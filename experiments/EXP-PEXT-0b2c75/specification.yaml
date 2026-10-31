@@ -45,12 +45,12 @@ experiment:
     First probe (2026-10-31, tools/experiment_preapproval.py --packet
     coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/approval-preview/preapproval-packet.json, source_ref
     origin/claude/pext-4torsion, exit 2, approvable false). Prospective sha256: specification
-    e3347d0455e84fbab6f6976dde81ad62045129d7e193b4db97f5a0a61e37d092, trial_plan
-    97356d14d729dd15880e257f62b60d56a1147d4d057b96a72d1f31e3e3db4638, queue
-    150b112bdf3f52f590a61d3a8c34f4306aaaaa7d46eface49a430ded366012c3, handoff
-    130215062ef45fc517fcc25c6458517cd145a1d8c1c96182eafa97f360669197. Blockers verbatim: (a) not committed or pushed
-    at source_ref: the canonical draft specification, the seven implementation sources (analyze.py, bitalgebra.py,
-    check.py, pext4_census.rs, run.py and the two fixtures, each listed under source_sha256), the two input_sha256
+    d41f80ca6e21baf7cd8e4992e2e4aa7fd347d7a493cfac51c9947ebe79e31d53, trial_plan
+    deb61b0cc1a41a327e3c2fa7dc190c49619df6986be995af4c7ffd8192bab1da, queue
+    d47f7e12519021817512aa4c77dc5ac7c753b426755cc3ae4393d19e8864dd47, handoff
+    8f14dadf6bb3833e3b97f8fb0a5767b70c5f2fb1880e3dce32f907e70779f2bb. Blockers verbatim: (a) not committed or pushed
+    at source_ref: the canonical draft specification, the implementation sources (analyze.py, bitalgebra.py,
+    check.py, pext4_census.rs, run.py and the fixtures, each listed under source_sha256), the two input_sha256
     fixtures and the two specification.input_bindings fixtures; (b) packet: goal concurrency record is not committed at
     source_ref (ledger/goals/GOAL-PEXT-4a1d6b/goal.yaml); (c) packet: no lawful open lane for this queue within goal
     concurrency.
@@ -132,9 +132,10 @@ experiment:
         provenance: new; producer-written output checker (not independent review)
       - path: analyze.py
         provenance: new; frozen analysis from recorded run directories
-      - path: fixtures/D-n5-q3-cosets.jsonl
+      - path: experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl
+        shared_with: EXP-PEXT-212d5c
         sha256: 8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa
-        provenance: verbatim copy of aburan28/crypto research/ghs_cover_census_n5_20261013/results/run-20261014T0050Z/D-n5-q3-cosets.jsonl (also vendored by EXP-PEXT-212d5c)
+        provenance: verbatim copy of aburan28/crypto research/ghs_cover_census_n5_20261013/results/run-20261014T0050Z/D-n5-q3-cosets.jsonl (not duplicated here, single Git copy under EXP-PEXT-212d5c because of the 64 KiB data-file gate)
       - path: fixtures/pilot-n3-q3-cosets.jsonl
         sha256: 5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff
         provenance: verbatim copy of .../pilot-n3-q3-cosets.jsonl (also vendored by EXP-PEXT-212d5c); used for the descriptive n = 3 recount only
@@ -153,8 +154,12 @@ experiment:
       4 distinct random elements of K per configuration (seed 20261101), both coefficient classes.
   input_bindings:
     regression_fixture_n5_q3:
-      path: experiments/EXP-PEXT-0b2c75/implementation/fixtures/D-n5-q3-cosets.jsonl
+      path: experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl
       sha256: 8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa
+      shared_with: EXP-PEXT-212d5c
+      dependency_note: >-
+        Byte-identical to the file vendored by EXP-PEXT-212d5c and not copied here. Its availability in Git at this path is a
+        dependency of this experiment: if that fixture is ever moved to the artifact store, this experiment must be amended.
       upstream_commit: f7ed67332588643447fdeca66b3790febbcf9e92
       role: positive control (20 genus-5 records) and negative recount (off-family split records)
     nearby_fixture_n3_q3:

@@ -111,9 +111,10 @@ experiment:
         provenance: new; producer-written output checker (not independent review)
       - path: analyze.py
         provenance: new; frozen analysis from recorded run directories
-      - path: fixtures/D-n5-q3-cosets.jsonl
+      - path: experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl
+        shared_with: EXP-PEXT-212d5c
         sha256: 8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa
-        provenance: verbatim copy of aburan28/crypto research/ghs_cover_census_n5_20261013/results/run-20261014T0050Z/D-n5-q3-cosets.jsonl (also vendored by EXP-PEXT-212d5c)
+        provenance: verbatim copy of aburan28/crypto research/ghs_cover_census_n5_20261013/results/run-20261014T0050Z/D-n5-q3-cosets.jsonl (not duplicated here, single Git copy under EXP-PEXT-212d5c because of the 64 KiB data-file gate)
       - path: fixtures/pilot-n3-q3-cosets.jsonl
         sha256: 5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff
         provenance: verbatim copy of .../pilot-n3-q3-cosets.jsonl (also vendored by EXP-PEXT-212d5c); used for the descriptive n = 3 recount only
@@ -132,8 +133,12 @@ experiment:
       4 distinct random elements of K per configuration (seed 20261101), both coefficient classes.
   input_bindings:
     regression_fixture_n5_q3:
-      path: experiments/EXP-PEXT-0b2c75/implementation/fixtures/D-n5-q3-cosets.jsonl
+      path: experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl
       sha256: 8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa
+      shared_with: EXP-PEXT-212d5c
+      dependency_note: >-
+        Byte-identical to the file vendored by EXP-PEXT-212d5c and not copied here. Its availability in Git at this path is a
+        dependency of this experiment: if that fixture is ever moved to the artifact store, this experiment must be amended.
       upstream_commit: f7ed67332588643447fdeca66b3790febbcf9e92
       role: positive control (20 genus-5 records) and negative recount (off-family split records)
     nearby_fixture_n3_q3:

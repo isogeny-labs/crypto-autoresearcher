@@ -60,6 +60,7 @@ NEG_Q = (5, 7, 9, 11, 13)
 AA_ARMS = ((3, 5, S5), (5, 5, S5), (9, 5, S5), (3, 7, "0,2,3,4"))
 FIXTURES = {"D-n5-q3-cosets.jsonl": "8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa",
             "pilot-n3-q3-cosets.jsonl": "5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff"}
+SHARED_FIXTURES = ("D-n5-q3-cosets.jsonl",)
 # pre-registered constants of the controls (written at design from the vendored fixtures, recomputed by the trial)
 EXPECT_OFF_FAMILY = {"5": {"8": 20, "4": 0}, "17": {"8": 30, "4": 20}, "25": {"8": 10, "4": 1}}  # D-n5-q3, E2 = 4 records by min_genus then E4
 EXPECT_MR = {5: {"0,1,2,3": [4, 5, 5]}, 7: {"0,1,2,3": [6, 7, 49], "0,1,2,4": [3, 7, 7], "0,1,2,5": [3, 7, 7], "0,1,3,4": [6, 7, 49], "0,1,3,5": [6, 7, 49]}}
@@ -169,7 +170,12 @@ def stage_negative(rd: str, binary: str) -> tuple:
 
 
 def fixture_records(name: str) -> list:
-    path = os.path.join(HERE, "fixtures", name)
+    # D-n5-q3-cosets.jsonl is shared with EXP-PEXT-212d5c (one copy in Git, over the 64 KiB data-file gate)
+    base = os.path.join(EXP_DIR, "..", "EXP-PEXT-212d5c", "implementation", "fixtures") if name in SHARED_FIXTURES else os.path.join(HERE, "fixtures")
+    path = os.path.normpath(os.path.join(base, name))
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"fixture {name} missing at {path}: it is shared with EXP-PEXT-212d5c; if that copy moved "
+                                "to the artifact store this experiment needs an amendment")
     assert _sha256(path) == FIXTURES[name], f"fixture {name} hash"
     with open(path) as f:
         return [json.loads(x) for x in f if x.strip()]

@@ -97,6 +97,9 @@ def main() -> None:
     spec_bytes = approved_spec()
     p_spec = write("specification.yaml", spec_bytes)
     src = sources()
+    SHARED = "experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl"  # shared fixture, one Git copy
+    src[SHARED] = sha(SHARED)
+    src = dict(sorted(src.items()))
     inputs = {k: v for k, v in src.items() if "/fixtures/" in k}
     trials = []
     for tid, rid, stage, arts, deps, mem, wd in TRIALS:
