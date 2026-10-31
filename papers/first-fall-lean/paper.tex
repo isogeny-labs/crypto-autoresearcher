@@ -167,11 +167,13 @@ computed fake quantity would bound the true one. Two placements of $\Sfe$ are
 possible on the true side. The printed lemma takes $\Dff$ of
 $\{f_1,\dots,f_M\}$ alone. The \emph{inside form} takes both quantities of
 the same system $S=F\cup\Sfe$, which is the form the paper's arguments
-need. Lean checks the refutation of the inside form. The printed form fails
-on the same witnesses: without $\Sfe$, $X^2Y+X(XY+X)=X^2$ and
-$X_3(X_1X_2+X_3)+X_2(X_1X_3+X_2)=X_2^2+X_3^2$ are falls at degree~3, and the
-degree-2 argument below applies unchanged. That check is by hand and by
-exhaustive search, not in Lean.
+need. The printed form fails on the same witnesses: without $\Sfe$,
+$X^2Y+X(XY+X)=X^2$ and $X_3(X_1X_2+X_3)+X_2(X_1X_3+X_2)=X_2^2+X_3^2$ are falls
+at degree~3, and the degree-2 argument below applies unchanged. Lean checks
+both placements, in separate modules (\lean{lemma4_inside_false} and
+\lean{lemma4_outside_false}); the second also states the printed form with the
+fake side computed from $F\cup\Sfe$, which in the model gives the same fake
+degree.
 
 \begin{theorem}\label{thm:nagao}
 Over $\FF_2$, with $\Sfe$ among the generators of the true system, let
@@ -379,6 +381,7 @@ falls as usual, which is consistent with 68 of 80.
 Statement & Kernel & Independent statement review\\
 \midrule
 Thm.~\ref{thm:nagao} (\lean{lemma4_inside_false}) & hosted receipt, CI run 41155781140 & not yet reviewed; producer caps fidelity at partial (two scoping rows)\\
+Thm.~\ref{thm:nagao}, printed placement (\lean{lemma4_outside_false}) & CI run 41247286804 (workspace gate, 96 targets verified) & not yet reviewed\\
 Prop.~\ref{prop:recovery} & not formalized & paper proof only\\
 Thm.~\ref{thm:lastfall} & hosted receipt, CI run 41191503149 & validated at stated scope (three-joint review)\\
 Thm.~\ref{thm:semaev}, concrete witness & hosted receipt, CI run 41155781140 & validated at scope, one draw\\
@@ -406,11 +409,11 @@ check. An independent statement review catches a true theorem that is cited
 for more than it says. We needed both: the first for Theorem~\ref{thm:nagao},
 the second for the withdrawn trace inference.
 
-Three items would strengthen this note. The first is a Lean proof of the
-printed (outside) form of the counterexample and of
+Three items would strengthen this note. The first is a Lean proof of
 Proposition~\ref{prop:recovery}. The second is a bridge from the
 list-of-monomials model to \texttt{MvPolynomial}. The third is an independent
-review of the Lean statement of Theorem~\ref{thm:nagao}.
+review of the Lean statements of Theorem~\ref{thm:nagao}, in both
+placements.
 
 \begin{thebibliography}{99}
 
