@@ -1,0 +1,41 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261031-61a6ff
+claim_id: NAGAO-2015-984-LEMMA4-OUTSIDE-F2-WITNESSES
+kind: formal_counterexample
+source: knowledge/findings/KN-FIND-936151.md
+source_status: COMPUTED
+theorem_name: CryptoResearch.Nagao.Lemma4Outside.lemma4_outside_false
+theorem_file: CryptoResearch/Nagao/Lemma4Outside.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Lean twin of the outside-form refutation recorded in KN-FIND-936151 (first found
+  in Python, CORR-20260916-96f47d). Reuses the model and witnesses of
+  Lemma4Witness.lean (target nagao-lemma4-inside-counterexample-20261029). The true
+  side is {f_1, f_2} alone, with the field equations NOT among its generators, as
+  Lemma 4 is printed in 2015/984. d_F(F) = 3 for both witnesses
+  (A: f_1 + X f_2 = X^2; B: X_3 f_1 + X_2 f_2 = X_2^2 + X_3^2; no fall at 1 or 2),
+  and d'_F = 2 with the fake side computed either from F or from F u S_fe
+  (identical in the model, since the field equations reduce to zero and are
+  dropped). All facts by kernel `decide` (no native_decide). Same scope as the
+  inside target: equality reading of condition (1) only, p = 2, N <= 3, nothing
+  about Proposition 5, the >= reading, or any elliptic curve. Pre-push check: a
+  line-by-line Python port of the Lean definitions evaluates every decided goal
+  true and rejects three mutated certificates; that port is not evidence.
+claim: |
+  Over F_2, with the equality reading of condition (1) and the field equations
+  NOT among the generators of the true system (outside form, as Lemma 4 of
+  Nagao 2015/984 is printed), for each of
+  A: F_2[X,Y], f_1 = X^2 Y, f_2 = X Y + X, and
+  B: F_2[X_1,X_2,X_3], f_1 = X_1 X_2 + X_3, f_2 = X_1 X_3 + X_2,
+  the true first fall degree of {f_1, f_2} is 3 and the fake first fall degree
+  (products and sum taken mod S_fe, computed from {f_1, f_2} or from
+  {f_1, f_2} u S_fe) is 2, so d_F <= d'_F fails for that system, and the
+  universal statement over finite F_2 systems is false for either reading of the
+  fake side.
+proof_map:
+  depends_on: [nagao-lemma4-inside-counterexample-20261029.yaml]
+  prerequisites:
+    - "Nagao 2015/984 Definitions 5 and 6 (equality reading of condition (1)) are transcribed faithfully by the list-of-exponent-vectors model in Lemma4Witness.lean; the transcription is not a Lean theorem"
+    - "cofactors with product degree <= D range over monomials of degree <= D (multilinear on the fake side): the leading-form degree-additivity argument over F_2[X_1..X_n] is not formalized"
+    - "fake-side generators that reduce to zero mod S_fe contribute nothing and may be dropped (inertness, KN-FIND-936151 section 2)"
