@@ -1,0 +1,257 @@
+{
+ "approved_by": "DEC-20261031-dcfdee",
+ "defaults": {
+  "negative_configs": 1000,
+  "negative_seed": 20261101,
+  "threads": 4
+ },
+ "experiment_id": "EXP-PEXT-0b2c75",
+ "frozen": true,
+ "input_sha256": {
+  "experiments/EXP-PEXT-0b2c75/implementation/fixtures/D-n5-q3-cosets.jsonl": "8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa",
+  "experiments/EXP-PEXT-0b2c75/implementation/fixtures/pilot-n3-q3-cosets.jsonl": "5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff"
+ },
+ "queue": "coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/dispatch_queue.json",
+ "schema": "crypto.autoresearch.trial_plan.v1",
+ "source_sha256": {
+  "experiments/EXP-PEXT-0b2c75/implementation/analyze.py": "0bb9ac61c711197ec05bbd3d295af537f1b5356337dd909dca4016ccd8e4d2f1",
+  "experiments/EXP-PEXT-0b2c75/implementation/bitalgebra.py": "7c3d69f32385b5845735c043eadbca8e872ef34d2a6a9ce64e5a3191f6d3d31c",
+  "experiments/EXP-PEXT-0b2c75/implementation/check.py": "b0060091f93fe961ab600e8166be6823fd16b0b0a9297a4c0c648dace570736a",
+  "experiments/EXP-PEXT-0b2c75/implementation/fixtures/D-n5-q3-cosets.jsonl": "8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa",
+  "experiments/EXP-PEXT-0b2c75/implementation/fixtures/pilot-n3-q3-cosets.jsonl": "5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff",
+  "experiments/EXP-PEXT-0b2c75/implementation/pext4_census.rs": "9204b9d23484a7e6598fb93b15ece4bf378f5d428d63de62943c8481d3063b0d",
+  "experiments/EXP-PEXT-0b2c75/implementation/run.py": "ffde62ef468993c006b24f8ede2a5145623e1e3ed4bf2d14aab6fda7a7a4bfc5"
+ },
+ "specification": "experiments/EXP-PEXT-0b2c75/specification.yaml",
+ "specification_sha256": "e3347d0455e84fbab6f6976dde81ad62045129d7e193b4db97f5a0a61e37d092",
+ "task_id": "TASK-20261031-73799d",
+ "trials": [
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/run.py",
+    "trial",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-PEXT-8c15bf",
+    "--trial-id",
+    "regression",
+    "--plan",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "regression.json",
+    "R-n5-q3.jsonl",
+    "R-fix-n5-q3.jsonl"
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "regression"
+   ],
+   "depends_on": [],
+   "id": "regression",
+   "memory_mb": 2048,
+   "run_id": "RUN-PEXT-8c15bf",
+   "stage": "regression",
+   "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
+   "watchdog_seconds": 3600
+  },
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/run.py",
+    "trial",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-PEXT-ff55f2",
+    "--trial-id",
+    "n5core",
+    "--plan",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "n5-core.jsonl.gz"
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "n5core"
+   ],
+   "depends_on": [
+    "regression"
+   ],
+   "id": "n5core",
+   "memory_mb": 2048,
+   "run_id": "RUN-PEXT-ff55f2",
+   "stage": "n5core",
+   "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
+   "watchdog_seconds": 7200
+  },
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/run.py",
+    "trial",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-PEXT-e4ce49",
+    "--trial-id",
+    "n7",
+    "--plan",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "n7.jsonl.gz"
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "n7"
+   ],
+   "depends_on": [
+    "regression"
+   ],
+   "id": "n7",
+   "memory_mb": 2048,
+   "run_id": "RUN-PEXT-e4ce49",
+   "stage": "n7",
+   "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
+   "watchdog_seconds": 28800
+  },
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/run.py",
+    "trial",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-PEXT-a19d45",
+    "--trial-id",
+    "negative",
+    "--plan",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "negative.jsonl.gz"
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "negative"
+   ],
+   "depends_on": [
+    "regression"
+   ],
+   "id": "negative",
+   "memory_mb": 2048,
+   "run_id": "RUN-PEXT-a19d45",
+   "stage": "negative",
+   "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
+   "watchdog_seconds": 3600
+  },
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/run.py",
+    "trial",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-PEXT-c0fbcd",
+    "--trial-id",
+    "n5ext",
+    "--plan",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "n5-ext.jsonl.gz"
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "n5ext"
+   ],
+   "depends_on": [
+    "regression"
+   ],
+   "id": "n5ext",
+   "memory_mb": 4096,
+   "run_id": "RUN-PEXT-c0fbcd",
+   "stage": "n5ext",
+   "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
+   "watchdog_seconds": 28800
+  },
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/run.py",
+    "trial",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-PEXT-87ac49",
+    "--trial-id",
+    "analyze",
+    "--plan",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "analysis.json",
+    "law-table.md"
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-PEXT-0b2c75/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-PEXT-0b2c75/trial-plan.json",
+    "analyze"
+   ],
+   "depends_on": [
+    "regression",
+    "n5core",
+    "n7",
+    "negative"
+   ],
+   "id": "analyze",
+   "inputs_from": {
+    "n5core": "RUN-PEXT-ff55f2",
+    "n5ext": "RUN-PEXT-c0fbcd",
+    "n7": "RUN-PEXT-e4ce49",
+    "negative": "RUN-PEXT-a19d45",
+    "regression": "RUN-PEXT-8c15bf"
+   },
+   "memory_mb": 2048,
+   "run_id": "RUN-PEXT-87ac49",
+   "stage": "analyze",
+   "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value.",
+   "watchdog_seconds": 1800
+  }
+ ]
+}

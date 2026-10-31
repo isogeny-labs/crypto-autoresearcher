@@ -1,0 +1,553 @@
+experiment:
+  id: EXP-PEXT-0b2c75
+  hypothesis_id: H-PEXT-ad0073
+  source_idea: IDEA-20261024-3c71a9
+  question_id: RQ-PEXT-7c3e91
+  goal_id: GOAL-PEXT-4a1d6b
+  version: 1
+  title: >-
+    Candidate norm-character (Kummer) law for |E(K)[4]| on the four-of-n-conjugates branch-quadruple family: exact
+    group counts on every PGL2(F_q)-orbit configuration, n = 5 (genus-5 floor family) at q up to 31 including
+    q = 1 mod 4 and prime powers 9, 25, 27, and the pre-registered n = 7 analogue at q up to 9, with a positive
+    control against the published q = 3 records, off-family negative controls and an A/A rebuild
+  experiment_class: structural-census
+  status: approved
+  frozen: true
+  designed_at: '2026-10-31'
+  designed_by: coordinator (design lane of /design-experiment IDEA-20261024-3c71a9)
+  selection_decision: null
+  selection_basis: >-
+    OWNER request to the Coordinator, 2026-10-31: "design the 4-torsion idea next". Recorded without a selection
+    decision record; the top-level session may add one.
+  approved_by: DEC-20261031-dcfdee
+  approval_decision: DEC-20261031-dcfdee
+  execution_authorized: true
+  approval_basis: >-
+    AGENTS.md 'Standing user authorization' (user, 2026-09-06); approval bounded by execution: tools/experiment_preapproval.py approvable true on pushed bytes, goal approved-unrun capacity checked.
+  execution_scope: >-
+    The six trials of experiments/EXP-PEXT-0b2c75/trial-plan.json and nothing else, in dependency order, through the frozen argv; no other q, n, word or seed.
+  reserved_ids:
+    approval_decision: DEC-20261031-dcfdee
+    observation_decision: DEC-20261031-e3db7e
+    executor_task: TASK-20261031-73799d
+    archive_task: TASK-20261031-4fa3ea
+    lane: BATCH-a4886a
+    runs:
+      regression: RUN-PEXT-8c15bf
+      n5core: RUN-PEXT-ff55f2
+      n7: RUN-PEXT-e4ce49
+      negative: RUN-PEXT-a19d45
+      n5ext: RUN-PEXT-c0fbcd
+      analyze: RUN-PEXT-87ac49
+  status_note: >-
+    Frozen at version 1 and approved by DEC-20261031-dcfdee under AGENTS.md standing authorization after the preapproval probe reported approvable true on pushed bytes.
+  intake_acknowledgement:
+    source: >-
+      coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/design-readiness.json and
+      derivation.md (Coordinator intake, zero runs); DEC-20261027-d51de0; review batches BATCH-a120ce (closed) and
+      BATCH-68a56c (open; impediments IMP-PEXT-BLIND-CONTRACT-INTERFACE-20261027 and IMP-PEXT-NORM-REVIEW-ADMISSION-20261027)
+    acknowledged_classification: >-
+      complete_prospective_design_can_follow_now is false; readiness specific_source_and_independent_proof_gaps_remain;
+      independent_mathematical_review false; novelty_verified false. This design is requested by the owner and is
+      therefore an owner-directed test of an UNREVIEWED candidate law as a refutable prediction on exact data. It does
+      not review, promote or certify the derivation, and a pass would not establish the theorem, novelty, class-level
+      shares, or anything beyond the tested cells.
+    obligations:
+    - id: 1
+      topic: pointed quartic-to-cubic map and extension at omitted points
+      status: not discharged (no independent assessment); partially exercised
+      exercised_by: C2 checks #C(K) of the quartic model equals #E(K) of the cubic on every unit (an arithmetic consequence of the isomorphism, not a proof)
+    - id: 2
+      topic: coefficient normalization and twist
+      status: not discharged; exercised by the t = chi_K(c) bookkeeping of the law and the paired units
+      exercised_by: both coefficient classes c = 1 and a fixed non-square on every configuration
+    - id: 3
+      topic: Bekker-Zarhin application and |E(K)[4]| = 4 + 4h
+      status: not discharged; exercised
+      exercised_by: C3 compares the halving count 4 + 4h (M1) with the brute-force x(2P) count of the sibling method (M2) on every unit; any difference is an instrument/derivation defect and voids the run
+    - id: 4
+      topic: norm character identity, C_{-k} = -C_k, shift invariance, affine bit equations
+      status: not discharged; exercised
+      exercised_by: C3 counter chi_norm_identity_mismatch (chi_q of the explicit norm against chi_K), P5 sign formula (4.2) on every unit, bitalgebra.py ordering invariance
+    - id: 5
+      topic: n = 5 cases and the unit being counted
+      status: not discharged for class shares; the table is tested per unit
+      exercised_by: P1, P2; the unit is the PGL2(F_q)-orbit configuration with both twists, so the weighting proof is not needed and class shares are not claimed
+    - id: 6
+      topic: exceptions, characteristic 3, special j, class quotient
+      status: not discharged; special-j and distinct-class counts reported, characteristic 3 in cells q = 3 (control), 9, 27
+      exercised_by: analysis.json arms
+    - id: 7
+      topic: n = 7 analogue S = (0,2,3,4)
+      status: tested as a pre-registered prediction (P3); realizability and the link to a minimal-genus family are measured ((m, r) computed per S), not proved
+    - id: 8
+      topic: heuristic H1 equidistribution
+      status: not asserted; reported only (non-gating)
+  objective: >-
+    Decide whether any exact count contradicts the candidate norm-character law (L) of H-PEXT-ad0073 on the enumerated
+    configurations: (P1) |E(K)[4]| = 8 on every unit at n = 5, S = (0,1,2,3), q = 3 mod 4 (q = 7, 11, 19, 23, 27, 31);
+    (P2) the table (5.1) at q = 1 mod 4 (q = 5, 9, 13, 17, 25, 29); (P3) the pre-registered formula (7.2) at n = 7,
+    S = (0,2,3,4), q = 3, 5, 7, 9; (P4) the generic predictor on the other n = 7 words; (P5) the sign formula (4.2);
+    (P6) (m, r, genus) of each word; with (N2) an off-family negative control showing the instrument can see violations,
+    and a q = 3 positive control reproducing the 20 published genus-5 records.
+  inputs:
+    implementation_sources:
+      note: >-
+        Files under experiments/EXP-PEXT-0b2c75/implementation/. Their sha256 values are bound by trial-plan.json
+        source_sha256, which binds this specification by sha256.
+      sha256_binding: trial_plan_source_sha256
+      files:
+      - path: pext4_census.rs
+        provenance: >-
+          new; field construction and the four_torsion / count method are a verbatim-semantics port of
+          aburan28/crypto research/ghs_cover_census_n5_20261013/cover_census_n.rs (sha256
+          d2a8504b68b26ea5ef83687d682a2bae75bb254acaf7d909420103e22aa11edc, commit f7ed67332588643447fdeca66b3790febbcf9e92),
+          generalised to GF(p^(f n)); the regression trial proves it reproduces the published records
+      - path: bitalgebra.py
+        provenance: new; the written candidate formulas (3.1), (3.2), (4.2), (5.1), (7.1)-(7.2) and a pure-algebra selfcheck
+      - path: run.py
+        provenance: new; frozen driver (stages regression, n5core, n5ext, n7, negative, analyze); records shlex.join(sys.orig_argv) per AMD-EXP-PEXT-212d5c-20261031-command-recording
+      - path: check.py
+        provenance: new; producer-written output checker (not independent review)
+      - path: analyze.py
+        provenance: new; frozen analysis from recorded run directories
+      - path: fixtures/D-n5-q3-cosets.jsonl
+        sha256: 8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa
+        provenance: verbatim copy of aburan28/crypto research/ghs_cover_census_n5_20261013/results/run-20261014T0050Z/D-n5-q3-cosets.jsonl (also vendored by EXP-PEXT-212d5c)
+      - path: fixtures/pilot-n3-q3-cosets.jsonl
+        sha256: 5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff
+        provenance: verbatim copy of .../pilot-n3-q3-cosets.jsonl (also vendored by EXP-PEXT-212d5c); used for the descriptive n = 3 recount only
+    fields: >-
+      K = GF(p^(f n)) with q = p^f by the sibling's first-primitive-modulus construction applied to (p, f n); identical
+      to the sibling field for f = 1. F_q is the subfield {a : a^q = a}. Prime powers are supported (q = 9, 25, 27):
+      the sibling's prime-q limit is removed in this tool and checked by the A/A arm at q = 9 and the validity counters.
+      Tractable prime q: every odd prime up to 31 at n = 5 (K up to 28.6 million elements); q = 9, 25, 27 included.
+      q = 37 and beyond (K above 69 million elements, 550 MB of tables) are excluded as out of proportion, not as impossible.
+      n = 7: q = 3, 5, 7, 9 (K up to 4.78 million elements); q = 11 (19.5 million elements, 6,600 orbits per word)
+      is excluded here for runtime, not for principle.
+    curves: >-
+      E_c: Y^2 = prod (X - alpha_i) over K, alpha_i = -A/(e_4 - e_i), A = c prod_{i<=3} (e_4 - e_i), e_i = sigma^{a_i} x,
+      for every PGL2(F_q)-orbit representative x of K \ F_q (the smallest field code of the orbit) and c in {1, the
+      non-square field code 2}. Units per q: 2 (q^2 + 1) at n = 5, 2 (q^n - q)/(q^3 - q) at n = 7. The negative arm draws
+      4 distinct random elements of K per configuration (seed 20261101), both coefficient classes.
+  input_bindings:
+    regression_fixture_n5_q3:
+      path: experiments/EXP-PEXT-0b2c75/implementation/fixtures/D-n5-q3-cosets.jsonl
+      sha256: 8f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa
+      upstream_commit: f7ed67332588643447fdeca66b3790febbcf9e92
+      role: positive control (20 genus-5 records) and negative recount (off-family split records)
+    nearby_fixture_n3_q3:
+      path: experiments/EXP-PEXT-0b2c75/implementation/fixtures/pilot-n3-q3-cosets.jsonl
+      sha256: 5003d258d9146d6650ac70d77ea373b4e4979713abbbebd82e1007c6394573ff
+      upstream_commit: f7ed67332588643447fdeca66b3790febbcf9e92
+      role: nearby object, descriptive only
+  controls:
+  - id: C1
+    name: positive control, published q = 3 records (in-sample by construction)
+    check: >-
+      regression trial: the n = 5, S = (0,1,2,3), q = 3 enumeration (20 units) equals the 20 genus-5 records of the sibling
+      census as a multiset of (j, order, E2, E4); the tool's verbatim sibling count reproduces order, E2, E4 and j in F_q of
+      every one of those records from the fixture's (a2, a4, a6) polynomial-basis indices. Any difference voids the experiment
+      (instrument defect or wrong family identification).
+  - id: C2
+    name: map check, quartic model versus cubic model
+    check: on every unit #C(K) of the quartic y^2 = c prod (z - e_i) (affine points plus 1 + chi(c) at infinity) equals #E(K) of the cubic; counter quartic_cubic_order_mismatch must be 0; Hasse bound hasse_fail 0.
+  - id: C3
+    name: independent group-count methods
+    check: >-
+      M2 (the sibling x(2P) point count, verbatim semantics) and M1 (halving by square differences, 4 + 4h) must agree
+      on every unit (m1_m2_mismatch 0); E[2] has 4 elements (e2_not_4 0); chi_q(N(x - sigma^k x)) computed from the explicit
+      norm equals chi_K (chi_norm_identity_mismatch 0). Any nonzero counter is an instrument defect, not a result.
+  - id: C4
+    name: genus identification
+    check: (m, r, genus) of every S word computed from the F_2-rank of the n cyclic shifts and the union size; (4, 5, 5) at n = 5; (3, 7, 7) for (0,2,3,4), (6, 7, 49) for the genus-49 words (P6).
+  - id: C5
+    name: A/A rebuild
+    check: >-
+      regression trial: the tool rebuilt with other rustc flags (opt-level 2, one codegen unit) and run with one thread
+      reproduces the 4-thread -O output byte for byte on four arms (n = 5 q = 3, 5, 9; n = 7 q = 3). These calibration
+      outputs are compared by hash only and are not tallied.
+  - id: C6
+    name: negative control by fixture recount
+    check: >-
+      the published q = 3 split records outside the genus-5 family are recounted from the vendored fixture: genus 17 has
+      30 with |E(K)[4]| = 8 and 20 with 4; genus 25 has 10 with 8 and 1 with 4. E(K)[4] = 4 occurs off the family at
+      q = 3 mod 4, so (P1) is not a property of all split curves.
+  - id: C7
+    name: negative control, random off-family quartics
+    check: >-
+      same instrument, fields q = 5, 7, 9, 11, 13: 1000 random 4-subsets of K per q, both coefficient classes. At eps = -1
+      at least 10 percent of units must have |E(K)[4]| != 8 (unconstrained expectation 1/4); at eps = +1 at least 20 percent
+      of pairs must have the c = 1 member at |E(K)[4]| = 4 (expectation 1/2) and the value 16 must be seen. The generic
+      pair rule (exactly one member of a pair with |E(K)[4]| = 4 at eps = +1) must hold on 100 percent of random pairs; a
+      violation is an instrument defect. If the thresholds fail, the negative control did not discriminate and the headline cannot be SUPPORT.
+  - id: C8
+    name: nearby object, descriptive
+    check: the n = 3, q = 3 genus-3 records of the published pilot are recounted by (E2, E4); no prediction (a different branch construction, not four conjugates of one orbit).
+  - id: C9
+    name: independent blind recount (at review)
+    check: >-
+      before any status move, an independent session writes a second implementation from this specification and the
+      derivation text only (not pext4_census.rs) and recounts |E(K)[4]| and the three signs for every unit at q = 5 and 7
+      (n = 5) and for 200 units per q drawn by seed 20261101 from q = 11 and 13, and every unit at n = 7, q = 3; any
+      difference is a finding against the instrument.
+  independent_variables:
+  - 'n in {5, 7}'
+  - 'q: 5, 7, 9, 11, 13, 17, 19, 23, 25, 27, 29, 31 (n = 5); 3, 5, 7, 9 (n = 7)'
+  - 'S word: (0,1,2,3) at n = 5; (0,2,3,4) and five others at n = 7'
+  - 'epsilon = chi_q(-1) (determined by q mod 4), coefficient class t = chi_K(c), bits b_k'
+  metrics:
+    primary:
+    - name: units whose |E(K)[4]| differs from the law prediction, by prediction id
+      pointer: analysis.json /predictions/P1_eps_minus1_all_E4_eq_8, P2_eps_plus1_table, P3_n7_primary_S_0234, P4_n7_other_S_generic_formula
+      prediction: P1, P2, P3, P4
+    - name: sign-formula mismatches
+      pointer: analysis.json /predictions/P5_sign_formula_4_2
+      prediction: P5
+    - name: genus of each word
+      pointer: analysis.json /predictions/P6_genus_of_family
+      prediction: P6
+    - name: negative-control discrimination
+      pointer: analysis.json /predictions/N2_negative_control_random_quartics
+      prediction: N2
+    - name: counts of |E(K)[4]| in {4, 8, 16} by q mod 4, by (t, p) cell and by twist pair
+      pointer: analysis.json /arms/*/e4_hist, e4_by_cell, pairs_exactly_one_E4_eq_4
+      prediction: descriptive; the pair count is generic and non-discriminating
+    - name: headline
+      pointer: analysis.json /headline, /valid, /invalid_reasons
+      prediction: all
+    secondary:
+    - name: H1 equidistribution of (b_1, b_2)
+      pointer: analysis.json /arms/*/H1
+      prediction: H1 (heuristic; non-gating)
+    - name: distinct (j, order, E4) classes versus units and special-j units
+      pointer: analysis.json /arms/*/distinct_classes_j_order_E4, units_special_j
+      prediction: descriptive
+    - name: wall time and peak RSS per trial
+      pointer: manifest.yaml /run/timing, /run/resources
+      prediction: bookkeeping only
+  preregistered_predictions:
+  - id: P1
+    claim: n = 5, S = (0,1,2,3), q = 3 mod 4, q >= 7
+    test: every unit has |E(K)[4]| = 8; any other value (including 4 or 16) is a counterexample; q = 3 is reported by C1 only
+  - id: P2
+    claim: n = 5, S = (0,1,2,3), q = 1 mod 4
+    test: every unit has |E(K)[4]| = 4 if t = -1, 16 if t = +1 and b_1 b_2 = +1, 8 if t = +1 and b_1 b_2 = -1 (derivation table 5.1)
+  - id: P3
+    claim: n = 7, S = (0,2,3,4), q = 3, 5, 7, 9
+    test: every unit has |E(K)[4]| = 4 (1 + I_1 + I_2 + I_3) with I_1 = [t R = +1, t S* = +1], I_2 = [eps t R = +1, t eps R S* = +1], I_3 = [eps t S* = +1, t R S* = +1], R = b_1 b_2, S* = b_2 b_3 (derivation 7.1-7.2)
+  - id: P4
+    claim: n = 7, five other canonical words (0,1,2,5), (0,1,2,4), (0,1,2,3), (0,1,3,4), (0,1,3,5), q = 3, 5, 7
+    test: every unit has |E(K)[4]| equal to the generic (3.1) + (4.2) predictor of bitalgebra.py
+  - id: P5
+    claim: sign formula
+    test: observed chi_K(alpha_1 - alpha_2), chi_K(alpha_1 - alpha_3), chi_K(alpha_2 - alpha_3) equal (s12, s13, s23) of (4.2) on every decisive unit
+  - id: P6
+    claim: genus identification
+    test: (m, r, genus) = (4, 5, 5) at n = 5; (3, 7, 7) for (0,2,3,4), (0,1,2,5), (0,1,2,4); (6, 7, 49) for (0,1,2,3), (0,1,3,4), (0,1,3,5)
+  - id: N2
+    claim: off-family random quartics violate the family law visibly (instrument sensitivity)
+    test: C7 thresholds
+  - id: H1
+    claim: (b_1, b_2) equidistributed over t = +1 units
+    test: chi-square per q reported; never gates
+  scale_relevance:
+    tier: toy
+    justification: >-
+      Structural exact counts. The derivation claims all odd q; the experiment enumerates every configuration of the listed
+      cells. No relevance to ECDLP cost is claimed.
+  panel_sizing:
+    n5_units_per_q: 'q = 5: 52; 7: 100; 9: 164; 11: 244; 13: 340; 17: 580; 19: 724; 23: 1,060; 25: 1,252; 27: 1,460; 29: 1,684; 31: 1,924 (2 (q^2 + 1) each; sum 9,584)'
+    n7_units: 'S = (0,2,3,4): q = 3: 182; 5: 1,302; 7: 4,902; 9: 13,286 (19,672); five other words at q = 3, 5, 7: 6,386 each (31,930)'
+    negative_units: '2,000 per q at q = 5, 7, 9, 11, 13'
+    decisive_coverage: >-
+      with H1 the (t, b_1 b_2) cells of the q = 1 mod 4 core arms (q = 5, 9, 13, 17: 568 orbits) hold about 284 units each; the
+      coverage rule requires at least 20 per cell and per eps class. A law with an exception rate below about 1 in 500
+      units could be missed; the experiment is a refutation attempt, not an estimate of a rate.
+    cost: >-
+      work is units x |K| field-operation sweeps. Measured design timing (validity-only, stdout counters only, 3 to 4
+      threads): q = 13 core arm 3.6 s including field build; q = 5, 7, 9, 11 under 1 s; q = 17 about 25 s; n = 7 q = 5 one
+      word 2.0 s; q = 25 (9.77 million elements, 1,252 units, 1.2e10 points) 1,105 s on 3 threads while the ledger validator
+      was also running, i.e. about 1.1e7 points per second, falling from about 3.5e7 in small fields as the tables leave the
+      cache. At about 1.5e7 points per second on 4 threads: n5core about 3 to 5 minutes including builds; n5ext (q = 23, 25,
+      27, 29, 31; 1.3e11 points plus field builds of 6 to 24 s each) about 2.5 hours; n7 (8.9e10 points, the q = 9 primary word
+      alone 6.4e10) about 1.5 to 2.5 hours; negative about 1 to 2 minutes; regression about 10 seconds. The watchdogs are
+      machine protection set well above these. Memory: 8 bytes per field element (q = 31: about 260 MB; n = 7 q = 9: about 70 MB).
+    disk: >-
+      deterministic gzip streams: n5core about 0.2 MB, n5ext about 0.5 MB, n7 about 2 to 4 MB, negative about 0.5 MB, regression about 50 KB;
+      the whole run set is below 6 MB. The host has about 190 MB free; anything beyond these sizes belongs in the artifact store.
+  replication:
+    seeds:
+    - 20261101
+    seed_rule: >-
+      only the negative arm is random: Rng(seed 20261101, tag = 1000 q + 10 n + 4), splitmix64, 1,000 configurations of 4
+      distinct elements of K per q. The family arms are exhaustive and seed-free.
+    independent_instances: 6
+    trials:
+    - trial_id: regression
+      run_id: RUN-PEXT-8c15bf
+      stage: regression
+    - trial_id: n5core
+      run_id: RUN-PEXT-ff55f2
+      stage: n5core
+    - trial_id: n7
+      run_id: RUN-PEXT-e4ce49
+      stage: n7
+    - trial_id: negative
+      run_id: RUN-PEXT-a19d45
+      stage: negative
+    - trial_id: n5ext
+      run_id: RUN-PEXT-c0fbcd
+      stage: n5ext
+    - trial_id: analyze
+      run_id: RUN-PEXT-87ac49
+      stage: analyze
+    replication_note: >-
+      Exact computations: replication is C1 (published records), C5 (rebuild, one thread), C9 (independent blind recount at
+      review) and the byte-identical rerun of any trial from the same bound sources. Trials n5core, n7, negative and n5ext
+      depend on regression; analyze depends on regression, n5core, n7 and negative and reads n5ext when present (a failed
+      extended panel never blocks the analysis; if it is recorded invalid it is not read).
+    determinism_excluded_fields:
+    - wall_s
+    - manifest timing fields
+  budget:
+    enforcement: advisory
+    wall_clock_seconds_per_trial:
+      regression: 3600
+      n5core: 7200
+      n7: 28800
+      negative: 3600
+      n5ext: 28800
+      analyze: 1800
+    total_cpu_hours: null
+    maximum_memory_gb: 4
+    maximum_runs: 6
+    maximum_workers: 4
+    note: >-
+      Machine protection only (4 threads). Not a research budget (ECC goal, unlimited). A timeout, memory kill or crash is
+      failed_infrastructure, never evidence about the law. Do not run alongside the EXP-PEXT-212d5c census on the same
+      4-core host (that experiment uses 4 threads too).
+  stopping_rules:
+  - Each trial stops when its stage completes; every arm is exhaustive over its units.
+  - No trial runs before regression passes; a failed regression stops the experiment.
+  - An unfinished trial at its watchdog is failed_infrastructure; it is rerun only under a versioned amendment with the same arms.
+  invalidation_rules:
+  - regression fails (C1, C4, C5, C6, algebra selfcheck) -> experiment void (instrument defect).
+  - any of m1_m2_mismatch, quartic_cubic_order_mismatch, hasse_fail, chi_norm_identity_mismatch, e2_not_4 nonzero, or an orbit-count mismatch -> that trial invalid, nothing read from it.
+  - generic pair rule violated on the random arm at eps = +1 -> invalid (instrument or (3.1) defect, not a refutation of the law).
+  - check.py nonzero on a trial -> that trial is not read until the defect is explained by an amendment.
+  success_criterion: >-
+    SUPPORT_SCOPED (comparisons C-law-n5-eps-minus, C-law-n5-eps-plus, C-law-n7, C-neg-random, all absolute): analysis.json
+    /valid true and /headline begins SUPPORT_SCOPED, i.e. regression passes, P1, P2, P3, P4, P5 and P6 have zero
+    contradictions on the decisive cells (n = 5 q >= 5; n = 7 all q), the negative control discriminates (N2) and every (t, b_1 b_2)
+    cell of each eps class holds at least 20 units. Scope: the enumerated cells only; the derivation stays an unreviewed candidate.
+  falsification_criterion: >-
+    REFUTED (scoped): analysis.json /headline begins REFUTED on a valid analysis, i.e. some decisive unit has
+    |E(K)[4]| different from the prediction of P1, P2, P3 or P4, or an observed sign differs from (4.2) (P5), or a word has
+    the wrong (m, r, genus) (P6). The unit (n, q, S, orbit, x, t, bits) and its recorded counts are the counterexample
+    certificate; the blind recount (C9) decides between a mathematical counterexample and an instrument fault.
+  inconclusive_criterion: >-
+    INCONCLUSIVE: valid, no contradiction, but C-neg-random does not discriminate, a (t, b_1 b_2) cell holds fewer than 20 units, or
+    a required decisive arm is absent.
+  heuristic_criterion: H1 is reported by its chi-square and never changes the headline.
+  decision_impact:
+    on_positive: >-
+      SUPPORT_SCOPED: no status move by itself. The result is an observation that the candidate law survived exact tests on
+      the enumerated cells, handed to independent review (/review-evidence, C9 blind recount) and to the open proof-review
+      batch; it does not discharge intake obligations 1, 3, 5 or the novelty check.
+    on_negative: >-
+      REFUTED: the certificate unit pinpoints the failing step (pointed map, sign formula (4.2), halving test (3.1)); the
+      derivation is withdrawn in scope after the blind recount confirms it and the idea's mechanism is rejected for those cells.
+    on_inconclusive: >-
+      INCONCLUSIVE: no status move; the next contract strengthens the unmet control or the unpopulated cells.
+    on_invalid: 'NOT_EVIDENCE: the instrument is repaired under a versioned amendment and the affected trials rerun.'
+  interpretation_limits:
+  - A pass is zero contradictions on the tested cells of an unreviewed candidate; it is not the theorem, not novelty, and not a class-level share.
+  - The unit is the configuration (x-orbit, coefficient class). Galois-conjugate x (the five cyclic shifts) and coincident K-classes are not merged; distinct-class counts are reported.
+  - The identification of the explicit family with the genus-5 curves of the GHS census is positively controlled at q = 3 only; for q >= 5 it rests on the sibling lemma and the computed (m, r) = (4, 5).
+  - The pair rule "exactly one twist per pair has |E(K)[4]| = 4" at eps = +1 is generic (holds for every quartic with four rational branch points) and is not evidence for the family.
+  - Nothing about descent to F_q, the GHS transfer, cost or any deployed curve. Novelty unverified (KN-LIT-bf1772 abstract only).
+  variable_ledger:
+    independent:
+    - name: n
+      levels: [5, 7]
+    - name: q
+      levels: [3, 5, 7, 9, 11, 13, 17, 19, 23, 25, 27, 29, 31]
+    - name: S_word
+      levels: ['0,1,2,3', '0,2,3,4', '0,1,2,5', '0,1,2,4', '0,1,3,4', '0,1,3,5']
+    factors:
+    - name: branch_family_construction
+      treatment: fixed
+      value: e_i = sigma^{a_i} x, origin e_4, cubic alpha_i = -A/(e_4 - e_i)
+      how: one tool (pext4_census.rs) and one construction for every family arm
+    - name: orbit_enumeration
+      treatment: fixed
+      value: all PGL2(F_q)-orbit representatives of K \ F_q, smallest field code
+      how: the tool asserts the orbit count (q^n - q)/(q^3 - q) on every arm
+    - name: coefficient_class
+      treatment: crossed
+      value: c = 1 and c = the fixed non-square code 2 on every configuration
+      how: both classes are run on every orbit, so t is balanced by construction
+    - name: field_construction
+      treatment: fixed
+      value: sibling first-primitive-modulus construction on GF(p^(f n))
+      how: deterministic; identical to the sibling for f = 1 (checked by C1 at q = 3)
+    - name: group_count_method
+      treatment: fixed
+      value: M2 (sibling x(2P) count) is the measured |E(K)[4]|; M1 (halving) is a cross-check
+      how: M1 must equal M2 on every unit (counter), so the method cannot move the metric
+    - name: random_configurations
+      treatment: randomized
+      how: fixed-seed splitmix64 stream (20261101), independent of any census output
+    - name: tool_build_and_threads
+      treatment: measured
+      how: rustc flags and thread count recorded; the A/A rebuild (C5) shows output bytes do not depend on them
+    comparisons:
+    - id: C-law-n5-eps-minus
+      arms: [n5core and n5ext arms with q = 3 mod 4, q >= 7]
+      differs_in: []
+      design: absolute
+    - id: C-law-n5-eps-plus
+      arms: [n5core and n5ext arms with q = 1 mod 4]
+      differs_in: []
+      design: absolute
+    - id: C-law-n7
+      arms: [n7 arms]
+      differs_in: []
+      design: absolute
+    - id: C-neg-random
+      arms: [negative arms q = 5, 7, 9, 11, 13]
+      differs_in: []
+      design: absolute
+    - id: C-aa-rebuild
+      arms: [regression A/A base build with 4 threads, regression A/A alternate build with 1 thread]
+      differs_in: [tool_build_and_threads]
+      design: aa
+    crosses_map: false
+    crosses_map_note: >-
+      No ECDLP quantity is carried across a map. The measured object is the explicit cubic E_c; the quartic-to-cubic
+      isomorphism of the derivation is a candidate step whose arithmetic consequence (equal point counts) is checked on every
+      unit (C2), and the link to the sibling's genus-5 curves is positively controlled at q = 3 (C1). Neither is a
+      transported claim about cost, descent or transfer, so no transfer_obligations block is written.
+  prediction_provenance:
+  - prediction: P1
+    first_recorded_in: ledger/proposals/IDEA-20261024-3c71a9.yaml
+    written_at: '2026-10-24'
+    data_seen:
+    - path: ledger/proposals/IDEA-20261024-3c71a9.yaml citations (sibling README, 20 of 60 / 0 of 21 at q = 3)
+      measured: genus-5 records at q = 3 all have |E(K)[4]| = 8
+    - path: experiments/EXP-PEXT-0b2c75 design smoke, family n = 5 q = 3 (scratch)
+      measured: the 20 units at q = 3 match the 20 published records (control C1), law outcomes agree
+    sample_status: partially_in_sample
+    decisive_scope: q = 3 mod 4 with q >= 7 (7, 11, 19, 23, 27, 31); q = 3 is the in-sample calibration and is never cited by a criterion
+    overlap: the IDEA derived the law after reading the q = 3 data
+  - prediction: P2
+    first_recorded_in: ledger/proposals/IDEA-20261024-3c71a9.yaml
+    written_at: '2026-10-24'
+    data_seen: []
+    sample_status: out_of_sample
+    overlap: >-
+      the table (5.1) was written at intake (2026-10-27) with the q = 3 data known, but no q = 1 mod 4 value of this family
+      had been computed by anyone before this experiment; design validity-only smoke runs printed instrument counters
+      only (law outcomes withheld by the validity-only flag)
+  - prediction: P3
+    first_recorded_in: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/derivation.md
+    written_at: '2026-10-27'
+    data_seen: []
+    sample_status: out_of_sample
+    overlap: derivation section 7 states "Before any new data"; no n = 7 value of this family computed before this experiment
+  - prediction: P4
+    first_recorded_in: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/derivation.md
+    written_at: '2026-10-27'
+    data_seen: []
+    sample_status: out_of_sample
+    overlap: generic formula (4.2) applied to the other S words by the design lane before any data
+  - prediction: P5
+    first_recorded_in: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/derivation.md
+    written_at: '2026-10-27'
+    data_seen: []
+    sample_status: out_of_sample
+    overlap: none on the decisive cells (q = 3 sign agreement is part of the control only)
+  - prediction: P6
+    first_recorded_in: ledger/proposals/IDEA-20261024-3c71a9.yaml
+    written_at: '2026-10-24'
+    data_seen:
+    - path: experiments/EXP-PEXT-0b2c75 design smoke, mode mr (scratch)
+      measured: (m, r, genus) of the S words, deterministic combinatorics of the shifts
+    sample_status: partially_in_sample
+    decisive_scope: the identification is computed combinatorics; it is a consistency check of the family definition rather than a data prediction, re-run by the regression trial
+    overlap: design lane computed it once to fix the S list
+  - prediction: N2
+    first_recorded_in: ledger/hypotheses/H-PEXT-ad0073.yaml
+    written_at: '2026-10-31'
+    data_seen:
+    - path: experiments/EXP-PEXT-0b2c75 design smoke, analyze.py code-path test on random arm q = 3 (scratch, not a run)
+      measured: share E4 != 8 about 0.27 at q = 3 (expectation 0.25)
+    sample_status: partially_in_sample
+    decisive_scope: the q = 5, 7, 9, 11, 13 arms; the q = 3 smoke is calibration of the threshold only
+    overlap: q = 3 only
+  - prediction: H1
+    first_recorded_in: ledger/proposals/IDEA-20261024-3c71a9.yaml
+    written_at: '2026-10-24'
+    data_seen: []
+    sample_status: out_of_sample
+    overlap: none; non-gating
+  runs_before_freezing:
+  - 'family n = 5 q = 3 (in-sample control; law outcomes read: all 20 units agree with the law and with the 20 published records)'
+  - 'regression stage through run.py and check.py into a scratch directory (not a run record): 9 of 9 checks identical, check.py exit 0, 4.4 s'
+  - 'validity-only (instrument counters only, law fields withheld): n = 5 at q = 5, 7, 9, 11, 13, 17 and n = 7 (0,2,3,4) at q = 3, 5: all five counters zero, orbit counts equal (q^n - q)/(q^3 - q)'
+  - 'analyze.py code-path test on scratch inputs: q = 3 n = 5 family (in-sample), a synthetic n = 7 stream generated from the algebra (not tool output), random arm q = 3'
+  - 'bitalgebra.py selfcheck (pure algebra): pass'
+  - 'no n = 7 law outcome and no out-of-sample n = 5 law outcome was printed or read before freezing'
+  - 'no Lean build: Lean is not part of this experiment (toolchain absent on the design host)'
+  required_artifacts:
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-8c15bf/manifest.yaml
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-8c15bf/raw-result.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-8c15bf/regression.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-8c15bf/R-n5-q3.jsonl
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-8c15bf/R-fix-n5-q3.jsonl
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-ff55f2/manifest.yaml
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-ff55f2/raw-result.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-ff55f2/n5-core.jsonl.gz
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-e4ce49/manifest.yaml
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-e4ce49/raw-result.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-e4ce49/n7.jsonl.gz
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-a19d45/manifest.yaml
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-a19d45/raw-result.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-a19d45/negative.jsonl.gz
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-c0fbcd/manifest.yaml
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-c0fbcd/raw-result.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-c0fbcd/n5-ext.jsonl.gz
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-87ac49/manifest.yaml
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-87ac49/raw-result.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-87ac49/analysis.json
+  - experiments/EXP-PEXT-0b2c75/runs/RUN-PEXT-87ac49/law-table.md
+  - experiments/EXP-PEXT-0b2c75/reports/run-<YYYYMMDDTHHMMZ>/ (run report, SVG graph of E4 counts by q and cell, report.pdf; research-visuals skill, written by /run after the run records)
+  artifact_schema:
+    raw_result: 'raw-result.json: experiment, trial_id, run_id, attack_claimed false, summary (stage-specific), invalid_reason'
+    family_stream: 'gzip JSON lines per arm: field (p, f, q, n, size, S, m, r, genus, orbits, orbits_expected, units), unit (orbit, x, t, eps, bits, s_pred, E4_pred, s_obs, order, order_quartic, E2, E4, E4_M1, j, j_fq, j0, j1728), totals (validity counters, law counts)'
+    negative_stream: 'gzip JSON lines per q: field, rand (cfg, e, in_family, t, eps, s_obs, order, order_quartic, E2, E4, E4_M1, j), totals'
+    analysis_json: 'valid, invalid_reasons, headline, predictions (rule, observed, outcome), arms, negative_arms, regression_checks, scope'
+  launcher:
+    trial_plan: experiments/EXP-PEXT-0b2c75/trial-plan.json
+    driver: experiments/EXP-PEXT-0b2c75/implementation/run.py
+    checker: experiments/EXP-PEXT-0b2c75/implementation/check.py
+    command: python3 experiments/EXP-PEXT-0b2c75/implementation/run.py trial --run-dir {run_dir} --run-id <RUN> --trial-id <trial> --plan experiments/EXP-PEXT-0b2c75/trial-plan.json
+    checker_command: python3 experiments/EXP-PEXT-0b2c75/implementation/check.py {run_dir} experiments/EXP-PEXT-0b2c75/trial-plan.json <trial>
+    route: implementation (executor-implementation); no runbook compiled in this design turn (experiment-director could not be dispatched from the design lane subagent)
+    library:
+    - rustc (edition 2021, -O), dependency-free tool
+    - Python 3.10 or later (sys.orig_argv) standard library and PyYAML (manifest)
+  freeze_fills:
+    note: >-
+      The only edits between this draft and the final bytes bound by the trial plan and the approval decision; none
+      changes a prediction, threshold, cell, seed, q, n or criterion.
+    approval_fields: status approved, frozen true, approved_by and approval_decision DEC-20261031-dcfdee, execution_authorized true, approval_basis, execution_scope, status_note stating approval; preapproval_blockers removed
+    preview: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/approval-preview/specification.yaml is these bytes after the fills
+  assigned_to: executor
+  out_of_scope:
+  - proving or reviewing the derivation; class-level shares and weighting proofs
+  - q above 31 at n = 5, q = 11 and above at n = 7, n = 11 and above
+  - the n = 3 hyperelliptic family and any non-quartic branch set as a law test (descriptive recount only)
+  - Lean artifacts (not part of this experiment)
+  - descent of the cover to F_q, transfer maps, index calculus or any cost
