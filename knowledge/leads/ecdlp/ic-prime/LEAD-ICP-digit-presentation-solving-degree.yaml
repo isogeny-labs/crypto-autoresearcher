@@ -8,23 +8,32 @@ mechanism: >-
   the Semaev system might have a solving degree bounded independently of p (as first-fall-degree
   heuristics give over F_{2^n}). Variants: p-independence of graded Macaulay invariants, adaptive
   connected-staircase search, valuation-semigroup presentations, finite-state carry circuits,
-  commutator border reduction, and comparisons with the binary chained-Semaev twin.
+  commutator border reduction, and comparisons with the binary chained-Semaev twin. For solver
+  measurements, Boolean quotient equations remove carry semantics from the field model but do
+  not make pure-CNF multiplication free: general F_p multiplication still costs Theta(log^2 p)
+  gates. The theorem-bearing candidates are therefore hybrid CDCL(T)/F_p and native QF_FF, with
+  pure CNF retained as an encoding-cost control.
 disposition: open_next_step
 next_action:
   step: >-
-    Run the certified finite degree-growth ladder with blocking controls (H-PFDR-d5f90f) on
-    the digit system at m = 2, 3 over s = 2..8 with independent primes per s (fixing the pseudoreplication
-    of EV-PFDR-99c699) and the support-matched and block-factored nulls; then the adaptive
-    staircase arm (H-PFDR-f3fe89) on the 12/16/20-bit panel.
+    First implement and freeze the owned m = 3 hybrid exponent screen in cryptanalysis PR #1343:
+    CaDiCaL plus an F_p external theory, with cvc5 QF_FF as the independent route, exact
+    two-window enumeration and curve-free support-matched nulls. Run every s = 6..14 only after
+    exhaustive tiny-cell and explanation-certificate replay; the strict necessary gate is a
+    corrected upper 95 percent interval e < 0.5. Use m = 2 only for exact correctness and
+    negative controls. The certified degree-growth and adaptive-staircase arms remain mechanism
+    diagnostics, not substitutes for the complete counted solver slope.
   discriminates: >-
-    d_lf growing with s at the semi-regular rate (as every measured cell so far suggests)
-    closes the lane as exhausted at the measured scale; a d_lf bounded in s strictly below
-    the null is the first elliptic early fall over F_p and reopens the conditional cost table
-    (still needing sigma < 1).
+    A fully counted hybrid slope with corrected upper interval below 0.5 advances the m = 3 PDP
+    mechanism to a separately frozen 40--80-bit continuation, while a corrected lower interval
+    at least 0.5 stops it. Growing d_lf or curve/null collision still diagnoses why it fails,
+    but favorable algebraic degree alone does not satisfy the gate. A complete index-calculus
+    win remains separately constrained by linear algebra, whose current bridge first admits
+    m >= 4.
 best_measured: >-
   d_ff = m 2^{m-1} + floor((s - 2^{m-1})/2) + 1, curve-independent and reproduced by a curve-free
   block-factored null (EV-PFDR-1394a4); sigma > 1 at every tested s (EV-PFDR-99c699); no syzygy
-  beyond Koszul (EV-PFDR-e67f06)
+  beyond Koszul (EV-PFDR-e67f06); no source-bound CDCL(T)/F_p slope measurement exists
 evidence:
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-PFDR-1394a4.yaml
@@ -52,6 +61,14 @@ evidence:
 - repo: crypto-autoresearcher
   path: problems/semaev-frontier-d5-dense-memory.md
   note: 'degree-five LFD frontier n = 47-51 needs >= 1267-2820 GiB under the dense admission gate'
+- repo: cryptanalysis
+  path: experiments/prime-field-m3-cdclt-20261031/PROTOCOL.md
+  note: >-
+    PR #1343, source head aa98e66beeaa2d8ef953e4fe01d73f41a267402e: unrun m = 3
+    CDCL(T)/F_p and cvc5 QF_FF screen, s = 6..14, strict e < 0.5 gate and complete-work controls
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261031-b51282.yaml
+  note: arity and solver-model correction; no new measurement
 ledger_refs:
 - H-PFDR-4148b8
 - H-PFDR-09e1b0
@@ -114,6 +131,8 @@ ledger_refs:
 - DEC-20261029-0857a9
 - DEC-20261029-266f95
 - DEC-20261029-ce5c57
+- IDEA-20260905-24d827
+- DEC-20261031-b51282
 known_results:
 - KR-IC-58213c
 - KR-IC-889857
@@ -121,6 +140,7 @@ known_results:
 - KR-IC-139da0
 related:
 - LEAD-ICP-pkm-tower-algebraic-oracle
+- LEAD-ICP-shared-coefficient-membership
 forecloses:
 - base-B digit presentation as Weil descent over a prime field
 - bounded last fall degree for prime-field Semaev systems
@@ -130,4 +150,4 @@ forecloses:
 - Yokoyama semi-normality object
 areas:
 - PFDR
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-10-31'
