@@ -284,6 +284,22 @@ carries a `proof_map` naming the unformalized transcription of Nagao's
 definitions. See the [report](../../docs/reports/2026-10-29-nagao-lemma4-lean/report.md)
 (hypothesis-delta table, receipt). It says nothing about Proposition 5.
 
+## Galbraith MPKC v2 Montgomery reduction
+
+`galbraith-montgomery-reduction-20261101.yaml` targets the integer core of
+Galbraith's Lemma 2.5.3. Explicit witnesses for the two modular congruences
+construct `w`; representative bounds prove `0 <= w < n`; and the conclusion
+is stated as `R*w = a (mod n)`. The source's odd-`n`, power-of-two-`R`
+assumptions are replaced by the negative-inverse congruence they supply, as
+recorded in the target's
+[theory note](../../research/galbraith_mpkc_formalization_20261101/theory.md).
+
+The module compiles standalone on the pinned toolchain. It remains pending the
+formal lane's project-wide axiom audit and independent semantic-fidelity
+review: the first cold project build exhausted its execution environment while
+compiling an unrelated pre-existing Semaev certificate. The target proves no
+implementation, constant-time, inverse-construction, or complexity claim.
+
 ## Natural follow-ups, deliberately not specced yet
 
 `THM_INCBARRIER1` §8 states three open gaps (G1, G2, G3) in precise form, and

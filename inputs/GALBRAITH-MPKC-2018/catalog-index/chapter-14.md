@@ -1,0 +1,91 @@
+# Chapter 14
+
+Generated from the hash-pinned PDF. This index records detection and source hashes,
+not truth, semantic fidelity, or Lean verification. Full lossy text is in the
+artifact-store catalog named by `../catalog-summary.json`.
+
+| source key | kind | PDF page | book proof | errata | Appendix B | Lean | statement SHA-256 |
+|---|---|---:|---|---|---|---|---|
+| `Theorem 14.1.1` | Theorem | 286 | absent_in_book | none | none | not_formalized | `626d4a788dc46da7242ff8be90b3b50fa8775afbb4983a61e2d3ee8c646e92d8` |
+| `Exercise 14.1.2` | Exercise | 287 | not_applicable | none | none | not_formalized | `8cbb2377d63e6a38d06620da523b6b89792342e2427883fb9f30c9dc2ef7c178` |
+| `Exercise 14.1.3` | Exercise | 287 | not_applicable | none | 623 | not_formalized | `d3a6ef29cacedb5a90d11553c03d51a3614ba44745d11d8b3a1d24ba25332641` |
+| `Example 14.1.4` | Example | 287 | not_applicable | none | none | not_formalized | `d406a0c35aae03319e730854edefc9eb19e5b18e3e4a9e02c240cf13cfe1251d` |
+| `Definition 14.2.1` | Definition | 288 | not_applicable | none | none | not_formalized | `f4cdcddd36e386440ee0a30335bbb3b20470b46a309347a503e40749e29ad724` |
+| `Exercise 14.2.2` | Exercise | 289 | not_applicable | none | none | not_formalized | `85ae0040bb66998abeec2edfb9238084b6c787f0ce222cc0a6596109cdae14bd` |
+| `Lemma 14.2.3` | Lemma | 289 | present_complete | none | none | not_formalized | `32a63adeb53b4614c193ed4f7b51c6d5f07e4eb45061bf17fabc11db3aa4e7bc` |
+| `Exercise 14.2.4` | Exercise | 289 | not_applicable | none | 623 | not_formalized | `a689667560cb60cd13dd6e2ac540a44260a114ad8fde5b26b40b5a82c57fc400` |
+| `Exercise 14.2.5` | Exercise | 289 | not_applicable | none | 623 | not_formalized | `76e21290910f3136f1a0a210f1cc28fea235f23f65d70249593bac3be92e1917` |
+| `Algorithm 16` | Algorithm | 290 | not_applicable | none | none | not_formalized | `8b18971a87ed2b6c35c2b3711a2a259303c23ace69a50b907f678120efc054e6` |
+| `Example 14.2.6` | Example | 290 | not_applicable | none | none | not_formalized | `8fb1208896e8fdb65ac08b27f40867b530f41e1fa77b7dc9d9df191936a80ac1` |
+| `Exercise 14.2.7` | Exercise | 290 | not_applicable | none | none | not_formalized | `7bc9ca45c2a85b1a2ffd5f678ad85a1c6024a07b12764a8088b84cc20853ba34` |
+| `Exercise 14.2.8` | Exercise | 290 | not_applicable | none | none | not_formalized | `62ba827526541e059be28d93bab2722956d53dc76ce8dc040f0865b724580d3a` |
+| `Heuristic 14.2.9` | Heuristic | 291 | not_applicable | none | none | not_formalized | `474241e076a88e74df0cdcb9eb910e8c0563b738da719e6fa5df36967a75ac7f` |
+| `Heuristic 14.2.10` | Heuristic | 292 | not_applicable | none | none | not_formalized | `40e75dcc11f16a65bc43c53935abb276fd5e84fe5cd061603b450f0623c4ae42` |
+| `Theorem p292-1` | Theorem | 292 | present_complete | none | none | not_formalized | `74ad3cbd1d95d93296a34285e80dbb75376ad16454b20e89c70d7130d337c44d` |
+| `Definition 14.2.11` | Definition | 293 | not_applicable | none | none | not_formalized | `5c7ad2e60ac351106a3048f5bee357237894c1b8f9dcf526f2cb594c5f325585` |
+| `Example 14.2.12` | Example | 293 | not_applicable | none | none | not_formalized | `f22add649ae44abe52407d99042022305dc3fae398786612e6de12c141cff5a9` |
+| `Exercise 14.2.13` | Exercise | 293 | not_applicable | none | none | not_formalized | `7f2248382960cd04283c15270288a2c04149b333767f34c19926bf3b391772bd` |
+| `Lemma 14.2.14` | Lemma | 294 | present_complete | none | none | not_formalized | `38212676034b0b04d3e6bd5dae3176e2c1bfd74dcd07e23d4f4652b7d72d709e` |
+| `Heuristic 14.2.15` | Heuristic | 294 | not_applicable | none | none | not_formalized | `76ce51f7114a08cd4631d1bc475a1553bd61fc110cae04ec49caf4da7d600b45` |
+| `Theorem 14.2.16` | Theorem | 295 | present_complete | none | none | not_formalized | `f0ac69f9c0ec03a6b31e5e65ce3a0249dc1b757e6e73dfb9a57377e3bd8879f4` |
+| `Exercise 14.2.17` | Exercise | 295 | not_applicable | none | none | not_formalized | `30a3c836cba9e11e142987ba7c839d50ce49a52677a2801691b50541edba1a10` |
+| `Exercise 14.2.18` | Exercise | 295 | not_applicable | none | 623 | not_formalized | `68a490292ee9915cce0161b22bfe381b2233bba18ff212c460f725f82b23f504` |
+| `Exercise 14.2.19` | Exercise | 295 | not_applicable | none | none | not_formalized | `a60a56dd0c5495e6487e7a4543b5b6c1561d68e7f4e3566ab2018f6e9631b782` |
+| `Exercise 14.2.20` | Exercise | 295 | not_applicable | none | none | not_formalized | `f9b0c335ac35587d848df1ceb7302a0ee516a0ad0ff8c0f363c0ca4920d81f19` |
+| `Exercise 14.2.21` | Exercise | 295 | not_applicable | none | 623 | not_formalized | `c895c1367dcb87f6f7717a21c716bdb242582f8fb2f9fee88f00307ae6f26540` |
+| `Exercise 14.2.22` | Exercise | 295 | not_applicable | none | none | not_formalized | `062f74ccb6c2dbaecaff16d8668ecd8401f0dc47144fbd46940063789ac4f573` |
+| `Theorem 14.2.23` | Theorem | 296 | absent_in_book | none | none | not_formalized | `eb6ba64796119ce1f342acdf3a411be2fed333ba2d5fe5c7084c4439813e16d7` |
+| `Algorithm 17` | Algorithm | 298 | not_applicable | none | none | not_formalized | `ec87a68cc1f8286ccab0e6759d29bc979d3203fc607f384b76fcf9bab3d99486` |
+| `Algorithm 18` | Algorithm | 298 | not_applicable | none | none | not_formalized | `7d69169822dc6692bb3ebfee08e6e3a135645043a06fd6ec087606419df3b8f5` |
+| `Heuristic 14.3.1` | Heuristic | 298 | not_applicable | none | none | not_formalized | `be4fb2ddeb752d9d68b6f16f33745bbb90867e906639f7425f4f7d5059eb7c1d` |
+| `Theorem 14.3.2` | Theorem | 299 | present_complete | none | none | not_formalized | `a40904a9db17448ae346f1654e6899506d066c0c5b5c75e4d8883bf8da1a3d4f` |
+| `Exercise 14.3.3` | Exercise | 299 | not_applicable | none | 623 | not_formalized | `e851c6e038fd2ea596af402f114196761d9d03d61656a65edb6ddeceee0bbb8c` |
+| `Exercise 14.4.1` | Exercise | 300 | not_applicable | none | none | not_formalized | `d61916891e0c9e909af8fe1288b996bc4232b0c5ffdaa8f981822f3b5c162703` |
+| `Exercise 14.4.2` | Exercise | 300 | not_applicable | none | none | not_formalized | `9b984218a5d054cb4115f27b80f9aa282f0c46bc269e2e92007c06d686d7813f` |
+| `Theorem 14.4.3` | Theorem | 300 | absent_in_book | none | none | not_formalized | `501fe6515ffe5681ad57c2753bc793078679e0cd141a27a659da932e27f9d052` |
+| `Exercise 14.4.4` | Exercise | 300 | not_applicable | none | none | not_formalized | `184844c5ec58e7ae3ad99b0dc96b21e64759379cbadc395231752d446749907c` |
+| `Example 14.4.5` | Example | 301 | not_applicable | none | none | not_formalized | `a0d85ec4c8438833c33a8fdfdab5d6f570b3c67788ed89cad38f4644421cf775` |
+| `Example 14.4.6` | Example | 301 | not_applicable | none | none | not_formalized | `cd3c80bb684671ba7f5b8c8992d30123e8f2f01ecb0fb4d13a903480ad82e368` |
+| `Example 14.4.7` | Example | 301 | not_applicable | none | none | not_formalized | `d77d306027096aa38e9845045cec7eb8eb8e75b797bb97d247dfba940dd29495` |
+| `Example 14.4.8` | Example | 301 | not_applicable | none | none | not_formalized | `5d2081e5ba4aa26db234fdbff63616463361d5cf7d9b61a7e924bcb70fbf1c77` |
+| `Exercise 14.4.9` | Exercise | 302 | not_applicable | none | 623 | not_formalized | `0ea225e8275be824a45540937269e83a3f94ac9d9935d5ca03d8e04351cfc05c` |
+| `Exercise 14.4.10` | Exercise | 302 | not_applicable | none | none | not_formalized | `be650c5b32ea8bb4f69c39cd2821ad0a12977f36f189c7218952487b06afc2e4` |
+| `Exercise 14.4.11` | Exercise | 303 | not_applicable | none | none | not_formalized | `baf707dd9586fbb317ef5219f64c698f6f8da452313529de1f2a9b7b237cb139` |
+| `Exercise 14.4.12` | Exercise | 303 | not_applicable | none | none | not_formalized | `1b2adb76698aa2e3f59b7f9d8bed7d30b94f8677de0accaa37c5b02ea157d0fa` |
+| `Exercise 14.5.1` | Exercise | 305 | not_applicable | none | none | not_formalized | `19c7a8a14c4da36680bf15567428cea31338a91672d51d0c5ca524990a5c8082` |
+| `Example 14.5.2` | Example | 305 | not_applicable | none | none | not_formalized | `af348b38b13f4064c96f9c9c0a674dfd5b868d75329051981e9bb9ef7a8e84e0` |
+| `Exercise 14.5.3` | Exercise | 306 | not_applicable | none | none | not_formalized | `1a95f63f8b2c0b5d9876c33d2a0e0deaa4c095d1063a9b990b16478e86aebfe4` |
+| `Heuristic 14.5.4` | Heuristic | 306 | not_applicable | none | none | not_formalized | `1fffa976d1709f95c9480fb06da7e331f8b594e00bcd568dcd1916b6209cfb5e` |
+| `Theorem 14.5.5` | Theorem | 306 | present_complete | none | none | not_formalized | `62e8d879c63b9734eab4f09e44c21e8df03c50190a1279a216bd796b6c14bf5f` |
+| `Exercise 14.5.6` | Exercise | 307 | not_applicable | none | 623 | not_formalized | `15ec2e7b4a93b5412f103a7c7ad8667aac4dda10e5afa0914c8f1c266bb11457` |
+| `Exercise 14.5.7` | Exercise | 307 | not_applicable | none | 623 | not_formalized | `3f158de3753fec3861bce9dec2b1d16a865882fa58c033568ae9493fe0a84d1e` |
+| `Exercise 14.5.8` | Exercise | 307 | not_applicable | none | none | not_formalized | `def4cd8afe21a2093eb9c1d078b8bb53f920a534457a5820f6449549ed9717ab` |
+| `Exercise 14.5.9` | Exercise | 307 | not_applicable | none | 623 | not_formalized | `cb5327b2d750fca2f692c508bebae7c6de2cb95507bc8e2df17b1dbb0eec0386` |
+| `Exercise 14.5.10` | Exercise | 308 | not_applicable | none | 624 | not_formalized | `314d020f4249cacbd5b2c1abb6d330852bb83df1efa1e7bb2e0c730f8c5a2e91` |
+| `Exercise 14.5.11` | Exercise | 308 | not_applicable | none | none | not_formalized | `165a5ef0890ca161ed864572762b73afe994c885172192b85b2efdd95467cd5e` |
+| `Exercise 14.5.12` | Exercise | 309 | not_applicable | none | 624 | not_formalized | `54eb117385d42afed83c2449d066b295177dbed239e3d7dd9693f385c0040839` |
+| `Algorithm 19` | Algorithm | 312 | not_applicable | none | none | not_formalized | `c410259b44a41e9a603c40a9e1908b94993f12b7a2a24a82d252d4dae251cd65` |
+| `Algorithm 20` | Algorithm | 312 | not_applicable | none | none | not_formalized | `74c6ddcd48b1e2c53b231a9c533b77cfa9da73de33b84babdd88572c5aa59638` |
+| `Heuristic 14.6.1` | Heuristic | 313 | not_applicable | none | none | not_formalized | `10415af88d1142cd75aa2f9ee7507f3a29f3811c8c65ba50e4c5f89cf371fa70` |
+| `Theorem 14.6.2` | Theorem | 313 | present_complete | none | none | not_formalized | `4b0c99ee91e33c2a088916c8363267bbac8c2f78578ec28e82b7abb2ce55f29b` |
+| `Exercise 14.6.3` | Exercise | 313 | not_applicable | none | 624 | not_formalized | `239b7a66b3839a88c31e5de5721e6767e42ea76cf75a041985c5562bdb925e3b` |
+| `Exercise 14.6.4` | Exercise | 313 | not_applicable | none | none | not_formalized | `9f6261fd1a66aac279737915cf1ddda6698179712aa4da8567fd7750e590b3d3` |
+| `Lemma 14.6.5` | Lemma | 314 | present_complete | none | none | not_formalized | `802f48f2ef0e0ecaab6d3817622288e1435b62c609bfec358ca2b70a8a1d89f2` |
+| `Theorem 14.6.6` | Theorem | 314 | present_complete | none | none | not_formalized | `5cb844b793dfc1d4e6113ec10b4ee5f2b605e8342a641abb28cfb53eebb18006` |
+| `Exercise 14.7.1` | Exercise | 316 | not_applicable | none | none | not_formalized | `9bc68631f1e3584a92ee2bf4a9015e4c3d493fe703b381d513b22c6c944ddccf` |
+| `Exercise 14.7.2` | Exercise | 316 | not_applicable | none | none | not_formalized | `36c55ee6cba9623bf711f211a3dfc9917d47ff8575ecfec8930709cdd442896a` |
+| `Exercise 14.7.3` | Exercise | 316 | not_applicable | none | none | not_formalized | `01c71de3a3b1b30354e5ecd0e66cd8513ecd0c92490d36309c8d878240e3b371` |
+| `Heuristic 14.7.4` | Heuristic | 317 | not_applicable | none | none | not_formalized | `38ec3a19d6252e0238affd91689e3933ef891114762657682f325c06eea7cf45` |
+| `Theorem 14.7.5` | Theorem | 317 | present_complete | none | none | not_formalized | `59793daa0671b44ba6d121364ebc1e606c31f18f00e3a7cd9f2a1a3c3cd4a35e` |
+| `Exercise 14.7.6` | Exercise | 317 | not_applicable | none | 624 | not_formalized | `838ad33803f27236a55d5eb871c06dbd49d35eb42162117e15b30eda1ce16b03` |
+| `Exercise 14.7.7` | Exercise | 317 | not_applicable | none | 624 | not_formalized | `890ecce0ef4c783defa9ce23b27ee63a19fad49b9d544bdb73576fe2108e5913` |
+| `Exercise 14.8.1` | Exercise | 319 | not_applicable | none | 624 | not_formalized | `f7dd0f2054161d88cf5f86e75af311c265e4963237b96609f86b7555feb485f2` |
+| `Example 14.9.1` | Example | 320 | not_applicable | none | none | not_formalized | `7268f87f65af59ea3c84a87955720601b3ce01fdb032da6fea14757c4027ab2c` |
+| `Algorithm 21` | Algorithm | 320 | not_applicable | none | none | not_formalized | `f974035523da533cdffff2cc75a5d963f1979d7040a380c0b3b044c88250b9df` |
+| `Theorem 14.9.2` | Theorem | 321 | sketch_complete | none | none | not_formalized | `9fd4ff7e6a97e92201d646c01d5aad33a472013cabe0590886ec5ae7a0343411` |
+| `Example 14.9.3` | Example | 321 | not_applicable | none | none | not_formalized | `05201c096bb74029b669955e59a3bd6928475d45cf80a98c1d732b47d6566ae9` |
+| `Exercise 14.9.4` | Exercise | 321 | not_applicable | none | none | not_formalized | `ac379a1271b2b671e5cdec3484e9b17cc9e8f1fb8b345c2cc007313bb5c1ff23` |
+| `Exercise 14.9.5` | Exercise | 321 | not_applicable | none | 624 | not_formalized | `89c0234707cb649dc58c568b594b2517f77e61f73d7bc73c0d5f6f086f226daa` |
+| `Exercise 14.9.6` | Exercise | 321 | not_applicable | none | none | not_formalized | `cbc6f57a6ae889050cde3e3db3b588b53df8431d08eb8f21a3738b963f076501` |
+| `Exercise 14.9.7` | Exercise | 321 | not_applicable | none | 624 | not_formalized | `ff5ac0e7c3cb2045feed3933545e64cdba7f9597c7b5430cc8704e945c2d8c28` |
+| `Exercise 14.10.1` | Exercise | 322 | not_applicable | none | none | not_formalized | `73962e5ee49d70c7a37cbcc74e9be53c8a4cc001dc80bf4b750aa7de290883c7` |

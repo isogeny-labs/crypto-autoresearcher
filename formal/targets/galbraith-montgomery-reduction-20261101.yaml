@@ -1,0 +1,23 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-8bf454
+claim_id: GALBRAITH-MPKC-LEMMA-2.5.3
+kind: formalize_claim
+source: research/galbraith_mpkc_formalization_20261101/theory.md
+source_status: EXTERNAL_CLAIM_WITH_PRINTED_PROOF
+theorem_name: CryptoResearch.Galbraith.montgomery_reduction
+theorem_file: CryptoResearch/Galbraith/MontgomeryReduction.lean
+workspace: formal
+hypothesis_ids: []
+proof_map:
+  depends_on: []
+  prerequisites: []
+notes: |
+  Formalizes the integer divisibility and representative-bound core only.
+  The theory note records why the source's odd-n and R=2^s hypotheses are
+  replaced by an explicit negative-inverse congruence, and why the conclusion
+  R*w = a (mod n) is the multiplication-form counterpart of w = a*R^-1.
+  Complexity, implementation, and inverse construction remain out of scope.
+claim: |
+  If 0 < n < R, 0 <= a < n, 0 <= u < R, n*n' = -1 modulo R, and
+  u = a*n' modulo R, then there is an integer w with a + u*n = R*w,
+  0 <= w < n, and R*w = a modulo n.
