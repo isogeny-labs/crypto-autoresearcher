@@ -1,0 +1,150 @@
+handoff:
+  id: TASK-20261031-3e6f7e
+  from: coordinator
+  to: reviewer
+  role: reviewer
+  objective: Independently challenge bit compilation, canonical ranges and projected transcript completion.
+  uncertainty_reduced: Whether authenticated field circuits can be bit-compiled and range-pruned transcripts completed
+    with exact certificates accepted by the unchanged projected-coverage verifier.
+  inputs:
+  - research/prime_sat_range_compiler_20261031/compiler.py
+  - research/prime_sat_rationality_authenticated_20261031/authenticated.py
+  - research/prime_sat_rationality_software_20261031/circuits.py
+  - research/prime_sat_rationality_software_20261031/rationality.py
+  - research/prime_sat_rationality_software_20261031/checker.py
+  - research/prime_sat_shared_signed_chart_20261030/quotient.py
+  - research/prime_sat_shared_signed_chart_20261030/charts.py
+  - research/prime_sat_shared_signed_chart_20261030/projectors.py
+  - research/prime_sat_shared_signed_chart_20261030/signed_recovery.py
+  - research/prime_sat_shared_signed_chart_20261030/check_chart.py
+  - research/prime_sat_prefix_adapter_20261030/adapter.py
+  - research/prime_sat_costbridge_controls_20261029/prefix_cover.py
+  - coordination/prime_sat_range_compiler_20261031/SOURCE-API.md
+  - coordination/prime_sat_range_compiler_20261031/fixed-software-contract.json
+  - coordination/prime_sat_range_compiler_20261031/inference-amendment.yaml
+  - coordination/prime_sat_range_compiler_20261031/review-plan.yaml
+  - coordination/prime_sat_range_compiler_20261031/reviewer-brief.md
+  - coordination/prime_sat_range_compiler_20261031/theory/range.md
+  - coordination/prime_sat_range_compiler_20261031/theory/completion.md
+  - coordination/prime_sat_range_compiler_20261031/fixtures/f7.json
+  - coordination/prime_sat_rationality_authenticated_20261031/fixed-software-contract.json
+  constraints:
+  - Preserve all 66 prior tasks and immutable evidence; max_concurrent=1.
+  - 'Fixed software only: at most four suite attempts per producer/reviewer, 240 seconds and 2 GiB each, all attempts
+    retained; checkpoint before any suite. No SAT, census, sweep, benchmark or remote job.'
+  - Production canonical field source comes from trusted public descriptor, never supplied IR or assignment. Preserve
+    projection and unique canonical state reconstruction.
+  - Only value-bit comparator CNF in first arm; final unchanged adapter gets empty CNF and null auxiliary bound.
+    Retain every original record and status.
+  - Root owns Git, queue, claims, snapshots and rendering. Fresh reviewer sees source and prospective inputs, never
+    producer tests/results/README.
+  - No full chart integration, degree-of-regularity or measured performance claim from fixed compiler checks.
+  deliverables: &id001
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/test_independent.py
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/independent-results.json
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/review.md
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/attestation.yaml
+  artifact_paths: *id001
+  write_scope: *id001
+  archived_by: TASK-20261031-7bf80e
+  budget:
+    scientific_runs: 0
+    solver_instances: 0
+    remote_jobs: 0
+    maximum_runs: 0
+    memory_gb: 2
+    maximum_software_suite_invocations: 4
+    suite_watchdog_seconds: 240
+  completion_gate:
+  - All 18 fixed obligation groups covered with retained exact inputs, attempts and independent expected outcomes.
+  - Literal certificates pass unchanged adapter; false completeness, malformed original records and content mutations
+    reject.
+  - Source roots and bit roots agree for fixed witnesses; projections, state uniqueness and costs are explicit.
+  return_format: Exact source, retained fixed results and per-joint scoped verdicts.
+  inference:
+    runtime: native_codex
+    model_verified: false
+    fallback_allowed: true
+    fallback_used: true
+    degraded_allowed: true
+    degraded_requirements:
+    - Actual model/provider/tier and effective effort are not authenticated.
+    - Native context/output capacity floors are unverified.
+    delivery: interactive
+    inference_amendment:
+      approved_by: coordinator
+      written_at: '2026-11-01T03:53:48.917065+00:00'
+      record: coordination/prime_sat_range_compiler_20261031/inference-amendment.yaml
+      scope: Authenticated bit compilation and canonical-range certificate completion; actual runtime identity unauthenticated.
+    policy: review-adversarial
+    independent_session: true
+    reasoning_effort: xhigh
+    fresh_session_required: true
+    inherit_producer_context: false
+  review_plan:
+    recorded_at: '2026-11-01T03:53:48.917065+00:00'
+    claim_under_review: Authenticated bit substitution and canonical-range completion preserve fixed projected roots
+      and produce certificates accepted by the unchanged full-cube verifier.
+    coordinator_prior: Value-range CNF alone is not proof; incomplete transcripts and incorrect auxiliary states
+      require separate handling.
+    joints:
+    - joint: source_binding
+      assigned_to: TASK-20261031-3e6f7e
+      attack_plan: Own typed mutation controls; production compiler rebuilds trusted source and never specializes
+        symbolic inputs.
+    - joint: bit_substitution
+      assigned_to: TASK-20261031-3e6f7e
+      attack_plan: Independently derive sparse substitution including repeated-variable squares, modular cancellations,
+        projection and witness decoding.
+    - joint: range_exactness
+      assigned_to: TASK-20261031-3e6f7e
+      attack_plan: Independently check compressed recurrence uniqueness, comparator value-only semantics, layouts
+        and malformed inputs.
+    - joint: certificate_completion
+      assigned_to: TASK-20261031-3e6f7e
+      attack_plan: Derive telescoping identities and preserve every original transcript record/status; challenge
+        malformed shadowed records and unresolved gaps.
+    - joint: fixed_execution
+      assigned_to: TASK-20261031-3e6f7e
+      attack_plan: Own bounded suite and expected outputs; exact hashes, all attempts retained, no solver or census.
+    - joint: claim_boundary
+      assigned_to: TASK-20261031-3e6f7e
+      attack_plan: Separate authentication, compile, reconstruction and certificate costs; compiled blocks are not
+        full chart solving or regularity evidence.
+    blindness:
+      mutual: true
+      lifted_for: []
+      rationale: Target source and prospective contract visible; producer tests/results hidden.
+    proves_too_much:
+      objects:
+      - Nonempty CNF treated as proof
+      - Censored status silently promoted
+      - Malformed original record discarded
+      - Valid field value but wrong recurrence state closed by range pruning
+      - Bit compilation specializes a fixture
+      failure_signature: Reject invalid controls or report missing coverage.
+    blind_rederivation:
+      required: true
+      assigned_to: TASK-20261031-3e6f7e
+      quantity: Own symbolic bit expansions, finite literal transcripts, state reconstruction and certificate identities.
+      blind_from:
+      - research/prime_sat_range_compiler_20261031/test_compiler.py
+      - research/prime_sat_range_compiler_20261031/software-results.json
+      - research/prime_sat_range_compiler_20261031/README.md
+      - coordination/prime_sat_range_compiler_20261031/snapshot-receipt.json
+      - Producer interpretations outside frozen brief
+    review_output:
+      paths: *id001
+      verdicts:
+      - holds
+      - breaks
+      - inconclusive
+      required:
+      - Native review_attestation with exact reads, actual attempts and runtime unknowns.
+    budget:
+      maximum_software_suite_invocations: 4
+      suite_watchdog_seconds: 240
+      scientific_runs: 0
+      solver_instances: 0
+      remote_jobs: 0
+    promotion: Scoped compiler/certificate software only; full projected SAT/chart comparison separate.

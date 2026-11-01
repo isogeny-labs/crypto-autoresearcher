@@ -1,0 +1,220 @@
+{
+  "schema": "experiment.export/v1",
+  "export_id": "SEMAEV-N45-POLY04-D5-CONCURRENT-001",
+  "created": "2026-11-01T06:17:16.030793+00:00",
+  "protocol": {
+    "path": "protocol.json",
+    "sha256": "775f570b705d825d09183a9556dab73943a508583a72ba99ece234cd7d55d1d7",
+    "protocol_id": "SEMAEV-N45-POLY04-D5-CONCURRENT-20261101-V1",
+    "version": 1
+  },
+  "producer": {
+    "runtime": "codex",
+    "model": null,
+    "session": null,
+    "role": "executor"
+  },
+  "source": {
+    "repo": "crypto-autoresearcher",
+    "commit": "7583b9f31b00a27c120061caf3fc00b3757438b3",
+    "dirty": false
+  },
+  "backend": "local",
+  "host": {
+    "path": null,
+    "sha256": null,
+    "class_id": null,
+    "summary": {
+      "cpu_model": null,
+      "logical_cpus": null,
+      "memory_bytes": null,
+      "kernel": null,
+      "hypervisor": null,
+      "isolation_tier_max": "L0"
+    }
+  },
+  "arms": [
+    {
+      "id": "producer",
+      "role": "candidate",
+      "binary_sha256": "fc0911db6560fe10b49d88d6206f89f8de6494616020a864c82d8be552749613",
+      "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48"
+    },
+    {
+      "id": "exact-count",
+      "role": "reference",
+      "binary_sha256": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56",
+      "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48"
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "n45-poly04-d5-concurrent-producer",
+      "instance_id": "0",
+      "seed": 20261101,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": {
+        "policy": "application",
+        "generations_written": 0,
+        "restored_from_generation": null,
+        "manifest_sha256": null
+      },
+      "measurements": {
+        "counted": {},
+        "wall_seconds": null,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {
+          "working_coordinates": 13688,
+          "relation_rank": 13688
+        }
+      },
+      "isolation": {
+        "tier": "L0",
+        "contended": true,
+        "blockers": [
+          "Shared local host; no performance claim"
+        ]
+      },
+      "verification": {
+        "status": "no_claim",
+        "verifier": "Native quotient reported projection_kills_one; no D5 certificate"
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "../../runs/n45-poly04-d5-concurrent-terminal-001/attempt-001/result.json",
+          "sha256": "a2f0b1eb2bb8254ea5e3bfdc96d4946c727e362e7e2f2d898b088ef3daacdff2",
+          "bytes": 1056,
+          "kind": "raw"
+        },
+        {
+          "path": "../../runs/n45-poly04-d5-concurrent-terminal-001/manifest.json",
+          "sha256": "5bc048216fed1d308578d30d5defb309251eeceb663d46f2583644d0955d32d9",
+          "bytes": 4557,
+          "kind": "receipt"
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null,
+      "arm": "producer"
+    },
+    {
+      "run_id": "n45-poly04-d5-concurrent-exact-count",
+      "instance_id": "0",
+      "seed": 20261101,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "exact_solutions": 0
+        },
+        "wall_seconds": null,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "L0",
+        "contended": true,
+        "blockers": [
+          "Shared local host; no performance claim"
+        ]
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": "Fresh pinned exact counter, stdout 0"
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "../../runs/n45-poly04-d5-concurrent-terminal-001/attempt-001/result.json",
+          "sha256": "a2f0b1eb2bb8254ea5e3bfdc96d4946c727e362e7e2f2d898b088ef3daacdff2",
+          "bytes": 1056,
+          "kind": "raw"
+        },
+        {
+          "path": "../../runs/n45-poly04-d5-concurrent-terminal-001/manifest.json",
+          "sha256": "5bc048216fed1d308578d30d5defb309251eeceb663d46f2583644d0955d32d9",
+          "bytes": 4557,
+          "kind": "receipt"
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null,
+      "arm": "exact-count"
+    }
+  ],
+  "flow": {
+    "planned": 2,
+    "attempted": 2,
+    "completed": 2,
+    "not_completed": 0,
+    "interrupted": 0,
+    "resumed": 0,
+    "excluded": []
+  },
+  "files": [
+    {
+      "path": "../../runs/n45-poly04-d5-concurrent-terminal-001/attempt-001/result.json",
+      "sha256": "a2f0b1eb2bb8254ea5e3bfdc96d4946c727e362e7e2f2d898b088ef3daacdff2",
+      "bytes": 1056,
+      "kind": "raw"
+    },
+    {
+      "path": "../../runs/n45-poly04-d5-concurrent-terminal-001/manifest.json",
+      "sha256": "5bc048216fed1d308578d30d5defb309251eeceb663d46f2583644d0955d32d9",
+      "bytes": 4557,
+      "kind": "receipt"
+    }
+  ],
+  "analysis": {
+    "script": {
+      "path": "../../run_lift_worker_checkpoint.py",
+      "sha256": "4ba508f26f8c8fb35679817b7e8c68ae7371ce4020ab03c01b59b3dd7fe32067",
+      "bytes": 13245,
+      "kind": "analysis"
+    },
+    "blinded": false,
+    "blinding_key_sha256": null,
+    "outputs": [],
+    "unmasked_at": null
+  },
+  "notes": [
+    {
+      "kind": "observation",
+      "text": "D4 seed recheck accepted codimension at least 12744; fresh exact count was zero.",
+      "by": "Codex"
+    },
+    {
+      "kind": "observation",
+      "text": "D5 native producer returned projection_kills_one with working_coordinates=relation_rank=13688 and no D5 certificate.",
+      "by": "Codex"
+    }
+  ],
+  "reviews_dir": "reviews"
+}

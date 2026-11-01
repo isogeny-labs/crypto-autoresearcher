@@ -1,0 +1,334 @@
+{
+  "schema": "crypto.autoresearch.visual_inspection.v1",
+  "task_id": "TASK-20261101-bc06d9",
+  "inspected_at": "2026-11-01T06:09:16Z",
+  "inspector": "/root/pfse_coordinator_rank",
+  "method": "Rendered every final PDF page to PNG with pdftoppm; opened every page with tools.view_image and visually inspected content. PyMuPDF and pdfinfo independently open the five-page PDF.",
+  "result": "passed_all_five_final_prepress_pages",
+  "pdf_pages": 5,
+  "source_and_document_sha256": {
+    "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/dependencies.dot": "6ac07c0d3ad035086508cb6ff824c358f0b10a88389c0a451462e8f8db400c61",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/dependencies.svg": "5dbd9969ef3e48b8e52f6f2c288fb2000d27a4736bd8d0c882b0839e37a676d5",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/independence-check.json": "b207e82cc94799466b62992e8f107eee1f043d379098bcc0dbbce6bd0e0e091d",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/next-action.json": "6cf843b5a1c3f324e37a42e1372df8f7bda23ef868199107f216cfb5c525719d",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md": "f964cbb6410ae795e2f197087b323ad76a25cdf114eaf11012041e4a9de2d83f",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf": "1578c2114789a5c8380da158968cf4078311f1bc2c6c302cafe63c12521251c1",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.typ": "5987c9309292798b38684a8f4e98734a94ab3d09f3a0d50692c085b7e599ada7"
+  },
+  "rendering": {
+    "graphviz_version": "2.42.4",
+    "typst_version": "0.15.0",
+    "commands": [
+      "dot -Tsvg docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/dependencies.dot -o docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/dependencies.svg",
+      "/tmp/pfse-synthesis-render-venv/bin/python - <<'PY'\nimport typst\np='docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/'\ntypst.compile(p+'report.typ',output=p+'report.pdf')\nprint('Typst 0.15.0 final compile: PASS')\nPY",
+      "pdftoppm -r 120 -png docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf /tmp/pfse-synthesis-pages.U631Ju/page",
+      "pdfinfo docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf"
+    ],
+    "graphviz_exit_code": 0,
+    "typst_final_exit_code": 0,
+    "pdf_raster_exit_code": 0,
+    "resolution_dpi": 120,
+    "pdf_opens": true,
+    "page_size": "A4",
+    "final_warning": "Fontconfig error: No writable cache directories. Rendering nonetheless exited zero; visible final glyphs, layout and text were inspected.",
+    "earlier_attempts": [
+      {
+        "operation": "Install scratch Typst",
+        "command": "/tmp/pfse-synthesis-render-venv/bin/pip install -q typst",
+        "outcome": "Blocked by sandbox network/proxy; no matching distribution from unreachable index. Retried with scoped network access using pip install -q --retries 0 typst; succeeded."
+      },
+      {
+        "operation": "Initial PDF compile",
+        "outcome": "typst.TypstError: unclosed label; no PDF produced. Literal comparison signs in report.typ were escaped via apply_patch; next compile succeeded."
+      },
+      {
+        "operation": "First visual inspection",
+        "outcome": "Every page opened; long diagram edge labels crowded the right side. Shortened A/B edge labels in DOT and rerendered SVG/PDF/all five pages. Final inspection passed."
+      }
+    ],
+    "final_pdf_producer": "GPL Ghostscript 10.05.1, followed by ToUnicode restoration and PyMuPDF object-stream compaction",
+    "ghostscript_version": "10.05.1",
+    "pymupdf_version": "1.26.6",
+    "prepress_command": "gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -dCompatibilityLevel=1.7 -dPDFSETTINGS=/prepress -dDetectDuplicateImages=true -dCompressFonts=true -sOutputFile=/tmp/pfse-synthesis-prepress.V5SN2U/report-prepress.pdf docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf",
+    "prepress_exit_code": 0,
+    "postprocess_description": "Matched the three rewritten Type0 fonts to the original Typst fonts by base name after the six-letter subset prefix; restored each original ToUnicode stream, preserving CID mappings. Saved with deflate=True; then saved with garbage=4, deflate=True, use_objstms=1. This is generated-PDF encoding/mapping repair, not report/source editing.",
+    "postprocess_recipe": "import fitz\nsrc=fitz.open('report-typst-original.pdf')\nout=fitz.open('report-prepress.pdf')\ndef fonts(d):\n result={}\n for page in d:\n  for f in page.get_fonts(): result[f[0]]=f\n return result\nbase=lambda name:name.split('+',1)[-1]\nmaps={base(f[3]):src.xref_stream(int(src.xref_get_key(f[0],'ToUnicode')[1].split()[0])) for f in fonts(src).values()}\nfor f in fonts(out).values():\n out.update_stream(int(out.xref_get_key(f[0],'ToUnicode')[1].split()[0]),maps[base(f[3])])\nout.save('report-equivalent.pdf',garbage=4,deflate=True)\nout.close()\nd=fitz.open('report-equivalent.pdf')\nd.save('report-equivalent-compact.pdf',garbage=4,deflate=True,use_objstms=1)\n",
+    "final_copy_commands": [
+      "cp docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf /tmp/pfse-synthesis-prepress.V5SN2U/report-typst-original.pdf",
+      "cp /tmp/pfse-synthesis-prepress.V5SN2U/report-equivalent-compact.pdf docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf"
+    ],
+    "final_raster_command": "pdftoppm -r 120 -png docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf /tmp/pfse-synthesis-prepress.V5SN2U/page",
+    "final_pdfinfo_command": "pdfinfo docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf",
+    "final_pdf_opens": true,
+    "final_pdf_pages": 5,
+    "final_pdf_version": "1.7",
+    "final_pdf_bytes": 56451,
+    "exact_extracted_page_text_equal_original": [
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "maximum_page_dimension_rounding_delta_points": 0.00445556640625,
+    "structural_disclosure": "Ghostscript changes PDF encoding/metadata and drops the original tagged-PDF structure (pdfinfo Tagged: no). All five extracted page texts are byte-identical, and all final raster pages were inspected. No claim of PDF-byte identity or preserved accessibility tagging is made.",
+    "new_attempts": [
+      {
+        "operation": "Plain Ghostscript prepress",
+        "bytes": 59730,
+        "sha256": "2ef843974bb0b09a34ced91760d5c0f7fb6aff819aace430bb6393941316b973",
+        "result": "Size passes but exact/normalized text comparison failed on all pages because fi/fl/ff ligature ToUnicode mappings were corrupted. Not installed."
+      },
+      {
+        "operation": "Ghostscript with -dPreserveMarkedContent=true",
+        "bytes": 59760,
+        "result": "Text comparison still failed; not installed."
+      },
+      {
+        "operation": "Original ToUnicode maps restored",
+        "bytes": 68580,
+        "sha256": "e21aa8eaa3af152b67445a5be952e8d8077ce8e256c2970d0794a5271846dbdd",
+        "result": "Exact extracted text matches all five pages, but artifact size gate fails; not installed."
+      },
+      {
+        "operation": "Object-stream compaction of restored PDF",
+        "bytes": 56451,
+        "sha256": "1578c2114789a5c8380da158968cf4078311f1bc2c6c302cafe63c12521251c1",
+        "result": "Under threshold, all five exact page texts match original; installed and visually inspected."
+      }
+    ]
+  },
+  "pages": [
+    {
+      "page": 1,
+      "text_characters": 1905,
+      "dimensions_points": [
+        595.280029296875,
+        841.8900146484375
+      ],
+      "png_path": "/tmp/pfse-synthesis-prepress.V5SN2U/page-1.png",
+      "png_sha256": "f0cd41287351ba23590e6c66c4bb152364536e17c59d24e153e7228a56297abc",
+      "viewed_with": "tools.view_image",
+      "checks": [
+        "Final rewritten PDF page opened visually at 120 dpi",
+        "No clipping, overlaps, missing glyphs or changed formula text observed",
+        "Layout, contrast, formulas, identifiers, footers and diagram arrows remain legible",
+        "Exact extracted page text equals original Typst page text"
+      ],
+      "specific_observation": "Machine/fidelity table and independent-joint scope remain clearly separated."
+    },
+    {
+      "page": 2,
+      "text_characters": 1615,
+      "dimensions_points": [
+        595.280029296875,
+        841.8900146484375
+      ],
+      "png_path": "/tmp/pfse-synthesis-prepress.V5SN2U/page-2.png",
+      "png_sha256": "bcdbca0d61a29c42bf134ccd999db61aa0ca6b26ac3fcfa4b433297d574afedc",
+      "viewed_with": "tools.view_image",
+      "checks": [
+        "Final rewritten PDF page opened visually at 120 dpi",
+        "No clipping, overlaps, missing glyphs or changed formula text observed",
+        "Layout, contrast, formulas, identifiers, footers and diagram arrows remain legible",
+        "Exact extracted page text equals original Typst page text"
+      ],
+      "specific_observation": "Sign-split envelope table and strict/non-strict comparison symbols are legible."
+    },
+    {
+      "page": 3,
+      "text_characters": 2049,
+      "dimensions_points": [
+        595.280029296875,
+        841.8900146484375
+      ],
+      "png_path": "/tmp/pfse-synthesis-prepress.V5SN2U/page-3.png",
+      "png_sha256": "a10f6e9265fe70b50b563994828f8929071c962b8fbafb7c4e2e944a7f08bc02",
+      "viewed_with": "tools.view_image",
+      "checks": [
+        "Final rewritten PDF page opened visually at 120 dpi",
+        "No clipping, overlaps, missing glyphs or changed formula text observed",
+        "Layout, contrast, formulas, identifiers, footers and diagram arrows remain legible",
+        "Exact extracted page text equals original Typst page text"
+      ],
+      "specific_observation": "F1-F5 counterexamples and changed-hypothesis controls fit within the page."
+    },
+    {
+      "page": 4,
+      "text_characters": 2185,
+      "dimensions_points": [
+        595.280029296875,
+        841.8900146484375
+      ],
+      "png_path": "/tmp/pfse-synthesis-prepress.V5SN2U/page-4.png",
+      "png_sha256": "b713c13bbad20758facc5baa99485a44eaa107576465c750343cd8427e888afc",
+      "viewed_with": "tools.view_image",
+      "checks": [
+        "Final rewritten PDF page opened visually at 120 dpi",
+        "No clipping, overlaps, missing glyphs or changed formula text observed",
+        "Layout, contrast, formulas, identifiers, footers and diagram arrows remain legible",
+        "Exact extracted page text equals original Typst page text"
+      ],
+      "specific_observation": "Final dependency arrows and shortened labels are separated; unresolved bridge is dashed red. Obligation table and formula-to-cost warning are visible."
+    },
+    {
+      "page": 5,
+      "text_characters": 2887,
+      "dimensions_points": [
+        595.280029296875,
+        841.8900146484375
+      ],
+      "png_path": "/tmp/pfse-synthesis-prepress.V5SN2U/page-5.png",
+      "png_sha256": "ddb0e733cbd5d7590ea88141a963c02c999d901380eb94eea5888db3377b9fcc",
+      "viewed_with": "tools.view_image",
+      "checks": [
+        "Final rewritten PDF page opened visually at 120 dpi",
+        "No clipping, overlaps, missing glyphs or changed formula text observed",
+        "Layout, contrast, formulas, identifiers, footers and diagram arrows remain legible",
+        "Exact extracted page text equals original Typst page text"
+      ],
+      "specific_observation": "Custody limits, unverified runtime metadata, exactly one proposed corrective action and open-goal statement are visible."
+    }
+  ],
+  "temporary_rasters_are_durable": false,
+  "temporary_raster_boundary": "Final PNG derivatives and the original Typst/intermediate PDFs remain scratch-only, nondurable. Hashes and observed comparisons are recorded; final report.pdf plus editable source remain the retained deliverables.",
+  "canonical_graphs": {
+    "scope_checked": [
+      "docs/reports/2026-11-01-ic-arity-oracle-review/",
+      "knowledge/frontiers/ecdlp/"
+    ],
+    "discovery_command": "rg --files knowledge/frontiers/ecdlp docs/reports/2026-11-01-ic-arity-oracle-review | rg '\\\\.(svg|dot|mmd)$'",
+    "before_this_task": "No editable DOT/Mermaid or SVG graph was present in the materialized scope.",
+    "left_unchanged": [
+      "PFSE program M0-M4 and total-cost planning tables"
+    ],
+    "reason": "Technical packet only; no official frontier/claim/status promotion. No external canonical write scope is authorized."
+  },
+  "scope_boundary": "Rendering and visual inspection only, not scientific computation, Lean verification, performance evidence or algorithmic proof. Exactly eight declared synthesis artifacts; publication/claim release is not performed.",
+  "prior_typst_render_provenance": {
+    "pdf_sha256": "96dbc24923995697d7494dab5fcfcd1c7445f70918d7d05beacdd1c4c148c50b",
+    "pdf_bytes": 98749,
+    "rendering": {
+      "graphviz_version": "2.42.4",
+      "typst_version": "0.15.0",
+      "commands": [
+        "dot -Tsvg docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/dependencies.dot -o docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/dependencies.svg",
+        "/tmp/pfse-synthesis-render-venv/bin/python - <<'PY'\nimport typst\np='docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/'\ntypst.compile(p+'report.typ',output=p+'report.pdf')\nprint('Typst 0.15.0 final compile: PASS')\nPY",
+        "pdftoppm -r 120 -png docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf /tmp/pfse-synthesis-pages.U631Ju/page",
+        "pdfinfo docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.pdf"
+      ],
+      "graphviz_exit_code": 0,
+      "typst_final_exit_code": 0,
+      "pdf_raster_exit_code": 0,
+      "resolution_dpi": 120,
+      "pdf_opens": true,
+      "page_size": "A4",
+      "final_warning": "Fontconfig error: No writable cache directories. Rendering nonetheless exited zero; visible final glyphs, layout and text were inspected.",
+      "earlier_attempts": [
+        {
+          "operation": "Install scratch Typst",
+          "command": "/tmp/pfse-synthesis-render-venv/bin/pip install -q typst",
+          "outcome": "Blocked by sandbox network/proxy; no matching distribution from unreachable index. Retried with scoped network access using pip install -q --retries 0 typst; succeeded."
+        },
+        {
+          "operation": "Initial PDF compile",
+          "outcome": "typst.TypstError: unclosed label; no PDF produced. Literal comparison signs in report.typ were escaped via apply_patch; next compile succeeded."
+        },
+        {
+          "operation": "First visual inspection",
+          "outcome": "Every page opened; long diagram edge labels crowded the right side. Shortened A/B edge labels in DOT and rerendered SVG/PDF/all five pages. Final inspection passed."
+        }
+      ]
+    },
+    "pages": [
+      {
+        "page": 1,
+        "text_characters": 1905,
+        "dimensions_points": [
+          595.2755737304688,
+          841.8897705078125
+        ],
+        "png_path": "/tmp/pfse-synthesis-pages.U631Ju/page-1.png",
+        "png_sha256": "8e6060e29b998f6d258b589069b1deed1c0e557751982eddf87f4c898baa2f87",
+        "viewed_with": "tools.view_image",
+        "checks": [
+          "Legible text and formulas; no missing glyphs observed",
+          "No clipping or overlapping text observed in final page",
+          "Source/task identifiers and page footer visible"
+        ],
+        "specific_observation": "Machine/fidelity table and independent-joint scope remain clearly separated."
+      },
+      {
+        "page": 2,
+        "text_characters": 1615,
+        "dimensions_points": [
+          595.2755737304688,
+          841.8897705078125
+        ],
+        "png_path": "/tmp/pfse-synthesis-pages.U631Ju/page-2.png",
+        "png_sha256": "321118632821ca5a18b5b15c2c71649c1b601bc4b7486e52b592ac2eb38cb58b",
+        "viewed_with": "tools.view_image",
+        "checks": [
+          "Legible text and formulas; no missing glyphs observed",
+          "No clipping or overlapping text observed in final page",
+          "Source/task identifiers and page footer visible"
+        ],
+        "specific_observation": "Sign-split envelope table and strict/non-strict comparison symbols are legible."
+      },
+      {
+        "page": 3,
+        "text_characters": 2049,
+        "dimensions_points": [
+          595.2755737304688,
+          841.8897705078125
+        ],
+        "png_path": "/tmp/pfse-synthesis-pages.U631Ju/page-3.png",
+        "png_sha256": "c88af13fe62210fb0628668e59303a67cf51345ffe312bb6bb4bede969282d8f",
+        "viewed_with": "tools.view_image",
+        "checks": [
+          "Legible text and formulas; no missing glyphs observed",
+          "No clipping or overlapping text observed in final page",
+          "Source/task identifiers and page footer visible"
+        ],
+        "specific_observation": "F1-F5 counterexamples and changed-hypothesis controls fit within the page."
+      },
+      {
+        "page": 4,
+        "text_characters": 2185,
+        "dimensions_points": [
+          595.2755737304688,
+          841.8897705078125
+        ],
+        "png_path": "/tmp/pfse-synthesis-pages.U631Ju/page-4.png",
+        "png_sha256": "26d7308b1eb3c36104f9ce38c43a5f271c5cbe8f395b5e86d85c26a1849cb279",
+        "viewed_with": "tools.view_image",
+        "checks": [
+          "Legible text and formulas; no missing glyphs observed",
+          "No clipping or overlapping text observed in final page",
+          "Source/task identifiers and page footer visible"
+        ],
+        "specific_observation": "Final dependency arrows and shortened labels are separated; unresolved bridge is dashed red. Obligation table and formula-to-cost warning are visible."
+      },
+      {
+        "page": 5,
+        "text_characters": 2887,
+        "dimensions_points": [
+          595.2755737304688,
+          841.8897705078125
+        ],
+        "png_path": "/tmp/pfse-synthesis-pages.U631Ju/page-5.png",
+        "png_sha256": "461f7bd833d9742f140a5e6279a287740a3997f59d2d870032fc847d5a826b83",
+        "viewed_with": "tools.view_image",
+        "checks": [
+          "Legible text and formulas; no missing glyphs observed",
+          "No clipping or overlapping text observed in final page",
+          "Source/task identifiers and page footer visible"
+        ],
+        "specific_observation": "Custody limits, unverified runtime metadata, exactly one proposed corrective action and open-goal statement are visible."
+      }
+    ],
+    "inspected_at": "2026-11-01T06:06:08Z"
+  },
+  "final_pdf_bytes": 56451,
+  "pdf_threshold_bytes_exclusive": 65536
+}

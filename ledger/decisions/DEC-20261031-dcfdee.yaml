@@ -1,0 +1,102 @@
+coordinator_decision:
+  id: DEC-20261031-dcfdee
+  id_provenance: >-
+    Minted by the design lane (random 6-hex token, confirmed free with tools/allocate_id.py --check) and reserved in
+    experiments/EXP-PEXT-0b2c75/specification.yaml reserved_ids before the draft was committed.
+  recorded_at: '2026-11-01'
+  decided_at: '2026-11-01'
+  decided_by: coordinator
+  goal_id: GOAL-PEXT-4a1d6b
+  question_ids: [RQ-PEXT-7c3e91]
+  kind: protocol_approval
+  mode: goal
+  context: >-
+    The owner asked the Coordinator on 2026-10-31 to "design the 4-torsion idea next" (IDEA-20261024-3c71a9). The design
+    lane wrote H-PEXT-ad0073 and the draft contract EXP-PEXT-0b2c75 (review_required), its launcher under
+    experiments/EXP-PEXT-0b2c75/implementation/ and exact-byte previews; they were merged by PR #2858. The first probe
+    refused on the goal concurrency cap (max_concurrent 2, three lanes). With the owner's agreement the parked lane
+    BATCH-68a56c was closed (parked_on_impediment, e6528dabb6), leaving BATCH-21339c and BATCH-a4886a open. The probe
+    then reported approvable true, blockers [] at source_ref origin/claude/pext-4torsion (8dbeb7eeb7).
+  decision: approve
+  decision_scope: >-
+    APPROVES EXP-PEXT-0b2c75 at version 1 as a TEST OF AN UNREVIEWED CANDIDATE LAW on exact data: six trials of
+    experiments/EXP-PEXT-0b2c75/trial-plan.json (regression RUN-PEXT-8c15bf, n5core RUN-PEXT-ff55f2, n7 RUN-PEXT-e4ce49,
+    negative RUN-PEXT-a19d45, n5ext RUN-PEXT-c0fbcd, analyze RUN-PEXT-87ac49) under executor task TASK-20261031-73799d
+    in lane BATCH-a4886a, archived by TASK-20261031-4fa3ea. Moves H-PEXT-ad0073 from specified to approved (pre-run).
+    Confers no executor admission (dispatch needs execution_state ready and a live claim). Asserts nothing about the
+    theorem, novelty or class shares, promotes no proof, discharges no intake obligation, and authorises no attack, cost
+    claim, deployed-curve work or run outside the frozen plan.
+  intake_acknowledgement: >-
+    The Coordinator intake (TASK-20261027-e6b5bf, design-readiness.json) classifies complete_prospective_design_can_follow_now
+    as false (readiness specific_source_and_independent_proof_gaps_remain), independent_mathematical_review false,
+    novelty_verified false. This approval is owner-directed and covers only the refutable test of the candidate law; the
+    derivation remains unreviewed (review batches blocked by IMP-PEXT-BLIND-CONTRACT-INTERFACE-20261027 and
+    IMP-PEXT-NORM-REVIEW-ADMISSION-20261027). A passing result would not promote the derivation.
+  target_ids:
+  - GOAL-PEXT-4a1d6b
+  - RQ-PEXT-7c3e91
+  - IDEA-20261024-3c71a9
+  - H-PEXT-ad0073
+  - EXP-PEXT-0b2c75
+  - TASK-20261031-73799d
+  - TASK-20261031-4fa3ea
+  authorization: >-
+    Standing user authorization of 2026-09-06 in AGENTS.md ("All is approved. Ideas/experiments should be always
+    approved"), plus the owner's explicit request of 2026-10-31 and agreement to resolve the concurrency cap. The
+    Coordinator checked protocol completeness and the runnable condition of AGENTS.md "Approval is bounded by execution".
+  approval_requirements_check:
+    protocol_completeness: >-
+      hypothesis with test boundary and distinguishable outcomes; contract with inputs, controls C1-C9 (positive q = 3
+      records, genus identification, A/A rebuild, fixture and random off-family negatives, nearby n = 3 recount, blind
+      recount at review), independent variables, metrics, seeds, budget, stopping, invalidation, success, falsification
+      and inconclusive criteria, decision_impact, required artifacts (run records and the research-visuals report),
+      variable_ledger with A/A comparison C-aa-rebuild, prediction_provenance for P1-P6, N2, H1 (q = 3 in-sample, withheld
+      law outcomes disclosed), intake_acknowledgement with the obligation table.
+    runnable: >-
+      tools/experiment_preapproval.py --packet
+      coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/approval-preview/preapproval-packet.json reported approvable
+      true, blockers [] at origin/claude/pext-4torsion (8dbeb7eeb7), re-run by the design lane with identical prospective
+      hashes. Route implementation (executor-implementation); no runbook (experiment-director not dispatched from the design
+      lane). The regression stage was smoke-run end to end into scratch (9 of 9 checks identical, check.py exit 0). execution_state
+      ready is confirmed by tools/newest_experiments.py after this decision is committed and pushed; a mismatch stops dispatch.
+    capacity: >-
+      GOAL-PEXT-4a1d6b approved-unrun experiments (cap 3): EXP-PEXT-212d5c is approved with no completed run, so 1 before this
+      approval and 2 after (tools/portfolio_kpis.py --goal-backlog prints approved_unrun=0, cap=none at the working tree, which
+      does not count it; the conservative count is recorded). Lanes: BATCH-21339c and BATCH-a4886a open, 2 of max_concurrent 2
+      after the BATCH-68a56c closure.
+    resource_limits: >-
+      4 threads, memory caps 2048-4096 MB per trial, watchdogs 3600 / 7200 / 28800 / 3600 / 28800 / 1800 s (estimates: minutes
+      to about 2.5 h per long trial); machine protection only. Must not run alongside the EXP-PEXT-212d5c census (4 threads each).
+  bound_sha256:
+    specification: d41f80ca6e21baf7cd8e4992e2e4aa7fd347d7a493cfac51c9947ebe79e31d53
+    trial_plan: deb61b0cc1a41a327e3c2fa7dc190c49619df6986be995af4c7ffd8192bab1da
+    dispatch_queue: d47f7e12519021817512aa4c77dc5ac7c753b426755cc3ae4393d19e8864dd47
+    executor_handoff: 8f14dadf6bb3833e3b97f8fb0a5767b70c5f2fb1880e3dce32f907e70779f2bb
+  status_transitions:
+  - record: EXP-PEXT-0b2c75
+    to: approved
+    note: frozen at version 1; execution_authorized true
+  - record: H-PEXT-ad0073
+    to: approved
+    note: pre-run approval; asserts nothing about truth
+  - record: BATCH-a4886a
+    to: open
+    note: lane under this decision (coordination/goals/GOAL-PEXT-4a1d6b/lanes/BATCH-a4886a.lane.json)
+  rationale:
+  - The contract is complete and runnable on pushed bytes; the standing authorization and the owner's request apply.
+  - The law is falsifiable by one unit; the instrument controls separate a counterexample from a defect.
+  limitations:
+  - The derivation is an unreviewed candidate; novelty unverified (KN-LIT-bf1772 abstract only).
+  - The pair rule is generic and non-discriminating; the discriminating content is recorded in H-PEXT-ad0073.
+  - Tested cells only; fixture D-n5-q3-cosets.jsonl is shared with EXP-PEXT-212d5c (amend if it moves to the artifact store).
+  evidence_refs: []
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Protocol approval; no evidence exists.
+  next_actions:
+  - >-
+    Committing session: commit and push this decision with the frozen specification, trial plan, queue, handoffs, hypothesis
+    and checkpoint; require python3 tools/newest_experiments.py --experiment EXP-PEXT-0b2c75 --json to report execution_state
+    ready before dispatch.
+  - Claim lane BATCH-a4886a, run alone on the host after or apart from the EXP-PEXT-212d5c census, then TASK-20261031-4fa3ea and /review-evidence with the blind recount C9.
+  session: https://claude.ai/code/session_01GLh4dUmHns1dzciTmFopv4

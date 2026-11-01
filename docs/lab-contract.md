@@ -146,7 +146,10 @@ in the owner first:
 | `tools/curve_identity.py` | `crypto-autoresearcher` |
 | `tools/task_card.py` | `crypto-autoresearcher` |
 | `tools/artifacts/artifacts.py` | `crypto` |
+| `tools/research_wip.py` | `crypto-autoresearcher` |
 | `docs/curve-identities.md` | `crypto-autoresearcher` |
+| `docs/research-wip-policy.json` | `crypto-autoresearcher` |
+| `docs/research-wip.md` | `crypto-autoresearcher` |
 | `docs/lab-contract.md` (this file) | `crypto-autoresearcher` |
 | `validation/v1` JSON schema | `crypto` |
 
@@ -167,6 +170,16 @@ a copy is not a fix: extend the owner or make the dependency explicit.
   to the owner, never resolved by picking a side.
 - Records are immutable: correct by superseding, never by rewriting; archive
   receipts bind content first (`path_sha256`), commit reachability second.
+
+### 8.1 Operational WIP admission
+
+The byte-identical policy, checker and explanation at
+`docs/research-wip-policy.json`, `tools/research_wip.py` and
+`docs/research-wip.md` define one cross-repository concurrency envelope. The
+campaign supervisor may enforce that envelope before dispatch. Over-cap state
+blocks work-expanding actions but continues to admit repair and review. PR
+counts are operational admission data only; they never establish scientific
+validity, completion, independence, priority or merge readiness.
 
 ## 9. Divergence at adoption (2026-10-24)
 
@@ -205,6 +218,9 @@ see, and the cross-repository parts run where a sibling checkout is available.
 6. **Shared code** — `docs/shared-code.lock.json` with
    `tools/check_lab_parity.py`; `crypto-lean` is named as the Lean dependency in
    `crypto` and `cryptanalysis`.
+7. **Operational WIP** — a shared policy and checker measure current open PRs;
+   the campaign supervisor can report or enforce the envelope while continuing
+   to admit repair and review work.
 
 Still owner decisions, not drift: whether to delete the legacy bucket copies
 (the contract keeps them read-only), and whether `crypto` should flip its
