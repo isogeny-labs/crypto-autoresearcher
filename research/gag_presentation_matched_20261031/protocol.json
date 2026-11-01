@@ -1,0 +1,604 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "GAG-PRESENTATION-MATCHED-20261031",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "research/gag_presentation_matched_20261031",
+  "authors": [
+    "Claude Code session claude-opus-5-5 (session_01AXUKfV7Mndc73sHXKwAJNs) under standing user authorization 2026-09-06"
+  ],
+  "links": {
+    "lead": "knowledge/leads/ecdlp/ic-engine/LEAD-ICE-gag-contraction-planner.yaml",
+    "builder": "src/crypto_autoresearcher/index_calculus/descent.py",
+    "driver": "research/gag_presentation_matched_20261031/driver.py",
+    "design": "research/gag_presentation_matched_20261031/design.json sha256:1ee2f567e47fb77bcf2c388a0e70b00f68061deb3af744297d006f871d16b51a"
+  },
+  "question": "For the Weil-descended decomposition system of Gaudry/Diem index calculus at n = m = 3 over F_{p^3}, does msolve's F4 do a different amount of counted work (total F4 matrix cells) when the system is presented as a merge tree or as the contracted S_4 (monolithic) instead of the chained S_3 system, beyond the spread caused by the choice of separating linear form alone?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "On every instance all four arms return status ok, the same ideal degree and the same set of verified relations, and that set contains the planted decomposition.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "monolithic (contracted S_4) and chain differ in total F4 matrix cells by more than the chain A/A spread, in the same direction at all three primes.",
+      "class": "comparative",
+      "decided_by": [
+        "C-mono"
+      ],
+      "if_supported": "a descriptive statement about msolve 0.6.5's F4 on these n = m = 3 toy instances only; no ECDLP cost, scaling, wall-time or other-solver claim",
+      "if_not_supported": "the presentation effect is within the separating-form spread, or inconsistent across the three primes, for these cells"
+    },
+    {
+      "id": "C3",
+      "text": "tree and chain differ in total F4 matrix cells by more than the chain A/A spread, in the same direction at all three primes.",
+      "class": "comparative",
+      "decided_by": [
+        "C-tree"
+      ],
+      "if_supported": "as for C2",
+      "if_not_supported": "as for C2"
+    },
+    {
+      "id": "C4",
+      "text": "Wall time per arm, reported descriptively; it decides nothing (no isolation).",
+      "class": "out_of_scope",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "Contracting the internal wire before descent (S_4: 3 unknowns, degree 4 per variable) changes F4's counted work relative to keeping it as 3 extra unknowns (chain: 6 unknowns, degree 2 per variable).",
+      "mechanism": "The presentations denote the same span (KN-LIT-c9e59d) but give F4 different variable counts, degrees and sparsity; the F4 degree reached and the Macaulay matrix sizes depend on them, not on the solution set.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "f4_cells",
+          "direction": "lower",
+          "minimum_effect": "median log2(monolithic/chain) below 0 and beyond the C-aa max |log2 ratio| at every prime",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [
+              {
+                "path": "external sandbox (not committed): Singular std and msolve -g 2 on n = m = 3 F_{p^3} systems, 2026-11-01 UTC",
+                "measured": "Groebner-stage wall time only, contracted faster than chained; no F4 cell counts; different instances, builder and flags"
+              },
+              {
+                "path": "pre-freeze instrument probe: one chain and one monolithic msolve -v 2 run at p = 1009 (instance outside this design)",
+                "measured": "F4 round tables exist and are parseable; values were seen for that one non-study instance"
+              },
+              {
+                "path": "pre-freeze pipeline dry run (discarded, not part of this design): p = 503, instance indices 0, 1, 98, all four arms",
+                "measured": "F4 cell counts per arm on those three non-study instances: monolithic about 1.3e6, chain about 1.18e7 (chain-aa within 0.3% of chain), tree about 1.29e7; all arms agreed on relations"
+              }
+            ],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "f4_cells",
+          "direction": "different",
+          "minimum_effect": "tree vs chain beyond the C-aa spread at every prime; no direction predicted",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [
+              {
+                "path": "pre-freeze pipeline dry run (discarded, not part of this design): p = 503, instance indices 0, 1, 98, all four arms",
+                "measured": "F4 cell counts per arm on those three non-study instances: monolithic about 1.3e6, chain about 1.18e7 (chain-aa within 0.3% of chain), tree about 1.29e7; all arms agreed on relations"
+              }
+            ],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "chain",
+      "role": "baseline",
+      "description": "descent.descent_system(topology='chain'): Semaev's chained S_3 system, the harness default",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "apt",
+            "install",
+            "msolve"
+          ]
+        ],
+        "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+        "flags": {
+          "msolve": "-c 0 -P 1 -t 1 -v 2"
+        },
+        "env": {
+          "PYTHONPATH": "src"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "topology": "chain",
+        "form_seed": 0
+      }
+    },
+    {
+      "id": "tree",
+      "role": "candidate",
+      "description": "the same boxes as a balanced merge tree (at m = 3: S_3(x2, x3, u), S_3(x1, u, x_R))",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "apt",
+            "install",
+            "msolve"
+          ]
+        ],
+        "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+        "flags": {
+          "msolve": "-c 0 -P 1 -t 1 -v 2"
+        },
+        "env": {
+          "PYTHONPATH": "src"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "topology": "tree",
+        "form_seed": 0
+      },
+      "same_instrument_as": "chain"
+    },
+    {
+      "id": "monolithic",
+      "role": "candidate",
+      "description": "the wire contracted over F_q by the quadratic resultant (S_4), then descended",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "apt",
+            "install",
+            "msolve"
+          ]
+        ],
+        "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+        "flags": {
+          "msolve": "-c 0 -P 1 -t 1 -v 2"
+        },
+        "env": {
+          "PYTHONPATH": "src"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "topology": "monolithic",
+        "form_seed": 0
+      },
+      "same_instrument_as": "chain"
+    },
+    {
+      "id": "chain-aa",
+      "role": "control_aa",
+      "description": "chain again with a different separating-form stream: the only difference is the nuisance factor form_seed",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "apt",
+            "install",
+            "msolve"
+          ]
+        ],
+        "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+        "flags": {
+          "msolve": "-c 0 -P 1 -t 1 -v 2"
+        },
+        "env": {
+          "PYTHONPATH": "src"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "topology": "chain",
+        "form_seed": 1
+      },
+      "same_instrument_as": "chain"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": false,
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "every instance is a planted decomposition and C1 requires every arm to return it, verified by point addition over F_q; a miss invalidates the instance, so the detector is exercised on every row rather than on a separate arm"
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "the claims compare solver work across presentations of the same instance; there is no property whose absence a null population would test"
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "presentation",
+        "levels": [
+          "chain",
+          "tree",
+          "monolithic"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instance",
+        "treatment": "crossed",
+        "how": "every arm runs on every instance (paired design); instances from the frozen instance_rule, independent of arm"
+      },
+      {
+        "name": "prime",
+        "treatment": "crossed",
+        "value": [
+          1009,
+          4099,
+          32749
+        ],
+        "how": "three field sizes in [307, 2^16), above the range where msolve's separating check was seen to be nondeterministic"
+      },
+      {
+        "name": "separating_form",
+        "treatment": "randomized",
+        "how": "drawn per arm and instance from the frozen form_rule; its effect is measured by C-aa"
+      },
+      {
+        "name": "msolve_binary",
+        "treatment": "fixed",
+        "value": "msolve 0.6.5-1build2, sha256 c2722288",
+        "how": "driver refuses a different sha256"
+      },
+      {
+        "name": "msolve_flags_threads",
+        "treatment": "fixed",
+        "value": "-c 0 -P 1 -t 1 -v 2",
+        "how": "one flag list in driver.py"
+      },
+      {
+        "name": "harness_code",
+        "treatment": "fixed",
+        "how": "one commit for all arms; recorded in environment.json with dirty state"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "per-instance shuffle from the frozen order_rule"
+      },
+      {
+        "name": "retries",
+        "treatment": "measured",
+        "how": "attempt_count per row; counted cells summed over all attempts (every retry charged)"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "loadavg per row; affects wall time only"
+      },
+      {
+        "name": "analyst",
+        "treatment": "fixed",
+        "how": "analysis is analyze.py, frozen by sha256 before data; no manual step"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-mono",
+        "arms": [
+          "chain",
+          "monolithic"
+        ],
+        "differs_in": [
+          "presentation"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-tree",
+        "arms": [
+          "chain",
+          "tree"
+        ],
+        "differs_in": [
+          "presentation"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "chain",
+          "chain-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "explicit_list",
+      "seeds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "nonce": null,
+      "note": "instance indices i = 0..9 per prime (warmup index 99) feed the string-seeded rules in links.design; form_seed 0 for chain/tree/monolithic and 1 for chain-aa"
+    },
+    "instance_sampling": {
+      "rule": "links.design.instance_rule for p in primes, i in 0..9",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "not masked: the analysis is a frozen script with no free choices; arm names are needed to compute the preregistered ratios",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 30,
+    "replicates": 1,
+    "warmups": 1,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 6,
+      "correction": "bonferroni",
+      "rank_test_n": 10,
+      "min_attainable_two_sided_p": 0.001953125,
+      "passes": true,
+      "note": "exact paired sign-flip test on 10 instances per prime: smallest two-sided p is 2/2^10 = 0.00195 < 0.05/6 = 0.00833. The counted metric is deterministic given the form, so one replicate per (arm, instance); between-form variation is the A/A arm. Ten instances resolve only effects consistent in sign across nearly all instances; a mixed-sign effect will read inconclusive."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 0.01,
+      "per_sample_seconds": 0.35,
+      "threads": 1,
+      "estimated_total_seconds": 60,
+      "measured_on": "pre-freeze dry run on this host (2 vCPU Xeon 2.1 GHz cloud container) at p = 503: msolve 0.03 s (monolithic) to 0.25 s (chain, tree) per call, plus Python system build"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "f4_cells",
+        "name": "total F4 matrix cells",
+        "unit": "matrix entries (rows x columns, dense footprint)",
+        "kind": "counted",
+        "definition": "sum over every F4 round msolve prints at -v 2 of rows x columns, summed over every attempt of the execution",
+        "source": "rows.jsonl f4_cells (parsed from raw/<exec>.a<k>.stdout)",
+        "aggregation": "paired_ratio",
+        "resolution": "1 entry",
+        "uncertainty": "paired_bootstrap_ci95"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "f4_rows",
+        "name": "total F4 matrix rows",
+        "unit": "rows",
+        "kind": "counted",
+        "definition": "sum of rows over every F4 round and attempt",
+        "source": "rows.jsonl f4_rows",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "bootstrap_ci95"
+      },
+      {
+        "id": "f4_max_deg",
+        "name": "maximum F4 degree",
+        "unit": "total degree",
+        "kind": "counted",
+        "definition": "largest deg column in msolve's F4 round table",
+        "source": "rows.jsonl f4_max_deg",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "range"
+      },
+      {
+        "id": "attempts",
+        "name": "msolve attempts",
+        "unit": "runs",
+        "kind": "counted",
+        "definition": "msolve invocations until a non-'failed' status, at most 8",
+        "source": "rows.jsonl attempt_count",
+        "aggregation": "sum",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "msolve_seconds",
+        "name": "msolve wall time",
+        "unit": "s",
+        "kind": "timed",
+        "definition": "subprocess wall time of every msolve attempt (F4, parametrization, output), summed; excludes Python system build and lifting",
+        "source": "rows.jsonl msolve_seconds",
+        "aggregation": "median",
+        "resolution": "1 us",
+        "uncertainty": "range"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 1,
+    "order": "randomized",
+    "clock": "counted",
+    "counters": [
+      "f4_cells",
+      "f4_rows",
+      "f4_rounds",
+      "f4_max_deg",
+      "attempt_count",
+      "ideal_degree"
+    ],
+    "record": [
+      "cpu_model",
+      "kernel",
+      "nproc",
+      "msolve_sha256",
+      "commit",
+      "dirty",
+      "loadavg"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "instance_type": "Claude Code cloud container (shared, unisolated)",
+      "cpus": 2,
+      "spot": false
+    },
+    "measurement_class": "search",
+    "timeout_seconds": 600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed design: (30 instances + 1 warmup) x 4 arms = 124 executions, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    },
+    {
+      "rule": "a row with status other than ok, or missing the planted relation, invalidates its instance for C2/C3 and is reported; the run continues",
+      "kind": "invalidation",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "an instance where any arm fails C1 is excluded from every comparison and listed",
+    "wall time is descriptive only (isolation none); counted cells stand",
+    "msolve 'failed' attempts are retried with a fresh form within the row (max 8) and charged; they are not infrastructure retries"
+  ],
+  "decision_rule": {
+    "text": "For C-mono and C-tree separately: supported_within_scope when, at every prime, the Bonferroni-level (1 - 0.05/6) percentile bootstrap interval of the median per-instance log2(candidate/chain) cells excludes 0, the exact sign-flip p <= 0.05/6, |median| exceeds the C-aa maximum |log2(chain-aa/chain)| at that prime, and the sign is the same at all primes; within_control_distribution when |median| <= that A/A maximum at every prime; invalid_measurement when C1 fails or a prime has no valid instance; inconclusive otherwise.",
+    "comparison_ids": [
+      "C-mono",
+      "C-tree"
+    ],
+    "threshold": "CI excludes 0, p <= 0.00833, |median log2 ratio| > A/A max |log2 ratio|, same sign at 3 primes",
+    "statistic": "median over instances of log2(f4_cells candidate / f4_cells chain), per prime",
+    "interval": "percentile bootstrap of the median, 20000 resamples, level 1 - 0.05/6",
+    "multiple_comparison_correction": "bonferroni",
+    "effect_size_measure": "median cell ratio 2^median(log2 ratio) per prime",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "research/gag_presentation_matched_20261031/analyze.py",
+      "sha256": "89648c115e30d09949f3c9500ef74a52b84d6b378577de2750167deece68c976"
+    },
+    "inputs": [
+      "runs/<run-id>/rows.jsonl"
+    ],
+    "outputs": [
+      "runs/<run-id>/analysis.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "per-instance log2(candidate/chain) F4 cells by prime with the A/A band"
+    ],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "changing primes, instances, forms, flags, metric or the analysis script after seeing data",
+    "quoting wall time as a result (isolation none)",
+    "reading a supported verdict as an ECDLP cost, scaling, other-solver or other-(n, m) claim",
+    "dropping instances other than by the invalidation rules"
+  ],
+  "literature": [
+    {
+      "ref": "knowledge/literature/KN-LIT-c9e59d.md (arXiv:2605.13993)",
+      "provenance": "retrieved",
+      "claim": "all presentations of the S_3 network denote one span; composition is elimination",
+      "verified_by": "this session read the main text, 2026-11-01"
+    },
+    {
+      "ref": "knowledge/techniques/KN-TECH-b18366.md",
+      "provenance": "internal",
+      "claim": "chaining reported up to 50x faster in the char-2 Boolean setting; the odd-characteristic extension is asserted, not measured",
+      "verified_by": "read by this session, 2026-10-31"
+    },
+    {
+      "ref": "knowledge/leads/ecdlp/ic-engine/LEAD-ICE-semaev-chain-cost-model.yaml",
+      "provenance": "internal",
+      "claim": "topology closed under Semaev's charged, variable-count cost model only",
+      "verified_by": "read by this session, 2026-10-31"
+    },
+    {
+      "ref": "src/crypto_autoresearcher/index_calculus/descent.py (decompose_descent docstring)",
+      "provenance": "internal",
+      "claim": "msolve 0.6.5's separating check is nondeterministic below p ~ 300",
+      "verified_by": "measured by this session, 2026-11-01"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": null
+  }
+}
