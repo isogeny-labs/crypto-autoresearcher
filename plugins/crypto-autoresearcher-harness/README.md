@@ -171,9 +171,9 @@ opencode mcp add crypto-autoresearcher-peer \
   --url http://127.0.0.1:8765/mcp
 ```
 
-## Safety model
+## Package-maintenance preflight
 
-Every invocation begins with:
+Before installing or publishing the package, run:
 
 ```sh
 python3 plugins/crypto-autoresearcher-harness/scripts/preflight.py \
@@ -182,9 +182,8 @@ python3 plugins/crypto-autoresearcher-harness/scripts/preflight.py \
 
 It is read-only: it checks source contracts, generated role bindings, and the
 harness's credential/dependency doctor; it does not run an experiment or make
-a backend call. The host then follows `AGENTS.md`, the role contract, and the
-dispatch queue. A readiness failure blocks execution but is never research
-evidence.
+a backend call. It is a package-maintenance check, not an automatic prerequisite
+for the public `run` skill. A readiness failure is never research evidence.
 
 ## Verify the package
 
