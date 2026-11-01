@@ -11,6 +11,7 @@ import json
 import os
 import platform
 import resource
+import signal
 import shutil
 import subprocess
 import sys
@@ -37,11 +38,18 @@ SAGE_GATES = HERE / "s0_sage_gates.py"
 MODAL_SAGE = HERE / "s0_modal_sage.py"
 WORKER = HERE / "s0_gate_worker.py"
 COUNTER_CHECKER = HERE / "s0_counter_checker.py"
+SEMAEV_INVENTORY = REPO / "experiments/EXP-SDEG-85eefd/implementation/semaev_polys.json"
+O5_GROUP = HERE / "o5_group.py"
 SAGE_IMAGE_DIGEST = "sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d"
 SAGE_IMAGE = "sagemath/sagemath@" + SAGE_IMAGE_DIGEST
 RSS_BYTES = 8 * 1024 ** 3
-SAGE_BACKEND = "auto"
+SAGE_BACKEND = "modal"
 MODAL_PYTHON = None
+MANDATED_REPOSITORY_VOLUME = Path("/Volumes/SSD990")
+MANDATED_TMPDIR = MANDATED_REPOSITORY_VOLUME / ".tmp-agent"
+# No committed Coordinator amendment authorising a substitute path has been
+# located.  This is an execution-authority condition, not a portability guess.
+PORTABILITY_AUTHORIZED = False
 
 GATES = {
     "G0-1": "v4 fixtures reproduce and panel_fixtures.py byte-reproduces independently",
@@ -49,7 +57,7 @@ GATES = {
     "G0-3": "specialised f6 has 1,000 signed-sum and 1,000 non-sum checks per fixture",
     "G0-4": "G1 agrees with O5 on 200 smoke attempts per size, including L=8",
     "G0-5": "frozen power analysis reproduces committed rates within 3 MC standard errors",
-    "G0-6": "independent checker exactly recomputes S,G,X,V units on 20 smoke queries",
+    "G0-6": "independent input replay exactly recomputes P_setup and S,G,X,V units on 20 smoke queries",
 }
 
 PINNED = {
@@ -72,35 +80,48 @@ def now():
     return dt.datetime.now(dt.timezone.utc).isoformat()
 
 
-def free_gib(path: Path):
-    return shutil.disk_usage(path).free / (1024 ** 3)
-
-
 def machine_reading():
     system = Path("/")
-    repo_volume = REPO
+    repo_volume = MANDATED_REPOSITORY_VOLUME
     try:
         nice_value = os.getpriority(os.PRIO_PROCESS, 0)
     except (AttributeError, OSError):
         nice_value = None
     rss_soft, rss_hard = resource.getrlimit(resource.RLIMIT_AS)
+    root_free_bytes = shutil.disk_usage(system).free
+    repository_volume_exists = repo_volume.is_dir()
+    repository_free_bytes = (shutil.disk_usage(repo_volume).free
+                             if repository_volume_exists else None)
     return {
         "read_at": now(), "host": platform.node(), "platform": platform.platform(),
         "python": sys.version, "loadavg_15m": float(os.getloadavg()[2]),
-        "load_limit": 14.0, "root_free_gib": round(free_gib(system), 6),
-        "root_free_min_gib": 5.0, "repository_volume": str(repo_volume),
-        "repository_free_gib": round(free_gib(repo_volume), 6),
-        "repository_free_min_gib": 20.0, "rss_limit_gib": 8.0,
+        "load_limit": 14.0,
+        "root_free_bytes": root_free_bytes,
+        "root_free_min_bytes": 5 * 1024 ** 3,
+        "root_free_gib_display": round(root_free_bytes / 1024 ** 3, 6),
+        "repository_volume": str(repo_volume),
+        "repository_volume_exists": repository_volume_exists,
+        "repository_free_bytes": repository_free_bytes,
+        "repository_free_min_bytes": 20 * 1024 ** 3,
+        "repository_free_gib_display": (round(repository_free_bytes / 1024 ** 3, 6)
+                                         if repository_free_bytes is not None else None),
+        "tmpdir_required": str(MANDATED_TMPDIR),
+        "portability_substitution_authorized": PORTABILITY_AUTHORIZED,
+        "rss_limit_gib": 8.0,
         "rlimit_as_soft_bytes": rss_soft, "rlimit_as_hard_bytes": rss_hard,
         "workers": 1, "nice_required": 10, "nice_actual": nice_value,
     }
 
 
 def c7_ok(reading):
-    nice_ok = reading["nice_actual"] is None or reading["nice_actual"] >= reading["nice_required"]
+    nice_actual = reading["nice_actual"]
+    nice_ok = (isinstance(nice_actual, int) and not isinstance(nice_actual, bool)
+               and nice_actual >= reading["nice_required"])
     return (reading["loadavg_15m"] <= reading["load_limit"]
-            and reading["root_free_gib"] >= reading["root_free_min_gib"]
-            and reading["repository_free_gib"] >= reading["repository_free_min_gib"]
+            and reading["root_free_bytes"] >= reading["root_free_min_bytes"]
+            and reading["repository_volume_exists"]
+            and reading["repository_free_bytes"] is not None
+            and reading["repository_free_bytes"] >= reading["repository_free_min_bytes"]
             and nice_ok)
 
 
@@ -142,53 +163,40 @@ def child_limits():
 def run_native(arguments, tmpdir, timeout):
     command = [sys.executable, *map(str, arguments)]
     started = now()
+    process = None
     try:
-        process = subprocess.run(command, cwd=REPO, env=child_environment(tmpdir),
-                                 capture_output=True, text=True, timeout=timeout,
-                                 preexec_fn=child_limits)
+        process = subprocess.Popen(
+            command, cwd=REPO, env=child_environment(tmpdir),
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+            preexec_fn=child_limits, start_new_session=True)
+        stdout, stderr = process.communicate(timeout=timeout)
         return {"command": command, "started_at": started, "finished_at": now(),
-                "returncode": process.returncode, "stdout": process.stdout,
-                "stderr": process.stderr, "timeout": False}
+                "returncode": process.returncode, "stdout": stdout,
+                "stderr": stderr, "timeout": False, "process_group_reaped": True,
+                "launch_error": None}
     except subprocess.TimeoutExpired as error:
-        return {"command": command, "started_at": started, "finished_at": now(),
-                "returncode": None, "stdout": error.stdout or "", "stderr": error.stderr or "",
-                "timeout": True, "timeout_seconds": timeout}
-
-
-def docker_base():
-    return ["docker", "--host=unix:///var/run/docker.sock"]
-
-
-def sage_command(script, *arguments):
-    native = shutil.which("sage")
-    if SAGE_BACKEND in ("auto", "native") and native:
-        return [native, "-python", str(script), *map(str, arguments)], "native"
-    if SAGE_BACKEND == "native":
-        raise RuntimeError("explicit native Sage backend requested but sage is unavailable")
-    if SAGE_BACKEND not in ("auto", "docker"):
-        raise RuntimeError("sage_command called for unsupported backend %s" % SAGE_BACKEND)
-    if shutil.which("docker") is None:
-        raise RuntimeError("Docker Sage backend requested but docker is unavailable")
-    relative_script = script.relative_to(REPO)
-    mapped_arguments = []
-    for argument in arguments:
-        value = str(argument)
-        candidate = Path(value)
-        if candidate.is_absolute() or (not value.startswith("-") and (REPO / candidate).exists()):
+        termination_error = None
+        try:
+            os.killpg(process.pid, signal.SIGTERM)
             try:
-                value = "/repo/" + str(candidate.resolve().relative_to(REPO))
-            except (ValueError, OSError):
-                pass
-        mapped_arguments.append(value)
-    command = docker_base() + ["run", "--rm", "--network=none", "--memory=8g",
-        "--memory-swap=8g", "--cpus=1", "--pids-limit=512", "--read-only",
-        "--user", "%d:%d" % (os.getuid(), os.getgid()),
-        "--tmpfs", "/tmp:rw,size=2g", "-e", "OMP_NUM_THREADS=1",
-        "-e", "OPENBLAS_NUM_THREADS=1", "-e", "MKL_NUM_THREADS=1", "-e", "HOME=/tmp",
-        "-v", str(REPO) + ":/repo:ro", SAGE_IMAGE,
-        "nice", "-n", "10", "sage", "-python", "/repo/" + str(relative_script),
-        *mapped_arguments]
-    return command, "docker"
+                stdout, stderr = process.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                os.killpg(process.pid, signal.SIGKILL)
+                stdout, stderr = process.communicate()
+        except (OSError, subprocess.SubprocessError) as kill_error:
+            termination_error = "%s: %s" % (type(kill_error).__name__, kill_error)
+            stdout = error.stdout or ""
+            stderr = error.stderr or ""
+        return {"command": command, "started_at": started, "finished_at": now(),
+                "returncode": None, "stdout": stdout, "stderr": stderr,
+                "timeout": True, "timeout_seconds": timeout,
+                "process_group_reaped": termination_error is None,
+                "termination_error": termination_error, "launch_error": None}
+    except (OSError, subprocess.SubprocessError) as error:
+        return {"command": command, "started_at": started, "finished_at": now(),
+                "returncode": None, "stdout": "", "stderr": str(error),
+                "timeout": False, "process_group_reaped": process is None,
+                "launch_error": "%s: %s" % (type(error).__name__, error)}
 
 
 def modal_request(script, arguments, timeout):
@@ -266,7 +274,9 @@ def run_modal_sage(script, arguments, tmpdir, timeout):
                 "backend": "modal", "image": SAGE_IMAGE,
                 "request_sha256": request["request_sha256"],
                 "adapter_stdout_base64": base64.b64encode(stdout).decode("ascii"),
-                "adapter_stderr_base64": base64.b64encode(stderr).decode("ascii")}
+                "adapter_stderr_base64": base64.b64encode(stderr).decode("ascii"),
+                "sandbox_termination_confirmed": False,
+                "termination_error": "outer adapter failure; sandbox termination unconfirmed"}
     adapter_stdout = launcher.stdout
     adapter_stderr = launcher.stderr
     try:
@@ -342,7 +352,9 @@ def run_modal_sage(script, arguments, tmpdir, timeout):
                 "request_sha256": request["request_sha256"],
                 "adapter_returncode": launcher.returncode,
                 "adapter_stdout_base64": base64.b64encode(adapter_stdout).decode("ascii"),
-                "adapter_stderr_base64": base64.b64encode(adapter_stderr).decode("ascii")}
+                "adapter_stderr_base64": base64.b64encode(adapter_stderr).decode("ascii"),
+                "sandbox_termination_confirmed": False,
+                "termination_error": "invalid adapter receipt; sandbox termination unconfirmed"}
     return {
         "command": process["command"], "launcher_command": command,
         "started_at": process["started_at"], "finished_at": process["finished_at"],
@@ -365,40 +377,20 @@ def run_modal_sage(script, arguments, tmpdir, timeout):
         "adapter_returncode": launcher.returncode,
         "adapter_stdout_sha256": hashlib.sha256(adapter_stdout).hexdigest(),
         "adapter_stderr_base64": base64.b64encode(adapter_stderr).decode("ascii"),
+        "sandbox_termination_confirmed": True,
+        "termination_error": None,
     }
 
 
 def run_sage(script, arguments, tmpdir, timeout):
-    if SAGE_BACKEND == "modal":
-        return run_modal_sage(script, arguments, tmpdir, timeout)
-    try:
-        command, backend = sage_command(script, *arguments)
-    except RuntimeError as error:
+    if SAGE_BACKEND != "modal":
         return {"command": [], "started_at": now(), "finished_at": now(),
-                "returncode": None, "stdout_bytes": b"", "stderr_bytes": str(error).encode(),
-                "timeout": False, "backend": SAGE_BACKEND}
-    env = child_environment(tmpdir)
-    if backend == "docker":
-        for name in ("DOCKER_HOST", "DOCKER_CONTEXT", "DOCKER_TLS", "DOCKER_TLS_VERIFY", "DOCKER_CERT_PATH"):
-            env.pop(name, None)
-    started = now()
-    try:
-        process = subprocess.run(command, cwd=REPO, env=env, capture_output=True, timeout=timeout)
-        return {"command": command, "started_at": started, "finished_at": now(),
-                "returncode": process.returncode, "stdout_bytes": process.stdout,
-                "stderr_bytes": process.stderr, "timeout": False, "backend": backend,
-                "image": SAGE_IMAGE if backend == "docker" else None}
-    except subprocess.TimeoutExpired as error:
-        return {"command": command, "started_at": started, "finished_at": now(),
-                "returncode": None, "stdout_bytes": error.stdout or b"",
-                "stderr_bytes": error.stderr or b"", "timeout": True,
-                "timeout_seconds": timeout, "backend": backend,
-                "image": SAGE_IMAGE if backend == "docker" else None}
-    except OSError as error:
-        return {"command": command, "started_at": started, "finished_at": now(),
-                "returncode": None, "stdout_bytes": b"", "stderr_bytes": str(error).encode(),
-                "timeout": False, "backend": backend,
-                "image": SAGE_IMAGE if backend == "docker" else None}
+                "returncode": None, "stdout_bytes": b"",
+                "stderr_bytes": b"frozen S0 driver requires the pinned Modal backend",
+                "timeout": False, "backend": SAGE_BACKEND,
+                "sandbox_termination_confirmed": False,
+                "termination_error": "non-Modal backend refused before launch"}
+    return run_modal_sage(script, arguments, tmpdir, timeout)
 
 
 def public_receipt(process):
@@ -418,6 +410,25 @@ def public_receipt(process):
         "stderr_base64": base64.b64encode(stderr_bytes).decode("ascii"),
         "stderr": stderr_bytes.decode("utf-8", "replace"),
     }
+
+
+def modal_termination_confirmed(process):
+    """Fail closed unless a Modal receipt proves that its sandbox terminated."""
+    if process.get("backend") != "modal":
+        return False
+    return (process.get("sandbox_termination_confirmed") is True
+            and isinstance(process.get("modal_sandbox_id"), str)
+            and process["modal_sandbox_id"].startswith("sb-")
+            and isinstance(process.get("worker"), dict)
+            and process["worker"].get("termination_error") is None)
+
+
+def unstarted_process(observation):
+    return {"command": [], "started_at": None, "finished_at": None,
+            "returncode": None, "stdout_bytes": b"", "stderr_bytes": b"",
+            "timeout": False, "backend": SAGE_BACKEND,
+            "not_started": True, "observation": observation,
+            "sandbox_termination_confirmed": False}
 
 
 def write_json(path, document):
@@ -440,9 +451,30 @@ def parse_process_json(process, binary=False):
 
 
 def run_g01(tmpdir):
-    generator = run_sage(PANEL_GENERATOR, [], tmpdir, 7200)
-    verifier = run_sage(PANEL_VERIFIER, [], tmpdir, 7200)
-    v4 = run_sage(V4_GENERATOR, [], tmpdir, 7200)
+    calls = (("generator", PANEL_GENERATOR),
+             ("independent_verifier", PANEL_VERIFIER),
+             ("v4_reproducer", V4_GENERATOR))
+    processes = {}
+    sequence_attestations = []
+    prior_name = None
+    for name, script in calls:
+        if prior_name is not None:
+            confirmed = modal_termination_confirmed(processes[prior_name])
+            sequence_attestations.append({
+                "before": name, "prior_call": prior_name,
+                "prior_sandbox_termination_confirmed": confirmed,
+                "no_prior_live_sandbox_attested": confirmed,
+            })
+            if not confirmed:
+                processes[name] = unstarted_process(
+                    "not started after unconfirmed prior Modal sandbox termination")
+                prior_name = name
+                continue
+        processes[name] = run_sage(script, [], tmpdir, 7200)
+        prior_name = name
+    generator = processes["generator"]
+    verifier = processes["independent_verifier"]
+    v4 = processes["v4_reproducer"]
     panel_match = (generator["returncode"] == 0 and verifier["returncode"] == 0
                    and generator["stdout_bytes"] == verifier["stdout_bytes"])
     v4_match = (v4["returncode"] == 0 and v4["stdout_bytes"] == V4_JSON.read_bytes())
@@ -473,19 +505,27 @@ def run_g01(tmpdir):
         "v4_expected_sha256": sha256(V4_JSON),
         "panel_entries": len(panel_document.get("panel", [])) if panel_document else None,
         "panel_shape_ok": panel_shape_ok,
-        "processes": {"generator": public_receipt(generator),
-                      "independent_verifier": public_receipt(verifier),
-                      "v4_reproducer": public_receipt(v4)}}
+        "max_workers": 1,
+        "sequence_attestations": sequence_attestations,
+        "all_sandbox_terminations_confirmed": all(
+            modal_termination_confirmed(process) for process in processes.values()
+            if not process.get("not_started")),
+        "processes": {name: public_receipt(process)
+                      for name, process in processes.items()}}
     write_json(evidence_path, evidence)
     if passed:
-        return gate_record("G0-1", passed=True, classification="pass",
+        record = gate_record("G0-1", passed=True, classification="pass",
                            observation="v4 and 20-panel fixture byte streams reproduced exactly",
                            evidence=(evidence_path, PANEL_JSON))
+        record["sandbox_termination_confirmed"] = evidence["all_sandbox_terminations_confirmed"]
+        return record
     blocked = any(item["timeout"] or item["returncode"] != 0 for item in (generator, verifier, v4))
-    return gate_record("G0-1", failed=not blocked, blocked=blocked,
+    record = gate_record("G0-1", failed=not blocked, blocked=blocked,
                        classification="infrastructure_error" if blocked else "implementation_error",
                        observation="fixture byte reproduction did not complete or disagreed",
                        evidence=(evidence_path,))
+    record["sandbox_termination_confirmed"] = evidence["all_sandbox_terminations_confirmed"]
+    return record
 
 
 def run_json_gate(gate_id, process, evidence_path):
@@ -515,8 +555,12 @@ def run_json_gate(gate_id, process, evidence_path):
 
 def run_g02(tmpdir):
     process = run_sage(SAGE_GATES, ["--gate", "G0-2", "--v4", V4_JSON,
-                                    "--panel", PANEL_JSON], tmpdir, 7200)
-    return run_json_gate("G0-2", process, EVIDENCE / "g0-2-determinants.json")
+                                    "--panel", PANEL_JSON,
+                                    "--inventory", SEMAEV_INVENTORY,
+                                    "--o5-group", O5_GROUP], tmpdir, 7200)
+    record = run_json_gate("G0-2", process, EVIDENCE / "g0-2-determinants.json")
+    record["sandbox_termination_confirmed"] = modal_termination_confirmed(process)
+    return record
 
 
 def run_g03(tmpdir):
@@ -534,25 +578,44 @@ def run_g06(tmpdir):
     producer_path = EVIDENCE / "g0-6-operation-log.json"
     try:
         result = parse_process_json(producer)
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, UnicodeDecodeError, TypeError):
         result = None
     if result is not None:
         result["producer_process"] = public_receipt(producer)
     write_json(producer_path, result or {"parse_error": True, "process": public_receipt(producer)})
-    if producer["timeout"] or result is None or result.get("queries_completed") != 20:
+    if producer["timeout"]:
         return gate_record("G0-6", blocked=True,
-                           classification="resource_exhaustion" if producer["timeout"] else "infrastructure_error",
-                           observation="20-query operation log was not completed", evidence=(producer_path,))
-    checker = run_native([COUNTER_CHECKER, producer_path], tmpdir, 600)
+                           classification="resource_exhaustion",
+                           observation="20-query producer watchdog expired", evidence=(producer_path,))
+    if producer.get("launch_error") or producer.get("returncode") != 0:
+        return gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                           observation="operation-log producer failed to execute cleanly",
+                           evidence=(producer_path,))
+    if (not isinstance(result, dict) or result.get("queries_completed") != 20
+            or not isinstance(result.get("operation_log"), list)
+            or len(result["operation_log"]) != 20):
+        return gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                           observation="producer receipt was malformed or incomplete",
+                           evidence=(producer_path,))
+    checker = run_native([COUNTER_CHECKER, producer_path], tmpdir, 7200)
     checker_path = EVIDENCE / "g0-6-independent-check.json"
     try:
         checked = parse_process_json(checker)
-    except json.JSONDecodeError:
+    except (json.JSONDecodeError, UnicodeDecodeError, TypeError):
         checked = None
     write_json(checker_path, {"process": public_receipt(checker), "result": checked})
-    if checked and checked.get("pass") and checker["returncode"] == 0:
+    if checker["timeout"]:
+        return gate_record("G0-6", blocked=True, classification="resource_exhaustion",
+                           observation="independent counter checker watchdog expired",
+                           evidence=(producer_path, checker_path))
+    if checker.get("launch_error") or checker.get("returncode") != 0 or not isinstance(checked, dict):
+        return gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                           observation="counter checker failed or emitted a malformed receipt",
+                           evidence=(producer_path, checker_path))
+    if checked.get("pass") is True:
         return gate_record("G0-6", passed=True, classification="pass",
-                           observation="independent checker reproduced all four unit totals on 20 queries",
+                           observation=("independently regenerated setup and 20 deterministic queries "
+                                        "matched every site-bound event, P_setup, and all four query totals"),
                            evidence=(producer_path, checker_path))
     return gate_record("G0-6", failed=True, classification="implementation_error",
                        observation="independent counter recomputation disagreed",
@@ -591,16 +654,39 @@ def run_g04(tmpdir):
         "sizes_required": [{"bits": b, "L": l, "attempts": 200} for b, l in sorted(sizes)],
         "sizes": by_bits, "processes": processes,
         "larger_sizes_after_terminal_blocker_started": len(results) == 5})
+    timing_by_key = {}
+    for row in results:
+        fixture = row.get("fixture", {})
+        key = (fixture.get("bits", row.get("bits")), fixture.get("L", row.get("L")))
+        timing_by_key[key] = row
+    timing_table = []
+    for bits, size in sizes:
+        row = timing_by_key.get((bits, size))
+        timing_table.append({
+            "bits": bits, "L": size, "attempts_required": 200,
+            "attempts_completed": row.get("attempts_completed") if row else None,
+            "median_query_seconds": row.get("median_query_seconds") if row else None,
+            "setup_seconds": row.get("setup_seconds") if row else None,
+            "oracle_seconds": row.get("oracle_seconds") if row else None,
+            "pass": row.get("pass") if row else None,
+            "blocked": row.get("blocked") if row else True,
+            "classification": (row.get("classification") if row
+                               else "not_started_after_terminal_condition"),
+        })
     if passed:
-        return gate_record("G0-4", passed=True, classification="pass",
+        record = gate_record("G0-4", passed=True, classification="pass",
                            observation="all 1,000 smoke decisions agreed with O5",
                            evidence=(evidence_path,))
+        record["per_size_timing"] = timing_table
+        return record
     blocking_class = next((row.get("classification") for row in results if row.get("blocked")),
                           "resource_exhaustion")
-    return gate_record("G0-4", blocked=blocked, failed=not blocked,
+    record = gate_record("G0-4", blocked=blocked, failed=not blocked,
                        classification=blocking_class if blocked else "implementation_error",
                        observation="G1/O5 smoke panel did not complete; see per-size receipt",
                        evidence=(evidence_path,))
+    record["per_size_timing"] = timing_table
+    return record
 
 
 def pending_gate(gate_id, observation, classification="infrastructure_error"):
@@ -616,12 +702,19 @@ def write_reports(started, readings, gates, command, preflight, protocol_deviati
         "experiment_id": EXP, "goal_id": "GOAL-ICEX-001", "owner": OWNER,
         "epoch": EPOCH, "smoke_namespace": SMOKE_NAMESPACE,
         "sage_backend": SAGE_BACKEND,
-        "sage_image": SAGE_IMAGE if SAGE_BACKEND in ("docker", "modal") else None,
+        "sage_image": SAGE_IMAGE,
         "execution_scope": "S0 gates G0-1..G0-6 only; no frozen/protocol run",
         "started_at": started, "finished_at": now(), "command": command,
         "git": git_state(), "input_preflight": preflight,
         "machine_protection_readings": readings,
         "machine_protection_passed_at_launch": bool(readings and c7_ok(readings[0])),
+        "execution_authority": {
+            "frozen_tmpdir": str(MANDATED_TMPDIR),
+            "frozen_repository_volume": str(MANDATED_REPOSITORY_VOLUME),
+            "portable_substitution_authorized": PORTABILITY_AUTHORIZED,
+            "blocker": (None if MANDATED_REPOSITORY_VOLUME.is_dir()
+                        else "Coordinator portability mapping/amendment required before launch"),
+        },
         "runner_status": status, "gates": gates,
         "protocol_deviations": protocol_deviations,
         "forbidden_actions_not_taken": ["no frozen scientific query draw",
@@ -639,6 +732,8 @@ def write_reports(started, readings, gates, command, preflight, protocol_deviati
         "gcd/specialisation root extraction, and independent signed point recovery. It uses",
         "no direct Cartesian/grid membership substitute and never consults O5 inside G1.",
         "The mandated all-vanishing root branch retains every V candidate and is charged in X.",
+        "D-4 witness certification and D-5 B0 hit-order selection remain explicitly unimplemented",
+        "in this S0-only package and cannot be used for a protocol run.",
         "", "Gate outcomes:", ""]
     for gate in gates:
         label = "PASS" if gate["pass"] else ("BLOCKED" if gate["blocked"] else "FAIL")
@@ -676,8 +771,8 @@ def main(argv=None):
     parser.add_argument("--owner", default=OWNER)
     parser.add_argument("--epoch", type=int, default=EPOCH)
     parser.add_argument("--launch-command", default=None)
-    parser.add_argument("--sage-backend", choices=("auto", "native", "docker", "modal"),
-                        default=os.environ.get("ICEX_S0_SAGE_BACKEND", "auto"))
+    parser.add_argument("--sage-backend", choices=("modal",),
+                        default=os.environ.get("ICEX_S0_SAGE_BACKEND", "modal"))
     parser.add_argument("--modal-python", default=os.environ.get("ICEX_S0_MODAL_PYTHON"))
     args = parser.parse_args(argv)
     if args.owner != OWNER or args.epoch != EPOCH:
@@ -697,8 +792,21 @@ def main(argv=None):
     preflight = input_preflight()
     deviations = [{"kind": "development_probe", "classification": "procedure_deviation",
                    "observation": "Before the frozen runner, one non-protocol L=3 development query was started without the required nice/C-7 wrapper and manually terminated after 34 seconds; it emitted no result and is not gate evidence."}]
-    deviations.append({"kind": "infrastructure_portability", "classification": "declared_deviation",
-                       "observation": "The macOS-only /Volumes/SSD990/.tmp-agent path is absent on this cloud host; gate subprocesses use an auto-removed TMPDIR inside the task write scope on the same repository volume guarded by C-7."})
+    deviations.append({
+        "kind": "execution_authority",
+        "classification": "hard_blocker",
+        "observation": ("The frozen card literally requires TMPDIR=/Volumes/SSD990/.tmp-agent "
+                        "and C-7 on /Volumes/SSD990. No committed Coordinator amendment "
+                        "authorises /workspace or any task-local substitute; none is used."),
+        "required_resolution": "committed Coordinator portability mapping/amendment",
+    })
+    if not MANDATED_REPOSITORY_VOLUME.is_dir():
+        gates = [pending_gate(
+            gate_id,
+            "not started: frozen /Volumes/SSD990 authority cannot be substituted; Coordinator amendment required",
+            "execution_authority") for gate_id in GATES]
+        write_reports(started, readings, gates, command, preflight, deviations)
+        return 6
     if not c7_ok(readings[0]):
         gates = [pending_gate(gate_id, "not started because C-7 failed at launch") for gate_id in GATES]
         write_reports(started, readings, gates, command, preflight, deviations)
@@ -715,23 +823,38 @@ def main(argv=None):
         write_reports(started, readings, gates, command, preflight, deviations)
         return 5
     EVIDENCE.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="s0-tmp-", dir=HERE) as temporary:
+    with tempfile.TemporaryDirectory(prefix="icex-s0-", dir=MANDATED_TMPDIR) as temporary:
         tmpdir = Path(temporary)
         outcomes = {"G0-1": run_g01(tmpdir)}
         readings.append(machine_reading())
-        if outcomes["G0-1"]["pass"] and c7_ok(readings[-1]):
+        global_stop = None
+        if outcomes["G0-1"].get("sandbox_termination_confirmed") is False:
+            global_stop = "unconfirmed Modal sandbox termination in G0-1"
+        if global_stop:
+            outcomes["G0-2"] = pending_gate("G0-2", global_stop, "infrastructure_error")
+            outcomes["G0-3"] = pending_gate("G0-3", global_stop, "infrastructure_error")
+        elif outcomes["G0-1"]["pass"] and c7_ok(readings[-1]):
             outcomes["G0-2"] = run_g02(tmpdir)
             readings.append(machine_reading())
-            outcomes["G0-3"] = run_g03(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-3", "C-7 failed between stages")
+            if outcomes["G0-2"].get("sandbox_termination_confirmed") is False:
+                global_stop = "unconfirmed Modal sandbox termination in G0-2"
+                outcomes["G0-3"] = pending_gate("G0-3", global_stop, "infrastructure_error")
+            else:
+                outcomes["G0-3"] = (run_g03(tmpdir) if c7_ok(readings[-1])
+                                     else pending_gate("G0-3", "C-7 failed between stages"))
         else:
             outcomes["G0-2"] = pending_gate("G0-2", "G0-1 dependency did not pass")
             outcomes["G0-3"] = pending_gate("G0-3", "G0-1 dependency did not pass")
-        readings.append(machine_reading())
-        outcomes["G0-5"] = run_g05(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-5", "C-7 failed between stages")
-        readings.append(machine_reading())
-        outcomes["G0-6"] = run_g06(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-6", "C-7 failed between stages")
-        readings.append(machine_reading())
-        outcomes["G0-4"] = run_g04(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-4", "C-7 failed between stages")
+        if global_stop:
+            for gate_id in ("G0-5", "G0-6", "G0-4"):
+                outcomes[gate_id] = pending_gate(gate_id, global_stop, "infrastructure_error")
+        else:
+            readings.append(machine_reading())
+            outcomes["G0-5"] = run_g05(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-5", "C-7 failed between stages")
+            readings.append(machine_reading())
+            outcomes["G0-6"] = run_g06(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-6", "C-7 failed between stages")
+            readings.append(machine_reading())
+            outcomes["G0-4"] = run_g04(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-4", "C-7 failed between stages")
         gates = [outcomes[gate_id] for gate_id in GATES]
     write_reports(started, readings, gates, command, preflight, deviations)
     return 0 if all(gate["pass"] for gate in gates) else 2

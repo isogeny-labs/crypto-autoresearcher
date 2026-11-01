@@ -2,12 +2,14 @@
 """Sage-only independent verifiers for EXP-ICEX-153c34 S0."""
 
 import argparse
+import hashlib
+import importlib.util
 import json
 import resource
 import sys
 import time
 
-from sage.all import GF, PolynomialRing
+from sage.all import EllipticCurve, GF, PolynomialRing
 
 
 def peak_rss_bytes():
@@ -123,8 +125,77 @@ def fixture_rows(v4_path, panel_path):
     return rows
 
 
-def gate_g02(v4_path, panel_path):
+def inventory_polynomial(rows, variable_count, a, b, ring):
+    """Specialise the pinned Z[a,b] coefficient inventory exactly in F_p."""
+    terms = {}
+    for row in rows:
+        ea, eb = row[0], row[1]
+        exponent = tuple(row[2:2 + variable_count]) + (0,) * (6 - variable_count)
+        coefficient = ring.base_ring()(row[-1]) * a ** ea * b ** eb
+        terms[exponent] = terms.get(exponent, ring.base_ring().zero()) + coefficient
+    return ring(terms)
+
+
+def load_module(path):
+    spec = importlib.util.spec_from_file_location("icex_o5_group", path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("cannot load independent O5 group module")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def sage_tuple(point):
+    if point.is_zero():
+        return None
+    return int(point[0]), int(point[1])
+
+
+def o5_group_crosscheck(module, p, av, bv):
+    """Cross-check the retained independent O5 affine law against Sage."""
+    field = GF(p)
+    curve = EllipticCurve(field, [field(av), field(bv)])
+    points = []
+    x = 0
+    while len(points) < 6 and x < p:
+        candidate = module.canonical_point(p, av, bv, x)
+        if candidate is not None:
+            # Curve construction also verifies the independent square root.
+            sage_point = curve((field(candidate[0]), field(candidate[1])))
+            if sage_tuple(sage_point) != candidate:
+                return {"pass": False, "cases": 0,
+                        "reason": "canonical lift disagrees with Sage", "x": x}
+            points.append(candidate)
+        x += 1
+    if len(points) < 2:
+        return {"pass": False, "cases": 0, "reason": "insufficient curve points"}
+
+    cases = [(None, None)]
+    for point in points:
+        cases.extend(((None, point), (point, None),
+                      (point, (point[0], (-point[1]) % p)), (point, point)))
+    cases.extend((points[left], points[right])
+                 for left in range(len(points)) for right in range(left + 1, len(points)))
+    failures = []
+    for index, (left, right) in enumerate(cases):
+        sage_left = (curve(0) if left is None
+                     else curve((field(left[0]), field(left[1]))))
+        sage_right = (curve(0) if right is None
+                      else curve((field(right[0]), field(right[1]))))
+        expected = sage_tuple(sage_left + sage_right)
+        observed = module.point_add(left, right, p, av)
+        if observed != expected:
+            failures.append({"case": index, "left": left, "right": right,
+                             "observed": observed, "sage": expected})
+    return {"pass": not failures, "cases": len(cases), "points": len(points),
+            "failures": failures}
+
+
+def gate_g02(v4_path, panel_path, inventory_path, o5_group_path):
     started = time.time()
+    with open(inventory_path, "r") as handle:
+        inventory = json.load(handle)
+    o5_module = load_module(o5_group_path)
     evidence = []
     for fixture in fixture_rows(v4_path, panel_path):
         item_started = time.time()
@@ -141,6 +212,9 @@ def gate_g02(v4_path, panel_path):
         f4_bareiss = determinant_bareiss(matrix4, ring)
         f4_subset = determinant_subset_dp(matrix4, ring)
         f4_equal = f4_bareiss == f4_subset
+        f4_inventory = inventory_polynomial(inventory["S4"], 4, a, b, ring)
+        f4_inventory_equal = (f4_bareiss == f4_inventory
+                              and f4_subset == f4_inventory)
 
         left5_bareiss = f4_bareiss.subs({x4: z})
         left5_subset = f4_subset.subs({x4: z})
@@ -151,21 +225,37 @@ def gate_g02(v4_path, panel_path):
         f5_subset = determinant_subset_dp(
             sylvester(fixed_coefficients(left5_subset, 5, 4, ring), right5_coeff, ring), ring)
         f5_equal = f5_bareiss == f5_subset
+        f5_inventory = inventory_polynomial(inventory["S5"], 5, a, b, ring)
+        f5_inventory_equal = (f5_bareiss == f5_inventory
+                              and f5_subset == f5_inventory)
+        group_check = o5_group_crosscheck(o5_module, p, av, bv)
         evidence.append({
             "fixture_id": fixture["fixture_id"], "p": p,
             "f4_equal": bool(f4_equal), "f5_equal": bool(f5_equal),
+            "f4_inventory_equal": bool(f4_inventory_equal),
+            "f5_inventory_equal": bool(f5_inventory_equal),
             "f4_terms": len(f4_bareiss.dict()), "f5_terms": len(f5_bareiss.dict()),
             "f4_sha256": polynomial_sha256(f4_bareiss),
             "f5_sha256": polynomial_sha256(f5_bareiss),
+            "f4_inventory_sha256": polynomial_sha256(f4_inventory),
+            "f5_inventory_sha256": polynomial_sha256(f5_inventory),
+            "o5_group_sage_crosscheck": group_check,
             "seconds": round(time.time() - item_started, 6),
         })
     return {
         "gate": "G0-2", "pass": (len(evidence) == 26
                                       and all(row["f4_equal"] and row["f5_equal"]
+                                              and row["f4_inventory_equal"]
+                                              and row["f5_inventory_equal"]
+                                              and row["o5_group_sage_crosscheck"]["pass"]
                                               for row in evidence)),
         "fixtures_checked": len(evidence),
         "method_a": "fraction-free Bareiss with exact divisions and first-nonzero row pivots",
         "method_b": "division-free subset-DP determinant expansion",
+        "method_c": "exact specialization of pinned semaev_polys.json coefficient inventory",
+        "inventory_sha256": hashlib.sha256(open(inventory_path, "rb").read()).hexdigest(),
+        "o5_group_sha256": hashlib.sha256(open(o5_group_path, "rb").read()).hexdigest(),
+        "o5_group_checked_by": "Sage EllipticCurve group law",
         "full_formal_slots_retained": True, "fixtures": evidence,
         "seconds": round(time.time() - started, 6), "peak_rss_bytes": peak_rss_bytes(),
     }
@@ -176,8 +266,10 @@ def main():
     parser.add_argument("--gate", choices=("G0-2",), required=True)
     parser.add_argument("--v4", required=True)
     parser.add_argument("--panel", required=True)
+    parser.add_argument("--inventory", required=True)
+    parser.add_argument("--o5-group", required=True)
     args = parser.parse_args()
-    result = gate_g02(args.v4, args.panel)
+    result = gate_g02(args.v4, args.panel, args.inventory, args.o5_group)
     json.dump(result, sys.stdout, sort_keys=True)
     sys.stdout.write("\n")
     raise SystemExit(0 if result["pass"] else 2)

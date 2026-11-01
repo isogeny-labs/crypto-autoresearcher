@@ -7,49 +7,55 @@ epoch: 1
 write_scope:
 - experiments/EXP-ICEX-153c34/implementation/
 files:
-- path: experiments/EXP-ICEX-153c34/implementation/g1_s0.py
-  sha256: 66b32dd328fed2160a632e466a25ce46f1cd492e88a537aa4a9ccc8f1c0fe35c
-- path: experiments/EXP-ICEX-153c34/implementation/implementation.md
-  sha256: 1c677eb232d8e9d1a43a139a1132e35aa879f2974fc2b4daebfeaefc5eb84796
-- path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures.py
-  sha256: 701e69f06f22d890a09473f2a7fac04f78d60d7021e346f28555a8fae377fab6
-- path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures_verifier.py
-  sha256: 2cfbea9b5fbbf1501e27954e610e274cb72a214cc8657fb31dd7a903b02e459d
-- path: experiments/EXP-ICEX-153c34/implementation/s0_counter_checker.py
-  sha256: 8847dbcf3509b2da58f9be8e0b7902acbb8df2995e04e48bf8c5c158c5ffa3f9
-- path: experiments/EXP-ICEX-153c34/implementation/s0_driver.py
-  sha256: 12cef27a5fe2e120f2bc8b365c156d61351f6988f6e0fd6e7399b03fe84d7dcc
-- path: experiments/EXP-ICEX-153c34/implementation/s0_gate_worker.py
-  sha256: 04a0062eeb33c6cadabb2a5933dedac936d519511af754e434ae9ee091a4180d
-- path: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml
-  sha256: 83e9aac27f6924327cf4d0ad7574404921574f74959bd6bd155a89f6866ed9b8
-- path: experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py
-  sha256: 77a2379fcf0473ee9938edaa6fc4fe02f44423d0330c300a2535ad19aef81143
-- path: experiments/EXP-ICEX-153c34/implementation/s0_sage_gates.py
-  sha256: 0fea55dbee0f32edd2d7b3da4ee521cbfeb3ef96abf41f93608d3fd350fea724
+- {path: experiments/EXP-ICEX-153c34/implementation/g1_s0.py, sha256: a7686ab7661479b9d3b1b2349d6134b03d9b8477e1df41221e5facef7f01c3ce}
+- {path: experiments/EXP-ICEX-153c34/implementation/implementation.md, sha256: 2b724d49643733e5710dd8ea69d7c8d5c4f87ca0076db5b1e3f87dea3abc51ea}
+- {path: experiments/EXP-ICEX-153c34/implementation/o5_group.py, sha256: 8b33c1bd1e5faa92f6e7a65a62f48a0f3e49432b3a846be330ad7f56ae52c07b}
+- {path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures.py, sha256: 701e69f06f22d890a09473f2a7fac04f78d60d7021e346f28555a8fae377fab6}
+- {path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures_verifier.py, sha256: 2cfbea9b5fbbf1501e27954e610e274cb72a214cc8657fb31dd7a903b02e459d}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_counter_checker.py, sha256: 46d6f2d4143671f9be5da719c88a23319426fc40758d3860d61bd53e5b8c3a0d}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_driver.py, sha256: 63189fd10e7f877145f4416054ad4960af67032c6378d414a0b821864823f9cf}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_gate_worker.py, sha256: 1bb3515d0df66cf157b8813e3e0de0aadea6f8fd02959153c73953d09f3e5167}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml, sha256: 68c6b2acb07dff68c7ba7f34994def7f7eabe97f2dd201c790e098529683578e}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py, sha256: 0bcfd3976c1144e90ad72d9c9efd0f457f012898a941818c33ff785afb2023e1}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_operation_spec.py, sha256: d608247f5e062bea50e71fdff3b987c2b692d6829c03def3340e6f4a33b1fbae}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_sage_gates.py, sha256: 7a37e1353ed2a5458929c023ce84053eedd5630f094a80b8c21cfcb4a7a50fe6}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py, sha256: 0cdac82d6c244ed4c45b4cc61201393e679694074a6634e9a3812abdf384d1d2}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests_output.json, sha256: dde1a07a38a61b3ea61191e98df186da37fb2b310ed65ff1aaf07b4080ae2d7e}
 - path: experiments/EXP-ICEX-153c34/implementation/implementation_report.yaml
   sha256: self; final content is bound by the static branch commit and Coordinator snapshot receipt
 commands:
-- PYTHONDONTWRITEBYTECODE=1 /workspace/.venv/bin/python experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py --self-test
+- PYTHONDONTWRITEBYTECODE=1 python3 experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py
 - static AST parse of every implementation Python file
-- offline driver-to-adapter request/manifest validation for all four Sage call shapes
-- offline exact-timeout receipt acceptance and malformed-receipt rejection/preservation mocks
-- offline independent point-add/square-root unit comparison on p=101 and p=103
-- offline lex-root all-vanishing and nonzero-constant branch unit checks
-- frozen input SHA256 preflight without invoking the S0 runner
-- git diff --check
+- frozen input SHA-256 preflight without invoking the S0 runner
+- JSON/YAML parse and git diff --check
 results:
   runner_status: not_started
   static_validation: passed
+  static_evidence: experiments/EXP-ICEX-153c34/implementation/s0_static_tests_output.json
   modal_invoked: false
+  sage_invoked: false
   gate_process_invoked: false
+  scientific_target_observed: false
+  g0_3_actual_path_checks_prepared: 52000
+  g0_3_independent_bareiss_checks_prepared: 52000
+  g0_6_registered_operation_sites: 38
+  g0_6_site_component_pairs_omission_and_tamper_tested: 41
   s0_gates_report: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml
   gates_passed: []
   gates_failed: []
   gates_blocked: [G0-1, G0-2, G0-3, G0-4, G0-5, G0-6]
-  sage_backend_for_next_launch: modal
+  sage_backend_for_next_launch: modal-only
   sage_image: sagemath/sagemath@sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d
-infrastructure_impediment: execution intentionally deferred until this static implementation is committed and C-7 passes
+execution_authority:
+  frozen_repository_volume: /Volumes/SSD990
+  frozen_tmpdir: /Volumes/SSD990/.tmp-agent
+  mandated_volume_present: false
+  portability_substitution_authorized: false
+  observed_at: '2026-11-01T21:51:18Z'
+  workspace_free_bytes_observation: 17353854976
+  repository_free_min_bytes: 21474836480
+  blocker: committed Coordinator portability mapping/amendment required before launch; current workspace reading is also below C-7
+infrastructure_impediment: execution authority and C-7 free-space conditions are unmet
 protocol_complete: false
 requires_rerun: true
-scientific_interpretation: none; static implementation evidence only
+scientific_interpretation: none; offline static implementation evidence only

@@ -18,6 +18,8 @@ from pathlib import Path
 import numpy as np
 
 import g1_s0 as g1
+import o5_group
+import s0_operation_spec as operation_spec
 
 
 HERE = Path(__file__).resolve().parent
@@ -75,56 +77,7 @@ def curve_order(p, a, b):
 
 
 def point_add(P, Q, p, a):
-    """Verifier-only affine group law, independent of the G1 implementation."""
-    if P is None:
-        return Q
-    if Q is None:
-        return P
-    x1, y1 = P
-    x2, y2 = Q
-    if x1 == x2 and (y1 + y2) % p == 0:
-        return None
-    if x1 == x2:
-        numerator, denominator = (3 * x1 * x1 + a) % p, (2 * y1) % p
-    else:
-        numerator, denominator = (y2 - y1) % p, (x2 - x1) % p
-    slope = numerator * pow(denominator, p - 2, p) % p
-    x3 = (slope * slope - x1 - x2) % p
-    y3 = (slope * (x1 - x3) - y1) % p
-    return x3, y3
-
-
-def verifier_sqrt(value, p):
-    """Verifier-only deterministic Tonelli-Shanks square root."""
-    value %= p
-    if value == 0:
-        return 0
-    if pow(value, (p - 1) // 2, p) != 1:
-        raise ValueError("not a square")
-    if p % 4 == 3:
-        return pow(value, (p + 1) // 4, p)
-    odd, power = p - 1, 0
-    while odd % 2 == 0:
-        odd //= 2
-        power += 1
-    nonresidue = 2
-    while pow(nonresidue, (p - 1) // 2, p) != p - 1:
-        nonresidue += 1
-    m = power
-    c = pow(nonresidue, odd, p)
-    t = pow(value, odd, p)
-    root = pow(value, (odd + 1) // 2, p)
-    while t != 1:
-        index, square = 1, t * t % p
-        while square != 1:
-            square = square * square % p
-            index += 1
-        correction = pow(c, 1 << (m - index - 1), p)
-        root = root * correction % p
-        t = t * correction * correction % p
-        c = correction * correction % p
-        m = index
-    return root
+    return o5_group.point_add(P, Q, p, a)
 
 
 def point_mul(k, P, p, a):
@@ -139,11 +92,7 @@ def point_mul(k, P, p, a):
 
 
 def canonical_point(p, a, b, x):
-    rhs = (x**3 + a * x + b) % p
-    if rhs == 0 or legendre(rhs, p) != 1:
-        return None
-    y = verifier_sqrt(rhs, p)
-    return x, min(y, p - y)
+    return o5_group.canonical_point(p, a, b, x)
 
 
 def smoke_fixture(bits, wanted_l):
@@ -392,37 +341,103 @@ def gate_g03(panel_path):
             all_pass = False
             continue
         signed, nonsums, retries = gate_g03_samples(fixture, deck)
+        setup = g1.d2_setup(int(fixture["p"]), int(fixture["a"]),
+                            int(fixture["b"]), [point[0] for point in deck], TERMS)
         samples = signed + nonsums
         tensor = f5_tensor(fixture)
         coefficients = batch_f5_coefficients(
             tensor, [sample[0][:4] for sample in samples], int(fixture["p"]))
         signed_failures, nonsum_failures, d2_crosscheck_failures = [], [], []
+        actual_d2_failures = []
         for index, ((xs, target), f5_coeff) in enumerate(zip(samples, coefficients)):
             p, a, b = int(fixture["p"]), int(fixture["a"]), int(fixture["b"])
             value = numeric_d2_resultant(f5_coeff, p, a, b, xs[4], target[0])
-            if index in (0, 1000):
-                independent = numeric_resultant_bareiss(
-                    f5_coeff, g1.s3_coeffs(p, a, b, xs[4], target[0]), p)
-                if value != independent:
-                    d2_crosscheck_failures.append({"sample": index, "d2": int(value),
-                                                   "bareiss": int(independent)})
+            # Gate the implementation actually used by G1, not only a numeric
+            # surrogate.  Every preregistered tuple is also compared with a
+            # separately constructed full formal-slot Sylvester determinant.
+            independent = numeric_resultant_bareiss(
+                f5_coeff, g1.s3_coeffs(p, a, b, xs[4], target[0]), p)
+            if value != independent:
+                d2_crosscheck_failures.append({"sample": index, "d2": int(value),
+                                               "bareiss": int(independent)})
+            actual_poly = g1.d2_specialise(setup, target[0])
+            actual = g1.sparse_eval(actual_poly, xs, p)
+            if actual != value or actual != independent:
+                actual_d2_failures.append({
+                    "sample": index, "actual_d2_specialise": int(actual),
+                    "numeric_d2": int(value), "bareiss": int(independent),
+                })
             if index < 1000 and value != 0:
                 signed_failures.append({"sample": index, "value": int(value)})
             if index >= 1000 and value == 0:
                 nonsum_failures.append({"sample": index - 1000, "value": 0})
-        passed = not signed_failures and not nonsum_failures and not d2_crosscheck_failures
+        # Force the formal quadratic's leading coefficient to vanish by taking
+        # x_R=x_5.  This retains the full degree slots and exercises precisely
+        # the removable-singularity branch that random smoke almost never hits.
+        drop_tuples = [
+            tuple(deck[position % len(deck)][0] for position in range(5)),
+            tuple(deck[-1 - (position % len(deck))][0] for position in range(5)),
+        ]
+        degree_drop = []
+        for case, drop_xs in enumerate(drop_tuples):
+            drop_xr = drop_xs[4]
+            drop_coeff = batch_f5_coefficients(
+                tensor, [drop_xs[:4]], int(fixture["p"]))[0]
+            drop_b = g1.s3_coeffs(int(fixture["p"]), int(fixture["a"]),
+                                  int(fixture["b"]), drop_xs[4], drop_xr)
+            drop_numeric = numeric_d2_resultant(
+                drop_coeff, int(fixture["p"]), int(fixture["a"]), int(fixture["b"]),
+                drop_xs[4], drop_xr)
+            drop_bareiss = numeric_resultant_bareiss(
+                drop_coeff, drop_b, int(fixture["p"]))
+            drop_actual = g1.sparse_eval(
+                g1.d2_specialise(setup, drop_xr), drop_xs, int(fixture["p"]))
+            degree_drop.append({
+                "case": case, "xs": list(drop_xs), "x5": drop_xs[4], "xR": drop_xr,
+                "formal_leading_coefficient": drop_b[2],
+                "actual_d2_specialise": int(drop_actual),
+                "numeric_d2": int(drop_numeric), "bareiss": int(drop_bareiss),
+                "pass": drop_b[2] == 0 and drop_actual == drop_numeric == drop_bareiss,
+            })
+
+        # D-6 is a distinct zero-target polynomial branch.  Compare the actual
+        # reduced f5 normal form against the pinned coefficient inventory.
+        zero_poly = g1.d2_zero_target(setup)
+        zero_xs = drop_tuples[0]
+        zero_actual = g1.sparse_eval(zero_poly, zero_xs, int(fixture["p"]))
+        zero_inventory = g1.s5_eval(
+            int(fixture["p"]), int(fixture["a"]), int(fixture["b"]), zero_xs, TERMS)
+        zero_target = {
+            "actual_d2_zero_target": int(zero_actual),
+            "inventory_f5": int(zero_inventory),
+            "pass": zero_actual == zero_inventory,
+        }
+        passed = (not signed_failures and not nonsum_failures
+                  and not d2_crosscheck_failures and not actual_d2_failures
+                  and all(row["pass"] for row in degree_drop) and zero_target["pass"])
         all_pass &= passed
         evidence.append({"fixture_id": fixture["fixture_id"], "p": fixture["p"],
                          "L": len(deck), "signed_checks": 1000, "nonsum_checks": 1000,
                          "signed_failures": signed_failures, "nonsum_failures": nonsum_failures,
             "d2_bareiss_crosscheck_failures": d2_crosscheck_failures,
+            "actual_d2_specialise_checks": len(samples),
+            "independent_bareiss_checks": len(samples),
+            "actual_d2_specialise_failures": actual_d2_failures,
+            "leading_degree_drop_control": degree_drop,
+            "d6_zero_target_control": zero_target,
                          "rejections": retries, "pass": passed,
             "frozen_fixture_cost_fields_emitted": False})
-    all_pass = all_pass and len(evidence) == 26
+    actual_checks = sum(row.get("actual_d2_specialise_checks", 0) for row in evidence)
+    bareiss_checks = sum(row.get("independent_bareiss_checks", 0) for row in evidence)
+    all_pass = (all_pass and len(evidence) == 26
+                and actual_checks == 52_000 and bareiss_checks == 52_000)
     return {"gate": "G0-3", "pass": all_pass, "blocked": False,
             "classification": "pass" if all_pass else "implementation_error",
             "fixtures_required": 26, "fixtures_checked": len(evidence),
             "samples_per_fixture": {"signed_5_sums": 1000, "non_sums": 1000},
+            "actual_d2_specialise_checks_required": 52_000,
+            "actual_d2_specialise_checks_completed": actual_checks,
+            "independent_bareiss_checks_completed": bareiss_checks,
             "sample_namespace": SMOKE, "fixtures": evidence}
 
 
@@ -446,6 +461,38 @@ def gate_g04(bits, wanted_l):
     setup_started = time.perf_counter()
     setup = g1.d2_setup(fixture["p"], fixture["a"], fixture["b"], fixture["V"], TERMS)
     setup_seconds = time.perf_counter() - setup_started
+    # Required D-6/O control: the scalar stream almost never produces O, so it
+    # must be forced before the 200 ordinary attempts.
+    try:
+        zero_result, zero_elapsed = run_query(fixture, setup, None)
+    except QueryTimeout as error:
+        return {
+            "gate": "G0-4", "pass": False, "blocked": True,
+            "classification": "resource_exhaustion", "fixture": fixture,
+            "attempts_required": 200, "attempts_completed": 0,
+            "observation": "D-6/O control: %s" % error,
+            "setup_seconds": setup_seconds, "oracle_seconds": oracle_seconds,
+            "zero_target_control": {"completed": False}, "attempts": [],
+            "frozen_fixture_cost_fields_emitted": False,
+        }
+    zero_expected = None in oracle
+    zero_control = {
+        "completed": True, "target": None, "g1_member": zero_result.get("member"),
+        "o5_member": zero_expected,
+        "agree": zero_result.get("status") == "ok"
+                 and zero_result.get("member") == zero_expected,
+        "seconds": zero_elapsed,
+    }
+    if not zero_control["agree"]:
+        return {
+            "gate": "G0-4", "pass": False, "blocked": False,
+            "classification": "implementation_error", "fixture": fixture,
+            "attempts_required": 200, "attempts_completed": 0,
+            "observation": "D-6/O G1/O5 disagreement",
+            "setup_seconds": setup_seconds, "oracle_seconds": oracle_seconds,
+            "zero_target_control": zero_control, "attempts": [],
+            "frozen_fixture_cost_fields_emitted": False,
+        }
     attempts, timings = [], []
     for index in range(200):
         scalar, target = attempt_target(fixture, index)
@@ -458,6 +505,7 @@ def gate_g04(bits, wanted_l):
                 "attempts_required": 200, "attempts_completed": len(attempts),
                 "observation": str(error), "setup_seconds": setup_seconds,
                 "oracle_seconds": oracle_seconds, "attempts": attempts,
+                "zero_target_control": zero_control,
                 "frozen_fixture_cost_fields_emitted": False,
             }
         expected = target in oracle
@@ -474,6 +522,7 @@ def gate_g04(bits, wanted_l):
                 "attempts_required": 200, "attempts_completed": len(attempts),
                 "observation": "first G1/O5 disagreement", "setup_seconds": setup_seconds,
                 "oracle_seconds": oracle_seconds, "attempts": attempts,
+                "zero_target_control": zero_control,
                 "frozen_fixture_cost_fields_emitted": False,
             }
     ordered = sorted(timings)
@@ -483,28 +532,53 @@ def gate_g04(bits, wanted_l):
         "fixture": fixture, "attempts_required": 200, "attempts_completed": 200,
         "all_agree": True, "median_query_seconds": median,
         "setup_seconds": setup_seconds, "oracle_seconds": oracle_seconds,
+        "zero_target_control": zero_control,
         "attempts": attempts, "frozen_fixture_cost_fields_emitted": False,
     }
 
 
 def gate_g06():
     fixture, _deck = smoke_fixture(7, 2)
-    setup = g1.d2_setup(fixture["p"], fixture["a"], fixture["b"], fixture["V"], TERMS)
+    setup_counter = g1.Counters(trace_operations=True)
+    setup_counter.set_component("P")
+    setup = g1.d2_setup(
+        fixture["p"], fixture["a"], fixture["b"], fixture["V"], TERMS,
+        counters=setup_counter)
     operation_log = []
     for index in range(20):
-        _scalar, target = attempt_target(fixture, index)
-        result, elapsed = run_query(fixture, setup, target)
+        scalar, target = attempt_target(fixture, index)
+        prior = signal.signal(signal.SIGALRM, _alarm)
+        signal.alarm(3600)
+        started = time.perf_counter()
+        try:
+            result = g1.g1_membership(
+                fixture, fixture["V"], target, TERMS, setup=setup,
+                trace_operations=True)
+            elapsed = time.perf_counter() - started
+        finally:
+            signal.alarm(0)
+            signal.signal(signal.SIGALRM, prior)
         if result.get("status") != "ok":
             return {"gate": "G0-6", "pass": False, "blocked": True,
                     "classification": "infrastructure_error", "fixture": fixture,
                     "queries_completed": len(operation_log), "operation_log": operation_log,
                     "observation": result}
         operation_log.append({
-            "attempt": index, "seconds": elapsed, "components": result["components"],
+            "attempt": index, "scalar": scalar,
+            "target": None if target is None else list(target),
+            "seconds": elapsed, "components": result["components"],
+            "events": result["operation_events"],
             "reported_units": {name: raw["units"] for name, raw in result["components"].items()},
         })
     return {"gate": "G0-6", "pass": None, "blocked": False,
             "classification": "pending_independent_checker", "fixture": fixture,
+            "terms_sha256": hashlib.sha256(TERMS.read_bytes()).hexdigest(),
+            "g1_sha256": hashlib.sha256(Path(g1.__file__).read_bytes()).hexdigest(),
+            "operation_spec_sha256": hashlib.sha256(
+                Path(operation_spec.__file__).read_bytes()).hexdigest(),
+            "setup": {"events": setup_counter.events,
+                      "raw": setup_counter.snapshot(),
+                      "units": setup_counter.units()},
             "queries_completed": 20, "operation_log": operation_log}
 
 

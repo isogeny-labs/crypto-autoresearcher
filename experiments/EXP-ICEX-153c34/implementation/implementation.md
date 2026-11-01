@@ -5,15 +5,23 @@ The implementation contains:
 
 * an exact panel generator and an independent Sage byte reproducer;
 * independent Bareiss/subset-DP polynomial checks and deterministic smoke,
-  power-reproduction, and counter-check workers;
+  power-reproduction, and counter-check workers; G0-3 evaluates the actual
+  D-2 implementation and an independent full-slot determinant on all 52,000
+  preregistered tuples;
 * the D-2 monomial-basis pseudo-resultant, deterministic lex Buchberger,
   recursive gcd/specialisation root extraction, and signed point recovery;
 * a fail-closed S0 orchestrator with pinned inputs, C-7 checks, one-worker
-  execution, `nice >= 10`, and an 8 GiB address-space ceiling; and
+  execution, `nice >= 10`, and an 8 GiB address-space ceiling; G0-6 regenerates
+  its fixture, targets, P_setup, and query traces in a separate process against
+  the explicit `s0_operation_spec.py` site contract, so producer counters and
+  events are claims rather than expected inputs. P_setup includes coefficient
+  specialization, indicator reduction, pair products, and factor-base lift
+  square roots in the same C-3 multiplication units; and
 * an explicitly selected Modal Sage-verifier backend pinned to the linux/amd64
   manifest
   `sagemath/sagemath@sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d`.
-  It sends only a hash-manifested per-call bundle, blocks worker networking,
+  It is the only backend the frozen driver accepts. It sends only a
+  hash-manifested per-call bundle, blocks worker networking,
   enforces one CPU/8 GiB/one single-use container/no retries, and returns exact
   stdout and stderr bytes in the receipt. Modal is never an automatic fallback.
 
@@ -27,7 +35,10 @@ as required before the frozen D-5 B0-hit-order selection; negative membership
 exhausts the algebraic roots.
 
 This static snapshot has not executed Modal or any S0 gate. All six gates remain
-blocked pending an immutable implementation commit and an authorized launch
-whose local C-7 reading passes. The earlier non-protocol L=3 development probe
+blocked pending an immutable implementation commit and a Coordinator amendment
+authorising a repository-volume/TMPDIR mapping for this host. The frozen
+`/Volumes/SSD990/.tmp-agent` path is absent, no substitute is authorized, and
+the present `/workspace` free space is also below C-7's 20-GiB repository-volume
+minimum. The earlier non-protocol L=3 development probe
 was manually terminated after 34 seconds, emitted no result, and is not gate
 evidence. No scientific interpretation is made.

@@ -36,14 +36,16 @@ SAGE_IMAGE_DIGEST = "sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616
 SAGE_IMAGE = "sagemath/sagemath@" + SAGE_IMAGE_DIGEST
 RSS_BYTES = 8 * 1024**3
 MAX_TIMEOUT_SECONDS = 7200
-MAX_BUNDLE_BYTES = 8 * 1024 * 1024
+MAX_BUNDLE_BYTES = 16 * 1024 * 1024
 ALLOWED_SCRIPT_SHA256 = {
     "panel_fixtures.py": "701e69f06f22d890a09473f2a7fac04f78d60d7021e346f28555a8fae377fab6",
     "panel_fixtures_verifier.py": "2cfbea9b5fbbf1501e27954e610e274cb72a214cc8657fb31dd7a903b02e459d",
     "ic_leads_fixtures_v2.py": "bde44afb3e14c34d97bf50c154456565d12f0b5a1d33d63b473f0f4124b1f3b2",
-    "s0_sage_gates.py": "0fea55dbee0f32edd2d7b3da4ee521cbfeb3ef96abf41f93608d3fd350fea724",
+    "s0_sage_gates.py": "7a37e1353ed2a5458929c023ce84053eedd5630f094a80b8c21cfcb4a7a50fe6",
 }
 V4_SHA256 = "543f49ca5304f4e61085305ca2ea01ccc0085298db26368d7362f96b1b6a5a45"
+SEMAEV_INVENTORY_SHA256 = "447d9bfff27f2b57b50e60fffde0c380ab697f4b2cbf006114bb7a50be10642e"
+O5_GROUP_SHA256 = "8b33c1bd1e5faa92f6e7a65a62f48a0f3e49432b3a846be330ad7f56ae52c07b"
 SAFE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}\Z")
 
 # The outer shell consumes the deterministic tar from stdin, verifies every
@@ -153,11 +155,11 @@ def validate_request(request: dict) -> list[tuple[dict, bytes]]:
     if any("\x00" in item or item.startswith("/") or ".." in Path(item).parts for item in argv):
         raise ValueError("unsafe argv token")
     files = request["files"]
-    if not isinstance(files, list) or not (1 <= len(files) <= 4):
+    if not isinstance(files, list) or not (1 <= len(files) <= 6):
         raise ValueError("invalid file bundle cardinality")
     decoded = [(row, decode_file(row)) for row in files]
     if sum(len(data) for _, data in decoded) > MAX_BUNDLE_BYTES:
-        raise ValueError("bundle exceeds the eight-MiB verifier bound")
+        raise ValueError("bundle exceeds the sixteen-MiB verifier bound")
     names = [row["name"] for row, _ in decoded]
     if len(names) != len(set(names)):
         raise ValueError("duplicate bundle filename")
@@ -176,14 +178,23 @@ def validate_request(request: dict) -> list[tuple[dict, bytes]]:
             raise ValueError("argv references a file absent from the bundle")
     if request["script"] == "s0_sage_gates.py":
         expected_argv = ["--gate", "G0-2", "--v4", "ic_leads_fixtures_v2.json",
-                         "--panel", "panel_fixtures.json"]
+                         "--panel", "panel_fixtures.json",
+                         "--inventory", "semaev_polys.json",
+                         "--o5-group", "o5_group.py"]
         if argv != expected_argv or input_names != {
             "ic_leads_fixtures_v2.json", "panel_fixtures.json",
+            "semaev_polys.json", "o5_group.py",
         }:
             raise ValueError("G0-2 invocation differs from the approved call shape")
         v4_row, _ = by_name["ic_leads_fixtures_v2.json"]
         if v4_row["sha256"] != V4_SHA256:
             raise ValueError("G0-2 v4 input hash mismatch")
+        inventory_row, _ = by_name["semaev_polys.json"]
+        if inventory_row["sha256"] != SEMAEV_INVENTORY_SHA256:
+            raise ValueError("G0-2 polynomial inventory hash mismatch")
+        o5_row, _ = by_name["o5_group.py"]
+        if o5_row["sha256"] != O5_GROUP_SHA256:
+            raise ValueError("G0-2 O5 group-arithmetic input hash mismatch")
     elif argv or input_names:
         raise ValueError("G0-1 verifier calls accept no arguments or input files")
     return decoded
