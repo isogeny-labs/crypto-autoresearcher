@@ -40,6 +40,7 @@ uncertainty remains. Full checks, costs and all misses are retained.
 | `tails.py` | the table of tails: every signed sum of `h` factor-base points the search can reach, keyed by x-coordinate and built once per factor base; with numpy, two sorted arrays at 8 bytes a tail |
 | `_accel.py` | optional numpy scan that locates the useful `S_3` roots (in the base or in a table of tails); relations and every counter are identical to the pure-Python path |
 | `msolve.py` | algebraic decomposition: the Semaev system solved by the msolve Gröbner-basis engine |
+| `diagram.py` | the decomposition system as a string diagram of `S_3` boxes ([Graphical Algebraic Geometry](../../../knowledge/literature/KN-LIT-c9e59d.md)); presentations `chain` (default), `tree` (balanced merge tree) and `monolithic` (internal wire contracted by a resultant, `S_{m+1}`, m ≤ 3) for `msolve.py` (`--msolve-topology`); they return identical relations, only cost may differ ([lead](../../../knowledge/leads/ecdlp/ic-engine/LEAD-ICE-gag-contraction-planner.yaml)) |
 | `linalg.py` | incremental sparse elimination mod `N`, stopping at the first relation that fixes the target log; pivots on the column the fewest pivot rows hold (`min_fill`) or, as before, the lowest index (`min_index`) |
 | `rho.py` | Pollard rho with distinguished points and a Teske 20-adding walk on `{X, −X}` (negation map, look-ahead, short-cycle escape); `--rho-walk plain` walks on points |
 | `solver.py` | the end-to-end solver and its cost columns |
