@@ -1,0 +1,59 @@
+experiment:
+  id: EXP-PFDR-4864c2
+  hypothesis_id: H-PFDR-6c9fa7
+  version: 1
+  title: Resume prime-field CDCL with certificate-producing finite-domain theory
+  status: review_required
+  source_idea: IDEA-20261029-8d82e6
+  derived_from_idea: IDEA-20261029-8d82e6
+  objective: Does bounded-PC learning prune before whole-block enumeration and cut
+    charged search cost by 2x against the strongest enumeration/SMT control on held-out
+    cells, with certificates that agree with the exact oracle? Charged search cost,
+    all theory calls included, is at most 0.5x the strongest enumeration/SMT control
+    on held-out cells.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261029-8d82e6.yaml
+    design_protocol: experiments/EXP-PFDR-4864c2/protocol.json
+    design_packet: analysis/open-ideas-design-20261101/DESIGN.md
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: known-unsat'
+  - 'negative: planted-sat'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - charged_search_cost
+    - verified_model_count
+    - actual_solving_degree
+    secondary: []
+  replication:
+    seeds:
+    - 20261101
+    - 20261102
+    - 20261103
+    independent_instances: 6
+  budget:
+    wall_clock_seconds_per_run: 3600
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 64
+  stopping_rules:
+  - 'fixed: replay the three s4,5,6 fixtures, then the held-out cells x two methods,
+    then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs is excluded
+  - a failed control voids the cells it protects
+  success_criterion: C-gain is supported when charged search cost is at most 0.5x
+    the strongest control, every certificate agrees with the oracle and no SAT instance
+    is declared UNSAT; pruning only after all but one block is fixed, or explanation
+    cost matching the enumeration, refutes it.
+  falsification_criterion: Pruning begins only after all but one factor-base block
+    is fixed.
+  required_artifacts:
+  - experiments/EXP-PFDR-4864c2/protocol.json
+  - experiments/EXP-PFDR-4864c2/runs/
+  - experiments/EXP-PFDR-4864c2/results/
+  - experiments/EXP-PFDR-4864c2/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

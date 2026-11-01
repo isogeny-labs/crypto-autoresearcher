@@ -1,0 +1,469 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "EXP-PFDR-915180",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "experiments/EXP-PFDR-915180",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261029-2e292c.yaml",
+    "note": "Design for open idea IDEA-20261029-2e292c; not yet approved or dispatched."
+  },
+  "question": "Does a witness-blind, instance-computable backdoor cut leave a cheaper complete residual than equal-entropy random cuts and best fixed-block guessing on tiny exact digit-system instances?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Every candidate cut's residual is certified by exhaustive enumeration over the frozen tiny instances, so a claimed strong backdoor with one unresolved legal assignment is detected.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "The witness-blind policy's total backdoor solve cost is at least 2x lower than both equal-entropy random cuts and best fixed-block guessing at the same entropy.",
+      "class": "comparative",
+      "decided_by": [
+        "C-gain"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "A small instance-computable backdoor chosen without any witness reduces complete residual cost by at least 2x against equal-entropy random and fixed-block cuts.",
+      "mechanism": "Conditioning a small set of carry or intermediate variables splits the system; if the split is chosen from instance structure rather than the solution, the residual branches shrink faster than a uniform-entropy cut.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "total_backdoor_solve_cost",
+          "direction": "lower",
+          "minimum_effect": "<=0.5x random and fixed-block",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "verified_model_count",
+          "direction": "equal_within",
+          "minimum_effect": "equal to the exact oracle",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "exception_coverage",
+          "direction": "equal_within",
+          "minimum_effect": "1.0",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "fixed-block",
+      "role": "reference",
+      "description": "best fixed-block guessing at matched entropy",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "fixed-block"
+      }
+    },
+    {
+      "id": "witness-blind",
+      "role": "candidate",
+      "description": "instance-computable cut chosen without any witness",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "witness-blind"
+      },
+      "same_instrument_as": "fixed-block"
+    },
+    {
+      "id": "random-entropy",
+      "role": "control_aa",
+      "description": "equal-entropy random cuts on the same instances",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "random-entropy"
+      },
+      "same_instrument_as": "fixed-block"
+    },
+    {
+      "id": "planted-backdoor",
+      "role": "control_positive",
+      "description": "planted synthetic circuit with a known small strong backdoor",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "planted-backdoor"
+      }
+    },
+    {
+      "id": "exact-oracle",
+      "role": "control_negative",
+      "description": "matched algebraic null with no planted structure",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "exact-oracle"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "planted-backdoor",
+      "expected_detection": "the planted small backdoor is recovered",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "exact-oracle",
+      "null_population": {
+        "description": "matched algebraic null instances with no planted backdoor",
+        "generator": "matched algebraic null instances with no planted backdoor",
+        "n": 100,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "fixed-block",
+          "witness-blind",
+          "random-entropy",
+          "planted-backdoor",
+          "exact-oracle"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "cut_policy",
+        "treatment": "crossed",
+        "how": "witness-blind, random, min-fill, fixed-block, rank-guided"
+      },
+      {
+        "name": "instances",
+        "treatment": "fixed",
+        "value": "frozen tiny digit-system instances",
+        "how": "independent of arm"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-cut",
+        "arms": [
+          "fixed-block",
+          "witness-blind"
+        ],
+        "differs_in": [
+          "cut_policy"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "fixed-block",
+          "random-entropy"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-gain",
+        "arms": [
+          "witness-blind",
+          "exact-oracle"
+        ],
+        "differs_in": [
+          "instances"
+        ],
+        "design": "absolute",
+        "threshold": "cost ratio <=0.5 against both baselines with equal verified model counts"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 50,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 3,
+      "correction": "holm",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 1800,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "total_backdoor_solve_cost",
+        "name": "total backdoor solve cost",
+        "unit": "field operations",
+        "kind": "derived",
+        "definition": "selection cost plus every residual branch cost, summed, per verified relation",
+        "source": "results/total_backdoor_solve_cost.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95",
+        "formula": "selection cost plus every residual branch cost, summed, per verified relation"
+      },
+      {
+        "id": "verified_model_count",
+        "name": "verified model count",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "models verified against the exact tiny oracle",
+        "source": "results/verified_model_count.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "exception_coverage",
+        "name": "exception coverage",
+        "unit": "fraction",
+        "kind": "rate",
+        "definition": "declared chart exceptions covered by the census",
+        "source": "results/exception_coverage.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "total_backdoor_solve_cost",
+      "verified_model_count",
+      "exception_coverage"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 3600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: every frozen tiny instance x five cut policies, exhaustive residual enumeration, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-gain is supported when the witness-blind cut costs at most 0.5x both baselines at equal verified model counts and full exception coverage; one unresolved legal assignment in a purported strong backdoor refutes it, and a policy that needs known roots or test tuning is inadmissible.",
+    "comparison_ids": [
+      "C-gain"
+    ],
+    "threshold": "cost ratio <=0.5 against both baselines with equal verified model counts",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "holm",
+    "effect_size_measure": "<=0.5x random and fixed-block",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "treating lower first-fall degree as lower solving cost",
+    "tuning the policy on test instances",
+    "claiming an escape from KN-OPEN-020"
+  ],
+  "literature": [
+    {
+      "ref": "IDEA-20261029-2e292c proposal record",
+      "provenance": "internal",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": true
+  }
+}

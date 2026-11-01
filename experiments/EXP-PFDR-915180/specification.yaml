@@ -1,0 +1,59 @@
+experiment:
+  id: EXP-PFDR-915180
+  hypothesis_id: H-PFDR-abef79
+  version: 1
+  title: Strong algebraic backdoors selected without witnesses
+  status: review_required
+  source_idea: IDEA-20261029-2e292c
+  derived_from_idea: IDEA-20261029-2e292c
+  objective: Does a witness-blind, instance-computable backdoor cut leave a cheaper
+    complete residual than equal-entropy random cuts and best fixed-block guessing
+    on tiny exact digit-system instances? The witness-blind policy's total backdoor
+    solve cost is at least 2x lower than both equal-entropy random cuts and best fixed-block
+    guessing at the same entropy.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261029-2e292c.yaml
+    design_protocol: experiments/EXP-PFDR-915180/protocol.json
+    design_packet: analysis/open-ideas-design-20261101/DESIGN.md
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: planted-backdoor'
+  - 'negative: exact-oracle'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - total_backdoor_solve_cost
+    - verified_model_count
+    - exception_coverage
+    secondary: []
+  replication:
+    seeds:
+    - 20261101
+    - 20261102
+    - 20261103
+    independent_instances: 50
+  budget:
+    wall_clock_seconds_per_run: 1800
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 64
+  stopping_rules:
+  - 'fixed: every frozen tiny instance x five cut policies, exhaustive residual enumeration,
+    then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs is excluded
+  - a failed control voids the cells it protects
+  success_criterion: C-gain is supported when the witness-blind cut costs at most
+    0.5x both baselines at equal verified model counts and full exception coverage;
+    one unresolved legal assignment in a purported strong backdoor refutes it, and
+    a policy that needs known roots or test tuning is inadmissible.
+  falsification_criterion: A purported strong backdoor has even one unresolved legal
+    assignment.
+  required_artifacts:
+  - experiments/EXP-PFDR-915180/protocol.json
+  - experiments/EXP-PFDR-915180/runs/
+  - experiments/EXP-PFDR-915180/results/
+  - experiments/EXP-PFDR-915180/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

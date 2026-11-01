@@ -1,0 +1,472 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "EXP-PFDR-aaeffc",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "experiments/EXP-PFDR-aaeffc",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261029-ec08bc.yaml",
+    "note": "Design for open idea IDEA-20261029-ec08bc; not yet approved or dispatched."
+  },
+  "question": "In the exact prime-field encoding, do exceptional denominator components rather than the genuine decomposition component account for a material part of solving cost, so chart-local saturation is 2x cheaper than the unsaturated exact baseline at identical recovered solution sets?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "The exhaustive small chart census must produce exact chart-union model equality, including generic additions, equal-x, doubling, infinity and norm-denominator-zero cases.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "Chart-local saturation cuts complete chart-union solve cost by 2x against the unsaturated exact baseline with an identical recovered solution set.",
+      "class": "comparative",
+      "decided_by": [
+        "C-gain"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "Exceptional denominator components account for a material share of solving cost, and chart-local saturation removes it without discarding valid relations.",
+      "mechanism": "Saturating exceptional factors before the expensive closure removes components that are not the decomposition component; the gain is real only if the recovered solution set is unchanged and the certificate cost does not cancel it.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "complete_chart_union_solve_cost",
+          "direction": "lower",
+          "minimum_effect": "<=0.5x unsaturated baseline",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "verified_model_count",
+          "direction": "equal_within",
+          "minimum_effect": "identical recovered solution set",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "exception_coverage",
+          "direction": "equal_within",
+          "minimum_effect": "1.0 across the chart census",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "unsaturated",
+      "role": "reference",
+      "description": "unsaturated exact baseline",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "unsaturated"
+      }
+    },
+    {
+      "id": "saturated",
+      "role": "candidate",
+      "description": "chart-local saturation before closure",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "saturated"
+      },
+      "same_instrument_as": "unsaturated"
+    },
+    {
+      "id": "baseline-aa",
+      "role": "control_aa",
+      "description": "unsaturated baseline on a second chart ordering",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "baseline-aa"
+      },
+      "same_instrument_as": "unsaturated"
+    },
+    {
+      "id": "certificate-check",
+      "role": "control_positive",
+      "description": "an independently checked saturation certificate",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "certificate-check"
+      }
+    },
+    {
+      "id": "discard-branch",
+      "role": "control_negative",
+      "description": "a branch-discarding cut that removes valid relations, which must be rejected",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "discard-branch"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "certificate-check",
+      "expected_detection": "the checked saturation certificate reproduces the saturated ideal",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "discard-branch",
+      "null_population": {
+        "description": "a cut that discards valid relations, whose solution set must differ",
+        "generator": "a cut that discards valid relations, whose solution set must differ",
+        "n": 100,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "unsaturated",
+          "saturated",
+          "baseline-aa",
+          "certificate-check",
+          "discard-branch"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "saturation",
+        "treatment": "crossed",
+        "how": "unsaturated, chart-local saturated, branch-discarding"
+      },
+      {
+        "name": "chart_case",
+        "treatment": "crossed",
+        "how": "generic, equal-x, doubling, infinity, norm-denominator zero"
+      },
+      {
+        "name": "relation_set",
+        "treatment": "crossed",
+        "how": "varied by comparison C-gain"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-sat",
+        "arms": [
+          "unsaturated",
+          "saturated"
+        ],
+        "differs_in": [
+          "saturation"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "unsaturated",
+          "baseline-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-gain",
+        "arms": [
+          "saturated",
+          "discard-branch"
+        ],
+        "differs_in": [
+          "relation_set"
+        ],
+        "design": "absolute",
+        "threshold": "cost ratio <=0.5 with identical solution sets"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 5,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 3,
+      "correction": "holm",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 1800,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "complete_chart_union_solve_cost",
+        "name": "complete chart-union solve cost",
+        "unit": "field operations",
+        "kind": "counted",
+        "definition": "saturation certificate plus closure per verified relation",
+        "source": "results/complete_chart_union_solve_cost.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "verified_model_count",
+        "name": "verified model count",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "solutions matching the exact chart-union oracle",
+        "source": "results/verified_model_count.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "exception_coverage",
+        "name": "exception coverage",
+        "unit": "fraction",
+        "kind": "rate",
+        "definition": "declared chart exceptions covered by the census",
+        "source": "results/exception_coverage.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "complete_chart_union_solve_cost",
+      "verified_model_count",
+      "exception_coverage"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 3600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: exhaustive small chart census x three saturation arms, exact model equality first, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-gain is supported when saturated cost is at most 0.5x unsaturated with an identical solution set and checked certificates; a gain entirely from discarded valid relations, or from an equation count that leaves pivot ranks unchanged, refutes it.",
+    "comparison_ids": [
+      "C-gain"
+    ],
+    "threshold": "cost ratio <=0.5 with identical solution sets",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "holm",
+    "effect_size_measure": "<=0.5x unsaturated baseline",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "discarding valid relations as a cost win",
+    "timing before exact chart-union equality",
+    "claiming reduced pivot rank from a reduced equation count"
+  ],
+  "literature": [
+    {
+      "ref": "IDEA-20261029-ec08bc proposal record",
+      "provenance": "internal",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": true
+  }
+}
