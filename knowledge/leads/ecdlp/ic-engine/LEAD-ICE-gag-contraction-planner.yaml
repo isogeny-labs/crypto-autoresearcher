@@ -26,9 +26,12 @@ next_action:
     with the msolve engine's new topology option (chain | tree | monolithic,
     src/crypto_autoresearcher/index_calculus/diagram.py): first prime-field m = 3 (all three)
     and m = 4 (chain vs tree) below the 2^16 msolve bound, recording msolve degree, wall time
-    net of startup and agreement with enumeration; then the same arms on a Weil-descended
-    F_{p^3} builder, which this repository does not have yet and must be added first. Include
-    an A/A arm (chain vs chain with a fresh separating form) and charge point extraction.
+    net of startup and agreement with enumeration; then the same arms over F_{p^n} with the
+    Weil-descent builder (src/crypto_autoresearcher/index_calculus/descent.py, CLI
+    `python -m crypto_autoresearcher.index_calculus descent --topology all`) at n = m = 3
+    (all three) and n = m = 4 (chain vs tree), on >= 3 primes in [307, 2^16). Include an A/A
+    arm (same presentation, fresh separating form), charge every msolve retry (the separating
+    check is nondeterministic below p ~ 300), and charge point extraction.
   discriminates: >-
     A presentation effect larger than the A/A spread that persists across >= 3 field sizes
     makes presentation a real solver-stage parameter, to be carried into the ICP Weil-descent
@@ -41,6 +44,9 @@ evidence:
 - repo: crypto-autoresearcher
   path: src/crypto_autoresearcher/index_calculus/diagram.py
   note: chain / tree / monolithic presentations for the msolve engine; tests show identical relations
+- repo: crypto-autoresearcher
+  path: src/crypto_autoresearcher/index_calculus/descent.py
+  note: Weil-descended F_{p^n} systems in every presentation; tests agree with a group-law brute force
 - repo: crypto-autoresearcher
   path: knowledge/techniques/KN-TECH-b18366.md
   note: chained presentation; char-2 speedup reported, odd-characteristic extension asserted
