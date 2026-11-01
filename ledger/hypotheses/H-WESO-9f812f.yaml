@@ -1,0 +1,51 @@
+hypothesis:
+  id: H-WESO-9f812f
+  question_id: RQ-WESO-8aff57
+  statement: The 2^80 factor in Theorem 4.4 enters the Theorem 5.3 expected-time product
+    at n=256.
+  mechanism: 2^80 n^4 counts objects examined; substituting n=256 makes the trial
+    factor 2^112, and one p^(1/3) pass multiplies it by about 2^85.
+  assumptions:
+  - The knowledge-note quotations match the PDF tokens. The test checks that match.
+  - "p^{1/3} at log2(p) = 256 is arithmetic on the quoted exponent, \u2248 2^{85.3}."
+  - Theorem 3.5 and Theorem 4.4 are not asserted true.
+  predictions:
+  - metric: indicator
+    direction: higher
+    minimum_effect: '1'
+  - metric: log2_product
+    direction: higher
+    minimum_effect: '>=197'
+  - metric: sheet_agreement
+    direction: different
+    minimum_effect: 0 mismatches
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261016-397ac9 and DESIGN.md
+    parameters:
+      instances: 2
+      replicates: 1
+      warmups: 0
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 120
+      backend: local
+  falsification_conditions:
+  - "The proof shows expectation O(n^4) with 2^{80} cancelled by a displayed identity.\
+    \ Heuristic 1 is then not necessary for that write-up\u2019s exponent. NIST-I\
+    \ stays inconclusive here because the preprint disclaims concrete cost."
+  - "The PDF tokens differ from the knowledge note. Withdraw 2^{112} until the PDF\u2019\
+    s constants are substituted."
+  interpretation_limits:
+  - A present 2^{80} prices the quoted constant. It does not falsify Theorem 5.3.
+  - A cancelled factor does not prove the unconditional algorithm.
+  - Toy smoothness samples do not decide this constant.
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31
+  source_proposal: IDEA-20261016-397ac9
+  proposal_id: IDEA-20261016-397ac9
+  depends_on:
+  - IDEA-20261016-397ac9
+  - RQ-WESO-8aff57

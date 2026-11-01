@@ -11,7 +11,9 @@ and waits for an artifact-store push (see Build).
    under the *equality* reading of condition (1) of Definitions 5-6. Two systems
    over F_2 have true first fall degree 3 and fake first fall degree 2, with the
    field equations inside the system (Lean: `lemma4_inside_false`). The printed
-   placement fails on the same witnesses (Lean: `lemma4_outside_false`).
+   placement fails on the same witnesses (Lean: `lemma4_outside_false`), and
+   it fails under the literal `>=` reading too (reviewer computations, not Lean;
+   `ledger/corrections/CORR-20261101-4186ae.yaml`).
    Proposition 6 gives the instance-wise recovery rule (Lean: `recovery`, over
    Mathlib `MvPolynomial`); the paper's own uses (proof of its Lemma 6) satisfy it.
 2. **Caminata-Gorla Theorem 2.8, formalized** over Mathlib `MvPolynomial`: with
@@ -26,8 +28,11 @@ and waits for an artifact-store push (see Build).
 ## What it does not say
 
 Nothing about Nagao's Proposition 5, Semaev's first-fall assumption in general,
-any complexity estimate, or ECDLP cost at any size. The `>=` reading of
-2015/984 is not refuted (under it the lemma holds trivially). Change class:
+any complexity estimate, or ECDLP cost at any size. Under the literal `>=`
+reading of 2015/984 the inside form holds trivially, so that form is refuted
+only under the equality reading; the printed form fails under both readings
+(reviewer computations in `coordination/formal-reviews/BATCH-4c1c67/`, not Lean;
+correction record `ledger/corrections/CORR-20261101-4186ae.yaml`). Change class:
 correction of a published lemma plus formalization; no advance, engineering,
 relabelling or accounting claim.
 
