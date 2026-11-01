@@ -1,0 +1,59 @@
+{
+  "schema": "semaev.exact-computation-protocol/v1",
+  "id": "n51-poly01-D5-stream-001",
+  "status": "draft",
+  "filed_utc": "2026-11-01",
+  "claim": {
+    "class": "exact_computation",
+    "scope": "The one named n51 polynomial-01 Boolean presentation in the frozen request",
+    "text": "An independently checked D5 certificate with codimension greater than a fresh exact solution count proves last fall degree at least 6 for this presentation.",
+    "not_claimed": ["exact last fall degree", "growth with n", "all subspaces", "timing or ECDLP cost"]
+  },
+  "input_selection": {
+    "rule": "Use the published n51 polynomial-01 D4 certificate selected before any n51 D5 closure output. Retain every attempt, refusal, timeout and checker failure.",
+    "population_inference": "none; one named input",
+    "replicates": 1,
+    "randomization": "not applicable to a deterministic exact certificate computation",
+    "blinding": "not applicable; the checker verifies a fixed algebraic identity"
+  },
+  "controls": {
+    "positive": "The prior native small-system fixture has a frozen D5 certificate hash and passed the original checker through full S3 upload/readback; the EKS-image preflight must also pass before the frontier job is submitted.",
+    "negative": "Changed input, changed S3 readback, duplicate target, and nonzero producer exit are rejected by transport controls; missing checker acceptance is non-success.",
+    "aa": "not applicable: no comparative or timed claim",
+    "reference": "The previously published D4 result, its independent checker transcript and exact count zero are bound by hash; the D5 run rechecks D4 and recounts."
+  },
+  "instruments": {
+    "frozen_by": "request instrument hashes plus immutable bundle manifest",
+    "threads": 1,
+    "host": "isolab EKS x86 CPU Spot, fixed digest-pinned image and 96 GiB pod memory",
+    "memory": "90 GiB producer cap; 96 GiB cgroup admission; source-derived 64,677,063,002-byte native payload envelope is not measured RSS",
+    "input": "same n51 polynomial-01 basis, curve coefficients and D4 seed hash as the publication receipt",
+    "nuisance": "Spot placement, preemption, AWS transfer throughput and co-tenants are recorded operationally; wall time is invalid for comparison"
+  },
+  "execution": {
+    "backend": "isolab EKS cpu-spot",
+    "attempts": 1,
+    "retries": 0,
+    "job_deadline_seconds": 21600,
+    "checkpoint": "none for this bounded exporter; preemption censors the attempt and never counts as closure",
+    "queue": "submit one unique Job only after the image preflight and absence of a live duplicate are checked",
+    "durability": "assigned ISOLAB_RESULTS_URI; seed and stage receipts uploaded, candidate certificate streamed to S3, full S3 readback hashed while fed to the original checker",
+    "clock_valid": false
+  },
+  "measurements": {
+    "primary": ["D5 checker nonmembership", "D5 checked codimension", "fresh exact solution count", "certificate SHA-256 and bytes"],
+    "secondary": ["stage exit codes", "timeouts", "memory and disk admission", "object readback identity"],
+    "timing": "operational L0 only; not a performance endpoint"
+  },
+  "stopping_rule": "One frozen input, one cloud attempt, fixed stage and Job limits. No outcome-dependent substitutions or selective reruns.",
+  "decision_rule": {
+    "lower_bound_6": "Require accepted original D5 checker transcript for 1 not in W_5(F), full certificate S3 SHA-256 readback, fresh exact count, and checked codimension > count.",
+    "non_success": ["capacity refusal", "seed mismatch", "D4 recheck mismatch", "count mismatch", "producer refusal", "timeout", "preemption", "S3 mismatch", "checker failure"],
+    "upper_bound": "No upper bound or exact LFD inferred from a failed or accepted D5 stage."
+  },
+  "analysis": {
+    "script": "run_n51_d5_stream.py",
+    "method": "Parse the original checker acceptance and exact count, apply the strict inequality, and retain all raw stage receipts. No statistical test or multiple-comparison correction applies to this one exact computation."
+  },
+  "literature_boundary": "The named-instance lower-bound method does not claim a first empirical refutation of Semaev's degree-four expectation or an asymptotic theorem."
+}
