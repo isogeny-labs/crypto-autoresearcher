@@ -1,0 +1,74 @@
+and consider the decomposition problem which states that for arbitrary divisor D0 ∈ Jac(C/Fpn )
+ﬁnding D1 , ..., Dd ∈ DF satisfying D0 +D1 +...+Dd ∼ 0. From the author [6], there is a set of g
+                     −−−→         −−−→
+global polynomials F(D0 )1 , ..., F(D0 )g of degree < C d (C is some constant)such that this prob-
+                                                              −−−→
+lem reduces to solving local equations system consisting [F(D0 )i ]↓j = 0 (i = 1, ..., g, j = 1, ..., n)
+and ﬁeld equations Xi,j p
+                          − Xi,j = 0 (i = 1, ..., d, j = 1, ..., n0 ). From the assumption that C
+                                                                                         −−−→ ↓
+has no F n rational points at x = 0, this problem also reduced to solve [c · −
+         p
+                                                                                   →
+                                                                                   m·F         ] =0
+                                                                                           (D0 )i j
+                                                   p
+(i = 1, ..., g, j = 1, ..., n) and ﬁeld equations Xi,j − Xi,j = 0, where c is arbitrary element of
+  ×        →
+           −      ∏ d    −
+                         →ei                             −
+                                                         →
+Fpn and m = i=1 Xi is arbitrary monomial of {Xi }. In this paper, we show that taking
+                                                                                        −−−→ ↓
+n0 = O(n2/3 ), d = O(gn1/3 ) = O(n1/3 ) and the complexity of computing [c · −      →
+                                                                                    m·F       ] is
+                                                                                              (D0 )i j
+O(exp(n  2/3+o(1)
+                  )), where o(1) → 0 when n → ∞. Moreover, if we assume ﬁrst fall degree
+assumption of [7], the complexity of solving local equations system is also O(exp(n2/3+o(1) )).
+So the total cost of solving discrete logarithm of Jac(C/Fpn ) which consists of DF times
+decomposition of a divisor in Jac(C/Fpn ) and linear algebra computation of #DF × #DF
+size matrix, is also O(exp(n2/3+o(1) )).
+    It must be noted that although its complexity is subexponential, the practical computa-
+tion, especially in cases of p > 2 or g ≥ 2, is diﬃcult and it is only a result of the complexity.
+
+2    First fall degree assumption
+Deﬁnition 1 (First fall degree [7]). Let K be a ﬁeld and let f1 , ..., fl ∈ K[X1 , ..., XN ].
+ﬁrst fall degree Df f is the (minimal) positive integer satisfying the following;
+There exists gi ∈ K[X1 , ..., XN ] (i = 1, ..., l) such that
+                                    ∑l                       ∑l
+1) max1≤i≤l deg(gi fi ) = Df f , 2) i=1 gi fi 6= 0, 3) deg( i=1 gi fi ) < Df f , 4) deg(fi ) ≤ Df f .
+Petit et al. [7] assume the following assumption show the subexponentiality of the discrete
+logarithm problem of elliptic curve over binary ﬁeld.
+Assumption 1 (First fall degree Assumption) Upper bound of the degree of the polyno-
+mial for computing Gröbner basis of f1 , ..., fl of F4 algorithm is Df f + O(1).
+This assumption has some counter examples and Petit et al. assume that the polynomials
+f1 , ..., fl are general polynomials. However, if f1 , ..., fl are randomly chosen, the value of Df f
+seems to be very large. In our situation, we treat only the cases that Df f ∼ maxi deg fi and
+so, f1 , ..., fl cannot be randomly chosen.
+     For my opinion, if there are many l-ple (g1 , ..., gl ) ∈ Al (K[X1 , ..., XN ]) satisfying the deﬁ-
+nition of ﬁrst fall degree,     assumption seems to be true. For example, for any l×l size invertible
+                          (N )          
+                        f1                f1
+                              
+matrix M , put  ...  := M  ...  . Deﬁne Df f (M ) by minimal integer satisfying the fol-
+                        fl
+                          (M )            fl
+lowing;
+                   (M )
+There exists gi          ∈ K[X1 , ..., XN ] (i = 1, ..., l) such that
+                         (M ) (M )                      ∑l      (M ) (M )              ∑l    (M ) (M )
+1) max1≤i≤l deg(gi fi ) = Df f (M ), 2) i=1 gi fi                         6= 0, 3) deg( i=1 gi fi ) <
+                   (M )
+Df f , 4) deg(fi ) ≤ Df f (M ). Put ﬁrst fall degree Df f := maxM Df f (M ). However, by us-
+ing this new assumption, I can not prove that the equations system coming from Weil descent
+have low ﬁrst fall degree in strict way and it remains a future work.
+Lemma 1. Under the Assumption 1, the complexity of computing Gröbner basis of f1 , ..., fl
+by F4 algorithm is estimated by ≤ O(N Df f ·C+O(1) ), when N À Df f and where C is some
+constant ∼ 3.
+                                                               (                     )
+                                                                 Df f + O(1) + N − 1
+Proof. The number of the monomials of degree ≤ Df f + O(1) is         D + O(1)           <
+                                                                                  ff
+N Df f +O(1) . So, in order to compute Gröbner basis of f1 , ..., fl , it is suﬃcient to compute
+

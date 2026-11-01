@@ -42,7 +42,50 @@ class Action:
                 "prompt": self.prompt}
 
 
-def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | None:
+def select_admitted(repo: Path, *, selector: Callable[..., Action | None],
+                    excluded: set[str], admission=None
+                    ) -> tuple[Action | None, list[dict]]:
+    """Select the first action admitted by an operational policy.
+
+    Rejected actions are excluded only for this selection pass.  They are not
+    put on scientific cooldown: a long-running supervisor rechecks admission
+    after its normal idle interval and the gate owns its own measurement TTL.
+    """
+    blocked: list[dict] = []
+    local_excluded = set(excluded)
+    if admission is not None and hasattr(admission, "allowed_kinds") \
+            and selector is select_next:
+        first = selector(repo, excluded=local_excluded)
+        if first is None:
+            return None, blocked
+        decision = admission(first)
+        if decision.get("allowed"):
+            return first, blocked
+        blocked.append({"action": first.as_dict(), "admission": decision})
+        allowed_kinds = admission.allowed_kinds()
+        action = selector(repo, excluded=local_excluded, allowed_kinds=allowed_kinds)
+        if action is None:
+            return None, blocked
+        decision = admission(action)
+        if decision.get("allowed"):
+            return action, blocked
+        blocked.append({"action": action.as_dict(), "admission": decision})
+        return None, blocked
+    while True:
+        action = selector(repo, excluded=local_excluded)
+        if action is None or admission is None:
+            return action, blocked
+        decision = admission(action)
+        if decision.get("allowed"):
+            return action, blocked
+        blocked.append({"action": action.as_dict(), "admission": decision})
+        if action.key in local_excluded:
+            return None, blocked
+        local_excluded.add(action.key)
+
+
+def select_next(repo: Path, *, excluded: set[str] | None = None,
+                allowed_kinds: set[str] | None = None) -> Action | None:
     """Use the existing ECC priority and coverage selectors, without inventing work."""
     from tools.ecc_priority import load_policy, open_ecc_ideas
     from tools.newest_experiments import newest_runnable
@@ -51,6 +94,7 @@ def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | Non
     rows = newest_runnable(repo, include_blocked=True)
     for row in rows:
         if (row["ecc"] and row["execution_state"] == "ready"
+                and (allowed_kinds is None or "run" in allowed_kinds)
                 and f"run:{row['id']}" not in excluded):
             return Action("run", row["id"],
                 f"Use the repository $run skill for {row['id']} only. Run its existing "
@@ -60,7 +104,8 @@ def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | Non
 
     policy = load_policy(repo / "orchestration" / "research-priority.yaml")
     for idea in open_ecc_ideas(policy, repo=repo):
-        if f"design:{idea['id']}" not in excluded:
+        if ((allowed_kinds is None or "design" in allowed_kinds)
+                and f"design:{idea['id']}" not in excluded):
             return Action("design", idea["id"],
                 f"As the top-level dispatcher, use /coordinate and "
                 f"/design-experiment for {idea['id']}. Dispatch the Coordinator "
@@ -75,6 +120,7 @@ def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | Non
     # plan. The run skill itself checks for a documented launcher first.
     for row in rows:
         if (row["ecc"] and row["execution_state"] == "needs_implementation_or_plan"
+                and (allowed_kinds is None or "prepare" in allowed_kinds)
                 and f"prepare:{row['id']}" not in excluded):
             return Action("prepare", row["id"],
                 f"As the top-level dispatcher, use /coordinate and dispatch "
@@ -87,6 +133,7 @@ def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | Non
     for row in rows:
         if (row["ecc"] and row["execution_state"] in
                 ("needs_plan_repair", "needs_reconciliation")
+                and (allowed_kinds is None or "repair" in allowed_kinds)
                 and f"repair:{row['id']}" not in excluded):
             return Action("repair", row["id"],
                 f"Use /coordinate to diagnose {row['execution_state']} for "
@@ -95,13 +142,16 @@ def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | Non
                 "scientific trials in this action.", "coordinator")
 
     for row in rows:
-        if row["execution_state"] == "ready" and f"run:{row['id']}" not in excluded:
+        if (row["execution_state"] == "ready"
+                and (allowed_kinds is None or "run" in allowed_kinds)
+                and f"run:{row['id']}" not in excluded):
             return Action("run", row["id"],
                 f"Use the repository $run skill for {row['id']} only; run its "
                 "existing approved program, preserve all attempts, and respect "
                 "the handoff, claim and machine-resource limits.", "executor")
     for row in rows:
         if (row["execution_state"] == "needs_implementation_or_plan"
+                and (allowed_kinds is None or "prepare" in allowed_kinds)
                 and f"prepare:{row['id']}" not in excluded):
             return Action("prepare", row["id"],
                 f"As the top-level dispatcher, use /coordinate and dispatch "
@@ -110,6 +160,7 @@ def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | Non
                 "Do not launch scientific trials.", "coordinator")
     for row in rows:
         if (row["execution_state"] in ("needs_plan_repair", "needs_reconciliation")
+                and (allowed_kinds is None or "repair" in allowed_kinds)
                 and f"repair:{row['id']}" not in excluded):
             return Action("repair", row["id"],
                 f"Use /coordinate to diagnose {row['execution_state']} for "
@@ -118,7 +169,8 @@ def select_next(repo: Path, *, excluded: set[str] | None = None) -> Action | Non
 
     # One bounded portfolio pass may rank a new idea; a repeated identical
     # result is cooled down rather than buying the same answer forever.
-    if "portfolio:ecdlp" not in excluded:
+    if ((allowed_kinds is None or "portfolio" in allowed_kinds)
+            and "portfolio:ecdlp" not in excluded):
         return Action("portfolio", "ecdlp",
             "As the top-level dispatcher, use /coordinate in portfolio mode "
             "and dispatch the Coordinator subagent. Select one justified ECC "
@@ -393,6 +445,7 @@ def supervise(repo: Path, state_dir: Path, *, backends: list[str],
               delivery: str = "interactive", batch_lane=None,
               batch_poll_seconds: int = 300, wait_batches: int = 0,
               selector: Callable[..., Action | None] = select_next,
+              admission=None,
               invoke: Callable[..., dict] = invoke_worker,
               clock: Callable[[], float] = time.time,
               sleeper: Callable[[float], None] = time.sleep) -> dict:
@@ -447,6 +500,7 @@ def supervise(repo: Path, state_dir: Path, *, backends: list[str],
                                         retry_seconds=retry_seconds)
                 next_poll = now + batch_poll_seconds
                 _save(state_path, state)
+            admission_blocked: list[dict] = []
             if drafted is not None:
                 action = drafted
             elif pending and "review:" + pending["target"] not in excluded:
@@ -461,10 +515,20 @@ def supervise(repo: Path, state_dir: Path, *, backends: list[str],
             elif pending:
                 action = None
             else:
-                action = selector(repo, excluded=excluded)
+                action, admission_blocked = select_admitted(
+                    repo, selector=selector, excluded=excluded, admission=admission)
+            if action is not None and admission is not None and not admission_blocked:
+                decision = admission(action)
+                if not decision.get("allowed"):
+                    admission_blocked.append({"action": action.as_dict(),
+                                              "admission": decision})
+                    action = None
+            for blocked in admission_blocked:
+                _event(state_dir, {"time": now, "event": "admission_blocked", **blocked})
             if action is None:
                 _event(state_dir, {"time": now, "event": "idle", "excluded": sorted(excluded),
-                                   "pending_batches": sorted(state["pending_batches"])})
+                                   "pending_batches": sorted(state["pending_batches"]),
+                                   "admission_blocked": len(admission_blocked)})
                 if state["pending_batches"] and batch_lane is not None:
                     # Nothing else is runnable but a draft is still being
                     # served; wait for it rather than declare the queue empty.
@@ -578,6 +642,7 @@ def report(state_dir: Path, *, now: float | None = None) -> dict:
         now = time.time()
     events = state_dir / "events.jsonl"
     actions = workers = no_progress = interrupted = model_attempts = failovers = 0
+    admission_blocked = 0
     batch_submitted = batch_collected = batch_failed = 0
     recent_actions = recent_designs = recent_runs = 0
     recent_validated_delta = recent_coverage_known = recent_coverage_unknown = 0
@@ -642,6 +707,8 @@ def report(state_dir: Path, *, now: float | None = None) -> dict:
                     no_progress += 1
                 elif kind == "interrupted_action":
                     interrupted += 1
+                elif kind == "admission_blocked":
+                    admission_blocked += 1
                 elif kind == "batch_submitted":
                     batch_submitted += 1
                 elif kind == "batch_collected":
@@ -661,6 +728,7 @@ def report(state_dir: Path, *, now: float | None = None) -> dict:
             "workers_returned": workers,
             "no_progress_actions": no_progress,
             "interrupted_actions": interrupted,
+            "admission_blocked_actions": admission_blocked,
             "batch_drafts_submitted": batch_submitted,
             "batch_drafts_collected": batch_collected,
             "batch_drafts_failed": batch_failed,

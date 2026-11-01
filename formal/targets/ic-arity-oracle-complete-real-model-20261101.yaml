@@ -1,0 +1,49 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-978031
+claim_id: IC-ARITY-ORACLE-COMPLETE-REAL-MODEL-20261101
+kind: formalize_claim
+source: docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md
+source_status: DERIVATION
+theorem_name: CryptoResearch.IC.ArityOracleCompleteRealModel.complete_real_model
+theorem_file: CryptoResearch/IC/ArityOracleCompleteRealModel.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Additive correction of the historical arity/oracle target. The theorem is
+  confined to exact real-number max-envelope algebra. It preserves the old
+  target and source bytes, distinguishes an infimum from an attained minimum,
+  distinguishes optimized from pointwise half thresholds, and includes F1-F5
+  plus positive and known-false controls. It contains no implemented oracle,
+  curve family, probability/rank theorem, growing-arity uniformity theorem,
+  transfer/descent, end-to-end cost, PFSE bridge, or ECDLP conclusion.
+claim: |
+  For real m >= 2, k >= 0 and beta > 0, set d=m-1-k,
+  q_F=max(k,2), q_G=max(k+1,2), and H(d,q,beta)=
+  max(1-d beta,q beta). The historical costs rewrite exactly to H with q_F
+  and q_G. Over beta>0, H has infimum q/(d+q), uniquely at
+  beta=1/(d+q), when d>0; infimum/minimum 1 exactly for
+  0<beta<=1/q when d=0; and unattained infimum 1 when d<0. Its optimized
+  value is below/equal/above 1/2 exactly when d is greater/equal/less than q.
+  For d>q its pointwise values are below 1/2 exactly on
+  1/(2d)<beta<1/(2q) and equal 1/2 exactly at the endpoints; d=q has the
+  single equality beta=1/(2q); d<q is pointwise above 1/2.
+  The all-return cost is pointwise no larger than the one-return cost, with
+  equality exactly when k<=1 or beta<=1/m. Their optimized values are equal
+  exactly when k<=1 or k>=m-1 and strictly ordered exactly when
+  1<k<m-1, including equal but unattained infima above m-1.
+  Under k>=m/2 the all-return cost is pointwise above 1/2, with sharp
+  optimized class bounds 4/(m+2) for 2<=m<=4 and m/(2(m-1)) for m>=4;
+  the one-return bound is 1/2+1/m. Boundary witnesses attain these class
+  bounds, while an explicit growing-m schedule proves there is no uniform
+  positive gap above 1/2. The aggregate proposition also contains the exact
+  F1-F5 counterexamples/boundaries and the values F(5,1/5,1)=2/5 and
+  F(3,1/4,0)=1/2, plus a named negation of blanket attainment.
+proof_map:
+  depends_on:
+    - ic-arity-oracle-threshold-20261024.yaml
+  prerequisites:
+    - "The historical costAll and costOne definitions are imported from ArityOracleThreshold.lean; this module proves their exact rewrite into H(d,q,beta) on m>=2, k>=0, beta>0."
+    - "Positivity of d+q_F and d+q_G on the exact domain is proved before any division or crossing-point use."
+    - "Ordered-field max and division facts from the pinned Mathlib workspace support the explicit lower-bound-plus-epsilon infimum certificate; no compactness or silent minimum assumption is used."
+    - "The proof dependency order is: envelope normal forms and denominator positivity; sign-regime infima/minimizers; optimized and pointwise thresholds; F/G comparison; MITM sharp bounds and nonuniform schedule; exact F1-F5 and positive/false controls; aggregate CompleteRealModel proposition."
+    - "H1-H4 motivate the historical definitions but are not formalized or proved here. No theorem connects this algebra to an implemented ECDLP algorithm, success probability, relation rank, memory cost, growing arity, transfer/descent, or PFSE."

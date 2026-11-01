@@ -1,0 +1,6611 @@
+{
+  "schema": "experiment.export/v1",
+  "export_id": "GAG-PM-run-001",
+  "created": "2026-11-01T17:56:58Z",
+  "protocol": {
+    "path": "../../protocol.json",
+    "sha256": "609c701cd648631cd0d7e85bd428dd9d1025fee55da53c45b6724fc27bf35ad2",
+    "protocol_id": "GAG-PRESENTATION-MATCHED-20261031",
+    "version": 1
+  },
+  "producer": {
+    "runtime": "claude_code",
+    "model": "claude-opus-5-5",
+    "session": "session_01AXUKfV7Mndc73sHXKwAJNs",
+    "role": "executor"
+  },
+  "source": {
+    "repo": "crypto-autoresearcher",
+    "commit": "bfccbce57c7e8d5bb06c909fbbc27f6f966fdf79",
+    "dirty": false
+  },
+  "backend": "manual",
+  "host": {
+    "path": "environment.json",
+    "sha256": "65dd1550a251e03ce245a288097e7e2d7567bf65d11c3e2bab7f1dadda2f60af",
+    "class_id": null,
+    "summary": {
+      "cpu_model": "Intel(R) Xeon(R) Processor @ 2.10GHz",
+      "logical_cpus": 2,
+      "memory_bytes": null,
+      "kernel": "6.18.44-fc-v185",
+      "hypervisor": null,
+      "isolation_tier_max": "none"
+    }
+  },
+  "arms": [
+    {
+      "id": "chain",
+      "role": "baseline",
+      "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+      "commit": "bfccbce57c7e8d5bb06c909fbbc27f6f966fdf79"
+    },
+    {
+      "id": "tree",
+      "role": "candidate",
+      "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+      "commit": "bfccbce57c7e8d5bb06c909fbbc27f6f966fdf79"
+    },
+    {
+      "id": "monolithic",
+      "role": "candidate",
+      "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+      "commit": "bfccbce57c7e8d5bb06c909fbbc27f6f966fdf79"
+    },
+    {
+      "id": "chain-aa",
+      "role": "control_aa",
+      "binary_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+      "commit": "bfccbce57c7e8d5bb06c909fbbc27f6f966fdf79"
+    }
+  ],
+  "runs": [
+    {
+      "run_id": "0001-p1009-i99-monolithic",
+      "arm": "monolithic",
+      "instance_id": "99",
+      "seed": 99,
+      "replicate": 0,
+      "warmup": true,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298697,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.5789984950000004,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0001-p1009-i99-monolithic.a1.stdout.gz",
+          "sha256": "28a92126e7a21ee450017f7ac73bc5449656f24582aa30923e4ea87e7d914ded",
+          "kind": "raw",
+          "bytes": 1164
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0002-p1009-i99-tree",
+      "arm": "tree",
+      "instance_id": "99",
+      "seed": 99,
+      "replicate": 0,
+      "warmup": true,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2401166570000015,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0002-p1009-i99-tree.a1.stdout.gz",
+          "sha256": "e84686fe5866ab25edb7731ac0c930a4adc26d3f6fdb7409008ee90843f0ca0d",
+          "kind": "raw",
+          "bytes": 1094
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0003-p1009-i99-chain",
+      "arm": "chain",
+      "instance_id": "99",
+      "seed": 99,
+      "replicate": 0,
+      "warmup": true,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.25737200400000404,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0003-p1009-i99-chain.a1.stdout.gz",
+          "sha256": "73b9a7d1643e99917656a57606828116ce2dd5651f92e70d090d0002308ea437",
+          "kind": "raw",
+          "bytes": 1089
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0004-p1009-i99-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "99",
+      "seed": 99,
+      "replicate": 0,
+      "warmup": true,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2359095939999989,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0004-p1009-i99-chain-aa.a1.stdout.gz",
+          "sha256": "93c2eaa58f767772f8928da63c615147e3283e59e31e49e3296a2ca9b0538f99",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0005-p1009-i0-tree",
+      "arm": "tree",
+      "instance_id": "0",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.31383074400000055,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0005-p1009-i0-tree.a1.stdout.gz",
+          "sha256": "6ee00d4ff1e48cb9672c5e2d920c45c02d17c2ee226f820af22107788faf0a96",
+          "kind": "raw",
+          "bytes": 1112
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0006-p1009-i0-monolithic",
+      "arm": "monolithic",
+      "instance_id": "0",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03123992999999814,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0006-p1009-i0-monolithic.a1.stdout.gz",
+          "sha256": "0128813011d5633f19a5758195e4bb254886347f4c1b25fa23df2298a88841d5",
+          "kind": "raw",
+          "bytes": 1159
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0007-p1009-i0-chain",
+      "arm": "chain",
+      "instance_id": "0",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22514915499999688,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0007-p1009-i0-chain.a1.stdout.gz",
+          "sha256": "18a616a843f23c55d66ab68726330785f73920e82db52a405733e6d4b5198403",
+          "kind": "raw",
+          "bytes": 1081
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0008-p1009-i0-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "0",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22795089399999569,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0008-p1009-i0-chain-aa.a1.stdout.gz",
+          "sha256": "88a56c70404d0e53a3645b43279586ed9ec64ad6ba412a08c7b594ec81df0810",
+          "kind": "raw",
+          "bytes": 1090
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0009-p1009-i1-tree",
+      "arm": "tree",
+      "instance_id": "1",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23117658099999971,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0009-p1009-i1-tree.a1.stdout.gz",
+          "sha256": "e0e849e1953ae75043ce5582eced2362803b6e8dc194b0cf2e060e0bde9a3b3c",
+          "kind": "raw",
+          "bytes": 1104
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0010-p1009-i1-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "1",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11790746,
+          "f4_rows": 9633,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.21563313200000067,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0010-p1009-i1-chain-aa.a1.stdout.gz",
+          "sha256": "da462804ad7b1b3a1271a84c0983a760ab365bae81c3755c1ea691f8506b913f",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0011-p1009-i1-monolithic",
+      "arm": "monolithic",
+      "instance_id": "1",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298254,
+          "f4_rows": 2470,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.030039029000000994,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0011-p1009-i1-monolithic.a1.stdout.gz",
+          "sha256": "cbd58edb39ee1e41c4923d88d394d4e04965415b457f3cb632273524d0a94bea",
+          "kind": "raw",
+          "bytes": 1166
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0012-p1009-i1-chain",
+      "arm": "chain",
+      "instance_id": "1",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2981225229999964,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0012-p1009-i1-chain.a1.stdout.gz",
+          "sha256": "0d428266f670250aa9842a58bfbaeb33708343c5d0d71290ae8f451d74814939",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0013-p1009-i2-chain",
+      "arm": "chain",
+      "instance_id": "2",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.21022162300000247,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0013-p1009-i2-chain.a1.stdout.gz",
+          "sha256": "244b4c698e5cb43e2f3d613d1fd80bd2ab5e0faaf05dbc71faeca697d3268ad2",
+          "kind": "raw",
+          "bytes": 1089
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0014-p1009-i2-monolithic",
+      "arm": "monolithic",
+      "instance_id": "2",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.027857453999999393,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0014-p1009-i2-monolithic.a1.stdout.gz",
+          "sha256": "571e1229fd9c674b0dd53d8c69ee140a47ac5942165ad3af5dfdb9f9fe073d1b",
+          "kind": "raw",
+          "bytes": 1166
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0015-p1009-i2-tree",
+      "arm": "tree",
+      "instance_id": "2",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22753629799999686,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0015-p1009-i2-tree.a1.stdout.gz",
+          "sha256": "1e41f2ee1f66b1778f2d1b755b56a44872f663da3654bf7750ef2d38917161db",
+          "kind": "raw",
+          "bytes": 1106
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0016-p1009-i2-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "2",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.20824878600000574,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0016-p1009-i2-chain-aa.a1.stdout.gz",
+          "sha256": "97847f2f3aed834240db9fbae5ce6db31387801afdea9adceff5c24df32ee781",
+          "kind": "raw",
+          "bytes": 1081
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0017-p1009-i3-monolithic",
+      "arm": "monolithic",
+      "instance_id": "3",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03121053299999943,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0017-p1009-i3-monolithic.a1.stdout.gz",
+          "sha256": "8cc78f97ad3600229fb8e9b651f0dcd0f38fdbf6304fe63fc41f71500db8d787",
+          "kind": "raw",
+          "bytes": 1162
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0018-p1009-i3-chain",
+      "arm": "chain",
+      "instance_id": "3",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2506237600000034,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0018-p1009-i3-chain.a1.stdout.gz",
+          "sha256": "ccfc51c4d44d5454da9c9ceaeb02e3714e3272f93d8af78a935be2ffe81df44a",
+          "kind": "raw",
+          "bytes": 1087
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0019-p1009-i3-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "3",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.21845159499999767,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0019-p1009-i3-chain-aa.a1.stdout.gz",
+          "sha256": "f0834cc8fece16880732c2af0219082641c6ea99bf75b2ade30607d019a762fb",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0020-p1009-i3-tree",
+      "arm": "tree",
+      "instance_id": "3",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2527753319999988,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0020-p1009-i3-tree.a1.stdout.gz",
+          "sha256": "806f493d2a7d7dbaa3ab4ab29f1274ebe2f0f81ffcbcede16008221d2c201db0",
+          "kind": "raw",
+          "bytes": 1108
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0021-p1009-i4-chain",
+      "arm": "chain",
+      "instance_id": "4",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22418957600000056,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0021-p1009-i4-chain.a1.stdout.gz",
+          "sha256": "4d1b16542cf391f65d372b58525e47b78b1f8e31000841c697669d7489fda0d1",
+          "kind": "raw",
+          "bytes": 1082
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0022-p1009-i4-tree",
+      "arm": "tree",
+      "instance_id": "4",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23227593400000046,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0022-p1009-i4-tree.a1.stdout.gz",
+          "sha256": "0d8575ef117599002b5960b3b4c759c15adb7c4184d9b7966d801d7fbfa9b8ae",
+          "kind": "raw",
+          "bytes": 1097
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0023-p1009-i4-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "4",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.254269352999998,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0023-p1009-i4-chain-aa.a1.stdout.gz",
+          "sha256": "1ff518f2a7a92bf10a3e64b6008ecce84349e562b34c7c0e4e27dd1814755908",
+          "kind": "raw",
+          "bytes": 1091
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0024-p1009-i4-monolithic",
+      "arm": "monolithic",
+      "instance_id": "4",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.030825614999997697,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0024-p1009-i4-monolithic.a1.stdout.gz",
+          "sha256": "93a4c509f78b71847d6ba5829cbedb91934390c5c5da26aedce1c7831495e8c4",
+          "kind": "raw",
+          "bytes": 1168
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0025-p1009-i5-monolithic",
+      "arm": "monolithic",
+      "instance_id": "5",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.030154751000004865,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0025-p1009-i5-monolithic.a1.stdout.gz",
+          "sha256": "34a302a54645a62cfe712a5480a11093c83d2692b8d018f88daf92f6e79a0224",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0026-p1009-i5-chain",
+      "arm": "chain",
+      "instance_id": "5",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2086246869999968,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0026-p1009-i5-chain.a1.stdout.gz",
+          "sha256": "cef4a5f4c6c49000a2e39a364a96ea9e5d03aed9594d32b52643f7f74133220b",
+          "kind": "raw",
+          "bytes": 1083
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0027-p1009-i5-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "5",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.21706565699999913,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0027-p1009-i5-chain-aa.a1.stdout.gz",
+          "sha256": "90621e1d32db68af165c1c9abad0a5b30645c21e7cea3f8c46c06f245855c293",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0028-p1009-i5-tree",
+      "arm": "tree",
+      "instance_id": "5",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2298345640000008,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0028-p1009-i5-tree.a1.stdout.gz",
+          "sha256": "d39a9f1f437d8059d0ea1a2c1e4287e307b69aa05ca5a9ee44de40bc923a38cb",
+          "kind": "raw",
+          "bytes": 1107
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0029-p1009-i6-chain",
+      "arm": "chain",
+      "instance_id": "6",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.20748102999999674,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0029-p1009-i6-chain.a1.stdout.gz",
+          "sha256": "a523b88caa52343f742bc9f5473072b56442442b431a52d7d62eedec681694a8",
+          "kind": "raw",
+          "bytes": 1083
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0030-p1009-i6-tree",
+      "arm": "tree",
+      "instance_id": "6",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22886906800000162,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0030-p1009-i6-tree.a1.stdout.gz",
+          "sha256": "8bc3b3cc5b55a220c752cfa9b7b3a4ad03c465b742ded6465f9f2a25052a5ec8",
+          "kind": "raw",
+          "bytes": 1098
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0031-p1009-i6-monolithic",
+      "arm": "monolithic",
+      "instance_id": "6",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.030648527000003867,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0031-p1009-i6-monolithic.a1.stdout.gz",
+          "sha256": "fae66e884f36a4dc28d40b0aeb857eb46ac2b54db3191b29e2b171f14d088ff6",
+          "kind": "raw",
+          "bytes": 1166
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0032-p1009-i6-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "6",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.21250759800000196,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0032-p1009-i6-chain-aa.a1.stdout.gz",
+          "sha256": "86bcaddaa1cef19452c752c0faf658f9982f124ce364880db9e92896426e9c09",
+          "kind": "raw",
+          "bytes": 1078
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0033-p1009-i7-tree",
+      "arm": "tree",
+      "instance_id": "7",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2883231980000005,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0033-p1009-i7-tree.a1.stdout.gz",
+          "sha256": "7e888ed0e1ad6b810b4a1335c28787edb9ef96306e6328d253cc2b301537df7f",
+          "kind": "raw",
+          "bytes": 1115
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0034-p1009-i7-monolithic",
+      "arm": "monolithic",
+      "instance_id": "7",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.028677969999996833,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0034-p1009-i7-monolithic.a1.stdout.gz",
+          "sha256": "2ec9ef0bb5016825f777619abbc538f4104e04cc14d4c80b7dbe4ab955d87620",
+          "kind": "raw",
+          "bytes": 1162
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0035-p1009-i7-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "7",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 2,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 23590914,
+          "f4_rows": 19270,
+          "f4_max_deg": 8,
+          "attempts": 2
+        },
+        "wall_seconds": 0.4318393289999989,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0035-p1009-i7-chain-aa.a1.stdout.gz",
+          "sha256": "399d290de811958d5cfb47d27cbc70d670237f28545f747c64d2d12f026772d9",
+          "kind": "raw",
+          "bytes": 1085
+        },
+        {
+          "path": "raw/0035-p1009-i7-chain-aa.a2.stdout.gz",
+          "sha256": "71db0dfd4a25949e29235820e03bd691b8feec5196a13cbbbfd3e15807d546ef",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0036-p1009-i7-chain",
+      "arm": "chain",
+      "instance_id": "7",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2159917440000001,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0036-p1009-i7-chain.a1.stdout.gz",
+          "sha256": "9c9d81b1c54037e1506cb3302c264f6554c5d9b31287c1faeb94959edd794ba0",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0037-p1009-i8-tree",
+      "arm": "tree",
+      "instance_id": "8",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12909180,
+          "f4_rows": 10140,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2576700850000009,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0037-p1009-i8-tree.a1.stdout.gz",
+          "sha256": "1384089051950c63a2686f19fe711f835835d18f28a169749676b9c0fd4d0890",
+          "kind": "raw",
+          "bytes": 1103
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0038-p1009-i8-monolithic",
+      "arm": "monolithic",
+      "instance_id": "8",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03864716399999679,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0038-p1009-i8-monolithic.a1.stdout.gz",
+          "sha256": "6c9d00af484a9f7559406a24018a7d9e7fe54f94321c8d3f76ab9c7465a892d2",
+          "kind": "raw",
+          "bytes": 1163
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0039-p1009-i8-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "8",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.28305435000000045,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0039-p1009-i8-chain-aa.a1.stdout.gz",
+          "sha256": "1589c41e9adfbe3d5e3dbedc5941f0ecdd1bfaae7dd266148da4fc71329a56c2",
+          "kind": "raw",
+          "bytes": 1095
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0040-p1009-i8-chain",
+      "arm": "chain",
+      "instance_id": "8",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2508042219999993,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0040-p1009-i8-chain.a1.stdout.gz",
+          "sha256": "364c6c69545dd273e6f9e488441800963adca0cfb4e25bec9b0786b7b4bcc8c1",
+          "kind": "raw",
+          "bytes": 1082
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0041-p1009-i9-monolithic",
+      "arm": "monolithic",
+      "instance_id": "9",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03527907399999464,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0041-p1009-i9-monolithic.a1.stdout.gz",
+          "sha256": "001e2c2c193c9881e3a3e78a6f83901508d5d047867e6011016af056f681654e",
+          "kind": "raw",
+          "bytes": 1166
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0042-p1009-i9-chain",
+      "arm": "chain",
+      "instance_id": "9",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2469299909999947,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0042-p1009-i9-chain.a1.stdout.gz",
+          "sha256": "9419683e643161b39dd7dd969dba774c1eee8a5db407d7960a6bce59755fc249",
+          "kind": "raw",
+          "bytes": 1080
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0043-p1009-i9-tree",
+      "arm": "tree",
+      "instance_id": "9",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24186404600000344,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0043-p1009-i9-tree.a1.stdout.gz",
+          "sha256": "cce221a8d84db1cbe87419fbd3f096f8ec597aafd9910ebb81c9a6014963a8e6",
+          "kind": "raw",
+          "bytes": 1097
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0044-p1009-i9-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "9",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2272360409999976,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0044-p1009-i9-chain-aa.a1.stdout.gz",
+          "sha256": "9e627755263beebeb4ff2c14f292adc58c49134f46c334a94243fcd2bf25036f",
+          "kind": "raw",
+          "bytes": 1076
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0045-p4099-i0-tree",
+      "arm": "tree",
+      "instance_id": "10",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.25307036799999594,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0045-p4099-i0-tree.a1.stdout.gz",
+          "sha256": "b8dfc22e9d1375cf902f83295bfa45c7d29ca73087bca85ed35427dab0d299f9",
+          "kind": "raw",
+          "bytes": 1099
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0046-p4099-i0-chain",
+      "arm": "chain",
+      "instance_id": "10",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22094444399999702,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0046-p4099-i0-chain.a1.stdout.gz",
+          "sha256": "b25609d5caa543ab6e36ff061c5d771a12e887a61751de67fb208cc0afcb7b0d",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0047-p4099-i0-monolithic",
+      "arm": "monolithic",
+      "instance_id": "10",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.031934344999996256,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0047-p4099-i0-monolithic.a1.stdout.gz",
+          "sha256": "dcb2f7155a39ba4999c69b4794cdec27122875ff88d93d931f47be09177e878c",
+          "kind": "raw",
+          "bytes": 1167
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0048-p4099-i0-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "10",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23717241900000374,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0048-p4099-i0-chain-aa.a1.stdout.gz",
+          "sha256": "019f3384b8c13a6faa2c0a01d74023afb18092687e9ea8419d0e9b7046a64c18",
+          "kind": "raw",
+          "bytes": 1082
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0049-p4099-i1-chain",
+      "arm": "chain",
+      "instance_id": "11",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.30669067099999836,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0049-p4099-i1-chain.a1.stdout.gz",
+          "sha256": "0e42011337640bc125b294a6dc0580a66bca544ec6bbaacb6ba2aec0b09a3ad7",
+          "kind": "raw",
+          "bytes": 1097
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0050-p4099-i1-tree",
+      "arm": "tree",
+      "instance_id": "11",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.26042316200000926,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0050-p4099-i1-tree.a1.stdout.gz",
+          "sha256": "362cfbd6efa9f8da3d76b9d076154ef0df0ed642d4e36c8222491466345a2a97",
+          "kind": "raw",
+          "bytes": 1112
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0051-p4099-i1-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "11",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.225425223000002,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0051-p4099-i1-chain-aa.a1.stdout.gz",
+          "sha256": "e1d28e78fc25c25c6d2c7200bc535b7b97ce0578f0f441067d54380af2545e09",
+          "kind": "raw",
+          "bytes": 1083
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0052-p4099-i1-monolithic",
+      "arm": "monolithic",
+      "instance_id": "11",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.0333773290000039,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0052-p4099-i1-monolithic.a1.stdout.gz",
+          "sha256": "6576e6b5643332bc6ec06604111216813936928a2a0ebe1f6bde977a02c8d5d3",
+          "kind": "raw",
+          "bytes": 1166
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0053-p4099-i2-chain",
+      "arm": "chain",
+      "instance_id": "12",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22353178400000218,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0053-p4099-i2-chain.a1.stdout.gz",
+          "sha256": "4cc2c78490e2fc0456545b78fb53d2125c7a8701a9f5b3290cc35da4b05c8c38",
+          "kind": "raw",
+          "bytes": 1088
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0054-p4099-i2-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "12",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22967576700000336,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0054-p4099-i2-chain-aa.a1.stdout.gz",
+          "sha256": "b636fa95be1dcf1da037e937f95e1fe7e93405d58e9bea70ba6f31abaedf7ecc",
+          "kind": "raw",
+          "bytes": 1077
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0055-p4099-i2-monolithic",
+      "arm": "monolithic",
+      "instance_id": "12",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03127099600000349,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0055-p4099-i2-monolithic.a1.stdout.gz",
+          "sha256": "8a30d5f9e868dda29771235b7f9a56b47d22f85cef8fd8011eff30dd756913ca",
+          "kind": "raw",
+          "bytes": 1169
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0056-p4099-i2-tree",
+      "arm": "tree",
+      "instance_id": "12",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2534874400000007,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0056-p4099-i2-tree.a1.stdout.gz",
+          "sha256": "7abb17b0b1bacfcb91251f812b99b0c673f2748ddd683e7139c14b2e6d305fb3",
+          "kind": "raw",
+          "bytes": 1111
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0057-p4099-i3-chain",
+      "arm": "chain",
+      "instance_id": "13",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22452608800000462,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0057-p4099-i3-chain.a1.stdout.gz",
+          "sha256": "18284423860e9733dc041e6bd1e44e3aefe2e5673cea7de74c2b860e9c71eb5d",
+          "kind": "raw",
+          "bytes": 1086
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0058-p4099-i3-monolithic",
+      "arm": "monolithic",
+      "instance_id": "13",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1299222,
+          "f4_rows": 2472,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03277601499999605,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0058-p4099-i3-monolithic.a1.stdout.gz",
+          "sha256": "1025620f0dd7b1862e4731e92d73ae36d76765d400201a0042f89c08a9dcc09a",
+          "kind": "raw",
+          "bytes": 1168
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0059-p4099-i3-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "13",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24186293500000033,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0059-p4099-i3-chain-aa.a1.stdout.gz",
+          "sha256": "ecf9b852b64d9b67d22bbd9fc1eec7dec30973598609de1a304b72d05d997f14",
+          "kind": "raw",
+          "bytes": 1086
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0060-p4099-i3-tree",
+      "arm": "tree",
+      "instance_id": "13",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24101688700000068,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0060-p4099-i3-tree.a1.stdout.gz",
+          "sha256": "18e7854a4476e4795c42ae25bc3e0fd21a31d4935dcb52e048abe7a5cce0797e",
+          "kind": "raw",
+          "bytes": 1103
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0061-p4099-i4-monolithic",
+      "arm": "monolithic",
+      "instance_id": "14",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.032730743000001894,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0061-p4099-i4-monolithic.a1.stdout.gz",
+          "sha256": "86193be7ed7e4acfd518982d4dead401d730d1ab1c4e0bc37fee14d0f99bb38c",
+          "kind": "raw",
+          "bytes": 1164
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0062-p4099-i4-chain",
+      "arm": "chain",
+      "instance_id": "14",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11792928,
+          "f4_rows": 9634,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.25720706699999596,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0062-p4099-i4-chain.a1.stdout.gz",
+          "sha256": "970892a44739dc397779d4a8884b88349a5dff1790db8b1c3f99725f6cf8b93d",
+          "kind": "raw",
+          "bytes": 1092
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0063-p4099-i4-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "14",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11792928,
+          "f4_rows": 9634,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2482407379999927,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0063-p4099-i4-chain-aa.a1.stdout.gz",
+          "sha256": "cad0e12c4e8a2bef72a7e08e1c426c79ff8f30100d05ea9c5fdda38d2f2341ca",
+          "kind": "raw",
+          "bytes": 1099
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0064-p4099-i4-tree",
+      "arm": "tree",
+      "instance_id": "14",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12848210,
+          "f4_rows": 10115,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24189954499999544,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0064-p4099-i4-tree.a1.stdout.gz",
+          "sha256": "6bebff20648007baa70533ca8fbbaad8f9d9397c187511fefe833c21f2e61a52",
+          "kind": "raw",
+          "bytes": 1106
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0065-p4099-i5-chain",
+      "arm": "chain",
+      "instance_id": "15",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22367777499999875,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0065-p4099-i5-chain.a1.stdout.gz",
+          "sha256": "ebf1767a5125c2e6a37f3d8a6208e2eac1d694efe1e6118f937e371bb2fa7585",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0066-p4099-i5-monolithic",
+      "arm": "monolithic",
+      "instance_id": "15",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298541,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.032112638999990395,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0066-p4099-i5-monolithic.a1.stdout.gz",
+          "sha256": "bb481cfe24d89c24852c5c11c1b8b28aa50620bb92f1d079ab0d27398cdb25bc",
+          "kind": "raw",
+          "bytes": 1168
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0067-p4099-i5-tree",
+      "arm": "tree",
+      "instance_id": "15",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2541880330000055,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0067-p4099-i5-tree.a1.stdout.gz",
+          "sha256": "b1aacc4b2499eb1098910fa214b482cd93bc52ca53d29db4bf20fb59de7cd52e",
+          "kind": "raw",
+          "bytes": 1105
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0068-p4099-i5-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "15",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2242232920000049,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0068-p4099-i5-chain-aa.a1.stdout.gz",
+          "sha256": "af1369cfc1d77d8626fd2b145cd5d5697120d523c1d2b233487674168110a179",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0069-p4099-i6-chain",
+      "arm": "chain",
+      "instance_id": "16",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24088832900000057,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0069-p4099-i6-chain.a1.stdout.gz",
+          "sha256": "5efa3e00a8ec578cc95389fa754ff2f693e7753dd73bc43534b8d030f0164455",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0070-p4099-i6-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "16",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22024680799999885,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0070-p4099-i6-chain-aa.a1.stdout.gz",
+          "sha256": "80169c1ac6a5330c7c7bd4929abe0bb2791293af89faca21a9431205eff9f03f",
+          "kind": "raw",
+          "bytes": 1089
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0071-p4099-i6-tree",
+      "arm": "tree",
+      "instance_id": "16",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2175110030000127,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0071-p4099-i6-tree.a1.stdout.gz",
+          "sha256": "ff0f5558867fd46ce3422f120a3581f16c6332a5dab89e8d6fc34c64015772fd",
+          "kind": "raw",
+          "bytes": 1096
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0072-p4099-i6-monolithic",
+      "arm": "monolithic",
+      "instance_id": "16",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.029811657000010428,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0072-p4099-i6-monolithic.a1.stdout.gz",
+          "sha256": "9700ec581e42221d4d31fcb4af25ec14a31b38062589544ddef570c56748cc78",
+          "kind": "raw",
+          "bytes": 1169
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0073-p4099-i7-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "17",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.21388302499998701,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0073-p4099-i7-chain-aa.a1.stdout.gz",
+          "sha256": "9cd9c7f6737a3aad88096254b6aa1dcfe1fcce15e56dc505e1a9280c7375e281",
+          "kind": "raw",
+          "bytes": 1078
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0074-p4099-i7-monolithic",
+      "arm": "monolithic",
+      "instance_id": "17",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.029568312999998625,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0074-p4099-i7-monolithic.a1.stdout.gz",
+          "sha256": "674c5397985313270913bea05d337a52fa76c605498c9563014977f4f3b816c1",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0075-p4099-i7-chain",
+      "arm": "chain",
+      "instance_id": "17",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.21591129099999762,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0075-p4099-i7-chain.a1.stdout.gz",
+          "sha256": "710c1ccf32f4257d1059e7643c0c2bbffd8b765e5ade62d30f725d661af3d9b8",
+          "kind": "raw",
+          "bytes": 1081
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0076-p4099-i7-tree",
+      "arm": "tree",
+      "instance_id": "17",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2696717580000012,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0076-p4099-i7-tree.a1.stdout.gz",
+          "sha256": "f02abb67948b06b6a6390868382bc0d3a8e2c23e5e1bd0527a04d2760a3438bb",
+          "kind": "raw",
+          "bytes": 1102
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0077-p4099-i8-chain",
+      "arm": "chain",
+      "instance_id": "18",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2214050949999944,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0077-p4099-i8-chain.a1.stdout.gz",
+          "sha256": "8349ccb8e428d581faba331a70e18c3dc98e81a0b7ca9ea177231e8ba4cf140b",
+          "kind": "raw",
+          "bytes": 1083
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0078-p4099-i8-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "18",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23270319499999914,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0078-p4099-i8-chain-aa.a1.stdout.gz",
+          "sha256": "c98070f3cfa86cfd900363d5e8e4bdc973504c9ac2de4b2f9e2b034937bbbded",
+          "kind": "raw",
+          "bytes": 1086
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0079-p4099-i8-monolithic",
+      "arm": "monolithic",
+      "instance_id": "18",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03916846900000337,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0079-p4099-i8-monolithic.a1.stdout.gz",
+          "sha256": "888c52e838aeb7b9a922149cd7f27fd4f1b1317c2744d11447cbb189b3f18f7c",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0080-p4099-i8-tree",
+      "arm": "tree",
+      "instance_id": "18",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2798701310000098,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0080-p4099-i8-tree.a1.stdout.gz",
+          "sha256": "f35fe24e739cdba4348913c94c4e967b17c5ca356f91c6dcd8f4ee70cace447f",
+          "kind": "raw",
+          "bytes": 1105
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0081-p4099-i9-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "19",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22893051199999093,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0081-p4099-i9-chain-aa.a1.stdout.gz",
+          "sha256": "4c24815f18e79d0dbaaff529c713b142c5e9e927b4270d8beb3d63cb26471d44",
+          "kind": "raw",
+          "bytes": 1087
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0082-p4099-i9-monolithic",
+      "arm": "monolithic",
+      "instance_id": "19",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03537899399999844,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0082-p4099-i9-monolithic.a1.stdout.gz",
+          "sha256": "e1bf2c09e9efcd4106b2dd1dacdc35c90c66f3b6bef99f81630313a8b48dd3d6",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0083-p4099-i9-tree",
+      "arm": "tree",
+      "instance_id": "19",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2666926320000016,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0083-p4099-i9-tree.a1.stdout.gz",
+          "sha256": "bb25b43d0c43db61417b8288f004f61a95e88cf07bb67545bca93a1307b5aaf7",
+          "kind": "raw",
+          "bytes": 1106
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0084-p4099-i9-chain",
+      "arm": "chain",
+      "instance_id": "19",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23110486800000274,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0084-p4099-i9-chain.a1.stdout.gz",
+          "sha256": "310dd29a545eb54d546f86f6607056e53813c3fe91e8139fa75b571cdac8ca57",
+          "kind": "raw",
+          "bytes": 1086
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0085-p32749-i0-monolithic",
+      "arm": "monolithic",
+      "instance_id": "20",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.032493228999996404,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0085-p32749-i0-monolithic.a1.stdout.gz",
+          "sha256": "51fc7698e02ebd51dd283cf2a30f5a688b28c759c65676de52815c523c4ba019",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0086-p32749-i0-tree",
+      "arm": "tree",
+      "instance_id": "20",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2547427169999992,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0086-p32749-i0-tree.a1.stdout.gz",
+          "sha256": "f1ee92d5b8dcc776d67b46760a348eb276c5190fcb3e26bd22798220893623b7",
+          "kind": "raw",
+          "bytes": 1105
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0087-p32749-i0-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "20",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2477602470000022,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0087-p32749-i0-chain-aa.a1.stdout.gz",
+          "sha256": "ad0d8bcfa65dc2c4c05f06dacff95272e84035307fb03a4457e0542d1335bf66",
+          "kind": "raw",
+          "bytes": 1091
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0088-p32749-i0-chain",
+      "arm": "chain",
+      "instance_id": "20",
+      "seed": 0,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24791579800000818,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0088-p32749-i0-chain.a1.stdout.gz",
+          "sha256": "3ae30ab67653902775f3bae6f40993bfa958d63f7d63a6f2313576929b650d2a",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0089-p32749-i1-tree",
+      "arm": "tree",
+      "instance_id": "21",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.25277826499998923,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0089-p32749-i1-tree.a1.stdout.gz",
+          "sha256": "61c6fe87807ee3d44968bdc047fd85f589a8956698c3a2b5b53131a0d1ed15f2",
+          "kind": "raw",
+          "bytes": 1103
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0090-p32749-i1-monolithic",
+      "arm": "monolithic",
+      "instance_id": "21",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03152480899998977,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0090-p32749-i1-monolithic.a1.stdout.gz",
+          "sha256": "b606abd7a3cbf131384bd9647c631a5ea3208230aa5056a6d0d2b13bb2b7c8d8",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0091-p32749-i1-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "21",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22251857999999913,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0091-p32749-i1-chain-aa.a1.stdout.gz",
+          "sha256": "5fe8c9f2f41d56e29802943544e0f47dd4e3b7e31402620e0a9150bd4964fb15",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0092-p32749-i1-chain",
+      "arm": "chain",
+      "instance_id": "21",
+      "seed": 1,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2227095929999905,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0092-p32749-i1-chain.a1.stdout.gz",
+          "sha256": "02ef855800ce2f9dbabe6a24c9eb56368c5eba88b30201e2618d08fa560ae5c7",
+          "kind": "raw",
+          "bytes": 1083
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0093-p32749-i2-tree",
+      "arm": "tree",
+      "instance_id": "22",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.25360049100000026,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0093-p32749-i2-tree.a1.stdout.gz",
+          "sha256": "ad7b7d15093b39dfe230d0dc387790710ea7a32cd34bed0a8998e5c6a7f3701d",
+          "kind": "raw",
+          "bytes": 1103
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0094-p32749-i2-monolithic",
+      "arm": "monolithic",
+      "instance_id": "22",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03713464899999508,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0094-p32749-i2-monolithic.a1.stdout.gz",
+          "sha256": "d46db5b0d6c6080cddb8e4014ff807ad4f54cbf9e080dbdf09691171bf0a4e49",
+          "kind": "raw",
+          "bytes": 1164
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0095-p32749-i2-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "22",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22559022299999754,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0095-p32749-i2-chain-aa.a1.stdout.gz",
+          "sha256": "4118012ee6c078e426c08b5cd72f5cba2926f593ae25ff02b69b6c562bb369f9",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0096-p32749-i2-chain",
+      "arm": "chain",
+      "instance_id": "22",
+      "seed": 2,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2171251380000001,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0096-p32749-i2-chain.a1.stdout.gz",
+          "sha256": "9a624a4ab3beb52af33b214cfd6664ab65f4814dfbc4dcf39944c4a3f7d83747",
+          "kind": "raw",
+          "bytes": 1086
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0097-p32749-i3-monolithic",
+      "arm": "monolithic",
+      "instance_id": "23",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.04730828699999279,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0097-p32749-i3-monolithic.a1.stdout.gz",
+          "sha256": "e1d75a7c1e8ff6c7d99189f468e8897b3c8e8cc32f25bb8b9a5bd4be03ffcdf2",
+          "kind": "raw",
+          "bytes": 1163
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0098-p32749-i3-tree",
+      "arm": "tree",
+      "instance_id": "23",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.3465202000000005,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0098-p32749-i3-tree.a1.stdout.gz",
+          "sha256": "fd70937bfa37866e532eff630d35381de041e2a7f68eb35607ad86c96cb08b1c",
+          "kind": "raw",
+          "bytes": 1110
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0099-p32749-i3-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "23",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2251441639999996,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0099-p32749-i3-chain-aa.a1.stdout.gz",
+          "sha256": "e8012bad5fd170e6f8852b8cd449d0c9d88c4135b2f567485b07c43e149fa59f",
+          "kind": "raw",
+          "bytes": 1083
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0100-p32749-i3-chain",
+      "arm": "chain",
+      "instance_id": "23",
+      "seed": 3,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22263997199999608,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0100-p32749-i3-chain.a1.stdout.gz",
+          "sha256": "4907025e752b58987baaf0ff825613158e72618fcf9d09321bf529c430c6afae",
+          "kind": "raw",
+          "bytes": 1088
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0101-p32749-i4-chain",
+      "arm": "chain",
+      "instance_id": "24",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23219602100000714,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0101-p32749-i4-chain.a1.stdout.gz",
+          "sha256": "578ab3b2d6e1e75020b4d6158963ca44d8bc81862c9cbeffc79e237392590f29",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0102-p32749-i4-monolithic",
+      "arm": "monolithic",
+      "instance_id": "24",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03216087500000242,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0102-p32749-i4-monolithic.a1.stdout.gz",
+          "sha256": "977db85aaf885dc4bd2dd6264c4124b753b8f19b29b1de7c004186935ee8b208",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0103-p32749-i4-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "24",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23639581000000476,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0103-p32749-i4-chain-aa.a1.stdout.gz",
+          "sha256": "bbabb1b84d80fb0f05a529442842f0a8e22af1e94bbe02b8c098a47e0e07e8ae",
+          "kind": "raw",
+          "bytes": 1082
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0104-p32749-i4-tree",
+      "arm": "tree",
+      "instance_id": "24",
+      "seed": 4,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.25546216600000093,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0104-p32749-i4-tree.a1.stdout.gz",
+          "sha256": "2a601d3716cdc2a3d764cce02265836734c1458e550c168a7e41d9ecf30c82b2",
+          "kind": "raw",
+          "bytes": 1110
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0105-p32749-i5-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "25",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24688172900000893,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0105-p32749-i5-chain-aa.a1.stdout.gz",
+          "sha256": "9213397a83731a737f540ca417042420ed84a9a9e3a7686d1374f0c863c773f5",
+          "kind": "raw",
+          "bytes": 1092
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0106-p32749-i5-tree",
+      "arm": "tree",
+      "instance_id": "25",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2792362630000014,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0106-p32749-i5-tree.a1.stdout.gz",
+          "sha256": "28ab1cf3dd7890750401831742ad74c4513234991a7691cd648563d1b0d33d01",
+          "kind": "raw",
+          "bytes": 1112
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0107-p32749-i5-monolithic",
+      "arm": "monolithic",
+      "instance_id": "25",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03096386699999698,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0107-p32749-i5-monolithic.a1.stdout.gz",
+          "sha256": "1474d7cb8daf81fa5fea251c30960e4ef3098d90b4e997d32d093f3e13285a6f",
+          "kind": "raw",
+          "bytes": 1166
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0108-p32749-i5-chain",
+      "arm": "chain",
+      "instance_id": "25",
+      "seed": 5,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22519679900000256,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0108-p32749-i5-chain.a1.stdout.gz",
+          "sha256": "bea354a371dd8f207ededda263eba0c19986a260c491884a4d8851792fceb0e1",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0109-p32749-i6-chain",
+      "arm": "chain",
+      "instance_id": "26",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.3040516649999887,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0109-p32749-i6-chain.a1.stdout.gz",
+          "sha256": "0f186a26213ee23a8c11c67340025242246c848d6b6132f2da55b9904a5e3000",
+          "kind": "raw",
+          "bytes": 1089
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0110-p32749-i6-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "26",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.23704493599998955,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0110-p32749-i6-chain-aa.a1.stdout.gz",
+          "sha256": "c300a86d5f1bd3c049616f26310c50fc1238c2c1df7b5b3aaaf8802a7b318c24",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0111-p32749-i6-tree",
+      "arm": "tree",
+      "instance_id": "26",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24003317199999685,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0111-p32749-i6-tree.a1.stdout.gz",
+          "sha256": "8d87cf8dde99bae40b64fab258a293cff14a70d436b31b1ba3e4b7bbd4bc74c6",
+          "kind": "raw",
+          "bytes": 1106
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0112-p32749-i6-monolithic",
+      "arm": "monolithic",
+      "instance_id": "26",
+      "seed": 6,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03223668799999757,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0112-p32749-i6-monolithic.a1.stdout.gz",
+          "sha256": "65d50bc1a3bf6afe0ee0d3bcce496546e328d79e261ee14fd3308afbf23a0904",
+          "kind": "raw",
+          "bytes": 1165
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0113-p32749-i7-chain",
+      "arm": "chain",
+      "instance_id": "27",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24128577100000825,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0113-p32749-i7-chain.a1.stdout.gz",
+          "sha256": "2000af10f9ebf37a0c8dae5f2b1992da68f3c9a8e6a78ae5d4263e5cee8f5001",
+          "kind": "raw",
+          "bytes": 1087
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0114-p32749-i7-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "27",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2283755919999919,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0114-p32749-i7-chain-aa.a1.stdout.gz",
+          "sha256": "a2268a1c698afe40e37674a3c7c22aa94ff6fcc40b578d800e93268d3fe19ab8",
+          "kind": "raw",
+          "bytes": 1088
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0115-p32749-i7-tree",
+      "arm": "tree",
+      "instance_id": "27",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2517072870000021,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0115-p32749-i7-tree.a1.stdout.gz",
+          "sha256": "ff5bda3213b141f9ecbbf674d91de1a5e8eeefe0dd9f2cb556ffc2ba3465c718",
+          "kind": "raw",
+          "bytes": 1098
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0116-p32749-i7-monolithic",
+      "arm": "monolithic",
+      "instance_id": "27",
+      "seed": 7,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03487112499999512,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0116-p32749-i7-monolithic.a1.stdout.gz",
+          "sha256": "ed2b2c0673b44ea5b887a64cf02a9048e2d309adae0cfddec3606e1922cc32a4",
+          "kind": "raw",
+          "bytes": 1168
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0117-p32749-i8-chain",
+      "arm": "chain",
+      "instance_id": "28",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2904671229999991,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0117-p32749-i8-chain.a1.stdout.gz",
+          "sha256": "65a394000036f5c6f804225753966a91880a0f1d29a32a697ef7019be9a24c56",
+          "kind": "raw",
+          "bytes": 1097
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0118-p32749-i8-tree",
+      "arm": "tree",
+      "instance_id": "28",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.31977100099999234,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0118-p32749-i8-tree.a1.stdout.gz",
+          "sha256": "4e842b44f3485e72136eb0a5ac6a6bff06b7029fb7b021f29d8a8619c04bb2a3",
+          "kind": "raw",
+          "bytes": 1110
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0119-p32749-i8-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "28",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22224124999999617,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0119-p32749-i8-chain-aa.a1.stdout.gz",
+          "sha256": "898edd2af8b41d65b618fd82c044d87be38965be19002fa948c9bbeb931a86e2",
+          "kind": "raw",
+          "bytes": 1083
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0120-p32749-i8-monolithic",
+      "arm": "monolithic",
+      "instance_id": "28",
+      "seed": 8,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.04499055200000157,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0120-p32749-i8-monolithic.a1.stdout.gz",
+          "sha256": "2140027eeaa22c0da2a3f6bf5c9ae47fbb9e4132cc35b658ae008e1f001633ac",
+          "kind": "raw",
+          "bytes": 1166
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0121-p32749-i9-monolithic",
+      "arm": "monolithic",
+      "instance_id": "29",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 1298729,
+          "f4_rows": 2471,
+          "f4_max_deg": 15,
+          "attempts": 1
+        },
+        "wall_seconds": 0.03230591899999524,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0121-p32749-i9-monolithic.a1.stdout.gz",
+          "sha256": "1f6a99b39690757975e4dc6ee714a5258ac46c214420fd519581dad8ffa509c2",
+          "kind": "raw",
+          "bytes": 1164
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0122-p32749-i9-chain-aa",
+      "arm": "chain-aa",
+      "instance_id": "29",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.22784609100000353,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0122-p32749-i9-chain-aa.a1.stdout.gz",
+          "sha256": "a1e87a867a50cffb4aedab410ea22dd187301d28d3142bab294f2dfaf2a62a27",
+          "kind": "raw",
+          "bytes": 1084
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0123-p32749-i9-tree",
+      "arm": "tree",
+      "instance_id": "29",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 12911317,
+          "f4_rows": 10141,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.24848559000000137,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0123-p32749-i9-tree.a1.stdout.gz",
+          "sha256": "1f4eb65e60f457af1cf273f0a3e66073d7016df4b134f3dbdf9fb85c95d1a469",
+          "kind": "raw",
+          "bytes": 1104
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    },
+    {
+      "run_id": "0124-p32749-i9-chain",
+      "arm": "chain",
+      "instance_id": "29",
+      "seed": 9,
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "f4_cells": 11795457,
+          "f4_rows": 9635,
+          "f4_max_deg": 8,
+          "attempts": 1
+        },
+        "wall_seconds": 0.2206682869999952,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {}
+      },
+      "isolation": {
+        "tier": "none",
+        "contended": null,
+        "blockers": []
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": null
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "raw/0124-p32749-i9-chain.a1.stdout.gz",
+          "sha256": "b4b563be47a2d5494d3bd225a8f0f82fd68f480055460916f5b74c3fd52a7e91",
+          "kind": "raw",
+          "bytes": 1085
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    }
+  ],
+  "flow": {
+    "planned": 124,
+    "attempted": 124,
+    "completed": 124,
+    "not_completed": 0,
+    "interrupted": 0,
+    "resumed": 0,
+    "excluded": []
+  },
+  "files": [
+    {
+      "path": "rows.jsonl.gz",
+      "sha256": "b72bd3fccd31caad459d079c4c26ad09081bb2123caef72628d3b00cda37b4ef",
+      "bytes": 8188,
+      "kind": "raw"
+    },
+    {
+      "path": "export_rows.jsonl",
+      "sha256": "217fc7cb68acfb3f949ac6c5f1ede7153b2a69104efdd81d7a16da41f3367b08",
+      "bytes": 34417,
+      "kind": "other"
+    },
+    {
+      "path": "raw.sha256",
+      "sha256": "a0e666f9adf998f743e69f1b2a103091a6c59c371e4819bae55aa4c08ee3ef12",
+      "bytes": 52556,
+      "kind": "other"
+    },
+    {
+      "path": "driver.log",
+      "sha256": "bf7f2a15fd36a92312226fa0b85d952b006a2b70818bb4d559627e24705da920",
+      "bytes": 7298,
+      "kind": "log"
+    },
+    {
+      "path": "checkpoint_gate.txt",
+      "sha256": "ef32c2fe4e1447129bd6081a28d3eee5f8e9e32492f38c01a37b53cbcb42b4d7",
+      "bytes": 201,
+      "kind": "log"
+    },
+    {
+      "path": "protocol.used.json",
+      "sha256": "fead644add61848f0dacfe6e497d2e21244da8fadb85a508a52f8480ca700d24",
+      "bytes": 21061,
+      "kind": "protocol"
+    }
+  ],
+  "analysis": {
+    "script": {
+      "path": "../../analyze.py",
+      "sha256": "89648c115e30d09949f3c9500ef74a52b84d6b378577de2750167deece68c976",
+      "bytes": 7689
+    },
+    "blinded": false,
+    "blinding_key_sha256": null,
+    "outputs": [
+      {
+        "path": "analysis.json",
+        "sha256": "4be344327ad6cffb1c8b183cdc8101bb03f09f08b3c441616a12673ecf0f85e6",
+        "kind": "analysis",
+        "bytes": 8664
+      }
+    ],
+    "unmasked_at": null
+  },
+  "notes": [
+    {
+      "kind": "observation",
+      "text": "rows.jsonl (driver output, sha256 7d49e68ecc64ea5acc0adf91cad4c2affcd58910fed5e8d70da307521973c638 uncompressed) is stored gzipped as rows.jsonl.gz; raw msolve stdout/stderr/output files are stored gzipped per file, listed in raw.sha256; analysis.json was computed from the uncompressed rows before compression.",
+      "by": "executor (Claude Code, claude-opus-5-5)"
+    },
+    {
+      "kind": "observation",
+      "text": "export instance_id is the protocol's global instance index (prime position x 10 + i); the driver's instance label p<prime>-i<i> is in each run_id; seed is i.",
+      "by": "executor (Claude Code, claude-opus-5-5)"
+    },
+    {
+      "kind": "observation",
+      "text": "One execution needed two msolve attempts (0035-p1009-i7-chain-aa: first attempt status failed, non-separating form); both attempts are charged in f4_cells as the protocol requires.",
+      "by": "executor (Claude Code, claude-opus-5-5)"
+    },
+    {
+      "kind": "observation",
+      "text": "The S3 resume checkpoint gate failed (no upload token in the session, checkpoint_gate.txt); the owner waived the checkpoint for this run on 2026-11-01 before launch. Protocol, design, driver and analysis script were committed and pushed before the run.",
+      "by": "executor (Claude Code, claude-opus-5-5)"
+    },
+    {
+      "kind": "observation",
+      "text": "wall_seconds is msolve subprocess time on a shared, unisolated cloud container; wall_valid is false and it decides nothing.",
+      "by": "executor (Claude Code, claude-opus-5-5)"
+    }
+  ],
+  "reviews_dir": "reviews"
+}

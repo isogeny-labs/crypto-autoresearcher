@@ -1,0 +1,39 @@
+schema: crypto.autoresearch.review_attestation.v1
+task: TASK-20261101-6dcb20
+batch: BATCH-4c1c67
+joint: J2
+mode: blind
+frozen_at_commit: this commit (derivation freeze; nothing else in the repository read before it)
+sources_read:
+  - coordination/formal-reviews/BATCH-4c1c67/handoffs/TASK-20261101-6dcb20.yaml
+  - coordination/formal-reviews/BATCH-4c1c67/blind-input.yaml
+sources_read_by_mistake: []
+notes_on_context: >-
+  The session harness auto-injected CLAUDE.md into context at session start (not opened by the
+  reviewer); it contains no mathematical content about this problem. No web search, no producer
+  code, no Lean/targets/findings/papers/plans/receipts/sibling reports.
+blind_input_sha256: af1591364529d043e386ebb6182092a52a5d2c8b5b3f6f1a155f3080b8556f42
+blind_input_sha256_matches_expected: true
+code: raw/fall_check.py (written from scratch; exact decision procedure), output raw/fall_check.out
+answers:
+  A:
+    F:        {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+               fall_certificate: "(1, X) -> X^2", fake_fall_certificate: "(1, 1) -> red = X"}
+    F_plus_fe: {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+               fall_certificate: "(1, X, 0, 0) -> X^2", fake_fall_certificate: "(1, 1, 0, 0) -> red = X"}
+  B:
+    F:        {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+               fall_certificate: "(X3, X2) -> X2^2 + X3^2", fake_fall_certificate: "(1 + X1, 1) -> red = X2 + X3"}
+    F_plus_fe: {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+               fall_certificate: "(X3, X2, 0, 0, 0) -> X2^2 + X3^2", fake_fall_certificate: "(1 + X1, 1, 0, 0, 0) -> red = X2 + X3"}
+  recovery_statement: proved
+  nearby_controls:
+    lower_bound_only_condition_a:
+      d_F_mod: {A_F: 3, A_F_plus_fe: 2, B_F: 3, B_F_plus_fe: 2}
+      effect: >-
+        d_F becomes 1 + min degree of a nonzero ideal element; with S_fe the inequality
+        d_F <= d'_F holds for every system by construction (proves too much); with F alone it
+        still fails for A and B.
+    recovery_without_degree_bound_on_A: refuted (fake fall (1,1) at v=2; F+S_fe has no fall at 2)
+unresolved_obligations:
+  - none mathematical; Control 1 interpreted as replacing all of (a) (the other reading reproduces the original definition)

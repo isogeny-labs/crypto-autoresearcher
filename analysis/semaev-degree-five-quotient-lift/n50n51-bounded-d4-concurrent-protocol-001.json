@@ -1,0 +1,380 @@
+{
+  "amendments": [
+    {
+      "changes": [
+        "Same 16 inputs, seed/checker/counter/binary hashes, original order, 27 GiB per-worker cap, exact decision rule and one-attempt stopping.",
+        "Dedicated owner lock and output root; launch requires MemAvailable >=64 GiB and permits the separately capped n43/n44 tail concurrently. No timing claim.",
+        "The original refused gate, plan and protocol remain unchanged."
+      ],
+      "filed": "2026-11-01",
+      "filed_before_affected_data": true,
+      "id": "CONCURRENT-HOST-CONTINUATION-001",
+      "reason": "The original local gate refused before data when MemAvailable stayed below 31.1 GiB. The present host has over 90 GiB available, but the n43/n44 tail holds the original exclusive locks for a long fixed panel. This separate output and owner lock preserve the full 16-input cohort and exact science while guarding total memory."
+    }
+  ],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n50n51-bounded-d4-local-plan-001.json",
+      "16 retained accepted D3 seed certificates and prior results",
+      "fresh exact counter outputs"
+    ],
+    "outputs": [
+      "Per-item retained-seed checks, fresh counts, D4 candidate and original checker transcripts; conditional LFD>=5 named-input bounds."
+    ],
+    "script": {
+      "path": "run_retained_bounded_d4.py",
+      "sha256": "7ec05a2a6e28cf8e74239ee1ad2e76caf74839c31f5faabb6b9df221c88f7b45"
+    }
+  },
+  "arms": [
+    {
+      "description": "All 16 accepted D3 seeds from the terminal original n50/n51 panel, in fixed original order: recheck each seed, recount solutions, run the bounded-export checkpoint D4 candidate, then independently check any D4 certificate.",
+      "id": "producer",
+      "instrument": {
+        "binary_sha256": "fc0911db6560fe10b49d88d6206f89f8de6494616020a864c82d8be552749613",
+        "build": [
+          [
+            "g++",
+            "-O3",
+            "-march=native",
+            "-fopenmp",
+            "quotient_lift_checkpoint.cpp",
+            "libm4ri.a",
+            "-lcrypto",
+            "-lm"
+          ]
+        ],
+        "commit": "9e8cb140965be5fa53b1126aa135afa9b1bd6b30",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "checkpoint_header_sha256": "553e26f10907206d622684bec776d1e65ee1b91f096b8f0b271b378b9d27816e",
+          "driver_sha256": "7ec05a2a6e28cf8e74239ee1ad2e76caf74839c31f5faabb6b9df221c88f7b45",
+          "source_sha256": "ce6424270a807bdb47ca7e391fd74467fedb6d5a6759a8a71655b99e7d96f7d6"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "chunk": 60000,
+        "degree": 4,
+        "inputs": 16,
+        "memory_bytes": 28991029248,
+        "seed_degree": 3
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Fresh exhaustive Boolean solution count for each same named input using pinned count_by_sum; the retained prior counts are cross-checks.",
+      "id": "exact-count",
+      "instrument": {
+        "binary_sha256": "b2d16d8a27b6133443671af1bcc297af225827af1bbd192aa1cb09a2644f6638",
+        "build": [
+          [
+            "gcc",
+            "-O3",
+            "count_by_sum.c"
+          ]
+        ],
+        "commit": "9e8cb140965be5fa53b1126aa135afa9b1bd6b30",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "count_by_sum": "b2d16d8a27b6133443671af1bcc297af225827af1bbd192aa1cb09a2644f6638"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "input_dispatch": "All inputs are unchained m2."
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "acceptance"
+      ],
+      "id": "C1",
+      "text": "For each named presentation, an independently checked D4 certificate whose codimension exceeds a fresh exhaustive solution count certifies LFD at least 5."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic certificate checks and exhaustive counts; no runtime comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Rejected or missing checker acceptance, count mismatch, producer refusal and killed constant are explicit non-success statuses. No upper-bound inference from them.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Native checkpoint candidate passed 150 retained and generated fixture controls, including degree-three seeds; each frontier seed and output is independently checked in this run. The new orchestration driver is syntax checked, with prior cascade records retained as references.",
+      "present": false
+    }
+  },
+  "created": "2026-11-01",
+  "decision_rule": {
+    "comparison_ids": [
+      "acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "At an accepted degree-four stage, exact_count < checked_codimension establishes named-input LFD>=5; this run does not attempt degree five.",
+    "threshold": "Independent D4 acceptance and exact_count < checked_codimension",
+    "verdict_vocabulary": [
+      "certificate_verified",
+      "projection_kills_one",
+      "resource_capped",
+      "timeout",
+      "failed"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": null,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "Each item retains stage records after completion; the native D4 candidate runs without application checkpoints. The dedicated owner lock is held throughout all 16 items. The n43/n44 tail uses separate output and remains capped at 16 GiB. Interrupted items remain incomplete and are not automatically retried.",
+      "counter_memory_bytes": 1073741824,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 28991029248
+    },
+    "queue": "owner-authorized-host-concurrent-guard",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "9c700f9fff6bdf81c882519d53cca35a2df4ee1c4c63431a29e1e9542e425ded",
+    "commit": "93cd25a00162a0ed305277dbc2ebbdb203b658bf",
+    "frozen_at": "2026-11-01T04:39:54Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling a native candidate certified before the original checker accepts it.",
+    "Inferring LFD>=6 from a D4 certificate.",
+    "Treating a resource refusal, timeout or killed constant as an upper bound.",
+    "Replacing the original 50-input frontier plan or imputing unrun D5 cells."
+  ],
+  "invalidation_rules": [
+    "Any seed, source or binary hash mismatch prevents execution.",
+    "A failed independent checker prevents a claim from that stage.",
+    "A counter failure or mismatch prevents solution-count comparison.",
+    "Killing1 in an over-approximating quotient is not membership evidence in the true closure.",
+    "Missing D4 remains unknown; an accepted D3 stage retains only its own lower bound."
+  ],
+  "links": {
+    "kind": "All 16 accepted D3 seeds from the fixed n50/n51 subpanel; original 50-input frontier remains unchanged.",
+    "launcher": "launch_concurrent_bounded_d4.py",
+    "launcher_sha256": "77832033d7d2d8fbdcb1b43f8c67b6328a65487edae51e358f8535ec36b55eb9",
+    "plan": "n50n51-bounded-d4-concurrent-plan-001.json",
+    "plan_sha256": "86c96513567714d882c41a63fc5a3313b96f6f5148d31f32c0e1aac4bf1072d4",
+    "predecessor": "n50n51-cascade-local-001 terminal",
+    "prior_launch_gate": "runs/n50n51-bounded-d4-local-gate-001/summary.json",
+    "prior_protocol": "n50n51-bounded-d4-local-protocol-001.json",
+    "prior_protocol_sha256": "8a067b0a73fba8ffc8ee43edd75818fdd96a98f8b7762cf3b53970a11235abdb",
+    "source_panel": "n50n51-cascade-local-plan-001.json",
+    "source_panel_sha256": "0d0b0a479f163f05794283ad19a600aa6fdd2f2d7ab806547ba7b28fdf93ce93"
+  },
+  "literature": [
+    {
+      "claim": "Constructive quotient-lift rationale, source review and remaining validation requirements.",
+      "provenance": "internal",
+      "ref": "README.md",
+      "verified_by": "Codex 2026-10-29"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "nq only after the original independent checker accepts the degree-four certificate; absent otherwise.",
+        "id": "certified_d4_codimension_lower_bound",
+        "kind": "exact",
+        "name": "accepted D4 codimension lower bound",
+        "resolution": "1",
+        "source": "per-item result.json stages entry at degree 4, certified_codimension",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Fresh count from the pinned native counter; no copied historical value is a new measurement.",
+        "id": "exact_solutions",
+        "kind": "exact",
+        "name": "exhaustive Boolean solution count",
+        "resolution": "1",
+        "source": "per-item result.json exact_solutions",
+        "uncertainty": "none_exact",
+        "unit": "solutions"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N50N51-BOUNDED-D4-CONCURRENT-20261101-V2",
+  "question": "Can the bounded-export checkpoint producer lift all 16 independently accepted retained D3 seeds to independently checked D4 certificates under a 27 GiB child cap?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "All 16 accepted D3 seeds from the completed n50/n51 original frontier subpanel, before any bounded D4 outcome. Named-input inference only; no population or timing inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "No new random input; reuse exact original records and retained accepted D3 certificate hashes.",
+      "seeds": [
+        20261029
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Per-instance D4 outcomes with unknown cells explicit; no runtime graph"
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 16,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Sixteen fixed exact named inputs; no population inference or statistical power claim.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 345600,
+      "fixed_seconds": 0,
+      "measured_on": "Per-item native watchdog times 16 is an allowance, not a prediction.",
+      "per_sample_seconds": 21600,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Attempt all 16 retained seeds once in original order. For each, stop on resource refusal, timeout, count mismatch, checker failure or projection_kills_one; retain the accepted D3 bound and any accepted D4 result. No automatic retry."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Resource refusal, timeout, invalid certificate or counter failure is retained without an LFD inference."
+    },
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Launch the unchanged 16-input cohort only after the terminal D3 panel and published seed readback are verified, a dedicated owner lock is acquired, MemAvailable >=64 GiB, all pinned bytes match, and the new output root is absent. The n43/n44 tail may run concurrently under its independent 16 GiB cap; no second bounded D4 worker or other frontier producer is admitted."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic exact certificates and enumeration; no timing comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "producer",
+          "exact-count"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "id": "acceptance",
+        "threshold": "Original checker accepts degree 4 and fresh exhaustive count is strictly below checked codimension."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "All 16 D3-accepted seeds from the terminal n50/n51 original frontier subpanel, selected by an independently checked D3 gate. No seed excluded by D4 outcome or profile; the original 50-input plan remains unchanged.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Bounded-export checkpoint native binary, new retained-seed driver, checker and counter hashes pinned; native D3-to-D4 fixture qualification and source-derived envelopes retained.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Same shared local host, one sequential 27 GiB-capped bounded D4 worker and one thread. A separately owned n43/n44 tail may run concurrently under its own 16 GiB cap. Launch only with MemAvailable >=64 GiB; no timing claim.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Original plan order of the 16 accepted D3 seeds; per input seed hash/checker, fresh exact count, D4 producer and checker. Each named input attempted once.",
+        "name": "order",
+        "treatment": "fixed"
+      },
+      {
+        "how": "D3 seed verification and exact count precede D4 candidate. D4 acceptance is conditional on native output and independent checker; resource refusals retain their D3 bound.",
+        "name": "stage",
+        "treatment": "crossed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 2
+}

@@ -81,6 +81,22 @@ def test_planned_trial_needs_a_real_dispatch_queue(tmp_path, monkeypatch):
     assert progress["execution_state"] == "ready"
     assert progress["trial_plan"] == "experiments/EXP-ECDLP-a1b2c3/trial-plan-v1.json"
 
+    # A bound task the dispatcher has finished with is not runnable: a
+    # cancelled task (EXP-ECDLP-ad0ffe, superseded by EXP-ECDLP-cded08) once
+    # still read as ready because only the binding was checked.
+    for state in ("cancelled", "completed", "failed", "invalid"):
+        body = json.loads(queue.read_text())
+        body["tasks"][0]["state"] = state
+        body["tasks"][0]["cancellation_reason"] = "successor experiment"
+        queue.write_text(json.dumps(body))
+        progress = mod.execution_progress(exp, tmp_path)
+        assert progress["execution_state"] == "needs_dispatch_queue", state
+        assert f"TASK-20261011-a1b2c3 is {state}" in progress["reason"]
+        assert "successor experiment" in progress["reason"]
+    body["tasks"][0]["state"] = "queued"
+    queue.write_text(json.dumps(body))
+    assert mod.execution_progress(exp, tmp_path)["execution_state"] == "ready"
+
 
 def test_newest_runnable_excludes_unreconciled_activity_and_orders_newest(tmp_path):
     (tmp_path / "orchestration").mkdir()
