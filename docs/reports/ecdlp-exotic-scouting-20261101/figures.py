@@ -45,8 +45,7 @@ for lab, col, ts in left:
             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=col, lw=1.6))
     for t in ts:
         ax.annotate("", xy=(6.45, ry[t]), xytext=(3.75, y),
-                    arrowprops=dict(arrowstyle="->", color=col, lw=1.0,
-                                    alpha=0.8))
+                    arrowprops=dict(arrowstyle="->", color=col, lw=1.0))
 for t, y in ry.items():
     ax.text(6.5, y, "LEAD-*-" + t, va="center", ha="left", fontsize=8.5,
             family="monospace",
@@ -56,9 +55,6 @@ for col, lab in [(NEW, "new lead row"), (AMEND, "amendment proposed for an exist
     ax.plot([], [], color=col, lw=2, label=lab)
 ax.legend(loc="lower center", bbox_to_anchor=(0.5, -0.06), ncol=3, fontsize=8.5,
           frameon=False)
-ax.set_title("ECDLP scouting round 2026-11-01: candidates (left) and the existing "
-             "atlas leads they cite or collide with (right)\nAtlas at b64dbdc580. "
-             "Diagram only; no measured values. Full collision list in README.md.",
-             fontsize=9.5)
+# Title and provenance live in the report caption (README.md, report.typ).
 fig.tight_layout()
 fig.savefig("scouting-map.svg")

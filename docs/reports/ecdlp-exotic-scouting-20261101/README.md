@@ -179,4 +179,6 @@ for the low-degree part of that class, with no auxiliary variables.
 - `README.md`: this note.
 - `novelty-gates.txt`: raw N1 and N2 gate output.
 - `figures.py`, `scouting-map.svg`: the candidate-to-lead map.
-- `report.typ`, `report.pdf`: rendered report.
+- `build_pdf.sh`, `report.typ`, `report.pdf`: rendered report. The script
+  compresses the PDF with Ghostscript so it stays under the artifact-store
+  data threshold and remains in Git.

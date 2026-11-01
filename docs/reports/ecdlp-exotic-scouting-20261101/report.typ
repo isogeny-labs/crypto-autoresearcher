@@ -1,7 +1,7 @@
 #set page(paper: "a4", margin: 2cm)
 #set text(size: 9.5pt)
 #set par(justify: false)
-#show raw: set text(size: 8.5pt)
+#show raw: set text(font: "Libertinus Serif", size: 9pt)
 #show heading.where(level: 1): set text(size: 14pt)
 #show heading.where(level: 2): set text(size: 12pt)
 #show heading.where(level: 3): set text(size: 10.5pt)
@@ -225,4 +225,6 @@ variables.
 - `README.md`: this note.
 - `novelty-gates.txt`: raw N1 and N2 gate output.
 - `figures.py`, `scouting-map.svg`: the candidate-to-lead map.
-- `report.typ`, `report.pdf`: rendered report.
+- `build_pdf.sh`, `report.typ`, `report.pdf`: rendered report. The
+  script compresses the PDF with Ghostscript so it stays under the
+  artifact-store data threshold and remains in Git.
