@@ -1,0 +1,42 @@
+handoff:
+  from: coordinator
+  to: reviewer
+  archived_by: null
+  inference:
+    policy: review-adversarial
+    independent_session_required: true
+    fallback_allowed: false
+    degraded_allowed: false
+  budget: {}
+  return_format: Own-joint report, raw build and axiom output, read attestation, exact hashes and unresolved obligations.
+  id: TASK-20261101-cd72e8
+  objective: Joint J3. Rebuild the five Nagao modules on the pinned toolchain, print elaborated statements and axioms, and compare each clause with claims C1 to C4 and deltas D1 to D10.
+  uncertainty_reduced: Elaborated Lean statement fidelity and fresh machine evidence
+  inputs:
+  - coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md
+  - coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml
+  - coordination/formal-reviews/BATCH-4c1c67/input-bindings.json
+  - formal/CryptoResearch/Nagao/Lemma4Witness.lean
+  - formal/CryptoResearch/Nagao/Lemma4Outside.lean
+  - formal/CryptoResearch/Nagao/RecoveryRule.lean
+  - formal/CryptoResearch/Nagao/Bridge.lean
+  - formal/CryptoResearch/Nagao/BridgeB.lean
+  - formal/lean-toolchain
+  - formal/lake-manifest.json
+  constraints:
+  - Do not read sibling reports (TASK-20261101-b3a351, TASK-20261101-6dcb20) before your report is committed.
+  - Existing receipt JSON and CI logs are not fresh verification; build yourself.
+  - No scientific trials, cloud jobs or changes outside the write scope. Change no research status.
+  deliverables:
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/review.md
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/review_attestation.yaml
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/raw/
+  artifact_paths:
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/
+  write_scope:
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/
+  completion_gate:
+  - Raw elaborated types and #print axioms output for every named theorem and definition listed in J3.
+  - Clause-by-clause comparison with C1 to C4 and a re-marked verdict for each of D1 to D10.
+  - review_attestation.yaml with sources_read and input hashes checked against input-bindings.json.
+  review_plan: coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml
