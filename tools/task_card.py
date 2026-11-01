@@ -46,6 +46,7 @@ it; never edit a copy.
     python3 tools/task_card.py ingest <reply.md> --expect assessment --card <card.yaml> --out <assessment.yaml>
     python3 tools/task_card.py lane --design <spec> [--bind <path>]... --card <card.yaml> \
         --assessment <assessment.yaml> [--via auto|conductor|delphi] [--task T-42] [--route]
+        [--free local|public]
 
 BATCH LANE. `request` prints a single-turn prompt with every fact computed
 (HEAD, sha256s, the receipt, what changed on disk), for a batch API: Delphi
@@ -58,6 +59,10 @@ Delphi (the key is in the project vault) or standalone `delphi` (the key is
 ANTHROPIC_API_KEY); `--via auto` picks whichever is connected. `--route` asks
 `delphi route` which model each step's task family goes to (Delphi's capability
 registry) and escalates a step the tool refuses to the next model in the chain.
+`--free local|public` runs standalone delphi in free mode (DELPHI_FREE): only
+models that cost nothing are called (self-hosted, local, and with `public` the
+free remote tiers, which may log prompts: public or synthetic designs only);
+a paid model is substituted from Delphi's free map or refused.
 
 Exit status: 0 clean / completed, 1 findings, 2 the card could not be read or
 `run` refused to start, 3 `run` stopped at a failing command (a result to
@@ -887,9 +892,23 @@ def _target(spec: str) -> dict[str, str]:
     return {"provider": provider, "model": model, "effort": effort}
 
 
+FREE_MODES = ("local", "public")
+
+
+def _delphi_env(opts: dict[str, Any]) -> dict[str, str] | None:
+    """The environment for standalone delphi: free mode is DELPHI_FREE, set from opts so the
+    lane's record says what actually ran (lane takes an inherited DELPHI_FREE as its default)."""
+    env = dict(os.environ)
+    env.pop("DELPHI_FREE", None)
+    if opts.get("free"):
+        env["DELPHI_FREE"] = opts["free"]
+    return env
+
+
 def route_for(family: str, opts: dict[str, Any]) -> dict[str, Any]:
     """`delphi route -family F -json`: the chosen model, its escalation chain and the basis."""
-    proc = subprocess.run([opts["delphi"], "route", "-family", family, "-json"], capture_output=True, text=True)
+    proc = subprocess.run([opts["delphi"], "route", "-family", family, "-json"], capture_output=True, text=True,
+                          env=_delphi_env(opts))
     try:
         data = json.loads(proc.stdout)
     except ValueError:
@@ -916,7 +935,7 @@ def _ask(backend: str, prompt: Path, workdir: Path, name: str, opts: dict[str, A
     if target.get("effort"):
         argv += ["-effort", target["effort"]]
     argv += ["-every", "30s", "-out", str(out), "-prompt", prompt.read_text(encoding="utf-8")]
-    proc = subprocess.run(argv, capture_output=True, text=True)
+    proc = subprocess.run(argv, capture_output=True, text=True, env=_delphi_env(opts))
     results = out / "results.jsonl"
     if proc.returncode != 0 or not results.is_file():
         raise CardError(f"delphi run failed ({proc.returncode}): {proc.stderr.strip()[-400:]}")
@@ -938,6 +957,7 @@ def lane(designs: list[str], binds: list[str], card_out: str, assessment_out: st
     failing command and was assessed."""
     opts = {"conductor": os.environ.get("CONDUCTOR", "conductor"),
             "delphi": os.environ.get("DELPHI", "delphi"), "model": DIRECTOR_MODEL, **(opts or {})}
+    opts["free"] = opts.get("free") or os.environ.get("DELPHI_FREE") or None
     card_out, assessment_out = safe_relative(card_out), safe_relative(assessment_out)
     workdir = repo / (card_out.rsplit(".", 1)[0] + ".lane")
     record: dict[str, Any] = {"card": card_out, "assessment": assessment_out, "calls": {}}
@@ -947,18 +967,25 @@ def lane(designs: list[str], binds: list[str], card_out: str, assessment_out: st
                 raise CardError(f"{path} already exists; cards and assessments are write-once")
         if workdir.exists():
             raise CardError(f"{rel(repo, workdir)} already exists; every lane gets a fresh record")
-        if opts.get("route"):
-            # Routing is Delphi's capability registry, which standalone delphi reads.
+        if opts.get("free") and opts["free"] not in FREE_MODES:
+            raise CardError(f"--free must be one of {', '.join(FREE_MODES)}, not {opts['free']!r}")
+        # Routing is Delphi's capability registry and free mode is DELPHI_FREE; both are
+        # standalone delphi's, and Conductor-hosted Delphi uses its fixed, paid director profile.
+        needs = [flag for flag, on in (("--route", opts.get("route")), ("--free (DELPHI_FREE)", opts.get("free")))
+                 if on]
+        if needs:
             if via == "conductor":
-                raise CardError("--route needs standalone delphi (delphi route); Conductor-hosted Delphi "
+                raise CardError(f"{' and '.join(needs)} needs standalone delphi; Conductor-hosted Delphi "
                                 "uses its fixed director profile")
             if not shutil.which(opts["delphi"]):
-                raise CardError(f"--route needs the delphi binary ({opts['delphi']} not found)")
+                raise CardError(f"{' and '.join(needs)} needs the delphi binary ({opts['delphi']} not found)")
             backend = "delphi"
         else:
             backend = pick_backend(via, opts["conductor"], opts["delphi"])
         record["backend"] = backend
-        say(f"LANE backend {backend}")
+        if opts.get("free"):
+            record["free"] = opts["free"]
+        say(f"LANE backend {backend}" + (f", free mode ({opts['free']})" if opts.get("free") else ""))
         workdir.mkdir(parents=True)
 
         def call(stage: str, text: str, accept) -> list[str]:
@@ -1090,10 +1117,13 @@ def main(argv: list[str] | None = None) -> int:
     run_lane.add_argument("--model", default=DIRECTOR_MODEL, help="delphi: the director model")
     run_lane.add_argument("--route", action="store_true",
                           help="let `delphi route` choose each step's model and escalate refused replies")
+    run_lane.add_argument("--free", choices=FREE_MODES,
+                          help="delphi free mode: only models that cost nothing (public: free remote tiers too, "
+                               "for public or synthetic designs only)")
     args = parser.parse_args(argv)
     if args.command == "lane":
         return lane(args.design, args.bind or [], args.card, args.assessment, args.via,
-                    {"task": args.task, "model": args.model, "route": args.route})
+                    {"task": args.task, "model": args.model, "route": args.route, "free": args.free})
     if args.command in ("request", "ingest"):
         if args.command == "request" and args.mode == "compile" and not (args.design and args.out):
             parser.error("request compile needs --design and --out")

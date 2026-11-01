@@ -165,6 +165,13 @@ usage when the backend reports them) go to `<card stem>.lane/`.
   route's escalation chain, at most twice; a compile reply whose findings are
   all specification errors is the design's gap and is never escalated.
   Standalone delphi only; `lane.json` records each route and attempt.
+- `--free local|public` (or an inherited `DELPHI_FREE`): standalone delphi in
+  free mode, so only models that cost nothing are called. `local` allows
+  self-hosted and local endpoints; `public` adds free remote tiers such as
+  OpenRouter `:free`, which may log prompts, so use it only for public or
+  synthetic designs. A paid model is replaced from Delphi's free map or
+  refused (an impediment, never an escalation); with `--route` the route only
+  considers free models. No API key is needed. `lane.json` records the mode.
 - Exit 0: ran and assessed. 1: a reply was refused; nothing was written for it
   and the reply is kept. 2: impediment. 3: the run stopped at a failing
   command, which is a result, and was assessed.
