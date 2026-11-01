@@ -25,13 +25,13 @@ a hash it cannot is an assertion by the session that recorded it.
 | — present but carrying no `.sha256` | 8 |
 | — sought and never retrieved | 1 |
 | Seed bibliography entries | 10 |
-| Literature entries (`KN-LIT-*`) | 8131 |
-| — with a resolvable external identifier | 2517 |
+| Literature entries (`KN-LIT-*`) | 8132 |
+| — with a resolvable external identifier | 2518 |
 | — with no identifier recorded | 5614 |
 
-Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1343, doi 183, eprint 837, url 154. Every identifier an entry carries is kept in `sources.json`.
+Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1344, doi 183, eprint 837, url 154. Every identifier an entry carries is kept in `sources.json`.
 
-`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full_text` 4, `full_text_supplied` 2, `metadata` 3, `partial` 5, `read` 7553, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 525.
+`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full_text` 4, `full_text_supplied` 2, `metadata` 3, `partial` 5, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 525.
 
 ## 1. Frozen source packages
 
@@ -243,7 +243,7 @@ records that some fetch failed, and says nothing about the file that is here.
 
 ## 5. Literature citations with a resolvable identifier
 
-2517 of 8131 `KN-LIT-*` entries carry an
+2518 of 8132 `KN-LIT-*` entries carry an
 eprint, arXiv, DOI, ISBN or URL identifier.
 
 | ID | Title | Year | Identifier | Verified |
@@ -2681,6 +2681,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-c82c45 | Index Calculus in the Trace Zero Variety | 2014 | `eprint:2014/318` | web |
 | KN-LIT-c8e485 | On the Correct Use of the Negation Map in the Pollard rho Method | 2011 | `eprint:2011/003` | read |
 | KN-LIT-c9a235 | A New Method for Geometric Interpretation of Elliptic Curve Discrete Logarithm Problem | 2019 | `eprint:2019/1059` | web |
+| KN-LIT-c9e59d | Graphical Algebraic Geometry: From Ideals and Varieties to Quantum Calculi | 2026 | `arxiv:2605.13993` | read |
 | KN-LIT-ca35e0 | Climbing and descending tall isogeny volcanos (Galbraith) -- ECDLP transfer across the conductor gap; Sec. 10 'The Koblitz, Koblitz, Menezes speculation' | 2024 | `eprint:2024/924` | read |
 | KN-LIT-ca757d | BAG-Loong（NGCC 公钥第一轮候选 · 密钥封装 3） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
 | KN-LIT-caa51d | The Exponential Time Hypothesis is False (openai/math family 378) | 2026 | `url:github.com/openai/math/blob/main/preprints/the-exponential-time-hypothesis-is-false-october-25-2026/paper.pdf` | read |

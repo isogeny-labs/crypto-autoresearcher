@@ -1,0 +1,67 @@
+id: LEAD-ICE-gag-contraction-planner
+family: ic-engine
+title: >-
+  Presentation planning for Semaev decomposition systems (which internal wires to contract
+  symbolically, keep as unknowns, or evaluate as finite relations) under measured Groebner cost
+mechanism: >-
+  Graphical Algebraic Geometry (KN-LIT-c9e59d) gives a complete equational calculus in which every
+  presentation of a point-decomposition system is a sound rewrite of one diagram of S_3 boxes:
+  the chained system (KN-TECH-b18366) keeps all m-2 internal wires, S_{m+1} contracts them all
+  by resultants, merge trees rewire them, and a table of tails evaluates one sub-diagram as its
+  finite rational locus. LEAD-ICE-semaev-chain-cost-model closed topology choice under Semaev's
+  charged cost model, where the variable count is topology-invariant. This lead asks the
+  different, measured question: does the solver's actual cost (Groebner time, degree reached,
+  matrix sizes) depend on the presentation, and on which side of the chained-vs-contracted
+  trade it lands outside characteristic 2. KN-TECH-b18366 reports chaining up to 50x faster in
+  the Boolean char-2 setting and records the extension to F_{p^n} as asserted, not measured.
+  Unqualified pointer, not program evidence: an external exploratory sandbox run (2026-11-01,
+  no frozen protocol, not committed here) at n = m = 3 over F_{p^3}, p in [101, 2^29), Singular
+  std and msolve F4, saw the contracted S_4 presentation finish the Groebner stage sooner than
+  the chained one on every cell, with identical solution sets. It carries no claim record and
+  supports nothing until an in-repository run replaces it (AGENTS.md, progress-fidelity gate).
+disposition: open_next_step
+next_action:
+  step: >-
+    Under a frozen experiment.protocol/v1, measure matched presentations of the same instances
+    with the msolve engine's new topology option (chain | tree | monolithic,
+    src/crypto_autoresearcher/index_calculus/diagram.py): first prime-field m = 3 (all three)
+    and m = 4 (chain vs tree) below the 2^16 msolve bound, recording msolve degree, wall time
+    net of startup and agreement with enumeration; then the same arms over F_{p^n} with the
+    Weil-descent builder (src/crypto_autoresearcher/index_calculus/descent.py, CLI
+    `python -m crypto_autoresearcher.index_calculus descent --topology all`) at n = m = 3
+    (all three) and n = m = 4 (chain vs tree), on >= 3 primes in [307, 2^16). Include an A/A
+    arm (same presentation, fresh separating form), charge every msolve retry (the separating
+    check is nondeterministic below p ~ 300), and charge point extraction.
+  discriminates: >-
+    A presentation effect larger than the A/A spread that persists across >= 3 field sizes
+    makes presentation a real solver-stage parameter, to be carried into the ICP Weil-descent
+    leads. No effect beyond A/A closes the question for the measured (n, m) cells only.
+best_measured: null
+evidence:
+- repo: crypto-autoresearcher
+  path: knowledge/literature/KN-LIT-c9e59d.md
+  note: the calculus, its soundness/completeness theorems and the #P-hardness of rewriting
+- repo: crypto-autoresearcher
+  path: src/crypto_autoresearcher/index_calculus/diagram.py
+  note: chain / tree / monolithic presentations for the msolve engine; tests show identical relations
+- repo: crypto-autoresearcher
+  path: src/crypto_autoresearcher/index_calculus/descent.py
+  note: Weil-descended F_{p^n} systems in every presentation; tests agree with a group-law brute force
+- repo: crypto-autoresearcher
+  path: knowledge/techniques/KN-TECH-b18366.md
+  note: chained presentation; char-2 speedup reported, odd-characteristic extension asserted
+ledger_refs: []
+known_results: []
+related:
+- LEAD-ICE-semaev-chain-cost-model
+- LEAD-ICE-prime-field-semaev-solving-degree
+- LEAD-ICP-gfp5-symmetrized-gaudry
+forecloses:
+- graphical algebraic geometry planner for Semaev systems
+- contract wires symbolically versus auxiliary variables measured Groebner cost
+- S_{m+1} versus chained S_3 presentation in odd characteristic
+- string diagram rewriting of summation polynomial networks
+areas:
+- SEMBIN
+- SDEG
+last_reviewed: '2026-10-31'

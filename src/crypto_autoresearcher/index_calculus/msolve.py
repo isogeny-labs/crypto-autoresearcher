@@ -20,6 +20,13 @@ observed to drop solutions on a four-point system over F_101; with ``-c 0`` a
 non-separating form is reported as a failure and retried with fresh
 coefficients instead.
 
+The Semaev part can be presented three ways (``topology``; diagram.py,
+LEAD-ICE-gag-contraction-planner): ``chain`` above (default, unchanged),
+``tree`` (the same S_3 boxes as a balanced merge tree, same variable count),
+and ``monolithic`` (the internal wire contracted by a resultant before
+solving, i.e. S_{m+1}; m <= 3).  Relations are lifted and verified the same way
+for all three.
+
 msolve is an external binary: set CRYPTO_AR_MSOLVE to its path or put it on
 PATH (Debian/Ubuntu: apt install msolve).  The engine refuses p >= 2^16 by
 default.  The Ubuntu 24.04 package (msolve 0.6.5-1build2) was observed to be
@@ -44,7 +51,7 @@ import tempfile
 import time
 from dataclasses import dataclass, field
 
-from . import polyfp
+from . import diagram, polyfp
 from .curve import Curve, Point
 from .decompose import canonical, verify
 from .factor_base import FactorBase
@@ -135,9 +142,17 @@ class System:
 
 
 def decomposition_system(E: Curve, fb: FactorBase, xR: int, m: int,
-                         rng: random.Random) -> System:
+                         rng: random.Random, topology: str = "chain") -> System:
+    """The decomposition system under one presentation (see diagram.py).
+
+    ``chain`` (the default) is unchanged from before topologies existed;
+    ``tree`` and ``monolithic`` keep the same membership equations, variable
+    names for the x_i and separating form, and differ only in the Semaev part.
+    """
     if m < 2:
         raise ValueError("m must be >= 2")
+    if topology != "chain":
+        return _diagram_system(E, fb, xR, m, rng, topology)
     p = E.p
     nv = 2 * m - 1  # x_1..x_m, u_1..u_{m-2}, z
     names = ([f"x{i + 1}" for i in range(m)] + [f"u{k + 1}" for k in range(m - 2)]
@@ -151,6 +166,54 @@ def decomposition_system(E: Curve, fb: FactorBase, xR: int, m: int,
         for k in range(1, m - 2):
             polys.append(s3_poly(E, nv, m + k - 1, k + 1, m + k))
         polys.append(s3_poly(E, nv, 2 * m - 3, m - 1, None, xR))
+    form: Poly = {tuple(1 if v == nv - 1 else 0 for v in range(nv)): 1}
+    for v in range(nv - 1):
+        exps = tuple(1 if w == v else 0 for w in range(nv))
+        form[exps] = (-rng.randrange(1, p)) % p
+    polys.append(form)
+    return System(names, polys, p, m)
+
+
+def _diagram_system(E: Curve, fb: FactorBase, xR: int, m: int,
+                    rng: random.Random, topology: str) -> System:
+    dg = diagram.build(topology, m)
+    p = E.p
+    contract = topology == "monolithic"
+    nu = 0 if contract else dg.wires
+    nv = m + nu + 1  # x_1..x_m, u_1..u_nu, z
+    names = [f"x{i + 1}" for i in range(m)] + [f"u{k + 1}" for k in range(nu)] + ["z"]
+    member = fb.membership_poly()
+    polys = [univariate(member, nv, i, p) for i in range(m)]
+    if contract:
+        # One scratch variable for the single internal wire (m <= 3), eliminated below.
+        width = nv + 1
+        scratch = nv
+
+        def index(t):
+            return t[1] if t[0] == "x" else scratch
+
+        parts = []
+        for box in dg.boxes:
+            a, b, c = box.terms()
+            if c == ("R",):
+                parts.append(s3_poly(E, width, index(a), index(b), None, xR))
+            else:
+                parts.append(s3_poly(E, width, index(a), index(b), index(c)))
+        if len(parts) == 1:
+            semaev = parts[0]
+        else:
+            semaev = diagram.resultant_quadratic(parts[0], parts[1], scratch, p)
+        polys.append({k[:nv]: v for k, v in semaev.items()})
+    else:
+        def index(t):
+            return t[1] if t[0] == "x" else m + t[1]
+
+        for box in dg.boxes:
+            a, b, c = box.terms()
+            if c == ("R",):
+                polys.append(s3_poly(E, nv, index(a), index(b), None, xR))
+            else:
+                polys.append(s3_poly(E, nv, index(a), index(b), index(c)))
     form: Poly = {tuple(1 if v == nv - 1 else 0 for v in range(nv)): 1}
     for v in range(nv - 1):
         exps = tuple(1 if w == v else 0 for w in range(nv))
@@ -263,6 +326,7 @@ class MsolveOutcome:
     rational_solutions: int
     unlifted: int
     detail: str = ""
+    topology: str = "chain"
 
 
 def _signs(E: Curve, fb: FactorBase, idx: list[int], R: Point):
@@ -278,19 +342,26 @@ def _signs(E: Curve, fb: FactorBase, idx: list[int], R: Point):
 
 def decompose_msolve(E: Curve, fb: FactorBase, R: Point, m: int, seed: int = 0,
                      timeout: float | None = None, retries: int = 3,
-                     threads: int = 1) -> MsolveOutcome:
-    """All decompositions of R found by solving the system with msolve."""
+                     threads: int = 1, topology: str = "chain") -> MsolveOutcome:
+    """All decompositions of R found by solving the system with msolve.
+
+    ``topology`` selects the presentation (diagram.TOPOLOGIES).  Every solution
+    is lifted and verified by point addition whatever the presentation, so the
+    returned relations do not depend on it; only cost and ``unlifted`` can.
+    """
     rng = random.Random(f"msolve|{E.p}|{E.a}|{E.b}|{R}|{m}|{seed}")
     seconds, runs = 0.0, 0
     run = MsolveRun("failed")
     while runs < retries:
         runs += 1
-        run = run_msolve(decomposition_system(E, fb, R[0], m, rng), timeout, threads)
+        run = run_msolve(decomposition_system(E, fb, R[0], m, rng, topology),
+                         timeout, threads)
         seconds += run.seconds
         if run.status != "failed":
             break
     if run.status not in ("ok", "no_solution"):
-        return MsolveOutcome(run.status, [], seconds, runs, run.degree, 0, 0, run.detail)
+        return MsolveOutcome(run.status, [], seconds, runs, run.degree, 0, 0, run.detail,
+                             topology)
     rels, unlifted = set(), 0
     for vals in run.solutions:
         idx = [fb.lookup(x) for x in vals[:m]]
@@ -301,4 +372,4 @@ def decompose_msolve(E: Curve, fb: FactorBase, R: Point, m: int, seed: int = 0,
         verify(E, fb, rel, R)
         rels.add(canonical(rel))
     return MsolveOutcome(run.status, sorted(rels), seconds, runs, run.degree,
-                         len(run.solutions), unlifted)
+                         len(run.solutions), unlifted, topology=topology)

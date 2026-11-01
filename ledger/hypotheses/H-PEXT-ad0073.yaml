@@ -1,0 +1,230 @@
+hypothesis:
+  id: H-PEXT-ad0073
+  question_id: RQ-PEXT-7c3e91
+  goal_id: GOAL-PEXT-4a1d6b
+  source_idea: IDEA-20261024-3c71a9
+  source_proposal: IDEA-20261024-3c71a9
+  designed_from: IDEA-20261024-3c71a9
+  added: '2026-10-31'
+  proposed_by: coordinator
+  designed_by: coordinator
+  selection_decision: null
+  selection_basis: >-
+    OWNER request to the Coordinator, 2026-10-31: "design the 4-torsion idea next" (/design-experiment
+    IDEA-20261024-3c71a9). Acknowledges the Coordinator intake DEC-20261027-d51de0 / TASK-20261027-e6b5bf
+    classification complete_prospective_design_can_follow_now false; see the experiment's intake_acknowledgement.
+  approval_decision: null
+  experiment_ids:
+  - EXP-PEXT-0b2c75
+  source_refs:
+  - IDEA-20261024-3c71a9
+  - RQ-PEXT-7c3e91
+  - GOAL-PEXT-4a1d6b
+  - DEC-20261027-d51de0
+  - KN-LIT-bf1772
+  - H-PEXT-d536a1
+  provenance_paths:
+  - ledger/proposals/IDEA-20261024-3c71a9.yaml
+  - ledger/proposals/IDEA-20261024-3c71a9.notes.md
+  - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/derivation.md
+  - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/design-readiness.json
+  title: >-
+    Candidate norm-character law for |E(K)[4]| on the four-of-n-conjugates branch-quadruple family (n = 5: the genus-5
+    floor family; n = 7: S = (0,2,3,4)), tested as a refutable prediction on exact point counts
+  statement: >-
+    UNREVIEWED CANDIDATE, tested not proved. Let q be an odd prime power, n an odd prime, K = F_{q^n}, sigma the
+    q-Frobenius, x in K \ F_q, S = (a_1, a_2, a_3, a_4) distinct residues mod n, e_i = sigma^{a_i} x, c in K*, and
+    E_c the Jacobian (origin (e_4, 0)) of the quartic y^2 = c prod (z - e_i), realized as the monic cubic
+    Y^2 = prod (X - alpha_i), alpha_i = -A/(e_4 - e_i), A = c prod_{i<=3} (e_4 - e_i) (derivation.md sections 1-2).
+    With eps = chi_q(-1), t = chi_K(c) and b_k = chi_q(N_{K/F_q}(x - sigma^k x)) for 1 <= k <= (n-1)/2, the candidate
+    law (L) of derivation.md (3.1), (3.2), (4.2) is: the signs s_ij = chi_K(alpha_i - alpha_j) equal
+    s12 = t beta(a_2 - a_1) beta(a_4 - a_3), s13 = t beta(a_3 - a_1) beta(a_4 - a_2), s23 = t beta(a_3 - a_2) beta(a_4 - a_1)
+    (beta(k) = b_k for k <= (n-1)/2, eps b_{n-k} otherwise); W_1, W_2, W_3 are halvable iff s12 = s13 = +1,
+    eps s12 = s23 = +1, eps s13 = eps s23 = +1; and |E_c(K)[4]| = 4 + 4h, h the number of halvable W_i.
+    Specializations fixed before any decisive run. (L5) n = 5, S = (0,1,2,3), the genus-5 minimum family of the
+    sibling census (m, r) = (4, 5): with p = b_1 b_2, |E_c(K)[4]| is 8 on every unit when q = 3 mod 4, and when
+    q = 1 mod 4 it is 4 for t = -1, 16 for (t, p) = (+1, +1) and 8 for (t, p) = (+1, -1) (derivation table (5.1)).
+    (L7) n = 7, S = (0,2,3,4) (genus 7, (m, r) = (3, 7)): |E_c(K)[4]| = 4 (1 + I_1 + I_2 + I_3) with the
+    indicators of derivation (7.1)-(7.2). The unit counted is the configuration: a PGL2(F_q)-orbit representative
+    x of K \ F_q with a coefficient class c in {1, non-square}; class-level shares are not claimed. The experiment
+    asks whether exact brute-force counts of |E_c(K)[4]| and of the signs on every unit contradict (L); a
+    pass would not establish the theorem, its novelty, the class-level shares, or anything outside the tested cells.
+  mechanism: >-
+    chi_K = chi_q o N_{K/F_q} (n odd), so the square class of every difference e_i - e_j depends only on the
+    norm bits b_k, eps and a common twist bit t; Bekker-Zarhin halving on the monic cubic then turns the three
+    sign conditions into |E[4]| = 4 + 4h. The candidate shows why the genus-5 floor family cannot avoid a
+    rational point of order 4 when -1 is a non-square in F_q. Nothing in the mechanism is claimed as independently
+    reviewed (BATCH-68a56c review lanes are blocked by IMP-PEXT-BLIND-CONTRACT-INTERFACE-20261027 and
+    IMP-PEXT-NORM-REVIEW-ADMISSION-20261027).
+  derivations:
+    written_at: '2026-10-27'
+    written_before_any_decisive_run: true
+    source: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/derivation.md
+    status: unreviewed candidate (Coordinator intake, zero runs, no independent mathematical review)
+    design_lane_algebra_check: >-
+      experiments/EXP-PEXT-0b2c75/implementation/bitalgebra.py selfcheck (pure algebra on the written formulas, no
+      field data): the generic predictor equals the literal n = 5 table (5.1) and the literal n = 7 formula (7.2) on
+      every bit cell, h is invariant under all 24 orderings of every 4-subset of Z/5 and Z/7 (28,800 variants), h is
+      never 2, and h <= 1 when eps = -1. This is internal consistency of the candidate formulas, not a proof of them.
+    pair_rule_observation: >-
+      Design-lane algebra from (3.1): at eps = +1 the three signs flip under the twist, so a pair has exactly one
+      member with h = 0 for EVERY quartic with four K-rational branch points. The IDEA's "exactly one K-twist of each
+      pair has |E(K)[4]| = 4 (share 1/2)" is therefore true off the family too and is NOT a discriminating prediction;
+      the discriminating content at eps = +1 is which member (the non-square coefficient t = -1, because the family
+      forces s12 = s13) and the split 16 iff t = +1 and p = +1 versus 8. At eps = -1 the discriminating content is
+      |E(K)[4]| = 8 on every unit, while an unconstrained quartic has |E(K)[4]| = 4 about a quarter of the time.
+  assumptions:
+  - The Bekker-Zarhin halving criterion for a monic cubic (cited by the derivation as a source theorem; not re-verified here).
+  - Distinct branch points and odd characteristic; the construction does not divide by 3 and includes characteristic 3 (q = 3, 9, 27).
+  - The sibling genus formula g = 2^(m-2)(r-4)+1 identifies S words with their minimum genus; (m, r) is computed by the tool for every S used.
+  proof_search_map:
+    bottleneck: whether the sign bookkeeping (4.2) plus the halving test (3.1) reproduce exact group data on the whole family
+    baseline_embedding:
+      parameter_slice: n = 5, q = 3, the 20 genus-5 records of the sibling census (in-sample)
+      reproduction_check: >-
+        regression trial of EXP-PEXT-0b2c75: the family enumeration at q = 3 equals the 20 published records on (j, order,
+        E2, E4) as multisets, and the tool's verbatim port of the sibling four_torsion method reproduces every published field
+        of those records
+    observation_collision:
+      observable: (eps, t, b_1..b_h) -> |E(K)[4]|
+      distinct_preimage_search: >-
+        two units with equal bits and different |E(K)[4]| refute the law; the random off-family arm shows the same
+        instrument can produce |E(K)[4]| = 4 at eps = -1
+    constructive_transforms:
+    - transform: constructive_enumeration
+      proposed_object: every PGL2(F_q)-orbit of x in K \ F_q with both coefficient classes, for q up to 31 (n = 5) and 9 (n = 7)
+      predicted_gain: exact tests of the law on all q^2 + 1 configurations per q instead of a sampled census
+    quantifier_order: >-
+      FOR ALL q in the tested lists, ALL units; no statement for untested q. The derivation is for all odd q; this
+      experiment tests the listed cells only.
+    method_ceiling:
+      strongest_certifiable_claim: >-
+        a clean pass is zero contradictions of the candidate on the enumerated cells; it is not a proof, not a review
+        and not a novelty finding
+      nearby_object_control: >-
+        off-family random branch quadruples (same instrument, same fields) and the published off-family split records
+        at q = 3, where |E(K)[4]| = 4 occurs
+    proof_obligations:
+    - claim: pointed quartic-to-cubic identification and extension at omitted points (intake obligation 1)
+      responsibility: independent assessment (not discharged here; the experiment checks #C(K) = #E(K) on every unit)
+    - claim: Bekker-Zarhin application and the count 4 + 4h (obligation 3)
+      responsibility: independent assessment (not discharged here; checked against brute force on every unit)
+    - claim: class shares and weighting (obligation 5/6)
+      responsibility: open; not claimed
+    not_applicable_reason: null
+  asymptotic_claim: null
+  target_complexity:
+    time_exponent: no attack claimed
+    memory_exponent: no attack claimed
+    best_known: n/a (structural)
+    hidden_overhead: n/a
+    tradeoff_note: 2-adic structure of a family is reported, never priced
+  dominated_by: n/a (no result claimed; structural)
+  sota_delta: none claimed; novelty unverified
+  novelty_status: unverified
+  novelty_note: >-
+    Iijima-Momose-Chao (KN-LIT-bf1772, ePrint 2015/805): only the abstract and bibliographic page were read (full text
+    returned HTTP 403 at intake). Their classification may contain this law. If it does, this experiment is an
+    independent exact check, not a discovery. The IDEA's novelty_status stays unverified.
+  heuristic_assumptions:
+  - id: H1
+    statement: >-
+      Over the t = +1 units of the n = 5 family, (b_1, b_2) is equidistributed, each of the four cells 1/4 up to a
+      sampling error. Reported by chi-square per q; non-gating. The deterministic law does not use it.
+    rigorous_support: none established (derivation.md section 8 records that no checked Weil/Katz statement was located)
+    validation_plan: chi-square on the four cells per q in analysis.json
+    validation_experiment_ids:
+    - EXP-PEXT-0b2c75
+    falsification_condition: none; descriptive only
+  structural_ingredients:
+  - description: genus formula, Lang reduction, four_torsion method and the 20 genus-5 records at q = 3
+    citation: aburan28/crypto research/ghs_cover_census_n5_20261013 at f7ed67332588643447fdeca66b3790febbcf9e92
+    provenance: retrieved
+    verified_by: 'fixtures with sha256 pins; D-n5-q3-cosets.jsonl shared from experiments/EXP-PEXT-212d5c/implementation/fixtures (not duplicated), pilot-n3-q3-cosets.jsonl vendored under experiments/EXP-PEXT-0b2c75/implementation/fixtures'
+    role: positive control and the verbatim E4 method
+  - description: odd-characteristic classification of GHS-weak curves
+    citation: KN-LIT-bf1772
+    provenance: internal
+    verified_by: coordinator 2026-10-24, abstract only
+    role: prior-art pointer; not read
+  reduction_chain:
+    core_problem: the 2-adic type |E(K)[4]| of the minimum-genus GHS family at prime n
+    corollaries: []
+  predictions:
+  - id: P1
+    metric: '|E(K)[4]| on every unit, n = 5, S = (0,1,2,3), q = 3 mod 4 (q = 7, 11, 19, 23, 27, 31; q = 3 reported as the in-sample control)'
+    direction: equals
+    minimum_effect: 8 on every unit (no 4, no 16)
+    source: IDEA-20261024-3c71a9 prediction 1 and derivation table (5.1)
+  - id: P2
+    metric: '|E(K)[4]| on every unit, n = 5, S = (0,1,2,3), q = 1 mod 4 (q = 5, 9, 13, 17, 25, 29)'
+    direction: equals
+    minimum_effect: 4 if t = -1; 16 if t = +1 and b_1 b_2 = +1; 8 if t = +1 and b_1 b_2 = -1 (the pair rule "exactly one 4 per pair" is generic and non-discriminating)
+    source: IDEA-20261024-3c71a9 predictions 2-3 and derivation table (5.1)
+  - id: P3
+    metric: '|E(K)[4]| on every unit, n = 7, S = (0,2,3,4), q = 3, 5, 7, 9'
+    direction: equals
+    minimum_effect: 4 (1 + I_1 + I_2 + I_3) of derivation (7.1)-(7.2)
+    source: IDEA-20261024-3c71a9 prediction 4 and derivation section 7 (written before any n = 7 data)
+  - id: P4
+    metric: '|E(K)[4]| on every unit, n = 7, the five other canonical 4-subsets (one is a rotation of (0,2,3,4)), q = 3, 5, 7'
+    direction: equals
+    minimum_effect: the generic (3.1) + (4.2) predictor
+    source: derivation.md (4.2), generic in S; secondary
+  - id: P5
+    metric: observed signs chi_K(alpha_i - alpha_j) versus the (4.2) bit expressions
+    direction: equals
+    minimum_effect: zero mismatches on every decisive unit
+    source: derivation.md (4.2)
+  - id: P6
+    metric: (m, r, genus) of each S word
+    direction: equals
+    minimum_effect: (4, 5, 5) at n = 5; (3, 7, 7) for (0,2,3,4); (6, 7, 49) for the genus-49 words
+    source: sibling Lemma M / genus formula
+  - id: N2
+    metric: off-family random quartics
+    direction: at_least
+    minimum_effect: share(E4 != 8) >= 0.10 at eps = -1; share of pairs whose c = 1 member has E4 = 4 >= 0.20 at eps = +1; E4 = 16 seen
+    source: design lane; shows the instrument can see violations of the family law
+  test_boundary:
+    instances:
+    - 'n = 5, S = (0,1,2,3): q = 5, 7, 9, 11, 13, 17, 19 (core) and q = 23, 25, 27, 29, 31 (extended); every PGL2(F_q)-orbit of x in K \ F_q with both coefficient classes: 2 (q^2 + 1) units per q'
+    - 'n = 7: S = (0,2,3,4) at q = 3, 5, 7, 9; five other canonical S words at q = 3, 5, 7'
+    - 'controls: n = 5, q = 3 (in-sample), random off-family quartics at n = 5, q = 5, 7, 9, 11, 13 (1000 configurations, both twists), published off-family records'
+    parameters:
+      seed_negative_arm: 20261101
+      threads: 4
+    implementation: >-
+      experiments/EXP-PEXT-0b2c75/implementation/ (pext4_census.rs, bitalgebra.py, run.py, check.py, analyze.py, fixtures/),
+      sha256-bound by the trial plan
+    budget:
+      maximum_runs: 6
+      maximum_workers: 4
+      maximum_memory_gb: 4
+    scope_note: >-
+      Toy fields only (K up to F_{31^5} and F_{3^14}). Exact counts of |E(K)[4]|, |E(K)| and signs; no transfer,
+      discrete logarithm, cost or speedup is claimed; nothing about any deployed curve.
+  distinguishable_outcomes:
+  - 'O-SUPPORT (support_scoped): instrument controls pass; P1, P2, P3, P4, P5, P6 have zero contradictions on the decisive cells; the off-family control discriminates. Reported as zero contradictions of an unreviewed candidate on the tested cells; no theorem, novelty or class-share claim.'
+  - 'O-REFUTE (refute in scope): on a valid analysis, any decisive unit with |E(K)[4]| different from the prediction, or a sign mismatch, or a wrong (m, r, genus). The unit (q, n, S, orbit, t, bits) is the counterexample certificate; the derivation (or the identification of the family) is wrong at that step.'
+  - 'O-PARTIAL (inconclusive): valid, no contradiction, but the off-family control does not discriminate, the (t, p) coverage is below 20 units per cell, or a required decisive arm is absent.'
+  - 'O-INVALID (not evidence): any instrument counter nonzero (M1 != M2, #C(K) != #E(K), Hasse, chi_K != chi_q o N, E[2] != 4), a failed positive control, an A/A byte difference, or an orbit-count mismatch.'
+  - 'not evidence: a timeout, memory kill or crash is failed_infrastructure (AGENTS.md rule 5).'
+  falsification_conditions:
+  - A unit at q = 3 mod 4 (n = 5, S = (0,1,2,3)) with |E(K)[4]| different from 8 refutes the Kummer bookkeeping (IDEA falsification 1, unadjusted).
+  - A unit at q = 1 mod 4 off the table (5.1) refutes the u-flip / table. The pair rule alone cannot refute: it is generic (IDEA falsification 2 amended by the design-lane algebra, recorded above).
+  - '|E(K)[4]| = 16 at q = 3 mod 4 is impossible by (3.1) and would indicate an enumeration error (invalid, not null), as in the IDEA.'
+  - A unit of the n = 7 panels off (7.2) or the generic predictor refutes the n = 7 analogue.
+  confounders:
+  - Characteristic 3 at q = 3, 9, 27 (in-sample q = 3 is control only; q = 9, 27 are out-of-sample in characteristic 3; the other q are not).
+  - j = 0 and 1728 are counted as units like any other (the full 2-torsion forces exactly the twist pair); special-j counts and distinct-class collisions are reported, not pooled away.
+  - Multiple x-orbits can give the same K-isomorphism class (and Galois shifts give conjugate curves); the unit is the configuration, so class-level shares are not claimed.
+  interpretation_limits:
+  - Bounded q and n; no cost, no transfer claim, no claim about omitted q.
+  - Zero contradictions would support the candidate on the tested cells only; the derivation stays unreviewed (obligations 1, 3 and 5 of the intake are not discharged).
+  - For q >= 5 the identification of the explicit family with "the genus-5 curves of the GHS census" rests on the sibling lemma and the computed (m, r) = (4, 5); it is positively controlled at q = 3 only.
+  - Novelty unverified (KN-LIT-bf1772 abstract only).
+  status: specified
+  status_note: >-
+    Specified 2026-10-31 by the Coordinator design lane. Not approved: EXP-PEXT-0b2c75 is review_required until the
+    preapproval probe reports approvable true on pushed bytes. States and asserts nothing about truth.

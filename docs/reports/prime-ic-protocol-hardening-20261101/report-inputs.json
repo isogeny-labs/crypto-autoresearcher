@@ -1,0 +1,125 @@
+{
+  "schema": "prime-ic-protocol-hardening-report/v1",
+  "recorded_at": "2026-11-01T00:40:00+00:00",
+  "decision_id": "DEC-20261101-26f1fa",
+  "repository_base": "f410b6a11bce888738a64f305d9772c269332d87",
+  "inputs": [
+    {
+      "path": "ledger/decisions/DEC-20261031-b51282.yaml",
+      "sha256": "bd9de670664bcecee905b11c5b9646d2f16e313ea11e01190929a2f86b5d83cd",
+      "bytes": 9161,
+      "scope": "Immutable arity and solver-model correction whose execution-design fields are additively hardened."
+    },
+    {
+      "path": "ledger/decisions/DEC-20261031-cd6460.yaml",
+      "sha256": "5a93414cc6b9fa4bb147f3dcca16fecce47f79ac252a251a315af3e0c6d9695d",
+      "bytes": 6583,
+      "scope": "Immutable checker-defect decision retained under its original meaning."
+    }
+  ],
+  "cross_repository_sources": [
+    {
+      "repository": "isogeny-labs/cryptanalysis",
+      "pull_request": "https://github.com/isogeny-labs/cryptanalysis/pull/1347",
+      "source_head": "86bd347e4502933697825ea276380fad0da76a1c",
+      "merge_commit": "3c769002f0f68d63a5055f6f3e24a9500393180e",
+      "state_at_recording": "merged",
+      "path": "experiments/prime-field-m3-cdclt-20261031",
+      "scope": "Hardened owner protocol, native small-field oracle, exact sizing and validation receipt."
+    },
+    {
+      "repository": "isogeny-labs/crypto",
+      "pull_request": "https://github.com/isogeny-labs/crypto/pull/3114",
+      "source_head": "c8e685b56adf8e18ee3bf6b847b38da097e1ea48",
+      "merge_commit": null,
+      "state_at_recording": "open_with_auto_merge",
+      "path": "research/prime_ic_lead_review_20261031",
+      "scope": "Machine-protocol v2, provenance correction, report and explicit freeze blockers."
+    }
+  ],
+  "outputs": [
+    {
+      "path": "ledger/decisions/DEC-20261101-26f1fa.yaml",
+      "sha256": "5015c3265db183da5e5b11e9ea55ca9e957c64b40b4bcd40865bc82a5a522a41",
+      "bytes": 9591
+    },
+    {
+      "path": "knowledge/leads/ecdlp/ic-prime/LEAD-ICP-digit-presentation-solving-degree.yaml",
+      "sha256": "cb1c3472656844f333862b977fc64d480db6e3ecc8e3488d31225296d83f2529",
+      "bytes": 6880
+    },
+    {
+      "path": "knowledge/leads/ecdlp/ic-prime/LEAD-ICP-shared-coefficient-membership.yaml",
+      "sha256": "50a747fa20ec95233c428bb3bda4c1314a3a9f91032099794876edb4b5b395fe",
+      "bytes": 3272
+    },
+    {
+      "path": "docs/reports/prime-ic-protocol-hardening-20261101/diagram.dot",
+      "sha256": "284f70b1f7b247172dbe954de43f0e032f58d65503365364c3cf7f33eccb3681",
+      "bytes": 1539
+    },
+    {
+      "path": "docs/reports/prime-ic-protocol-hardening-20261101/diagram.svg",
+      "sha256": "c05a1c08193b41cf09596ce5ca150dfbbd86004ff4ad25cecbfea090d4b1f8a0",
+      "bytes": 10383
+    },
+    {
+      "path": "docs/reports/prime-ic-protocol-hardening-20261101/diagram.pdf",
+      "sha256": "f704f19524bf4bd0a02b47767c220f4d5a69c9d598ae368d7e97d893f65317b6",
+      "bytes": 18806
+    },
+    {
+      "path": "docs/reports/prime-ic-protocol-hardening-20261101/report.md",
+      "sha256": "ed97f3df73c7091168e4d28ea298254c2ef35550720ad2fd9f55a00d691ef5b4",
+      "bytes": 2532
+    },
+    {
+      "path": "docs/reports/prime-ic-protocol-hardening-20261101/report.typ",
+      "sha256": "39e64203de6ac1014a667665fa8595869812e4765822146cf4a6850e8c75ae14",
+      "bytes": 2019
+    },
+    {
+      "path": "docs/reports/prime-ic-protocol-hardening-20261101/report.pdf",
+      "sha256": "ee0ac272fc83a4cb8e17c308208586094202f1b5ea6b3854fc1a601995928042",
+      "bytes": 39120
+    }
+  ],
+  "rendering": {
+    "renderer": "Pandoc with XeLaTeX; Typst source retained for the standard report surface",
+    "pages": 1,
+    "all_pages_inspected": true,
+    "inspection_image": "/tmp/tmp.8bZvC5d33k/report.png",
+    "finding": "Diagram and text are legible with no clipping, overlap or overflow.",
+    "pdf_sha256": "ee0ac272fc83a4cb8e17c308208586094202f1b5ea6b3854fc1a601995928042"
+  },
+  "validation": {
+    "native_decision_check": {
+      "errors": [],
+      "warnings": [],
+      "scope": "tools.validate_ledger.check_ledger_record for DEC-20261101-26f1fa."
+    },
+    "lead_atlas": {
+      "status": "pass",
+      "scope": "Both updated leads parse and are returned by exact-match lead-atlas queries; atlas disposition remains open_next_step."
+    },
+    "full_ledger_gate": {
+      "status": "deferred_to_full_checkout_ci",
+      "reason": "Canonical validation refused the sparse checkout because 15624 tracked files are off disk. Sparse override found five missing-path/schema errors in unrelated materialized records and is not reported as a full-repository result."
+    },
+    "validator_unit_tests": {
+      "status": "17_passed_2_sparse_fixture_failures",
+      "reason": "One test lacks its transfer-assessment fixture in the sparse tree; one expects the repository validator to complete rather than refuse 15624 off-disk tracked files."
+    },
+    "progress_fidelity": {
+      "new_claim_files": 0,
+      "reason": "No quantitative speedup, performance advantage or attack-cost result is claimed."
+    }
+  },
+  "evidence_boundary": {
+    "scientific_runs": 0,
+    "held_out_instances": 0,
+    "solver_exponent_estimates": 0,
+    "performance_claims": 0,
+    "statement": "Additive protocol correction and bounded native development-fixture validation only."
+  }
+}
