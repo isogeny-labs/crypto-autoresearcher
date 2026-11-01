@@ -38,9 +38,10 @@ The pre-design snapshot is **5 ideas**, all `RQ-PFDR-ae2fba`, added
   decision rule, falsifier.
 - `protocols/<IDEA>.json` — five `experiment.protocol/v1` records, all
   validating with 0 findings.
-- Ledger records (linked): five `H-PFDR-*` `specified` hypotheses and five
-  `EXP-PFDR-*` `review_required` experiments, each with a frozen
-  `experiments/<EXP>/protocol.json`.
+- Ledger records (linked): five `H-PFDR-*` `specified` hypotheses; **one**
+  `EXP-PFDR-*` contract (`EXP-PFDR-3569b5`, the high-priority Graeffe tower)
+  lands in this PR. The 2026-11-01 process budget allows one new ECC
+  experiment per session, so the other four are deferred — see `DEFERRED.md`.
 
 ## Status
 

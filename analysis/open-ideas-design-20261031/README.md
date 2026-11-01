@@ -43,10 +43,11 @@ invalidation rules, the decision rule, the falsifier and the inadmissible
 moves. `protocols/<IDEA>.json` is the same design as an
 `experiment.protocol/v1` record.
 
-The designs are also **ledgered**: 11 hypotheses (`H-*`, status `specified`)
-and 11 experiments (`EXP-*`, status `review_required`) under
-`ledger/hypotheses/` and `experiments/`, each experiment carrying a frozen
-`protocol.json`. The idea-to-record mapping is in `LEDGER_MAPPING.md`.
+The designs are **hypothesised** (11 `H-*` records, status `specified`) and
+published as frozen protocols. Under the 2026-11-01 process budget only one
+experiment contract per session may be filed, so these eleven experiment
+records are deferred: see `../open-ideas-design-20261101/DEFERRED.md` and branch
+`deferred/open-idea-contracts-20261101`.
 
 | area | open ideas | design theme |
 |:--|--:|:--|
