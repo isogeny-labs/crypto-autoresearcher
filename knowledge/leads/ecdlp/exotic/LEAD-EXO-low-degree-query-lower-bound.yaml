@@ -6,19 +6,26 @@ title: >-
 mechanism: >-
   LEAD-EXO-augmented-oracle-ggm closes every named oracle that the generic group model can
   simulate, and reopens when a publicly computable oracle that it cannot simulate appears.
-  Degree-D polynomial tests on coordinates are such oracles: they include the small-x
-  membership that prime-field index calculus uses. This lead proposes a lower bound for the
-  whole class rather than oracle by oracle. Model: the solver holds encodings of group
-  elements, may add and compare them, and may also ask whether f(coordinates of X_1..X_t) = 0
-  for any f of degree at most D. Conjecture H1 (numbered heuristic, unproven): with T queries,
-  success probability is at most O(T^2/N) + O(T D p^(-1/2) polylog p), so T is
-  Omega(min(sqrt N, sqrt p / D)). The single-point case follows from Weil-type point counts;
-  the risk is joint equidistribution of adaptively chosen tuples ((a_i + b_i k)P), which would
+  Polynomial tests on coordinates are candidates. This lead proposes a lower bound for the
+  low-degree part of that class rather than oracle by oracle. Model: the solver holds
+  encodings of group elements, may add and compare them, and may also ask whether
+  f(coordinates of X_1..X_t) = 0 for any f of degree at most D, with no auxiliary variables.
+  Scope of the model, stated per oracle family: small-x membership x(P) < B is a degree-B
+  condition in this model, so it enters only at D about B, where the bound below is weaker
+  than sqrt(N) for any useful B; the Legendre symbol of x has degree (p-1)/2; with auxiliary
+  variables small-x membership drops to degree 2 with about log B extra unknowns, and a bound
+  for that model would have to depend on their number (not proposed here). So this lead does
+  not address index calculus on small-x bases. It targets genuinely low-degree statistics
+  (low-degree curves through tuples of points, cross-ratios, bounded-degree relations among
+  coordinates of related points). Conjecture H1 (numbered heuristic, unproven): with T
+  queries, success probability is at most O(T^2/N) + O(T D p^(-1/2) polylog p), so T is
+  Omega(min(sqrt N, sqrt p / D)) for D = p^(o(1)). The single-point case is the counting
+  behind LEAD-ICP-algebraic-membership-factor-base (a degree-d locus holds O(d) points); the
+  risk is joint equidistribution of adaptively chosen tuples ((a_i + b_i k)P), which would
   need character-sum bounds along multiples of a point (Kohel-Shparlinski type, citation
-  recalled and unverified). A proof would turn several measured nulls
-  (LEAD-EXO-coordinate-statistic-leakage, LEAD-EXO-dl-character-sum-pseudorandom, the A(d)
-  plan of LEAD-EXO-invertible-hint-subset) into one theorem in scope; a failure of the
-  multi-point step would name the first coordinate test worth measuring.
+  recalled and unverified). A proof would turn the low-degree families of
+  LEAD-EXO-coordinate-statistic-leakage into a theorem in scope; a failure of the
+  multi-point step would name the first low-degree coordinate test worth measuring.
 disposition: open_next_step
 next_action:
   step: >-
@@ -49,6 +56,7 @@ known_results:
 - KR-RHO-ea34b8
 related:
 - LEAD-EXO-augmented-oracle-ggm
+- LEAD-ICP-algebraic-membership-factor-base
 - LEAD-EXO-coordinate-statistic-leakage
 - LEAD-EXO-invertible-hint-subset
 - LEAD-EXO-dl-character-sum-pseudorandom

@@ -43,9 +43,10 @@ Contracting one leaf gives the transfer matrix
 M[y, y'] = #{ x in FB : S_3(x, y, y') = 0 }
 ```
 
-This is the adjacency operator of the Cayley graph of E(F_p)/{+-1} with
-connection set FB. Its eigenvectors are the even characters of E(F_p),
-indexed by the discrete logarithm. A basis that diagonalises M therefore
+Up to multiplicity conventions, this is the quotient by negation of the
+Cayley graph of E(F_p) with connection set {+-F : x(F) in FB}. Its
+eigenfunctions are the symmetrised characters chi_j + chi_(-j), indexed by
+the discrete logarithm. A basis that diagonalises M therefore
 already encodes the answer. The open question is whether any cheaper basis
 lowers the tensor rank of T.
 
@@ -82,13 +83,25 @@ it.
 
 ### C3. Low-degree query lower bound (`LEAD-EXO-low-degree-query-lower-bound`)
 
-The generic group model closes named oracles one by one. Degree-D tests on
-coordinates, including small-x membership, are the oracles it cannot
-simulate. This lead proposes one bound for the whole class.
+The generic group model closes named oracles one by one. Polynomial tests
+on coordinates are oracles it cannot simulate. This lead proposes one bound
+for the low-degree part of that class, with no auxiliary variables.
+
+- **Scope.** Small-x membership `x(P) < B` has degree B in this model, so it
+  enters only at D about B, where the bound is weaker than sqrt(N). The
+  Legendre symbol of x has degree (p-1)/2. With auxiliary variables, small-x
+  membership drops to degree 2 with about log B extra unknowns, and a bound
+  would have to depend on their number. So this lead does not address index
+  calculus on small-x bases. It targets genuinely low-degree statistics:
+  low-degree curves through tuples of points, cross-ratios, and
+  bounded-degree relations among coordinates of related points.
+- **Single-point case.** This is the counting behind
+  `LEAD-ICP-algebraic-membership-factor-base`: a degree-d locus holds O(d)
+  points. That lead was the top N1 hit for this candidate.
 
 - **H1 (conjecture).** With T queries, success probability is at most
   `O(T^2/N) + O(T D p^(-1/2) polylog p)`, so T is
-  `Omega(min(sqrt N, sqrt p / D))`.
+  `Omega(min(sqrt N, sqrt p / D))` for D = p^(o(1)).
 - **Risk.** The single-point case follows from Weil-type point counts.
   Adaptive multi-point tuples need character sums along multiples of a point.
   The Kohel-Shparlinski reference for these is recalled, not verified.
