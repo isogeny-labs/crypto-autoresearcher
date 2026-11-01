@@ -1,39 +1,80 @@
-schema: crypto.autoresearch.review_attestation.v1
-task: TASK-20261101-6dcb20
-batch: BATCH-4c1c67
-joint: J2
-mode: blind
-frozen_at_commit: this commit (derivation freeze; nothing else in the repository read before it)
-sources_read:
-  - coordination/formal-reviews/BATCH-4c1c67/handoffs/TASK-20261101-6dcb20.yaml
-  - coordination/formal-reviews/BATCH-4c1c67/blind-input.yaml
-sources_read_by_mistake: []
-notes_on_context: >-
-  The session harness auto-injected CLAUDE.md into context at session start (not opened by the
-  reviewer); it contains no mathematical content about this problem. No web search, no producer
-  code, no Lean/targets/findings/papers/plans/receipts/sibling reports.
-blind_input_sha256: af1591364529d043e386ebb6182092a52a5d2c8b5b3f6f1a155f3080b8556f42
-blind_input_sha256_matches_expected: true
-code: raw/fall_check.py (written from scratch; exact decision procedure), output raw/fall_check.out
-answers:
-  A:
-    F:        {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
-               fall_certificate: "(1, X) -> X^2", fake_fall_certificate: "(1, 1) -> red = X"}
-    F_plus_fe: {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
-               fall_certificate: "(1, X, 0, 0) -> X^2", fake_fall_certificate: "(1, 1, 0, 0) -> red = X"}
-  B:
-    F:        {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
-               fall_certificate: "(X3, X2) -> X2^2 + X3^2", fake_fall_certificate: "(1 + X1, 1) -> red = X2 + X3"}
-    F_plus_fe: {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
-               fall_certificate: "(X3, X2, 0, 0, 0) -> X2^2 + X3^2", fake_fall_certificate: "(1 + X1, 1, 0, 0, 0) -> red = X2 + X3"}
-  recovery_statement: proved
-  nearby_controls:
-    lower_bound_only_condition_a:
-      d_F_mod: {A_F: 3, A_F_plus_fe: 2, B_F: 3, B_F_plus_fe: 2}
-      effect: >-
-        d_F becomes 1 + min degree of a nonzero ideal element; with S_fe the inequality
-        d_F <= d'_F holds for every system by construction (proves too much); with F alone it
-        still fails for A and B.
-    recovery_without_degree_bound_on_A: refuted (fake fall (1,1) at v=2; F+S_fe has no fall at 2)
-unresolved_obligations:
-  - none mathematical; Control 1 interpreted as replacing all of (a) (the other reading reproduces the original definition)
+# Post-freeze format change (2026-11-01): the derivation-freeze content is nested unchanged
+# under review_attestation (and indented 4 spaces) so tools/check_review_independence.py can read it.
+# No answer, control, source or obligation was changed.
+review_attestation:
+  task_id: TASK-20261101-6dcb20
+  batch_id: BATCH-4c1c67
+  joints_owned: [J2]
+  verdict: holds
+  verdict_scope: >-
+    Mapped to the claims only after the freeze, by reading claim_under_review and J2's
+    breaking_artifact in review-plan.yaml. The frozen values agree with C1 to C3, and none of
+    J2's breaking artifacts occurred. J2 blind re-derivation complete: d_F = 3 and d'_F = 2 for A and for B in both
+    placements (F, F + S_fe), so d_F <= d'_F fails in all four cases; the recovery statement
+    (with the unreduced bound deg(g_i f_i) <= v) is proved; without that bound it is refuted on A;
+    the lower-bound-only control makes d_F <= d'_F hold by construction with S_fe (proves too much).
+  sources_read:
+    - coordination/formal-reviews/BATCH-4c1c67/handoffs/TASK-20261101-6dcb20.yaml
+    - coordination/formal-reviews/BATCH-4c1c67/blind-input.yaml
+  sources_read_scope: >-
+    Everything opened before the derivation-freeze commit 1465c72247. No path in the
+    review-plan-addendum-blind-from.yaml blind_from list was opened before or after the freeze,
+    except review-plan.yaml, which after the freeze was hashed with sha256sum and parsed by
+    tools/check_review_independence.py. Later, to choose the checker's breaks/holds/inconclusive
+    word, its claim_under_review and J2 joint entry were displayed. Both reads came after the
+    frozen derivation and changed none of it.
+  read_sibling_reports: false
+  read_sibling_reports_scope: >-
+    false for everything before the freeze and for the derivation. After the freeze, the first
+    20 lines of reviews/TASK-20261101-b3a351/review_attestation.yaml and
+    reviews/TASK-20261101-cd72e8/review_attestation.yaml were viewed only to copy this wrapper
+    format, as the producer session's request allowed. No sibling review.md was opened.
+  blind_from_respected: true
+  post_freeze_reads:
+    - AGENTS.md (grep for PR rules)
+    - .github/ (directory listing, looking for a PR template; none found)
+    - coordination/formal-reviews/BATCH-4c1c67/review-plan-addendum-blind-from.yaml
+    - coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml (sha256sum, the checker's parse, then claim_under_review and the J2/J3 joint entries)
+    - tools/check_review_independence.py (excerpts, to learn the field names it reads)
+    - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/review_attestation.yaml (first 20 lines)
+    - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/review_attestation.yaml (first 20 lines)
+  frozen_attestation:
+    schema: crypto.autoresearch.review_attestation.v1
+    task: TASK-20261101-6dcb20
+    batch: BATCH-4c1c67
+    joint: J2
+    mode: blind
+    frozen_at_commit: this commit (derivation freeze; nothing else in the repository read before it)
+    sources_read:
+      - coordination/formal-reviews/BATCH-4c1c67/handoffs/TASK-20261101-6dcb20.yaml
+      - coordination/formal-reviews/BATCH-4c1c67/blind-input.yaml
+    sources_read_by_mistake: []
+    notes_on_context: >-
+      The session harness auto-injected CLAUDE.md into context at session start (not opened by the
+      reviewer); it contains no mathematical content about this problem. No web search, no producer
+      code, no Lean/targets/findings/papers/plans/receipts/sibling reports.
+    blind_input_sha256: af1591364529d043e386ebb6182092a52a5d2c8b5b3f6f1a155f3080b8556f42
+    blind_input_sha256_matches_expected: true
+    code: raw/fall_check.py (written from scratch; exact decision procedure), output raw/fall_check.out
+    answers:
+      A:
+        F:        {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+                   fall_certificate: "(1, X) -> X^2", fake_fall_certificate: "(1, 1) -> red = X"}
+        F_plus_fe: {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+                   fall_certificate: "(1, X, 0, 0) -> X^2", fake_fall_certificate: "(1, 1, 0, 0) -> red = X"}
+      B:
+        F:        {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+                   fall_certificate: "(X3, X2) -> X2^2 + X3^2", fake_fall_certificate: "(1 + X1, 1) -> red = X2 + X3"}
+        F_plus_fe: {d_F: 3, d_prime_F: 2, d_F_le_d_prime_F: false,
+                   fall_certificate: "(X3, X2, 0, 0, 0) -> X2^2 + X3^2", fake_fall_certificate: "(1 + X1, 1, 0, 0, 0) -> red = X2 + X3"}
+      recovery_statement: proved
+      nearby_controls:
+        lower_bound_only_condition_a:
+          d_F_mod: {A_F: 3, A_F_plus_fe: 2, B_F: 3, B_F_plus_fe: 2}
+          effect: >-
+            d_F becomes 1 + min degree of a nonzero ideal element; with S_fe the inequality
+            d_F <= d'_F holds for every system by construction (proves too much); with F alone it
+            still fails for A and B.
+        recovery_without_degree_bound_on_A: refuted (fake fall (1,1) at v=2; F+S_fe has no fall at 2)
+    unresolved_obligations:
+      - none mathematical; Control 1 interpreted as replacing all of (a) (the other reading reproduces the original definition)
