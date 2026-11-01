@@ -1,5 +1,13 @@
 # Open-idea experiment designs — 2026-10-31
 
+> **Correction (2026-11-01).** The open-set rule used here counted an idea as
+> designed when its `IDEA-*` id appeared anywhere in a hypothesis, including an
+> incidental mention. The harness's own link is explicit
+> (`proposal_id`/`source_proposal`, `derived_from_idea`/`source_idea`). Under
+> that definition five PFDR ideas were still open; they are designed in
+> `analysis/open-ideas-design-20261101/`, and these 11 records now carry the
+> explicit links too.
+
 A design pass under the `design-experiment` skill over **every open idea in the
 ledger**. Produced by one session; nothing was approved, dispatched or run.
 
