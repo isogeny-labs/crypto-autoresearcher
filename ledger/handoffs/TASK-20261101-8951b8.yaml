@@ -1,0 +1,135 @@
+handoff:
+  id: TASK-20261101-8951b8
+  from: coordinator
+  to: executor
+  role: executor
+  recorded_at: '2026-11-01'
+  kind: executor_run
+  goal_id: GOAL-PFDR-fd09e0
+  batch_id: BATCH-3a63a4
+  experiment_id: EXP-PFDR-ada71b
+  hypothesis_id: H-PFDR-ed7ccf
+  approved_by: DEC-20261101-cb3277
+  execution:
+    mode: experiments
+    kind: run
+    experiment_id: EXP-PFDR-ada71b
+    trial_plan: experiments/EXP-PFDR-ada71b/trial-plan.json
+    trial_plan_sha256: 0407d4753edfabfbe124d398c1a8bde75a048b0ace14df0bd98e35e0502cddc6
+    approved_by: DEC-20261101-cb3277
+  objective: Run the six planned trials of EXP-PFDR-ada71b exactly as frozen in trial-plan.json under
+    DEC-20261101-cb3277. Leave the run artifacts in place; do not interpret them and do not edit the specification,
+    trial plan, implementation or queue.
+  uncertainty_reduced: Whether the repaired (v2) break-even growth ladder yields valid per-line slopes
+    and passing preregistered controls on fresh curves.
+  inputs:
+  - ledger/hypotheses/H-PFDR-ed7ccf.yaml
+  - ledger/decisions/DEC-20261101-cb3277.yaml
+  - experiments/EXP-PFDR-ada71b/specification.yaml
+  - experiments/EXP-PFDR-ada71b/trial-plan.json
+  - experiments/EXP-PFDR-ada71b/implementation/run.py
+  - experiments/EXP-PFDR-ada71b/implementation/check.py
+  - experiments/EXP-PFDR-ada71b/implementation/paircount.c
+  - experiments/EXP-PFDR-ada71b/implementation/vendor/curve.py
+  constraints:
+  - Run only the six trials in trial-plan.json, in order; no extra seeds, cells or hosts.
+  - Do not edit specification.yaml, trial-plan.json, the implementation, the queue or the hypothesis.
+  - A crash, timeout, memory kill or refused manifest is failed_infrastructure for that trial, never a
+    scientific conclusion.
+  - No Amazon Bedrock.
+  - Zero trials are launched by the approval act; this card is the execution authority after approval.
+  deliverables:
+  - one run directory per planned RUN id with the declared artifacts
+  artifact_paths:
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/analysis-main.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/check.stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/check.stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/command.txt
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/environment.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/execution-receipt.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/flags.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/launch.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/manifest.yaml
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/raw-result.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-2d655b/stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/check.stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/check.stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/command.txt
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/design.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/environment.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/execution-receipt.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/launch.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/manifest.yaml
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/pilot-jobs.jsonl
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/raw-result.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/check.stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/check.stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/command.txt
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/environment.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/launch.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/manifest.yaml
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/raw-result.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/check.stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/check.stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/command.txt
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/environment.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/execution-receipt.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/launch.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/manifest.yaml
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/raw-result.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/rep-jobs.jsonl
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-b5f267/stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/check.stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/check.stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/command.txt
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/environment.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/execution-receipt.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/launch.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/main-jobs.jsonl
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/manifest.yaml
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/raw-result.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-efce3d/stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/analysis.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/check.stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/check.stdout.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/command.txt
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/environment.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/execution-receipt.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/flags.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/launch.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/manifest.yaml
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/raw-result.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/stderr.log
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-fe2d35/stdout.log
+  write_scope:
+  - experiments/EXP-PFDR-ada71b/runs
+  archived_by: TASK-20261101-18d7f6
+  depends_on:
+  - TASK-20261101-125ee4
+  inference:
+    policy: executor-implementation
+    reasoning_effort: null
+    fallback_allowed: true
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 6
+    memory_gb: 4
+    wall_clock_seconds: 129600
+  completion_gate:
+  - Every planned RUN id has manifest.yaml and raw-result.json and its declared artifacts.
+  - check.py exits zero for every trial or the run is recorded invalid with the checker output.
+  - The specification, trial plan, implementation and queue bytes are unchanged.
+  - No extra trials and no run outside the declared set.
+  return_format: per-trial run directories, checker output and a run receipt
+  handoff_record: ledger/handoffs/TASK-20261101-8951b8.yaml
