@@ -10,7 +10,6 @@ This is an equality statement about natural casts into ZMod. It contains no
 circuit semantics, encoding theorem, or proof-system soundness result.
 -/
 import Mathlib.Data.ZMod.Basic
-import Mathlib.Tactic.Omega
 
 namespace CryptoResearch.AttackCorpus.ModAlias
 
@@ -21,8 +20,10 @@ theorem modulus_alias_and_bounded_repair (q : ℕ) (hq : 2 ≤ q) :
       (0 : ZMod q) = (q : ZMod q) ∧
       ∀ x y : ℕ, x < q → y < q →
         (x : ZMod q) = (y : ZMod q) → x = y := by
-  haveI : NeZero q := ⟨by omega⟩
-  refine ⟨by omega, ?_, ?_⟩
+  have hq0 : 0 < q := lt_of_lt_of_le (by decide : 0 < 2) hq
+  have hqne : q ≠ 0 := Nat.ne_of_gt hq0
+  haveI : NeZero q := ⟨hqne⟩
+  refine ⟨Ne.symm hqne, ?_, ?_⟩
   · exact (ZMod.natCast_self q).symm
   · intro x y hx hy hxy
     have hv : (x : ZMod q).val = (y : ZMod q).val :=
