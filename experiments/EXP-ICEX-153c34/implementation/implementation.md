@@ -11,7 +11,10 @@ The implementation contains:
 * the D-2 monomial-basis pseudo-resultant, deterministic lex Buchberger,
   recursive gcd/specialisation root extraction, and signed point recovery;
 * a fail-closed S0 orchestrator with pinned inputs, C-7 checks, one-worker
-  execution, `nice >= 10`, and an 8 GiB address-space ceiling. Every native
+  execution, `nice >= 10`, and an 8 GiB address-space ceiling. Before any gate,
+  it recomputes the exact 12-file Python-source manifest, compares every file
+  with the audited implementation report and its immutable source commit, and
+  rejects missing, extra, changed, or commit-unbound sources. Every native
   abnormal path sends TERM and then KILL to the fresh process group, attempts
   to reap the leader, confirms the group is gone, and globally stops later
   gates when that confirmation is unavailable;
@@ -31,7 +34,10 @@ The implementation contains:
   It is the only backend the frozen driver accepts. It sends only a
   hash-manifested per-call bundle, blocks worker networking,
   enforces one CPU/8 GiB/one single-use container/no retries, and returns exact
-  stdout and stderr bytes in the receipt. Modal is never an automatic fallback.
+  stdout and stderr bytes in the receipt. Gate parsing accepts Modal only from
+  a confirmed sandbox-termination receipt and never requires the native-only
+  process-group field; native gates still require confirmed process-group
+  reaping. Modal is never an automatic fallback.
 
 The G1 decision path has no direct Cartesian/grid `V^5` membership substitute
 and cannot receive the O5 oracle. The frozen recursive extractor still retains

@@ -14,6 +14,7 @@ import hashlib
 import inspect
 import json
 from pathlib import Path
+from unittest import mock
 
 import g1_s0 as g1
 import o5_group
@@ -472,12 +473,98 @@ def check_modal_contract():
             "tampered_call_shape_rejected": True}
 
 
+def check_backend_aware_gate_parsing():
+    modal = {
+        "backend": "modal", "command": ["sage"],
+        "started_at": "offline", "finished_at": "offline",
+        "returncode": 0, "stdout_bytes": b'{"pass":true}',
+        "stderr_bytes": b"", "timeout": False,
+        "sandbox_termination_confirmed": True,
+        "modal_sandbox_id": "sb-offline-regression",
+        "worker": {"termination_error": None},
+    }
+    native = {
+        "backend": "native", "command": ["python"],
+        "started_at": "offline", "finished_at": "offline",
+        "returncode": 0, "stdout": '{"pass":true}', "stderr": "",
+        "timeout": False, "process_group_reaped": True,
+        "lifecycle_error": None,
+    }
+    evidence = driver.EVIDENCE / "offline-never-written.json"
+    with (mock.patch.object(driver, "write_json") as write_json,
+          mock.patch.object(driver, "run_sage", return_value=modal) as run_sage):
+        modal_record = driver.run_g02(Path("/offline-not-used"))
+        native_record = driver.run_json_gate("G0-3", native, evidence)
+        unconfirmed_modal = dict(modal, sandbox_termination_confirmed=False,
+                                 process_group_reaped=True)
+        unconfirmed_modal_record = driver.run_json_gate(
+            "G0-2", unconfirmed_modal, evidence)
+        unreaped_native = dict(native, process_group_reaped=False,
+                               sandbox_termination_confirmed=True)
+        unreaped_native_record = driver.run_json_gate(
+            "G0-3", unreaped_native, evidence)
+    assert write_json.call_count == 4
+    assert run_sage.call_count == 1
+    assert modal_record["pass"] is True
+    assert modal_record["execution_backend"] == "modal"
+    assert modal_record["sandbox_termination_confirmed"] is True
+    assert "native_process_group_reaped" not in modal_record
+    assert native_record["pass"] is True
+    assert native_record["execution_backend"] == "native"
+    assert native_record["native_process_group_reaped"] is True
+    assert "sandbox_termination_confirmed" not in native_record
+    assert unconfirmed_modal_record["blocked"] is True
+    assert unconfirmed_modal_record["sandbox_termination_confirmed"] is False
+    assert unreaped_native_record["blocked"] is True
+    assert unreaped_native_record["native_process_group_reaped"] is False
+    return {
+        "confirmed_modal_without_native_reap_field_passes": True,
+        "modal_termination_failure_rejected_despite_native_field": True,
+        "confirmed_native_reaping_passes": True,
+        "native_reaping_failure_rejected_despite_modal_field": True,
+    }
+
+
+def check_audited_source_manifest_binding():
+    document = driver.yaml.safe_load(driver.IMPLEMENTATION_REPORT.read_text())
+    checked = driver.implementation_manifest_preflight(document)
+    assert checked["pass"] is True
+    assert checked["source_paths_exact"] is True
+    assert len(checked["files"]) == len(driver.AUDITED_SOURCE_FILES) == 12
+    assert all(row["pass"] for row in checked["files"])
+
+    tampered_hash = json.loads(json.dumps(document))
+    source_row = next(row for row in tampered_hash["files"]
+                      if row["path"] == driver.AUDITED_SOURCE_FILES[0])
+    source_row["sha256"] = "0" * 64
+    assert driver.implementation_manifest_preflight(tampered_hash)["pass"] is False
+
+    missing_source = json.loads(json.dumps(document))
+    missing_source["files"] = [
+        row for row in missing_source["files"]
+        if row["path"] != driver.AUDITED_SOURCE_FILES[-1]
+    ]
+    assert driver.implementation_manifest_preflight(missing_source)["pass"] is False
+
+    wrong_commit = json.loads(json.dumps(document))
+    wrong_commit["implementation_commit"] = "0" * 40
+    assert driver.implementation_manifest_preflight(wrong_commit)["pass"] is False
+    return {
+        "audited_source_files": len(checked["files"]),
+        "current_and_commit_hashes_equal_manifest": True,
+        "tampered_hash_rejected": True,
+        "missing_source_rejected": True,
+        "unavailable_source_commit_rejected": True,
+    }
+
+
 def check_static_lifecycle_and_sage_bindings():
     native_source = inspect.getsource(driver.run_native)
     cleanup_source = inspect.getsource(driver._terminate_and_reap_process_group)
     assert "start_new_session=True" in native_source
     assert "_terminate_and_reap_process_group" in native_source
     assert "except BaseException" in native_source
+    assert '"backend": "native"' in native_source
     assert "os.killpg" in cleanup_source
     assert "signal.SIGTERM" in cleanup_source
     assert "signal.SIGKILL" in cleanup_source
@@ -486,6 +573,10 @@ def check_static_lifecycle_and_sage_bindings():
     driver_source = inspect.getsource(driver)
     assert "unconfirmed Modal sandbox termination" in driver_source
     assert "unconfirmed native process-group reaping" in driver_source
+    main_source = inspect.getsource(driver.main)
+    assert (main_source.index("implementation_manifest_preflight()")
+            < main_source.index("machine_reading()"))
+    assert "audited implementation source manifest mismatch" in main_source
     assert "pinned checkpoint explicitly says execution not admitted" in driver_source
     assert "dir=MANDATED_TMPDIR" in driver_source
     assert 'choices=("modal",)' in driver_source
@@ -544,6 +635,8 @@ def main():
         "o5_group": check_o5_group(),
         "raw_c7_boundary": check_raw_c7_boundary(),
         "modal_contract": check_modal_contract(),
+        "backend_aware_gate_parsing": check_backend_aware_gate_parsing(),
+        "audited_source_manifest": check_audited_source_manifest_binding(),
         "static_bindings": check_static_lifecycle_and_sage_bindings(),
     }
     result = {

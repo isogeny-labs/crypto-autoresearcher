@@ -40,6 +40,7 @@ SAGE_GATES = HERE / "s0_sage_gates.py"
 MODAL_SAGE = HERE / "s0_modal_sage.py"
 WORKER = HERE / "s0_gate_worker.py"
 COUNTER_CHECKER = HERE / "s0_counter_checker.py"
+IMPLEMENTATION_REPORT = HERE / "implementation_report.yaml"
 SEMAEV_INVENTORY = REPO / "experiments/EXP-SDEG-85eefd/implementation/semaev_polys.json"
 O5_GROUP = HERE / "o5_group.py"
 SAGE_IMAGE_DIGEST = "sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d"
@@ -58,6 +59,21 @@ PORTABILITY_AUTHORIZED = False
 # admitted``.  Only a committed Coordinator admission/amendment may change
 # this frozen launch condition.
 CHECKPOINT_EXECUTION_ADMITTED = False
+
+AUDITED_SOURCE_FILES = (
+    "experiments/EXP-ICEX-153c34/implementation/g1_s0.py",
+    "experiments/EXP-ICEX-153c34/implementation/o5_group.py",
+    "experiments/EXP-ICEX-153c34/implementation/panel_fixtures.py",
+    "experiments/EXP-ICEX-153c34/implementation/panel_fixtures_verifier.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_counter_checker.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_counter_reference.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_driver.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_gate_worker.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_operation_spec.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_sage_gates.py",
+    "experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py",
+)
 
 GATES = {
     "G0-1": "v4 fixtures reproduce and panel_fixtures.py byte-reproduces independently",
@@ -151,6 +167,112 @@ def input_preflight():
         rows.append({"path": relative, "expected_sha256": expected,
                      "observed_sha256": observed, "pass": observed == expected})
     return rows
+
+
+def implementation_manifest_preflight(document=None):
+    """Bind launch to the exact audited Python-source manifest and commit."""
+    errors = []
+    if document is None:
+        try:
+            document = yaml.safe_load(IMPLEMENTATION_REPORT.read_text())
+        except (OSError, yaml.YAMLError) as error:
+            return {"pass": False, "errors": [
+                "implementation report could not be read: %s" % error], "files": []}
+    if not isinstance(document, dict):
+        return {"pass": False, "errors": [
+            "implementation report is not an object"], "files": []}
+
+    source_commit = document.get("implementation_commit")
+    source_tree = document.get("implementation_tree")
+    if (not isinstance(source_commit, str) or len(source_commit) != 40
+            or any(character not in "0123456789abcdef" for character in source_commit)):
+        errors.append("implementation_commit is not a full lowercase Git object id")
+    if (not isinstance(source_tree, str) or len(source_tree) != 40
+            or any(character not in "0123456789abcdef" for character in source_tree)):
+        errors.append("implementation_tree is not a full lowercase Git object id")
+
+    file_rows = document.get("files")
+    if not isinstance(file_rows, list):
+        file_rows = []
+        errors.append("implementation report files is not a list")
+    by_path = {}
+    for index, row in enumerate(file_rows):
+        if not isinstance(row, dict) or not isinstance(row.get("path"), str):
+            errors.append("implementation report file row %d is malformed" % index)
+            continue
+        path = row["path"]
+        if path in by_path:
+            errors.append("implementation report repeats path %s" % path)
+        by_path[path] = row
+
+    expected_paths = set(AUDITED_SOURCE_FILES)
+    declared_source_paths = {
+        path for path in by_path
+        if path.startswith("experiments/EXP-ICEX-153c34/implementation/")
+        and path.endswith(".py")
+    }
+    actual_source_paths = {
+        str(path.relative_to(REPO)) for path in HERE.glob("*.py") if path.is_file()
+    }
+    if declared_source_paths != expected_paths:
+        errors.append("report Python-source path set differs from frozen audited set")
+    if actual_source_paths != expected_paths:
+        errors.append("worktree Python-source path set differs from frozen audited set")
+
+    def git(arguments, text=False):
+        return subprocess.run(
+            ["git", "-C", str(REPO), *arguments], capture_output=True,
+            text=text, check=False)
+
+    current_head = git(["rev-parse", "HEAD"], text=True)
+    current_head_id = current_head.stdout.strip() if current_head.returncode == 0 else None
+    commit_exists = False
+    if isinstance(source_commit, str) and len(source_commit) == 40:
+        commit_check = git(["cat-file", "-e", source_commit + "^{commit}"])
+        commit_exists = commit_check.returncode == 0
+        if not commit_exists:
+            errors.append("implementation_commit is not available as a commit")
+        elif current_head_id is None or git(
+                ["merge-base", "--is-ancestor", source_commit, current_head_id]).returncode != 0:
+            errors.append("implementation_commit is not an ancestor of current HEAD")
+        tree = git(["rev-parse", source_commit + "^{tree}"], text=True)
+        if tree.returncode != 0 or tree.stdout.strip() != source_tree:
+            errors.append("implementation_tree disagrees with implementation_commit")
+
+    rows = []
+    for relative in AUDITED_SOURCE_FILES:
+        row_errors = []
+        declared = by_path.get(relative)
+        declared_hash = declared.get("sha256") if isinstance(declared, dict) else None
+        if (not isinstance(declared_hash, str) or len(declared_hash) != 64
+                or any(character not in "0123456789abcdef" for character in declared_hash)):
+            row_errors.append("missing or malformed declared SHA-256")
+        path = REPO / relative
+        current_hash = sha256(path) if path.is_file() else None
+        if current_hash != declared_hash:
+            row_errors.append("current file differs from declared SHA-256")
+        committed_hash = None
+        if commit_exists:
+            committed = git(["show", source_commit + ":" + relative])
+            if committed.returncode != 0:
+                row_errors.append("file is absent from implementation_commit")
+            else:
+                committed_hash = hashlib.sha256(committed.stdout).hexdigest()
+                if committed_hash != declared_hash:
+                    row_errors.append("implementation_commit file differs from declared SHA-256")
+        rows.append({
+            "path": relative, "declared_sha256": declared_hash,
+            "current_sha256": current_hash, "commit_sha256": committed_hash,
+            "pass": not row_errors, "errors": row_errors,
+        })
+        errors.extend("%s: %s" % (relative, error) for error in row_errors)
+    return {
+        "pass": not errors, "implementation_commit": source_commit,
+        "implementation_tree": source_tree, "current_head": current_head_id,
+        "source_paths_exact": (declared_source_paths == expected_paths
+                               and actual_source_paths == expected_paths),
+        "files": rows, "errors": errors,
+    }
 
 
 def child_environment(tmpdir):
@@ -273,7 +395,8 @@ def run_native(arguments, tmpdir, timeout):
         # session.  Clean them up and classify the launch as abnormal if it did.
         if _process_group_exists(process.pid):
             cleanup = _terminate_and_reap_process_group(process, stdout, stderr)
-            return {"command": command, "started_at": started, "finished_at": now(),
+            return {"backend": "native", "command": command,
+                    "started_at": started, "finished_at": now(),
                     "returncode": process.returncode,
                     "stdout": cleanup["stdout"], "stderr": cleanup["stderr"],
                     "timeout": False,
@@ -281,7 +404,8 @@ def run_native(arguments, tmpdir, timeout):
                     "termination_error": cleanup["termination_error"],
                     "lifecycle_error": "native leader exited with live descendants",
                     "launch_error": None}
-        return {"command": command, "started_at": started, "finished_at": now(),
+        return {"backend": "native", "command": command,
+                "started_at": started, "finished_at": now(),
                 "returncode": process.returncode, "stdout": stdout,
                 "stderr": stderr, "timeout": False, "process_group_reaped": True,
                 "termination_error": None, "lifecycle_error": None,
@@ -289,7 +413,8 @@ def run_native(arguments, tmpdir, timeout):
     except subprocess.TimeoutExpired as error:
         cleanup = _terminate_and_reap_process_group(
             process, error.stdout or "", error.stderr or "")
-        return {"command": command, "started_at": started, "finished_at": now(),
+        return {"backend": "native", "command": command,
+                "started_at": started, "finished_at": now(),
                 "returncode": process.returncode,
                 "stdout": cleanup["stdout"], "stderr": cleanup["stderr"],
                 "timeout": True, "timeout_seconds": timeout,
@@ -300,7 +425,8 @@ def run_native(arguments, tmpdir, timeout):
         cleanup = ({"stdout": "", "stderr": "",
                     "process_group_reaped": True, "termination_error": None}
                    if process is None else _terminate_and_reap_process_group(process))
-        return {"command": command, "started_at": started, "finished_at": now(),
+        return {"backend": "native", "command": command,
+                "started_at": started, "finished_at": now(),
                 "returncode": process.returncode if process is not None else None,
                 "stdout": cleanup["stdout"],
                 "stderr": cleanup["stderr"] + ("\n" if cleanup["stderr"] else "") + str(error),
@@ -566,6 +692,35 @@ def bind_native_reaping(record, *processes):
     return record
 
 
+def process_lifecycle_status(process):
+    """Return backend-specific termination proof without cross-applying fields."""
+    backend = process.get("backend")
+    if backend == "modal":
+        confirmed = modal_termination_confirmed(process)
+        return {"backend": backend, "confirmed": confirmed,
+                "proof": "sandbox_termination_confirmed",
+                "error": None if confirmed else
+                "Modal sandbox termination was not confirmed"}
+    if backend == "native":
+        confirmed = process.get("process_group_reaped") is True
+        return {"backend": backend, "confirmed": confirmed,
+                "proof": "process_group_reaped",
+                "error": None if confirmed else
+                "native process group reaping was not confirmed"}
+    return {"backend": backend, "confirmed": False, "proof": None,
+            "error": "gate process receipt has an unknown backend"}
+
+
+def bind_gate_lifecycle(record, process):
+    lifecycle = process_lifecycle_status(process)
+    record["execution_backend"] = lifecycle["backend"]
+    if lifecycle["backend"] == "modal":
+        record["sandbox_termination_confirmed"] = lifecycle["confirmed"]
+    elif lifecycle["backend"] == "native":
+        record["native_process_group_reaped"] = lifecycle["confirmed"]
+    return record
+
+
 def parse_process_json(process, binary=False):
     if binary:
         return json.loads(process["stdout_bytes"].decode("utf-8"))
@@ -659,32 +814,33 @@ def run_json_gate(gate_id, process, evidence_path):
     write_json(evidence_path, {"schema": "crypto.autoresearch.icex_s0_gate_evidence.v1",
                                "gate": gate_id, "process": public_receipt(process),
                                "result": result})
-    if process.get("process_group_reaped") is not True:
-        return bind_native_reaping(
+    lifecycle = process_lifecycle_status(process)
+    if not lifecycle["confirmed"]:
+        return bind_gate_lifecycle(
             gate_record(gate_id, blocked=True, classification="infrastructure_error",
-                        observation="native process group reaping was not confirmed",
-                        evidence=(evidence_path,)), process)
-    if process.get("lifecycle_error"):
-        return bind_native_reaping(
+                        observation=lifecycle["error"], evidence=(evidence_path,)),
+            process)
+    if lifecycle["backend"] == "native" and process.get("lifecycle_error"):
+        return bind_gate_lifecycle(
             gate_record(gate_id, blocked=True, classification="infrastructure_error",
                         observation=process["lifecycle_error"],
                         evidence=(evidence_path,)), process)
     if process["timeout"]:
-        return bind_native_reaping(
+        return bind_gate_lifecycle(
             gate_record(gate_id, blocked=True, classification="resource_exhaustion",
                         observation="gate process watchdog expired", evidence=(evidence_path,)),
             process)
     if result is None:
-        return bind_native_reaping(
+        return bind_gate_lifecycle(
             gate_record(gate_id, blocked=True, classification="infrastructure_error",
                         observation="gate emitted no parseable JSON receipt",
                         evidence=(evidence_path,)), process)
     if result.get("pass") is True and process["returncode"] == 0:
-        return bind_native_reaping(
+        return bind_gate_lifecycle(
             gate_record(gate_id, passed=True, classification="pass",
                         observation="frozen gate condition passed", evidence=(evidence_path,)),
             process)
-    return bind_native_reaping(
+    return bind_gate_lifecycle(
         gate_record(gate_id, failed=not result.get("blocked", False),
                     blocked=result.get("blocked", False),
                     classification=result.get("classification", "implementation_error"),
@@ -873,7 +1029,8 @@ def pending_gate(gate_id, observation, classification="infrastructure_error"):
     return gate_record(gate_id, blocked=True, classification=classification, observation=observation)
 
 
-def write_reports(started, readings, gates, command, preflight, protocol_deviations):
+def write_reports(started, readings, gates, command, preflight, protocol_deviations,
+                  implementation_manifest):
     all_pass = all(gate["pass"] for gate in gates)
     any_started = any(gate["evidence_paths"] for gate in gates)
     status = "passed" if all_pass else ("completed_with_failures" if any_started else "not_started")
@@ -886,6 +1043,7 @@ def write_reports(started, readings, gates, command, preflight, protocol_deviati
         "execution_scope": "S0 gates G0-1..G0-6 only; no frozen/protocol run",
         "started_at": started, "finished_at": now(), "command": command,
         "git": git_state(), "input_preflight": preflight,
+        "implementation_source_manifest_preflight": implementation_manifest,
         "machine_protection_readings": readings,
         "machine_protection_passed_at_launch": bool(readings and c7_ok(readings[0])),
         "execution_authority": {
@@ -932,9 +1090,16 @@ def write_reports(started, readings, gates, command, preflight, protocol_deviati
     for path in sorted(HERE.rglob("*")):
         if path.is_file() and path.name != "implementation_report.yaml" and "__pycache__" not in path.parts:
             files.append({"path": str(path.relative_to(REPO)), "sha256": sha256(path)})
+    implementation_commit = git_state()["commit"]
+    tree_process = subprocess.run(
+        ["git", "-C", str(REPO), "rev-parse", implementation_commit + "^{tree}"],
+        capture_output=True, text=True, check=False)
+    implementation_tree = (tree_process.stdout.strip()
+                           if tree_process.returncode == 0 else None)
     impl = {
         "schema": "crypto.autoresearch.implementation_report.v1", "task_id": TASK,
-        "experiment_id": EXP, "implementation_commit": git_state()["commit"],
+        "experiment_id": EXP, "implementation_commit": implementation_commit,
+        "implementation_tree": implementation_tree,
         "commit_binding": ("implementation_commit identifies the immutable source commit; "
                            "this report is stored in a later evidence commit and does not "
                            "claim a self-referential hash"),
@@ -942,6 +1107,8 @@ def write_reports(started, readings, gates, command, preflight, protocol_deviati
         "write_scope": ["experiments/EXP-ICEX-153c34/implementation/"],
         "files": files,
         "commands": [command], "results": {"runner_status": status,
+            "implementation_source_manifest_passed_before_gates":
+                implementation_manifest.get("pass") is True,
             "s0_gates_report": str(gates_path.relative_to(REPO)),
             "gates_passed": [gate["id"] for gate in gates if gate["pass"]],
             "gates_failed": [gate["id"] for gate in gates if gate["fail"]],
@@ -977,6 +1144,13 @@ def main(argv=None):
     resource.setrlimit(resource.RLIMIT_AS, (min(RSS_BYTES, bounded_hard), bounded_hard))
     command = args.launch_command or " ".join([sys.executable, *sys.argv])
     started = now()
+    implementation_manifest = implementation_manifest_preflight()
+    if implementation_manifest.get("pass") is not True:
+        print(json.dumps({
+            "refused": "audited implementation source manifest mismatch",
+            "preflight": implementation_manifest,
+        }, sort_keys=True), file=sys.stderr)
+        return 8
     readings = [machine_reading()]
     preflight = input_preflight()
     deviations = [{"kind": "development_probe", "classification": "procedure_deviation",
@@ -1003,29 +1177,34 @@ def main(argv=None):
             gate_id,
             "not started: pinned checkpoint explicitly says execution not admitted",
             "execution_authority") for gate_id in GATES]
-        write_reports(started, readings, gates, command, preflight, deviations)
+        write_reports(started, readings, gates, command, preflight, deviations,
+                      implementation_manifest)
         return 7
     if not MANDATED_REPOSITORY_VOLUME.is_dir():
         gates = [pending_gate(
             gate_id,
             "not started: frozen /Volumes/SSD990 authority cannot be substituted; Coordinator amendment required",
             "execution_authority") for gate_id in GATES]
-        write_reports(started, readings, gates, command, preflight, deviations)
+        write_reports(started, readings, gates, command, preflight, deviations,
+                      implementation_manifest)
         return 6
     if not c7_ok(readings[0]):
         gates = [pending_gate(gate_id, "not started because C-7 failed at launch") for gate_id in GATES]
-        write_reports(started, readings, gates, command, preflight, deviations)
+        write_reports(started, readings, gates, command, preflight, deviations,
+                      implementation_manifest)
         return 3
     if not all(row["pass"] for row in preflight):
         gates = [pending_gate(gate_id, "not started because a frozen input hash mismatched",
                               "specification_error") for gate_id in GATES]
-        write_reports(started, readings, gates, command, preflight, deviations)
+        write_reports(started, readings, gates, command, preflight, deviations,
+                      implementation_manifest)
         return 4
     if git_state()["status_porcelain"]:
         gates = [pending_gate(gate_id,
                               "not started because the immutable implementation worktree was dirty",
                               "execution_precondition") for gate_id in GATES]
-        write_reports(started, readings, gates, command, preflight, deviations)
+        write_reports(started, readings, gates, command, preflight, deviations,
+                      implementation_manifest)
         return 5
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="icex-s0-", dir=MANDATED_TMPDIR) as temporary:
@@ -1079,7 +1258,8 @@ def main(argv=None):
                                           else pending_gate(
                                               "G0-4", "C-7 failed between stages"))
         gates = [outcomes[gate_id] for gate_id in GATES]
-    write_reports(started, readings, gates, command, preflight, deviations)
+    write_reports(started, readings, gates, command, preflight, deviations,
+                  implementation_manifest)
     return 0 if all(gate["pass"] for gate in gates) else 2
 
 
