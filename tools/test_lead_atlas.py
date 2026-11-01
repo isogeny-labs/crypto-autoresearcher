@@ -108,6 +108,22 @@ class PriorArtLeadTests(unittest.TestCase):
         self.assertTrue(any("is not a lead" in e for e in self._errors(
             rid, self._block(lead="LEAD-ICB-does-not-exist"))))
 
+    def test_post_cutover_known_lead_requires_disposition_specific_delta(self) -> None:
+        closed = next(r for r in la.load_leads() if r["disposition"] in la.CLOSED)
+        opened = next(r for r in la.load_leads() if r["disposition"] in la.OPEN)
+        rid = f"IDEA-{vl.LEAD_DELTA_CUTOVER}-abc123"
+        self.assertTrue(any("lead_delta is required" in e for e in
+                            self._errors(rid, self._block(lead=closed["id"]))))
+        self.assertFalse(self._errors(rid, self._block(
+            lead=closed["id"], lead_delta={"kind": "answers_obstruction",
+                                            "statement": "changes assumption A"})))
+        self.assertFalse(self._errors(rid, self._block(
+            lead=opened["id"], lead_delta={"kind": "advances_next_action",
+                                            "statement": "runs its queued test"})))
+        self.assertTrue(any("advances_next_action" in e for e in self._errors(
+            rid, self._block(lead=opened["id"], lead_delta={
+                "kind": "answers_obstruction", "statement": "wrong kind"}))))
+
 
 class RecordAreaTests(unittest.TestCase):
     """ecdlp_records() must see records the id prefix or line regex miss."""

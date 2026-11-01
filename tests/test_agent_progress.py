@@ -24,12 +24,12 @@ def round_messages(index, *, path="missing.md", content="ERROR: missing.md is no
 
 
 def history(**kwargs):
-    return [message for i in range(3) for message in round_messages(i, **kwargs)]
+    return [message for i in range(2) for message in round_messages(i, **kwargs)]
 
 
 def test_changed_call_ids_do_not_hide_identical_failures():
     detail = repeated_tool_failure(history())
-    assert detail["consecutive_rounds"] == 3
+    assert detail["consecutive_rounds"] == 2
     assert detail["tool_names"] == ["read_file"]
     assert detail["classification"] == "operational_tool_failure"
 
@@ -50,16 +50,16 @@ def test_structured_tool_errors_are_recognised():
 
 
 def test_changing_arguments_or_error_output_resets_the_streak():
-    before = round_messages(0) + round_messages(1)
-    assert repeated_tool_failure(before + round_messages(2, path="other.md")) is None
-    assert repeated_tool_failure(before + round_messages(2, content="ERROR: different")) is None
+    before = round_messages(0)
+    assert repeated_tool_failure(before + round_messages(1, path="other.md")) is None
+    assert repeated_tool_failure(before + round_messages(1, content="ERROR: different")) is None
 
 
 def test_success_or_new_user_input_resets_the_streak():
-    before = round_messages(0) + round_messages(1)
-    assert repeated_tool_failure(before + round_messages(2, content="1\tdata")) is None
+    before = round_messages(0)
+    assert repeated_tool_failure(before + round_messages(1, content="1\tdata")) is None
     assert repeated_tool_failure(before + [HumanMessage("new instructions")]
-                                 + round_messages(2)) is None
+                                 + round_messages(1)) is None
 
 
 def test_incomplete_tool_round_cannot_establish_a_stall():
@@ -68,7 +68,7 @@ def test_incomplete_tool_round_cannot_establish_a_stall():
 
 def test_parallel_order_does_not_matter_but_one_success_prevents_a_stall():
     messages = []
-    for i in range(3):
+    for i in range(2):
         calls = [round_messages(f"{i}-{j}", path=f"{j}.md") for j in range(2)]
         messages.append(AIMessage(content="", tool_calls=[c[0].tool_calls[0] for c in calls]))
         messages.extend([c[1] for c in (calls if i % 2 else reversed(calls))])
@@ -90,17 +90,17 @@ class ScriptedModel:
         return next(self.replies)
 
 
-def test_loop_stops_before_fourth_paid_request(tmp_path):
-    model = ScriptedModel([round_messages(i)[0] for i in range(3)])
+def test_loop_stops_before_third_paid_request(tmp_path):
+    model = ScriptedModel([round_messages(i)[0] for i in range(2)])
     journal = ToolJournal()
     tools = build_tools(TaskScope(tmp_path, "TASK-FIXTURE"), journal, ["read_file"])
     agent = graph.build_agent(model, tools, max_steps=40)
     state = agent.invoke({"messages": [HumanMessage("read")], "steps": 0,
                           "stop_reason": None})
-    assert model.calls == state["steps"] == 3
+    assert model.calls == state["steps"] == 2
     assert graph.final_stop_reason(state) == graph.TOOL_FAILURE
-    assert state["stop_detail"]["consecutive_rounds"] == 3
-    assert len(journal.denials) == 3
+    assert state["stop_detail"]["consecutive_rounds"] == 2
+    assert len(journal.denials) == 2
     run = runner.TaskRun(task_id="TASK-FIXTURE", role="executor",
                          stop_reason=graph.TOOL_FAILURE, steps=3, final_text="",
                          resolution=None, stop_detail=state["stop_detail"])
@@ -109,14 +109,37 @@ def test_loop_stops_before_fourth_paid_request(tmp_path):
 
 def test_a_corrected_tool_call_can_finish(tmp_path):
     (tmp_path / "exists.md").write_text("useful evidence\n", encoding="utf-8")
-    model = ScriptedModel([round_messages(0)[0], round_messages(1)[0],
-                           round_messages(2, path="exists.md")[0],
+    model = ScriptedModel([round_messages(0)[0],
+                           round_messages(1, path="exists.md")[0],
                            AIMessage(content="finished")])
     tools = build_tools(TaskScope(tmp_path, "TASK-FIXTURE"), ToolJournal(), ["read_file"])
     state = graph.build_agent(model, tools, max_steps=10).invoke({
         "messages": [HumanMessage("read")], "steps": 0, "stop_reason": None})
     assert graph.final_stop_reason(state) == graph.COMPLETED
-    assert model.calls == 4
+    assert model.calls == 3
+
+
+@pytest.mark.parametrize("reason", ["length", "max_tokens", "max_output_tokens"])
+def test_provider_truncation_is_not_completion(reason):
+    reply = AIMessage(content="partial", response_metadata={"stop_reason": reason})
+    state = graph.build_agent(ScriptedModel([reply]), [], max_steps=5).invoke({
+        "messages": [HumanMessage("work")], "steps": 0, "stop_reason": None,
+        "stop_detail": None})
+    assert graph.final_stop_reason(state) == graph.MODEL_TRUNCATION
+    assert state["stop_detail"]["classification"] == "incomplete_model_output"
+
+
+def test_reported_model_mismatch_is_not_completion():
+    reply = AIMessage(content="done", response_metadata={
+        "stop_reason": "stop", "model_matches_resolution": False,
+        "model_identity_enforced": True,
+        "model_name": "wrong-model", "resolved_model_id": "expected-model",
+    })
+    state = graph.build_agent(ScriptedModel([reply]), [], max_steps=5).invoke({
+        "messages": [HumanMessage("work")], "steps": 0, "stop_reason": None,
+        "stop_detail": None})
+    assert graph.final_stop_reason(state) == graph.MODEL_IDENTITY_MISMATCH
+    assert state["stop_detail"]["reported_model"] == "wrong-model"
 
 
 def test_transcript_preserves_tool_status_and_per_response_usage():

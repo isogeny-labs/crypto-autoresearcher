@@ -1,0 +1,20 @@
+{
+  "n": 3,
+  "m": 3,
+  "primes": [
+    1009,
+    4099,
+    32749
+  ],
+  "instances_per_prime": 10,
+  "warmup": {
+    "prime": 1009,
+    "index": 99
+  },
+  "max_attempts": 8,
+  "alpha": 0.05,
+  "msolve_sha256": "c2722288d22c3a1eab00c0b818d0204d4a98104d059b2fd4ecb7343e8ef759fa",
+  "instance_rule": "instance (p, i): F = ExtField(p, 3, seed=i) (seeded monic irreducible modulus); E = ExtCurve.random(F, Random('curve|p|i')); R, xs = planted_target(E, 3, Random('target|p|i')), i.e. R a signed sum of three factor-base points (abscissa in F_p)",
+  "form_rule": "separating linear form drawn from Random('form|<arm form_seed>|p<p>-i<i>'); a retried attempt draws the next form from the same stream",
+  "order_rule": "per instance the four arms run in the order of Random('order|p<p>-i<i>').shuffle(sorted arm ids)"
+}

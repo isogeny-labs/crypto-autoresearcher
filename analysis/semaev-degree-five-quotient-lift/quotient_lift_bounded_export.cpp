@@ -88,7 +88,11 @@ static void export_map(const char* path,mzd_t* map,mzd_t* A,long rank) {
                 xor_row(dst,mzd_row(projection,w*64+b),projection->width); }
         }
     }
-    FILE* f=fopen(path,"wbx"); if(!f) throw std::runtime_error("output exists or cannot be created");
+    // A dash streams the same certificate bytes to stdout. The status record
+    // moves to stderr in that mode, so it cannot corrupt the binary stream.
+    bool stream=std::strcmp(path,"-")==0;
+    FILE* f=stream?stdout:fopen(path,"wbx");
+    if(!f) throw std::runtime_error("output exists or cannot be created");
     int64_t hdr[4]={N,D,map->nrows,nq}; write_exact(f,hdr,8,4);
     write_exact(f,masks.data(),8,masks.size());
     // Apply the same linear projection in bounded matrix blocks. This does
@@ -105,7 +109,9 @@ static void export_map(const char* path,mzd_t* map,mzd_t* A,long rank) {
             write_exact(f,mzd_row(product,i),8,product->width);
         mzd_free(product);
     }
-    if(fclose(f)) throw std::runtime_error("certificate close failed");
+    if(stream) {
+        if(fflush(f) || ferror(f)) throw std::runtime_error("certificate stream flush failed");
+    } else if(fclose(f)) throw std::runtime_error("certificate close failed");
     mzd_free(projection);
 }
 int main(int argc,char** argv) try {
@@ -177,7 +183,8 @@ int main(int argc,char** argv) try {
     auto action=[&](int x) { mzd_t* T=mzd_init(nq,work); for(long q=0;q<nq;q++)
         std::memcpy(mzd_row(T,q),mzd_row(map,column(seed_masks[rep[q]]|(U(1)<<x))),map->width*sizeof(word)); return T; };
     auto killed=[&]() { if(kills_constant(A,rank,map)) {
-        std::cout<<"{\"status\":\"projection_kills_one\",\"working_coordinates\":"<<work<<",\"relation_rank\":"<<rank<<"}\n";
+        (std::strcmp(argv[2],"-")==0?std::cerr:std::cout)
+            <<"{\"status\":\"projection_kills_one\",\"working_coordinates\":"<<work<<",\"relation_rank\":"<<rank<<"}\n";
         return true; } return false; };
     for(int x=0;x<N;x++) {
         mzd_t* T=action(x);
@@ -214,6 +221,7 @@ int main(int argc,char** argv) try {
         if(rank==before) break;
     }
     export_map(argv[2],map,A,rank);
-    std::cout<<"{\"status\":\"candidate_certificate\",\"working_coordinates\":"<<work<<",\"codimension\":"<<work-rank<<",\"closure_rounds\":"<<rounds<<"}\n";
+    (std::strcmp(argv[2],"-")==0?std::cerr:std::cout)
+        <<"{\"status\":\"candidate_certificate\",\"working_coordinates\":"<<work<<",\"codimension\":"<<work-rank<<",\"closure_rounds\":"<<rounds<<"}\n";
     mzd_free(A); mzd_free(map); return 0;
 } catch(const std::exception& e) { std::cerr<<"refused: "<<e.what()<<"\n"; return 2; }

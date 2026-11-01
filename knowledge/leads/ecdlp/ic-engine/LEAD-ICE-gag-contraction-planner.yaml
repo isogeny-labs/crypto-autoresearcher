@@ -29,14 +29,21 @@ next_action:
     net of startup and agreement with enumeration; then the same arms over F_{p^n} with the
     Weil-descent builder (src/crypto_autoresearcher/index_calculus/descent.py, CLI
     `python -m crypto_autoresearcher.index_calculus descent --topology all`) at n = m = 3
-    (all three) and n = m = 4 (chain vs tree), on >= 3 primes in [307, 2^16). Include an A/A
+    (all three; done in run-001, see best_measured) and n = m = 4 (chain vs tree; needs
+    a host with more than 8 GB), on >= 3 primes in [307, 2^16). Include an A/A
     arm (same presentation, fresh separating form), charge every msolve retry (the separating
     check is nondeterministic below p ~ 300), and charge point extraction.
   discriminates: >-
     A presentation effect larger than the A/A spread that persists across >= 3 field sizes
     makes presentation a real solver-stage parameter, to be carried into the ICP Weil-descent
     leads. No effect beyond A/A closes the question for the measured (n, m) cells only.
-best_measured: null
+best_measured: >-
+  n = m = 3 over F_{p^3}, p in {1009, 4099, 32749}, msolve 0.6.5 F4, 30 planted instances:
+  monolithic (S_4) used 0.110x the chained system's F4 matrix cells at every prime and on every
+  instance (protocol verdict supported_within_scope, counted metric, descriptive, not an ECDLP
+  cost claim); tree used 1.095x (verdict inconclusive: p = 1009 A/A floor set by one charged
+  retry). All arms returned identical verified relations. Run-001 has had an independent
+  review-run (recommendation replicate), not an evidence review.
 evidence:
 - repo: crypto-autoresearcher
   path: knowledge/literature/KN-LIT-c9e59d.md
@@ -47,6 +54,12 @@ evidence:
 - repo: crypto-autoresearcher
   path: src/crypto_autoresearcher/index_calculus/descent.py
   note: Weil-descended F_{p^n} systems in every presentation; tests agree with a group-law brute force
+- repo: crypto-autoresearcher
+  path: research/gag_presentation_matched_20261031/runs/run-001/export.json
+  note: frozen protocol 609c701c; 124 executions; check-export clean; analysis.json verdicts
+- repo: crypto-autoresearcher
+  path: research/gag_presentation_matched_20261031/reviews/REV-20261101T180217Z-c184b3.json
+  note: independent review-run (validator), headline numbers recomputed and 3 executions replayed
 - repo: crypto-autoresearcher
   path: knowledge/techniques/KN-TECH-b18366.md
   note: chained presentation; char-2 speedup reported, odd-characteristic extension asserted
@@ -64,4 +77,4 @@ forecloses:
 areas:
 - SEMBIN
 - SDEG
-last_reviewed: '2026-10-31'
+last_reviewed: '2026-11-01'
