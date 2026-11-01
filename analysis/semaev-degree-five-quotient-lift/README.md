@@ -1,13 +1,147 @@
 # Degree-five closure through a checked degree-four quotient
 
-Status: implementation research toward the degree-six search. No frontier run
-or degree-six bound is claimed. The existing frozen data campaign is unchanged.
+Status (2026-10-30 23:13 UTC): the D4 panel has 26 terminal inputs of 32,
+including 19 certified LFD-at-least-five results. The newly completed
+n45 polynomial03 input has independently accepted codimension 12,742 and
+fresh exact count 6. All 46 variable-closure checks and 47 worker artifact
+hashes passed. Its 288,550,808-byte certificate is public; anonymous download,
+decompression and object-store readback verified. See its
+[report](reports/panel-local-n45-poly03-001/report.md),
+[publication receipt](panel-local-archive-001/fresh-n45-poly-03-rref-local01.publication.json),
+and [corrected inventory](runtime/panel-remaining-after-local006.json).
+Six original panel inputs remain. Inventory 006 corrects copied descriptive
+metadata in 005; its terminal bindings and counts are unchanged.
+
+The n47 random02 degree-five job was submitted at 21:15:56 UTC and is
+running with the qualified blocked implementation. Actual memory/disk
+admission passed, and the retained seed bytes verified. A fresh original
+checker accepted the D4 seed with codimension 61,196 after all 48 variable
+checks; fresh enumeration confirmed four solutions. The D5 producer started
+at 21:30:33 UTC. [Closed stage receipts](validation/rand02-blocked-frontier-progress-002/manifest.json)
+retain these results. Only an independently accepted D5 codimension greater
+than four establishes LFD at least six for this input.
+
+The producer has published eight verified durable checkpoint manifests.
+The [latest observation](validation/rand02-blocked-frontier-progress-006/observation.json)
+records completion of phase-zero variable 1 and entry into variable 2,
+with relation rank 148,732. The latest snapshot is 3,487,468,144 bytes,
+with S3 object size checked.
+This is resumable computation state, not an accepted D5 certificate.
+The [restore-only job](runtime/rand02-blocked-restore-job-001.json) is
+prepared against the original run's immutable checkpoint prefix. It has not
+been submitted. A restore is eligible only after the original Job is terminal
+and its final output, owner state, and newest compatible checkpoint are
+reconciled; the worker rejects an unavailable or mismatched restore instead
+of silently starting D5 from scratch.
+
+A separate [RREF exporter](RREF-EXPORT.md) for later D4 inputs passed all
+14 fixed equivalence controls. Its 12 completed certificates match the
+reference bytes and pass independent checks; both constant-one cases emit
+no certificate. The [report](reports/rref-export-001/report.md) and validated
+export retain all 81 files. The separately packaged worker completed the
+n45 polynomial03 scientific input with all per-worker controls and the
+original checker. No runtime comparison is claimed.
+
+The n47 random00 degree-five attempt freshly counted zero solutions and
+verified byte identity and historical acceptance of its D4 seed. Its pod
+was terminated in response to imminent node shutdown at 20:43:47 UTC,
+with exit code 137 and zero restarts. Ten durable objects remain, but no
+native checkpoint, D5 certificate, or final result. The
+[interruption report](reports/seed-reuse-frontier-interruption-001/report.md)
+retains the exact job, pod, and object hashes. This is a terminal interruption;
+no replacement frontier job or restore has launched. An accepted positive
+D5 codimension on this zero-solution input would establish LFD at least six.
+The new [capacity profile](reports/rand00-envelope-001/report.md) verifies
+126,387 border coordinates by two enumeration methods, giving 187,583 D5
+working coordinates. Applying the corrected blocked source formula gives
+94,262,240,264 bytes under the existing 96 GiB child limit. This makes a
+checkpoint-capable rerun eligible for later admission; it does not replace
+the active random02 job or the prepared random03 input.
+Its [separate retry request](runtime/rand00-blocked-frontier-request-001.json),
+[frozen protocol](rand00-blocked-frontier-protocol-001.json), and
+[prepared job](runtime/rand00-blocked-frontier-job-001.json) preserve the
+original input and require a fresh zero count and independent D5 check.
+The retry remains unsubmitted behind both random02 and random03.
+
+The blocked rewrite with bounded export and native checkpoints has passed
+28 native configurations and nine actual local-worker controls; see the
+[native](reports/blocked-checkpoint-001/report.md) and
+[local worker](reports/blocked-checkpoint-worker-001/report.md) reports.
+Its first cloud source job reached its scheduling deadline without executing
+controls. The second cloud qualification completed all nine controls: three fresh
+certificates, three deliberate checkpoint stops, and three restored certificates
+in a distinct pod. All six completed certificates match their references and
+pass the original checker; all 556 archived file hashes verify. The
+[report and export](reports/blocked-checkpoint-worker-cloud-002/report.md)
+retain the results; export validation returned zero findings and the PDF was
+inspected. The next large input is n47 random02, with a
+[frozen blocked protocol](rand02-blocked-frontier-protocol-001.json) pinning
+that qualification. Its actual memory/disk admission and fresh exact count
+remain part of the worker execution. Candidate checkpoints remain bound
+to the candidate binary; they cannot restore the original binary's state.
+
+Seven of 47 original high-memory inputs have terminal records; 40 remain
+unfinished. The next original input, n47 random02, has a published accepted
+D4 seed and a [dimension profile](reports/rand02-envelope-001/report.md).
+Its D5 cascade remains unfinished. The calculated blocked allocation envelope
+is recorded in runtime/rand02-blocked-envelope-arithmetic-001.json. The
+additional-workspace term in that record omitted the native stride padding;
+the write-once [correction](runtime/blocked-envelope-correction-001.json)
+gives 94,262,240,264 bytes for both random02 and random03, with
+8,816,974,840 bytes below the 96 GiB child limit. These are source-derived
+allocation bounds, not observed memory use. The random03
+[dimension profile](validation/rand03-envelope-001/result.json) independently
+agrees with the random02 counts: 126,387 border coordinates and 187,583
+working coordinates. No independently checked
+LFD-at-least-six result has yet been obtained.
 
 The dense producer works in every monomial of degree at most five. This
 prototype first rewrites degree-five monomials using a triangular, checked
 degree-four quotient map, then imposes multiplication consistency on a smaller
 coordinate space. The numerical size of that space is not assumed in advance.
 This is not a claim that all frontier instances fit the present host.
+
+## Next original frontier seed
+
+The next original input after active n47 random02 is n47 random03. Its saved
+D3 certificate and system hashes were verified against the recovery plan;
+the previous D4 lift was resource-capped. The separately frozen
+`rand03-d4-local-protocol-001.json` prepares direct D4 closure using the
+qualified RREF exporter, fresh exact counting, and the original checker.
+Its calculated admission envelope is 21,372,163,527 bytes under the unchanged
+40 GiB child limit; this is allocation arithmetic, not measured RSS.
+
+The request launched locally at 23:12:36 UTC after polynomial03 terminated.
+Both campaign locks and unchanged memory admission passed; all three worker
+controls passed, and fresh counting returned 2 solutions. The original
+independent checker accepted the completed D4 certificate with codimension
+at least 61,196, so this exact input has LFD at least 5. The collector
+verified all 47 worker artifacts and the successful terminal record in
+`validation/rand03-d4-local-final-001`. The [report](reports/rand03-d4-local-001/report.md)
+records the exact evidence and public readback. This accepted seed prepares
+the original D5 continuation; it neither completes that frontier input nor
+adds an input to the separate 32-input D4 panel. No field, target, subspace,
+or sample was redrawn.
+
+Its [next D5 request](runtime/rand03-blocked-frontier-request-001.json) and
+[frozen protocol](rand03-blocked-frontier-protocol-001.json) pin the published
+seed, fresh count target two, corrected memory envelope, and qualified blocked
+worker. The [prepared job](runtime/rand03-blocked-frontier-job-001.json) has
+not been submitted; the protocol requires the active random02 frontier job
+to become terminal and capacity to be reconciled first.
+
+The next original D4 panel input, n45 polynomial04, passed bounded memory
+admission after 535.5 seconds at 00:35:53 UTC on October 31. Its three
+worker controls passed, fresh exact counting found zero solutions, and D4
+production is active. The five remaining n45 random-subspace input systems,
+plans, and protocols are committed and frozen in inventory order behind it.
+After a local D4 attempt is terminal, `collect_panel_result.py` verifies its
+pinned artifacts, controls, exact count, and original checker transcript.
+`normalize_local_certificate.py` then creates a write-once publication view
+from that verified collection without changing the raw attempt. The normalizer
+was exercised against the completed n45 polynomial03 result, including its
+certificate hardlink, and rejects the active n47 random03 attempt before a
+terminal record exists.
 
 ## Soundness argument to review
 
@@ -114,8 +248,53 @@ At initial observation, the first n47 input has an accepted D3 certificate with 
 
 At reconciliation on2026-10-29 15:00 UTC, the original frontier owner was absent and its lock was free. Twenty attempts were terminal:17 resource-capped and3 without a degree-three certificate. Seven accepted degree-four maps support LFD>=5: n47 polynomial-basis indices00–04 and n48 polynomial-basis indices00 and04. The n47 checked codimensions are21428 (indices00–03) and21430 (04); their exact solution counts are0,2,2,0,2. The two n48 checked codimensions are26570, against counts2 and0. No degree-six bound follows from a memory refusal.
 
-The completed n49 degree-four candidate was retained without claiming acceptance. The original expanded panel also stopped after108 outcomes. Cause of owner loss is unknown; missing processes are not mathematical evidence.
+The completed n49 degree-four candidate was initially retained without claiming acceptance. A later [independent recheck](reports/n49-retained-d4-001/report.md) accepted the hash-pinned certificate: checked D4 codimension at least 32,291 exceeds a fresh exact count of two, proving LFD at least five for `fresh-n49-poly-00`. Its certificate and evidence have public readback receipts. The original expanded panel also stopped after108 outcomes. Cause of owner loss is unknown; missing processes are not mathematical evidence.
 
 The separate `highmem-protocol.json` continues47 inputs: all17 capped cases plus30 unfinished/unattempted cases. It pins18 retained seeds, always rechecks them against the original independent checker, and uses the separately validated blockwise exporter under a standalone64 GiB cap. Its detached owner and exact command are recorded in `runs/frontier-highmem-001.launch.json`; outputs are `/home/ec2-user/fall-degree-data-20261029/frontier-highmem-001`. The old two40 GiB workers remain stopped during this placement.
 
 The original50 records remain authoritative for their attempts. Continuation outputs must be joined by `prior_id`, preserving old outcomes and taking only justified lower bounds. They are not47 additional independent inputs, and20+47 must not be reported as67 distinct instances. The three original no-certificate outcomes remain visible. The rest of the original expanded campaign is still outstanding.
+
+## High-memory continuation: two terminal results
+
+The immutable [third progress snapshot](reports/highmem-progress-003/report.md) records two terminal inputs out of47. The first n47 polynomial-basis input retained its accepted D4 map (codimension21428, exact count0, LFD>=5). Its D5 construction killed the constant and produced no usable D5 certificate. This gives neither an upper bound nor a conclusion about membership in the true W5 closure. The second input has accepted D4 codimension21428 and D5 codimension2, with exact count2. It retains LFD>=5; equality at D5 gives no stronger lower bound or upper bound. Both accepted stages are publicly archived with anonymous and canonical-store GET/hash verification. The remaining45 inputs include the live third input; no degree-six bound is recorded.
+
+The continuation-specific [publication linkage](highmem-archive/fresh-n47-poly-00-D5-cascade01-highmem01-D4.publication.json) binds the retained certificate and fresh checker/count evidence to the already-public original certificate. A fresh anonymous GET verified all three original assets, and gzip decompression reproduced the continuation certificate hash. The original public receipt still describes the original attempt; the linkage records the continuation provenance separately. The new snapshot has no missing publication acknowledgement for its completed stage. This changes evidence availability, not the mathematical bound or sample count.
+
+## High-memory continuation: five terminal results
+
+The [fourth immutable snapshot](reports/highmem-progress-004/report.md) adds polynomial-basis inputs02–04 at n47. All retained D4 certificates and fresh checker/count transcripts were verified. Inputs02 and04 have accepted D5 codimension2 equal to their exact count2; input03 killed the constant at D5. All retain LFD>=5, with no degree-six or upper bound. Five newly archived stages passed anonymous public and canonical-store readback verification. The continuation now has five terminal and42 unfinished inputs; the live random input00 remains unfinished. These are continuations of original named inputs, not additional independent draws.
+
+## n47 random input 00: accepted D4, capped D5
+
+The [fifth immutable snapshot](reports/highmem-progress-005/report.md) records six terminal inputs and no degree-six bound. The original independent checker accepts the D4 certificate with codimension lower bound 61,196 and exact solution count 0, establishing LFD >= 5. The following D5 lift was refused by the frozen 64 GiB allocation gate. This leaves degree six and upper bounds unknown. The [resource obstruction record](../../problems/semaev-degree-five-lift-exceeds-64gib.md) preserves the next capacity and qualification requirements; the active driver continues the remaining frozen inputs unchanged.
+
+The [retained-seed capacity calculation](reports/native-envelope-001/report.md) reproduces a 152,976,386,232-byte native envelope for this D5 lift. Both border enumerations agree. Even chunk 1 exceeds this host total memory, so reducing the batch alone cannot admit the existing representation. A separately qualified larger-memory instrument/host or reduced representation remains necessary. No new LFD bound follows.
+
+The separate [bounded-export allocation candidate](BOUNDED-EXPORT-MEMORY.md) passed generic byte-equivalence and nine independently checked Semaev stages. It removes a full-output-map reservation left over after blockwise export, giving a calculated 85.791 GiB envelope for this seed. Runtime placement and a frozen frontier continuation are still required; no large input has run on it.
+
+The [n44 random03 report](reports/panel-v3-n44-rand03/report.md) retains an accepted D4 codimension 31,780 against exact count zero, establishing LFD >= 5; all 47 artifact hashes and public archive readback verified.
+
+The [n44 random02 report](reports/panel-v3-n44-rand02/report.md) adds accepted D4 codimension 31,780 against exact count 2, establishing LFD >= 5. The separate bounded-export D5 job was submitted after both panel jobs finished; see [submission receipt](runs/bounded-lift-submission-001.json). Submission alone establishes no new mathematical result.
+
+The blocked candidate's small cloud source job
+`semaev-blocked-worker-source-20261030-1700` was submitted at 18:58:52 UTC.
+It is Pending with scheduler-reported affinity/selector/taint constraints;
+no controls have run and no dependent restore has launched. See the
+[scheduling problem record](../../problems/semaev-blocked-worker-cloud-scheduling.md).
+The original large n47 job is still active and has not been replaced.
+
+## Latest checked data, 2026-10-31
+
+The [n45 random03 low-memory D4 run](reports/panel-local-n45-rand03-lowmem-002/report.md) produced an independently accepted certificate with checked codimension at least 46,472 against a fresh exact count of zero. It certifies LFD >= 5 for that named Boolean presentation; the certificate and evidence have public readback receipts. The original 32-input late panel has 31 terminal inputs, 24 certified LFD-at-least-five bounds, and one remaining original input.
+
+The n47 random03 D5 cloud job [ended without a D5 artifact](validation/rand03-blocked-frontier-terminal-001/observation.json); its degree-five closure outcome is unknown. The n48 poly04 local D5 attempt [completed with `projection_kills_one`](reports/n48-poly04-d5-local-001/report.md) after an independently accepted D4 seed (codimension at least 26,570) and fresh exact count zero. Its quotient result supplies no D5 certificate or upper bound. The report has a validated export and inspected PDF; its [terminal run record](runs/n48-poly04-d5-local-terminal-001/manifest.json) pins the raw receipts and transcripts.
+
+The corrected n49 poly00 local D5 run [passed its seed recheck and count](runs/n49-poly00-d5-local-stage4-002/manifest.json): D4 codimension at least 32,291 after all 50 variable checks, and fresh exact count two. Its D5 producer later timed out without a certificate. The [nine-manifest rank screen](reports/n49-poly00-rank-screen-20261101/report.md) records rank 59,351 in 59,353 coordinates by checkpoint sequence 2, unchanged through sequence 9. This append-only quotient worker cannot export codimension above two from that checkpoint, so a restore of this instrument cannot meet the strict degree-six count test; this is not an LFD upper bound. Its first launch [stopped before data](runs/n49-poly00-d5-local-preflight-refusal-001/manifest.json) because the disk policy confused curve parameter 49 with 50 Boolean variables; the [frozen v2 protocol](n49-poly00-d5-local-protocol-002.json) corrects this and preserves the refusal. A separate [frozen n50 poly00 cascade protocol](n50-poly00-cascade-local-protocol-001.json) retains the next named input from the original 50-input frontier. Only an independently accepted D5 certificate with checked codimension above the fresh exact solution count establishes LFD >= 6.
+
+## n47 random00 blocked D5 retry, 2026-11-01 readback
+
+The [terminal report](reports/rand00-blocked-terminal-20261101/report.md) records the completed retry on the original random00 input. The independent D4 checker accepted codimension at least 61,196 and a fresh exact counter found zero solutions, retaining the named-instance LFD >= 5 bound. The D5 blocked quotient ended with `projection_kills_one` at recorded rank 187,583 of 187,583 coordinates. It emitted no D5 certificate, so this run gives no degree-six lower bound or upper bound. Twenty-two small S3 objects, including eight checkpoint manifests, were independently downloaded and hashed for the report; the checkpoint object bytes were not downloaded there.
+
+## n47 polynomial blocked D5 terminals, 2026-11-01 readbacks
+
+The fixed [polynomial03](reports/poly03-blocked-terminal-20261101/report.md) and [polynomial00](reports/poly00-blocked-terminal-20261101/report.md) cloud attempts each passed the original independent D4 checker with codimension at least 21,428 and a fresh exact count of zero, certifying LFD >= 5 for each named Boolean presentation. Their D5 quotient producers each ended with `projection_kills_one` at relation rank 30,546 of 30,546 working coordinates and emitted no D5 certificate. Each report hashes 14 small terminal S3 objects and includes an inspected PDF. These quotient observations do not establish degree-five membership or an upper bound.

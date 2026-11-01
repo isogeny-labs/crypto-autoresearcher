@@ -4,7 +4,7 @@
 - **Kind:** implementation gap and proof gap
 - **Affected work:** [Koblitz isogeny rho-transfer protocol](../docs/experiments/koblitz-isogeny-rho-transfer.md), [2026-10-14 conductor-gap panel](../research/conductor_gap_panel_20261014/REPORT.md), K-163 conductor-45641 endpoints, and K-283 conductor-1697 endpoints
 - **Next action owner:** unassigned executor after an experiment contract admits the map-construction work
-- **Last updated:** 2026-10-14
+- **Last updated:** 2026-10-31
 
 ## Problem
 
@@ -68,6 +68,16 @@ from supplied private advice and charges discovery accordingly.
   transported subgroup action is
   `[d^(-1)] o phi o tau o dual(phi)`. This identity does not construct the
   missing maps or price them.
+- **Machine-checked conditional transfer gate:** the
+  [theory note](../research/THM_K163_COPRIME_TRANSFER1.md) and
+  [formal target](../formal/targets/k163-coprime-recovery-transfer-20261031.yaml)
+  reuse the standard K-163 subgroup order, kernel-check that it is coprime to
+  45,641, and prove the following abstract implication: if supplied additive
+  homomorphisms satisfy `recovery(phi(X)) = [45641]X`, then the forward map
+  preserves and reflects scalar relations on the selected subgroup. This
+  discharges the subgroup-algebra consequence only. It does not construct the
+  vertical map or dual, prove either geometric composition, bind the abstract
+  groups to the named curves, or establish any cost or weakness result.
 - **Suspected explanation:** retaining only endpoint coefficients was enough
   for the earlier conductor census, whose objective was structural. It was
   not designed as a transfer benchmark. This explains the artifact shape but
@@ -101,6 +111,10 @@ The first three conditions are prerequisites for a valid transfer experiment.
 The fourth is additionally required before any performance or weakness
 inference.
 
+The conditional Lean theorem above closes none of these checklist items: it
+states what follows after the missing map, homomorphism, composition, and
+subgroup hypotheses have been certified.
+
 ## Next discriminating step
 
 - **Action or proof obligation:** with the degree-73 map/dual prerequisite now
@@ -129,5 +143,7 @@ inference.
 
 ## Resolution and history
 
-Unresolved. This record names a missing transfer certificate; it is not a
-negative result about the isogeny class or ECDLP.
+Unresolved. The 2026-10-31 Lean target machine-checks the coprime recovery
+implication but leaves the concrete K-163 and K-283 maps, duals, compositions,
+and measurements open. This record names a missing transfer certificate; it
+is not a negative result about the isogeny class or ECDLP.

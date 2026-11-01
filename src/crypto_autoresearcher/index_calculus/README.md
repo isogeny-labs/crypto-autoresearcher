@@ -12,7 +12,22 @@ how the classical prime-field index calculus scales.
 The [October 29 continuation](../../../research/prime_field_execution_20261029/README.md)
 adds target-row combination certificates without full base rank, a gated
 target-aware Prym collector, and optional Dickson stage diagnostics. These are
-software-tested interfaces; the proposed scientific panels remain unexecuted.
+software-tested interfaces. The [symmetry iteration](../../../research/prime_field_symmetries_20261029/README.md)
+now records the first admitted fixed P-256 C1 panel (all seven cases complete),
+a typed base/action catalog, complete target-branch replay, affine translation
+frames and a reusable operator prototype. Completed fixed prime-field panels
+include [B1 zero completion](../../../research/prime_field_b1_execution_20261029/RESULTS.md),
+[B2 matched shifted covers and D1 targets](../../../research/prime_field_b2_execution_20261030/RESULTS.md),
+[A1 residual cancellation](../../../research/prime_field_a1_execution_20261030/RESULTS.md),
+and [A2 norm completion](../../../research/prime_field_a2_execution_20261030/RESULTS.md).
+The [A3 direct three-sum comparison](../../../research/prime_field_a3_execution_20261030/RESULTS.md)
+now records exact enumeration/pair-table agreement on both original p4099 curves,
+with complete separate replay and stage accounting. These small fixed panels
+do not establish larger-field transfer or a complete attack-cost advantage.
+The [A4 holdout and target panel](../../../research/prime_field_a4_execution_20261030/RESULTS.md)
+adds four prospectively selected curves over8191/65537 and32public targets:
+one full-rank base, three deficient bases, and no target recovery while base
+uncertainty remains. Full checks, costs and all misses are retained.
 
 ## Layout
 
@@ -25,6 +40,8 @@ software-tested interfaces; the proposed scientific panels remain unexecuted.
 | `tails.py` | the table of tails: every signed sum of `h` factor-base points the search can reach, keyed by x-coordinate and built once per factor base; with numpy, two sorted arrays at 8 bytes a tail |
 | `_accel.py` | optional numpy scan that locates the useful `S_3` roots (in the base or in a table of tails); relations and every counter are identical to the pure-Python path |
 | `msolve.py` | algebraic decomposition: the Semaev system solved by the msolve Gröbner-basis engine |
+| `diagram.py` | the decomposition system as a string diagram of `S_3` boxes ([Graphical Algebraic Geometry](../../../knowledge/literature/KN-LIT-c9e59d.md)); presentations `chain` (default), `tree` (balanced merge tree) and `monolithic` (internal wire contracted by a resultant, `S_{m+1}`, m ≤ 3) for `msolve.py` (`--msolve-topology`); they return identical relations, only cost may differ ([lead](../../../knowledge/leads/ecdlp/ic-engine/LEAD-ICE-gag-contraction-planner.yaml)) |
+| `descent.py` | Gaudry/Diem decomposition over `F_{p^n}` (factor base: abscissas in `F_p`) by Weil descent of the `S_3` network, in any `diagram.py` presentation, solved with msolve (`p < 2^16`); pure-Python `F_{p^n}` and curve arithmetic, and a group-law brute force (`m ≤ 3`) as the reference; CLI `descent` |
 | `linalg.py` | incremental sparse elimination mod `N`, stopping at the first relation that fixes the target log; pivots on the column the fewest pivot rows hold (`min_fill`) or, as before, the lowest index (`min_index`) |
 | `rho.py` | Pollard rho with distinguished points and a Teske 20-adding walk on `{X, −X}` (negation map, look-ahead, short-cycle escape); `--rho-walk plain` walks on points |
 | `solver.py` | the end-to-end solver and its cost columns |

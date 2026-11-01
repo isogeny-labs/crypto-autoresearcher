@@ -124,6 +124,7 @@ def prym(monkeypatch):
         'check_census': ROOT/'research/prym_rank_census_20261025',
         'collect_width': ROOT/'research/prym_factor_base_width_20261025',
         'check_prym': STUDY,
+        'check_targets': STUDY,
     }
     for name, directory in directories.items():
         spec = importlib.util.spec_from_file_location(name, directory/(name+'.py'))
@@ -161,6 +162,12 @@ def test_completed_small_stream_retains_old_rows_and_verifies_new(prym):
     assert old['attempts'] == new['attempts'] == 2*56*64
     assert sum(new['statuses'].values()) == new['attempts']
     assert new['quality']['rows'] == len(new['rows'])
+    assert len(new['status_blocks']) == 2
+    assert all(len(block['statuses']) == 56*64 for block in new['status_blocks'])
+    from collections import Counter
+    retained = Counter(new['status_legend'][code] for block in new['status_blocks']
+                       for code in block['statuses'])
+    assert retained == new['statuses']
     assert new['quality']['rank'] >= old['quality']['rank']
     canonical = lambda row: tuple(row['coefficients'])+(row['source_scalar'],)
     assert {canonical(row) for row in old['rows']} <= {canonical(row) for row in new['rows']}
@@ -171,7 +178,10 @@ def test_completed_small_stream_retains_old_rows_and_verifies_new(prym):
     assert check(fixture, [1, 2], new)['checked']
     assert check(fixture, [1, 2], old)['checked']
     for mutate in [lambda v: v['rows'].pop(), lambda v: v.update(branch_sha256='0'*64),
-                   lambda v: v['quality'].update(rank=0), lambda v: v['statuses'].update(accepted=0)]:
+                   lambda v: v['quality'].update(rank=0), lambda v: v['statuses'].update(accepted=0),
+                   lambda v: v['status_blocks'][0].update(statuses='+'*3584),
+                   lambda v: v['status_blocks'][0].update(branch_sha256='0'*64),
+                   lambda v: v['status_legend'].update(S='accepted')]:
         corrupted = deepcopy(new)
         mutate(corrupted)
         with pytest.raises(ValueError):
@@ -185,7 +195,26 @@ def test_scientific_collect_has_no_unadmitted_path(prym):
         module.collect(fixture, [1], lambda record: pytest.fail('executed'))
 
 
-def test_target_collector_labels_and_fixed_projection(prym, monkeypatch):
+def test_prym_phase_failure_is_journaled(prym, monkeypatch, tmp_path):
+    module, fixture = prym
+    monkeypatch.setitem(sys.modules, 'prym_completion', module)
+    spec = importlib.util.spec_from_file_location('phase_control', STUDY/'run_prym.py')
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    def fail():
+        raise RuntimeError('marked software failure')
+    import json
+    journal = tmp_path/'phases.jsonl'
+    with pytest.raises(RuntimeError, match='marked software failure'):
+        runner.phase(journal, fixture, 'software_control', 'verification', fail)
+    retained = json.loads(journal.read_text())
+    assert retained['status'] == 'failed' and retained['error_type'] == 'RuntimeError'
+    assert retained['cpu_seconds'] >= 0 and retained['wall_seconds'] >= 0
+    assert retained['wall_valid'] is False
+
+
+@pytest.mark.parametrize('target_index', [0, None])
+def test_target_collector_labels_and_fixed_projection(prym, monkeypatch, target_index):
     module, fixture = prym
     monkeypatch.setitem(sys.modules, 'prym_completion', module)
     spec = importlib.util.spec_from_file_location('prime_field_target_completion', STUDY/'target_completion.py')
@@ -196,7 +225,7 @@ def test_target_collector_labels_and_fixed_projection(prym, monkeypatch):
     from collect_width import project
     curve = Curve(fixture['p'], fixture['a'], fixture['b'])
     recipe = hash_public_target(curve, fixture['r'], fixture['uid'], 0)
-    Q = tuple(recipe['point'])
+    Q = tuple(recipe['point']) if target_index is not None else tuple(fixture['P'])
     # Different source/multiplier schedules catch accidental target anchors.
     baseline = module.collect(fixture, [1, 2], lambda row: None)
     events = []
@@ -222,6 +251,27 @@ def test_target_collector_labels_and_fixed_projection(prym, monkeypatch):
     certificate = result['final_target_certificate']
     if certificate is not None:
         assert curve.mul(certificate['scalar'], tuple(fixture['P'])) == Q
+    if target_index is None:
+        assert certificate is not None and certificate['scalar'] == 1  # software positive only
+    from check_targets import check
+    assert check(fixture, [1, 2], baseline['rows'], Q, [1, 3], result)['complete_branch_replay']
+    mutations = [lambda v: v['rows'].pop(), lambda v: v.update(branch_sha256='0'*64),
+                 lambda v: v['statuses'].update(accepted=0),
+                 lambda v: v['status_blocks'][0].update(statuses='+'*3584),
+                 lambda v: v['status_blocks'][0].update(branch_sha256='0'*64),
+                 lambda v: v['preprocessing'].update(rank=0),
+                 lambda v: v['projection'].update(U=0),
+                 lambda v: v.update(target_is_public_anchor=not v['target_is_public_anchor']),
+                 lambda v: v['target_identification'].update(augmented_rank=-1)]
+    if certificate is not None:
+        mutations += [lambda v: v['final_target_certificate'].update(value=-1),
+                      lambda v: v['final_target_certificate'].update(row_weights=[])]
+        mutations += [lambda v: v['first_combined_recovery'].update(attempt=-1)]
+    for mutate in mutations:
+        corrupt = deepcopy(result)
+        mutate(corrupt)
+        with pytest.raises(ValueError):
+            check(fixture, [1, 2], baseline['rows'], Q, [1, 3], corrupt)
     with pytest.raises(ValueError, match='independent of target'):
         target_module.prepare(fixture, [1, 2], result['rows'][:1])
     assert len([row for row in events if row['kind'] == 'verified_witness']) == len(result['rows'])
@@ -238,3 +288,21 @@ def test_gate_rejects_parameters_before_any_checkpoint(tmp_path):
     release.write_text(json.dumps(dict(parameters={'max_dimension': 1}, execution_authorized=True)))
     with pytest.raises(ValueError, match='parameters'):
         admit(tmp_path, protocol, tmp_path/'inputs.json', [], {'max_dimension': 560}, release)
+
+
+def test_public_target_recipe_has_separate_complete_hash_replay(prym):
+    _,fixture=prym
+    from crypto_autoresearcher.index_calculus.curve import Curve
+    from crypto_autoresearcher.index_calculus.target_relations import hash_public_target
+    from check_targets import check_recipe
+    curve=Curve(fixture['p'],fixture['a'],fixture['b'])
+    identity='urn:marked-small-software-curve';domain='marked-software-target/v1';attempts=[]
+    recipe=hash_public_target(curve,fixture['r'],identity,0,domain=domain,on_attempt=attempts.append)
+    result=check_recipe(fixture,identity,domain,0,10000,recipe,attempts)
+    assert result['hash_recipe_checked'] and result['hash_attempts_replayed']==len(attempts)
+    for mutate in [lambda v:v.update(point=[0,0]),lambda v:v['selected'].update(counter=999),
+                   lambda v:v.update(scalar_label_generated=True),lambda v:v.update(curve_uid='wrong')]:
+        corrupted=deepcopy(recipe);mutate(corrupted)
+        with pytest.raises(ValueError):check_recipe(fixture,identity,domain,0,10000,corrupted,attempts)
+    with pytest.raises(ValueError):check_recipe(fixture,identity+'wrong',domain,0,10000,recipe,attempts)
+    with pytest.raises(ValueError):check_recipe(fixture,identity,domain,0,10000,recipe,attempts+[attempts[-1]])

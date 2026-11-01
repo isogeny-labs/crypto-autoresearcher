@@ -118,6 +118,32 @@ bases, degree-compatible term orders and row-echelon Macaulay matrices.
 Note the direction, corrected in `CORR-20260916-0c9c0a`: the last fall degree is
 a **lower** bound for the solving degree, not an upper one.
 
+## K-163 conditional coprime recovery transfer
+
+`k163-coprime-recovery-transfer-20261031.yaml` proves a conditional
+cyclic-subgroup transfer theorem. It reuses the formal K-163 subgroup-order
+constant, kernel-checks
+`gcd(45641, 5846006549323611672814741753598448348329118574063) = 1`,
+and proves that additive homomorphisms satisfying
+`recovery(phi(X)) = [45641]X` preserve and reflect scalar relations on the
+selected prime-order subgroup.
+
+This target does **not** construct the K-163 degree-45,641 vertical isogeny,
+its algebraic dual, either point-level composition, an exact-order curve
+point, or an endpoint subgroup bridge. It also proves no transfer-cost or
+ECDLP advantage. Endpoint-to-source transfer requires the opposite
+composition separately. Those geometric and experimental obligations remain
+open in
+[`koblitz-vertical-isogeny-maps-not-persisted.md`](../../problems/koblitz-vertical-isogeny-maps-not-persisted.md).
+
+`k163-horizontal-recovery-control-20261031.yaml` strengthens the algebraic
+control in the same module. From an abstract additive endomorphism satisfying
+the Koblitz relation `tau^2 = tau - 2`, Lean derives both compositions for
+`alpha = 51 - 160 tau` and its conjugate and then proves exact image order and
+scalar-relation preservation. This is the already-known same-curve horizontal
+control, not a vertical conductor-floor map; the bridge from abstract `tau`
+to concrete sect163k1 Frobenius remains outside Lean.
+
 ## Batch-five discriminant wording
 
 The frozen `endosweep-dk-exact-batch5-discriminants.yaml` target proves exact
@@ -228,6 +254,16 @@ finds it faithful to the target's claim (`faithful_scoped`, `validated_scoped`
 for that claim only). It does **not** support the note's descent Lemma as
 titled: degree-2 maps as quotients by ι_S, and descent ⟺ commutation, are
 prose. It does not support the summation-polynomial Corollary either.
+
+## Nagao 2015/984 Lemma 4 counterexample
+
+`nagao-lemma4-inside-counterexample-20261029.yaml` (`formal_counterexample`) is the
+Lean twin of the Python certificate of `KN-FIND-936151`: for two finite `F_2`
+systems (N <= 3) the kernel-`decide` theorems give `d_F = 3 > 2 = d'_F` in the
+inside form under the equality reading of condition (1). It is a new spec and
+carries a `proof_map` naming the unformalized transcription of Nagao's
+definitions. See the [report](../../docs/reports/2026-10-29-nagao-lemma4-lean/report.md)
+(hypothesis-delta table, receipt). It says nothing about Proposition 5.
 
 ## Natural follow-ups, deliberately not specced yet
 
