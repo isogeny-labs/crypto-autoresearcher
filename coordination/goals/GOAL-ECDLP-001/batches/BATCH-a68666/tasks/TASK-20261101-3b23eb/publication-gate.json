@@ -1,0 +1,68 @@
+{
+  "schema": "crypto.autoresearch.prepublication_gate.v1",
+  "state": "prepared_unpublished_not_dispatch_authorized",
+  "recorded_at": "2026-11-01T04:37:18Z",
+  "task_id": "TASK-20261101-3b23eb",
+  "source_archive_task_id": "TASK-20261101-510074",
+  "branch": "codex/pfse-wp2-20261101",
+  "base_commit": "93cd25a00162a0ed305277dbc2ebbdb203b658bf",
+  "receipt_exact_bytes_verified": true,
+  "all_listed_available_input_hashes_match": true,
+  "complete_current_workspace_map_matches_receipt": false,
+  "current_verifier_map_matches_receipt": true,
+  "plan_sha256": "2ce285e77cd85699f47a9ee4826775fdfc2a077168000fbae30e805b81813e92",
+  "blind_input_sha256": "a109fc6cdf7df0e6b52e0e3717d54bb20ec0803687d8602afda065ada4f79914",
+  "blind_card_sha256": "e23c5cf95789c30df69001828201bfa59b0e5f82c207f1ac0ed63a86f9eae845",
+  "isolated_directory": "/tmp/pfse-ic-arity-blind.T9X7os",
+  "isolated_inventory_sha256": "34f394dc7df0a90b05bf43d15d9bda2a251163e2aa5d1ce14ea063949744c957",
+  "publication": {
+    "source_snapshot_commit_obtained": false,
+    "pushed": false,
+    "reviewable_pr_verified": false,
+    "lane_publication_verified": false,
+    "archive_commit_verification_passed": false
+  },
+  "reviewers": {
+    "A": "TASK-20261101-bd53ca",
+    "B": "TASK-20261101-e90be2",
+    "launched": false,
+    "claims_published": false,
+    "session_context_isolation_verified": false,
+    "mutual_blindness_execution_verified": false
+  },
+  "blockers": [
+    {
+      "condition": "current_workspace_inputs_differ_from_receipt",
+      "detail": "The receipt's generated CryptoResearch.lean is absent from the current checkout and is untracked by design. The current complete inventory has three additional Nagao modules, so both the exact map and the current generated-root digest differ.",
+      "clears_when": "The new one-workflow current-published-head verification task TASK-20261101-9a4a63 produces exact successful native evidence and its dedicated snapshot TASK-20261101-6fd5e3 is verified and published. No compatibility waiver or historical receipt relabeling can clear this gate."
+    },
+    {
+      "condition": "source_snapshot_not_committed_or_published",
+      "detail": "Only local pre-publication construction is authorized; no commit, push, PR or verified Git archive receipt exists for these task outputs.",
+      "clears_when": "Driving Coordinator performs and verifies actual source snapshot/publication under the existing contract."
+    },
+    {
+      "condition": "review_sessions_not_launched_or_claimed",
+      "detail": "No reviewer session, actual model resolution, context isolation or published task claim is attested.",
+      "clears_when": "After all source gates clear, launch each reviewer in a distinct fresh session under its allowed inputs and real published claim."
+    }
+  ],
+  "next_action": "Driving Coordinator publish and verify the source snapshot, then execute only the separately authorized one-workflow task TASK-20261101-9a4a63 through /run and archive it under TASK-20261101-6fd5e3; reviewers and synthesis remain gated until exact current-head evidence and its published snapshot pass. No run is launched by this record.",
+  "scientific_status_change": false,
+  "completion_claimed": false,
+  "refreshed_at": "2026-11-01T04:43:46Z",
+  "fresh_current_head_verification": {
+    "required_before": [
+      "TASK-20261101-bd53ca",
+      "TASK-20261101-e90be2",
+      "TASK-20261101-bc06d9"
+    ],
+    "workflow_task": "TASK-20261101-9a4a63",
+    "snapshot_task": "TASK-20261101-6fd5e3",
+    "amendment": "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml",
+    "maximum_hosted_workflow_dispatch_runs": 1,
+    "launched": false,
+    "gate_open": false,
+    "source_head_pin": "Resolve exact published branch head at execution time; do not treat this metadata base or historical test-merge SHA as the future run identity."
+  }
+}

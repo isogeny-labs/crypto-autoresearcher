@@ -1,0 +1,89 @@
+{
+  "schema": "crypto.autoresearch.receipt_intake.v1",
+  "state": "receipt_copied_exact_bytes_review_pending",
+  "goal_id": "GOAL-ECDLP-001",
+  "batch_id": "BATCH-a68666",
+  "existing_task_id": "TASK-20261024-9fbb0f",
+  "claim_id": "IC-ARITY-ORACLE-THRESHOLD-20261024",
+  "artifact": {
+    "actions_run_id": 41239718774,
+    "actions_run_url": "https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41239718774",
+    "github_artifact_id": 13058300353,
+    "zip_sha256": "8327f6ac9652520738e3028f389a6c3374b125454dd627524b91d76fb901d69f",
+    "receipt_path": "docs/reports/2026-11-01-ic-arity-oracle-review/receipts/ic-arity-oracle-threshold-20261024.json",
+    "receipt_sha256": "c453735222a1fea9d565f755b5f4cb54b6282e94ba7b23da51d6e871a1341596",
+    "raw_receipt_mutation": "forbidden; copy exact bytes, do not rewrite semantic_review"
+  },
+  "source_identity": {
+    "pr": 2854,
+    "pr_head_commit": "e9d727e09fa3f74c4a8d39405ddb9b2047c04475",
+    "test_merge_commit": "ffd1ec280736cb1e2f0e2860d55b5c70941f7f14",
+    "test_merge_parents": [
+      "7e12aa99c3c652fc3918ed43c04617343345fb11",
+      "e9d727e09fa3f74c4a8d39405ddb9b2047c04475"
+    ],
+    "test_merge_parent_provenance": "GitHub commit API observation supplied by driving Coordinator; parent order retained",
+    "pr_merge_commit": "7764507195",
+    "current_base_commit": "93cd25a00162a0ed305277dbc2ebbdb203b658bf",
+    "identity_rule": "Test-merge receipt is not relabeled as a current-HEAD run; exact input hashes bind reusable verification."
+  },
+  "inputs": [
+    {
+      "path": "formal/targets/ic-arity-oracle-threshold-20261024.yaml",
+      "sha256": "3d85e9321435ec534745db4268734755aa8f9881ad520f43daa3dc8f6acb090a"
+    },
+    {
+      "path": "formal/CryptoResearch/IC/ArityOracleThreshold.lean",
+      "sha256": "0576984a0305b11fae02dd673815f3db32b75f8f57ffb9354b9e5869cea414d2"
+    },
+    {
+      "path": "formal/lean-toolchain",
+      "sha256": "5699bbbd7db4601365371c8b0c9bf463d07d747b5f4d8aedabce9eb067dfc150"
+    },
+    {
+      "path": "formal/lake-manifest.json",
+      "sha256": "3adfcdc058cb9fe8556812d1b6cb76b75d3e1295f705f8e08296e2a28dc3a4dc"
+    }
+  ],
+  "receipt_observation": {
+    "status": "machine_verified",
+    "build_passed": true,
+    "axiom_audit_passed": true,
+    "forbidden_constructs": [],
+    "infrastructure_failure": null,
+    "named_audited_theorem": "CryptoResearch.IC.ArityOracleThreshold.mitm_never_sub_generic",
+    "semantic_review": "pending",
+    "interpretation": "Existing receipt observation only; independent semantic fidelity is not established."
+  },
+  "current_source_compatibility_observation": {
+    "receipt_workspace_entries": 72,
+    "listed_workspace_inputs": "71 present and matching, zero mismatches; generated formal/CryptoResearch.lean is absent by design",
+    "verifier_inputs": "10 of 10 present and matching",
+    "additional_current_workspace_modules": [
+      "formal/CryptoResearch/Nagao/Bridge.lean",
+      "formal/CryptoResearch/Nagao/Lemma4Outside.lean",
+      "formal/CryptoResearch/Nagao/RecoveryRule.lean"
+    ],
+    "strict_reuse_check": "fails with local source inputs",
+    "interpretation": "The historical receipt remains evidence for its exact test-merge closure and the named theorem/spec/toolchain hashes still match. It is not relabeled as verification of the full current workspace; fresh current-head verification remains required before a validated review conclusion."
+  },
+  "verification_scope": "The four named source hashes, all ten verifier inputs, and 71 available listed workspace inputs match local current files. The complete current workspace map does not match because the generated root is absent and three later Nagao modules are present. Exact rows and hashes are bound in the preparation input-binding record. No verification rerun has yet occurred.",
+  "storage": "The receipt is 66,915 bytes. Repository policy keeps it in Git because .json is not in DATA_EXT and the file is below the 1 MiB general non-code threshold; tools/artifacts/artifacts.py plan reports no move. The exact receipt SHA-256 remains the binding authority.",
+  "historical_problem": "problems/formal-lean-external-volume-eintr.md: successful hosted verification can qualify its target blocker; it does not establish a repair of the historical host filesystem.",
+  "completion": "No manuscript, theorem promotion, global lower bound, speedup, or goal completion follows from this manifest.",
+  "refreshed_at": "2026-11-01T04:43:46Z",
+  "fresh_current_head_verification": {
+    "required_before": [
+      "TASK-20261101-bd53ca",
+      "TASK-20261101-e90be2",
+      "TASK-20261101-bc06d9"
+    ],
+    "workflow_task": "TASK-20261101-9a4a63",
+    "snapshot_task": "TASK-20261101-6fd5e3",
+    "amendment": "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml",
+    "maximum_hosted_workflow_dispatch_runs": 1,
+    "launched": false,
+    "gate_open": false,
+    "source_head_pin": "Resolve exact published branch head at execution time; do not treat this metadata base or historical test-merge SHA as the future run identity."
+  }
+}
