@@ -1,0 +1,41 @@
+digraph k163_coprime_transfer {
+  graph [rankdir=TB, bgcolor="white", pad="0.22", nodesep="0.35", ranksep="0.46", fontname="Liberation Sans"];
+  node [shape=box, style="rounded,filled", fontname="Liberation Sans", fontsize=9.5, color="#34527a", fillcolor="#eef3fa"];
+  edge [fontname="Liberation Sans", fontsize=8.5, color="#607991", arrowsize=0.68];
+
+  kconst [label="Formal K-163 constant r\nand gcd(45641,r)=1", fillcolor="#e5f5e9", color="#267347"];
+  generic [label="Generic premise\nrecovery(phi(X))=[45641]X"];
+  generic_result [label="Lean: injective on r-torsion\n+ exact image order\n+ scalar-relation equivalence", fillcolor="#e5f5e9", color="#267347"];
+  membership [label="DLP interpretation requires\nQ in <P>: OPEN", fillcolor="#fff1d8", color="#ac6b21"];
+  control [label="Negative control\n[2] on ZMod 6 is noninjective", fillcolor="#e5f5e9", color="#267347"];
+
+  tau_rel [label="Abstract additive tau\ntau^2=tau-2"];
+  cm [label="Lean CM arithmetic\nalpha=51-160 tau\nalpha_bar=-109+160 tau", fillcolor="#e5f5e9", color="#267347"];
+  both [label="Lean: both compositions [45641]\n+ exact alpha image order", fillcolor="#e5f5e9", color="#267347"];
+  actual_tau [label="Concrete sect163k1\ntau / Frobenius bridge: OPEN", fillcolor="#fff1d8", color="#ac6b21"];
+
+  actual [label="Actual K-163\nsource subgroup", fillcolor="#fff1d8", color="#ac6b21"];
+  endpoint [label="Actual vertical\nendpoint subgroup", fillcolor="#fff1d8", color="#ac6b21"];
+  cost [label="Vertical map cost / ECDLP advantage /\nweak-curve verdict: UNKNOWN", fillcolor="#fff1d8", color="#ac6b21"];
+
+  { rank=same; kconst; control; }
+  { rank=same; generic; tau_rel; actual_tau; }
+  { rank=same; generic_result; both; membership; }
+  { rank=same; actual; endpoint; }
+
+  kconst -> generic_result [label="coprime gate"];
+  generic -> generic_result;
+  control -> generic_result [label="guards hypothesis", style=dotted];
+  generic_result -> membership [label="not subgroup membership", style=dashed, color="#ac6b21"];
+
+  tau_rel -> cm;
+  cm -> both [label="derive alpha_bar alpha\nand alpha alpha_bar"];
+  both -> generic_result [label="discharges generic premise"];
+  actual_tau -> tau_rel [label="identification OPEN", style=dashed, color="#ac6b21"];
+
+  actual -> endpoint [label="vertical map OPEN", style=dashed, color="#ac6b21"];
+  endpoint -> actual [label="vertical dual + compositions OPEN", style=dashed, color="#ac6b21"];
+  actual -> actual_tau [label="same-curve bridge OPEN", style=dashed, color="#ac6b21"];
+  endpoint -> cost [style=dashed, color="#ac6b21"];
+  generic_result -> cost [label="does not establish", style=dashed, color="#ac6b21"];
+}
