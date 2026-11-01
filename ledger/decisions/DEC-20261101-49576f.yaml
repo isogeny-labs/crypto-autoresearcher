@@ -1,0 +1,121 @@
+coordinator_decision:
+  id: DEC-20261101-49576f
+  id_provenance: Allocated with tools/allocate_id.py --next coordinator_decision --date
+    20261101 and confirmed free with --check.
+  recorded_at: '2026-11-01'
+  decided_at: '2026-11-01'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: Coordinator session claude_code /design-experiment, delegated from a
+    requesting session whose container disk was full; execution observed by the top-level
+    session.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  mode: design-experiment
+  kind: selection_and_design
+  context: >-
+    The requesting session asked to finish the EXP-PFDR-2d36f9 design (DEC-20261031-e8e84b
+    NA-1). On origin/main that work is already complete: EXP-PFDR-2d36f9 was approved
+    (DEC-20261031-47307d, amended DEC-20261031-21b352), all seven trials ran, and
+    DEC-20261031-0fe2d3 / EV-PFDR-c42190 record the reading O-INVALID. The goal head's
+    next_action is "design a revised v2 with a reachable 16-bit coincidence target and a
+    plant/calibration construction that passes C3-C6, or close the lane". No open PR or lane
+    is designing v2.
+  decision: design
+  decision_label: select and design EXP-PFDR-ada71b (v2 of EXP-PFDR-2d36f9)
+  target_ids:
+  - EXP-PFDR-ada71b
+  - EXP-PFDR-2d36f9
+  - H-PFDR-ed7ccf
+  - IDEA-20261018-a0830c
+  - GOAL-PFDR-fd09e0
+  - BATCH-3505b3
+  - BATCH-3a63a4
+  ranking:
+    selected: EXP-PFDR-ada71b (v2 of the break-even growth ladder)
+    basis: >-
+      It is the recorded goal next_action. The diagnosis below shows v1 failed for two
+      instrument reasons that a narrow repair removes, the slope and control machinery
+      otherwise worked, and a full v2 costs minutes of CPU (v1 census-main 293 s). No other
+      open proposal on GOAL-PFDR-fd09e0 is strictly better at this cost; the lead
+      LEAD-ICP-coincidence-harvest-structured-base stays unresolved until a valid reading
+      exists.
+  design:
+    diagnosis:
+    - id: D1
+      finding: >-
+        The theta 0.30 lines were invalid only because b16-t0.30 had M = 2333 < 2500. The
+        8-curve pilot planned 1965 curves for 1.1 x 2500 (implied per-curve null mean 1.40);
+        the main block realized 1.187, an 18% overestimate. C3, C4 and C5 failed only through
+        this invalid theta: the theta 0.30 plants recovered gamma_design within 0.012
+        (0.152/0.164, 0.324/0.333, 0.495/0.502), the Z/N slope read 0.697 against 0.70, and
+        every theta 0.35 control passed.
+      repair: 32 pilot curves and a sizing margin of 1.5 (about 3160 curves and M about 3750
+        at the v1 realized mean; above 3100 even at an 18% pilot overestimate).
+    - id: D2
+      finding: >-
+        Null bases are seeded per (block, rung, theta, curve, replicate) without d, and v1
+        read replicate 0 for the A/A line and z_cal of every d. The six A/A lines were three
+        copies of two lines and the 30 z_cal values were 10 values each repeated three
+        times; the C6 sd 0.66 had effective n = 10 (sampling sd about 0.22), not 30.
+      repair: the rank-d cell reads null replicate d - 1 against the other 19 (run.py
+        null_rep_index), giving six distinct A/A lines and 30 distinct z_cal.
+    - id: D3
+      finding: The v1 main block was observed, including SUB-BE readings on the three theta
+        0.35 lines.
+      repair: fresh seed blocks 12,000,000 / 12,100,000 / 12,200,000 / 12,900,000 (disjoint
+        from every block in experiments/*/implementation) and a new experiment tag in every
+        base seed; v1 records are never pooled.
+    unchanged: Every success, falsification, class, control and calibration threshold, the
+      grid (bits 16-32, theta 0.30/0.35, d 1-3, gamma 0, 1/6, 1/3, 1/2), the counting
+      convention, the kernel and the bootstrap are identical to v1. The descriptive
+      reanalysis-ca5e01 trial is dropped (already run as RUN-PFDR-b507a1); six trials.
+    implementation_checks:
+    - selftest PASS on the 12,900,000 block (126 kernel-vs-brute, 9 near-2^32 key checks
+      with p < 2^32 and key bound < 2^64, 12 order certifications, 8 at 32 bits); check.py
+      CHECK OK.
+    - full six-trial smoke flow on a throwaway seed block (99,000,000 offsets) with shrunken
+      constants; every trial exits 0 and check.py prints CHECK OK; 29 of 30 z_cal distinct.
+      No v2 block was touched and no v1 record was re-read.
+    - check.py now fails when trial-plan defaults differ from the driver constants.
+  rationale:
+  - O-INVALID is an instrument fact, not negative evidence; a valid reading needs only the
+    D1-D3 repairs.
+  - The repairs are fixed before any v2 data and do not move any decision threshold, so v2
+    is confirmatory on fresh blocks.
+  - Closing the lane instead would leave the lead without a reading at negligible saving.
+  evidence_refs:
+  - EV-PFDR-c42190
+  - DEC-20261031-0fe2d3
+  - experiments/EXP-PFDR-2d36f9/runs/RUN-PFDR-73276d/analysis.json
+  limitations:
+  - Toy scope only (bits 16-32, h = 2); v2 asserts nothing beyond it.
+  - EV-PFDR-07d608 stays graded preliminary (DEC-20261029-8d9b43); this design does not
+    depend on it.
+  - The FAM-1 ladder remains deferred (DEC-20261031-e8e84b NA-3).
+  lane_actions:
+  - close BATCH-3505b3 (outcome archived; v1 executed, archived and read under
+    DEC-20261031-0fe2d3) so the open-lane count stays within max_concurrent 5.
+  - open BATCH-3a63a4 for EXP-PFDR-ada71b.
+  status_transitions:
+  - record: H-PFDR-ed7ccf
+    note: specified unchanged
+  - record: EXP-PFDR-ada71b
+    note: review_required until preapproval reports approvable true
+  goal_update: next_action becomes the EXP-PFDR-ada71b preapproval and approval, then /run.
+  next_actions:
+  - Run tools/experiment_preapproval.py on the EXP-PFDR-ada71b packet; approve under
+    DEC-20261101-cb3277 only on approvable true.
+  - /run EXP-PFDR-ada71b under TASK-20261101-8951b8 after approval and the snapshot
+    archive TASK-20261101-125ee4.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Design decision; no result.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261101-49576f.yaml
+  - experiments/EXP-PFDR-ada71b/specification.yaml
+  - experiments/EXP-PFDR-ada71b/trial-plan.json
+  - experiments/EXP-PFDR-ada71b/implementation/
+  official_effect_until_committed_pushed_reviewable: none

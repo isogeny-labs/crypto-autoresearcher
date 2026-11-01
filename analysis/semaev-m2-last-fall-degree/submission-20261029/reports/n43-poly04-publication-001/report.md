@@ -1,0 +1,5 @@
+# n=43 polynomial04: published D4 certificate and exact count
+
+The fifth fixed n=43 polynomial-basis input produced an independently accepted degree-four certificate. The original checker reports `1 ∉ W_4(F)` and codimension at least **2**. A separate exhaustive counter found **2 ordered Boolean solutions**. The strict inequality `checked codimension > exact count` is absent, so this row does not establish LFD ≥ 5. It remains a verified D4 nonmembership result for this named presentation.
+
+The [machine-readable row](result.json) binds the retained computation result, [count inference](inference.json), and certificate SHA-256. The [public archive readback](../../archive/fresh-n43-poly-04.publication.json) verifies the compressed certificate and evidence bundle through anonymous HTTPS downloads and canonical-store GETs, then checks the decompressed 2,399,808-byte certificate against its original SHA-256. The [flow diagram](flow.svg) marks exactly where the lower-bound inference stops. This row belongs to the original frozen n=43–44 tail, whose next input is running separately.

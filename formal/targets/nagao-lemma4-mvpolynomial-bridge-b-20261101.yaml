@@ -1,0 +1,33 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-df0066
+claim_id: NAGAO-2015-984-LEMMA4-MVPOLYNOMIAL-BRIDGE-B
+kind: formal_counterexample
+source: knowledge/findings/KN-FIND-936151.md
+source_status: COMPUTED
+theorem_name: CryptoResearch.Nagao.BridgeB.lemma4_mvB_false
+theorem_file: CryptoResearch/Nagao/BridgeB.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Witness B companion to nagao-lemma4-mvpolynomial-bridge-20261101. Restates witness B
+  of Lemma4Witness.lean in Mathlib MvPolynomial (Fin 3) (ZMod 2) with the IsFall /
+  IsFakeFall definitions of RecoveryRule.lean and UNRESTRICTED cofactors. toMv_fB₁ /
+  toMv_fB₂ identify the list data with X0 X1 + X2 and X0 X2 + X1. No fall at degree 1
+  or 2 (domain, so cofactors of the degree-two generators are constant; coefficients of
+  X0X1, X0X2, X0^2, X1^2, X2^2 force them to zero); fall at 3: X2 f1 + X1 f2 = X1^2 + X2^2;
+  fake fall at 2: red(f1 + (X0 + 1) f2) = X1 + X2. Lemma4Mv' and FirstFallIs' are the
+  Bridge.lean statements generalized to any finite variable type (same bodies).
+  Built locally against the pinned Mathlib with a verbatim-definition stub of
+  Lemma4Witness (fA/fB definitions only); #print axioms lemma4_mvB_false reports only
+  propext, Classical.choice, Quot.sound.
+claim: |
+  Over F_2[X0, X1, X2] (Mathlib MvPolynomial (Fin 3) (ZMod 2)), with the equality reading
+  of condition (1) and arbitrary polynomial cofactors, let F = {X0 X1 + X2, X0 X2 + X1}
+  (the list-model witness B under toMv) and S_fe = {X_j^2 - X_j}. The first fall degree
+  of F, and of F u S_fe, is 3, and F (also F u S_fe) has a fake fall at degree 2. Hence
+  d_F <= d'_F fails in the printed placement (fake side from F or from F u S_fe) and in
+  the inside placement.
+proof_map:
+  depends_on: [nagao-lemma4-mvpolynomial-bridge-20261101.yaml]
+  prerequisites:
+    - "the MvPolynomial definitions IsFall and IsFakeFall transcribe Definitions 5 and 6 of Nagao 2015/984 under the equality reading; the transcription is not a Lean theorem"

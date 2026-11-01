@@ -1,0 +1,109 @@
+correction:
+  id: CORR-20261101-43e52a
+  recorded_at: '2026-11-01'
+  recorded_by: coordinator
+  type: post_archive_binding_mode_and_hash_correction
+  severity: administrative_no_measured_quantity_moves
+  supersedes: []
+  corrects:
+    - coordination/goals/GOAL-ECDLP-001/batches/BATCH-5a5091/dispatch_queue.json
+    - TASK-20260907-9e1f93
+    - coordination/goals/GOAL-ECDLP-001/batches/BATCH-5a5091/archives/TASK-20260907-9e1f93/ledger-receipt.json
+  goal_id: GOAL-ECDLP-001
+  batch_id: BATCH-5a5091
+  record_id: TASK-20260907-9e1f93
+  authorization:
+    source: user
+    recorded_at: '2026-11-01'
+    scope: >-
+      The user explicitly authorized the additive administrative binding repair
+      required before the IC arity/oracle correction lane may open.
+  prior_value:
+    archive_binding_mode: content_first
+    goal_path_sha256: 356a9b3c261ac2b05ae299ffffd8a320504c60c6d735cf3486e1626a2fff6780
+    interpretation: >-
+      Verify the declared archive paths against the current HEAD tree while
+      carrying a later goal-head hash that is not the goal blob in the archive
+      commit.
+  corrected_value:
+    archive_binding_mode: content_at_commit
+    goal_path_sha256: c0de99c75f52908ca6f998a3ad78f5149e51963ba66c01f0b44db23fd71fbd83
+    interpretation: >-
+      Verify every declared archive path against the exact historical archive
+      commit bc34285c5fb773003ec1cb01a205b5c9ad3f4405, whose first parent is
+      53306f1d594144671d4556176ef6a0b91adf2b36.
+  what_happened: >-
+    The completed TASK-20260907-9e1f93 archive records the historical Stage 0
+    review disposition in commit bc34285c5fb773003ec1cb01a205b5c9ad3f4405.
+    Its queue binding remained content_first even though the archived package
+    contains the mutable GOAL-ECDLP-001 head. A later 2026-09-13 queue edit also
+    replaced the goal path hash with then-current HEAD hash
+    356a9b3c261ac2b05ae299ffffd8a320504c60c6d735cf3486e1626a2fff6780,
+    while the goal blob in the historical archive commit hashes to
+    c0de99c75f52908ca6f998a3ad78f5149e51963ba66c01f0b44db23fd71fbd83.
+    The goal legitimately continued to evolve, so current HEAD now hashes to
+    577bc04ddb88617673304af0d37eafbda0e0389de7fb8786cd33ad59b55c193f.
+    The dispatcher consequently refused every GOAL-ECDLP-001 health check
+    before any newly authorized work could be admitted.
+  independent_verification:
+    - >-
+      Every declared TASK-20260907-9e1f93 path was read from archive commit
+      bc34285c5fb773003ec1cb01a205b5c9ad3f4405 and SHA-256 recomputed. Eleven
+      paths matched the queue; only ledger/goals/GOAL-ECDLP-001/goal.yaml did
+      not, because the queue carried the later HEAD hash.
+    - >-
+      The historical commit's goal blob SHA-256 is
+      c0de99c75f52908ca6f998a3ad78f5149e51963ba66c01f0b44db23fd71fbd83.
+      Commit bc34285c5fb773003ec1cb01a205b5c9ad3f4405 and parent
+      53306f1d594144671d4556176ef6a0b91adf2b36 remain unchanged.
+    - >-
+      Git blame attributes the substituted 356a9b3 hash to a 2026-09-13 queue
+      update after the 2026-09-07 archive. No archived receipt, decision, goal
+      blob, checkpoint, review, composition, or historical commit is edited.
+  impact_assessment:
+    verdicts_changed: NONE
+    measured_quantities_changed: NONE
+    authorization_changed: NONE
+    hypothesis_status_changed: NONE
+    experiment_status_changed: NONE
+    goal_status_changed: NONE
+    scientific_effect: >-
+      None. This correction repairs only historical archive validation. It is
+      not evidence about ECDLP, does not authorize a scientific run, and does
+      not validate the later IC arity/oracle formalization.
+    scope: >-
+      Archival provenance and queue validation only. The current goal record
+      remains the live projection; the historical package is validated against
+      its own immutable commit.
+  required_action:
+    - >-
+      Change TASK-20260907-9e1f93's archive binding_mode to content_at_commit,
+      restore only the goal path hash to the value in its archive commit, and
+      preserve every other archive field and historical artifact byte.
+    - >-
+      Re-run research_dispatch and goal_portfolio_health, requiring the old
+      archive to validate against commit bc34285 rather than mutable HEAD.
+    - >-
+      Treat any remaining dispatch or ledger failure as a separate operational
+      defect. This correction itself asserts nothing about the science.
+  refs:
+    - GOAL-ECDLP-001
+    - BATCH-5a5091
+    - TASK-20260907-9e1f93
+    - bc34285c5fb773003ec1cb01a205b5c9ad3f4405
+    - 53306f1d594144671d4556176ef6a0b91adf2b36
+    - CORR-20261010-b718ac
+    - CORR-20261101-43e52a
+  inference:
+    requested_policy: coordinator-orchestration-code
+    provider: openai
+    runtime: codex
+    resolved_model_id: gpt-6.1-sol
+    reasoning_effort: high
+    fallback_used: false
+    degraded_requirements: []
+    model_verified: false
+    model_verified_reason: >-
+      The interactive Codex runtime identifies the model, but no task-specific
+      adapter probe receipt was produced for this administrative correction.
+    amazon_bedrock_selected_configured_probed_contacted_or_used: false

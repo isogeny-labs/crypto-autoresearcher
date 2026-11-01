@@ -188,6 +188,10 @@ class ResolvedChatModel(BaseChatModel):
                 "model_matches_resolution": (
                     completion.model == self.resolution.resolved_model_id
                     if completion.model else None),
+                # An operator-supplied, unprobed identifier is still recorded
+                # as a disagreement, but only a probe-verified binding is a
+                # strong enough identity assertion to abort the run.
+                "model_identity_enforced": self.resolution.verified_model,
                 "backend": self.resolution.backend,
                 "stop_reason": completion.stop_reason,
                 "latency_seconds": completion.latency_seconds,

@@ -18,6 +18,7 @@ from crypto_autoresearcher.index_calculus import (
     pollard_rho,
     solve_index_calculus,
 )
+from crypto_autoresearcher.index_calculus import diagram
 from crypto_autoresearcher.index_calculus import msolve as ms
 from crypto_autoresearcher.index_calculus import polyfp
 from crypto_autoresearcher.index_calculus.__main__ import main
@@ -633,6 +634,143 @@ def test_index_calculus_with_the_msolve_engine():
     res = solve_index_calculus(E, P, Q, m=2, fb_kind="small_x", engine="msolve", seed=1)
     assert res.verified and res.k == 777 % E.order
     assert res.msolve_calls >= res.attempts - res.censored_attempts
+
+
+# -- presentations (diagram.py) ----------------------------------------------------------
+
+@pytest.mark.parametrize("m", [2, 3, 4, 5, 6])
+def test_diagram_wiring_is_a_tree_of_s3_boxes(m):
+    for topology in ("chain", "tree"):
+        dg = diagram.build(topology, m)
+        assert len(dg.boxes) == m - 1 and dg.wires == m - 2
+        # every internal wire joins exactly two boxes, every x_i appears once, R once
+        assert all(len(v) == 2 for v in dg.incidence().values())
+        leaves = sorted(t[1] for b in dg.boxes for t in b.terms() if t[0] == "x")
+        assert leaves == list(range(m))
+        assert sum(t == ("R",) for b in dg.boxes for t in b.terms()) == 1
+    assert diagram.chain(m).depth() == m - 1
+    assert diagram.tree(m).depth() == math.ceil(math.log2(m))
+
+
+def test_diagram_plan():
+    assert diagram.plan("chain", 4)["unknowns"] == 6
+    assert diagram.plan("tree", 4)["unknowns"] == 6
+    mono = diagram.plan("monolithic", 3)
+    assert mono["unknowns"] == 3 and mono["semaev_equations"] == 1
+    assert mono["max_degree_per_variable"] == 4
+    with pytest.raises(ValueError, match="m <= 3"):
+        diagram.plan("monolithic", 4)
+    with pytest.raises(ValueError, match="unknown topology"):
+        diagram.build("star", 3)
+
+
+def test_resultant_quadratic_is_sylvester():
+    # Res_X(X^2 - 1, X^2 - 4) = prod (r_i - s_j) over roots = (1-2)(1+2)(-1-2)(-1+2) = 9
+    p = 101
+    f = {(2,): 1, (0,): p - 1}
+    g = {(2,): 1, (0,): p - 4}
+    assert diagram.resultant_quadratic(f, g, 0, p) == {(0,): 9}
+    # common root -> 0
+    assert diagram.resultant_quadratic(f, {(2,): 1, (1,): p - 3, (0,): 2}, 0, p) == {}
+
+
+def _wire_values(E, dg, pts):
+    """x-coordinates every internal wire carries for signed points pts."""
+    producer = {b.c[1]: b for b in dg.boxes if b.c[0] == "u"}
+    cache = {}
+
+    def point(term):
+        if term[0] == "x":
+            return pts[term[1]]
+        if term[1] not in cache:
+            b = producer[term[1]]
+            cache[term[1]] = E.add(point(b.a), point(b.b))
+        return cache[term[1]]
+
+    return [point(("u", k))[0] for k in range(dg.wires)]
+
+
+@pytest.mark.parametrize("topology,m", [("tree", 2), ("tree", 3), ("tree", 4), ("tree", 5),
+                                        ("monolithic", 2), ("monolithic", 3)])
+def test_presentations_vanish_at_a_planted_decomposition(curve14, topology, m):
+    E, _ = curve14
+    fb = build_factor_base(E, "small_x", 12)
+    rng = random.Random(100 + m)
+    idx = [rng.randrange(len(fb)) for _ in range(m)]
+    pts = [fb.points[i] if rng.random() < 0.5 else E.neg(fb.points[i]) for i in idx]
+    R = None
+    for Q in pts:
+        R = E.add(R, Q)
+    system = ms.decomposition_system(E, fb, R[0], m, random.Random(0), topology)
+    xs = [P[0] for P in pts]
+    values = xs if topology == "monolithic" else xs + _wire_values(E, diagram.build(topology, m), pts)
+    assert len(system.names) == len(values) + 1
+    form = system.polys[-1]
+    z = (-sum(c * values[exps.index(1)] for exps, c in form.items() if exps[-1] == 0)) % E.p
+    for poly in system.polys:
+        assert ms.evaluate(poly, values + [z], E.p) == 0
+    assert "(" not in system.render() and "^0" not in system.render()
+
+
+def test_chain_topology_is_the_unchanged_default(curve14):
+    E, _ = curve14
+    fb = build_factor_base(E, "small_x", 12)
+    R = E.random_point(random.Random(5))
+    for m in (2, 3, 4):
+        a = ms.decomposition_system(E, fb, R[0], m, random.Random(9))
+        b = ms.decomposition_system(E, fb, R[0], m, random.Random(9), "chain")
+        assert a.render() == b.render()
+
+
+def test_monolithic_m3_is_semaev_s4(curve14):
+    # S_4 vanishes on x-tuples of points summing (with signs) to R, and the
+    # contracted polynomial has degree 2^{m-1} = 4 in each x_i
+    E, _ = curve14
+    fb = build_factor_base(E, "small_x", 12)
+    R = E.random_point(random.Random(11))
+    system = ms.decomposition_system(E, fb, R[0], 3, random.Random(0), "monolithic")
+    s4 = system.polys[3]
+    assert [max(k[i] for k in s4) for i in range(3)] == [4, 4, 4]
+    assert all(k[3] == 0 for k in s4)  # z does not occur
+
+
+@needs_msolve
+@pytest.mark.parametrize("topology", ["tree", "monolithic"])
+@pytest.mark.parametrize("m", [2, 3])
+@pytest.mark.parametrize("kind", KINDS)
+def test_msolve_presentations_agree_with_enumeration(kind, m, topology):
+    E, _ = generate_prime_order_curve(14, 2, p_filter=subgroup_prime_filter([], sizes=[8]))
+    fb = build_factor_base(E, kind, 8)
+    agreed = 0
+    for R in _targets(E, fb, m, 8, seed=m):
+        out = ms.decompose_msolve(E, fb, R, m, timeout=120, topology=topology)
+        assert out.status in ("ok", "no_solution"), out
+        assert out.topology == topology
+        assert out.relations == decompose_all(E, fb, R, m)
+        agreed += bool(out.relations)
+    assert agreed > 0
+
+
+@needs_msolve
+def test_msolve_tree_m4_agrees_with_chain():
+    E, _ = generate_prime_order_curve(12, 2)
+    fb = build_factor_base(E, "small_x", 6)
+    for R in _targets(E, fb, 4, 3, seed=4):
+        chain = ms.decompose_msolve(E, fb, R, 4, timeout=300)
+        tree = ms.decompose_msolve(E, fb, R, 4, timeout=300, topology="tree")
+        assert chain.status in ("ok", "no_solution") and tree.status == chain.status
+        assert tree.relations == chain.relations
+
+
+@needs_msolve
+def test_index_calculus_records_the_msolve_topology():
+    E, P = generate_prime_order_curve(12, 1)
+    Q = E.mul(777, P)
+    res = solve_index_calculus(E, P, Q, m=2, fb_kind="small_x", engine="msolve", seed=1,
+                               msolve_topology="tree")
+    assert res.verified and res.msolve_topology == "tree"
+    with pytest.raises(ValueError, match="unknown msolve topology"):
+        solve_index_calculus(E, P, Q, m=2, engine="msolve", msolve_topology="star")
 
 
 # -- end to end ---------------------------------------------------------------------

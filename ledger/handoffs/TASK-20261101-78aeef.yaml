@@ -1,0 +1,60 @@
+{
+  "handoff": {
+    "id": "TASK-20261101-78aeef",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Snapshot the fresh formal receipt and open the affected-joint review gate only after exact custody checks",
+    "uncertainty_reduced": "Durable binding of the fresh receipt to the published correction/spec/module/note and an explicit fail-closed validator gate.",
+    "inputs": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+      "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+      "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+      "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
+      "orchestration/formal/receipts.py",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "Run alone after verifier termination; zero Lean builds, verification reruns, formalization runs, workflows or scientific trials.",
+      "Archive the exact receipt plus these two archive artifacts. Decode/validate the receipt against the published source snapshot, exact spec/module/name, toolchain/manifest hashes, complete maps, build/forbidden/axiom status and semantic_review pending.",
+      "verification-gate.json may set allows_validator=true only when the exact receipt is machine_verified and custody validation passes. Missing/stale/mismatched/failed evidence keeps it false and cannot be bypassed by task state.",
+      "Commit, push, publish and natively verify the snapshot before TASK-20261101-bab1cb starts. Do not edit the receipt or source and do not infer semantic fidelity."
+    ],
+    "deliverables": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json"
+    ],
+    "artifact_paths": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json"
+    ],
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json"
+    ],
+    "archived_by": "TASK-20261101-78aeef",
+    "inference": {
+      "policy": "coordinator-orchestration-code",
+      "reasoning_effort": "high",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "wall_clock_seconds": null,
+      "memory_gb": null,
+      "maximum_runs": 0,
+      "scientific_runs": 0
+    },
+    "completion_gate": [
+      "Snapshot receipt binds actual commit/parent, exact changed paths and SHA-256s for the immutable receipt and two archive files.",
+      "verification-gate.json binds source snapshot, receipt hash, all four primary hashes, exact target name/type audit, build, forbidden-construct, axiom and semantic-pending statuses.",
+      "Native archive verification and publication pass; allows_validator=true only on complete success. No scientific conclusion or status change."
+    ],
+    "return_format": "Verified receipt snapshot/gate and exact provenance, or fail-closed impediment."
+  }
+}
+

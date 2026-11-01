@@ -1,15 +1,25 @@
 id: LEAD-ICP-shared-coefficient-membership
 family: ic-prime
 title: Shared divisor-coefficient circuits for high-degree implicit factor-base membership
-mechanism: Represent a five-point relation by a norm A^2-B^2f=(X-r)U from L(6O), and enforce all root memberships
-  through one shared quotient-ring or Graeffe coefficient tower. The base and function-first viewpoint are known.
-  The question is complete solving work with the same high-degree implicit membership and unchanged yield, including
-  chart and root recovery costs.
-disposition: open_unexamined
+mechanism: >-
+  Represent a five-point relation by a norm A^2-B^2f=(X-r)U from L(6O), and enforce all root
+  memberships through one shared quotient-ring or Graeffe coefficient tower. The base and
+  function-first viewpoint are known. The question is complete solving work with the same
+  high-degree implicit membership and unchanged yield, including chart and root recovery costs.
+  Arity-two theorem cells are component evidence only: if a PDP costs 2^(e s) at s=log2(p)/m,
+  reusable setup costs 2^(a s), and collection needs Theta(2^s) natural queries, the strict
+  gates are a<m/2 and e<m/2-1; the latter is impossible at m=2.
+disposition: open_next_step
 next_action:
-  step: Prove chart correspondence. Freeze k=3,4 censuses only after checking at least five usable distinct x;
-    compare per-root PKM, symmetric, quotient and Graeffe circuits. Use k=2 only as a deliberate empty squarefree-chart
-    negative control; repeated roots form a separate arm.
+  step: >-
+    Prove chart correspondence. Freeze k=3,4 censuses only after checking at least five usable
+    distinct x; compare per-root PKM, symmetric, quotient and Graeffe circuits. Use k=2 only as
+    a deliberate empty squarefree-chart negative control, with repeated roots in a separate arm;
+    never cite an m=2 cell as exponent-changing. Route any solver-slope claim through the
+    source-bound m=3 protocol hardened in cryptanalysis PR #1347: natural-only complete-panel
+    e<0.5, reusable setup a<1.5, signed lifts, compact field ranges and checked explanations/UNSAT
+    proofs. Retain explicit rationality circuits when the shared construction reaches arity at
+    least four, and do not inherit the unadmitted one-hot s=15..27 continuation.
   discriminates: A cheaper shared proof/solve circuit beyond permutation constants, versus algebraic degree merely
     hidden in auxiliary coefficients or excluded charts.
 evidence:
@@ -19,11 +29,24 @@ evidence:
 - repo: crypto
   path: problems/prime-divisor-uniform-solver.md
   note: 'no fixed-base divisor procedure with a proved sub-exponential relation supply; open'
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261031-b51282.yaml
+  note: corrects the arity gate and prime-field solver contract; no solver exponent measured
+- repo: cryptanalysis
+  path: experiments/prime-field-m3-cdclt-20261031/PROTOCOL.md
+  note: >-
+    PR #1347, merge 3c769002f0f68d63a5055f6f3e24a9500393180e: passing development oracle
+    and hardened unrun m=3 screen with exact enumeration, curve-free null and hybrid F_p route
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261101-26f1fa.yaml
+  note: additive complete-cost, population, proof and continuation-admission correction
 ledger_refs:
 - IDEA-20260918-5a9a51
 - RQ-PFDR-ae2fba
 - IDEA-20261029-3d0e71
 - IDEA-20261030-a62c58
+- DEC-20261031-b51282
+- DEC-20261101-26f1fa
 known_results:
 - KR-IC-5931ee
 - KR-IC-8b9daa
@@ -35,4 +58,4 @@ forecloses:
 - per-root PKM and symmetric membership circuits with repeated root tests
 areas:
 - PFDR
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-01'

@@ -17,6 +17,7 @@ scripts/research.sh anthropic-batch --dry-run
 scripts/research.sh openrouter --once
 scripts/research.sh abliterated            # keeps running
 scripts/research.sh local --report
+scripts/research.sh codex --wip-policy enforce --dry-run
 ```
 
 `scripts/research.sh <preset> [flags]` is `autoresearch campaign autopilot
@@ -157,6 +158,22 @@ linked scientific receipts provide those values.
 If every eligible model fails before a tool or checkout effect, the action
 retries after `--retry-seconds` (default five minutes), without inventing a
 partial experiment or suppressing the queue for a day.
+
+### Cross-repository WIP admission
+
+`--wip-policy off|advisory|enforce` controls the operational pull-request gate
+defined in [`docs/research-wip-policy.json`](research-wip-policy.json). The
+default is `off` for backwards compatibility; persistent unattended service
+should use `--wip-policy enforce`. `advisory` measures and reports the same
+counts without filtering actions. `--wip-policy-file` selects a different
+committed policy for a controlled deployment.
+
+In enforcement mode, the supervisor refreshes current open-PR counts through
+the authenticated GitHub CLI. While a repository or aggregate cap is exceeded,
+or when measurement is unavailable, `run`, `design`, `prepare`, and `portfolio`
+are excluded for that selection pass. `repair` and `review` remain eligible so
+existing work can drain. Rejections are recorded as `admission_blocked`; they
+are operational state, not evidence about any hypothesis or PR's correctness.
 
 OpenCode uses `opencode run --model provider/model --format json` ([CLI
 reference](https://opencode.ai/docs/cli/)); local vLLM

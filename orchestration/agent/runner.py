@@ -174,7 +174,7 @@ def task_brief(task: dict[str, Any], scope: TaskScope, tool_names: list[str]) ->
         "correction is a new path. When you are done, reply with a short "
         "summary naming the paths you wrote; do not restate their contents.",
         "Correct failed tool arguments instead of repeating identical errors. "
-        "Three consecutive identical all-error tool rounds stop this runtime "
+        "Two consecutive identical all-error tool rounds stop this runtime "
         "with an operational failure receipt, not a research conclusion. "
         "Successful calls, timeouts and command exit codes are not counted "
         "as identical tool-error stalls.",
