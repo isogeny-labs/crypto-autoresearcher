@@ -1,0 +1,70 @@
+{
+  "review_plan_addendum": {
+    "extends": "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
+    "written_at": "2026-11-01T18:10:22Z",
+    "authorization": "Explicit driving Coordinator instruction on 2026-11-01 after the exactly-once verifier preserved an infrastructure timeout; prospective pre-review recovery only.",
+    "reason": "TASK-20261101-f6477d produced an immutable formal receipt with verification=null because full lake build exceeded its fixed 1800-second timeout. Preserve that non-proof observation and authorize one distinct 3600-second CLI work unit rather than overwrite or relabel it.",
+    "unchanged": {
+      "base_plan_sha256": "8a305f22ef7bb874f368cd0a2eeb09dc9a9ac5e56f5c7ee8ee5be9a9beeb8867",
+      "blind_input_sha256": "176d52499ee7081d9707d05045b4e185fde4ce14d76ae575aeb3d20507bacf26",
+      "mathematical_claim_and_joints": true,
+      "joint_owners": true,
+      "blind_phase_and_lift": true,
+      "proves_too_much_controls": true,
+      "formal_theorem_and_review_requirements": true,
+      "proof_source_spec_note_and_original_receipt_bytes": true,
+      "original_verifier_handoff_bytes": true,
+      "no_algorithm_or_pfse_bridge": true
+    },
+    "observed_failure": {
+      "task_id": "TASK-20261101-f6477d",
+      "release": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+      "receipt": "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+      "receipt_sha256": "eb8c230575ee2308536d7147cc82470bafeb93c7b42120aa41404a301eb76a9e",
+      "verification": null,
+      "infrastructure_failure": "TimeoutExpired during full lake build after 1800 seconds",
+      "evidentiary_status": "Not proof evidence and not a mathematical negative."
+    },
+    "what_changes": {
+      "recovery_verifier_task": "TASK-20261101-caeb64",
+      "recovery_snapshot_task": "TASK-20261101-48eac4",
+      "retry_receipt": "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+      "retry_build_timeout_seconds": 3600,
+      "maximum_fresh_cli_work_units": 1,
+      "original_queue_lifecycle_registration": "TASK-20261101-f6477d state is registered failed so its exactly-once command cannot be redispatched; its handoff/receipt bytes are unchanged.",
+      "validator_dependency_replaced": "TASK-20261101-78aeef -> TASK-20261101-48eac4",
+      "blind_from_additions": [
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+      ],
+      "reporting_requirement": "Validator, synthesis and final EV/DEC show the original timeout and recovery path separately."
+    },
+    "source_binding": {
+      "source_snapshot_task": "TASK-20261101-c8df5e",
+      "source_snapshot_commit": "68001c097fc57fcc4bf4ef4899dee8577760473a",
+      "task_spec_sha256": "e92ff4622a6d0a7b57b319780b8253f7c23f30b46ffc2b9517f24f861040fc86",
+      "theorem_source_sha256": "6de9feca6adefdbb82c867c1740c93ad62aa897f70ff267920f74681e93b5d64",
+      "invocation_provenance_rule": "The formal CLI records provenance.source_commit as invocation HEAD. The recovery invocation HEAD will include this additive plan and need not equal 68001c097fc57fcc4bf4ef4899dee8577760473a. Custody is established by ancestry or an equivalent exact-byte check plus the immutable spec/theorem hashes; both commits must be reported without conflation."
+    },
+    "execution_prerequisite": {
+      "verifier_task": "TASK-20261101-caeb64",
+      "snapshot_task": "TASK-20261101-48eac4",
+      "route": "/run TASK-20261101-caeb64",
+      "command": "python3 -m orchestration.formal.cli verify --task-file formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml --artifact-out docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json --build-timeout 3600",
+      "required_before": [
+        "TASK-20261101-bab1cb",
+        "TASK-20261101-62882f",
+        "TASK-20261101-78d5de"
+      ],
+      "gate_file": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
+      "gate_requires": "allows_validator=true only after exact recovery receipt verification and verified/published dedicated snapshot; all failures remain closed."
+    },
+    "scope": "Pre-review infrastructure recovery only. No proof/source/spec/note edit, no retry of the original task, no theorem/review weakening, no scientific trials, EV/DEC/H/status change, algorithm/PFSE claim or semantic conclusion.",
+    "procedure_deviations": []
+  }
+}
+

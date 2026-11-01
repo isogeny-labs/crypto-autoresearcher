@@ -1,4 +1,4 @@
-# Nagao 2015/984 Lemma 4: formal statement review packet (prepared, not dispatched)
+# Nagao 2015/984 Lemma 4: formal statement review packet (dispatched 2026-11-01)
 
 Batch `BATCH-4c1c67`. This packet asks for the independent semantic-fidelity
 review that the formal lane requires before any of the five Lean results below
@@ -16,6 +16,14 @@ the packet author may not act as a reviewer on any joint.
 | `RecoveryRule.recovery` | `Nagao/RecoveryRule.lean` | `nagao-lemma4-recovery-rule-20261101` | workspace gate, run 41259822143 (PR #2867) |
 | `Bridge.lemma4_mv_false`, `Bridge.red_sum_red` | `Nagao/Bridge.lean` | `nagao-lemma4-mvpolynomial-bridge-20261101` | workspace gate, run 41264005876 (PR #2871) |
 | `BridgeB.lemma4_mvB_false` | `Nagao/BridgeB.lean` | `nagao-lemma4-mvpolynomial-bridge-b-20261101` | workspace gate, run 41280794617 (PR #2901) |
+
+Dispatch (2026-11-01), one independent session per joint, cards in `handoffs/`:
+
+| Task | Joint | Input boundary |
+| --- | --- | --- |
+| `TASK-20261101-b3a351` | J1 primary-source correspondence | plan, bindings, Lean modules, ePrint 2015/984 and 2013/549 |
+| `TASK-20261101-6dcb20` | J2 blind re-derivation and controls | `blind-input.yaml` only until the derivation is committed |
+| `TASK-20261101-cd72e8` | J3 Lean statements, axioms, fresh build | plan, bindings, Lean modules, pins |
 
 Files:
 

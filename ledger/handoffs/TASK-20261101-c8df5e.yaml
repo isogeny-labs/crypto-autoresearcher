@@ -1,0 +1,57 @@
+{
+  "handoff": {
+    "id": "TASK-20261101-c8df5e",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Snapshot and publish the exact producer correction/spec/source/note before verification",
+    "uncertainty_reduced": "Durable custody of the four source artifacts and proof that every historical input remained unchanged.",
+    "inputs": [
+      "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+      "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+      "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/batch.yaml",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/dispatch_queue.json",
+      "ledger/decisions/DEC-20261101-8adb11.yaml",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "Run alone after producer termination; zero Lean/formal/scientific runs.",
+      "Stage only the four producer artifacts plus this exact snapshot receipt. Verify parent, exact changed paths, SHA-256s, task IDs, and absence of edits to every original/prior artifact.",
+      "Commit, push and make the snapshot reviewable before TASK-20261101-f6477d starts. A local or unverified commit is not a verification input.",
+      "Do not alter proof/spec/note content, infer correctness, write EV/final DEC, or change any scientific status."
+    ],
+    "deliverables": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json"
+    ],
+    "artifact_paths": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json"
+    ],
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json"
+    ],
+    "archived_by": "TASK-20261101-c8df5e",
+    "inference": {
+      "policy": "coordinator-orchestration-code",
+      "reasoning_effort": "high",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "wall_clock_seconds": null,
+      "memory_gb": null,
+      "maximum_runs": 0,
+      "scientific_runs": 0
+    },
+    "completion_gate": [
+      "Snapshot receipt records actual commit/parent, the exact changed-path set consisting of four producer artifacts plus the receipt as applicable, hashes, remote head and PR observation without invented values.",
+      "Native archive verification passes for every declared producer artifact and the receipt.",
+      "Published snapshot is the only source accepted by the verifier; no scientific conclusion or status change."
+    ],
+    "return_format": "Verified source snapshot path/commit and publication observation, or exact fail-closed impediment."
+  }
+}
+
