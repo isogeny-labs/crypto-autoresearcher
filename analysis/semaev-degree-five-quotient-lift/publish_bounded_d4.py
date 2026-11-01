@@ -132,7 +132,6 @@ def publish(args):
                 old = json.loads(acknowledgement.read_text())
                 if old['certificate_sha256'] != row['stages'][1]['certificate_sha256']:
                     raise ValueError('identity collision with previous publication: ' + name)
-                continue
             certificate = args.archive / (name + '.D4.cert.gz')
             pack_certificate(path.parent / 'degree4.bin', certificate)
             receipt = args.archive / (name + '.receipt.json')
@@ -182,13 +181,24 @@ def publish(args):
                             raise ValueError('canonical store readback mismatch')
                     verified.append(dict(name=file.name, sha256=sha, bytes=file.stat().st_size,
                                          anonymous_url=url, store_uri=store_uri))
-                save_new(acknowledgement, dict(schema='semaev.bounded-d4-publication-readback/v1',
+                new_ack = dict(schema='semaev.bounded-d4-publication-readback/v1',
                     id=name, checked_at=datetime.datetime.now(datetime.timezone.utc).isoformat(),
                     certificate_sha256=row['stages'][1]['certificate_sha256'], files=verified,
                     checks=['anonymous HTTPS GET and SHA256 for every asset',
                             'gzip decompression and original certificate SHA256',
-                            'S3 GET and SHA256 for each store-backed asset']))
-                run(['gh', 'release', 'upload', args.tag, acknowledgement, '--repo', args.repo])
+                            'S3 GET and SHA256 for each store-backed asset'])
+                if acknowledgement.exists():
+                    old = json.loads(acknowledgement.read_text())
+                    for key in ('schema', 'id', 'certificate_sha256', 'files', 'checks'):
+                        if old[key] != new_ack[key]:
+                            raise ValueError('existing publication acknowledgement changed: ' + key)
+                else:
+                    save_new(acknowledgement, new_ack)
+                if acknowledgement.name not in assets:
+                    run(['gh', 'release', 'upload', args.tag, acknowledgement, '--repo', args.repo])
+                    assets.add(acknowledgement.name)
+                readback(f'https://github.com/{args.repo}/releases/download/{args.tag}/{acknowledgement.name}',
+                         digest(acknowledgement), downloaded)
                 print(json.dumps({'id': name, 'publication': 'anonymous_and_store_readback_verified'}), flush=True)
 
 
