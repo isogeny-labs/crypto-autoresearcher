@@ -5,14 +5,15 @@
   "objective": "One additive complete-real-model formal correction, exact verification, prospective affected-joint validation, scoped visual synthesis and final ledger custody; zero scientific trials and no algorithm/PFSE or scientific-status transition.",
   "opened_at": "2026-11-01",
   "opened_by": "coordinator-formal-correction-20261101",
-  "queue_status": "prepared_not_dispatched",
+  "queue_status": "pre_review_infrastructure_recovery_prepared",
   "max_concurrent": 1,
   "dispatch_blockers": [],
   "publication_boundary": "Preparation files alone confer no launch authority. Register and publish the disjoint lane; each worker requires the exact committed queue/card/handoff and all completed published archive dependencies.",
   "review_plan": "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
   "verification_gate": {
-    "task": "TASK-20261101-78aeef",
-    "path": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json",
+    "task": "TASK-20261101-caeb64",
+    "snapshot_task": "TASK-20261101-48eac4",
+    "path": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
     "require_true": "allows_validator",
     "required_before": [
       "TASK-20261101-bab1cb",
@@ -255,7 +256,7 @@
       "id": "TASK-20261101-f6477d",
       "title": "Write one fresh exact formal-verification receipt for the new aggregate target",
       "role": "executor",
-      "state": "queued",
+      "state": "failed",
       "priority": 95,
       "review_required": false,
       "depends_on": [
@@ -451,6 +452,222 @@
       "handoff_ref": "ledger/handoffs/TASK-20261101-78aeef.yaml"
     },
     {
+      "id": "TASK-20261101-caeb64",
+      "title": "Retry the exact formal target once with a distinct receipt and 3600-second build timeout",
+      "role": "executor",
+      "state": "queued",
+      "priority": 96,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261101-c8df5e"
+      ],
+      "handoff_ref": "ledger/handoffs/TASK-20261101-caeb64.yaml",
+      "read_scope": [
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+        "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+        "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+        "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+        "formal/lean-toolchain",
+        "formal/lake-manifest.json",
+        "formal/lakefile.toml",
+        "orchestration/formal/cli.py",
+        "orchestration/formal/receipts.py",
+        "tools/formal_task.py",
+        "AGENTS.md"
+      ],
+      "write_scope": [
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+      ],
+      "artifact_paths": [
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+      ],
+      "archived_by": "TASK-20261101-48eac4",
+      "handoff": {
+        "id": "TASK-20261101-caeb64",
+        "from": "coordinator",
+        "to": "executor",
+        "objective": "Run one additive infrastructure-recovery verification work unit with a distinct immutable receipt and a 3600-second build timeout",
+        "uncertainty_reduced": "Whether the exact source packet that timed out during the full 1800-second lake build passes the same pinned formal verifier when given one bounded longer infrastructure window.",
+        "inputs": [
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+          "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+          "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+          "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+          "formal/lean-toolchain",
+          "formal/lake-manifest.json",
+          "formal/lakefile.toml",
+          "orchestration/formal/cli.py",
+          "orchestration/formal/receipts.py",
+          "tools/formal_task.py",
+          "AGENTS.md"
+        ],
+        "constraints": [
+          "The original TASK-20261101-f6477d receipt at docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json is immutable, has SHA-256 eb8c230575ee2308536d7147cc82470bafeb93c7b42120aa41404a301eb76a9e, verification=null and TimeoutExpired during full lake build at 1800 seconds. It is infrastructure provenance only, not proof evidence; do not edit, overwrite, relabel, delete or rerun that task.",
+          "Run only after this recovery addendum/queue/handoff is committed, pushed and reviewable. The immutable mathematical source custody is source snapshot commit 68001c097fc57fcc4bf4ef4899dee8577760473a; require exact spec SHA-256 e92ff4622a6d0a7b57b319780b8253f7c23f30b46ffc2b9517f24f861040fc86 and theorem-source SHA-256 6de9feca6adefdbb82c867c1740c93ad62aa897f70ff267920f74681e93b5d64 before and after verification.",
+          "The formal CLI records provenance.source_commit as the invocation checkout HEAD, which will include this additive recovery packet and therefore need not equal source snapshot commit 68001c097fc57fcc4bf4ef4899dee8577760473a. Record both values distinctly. Accept the invocation HEAD only if the source snapshot is its ancestor or otherwise exact byte custody is independently established and every frozen source/spec hash matches; never misstate invocation HEAD as the source-production commit.",
+          "Execute exactly one fresh CLI work unit through /run TASK-20261101-caeb64: python3 -m orchestration.formal.cli verify --task-file formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml --artifact-out docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json --build-timeout 3600.",
+          "The retry receipt path must not preexist. No retry, rerun, timeout extension, hosted workflow, local substitute, source/proof/spec/note/toolchain/dependency/verifier edit, MathCode generation or scientific trial is authorized under this task.",
+          "Preserve every actual outcome. Require exact task/spec/source/toolchain/manifest hashes, complete workspace/verifier maps, theorem_file CryptoResearch/IC/ArityOracleCompleteRealModel.lean, theorem_name CryptoResearch.IC.ArityOracleCompleteRealModel.complete_real_model, nonempty named target audit, full build, forbidden-construct scan and transitive axiom audit.",
+          "A machine_verified retry remains semantic_review required/pending and cannot open review until the dedicated recovery snapshot is committed, published and natively verified. Any timeout/failure remains infrastructure/proof-obligation provenance and requires a new Coordinator act; it is never negative mathematical evidence."
+        ],
+        "deliverables": [
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+        ],
+        "artifact_paths": [
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+        ],
+        "write_scope": [
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+        ],
+        "archived_by": "TASK-20261101-48eac4",
+        "inference": {
+          "policy": "executor-implementation",
+          "reasoning_effort": "medium",
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 7200,
+          "memory_gb": 8,
+          "maximum_runs": 1,
+          "scientific_runs": 0
+        },
+        "completion_gate": [
+          "Exactly one distinct immutable formal_verification.v1 retry receipt records actual invocation HEAD, exact frozen source/spec/toolchain/manifest hashes, complete maps, Lean version, build/audit logs and any infrastructure failure.",
+          "The retry receipt preserves the distinction between invocation provenance.source_commit and source custody at 68001c097fc57fcc4bf4ef4899dee8577760473a; exact spec/theorem hashes must remain e92ff4622a6d0a7b57b319780b8253f7c23f30b46ffc2b9517f24f861040fc86 and 6de9feca6adefdbb82c867c1740c93ad62aa897f70ff267920f74681e93b5d64.",
+          "Success requires machine_verified=true for the exact aggregate theorem, full build and axiom audit passed, no forbidden construct and semantic_review pending. Otherwise the task is not completed and no semantic conclusion follows.",
+          "Actual executor runtime/model/effort, exactly one work unit and zero scientific runs are reported."
+        ],
+        "return_format": "Distinct retry receipt path/hash, invocation HEAD versus source-custody binding, exact target/build/axiom status and any infrastructure or proof obstruction; no semantic verdict.",
+        "execution_route": {
+          "kind": "formal_verify_infrastructure_recovery",
+          "public_invocation": "/run TASK-20261101-caeb64",
+          "maximum_verifications": 1,
+          "build_timeout_seconds": 3600
+        }
+      }
+    },
+    {
+      "id": "TASK-20261101-48eac4",
+      "title": "Snapshot the recovery receipt and gate the unchanged affected-joint review",
+      "role": "coordinator",
+      "state": "queued",
+      "priority": 96,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261101-caeb64"
+      ],
+      "handoff_ref": "ledger/handoffs/TASK-20261101-48eac4.yaml",
+      "read_scope": [
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+        "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+        "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+        "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
+        "orchestration/formal/receipts.py",
+        "AGENTS.md"
+      ],
+      "write_scope": [
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+      ],
+      "artifact_paths": [
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+      ],
+      "archived_by": "TASK-20261101-48eac4",
+      "handoff": {
+        "id": "TASK-20261101-48eac4",
+        "from": "coordinator",
+        "to": "coordinator",
+        "objective": "Snapshot the additive recovery receipt and open semantic review only after exact source/provenance/custody checks",
+        "uncertainty_reduced": "Durable binding of the one retry receipt to the immutable source snapshot while retaining the original timeout as visible non-proof infrastructure provenance.",
+        "inputs": [
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+          "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+          "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+          "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
+          "orchestration/formal/receipts.py",
+          "AGENTS.md"
+        ],
+        "constraints": [
+          "Run alone after the recovery verifier terminates; zero Lean builds, verification reruns, formalization runs, workflows or scientific trials.",
+          "Preserve and cite the original failed receipt SHA-256 eb8c230575ee2308536d7147cc82470bafeb93c7b42120aa41404a301eb76a9e and failed release. It remains verification=null infrastructure provenance and is never substituted for, merged into or overwritten by the recovery receipt.",
+          "Validate the retry receipt against source snapshot commit 68001c097fc57fcc4bf4ef4899dee8577760473a, exact spec hash e92ff4622a6d0a7b57b319780b8253f7c23f30b46ffc2b9517f24f861040fc86, theorem-source hash 6de9feca6adefdbb82c867c1740c93ad62aa897f70ff267920f74681e93b5d64, target name/type, toolchain/manifest hashes, complete maps, build/forbidden/axiom status and semantic_review pending.",
+          "Treat retry provenance.source_commit as invocation HEAD, not source-custody commit. verification-gate.json must record both and demonstrate exact byte/hash custody from 68001c097fc57fcc4bf4ef4899dee8577760473a; it must not require false equality between those commits.",
+          "Archive the exact retry receipt plus these two recovery archive artifacts. verification-gate.json may set allows_validator=true only when the retry is machine_verified and every custody check passes.",
+          "Commit, push, publish and natively verify the recovery snapshot before TASK-20261101-bab1cb starts. Do not edit either receipt or any source, and do not infer semantic fidelity or an algorithm/PFSE conclusion."
+        ],
+        "deliverables": [
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+        ],
+        "artifact_paths": [
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+        ],
+        "write_scope": [
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+        ],
+        "archived_by": "TASK-20261101-48eac4",
+        "inference": {
+          "policy": "coordinator-orchestration-code",
+          "reasoning_effort": "high",
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": null,
+          "memory_gb": null,
+          "maximum_runs": 0,
+          "scientific_runs": 0
+        },
+        "completion_gate": [
+          "Snapshot receipt binds actual commit/parent, exact changed paths and SHA-256s for the immutable retry receipt and two recovery archive files.",
+          "verification-gate.json binds the original failed receipt/release, retry receipt, invocation HEAD, source custody 68001c097fc57fcc4bf4ef4899dee8577760473a, exact spec/theorem hashes, target audit, build, forbidden-construct, axiom and semantic-pending statuses.",
+          "Native archive verification and publication pass; allows_validator=true only on complete recovery success. No scientific conclusion or status change."
+        ],
+        "return_format": "Verified recovery snapshot/gate, original-timeout provenance and exact invocation-HEAD/source-custody distinction, or fail-closed impediment."
+      },
+      "archive": {
+        "kind": "snapshot",
+        "binding_mode": "content_at_commit",
+        "source_task_ids": [
+          "TASK-20261101-caeb64"
+        ],
+        "commit_sha": null,
+        "parent_sha": null,
+        "path_sha256": {},
+        "record_ids": [
+          "TASK-20261101-caeb64"
+        ]
+      }
+    },
+    {
       "id": "TASK-20261101-bab1cb",
       "title": "Independently validate the affected formal joint with blind re-derivation and exact audits",
       "role": "validator",
@@ -460,13 +677,13 @@
       "depends_on": [
         "TASK-20261101-978031",
         "TASK-20261101-c8df5e",
-        "TASK-20261101-78aeef"
+        "TASK-20261101-48eac4"
       ],
       "read_scope": [
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/blind-input.md",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
-        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json",
-        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/snapshot-receipt.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
         "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
         "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
         "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
@@ -483,7 +700,10 @@
         "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md",
         "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/next-action.json",
         "src/crypto_autoresearcher/index_calculus/README.md",
-        "AGENTS.md"
+        "AGENTS.md",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json"
       ],
       "write_scope": [
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review"
@@ -502,8 +722,8 @@
         "inputs": [
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/blind-input.md",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
-          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json",
-          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/snapshot-receipt.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
           "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
           "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
           "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
@@ -520,7 +740,10 @@
           "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md",
           "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/next-action.json",
           "src/crypto_autoresearcher/index_calculus/README.md",
-          "AGENTS.md"
+          "AGENTS.md",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json"
         ],
         "constraints": [
           "Fresh review-adversarial session with reasoning_effort xhigh, fork_turns=none, distinct from producer, verifier, Coordinator and synthesis. No fallback/degradation and no producer/parent/Coordinator conversation.",
@@ -530,7 +753,8 @@
           "Audit the exact spec/module/qualified target name, proof_map dependency and prerequisites, receipt hashes/maps/toolchain/manifest, nonempty target type audit, build/forbidden-construct result and transitive axioms. A successful module build or nearby theorem is insufficient.",
           "Re-evaluate all regimes and all F1-F5 controls, F(5,1/5,1)=2/5 and F(3,1/4,0)=1/2. Check actual IsGLB or lower-bound-plus-epsilon content, all minimizers/nonattainment, pointwise versus optimized quantifiers, F/G equality and MITM sharp/nonuniform claims.",
           "Apply every proves-too-much object and worked attack in review-plan.yaml. Explicitly reject any algorithm, PFSE, success/rank, growing-arity total-cost, speedup, global lower-bound or ECDLP existence/nonexistence inference.",
-          "Attestation must truthfully record exact sources in read order, phase-one seal hash, joints_owned [A,B,C], joint verdicts holds|breaks|inconclusive, actual runtime/session/model/effort, independence, commands, limitations and deviations. Never invent a session identity or audit result."
+          "Attestation must truthfully record exact sources in read order, phase-one seal hash, joints_owned [A,B,C], joint verdicts holds|breaks|inconclusive, actual runtime/session/model/effort, independence, commands, limitations and deviations. Never invent a session identity or audit result.",
+          "After phase-one sealing, audit both formal receipts separately: original SHA eb8c230575ee2308536d7147cc82470bafeb93c7b42120aa41404a301eb76a9e is an 1800-second infrastructure timeout with no proof evidence; only the published TASK-20261101-48eac4 recovery gate may supply machine evidence. Check that invocation HEAD and source custody 68001c097fc57fcc4bf4ef4899dee8577760473a are distinguished and that exact spec/theorem hashes are unchanged."
         ],
         "deliverables": [
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/validation.md",
@@ -562,7 +786,8 @@
           "Phase-one derivation is visibly sealed before unblinding and covers the entire requested d/q quantity.",
           "Validation report contains exact hypothesis-delta, requirement-to-declaration, target-name/receipt/axiom, infimum/minimizer, threshold/comparison, MITM and control tables with explicit verdicts.",
           "Attestation has exact task/joints/verdicts/source order/seal/session/runtime/model/effort/independence and every procedure deviation.",
-          "No claim outside the formal real model and no source/build/status change."
+          "No claim outside the formal real model and no source/build/status change.",
+          "The report preserves the original timeout as non-proof infrastructure provenance and identifies the distinct recovery receipt/snapshot as the only prospective machine-evidence path."
         ],
         "return_format": "Two review artifacts, joint verdicts, exact counterexamples/deltas/audit findings and unresolved interfaces.",
         "review_plan": "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml"
@@ -587,7 +812,7 @@
         "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
-        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/validation.md",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/attestation.yaml",
         "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/TASK-20261101-bd53ca/review.md",
@@ -595,7 +820,11 @@
         "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md",
         "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/next-action.json",
         "src/crypto_autoresearcher/index_calculus/README.md",
-        "AGENTS.md"
+        "AGENTS.md",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json"
       ],
       "write_scope": [
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/synthesis"
@@ -625,7 +854,7 @@
           "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
-          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/validation.md",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/attestation.yaml",
           "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/TASK-20261101-bd53ca/review.md",
@@ -633,7 +862,11 @@
           "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md",
           "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/next-action.json",
           "src/crypto_autoresearcher/index_calculus/README.md",
-          "AGENTS.md"
+          "AGENTS.md",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json"
         ],
         "constraints": [
           "Run only after the validator artifacts exist. Zero scientific trials, formal builds, verification reruns, proof edits, source edits, EV/DEC/H/lead/goal edits or scientific transitions.",
@@ -643,7 +876,8 @@
           "Run tools/check_review_independence.py against the batch with the externally frozen review-plan digest and preserve complete command/stdout/stderr/exit/hashes in independence-check.json. A failed or inapplicable check is reported, never silently passed.",
           "Record the internal source/literature review exactly: original note/spec/source/proposal/lead, prior sealed A/B reports and synthesis, and IC README. State no external literature supports this elementary algebra and make no novelty claim.",
           "Separate source authorship, machine verification, semantic validation and open model-to-PFSE interfaces. No claim that any ECDLP algorithm exists or does not exist, no speedup, no global barrier and no goal verdict.",
-          "All prior report bytes remain unchanged. Only the eight synthesis files are writable."
+          "All prior report bytes remain unchanged. Only the eight synthesis files are writable.",
+          "Report the original 1800-second timeout and distinct 3600-second recovery receipt as separate observations. The first is not proof evidence; the second counts only if its published recovery gate passes. Distinguish invocation HEAD from immutable source snapshot custody and exact theorem/spec hashes."
         ],
         "deliverables": [
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/synthesis/report.md",
@@ -707,8 +941,8 @@
       ],
       "read_scope": [
         "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
-        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/snapshot-receipt.json",
-        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/validation.md",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/attestation.yaml",
         "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/synthesis/report.md",
@@ -724,7 +958,11 @@
         "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/dispatch_queue.json",
         "ledger/decisions/DEC-20261101-8adb11.yaml",
         "ledger/goals/GOAL-ECDLP-001/goal.yaml",
-        "AGENTS.md"
+        "AGENTS.md",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
       ],
       "write_scope": [
         "ledger/evidence/EV-ECDLP-923dc3.yaml",
@@ -747,8 +985,8 @@
         "uncertainty_reduced": "Official custody and exact scope of the completed correction/formalization packet without any change to scientific hypotheses, leads, experiments, goal status, or algorithm/PFSE claims.",
         "inputs": [
           "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
-          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/snapshot-receipt.json",
-          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-78aeef/verification-gate.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/validation.md",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review/attestation.yaml",
           "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/synthesis/report.md",
@@ -764,7 +1002,11 @@
           "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/dispatch_queue.json",
           "ledger/decisions/DEC-20261101-8adb11.yaml",
           "ledger/goals/GOAL-ECDLP-001/goal.yaml",
-          "AGENTS.md"
+          "AGENTS.md",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+          "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
         ],
         "constraints": [
           "Run alone. First inspect every declared source and gate. Do not predetermine a positive result: EV-ECDLP-923dc3 records the actual formal/semantic evidence including breaks or inconclusive outcomes; DEC-20261101-1596a6 selects scoped accept/synthesize or revise from that evidence.",
@@ -773,7 +1015,8 @@
           "Archive exact validator and synthesis artifacts plus the new EV/DEC/receipt/checkpoint. Verify actual parent, exact diff, record IDs, hashes, source_task_ids, ancestry and message IDs before treating the records as official.",
           "CHECKPOINT.json names goal, BATCH-5de665 lane, queue, branch/PR, actual verified source/verification/ledger archive SHAs, completed task IDs, EV/DEC IDs, owner, any impediment/recheck, and exactly one next_action under 1000 characters.",
           "Commit, push, publish and natively verify the ledger archive. Only after publication and verified release may the driving Coordinator execute tools/goal_lanes.py close-lane GOAL-ECDLP-001 BATCH-5de665 --publish (using the tool's actual help syntax) and record the actual closure observation. Do not invent a closure or close on a local commit.",
-          "No scientific trial or Lean build. A failed archive/publication/closure is an operational impediment, not mathematical evidence."
+          "No scientific trial or Lean build. A failed archive/publication/closure is an operational impediment, not mathematical evidence.",
+          "EV/DEC must cite the original timeout as infrastructure provenance without proof weight and use the distinct recovery receipt only through its verified recovery snapshot/gate. Record invocation HEAD separately from source snapshot custody and exact immutable theorem/spec hashes."
         ],
         "deliverables": [
           "ledger/evidence/EV-ECDLP-923dc3.yaml",
@@ -837,6 +1080,21 @@
       },
       "handoff_ref": "ledger/handoffs/TASK-20261101-78d5de.yaml"
     }
-  ]
+  ],
+  "authorization_amendments": [
+    "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml"
+  ],
+  "failed_verification_attempt": {
+    "task": "TASK-20261101-f6477d",
+    "receipt": "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+    "receipt_sha256": "eb8c230575ee2308536d7147cc82470bafeb93c7b42120aa41404a301eb76a9e",
+    "outcome": "failed_infrastructure_timeout",
+    "verification": null,
+    "build_timeout_seconds": 1800,
+    "release": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+    "proof_evidence": false,
+    "receipt_and_handoff_preserved_unchanged": true,
+    "queue_lifecycle_state_registered": "failed"
+  }
 }
 
