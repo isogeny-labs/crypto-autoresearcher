@@ -1,6 +1,6 @@
 {
   "schema": "crypto.autoresearch.prepublication_gate.v1",
-  "state": "prepared_unpublished_not_dispatch_authorized",
+  "state": "source_archive_verified_fresh_current_head_gate_closed",
   "recorded_at": "2026-11-01T04:37:18Z",
   "task_id": "TASK-20261101-3b23eb",
   "source_archive_task_id": "TASK-20261101-510074",
@@ -16,11 +16,15 @@
   "isolated_directory": "/tmp/pfse-ic-arity-blind.T9X7os",
   "isolated_inventory_sha256": "34f394dc7df0a90b05bf43d15d9bda2a251163e2aa5d1ce14ea063949744c957",
   "publication": {
-    "source_snapshot_commit_obtained": false,
-    "pushed": false,
-    "reviewable_pr_verified": false,
-    "lane_publication_verified": false,
-    "archive_commit_verification_passed": false
+    "source_payload_commit_obtained": true,
+    "source_payload_pushed": true,
+    "reviewable_pr_verified": true,
+    "pr_draft": true,
+    "lane_publication_verified": true,
+    "source_parent_diff_and_31_hashes_verified": true,
+    "archive_commit_verification_passed": true,
+    "finalization_metadata_committed": false,
+    "archive_attestation_pushed": true
   },
   "reviewers": {
     "A": "TASK-20261101-bd53ca",
@@ -37,9 +41,9 @@
       "clears_when": "The new one-workflow current-published-head verification task TASK-20261101-9a4a63 produces exact successful native evidence and its dedicated snapshot TASK-20261101-6fd5e3 is verified and published. No compatibility waiver or historical receipt relabeling can clear this gate."
     },
     {
-      "condition": "source_snapshot_not_committed_or_published",
-      "detail": "Only local pre-publication construction is authorized; no commit, push, PR or verified Git archive receipt exists for these task outputs.",
-      "clears_when": "Driving Coordinator performs and verifies actual source snapshot/publication under the existing contract."
+      "condition": "finalization_metadata_commit_and_claim_release_pending",
+      "detail": "The source/archive payload and published attestation verify, but current finalization metadata is uncommitted and the source archive epoch-1 claim remains live.",
+      "clears_when": "Driving Coordinator commits/pushes finalization metadata and releases the actual source-archive claim; no release or launch performed by this turn."
     },
     {
       "condition": "review_sessions_not_launched_or_claimed",
@@ -47,7 +51,7 @@
       "clears_when": "After all source gates clear, launch each reviewer in a distinct fresh session under its allowed inputs and real published claim."
     }
   ],
-  "next_action": "Driving Coordinator publish and verify the source snapshot, then execute only the separately authorized one-workflow task TASK-20261101-9a4a63 through /run and archive it under TASK-20261101-6fd5e3; reviewers and synthesis remain gated until exact current-head evidence and its published snapshot pass. No run is launched by this record.",
+  "next_action": "Driving Coordinator commit/push the exact source-archive finalization metadata and release TASK-20261101-510074's live claim; then claim/run only TASK-20261101-9a4a63 with the actual published head pinned at execution. Both semantic reviewers and synthesis remain gated on that fresh workflow and TASK-20261101-6fd5e3.",
   "scientific_status_change": false,
   "completion_claimed": false,
   "refreshed_at": "2026-11-01T04:43:46Z",
@@ -64,5 +68,50 @@
     "launched": false,
     "gate_open": false,
     "source_head_pin": "Resolve exact published branch head at execution time; do not treat this metadata base or historical test-merge SHA as the future run identity."
-  }
+  },
+  "finalization_observed_at": "2026-11-01T04:53:54Z",
+  "source_payload_commit": "f87479876dae4b04ef95e2118e2b57f129373412",
+  "source_payload_parent": "93cd25a00162a0ed305277dbc2ebbdb203b658bf",
+  "remote_publication": {
+    "repository": "isogeny-labs/crypto-autoresearcher",
+    "branch": "codex/pfse-wp2-20261101",
+    "head_sha": "a1bfa648c68f2572be959bfa8d00ca559df61bbb",
+    "pr_number": 2892,
+    "pr_url": "https://github.com/isogeny-labs/crypto-autoresearcher/pull/2892",
+    "pr_state": "open",
+    "pr_draft": true,
+    "pr_head_at_creation": "f87479876dae4b04ef95e2118e2b57f129373412",
+    "observed_at": "2026-11-01T04:53:54Z",
+    "source_is_remote_head_ancestor": true,
+    "ahead_by": 4,
+    "behind_by": 0,
+    "verification": "GitHub fetch_pr and compare_commits observations; local Git ancestry and three claim/release-only later paths agree.",
+    "post_source_commit_paths": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/claims/TASK-20261101-3b23eb.1.claim.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/claims/TASK-20261101-3b23eb.1.release.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/claims/TASK-20261101-510074.1.claim.json"
+    ],
+    "archive_attestation_commit": "a1bfa648c68f2572be959bfa8d00ca559df61bbb",
+    "archive_attestation_parent": "791ea0f9f8a1fc3c49cde1d8ba7ee01e7365de3b",
+    "archive_attestation_empty_commit": true
+  },
+  "source_archive_claim": {
+    "task": "TASK-20261101-510074",
+    "epoch": 1,
+    "owner": "coordinator-pfse-semantic-20261101",
+    "released": false
+  },
+  "archive_commit_sha": "a1bfa648c68f2572be959bfa8d00ca559df61bbb",
+  "archive_parent_sha": "791ea0f9f8a1fc3c49cde1d8ba7ee01e7365de3b",
+  "resolved_blockers": [
+    {
+      "condition": "archive_commit_message_missing_task_ids",
+      "detail": "archive task TASK-20261101-510074 commit message is missing IDs ['TASK-20261101-510074', 'TASK-20261101-3b23eb']",
+      "clears_when": "Create an additive archival attestation commit whose tree retains the 31 exact source payload bytes and whose message names TASK-20261101-510074 and TASK-20261101-3b23eb; bind that actual commit/parent without rewriting f874, rerun the archive verifier, then commit/push finalization metadata separately.",
+      "resolved_by": "a1bfa648c68f2572be959bfa8d00ca559df61bbb",
+      "resolved_at": "2026-11-01T04:53:54Z",
+      "native_verifier_passed": true
+    }
+  ],
+  "source_archive_custody_verified": true
 }
