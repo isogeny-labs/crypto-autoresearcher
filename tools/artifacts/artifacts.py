@@ -649,14 +649,27 @@ def changed_candidates(cfg: Config, base: str, head: str) -> list[tuple[str, int
     # 7-character raw id is not a valid object name when that blob is absent.
     out = git(cfg.root, "diff", "--raw", "--no-abbrev", "-z", "--no-renames", "--diff-filter=AM", base, head)
     fields = out.decode(errors="surrogateescape").split("\0")
-    offenders = []
+    entries = []
     for meta, path in zip(fields[0::2], fields[1::2]):
         if not meta:
             continue
         _, mode, _, blob, _ = meta.lstrip(":").split()
         if mode == "160000":
             continue
-        size = int(git(cfg.root, "cat-file", "-s", blob))
+        entries.append((path, blob))
+    # One batch avoids a process (and, in blobless clones, a lazy-fetch setup)
+    # for every changed path. Git returns one answer per input, in order.
+    request = "".join(f"{blob}\n" for _, blob in entries).encode()
+    replies = (git(cfg.root, "cat-file", "--batch-check=%(objectname) %(objecttype) %(objectsize)", input=request)
+               .decode().splitlines() if entries else [])
+    if len(replies) != len(entries):
+        die("git cat-file returned the wrong number of blob sizes")
+    offenders = []
+    for (path, blob), reply in zip(entries, replies):
+        answer = reply.split()
+        if len(answer) != 3 or answer[0] != blob or answer[1] != "blob":
+            die(f"git cat-file could not size blob {blob} for {path}")
+        size = int(answer[2])
         if belongs_in_store(path, size, cfg.policy):
             offenders.append((path, size))
     return offenders
