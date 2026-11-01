@@ -6,94 +6,85 @@ owner: executor-codex
 epoch: 1
 smoke_namespace: smoke|EXP-ICEX-153c34/v1
 execution_scope: S0 gates G0-1..G0-6 only; no frozen/protocol run
-started_at: '2026-10-10T19:40:21.614466+00:00'
-finished_at: '2026-10-10T19:40:21.722557+00:00'
-command: nice -n 10 env TMPDIR=/Volumes/SSD990/.tmp-agent /usr/local/bin/python3 experiments/EXP-ICEX-153c34/implementation/s0_driver.py
-  --run-gates --owner executor-codex --epoch 1
-git:
-  commit: 2d8d56021aa50fb87f6eeaa76caa7de398717392
-  branch: codex/run-csidh-20261010
-  status_porcelain:
-  - ?? coordination/sessions/receipts/20261010/SR-20261010-792686.yaml
-  - ?? experiments/EXP-ICEX-153c34/implementation/
-machine_protection: &id001
-  read_at: '2026-10-10T19:40:21.614466+00:00'
-  host: Adams-MacBook-Pro.local
-  platform: macOS-26.6-arm64-arm-64bit-Mach-O
-  python: 3.13.1 (v3.13.1:06714517797, Dec  3 2024, 14:00:22) [Clang 15.0.0 (clang-1500.3.9.4)]
-  loadavg_15m: 103.56787109375
-  load_limit: 14.0
-  root_free_gib: 3.437267
-  root_free_min_gib: 5.0
-  repository_volume: /Volumes/SSD990
-  repository_free_gib: 8.51712
-  repository_free_min_gib: 20.0
-  rss_limit_gib: 8.0
-  workers: 1
-  nice_required: 10
-machine_protection_passed: false
-runner_status: refused_infrastructure
-infrastructure_error:
-  class: infrastructure_error
-  reason: C-7 machine protection failed closed at launch
-  readings: *id001
+started_at: null
+finished_at: null
+command: null
+sage_backend_selected_for_next_launch: modal
+sage_image: sagemath/sagemath@sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d
+input_preflight: []
+machine_protection_readings: []
+machine_protection_passed_at_launch: null
+runner_status: not_started
+static_snapshot_status: ready_for_immutable_commit
 gates:
 - id: G0-1
   description: v4 fixtures reproduce and panel_fixtures.py byte-reproduces independently
   pass: false
   fail: false
   blocked: true
-  classification: infrastructure_error
+  classification: execution_precondition
   evidence_paths: []
-  observation: not started because C-7 machine protection failed at launch
+  observation: not executed; awaiting immutable implementation commit and authorized C-7-passing launch
 - id: G0-2
   description: f4 and f5 agree between Bareiss and subset-DP determinant reconstruction
   pass: false
   fail: false
   blocked: true
-  classification: infrastructure_error
+  classification: execution_precondition
   evidence_paths: []
-  observation: not started because C-7 machine protection failed at launch
+  observation: not executed; awaiting immutable implementation commit and authorized C-7-passing launch
 - id: G0-3
-  description: specialised f6 has the required signed-sum/non-sum smoke checks
+  description: specialised f6 has 1,000 signed-sum and 1,000 non-sum checks per fixture
   pass: false
   fail: false
   blocked: true
-  classification: infrastructure_error
+  classification: execution_precondition
   evidence_paths: []
-  observation: not started because C-7 machine protection failed at launch
+  observation: not executed; awaiting immutable implementation commit and authorized C-7-passing launch
 - id: G0-4
   description: G1 agrees with O5 on 200 smoke attempts per size, including L=8
   pass: false
   fail: false
   blocked: true
-  classification: infrastructure_error
+  classification: execution_precondition
   evidence_paths: []
-  observation: not started because C-7 machine protection failed at launch
+  observation: not executed; awaiting immutable implementation commit and authorized C-7-passing launch
 - id: G0-5
-  description: frozen power analysis reproduces the committed rates within 3 MC standard
-    errors
+  description: frozen power analysis reproduces committed rates within 3 MC standard errors
   pass: false
   fail: false
   blocked: true
-  classification: infrastructure_error
+  classification: execution_precondition
   evidence_paths: []
-  observation: not started because C-7 machine protection failed at launch
+  observation: not executed; awaiting immutable implementation commit and authorized C-7-passing launch
 - id: G0-6
-  description: independent counter checker exactly recomputes S,G,X,V on 20 smoke
-    queries
+  description: independent checker exactly recomputes S,G,X,V units on 20 smoke queries
   pass: false
   fail: false
   blocked: true
-  classification: infrastructure_error
+  classification: execution_precondition
   evidence_paths: []
-  observation: not started because C-7 machine protection failed at launch
-protocol_deviations: []
+  observation: not executed; awaiting immutable implementation commit and authorized C-7-passing launch
+protocol_deviations:
+- kind: development_probe
+  classification: procedure_deviation
+  observation: >-
+    Before the frozen runner, one non-protocol L=3 development query was started
+    without the required nice/C-7 wrapper and manually terminated after 34
+    seconds; it emitted no result and is not gate evidence.
+- kind: infrastructure_portability
+  classification: declared_deviation
+  observation: >-
+    The macOS-only /Volumes/SSD990/.tmp-agent path is absent on this cloud host;
+    the runner uses an auto-removed task-local TMPDIR on the same repository
+    volume guarded by C-7.
 forbidden_actions_not_taken:
-- no panel fixture generation
-- no G1 smoke query
-- no charged or protocol-labelled draw
-- no frozen fixture cost field
+- no Modal or other external worker invoked during this static pass
+- no S0 gate executed during this static pass
+- no frozen scientific query draw
+- no charged protocol run
+- no frozen-fixture cost field in G0-4
+- no evaluation/CRT or direct Cartesian V^5 membership substitute
 - no experiments/EXP-ICEX-153c34/runs/RUN-* directory
 - no specification, fixture, hypothesis or ledger edit
 observation_only: true

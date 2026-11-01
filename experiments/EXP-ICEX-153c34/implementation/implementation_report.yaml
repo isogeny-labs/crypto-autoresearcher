@@ -1,49 +1,55 @@
 schema: crypto.autoresearch.implementation_report.v1
 task_id: TASK-20261001-4862b6
 experiment_id: EXP-ICEX-153c34
-implementation_commit: 2d8d56021aa50fb87f6eeaa76caa7de398717392
+implementation_commit: pending; bound by the static branch commit and Coordinator snapshot receipt
 owner: executor-codex
 epoch: 1
 write_scope:
 - experiments/EXP-ICEX-153c34/implementation/
 files:
 - path: experiments/EXP-ICEX-153c34/implementation/g1_s0.py
-  sha256: 4c3c70279b5c656c3fdf7f6840eb9b654a26f4c84d20ef0eab1b501e49d0db56
+  sha256: 66b32dd328fed2160a632e466a25ce46f1cd492e88a537aa4a9ccc8f1c0fe35c
 - path: experiments/EXP-ICEX-153c34/implementation/implementation.md
-  sha256: 8cebd1c092e9bb0784e4c5bff53344838fe3111cb00aba747c1eec204623e661
+  sha256: 1c677eb232d8e9d1a43a139a1132e35aa879f2974fc2b4daebfeaefc5eb84796
 - path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures.py
-  sha256: cbd0ea54ebd4a610a56b246418ad30cba2cbbdcb825d97fcb7dd6eddc2e29227
+  sha256: 701e69f06f22d890a09473f2a7fac04f78d60d7021e346f28555a8fae377fab6
+- path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures_verifier.py
+  sha256: 2cfbea9b5fbbf1501e27954e610e274cb72a214cc8657fb31dd7a903b02e459d
+- path: experiments/EXP-ICEX-153c34/implementation/s0_counter_checker.py
+  sha256: 8847dbcf3509b2da58f9be8e0b7902acbb8df2995e04e48bf8c5c158c5ffa3f9
 - path: experiments/EXP-ICEX-153c34/implementation/s0_driver.py
-  sha256: 4b1651c335e14d05a41088525b6aed34e1362489bfb70f856e369093368faeda
+  sha256: 12cef27a5fe2e120f2bc8b365c156d61351f6988f6e0fd6e7399b03fe84d7dcc
+- path: experiments/EXP-ICEX-153c34/implementation/s0_gate_worker.py
+  sha256: 04a0062eeb33c6cadabb2a5933dedac936d519511af754e434ae9ee091a4180d
 - path: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml
-  sha256: 73a6e0f09061e0b94a73c83d7b96cfd1b0e776b767699950ca010fe9d04827da
+  sha256: 83e9aac27f6924327cf4d0ad7574404921574f74959bd6bd155a89f6866ed9b8
+- path: experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py
+  sha256: 77a2379fcf0473ee9938edaa6fc4fe02f44423d0330c300a2535ad19aef81143
+- path: experiments/EXP-ICEX-153c34/implementation/s0_sage_gates.py
+  sha256: 0fea55dbee0f32edd2d7b3da4ee521cbfeb3ef96abf41f93608d3fd350fea724
 - path: experiments/EXP-ICEX-153c34/implementation/implementation_report.yaml
-  sha256: self; final content is bound by the Coordinator snapshot receipt
+  sha256: self; final content is bound by the static branch commit and Coordinator snapshot receipt
 commands:
-- nice -n 10 env TMPDIR=/Volumes/SSD990/.tmp-agent /usr/local/bin/python3 experiments/EXP-ICEX-153c34/implementation/s0_driver.py
-  --run-gates --owner executor-codex --epoch 1
+- PYTHONDONTWRITEBYTECODE=1 /workspace/.venv/bin/python experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py --self-test
+- static AST parse of every implementation Python file
+- offline driver-to-adapter request/manifest validation for all four Sage call shapes
+- offline exact-timeout receipt acceptance and malformed-receipt rejection/preservation mocks
+- offline independent point-add/square-root unit comparison on p=101 and p=103
+- offline lex-root all-vanishing and nonzero-constant branch unit checks
+- frozen input SHA256 preflight without invoking the S0 runner
+- git diff --check
 results:
-  runner_status: refused_infrastructure
+  runner_status: not_started
+  static_validation: passed
+  modal_invoked: false
+  gate_process_invoked: false
   s0_gates_report: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml
-  machine_protection_passed: false
-infrastructure_impediment:
-  class: infrastructure_error
-  reason: C-7 machine protection failed closed at launch
-  readings:
-    read_at: '2026-10-10T19:40:21.614466+00:00'
-    host: Adams-MacBook-Pro.local
-    platform: macOS-26.6-arm64-arm-64bit-Mach-O
-    python: 3.13.1 (v3.13.1:06714517797, Dec  3 2024, 14:00:22) [Clang 15.0.0 (clang-1500.3.9.4)]
-    loadavg_15m: 103.56787109375
-    load_limit: 14.0
-    root_free_gib: 3.437267
-    root_free_min_gib: 5.0
-    repository_volume: /Volumes/SSD990
-    repository_free_gib: 8.51712
-    repository_free_min_gib: 20.0
-    rss_limit_gib: 8.0
-    workers: 1
-    nice_required: 10
+  gates_passed: []
+  gates_failed: []
+  gates_blocked: [G0-1, G0-2, G0-3, G0-4, G0-5, G0-6]
+  sage_backend_for_next_launch: modal
+  sage_image: sagemath/sagemath@sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d
+infrastructure_impediment: execution intentionally deferred until this static implementation is committed and C-7 passes
 protocol_complete: false
 requires_rerun: true
-scientific_interpretation: none; executor observations only
+scientific_interpretation: none; static implementation evidence only

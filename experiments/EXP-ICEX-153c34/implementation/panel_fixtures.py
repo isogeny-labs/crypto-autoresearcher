@@ -33,7 +33,8 @@ def digest(label):
 
 
 def admissible(p, a, b):
-    if a % p in (0,):
+    # Verbatim v4 admissibility: a=0 gives j=0 and b=0 gives j=1728.
+    if a % p == 0 or b % p == 0:
         return None, "j in {0,1728}"
     if (4 * a**3 + 27 * b**2) % p == 0:
         return None, "singular"
