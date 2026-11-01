@@ -1,0 +1,19 @@
+digraph Evidence {
+ graph [rankdir=TB, bgcolor="white", pad="0.20", nodesep="0.28", ranksep="0.34", fontname="DejaVu Sans", label="IC arity/oracle: evidence is not algorithm coverage", labelloc=t, fontsize=16];
+ node [shape=box, style="rounded,filled", fillcolor="#eef4fb", color="#35536c", fontname="DejaVu Sans", fontsize=12, margin="0.15,0.10"];
+ edge [fontname="DejaVu Sans", fontsize=10, color="#35536c"];
+ machine [label="Fresh hosted verification\n41275109694 / attempt 1\nExact named MITM audit: PASS"];
+ named [label="m >= 2, beta > 0, k >= m/2\n=> costAll > 1/2\nVerified real cost model only"];
+ a [label="Joint A: breaks bundled claim\nDeclaration/prose mismatch\nAttainment and quantifiers"];
+ b [label="Joint B: holds for derivation\nBlind complete envelopes\nm=2,k=2: no minimizer"];
+ algebra [label="Scoped synthesis / symbolic result\nInfimum + minimizer regimes\nNo combined approval vote", fillcolor="#e8f2e9"];
+ open [label="UNRESOLVED: model-to-PFSE bridge\nH1-H4, probability/rank, output, m!\nuniform arity, setup, memory, recovery", color="#a33b32", fillcolor="#fff0ed"];
+ goal [label="PFSE family algorithm or lower bound\nNo existence/nonexistence result\nGOAL-ECDLP-001 remains open", color="#a33b32", fillcolor="#fff0ed"];
+ {rank=same; a; b;}
+ machine -> named [label="machine checked"];
+ named -> algebra [label="scope retained"];
+ a -> algebra [label="sealed A audit"];
+ b -> algebra [label="sealed B derivation"];
+ algebra -> open [label="missing implication", style=dashed, color="#a33b32"];
+ open -> goal [label="not established", style=dashed, color="#a33b32"];
+}
