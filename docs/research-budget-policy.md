@@ -6,6 +6,16 @@ research scope without repeated CPU-time, stage-budget or batch-budget approvals
 This supersedes older budget-exhaustion instructions. ECC campaign totals remain
 unlimited; non-ECC estimates are also not automatic spending gates.
 
+ECC has one deliberately separate administrative guardrail, added by user
+direction 2026-11-01: a session may file at most 3 new ECC ideas and 1 new ECC
+experiment, and the repository may file at most 12 / 6 respectively per UTC
+day. This is a design-record process budget, not a scientific spending cap.
+It leaves unfiled work queued and never limits executions, replications,
+validations, compute batches or evidence follow-up. The distinction prevents
+"unlimited ECDLP research" from becoming "unlimited template paperwork".
+`tools/ecc_priority.py --process-budget-violations` and
+`tools/session_receipt.py` enforce it from its dated cutover.
+
 Time, CPU and run-count estimates may be null. Finite estimates remain useful
 for ranking, scheduling and measured-versus-predicted cost comparisons, but do
 not stop launches. Stage estimates are optional and need not sum exactly.

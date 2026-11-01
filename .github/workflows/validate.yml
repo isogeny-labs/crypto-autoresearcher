@@ -507,6 +507,10 @@ jobs:
         if: needs.changes.outputs.tests == 'true'
         run: python3 tools/check_inference_cost_policy.py
 
+      - name: Enforce ECC design-record process budget
+        if: needs.changes.outputs.base != ''
+        run: python3 tools/ecc_priority.py --process-budget-violations --base-ref "$BASE_SHA"
+
       - name: Check runtime role bindings have not drifted
         if: needs.changes.outputs.tests == 'true'
         run: |

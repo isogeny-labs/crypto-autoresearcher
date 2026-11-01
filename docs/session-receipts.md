@@ -55,6 +55,17 @@ Outcomes are a closed list (`approved`, `review_required`, `refused_capacity`,
 detected from markers the runtime itself sets (`CURSOR_AGENT`, `CLAUDECODE`,
 `AUTORESEARCH_RUNTIME`, `AUTORESEARCH_RESOLVED_MODEL`, …) and are `null` when
 no marker is present; `--runtime` and `--model` override.
+Provider and backend are recorded only from `AUTORESEARCH_PROVIDER` /
+`AUTORESEARCH_BACKEND` or explicit `--provider` / `--backend`; the tool never
+guesses a provider from a marketing model name. The summary reports runtime,
+model, provider and complete-provenance coverage separately and flags sessions
+that consumed at least 500,000 input tokens while creating no records.
+
+For post-2026-11-01 ECC design sessions, writing the receipt also enforces the
+design-record process budget in `orchestration/research-priority.yaml` against
+the existing UTC-day receipts. A refusal defers unfiled design records; it does
+not limit scientific runs or change any research status. CI repeats the check
+to catch concurrent worktrees that were individually below the limit.
 
 Receipts land under `coordination/sessions/receipts/<YYYYMMDD>/SR-<date>-<tok>.yaml`
 and are committed with the session's other coordination files. They are

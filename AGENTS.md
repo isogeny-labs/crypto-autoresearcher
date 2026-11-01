@@ -275,14 +275,15 @@ infer it from an id prefix.
 3. **Open ECC ideas are designed, not shelved.** An open idea is `proposed`
    with no hypothesis or experiment citing it; `/design-experiment` makes it a
    hypothesis and a frozen contract at `approved_by: null` until a committed
-   Coordinator decision approves it under the standing authorization.
+   Coordinator decision approves it under the standing authorization. From
+   2026-11-01, an ECDLP idea names its lead-atlas row and exact next-action or
+   obstruction delta; citation alone is not progress.
 
 ### Approval is bounded by execution
 
-The approved-unrun capacity cap from 2026-10-07 is removed by user direction
-(2026-10-11). `tools/portfolio_kpis.py` reports the backlog for prioritization;
-neither its count nor `--capacity` blocks design or approval. An open ECC idea
-is ranked and designed when its protocol can be completed. Approval requires:
+ECC execution remains unlimited; the old backlog cap stays removed. From
+2026-11-01, design-record rates follow `orchestration/research-priority.yaml`.
+The guard defers unfiled designs, never science. Approval requires:
 
 - **Runnable.** Before approval, require `python3
   tools/experiment_preapproval.py --packet <PACKET.json>` to report

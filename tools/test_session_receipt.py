@@ -47,6 +47,8 @@ class ReceiptTests(unittest.TestCase):
         self.assertIsNone(rec["usage_source"])
         self.assertIsNone(rec["runtime"])
         self.assertIsNone(rec["model"])
+        self.assertIsNone(rec["provider"])
+        self.assertIsNone(rec["backend"])
         self.assertIsNone(rec["started_at"])
         self.assertEqual(rec["ended_at"], "2026-10-07T09:30:00+00:00")
 
@@ -85,6 +87,8 @@ class ReceiptTests(unittest.TestCase):
         s = sr.summary(sr.load_all(self.root))
         self.assertEqual(s["receipts"], 2)
         self.assertEqual(s["usage_known"], 0)
+        self.assertEqual(s["runtime_known"], 0)
+        self.assertEqual(s["provenance_complete"], 0)
         self.assertEqual(s["by_skill"]["run"], {"nothing_executable": 1})
         self.assertEqual(s["records_created_by_skill"]["design-experiment"], 4)
         text = sr.render_summary(s)
@@ -105,6 +109,29 @@ class ReceiptTests(unittest.TestCase):
         self.assertIn("bounced 5", sr.render_summary(s))
         # A receipt that did not count bounces records null, never zero.
         self.assertIsNone(sr.receipt(_args(), repo_root=self.root, now=self.now, env={})["bounced"])
+
+    def test_receipt_refuses_ecc_design_record_flood(self) -> None:
+        (self.root / "orchestration").mkdir()
+        (self.root / "ledger/questions").mkdir(parents=True)
+        (self.root / "ledger/proposals").mkdir()
+        (self.root / "orchestration/research-priority.yaml").write_text(
+            yaml.safe_dump({"ecc_areas": ["ECDLP"], "process_budget": {
+                "effective_on": "2026-11-01",
+                "max_new_ecc_ideas_per_session": 3,
+                "max_new_ecc_experiments_per_session": 1,
+                "max_new_ecc_ideas_per_utc_day": 12,
+                "max_new_ecc_experiments_per_utc_day": 6}}), encoding="utf-8")
+        (self.root / "ledger/questions/q.yaml").write_text(yaml.safe_dump({
+            "research_question": {"id": "RQ-ECDLP-abc123"}}), encoding="utf-8")
+        ids = [f"IDEA-20261101-abc12{i}" for i in range(4)]
+        for index, idea_id in enumerate(ids):
+            (self.root / f"ledger/proposals/{index}.yaml").write_text(yaml.safe_dump({
+                "idea": {"id": idea_id, "question_id": "RQ-ECDLP-abc123"}}),
+                encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "process budget exceeded"):
+            sr.receipt(_args(skill="propose-ideas", outcome="proposed",
+                             created=",".join(ids)), repo_root=self.root,
+                       now=datetime(2026, 11, 1, 12, tzinfo=timezone.utc), env={})
 
     def test_cli_requires_skill_and_outcome(self) -> None:
         with self.assertRaises(SystemExit):
