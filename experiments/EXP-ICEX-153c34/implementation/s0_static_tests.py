@@ -405,9 +405,14 @@ def check_raw_c7_boundary():
     assert driver.MANDATED_REPOSITORY_VOLUME == Path("/Volumes/SSD990")
     assert driver.MANDATED_TMPDIR == Path("/Volumes/SSD990/.tmp-agent")
     assert driver.PORTABILITY_AUTHORIZED is False
+    assert driver.EXECUTION_CHECKPOINT == (
+        driver.REPO / "ledger/goals/GOAL-ICEX-001/checkpoints/BATCH-454f85.yaml")
+    assert sha256(driver.EXECUTION_CHECKPOINT) == driver.EXECUTION_CHECKPOINT_SHA256
+    assert driver.CHECKPOINT_EXECUTION_ADMITTED is False
     return {"raw_bytes_exact_threshold_passes": True,
             "one_byte_below_fails": True,
-            "portable_substitution_authorized": False}
+            "portable_substitution_authorized": False,
+            "checkpoint_execution_admitted": False}
 
 
 def check_modal_contract():
@@ -481,6 +486,7 @@ def check_static_lifecycle_and_sage_bindings():
     driver_source = inspect.getsource(driver)
     assert "unconfirmed Modal sandbox termination" in driver_source
     assert "unconfirmed native process-group reaping" in driver_source
+    assert "pinned checkpoint explicitly says execution not admitted" in driver_source
     assert "dir=MANDATED_TMPDIR" in driver_source
     assert 'choices=("modal",)' in driver_source
     assert 'if SAGE_BACKEND != "modal"' in driver_source

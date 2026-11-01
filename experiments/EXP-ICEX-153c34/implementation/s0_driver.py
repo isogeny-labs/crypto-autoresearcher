@@ -49,9 +49,15 @@ SAGE_BACKEND = "modal"
 MODAL_PYTHON = None
 MANDATED_REPOSITORY_VOLUME = Path("/Volumes/SSD990")
 MANDATED_TMPDIR = MANDATED_REPOSITORY_VOLUME / ".tmp-agent"
+EXECUTION_CHECKPOINT = REPO / "ledger/goals/GOAL-ICEX-001/checkpoints/BATCH-454f85.yaml"
+EXECUTION_CHECKPOINT_SHA256 = "063874821efef1b5f25eedd6292c2d228e0646613e949fb86c4a9379cad92026"
 # No committed Coordinator amendment authorising a substitute path has been
 # located.  This is an execution-authority condition, not a portability guess.
 PORTABILITY_AUTHORIZED = False
+# The pinned checkpoint says ``evidence_id: null`` and ``execution not
+# admitted``.  Only a committed Coordinator admission/amendment may change
+# this frozen launch condition.
+CHECKPOINT_EXECUTION_ADMITTED = False
 
 GATES = {
     "G0-1": "v4 fixtures reproduce and panel_fixtures.py byte-reproduces independently",
@@ -71,6 +77,7 @@ PINNED = {
     "coordination/goals/GOAL-ICEX-001/batches/BATCH-454f85/tasks/TASK-20261001-768475/power_check.py": "daafecd5393b446133e80562e540a2957288467b38d8988ada8b9dddc7c973af",
     "coordination/goals/GOAL-ICEX-001/batches/BATCH-454f85/tasks/TASK-20261001-768475/power_check_output.json": "4566443ab0f3495292e3b9b31694458d36c631433a166cf184f0ea5095576135",
     "experiments/EXP-SDEG-85eefd/implementation/semaev_polys.json": "447d9bfff27f2b57b50e60fffde0c380ab697f4b2cbf006114bb7a50be10642e",
+    "ledger/goals/GOAL-ICEX-001/checkpoints/BATCH-454f85.yaml": EXECUTION_CHECKPOINT_SHA256,
 }
 
 
@@ -885,8 +892,15 @@ def write_reports(started, readings, gates, command, preflight, protocol_deviati
             "frozen_tmpdir": str(MANDATED_TMPDIR),
             "frozen_repository_volume": str(MANDATED_REPOSITORY_VOLUME),
             "portable_substitution_authorized": PORTABILITY_AUTHORIZED,
-            "blocker": (None if MANDATED_REPOSITORY_VOLUME.is_dir()
-                        else "Coordinator portability mapping/amendment required before launch"),
+            "checkpoint": str(EXECUTION_CHECKPOINT.relative_to(REPO)),
+            "checkpoint_sha256": EXECUTION_CHECKPOINT_SHA256,
+            "checkpoint_execution_admitted": CHECKPOINT_EXECUTION_ADMITTED,
+            "blockers": [blocker for blocker in (
+                (None if CHECKPOINT_EXECUTION_ADMITTED else
+                 "committed checkpoint says execution not admitted"),
+                (None if MANDATED_REPOSITORY_VOLUME.is_dir() else
+                 "Coordinator portability mapping/amendment required before launch"),
+            ) if blocker is not None],
         },
         "runner_status": status, "gates": gates,
         "protocol_deviations": protocol_deviations,
@@ -975,6 +989,22 @@ def main(argv=None):
                         "authorises /workspace or any task-local substitute; none is used."),
         "required_resolution": "committed Coordinator portability mapping/amendment",
     })
+    deviations.append({
+        "kind": "checkpoint_authority",
+        "classification": "hard_blocker",
+        "observation": ("The pinned BATCH-454f85 checkpoint has evidence_id null and "
+                        "states that execution is not admitted."),
+        "checkpoint": str(EXECUTION_CHECKPOINT.relative_to(REPO)),
+        "checkpoint_sha256": EXECUTION_CHECKPOINT_SHA256,
+        "required_resolution": "committed Coordinator execution admission/amendment",
+    })
+    if not CHECKPOINT_EXECUTION_ADMITTED:
+        gates = [pending_gate(
+            gate_id,
+            "not started: pinned checkpoint explicitly says execution not admitted",
+            "execution_authority") for gate_id in GATES]
+        write_reports(started, readings, gates, command, preflight, deviations)
+        return 7
     if not MANDATED_REPOSITORY_VOLUME.is_dir():
         gates = [pending_gate(
             gate_id,

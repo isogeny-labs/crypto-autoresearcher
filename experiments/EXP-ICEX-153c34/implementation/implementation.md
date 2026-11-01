@@ -43,10 +43,12 @@ as required before the frozen D-5 B0-hit-order selection; negative membership
 exhausts the algebraic roots.
 
 This static snapshot has not executed Modal or any S0 gate. All six gates remain
-blocked pending an immutable implementation commit and a Coordinator amendment
-authorising a repository-volume/TMPDIR mapping for this host. The frozen
-`/Volumes/SSD990/.tmp-agent` path is absent, no substitute is authorized, and
-the present `/workspace` free space is also below C-7's 20-GiB repository-volume
-minimum. The earlier non-protocol L=3 development probe
+blocked pending independent re-audit, committed Coordinator execution
+admission, and a Coordinator amendment authorising a repository-volume/TMPDIR
+mapping for this host. The pinned `BATCH-454f85` checkpoint has `evidence_id:
+null` and says execution is not admitted. The frozen `/Volumes/SSD990/.tmp-agent`
+path is absent, no substitute is authorized, and the prior `/workspace` free
+space observation is also below C-7's 20-GiB repository-volume minimum. The
+earlier non-protocol L=3 development probe
 was manually terminated after 34 seconds, emitted no result, and is not gate
 evidence. No scientific interpretation is made.
