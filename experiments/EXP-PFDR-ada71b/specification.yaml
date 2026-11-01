@@ -42,15 +42,15 @@ experiment:
     against rho and claims no speedup.
   input_bindings:
     base_implementation:
-      path: experiments/EXP-PFDR-ada71b/implementation/run.py
+      path: experiments/EXP-PFDR-2d36f9/implementation/run.py
       sha256: 3729f460614c545bce1243eec059a49c68ea3d087f3581a3aeb08ea79f35ccd6
       role: v1 driver; v2 changes only EXP tag, seed blocks, pilot sizing and the per-d null replicate (R6)
     base_checker:
-      path: experiments/EXP-PFDR-ada71b/implementation/check.py
+      path: experiments/EXP-PFDR-2d36f9/implementation/check.py
       sha256: b19e0a74598617e57440edd62cff648b9125374abf4d7872744cc06aad1c582c
       role: v1 checker; v2 changes only the EXP tag and the per-d null replicate in the recomputation
     base_kernel:
-      path: experiments/EXP-PFDR-ada71b/implementation/paircount.c
+      path: experiments/EXP-PFDR-2d36f9/implementation/paircount.c
       sha256: 0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696
       role: pair-sum kernel with the p < 2^32 key-bound fix; copied verbatim
     vendored_curve:
@@ -58,7 +58,7 @@ experiment:
       sha256: fcca2beb699b4785c25820df1d949b757be7a273efd2f4f015625d7aa13c67fa
       role: certified prime-order curve generator; copied verbatim
     v1_diagnosis:
-      path: experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-73276d/analysis.json
+      path: experiments/EXP-PFDR-2d36f9/runs/RUN-PFDR-73276d/analysis.json
       sha256: 70b4d2af7be5992e47105757d81d0fea65a9b067ce5736653e82feb6a43d0356
       role: v1 O-INVALID reading used only to diagnose the instrument defects R6 repairs; never pooled with v2 data
   inputs:
