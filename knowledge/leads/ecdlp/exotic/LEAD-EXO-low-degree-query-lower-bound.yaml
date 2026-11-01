@@ -1,0 +1,63 @@
+id: LEAD-EXO-low-degree-query-lower-bound
+family: exotic
+title: >-
+  A query lower bound for solvers that also test low-degree polynomial conditions on point
+  coordinates (generic group model plus degree-D tests)
+mechanism: >-
+  LEAD-EXO-augmented-oracle-ggm closes every named oracle that the generic group model can
+  simulate, and reopens when a publicly computable oracle that it cannot simulate appears.
+  Degree-D polynomial tests on coordinates are such oracles: they include the small-x
+  membership that prime-field index calculus uses. This lead proposes a lower bound for the
+  whole class rather than oracle by oracle. Model: the solver holds encodings of group
+  elements, may add and compare them, and may also ask whether f(coordinates of X_1..X_t) = 0
+  for any f of degree at most D. Conjecture H1 (numbered heuristic, unproven): with T queries,
+  success probability is at most O(T^2/N) + O(T D p^(-1/2) polylog p), so T is
+  Omega(min(sqrt N, sqrt p / D)). The single-point case follows from Weil-type point counts;
+  the risk is joint equidistribution of adaptively chosen tuples ((a_i + b_i k)P), which would
+  need character-sum bounds along multiples of a point (Kohel-Shparlinski type, citation
+  recalled and unverified). A proof would turn several measured nulls
+  (LEAD-EXO-coordinate-statistic-leakage, LEAD-EXO-dl-character-sum-pseudorandom, the A(d)
+  plan of LEAD-EXO-invertible-hint-subset) into one theorem in scope; a failure of the
+  multi-point step would name the first coordinate test worth measuring.
+disposition: open_next_step
+next_action:
+  step: >-
+    (a) Write the single-test lemma (one point, degree D) with explicit constants and check
+    whether adaptive multi-point tests reduce to character-sum bounds on curves of bounded
+    genus; verify the Kohel-Shparlinski reference before relying on it. (b) In parallel, a
+    cheap empirical check for p from 2^16 to 2^24: the maximum bias over degree-<=D tests on pairs
+    (P, kP) against a matched random-labelling null, compared with D / sqrt(p).
+  discriminates: >-
+    A proof of H1 gives a proof-kind closure for degree-D coordinate tests, to be filed by the
+    Coordinator after review. A family of degree-D tests whose bias exceeds D / sqrt(p) by a
+    growing factor refutes H1 and is exactly the non-simulable oracle that reopens
+    LEAD-EXO-augmented-oracle-ggm; it goes to a charged comparison.
+best_measured: null
+evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/ecdlp-exotic-scouting-20261101/README.md
+  note: scouting note with conjecture H1 and its failure mode
+- repo: crypto-autoresearcher
+  path: knowledge/findings/KN-FIND-002.md
+  note: GGM simulability of named oracles; this lead targets the oracles it cannot cover
+- repo: crypto-autoresearcher
+  path: knowledge/findings/KN-FIND-e7a3b1.md
+  note: standard analytic proof routes for the character-sum hypothesis, recorded as closed
+ledger_refs: []
+known_results:
+- KR-RHO-13bf67
+- KR-RHO-ea34b8
+related:
+- LEAD-EXO-augmented-oracle-ggm
+- LEAD-EXO-coordinate-statistic-leakage
+- LEAD-EXO-invertible-hint-subset
+- LEAD-EXO-dl-character-sum-pseudorandom
+- LEAD-RHO-generic-sqrt-lower-bound
+forecloses:
+- low-degree polynomial test on coordinates beats the square-root bound
+- generic group model extended with degree-D coordinate queries
+- algebraic query model lower bound for ECDLP
+- coordinate oracle that the generic group model cannot simulate
+areas:
+- ECDLP
+last_reviewed: '2026-11-01'

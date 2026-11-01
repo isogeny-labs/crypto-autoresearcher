@@ -1,0 +1,68 @@
+id: LEAD-EXO-holant-decomposition-count-network
+family: exotic
+title: >-
+  Holant / holographic view of the decomposition-count tensor network over F_p, and its
+  transfer-matrix spectrum
+mechanism: >-
+  Write the number of m-term decompositions of a target R over a factor base FB as a closed
+  tensor network over the alphabet F_p: a chain of ternary tensors T[x,y,z] = [S_3(x,y,z) = 0],
+  whose internal bonds carry x-coordinates of partial sums, with the indicator vector of FB on
+  each leaf. Holant theory asks whether a basis change on the bond spaces (a holographic
+  transformation) makes such a counting network cheap to contract. Contracting one leaf gives
+  the transfer matrix M[y,y'] = #{x in FB : S_3(x,y,y') = 0}, which is the adjacency operator
+  of the Cayley graph of E(F_p)/{+-1} with connection set FB. Its eigenvectors are the even
+  characters of E(F_p), which are indexed by the discrete logarithm. So a basis that
+  diagonalises M already encodes the answer, and the open question is whether any cheaper
+  basis lowers the tensor rank of T. This differs from LEAD-ICE-gag-contraction-planner, which
+  asks which presentation of the same system is cheapest for a Groebner solver, and from
+  LEAD-EXO-hashed-factor-base-tensor-ecdl, which contracts a Boolean encoding by #SAT. Numbered
+  heuristics (scouting note, unproven). H1: an algorithm that only reads entries of T is
+  simulable in the generic group model with O(1) group operations per entry, as the x-oracle
+  is in LEAD-EXO-augmented-oracle-ggm; an algorithm that manipulates the polynomial S_3 is not
+  covered by that argument. H2: the Cai-Chen complex-weighted #CSP dichotomy is stated for a
+  fixed finite domain; here the domain F_p grows with the instance, so it gives no closure.
+disposition: open_next_step
+next_action:
+  step: >-
+    (a) Write the entry-access simulation of H1 as a short proof note with its overhead. (b) At
+    toy primes p <= 2^10 (several curves per size, recorded seeds), build T and M explicitly;
+    check that the spectrum of M matches the character prediction; then compare the tensor
+    rank (or a computable proxy such as flattening ranks) of T after candidate bond-wise basis
+    changes (additive Fourier on F_p, multiplicative characters, Legendre-symbol bases) against
+    a null of random ternary tensors with the same support density.
+  discriminates: >-
+    If (a) holds, only bases that use the algebraic form of S_3 remain in scope, and (b)
+    decides them at toy size. A rank drop for T beyond the random-support null that persists
+    across sizes is a first non-generic structure and goes to a charged comparison against
+    matched rho. No drop at any toy size makes the lead exhausted_at_scale at the size reached,
+    reopening if a basis family is found whose description length grows sub-polynomially in p.
+best_measured: null
+evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/ecdlp-exotic-scouting-20261101/README.md
+  note: scouting note, novelty gates, heuristics H1-H2 and the transfer-matrix observation
+- repo: crypto-autoresearcher
+  path: knowledge/literature/KN-LIT-c9e59d.md
+  note: Graphical Algebraic Geometry (Gao, Shaikh, Kissinger), #CSP as closed-diagram rewriting
+- repo: crypto-autoresearcher
+  path: knowledge/findings/KN-FIND-002.md
+  note: GGM simulability of jet and endomorphism oracles, the template for H1
+ledger_refs: []
+known_results:
+- KR-IC-5a43e5
+- KR-IC-401ebf
+- KR-RHO-13bf67
+related:
+- LEAD-ICE-gag-contraction-planner
+- LEAD-EXO-hashed-factor-base-tensor-ecdl
+- LEAD-EXO-augmented-oracle-ggm
+- LEAD-RHO-generic-sqrt-lower-bound
+forecloses:
+- holographic transformation makes the Semaev counting network tractable
+- holant reduction of point decomposition counting
+- transfer matrix of decomposition counts diagonalised without logarithms
+- low tensor rank of the S_3 incidence tensor over F_p
+- Cayley graph spectrum of the factor base reveals discrete logs
+areas:
+- ECDLP
+last_reviewed: '2026-11-01'
