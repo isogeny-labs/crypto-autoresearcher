@@ -46,18 +46,20 @@ for f in analysis/open-ideas-design-20261031/protocols/*.json; do
 done
 ```
 
-Current result: 11/11 `OK (0 finding(s))`, captured in `validation.txt`.
+Current result: 11/11 `OK (0 finding(s))` on the frozen records, captured in
+`validation.txt`.
 
 ## Status and next action
 
-These records are `freeze.status: draft` until a Coordinator freezes them on a
-commit; they are not published authority and no data was taken. The next
-action is the ordinary `design-experiment` path: mint `H-*`/`EXP-*` ids, write
-the hypothesis and specification records, run `experiment_preapproval.py`, and
-approve under the standing authorization in `AGENTS.md`. That step is
-deliberately not taken here: it would add ledger records without the runbook,
-preapproval packet and dispatch queue the skill requires in the same turn, and
-a half-published contract is worse than an unpublished design.
+All 11 records are frozen on commit `403b404574` (`freeze.status: frozen`,
+`filed_before_affected_data: true`). They are not approved authority and no
+data was taken. The next action is the ordinary `design-experiment` path: mint
+`H-*`/`EXP-*` ids, write the hypothesis and specification records, run
+`experiment_preapproval.py`, and approve under the standing authorization in
+`AGENTS.md`. That step is deliberately not taken here: it would add ledger
+records without the runbook, preapproval packet and dispatch queue the skill
+requires in the same turn, and a half-published contract is worse than an
+unpublished design.
 
 ## Files
 
