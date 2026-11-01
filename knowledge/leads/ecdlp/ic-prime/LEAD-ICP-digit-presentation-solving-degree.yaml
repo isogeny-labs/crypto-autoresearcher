@@ -10,26 +10,28 @@ mechanism: >-
   connected-staircase search, valuation-semigroup presentations, finite-state carry circuits,
   commutator border reduction, and comparisons with the binary chained-Semaev twin. For solver
   measurements, Boolean quotient equations remove carry semantics from the field model but do
-  not make pure-CNF multiplication free: general F_p multiplication still costs Theta(log^2 p)
-  gates. The theorem-bearing candidates are therefore hybrid CDCL(T)/F_p and native QF_FF, with
-  pure CNF retained as an encoding-cost control.
+  not make pure-CNF multiplication free. The selected schoolbook control has Theta((log p)^2)
+  gates by construction, not as a universal lower bound. The proof-eligible candidate is hybrid
+  CDCL(T)/F_p; native QF_FF is a SAT/model diagnostic at inspected cvc5 source because its
+  finite-field theory exposes no proof checker.
 disposition: open_next_step
 next_action:
   step: >-
-    First implement and freeze the owned m = 3 hybrid exponent screen in cryptanalysis PR #1343:
-    CaDiCaL plus an F_p external theory, with cvc5 QF_FF as the independent route, exact
-    two-window enumeration and curve-free support-matched nulls. Run every s = 6..14 only after
-    exhaustive tiny-cell and explanation-certificate replay; the strict necessary gate is a
-    corrected upper 95 percent interval e < 0.5. Use m = 2 only for exact correctness and
-    negative controls. The certified degree-growth and adaptive-staircase arms remain mechanism
-    diagnostics, not substitutes for the complete counted solver slope.
+    Continue the owned m=3 implementation after merged cryptanalysis PR #1347: build the
+    source-bound CaDiCaL F_p trail theory and independent explanation/UNSAT-proof replay on the
+    landed native development oracle. Freeze every s=6..14 only after the typed exporter,
+    cold/setup/online ledger, natural-only complete-panel analysis and power source exist. The
+    necessary upper-interval gates are e<0.5 for natural queries and a<1.5 for reusable setup.
+    In parallel at development scope, establish exact signed-model-set equivalence for a compact
+    selector before proposing any s=15..27 continuation. Use m=2 only for exact correctness and
+    negative controls.
   discriminates: >-
-    A fully counted hybrid slope with corrected upper interval below 0.5 advances the m = 3 PDP
-    mechanism to a separately frozen 40--80-bit continuation, while a corrected lower interval
-    at least 0.5 stops it. Growing d_lf or curve/null collision still diagnoses why it fails,
-    but favorable algebraic degree alone does not satisfy the gate. A complete index-calculus
-    win remains separately constrained by linear algebra, whose current bridge first admits
-    m >= 4.
+    A complete verified natural panel whose query and setup upper intervals satisfy e<0.5 and
+    a<1.5 advances the frozen bundle only to a continuation proposal; one-hot s=15..27 remains
+    unadmitted. Either lower interval at or above its boundary on the same valid panel stops it;
+    any natural censoring is inconclusive. Growing d_lf or curve/null collision remains mechanism
+    evidence, but favorable algebraic degree alone does not satisfy the gate. Linear algebra and
+    the remaining complete index-calculus stages stay separate.
 best_measured: >-
   d_ff = m 2^{m-1} + floor((s - 2^{m-1})/2) + 1, curve-independent and reproduced by a curve-free
   block-factored null (EV-PFDR-1394a4); sigma > 1 at every tested s (EV-PFDR-99c699); no syzygy
@@ -64,11 +66,19 @@ evidence:
 - repo: cryptanalysis
   path: experiments/prime-field-m3-cdclt-20261031/PROTOCOL.md
   note: >-
-    PR #1343, source head aa98e66beeaa2d8ef953e4fe01d73f41a267402e: unrun m = 3
-    CDCL(T)/F_p and cvc5 QF_FF screen, s = 6..14, strict e < 0.5 gate and complete-work controls
+    PR #1347, merge 3c769002f0f68d63a5055f6f3e24a9500393180e: passing native small-field
+    development oracle plus hardened unrun m=3 CDCL(T)/F_p screen; strict e<0.5 and a<1.5 gates
+- repo: crypto
+  path: research/prime_ic_lead_review_20261031/PDP_ARITY_CORRECTION.md
+  note: >-
+    crypto PR #3114 hardens the machine protocol, signed semantics, compact range encoding,
+    proof eligibility and one-hot continuation admission; no scientific row
 - repo: crypto-autoresearcher
   path: ledger/decisions/DEC-20261031-b51282.yaml
   note: arity and solver-model correction; no new measurement
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261101-26f1fa.yaml
+  note: additive setup/population/encoding/proof/resource correction; no new measurement
 ledger_refs:
 - H-PFDR-4148b8
 - H-PFDR-09e1b0
@@ -133,6 +143,7 @@ ledger_refs:
 - DEC-20261029-ce5c57
 - IDEA-20260905-24d827
 - DEC-20261031-b51282
+- DEC-20261101-26f1fa
 known_results:
 - KR-IC-58213c
 - KR-IC-889857
@@ -150,4 +161,4 @@ forecloses:
 - Yokoyama semi-normality object
 areas:
 - PFDR
-last_reviewed: '2026-10-31'
+last_reviewed: '2026-11-01'
