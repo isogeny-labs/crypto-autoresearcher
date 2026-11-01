@@ -52,6 +52,8 @@ from .linalg import PIVOT_RULES, EliminationState
 from .tails import TailTable, default_table_arity
 from .targets import TARGET_ENGINES, FixedBaseMultiplier
 
+from .diagram import TOPOLOGIES
+
 ENGINES = ("enumerate", "mitm", "msolve")
 HARVEST_MODES = ("off", "census", "on")
 HARVEST_MODES_ALL = HARVEST_MODES + ("table", "search")  # EXP-PFDR-011cd0 EC-3, EC-4
@@ -94,6 +96,7 @@ class ICResult:
     target_table_entries: int = 0
     target_table_coordinate_bytes: int = 0
     seconds_target_setup: float = 0.0
+    msolve_topology: str = "chain"
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -117,7 +120,8 @@ def solve_index_calculus(E: Curve, P: Point, Q: Point, m: int = 2,
                          retain: str = "default",
                          digest_classes=(),
                          target_engine: str = "reference",
-                         target_window: int = 4) -> ICResult:
+                         target_window: int = 4,
+                         msolve_topology: str = "chain") -> ICResult:
     N = E.order
     if N is None:
         raise ValueError("curve order must be known")
@@ -125,6 +129,8 @@ def solve_index_calculus(E: Curve, P: Point, Q: Point, m: int = 2,
         raise ValueError("m must be >= 2")
     if engine not in ENGINES:
         raise ValueError(f"unknown engine {engine!r}; choose from {ENGINES}")
+    if msolve_topology not in TOPOLOGIES:
+        raise ValueError(f"unknown msolve topology {msolve_topology!r}; choose from {TOPOLOGIES}")
     if target_engine not in TARGET_ENGINES:
         raise ValueError(f"unknown target engine {target_engine!r}; choose from {TARGET_ENGINES}")
     if (isinstance(target_window, bool) or not isinstance(target_window, int)
@@ -252,7 +258,8 @@ def solve_index_calculus(E: Curve, P: Point, Q: Point, m: int = 2,
         if engine != "msolve":
             rel = decompose(E, fb, R, m, stats, accelerate=accel, table=table)
         else:
-            rel = _msolve_attempt(E, fb, R, m, seed, stats, msolve_timeout)
+            rel = _msolve_attempt(E, fb, R, m, seed, stats, msolve_timeout,
+                                  msolve_topology)
             msolve_calls += rel[1]
             msolve_seconds += rel[2]
             censored += rel[3]
@@ -307,17 +314,18 @@ def solve_index_calculus(E: Curve, P: Point, Q: Point, m: int = 2,
         target_table_coordinate_bytes=(sum(t.coordinate_bytes for t in target_tables)
                                        if target_tables else 0),
         seconds_target_setup=seconds_target_setup,
+        msolve_topology=msolve_topology,
     )
 
 
-def _msolve_attempt(E, fb, R, m, seed, stats, timeout):
+def _msolve_attempt(E, fb, R, m, seed, stats, timeout, topology="chain"):
     """One msolve decomposition attempt: (relation | None, runs, seconds, censored)."""
     from .msolve import decompose_msolve
 
     stats.attempts += 1
     if R is None:
         return None, 0, 0.0, 0
-    out = decompose_msolve(E, fb, R, m, seed=seed, timeout=timeout)
+    out = decompose_msolve(E, fb, R, m, seed=seed, timeout=timeout, topology=topology)
     if out.status not in ("ok", "no_solution"):
         # Timeouts and solver failures are censored, never read as "no relation".
         return None, out.runs, out.seconds, 1

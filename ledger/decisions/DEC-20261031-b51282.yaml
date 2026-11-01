@@ -1,0 +1,154 @@
+coordinator_decision:
+  id: DEC-20261031-b51282
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date 20261031 and
+    confirmed free with tools/allocate_id.py --check DEC-20261031-b51282 before this record
+    was written.
+  context: >-
+    Programme correction after review of the prime-field factor-base-degree and rationality
+    thread. The review identified two independent boundaries: all accepted factor-base-degree
+    theorem cells in the source package are at outer arity m = 2, and a prime-field "Boolean
+    SAT solver" must name the F_p theory component rather than imply that quotient-Boolean
+    equations make prime-field multiplication free in CNF. The ECDLP lead atlas, the PKM
+    primary-source review KN-LIT-10b0fa, the prior SAT/SMT proposals, the two immutable
+    rationality-interface decisions and the owned cryptanalysis implementation precedent
+    were read before this correction.
+  decision: refine
+  decision_scope: >-
+    Correct the experiment-selection inference, not the retained mathematics. DEC-20261031-cd6460
+    remains the authoritative record of the standalone checker's outer-chart metadata defect,
+    and DEC-20261031-ca1521 remains the evidence that the fixed authenticated interface rejects
+    R1 at its stated F5/F7 software scope. This decision supersedes any inference that those
+    repairs, or any accepted m = 2 theorem cell, can by themselves move the ECDLP exponent.
+    The first relevant PDP exponent screen is fixed m = 3; the theorem-bearing solver candidates
+    are hybrid CDCL(T)/F_p and cvc5 QF_FF, while pure CNF is an encoding-cost control.
+  decided_by: coordinator
+  decided_at: '2026-10-31T23:37:39+00:00'
+  target_ids:
+  - DEC-20261031-cd6460
+  - DEC-20261031-ca1521
+  - IDEA-20260905-24d827
+  - IDEA-20261029-8d82e6
+  - LEAD-ICP-digit-presentation-solving-degree
+  - LEAD-ICP-shared-coefficient-membership
+  rationale:
+  - >-
+    With s = log2(p)/m, one PDP call costing 2^(e s) and Theta(2^s) required
+    relations gives relation-collection work p^((e+1)/m), up to polynomial factors.
+    Strict improvement on rho therefore requires e < m/2 - 1. At m = 2 the bound is
+    e < 0, so no nonnegative PDP work exponent can pass it. At m = 3 the necessary
+    gate is e < 0.5.
+  - >-
+    The gate is necessary for relation collection and is not sufficient for a complete
+    index-calculus win. The retained PKM cost bridge places the linear-algebra crossover at
+    m >= 4 under its complete model. The m = 3 screen is therefore an exponent measurement
+    of the PDP mechanism, not an attack claim.
+  - >-
+    Boolean quotient equations z^2-z remove carry semantics from the mathematical field
+    model, but a general multiplication in a pure bit-level F_p circuit still costs
+    Theta(log^2 p) gates. A solver claim must count either a native F_p theory or the complete
+    bit-level circuit. The corrected primary route is CaDiCaL with an external F_p propagator;
+    cvc5 QF_FF is the independent route and pure CNF remains a measured control.
+  - >-
+    The rational lambda-lift identity, discriminant 16 t^2 f(x), the guarded rationality
+    argument for three disjoint windows, explicit rationality circuits at arity at least four,
+    and forbidden-word clauses survive this correction. No S4 expansion is authorized for
+    the m = 3 screen; use two chained S3 constraints and retain the t = 0 exceptional branch.
+  corrected_cost_bridge:
+    scale: s = log2(p)/m
+    pdp_work: 2^(e s)
+    relation_count: Theta(2^s)
+    collection_work: p^((e+1)/m) up to polynomial factors
+    rho_work: p^(1/2) up to polynomial factors
+    strict_necessary_gate: e < m/2 - 1
+    arity_two: impossible for nonnegative e; exact enumeration remains optimal up to polynomial factors in the stated reference model
+    arity_three: first PDP screen; strict gate e < 0.5
+    arity_four_and_higher: retain explicit rationality circuits and separately charge linear algebra
+  corrected_solver_contract:
+    candidate_primary: CaDiCaL external propagation with a source-bound F_p theory and independently replayed explanation clauses
+    candidate_independent: pinned cvc5 QF_FF over the identical canonical predicate
+    control_only: pure CNF gate/variable/clause/byte accounting, including Theta(log^2 p) gates per general F_p multiplication
+    architecture_precedent: >-
+      cryptanalysis Q1421 source aa98e66beeaa2d8ef953e4fe01d73f41a267402e cites
+      theory_solver.cpp SHA-256 0a0d2c673e9484f4b217917ee306e7663140e4d4618d8bb0ed8dc91947d08bc6.
+      It is an F_{2^n} external-propagator precedent only, not the missing F_p implementation.
+  retained_mathematics:
+  - rational quadratic lambda lift (2 t lambda - s0)^2 = f(x)
+  - discriminant 16 t^2 f(x), with t = 0 retained as an exceptional branch
+  - three-summand rationality under rational target, odd prime group order and disjoint windows
+  - explicit rationality circuits for arity at least four
+  - one forbidden-word clause for every field or index word outside its declared domain
+  corrected_execution_design:
+    owner: isogeny-labs/cryptanalysis
+    merged_pr: https://github.com/isogeny-labs/cryptanalysis/pull/1343
+    source_head: aa98e66beeaa2d8ef953e4fe01d73f41a267402e
+    merge_commit: 8a93e468d6270706622d9cfd08c3a878fa6baf96
+    protocol: experiments/prime-field-m3-cdclt-20261031/PROTOCOL.md
+    fixed_arity: 3
+    initial_ladder: every integer s = 6..14
+    target_continuation: s = 15..27 only under a prospective frozen amendment
+    target_field_band: s = 13..27 corresponds to about 39..81-bit prime fields at m = 3
+    decision_statistic: Holm-corrected upper 95 percent interval for e strictly below 0.5
+    controls:
+    - exact two-window enumeration reference with e = 2
+    - curve-free support-matched null
+    - planted positive and exact UNSAT instances
+    - byte-identical fresh-process A/A arm
+    - pure-CNF encoding-cost arm
+    run_status: not frozen; no held-out instances generated and no scientific rows run
+  evidence_strength: desk_correction_with_source_bound_execution_design
+  claim_tier: corrected_experiment_selection_and_solver_contract
+  proof_status: arithmetic_cost_identity_plus_unrun_preregistered_design
+  proof_assistant_verified: false
+  evidence_refs:
+  - knowledge/literature/KN-LIT-10b0fa.md
+  - knowledge/leads/ecdlp/ic-prime/LEAD-ICP-digit-presentation-solving-degree.yaml
+  - knowledge/leads/ecdlp/ic-prime/LEAD-ICP-shared-coefficient-membership.yaml
+  - knowledge/leads/ecdlp/ic-prime/LEAD-ICP-pkm-tower-algebraic-oracle.yaml
+  - ledger/proposals/IDEA-20260905-24d827.yaml
+  - ledger/proposals/IDEA-20261029-8d82e6.yaml
+  - ledger/decisions/DEC-20261031-cd6460.yaml
+  - ledger/decisions/DEC-20261031-ca1521.yaml
+  - https://github.com/isogeny-labs/crypto/pull/3096
+  - https://github.com/isogeny-labs/cryptanalysis/pull/1343
+  next_actions:
+  - >-
+    Implement the source-bound prime-field generator, CaDiCaL F_p theory and explanation
+    checker in cryptanalysis; exhaustively replay tiny cells including t = 0, forbidden words,
+    overlapping-window mutations and corrupt explanations before freezing the ladder.
+  - >-
+    Pin and export the identical predicate to cvc5 QF_FF, and freeze analysis, power,
+    runtime/memory and complete-work accounting before any held-out instance generation.
+  - >-
+    Run s = 6..14 only after those gates. Advance to a separately frozen s = 15..27
+    continuation only if correctness, controls and the prospective power condition pass;
+    never select a favorable completed subset.
+  - >-
+    Keep the m = 2 factor-base-degree theorems and software-interface checks as component
+    evidence. Do not cite them as satisfying the corrected rho crossover.
+  limitations:
+  - No prime-field external propagator, cvc5 QF_FF benchmark, field census or exponent fit was executed for this decision.
+  - The e < 0.5 gate is necessary for the m = 3 PDP collection component; it is not a complete ECDLP complexity theorem.
+  - The retained rationality argument depends on the stated rational-target, odd-prime-order and disjoint-window guards.
+  - The Q1421 source establishes API architecture and counted-call precedent over F_{2^n}, not correctness over F_p.
+  report_paths:
+  - docs/reports/prime-ic-arity-correction-20261031/report.md
+  - docs/reports/prime-ic-arity-correction-20261031/diagram.svg
+  - docs/reports/prime-ic-arity-correction-20261031/report.typ
+  - docs/reports/prime-ic-arity-correction-20261031/report.pdf
+  - docs/reports/prime-ic-arity-correction-20261031/report-inputs.json
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      This is a programme correction and unrun execution design. It promotes no solver
+      exponent, rationality theorem beyond its existing scope, or ECDLP speedup.
+  new_scientific_runs: 0
+  persistent_goal_complete: false
+  status_changes:
+    hypotheses: []
+    experiments: []
+    evidence: []
+    knowledge:
+    - LEAD-ICP-digit-presentation-solving-degree (corrected next step and solver boundary)
+    - LEAD-ICP-shared-coefficient-membership (arity-two inference removed; next step made explicit)
+    goal_status_changes: []

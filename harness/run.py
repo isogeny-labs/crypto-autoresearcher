@@ -1,4 +1,4 @@
-"""Experiment entry point: EXP-SEMAEV-001.
+"""Existing experiment entry point: EXP-SEMAEV-001 and the ECDLP challenge control.
 
 Runs the matched pair for each toy instance and writes immutable run records:
 
@@ -14,11 +14,14 @@ Usage:
     python -m harness.run --experiment EXP-SEMAEV-001
     python -m harness.run --experiment EXP-SEMAEV-001 --bits 8,10,12 --seeds 1,2 \
         --factor-base 14 --out experiments/EXP-SEMAEV-001
+    python -m harness.run --experiment EXP-ECDLP-CHALLENGES-001 \
+        --crypto-bin ../crypto/target/release/ecdlp-challenges
 """
 from __future__ import annotations
 
 import argparse
 import io
+import shlex
 import time
 from contextlib import redirect_stdout
 
@@ -99,7 +102,36 @@ def main() -> int:
     ap.add_argument("--factor-base", type=int, default=DEFAULT_FACTOR_BASE)
     ap.add_argument("--out", default=None,
                     help="output experiment root (default experiments/<EXP_ID>)")
+    ap.add_argument("--crypto-bin",
+                    help="native ecdlp-challenges binary (challenge experiment only)")
+    ap.add_argument("--fixture",
+                    help="challenge fixture JSON (default committed public fixture)")
+    ap.add_argument("--submission",
+                    help="contributed challenge submission JSON; default native baseline")
     args = ap.parse_args()
+    if args.experiment == "EXP-ECDLP-CHALLENGES-001":
+        from . import ecdlp_challenges
+        from .runner import run_wrapped
+
+        command = (f"python -m harness.run --experiment {shlex.quote(args.experiment)}"
+                   + (f" --crypto-bin {shlex.quote(args.crypto_bin)}"
+                      if args.crypto_bin else "")
+                   + (f" --fixture {shlex.quote(args.fixture)}"
+                      if args.fixture else "")
+                   + (f" --submission {shlex.quote(args.submission)}"
+                      if args.submission else ""))
+        run_id = run_wrapped(
+            ecdlp_challenges.EXP_ID,
+            ecdlp_challenges.EXP_AREA,
+            lambda: ecdlp_challenges.make_result(
+                binary=args.crypto_bin, fixture=args.fixture,
+                submission=args.submission),
+            status="completed_valid",
+            command=command,
+            out_root=args.out,
+        )
+        print(f"wrote 1 run record:\n  {run_id}")
+        return 0
     if args.experiment != EXP_ID:
         print(f"unknown experiment {args.experiment}")
         return 2

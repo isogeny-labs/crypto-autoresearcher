@@ -158,6 +158,20 @@ usage when the backend reports them) go to `<card stem>.lane/`.
 - `--via auto` (default): Conductor when `conductor delphi profiles` lists a
   `director` profile, else standalone delphi when a key is set, else an
   `IMPEDIMENT` (exit 2) before anything is written.
+- `--route`: each step's model comes from Delphi's capability registry
+  (`delphi route`: the cheapest model measured good enough on the step's
+  family, `card-compile` or `assess`, from the suites in
+  `evals/calibration/`). A reply the tool refuses goes to the next model in the
+  route's escalation chain, at most twice; a compile reply whose findings are
+  all specification errors is the design's gap and is never escalated.
+  Standalone delphi only; `lane.json` records each route and attempt.
+- `--free local|public` (or an inherited `DELPHI_FREE`): standalone delphi in
+  free mode, so only models that cost nothing are called. `local` allows
+  self-hosted and local endpoints; `public` adds free remote tiers such as
+  OpenRouter `:free`, which may log prompts, so use it only for public or
+  synthetic designs. A paid model is replaced from Delphi's free map or
+  refused (an impediment, never an escalation); with `--route` the route only
+  considers free models. No API key is needed. `lane.json` records the mode.
 - Exit 0: ran and assessed. 1: a reply was refused; nothing was written for it
   and the reply is kept. 2: impediment. 3: the run stopped at a failing
   command, which is a result, and was assessed.
@@ -202,6 +216,16 @@ batch registry (it resolves to `director-runbook`, Sonnet 5.5 at high).
   finds (`VIA=` and `TASK=` override); it exits 2 when neither is connected.
 - Kind `runbook` cards are not compiled in this lane: a runbook is written and
   linted against files.
+
+## Measuring which models can be the director
+
+Which model fills the director tier is a measured choice, not a fixed one.
+`evals/calibration/` holds two Delphi calibration suites, `card-compile` and `assess`,
+whose prompts are exactly what `task_card.py request` prints and whose grader is
+`task_card.py ingest` plus a field-by-field check against the design. `delphi calibrate`
+runs one against a model and `delphi registry table` compares models with intervals and
+an equivalence verdict (`evals/calibration/README.md`). The results are evidence about
+models, never about ECDLP.
 
 ## One card format in every repository
 

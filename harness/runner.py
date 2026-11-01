@@ -28,6 +28,7 @@ import platform
 import resource
 import subprocess
 import sys
+import tempfile
 import time
 from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
@@ -427,7 +428,68 @@ def _verify_md5_collision_pair(cert: dict,
     return (not failures), failures
 
 
-# Certificate verifiers, keyed by kind. Each is INDEPENDENT of any solver.
+def _verify_ecdlp_challenge_receipt(cert: dict) -> tuple[bool, list[str]]:
+    """Replay an ECDLP challenge receipt with its digest-pinned native verifier.
+
+    The Python harness deliberately does not duplicate the elliptic-curve or
+    linear-algebra checks. It re-executes the native verifier from the embedded
+    fixture and submission, checks the binary digest first, and requires an
+    exact receipt match.
+    """
+    failures: list[str] = []
+    metadata = cert.get("native_verifier")
+    statement = cert.get("statement")
+    if not isinstance(metadata, dict) or not isinstance(statement, dict):
+        return False, ["missing_native_verifier_or_statement"]
+    binary = metadata.get("path")
+    expected_sha256 = metadata.get("sha256")
+    if not isinstance(binary, str) or not os.path.isfile(binary):
+        return False, ["native_verifier_missing"]
+    actual_sha256 = _sha256_file(binary)
+    if not isinstance(expected_sha256, str) or actual_sha256 != expected_sha256:
+        return False, ["native_verifier_digest_mismatch"]
+    fixture = statement.get("fixture")
+    submission = statement.get("submission")
+    expected = statement.get("receipt")
+    if not all(isinstance(value, dict) for value in (fixture, submission, expected)):
+        return False, ["malformed_embedded_artifact"]
+    with tempfile.TemporaryDirectory(prefix="ecdlp-challenge-replay-") as tmp:
+        fixture_path = os.path.join(tmp, "fixture.json")
+        submission_path = os.path.join(tmp, "submission.json")
+        with open(fixture_path, "w", encoding="utf-8") as handle:
+            json.dump(fixture, handle, separators=(",", ":"))
+        with open(submission_path, "w", encoding="utf-8") as handle:
+            json.dump(submission, handle, separators=(",", ":"))
+        try:
+            completed = subprocess.run(
+                [binary, "verify", "--fixture", fixture_path,
+                 "--submission", submission_path],
+                capture_output=True, text=True, timeout=30, check=False)
+        except (OSError, subprocess.TimeoutExpired):
+            return False, ["native_verifier_execution_failed"]
+    if completed.returncode != 0:
+        return False, ["native_verifier_rejected"]
+    try:
+        replayed = json.loads(completed.stdout)
+    except (TypeError, json.JSONDecodeError):
+        return False, ["native_verifier_output_not_json"]
+    if replayed != expected:
+        failures.append("native_receipt_mismatch")
+    if expected.get("schema") != "crypto.ecdlp-challenge-receipt/v1":
+        failures.append("receipt_schema")
+    if expected.get("status") != "verified":
+        failures.append("receipt_status")
+    if expected.get("claim_boundary") != {
+            "performance": "not_measured",
+            "security": "not_established",
+            "transfer_advantage": "unknown"}:
+        failures.append("claim_boundary")
+    return not failures, failures
+
+
+# Certificate verifiers, keyed by kind. Each is independent of the candidate
+# producer. ECDLP challenge receipts are replayed by the native verifier rather
+# than reimplemented in Python.
 def _verify(cert: dict) -> tuple[bool, str]:
     from .semaev import verify_decomposition_certificate
     from .toycurve import EllipticCurve
@@ -448,6 +510,13 @@ def _verify(cert: dict) -> tuple[bool, str]:
         if failures:
             cert["failing_checks"] = failures
         return verified, "independent-recompute"
+    if kind == "ecdlp_challenge_receipt":
+        verified, failures = _verify_ecdlp_challenge_receipt(cert)
+        if failures:
+            cert["failing_checks"] = failures
+        metadata = cert.get("native_verifier")
+        digest = metadata.get("sha256", "unknown") if isinstance(metadata, dict) else "unknown"
+        return verified, f"native-replay:{digest[:16]}"
     return False, f"unknown-kind:{kind}"
 
 
@@ -586,7 +655,7 @@ def write_run(exp_id: str, exp_area: str, result: RunResult, *,
     valid = result.valid
     invalid_reason = result.invalid_reason
     if cert.get("kind") in ("discrete_log", "decomposition",
-                            "md5_collision_pair") and not verified:
+                            "md5_collision_pair", "ecdlp_challenge_receipt") and not verified:
         final_status = "completed_invalid"
         valid = False
         invalid_reason = "certificate failed independent verification"

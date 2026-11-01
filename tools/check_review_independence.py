@@ -92,9 +92,12 @@ from __future__ import annotations
 
 import argparse
 import glob
+import hashlib
 import os
 import re
+import subprocess
 import sys
+from functools import lru_cache
 
 import yaml
 
@@ -150,9 +153,57 @@ def _valid_task(value, *, native=False):
     return isinstance(value, str) and bool(pattern.fullmatch(value))
 
 
+class InvalidGitSource(ValueError):
+    """A Git source must not silently become an unrelated filesystem path."""
+
+
+@lru_cache(maxsize=128)
+def _git_source_commit(repo, abbreviation):
+    """Resolve only hexadecimal object identities, never branch/tag names."""
+    def git(*args):
+        try:
+            result = subprocess.run(
+                ["git", "-C", repo, *args], capture_output=True, text=True,
+                timeout=10, env={**os.environ, "GIT_NO_REPLACE_OBJECTS": "1"})
+        except (OSError, subprocess.TimeoutExpired) as error:
+            raise InvalidGitSource(f"cannot resolve Git commit {abbreviation!r}: {error}") from error
+        if result.returncode:
+            raise InvalidGitSource(f"cannot resolve Git commit {abbreviation!r}")
+        return result.stdout.strip()
+
+    objects = git("rev-parse", "--disambiguate="+abbreviation).splitlines()
+    if (len(objects) != 1 or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", objects[0])
+            or not objects[0].startswith(abbreviation)):
+        raise InvalidGitSource(f"unknown or ambiguous Git commit {abbreviation!r}")
+    if git("cat-file", "-t", objects[0]) != "commit":
+        raise InvalidGitSource(f"Git identity {abbreviation!r} is not a commit")
+    return objects[0]
+
+
 def _read_path(value):
-    """Canonical comparison only; this does not read the declared artifact."""
-    return os.path.realpath(os.path.join(REPO, str(value).strip().replace("\\", "/")))
+    """Compare path scopes across Git revisions; do not authenticate blob bytes.
+
+    A Git citation is an existing commit (or unambiguous hexadecimal prefix)
+    plus an exact repository-relative path. Version custody is checked by the
+    archive verifier, separately. All revisions obey the same read restrictions.
+    """
+    raw = str(value)
+    source = raw.strip()
+    if source.lower().startswith("git:"):
+        match = re.fullmatch(r"git:([0-9a-f]{7,40}|[0-9a-f]{64}):(.+)", source)
+        if not match or source != raw:
+            raise InvalidGitSource(f"malformed Git citation {raw!r}")
+        revision, path = match.groups()
+        if (os.path.isabs(path) or any(c in path for c in "\\*?[]:")
+                or any(ord(c) < 32 or ord(c) == 127 for c in path)
+                or any(part in ("", ".", "..") for part in path.split("/"))):
+            raise InvalidGitSource(f"invalid Git source path {path!r}")
+        _git_source_commit(REPO, revision)
+        canonical = os.path.realpath(os.path.join(REPO, path))
+        if not _within(canonical, os.path.realpath(REPO)):
+            raise InvalidGitSource(f"Git source path escapes repository: {path!r}")
+        return canonical
+    return os.path.realpath(os.path.join(REPO, source.replace("\\", "/")))
 
 
 def _within(path, directory):
@@ -333,7 +384,8 @@ def _claims_joint(owned: list, name: str) -> bool:
     return False
 
 
-def _verdict_for(attestation: dict, name: str) -> tuple[str | None, str | None]:
+def _verdict_for(attestation: dict, name: str,
+                 declared_joint_count: int = 1) -> tuple[str | None, str | None]:
     """This reviewer's verdict on one joint, and why it could not be read.
 
     A reviewer that owns several joints reports one verdict PER JOINT -- the
@@ -348,6 +400,12 @@ def _verdict_for(attestation: dict, name: str) -> tuple[str | None, str | None]:
     if raw is None:
         raw = attestation.get("verdicts")
     if isinstance(raw, str):
+        owned = attestation.get("joints_owned")
+        owned_count = (len({_joint_label(str(item)).casefold() for item in owned})
+                       if isinstance(owned, list) else 0)
+        if max(declared_joint_count, owned_count) != 1:
+            return None, ("a reviewer with multiple joints needs a per-joint "
+                          "verdict mapping; one scalar verdict cannot cover them")
         value = raw.strip()
         if value in VERDICTS:
             return value, None
@@ -375,10 +433,11 @@ def _verdict_for(attestation: dict, name: str) -> tuple[str | None, str | None]:
                   f"{type(raw).__name__}")
 
 
-def _load(path: str):
+def _load(path: str, *, content: str | None = None):
     try:
-        with open(path, encoding="utf-8") as handle:
-            content = handle.read()
+        if content is None:
+            with open(path, encoding="utf-8") as handle:
+                content = handle.read()
         # The normal legacy loader keeps the last duplicate YAML key.
         # Explicit phase/replacement authority must never silently shadow one,
         # including a duplicate wrapper containing either directive.
@@ -822,6 +881,16 @@ def _rel(path: str) -> str:
 
 
 def check(plan: dict, reports: list[tuple[str, dict]]) -> list[str]:
+    # Recheck abbreviations on every invocation: Git may have gained objects
+    # since an earlier check in this process, changing their uniqueness.
+    _git_source_commit.cache_clear()
+    try:
+        return _check(plan, reports)
+    except InvalidGitSource as error:
+        return [f"invalid Git source identity: {error}"]
+
+
+def _check(plan: dict, reports: list[tuple[str, dict]]) -> list[str]:
     problems: list[str] = list(plan.get("_composition_errors") or [])
     if _replacement_locations(plan):
         problems.append("blind_phase_replacement belongs only at review_plan_addendum top level")
@@ -852,6 +921,12 @@ def check(plan: dict, reports: list[tuple[str, dict]]) -> list[str]:
         problems.append("review_plan.joints is empty; a review with no named "
                         "load-bearing step cannot show coverage")
         joints = []
+    declared_joint_counts: dict[str, int] = {}
+    for entry in joints:
+        if isinstance(entry, dict):
+            owner = _joint_owner(entry)
+            if owner:
+                declared_joint_counts[owner] = declared_joint_counts.get(owner, 0) + 1
     owners: dict[str, list[str]] = {}
     task_joints: dict[str, list[str]] = {}
     for index, entry in enumerate(joints):
@@ -860,6 +935,14 @@ def check(plan: dict, reports: list[tuple[str, dict]]) -> list[str]:
             continue
         if "id" in entry and (not isinstance(entry["id"], str) or not entry["id"].strip()):
             problems.append(f"review_plan.joints[{index}].id must be a nonempty string")
+        if "id" in entry and "joint" in entry and (
+            not isinstance(entry.get("joint"), str)
+            or not entry["joint"].strip()
+            or entry["joint"].strip() == str(entry["id"]).strip()
+        ):
+            problems.append(
+                f"review_plan.joints[{index}].joint needs a nonempty "
+                "full statement for its explicit id")
         name = _joint_name(entry).strip() or f"joints[{index}]"
         owner = _joint_owner(entry)
         if not owner:
@@ -889,7 +972,7 @@ def check(plan: dict, reports: list[tuple[str, dict]]) -> list[str]:
         if not _claims_joint(owned, name):
             problems.append(f"{owner} does not claim joint "
                             f"'{_joint_label(name)}' in joints_owned")
-        _, problem = _verdict_for(attestation, name)
+        _, problem = _verdict_for(attestation, name, declared_joint_counts.get(owner, 1))
         if problem:
             problems.append(f"{owner}: {problem}")
     for name, assigned in owners.items():
@@ -920,6 +1003,11 @@ def check(plan: dict, reports: list[tuple[str, dict]]) -> list[str]:
         read = attestation.get("sources_read", [])
         if not isinstance(read, list) or any(not isinstance(value, str) or not value.strip() for value in read):
             problems.append(f"{task_id}: sources_read must be a list of nonempty paths/source strings")
+        elif read:
+            # Validate even a broadly lifted/non-blind reviewer's Git reads.
+            # Malformed citations cannot bypass the later scope comparisons.
+            for value in read:
+                _read_path(value)
 
     # --- blindness ----------------------------------------------------------
     blindness = plan.get("blindness")
@@ -1162,6 +1250,9 @@ def main() -> int:
     parser.add_argument("--reports", nargs="*", default=[],
                         help="report files or directories to scan")
     parser.add_argument("--batch", help="batch directory holding both")
+    parser.add_argument("--expected-plan-sha256", metavar="HEX",
+                        help="externally pinned SHA-256 of the exact plan file; "
+                             "required when the plan uses explicit joint IDs")
     parser.add_argument("--no-addenda", action="store_true",
                         help="check against the plan file alone, ignoring any "
                              "review_plan_addendum beside it (for auditing a "
@@ -1202,8 +1293,20 @@ def main() -> int:
               file=sys.stderr)
         return 2
 
+    # An ID and a plausible statement in the same untrusted plan cannot bind
+    # one to the other. Require a digest supplied outside that file before a
+    # combined CLI check admits a plan with explicit joint IDs.
     try:
-        plan = _plan_of(_load(plan_path))
+        with open(plan_path, "rb") as handle:
+            plan_bytes = handle.read()
+        actual_plan_sha256 = hashlib.sha256(plan_bytes).hexdigest()
+        plan_text = plan_bytes.decode("utf-8")
+    except (OSError, UnicodeError) as error:
+        print(f"cannot read review plan {plan_path}: {error}", file=sys.stderr)
+        return 2
+
+    try:
+        plan = _plan_of(_load(plan_path, content=plan_text))
     except ValueError as error:
         print(f"FAIL: invalid review plan: {error}", file=sys.stderr)
         return 2
@@ -1229,6 +1332,20 @@ def main() -> int:
                 print(f"  {note}")
             if not composition:
                 print("  (no joint added or reassigned)")
+
+    pin_joints = plan.get("joints")
+    has_explicit_ids = isinstance(pin_joints, list) and any(
+        isinstance(joint, dict) and "id" in joint for joint in pin_joints)
+    expected = args.expected_plan_sha256
+    if has_explicit_ids and not expected:
+        print("FAIL: explicit joint IDs require --expected-plan-sha256 "
+              "from a trusted external record", file=sys.stderr)
+        return 2
+    if expected and (not re.fullmatch(r"[0-9a-f]{64}", expected)
+                     or expected != actual_plan_sha256):
+        print(f"FAIL: plan SHA-256 mismatch (actual {actual_plan_sha256})",
+              file=sys.stderr)
+        return 2
 
     try:
         reports = _collect_reports(report_targets)

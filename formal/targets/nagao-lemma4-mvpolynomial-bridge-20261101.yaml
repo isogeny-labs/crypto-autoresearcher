@@ -1,0 +1,39 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-69a09a
+claim_id: NAGAO-2015-984-LEMMA4-MVPOLYNOMIAL-BRIDGE
+kind: formal_counterexample
+source: knowledge/findings/KN-FIND-936151.md
+source_status: COMPUTED
+theorem_name: CryptoResearch.Nagao.Bridge.lemma4_mv_false
+theorem_file: CryptoResearch/Nagao/Bridge.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Bridge from the list-of-exponent-vectors model of Lemma4Witness.lean and
+  Lemma4Outside.lean to Mathlib MvPolynomial (Fin 2) (ZMod 2), using the IsFall /
+  IsFakeFall definitions of RecoveryRule.lean. toMv sends list-model polynomials to
+  MvPolynomial; toMv_fA₁ / toMv_fA₂ identify witness A's list data with X^2 Y and
+  X Y + X. Witness A is then refuted in MvPolynomial with UNRESTRICTED cofactors:
+  no fall at degree 1 or 2 (ZMod 2 is a domain, so degrees add; cofactors are forced
+  to vanish or be constant, and the coefficients of XY, X^2, Y^2 force the constants
+  to zero), a fall at degree 3, and a fake fall at degree 2. This removes the
+  list-model prerequisite that cofactors range over monomials of degree <= D.
+  Lemma4Mv states d_F <= d'_F without a minimum on the fake side (d_F is at most
+  every degree with a fake fall), which is equivalent to d_F <= d'_F whenever d'_F
+  exists. Also proved: red is additive and idempotent (red_add, red_red) and
+  red_sum_red, closing the step left open in RecoveryRule.lean. Built locally
+  against the pinned Mathlib (with a verbatim-definition stub of Lemma4Witness,
+  whose kernel decides exceed local memory); #print axioms lemma4_mv_false and
+  red_sum_red report only propext, Classical.choice, Quot.sound.
+  Witness B is not restated in MvPolynomial.
+claim: |
+  Over F_2[X, Y] (Mathlib MvPolynomial (Fin 2) (ZMod 2)), with the equality reading
+  of condition (1) and arbitrary polynomial cofactors, let F = {X^2 Y, X Y + X}
+  (the list-model witness A under toMv) and S_fe = {X^2 - X, Y^2 - Y}. The first
+  fall degree of F, and of F u S_fe, is 3, and F (also F u S_fe) has a fake fall at
+  degree 2. Hence d_F <= d'_F fails in the printed placement (fake side from F or
+  from F u S_fe) and in the inside placement.
+proof_map:
+  depends_on: [nagao-lemma4-recovery-rule-20261101.yaml, nagao-lemma4-inside-counterexample-20261029.yaml]
+  prerequisites:
+    - "the MvPolynomial definitions IsFall and IsFakeFall transcribe Definitions 5 and 6 of Nagao 2015/984 under the equality reading; the transcription is not a Lean theorem"
