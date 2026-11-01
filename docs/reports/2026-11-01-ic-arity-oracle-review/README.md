@@ -1,126 +1,83 @@
 # IC arity/oracle semantic review packet
 
 Date: 2026-11-01. Goal: GOAL-ECDLP-001. Lane: BATCH-a68666.
-Branch: codex/pfse-wp2-20261101. Source archive verified in draft PR #2892;
-finalization metadata awaits commit. Reviewers have not run.
+Fresh hosted verification and narrow target-receipt custody checked; verification
+snapshot publication pending. Neither semantic reviewer has run.
 
-The immutable source payload is commit
-`f87479876dae4b04ef95e2118e2b57f129373412`, parent
-`93cd25a00162a0ed305277dbc2ebbdb203b658bf`. All 31 declared paths, their
-hashes and the exact commit diff were checked. GitHub currently reports PR
-[#2892](https://github.com/isogeny-labs/crypto-autoresearcher/pull/2892) at
-`a1bfa648c68f2572be959bfa8d00ca559df61bbb`, four commits ahead of that
-payload. This last commit is an empty archival attestation, parent
-`791ea0f9f8a1fc3c49cde1d8ba7ee01e7365de3b`, naming both
-`TASK-20261101-510074` and `TASK-20261101-3b23eb`. The native archive
-verifier passes all 31 exact payload hashes at that attestation commit,
-with no generated-path skips. The earlier message-ID blocker is resolved
-without rewriting f874 or waiving a gate.
-Finalization edits are later metadata versions and do not change the frozen
-f874 payload bindings. The current-head formal/reviewer gate remains closed.
+Workflow [41275109694](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41275109694),
+attempt 1, succeeded at its pinned published head
+`7e1827b530349c633d98c96185e8196669812cb4`. GitHub confirms that the actual
+formal-workspace job ran root generation, dependency checks, build, complete
+formal gate and artifact upload. Independent replay of the committed capture
+finds no strict-checker errors: all 191 tracked snapshot blobs match the pinned
+commit; the complete 75-entry workspace and 10-entry verifier maps match.
+Semantic fidelity remains pending; a build certifies the stated formal object.
 
-This packet takes in an existing hosted verification receipt for
-TASK-20261024-9fbb0f and prepares two independent reviewer joints. The receipt
-reports machine verification of its named algebraic theorem; semantic fidelity
-is pending. The theorem does not prove that H1-H4 describe a complete ECDLP
-algorithm or rule out all prime-field subexponential algorithms. No new
-EV/DEC/H status record, scientific run, source-proof change or promotion is
-part of this packet.
+Exactly six sidecars are committed at
+`e887f4cd75b16db6e47342d1f319bf393888707c`, parent the pinned workflow head.
+They contain a lossless base64 copy of the exact 67,574-byte native target receipt,
+SHA-256 `75e52bc6bb7a034f81103166cf463d3f660b39b863177b797f7039f58394bc0a`.
+This receipt remains `semantic_review: pending`. Its source identity is not
+relabeled as the branch's later evidence/claim commits.
 
-The recovered raw receipt was copied mechanically, unchanged, to
-`receipts/ic-arity-oracle-threshold-20261024.json`. Its digest and GitHub
-provenance are in [receipt-manifest.json](receipt-manifest.json). Preserve its
-pending semantic-review field; new reviews are separate artifacts. The receipt
-is 66,915 bytes and remains in Git under the repository's general non-code
-threshold; `.json` is not a 64-KiB `DATA_EXT` suffix.
+Custody is accepted narrowly for that committed target receipt, its embedded
+build/named-audit logs and six provenance sidecars, together with independently
+checked GitHub artifact ID 13072015323 and digest
+`55289254e49c26fbe6c2a3258cbc2bec50afc56c2a46236305b4bc9f1aaea600`.
+GitHub retention expires `2027-01-30T04:58:42Z`. Raw ZIP S3 archival is
+`unavailable_not_attempted`; temporary ZIP copies are not durable.
+No S3 success or permanent retention of the entire artifact/log ZIP is claimed.
 
-Complete receipt-map comparison found that all ten verifier inputs and all 71
-available listed workspace inputs match, with no byte mismatch. The generated
-`formal/CryptoResearch.lean` root is absent by design, while the current tree
-contains three later Nagao modules that were not in the receipt. Consequently
-the strict receipt-reuse check reports `local source inputs`. The receipt is
-historical machine evidence for its exact test-merge closure, not a current-tree
-verification. A fresh current-head formal gate and its verified published
-snapshot are required before either reviewer or synthesis.
+The native archive verifier passes for the six producer sidecars and both task
+IDs in their commit message. Full TASK-20261101-6fd5e3 archival also requires its
+two new task-owned [snapshot receipt](../../../coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json)
+and [current-head gate](../../../coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json).
+Those files are authored but not committed/published yet. Therefore
+`allows_reviewers=false`: this is a publication blocker, not a failed custody
+or mathematical result. Commit/publish the two files and control metadata with
+both verification task IDs in the message, then bind and pass the full
+eight-artifact archive check before opening the gate. No extra workflow is
+authorized.
 
-The prospective [addendum](review-plan-addendum-01-current-head.yaml) adds
-TASK-20261101-9a4a63 for at most one hosted `workflow_dispatch` run of the
-existing `lean-verification.yml`, followed by dedicated snapshot
-TASK-20261101-6fd5e3. The task pins the exact published branch head at execution
-time and fails closed on any head/run/receipt/map mismatch or missing evidence.
-Neither task has been launched. The original seven tasks retain their zero-build
-limits; the plan and blind mathematical input retain their exact original bytes.
+PR [#2892](https://github.com/isogeny-labs/crypto-autoresearcher/pull/2892) is
+currently draft at `7ecd8396c797d2e8e591bed461ac3401b98e469a`, two
+claim/release commits after the sidecar commit. The source workflow claim was
+released completed; the verification-snapshot epoch-1 claim remains live and
+has not been released by this task.
 
-[review-plan.yaml](review-plan.yaml) is the pre-dispatch plan. Reviewer A
-owns declaration fidelity and model scope; Reviewer B independently derives
-the formulas from [blind-input.md](blind-input.md). B must not read this README,
-the full plan, receipt, source proof, notes, queue, history or sibling output.
-Give B only the minimal allowlist in a clean input directory with no .git and
-no inherited conversation. Reviewers remain mutually blind for the whole round.
-Only Coordinator synthesis compares their sealed, archived outputs.
+The earlier source packet remains frozen at
+`f87479876dae4b04ef95e2118e2b57f129373412`; its 31-path archive verified
+under attestation `a1bfa648c68f2572be959bfa8d00ca559df61bbb`.
+The historical PR2854 receipt is retained unchanged in
+`receipts/ic-arity-oracle-threshold-20261024.json` and
+[receipt-manifest.json](receipt-manifest.json). Its original strict map mismatch
+is preserved as history; the fresh receipt supplies the later exact source
+closure. Neither receipt proves H1-H4 describe a full ECDLP algorithm.
 
-| Task | Role and lifecycle |
+[review-plan.yaml](review-plan.yaml) and [blind-input.md](blind-input.md) retain
+their original hashes:
+`2ce285e77cd85699f47a9ee4826775fdfc2a077168000fbae30e805b81813e92` and
+`a109fc6cdf7df0e6b52e0e3717d54bb20ec0803687d8602afda065ada4f79914`.
+The [prospective addendum](review-plan-addendum-01-current-head.yaml) changes
+prerequisites and widens protected inputs; it changes no joint, claim, owner
+or blind mathematical input. B receives only the three-file isolated input,
+never receipts, producer proof, this README, full plan, history or sibling output.
+Reviewers remain mutually blind. Archive both outputs before Coordinator synthesis.
+
+| Task | Role |
 | --- | --- |
-| TASK-20261101-3b23eb | Verify receipt/input binding and prepare clean blind input; no runs |
-| TASK-20261101-510074 | Isolated source/packet snapshot and publication before review |
-| TASK-20261101-9a4a63 | At most one hosted current-published-head formal workflow |
-| TASK-20261101-6fd5e3 | Verified snapshot of fresh workflow evidence before review |
-| TASK-20261101-bd53ca | Independent joint A review |
-| TASK-20261101-e90be2 | Independent blind joint B derivation |
-| TASK-20261101-4b30bd | Seal and snapshot both reviews before synthesis |
-| TASK-20261101-bc06d9 | Coordinator checks independence and composes scoped report |
-| TASK-20261101-7e3b01 | Snapshot/publish synthesis and retain one next action |
+| TASK-20261101-3b23eb | Historical receipt/input preparation |
+| TASK-20261101-510074 | Published source snapshot |
+| TASK-20261101-9a4a63 | One hosted workflow, completed release |
+| TASK-20261101-6fd5e3 | Fresh verification snapshot, publication pending |
+| TASK-20261101-bd53ca | Independent declaration/scope review |
+| TASK-20261101-e90be2 | Independent blind derivation |
+| TASK-20261101-4b30bd | Review output snapshot |
+| TASK-20261101-bc06d9 | Coordinator synthesis |
+| TASK-20261101-7e3b01 | Final snapshot/publication |
 
-The queue is `coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/dispatch_queue.json`. Each task has an exact handoff
-and task-owned write scope. Only preparation is dependency-ready initially;
-ready selection is not publication/claim authorization. No reviewer starts
-until the packet/receipt are committed, pushed and reviewable and the source
-snapshot receipt verifies, and the new fresh-verification/snapshot gate passes.
-Source archive custody now verifies against the published attestation commit;
-its finalization metadata remains uncommitted in this worktree.
-The preparation task has a real completed claim-release receipt; the source
-archive's epoch-1 claim remains live and is not released by these edits.
-Current preparation base:
-`93cd25a00162a0ed305277dbc2ebbdb203b658bf`; the historical receipt's original
-test-merge identity is unchanged.
-
-Receipt sources: GitHub Actions run 41239718774/artifact 13058300353, PR #2854.
-Primary-source context checked in the ranking pass: Shoup Theorem 1 (random
-encoding/generic model only), Semaev 2004 Section 3 (conditional solver), and
-Jao-Miller-Venkatesan Theorem 1.1/Corollary 1.2 (GRH, fixed level). The family
-draft and unresolved Yokoyama full-text gate remain as documented in
-`docs/research/pfse-wp0-wp1-gate-20261031.md`. This review does not depend on
-claiming that inaccessible text was read.
-
-Fresh read-only health/KPI scans refused the sparse checkout; the October 7
-cache is historical. Existing Prym/SNFS lane ownership is unchanged. No lane
-claims ownership of this new dedicated packet. This lane's registration
-was verified in the published source payload; no reviewer or workflow has been
-launched by source archive finalization.
-
-Completion requires both truthful independent reports, archived outputs,
-independence checks, and a scope-qualified synthesis with editable diagram and
-inspected PDF. Official evidence/decision records and any status transition
-require a later Coordinator act; final publication here is a snapshot only.
-
-Preparation checks performed (no reviewers or experiments): the focus queue
-passes `tools/autoresearch_focus.py --check-only`; the dispatch queue passes
-`tools/research_dispatch.py --ready-only --claims refs` with exactly the
-preparation task ready and eight tasks deferred. The repository validator's
-`check_ledger_record` and `check_review_plan` functions pass all nine new
-handoffs and the prospective plan; every standalone task card exactly matches
-its queue entry. The independence checker reports only the expected missing
-reviewer attestations when given the plan and no reports. That is a setup
-check, not a completed independence review.
-
-The full `tools/validate_ledger.py` scan refuses this sparse checkout because
-102999 tracked files are off disk. Branch merge hygiene passes but, with these
-new files untracked, does not replace the explicit scoped parsing/validation.
-Full corpus validation remains a publication gate in a complete checkout.
-No checkout setting or validation baseline was changed.
-
-The pre-dispatch plan SHA-256, pinned externally in `batch.yaml`, is
-`2ce285e77cd85699f47a9ee4826775fdfc2a077168000fbae30e805b81813e92`.
-After actual reviewer reports exist, run the independence check with that
-trusted pin and both report directories; its present missing-attestation
-result must not be relabeled as a pass.
+The queue is `coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/dispatch_queue.json`. Ready-task selection does not
+override publication, archive, claim or independence gates. No reviewers,
+scientific trials, source/proof edits, EV/DEC/H transitions or goal completion
+are part of this archive turn. Full corpus ledger validation remains unavailable
+in the sparse checkout; scoped card/queue/plan checks do not replace it.
