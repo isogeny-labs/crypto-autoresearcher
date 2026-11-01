@@ -1,8 +1,9 @@
 # IC arity/oracle semantic review packet
 
 Date: 2026-11-01. Goal: GOAL-ECDLP-001. Lane: BATCH-a68666.
-Fresh hosted verification and narrow target-receipt custody checked; verification
-snapshot publication pending. Neither semantic reviewer has run.
+Fresh hosted verification, narrow target-receipt custody and the full published
+eight-artifact snapshot verify. Finalization metadata awaits commit; neither
+semantic reviewer has run.
 
 Workflow [41275109694](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41275109694),
 attempt 1, succeeded at its pinned published head
@@ -29,19 +30,22 @@ GitHub retention expires `2027-01-30T04:58:42Z`. Raw ZIP S3 archival is
 No S3 success or permanent retention of the entire artifact/log ZIP is claimed.
 
 The native archive verifier passes for the six producer sidecars and both task
-IDs in their commit message. Full TASK-20261101-6fd5e3 archival also requires its
+IDs in their commit message. Full TASK-20261101-6fd5e3 archival includes its
 two new task-owned [snapshot receipt](../../../coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json)
 and [current-head gate](../../../coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json).
-Those files are authored but not committed/published yet. Therefore
-`allows_reviewers=false`: this is a publication blocker, not a failed custody
-or mathematical result. Commit/publish the two files and control metadata with
-both verification task IDs in the message, then bind and pass the full
-eight-artifact archive check before opening the gate. No extra workflow is
-authorized.
+All eight exact bytes are now committed/published at
+`5b3ad6957cb48260d354d9aec6d47cc8159878d8`, parent
+`7ecd8396c797d2e8e591bed461ac3401b98e469a`. Native archive validation passes
+all eight hashes with no generated-path skips, and the evidence gate is now
+`allows_reviewers=true` in the finalized metadata. That eligibility does not
+launch anything: driving Coordinator must publish these finalization edits,
+release the still-live snapshot claim and issue independent reviewer claims.
+The committed pre-finalization snapshot/gate bytes remain bound as their own
+version; these updated metadata records do not rewrite that evidence.
+No extra workflow is authorized.
 
 PR [#2892](https://github.com/isogeny-labs/crypto-autoresearcher/pull/2892) is
-currently draft at `7ecd8396c797d2e8e591bed461ac3401b98e469a`, two
-claim/release commits after the sidecar commit. The source workflow claim was
+currently draft at `5b3ad6957cb48260d354d9aec6d47cc8159878d8`. The source workflow claim was
 released completed; the verification-snapshot epoch-1 claim remains live and
 has not been released by this task.
 
@@ -69,7 +73,7 @@ Reviewers remain mutually blind. Archive both outputs before Coordinator synthes
 | TASK-20261101-3b23eb | Historical receipt/input preparation |
 | TASK-20261101-510074 | Published source snapshot |
 | TASK-20261101-9a4a63 | One hosted workflow, completed release |
-| TASK-20261101-6fd5e3 | Fresh verification snapshot, publication pending |
+| TASK-20261101-6fd5e3 | Published fresh verification snapshot verified; finalization pending |
 | TASK-20261101-bd53ca | Independent declaration/scope review |
 | TASK-20261101-e90be2 | Independent blind derivation |
 | TASK-20261101-4b30bd | Review output snapshot |
