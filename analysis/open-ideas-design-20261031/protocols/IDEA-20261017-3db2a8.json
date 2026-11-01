@@ -1,0 +1,481 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "OI-exact-first-moment",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "analysis/open-ideas-design-20261031/protocols",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261017-3db2a8.yaml",
+    "note": "Design for open idea IDEA-20261017-3db2a8; not yet approved or dispatched."
+  },
+  "question": "Does the per-class mean equal d(V)*C(|W|+t-1,t)/N in toy cells, and does the crossover sensitivity read 2.9+-0.3 n per bit?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Stage 0 recomputes n_cross sensitivity from the frozen tables formulas; Stage 2 verifies by group enumeration that P in 4E iff Tr(u)=0 and counts d(V) on h=4 and h=2 curves.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "The measured class mean matches the exact first moment within O(c/N) and the crossover sensitivity is 2.9+-0.3 n per bit.",
+      "class": "comparative",
+      "decided_by": [
+        "C-exact"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "The Semaev yield is the exact first moment d(V)*C(|W|+t-1,t)/N, and each yield constant is an additive theta bits in stage 1.",
+      "mechanism": "x-multiset decompositions of R_X correspond to point multisets of W summing to R up to O(1/N) coincidences; d(V)=h/|<cl(W)>| carries the class factor.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "class_mean_ratio",
+          "direction": "equal_within",
+          "minimum_effect": "1 within O(c/N)",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "ncross_shift",
+          "direction": "equal_within",
+          "minimum_effect": "2.9+-0.3 n",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "gap",
+          "direction": "lower",
+          "minimum_effect": "<=t/|V|",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "frozen-counts",
+      "role": "reference",
+      "description": "RUN-SEMBIN-8be036 per-R counts, read-only",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "frozen-counts"
+      }
+    },
+    {
+      "id": "class-mean",
+      "role": "candidate",
+      "description": "pi=0 class mean against the exact first moment",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "class-mean"
+      },
+      "same_instrument_as": "frozen-counts"
+    },
+    {
+      "id": "counts-aa",
+      "role": "control_aa",
+      "description": "frozen counts re-read under the second convention",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "counts-aa"
+      },
+      "same_instrument_as": "frozen-counts"
+    },
+    {
+      "id": "h4-enumeration",
+      "role": "control_positive",
+      "description": "n=11,13 h=4 curve: P in 4E iff Tr(u)=0 by group enumeration",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "h4-enumeration"
+      }
+    },
+    {
+      "id": "h2-curve",
+      "role": "control_negative",
+      "description": "h=2 curve (Tr(a)=1): d=1 for every V",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "h2-curve"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "h4-enumeration",
+      "expected_detection": "the Tr(u)=0 criterion reproduces the h=4 class split",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "h2-curve",
+      "null_population": {
+        "description": "h=2 curve where the class factor d is 1 for every V",
+        "generator": "h=2 curve where the class factor d is 1 for every V",
+        "n": 100,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "frozen-counts",
+          "class-mean",
+          "counts-aa",
+          "h4-enumeration",
+          "h2-curve"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "estimator",
+        "treatment": "crossed",
+        "how": "overall mean, class mean, exact first moment"
+      },
+      {
+        "name": "curve_h",
+        "treatment": "fixed",
+        "value": "h=4 and h=2 toy curves",
+        "how": "frozen fixtures"
+      },
+      {
+        "name": "method",
+        "treatment": "crossed",
+        "how": "varied by comparison C-exact"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-moment",
+        "arms": [
+          "frozen-counts",
+          "class-mean"
+        ],
+        "differs_in": [
+          "estimator"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "frozen-counts",
+          "counts-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-exact",
+        "arms": [
+          "class-mean",
+          "h4-enumeration"
+        ],
+        "differs_in": [
+          "method"
+        ],
+        "design": "absolute",
+        "threshold": "class_mean_ratio within O(c/N)"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 2,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 3,
+      "correction": "holm",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 900,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "class_mean_ratio",
+        "name": "class mean ratio",
+        "unit": "ratio",
+        "kind": "derived",
+        "definition": "measured pi=0 class mean divided by d(V)*C(|W|+t-1,t)/N",
+        "source": "results/class_mean_ratio.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95",
+        "formula": "measured pi=0 class mean divided by d(V)*C(|W|+t-1,t)/N"
+      },
+      {
+        "id": "ncross_shift",
+        "name": "n_cross shift per bit",
+        "unit": "n per bit",
+        "kind": "derived",
+        "definition": "recomputed from the frozen tables.yaml formulas",
+        "source": "results/ncross_shift.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95",
+        "formula": "recomputed from the frozen tables.yaml formulas"
+      },
+      {
+        "id": "gap",
+        "name": "relative probability gap",
+        "unit": "fraction",
+        "kind": "derived",
+        "definition": "P(A_t)-P(eq.5) divided by P(A_t)",
+        "source": "results/gap.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95",
+        "formula": "P(A_t)-P(eq.5) divided by P(A_t)"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "class_mean_ratio",
+      "ncross_shift",
+      "gap"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 1800,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: Stage 0 arithmetic, Stage 1 frozen counts, Stage 2 two toy curves, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-exact is supported when the class mean matches the exact first moment within O(c/N), the h=2 control gives d=1, and the sensitivity is 2.9+-0.3 n per bit; a class mean outside O(c/N) falsifies C1.",
+    "comparison_ids": [
+      "C-exact"
+    ],
+    "threshold": "class_mean_ratio within O(c/N)",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "holm",
+    "effect_size_measure": "1 within O(c/N)",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "editing H-RELN-96e3ba or EXP-RELN-164ad3 instead of filing an additive amendment",
+    "reading constants as a security claim"
+  ],
+  "literature": [
+    {
+      "ref": "frozen tables.yaml formulas",
+      "provenance": "retrieved",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    },
+    {
+      "ref": "RUN-SEMBIN-8be036",
+      "provenance": "internal",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "b46eb72fa49e3f6f2ca5ab8305134aed05fee1a20dd166803e50c6349a7d3b82",
+    "commit": "403b404574cac9f19a0db0aa140ea8f34ca121e5",
+    "frozen_at": "2026-11-01T04:36:20Z",
+    "filed_before_affected_data": true
+  }
+}
