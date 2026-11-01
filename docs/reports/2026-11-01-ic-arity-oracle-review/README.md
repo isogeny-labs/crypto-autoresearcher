@@ -7,7 +7,8 @@ Both independent reviewer outputs are sealed and pushed at
 `52cf91e8404cdb68710c5623c40fde549d566bca`. That commit contains exactly four declared
 report/attestation files and names TASK-20261101-4b30bd,
 TASK-20261101-bd53ca and TASK-20261101-e90be2. Published epoch-1 completed
-releases match every output hash. The review-snapshot epoch-1 claim remains live.
+releases match every output hash. The review-snapshot epoch-1 claim has a
+published completed release dated `2026-11-01T05:58:23Z`.
 
 The pinned independence checker composes the prospective addendum and passes:
 two reports, every joint owned and attested, blindness respected, controls
@@ -35,14 +36,19 @@ there are no generated-path skips. Pinned independence composition also passes.
 The archive binds the provisional snapshot bytes as published at that commit,
 including their then-pending gate; those historical bytes are not rewritten.
 
-Finalization metadata now records `allows_synthesis=true`. This is eligibility,
-not execution: driving Coordinator must publish these finalization edits and
-release the live snapshot claim before separately claiming/dispatching
-TASK-20261101-bc06d9. This task performs no synthesis or unblinding.
+Finalization metadata records `allows_synthesis=true`. The five-artifact
+archive and its completed release verify. TASK-20261101-4b30bd now has explicit
+`state=completed` in the card and exact queue mirror: archive release overlays
+do not substitute for this Coordinator lifecycle transition.
+The separately live TASK-20261101-bc06d9 claim is now dependency-honorable and
+dispatch treats it as running. Driving Coordinator must publish this lifecycle
+correction before synthesis executes. This correction performs no synthesis
+or unblinding.
 
 PR [#2892](https://github.com/isogeny-labs/crypto-autoresearcher/pull/2892) is
-open and draft at `5658c82b1de6f4fc6b44c864c91855c61c21d72e`. GitHub comparison confirms
-that the archive commit equals the remote PR head; local ancestry agrees.
+open and draft at `feac2139a7bac8a8de383085aacdb5b45609b6cc`; the
+five-artifact archive remains an ancestor, and the published completed release
+and live synthesis claim are present at this observed remote head.
 
 The formal-evidence prerequisite remains the published eight-artifact snapshot
 `5b3ad6957cb48260d354d9aec6d47cc8159878d8` for
