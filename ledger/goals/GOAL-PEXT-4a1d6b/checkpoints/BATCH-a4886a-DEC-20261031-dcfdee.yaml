@@ -1,0 +1,35 @@
+# WRITE-ONCE goal checkpoint shard (tools/shard_goal.py layout). One checkpoint
+# per file. Never edit or reorder this file. A correction is a new record.
+# GOAL-PEXT-4a1d6b, lane-opening checkpoint for BATCH-a4886a, written with the
+# approval decision DEC-20261031-dcfdee. It opens BATCH-a4886a and closes nothing.
+batch_checkpoint:
+  batch_id: BATCH-a4886a
+  checkpoint_id: BATCH-a4886a-DEC-20261031-dcfdee
+  goal_id: GOAL-PEXT-4a1d6b
+  kind: initial
+  recorded_at: '2026-11-01'
+  recorded_by: coordinator
+  decision_id: DEC-20261031-dcfdee
+  decision_ids:
+  - DEC-20261031-dcfdee
+  status: active
+  goal_status_after: active
+  question_ids:
+  - RQ-PEXT-7c3e91
+  records_opened:
+  - H-PEXT-ad0073
+  - EXP-PEXT-0b2c75
+  - DEC-20261031-dcfdee
+  - TASK-20261031-73799d
+  - TASK-20261031-4fa3ea
+  completion_criteria_discharged: none
+  hypotheses:
+    H-PEXT-ad0073: approved (pre-run approval of EXP-PEXT-0b2c75 in DEC-20261031-dcfdee; tests an unreviewed candidate law, asserts nothing about truth)
+  heuristics:
+    H1 (IDEA-20261024-3c71a9): unvalidated, non-gating; reported by chi-square in EXP-PEXT-0b2c75
+  latest_verified_commit: null
+  impediments_changed: none
+  next_action: >-
+    Commit and push the approval package, confirm execution_state ready with tools/newest_experiments.py, claim lane
+    BATCH-a4886a, dispatch TASK-20261031-73799d (/run EXP-PEXT-0b2c75; not alongside the EXP-PEXT-212d5c census), then the ledger
+    archive TASK-20261031-4fa3ea and /review-evidence with the blind recount. A pass does not promote the derivation.
