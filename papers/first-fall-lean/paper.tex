@@ -218,6 +218,16 @@ first, reproduces both witnesses. It also finds the lemma violated on 94 of
 (23.5\%)~\cite{artifacts}. We reproduced both witnesses a third time by
 exhaustive search over cofactor tuples while preparing this paper.
 
+The restriction on cofactors in the list model is not needed. A further Lean
+module, \lean{CryptoResearch.Nagao.Bridge}, maps the list data of witness~(A)
+to $X^2Y$ and $XY+X$ in Mathlib's polynomial ring over $\FF_2$ and proves
+Theorem~\ref{thm:nagao} for~(A) there with arbitrary polynomial cofactors, in
+both placements (\lean{lemma4_mv_false}). Since $\FF_2[X,Y]$ is a domain, degrees
+add under multiplication, so a product of degree at most~2 forces the cofactor
+of a quadratic generator to be constant and that of $X^2Y$ to vanish; the
+coefficients of $XY$, $X^2$ and $Y^2$ then force the constants to zero. Witness~(B)
+is not restated there.
+
 \subsection{When the inference survives}
 
 The failure has one cause. Reduction modulo $\Sfe$ can lower the degree of an
@@ -252,8 +262,9 @@ variables and field equations $X_j^2-X_j$, with reduction clamping every exponen
 to at most one. The key lemma is the reduction step of the proof above: $s-\red(s)$
 is a combination $\sum_j h_j(X_j^2-X_j)$ in which every product has degree at most
 $\deg s$. The Lean statement takes the fake sum as $\red$ of the unreduced sum;
-that this agrees with reducing the sum of reduced products (linearity and
-idempotence of $\red$) is not formalized. The proposition needs two hypotheses that neither~\cite{nagao13}
+this agrees with reducing the sum of reduced products because $\red$ is additive
+and idempotent, which \lean{CryptoResearch.Nagao.Bridge} also proves
+(\lean{red_sum_red}). The proposition needs two hypotheses that neither~\cite{nagao13}
 nor~\cite{nagao15} states as such: the field equations are generators of the
 true system, and the fake witness loses no degree under reduction. In both
 witnesses of Theorem~\ref{thm:nagao} the second hypothesis fails: $X^2Y$ drops
@@ -390,6 +401,7 @@ Statement & Kernel & Independent statement review\\
 Thm.~\ref{thm:nagao} (\lean{lemma4_inside_false}) & hosted receipt, CI run 41155781140 & not yet reviewed; producer caps fidelity at partial (two scoping rows)\\
 Thm.~\ref{thm:nagao}, printed placement (\lean{lemma4_outside_false}) & CI run 41247286804 (workspace gate, 96 targets verified) & not yet reviewed\\
 Prop.~\ref{prop:recovery} (\lean{recovery}) & CI run 41259822143 (workspace gate, 97 targets verified) & not yet reviewed\\
+Thm.~\ref{thm:nagao}, witness (A) in \texttt{MvPolynomial} (\lean{lemma4_mv_false}) & CI run 41264005876 (workspace gate, 98 targets verified) & not yet reviewed\\
 Thm.~\ref{thm:lastfall} & hosted receipt, CI run 41191503149 & validated at stated scope (three-joint review)\\
 Thm.~\ref{thm:semaev}, concrete witness & hosted receipt, CI run 41155781140 & validated at scope, one draw\\
 Thm.~\ref{thm:semaev}, rank family & hosted receipts, CI run 41155781140 & integrity audit only\\
@@ -416,11 +428,11 @@ check. An independent statement review catches a true theorem that is cited
 for more than it says. We needed both: the first for Theorem~\ref{thm:nagao},
 the second for the withdrawn trace inference.
 
-Two items would strengthen this note. The first is a bridge from the
-list-of-monomials model of Theorem~\ref{thm:nagao} to \texttt{MvPolynomial}, in
-which Proposition~\ref{prop:recovery} is already stated. The second is an
-independent review of the Lean statements of Theorem~\ref{thm:nagao}, in both
-placements, and of Proposition~\ref{prop:recovery}.
+Two items would strengthen this note. The first is witness~(B) in
+\texttt{MvPolynomial}, which the list model covers but the bridge does not. The
+second, and the one that matters, is an independent review of the Lean
+statements of Theorem~\ref{thm:nagao}, in both placements and both models, and
+of Proposition~\ref{prop:recovery}.
 
 \begin{thebibliography}{99}
 
