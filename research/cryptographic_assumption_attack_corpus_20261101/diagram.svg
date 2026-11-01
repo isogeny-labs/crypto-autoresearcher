@@ -1,0 +1,176 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1000" viewBox="0 0 1500 1000" role="img" aria-labelledby="title desc">
+  <title id="title">Cryptographic assumption attack corpus: claim-to-conclusion triage</title>
+  <desc id="desc">Five first-wave Lean targets are mapped from an overbroad claim through its hidden premise and countermodel or conditional repair to the conclusion that is actually allowed. Later protocol and model targets are ranked below.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .title { font: 700 28px 'DejaVu Sans', sans-serif; fill: #17233a; }
+      .subtitle { font: 400 15px 'DejaVu Sans', sans-serif; fill: #526079; }
+      .column { font: 700 16px 'DejaVu Sans', sans-serif; fill: #25334e; }
+      .row-label { font: 700 15px 'DejaVu Sans', sans-serif; fill: #17233a; }
+      .body { font: 400 13px 'DejaVu Sans', sans-serif; fill: #26344e; }
+      .small { font: 400 11.5px 'DejaVu Sans', sans-serif; fill: #526079; }
+      .tag { font: 700 11px 'DejaVu Sans', sans-serif; letter-spacing: .5px; }
+      .claim { fill: #fff1f1; stroke: #bd3e4b; stroke-width: 2; }
+      .premise { fill: #fff8e5; stroke: #c8881a; stroke-width: 2; }
+      .repair { fill: #edf8ef; stroke: #398952; stroke-width: 2; }
+      .model { fill: #f1effb; stroke: #6f5bb3; stroke-width: 2; }
+      .gap { fill: #fff2e8; stroke: #d36e2b; stroke-width: 2; stroke-dasharray: 7 5; }
+      .open { fill: #eef3f8; stroke: #63758c; stroke-width: 2; stroke-dasharray: 7 5; }
+      .panel { fill: #ffffff; stroke: #cbd3df; stroke-width: 1.5; }
+      .divider { stroke: #d8dee8; stroke-width: 1; }
+      .arrow { fill: none; stroke: #75829a; stroke-width: 2; marker-end: url(#arrow); }
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#75829a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1500" height="1000"/>
+  <text class="title" x="55" y="48">Cryptographic assumption attack corpus</text>
+  <text class="subtitle" x="55" y="76">Triage rule: attack the universal statement, expose the premise, prove the repair, and stop at the scoped conclusion.</text>
+
+  <!-- Status palette -->
+  <g transform="translate(55,96)">
+    <rect class="claim" x="0" y="0" rx="9" width="178" height="34"/>
+    <text class="tag" x="14" y="22" fill="#9d2836">FALSE-AS-STATED</text>
+    <rect class="premise" x="192" y="0" rx="9" width="175" height="34"/>
+    <text class="tag" x="206" y="22" fill="#93600d">CONDITIONAL</text>
+    <rect class="model" x="381" y="0" rx="9" width="174" height="34"/>
+    <text class="tag" x="395" y="22" fill="#574495">MODEL-RELATIVE</text>
+    <rect class="open" x="569" y="0" rx="9" width="191" height="34"/>
+    <text class="tag" x="583" y="22" fill="#4e6078">OPEN ASSUMPTION</text>
+    <rect class="gap" x="774" y="0" rx="9" width="174" height="34"/>
+    <text class="tag" x="788" y="22" fill="#a64f19">INTERFACE GAP</text>
+  </g>
+
+  <!-- Column headings -->
+  <text class="column" x="82" y="165">Overbroad research claim</text>
+  <text class="column" x="430" y="165">Hidden premise</text>
+  <text class="column" x="782" y="165">Countermodel / conditional repair</text>
+  <text class="column" x="1162" y="165">Allowed conclusion</text>
+
+  <!-- Row 1 -->
+  <g transform="translate(55,182)">
+    <text class="row-label" x="0" y="20">P0.1  MOD-ALIAS</text>
+    <rect class="claim" x="0" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="16" y="57">Circuit-field equality is integer</text>
+    <text class="body" x="16" y="77">or native-value equality.</text>
+    <text class="tag" x="16" y="105" fill="#9d2836">FALSE-AS-STATED</text>
+    <rect class="premise" x="350" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="366" y="57">Canonical representatives and range</text>
+    <text class="body" x="366" y="77">constraints make reduction injective.</text>
+    <rect class="repair" x="700" y="31" rx="12" width="330" height="92"/>
+    <text class="body" x="716" y="55">Countermodel: 0 = q in ZMod q.</text>
+    <text class="body" x="716" y="76">Repair: both integers lie in one</text>
+    <text class="body" x="716" y="96">interval of width less than q.</text>
+    <rect class="repair" x="1080" y="31" rx="12" width="310" height="92"/>
+    <text class="body" x="1096" y="57">Only bounded encodings support</text>
+    <text class="body" x="1096" y="77">integer-equality conclusions.</text>
+    <path class="arrow" d="M300 77 L350 77"/><path class="arrow" d="M650 77 L700 77"/><path class="arrow" d="M1030 77 L1080 77"/>
+  </g>
+
+  <!-- Row 2 -->
+  <g transform="translate(55,314)">
+    <text class="row-label" x="0" y="20">P0.2  SUBGROUP</text>
+    <rect class="claim" x="0" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="16" y="57">Every ambiently accepted point lies</text>
+    <text class="body" x="16" y="77">in the intended prime-order subgroup.</text>
+    <text class="tag" x="16" y="105" fill="#9d2836">FALSE-AS-STATED</text>
+    <rect class="premise" x="350" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="366" y="55">On-curve, nonidentity, subgroup</text>
+    <text class="body" x="366" y="75">membership, and exact order q are</text>
+    <text class="body" x="366" y="95">distinct checks.</text>
+    <rect class="repair" x="700" y="31" rx="12" width="330" height="92"/>
+    <text class="body" x="716" y="55">Countermodel: product group with a</text>
+    <text class="body" x="716" y="75">torsion/cofactor component. Repair:</text>
+    <text class="body" x="716" y="95">certify membership and addOrderOf = q.</text>
+    <rect class="repair" x="1080" y="31" rx="12" width="310" height="92"/>
+    <text class="body" x="1096" y="55">Scalar-field reasoning applies only</text>
+    <text class="body" x="1096" y="75">inside the certified exact-order</text>
+    <text class="body" x="1096" y="95">subgroup.</text>
+    <path class="arrow" d="M300 77 L350 77"/><path class="arrow" d="M650 77 L700 77"/><path class="arrow" d="M1030 77 L1080 77"/>
+  </g>
+
+  <!-- Row 3 -->
+  <g transform="translate(55,446)">
+    <text class="row-label" x="0" y="20">P0.3  BATCH-RLC</text>
+    <rect class="claim" x="0" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="16" y="55">Random-linear batching always has a</text>
+    <text class="body" x="16" y="75">small cancellation probability.</text>
+    <text class="tag" x="16" y="105" fill="#9d2836">FALSE WITHOUT TIMING</text>
+    <rect class="premise" x="350" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="366" y="55">Errors are fixed before an independent</text>
+    <text class="body" x="366" y="75">uniform challenge; the resulting</text>
+    <text class="body" x="366" y="95">polynomial is nonzero over a field.</text>
+    <rect class="repair" x="700" y="31" rx="12" width="330" height="92"/>
+    <text class="body" x="716" y="55">Adaptive countermodel:</text>
+    <text class="body" x="716" y="75">e0(rho) = -rho, e1 = 1, so</text>
+    <text class="body" x="716" y="95">e0(rho) + rho e1 = 0 identically.</text>
+    <rect class="premise" x="1080" y="31" rx="12" width="310" height="92"/>
+    <text class="body" x="1096" y="55">A Schwartz-Zippel bound follows only</text>
+    <text class="body" x="1096" y="75">after independence, field, nonzero,</text>
+    <text class="body" x="1096" y="95">and degree premises are certified.</text>
+    <path class="arrow" d="M300 77 L350 77"/><path class="arrow" d="M650 77 L700 77"/><path class="arrow" d="M1030 77 L1080 77"/>
+  </g>
+
+  <!-- Row 4 -->
+  <g transform="translate(55,578)">
+    <text class="row-label" x="0" y="20">P0.4  POLY-FUNCTION</text>
+    <rect class="claim" x="0" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="16" y="57">Agreement on every field element</text>
+    <text class="body" x="16" y="77">implies formal polynomial equality.</text>
+    <text class="tag" x="16" y="105" fill="#9d2836">FALSE-AS-STATED</text>
+    <rect class="premise" x="350" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="366" y="55">A degree bound below field size, or</text>
+    <text class="body" x="366" y="75">explicit equality modulo all field</text>
+    <text class="body" x="366" y="95">equations, is required.</text>
+    <rect class="repair" x="700" y="31" rx="12" width="330" height="92"/>
+    <text class="body" x="716" y="55">Countermodel over F_q: X^q - X is</text>
+    <text class="body" x="716" y="75">nonzero formally and evaluates to zero</text>
+    <text class="body" x="716" y="95">at every field element.</text>
+    <rect class="repair" x="1080" y="31" rx="12" width="310" height="92"/>
+    <text class="body" x="1096" y="55">Pointwise equality identifies the</text>
+    <text class="body" x="1096" y="75">bounded-degree representative, not an</text>
+    <text class="body" x="1096" y="95">arbitrary formal polynomial.</text>
+    <path class="arrow" d="M300 77 L350 77"/><path class="arrow" d="M650 77 L700 77"/><path class="arrow" d="M1030 77 L1080 77"/>
+  </g>
+
+  <!-- Row 5 -->
+  <g transform="translate(55,710)">
+    <text class="row-label" x="0" y="20">P0.5  SCHNORR-SS</text>
+    <rect class="premise" x="0" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="16" y="55">Two accepting transcripts reveal the</text>
+    <text class="body" x="16" y="75">witness.</text>
+    <text class="tag" x="16" y="105" fill="#93600d">CONDITIONAL</text>
+    <rect class="premise" x="350" y="31" rx="12" width="300" height="92"/>
+    <text class="body" x="366" y="55">Same commitment, distinct challenges,</text>
+    <text class="body" x="366" y="75">exact prime-order subgroup, and an</text>
+    <text class="body" x="366" y="95">invertible challenge difference.</text>
+    <rect class="repair" x="700" y="31" rx="12" width="330" height="92"/>
+    <text class="body" x="716" y="55">Failures: repeated challenge; or a</text>
+    <text class="body" x="716" y="75">nonunit difference in ZMod 4. Repair:</text>
+    <text class="body" x="716" y="95">solve only when the difference is a unit.</text>
+    <rect class="repair" x="1080" y="31" rx="12" width="310" height="92"/>
+    <text class="body" x="1096" y="55">Special-soundness extraction is a</text>
+    <text class="body" x="1096" y="75">transcript theorem; Fiat-Shamir</text>
+    <text class="body" x="1096" y="95">security remains a separate bridge.</text>
+    <path class="arrow" d="M300 77 L350 77"/><path class="arrow" d="M650 77 L700 77"/><path class="arrow" d="M1030 77 L1080 77"/>
+  </g>
+
+  <!-- Later tiers -->
+  <line class="divider" x1="55" y1="850" x2="1445" y2="850"/>
+  <text class="column" x="55" y="878">Next tiers after the five finite trust-boundary targets</text>
+
+  <rect class="panel" x="55" y="894" rx="12" width="665" height="78"/>
+  <text class="tag" x="73" y="918" fill="#a64f19">P1 · INTERFACE-HEAVY PROTOCOL CLAIMS</text>
+  <text class="small" x="73" y="942">Fiat-Shamir encoding / domain separation · KZG degree, SRS, subgroup and known-tau failures</text>
+  <text class="small" x="73" y="960">Pedersen/IPA generator relations · hash-to-curve subgroup clearing, uniformity and domain separation</text>
+
+  <rect class="panel" x="745" y="894" rx="12" width="700" height="78"/>
+  <text class="tag" x="763" y="918" fill="#574495">P2 · MODEL-RELATIVE / OPEN HARDNESS FRAMEWORKS</text>
+  <text class="small" x="763" y="942">Generic-group random encodings · exact forking lemma · ROM / AGM / KEA / q-SDH boundaries</text>
+  <text class="small" x="763" y="960">Full SNARK soundness and knowledge extraction · QROM · concrete multi-user/query losses</text>
+
+  <text class="small" x="55" y="992">Lean can refute universal statements and verify reductions under named hypotheses; it cannot settle an unformalized real-world computational hardness assumption.</text>
+</svg>
