@@ -1,0 +1,57 @@
+id: LEAD-ICP-elliptic-code-list-decoding
+family: ic-prime
+title: >-
+  Elliptic (AG) code decoding as a relation finder: minimum-weight codewords of C_L(FB, kO)
+  via list decoding or information-set decoding (Zhang-Liu)
+mechanism: >-
+  For the one-point elliptic code C_L(D, kO) with evaluation set D = the factor base, a
+  codeword of minimum weight vanishes at exactly k points of D, and such a codeword exists
+  exactly when those k points sum to O (the subset-sum view used by Cheng for the NP-hardness
+  of the minimum distance of elliptic codes). Shifting the divisor by a target R turns this
+  into a decomposition of R. Zhang and Liu (KN-LIT-643) propose finding these codewords with
+  list decoding. The program has the paper on file but no lead row and no costed test.
+  Numbered heuristic (derivation to check, not proved here). H1: a minimum-weight codeword
+  agrees with the all-zero word in exactly k coordinates, while Guruswami-Sudan on a length-B,
+  dimension-k code of genus 1 guarantees only codewords with agreement above about
+  sqrt(B k). Because sqrt(B k) > k whenever B > k, decoding around a fixed codeword cannot
+  reach them, so any received-word strategy must supply the missing agreement itself, which
+  predicts enumeration-level cost. Information-set decoding on these codes is predicted to be
+  enumeration over k-subsets, inside the scope of LEAD-ICP-generic-table-decomposition.
+disposition: open_next_step
+next_action:
+  step: >-
+    Read the full Zhang-Liu text and record which received words and parameters it uses and
+    the complexity it states. Then, at p near 2^16 with factor base size near 2^8 and k from 2
+    to 6, run their procedure (or exact list decoding by brute force at that size) against
+    plain enumeration of k-subsets, counting verified relations per unit of counted work on
+    the same curves and seeds.
+  discriminates: >-
+    If their received-word choice needs about k guessed agreements, the method is enumeration
+    in disguise and the lead goes to a cost-model closure with the scope of
+    LEAD-ICP-generic-table-decomposition. If it finds relations below enumeration cost at toy
+    size, the next step is a charged comparison against matched rho on a size ladder.
+best_measured: null
+evidence:
+- repo: crypto-autoresearcher
+  path: knowledge/literature/KN-LIT-643.md
+  note: Zhang-Liu, Solving ECDLP via List Decoding (ePrint 2018/795)
+- repo: crypto-autoresearcher
+  path: knowledge/literature/KN-LIT-1785.md
+  note: maximal length of MDS elliptic codes (related code-theoretic structure)
+- repo: crypto-autoresearcher
+  path: docs/reports/ecdlp-exotic-scouting-20261101/README.md
+  note: scouting note with heuristic H1 and the Cheng subset-sum correspondence
+ledger_refs: []
+known_results:
+- KR-IC-401ebf
+related:
+- LEAD-ICP-generic-table-decomposition
+- LEAD-ICP-algebraic-membership-factor-base
+forecloses:
+- list decoding of elliptic codes finds index-calculus relations
+- minimum weight codewords of algebraic geometry codes solve ECDLP
+- Guruswami-Sudan decoding as a point-decomposition oracle
+- information set decoding on elliptic codes
+areas:
+- ECDLP
+last_reviewed: '2026-11-01'
