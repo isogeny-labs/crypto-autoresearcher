@@ -14,24 +14,24 @@ a hash it cannot is an assertion by the session that recorded it.
 
 | Class | Count |
 |---|---|
-| Frozen source packages (`SRC-*`) | 28 |
+| Frozen source packages (`SRC-*`) | 29 |
 | — of those with the artifact committed | 27 |
-| Per-URL retrieval attempts | 54 |
+| Per-URL retrieval attempts | 56 |
 | — succeeded | 34 |
-| — failed or blocked | 20 |
+| — failed or blocked | 22 |
 | Source artifacts under `inputs/` | 64 |
 | — hash recomputed and matching | 55 |
 | — hash MISMATCH | 0 |
 | — present but carrying no `.sha256` | 8 |
 | — sought and never retrieved | 1 |
 | Seed bibliography entries | 10 |
-| Literature entries (`KN-LIT-*`) | 8132 |
-| — with a resolvable external identifier | 2518 |
+| Literature entries (`KN-LIT-*`) | 8133 |
+| — with a resolvable external identifier | 2519 |
 | — with no identifier recorded | 5614 |
 
-Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1344, doi 183, eprint 837, url 154. Every identifier an entry carries is kept in `sources.json`.
+Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1344, doi 183, eprint 837, isbn 1, url 154. Every identifier an entry carries is kept in `sources.json`.
 
-`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full_text` 4, `full_text_supplied` 2, `metadata` 3, `partial` 5, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 525.
+`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full-pdf-mechanical-traversal-and-scoped-reading` 1, `full_text` 4, `full_text_supplied` 2, `metadata` 3, `partial` 5, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 525.
 
 ## 1. Frozen source packages
 
@@ -48,6 +48,7 @@ decides whether a later session can re-read what was read here.
 | SRC-ECMASFP5-HACKMD-2025 | Elliptic Curves over Goldilocks (EcMasFp5 design note) |  | 2025 | `inputs/ECMASFP5-HACKMD-2025` | yes | frozen_path |  |  |
 | SRC-EULER-PETIT-2019-QSP | New Results on Quasi-Subfield Polynomials |  | 2020 | `inputs/EULER-PETIT-2019-QSP` | yes | frozen_path |  |  |
 | SRC-FIPS186-4-BINARY-CURVES | FIPS PUB 186-4, Digital Signature Standard -- Appendix D.1.3, Curves over Binary Fields (the B- and K- curves at degrees 163, 233, 283, 409, 571) | National Institute of Standards and Technology | 2013 | `inputs/FIPS186-4-BINARY-CURVES` | yes | frozen_path |  |  |
+| SRC-GALBRAITH-MPKC-V2-2018 | Mathematics of Public Key Cryptography | Steven D. Galbraith | 2012 | `inputs/GALBRAITH-MPKC-2018` | **no** | declared | https://www.math.auckland.ac.nz/~sgal018/crypto-book/main.pdf | ca75ee62b96daa0d |
 | SRC-GORLA-MASSIERER-2014-1403 | Point compression for the trace zero subgroup over a small degree extension field |  | 2014 | `inputs/GORLA-MASSIERER-2014-1403` | yes | frozen_path |  |  |
 | SRC-HHAN-2024-2402.11269 | A New Approach to Generic Lower Bounds: Classical/Quantum MDL, Quantum Factoring, and More |  |  | `inputs/HHAN-2024-2402.11269` | yes | declared | https://arxiv.org/pdf/2402.11269v1 | eb5df4bea59017d7 |
 | SRC-HUANG-2020-JMC-QSP | Quasi-subfield Polynomials and the Elliptic Curve Discrete Logarithm Problem |  | 2020 | `inputs/HUANG-2020-JMC-QSP` | yes | frozen_path |  |  |
@@ -99,6 +100,8 @@ not the same as never having looked.
 | ellipticnews-2015-04-13-ecdlp-char-two | https://ellipticnews.wordpress.com/2015/04/13/elliptic-curve-discrete-logarithm-problem-in-characteristic-two/ | retrieved | 200 | 2026-09-05T22:45:26Z |  |
 | arxiv-abs | https://arxiv.org/abs/1909.11326v2 | retrieved | 200 | 2026-09-16T19:49:49Z | `inputs/EULER-PETIT-2019-QSP/arxiv-1909.11326-abs.html` |
 | arxiv-pdf-v2 | https://arxiv.org/pdf/1909.11326v2 | retrieved | 200 | 2026-09-16T19:49:49Z | `inputs/EULER-PETIT-2019-QSP/arxiv-1909.11326v2.pdf` |
+| galbraith-mpkc-official-page | https://www.math.auckland.ac.nz/~sgal018/crypto-book/crypto-book.html | retrieved-temporary-not-vendored | 200 | 2026-11-01T22:00:42Z |  |
+| galbraith-mpkc-v2-pdf | https://www.math.auckland.ac.nz/~sgal018/crypto-book/main.pdf | retrieved-temporary-not-vendored | 200 | 2026-11-01T21:54:01Z |  |
 | arxiv-abs | https://arxiv.org/abs/1403.0126 | retrieved | 200 | 2026-09-20T07:48:26Z | `inputs/GORLA-MASSIERER-2014-1403/arxiv-1403.0126-abs.html` |
 | arxiv-pdf | https://arxiv.org/pdf/1403.0126 | retrieved | 200 | 2026-09-20T07:48:26Z | `inputs/GORLA-MASSIERER-2014-1403/arxiv-1403.0126.pdf` |
 | hhan-2024-abs | https://arxiv.org/abs/2402.11269 | retrieved_not_vendored | 200 | 2026-10-03T21:07:02Z |  |
@@ -243,7 +246,7 @@ records that some fetch failed, and says nothing about the file that is here.
 
 ## 5. Literature citations with a resolvable identifier
 
-2518 of 8132 `KN-LIT-*` entries carry an
+2519 of 8133 `KN-LIT-*` entries carry an
 eprint, arXiv, DOI, ISBN or URL identifier.
 
 | ID | Title | Year | Identifier | Verified |
@@ -1597,6 +1600,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-2d4a82 | Octarine（NGCC 公钥第一轮候选 · 数字签名 16） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
 | KN-LIT-2d85cd | Low-Reiter: Niederreiter encryption scheme for embedded microcontrollers | 2010 | `doi:10.1007/978-3-642-12929-2_13` | web |
 | KN-LIT-2d9edb | An algebraic attack against McEliece-like cryptosystems based on BCH codes | 2023 | `eprint:2022/1715` | web |
+| KN-LIT-2e5200 | Mathematics of Public Key Cryptography, version 2.0 | 2012 | `isbn:9781107013926` | full-pdf-mechanical-traversal-and-scoped-reading |
 | KN-LIT-2e9580 | BIKE-MLThre（NGCC 公钥第一轮候选 · 密钥封装 5） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
 | KN-LIT-2f3594 | CTL Algorithm（NGCC 公钥第一轮候选 · 密钥封装 12） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
 | KN-LIT-300 | The Ising model: from elliptic curves to modular | 2010 | `arxiv:1007.0535` | read |

@@ -1,0 +1,44 @@
+{
+  "schema": "crypto.autoresearch.external_artifact_status.v1",
+  "checked_at": "2026-11-01T22:06:55Z",
+  "status": "blocked_access_denied",
+  "principal_arn": "arn:aws:iam::590183823895:user/adam",
+  "bucket": "setec-astronomy-artifacts",
+  "objects": [
+    {
+      "role": "content-addressed-pdf",
+      "key": "store/sha256/ca/ca75ee62b96daa0d46faaa2d4dc28205683455ad3a2a48586b9b39299c25022d",
+      "sha256": "ca75ee62b96daa0d46faaa2d4dc28205683455ad3a2a48586b9b39299c25022d",
+      "bytes": 5252338,
+      "put_result": "AccessDenied"
+    },
+    {
+      "role": "content-addressed-full-catalog",
+      "key": "store/sha256/76/764d12497f4c1ce59c09cb206f99ff9d3a7feb59958783b13a48f91749c0789d",
+      "sha256": "764d12497f4c1ce59c09cb206f99ff9d3a7feb59958783b13a48f91749c0789d",
+      "bytes": 2459284,
+      "put_result": "AccessDenied"
+    },
+    {
+      "role": "knowledge-source-sidecar",
+      "key": "knowledge/source/papers/book/galbraith-mpkc-v2-2018/paper.pdf.metadata.json",
+      "sha256": "239747acc1b7ddc55d6f72182a705cc8c8728744ed3097f890108327f397bfc4",
+      "bytes": 820,
+      "put_result": "AccessDenied"
+    },
+    {
+      "role": "knowledge-source-pdf",
+      "key": "knowledge/source/papers/book/galbraith-mpkc-v2-2018/paper.pdf",
+      "sha256": "ca75ee62b96daa0d46faaa2d4dc28205683455ad3a2a48586b9b39299c25022d",
+      "bytes": 5252338,
+      "put_result": "not_attempted_because_sidecar_write_failed"
+    }
+  ],
+  "retry_order": [
+    "Validate kb-sidecar.json against kb/config/metadata-schema.json.",
+    "Conditionally put the sidecar with If-None-Match '*'.",
+    "Conditionally put the hash-checked PDF with If-None-Match '*'.",
+    "Use tools/artifacts/artifacts.py push for the content-addressed PDF and catalog, then verify --remote."
+  ],
+  "evidence_boundary": "This access failure is not evidence about the book and is not a successful ingestion receipt."
+}
