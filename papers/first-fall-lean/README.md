@@ -63,8 +63,10 @@ ignored locally and must be rebuilt with `make`.
 
 ## Owed before submission
 
-- [ ] Independent statement review of `lemma4_inside_false` and
-      `lemma4_outside_false` (formal lane gate).
+- [ ] Independent statement review of `lemma4_inside_false`,
+      `lemma4_outside_false`, `recovery`, `lemma4_mv_false` and `lemma4_mvB_false`
+      (formal lane gate). Packet prepared, not dispatched:
+      `coordination/formal-reviews/BATCH-4c1c67/`.
 - [x] Lean proof of the printed (outside) placement (PR #2859).
 - [x] Lean proof of Proposition 6 (PR #2867).
 - [x] Bridge from the list-of-monomials model to Mathlib `MvPolynomial`, with
