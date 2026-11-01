@@ -11,12 +11,20 @@ The implementation contains:
 * the D-2 monomial-basis pseudo-resultant, deterministic lex Buchberger,
   recursive gcd/specialisation root extraction, and signed point recovery;
 * a fail-closed S0 orchestrator with pinned inputs, C-7 checks, one-worker
-  execution, `nice >= 10`, and an 8 GiB address-space ceiling; G0-6 regenerates
-  its fixture, targets, P_setup, and query traces in a separate process against
-  the explicit `s0_operation_spec.py` site contract, so producer counters and
-  events are claims rather than expected inputs. P_setup includes coefficient
-  specialization, indicator reduction, pair products, and factor-base lift
-  square roots in the same C-3 multiplication units; and
+  execution, `nice >= 10`, and an 8 GiB address-space ceiling. Every native
+  abnormal path sends TERM and then KILL to the fresh process group, attempts
+  to reap the leader, confirms the group is gone, and globally stops later
+  gates when that confirmation is unavailable;
+* a standalone G0-6 semantic reference which imports neither `g1_s0.py` nor
+  its operation-site registry. It independently derives the fixture and all
+  20 targets, rebuilds P_setup, implements D-2, Buchberger, recursive roots,
+  and signed recovery, and compares setup state, arithmetic outputs, and raw
+  primitive totals. Producer events are only an auxiliary site-contract and
+  receipt-consistency claim. Offline regressions cover all 60 sites / 63
+  site-component pairs and reject a coherent missing-charge forgery that
+  preserves arithmetic. P_setup includes coefficient specialization,
+  indicator reduction, pair products, and factor-base lift square roots in
+  the same C-3 multiplication units; and
 * an explicitly selected Modal Sage-verifier backend pinned to the linux/amd64
   manifest
   `sagemath/sagemath@sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d`.

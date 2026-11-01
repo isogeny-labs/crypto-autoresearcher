@@ -18,6 +18,7 @@ from pathlib import Path
 import g1_s0 as g1
 import o5_group
 import s0_counter_checker as checker
+import s0_counter_reference as counter_reference
 import s0_driver as driver
 import s0_gate_worker as gate_worker
 import s0_modal_sage as modal_adapter
@@ -50,40 +51,57 @@ def _aggregates(events, components):
     return aggregates, reported
 
 
-def synthetic_expected_document():
+def synthetic_documents():
     setup_events = _events_for_components(("P",))
     setup_raw, errors = operation_spec.aggregate(setup_events)
     assert not errors
+    setup_receipt = dict(setup_raw["P"], units=checker.units(setup_raw["P"]))
     query_events = _events_for_components(checker.COMPONENTS)
     components, reported = _aggregates(query_events, checker.COMPONENTS)
-    queries = []
+    expected_queries, producer_queries = [], []
     for attempt in range(20):
-        queries.append({"attempt": attempt, "scalar": attempt,
-                        "target": [attempt, attempt + 1],
-                        "events": json.loads(json.dumps(query_events)),
-                        "components": json.loads(json.dumps(components)),
-                        "reported_units": dict(reported)})
-    return {
+        result = {
+            "status": "ok", "member": bool(attempt % 2),
+            "candidate_xs": [[attempt] * 5], "decompositions": [],
+            "basis_size": attempt + 1, "f6_terms": attempt + 2,
+        }
+        expected_queries.append({
+            "attempt": attempt, "scalar": attempt,
+            "target": [attempt, attempt + 1], "result": result,
+            "components": json.loads(json.dumps(components)),
+        })
+        producer_queries.append({
+            "attempt": attempt, "scalar": attempt,
+            "target": [attempt, attempt + 1], "result": dict(result),
+            "events": json.loads(json.dumps(query_events)),
+            "components": json.loads(json.dumps(components)),
+            "reported_units": dict(reported),
+        })
+    expected = {
         "fixture": {"fixture_id": "offline-operation-contract"},
         "terms_sha256": "offline-operation-contract",
-        "g1_sha256": "offline-operation-contract",
-        "operation_spec_sha256": "offline-operation-contract",
-        "setup": {"events": setup_events, "raw": setup_raw["P"],
-                  "units": checker.units(setup_raw["P"])},
-        "queries_completed": 20, "operation_log": queries,
+        "setup": {"fingerprint_sha256": "offline-setup", **setup_receipt},
+        "queries_completed": 20, "queries": expected_queries,
     }
+    producer = {
+        "fixture": expected["fixture"], "terms_sha256": expected["terms_sha256"],
+        "producer_source_sha256": checker.source_hashes(),
+        "setup": {"fingerprint_sha256": "offline-setup",
+                  "events": setup_events, **setup_receipt},
+        "queries_completed": 20, "operation_log": producer_queries,
+    }
+    return producer, expected
 
 
 def check_counter_replay():
-    expected = synthetic_expected_document()
-    document = json.loads(json.dumps(expected))
+    document, expected = synthetic_documents()
     assert checker.compare_documents(document, expected)["pass"] is True
 
     # Every registered setup and query site is subjected independently to an
     # omission and to a semantic tamper.  The expected trace is held fixed.
     tested_pairs = []
-    for location, events in (("setup", expected["setup"]["events"]),
-                             ("query", expected["operation_log"][0]["events"])):
+    for location, events in (("setup", document["setup"]["events"]),
+                             ("query", document["operation_log"][0]["events"])):
         for index, event in enumerate(events):
             pair = (location, event["component"], event["site"])
             tested_pairs.append(pair)
@@ -105,27 +123,164 @@ def check_counter_replay():
     aggregate_tamper["operation_log"][7]["components"]["G"]["mul"] += 1
     assert checker.compare_documents(aggregate_tamper, expected)["pass"] is False
     source_tamper = json.loads(json.dumps(document))
-    source_tamper["operation_spec_sha256"] = "0" * 64
+    source_tamper["producer_source_sha256"]["g1_s0.py"] = "0" * 64
     assert checker.compare_documents(source_tamper, expected)["pass"] is False
+    result_tamper = json.loads(json.dumps(document))
+    result_tamper["operation_log"][3]["result"]["basis_size"] += 1
+    assert checker.compare_documents(result_tamper, expected)["pass"] is False
     return {"queries": 20, "tampered_aggregate_rejected": True,
             "tampered_source_binding_rejected": True,
+            "tampered_arithmetic_result_rejected": True,
             "site_component_pairs_with_omission_and_tamper_tests": len(tested_pairs),
             "registered_sites": len(operation_spec.SITE_SPEC)}
 
 
 def check_independent_counter_inputs():
     producer_fixture, _deck = gate_worker.smoke_fixture(7, 2)
-    checker_fixture = checker.smoke_fixture(7, 2)
+    checker_fixture = counter_reference.smoke_fixture(7, 2)
     assert producer_fixture == checker_fixture
     for attempt in range(20):
         producer_scalar, producer_target = gate_worker.attempt_target(
             producer_fixture, attempt)
-        checker_scalar, checker_target = checker.attempt_target(
+        checker_scalar, checker_target = counter_reference.target_for(
             checker_fixture, attempt)
         assert (producer_scalar, producer_target) == (checker_scalar, checker_target)
     return {"fixture_byte_equal": True, "targets_equal": 20,
+            "independent_reference_imports_g1": False,
             "producer_functions_called": ["smoke_fixture", "attempt_target"],
             "gate_functions_called": []}
+
+
+def check_proves_too_much_regression():
+    reference_output, reference_receipt = counter_reference.reference_pseudo_basis(
+        101, 2, 3, 7)
+    normal = g1.Counters()
+    normal_output = g1._d2_pseudo_basis(101, 2, 3, 7, normal)
+    assert normal_output == reference_output
+    assert normal.totals() == reference_receipt
+
+    class MissingProducerCharge(g1.Counters):
+        def charge(self, operation, count=1, site="unspecified"):
+            if site == "d2_target.a_square":
+                return
+            return super().charge(operation, count, site)
+
+    missing = MissingProducerCharge()
+    missing_output = g1._d2_pseudo_basis(101, 2, 3, 7, missing)
+    assert missing_output == reference_output
+    assert missing.totals()["mul"] == reference_receipt["mul"] - 1
+    assert checker.compare_receipt(
+        missing.totals(), reference_receipt, "proves-too-much")
+
+    # A coherent producer forgery deletes both a trace charge and its reported
+    # total while leaving the arithmetic result unchanged.  Trace-vs-total
+    # self-consistency still passes; the standalone semantic total rejects it.
+    producer, expected = synthetic_documents()
+    query = producer["operation_log"][0]
+    index = next(index for index, event in enumerate(query["events"])
+                 if event["component"] == "S" and event["operation"] == "mul")
+    deleted = query["events"].pop(index)
+    assert deleted["count"] == 1
+    for sequence, event in enumerate(query["events"]):
+        event["sequence"] = sequence
+    query["components"]["S"]["mul"] -= 1
+    query["components"]["S"]["units"] -= 1
+    query["reported_units"]["S"] -= 1
+    assert not checker.compare_trace_claim(
+        query["events"], query["components"], checker.COMPONENTS,
+        "coherent deletion")
+    checked = checker.compare_documents(producer, expected)
+    assert checked["pass"] is False
+    assert query["result"] == expected["queries"][0]["result"]
+    return {
+        "actual_arithmetic_output_unchanged": True,
+        "actual_deleted_charge_count": 1,
+        "coherent_trace_and_total_forgery_rejected": True,
+        "independent_reference_mul": reference_receipt["mul"],
+    }
+
+
+def check_reference_component_units():
+    # Fixed unit inputs, not a smoke fixture or query draw, exercise every
+    # independently implemented component without invoking G0-6.
+    producer_setup_count = g1.Counters()
+    producer_setup_count.set_component("P")
+    producer_setup = g1.d2_setup(
+        101, 2, 3, (1, 3), checker.TERMS, producer_setup_count)
+    reference_setup_count = counter_reference.PrimitiveCount()
+    reference_setup = counter_reference.build_setup(
+        101, 2, 3, (1, 3), checker.TERMS, reference_setup_count)
+    assert producer_setup_count.totals() == reference_setup_count.receipt()
+    assert (gate_worker.setup_fingerprint(producer_setup)
+            == counter_reference.setup_fingerprint(reference_setup))
+
+    specialised_units = {}
+    for label, target_x in (("finite", 7), ("zero_target", None)):
+        producer_s_count = g1.Counters()
+        reference_s_count = counter_reference.PrimitiveCount()
+        if target_x is None:
+            producer_polynomial = g1.d2_zero_target(
+                producer_setup, producer_s_count)
+            reference_polynomial = counter_reference.zero_target(
+                reference_setup, reference_s_count)
+        else:
+            producer_polynomial = g1.d2_specialise(
+                producer_setup, target_x, producer_s_count)
+            reference_polynomial = counter_reference.specialise(
+                reference_setup, target_x, reference_s_count)
+        assert producer_polynomial.terms == reference_polynomial.terms
+        assert producer_s_count.totals() == reference_s_count.receipt()
+        specialised_units[label] = reference_s_count.units()
+
+    polynomial_terms = (
+        {(2, 0): 1, (0, 0): -1},
+        {(0, 2): 1, (0, 0): -1},
+        {(1, 0): 1, (0, 1): -1},
+    )
+    producer_g_count = g1.Counters()
+    reference_g_count = counter_reference.PrimitiveCount()
+    producer_basis = g1.buchberger(
+        [g1.SparsePoly(2, terms) for terms in polynomial_terms],
+        101, producer_g_count)
+    reference_basis = counter_reference.buchberger(
+        [counter_reference.RefSparse(2, terms) for terms in polynomial_terms],
+        101, reference_g_count)
+    assert ([poly.terms for poly in producer_basis]
+            == [poly.terms for poly in reference_basis])
+    assert producer_g_count.totals() == reference_g_count.receipt()
+
+    producer_x_count = g1.Counters()
+    reference_x_count = counter_reference.PrimitiveCount()
+    producer_roots = g1.extract_lex_roots(
+        [], [], (1, 2), 101, producer_x_count,
+        indicator=g1.indicator_coefficients((1, 2), 101))
+    reference_roots = counter_reference.extract_roots(
+        [], [], (1, 2), 101,
+        counter_reference.indicator((1, 2), 101), reference_x_count)
+    assert producer_roots == reference_roots
+    assert producer_x_count.totals() == reference_x_count.receipt()
+
+    fixture = {"p": 101, "a": 2, "b": 3}
+    points = {1: o5_group.canonical_point(101, 2, 3, 1)}
+    candidates = [(1, 1, 1, 1, 1)]
+    producer_v_count = g1.Counters()
+    reference_v_count = counter_reference.PrimitiveCount()
+    producer_decompositions = g1.signed_recovery(
+        fixture, candidates, None, producer_v_count, points=points)
+    reference_decompositions = counter_reference.recover(
+        fixture, candidates, None, points, reference_v_count)
+    assert producer_decompositions == reference_decompositions
+    assert producer_v_count.totals() == reference_v_count.receipt()
+    return {
+        "fixed_unit_inputs_only": True,
+        "p_setup_fingerprint_equal": True,
+        "p_setup_units": reference_setup_count.units(),
+        "s_polynomial_and_totals_equal": True,
+        "s_units": specialised_units,
+        "g_basis_and_totals_equal": True,
+        "x_roots_and_totals_equal": True,
+        "v_recovery_and_totals_equal": True,
+    }
 
 
 def check_counter_sites_and_legal_root_branch():
@@ -314,11 +469,18 @@ def check_modal_contract():
 
 def check_static_lifecycle_and_sage_bindings():
     native_source = inspect.getsource(driver.run_native)
+    cleanup_source = inspect.getsource(driver._terminate_and_reap_process_group)
     assert "start_new_session=True" in native_source
-    assert "os.killpg" in native_source
-    assert "signal.SIGKILL" in native_source
+    assert "_terminate_and_reap_process_group" in native_source
+    assert "except BaseException" in native_source
+    assert "os.killpg" in cleanup_source
+    assert "signal.SIGTERM" in cleanup_source
+    assert "signal.SIGKILL" in cleanup_source
+    assert "process.wait" in cleanup_source
+    assert "group_gone" in cleanup_source
     driver_source = inspect.getsource(driver)
     assert "unconfirmed Modal sandbox termination" in driver_source
+    assert "unconfirmed native process-group reaping" in driver_source
     assert "dir=MANDATED_TMPDIR" in driver_source
     assert 'choices=("modal",)' in driver_source
     assert 'if SAGE_BACKEND != "modal"' in driver_source
@@ -335,11 +497,32 @@ def check_static_lifecycle_and_sage_bindings():
     assert '"actual_d2_specialise_checks": len(samples)' in worker_source
     assert '"independent_bareiss_checks": len(samples)' in worker_source
     checker_source = driver.COUNTER_CHECKER.read_text()
-    assert "independent regeneration of the frozen smoke fixture" in checker_source
-    assert "compare_trace" in checker_source
+    assert "standalone s0_counter_reference.py" in checker_source
+    assert "producer_counters_or_events_are_expected_inputs" in checker_source
+    checker_imports = {
+        alias.name
+        for node in ast.walk(ast.parse(checker_source))
+        if isinstance(node, (ast.Import, ast.ImportFrom))
+        for alias in node.names
+    }
+    assert "g1_s0" not in checker_imports
+    assert "o5_group" not in checker_imports
+
+    reference_source = (HERE / "s0_counter_reference.py").read_text()
+    reference_imports = {
+        alias.name
+        for node in ast.walk(ast.parse(reference_source))
+        if isinstance(node, (ast.Import, ast.ImportFrom))
+        for alias in node.names
+    }
+    assert not ({"g1_s0", "o5_group", "s0_operation_spec"} & reference_imports)
+    assert "def expected_document" in reference_source
+    assert "def membership" in reference_source
     return {"native_process_group_kill": True,
+            "native_abnormal_path_reap_and_global_stop": True,
             "modal_global_stop": True,
             "non_modal_sage_refused": True,
+            "standalone_counter_import_independence": True,
             "inventory_and_o5_sage_bindings": True,
             "d2_all_tuple_and_d6_controls_present": True}
 
@@ -348,6 +531,8 @@ def main():
     checks = {
         "counter_replay": check_counter_replay(),
         "counter_input_regeneration": check_independent_counter_inputs(),
+        "proves_too_much_regression": check_proves_too_much_regression(),
+        "reference_component_units": check_reference_component_units(),
         "counter_sites_and_roots": check_counter_sites_and_legal_root_branch(),
         "operation_spec_source_binding": check_operation_spec_source_binding(),
         "o5_group": check_o5_group(),
@@ -363,9 +548,9 @@ def main():
         "checks": checks,
         "source_sha256": {
             name: sha256(HERE / name) for name in (
-                "g1_s0.py", "o5_group.py", "s0_counter_checker.py", "s0_driver.py",
-                "s0_gate_worker.py", "s0_modal_sage.py", "s0_operation_spec.py",
-                "s0_sage_gates.py")
+                "g1_s0.py", "o5_group.py", "s0_counter_checker.py",
+                "s0_counter_reference.py", "s0_driver.py", "s0_gate_worker.py",
+                "s0_modal_sage.py", "s0_operation_spec.py", "s0_sage_gates.py")
         },
     }
     print(json.dumps(result, sort_keys=True, separators=(",", ":")))

@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import base64
 import datetime as dt
+import errno
 import hashlib
 import json
 import os
@@ -16,6 +17,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import yaml
@@ -57,7 +59,7 @@ GATES = {
     "G0-3": "specialised f6 has 1,000 signed-sum and 1,000 non-sum checks per fixture",
     "G0-4": "G1 agrees with O5 on 200 smoke attempts per size, including L=8",
     "G0-5": "frozen power analysis reproduces committed rates within 3 MC standard errors",
-    "G0-6": "independent input replay exactly recomputes P_setup and S,G,X,V units on 20 smoke queries",
+    "G0-6": "standalone reference matches P_setup, arithmetic outputs, and S,G,X,V totals on 20 smoke queries",
 }
 
 PINNED = {
@@ -160,6 +162,96 @@ def child_limits():
     resource.setrlimit(resource.RLIMIT_AS, (RSS_BYTES, RSS_BYTES))
 
 
+def _process_group_exists(process_group):
+    try:
+        os.killpg(process_group, 0)
+    except ProcessLookupError:
+        return False
+    except OSError as error:
+        if error.errno == errno.ESRCH:
+            return False
+        return True
+    return True
+
+
+def _wait_process_group_gone(process_group, timeout):
+    deadline = time.monotonic() + timeout
+    while _process_group_exists(process_group):
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(0.05)
+    return True
+
+
+def _stream_text(value):
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", "replace")
+    return str(value)
+
+
+def _terminate_and_reap_process_group(process, stdout="", stderr=""):
+    """TERM/KILL a native process group and prove leader and group are gone."""
+    errors = []
+    process_group = process.pid
+    captured_stdout, captured_stderr = _stream_text(stdout), _stream_text(stderr)
+
+    def capture(timeout):
+        nonlocal captured_stdout, captured_stderr
+        try:
+            new_stdout, new_stderr = process.communicate(timeout=timeout)
+            captured_stdout = _stream_text(new_stdout)
+            captured_stderr = _stream_text(new_stderr)
+            return True
+        except subprocess.TimeoutExpired as error:
+            if error.stdout is not None:
+                captured_stdout = _stream_text(error.stdout)
+            if error.stderr is not None:
+                captured_stderr = _stream_text(error.stderr)
+            return False
+        except BaseException as error:  # cleanup must continue after decoder/pipe failures
+            errors.append("communicate %s: %s" % (type(error).__name__, error))
+            return False
+
+    if _process_group_exists(process_group):
+        try:
+            os.killpg(process_group, signal.SIGTERM)
+        except ProcessLookupError:
+            pass
+        except OSError as error:
+            if error.errno != errno.ESRCH:
+                errors.append("SIGTERM %s: %s" % (type(error).__name__, error))
+    capture(5)
+
+    if process.poll() is None or _process_group_exists(process_group):
+        try:
+            os.killpg(process_group, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        except OSError as error:
+            if error.errno != errno.ESRCH:
+                errors.append("SIGKILL %s: %s" % (type(error).__name__, error))
+        capture(5)
+
+    if process.poll() is None:
+        try:
+            process.wait(timeout=5)
+        except BaseException as error:
+            errors.append("wait %s: %s" % (type(error).__name__, error))
+    group_gone = _wait_process_group_gone(process_group, 5)
+    leader_reaped = process.poll() is not None
+    if not leader_reaped:
+        errors.append("direct child was not reaped")
+    if not group_gone:
+        errors.append("process group still exists after SIGKILL")
+    return {
+        "stdout": captured_stdout, "stderr": captured_stderr,
+        "process_group_reaped": leader_reaped and group_gone,
+        "termination_error": "; ".join(errors) if errors else None,
+    }
+
+
 def run_native(arguments, tmpdir, timeout):
     command = [sys.executable, *map(str, arguments)]
     started = now()
@@ -170,33 +262,50 @@ def run_native(arguments, tmpdir, timeout):
             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
             preexec_fn=child_limits, start_new_session=True)
         stdout, stderr = process.communicate(timeout=timeout)
+        # A normally reaped leader must not leave descendants in its private
+        # session.  Clean them up and classify the launch as abnormal if it did.
+        if _process_group_exists(process.pid):
+            cleanup = _terminate_and_reap_process_group(process, stdout, stderr)
+            return {"command": command, "started_at": started, "finished_at": now(),
+                    "returncode": process.returncode,
+                    "stdout": cleanup["stdout"], "stderr": cleanup["stderr"],
+                    "timeout": False,
+                    "process_group_reaped": cleanup["process_group_reaped"],
+                    "termination_error": cleanup["termination_error"],
+                    "lifecycle_error": "native leader exited with live descendants",
+                    "launch_error": None}
         return {"command": command, "started_at": started, "finished_at": now(),
                 "returncode": process.returncode, "stdout": stdout,
                 "stderr": stderr, "timeout": False, "process_group_reaped": True,
+                "termination_error": None, "lifecycle_error": None,
                 "launch_error": None}
     except subprocess.TimeoutExpired as error:
-        termination_error = None
-        try:
-            os.killpg(process.pid, signal.SIGTERM)
-            try:
-                stdout, stderr = process.communicate(timeout=5)
-            except subprocess.TimeoutExpired:
-                os.killpg(process.pid, signal.SIGKILL)
-                stdout, stderr = process.communicate()
-        except (OSError, subprocess.SubprocessError) as kill_error:
-            termination_error = "%s: %s" % (type(kill_error).__name__, kill_error)
-            stdout = error.stdout or ""
-            stderr = error.stderr or ""
+        cleanup = _terminate_and_reap_process_group(
+            process, error.stdout or "", error.stderr or "")
         return {"command": command, "started_at": started, "finished_at": now(),
-                "returncode": None, "stdout": stdout, "stderr": stderr,
+                "returncode": process.returncode,
+                "stdout": cleanup["stdout"], "stderr": cleanup["stderr"],
                 "timeout": True, "timeout_seconds": timeout,
-                "process_group_reaped": termination_error is None,
-                "termination_error": termination_error, "launch_error": None}
-    except (OSError, subprocess.SubprocessError) as error:
+                "process_group_reaped": cleanup["process_group_reaped"],
+                "termination_error": cleanup["termination_error"],
+                "lifecycle_error": None, "launch_error": None}
+    except (OSError, subprocess.SubprocessError, UnicodeError, ValueError) as error:
+        cleanup = ({"stdout": "", "stderr": "",
+                    "process_group_reaped": True, "termination_error": None}
+                   if process is None else _terminate_and_reap_process_group(process))
         return {"command": command, "started_at": started, "finished_at": now(),
-                "returncode": None, "stdout": "", "stderr": str(error),
-                "timeout": False, "process_group_reaped": process is None,
+                "returncode": process.returncode if process is not None else None,
+                "stdout": cleanup["stdout"],
+                "stderr": cleanup["stderr"] + ("\n" if cleanup["stderr"] else "") + str(error),
+                "timeout": False,
+                "process_group_reaped": cleanup["process_group_reaped"],
+                "termination_error": cleanup["termination_error"],
+                "lifecycle_error": None,
                 "launch_error": "%s: %s" % (type(error).__name__, error)}
+    except BaseException:
+        if process is not None:
+            _terminate_and_reap_process_group(process)
+        raise
 
 
 def modal_request(script, arguments, timeout):
@@ -444,6 +553,12 @@ def gate_record(gate_id, passed=False, failed=False, blocked=False,
             "observation": observation}
 
 
+def bind_native_reaping(record, *processes):
+    record["native_process_group_reaped"] = all(
+        process.get("process_group_reaped") is True for process in processes)
+    return record
+
+
 def parse_process_json(process, binary=False):
     if binary:
         return json.loads(process["stdout_bytes"].decode("utf-8"))
@@ -537,20 +652,37 @@ def run_json_gate(gate_id, process, evidence_path):
     write_json(evidence_path, {"schema": "crypto.autoresearch.icex_s0_gate_evidence.v1",
                                "gate": gate_id, "process": public_receipt(process),
                                "result": result})
+    if process.get("process_group_reaped") is not True:
+        return bind_native_reaping(
+            gate_record(gate_id, blocked=True, classification="infrastructure_error",
+                        observation="native process group reaping was not confirmed",
+                        evidence=(evidence_path,)), process)
+    if process.get("lifecycle_error"):
+        return bind_native_reaping(
+            gate_record(gate_id, blocked=True, classification="infrastructure_error",
+                        observation=process["lifecycle_error"],
+                        evidence=(evidence_path,)), process)
     if process["timeout"]:
-        return gate_record(gate_id, blocked=True, classification="resource_exhaustion",
-                           observation="gate process watchdog expired", evidence=(evidence_path,))
+        return bind_native_reaping(
+            gate_record(gate_id, blocked=True, classification="resource_exhaustion",
+                        observation="gate process watchdog expired", evidence=(evidence_path,)),
+            process)
     if result is None:
-        return gate_record(gate_id, blocked=True, classification="infrastructure_error",
-                           observation="gate emitted no parseable JSON receipt", evidence=(evidence_path,))
+        return bind_native_reaping(
+            gate_record(gate_id, blocked=True, classification="infrastructure_error",
+                        observation="gate emitted no parseable JSON receipt",
+                        evidence=(evidence_path,)), process)
     if result.get("pass") is True and process["returncode"] == 0:
-        return gate_record(gate_id, passed=True, classification="pass",
-                           observation="frozen gate condition passed", evidence=(evidence_path,))
-    return gate_record(gate_id, failed=not result.get("blocked", False),
-                       blocked=result.get("blocked", False),
-                       classification=result.get("classification", "implementation_error"),
-                       observation=result.get("observation", "frozen gate condition did not pass"),
-                       evidence=(evidence_path,))
+        return bind_native_reaping(
+            gate_record(gate_id, passed=True, classification="pass",
+                        observation="frozen gate condition passed", evidence=(evidence_path,)),
+            process)
+    return bind_native_reaping(
+        gate_record(gate_id, failed=not result.get("blocked", False),
+                    blocked=result.get("blocked", False),
+                    classification=result.get("classification", "implementation_error"),
+                    observation=result.get("observation", "frozen gate condition did not pass"),
+                    evidence=(evidence_path,)), process)
 
 
 def run_g02(tmpdir):
@@ -583,20 +715,34 @@ def run_g06(tmpdir):
     if result is not None:
         result["producer_process"] = public_receipt(producer)
     write_json(producer_path, result or {"parse_error": True, "process": public_receipt(producer)})
+    if producer.get("process_group_reaped") is not True:
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                        observation="producer process group reaping was not confirmed",
+                        evidence=(producer_path,)), producer)
+    if producer.get("lifecycle_error"):
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                        observation=producer["lifecycle_error"], evidence=(producer_path,)),
+            producer)
     if producer["timeout"]:
-        return gate_record("G0-6", blocked=True,
-                           classification="resource_exhaustion",
-                           observation="20-query producer watchdog expired", evidence=(producer_path,))
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True,
+                        classification="resource_exhaustion",
+                        observation="20-query producer watchdog expired",
+                        evidence=(producer_path,)), producer)
     if producer.get("launch_error") or producer.get("returncode") != 0:
-        return gate_record("G0-6", blocked=True, classification="infrastructure_error",
-                           observation="operation-log producer failed to execute cleanly",
-                           evidence=(producer_path,))
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                        observation="operation-log producer failed to execute cleanly",
+                        evidence=(producer_path,)), producer)
     if (not isinstance(result, dict) or result.get("queries_completed") != 20
             or not isinstance(result.get("operation_log"), list)
             or len(result["operation_log"]) != 20):
-        return gate_record("G0-6", blocked=True, classification="infrastructure_error",
-                           observation="producer receipt was malformed or incomplete",
-                           evidence=(producer_path,))
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                        observation="producer receipt was malformed or incomplete",
+                        evidence=(producer_path,)), producer)
     checker = run_native([COUNTER_CHECKER, producer_path], tmpdir, 7200)
     checker_path = EVIDENCE / "g0-6-independent-check.json"
     try:
@@ -604,27 +750,41 @@ def run_g06(tmpdir):
     except (json.JSONDecodeError, UnicodeDecodeError, TypeError):
         checked = None
     write_json(checker_path, {"process": public_receipt(checker), "result": checked})
+    if checker.get("process_group_reaped") is not True:
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                        observation="counter-checker process group reaping was not confirmed",
+                        evidence=(producer_path, checker_path)), producer, checker)
+    if checker.get("lifecycle_error"):
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                        observation=checker["lifecycle_error"],
+                        evidence=(producer_path, checker_path)), producer, checker)
     if checker["timeout"]:
-        return gate_record("G0-6", blocked=True, classification="resource_exhaustion",
-                           observation="independent counter checker watchdog expired",
-                           evidence=(producer_path, checker_path))
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="resource_exhaustion",
+                        observation="independent counter checker watchdog expired",
+                        evidence=(producer_path, checker_path)), producer, checker)
     if checker.get("launch_error") or checker.get("returncode") != 0 or not isinstance(checked, dict):
-        return gate_record("G0-6", blocked=True, classification="infrastructure_error",
-                           observation="counter checker failed or emitted a malformed receipt",
-                           evidence=(producer_path, checker_path))
+        return bind_native_reaping(
+            gate_record("G0-6", blocked=True, classification="infrastructure_error",
+                        observation="counter checker failed or emitted a malformed receipt",
+                        evidence=(producer_path, checker_path)), producer, checker)
     if checked.get("pass") is True:
-        return gate_record("G0-6", passed=True, classification="pass",
-                           observation=("independently regenerated setup and 20 deterministic queries "
-                                        "matched every site-bound event, P_setup, and all four query totals"),
-                           evidence=(producer_path, checker_path))
-    return gate_record("G0-6", failed=True, classification="implementation_error",
-                       observation="independent counter recomputation disagreed",
-                       evidence=(producer_path, checker_path))
+        return bind_native_reaping(
+            gate_record("G0-6", passed=True, classification="pass",
+                        observation=("standalone arithmetic reference matched setup state, "
+                                     "20 query outputs, and every primitive total"),
+                        evidence=(producer_path, checker_path)), producer, checker)
+    return bind_native_reaping(
+        gate_record("G0-6", failed=True, classification="implementation_error",
+                    observation="independent semantic counter reference disagreed",
+                    evidence=(producer_path, checker_path)), producer, checker)
 
 
 def run_g04(tmpdir):
     sizes = [(20, 8), (16, 5), (18, 6), (22, 10), (24, 13)]
-    results, processes = [], []
+    results, processes, native_reaped = [], [], []
     for bits, size in sizes:
         reading = machine_reading()
         if not c7_ok(reading):
@@ -635,9 +795,20 @@ def run_g04(tmpdir):
         process = run_native([WORKER, "--gate", "G0-4", "--bits", str(bits), "--L", str(size)],
                              tmpdir, 48 * 3600)
         processes.append(public_receipt(process))
+        native_reaped.append(process.get("process_group_reaped") is True)
+        if process.get("process_group_reaped") is not True:
+            results.append({"bits": bits, "L": size, "pass": False, "blocked": True,
+                            "classification": "infrastructure_error",
+                            "observation": "native process group reaping was not confirmed"})
+            break
+        if process.get("lifecycle_error"):
+            results.append({"bits": bits, "L": size, "pass": False, "blocked": True,
+                            "classification": "infrastructure_error",
+                            "observation": process["lifecycle_error"]})
+            break
         try:
             result = parse_process_json(process)
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, UnicodeDecodeError, TypeError):
             result = {"bits": bits, "L": size, "pass": False, "blocked": True,
                       "classification": "resource_exhaustion" if process["timeout"] else "infrastructure_error",
                       "observation": "size process emitted no parseable result"}
@@ -678,6 +849,7 @@ def run_g04(tmpdir):
                            observation="all 1,000 smoke decisions agreed with O5",
                            evidence=(evidence_path,))
         record["per_size_timing"] = timing_table
+        record["native_process_group_reaped"] = all(native_reaped)
         return record
     blocking_class = next((row.get("classification") for row in results if row.get("blocked")),
                           "resource_exhaustion")
@@ -686,6 +858,7 @@ def run_g04(tmpdir):
                        observation="G1/O5 smoke panel did not complete; see per-size receipt",
                        evidence=(evidence_path,))
     record["per_size_timing"] = timing_table
+    record["native_process_group_reaped"] = all(native_reaped)
     return record
 
 
@@ -748,10 +921,12 @@ def write_reports(started, readings, gates, command, preflight, protocol_deviati
     impl = {
         "schema": "crypto.autoresearch.implementation_report.v1", "task_id": TASK,
         "experiment_id": EXP, "implementation_commit": git_state()["commit"],
+        "commit_binding": ("implementation_commit identifies the immutable source commit; "
+                           "this report is stored in a later evidence commit and does not "
+                           "claim a self-referential hash"),
         "owner": OWNER, "epoch": EPOCH,
         "write_scope": ["experiments/EXP-ICEX-153c34/implementation/"],
-        "files": files + [{"path": str((HERE / "implementation_report.yaml").relative_to(REPO)),
-                            "sha256": "self; final content is bound by the Coordinator snapshot receipt"}],
+        "files": files,
         "commands": [command], "results": {"runner_status": status,
             "s0_gates_report": str(gates_path.relative_to(REPO)),
             "gates_passed": [gate["id"] for gate in gates if gate["pass"]],
@@ -845,16 +1020,34 @@ def main(argv=None):
         else:
             outcomes["G0-2"] = pending_gate("G0-2", "G0-1 dependency did not pass")
             outcomes["G0-3"] = pending_gate("G0-3", "G0-1 dependency did not pass")
+        if outcomes["G0-3"].get("native_process_group_reaped") is False:
+            global_stop = "unconfirmed native process-group reaping in G0-3"
         if global_stop:
             for gate_id in ("G0-5", "G0-6", "G0-4"):
                 outcomes[gate_id] = pending_gate(gate_id, global_stop, "infrastructure_error")
         else:
             readings.append(machine_reading())
-            outcomes["G0-5"] = run_g05(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-5", "C-7 failed between stages")
-            readings.append(machine_reading())
-            outcomes["G0-6"] = run_g06(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-6", "C-7 failed between stages")
-            readings.append(machine_reading())
-            outcomes["G0-4"] = run_g04(tmpdir) if c7_ok(readings[-1]) else pending_gate("G0-4", "C-7 failed between stages")
+            outcomes["G0-5"] = (run_g05(tmpdir) if c7_ok(readings[-1])
+                                  else pending_gate("G0-5", "C-7 failed between stages"))
+            if outcomes["G0-5"].get("native_process_group_reaped") is False:
+                global_stop = "unconfirmed native process-group reaping in G0-5"
+            if global_stop:
+                outcomes["G0-6"] = pending_gate("G0-6", global_stop, "infrastructure_error")
+                outcomes["G0-4"] = pending_gate("G0-4", global_stop, "infrastructure_error")
+            else:
+                readings.append(machine_reading())
+                outcomes["G0-6"] = (run_g06(tmpdir) if c7_ok(readings[-1])
+                                      else pending_gate("G0-6", "C-7 failed between stages"))
+                if outcomes["G0-6"].get("native_process_group_reaped") is False:
+                    global_stop = "unconfirmed native process-group reaping in G0-6"
+                if global_stop:
+                    outcomes["G0-4"] = pending_gate(
+                        "G0-4", global_stop, "infrastructure_error")
+                else:
+                    readings.append(machine_reading())
+                    outcomes["G0-4"] = (run_g04(tmpdir) if c7_ok(readings[-1])
+                                          else pending_gate(
+                                              "G0-4", "C-7 failed between stages"))
         gates = [outcomes[gate_id] for gate_id in GATES]
     write_reports(started, readings, gates, command, preflight, deviations)
     return 0 if all(gate["pass"] for gate in gates) else 2

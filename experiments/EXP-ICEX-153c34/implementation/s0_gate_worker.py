@@ -537,6 +537,28 @@ def gate_g04(bits, wanted_l):
     }
 
 
+def setup_fingerprint(setup):
+    """Canonical producer setup state for independent semantic comparison."""
+    def sparse(poly):
+        return [[list(exponent), value]
+                for exponent, value in sorted(poly.terms.items())]
+
+    document = {
+        "p": setup["p"], "a": setup["a"], "b": setup["b"],
+        "V": list(setup["V"]), "indicator": list(setup["indicator"]),
+        "coeffs": [sparse(poly) for poly in setup["coeffs"]],
+        "pair_products": [
+            {"pair": [left, right],
+             "terms": sparse(setup["pair_products"][left, right])}
+            for left in range(9) for right in range(left, 9)
+        ],
+        "points": [[x, list(setup["points"][x])]
+                   for x in sorted(setup["points"])],
+    }
+    encoded = json.dumps(document, sort_keys=True, separators=(",", ":")).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
 def gate_g06():
     fixture, _deck = smoke_fixture(7, 2)
     setup_counter = g1.Counters(trace_operations=True)
@@ -569,16 +591,22 @@ def gate_g06():
             "seconds": elapsed, "components": result["components"],
             "events": result["operation_events"],
             "reported_units": {name: raw["units"] for name, raw in result["components"].items()},
+            "result": {key: result[key] for key in (
+                "status", "member", "candidate_xs", "decompositions",
+                "basis_size", "f6_terms")},
         })
     return {"gate": "G0-6", "pass": None, "blocked": False,
             "classification": "pending_independent_checker", "fixture": fixture,
             "terms_sha256": hashlib.sha256(TERMS.read_bytes()).hexdigest(),
-            "g1_sha256": hashlib.sha256(Path(g1.__file__).read_bytes()).hexdigest(),
-            "operation_spec_sha256": hashlib.sha256(
-                Path(operation_spec.__file__).read_bytes()).hexdigest(),
+            "producer_source_sha256": {
+                "g1_s0.py": hashlib.sha256(Path(g1.__file__).read_bytes()).hexdigest(),
+                "s0_operation_spec.py": hashlib.sha256(
+                    Path(operation_spec.__file__).read_bytes()).hexdigest(),
+            },
             "setup": {"events": setup_counter.events,
-                      "raw": setup_counter.snapshot(),
-                      "units": setup_counter.units()},
+                      **setup_counter.snapshot(),
+                      "units": setup_counter.units(),
+                      "fingerprint_sha256": setup_fingerprint(setup)},
             "queries_completed": 20, "operation_log": operation_log}
 
 
