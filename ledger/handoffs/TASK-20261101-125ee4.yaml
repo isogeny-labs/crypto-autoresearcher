@@ -1,0 +1,70 @@
+handoff:
+  id: TASK-20261101-125ee4
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-01'
+  kind: snapshot_archive
+  archive_kind: snapshot
+  goal_id: GOAL-PFDR-fd09e0
+  batch_id: BATCH-3a63a4
+  question_id: RQ-PFDR-ae2fba
+  experiment_id: EXP-PFDR-ada71b
+  hypothesis_id: H-PFDR-ed7ccf
+  opened_by_decision: DEC-20261101-49576f
+  approved_by: DEC-20261101-cb3277
+  objective: Commit the selected proposal, hypothesis, frozen EXP-PFDR-ada71b specification, trial plan,
+    implementation, queue, handoffs and the design and approval decisions by exact path and bind them
+    by content at that commit, before dispatch of TASK-20261101-8951b8.
+  uncertainty_reduced: Durability and hash binding of the approved design package; not a scientific uncertainty.
+  inputs:
+  - ledger/proposals/IDEA-20261018-a0830c.yaml
+  - ledger/hypotheses/H-PFDR-ed7ccf.yaml
+  - experiments/EXP-PFDR-ada71b/specification.yaml
+  - experiments/EXP-PFDR-ada71b/trial-plan.json
+  - experiments/EXP-PFDR-ada71b/implementation/run.py
+  - experiments/EXP-PFDR-ada71b/implementation/check.py
+  - experiments/EXP-PFDR-ada71b/implementation/paircount.c
+  - experiments/EXP-PFDR-ada71b/implementation/vendor/curve.py
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json
+  - ledger/handoffs/TASK-20261101-8951b8.yaml
+  - ledger/handoffs/TASK-20261101-18d7f6.yaml
+  - ledger/handoffs/TASK-20261101-125ee4.yaml
+  - ledger/decisions/DEC-20261101-49576f.yaml
+  - ledger/decisions/DEC-20261101-cb3277.yaml
+  - experiments/EXP-PFDR-ada71b/protocol.json
+  - ledger/handoffs/TASK-20261101-f77bc6.yaml
+  constraints:
+  - Stage exactly the declared paths; never stage __pycache__ or tool scratch.
+  - Do not edit any declared path while archiving.
+  - Merge origin/main, never rebase.
+  - No trial is launched from this task; maximum_runs 0.
+  - A receipt is not evidence.
+  deliverables:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/archives/TASK-20261101-125ee4/snapshot-receipt.json
+  artifact_paths:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/archives/TASK-20261101-125ee4/snapshot-receipt.json
+  write_scope:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/archives/TASK-20261101-125ee4/
+  archived_by: TASK-20261101-125ee4
+  depends_on:
+  - TASK-20261101-f77bc6
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: true
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  completion_gate:
+  - path_sha256 in the receipt covers every declared path
+  - the commit is reachable from HEAD
+  - tools/newest_experiments.py --experiment EXP-PFDR-ada71b --json reports execution_state ready
+  - zero trials
+  return_format: receipt path, commit sha and the newest_experiments readiness output
+  handoff_record: ledger/handoffs/TASK-20261101-125ee4.yaml
+  archive:
+    kind: snapshot
+    binding_mode: content_at_commit
