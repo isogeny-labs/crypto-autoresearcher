@@ -246,8 +246,9 @@ changes no status.
 This is a scheduling rule and relaxes nothing: an impediment is never negative
 mathematical evidence (rule 5); an unservable `review-breakthrough`
 (`degradable: false`) leaves the claim un-promoted, never downgraded to
-`validator`. Owner cloud limits and stagnation caps can stop spending; a watchdog stop is not campaign
-exhaustion. Terminal retirement (`completed`, `closed_at_budget`,
+`validator`. Routine estimates do not stop research. Owner cloud limits and
+stagnation caps can stop spending; a watchdog stop is not campaign exhaustion.
+Terminal retirement (`completed`, `closed_at_budget`,
 `cancelled`) is a deliberate Coordinator act with a committed decision. A goal
 that can never be parked always looks runnable: never dispatch a task you
 cannot rank ahead of doing nothing; report an impeded goal with its `recheck`

@@ -30,6 +30,25 @@ note, and `source` names the note it came from. Do not write a claim that is
 not traceable to one: a formalization of a claim nobody made proves nothing
 about this program's research.
 
+## Cryptographic assumption attack corpus (2026-11-01)
+
+These five specs freeze the first finite trust-boundary tranche from the
+[attack-corpus source note](../../research/cryptographic_assumption_attack_corpus_20261101/README.md).
+They are pointers only: their theorem files do not yet exist, so every row is
+**undischarged** and makes no protocol-security or vulnerability claim.
+
+| target | kind | exact boundary | state |
+| --- | --- | --- | --- |
+| `attack-mod-alias.yaml` | `formal_counterexample` | residue equality versus bounded natural representatives | undischarged |
+| `attack-subgroup-membership.yaml` | `formal_counterexample` | ambient product group versus designated prime-order subgroup | undischarged |
+| `attack-batch-rlc-adaptive.yaml` | `formal_counterexample` | adaptive cancellation versus fixed-error finite counting | undischarged |
+| `attack-polynomial-function-alias.yaml` | `formal_counterexample` | polynomial functions versus bounded-degree formal polynomials | undischarged |
+| `attack-schnorr-special-soundness.yaml` | `formalize_claim` | scalar two-transcript extraction under same-commitment, distinct-challenge, prime-field hypotheses | undischarged |
+
+Each target requires its countermodel and conditional repair in the same
+module. Implementation impact remains gated on a separate source-to-model
+refinement and independent semantic-fidelity review.
+
 ## What is here, in ascending difficulty
 
 | target | kind | from | expectation |
