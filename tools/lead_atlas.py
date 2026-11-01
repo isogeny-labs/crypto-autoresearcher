@@ -15,6 +15,7 @@ happened since: "already done" becomes a computed answer, not a re-reading.
     python3 tools/lead_atlas.py --match "TEXT"   # rank leads and KR rows against an idea
     python3 tools/lead_atlas.py --delta          # what changed since the last review
     python3 tools/lead_atlas.py --coverage       # ECC ledger records not mapped to a lead
+    python3 tools/lead_atlas.py --pursuit        # every lead not disproven in scope
     python3 tools/lead_atlas.py --render [--out PATH]   # ATLAS.md (derived)
     python3 tools/lead_atlas.py --stamp          # record a completed review (REVIEW_STATE.json)
 
@@ -63,6 +64,11 @@ CLOSED = ("closed_obstructed", "closed_known", "closed_dominated",
           "exhausted_at_scale")
 OPEN = ("open_next_step", "open_blocked", "open_unexamined")
 DISPOSITIONS = CLOSED + OPEN
+# A disposition records what happened to a mechanism; it does not by itself
+# decide whether the program keeps pursuing it. Known, dominated and
+# scale-exhausted mechanisms retain explicit revisit conditions. Only a lead
+# with a scoped obstruction is outside the pursuit queue.
+DISPROVEN = ("closed_obstructed",)
 OBSTRUCTION_KINDS = {"theorem", "proof", "measured", "literature",
                      "cost_model"}
 LEAD_ID = re.compile(r"^LEAD-([A-Z]+)-[a-z0-9][a-z0-9-]{1,47}$")
@@ -225,8 +231,29 @@ def check_leads(rows: list[dict[str, Any]], *, strict_paths: bool = False
                 if dom and dom not in known:
                     err(f"dominated_by '{dom}' is not a lead id")
         if disp in OPEN:
-            if not isinstance(nxt, dict) or not str(nxt.get("step") or
-                                                    "").strip():
+            inherited = (isinstance(nxt, dict)
+                         and nxt.get("from_revisit_when") is True)
+            if isinstance(nxt, dict) and "from_revisit_when" in nxt \
+                    and not isinstance(nxt.get("from_revisit_when"), bool):
+                err("next_action.from_revisit_when must be boolean")
+            if inherited:
+                if str(nxt.get("step") or "").strip():
+                    err("next_action cannot combine step with "
+                        "from_revisit_when: true")
+                if not isinstance(obs, dict):
+                    err("from_revisit_when requires an obstruction block")
+                else:
+                    if obs.get("kind") not in OBSTRUCTION_KINDS:
+                        err(f"obstruction.kind must be one of "
+                            f"{sorted(OBSTRUCTION_KINDS)}")
+                    for k in ("statement", "revisit_when"):
+                        if not str(obs.get(k) or "").strip():
+                            err(f"obstruction.{k} is required by "
+                                "from_revisit_when")
+            inherited_revisit = (inherited and isinstance(obs, dict)
+                                 and str(obs.get("revisit_when") or "").strip())
+            if not isinstance(nxt, dict) or not (
+                    str(nxt.get("step") or "").strip() or inherited_revisit):
                 err(f"{disp} requires next_action.step")
             elif disp == "open_blocked" and not str(nxt.get("blocked_by")
                                                     or "").strip():
@@ -457,6 +484,42 @@ def tally(rows: list[dict[str, Any]]) -> dict[str, int]:
     return t
 
 
+def is_pursued(row: dict[str, Any]) -> bool:
+    """Whether the lead remains in the program's pursuit queue."""
+    return row.get("disposition") not in DISPROVEN
+
+
+def _one_line(x: Any) -> str:
+    """Collapse prose to one line without presentation-specific escaping."""
+    return " ".join(str(x or "").split())
+
+
+def pursuit_action(row: dict[str, Any]) -> str:
+    """The next action or exact revisit trigger for a pursued lead."""
+    if row.get("disposition") in OPEN:
+        nxt = row.get("next_action") or {}
+        if nxt.get("from_revisit_when"):
+            step = _one_line((row.get("obstruction") or {}).get(
+                "revisit_when"))
+        else:
+            step = _one_line(nxt.get("step"))
+        if nxt.get("blocked_by"):
+            step += f" (blocked by: {_one_line(nxt['blocked_by'])})"
+        return step
+    obs = row.get("obstruction") or {}
+    return "Revisit when: " + _one_line(obs.get("revisit_when"))
+
+
+def pursuit_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Every non-disproven lead, ordered by immediate action then id."""
+    order = {d: i for i, d in enumerate(
+        ("open_next_step", "open_unexamined", "open_blocked",
+         "exhausted_at_scale", "closed_dominated", "closed_known"))}
+    return sorted((r for r in rows if is_pursued(r)),
+                  key=lambda r: (order.get(str(r.get("disposition")), 99),
+                                 str(r.get("id"))))
+
+
 def saturation(rows: list[dict[str, Any]], cov: dict[str, Any],
                dl: dict[str, Any]) -> dict[str, Any]:
     t = tally(rows)
@@ -482,13 +545,18 @@ def brief() -> str:
     dl = delta()
     sat = saturation(rows, cov, dl)
     state = load_state()
-    closed = sum(t[d] for d in CLOSED)
+    disproven = sum(t[d] for d in DISPROVEN)
+    pursued = len(rows) - disproven
+    revisit = sum(t[d] for d in
+                  ("closed_known", "closed_dominated", "exhausted_at_scale"))
     lines = [
         f"ECDLP lead atlas (knowledge/leads/ecdlp/, reviewed "
         f"{state.get('reviewed_at', 'never')}): {len(rows)} leads, "
-        f"{closed} closed with a named obstruction, "
+        f"{disproven} disproven/obstructed in their stated scope and outside "
+        f"the pursuit queue, {pursued} still pursued: "
         f"{t['open_next_step']} open with a decided next step, "
-        f"{t['open_blocked']} blocked, {t['open_unexamined']} unexamined. "
+        f"{t['open_blocked']} blocked, {t['open_unexamined']} unexamined, "
+        f"{revisit} known/dominated/scale-exhausted with a revisit trigger. "
         f"{cov['mapped']}/{cov['records']} ECDLP ledger records mapped to a "
         "lead."]
     absent = [n for n, v in dl.items() if v.get("status") == "not_checked_out"]
@@ -496,8 +564,8 @@ def brief() -> str:
         seen = [n for n in REPOS if n not in absent]
         lines.append(f"Nothing in the watched paths of {', '.join(seen)} "
                      "changed since that review: every lead and idea there has "
-                     "already been examined. Work is the open next steps "
-                     "(`python3 tools/lead_atlas.py --render`), or a NEW lead "
+                     "already been examined. Work is the pursuit queue "
+                     "(`python3 tools/lead_atlas.py --pursuit`), or a NEW lead "
                      "that `--match` does not find.")
         if absent:
             lines.append(f"Not checked out, so unverified: {', '.join(absent)}.")
@@ -562,7 +630,7 @@ def match(query: str, limit: int = 8) -> list[tuple[float, str, str, str]]:
 
 
 def _one(x: Any) -> str:
-    return " ".join(str(x or "").split()).replace("|", "\\|")
+    return _one_line(x).replace("|", "\\|")
 
 
 def render(rows: list[dict[str, Any]]) -> str:
@@ -576,20 +644,15 @@ def render(rows: list[dict[str, Any]]) -> str:
            f"Current committed rows: {len(rows)} leads: "
            + ", ".join(f"{k} {v}" for k, v in t.items())
            + f". Ledger coverage {cov['mapped']}/{cov['records']}.", ""]
-    out += ["## Open next steps", "",
-            "| lead | disposition | next step | best measured |",
+    out += ["## Pursuit queue", "",
+            "Only `closed_obstructed` leaves this queue. Known, dominated and "
+            "scale-exhausted leads remain pursued through their exact revisit "
+            "conditions.", "",
+            "| lead | disposition | next action or revisit trigger | best measured |",
             "|:--|:--|:--|:--|"]
-    for r in sorted(rows, key=lambda r: (OPEN.index(r["disposition"])
-                                         if r.get("disposition") in OPEN
-                                         else 9, r["id"])):
-        if r.get("disposition") not in OPEN:
-            continue
-        nx = r.get("next_action") or {}
-        step = _one(nx.get("step"))
-        if nx.get("blocked_by"):
-            step += f" (blocked by: {_one(nx['blocked_by'])})"
+    for r in pursuit_rows(rows):
         out.append(f"| `{r['id']}` {_one(r.get('title'))} | "
-                   f"{r['disposition']} | {step} | "
+                   f"{r['disposition']} | {_one(pursuit_action(r))} | "
                    f"{_one(r.get('best_measured')) or '—'} |")
     for fam in FAMILIES:
         fr = [r for r in rows if r.get("family") == fam]
@@ -605,7 +668,7 @@ def render(rows: list[dict[str, Any]]) -> str:
                 o = r.get("obstruction") or {}
                 why = f"[{o.get('kind')}] {_one(o.get('statement'))}"
             else:
-                why = _one((r.get("next_action") or {}).get("step"))
+                why = _one(pursuit_action(r))
             out.append(f"| `{r['id']}` {_one(r.get('title'))} | "
                        f"{r.get('disposition')} | {why} |")
     return "\n".join(out) + "\n"
@@ -667,6 +730,7 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--match", metavar="TEXT")
     g.add_argument("--delta", action="store_true")
     g.add_argument("--coverage", action="store_true")
+    g.add_argument("--pursuit", action="store_true")
     g.add_argument("--render", action="store_true")
     g.add_argument("--stamp", metavar="REVIEWER")
     ap.add_argument("--out", metavar="PATH")
@@ -735,6 +799,21 @@ def main(argv: list[str] | None = None) -> int:
             print(f"unmapped  {r}")
         for d in cov["dangling"]:
             print(f"dangling  {d}")
+        return 0
+    if a.pursuit:
+        rows = pursuit_rows(load_leads())
+        if a.json:
+            print(json.dumps([{
+                "id": r["id"],
+                "family": r.get("family"),
+                "title": r.get("title"),
+                "disposition": r.get("disposition"),
+                "action": pursuit_action(r),
+            } for r in rows], indent=1))
+        else:
+            for r in rows:
+                print(f"{r['id']:52s} {r['disposition']:20s} "
+                      f"{pursuit_action(r)}")
         return 0
     if a.render:
         text = render(load_leads())
