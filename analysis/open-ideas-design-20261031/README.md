@@ -15,13 +15,16 @@ An idea is open when its proposal record satisfies all three:
 That query is executable and reproducible:
 
 ```sh
-PYTHONPATH=. python3 analysis/open-ideas-design-20261031/open_set.py
+PYTHONPATH=. python3 analysis/open-ideas-design-20261031/open_set.py --pre  # snapshot: 11
+PYTHONPATH=. python3 analysis/open-ideas-design-20261031/open_set.py        # now: 0
 ```
 
-It returns **11 ideas**, recorded in `open-set.txt`, and exits non-zero if the
-recomputed set differs from the designed set. The 2,355 other `proposed`
-records are either dominated (`dominated_by` set) or already carry a
-hypothesis/experiment downstream, so they are not open under this definition.
+`--pre` returns **11 ideas**, recorded in `open-set.txt`, and exits non-zero if
+the snapshot differs from the designed set. The default mode reports the
+current set and checks closure: it is **0**, because all 11 designed ideas now
+carry a hypothesis record downstream. The 2,355 other `proposed` records are
+either dominated (`dominated_by` set) or already carry a hypothesis/experiment
+downstream, so they are not open under this definition.
 
 ## What was designed
 
@@ -32,6 +35,11 @@ invalidation rules, the decision rule, the falsifier and the inadmissible
 moves. `protocols/<IDEA>.json` is the same design as an
 `experiment.protocol/v1` record.
 
+The designs are also **ledgered**: 11 hypotheses (`H-*`, status `specified`)
+and 11 experiments (`EXP-*`, status `review_required`) under
+`ledger/hypotheses/` and `experiments/`, each experiment carrying a frozen
+`protocol.json`. The idea-to-record mapping is in `LEDGER_MAPPING.md`.
+
 | area | open ideas | design theme |
 |:--|--:|:--|
 | WESO | 3 | audit quoted constants and the mixing budget behind the NIST-I row |
@@ -41,25 +49,25 @@ moves. `protocols/<IDEA>.json` is the same design as an
 ## Validation
 
 ```sh
-for f in analysis/open-ideas-design-20261031/protocols/*.json; do
+for f in experiments/EXP-WESO-*/protocol.json experiments/EXP-SEMBIN-*/protocol.json experiments/EXP-KIC-*/protocol.json; do
   python3 tools/experiment_protocol.py validate "$f"
 done
 ```
 
-Current result: 11/11 `OK (0 finding(s))` on the frozen records, captured in
-`validation.txt`.
+Current result: 11/11 `OK (0 finding(s))` on the frozen per-experiment copies
+(the design copies under `protocols/` validate identically).
 
 ## Status and next action
 
-All 11 records are frozen on commit `403b404574` (`freeze.status: frozen`,
-`filed_before_affected_data: true`). They are not approved authority and no
-data was taken. The next action is the ordinary `design-experiment` path: mint
-`H-*`/`EXP-*` ids, write the hypothesis and specification records, run
-`experiment_preapproval.py`, and approve under the standing authorization in
-`AGENTS.md`. That step is deliberately not taken here: it would add ledger
-records without the runbook, preapproval packet and dispatch queue the skill
-requires in the same turn, and a half-published contract is worse than an
-unpublished design.
+The designs are frozen (`freeze.status: frozen`,
+`filed_before_affected_data: true`), and the ledger records exist as
+`specified` hypotheses and `review_required` experiments. They are not
+approved authority and no data was taken. The next action is the ordinary
+`design-experiment` approval path: run `experiment_preapproval.py`, write the
+runbook and task card, and approve under the standing authorization in
+`AGENTS.md`. That step is deliberately left to the Coordinator: approval
+requires a preapproval packet, runbook lint and dispatch queue in the same
+turn, and an incomplete contract must stay `review_required`.
 
 ## Files
 
