@@ -11,7 +11,7 @@ import pytest
 import yaml
 
 from harness import ecdlp_challenges
-from harness import runner
+from harness import runner_ecdlp_v1 as challenge_runner
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -61,11 +61,45 @@ def test_explicit_missing_binary_is_refused(tmp_path, monkeypatch):
         ecdlp_challenges.resolve_binary(str(tmp_path / "absent"))
 
 
+def test_versioned_replay_checks_digest_and_exact_receipt(tmp_path):
+    receipt = {
+        "schema": "crypto.ecdlp-challenge-receipt/v1",
+        "status": "verified",
+        "claim_boundary": dict(ecdlp_challenges.CLAIM_BOUNDARY),
+    }
+    verifier = tmp_path / "verifier"
+    verifier.write_text("#!/usr/bin/env python3\nprint(" + repr(json.dumps(receipt)) + ")\n")
+    verifier.chmod(0o755)
+    cert = {
+        "kind": "ecdlp_challenge_receipt",
+        "native_verifier": {
+            "path": str(verifier),
+            "sha256": ecdlp_challenges.sha256_file(verifier),
+        },
+        "statement": {"fixture": {}, "submission": {}, "receipt": receipt},
+    }
+    verified, label = challenge_runner._verify(cert)
+    assert verified is True
+    assert label.startswith("native-replay:")
+
+    altered = json.loads(json.dumps(cert))
+    altered["statement"]["receipt"]["status"] = "rejected"
+    verified, _ = challenge_runner._verify(altered)
+    assert verified is False
+    assert "native_receipt_mismatch" in altered["failing_checks"]
+
+    altered = json.loads(json.dumps(cert))
+    altered["native_verifier"]["sha256"] = "0" * 64
+    verified, _ = challenge_runner._verify(altered)
+    assert verified is False
+    assert "native_verifier_digest_mismatch" in altered["failing_checks"]
+
+
 @pytest.mark.skipif(native_binary() is None, reason="sibling native verifier is not built")
 def test_real_native_receipt_replay_rejects_tampering():
     result = ecdlp_challenges.make_result(binary=str(native_binary()))
     certificate = dict(result.certificate)
-    verified, label = runner._verify(certificate)
+    verified, label = challenge_runner._verify(certificate)
     assert verified is True
     assert label.startswith("native-replay:")
     assert result.metrics["frontier"] == {
@@ -80,7 +114,7 @@ def test_real_native_receipt_replay_rejects_tampering():
 
     tampered = json.loads(json.dumps(result.certificate))
     tampered["statement"]["receipt"]["frontier"][0]["value"] += 1
-    verified, _ = runner._verify(tampered)
+    verified, _ = challenge_runner._verify(tampered)
     assert verified is False
     assert "native_receipt_mismatch" in tampered["failing_checks"]
 
