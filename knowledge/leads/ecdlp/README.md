@@ -16,6 +16,7 @@ python3 tools/lead_atlas.py --brief          # what the session-start hook print
 python3 tools/lead_atlas.py --match "idea"   # leads and KR rows an idea collides with
 python3 tools/lead_atlas.py --delta          # watched paths changed since the last review
 python3 tools/lead_atlas.py --coverage       # ECDLP ledger records with no lead
+python3 tools/lead_atlas.py --pursuit        # every lead not disproven in scope
 python3 tools/lead_atlas.py --check          # CI (make check-ledger)
 python3 tools/lead_atlas.py --render --out knowledge/leads/ecdlp/ATLAS.md
 python3 tools/lead_atlas.py --stamp <session> # close a review: pin every repo's HEAD
@@ -54,6 +55,28 @@ and nothing has changed since the review. Saturation is a reporting state. It
 pauses no goal (AGENTS.md "Goals are never paused"), and open next steps remain
 work.
 
+### Pursuit invariant
+
+Only `closed_obstructed` removes a lead from the pursuit queue, and only for
+the mechanism and assumptions its obstruction actually covers. The atlas
+renders every other disposition in `--pursuit` and in the generated report's
+Pursuit queue:
+
+- `closed_known` remains pursued when a new implementation, parameter regime,
+  or improvement beyond the reproduced known result becomes available;
+- `closed_dominated` remains pursued at the condition that could remove the
+  stated dominance;
+- `exhausted_at_scale` remains pursued at its explicit scale or capability
+  trigger; and
+- all `open_*` rows remain pursued directly, including blocked and unexamined
+  work.
+
+A timeout, bounded null, resource limit, missing implementation, or dominance
+on finite toy rows is not a disproof. If a `closed_obstructed` row is later
+found to cover only one submechanism, reopen or split the uncovered mechanism;
+do not let the broad title inherit a narrow obstruction. This scheduling view
+changes no hypothesis, experiment, or goal status.
+
 ## Layout
 
 ```text
@@ -82,6 +105,7 @@ obstruction:                  # required for closed_* and exhausted_at_scale
   revisit_when: the condition that reopens it
 next_action:                  # required for open_*
   step: the concrete next experiment or proof obligation
+  from_revisit_when: false    # true reuses obstruction.revisit_when after a scoped reopening
   discriminates: what each outcome decides
   blocked_by: problems/x.md   # open_blocked only
 best_measured: "S_IC/S_rho = 5.23x at log2 r = 36.6 (Table A)"   # or null
