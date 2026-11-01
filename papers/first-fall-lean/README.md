@@ -40,6 +40,7 @@ relabelling or accounting claim.
 | Thm 5, Python | `tools/lemma4_inside_form.py`, `tools/test_lemma4_inside_form.py`; `knowledge/findings/KN-FIND-936151.md`; `ledger/evidence/EV-SEMBIN-1ca3c8.yaml` | n/a | two blind implementations; 94/400 random violations |
 | Prop 6 | `formal/CryptoResearch/Nagao/RecoveryRule.lean`; target `formal/targets/nagao-lemma4-recovery-rule-20261101.yaml`; rule stated in `KN-FIND-936151` section 4 | workspace gate, CI run 41259822143 (PR #2867) | **not yet reviewed** |
 | Thm 5, `MvPolynomial` bridge | `formal/CryptoResearch/Nagao/Bridge.lean` (`lemma4_mv_false`, `red_sum_red`); target `formal/targets/nagao-lemma4-mvpolynomial-bridge-20261101.yaml` | workspace gate, CI run 41264005876 (PR #2871) | **not yet reviewed** |
+| Thm 5, `MvPolynomial` bridge, witness B | `formal/CryptoResearch/Nagao/BridgeB.lean` (`lemma4_mvB_false`); target `formal/targets/nagao-lemma4-mvpolynomial-bridge-b-20261101.yaml` | workspace gate, CI run 41280794617 (PR #2901) | **not yet reviewed** |
 | Thm 7 | `formal/CryptoResearch/FallDegree/LastFall.lean` | hosted run 41191503149 | validated at stated scope (`coordination/formal-reviews/lastfall-native-20261031/archive/synthesis.md`) |
 | Thm 8 | `formal/CryptoResearch/Semaev/BooleanParity*.lean`, `ConcreteFirstFallWitness.lean`, `FiniteEquationSemantics.lean` | hosted receipts, run 41155781140 | concrete witness validated at scope (`coordination/formal-reviews/BATCH-016711/`); rank family sheriff-audited only (`research/sheriff/SHF-20261023-7b9227/`) |
 | Closure counts | `docs/reports/2026-10-26-semaev-closure-review/` | not formalized | independent code review |
@@ -66,8 +67,8 @@ ignored locally and must be rebuilt with `make`.
       `lemma4_outside_false` (formal lane gate).
 - [x] Lean proof of the printed (outside) placement (PR #2859).
 - [x] Lean proof of Proposition 6 (PR #2867).
-- [x] Bridge from the list-of-monomials model to Mathlib `MvPolynomial` for
-      witness A, with unrestricted cofactors (PR #2871); witness B not bridged.
+- [x] Bridge from the list-of-monomials model to Mathlib `MvPolynomial`, with
+      unrestricted cofactors: witness A (PR #2871) and witness B (PR #2901).
 - [ ] Independent human check of Proposition 6 and of the reading of 2015/984's
       Lemma 6 (`KN-FIND-936151` section 4).
 - [ ] Novelty audit: prior-remark search recorded in `../nagao-lemma4-note/note.md`
