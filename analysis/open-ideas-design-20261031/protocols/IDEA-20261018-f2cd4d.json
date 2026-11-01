@@ -1,0 +1,502 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "OI-tau-horner-mfactorial",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "analysis/open-ideas-design-20261031/protocols",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261018-f2cd4d.yaml",
+    "note": "Design for open idea IDEA-20261018-f2cd4d; not yet approved or dispatched."
+  },
+  "question": "At (n,m,l)=(17,2,8),(19,2,9),(17,3,6),(19,3,6), is conflicts per distinct relation for Horner over plain+lex-SB in [0.8,1.25], while plain+SB is about 1/m! of plain?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Distinct relations of plain (unordered) and Horner (ordered) are enumerated exactly per cell; MITM table sizes and probe counts come from the same enumeration.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "Horner costs the same per distinct relation as plain+SB, so the tau-Horner m! is the symmetry-breaking m! and the two do not compose.",
+      "class": "comparative",
+      "decided_by": [
+        "C-sb"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "In the exhaustive-core regime the tau-Horner chain's per-relation m! is the same m! that lex symmetry breaking already removes.",
+      "mechanism": "Plain+SB searches 2^(ml)/m! with B^m/(m! r) unordered solutions; Horner searches 2^(ml) with B^m/r ordered ones; both cost c 2^(ml) r/B^m per relation.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "horner_ratio",
+          "direction": "equal_within",
+          "minimum_effect": "0.8 to 1.25",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "sb_gain",
+          "direction": "lower",
+          "minimum_effect": "about 1/m!",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "mitm_ratio",
+          "direction": "equal_within",
+          "minimum_effect": "1.0 within 10%",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "plain",
+      "role": "reference",
+      "description": "plain chain, no symmetry breaking",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "plain"
+      }
+    },
+    {
+      "id": "plain-sb",
+      "role": "baseline",
+      "description": "plain chain with lex symmetry breaking",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "plain-sb"
+      },
+      "same_instrument_as": "plain"
+    },
+    {
+      "id": "horner",
+      "role": "candidate",
+      "description": "tau-Horner chain of IDEA-20260926-197ecf",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "horner"
+      },
+      "same_instrument_as": "plain"
+    },
+    {
+      "id": "plain-aa",
+      "role": "control_aa",
+      "description": "plain rerun on a second recorded seed",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "plain-aa"
+      },
+      "same_instrument_as": "plain"
+    },
+    {
+      "id": "sb-count",
+      "role": "control_positive",
+      "description": "SB model count against the binomial count",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "sb-count"
+      }
+    },
+    {
+      "id": "relabelled",
+      "role": "control_negative",
+      "description": "Z/NZ relabelled group with scalar of order n",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "relabelled"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "sb-count",
+      "expected_detection": "SB model count equals the binomial count",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "relabelled",
+      "null_population": {
+        "description": "relabelled Z/N group with a scalar of order n, where curve structure is absent",
+        "generator": "relabelled Z/N group with a scalar of order n, where curve structure is absent",
+        "n": 100,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "plain",
+          "plain-sb",
+          "horner",
+          "plain-aa",
+          "sb-count",
+          "relabelled"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "chain",
+        "treatment": "crossed",
+        "how": "plain, plain+SB, Horner"
+      },
+      {
+        "name": "solver",
+        "treatment": "crossed",
+        "how": "CaDiCaL and WDSat default"
+      },
+      {
+        "name": "cell",
+        "treatment": "crossed",
+        "how": "four (n,m,l) cells"
+      },
+      {
+        "name": "symmetry_breaking",
+        "treatment": "crossed",
+        "how": "varied by comparison C-sb"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-horner",
+        "arms": [
+          "plain-sb",
+          "horner"
+        ],
+        "differs_in": [
+          "chain"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "plain",
+          "plain-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-sb",
+        "arms": [
+          "plain",
+          "plain-sb"
+        ],
+        "differs_in": [
+          "symmetry_breaking"
+        ],
+        "design": "one_factor"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 4,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 3,
+      "correction": "holm",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 3600,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "horner_ratio",
+        "name": "Horner per-relation ratio",
+        "unit": "ratio",
+        "kind": "counted",
+        "definition": "pooled conflicts over pooled distinct relations, Horner over plain+SB",
+        "source": "results/horner_ratio.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "sb_gain",
+        "name": "SB gain",
+        "unit": "ratio",
+        "kind": "counted",
+        "definition": "conflicts per target, plain over plain+SB",
+        "source": "results/sb_gain.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "mitm_ratio",
+        "name": "MITM ordered/unordered ratio",
+        "unit": "ratio",
+        "kind": "derived",
+        "definition": "table size times probes per relation, ordered over unordered",
+        "source": "results/mitm_ratio.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95",
+        "formula": "table size times probes per relation, ordered over unordered"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "horner_ratio",
+      "sb_gain",
+      "mitm_ratio"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 7200,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: four cells x three chain arms x two solvers, 200 targets per cell from a recorded seed, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-horner is supported when horner_ratio in [0.8,1.25], sb_gain about 1/m!, and mitm_ratio 1.0 within 10%; horner_ratio<=0.67 at two cells is a genuine structural gain.",
+    "comparison_ids": [
+      "C-sb"
+    ],
+    "threshold": "effect within the stated interval",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "holm",
+    "effect_size_measure": "0.8 to 1.25",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "treating conflicts as a bound rather than search work",
+    "changing the cells after seeing results",
+    "reading the result as an exponent claim"
+  ],
+  "literature": [
+    {
+      "ref": "IDEA-20260926-197ecf",
+      "provenance": "internal",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    },
+    {
+      "ref": "KN-LIT-92b022 WDSat symmetry breaking",
+      "provenance": "retrieved",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": true
+  }
+}
