@@ -15,15 +15,31 @@ input_preflight: []
 machine_protection_readings: []
 machine_protection_passed_at_launch: null
 runner_status: not_started
-static_snapshot_status: awaiting_independent_reaudit_and_execution_authority
+static_snapshot_status: source_commit_offline_validated_awaiting_independent_reaudit_and_execution_authority
 offline_static_evidence:
   path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests_output.json
-  scope: helper, schema, trace-tamper, and lifecycle checks only; not an S0 gate
+  implementation_source_commit: c982810e518540ddd48a915099df6652ba347721
+  scope: helper, semantic-counter, tamper, and lifecycle checks only; not an S0 gate
+  registered_operation_sites: 60
+  site_component_pairs_omission_and_tamper_tested: 63
+  standalone_reference_components_unit_checked: [P, S, G, X, V]
+  proves_too_much_missing_charge_rejected: true
 execution_authority:
+  checkpoint: ledger/goals/GOAL-ICEX-001/checkpoints/BATCH-454f85.yaml
+  checkpoint_sha256: 063874821efef1b5f25eedd6292c2d228e0646613e949fb86c4a9379cad92026
+  checkpoint_evidence_id: null
+  checkpoint_execution_admitted: false
   frozen_repository_volume: /Volumes/SSD990
   frozen_tmpdir: /Volumes/SSD990/.tmp-agent
   portable_substitution_authorized: false
-  blocker: committed Coordinator portability mapping/amendment required before launch
+  frozen_volume_present: false
+  prior_workspace_free_bytes_observation: 17353854976
+  prior_workspace_observed_at: '2026-11-01T21:51:18Z'
+  repository_free_min_bytes: 21474836480
+  blockers:
+  - pinned checkpoint explicitly says execution not admitted
+  - committed Coordinator portability mapping/amendment required before launch
+  - prior /workspace reading is below the 20-GiB C-7 minimum and is not launch authority
 gates:
 - id: G0-1
   description: v4 fixtures reproduce and panel_fixtures.py byte-reproduces independently
@@ -32,7 +48,7 @@ gates:
   blocked: true
   classification: execution_precondition
   evidence_paths: []
-  observation: not executed; awaiting immutable implementation commit, re-audit, and execution authority
+  observation: not executed; awaiting independent re-audit and execution authority
 - id: G0-2
   description: f4 and f5 agree between Bareiss and subset-DP determinant reconstruction
   pass: false
@@ -40,7 +56,7 @@ gates:
   blocked: true
   classification: execution_precondition
   evidence_paths: []
-  observation: not executed; awaiting immutable implementation commit, re-audit, and execution authority
+  observation: not executed; awaiting independent re-audit and execution authority
 - id: G0-3
   description: specialised f6 has 1,000 signed-sum and 1,000 non-sum checks per fixture
   pass: false
@@ -48,7 +64,7 @@ gates:
   blocked: true
   classification: execution_precondition
   evidence_paths: []
-  observation: not executed; awaiting immutable implementation commit, re-audit, and execution authority
+  observation: not executed; awaiting independent re-audit and execution authority
 - id: G0-4
   description: G1 agrees with O5 on 200 smoke attempts per size, including L=8
   pass: false
@@ -56,7 +72,7 @@ gates:
   blocked: true
   classification: execution_precondition
   evidence_paths: []
-  observation: not executed; awaiting immutable implementation commit, re-audit, and execution authority
+  observation: not executed; awaiting independent re-audit and execution authority
 - id: G0-5
   description: frozen power analysis reproduces committed rates within 3 MC standard errors
   pass: false
@@ -64,15 +80,15 @@ gates:
   blocked: true
   classification: execution_precondition
   evidence_paths: []
-  observation: not executed; awaiting immutable implementation commit, re-audit, and execution authority
+  observation: not executed; awaiting independent re-audit and execution authority
 - id: G0-6
-  description: independent input replay exactly recomputes P_setup and S,G,X,V units on 20 smoke queries
+  description: standalone reference matches P_setup, arithmetic outputs, and S,G,X,V totals on 20 smoke queries
   pass: false
   fail: false
   blocked: true
   classification: execution_precondition
   evidence_paths: []
-  observation: not executed; awaiting immutable implementation commit, re-audit, and execution authority
+  observation: not executed; awaiting independent re-audit and execution authority
 protocol_deviations:
 - kind: development_probe
   classification: procedure_deviation

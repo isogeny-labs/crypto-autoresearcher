@@ -1,33 +1,39 @@
 schema: crypto.autoresearch.implementation_report.v1
 task_id: TASK-20261001-4862b6
 experiment_id: EXP-ICEX-153c34
-implementation_commit: pending; bound by the static branch commit and Coordinator snapshot receipt
+implementation_commit: c982810e518540ddd48a915099df6652ba347721
+implementation_tree: b0c4a91605dcd48bce201e36d0bef2a94a66288d
+commit_binding:
+  source_role: implementation_commit is the immutable source commit tested offline
+  evidence_role: this report and the two static evidence files are stored by the subsequent evidence commit
+  self_hash_embedded: false
+  rationale: Git binds this report in its containing commit; no impossible self-referential digest is claimed
 owner: executor-codex
 epoch: 1
 write_scope:
 - experiments/EXP-ICEX-153c34/implementation/
 files:
 - {path: experiments/EXP-ICEX-153c34/implementation/g1_s0.py, sha256: a7686ab7661479b9d3b1b2349d6134b03d9b8477e1df41221e5facef7f01c3ce}
-- {path: experiments/EXP-ICEX-153c34/implementation/implementation.md, sha256: 2b724d49643733e5710dd8ea69d7c8d5c4f87ca0076db5b1e3f87dea3abc51ea}
+- {path: experiments/EXP-ICEX-153c34/implementation/implementation.md, sha256: dc7338cca56c12093affb962de073052c0d5fb19c66b7d03b4f252ad242e951a}
 - {path: experiments/EXP-ICEX-153c34/implementation/o5_group.py, sha256: 8b33c1bd1e5faa92f6e7a65a62f48a0f3e49432b3a846be330ad7f56ae52c07b}
 - {path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures.py, sha256: 701e69f06f22d890a09473f2a7fac04f78d60d7021e346f28555a8fae377fab6}
 - {path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures_verifier.py, sha256: 2cfbea9b5fbbf1501e27954e610e274cb72a214cc8657fb31dd7a903b02e459d}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_counter_checker.py, sha256: 46d6f2d4143671f9be5da719c88a23319426fc40758d3860d61bd53e5b8c3a0d}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_driver.py, sha256: 63189fd10e7f877145f4416054ad4960af67032c6378d414a0b821864823f9cf}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_gate_worker.py, sha256: 1bb3515d0df66cf157b8813e3e0de0aadea6f8fd02959153c73953d09f3e5167}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml, sha256: 68c6b2acb07dff68c7ba7f34994def7f7eabe97f2dd201c790e098529683578e}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_counter_checker.py, sha256: 7deca6823966354c838bc6fc7248a00450e82ba8e1ce76eb9b0d8c52e3b1fe51}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_counter_reference.py, sha256: bca08d2948926aff313bac63316b9d6f5d143b29c34650c703d22fb9574ec75c}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_driver.py, sha256: 24227876b1559719418e6e7b9029e580939c66b5210aa96ff94e5d33289db4ba}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_gate_worker.py, sha256: 4a7b144c02f2b5b2c29944f5689f397914bd29579c8c037b5d23336c50637174}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml, sha256: 6fa26143e91e48ff579fd92f14cd37331e36c6c7ac86ae59884d217afd85ac99}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py, sha256: 0bcfd3976c1144e90ad72d9c9efd0f457f012898a941818c33ff785afb2023e1}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_operation_spec.py, sha256: d608247f5e062bea50e71fdff3b987c2b692d6829c03def3340e6f4a33b1fbae}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_sage_gates.py, sha256: 7a37e1353ed2a5458929c023ce84053eedd5630f094a80b8c21cfcb4a7a50fe6}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py, sha256: 0cdac82d6c244ed4c45b4cc61201393e679694074a6634e9a3812abdf384d1d2}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests_output.json, sha256: dde1a07a38a61b3ea61191e98df186da37fb2b310ed65ff1aaf07b4080ae2d7e}
-- path: experiments/EXP-ICEX-153c34/implementation/implementation_report.yaml
-  sha256: self; final content is bound by the static branch commit and Coordinator snapshot receipt
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py, sha256: 03195c1b488a65efab3830e31512e850872ea4fb8ca5c965a4385b1342232806}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests_output.json, sha256: fa5e28420ec7de2be9d45358c5523003b49df76e3c5e4d8c469be7d056db6154}
 commands:
 - PYTHONDONTWRITEBYTECODE=1 python3 experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py
 - static AST parse of every implementation Python file
 - frozen input SHA-256 preflight without invoking the S0 runner
 - JSON/YAML parse and git diff --check
+- harmless local run_native lifecycle probes only (normal exit, direct timeout, descendant timeout); no gate worker
 results:
   runner_status: not_started
   static_validation: passed
@@ -35,11 +41,21 @@ results:
   modal_invoked: false
   sage_invoked: false
   gate_process_invoked: false
+  checkpoint_command_invoked: false
   scientific_target_observed: false
   g0_3_actual_path_checks_prepared: 52000
   g0_3_independent_bareiss_checks_prepared: 52000
-  g0_6_registered_operation_sites: 38
-  g0_6_site_component_pairs_omission_and_tamper_tested: 41
+  g0_6_registered_operation_sites: 60
+  g0_6_site_component_pairs_omission_and_tamper_tested: 63
+  g0_6_standalone_reference_imports_producer_or_site_registry: false
+  g0_6_setup_and_component_unit_checks_passed: [P, S, G, X, V]
+  g0_6_proves_too_much_missing_charge_rejected: true
+  native_lifecycle_probe:
+    normal_exit_process_group_reaped: true
+    direct_timeout_process_group_reaped: true
+    descendant_timeout_process_group_reaped: false
+    descendant_timeout_behavior: TERM and KILL were sent; unreaped descendant zombie made confirmation fail closed
+    subsequent_gate_global_stop_condition_present: true
   s0_gates_report: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml
   gates_passed: []
   gates_failed: []
@@ -47,15 +63,22 @@ results:
   sage_backend_for_next_launch: modal-only
   sage_image: sagemath/sagemath@sha256:4562582e9da21605ce1507932effb548d44888ed9e35ec768616049e6776391d
 execution_authority:
+  checkpoint: ledger/goals/GOAL-ICEX-001/checkpoints/BATCH-454f85.yaml
+  checkpoint_sha256: 063874821efef1b5f25eedd6292c2d228e0646613e949fb86c4a9379cad92026
+  checkpoint_evidence_id: null
+  checkpoint_execution_admitted: false
   frozen_repository_volume: /Volumes/SSD990
   frozen_tmpdir: /Volumes/SSD990/.tmp-agent
   mandated_volume_present: false
   portability_substitution_authorized: false
-  observed_at: '2026-11-01T21:51:18Z'
-  workspace_free_bytes_observation: 17353854976
+  prior_workspace_free_bytes_observation: 17353854976
+  prior_workspace_observed_at: '2026-11-01T21:51:18Z'
   repository_free_min_bytes: 21474836480
-  blocker: committed Coordinator portability mapping/amendment required before launch; current workspace reading is also below C-7
-infrastructure_impediment: execution authority and C-7 free-space conditions are unmet
+  hard_blockers:
+  - pinned checkpoint explicitly says execution not admitted
+  - committed Coordinator portability mapping/amendment required before launch
+  - prior /workspace reading is below C-7 and supplies no substitution authority
+infrastructure_impediment: checkpoint authority, repository-volume authority, and C-7 free-space conditions are unmet
 protocol_complete: false
 requires_rerun: true
-scientific_interpretation: none; offline static implementation evidence only
+scientific_interpretation: none; offline-only implementation evidence
