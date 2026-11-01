@@ -29,7 +29,11 @@ from .progress import repeated_tool_failure
 STEP_BUDGET = "step_budget_exhausted"
 CLOCK_BUDGET = "wall_clock_budget_exhausted"
 TOOL_FAILURE = "repeated_tool_failure"
+MODEL_TRUNCATION = "model_output_truncated"
+MODEL_IDENTITY_MISMATCH = "model_identity_mismatch"
 COMPLETED = "completed"
+
+_TRUNCATION_REASONS = {"length", "max_tokens", "max_output_tokens"}
 
 
 class AgentState(TypedDict):
@@ -57,7 +61,27 @@ def build_agent(model: Any, tools: Sequence[Any], *, max_steps: int = 40,
             # request with the same unchanged operational prerequisites.
             return {"stop_reason": TOOL_FAILURE, "stop_detail": failure}
         response = bound.invoke(state["messages"])
-        return {"messages": [response], "steps": state["steps"] + 1}
+        metadata = getattr(response, "response_metadata", None) or {}
+        stop_reason = str(metadata.get("stop_reason") or "").lower()
+        common = {"messages": [response], "steps": state["steps"] + 1}
+        if (metadata.get("model_matches_resolution") is False
+                and metadata.get("model_identity_enforced") is True):
+            return {**common, "stop_reason": MODEL_IDENTITY_MISMATCH,
+                    "stop_detail": {
+                        "classification": "inference_provenance_failure",
+                        "reported_model": metadata.get("model_name"),
+                        "resolved_model_id": metadata.get("resolved_model_id"),
+                        "asserts_nothing_about": "the science or campaign completion",
+                    }}
+        if stop_reason in _TRUNCATION_REASONS:
+            return {**common, "stop_reason": MODEL_TRUNCATION,
+                    "stop_detail": {
+                        "classification": "incomplete_model_output",
+                        "provider_stop_reason": stop_reason,
+                        "asserts_nothing_about": "the science or campaign completion",
+                        "next_action": "Resume from the preserved checkpoint; do not treat this response as completed.",
+                    }}
+        return common
 
     def route(state: AgentState) -> str:
         if state.get("stop_reason"):

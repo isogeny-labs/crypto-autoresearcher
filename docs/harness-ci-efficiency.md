@@ -32,7 +32,7 @@ that independent feedback.
 
 ## Repeated tool errors
 
-The `api_direct` loop stops before a fourth model request after three consecutive
+The `api_direct` loop stops before a third model request after two consecutive
 identical tool rounds in which every result is an explicit tool error or scope
 refusal. Equality includes tool names, arguments, full results and error status,
 but excludes call IDs and parallel result ordering. A changed argument, changed

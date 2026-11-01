@@ -46,7 +46,8 @@ step 2).
    handoff says so.
 3. Dispatch the **idea-generator** subagent with a handoff that includes the
    research question, the context found above, how many ideas are wanted
-   (default 3–5), and any user constraints. Remind it that every idea record
+   (default 3; the ECC process maximum is 3 per session), and any user
+   constraints. Remind it that every idea record
    must be schema-complete and novelty-checked against `knowledge/` before
    any novelty label stronger than `unverified`, and must carry a `prior_art`
    block naming the map rows it was positioned against (required by
@@ -56,6 +57,11 @@ step 2).
    Send back any idea whose top hit is a row or lead it did not cite, or whose
    `prior_art.lead` is a closed lead whose obstruction the idea does not
    answer. Every ECDLP idea from IDEA-20261025-* carries `prior_art.lead`.
+   From IDEA-20261101-* onward, an existing lead also requires
+   `prior_art.lead_delta`: `kind: advances_next_action` for an open lead or
+   `kind: answers_obstruction` for a closed lead, plus a `statement` naming
+   the exact new information, test, or changed assumption. Merely renaming the
+   mechanism or citing the lead does not pass validation.
    When an idea declares `lead: new`, add the lead row in the same PR. The handoff must also direct
    it to the exemplar search heuristics in `agents/idea-generator.md` and the
    target profile in `docs/target-result-profile.md`: exponent-first ambition,
@@ -100,6 +106,9 @@ step 2).
    coordinator --outcome proposed --created <RQ/IDEA ids> --bounced <n>`
    (`docs/session-receipts.md`), where `<n>` is the step 4 count, `0` when
    nothing was sent back.
+   For ECC work the receipt enforces the design-record process budget in
+   `orchestration/research-priority.yaml`; reaching it defers additional
+   unfiled ideas and does not constrain runs or later sessions.
 
 ## Branch and PR hygiene
 
