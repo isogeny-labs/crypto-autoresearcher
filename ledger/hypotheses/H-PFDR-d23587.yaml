@@ -1,0 +1,54 @@
+hypothesis:
+  id: H-PFDR-d23587
+  area: PFDR
+  question_id: RQ-PFDR-ae2fba
+  source_proposal: IDEA-20261029-ec08bc
+  proposal_id: IDEA-20261029-ec08bc
+  title: Complete chart-local saturation before expensive closure
+  status: specified
+  proposed_by: open-ideas design pass 2026-11-01
+  designed_by: opencode
+  created: '2026-11-01'
+  updated: '2026-11-01'
+  depends_on:
+  - IDEA-20261029-ec08bc
+  - RQ-PFDR-ae2fba
+  statement: Exceptional denominator components account for a material share of solving
+    cost, and chart-local saturation removes it without discarding valid relations.
+  mechanism: Saturating exceptional factors before the expensive closure removes components
+    that are not the decomposition component; the gain is real only if the recovered
+    solution set is unchanged and the certificate cost does not cancel it.
+  assumptions:
+  - User requests factor-base/SAT research; execution is not authorized here.
+  - Implicit membership is not an asserted escape from KN-OPEN-020.
+  predictions:
+  - metric: complete_chart_union_solve_cost
+    direction: lower
+    minimum_effect: <=0.5x unsaturated baseline
+  - metric: verified_model_count
+    direction: different
+    minimum_effect: identical recovered solution set
+  - metric: exception_coverage
+    direction: different
+    minimum_effect: 1.0 across the chart census
+  test_boundary:
+    instances:
+    - cells named in IDEA-20261029-ec08bc and DESIGN.md
+    parameters:
+      instances: 5
+      replicates: 1
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 1800
+      backend: local
+  falsification_conditions:
+  - The apparent gain is entirely due to discarded valid relations.
+  - High-degree closure remains on the generic saturated component.
+  - Exceptional-branch or saturation-certificate construction costs cancel the gain.
+  - Only the equation count improves; pivot ranks and full solve cost do not.
+  interpretation_limits:
+  - Proposal only; no experiment or improvement established.
+  - Prime-field scope; regularity, solving degree and work are distinct.
+  - Independent relation verification; incomplete means UNKNOWN.
