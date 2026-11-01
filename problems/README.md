@@ -12,6 +12,7 @@ Keep resolved and superseded records in the index.
 
 | Problem | Status | What it blocks | What would unblock it |
 | --- | --- | --- | --- |
+| [Xedni Sadek explicit cutoff](xedni-sadek-explicit-cutoff.md) | open | Using the audited explicit local-test cutoff as a certificate | Independent full repair of the coefficient bound, integer exponents, field selection and zero/unit cases |
 | [Last fall degree needs a finite-profile completion certificate](lastfall-finite-profile-completeness.md) | open | Promoting a finite rank profile to an exact global `d_F` claim | Exact iterative-closure row spaces and a proved later-fall cutoff for a named system |
 | [LastFall review task identities do not satisfy the independence checker](lastfall-review-task-id-schema.md) | open | A `validated_scoped` verdict for the current review packet | Prospective native task plan or reviewed identity bridge, negative control, and passing checker |
 | [P-256 second-pass launch metadata needs prospective corrections](p256-pass2-launch-contract-metadata-incomplete.md) | resolved | Original F3/F4 metadata and missing outer guards, corrected prospectively before data | F3/F4 v2 and explicit guarded commands are preserved; actual authentication, gate and execution remain required |

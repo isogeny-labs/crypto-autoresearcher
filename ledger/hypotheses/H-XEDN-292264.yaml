@@ -1,0 +1,74 @@
+hypothesis:
+  id: H-XEDN-292264
+  question_id: RQ-XEDN-3bfe2e
+  status: proposed
+  proposed_by: codex-root
+  added: '2026-11-01'
+  archived_by: TASK-20261101-fbd859
+  statement: A complete explicit local-test cutoff for supplied rational data can be
+    reconstructed using certified integer B >= max(2,C), admissible integer K and
+    M_star=(B^2-1)(B^2-B)*B^(2*(K+1)*r+4*K), after repairing field selection and
+    zero/unit coefficient cases. This full repair is proposed, not established.
+  mechanism: Replace the invalid square-root prime-divisor bound with a linear bound
+    and a monotone integer majorant, retaining all independent number-theoretic obligations.
+  assumptions:
+  - All hypotheses and exceptional j exclusions of the audited theorem remain required.
+  - A full rational Mordell-Weil basis and rigorous coefficient bound are supplied.
+  - Admissible Kummer exponents and field selection must be independently justified.
+  proof_search_map:
+    bottleneck: The square-root prime-divisor inference does not follow from the coefficient bound.
+    baseline_embedding:
+      parameter_slice: Sadek Theorem 4.4 degree-bound step for supplied rational points
+      reproduction_check: Historical n=ell=C=3 counterexample and imported n=2..16 fixture
+    observation_collision:
+      observable: A prime coefficient can equal the entire coefficient bound.
+      distinct_preimage_search: Contrast prime coefficients with composite coefficients having small prime factors.
+    constructive_transforms:
+    - transform: stronger_invariant
+      proposed_object: Integer majorant with separately certified B and admissible K
+      predicted_gain: A justified conservative cutoff, not a performance improvement
+    quantifier_order: For every valid integer B,r,K and ell,k within their bounds,
+      the majorant dominates; existence of admissible field parameters is a separate obligation.
+    method_ceiling:
+      strongest_certifiable_claim: A corrected local-test cutoff for already supplied rational data
+      nearby_object_control: Reject zero and handle unit coefficients without empty-set maxima.
+    proof_obligations:
+    - claim: The number-field and homothety assumptions admit the chosen integer K.
+      responsibility: feasibility
+    - claim: Zero/unit cases and every required test prime are covered.
+      responsibility: correctness
+    - claim: A supplied-data test is not an arbitrary-residue dependent-lift constructor.
+      responsibility: scope
+  predictions:
+  - metric: valid-domain failures of conditional integer domination
+    direction: different
+    minimum_effect: zero
+  test_boundary:
+    instances: [exact integer expressions; no elliptic-curve target search]
+    parameters:
+      B: [2, 64]
+      r: [1, 4]
+      K: [1, 8]
+      ell: all primes at most B
+      k: integers from 1 through K
+    execution_status: proposed grid, not launched
+  falsification_conditions:
+  - A valid-domain counterexample to the conditional majorant.
+  - An admissible rational-data case for which the proposed full repair omits a necessary test prime.
+  asymptotic_claim: null
+  dominated_by: n/a (no advantage claimed)
+  sota_delta: none; proof-bound audit only
+  novelty_status: unverified
+  structural_ingredients:
+  - description: Sadek 2016 Theorem 4.4 and its degree-bound proof.
+    citation: https://arxiv.org/pdf/1605.02961
+    provenance: retrieved
+    verified_by: codex-root
+    role: audited source; displayed cutoff not adopted as verified
+  interpretation_limits:
+  - Integer software controls do not certify the complete repaired theorem.
+  - No arbitrary-residue construction, coefficient-discovery method or speedup claimed.
+  - No independent review or official scientific promotion in this snapshot.
+  proof_refs:
+  - docs/reports/xedni-sadek-20261101/README.md
+  - problems/xedni-sadek-explicit-cutoff.md
