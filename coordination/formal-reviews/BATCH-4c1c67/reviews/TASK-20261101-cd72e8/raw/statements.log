@@ -1,0 +1,196 @@
+== 2026-11-01T19:18:13Z lake env lean J3/Statements.lean  (sha256 4335bc3698dbdaa1793d19f4147bc92d12c1d0573cde7c0585fedb08d0d713a1)
+Lemma4Witness.lemma4_inside_false : ¬∀ (n : ℕ) (S : List Lemma4Witness.Poly), Lemma4Witness.Lemma4Inside n S
+Lemma4Outside.lemma4_outside_false : (¬∀ (n : ℕ) (F : List Lemma4Witness.Poly), Lemma4Outside.Lemma4Outside n F) ∧
+  ¬∀ (n : ℕ) (F : List Lemma4Witness.Poly), Lemma4Outside.Lemma4OutsideFe n F
+@RecoveryRule.recovery : ∀ {σ : Type u_1} {R : Type u_2} [inst : CommRing R] [DecidableEq σ] [inst_2 : Fintype σ]
+  {ι : Type u_3} [inst_3 : Fintype ι] (fs g : ι → MvPolynomial σ R) (v : ℕ),
+  RecoveryRule.IsFakeFall fs g v →
+    (∀ (i : ι), (g i * fs i).totalDegree ≤ v) → ∃ G, RecoveryRule.IsFall (RecoveryRule.withFe fs) G v
+Bridge.lemma4_mv_false : Bridge.toMv 2 Lemma4Witness.fA₁ = Bridge.mA₁ ∧
+  Bridge.toMv 2 Lemma4Witness.fA₂ = Bridge.mA₂ ∧
+    ¬Bridge.Lemma4Mv Bridge.mFA Bridge.mFA ∧
+      ¬Bridge.Lemma4Mv Bridge.mFA (RecoveryRule.withFe Bridge.mFA) ∧
+        ¬Bridge.Lemma4Mv (RecoveryRule.withFe Bridge.mFA) (RecoveryRule.withFe Bridge.mFA)
+@Bridge.red_sum_red : ∀ {σ : Type u_1} {R : Type u_2} [inst : CommRing R] [DecidableEq σ] {ι : Type u_3}
+  [inst_2 : Fintype ι] (p : ι → MvPolynomial σ R),
+  RecoveryRule.red (∑ i, RecoveryRule.red (p i)) = RecoveryRule.red (∑ i, p i)
+BridgeB.lemma4_mvB_false : Bridge.toMv 3 Lemma4Witness.fB₁ = BridgeB.mB₁ ∧
+  Bridge.toMv 3 Lemma4Witness.fB₂ = BridgeB.mB₂ ∧
+    ¬BridgeB.Lemma4Mv' BridgeB.mFB BridgeB.mFB ∧
+      ¬BridgeB.Lemma4Mv' BridgeB.mFB (RecoveryRule.withFe BridgeB.mFB) ∧
+        ¬BridgeB.Lemma4Mv' (RecoveryRule.withFe BridgeB.mFB) (RecoveryRule.withFe BridgeB.mFB)
+Lemma4Witness.lemma4_inside_false_A : ¬Lemma4Witness.Lemma4Inside 2 Lemma4Witness.SA
+Lemma4Witness.lemma4_inside_false_B : ¬Lemma4Witness.Lemma4Inside 3 Lemma4Witness.SB
+Lemma4Witness.A_dF : Lemma4Witness.FirstFall 2 false Lemma4Witness.SA 3
+Lemma4Witness.A_dF' : Lemma4Witness.FirstFall 2 true Lemma4Witness.SA 2
+Lemma4Witness.B_dF : Lemma4Witness.FirstFall 3 false Lemma4Witness.SB 3
+Lemma4Witness.B_dF' : Lemma4Witness.FirstFall 3 true Lemma4Witness.SB 2
+Lemma4Outside.lemma4_outside_false_B : ¬Lemma4Outside.Lemma4Outside 3 Lemma4Outside.FB
+Lemma4Outside.lemma4_outside_fe_false_B : ¬Lemma4Outside.Lemma4OutsideFe 3 Lemma4Outside.FB
+Bridge.firstFall_out : Bridge.FirstFallIs Bridge.mFA 3
+Bridge.firstFall_in : Bridge.FirstFallIs (RecoveryRule.withFe Bridge.mFA) 3
+Bridge.out_no_fall_two : ¬∃ G, RecoveryRule.IsFall Bridge.mFA G 2
+Bridge.in_no_fall_two : ¬∃ G, RecoveryRule.IsFall (RecoveryRule.withFe Bridge.mFA) G 2
+@Bridge.no_fall_one : ∀ {ι : Type u_1} [inst : Fintype ι] (fs : ι → Bridge.P),
+  (∀ (i : ι), 2 ≤ MvPolynomial.totalDegree (fs i)) → ¬∃ G, RecoveryRule.IsFall fs G 1
+Bridge.fake_fall_two : RecoveryRule.IsFakeFall Bridge.mFA Bridge.gFake 2
+Bridge.fake_fall_two_fe : RecoveryRule.IsFakeFall (RecoveryRule.withFe Bridge.mFA) (Sum.elim Bridge.gFake 0) 2
+BridgeB.firstFall_outB : BridgeB.FirstFallIs' BridgeB.mFB 3
+BridgeB.firstFall_inB : BridgeB.FirstFallIs' (RecoveryRule.withFe BridgeB.mFB) 3
+BridgeB.out_no_fall_twoB : ¬∃ G, RecoveryRule.IsFall BridgeB.mFB G 2
+BridgeB.in_no_fall_twoB : ¬∃ G, RecoveryRule.IsFall (RecoveryRule.withFe BridgeB.mFB) G 2
+@BridgeB.no_fall_one3 : ∀ {ι : Type u_1} [inst : Fintype ι] (fs : ι → BridgeB.Q),
+  (∀ (i : ι), MvPolynomial.totalDegree (fs i) = 2) → ¬∃ G, RecoveryRule.IsFall fs G 1
+BridgeB.fake_fall_twoB : RecoveryRule.IsFakeFall BridgeB.mFB BridgeB.gFakeB 2
+BridgeB.fake_fall_two_feB : RecoveryRule.IsFakeFall (RecoveryRule.withFe BridgeB.mFB) (Sum.elim BridgeB.gFakeB 0) 2
+def CryptoResearch.Nagao.RecoveryRule.IsFall.{u_1, u_2, u_3} : {σ : Type u_1} →
+  {R : Type u_2} →
+    [inst : CommRing R] → {ι : Type u_3} → [Fintype ι] → (ι → MvPolynomial σ R) → (ι → MvPolynomial σ R) → ℕ → Prop :=
+fun {σ} {R} [CommRing R] {ι} [Fintype ι] fs g D =>
+  (∀ (i : ι), (g i * fs i).totalDegree ≤ D) ∧
+    (∃ i, (g i * fs i).totalDegree = D) ∧ ∑ i, g i * fs i ≠ 0 ∧ (∑ i, g i * fs i).totalDegree < D
+def CryptoResearch.Nagao.RecoveryRule.IsFakeFall.{u_1, u_2, u_3} : {σ : Type u_1} →
+  {R : Type u_2} →
+    [inst : CommRing R] → {ι : Type u_3} → [Fintype ι] → (ι → MvPolynomial σ R) → (ι → MvPolynomial σ R) → ℕ → Prop :=
+fun {σ} {R} [CommRing R] {ι} [Fintype ι] fs g D =>
+  (∀ (i : ι), (RecoveryRule.red (g i * fs i)).totalDegree ≤ D) ∧
+    (∃ i, (RecoveryRule.red (g i * fs i)).totalDegree = D) ∧
+      RecoveryRule.red (∑ i, g i * fs i) ≠ 0 ∧ (RecoveryRule.red (∑ i, g i * fs i)).totalDegree < D
+def CryptoResearch.Nagao.RecoveryRule.withFe.{u_1, u_2, u_3} : {σ : Type u_1} →
+  {R : Type u_2} → [inst : CommRing R] → {ι : Type u_3} → (ι → MvPolynomial σ R) → ι ⊕ σ → MvPolynomial σ R :=
+fun {σ} {R} [CommRing R] {ι} fs => Sum.elim fs RecoveryRule.fe
+def CryptoResearch.Nagao.RecoveryRule.red.{u_1, u_2} : {σ : Type u_1} →
+  {R : Type u_2} → [inst : CommRing R] → MvPolynomial σ R → MvPolynomial σ R :=
+fun {σ} {R} [CommRing R] p => ∑ a ∈ p.support, (MvPolynomial.monomial (RecoveryRule.clamp a)) (p.coeff a)
+def CryptoResearch.Nagao.RecoveryRule.clamp.{u_1} : {σ : Type u_1} → (σ →₀ ℕ) → σ →₀ ℕ :=
+fun {σ} a => Finsupp.mapRange (fun n => min n 1) RecoveryRule.clamp._proof_1 a
+def CryptoResearch.Nagao.RecoveryRule.fe.{u_1, u_2} : {σ : Type u_1} →
+  {R : Type u_2} → [inst : CommRing R] → σ → MvPolynomial σ R :=
+fun {σ} {R} [CommRing R] j => MvPolynomial.X j ^ 2 - MvPolynomial.X j
+def CryptoResearch.Nagao.RecoveryRule.deg.{u_1} : {σ : Type u_1} → [Fintype σ] → (σ →₀ ℕ) → ℕ :=
+fun {σ} [Fintype σ] a => ∑ i, a i
+def CryptoResearch.Nagao.Bridge.FirstFallIs.{u_1} : {ι : Type u_1} → [Fintype ι] → (ι → Bridge.P) → ℕ → Prop :=
+fun {ι} [Fintype ι] fs d =>
+  (∃ G, RecoveryRule.IsFall fs G d) ∧ ∀ (D : ℕ), 1 ≤ D → D < d → ¬∃ G, RecoveryRule.IsFall fs G D
+def CryptoResearch.Nagao.Bridge.Lemma4Mv.{u_1, u_2} : {ι : Type u_1} →
+  {κ : Type u_2} → [Fintype ι] → [Fintype κ] → (ι → Bridge.P) → (κ → Bridge.P) → Prop :=
+fun {ι} {κ} [Fintype ι] [Fintype κ] fsTrue fsFake =>
+  ∀ (d : ℕ), Bridge.FirstFallIs fsTrue d → ∀ (D : ℕ), (∃ g, RecoveryRule.IsFakeFall fsFake g D) → d ≤ D
+def CryptoResearch.Nagao.BridgeB.FirstFallIs'.{u_1, u_2} : {σ : Type u_1} →
+  {ι : Type u_2} → [DecidableEq σ] → [Fintype σ] → [Fintype ι] → (ι → MvPolynomial σ (ZMod 2)) → ℕ → Prop :=
+fun {σ} {ι} [DecidableEq σ] [Fintype σ] [Fintype ι] fs d =>
+  (∃ G, RecoveryRule.IsFall fs G d) ∧ ∀ (D : ℕ), 1 ≤ D → D < d → ¬∃ G, RecoveryRule.IsFall fs G D
+def CryptoResearch.Nagao.BridgeB.Lemma4Mv'.{u_1, u_2, u_3} : {σ : Type u_1} →
+  {ι : Type u_2} →
+    {κ : Type u_3} →
+      [DecidableEq σ] →
+        [Fintype σ] →
+          [Fintype ι] → [Fintype κ] → (ι → MvPolynomial σ (ZMod 2)) → (κ → MvPolynomial σ (ZMod 2)) → Prop :=
+fun {σ} {ι} {κ} [DecidableEq σ] [Fintype σ] [Fintype ι] [Fintype κ] fsTrue fsFake =>
+  ∀ (d : ℕ), BridgeB.FirstFallIs' fsTrue d → ∀ (D : ℕ), (∃ g, RecoveryRule.IsFakeFall fsFake g D) → d ≤ D
+def CryptoResearch.Nagao.Bridge.toMv : (n : ℕ) → Lemma4Witness.Poly → MvPolynomial (Fin n) (ZMod 2) :=
+fun n p => (List.map (fun m => (MvPolynomial.monomial (Bridge.expOf n m)) 1) p).sum
+def CryptoResearch.Nagao.Bridge.expOf : (n : ℕ) → List ℕ → Fin n →₀ ℕ :=
+fun n m => Finsupp.equivFunOnFinite.symm fun i => m.getD (↑i) 0
+def CryptoResearch.Nagao.Bridge.mA₁ : Bridge.P :=
+MvPolynomial.X 0 ^ 2 * MvPolynomial.X 1
+def CryptoResearch.Nagao.Bridge.mA₂ : Bridge.P :=
+MvPolynomial.X 0 * MvPolynomial.X 1 + MvPolynomial.X 0
+def CryptoResearch.Nagao.Bridge.mFA : Fin 2 → Bridge.P :=
+![Bridge.mA₁, Bridge.mA₂]
+def CryptoResearch.Nagao.Bridge.Gout : Fin 2 → Bridge.P :=
+![1, MvPolynomial.X 0]
+def CryptoResearch.Nagao.Bridge.Gin : Fin 2 ⊕ Fin 2 → Bridge.P :=
+Sum.elim Bridge.Gout 0
+def CryptoResearch.Nagao.Bridge.gFake : Fin 2 → Bridge.P :=
+![1, 1]
+def CryptoResearch.Nagao.BridgeB.mB₁ : BridgeB.Q :=
+MvPolynomial.X 0 * MvPolynomial.X 1 + MvPolynomial.X 2
+def CryptoResearch.Nagao.BridgeB.mB₂ : BridgeB.Q :=
+MvPolynomial.X 0 * MvPolynomial.X 2 + MvPolynomial.X 1
+def CryptoResearch.Nagao.BridgeB.mFB : Fin 2 → BridgeB.Q :=
+![BridgeB.mB₁, BridgeB.mB₂]
+def CryptoResearch.Nagao.BridgeB.GoutB : Fin 2 → BridgeB.Q :=
+![MvPolynomial.X 2, MvPolynomial.X 1]
+def CryptoResearch.Nagao.BridgeB.GinB : Fin 2 ⊕ Fin 3 → BridgeB.Q :=
+Sum.elim BridgeB.GoutB 0
+def CryptoResearch.Nagao.BridgeB.gFakeB : Fin 2 → BridgeB.Q :=
+![1, MvPolynomial.X 0 + 1]
+def CryptoResearch.Nagao.Lemma4Witness.FirstFall : ℕ → Bool → List Lemma4Witness.Poly → ℕ → Prop :=
+fun n fake S D => Lemma4Witness.FallAt n fake S D ∧ ∀ (D' : ℕ), 1 ≤ D' → D' < D → ¬Lemma4Witness.FallAt n fake S D'
+def CryptoResearch.Nagao.Lemma4Witness.FallAt : ℕ → Bool → List Lemma4Witness.Poly → ℕ → Prop :=
+fun n fake S D =>
+  ∃ gs,
+    List.Forall₂ (Lemma4Witness.Adm n D fake) gs (Lemma4Witness.gens fake S) ∧
+      Lemma4Witness.Cond fake D gs (Lemma4Witness.gens fake S)
+def CryptoResearch.Nagao.Lemma4Witness.Cond : Bool → ℕ → List Lemma4Witness.Poly → List Lemma4Witness.Poly → Prop :=
+fun fake D gs S =>
+  have P := List.zipWith (fun g s => Lemma4Witness.prep fake (Lemma4Witness.mul g s)) gs S;
+  have total := Lemma4Witness.prep fake (Lemma4Witness.norm P.flatten);
+  (∀ p ∈ P, Lemma4Witness.DegLe p D) ∧ (∃ p ∈ P, ∃ m ∈ p, List.sum m = D) ∧ total ≠ [] ∧ ∀ m ∈ total, List.sum m < D
+def CryptoResearch.Nagao.Lemma4Witness.Adm : ℕ → ℕ → Bool → Lemma4Witness.Poly → Lemma4Witness.Poly → Prop :=
+fun n D fake g s =>
+  List.Sublist g (Lemma4Witness.mons n D fake) ∧ Lemma4Witness.DegLe (Lemma4Witness.prep fake (Lemma4Witness.mul g s)) D
+def CryptoResearch.Nagao.Lemma4Witness.gens : Bool → List Lemma4Witness.Poly → List Lemma4Witness.Poly :=
+fun fake S => if fake = true then List.filter (fun x => decide (x ≠ [])) (List.map Lemma4Witness.reduceFe S) else S
+def CryptoResearch.Nagao.Lemma4Witness.prep : Bool → Lemma4Witness.Poly → Lemma4Witness.Poly :=
+fun fake p => if fake = true then Lemma4Witness.reduceFe p else p
+def CryptoResearch.Nagao.Lemma4Witness.reduceFe : Lemma4Witness.Poly → Lemma4Witness.Poly :=
+fun p => Lemma4Witness.norm (List.map (fun m => List.map (min 1) m) p)
+def CryptoResearch.Nagao.Lemma4Witness.mul : Lemma4Witness.Poly → Lemma4Witness.Poly → Lemma4Witness.Poly :=
+fun p q => Lemma4Witness.norm (List.flatMap (fun a => List.map (Lemma4Witness.monoMul a) q) p)
+def CryptoResearch.Nagao.Lemma4Witness.monoMul : Lemma4Witness.Mono → Lemma4Witness.Mono → Lemma4Witness.Mono :=
+fun a b => List.zipWith (fun x1 x2 => x1 + x2) a b
+def CryptoResearch.Nagao.Lemma4Witness.norm : List Lemma4Witness.Mono → Lemma4Witness.Poly :=
+fun l => (List.filter (fun m => List.count m l % 2 == 1) l).dedup
+def CryptoResearch.Nagao.Lemma4Witness.mons : ℕ → ℕ → Bool → List Lemma4Witness.Mono :=
+fun n D fake => Lemma4Witness.monsAux n (if fake = true then 1 else D) D
+def CryptoResearch.Nagao.Lemma4Witness.monsAux : ℕ → ℕ → ℕ → List Lemma4Witness.Mono :=
+fun x x_1 x_2 => Nat.brecOn (motive := fun x => ℕ → ℕ → List Lemma4Witness.Mono) x Lemma4Witness.monsAux._f x_1 x_2
+def CryptoResearch.Nagao.Lemma4Witness.DegLe : Lemma4Witness.Poly → ℕ → Prop :=
+fun p D => ∀ m ∈ p, List.sum m ≤ D
+def CryptoResearch.Nagao.Lemma4Witness.fieldEqs : ℕ → List Lemma4Witness.Poly :=
+fun n =>
+  List.map
+    (fun i =>
+      [List.map (fun j => if j = i then 2 else 0) (List.range n),
+        List.map (fun j => if j = i then 1 else 0) (List.range n)])
+    (List.range n)
+def CryptoResearch.Nagao.Lemma4Witness.Lemma4Inside : ℕ → List Lemma4Witness.Poly → Prop :=
+fun n S => ∀ (d d' : ℕ), Lemma4Witness.FirstFall n false S d → Lemma4Witness.FirstFall n true S d' → d ≤ d'
+def CryptoResearch.Nagao.Lemma4Outside.Lemma4Outside : ℕ → List Lemma4Witness.Poly → Prop :=
+fun n F => ∀ (d d' : ℕ), Lemma4Witness.FirstFall n false F d → Lemma4Witness.FirstFall n true F d' → d ≤ d'
+def CryptoResearch.Nagao.Lemma4Outside.Lemma4OutsideFe : ℕ → List Lemma4Witness.Poly → Prop :=
+fun n F =>
+  ∀ (d d' : ℕ),
+    Lemma4Witness.FirstFall n false F d → Lemma4Witness.FirstFall n true (F ++ Lemma4Witness.fieldEqs n) d' → d ≤ d'
+def CryptoResearch.Nagao.Lemma4Witness.SA : List Lemma4Witness.Poly :=
+[Lemma4Witness.fA₁, Lemma4Witness.fA₂] ++ Lemma4Witness.fieldEqs 2
+def CryptoResearch.Nagao.Lemma4Witness.SB : List Lemma4Witness.Poly :=
+[Lemma4Witness.fB₁, Lemma4Witness.fB₂] ++ Lemma4Witness.fieldEqs 3
+def CryptoResearch.Nagao.Lemma4Witness.fA₁ : Lemma4Witness.Poly :=
+[[2, 1]]
+def CryptoResearch.Nagao.Lemma4Witness.fA₂ : Lemma4Witness.Poly :=
+[[1, 1], [1, 0]]
+def CryptoResearch.Nagao.Lemma4Witness.fB₁ : Lemma4Witness.Poly :=
+[[1, 1, 0], [0, 0, 1]]
+def CryptoResearch.Nagao.Lemma4Witness.fB₂ : Lemma4Witness.Poly :=
+[[1, 0, 1], [0, 1, 0]]
+def CryptoResearch.Nagao.Lemma4Outside.FA : List Lemma4Witness.Poly :=
+[Lemma4Witness.fA₁, Lemma4Witness.fA₂]
+def CryptoResearch.Nagao.Lemma4Outside.FB : List Lemma4Witness.Poly :=
+[Lemma4Witness.fB₁, Lemma4Witness.fB₂]
+def CryptoResearch.Nagao.Lemma4Witness.gA_true : List Lemma4Witness.Poly :=
+[[], [[1, 0]], [[0, 1]], []]
+def CryptoResearch.Nagao.Lemma4Witness.gA_fake : List Lemma4Witness.Poly :=
+[[[1, 1]], [[1, 0]]]
+def CryptoResearch.Nagao.Lemma4Witness.gB_true : List Lemma4Witness.Poly :=
+[[[0, 0, 0]], [[0, 0, 0], [1, 0, 0]], [[0, 0, 1]], [], []]
+def CryptoResearch.Nagao.Lemma4Witness.gB_fake : List Lemma4Witness.Poly :=
+[[[0, 0, 0]], [[0, 0, 0], [1, 0, 0]]]
+def CryptoResearch.Nagao.Lemma4Outside.gA_out : List Lemma4Witness.Poly :=
+[[[0, 0]], [[1, 0]]]
+def CryptoResearch.Nagao.Lemma4Outside.gB_out : List Lemma4Witness.Poly :=
+[[[0, 0, 1]], [[0, 1, 0]]]
+TIMED wall=3.8s user=1.9s sys=2.0s maxrss_largest_child=2246MiB exit=0
+EXIT[Statements]=0
