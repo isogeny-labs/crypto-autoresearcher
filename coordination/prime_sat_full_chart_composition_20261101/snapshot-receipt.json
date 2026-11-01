@@ -1,0 +1,234 @@
+{
+  "schema": "prime-full-chart-composition-source-snapshot/v1",
+  "recorded_at": "2026-11-01T20:39:14.876738+00:00",
+  "task_id": "TASK-20261101-76dc07",
+  "source_task_id": "TASK-20261101-e6e4b5",
+  "source_commit": "4e6e9cfaddd37892829c75f1a67fdf1f6c535ba7",
+  "producer_publication": {
+    "started_at": "2026-11-01T20:11:40.454550+00:00",
+    "steps": [
+      {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--name-only"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "fetch",
+          "origin",
+          "main"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/aburan28/crypto-autoresearcher\n * branch                    main       -> FETCH_HEAD\n   1269acd4708..6e14e3ce107  main       -> origin/main\n"
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "origin/main"
+        ],
+        "returncode": 0,
+        "stdout": "6e14e3ce107450f3781f012fb38a63f487ba2797\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-list",
+          "--left-right",
+          "--count",
+          "HEAD...origin/main"
+        ],
+        "returncode": 0,
+        "stdout": "1\t9\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "add",
+          "--",
+          "research/prime_sat_full_chart_composition_20261101/composition.py",
+          "research/prime_sat_full_chart_composition_20261101/test_composition.py",
+          "research/prime_sat_full_chart_composition_20261101/software-results.json",
+          "research/prime_sat_full_chart_composition_20261101/README.md"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--name-only"
+        ],
+        "returncode": 0,
+        "stdout": "research/prime_sat_full_chart_composition_20261101/README.md\nresearch/prime_sat_full_chart_composition_20261101/composition.py\nresearch/prime_sat_full_chart_composition_20261101/software-results.json\nresearch/prime_sat_full_chart_composition_20261101/test_composition.py\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/check_merge_hygiene.py",
+          "--base",
+          "origin/main"
+        ],
+        "returncode": 0,
+        "stdout": "PASS: no conflict markers, no unparseable records, no duplicate registry keys, no changed runbook-session files, no schema-failing new run manifests, no identifier collisions, no new legacy GOAL identifiers\n",
+        "stderr": "note: parseability scoped to 5 committed, staged, or tracked-worktree candidate path(s) vs origin/main; the absolute sweep runs on main\n"
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/check_run_immutability.py"
+        ],
+        "returncode": 0,
+        "stdout": "OK: no committed run artifacts were modified or deleted\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "commit",
+          "-m",
+          "research: TASK-20261101-e6e4b5 complete chart quadratic composition and fixed witness controls"
+        ],
+        "returncode": 0,
+        "stdout": "[codex/prime-full-chart-composition-20261101 4e6e9cfaddd] research: TASK-20261101-e6e4b5 complete chart quadratic composition and fixed witness controls\n Committer: EC2 Default User <ec2-user@ip-172-31-26-169.us-east-2.compute.internal>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly:\n\n    git config --global user.name \"Your Name\"\n    git config --global user.email you@example.com\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 4 files changed, 921 insertions(+)\n create mode 100644 research/prime_sat_full_chart_composition_20261101/README.md\n create mode 100644 research/prime_sat_full_chart_composition_20261101/composition.py\n create mode 100644 research/prime_sat_full_chart_composition_20261101/software-results.json\n create mode 100644 research/prime_sat_full_chart_composition_20261101/test_composition.py\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "returncode": 0,
+        "stdout": "4e6e9cfaddd37892829c75f1a67fdf1f6c535ba7\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "push"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "remote: This repository moved. Please use the new location:        \nremote:   https://github.com/isogeny-labs/crypto-autoresearcher.git        \nTo https://github.com/aburan28/crypto-autoresearcher.git\n   fc0ea2b538a..4e6e9cfaddd  codex/prime-full-chart-composition-20261101 -> codex/prime-full-chart-composition-20261101\n"
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/goal_lanes.py",
+          "release",
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/dispatch_queue.json",
+          "TASK-20261101-e6e4b5",
+          "--as",
+          "executor-prime-full-chart-composition",
+          "--expected-epoch",
+          "1",
+          "--outcome",
+          "completed",
+          "--note",
+          "Four producer outputs published with all fixed-suite attempts retained. Independent review pending; no SAT or scientific runs.",
+          "--publish"
+        ],
+        "returncode": 0,
+        "stdout": "  bound 4 artifact hash(es)\nreleased TASK-20261101-e6e4b5 as completed -> coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/TASK-20261101-e6e4b5.1.release.json\npublished a37836ea421 and pushed\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          ".resume/ready-claim-active-support.py",
+          "full-chart-composition-snapshot",
+          "TASK-20261101-76dc07",
+          "coordinator-prime-full-chart-composition",
+          "prime-full-chart-composition-snapshot-20261101"
+        ],
+        "returncode": 0,
+        "stdout": ".resume/active-support-full-chart-composition-snapshot-ready.json\n.resume/active-support-full-chart-composition-snapshot-claim.json\n",
+        "stderr": ""
+      }
+    ],
+    "hashes": {
+      "research/prime_sat_full_chart_composition_20261101/composition.py": "354d6eef9695477f5c3ab2e9acc274241848f25a863dac30d2e5eb0def68c3b9",
+      "research/prime_sat_full_chart_composition_20261101/test_composition.py": "9b025e9b8f2b549ecdc96acf0fabfaa15d09f9ae9506e3bd79eba21c9bbcb9cb",
+      "research/prime_sat_full_chart_composition_20261101/software-results.json": "3b3377963bec61249b61580f6cf1cc30fdfb5ab7ec8a959f2c34ac18329c9cb9",
+      "research/prime_sat_full_chart_composition_20261101/README.md": "56cd8e84cdf3c7cc30d9115ae4a2a0ddc082ab40e16df55c6e7e34e7d1290450"
+    },
+    "claim_epoch": 1,
+    "assertions": 1805,
+    "unrelated_dirty_hashes": {
+      "ledger/.index/experiments.jsonl": "9766ecc5baadeabc5584a130eeb8f352ee249efdc100ae6bf28a6ca9dc07e989",
+      "ledger/.index/hypotheses.jsonl": "be79cd480cfc429a5f95789d18738a7146c7e03a9de7456a17bed686c0a859f4",
+      "ledger/.index/proposals.jsonl": "adf24d9badf1b81d5ce8eff85ff597a73aeebe18eb2c49055b1453073a2816e9"
+    },
+    "base_commit": "6e14e3ce107450f3781f012fb38a63f487ba2797",
+    "base_relation": "1\t9",
+    "merge_outcome": "inspected divergence; no merge performed",
+    "source_commit": "4e6e9cfaddd37892829c75f1a67fdf1f6c535ba7",
+    "completed": true
+  },
+  "snapshot_claim": {
+    "command": [
+      "/home/ec2-user/prime-sat-research-venv/bin/python",
+      "tools/goal_lanes.py",
+      "claim",
+      "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/dispatch_queue.json",
+      "TASK-20261101-76dc07",
+      "--as",
+      "coordinator-prime-full-chart-composition",
+      "--session",
+      "prime-full-chart-composition-snapshot-20261101",
+      "--ttl-minutes",
+      "120",
+      "--publish"
+    ],
+    "started_at": "2026-11-01T20:27:06.537313+00:00",
+    "returncode": 0,
+    "stdout": "claimed TASK-20261101-76dc07 -> coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/TASK-20261101-76dc07.1.claim.json\npublished a290638b73f and pushed\n",
+    "stderr": "",
+    "ended_at": "2026-11-01T20:29:14.094974+00:00"
+  },
+  "source_sha256": {
+    "research/prime_sat_full_chart_composition_20261101/composition.py": "354d6eef9695477f5c3ab2e9acc274241848f25a863dac30d2e5eb0def68c3b9",
+    "research/prime_sat_full_chart_composition_20261101/test_composition.py": "9b025e9b8f2b549ecdc96acf0fabfaa15d09f9ae9506e3bd79eba21c9bbcb9cb",
+    "research/prime_sat_full_chart_composition_20261101/software-results.json": "3b3377963bec61249b61580f6cf1cc30fdfb5ab7ec8a959f2c34ac18329c9cb9",
+    "research/prime_sat_full_chart_composition_20261101/README.md": "56cd8e84cdf3c7cc30d9115ae4a2a0ddc082ab40e16df55c6e7e34e7d1290450"
+  },
+  "metadata_sha256": {
+    "coordination/prime_sat_full_chart_composition_20261101/SOURCE-API.md": "a742017f8a8c6db0adbf20246dac1ab730f85f6322c144fc8687235db371d753",
+    "coordination/prime_sat_full_chart_composition_20261101/fixed-software-contract.json": "16f5740d53471c30423db90fb1bf82c4774a9dd0a2c39d60b5d2ac35998a7659",
+    "coordination/prime_sat_full_chart_composition_20261101/design.md": "25c5374a45a3fec0b9ace3f8ee3c7a88e7be84d2670892b488cbd41dc73ce94b",
+    "coordination/prime_sat_full_chart_composition_20261101/admission.yaml": "7b2c27aac9ddaaeeac6380dda6d75f4fb890c8bc03cbe97937bf10ad9427c2be",
+    "coordination/prime_sat_full_chart_composition_20261101/source-inputs.json": "8273c75aa370a249ceb467f91ce7ed485752aa95c121127fb08fedf92cf47a83",
+    "coordination/prime_sat_full_chart_composition_20261101/inference-amendment.yaml": "d7dc0731afba9e54b4e3cf5d60200f0e51173eaa4e735b091ceb20615277bec8",
+    "coordination/prime_sat_full_chart_composition_20261101/review-plan.yaml": "3718942b8ae77aab1a394a3fc672c7f24e2c797fada345ac29c0c2db784cc707",
+    "coordination/prime_sat_full_chart_composition_20261101/reviewer-brief.md": "9070f5c4de785f2cb4c5125bb508f1df742e6b4937abb369787399af75bbc640",
+    "coordination/prime_sat_full_chart_composition_20261101/ROOT-INSTRUCTIONS.md": "093d2163f99dfa05ffa04a21ee806bf1a6480508061b30e1b0d96a744ef23293",
+    "coordination/prime_sat_full_chart_composition_20261101/id-checks.json": "00453a13f7d10148647e19f20b5e8dbbd20e8068cc32ad7655958a480824eb52"
+  },
+  "base_commit_inspected": "bbc19e928ec2a4065c8ce6b752515b37c8074556",
+  "base_relation": "1\t10",
+  "merge_outcome": "merged fetched origin/main; producer and dependency hashes rechecked",
+  "pre_snapshot_head": "c89330685a21fd6e3bed756190771219733b43de",
+  "source_immutability": true,
+  "bound_inputs_unchanged": 14,
+  "independent_review": "pending; fixed producer suite is not independent acceptance",
+  "scientific_runs": 0,
+  "software_suite_attempts": 2,
+  "producer_assertions": 1805,
+  "solver_invocations": 0,
+  "archive_binding": "Native exact content_at_commit union binds this receipt after commit; no self hash."
+}
