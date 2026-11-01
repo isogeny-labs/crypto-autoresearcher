@@ -109,6 +109,36 @@ def readback(url, expected, destination):
         raise ValueError('anonymous release asset hash mismatch: ' + url)
 
 
+def already_published(path, archive, plan_hash, known_ids):
+    """Trust a prior readback only when its committed receipt binds this row."""
+    row = json.loads(path.read_text())
+    name = row.get('id')
+    if name not in known_ids or row.get('plan_sha256') != plan_hash:
+        raise ValueError('result outside pinned plan: ' + str(path))
+    acknowledgement = archive / (name + '.publication.json')
+    if not acknowledgement.exists():
+        return False
+    receipt = archive / (name + '.receipt.json')
+    if not receipt.exists():
+        raise ValueError('publication acknowledgement without receipt: ' + name)
+    old = json.loads(acknowledgement.read_text())
+    saved = json.loads(receipt.read_text())
+    if (row.get('status') != 'certificate_verified' or
+            old.get('schema') != 'semaev.bounded-d4-publication-readback/v1' or
+            old.get('id') != name or
+            saved.get('schema') != 'semaev.published-bounded-d4/v1' or
+            saved.get('plan_sha256') != plan_hash or saved.get('result') != row or
+            old.get('certificate_sha256') != row['stages'][1]['certificate_sha256']):
+        raise ValueError('previous publication identity differs from retained result: ' + name)
+    cert = next((item for item in old.get('files', [])
+                 if item.get('name') == name + '.D4.cert.gz'), None)
+    if (cert is None or cert.get('sha256') != saved.get('compressed_sha256') or
+            cert.get('bytes') != saved.get('compressed_bytes')):
+        raise ValueError('previous certificate receipt differs from publication: ' + name)
+    print(json.dumps({'id': name, 'publication': 'previous_readback_receipt_reconciled'}), flush=True)
+    return True
+
+
 def publish(args):
     args.archive.mkdir(parents=True, exist_ok=True)
     plan = json.loads(args.plan.read_text())
@@ -123,6 +153,8 @@ def publish(args):
         assets = {asset['name'] for asset in info['assets']}
         eligible = []
         for path in sorted(args.run_root.glob('*/attempt-001/result.json')):
+            if already_published(path, args.archive, plan_hash, known_ids):
+                continue
             row = checked_row(path, plan_hash, known_ids)
             if row is None:
                 continue

@@ -69,6 +69,27 @@ class PublicationEligibility(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'evidence bundle differs'):
                 module.pack_evidence(path.parent, bundle)
 
+    def test_previous_readback_skips_only_identical_result(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            path = self.fixture(root)
+            archive = root / 'archive'
+            archive.mkdir()
+            row = json.loads(path.read_text())
+            receipt = {'schema': 'semaev.published-bounded-d4/v1',
+                       'plan_sha256': 'plan', 'result': row,
+                       'compressed_sha256': 'packed', 'compressed_bytes': 42}
+            ack = {'schema': 'semaev.bounded-d4-publication-readback/v1',
+                   'id': 'item', 'certificate_sha256': row['stages'][1]['certificate_sha256'],
+                   'files': [{'name': 'item.D4.cert.gz', 'sha256': 'packed', 'bytes': 42}]}
+            (archive / 'item.receipt.json').write_text(json.dumps(receipt))
+            (archive / 'item.publication.json').write_text(json.dumps(ack))
+            self.assertTrue(module.already_published(path, archive, 'plan', {'item'}))
+            row['exact_solutions'] = 3
+            path.write_text(json.dumps(row))
+            with self.assertRaisesRegex(ValueError, 'identity differs'):
+                module.already_published(path, archive, 'plan', {'item'})
+
 
 if __name__ == '__main__':
     unittest.main()
