@@ -7,6 +7,9 @@
     engines  per-target decomposition cost of msolve (Groebner) vs exhaustive
              enumeration on a ladder of factor-base sizes, with the check that
              both engines find exactly the same decompositions
+    descent  one Gaudry/Diem decomposition over F_{p^n} by Weil descent (msolve),
+             under one or every presentation (chain | tree | monolithic), with
+             an optional group-law brute-force check (descent.py)
     analyze  refit and tabulate from sweep / engines JSONL files
     representation-controls  bounded lift/circularity, equivalent-model,
              residual-correction and CM-filter software diagnostics
@@ -84,6 +87,58 @@ def cmd_solve(args: argparse.Namespace) -> int:
     json.dump(out, sys.stdout, indent=2, default=list)
     print()
     return 0 if ic.verified else 1
+
+
+# -- descent ----------------------------------------------------------------------
+
+def cmd_descent(args: argparse.Namespace) -> int:
+    from . import descent as dsc
+    from .msolve import available, startup_seconds
+
+    if not available():
+        print("msolve not found: install it (apt install msolve) or set CRYPTO_AR_MSOLVE",
+              file=sys.stderr)
+        return 2
+    m = args.m or args.n
+    F = dsc.ExtField(args.p, args.n, seed=args.curve_seed)
+    E = dsc.ExtCurve.random(F, random.Random(f"descent-curve|{args.curve_seed}"))
+    trng = random.Random(f"descent-target|{args.target_seed}")
+    if args.random_target:
+        R = None
+        while R is None:
+            R = E.lift_x(F.random(trng))
+        planted = None
+    else:
+        R, planted = dsc.planted_target(E, m, trng)
+    out = {"p": F.p, "n": F.n, "m": m, "modulus": F.modulus, "a": list(E.a), "b": list(E.b),
+           "R": [list(R[0]), list(R[1])], "planted_x": planted,
+           "msolve_startup_seconds": startup_seconds(), "runs": []}
+    truth = None
+    if args.check:
+        truth = dsc.decompositions_bruteforce(E, R, m)
+        out["bruteforce_relations"] = [list(map(list, r)) for r in truth]
+    topologies = TOPOLOGIES if args.topology == "all" else (args.topology,)
+    ok = True
+    for topo in topologies:
+        if topo == "monolithic" and m > diagram_max_m():
+            continue
+        o = dsc.decompose_descent(E, R, m, seed=args.seed, topology=topo, timeout=args.timeout)
+        row = {"topology": topo, "plan": o.plan, "status": o.status, "degree": o.degree,
+               "msolve_runs": o.runs, "msolve_seconds": o.seconds,
+               "rational_solutions": o.rational_solutions, "unlifted": o.unlifted,
+               "relations": [list(map(list, r)) for r in o.relations], "detail": o.detail}
+        if truth is not None:
+            row["agrees_with_bruteforce"] = o.relations == truth
+            ok = ok and row["agrees_with_bruteforce"]
+        out["runs"].append(row)
+    json.dump(out, sys.stdout, indent=2)
+    print()
+    return 0 if ok else 1
+
+
+def diagram_max_m() -> int:
+    from .diagram import MONOLITHIC_MAX_M
+    return MONOLITHIC_MAX_M
 
 
 # -- sweep ------------------------------------------------------------------------
@@ -1247,6 +1302,21 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--json", action="store_true")
     g.add_argument("--quiet", action="store_true")
     g.set_defaults(func=cmd_engines)
+
+    w2 = sub.add_parser("descent", help="Gaudry/Diem decomposition over F_{p^n} via Weil descent")
+    w2.add_argument("--p", type=int, default=101, help="odd prime below the msolve bound 2^16")
+    w2.add_argument("--n", type=int, default=3, help="extension degree")
+    w2.add_argument("--m", type=int, default=0, help="points per decomposition (default n)")
+    w2.add_argument("--topology", choices=TOPOLOGIES + ("all",), default="all")
+    w2.add_argument("--curve-seed", type=int, default=0)
+    w2.add_argument("--target-seed", type=int, default=0)
+    w2.add_argument("--random-target", action="store_true",
+                    help="a random point instead of a planted sum of m base points")
+    w2.add_argument("--seed", type=int, default=0, help="separating-form seed")
+    w2.add_argument("--timeout", type=float, default=600.0)
+    w2.add_argument("--check", action="store_true",
+                    help="also enumerate decompositions by the group law (m <= 3, small p)")
+    w2.set_defaults(func=cmd_descent)
 
     c = sub.add_parser("census", help="EXP-PFDR-1b78f7 collision-harvest panels")
     c.add_argument("--panel", choices=("main", "rho", "j0"), required=True)
