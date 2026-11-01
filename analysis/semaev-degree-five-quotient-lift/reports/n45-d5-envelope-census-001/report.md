@@ -1,6 +1,6 @@
 # Retained n=45 D4 seeds: read-only D5 capacity census
 
-Nine independently accepted, locally retained D4 seeds were structurally profiled with the SHA-bound bounded-export profiler. All nine have a certified LFD lower bound of at least 5 from their original D4 receipts. This census takes no new closure data and proves no D5 membership or non-membership.
+Nine independently accepted and published D4 seeds were structurally profiled with the SHA-bound bounded-export profiler. All nine have a certified LFD lower bound of at least 5 from their original D4 receipts. This census takes no new closure data and proves no D5 membership or non-membership.
 
 The five polynomial-subspace presentations have 13,669–13,688 D5 working coordinates and a 5.012–5.013 GB allocation envelope at 60,000 rows. The four random-subspace presentations each have 123,103 coordinates and a 48.373 GB envelope. The latter remains a calculated allocation bound, not measured RSS or an admission decision.
 
@@ -16,6 +16,6 @@ The five polynomial-subspace presentations have 13,669–13,688 D5 working coord
 | fresh-n45-rand-02-rref-local01 | 0 | 46472 | 76631 | 123103 | 48373307651 | `ec2b879f84908cf58a7d1e689168d02119bea7d683a5670d845b1a71ac8241a8` |
 | fresh-n45-rand-03-rref-lowmem01 | 0 | 46472 | 76631 | 123103 | 48373307651 | `3b1c4521367f6a2ef55d8ba870ff192bbcadd35d4f70fb5f6e91cbb643822b4f` |
 
-The [evidence directory](evidence/) preserves each frozen plan, full profile, and original accepted result, including the certificate SHA-256, source hashes, independent border enumeration agreement, allocation terms, and output hash. The profiler checked the complete source certificate hash and triangular quotient representation before counting the degree-five border. The plan and profile files under `evidence/` are byte copies of the write-once local outputs.
+The previously committed [publication acknowledgements](../../panel-local-archive-001/) bind these nine certificates to public release assets and canonical-store readbacks. The [evidence directory](evidence/) preserves each frozen plan, full profile, and original accepted result, including the certificate SHA-256, source hashes, independent border enumeration agreement, allocation terms, and output hash. The profiler checked the complete source certificate hash and triangular quotient representation before counting the degree-five border. The plan and profile files under `evidence/` are byte copies of the write-once local outputs.
 
 At current capacity, a polynomial seed is the smallest D5 continuation. The existing local launcher takes the same owner locks as the running n=43/n=44 D4 tail, so no D5 job was launched during this census. A new D5 run requires its own frozen protocol, fresh count, independent D5 checker and terminal receipt.
