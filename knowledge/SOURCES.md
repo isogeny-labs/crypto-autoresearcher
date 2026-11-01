@@ -31,7 +31,7 @@ a hash it cannot is an assertion by the session that recorded it.
 
 Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1344, doi 183, eprint 837, url 154. Every identifier an entry carries is kept in `sources.json`.
 
-`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full_text` 4, `full_text_supplied` 2, `metadata` 3, `partial` 5, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 525.
+`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full_text` 5, `full_text_supplied` 2, `metadata` 3, `partial` 5, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 524.
 
 ## 1. Frozen source packages
 
@@ -273,7 +273,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-01e321 | UVW Key Encapsulation Mechanism（NGCC 公钥第一轮候选 · 密钥封装 38） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
 | KN-LIT-01f731 | A new sieving-style information-set decoding algorithm | 2023 | `eprint:2023/247` | web |
 | KN-LIT-020 | The Xedni Calculus and the Elliptic Curve Discrete Logarithm Problem | 2000 | `doi:10.1023/a:1008319518035` | web |
-| KN-LIT-021 | Analysis of the Xedni Calculus Attack | 2000 | `doi:10.1023/a:1008312401197` | web |
+| KN-LIT-021 | Analysis of the Xedni Calculus Attack | 2000 | `doi:10.1023/a:1008312401197` | full_text |
 | KN-LIT-022 | Elliptic Curve Discrete Logarithm Problem over Small Degree Extension Fields | 2013 | `eprint:2010/157` | web |
 | KN-LIT-023 | Improving the Complexity of Index Calculus Algorithms in Elliptic Curves over Binary Fields | 2012 | `doi:10.1007/978-3-642-29011-4_4` | web |
 | KN-LIT-024 | On the First Fall Degree of Summation Polynomials | 2019 | `eprint:2015/1121` | web |
