@@ -1,8 +1,8 @@
 schema: crypto.autoresearch.implementation_report.v1
 task_id: TASK-20261001-4862b6
 experiment_id: EXP-ICEX-153c34
-implementation_commit: c982810e518540ddd48a915099df6652ba347721
-implementation_tree: b0c4a91605dcd48bce201e36d0bef2a94a66288d
+implementation_commit: 950ce0e26303f3c9c35780f33244767c38a225f5
+implementation_tree: dfc01b14626bfb0045242a64897f828736f4101b
 commit_binding:
   source_role: implementation_commit is the immutable source commit tested offline
   evidence_role: this report and the two static evidence files are stored by the subsequent evidence commit
@@ -14,20 +14,20 @@ write_scope:
 - experiments/EXP-ICEX-153c34/implementation/
 files:
 - {path: experiments/EXP-ICEX-153c34/implementation/g1_s0.py, sha256: a7686ab7661479b9d3b1b2349d6134b03d9b8477e1df41221e5facef7f01c3ce}
-- {path: experiments/EXP-ICEX-153c34/implementation/implementation.md, sha256: dc7338cca56c12093affb962de073052c0d5fb19c66b7d03b4f252ad242e951a}
+- {path: experiments/EXP-ICEX-153c34/implementation/implementation.md, sha256: 1ec384e261d6dfa369eb14b48697487e07605b160f5824e979f6930af2b20cac}
 - {path: experiments/EXP-ICEX-153c34/implementation/o5_group.py, sha256: 8b33c1bd1e5faa92f6e7a65a62f48a0f3e49432b3a846be330ad7f56ae52c07b}
 - {path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures.py, sha256: 701e69f06f22d890a09473f2a7fac04f78d60d7021e346f28555a8fae377fab6}
 - {path: experiments/EXP-ICEX-153c34/implementation/panel_fixtures_verifier.py, sha256: 2cfbea9b5fbbf1501e27954e610e274cb72a214cc8657fb31dd7a903b02e459d}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_counter_checker.py, sha256: 7deca6823966354c838bc6fc7248a00450e82ba8e1ce76eb9b0d8c52e3b1fe51}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_counter_reference.py, sha256: bca08d2948926aff313bac63316b9d6f5d143b29c34650c703d22fb9574ec75c}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_driver.py, sha256: 24227876b1559719418e6e7b9029e580939c66b5210aa96ff94e5d33289db4ba}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_driver.py, sha256: 140d7f44e250b1c0f9f9810e6de0ceb27ca53801c98813f5548c1bf33cc77daf}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_gate_worker.py, sha256: 4a7b144c02f2b5b2c29944f5689f397914bd29579c8c037b5d23336c50637174}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml, sha256: 6fa26143e91e48ff579fd92f14cd37331e36c6c7ac86ae59884d217afd85ac99}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_gates_report.yaml, sha256: 8ed0d7255c841f60abae4c0ca37cbbfb5c0156a155adf72a966ea813c83b2b75}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_modal_sage.py, sha256: 0bcfd3976c1144e90ad72d9c9efd0f457f012898a941818c33ff785afb2023e1}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_operation_spec.py, sha256: d608247f5e062bea50e71fdff3b987c2b692d6829c03def3340e6f4a33b1fbae}
 - {path: experiments/EXP-ICEX-153c34/implementation/s0_sage_gates.py, sha256: 7a37e1353ed2a5458929c023ce84053eedd5630f094a80b8c21cfcb4a7a50fe6}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py, sha256: 03195c1b488a65efab3830e31512e850872ea4fb8ca5c965a4385b1342232806}
-- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests_output.json, sha256: fa5e28420ec7de2be9d45358c5523003b49df76e3c5e4d8c469be7d056db6154}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py, sha256: aad964a1761255a2f3b8f863ac40dec0f256772494e8f18407ccb4c40606f834}
+- {path: experiments/EXP-ICEX-153c34/implementation/s0_static_tests_output.json, sha256: 8696491573216cfb13554e8590f35c9acf658e8b2d13e8339a1fbc27d952317f}
 commands:
 - PYTHONDONTWRITEBYTECODE=1 python3 experiments/EXP-ICEX-153c34/implementation/s0_static_tests.py
 - static AST parse of every implementation Python file
@@ -50,6 +50,20 @@ results:
   g0_6_standalone_reference_imports_producer_or_site_registry: false
   g0_6_setup_and_component_unit_checks_passed: [P, S, G, X, V]
   g0_6_proves_too_much_missing_charge_rejected: true
+  audited_source_manifest:
+    files: 12
+    exact_path_set: true
+    current_hashes_equal_declared: true
+    source_commit_hashes_equal_declared: true
+    tampered_hash_rejected: true
+    missing_source_rejected: true
+    unavailable_source_commit_rejected: true
+    evaluated_before_machine_reading_or_any_gate: true
+  backend_aware_gate_parsing:
+    confirmed_modal_g0_2_without_native_reap_field_passes: true
+    unconfirmed_modal_rejected_even_with_native_reap_field: true
+    confirmed_native_reaping_passes: true
+    unreaped_native_rejected_even_with_modal_termination_field: true
   native_lifecycle_probe:
     normal_exit_process_group_reaped: true
     direct_timeout_process_group_reaped: true
