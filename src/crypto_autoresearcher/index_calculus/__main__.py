@@ -39,6 +39,7 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 
 from .curve import generate_prime_order_curve
 from .decompose import DecompStats, decompose_all
+from .diagram import TOPOLOGIES
 from .factor_base import (FACTOR_BASES, FactorBase, build_factor_base,
                           default_fb_size, subgroup_prime_filter)
 from .rho import pollard_rho
@@ -72,7 +73,8 @@ def cmd_solve(args: argparse.Namespace) -> int:
                               seed=args.seed, engine=args.engine,
                               accelerate=False if args.no_accel else None,
                               table_arity=args.table_arity, la_pivot=args.la_pivot,
-                              target_engine=args.target_engine, target_window=args.target_window)
+                              target_engine=args.target_engine, target_window=args.target_window,
+                              msolve_topology=args.msolve_topology)
     out["index_calculus"] = ic.to_dict() | {"correct": ic.k == k}
     if args.rho:
         rr = pollard_rho(E, P, Q, seed=args.seed, negation=args.rho_walk == "negation")
@@ -371,7 +373,9 @@ def _engines_task(task: dict) -> dict:
     t0 = time.perf_counter()
     enum = decompose_all(E, fb, R, m, stats)
     enum_seconds = time.perf_counter() - t0
-    out = decompose_msolve(E, fb, R, m, seed=task["target"], timeout=task["timeout"])
+    topology = task.get("topology", "chain")
+    out = decompose_msolve(E, fb, R, m, seed=task["target"], timeout=task["timeout"],
+                           topology=topology)
     ok = out.status in ("ok", "no_solution")
     member = fb.membership_poly()
     return {"engine_cell": True, "bits": task["bits"], "p": E.p, "m": m,
@@ -381,6 +385,7 @@ def _engines_task(task: dict) -> dict:
             "target": task["target"], "planted": task["planted"],
             "enum_s3": stats.s3_solves, "enum_seconds": enum_seconds,
             "enum_decomps": len(enum),
+            "msolve_topology": topology,
             "msolve_status": out.status, "msolve_seconds": out.seconds,
             "msolve_net_seconds": max(out.seconds - startup_seconds(), 1e-4),
             "msolve_runs": out.runs, "msolve_degree": out.degree,
@@ -417,7 +422,8 @@ def cmd_engines(args: argparse.Namespace) -> int:
                 done_bases.add(key)
                 tasks = [{"bits": args.bits, "curve_seed": args.curve_seed, "pf_spec": spec,
                           "kind": kind, "size": target_size, "m": m, "R": R,
-                          "planted": planted, "target": t, "timeout": args.timeout}
+                          "planted": planted, "target": t, "timeout": args.timeout,
+                          "topology": args.msolve_topology}
                          for t, (R, planted) in enumerate(
                              _targets(E, fb, m, args.targets, args.planted, args.seed))]
                 cell = _run_jobs(_engines_one, tasks, args.workers, args.out, args.quiet)
@@ -1157,6 +1163,8 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--fb", choices=FACTOR_BASES, default="small_x")
     s.add_argument("--fb-size", type=int, default=None)
     s.add_argument("--engine", choices=ENGINES, default="enumerate")
+    s.add_argument("--msolve-topology", choices=TOPOLOGIES, default="chain",
+                   help="presentation of the Semaev system for --engine msolve (diagram.py)")
     s.add_argument("--target-engine", choices=TARGET_ENGINES, default="reference",
                    help="repeated-base target multiplication (table setup is charged)")
     s.add_argument("--target-window", type=int, choices=range(1, 9), default=4)
@@ -1226,6 +1234,8 @@ def main(argv: list[str] | None = None) -> int:
                    help="fraction of targets built as sums of m base points")
     g.add_argument("--seed", type=int, default=0)
     g.add_argument("--timeout", type=float, default=300.0, help="per msolve run")
+    g.add_argument("--msolve-topology", choices=TOPOLOGIES, default="chain",
+                   help="presentation of the Semaev system (diagram.py)")
     g.add_argument("--max-seconds", type=float, default=60.0,
                    help="stop a ladder once the median msolve time exceeds this")
     g.add_argument("--tolerance", type=float, default=0.15)
