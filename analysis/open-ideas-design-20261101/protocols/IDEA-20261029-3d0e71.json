@@ -1,0 +1,468 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "OI-graeffe-shared-divisor",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "analysis/open-ideas-design-20261101/protocols",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261029-3d0e71.yaml",
+    "note": "Design for open idea IDEA-20261029-3d0e71; not yet approved or dispatched."
+  },
+  "question": "For p with d=2^k dividing p-1 and at least five usable distinct x, does a shared-coefficient Graeffe tower reduce complete five-point decomposition work by 2x against per-root PKM, symmetric S6 and quotient towers on three matched cells?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Exact model agreement is required on identical squarefree charts before any timing; a missing or spurious relation invalidates the arm.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "After matching permutation multiplicity and root sets, the Graeffe arm's complete relation cost is at least 2x lower on three matched k=3,4 cells.",
+      "class": "comparative",
+      "decided_by": [
+        "C-gain"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "A shared divisor-coefficient Graeffe membership tower cuts complete five-point decomposition work by 2x relative to per-root PKM towers, without a degree or exponent claim.",
+      "mechanism": "Sharing the coefficient tower across roots moves repeated membership work into one Graeffe evaluation; if the correspondence holds, the complete cost falls even though the intrinsic degree does not.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "complete_relation_cost",
+          "direction": "lower",
+          "minimum_effect": "<=0.5x per-root PKM",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "verified_model_count",
+          "direction": "equal_within",
+          "minimum_effect": "exact agreement",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "chart_coverage",
+          "direction": "equal_within",
+          "minimum_effect": "1.0",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "per-root-pkm",
+      "role": "reference",
+      "description": "per-root PKM tower",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "per-root-pkm"
+      }
+    },
+    {
+      "id": "graeffe",
+      "role": "candidate",
+      "description": "shared divisor-coefficient Graeffe tower",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "graeffe"
+      },
+      "same_instrument_as": "per-root-pkm"
+    },
+    {
+      "id": "tower-aa",
+      "role": "control_aa",
+      "description": "per-root PKM with a second root ordering",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "tower-aa"
+      },
+      "same_instrument_as": "per-root-pkm"
+    },
+    {
+      "id": "planted-relation",
+      "role": "control_positive",
+      "description": "a planted five-point relation the tower must recover exactly",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "planted-relation"
+      }
+    },
+    {
+      "id": "k2-empty",
+      "role": "control_negative",
+      "description": "k=2 empty-chart control, where no usable five-point chart exists",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "k2-empty"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "planted-relation",
+      "expected_detection": "the planted relation is recovered exactly",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "k2-empty",
+      "null_population": {
+        "description": "k=2 empty-chart cells where no five-point decomposition exists",
+        "generator": "k=2 empty-chart cells where no five-point decomposition exists",
+        "n": 100,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "per-root-pkm",
+          "graeffe",
+          "tower-aa",
+          "planted-relation",
+          "k2-empty"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "tower",
+        "treatment": "crossed",
+        "how": "per-root PKM, symmetric S6, quotient, Graeffe"
+      },
+      {
+        "name": "cell",
+        "treatment": "fixed",
+        "value": "k=3,4 cells with at least five usable distinct x",
+        "how": "matched chart sets"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-tower",
+        "arms": [
+          "per-root-pkm",
+          "graeffe"
+        ],
+        "differs_in": [
+          "tower"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "per-root-pkm",
+          "tower-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-gain",
+        "arms": [
+          "graeffe",
+          "k2-empty"
+        ],
+        "differs_in": [
+          "cell"
+        ],
+        "design": "absolute",
+        "threshold": "cost ratio <=0.5 on three matched cells with exact model agreement"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 3,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 3,
+      "correction": "holm",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 3600,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "complete_relation_cost",
+        "name": "complete relation cost",
+        "unit": "field operations",
+        "kind": "counted",
+        "definition": "setup, tower, membership and verification per verified relation",
+        "source": "results/complete_relation_cost.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "verified_model_count",
+        "name": "verified model count",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "models matching the exact oracle",
+        "source": "results/verified_model_count.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "chart_coverage",
+        "name": "chart coverage",
+        "unit": "fraction",
+        "kind": "rate",
+        "definition": "squarefree charts covered by the census",
+        "source": "results/chart_coverage.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "complete_relation_cost",
+      "verified_model_count",
+      "chart_coverage"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 7200,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: three matched cells x four towers; exact model agreement first, timing second; k=2 negative control; then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-gain is supported when complete relation cost is at most 0.5x per-root PKM on three matched cells after matching permutation multiplicity and root sets, with exact model agreement; any missing or spurious relation, or a gain that is only a permutation constant, refutes it.",
+    "comparison_ids": [
+      "C-gain"
+    ],
+    "threshold": "cost ratio <=0.5 on three matched cells with exact model agreement",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "holm",
+    "effect_size_measure": "<=0.5x per-root PKM",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "timing before exact model agreement",
+    "reading a permutation-constant gain as a cost gain",
+    "claiming a degree or exponent improvement"
+  ],
+  "literature": [
+    {
+      "ref": "IDEA-20261029-3d0e71 proposal record",
+      "provenance": "internal",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": true
+  }
+}

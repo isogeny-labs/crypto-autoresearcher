@@ -49,6 +49,23 @@ class AtlasTests(unittest.TestCase):
         errors, _ = la.check_leads([row])
         self.assertTrue(any("next_action.step" in e for e in errors))
 
+    def test_inherited_revisit_requires_complete_obstruction(self) -> None:
+        row = copy.deepcopy(next(r for r in self.rows
+                                 if r["disposition"] in la.OPEN))
+        row["next_action"] = {"from_revisit_when": True}
+        row.pop("obstruction", None)
+        errors, _ = la.check_leads([row])
+        self.assertTrue(any("requires an obstruction block" in e
+                            for e in errors))
+
+    def test_inherited_revisit_and_explicit_step_are_exclusive(self) -> None:
+        row = copy.deepcopy(next(r for r in self.rows
+                                 if (r.get("next_action") or {}).get(
+                                     "from_revisit_when")))
+        row["next_action"]["step"] = "ambiguous action"
+        errors, _ = la.check_leads([row])
+        self.assertTrue(any("cannot combine step" in e for e in errors))
+
     def test_unknown_ledger_ref_fails(self) -> None:
         row = copy.deepcopy(self.rows[0])
         row["ledger_refs"] = ["H-NOPE-000000"]
@@ -73,6 +90,44 @@ class AtlasTests(unittest.TestCase):
         text = la.render(self.rows)
         for r in self.rows:
             self.assertIn(r["id"], text)
+
+    def test_only_scoped_obstructions_leave_pursuit_queue(self) -> None:
+        pursued = {r["id"] for r in la.pursuit_rows(self.rows)}
+        for row in self.rows:
+            with self.subTest(row=row["id"]):
+                self.assertEqual(row["id"] in pursued,
+                                 row["disposition"] != "closed_obstructed")
+
+    def test_closed_non_obstruction_uses_revisit_trigger(self) -> None:
+        row = next(r for r in self.rows if r["disposition"] in
+                   ("closed_known", "closed_dominated", "exhausted_at_scale"))
+        self.assertTrue(la.is_pursued(row))
+        self.assertIn(str(row["obstruction"]["revisit_when"]),
+                      la.pursuit_action(row))
+
+    def test_render_excludes_only_obstructed_from_pursuit_section(self) -> None:
+        text = la.render(self.rows)
+        section = text.split("## Pursuit queue", 1)[1].split("\n## ", 1)[0]
+        for row in self.rows:
+            with self.subTest(row=row["id"]):
+                self.assertEqual(f"| `{row['id']}` " in section,
+                                 row["disposition"] != "closed_obstructed")
+
+    def test_reopened_family_rows_render_the_inherited_action(self) -> None:
+        row = next(r for r in self.rows
+                   if (r.get("next_action") or {}).get("from_revisit_when"))
+        text = la.render(self.rows)
+        family = text.split(f"## {row['family']}", 1)[1].split(
+            "\n## ", 1)[0]
+        rendered = next(line for line in family.splitlines()
+                        if line.startswith(f"| `{row['id']}` "))
+        self.assertIn(la._one(row["obstruction"]["revisit_when"]), rendered)
+
+    def test_pursuit_action_is_not_markdown_escaped(self) -> None:
+        row = copy.deepcopy(next(r for r in self.rows
+                                 if r["disposition"] in la.OPEN))
+        row["next_action"] = {"step": "chain | tree"}
+        self.assertEqual(la.pursuit_action(row), "chain | tree")
 
 
 class PriorArtLeadTests(unittest.TestCase):

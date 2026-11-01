@@ -46,9 +46,10 @@ each checked in Lean~4 with Mathlib, and we state for each exactly what the
 kernel checked and what it did not.
 (i)~Lemma~4 of Nagao (ePrint 2015/984) asserts that the first fall degree is
 at most a ``fake'' first fall degree computed modulo the field equations.
-Under the equality reading of the paper's definition, we give two systems over
-$\FF_2$, in two and three variables, with true first fall degree~3 and fake
-first fall degree~2. A short argument shows when the inference can be
+We give two systems over $\FF_2$, in two and three variables, with true first
+fall degree~3 and fake first fall degree~2. For the lemma as printed this holds
+under either reading of the paper's definition; for the variant with the field
+equations among the generators it holds under the equality reading only. A short argument shows when the inference can be
 recovered for a given instance, and the paper's own applications satisfy it.
 (ii)~We formalize Theorem~2.8 of Caminata and Gorla: if a system has a degree
 fall and its last fall degree is finite, the last fall degree is the largest
@@ -84,7 +85,8 @@ slightly: falls measured before or after reduction by the field equations;
 field equations as generators of the system or as relations of the ring; row
 spans of a Macaulay matrix or their multiplicative closure. Each step is easy
 to get wrong and hard to check by eye. We used a proof assistant to check
-three such steps. One check refutes a published lemma under a stated reading.
+three such steps. One check refutes a published lemma, in its printed form
+under either reading of its definition.
 The second formalizes a known theorem in a form that makes the direction of
 valid inference explicit. The third shows that two statistics with the same
 name agree on one number and disagree on another.
@@ -134,13 +136,16 @@ asks for a nonzero reduced sum.
 \begin{remark}[Which reading]\label{rem:reading}
 Definitions~5 and~6 of~\cite{nagao15} print condition~(1) as
 $\max_i\deg(g_is_i)\ge D$. Under that literal reading, padding the cofactors
-makes condition~(1) free. The first fall degree then collapses to one more
-than the least degree of a nonzero element of the ideal, and Lemma~4 holds
-for reasons unrelated to the paper's argument. Nagao's earlier paper~\cite{nagao13} prints
-equality in its Definition~1, and the standard definition used
-in~\cite{cg} is the degree at which the fall happens. We adopt the equality
-reading throughout. It is a declared interpretation of an ambiguous text. We
-make no claim about the author's intent.
+makes condition~(1) free whenever there are at least two generators, so each
+quantity collapses to one more than the least degree of a nonzero element of
+the ideal it is computed from. When both quantities use the same ideal, as in
+the inside form of Section~\ref{sec:nagao}, Lemma~4 then holds for reasons
+unrelated to the paper's argument. In the printed form they do not, and
+Lemma~4 still fails (Section~\ref{sec:nagao}). Nagao's earlier
+paper~\cite{nagao13} prints equality in its Definition~1, and the standard
+definition used in~\cite{cg} is the degree at which the fall happens. We adopt
+the equality reading throughout. It is a declared interpretation of an
+ambiguous text. We make no claim about the author's intent.
 \end{remark}
 
 \begin{definition}[Caminata--Gorla~\cite{cg}, Definition~1.5]\label{def:V}
@@ -174,6 +179,18 @@ both placements, in separate modules (\lean{lemma4_inside_false} and
 \lean{lemma4_outside_false}); the second also states the printed form with the
 fake side computed from $F\cup\Sfe$, which in the model gives the same fake
 degree.
+
+The printed form does not depend on the reading of condition~(1). Under the
+literal $\ge$, the true side is governed by the least degree of a nonzero
+element of $\langle F\rangle$, which is~2 for both witnesses: every element of
+$\langle X^2Y, XY+X\rangle$ is a multiple of~$X$, and $X$ itself is not in the
+ideal. The fake side is governed by $\langle F\rangle+\Sfe$, which contains~$X$
+for~(A) and $X_2+X_3$ for~(B) but not~$1$. So $\Dff=3$ and $\Dfake=2$ under
+$\ge$ as well. The inside form, whose two sides share the ideal
+$\langle F\rangle+\Sfe$, holds under~$\ge$. This paragraph rests on two
+independent reviewer computations in review batch~BATCH-4c1c67, Gr\"obner bases
+by one reviewer and a blind re-derivation by another; it is not formalized in
+Lean, whose definitions encode the equality reading only.
 
 \begin{theorem}\label{thm:nagao}
 Over $\FF_2$, with $\Sfe$ among the generators of the true system, let
@@ -402,6 +419,7 @@ Statement & Kernel & Independent statement review\\
 \midrule
 Thm.~\ref{thm:nagao} (\lean{lemma4_inside_false}) & hosted receipt, CI run 41155781140 & not yet reviewed; producer caps fidelity at partial (two scoping rows)\\
 Thm.~\ref{thm:nagao}, printed placement (\lean{lemma4_outside_false}) & CI run 41247286804 (workspace gate, 96 targets verified) & not yet reviewed\\
+Thm.~\ref{thm:nagao}, printed placement under $\ge$ & not formalized & two reviewer computations (BATCH-4c1c67)\\
 Prop.~\ref{prop:recovery} (\lean{recovery}) & CI run 41259822143 (workspace gate, 97 targets verified) & not yet reviewed\\
 Thm.~\ref{thm:nagao}, witness (A) in \texttt{MvPolynomial} (\lean{lemma4_mv_false}) & CI run 41264005876 (workspace gate, 98 targets verified) & not yet reviewed\\
 Thm.~\ref{thm:nagao}, witness (B) in \texttt{MvPolynomial} (\lean{lemma4_mvB_false}) & CI run 41280794617 (workspace gate, 101 targets verified) & not yet reviewed\\
