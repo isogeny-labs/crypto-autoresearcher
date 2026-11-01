@@ -225,8 +225,10 @@ Theorem~\ref{thm:nagao} for~(A) there with arbitrary polynomial cofactors, in
 both placements (\lean{lemma4_mv_false}). Since $\FF_2[X,Y]$ is a domain, degrees
 add under multiplication, so a product of degree at most~2 forces the cofactor
 of a quadratic generator to be constant and that of $X^2Y$ to vanish; the
-coefficients of $XY$, $X^2$ and $Y^2$ then force the constants to zero. Witness~(B)
-is not restated there.
+coefficients of $XY$, $X^2$ and $Y^2$ then force the constants to zero. The module
+\lean{CryptoResearch.Nagao.BridgeB} does the same for witness~(B) in three variables
+(\lean{lemma4_mvB_false}); there the fake fall is
+$\red\bigl(f_1+(X_1+1)f_2\bigr)=X_2+X_3$.
 
 \subsection{When the inference survives}
 
@@ -402,6 +404,7 @@ Thm.~\ref{thm:nagao} (\lean{lemma4_inside_false}) & hosted receipt, CI run 41155
 Thm.~\ref{thm:nagao}, printed placement (\lean{lemma4_outside_false}) & CI run 41247286804 (workspace gate, 96 targets verified) & not yet reviewed\\
 Prop.~\ref{prop:recovery} (\lean{recovery}) & CI run 41259822143 (workspace gate, 97 targets verified) & not yet reviewed\\
 Thm.~\ref{thm:nagao}, witness (A) in \texttt{MvPolynomial} (\lean{lemma4_mv_false}) & CI run 41264005876 (workspace gate, 98 targets verified) & not yet reviewed\\
+Thm.~\ref{thm:nagao}, witness (B) in \texttt{MvPolynomial} (\lean{lemma4_mvB_false}) & CI run 41280794617 (workspace gate, 101 targets verified) & not yet reviewed\\
 Thm.~\ref{thm:lastfall} & hosted receipt, CI run 41191503149 & validated at stated scope (three-joint review)\\
 Thm.~\ref{thm:semaev}, concrete witness & hosted receipt, CI run 41155781140 & validated at scope, one draw\\
 Thm.~\ref{thm:semaev}, rank family & hosted receipts, CI run 41155781140 & integrity audit only\\
@@ -428,11 +431,9 @@ check. An independent statement review catches a true theorem that is cited
 for more than it says. We needed both: the first for Theorem~\ref{thm:nagao},
 the second for the withdrawn trace inference.
 
-Two items would strengthen this note. The first is witness~(B) in
-\texttt{MvPolynomial}, which the list model covers but the bridge does not. The
-second, and the one that matters, is an independent review of the Lean
-statements of Theorem~\ref{thm:nagao}, in both placements and both models, and
-of Proposition~\ref{prop:recovery}.
+One item would strengthen this note: an independent review of the Lean
+statements of Theorem~\ref{thm:nagao}, for both witnesses, in both placements
+and both models, and of Proposition~\ref{prop:recovery}.
 
 \begin{thebibliography}{99}
 

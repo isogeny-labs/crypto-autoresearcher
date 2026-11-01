@@ -111,7 +111,7 @@ def main() -> int:
     args = ap.parse_args()
     if args.experiment == "EXP-ECDLP-CHALLENGES-001":
         from . import ecdlp_challenges
-        from .runner import run_wrapped
+        from .runner_ecdlp_v1 import run_wrapped
 
         command = (f"python -m harness.run --experiment {shlex.quote(args.experiment)}"
                    + (f" --crypto-bin {shlex.quote(args.crypto_bin)}"
