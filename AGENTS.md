@@ -28,16 +28,15 @@ repeated overall-goal verdicts.
 
 When substantial research, cryptanalysis or audit work cannot meet a proof, implementation, experiment or validation requirement, create or update a linked problem record before repeating or handing off the blocked approach. The full [problem-record rule](docs/agent-contract-supplement.md#name-the-obstruction) is binding, including its evidence distinctions, exit criteria, next test and preservation of the original requirement. A problem record alone resolves nothing.
 
-## Budgets: progress first
+## Cloud budgets and GitHub custody
 
-Research cost estimates are advisory, may be null, and never need repeated user
-approval (user, 2026-09-06). Only a committed Coordinator stagnation review (≥
-90 days without documented progress; evidence, scope, a next action, an
-assessment from the last seven days) may cap spending. Memory/concurrency limits
-and justified process watchdogs protect the machine; they are not budget. Fixed
-sample counts, locked plans, write scopes, controls, immutable records,
-independent review and the Bedrock ban still bind.
-`docs/research-budget-policy.md`.
+Owner, 2026-11-01: EKS/IsoLab cost and CPU/RAM ceilings bind ECC too,
+superseding advisory/unlimited cloud spending. Commit and push experiment inputs
+before cloud builds/runs; verify GitHub publication. Budget all attempts and
+publish outcomes, including failures. Queue unaffordable work without changing
+frozen controls or bypassing caps. Follow
+[research budget policy](docs/research-budget-policy.md) for limits, custody and
+operational stops; scientific status and immutable records remain unchanged.
 
 ## Entry points
 
@@ -247,26 +246,26 @@ changes no status.
 This is a scheduling rule and relaxes nothing: an impediment is never negative
 mathematical evidence (rule 5); an unservable `review-breakthrough`
 (`degradable: false`) leaves the claim un-promoted, never downgraded to
-`validator`. Routine estimates do not stop research: only the exceptional
-stagnation policy caps a budget, and a watchdog stop is not campaign
-exhaustion. Terminal retirement (`completed`, `closed_at_budget`,
+`validator`. Routine estimates do not stop research. Owner cloud limits and
+stagnation caps can stop spending; a watchdog stop is not campaign exhaustion.
+Terminal retirement (`completed`, `closed_at_budget`,
 `cancelled`) is a deliberate Coordinator act with a committed decision. A goal
 that can never be parked always looks runnable: never dispatch a task you
 cannot rank ahead of doing nothing; report an impeded goal with its `recheck`
 and move on.
 
-## ECC comes first, and its budget is unlimited
+## ECC comes first within owner cloud limits
 
 User, 2026-09-04. The ECC area set is declared once in
 `orchestration/research-priority.yaml` and read via `tools/ecc_priority.py`
 (`--list-areas`, `--classify`, `--open-ideas`, `--budget-violations`); never
 infer it from an id prefix.
 
-1. **Unlimited budget.** Active and draft ECC goals have
+1. **Open scientific campaign horizon.** Active and draft ECC goals retain
    `campaign_budget.maximum_batches: null` and
    `total_wall_clock_seconds: null` (validated). `max_concurrent` stays
-   bounded: machine headroom. Unlimited removes the batch ceiling, not the
-   duty to rank: never dispatch a task you cannot rank ahead of doing nothing.
+   bounded. Null campaign fields waive no cloud ceiling. Never dispatch
+   a task you cannot rank ahead of doing nothing.
 2. **ECC first, always.** Every selection point considers ECC goals first; a
    non-ECC goal is worked only when no ECC goal offers a ranked, justified
    task. Priority orders the queue, manufactures no work, and lowers no
@@ -281,7 +280,8 @@ infer it from an id prefix.
 
 ### Approval is bounded by execution
 
-ECC execution remains unlimited; the old backlog cap stays removed. From
+ECC has no fixed campaign batch ceiling; owner cloud limits bind each launch.
+The old backlog cap stays removed. From
 2026-11-01, design-record rates follow `orchestration/research-priority.yaml`.
 The guard defers unfiled designs, never science. Approval requires:
 
