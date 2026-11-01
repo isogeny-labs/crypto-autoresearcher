@@ -503,6 +503,9 @@ PRIOR_ART_CUTOVER = 20261001
 # ECDLP idea also names the program's own lead it advances, so ideas stop
 # re-proposing mechanisms an earlier lane already measured or closed.
 LEAD_CUTOVER = 20261025
+# Naming a lead is not itself novelty. From this date the idea also states the
+# exact delta to the lead's queued next action or recorded obstruction.
+LEAD_DELTA_CUTOVER = 20261101
 _LEAD_ID = re.compile(r"^LEAD-[A-Z]+-[a-z0-9][a-z0-9-]{1,47}$")
 PRIOR_ART_NOVELTY = {"known", "adaptation", "speculative", "unverified"}
 PRIOR_ART_RELATIONS = {"same", "special_case", "generalizes", "adjacent",
@@ -528,6 +531,18 @@ def _frontier_row_ids() -> set[str]:
 def _lead_exists(ref: str) -> bool:
     return bool(_LEAD_ID.match(ref)) and bool(glob.glob(os.path.join(
         REPO, "knowledge", "leads", "ecdlp", "*", ref + ".yaml")))
+
+
+def _lead_record(ref: str) -> dict | None:
+    paths = glob.glob(os.path.join(REPO, "knowledge", "leads", "ecdlp", "*",
+                                   ref + ".yaml"))
+    if len(paths) != 1:
+        return None
+    try:
+        row = yaml.safe_load(Path(paths[0]).read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        return None
+    return row if isinstance(row, dict) else None
 
 
 def _prior_art_ref_resolves(ref: str) -> bool:
@@ -563,6 +578,23 @@ def check_prior_art_lead(path: str, block: dict, date: re.Match | None,
     elif not _lead_exists(lead):
         ctx.err(path, f"prior_art.lead '{lead}' is not a lead in "
                       "knowledge/leads/ecdlp/")
+    elif date and int(date.group(1)) >= LEAD_DELTA_CUTOVER:
+        row = _lead_record(lead) or {}
+        disposition = str(row.get("disposition") or "")
+        delta = block.get("lead_delta")
+        if not isinstance(delta, dict):
+            ctx.err(path, "prior_art.lead_delta is required for ECDLP ideas "
+                          f"from IDEA-{LEAD_DELTA_CUTOVER} on")
+            return
+        expected = ("answers_obstruction" if disposition.startswith("closed_")
+                    or disposition == "exhausted_at_scale"
+                    else "advances_next_action")
+        if delta.get("kind") != expected:
+            ctx.err(path, f"prior_art.lead_delta.kind must be '{expected}' for "
+                          f"{lead} ({disposition or 'unknown disposition'})")
+        if not str(delta.get("statement") or "").strip():
+            ctx.err(path, "prior_art.lead_delta.statement must name the exact "
+                          "new information, test, or assumption change")
 
 
 def check_prior_art(path: str, body: dict, ctx: Ctx) -> None:
