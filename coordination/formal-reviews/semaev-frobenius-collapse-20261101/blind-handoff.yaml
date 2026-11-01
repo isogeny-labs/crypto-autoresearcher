@@ -1,0 +1,29 @@
+handoff:
+  id: TASK-20261101-df39aa
+  from: coordinator
+  to: reviewer
+  objective: Re-derive the stated finite-support polynomial congruence from the mathematical statement and parameters alone.
+  uncertainty_reduced: Whether an independent derivation agrees with the source identity and respects its necessary hypotheses.
+  inputs:
+    - 'Statement: prime p, q=p^e with e>=0, K a field of characteristic p, R=K[x_1,...,x_M], I_q=(x_i^q-x_i). For each g in R, determine g^q modulo I_q and compare with the polynomial obtained by raising each coefficient of g to q.'
+  constraints:
+    - Read only this handoff and general algebra references if needed; do not read the proof, target YAML, source note, plan, or sibling reports.
+    - Test mixed monomials, extension-field coefficients, q=1, and both known-false controls: characteristic zero and removal of field equations.
+    - Do not modify the producer proof or official experiment status.
+  deliverables:
+    - Blind mathematical derivation and controls with review_attestation.
+  artifact_paths:
+    - coordination/formal-reviews/semaev-frobenius-collapse-20261101/blind-report.md
+  archived_by: TASK-20261101-f62009
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget: {}
+  completion_gate:
+    - Derivation uses only the mathematical statement and declared parameters.
+    - Attestation lists every source read, confirms blind_from_respected, and states sibling reports were not read.
+  return_format: Markdown report with YAML review_attestation block.
