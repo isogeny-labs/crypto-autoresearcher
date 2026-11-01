@@ -883,13 +883,14 @@
           "TASK-20261101-bd53ca",
           "TASK-20261101-e90be2"
         ],
-        "commit_sha": "76320e68aef505292da6a9eff98aa219cca4ecc3",
-        "parent_sha": "52cf91e8404cdb68710c5623c40fde549d566bca",
+        "commit_sha": "5658c82b1de6f4fc6b44c864c91855c61c21d72e",
+        "parent_sha": "446bf35095bf2744a817b0fad7dd3bd170bcb507",
         "path_sha256": {
           "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/TASK-20261101-bd53ca/review.md": "5a31ab3ac940f16461ef54de1996e049df6777c9f6e46084e7596ec8706a223e",
           "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/TASK-20261101-bd53ca/attestation.yaml": "43ad4dff5f1b45b60f7d125822b5f643920e6dbe4592c66cb38b8a09f0a48a7d",
           "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/TASK-20261101-e90be2/derivation.md": "c333bee6b8057d006512ed389a2d48b0cac291540fa504049b8a28b0ca5dc4b5",
-          "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/TASK-20261101-e90be2/attestation.yaml": "8c10ade45754b694d336d4bd924a07eda3dcb86a8ce5af0eb55b236186a59edf"
+          "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/TASK-20261101-e90be2/attestation.yaml": "8c10ade45754b694d336d4bd924a07eda3dcb86a8ce5af0eb55b236186a59edf",
+          "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-4b30bd/snapshot-receipt.json": "157f1a379bc74fbb9c3b74365d990b81daefd215fe2df8db39114bdec19c7bb3"
         },
         "record_ids": [
           "TASK-20261101-bd53ca",
@@ -897,22 +898,30 @@
         ]
       },
       "archive_registration": {
-        "state": "four_sources_verified_full_snapshot_pending",
-        "observed_at": "2026-11-01T05:55:33Z",
+        "state": "full_snapshot_verified",
+        "observed_at": "2026-11-01T05:57:15Z",
         "source_output_commit": "76320e68aef505292da6a9eff98aa219cca4ecc3",
-        "source_output_parent": "52cf91e8404cdb68710c5623c40fde549d566bca",
+        "archive_commit_sha": "5658c82b1de6f4fc6b44c864c91855c61c21d72e",
+        "archive_parent_sha": "446bf35095bf2744a817b0fad7dd3bd170bcb507",
         "source_paths_verified": 4,
+        "paths_verified": 5,
         "native_source_only_check_passed": true,
-        "full_archive_verified": false,
-        "archive_output_committed": false,
-        "allows_synthesis": false,
-        "claim_released": false,
+        "full_archive_verified": true,
+        "archive_output_committed": true,
+        "generated_paths_skipped": [],
         "required_message_ids": [
           "TASK-20261101-4b30bd",
           "TASK-20261101-bd53ca",
           "TASK-20261101-e90be2"
         ],
-        "blocker": "The new task-owned snapshot-receipt.json is not in the four-output source commit. Commit/publish all five declared artifact bytes with a message naming all three IDs, bind exact commit/parent and five hashes, and pass full native archive verification before synthesis."
+        "independence_composition_passed": true,
+        "external_plan_sha256": "2ce285e77cd85699f47a9ee4826775fdfc2a077168000fbae30e805b81813e92",
+        "addenda_composed": 1,
+        "allows_synthesis": true,
+        "finalization_metadata_commit_pending": true,
+        "claim_released": false,
+        "eligibility_boundary": "Full five-artifact archive and pinned independence gates pass. This eligibility does not launch synthesis: publish these finalization metadata, release the live snapshot claim, then separately claim/dispatch TASK-20261101-bc06d9 under its contract. No synthesis or unblinding was performed.",
+        "snapshot_version_boundary": "Archive binds the provisional snapshot bytes exactly as committed at 5658c82b1de6f4fc6b44c864c91855c61c21d72e. Its then-pending gate is historical; finalization is recorded here without rewriting those archived bytes."
       }
     },
     {

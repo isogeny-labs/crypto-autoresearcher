@@ -1,6 +1,6 @@
 {
   "schema": "crypto.autoresearch.receipt_intake.v1",
-  "state": "review_outputs_sealed_snapshot_publication_pending",
+  "state": "review_outputs_archived_synthesis_eligible",
   "goal_id": "GOAL-ECDLP-001",
   "batch_id": "BATCH-a68666",
   "existing_task_id": "TASK-20261024-9fbb0f",
@@ -71,7 +71,7 @@
   "storage": "The receipt is 66,915 bytes. Repository policy keeps it in Git because .json is not in DATA_EXT and the file is below the 1 MiB general non-code threshold; tools/artifacts/artifacts.py plan reports no move. The exact receipt SHA-256 remains the binding authority.",
   "historical_problem": "problems/formal-lean-external-volume-eintr.md: successful hosted verification can qualify its target blocker; it does not establish a repair of the historical host filesystem.",
   "completion": "No manuscript, theorem promotion, global lower bound, speedup, or goal completion follows from this manifest.",
-  "refreshed_at": "2026-11-01T05:55:33Z",
+  "refreshed_at": "2026-11-01T05:57:15Z",
   "fresh_current_head_verification": {
     "required_before": [
       "TASK-20261101-bd53ca",
@@ -184,34 +184,28 @@
     "state": "open",
     "draft": true,
     "head": "codex/pfse-wp2-20261101",
-    "head_sha": "446bf35095bf2744a817b0fad7dd3bd170bcb507",
-    "observed_at": "2026-11-01T05:55:33Z",
-    "source_is_remote_head_ancestor": true,
-    "ahead_by": 3,
-    "behind_by": 0,
-    "post_source_paths": [
-      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/claims/TASK-20261101-4b30bd.1.claim.json",
-      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/claims/TASK-20261101-bd53ca.1.release.json",
-      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/claims/TASK-20261101-e90be2.1.release.json"
-    ]
+    "head_sha": "5658c82b1de6f4fc6b44c864c91855c61c21d72e",
+    "observed_at": "2026-11-01T05:57:15Z",
+    "archive_is_remote_head": true,
+    "ahead_by": 0,
+    "behind_by": 0
   },
   "review_snapshot": {
-    "state": "four_sources_verified_full_snapshot_pending",
-    "observed_at": "2026-11-01T05:55:33Z",
+    "state": "full_snapshot_verified",
+    "observed_at": "2026-11-01T05:57:15Z",
     "source_output_commit": "76320e68aef505292da6a9eff98aa219cca4ecc3",
     "source_output_parent": "52cf91e8404cdb68710c5623c40fde549d566bca",
     "source_paths_verified": 4,
     "native_source_only_check_passed": true,
-    "full_archive_verified": false,
-    "archive_output_committed": false,
-    "allows_synthesis": false,
+    "full_archive_verified": true,
+    "archive_output_committed": true,
+    "allows_synthesis": true,
     "claim_released": false,
     "required_message_ids": [
       "TASK-20261101-4b30bd",
       "TASK-20261101-bd53ca",
       "TASK-20261101-e90be2"
     ],
-    "blocker": "The new task-owned snapshot-receipt.json is not in the four-output source commit. Commit/publish all five declared artifact bytes with a message naming all three IDs, bind exact commit/parent and five hashes, and pass full native archive verification before synthesis.",
     "joint_verdicts": {
       "A": "breaks",
       "B": "holds"
@@ -222,6 +216,15 @@
       "docs/reports/2026-11-01-ic-arity-oracle-review/blind-input.md": "a109fc6cdf7df0e6b52e0e3717d54bb20ec0803687d8602afda065ada4f79914"
     },
     "independence_composition_passed": true,
-    "serving_and_backend_metadata": "unverified; see sealed attestations"
+    "serving_and_backend_metadata": "unverified; see sealed attestations",
+    "archive_commit_sha": "5658c82b1de6f4fc6b44c864c91855c61c21d72e",
+    "archive_parent_sha": "446bf35095bf2744a817b0fad7dd3bd170bcb507",
+    "paths_verified": 5,
+    "generated_paths_skipped": [],
+    "external_plan_sha256": "2ce285e77cd85699f47a9ee4826775fdfc2a077168000fbae30e805b81813e92",
+    "addenda_composed": 1,
+    "finalization_metadata_commit_pending": true,
+    "eligibility_boundary": "Full five-artifact archive and pinned independence gates pass. This eligibility does not launch synthesis: publish these finalization metadata, release the live snapshot claim, then separately claim/dispatch TASK-20261101-bc06d9 under its contract. No synthesis or unblinding was performed.",
+    "snapshot_version_boundary": "Archive binds the provisional snapshot bytes exactly as committed at 5658c82b1de6f4fc6b44c864c91855c61c21d72e. Its then-pending gate is historical; finalization is recorded here without rewriting those archived bytes."
   }
 }

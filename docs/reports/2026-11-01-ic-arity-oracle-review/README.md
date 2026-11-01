@@ -27,18 +27,22 @@ a mathematical conclusion. The [frozen plan](review-plan.yaml),
 [addendum](review-plan-addendum-01-current-head.yaml) and
 [blind input](blind-input.md) are unchanged.
 
-The native Git archive verifier passes for the four source artifacts at that
-commit. Full TASK-20261101-4b30bd archival additionally requires the new
-`coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-4b30bd/snapshot-receipt.json`.
-That fifth artifact is not committed yet. Full archival and synthesis remain
-blocked: driving Coordinator must commit/publish the five exact artifacts with
-a message naming all three task IDs, bind the actual commit/parent and five
-hashes, then pass full native verification before release or synthesis.
-The four-source pass is not a full archive pass.
+Full native TASK-20261101-4b30bd archive validation now passes for the four
+reviewer artifacts plus its task-owned snapshot: all five exact bytes are
+committed/pushed at `5658c82b1de6f4fc6b44c864c91855c61c21d72e`, parent
+`446bf35095bf2744a817b0fad7dd3bd170bcb507`. The commit message names all three task IDs;
+there are no generated-path skips. Pinned independence composition also passes.
+The archive binds the provisional snapshot bytes as published at that commit,
+including their then-pending gate; those historical bytes are not rewritten.
+
+Finalization metadata now records `allows_synthesis=true`. This is eligibility,
+not execution: driving Coordinator must publish these finalization edits and
+release the live snapshot claim before separately claiming/dispatching
+TASK-20261101-bc06d9. This task performs no synthesis or unblinding.
 
 PR [#2892](https://github.com/isogeny-labs/crypto-autoresearcher/pull/2892) is
-open and draft at `446bf35095bf2744a817b0fad7dd3bd170bcb507`, three claim/release-only commits
-after the sealed outputs. GitHub comparison and local ancestry agree.
+open and draft at `5658c82b1de6f4fc6b44c864c91855c61c21d72e`. GitHub comparison confirms
+that the archive commit equals the remote PR head; local ancestry agrees.
 
 The formal-evidence prerequisite remains the published eight-artifact snapshot
 `5b3ad6957cb48260d354d9aec6d47cc8159878d8` for
@@ -68,7 +72,7 @@ verification. See [receipt-manifest.json](receipt-manifest.json).
 
 The queue is
 `coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/dispatch_queue.json`.
-This turn performs only review snapshot preparation: no scientific trials,
+This turn performs only review snapshot finalization: no scientific trials,
 source/proof edits, EV/DEC/H transitions, synthesis, next-task launch or goal
 completion. Full corpus ledger validation remains unavailable in the sparse
 checkout; scoped checks do not replace it.
