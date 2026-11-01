@@ -7,13 +7,133 @@
  "max_concurrent_basis": "one executor at a time; machine headroom (one 4 GiB worker, protection watchdogs per trial), not a research budget.",
  "tasks": [
   {
+   "id": "TASK-20261101-f77bc6",
+   "title": "Design EXP-PFDR-ada71b to runnable and record approval on approvable true (zero trials)",
+   "role": "coordinator",
+   "state": "completed",
+   "priority": 95,
+   "review_required": false,
+   "depends_on": [],
+   "read_scope": [
+    "ledger/decisions/DEC-20261101-49576f.yaml",
+    "ledger/evidence/EV-PFDR-c42190.yaml",
+    "experiments/EXP-PFDR-2d36f9/specification.yaml",
+    "experiments/EXP-PFDR-2d36f9/implementation/"
+   ],
+   "write_scope": [
+    "experiments/EXP-PFDR-ada71b/",
+    "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/",
+    "coordination/design/EXP-PFDR-ada71b-approval-20261101/",
+    "ledger/handoffs/",
+    "ledger/decisions/"
+   ],
+   "artifact_paths": [
+    "ledger/proposals/IDEA-20261018-a0830c.yaml",
+    "ledger/hypotheses/H-PFDR-ed7ccf.yaml",
+    "experiments/EXP-PFDR-ada71b/specification.yaml",
+    "experiments/EXP-PFDR-ada71b/trial-plan.json",
+    "experiments/EXP-PFDR-ada71b/implementation/run.py",
+    "experiments/EXP-PFDR-ada71b/implementation/check.py",
+    "experiments/EXP-PFDR-ada71b/implementation/paircount.c",
+    "experiments/EXP-PFDR-ada71b/implementation/vendor/curve.py",
+    "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json",
+    "ledger/handoffs/TASK-20261101-8951b8.yaml",
+    "ledger/handoffs/TASK-20261101-18d7f6.yaml",
+    "ledger/handoffs/TASK-20261101-125ee4.yaml",
+    "ledger/decisions/DEC-20261101-49576f.yaml",
+    "ledger/decisions/DEC-20261101-cb3277.yaml",
+    "experiments/EXP-PFDR-ada71b/protocol.json",
+    "ledger/handoffs/TASK-20261101-f77bc6.yaml"
+   ],
+   "handoff": {
+    "objective": "Design EXP-PFDR-ada71b (v2 of EXP-PFDR-2d36f9) to runnable under DEC-20261101-49576f: specification, protocol.json, implementation, trial plan, queue and handoffs; run the preapproval probe; record approval DEC-20261101-cb3277 only on approvable true. Zero trials.",
+    "uncertainty_reduced": "None scientific; makes the v2 contract runnable and approvable.",
+    "inputs": [
+     "ledger/decisions/DEC-20261101-49576f.yaml",
+     "ledger/evidence/EV-PFDR-c42190.yaml",
+     "experiments/EXP-PFDR-2d36f9/specification.yaml",
+     "experiments/EXP-PFDR-2d36f9/implementation/"
+    ],
+    "constraints": [
+     "Zero scientific runs.",
+     "Do not edit any EXP-PFDR-2d36f9 record.",
+     "Approval only on preapproval approvable true."
+    ],
+    "deliverables": [
+     "ledger/proposals/IDEA-20261018-a0830c.yaml",
+     "ledger/hypotheses/H-PFDR-ed7ccf.yaml",
+     "experiments/EXP-PFDR-ada71b/specification.yaml",
+     "experiments/EXP-PFDR-ada71b/trial-plan.json",
+     "experiments/EXP-PFDR-ada71b/implementation/run.py",
+     "experiments/EXP-PFDR-ada71b/implementation/check.py",
+     "experiments/EXP-PFDR-ada71b/implementation/paircount.c",
+     "experiments/EXP-PFDR-ada71b/implementation/vendor/curve.py",
+     "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json",
+     "ledger/handoffs/TASK-20261101-8951b8.yaml",
+     "ledger/handoffs/TASK-20261101-18d7f6.yaml",
+     "ledger/handoffs/TASK-20261101-125ee4.yaml",
+     "ledger/decisions/DEC-20261101-49576f.yaml",
+     "ledger/decisions/DEC-20261101-cb3277.yaml",
+     "experiments/EXP-PFDR-ada71b/protocol.json",
+     "ledger/handoffs/TASK-20261101-f77bc6.yaml"
+    ],
+    "artifact_paths": [
+     "ledger/proposals/IDEA-20261018-a0830c.yaml",
+     "ledger/hypotheses/H-PFDR-ed7ccf.yaml",
+     "experiments/EXP-PFDR-ada71b/specification.yaml",
+     "experiments/EXP-PFDR-ada71b/trial-plan.json",
+     "experiments/EXP-PFDR-ada71b/implementation/run.py",
+     "experiments/EXP-PFDR-ada71b/implementation/check.py",
+     "experiments/EXP-PFDR-ada71b/implementation/paircount.c",
+     "experiments/EXP-PFDR-ada71b/implementation/vendor/curve.py",
+     "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json",
+     "ledger/handoffs/TASK-20261101-8951b8.yaml",
+     "ledger/handoffs/TASK-20261101-18d7f6.yaml",
+     "ledger/handoffs/TASK-20261101-125ee4.yaml",
+     "ledger/decisions/DEC-20261101-49576f.yaml",
+     "ledger/decisions/DEC-20261101-cb3277.yaml",
+     "experiments/EXP-PFDR-ada71b/protocol.json",
+     "ledger/handoffs/TASK-20261101-f77bc6.yaml"
+    ],
+    "write_scope": [
+     "experiments/EXP-PFDR-ada71b/",
+     "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/",
+     "coordination/design/EXP-PFDR-ada71b-approval-20261101/",
+     "ledger/handoffs/",
+     "ledger/decisions/"
+    ],
+    "archived_by": "TASK-20261101-125ee4",
+    "depends_on": [],
+    "inference": {
+     "policy": "coordinator-orchestration-code",
+     "reasoning_effort": null,
+     "fallback_allowed": true,
+     "degraded_allowed": false,
+     "independent_session_required": false,
+     "delivery": "interactive"
+    },
+    "budget": {
+     "maximum_runs": 0
+    },
+    "completion_gate": [
+     "tools/experiment_preapproval.py reports approvable true on the packet",
+     "zero trials"
+    ],
+    "return_format": "design package paths and the preapproval report",
+    "record": "ledger/handoffs/TASK-20261101-f77bc6.yaml"
+   },
+   "archived_by": "TASK-20261101-125ee4"
+  },
+  {
    "id": "TASK-20261101-125ee4",
    "title": "Snapshot archive of the approved EXP-PFDR-ada71b design package (zero trials)",
    "role": "coordinator",
    "state": "queued",
    "priority": 90,
    "review_required": false,
-   "depends_on": [],
+   "depends_on": [
+    "TASK-20261101-f77bc6"
+   ],
    "read_scope": [
     "ledger/proposals/IDEA-20261018-a0830c.yaml",
     "ledger/hypotheses/H-PFDR-ed7ccf.yaml",
@@ -28,7 +148,9 @@
     "ledger/handoffs/TASK-20261101-18d7f6.yaml",
     "ledger/handoffs/TASK-20261101-125ee4.yaml",
     "ledger/decisions/DEC-20261101-49576f.yaml",
-    "ledger/decisions/DEC-20261101-cb3277.yaml"
+    "ledger/decisions/DEC-20261101-cb3277.yaml",
+    "experiments/EXP-PFDR-ada71b/protocol.json",
+    "ledger/handoffs/TASK-20261101-f77bc6.yaml"
    ],
    "write_scope": [
     "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/archives/TASK-20261101-125ee4/"
@@ -53,7 +175,9 @@
      "ledger/handoffs/TASK-20261101-18d7f6.yaml",
      "ledger/handoffs/TASK-20261101-125ee4.yaml",
      "ledger/decisions/DEC-20261101-49576f.yaml",
-     "ledger/decisions/DEC-20261101-cb3277.yaml"
+     "ledger/decisions/DEC-20261101-cb3277.yaml",
+     "experiments/EXP-PFDR-ada71b/protocol.json",
+     "ledger/handoffs/TASK-20261101-f77bc6.yaml"
     ],
     "constraints": [
      "Stage exactly the declared paths; never stage __pycache__ or tool scratch.",
@@ -72,7 +196,9 @@
      "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/archives/TASK-20261101-125ee4/"
     ],
     "archived_by": "TASK-20261101-125ee4",
-    "depends_on": [],
+    "depends_on": [
+     "TASK-20261101-f77bc6"
+    ],
     "inference": {
      "policy": "coordinator-orchestration-code",
      "reasoning_effort": null,
@@ -102,7 +228,7 @@
     "kind": "snapshot",
     "binding_mode": "content_at_commit",
     "source_task_ids": [
-     "TASK-20261101-125ee4"
+     "TASK-20261101-f77bc6"
     ],
     "record_ids": [
      "GOAL-PFDR-fd09e0",
@@ -111,6 +237,7 @@
      "DEC-20261101-49576f",
      "DEC-20261101-cb3277",
      "BATCH-3a63a4",
+     "TASK-20261101-f77bc6",
      "TASK-20261101-125ee4",
      "TASK-20261101-8951b8",
      "TASK-20261101-18d7f6"
@@ -216,7 +343,7 @@
      "kind": "run",
      "experiment_id": "EXP-PFDR-ada71b",
      "trial_plan": "experiments/EXP-PFDR-ada71b/trial-plan.json",
-     "trial_plan_sha256": "da0490b315ab2330edb336bc29edaae036e88f1bf77518d1d7ff78d756c9218f",
+     "trial_plan_sha256": "66eb61fcd57661dc9e4bf25454b86c87ef9f529043c322c0dc6663209d116c42",
      "approved_by": "DEC-20261101-cb3277"
     },
     "objective": "Run the six planned trials of EXP-PFDR-ada71b exactly as frozen in trial-plan.json under DEC-20261101-cb3277. Leave the run artifacts in place; do not interpret them and do not edit the specification, trial plan, implementation or queue.",
