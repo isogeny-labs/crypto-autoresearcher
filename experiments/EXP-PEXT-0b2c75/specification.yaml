@@ -11,19 +11,21 @@ experiment:
     q = 1 mod 4 and prime powers 9, 25, 27, and the pre-registered n = 7 analogue at q up to 9, with a positive
     control against the published q = 3 records, off-family negative controls and an A/A rebuild
   experiment_class: structural-census
-  status: review_required
-  frozen: false
+  status: approved
+  frozen: true
   designed_at: '2026-10-31'
   designed_by: coordinator (design lane of /design-experiment IDEA-20261024-3c71a9)
   selection_decision: null
   selection_basis: >-
     OWNER request to the Coordinator, 2026-10-31: "design the 4-torsion idea next". Recorded without a selection
     decision record; the top-level session may add one.
-  approved_by: null
-  approval_decision: null
-  execution_authorized: false
-  approval_basis: null
-  execution_scope: null
+  approved_by: DEC-20261031-dcfdee
+  approval_decision: DEC-20261031-dcfdee
+  execution_authorized: true
+  approval_basis: >-
+    AGENTS.md 'Standing user authorization' (user, 2026-09-06); approval bounded by execution: tools/experiment_preapproval.py approvable true on pushed bytes, goal approved-unrun capacity checked.
+  execution_scope: >-
+    The six trials of experiments/EXP-PEXT-0b2c75/trial-plan.json and nothing else, in dependency order, through the frozen argv; no other q, n, word or seed.
   reserved_ids:
     approval_decision: DEC-20261031-dcfdee
     observation_decision: DEC-20261031-e3db7e
@@ -38,30 +40,7 @@ experiment:
       n5ext: RUN-PEXT-c0fbcd
       analyze: RUN-PEXT-87ac49
   status_note: >-
-    Draft, not approved, not frozen. Written by the design lane; the approval decision id is reserved and NOT
-    written. The preapproval probe needs committed and pushed bytes; see preapproval_blockers.
-  preapproval_blockers:
-  - >-
-    First probe (2026-10-31, tools/experiment_preapproval.py --packet
-    coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/approval-preview/preapproval-packet.json, source_ref
-    origin/claude/pext-4torsion, exit 2, approvable false). Prospective sha256: specification
-    d41f80ca6e21baf7cd8e4992e2e4aa7fd347d7a493cfac51c9947ebe79e31d53, trial_plan
-    deb61b0cc1a41a327e3c2fa7dc190c49619df6986be995af4c7ffd8192bab1da, queue
-    d47f7e12519021817512aa4c77dc5ac7c753b426755cc3ae4393d19e8864dd47, handoff
-    8f14dadf6bb3833e3b97f8fb0a5767b70c5f2fb1880e3dce32f907e70779f2bb. Blockers verbatim: (a) not committed or pushed
-    at source_ref: the canonical draft specification, the implementation sources (analyze.py, bitalgebra.py,
-    check.py, pext4_census.rs, run.py and the fixtures, each listed under source_sha256), the two input_sha256
-    fixtures and the two specification.input_bindings fixtures; (b) packet: goal concurrency record is not committed at
-    source_ref (ledger/goals/GOAL-PEXT-4a1d6b/goal.yaml); (c) packet: no lawful open lane for this queue within goal
-    concurrency.
-  - >-
-    Blocker (c) is structural, not only a commit state. The goal declares campaign_budget.max_concurrent 2 and two
-    lanes are already open (BATCH-21339c, BATCH-68a56c); the design lane BATCH-a4886a (opened locally without
-    --publish) is the third. The probe refuses while more than max_concurrent lanes are open, so approvable true needs
-    a Coordinator decision first: close or finish another open lane, or raise max_concurrent (a machine-headroom cap on a
-    4-core host that EXP-PEXT-212d5c also loads with 4 threads, so raising it needs the execution plan to be sequenced).
-    This design touched neither of those lanes.
-  - Not approved by design, not by an omission: no approval decision record exists (DEC-20261031-dcfdee is reserved only).
+    Frozen at version 1 and approved by DEC-20261031-dcfdee under AGENTS.md standing authorization after the preapproval probe reported approvable true on pushed bytes.
   intake_acknowledgement:
     source: >-
       coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-3e067e/tasks/TASK-20261027-e6b5bf/design-readiness.json and
