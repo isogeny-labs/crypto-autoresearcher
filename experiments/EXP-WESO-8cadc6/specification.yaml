@@ -1,0 +1,59 @@
+experiment:
+  id: EXP-WESO-8cadc6
+  hypothesis_id: H-WESO-28e412
+  version: 1
+  title: Mixing citation vs total variation 2^-15 on the NIST-I row
+  status: review_required
+  objective: Does the frozen proof display a walk length n with total-variation distance
+    eps(n) < 2^-15 for the non-backtracking walk, or only n=O(log p)? No cited n displays
+    eps(n) < 2^-15, so Lemma 3.5's uniform-curve probability is not yet attached to
+    Algorithm 3 at the NIST-I row.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261016-cdb5e4.yaml
+    design_protocol: experiments/EXP-WESO-8cadc6/protocol.json
+    design_packet: analysis/open-ideas-design-20261031/DESIGN.md
+    cells:
+      instances: 2
+      replicates: 1
+      warmups: 0
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: planted-eps (a planted (n, 2^-16) pair is recorded and classified)'
+  - 'negative: simple-walk (simple-random-walk mixing bounds, which are not bounds
+    on the non-backtracking walk)'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - min_eps_log2
+    - explicit_n
+    - separation
+    secondary: []
+  replication:
+    seeds:
+    - 20261031
+    independent_instances: 2
+  budget:
+    wall_clock_seconds_per_run: 120
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 10
+  stopping_rules:
+  - 'fixed: one extraction sheet per source, plus the planted pair, then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs from the frozen build is excluded and reported
+  - a control that fails its expected detection voids the clean cells it was meant
+    to protect
+  success_criterion: C-budget is supported when no non-backtracking pair reaches eps<2^-15
+    and the rows stay separated; a displayed pair with eps<2^-15 refutes it and the
+    coupling keeps Lemma 3.5's bound positive.
+  falsification_criterion: "Lemma 14 or the [37] citation displays an n with \u03B5\
+    (n) < 2^{-15} for the non-backtracking walk. Coupling then keeps Lemma 3.5\u2019\
+    s lower bound positive by at least P0/2 at the printed P0."
+  required_artifacts:
+  - experiments/EXP-WESO-8cadc6/protocol.json
+  - experiments/EXP-WESO-8cadc6/runs/
+  - experiments/EXP-WESO-8cadc6/results/
+  - experiments/EXP-WESO-8cadc6/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

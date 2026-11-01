@@ -1,0 +1,62 @@
+experiment:
+  id: EXP-WESO-f44c55
+  hypothesis_id: H-WESO-9f812f
+  version: 1
+  title: 'Delgado 2^80 n^4 factor at n=256: does it enter the Theorem 5.3 runtime
+    product?'
+  status: review_required
+  objective: At n=256, does the quoted 2^80 n^4 trial factor multiply the Theorem
+    5.3 expected-time product, or is it cancelled by a displayed identity? The 2^80
+    trial factor is present (not cancelled), so the n=256 product is >=2^197 and Heuristic
+    1 stays load-bearing below 2^128.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261016-397ac9.yaml
+    design_protocol: experiments/EXP-WESO-f44c55/protocol.json
+    design_packet: analysis/open-ideas-design-20261031/DESIGN.md
+    cells:
+      instances: 2
+      replicates: 1
+      warmups: 0
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: pdf-tokens (the quoted 2^80 is located verbatim in the PDF tokens)'
+  - 'negative: toy-smoothness (toy smoothness samples that carry no information about
+    a proof constant)'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - indicator
+    - log2_product
+    - sheet_agreement
+    secondary: []
+  replication:
+    seeds:
+    - 20261031
+    independent_instances: 2
+  budget:
+    wall_clock_seconds_per_run: 120
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 10
+  stopping_rules:
+  - 'fixed: two readers x one sheet, plus the verbatim token check, then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs from the frozen build is excluded and reported
+  - a control that fails its expected detection voids the clean cells it was meant
+    to protect
+  success_criterion: C-present is supported when both readers place 2^80 inside the
+    Theorem 5.3 product (indicator=1) with no sheet disagreement and log2_product>=197;
+    if the proof cancels 2^80 by a displayed identity, indicator=0 and Heuristic 1
+    is not necessary for that write-up.
+  falsification_criterion: "The proof shows expectation O(n^4) with 2^{80} cancelled\
+    \ by a displayed identity. Heuristic 1 is then not necessary for that write-up\u2019\
+    s exponent. NIST-I stays inconclusive here because the preprint disclaims concrete\
+    \ cost."
+  required_artifacts:
+  - experiments/EXP-WESO-f44c55/protocol.json
+  - experiments/EXP-WESO-f44c55/runs/
+  - experiments/EXP-WESO-f44c55/results/
+  - experiments/EXP-WESO-f44c55/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

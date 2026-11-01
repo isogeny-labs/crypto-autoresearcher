@@ -1,0 +1,468 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "EXP-WESO-8cadc6",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "experiments/EXP-WESO-8cadc6",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261016-cdb5e4.yaml",
+    "note": "Design for open idea IDEA-20261016-cdb5e4; not yet approved or dispatched."
+  },
+  "question": "Does the frozen proof display a walk length n with total-variation distance eps(n) < 2^-15 for the non-backtracking walk, or only n=O(log p)?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Every explicit (n, eps) pair is extracted from EUROCRYPT 2023 Lemma 14 and the Pizer/[37] citation, labelled by walk type and distance, with the minimum eps recorded.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "No cited n displays eps(n) < 2^-15, so Lemma 3.5's uniform-curve probability is not yet attached to Algorithm 3 at the NIST-I row.",
+      "class": "comparative",
+      "decided_by": [
+        "C-budget"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "The cited mixing results give no n with eps(n) < 2^-15 for the non-backtracking walk used by Algorithm 3.",
+      "mechanism": "A transferred success lower bound must keep at least half the uniform bound; the budget 2^-15 is half the reciprocal of the printed NIST-I ratio 2^14.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "min_eps_log2",
+          "direction": "lower",
+          "minimum_effect": ">=2^-15",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "explicit_n",
+          "direction": "lower",
+          "minimum_effect": "0",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "separation",
+          "direction": "equal_within",
+          "minimum_effect": "0 mixed rows",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "proof-read",
+      "role": "reference",
+      "description": "frozen proof use of Lemma 14 and the Pizer citation",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "proof-read"
+      }
+    },
+    {
+      "id": "primary-cite",
+      "role": "candidate",
+      "description": "EUROCRYPT 2023 Lemma 14 read from the primary source",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "primary-cite"
+      },
+      "same_instrument_as": "proof-read"
+    },
+    {
+      "id": "citation-37",
+      "role": "control_aa",
+      "description": "second citation [37] read on the same sheet",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "citation-37"
+      },
+      "same_instrument_as": "proof-read"
+    },
+    {
+      "id": "planted-eps",
+      "role": "control_positive",
+      "description": "a displayed pair with eps=2^-16 must be detected",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "planted-eps"
+      }
+    },
+    {
+      "id": "simple-walk",
+      "role": "control_negative",
+      "description": "simple-random-walk bound, which does not bound Algorithm 3",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "simple-walk"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "planted-eps",
+      "expected_detection": "a planted (n, 2^-16) pair is recorded and classified",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "simple-walk",
+      "null_population": {
+        "description": "simple-random-walk mixing bounds, which are not bounds on the non-backtracking walk",
+        "generator": "simple-random-walk mixing bounds, which are not bounds on the non-backtracking walk",
+        "n": 100,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "proof-read",
+          "primary-cite",
+          "citation-37",
+          "planted-eps",
+          "simple-walk"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "source",
+        "treatment": "fixed",
+        "value": "EUROCRYPT 2023 Lemma 14; Pizer [37]",
+        "how": "one frozen token extract"
+      },
+      {
+        "name": "walk_type",
+        "treatment": "crossed",
+        "how": "simple and non-backtracking on separate rows"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-read",
+        "arms": [
+          "proof-read",
+          "primary-cite"
+        ],
+        "differs_in": [
+          "source"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "proof-read",
+          "citation-37"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-budget",
+        "arms": [
+          "proof-read",
+          "simple-walk"
+        ],
+        "differs_in": [
+          "walk_type"
+        ],
+        "design": "absolute",
+        "threshold": "explicit_n=0 and min_eps_log2>=-15"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 2,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 2,
+      "correction": "holm",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 120,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "min_eps_log2",
+        "name": "log2 minimum cited eps",
+        "unit": "bits",
+        "kind": "exact",
+        "definition": "minimum over cited pairs of log2 eps on the non-backtracking row",
+        "source": "results/min_eps_log2.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "explicit_n",
+        "name": "count of qualifying n",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "cited n with eps(n)<2^-15 on the non-backtracking row",
+        "source": "results/explicit_n.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "separation",
+        "name": "mislabeled distance/walk rows",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "rows where total variation, statistical distance or l2 are conflated, or walk types mixed",
+        "source": "results/separation.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "min_eps_log2",
+      "explicit_n",
+      "separation"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: one extraction sheet per source, plus the planted pair, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-budget is supported when no non-backtracking pair reaches eps<2^-15 and the rows stay separated; a displayed pair with eps<2^-15 refutes it and the coupling keeps Lemma 3.5's bound positive.",
+    "comparison_ids": [
+      "C-budget"
+    ],
+    "threshold": "explicit_n=0 and min_eps_log2>=-15",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "holm",
+    "effect_size_measure": ">=2^-15",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "using a simple-random-walk bound as a bound on the non-backtracking walk",
+    "conflating statistical distance, total variation and l2",
+    "spectral computations (belong to IDEA-20260815-1cc763)"
+  ],
+  "literature": [
+    {
+      "ref": "EUROCRYPT 2023 Lemma 14; Pizer [37] as used by the frozen proof",
+      "provenance": "retrieved",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": true
+  }
+}

@@ -1,0 +1,47 @@
+hypothesis:
+  id: H-KIC-85070c
+  question_id: RQ-KIC-7502b9
+  statement: In the exhaustive-core regime the tau-Horner chain's per-relation m!
+    is the same m! that lex symmetry breaking already removes.
+  mechanism: Plain+SB searches 2^(ml)/m! with B^m/(m! r) unordered solutions; Horner
+    searches 2^(ml) with B^m/r ordered ones; both cost c 2^(ml) r/B^m per relation.
+  assumptions:
+  - Lex symmetry breaking is an exact comparator on core coordinates, checked by model
+    counts.
+  predictions:
+  - metric: horner_ratio
+    direction: different
+    minimum_effect: 0.8 to 1.25
+  - metric: sb_gain
+    direction: lower
+    minimum_effect: about 1/m!
+  - metric: mitm_ratio
+    direction: different
+    minimum_effect: 1.0 within 10%
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261018-f2cd4d and DESIGN.md
+    parameters:
+      instances: 4
+      replicates: 1
+      warmups: 0
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 3600
+      backend: local
+  falsification_conditions:
+  - 'Horner cost per relation at most 0.67 of plain+SB at two cells: genuine structural
+    gain, the IDEA-20260926-197ecf budget claim stands.'
+  - 'SB reduces conflicts by less than 0.5 of 1/m!: the residual m!/(SB factor) gain
+    is real and is reported.'
+  - 'SB model count differs from the binomial count or any model fails group replay:
+    arm invalid.'
+  interpretation_limits:
+  - toy cells n <= 19
+  - conflicts are search work not a bound
+  - qualifies a budget column not an exponent
+  - cross-RQ with RQ-FROB-7d8dd4
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

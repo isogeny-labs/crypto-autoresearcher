@@ -1,0 +1,59 @@
+experiment:
+  id: EXP-KIC-4bf856
+  hypothesis_id: H-KIC-85070c
+  version: 1
+  title: Is the tau-Horner m! the symmetry-breaking m! in disguise?
+  status: review_required
+  objective: At (n,m,l)=(17,2,8),(19,2,9),(17,3,6),(19,3,6), is conflicts per distinct
+    relation for Horner over plain+lex-SB in [0.8,1.25], while plain+SB is about 1/m!
+    of plain? Horner costs the same per distinct relation as plain+SB, so the tau-Horner
+    m! is the symmetry-breaking m! and the two do not compose.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261018-f2cd4d.yaml
+    design_protocol: experiments/EXP-KIC-4bf856/protocol.json
+    design_packet: analysis/open-ideas-design-20261031/DESIGN.md
+    cells:
+      instances: 4
+      replicates: 1
+      warmups: 0
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: sb-count (SB model count equals the binomial count)'
+  - 'negative: relabelled (relabelled Z/N group with a scalar of order n, where curve
+    structure is absent)'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - horner_ratio
+    - sb_gain
+    - mitm_ratio
+    secondary: []
+  replication:
+    seeds:
+    - 20261031
+    independent_instances: 4
+  budget:
+    wall_clock_seconds_per_run: 3600
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 12
+  stopping_rules:
+  - 'fixed: four cells x three chain arms x two solvers, 200 targets per cell from
+    a recorded seed, then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs from the frozen build is excluded and reported
+  - a control that fails its expected detection voids the clean cells it was meant
+    to protect
+  success_criterion: C-horner is supported when horner_ratio in [0.8,1.25], sb_gain
+    about 1/m!, and mitm_ratio 1.0 within 10%; horner_ratio<=0.67 at two cells is
+    a genuine structural gain.
+  falsification_criterion: 'Horner cost per relation at most 0.67 of plain+SB at two
+    cells: genuine structural gain, the IDEA-20260926-197ecf budget claim stands.'
+  required_artifacts:
+  - experiments/EXP-KIC-4bf856/protocol.json
+  - experiments/EXP-KIC-4bf856/runs/
+  - experiments/EXP-KIC-4bf856/results/
+  - experiments/EXP-KIC-4bf856/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

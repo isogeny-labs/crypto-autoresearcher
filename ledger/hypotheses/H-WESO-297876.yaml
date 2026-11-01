@@ -1,0 +1,44 @@
+hypothesis:
+  id: H-WESO-297876
+  question_id: RQ-WESO-8aff57
+  statement: The per-entry cost of the two named listing algorithms is at least the
+    recomputed Delfs-Galbraith gap at p=5*2^248-1.
+  mechanism: The print's rounding hides 21.5 bits at the exact prime; charging Phi_l
+    once over Z and per batch decides whether the batched listing closes that gap.
+  assumptions:
+  - c is the cost of the two named algorithms only.
+  - One attempt costs M field operations only inside the Section 4.1 model.
+  - j in {0, 1728} is excluded from the mean.
+  predictions:
+  - metric: log2_c
+    direction: higher
+    minimum_effect: '>=Delta'
+  - metric: delta
+    direction: higher
+    minimum_effect: 21.5 on the printed row
+  - metric: algorithm_split
+    direction: different
+    minimum_effect: reported
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261016-fb1656 and DESIGN.md
+    parameters:
+      instances: 20
+      replicates: 1
+      warmups: 0
+      tests_in_family: 1
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 600
+      backend: local
+  falsification_conditions:
+  - "c < 2^\u0394: the listing correction does not reach the Delfs\u2013Galbraith\
+    \ line."
+  - "The two algorithms split across 2^\u0394: the one-sided label is false."
+  interpretation_limits:
+  - No new exponent. The asymptotic o(1) can still absorb the batch.
+  - This count does not validate Heuristic 1.
+  - "Supersingular \u2113-isogeny listing, not a prime-field factor base."
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

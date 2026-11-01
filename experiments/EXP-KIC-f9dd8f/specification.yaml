@@ -1,0 +1,58 @@
+experiment:
+  id: EXP-KIC-f9dd8f
+  hypothesis_id: H-KIC-3b4af8
+  version: 1
+  title: Frobenius-stable multiplicative-subgroup bases x^d=1 at prime degrees
+  status: review_required
+  objective: At n=23 and n=29, does B_d have coverage within 2 sd of the orbit-class
+    null and a random stable union, with an O(n)-byte stable description at no more
+    than 2x a random orbit seed's construction cost? B_d coverage matches the orbit-class
+    null within 2 sd and construction cost stays within 2x a random orbit seed, so
+    the multiplicative lane is a usable stable base.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261018-329d0a.yaml
+    design_protocol: experiments/EXP-KIC-f9dd8f/protocol.json
+    design_packet: analysis/open-ideas-design-20261031/DESIGN.md
+    cells:
+      instances: 4
+      replicates: 1
+      warmups: 0
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: subspace-lane (the known n=23 subspace lane is enumerated and counted)'
+  - 'negative: relabelled (relabelled Z/r with no multiplicative structure)'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - coverage_z
+    - gap_stable
+    - cost_ratio
+    secondary: []
+  replication:
+    seeds:
+    - 20261031
+    independent_instances: 4
+  budget:
+    wall_clock_seconds_per_run: 1800
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 10
+  stopping_rules:
+  - 'fixed: census n<=200, then n=23 and n=29 enumeration, then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs from the frozen build is excluded and reported
+  - a control that fails its expected detection voids the clean cells it was meant
+    to protect
+  success_criterion: C-null is supported when |coverage_z|<=2, the stable-union gap
+    is within 2 sd and cost_ratio<=2; coverage z beyond 3 for B_d but not for random
+    stable unions means multiplicative closure biases S_3 solutions.
+  falsification_criterion: 'Coverage z beyond 3 for B_d but not for random stable
+    unions: multiplicative closure biases S_3 solutions.'
+  required_artifacts:
+  - experiments/EXP-KIC-f9dd8f/protocol.json
+  - experiments/EXP-KIC-f9dd8f/runs/
+  - experiments/EXP-KIC-f9dd8f/results/
+  - experiments/EXP-KIC-f9dd8f/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

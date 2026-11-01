@@ -1,0 +1,44 @@
+hypothesis:
+  id: H-SEMBIN-35f129
+  question_id: RQ-SEMBIN-ade131
+  statement: The Semaev yield is the exact first moment d(V)*C(|W|+t-1,t)/N, and each
+    yield constant is an additive theta bits in stage 1.
+  mechanism: x-multiset decompositions of R_X correspond to point multisets of W summing
+    to R up to O(1/N) coincidences; d(V)=h/|<cl(W)>| carries the class factor.
+  assumptions:
+  - The proposal's frozen cells are the test boundary.
+  - The instrument is the one named in the frozen protocol.
+  predictions:
+  - metric: class_mean_ratio
+    direction: different
+    minimum_effect: 1 within O(c/N)
+  - metric: ncross_shift
+    direction: different
+    minimum_effect: 2.9+-0.3 n
+  - metric: gap
+    direction: lower
+    minimum_effect: <=t/|V|
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261017-3db2a8 and DESIGN.md
+    parameters:
+      instances: 2
+      replicates: 1
+      warmups: 0
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 900
+      backend: local
+  falsification_conditions:
+  - 'A class mean differing from d(V)*C(|W|+t-1,t)/N beyond O(c/N): C1 is wrong.'
+  - 'P(eq.5 at t) > P(A_t) in any cell: the Lemma 2 direction used in C5 is wrong.'
+  - 'A linear V with d(V)>2 on an h=4 curve at k>=6: the ceiling in C1 is wrong.'
+  interpretation_limits:
+  - Constants only. Assumption 1/2 and the FIPS conclusion untouched; no security
+    claim either way.
+  - Does not edit H-RELN-96e3ba or EXP-RELN-164ad3; remedy is an additive amendment
+    naming this exact mean as comparator.
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

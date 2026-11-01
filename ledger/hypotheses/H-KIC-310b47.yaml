@@ -1,0 +1,46 @@
+hypothesis:
+  id: H-KIC-310b47
+  question_id: RQ-KIC-7502b9
+  statement: Coverage gained without discrete logarithms is an order statistic of
+    the exact orbit-class occupancy null and carries no exploitable structure.
+  mechanism: M_c m-sum classes thrown into N_c target classes give occupancy variance
+    about N_c e^-lam(1-(1+lam)e^-lam); a log-blind pool search reaches mean + z(K_eff)
+    sd, whereas the log-aware headroom min(1,lam) needs logs.
+  assumptions:
+  - The proposal's frozen cells are the test boundary.
+  - The instrument is the one named in the frozen protocol.
+  predictions:
+  - metric: sd_ratio
+    direction: different
+    minimum_effect: 0.8 to 1.25
+  - metric: winner_z
+    direction: lower
+    minimum_effect: '|z|<=1'
+  - metric: headroom_share
+    direction: lower
+    minimum_effect: <=0.1
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261018-5f37a1 and DESIGN.md
+    parameters:
+      instances: 66045
+      replicates: 1
+      warmups: 0
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 1200
+      backend: local
+  falsification_conditions:
+  - Score sd outside 0.5 to 2 times null sd in both conventions after the IDEA-20261018-d4cef4
+    floor.
+  - Log-aware greedy not 5 null sd above mean (instrument blind; nothing read).
+  - Pool winner outside the 1st to 99th percentile of the selection-matched winner
+    law.
+  interpretation_limits:
+  - coverage only since mean yield is conserved (KN-FIND-007)
+  - toy cells
+  - no attack or exponent claim
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

@@ -1,0 +1,45 @@
+hypothesis:
+  id: H-SEMBIN-c5432e
+  question_id: RQ-SEMBIN-ade131
+  statement: At |V|=2^20 the parity confinement makes the n=40 success probability
+    .316 on sparse f, not .393.
+  mechanism: If f has second exponent s<=20 then Tr(alpha^j)=0 for j<n-s, so N(z)=0
+    for every z with Tr(b/z)=1; the surviving mass gives (1-e^{-2mu})/2=.316 at mu=.5.
+  assumptions:
+  - The proposal's frozen cells are the test boundary.
+  - The instrument is the one named in the frozen protocol.
+  predictions:
+  - metric: p_sparse
+    direction: lower
+    minimum_effect: .316+-.015
+  - metric: p_dense
+    direction: different
+    minimum_effect: .393+-.015
+  - metric: pi1_hits
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: band_violations
+    direction: lower
+    minimum_effect: <=2 of 33 at 95%
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261017-0e2dab and DESIGN.md
+    parameters:
+      instances: 2000
+      replicates: 1
+      warmups: 0
+      tests_in_family: 4
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 1800
+      backend: local
+  falsification_conditions:
+  - 'Sparse-f P outside [.30,.33] at 2000 z: the parity mixture does not hold at |V|=2^20.'
+  - 'Any solution at Tr(b/z)=1 with sparse f: theorem misapplied or code bug.'
+  - 'More than 4 of 33 cells outside their instance band: the band, hence C1, is wrong.'
+  interpretation_limits:
+  - Toy; nothing about Assumption 1, degree or any curve's security. An instance-band
+    reading audits the paper's evidence; it does not refute eq. (11).
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

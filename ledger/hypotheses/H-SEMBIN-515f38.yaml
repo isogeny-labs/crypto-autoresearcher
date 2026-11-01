@@ -1,0 +1,44 @@
+hypothesis:
+  id: H-SEMBIN-515f38
+  question_id: RQ-SEMBIN-ade131
+  statement: At |V|<=2^8 and t<=12 there is no intrinsic solution clustering beyond
+    the stated multiset null.
+  mechanism: Size-biased sampling makes the expected number of other solutions exactly
+    nu_t=E[c(c-1)]/E[c]; with mu_class<=1e-5 any extra solution is far outside the
+    Poisson background.
+  assumptions:
+  - The proposal's frozen cells are the test boundary.
+  - The instrument is the one named in the frozen protocol.
+  predictions:
+  - metric: extra
+    direction: different
+    minimum_effect: 0 within the Poisson bound
+  - metric: planted
+    direction: higher
+    minimum_effect: 2^{t-1}-1
+  - metric: nonrational
+    direction: lower
+    minimum_effect: <1% at |V|>=2^6
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261017-3079bc and DESIGN.md
+    parameters:
+      instances: 5
+      replicates: 1
+      warmups: 0
+      tests_in_family: 5
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 3600
+      backend: local
+  falsification_conditions:
+  - 'Planted control not recovered: detector blind, no cell may be called clean.'
+  - 'Events in the curve-free control: pipeline bug, run void.'
+  - 'Events above the null bound at >=2 cells with a common pattern: structural clustering
+    exists; a kappa(t) fit replaces the clean reading.'
+  interpretation_limits:
+  - A clean result bounds structure only for |V|<=2^8 and t<=12; it does not reach
+    |V|=2^38. No security or degree claim.
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

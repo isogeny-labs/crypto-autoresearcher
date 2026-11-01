@@ -1,0 +1,45 @@
+hypothesis:
+  id: H-KIC-cb7fa2
+  question_id: RQ-KIC-7502b9
+  statement: The relation module of a Koblitz orbit is the principal ideal (delta),
+    and w_min marks where toy tau-stable cells become dimension-forced.
+  mechanism: delta=sum_{j<n} tau^j has norm equal to the point-count ratio; Ann(G)=(delta),
+    so every column relation is a multiple of delta and the minimum tau-adic weight
+    controls duplicate class-sums.
+  assumptions:
+  - The proposal's frozen cells are the test boundary.
+  - The instrument is the one named in the frozen protocol.
+  predictions:
+  - metric: nw_ratio
+    direction: different
+    minimum_effect: factor 3
+  - metric: membership
+    direction: higher
+    minimum_effect: '1.0'
+  - metric: dup_excess
+    direction: lower
+    minimum_effect: <=floor+2 sd
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261018-d4cef4 and DESIGN.md
+    parameters:
+      instances: 8
+      replicates: 1
+      warmups: 0
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 2400
+      backend: local
+  falsification_conditions:
+  - 'A relation found outside (delta): instrument error or Ann(G) = (delta) false.'
+  - 'N_w off by more than a factor 3 (Poisson 3 sd) at two cells: H1 false.'
+  - 'Duplicates exceed floor plus class null by 4 sd: unexplained structure, the IDEA-20261018-5f37a1
+    null is invalid there.'
+  interpretation_limits:
+  - toy cells n at most 23
+  - no claim at deployed n (w_min about 33 to 44 by hand estimate)
+  - no attack
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

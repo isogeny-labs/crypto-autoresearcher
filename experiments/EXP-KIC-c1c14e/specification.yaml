@@ -1,0 +1,59 @@
+experiment:
+  id: EXP-KIC-c1c14e
+  hypothesis_id: H-KIC-310b47
+  version: 1
+  title: 'Log-blind golden bases: coverage is an order statistic of orbit-class occupancy'
+  status: review_required
+  objective: On the frozen N19 pool of 66045 four-orbit bases, is the score sd 0.8-1.25
+    times the exact occupancy-null sd, and are the pool and plane winners within 1
+    sd of the selection-matched expected maximum? The log-blind pool reaches at most
+    0.1 of the log-aware headroom while the log-aware greedy control sits at least
+    5 null sd above the mean.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261018-5f37a1.yaml
+    design_protocol: experiments/EXP-KIC-c1c14e/protocol.json
+    design_packet: analysis/open-ideas-design-20261031/DESIGN.md
+    cells:
+      instances: 66045
+      replicates: 1
+      warmups: 0
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: log-aware (log-aware greedy reaches at least 5 null sd above the mean)'
+  - 'negative: relabelled (relabelled Z/r pools with the same exhaustive 4-of-37 search)'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - sd_ratio
+    - winner_z
+    - headroom_share
+    secondary: []
+  replication:
+    seeds:
+    - 20261031
+    independent_instances: 66045
+  budget:
+    wall_clock_seconds_per_run: 1200
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 10
+  stopping_rules:
+  - 'fixed: Stage 0 the frozen 66045 scores, Stage 1 200 random pools, Stage 2 one
+    log-aware greedy, then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs from the frozen build is excluded and reported
+  - a control that fails its expected detection voids the clean cells it was meant
+    to protect
+  success_criterion: C-null is supported when sd_ratio in [0.8,1.25], |winner_z|<=1
+    and headroom_share<=0.1; sd_ratio>=1.5 flags real structure whose source is then
+    the finding.
+  falsification_criterion: Score sd outside 0.5 to 2 times null sd in both conventions
+    after the IDEA-20261018-d4cef4 floor.
+  required_artifacts:
+  - experiments/EXP-KIC-c1c14e/protocol.json
+  - experiments/EXP-KIC-c1c14e/runs/
+  - experiments/EXP-KIC-c1c14e/results/
+  - experiments/EXP-KIC-c1c14e/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

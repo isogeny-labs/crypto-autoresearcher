@@ -1,0 +1,59 @@
+experiment:
+  id: EXP-KIC-3b53b5
+  hypothesis_id: H-KIC-cb7fa2
+  version: 1
+  title: 'Universal Frobenius relations: the relation module is (delta) in Z[tau]'
+  status: review_required
+  objective: At n<=23, does every found relation lie in (delta), and is the exact
+    N_w within a factor 3 of the random-lattice count at every cell and weight w<=8?
+    The exact N_w is within a factor 3 of the random-lattice count and duplicate class-sums
+    stay within floor+2 sd of the class null.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261018-d4cef4.yaml
+    design_protocol: experiments/EXP-KIC-3b53b5/protocol.json
+    design_packet: analysis/open-ideas-design-20261031/DESIGN.md
+    cells:
+      instances: 8
+      replicates: 1
+      warmups: 0
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: tau-naf (tau-NAF(delta) appears at its predicted weight)'
+  - 'negative: distinct-point (multiset convention whose coincidences are not algebraic
+    relations)'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - nw_ratio
+    - membership
+    - dup_excess
+    secondary: []
+  replication:
+    seeds:
+    - 20261031
+    independent_instances: 8
+  budget:
+    wall_clock_seconds_per_run: 2400
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 10
+  stopping_rules:
+  - 'fixed: eight cells x weights 1..8, then the two table duplicate counts, then
+    stop'
+  invalidation_rules:
+  - a row whose instrument hash differs from the frozen build is excluded and reported
+  - a control that fails its expected detection voids the clean cells it was meant
+    to protect
+  success_criterion: C-ideal is supported when membership=1, nw_ratio within factor
+    3 at every cell and weight, and dup_excess<=2 sd; a relation outside (delta) is
+    an instrument error or a false Ann(G)=(delta).
+  falsification_criterion: 'A relation found outside (delta): instrument error or
+    Ann(G) = (delta) false.'
+  required_artifacts:
+  - experiments/EXP-KIC-3b53b5/protocol.json
+  - experiments/EXP-KIC-3b53b5/runs/
+  - experiments/EXP-KIC-3b53b5/results/
+  - experiments/EXP-KIC-3b53b5/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

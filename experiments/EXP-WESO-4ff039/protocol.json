@@ -1,0 +1,475 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "EXP-WESO-4ff039",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "experiments/EXP-WESO-4ff039",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261016-fb1656.yaml",
+    "note": "Design for open idea IDEA-20261016-fb1656; not yet approved or dispatched."
+  },
+  "question": "At p=5*2^248-1 with B* from the Section 4.1 formulas, is the entry-weighted F_{p^2}-multiplication count c at least 2^Delta, where Delta is the recomputed gap to the Delfs-Galbraith line?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "c_direct and c_batched are counted with the schoolbook F_{p^2} multiplication unit on one frozen j-list, and Delta is recomputed at the exact prime, not read from the rounded row.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "c >= 2^Delta, so the listing correction lifts the NIST-I time lower bound to at least the Delfs-Galbraith line under the Section 4.1 model.",
+      "class": "comparative",
+      "decided_by": [
+        "C-gap"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "The per-entry cost of the two named listing algorithms is at least the recomputed Delfs-Galbraith gap at p=5*2^248-1.",
+      "mechanism": "The print's rounding hides 21.5 bits at the exact prime; charging Phi_l once over Z and per batch decides whether the batched listing closes that gap.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "log2_c",
+          "direction": "higher",
+          "minimum_effect": ">=Delta",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "delta",
+          "direction": "higher",
+          "minimum_effect": "21.5 on the printed row",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "algorithm_split",
+          "direction": "different",
+          "minimum_effect": "reported",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "direct",
+      "role": "reference",
+      "description": "direct: reduce Phi_l and find roots at one supersingular j",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "direct"
+      }
+    },
+    {
+      "id": "batched",
+      "role": "candidate",
+      "description": "one batched multipoint evaluation of Phi_l, written down before timing",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "batched"
+      },
+      "same_instrument_as": "direct"
+    },
+    {
+      "id": "batch-aa",
+      "role": "control_aa",
+      "description": "the direct arm repeated on a second j-subset",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "batch-aa"
+      },
+      "same_instrument_as": "direct"
+    },
+    {
+      "id": "known-phi",
+      "role": "control_positive",
+      "description": "a low-degree Phi_l whose root count is known by hand",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "known-phi"
+      }
+    },
+    {
+      "id": "toy-l",
+      "role": "control_negative",
+      "description": "toy prime l whose entry cost cannot be 2^21.5, to prove the counter is not inflating",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "toy-l"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "known-phi",
+      "expected_detection": "the counted root count matches the hand value",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "toy-l",
+      "null_population": {
+        "description": "a small prime l where the gap cannot be reached",
+        "generator": "a small prime l where the gap cannot be reached",
+        "n": 100,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "direct",
+          "batched",
+          "batch-aa",
+          "known-phi",
+          "toy-l"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "algorithm",
+        "treatment": "crossed",
+        "how": "direct and batched on the same j-list"
+      },
+      {
+        "name": "j_list",
+        "treatment": "fixed",
+        "value": "20 supersingular j outside {0,1728}",
+        "how": "frozen before counting"
+      },
+      {
+        "name": "prime_size",
+        "treatment": "crossed",
+        "how": "varied by comparison C-gap"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-cost",
+        "arms": [
+          "direct",
+          "batched"
+        ],
+        "differs_in": [
+          "algorithm"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "direct",
+          "batch-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-gap",
+        "arms": [
+          "direct",
+          "toy-l"
+        ],
+        "differs_in": [
+          "prime_size"
+        ],
+        "design": "absolute",
+        "threshold": "log2_c >= delta"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 20,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 600,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "log2_c",
+        "name": "log2 c",
+        "unit": "bits",
+        "kind": "counted",
+        "definition": "entry-weighted F_p^2 multiplications of the better of the two named algorithms",
+        "source": "results/log2_c.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "delta",
+        "name": "recomputed Delta",
+        "unit": "bits",
+        "kind": "derived",
+        "definition": "log2(printed Delfs-Galbraith line) - log2(M/P0) at p=5*2^248-1",
+        "source": "results/delta.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95",
+        "formula": "log2(printed Delfs-Galbraith line) - log2(M/P0) at p=5*2^248-1"
+      },
+      {
+        "id": "algorithm_split",
+        "name": "log2(c_batched/c_direct)",
+        "unit": "bits",
+        "kind": "derived",
+        "definition": "ratio of the two counted costs on the same j-list",
+        "source": "results/algorithm_split.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95",
+        "formula": "ratio of the two counted costs on the same j-list"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "log2_c",
+      "delta",
+      "algorithm_split"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 1200,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: 20 j values x both algorithms, batched routine written before the count, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-gap is supported when log2_c>=delta at the recomputed prime; c<2^Delta falsifies the lift, and a 2^Delta split between the algorithms falsifies the one-sided label.",
+    "comparison_ids": [
+      "C-gap"
+    ],
+    "threshold": "log2_c >= delta",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": ">=Delta",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "timing before writing the batched algorithm down",
+    "charging Phi_l per batch only",
+    "using the printed 21.5 instead of the recomputed Delta"
+  ],
+  "literature": [
+    {
+      "ref": "Section 4.1 model and the printed NIST-I row (frozen source)",
+      "provenance": "retrieved",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": true
+  }
+}

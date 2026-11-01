@@ -1,0 +1,47 @@
+hypothesis:
+  id: H-SEMBIN-230c74
+  question_id: RQ-SEMBIN-ade131
+  statement: The t=2 yield deficit is trace-parity confinement, and it vanishes as
+    mu drops into the cost-relevant linear regime.
+  mechanism: For V in ker Tr the per-target count is a 50/50 mixture of 0 and Poisson(2mu),
+    giving f_disp=(1+e^{-mu})/2; intrinsic clustering would instead be flat at 1/kappa.
+  assumptions:
+  - The proposal's frozen cells are the test boundary.
+  - The instrument is the one named in the frozen protocol.
+  predictions:
+  - metric: f_disp
+    direction: higher
+    minimum_effect: (1+e^{-mu})/2 within .005
+  - metric: f_disp_unconf
+    direction: different
+    minimum_effect: 1.000+-.005
+  - metric: pi1
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: vmr
+    direction: different
+    minimum_effect: 1.00+-.03
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261017-e9f824 and DESIGN.md
+    parameters:
+      instances: 10
+      replicates: 1
+      warmups: 0
+      tests_in_family: 4
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 3600
+      backend: local
+  falsification_conditions:
+  - 'Confined f_disp at mu-hat<=.04 below .95 in >=2 cells: intrinsic clustering exists,
+    first-order cost >=0.07 bit.'
+  - 'Unconfined f_disp outside [.99,1.01] at mu-hat<=.05: the null object is not null.'
+  - 'Inside-class variance/mean outside [.95,1.05] at mu-hat<=.04: H1 fails.'
+  interpretation_limits:
+  - Toy scale; says nothing about Assumption 1/2, any degree, or any curve's security.
+  - A pass shows the t=2 deficit is a saturation artifact; it does not show t=m=12
+    is clustering-free (IDEA-20261017-3079bc).
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31

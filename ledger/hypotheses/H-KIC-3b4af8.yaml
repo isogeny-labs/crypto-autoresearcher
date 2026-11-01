@@ -1,0 +1,47 @@
+hypothesis:
+  id: H-KIC-3b4af8
+  question_id: RQ-KIC-7502b9
+  statement: Multiplicative-subgroup bases are a Frobenius-stable base lane at prime
+    degrees where the stable-subspace lane is empty, with no coverage bias.
+  mechanism: S_d is closed under squaring and, for b=1, under x->1/x; every non-identity
+    orbit of <2,-1> on Z/d has size 2n, so the base has an O(1) description (n, modulus,
+    d) and one exponentiation test.
+  assumptions:
+  - The proposal's frozen cells are the test boundary.
+  - The instrument is the one named in the frozen protocol.
+  predictions:
+  - metric: coverage_z
+    direction: different
+    minimum_effect: '|z|<=2'
+  - metric: gap_stable
+    direction: lower
+    minimum_effect: within 2 sd
+  - metric: cost_ratio
+    direction: lower
+    minimum_effect: <=2x
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261018-329d0a and DESIGN.md
+    parameters:
+      instances: 4
+      replicates: 1
+      warmups: 0
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 1800
+      backend: local
+  falsification_conditions:
+  - 'Coverage z beyond 3 for B_d but not for random stable unions: multiplicative
+    closure biases S_3 solutions.'
+  - A census entry fails the multiplication or primality check.
+  - Construction cost per accepted point (power step, trace test, lift) above 2x a
+    random orbit seed.
+  interpretation_limits:
+  - toy cells
+  - base sizes limited to divisors of 2^n-1
+  - no SAT claim
+  - no attack
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31
