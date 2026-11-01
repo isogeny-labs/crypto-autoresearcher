@@ -1,0 +1,36 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-7c9cc7
+claim_id: ATTACK-POLYNOMIAL-FUNCTION-ALIAS
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_20261101/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.PolynomialFunctionAlias.nonzero_polynomial_zero_function
+theorem_file: CryptoResearch/AttackCorpus/PolynomialFunctionAlias.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  The concrete negative control may use P(X)=X^2-X over ZMod 2. It must prove
+  both P != 0 as a formal polynomial and P.eval x = 0 for every x in ZMod 2.
+  Pointwise agreement on the base field therefore cannot by itself justify a
+  formal polynomial identity.
+
+  The repair is the standard root-count boundary: over a finite field F, a
+  polynomial of natural degree strictly below Fintype.card F that evaluates
+  to zero at every field element is the zero polynomial. Multivariate,
+  extension-field, quotient-ring, lookup and committed-polynomial interfaces
+  are not covered.
+claim: |
+  In (ZMod 2)[X], the formal polynomial P = X^2 - X is nonzero, but
+  P.eval x = 0 for every x : ZMod 2. Hence equality of polynomial functions
+  on a finite field does not imply equality of unrestricted formal
+  polynomials.
+
+  Prove the exact univariate repair as well: for every finite field F and
+  P : F[X], if P.natDegree < Fintype.card F and P.eval x = 0 for every
+  x : F, then P = 0. This states the degree boundary explicitly and makes no
+  polynomial-commitment or proof-system security claim.
+proof_map:
+  prerequisites:
+    - "The object on the formal side is Mathlib Polynomial F and the semantic side is evaluation at every element of the base field F"
+    - "The repair is univariate and uses the strict degree bound natDegree P < |F|; no multivariate individual-degree or total-degree variant is implied"
+    - "Identifying a protocol's committed polynomial, evaluation domain and quotient constraints with these Mathlib objects requires a separate refinement theorem"

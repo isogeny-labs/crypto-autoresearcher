@@ -1,0 +1,41 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-a0f198
+claim_id: ATTACK-BATCH-RLC-ADAPTIVE-CANCELLATION
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_20261101/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.AdaptiveBatching.adaptive_rlc_cancellation
+theorem_file: CryptoResearch/AttackCorpus/AdaptiveBatching.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  The counterexample isolates challenge timing. If errors may depend on the
+  random-linear-combination challenge rho, e0(rho) = -rho and e1(rho) = 1
+  make e0(rho) + rho*e1(rho) vanish for every rho although e1 is nonzero.
+  This is not a forgery against a named batching protocol.
+
+  The repair is a finite counting lemma for two fixed field elements a,b that
+  are selected before rho: when (a,b) is not (0,0), at most one rho satisfies
+  a + rho*b = 0. The target must keep fixedness visible in the quantifier
+  order and state a cardinality bound; translating it to transcript-level
+  probability, higher-degree batching, Fiat-Shamir, or multiple equations is
+  outside this theorem.
+claim: |
+  Over every field F, define adaptive errors e0(rho) = -rho and e1(rho) = 1.
+  Then for every rho : F,
+
+      e0(rho) + rho * e1(rho) = 0,
+
+  while e1(rho) is nonzero. Thus the fixed-nonzero-polynomial root-count
+  argument does not apply when the alleged errors may be chosen after seeing
+  the challenge.
+
+  Also prove the exact fixed-error repair for a finite field F: for fixed
+  a,b : F with not (a = 0 and b = 0), the set of rho : F satisfying
+  a + rho*b = 0 has cardinality at most one. This is a finite algebraic
+  counterexample and repair, not a security theorem for a named protocol.
+proof_map:
+  prerequisites:
+    - "The batching equation under audit has the scalar form a + rho*b = 0 over a field; encodings, group equations and transcript binding are not modeled"
+    - "For the repair, a and b are fixed before rho is sampled; the Lean quantifier order is the only commitment/timing model supplied"
+    - "Uniform sampling converts the cardinality bound into probability at most 1/|F|, but that PMF theorem and adaptive Fiat-Shamir transcript semantics are not part of this target"
