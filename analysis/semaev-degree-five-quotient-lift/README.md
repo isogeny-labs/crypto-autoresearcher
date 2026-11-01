@@ -294,3 +294,7 @@ The corrected n49 poly00 local D5 run [passed its seed recheck and count](runs/n
 ## n47 random00 blocked D5 retry, 2026-11-01 readback
 
 The [terminal report](reports/rand00-blocked-terminal-20261101/report.md) records the completed retry on the original random00 input. The independent D4 checker accepted codimension at least 61,196 and a fresh exact counter found zero solutions, retaining the named-instance LFD >= 5 bound. The D5 blocked quotient ended with `projection_kills_one` at recorded rank 187,583 of 187,583 coordinates. It emitted no D5 certificate, so this run gives no degree-six lower bound or upper bound. Twenty-two small S3 objects, including eight checkpoint manifests, were independently downloaded and hashed for the report; the checkpoint object bytes were not downloaded there.
+
+## n47 polynomial blocked D5 terminals, 2026-11-01 readbacks
+
+The fixed [polynomial03](reports/poly03-blocked-terminal-20261101/report.md) and [polynomial00](reports/poly00-blocked-terminal-20261101/report.md) cloud attempts each passed the original independent D4 checker with codimension at least 21,428 and a fresh exact count of zero, certifying LFD >= 5 for each named Boolean presentation. Their D5 quotient producers each ended with `projection_kills_one` at relation rank 30,546 of 30,546 working coordinates and emitted no D5 certificate. Each report hashes 14 small terminal S3 objects and includes an inspected PDF. These quotient observations do not establish degree-five membership or an upper bound.
