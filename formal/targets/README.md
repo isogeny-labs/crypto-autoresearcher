@@ -34,16 +34,21 @@ about this program's research.
 
 These five specs freeze the first finite trust-boundary tranche from the
 [attack-corpus source note](../../research/cryptographic_assumption_attack_corpus_20261101/README.md).
-They are pointers only: their theorem files do not yet exist, so every row is
-**undischarged** and makes no protocol-security or vulnerability claim.
+Their corrected proof sources passed the pinned Lean 4.35 full-workspace
+verifier and axiom audit in
+[run 41365419446](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41365419446).
+Five assigned semantic reviews attest `holds`; the
+[technical review packet](../../docs/reports/2026-11-01-attack-corpus-five-lean/README.md)
+records its noncanonical handoff/independence limitations. No row makes a
+protocol-security or implementation-vulnerability claim.
 
 | target | kind | exact boundary | state |
 | --- | --- | --- | --- |
-| `attack-mod-alias.yaml` | `formal_counterexample` | residue equality versus bounded natural representatives | undischarged |
-| `attack-subgroup-membership.yaml` | `formal_counterexample` | ambient product group versus designated prime-order subgroup | undischarged |
-| `attack-batch-rlc-adaptive.yaml` | `formal_counterexample` | adaptive cancellation versus fixed-error finite counting | undischarged |
-| `attack-polynomial-function-alias.yaml` | `formal_counterexample` | polynomial functions versus bounded-degree formal polynomials | undischarged |
-| `attack-schnorr-special-soundness.yaml` | `formalize_claim` | scalar two-transcript extraction under same-commitment, distinct-challenge, prime-field hypotheses | undischarged |
+| `attack-mod-alias.yaml` | `formal_counterexample` | residue equality versus bounded natural representatives | machine-verified; scoped review holds |
+| `attack-subgroup-membership.yaml` | `formal_counterexample` | ambient product group versus designated prime-order subgroup | machine-verified; scoped review holds |
+| `attack-batch-rlc-adaptive.yaml` | `formal_counterexample` | adaptive cancellation versus fixed-error finite counting | machine-verified; scoped review holds |
+| `attack-polynomial-function-alias.yaml` | `formal_counterexample` | polynomial functions versus bounded-degree formal polynomials | machine-verified; scoped review holds |
+| `attack-schnorr-special-soundness.yaml` | `formalize_claim` | scalar two-transcript extraction under same-commitment, distinct-challenge, prime-field hypotheses | machine-verified; scoped review holds |
 
 Each target requires its countermodel and conditional repair in the same
 module. Implementation impact remains gated on a separate source-to-model

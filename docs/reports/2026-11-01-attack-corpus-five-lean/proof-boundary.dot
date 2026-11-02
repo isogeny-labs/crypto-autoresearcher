@@ -1,0 +1,76 @@
+digraph attack_corpus_five {
+  graph [
+    bgcolor="white",
+    fontname="DejaVu Sans",
+    fontsize=12,
+    label="Five frozen assumption boundaries · corrected producer 37cc75cfeb · exact Lean 4.35 run 41365419446 passed",
+    labelloc="t",
+    labeljust="l",
+    nodesep=0.30,
+    ranksep=0.42,
+    pad=0.20,
+    splines=ortho
+  ];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=9,
+        margin="0.10,0.07", width=2.28, height=0.58];
+  edge [color="#64748b", penwidth=1.1, arrowsize=0.65];
+
+  subgraph column_heads {
+    rank=same;
+    h0 [shape=plaintext, label="OVERBROAD INFERENCE", fontcolor="#991b1b"];
+    h1 [shape=plaintext, label="COUNTERMODEL / CONTROL", fontcolor="#1d4ed8"];
+    h2 [shape=plaintext, label="REPAIRED PREMISE", fontcolor="#166534"];
+    h3 [shape=plaintext, label="STILL REQUIRES A BRIDGE", fontcolor="#92400e"];
+    h0 -> h1 -> h2 -> h3 [style=invis, weight=20];
+  }
+
+  subgraph mod_row {
+    rank=same;
+    mod_bad [label="MOD-ALIAS\nresidue equality ⇒\ninteger equality", fillcolor="#fee2e2", color="#b91c1c"];
+    mod_ce [label="0 ≠ q in ℕ, but\n0 = q in ZMod q", fillcolor="#dbeafe", color="#2563eb"];
+    mod_fix [label="x,y < q and equal casts\n⇒ x = y", fillcolor="#dcfce7", color="#16a34a"];
+    mod_gap [label="circuit / limb / byte\nrange-check refinement", fillcolor="#fef3c7", color="#d97706"];
+    mod_bad -> mod_ce -> mod_fix -> mod_gap;
+  }
+
+  subgraph batch_row {
+    rank=same;
+    batch_bad [label="BATCH-RLC\nroot bound with errors\nchosen after ρ", fillcolor="#fee2e2", color="#b91c1c"];
+    batch_ce [label="e₀(ρ) = −ρ, e₁(ρ) = 1\ncancels for every ρ", fillcolor="#dbeafe", color="#2563eb"];
+    batch_fix [label="fixed (a,b) ≠ (0,0)\n≤ 1 accepting challenge", fillcolor="#dcfce7", color="#16a34a"];
+    batch_gap [label="commitment timing, uniform PMF,\nFiat–Shamir transcript binding", fillcolor="#fef3c7", color="#d97706"];
+    batch_bad -> batch_ce -> batch_fix -> batch_gap;
+  }
+
+  subgraph poly_row {
+    rank=same;
+    poly_bad [label="POLY-FUNCTION\npointwise equality ⇒\nformal equality", fillcolor="#fee2e2", color="#b91c1c"];
+    poly_ce [label="X²−X ≠ 0 in F₂[X],\nbut evaluates to zero", fillcolor="#dbeafe", color="#2563eb"];
+    poly_fix [label="univariate natDegree < |F|\nand zero evaluations ⇒ P = 0", fillcolor="#dcfce7", color="#16a34a"];
+    poly_gap [label="committed-polynomial, domain,\nquotient and multivariate model", fillcolor="#fef3c7", color="#d97706"];
+    poly_bad -> poly_ce -> poly_fix -> poly_gap;
+  }
+
+  subgraph subgroup_row {
+    rank=same;
+    subgroup_bad [label="SUBGROUP\nambient acceptance ⇒\ndesignated membership", fillcolor="#fee2e2", color="#b91c1c"];
+    subgroup_ce [label="(1,0) ∈ ZMod 2 × ZMod 3\noutside image (0,s); order 2", fillcolor="#dbeafe", color="#2563eb"];
+    subgroup_fix [label="image witness supplies s;\nnonzero image point has order 3", fillcolor="#dcfce7", color="#16a34a"];
+    subgroup_gap [label="curve decode, twist/on-curve,\ncofactor and subgroup policy", fillcolor="#fef3c7", color="#d97706"];
+    subgroup_bad -> subgroup_ce -> subgroup_fix -> subgroup_gap;
+  }
+
+  subgraph schnorr_row {
+    rank=same;
+    schnorr_bad [label="SCHNORR-SS\nany two accepting\ntranscripts extract", fillcolor="#fee2e2", color="#b91c1c"];
+    schnorr_ce [label="equal challenges: no equation;\nZMod 4 diff 2: nonunit", fillcolor="#dbeafe", color="#2563eb"];
+    schnorr_fix [label="same r + distinct c in prime field\n⇒ x = (s₁−s₂)/(c₁−c₂)", fillcolor="#dcfce7", color="#16a34a"];
+    schnorr_gap [label="group-to-scalar refinement, forks,\nROM/QROM and extractor runtime", fillcolor="#fef3c7", color="#d97706"];
+    schnorr_bad -> schnorr_ce -> schnorr_fix -> schnorr_gap;
+  }
+
+  h0 -> mod_bad -> batch_bad -> poly_bad -> subgroup_bad -> schnorr_bad [style=invis, weight=12];
+  h1 -> mod_ce -> batch_ce -> poly_ce -> subgroup_ce -> schnorr_ce [style=invis, weight=12];
+  h2 -> mod_fix -> batch_fix -> poly_fix -> subgroup_fix -> schnorr_fix [style=invis, weight=12];
+  h3 -> mod_gap -> batch_gap -> poly_gap -> subgroup_gap -> schnorr_gap [style=invis, weight=12];
+}
