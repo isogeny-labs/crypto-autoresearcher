@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independently check a trace-sliced Semaev Boolean quotient certificate.
+"""Independently check an affine-sliced Semaev Boolean quotient certificate.
 
 The named equations are rebuilt by the dossier's independent descent, then
 restricted using its trace identity. A checked map proves nonmembership for
@@ -48,7 +48,7 @@ def substitute(poly, variable, affine_terms):
     return result
 
 
-def trace_slice(record, variable):
+def trace_slice(record, variable, combination_mask=None):
     source_dir = Path(__file__).resolve().parents[1] / 'semaev-m2-last-fall-degree/verify'
     sys.path.insert(0, str(source_dir))
     from cert_check import descend, mk_field
@@ -63,6 +63,19 @@ def trace_slice(record, variable):
     k = len(basis)
     if variables != 2 * k or not k <= variable < variables:
         raise ValueError('slice variable must be a b-coordinate')
+    if combination_mask is not None:
+        if not (0 < combination_mask < (1 << len(polys))):
+            raise ValueError('affine combination mask is out of range')
+        relation = set()
+        for i, poly in enumerate(polys):
+            if combination_mask >> i & 1:
+                relation.symmetric_difference_update(poly)
+        if any(m and (m & (m - 1)) for m in relation):
+            raise ValueError('selected equation combination is not affine')
+        if (1 << variable) not in relation:
+            raise ValueError('selected affine equation does not eliminate variable')
+        affine = sorted(relation - {1 << variable})
+        return variables - 1, [substitute(p, variable, affine) for p in polys], affine
     j = variable - k
     mul, power, trace = mk_field(n, modulus)
     trace_bits = [trace(v) for v in basis]
@@ -186,6 +199,7 @@ def main():
     parser.add_argument('--expect-plan-sha256', required=True)
     parser.add_argument('--expect-descent-source-sha256', required=True)
     parser.add_argument('--variable', type=int, required=True)
+    parser.add_argument('--affine-combination-mask', type=lambda s: int(s, 0))
     parser.add_argument('--expect-certificate-sha256')
     args = parser.parse_args()
     try:
@@ -198,13 +212,16 @@ def main():
         if args.expect_certificate_sha256 and sha256(args.certificate) != args.expect_certificate_sha256:
             raise ValueError('certificate digest mismatch')
         plan = json.loads(args.plan.read_text())
-        n, polys, affine = trace_slice(plan['record'], args.variable)
+        n, polys, affine = trace_slice(plan['record'], args.variable,
+                                        args.affine_combination_mask)
         cert_n, degree, codim, masks, rows = read_certificate(args.certificate)
         if cert_n != n:
             raise ValueError('certificate has wrong sliced variable count')
         result = check_map(n, degree, codim, masks, rows, polys)
         result['eliminated_variable'] = args.variable
         result['substitution_terms'] = affine
+        result['affine_combination_mask'] = (hex(args.affine_combination_mask)
+                                             if args.affine_combination_mask is not None else 'trace')
         result['plan_sha256'] = args.expect_plan_sha256
         result['descent_source_sha256'] = args.expect_descent_source_sha256
         result['certificate_sha256'] = sha256(args.certificate)

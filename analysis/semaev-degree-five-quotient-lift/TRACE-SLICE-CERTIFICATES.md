@@ -1,7 +1,7 @@
-# Trace-sliced certificate route
+# Affine-sliced certificate route
 
 Proposition 2.5b of the [theorem dossier](../semaev-m2-last-fall-degree/theorem-dossier.md)
-proves that, when the equation span contains a nonconstant affine trace
+proves that, when the equation span contains any nonconstant affine
 equation, substituting one Boolean variable preserves every degree-at-most-$d$
 closure for $d\ge2$. A degree-five nonmembership certificate for the sliced
 system therefore proves the same nonmembership for the original system. A
@@ -13,8 +13,28 @@ completed frontier certificate.
 The [n50 polynomial03 frozen plan](n50-poly03-d5-local-no-checkpoint-plan-002.json)
 (SHA-256 `88a92372e9466b0e9ecbb11b1bf5554533955844068f4aa378b79e21e6da3730`)
 has trace zero on all 25 basis vectors. Its trace consequence is constant
-zero, so **this reduction does not apply to n50 polynomial03**. The existing
-n50 D5 continuation retains its original memory, checkpoint, and cost gates.
+zero. However, exact elimination of the quadratic parts of its 50 independently
+descended equations has rank 48. One of the two dependencies is the zero
+polynomial; the other, selected by coefficient mask
+`0x13c4f635ad45c` in the independent descent's polynomial-bit coordinate
+order, is the nonzero affine equation
+
+$$\sum_{j\in J}(a_j+b_j)=0,\qquad
+J=\{0,3,5,6,9,10,12,14,15,17,18,20,23\}.$$
+
+The checker recomputes this combination from the pinned field record and
+rejects it unless it is affine and contains the eliminated variable. Thus
+**n50 polynomial03 can be sliced using this different relation**: eliminate
+variable 25 ($b_0$), leaving 49 variables. Projecting its accepted D4 map
+with codimension 38,629 would have 231,526 monomial rows and a calculated
+1,120,585,872-byte file, versus the retained 1,215,691,872-byte original.
+These sizes follow from the certificate format; no frontier projection or
+D5 run has occurred. The existing n50 D5 continuation retains its original
+memory, checkpoint, and cost gates until a new sliced protocol is frozen.
+The nonzero affine equation also supplies $r=1$ in Proposition 2.5a, so the
+fresh zero count and accepted D4 certificate give the rigorous named-instance
+interval $5\le d_{\rm LFD}\le26$ ($k=25$). This upper bound does not resolve
+whether the last fall degree is five or at least six.
 
 The [n51 polynomial01 request](n51-poly01-d5-stream-request-001.json)
 (SHA-256 `d74ea19216814bcfa2f316fb70a3d785e9be99fc7820c15222d609e093fd5684`)
@@ -29,8 +49,9 @@ variables and preserves the named system's Boolean solution count.
 contain the eliminated variable, renumbering monomials and retaining the
 quotient coordinates. It checks the source digest and shape but does not
 claim to verify closure. `check_trace_slice_certificate.py` reconstructs the
-named Semaev equations with the original independent descent, checks their
-trace consequence, substitutes the variable, and checks surjectivity, all
+named Semaev equations with the original independent descent, checks either
+the trace consequence or an explicit equation-combination mask, substitutes
+the variable, and checks surjectivity, all
 equations, nonzero constant, and every low-kernel variable product. It tests
 surjectivity by rank because a projected map need not retain a literal unit
 row for every quotient coordinate. A passing D4 check supplies a smaller
@@ -46,6 +67,26 @@ The focused test projects it to a five-variable certificate with SHA-256
 and the new checker accepts the independently sliced equations at D4 with
 codimension one. This validates a real named control for the instrument; its
 solution count is also one, so it establishes no new LFD lower bound.
+
+The retained original n50 D4 certificate has SHA-256
+`6a25ce310435e564b5487975c17de90f2903a401e8721d95781cf7049f688719`
+and was accepted with codimension at least 38,629 against a fresh zero count;
+see the [D4 report](reports/n50-poly03-bounded-d4-publication-001/report.md).
+The prospective n50 projection/check commands, after custody and budget
+admission, are:
+
+```sh
+python3 analysis/semaev-degree-five-quotient-lift/slice_trace_certificate.py \
+  /path/to/accepted-n50-degree4.bin /path/to/sliced-n50-degree4.bin \
+  --variable 25 \
+  --expect-source-sha256 6a25ce310435e564b5487975c17de90f2903a401e8721d95781cf7049f688719
+python3 analysis/semaev-degree-five-quotient-lift/check_trace_slice_certificate.py \
+  /path/to/sliced-n50-degree4.bin \
+  --plan analysis/semaev-degree-five-quotient-lift/n50-poly03-d5-local-no-checkpoint-plan-002.json \
+  --expect-plan-sha256 88a92372e9466b0e9ecbb11b1bf5554533955844068f4aa378b79e21e6da3730 \
+  --expect-descent-source-sha256 b6e28168091986b3cb04790f51889723db0ec5838633767bb80a6dc4ac97bd70 \
+  --variable 25 --affine-combination-mask 0x13c4f635ad45c
+```
 
 The retained original n51 D4 certificate has SHA-256
 `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`
@@ -68,6 +109,6 @@ python3 analysis/semaev-degree-five-quotient-lift/check_trace_slice_certificate.
 
 Before a native D5 run, freeze a new protocol with the checked sliced seed,
 source and checker digests, resource envelope, exact count, and independent
-acceptance threshold. The existing unsliced n51 protocol is not silently
+acceptance threshold. Existing unsliced n50 and n51 protocols are not silently
 repurposed. The current daily Spot budget readback exceeds its $25 limit;
 no projection or native frontier run was started under this packet.

@@ -38,8 +38,8 @@ The first two conditions qualify a prospective one-shot instrument; the final co
 
 Unresolved. V1 remains immutable. The V2 runner and control are being prepared prospectively; no frontier D5 run has occurred under either protocol.
 
-The trace-slicing alternative does not apply to this n50 polynomial03 input:
-all 25 basis elements in its frozen plan have field trace zero, so the trace
-consequence has no variable to eliminate. The prospective instrument and its
-different n51 polynomial01 target are recorded in
+The trace consequence does not itself eliminate a variable on this n50 input:
+all 25 basis elements in its frozen plan have field trace zero. A separate
+exact affine relation in the descended equation span does permit a 50-to-49
+variable slice; its coefficient mask and independent-check route are in
 [TRACE-SLICE-CERTIFICATES.md](../analysis/semaev-degree-five-quotient-lift/TRACE-SLICE-CERTIFICATES.md).

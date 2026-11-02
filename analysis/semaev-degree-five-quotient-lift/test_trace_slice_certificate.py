@@ -87,12 +87,38 @@ class TraceSliceCertificateTests(unittest.TestCase):
         root = Path(__file__).resolve().parent
         n50 = json.loads((root / 'n50-poly03-d5-local-no-checkpoint-plan-002.json').read_text())
         sys.path.insert(0, str(root.parent / 'semaev-m2-last-fall-degree/verify'))
-        from cert_check import mk_field
+        from cert_check import descend, mk_field
         record = n50['record']
         _, _, trace = mk_field(record['n'], int(record['modulus_hex'], 16))
         self.assertTrue(all(trace(int(v, 16)) == 0 for v in record['V_basis_hex']))
+        _, original = descend(record['n'], int(record['modulus_hex'], 16),
+                              record['a2'], int(record['a6_hex'], 16),
+                              int(record['z_hex'], 16),
+                              [int(v, 16) for v in record['V_basis_hex']])
+        quadratic = sorted({m for poly in original for m in poly
+                            if bin(m).count('1') == 2})
+        positions = {m: i for i, m in enumerate(quadratic)}
+        pivots = {}
+        for poly in original:
+            row = sum(1 << positions[m] for m in poly if m in positions)
+            while row:
+                bit = row.bit_length() - 1
+                if bit in pivots:
+                    row ^= pivots[bit]
+                else:
+                    pivots[bit] = row
+                    break
+        self.assertEqual(len(pivots), 48)
         with self.assertRaisesRegex(ValueError, 'zero trace'):
             trace_slice(record, 25)
+        relation_mask = 0x13c4f635ad45c
+        n, polys, affine = trace_slice(record, 25, relation_mask)
+        self.assertEqual((n, len(polys)), (49, 50))
+        pairs = (0, 3, 5, 6, 9, 10, 12, 14, 15, 17, 18, 20, 23)
+        expected = {1 << j for j in pairs} | {1 << (25 + j) for j in pairs if j}
+        self.assertEqual(set(affine), expected)
+        with self.assertRaisesRegex(ValueError, 'not affine'):
+            trace_slice(record, 25, 1)
         n51 = json.loads((root / 'n51-poly01-d5-stream-request-001.json').read_text())
         n, polys, affine = trace_slice(n51['record'], 26)
         self.assertEqual((n, len(polys)), (51, 51))
