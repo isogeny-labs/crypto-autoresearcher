@@ -20,7 +20,7 @@ field. The quantifier order keeps these two timing models separate. -/
 theorem adaptive_rlc_cancellation :
     (∀ (F : Type u) [Field F] (ρ : F),
       (-ρ) + ρ * (1 : F) = 0 ∧ (1 : F) ≠ 0) ∧
-    (∀ (F : Type u) [Field F] [Fintype F] (a b : F),
+    (∀ (F : Type u) [Field F] [Fintype F] [DecidableEq F] (a b : F),
       ¬ (a = 0 ∧ b = 0) →
         (Finset.univ.filter (fun ρ : F => a + ρ * b = 0)).card ≤ 1) := by
   constructor
