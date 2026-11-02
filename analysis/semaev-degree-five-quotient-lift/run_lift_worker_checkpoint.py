@@ -101,6 +101,13 @@ def main():
         SEMAEV_CHECKPOINT_REQUEST=str(a.request.resolve()),SEMAEV_CHECKPOINT_CONTEXT=str(a.out/'context.json'),
         SEMAEV_CHECKPOINT_DIR=str(snapshots),SEMAEV_CHECKPOINT_S3_PREFIX=prefix,
         SEMAEV_CHECKPOINT_PRUNE_LOCAL='1',SEMAEV_CHECKPOINT_PUBLISH=str(a.bundle/'checkpoint_export_guard.py'))
+    cadence=req.get('checkpoint_publish_every',1)
+    if type(cadence) is not int or not 1 <= cadence <= 1_000_000:
+        raise ValueError('invalid checkpoint publication cadence')
+    if cadence > 1:
+        if 'checkpoint_cadence_hook.py' not in manifest['files']:
+            raise ValueError('bounded cadence hook absent from worker bundle')
+        env['SEMAEV_CHECKPOINT_PUBLISH']=str(a.bundle/'checkpoint_cadence_hook.py')
     def publish(path):
         if target:subprocess.run(['aws','s3','cp',str(path),target+str(path.relative_to(a.out)),'--only-show-errors'],check=True,timeout=1200)
     def record(name,data):
@@ -176,6 +183,8 @@ def main():
             record('prelaunch-disk.json',disk_admit(root,policy,0 if phase==2 else maximum_snapshot))
             if a.control_source:
                 if not req.get('checkpoint_stop_after') or a.restore_prefix:raise ValueError('control stop not authorized')
+                if cadence > 1 and req['checkpoint_stop_after'] % cadence:
+                    raise ValueError('control stop precedes a scheduled durable checkpoint')
                 env['SEMAEV_CHECKPOINT_STOP_AFTER']=str(req['checkpoint_stop_after'])
             cert=a.out/'certificate.bin'
             code,text=run('produce5',[a.bundle/'bin/quotient_lift_checkpoint',seed,cert,req['chunk_rows'],req['memory_bytes']],req['memory_bytes'])
