@@ -15,3 +15,11 @@ python3 analysis/semaev-degree-five-quotient-lift/rank-check/run_indep_d4_rank.p
 The output root is fixed in the plan. A complete `rank_match` result would establish `U_4=W_4` for this named input when the independent implementation and prior checker evidence are accepted. It would not by itself prove a D5 upper bound: the existing D5 `projection_kills_one` computation still needs a checked refutation witness or an independently verified execution trace. It also would not give a degree-six lower bound; that requires a positive checked D5 dual certificate with codimension above the exact solution count.
 
 The protocol was frozen before this replay. No n47 rank process has been started by preparing these files. Existing n45 local closure and EKS jobs retain their ownership and budgets. The relevant prior-art/definition reading is the theorem dossier and verification record; this replay makes no novelty claim.
+
+The original 40 GiB admission gate did not launch after the n45 panel completed: host `MemAvailable` remained below the required 42 GiB. [Protocol v2](n47-rand00-protocol-002.json) is a filed-before-data amendment with a [new plan](n47-rand00-plan-002.json) and write-once output root. It changes only the child address-space cap to 16 GiB (plus the unchanged 2 GiB host reserve). At most 213,053 Python pivot integers can each hold 213,053 bits, about 6.1 GB of pivot payload even at full rank; 16 GiB leaves room for Python and transient rows. This is a source-level capacity calculation, not a measured peak. The input, independent verifier, runner, rank target, timeout and one-attempt rule are unchanged. Run v2 only after both campaign locks are free and its own memory gate passes:
+
+```sh
+python3 analysis/semaev-degree-five-quotient-lift/rank-check/run_indep_d4_rank.py \
+  --plan analysis/semaev-degree-five-quotient-lift/rank-check/n47-rand00-plan-002.json \
+  --protocol analysis/semaev-degree-five-quotient-lift/rank-check/n47-rand00-protocol-002.json
+```

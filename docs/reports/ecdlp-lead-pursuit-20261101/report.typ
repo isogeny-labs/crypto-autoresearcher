@@ -42,7 +42,7 @@ When a row combined a proved negative subcase with an untested escape, the audit
 - IC engines: coordinate-blind scope of `generic-oracle-arity-cost-floor`; generic-fibre census of `semaev-cover-monodromy`.
 - Prime IC: `generic-table-decomposition`; generic equality-filter scope of `representation-subset-sum`; `self-pairing-prime-order`.
 - Generic: `generic-sqrt-lower-bound`; generic auxiliary-power acquisition in `cheon-aux-acquisition`.
-- Transfer: `cm-canonical-lift-heights`; `one-point-self-pairing`; homomorphic scope of `padic-canonical-section`; class-invariant scope of `prime-field-isogeny-to-weak`; homomorphic scope of `second-torsion-direction`.
+- Transfer: the twelve fixed-arity mechanisms in `cm-canonical-lift-heights`; `one-point-self-pairing`; homomorphic scope of `padic-canonical-section`; class-invariant scope of `prime-field-isogeny-to-weak`; homomorphic scope of `second-torsion-direction`.
 - Structure: generic scopes of `endo-scalar-action-generic`, `isogeny-class-generic-invariance`, and `isogeny-transport-preprocessing`; class-invariant weaknesses in `isogeny-walk-weak-neighbour`; scalar/generic scopes of `p192-class-cm-relations` and `secp256k1-cm-class-audit`.
 - Exotic: the named GGM-simulable scope of `augmented-oracle-ggm`.
 
@@ -55,6 +55,16 @@ The binary SAT/enumeration measurements do not test symmetric Groebner systems a
 Load-bearing cross-checks are `crypto:research/factor_base_arity_review_20261024/README.md`, `crypto:research/prime_factor_base_degree_20261031/parallel_20261031/RESULTS.md`, `crypto:problems/ghs-higher-magic-descent-not-executable.md`, and every atlas row's obstruction, foreclosure, revisit, evidence, and related fields.
 
 No performance result is introduced. This report records disposition and queue semantics only.
+
+== Xedni correction
+
+The later primary-source and kernel-checked review at `crypto@34caae22581045ec59fe779d86f8bf2d495cc14a` found that two xedni rows exceeded JKSST's theorem. Theorem 4.1 says "under certain plausible assumptions"; Lemma 4.1 assumes the selected-lift height/discriminant comparison and Lang, while reduction, useful-relation, cofactor, and adaptive-hazard bridges remain explicit premises.
+
+`LEAD-TRF-global-lift-small-height` and `LEAD-ICP-char0-lifting-xedni-smoothness` are therefore `open_next_step`. Their exact and finite negatives remain recorded. `KR-IC-cd159a` now states the conditional theorem, and `LEAD-EXO-global-lift-height` pursues both the function-field timing and characteristic-zero bridge-composition branches.
+
+The CM row stays suppressed only inside corrected L9: ordinary prime-field Serre--Tate/global CM models, fixed arity 2..9, absolute `C0`, and twelve enumerated mechanisms. Target-dependent arbitrary sections, growing arity or `C0`, and unenumerated families remain outside. The 21/139 totals are unchanged because `closed_known` rows were already pursued.
+
+Primary JKSST PDF SHA-256: `981bf955f7aecc5df4f271837f6653bd7666e5026f59df44196609d4a1dd6bc7`; checked at Section 4, Lemma 4.1, Theorem 4.1, Sections 5--6, and notes 7--8. The sibling proof map is `research/jksst_xedni_audit_20261101/PROOF_MAP.md`.
 
 == Review boundary
 
