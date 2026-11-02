@@ -22,7 +22,9 @@ next_action:
     effect to price. A registered no-drop result would close only the frozen presentations,
     edges and toy scale. Another unit ideal remains non-informative. The existing finite
     witnesses refute the simulator lemma as written, not every corrected transport theorem
-    and not the presentation lead.
+    and not the presentation lead. The Q5 msolve replay rejects only its frozen m = 2 toy
+    presentation and coordinate candidates; it does not test the registered non-unit edge,
+    m >= 4, larger primes, another engine/order, or a complete relation/rank/linear-algebra path.
 best_measured: >-
   Binary Koblitz m=3 (PinX3, 2^(l+1) eliminations per probe; not an attack, overall about 2^(2n/3),
   worse than rho), 32 curves x 32 geometric V, 2000 probes per cell, two-way crossed random effects,
@@ -34,7 +36,11 @@ best_measured: >-
   variables: domain and codomain ranks were both [0,1,9,40,114], but both Groebner bases were
   {1}. Its registered label is `degenerate-unit-ideal`, so it supplies no nontrivial-instance
   information. Separately, the R6.8 identity-deleting/arbitrary-lift transport simulator has
-  exact finite counterexamples and its closure claim was withdrawn.
+  exact finite counterexamples and its closure claim was withdrawn. In the frozen Q5 component
+  replay, msolve 0.6.5 processed 6,486 m = 2 toy systems with zero gate failures or timeouts:
+  the Mobius-presented mu_k and Velu-chain arms had identical F4 matrix-cell counts in 16/16
+  comparisons, while the registered coordinate search improved 0/16. The tested primes were
+  257, 1153, 7681 and 12289 at k = 3,4; there was no ECDLP, rho or full-pipeline row.
 evidence:
 - repo: crypto-autoresearcher
   path: experiments/EXP-DREG-dd668d/specification.yaml
@@ -83,6 +89,12 @@ evidence:
 - repo: crypto
   path: problems/transport-oracle-exact-simulation-gap.md
   note: exact finite counterexamples refute identity removal and arbitrary single-lift steps; corrected theorem open
+- repo: crypto
+  ref: 20e19b9fcbd790f86bf66be41d3b25e5cc3ceced
+  path: research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md
+  note: >-
+    frozen msolve F4 replay: presentation explains the finite m = 2 toy cost and the selected
+    coordinates improve 0/16; m >= 4, larger scales, other engines and end-to-end cost remain open
 ledger_refs:
 - H-ICINV-6c7920
 - H-ICINV-d5e351
@@ -101,6 +113,8 @@ forecloses:
 - the R6.8 identity-deleting and arbitrary-single-lift simulator lemma as written
 - a curve effect above the registered threshold in the two tested geometric-V Koblitz cohorts
 - inferring global curve-model or isogeny invariance from those bounded toy cohorts
+- the registered Q5b improvement criterion for the frozen m = 2 toy presentation/coordinate
+  candidate family under msolve 0.6.5 DRL
 areas:
 - ICINV
 - DREG

@@ -12,6 +12,8 @@ Xedni correction evidence: `crypto@34caae22581045ec59fe779d86f8bf2d495cc14a`
 
 Latest scoped filter evidence: `crypto@b825c0c0d535215a6b01571350fa5b54a05ea0fd`
 
+Latest scoped F4-presentation evidence: `crypto@20e19b9fcbd790f86bf66be41d3b25e5cc3ceced`
+
 ## Decision
 
 The existing 159-row ECDLP atlas was reviewed family by family. That review also identified and
@@ -183,6 +185,15 @@ stated exactly: it covers filters that see only generic group operations and enc
 Coordinate-reading predicates are outside that theorem. No disposition or family total changes:
 the atlas remains **160 total / 140 pursued / 20 scoped obstructions**.
 
+The later Q5 replay at
+`crypto:research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md`
+ran msolve F4 on 6,486 frozen `m=2` toy systems with zero gate failures or timeouts. The
+Möbius-presented μ_k and Vélu-chain arms had identical matrix-cell counts in 16/16 comparisons,
+and the registered coordinate search improved 0/16. That rejects only the tested toy
+presentations/candidates: `m>=4`, larger primes, other engines/orders, relation collection,
+rank, linear algebra, and complete ECDLP/rho cost remain open. The two carrier cards stay
+`open_next_step` and `open_blocked`; counts do not change.
+
 ## Evidence and reproducibility
 
 The canonical row evidence is stored beside each lead under `knowledge/leads/ecdlp/`. The policy
@@ -199,6 +210,7 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - `crypto:research/jksst_xedni_audit_20261101/PROOF_MAP.md`
 - `crypto:research/eccp131_representation_filter_20261102/REPORT.md`
 - `crypto:problems/eccp131-full-parameter-index-calculus.md`
+- `crypto:research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md`
 - `crypto:docs/ecdlp-hardness-corpus/REPORT.md`
 - `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`
 - `ledger/proposals/IDEA-20261024-a2b05d.yaml`
@@ -208,8 +220,8 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - the `obstruction`, `forecloses`, `revisit_when`, `evidence`, and `related` fields of all 160
   atlas rows.
 
-No performance result is introduced by this report. It records a disposition audit and the
-queue invariant.
+No end-to-end ECDLP performance result is introduced by this report. It records a disposition
+audit, scoped component evidence, and the queue invariant.
 
 ## Review boundary
 

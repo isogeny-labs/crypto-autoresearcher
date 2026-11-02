@@ -44,7 +44,9 @@ next_action:
     Kummer/Dickson/torus/isogeny-tower cells and moves that bounded ladder to exhausted_at_scale;
     d_F flat in t at m >= 4 against the shape-matched null would be the first bounded-degree
     prime-field decomposition and goes to Stage B (end to end against matched rho with the
-    section 5a band). A timeout, allocation failure or unrun cell is no disposition evidence.
+    section 5a band). The Q5 msolve component replay is an m = 2 presentation control only;
+    its finite no-improvement verdict cannot decide those m >= 4 degree, rank or complete-cost
+    gates. A timeout, allocation failure or unrun cell is no disposition evidence.
   blocked_by: >-
     Route and custody: isolab.eks.request/v1 accepts only ecbench specs, so the frozen isolab/LAUNCH.md
     jobs (pkm_tower_pilot) need the harness-host isolab_k8s_run route (crypto docs/session-logs/2026-10-28.md);
@@ -70,7 +72,11 @@ best_measured: >-
   coordinates make two consecutive nondegenerate cyclic 2-isogeny Velu x-steps simultaneously
   monomial; for odd ell >= 3, a single Velu-Kohel N/psi^2 step is nonmonomial under the stated
   unit and kernel hypotheses. The bridge from density-one reduction in the whole chain and
-  remaining denominator-leading forms is still open.
+  remaining denominator-leading forms is still open. A frozen msolve 0.6.5 F4 replay on 6,486
+  m = 2 toy systems had zero gate failures/timeouts: Mobius-presented mu_k and the Velu chain
+  had identical matrix-cell counts in 16/16 comparisons, the Velu/native gap was 1.32x-1.43x,
+  and the registered coordinate selection improved 0/16. This is component evidence at
+  p <= 12289 and k = 3,4, not an m >= 4 or end-to-end IC result.
 evidence:
 - repo: crypto
   path: research/notes/index-calculus/RESEARCH_PKM_TOWER_ORACLE.md
@@ -112,6 +118,12 @@ evidence:
     merged bridge at efeff221f0: kernel-checked Velu monomial-coordinate obstructions and exact
     hypotheses; section "Scope" retains the whole-chain density-one, denominator-leading,
     homomorphism and odd-degree bridge gaps
+- repo: crypto
+  ref: 20e19b9fcbd790f86bf66be41d3b25e5cc3ceced
+  path: research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md
+  note: >-
+    deterministic msolve F4 component replay for the frozen m = 2 toy presentations; no
+    relation collection, rank, linear algebra, matched rho or m >= 4 discriminator
 - repo: crypto
   path: research/ic_sweeper_20261024/README.md
   note: >-
@@ -166,6 +178,7 @@ related:
 - LEAD-ICE-prime-field-semaev-solving-degree
 - LEAD-ICP-algebraic-membership-factor-base
 - LEAD-ICE-descent-closure-degree-at-scale
+- LEAD-ICE-curve-presentation-invariance
 forecloses:
 - Petit-Kosters-Messeng tower factor base over a prime field
 - isogeny-chain or Kummer tower factor base with auxiliary variables

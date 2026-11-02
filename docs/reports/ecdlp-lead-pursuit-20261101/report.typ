@@ -54,7 +54,7 @@ The binary SAT/enumeration measurements do not test symmetric Groebner systems a
 
 Load-bearing cross-checks are `crypto:research/factor_base_arity_review_20261024/README.md`, `crypto:research/prime_factor_base_degree_20261031/parallel_20261031/RESULTS.md`, `crypto:problems/ghs-higher-magic-descent-not-executable.md`, and every atlas row's obstruction, foreclosure, revisit, evidence, and related fields.
 
-No performance result is introduced. This report records disposition and queue semantics only.
+No end-to-end ECDLP performance is claimed; this is a scoped-evidence and queue audit.
 
 == Xedni correction
 
@@ -79,6 +79,8 @@ This additive correction changes IC engines from 2/18 to *1 obstructed / 19 purs
 The exact ECCp-131 study at `crypto@b825c0c0d535215a6b01571350fa5b54a05ea0fd` evaluated 3,450 frozen simple 1--8-bit coordinate configurations in each of six small-x/random-base cells at `B=64,128,256`. Every recorded held-out Wilson lower enrichment ratio was below one (0.6093--0.7783). The two positive small-x point estimates were post-add predicates that first require all $Theta(B^2)$ pair sums. Exact-width F4/F5 was unavailable and unmeasured; local clocks and performance claims remain invalid.
 
 This rejects only that finite predicate family. Learned multibit hashes, algebraic buckets, larger bases, other curves, and any coordinate-visible filter with a proved subquadratic pair generator remain live under `LEAD-EXO-four-list-ktree-join`. The generic representation-subset-sum obstruction is now explicitly limited to group-operation/equality-only filters. Counts remain *160 total / 140 pursued / 20 scoped obstructions*.
+
+Q5 at `crypto@20e19b9fcbd790f86bf66be41d3b25e5cc3ceced` ran msolve F4 on 6,486 frozen `m=2` toy systems with zero failures/timeouts: A2/B matrix cells matched 16/16 and registered coordinate improvement was 0/16. This forecloses only that toy family. Its carrier cards remain `open_next_step` / `open_blocked`; `m>=4`, larger primes/scales, other engines/orders, relation collection, useful rank, linear algebra, and end-to-end cost remain open. Counts do not change.
 
 == Review boundary
 
