@@ -1,0 +1,127 @@
+# =============================================================================
+# CORR-20261102-7e3a91 -- Scopes one sentence of CORR-20260923-064d0d.
+# Its bullet "FHJRV's Prop. 8(i) / Prop. 13 polynomial-ring form requires b to
+# be a square ... That form is therefore unavailable for them" holds for
+# coordinates with phi(-P) = phi(P) (the Kummer / x class) only. For the
+# u = x/y class on a double-odd curve, the quotient IS a polynomial-ring form.
+# Written by the Coordinator from the crypto desk audit
+# research/ecgfp5_representation_audit_20261102. No archived or frozen record
+# is edited; CORR-20260923-064d0d stays as written.
+# =============================================================================
+correction:
+  id: CORR-20261102-7e3a91
+  recorded_at: '2026-11-02'
+  recorded_by: coordinator
+  record_type: claim
+  record_type_note: >-
+    "claim" is the closest permitted token (candidate | claim | run). The
+    corrected artifact is one bullet of a correction's corrected_value: a
+    statement about when a construction exists. It is not a run's status or
+    metric. Precedent for the closest-token choice: CORR-20260923-064d0d.
+  record_id: CORR-20260923-064d0d
+  goal_id: GOAL-GFPN-380702
+  supersedes: []
+
+  field: >-
+    CORR-20260923-064d0d, corrected_value, the sixth bullet ("FHJRV's
+    Prop. 8(i) / Prop. 13 polynomial-ring form requires b to be a square in
+    F_q, or full 2-torsion (Remark 9). EcGFp5-shaped double-odd curves have b
+    a non-square ... That form is therefore unavailable for them."). The same
+    reading appears in KN-OPEN-9b4a2b ("FHJRV's ring form does not apply") and
+    is inherited by KN-OPEN-814b4c through its source_refs.
+
+  prior_value: >-
+    The FHJRV polynomial-ring form is unavailable for EcGFp5-shaped double-odd
+    curves, because b is a non-square in F_q and E(F_q) has only one rational
+    2-torsion point. Stated without restriction on the coordinate.
+
+  corrected_value: >-
+    The sentence holds for coordinates phi with phi(-P) = phi(P), i.e. the
+    Kummer / x class, whose deck involution is P -> -P. For those, the ring
+    form for the 2-torsion action needs b a square or full 2-torsion, and
+    double-odd curves have neither. It does NOT hold for the second degree-2
+    class.
+    - On a double-odd curve, degree-2 coordinates over F_q fall into exactly
+      two inequivalent classes: Kummer (x, involution P -> -P) and u = x/y
+      (involution P -> N - P), where N = (0, 0) is the rational 2-torsion
+      point.
+    - Derivation (two lines, checkable): on y^2 = x(x^2 + a x + b),
+      P + N = (b/x, -b y/x^2). So u(P + N) = (b/x) / (-b y/x^2) = -x/y =
+      -u(P), and u(-P) = -u(P). The audit also checked u(P + N) = -u(P)
+      numerically on 200 points at p = 4111.
+    - Consequently the summation system in u is invariant under even sign
+      changes and S_m, and its quotient lies in a polynomial ring:
+      H_R = A(s) + pi B(s), in K[s_1, ..., s_{m-1}, pi], with
+      s_k = e_k(u_i^2), pi = prod u_i and the two-term quadric s_m - pi^2.
+      This is the FHJRV Prop. 13 shape. That proposition does not need
+      phi(-P) = phi(P) (audit reading of FHJRV).
+    - Measured ideal degree, equal to 2^{(m-1)^2}, with the planted point
+      recovered in every case: D = 16 at m = 3 (p = 4111 and 262231) and
+      D = 512 at m = 4 (p = 4129 and 262153). The main session re-measured
+      the m = 4, p = 4129 cell with msolve.
+    - m = 4 is even. The rescaled lambda construction recorded in the last
+      bullet of CORR-20260923-064d0d needs odd extension degree, so the u
+      ring form also covers a case that construction does not.
+    - At m = 5 the u system would have 6 unknowns of degrees (8,8,8,8,8,2),
+      with the same supports as the current quotient (1287 and 792 terms) and
+      s_5 - pi^2 replacing the dense w^2 - Q(s). That cell has NOT been run.
+      The audit expects D = 65,536 and no degree fall. That is an
+      expectation, not a measurement.
+    Every other bullet of CORR-20260923-064d0d is untouched, including the
+    lambda construction and its square-analogue degrees.
+
+  reason: >-
+    Desk audit in the sibling crypto repository,
+    research/ecgfp5_representation_audit_20261102 (branch
+    claude/point-decomposition-literature-taddl7, commit 01205f917). The basis
+    has two parts.
+    (1) A derivation: the identity u(P + N) = -u(P) above, which the
+    Coordinator re-derived from the addition law, together with the audit's
+    reading of FHJRV Prop. 13.
+    (2) Toy-scale ideal degrees for the u ring form at m = 3 and m = 4, two
+    primes each, planted point recovered. These are empirical, at toy primes
+    only.
+    This record narrows a statement. It does not reject a theory, so the
+    refutation-artifact ladder for weaken / reject_scoped does not apply.
+    The narrowing is still declared as derivation plus empirical_only toy
+    degrees.
+
+  evidence_artifacts:
+    - crypto:research/ecgfp5_representation_audit_20261102/README.md
+    - crypto:research/ecgfp5_representation_audit_20261102/src/ringu.py
+    - crypto:research/ecgfp5_representation_audit_20261102/src/variants.py
+    - crypto:research/ecgfp5_representation_audit_20261102/src/fq.py
+    - crypto:research/ecgfp5_representation_audit_20261102/runs/
+    - research/equation-schemes-20260905/retrieved-pages/hal-00935050.txt
+    - inputs/PORNIN-2022-274-ECGFP5/paper_fulltext.md
+    - ledger/corrections/CORR-20260923-064d0d.yaml
+    - knowledge/open-problems/KN-OPEN-9b4a2b.md
+    - knowledge/open-problems/KN-OPEN-814b4c.md
+
+  effect_on_dependent_records: >-
+    - CORR-20260923-064d0d: not edited. Its sixth bullet is read with this
+      scope from now on.
+    - KN-OPEN-9b4a2b (already superseded) and KN-OPEN-814b4c: the scoping
+      enters the knowledge layer by superseding KN-OPEN-814b4c with
+      KN-OPEN-c52f07. That entry carries 814b4c's open items unchanged and
+      adds the u-class ring form at m = 5 as a measurable item.
+    - IDEA-20260905-d0fee4: its conclusion (no coordinate E -> P^1 beats the
+      degree-2 law) holds. Its step (C2) fails for coordinates that factor
+      through an isogeny: x' o phi_<N> has degree 4 but per-variable degree
+      2^{m-1}, below (C2)'s n^{m-2} bound for m >= 4. "Kummer line optimal"
+      should read "Kummer and u classes tie". That proposal is a candidate
+      record and is not corrected here; a separate candidate-type correction
+      is owed.
+    - Lead atlas: LEAD-EXO-curve-model-representation (obstruction) and
+      LEAD-ICP-gfp5-symmetrized-gaudry (revisit_when, evidence) are updated
+      in place, as the atlas rules allow.
+    - No hypothesis, experiment, run or goal status changes.
+
+  scope_note: >-
+    Scoped to double-odd curves y^2 = x(x^2 + a x + b) over F_{p^n} with b a
+    non-square (EcGFp5 shape), and to degree-2 coordinates. The degree
+    measurements are toy-scale (p <= 262231, m <= 4). Nothing here says the u
+    ring form is cheaper to solve than the current quotient at m = 5, or
+    changes any EcGFp5 security estimate. The cited audit is pushed on a
+    crypto branch and is not yet merged to crypto main; until that PR merges,
+    the crypto: evidence paths resolve on the branch only.
