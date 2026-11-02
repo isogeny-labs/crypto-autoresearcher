@@ -2,9 +2,13 @@
 """Independent checker controls: legal closure, degree refusal and tampering."""
 
 import copy
+import hashlib
+import struct
+import tempfile
 import unittest
 from pathlib import Path
 
+from seed_kernel import SeedKernel
 from verify_primal_witness import check, named_system, system_digest
 
 
@@ -92,6 +96,38 @@ class WitnessChecks(unittest.TestCase):
         mutated["terminal"] = 1
         with self.assertRaisesRegex(ValueError, "not the constant one"):
             check(mutated, system_digest(3, mutated["generators"]))
+
+    def test_checked_kernel_premise(self):
+        # B_1 monomials x0,x1,1; pi(x0)=pi(x1)=0, pi(1)=1.
+        seed_bytes = struct.pack("<4q", 2, 1, 3, 1)
+        seed_bytes += struct.pack("<3Q", 1, 2, 0)
+        seed_bytes += struct.pack("<3Q", 0, 0, 1)
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "seed.bin"
+            path.write_bytes(seed_bytes)
+            digest = hashlib.sha256(seed_bytes).hexdigest()
+            witness = copy.deepcopy(WITNESS)
+            witness["steps"] = [
+                {"op": "kernel", "terms": [2]},
+                {"op": "mul", "ref": 0, "variable": 0},
+                {"op": "input", "index": 2},
+                {"op": "xor", "refs": [1, 2]},
+            ]
+            witness["terminal"] = 3
+            with self.assertRaisesRegex(ValueError, "requires a checked D4 seed"):
+                check(witness, DIGEST)
+            with self.assertRaisesRegex(ValueError, "digest mismatch"):
+                SeedKernel(path, "0" * 64)
+            seed = SeedKernel(path, digest)
+            try:
+                result = check(witness, DIGEST, seed)
+                self.assertEqual((result["status"], result["kernel_leaves"]),
+                                 ("valid_given_accepted_seed_and_kernel_equality", 1))
+                witness["steps"][0]["terms"] = [0]
+                with self.assertRaisesRegex(ValueError, "not in the D4 quotient kernel"):
+                    check(witness, DIGEST, seed)
+            finally:
+                seed.close()
 
 
 if __name__ == "__main__":
