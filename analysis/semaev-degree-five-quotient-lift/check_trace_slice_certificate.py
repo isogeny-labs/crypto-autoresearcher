@@ -187,7 +187,7 @@ def check_map(n, degree, codim, masks, rows, polys):
         for indices in basis:
             if reduce(operator.xor, (products[j] for j in indices), 0):
                 raise ValueError('C2: multiplication fails at variable %d' % variable)
-    return {'status': 'valid_trace_slice_nonmembership', 'degree': degree,
+    return {'status': 'valid_affine_slice_nonmembership', 'degree': degree,
             'variables': n, 'codimension_lower_bound': codim,
             'generators': len(polys), 'low_kernel_dimension': len(kernel)}
 

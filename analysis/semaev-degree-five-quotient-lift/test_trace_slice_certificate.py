@@ -56,7 +56,7 @@ class TraceSliceCertificateTests(unittest.TestCase):
             self.assertNotIn(1, small_rows)
             self.assertEqual(check_map(n, degree, codim, small_masks, small_rows,
                                        [substitute({0, 1, 2}, 0, [0, 2])])['status'],
-                             'valid_trace_slice_nonmembership')
+                             'valid_affine_slice_nonmembership')
             with self.assertRaises(FileExistsError):
                 project(source, output, 0, source_hash)
 
@@ -96,7 +96,30 @@ class TraceSliceCertificateTests(unittest.TestCase):
             cert_n, degree, codim, masks, rows = read_certificate(output)
             self.assertEqual((cert_n, degree, codim), (n, 4, 1))
             result = check_map(n, degree, codim, masks, rows, polys)
-            self.assertEqual(result['status'], 'valid_trace_slice_nonmembership')
+            self.assertEqual(result['status'], 'valid_affine_slice_nonmembership')
+
+    def test_retained_nontrace_affine_certificate_projects_and_checks(self):
+        root = Path(__file__).resolve().parent
+        fixture = root / 'validation/cascade-20261029-v2/0'
+        source = fixture / 'degree4.bin'
+        source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+        self.assertEqual(source_hash,
+                         'cfe306125fef4482fb86b15966c7be5ec6e26ed5ca09d5addafd2c5f9e079c4a')
+        self.assertIn('VALID: 1 is not in W_4(F)',
+                      (fixture / 'check4.stdout.txt').read_text())
+        record = {'n': 6, 'modulus_hex': '43', 'a2': 0, 'a6_hex': '3',
+                  'z_hex': '2', 'V_basis_hex': ['1', '2', '4']}
+        n, polys, affine = trace_slice(record, 3, 0x24)
+        self.assertEqual((n, affine), (5, [1]))
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / 'sliced.bin'
+            projected = project(source, output, 3, source_hash)
+            self.assertEqual(projected['certificate_sha256'],
+                             '59cd20d3de0fde08b5d34490a9895a0f7c3d14830b8136e78e926260f28741e0')
+            cert_n, degree, codim, masks, rows = read_certificate(output)
+            self.assertEqual((cert_n, degree, codim), (5, 4, 3))
+            result = check_map(n, degree, codim, masks, rows, polys)
+            self.assertEqual(result['status'], 'valid_affine_slice_nonmembership')
 
     def test_frontier_candidate_selection_uses_actual_trace(self):
         root = Path(__file__).resolve().parent

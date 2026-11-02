@@ -74,6 +74,17 @@ and the new checker accepts the independently sliced equations at D4 with
 codimension one. This validates a real named control for the instrument; its
 solution count is also one, so it establishes no new LFD lower bound.
 
+The separate retained n6 `cascade-20261029-v2/0` control exercises the
+**nontrace affine-combination path** needed by n50. All three basis traces
+vanish, but the independently descended equation combination `0x24` is
+$a_0+b_0=0$. Its original-checker-accepted D4 certificate has SHA-256
+`cfe306125fef4482fb86b15966c7be5ec6e26ed5ca09d5addafd2c5f9e079c4a`.
+Projection gives a five-variable D4 map with SHA-256
+`59cd20d3de0fde08b5d34490a9895a0f7c3d14830b8136e78e926260f28741e0`;
+the new checker accepts codimension three after reconstructing the six named
+equations. The fixture's count is three, so this is qualification of the
+nontrace instrument, not a new LFD bound.
+
 The retained original n50 D4 certificate has SHA-256
 `6a25ce310435e564b5487975c17de90f2903a401e8721d95781cf7049f688719`
 and was accepted with codimension at least 38,629 against a fresh zero count;
