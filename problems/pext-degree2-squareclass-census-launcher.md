@@ -100,3 +100,32 @@ then exact curve/T/structure joins. Scalar/descent/lift, Type2, original geometr
 P3/descriptive q13 H1 analysis, exports/checkpoints and frozen launch bindings
 remain required. See the [fresh classes report](../experiments/EXP-PEXT-bf8f96/reports/classes-20261102/report.md).
 The original exit/admission criteria and scientific/goal statuses remain unchanged.
+
+
+## Full-cohort input progress, 2026-11-02
+
+The [compact input producer](../experiments/EXP-PEXT-bf8f96/implementation/compact_class_inputs.rs)
+and [separate checker](../experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py)
+now materialize and verify every prescribed class cohort without whole-member JSON:
+q3/n5 488 classes / 117,370 nonsingular normalized members; q5/n3 252 / 15,500;
+q7/n3 690 / 117,306; q11/n3 2,662 / 1,770,230; descriptive q13/n3 4,400 /
+4,824,612. The checker reconstructs disjoint complete residual orbits with independent
+polynomial arithmetic and exact family cardinalities. The previous input-size
+obstruction for these cohorts is resolved within Q<=2197/10,000,000-slot bounds.
+
+The [legacy bijection](../experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-q3-n5-bijection.json)
+is newly materialized and verified for all 488 historical role=class rows, using
+hash-pinned field/builder/fixture identities and literal representative-to-old
+cubic isomorphism witnesses. All old models and new classes occur once; model
+coefficients are interpreted in polynomial-basis encoding. No archived genus/order
+outcomes affect input selection. Four source-bound software test methods, all five
+full input checks and the independent bijection replay pass. See the
+[fresh report](../experiments/EXP-PEXT-bf8f96/reports/cohorts-20261102/report.md)
+and exact commands/hash log for this completed input-construction component.
+
+Next join the byte-bound classes with all rational-T cosets and projective
+structures, scalar-preserving quartic transport and exact cross-shard coverage.
+Connectedness/geometric genus, Frobenius descent/Type2, original geometric P3 and
+descriptive q13 H1 analysis, exports/checkpoints and frozen launcher/runtime
+bindings remain. Original admission/exit criteria and scientific/goal statuses
+are unchanged; the experiment remains review_required/unapproved.
