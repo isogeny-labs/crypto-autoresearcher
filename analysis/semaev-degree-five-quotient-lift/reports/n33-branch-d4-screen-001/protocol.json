@@ -19,6 +19,26 @@
         "variable_ledger",
         "analysis_plan"
       ]
+    },
+    {
+      "changes": [
+        "Add FULL_CLOSURE=1 and two fixed full-replay arms.",
+        "Compare complete dimensions and membership against native branches."
+      ],
+      "filed": "2026-11-02",
+      "filed_before_affected_data": true,
+      "id": "A2",
+      "reason": "Independent implementation stops at first membership and so cannot match the native full fixed-point rank; both early results are retained.",
+      "supersedes_fields": [
+        "arms",
+        "analysis_plan",
+        "decision_rule",
+        "execution",
+        "sample_size",
+        "stopping_rules",
+        "metrics",
+        "variable_ledger"
+      ]
     }
   ],
   "analysis_plan": {
@@ -28,11 +48,13 @@
       "retained fresh-n33-tr0-01 input.sys SHA-256 25d5079098df3c122d39b0decd89713256e9bc78b18af461eb3226c47467c05e",
       "code/restrict.py SHA-256 310873f642ab1fc65a9e229a39a3f75c6bdb92b66d809eff6b99d95459ba1f9b",
       "retained lfdclose2 SHA-256 f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04",
-      "verify/indep_verify.py SHA-256 7a694a27d794c40565fd0366a1883a883705fb5f69fecedafdf80a8c8ffc92c0"
+      "verify/indep_verify.py SHA-256 7a694a27d794c40565fd0366a1883a883705fb5f69fecedafdf80a8c8ffc92c0",
+      "Full-closure independent Python source SHA-256 d44608877d0731646978a52dd4143d04fe51c0d3359d3317d2bdb9d299b2b875"
     ],
     "outputs": [
       "Two restricted input hashes, exact W4 closure transcripts and terminal statuses; no LFD upper claim until independently checked membership witnesses.",
-      "Two independently reconstructed branch closure transcripts and agreement table, or explicit incomplete status."
+      "Two independently reconstructed branch closure transcripts and agreement table, or explicit incomplete status.",
+      "Two complete independent closure transcripts with hashes and terminal statuses."
     ],
     "script": {
       "path": "analysis/semaev-m2-last-fall-degree/code/restrict.py",
@@ -157,6 +179,68 @@
         "variable": 0
       },
       "role": "reference"
+    },
+    {
+      "description": "Independent complete W4 fixed-point replay of variable 0 fixed to 0.",
+      "id": "full-independent-0",
+      "instrument": {
+        "binary_sha256": null,
+        "build": [
+          [
+            "reuse",
+            "retained independent Python source"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "FIX": "0=0",
+          "FULL_CLOSURE": "1",
+          "NOCOUNT": "1"
+        },
+        "flags": {
+          "source_sha256": "d44608877d0731646978a52dd4143d04fe51c0d3359d3317d2bdb9d299b2b875"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "memory_bytes": 4294967296,
+        "value": 0,
+        "variable": 0
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Independent complete W4 fixed-point replay of variable 0 fixed to 1.",
+      "id": "full-independent-1",
+      "instrument": {
+        "binary_sha256": null,
+        "build": [
+          [
+            "reuse",
+            "retained independent Python source"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "FIX": "0=1",
+          "FULL_CLOSURE": "1",
+          "NOCOUNT": "1"
+        },
+        "flags": {
+          "source_sha256": "d44608877d0731646978a52dd4143d04fe51c0d3359d3317d2bdb9d299b2b875"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "memory_bytes": 4294967296,
+        "value": 1,
+        "variable": 0
+      },
+      "role": "reference"
     }
   ],
   "authors": [
@@ -200,10 +284,10 @@
     "interval": "none, exact",
     "multiple_comparison_correction": "none",
     "statistic": "none",
-    "text": "If both native and independent closures report W4_one=1 on each fixed branch, record independently reproduced exact-computation evidence and seek explicit membership witnesses before calling LFD=5 certified.",
-    "threshold": "all four complete branch outcomes W4_one=1 with matching dimensions per branch",
+    "text": "Native and full independent closures must report W4_one=1 and matching complete dimensions for both branches. With accepted original D4 nonmembership and zero count, Lemma 1.3 gives exact LFD=5 for this named input.",
+    "threshold": "both branches W4_one=1 in native and full independent runs, with all cumulative dimensions matching",
     "verdict_vocabulary": [
-      "independently_reproduced_candidate",
+      "independently_reproduced_exact_lfd5",
       "discordant",
       "incomplete",
       "resource_capped",
@@ -234,13 +318,13 @@
       "infrastructure_only": true,
       "max_attempts": 1
     },
-    "timeout_seconds": 10800
+    "timeout_seconds": 18000
   },
   "freeze": {
     "status": "frozen",
-    "protocol_sha256": "0eb4390f77b6c793bd2cda7c93b2449818d478ba97d80d04719d2f536fd164c7",
-    "commit": "f1473cacbfe90400925c6767af5ecc8dbeff7810",
-    "frozen_at": "2026-11-02T20:14:42Z",
+    "protocol_sha256": "806f6900d747a1548248c95b22b38b8dd24b18b90ff63d9892e269bab0003e26",
+    "commit": "09ec70d5dbe172c6b04bfeff1c80de60956a3db9",
+    "frozen_at": "2026-11-02T20:20:17Z",
     "filed_before_affected_data": true
   },
   "hypotheses": [],
@@ -312,10 +396,21 @@
         "source": "independent.stdout.txt contains_one",
         "uncertainty": "none_exact",
         "unit": "Boolean"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Cumulative dimensions after complete fixed point with FULL_CLOSURE=1.",
+        "id": "full_independent_dimensions",
+        "kind": "exact",
+        "name": "independent complete W4 dimensions",
+        "resolution": "1",
+        "source": "full-independent.stdout.txt W4 dims",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
       }
     ]
   },
-  "protocol_id": "SEMAEV-N33-TR0-01-BRANCH-D4-SCREEN-20261102-V2",
+  "protocol_id": "SEMAEV-N33-TR0-01-BRANCH-D4-SCREEN-20261102-V3",
   "question": "Do both fixed branches a_0=0 and a_0=1 of the named n33 system refute at W4, making an exact-degree-five upper-bound proof worth certifying?",
   "randomization": {
     "arm_order": "fixed",
@@ -348,7 +443,7 @@
   },
   "repository": "crypto-autoresearcher",
   "sample_size": {
-    "instances": 4,
+    "instances": 6,
     "power": {
       "alpha": 0.05,
       "correction": "none",
@@ -358,10 +453,10 @@
       "tests_in_family": 1
     },
     "preflight_runtime": {
-      "estimated_total_seconds": 10800,
+      "estimated_total_seconds": 18000,
       "fixed_seconds": 0,
-      "measured_on": "Upper watchdog envelope only; no measured runtime estimate.",
-      "per_sample_seconds": 2700,
+      "measured_on": "Upper watchdog envelope only, no measured runtime estimate.",
+      "per_sample_seconds": 3000,
       "threads": 1
     },
     "replicates": 1,
@@ -383,6 +478,11 @@
       "kind": "fixed_n",
       "preregistered": true,
       "rule": "Run exactly one independent Python closure for each fixed branch 0=0 and 0=1, each capped at 3600 seconds and 4 GiB. Retain terminal outputs. No retry or alternate variable."
+    },
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Exactly one full independent W4 closure for each fixed branch, each capped at 3600 seconds and 4 GiB, no retry."
     }
   ],
   "study_dir": "analysis/semaev-degree-five-quotient-lift",
@@ -415,6 +515,21 @@
         ],
         "id": "independent-agreement",
         "threshold": "same W4_one and dimensions for matching branch"
+      },
+      {
+        "arms": [
+          "a0-0",
+          "a0-1",
+          "full-independent-0",
+          "full-independent-1"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "instrument",
+          "branch"
+        ],
+        "id": "full-fixed-point-agreement",
+        "threshold": "W4_one and all cumulative dimensions match per branch"
       }
     ],
     "crosses_map": false,
@@ -443,9 +558,14 @@
         "how": "Pinned Python source reconstructs descent by Moebius interpolation and computes closure with integer row echelonization.",
         "name": "independent instrument",
         "treatment": "fixed"
+      },
+      {
+        "how": "FULL_CLOSURE=1 on the two full independent arms.",
+        "name": "early stop",
+        "treatment": "fixed"
       }
     ],
     "independent": []
   },
-  "version": 2
+  "version": 3
 }
