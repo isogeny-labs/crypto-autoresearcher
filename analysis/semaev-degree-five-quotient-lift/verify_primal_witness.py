@@ -27,7 +27,7 @@ def popcount(mask):
     return bin(mask).count("1")
 
 
-def check(document, expected_system_sha256):
+def check(document, expected_system_sha256, seed_kernel=None):
     if document.get("schema") != "semaev.boolean-primal-witness/v1":
         raise ValueError("wrong schema")
     nvars, degree = document["variables"], document["degree"]
@@ -54,6 +54,7 @@ def check(document, expected_system_sha256):
     if digest != expected_system_sha256:
         raise ValueError("generator-list digest mismatch")
     rows = []
+    kernel_leaves = 0
     for step in document["steps"]:
         op = step.get("op")
         if op == "input" and set(step) == {"op", "index"}:
@@ -61,6 +62,14 @@ def check(document, expected_system_sha256):
             if type(index) is not int or not 0 <= index < len(sources):
                 raise ValueError("invalid generator index")
             row = sources[index]
+        elif op == "kernel" and set(step) == {"op", "terms"}:
+            if seed_kernel is None:
+                raise ValueError("kernel premise requires a checked D4 seed")
+            row = poly(step["terms"])
+            if seed_kernel.variables != nvars or seed_kernel.degree >= degree:
+                raise ValueError("D4 seed and target dimensions do not match")
+            seed_kernel.contains(row)
+            kernel_leaves += 1
         elif op == "xor" and set(step) == {"op", "refs"}:
             refs = step["refs"]
             if not isinstance(refs, list) or not refs:
@@ -89,7 +98,8 @@ def check(document, expected_system_sha256):
     terminal = document["terminal"]
     if type(terminal) is not int or terminal != len(rows) - 1 or rows[terminal] != frozenset((0,)):
         raise ValueError("terminal step is not the constant one")
-    return {"status": "valid_primal_refutation", "degree": degree,
+    return {"status": "valid_given_accepted_seed_and_kernel_equality" if kernel_leaves else "valid_primal_refutation",
+            "kernel_leaves": kernel_leaves, "degree": degree,
             "variables": nvars, "generators": len(sources), "steps": len(rows),
             "system_sha256": digest}
 
@@ -119,6 +129,8 @@ def main():
     parser.add_argument("--instance-plan", type=Path)
     parser.add_argument("--expect-plan-sha256")
     parser.add_argument("--expect-descent-source-sha256")
+    parser.add_argument("--d4-seed", type=Path)
+    parser.add_argument("--expect-d4-seed-sha256")
     args = parser.parse_args()
     if args.instance_plan and not (args.expect_plan_sha256 and args.expect_descent_source_sha256):
         parser.error("named instance needs plan and independent descent-source SHA-256 pins")
@@ -126,6 +138,8 @@ def main():
         parser.error("instance pins require --instance-plan")
     if not args.instance_plan and not args.expect_system_sha256:
         parser.error("supply a frozen instance plan or an independently pinned system digest")
+    if bool(args.d4_seed) != bool(args.expect_d4_seed_sha256):
+        parser.error("--d4-seed and --expect-d4-seed-sha256 must be used together")
     try:
         witness = json.loads(args.witness.read_text())
         if args.instance_plan:
@@ -138,7 +152,19 @@ def main():
                 raise ValueError("pinned system digest differs from instance plan")
         else:
             pinned = args.expect_system_sha256
-        result = check(witness, pinned)
+        seed = None
+        if args.d4_seed:
+            from seed_kernel import SeedKernel
+            seed = SeedKernel(args.d4_seed, args.expect_d4_seed_sha256)
+            if args.instance_plan:
+                plan = json.loads(args.instance_plan.read_text())
+                if seed.sha256 != plan["seed_sha256"]:
+                    raise ValueError("D4 seed differs from frozen instance plan")
+        try:
+            result = check(witness, pinned, seed)
+        finally:
+            if seed is not None:
+                seed.close()
     except (KeyError, TypeError, ValueError, IndexError) as error:
         parser.exit(1, f"INVALID: {error}\n")
     print(json.dumps(result, sort_keys=True))
