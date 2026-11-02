@@ -26,7 +26,7 @@ theorem adaptive_rlc_cancellation :
   constructor
   · intro F _ ρ
     simp
-  · intro F _ _ a b hab
+  · intro F _ _ _ a b hab
     classical
     apply Finset.card_le_one.mpr
     intro ρ hρ σ hσ
