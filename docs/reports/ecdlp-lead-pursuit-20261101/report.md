@@ -16,6 +16,8 @@ Latest scoped F4-presentation evidence: `crypto@20e19b9fcbd790f86bf66be41d3b25e5
 
 Latest scoped Curve25519 PKM evidence: `crypto@8491be7ed89642fa2f3715f8d5452839d26c384a`
 
+Latest scoped JV cover review: `crypto@434d356433b2118dfd5a916db222e2181bd7462d`
+
 ## Decision
 
 The existing 159-row ECDLP atlas was reviewed family by family. That review also identified and
@@ -221,6 +223,30 @@ second-host replay and independent validation remain pursued. The PKM carrier st
 `open_blocked`, the charged-toy exponent carrier stays `exhausted_at_scale` and pursued through
 its revisit trigger, and the atlas remains **160 total / 140 pursued / 20 scoped obstructions**.
 
+## JV cover line-search review
+
+The independent validator and red team at
+`crypto:research/jv_cover_fbline_20261102/review/README.md` reproduce the bounded component
+gain: best-of-65,536 factor-base-line selection lowers the Nagao-only arm to
+`0.5865 [0.530,0.650]` of its plain cost, or **1.705x**, on all nine weak-class cells at
+`p=1301,1451,1601`, with the search charged. The result is a finite constant factor whose model
+gain decays with `p`, not an exponent change.
+
+The same review refutes the new-frontier framing. In like-for-like F_p multiplications the
+Nagao arm remains **1.900 / 1.585 / 1.318x rho**. Its apparent U1 crossing uses a schoolbook rho
+price and omits the cover's F_p additions, so U1 is a lower bound and is not rankable. More
+decisively, the existing same-class JV sieve is **83--100x cheaper** (21--25x against its
+additions/lookups-inclusive cost). `LEAD-TRF-jv-nagao-genus2-cover-decomp` therefore stays
+`closed_dominated` and pursued at its revisit trigger; no general cover obstruction is added.
+
+The charged successor moves to `LEAD-TRF-jv-sieve-fp6-weak-class`: freeze line selection on the
+V2 sieve panel at `p in {1009,1511,1823}`, seeds 17--32, emit the missing native counters, charge
+the search and isogeny walk, and compare in `bitop/v1` with matched strong rho. The red team's
+`n=4096` pilot (**1.42x [1.18,1.73]**) is exploratory and unfrozen, hence not evidence;
+`n=65536` was a **0.92x** net loss.
+Large-prime, exhaustive-table and other-subline successors remain open. Counts stay
+**160 / 140 / 20**.
+
 ## Evidence and reproducibility
 
 The canonical row evidence is stored beside each lead under `knowledge/leads/ecdlp/`. The policy
@@ -240,6 +266,8 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - `crypto:research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md`
 - `crypto:research/curve25519_algebraic_ecbench_20261102/README.md`
 - `crypto:research/curve25519_guess_optimum_20261102/README.md`
+- `crypto:research/jv_cover_fbline_20261102/review/README.md`
+- `crypto:research/jv_cover_fbline_20261102/review/red_team/REPORT.md`
 - `crypto:docs/ecdlp-hardness-corpus/REPORT.md`
 - `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`
 - `ledger/proposals/IDEA-20261024-a2b05d.yaml`

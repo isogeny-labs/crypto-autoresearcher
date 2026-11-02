@@ -90,6 +90,12 @@ The companion `m=2` guess-depth panel fell to the edge `G=t-1` in every successf
 
 This rejects only those finite predictions. It supplies no theorem or exponent. The edge-cell whole solve, `m>=4`, other forms, curves and scales, useful rank, replay repair and independent validation remain pursued. `LEAD-ICP-pkm-tower-algebraic-oracle` stays `open_blocked`; `LEAD-ICE-charged-toy-ic-exponent-vs-rho` stays pursued at `exhausted_at_scale`; counts stay *160 / 140 / 20*.
 
+== JV cover line-search review · 2026-11-02
+
+At `crypto@434d356433b2118dfd5a916db222e2181bd7462d`, independent validation reproduces a *1.705x* charged best-of-65,536 factor-base-line gain on nine weak-class Nagao-only cells (`p=1301,1451,1601`). It is a finite constant factor, not an exponent change. In like-for-like F_p multiplications the arm remains *1.900 / 1.585 / 1.318x rho*; U1 omits cover additions and is an unrankable lower bound. The same-class JV sieve is *83--100x cheaper* (21--25x against S+), so the Nagao card stays `closed_dominated` and pursued.
+
+The frozen successor applies line selection to the sieve at `p in {1009,1511,1823}`, seeds 17--32, with search, native counters and isogeny walk charged in `bitop/v1` against matched strong rho. The red-team `n=4096` pilot (*1.42x [1.18,1.73]*) is exploratory/unfrozen non-evidence and `n=65536` is a *0.92x* net loss. Large-prime, exhaustive-table and other-subline routes remain open; the sieve card stays `open_next_step` and counts stay *160 / 140 / 20*.
+
 == Review boundary
 
 The Conductor command was unavailable and no `.conductor/WORKFLOW.md` was present. The global review stamp remains unchanged: the cryptanalysis base ref was unreachable and the configured `ecc-challenges` checkout was absent, so a whole-universe freshness claim would be unsupported. The 159 pre-existing rows, the added live successor, and the cited crypto snapshot are reconciled; the unavailable repositories must be reconciled before advancing the canonical stamp.

@@ -10,15 +10,18 @@ mechanism: >-
 disposition: open_next_step
 next_action:
   step: >-
-    Freeze numeric acceptance tolerances for the positive control (R0 S) and the rho A/A rule,
-    then re-run the paired sieve vs strong-rho panel at p in {1009, 1511, 1823} with the corrected
-    hash accounting, the F4/linear-algebra additions emitted, and the isogeny walk into the
-    weak class charged, producing VALIDATION.json.
+    Freeze a paired line-search-on-sieve protocol on V2's p in {1009,1511,1823}, seeds 17-32,
+    --stop 64 sparse instances. Require the plain arm to reproduce V2 exactly; pre-register the
+    search size or the chi(h) table rule and charge it in full; emit F_p additions and pair
+    selection; price both arms in bitop/v1 against matched strong rho across the section 5a
+    band; charge the isogeny walk into the weak class; and produce VALIDATION.json. Freeze the
+    positive-control tolerance and rho A/A rule before data.
   discriminates: >-
-    Ratios below one across the 0/0.1/1 GAE band with controls accepted would make this the
-    program's first validated sub-rho transfer row (weak class only, not prime order); ratios
-    that move above one once the walk and hashes are charged would close it as an accounting
-    artefact.
+    Ratios below one across the 0/0.1/1 band with controls accepted would validate the weak-class
+    transfer row and show whether line selection improves the actual sieve frontier. A null or
+    loss rejects only that frozen search rule, not the base sieve, a large-prime arm, another
+    F_p subline or a differently charged search. The red-team n=4096 pilot is exploratory and
+    unfrozen; it is not evidence for this discriminator.
 best_measured: >-
   historical, comparison withheld: sieve/strong-rho S ratio 0.0042 [0.0032, 0.0058] at log2
   l = 63.0 (p = 1823); e2e incl. walk 0.011 x pooled rho at p = 1511
@@ -44,9 +47,18 @@ evidence:
 - repo: crypto
   path: research/ic_cover_weakclass_20261023/VALIDATION.json
   note: 'validation record for the Hilbert-stop rows'
+- repo: crypto
+  ref: 434d356433b2118dfd5a916db222e2181bd7462d
+  path: research/jv_cover_fbline_20261102/review/README.md
+  note: >-
+    validates the line-selection mechanism on the dominated Nagao arm and specifies the frozen
+    sieve successor; the n=4096 1.42x [1.18,1.73] pilot is exploratory/unfrozen non-evidence,
+    and n=65536 is a 0.92x net loss
 known_results:
 - KR-IC-5ea2f8
 - KR-IC-a4dd54
+related:
+- LEAD-TRF-jv-nagao-genus2-cover-decomp
 forecloses:
 - Joux-Vitse cover and decomposition
 - weak class over F_{p^6}
@@ -54,4 +66,4 @@ forecloses:
 - isogeny walk into the JV weak class
 areas:
 - ECDLP
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'
