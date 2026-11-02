@@ -17,3 +17,20 @@ Exit criteria: preserve full cohorts, implement and independently check every na
 Next test: complete the same-curve quotient/projective and square-class checker first; use the symbolic identity replay and existing T=O fixtures as instrument tests. No scientific census before freeze. Missing or failing admission is an operational fact, not evidence against P1-P4.
 
 Recheck: actual completed implementation/archive or exact runtime/lane capability change, not periodic no-change polling. The active goal remains active; no official scientific status changes.
+
+## Implementation progress, 2026-11-02
+
+[The native quotient component](../experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs)
+now implements rational points and the general group law, witnessed E(K)/2E(K)
+partitions, both projective quotient charts, reproducible field identity, and
+geometric/arithmetic square-class relations retaining nonsquare constants.
+[Four fixed software tests pass](../experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/software-tests.txt),
+including characteristic-three and extension-field fixtures. These replace the
+initial absence of those construction components; they do not constitute a
+full-cohort census or independent scientific verification.
+
+The remaining implementation path is certificate serialization and an independent
+checker, exhaustive actual-curve/structure iteration with scalar-aware transforms,
+Frobenius-descent certificates, full-cohort analysis and launch/export bindings.
+The original exit criteria and admission requirements remain in force. See the
+[implementation report](../experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.md).
