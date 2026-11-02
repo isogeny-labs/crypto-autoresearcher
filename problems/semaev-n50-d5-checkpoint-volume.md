@@ -36,4 +36,10 @@ The first two conditions qualify a prospective one-shot instrument; the final co
 
 ## Resolution and history
 
-Unresolved. V1 remains immutable. The V2 runner and control are being prepared prospectively; no frontier D5 run has occurred under either protocol.
+Unresolved. V1 remains immutable. The V2 checkpoint-free runner and its small
+control are published, but the 2026-11-02 account-budget readback is above
+both daily limits and no frontier D5 run has occurred under either protocol.
+An opt-in [bounded-cadence candidate](../analysis/semaev-degree-five-quotient-lift/BOUNDED-CADENCE.md)
+now passes a fake-store publication/restore control, including gaps between
+published sequence numbers. It still needs native retained-seed replay and
+original-checker qualification before any n50 execution protocol can use it.
