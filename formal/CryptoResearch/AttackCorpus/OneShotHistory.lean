@@ -114,7 +114,11 @@ theorem survival_lower_bound_and_finite_tail
   have hsum :
       (∑ i ∈ Finset.range N, (1 - epsilon) ^ i) ≤
         ∑ i ∈ Finset.range N, S i := by
-    exact Finset.sum_le_sum fun i _hi ↦ hgeometric i
+    induction N with
+    | zero => simp
+    | succ N ih =>
+        simpa only [Finset.sum_range_succ] using
+          add_le_add ih (hgeometric N)
   have hscaled := mul_le_mul_of_nonneg_left hsum hepsilon_nonneg
   calc
     1 - (1 - epsilon) ^ N =

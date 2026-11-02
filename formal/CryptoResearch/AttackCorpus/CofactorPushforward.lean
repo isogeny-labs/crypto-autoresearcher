@@ -83,7 +83,7 @@ theorem product_image_and_fiber_repair
     · rintro _ ⟨⟨k, s⟩, rfl⟩
       refine ⟨h • s, ?_⟩
       apply Prod.ext
-      · exact hkill k
+      · exact (hkill k).symm
       · rfl
     · rintro _ ⟨s, rfl⟩
       let e : S ≃ S := Equiv.ofBijective (fun x : S => h • x) hperm
@@ -119,20 +119,31 @@ def goodTarget (s : ZMod 3) : GoodAmbient :=
   (0, s)
 
 private theorem badClear_eq_zero (P : BadAmbient) : badClear P = 0 := by
-  ext <;> simp [badClear, nsmul_eq_mul]
+  apply Prod.ext
+  · change (2 : ℕ) • P.1 = 0
+    rw [nsmul_eq_mul, ZMod.natCast_self, zero_mul]
+  · change (2 : ℕ) • P.2 = 0
+    rw [nsmul_eq_mul, ZMod.natCast_self, zero_mul]
 
 private theorem two_annihilates_zmod_two (k : ZMod 2) : (2 : ℕ) • k = 0 := by
-  simp [nsmul_eq_mul]
+  rw [nsmul_eq_mul, ZMod.natCast_self, zero_mul]
 
 private theorem two_permutes_zmod_three :
     Function.Bijective (fun s : ZMod 3 => (2 : ℕ) • s) := by
   constructor
   · intro a b hab
-    rw [nsmul_eq_mul] at hab
-    exact mul_left_cancel₀ (by decide : (2 : ZMod 3) ≠ 0) hab
+    change (2 : ℕ) • a = (2 : ℕ) • b at hab
+    have hab' :
+        ((2 : ℕ) : ZMod 3) * a = ((2 : ℕ) : ZMod 3) * b := by
+      simpa only [nsmul_eq_mul] using hab
+    exact mul_left_cancel₀ (by decide : ((2 : ℕ) : ZMod 3) ≠ 0) hab'
   · intro t
     refine ⟨(2 : ℕ) • t, ?_⟩
-    norm_num [nsmul_eq_mul]
+    simp only [nsmul_eq_mul]
+    rw [← mul_assoc]
+    have htwo_sq :
+        ((2 : ℕ) : ZMod 3) * ((2 : ℕ) : ZMod 3) = 1 := by decide
+    rw [htwo_sq, one_mul]
 
 /-- The exact audited declaration contains both failure controls and the
 generic repair.  Thus checking this name cannot silently verify only the
@@ -164,12 +175,45 @@ theorem cofactor_failure_and_product_fiber_repair
         fiberCount badClear (0, 0) = 4 ∧
         fiberCount badClear (0, 1) = 0 := by
     refine ⟨badClear_eq_zero, ?_, ?_⟩
-    · simp [fiberCount, badClear_eq_zero]
-    · simp [fiberCount, badClear_eq_zero]
-  have hgood := product_image_and_fiber_repair
+    · rw [fiberCount]
+      have hall :
+          Finset.univ.filter (fun P : BadAmbient => badClear P = (0, 0)) =
+            Finset.univ := by
+        apply Finset.filter_eq_self.2
+        intro P _
+        rw [badClear_eq_zero]
+        rfl
+      rw [hall, Finset.card_univ, Fintype.card_prod, ZMod.card]
+    · rw [fiberCount]
+      have hempty :
+          Finset.univ.filter (fun P : BadAmbient => badClear P = (0, 1)) =
+            ∅ := by
+        apply Finset.filter_eq_empty_iff.2
+        intro P _
+        rw [badClear_eq_zero]
+        intro hzero
+        have hone : (0 : ZMod 2) = 1 := congrArg Prod.snd hzero
+        norm_num at hone
+      rw [hempty, Finset.card_empty]
+  have hgood_raw := product_image_and_fiber_repair
     (K := ZMod 2) (S := ZMod 3) 2 two_annihilates_zmod_two two_permutes_zmod_three
+  have hclear :
+      goodClear = productClear (K := ZMod 2) (S := ZMod 3) 2 := by
+    funext P
+    rfl
+  have htarget :
+      goodTarget = productTarget (K := ZMod 2) (S := ZMod 3) := by
+    funext t
+    rfl
+  have hgood :
+      Set.range goodClear = Set.range goodTarget ∧
+        (∀ t : ZMod 3, fiberCount goodClear (goodTarget t) = 2) ∧
+        (∀ t : ZMod 3,
+          fiberCount goodClear (goodTarget t) * Fintype.card (ZMod 3) =
+            Fintype.card GoodAmbient) := by
+    rw [hclear, htarget]
+    simpa only [ZMod.card] using hgood_raw
   have hgeneric := product_image_and_fiber_repair h hkill hperm
-  simpa [goodClear, goodTarget, productClear, productTarget] using
-    And.intro hbad (And.intro hgood hgeneric)
+  exact And.intro hbad (And.intro hgood hgeneric)
 
 end CryptoResearch.AttackCorpus.CofactorPushforward

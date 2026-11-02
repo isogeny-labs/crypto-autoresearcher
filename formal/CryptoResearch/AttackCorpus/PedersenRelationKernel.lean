@@ -112,6 +112,8 @@ theorem collision_recovers_relation
     alpha * (r' - r) = r' * alpha - r * alpha := by ring
     _ = m - m' := by linear_combination -hexponents
 
+local instance : Fact (Nat.Prime 5) := ⟨by decide⟩
+
 /-- A concrete nonvacuity control: over `ZMod 5`, `G = 1`, `H = 2`, and
 `alpha = 2`, the distinct openings `(0,0)` and `(2,4)` both commit to zero. -/
 def concreteZModFiveControl : Prop :=
@@ -120,7 +122,8 @@ def concreteZModFiveControl : Prop :=
   let alpha : ZMod 5 := 2
   alpha ≠ 0 ∧ H = alpha • G ∧
     ((0, 0) : ZMod 5 × ZMod 5) ≠ (2, 4) ∧
-    commitmentMap G H (0, 0) = commitmentMap G H (2, 4)
+    commitmentMap G H ((0, 0) : ZMod 5 × ZMod 5) =
+      commitmentMap G H ((2, 4) : ZMod 5 × ZMod 5)
 
 theorem concrete_zmod_five_control : concreteZModFiveControl := by
   norm_num [concreteZModFiveControl, commitmentMap]

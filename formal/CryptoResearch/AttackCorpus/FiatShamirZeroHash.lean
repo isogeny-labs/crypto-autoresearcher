@@ -29,7 +29,7 @@ def Accepts
 /-- A deliberately non-random challenge function. -/
 def constantHash
     {Message F A : Type*} [Zero F] (challenge : F) : Message → A → F :=
-  fun _ _ ⇒ challenge
+  fun _ _ ↦ challenge
 
 /-- Challenge zero makes `R = s • G` accept for every public key.  The
 construction has no witness input. -/
@@ -49,6 +49,8 @@ theorem known_constant_hash_accepts
     Accepts (constantHash challenge) m generator publicKey
       (response • generator - challenge • publicKey) response := by
   simp [Accepts, constantHash]
+
+local instance : Fact (Nat.Prime 5) := ⟨by decide⟩
 
 /-- The same zero-hash transcript accepts two distinct public keys in a
 concrete prime-field module. -/
