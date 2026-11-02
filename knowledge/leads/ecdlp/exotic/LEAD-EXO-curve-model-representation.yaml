@@ -13,15 +13,37 @@ obstruction:
   statement: >-
     Model-native PDP solving degree is invariant (d_reg = 2) between Weierstrass Semaev and
     twisted Edwards at m=2 and m=3, with Edwards a constant factor larger (EV-REP-001, EV-REP-002
-    replicated); the Kummer line is Bezout-optimal among coordinates E -> P^1 and the model
-    lever is capped by a one-line degree argument (IDEA-20260905-d0fee4, IDEA-20260913-11d3cb,
-    proposals). Exponent lever closed; at most constant factors (Hessian coordinate factor
-    <= 2) remain.
+    replicated).
+    No coordinate E -> P^1 beats the degree-2 law (IDEA-20260905-d0fee4, IDEA-20260913-11d3cb,
+    proposals). That conclusion holds, but d0fee4's step (C2) fails for coordinates that
+    factor through an isogeny: x' o phi_<N> has degree 4 but per-variable degree 2^{m-1}
+    (crypto research/ecgfp5_representation_audit_20261102).
+    The corrected law has two parts:
+    - On a double-odd curve, degree-2 coordinates over F_q come in exactly two inequivalent
+      classes: Kummer (x, involution P -> -P) and u = x/y (involution P -> N - P, since
+      u(P + N) = -u(P)).
+    - The two classes tie: every N-stable subline in either class gives D = 2^{(m-1)^2}. A
+      translation changes the target, and a Moebius map changes only the factor-base subline.
+      "Kummer line Bezout-optimal" therefore reads "Kummer and u classes tie".
+    Larger symmetry groups are closed for double-odd curves: FGHR Edwards / Jacobi
+    intersection, FHJRV full E[2], 4-torsion, Hessian and Huff. EcGFp5 has one rational
+    2-torsion point, no rational 4-torsion (b and a^2 - 4b are non-squares), and 4 does not
+    divide #E even up to 2-isogeny, so only <N> is usable (D = 2^16 at m = 5).
+    The u class makes the FHJRV Prop. 13 polynomial-ring form available on double-odd
+    curves, which CORR-20261102-7e3a91 records. Its m = 5 solve cost belongs to
+    LEAD-ICP-gfp5-symmetrized-gaudry.
+    Exponent lever closed; at most constant factors (Hessian coordinate factor <= 2, ring-form
+    solve constants) remain.
   revisit_when: >-
-    A coordinate E -> P^1 with summation-polynomial degree below the Kummer degree is exhibited
-    (would refute the Bezout claim), or a constant-factor model gain is wanted inside an IC
-    engine (then it belongs to ic-prime).
-best_measured: d_reg = 2 for both models at m = 2, 3 (EV-REP-002, replicated, toy)
+    A coordinate E -> P^1 with summation-polynomial degree below the common degree-2 law
+    (Kummer and u classes, D = 2^{(m-1)^2} on N-stable sublines) is exhibited, which would
+    refute the degree claim. Or a constant-factor model gain is wanted inside an IC engine
+    (then it belongs to ic-prime; the u-ring m = 5 cell is tracked there).
+best_measured: >-
+  d_reg = 2 for both models at m = 2, 3 (EV-REP-002, replicated, toy). u = x/y ring form on
+  double-odd analogues: D = 16 at m = 3 (p = 4111, 262231) and D = 512 at m = 4 (p = 4129,
+  262153), equal to the Kummer-class law, planted point recovered (crypto desk audit
+  2026-11-02, toy).
 next_action: {from_revisit_when: true}
 evidence:
 - repo: crypto-autoresearcher
@@ -35,8 +57,19 @@ evidence:
   note: Scoped finding from EV-REP-002
 - repo: crypto-autoresearcher
   path: ledger/proposals/IDEA-20260905-d0fee4.yaml
-  note: Kummer line Bezout-optimal among all coordinates
+  note: >-
+    No coordinate beats the degree-2 law (conclusion holds); step (C2) fails for coordinates
+    factoring through an isogeny, so Kummer and u classes tie (see the 2026-11-02 audit)
+- repo: crypto
+  path: research/ecgfp5_representation_audit_20261102/README.md
+  note: >-
+    Desk audit of representation levers for EcGFp5: two degree-2 classes tie at
+    D = 2^{(m-1)^2}; larger symmetry groups closed; u-ring D measured at m = 3, 4
+- repo: crypto-autoresearcher
+  path: ledger/corrections/CORR-20261102-7e3a91.yaml
+  note: Scopes the "ring form unavailable" sentence to coordinates with phi(-P) = phi(P)
 ledger_refs:
+- CORR-20261102-7e3a91
 - EV-REP-001
 - EV-REP-002
 - H-REP-001
@@ -53,8 +86,12 @@ forecloses:
 - Montgomery x-only factor base
 - Kummer line coordinate change
 - curve model changes solving degree
+- Moebius or translation coordinate change on a double-odd curve
+- 4-torsion or Hessian symmetry on EcGFp5
+related:
+- LEAD-ICP-gfp5-symmetrized-gaudry
 areas:
 - MODEL
 - REP
 - ECDLP
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

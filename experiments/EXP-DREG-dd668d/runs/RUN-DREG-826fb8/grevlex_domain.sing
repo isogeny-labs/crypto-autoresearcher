@@ -1,0 +1,20 @@
+
+ring R=2,(b0,b1,b2,b3,b4,b5,b6,b7),dp;
+option(redSB);
+ideal I=b0*b1+b0*b4+b1*b4+b0*b1*b4+b0*b5+b1*b5,1+b0*b5+b1*b5+b0*b1*b5,b2*b4+b2*b5+b2*b6+b4*b6+b2*b4*b6+b5*b6+b2*b7+b4*b7+b2*b5*b7,1+b2*b5+b5*b6+b2*b5*b6+b2*b7+b4*b7+b2*b4*b7+b5*b7+b2*b5*b7,b3+b6+b7+b3*b7,1+b7,b0^2+b0,b1^2+b1,b2^2+b2,b3^2+b3,b4^2+b4,b5^2+b5,b6^2+b6,b7^2+b7;
+ideal G=std(I);
+degBound=4;
+ideal G4=std(I);
+degBound=0;
+print("FULL_SIZE"); print(size(G));
+print("FULL_DEGS");
+int k; for(k=1;k<=size(G);k++){ print(deg(G[k])); }
+print("UNIT"); print(deg(G[1])==0 and size(G)==1);
+print("G4_LEAD_EQUAL");
+ideal LG=lead(G); ideal L4=lead(G4);
+print(size(reduce(LG,std(L4)))==0 and size(reduce(L4,std(LG)))==0);
+print("G4_DEGS");
+for(k=1;k<=size(G4);k++){ print(deg(G4[k])); }
+print("GB_FULL");
+for(k=1;k<=size(G);k++){ print(G[k]); }
+quit;

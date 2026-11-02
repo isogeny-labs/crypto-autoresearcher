@@ -1,0 +1,58 @@
+# Complete-chart composition: independent fixed software review
+
+## Decision and scope
+
+DEC-20261101-1a223a supports complete-chart quadratic composition at the retained fixed software, signed-witness and certificate fidelity scope. The independent source-aware review TASK-20261101-f834b9 passed all 160 assertion records in its second bounded invocation. All 22 frozen obligation groups are covered. Evidence strength is independent_fixed_software_review; claim tier is scoped_software_fidelity. This is a Coordinator synthesis under TASK-20261101-54d3ba, with no new suite or scientific run.
+
+The construction binds its source to a trusted public descriptor, keeps U lifted, retains every lower normalized A/B coefficient, and specifies zero, constant and linear B strata before any witness is supplied. Independent sparse-polynomial and Boolean expansions matched the full equation and variable lists for every one of the 135 fixed cells. Exact signed multiplicities, repeated-root nilpotence and the original certificate checker remain part of the checked path.
+
+## Observation: complete fixed coverage
+
+The fixed cohort is 15 chart fixtures × 3 rationality arms × 3 public strata = 135 cases over F5 and F7, with k from 0 through 5. Direct recount of attempt 2 stdout gives 39 valid witness roundtrips, 72 wrong-stratum witness rejections and 24 literal special-chart obstructions. The 72 rejections concern supplied witnesses, not unsatisfiability of their full strata. All eight nilpotent controls, eight guard controls, both F1 beta signs, 46 schema/content/arithmetic negatives and seven range negatives passed. Counts describe prescribed coverage; no sampling uncertainty or statistical replication is asserted.
+
+The F1 common-root fixture recovered multiplicities 4 and 1 for the two ordinates for both beta signs. Swapped 1/4 and altered 3/2 or 2/3 multiplicities were rejected. Nilpotent branch and nonbranch controls preserve nonzero residuals whose prescribed powers vanish. The interval identities retain every quotient/remainder coefficient; checked static interval dimensions are algebraic sizes, not measured costs.
+
+All-identity empty projection, literal impossible charts, missing coverage, duplicate projections, malformed later records, censored status and explicit decode failures were checked. The unchanged final adapter received empty domain CNF and null auxiliary bound. A labeled injected signed-check failure retained the original arithmetic model and returned accepted=false with its model index; this tests failure propagation and does not report a defect in the signed checker. The fixed F7 range certificate checked the identity 6*(state-1)+state=1, and a modified multiplier was rejected.
+
+![Fixed chart case categories and retained independent attempts](diagram.svg)
+
+## Observation: every attempt retained
+
+Independent attempt 1 used host Python 3.9.25 and returned exit 1: 157 records, 16 pass and 141 fail. Exactly 136 failures are manifestations of missing int.bit_count (135 chart cases and the F1 group); five later failures depend on unavailable chart-cache entries. F1 signs were configured but neither completed in this attempt. Independent attempt 2 used the existing Python 3.12.8 research interpreter and returned exit 0: 160 records, all pass. The target source was unchanged. Both test versions, raw stdout/stderr, checkpoint receipts, commands and input hashes remain in independent-results.json.
+
+Producer attempts are retained separately. Attempt 1 stopped after 15 records with UnboundLocalError for the test harness local groups binding. Two augmented assignments were replaced with groups.extend; the target composition source was unchanged. Attempt 2 returned exit 0 with 1,805 producer assertions, 135 documents and 39 witness roundtrips. Producer assertions are not interchangeable with the reviewer’s assertion-record count.
+
+Each side used two of its four permitted fixed-suite attempts, with a 240-second child watchdog and 2 GiB address-space limit per invocation. Both independent checkpoint gates returned zero. Recorded reviewer child elapsed times are 0.4892870369949378 and 4.189513535995502 seconds; these are custody observations under different interpreters, not a performance comparison. No SAT instance, field/Boolean census, benchmark or remote scientific job was run.
+
+## Comparison and inference
+
+The comparison is between the submitted source and independently written fixed expected algebra, Boolean substitutions, literal signed witnesses and certificate controls. All six joints hold: source binding, quadratic composition, signed witnesses, bit/certificate fidelity, fixed execution and claim boundary. The successful round provides independent fixed software evidence for assembling the already checked components into the whole chart. It does not measure complete projected model sets or regularity.
+
+Instrumentation observed one canonical chart build for each successful authentication, encode, decode or witness-construction call, and two for one-model transcript completion. A rejected authentication still performed a build but returned no successful receipt. Construction, authentication, substitution, range handling, residuals, reconstruction and checking retain separate units. Successful-operation counters omit interrupted inner work; component-builder call counts also do not price every internal arithmetic operation.
+
+## Custody and review independence
+
+Source commit: 4e6e9cfaddd37892829c75f1a67fdf1f6c535ba7. Target composition SHA-256: 354d6eef9695477f5c3ab2e9acc274241848f25a863dac30d2e5eb0def68c3b9. Published independent review commit: c59d133004d147c3fc3b125539f94427879c5871. The terminal publication receipt reports completed=true and a successful push. Coordinator rehashed all four sealed review artifacts against both the working files and that commit, verified all four producer snapshot hashes and all 20 reviewed dependency/specification hashes, and recomputed the raw record/category summaries. No replay was launched.
+
+The review plan was prospective. The reviewer was fresh and source-aware, with producer tests/results/README and snapshot receipt hidden. The native independence gate returned PASS for all owned joints, declared blindness and controls. Actual serving model, provider, tier and effective effort remain unauthenticated under the inference amendment. Post-dispatch guidance supplied procedural attestation formatting and the existing interpreter path after the compatibility failure; no mathematical expected values were supplied.
+
+Primary evidence is research/prime_sat_full_chart_composition_20261101/TASK-20261101-f834b9/independent-results.json, test_independent.py, review.md and attestation.yaml; producer context is research/prime_sat_full_chart_composition_20261101/software-results.json. The frozen API, 22-obligation contract, source inventory and snapshot are under coordination/prime_sat_full_chart_composition_20261101. Predecessor DEC-20261101-9feeb1 supplied the range-compiler prerequisite. This synthesis reads internal source/evidence and makes no external literature novelty claim.
+
+## Limitations and next work
+
+Trusted public descriptors and prime p>3 are assumptions; curve nonsingularity, target membership, k≤5 and 2^s<p are the declared interface conditions. Successful execution here used Python 3.12.8; host Python 3.9.25 is incompatible at int.bit_count. The finite fixed coverage does not imply coverage of every descriptor or witness.
+
+Next, preserve the original 106-cell coordinate cohort on y²=x³+2x+2 over F17 and y²=x³+x+4 over F97, digit widths 2/3 and all affine-x least-positive-y targets, across quartic, membership, quadratic and quadratic_aa. Preserve its complete model-set requirements and controls. The older six-cell F17 coefficient cohort, degrees 8/16 with three target representatives and leaf_sat/prefix_univariate_gcd/exhaustive_reference/aa_reverse_prefix arms, stays distinct. Its original RUN-PNEXT-ad1645 status remains invalid_output. The current composition does not replace either retained cohort.
+
+Full-chart integration should use generic engine_bridge.solve after authenticated decimal-mask-to-integer conversion, preserving polynomial order, full-cube completion, censored transcripts and failed models. The coordinate-specific run_cell is not this route. Freeze all successful and failed phase costs before comparative data. Compare normalized coefficient arms separately until a checked common signed-output mapping with complete fibers connects them to coordinate representations. Root’s bridge/scope audit receipts are integration inventories, not new results or execution admission.
+
+Unchanged partial-matrix and two-bit-backdoor scaling remains unapproved absent structural change. Affine elimination/regularity, bounded-root-sum and Boolean-affine refuter drafts remain unadmitted and unexecuted candidates. This decision authorizes no new suite or cloud launch. Future cloud admission must obey the current owner financial/resource ceilings and published GitHub input custody.
+
+## Derived record and publication
+
+Knowledge promotion: none. This is source-specific independent fixed software fidelity; it establishes no new general theorem, measured bound or method validated across experiments. Existing nilpotence and signed-recovery concepts are dependencies. No hypothesis, experiment, goal or knowledge status is changed.
+
+Checked and left unchanged: docs/reports/prime-sat-range-corrected-20261101/diagram.svg; docs/reports/prime-sat-shared-signed-chart-20261030/diagram.svg; docs/reports/prime-sat-rationality-software-20261031/diagram.svg. These historical figures retain their exact earlier scopes. The knowledge/frontiers/ecdlp/README.md map contract was checked: this fixed software result changes no scientific bound or frontier. The new diagram records this review’s own categories and attempt outcomes.
+
+Root must render report.pdf, inspect every page, create report-inputs.json and archive/publish the exact four review artifacts plus six decision/report artifacts. The local sources do not themselves complete that publication gate. No new suite is required by this synthesis.
+

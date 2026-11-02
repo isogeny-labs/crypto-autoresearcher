@@ -1,0 +1,30 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261102-67069f
+claim_id: NAGAO-2015-984-LEMMA4-EXACT-FIRST-FALL-DEGREES
+kind: formalize_claim
+source: knowledge/findings/KN-FIND-936151.md
+source_status: COMPUTED
+theorem_name: CryptoResearch.Nagao.FakeExact.exact_first_fall_degrees
+theorem_file: CryptoResearch/Nagao/FakeExact.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Adopted on the Coordinator's (user's) decision of 2026-11-02 for item F2 of formal-review
+  batch BATCH-4c1c67: the proof of no fake fall at degree 1 is the reviewer control
+  J3Controls.C4_fake_side written by TASK-20261101-cd72e8 in
+  coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/raw/J3/Controls.lean,
+  moved into the workspace namespace with only names and the header changed. It closes the C4 gap
+  J3 reported: Bridge.lean and BridgeB.lean gave d'_F <= 2 (a fake fall at 2); this gives d'_F = 2
+  with arbitrary cofactors, because red preserves the constant coefficient, so generators without
+  constant terms admit no fake fall at degree 1. exact_first_fall_degrees combines that with the
+  true-side FirstFallIs results of Bridge.lean and BridgeB.lean. Built locally against the pinned
+  Mathlib (Lemma4Witness replaced by a verbatim-definition stub, as before); #print axioms reports
+  only propext, Classical.choice, Quot.sound.
+claim: |
+  Over F_2 (Mathlib MvPolynomial), equality reading of condition (1), arbitrary polynomial
+  cofactors: for witness A (X^2 Y, X Y + X) and witness B (X1 X2 + X3, X1 X3 + X2), the true first
+  fall degree of F and of F u S_fe is 3, and the fake first fall degree of F and of F u S_fe is 2.
+proof_map:
+  depends_on: [nagao-lemma4-mvpolynomial-bridge-20261101.yaml, nagao-lemma4-mvpolynomial-bridge-b-20261101.yaml]
+  prerequisites:
+    - "the MvPolynomial definitions IsFall and IsFakeFall transcribe Definitions 5 and 6 of Nagao 2015/984 under the equality reading; the transcription is not a Lean theorem"
