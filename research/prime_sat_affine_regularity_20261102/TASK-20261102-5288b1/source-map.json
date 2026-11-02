@@ -1,0 +1,696 @@
+{
+  "finite_target_cases": [
+    {
+      "A": "A0+X",
+      "B": "0",
+      "constant_part": "-a",
+      "d": 2,
+      "homogeneous_part": "0",
+      "impossible_strata_policy": "Retain every nonzero scalar obstruction and all other nonzero substituted rows; do not select a stratum from a witness.",
+      "k": 1,
+      "normalization": "A1=1",
+      "pivot_coefficient": 1,
+      "pivot_variable": "chart.A0",
+      "projection": [
+        "chart.A0"
+      ],
+      "reduced_projection": [],
+      "replacement": "-a",
+      "structurally_admissible_strata": [
+        "zero"
+      ],
+      "structurally_impossible_strata": [
+        "constant",
+        "linear"
+      ],
+      "target_ordinate_zero": "Set b=0 in the same replacement; no division by b."
+    },
+    {
+      "A": "A0+A1*X",
+      "B": "1",
+      "constant_part": "b",
+      "d": 3,
+      "homogeneous_part": "-a*A1",
+      "impossible_strata_policy": "Retain every nonzero scalar obstruction and all other nonzero substituted rows; do not select a stratum from a witness.",
+      "k": 2,
+      "normalization": "B0=1",
+      "pivot_coefficient": 1,
+      "pivot_variable": "chart.A0",
+      "projection": [
+        "chart.A0",
+        "chart.A1"
+      ],
+      "reduced_projection": [
+        "chart.A1"
+      ],
+      "replacement": "b-a*A1",
+      "structurally_admissible_strata": [
+        "constant"
+      ],
+      "structurally_impossible_strata": [
+        "zero",
+        "linear"
+      ],
+      "target_ordinate_zero": "Set b=0 in the same replacement; no division by b."
+    },
+    {
+      "A": "A0+A1*X+X^2",
+      "B": "B0",
+      "constant_part": "-a^2",
+      "d": 4,
+      "homogeneous_part": "b*B0-a*A1",
+      "impossible_strata_policy": "Retain every nonzero scalar obstruction and all other nonzero substituted rows; do not select a stratum from a witness.",
+      "k": 3,
+      "normalization": "A2=1",
+      "pivot_coefficient": 1,
+      "pivot_variable": "chart.A0",
+      "projection": [
+        "chart.A0",
+        "chart.A1",
+        "chart.B0"
+      ],
+      "reduced_projection": [
+        "chart.A1",
+        "chart.B0"
+      ],
+      "replacement": "b*B0-a*A1-a^2",
+      "structurally_admissible_strata": [
+        "zero",
+        "constant"
+      ],
+      "structurally_impossible_strata": [
+        "linear"
+      ],
+      "target_ordinate_zero": "Set b=0 in the same replacement; no division by b."
+    },
+    {
+      "A": "A0+A1*X+A2*X^2",
+      "B": "B0+X",
+      "constant_part": "b*a",
+      "d": 5,
+      "homogeneous_part": "b*B0-a*A1-a^2*A2",
+      "impossible_strata_policy": "Retain every nonzero scalar obstruction and all other nonzero substituted rows; do not select a stratum from a witness.",
+      "k": 4,
+      "normalization": "B1=1",
+      "pivot_coefficient": 1,
+      "pivot_variable": "chart.A0",
+      "projection": [
+        "chart.A0",
+        "chart.A1",
+        "chart.B0",
+        "chart.A2"
+      ],
+      "reduced_projection": [
+        "chart.A1",
+        "chart.B0",
+        "chart.A2"
+      ],
+      "replacement": "b*B0+b*a-a*A1-a^2*A2",
+      "structurally_admissible_strata": [
+        "linear"
+      ],
+      "structurally_impossible_strata": [
+        "zero",
+        "constant"
+      ],
+      "target_ordinate_zero": "Set b=0 in the same replacement; no division by b."
+    },
+    {
+      "A": "A0+A1*X+A2*X^2+X^3",
+      "B": "B0+B1*X",
+      "constant_part": "-a^3",
+      "d": 6,
+      "homogeneous_part": "b*B0+b*a*B1-a*A1-a^2*A2",
+      "impossible_strata_policy": "Retain every nonzero scalar obstruction and all other nonzero substituted rows; do not select a stratum from a witness.",
+      "k": 5,
+      "normalization": "A3=1",
+      "pivot_coefficient": 1,
+      "pivot_variable": "chart.A0",
+      "projection": [
+        "chart.A0",
+        "chart.A1",
+        "chart.B0",
+        "chart.A2",
+        "chart.B1"
+      ],
+      "reduced_projection": [
+        "chart.A1",
+        "chart.B0",
+        "chart.A2",
+        "chart.B1"
+      ],
+      "replacement": "b*B0+b*a*B1-a*A1-a^2*A2-a^3",
+      "structurally_admissible_strata": [
+        "zero",
+        "constant",
+        "linear"
+      ],
+      "structurally_impossible_strata": [],
+      "target_ordinate_zero": "Set b=0 in the same replacement; no division by b."
+    }
+  ],
+  "method": "Independent analytical reading of the exact allowed source text; no source construction, import, component invocation or row census.",
+  "notation": {
+    "A_i": "chart.Ai when variable, otherwise the normalized or structural constant",
+    "B_i": "chart.Bi when variable, otherwise the normalized or structural constant",
+    "E": "b*B(a)-sum_{i>=1} A_i*a^i, including fixed highest coefficient",
+    "U": "X^k+sum_{i<k} support.ui*X^i",
+    "X": "original short-Weierstrass polynomial variable",
+    "source_descriptor_curve_a": "alpha",
+    "source_descriptor_curve_b": "beta",
+    "source_descriptor_target": "[a,b]"
+  },
+  "primary_reference": {
+    "authors": [
+      "Alessio Caminata",
+      "Elisa Gorla"
+    ],
+    "bytes": 228538,
+    "provenance": "retrieved independently",
+    "read_locators": [
+      "Definition 1.1, PDF page 4",
+      "Definition 1.4, PDF page 6"
+    ],
+    "role": "Definitions only; no chart theorem or proof imported.",
+    "sha256": "9e9323db0cd2f755a375c1baa836b999972fc38eebca3e6f55f63dfecb226177",
+    "title": "Solving degree, last fall degree, and related invariants",
+    "url": "https://arxiv.org/pdf/2112.05579v2",
+    "version": "v2"
+  },
+  "projection_reconstruction": {
+    "U": "Lifted throughout; no support coefficient eliminated.",
+    "beta_fibers": "Do not choose or discard a common-root beta sign.",
+    "bit_projection": "Different coefficient dimensions; no literal raw-bit projection equality claimed.",
+    "full_field_fibers": "Projection and reconstruction are inverse on solutions; E depends only on remaining projected coefficients, so corresponding auxiliary fibers are unchanged.",
+    "map": "Insert chart.A0=E into the original pole-basis ordered coefficient vector; retain all other coefficient values and all auxiliaries; restore normalized highest coefficient 1 and structural zeros.",
+    "signed_output": "Reconstructed A,B,U and all retained auxiliaries give identical inputs to the unchanged signed recovery and checker; finite signed divisor includes one negative-target contribution, including one copy when b=0."
+  },
+  "rationality_arm_stratum_map": {
+    "stratified_guard_with_nilpotent_zero_B": {
+      "constant": "constant",
+      "linear": "guard",
+      "zero": "nilpotent"
+    },
+    "stratified_slack_with_nilpotent_zero_B": {
+      "constant": "constant",
+      "linear": "slack",
+      "zero": "nilpotent"
+    },
+    "uniform_nilpotent_square": {
+      "constant": "nilpotent",
+      "linear": "nilpotent",
+      "zero": "nilpotent"
+    }
+  },
+  "rationality_bindings": {
+    "constant": {
+      "auxiliaries": "all template auxiliaries -> rationality.<name>",
+      "effect": "All rows unchanged.",
+      "inputs": "b0 -> actual normalized or variable B0"
+    },
+    "coverage": "Includes all nine public arm/stratum combinations, including structurally impossible ones; imported component correctness is not re-proved.",
+    "guard_or_slack": {
+      "auxiliaries": "all template auxiliaries -> rationality.<name>",
+      "effect": "Replace A0 binding with E everywhere, retaining each nonzero row.",
+      "inputs": "A0..A3 -> actual A coefficients padded with structural zeros; b0,b1 -> actual B coefficients"
+    },
+    "nilpotent": {
+      "auxiliaries": "all template auxiliaries -> rationality.<name>",
+      "effect": "All rows unchanged.",
+      "inputs": "u_i -> support.ui"
+    }
+  },
+  "representations": {
+    "boolean": {
+      "status": "Current separate authenticated canonical value/range compilation",
+      "warning": "A full-field affine pivot does not authorize bit elimination without transformed idempotence and range obligations; x=y+z over odd characteristic admits y=z=1 if the x guard is omitted."
+    },
+    "field_augmented": {
+      "deletion_certificate": "Zero row when homogeneous part E is zero; otherwise its top part sum_i a_i*z_i^p is in the span of surviving field highest parts, and the full row is the same linear combination of their full equations.",
+      "eliminated_field_row": "(E^p-E)=sum_i a_i*(z_i^p-z_i), where E=sum_i a_i*z_i+c over F_p",
+      "finiteness": "Pure powers v^p bound every exponent in a spanning set.",
+      "remaining_field_rows": "Retain every z_i^p-z_i.",
+      "status": "theoretical presentation, not emitted by current canonical_chart",
+      "total_input_degree": "p whenever any variable field equation remains; not a quadratic whole input",
+      "variables_requiring_field_equations": [
+        "all projected lower A/B coefficients",
+        "support.u*",
+        "stratum.inverse when declared",
+        "interval.e*",
+        "interval quotient variables",
+        "interval intermediate remainder variables",
+        "every rationality auxiliary"
+      ]
+    },
+    "raw": {
+      "chart_arithmetic_degree_upper_bound": 2,
+      "explicit_all_variable_field_equations": false,
+      "finite_top_quotient": "Requires a separate proof; not inferred from bit ranges or finite-field assignment typing."
+    }
+  },
+  "row_families": [
+    {
+      "labels": "norm.coefficient*",
+      "retention": "All nonzero rows, including newly linear, constant, and ordinarily redundant rows.",
+      "source": "coefficients of A^2-f*B^2-c*D*U; c=(-1) for odd d, +1 for even d; D=X-a for finite target, 1 for identity",
+      "substitution": "Replace A by E+sum_{i>=1}A_i*X^i; keep U and every support.ui lifted."
+    },
+    {
+      "labels": "sign.target",
+      "retention": "May omit this zero row.",
+      "source": "A(a)-b*B(a)",
+      "substitution": "Identically zero by chart.A0=E."
+    },
+    {
+      "labels": "stratum.*",
+      "retention": "All nonzero rows, inverse variables and scalar obstructions.",
+      "substitution": "Unchanged; no A0 occurs."
+    },
+    {
+      "labels": "interval.idem*.coefficient*",
+      "retention": "Every nonzero coefficient row and all variables.",
+      "source": "E_j^2-E_j-U*Q_j; deg(E_j)<k, deg(Q_j)<=k-2; Q empty for k=1",
+      "substitution": "Unchanged; no A0 occurs."
+    },
+    {
+      "labels": "interval.Nzero",
+      "retention": "Nonzero row retained.",
+      "source": "For k=1, -support.u0-t-sum_j 2^j*interval.ej.0",
+      "substitution": "Unchanged."
+    },
+    {
+      "labels": "interval.N2/N3/N4/N5.coefficient*",
+      "retention": "Every quotient, intermediate remainder, and nonzero coefficient row; do not replace nilpotence by N=0.",
+      "source": "Each LR-P-UQ; P=0 in the final product; chains k2:[2], k3:[2,3], k4:[2,4], k5:[2,4,5]",
+      "substitution": "Unchanged; no A0 occurs."
+    },
+    {
+      "labels": "rationality.*",
+      "retention": "Every nonzero resulting row, including scalar obstructions and lower-degree rows; no row label is selected using a witness.",
+      "source": "For every imported template equation Q_j the aggregate equation is theta(Q_j), via every source term and binding at composition.py:203-225.",
+      "substitution": "For every j use psi(theta(Q_j)); the only changed binding is A0->E in guard/slack."
+    },
+    {
+      "labels": "special.impossible",
+      "retention": "Retain the unit-ideal obstruction.",
+      "source": "literal 1",
+      "substitution": "No pivot exists in special charts."
+    }
+  ],
+  "schema": "prime-affine-regularity-source-map/v1",
+  "source_files": [
+    {
+      "access": "text and hash inspection only",
+      "bytes": 36631,
+      "path": "AGENTS.md",
+      "sha256": "e95a5b68c7be0391c9b6d6ad039b5903127eb6ac8e8cf2bc1af5b06c91c23703"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 15925,
+      "path": "agents/coordinator.md",
+      "sha256": "410b3be4737a58dbf31c469b6b2d103740598e2b3c0a86610fa64af0b80128ad"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 81100,
+      "path": "docs/agent-contract-extended.md",
+      "sha256": "1dd0e607a772b19b733cfc2ac0971076e72d653e7703224522c6096fa3fc8692"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 7066,
+      "path": "docs/research-budget-policy.md",
+      "sha256": "215f0edd1b85a02609ccf981baa821c9d6d99973962d664c8ce5605978a8d8f1"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 42239,
+      "path": "templates/research-records.md",
+      "sha256": "d1935d5d42f5b5e74672f8e10a4fa0ee9fbf3efb0980499bf004ba1f02e50d34"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 3915,
+      "path": "coordination/prime_sat_full_chart_composition_20261101/review-plan.yaml",
+      "sha256": "3718942b8ae77aab1a394a3fc672c7f24e2c797fada345ac29c0c2db784cc707"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 21067,
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "sha256": "354d6eef9695477f5c3ab2e9acc274241848f25a863dac30d2e5eb0def68c3b9"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 5475,
+      "path": "research/prime_sat_shared_signed_chart_20261030/charts.py",
+      "sha256": "c808c7d3a5a2a96316a0c13c9faafd848406ef44e960a1bcc52bde700e6a818b"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 7048,
+      "path": "coordination/prime_sat_full_chart_composition_20261101/SOURCE-API.md",
+      "sha256": "a742017f8a8c6db0adbf20246dac1ab730f85f6322c144fc8687235db371d753"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 16629,
+      "path": "coordination/prime_sat_full_chart_composition_20261101/fixed-software-contract.json",
+      "sha256": "16f5740d53471c30423db90fb1bf82c4774a9dd0a2c39d60b5d2ac35998a7659"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 25469,
+      "path": "coordination/prime_sat_affine_regularity_20261102/statement-contract.json",
+      "sha256": "92ccc4d94e996ae21e59c36bbaff358350970f6e1a0926272a8d27590e8d7056"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 6637,
+      "path": "coordination/prime_sat_affine_regularity_20261102/reviewer-brief.md",
+      "sha256": "8ca6ea168309f4d3f8a6e16fb658111fd9cbdba4435d3f1cbd7fd4b21a0b8701"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 8514,
+      "path": "coordination/prime_sat_affine_regularity_20261102/review-plan.yaml",
+      "sha256": "e89606b29ab72ce4d50e2fdd2775d4049469ab82ed7b85c62302b8734acfc50f"
+    },
+    {
+      "access": "text and hash inspection only",
+      "bytes": 1015,
+      "path": "coordination/prime_sat_affine_regularity_20261102/inference-amendment.yaml",
+      "sha256": "5f4b66a0d85742900a5482bc25b244346efabac56cce1dcd164f6809bc19a1f4"
+    }
+  ],
+  "source_locations": [
+    {
+      "lines": [
+        39,
+        55
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Strict descriptor; p primality remains a caller premise."
+    },
+    {
+      "lines": [
+        36,
+        49
+      ],
+      "path": "research/prime_sat_shared_signed_chart_20261030/charts.py",
+      "role": "Pole basis, normalization order and all special cases."
+    },
+    {
+      "lines": [
+        153,
+        177
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Special chart dispatch, projected variables, lifted U, norm coefficients and finite sign row."
+    },
+    {
+      "lines": [
+        178,
+        187
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "All public strata and inverse constraints."
+    },
+    {
+      "lines": [
+        117,
+        122
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Modular product coefficient identities with every remainder and quotient."
+    },
+    {
+      "lines": [
+        139,
+        150
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Exact nilpotent power chains."
+    },
+    {
+      "lines": [
+        188,
+        202
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Interval idempotents, N construction and chain invocation."
+    },
+    {
+      "lines": [
+        203,
+        225
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "All arm/stratum choices and exhaustive termwise component binding."
+    },
+    {
+      "lines": [
+        102,
+        109
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Quadratic arithmetic guard; zero source rows retain labels."
+    },
+    {
+      "lines": [
+        229,
+        243
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Distinct authenticated bit/range representation."
+    },
+    {
+      "lines": [
+        109,
+        124
+      ],
+      "path": "research/prime_sat_shared_signed_chart_20261030/charts.py",
+      "role": "Signed zeros include negative target; normalized A/B construction."
+    },
+    {
+      "lines": [
+        364,
+        403
+      ],
+      "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+      "role": "Restore normalized A/B and U; unchanged signed recovery and checker."
+    }
+  ],
+  "special_and_identity_cases": [
+    {
+      "dreg": 1,
+      "k": 0,
+      "pivot": false,
+      "projection": [],
+      "source": "empty variables and equations",
+      "strata": [
+        "zero"
+      ],
+      "target": "identity",
+      "top_quotient": "F_p"
+    },
+    {
+      "dreg": 0,
+      "k": 0,
+      "pivot": false,
+      "projection": [],
+      "source": "special.impossible=1; no variables",
+      "strata": [
+        "constant",
+        "linear"
+      ],
+      "target": "identity",
+      "top_quotient": "zero"
+    },
+    {
+      "dreg": 0,
+      "k": 0,
+      "pivot": false,
+      "projection": [],
+      "source": "special.impossible=1; no variables",
+      "strata": [
+        "zero",
+        "constant",
+        "linear"
+      ],
+      "target": "finite",
+      "top_quotient": "zero"
+    },
+    {
+      "dreg": 0,
+      "k": 1,
+      "pivot": false,
+      "projection": [],
+      "source": "special.impossible=1; no variables; no pole-one function",
+      "strata": [
+        "zero",
+        "constant",
+        "linear"
+      ],
+      "target": "identity",
+      "top_quotient": "zero"
+    },
+    {
+      "A": "A0+X",
+      "B": "0",
+      "d": 2,
+      "k": 2,
+      "pivot": false,
+      "projection": [
+        "chart.A0"
+      ],
+      "reason": "No sign.target row",
+      "structurally_admissible_strata": [
+        "zero"
+      ],
+      "target": "identity"
+    },
+    {
+      "A": "A0+A1*X",
+      "B": "1",
+      "d": 3,
+      "k": 3,
+      "pivot": false,
+      "projection": [
+        "chart.A0",
+        "chart.A1"
+      ],
+      "reason": "No sign.target row",
+      "structurally_admissible_strata": [
+        "constant"
+      ],
+      "target": "identity"
+    },
+    {
+      "A": "A0+A1*X+X^2",
+      "B": "B0",
+      "d": 4,
+      "k": 4,
+      "pivot": false,
+      "projection": [
+        "chart.A0",
+        "chart.A1",
+        "chart.B0"
+      ],
+      "reason": "No sign.target row",
+      "structurally_admissible_strata": [
+        "zero",
+        "constant"
+      ],
+      "target": "identity"
+    },
+    {
+      "A": "A0+A1*X+A2*X^2",
+      "B": "B0+X",
+      "d": 5,
+      "k": 5,
+      "pivot": false,
+      "projection": [
+        "chart.A0",
+        "chart.A1",
+        "chart.B0",
+        "chart.A2"
+      ],
+      "reason": "No sign.target row",
+      "structurally_admissible_strata": [
+        "linear"
+      ],
+      "target": "identity"
+    }
+  ],
+  "strata": {
+    "admissible_is_not_satisfiable": true,
+    "constant": {
+      "effect": "unchanged",
+      "rows": [
+        "stratum.B1zero: B1",
+        "stratum.nonzero: B0*stratum.inverse-1"
+      ]
+    },
+    "linear": {
+      "effect": "unchanged",
+      "rows": [
+        "stratum.nonzero: B1*stratum.inverse-1"
+      ]
+    },
+    "structural_obstructions": [
+      "B0=0 in nonzero constant stratum gives -1.",
+      "B1=0 in linear stratum gives -1.",
+      "Fixed B0=1 in zero stratum gives 1.",
+      "Fixed B1=1 in zero or constant stratum gives 1."
+    ],
+    "zero": {
+      "effect": "unchanged",
+      "rows": [
+        "stratum.B0zero: B0",
+        "stratum.B1zero: B1"
+      ]
+    }
+  },
+  "task_id": "TASK-20261102-5288b1",
+  "translated_k2": {
+    "api_boundary": "Polynomial-basis translation only; no new short-Weierstrass curve API call.",
+    "cubic": "f(a+Z)=Z^3+3*a*Z^2+(3*a^2+alpha)*Z+b^2",
+    "dreg": {
+      "original": "2*p",
+      "reduced_b_nonzero": "p+1",
+      "reduced_b_zero": "p+1"
+    },
+    "excluded_rows": [
+      "interval",
+      "rationality",
+      "stratum-inverse",
+      "other auxiliaries"
+    ],
+    "forward": [
+      "q=r1",
+      "h=r0+a*r1",
+      "w=s1+2*a",
+      "v=s0+a*s1+a^2"
+    ],
+    "hilbert_polynomials": {
+      "original": "(1+t)*(1+t+...+t^(p-1))^2",
+      "reduced_b_nonzero": "(1+t)*(1+t+...+t^(p-1))",
+      "reduced_b_zero": "(1+t)*(1+t+...+t^(p-1))"
+    },
+    "inverse": [
+      "r1=q",
+      "r0=h-a*q",
+      "s1=w-2*a",
+      "s0=v-a*w+a^2"
+    ],
+    "norm": "A(X)^2-f(X)+(X-a)*U(X); translated nonzero coefficient rows are -E2,-E1,-E0",
+    "original_symbols": {
+      "r0": "chart.A0",
+      "r1": "chart.A1",
+      "s0": "support.u0",
+      "s1": "support.u1"
+    },
+    "sign": "h-b; original pivot r0=b-a*r1",
+    "top_ideals": {
+      "original": "(h,q^2,v^p,w^p)",
+      "reduced_b_nonzero": "(q^2,v+2*b*q,w^p)",
+      "reduced_b_zero": "(q^2,v,w^p)"
+    },
+    "translated_symbols": {
+      "h": "A0 in the contract diagnostic",
+      "q": "A1 in the contract diagnostic",
+      "v": "u0 in the contract diagnostic",
+      "w": "u1 in the contract diagnostic"
+    }
+  },
+  "unchanged_obligations": {
+    "coordinate_cohort": "All 106 cells; F17 curve(2,2), F97 curve(1,4); widths2/3; all affine-x least-positive-y targets; quartic/membership/quadratic/quadratic_aa; complete projected sets, original controls and all phase/failure costs.",
+    "cross_family": "Explicit common signed-output map and complete fibers remain required.",
+    "fixed_software_controls": "All 15 chart fixtures across all three arms and public strata; all eight nilpotent and eight guard fixtures; mutation and certificate controls; both common-root beta signs. No fixture was executed here.",
+    "interval": "All original t,s, wrapped interval semantics and target-outside-interval cases stay intact.",
+    "older_coefficient_cohort": "All six F17 cells; degrees8/16; three target representatives; leaf_sat/prefix_univariate_gcd/exhaustive_reference/aa_reverse_prefix; distinct from normalized complete-chart coordinates.",
+    "other_leads": "All five prime-field leads preserved; no unchanged partial-matrix/two-bit-backdoor scaling or Boolean-refuter/SAT-bridge admission."
+  }
+}
