@@ -208,26 +208,44 @@ mod implementation {
             let q=self.field.q as u128; let size=self.field.size as u128;
             u64::try_from((size*size*size-size)/(q*q*q-q)).map_err(|_|"structure count overflow")
         }
-        /// Complete left-coset traversal with an explicit count ceiling and
-        /// immediate callback-error propagation. Output is normalized PGL2.
-        pub fn visit_structures<F>(&self,maximum:u64,mut body:F)->Result<u64,&'static str>
+        /// Complete left-coset traversal with a pre-allocation count ceiling.
+        pub fn visit_structures<F>(&self,maximum:u64,body:F)->Result<u64,&'static str>
+        where F:FnMut([u32;4])->Result<(),&'static str> {
+            self.visit_structures_range(0,self.structure_count()?,maximum,body)
+        }
+        /// Half-open slice of the same frozen transversal order. Arithmetic
+        /// unranking skips the prefix without constructing or visiting it.
+        pub fn visit_structures_range<F>(&self,start:u64,end:u64,maximum_emitted:u64,mut body:F)->Result<u64,&'static str>
         where F:FnMut([u32;4])->Result<(),&'static str> {
             let expected=self.structure_count()?;
-            if expected>maximum { return Err("structure traversal limit exceeded"); }
-            let f=&self.field; let t=trans(f);
-            if t.total!=expected { return Err("transversal cardinality mismatch"); }
-            let mut count=0u64;
-            let mut emit=|a,b,c|->Result<(),&'static str> {
-                let matrix=self.normalize_matrix(from_triple(f,a,b,c,t.inf))?;
-                body(matrix)?; count+=1; Ok(())
+            if start>end || end>expected { return Err("invalid structure range"); }
+            if end-start>maximum_emitted { return Err("structure traversal limit exceeded"); }
+            if start==end { return Ok(0); }
+            let f=&self.field;let t=trans(f);let q=f.size as u64;
+            let first=t.rep_a1.len() as u64;
+            let second=(t.rep_a2.len() as u64)*(q-1);
+            if t.total!=expected || first+second+(t.rep_b.len() as u64)*q*(q-1)!=expected {
+                return Err("transversal cardinality mismatch");
+            }
+            // Rank in [0,Q] with one/two forbidden entries, in numeric order.
+            let omit_one=|rank:u64,excluded:u32|->u32 {
+                let x=rank as u32;if x>=excluded {x+1} else {x}
             };
-            for &c in &t.rep_a1 { emit(t.inf,0,c)?; }
-            for &b in &t.rep_a2 { for c in 0..f.size { if c!=b { emit(t.inf,b,c)?; } } }
-            for &a in &t.rep_b { for b in 0..=f.size { if b==a { continue; }
-                for c in 0..=f.size { if c!=a && c!=b { emit(a,b,c)?; } }
-            } }
-            if count!=expected { return Err("emitted structure count mismatch"); }
-            Ok(count)
+            for index in start..end {
+                let (a,b,c)=if index<first {
+                    (t.inf,0,t.rep_a1[index as usize])
+                } else if index<first+second {
+                    let offset=index-first;let b=t.rep_a2[(offset/(q-1)) as usize];
+                    (t.inf,b,omit_one(offset%(q-1),b))
+                } else {
+                    let offset=index-first-second;let a=t.rep_b[(offset/(q*(q-1))) as usize];
+                    let tail=offset%(q*(q-1));let b=omit_one(tail/(q-1),a);
+                    let low=a.min(b);let high=a.max(b);let mut c=(tail%(q-1)) as u32;
+                    if c>=low {c+=1;} if c>=high {c+=1;} (a,b,c)
+                };
+                body(self.normalize_matrix(from_triple(f,a,b,c,t.inf))?)?;
+            }
+            Ok(end-start)
         }
         pub fn conjugate_forms(&self,form:[u32;5])->Result<Vec<[u32;5]>,&'static str> {
             if self.field.n>7 || form.iter().any(|&a|a>=self.field.size) {
@@ -391,6 +409,35 @@ mod implementation {
                     for &p in &points { assert_eq!(c.inverse(target,c.forward(target,p).unwrap()).unwrap(),p); }
                 }
             }
+        }
+        #[test]
+        fn structure_unranking_matches_nested_reference() {
+            for (q,n) in [(3,1),(3,3),(5,3)] {
+                let ctx=Context::new(q,n,125).unwrap();let f=&ctx.field;let t=trans(f);
+                let mut reference=Vec::new();
+                let mut emit=|a,b,c|reference.push(ctx.normalize_matrix(from_triple(f,a,b,c,t.inf)).unwrap());
+                for &c in &t.rep_a1 {emit(t.inf,0,c);}
+                for &b in &t.rep_a2 {for c in 0..f.size {if c!=b {emit(t.inf,b,c);}}}
+                for &a in &t.rep_b {for b in 0..=f.size {if b==a {continue;}
+                    for c in 0..=f.size {if c!=a && c!=b {emit(a,b,c);}}
+                }}
+                let count=reference.len() as u64;assert_eq!(count,ctx.structure_count().unwrap());
+                // Every index includes every A1/A2/B boundary and skipped value.
+                let mut actual=Vec::new();ctx.visit_structures(count,|m|{actual.push(m);Ok(())}).unwrap();
+                assert_eq!(actual,reference);
+                let mut joined=Vec::new();let mut start=0;
+                while start<count {let end=(start+17).min(count);
+                    ctx.visit_structures_range(start,end,17,|m|{joined.push(m);Ok(())}).unwrap();start=end;
+                }
+                assert_eq!(joined,reference);
+                assert_eq!(ctx.visit_structures_range(count,count,0,|_|panic!("empty")),Ok(0));
+                assert!(ctx.visit_structures_range(count,count+1,1,|_|panic!("bounds")).is_err());
+                assert!(ctx.visit_structures_range(1,0,0,|_|panic!("reverse")).is_err());
+            }
+            // Direct suffix access in the largest prescribed field: no prefix traversal.
+            let ctx=Context::new(13,3,2197).unwrap();let count=ctx.structure_count().unwrap();let mut calls=0;
+            ctx.visit_structures_range(count-1,count,1,|m|{assert_eq!(ctx.normalize_matrix(m)?,m);calls+=1;Ok(())}).unwrap();
+            assert_eq!(calls,1);
         }
         #[test]
         fn structure_bounds_and_exact_scalar_transport() {

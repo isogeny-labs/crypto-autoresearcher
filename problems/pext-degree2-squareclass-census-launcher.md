@@ -129,3 +129,28 @@ Connectedness/geometric genus, Frobenius descent/Type2, original geometric P3 an
 descriptive q13 H1 analysis, exports/checkpoints and frozen launcher/runtime
 bindings remain. Original admission/exit criteria and scientific/goal statuses
 are unchanged; the experiment remains review_required/unapproved.
+
+
+## Streaming join progress, 2026-11-02
+
+The [join plan](../experiments/EXP-PEXT-bf8f96/implementation/join_core.rs)
+now streams exact class/T/structure ordinal ranges with checked immutable prefixes,
+direct structure unranking and literal scalar-preserving quartic/conjugate rows.
+The [separate fixture checker](../experiments/EXP-PEXT-bf8f96/implementation/check_join_certificate.py)
+reconstructs complete supplied model/T coverage, distinct projective cocycles and
+exact adjacent-shard union. F3 complete classes pass8classes/14T-blocks/14rows;
+F5 passes12/24/24; one F27 model passes2T-blocks*819structures=1638rows.
+Eight Rust tests and25Python methods pass with source-bound logs, including
+nested-reference unranking, malformed shards and all-control-point translation
+involution. These checks complete the supplied-input arithmetic join component;
+no full target join or scientific cover/genus trial was launched.
+
+Next bind the complete published cohort and plan identities to production
+streaming/checkpoint/shard custody, then implement explicit all-T Mobius/scalar
+transport: T'=T+2Q requires reindexing HN to HN*A^-1, not fixed-ordinal equality.
+The present group identity is checked; the coordinate/scalar witness is still
+missing. Preserve all original five cohorts, abstract placements and controls.
+Scientific descent/genus/analysis and frozen launcher remain subsequent interfaces.
+See the [fresh join report](../experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.md).
+Original criteria and scientific/goal statuses remain unchanged; review_required
+and unapproved status persists.
