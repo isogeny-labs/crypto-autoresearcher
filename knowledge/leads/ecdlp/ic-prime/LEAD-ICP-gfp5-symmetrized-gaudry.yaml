@@ -8,21 +8,56 @@ mechanism: >-
   degree from ~2^20 to ~2^9 and so lower the design note's >= 2^142 Gaudry floor; the side
   dichotomy says every F_q-rational root of the descended system is an all-E or all-twist
   decomposition.
-disposition: open_next_step
-next_action:
-  step: >-
-    Run H-GFPN-6cc6aa (degree-4 Macaulay rank of the double-odd 2-torsion quotient against
-    a cofactor-1 null) at toy p', then re-run the C1 ladder with an honest memory envelope
-    (the m = 5 cells died at the degree-33 F4 round under 11 GiB) on >= 3 primes spanning
-    >= 12 bits.
-  discriminates: >-
-    Rank ratio <= 1/2 with the null above 1/2 supports the symmetrized degree drop and gives
-    a measured band to compare with 2^142 (still far above rho's ~2^160 only if the band collapses);
-    no drop leaves the published estimate standing and closes the symmetrization arm.
+disposition: closed_dominated
+obstruction:
+  kind: measured
+  statement: >-
+    The F_p-rational (Z/2)^4 x| S_5 quotient of KN-OPEN-9b4a2b (6 unknowns, degrees
+    8,8,8,8,8,2) was solved completely at m = 5 with msolve 0.6.5 (grevlex F4 plus
+    rational parametrisation) at p' = 4111, 262231 and 33554371. That is 3 primes over
+    13 bits, on a frozen protocol (crypto research/ecgfp5_quotient_solve_20261101).
+    D = 2^16 in every cell, which confirms the law D = 2^{(m-1)^2}. The planted point
+    was recovered every time. Peak RSS was 4.7-6.5 GiB.
+    Whole-solve per-system cost was c_cyc = 2^46.30 / 2^46.56 / 2^46.63 (CPU-s x 2.8 GHz,
+    band [c/4, 4c]). That meets the frozen G1 CLOSE threshold c_cyc >= 2^46 in every
+    cell, but only by 0.30-0.63 bits.
+    F4 alone cost 2^44.72-2^45.29, which would sit in G1's not_measured band. About
+    two-thirds of c is the rational parametrisation.
+    Five solver probes at p' = 4111 gave no improvement against the bar
+    W0_F4_CPU / 1.5 = 6,900 s:
+    - weighted F4 W = (2,2,2,2,2,1) finished with D = 2^21 and 1.16x the CPU;
+    - weighted (1,1,1,1,1,2) and (1,2,3,4,5,5) hit the wall cap;
+    - Singular sba F5a hit its cap;
+    - Singular sba F5b was stopped by the owner past the bar.
+    Grevlex already shows no degree fall on this system, which removes the mechanism
+    weighted orders exploit.
+    The ideal-degree drop the mechanism predicted is real (2^20 -> 2^16 against the
+    S_5-symmetrised system). The per-system cost at this D still dominates the
+    symmetrized Gaudry route against rho under the program's G1 model.
+  revisit_when: >-
+    Any of the following reopens the lead:
+    - a finish cheaper than msolve's rational parametrisation (FGLM to a lex eliminant, or
+      the eliminant only) brings whole-solve c_cyc to <= 2^38 (G1 PROMOTE) on >= 3 primes;
+    - a matrix-F5/GVW-style F4 (e.g. FGb) or another solver lowers F4 CPU below W0/1.5 on
+      the same system;
+    - a further rational symmetry or construction gives D < 2^16 at m = 5.
+    Note: the closure margin is under one bit, so a constant-factor finish change alone
+    could move the verdict to not_measured. H-GFPN-6cc6aa (degree-4 Macaulay rank against
+    a cofactor-1 null) remains untested.
 best_measured: >-
-  H-GFPN-9a29be inconclusive: m = 5 cells memory_exhausted at p' = 4111, arm (i) at m = 5
-  never attempted (EV-GFPN-fc5950)
+  Quotient at m = 5, msolve 0.6.5, 4 threads: D = 2^16 at p' = 4111 / 262231 / 33554371,
+  planted point recovered; whole-solve c_cyc 2^46.30 / 2^46.56 / 2^46.63 (F4 alone
+  2^44.72 / 2^45.05 / 2^45.29); max RSS 4.68 / 6.47 / 6.41 GiB; G1 CLOSE at every prime.
+  Supersedes H-GFPN-9a29be's memory_exhausted m = 5 cells (EV-GFPN-fc5950).
 evidence:
+- repo: crypto
+  path: research/ecgfp5_quotient_solve_20261101/README.md
+  note: >-
+    m = 3 validation (30 solves), m = 5 cells at three primes, weighted-F4 and sba probes;
+    frozen PROTOCOL.md with amendments A1-A5; crypto PR #3267
+- repo: crypto
+  path: research/ecgfp5_lead_evaluation_20261031/README.md
+  note: desk evaluation that designed the decisive quotient solve and its G1 criteria
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-GFPN-fc5950.yaml
   note: m = 5 absence is an absence; envelope misstated
@@ -63,4 +98,4 @@ forecloses:
 - side dichotomy of extension-field descent roots
 areas:
 - GFPN
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-01'
