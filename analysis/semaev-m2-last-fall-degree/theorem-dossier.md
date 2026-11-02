@@ -326,6 +326,43 @@ $$1=\sum_\sigma\sum_i\lambda_i^\sigma\,e_\sigma f_i .$$
 Each $e_\sigma f_i$ is a sum of products $m\,f_i$ with $m$ a monomial in $c$
 of degree $\le k$, so it lies in $M_{k+2}$. $\square$
 
+**Proposition 2.5a** (upper bound from affine constraints on the sum).
+**Proved.** Suppose the unsatisfiable $m=2$ system has $r$ affine-linear
+polynomials in $c=a+b$ in $\operatorname{span}F$ whose linear parts are
+linearly independent.
+Then
+
+$$1\in W_{k-r+2}(F),\qquad d_{\tilde F}\le k-r+2.$$
+
+In particular, if $\operatorname{Tr}|_V\ne0$, Theorem 2.1(c) supplies
+$\ell_0=\operatorname{Tr}(s)+\operatorname{Tr}(\alpha)$ and
+$d_{\tilde F}\le k+1$. This applies to every unsatisfiable instance with
+$V\not\subset K_0$, including Semaev's polynomial-basis subspace (which
+contains $1$). The conclusion concerns the closure $W_d$; it does not assert
+$1\in M_{k-r+2}$.
+
+*Proof.* Make an invertible affine change among the $c$ variables so that
+the $r$ given polynomials are the coordinate variables $y_1,\ldots,y_r$.
+Write the other $k-r$ coordinates as $q$. Each $f_i(a,y,q)$ still has degree
+at most two and is affine in $a$ after fixing $(y,q)$, by the expression in
+Theorem 2.5. For each $\tau\in\mathbb F_2^{k-r}$ the affine system
+$\{f_i(a,0,\tau)\}$ is inconsistent, so choose constants
+$\lambda_i^\tau\in\mathbb F_2$ with
+$\sum_i\lambda_i^\tau f_i(a,0,\tau)=1$ identically in $a$.
+
+Let $e_\tau(q)$ be the Boolean indicator of $q=\tau$, and set
+$Q=\sum_{\tau,i}e_\tau(q)\lambda_i^\tau f_i(a,y,q)$.
+Each summand belongs to $W_D(F)$ for $D=k-r+2$: expand the indicator into
+monomials and multiply a generator by at most $k-r$ variables. At $y=0$,
+the indicator identity gives $Q(a,0,q)=1$. Therefore every monomial of
+$Q+1$ contains some $y_j$, and we can partition its monomials to write
+$Q+1=\sum_{j=1}^r y_jH_j$ with $\deg H_j\le D-1$.
+Each $y_j$ lies in $\operatorname{span}F\subseteq W_D(F)$. Multiplication by
+the monomials of $H_j$, one variable at a time, stays inside degree $D$;
+hence $y_jH_j\in W_D(F)$. Thus $1\in W_D(F)$, and Proposition 1.2 gives the
+last-fall-degree bound. The trace specialization follows from Theorem
+2.1(c). $\square$
+
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$
 (the linear parts of $\operatorname{Tr}X_1$ and $\operatorname{Tr}X_2$). Let

@@ -32,7 +32,7 @@ free and $\dim V=\lceil n/3\rceil$. The statements and proofs are in
    - The degree-3 identities $\omega a_j\equiv$ (quadratic) also hold.
    - On random subspaces these falls span the whole degree-$\le2$ part of $W_3$, of dimension exactly $3n$. This was checked on instances.
 3. **General bounds on the last fall degree.**
-   - Upper bound (Thm 2.5): every unsatisfiable instance is refuted inside the degree-$(k+2)$ Macaulay matrix, so $d_{\rm LFD}\le k+2$. For Semaev's whole chained system (5) with any $t\ge2$, the bound is $d_{\rm LFD}\le(t-1)k+t$ (Prop 3.7). That is $2k+3$ at $t=3$: each auxiliary element $u_j$ adds 1, not $n$.
+   - Upper bounds (Thm 2.5 and Prop 2.5a): every unsatisfiable instance is refuted inside the degree-$(k+2)$ Macaulay matrix, so $d_{\rm LFD}\le k+2$. If the equation span has $r$ affine constraints on $c=a+b$ with independent linear parts, then the closure bound improves to $d_{\rm LFD}\le k-r+2$; in particular $d_{\rm LFD}\le k+1$ when $\operatorname{Tr}|_V\ne0$. For Semaev's whole chained system (5) with any $t\ge2$, the bound is $d_{\rm LFD}\le(t-1)k+t$ (Prop 3.7). That is $2k+3$ at $t=3$: each auxiliary element $u_j$ adds 1, not $n$.
    - Lower bound (Prop 2.6): $d_{\rm LFD}\ge3=d_{\rm ff}+1$ under two explicit, checkable genericity conditions. They hold on every random-subspace instance computed.
 4. **Bridges** (Props 1.1, 1.2, 1.4; Lemma 1.3).
    - The Boolean closure $W_d$ equals the polynomial closure $V_{\tilde F,d}$ modulo field equations.
