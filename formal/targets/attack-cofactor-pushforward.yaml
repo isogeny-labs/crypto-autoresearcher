@@ -1,0 +1,35 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261102-0d3cc8
+claim_id: ATTACK-COFACTOR-PUSHFORWARD-EXACT-FIBERS
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.CofactorPushforward.cofactor_failure_and_product_fiber_repair
+theorem_file: CryptoResearch/AttackCorpus/CofactorPushforward.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Include a shared-factor collapse over ZMod 2 x ZMod 2, the exact good control
+  over ZMod 2 x ZMod 3, and a generic finite K x S fibre-count theorem. The
+  exact audited declaration must contain both the countermodel and the repair,
+  including the constant |K| fibre count or its equivalent cardinal identity.
+
+  RFC 9380 does not claim that clearing alone uniformizes: encode_to_curve is
+  explicitly nonuniform and a configured h_eff may differ from h. No concrete
+  curve decomposition, suite, or implementation is certified here.
+claim: |
+  Scalar multiplication by two on ZMod 2 x ZMod 2 is constant zero, so it is
+  not a surjective uniformizer onto the intended second factor. In contrast,
+  on ZMod 2 x ZMod 3 it has image exactly {0} x ZMod 3 and every target point
+  has exactly two preimages.
+
+  Prove the generic repair in the same declaration: for finite additive groups
+  K and S, if multiplication by h annihilates K and acts bijectively on S,
+  then multiplication by h on K x S has image {0} x S and every point there
+  has exactly Fintype.card K preimages. State the resulting exact cardinal
+  pushforward identity.
+proof_map:
+  prerequisites:
+    - "The ambient group is supplied as an explicit product K x S; no theorem decomposes a concrete elliptic-curve group this way"
+    - "Multiplication by h is assumed to annihilate K and to be bijective on S; the word cofactor does not imply either premise"
+    - "Uniformity means exact equal finite fibre counts for uniform ambient input, not hash-to-curve indifferentiability or a distribution theorem for a concrete encoder"
