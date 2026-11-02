@@ -337,8 +337,9 @@ $$1\in W_{k-r+2}(F),\qquad d_{\tilde F}\le k-r+2.$$
 In particular, if $\operatorname{Tr}|_V\ne0$, Theorem 2.1(c) supplies
 $\ell_0=\operatorname{Tr}(s)+\operatorname{Tr}(\alpha)$ and
 $d_{\tilde F}\le k+1$. This applies to every unsatisfiable instance with
-$V\not\subset K_0$, including Semaev's polynomial-basis subspace (which
-contains $1$). The conclusion concerns the closure $W_d$; it does not assert
+$V\not\subset K_0$. For odd $n$, a polynomial-basis subspace containing $1$
+meets that condition because $\operatorname{Tr}(1)=1$; for even $n$, it must
+be checked on the actual basis. The conclusion concerns the closure $W_d$; it does not assert
 $1\in M_{k-r+2}$.
 
 *Proof.* Make an invertible affine change among the $c$ variables so that

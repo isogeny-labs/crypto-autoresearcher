@@ -37,3 +37,9 @@ The first two conditions qualify a prospective one-shot instrument; the final co
 ## Resolution and history
 
 Unresolved. V1 remains immutable. The V2 runner and control are being prepared prospectively; no frontier D5 run has occurred under either protocol.
+
+The trace-slicing alternative does not apply to this n50 polynomial03 input:
+all 25 basis elements in its frozen plan have field trace zero, so the trace
+consequence has no variable to eliminate. The prospective instrument and its
+different n51 polynomial01 target are recorded in
+[TRACE-SLICE-CERTIFICATES.md](../analysis/semaev-degree-five-quotient-lift/TRACE-SLICE-CERTIFICATES.md).
