@@ -105,10 +105,14 @@ def main() -> int:
                 and bool(receipt["audit_log"])
                 and task["task_id"] == target["task_id"]
                 and verification["task_id"] == target["task_id"]
+                and task["workspace"] == target["workspace"]
                 and task["theorem_name"] == target["theorem_name"]
                 and task["theorem_file"] == target["theorem_file"]
+                and verification["theorem_name"] == target["theorem_name"]
+                and verification["theorem_file"] == target["theorem_file"]
                 and provenance["task_spec_sha256"] == target_hash
-                and provenance["theorem_sha256"] == theorem_hash):
+                and provenance["theorem_sha256"] == theorem_hash
+                and provenance["workspace_inputs"].get(target["theorem_file"]) == theorem_hash):
                 matches.append({"run_id": int(run_id), "file": receipt_path.name,
                                 "sha256": sha256(receipt_path.read_bytes()),
                                 "source_commit": provenance["source_commit"]})

@@ -7,7 +7,7 @@ At crypto-autoresearcher `main` commit `685914319621828a458a19c1ce8693ca0174f7f5
 | [41365419446](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41365419446) | 107 named receipts, including the five merged attack-corpus proof sources and their frozen targets | pre/post files byte-identical, SHA-256 `006ffd7bb3c7c5711049386a53eadcc38701d03007ec74ab427ce51b10ca235d` |
 | [41488317240](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41488317240) | the later Nagao exact-degree target, plus matching receipts for existing sources | pre/post files byte-identical, SHA-256 `fb62d1952a368023bbf13dfb42f245d69e500693e11e5f631ed8a8a648e4caa7` |
 
-The comparison requires matching `task_id`, `theorem_name`, `theorem_file`, frozen target hash, Lean source hash, successful build and axiom-audit flags, no forbidden constructs or infrastructure failure, and a nonempty audit log. It also rejects a run whose pre/post dependency-pin files differ. The inventory is pinned to this one Git commit; later `main` commits require a new snapshot or an explicit tree-diff showing no relevant source changes.
+The comparison requires matching `task_id`, workspace, `theorem_name`, and `theorem_file` across the target, task and verification sections. It checks the frozen target hash and Lean source hash against receipt provenance, including the named workspace input; successful build and axiom-audit flags; no forbidden constructs or infrastructure failure; and a nonempty audit log. It also rejects a run whose pre/post dependency-pin files differ. The inventory is pinned to this one Git commit; later `main` commits require a new snapshot or an explicit tree-diff showing no relevant source changes.
 
 ## Rebuild
 
