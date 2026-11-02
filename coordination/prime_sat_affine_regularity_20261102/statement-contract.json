@@ -1,0 +1,381 @@
+{
+  "schema": "affine-regularity-prospective-review-contract/v1",
+  "recorded_at": "2026-11-02T00:11:01.851864+00:00",
+  "status": "approved for bounded zero-execution analytical review; publication and native ownership required",
+  "authority": "Coordinator approval under standing owner authorization is recorded in coordination/prime_sat_affine_regularity_20261102/admission-proposal.yaml. This approval neither publishes the task nor claims a mathematical result; native readiness, ownership and source snapshot remain required.",
+  "objective": "Independently resolve the retained-row affine-reduction statements and translated k2 control, and map their actual scope onto the complete-chart source.",
+  "review_type": "analytical source-aware independent derivation; no implementation or executable checks",
+  "statements": [
+    {
+      "id": "graded_quotient",
+      "statement": "For every field K, integer n>=0, finite polynomial list f_i in R=K[x,z_1,...,z_n], homogeneous linear ell in S=K[z_1,...,z_n] and c in K, set F=(L=x-ell-c,f_i), G=(f_i(ell+c,z)) with only zero rows omitted, I=(F_top), J=(G_top). Decide whether a graded surjection R/I -> S/J exists and hence each quotient Hilbert function of G is bounded above by that of F. If R/I is finite-dimensional, decide dreg(G)<=dreg(F), with dreg the first zero graded component of the quotient.",
+      "required_edges": [
+        "Degree-drop and vanished-row cases",
+        "Nonzero constant input or output",
+        "n=0, empty G, zero ideal versus unit ideal",
+        "No assertion of strictness or solving-degree equality"
+      ]
+    },
+    {
+      "id": "solution_field_equations",
+      "statement": "For the same data, substitution and x=ell(z)+c reconstruction give inverse solution-set maps over every field extension of K. For K=F_p and ell=sum a_i*z_i, c,a_i in F_p, independently establish the substituted x^p-x identity sum a_i*(z_i^p-z_i), and state exactly when it may be omitted without changing the top-part ideal.",
+      "required_edges": [
+        "All remaining variables, including chart auxiliaries, have field equations in the explicitly field-augmented presentation",
+        "Degree-zero/one boundary cases",
+        "Do not infer the Frobenius identity for coefficients outside F_p",
+        "Do not transfer full-field affine substitution directly to Boolean bits without idempotence guards"
+      ]
+    },
+    {
+      "id": "row_retention",
+      "statement": "Retain every nonzero substituted row, including redundant rows. Independently check {z^2+z,z^2,z} versus {z^2+z,z^2}: same ordinary ideal, potentially different top-part invariant. Any nonzero row deletion needs an explicit highest-part membership argument; ordinary ideal membership alone is insufficient.",
+      "required_edges": [
+        "Deleting a zero row is allowed",
+        "Deleting the transformed field equation needs its stated certificate",
+        "An ordinary norm/sign redundancy is not by itself a highest-part certificate"
+      ]
+    },
+    {
+      "id": "translated_k2",
+      "statement": "For every prime p>3, nonsingular E:y^2=x^3+alpha*x+beta over F_p and affine T=(a,b) on E, take Z=X-a, c2=3a,c1=3a^2+alpha. Diagnose exactly the four-variable system E2=c2-A1^2-u1, E1=c1-2*A1*A0-u0, E0=b^2-A0^2, L=A0-b, plus v^p-v for v=A0,A1,u0,u1. No interval, rationality-block, stratum-inverse or other auxiliary equations are included. Compare its top-part ideal with the all-nonzero-row substitution A0=b and retained three field equations. Independently decide the proposed values dreg(F)=2p and dreg(G)=p+1.",
+      "required_edges": [
+        "Separate b=0 and b!=0; show exact quotient monomial basis/Hilbert polynomial and largest nonzero degree",
+        "Show both inclusions for each claimed top-part ideal, not only a list of obvious generators",
+        "Retain any nonzero constant consequence; do not assume existence of F_p solutions",
+        "This is polynomial-basis translation, not a translated-curve API call",
+        "The original source uses X; name translated coefficient variables separately and derive their inverse coordinate map",
+        "Do not apply these strict values to the interval/rationality-augmented chart"
+      ]
+    },
+    {
+      "id": "source_application",
+      "statement": "For every valid public descriptor of the current composition source, classify whether the finite-target sign row supplies the coefficient-one chart.A0 pivot. For finite T and k=1..5, derive chart.A0=yT*B(xT)-sum_{i>=1} Ai*xT^i with fixed highest coefficient included as a constant. Map substitution to every emitted norm.*, sign.target, stratum.*, interval.*, rationality.* row family and all projected/auxiliary field equations if added. Keep U lifted.",
+      "required_edges": [
+        "k=0,T=O: empty projected all-identity in zero stratum; other strata literal obstruction; no A0 pivot",
+        "k=0,finite T: literal impossible chart; no A0 pivot",
+        "k=1,T=O: literal impossible pole-one chart; no pivot",
+        "T=O,k=2..5: no target-sign equation; do not eliminate A0 by this rule",
+        "Finite k=1..5 with structurally impossible B stratum: retain obstruction; no witness-selected stratum",
+        "yT=0 two-torsion needs no division by yT",
+        "All three rationality arms and all three public strata; wrapped interval and target outside interval stay unchanged",
+        "No fabricated field-equation emission: canonical_chart currently emits quadratic field arithmetic; explicit v^p-v augmentation is a theoretical presentation distinct from current bit-range compilation",
+        "Raw reduced coefficient projection differs in dimension; give reconstruction to original normalized chart and signed-output convention before any comparison"
+      ]
+    },
+    {
+      "id": "claim_boundary",
+      "statement": "Classify separately: solution-set bijection, one fewer full-field variable where pivot exists, no increase in total input degree under affine substitution, conditional non-increase in top-part regularity, strict k2 diagnostic change, and unresolved strict full-chart/solving-degree/search-work change.",
+      "required_edges": [
+        "Explicit field equations have degree p; quadratic claim applies to chart arithmetic rows, not the entire field-augmented input",
+        "No complete projected-model comparison, benchmark, certificate-pruning result or runtime gain follows from this analytical packet",
+        "Preserve original full user cohorts and future failed-work accounting"
+      ]
+    }
+  ],
+  "inputs": {
+    "procedural": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "e95a5b68c7be0391c9b6d6ad039b5903127eb6ac8e8cf2bc1af5b06c91c23703"
+      },
+      {
+        "path": "agents/coordinator.md",
+        "sha256": "410b3be4737a58dbf31c469b6b2d103740598e2b3c0a86610fa64af0b80128ad"
+      },
+      {
+        "path": "docs/agent-contract-extended.md",
+        "sha256": "1dd0e607a772b19b733cfc2ac0971076e72d653e7703224522c6096fa3fc8692"
+      },
+      {
+        "path": "docs/research-budget-policy.md",
+        "sha256": "215f0edd1b85a02609ccf981baa821c9d6d99973962d664c8ce5605978a8d8f1"
+      },
+      {
+        "path": "templates/research-records.md",
+        "sha256": "d1935d5d42f5b5e74672f8e10a4fa0ee9fbf3efb0980499bf004ba1f02e50d34"
+      },
+      {
+        "path": "coordination/prime_sat_full_chart_composition_20261101/review-plan.yaml",
+        "sha256": "3718942b8ae77aab1a394a3fc672c7f24e2c797fada345ac29c0c2db784cc707"
+      }
+    ],
+    "primary_reference": {
+      "url": "https://arxiv.org/pdf/2112.05579v2",
+      "title": "Caminata and Gorla, Solving degree, last fall degree, and related invariants",
+      "locators": [
+        "Definition1.1, PDF page4",
+        "Definition1.4, PDF page6"
+      ],
+      "provenance": "retrieved primary source; definitions checked by planning coordinator in preceding turn; future reviewer must read independently",
+      "scope": "Metric definitions only; source does not supply the proposed chart theorem."
+    },
+    "source_inputs": [
+      {
+        "path": "research/prime_sat_full_chart_composition_20261101/composition.py",
+        "sha256": "354d6eef9695477f5c3ab2e9acc274241848f25a863dac30d2e5eb0def68c3b9"
+      },
+      {
+        "path": "research/prime_sat_shared_signed_chart_20261030/charts.py",
+        "sha256": "c808c7d3a5a2a96316a0c13c9faafd848406ef44e960a1bcc52bde700e6a818b"
+      },
+      {
+        "path": "coordination/prime_sat_full_chart_composition_20261101/SOURCE-API.md",
+        "sha256": "a742017f8a8c6db0adbf20246dac1ab730f85f6322c144fc8687235db371d753"
+      },
+      {
+        "path": "coordination/prime_sat_full_chart_composition_20261101/fixed-software-contract.json",
+        "sha256": "16f5740d53471c30423db90fb1bf82c4774a9dd0a2c39d60b5d2ac35998a7659"
+      }
+    ],
+    "producer_proofs_for_custody_only_never_reviewer_inputs": [
+      {
+        "path": ".resume/affine-regularity-monotonicity-20261101/derivation.md",
+        "sha256": "e4281119268e4ecc939321f7b6e1c0d24c9587010b03228fc36539a11de5010a",
+        "archived_input_path": "coordination/prime_sat_affine_regularity_20261102/producer-inputs/monotonicity.md",
+        "producer_output_path": "research/prime_sat_affine_regularity_20261102/monotonicity.md"
+      },
+      {
+        "path": ".resume/affine-regularity-control-20261101/derivation.md",
+        "sha256": "98e84341026434b15532264b72da6b7e03e2d672c1545fe3c9dc0aa503e8df19",
+        "archived_input_path": "coordination/prime_sat_affine_regularity_20261102/producer-inputs/strict-control.md",
+        "producer_output_path": "research/prime_sat_affine_regularity_20261102/strict-control.md"
+      }
+    ],
+    "producer_proof_read_prohibition": "Every exact forbidden path in review-plan.yaml and any later copy stays hidden throughout; hashes are custody only."
+  },
+  "review_plan": {
+    "recorded_at": "2026-11-02T17:04:00.292389+00:00",
+    "claim_under_review": "Statement-only retained-row affine elimination, field-equation obligations, translated k2 top-part regularity control and source pivot mapping; no strict full-chart or solving-degree claim assumed.",
+    "coordinator_prior": "Affine substitution appears capable of exposing lower-degree retained consequences; the exact graded inclusion, row deletion and source-presentation boundaries must be independently challenged. No strict complete-chart or solving-degree benefit is assumed.",
+    "joints": [
+      {
+        "joint": "graded_quotient",
+        "assigned_to": "TASK-20261102-5288b1",
+        "attack_plan": "Try affine constants that cancel leading terms, zero/constant substitutions and no remaining variables; establish the correct ideal inclusion and map direction, or give a counterexample."
+      },
+      {
+        "joint": "solution_field_equations",
+        "assigned_to": "TASK-20261102-5288b1",
+        "attack_plan": "Derive reconstruction over extensions and the Frobenius equation identity; exhibit the missing premise if coefficients lie outside F_p or surviving field equations are omitted."
+      },
+      {
+        "joint": "row_retention",
+        "assigned_to": "TASK-20261102-5288b1",
+        "attack_plan": "Recompute the redundant-row counterexample and challenge deletion based only on ordinary ideal equivalence."
+      },
+      {
+        "joint": "translated_k2",
+        "assigned_to": "TASK-20261102-5288b1",
+        "attack_plan": "Derive both highest-part ideals and monomial staircases from the displayed rows without reading producer calculations; cover zero and nonzero target ordinate."
+      },
+      {
+        "joint": "source_application",
+        "assigned_to": "TASK-20261102-5288b1",
+        "attack_plan": "Trace basis normalization and sign.target directly in the source; classify each k/target special case and every row family, and identify the absence of explicit field equations from canonical_chart."
+      },
+      {
+        "joint": "claim_boundary",
+        "assigned_to": "TASK-20261102-5288b1",
+        "attack_plan": "Challenge an assertion of strict improvement for every affine elimination, or transfer of the diagnostic degree to complete interval/Boolean systems; require a distinct statement for every invariant and representation."
+      }
+    ],
+    "blindness": {
+      "mutual": true,
+      "lifted_for": [],
+      "rationale": "One fresh source-aware reviewer independently derives every statement; original and archived producer proof text stays hidden throughout."
+    },
+    "proves_too_much": {
+      "objects": [
+        "Redundant row deletion that changes dreg1 to2 despite ordinary ideal equality",
+        "F={x,z^2} reduced by x=0: equal dreg, refuting universal strictness",
+        "Finite-target-free identity charts: no sign pivot",
+        "k=0/all-identity and literal impossible charts: empty/unit-ideal boundary",
+        "Field Frobenius coefficients outside F_p",
+        "Boolean substitution x=y+z without ell^2-ell",
+        "Translated diagnostic with extra interval/rationality equations: strict thresholds cannot be inherited",
+        "Current canonical_chart without added field equations: finite top-part quotient must not be assumed"
+      ],
+      "failure_signature": "Identify the invalid conclusion or missing premise explicitly; do not promote a general claim because a narrow control holds."
+    },
+    "blind_rederivation": {
+      "required": true,
+      "assigned_to": "TASK-20261102-5288b1",
+      "quantity": "Graded map/inclusion proof, solution reconstruction, Frobenius identity, top-part deletion control, both diagnostic Hilbert staircases and actual source pivot cases",
+      "blind_from": [
+        ".resume/affine-regularity-monotonicity-20261101/derivation.md",
+        ".resume/affine-regularity-monotonicity-20261101/diagram.svg",
+        ".resume/affine-regularity-monotonicity-20261101/report.typ",
+        ".resume/affine-regularity-monotonicity-20261101/report.pdf",
+        ".resume/affine-regularity-monotonicity-20261101/report-inputs.json",
+        ".resume/affine-regularity-control-20261101/derivation.md",
+        ".resume/affine-regularity-control-20261101/diagram.svg",
+        ".resume/affine-regularity-control-20261101/report.typ",
+        ".resume/affine-regularity-control-20261101/report.pdf",
+        ".resume/affine-regularity-control-20261101/report-inputs.json",
+        "coordination/prime_sat_affine_regularity_20261102/producer-inputs/monotonicity.md",
+        "coordination/prime_sat_affine_regularity_20261102/producer-inputs/strict-control.md",
+        "research/prime_sat_affine_regularity_20261102/monotonicity.md",
+        "research/prime_sat_affine_regularity_20261102/strict-control.md",
+        "research/prime_sat_affine_regularity_20261102/provenance.json",
+        "research/prime_sat_affine_regularity_20261102/report.md",
+        "research/prime_sat_affine_regularity_20261102/diagram.svg",
+        "research/prime_sat_affine_regularity_20261102/report.typ",
+        "research/prime_sat_affine_regularity_20261102/report.pdf",
+        "research/prime_sat_affine_regularity_20261102/report-inputs.json",
+        "research/prime_sat_full_chart_composition_20261101/test_composition.py",
+        "research/prime_sat_full_chart_composition_20261101/software-results.json",
+        "research/prime_sat_full_chart_composition_20261101/README.md",
+        "research/prime_sat_full_chart_composition_20261101/TASK-20261101-f834b9/test_independent.py",
+        "research/prime_sat_full_chart_composition_20261101/TASK-20261101-f834b9/independent-results.json",
+        "research/prime_sat_full_chart_composition_20261101/TASK-20261101-f834b9/review.md",
+        "research/prime_sat_full_chart_composition_20261101/TASK-20261101-f834b9/attestation.yaml",
+        "docs/reports/prime-sat-full-chart-composition-20261101/report.md",
+        "docs/reports/prime-sat-full-chart-composition-20261101/diagram.svg",
+        "docs/reports/prime-sat-full-chart-composition-20261101/report.typ",
+        "docs/reports/prime-sat-full-chart-composition-20261101/report.pdf",
+        "docs/reports/prime-sat-full-chart-composition-20261101/report-inputs.json",
+        "docs/reports/prime-sat-range-corrected-20261101/report.md",
+        "docs/reports/prime-sat-range-corrected-20261101/diagram.svg",
+        "docs/reports/prime-sat-range-corrected-20261101/report.typ",
+        "docs/reports/prime-sat-range-corrected-20261101/report.pdf",
+        "docs/reports/prime-sat-range-corrected-20261101/report-inputs.json",
+        "docs/reports/prime-sat-rationality-software-20261031/report.md",
+        "docs/reports/prime-sat-rationality-software-20261031/diagram.svg",
+        "docs/reports/prime-sat-rationality-software-20261031/report.typ",
+        "docs/reports/prime-sat-rationality-software-20261031/report.pdf",
+        "docs/reports/prime-sat-rationality-software-20261031/report-inputs.json",
+        "docs/reports/prime-sat-shared-signed-chart-20261030/report.md",
+        "docs/reports/prime-sat-shared-signed-chart-20261030/diagram.svg",
+        "docs/reports/prime-sat-shared-signed-chart-20261030/report.typ",
+        "docs/reports/prime-sat-shared-signed-chart-20261030/report.pdf",
+        "docs/reports/prime-sat-shared-signed-chart-20261030/report-inputs.json",
+        "ledger/decisions/DEC-20261101-1a223a.yaml",
+        "coordination/prime_sat_full_chart_composition_20261101/design.md",
+        "coordination/prime_sat_full_chart_composition_20261101/snapshot-receipt.json",
+        "coordination/prime_sat_affine_regularity_20261102/source-inputs.json",
+        "coordination/prime_sat_affine_regularity_20261102/snapshot-receipt.json",
+        ".resume/boolean-affine-refuter-20261101/derivation.md",
+        ".resume/boolean-affine-refuter-20261101/affine_candidate.py",
+        ".resume/boolean-affine-refuter-20261101/prospective-controls.json",
+        ".resume/affine-two-pivot-20261102/"
+      ]
+    },
+    "review_output": {
+      "paths": [
+        "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/independent-derivation.md",
+        "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/source-map.json",
+        "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/review.md",
+        "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/attestation.yaml"
+      ],
+      "verdicts": [
+        "holds",
+        "breaks",
+        "inconclusive"
+      ],
+      "required": [
+        "Own complete analytical derivation; native review_attestation.verdict is a6-joint map; exact reads, hashes, deviations and runtime unknowns retained."
+      ]
+    },
+    "budget": {
+      "scientific_runs": 0,
+      "solver_instances": 0,
+      "solver_calls": 0,
+      "remote_jobs": 0,
+      "maximum_runs": 0,
+      "maximum_software_suite_invocations": 0,
+      "candidate_imports": 0,
+      "cas_invocations": 0,
+      "census": 0,
+      "memory_gb": 2,
+      "review_sessions": 1,
+      "review_rounds": 1,
+      "maximum_elapsed_review_seconds": 3600
+    },
+    "promotion": "Reviewer reports only its joints. A later Coordinator decision composes evidence; no mathematical acceptance is prewritten."
+  },
+  "budget": {
+    "review_sessions": 1,
+    "review_rounds": 1,
+    "maximum_elapsed_review_seconds": 3600,
+    "reason_for_bound": "Finite six-joint analytical review; on expiry preserve achieved derivations and unresolved joints as inconclusive. No automatic second round.",
+    "software_suite_invocations": 0,
+    "candidate_imports": 0,
+    "solver_calls": 0,
+    "census": 0,
+    "scientific_runs": 0,
+    "remote_jobs": 0,
+    "source_edits": 0,
+    "deliverable_files": 4
+  },
+  "permitted_operations": [
+    "Read the declared text/source files and primary reference",
+    "Hand derivation and source inspection",
+    "Write the four later-bound analytical review artifacts",
+    "Ordinary text/JSON/YAML parsing and file hashes for custody; no candidate execution, CAS, generated enumeration or solver"
+  ],
+  "prospective_deliverables": [
+    {
+      "path": "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/independent-derivation.md",
+      "purpose": "Independent full derivation from statements, systems and source; sealed with final artifacts; contains proofs or counterexamples, boundary conventions and explicit unresolved points. Producer proofs remain unread throughout."
+    },
+    {
+      "path": "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/source-map.json",
+      "purpose": "Source hash and symbol/label mapping, classification for every special-chart family, all-arm/stratum substitution obligations, current versus field-augmented representation, projection reconstruction."
+    },
+    {
+      "path": "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/review.md",
+      "purpose": "Six-joint verdicts against the prospective assertions, referencing the reviewer own complete derivation, exact assumptions, counterexamples, remaining questions and source citations. No producer-proof comparison required."
+    },
+    {
+      "path": "research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/attestation.yaml",
+      "purpose": "Native review_attestation with six-entry verdict map, exact sources_read, independent derivation and final artifact hashes, blind_from compliance/deviations, zero-execution counts and unauthenticated runtime disclosure."
+    }
+  ],
+  "completion_gate": [
+    "All six joints addressed with proved arguments, explicit counterexamples or labeled unresolved conditions; uncertainty is not silently resolved.",
+    "All field/special-chart cases, both b cases and every proves-too-much control addressed analytically.",
+    "No reliance on completed software tests as proof of affine reduction; no omitted row justified solely by ordinary ideal equality.",
+    "Exact declared reads and sealed independent derivation retained; both producer proofs and every copy remain unread throughout.",
+    "No suite, imported candidate, CAS, solver, census, code edit or external compute launch."
+  ],
+  "inference": {
+    "requested_policy": "review-adversarial",
+    "requested_effort": "xhigh",
+    "fresh_session_required": true,
+    "inherit_producer_context": false,
+    "actual_provider_model_tier_effort": "unknown; unauthenticated",
+    "amendment_requirement": "Satisfied prospectively by the explicitly approved coordination/prime_sat_affine_regularity_20261102/inference-amendment.yaml; all unauthenticated requirements remain disclosed. Publication and native ownership are still required.",
+    "no_silent_substitution": true,
+    "amendment_record": "coordination/prime_sat_affine_regularity_20261102/inference-amendment.yaml",
+    "amendment_approved_by": "coordinator",
+    "amendment_approved_at": "2026-11-02T17:14:22.337107+00:00"
+  },
+  "root_admission_work_remaining": [
+    "Reconcile existing archive/slot completion; do not overlap or duplicate it.",
+    "Bind native task/archive IDs, actual exclusive write scope and exact review output paths; commit/push the statement/system contract and allowed source/API inputs with exact hashes. Preserve producer proof hashes privately for custody but exclude proof text from reviewer read scope.",
+    "Freeze this statement-only plan and prospective runtime amendment before any reviewer reads; root derivations and their copies remain excluded throughout, with no blindness lift.",
+    "Obtain native readiness/ownership only through the existing workflow; no action in this list is authorized by this candidate packet.",
+    "Root owns subsequent report/diagram/PDF, rendering, official decision, archive and publication; no scientific promotion is prewritten."
+  ],
+  "preserved_scope": {
+    "coordinate_cohort": "106 original cells; F17 curve(2,2), F97 curve(1,4), digit widths2/3, all affine-x least-positive-y targets; quartic/membership/quadratic/quadratic_aa; complete projected model sets, original controls and all phase/failure costs.",
+    "older_coefficient_cohort": "Six original F17 cells, degrees8/16, three target representatives; leaf_sat/prefix_univariate_gcd/exhaustive_reference/aa_reverse_prefix. Distinct from new normalized complete-chart coefficients.",
+    "representation_bridge": "Reduced coefficient coordinates require reconstruction; no raw-bit projection equality across representations is assumed. Common signed-output map and complete fibers remain necessary for cross-family comparison.",
+    "other_leads": "All five prime-field leads remain in scope. No unchanged partial-matrix/two-bit-backdoor scaling and no guarded Boolean-refuter or SAT-bridge admission occurs here.",
+    "strict_result_boundary": "Even a positive analytical review proves only the stated presentation claims and diagnostic; strict full-chart degree reduction and certified pruning performance require their own evidence."
+  },
+  "native_ids": {
+    "producer": "TASK-20261102-143be1",
+    "snapshot": "TASK-20261102-300dde",
+    "reviewer": "TASK-20261102-5288b1",
+    "ledger": "TASK-20261102-74f0a5",
+    "decision": "DEC-20261102-cd6ac3"
+  },
+  "approval": {
+    "approved_by": "coordinator",
+    "approved_at": "2026-11-02T17:14:22.337107+00:00",
+    "record": "coordination/prime_sat_affine_regularity_20261102/admission-proposal.yaml",
+    "initial_stage_manifest_sha256": "80237d51535fdeb314fd5b7a4c992f96c253080b36470e3b87d19700c81e4867",
+    "mathematical_claims_promoted": false
+  }
+}
