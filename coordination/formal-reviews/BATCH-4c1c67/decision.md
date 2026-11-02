@@ -32,3 +32,14 @@ transcription prerequisites listed in each module's "What is NOT proved"
 section, the literal ≥ reading beyond CORR-20261101-4186ae, and anything about
 elliptic curves. Open beyond this batch: independent human check of
 Proposition 6 and the Lemma 6 reading; novelty audit; the O3 live fetch.
+
+## Addendum (2026-11-02, later): O3
+
+A second live attempt reached the 2015/984 landing page at eprint.iacr.org,
+which has title "Complexity of ECDLP under the First Fall Degree Assumption",
+author Koh-ichi Nagao, and one history entry, "2015-10-12: received", with no
+later revision. That agrees with the vendored PDF's recorded last-modified date
+of 2015-10-11 (the one-day difference is consistent with a timezone offset), so
+the vendored PDF is the only posted version. The PDF itself still returns 403
+from this environment, so a byte-for-byte comparison is still owed. 2013/549
+was not re-checked.
