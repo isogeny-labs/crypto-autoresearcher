@@ -50,6 +50,12 @@ span gives the exact substitution
 $b_0=a_0+\operatorname{Tr}(a_6/z^2)$; the checker recomputes this identity
 from the field record before testing any certificate. This leaves 51
 variables and preserves the named system's Boolean solution count.
+The quadratic coefficient matrix has rank 50 across 51 equations, so the
+trace relation spans its entire affine-dependency space. Likewise, n50's
+quadratic rank 48 leaves two dependencies: one zero polynomial and the single
+nonzero relation above. Degree-two equation combinations therefore provide
+one affine elimination on each of these named inputs; further size reductions
+would require a different algebraic relation or a different presentation.
 
 `slice_trace_certificate.py` copies the accepted D4 map rows that do not
 contain the eliminated variable, renumbering monomials and retaining the

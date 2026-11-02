@@ -17,6 +17,23 @@ from slice_trace_certificate import project
 
 
 class TraceSliceCertificateTests(unittest.TestCase):
+    @staticmethod
+    def quadratic_rank(polys):
+        quadratic = sorted({m for poly in polys for m in poly
+                            if bin(m).count('1') == 2})
+        positions = {m: i for i, m in enumerate(quadratic)}
+        pivots = {}
+        for poly in polys:
+            row = sum(1 << positions[m] for m in poly if m in positions)
+            while row:
+                bit = row.bit_length() - 1
+                if bit in pivots:
+                    row ^= pivots[bit]
+                else:
+                    pivots[bit] = row
+                    break
+        return len(pivots)
+
     def test_named_n50_affine_certificate_and_tamper_rejection(self):
         certificate = (Path(__file__).resolve().parent /
                        'n50-poly03-affine-relation-001.json')
@@ -133,20 +150,7 @@ class TraceSliceCertificateTests(unittest.TestCase):
                               record['a2'], int(record['a6_hex'], 16),
                               int(record['z_hex'], 16),
                               [int(v, 16) for v in record['V_basis_hex']])
-        quadratic = sorted({m for poly in original for m in poly
-                            if bin(m).count('1') == 2})
-        positions = {m: i for i, m in enumerate(quadratic)}
-        pivots = {}
-        for poly in original:
-            row = sum(1 << positions[m] for m in poly if m in positions)
-            while row:
-                bit = row.bit_length() - 1
-                if bit in pivots:
-                    row ^= pivots[bit]
-                else:
-                    pivots[bit] = row
-                    break
-        self.assertEqual(len(pivots), 48)
+        self.assertEqual(self.quadratic_rank(original), 48)
         with self.assertRaisesRegex(ValueError, 'zero trace'):
             trace_slice(record, 25)
         relation_mask = 0x13c4f635ad45c
@@ -161,6 +165,13 @@ class TraceSliceCertificateTests(unittest.TestCase):
         n, polys, affine = trace_slice(n51['record'], 26)
         self.assertEqual((n, len(polys)), (51, 51))
         self.assertIn(1, affine)
+        record = n51['record']
+        _, original = descend(record['n'], int(record['modulus_hex'], 16),
+                              record['a2'], int(record['a6_hex'], 16),
+                              int(record['z_hex'], 16),
+                              [int(v, 16) for v in record['V_basis_hex']])
+        # The trace relation spans the entire quadratic-kernel dimension one.
+        self.assertEqual(self.quadratic_rank(original), 50)
 
 
 if __name__ == '__main__':
