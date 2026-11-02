@@ -38,6 +38,15 @@ accepted seed for a separately frozen D5 continuation. A later D5 map must
 pass the same checker and the count-versus-codimension gate before any LFD
 at least six claim.
 
+The retained odd-$n$ software fixture `odd-a2-0` has an original-checker
+accepted 944-byte D4 certificate, SHA-256
+`d8552a13d300bcbec10966b52092d3754975716fd50062bab3b347b85dfbc6a9`.
+The focused test projects it to a five-variable certificate with SHA-256
+`dc7c6c6f6f9594f1b33963a431d63c310d3780ea7337fc8902cd84dcb5920838`
+and the new checker accepts the independently sliced equations at D4 with
+codimension one. This validates a real named control for the instrument; its
+solution count is also one, so it establishes no new LFD lower bound.
+
 The retained original n51 D4 certificate has SHA-256
 `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`
 and was accepted with codimension at least 45,615 against a fresh zero count;

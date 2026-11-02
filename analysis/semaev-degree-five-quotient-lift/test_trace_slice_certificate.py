@@ -62,6 +62,27 @@ class TraceSliceCertificateTests(unittest.TestCase):
         self.assertEqual(len(sliced), 19)
         self.assertIn(1, affine)  # a_0 appears because Tr(1)=1 for odd n.
 
+    def test_retained_named_certificate_projects_and_checks(self):
+        root = Path(__file__).resolve().parent
+        fixture = root / 'validation/panel-worker-v2-20261029/odd-a2-0'
+        source = fixture / 'result/certificate.bin'
+        source_hash = hashlib.sha256(source.read_bytes()).hexdigest()
+        self.assertEqual(source_hash,
+                         'd8552a13d300bcbec10966b52092d3754975716fd50062bab3b347b85dfbc6a9')
+        self.assertIn('VALID: 1 is not in W_4(F)',
+                      (fixture / 'result/check.stdout.txt').read_text())
+        record = json.loads((fixture / 'instance.json').read_text())[0]
+        n, polys, _ = trace_slice(record, 3)
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / 'sliced.bin'
+            projected = project(source, output, 3, source_hash)
+            self.assertEqual(projected['certificate_sha256'],
+                             'dc7c6c6f6f9594f1b33963a431d63c310d3780ea7337fc8902cd84dcb5920838')
+            cert_n, degree, codim, masks, rows = read_certificate(output)
+            self.assertEqual((cert_n, degree, codim), (n, 4, 1))
+            result = check_map(n, degree, codim, masks, rows, polys)
+            self.assertEqual(result['status'], 'valid_trace_slice_nonmembership')
+
     def test_frontier_candidate_selection_uses_actual_trace(self):
         root = Path(__file__).resolve().parent
         n50 = json.loads((root / 'n50-poly03-d5-local-no-checkpoint-plan-002.json').read_text())
