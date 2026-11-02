@@ -6,6 +6,7 @@ without anyone trusting it. Each lint rule is shown to bite.
 """
 from __future__ import annotations
 
+import subprocess
 import sys
 from copy import deepcopy
 from pathlib import Path
@@ -190,6 +191,30 @@ def test_run_executes_records_and_relays_verbatim(tmp_path):
     assert relay["relay_verbatim"] and relay["verify_findings"] == []
     rounded = tc.check_relay(card, printed.replace("value=42", "value=40"), repo)
     assert not rounded["relay_verbatim"]
+
+
+def test_relay_with_outputs_declared_out_of_sorted_order_is_verbatim(tmp_path):
+    # Regression: the receipt is written with sorted keys, so check-relay used to
+    # rebuild the brief with outputs in sorted order while `run` printed them in
+    # card order, and every multi-output relay was flagged as edited.
+    repo, script, _ = _git_repo(tmp_path)
+    writer = repo / "tools" / "write.py"
+    writer.write_text("from pathlib import Path\nPath('out').mkdir(exist_ok=True)\n"
+                      "Path('out/z.txt').write_text('z')\nPath('out/a.txt').write_text('a')\n")
+    for args in (["add", "-A"], ["commit", "-q", "-m", "writer"]):
+        subprocess.run(["git", *args], cwd=repo, check=True)
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                          text=True, check=True).stdout.strip()
+    card = _frozen_card(script, head)
+    card["binds"].append({"path": "tools/write.py", "sha256": rb.sha256_file(writer)})
+    card["commands"] = [{"argv": ["python3", "tools/write.py"], "timeout_seconds": 30,
+                         "success_exit_codes": [0], "outputs": ["out/z.txt", "out/a.txt"]}]
+    assert tc.lint(card, repo) == []
+    receipt = tc.run_card("card.yaml", "0" * 64, card, repo)
+    assert receipt["status"] == "completed"
+    printed = tc.brief(receipt, "out/receipt.json", rb.sha256_file(repo / "out/receipt.json"))
+    relay = tc.check_relay(card, "Output:\n" + printed, repo)
+    assert relay["relay_verbatim"], relay["missing_lines"]
 
 
 def test_a_failing_command_stops_the_card_and_is_recorded(tmp_path):
