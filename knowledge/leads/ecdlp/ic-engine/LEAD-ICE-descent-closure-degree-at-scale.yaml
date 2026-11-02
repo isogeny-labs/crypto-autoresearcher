@@ -12,18 +12,34 @@ mechanism: >-
 disposition: open_blocked
 next_action:
   step: >-
-    Run the frozen dreg_closure C1 cell (m = 3, n = 19, l = 7, degree 5) and A2/B1/B2 cells
-    on a host with >= 250 GB RAM (or a sparse closure), then (m, l) = (4, 7); report closure
-    degree on >= 4 unsatisfiable draws plus satisfiable controls.
+    For n=47 random00, use the exact affine trace slice of Proposition 2.5b: the pinned
+    subspace has trace-one basis elements, so one Boolean variable can be eliminated without
+    changing degree-five closure membership or nonmembership. On that sliced system obtain
+    either a checked primal degree-five derivation (or independently replay the retained
+    degree-five relation) and transfer it to the original system, proving exact LFD=5 with the
+    checked D4 equality, or obtain a checked dual/nonmembership certificate and transfer it,
+    proving LFD>=6. The existing unsliced verify_primal_witness.py route remains valid. Do not
+    treat projection_kills_one in an over-approximating quotient as either result. In parallel,
+    run the frozen dreg_closure C1 and A2/B1/B2 cells on qualified high-memory or sparse
+    closure machinery, then (m,l) = (4,7), with satisfiable controls.
   discriminates: >-
     Degree 4 at l = 7 for m = 4 restores the "4, constant" row (2^68.43, still +7.6 bits over
-    rho); degree 5 confirms the +10.32-bit optimistic bracket; degree >= 6 shows the degree
-    grows with l and the binary-descent route has no constant-degree regime, closing this
-    lead as obstructed.
+    rho); degree 5 confirms the +10.32-bit optimistic bracket for that cell. An accepted
+    degree-five certificate would establish only the registered n = 47 lower bound. Degree
+    >= 6 refutes a <=5 claim at the tested cell; it does not prove universal growth or close
+    other arities, presentations or sparse solvers. Trace slicing is an exact equivalent
+    presentation, not an observed degree or cost improvement. Refusal, timeout, interruption
+    and missing output remain non-mathematical.
   blocked_by: >-
-    memory (C1 capped at 169 GB of 184 GB; projection 217 GB) - research/dreg_closure_m4l6_20261018/RESULTS.md
+    missing checked D5 row provenance or a positive D5 non-membership certificate for n=47
+    random00 on either the original or exact trace-sliced presentation, plus memory for C1
+    (169 GB cap; 217 GB projection in
+    crypto:research/dreg_closure_m4l6_20261018/RESULTS.md)
 best_measured: >-
   closure degree 4 through (m,l) = (4,6), N = 54; (3,7) degree-5 closure capped at 169 GB;
+  n=47 random00 has checked D4 rank/kernel equality and LFD>=5. Its D5 continuation completed
+  at relation rank 187,583/187,583 but ended projection_kills_one without a valid D5 certificate;
+  therefore exact LFD=5 versus LFD>=6 remains open;
   ECC2K-130 m = 4 optimistic +10.32 bits over rho (+12.48 with K), derived
 evidence:
 - repo: crypto
@@ -58,6 +74,35 @@ evidence:
 - repo: crypto
   path: problems/ic-low-degree-complete-cost-and-scaling.md
   note: "small solving degrees at (3,22,8), l = 9, HKY N = 58/60 and N ~ 100 lack a qualified complete-decomposition cost or scaling law"
+- repo: crypto-autoresearcher
+  path: problems/semaev-degree-five-lift-exceeds-64gib.md
+  note: >-
+    D4 accepted at n = 47; D5 allocation refusal and two interrupted qualified cloud attempts
+    produced no certificate or degree-six inference
+- repo: crypto-autoresearcher
+  path: problems/semaev-checkpoint-frontier-disk.md
+  note: historical checkpoint/export blocker; the rand00 frontier later completed without a valid D5 certificate
+- repo: crypto-autoresearcher
+  path: analysis/semaev-degree-five-quotient-lift/reports/rand00-blocked-terminal-20261101/report.md
+  note: completed D5 production ended projection_kills_one at full relation rank; no D5 membership certificate
+- repo: crypto-autoresearcher
+  path: analysis/semaev-degree-five-quotient-lift/reports/n47-rand00-d4-rank-equality-20261102/audit-result.json
+  note: independent archived-transcript audit checks W4 rank equals quotient-kernel dimension and 1 is absent
+- repo: crypto-autoresearcher
+  path: analysis/semaev-degree-five-quotient-lift/PRIMAL-WITNESS.md
+  note: independent exact D5 witness contract; no accepted n47 witness exists yet
+- repo: crypto-autoresearcher
+  ref: origin/main
+  path: analysis/semaev-m2-last-fall-degree/theorem-dossier.md
+  note: >-
+    Props 2.5a/2.5b prove the scoped t=2 bound d_LFD <= k-r+2 and exact affine
+    trace slicing for degree-d membership, nonmembership and dual certificates; they prove no
+    asymptotic growth or ECDLP cost claim
+- repo: crypto-autoresearcher
+  path: analysis/semaev-degree-five-quotient-lift/cascade-plan.json
+  note: >-
+    pins the n=47 random00 modulus and V basis; exact field-trace evaluation gives
+    Tr(0x1643c3306a75)=1, so Proposition 2.5b applies to this named input
 ledger_refs:
 - H-SEMBIN-106967
 - H-SEMBIN-d895d9
@@ -77,13 +122,11 @@ known_results:
 - KR-IC-1fcdbc
 - KR-IC-73db3f
 forecloses:
-- solving degree of Weil descent stays 4
-- first fall degree assumption makes binary ECDLP subexponential
-- MutantXL closure degree on summation polynomial systems
-- degree-capped certified decomposition
-- arity axis of bounded-degree refutation
+- closure degree at most 4 for the frozen n=47 random00 Boolean presentation
+- projection_kills_one alone certifies 1 in the true degree-five closure
+- D4 rank equality alone establishes exact LFD=5 without a checked D5 membership witness
 areas:
 - SEMBIN
 - DREG
 - SDEG
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-02'

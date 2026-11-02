@@ -7,22 +7,26 @@ mechanism: >-
   on the same instances, censoring charged and failures included. Audits found the four-size
   exponent unidentifiable and the 1/2 comparison mis-specified, and enumerative membership,
   not IC itself, is the bottleneck; the non-enumerative oracle is approved but unbuilt.
-disposition: open_blocked
-next_action:
-  step: >-
-    Build the EXP-ICEX-153c34 backend (G1 membership, O5 oracle, S/G/X/V counters, admission-refusing
-    driver) and pass S0 gates G0-1..G0-6 on smoke curves, then fit the crossover order log
-    l* (IDEA-20260805-4d31bc) rather than a ratio exponent.
-  discriminates: >-
-    A measured crossover with both arms on the same instances fixes the distance to rho in
-    one unit-invariant number; an empty crossover across the reachable range turns the lane
-    into an exhausted_at_scale record with the reached size.
-  blocked_by: >-
-    EXP-ICEX-153c34 backend unbuilt; dispatch gated on the C-7 host-load gate (GOAL-ICEX-001
-    next_action)
+disposition: exhausted_at_scale
+obstruction:
+  kind: measured
+  statement: >-
+    E32 completed the charged handover ladder on eleven sizes through group order about
+    2^42.4. The registered IC arm remained behind its strongest matched rho at every tested
+    row and weight; at the top it was about 1.5e3 times behind (best row 1.14e3). The fitted
+    distance slope is -0.243 +/- 0.04 and the fitted crossover is 2^85.5
+    [2^79.2, 2^94.3] at zero GAE, roughly 43 extrapolated bits beyond the largest measured
+    size. No crossover was measured. E27 separately made the matched walk about 1.45x cheaper,
+    increasing the recorded distance. This exhausts only this implementation and reached
+    range; it is not a lower bound on non-enumerative or representation-dependent oracles.
+    Under the atlas invariant, `exhausted_at_scale` remains in the pursuit queue at its
+    explicit revisit condition.
+  revisit_when: >-
+    A validated non-enumerative oracle changes the IC exponent or a charged run reaches a
+    materially larger order where the fitted handover can be tested rather than extrapolated.
 best_measured: >-
-  no IC arm beats rho at any band weight, none has a fitted exponent below rho's (ic_frontier_campaign_20261015);
-  Table A 5.23x at log2 r 36.6
+  E32: no crossover through log2 order 42.4; fitted crossover log2 n* = 85.5
+  [79.2, 94.3] at zero GAE; about 1.5e3x distance at the top measured size.
 evidence:
 - repo: crypto-autoresearcher
   path: ledger/goals/GOAL-ICEX-001/goal.yaml
@@ -39,6 +43,12 @@ evidence:
 - repo: crypto
   path: docs/ic/LEADERBOARD.md
   note: 'Tables A-C: 3.6x-38x matched rho; online wins superseded (empty rho table)'
+- repo: crypto
+  path: research/e27_walk_20261030/REPORT.typ
+  note: matched rho correction; walk cost falls about 1.45x and every tested IC row remains behind
+- repo: crypto
+  path: research/e32_handover_ladder_20261031/REPORT.typ
+  note: eleven-size charged ladder and crossover fit; crossing is extrapolated, not measured
 - repo: crypto-autoresearcher
   path: problems/icex-sparse-la-source-adoption-and-matched-matrix-gap.md
   note: 'sparse-LA source adoption leaves a matched-matrix contract gap'
@@ -56,10 +66,9 @@ known_results:
 - KR-IC-9e610d
 - KR-IC-401ebf
 forecloses:
-- charged toy index calculus exponent versus rho
-- fit IC exponent over four toy sizes
-- censoring-charged cost exponent
-- go/no-go on optimistic handed-over inputs
+- a crossover of the registered E32 implementation through log2 order 42.4
+- treating the fitted 2^85.5 crossover as an observed crossing
+- treating E27's cheaper matched rho reference as an improvement of the IC arm
 areas:
 - ICEX
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'

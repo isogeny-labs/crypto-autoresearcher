@@ -13,26 +13,36 @@ next_action:
     second moment) on the covered families across N and fit its decay against 1/sqrt(N); EXP-ECDLP-5cad48
     ran many stages without ever assigning a W class.
   discriminates: >-
-    LARGE-W (decay slower than 1/sqrt(N)) reopens a bucket-concentrated filter for a four-tree;
-    SMALL-W extends the bucket-averaged O2 barrier (KN-FIND-ffe1df) to a bucket-resolved one
-    and closes the filter class.
+    SMALL-W supports a proof attempt for a bucket-selected level-1 bound; a fitted exponent is
+    not that proof. LARGE-W rejects that second-moment proof route and motivates inspection of
+    the heavy buckets, but does not by itself exhibit an attack. Neither outcome closes j=2,
+    higher tree levels, uncovered filter families, or KN-OPEN-91d4f6 without the missing theorem.
 best_measured: >-
-  j=2 four-tree at exponent 0.4167 closed for character filters under group-law or quasigroup
-  combining, toy N <= 65539 (analysis/o2-sum-compatible-filters)
+  At p=65539, M=40, M*max_c pi_c=1.084 versus 1.082 for the SHA null and M*delta=1.002;
+  the excess decays over the toy ladder. This shows no attack signal, but j=2 remains unproved,
+  not refuted, and no tree row is closed.
 evidence:
 - repo: crypto-autoresearcher
   path: analysis/o2-sum-compatible-filters/README.md
-  note: 'O2: no cheap sum-compatible character filter (toy N <= 65539)'
+  note: >-
+    historical O2 headline, superseded and withdrawn after the bucket-selection hole; retained
+    only as the derivation/measurement artifact, not as a j=2 closure
 - repo: crypto-autoresearcher
   path: knowledge/findings/KN-FIND-ffe1df.md
-  note: 'O2 is conditional, class-restricted, bucket-averaged: NOT a closure of the k-tree
-    lane'
+  note: >-
+    O2 is conditional, class-restricted, level-1 and bucket-averaged; j=2 is unproved and no
+    row is closed
 - repo: crypto-autoresearcher
   path: ledger/questions/RQ-ECDLP-160d89.yaml
   note: Four-list output-sensitive partial-verifier question
 - repo: crypto-autoresearcher
   path: ledger/proposals/IDEA-20260904-f7d47d.yaml
   note: The O2 line's load-bearing hole is an unmeasured second moment
+- repo: crypto-autoresearcher
+  path: knowledge/open-problems/KN-OPEN-91d4f6.md
+  note: >-
+    characteristic-2 approximate x-functional single-bucket gain remains open; averaged
+    agreement and level-1 bounds do not close it
 ledger_refs:
 - H-ECDLP-2ade73
 - H-ECDLP-07c7c6
@@ -50,12 +60,9 @@ known_results:
 - KR-RHO-5b1c0a
 - KR-RHO-13bf67
 forecloses:
-- Wagner k-tree on elliptic curve points
-- four-list join with a cheap filter
-- sum-compatible hash on E(F_p)
-- representation technique subset-sum for ECDLP
-- signed-y four-list cascade
-- output-sensitive partial verifier
+- the original inference that bucket-averaged agreement bounds the adaptively selected bucket
+- the original O2 blanket statement that every j>=2 configuration is closed
+- the Family-J popcount interval/character-sum theorem as stated
 areas:
 - ECDLP
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-02'

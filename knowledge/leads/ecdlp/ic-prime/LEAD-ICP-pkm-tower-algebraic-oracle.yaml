@@ -20,40 +20,57 @@ mechanism: >-
 disposition: open_blocked
 next_action:
   step: >-
-    Run the preregistered prime fall-degree study (crypto research/prime_fall_degree_20261027,
-    stages g4, hky-A, d-A, cap-A, then hky-C, hky-B, d-B) on a dedicated host with multiply-add
-    counts kept: stage A must first reproduce the session-reported Kummer m = 2 d_F medians
-    3,4,4,4,4,5,5,5,5,6 at t = 1..10, then score t >= 11 against the Amendment-6 C-step prediction
-    d_F = 4 + floor((t-2)/4) registered before those rows existed. After it, the m >= 4 F4 cells
-    (m = 4, N = 20, projected 240-380 GB) and the published-IC reference arm priced as cold
-    whole-solve S in GAE. ic_sweeper section 2.5 proposed a standard-base FGHR-symmetrised
-    S_{m+1} + msolve arm, but FGHR's 2-torsion invariants need rational 2-torsion and every
-    Table B prime curve has odd order; the prep in crypto
+    First run the symmetric m = 3, N = 21 cell on a dedicated host with at least about 32 GB:
+    it is the registered discriminator between D = 6 staying flat and the observed staircase
+    rising to 7. Run the symmetric m = 4, N = 20 cell on the larger 240-380 GB route, then price
+    the m = 4 symmetric oracle end to end at N = 12..16 against the equal-instance plain arm and
+    matched rho; D alone cannot rank m = 4 because the symmetric S_5 input already has degree 8.
+    In parallel, run the preregistered prime fall-degree study (crypto
+    research/prime_fall_degree_20261027, stages g4, hky-A, d-A, cap-A, then hky-C, hky-B, d-B)
+    with multiply-add counts kept: stage A must reproduce the session-reported Kummer m = 2 d_F
+    medians 3,4,4,4,4,5,5,5,5,6 at t = 1..10, then score t >= 11 against the Amendment-6 C-step
+    prediction d_F = 4 + floor((t-2)/4) registered before those rows existed. The published-IC
+    reference arm remains a cold whole-solve S in GAE. ic_sweeper section 2.5 proposed a
+    standard-base FGHR-symmetrised S_{m+1} + msolve arm, but FGHR's 2-torsion invariants need
+    rational 2-torsion and every Table B prime curve has odd order; the prep in crypto
     research/prime_ic_program_20261029/reference_arm therefore specifies Semaev's naive
     small-abscissa system <S_{m+1}, F_V(x_i)> solved by a pinned msolve -P 1 (not implemented),
     with PKM's tower base on pkm-semaev as its phase-2 arm.
   discriminates: >-
-    d_F growing with t at or above the C-step (as every measured D so far: m = 2 reads 4 -> 6
-    to N = 20, m = 3 reads 5..7 to N = 18, m = 4 reads 6, 7, 7 to N = 16) confirms the pre-registered
-    H0 (solving degree linear in N) for Kummer/Dickson/torus/isogeny towers and moves the lead
-    to exhausted_at_scale at the reached N; d_F flat in t at m >= 4 against the shape-matched
-    null would be the first bounded-degree prime-field decomposition and goes to Stage B (end
-    to end against matched rho with the section 5a band).
+    Symmetric m = 3 D = 7 at N = 21 continues the measured staircase; D = 6 there leaves the
+    bounded-D reading live and requires the next registered cell. At m = 4, only complete
+    counted pipeline cost can distinguish a solver-stage constant from an IC gain. More generally,
+    d_F growing with t at or above the C-step confirms the preregistered H0 only for the reached
+    Kummer/Dickson/torus/isogeny-tower cells and moves that bounded ladder to exhausted_at_scale;
+    d_F flat in t at m >= 4 against the shape-matched null would be the first bounded-degree
+    prime-field decomposition and goes to Stage B (end to end against matched rho with the
+    section 5a band). A timeout, allocation failure or unrun cell is no disposition evidence.
   blocked_by: >-
     Route and custody: isolab.eks.request/v1 accepts only ecbench specs, so the frozen isolab/LAUNCH.md
     jobs (pkm_tower_pilot) need the harness-host isolab_k8s_run route (crypto docs/session-logs/2026-10-28.md);
     the raw stage A/C runs, TABLE.md and draft RESULTS.md exist only in the owner's Mac worktree
     (RESTART.md); m = 3 N = 21 and m = 4 N = 20 need 130-380 GB hosts. Problem records: crypto-autoresearcher
     problems/pkm-isogeny-chain-factor-base-no-fast-decomposition.md, crypto problems/mixed-fiber-pkm-full-solver.md
-    and problems/aps-single-relation-complete-cost.md.
+    and problems/aps-single-relation-complete-cost.md. The symmetric m = 3, N = 21 cell was not
+    attempted after N = 18 exceeded the smaller host's safe headroom (the study recommends about
+    32 GB or more); symmetric m = 4, N = 20 ended in allocation failure under its 6 GB cap.
 best_measured: >-
   F4 solving degree D grows with N on every tower family (m = 2: 3 4 4 4 4 5 5 5 5 6 for N = 2..20;
   m = 3: 5 6 6 7 at N = 6..15; m = 4: 6 7 at N = 8, 12; torus = split Dickson = Kummer, isogeny
   tower one higher), shape-matched null gives the same D (RESEARCH_PKM_TOWER_ORACLE section
   17, measured); derived ffd = 4 for Kummer m = 2 at every t and d_F <= 2t + 2 (DERIVED D3,
-  D4); P-256 2-isogeny chain encoding 2x-654x slower than the dense encoding of the same set
-  under Singular std, basis step 8x to >79x under msolve (EXP-ECDLP-f49f75, EXP-ECDLP-502ae2); no complete-cost
-  or matched-rho row exists
+  D4). A different symmetric presentation reads D = 4,5,5,6,6 at m = 3, N = 6,9,12,15,18;
+  N = 18 is predicted by both "bounded at 6" and "next rise at N = 21". At m = 4 its D = 8 at
+  N = 12 and 16 is already forced by the S_5 input degree. At N = 12 it is 5.9x narrower and
+  uses about 2.7e5x fewer counted field operations than the plain chain, with uncontended
+  per-system time 7,632x-8,891x lower; this is an unpriced solver-stage diagnostic, not an IC
+  result. P-256 2-isogeny chain encoding is 2x-654x slower than the dense encoding of the same
+  set under Singular std, basis step 8x to >79x under msolve (EXP-ECDLP-f49f75,
+  EXP-ECDLP-502ae2); no complete-cost or matched-rho row exists. Formally, no per-level Mobius
+  coordinates make two consecutive nondegenerate cyclic 2-isogeny Velu x-steps simultaneously
+  monomial; for odd ell >= 3, a single Velu-Kohel N/psi^2 step is nonmonomial under the stated
+  unit and kernel hypotheses. The bridge from density-one reduction in the whole chain and
+  remaining denominator-leading forms is still open.
 evidence:
 - repo: crypto
   path: research/notes/index-calculus/RESEARCH_PKM_TOWER_ORACLE.md
@@ -83,6 +100,18 @@ evidence:
 - repo: crypto
   path: research/prime_fall_degree_20261027/isolab/LAUNCH.md
   note: frozen two-job launch (not yet run); 14 CPU, 56 Gi, 14,400 s each
+- repo: crypto
+  path: research/pkm_symmetric_lead1_20261026/README.md
+  note: >-
+    merged through c2b49d7682: symmetric m = 3 D sequence through N = 18, first m = 4 cells,
+    uncontended solver-stage counts, explicit allocation/unrun boundaries and the N = 21 discriminator;
+    no complete pipeline or matched-rho row
+- repo: crypto
+  path: research/isogeny_vs_mu_factor_base_20261102/lean/README.md
+  note: >-
+    merged bridge at efeff221f0: kernel-checked Velu monomial-coordinate obstructions and exact
+    hypotheses; section "Scope" retains the whole-chain density-one, denominator-leading,
+    homomorphism and odd-degree bridge gaps
 - repo: crypto
   path: research/ic_sweeper_20261024/README.md
   note: >-
@@ -144,8 +173,12 @@ forecloses:
 - Amadori-Pintore-Sala partitioned summation polynomials
 - Dickson or torus tower decomposition oracle
 - algebraic prime-field decomposition oracle for ic bench
+- simultaneous monomialisation of two consecutive nondegenerate cyclic 2-isogeny Velu x-steps
+  by per-level Mobius coordinates
+- monomialisation of one odd-degree Velu-Kohel N/psi^2 step when ell is a unit and the stated
+  kernel/coordinate hypotheses hold
 areas:
 - ECDLP
 - PFDR
 - DREG
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'

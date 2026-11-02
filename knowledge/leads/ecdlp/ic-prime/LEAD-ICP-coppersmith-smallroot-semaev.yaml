@@ -45,8 +45,19 @@ best_measured: >-
   derived bound (crypto research/smallroot_optimal_reach_20261026): any lattice, equal bounds,
   0.3293 (S_3 in 3 unknowns) / 0.3536 (2 unknowns); numerical best region 0.4357 / 0.4892
   (-> 1/2); demand 8/9 at (m,w) = (4,2); HG-corrected JM extended reach 0.2803 (CORR-20261024-b2a799).
-  Earlier probe figures (S_3 rigorous delta <= 0.10, Probes B/C at 40/56 bits) are consistent.
-next_action: {from_revisit_when: true}
+  Earlier probe figures are consistent. The mega-pass triangular LM-diagonal A3/S5 comparison
+  is negative only at l<=2; its registered l=3 cell and Howell/non-triangular joint lattices remain open.
+next_action:
+  step: >-
+    Run the registered MP-lattices-3 l=3 A3-versus-S5 discriminator with the same exact
+    determinant/reach accounting, then construct and measure the Howell/non-triangular or
+    multi-ideal joint lattice that the one-block convex bound does not cover. Keep the l<=2
+    triangular negatives as fixed controls rather than extrapolating them.
+  discriminates: >-
+    A3 failing at l=3 closes only the registered triangular LM-diagonal comparison; a verified
+    advantage advances that construction. A joint non-triangular lattice whose checked reach
+    clears the 8/9 demand advances an oracle candidate. Failure of one finite lattice or a
+    numerical optimiser cannot close non-convex, unequal-bound, multi-ideal or non-Coppersmith routes.
 evidence:
 - repo: crypto
   path: RESEARCH_PRIME_FIELD_BREAKTHROUGH_PROGRAM.md
@@ -84,7 +95,14 @@ evidence:
 - repo: crypto
   path: research/prime_s5_small_root_leads_20261028/README.md
   note: "direct S_4/S_5 oracle (crypto #2846, merged; section 7c in #2863, open): S_4 and S_5 measured full-box Newton polytopes and fully dense over F_p; the same reach bound caps any x-variable convex (p, f)^t lattice at delta 1/21.8 (S_4) and 1/70.8 (S_5) against targets 1/4 and 1/5 (5.5x and 14.2x short); S_4 lattice reach measured B < 2 at l = 1, 2 (32-48 bits); e-form unequal bounds, non-convex and multi-ideal lattices stay open"
+- repo: crypto
+  path: research/ic_mega_pass_20261031/experiments/MP-lattices-3/README.md
+  note: reconciled overall outcome inconclusive; l=3 registered discriminator was not run
+- repo: crypto
+  path: research/ic_mega_pass_20261031/experiments/MP-lattices-3/AUDIT.md
+  note: exact negative result is limited to triangular LM-diagonal l<=2 cells; non-triangular routes remain open
 ledger_refs:
+- IDEA-20261024-1b76a4
 - IDEA-20260904-39336c
 - IDEA-20260903-81a943
 - IDEA-20260808-486ae2
@@ -107,13 +125,10 @@ known_results:
 - KR-IC-401ebf
 - KR-IC-5a43e5
 forecloses:
-- Coppersmith small roots of summation polynomials
-- small-x factor base solved by LLL
-- windowed addition tree with lattice reduction
-- symmetric e1 e2 lattice for S_3
-- rank-r generalized arithmetic progression factor base
-- lattice-assisted meet-in-the-middle decomposition
+- equal-bound convex (p,f)^t lattices on one S3 block reach the (m,w)=(4,2) IC demand
+- triangular LM-diagonal A3 beats S5 in the tested l<=2 cells
+- an equal-bound convex one-block S3 lattice exceeds the proved 0.3293/0.3536 reach bound
 areas:
 - PFDR
 - PATH
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

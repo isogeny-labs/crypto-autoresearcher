@@ -10,16 +10,27 @@ mechanism: >-
 disposition: open_blocked
 next_action:
   step: >-
-    Finish the 17 missing arms of EXP-ECTD-0cf008 (32,768 targets each) after the recovery
-    amendment, reporting coverage and variance, not only mean yield.
+    Repair and independently review the transport simulator: specify fixed versus at-most-m
+    decompositions, retain identity and kernel points, enumerate and filter every lift, and either
+    prove adaptive-path challenge independence or narrow to a non-adaptive model. Charge lift
+    filtering, path evaluation, base construction and scaling parameters. In parallel, finish the
+    17 missing EXP-ECTD arms and run the surviving R7.3 branch with the repository LineOracle /
+    F_{p^2} zeta-fold and a genuinely level-dependent IC oracle on matched crater/floor levels.
   discriminates: >-
-    Transported/native yield ratios within the A/A band confirm the conservation prediction
-    and close the lead; a coverage or variance excess that grows with field size is the only
-    outcome that would matter.
+    A corrected simulator exits the proof gap only when it returns exactly the original
+    decompositions under the stated arity and adaptive model with complete costs. Transported/native
+    ratios within the A/A band confirm conservation only for the frozen maps, bases and sizes.
+    A LineOracle or level-dependent coverage, useful-rank, variance or cost separation that grows
+    with scale is an opportunity to price. Null toy cells do not close other bases, paths or strata,
+    and the 17 infrastructure-lost arms remain unmeasured.
   blocked_by: problems/prime-field-arity3-relation-oracle.md
 best_measured: >-
-  conductor-gap counted diagnostics IC floor/crater 0.975 [0.603, 1.451] (ell = 8209), 1.127
-  [0.922, 1.342] (ell = 131101): no separation
+  Earlier counted IC floor/crater diagnostics were 0.975 [0.603,1.451] at ell=8209 and 1.127
+  [0.922,1.342] at ell=131101. Merged R7.3 found post-automorphism conductor effects 1.0018
+  [0.9986,1.0050] and 0.9997 [0.9966,1.0030], h=2,3 relation-yield factor 0.9998
+  [0.9993,1.0004], and base/image census equality in 120/120 checks. Its endomorphism-mixed walk
+  cost 1.22x plain rho on the crater and 1.79x on the floor, while the best strategy's level ratio
+  was 0.9999 [0.9945,1.0055]. LineOracle/F_{p^2} zeta-fold and level-dependent IC were not run.
 evidence:
 - repo: crypto-autoresearcher
   path: problems/prime-field-arity3-relation-oracle.md
@@ -38,7 +49,14 @@ evidence:
   note: graph-wide volcano IC survey, no runtime comparison admitted
 - repo: crypto
   path: RESEARCH_ISOGENY_FIBERS_ECDLP.md
-  note: "section 19 R6.11 (merged #2197): plain x-frame relation yield on crater and floor of l-volcanoes, l <= 13, equal within 0.5 % at toy size"
+  note: >-
+    sections 19 and 20.3: R6.11 plain-x null plus merged R7.3 measurements; LineOracle/F_{p^2}
+    zeta-fold and a genuinely level-dependent IC oracle remain open
+- repo: crypto
+  path: research/isogeny_fibers_20261010/round7/r7_3_conductor_sensitive/RESULTS.md
+  note: >-
+    120/120 transport-census equality and null tested yield after baseline; the one 1.46x
+    level gap belongs to an endomorphism-mixed walk dominated by plain rho
 - repo: crypto
   path: problems/photo-volcano-two-sum-ic-recovery.md
   note: "strict signed two-sum base on 46 volcano vertices: 0 random relations in 14,720 Groebner systems, 920/920 planted controls pass; support 288/(r-1)"
@@ -48,7 +66,11 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-CMFB-e3d1ec.yaml
   note: 'CM-family small-x window base exchangeable with a random base for m = 3 coverage within +-0.04% at C24 (toy, preliminary); CM structure itself untested'
+- repo: crypto
+  path: problems/transport-oracle-exact-simulation-gap.md
+  note: finite counterexamples refute the original simulator steps; no universal transport closure follows
 ledger_refs:
+- IDEA-20261024-892d61
 - GOAL-ICPERF-e6b6a4
 - IDEA-20261011-07c83f
 - H-CMFB-9b2eed
@@ -57,9 +79,9 @@ ledger_refs:
 known_results:
 - KR-RHO-817bf8
 forecloses:
-- walk the isogeny volcano to a curve with better relation yield
-- transport the factor base along an isogeny
-- crater versus floor index calculus
+- the R6.8 identity-deleting and arbitrary-single-lift simulator lemma as written
+- a mean-yield separation in the completed named crater/floor toy diagnostics
+- treating the 17 infrastructure-lost EXP-ECTD arms as null scientific observations
 areas:
 - ICPERF
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'

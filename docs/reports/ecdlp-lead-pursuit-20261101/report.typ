@@ -4,13 +4,13 @@
 
 = ECDLP lead pursuit audit
 
-_160-lead reconciled atlas · 2026-11-01_
+_160-lead reconciled atlas · current disposition 2026-11-02_
 
 #image("diagram.svg", width: 100%)
 
 == Decision
 
-The 159-row ECDLP atlas at `crypto-autoresearcher@7072741f712c` was reviewed family by family against `crypto@b6ffdca53494`. The review also added one missing live split-graph/secant successor, so the reconciled atlas has *160 leads*. Exactly *21 narrowly scoped mechanisms* have mechanism-wide obstruction evidence under their stated assumptions. The other *139 leads remain pursued* through a next action or explicit revisit trigger.
+The 159-row ECDLP atlas at `crypto-autoresearcher@7072741f712c` was reviewed family by family against `crypto@b6ffdca53494`. The review also added one missing live split-graph/secant successor, so the reconciled atlas has *160 leads*. The 2026-11-01 audit recorded *21 scoped obstructions / 139 pursued*. The confirmed 2026-11-02 arity/oracle correction makes the current accounting *20 `closed_obstructed` / 140 pursued*.
 
 This is a scope decision. Each stopped row is stopped only for the exact mechanism in its obstruction. A different presentation, locus, oracle, statistic, or stated escape remains live.
 
@@ -28,10 +28,10 @@ When a row combined a proved negative subcase with an untested escape, the audit
   align: (left, right, right, right),
   [*Family*], [*Reviewed*], [*Obstructed*], [*Pursued*],
   [Binary-field IC], [23], [2], [21],
-  [IC engines], [20], [2], [18],
+  [IC engines], [20], [1], [19],
   [Prime-field IC], [27], [3], [24],
   [Generic, transfer, structure, exotic], [90], [14], [76],
-  [*Total*], [*160*], [*21*], [*139*],
+  [*Total*], [*160*], [*20*], [*140*],
 )
 
 == Exact suppressed scopes
@@ -39,7 +39,7 @@ When a row combined a proved negative subcase with an untested escape, the audit
 #set text(size: 8pt)
 
 - Binary IC: `generic-table-oracle`; linear/subspace scope of `frobenius-orbit-factor-base`.
-- IC engines: coordinate-blind scope of `generic-oracle-arity-cost-floor`; generic-fibre census of `semaev-cover-monodromy`.
+- IC engines: generic-fibre census of `semaev-cover-monodromy`.
 - Prime IC: `generic-table-decomposition`; generic equality-filter scope of `representation-subset-sum`; `self-pairing-prime-order`.
 - Generic: `generic-sqrt-lower-bound`; generic auxiliary-power acquisition in `cheon-aux-acquisition`.
 - Transfer: the twelve fixed-arity mechanisms in `cm-canonical-lift-heights`; `one-point-self-pairing`; homomorphic scope of `padic-canonical-section`; class-invariant scope of `prime-field-isogeny-to-weak`; homomorphic scope of `second-torsion-direction`.
@@ -62,9 +62,17 @@ The later primary-source and kernel-checked review at `crypto@34caae22581045ec59
 
 `LEAD-TRF-global-lift-small-height` and `LEAD-ICP-char0-lifting-xedni-smoothness` are therefore `open_next_step`. Their exact and finite negatives remain recorded. `KR-IC-cd159a` now states the conditional theorem, and `LEAD-EXO-global-lift-height` pursues both the function-field timing and characteristic-zero bridge-composition branches.
 
-The CM row stays suppressed only inside corrected L9: ordinary prime-field Serre--Tate/global CM models, fixed arity 2..9, absolute `C0`, and twelve enumerated mechanisms. Target-dependent arbitrary sections, growing arity or `C0`, and unenumerated families remain outside. The 21/139 totals are unchanged because `closed_known` rows were already pursued.
+The CM row stays suppressed only inside corrected L9: ordinary prime-field Serre--Tate/global CM models, fixed arity 2..9, absolute `C0`, and twelve enumerated mechanisms. Target-dependent arbitrary sections, growing arity or `C0`, and unenumerated families remain outside. At that stage, the 21/139 totals were unchanged because `closed_known` rows were already pursued.
 
 Primary JKSST PDF SHA-256: `981bf955f7aecc5df4f271837f6653bd7666e5026f59df44196609d4a1dd6bc7`; checked at Section 4, Lemma 4.1, Theorem 4.1, Sections 5--6, and notes 7--8. The sibling proof map is `research/jksst_xedni_audit_20261101/PROOF_MAP.md`.
+
+== Arity/oracle correction · 2026-11-02
+
+`LEAD-ICE-generic-oracle-arity-cost-floor` is now `open_next_step`. Its exact fixed-arity negative remains: `EV-SEMBIN-b6d042` has zero in-domain sub-rho cells for `ENUM`, `MITM`, and `MITM_CAPPED` in the frozen model; the reviewed Lean declaration `mitm_never_sub_generic` proves `costAll(m,beta,k) > 1/2` for `m >= 2`, `beta > 0`, and `k >= m/2`.
+
+The independent semantic review rejects the bundled blanket-attainment and literal pointwise-threshold wording. The model does not supply an executable algorithm, actual oracle output/useful-rank semantics, required yield hypotheses, or a uniform model-to-algorithm theorem. The `FREE` control has 7,850 sub-VOW model cells; free oracles, growing arity, and coordinate-reading constructions remain outside the exact negative. Those branches stay pursued.
+
+This additive correction changes IC engines from 2/18 to *1 obstructed / 19 pursued* and the atlas from 21/139 to *20 / 140*. It preserves the original dated 26-row statement and the later Xedni narrative. Sources: `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`, `ledger/proposals/IDEA-20261024-a2b05d.yaml`, and `ledger/decisions/DEC-20261101-8adb11.yaml`.
 
 == Review boundary
 

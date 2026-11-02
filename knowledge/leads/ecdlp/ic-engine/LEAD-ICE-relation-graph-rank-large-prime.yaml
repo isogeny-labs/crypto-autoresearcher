@@ -10,13 +10,19 @@ mechanism: >-
 disposition: open_next_step
 next_action:
   step: >-
-    Extend the honest 2LP summation-multigraph run (EXP-RELN-c5a377 v4 generator, L = q^(1/5))
-    to larger q with rank-qualified rows and a rewire / Erdos-Renyi null, reporting edge density
+    Extend the honest 2LP summation-multigraph run (EXP-RELN-c5a377 v4 exact-x generator,
+    B = ceil(p^(1/5)), B2 = ceil(p^(2/5))) to larger p with rank-qualified rows and a
+    rewire / Erdos-Renyi null, reporting edge density
     delta against the 1/4 supercritical threshold and whole-solve S against matched rho.
   discriminates: >-
     delta > 1/4 with a whole-solve S drop beyond the null is a priced relation-phase gain
-    (as in the genus-3 2LP study); delta stuck below 1/4 closes 2LP for point-decomposition
-    IC at L = q^(1/5).
+    (as in the genus-3 2LP study). Delta below 1/4 exhausts only the frozen exact-x generator,
+    B/B2 schedule and reached sizes. Full-column-rank gains are not a substitute for
+    the first dependency needed by the tested single-target formulation.
+best_measured: >-
+  The honest 2LP study is inconclusive at 9/9 toy cells. In the post-hoc MP-ml_empirical-6
+  fixed-weight toy, forced-coverage rank steering delays first dependency (0.886B versus
+  0.514B at m = 2 and none before full rank at m = 3); that refutes only that policy.
 evidence:
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-RELN-3c9a24.yaml
@@ -37,6 +43,12 @@ evidence:
 - repo: cryptanalysis
   path: problems/known-label-thin-coordinate-construction.md
   note: 'efficient known-label construction into a thin coordinate domain remains open'
+- repo: crypto
+  path: research/ic_mega_pass_20261031/experiments/MP-ml_empirical-6/README.md
+  note: forced-coverage policy worsens first-dependency stopping; honest rank-qualified/2LP carrier remains open
+- repo: crypto
+  path: research/ic_mega_pass_20261031/verdicts/MP-ml_empirical-6.design.json
+  note: exact stopped policy and surviving carrier scope
 ledger_refs:
 - H-RELN-4d092c
 - H-RELN-940f14
@@ -47,11 +59,10 @@ ledger_refs:
 known_results:
 - KR-IC-9e610d
 forecloses:
-- two large prime cycle basis enrichment for point decomposition
-- rank-feedback relation generator selection
-- relations needed fixed point of left kernel
-- adaptive stopping on the relation 2-core
+- forced-lowest-degree-column coverage steering reaches the first dependency sooner in the tested sparse-row toy
+- treating full-column rank as the single-target first-dependency stopping rule
+- transferring that forced-coverage toy result to honest rank-qualified two-large-prime collection
 areas:
 - RELN
 - ICEX
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'

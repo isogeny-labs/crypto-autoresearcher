@@ -12,17 +12,26 @@ obstruction:
   kind: proof
   statement: >-
     On ECC2K-130 gcd(4, l) = 1, so every full-translation homomorphic cofactor quotient reduces
-    to the order-l projection rho already uses (Sylow coprimality); exactly sum-compatible
-    filters on E(F_{2^131}) carry 2 bits (the cofactor), so Wagner k-tree has no quotient
-    to work in; the corrected iota-stable classification (V_d = b^{1/4} F_{2^d}) empties the
-    (subspace base, 2-torsion quotient) cell on every prime-degree standardized curve; the
-    production 2-torsion census adds 0 relations. FGHR 2-torsion symmetrisation of the solve
-    is a separate constant (engine family).
+    to the order-l projection rho already uses (Sylow coprimality). On the prime-order subgroup
+    <P>, Theorem C excludes every nontrivial exact sum-compatible quotient/filter for M>=2.
+    On the full group E(F_{2^n}), by contrast, the exact gain is bounded by the cofactor h and
+    can attain 2 via trace or 4 via one halving; that full-group gain does not transfer to <P>.
+    The corrected iota-stable classification (V_d = b^{1/4} F_{2^d}) empties the (subspace base,
+    2-torsion quotient) cell on every prime-degree standardized curve, and the production
+    2-torsion census adds 0 relations. FGHR solve symmetrisation is a separate engine constant.
   revisit_when: >-
     A curve with a large smooth cofactor, or a non-homomorphic sum-compatible filter with
     more than log2(cofactor) bits.
 best_measured: '2-torsion census: 0 additional relations (improve-2 item 02).'
-next_action: {from_revisit_when: true}
+next_action:
+  step: >-
+    Execute the KN-OPEN-91d4f6 single-bucket-gain ladder on the prime-order subgroup and the
+    full-group cofactor controls with matched SHA nulls and equal operation budgets. Measure
+    max-bucket gain, not bucket-averaged agreement, and keep tree levels separate.
+  discriminates: >-
+    Unbounded subgroup gain advances a non-homomorphic approximate-filter branch. A universal
+    characteristic-2 bound with degenerate cases classified can close that exact class. Null
+    toy cells, the constant trace on the subgroup, or a full-group cofactor gain do not close it.
 evidence:
 - repo: crypto
   path: RESEARCH_IC_LEADS_AND_CONNECTIONS_20261010.md
@@ -33,6 +42,14 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-BINSTD-a692eb.yaml
   note: HOLD-O quotient chain, inconclusive
+- repo: crypto-autoresearcher
+  path: knowledge/open-problems/KN-OPEN-91d4f6.md
+  note: >-
+    no nontrivial exact filter on <P>; exact full-group gain is bounded by cofactor h, while
+    approximate characteristic-2 x-functional gain on <P> remains open
+- repo: crypto
+  path: research/ic_mega_pass_20261031/verdicts/MP-ml_empirical-6.design.json
+  note: unequal-budget random-encoding control refuted; follow-up comparisons require equal budgets
 ledger_refs:
 - H-BINSTD-b1006d
 - IDEA-20260922-e3048d
@@ -48,11 +65,11 @@ ledger_refs:
 known_results:
 - KR-IC-955fd6
 forecloses:
-- Wagner k-tree on ECC2K-130
-- cofactor 4 coset label prunes decomposition
-- 2-torsion translation quotient of a subspace factor base
-- spend the cofactor on decomposition
+- any nontrivial exact sum-compatible quotient/filter on the prime-order subgroup
+- exact full-group gain beyond the cofactor h
+- the classified prime-degree subspace-base plus 2-torsion-translation cell
+- transferring the full-group trace or halving gain to the prime-order subgroup
 areas:
 - BINSTD
 - CERTBIN
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

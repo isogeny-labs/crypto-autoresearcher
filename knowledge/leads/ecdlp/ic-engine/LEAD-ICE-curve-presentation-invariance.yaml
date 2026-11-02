@@ -8,17 +8,21 @@ mechanism: >-
   Hessian) or to a special-j / small-height curve, and look for a presentation whose Semaev
   system has lower first-fall / solving degree or higher yield. Mean length-2 yield and factor-base
   decomposition probability are class invariants; the within-class variance claim was rejected
-  at scope; Groebner-degree transport on certified Velu edges is specified but never run.
+  at scope. The first registered Groebner-degree edge run completed as a degenerate unit ideal
+  and therefore gives no information about a nontrivial presentation.
 disposition: open_next_step
 next_action:
   step: >-
-    Execute EXP-DREG-dd668d (spec frozen, runs/ empty): last-fall and grevlex solving degree
-    of the native, Velu-graph-eliminated and random-enrichment ideals on certified toy edges
-    (H-DREG-c44a0d, H-DREG-1d0e5d), plus one special-model curve vs a generic classmate (IDEA-20260922-fac3e7).
+    Freeze a certified successor edge whose native and codomain decomposition ideals are
+    non-unit, so it satisfies EXP-DREG-c3e8c9's prerequisite that excludes
+    `degenerate-unit-ideal`. Then compare its native, Velu-graph-eliminated and frozen
+    random-enrichment ideals, and add one special-model curve against a generic classmate.
   discriminates: >-
     A drop beyond random enrichment and beyond a GL(N,F_2) coordinate change is a transport
-    effect to price (including the transport cost); no drop closes isogeny/model transport
-    of Groebner difficulty at toy scale, consistent with the mean-invariance identity.
+    effect to price. A registered no-drop result would close only the frozen presentations,
+    edges and toy scale. Another unit ideal remains non-informative. The existing finite
+    witnesses refute the simulator lemma as written, not every corrected transport theorem
+    and not the presentation lead.
 best_measured: >-
   Binary Koblitz m=3 (PinX3, 2^(l+1) eliminations per probe; not an attack, overall about 2^(2n/3),
   worse than rho), 32 curves x 32 geometric V, 2000 probes per cell, two-way crossed random effects,
@@ -26,11 +30,25 @@ best_measured: >-
   work/call ICC_curve 0.000 [0, 0.001], yield 0.006 [0, 0.020]. n=23 a2=1 l=8: work/call 0.005
   [0, 0.022], yield 0.015 [0, 0.039]. H0 in both classes. Detection limit (parametric power
   simulation): ICC 0.20 found with p about 0.99, ICC 0.10 only p about 0.42. Scoped to geometric
-  V and these two classes; not a proof.
+  V and these two classes; not a proof. RUN-DREG-826fb8 used one F_4 edge and eight Boolean
+  variables: domain and codomain ranks were both [0,1,9,40,114], but both Groebner bases were
+  {1}. Its registered label is `degenerate-unit-ideal`, so it supplies no nontrivial-instance
+  information. Separately, the R6.8 identity-deleting/arbitrary-lift transport simulator has
+  exact finite counterexamples and its closure claim was withdrawn.
 evidence:
 - repo: crypto-autoresearcher
   path: experiments/EXP-DREG-dd668d/specification.yaml
-  note: frozen spec; no runs recorded
+  note: frozen native/codomain comparison; its first run completed as a degenerate unit ideal
+- repo: crypto-autoresearcher
+  path: experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/report.md
+  note: >-
+    completed F_4 edge with matching rank profiles, but both ideals are {1}; registered as
+    degenerate-unit-ideal with no success/falsification judgment
+- repo: crypto-autoresearcher
+  path: experiments/EXP-DREG-c3e8c9/specification.yaml
+  note: >-
+    graph-elimination versus frozen random-enrichment successor; explicitly excludes a
+    degenerate-unit-ideal prerequisite
 - repo: crypto
   path: experiments/koblitz_presentation/icc_n31_m3_geom_s1-32.json
   note: >-
@@ -62,6 +80,9 @@ evidence:
 - repo: crypto
   path: RESEARCH_ISOGENY_FIBERS_ECDLP.md
   note: "section 19 R5.4 (merged #2180): over F_p every known attack family cost is a class invariant up to a bounded factor; Conjecture 10 can fail only across a prime conductor gap (parts conditional)"
+- repo: crypto
+  path: problems/transport-oracle-exact-simulation-gap.md
+  note: exact finite counterexamples refute identity removal and arbitrary single-lift steps; corrected theorem open
 ledger_refs:
 - H-ICINV-6c7920
 - H-ICINV-d5e351
@@ -77,15 +98,12 @@ known_results:
 - KR-IC-5a43e5
 - KR-IC-401ebf
 forecloses:
-- isogeny transport to an easier Semaev presentation
-- curve model invariance of solving degree
-- special j-invariant Semaev degeneration
-- within-isogeny-class variance of decomposition rate
-- Velu edge lowers Groebner degree
-- binary Koblitz curve effect on decomposition cost beyond the factor-base subspace
+- the R6.8 identity-deleting and arbitrary-single-lift simulator lemma as written
+- a curve effect above the registered threshold in the two tested geometric-V Koblitz cohorts
+- inferring global curve-model or isogeny invariance from those bounded toy cohorts
 areas:
 - ICINV
 - DREG
 - ICEX
 - RELN
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-02'

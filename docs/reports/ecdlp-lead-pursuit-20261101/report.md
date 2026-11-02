@@ -2,6 +2,8 @@
 
 Date: 2026-11-01
 
+Current disposition update: 2026-11-02
+
 Atlas snapshot: `crypto-autoresearcher@7072741f712c`
 
 Crypto evidence snapshot: `crypto@b6ffdca53494`
@@ -12,12 +14,11 @@ Xedni correction evidence: `crypto@34caae22581045ec59fe779d86f8bf2d495cc14a`
 
 The existing 159-row ECDLP atlas was reviewed family by family. That review also identified and
 added one missing live split-graph/secant successor, so the reconciled atlas has **160 leads**.
-Exactly **21 narrowly scoped mechanisms have mechanism-wide obstruction evidence under their
-stated assumptions** and may leave
-the pursuit queue. The other **139 leads remain pursued** through either their next action or
-their explicit revisit trigger.
+The 2026-11-01 audit recorded **21 narrowly scoped mechanisms** outside the pursuit queue and
+**139 pursued leads**. The confirmed 2026-11-02 arity/oracle correction narrows one of those
+rows: the current accounting is **20 `closed_obstructed` rows** and **140 pursued leads**.
 
-This is a scope decision, not a claim that 21 broad research areas are impossible. Each stopped
+This is a scope decision, not a claim that 20 broad research areas are impossible. Each stopped
 row is stopped only for the mechanism stated in its obstruction. A non-generic oracle, different
 presentation, different locus, non-homomorphic statistic, or other stated escape remains a
 separate live lead.
@@ -48,18 +49,17 @@ mechanism in the queue.
 | Family scope | Reviewed | Scoped obstruction | Pursued |
 | --- | ---: | ---: | ---: |
 | Binary-field index calculus | 23 | 2 | 21 |
-| Index-calculus engines | 20 | 2 | 18 |
+| Index-calculus engines | 20 | 1 | 19 |
 | Prime-field index calculus | 27 | 3 | 24 |
 | Generic, transfer, structure, and exotic | 90 | 14 | 76 |
-| **Total** | **160** | **21** | **139** |
+| **Total** | **160** | **20** | **140** |
 
-The 21 suppressed mechanisms are:
+The 20 currently suppressed mechanisms are:
 
 | Family | Lead | Exact stopped scope |
 | --- | --- | --- |
 | Binary IC | `LEAD-ICB-generic-table-oracle` | Generic group-operation/table/membership oracle |
 | Binary IC | `LEAD-ICB-frobenius-orbit-factor-base` | Linear/subspace Frobenius orbit-column claim beyond exact orbit savings |
-| IC engine | `LEAD-ICE-generic-oracle-arity-cost-floor` | Coordinate-blind enumeration and MITM oracle floor |
 | IC engine | `LEAD-ICE-semaev-cover-monodromy` | Generic-fibre cycle-type census on the stated rational locus |
 | Prime IC | `LEAD-ICP-generic-table-decomposition` | Generic enumeration/table decomposition |
 | Prime IC | `LEAD-ICP-representation-subset-sum` | Generic group-operation/equality subset filter |
@@ -127,12 +127,35 @@ bound plus constant-size coefficient enlargement, with the generic class-polynom
 as a separate setup gate. Target-dependent arbitrary sections, growing arity or `C0`, and
 unenumerated CM lift families are explicitly outside that closure.
 
-This correction changes two rows from `closed_known` to `open_next_step`; it does not change the
-audit totals of **21 scoped obstructions** and **139 pursued leads**, because `closed_known` was
-already retained in the pursuit queue. The primary PDF checked was the author-hosted JKSST copy,
+At that stage, this correction changed two rows from `closed_known` to `open_next_step`; it did
+not change the then-current audit totals of **21 scoped obstructions** and **139 pursued leads**,
+because `closed_known` was already retained in the pursuit queue. The primary PDF checked was the
+author-hosted JKSST copy,
 SHA-256 `981bf955f7aecc5df4f271837f6653bd7666e5026f59df44196609d4a1dd6bc7`, especially
 Section 4, Lemma 4.1, Theorem 4.1, Sections 5--6, and notes 7--8. Silverman's proposal remains a
 metadata/first-page evidence gap; no inaccessible text was treated as read.
+
+## Arity/oracle correction after the family and Xedni audits
+
+On 2026-11-02, `LEAD-ICE-generic-oracle-arity-cost-floor` moved from
+`closed_obstructed` to `open_next_step`. The exact fixed-arity negative evidence is preserved:
+`EV-SEMBIN-b6d042` has zero in-domain sub-rho cells for `ENUM`, `MITM`, and `MITM_CAPPED` in
+the frozen model, and the reviewed Lean declaration `mitm_never_sub_generic` proves
+`costAll(m,beta,k) > 1/2` when `m >= 2`, `beta > 0`, and `k >= m/2`. Those are exact
+in-model obstructions, not discarded results.
+
+The independent semantic review rejected the bundled blanket-attainment and literal
+pointwise-threshold wording. The fixed model does not supply an executable algorithm, actual
+oracle output and useful-rank semantics, the required yield hypotheses, or a uniform
+model-to-algorithm theorem. Its `FREE` control has 7,850 sub-VOW model cells, and free oracles,
+growing arity, and coordinate-reading constructions remain outside the exact negative theorem.
+Those unrefuted branches therefore remain pursued while the fixed-arity `ENUM`/`MITM` result
+stays recorded in the row's obstruction and `forecloses` fields.
+
+This additive correction changes the IC-engine family from **2 obstructed / 18 pursued** to
+**1 obstructed / 19 pursued**, and the full atlas from **21 / 139** to **20 / 140**. It leaves
+the original dated 26-row statement and the subsequent Xedni reconciliation narrative intact;
+neither historical account is rewritten by this disposition update.
 
 ## Evidence and reproducibility
 
@@ -149,6 +172,9 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - `crypto:research/jksst_xedni_audit_20261101/README.md`
 - `crypto:research/jksst_xedni_audit_20261101/PROOF_MAP.md`
 - `crypto:docs/ecdlp-hardness-corpus/REPORT.md`
+- `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`
+- `ledger/proposals/IDEA-20261024-a2b05d.yaml`
+- `ledger/decisions/DEC-20261101-8adb11.yaml`
 - `crypto:problems/ghs-higher-magic-descent-not-executable.md`
 - `crypto:problems/factor-base-shape-to-successful-work.md`
 - the `obstruction`, `forecloses`, `revisit_when`, `evidence`, and `related` fields of all 160

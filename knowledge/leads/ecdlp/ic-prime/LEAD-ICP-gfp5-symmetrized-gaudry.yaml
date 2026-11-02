@@ -8,83 +8,51 @@ mechanism: >-
   degree from ~2^20 to ~2^9 and so lower the design note's >= 2^142 Gaudry floor; the side
   dichotomy says every F_q-rational root of the descended system is an all-E or all-twist
   decomposition.
-disposition: closed_dominated
-obstruction:
-  kind: measured
-  statement: >-
-    The F_p-rational (Z/2)^4 x| S_5 quotient of KN-OPEN-9b4a2b (6 unknowns, degrees
-    8,8,8,8,8,2) was solved completely at m = 5 with msolve 0.6.5 (grevlex F4 plus
-    rational parametrisation) at p' = 4111, 262231 and 33554371. That is 3 primes over
-    13 bits, on a frozen protocol (crypto research/ecgfp5_quotient_solve_20261101).
-    D = 2^16 in every cell, which confirms the law D = 2^{(m-1)^2}. The planted point
-    was recovered every time. Peak RSS was 4.7-6.5 GiB.
-    Whole-solve per-system cost was c_cyc = 2^46.30 / 2^46.56 / 2^46.63 (CPU-s x 2.8 GHz,
-    band [c/4, 4c]). That meets the frozen G1 CLOSE threshold c_cyc >= 2^46 in every
-    cell, but only by 0.30-0.63 bits.
-    F4 alone cost 2^44.72-2^45.29, which would sit in G1's not_measured band. About
-    two-thirds of c is the rational parametrisation.
-    Five solver probes at p' = 4111 gave no improvement against the bar
-    W0_F4_CPU / 1.5 = 6,900 s:
-    - weighted F4 W = (2,2,2,2,2,1) finished with D = 2^21 and 1.16x the CPU;
-    - weighted (1,1,1,1,1,2) and (1,2,3,4,5,5) hit the wall cap;
-    - Singular sba F5a hit its cap;
-    - Singular sba F5b was stopped by the owner past the bar.
-    Grevlex already shows no degree fall on this system, which removes the mechanism
-    weighted orders exploit.
-    The ideal-degree drop the mechanism predicted is real (2^20 -> 2^16 against the
-    S_5-symmetrised system). The per-system cost at this D still dominates the
-    symmetrized Gaudry route against rho under the program's G1 model.
-  revisit_when: >-
-    Any of the following reopens the lead:
-    - a finish cheaper than msolve's rational parametrisation (FGLM to a lex eliminant, or
-      the eliminant only) brings whole-solve c_cyc to <= 2^38 (G1 PROMOTE) on >= 3 primes;
-    - a matrix-F5/GVW-style F4 (e.g. FGb) or another solver lowers F4 CPU below W0/1.5 on
-      the same system;
-    - a further rational symmetry or construction gives D < 2^16 at m = 5. The 2026-11-02
-      representation audit closes larger symmetry groups for double-odd curves (no rational
-      4-torsion), so this condition now needs a construction that is not a symmetry
-      quotient;
-    - the u = x/y polynomial-ring form (FHJRV Prop. 13 shape: H_R = A(s) + pi B(s),
-      s_k = e_k(u_i^2), pi = prod u_i, two-term quadric s_5 - pi^2 in place of the dense
-      w^2 - Q(s); available on double-odd curves per CORR-20261102-7e3a91) beats W0 in one
-      m = 5 cell at p' = 4111. The cell runs under a frozen protocol of W0's shape (msolve
-      0.6.5, 4 threads, 12 GiB / 4 h), reports D, recovers the planted point, and must
-      bring F4 CPU below W0/1.5 = 6,900 s or whole-solve CPU below W0's 31,004 s. A win
-      there calls for the three-prime run. A memory or time stop is not_measured. This cell
-      has NOT been run. The audit expects D = 65,536 and no degree fall, so any gain would
-      be a constant factor. That is an expectation, not a result.
-    Note: the closure margin is under one bit, so a constant-factor finish change alone
-    could move the verdict to not_measured. A block-Wiedemann finish on the BNS22 chain
-    matrix is running under crypto research/ecgfp5_quotient_bw_finish_20261102 (protocol
-    frozen 2026-11-02). It has no result yet and tests the first condition above.
-    H-GFPN-6cc6aa (degree-4 Macaulay rank against a cofactor-1 null) remains untested.
-    Open items and resolution criteria: KN-OPEN-c52f07.
+disposition: open_next_step
+next_action:
+  step: >-
+    Freeze and run one u=x/y m=5 cell at p'=4111 under W0's solver, host and envelope.
+    Advance it to a three-prime run if either the F4 CPU is at most 6,900 s or the whole-solve
+    CPU is at most 31,004 s; these are alternative bars, not a conjunction. Independently run
+    the S_5 arm at m=5 on the quotient's own targets at at least three primes spanning 12 bits,
+    and keep the unrun H-GFPN-6cc6aa degree-4 Macaulay-rank test as a separate branch.
+  discriminates: >-
+    One u-cell decides only whether that representation merits the three-prime follow-up.
+    The same-target S_5 arm measures the orbit non-freeness gap without comparing D to the
+    constant 2^20; the Macaulay test answers a different rank question. A memory/time stop is
+    not measured, and none of these toy per-system outcomes is an end-to-end security claim.
 best_measured: >-
-  Quotient at m = 5, msolve 0.6.5, 4 threads: D = 2^16 at p' = 4111 / 262231 / 33554371,
-  planted point recovered; whole-solve c_cyc 2^46.30 / 2^46.56 / 2^46.63 (F4 alone
-  2^44.72 / 2^45.05 / 2^45.29); max RSS 4.68 / 6.47 / 6.41 GiB; G1 CLOSE at every prime.
-  Supersedes H-GFPN-9a29be's memory_exhausted m = 5 cells (EV-GFPN-fc5950).
+  m=5 quotient, D=2^16 and planted point recovered at three primes; block-Wiedemann whole-solve
+  c_cyc 2^45.43 / 2^45.58 / 2^45.84, 1.72--1.97x below W0 but 7.43--7.84 bits above PROMOTE;
+  G1 bands straddle CLOSE
 evidence:
 - repo: crypto
   path: research/ecgfp5_quotient_solve_20261101/README.md
-  note: >-
-    m = 3 validation (30 solves), m = 5 cells at three primes, weighted-F4 and sba probes;
-    frozen PROTOCOL.md with amendments A1-A5; crypto PR #3267
+  note: complete m=5 quotient solves at three primes and exact W0 stage accounting
 - repo: crypto
   path: research/ecgfp5_lead_evaluation_20261031/README.md
-  note: desk evaluation that designed the decisive quotient solve and its G1 criteria
+  note: frozen G1 per-system criteria and same-target comparison design; no security-level claim
+- repo: crypto
+  path: research/ecgfp5_quotient_bw_finish_20261102/README.md
+  note: >-
+    all three frozen cells completed; identical eliminants, 1.72--1.97x whole-solve improvement,
+    uncertainty bands still straddle CLOSE and PROMOTE remains 7.43--7.84 bits away
 - repo: crypto
   path: research/ecgfp5_representation_audit_20261102/README.md
-  note: >-
-    Representation audit: u = x/y ring form available on double-odd curves (D = 16 at m = 3,
-    512 at m = 4, planted point recovered); larger symmetry groups closed; m = 5 u cell
-    named as the next step
+  note: larger rational symmetry groups closed for double-odd curves; u=x/y m=5 control remains open
 - repo: crypto-autoresearcher
   path: ledger/corrections/CORR-20261102-7e3a91.yaml
-  note: Scopes "FHJRV ring form unavailable" to coordinates with phi(-P) = phi(P)
+  note: >-
+    narrows the old ring-form exclusion to the Kummer/x class; u=x/y is a valid polynomial-ring
+    form and its m=5 cost remains unmeasured
+- repo: crypto-autoresearcher
+  path: knowledge/open-problems/KN-OPEN-c52f07.md
+  note: >-
+    independent open items and exact exits for the same-target S_5 arm, u=x/y control and
+    H-GFPN-6cc6aa; memory/time stops are not measured
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-GFPN-fc5950.yaml
-  note: m = 5 absence is an absence; envelope misstated
+  note: historical m=5 absence superseded by the completed quotient solves
 - repo: crypto-autoresearcher
   path: research/gfp5_deployed_curves_20260920.md
   note: design of the GFPN study
@@ -110,17 +78,17 @@ ledger_refs:
 - IDEA-20261007-72d11a
 - IDEA-20261007-cefca4
 - EV-GFPN-fc5950
-- CORR-20261102-7e3a91
 - GOAL-GFPN-380702
+- CORR-20261102-7e3a91
 known_results:
 - KR-IC-e2d81b
 - KR-IC-955fd6
 - KR-IC-46d822
 - KR-IC-8b9daa
 forecloses:
-- symmetrized Gaudry attack on EcGFp5
-- two-torsion symmetry lowers the ideal degree at n = 5
-- side dichotomy of extension-field descent roots
+- the predicted quotient dimension near 2^9 at m = 5 for the tested presentation
+- the W0 or block-Wiedemann toy cells meet the frozen 2^38 PROMOTE threshold
+- the tested weighted-order and Singular sba probes improve the p'=4111 W0 F4 stage by 1.5x
 areas:
 - GFPN
 last_reviewed: '2026-11-02'

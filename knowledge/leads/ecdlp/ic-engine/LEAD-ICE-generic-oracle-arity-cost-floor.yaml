@@ -1,27 +1,46 @@
 id: LEAD-ICE-generic-oracle-arity-cost-floor
 family: ic-engine
-title: Generic (enumerative / MITM / free) decomposition oracles cannot reach rho at any arity
+title: Fixed-arity ENUM / MITM decomposition-oracle cost floor and the open free-oracle bridge
 mechanism: >-
-  Treat the oracle as an abstract m-SUM search or charge it nothing, and ask whether any arity
-  m or base size puts point-decomposition IC below rho. The product law relations x targets
-  x oracle = m 2^n is independent of dim V, and the store any sub-rho cell needs costs as
-  much as rho's whole walk.
-disposition: closed_obstructed
+  The frozen fixed-arity model combines mean decomposition yield, B useful relations,
+  B^2 linear algebra and an oracle cost B^k. It gives an exact obstruction for its ENUM,
+  MITM and MITM_CAPPED classes. A FREE control, growing arity, actual oracle output/rank
+  semantics and the uniform model-to-algorithm bridge are separate branches which the
+  model does not establish and which remain pursued.
+disposition: open_next_step
+next_action:
+  step: >-
+    Preserve the authored and source-archived complete-real-model correction, and run only its
+    authorized infrastructure recovery verifier TASK-20261101-caeb64. If machine verification
+    succeeds, complete custody/gating under TASK-20261101-48eac4 and the affected-joint semantic
+    review before relying on the correction. Separately bind one concrete free- or growing-arity
+    candidate to an executable oracle with exact output semantics, yield tails, useful-rank
+    stopping, setup, memory, m!-uniformity and complete charged cost.
+  discriminates: >-
+    A semantically accepted corrected formal model settles only its algebra. A verified candidate with
+    complete sub-rho cost would advance the open bridge; a failure closes only that implementation
+    and tested schedule. No finite timeout, bounded cell, or model mismatch closes free oracles,
+    growing arity, coordinate-reading oracles or the model-to-algorithm bridge.
 obstruction:
   kind: cost_model
   statement: >-
-    For oracles of class ENUM, MITM and MITM_CAPPED on binary curves of prime degree n, the
-    replicated v2 cost model has zero in-domain sub-rho cells (EV-SEMBIN-b6d042); on ECC2K-130
-    a free oracle at m = 3 still costs 2^68.58 against rho's 2^60.81 (KN-FIND-aa2efc); in-model,
-    structured generic-group bounds (CHW 2026/384) and non-adaptive time-space bounds (DKM
-    2025/783) give the same wall. Scope: oracles that do not read curve coordinates algebraically;
-    the FREE control does have sub-VOW cells, so the obstruction is the oracle class, not
-    IC.
+    Exact closed subclaim: for ENUM, MITM and MITM_CAPPED in the frozen fixed-arity binary
+    model, the replicated v2 census has zero in-domain sub-rho cells (EV-SEMBIN-b6d042).
+    In the reviewed real model, the machine-checked declaration mitm_never_sub_generic proves
+    costAll(m,beta,k) > 1/2 when m >= 2, beta > 0 and k >= m/2. The independent 2026-11-01
+    review also disproved the bundled blanket-attainment and literal pointwise-threshold wording.
+    Neither result supplies an algorithm, the yield/rank hypotheses, a growing-arity uniformity
+    theorem, or a FREE-oracle/model-to-PFSE bridge. The FREE control has sub-VOW model cells.
   revisit_when: >-
-    An oracle that reads coordinates with per-query cost polynomial in n at fixed degree (see
-    LEAD-ICE-descent-closure-degree-at-scale) is measured, or a non-generic yield exceeds
-    C(B+m-1,m)/N on average.
-best_measured: 'free oracle at m = 3 on ECC2K-130: 2^68.58 vs rho 2^60.81 (KN-FIND-aa2efc)'
+    Revisit the exact ENUM/MITM obstruction if a measured oracle violates one of its yield,
+    useful-rank, linear-algebra or B^k-cost premises. Coordinate-reading oracles are tracked by
+    LEAD-ICE-descent-closure-degree-at-scale; free and growing-arity schedules remain open here.
+best_measured: >-
+  Scoped fixed-arity evidence: zero sub-rho ENUM/MITM/MITM_CAPPED cells in EV-SEMBIN-b6d042;
+  at m = 3 the ECC2K-130 FREE control costs 2^68.58 versus rho 2^60.81, while the same FREE
+  model has 7,850 sub-VOW cells elsewhere and therefore supplies no universal obstruction. The
+  additive complete-real-model source is archived, but its first formal receipt has
+  verification=null after a 1,800-second build timeout; that is infrastructure evidence only.
 evidence:
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-SEMBIN-b6d042.yaml
@@ -40,6 +59,23 @@ evidence:
 - repo: crypto
   path: research/binary_mitm_oracle_l11_l12_20261016
   note: MITM oracle 928x-2,187x over pairs-and-solve, relation collection still Theta(2^n)
+- repo: crypto-autoresearcher
+  path: ledger/proposals/IDEA-20261024-a2b05d.yaml
+  note: conditional fixed-arity real cost model; its bundled blanket wording was later corrected
+- repo: crypto-autoresearcher
+  path: docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md
+  note: >-
+    MITM inequality verified at its exact signature; blanket attainment, literal pointwise
+    threshold and universal/free-oracle wording rejected; algorithm and growing-arity bridges open
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261101-8adb11.yaml
+  note: authorizes an additive formal-model correction and explicitly changes no scientific status
+- repo: crypto-autoresearcher
+  path: formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md
+  note: authored correction packet; machine verification and semantic review remain pending
+- repo: crypto-autoresearcher
+  path: docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml
+  note: preserves the 1,800-second timeout as non-proof infrastructure provenance and authorizes one recovery work unit
 ledger_refs:
 - H-SEMBIN-8e7ae3
 - EV-SEMBIN-b6d042
@@ -49,18 +85,18 @@ ledger_refs:
 - H-ICEX-cd499e
 - IDEA-20260803-fa9839
 - IDEA-20260830-4ab603
+- IDEA-20261024-a2b05d
+- DEC-20261101-8adb11
 known_results:
 - KR-IC-1fcdbc
 - KR-IC-401ebf
 - KR-IC-9e610d
 forecloses:
-- free decomposition oracle lifts IC below rho
-- arity threshold for point-decomposition index calculus
-- generic m-SUM decomposition oracle
-- larger arity m makes enumeration IC beat rho
-- multi-target amortisation rescues exhaustive-solver IC
+- fixed-arity MITM with k >= m/2 beats exponent 1/2 inside the reviewed costAll model
+- ENUM, MITM or MITM_CAPPED has a sub-rho cell inside the frozen EV-SEMBIN-b6d042 model domain
+- fixed-arity exhaustive enumeration beats rho while all frozen yield, rank and linear-algebra premises hold
 areas:
 - ICEX
 - SEMBIN
 - RELN
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-02'
