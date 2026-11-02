@@ -126,7 +126,7 @@ def concreteZModFiveControl : Prop :=
       commitmentMap G H ((2, 4) : ZMod 5 × ZMod 5)
 
 theorem concrete_zmod_five_control : concreteZModFiveControl := by
-  norm_num [concreteZModFiveControl, commitmentMap]
+  norm_num [concreteZModFiveControl, commitmentMap] <;> decide
 
 /-- A known relation gives a nonzero kernel vector and arbitrary-message
 alternate openings; faithful scalar encoding characterizes the entire kernel,
