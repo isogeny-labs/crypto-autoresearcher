@@ -40,10 +40,25 @@ obstruction:
       the eliminant only) brings whole-solve c_cyc to <= 2^38 (G1 PROMOTE) on >= 3 primes;
     - a matrix-F5/GVW-style F4 (e.g. FGb) or another solver lowers F4 CPU below W0/1.5 on
       the same system;
-    - a further rational symmetry or construction gives D < 2^16 at m = 5.
+    - a further rational symmetry or construction gives D < 2^16 at m = 5. The 2026-11-02
+      representation audit closes larger symmetry groups for double-odd curves (no rational
+      4-torsion), so this condition now needs a construction that is not a symmetry
+      quotient;
+    - the u = x/y polynomial-ring form (FHJRV Prop. 13 shape: H_R = A(s) + pi B(s),
+      s_k = e_k(u_i^2), pi = prod u_i, two-term quadric s_5 - pi^2 in place of the dense
+      w^2 - Q(s); available on double-odd curves per CORR-20261102-7e3a91) beats W0 in one
+      m = 5 cell at p' = 4111. The cell runs under a frozen protocol of W0's shape (msolve
+      0.6.5, 4 threads, 12 GiB / 4 h), reports D, recovers the planted point, and must
+      bring F4 CPU below W0/1.5 = 6,900 s or whole-solve CPU below W0's 31,004 s. A win
+      there calls for the three-prime run. A memory or time stop is not_measured. This cell
+      has NOT been run. The audit expects D = 65,536 and no degree fall, so any gain would
+      be a constant factor. That is an expectation, not a result.
     Note: the closure margin is under one bit, so a constant-factor finish change alone
-    could move the verdict to not_measured. H-GFPN-6cc6aa (degree-4 Macaulay rank against
-    a cofactor-1 null) remains untested.
+    could move the verdict to not_measured. A block-Wiedemann finish on the BNS22 chain
+    matrix is running under crypto research/ecgfp5_quotient_bw_finish_20261102 (protocol
+    frozen 2026-11-02). It has no result yet and tests the first condition above.
+    H-GFPN-6cc6aa (degree-4 Macaulay rank against a cofactor-1 null) remains untested.
+    Open items and resolution criteria: KN-OPEN-c52f07.
 best_measured: >-
   Quotient at m = 5, msolve 0.6.5, 4 threads: D = 2^16 at p' = 4111 / 262231 / 33554371,
   planted point recovered; whole-solve c_cyc 2^46.30 / 2^46.56 / 2^46.63 (F4 alone
@@ -58,6 +73,15 @@ evidence:
 - repo: crypto
   path: research/ecgfp5_lead_evaluation_20261031/README.md
   note: desk evaluation that designed the decisive quotient solve and its G1 criteria
+- repo: crypto
+  path: research/ecgfp5_representation_audit_20261102/README.md
+  note: >-
+    Representation audit: u = x/y ring form available on double-odd curves (D = 16 at m = 3,
+    512 at m = 4, planted point recovered); larger symmetry groups closed; m = 5 u cell
+    named as the next step
+- repo: crypto-autoresearcher
+  path: ledger/corrections/CORR-20261102-7e3a91.yaml
+  note: Scopes "FHJRV ring form unavailable" to coordinates with phi(-P) = phi(P)
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-GFPN-fc5950.yaml
   note: m = 5 absence is an absence; envelope misstated
@@ -86,6 +110,7 @@ ledger_refs:
 - IDEA-20261007-72d11a
 - IDEA-20261007-cefca4
 - EV-GFPN-fc5950
+- CORR-20261102-7e3a91
 - GOAL-GFPN-380702
 known_results:
 - KR-IC-e2d81b
@@ -98,4 +123,4 @@ forecloses:
 - side dichotomy of extension-field descent roots
 areas:
 - GFPN
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

@@ -14,7 +14,7 @@ status: open
 source_refs: [KN-OPEN-9b4a2b, EV-GFPN-fc5950, H-GFPN-9a29be, H-GFPN-6cc6aa,
   GOAL-GFPN-380702]
 added: 2026-11-02
-superseded_by: null
+superseded_by: KN-OPEN-c52f07
 ---
 
 ## What changed
