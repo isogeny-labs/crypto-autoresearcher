@@ -39,7 +39,7 @@ def check(certificate, transcript, checker_argv, plan,
     expected_input = [str(record['n']), record['modulus_hex'],
                       str(record['a2']), record['a6_hex'], record['z_hex']]
     expected_input += record['V_basis_hex']
-    if (len(argv) < 11 or Path(argv[5]) != certificate or
+    if (len(argv) < 11 or Path(argv[5]).name != certificate.name or
             argv[6:] != expected_input):
         raise ValueError('original checker arguments differ from named input')
     checker_source = Path(__file__).resolve().parents[1] / 'semaev-m2-last-fall-degree/verify/cert_check.py'
