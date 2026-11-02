@@ -1,0 +1,63 @@
+hypothesis:
+  id: H-PFDR-384bb7
+  area: PFDR
+  question_id: RQ-PFDR-ae2fba
+  source_proposal: IDEA-20261029-3d0e71
+  proposal_id: IDEA-20261029-3d0e71
+  title: Shared divisor coefficients with a Graeffe membership tower
+  status: specified
+  proposed_by: open-ideas design pass 2026-11-01
+  designed_by: opencode
+  created: '2026-11-01'
+  updated: '2026-11-01'
+  depends_on:
+  - IDEA-20261029-3d0e71
+  - RQ-PFDR-ae2fba
+  statement: A shared divisor-coefficient Graeffe membership tower cuts complete five-point
+    decomposition work by 2x relative to per-root PKM towers, without a degree or
+    exponent claim.
+  mechanism: Sharing the coefficient tower across roots moves repeated membership
+    work into one Graeffe evaluation; if the correspondence holds, the complete cost
+    falls even though the intrinsic degree does not.
+  assumptions:
+  - User requests factor-base/SAT research; execution is not authorized here.
+  - Implicit membership is not an asserted escape from KN-OPEN-020.
+  predictions:
+  - metric: complete_relation_cost
+    direction: lower
+    minimum_effect: <=0.5x per-root PKM
+  - metric: verified_model_count
+    direction: different
+    minimum_effect: exact agreement
+  - metric: chart_coverage
+    direction: different
+    minimum_effect: '1.0'
+  test_boundary:
+    instances:
+    - cells named in IDEA-20261029-3d0e71 and DESIGN.md
+    parameters:
+      instances: 3
+      replicates: 1
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 3600
+      backend: local
+  falsification_conditions:
+  - Any missing/spurious relation under declared chart equivalence.
+  - After matching permutation multiplicity and root sets, no complete-work improvement.
+  - Degree/branch growth merely moves into the coefficient tower or gcd/chart conditions.
+  - No suitable divisor d near the desired factor-base size for the actual target
+    prime.
+  interpretation_limits:
+  - Proposal only; no experiment or improvement established.
+  - Prime-field scope; regularity, solving degree and work are distinct.
+  - Independent relation verification; incomplete means UNKNOWN.
+  - An arbitrary interval factor base has no free logarithmic-length product polynomial
+    circuit.
+  - Applicable p-1 structure is a restriction on the field, not a weakness proved
+    for every prime curve.
+  - Backward Graeffe search still has roughly binomial(d+4,5) multisets absent additional
+    pruning.
+  - Initial E(F_p) has prime order; cofactors require explicit subgroup treatment.

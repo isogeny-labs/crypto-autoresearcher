@@ -1,0 +1,366 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n51-poly01-d5-stream-request-001.json",
+      "SHA-bound public D4 certificate",
+      "published prior result and exact count",
+      "EKS preflight receipt"
+    ],
+    "outputs": [
+      "Stage receipts, fresh exact count, independently checked D5 certificate or explicit non-success, candidate SHA-256 and full S3 readback."
+    ],
+    "script": {
+      "path": "run_n51_d5_stream.py",
+      "sha256": "975750511f0f65a57e5b84b957303078b89475041c1c801f5a9fdd8492ea9537"
+    }
+  },
+  "arms": [
+    {
+      "description": "Recheck the public D4 seed, enumerate exact solutions, stream a bounded D5 candidate to S3, read it back and feed it to the original checker.",
+      "id": "producer",
+      "instrument": {
+        "binary_sha256": "9cd484197ed9afb3eeb4466b06e143b440b2ec47a133a6d5433a8f2eaa5b5797",
+        "build": [
+          [
+            "reuse",
+            "source-reviewed bounded stream binary"
+          ]
+        ],
+        "commit": "1d5340d6319e9a56921dbee61ef43e102ee64fa4",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "checker_sha256": "b6e28168091986b3cb04790f51889723db0ec5838633767bb80a6dc4ac97bd70",
+          "runner_sha256": "975750511f0f65a57e5b84b957303078b89475041c1c801f5a9fdd8492ea9537",
+          "transport_sha256": "0dfad8bf3bfbaf463ade9e9d96a32bd647910a2ab5c9028637390eb2a560130f"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "certificate_max_bytes": 37611132032,
+        "chunk": 60000,
+        "degree": 5,
+        "memory_bytes": 96636764160,
+        "seed_degree": 4
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Fresh exact count for the identical retained input; require agreement with the published zero before D5.",
+      "id": "exact-count",
+      "instrument": {
+        "binary_sha256": "b2d16d8a27b6133443671af1bcc297af225827af1bbd192aa1cb09a2644f6638",
+        "build": [
+          [
+            "reuse",
+            "pinned native count_by_sum"
+          ]
+        ],
+        "commit": "1d5340d6319e9a56921dbee61ef43e102ee64fa4",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "counter_sha256": "b2d16d8a27b6133443671af1bcc297af225827af1bbd192aa1cb09a2644f6638"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "input_dispatch": "All inputs are unchained m2."
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "acceptance"
+      ],
+      "id": "C1",
+      "text": "An independently accepted D5 certificate whose checked codimension exceeds the fresh exact solution count certifies LFD >=6 for this named Boolean presentation."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic algebra and counts; no runtime comparison. Different chunk sizes are covered by software fixtures.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Changed seed, instrument, readback and producer failures are rejected in focused transport controls; no population null or statistical claim is made.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "No known degree-six positive. The EKS image preflight passed a real native small-system D5 fixture with independently checked codimension 3 and full S3 readback; non-detection on n51 gives no upper bound.",
+      "present": false
+    }
+  },
+  "created": "2026-11-01",
+  "decision_rule": {
+    "comparison_ids": [
+      "acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Original D5 checker acceptance and exact_count < checked_codimension establishes LFD>=6 for the named input.",
+    "threshold": "Independent D5 acceptance and exact_count < checked_codimension",
+    "verdict_vocabulary": [
+      "certificate_verified",
+      "failed",
+      "resource_capped",
+      "preempted"
+    ]
+  },
+  "execution": {
+    "backend": "isolab-k8s",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 0,
+      "interval_seconds": 21600,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "checkpoint_detail": "No checkpoint; candidate streams directly to assigned S3 prefix, then full readback is hashed and checked. Seed and stage receipts upload before exit.",
+      "counter_memory_bytes": 1073741824,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 96636764160,
+      "pod_memory_bytes": 103079215104
+    },
+    "queue": "cpu-spot",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "17277fb04a80ffb923dbed748c413e888aeef28883f14534a3a2ea12fc251651",
+    "commit": "6a4e6ddded88bb5df33eecbe121eb08e1b3d27f5",
+    "frozen_at": "2026-11-01T20:18:04Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling a producer candidate certified before full readback and original checker acceptance.",
+    "Inferring LFD>=6 without accepted D5 map and strict count inequality.",
+    "Treating timeout, preemption or capacity refusal as an upper bound.",
+    "Replacing the selected published input after observing D5 output."
+  ],
+  "invalidation_rules": [
+    "Any source, binary, request, seed or bundle hash mismatch prevents execution.",
+    "A failed or missing independent checker prevents LFD inference.",
+    "A missing or nonzero fresh solution count prevents the strict inequality.",
+    "A missing or changed S3 readback prevents certificate acceptance.",
+    "Resource refusal, timeout or preemption remains unknown for D5."
+  ],
+  "links": {
+    "launch_gate": "Qualified EKS image preflight, frozen protocol and request, immutable public bundle, no live duplicate, unique assigned result prefix, 96 GiB pod admission.",
+    "preflight_job": "semaev-d5-stream-custody-preflight-public-v3-20261101",
+    "preflight_job_uid": "ef4cb600-5b65-4ead-ba22-38f87369270b",
+    "preflight_readback_sha256": "ca5e3c534fb1e6cd690fc7d7d7095e61c256007169c42e9b20139918aa452837",
+    "preflight_receipt_sha256": "5628fd58ddddb1142615dfd90cb1e05acd2250a3c41a26c85f09bd4c030f667f",
+    "prior_result_sha256": "6c015d2e1b0f1ae10a0a1f469cdda001199ca40a1ae6b2fd7a9eaab44ac1bd84",
+    "published_seed_sha256": "ad32ae696931367c7a8a0a50231821ca9b545d222ef192db09205eaf5750be62",
+    "request": "n51-poly01-d5-stream-request-001.json",
+    "request_sha256s": [
+      "d74ea19216814bcfa2f316fb70a3d785e9be99fc7820c15222d609e093fd5684"
+    ],
+    "source_commit": "1d5340d6319e9a56921dbee61ef43e102ee64fa4"
+  },
+  "literature": [
+    {
+      "claim": "Degree and closure definitions and exact-count bridge for the named Boolean systems.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md",
+      "verified_by": "Codex 2026-10-29"
+    },
+    {
+      "claim": "Constructive quotient-lift rationale and known source bounds; no runtime or novelty claim.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-degree-five-quotient-lift/README.md",
+      "verified_by": "Codex 2026-11-01"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "image_digest",
+      "job_uid",
+      "pod_uid",
+      "cgroup_memory_bytes",
+      "disk_free_bytes",
+      "binary_sha256",
+      "runner_sha256",
+      "input_sha256",
+      "argv"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Checked D5 codimension only after full S3 readback and original independent checker acceptance; absent otherwise.",
+        "id": "certified_codimension_lower_bound",
+        "kind": "exact",
+        "name": "accepted D5 codimension lower bound",
+        "resolution": "1",
+        "source": "result.json checked_codimension only when status certificate_verified",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Fresh count from the pinned native counter; no copied historical value is a new measurement.",
+        "id": "exact_solutions",
+        "kind": "exact",
+        "name": "exhaustive Boolean solution count",
+        "resolution": "1",
+        "source": "result.json exact_solutions",
+        "uncertainty": "none_exact",
+        "unit": "solutions"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N51-POLY01-D5-STREAM-20261101-V1",
+  "question": "Does the published n51 polynomial-01 D4 seed lift to an independently checked D5 certificate with codimension above a fresh exact zero-solution count under one bounded 96 GiB EKS attempt?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One published named n51 polynomial-01 input selected before D5 output; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original published input seed reused; no new random draw.",
+      "seeds": [
+        1812300214742206507
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Named n51 D5 stage flow with unknown outcomes explicit; no runtime graph"
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 21600,
+      "fixed_seconds": 0,
+      "measured_on": "Source-derived resource profile and one bounded EKS image preflight; not a runtime prediction.",
+      "per_sample_seconds": 21600,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named n51 polynomial-01 cloud attempt, no automatic retry; 21600-second Job deadline and frozen stage limits. Preserve refusal, timeout, preemption and checker failure as non-success."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic exact certificates and enumeration; no timing comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "producer",
+          "exact-count"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "id": "acceptance",
+        "threshold": "Original checker accepts degree5 and fresh exhaustive count is strictly below checked codimension."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "One published n51 polynomial-01 D4 seed, exact record and public compressed object hash pinned before D5.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Producer, runner, transport, original checker and exact counter pinned by SHA-256 and immutable cloud bundle.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "One digest-pinned EKS x86 Spot pod; 96 GiB cgroup admission, 90 GiB producer cap, disk admission and image preflight. Clock invalid for performance comparison.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Public D4 download and original recheck, fresh exact count, D5 stream/upload, full S3 readback and original checker.",
+        "name": "order",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Any interruption is retained as censored attempt; no replacement input or outcome-dependent retry.",
+        "name": "spot_preemption",
+        "treatment": "measured"
+      },
+      {
+        "how": "Seed recheck, fresh exact count, D5 producer, S3 readback and checker are recorded separately; only complete acceptance decides the claim.",
+        "name": "stage",
+        "treatment": "crossed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

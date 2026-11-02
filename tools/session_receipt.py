@@ -81,10 +81,32 @@ def detect_runtime(env: dict[str, str] | None = None) -> str | None:
 
 def detect_model(env: dict[str, str] | None = None) -> str | None:
     env = os.environ if env is None else env
-    for key in ("AUTORESEARCH_RESOLVED_MODEL", "AUTORESEARCH_MODEL", "ANTHROPIC_MODEL", "CURSOR_MODEL"):
+    for key in ("AUTORESEARCH_RESOLVED_MODEL", "AUTORESEARCH_MODEL",
+                "ANTHROPIC_MODEL", "CURSOR_MODEL", "CODEX_MODEL",
+                "OPENAI_MODEL", "OPENCODE_MODEL"):
         if env.get(key):
             return env[key]
     return None
+
+
+def _enforce_ecc_process_budget(rec: dict[str, Any], repo_root: Path) -> None:
+    """Refuse a receipt that would cross the dated design-record guardrail."""
+    if not (repo_root / "orchestration/research-priority.yaml").is_file():
+        return
+    tools_dir = str(Path(__file__).resolve().parent)
+    if tools_dir not in sys.path:
+        sys.path.insert(0, tools_dir)
+    import ecc_priority
+    violations = ecc_priority.process_budget_violations(
+        repo=repo_root, extra_receipts=[rec])
+    relevant = [row for row in violations if rec["id"] in row["receipt_ids"]]
+    if relevant:
+        detail = "; ".join(
+            f"{row['scope']} {row['kind']} {row['count']}>{row['limit']}"
+            for row in relevant)
+        raise ValueError(
+            "ECC design-record process budget exceeded: " + detail +
+            ". Scientific runs remain unlimited; defer unfiled design work.")
 
 
 def _git(repo_root: Path, *args: str) -> str | None:
@@ -117,7 +139,7 @@ def receipt(args: argparse.Namespace, *, repo_root: Path, now: datetime | None =
         if not isinstance(usage, dict):
             raise ValueError("--usage-json must be a JSON object of the runtime's own counters")
     ids = [s for s in (args.created or "").split(",") if s.strip()]
-    return {
+    rec = {
         "schema": SCHEMA,
         "id": f"SR-{now.strftime('%Y%m%d')}-{secrets.token_hex(3)}",
         "recorded_at": now.isoformat(),
@@ -126,6 +148,8 @@ def receipt(args: argparse.Namespace, *, repo_root: Path, now: datetime | None =
         "mode": args.mode,
         "runtime": args.runtime or detect_runtime(env),
         "model": args.model or detect_model(env),
+        "provider": getattr(args, "provider", None) or env.get("AUTORESEARCH_PROVIDER"),
+        "backend": getattr(args, "backend", None) or env.get("AUTORESEARCH_BACKEND"),
         "policy": args.policy or env.get("AUTORESEARCH_POLICY"),
         "started_at": started,
         "ended_at": now.isoformat(),
@@ -143,6 +167,8 @@ def receipt(args: argparse.Namespace, *, repo_root: Path, now: datetime | None =
         "supersedes": args.supersedes,
         "asserts_nothing_about": "the science; this is a process receipt, not evidence",
     }
+    _enforce_ecc_process_budget(rec, repo_root)
+    return rec
 
 
 def write(rec: dict[str, Any], repo_root: Path) -> Path:
@@ -179,15 +205,31 @@ def summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
     created: Counter = Counter()
     bounced: Counter = Counter()
     usage_known = 0
+    runtime_known = model_known = provider_known = provenance_complete = 0
+    high_input_zero_record: list[str] = []
     for r in rows:
         by_skill[r.get("skill") or "?"][r.get("outcome") or "?"] += 1
         created[r.get("skill") or "?"] += int(r.get("records_created_count") or 0)
         bounced[r.get("skill") or "?"] += int(r.get("bounced") or 0)
         if r.get("usage"):
             usage_known += 1
+            input_tokens = (r.get("usage") or {}).get("input_tokens")
+            if (isinstance(input_tokens, int) and input_tokens >= 500_000
+                    and not r.get("records_created_count")):
+                high_input_zero_record.append(str(r.get("id") or "?"))
+        runtime_known += bool(r.get("runtime"))
+        model_known += bool(r.get("model"))
+        provider_known += bool(r.get("provider"))
+        provenance_complete += bool(r.get("runtime") and r.get("model")
+                                    and r.get("provider"))
     return {
         "receipts": len(rows),
         "usage_known": usage_known,
+        "runtime_known": runtime_known,
+        "model_known": model_known,
+        "provider_known": provider_known,
+        "provenance_complete": provenance_complete,
+        "high_input_zero_record": high_input_zero_record,
         "by_skill": {k: dict(v) for k, v in sorted(by_skill.items())},
         "records_created_by_skill": dict(created),
         "bounced_by_skill": {k: v for k, v in bounced.items() if v},
@@ -197,7 +239,15 @@ def summary(rows: list[dict[str, Any]]) -> dict[str, Any]:
 def render_summary(s: dict[str, Any]) -> str:
     if not s["receipts"]:
         return "session receipts: none yet (every skill ends with tools/session_receipt.py)"
-    lines = [f"session receipts: {s['receipts']}, provider usage known for {s['usage_known']}"]
+    lines = [f"session receipts: {s['receipts']}, provider usage known for {s['usage_known']}",
+             "  provenance coverage: "
+             f"runtime {s.get('runtime_known', 0)}/{s['receipts']}, "
+             f"model {s.get('model_known', 0)}/{s['receipts']}, "
+             f"provider {s.get('provider_known', 0)}/{s['receipts']}, "
+             f"complete {s.get('provenance_complete', 0)}/{s['receipts']}"]
+    if s.get("high_input_zero_record"):
+        lines.append("  process anomaly: >=500k input tokens and zero records: " +
+                     ", ".join(s["high_input_zero_record"]))
     for skill, outcomes in s["by_skill"].items():
         total = sum(outcomes.values())
         parts = ", ".join(f"{o} {n}" for o, n in sorted(outcomes.items(), key=lambda kv: -kv[1]))
@@ -228,6 +278,8 @@ def main(argv: list[str] | None = None) -> int:
         p.add_argument("--started", help="ISO start time; defaults to $SESSION_RECEIPT_STARTED")
         p.add_argument("--runtime", help="override the detected runtime")
         p.add_argument("--model", help="resolved model id, if the runtime exposes it")
+        p.add_argument("--provider", help="provider reported by the runtime; never infer it from the model name")
+        p.add_argument("--backend", help="configured inference backend, if exposed")
         p.add_argument("--policy", help="requested inference policy")
         p.add_argument("--usage-json", help="runtime's own usage counters as JSON; never an estimate")
         p.add_argument("--usage-source", help="where --usage-json came from (e.g. cursor run-info)")

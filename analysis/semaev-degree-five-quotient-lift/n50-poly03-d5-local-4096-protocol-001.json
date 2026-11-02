@@ -1,0 +1,379 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "runtime/n50-poly03-d5-local-4096-request-001.json",
+      "SHA-bound published n50 polynomial03 D4 certificate",
+      "runtime/blocked-checkpoint-worker-cloud-001/manifest.json",
+      "validation/n50-poly03-d5-4096-preflight-001/result.json",
+      "reports/blocked-checkpoint-worker-cloud-002/export.json"
+    ],
+    "outputs": [
+      "Stage transcripts, exact count, independently checked D5 certificate or explicit inconclusive outcome, immutable S3 checkpoints and full-readback acknowledgments."
+    ],
+    "script": {
+      "path": "run_lift_worker_checkpoint.py",
+      "sha256": "4ba508f26f8c8fb35679817b7e8c68ae7371ce4020ab03c01b59b3dd7fe32067"
+    }
+  },
+  "arms": [
+    {
+      "description": "Stream and recheck D4 seed, enumerate exact solutions, run checkpoint-capable D5 producer and original independent checker.",
+      "id": "producer",
+      "instrument": {
+        "binary_sha256": "fc0911db6560fe10b49d88d6206f89f8de6494616020a864c82d8be552749613",
+        "build": [
+          [
+            "reuse",
+            "qualified checkpoint binary"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "checker_sha256": "13d926240a99de4b3eede374932fe245d62e7de65102a4fdf2cccfb0e4463877",
+          "driver_sha256": "4ba508f26f8c8fb35679817b7e8c68ae7371ce4020ab03c01b59b3dd7fe32067",
+          "guard_sha256": "952cc55fbf485548ec6a50efd23b52a19c971ac08a83197abf2282622bdb59d9",
+          "manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "chunk": 4096,
+        "degree": 5,
+        "memory_bytes": 41875931136,
+        "seed_degree": 4
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Fresh exact count for the identical n50 polynomial03 input; require agreement with the prior zero count before D5.",
+      "id": "exact-count",
+      "instrument": {
+        "binary_sha256": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56",
+        "build": [
+          [
+            "reuse",
+            "qualified portable count_by_sum_worker"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "count_by_sum": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "input_dispatch": "All inputs are unchained m2."
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "acceptance"
+      ],
+      "id": "C1",
+      "text": "An independently accepted D5 certificate whose checked codimension exceeds the freshly enumerated solution count certifies LFD >=6 for the exact named Boolean presentation."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic algebra and counts; no runtime comparison. Different chunk sizes are covered by software fixtures.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Separate frozen export-guard controls reject corrupt state, wrong identities, existing output and insufficient capacity; local worker count-equality fixtures emit no LFD bound. No population arm inferred.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "No known degree-six detection control. The identical worker passed qualified source/restore controls; this is one exact named-input test, and non-detection yields no upper bound.",
+      "present": false
+    }
+  },
+  "created": "2026-11-02",
+  "decision_rule": {
+    "comparison_ids": [
+      "acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "At any accepted degree d, exact_count < checked_codimension establishes LFD>=d+1; reaching6 requires an accepted degree5 certificate and this strict inequality.",
+    "threshold": "Independent acceptance and exact_count < checked_codimension",
+    "verdict_vocabulary": [
+      "certificate_verified",
+      "projection_kills_one",
+      "seed_without_certificate",
+      "failed",
+      "resource_capped",
+      "export_deferred",
+      "checkpointed_control"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": 21600,
+      "policy": "application",
+      "restore_validation": "manifest_sha256"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "Event-driven save after each seed chunk and completed closure round, plus export-ready state. Conditional S3 publication and full readback precede local prune. Startup and output are accounted under a 64 GiB run directory with a 512 MiB reserve; the host admission also reserves 2 GiB. No time-based checkpoint interval guarantee.",
+      "counter_memory_bytes": 1073741824,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 41875931136,
+      "pod_memory_bytes": 44023414784
+    },
+    "queue": "local-exclusive-memory",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "319190ad542a9502d46ece57574662a519d2ac675a981995ec366ed31b502c18",
+    "commit": "32011d464fafeedf75e7692f608364c1bdd0506d",
+    "frozen_at": "2026-11-02T00:09:33Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling a killed constant a proved upper bound.",
+    "Calling native output certified before original checker acceptance.",
+    "Inferring LFD>=6 without accepted D5 map and strict count inequality.",
+    "Replacing original capped dense-engine records with cascade outcomes.",
+    "Treating a lower-degree accepted stage as degree-five completion."
+  ],
+  "invalidation_rules": [
+    "Any source or binary hash mismatch prevents execution.",
+    "A failed independent checker prevents a claim from that stage.",
+    "A counter failure prevents a solution-count comparison.",
+    "Killing1 in an over-approximating quotient is not membership evidence in the true closure.",
+    "Missing later stages remain unknown, even if an earlier stage proves a smaller lower bound.",
+    "Deferred export or missing checkpoint/certificate carries no mathematical bound.",
+    "Restore request mismatch or unverified state prevents native launch."
+  ],
+  "links": {
+    "checkpoint_prefix": "s3://setec-astronomy-artifacts/checkpoints/semaev-n50-poly03-d5-local-4096-001",
+    "dimension_profile": "validation/n50-poly03-d5-4096-preflight-001/result.json",
+    "dimension_profile_sha256": "60b9265ddcd71839c4f9cc78dbefeb9207cadac6f466018a03dbe86bb431d6f7",
+    "launch_gate": "Only after the n47 independent D4 rank replay is terminal, exclusive locks and memory admission pass, fresh budget headroom and finite charged/reserved S3 lane allowance are recorded, and output root/S3 prefix are empty. No simultaneous frontier producer.",
+    "plan": "n50-poly03-d5-local-4096-plan-001.json",
+    "plan_sha256": "cceb2216a18b7d5296a2c20cf3f3a1cd9fc83c56719ed567ed74e54748fb6c06",
+    "published_seed": "bounded-d4-archive-001/fresh-n50-poly-03-D5-cascade01-bounded-D4-001.publication.json",
+    "published_seed_sha256": "6802bc153ebe8b21a8c83b5e82dcb2f633a23816101c2e273b7844736151412c",
+    "qualification_export": "reports/blocked-checkpoint-worker-cloud-002/export.json",
+    "qualification_export_sha256": "5a899d09f088fdb7022b560e3bd9339d9b7151b9ce57824eb63a1d1bd4480068",
+    "request": "runtime/n50-poly03-d5-local-4096-request-001.json",
+    "request_sha256s": [
+      "33f01d0d800948449958109d6bd0eac78a7b1a52fc313b6670fe7efc059ccbd7"
+    ],
+    "worker_manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa"
+  },
+  "literature": [
+    {
+      "claim": "Closure exactness obligations and distinction between checked D5 nonmembership and projection status.",
+      "provenance": "internal",
+      "ref": "reports/n51-poly01-d5-stream-001/proof-bridge.md",
+      "verified_by": "Codex 2026-11-02"
+    },
+    {
+      "claim": "Hash-pinned seed and 4096-row bounded allocation profile; no timing or LFD inference.",
+      "provenance": "internal",
+      "ref": "validation/n50-poly03-d5-4096-preflight-001/result.json",
+      "verified_by": "Codex 2026-11-02"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "nq only after original independent checker acceptance; absent if no accepted certificate.",
+        "id": "certified_codimension_lower_bound",
+        "kind": "exact",
+        "name": "accepted D5 codimension lower bound",
+        "resolution": "1",
+        "source": "result.json certified_codimension_lower_bound only when status certificate_verified",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Fresh count from the pinned native counter; no copied historical value is a new measurement.",
+        "id": "exact_solutions",
+        "kind": "exact",
+        "name": "exhaustive Boolean solution count",
+        "resolution": "1",
+        "source": "result.json exact_solutions",
+        "uncertainty": "none_exact",
+        "unit": "solutions"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N50-POLY03-D5-LOCAL-4096-20261102-V1",
+  "question": "Does the already certified zero-solution n50 polynomial03 presentation yield an independently accepted D5 codimension above zero with the 4096-row bounded checkpoint worker?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One fixed n50 polynomial03 input selected from the original frozen frontier after its accepted D4 seed; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original frontier parameters reused; no new random inputs.",
+      "seeds": [
+        5026844743918730416
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Per-instance D5 outcomes with unknown cells explicit; no runtime graph"
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 21600,
+      "fixed_seconds": 0,
+      "measured_on": "One named local run with a 21600-second stage watchdog; no runtime estimate.",
+      "per_sample_seconds": 21600,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named 21600-second local attempt, no automatic retry. Preserve every checkpoint and terminal outcome; stop on resource/checker/count failure, projection killing1, or export deferral. A later restore requires a separately reconciled launch receipt under the same frozen request/context."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Resource refusal, timeout, invalid certificate or counter failure is retained without an LFD inference."
+    },
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Only after the n47 independent D4 rank replay is terminal, exclusive locks and memory admission pass, fresh budget headroom and finite charged/reserved S3 lane allowance are recorded, and output root/S3 prefix are empty. No simultaneous frontier producer."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic exact certificates and enumeration; no timing comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "producer",
+          "exact-count"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "id": "acceptance",
+        "threshold": "Original checker accepts degree5 and fresh exhaustive count is strictly below checked codimension."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "One fixed input from the original n50 frontier: polynomial03 with its publicly read-back, independently accepted D4 seed and fresh historical zero count. No new sampling.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Exact checkpoint worker bundle, producer, guard, original checker and exact counter pinned by manifest.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "One local host, 39 GiB child RLIMIT and 2 GiB admission reserve; exclusive locks. The source-derived 38,017,488,971-byte 4096-row envelope is a preflight estimate, not RSS.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "D4 streamed seed and independent recheck, fresh exact count, optional compatible restore and guard, D5 producer and original checker.",
+        "name": "order",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Count and seed acceptance required before D5; no inference from incomplete later stages.",
+        "name": "stage",
+        "treatment": "crossed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

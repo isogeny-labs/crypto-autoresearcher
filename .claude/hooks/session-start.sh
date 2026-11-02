@@ -14,9 +14,9 @@
 #      repository corruption; it is a missing object. It once put 26 of 46
 #      active goals in that bucket, leaving the harness nothing to dispatch.
 #
-# In the web container it also starts a cairn node, installs SageMath 10.9, and
-# runs aburan28/crypto's scripts/setup-workstation.sh for the rest of the
-# toolchain (the last block below).
+# In the web container it also starts a cairn node and runs aburan28/crypto's
+# scripts/cloud-setup.sh for the rest of the toolchain, SageMath 10.9 included
+# (the last block below).
 #
 # Idempotent, non-interactive, and never fatal: a session that starts with a
 # degraded environment is better than one that does not start.
@@ -24,16 +24,18 @@ set -uo pipefail
 
 cd "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel)}" || exit 0
 
-# Optional sparse checkout (docs/sparse-checkout.md). A full checkout is ~9 GB,
-# 7 GB of it run archives and reference bundles an execution session never
-# reads, and it leaves too little disk for SageMath below. Opt in per
-# environment with CRYPTO_AR_SPARSE_PROFILE=harness; `disable` undoes it.
-# Opt-in, not default: the ledger sweeps the Coordinator skills run refuse a
-# sparse checkout (docs/sparse-checkout.md, "Not the default").
-if [ -n "${CRYPTO_AR_SPARSE_PROFILE:-}" ]; then
+# Sparse checkout (docs/sparse-checkout.md). A full checkout is ~9 GB, 7 GB of
+# it run archives and reference bundles an execution session never reads, and
+# it leaves too little disk for SageMath. In the web container cloud-setup.sh
+# (last block) applies the harness profile by default;
+# CRYPTO_AR_SPARSE_PROFILE=full keeps the checkout full for the ledger sweeps
+# the Coordinator skills run, which refuse a sparse checkout. Elsewhere it
+# stays opt-in: CRYPTO_AR_SPARSE_PROFILE=harness here; `disable` undoes it.
+if [ -n "${CRYPTO_AR_SPARSE_PROFILE:-}" ] && [ "$CRYPTO_AR_SPARSE_PROFILE" != full ]; then
     python3 tools/sparse_checkout.py apply "$CRYPTO_AR_SPARSE_PROFILE" >&2 \
         || echo "session-start: sparse profile '$CRYPTO_AR_SPARSE_PROFILE' not applied; checkout stays full" >&2
-elif [ "$(git config --bool core.sparseCheckout 2>/dev/null)" != "true" ] \
+elif [ "${CLAUDE_CODE_REMOTE:-}" != "true" ] \
+    && [ "$(git config --bool core.sparseCheckout 2>/dev/null)" != "true" ] \
     && [ "$(df -Pk . 2>/dev/null | awk 'NR==2{print $4}')" -lt 20971520 ] 2>/dev/null; then
     echo "session-start: <20GiB free with a full checkout; 'python3 tools/sparse_checkout.py apply harness' frees ~7GB for run sessions" >&2
 fi
@@ -72,96 +74,48 @@ if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
     scripts/cairn-node.sh ensure || true
 fi
 
-# SageMath 10.9, pinned to match the version driver.py/checker.py hard-assert
-# (dependencies.json's "sage": "10.9" across frozen experiments, e.g.
-# EXP-FROB-d8aa37). Workspace tooling only: this does NOT satisfy a frozen
-# experiment's runtime-lock admission (that stays a Coordinator-pinned,
-# hash-verified sandbox; see AGENTS.md and each experiment's
-# dependencies.json/linux-runtime-lock.json). What it does let an Executor or
-# a human run safely is `sage -python .../driver.py --self-test` during
-# implementation -- restricted to fixed, non-scientific fixtures per
-# dependencies.json's "stage0 scientific constructors during implementation"
-# prohibition -- plus general Sage-touching dev/lint work. Heavy (~8GiB), so
-# only for the web container, and skipped rather than filling the disk.
-if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ]; then
-    SAGE_PREFIX=/opt/conda-sage
-    SAGE_ENV="$SAGE_PREFIX/envs/sage"
-    if [ -x "$SAGE_ENV/bin/python3" ] \
-        && "$SAGE_ENV/bin/python3" -c "
-from sage.env import SAGE_VERSION
-import sys
-sys.exit(0 if SAGE_VERSION == '10.9' else 1)
-" 2>/dev/null; then
-        : # already installed and pinned correctly -- container cache did its job
-    elif [ "$(df -Pk /opt 2>/dev/null | awk 'NR==2{print $4}')" -lt 10485760 ] 2>/dev/null; then
-        echo "session-start: <10GiB free under /opt, skipping SageMath 10.9 install" >&2
-    else
-        echo "session-start: installing SageMath 10.9 (conda-forge, ~8GiB) for workspace use" >&2
-        MM=/tmp/session-start-micromamba
-        if [ ! -x "$MM" ]; then
-            curl -fsSL --max-time 60 https://micro.mamba.pm/api/micromamba/linux-64/latest \
-                | tar xj -O bin/micromamba > "$MM.tmp" \
-                && mv "$MM.tmp" "$MM" && chmod +x "$MM"
-        fi
-        if [ -x "$MM" ]; then
-            "$MM" create -y -r "$SAGE_PREFIX" -p "$SAGE_ENV" -c conda-forge "sage=10.9" \
-                || echo "session-start: SageMath install failed; rerun manually if needed" >&2
-        else
-            echo "session-start: could not fetch micromamba; skipping SageMath install" >&2
-        fi
-    fi
-
-    # A shim on PATH matching the official upstream Sage CLI's
-    # `sage -python <script> [args...]` convention that frozen trial-plan
-    # argv uses. conda-forge's own `sage` entry point (sage.cli.__main__) has
-    # no -python subcommand; everything else delegates to it unchanged.
-    if [ -x "$SAGE_ENV/bin/python3" ]; then
-        mkdir -p "$SAGE_PREFIX/bin"
-        cat > "$SAGE_PREFIX/bin/sage" << SAGESHIM
-#!/bin/sh
-if [ "\$1" = "-python" ]; then
-    shift
-    exec "$SAGE_ENV/bin/python3" "\$@"
-fi
-exec "$SAGE_ENV/bin/sage" "\$@"
-SAGESHIM
-        chmod +x "$SAGE_PREFIX/bin/sage"
-        if [ -n "${CLAUDE_ENV_FILE:-}" ]; then
-            echo "export PATH=\"$SAGE_PREFIX/bin:\$PATH\"" >> "$CLAUDE_ENV_FILE"
-        fi
-    fi
-fi
-
-# The rest of the research toolchain: aburan28/crypto's
-# scripts/setup-workstation.sh (system libraries and PARI/GP, Rust/Go/Node/uv,
-# conductor, the codex and opencode CLIs, git/gh sign-in as the GitHub service
-# account when GH_APP_* or GH_SERVICE_TOKEN is set as an environment secret, a
-# cryptanalysis checkout next to this one, per-repo virtualenvs), minus what
-# this hook already did (cairn, SageMath)
-# and crypto's control plane. Fetched at a pinned commit, not main, so a session
-# never runs a script nobody reviewed; bump CRYPTO_SETUP_REF to take a newer
-# one. It skips what is installed, so a cached container only re-checks. Its
-# output goes to a log. CRYPTO_WORKSTATION_SETUP=0 turns it off and
-# CRYPTO_SETUP_CLONE lists the repositories to clone (default cryptanalysis).
+# The rest of the research toolchain: aburan28/crypto's scripts/cloud-setup.sh
+# (docs/cloud-setup.md there). It applies the harness sparse profile to this
+# checkout and to a crypto checkout next to it, then runs
+# scripts/setup-workstation.sh: system libraries and PARI/GP, Rust/Go/Node/uv,
+# conductor, the codex and opencode CLIs, aws and kubectl, git/gh sign-in as
+# the GitHub service account when GH_APP_* or GH_SERVICE_TOKEN is set as an
+# environment secret, a cryptanalysis checkout next to this one, per-repo
+# virtualenvs, and SageMath 10.9 when 4 GiB are free. Its lean conda-forge
+# build (sagelib + maxima) goes to /opt/conda-sage with the `sage -python`
+# shim that frozen trial-plan argv uses. That is workspace tooling only: it
+# does NOT satisfy a frozen experiment's runtime-lock admission (a
+# Coordinator-pinned, hash-verified sandbox; see AGENTS.md and each
+# experiment's dependencies.json/linux-runtime-lock.json). cairn (above) and
+# crypto's control plane are skipped.
+# Fetched at a pinned commit, not main, so a session never runs a script nobody
+# reviewed; bump CRYPTO_SETUP_REF to take a newer one. It skips what is
+# installed, so a cached container only re-checks. Its output goes to a log.
+# CRYPTO_WORKSTATION_SETUP=0 turns it off and CRYPTO_SETUP_CLONE lists the
+# repositories to clone (default cryptanalysis).
 if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ] && [ "${CRYPTO_WORKSTATION_SETUP:-1}" != 0 ]; then
-    setup_ref="${CRYPTO_SETUP_REF:-28b5c56f3153a5830327b9b70b833f2b062663df}"
-    setup_dir="$HOME/.cache/workstation-setup/$setup_ref"
-    setup="$setup_dir/setup-workstation.sh"
+    setup_ref="${CRYPTO_SETUP_REF:-0a621d718eed400eabf5fa863ead48383f1ba999}"
+    setup_dir="$HOME/.cache/workstation-setup/$setup_ref/scripts"
     setup_log="$HOME/.local/state/workspace-tools/autoresearcher-setup.log"
     mkdir -p "$setup_dir" "$(dirname "$setup_log")"
-    if [ ! -s "$setup" ]; then
+    # cloud-setup.sh runs setup-workstation.sh from its own directory, which
+    # runs isolab-agent.sh from there too.
+    for f in cloud-setup.sh setup-workstation.sh isolab-agent.sh; do
+        [ -s "$setup_dir/$f" ] && continue
         curl -fsSL --max-time 30 \
-            "https://raw.githubusercontent.com/aburan28/crypto/$setup_ref/scripts/setup-workstation.sh" \
-            -o "$setup.tmp" && mv "$setup.tmp" "$setup" \
-            || echo "session-start: could not fetch setup-workstation.sh at $setup_ref; skipping workstation setup" >&2
-    fi
-    if [ -s "$setup" ]; then
-        if CLONE_REPOS="${CRYPTO_SETUP_CLONE-cryptanalysis}" bash "$setup" \
-            --workspace "$(dirname "$PWD")" --skip cairn,sage,control-plane >>"$setup_log" 2>&1; then
-            echo "session-start: workstation setup ran (log: $setup_log)" >&2
+            "https://raw.githubusercontent.com/aburan28/crypto/$setup_ref/scripts/$f" \
+            -o "$setup_dir/$f.tmp" && mv "$setup_dir/$f.tmp" "$setup_dir/$f" \
+            || echo "session-start: could not fetch $f at $setup_ref" >&2
+    done
+    if [ -s "$setup_dir/cloud-setup.sh" ] && [ -s "$setup_dir/setup-workstation.sh" ]; then
+        if WORKSPACE="$(dirname "$PWD")" CLONE_REPOS="${CRYPTO_SETUP_CLONE-cryptanalysis}" \
+            SETUP_SKIP=cairn bash "$setup_dir/cloud-setup.sh" >>"$setup_log" 2>&1; then
+            echo "session-start: cloud setup ran (log: $setup_log)" >&2
         else
-            echo "session-start: workstation setup failed (log: $setup_log)" >&2
+            echo "session-start: cloud setup failed (log: $setup_log)" >&2
         fi
+    else
+        echo "session-start: skipping cloud setup; its scripts did not download" >&2
     fi
 fi
 

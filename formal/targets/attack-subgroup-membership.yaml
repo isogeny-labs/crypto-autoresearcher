@@ -1,0 +1,38 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-f0c6aa
+claim_id: ATTACK-SUBGROUP-MEMBERSHIP-CONTROL
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_20261101/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.SubgroupMembership.ambient_membership_does_not_imply_designated_subgroup
+theorem_file: CryptoResearch/AttackCorpus/SubgroupMembership.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  This deliberately uses the finite additive group ZMod 2 x ZMod 3 as the
+  smallest transparent cofactor countermodel. Its ambient-acceptance predicate
+  is not an elliptic-curve equation. The theorem therefore refutes only the
+  abstract inference from ambient membership to membership in a designated
+  prime-order subgroup.
+
+  The conditional repair is exact for this model: membership in the image of
+  s |-> (0,s) supplies a ZMod 3 scalar, and a nonzero image point has additive
+  order three. SEC 1 point decoding, invalid-curve and twist attacks, exact
+  curve order, cofactor clearing, and subgroup checks on a concrete curve are
+  separate targets.
+claim: |
+  Let G = ZMod 2 x ZMod 3 and let the designated prime-order subgroup be the
+  image S of phi(s) = (0,s). There is an ambiently accepted point P = (1,0)
+  such that P is not in S and addOrderOf P = 2. Thus membership in an ambient
+  finite group does not imply membership in its designated order-three
+  subgroup.
+
+  Prove the exact repair in the same finite model: if P is in S, then there is
+  s : ZMod 3 with P = phi(s); if additionally P is nonzero, then
+  addOrderOf P = 3. No elliptic-curve or protocol-security conclusion is part
+  of the claim.
+proof_map:
+  prerequisites:
+    - "Ambient acceptance is represented only by membership in the product group ZMod 2 x ZMod 3; identifying that predicate with an actual on-curve decoder is intentionally not formalized"
+    - "The designated subgroup is exactly Set.range (fun s : ZMod 3 => (0,s)); no claim is made that a concrete implementation performs this membership test"
+    - "Concrete curve order, subgroup order, nonidentity validation, twist rejection and cofactor-clearing semantics require later refinement targets"

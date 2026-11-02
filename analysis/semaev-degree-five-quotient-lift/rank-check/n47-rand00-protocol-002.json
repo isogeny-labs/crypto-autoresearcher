@@ -1,0 +1,391 @@
+{
+  "amendments": [
+    {
+      "id": "A1",
+      "filed": "2026-11-01",
+      "filed_before_affected_data": true,
+      "reason": "The preceding frozen protocol was not launched: after the n45 campaign lock released, MemAvailable remained below its 40 GiB child plus 2 GiB reserve admission threshold. The unchanged Python pivot representation has at most 213053 integers of at most 213053 bits, about 6.1 GB of pivot payload, so a 16 GiB child cap retains substantial headroom.",
+      "changes": [
+        "Child RLIMIT_AS and memory admission change from 40 GiB to 16 GiB; 2 GiB reserve unchanged.",
+        "New write-once output root and plan identity. The input, verifier, runner, decision rule, timeout and retry count are unchanged."
+      ],
+      "supersedes_fields": [
+        "execution.placement.memory_per_worker_bytes",
+        "arms[0].parameters.memory_bytes",
+        "links.launch_gate",
+        "links.request",
+        "links.request_sha256s"
+      ]
+    }
+  ],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "rank-check/n47-rand00-plan-002.json",
+      "runtime/rand00-blocked-frontier-request-001.json",
+      "retained SHA-bound D4 seed and accepted checker transcript",
+      "verify/indep_verify.py"
+    ],
+    "outputs": [
+      "Admission samples, process identity, complete stdout/stderr with SHA-256, parsed final rank or explicit non-success."
+    ],
+    "script": {
+      "path": "rank-check/run_indep_d4_rank.py",
+      "sha256": "def10fa6a7d0ed20b6c2c24cfcc8fd6664117e92f7c9307f6c71baf74b5f9c8c"
+    }
+  },
+  "arms": [
+    {
+      "description": "Unchanged independent implementation B reconstructs the original Boolean system and computes exact W4 rank with Python integers and ascending monomial order.",
+      "id": "exact-closure",
+      "instrument": {
+        "binary_sha256": "7a694a27d794c40565fd0366a1883a883705fb5f69fecedafdf80a8c8ffc92c0",
+        "build": [
+          [
+            "reuse",
+            "unchanged independent Python verifier B"
+          ]
+        ],
+        "commit": "b42932518c8ea41b1cb2a6de6d4d650fb22be674",
+        "env": {
+          "PYTHONHASHSEED": "0",
+          "PYTHONUNBUFFERED": "1"
+        },
+        "flags": {
+          "NOCOUNT": "1",
+          "degree": "4",
+          "runner_sha256": "def10fa6a7d0ed20b6c2c24cfcc8fd6664117e92f7c9307f6c71baf74b5f9c8c"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "memory_bytes": 17179869184,
+        "timeout_seconds": 43200,
+        "variables": 48
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Previously published D4 quotient with original checker acceptance; hash and codimension are pinned and rechecked from the retained seed bytes.",
+      "id": "accepted-quotient",
+      "instrument": {
+        "binary_sha256": "13d926240a99de4b3eede374932fe245d62e7de65102a4fdf2cccfb0e4463877",
+        "build": [
+          [
+            "reuse",
+            "retained accepted D4 seed and checker transcript"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {},
+        "flags": {
+          "checker_stdout_sha256": "058be3276433127923b07d3c41a4c4e81bc7a8c75d205f824e5abe4f9f86ab93",
+          "seed_sha256": "3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "codimension": 61196,
+        "columns": 213053,
+        "degree": 4
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "rank-equality"
+      ],
+      "id": "C1",
+      "text": "For the named n47 random00 system, independently generated exact W4 rank 151857 together with accepted quotient codimension 61196 establishes equality of W4 and the D4 seed kernel; no D5 conclusion follows from this rank alone."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic rank and quotient dimension; no timing or variance claim.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "The wrapper rejects source, request, seed and dimension mismatches; no statistical null population or negative-scanning claim is made.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The retained R35a implementation-B result matches exact D4 rank 61425 and serves as a source-bound reference; no new positive control is run in this one-input protocol.",
+      "present": false
+    }
+  },
+  "created": "2026-11-01",
+  "decision_rule": {
+    "comparison_ids": [
+      "rank-equality"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Independent exact W4 rank 151857 and absence of one, combined with original accepted quotient containment and codimension 61196, establishes U4=W4 for the named input.",
+    "threshold": "rank=151857, columns=213053, contains_one=false, exit0, hashes match",
+    "verdict_vocabulary": [
+      "rank_match",
+      "rank_mismatch",
+      "incomplete",
+      "resource_refused"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 30,
+      "interval_seconds": 43200,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "checkpoint_detail": "No application checkpoint in unchanged independent verifier B. Save admission, process identity and logs; interruption or timeout is inconclusive.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 17179869184,
+      "pod_memory_bytes": 132915908608
+    },
+    "queue": "frozen-local-campaign",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 43200
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "1c72e0376e927113cbd351293c81365e59a2a02ef75404c86412fbb25a3bb033",
+    "commit": "b64dbdc58011992defdfb1c3c78ce6dc33917277",
+    "frozen_at": "2026-11-01T23:44:02Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Claiming a D5 bound from a D4 rank result alone.",
+    "Treating the original quotient codimension as exact W4 without the independent rank match.",
+    "Treating partial stdout or a timed-out run as a completed closure.",
+    "Inferring population or runtime behavior from this one named input."
+  ],
+  "invalidation_rules": [
+    "Any plan, source, runner, retained request or seed hash mismatch prevents execution.",
+    "A busy campaign lock or insufficient MemAvailable prevents starting the rank process.",
+    "A timeout, nonzero exit, missing final rank line or changed dimensions prevents equality inference.",
+    "Rank mismatch is recorded at its actual scope; no D5 inference follows."
+  ],
+  "links": {
+    "accepted_checker_stdout_sha256": "058be3276433127923b07d3c41a4c4e81bc7a8c75d205f824e5abe4f9f86ab93",
+    "launch_gate": "Only after the n45 local panel is terminal, both campaign locks are free, and 16 GiB child plus 2 GiB reserve memory admission passes. One original n47 random00 input; no redraw or concurrent high-memory campaign.",
+    "prior_request_sha256": "aaec1c158b697a8661d4af32b7811707900bd02a359204eafb3f90501695dca6",
+    "published_seed_sha256": "3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f",
+    "request": "rank-check/n47-rand00-plan-002.json",
+    "request_sha256s": [
+      "178bec5c09a4645274d8ef5806a3ebdd5681827e14258dd07cfc2b84fc331abd"
+    ],
+    "source_commit": "b42932518c8ea41b1cb2a6de6d4d650fb22be674"
+  },
+  "literature": [
+    {
+      "claim": "Definition of W4, exact bounded closure and dual certificate containment.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md",
+      "verified_by": "Codex 2026-11-01"
+    },
+    {
+      "claim": "Independent implementation B uses different arithmetic, monomial order and row algorithm; retained R35a exact rank agreement.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/results/verification.md",
+      "verified_by": "Codex 2026-11-01"
+    },
+    {
+      "claim": "Conditional equality bridge for quotient-kills-one outcomes; no new D5 claim.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-degree-five-quotient-lift/reports/n51-poly01-d5-stream-001/proof-bridge.md",
+      "verified_by": "Codex 2026-11-01"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "python_version",
+      "kernel_release",
+      "source_sha256",
+      "seed_sha256",
+      "argv",
+      "memory_admission",
+      "exit_code"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Rank of fully closed degree-at-most-four row space after original input reconstruction; present only on complete zero-exit verifier run.",
+        "id": "independent_w4_rank",
+        "kind": "exact",
+        "name": "exact independently computed W4 dimension",
+        "resolution": "1",
+        "source": "result.json observed.rank",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Independent verifier final contains_one field; required false for equality inference.",
+        "id": "contains_one",
+        "kind": "exact",
+        "name": "constant membership in exact W4",
+        "resolution": "1",
+        "source": "result.json observed.contains_one",
+        "uncertainty": "none_exact",
+        "unit": "boolean"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Previously accepted quotient dimension 61196 bound to retained D4 seed hash and checker transcript; not freshly measured by the rank runner.",
+        "id": "accepted_quotient_codimension",
+        "kind": "exact",
+        "name": "original checker accepted D4 quotient dimension",
+        "resolution": "1",
+        "source": "plan.accepted_codimension",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N47-RAND00-INDEPENDENT-D4-RANK-20261101-V2",
+  "question": "Does independent exact D4 closure replay on retained n47 random00 have rank 151857, matching the accepted D4 quotient kernel?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "The retained accepted quotient precedes one exact independent replay; no timed comparison.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Original input and target rank are fixed and public; no population inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One retained n47 random00 input, selected because its D5 quotient killed one; the equality question is conditional and input-specific."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Reuse original fixed field/subspace seed; no new draw.",
+      "seeds": [
+        9494361161180666839
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Single-input rank comparison with exact target or a stage diagram on non-completion; no runtime graph."
+    ],
+    "report_dir": "rank-check/reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-instance rank equality, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 43200,
+      "fixed_seconds": 0,
+      "measured_on": "12-hour watchdog, not runtime prediction; R35a reference took 978 seconds at smaller N=36.",
+      "per_sample_seconds": 43200,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named independent n47 random00 D4 rank attempt after campaign locks and memory gate pass; 43200-second watchdog and no automatic retry. Mismatch, timeout or failure is retained without equality claim."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "No timing comparison; exact rank match only.",
+    "comparisons": [
+      {
+        "arms": [
+          "exact-closure",
+          "accepted-quotient"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "instrument"
+        ],
+        "id": "rank-equality",
+        "threshold": "Independent W4 rank equals 213053 - 61196 = 151857 and contains_one is false."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Original n47 random00 field, target and 24-element subspace bound to frozen request SHA-256.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Unchanged independent Python verifier B and wrapper pinned by SHA-256; retained quotient checker transcript bound by hash.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "One shared local host; 16 GiB child address-space limit, 2 GiB MemAvailable reserve, no performance claim.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Hash retained D4 seed and check header, then run independent exact closure once.",
+        "name": "order",
+        "treatment": "fixed"
+      },
+      {
+        "how": "A lost process or incomplete output is censored; no restart under the same attempt ID.",
+        "name": "migration",
+        "treatment": "measured"
+      }
+    ],
+    "independent": []
+  },
+  "version": 2
+}
