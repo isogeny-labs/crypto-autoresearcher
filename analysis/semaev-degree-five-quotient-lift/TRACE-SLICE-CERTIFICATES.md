@@ -62,7 +62,11 @@ $\dim P-\mathbf1_{z\in P}$. Exact field multiplication on these plans gives
 $(\dim P,z\in P)=(49,\mathrm{true})$ at n50 and $(51,\mathrm{true})$ at n51,
 hence ranks 48 and 50. This predicts the number of affine-or-zero equation
 dependencies before doing the full Boolean descent; their nonzero affine
-content still has to be checked.
+content still has to be checked. The proposition also computes the rank of
+their $c=a+b$ linear parts as
+$r=\dim(L_z(P)+z^2V^2)-\dim L_z(P)$. The augmented dimensions are 49 at
+n50 and 51 at n51, so $r=1$ on both. This independently recovers the single
+effective affine constraint used for the upper bounds and slice choice.
 
 Corollary 2.5c extends exact slicing to any affine relation in $W_d$, so a
 degree-three fall could have supplied another eliminable variable at D5.

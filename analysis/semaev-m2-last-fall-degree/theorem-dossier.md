@@ -423,7 +423,20 @@ $$\dim_{\mathbb F_2}P-\mathbf 1_{z\in P}.$$
 
 Consequently, the space of equation combinations whose quadratic part
 vanishes has dimension $n-\dim P+\mathbf 1_{z\in P}$. Its members are affine
-polynomials or zero; the formula by itself does not say how many are nonzero.
+polynomials in $c=a+b$ or zero. More precisely, identify coordinate-equation
+combinations with trace functionals $u\mapsto\operatorname{Tr}(\mu u)$ and put
+$A=L_z(P)^\perp$. The linear rank of the resulting affine constraints is
+
+$$r=\operatorname{rank}\left(A\longrightarrow\mathbb F_2^k,\quad
+\mu\longmapsto
+(\operatorname{Tr}(\mu z^2v_j^2))_{j=0}^{k-1}\right).$$
+
+Equivalently, with $Q=L_z(P)$ and $U=z^2V^2$,
+$r=\dim(Q+U)-\dim Q$, since the field trace pairing is nondegenerate.
+
+For every unsatisfiable such system, Proposition 2.5a therefore gives the
+computable upper bound $d_{\tilde F}\le k-r+2$. The constant terms depend on
+$a_6$, but do not affect $r$.
 
 *Proof.* In the invertible coordinates $(a,c)$, $c=a+b$, the expression in
 Theorem 2.5 shows that the only quadratic terms are
@@ -434,7 +447,16 @@ coefficient rank $\dim L_z(P)$, independently of the chosen field basis.
 Since $\ker L_z=\{0,z\}$, rank-nullity on $P$ gives the formula. An
 invertible Boolean coordinate change from $(a,b)$ to $(a,c)$ preserves the
 degree filtration and induces an isomorphism on $B_{\le2}/B_{\le1}$, so this
-is also the rank in the original Boolean coordinates.
+is also the rank in the original Boolean coordinates. In fact, the full
+expression in Theorem 2.5 is
+$S=L_z(X_1^2+X_1s)+z^2s^2+a_6$.
+Both $X_1^2$ and $X_1s$ have coefficients in $P$, so every $\mu\in A$
+annihilates the first term. Its remaining equation combination is exactly
+$\operatorname{Tr}(\mu z^2s^2)+\operatorname{Tr}(\mu a_6)$, whose coefficient
+of $c_j$ is the displayed trace. A basis of the image supplies $r$
+independent affine linear parts in $c$. The kernel of that image map is
+$(Q+U)^\perp$, while its domain is $Q^\perp$, giving the equivalent
+dimension formula. Proposition 2.5a applies.
 $\square$
 
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
