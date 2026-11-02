@@ -56,3 +56,24 @@ P3 cohorts and descriptive q13 H1 output, analysis/export/checkpoint and frozen
 launch bindings remain required. The original admission/exit criteria and active
 goal status remain unchanged. See the fresh
 [certificate report](../experiments/EXP-PEXT-bf8f96/reports/certificates-20261102/report.md).
+
+## Projective-structure progress, 2026-11-02
+
+The [core API](../experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs)
+now exposes complete bounded left-coset traversal, normalized coordinate cocycles
+and literal scalar-preserving binary-form transport. The
+[structure checker](../experiments/EXP-PEXT-bf8f96/implementation/check_structure_certificate.py)
+checks distinct cocycles and the exact group index, which certifies complete left
+PGL2(Fq) coset coverage, and independently recomputes every transformed coefficient.
+The source-bound software log records5Rust,6quotientPython and5structurePython
+test groups passing, including the full fixed F27 partition19,656=819*24 and
+orientation/scalar controls. This completes the group/coordinate component at its
+stated scope; it is no all-curve census or covering-descent certificate.
+
+The present whole-JSON checker is capped at16MiB/100,000structures. Next implement
+streaming coverage/partition receipts and full actual-curve/T/projective-structure
+joins with exact external identities and scalar bookkeeping, preserving original
+cohorts. Frobenius-lift/descent and Type2 checks, geometric P3/descriptive q13 H1
+analysis, exports/checkpoints and frozen launch bindings remain required. See the
+[fresh structures report](../experiments/EXP-PEXT-bf8f96/reports/structures-20261102/report.md).
+Original exit/admission criteria remain; scientific and goal statuses do not change.

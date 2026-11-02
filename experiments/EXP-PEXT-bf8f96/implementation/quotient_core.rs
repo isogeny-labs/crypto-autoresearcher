@@ -117,6 +117,53 @@ mod implementation {
                 arithmetic_rank:forms.len()-squares.ilog2() as usize,
                 contains_nonsquare_constant:relations.iter().any(|(_,square)|!square),relations})
         }
+        /// Move zeros by N using the literal adjugate substitution. No monic
+        /// normalization: F(dX-bZ,-cX+aZ) retains the curve's scalar class.
+        pub fn transform_form(&self, form:[u32;5], matrix:[u32;4])->Result<[u32;5],&'static str> {
+            self.normalize_matrix(matrix)?;
+            if form.iter().any(|&a|a>=self.field.size) { return Err("invalid form coefficient"); }
+            Ok(mob(&self.field,&form,&matrix))
+        }
+        pub fn normalize_matrix(&self,matrix:[u32;4])->Result<[u32;4],&'static str> {
+            let f=&self.field;
+            if matrix.iter().any(|&a|a>=f.size) { return Err("invalid matrix coefficient"); }
+            if f.mul(matrix[0],matrix[3])==f.mul(matrix[1],matrix[2]) { return Err("singular projective matrix"); }
+            let first=*matrix.iter().find(|&&a|a!=0).unwrap();
+            Ok(matrix.map(|a|f.div(a,first)))
+        }
+        /// tau=N^-1 sigma N; returns the normalized linear part N^-1 sigma(N).
+        pub fn structure_cocycle(&self,matrix:[u32;4])->Result<[u32;4],&'static str> {
+            let m=self.normalize_matrix(matrix)?; let f=&self.field;
+            let adj=[m[3],f.neg(m[1]),f.neg(m[2]),m[0]];
+            self.normalize_matrix(mmul(f,&adj,&mfrob(f,&m)))
+        }
+        /// Exact count of left PGL2(Fq) cosets, before any transversal allocation.
+        pub fn structure_count(&self)->Result<u64,&'static str> {
+            if ![1,3,5,7].contains(&self.field.n) { return Err("transversal requires degree one or odd prime 3,5,7"); }
+            let q=self.field.q as u128; let size=self.field.size as u128;
+            u64::try_from((size*size*size-size)/(q*q*q-q)).map_err(|_|"structure count overflow")
+        }
+        /// Complete left-coset traversal with an explicit count ceiling and
+        /// immediate callback-error propagation. Output is normalized PGL2.
+        pub fn visit_structures<F>(&self,maximum:u64,mut body:F)->Result<u64,&'static str>
+        where F:FnMut([u32;4])->Result<(),&'static str> {
+            let expected=self.structure_count()?;
+            if expected>maximum { return Err("structure traversal limit exceeded"); }
+            let f=&self.field; let t=trans(f);
+            if t.total!=expected { return Err("transversal cardinality mismatch"); }
+            let mut count=0u64;
+            let mut emit=|a,b,c|->Result<(),&'static str> {
+                let matrix=self.normalize_matrix(from_triple(f,a,b,c,t.inf))?;
+                body(matrix)?; count+=1; Ok(())
+            };
+            for &c in &t.rep_a1 { emit(t.inf,0,c)?; }
+            for &b in &t.rep_a2 { for c in 0..f.size { if c!=b { emit(t.inf,b,c)?; } } }
+            for &a in &t.rep_b { for b in 0..=f.size { if b==a { continue; }
+                for c in 0..=f.size { if c!=a && c!=b { emit(a,b,c)?; } }
+            } }
+            if count!=expected { return Err("emitted structure count mismatch"); }
+            Ok(count)
+        }
         pub fn conjugate_forms(&self,form:[u32;5])->Result<Vec<[u32;5]>,&'static str> {
             if self.field.n>7 || form.iter().any(|&a|a>=self.field.size) {
                 return Err("conjugate form outside supported domain");
@@ -279,6 +326,30 @@ mod implementation {
                     for &p in &points { assert_eq!(c.inverse(target,c.forward(target,p).unwrap()).unwrap(),p); }
                 }
             }
+        }
+        #[test]
+        fn structure_bounds_and_exact_scalar_transport() {
+            let even=Context::new(3,2,9).unwrap();
+            assert!(even.structure_count().is_err());
+            let ctx=Context::new(3,3,27).unwrap(); let f=&ctx.field;
+            assert_eq!(ctx.structure_count().unwrap(),819);
+            assert!(ctx.visit_structures(818,|_|panic!("must reject before callback")).is_err());
+            let mut calls=0;
+            assert_eq!(ctx.visit_structures(819,|_|{calls+=1;Err("callback stop")}),Err("callback stop"));
+            assert_eq!(calls,1);
+            let form=[1,1,0,1,0];
+            for matrix in [[1,0,0,1],[0,1,1,0],[1,2,3,1]] {
+                let det=f.sub(f.mul(matrix[0],matrix[3]),f.mul(matrix[1],matrix[2]));
+                assert_ne!(det,0);
+                let adj=[matrix[3],f.neg(matrix[1]),f.neg(matrix[2]),matrix[0]];
+                let image=ctx.transform_form(form,matrix).unwrap();
+                let restored=ctx.transform_form(image,adj).unwrap();
+                assert_eq!(restored,form.map(|x|f.mul(x,f.pow(det,4))));
+                let scaled=matrix.map(|x|f.mul(2,x));
+                assert_eq!(ctx.transform_form(form,scaled).unwrap(),image.map(|x|f.mul(x,f.pow(2,4))));
+            }
+            assert!(ctx.transform_form(form,[1,1,1,1]).is_err());
+            assert!(ctx.transform_form(form,[27,0,0,1]).is_err());
         }
         #[test]
         fn rejects_invalid_domains() {
