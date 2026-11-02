@@ -363,6 +363,42 @@ hence $y_jH_j\in W_D(F)$. Thus $1\in W_D(F)$, and Proposition 1.2 gives the
 last-fall-degree bound. The trace specialization follows from Theorem
 2.1(c). $\square$
 
+**Proposition 2.5b** (exact slicing by an affine equation). **Proved.**
+Suppose $y=b_j+L(a,b_{\ne j})$ is a nonconstant affine polynomial in
+$\operatorname{span}F$, where $L$ is affine and does not involve $b_j$.
+Let $G=F|_{b_j=L}$ be the system in the remaining $2k-1$ Boolean variables.
+For every $d\ge2$,
+
+$$W_d(G)=W_d(F)\cap B'_{\le d},\qquad
+ 1\in W_d(G)\iff1\in W_d(F),$$
+
+where $B'$ is the Boolean ring without $b_j$, embedded in $B$. In particular,
+an independently checked degree-five nonmembership certificate for $G$
+proves $1\notin W_5(F)$. When $F$ is unsatisfiable, so is $G$, and this gives
+$d_{\tilde F}\ge6$ by Proposition 1.2. For $V\not\subset K_0$, a coordinate
+$b_j$ with $\operatorname{Tr}(v_j)=1$ can be chosen using $y=\ell_0$.
+
+*Proof.* Let $\rho:B\to B'$ substitute $b_j=L$. Since $\rho$ does not
+increase degree and sends every old variable to an affine polynomial,
+restriction sends the generators and every allowed closure step of $W_d(F)$
+into $W_d(G)$. Hence $\rho(W_d(F))\subseteq W_d(G)$.
+
+Conversely, for each quadratic or lower-degree generator $f_i$, multilinearity
+in $b_j$ gives $f_i+\rho(f_i)=y h_i$ for an affine $h_i\in B'$. The polynomial
+$y$ is in $\operatorname{span}F$ and has degree one, so $yh_i\in W_d(F)$ for
+$d\ge2$. Thus every generator of $G$ lies in $W_d(F)$. Its closure steps
+multiply only by the remaining variables and are also allowed in $W_d(F)$.
+Therefore $W_d(G)\subseteq W_d(F)\cap B'_{\le d}$. Applying $\rho$ to an
+element of the latter intersection proves the opposite inclusion. $\square$
+
+The same restriction transfers a dual certificate: if
+$\pi_G:B'_{\le d}\to Z$ satisfies Proposition 1.5 for $G$, then
+$\pi_F=\pi_G\circ\rho$ is onto, annihilates $F$, and satisfies the closure
+condition for $F$. Indeed $\rho(x)$ is affine for every original variable
+$x$, so its product with a low-degree member of $\ker\pi_G$ is annihilated
+by the checked closure condition. Also $\pi_F(1)=\pi_G(1)$. This describes
+a certificate transfer, not a completed reduced-instance computation.
+
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$
 (the linear parts of $\operatorname{Tr}X_1$ and $\operatorname{Tr}X_2$). Let
