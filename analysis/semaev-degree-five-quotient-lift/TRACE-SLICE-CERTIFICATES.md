@@ -67,7 +67,23 @@ affine basis element. On the named n51 plan the corresponding dimensions are
 10970, 254, and one, with only the trace relation. The focused test replays
 both calculations from independently descended named equations. Thus $W_3$
 does not enable a second slice on these inputs; affine falls first appearing
-at D4 or D5 remain untested.
+at D4 or D5 require a separate check.
+
+The accepted D4 quotient maps rule out a new affine fall at D4 as well. The
+[affine-row checker](check_affine_d4_rows.py) rehashes each full certificate,
+the original checker's named-input argv and acceptance transcript, then reads
+only the constant and variable rows. For n50, the 51 affine rows have rank 50,
+and their unique kernel vector is the already certified relation
+`0x25b59a52dacd2` in constant-first variable coordinates. For n51, the 53
+affine rows have rank 52, with only the trace relation `0x8000002`. The
+[n50 result](validation/n50-affine-d4-rows-001.json) and
+[n51 result](validation/n51-affine-d4-rows-001.json) pin the exact certificate,
+checker, argument, transcript, plan and row-checker hashes. Since the full
+checker accepted each map, $W_4$ lies in its kernel; the known affine relation
+already spans the one-dimensional affine kernel. Therefore each named system
+has **exactly one affine relation in $W_4$**, and no second D4 affine slice is
+available. This uses the retained full-certificate acceptance, not just the
+small row check. A new affine relation in $W_5$ remains possible.
 
 `slice_trace_certificate.py` copies the accepted D4 map rows that do not
 contain the eliminated variable, renumbering monomials and retaining the
