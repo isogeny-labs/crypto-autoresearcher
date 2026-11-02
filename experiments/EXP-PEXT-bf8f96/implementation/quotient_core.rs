@@ -117,6 +117,15 @@ mod implementation {
                 arithmetic_rank:forms.len()-squares.ilog2() as usize,
                 contains_nonsquare_constant:relations.iter().any(|(_,square)|!square),relations})
         }
+        pub fn conjugate_forms(&self,form:[u32;5])->Result<Vec<[u32;5]>,&'static str> {
+            if self.field.n>7 || form.iter().any(|&a|a>=self.field.size) {
+                return Err("conjugate form outside supported domain");
+            }
+            let mut result=Vec::new(); let mut current=form;
+            for _ in 0..self.field.n { result.push(current); current=current.map(|a|self.field.frob(a)); }
+            if current!=form { return Err("Frobenius orbit does not close"); }
+            Ok(result)
+        }
     }
 
     impl Curve<'_> {

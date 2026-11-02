@@ -34,3 +34,25 @@ checker, exhaustive actual-curve/structure iteration with scalar-aware transform
 Frobenius-descent certificates, full-cohort analysis and launch/export bindings.
 The original exit criteria and admission requirements remain in force. See the
 [implementation report](../experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.md).
+
+## Certificate replay progress, 2026-11-02
+
+[The serializer](../experiments/EXP-PEXT-bf8f96/implementation/quotient_certificate.rs)
+now emits one actual-curve standard-structure unit, including full point/coset
+witnesses, chart images, exact Frobenius conjugates and complete square-class
+relations. [The Python checker](../experiments/EXP-PEXT-bf8f96/implementation/check_quotient_certificate.py)
+recomputes those finite objects with separate polynomial-basis arithmetic and
+requires an external expected field/model. The source-bound software log records
+four Rust test groups and six Python methods passing, including five fixed units,
+eleven mutation variants, field/scalar/JSON controls and CLI expected-input checks.
+This completes the serialization and per-unit checker components within their
+stated standard-structure scope; it does not establish full-cohort coverage,
+Frobenius descent or independent scientific review.
+
+Next implement exhaustive actual-curve/projective-structure iteration, retaining
+binary-form scalar bookkeeping, external frozen field/T identities and exact
+coverage/stabilizer certificates. Descent/lift and Type2 checks, original geometric
+P3 cohorts and descriptive q13 H1 output, analysis/export/checkpoint and frozen
+launch bindings remain required. The original admission/exit criteria and active
+goal status remain unchanged. See the fresh
+[certificate report](../experiments/EXP-PEXT-bf8f96/reports/certificates-20261102/report.md).
