@@ -431,11 +431,15 @@ def head(root: str) -> str | None:
 
 
 def changed_since(root: str, base: str, name: str) -> list[str] | None:
-    """Watched paths ADDED or MODIFIED since `base`; None if base unknown."""
+    """Watched paths ADDED or MODIFIED since `base`; None if base unknown.
+
+    --no-renames: rename detection reads blob contents, which a partial clone
+    fetches one by one (over 120 s on a crypto checkout), and it would report
+    a renamed-in path as R, which the A/M filter drops."""
     if subprocess.run(["git", "-C", root, "cat-file", "-e", base + "^{commit}"],
                       capture_output=True).returncode != 0:
         return None
-    out = subprocess.run(["git", "-C", root, "diff", "--name-only",
+    out = subprocess.run(["git", "-C", root, "diff", "--name-only", "--no-renames",
                           "--diff-filter=AM", base, "HEAD"],
                          capture_output=True, text=True, timeout=120)
     if out.returncode != 0:
