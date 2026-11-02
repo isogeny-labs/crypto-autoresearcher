@@ -82,3 +82,36 @@ hypothesis-delta table, positive and negative controls, machine status,
 fidelity, scoped outcome, missing bridges, and a `holds | breaks |
 inconclusive` attestation. The composition must reconcile all five without
 promoting official research state.
+
+## Correction-round amendment (before affected-joint re-review)
+
+The first review round found no false scoped theorem, but it exposed four
+audit-surface defects. They were corrected in a second immutable producer
+snapshot before any affected reviewer was asked to inspect the changes:
+
+- Correction commit: `37cc75cfebb30c7582e90e3b632d3454ff5804dc`.
+- `MOD-ALIAS`: preserve the frozen `2 <= q` declaration, add the sharp
+  positive-modulus theorem (including `q = 1`), and make the `q = 0`
+  distinctness boundary explicit.
+- `BATCH-RLC`: put the fixed-error cardinality repair in the exact named
+  target declaration, rather than relying only on an adjacent theorem.
+- `POLY-FUNCTION`: put the generic strict-degree repair in the exact named
+  target declaration, rather than relying only on an adjacent theorem.
+- `SCHNORR-SS`: state explicitly that the two `ZMod 4` witness scalars are
+  distinct in the composite-ring negative control.
+
+| affected source | corrected SHA-256 |
+| --- | --- |
+| `ModAlias.lean` | `81353b007ec158f8383504d7614717551eaa477197ef7d925fe06ff2d52f1420` |
+| `AdaptiveBatching.lean` | `4c6feaa0109a6b8b27e8f009db08973c3fc634e1a13daa5f80832f370b17a656` |
+| `PolynomialFunctionAlias.lean` | `2f75204ec9aa9269f21bedd1d38f34ed44b6451eba46d0928ae461367662ae10` |
+| `SchnorrSpecialSoundness.lean` | `7bdb4110e6e04cff5356bd3f1e9d5e4d92eaa4e6c746efad8a1cc22d38a5c1b8` |
+
+The original blind derivations remain the prior for the correction round.
+The same four joint owners now inspect only their assigned producer-to-
+correction diff and the corrected full declaration, append whether the
+finding is resolved, update their source hash, and retain any residual delta.
+This follow-up is intentionally not represented as a second blind derivation.
+The subgroup source is byte-identical (`ee33d018...`) and needs no affected-
+joint re-review. Exact Lean 4.35 machine evidence restarts at the correction
+snapshot; the earlier run cannot validate changed bytes.
