@@ -13,10 +13,28 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_trace_slice_certificate import (check_map, read_certificate,
                                            substitute, trace_slice)
 from check_affine_relation import verify as verify_affine_relation
+from check_affine_w3 import analyze as analyze_affine_w3
 from slice_trace_certificate import project
 
 
 class TraceSliceCertificateTests(unittest.TestCase):
+    def test_named_w3_affine_spaces_have_rank_one(self):
+        for name, n, rank, low_rank in (
+                ('n50-poly03-d5-local-no-checkpoint-plan-002.json', 50, 8130, 196),
+                ('n51-poly01-d5-stream-request-001.json', 52, 10970, 254)):
+            with self.subTest(name=name):
+                result = analyze_affine_w3(name)
+                self.assertEqual((result['variables'], result['w3_rank'],
+                                  result['low_degree_rank'], result['affine_rank']),
+                                 (n, rank, low_rank, 1))
+                if n == 50:
+                    pairs = (0, 3, 5, 6, 9, 10, 12, 14, 15, 17, 18, 20, 23)
+                    expected = sorted([1 << j for j in pairs] +
+                                      [1 << (25 + j) for j in pairs])
+                else:
+                    expected = [1, 1 << 26]
+                self.assertEqual(result['affine_supports'], [expected])
+
     @staticmethod
     def quadratic_rank(polys):
         quadratic = sorted({m for poly in polys for m in poly

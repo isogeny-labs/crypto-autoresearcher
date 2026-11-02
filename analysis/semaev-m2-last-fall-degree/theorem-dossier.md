@@ -400,6 +400,20 @@ $x$, so its product with a low-degree member of $\ker\pi_G$ is annihilated
 by the checked closure condition. Also $\pi_F(1)=\pi_G(1)$. This describes
 a certificate transfer, not a completed reduced-instance computation.
 
+**Corollary 2.5c** (slicing from a later affine fall). **Proved.** Fix
+$d\ge2$. The equality and nonmembership transfer of Proposition 2.5b still
+hold if its affine polynomial $y$ belongs to $W_d(F)$ rather than to
+$\operatorname{span}F$. In particular, an affine $y\in W_s(F)$ permits exact
+slicing at every degree $d\ge\max(2,s)$.
+
+*Proof.* The restriction map $\rho$ still sends $W_d(F)$ into $W_d(G)$.
+Conversely, $f_i+\rho(f_i)=y h_i$ with $h_i$ affine in the retained variables.
+Since $y\in W_d(F)$ has degree one, the closure rule puts $y h_i$ in
+$W_d(F)$; hence every generator of $G$ belongs to $W_d(F)$. Closure under
+the retained variables gives $W_d(G)\subseteq W_d(F)\cap B'_{\le d}$, and
+applying $\rho$ gives the reverse inclusion. Monotonicity of $W_d$ proves
+the final assertion. $\square$
+
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$
 (the linear parts of $\operatorname{Tr}X_1$ and $\operatorname{Tr}X_2$). Let

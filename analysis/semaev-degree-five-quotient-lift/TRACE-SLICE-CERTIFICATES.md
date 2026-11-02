@@ -57,6 +57,18 @@ nonzero relation above. Degree-two equation combinations therefore provide
 one affine elimination on each of these named inputs; further size reductions
 would require a different algebraic relation or a different presentation.
 
+Corollary 2.5c extends exact slicing to any affine relation in $W_d$, so a
+degree-three fall could have supplied another eliminable variable at D5.
+The exact [degree-three closure check](check_affine_w3.py) processes every
+new degree-at-most-two fall and its variable products until no row is added.
+On the named n50 plan it obtains $\dim W_3=8130$, low-degree intersection
+dimension 196, and affine dimension one, with the relation above as its sole
+affine basis element. On the named n51 plan the corresponding dimensions are
+10970, 254, and one, with only the trace relation. The focused test replays
+both calculations from independently descended named equations. Thus $W_3$
+does not enable a second slice on these inputs; affine falls first appearing
+at D4 or D5 remain untested.
+
 `slice_trace_certificate.py` copies the accepted D4 map rows that do not
 contain the eliminated variable, renumbering monomials and retaining the
 quotient coordinates. It checks the source digest and shape but does not
