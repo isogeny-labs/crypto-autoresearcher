@@ -1,0 +1,45 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=22mm]{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7pt}
+\begin{document}
+\begin{center}
+{\LARGE Benchmark dashboard provenance audit}\\[4pt]
+{\large Nine archived N13 rows, 2 November 2026}
+\end{center}
+
+\textbf{Checked publication.} The public crypto-autoresearcher Pages build
+\texttt{6d5e7c5} serves the pinned nine-row cryptanalysis snapshot exactly.
+The live comparison payload's benchmark object equals the committed JSON;
+all nine receipt selectors and the catalog name its SHA-256
+\texttt{4cc3b31a...568ae5e}. Pages
+\href{https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41512121316}
+{run 41512121316} succeeded, and the captured live meta payload names the
+same build commit.
+
+\begin{center}
+\includegraphics[width=0.98\linewidth]{provenance.pdf}
+\end{center}
+
+\textbf{Current source check.} The stored snapshot pins cryptanalysis
+\texttt{5ab7d5b}, the archived revision specified by the UI contract. A clean
+export at cryptanalysis \texttt{bf155c2} returned nine rows and seven source
+files. After removing only commit-derived source labels, row IDs and URLs,
+the two exports are equal: zero measurement, curve-identity, run-ID or source
+hash differences. The primary archive, candidate and workload manifests,
+exporter, and curve-identity tool have no Git diff between those commits.
+Updating the pin would alter labels without changing the data.
+
+\textbf{Reproduction and scope.} The adjacent \texttt{check.py} compares the
+committed snapshot and receipt registry with archived current-export and
+live-site payloads; \texttt{check-result.json} records its passing output and
+input digests. This checks source and publication fidelity for the nine N13
+toy rows. It does not rerun the archived experiment or certify its recorded
+runtime measurements. Other dashboard panels and experiment families are
+separate audit targets. No performance graph changed because its numeric
+inputs and their source hashes did not change.
+
+\end{document}
