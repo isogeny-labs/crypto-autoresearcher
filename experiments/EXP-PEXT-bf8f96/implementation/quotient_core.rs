@@ -18,6 +18,19 @@ mod implementation {
         /// Each (P,Q) certifies P = representative + 2Q.
         pub members: Vec<(Point, Point)>,
     }
+    #[derive(Clone, Debug)]
+    pub struct ModelWitness {
+        pub model: [u32;3],
+        /// old x = u^2 * new x + r, old y = u^3 * new y.
+        pub u: u32,
+        pub r: u32,
+    }
+    #[derive(Debug)]
+    pub struct CurveClass {
+        pub representative: [u32;3],
+        /// Every nonsingular normalized model in this isomorphism orbit.
+        pub members: Vec<ModelWitness>,
+    }
     pub struct Context { field: Fld }
     pub struct Curve<'a> { f: &'a Fld, model: Cv }
     #[derive(Debug, PartialEq, Eq)]
@@ -116,6 +129,58 @@ mod implementation {
             Ok(SquareClasses{geometric_rank:forms.len()-relations.len().ilog2() as usize,
                 arithmetic_rank:forms.len()-squares.ilog2() as usize,
                 contains_nonsquare_constant:relations.iter().any(|(_,square)|!square),relations})
+        }
+        /// Explicit pointed K-isomorphism, retaining the actual curve model.
+        pub fn transform_model(&self,model:[u32;3],u:u32,r:u32)->Result<[u32;3],&'static str> {
+            self.curve(model[0],model[1],model[2])?;
+            let f=&self.field;
+            if u==0 || u>=f.size || r>=f.size { return Err("invalid model isomorphism parameters"); }
+            let [a2,a4,a6]=model; let r2=f.mul(r,r);
+            let output=[f.div(f.add(f.mul(f.int(3),r),a2),f.pow(u,2)),
+                f.div(f.add(f.add(f.mul(f.int(3),r2),f.mul(f.int(2),f.mul(a2,r))),a4),f.pow(u,4)),
+                f.div(cubic(f,&Cv{a2,a4,a6},r),f.pow(u,6))];
+            self.curve(output[0],output[1],output[2])?;
+            Ok(output)
+        }
+        /// A witness from any nonsingular long model to the chosen family.
+        pub fn normalize_model(&self,model:[u32;3])->Result<ModelWitness,&'static str> {
+            self.curve(model[0],model[1],model[2])?;
+            let f=&self.field;
+            let r=if f.q!=3 { f.neg(f.div(model[0],f.int(3))) }
+                else if model[0]!=0 { f.neg(f.div(model[1],f.mul(f.int(2),model[0]))) }
+                else { 0 };
+            Ok(ModelWitness{model:self.transform_model(model,1,r)?,u:1,r})
+        }
+        pub fn curve_model_domain_size(&self)->u64 {
+            let size=self.field.size as u64;
+            if self.field.q==3 { 2*size*size-size } else { size*size }
+        }
+        /// All pointed K-isomorphism classes in complete normalized families.
+        /// A count ceiling is enforced before allocating the coverage set.
+        /// Class order is family A then B in char3, otherwise coefficient order.
+        pub fn visit_curve_classes<F>(&self,maximum_models:u64,mut body:F)->Result<u64,&'static str>
+        where F:FnMut(CurveClass)->Result<(),&'static str> {
+            if self.curve_model_domain_size()>maximum_models { return Err("curve model domain limit exceeded"); }
+            let f=&self.field; let mut covered=BTreeSet::new(); let mut count=0u64;
+            let mut emit=|model:[u32;3]|->Result<(),&'static str> {
+                if covered.contains(&model)||self.curve(model[0],model[1],model[2]).is_err() { return Ok(()); }
+                let mut witnesses=OrderedMap::new();
+                for u in 1..f.size {
+                    let shifts=if f.q==3 && model[0]==0 { f.size } else { 1 };
+                    for r in 0..shifts {
+                        let image=self.transform_model(model,u,r)?;
+                        witnesses.entry(image).or_insert(ModelWitness{model:image,u,r});
+                    }
+                }
+                for image in witnesses.keys() {
+                    if !covered.insert(*image) { return Err("overlapping curve isomorphism classes"); }
+                }
+                body(CurveClass{representative:model,members:witnesses.into_values().collect()})?;
+                count+=1; Ok(())
+            };
+            if f.q==3 { for a2 in 1..f.size { for a6 in 0..f.size { emit([a2,0,a6])?; } } }
+            for a4 in 0..f.size { for a6 in 0..f.size { emit([0,a4,a6])?; } }
+            Ok(count)
         }
         /// Move zeros by N using the literal adjugate substitution. No monic
         /// normalization: F(dX-bZ,-cX+aZ) retains the curve's scalar class.
@@ -352,6 +417,40 @@ mod implementation {
             assert!(ctx.transform_form(form,[27,0,0,1]).is_err());
         }
         #[test]
+        fn curve_model_normalization_and_orbits() {
+            for (q,n) in [(3,1),(5,1),(3,2)] {
+                let ctx=Context::new(q,n,9).unwrap(); let f=&ctx.field;
+                let mut covered=BTreeSet::new();
+                let count=ctx.visit_curve_classes(153,|class| {
+                    for witness in class.members {
+                        assert_eq!(ctx.transform_model(class.representative,witness.u,witness.r).unwrap(),witness.model);
+                        assert!(covered.insert(witness.model));
+                    }
+                    Ok(())
+                }).unwrap();
+                if (q,n)==(3,1) { assert_eq!(count,8); }
+                if (q,n)==(5,1) { assert_eq!(count,12); }
+                for a2 in 0..f.size { for a4 in 0..f.size { for a6 in 0..f.size {
+                    let Ok(source)=ctx.curve(a2,a4,a6) else { continue; };
+                    let witness=ctx.normalize_model([a2,a4,a6]).unwrap();
+                    assert!(covered.contains(&witness.model));
+                    let target=ctx.curve(witness.model[0],witness.model[1],witness.model[2]).unwrap();
+                    let images: BTreeSet<_>=source.points().iter().map(|&point| match point {
+                        Point::Infinity=>point,
+                        Point::Affine{x,y}=>Point::Affine{x:f.div(f.sub(x,witness.r),f.pow(witness.u,2)),y:f.div(y,f.pow(witness.u,3))},
+                    }).collect();
+                    assert_eq!(images,target.points().into_iter().collect());
+                } } }
+                assert!(ctx.visit_curve_classes(ctx.curve_model_domain_size()-1,|_|panic!("cap before callback")).is_err());
+                let mut calls=0;
+                assert_eq!(ctx.visit_curve_classes(153,|_|{calls+=1;Err("stop classes")}),Err("stop classes"));
+                assert_eq!(calls,1);
+                assert!(ctx.transform_model([0,1,1],0,0).is_err());
+                assert!(ctx.transform_model([0,1,1],1,f.size).is_err());
+                assert!(ctx.normalize_model([0,0,0]).is_err());
+            }
+        }
+        #[test]
         fn rejects_invalid_domains() {
             assert!(Context::new(9,1,9).is_err());
             assert!(Context::new(5,3,124).is_err());
@@ -361,4 +460,4 @@ mod implementation {
         }
     }
 }
-pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses};
+pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};

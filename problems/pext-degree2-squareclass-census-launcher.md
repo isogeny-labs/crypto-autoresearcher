@@ -77,3 +77,26 @@ cohorts. Frobenius-lift/descent and Type2 checks, geometric P3/descriptive q13 H
 analysis, exports/checkpoints and frozen launch bindings remain required. See the
 [fresh structures report](../experiments/EXP-PEXT-bf8f96/reports/structures-20261102/report.md).
 Original exit/admission criteria remain; scientific and goal statuses do not change.
+
+## Curve-class progress, 2026-11-02
+
+The [core API](../experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs)
+now normalizes all nonsingular long models into complete short or characteristic3
+A/B families, enumerates their full residual isomorphism orbits and emits explicit
+representative-to-member u,r witnesses. The separate
+[class checker](../experiments/EXP-PEXT-bf8f96/implementation/check_curve_class_certificate.py)
+reconstructs complete normalized family coverage and polynomial isomorphism
+identities. Final software checks pass6Rust+6quotientPython+5structurePython+
+5classPython groups, including fixed F3/F5/F9 certificates and exceptional twists.
+This completes the class-enumeration component, not a scientific cover/genus census.
+
+The historical n5/q3 fixture SHA2568f03e3d1a28a989108a038cfffab51e0362d2397dd03e06fc0ccfe442d9123fa
+identifies488 as the complete K-isomorphism cohort with twists and exceptional
+models. The new full488model bijection is still unmaterialized and must align
+actual field/model identities and explicit isomorphisms, not reordered class IDs.
+Current16MiB/1,000,000-candidate checker limits exclude the original n3/q11 cohort;
+next implement streaming input/coverage partitions without cutting that cohort,
+then exact curve/T/structure joins. Scalar/descent/lift, Type2, original geometric
+P3/descriptive q13 H1 analysis, exports/checkpoints and frozen launch bindings
+remain required. See the [fresh classes report](../experiments/EXP-PEXT-bf8f96/reports/classes-20261102/report.md).
+The original exit/admission criteria and scientific/goal statuses remain unchanged.
