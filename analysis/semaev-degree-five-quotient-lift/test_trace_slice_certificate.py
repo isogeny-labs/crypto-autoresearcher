@@ -18,6 +18,32 @@ from slice_trace_certificate import project
 
 
 class TraceSliceCertificateTests(unittest.TestCase):
+    @staticmethod
+    def product_span_data(record):
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1] /
+                               'semaev-m2-last-fall-degree/verify'))
+        from cert_check import mk_field
+        mul, _, _ = mk_field(record['n'], int(record['modulus_hex'], 16))
+        basis = [int(v, 16) for v in record['V_basis_hex']]
+        pivots = {}
+
+        def reduce(value, insert=False):
+            while value:
+                bit = value.bit_length() - 1
+                if bit in pivots:
+                    value ^= pivots[bit]
+                else:
+                    if insert:
+                        pivots[bit] = value
+                        return 0
+                    return value
+            return 0
+
+        for i, a in enumerate(basis):
+            for b in basis[i:]:
+                reduce(mul(a, b), insert=True)
+        return len(pivots), reduce(int(record['z_hex'], 16)) == 0
+
     def test_named_w3_affine_spaces_have_rank_one(self):
         for name, n, rank, low_rank in (
                 ('n50-poly03-d5-local-no-checkpoint-plan-002.json', 50, 8130, 196),
@@ -144,6 +170,7 @@ class TraceSliceCertificateTests(unittest.TestCase):
                       (fixture / 'check4.stdout.txt').read_text())
         record = {'n': 6, 'modulus_hex': '43', 'a2': 0, 'a6_hex': '3',
                   'z_hex': '2', 'V_basis_hex': ['1', '2', '4']}
+        self.assertEqual(self.product_span_data(record), (5, True))
         n, polys, affine = trace_slice(record, 3, 0x24)
         self.assertEqual((n, affine), (5, [1]))
         with tempfile.TemporaryDirectory() as tmp:
@@ -169,6 +196,9 @@ class TraceSliceCertificateTests(unittest.TestCase):
                               int(record['z_hex'], 16),
                               [int(v, 16) for v in record['V_basis_hex']])
         self.assertEqual(self.quadratic_rank(original), 48)
+        dim, contains_z = self.product_span_data(record)
+        self.assertEqual((dim, contains_z), (49, True))
+        self.assertEqual(self.quadratic_rank(original), dim - contains_z)
         with self.assertRaisesRegex(ValueError, 'zero trace'):
             trace_slice(record, 25)
         relation_mask = 0x13c4f635ad45c
@@ -190,6 +220,9 @@ class TraceSliceCertificateTests(unittest.TestCase):
                               [int(v, 16) for v in record['V_basis_hex']])
         # The trace relation spans the entire quadratic-kernel dimension one.
         self.assertEqual(self.quadratic_rank(original), 50)
+        dim, contains_z = self.product_span_data(record)
+        self.assertEqual((dim, contains_z), (51, True))
+        self.assertEqual(self.quadratic_rank(original), dim - contains_z)
 
 
 if __name__ == '__main__':

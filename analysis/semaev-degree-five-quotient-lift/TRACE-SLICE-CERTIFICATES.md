@@ -56,6 +56,13 @@ quadratic rank 48 leaves two dependencies: one zero polynomial and the single
 nonzero relation above. Degree-two equation combinations therefore provide
 one affine elimination on each of these named inputs; further size reductions
 would require a different algebraic relation or a different presentation.
+Proposition 2.5d explains the quadratic ranks: with
+$P=\operatorname{span}\{uv:u,v\in V\}$, the quadratic rank is
+$\dim P-\mathbf1_{z\in P}$. Exact field multiplication on these plans gives
+$(\dim P,z\in P)=(49,\mathrm{true})$ at n50 and $(51,\mathrm{true})$ at n51,
+hence ranks 48 and 50. This predicts the number of affine-or-zero equation
+dependencies before doing the full Boolean descent; their nonzero affine
+content still has to be checked.
 
 Corollary 2.5c extends exact slicing to any affine relation in $W_d$, so a
 degree-three fall could have supplied another eliminable variable at D5.

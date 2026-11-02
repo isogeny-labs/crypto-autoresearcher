@@ -414,6 +414,29 @@ the retained variables gives $W_d(G)\subseteq W_d(F)\cap B'_{\le d}$, and
 applying $\rho$ gives the reverse inclusion. Monotonicity of $W_d$ proves
 the final assertion. $\square$
 
+**Proposition 2.5d** (quadratic-rank formula). **Proved.** Let
+$P=\operatorname{span}_{\mathbb F_2}\{uv:u,v\in V\}\subseteq K$ and $z\ne0$.
+The rank of the quadratic coefficient matrix of the $n$ descended $m=2$
+equations is
+
+$$\dim_{\mathbb F_2}P-\mathbf 1_{z\in P}.$$
+
+Consequently, the space of equation combinations whose quadratic part
+vanishes has dimension $n-\dim P+\mathbf 1_{z\in P}$. Its members are affine
+polynomials or zero; the formula by itself does not say how many are nonzero.
+
+*Proof.* In the invertible coordinates $(a,c)$, $c=a+b$, the expression in
+Theorem 2.5 shows that the only quadratic terms are
+$X_1^2s^2+zX_1s$. The coefficient of $a_ic_j$ is therefore
+$(v_iv_j)^2+zv_iv_j=L_z(v_iv_j)$, where $L_z(u)=u^2+zu$ is an
+$\mathbb F_2$-linear map on $K$. The $n$ coordinate equations have quadratic
+coefficient rank $\dim L_z(P)$, independently of the chosen field basis.
+Since $\ker L_z=\{0,z\}$, rank-nullity on $P$ gives the formula. An
+invertible Boolean coordinate change from $(a,b)$ to $(a,c)$ preserves the
+degree filtration and induces an isomorphism on $B_{\le2}/B_{\le1}$, so this
+is also the rank in the original Boolean coordinates.
+$\square$
+
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$
 (the linear parts of $\operatorname{Tr}X_1$ and $\operatorname{Tr}X_2$). Let
