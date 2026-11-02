@@ -1,0 +1,68 @@
+{
+  "schema": "crypto.autoresearch.design_snapshot_receipt.v1",
+  "task_id": "TASK-20261102-d8d2b5",
+  "artifact_paths": [
+    "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_core.rs",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_join_certificate.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/test_join_certificate.py",
+    "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.md",
+    "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.typ",
+    "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.pdf",
+    "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/join-flow.svg",
+    "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/join-flow.mmd",
+    "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/software-tests.txt",
+    "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/artifact-manifest.json",
+    "problems/pext-degree2-squareclass-census-launcher.md",
+    "ledger/handoffs/TASK-20261102-d8d2b5.yaml",
+    "coordination/sessions/receipts/20261102/SR-20261102-43c569.yaml"
+  ],
+  "archive": {
+    "kind": "snapshot",
+    "binding_mode": "commit",
+    "commit_sha": "0ed3e50faff8186722649ed2229abfa8e30b3bcf",
+    "parent_sha": "f32ddac2ba2d3af04617aa0b4f8d8b74bd4e60ab",
+    "record_ids": [
+      "H-PEXT-c3a11d",
+      "EXP-PEXT-bf8f96"
+    ],
+    "path_sha256": {
+      "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs": "40b68dc53fc1e5c3242b4077fc409347911011bbef066ba7ca9351fe36d98c15",
+      "experiments/EXP-PEXT-bf8f96/implementation/join_core.rs": "bbc07ca93a0d27989b70d7c15b903a092b9ad06ab74ae75657aa0abbc9ad414f",
+      "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs": "cac785069929ffad5ae450b387bc08ef22eaebfcb84e4747d97787e7e7d92090",
+      "experiments/EXP-PEXT-bf8f96/implementation/check_join_certificate.py": "b04cb57115e559bf0c37603b8eee70fdebc013697b7810f14b54e28b5ab7f16f",
+      "experiments/EXP-PEXT-bf8f96/implementation/test_join_certificate.py": "7efd13d3c7594ba0a40cde7713ba31a7cce01c2cc3c9e30252a9bb0c039b01aa",
+      "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.md": "b6c415b87cf73324dc4ac141550f27d77d3aef1bd324cc17dbd2764060f3cbd0",
+      "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.typ": "ab790cfa2054ae1abedde69c9479ca61ccb1fe1fd9d1c4ce6557ef811f57a1b8",
+      "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.pdf": "cc96feeb291368dc477a4a299791d1e3f816d294380d43deddc75e25add3db6d",
+      "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/join-flow.svg": "5f8aea345f1cb0171f2b7368af986db771772536ecb69165c2c6027bd5554651",
+      "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/join-flow.mmd": "e2abb59a2ab361183cb07b8b2c8c68b419b919f069e60134bcb293b588030d16",
+      "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/software-tests.txt": "5e8684b2b0f95047bf8835fdfd542704fb48e4209ece6be63ca63fb4056dc821",
+      "experiments/EXP-PEXT-bf8f96/reports/joins-20261102/artifact-manifest.json": "33f4aa44272bbdf3948bd7cfa1c85ef042d144bee7adb5d2079fbf40c383d045",
+      "problems/pext-degree2-squareclass-census-launcher.md": "dc5312d3eb20fa397f8b7ba937dadf5e5588e6241812b770ab8f4faf07cecbfa",
+      "ledger/handoffs/TASK-20261102-d8d2b5.yaml": "3d879f71d6f288d8f9e176b6750c8362dabec0b49a04dfe8cde6e97329577ebc",
+      "coordination/sessions/receipts/20261102/SR-20261102-43c569.yaml": "d00cd8da809830dea543b1dd99fd05504106965b0513d08e18354d445abaf988"
+    }
+  },
+  "verification": {
+    "native_verifier": "tools.research_dispatch.GitRepositoryVerifier.verify_archive",
+    "result": "pass",
+    "checks": [
+      "reachable commit",
+      "exact first parent",
+      "exact changed path set",
+      "all Git blob SHA256 bindings",
+      "task and record IDs in commit message"
+    ]
+  },
+  "validation": {
+    "software_tests": "eight Rust tests plus 25 Python test methods pass; source-bound log preserves commands, versions and warnings",
+    "fixed_join_coverage": "F3:8classes/14T/14rows; F5:12classes/24T/24rows; F27:1class/2T/819structures/1638rows; independent complete coverage",
+    "shards": "native adjacent ranges equal full stream; independent checker rejects gaps, overlaps, duplicate ranges, malformed identities and scalar/conjugate errors",
+    "merge_hygiene": "pass",
+    "full_ledger": "only inherited RUN-BINSTD-f7ca97 manifest expected top-level run remains after main merge",
+    "pdf": "rendered and visually inspected"
+  },
+  "authority": "Implementation and fixed software controls only; same review_required experiment; no complete target join, scientific trial, approval, all-T coordinate transport certificate or independent scientific review"
+}
