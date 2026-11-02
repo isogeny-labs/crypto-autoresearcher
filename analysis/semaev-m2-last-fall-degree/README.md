@@ -39,6 +39,7 @@ free and $\dim V=\lceil n/3\rceil$. The statements and proofs are in
    - For unsatisfiable systems, the last fall degree equals the solving degree, which equals $\min\{d:1\in W_d\}$.
    - Every F4 run has $d_{F4}\ge d_{\rm LFD}$. The same holds for satisfiable systems whenever $\operatorname{codim}W_d>\#$solutions.
    - A branching lemma turns refutations of restricted systems into upper bounds.
+   - An affine trace equation permits exact slicing to one fewer Boolean variable (Prop 2.5b): degree-$d$ closure nonmembership and refutation transfer in both directions. A checked degree-five certificate on the sliced system would prove the original named-instance lower bound without computing the full-variable closure.
 
 **Computer-verified on named instances**
 ([`results/instances.json`](results/instances.json),
