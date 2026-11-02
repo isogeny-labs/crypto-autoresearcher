@@ -12,6 +12,7 @@ Keep resolved and superseded records in the index.
 
 | Problem | Status | What it blocks | What would unblock it |
 | --- | --- | --- | --- |
+| [n50 polynomial03 D5 checkpoint volume at small chunks](semaev-n50-d5-checkpoint-volume.md) | investigating | The 4,096-row V1 worker can publish 3,100 seed-phase snapshots before a D5 result | Qualify the V2 checkpoint-free runner and obtain an independently accepted D5 result under fresh resource and cost admission |
 | [Xedni Sadek explicit cutoff](xedni-sadek-explicit-cutoff.md) | open | Using the audited explicit local-test cutoff as a certificate | Independent full repair of the coefficient bound, integer exponents, field selection and zero/unit cases |
 | [Last fall degree needs a finite-profile completion certificate](lastfall-finite-profile-completeness.md) | open | Promoting a finite rank profile to an exact global `d_F` claim | Exact iterative-closure row spaces and a proved later-fall cutoff for a named system |
 | [LastFall review task identities do not satisfy the independence checker](lastfall-review-task-id-schema.md) | open | A `validated_scoped` verdict for the current review packet | Prospective native task plan or reviewed identity bridge, negative control, and passing checker |
