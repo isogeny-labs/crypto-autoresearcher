@@ -47,3 +47,9 @@ The [native-control packet](../analysis/semaev-degree-five-quotient-lift/CADENCE
 now has a frozen V2 protocol and hash-verified prepared bundle, but no control
 run: the live daily Spot budget remains above its limit. V1 was superseded
 before data because its qualifier did not assert the exact restored snapshot.
+
+The trace consequence does not itself eliminate a variable on this n50 input:
+all 25 basis elements in its frozen plan have field trace zero. A separate
+exact affine relation in the descended equation span does permit a 50-to-49
+variable slice; its coefficient mask and independent-check route are in
+[TRACE-SLICE-CERTIFICATES.md](../analysis/semaev-degree-five-quotient-lift/TRACE-SLICE-CERTIFICATES.md).
