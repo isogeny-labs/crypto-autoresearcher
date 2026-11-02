@@ -97,9 +97,11 @@ against a pinned Mathlib and depends only on the axioms \texttt{propext},
 \texttt{admit}, custom axiom or \texttt{unsafe} declaration appears. Section~\ref{sec:status}
 gives each statement's hosted CI receipt and the status of its independent
 statement review, which is a separate check that the Lean proposition says
-what the prose claims. The last-fall theorem, the concrete Semaev witness and
-the trace identity of Section~\ref{sec:semaev} have passed that review at their
-stated scope. The counterexample certificate and the Semaev rank family have
+what the prose claims. The Lean statements of Theorem~\ref{thm:nagao} (both
+witnesses, both placements, both models) and of Proposition~\ref{prop:recovery}
+passed that review at their stated scope in a three-reviewer round
+(BATCH-4c1c67), as did the last-fall theorem, the concrete Semaev witness and
+the trace identity of Section~\ref{sec:semaev}. The Semaev rank family has
 not.
 
 \paragraph{What this paper does not claim.} We say nothing about Nagao's
@@ -127,11 +129,17 @@ Over $\FF_p$ let $\Sfe=\{X_i^p-X_i\}$ and write $\red(h)$ for the reduction of
 $h$ modulo $\Sfe$, which over $\FF_2$ clamps every exponent to at most one.
 
 \begin{definition}[Fake first fall degree]\label{def:fake}
-$\Dfake(S)$ is defined as $\Dff(S)$ except that cofactors are reduced
-(multilinear over $\FF_2$), every product and the sum are replaced by their
-reductions, generators that reduce to zero are dropped, and condition~(2)
-asks for a nonzero reduced sum.
+$\Dfake(S)$ is defined as $\Dff(S)$ except that every product and the sum are
+replaced by their reductions, generators that reduce to zero are dropped, and
+condition~(2) asks for a nonzero reduced sum. Cofactors are arbitrary.
 \end{definition}
+
+Definition~6 of~\cite{nagao15} takes $g_i\in K[X_1,\dots,X_N]$ without restriction
+and bounds the degree of $g_if_i \bmod \Sfe$, the reduced product; it bounds
+neither the unreduced product nor the cofactor. The \texttt{MvPolynomial}
+formalization follows this. The list model narrows the cofactors to multilinear
+polynomials of degree at most~$D$, which changes nothing for the two witnesses
+below, whose fake cofactors are multilinear.
 
 \begin{remark}[Which reading]\label{rem:reading}
 Definitions~5 and~6 of~\cite{nagao15} print condition~(1) as
@@ -228,7 +236,11 @@ facts by \texttt{decide +kernel} in a model where a polynomial over $\FF_2$ is
 a duplicate-free list of exponent vectors and cofactors range over polynomials
 whose monomials have degree at most $D$ (multilinear on the fake side). The
 named theorem \lean{lemma4_inside_false} states
-$\neg\,\forall n\,S,\ \mathrm{Lemma4Inside}\ n\ S$. A separate Python
+$\neg\,\forall n\,S,\ \mathrm{Lemma4Inside}\ n\ S$; the per-witness statements are
+\lean{lemma4_inside_false_A} and \lean{lemma4_inside_false_B} (inside) and
+\lean{lemma4_outside_false_A} and \lean{lemma4_outside_false_B} (printed). The
+exact degrees for both witnesses are cited from \lean{exact_first_fall_degrees}
+below. A separate Python
 implementation, written from the definitions without reference to the
 first, reproduces both witnesses. It also finds the lemma violated on 94 of
 400 random pairs of multilinear quadratics in three variables
@@ -423,12 +435,12 @@ falls as usual, which is consistent with 68 of 80.
 \toprule
 Statement & Kernel & Independent statement review\\
 \midrule
-Thm.~\ref{thm:nagao} (\lean{lemma4_inside_false}) & hosted receipt, CI run 41155781140 & not yet reviewed; producer caps fidelity at partial (two scoping rows)\\
-Thm.~\ref{thm:nagao}, printed placement (\lean{lemma4_outside_false}) & CI run 41247286804 (workspace gate, 96 targets verified) & not yet reviewed\\
+Thm.~\ref{thm:nagao} (\lean{lemma4_inside_false}) & hosted receipt, CI run 41155781140 & validated at scope (BATCH-4c1c67)\\
+Thm.~\ref{thm:nagao}, printed placement (\lean{lemma4_outside_false}) & CI run 41247286804 (workspace gate, 96 targets verified) & validated at scope (BATCH-4c1c67)\\
 Thm.~\ref{thm:nagao}, printed placement under $\ge$ & not formalized & two reviewer computations (BATCH-4c1c67)\\
-Prop.~\ref{prop:recovery} (\lean{recovery}) & CI run 41259822143 (workspace gate, 97 targets verified) & not yet reviewed\\
-Thm.~\ref{thm:nagao}, witness (A) in \texttt{MvPolynomial} (\lean{lemma4_mv_false}) & CI run 41264005876 (workspace gate, 98 targets verified) & not yet reviewed\\
-Thm.~\ref{thm:nagao}, witness (B) in \texttt{MvPolynomial} (\lean{lemma4_mvB_false}) & CI run 41280794617 (workspace gate, 101 targets verified) & not yet reviewed\\
+Prop.~\ref{prop:recovery} (\lean{recovery}) & CI run 41259822143 (workspace gate, 97 targets verified) & validated at scope (BATCH-4c1c67)\\
+Thm.~\ref{thm:nagao}, witness (A) in \texttt{MvPolynomial} (\lean{lemma4_mv_false}) & CI run 41264005876 (workspace gate, 98 targets verified) & validated at scope (BATCH-4c1c67)\\
+Thm.~\ref{thm:nagao}, witness (B) in \texttt{MvPolynomial} (\lean{lemma4_mvB_false}) & CI run 41280794617 (workspace gate, 101 targets verified) & validated at scope (BATCH-4c1c67)\\
 Thm.~\ref{thm:nagao}, exact degrees (\lean{exact_first_fall_degrees}) & CI run 41372240324 (workspace gate, 104 targets verified) & proof written by reviewer J3\\
 Thm.~\ref{thm:lastfall} & hosted receipt, CI run 41191503149 & validated at stated scope (three-joint review)\\
 Thm.~\ref{thm:semaev}, concrete witness & hosted receipt, CI run 41155781140 & validated at scope, one draw\\
