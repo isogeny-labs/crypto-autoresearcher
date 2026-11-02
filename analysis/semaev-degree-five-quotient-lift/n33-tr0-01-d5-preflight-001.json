@@ -11,6 +11,10 @@
     "must_recount_freshly_before_D5": true,
     "ordered_solutions": 0
   },
+  "exact_request": {
+    "path": "runtime/n33-tr0-01-d5-local-request-001.json",
+    "sha256": "6649e25d1ed9252963af813f8b779a63d90a359aefe5294d4a79c65610c2c1c7"
+  },
   "financial_admission": {
     "absolute_deadline_utc": null,
     "account_budget_headroom_confirmed": false,
@@ -18,10 +22,18 @@
     "proposed_cost_ceiling_usd": null,
     "reason": "Current budget over limit; freeze these fields and the full protocol only after authorized allowance and fresh readback."
   },
+  "frozen_protocol": {
+    "path": "reports/n33-tr0-01-d5-lowmem-001/protocol.json",
+    "protocol_sha256": "beed33e04c7c767293b64d649c982046ecf5dce29e73a8f7e6133088c7f44f7b",
+    "superseded_v1_path": "reports/n33-tr0-01-d5-lowmem-001/protocol-v1-frozen.json",
+    "superseded_v1_protocol_sha256": "01ce9ce06e4c8da817c49c381452bb03fcfa544dd1966ed04aeff54cb8056d9f",
+    "version": 2
+  },
   "id": "n33-tr0-01-d5-lowmem-001",
   "launch_gates": [
-    "Freeze and validate experiment.protocol/v1 and exact request/command before D5 data.",
+    "Verify the frozen experiment.protocol/v1 hash and exact request/command before D5 data.",
     "Commit and push all source, input and protocol hashes; verify exact GitHub head.",
+    "Stage the qualified bundle inside the new accounted work root, verify manifest and all member digests, and bind the unique checkpoint destination; the existing bundle path is outside that root.",
     "Reconcile active jobs, owner locks, S3 output prefix and existing checkpoints; do not duplicate.",
     "Obtain fresh memory/disk admission and a finite charged/reserved cost allowance with account-budget headroom.",
     "Run a fresh exact count, recheck the D4 seed, then run one D5 producer attempt and separate original checker."
@@ -29,7 +41,7 @@
   "proposed_execution": {
     "automatic_retries": 0,
     "candidate_disk_capacity_bytes": 4294967296,
-    "candidate_memory_limit_bytes": 2147483648,
+    "candidate_memory_limit_bytes": 4294967296,
     "chunk_rows": 4096,
     "claim_class": "exact_computation",
     "count_binary_sha256": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56",
@@ -89,11 +101,11 @@
     "independent_checker_accepted_codimension": 4888,
     "publication_url": "https://github.com/isogeny-labs/crypto-autoresearcher/releases/download/semaev-closure-certificates-20261029/fresh-n33-tr0-01.D4.cert.gz"
   },
-  "status": "profiled_not_frozen_or_launched",
+  "status": "protocol_frozen_not_launched",
   "stopping_rule": "At most one 7200-second producer attempt, no automatic retry or restore. Stop on failed hash, count, checker, capacity, budget or owner gate; retain explicit unknown on timeout, killed constant, invalid output or missing certificate.",
   "variable_ledger": {
     "clock": "No runtime claim; wall time is watchdog/admission data only.",
-    "host": "Measured at admission; proposed 2 GiB child limit is a candidate, not measured peak RSS.",
+    "host": "Measured at admission; proposed 4 GiB child limit is a candidate, not measured peak RSS.",
     "input": "Fixed published fresh-n33-tr0-01 record and certificate hash.",
     "instrument": "Fixed qualified worker bundle and checker hashes; verify source/binary identity before launch.",
     "order": "Fixed: archive hash, D4 recheck, fresh count, one D5 producer, separate D5 checker.",

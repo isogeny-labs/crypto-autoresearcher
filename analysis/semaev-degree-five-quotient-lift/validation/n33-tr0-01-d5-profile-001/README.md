@@ -21,12 +21,16 @@ monomial universe has 331,212 members; its provisional map bit payload is
 gives a 454,586,900-byte envelope. These are representation-derived sizes,
 not measured peak RSS, runtime or a completed D5 closure.
 
-The [candidate preflight](../../n33-tr0-01-d5-preflight-001.json) names one
-future exact-computation attempt using the already qualified worker, a fresh
-count and an independent D4/D5 checker. It is **not a frozen or authorized
-launch**: a validated `experiment.protocol/v1`, exact command, fresh
-job/lock/capacity reconciliation and finite cost allowance with account-budget
-headroom are still required. The current `spot-experiments-daily-25` budget
+The [candidate preflight](../../n33-tr0-01-d5-preflight-001.json) and
+[frozen scientific protocol](../../reports/n33-tr0-01-d5-lowmem-001/protocol.json)
+name one future exact-computation attempt using the already qualified worker,
+a fresh count, and independent D4/D5 checks. The [exact request](../../runtime/n33-tr0-01-d5-local-request-001.json)
+pins a candidate 4 GiB child limit, 4,096-row chunks and a 7,200-second
+watchdog. Protocol version two adds the request-hash list required by the
+qualified runner; its [frozen predecessor](../../reports/n33-tr0-01-d5-lowmem-001/protocol-v1-frozen.json)
+is retained, and no D5 data preceded the amendment. It is **not an authorized launch**: the exact command and absolute
+deadline, fresh job/lock/capacity reconciliation, and finite cost allowance
+with account-budget headroom are still required. The current `spot-experiments-daily-25` budget
 readback exceeds its $25 limit, so no D5 producer was started. A verified D5
 certificate with codimension greater than the fresh exact count would prove
 LFD at least six for this named presentation; every other outcome remains
