@@ -12,10 +12,25 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_trace_slice_certificate import (check_map, read_certificate,
                                            substitute, trace_slice)
+from check_affine_relation import verify as verify_affine_relation
 from slice_trace_certificate import project
 
 
 class TraceSliceCertificateTests(unittest.TestCase):
+    def test_named_n50_affine_certificate_and_tamper_rejection(self):
+        certificate = (Path(__file__).resolve().parent /
+                       'n50-poly03-affine-relation-001.json')
+        checked = verify_affine_relation(certificate)
+        self.assertEqual((checked['status'], checked['quadratic_rank']),
+                         ('valid_affine_relation', 48))
+        tampered = json.loads(certificate.read_text())
+        tampered['pair_indices'] = tampered['pair_indices'][:-1]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'tampered.json'
+            path.write_text(json.dumps(tampered))
+            with self.assertRaisesRegex(ValueError, 'differs from claimed'):
+                verify_affine_relation(path)
+
     def test_project_and_independent_check_with_nondirect_unit_rows(self):
         # Two evaluations on y=x0+x1+1=0. The projected map has rank two,
         # although its monomial rows include no unit vector for coordinate 0.

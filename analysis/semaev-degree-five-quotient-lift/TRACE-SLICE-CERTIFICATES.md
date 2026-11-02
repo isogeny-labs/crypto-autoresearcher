@@ -35,6 +35,12 @@ The nonzero affine equation also supplies $r=1$ in Proposition 2.5a, so the
 fresh zero count and accepted D4 certificate give the rigorous named-instance
 interval $5\le d_{\rm LFD}\le26$ ($k=25$). This upper bound does not resolve
 whether the last fall degree is five or at least six.
+The short [affine-relation certificate](n50-poly03-affine-relation-001.json)
+is independently reconstructed by [its checker](check_affine_relation.py).
+The [accepted result](validation/n50-poly03-affine-001/result.json), SHA-256
+`02244547686a97894cfd05a6aa3926aafe66ec107754793f214baceadbb6ccc9`,
+binds the plan, independent descent source, relation mask, quadratic rank 48,
+and verifier source. A tampered pair list is rejected by the focused test.
 
 The [n51 polynomial01 request](n51-poly01-d5-stream-request-001.json)
 (SHA-256 `d74ea19216814bcfa2f316fb70a3d785e9be99fc7820c15222d609e093fd5684`)
