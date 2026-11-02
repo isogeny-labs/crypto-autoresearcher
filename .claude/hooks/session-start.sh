@@ -119,11 +119,13 @@ if [ "${CLAUDE_CODE_REMOTE:-}" = "true" ] && [ "${CRYPTO_WORKSTATION_SETUP:-1}" 
     fi
 fi
 
-exit 0
-
 # What this program has already tried against ECDLP, and whether anything
 # changed in the four repositories since the atlas was last reviewed
 # (knowledge/leads/ecdlp/README.md). Hook stdout becomes session context, so a
 # fresh clone starts by knowing whether everything has already been examined.
-# Never fatal.
-python3 tools/lead_atlas.py --brief 2>/dev/null || true
+# Never fatal, and bounded: its change scan diffs the sibling checkouts, which
+# a partial clone can turn into on-demand fetches.
+timeout 90 python3 tools/lead_atlas.py --brief 2>/dev/null \
+    || echo "session-start: lead atlas brief unavailable; run 'python3 tools/lead_atlas.py --brief'" >&2
+
+exit 0
