@@ -63,9 +63,10 @@ and lmodern.
 
 `paper.pdf` is over the repository's 64 KiB data limit (AGENTS.md, "Data files
 live in the artifact store"). Until someone with store credentials runs
-`python3 tools/artifacts/artifacts.py push papers/first-fall-lean/paper.pdf`
-and commits the `.artifacts.json` and `.gitignore` it writes, `paper.pdf` is
-ignored locally and must be rebuilt with `make`.
+`paper.pdf` lives in the artifact store (manifest `.artifacts.json`, sha256
+`0b1e7c51…6f18`, pushed 2026-11-02). Fetch it with
+`python3 tools/artifacts/artifacts.py pull papers/first-fall-lean/paper.pdf`, or
+rebuild with `make`. Push again after any change to the text.
 
 ## Owed before submission
 
@@ -78,7 +79,8 @@ ignored locally and must be rebuilt with `make`.
 - [x] Bridge from the list-of-monomials model to Mathlib `MvPolynomial`, with
       unrestricted cofactors: witness A (PR #2871) and witness B (PR #2901).
 - [ ] Independent human check of Proposition 6 and of the reading of 2015/984's
-      Lemma 6 (`KN-FIND-936151` section 4).
+      Lemma 6 (`KN-FIND-936151` section 4). Checklist for the checker:
+      `HUMAN-CHECK.md`.
 - [ ] Novelty audit: prior-remark search recorded in `../nagao-lemma4-note/note.md`
       section 4 and `docs/ecdlp-literature-review-20260926.md` section 5; repeat
       against post-2015 citations of 2015/984 and 2021/1611.
