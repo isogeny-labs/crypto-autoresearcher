@@ -9,18 +9,33 @@ mechanism: >-
 disposition: open_next_step
 next_action:
   step: >-
-    Measure the relative bucket variance W of the O2 agreement kernel (H-ECDLP-2ade73; IDEA-20260904-f7d47d
-    second moment) on the covered families across N and fit its decay against 1/sqrt(N); EXP-ECDLP-5cad48
-    ran many stages without ever assigning a W class.
+    Pursue either independent successor. (a) Measure the relative bucket variance W of the O2
+    agreement kernel (H-ECDLP-2ade73; IDEA-20260904-f7d47d second moment) on the covered families
+    across N and fit its decay against 1/sqrt(N); EXP-ECDLP-5cad48 ran many stages without ever
+    assigning a W class. (b) Build a coordinate-visible bucket generator for exact ECCp-131 whose
+    qualifying pairs can be enumerated in O(B + output), or another proved subquadratic bound,
+    then freeze the same train/held-out/independent-null/random-base controls used by the simple-bit
+    screen. Learned multibit hashes and algebraic bucket generators remain eligible.
   discriminates: >-
     SMALL-W supports a proof attempt for a bucket-selected level-1 bound; a fitted exponent is
     not that proof. LARGE-W rejects that second-moment proof route and motivates inspection of
     the heavy buckets, but does not by itself exhibit an attack. Neither outcome closes j=2,
     higher tree levels, uncovered filter families, or KN-OPEN-91d4f6 without the missing theorem.
+    For the ECCp-131 successor, promotion requires a held-out lower enrichment ratio above one,
+    no matched-random-base explanation, and the promised subquadratic generator. Another bounded
+    null rejects only the frozen predicate family, base sizes and curve; a post-add signal that
+    first enumerates all Theta(B^2) sums is not a qualifying Wagner filter.
 best_measured: >-
   At p=65539, M=40, M*max_c pi_c=1.084 versus 1.082 for the SHA null and M*delta=1.002;
   the excess decays over the toy ladder. This shows no attack signal, but j=2 remains unproved,
-  not refuted, and no tree row is closed.
+  not refuted, and no tree row is closed. On exact 131-bit ECCp-131, the frozen representation-filter
+  sweep evaluated 3,450 simple 1--8-bit coordinate configurations in each of six small-x/random-base
+  cells at B=64,128,256. All recorded held-out Wilson lower ratios were below one
+  (0.6093--0.7783); the two positive
+  small-x point estimates were post-add filters requiring all Theta(B^2) pair sums. This is an exact
+  counted null for that finite family, not for learned, algebraic or other coordinate-visible
+  buckets; local clocks are invalid and the retained export-shape/interval-label deviations do
+  not support a performance claim.
 evidence:
 - repo: crypto-autoresearcher
   path: analysis/o2-sum-compatible-filters/README.md
@@ -43,6 +58,18 @@ evidence:
   note: >-
     characteristic-2 approximate x-functional single-bucket gain remains open; averaged
     agreement and level-1 bounds do not close it
+- repo: crypto
+  ref: b825c0c0d535215a6b01571350fa5b54a05ea0fd
+  path: research/eccp131_representation_filter_20261102/REPORT.md
+  note: >-
+    exact ECCp-131 held-out screen; no qualifying filter in the frozen simple-bit family;
+    subquadratic coordinate-visible bucket generators and other predicate families remain open
+- repo: crypto
+  ref: b825c0c0d535215a6b01571350fa5b54a05ea0fd
+  path: problems/eccp131-full-parameter-index-calculus.md
+  note: >-
+    full exact-curve pipeline remains open; bounded arity-2/3 rows are zero and exact-width
+    F4/F5 were not dispatched
 ledger_refs:
 - H-ECDLP-2ade73
 - H-ECDLP-07c7c6
@@ -59,10 +86,15 @@ ledger_refs:
 known_results:
 - KR-RHO-5b1c0a
 - KR-RHO-13bf67
+related:
+- LEAD-EXO-coordinate-statistic-leakage
+- LEAD-ICP-representation-subset-sum
+- LEAD-ICP-full-width-arity-grid
 forecloses:
 - the original inference that bucket-averaged agreement bounds the adaptively selected bucket
 - the original O2 blanket statement that every j>=2 configuration is closed
 - the Family-J popcount interval/character-sum theorem as stated
+- the frozen ECCp-131 simple 1--8-bit coordinate source/combiner family at B=64,128,256
 areas:
 - ECDLP
 last_reviewed: '2026-11-02'

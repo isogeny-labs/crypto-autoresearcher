@@ -10,6 +10,8 @@ Crypto evidence snapshot: `crypto@b6ffdca53494`
 
 Xedni correction evidence: `crypto@34caae22581045ec59fe779d86f8bf2d495cc14a`
 
+Latest scoped filter evidence: `crypto@b825c0c0d535215a6b01571350fa5b54a05ea0fd`
+
 ## Decision
 
 The existing 159-row ECDLP atlas was reviewed family by family. That review also identified and
@@ -157,6 +159,30 @@ This additive correction changes the IC-engine family from **2 obstructed / 18 p
 the original dated 26-row statement and the subsequent Xedni reconciliation narrative intact;
 neither historical account is rewritten by this disposition update.
 
+## Coordinate-visible Wagner-filter evidence after the disposition audit
+
+The exact ECCp-131 study at
+`crypto:research/eccp131_representation_filter_20261102/REPORT.md` evaluated 3,450 frozen
+simple 1--8-bit coordinate configurations in each of six small-x/random-base cells at
+`B=64,128,256`. Every recorded held-out Wilson lower enrichment ratio was below one
+(`0.6093--0.7783`). The
+two positive small-x point estimates were post-add predicates that first require all
+`Theta(B^2)` pair sums. Planted four-sum, modular-solver, A/A, and bounded relation-oracle
+controls passed; the exact arity-2/3 probes still returned zero natural rows and rank. Exact-width
+F4/F5 was unavailable and unmeasured. Local clocks are invalid; the retained export-shape and
+interval-label deviations support no performance claim.
+
+This result rejects only the frozen source/combiner/bit-slice family. It does not obstruct
+learned multibit hashes, algebraic bucket generators, larger bases, other curves, or another
+coordinate-visible filter with a proved subquadratic qualifying-pair enumerator. The existing
+`LEAD-EXO-four-list-ktree-join` row therefore remains the pursued carrier. Its next action now
+includes that explicit successor alongside the unresolved O2 bucket-variance branch.
+
+The generic theorem in `LEAD-ICP-representation-subset-sum` is unchanged, but its scope is now
+stated exactly: it covers filters that see only generic group operations and encoding equality.
+Coordinate-reading predicates are outside that theorem. No disposition or family total changes:
+the atlas remains **160 total / 140 pursued / 20 scoped obstructions**.
+
 ## Evidence and reproducibility
 
 The canonical row evidence is stored beside each lead under `knowledge/leads/ecdlp/`. The policy
@@ -171,6 +197,8 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - `crypto:research/prime_factor_base_degree_20261031/parallel_20261031/RESULTS.md`
 - `crypto:research/jksst_xedni_audit_20261101/README.md`
 - `crypto:research/jksst_xedni_audit_20261101/PROOF_MAP.md`
+- `crypto:research/eccp131_representation_filter_20261102/REPORT.md`
+- `crypto:problems/eccp131-full-parameter-index-calculus.md`
 - `crypto:docs/ecdlp-hardness-corpus/REPORT.md`
 - `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`
 - `ledger/proposals/IDEA-20261024-a2b05d.yaml`

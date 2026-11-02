@@ -74,6 +74,12 @@ The independent semantic review rejects the bundled blanket-attainment and liter
 
 This additive correction changes IC engines from 2/18 to *1 obstructed / 19 pursued* and the atlas from 21/139 to *20 / 140*. It preserves the original dated 26-row statement and the later Xedni narrative. Sources: `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`, `ledger/proposals/IDEA-20261024-a2b05d.yaml`, and `ledger/decisions/DEC-20261101-8adb11.yaml`.
 
+== Coordinate-visible Wagner filter · 2026-11-02
+
+The exact ECCp-131 study at `crypto@b825c0c0d535215a6b01571350fa5b54a05ea0fd` evaluated 3,450 frozen simple 1--8-bit coordinate configurations in each of six small-x/random-base cells at `B=64,128,256`. Every recorded held-out Wilson lower enrichment ratio was below one (0.6093--0.7783). The two positive small-x point estimates were post-add predicates that first require all $Theta(B^2)$ pair sums. Exact-width F4/F5 was unavailable and unmeasured; local clocks and performance claims remain invalid.
+
+This rejects only that finite predicate family. Learned multibit hashes, algebraic buckets, larger bases, other curves, and any coordinate-visible filter with a proved subquadratic pair generator remain live under `LEAD-EXO-four-list-ktree-join`. The generic representation-subset-sum obstruction is now explicitly limited to group-operation/equality-only filters. Counts remain *160 total / 140 pursued / 20 scoped obstructions*.
+
 == Review boundary
 
 The Conductor command was unavailable and no `.conductor/WORKFLOW.md` was present. The global review stamp remains unchanged: the cryptanalysis base ref was unreachable and the configured `ecc-challenges` checkout was absent, so a whole-universe freshness claim would be unsupported. The 159 pre-existing rows, the added live successor, and the cited crypto snapshot are reconciled; the unavailable repositories must be reconciled before advancing the canonical stamp.
