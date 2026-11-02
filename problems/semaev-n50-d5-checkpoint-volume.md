@@ -43,3 +43,7 @@ An opt-in [bounded-cadence candidate](../analysis/semaev-degree-five-quotient-li
 now passes a fake-store publication/restore control, including gaps between
 published sequence numbers. It still needs native retained-seed replay and
 original-checker qualification before any n50 execution protocol can use it.
+The [native-control packet](../analysis/semaev-degree-five-quotient-lift/CADENCE-NATIVE-CONTROL.md)
+now has a frozen V2 protocol and hash-verified prepared bundle, but no control
+run: the live daily Spot budget remains above its limit. V1 was superseded
+before data because its qualifier did not assert the exact restored snapshot.
