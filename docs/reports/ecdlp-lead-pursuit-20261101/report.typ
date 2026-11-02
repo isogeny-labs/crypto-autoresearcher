@@ -54,7 +54,7 @@ The binary SAT/enumeration measurements do not test symmetric Groebner systems a
 
 Load-bearing cross-checks are `crypto:research/factor_base_arity_review_20261024/README.md`, `crypto:research/prime_factor_base_degree_20261031/parallel_20261031/RESULTS.md`, `crypto:problems/ghs-higher-magic-descent-not-executable.md`, and every atlas row's obstruction, foreclosure, revisit, evidence, and related fields.
 
-No end-to-end ECDLP performance is claimed; this is a scoped-evidence and queue audit.
+No validated leaderboard, cryptographic-scale, or asymptotic performance is claimed. The bounded local full-solve evidence added below is labelled explicitly; this remains a scoped-evidence and queue audit.
 
 == Xedni correction
 
@@ -81,6 +81,14 @@ The exact ECCp-131 study at `crypto@b825c0c0d535215a6b01571350fa5b54a05ea0fd` ev
 This rejects only that finite predicate family. Learned multibit hashes, algebraic buckets, larger bases, other curves, and any coordinate-visible filter with a proved subquadratic pair generator remain live under `LEAD-EXO-four-list-ktree-join`. The generic representation-subset-sum obstruction is now explicitly limited to group-operation/equality-only filters. Counts remain *160 total / 140 pursued / 20 scoped obstructions*.
 
 Q5 at `crypto@20e19b9fcbd790f86bf66be41d3b25e5cc3ceced` ran msolve F4 on 6,486 frozen `m=2` toy systems with zero failures/timeouts: A2/B matrix cells matched 16/16 and registered coordinate improvement was 0/16. This forecloses only that toy family. Its carrier cards remain `open_next_step` / `open_blocked`; `m>=4`, larger primes/scales, other engines/orders, relation collection, useful rank, linear algebra, and end-to-end cost remain open. Counts do not change.
+
+== Curve25519 PKM whole solve and guess depth · 2026-11-02
+
+At `crypto@8491be7ed89642fa2f3715f8d5452839d26c384a`, one `k=20` Curve25519 miniature (`p=1048573`, `r=131203`) supplied six full `m=2`, isogeny-tower `t=6`, `G=4` solves. The candidate was behind proj-a by *2.58x / 1.35e5x / 8.17e5x* and rho-neg by *18.2x / 9.55e5x / 5.85e6x* at `w=0 / 0.1 / 1`. Session 1 had 24/24 verified records and eight identical replays, but it is local L0 with no second host or validator. The one-target `G=0` control ranks nothing because its replay differs in phase counts.
+
+The companion `m=2` guess-depth panel fell to the edge `G=t-1` in every successful series, falsifying its registered interior U-shape. Its best modelled cell (`k=20,t=10,G=9`) has no common-unit whole solve or matched rho. The committed files contain 32 successful rows and 35 statuses despite stale 27/30 prose. The `k=28,t=14` cells remain unmeasured after allocation failure, timeout and the `G<=12` code cap.
+
+This rejects only those finite predictions. It supplies no theorem or exponent. The edge-cell whole solve, `m>=4`, other forms, curves and scales, useful rank, replay repair and independent validation remain pursued. `LEAD-ICP-pkm-tower-algebraic-oracle` stays `open_blocked`; `LEAD-ICE-charged-toy-ic-exponent-vs-rho` stays pursued at `exhausted_at_scale`; counts stay *160 / 140 / 20*.
 
 == Review boundary
 

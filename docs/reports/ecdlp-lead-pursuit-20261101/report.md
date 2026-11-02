@@ -14,6 +14,8 @@ Latest scoped filter evidence: `crypto@b825c0c0d535215a6b01571350fa5b54a05ea0fd`
 
 Latest scoped F4-presentation evidence: `crypto@20e19b9fcbd790f86bf66be41d3b25e5cc3ceced`
 
+Latest scoped Curve25519 PKM evidence: `crypto@8491be7ed89642fa2f3715f8d5452839d26c384a`
+
 ## Decision
 
 The existing 159-row ECDLP atlas was reviewed family by family. That review also identified and
@@ -194,6 +196,31 @@ presentations/candidates: `m>=4`, larger primes, other engines/orders, relation 
 rank, linear algebra, and complete ECDLP/rho cost remain open. The two carrier cards stay
 `open_next_step` and `open_blocked`; counts do not change.
 
+## Curve25519 PKM whole-solve and guess-depth evidence
+
+The later bounded study at
+`crypto:research/curve25519_algebraic_ecbench_20261102/README.md` supplies the first complete
+PKM algebraic row in this audit: on one `k=20` Curve25519 miniature (`p=1048573`, `r=131203`),
+six `m=2`, isogeny-tower `t=6`, `G=4` solves were behind the projected-abscissa MITM baseline
+by **2.58x / 1.35e5x / 8.17e5x** and behind `rho-neg` by
+**18.2x / 9.55e5x / 5.85e6x** at `w=0 / 0.1 / 1`. Session 1 had 24/24 verified records and
+eight identical replays. It was nevertheless local L0, with no second host or validator; the
+one-target `G=0` control is excluded from ranking because its replay differs in phase counts.
+
+The companion `m=2` guess-depth study found that every successful measured series fell to the
+edge `G=t-1`; the registered interior U-shape was false, and the best modelled coverage cost was
+`1.18e7` at `k=20,t=10,G=9`. That edge cell has no common-unit whole-solve or matched-rho row.
+The committed data contain 32 successful rows and 35 status rows, despite stale `27/30` prose in
+the README. The remaining `k=28,t=14` cells are explicitly unmeasured: `G=11` failed allocation,
+`G=12` timed out before its first target, and `G=13` hit the code's `G<=12` cap.
+
+These results reject only the frozen `t=6,G=4` winning prediction and the registered interior
+U-shape on its finite grid. They provide no theorem or scaling exponent. The `t=10,G=9`
+whole-solve comparison, `m>=4`, other factor-base forms, curves and scales, useful rank, a
+second-host replay and independent validation remain pursued. The PKM carrier stays
+`open_blocked`, the charged-toy exponent carrier stays `exhausted_at_scale` and pursued through
+its revisit trigger, and the atlas remains **160 total / 140 pursued / 20 scoped obstructions**.
+
 ## Evidence and reproducibility
 
 The canonical row evidence is stored beside each lead under `knowledge/leads/ecdlp/`. The policy
@@ -211,6 +238,8 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - `crypto:research/eccp131_representation_filter_20261102/REPORT.md`
 - `crypto:problems/eccp131-full-parameter-index-calculus.md`
 - `crypto:research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md`
+- `crypto:research/curve25519_algebraic_ecbench_20261102/README.md`
+- `crypto:research/curve25519_guess_optimum_20261102/README.md`
 - `crypto:docs/ecdlp-hardness-corpus/REPORT.md`
 - `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`
 - `ledger/proposals/IDEA-20261024-a2b05d.yaml`
@@ -220,8 +249,9 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - the `obstruction`, `forecloses`, `revisit_when`, `evidence`, and `related` fields of all 160
   atlas rows.
 
-No end-to-end ECDLP performance result is introduced by this report. It records a disposition
-audit, scoped component evidence, and the queue invariant.
+No validated leaderboard, cryptographic-scale, or asymptotic performance result is introduced
+by this report. It records one bounded local full-solve row, scoped component evidence, the
+remaining unmeasured cells, and the queue invariant.
 
 ## Review boundary
 
