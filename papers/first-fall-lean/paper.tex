@@ -245,7 +245,13 @@ of a quadratic generator to be constant and that of $X^2Y$ to vanish; the
 coefficients of $XY$, $X^2$ and $Y^2$ then force the constants to zero. The module
 \lean{CryptoResearch.Nagao.BridgeB} does the same for witness~(B) in three variables
 (\lean{lemma4_mvB_false}); there the fake fall is
-$\red\bigl(f_1+(X_1+1)f_2\bigr)=X_2+X_3$.
+$\red\bigl(f_1+(X_1+1)f_2\bigr)=X_2+X_3$. These two modules exhibit a fake fall at
+degree~2, which is enough to refute the lemma. That no fake fall exists at
+degree~1 was proved by a reviewer in batch~BATCH-4c1c67: reduction preserves the
+constant coefficient, so generators without constant terms have no fake fall at
+degree~1 for any cofactors. Adopted into the workspace as
+\lean{exact_first_fall_degrees}, it gives $\Dff=3$ and $\Dfake=2$ exactly, for both
+witnesses in both placements.
 
 \subsection{When the inference survives}
 
@@ -423,6 +429,7 @@ Thm.~\ref{thm:nagao}, printed placement under $\ge$ & not formalized & two revie
 Prop.~\ref{prop:recovery} (\lean{recovery}) & CI run 41259822143 (workspace gate, 97 targets verified) & not yet reviewed\\
 Thm.~\ref{thm:nagao}, witness (A) in \texttt{MvPolynomial} (\lean{lemma4_mv_false}) & CI run 41264005876 (workspace gate, 98 targets verified) & not yet reviewed\\
 Thm.~\ref{thm:nagao}, witness (B) in \texttt{MvPolynomial} (\lean{lemma4_mvB_false}) & CI run 41280794617 (workspace gate, 101 targets verified) & not yet reviewed\\
+Thm.~\ref{thm:nagao}, exact degrees (\lean{exact_first_fall_degrees}) & local build; workspace gate pending & proof written by reviewer J3\\
 Thm.~\ref{thm:lastfall} & hosted receipt, CI run 41191503149 & validated at stated scope (three-joint review)\\
 Thm.~\ref{thm:semaev}, concrete witness & hosted receipt, CI run 41155781140 & validated at scope, one draw\\
 Thm.~\ref{thm:semaev}, rank family & hosted receipts, CI run 41155781140 & integrity audit only\\
