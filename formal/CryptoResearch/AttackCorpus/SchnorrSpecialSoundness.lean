@@ -52,10 +52,11 @@ theorem zmod_four_distinct_challenges_nonunique :
     let c1 : ZMod 4 := 2
     let c2 : ZMod 4 := 0
     c1 ≠ c2 ∧ ¬ IsUnit (c1 - c2) ∧
+      (0 : ZMod 4) ≠ 2 ∧
       s1 = r + c1 * 0 ∧ s2 = r + c2 * 0 ∧
       s1 = r + c1 * 2 ∧ s2 = r + c2 * 2 := by
   dsimp
-  refine ⟨by decide, ?_, by norm_num, by norm_num, ?_, by norm_num⟩
+  refine ⟨by decide, ?_, by decide, by norm_num, by norm_num, ?_, by norm_num⟩
   · rw [sub_zero]
     change ¬ IsUnit ((2 : ℕ) : ZMod 4)
     rw [ZMod.isUnit_iff_coprime]

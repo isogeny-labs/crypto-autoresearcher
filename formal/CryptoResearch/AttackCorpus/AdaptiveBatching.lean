@@ -3,9 +3,10 @@ Source: research/cryptographic_assumption_attack_corpus_20261101/README.md
 Target: formal/targets/attack-batch-rlc-adaptive.yaml
 
 This module isolates the challenge-timing boundary in a scalar random-linear-
-combination check.  The first theorem permits the alleged errors to depend on
-the challenge and gives a cancellation for every challenge.  The repair keeps
-`a` and `b` outside the challenge quantifier and counts accepting challenges.
+combination check.  The named target permits the alleged errors to depend on
+the challenge and gives a cancellation for every challenge.  Its second
+conjunct keeps `a` and `b` outside the challenge quantifier and counts
+accepting challenges.
 
 No transcript, group equation, sampler, Fiat--Shamir transform, or protocol
 security game is modeled here.
@@ -26,19 +27,8 @@ def adaptiveError0 (rho : F) : F := -rho
 /-- The second adaptive error is nonzero, independently of the challenge. -/
 def adaptiveError1 (_rho : F) : F := 1
 
-/-- Adaptive errors can cancel every random-linear-combination challenge.
-
-The dependency on `rho` is explicit in both errors.  Consequently this theorem
-is not an instance of a fixed nonzero polynomial evaluated at a later random
-challenge. -/
-theorem adaptive_rlc_cancellation :
-    ∀ rho : F,
-      adaptiveError0 rho + rho * adaptiveError1 rho = 0 ∧
-        adaptiveError1 rho ≠ 0 := by
-  intro rho
-  simp [adaptiveError0, adaptiveError1]
-
-/-- Fixed nonzero errors accept at no more than one field challenge.
+/-- A fixed nonzero coefficient pair accepts at no more than one field
+challenge.
 
 The placement of `a` and `b` before the filtered `rho` is the entire timing
 model supplied by this theorem.  Uniform sampling would turn this cardinality
@@ -61,5 +51,26 @@ theorem fixed_error_acceptance_card_le_one [Fintype F] (a b : F)
     rcases mul_eq_zero.mp hdiff with hrs | hb'
     · exact sub_eq_zero.mp hrs
     · exact (hb hb').elim
+
+/-- Adaptive errors can cancel every random-linear-combination challenge,
+whereas a fixed nonzero coefficient pair accepts at most one challenge over a
+finite field.
+
+The dependency on `rho` is explicit in the adaptive errors.  The repair
+quantifies the `Fintype F` structure and then fixes `a` and `b` before forming
+the accepting set.  Keeping both halves in this exact named declaration makes
+the frozen target's counterexample and repair jointly auditable. -/
+theorem adaptive_rlc_cancellation :
+    (∀ rho : F,
+      adaptiveError0 rho + rho * adaptiveError1 rho = 0 ∧
+        adaptiveError1 rho ≠ 0) ∧
+      ∀ [Fintype F] (a b : F),
+        ¬ (a = 0 ∧ b = 0) →
+          ({rho : F | a + rho * b = 0} : Set F).ncard ≤ 1 := by
+  constructor
+  · intro rho
+    simp [adaptiveError0, adaptiveError1]
+  · intro _ a b hfixed
+    exact fixed_error_acceptance_card_le_one a b hfixed
 
 end CryptoResearch.AttackCorpus.AdaptiveBatching
