@@ -1,0 +1,289 @@
+# =============================================================================
+# AMD-EXP-DREG-dd668d-20261102-glsample -- additive clarifying amendment to
+# EXP-DREG-dd668d (and so to LADDER-W-v1, frozen_ladder of its specification),
+# written BEFORE ANY RUN.
+#
+# NEW FILE. It rewrites nothing. specification.yaml and H-DREG-1d0e5d stay
+# byte-for-byte as committed. Any later change to this text is a new file
+# under a new id that cites this one.
+#
+# OUTCOME DISCIPLINE. At the time of writing experiments/EXP-DREG-dd668d/runs/
+# holds only .gitkeep. No run, no partial run and no scratch computation of
+# any matrix, rank profile, curve, point count or isogeny of this ladder was
+# made by the Coordinator, or by anyone whose result reached the Coordinator,
+# before the values below were fixed. The RNG stream below was not executed.
+# =============================================================================
+amendment:
+  id: AMD-EXP-DREG-dd668d-20261102-glsample
+  experiment_id: EXP-DREG-dd668d
+  hypothesis_id: H-DREG-1d0e5d
+  question_id: RQ-DREG-d7b6d6
+  ladder_id: LADDER-W-v1
+  prior_approval: DEC-20260922-0397f8
+  decision_id: DEC-20261102-0dedaa
+  recorded_at: '2026-11-02'
+  recorded_by: coordinator
+  kind: additive_clarifying_amendment
+  status: recorded
+  approval:
+    approved_if_and_only_if: >-
+      DEC-20261102-0dedaa is committed and pushed to a branch with an open PR
+      against main, its decision is approve, and it names this amendment id.
+      Until then no run may rely on this text, and the specification alone is
+      not runnable (the executor's refusal stands).
+    how_approval_is_recorded: >-
+      In DEC-20261102-0dedaa only. This file is not edited afterwards.
+
+  written_before_any_run:
+    runs_directory_state: experiments/EXP-DREG-dd668d/runs/ contains only .gitkeep
+    why: >-
+      The executor assigned under TASK-20260922-4a49b0 declined to launch
+      because frozen_ladder.gl_sample does not determine the eight GL-8
+      matrices: the transvection count N is undefined, the RNG draw order and
+      the pivot = target case are unstated, the substitution convention is
+      unstated, and the rung n=2 certification triples are not listed. An
+      undetermined control cannot be replayed or validated, so the GL-8 check,
+      and with it gl_check_passed and every outcome label conditioned on it,
+      would not be reproducible. The executor was right not to choose values
+      itself (a run-time choice would be an unrecorded protocol decision).
+      This amendment fixes each value before any data exist and independently
+      of any outcome.
+
+  scope_of_change:
+    changes_only: >-
+      The determination of the GL-8 control (frozen_ladder.gl_sample), the
+      index convention of the base boolean variables that GL-8, IDENTITY and
+      NEARBY-DEG2 act on, the rung scope of this single run, and the admissible
+      construction of the dual map in the edge certificate. Each item is a
+      reading or a value where the specification is silent or ambiguous; no
+      item overrides a value the specification states.
+    does_not_change:
+      - H-DREG-1d0e5d (statement, predictions, falsification conditions, HEUR-1d0e5d)
+      - experiment.preregistered_prediction
+      - experiment.metrics (primary and secondary)
+      - every outcome label and the label assignment of invalidation_rules, success_criterion and falsification_criterion
+      - experiment.claim_ceiling and scale_relevance
+      - stopping_rules, budget, D_max = 4, replication.seeds = [20260922]
+      - the NEARBY-DEG2 substitution itself (only the naming of its variables is read below)
+      - edge_certificate items 1 to 3 and item 5, the boolean_matrix definition, falls, grevlex, delta, homogeneity_gate
+      - the count of GL samples (eight) and the seed (20260922)
+
+  # ---------------------------------------------------------------------------
+  # A1. Base boolean variable vector (index convention).
+  # ---------------------------------------------------------------------------
+  base_variable_vector:
+    item: executor gap 3 (substitution convention), prerequisite
+    rule: >-
+      The base boolean variables form the column vector b = (b_0, ..., b_{v-1})
+      in the variable order frozen_ladder.grevlex already fixes: the boolean
+      bits of x1, x2, x3, x4, u1, u2, with the bit of x1 first. Each x_i lies in
+      V = {0, 1} and contributes one boolean variable. Each u_j lies in the rung
+      field and contributes its coordinates in the basis frozen_ladder.base_curve
+      names, coefficient of 1 first, then coefficient of z.
+    at_rung_n1: >-
+      v = 8. b_0 = x1, b_1 = x2, b_2 = x3, b_3 = x4, b_4 = u1[1], b_5 = u1[z],
+      b_6 = u2[1], b_7 = u2[z]. This agrees with scale_relevance (8 boolean
+      variables at rung n=1).
+    nearby_deg2_reading: >-
+      NEARBY-DEG2 writes "x0 |-> x0 + x1*x2". The chained system has no
+      variable named x0, so the only reading is zero-based indices of the base
+      boolean vector: b_0 |-> b_0 + b_1*b_2, with every other b_i fixed, applied
+      to the base ideal and reduced by the field equations. Declared here so
+      that A1 and NEARBY-DEG2 use one index convention; the substitution is
+      unchanged.
+
+  # ---------------------------------------------------------------------------
+  # A2. GL-8 sample, fully determined (replaces nothing; determines gl_sample).
+  # ---------------------------------------------------------------------------
+  gl_sample_determination:
+    item: executor gaps 1 and 2
+    N:
+      value_formula: N = 4 * v^2
+      value_at_rung_n1: 256
+      rationale: >-
+        Fixed before any data and independent of outcomes. (1) Counting
+        floor: |GL(8, F_2)| is about 0.289 * 2^64 (about 2^62.2) and there are
+        v(v-1) = 56 elementary transvections, so a word of fewer than about
+        62.2 / log2(56), roughly 11, transvections cannot reach a constant
+        fraction of the group; N = 256 is about 24 times that floor. (2) N is
+        a formula in v so the same rule holds at any rung that later uses
+        LADDER-W-v1 (N = 576 at v = 12). (3) Each row receives on average N/v
+        = 32 row additions at v = 8, so a near-identity or near-permutation
+        sample is not a practical concern. (4) Uniformity is not load-bearing:
+        the mechanism of H-DREG-1d0e5d asserts invariance of r(d) under every
+        invertible linear substitution, so any eight invertible matrices are a
+        valid test sample, and the choice of N affects only how generic the
+        eight are. No rigorous mixing-time bound for this elementary
+        row-addition walk is relied on; any such bound would be a recalled
+        pointer, not support. Over F_2, SL(v, F_2) = GL(v, F_2), so the
+        determinant-1 products lose nothing.
+    rng:
+      constructor: random.Random(20260922), Python standard library, created once
+      stream: >-
+        One stream shared by all eight matrices, consumed in matrix order
+        k = 0, 1, ..., 7. It is never re-seeded, never copied, and used for
+        nothing else in the run (NEARBY-DEG2 and IDENTITY use no randomness).
+      draw_call: rng.randrange(v) for each index; no other RNG method is called
+      draw_order: >-
+        For each transvection, the pivot p is drawn first, then the target t:
+        p = rng.randrange(v); t = rng.randrange(v). If p == t, the pair is
+        discarded and a new pair is drawn (pivot first again) from the same
+        stream; discarded pairs do not count toward N.
+      provenance_recorded: >-
+        manifest.yaml records sys.version and the exact constructor and draw
+        call; a later replay on another CPython 3 version uses the same calls.
+    transvection:
+      definition: >-
+        T(p, t) = I + E_{t,p}, where E_{t,p} has a single 1 in row t, column p
+        (p != t). Left-multiplication A <- T(p, t) * A adds row p of A to row t
+        of A over F_2.
+      product: >-
+        For matrix k: start A = I (v x v over F_2); for s = 1..N draw (p_s, t_s)
+        and set A <- T(p_s, t_s) * A. So M_k = T(p_N, t_N) * ... * T(p_1, t_1).
+    singular_rejection:
+      reading: >-
+        One attempt is one product of N transvections from the identity. After
+        each attempt the rank of A over F_2 is computed by Gaussian
+        elimination. If rank < v the attempt is rejected, A is reset to I and a
+        new attempt is drawn from the same stream. Attempts are counted per
+        matrix k. If attempt 100 for some k is singular (100 rejected
+        attempts), the run takes the label instrument under the existing rule.
+      note: >-
+        Every product of transvections has determinant 1, so a rejection can
+        arise only from an implementation defect. Each rejection, if any, is
+        recorded with its attempt index; the rule is kept as written as a
+        defect detector.
+    duplicates_and_identity: >-
+      No matrix is rejected for being the identity or for equalling another
+      sample; that would be a new control. Each M_k is recorded, so either event
+      is visible to a validator.
+    recording: >-
+      certificates.json records, under gl_sample: v, N, the seed, for each k the
+      attempt count, the number of discarded p == t pairs, M_k as a list of v row
+      integers (bit j of row i is M_k[i][j]), and the sha256 of the canonical
+      JSON of the eight row lists. This is provenance for replay, not a metric
+      and not a gate.
+
+  # ---------------------------------------------------------------------------
+  # A3. Substitution convention.
+  # ---------------------------------------------------------------------------
+  substitution_convention:
+    item: executor gap 3
+    rule: >-
+      x -> M x on the base boolean vector b of A1: every native generator g of
+      the base (domain) ideal is replaced by g(M b), that is, each b_i is
+      replaced by the linear form sum_j M[i][j] b_j over F_2, in the same
+      generator order and count. The result is expanded and square-free reduced
+      in F_2[b] / (b_i^2 + b_i), as frozen_ladder.boolean_matrix defines, and
+      r(d) is computed by the unchanged full-matrix definition for d <= 4.
+    field_equations: >-
+      Kept. The ring is the boolean quotient throughout; no degree-1 part of a
+      field equation is dropped and nothing is homogenized. Over F_2,
+      (sum_j M[i][j] b_j)^2 + sum_j M[i][j] b_j = sum_j M[i][j] (b_j^2 + b_j), so
+      the field-equation ideal is mapped to itself by every M and the quotient
+      ring is unchanged. homogeneity_gate stands as written.
+    applies_to: >-
+      GL-8 acts on the base (domain) native ideal only, as the control text
+      says. IDENTITY is M = I under the same convention. The codomain ideal is
+      not substituted.
+
+  # ---------------------------------------------------------------------------
+  # A4. Rung scope and dual-map construction.
+  # ---------------------------------------------------------------------------
+  rung_scope:
+    item: executor gap 4 (first part)
+    rule: >-
+      Rung n=2 is out of scope for this run. The objective, the stopping
+      rules, scale_relevance and test_boundary.parameters.rung_n of
+      H-DREG-1d0e5d all fix one F_4 edge at rung n=1. This run builds no F_16
+      system and performs no rung-n=2 certification of S_3; the S_3 certificate
+      it requires is the rung-n=1 clause (every triple of F_4-points).
+    left_open: >-
+      The 32 frozen F_16 triples of frozen_ladder.summation_polynomial remain
+      undetermined. Before any contract builds rung n=2 on LADDER-W-v1
+      (EXP-DREG-ab3fee is the one that does), a further amendment in this
+      directory must fix a seeded generation rule. It is not fixed here because
+      no rung-n=2 data are needed for this run and the rule belongs with the
+      review of the contract that uses it.
+  dual_map:
+    item: executor gap 4 (second part)
+    reading: >-
+      edge_certificate item 4 is existential: it passes when some recorded
+      explicit map psi from the codomain E' to the domain E, defined over F_4,
+      with psi(O) = O, satisfies psi(phi(P)) = [2]P for every F_4-rational point
+      P of E (O and T included), each image checked to lie on E.
+    admissible_constructions:
+      - id: DUAL-FROB
+        description: >-
+          The 2-power Frobenius (x, y) |-> (x^2, y^2) from E' to E'^(2),
+          followed by an explicit isomorphism E'^(2) -> E (a change of variables
+          x = u^2 x' + r, y = u^3 y' + s u^2 x' + t), with u, r, s, t recorded.
+        order: attempted first
+      - id: DUAL-VELU
+        description: >-
+          A Velu-type separable degree-2 map from E' (kernel its rational
+          2-torsion point) composed with an explicit isomorphism to E, as the
+          executor requested. Allowed, formula recorded.
+        order: may be attempted in addition
+    failure_rule: >-
+      Every attempted construction and its pass/fail verdict is recorded in
+      certificates.json. Item 4 fails, and the label is no-certified-edge
+      under the existing rule, only if every attempted construction fails and
+      DUAL-FROB was among them.
+    expectation_not_a_gate: >-
+      On an ordinary curve in characteristic 2 the 2-torsion is cyclic of order
+      2, a separable degree-2 isogeny with kernel E[2] is a Verschiebung up to
+      isomorphism, and its dual is the Frobenius up to isomorphism (purely
+      inseparable). DUAL-VELU is therefore expected to fail the [2]P identity
+      except where E(F_4) is small enough for the finite check to be weak.
+      This is the Coordinator's recalled standard theory (provenance recalled,
+      a pointer, not support); it is why DUAL-FROB must be attempted before a
+      failure is declared, and it changes no gate.
+    limitation: >-
+      The item-4 check is finite (all F_4-points, at most 8). It is kept as
+      written and is not strengthened here.
+
+  # ---------------------------------------------------------------------------
+  # A5. Resume checkpoint (operational, not protocol).
+  # ---------------------------------------------------------------------------
+  resume_checkpoint:
+    item: executor gap 5
+    applies: true
+    rule: >-
+      AGENTS.md "Resume checkpoints in S3 before every run" and the
+      crypto-autoresearcher CLAUDE.md (owner, 2026-10-24) apply to every
+      experiment run, with no toy-tier exemption. Before launch the executor
+      runs scripts/checkpoint.sh init, fills every section of .resume/RESUME.md
+      (spec path, this amendment, DEC-20261102-0dedaa, the stop and success
+      conditions), and the push must succeed (on Claude Code the hook pushes and
+      gates the launcher; on another runtime run scripts/checkpoint.sh gate).
+      CHECKPOINT_SKIP may not be used for the run itself. A failed push stops
+      the launch as infrastructure and is never a result.
+    custody: >-
+      .resume/RESUME.md is gitignored and is a safety net, not a run artifact;
+      the four required artifacts still land in the PR. The upload token is a
+      bearer credential and appears in no record, report or card.
+    cloud: >-
+      The run is local, one worker, maximum_memory_gb 4. No cloud spend is
+      implied.
+
+  dispatch_note: >-
+    TASK-20260922-4a49b0 does not list this amendment among its inputs and is
+    immutable. Dispatch is by a new executor handoff that names
+    specification.yaml and this file as the governing text, after
+    DEC-20261102-0dedaa is committed and tools/newest_experiments.py
+    --experiment EXP-DREG-dd668d --json reports execution_state ready.
+  hash_binding: >-
+    The sha256 of specification.yaml and of this file are bound by the archival
+    commit's path_sha256; they were not computed in the authoring session (no
+    shell). The run's manifest.yaml records both.
+  cites:
+    - experiments/EXP-DREG-dd668d/specification.yaml (frozen_ladder.gl_sample, grevlex, base_curve, edge_certificate, summation_polynomial; controls GL-8, NEARBY-DEG2, IDENTITY)
+    - ledger/hypotheses/H-DREG-1d0e5d.yaml (mechanism, test_boundary)
+    - ledger/decisions/DEC-20260922-0397f8.yaml (the approval this amendment clarifies)
+    - ledger/handoffs/TASK-20260922-4a49b0.yaml (the executor task that was refused)
+    - experiments/EXP-DREG-ab3fee/specification.yaml (rung n=2 user of LADDER-W-v1; at most 12 boolean variables at n=2)
+    - AGENTS.md, "Resume checkpoints in S3 before every run"
+  non_claims:
+    - This file measures nothing and states no rank, matrix, curve or point count.
+    - It approves nothing by itself and authorizes no run.
