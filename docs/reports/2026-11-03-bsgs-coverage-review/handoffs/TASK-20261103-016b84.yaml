@@ -1,0 +1,39 @@
+handoff:
+  from: coordinator
+  to: reviewer
+  constraints:
+  - Use a separate reviewer session and own only the assigned joint.
+  - Do not read sibling reports until all first verdicts and attestations are frozen.
+  - No scientific trials, cloud jobs, or local memory-heavy builds.
+  - Keep machine, source, and semantic evidence separate; report actual controls and
+    failures.
+  - Before freezing, read only blind-input.yaml and public mathematical definitions;
+    do not read the review plan, producer proof, source code, or other reports.
+  archived_by: TASK-20261103-495df5
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget: {}
+  completion_gate:
+  - Own-joint report with a holds, breaks, or inconclusive verdict.
+  - Complete sources_read and sibling-report access attestation.
+  - Raw checks and negative-control outcomes retained under own task directory.
+  return_format: Review report, raw checks, read attestation, and exact artifact hashes.
+  id: TASK-20261103-016b84
+  objective: From the statement and parameters alone, derive exact BSGS index coverage
+    and boundary cases, and independently check the finite curve count. Freeze your
+    derivation before seeing producer or sibling material.
+  uncertainty_reduced: J3 blind division-algorithm and curve-count derivation
+  inputs:
+  - docs/reports/2026-11-03-bsgs-coverage-review/blind-input.yaml
+  deliverables:
+  - Own-joint review report
+  - Raw derivation and controls
+  - review_attestation
+  artifact_paths:
+  - docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-016b84/
+  write_scope: docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-016b84/
