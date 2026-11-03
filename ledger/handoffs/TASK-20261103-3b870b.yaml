@@ -1,0 +1,87 @@
+handoff:
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-03'
+  opened_by_decision: DEC-20261103-951e67
+  experiment_id: EXP-SEMBIN-24ec56
+  goal_id: GOAL-SEMBIN-5078bc
+  lane: BATCH-821a5d
+  id: TASK-20261103-3b870b
+  hypothesis_id: H-SEMBIN-106967
+  question_id: RQ-SEMBIN-fa2e3f
+  objective: 'Reconcile the 12 retry-2 trials of EXP-SEMBIN-24ec56 without a result by an additive retry-3 with
+    per-cell watchdogs resized from measured rates: amendment AMD-EXP-SEMBIN-24ec56-20261103-retry3, the plan, the
+    runbook (session RBS-SEMBIN-c3f120), DEC-20261103-951e67 and the cards.'
+  uncertainty_reduced: None (control plane); lets the 12 remaining cells be measured once on a persistent host.
+  inputs:
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json
+  - experiments/EXP-SEMBIN-24ec56/runbook-retry2.yaml
+  - experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-620add/journal.jsonl
+  constraints:
+  - 'R-1: Every id minted with tools/allocate_id.py and confirmed free with --check.'
+  - 'R-2: Trial ids, cells, seeds, argv (apart from run id and plan path), watchdogs, memory caps and checker are
+    copied without change.'
+  - 'R-3: No partial output of a earlier attempt is read as a result.'
+  - 'R-4: The specification, trial-plan.json, runbook.yaml and implementation/ stay byte-identical.'
+  deliverables: &id001
+  - experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json
+  - experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml
+  - experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt
+  - ledger/decisions/DEC-20261103-951e67.yaml
+  - ledger/handoffs/TASK-20261103-3b870b.yaml
+  - ledger/handoffs/TASK-20261103-7d220f.yaml
+  - ledger/handoffs/TASK-20261103-c3f120.yaml
+  - ledger/handoffs/TASK-20261103-690a14.yaml
+  - ledger/handoffs/TASK-20261103-ec2dd8.yaml
+  - ledger/handoffs/TASK-20261103-11e331.yaml
+  - ledger/handoffs/TASK-20261103-6bfe7a.yaml
+  - ledger/handoffs/TASK-20261103-952d2a.yaml
+  - ledger/handoffs/TASK-20261103-e9dd0d.yaml
+  write_scope:
+  - experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json
+  - experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml
+  - experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt
+  - ledger/decisions/DEC-20261103-951e67.yaml
+  - ledger/handoffs/TASK-20261103-3b870b.yaml
+  - ledger/handoffs/TASK-20261103-7d220f.yaml
+  - ledger/handoffs/TASK-20261103-c3f120.yaml
+  - ledger/handoffs/TASK-20261103-690a14.yaml
+  - ledger/handoffs/TASK-20261103-ec2dd8.yaml
+  - ledger/handoffs/TASK-20261103-11e331.yaml
+  - ledger/handoffs/TASK-20261103-6bfe7a.yaml
+  - ledger/handoffs/TASK-20261103-952d2a.yaml
+  - ledger/handoffs/TASK-20261103-e9dd0d.yaml
+  - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/dispatch_queue.json
+  artifact_paths: *id001
+  completion_gate:
+  - tools/runbook.py lint prints LINT OK for the retry runbook
+  - every package path is declared in the snapshot archive
+  archived_by: TASK-20261103-7d220f
+  depends_on: []
+  review_required: false
+  state: completed
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+    wall_clock_seconds: 3600
+    memory_gb: 2
+  handoff_record: ledger/handoffs/TASK-20261103-3b870b.yaml

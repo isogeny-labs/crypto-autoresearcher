@@ -1,0 +1,68 @@
+handoff:
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-03'
+  opened_by_decision: DEC-20261103-951e67
+  experiment_id: EXP-SEMBIN-24ec56
+  goal_id: GOAL-SEMBIN-5078bc
+  lane: BATCH-821a5d
+  id: TASK-20261103-7d220f
+  objective: Commit the AMD-EXP-SEMBIN-24ec56-20261103-retry3 retry package of TASK-20261103-3b870b alone, by exact
+    path, and bind it by content at that commit before any retry runs.
+  uncertainty_reduced: Durability of the retry plan, runbook, amendment, decision and cards before execution. Not
+    a scientific uncertainty.
+  inputs:
+  - experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json
+  - experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json
+  - experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml
+  - experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt
+  - ledger/decisions/DEC-20261103-951e67.yaml
+  - ledger/handoffs/TASK-20261103-3b870b.yaml
+  - ledger/handoffs/TASK-20261103-7d220f.yaml
+  - ledger/handoffs/TASK-20261103-c3f120.yaml
+  - ledger/handoffs/TASK-20261103-690a14.yaml
+  - ledger/handoffs/TASK-20261103-ec2dd8.yaml
+  - ledger/handoffs/TASK-20261103-11e331.yaml
+  - ledger/handoffs/TASK-20261103-6bfe7a.yaml
+  - ledger/handoffs/TASK-20261103-952d2a.yaml
+  - ledger/handoffs/TASK-20261103-e9dd0d.yaml
+  - origin/main
+  constraints:
+  - 'SC-1: Stage only the declared artifact_paths; the session receipt may ride along.'
+  - 'SC-2: Do not edit any contract, plan, runbook, source or checker while archiving.'
+  - 'SC-3: Merge origin/main, never rebase.'
+  - 'SC-4: A receipt is not evidence.'
+  - 'SC-5: No trial is launched from this task.'
+  deliverables:
+  - one commit carrying exactly the declared retry package
+  - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-7d220f/snapshot-receipt.json
+  write_scope:
+  - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-7d220f
+  artifact_paths:
+  - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-7d220f/snapshot-receipt.json
+  completion_gate:
+  - path_sha256 in the receipt covers every declared path
+  - the commit is reachable from HEAD and the post-commit verifier accepts it
+  archived_by: TASK-20261103-7d220f
+  depends_on:
+  - TASK-20261103-3b870b
+  review_required: false
+  state: pending
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+    wall_clock_seconds: 1200
+    memory_gb: 2
+  handoff_record: ledger/handoffs/TASK-20261103-7d220f.yaml

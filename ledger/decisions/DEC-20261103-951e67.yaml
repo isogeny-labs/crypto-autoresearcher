@@ -1,0 +1,221 @@
+coordinator_decision:
+  id: DEC-20261103-951e67
+  recorded_at: '2026-11-03'
+  question_ids:
+  - RQ-SEMBIN-fa2e3f
+  goal_id: GOAL-SEMBIN-5078bc
+  kind: protocol_approval
+  context: 'Retry session RBS-SEMBIN-620add of EXP-SEMBIN-24ec56 completed 7 of its 19 retries (RUN-SEMBIN-b503a2,
+    RUN-SEMBIN-9c21b8, RUN-SEMBIN-ba948a, RUN-SEMBIN-2f97e8, RUN-SEMBIN-74d2c7, RUN-SEMBIN-885673, RUN-SEMBIN-127424),
+    lost poly-m4-n11 to a container restart, and was stopped on 2026-11-03 during rand-m4-n11. Measured on the 4-CPU
+    host of retry-2: m=4 n=9 cells took 7.0-11.5 h (poly 7.0 h, rand 7.6 h, null-support 11.4 h) against the m=3
+    timings the 64800 s watchdog was sized from; rand-m4-n11 ran curve 0 at about 15 min per SAT target over 43
+    SAT and 10 UNSAT targets, about 11 h per curve and 33 h per cell. The user chose on 2026-11-03 to stop here
+    and hand the remaining cells to a persistent host with a resized retry plan.'
+  decision: approve
+  decision_scope: APPROVES amendment AMD-EXP-SEMBIN-24ec56-20261103-retry3 and the retry of exactly these 12 trials,
+    once each, under the run ids listed under execution_dispatch, through experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml
+    (session RBS-SEMBIN-c3f120; six two-trial steps under TASK-20261103-c3f120, TASK-20261103-690a14, TASK-20261103-ec2dd8,
+    TASK-20261103-11e331, TASK-20261103-6bfe7a, TASK-20261103-952d2a) in lane BATCH-821a5d, with 84 h per-cell watchdogs.
+    CLOSES TASK-20261031-620add as failed and CANCELS TASK-20261031-0538f3 (its 7 final records are archived by
+    TASK-20261103-e9dd0d); retry-2 run ids RUN-SEMBIN-67009b, RUN-SEMBIN-9aac65, RUN-SEMBIN-3ddd63, RUN-SEMBIN-ff7994,
+    RUN-SEMBIN-265449, RUN-SEMBIN-57976e, RUN-SEMBIN-f56bc1, RUN-SEMBIN-76decf, RUN-SEMBIN-2abe6f, RUN-SEMBIN-0be9ab
+    stay unused. Asserts nothing about any hypothesis; changes no scientific protocol value.
+  target_ids:
+  - RQ-SEMBIN-fa2e3f
+  - GOAL-SEMBIN-5078bc
+  - H-SEMBIN-106967
+  - EXP-SEMBIN-24ec56
+  - DEC-20261031-1abe62
+  - DEC-20261103-951e67
+  - AMD-EXP-SEMBIN-24ec56-20261103-retry3
+  - AMD-EXP-SEMBIN-24ec56-20261031-retry2
+  - TASK-20261103-3b870b
+  - TASK-20261103-7d220f
+  - TASK-20261103-c3f120
+  - TASK-20261103-690a14
+  - TASK-20261103-ec2dd8
+  - TASK-20261103-11e331
+  - TASK-20261103-6bfe7a
+  - TASK-20261103-952d2a
+  - TASK-20261103-e9dd0d
+  - TASK-20261031-620add
+  - TASK-20261031-0538f3
+  - RUN-SEMBIN-19a489
+  - RUN-SEMBIN-dbac27
+  - RUN-SEMBIN-afeaf6
+  - RUN-SEMBIN-99db4f
+  - RUN-SEMBIN-12deb9
+  - RUN-SEMBIN-7994a8
+  - RUN-SEMBIN-575352
+  - RUN-SEMBIN-62a98b
+  - RUN-SEMBIN-749a4f
+  - RUN-SEMBIN-4319cc
+  - RUN-SEMBIN-0c34b9
+  - RUN-SEMBIN-fc747e
+  - RUN-SEMBIN-2dcd13
+  - RUN-SEMBIN-a1d461
+  authorization: Standing user authorization of 2026-09-06 in AGENTS.md and the user's choice of 2026-11-03 (stop
+    here; persistent host).
+  protocol_completeness:
+    EXP-SEMBIN-24ec56:
+      controls: unchanged (the null-support retry is the C4 support-matched null of the m4-n9 cell)
+      metrics: unchanged; per-cell pointers into each retry raw-result.json
+      budget: per cell 6 GB, 1800 s per job, watchdog 302400 s (resized); 12 runs in six steps of 604800 s; advisory
+      stopping_rules: unchanged
+      invalidation_rules: unchanged
+      required_artifacts: unchanged (manifest.yaml, raw-result.json, results.jsonl, instances.json per run)
+      preregistered_prediction: unchanged (P1-P4; criteria scope of DEC-20261018-9262ac)
+      launcher: six group plans and experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml bound; run.py, check.py and
+        build.sh unchanged
+  readiness_requirement: Takes effect only when committed with the retry plan, amendment and runbook whose sha256
+    it names, after tools/runbook.py lint prints LINT OK; launch on a host where build.sh reports m4ri_available
+    true.
+  capacity_check: No capacity cap applies (AGENTS.md 2026-10-11). Lane BATCH-821a5d max_concurrent 1; TASK-20261031-620add
+    released.
+  status_transitions:
+  - record: TASK-20261031-620add
+    to: failed
+  - record: TASK-20261031-0538f3
+    to: cancelled
+  rationale:
+  - The frozen watchdogs were sized from m=3 timings; measured m>=4 rates are 2x or more beyond them, so as frozen
+    the remaining cells could only end watchdog_expired.
+  - The watchdog is machine protection, not a scientific parameter; per-job caps, censoring and every scientific
+    value stay as frozen.
+  - Retries are once each and final whatever their outcome, so no outcome is rerun until it looks favourable.
+  evidence_refs: []
+  limitations:
+  - Toy scale; nothing about n = 131.
+  - check.py is producer-written; independent review precedes any status move.
+  - The null retries are subject to the same C3 checker-scope question as the completed null trials.
+  - Cells at >= 124,314 columns may censor under the 6 GB per-job cap; a censored cell is never negative.
+  execution_dispatch:
+    tasks:
+    - TASK-20261103-c3f120
+    - TASK-20261103-690a14
+    - TASK-20261103-ec2dd8
+    - TASK-20261103-11e331
+    - TASK-20261103-6bfe7a
+    - TASK-20261103-952d2a
+    inference:
+      policy: executor-mechanical
+    runbook_session: RBS-SEMBIN-c3f120
+    runs:
+    - run_id: RUN-SEMBIN-afeaf6
+      trial_id: poly-m4-n11
+      seed: 20261019
+      retry_of: RUN-SEMBIN-19a489
+      task: TASK-20261103-c3f120
+      step: S01-retries
+    - run_id: RUN-SEMBIN-99db4f
+      trial_id: rand-m4-n11
+      seed: 20261020
+      retry_of: RUN-SEMBIN-dbac27
+      task: TASK-20261103-c3f120
+      step: S01-retries
+    - run_id: RUN-SEMBIN-12deb9
+      trial_id: null-support-m4-n11
+      seed: 20261022
+      retry_of: RUN-SEMBIN-67009b
+      task: TASK-20261103-690a14
+      step: S02-retries
+    - run_id: RUN-SEMBIN-7994a8
+      trial_id: poly-m5-n9
+      seed: 20261021
+      retry_of: RUN-SEMBIN-9aac65
+      task: TASK-20261103-690a14
+      step: S02-retries
+    - run_id: RUN-SEMBIN-575352
+      trial_id: rand-m5-n9
+      seed: 20261021
+      retry_of: RUN-SEMBIN-3ddd63
+      task: TASK-20261103-ec2dd8
+      step: S03-retries
+    - run_id: RUN-SEMBIN-62a98b
+      trial_id: null-support-m5-n9
+      seed: 20261022
+      retry_of: RUN-SEMBIN-ff7994
+      task: TASK-20261103-ec2dd8
+      step: S03-retries
+    - run_id: RUN-SEMBIN-749a4f
+      trial_id: poly-m4-n13
+      seed: 20261019
+      retry_of: RUN-SEMBIN-265449
+      task: TASK-20261103-11e331
+      step: S04-retries
+    - run_id: RUN-SEMBIN-4319cc
+      trial_id: rand-m4-n13
+      seed: 20261020
+      retry_of: RUN-SEMBIN-57976e
+      task: TASK-20261103-11e331
+      step: S04-retries
+    - run_id: RUN-SEMBIN-0c34b9
+      trial_id: null-support-m4-n13
+      seed: 20261022
+      retry_of: RUN-SEMBIN-f56bc1
+      task: TASK-20261103-6bfe7a
+      step: S05-retries
+    - run_id: RUN-SEMBIN-fc747e
+      trial_id: poly-m5-n11
+      seed: 20261021
+      retry_of: RUN-SEMBIN-76decf
+      task: TASK-20261103-6bfe7a
+      step: S05-retries
+    - run_id: RUN-SEMBIN-2dcd13
+      trial_id: rand-m5-n11
+      seed: 20261021
+      retry_of: RUN-SEMBIN-2abe6f
+      task: TASK-20261103-952d2a
+      step: S06-retries
+    - run_id: RUN-SEMBIN-a1d461
+      trial_id: null-support-m5-n11
+      seed: 20261022
+      retry_of: RUN-SEMBIN-0be9ab
+      task: TASK-20261103-952d2a
+      step: S06-retries
+    depends_on:
+    - TASK-20261103-7d220f
+  runbook: experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml
+  runbook_sha256: 527a41c081389545cf68ea26329156a8eb711369287ff72ac2b4f123ba20c008
+  protocol_binding:
+    specification: experiments/EXP-SEMBIN-24ec56/specification.yaml
+    specification_sha256: 38211e96deedb6136fb58ed5e6372ef32ef926921a3c1584b4c5462131f47bd5
+    amendment: experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml
+    amendment_sha256: 567acbf488384152f13256cb2343c7a27c0ffa348e3c9ec56a9294a2ec39e9b4
+    queue: coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/dispatch_queue.json
+    runbook: experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml
+    lane: BATCH-821a5d
+    trial_plans:
+    - path: experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json
+      sha256: 867708585ca746a0002b8f5086473e821418524a0e3274ee741e55aada5a56d4
+    - path: experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json
+      sha256: 167bd3d0a927d1cf4f5b53b4f13c4c8930bafb321d995b29ee639df9c24c55fc
+    - path: experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json
+      sha256: 26eaa15b320436e57c6176b15103a15a97fed1e79ab10ca3486f2b5e3898a38d
+    - path: experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json
+      sha256: 2e23535407a8d5bbd69fedf34417636da93278c9c1f9bc7a6b6c1f3742569c4f
+    - path: experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json
+      sha256: 733cd2ddf5527e418f656d930b632754cb1b13d5a6bd04b162519c160f4da39d
+    - path: experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json
+      sha256: bed341bb4f336fe40c000d93759f369a51ba6496a8cbb926b9cd08433e9480c2
+  opened_tasks:
+  - TASK-20261103-3b870b
+  - TASK-20261103-7d220f
+  - TASK-20261103-c3f120
+  - TASK-20261103-690a14
+  - TASK-20261103-ec2dd8
+  - TASK-20261103-11e331
+  - TASK-20261103-6bfe7a
+  - TASK-20261103-952d2a
+  - TASK-20261103-e9dd0d
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Approval is not evidence.
+  next_actions:
+  - Snapshot TASK-20261103-7d220f; on a persistent host run experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (its
+    steps claim TASK-20261103-c3f120, TASK-20261103-690a14, TASK-20261103-ec2dd8, TASK-20261103-11e331, TASK-20261103-6bfe7a,
+    TASK-20261103-952d2a in turn); then TASK-20261103-e9dd0d.
+  decided_by: coordinator
+  decided_at: '2026-11-03'
+  official_effect_until_committed_pushed_reviewable: none

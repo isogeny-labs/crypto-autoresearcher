@@ -1631,7 +1631,7 @@
       "id": "TASK-20261031-620add",
       "title": "Execute the 19 EXP-SEMBIN-24ec56 retries (runbook, mechanical tier)",
       "role": "executor",
-      "state": "queued",
+      "state": "failed",
       "priority": 73,
       "review_required": false,
       "depends_on": [
@@ -1947,13 +1947,15 @@
           "session": "RBS-SEMBIN-620add"
         }
       },
-      "archived_by": "TASK-20261031-0538f3"
+      "archived_by": "TASK-20261031-0538f3",
+      "failed_by": "DEC-20261103-951e67",
+      "failed_note": "Session RBS-SEMBIN-620add stopped 2026-11-03; 12 remaining trials retried under TASK-20261103-c3f120, TASK-20261103-690a14, TASK-20261103-ec2dd8, TASK-20261103-11e331, TASK-20261103-6bfe7a, TASK-20261103-952d2a."
     },
     {
       "id": "TASK-20261031-0538f3",
       "title": "Ledger archive of the 19 EXP-SEMBIN-24ec56 retry runs, session RBS-SEMBIN-620add and the earlier attempts",
       "role": "coordinator",
-      "state": "queued",
+      "state": "cancelled",
       "priority": 72,
       "review_required": false,
       "depends_on": [
@@ -2065,6 +2067,1079 @@
           "RUN-SEMBIN-f883b4",
           "RUN-SEMBIN-fa6a48"
         ]
+      },
+      "cancelled_by": "DEC-20261103-951e67",
+      "cancelled_note": "Superseded by TASK-20261103-e9dd0d, which also archives retry-2's 7 final records."
+    },
+    {
+      "id": "TASK-20261103-3b870b",
+      "title": "Reconciliation of the 12 EXP-SEMBIN-24ec56 retry-2 trials without a result (retry-3, resized watchdogs)",
+      "role": "coordinator",
+      "state": "completed",
+      "priority": 71,
+      "review_required": false,
+      "depends_on": [],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json",
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry2.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-620add/journal.jsonl"
+      ],
+      "write_scope": [
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt",
+        "ledger/decisions/DEC-20261103-951e67.yaml",
+        "ledger/handoffs/TASK-20261103-3b870b.yaml",
+        "ledger/handoffs/TASK-20261103-7d220f.yaml",
+        "ledger/handoffs/TASK-20261103-c3f120.yaml",
+        "ledger/handoffs/TASK-20261103-690a14.yaml",
+        "ledger/handoffs/TASK-20261103-ec2dd8.yaml",
+        "ledger/handoffs/TASK-20261103-11e331.yaml",
+        "ledger/handoffs/TASK-20261103-6bfe7a.yaml",
+        "ledger/handoffs/TASK-20261103-952d2a.yaml",
+        "ledger/handoffs/TASK-20261103-e9dd0d.yaml",
+        "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/dispatch_queue.json"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt",
+        "ledger/decisions/DEC-20261103-951e67.yaml",
+        "ledger/handoffs/TASK-20261103-3b870b.yaml",
+        "ledger/handoffs/TASK-20261103-7d220f.yaml",
+        "ledger/handoffs/TASK-20261103-c3f120.yaml",
+        "ledger/handoffs/TASK-20261103-690a14.yaml",
+        "ledger/handoffs/TASK-20261103-ec2dd8.yaml",
+        "ledger/handoffs/TASK-20261103-11e331.yaml",
+        "ledger/handoffs/TASK-20261103-6bfe7a.yaml",
+        "ledger/handoffs/TASK-20261103-952d2a.yaml",
+        "ledger/handoffs/TASK-20261103-e9dd0d.yaml"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-3b870b.yaml",
+        "objective": "Reconcile the 12 retry-2 trials of EXP-SEMBIN-24ec56 without a result by an additive retry-3 with per-cell watchdogs resized from measured rates: amendment AMD-EXP-SEMBIN-24ec56-20261103-retry3, the plan, the runbook (session RBS-SEMBIN-c3f120), DEC-20261103-951e67 and the cards.",
+        "uncertainty_reduced": "None (control plane); lets the 12 remaining cells be measured once on a persistent host.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json",
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry2.yaml",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-620add/journal.jsonl"
+        ],
+        "constraints": [
+          "R-1: Every id minted with tools/allocate_id.py and confirmed free with --check.",
+          "R-2: Trial ids, cells, seeds, argv (apart from run id and plan path), watchdogs, memory caps and checker are copied without change.",
+          "R-3: No partial output of a earlier attempt is read as a result.",
+          "R-4: The specification, trial-plan.json, runbook.yaml and implementation/ stay byte-identical."
+        ],
+        "deliverables": [
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt",
+          "ledger/decisions/DEC-20261103-951e67.yaml",
+          "ledger/handoffs/TASK-20261103-3b870b.yaml",
+          "ledger/handoffs/TASK-20261103-7d220f.yaml",
+          "ledger/handoffs/TASK-20261103-c3f120.yaml",
+          "ledger/handoffs/TASK-20261103-690a14.yaml",
+          "ledger/handoffs/TASK-20261103-ec2dd8.yaml",
+          "ledger/handoffs/TASK-20261103-11e331.yaml",
+          "ledger/handoffs/TASK-20261103-6bfe7a.yaml",
+          "ledger/handoffs/TASK-20261103-952d2a.yaml",
+          "ledger/handoffs/TASK-20261103-e9dd0d.yaml"
+        ],
+        "completion_gate": [
+          "tools/runbook.py lint prints LINT OK for the retry runbook",
+          "every package path is declared in the snapshot archive"
+        ],
+        "inference": {
+          "policy": "coordinator-orchestration-code",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "maximum_runs": 0,
+          "wall_clock_seconds": 3600,
+          "memory_gb": 2
+        }
+      },
+      "archived_by": "TASK-20261103-7d220f"
+    },
+    {
+      "id": "TASK-20261103-7d220f",
+      "title": "Snapshot archive of the EXP-SEMBIN-24ec56 retry-3 package (content_at_commit)",
+      "role": "coordinator",
+      "state": "queued",
+      "priority": 70,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-3b870b"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt",
+        "ledger/decisions/DEC-20261103-951e67.yaml",
+        "ledger/handoffs/TASK-20261103-3b870b.yaml",
+        "ledger/handoffs/TASK-20261103-7d220f.yaml",
+        "ledger/handoffs/TASK-20261103-c3f120.yaml",
+        "ledger/handoffs/TASK-20261103-690a14.yaml",
+        "ledger/handoffs/TASK-20261103-ec2dd8.yaml",
+        "ledger/handoffs/TASK-20261103-11e331.yaml",
+        "ledger/handoffs/TASK-20261103-6bfe7a.yaml",
+        "ledger/handoffs/TASK-20261103-952d2a.yaml",
+        "ledger/handoffs/TASK-20261103-e9dd0d.yaml",
+        "origin/main"
+      ],
+      "write_scope": [
+        "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-7d220f"
+      ],
+      "artifact_paths": [
+        "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-7d220f/snapshot-receipt.json"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-7d220f.yaml",
+        "objective": "Commit the AMD-EXP-SEMBIN-24ec56-20261103-retry3 retry package of TASK-20261103-3b870b alone, by exact path, and bind it by content at that commit before any retry runs.",
+        "uncertainty_reduced": "Durability of the retry plan, runbook, amendment, decision and cards before execution. Not a scientific uncertainty.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3-lint.txt",
+          "ledger/decisions/DEC-20261103-951e67.yaml",
+          "ledger/handoffs/TASK-20261103-3b870b.yaml",
+          "ledger/handoffs/TASK-20261103-7d220f.yaml",
+          "ledger/handoffs/TASK-20261103-c3f120.yaml",
+          "ledger/handoffs/TASK-20261103-690a14.yaml",
+          "ledger/handoffs/TASK-20261103-ec2dd8.yaml",
+          "ledger/handoffs/TASK-20261103-11e331.yaml",
+          "ledger/handoffs/TASK-20261103-6bfe7a.yaml",
+          "ledger/handoffs/TASK-20261103-952d2a.yaml",
+          "ledger/handoffs/TASK-20261103-e9dd0d.yaml",
+          "origin/main"
+        ],
+        "constraints": [
+          "SC-1: Stage only the declared artifact_paths; the session receipt may ride along.",
+          "SC-2: Do not edit any contract, plan, runbook, source or checker while archiving.",
+          "SC-3: Merge origin/main, never rebase.",
+          "SC-4: A receipt is not evidence.",
+          "SC-5: No trial is launched from this task."
+        ],
+        "deliverables": [
+          "one commit carrying exactly the declared retry package",
+          "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-7d220f/snapshot-receipt.json"
+        ],
+        "completion_gate": [
+          "path_sha256 in the receipt covers every declared path",
+          "the commit is reachable from HEAD and the post-commit verifier accepts it"
+        ],
+        "inference": {
+          "policy": "coordinator-orchestration-code",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "maximum_runs": 0,
+          "wall_clock_seconds": 1200,
+          "memory_gb": 2
+        }
+      },
+      "archived_by": "TASK-20261103-7d220f",
+      "archive": {
+        "kind": "snapshot",
+        "binding_mode": "content_at_commit",
+        "source_task_ids": [
+          "TASK-20261103-3b870b"
+        ],
+        "record_ids": [
+          "H-SEMBIN-106967",
+          "EXP-SEMBIN-24ec56",
+          "DEC-20261103-951e67",
+          "TASK-20261103-3b870b",
+          "TASK-20261103-7d220f",
+          "TASK-20261103-c3f120",
+          "TASK-20261103-690a14",
+          "TASK-20261103-ec2dd8",
+          "TASK-20261103-11e331",
+          "TASK-20261103-6bfe7a",
+          "TASK-20261103-952d2a",
+          "TASK-20261103-e9dd0d",
+          "AMD-EXP-SEMBIN-24ec56-20261103-retry3"
+        ],
+        "commit_sha": null,
+        "parent_sha": null,
+        "path_sha256": {},
+        "receipt": "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-7d220f/snapshot-receipt.json"
+      }
+    },
+    {
+      "id": "TASK-20261103-c3f120",
+      "title": "Execute EXP-SEMBIN-24ec56 retry-3 group 1 of 6: poly-m4-n11, rand-m4-n11 (runbook step S01, persistent host)",
+      "role": "executor",
+      "state": "queued",
+      "priority": 69,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-7d220f"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+        "experiments/EXP-SEMBIN-24ec56/implementation/",
+        "ledger/hypotheses/H-SEMBIN-106967.yaml",
+        "ledger/decisions/DEC-20261103-951e67.yaml"
+      ],
+      "write_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+        "experiments/EXP-SEMBIN-24ec56/reports/"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/instances.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/instances.json"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-c3f120.yaml",
+        "objective": "Execute step S01-retries of experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (session RBS-SEMBIN-c3f120) over experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json on a persistent host after TASK-20261103-7d220f verifies: retry poly-m4-n11 and rand-m4-n11 once each under new run ids, each validated by check.py. Record the metrics as observations.",
+        "uncertainty_reduced": "The pre-registered predictions P1-P3 of H-SEMBIN-106967 (and the descriptive P4) at the frozen toy scope; whether Semaev 2015 Assumption 1, operationalised as D_W = 4, is contradicted on the UNSAT arm at m in {3,4,5}.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+          "experiments/EXP-SEMBIN-24ec56/implementation/",
+          "ledger/hypotheses/H-SEMBIN-106967.yaml",
+          "ledger/decisions/DEC-20261103-951e67.yaml"
+        ],
+        "constraints": [
+          "EX-1: Run only through tools/runbook.py (lint, run, verify, report, publish-paths, status) with a published live claim on lane BATCH-821a5d; launch no command except the frozen argv.",
+          "EX-2: Do not edit the specification, hypothesis, trial plan, runbook or any file under implementation/; protocol changes only as amendments under experiments/EXP-SEMBIN-24ec56/amendments/.",
+          "EX-3: A timeout, crash, memory kill or per-job censoring (6 GB RSS / 1800 s) is failed_infrastructure or a recorded censored job, never a metric value and never a refutation.",
+          "EX-4: No interpretation; metrics are recorded. Do not overwrite a run directory once it exists, and do not run a third trial in this group.",
+          "EX-5: If libm4ri is absent the trial runs independent-eliminator-only with the degradation flag recorded; never substitute another solver."
+        ],
+        "deliverables": [
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-afeaf6/",
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-99db4f/",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-c3f120/ written by tools/runbook.py"
+        ],
+        "dispatch_preconditions": [
+          "snapshot TASK-20261103-7d220f committed, pushed and verified",
+          "DEC-20261103-951e67 committed with the plan and runbook sha256 equal to the committed files",
+          "a persistent host: numpy 2.4.6 and libm4ri-dev 20200125-1build2 present (build.sh reports m4ri_available true)",
+          "lane BATCH-821a5d free (max_concurrent 1); the runbook step claims TASK-20261103-c3f120 with tools/goal_lanes.py"
+        ],
+        "execution": {
+          "mode": "experiments",
+          "kind": "run",
+          "experiment_id": "EXP-SEMBIN-24ec56",
+          "trial_plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+          "trial_plan_sha256": "867708585ca746a0002b8f5086473e821418524a0e3274ee741e55aada5a56d4",
+          "approved_by": "DEC-20261103-951e67"
+        },
+        "inference": {
+          "policy": "executor-mechanical",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 604800,
+          "wall_clock_seconds_note": "the step timeout (runbook maximum); 84 h per-cell watchdogs; advisory, machine protection only",
+          "memory_gb": 6,
+          "maximum_runs": 2,
+          "maximum_workers": 1
+        },
+        "completion_gate": [
+          "both retry run directories exist, each with check.py exit 0 (VALID) or a recorded terminal class in its receipt",
+          "every declared artifact present and hash-bound in the runbook session journal",
+          "tools/runbook.py verify passes on RBS-SEMBIN-c3f120",
+          "run and runbook-session directories committed and pushed on the session branch",
+          "no byte of the specification, either trial plan, either runbook or implementation/ changed"
+        ],
+        "runbook": {
+          "path": "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "session": "RBS-SEMBIN-c3f120",
+          "step": "S01-retries"
+        }
+      },
+      "archived_by": "TASK-20261103-e9dd0d"
+    },
+    {
+      "id": "TASK-20261103-690a14",
+      "title": "Execute EXP-SEMBIN-24ec56 retry-3 group 2 of 6: null-support-m4-n11, poly-m5-n9 (runbook step S02, persistent host)",
+      "role": "executor",
+      "state": "queued",
+      "priority": 68,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-7d220f"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+        "experiments/EXP-SEMBIN-24ec56/implementation/",
+        "ledger/hypotheses/H-SEMBIN-106967.yaml",
+        "ledger/decisions/DEC-20261103-951e67.yaml"
+      ],
+      "write_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+        "experiments/EXP-SEMBIN-24ec56/reports/"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/instances.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/instances.json"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-690a14.yaml",
+        "objective": "Execute step S02-retries of experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (session RBS-SEMBIN-c3f120) over experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json on a persistent host after TASK-20261103-7d220f verifies: retry null-support-m4-n11 and poly-m5-n9 once each under new run ids, each validated by check.py. Record the metrics as observations.",
+        "uncertainty_reduced": "The pre-registered predictions P1-P3 of H-SEMBIN-106967 (and the descriptive P4) at the frozen toy scope; whether Semaev 2015 Assumption 1, operationalised as D_W = 4, is contradicted on the UNSAT arm at m in {3,4,5}.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+          "experiments/EXP-SEMBIN-24ec56/implementation/",
+          "ledger/hypotheses/H-SEMBIN-106967.yaml",
+          "ledger/decisions/DEC-20261103-951e67.yaml"
+        ],
+        "constraints": [
+          "EX-1: Run only through tools/runbook.py (lint, run, verify, report, publish-paths, status) with a published live claim on lane BATCH-821a5d; launch no command except the frozen argv.",
+          "EX-2: Do not edit the specification, hypothesis, trial plan, runbook or any file under implementation/; protocol changes only as amendments under experiments/EXP-SEMBIN-24ec56/amendments/.",
+          "EX-3: A timeout, crash, memory kill or per-job censoring (6 GB RSS / 1800 s) is failed_infrastructure or a recorded censored job, never a metric value and never a refutation.",
+          "EX-4: No interpretation; metrics are recorded. Do not overwrite a run directory once it exists, and do not run a third trial in this group.",
+          "EX-5: If libm4ri is absent the trial runs independent-eliminator-only with the degradation flag recorded; never substitute another solver."
+        ],
+        "deliverables": [
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-12deb9/",
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-7994a8/",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-c3f120/ written by tools/runbook.py"
+        ],
+        "dispatch_preconditions": [
+          "snapshot TASK-20261103-7d220f committed, pushed and verified",
+          "DEC-20261103-951e67 committed with the plan and runbook sha256 equal to the committed files",
+          "a persistent host: numpy 2.4.6 and libm4ri-dev 20200125-1build2 present (build.sh reports m4ri_available true)",
+          "lane BATCH-821a5d free (max_concurrent 1); the runbook step claims TASK-20261103-690a14 with tools/goal_lanes.py"
+        ],
+        "execution": {
+          "mode": "experiments",
+          "kind": "run",
+          "experiment_id": "EXP-SEMBIN-24ec56",
+          "trial_plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+          "trial_plan_sha256": "167bd3d0a927d1cf4f5b53b4f13c4c8930bafb321d995b29ee639df9c24c55fc",
+          "approved_by": "DEC-20261103-951e67"
+        },
+        "inference": {
+          "policy": "executor-mechanical",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 604800,
+          "wall_clock_seconds_note": "the step timeout (runbook maximum); 84 h per-cell watchdogs; advisory, machine protection only",
+          "memory_gb": 6,
+          "maximum_runs": 2,
+          "maximum_workers": 1
+        },
+        "completion_gate": [
+          "both retry run directories exist, each with check.py exit 0 (VALID) or a recorded terminal class in its receipt",
+          "every declared artifact present and hash-bound in the runbook session journal",
+          "tools/runbook.py verify passes on RBS-SEMBIN-c3f120",
+          "run and runbook-session directories committed and pushed on the session branch",
+          "no byte of the specification, either trial plan, either runbook or implementation/ changed"
+        ],
+        "runbook": {
+          "path": "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "session": "RBS-SEMBIN-c3f120",
+          "step": "S02-retries"
+        }
+      },
+      "archived_by": "TASK-20261103-e9dd0d"
+    },
+    {
+      "id": "TASK-20261103-ec2dd8",
+      "title": "Execute EXP-SEMBIN-24ec56 retry-3 group 3 of 6: rand-m5-n9, null-support-m5-n9 (runbook step S03, persistent host)",
+      "role": "executor",
+      "state": "queued",
+      "priority": 67,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-7d220f"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+        "experiments/EXP-SEMBIN-24ec56/implementation/",
+        "ledger/hypotheses/H-SEMBIN-106967.yaml",
+        "ledger/decisions/DEC-20261103-951e67.yaml"
+      ],
+      "write_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+        "experiments/EXP-SEMBIN-24ec56/reports/"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/instances.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/instances.json"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-ec2dd8.yaml",
+        "objective": "Execute step S03-retries of experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (session RBS-SEMBIN-c3f120) over experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json on a persistent host after TASK-20261103-7d220f verifies: retry rand-m5-n9 and null-support-m5-n9 once each under new run ids, each validated by check.py. Record the metrics as observations.",
+        "uncertainty_reduced": "The pre-registered predictions P1-P3 of H-SEMBIN-106967 (and the descriptive P4) at the frozen toy scope; whether Semaev 2015 Assumption 1, operationalised as D_W = 4, is contradicted on the UNSAT arm at m in {3,4,5}.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+          "experiments/EXP-SEMBIN-24ec56/implementation/",
+          "ledger/hypotheses/H-SEMBIN-106967.yaml",
+          "ledger/decisions/DEC-20261103-951e67.yaml"
+        ],
+        "constraints": [
+          "EX-1: Run only through tools/runbook.py (lint, run, verify, report, publish-paths, status) with a published live claim on lane BATCH-821a5d; launch no command except the frozen argv.",
+          "EX-2: Do not edit the specification, hypothesis, trial plan, runbook or any file under implementation/; protocol changes only as amendments under experiments/EXP-SEMBIN-24ec56/amendments/.",
+          "EX-3: A timeout, crash, memory kill or per-job censoring (6 GB RSS / 1800 s) is failed_infrastructure or a recorded censored job, never a metric value and never a refutation.",
+          "EX-4: No interpretation; metrics are recorded. Do not overwrite a run directory once it exists, and do not run a third trial in this group.",
+          "EX-5: If libm4ri is absent the trial runs independent-eliminator-only with the degradation flag recorded; never substitute another solver."
+        ],
+        "deliverables": [
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-575352/",
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-62a98b/",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-c3f120/ written by tools/runbook.py"
+        ],
+        "dispatch_preconditions": [
+          "snapshot TASK-20261103-7d220f committed, pushed and verified",
+          "DEC-20261103-951e67 committed with the plan and runbook sha256 equal to the committed files",
+          "a persistent host: numpy 2.4.6 and libm4ri-dev 20200125-1build2 present (build.sh reports m4ri_available true)",
+          "lane BATCH-821a5d free (max_concurrent 1); the runbook step claims TASK-20261103-ec2dd8 with tools/goal_lanes.py"
+        ],
+        "execution": {
+          "mode": "experiments",
+          "kind": "run",
+          "experiment_id": "EXP-SEMBIN-24ec56",
+          "trial_plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+          "trial_plan_sha256": "26eaa15b320436e57c6176b15103a15a97fed1e79ab10ca3486f2b5e3898a38d",
+          "approved_by": "DEC-20261103-951e67"
+        },
+        "inference": {
+          "policy": "executor-mechanical",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 604800,
+          "wall_clock_seconds_note": "the step timeout (runbook maximum); 84 h per-cell watchdogs; advisory, machine protection only",
+          "memory_gb": 6,
+          "maximum_runs": 2,
+          "maximum_workers": 1
+        },
+        "completion_gate": [
+          "both retry run directories exist, each with check.py exit 0 (VALID) or a recorded terminal class in its receipt",
+          "every declared artifact present and hash-bound in the runbook session journal",
+          "tools/runbook.py verify passes on RBS-SEMBIN-c3f120",
+          "run and runbook-session directories committed and pushed on the session branch",
+          "no byte of the specification, either trial plan, either runbook or implementation/ changed"
+        ],
+        "runbook": {
+          "path": "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "session": "RBS-SEMBIN-c3f120",
+          "step": "S03-retries"
+        }
+      },
+      "archived_by": "TASK-20261103-e9dd0d"
+    },
+    {
+      "id": "TASK-20261103-11e331",
+      "title": "Execute EXP-SEMBIN-24ec56 retry-3 group 4 of 6: poly-m4-n13, rand-m4-n13 (runbook step S04, persistent host)",
+      "role": "executor",
+      "state": "queued",
+      "priority": 66,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-7d220f"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+        "experiments/EXP-SEMBIN-24ec56/implementation/",
+        "ledger/hypotheses/H-SEMBIN-106967.yaml",
+        "ledger/decisions/DEC-20261103-951e67.yaml"
+      ],
+      "write_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+        "experiments/EXP-SEMBIN-24ec56/reports/"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/instances.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/instances.json"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-11e331.yaml",
+        "objective": "Execute step S04-retries of experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (session RBS-SEMBIN-c3f120) over experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json on a persistent host after TASK-20261103-7d220f verifies: retry poly-m4-n13 and rand-m4-n13 once each under new run ids, each validated by check.py. Record the metrics as observations.",
+        "uncertainty_reduced": "The pre-registered predictions P1-P3 of H-SEMBIN-106967 (and the descriptive P4) at the frozen toy scope; whether Semaev 2015 Assumption 1, operationalised as D_W = 4, is contradicted on the UNSAT arm at m in {3,4,5}.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+          "experiments/EXP-SEMBIN-24ec56/implementation/",
+          "ledger/hypotheses/H-SEMBIN-106967.yaml",
+          "ledger/decisions/DEC-20261103-951e67.yaml"
+        ],
+        "constraints": [
+          "EX-1: Run only through tools/runbook.py (lint, run, verify, report, publish-paths, status) with a published live claim on lane BATCH-821a5d; launch no command except the frozen argv.",
+          "EX-2: Do not edit the specification, hypothesis, trial plan, runbook or any file under implementation/; protocol changes only as amendments under experiments/EXP-SEMBIN-24ec56/amendments/.",
+          "EX-3: A timeout, crash, memory kill or per-job censoring (6 GB RSS / 1800 s) is failed_infrastructure or a recorded censored job, never a metric value and never a refutation.",
+          "EX-4: No interpretation; metrics are recorded. Do not overwrite a run directory once it exists, and do not run a third trial in this group.",
+          "EX-5: If libm4ri is absent the trial runs independent-eliminator-only with the degradation flag recorded; never substitute another solver."
+        ],
+        "deliverables": [
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-749a4f/",
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-4319cc/",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-c3f120/ written by tools/runbook.py"
+        ],
+        "dispatch_preconditions": [
+          "snapshot TASK-20261103-7d220f committed, pushed and verified",
+          "DEC-20261103-951e67 committed with the plan and runbook sha256 equal to the committed files",
+          "a persistent host: numpy 2.4.6 and libm4ri-dev 20200125-1build2 present (build.sh reports m4ri_available true)",
+          "lane BATCH-821a5d free (max_concurrent 1); the runbook step claims TASK-20261103-11e331 with tools/goal_lanes.py"
+        ],
+        "execution": {
+          "mode": "experiments",
+          "kind": "run",
+          "experiment_id": "EXP-SEMBIN-24ec56",
+          "trial_plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+          "trial_plan_sha256": "2e23535407a8d5bbd69fedf34417636da93278c9c1f9bc7a6b6c1f3742569c4f",
+          "approved_by": "DEC-20261103-951e67"
+        },
+        "inference": {
+          "policy": "executor-mechanical",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 604800,
+          "wall_clock_seconds_note": "the step timeout (runbook maximum); 84 h per-cell watchdogs; advisory, machine protection only",
+          "memory_gb": 6,
+          "maximum_runs": 2,
+          "maximum_workers": 1
+        },
+        "completion_gate": [
+          "both retry run directories exist, each with check.py exit 0 (VALID) or a recorded terminal class in its receipt",
+          "every declared artifact present and hash-bound in the runbook session journal",
+          "tools/runbook.py verify passes on RBS-SEMBIN-c3f120",
+          "run and runbook-session directories committed and pushed on the session branch",
+          "no byte of the specification, either trial plan, either runbook or implementation/ changed"
+        ],
+        "runbook": {
+          "path": "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "session": "RBS-SEMBIN-c3f120",
+          "step": "S04-retries"
+        }
+      },
+      "archived_by": "TASK-20261103-e9dd0d"
+    },
+    {
+      "id": "TASK-20261103-6bfe7a",
+      "title": "Execute EXP-SEMBIN-24ec56 retry-3 group 5 of 6: null-support-m4-n13, poly-m5-n11 (runbook step S05, persistent host)",
+      "role": "executor",
+      "state": "queued",
+      "priority": 65,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-7d220f"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+        "experiments/EXP-SEMBIN-24ec56/implementation/",
+        "ledger/hypotheses/H-SEMBIN-106967.yaml",
+        "ledger/decisions/DEC-20261103-951e67.yaml"
+      ],
+      "write_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+        "experiments/EXP-SEMBIN-24ec56/reports/"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/instances.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/instances.json"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-6bfe7a.yaml",
+        "objective": "Execute step S05-retries of experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (session RBS-SEMBIN-c3f120) over experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json on a persistent host after TASK-20261103-7d220f verifies: retry null-support-m4-n13 and poly-m5-n11 once each under new run ids, each validated by check.py. Record the metrics as observations.",
+        "uncertainty_reduced": "The pre-registered predictions P1-P3 of H-SEMBIN-106967 (and the descriptive P4) at the frozen toy scope; whether Semaev 2015 Assumption 1, operationalised as D_W = 4, is contradicted on the UNSAT arm at m in {3,4,5}.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+          "experiments/EXP-SEMBIN-24ec56/implementation/",
+          "ledger/hypotheses/H-SEMBIN-106967.yaml",
+          "ledger/decisions/DEC-20261103-951e67.yaml"
+        ],
+        "constraints": [
+          "EX-1: Run only through tools/runbook.py (lint, run, verify, report, publish-paths, status) with a published live claim on lane BATCH-821a5d; launch no command except the frozen argv.",
+          "EX-2: Do not edit the specification, hypothesis, trial plan, runbook or any file under implementation/; protocol changes only as amendments under experiments/EXP-SEMBIN-24ec56/amendments/.",
+          "EX-3: A timeout, crash, memory kill or per-job censoring (6 GB RSS / 1800 s) is failed_infrastructure or a recorded censored job, never a metric value and never a refutation.",
+          "EX-4: No interpretation; metrics are recorded. Do not overwrite a run directory once it exists, and do not run a third trial in this group.",
+          "EX-5: If libm4ri is absent the trial runs independent-eliminator-only with the degradation flag recorded; never substitute another solver."
+        ],
+        "deliverables": [
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-0c34b9/",
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-fc747e/",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-c3f120/ written by tools/runbook.py"
+        ],
+        "dispatch_preconditions": [
+          "snapshot TASK-20261103-7d220f committed, pushed and verified",
+          "DEC-20261103-951e67 committed with the plan and runbook sha256 equal to the committed files",
+          "a persistent host: numpy 2.4.6 and libm4ri-dev 20200125-1build2 present (build.sh reports m4ri_available true)",
+          "lane BATCH-821a5d free (max_concurrent 1); the runbook step claims TASK-20261103-6bfe7a with tools/goal_lanes.py"
+        ],
+        "execution": {
+          "mode": "experiments",
+          "kind": "run",
+          "experiment_id": "EXP-SEMBIN-24ec56",
+          "trial_plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+          "trial_plan_sha256": "733cd2ddf5527e418f656d930b632754cb1b13d5a6bd04b162519c160f4da39d",
+          "approved_by": "DEC-20261103-951e67"
+        },
+        "inference": {
+          "policy": "executor-mechanical",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 604800,
+          "wall_clock_seconds_note": "the step timeout (runbook maximum); 84 h per-cell watchdogs; advisory, machine protection only",
+          "memory_gb": 6,
+          "maximum_runs": 2,
+          "maximum_workers": 1
+        },
+        "completion_gate": [
+          "both retry run directories exist, each with check.py exit 0 (VALID) or a recorded terminal class in its receipt",
+          "every declared artifact present and hash-bound in the runbook session journal",
+          "tools/runbook.py verify passes on RBS-SEMBIN-c3f120",
+          "run and runbook-session directories committed and pushed on the session branch",
+          "no byte of the specification, either trial plan, either runbook or implementation/ changed"
+        ],
+        "runbook": {
+          "path": "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "session": "RBS-SEMBIN-c3f120",
+          "step": "S05-retries"
+        }
+      },
+      "archived_by": "TASK-20261103-e9dd0d"
+    },
+    {
+      "id": "TASK-20261103-952d2a",
+      "title": "Execute EXP-SEMBIN-24ec56 retry-3 group 6 of 6: rand-m5-n11, null-support-m5-n11 (runbook step S06, persistent host)",
+      "role": "executor",
+      "state": "queued",
+      "priority": 64,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-7d220f"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+        "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+        "experiments/EXP-SEMBIN-24ec56/implementation/",
+        "ledger/hypotheses/H-SEMBIN-106967.yaml",
+        "ledger/decisions/DEC-20261103-951e67.yaml"
+      ],
+      "write_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+        "experiments/EXP-SEMBIN-24ec56/reports/"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/instances.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/launch.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/execution-receipt.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/command.txt",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/environment.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/check.stdout.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/check.stderr.log",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/manifest.yaml",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/raw-result.json",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/results.jsonl",
+        "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/instances.json",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-c3f120/journal.jsonl"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-952d2a.yaml",
+        "objective": "Execute step S06-retries of experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (session RBS-SEMBIN-c3f120) over experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json on a persistent host after TASK-20261103-7d220f verifies: retry rand-m5-n11 and null-support-m5-n11 once each under new run ids, each validated by check.py. Record the metrics as observations.",
+        "uncertainty_reduced": "The pre-registered predictions P1-P3 of H-SEMBIN-106967 (and the descriptive P4) at the frozen toy scope; whether Semaev 2015 Assumption 1, operationalised as D_W = 4, is contradicted on the UNSAT arm at m in {3,4,5}.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml",
+          "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+          "experiments/EXP-SEMBIN-24ec56/implementation/",
+          "ledger/hypotheses/H-SEMBIN-106967.yaml",
+          "ledger/decisions/DEC-20261103-951e67.yaml"
+        ],
+        "constraints": [
+          "EX-1: Run only through tools/runbook.py (lint, run, verify, report, publish-paths, status) with a published live claim on lane BATCH-821a5d; launch no command except the frozen argv.",
+          "EX-2: Do not edit the specification, hypothesis, trial plan, runbook or any file under implementation/; protocol changes only as amendments under experiments/EXP-SEMBIN-24ec56/amendments/.",
+          "EX-3: A timeout, crash, memory kill or per-job censoring (6 GB RSS / 1800 s) is failed_infrastructure or a recorded censored job, never a metric value and never a refutation.",
+          "EX-4: No interpretation; metrics are recorded. Do not overwrite a run directory once it exists, and do not run a third trial in this group.",
+          "EX-5: If libm4ri is absent the trial runs independent-eliminator-only with the degradation flag recorded; never substitute another solver."
+        ],
+        "deliverables": [
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-2dcd13/",
+          "experiments/EXP-SEMBIN-24ec56/runs/RUN-SEMBIN-a1d461/",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-c3f120/ written by tools/runbook.py"
+        ],
+        "dispatch_preconditions": [
+          "snapshot TASK-20261103-7d220f committed, pushed and verified",
+          "DEC-20261103-951e67 committed with the plan and runbook sha256 equal to the committed files",
+          "a persistent host: numpy 2.4.6 and libm4ri-dev 20200125-1build2 present (build.sh reports m4ri_available true)",
+          "lane BATCH-821a5d free (max_concurrent 1); the runbook step claims TASK-20261103-952d2a with tools/goal_lanes.py"
+        ],
+        "execution": {
+          "mode": "experiments",
+          "kind": "run",
+          "experiment_id": "EXP-SEMBIN-24ec56",
+          "trial_plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+          "trial_plan_sha256": "bed341bb4f336fe40c000d93759f369a51ba6496a8cbb926b9cd08433e9480c2",
+          "approved_by": "DEC-20261103-951e67"
+        },
+        "inference": {
+          "policy": "executor-mechanical",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 604800,
+          "wall_clock_seconds_note": "the step timeout (runbook maximum); 84 h per-cell watchdogs; advisory, machine protection only",
+          "memory_gb": 6,
+          "maximum_runs": 2,
+          "maximum_workers": 1
+        },
+        "completion_gate": [
+          "both retry run directories exist, each with check.py exit 0 (VALID) or a recorded terminal class in its receipt",
+          "every declared artifact present and hash-bound in the runbook session journal",
+          "tools/runbook.py verify passes on RBS-SEMBIN-c3f120",
+          "run and runbook-session directories committed and pushed on the session branch",
+          "no byte of the specification, either trial plan, either runbook or implementation/ changed"
+        ],
+        "runbook": {
+          "path": "experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml",
+          "session": "RBS-SEMBIN-c3f120",
+          "step": "S06-retries"
+        }
+      },
+      "archived_by": "TASK-20261103-e9dd0d"
+    },
+    {
+      "id": "TASK-20261103-e9dd0d",
+      "title": "Ledger archive of the EXP-SEMBIN-24ec56 retry-2 and retry-3 runs and sessions",
+      "role": "coordinator",
+      "state": "queued",
+      "priority": 62,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261103-c3f120",
+        "TASK-20261103-690a14",
+        "TASK-20261103-ec2dd8",
+        "TASK-20261103-11e331",
+        "TASK-20261103-6bfe7a",
+        "TASK-20261103-952d2a"
+      ],
+      "read_scope": [
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+        "experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json",
+        "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml"
+      ],
+      "write_scope": [
+        "ledger/decisions/DEC-20261103-e73db2.yaml",
+        "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-e9dd0d/",
+        "experiments/EXP-SEMBIN-24ec56/runs/",
+        "experiments/EXP-SEMBIN-24ec56/runbook-sessions/"
+      ],
+      "artifact_paths": [
+        "ledger/decisions/DEC-20261103-e73db2.yaml",
+        "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-e9dd0d/ledger-receipt.json"
+      ],
+      "handoff": {
+        "record": "ledger/handoffs/TASK-20261103-e9dd0d.yaml",
+        "objective": "Ledger-archive the 12 retry-3 run records and session RBS-SEMBIN-c3f120, the 7 final retry-2 records (RUN-SEMBIN-b503a2, RUN-SEMBIN-9c21b8, RUN-SEMBIN-ba948a, RUN-SEMBIN-2f97e8, RUN-SEMBIN-74d2c7, RUN-SEMBIN-885673, RUN-SEMBIN-127424) and session RBS-SEMBIN-620add, and the earlier attempts (preserved, never evidence), with the observation decision DEC-20261103-e73db2.",
+        "uncertainty_reduced": "Completeness and hash binding of the retry packages. Not a status move.",
+        "inputs": [
+          "experiments/EXP-SEMBIN-24ec56/runs/",
+          "experiments/EXP-SEMBIN-24ec56/runbook-sessions/",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g2.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g3.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g4.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g5.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json",
+          "experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json",
+          "experiments/EXP-SEMBIN-24ec56/amendments/AMD-EXP-SEMBIN-24ec56-20261103-retry3.yaml"
+        ],
+        "constraints": [
+          "Stage exactly the retry run artifacts, the killed attempts, the runbook session and the observation decision.",
+          "A criterion met is an observation; status moves only after independent review (/review-evidence).",
+          "The killed attempts are archived as preserved, never as results.",
+          "No trial is launched from this task."
+        ],
+        "deliverables": [
+          "ledger/decisions/DEC-20261103-e73db2.yaml",
+          "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/archives/TASK-20261103-e9dd0d/ledger-receipt.json"
+        ],
+        "completion_gate": [
+          "12 retry-3 run directories with receipts",
+          "DEC-20261103-e73db2 committed and bound in the queue archive block",
+          "path_sha256 in the receipt covers every declared path"
+        ],
+        "inference": {
+          "policy": "coordinator-orchestration-code",
+          "reasoning_effort": null,
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "wall_clock_seconds": 3600,
+          "memory_gb": 2,
+          "maximum_runs": 0
+        }
+      },
+      "archived_by": "TASK-20261103-e9dd0d",
+      "archive": {
+        "kind": "ledger",
+        "binding_mode": "content_at_commit",
+        "source_task_ids": [
+          "TASK-20261103-c3f120",
+          "TASK-20261103-690a14",
+          "TASK-20261103-ec2dd8",
+          "TASK-20261103-11e331",
+          "TASK-20261103-6bfe7a",
+          "TASK-20261103-952d2a"
+        ],
+        "commit_sha": null,
+        "parent_sha": null,
+        "path_sha256": {},
+        "record_ids": [
+          "DEC-20261103-e73db2",
+          "RUN-SEMBIN-afeaf6",
+          "RUN-SEMBIN-99db4f",
+          "RUN-SEMBIN-12deb9",
+          "RUN-SEMBIN-7994a8",
+          "RUN-SEMBIN-575352",
+          "RUN-SEMBIN-62a98b",
+          "RUN-SEMBIN-749a4f",
+          "RUN-SEMBIN-4319cc",
+          "RUN-SEMBIN-0c34b9",
+          "RUN-SEMBIN-fc747e",
+          "RUN-SEMBIN-2dcd13",
+          "RUN-SEMBIN-a1d461",
+          "RUN-SEMBIN-b503a2",
+          "RUN-SEMBIN-9c21b8",
+          "RUN-SEMBIN-ba948a",
+          "RUN-SEMBIN-2f97e8",
+          "RUN-SEMBIN-74d2c7",
+          "RUN-SEMBIN-885673",
+          "RUN-SEMBIN-127424",
+          "RUN-SEMBIN-19a489",
+          "RUN-SEMBIN-dbac27"
+        ]
       }
     }
   ],
@@ -2083,6 +3158,11 @@
       "at": "2026-10-31T00:00:00Z",
       "kind": "retry_written",
       "text": "DEC-20261031-1abe62: retry-2 package AMD-EXP-SEMBIN-24ec56-20261031-retry2 for 19 trials; supersedes DEC-20261022-063e36; TASK-20261018-944ddb closed as failed."
+    },
+    {
+      "at": "2026-11-03T00:00:00Z",
+      "kind": "retry_written",
+      "text": "DEC-20261103-951e67: retry-3 package AMD-EXP-SEMBIN-24ec56-20261103-retry3 for 12 trials in six two-trial steps with 84 h watchdogs; TASK-20261031-620add closed as failed."
     }
   ]
 }

@@ -1,0 +1,85 @@
+amendment:
+  id: AMD-EXP-SEMBIN-24ec56-20261103-retry3
+  experiment_id: EXP-SEMBIN-24ec56
+  recorded_at: '2026-11-03'
+  kind: execution_retry
+  approved_by: DEC-20261103-951e67
+  standing_authorization: AGENTS.md 2026-09-06; user instruction 2026-11-03 (stop here; persistent host, resized
+    retry plan)
+  supersedes:
+    amendment: AMD-EXP-SEMBIN-24ec56-20261031-retry2
+    decision: DEC-20261031-1abe62
+    note: for the 12 trials below only; retry-2's 7 completed retries stand
+  trigger: Retry session RBS-SEMBIN-620add completed 7 of its 19 retries, then lost poly-m4-n11 to a container restart
+    and was stopped during rand-m4-n11 because the cell could not finish inside its frozen 64800 s watchdog.
+  findings:
+  - 'Measured on the 4-CPU host of retry-2: m=4 n=9 cells took 7.0-11.5 h (poly 7.0 h, rand 7.6 h, null-support
+    11.4 h) against the m=3 timings the 64800 s watchdog was sized from; rand-m4-n11 ran curve 0 at about 15 min
+    per SAT target over 43 SAT and 10 UNSAT targets, about 11 h per curve and 33 h per cell.'
+  - The frozen per-cell watchdogs (14400 / 43200 / 64800 s) were sized from m=3 timings and are too short for every
+    remaining m>=4, n>=11 cell; as frozen those cells could only end watchdog_expired.
+  - The watchdog is a machine protection (docs/experiment-execution.md), not a scientific parameter.
+  changes:
+  - No byte of the specification, any earlier trial plan, any earlier runbook or implementation/ changes.
+  - 'Each of the 12 trials is retried exactly once under a new run id (same trial id, cell, seed, argv apart from
+    run id and plan path, memory cap and checker) through experiments/EXP-SEMBIN-24ec56/runbook-retry3.yaml (session
+    RBS-SEMBIN-c3f120): six steps of two trials, each step with its own plan (experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g1.json
+    .. -g6.json) and executor task, watchdog_seconds 302400 (84 h) per cell, a 604800 s step (the runbook maximum)
+    and a 10080 min claim.'
+  - Intended for a persistent host; the run ids RUN-SEMBIN-67009b, RUN-SEMBIN-9aac65, RUN-SEMBIN-3ddd63, RUN-SEMBIN-ff7994,
+    RUN-SEMBIN-265449, RUN-SEMBIN-57976e, RUN-SEMBIN-f56bc1, RUN-SEMBIN-76decf, RUN-SEMBIN-2abe6f, RUN-SEMBIN-0be9ab
+    of retry-2 stay unused.
+  - A completed retry (valid or invalid) is final and never rerun.
+  scientific_protocol_unchanged: true
+  scientific_protocol_note: Seeds, cells, curves, targets, closures, eliminators, per-job caps (6 GB, 1800 s), censoring
+    rules, thresholds and the checker are unchanged; only the per-cell machine-protection watchdog, the step timeout
+    and the claim TTL change.
+  retries:
+  - trial_id: poly-m4-n11
+    earlier_run: RUN-SEMBIN-19a489
+    earlier_outcome: interrupted
+    retry_run: RUN-SEMBIN-afeaf6
+  - trial_id: rand-m4-n11
+    earlier_run: RUN-SEMBIN-dbac27
+    earlier_outcome: interrupted
+    retry_run: RUN-SEMBIN-99db4f
+  - trial_id: null-support-m4-n11
+    earlier_run: RUN-SEMBIN-67009b
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-12deb9
+  - trial_id: poly-m5-n9
+    earlier_run: RUN-SEMBIN-9aac65
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-7994a8
+  - trial_id: rand-m5-n9
+    earlier_run: RUN-SEMBIN-3ddd63
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-575352
+  - trial_id: null-support-m5-n9
+    earlier_run: RUN-SEMBIN-ff7994
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-62a98b
+  - trial_id: poly-m4-n13
+    earlier_run: RUN-SEMBIN-265449
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-749a4f
+  - trial_id: rand-m4-n13
+    earlier_run: RUN-SEMBIN-57976e
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-4319cc
+  - trial_id: null-support-m4-n13
+    earlier_run: RUN-SEMBIN-f56bc1
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-0c34b9
+  - trial_id: poly-m5-n11
+    earlier_run: RUN-SEMBIN-76decf
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-fc747e
+  - trial_id: rand-m5-n11
+    earlier_run: RUN-SEMBIN-2abe6f
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-2dcd13
+  - trial_id: null-support-m5-n11
+    earlier_run: RUN-SEMBIN-0be9ab
+    earlier_outcome: not_started
+    retry_run: RUN-SEMBIN-a1d461

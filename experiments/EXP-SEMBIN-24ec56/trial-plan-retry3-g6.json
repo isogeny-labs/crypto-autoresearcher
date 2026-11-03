@@ -1,0 +1,213 @@
+{
+ "approved_by": "DEC-20261103-951e67",
+ "defaults": {
+  "closure_degrees": [
+   3,
+   4
+  ],
+  "curves": {
+   "rule": "pick_curve_seeds",
+   "seeds": [
+    0,
+    1,
+    2
+   ]
+  },
+  "independent_primary_above_columns": 50000,
+  "job_rss_cap_gb": 6,
+  "job_wall_cap_s": 1800,
+  "m4ri_max_columns": 100000,
+  "max_targets_per_curve": 150,
+  "min_labelled_dense": 10,
+  "min_unsat_null": 10,
+  "min_unsat_per_curve": 10,
+  "notes": {
+   "censoring": "6 GB RSS (RLIMIT_AS on the worker and closure.c mem cap) or 1800 s per job -> censored",
+   "closures": "M_3, W_3, M_4, W_4 per instance; W_5 where C(N,<=5) <= 40000; both eliminators where libm4ri is present and columns <= 100000; independent eliminator primary above 50000",
+   "curves": "pick_curve seeds 0, 1, 2 (specification inputs.curves.selection); rule b_upward with count 3 is implemented in run.py as the alternative the brief named",
+   "ops_proxy": "M4RI: sum over closure iterations of rows x cols; independent: rows x cols",
+   "skip_after_consecutive_censored": "null = never skip; an integer K would skip the remaining jobs of a (cell, closure, D, eliminator) after K consecutive censored jobs and record them as censored",
+   "targets": "x(2P) stream (pilot_lib.subgroup_targets) seeded by the trial seed; per (curve, V) the first 150 targets are labelled, the first 30 unique UNSAT and every unique SAT are run",
+   "v_rand": "per (seed, curve index) subspace seed = first 8 bytes of sha256('V|seed|curve_index'), uniform full-rank k x n F_2 matrix"
+  },
+  "skip_after_consecutive_censored": 3,
+  "solution_cap": 256,
+  "w5_max_columns": 40000
+ },
+ "experiment_id": "EXP-SEMBIN-24ec56",
+ "frozen": true,
+ "input_sha256": {
+  "analysis/ecdlp2m-iteration-20261009/m3-closure-pilot/instances/n9-poly.json": "bb679e66b50b7a5186cc363e563f3b4bda80e29e1f99ff4a27668664bb3bc75e"
+ },
+ "protocol_version": "1-retry3-g6",
+ "queue": "coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/dispatch_queue.json",
+ "retry_of_plan": {
+  "amendment": "AMD-EXP-SEMBIN-24ec56-20261103-retry3",
+  "amendment_sha256": "567acbf488384152f13256cb2343c7a27c0ffa348e3c9ec56a9294a2ec39e9b4",
+  "group": "6 of 6",
+  "plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json",
+  "plan_sha256": "ba9bf8f510826ffc37accd0f27663ec4dd96c04242d9869c300072391bfd7e55"
+ },
+ "schema": "crypto.autoresearch.trial_plan.v1",
+ "source_sha256": {
+  "experiments/EXP-SEMBIN-24ec56/implementation/build.sh": "d17d7a7302a3af9e9963617de96eae3187fb15e462e65d0692a7a56d03e114b1",
+  "experiments/EXP-SEMBIN-24ec56/implementation/check.py": "24363f068a4837188a490ef1a02a693d02a7877bd70cd26383665432d70374e1",
+  "experiments/EXP-SEMBIN-24ec56/implementation/count_affu.c": "da32ba3a62c3683f218f99d26e5ac1cc05a1030b9a5275c7abd8d942447071ff",
+  "experiments/EXP-SEMBIN-24ec56/implementation/count_chain.c": "9b5eea0e24d16e04131b410ec1d4d6def6e0627bc8b75aea815326c3e1ee199b",
+  "experiments/EXP-SEMBIN-24ec56/implementation/myclosure.c": "ce2b374fea675ccd09edbefb1f710294cedebfac983848db22b7896c075a7221",
+  "experiments/EXP-SEMBIN-24ec56/implementation/myclosure_local.c": "21f3648e013d03264dc69395d31d7b2e9cfc227b5fd95df88bbfd4d2d64a5873",
+  "experiments/EXP-SEMBIN-24ec56/implementation/pilot2_lib.py": "799c0792fb67ce1af689560ebd384f4727e14cb22038cc168c0a4b969c553e02",
+  "experiments/EXP-SEMBIN-24ec56/implementation/pilot3.py": "dd28dc92d4192f81ae1ef0b35a4c8a79e193a9e05a4805c92e7c396444e499cc",
+  "experiments/EXP-SEMBIN-24ec56/implementation/pilot_lib.py": "b06beff5e251e224d2d8e3a4323bce2c9c8f5b3e4645f0243a5e1c3dbb1df87b",
+  "experiments/EXP-SEMBIN-24ec56/implementation/run.py": "67460ae9334a9c538b343ac069c880f5f17597804be86edbe6a620a2d3e684a7",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/Makefile": "042552e04863953482a579e5f46131b1e1e86be9b7920e56029aee3bb8f2c1e5",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/PATCH_boolsys.diff": "4e3bacec50c05977a4a858075dd83546955a1a66ac1fdb64d7ab570d7d9d493f",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/boolsys.py": "497fcbce098ac917c0858bd2e841077bd5738d98094d375a8e1ed8b131e4a474",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/closure.c": "fb50e265c05a957226d1b673ee6ef55937be50a267877b11398115b1ae7659f3",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/closure_cert.py": "0edcab87851b7d0fc4d2f7a2afc936699a256955cd51c2f5e3413156ccf80a85",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/curve.py": "ec7d70d5a48951c28f2b6dbedefbab19d2eaf92fc471172b1787db34ff893acc",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/gf2_chained_builder.py": "805790da8fda86c72a710515ed279ebfb4a8d04645151ad1ad900f80ab9477a3",
+  "experiments/EXP-SEMBIN-24ec56/implementation/vendor/gf2n.py": "5d1e3a6d37f66709008a60ae1e44caea59bce21624fd0f27ed5c0b5c396eda0a",
+  "experiments/EXP-SEMBIN-24ec56/implementation/worker.py": "ba79d353a5f8aa28fa631b46ea613d597bb42c7bb6b487caa82f60b229eaa110",
+  "experiments/EXP-SEMBIN-24ec56/implementation/worker3.py": "e846d2dfe04dc125adcfc34431466f779d23b70448a220e0a64fce15a0c402c8"
+ },
+ "specification": "experiments/EXP-SEMBIN-24ec56/specification.yaml",
+ "specification_sha256": "38211e96deedb6136fb58ed5e6372ef32ef926921a3c1584b4c5462131f47bd5",
+ "successor_of": {
+  "amendment": "AMD-EXP-SEMBIN-d9767f-20261018-successor",
+  "experiment_id": "EXP-SEMBIN-d9767f",
+  "interrupted_run": "RUN-SEMBIN-07f442",
+  "plan": "experiments/EXP-SEMBIN-d9767f/trial-plan.json",
+  "plan_sha256": "224a5fcbd56dfc3401ace53edcc530c4cb6d79a662395af16cb603705c4d16d1"
+ },
+ "task_id": "TASK-20261103-952d2a",
+ "trials": [
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-SEMBIN-24ec56/implementation/run.py",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-SEMBIN-2dcd13",
+    "--trial-id",
+    "rand-m5-n11",
+    "--seed",
+    "20261021",
+    "--plan",
+    "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "results.jsonl",
+    "instances.json"
+   ],
+   "cells": [
+    {
+     "cell": "m5-n11-k3",
+     "family": "S3",
+     "k": 3,
+     "m": 5,
+     "n": 11,
+     "v_type": "rand"
+    }
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-SEMBIN-24ec56/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json"
+   ],
+   "depends_on": [],
+   "id": "rand-m5-n11",
+   "memory_mb": 6144,
+   "parent_trial": {
+    "experiment_id": "EXP-SEMBIN-d9767f",
+    "run_id": "RUN-SEMBIN-bb9a72",
+    "seed": 20261021,
+    "trial_id": "m5-poly-and-rand"
+   },
+   "retry_of": {
+    "original": {
+     "failure_class": "infrastructure_error",
+     "plan": "experiments/EXP-SEMBIN-24ec56/trial-plan.json",
+     "reason": "2026-10-31 image without numpy/libm4ri-dev; import failure in about 1 s",
+     "run_id": "RUN-SEMBIN-f883b4"
+    },
+    "outcome": "not_started",
+    "plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json",
+    "reason": "retry-2 session stopped before launch",
+    "run_id": "RUN-SEMBIN-2abe6f"
+   },
+   "run_id": "RUN-SEMBIN-2dcd13",
+   "seed": 20261021,
+   "watchdog_reason": "Machine protection only (AMD-EXP-SEMBIN-24ec56-20261103-retry3): 302400 s per cell, resized from measured rates. Measured on the 4-CPU host of retry-2: m=4 n=9 cells took 7.0-11.5 h (poly 7.0 h, rand 7.6 h, null-support 11.4 h) against the m=3 timings the 64800 s watchdog was sized from; rand-m4-n11 ran curve 0 at about 15 min per SAT target over 43 SAT and 10 UNSAT targets, about 11 h per curve and 33 h per cell. Every job stays capped at 6 GB RSS and 1800 s and is censored beyond that; expiry fails this cell's retry only, never a metric value.",
+   "watchdog_seconds": 302400
+  },
+  {
+   "argv": [
+    "python3",
+    "experiments/EXP-SEMBIN-24ec56/implementation/run.py",
+    "--run-dir",
+    "{run_dir}",
+    "--run-id",
+    "RUN-SEMBIN-a1d461",
+    "--trial-id",
+    "null-support-m5-n11",
+    "--seed",
+    "20261022",
+    "--plan",
+    "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json"
+   ],
+   "artifacts": [
+    "manifest.yaml",
+    "raw-result.json",
+    "results.jsonl",
+    "instances.json"
+   ],
+   "cells": [
+    {
+     "cell": "m5-n11-k3",
+     "family": "NULL",
+     "k": 3,
+     "m": 5,
+     "min_unsat_null": 10,
+     "n": 11,
+     "v_type": "poly"
+    }
+   ],
+   "check_argv": [
+    "python3",
+    "experiments/EXP-SEMBIN-24ec56/implementation/check.py",
+    "{run_dir}",
+    "experiments/EXP-SEMBIN-24ec56/trial-plan-retry3-g6.json"
+   ],
+   "depends_on": [],
+   "id": "null-support-m5-n11",
+   "memory_mb": 6144,
+   "parent_trial": {
+    "experiment_id": "EXP-SEMBIN-d9767f",
+    "run_id": "RUN-SEMBIN-d8aaa8",
+    "seed": 20261022,
+    "trial_id": "nulls-and-controls"
+   },
+   "retry_of": {
+    "original": {
+     "failure_class": "infrastructure_error",
+     "plan": "experiments/EXP-SEMBIN-24ec56/trial-plan.json",
+     "reason": "2026-10-31 image without numpy/libm4ri-dev; import failure in about 1 s",
+     "run_id": "RUN-SEMBIN-fa6a48"
+    },
+    "outcome": "not_started",
+    "plan": "experiments/EXP-SEMBIN-24ec56/trial-plan-retry2.json",
+    "reason": "retry-2 session stopped before launch",
+    "run_id": "RUN-SEMBIN-0be9ab"
+   },
+   "run_id": "RUN-SEMBIN-a1d461",
+   "seed": 20261022,
+   "watchdog_reason": "Machine protection only (AMD-EXP-SEMBIN-24ec56-20261103-retry3): 302400 s per cell, resized from measured rates. Measured on the 4-CPU host of retry-2: m=4 n=9 cells took 7.0-11.5 h (poly 7.0 h, rand 7.6 h, null-support 11.4 h) against the m=3 timings the 64800 s watchdog was sized from; rand-m4-n11 ran curve 0 at about 15 min per SAT target over 43 SAT and 10 UNSAT targets, about 11 h per curve and 33 h per cell. Every job stays capped at 6 GB RSS and 1800 s and is censored beyond that; expiry fails this cell's retry only, never a metric value.",
+   "watchdog_seconds": 302400
+  }
+ ]
+}
