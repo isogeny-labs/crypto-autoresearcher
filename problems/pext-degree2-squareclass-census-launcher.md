@@ -507,3 +507,16 @@ Riemann–Hurwitz and incomplete-coverage refusals. The
 records the fixture's spectra and boundaries. Next integrate the reducer in
 full analysis with descent, Type2, C0-C7 controls and frozen output bindings.
 No approved scientific cohort was reduced or launched.
+
+## Coefficient-aware square-class relations, 2026-11-03
+
+The [relation ledger](../experiments/EXP-PEXT-bf8f96/implementation/squareclass_relations.py)
+now enumerates the branch-support and leading-coefficient square class of
+every subset of a checked n=3/5/7 conjugate quartic orbit. It distinguishes
+geometric from arithmetic relations over K(X), including a nonsquare constant
+relation in a synthetic rank-two coefficient twist. Three software tests pass
+against the independent polynomial-square routine. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/squareclass-relations-20261103/report.md)
+records the exact fixture result. Next construct and check the Frobenius lift
+and cocycle before assigning any descended/admissible genus. No scientific
+cohort trial was launched.
