@@ -246,3 +246,24 @@ Lang/Hilbert-90 cocycle solve. It retains the existing left-coset ordinal order
 and all cohort types. The full generator, independent completeness checker,
 resource measurement, constant coefficient classes, descent, Type2 and frozen
 execution packet remain to implement. No scientific trial or approval occurred.
+
+## Rational-root exceptional-index generator, 2026-11-03
+
+The [native arithmetic](../experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs)
+now builds reusable, complete cocycle-to-ordinal and rational-image indices
+for the exact left-coset structure order. It emits the full contribution from
+K-rational branch roots, including simple infinity and collisions between
+distinct roots. Nonrational point-orbit representatives are cached once per
+field. The [independent checker](../experiments/EXP-PEXT-bf8f96/implementation/check_rational_collision_certificate.py)
+recomputes the full fixed F27 candidate sets with polynomial-basis arithmetic
+and rejects missing or inserted ordinals. Its first T block has 273 rational-
+root exceptional indices; the second has none. Direct support checking leaves
+six and one exceptional indices respectively for the degree-2/3/4 root
+generator. Native 13-core/15-join and one independent Python test pass; the
+[source-bound report](../experiments/EXP-PEXT-bf8f96/reports/rational-collision-index-20261103/report.md)
+gives the exact scope and modeled index sizes.
+
+Next implement symbolic factor roots and linear cocycle candidates for degrees
+2/3/4, replay all factor patterns independently, then measure the full-cohort
+resource route and finish the frozen execution packet. No scientific trial or
+approval occurred.

@@ -56,6 +56,29 @@ mod implementation {
         pub branch_points: usize,
         pub geometric_genus: usize,
     }
+    pub struct CocycleIndex {
+        prime:u32,
+        degree:u32,
+        primitive_polynomial_index:u32,
+        power:u32,
+        nonrational_reps:Vec<u32>,
+        entries:HashMap<[u32;4],u64>,
+    }
+    impl CocycleIndex {
+        pub fn len(&self)->usize {self.entries.len()}
+        pub fn power(&self)->u32 {self.power}
+    }
+    pub struct RationalImageIndex {
+        prime:u32,
+        degree:u32,
+        primitive_polynomial_index:u32,
+        by_root:Vec<Vec<u64>>,
+        entries:u64,
+    }
+    impl RationalImageIndex {
+        pub fn entries(&self)->u64 {self.entries}
+        pub fn roots(&self)->usize {self.by_root.len()}
+    }
 
     impl Context {
         pub fn new(q: u32, n: u32, maximum_field_elements: u32) -> Result<Self, &'static str> {
@@ -258,6 +281,190 @@ mod implementation {
             let m=self.normalize_matrix(matrix)?; let f=&self.field;
             let adj=[m[3],f.neg(m[1]),f.neg(m[2]),m[0]];
             self.normalize_matrix(mmul(f,&adj,&mfrob(f,&m)))
+        }
+        /// N^-1 sigma^k(N), normalized in the repository's left-coset order.
+        pub fn structure_cocycle_power(&self,matrix:[u32;4],k:u32)->Result<[u32;4],&'static str> {
+            if ![3,5,7].contains(&self.field.n) || k==0 || k>=self.field.n {
+                return Err("invalid nontrivial Frobenius power");
+            }
+            let m=self.normalize_matrix(matrix)?; let f=&self.field;
+            let adj=[m[3],f.neg(m[1]),f.neg(m[2]),m[0]];
+            let mut conjugate=m;
+            for _ in 0..k {conjugate=mfrob(f,&conjugate);}
+            self.normalize_matrix(mmul(f,&adj,&conjugate))
+        }
+        /// One-time complete cocycle-to-ordinal table for a specified k.
+        /// A duplicate would contradict the left-coset transversal contract.
+        pub fn cocycle_index(&self,k:u32,maximum_entries:u64)->Result<CocycleIndex,&'static str> {
+            if ![3,5,7].contains(&self.field.n) || k==0 || k>=self.field.n {
+                return Err("invalid nontrivial Frobenius power");
+            }
+            let expected=self.structure_count()?;
+            if expected>maximum_entries {return Err("cocycle index entry limit exceeded");}
+            let capacity=usize::try_from(expected).map_err(|_|"cocycle index allocation limit")?;
+            let mut entries=HashMap::with_capacity(capacity);let mut ordinal=0u64;
+            self.visit_structures(expected,|matrix| {
+                let key=self.structure_cocycle_power(matrix,k)?;
+                if entries.insert(key,ordinal).is_some() {return Err("duplicate projective cocycle");}
+                ordinal+=1;Ok(())
+            })?;
+            if ordinal!=expected || entries.len()!=capacity {return Err("incomplete cocycle index");}
+            let nonrational_reps=trans(&self.field).rep_b;
+            let group=(self.field.q as u64).pow(3)-self.field.q as u64;
+            if (nonrational_reps.len() as u64).checked_mul(group)
+                !=Some(self.field.size as u64-self.field.q as u64) {
+                return Err("nonrational point orbit coverage mismatch");
+            }
+            Ok(CocycleIndex{prime:self.field.q,degree:self.field.n,
+                primitive_polynomial_index:self.field.idx_of[2],power:k,
+                nonrational_reps,entries})
+        }
+        pub fn cocycle_ordinal(&self,index:&CocycleIndex,cocycle:[u32;4])
+            ->Result<Option<u64>,&'static str> {
+            if (index.prime,index.degree,index.primitive_polynomial_index)
+                !=(self.field.q,self.field.n,self.field.idx_of[2]) {
+                return Err("cocycle index field mismatch");
+            }
+            let key=self.normalize_matrix(cocycle)?;
+            Ok(index.entries.get(&key).copied())
+        }
+        /// Once-per-field exact index for N(alpha) in P^1(F_q). The projective
+        /// root encoding is 0..Q-1 for finite points and Q for infinity.
+        pub fn rational_image_index(&self,maximum_entries:u64)
+            ->Result<RationalImageIndex,&'static str> {
+            let f=&self.field;let structures=self.structure_count()?;
+            let fq=(0..f.size).filter(|&x|f.in_fq(x)).collect::<Vec<_>>();
+            if fq.len()!=f.q as usize {return Err("base field point count mismatch");}
+            let total=structures.checked_mul(f.q as u64+1).ok_or("rational image count overflow")?;
+            if total>maximum_entries {return Err("rational image entry limit exceeded");}
+            let roots=f.size as usize+1;
+            let per_root=usize::try_from(total/(roots as u64)).map_err(|_|"rational image allocation limit")?;
+            if total%(roots as u64)!=0 {return Err("nonintegral rational image bucket size");}
+            let mut by_root=(0..roots).map(|_|Vec::with_capacity(per_root)).collect::<Vec<_>>();
+            let mut ordinal=0u64;
+            self.visit_structures(structures,|matrix| {
+                let adj=[matrix[3],f.neg(matrix[1]),f.neg(matrix[2]),matrix[0]];
+                for &image in fq.iter().chain(std::iter::once(&f.size)) {
+                    let root=apply(f,&adj,image,f.size);
+                    by_root[root as usize].push(ordinal);
+                }
+                ordinal+=1;Ok(())
+            })?;
+            if ordinal!=structures || by_root.iter().any(|bucket|bucket.len()!=per_root) {
+                return Err("rational image index coverage mismatch");
+            }
+            Ok(RationalImageIndex{prime:f.q,degree:f.n,
+                primitive_polynomial_index:f.idx_of[2],by_root,entries:total})
+        }
+        pub fn rational_image_ordinals<'a>(&self,index:&'a RationalImageIndex,root:u32)
+            ->Result<&'a [u64],&'static str> {
+            if (index.prime,index.degree,index.primitive_polynomial_index)
+                !=(self.field.q,self.field.n,self.field.idx_of[2]) {
+                return Err("rational image index field mismatch");
+            }
+            index.by_root.get(root as usize).map(Vec::as_slice).ok_or("invalid projective root")
+        }
+        /// Exact collision indices for an ordered distinct pair of K-rational
+        /// branch roots. Shared nonrational images are normalized by the left
+        /// PGL2(F_q) action; the output is in the frozen structure order.
+        pub fn rational_pair_collision_ordinals(&self,index:&CocycleIndex,
+            alpha:u32,gamma:u32,maximum_candidates:u64)->Result<Vec<u64>,&'static str> {
+            let f=&self.field;let inf=f.size;
+            if alpha>inf || gamma>inf || alpha==gamma {return Err("invalid distinct rational root pair");}
+            if (index.prime,index.degree,index.primitive_polynomial_index)
+                !=(f.q,f.n,f.idx_of[2]) {return Err("cocycle index field mismatch");}
+            let k=index.power;
+            if k==0 || k>=f.n {return Err("invalid cocycle power");}
+            let expected=(index.nonrational_reps.len() as u64).checked_mul(f.size as u64-1)
+                .ok_or("rational pair candidate count overflow")?;
+            if expected>maximum_candidates {return Err("rational pair candidate limit exceeded");}
+            let delta=(0..=inf).find(|&v|v!=alpha && v!=gamma).ok_or("missing third source point")?;
+            let source=from_triple(f,alpha,gamma,delta,inf);
+            let source_adj=[source[3],f.neg(source[1]),f.neg(source[2]),source[0]];
+            let mut ordinals=Vec::with_capacity(expected as usize);
+            for &x in &index.nonrational_reps {
+                let mut y=x;
+                for _ in 0..f.n-k {y=f.frob(y);}
+                if y==x {return Err("nonrational orbit representative fixed by Frobenius");}
+                for z in 0..=inf {
+                    if z==x || z==y {continue;}
+                    let destination=from_triple(f,x,y,z,inf);
+                    let matrix=self.normalize_matrix(mmul(f,&destination,&source_adj))?;
+                    let cocycle=self.structure_cocycle_power(matrix,k)?;
+                    let ordinal=self.cocycle_ordinal(index,cocycle)?
+                        .ok_or("rational pair cocycle absent from complete index")?;
+                    ordinals.push(ordinal);
+                }
+            }
+            ordinals.sort_unstable();ordinals.dedup();
+            if ordinals.len()!=expected as usize {return Err("duplicate rational pair candidate");}
+            Ok(ordinals)
+        }
+        /// K-rational projective roots of a squarefree binary quartic.
+        pub fn rational_branch_roots(&self,form:[u32;5])->Result<Vec<u32>,&'static str> {
+            let f=&self.field;
+            if form.iter().any(|&a|a>=f.size) {return Err("invalid form coefficient");}
+            let degree=form.iter().rposition(|&a|a!=0).ok_or("zero form")?;
+            if degree<3 {return Err("multiple root at projective infinity");}
+            let set=set_of(f,&form);let mut derivative=pz();derivative.n=degree;
+            for i in 1..=degree {derivative.c[i-1]=f.mul(f.int(i as i64),form[i]);}
+            if pgcd(f,&set.p,&ptrim(derivative)).n!=1 {return Err("repeated branch root");}
+            let mut roots=Vec::new();
+            for x in 0..f.size {
+                let value=form.iter().rev().fold(0,|acc,&coefficient|
+                    f.add(f.mul(acc,x),coefficient));
+                if value==0 {roots.push(x);}
+            }
+            if degree==3 {roots.push(f.size);}
+            Ok(roots)
+        }
+        /// Complete degree-one-root contribution to the exceptional ordinal
+        /// set. Other root degrees must be generated separately before the
+        /// generic complement is certified.
+        pub fn rational_root_collision_ordinals(&self,form:[u32;5],
+            image_index:&RationalImageIndex,cocycle_indices:&[CocycleIndex],
+            maximum_candidates:u64)->Result<Vec<u64>,&'static str> {
+            let n=self.field.n as usize;
+            if ![3,5,7].contains(&n) || cocycle_indices.len()!=(n-1)/2 {
+                return Err("incomplete collision Frobenius powers");
+            }
+            for (i,index) in cocycle_indices.iter().enumerate() {
+                if index.power!=(i+1) as u32 {return Err("collision Frobenius power order mismatch");}
+                if (index.prime,index.degree,index.primitive_polynomial_index)
+                    !=(self.field.q,self.field.n,self.field.idx_of[2]) {
+                    return Err("cocycle index field mismatch");
+                }
+            }
+            if (image_index.prime,image_index.degree,image_index.primitive_polynomial_index)
+                !=(self.field.q,self.field.n,self.field.idx_of[2]) {
+                return Err("rational image index field mismatch");
+            }
+            let roots=self.rational_branch_roots(form)?;
+            let self_count=if roots.is_empty() {0} else {
+                self.rational_image_ordinals(image_index,roots[0])?.len() as u64
+            };
+            let pair_count=(cocycle_indices[0].nonrational_reps.len() as u64)
+                .checked_mul(self.field.size as u64-1).ok_or("pair count overflow")?;
+            let r=roots.len() as u64;
+            let bound=r.checked_mul(self_count)
+                .and_then(|x|r.checked_mul(r.saturating_sub(1))
+                    .and_then(|pairs|pairs.checked_mul(cocycle_indices.len() as u64))
+                    .and_then(|pairs|pairs.checked_mul(pair_count))
+                    .and_then(|pairs|x.checked_add(pairs)))
+                .ok_or("rational root candidate count overflow")?;
+            if bound>maximum_candidates {return Err("rational root candidate limit exceeded");}
+            let capacity=usize::try_from(bound).map_err(|_|"rational root allocation limit")?;
+            let mut ordinals=Vec::with_capacity(capacity);
+            for &root in &roots {ordinals.extend_from_slice(self.rational_image_ordinals(image_index,root)?);}
+            for index in cocycle_indices {
+                for &alpha in &roots {for &gamma in &roots {
+                    if alpha!=gamma {
+                        ordinals.extend(self.rational_pair_collision_ordinals(index,alpha,gamma,pair_count)?);
+                    }
+                }}
+            }
+            ordinals.sort_unstable();ordinals.dedup();
+            Ok(ordinals)
         }
         /// Exact count of left PGL2(Fq) cosets, before any transversal allocation.
         pub fn structure_count(&self)->Result<u64,&'static str> {
@@ -485,6 +692,126 @@ mod implementation {
             assert!(ctx.support_geometry(&[[0,0,1,0,1];5]).is_err());
         }
         #[test]
+        fn complete_cocycle_index_replays_structure_ordinals() {
+            for (q,n,k,limit) in [(3,3,1,27),(3,5,2,243)] {
+                let ctx=Context::new(q,n,limit).unwrap();
+                let count=ctx.structure_count().unwrap();
+                if n==5 {assert_eq!(count,597861);}
+                assert!(ctx.cocycle_index(k,count-1).is_err());
+                let index=ctx.cocycle_index(k,count).unwrap();
+                assert_eq!(index.len() as u64,count);
+                assert_eq!(index.power(),k);
+                for ordinal in [0,count/2,count-1] {
+                    ctx.visit_structures_range(ordinal,ordinal+1,1,|matrix| {
+                        let cocycle=ctx.structure_cocycle_power(matrix,k)?;
+                        assert_eq!(ctx.cocycle_ordinal(&index,cocycle)?,Some(ordinal));
+                        let scaled=cocycle.map(|a|ctx.field.mul(a,ctx.integer(2)));
+                        assert_eq!(ctx.cocycle_ordinal(&index,scaled)?,Some(ordinal));
+                        Ok(())
+                    }).unwrap();
+                }
+                assert!(ctx.cocycle_index(0,count).is_err());
+                assert!(ctx.cocycle_index(n,count).is_err());
+            }
+            let q3=Context::new(3,3,27).unwrap();
+            let q5=Context::new(5,3,125).unwrap();
+            let index=q3.cocycle_index(1,819).unwrap();
+            assert!(q5.cocycle_ordinal(&index,[1,0,0,1]).is_err());
+            assert!(q3.cocycle_ordinal(&index,[1,0,0,0]).is_err());
+        }
+        #[test]
+        fn rational_image_index_matches_direct_full_f27_scan() {
+            let ctx=Context::new(3,3,27).unwrap();let f=&ctx.field;
+            assert!(ctx.rational_image_index(3275).is_err());
+            let index=ctx.rational_image_index(3276).unwrap();
+            assert_eq!(index.entries(),3276);
+            assert_eq!(index.roots(),28);
+            for root in [0,1,2,7,26,27] {
+                let expected=ctx.rational_image_ordinals(&index,root).unwrap();
+                assert_eq!(expected.len(),117);
+                assert!(expected.windows(2).all(|pair|pair[0]<pair[1]));
+                let mut direct=Vec::new();let mut ordinal=0;
+                ctx.visit_structures(819,|matrix| {
+                    let image=apply(f,&matrix,root,f.size);
+                    if image==f.size || f.in_fq(image) {direct.push(ordinal);}
+                    ordinal+=1;Ok(())
+                }).unwrap();
+                assert_eq!(expected,direct);
+            }
+            assert!(ctx.rational_image_ordinals(&index,28).is_err());
+            let ctx5=Context::new(3,5,243).unwrap();
+            let count=ctx5.structure_count().unwrap();
+            let index5=ctx5.rational_image_index(count*4).unwrap();
+            assert_eq!(index5.roots(),244);
+            assert_eq!(index5.entries(),2391444);
+            assert_eq!(ctx5.rational_image_ordinals(&index5,0).unwrap().len(),9801);
+            assert!(ctx5.rational_image_ordinals(&index5,243).unwrap().len()==9801);
+            assert!(ctx5.rational_image_ordinals(&index,0).is_err());
+        }
+        #[test]
+        fn rational_pair_generator_matches_direct_full_f27_collision() {
+            let ctx=Context::new(3,3,27).unwrap();let f=&ctx.field;
+            let index=ctx.cocycle_index(1,819).unwrap();
+            for (alpha,gamma) in [(0,1),(27,0),(2,27)] {
+                assert!(ctx.rational_pair_collision_ordinals(&index,alpha,gamma,25).is_err());
+                let generated=ctx.rational_pair_collision_ordinals(&index,alpha,gamma,26).unwrap();
+                assert_eq!(generated.len(),26);
+                let mut direct=Vec::new();let mut ordinal=0;
+                ctx.visit_structures(819,|matrix| {
+                    let a=apply(f,&matrix,alpha,f.size);
+                    let b=apply(f,&matrix,gamma,f.size);
+                    let frob_b=if b==f.size {b} else {f.frob(b)};
+                    if a==frob_b {direct.push(ordinal);}
+                    ordinal+=1;Ok(())
+                }).unwrap();
+                assert_eq!(generated,direct);
+            }
+            assert!(ctx.rational_pair_collision_ordinals(&index,0,0,26).is_err());
+            assert!(ctx.rational_pair_collision_ordinals(&index,28,0,26).is_err());
+            let ctx5=Context::new(3,5,243).unwrap();
+            let index5=ctx5.cocycle_index(2,ctx5.structure_count().unwrap()).unwrap();
+            let generated=ctx5.rational_pair_collision_ordinals(&index5,0,1,2420).unwrap();
+            assert_eq!(generated.len(),2420);
+            assert!(generated.windows(2).all(|pair|pair[0]<pair[1]));
+        }
+        #[test]
+        fn complete_rational_root_set_matches_direct_f27_support_collision() {
+            let ctx=Context::new(3,3,27).unwrap();let f=&ctx.field;
+            let cocycles=[ctx.cocycle_index(1,819).unwrap()];
+            let images=ctx.rational_image_index(3276).unwrap();
+            let mut forms=Vec::new();
+            let curve=ctx.curve(ctx.integer(1),0,ctx.integer(1)).unwrap();
+            for coset in curve.quotient_classes().unwrap() {
+                forms.push(curve.quotient_form(coset.representative).unwrap());
+            }
+            for finite_roots in [&[0,1,2][..],&[0,1,2,3][..]] {
+                let mut polynomial=pz();polynomial.n=1;polynomial.c[0]=1;
+                for &root in finite_roots {
+                    let mut linear=pz();linear.n=2;linear.c[0]=f.neg(root);linear.c[1]=1;
+                    polynomial=pmul(f,&polynomial,&linear);
+                }
+                let mut form=[0;5];form[..polynomial.n].copy_from_slice(&polynomial.c[..polynomial.n]);
+                forms.push(form);
+            }
+            for form in forms {
+                let roots=ctx.rational_branch_roots(form).unwrap();
+                if !roots.is_empty() {
+                    assert!(ctx.rational_root_collision_ordinals(form,&images,&cocycles,0).is_err());
+                }
+                let generated=ctx.rational_root_collision_ordinals(form,&images,&cocycles,1000).unwrap();
+                let mut direct=Vec::new();let mut ordinal=0;
+                ctx.visit_structures(819,|matrix| {
+                    let transformed=roots.iter().map(|&root|apply(f,&matrix,root,f.size)).collect::<Vec<_>>();
+                    let hit=transformed.iter().any(|&left|transformed.iter().any(|&right|
+                        left==if right==f.size {right} else {f.frob(right)}));
+                    if hit {direct.push(ordinal);}
+                    ordinal+=1;Ok(())
+                }).unwrap();
+                assert_eq!(generated,direct);
+            }
+            assert!(ctx.rational_branch_roots([0,0,1,0,1]).is_err());
+        }
+        #[test]
         fn extension_encoding_and_charts() {
             // Fixed embedded curves: orders obtained from t_2=t_1^2-2q
             // and t_3=t_1^3-3qt_1, respectively. No parameter sweep.
@@ -602,4 +929,4 @@ mod implementation {
         }
     }
 }
-pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CurveClass,ModelWitness};
+pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,CurveClass,ModelWitness};
