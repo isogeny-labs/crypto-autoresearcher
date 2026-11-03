@@ -577,11 +577,10 @@ jobs:
       SCOPE_RESULT: ${{ needs.changes.result }}
       RUN_TESTS: ${{ needs.changes.outputs.tests }}
     runs-on: ubuntu-latest
-    # Job 122973073212 spent >11m on full-checkout/setup and was cancelled
-    # at 66% of shard 1. Jobs 126095145006 and 126095145073 later reached
-    # the 20m job cap while their test steps were still running; keep the full
-    # suite and allow the same bounded startup/test envelope for every shard.
-    timeout-minutes: 45
+    # Shard 1 needs a full checkout. Job 126188037687 spent about 44 minutes
+    # reaching its test step and hit the 45-minute job limit before tests could
+    # finish. Keep the complete suite and allow checkout plus test time.
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
