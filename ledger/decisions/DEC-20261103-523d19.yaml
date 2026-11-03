@@ -1,0 +1,53 @@
+coordinator_decision:
+  id: DEC-20261103-523d19
+  recorded_at: '2026-11-03'
+  question_ids:
+  - RQ-ECDLP-002
+  goal_id: GOAL-ECDLP-001
+  kind: tasks_added
+  context: >-
+    DEC-20261018-3b4a32 decided replicate for H-SEMAEV-94dab2 at preliminary
+    strength because its validator (TASK-20261018-83a561) ran as a subagent of
+    the producing session, against its handoff's
+    independent_session_required. Its first next action is an
+    independent-session re-validation of the seven run records against the
+    same review plan. The owner asked for it on 2026-11-03.
+  decision: dispatch
+  decision_scope: >-
+    Opens lane BATCH-7c689b with two tasks: TASK-20261103-f8f2d2, an
+    independent validator under review plan RP-BATCH-7c689b (blind to the
+    evidence record, the decisions, the producer's analysis and reports and
+    the first validation report), and TASK-20261103-2c99e6, the Coordinator
+    review and archive that follows it. Authorizes no trial and changes no
+    research status.
+  target_ids:
+  - H-SEMAEV-94dab2
+  - EXP-SEMAEV-93d5cc
+  - EXP-SEMAEV-6e9dcf
+  - EV-SEMAEV-593b7a
+  - DEC-20261018-3b4a32
+  - CORR-20261024-8df12c
+  - TASK-20261103-f8f2d2
+  - TASK-20261103-2c99e6
+  authorization: Standing user authorization of 2026-09-06 in AGENTS.md and the owner's request of 2026-11-03.
+  rationale:
+  - The deviation caps EV-SEMAEV-593b7a at preliminary; only an independent session can lift that cap.
+  - Blindness to the producer's tables makes the per-cell values a second derivation, not a re-reading.
+  - DEC-20261024-85695c asks this re-validation to also check CORR-20261024-8df12c's observed conduct (joint J6).
+  status_transitions: []
+  evidence_refs: []
+  limitations:
+  - The dispatching session is the producing session; independence rests on the validator running as a fresh session with a blind brief and no shared context.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Dispatch is not evidence.
+  next_actions:
+  - Start TASK-20261103-f8f2d2 in a fresh cloud session on the lane branch.
+  - On its report, run TASK-20261103-2c99e6, which records DEC-20261103-812d74 (id reserved here).
+  decided_by: coordinator
+  inference:
+    policy: coordinator-orchestration-code
+    requested_policy: coordinator-orchestration-code
+    runtime: claude_code
+    fallback_used: false
+    degraded_requirements: []
