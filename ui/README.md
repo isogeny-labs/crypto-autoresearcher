@@ -369,7 +369,9 @@ Those numbers come from CloudWatch, not from ledger record counts.
 - names the instance, never the hostname.
 
 Locally, put `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in `.env`
-(gitignored) or the shell, then:
+(gitignored) or the shell. Temporary role credentials also require
+`AWS_SESSION_TOKEN`; the client sends and signs it with each RDS and CloudWatch
+request. Then:
 
 ```sh
 set -a && source .env && set +a
