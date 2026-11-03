@@ -8,6 +8,8 @@ mod implementation {
     include!("../../EXP-PEXT-212d5c/implementation/cover_census_n7.rs");
     include!("symbolic_extension.rs");
     include!("branch_factorization.rs");
+    include!("branch_roots.rs");
+    include!("root_collision.rs");
     use std::collections::{BTreeSet, BTreeMap as OrderedMap};
 
     #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -624,8 +626,72 @@ mod implementation {
     mod tests {
         use super::*;
         #[test]
+        fn symbolic_root_kernels_match_direct_projective_matrix_scan() {
+            let ctx=Context::new(3,3,27).unwrap();let f=&ctx.field;
+            for degree in 2..=4 {
+                let mut modulus=None;
+                'search: for a in 0..f.size {for b in 1..f.size {
+                    let mut candidate=vec![0;degree+1];
+                    candidate[0]=b;candidate[1]=a;candidate[degree]=1;
+                    if ctx.symbolic_extension(&candidate).is_ok() {
+                        modulus=Some(candidate);break 'search;
+                    }
+                }}
+                let ext=ctx.symbolic_extension(&modulus.unwrap()).unwrap();
+                let alpha=ext.variable();let beta=ext.power(alpha,f.size as u64);
+                let generated=ext.projective_root_maps(alpha,beta,f.size as u64+1).unwrap();
+                if degree==2 {
+                    assert_eq!(generated.len(),f.size as usize+1);
+                    assert!(ext.projective_root_maps(alpha,beta,f.size as u64).is_err());
+                } else {assert!(generated.len()<=1);}
+                let mut direct=Vec::new();
+                for a in 0..f.size {for b in 0..f.size {
+                    for c in 0..f.size {for d in 0..f.size {
+                        let matrix=[a,b,c,d];
+                        if matrix.iter().find(|&&value|value!=0)!=Some(&1) {continue;}
+                        if f.sub(f.mul(a,d),f.mul(b,c))==0 {continue;}
+                        let terms=matrix.map(|value|ext.element(&[value]).unwrap());
+                        let left=ext.add(ext.mul(terms[0],beta),terms[1]);
+                        let right=ext.mul(alpha,ext.add(ext.mul(terms[2],beta),terms[3]));
+                        if left==right {direct.push(matrix);}
+                    }}
+                }}
+                direct.sort();assert_eq!(generated,direct);
+                assert!(ext.projective_root_maps(alpha,beta,0).is_err() || generated.is_empty());
+            }
+        }
+        #[test]
+        fn all_degree_root_candidates_equal_fixed_f27_exceptional_scan() {
+            let ctx=Context::new(3,3,27).unwrap();
+            let cocycles=[ctx.cocycle_index(1,819).unwrap()];
+            let images=ctx.rational_image_index(3276).unwrap();
+            let curve=ctx.curve(ctx.integer(1),0,ctx.integer(1)).unwrap();
+            for (block,coset) in curve.quotient_classes().unwrap().iter().enumerate() {
+                let form=curve.quotient_form(coset.representative).unwrap();
+                assert!(ctx.nonrational_root_collision_ordinals(form,&[],1000).is_err());
+                assert!(ctx.nonrational_root_collision_ordinals(form,&cocycles,0).is_err());
+                let rational=ctx.rational_root_collision_ordinals(form,&images,&cocycles,1000).unwrap();
+                let nonrational=ctx.nonrational_root_collision_ordinals(form,&cocycles,1000).unwrap();
+                assert_eq!(nonrational.len(),if block==0 {7} else {1});
+                let overlap=nonrational.iter().filter(|&&ordinal|rational.binary_search(&ordinal).is_ok()).count();
+                assert_eq!(overlap,if block==0 {1} else {0});
+                let mut combined=rational;combined.extend(nonrational);
+                combined.sort_unstable();combined.dedup();
+                assert_eq!(combined.len(),if block==0 {279} else {1});
+                let mut direct=Vec::new();let mut ordinal=0u64;
+                ctx.visit_structures(819,|matrix| {
+                    let orbit=ctx.conjugate_forms(ctx.transform_form(form,matrix)?)?;
+                    if !ctx.support_geometry(&orbit)?.pairwise_disjoint {direct.push(ordinal);}
+                    ordinal+=1;Ok(())
+                }).unwrap();
+                assert_eq!(combined,direct);
+            }
+        }
+        #[test]
         fn branch_factorization_covers_all_squarefree_quartic_patterns() {
             let ctx=Context::new(3,3,27).unwrap();let f=&ctx.field;
+            let cocycles=[ctx.cocycle_index(1,819).unwrap()];
+            let images=ctx.rational_image_index(3276).unwrap();
             let irreducible=|degree:usize,excluded:&[Vec<u32>]| -> Vec<u32> {
                 for a in 0..f.size {for b in 1..f.size {
                     let mut candidate=vec![0;degree+1];
@@ -661,17 +727,36 @@ mod implementation {
                 let mut got=result.finite_factors;
                 let mut wanted=factors;got.sort();wanted.sort();
                 assert_eq!(got,wanted);
+                let roots=ctx.branch_roots(form).unwrap();
+                assert_eq!(roots.factorization.pattern(),expected);
+                assert_eq!(roots.finite_roots.len(),4);
+                assert_eq!(roots.extension.as_ref().map(SymbolicExtension::degree),
+                    expected.iter().copied().max().filter(|&degree|degree>1));
+                let mut generated=ctx.rational_root_collision_ordinals(form,&images,&cocycles,2000).unwrap();
+                generated.extend(ctx.nonrational_root_collision_ordinals(form,&cocycles,2000).unwrap());
+                generated.sort_unstable();generated.dedup();
+                let mut direct=Vec::new();let mut ordinal=0u64;
+                ctx.visit_structures(819,|matrix| {
+                    let orbit=ctx.conjugate_forms(ctx.transform_form(form,matrix)?)?;
+                    if !ctx.support_geometry(&orbit)?.pairwise_disjoint {direct.push(ordinal);}
+                    ordinal+=1;Ok(())
+                }).unwrap();
+                assert_eq!(generated,direct);
             }
             let mut infinity_form=[0;5];infinity_form[..cubic.len()].copy_from_slice(&cubic);
             let result=ctx.factor_branch_form(infinity_form).unwrap();
             assert!(result.infinity);assert_eq!(result.pattern(),vec![1,3]);
             assert_eq!(result.finite_factors,vec![cubic]);
+            let roots=ctx.branch_roots(infinity_form).unwrap();
+            assert_eq!(roots.finite_roots.len(),3);
+            assert!(roots.factorization.infinity);
             assert!(ctx.factor_branch_form([0,0,1,0,1]).is_err());
             let curve=ctx.curve(ctx.integer(1),0,ctx.integer(1)).unwrap();
             for coset in curve.quotient_classes().unwrap() {
                 let form=curve.quotient_form(coset.representative).unwrap();
                 let result=ctx.factor_branch_form(form).unwrap();
                 assert_eq!(result.pattern().iter().sum::<usize>(),4);
+                assert_eq!(ctx.branch_roots(form).unwrap().finite_roots.len()+result.infinity as usize,4);
             }
         }
         #[test]
@@ -1023,4 +1108,4 @@ mod implementation {
         }
     }
 }
-    pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,CurveClass,ModelWitness};
+    pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,BranchRoots,CurveClass,ModelWitness};

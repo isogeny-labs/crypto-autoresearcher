@@ -294,3 +294,19 @@ states the construction and scope. Next embed all roots in a common symbolic
 extension and solve the nonrational collision equations, then independently
 replay completeness and measure the resource route. The contract remains
 review_required; no scientific trial or approval occurred.
+
+## All-degree exceptional candidates, 2026-11-03
+
+The [common-extension roots](../experiments/EXP-PEXT-bf8f96/implementation/branch_roots.rs)
+and [linear collision solver](../experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs)
+now emit candidate structure ordinals for branch roots of degrees 1 through 4.
+Each of the five synthetic squarefree factor patterns matches a full fixed
+F27 structure scan. The two actual quotient forms yield complete exceptional
+unions of 279 and 1 ordinals; the degree-greater-than-one contribution is
+7 and 1 before one overlap with the rational set. Seventeen core and nineteen
+join native tests pass. The [report](../experiments/EXP-PEXT-bf8f96/reports/all-degree-collision-20261103/report.md)
+states the exact fixed-fixture scope. Next independently replay all factor
+patterns, check each production candidate against literal support gcd,
+measure full-cohort resource feasibility, and complete descent, Type2,
+controls and the frozen execution packet. The contract remains
+review_required; no scientific trial or approval occurred.
