@@ -359,6 +359,8 @@ reads.
 The home page shows write IOPS, read IOPS, throughput and storage for the
 rho distinguished-point Postgres instance (`rho-dp` in `us-west-2`).
 Those numbers come from CloudWatch, not from ledger record counts.
+The current source-to-destination cutover and fresh-panel validation are
+tracked in [the rho cutover problem record](../problems/rho-dp-destination-cutover-unverified.md).
 
 `ui/ops.py` is stdlib-only (no boto3). It:
 
