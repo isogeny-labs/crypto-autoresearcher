@@ -573,8 +573,10 @@ jobs:
       RUN_TESTS: ${{ needs.changes.outputs.tests }}
     runs-on: ubuntu-latest
     # Job 122973073212 spent >11m on full-checkout/setup and was cancelled
-    # at 66% of shard 1. Sparse shards retain their existing total allowance.
-    timeout-minutes: ${{ matrix.shard == 1 && 45 || 20 }}
+    # at 66% of shard 1. Jobs 126095145006 and 126095145073 later reached
+    # the 20m job cap while their test steps were still running; keep the full
+    # suite and allow the same bounded startup/test envelope for every shard.
+    timeout-minutes: 45
     strategy:
       fail-fast: false
       matrix:
@@ -670,7 +672,7 @@ jobs:
         run: python3 tools/ci_sparse_guard.py tripwires
 
       - name: Run harness tests (shard ${{ matrix.shard }} of 4)
-        timeout-minutes: 20
+        timeout-minutes: 30
         if: env.RUN_TESTS == 'true'
         env:
           SPARSE: ${{ matrix.shard != 1 && '1' || '' }}
