@@ -383,3 +383,19 @@ limit, digest and admission refusals. The
 binds the scope. Next build the full run driver, independent production
 checker and exact trial/queue/runbook packet. The experiment remains
 review_required and unfrozen; no cohort trial was launched.
+
+## Independent candidate-set replay, 2026-11-03
+
+The [independent Python checker](../experiments/EXP-PEXT-bf8f96/implementation/independent_candidate_unit.py)
+now reconstructs the frozen structure ordinal map, exact rational and
+higher-degree-root candidate unions, and generic complement intervals. All
+fixed F27 rows match, including direct geometry checks; five mutation controls
+are rejected. The retained synthetic q11 unit independently matches 79,223
+exceptional ordinals and 58,530 complement intervals. Its 498,348 KiB peak
+RSS and 96.04-second profile separate the 89.15-second one-time index from
+3.98 seconds of unit verification. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/independent-candidate-20261103/report.md)
+keeps this software-fixture scope explicit. Next bind the checker to
+supervisor-owned cohort artifacts and complete the full controls, descent,
+analysis and approval packet. EXP-PEXT-bf8f96 remains review_required and
+unfrozen; no scientific trial occurred.
