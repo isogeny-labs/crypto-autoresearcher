@@ -339,3 +339,19 @@ keeps that software scope explicit. Next serialize production source-bound
 candidate/interval receipts and measure complete P1-P4, descent/Type2 and
 control costs before the 24 CPU-hour execution decision. The contract remains
 review_required; no scientific trial or approval occurred.
+
+## Bounded per-form candidate unit, 2026-11-03
+
+The [per-form Rust CLI](../experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs)
+now emits exact field identity, factors/roots, checked exceptional matrix and
+geometry rows, and generic complement intervals under explicit count caps.
+An [independent unit checker](../experiments/EXP-PEXT-bf8f96/implementation/check_candidate_unit.py)
+replayed both actual F27 forms against the complete joined fixture, and seven
+negative mutations or caps were rejected. A source-bound synthetic q11/n3
+CLI smoke emitted a 3,623,945-byte JSON unit for 79,223 exceptional rows;
+peak RSS was 267,204 KiB under a 4 GiB address-space cap. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/report.md)
+preserves the fixed software scope. Next bind each unit to the published
+cohort/T plan and frozen source/protocol, add atomic success and failure
+receipts, and complete the remaining controls and descent interfaces before
+approval. The contract remains review_required; no scientific trial occurred.
