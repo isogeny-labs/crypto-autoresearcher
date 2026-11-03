@@ -30,6 +30,8 @@ IMPLEMENTATION = "experiments/EXP-PEXT-bf8f96/implementation/"
 REQUIRED_SOURCES = {
     IMPLEMENTATION + name for name in (
         "candidate_unit.rs", "candidate_unit_artifact.py", "candidate_binding.py",
+        "candidate_batch.py", "candidate_census_driver.py", "candidate_census_check.py",
+        "independent_candidate_unit.py", "independent_check.py",
         "quotient_core.rs", "symbolic_extension.rs", "branch_factorization.rs",
         "branch_roots.rs", "root_collision.rs", "join_plan.py", "input_manifest.py",
         "check_quotient_certificate.py", "check_compact_class_inputs.py")

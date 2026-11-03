@@ -431,3 +431,20 @@ records exact counts and fixture scope. Next integrate the supervised full
 driver and persistent checker, then complete descent, Type2, controls,
 analysis and the approval packet. The contract remains review_required and
 unfrozen; no scientific cohort trial occurred.
+
+## Supervised candidate batch driver and replay, 2026-11-03
+
+The [candidate driver](../experiments/EXP-PEXT-bf8f96/implementation/candidate_census_driver.py)
+now iterates the fixed full-cohort class/T slots through the live-admitted
+unit runner, enforces bounded per-unit/stage limits, stops on failure and
+seals a complete index only after every unit succeeds. The
+[persistent checker](../experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py)
+verifies that index and independently replays each unit against its bound form
+and binary digest using one reusable field index. Fourteen related software
+tests pass; the F27 two-unit fixture gives 280 exceptional and 1,358 generic
+structure ordinals with all exceptional geometry checked. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-driver-20261103/report.md)
+records the exact software scope. Next integrate binary build provenance and
+supervisor-compatible stage artifacts in `run.py`, then the remaining descent,
+Type2, controls, analysis and approval packet. The contract remains
+review_required and unfrozen; no scientific cohort trial occurred.
