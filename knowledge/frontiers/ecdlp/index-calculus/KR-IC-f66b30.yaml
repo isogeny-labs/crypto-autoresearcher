@@ -1,0 +1,33 @@
+id: KR-IC-f66b30
+area: index-calculus
+kind: known_negative
+title: Target-family amortisation is dominated inside the BTN (Boolean tensor network) cost model
+claim: >-
+  Making the target R = R0 + [T]G a free variable costs one point addition (about b edges) per
+  bit of T, whereas a base point costs about b edges per b/m bits of window, so a free target bit
+  is m times less edge-efficient than a base bit, and letting (u,v) float costs 2b additions.
+  Since D.1 cost depends only on the edge count (KR-IC-9278b9), amortising the transform over a
+  target family gains nothing inside D.1. The only amortisation the model admits is solver-side
+  clause retention across targets, a constant (retained-setup/advice, closed). Descent trees are
+  also dominated: the deepest level needs (m+1)b > mb edges. The edge counts are estimates: the
+  earlier "10^5 b edges per addition" figure was 9x to 30x too high (measured 3,364 edges per
+  slot-bit for the freed binary network, 1.17e4 for the unfreed prototype, 11.9k per bit for the
+  m = 2 prime network at b = 131), which does not change the argument (it depends on ratios).
+  Heuristic: derived by arithmetic in the lab's review, no Lean receipt.
+status: heuristic
+setting: {field: prime, model: boolean_tensor_network}
+sources:
+  - ref: KN-LIT-caa51d
+    locator: "Thm D.1 cost depends on edge count s only (as read in the 2026-10-31 review)"
+    verification_state: secondary_source
+forecloses:
+  - amortise tensor contraction over a family of targets
+  - target parameter T interpolation of relation counts
+  - retained setup online with tensor oracle
+  - descent tree with tensor oracle
+internal:
+  - {ref: KN-LIT-eb8749, relation: cites, note: "the Bochum relation network is the object whose edge counts are compared"}
+open: []
+dominated_by: null
+added: '2026-11-02'
+superseded_by: null

@@ -1,0 +1,40 @@
+id: KR-IC-ecebb6
+area: index-calculus
+kind: known_bound
+title: Ladder rule and solver-saving floor for fixed-arity index calculus (relation phase, necessary conditions), reconciled with the sweep's rho_floor
+claim: >-
+  Two conventions, one statement, both NECESSARY conditions for beating rho on the relation phase
+  only (linear algebra dropped). Ladder convention (IcTensorRoute; Lean receipt: crypto research/ic_prime_eth_leads_20261031/lean/IcTensorRoute.lean, rebuilt 2026-11-02 with standard axioms and no sorry, log docs/reports/ic-prime-eth-leads-20261102/rebuild_IcTensorRoute_20261102.txt; no KN-FIND backs it yet): b = log2 p, window s = b/m
+  bits, one decomposition attempt costs 2^{e s}; relation phase about m! 2^{b(1+e)/m} against rho
+  2^{b/2}; ladder_rule and ladder_rule_real (Lean): (1+e)/m < 1/2 iff e < m/2 - 1, so m = 2 never
+  (arity_two_never), m = 3 needs e < 1/2, m = 4 needs e < 1. Sweep convention (rho_floor,
+  PrimePdpEncoding.lean in a sweep worktree, core Lean, Nat form; read from source, NOT rebuilt in
+  this PR): window l, per-target oracle cost c, product-law work W = m! p c / 2^{(m-1) l}; if
+  2^{(m-1) l} <= c m s and s*s <= p then s 2^{(m-1) l} <= m! p c, i.e. W >= sqrt(p). With l = b/m
+  and c = 2^{e s}, rho_floor's threshold c < 2^{(m-1)l}/(m sqrt p) is e <= m/2 - 1 up to the
+  factor m. ladder_rule drops m! entirely; rho_floor drops (m-1)! (uses m! >= m). The conventions
+  differ in strict vs non-strict inequality, exponent scale (e in units of s vs c additive), and
+  the m factor. Solver-saving floor (solver_saving_floor, Lean, rebuilt): a Boolean solver
+  costing 2^{n(1-delta)} with n >= b interface bits meets the per-attempt budget 2^{b(1/2-1/m)}
+  only if delta >= 1/2 + 1/m (the budget omits the factor m, a conservative direction). The
+  hypothesis n >= b is an assumption on the encoding (interface_lower_bound only gives an
+  injectivity count k <= s). Measured context (unaudited here, from a sweep memo): WDSat
+  alpha about m (delta about 0) on binary PDP; a pilot prime 16-bit sweep took 2e5 to 1.6e6
+  conflicts against 48 to 68 for enumeration.
+status: heuristic
+setting: {field: any, model: per_attempt_oracle_fixed_arity}
+cost: "beats rho only if e < m/2 - 1 (m=3: e<0.5; m=4: e<1); solver needs delta >= 1/2 + 1/m"
+sources:
+  - ref: KN-LIT-caa51d
+    locator: "context for the black-box oracle model only; the arithmetic itself is internal (Lean) and has no external source"
+    verification_state: secondary_source
+forecloses:
+  - SAT solver makes fixed-arity index calculus beat rho
+  - per-attempt decomposition cost exponent below m/2 - 1
+  - arity two index calculus
+  - Boolean solver with constant-factor savings rescues index calculus
+internal: []
+open: []
+dominated_by: null
+added: '2026-11-02'
+superseded_by: null

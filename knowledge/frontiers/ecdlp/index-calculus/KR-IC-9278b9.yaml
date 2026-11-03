@@ -1,0 +1,35 @@
+id: KR-IC-9278b9
+area: index-calculus
+kind: known_negative
+title: D.1 as stated gives no discount for linear or low-rank vertices and has no q-ary (prime-digit) form
+claim: >-
+  As stated in the lab's reading, Theorem D.1 (openai/math ETH paper, Appendix D) bounds the
+  contraction by (s+L)^{O(1)} 2^{O(s/sqrt(log s))} where the exponent depends only on the number
+  s of one-bit edges; vertex tensors are black boxes evaluated from their descriptions in time
+  (s+L)^b 2^{A s^{9/10}}, so a vertex that is F_p-linear or low rank earns no reduction in the
+  exponent. Edges are bits and the machinery is 2-adic (valuations, F_{2^e} residue field,
+  l0 = 1-z, l1 = z); the paper treats no q-ary edge alphabet and supplies no p-adic analogue.
+  Hence Fourier-gadget or ring-linear structure can help a solver, not the D.1 bound, and a
+  p-ary digit network is outside D.1 as stated. Also, D.1's recursion is inert below s about
+  2^{2^85} edges (admission u0 >= lambda^{4/5}), where the algorithm is brute force 2^s (derived
+  by an internal audit; the Bochum paper quotes the weaker 2^{2^17}). Line citations in the
+  source reading were not re-checked against the paper in this PR.
+status: heuristic
+setting: {field: prime, model: boolean_tensor_network}
+sources:
+  - ref: KN-LIT-caa51d
+    locator: "App. D, Thm D.1 statement; vertices as immutable descriptions; cost depends on s only; 2-adic machinery (as read in the 2026-10-31 review; eth.txt line numbers not re-checked)"
+    verification_state: secondary_source
+  - ref: KN-LIT-eb8749
+    locator: "Section 1.2 Limitations (saving only for networks of size at least 2^{2^17})"
+    verification_state: full_text_read
+forecloses:
+  - linear vertices cheaper in tensor contraction
+  - q-ary tensor network under D.1
+  - p-ary digit network inherits D.1 exponent
+  - Fourier gadget lowers the D.1 exponent
+internal: []
+open: []
+dominated_by: null
+added: '2026-11-02'
+superseded_by: null
