@@ -533,3 +533,18 @@ the synthetic nonsquare rank-two relation as an arithmetic square. The
 records the exact algebraic scope. Next bind the action to the actual source
 elliptic map and construct/check the descended model before reporting an
 admissible genus. No scientific cohort trial was launched.
+
+## Source elliptic map to moved quotient quartic, 2026-11-03
+
+The [binding checker](../experiments/EXP-PEXT-bf8f96/implementation/source_map_binding.py)
+now checks the named elliptic model and canonical T map into the quotient
+quartic, then the projective structure change with its determinant-dependent
+ordinate factor. It verifies the quartic equation and rational inverse in the
+elliptic function field and binds the result to a published class/T and an
+independent structure ordinal. Seven related software tests pass on F27
+fixtures and the q5/n3 published input binding, including wrong-matrix and
+wrong-ordinal refusals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/source-map-binding-20261103/report.md)
+records the exact scope. Next construct and check the fixed-field model and
+full compositum source-map compatibility before assigning an admissible
+genus. No scientific cohort trial was launched.
