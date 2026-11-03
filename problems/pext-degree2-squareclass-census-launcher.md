@@ -369,3 +369,17 @@ records the exact scope. Next add frozen protocol/source/binary admission and
 write-once success/failure receipts, then complete independent production
 checks and the remaining full execution packet. The contract remains
 review_required; no scientific trial occurred.
+
+## Supervisor-gated candidate artifacts, 2026-11-03
+
+The [candidate artifact helper](../experiments/EXP-PEXT-bf8f96/implementation/candidate_unit_artifact.py)
+now requires the frozen plan's live supervisor claim and exact source/input
+bindings for production construction. Each unit directory is exclusive;
+successful raw output is compressed with digests, and started failures retain
+partial stdout, stderr and a write-once failure record. Fixed F27 software
+checks replayed one successful unit and a forced-cap failure, plus duplicate,
+limit, digest and admission refusals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-artifact-20261103/report.md)
+binds the scope. Next build the full run driver, independent production
+checker and exact trial/queue/runbook packet. The experiment remains
+review_required and unfrozen; no cohort trial was launched.
