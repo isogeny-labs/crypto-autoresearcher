@@ -1,0 +1,43 @@
+handoff:
+  id: TASK-20261103-2c99e6
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-03'
+  opened_by_decision: DEC-20261103-523d19
+  experiment_id: EXP-SEMAEV-93d5cc
+  goal_id: GOAL-ECDLP-001
+  lane: BATCH-7c689b
+  objective: >-
+    Review the independent report of TASK-20261103-f8f2d2, record a decision
+    on the strength of EV-SEMAEV-593b7a (it may stay preliminary, rise, or be
+    superseded), lift the review blindness deliberately, and archive the lane.
+  uncertainty_reduced: Whether the procedure deviation of DEC-20261018-3b4a32 is remedied.
+  inputs:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.json
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.md
+  - ledger/evidence/EV-SEMAEV-593b7a.yaml
+  - ledger/decisions/DEC-20261018-3b4a32.yaml
+  constraints:
+  - Starts only after TASK-20261103-f8f2d2's report is committed.
+  - Records are immutable; a strength change is a new decision and, if needed, a successor evidence record.
+  deliverables:
+  - ledger/decisions/DEC-20261103-812d74.yaml
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/archives/TASK-20261103-2c99e6/ledger-receipt.json
+  write_scope:
+  - ledger/decisions/DEC-20261103-812d74.yaml
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/archives/TASK-20261103-2c99e6
+  archived_by: TASK-20261103-2c99e6
+  depends_on: [TASK-20261103-f8f2d2]
+  completion_gate:
+  - decision recorded and lane archived
+  inference:
+    policy: coordinator-orchestration-code
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+    wall_clock_seconds: 3600
+    memory_gb: 2
