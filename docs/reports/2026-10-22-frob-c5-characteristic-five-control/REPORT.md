@@ -57,7 +57,11 @@ direct-trace flag is not an independent check.
 
 The editable [DOT](proof.dot), [SVG](proof.svg), [PNG](proof.png),
 [figure PDF](proof-figure.pdf), and [report PDF](report.pdf) render the new
-boundary. The C5 factor-proof diagram is checked separately in merged PR #2475.
+boundary. The rebuilt report PDF is recorded by [its artifact manifest](.artifacts.json)
+with SHA-256 `58c0ad316c8ebecc0163d2f950dcd2df22bccca91507addcf3add9bfc46eb853`;
+materialize it with `python3 tools/artifacts/artifacts.py pull
+docs/reports/2026-10-22-frob-c5-characteristic-five-control/report.pdf`.
+The C5 factor-proof diagram is checked separately in merged PR #2475.
 No run value, performance graph, or dashboard row changed because this task
 made no measurement. Separate Lean certificates now check the archived
 quotient-basis matrix entries and exact matrix factor kernels. The next
