@@ -7,6 +7,7 @@
 mod implementation {
     include!("../../EXP-PEXT-212d5c/implementation/cover_census_n7.rs");
     include!("symbolic_extension.rs");
+    include!("branch_factorization.rs");
     use std::collections::{BTreeSet, BTreeMap as OrderedMap};
 
     #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -623,6 +624,57 @@ mod implementation {
     mod tests {
         use super::*;
         #[test]
+        fn branch_factorization_covers_all_squarefree_quartic_patterns() {
+            let ctx=Context::new(3,3,27).unwrap();let f=&ctx.field;
+            let irreducible=|degree:usize,excluded:&[Vec<u32>]| -> Vec<u32> {
+                for a in 0..f.size {for b in 1..f.size {
+                    let mut candidate=vec![0;degree+1];
+                    candidate[0]=b;candidate[1]=a;candidate[degree]=1;
+                    if !excluded.contains(&candidate) && ctx.symbolic_extension(&candidate).is_ok() {
+                        return candidate;
+                    }
+                }}
+                panic!("missing sparse irreducible factor")
+            };
+            let quadratic=irreducible(2,&[]);
+            let second_quadratic=irreducible(2,&[quadratic.clone()]);
+            assert_eq!(quadratic[1],second_quadratic[1]); // forces the norm fallback
+            let cubic=irreducible(3,&[]);
+            let quartic=irreducible(4,&[]);
+            let linear=|root:u32| vec![f.neg(root),1];
+            let fixtures=[
+                (vec![linear(0),linear(1),linear(2),linear(3)],vec![1,1,1,1]),
+                (vec![linear(0),linear(1),quadratic.clone()],vec![1,1,2]),
+                (vec![linear(0),cubic.clone()],vec![1,3]),
+                (vec![quadratic.clone(),second_quadratic.clone()],vec![2,2]),
+                (vec![quartic.clone()],vec![4]),
+            ];
+            for (factors,expected) in fixtures {
+                let mut product=pz();product.n=1;product.c[0]=1;
+                for factor in &factors {
+                    let mut p=pz();p.n=factor.len();p.c[..p.n].copy_from_slice(factor);
+                    product=pmul(f,&product,&p);
+                }
+                let mut form=[0;5];form[..product.n].copy_from_slice(&product.c[..product.n]);
+                let result=ctx.factor_branch_form(form).unwrap();
+                assert_eq!(result.pattern(),expected);
+                let mut got=result.finite_factors;
+                let mut wanted=factors;got.sort();wanted.sort();
+                assert_eq!(got,wanted);
+            }
+            let mut infinity_form=[0;5];infinity_form[..cubic.len()].copy_from_slice(&cubic);
+            let result=ctx.factor_branch_form(infinity_form).unwrap();
+            assert!(result.infinity);assert_eq!(result.pattern(),vec![1,3]);
+            assert_eq!(result.finite_factors,vec![cubic]);
+            assert!(ctx.factor_branch_form([0,0,1,0,1]).is_err());
+            let curve=ctx.curve(ctx.integer(1),0,ctx.integer(1)).unwrap();
+            for coset in curve.quotient_classes().unwrap() {
+                let form=curve.quotient_form(coset.representative).unwrap();
+                let result=ctx.factor_branch_form(form).unwrap();
+                assert_eq!(result.pattern().iter().sum::<usize>(),4);
+            }
+        }
+        #[test]
         fn symbolic_extensions_validate_irreducibility_and_field_laws() {
             let ctx=Context::new(3,3,27).unwrap();
             for degree in 2..=4 {
@@ -971,4 +1023,4 @@ mod implementation {
         }
     }
 }
-pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,CurveClass,ModelWitness};
+    pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,CurveClass,ModelWitness};

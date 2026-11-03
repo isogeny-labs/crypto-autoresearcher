@@ -281,3 +281,16 @@ records its software scope. Next factor bound quartics, solve all nonrational
 root collisions, replay completeness independently and measure the proposed
 resource route. The contract remains review_required; no scientific trial or
 approval occurred.
+
+## Complete branch-factor input, 2026-11-03
+
+The [native branch factorizer](../experiments/EXP-PEXT-bf8f96/implementation/branch_factorization.rs)
+now returns exact irreducible factors for all five squarefree projective
+quartic patterns, including a deterministic trace/norm split for `2+2` and
+an explicit infinity flag. Fixed F27 fixtures exercise each pattern, the
+equal-trace norm fallback, and actual quotient forms. Fifteen core and
+seventeen join native tests pass; the [report](../experiments/EXP-PEXT-bf8f96/reports/branch-factorization-20261103/report.md)
+states the construction and scope. Next embed all roots in a common symbolic
+extension and solve the nonrational collision equations, then independently
+replay completeness and measure the resource route. The contract remains
+review_required; no scientific trial or approval occurred.
