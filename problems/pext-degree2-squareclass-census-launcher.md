@@ -226,3 +226,23 @@ the stated input scope. An exact exceptional-index generator with independent
 completeness remains the next throughput construction. Coefficient classes,
 descent and Type2 predicates must still be added before the complete P1–P4
 and H1 contract can be frozen. No scientific run or approval occurred.
+
+## Native screening and complete-index derivation, 2026-11-03
+
+The [native arithmetic](../experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs)
+now checks exact geometric support rank, branch count and genus for a complete
+squarefree Frobenius orbit. The [join path](../experiments/EXP-PEXT-bf8f96/implementation/join_core.rs)
+screens exact ordinal shards, counts generic positions and emits overlapping
+rows only; it defers cocycle construction on generic rows. Its full fixed F27
+software fixture yields 1358 generic and 280 exceptional positions, and
+113-position shard replay gives identical exceptional ordinals and genera.
+Nine core and eleven join Rust tests pass, including q3/n5 rank-one validation.
+This path still visits every ordinal, so no 24 CPU-hour fit is inferred.
+
+The [prospective exceptional-index derivation](../experiments/EXP-PEXT-bf8f96/reports/exceptional-index-design-20261103/report.md)
+handles all rational and degree-2/3/4 branch roots by finite-field orbit
+normalization, a small linear system for each nonrational root pair and a
+Lang/Hilbert-90 cocycle solve. It retains the existing left-coset ordinal order
+and all cohort types. The full generator, independent completeness checker,
+resource measurement, constant coefficient classes, descent, Type2 and frozen
+execution packet remain to implement. No scientific trial or approval occurred.

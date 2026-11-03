@@ -49,6 +49,13 @@ mod implementation {
         pub contains_nonsquare_constant: bool,
         pub relations: Vec<(u8,bool)>,
     }
+    #[derive(Debug, PartialEq, Eq)]
+    pub struct SupportGeometry {
+        pub pairwise_disjoint: bool,
+        pub geometric_rank: usize,
+        pub branch_points: usize,
+        pub geometric_genus: usize,
+    }
 
     impl Context {
         pub fn new(q: u32, n: u32, maximum_field_elements: u32) -> Result<Self, &'static str> {
@@ -129,6 +136,56 @@ mod implementation {
             Ok(SquareClasses{geometric_rank:forms.len()-relations.len().ilog2() as usize,
                 arithmetic_rank:forms.len()-squares.ilog2() as usize,
                 contains_nonsquare_constant:relations.iter().any(|(_,square)|!square),relations})
+        }
+        /// Exact geometric support arithmetic for a complete Frobenius orbit
+        /// of squarefree quartics. Coefficient classes and descent are separate.
+        pub fn support_geometry(&self, forms:&[[u32;5]]) -> Result<SupportGeometry,&'static str> {
+            let f=&self.field;
+            if ![3,5,7].contains(&f.n) || forms.len()!=f.n as usize {
+                return Err("requires complete degree-3/5/7 conjugate orbit");
+            }
+            let mut supports=Vec::with_capacity(forms.len());
+            for (i,form) in forms.iter().enumerate() {
+                if form.iter().any(|&a|a>=f.size) {return Err("invalid form coefficient");}
+                let degree=form.iter().rposition(|&a|a!=0).ok_or("zero form")?;
+                if degree<3 {return Err("multiple root at projective infinity");}
+                let set=set_of(f,form);
+                let mut derivative=pz(); derivative.n=degree;
+                for j in 1..=degree {derivative.c[j-1]=f.mul(f.int(j as i64),form[j]);}
+                if pgcd(f,&set.p,&ptrim(derivative)).n!=1 {return Err("repeated branch root");}
+                if forms[(i+1)%forms.len()]!=form.map(|a|f.frob(a)) {
+                    return Err("Frobenius conjugate sequence mismatch");
+                }
+                supports.push(set);
+            }
+            let disjoint=(0..supports.len()).all(|i|
+                (i+1..supports.len()).all(|j|!meets(f,&supports[i],&supports[j])));
+            if disjoint {
+                let n=forms.len();
+                return Ok(SupportGeometry{pairwise_disjoint:true,geometric_rank:n,
+                    branch_points:4*n,geometric_genus:(n-1)*(1<<n)+1});
+            }
+            let one=Set{p:{let mut p=pz();p.n=1;p.c[0]=1;p},inf:false};
+            let mut span=vec![one];let mut total=one;
+            for support in &supports {
+                total=union(f,&total,support);
+                if span.contains(support) {continue;}
+                let add:Vec<Set>=span.iter().map(|v|sdiff(f,v,support)).collect();
+                span.extend(add);
+            }
+            if !span.len().is_power_of_two() {return Err("support span cardinality");}
+            let rank=span.len().ilog2() as usize;
+            let branches=size(&total);
+            if rank==0 || branches<4 {return Err("invalid branch rank or count");}
+            if span.iter().skip(1).any(|v|size(v)<2 || size(v)%2!=0) {
+                return Err("invalid character branch parity");
+            }
+            let genus=if rank==1 {(branches-2)/2}
+                else {1+(1<<(rank-2))*(branches-4)};
+            let character_sum:usize=span.iter().skip(1).map(|v|(size(v)-2)/2).sum();
+            if genus!=character_sum {return Err("support genus character-sum mismatch");}
+            Ok(SupportGeometry{pairwise_disjoint:false,geometric_rank:rank,
+                branch_points:branches,geometric_genus:genus})
         }
         /// Explicit pointed K-isomorphism, retaining the actual curve model.
         pub fn transform_model(&self,model:[u32;3],u:u32,r:u32)->Result<[u32;3],&'static str> {
@@ -390,6 +447,44 @@ mod implementation {
             assert!(ctx.square_relations(&[[0,0,0,0,1]]).is_err());
         }
         #[test]
+        fn fixed_f27_support_geometry_matches_independent_relations() {
+            let ctx=Context::new(3,3,27).unwrap();
+            let curve=ctx.curve(ctx.integer(1),0,ctx.integer(1)).unwrap();
+            let mut generic=0usize;let mut exceptional=OrderedMap::new();
+            for coset in curve.quotient_classes().unwrap() {
+                let form=curve.quotient_form(coset.representative).unwrap();
+                ctx.visit_structures(819,|matrix| {
+                    let image=ctx.transform_form(form,matrix)?;
+                    let orbit=ctx.conjugate_forms(image)?;
+                    let geometry=ctx.support_geometry(&orbit)?;
+                    if geometry.pairwise_disjoint {generic+=1;}
+                    else {
+                        let key=(geometry.geometric_rank,geometry.branch_points,geometry.geometric_genus);
+                        *exceptional.entry(key).or_insert(0usize)+=1;
+                        let relations=ctx.square_classes(&orbit)?;
+                        assert_eq!(relations.geometric_rank,geometry.geometric_rank);
+                    }
+                    Ok(())
+                }).unwrap();
+            }
+            assert_eq!(generic,1358);
+            assert_eq!(exceptional,[( (1,4,1),2),((3,8,9),18),((3,9,11),52),((3,10,13),208)]
+                .into_iter().collect());
+        }
+        #[test]
+        fn support_geometry_validates_orbit_and_rank_one_n5() {
+            let ctx=Context::new(3,5,243).unwrap();
+            let form=[1,1,0,1,0];
+            let repeated=[form;5];
+            let geometry=ctx.support_geometry(&repeated).unwrap();
+            assert_eq!(geometry,SupportGeometry{pairwise_disjoint:false,
+                geometric_rank:1,branch_points:4,geometric_genus:1});
+            let mut broken=repeated;broken[1][0]=2;
+            assert!(ctx.support_geometry(&broken).is_err());
+            assert!(ctx.support_geometry(&repeated[..4]).is_err());
+            assert!(ctx.support_geometry(&[[0,0,1,0,1];5]).is_err());
+        }
+        #[test]
         fn extension_encoding_and_charts() {
             // Fixed embedded curves: orders obtained from t_2=t_1^2-2q
             // and t_3=t_1^3-3qt_1, respectively. No parameter sweep.
@@ -507,4 +602,4 @@ mod implementation {
         }
     }
 }
-pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CurveClass,ModelWitness};
