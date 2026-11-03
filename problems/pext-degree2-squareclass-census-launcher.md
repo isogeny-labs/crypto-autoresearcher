@@ -310,3 +310,16 @@ patterns, check each production candidate against literal support gcd,
 measure full-cohort resource feasibility, and complete descent, Type2,
 controls and the frozen execution packet. The contract remains
 review_required; no scientific trial or approval occurred.
+
+## Independent all-pattern software replay, 2026-11-03
+
+The [independent polynomial-basis checker](../experiments/EXP-PEXT-bf8f96/implementation/check_all_degree_collision_certificate.py)
+now reconstructs the roots, projective linear kernels, cocycle norm and joined
+Lang witnesses for all five squarefree factor patterns and both actual F27
+quotient forms. Every exact candidate union agrees with a literal support-gcd
+scan. The [source-bound report](../experiments/EXP-PEXT-bf8f96/reports/all-degree-independent-20261103/report.md)
+records counts, 17 core and 19 join native tests, one independent Python test
+and four mutation rejections. Next build production candidate receipts and
+direct checks, measure the full-cohort 4 GB and 24 CPU-hour route, and finish
+coefficient-aware descent, Type2, controls and the frozen execution packet.
+The contract remains review_required; no scientific trial or approval occurred.
