@@ -463,3 +463,17 @@ records the software scope. Next integrate this build and the cohort slots in
 the six-stage launcher, then complete the remaining descent, Type2, controls,
 analysis and approval packet. EXP-PEXT-bf8f96 remains review_required and
 unfrozen; no scientific cohort trial occurred.
+
+## Exact published four-cohort join-plan inputs, 2026-11-03
+
+The four [canonical join plans](../experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/)
+are now materialized and recomputed against the published compact
+class manifest. Their [set receipt](../experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/receipt.json)
+binds 4,092 classes, 8,178 class/T blocks and 10,262,826,642 structure
+ordinals to exact plan hashes. The draft specification now names the four
+input paths and reflects the actual readiness state. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/join-plans-published-20261103/report.md)
+keeps this input-preparation scope explicit. Next bind the plans in the frozen
+six-stage trial plan and run entry point, then complete the remaining descent,
+Type2, controls, analysis and approval packet. No candidate or scientific
+cohort trial row was produced.
