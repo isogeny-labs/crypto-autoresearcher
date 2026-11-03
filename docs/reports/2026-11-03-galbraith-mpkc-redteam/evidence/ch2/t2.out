@@ -1,0 +1,35 @@
+
+=== Theorem 2.4.3, odd n in 1..199 (incl n=1), a in -50..50
+failures: 0 []
+Def 2.4.1 literal overlap at p|a: x^2=0 mod 3 has solution x=0, so case '1' and case '0' both apply for a=0,p=3
+QR with m negative: (n/m) undefined for m<0 (Jacobi needs n in N); e.g. m=-3,n=5 not covered by definition
+
+=== Exercise 2.4.7 table, primes < 20000
+primes 2261 failures 0
+
+=== Lemma 2.9.1, primes 3 mod 4 < 3000, all QR a
+failures 0
+
+=== Lemma 2.9.2 edge cases
+p=7, a=0 (a square: 0=0^2): b = a^q = 0 -> b=0 has no multiplicative order (statement needs p∤a)
+p=2: p-1=2^0*1, e=0, 'order dividing 2^(e-1)=1/2' meaningless (needs p odd)
+
+=== Algorithm 3 (Tonelli-Shanks) exactly as printed; primes < 2000, all QR a
+cases 138373 failures 0
+
+=== Exercise 2.9.9 Atkin, p=5 mod 8 < 5000
+failures 0
+
+=== Exercise 2.9.10 Cipolla: hypothesis (a/p)=1 missing
+QR a: failures 0 ; non-residue a example (p,a,t,x^((p+1)/2)=u+v*x): (3, 2, 1, (1, 1)) -> v!=0 so not an element of F_p; no square root mod p exists
+
+=== Cornacchia as printed (Euclid on 2p and x0, stop at first r<sqrt p) vs the p-version
+solvable (p,d): 2918; printed 2p-version misses 2078 e.g. [(3, 2, (1, 1)), (5, 4, (1, 1)), (7, 3, (2, 1))]; p-version misses 0
+
+=== Example 2.13.2 / Exercise 2.13.4 (quadratic Hensel)
+13^2 mod 27 = 7
+quadratic Hensel failures: 0
+
+=== Algorithm 2 edge cases; Example 2.8.5
+Algorithm 2 congruence failures (m>=1): 0 ; m=1,g=10,n=7 returns 10 (not reduced); m=0: log2(0) undefined
+Example 2.8.5 exponent reached: 155 == 0b10011011 = 155
