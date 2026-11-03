@@ -7,6 +7,7 @@ descent or hyperelliptic-model certificate.
 
 from check_all_degree_collision_certificate import validate_row
 from check_structure_certificate import normalize, transform
+from generic_disjoint import classify
 
 
 def _add(extension, left, right):
@@ -63,42 +64,61 @@ def _base_matrix_witness(field, extension, alpha):
     return None
 
 
+class Type2Instrument:
+    """Validate one branch form once, then inspect its projective structures."""
+
+    def __init__(self, field, unit):
+        if field.n != 3 or field.p % 2 != 1:
+            raise ValueError("Type2 instrument requires odd cubic extension")
+        factor = {"form": unit["form"], "pattern": unit["factor_pattern"],
+                  "infinity": unit["infinity"], "factors": unit["factors"],
+                  "extension_modulus": unit["extension_modulus"], "roots": unit["roots"]}
+        self.extension, self.roots = validate_row(
+            field, factor, unit["form"], unit["factor_pattern"])
+        self.field = field
+        self.form = unit["form"]
+        self.pattern = unit["factor_pattern"]
+        if self.pattern == [2, 2] and (self.extension.degree != 2 or len(self.roots) != 4):
+            raise ValueError("Type2 quadratic roots incomplete")
+
+    def inspect(self, matrix):
+        field, extension = self.field, self.extension
+        matrix = normalize(field, matrix)
+        moved = transform(field, self.form, matrix)
+        if self.pattern != [2, 2]:
+            return {"schema": "pext.type2-predicate/v1", "signature": False,
+                    "hyperelliptic_predicate": None, "moved_form": moved,
+                    "status": "checked_non_type2_factor_pattern"}
+        moved_roots = [_projective_image(field, extension, matrix, root) for root in self.roots]
+        if len(set(moved_roots)) != 4 or any(extension.evaluate(moved, root) != extension.constant(0)
+                                           for root in moved_roots):
+            raise ValueError("moved Type2 branch roots invalid")
+        ordered = sorted(moved_roots)
+        choices = []
+        for alpha in ordered:
+            orbit = _orbit(extension, alpha, field.p)
+            if orbit is not None and set(moved_roots) == {orbit[index] for index in (0, 1, 3, 4)}:
+                choices.append(alpha)
+        if not choices:
+            return {"schema": "pext.type2-predicate/v1", "signature": False,
+                    "hyperelliptic_predicate": None, "moved_form": moved,
+                    "status": "checked_no_length_six_type2_orbit"}
+        conjugates = [moved]
+        for _ in range(2):
+            conjugates.append([field.power(value, field.p) for value in conjugates[-1]])
+        if classify(field, conjugates)["classification"] != "exceptional":
+            raise ValueError("Type2 orbit did not imply exceptional branch overlap")
+        witnesses = [(alpha, _base_matrix_witness(field, extension, alpha)) for alpha in choices]
+        accepted = next(((alpha, witness) for alpha, witness in witnesses if witness is not None), None)
+        return {"schema": "pext.type2-predicate/v1", "signature": True,
+                "hyperelliptic_predicate": accepted is not None,
+                "moved_form": moved, "alpha": list((accepted or witnesses[0])[0]),
+                "trace_zero_matrix": None if accepted is None else accepted[1],
+                "alpha_choices_checked": len(choices),
+                "base_matrix_pair_space_per_choice": field.p**2,
+                "status": "checked_type2_signature_and_trace_zero_predicate"}
+
+
 def inspect(field, unit, matrix):
-    """Return independently checked Type2 signature and separate predicate."""
-    if field.n != 3 or field.p % 2 != 1:
-        raise ValueError("Type2 instrument requires odd cubic extension")
-    factor = {"form": unit["form"], "pattern": unit["factor_pattern"],
-              "infinity": unit["infinity"], "factors": unit["factors"],
-              "extension_modulus": unit["extension_modulus"], "roots": unit["roots"]}
-    extension, roots = validate_row(field, factor, unit["form"], unit["factor_pattern"])
-    matrix = normalize(field, matrix)
-    moved = transform(field, unit["form"], matrix)
-    if unit["factor_pattern"] != [2, 2]:
-        return {"schema": "pext.type2-predicate/v1", "signature": False,
-                "hyperelliptic_predicate": None, "moved_form": moved,
-                "status": "checked_non_type2_factor_pattern"}
-    if extension.degree != 2 or len(roots) != 4:
-        raise ValueError("Type2 quadratic roots incomplete")
-    moved_roots = [_projective_image(field, extension, matrix, root) for root in roots]
-    if len(set(moved_roots)) != 4 or any(extension.evaluate(moved, root) != extension.constant(0)
-                                       for root in moved_roots):
-        raise ValueError("moved Type2 branch roots invalid")
-    ordered = sorted(moved_roots)
-    choices = []
-    for alpha in ordered:
-        orbit = _orbit(extension, alpha, field.p)
-        if orbit is not None and set(moved_roots) == {orbit[index] for index in (0, 1, 3, 4)}:
-            choices.append(alpha)
-    if not choices:
-        return {"schema": "pext.type2-predicate/v1", "signature": False,
-                "hyperelliptic_predicate": None, "moved_form": moved,
-                "status": "checked_no_length_six_type2_orbit"}
-    witnesses = [(alpha, _base_matrix_witness(field, extension, alpha)) for alpha in choices]
-    accepted = next(((alpha, witness) for alpha, witness in witnesses if witness is not None), None)
-    return {"schema": "pext.type2-predicate/v1", "signature": True,
-            "hyperelliptic_predicate": accepted is not None,
-            "moved_form": moved, "alpha": list((accepted or witnesses[0])[0]),
-            "trace_zero_matrix": None if accepted is None else accepted[1],
-            "alpha_choices_checked": len(choices),
-            "base_matrix_pair_space_per_choice": field.p**2,
-            "status": "checked_type2_signature_and_trace_zero_predicate"}
+    """One-off checked branch inspection."""
+    return Type2Instrument(field, unit).inspect(matrix)

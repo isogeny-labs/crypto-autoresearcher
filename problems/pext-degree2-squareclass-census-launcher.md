@@ -562,3 +562,18 @@ not have the signature. The
 records the exact forms and source. Next bind Type2 rows into the full
 checker/analysis and independent witness review. No scientific cohort trial
 was launched.
+
+## Type2 full-review unit scanner, 2026-11-03
+
+The [unit scanner](../experiments/EXP-PEXT-bf8f96/implementation/type2_unit_scan.py)
+now cross-tabs Type2 signatures and trace-zero predicate results only after
+every exceptional candidate row has passed independent geometry review.
+Type2's length-six root placement forces overlap with a Frobenius-conjugate
+branch set, so the certified generic complement is excluded without scanning
+each generic structure. Five related software tests pass; three complete F27
+units give signature counts `6,8,6` and trace-zero-positive counts `2,0,2`,
+and partial reviews are refused. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/type2-unit-scan-20261103/report.md)
+records the exact fixture scope. Next persist the rows in the frozen checker
+and cross-tab by published curve/T identity; full-cohort runtime remains to
+be measured. No scientific cohort trial was launched.
