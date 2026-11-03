@@ -183,3 +183,30 @@ queue/handoff and published/frozen source/approval bindings. The original exit
 criteria remain; no approval, freeze or scientific status transition occurs.
 See the [fresh transport report](../experiments/EXP-PEXT-bf8f96/reports/transport-20261103/report.md)
 and TASK-20261103-69adf4 for exact successor custody scope.
+
+## Published input, plan and generic-support progress, 2026-11-03
+
+The [input manifest](../experiments/EXP-PEXT-bf8f96/inputs/manifest.json)
+now binds the exact five complete class inputs/checks and q3/n5 legacy
+bijection artifact. The [all-T plan builder](../experiments/EXP-PEXT-bf8f96/implementation/join_plan.py)
+specifies canonical T targets and exact structure offsets for the four geometric
+cohorts; fixed F3/F5/F27 plans match the separate Rust join producer. No full
+production plan was generated before protocol freeze. The q11/n3 design count
+is 5322 T blocks times 1,786,323 structures, or 9,506,811,006 positions;
+the current per-position output design has no demonstrated fit within the
+proposed 24 CPU-hour total budget across all stages.
+
+The new [generic support classifier](../experiments/EXP-PEXT-bf8f96/implementation/generic_disjoint.py)
+checks squarefree Frobenius-conjugate quartics and all projective support gcds.
+Disjoint supports certify rank n, connectedness and geometric genus
+`(n-1)*2^n+1`; any overlap retains its pair for full analysis. On the complete
+F27 software fixture, 1358/1638 rows are generic and all agree with the
+separate square-relation checker; 280 require exceptional handling. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/generic-disjoint-20261103/report.md)
+and source-bound log show the exact control scope, diagram and checks.
+
+Next construct an exact exceptional-index generator and independent completeness
+certificate so the generic complement can be counted without visiting every
+structure. Then implement exceptional rank/genus and the original P1-P4,
+descent/Type2, H1, controls, analysis and frozen execution packet. The contract
+remains review_required and unapproved; no scientific trial was launched.
