@@ -56,6 +56,20 @@ class VersionedBsgsTests(unittest.TestCase):
                 self.assertIn("canonical scalar", produced.stderr)
                 self.assertIsNone(checked)
 
+    def test_boolean_logarithm_is_not_a_scalar(self) -> None:
+        produced, checked = call("known-k", "1", self.root / "boolean")
+        self.assertEqual(produced.returncode, 0, produced.stderr)
+        self.assertIsNotNone(checked)
+        self.assertEqual(checked.returncode, 0, checked.stderr)
+        result_file = self.root / "boolean" / "raw-result.json"
+        record = json.loads(result_file.read_text())
+        record["k_found"] = True
+        result_file.write_text(json.dumps(record))
+        check = subprocess.run([sys.executable, str(EXAMPLE / "check_v2.py"), str(self.root / "boolean"),
+                                str(EXAMPLE / "curve.json"), "known-k", "1"], capture_output=True, text=True)
+        self.assertEqual(check.returncode, 1)
+        self.assertIn("no logarithm", check.stdout)
+
     def test_setup_count_mutation_fails_checker(self) -> None:
         produced, checked = call("known-k", "123456", self.root / "control")
         self.assertEqual(produced.returncode, 0, produced.stderr)

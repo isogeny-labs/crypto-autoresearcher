@@ -115,9 +115,9 @@ def main(argv: list[str]) -> int:
     else:
         m = math.isqrt(n - 1) + 1
         found = result.get("k_found")
-        need(result.get("status") == "solved" and isinstance(found, int) and 0 <= found < n,
+        need(result.get("status") == "solved" and type(found) is int and 0 <= found < n,
              "no logarithm in [0, n) was reported")
-        if isinstance(found, int):
+        if type(found) is int:
             need(E.to_affine(E.scalar(found, G)) == (None if result.get("Q") is None else tuple(result["Q"])), "k_found * G != Q")
             need(found == k, "k_found is not the prescribed logarithm")
             # The prescribed algorithm's own count for this k: a solver that
