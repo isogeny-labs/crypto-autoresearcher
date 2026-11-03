@@ -355,3 +355,17 @@ preserves the fixed software scope. Next bind each unit to the published
 cohort/T plan and frozen source/protocol, add atomic success and failure
 receipts, and complete the remaining controls and descent interfaces before
 approval. The contract remains review_required; no scientific trial occurred.
+
+## Published cohort/T candidate binding, 2026-11-03
+
+The [read-only binding](../experiments/EXP-PEXT-bf8f96/implementation/candidate_binding.py)
+recomputes the published all-T join plan, checks an optional plan byte for byte,
+reconstructs the selected curve and canonical T list, and derives the exact
+quotient form and structure-ordinal interval. The first q5/n3 class at T=O
+binds form `[1,0,0,1,0]` to `[0,16275)`. Two software tests pass, including
+mutated-plan and invalid-index refusals; the
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-binding-20261103/report.md)
+records the exact scope. Next add frozen protocol/source/binary admission and
+write-once success/failure receipts, then complete independent production
+checks and the remaining full execution packet. The contract remains
+review_required; no scientific trial occurred.
