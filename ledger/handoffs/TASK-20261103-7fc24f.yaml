@@ -1,0 +1,56 @@
+handoff:
+  id: TASK-20261103-7fc24f
+  from: coordinator
+  to: validator
+  role: validator
+  recorded_at: '2026-11-03'
+  opened_by_decision: DEC-20261103-523d19
+  experiment_id: EXP-SEMAEV-93d5cc
+  goal_id: GOAL-ECDLP-001
+  lane: BATCH-7c689b
+  objective: >-
+    Blind re-derivation J5b under review-plan addendum
+    review-plan-addendum-blind-j5.yaml: compute the s4_support term counts and
+    the FIB C16-1 Groebner basis quantities from blind-statement.yaml alone.
+  uncertainty_reduced: Whether an agent blind to every producer artifact and stated value derives the same S4 and decomposition-basis quantities.
+  inputs:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-statement.yaml
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan-addendum-blind-j5.yaml
+  - ledger/handoffs/TASK-20261103-7fc24f.yaml
+  constraints:
+  - Fresh independent session; read only the three inputs above plus standard library and sympy documentation. Do not open experiments/, harness/, ledger/ (except this handoff), any other file of the batch, or any PR discussion.
+  - Do not run git log, git show or any command that prints commit messages or other branches' content.
+  - Write your own code; no producer code. Zero scientific trials beyond this computation.
+  - Freeze outputs and attest the read set; do not compare with any recorded value.
+  deliverables:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/blind-outputs.json
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/rederive.py
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/attestation.yaml
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/review.md
+  artifact_paths:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/blind-outputs.json
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/rederive.py
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/attestation.yaml
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f/review.md
+  write_scope:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-7fc24f
+  archived_by: TASK-20261103-2c99e6
+  depends_on: []
+  review_plan: coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml
+  frozen_input_sha256:
+    coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-statement.yaml: d2e97f75a1e579a9e6f7b4921bdddb3e9833f7e131113c6009e02f7e26e457e2
+    coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan-addendum-blind-j5.yaml: aaed34016931fe70cdb5532b77274e3a52dc8becb250f40026b9118facabcfa8
+  joints_owned: [J5b]
+  completion_gate:
+  - blind-outputs.json covers all 552 ICINV records and all 200 C16-1 targets, or names each it could not compute
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+    wall_clock_seconds: 10800
+    memory_gb: 8
