@@ -154,3 +154,32 @@ Scientific descent/genus/analysis and frozen launcher remain subsequent interfac
 See the [fresh join report](../experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.md).
 Original criteria and scientific/goal statuses remain unchanged; review_required
 and unapproved status persists.
+
+## Exact target-coordinate transport progress, 2026-11-03
+
+The new [transport component](../experiments/EXP-PEXT-bf8f96/implementation/target_transport.py)
+constructs normalized Mobius A and nonzero weighted-ordinate kappa for supplied
+T,Q with T'=T+2Q. It verifies both rational coordinate identities in K(E) by
+clearing denominators and the literal quartic identity F_T'(A(X,Z))=kappa^2*F_T(X,Z).
+The [source-bound software log](../experiments/EXP-PEXT-bf8f96/reports/transport-20261103/software-tests.txt)
+records five methods PASS: all T,Q on all8F3classes(156pairs), all12F5classes(500),
+F9A/twist/B(144/225/256), selected F27(12)/F125(9),216F3composition triples,
+three F27 projective-cocycle reindex controls, mutations and CLI expected-input
+checks. Coordinator static inspection found no defect in the inspected paths.
+Synthesis and verification share the rational engine; this is exact component
+software replay, not an independent arithmetic implementation or scientific review.
+
+The explicit coordinate/scalar witness gap named in the previous entry is now
+implemented at that scope. Next integrate transport and normalization scales with
+the complete published cohort/plan identities and production streaming/checkpoint/
+shard custody, including an exact full structure reindexing certificate. Preserve
+all original cohorts: q3/n5(488), q5/n3(252), q7/n3(690), q11/n3(2662), descriptive
+q13/n3(4400); abstract n3/5/7placements, original coordinate/random-branch controls,
+geometric P3 and separate q5/7/11/13H1 arms retain their original requirements.
+Connectedness/geometric genus, Frobenius lift/descent, Type2 and analysis/export
+remain scientific interfaces. The fresh read-only preapproval diagnostic remains
+approvable:false for missing implementation/runbook/route, lawful lane, trial-plan,
+queue/handoff and published/frozen source/approval bindings. The original exit
+criteria remain; no approval, freeze or scientific status transition occurs.
+See the [fresh transport report](../experiments/EXP-PEXT-bf8f96/reports/transport-20261103/report.md)
+and TASK-20261103-69adf4 for exact successor custody scope.
