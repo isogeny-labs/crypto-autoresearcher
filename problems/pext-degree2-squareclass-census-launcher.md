@@ -210,3 +210,19 @@ certificate so the generic complement can be counted without visiting every
 structure. Then implement exceptional rank/genus and the original P1-P4,
 descent/Type2, H1, controls, analysis and frozen execution packet. The contract
 remains review_required and unapproved; no scientific trial was launched.
+
+## Exceptional geometric support progress, 2026-11-03
+
+The [support calculator](../experiments/EXP-PEXT-bf8f96/implementation/generic_disjoint.py)
+now computes the exact parity-support span for every emitted overlapping
+conjugate family. Its rank, projective union size and Riemann–Hurwitz genus
+agree with a character-subcover genus sum. On all 280 overlapping positions
+of the fixed F27 software fixture, a separate polynomial-product relation
+checker agrees on geometric rank. The rank/branch/genus fixture breakdown and
+source hashes are in the [new report](../experiments/EXP-PEXT-bf8f96/reports/exceptional-geometry-20261103/report.md).
+
+This closes the emitted-row **geometric** rank/genus arithmetic interface at
+the stated input scope. An exact exceptional-index generator with independent
+completeness remains the next throughput construction. Coefficient classes,
+descent and Type2 predicates must still be added before the complete P1–P4
+and H1 contract can be frozen. No scientific run or approval occurred.

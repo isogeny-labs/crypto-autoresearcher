@@ -8,7 +8,7 @@ import unittest
 
 from check_compact_class_inputs import BasisField
 from check_quotient_certificate import square_relations
-from generic_disjoint import classify
+from generic_disjoint import classify, exceptional_geometry
 
 
 class GenericDisjointTests(unittest.TestCase):
@@ -21,6 +21,7 @@ class GenericDisjointTests(unittest.TestCase):
             record = json.loads(subprocess.check_output([binary, "f27-char3"]))
         field = BasisField(record["field"])
         counts = {"generic-disjoint": 0, "exceptional": 0}
+        exceptional_spectrum = {}
         for row in record["rows"]:
             forms = row["conjugates"]
             result = classify(field, forms)
@@ -30,10 +31,25 @@ class GenericDisjointTests(unittest.TestCase):
                 self.assertEqual(result["geometric_genus"], 17)
             else:
                 self.assertTrue(result["overlaps"])
+                geometry = exceptional_geometry(field, forms)
+                relations = square_relations(field, forms)
+                self.assertEqual(len(relations),
+                                 1 << (field.n-geometry["geometric_squareclass_rank"]))
+                self.assertTrue(geometry["connected"])
+                self.assertLessEqual(geometry["branch_points"], 4*field.n)
+                key = (geometry["geometric_squareclass_rank"], geometry["branch_points"],
+                       geometry["geometric_genus"])
+                exceptional_spectrum[key] = exceptional_spectrum.get(key, 0) + 1
         self.assertEqual(sum(counts.values()), record["total"])
         self.assertGreater(counts["generic-disjoint"], 0)
         self.assertGreater(counts["exceptional"], 0)
-        print(json.dumps(counts, sort_keys=True))
+        self.assertEqual(exceptional_spectrum,
+                         {(1, 4, 1): 2, (3, 8, 9): 18,
+                          (3, 9, 11): 52, (3, 10, 13): 208})
+        print(json.dumps({"counts": counts,
+                          "exceptional_spectrum": [list(key)+[value]
+                                                   for key, value in sorted(exceptional_spectrum.items())]},
+                         sort_keys=True))
 
     def test_repeated_and_infinity_cases(self):
         with tempfile.TemporaryDirectory(prefix="pext-disjoint-control-") as scratch:
@@ -45,6 +61,7 @@ class GenericDisjointTests(unittest.TestCase):
         field = BasisField(record["field"])
         form = record["rows"][0]["original_form"]
         self.assertEqual(classify(field, [form]*3)["classification"], "exceptional")
+        self.assertEqual(exceptional_geometry(field, [form]*3)["geometric_squareclass_rank"], 1)
         with self.assertRaises(ValueError):
             classify(field, [[0, 0, 1, 0, 1]]*3)
         broken = [list(item) for item in record["rows"][0]["conjugates"]]
