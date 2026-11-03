@@ -49,6 +49,8 @@ def main() -> None:
     current, current_sha = read_json(args.current_export)
     live, live_sha = read_json(HERE / "live-comparisons.json")
     meta, meta_sha = read_json(HERE / "live-meta.json")
+    live_latest, live_latest_sha = read_json(HERE / "live-comparisons-20261103.json")
+    meta_latest, meta_latest_sha = read_json(HERE / "live-meta-20261103.json")
 
     require(pinned["schema"] == current["schema"] == 1, "schema mismatch")
     require(pinned["source_commit"] == "5ab7d5bc5a16ff4d87a5ef8bed45cf9543f47c14",
@@ -65,6 +67,10 @@ def main() -> None:
     require(meta["mode"] == "static", "live mode mismatch")
     require(meta["commit"] == "6d5e7c5c6d442e85e0a78864e84d74898becab73",
             "live build revision mismatch")
+    require(live_latest["benchmarks"] == pinned, "latest live benchmark payload mismatch")
+    require(meta_latest["mode"] == "static", "latest live mode mismatch")
+    require(meta_latest["commit"] == "9b721d74256afa5e007e21f24d86e2953e33b214",
+            "latest live build revision mismatch")
     registered = [r for r in receipts["receipts"] if r["adapter"] == "benchmark-snapshot/1"]
     require(len(registered) == 9, "receipt count mismatch")
     require({r["row_id"] for r in registered} == {r["id"] for r in pinned["rows"]},
@@ -79,6 +85,8 @@ def main() -> None:
         "current_source_commit": current["source_commit"],
         "live_site_commit": meta["commit"],
         "live_site_built_at": meta["built_at"],
+        "latest_live_site_commit": meta_latest["commit"],
+        "latest_live_site_built_at": meta_latest["built_at"],
         "rows": len(pinned["rows"]),
         "source_files": len(pinned["sources"]),
         "registered_receipts": len(registered),
@@ -87,6 +95,8 @@ def main() -> None:
         "current_export_sha256": current_sha,
         "live_comparisons_sha256": live_sha,
         "live_meta_sha256": meta_sha,
+        "latest_live_comparisons_sha256": live_latest_sha,
+        "latest_live_meta_sha256": meta_latest_sha,
     }, indent=2, sort_keys=True))
 
 

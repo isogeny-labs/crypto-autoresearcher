@@ -2,11 +2,13 @@
 
 **Checked result (2026-11-02 UTC).** The public crypto-autoresearcher site at build commit `6d5e7c5c6d442e85e0a78864e84d74898becab73` serves all nine rows of the pinned cryptanalysis primary benchmark snapshot. The live `data/comparisons.json` benchmark object equals the committed `ui/benchmarks/cryptanalysis-primary.json` object. The catalog SHA-256 and all nine `ui/receipts.json` registrations resolve to that same snapshot (`4cc3b31ab805b34d9f2d1103e574f8130a6902d09703d49337c467257568ae5e`). Pages [run 41512121316](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41512121316) completed successfully; the captured live `data/meta.json` names that exact commit and build time `2026-11-02T19:45:50+00:00`.
 
+**Current readback (2026-11-03 UTC).** Pages [run 41653395285](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41653395285) successfully deployed current main `9b721d74256afa5e007e21f24d86e2953e33b214`. The new [live meta capture](live-meta-20261103.json) names that commit and its build time, while the new [comparison capture](live-comparisons-20261103.json) is byte-identical to the prior one (SHA-256 `c03a242b79197f0603bbf6657766a90e030f6d419c907c3e5ac68e07021d043b`). Thus the public benchmark rows remain the same on the later deployment. No `ui/` file changed between the audit branch's initial base and this main revision.
+
 The snapshot intentionally names cryptanalysis source commit `5ab7d5bc5a16ff4d87a5ef8bed45cf9543f47c14`, the archive revision recorded by [the UI contract](../../../ui/README.md). I ran `tools/export_benchmark_snapshot.py` from cryptanalysis `bf155c25e57c6eefbaeed2c19b84786e402851f7`: it returned nine rows and seven source files, with every measurement, curve identity, run ID, and source SHA-256 equal to the pinned snapshot. A structured comparison found differences only in the top-level `source_commit`, the nine row IDs derived from it, and seven source URLs. `git diff --quiet` between those two cryptanalysis commits returned zero for the primary archive, candidate and workload manifests, exporter, and curve-identity tool. Repinning would change provenance labels without changing benchmark evidence, so this audit leaves the committed snapshot and graphs unchanged.
 
 ## Reproduce the recorded comparison
 
-The [offline checker](check.py) reads the committed snapshot, catalog, and receipts plus the captured [current source export](current-export.json), [live comparison payload](live-comparisons.json), and [live meta payload](live-meta.json):
+The [offline checker](check.py) reads the committed snapshot, catalog, and receipts plus the captured [current source export](current-export.json), both live comparison payloads, and both live meta payloads:
 
 ```sh
 python3 docs/reports/2026-11-02-benchmark-snapshot-audit/check.py
