@@ -520,3 +520,16 @@ against the independent polynomial-square routine. The
 records the exact fixture result. Next construct and check the Frobenius lift
 and cocycle before assigning any descended/admissible genus. No scientific
 cohort trial was launched.
+
+## Radical-algebra Frobenius lift component, 2026-11-03
+
+The [lift checker](../experiments/EXP-PEXT-bf8f96/implementation/radical_frobenius.py)
+now constructs coherent polynomial-square witnesses for arithmetic relations,
+checks their cyclic Frobenius images, solves the generator sign equations and
+checks an order-n action. Seven related software tests pass, including a
+nonzero sign correction on a fixed F27 repeated-support orbit and refusal of
+the synthetic nonsquare rank-two relation as an arithmetic square. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/radical-frobenius-20261103/report.md)
+records the exact algebraic scope. Next bind the action to the actual source
+elliptic map and construct/check the descended model before reporting an
+admissible genus. No scientific cohort trial was launched.
