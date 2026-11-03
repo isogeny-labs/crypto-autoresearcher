@@ -632,3 +632,16 @@ software tests pass, including write-once and tampered-row refusal. The
 records the component scope. Next implement descent and controls, then bind
 the final analyze/export artifacts. The contract remains `review_required`;
 no scientific cohort trial was launched.
+
+## Source radical binding, 2026-11-03
+
+The [source-radical binder](../experiments/EXP-PEXT-bf8f96/implementation/source_radical_binding.py)
+now identifies generator zero of the coherent radical algebra with the exact
+moved quartic reached from the named elliptic curve and T. It checks the full
+coefficient Frobenius orbit and order-n radical action, with optional
+published class/T/ordinal binding. Nine related software tests pass, including
+wrong-source and wrong-conjugate refusal. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/source-radical-binding-20261103/report.md)
+records the scope. Next construct the fixed-field model and independently
+check its descent and connectedness before assigning admissible genus. The
+contract remains `review_required`; no scientific cohort trial was launched.
