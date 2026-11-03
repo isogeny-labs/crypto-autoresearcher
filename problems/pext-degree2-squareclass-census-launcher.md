@@ -577,3 +577,19 @@ and partial reviews are refused. The
 records the exact fixture scope. Next persist the rows in the frozen checker
 and cross-tab by published curve/T identity; full-cohort runtime remains to
 be measured. No scientific cohort trial was launched.
+
+## Type2 persistent checker integration, 2026-11-03
+
+The [batch checker](../experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py)
+now persists Type2 signature rows and a hash-linked summary for cubic
+cohorts after full independent exceptional-geometry review. The candidate
+check binds the Type2 summary hash. The
+[stage adapter](../experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py)
+requires this mode and declares both files per cubic cohort; its candidate
+artifact inventory is now 254 paths in `n3core`, 677 in `n3ext` and 131 in
+`n5`, 1,062 total. Eight related software tests pass, including the F27
+write-once batch and refusal of Type2 without full geometry. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/type2-stage-integration-20261103/report.md)
+records the exact fixture scope. Next bind these outputs in full analysis and
+measure full-cohort checker time/storage before approval. No scientific
+cohort trial was launched.

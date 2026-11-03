@@ -29,7 +29,15 @@ COHORTS = {"n3core": ("q5-n3", "q7-n3"), "n3ext": ("q11-n3",),
            "n5": ("q3-n5",)}
 BASE = "experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103"
 COMPONENT_SOURCES = REQUIRED_SOURCES | {
-    "experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py"
+    "experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/type2_predicate.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/type2_unit_scan.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_all_degree_collision_certificate.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_structure_certificate.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_rational_collision_certificate.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/generic_disjoint.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/independent_transversal.py"
 }
 
 
@@ -59,6 +67,8 @@ def expected_artifacts(stage):
                           prefix + "chunks/" + name.replace(".tar", ".receipt.json")))
         names.extend((prefix + "units-index.json", prefix + "candidate-reviews.jsonl",
                       prefix + "candidate-check.json"))
+        if plan["field"]["degree"] == 3:
+            names.extend((prefix + "type2-rows.jsonl", prefix + "type2-check.json"))
     if len(names) != len(set(names)):
         raise ValueError("candidate artifact names collide")
     return names
@@ -217,7 +227,9 @@ def check_stage(trial_plan, run_dir, stage):
         cohort_dir = run_dir / "cohorts" / cohort
         checked = check_batch(cohort_dir, cohort, binder,
                               build_receipt["binary_sha256"], deadline_utc=deadline,
-                              expected_limits=trial["candidate_config"][cohort])
+                              expected_limits=trial["candidate_config"][cohort],
+                              full_geometry=True,
+                              type2=binder.plan["field"]["degree"] == 3)
         if (produced.get("cohort") != cohort
                 or produced.get("index_sha256") != checked["index_sha256"]
                 or produced.get("unit_count") != checked["unit_count"]

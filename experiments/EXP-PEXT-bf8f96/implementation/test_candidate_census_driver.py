@@ -1,5 +1,6 @@
 """Fixed F27 software control for complete driver and failed-unit retention."""
 
+import hashlib
 import json
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -76,11 +77,17 @@ class BatchDriverTests(unittest.TestCase):
         self.assertFalse((directory / "u000001").exists())
         review = check_batch(directory, "q3-n3", self.binder,
                              runner.binary_sha256, scope="software-fixture",
-                             full_geometry=True)
+                             full_geometry=True, type2=True)
         self.assertEqual(review["unit_count"], 2)
         self.assertEqual(review["exceptional"], 280)
         self.assertEqual(review["generic"], 2*819-280)
         self.assertEqual(len((directory / "candidate-reviews.jsonl").read_text().splitlines()), 2)
+        type2 = json.loads((directory / "type2-check.json").read_bytes())
+        self.assertEqual(type2["signature_count"], 0)
+        self.assertEqual(type2["exceptional_checked"], 280)
+        self.assertEqual((directory / "type2-rows.jsonl").read_bytes(), b"")
+        self.assertEqual(review["type2_check_sha256"],
+                         hashlib.sha256((directory / "type2-check.json").read_bytes()).hexdigest())
         with self.assertRaises(FileExistsError):
             check_batch(directory, "q3-n3", self.binder,
                         runner.binary_sha256, scope="software-fixture")
@@ -119,6 +126,11 @@ class BatchDriverTests(unittest.TestCase):
                   self.caps, 1024**3, 60, 60, 120)
         wrong_limits_dir = self.base / "wrong-limits"
         shutil.copytree(directory, wrong_limits_dir)
+        with self.assertRaisesRegex(ValueError, "geometry and Type2 checker mode"):
+            check_batch(wrong_limits_dir, "q3-n3", self.binder,
+                        runner.binary_sha256, scope="software-fixture",
+                        type2=True, full_geometry=False)
+        self.assertFalse((wrong_limits_dir / "candidate-reviews.partial").exists())
         wrong_limits = {"caps": dict(self.caps, structures=818),
                         "memory_bytes": 1024**3, "cpu_seconds": 60,
                         "unit_wall_seconds": 60}

@@ -40,7 +40,7 @@ class CandidateStageShapeTests(unittest.TestCase):
     def test_exact_archive_names_and_six_stage_shape(self):
         self.assertEqual(sum(WATCHDOGS.values()), 86400)
         self.assertEqual({stage: len(expected_artifacts(stage)) for stage in COHORTS},
-                         {"n3core": 250, "n3ext": 675, "n5": 131})
+                         {"n3core": 254, "n3ext": 677, "n5": 131})
         for stage in COHORTS:
             names = expected_artifacts(stage)
             self.assertEqual(len(names), len(set(names)))
