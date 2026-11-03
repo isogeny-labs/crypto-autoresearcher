@@ -619,3 +619,16 @@ read-only campaign table. Seven focused software tests pass. The
 records the checked scope. Next build the full analyze-stage writer and add
 descent and C0–C7 controls. The contract remains `review_required`; no
 scientific cohort trial was launched.
+
+## Geometric analyze-stage component, 2026-11-03
+
+The [geometric analysis stage](../experiments/EXP-PEXT-bf8f96/implementation/geometric_analysis_stage.py)
+now writes and rechecks exact curve rows and a hash-bound campaign summary
+inside a frozen supervisor analyze trial. It requires the validated supervisor
+execution receipt for each of the three prior census stages, the current
+analyze claim, plan/source bindings and declared output paths. Six focused
+software tests pass, including write-once and tampered-row refusal. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/geometric-analysis-stage-20261103/report.md)
+records the component scope. Next implement descent and controls, then bind
+the final analyze/export artifacts. The contract remains `review_required`;
+no scientific cohort trial was launched.

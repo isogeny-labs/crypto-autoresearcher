@@ -76,7 +76,7 @@ def aggregate_cohorts(curves, cohorts):
 def reduce_campaign(trial_plan, stage_dirs):
     """Require exact candidate-stage checks, then reduce every planned curve/T."""
     sys.path.insert(0, str(ROOT / "tools"))
-    from experiment_execution import load_plan, run_root, sha256
+    from experiment_execution import load_plan, run_root, sha256, trial_state
     trial_plan = Path(trial_plan)
     plan = load_plan(ROOT, trial_plan)
     if plan["experiment_id"] != "EXP-PEXT-bf8f96":
@@ -90,6 +90,8 @@ def reduce_campaign(trial_plan, stage_dirs):
     curves, cohorts = [], {}
     for stage, names in COHORTS.items():
         validate_shape(plan, stage)
+        if trial_state(ROOT, plan, trials[stage], plan_sha256) != "output_validated":
+            raise ValueError("candidate stage lacks validated supervisor receipt")
         stage_dir = Path(stage_dirs[stage])
         if (stage_dir.is_symlink() or not stage_dir.is_dir()
                 or stage_dir.resolve() != run_root(ROOT, plan, trials[stage])):
