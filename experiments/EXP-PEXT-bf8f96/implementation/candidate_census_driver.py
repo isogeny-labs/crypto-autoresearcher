@@ -73,10 +73,10 @@ def run_batch(runner, run_dir, cohort, plan_sha256, caps, memory_bytes,
 
 def run_production(trial_plan, run_dir, cohort, join_plan, binary,
                    binary_sha256, caps, memory_bytes, cpu_seconds,
-                   unit_wall_seconds, stage_wall_seconds):
+                   unit_wall_seconds, stage_wall_seconds, *, unit_dir=None):
     """Enter only through the live supervisor's approved trial run directory."""
     runner = admitted_runner(trial_plan, run_dir, cohort, join_plan,
-                             binary, binary_sha256)
-    return run_batch(runner, run_dir, cohort, runner.binder.plan_sha256,
+                             binary, binary_sha256, unit_dir=unit_dir)
+    return run_batch(runner, runner.parent, cohort, runner.binder.plan_sha256,
                      caps, memory_bytes, cpu_seconds, unit_wall_seconds,
                      stage_wall_seconds)

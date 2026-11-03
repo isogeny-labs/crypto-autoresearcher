@@ -31,6 +31,7 @@ REQUIRED_SOURCES = {
     IMPLEMENTATION + name for name in (
         "candidate_unit.rs", "candidate_unit_artifact.py", "candidate_binding.py",
         "candidate_batch.py", "candidate_census_driver.py", "candidate_census_check.py",
+        "candidate_build.py",
         "independent_candidate_unit.py", "independent_check.py",
         "quotient_core.rs", "symbolic_extension.rs", "branch_factorization.rs",
         "branch_roots.rs", "root_collision.rs", "join_plan.py", "input_manifest.py",
@@ -69,7 +70,8 @@ def checked_limits(caps, memory_bytes, cpu_seconds, wall_seconds):
     return [str(caps[key]) for key in CAP_NAMES]
 
 
-def admitted_runner(trial_plan, run_dir, cohort, join_plan, binary, binary_sha256):
+def admitted_runner(trial_plan, run_dir, cohort, join_plan, binary, binary_sha256,
+                    unit_dir=None):
     """Construct a production runner only inside the exact live supervisor run."""
     sys.path.insert(0, str(ROOT / "tools"))
     from experiment_execution import (authorize, load_plan, read_json, run_root,
@@ -103,8 +105,15 @@ def admitted_runner(trial_plan, run_dir, cohort, join_plan, binary, binary_sha25
             raise ValueError(f"candidate input absent or hash mismatch: {relative}")
     if (not binary.is_file() or binary.is_symlink() or file_sha256(binary) != binary_sha256):
         raise ValueError("candidate binary digest mismatch")
+    if unit_dir is None:
+        unit_dir = run_dir
+    else:
+        unit_dir = Path(unit_dir)
+        if (unit_dir != run_dir / "cohorts" / cohort or unit_dir.is_symlink()
+                or (run_dir / "cohorts").is_symlink() or not unit_dir.is_dir()):
+            raise ValueError("candidate unit directory differs from supervisor cohort slot")
     return CandidateUnitArtifacts(binary, binary_sha256, CandidateBinder(cohort, plan_path=join_plan),
-                                  "approved-cohort", run_dir, _ADMISSION_TOKEN)
+                                  "approved-cohort", unit_dir, _ADMISSION_TOKEN)
 
 
 class CandidateUnitArtifacts:

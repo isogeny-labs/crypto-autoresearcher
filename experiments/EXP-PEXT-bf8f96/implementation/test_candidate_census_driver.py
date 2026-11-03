@@ -63,8 +63,8 @@ class BatchDriverTests(unittest.TestCase):
                                       self.binder, "software-fixture", directory)
 
     def test_complete_two_unit_fixture(self):
-        directory = self.base / "complete"
-        directory.mkdir()
+        directory = self.base / "complete" / "cohorts" / "q3-n3"
+        directory.mkdir(parents=True)
         runner = self.runner(directory)
         result = run_batch(runner, directory, "q3-n3", "3"*64,
                            self.caps, 1024**3, 60, 60, 120)

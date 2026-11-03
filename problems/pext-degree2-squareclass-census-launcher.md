@@ -448,3 +448,18 @@ records the exact software scope. Next integrate binary build provenance and
 supervisor-compatible stage artifacts in `run.py`, then the remaining descent,
 Type2, controls, analysis and approval packet. The contract remains
 review_required and unfrozen; no scientific cohort trial occurred.
+
+## Candidate build provenance and nested cohort slots, 2026-11-03
+
+The [build helper](../experiments/EXP-PEXT-bf8f96/implementation/candidate_build.py)
+checks seven transitive Rust source hashes and records the invoked rustc shim,
+real compiler executable, version, flags, logs and binary digest in a
+write-once receipt. Production candidate units may now live in an exact
+`cohorts/<cohort>` subdirectory of one supervisor run, so q5/n3 and q7/n3
+fit the prescribed `n3core` stage without a new run. Sixteen related software
+tests pass, including source/binary tamper refusal and nested F27 replay. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-build-20261103/report.md)
+records the software scope. Next integrate this build and the cohort slots in
+the six-stage launcher, then complete the remaining descent, Type2, controls,
+analysis and approval packet. EXP-PEXT-bf8f96 remains review_required and
+unfrozen; no scientific cohort trial occurred.
