@@ -43,7 +43,10 @@ jobs:
   changes:
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    # A cold blobless checkout can consume nearly five minutes before scope
+    # detection starts (job 126140552341). Keep the same fail-closed scope
+    # decision while allowing its store pull and controls to finish.
+    timeout-minutes: 15
     outputs:
       base: ${{ steps.scope.outputs.base }}
       ledger: ${{ steps.scope.outputs.ledger }}
