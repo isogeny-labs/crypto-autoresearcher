@@ -493,3 +493,17 @@ compares every retained unit's limits to the frozen cohort config. The
 records software checks and exact scope. Next complete the full six-stage
 `run.py`/`check.py`, descent, Type2, C0-C7 controls, analysis and approval
 packet. No scientific cohort trial was launched.
+
+## Exact geometric reducer component, 2026-11-03
+
+The [reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py)
+now recomputes P1 factor-pattern mismatches, P2 nonzero-T genus-spectrum
+violations and P3 same-curve geometric minimum drops from complete candidate
+units. It requires a full independent geometry review of every exceptional
+row, sealed chunk and review hashes, published class/T bindings, and exact
+cohort totals. Ten related software tests pass on fixed F27 units, including
+Riemann–Hurwitz and incomplete-coverage refusals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/geometric-reducer-20261103/report.md)
+records the fixture's spectra and boundaries. Next integrate the reducer in
+full analysis with descent, Type2, C0-C7 controls and frozen output bindings.
+No approved scientific cohort was reduced or launched.
