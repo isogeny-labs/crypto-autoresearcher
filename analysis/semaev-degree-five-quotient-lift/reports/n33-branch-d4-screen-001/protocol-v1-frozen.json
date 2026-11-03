@@ -1,0 +1,330 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "retained fresh-n33-tr0-01 input.sys SHA-256 25d5079098df3c122d39b0decd89713256e9bc78b18af461eb3226c47467c05e",
+      "code/restrict.py SHA-256 310873f642ab1fc65a9e229a39a3f75c6bdb92b66d809eff6b99d95459ba1f9b",
+      "retained lfdclose2 SHA-256 f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04"
+    ],
+    "outputs": [
+      "Two restricted input hashes, exact W4 closure transcripts and terminal statuses; no LFD upper claim until independently checked membership witnesses."
+    ],
+    "script": {
+      "path": "analysis/semaev-m2-last-fall-degree/code/restrict.py",
+      "sha256": "310873f642ab1fc65a9e229a39a3f75c6bdb92b66d809eff6b99d95459ba1f9b"
+    }
+  },
+  "arms": [
+    {
+      "description": "Restrict the pinned named input at Boolean variable 0 to 0; run the pinned D4 closure binary once.",
+      "id": "a0-0",
+      "instrument": {
+        "binary_sha256": "f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04",
+        "build": [
+          [
+            "reuse",
+            "retained local lfdclose2 binary"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "restrict_source_sha256": "310873f642ab1fc65a9e229a39a3f75c6bdb92b66d809eff6b99d95459ba1f9b"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "memory_bytes": 4294967296,
+        "value": 0,
+        "variable": 0
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Restrict the pinned named input at Boolean variable 0 to 1; run the pinned D4 closure binary once.",
+      "id": "a0-1",
+      "instrument": {
+        "binary_sha256": "f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04",
+        "build": [
+          [
+            "reuse",
+            "retained local lfdclose2 binary"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "restrict_source_sha256": "310873f642ab1fc65a9e229a39a3f75c6bdb92b66d809eff6b99d95459ba1f9b"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "memory_bytes": 4294967296,
+        "value": 1,
+        "variable": 0
+      },
+      "role": "candidate"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized degree-six search preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "branch-screen"
+      ],
+      "id": "C1",
+      "text": "The two fixed restrictions are screened for 1 in W4 using exact Boolean linear algebra; native output alone is not a checked membership proof."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "One deterministic exact named input; no comparative runtime claim or sampled effect.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Both exact branches are fixed by a proof lemma; no null population or comparative effect is claimed.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "This is a deterministic two-branch screen of a named input, not a detector operating on a sampled population; a positive result requires later independent membership verification.",
+      "present": false
+    }
+  },
+  "created": "2026-11-02",
+  "decision_rule": {
+    "comparison_ids": [
+      "branch-screen"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "If both native branch closures report W4_one=1, seek independent membership witnesses before claiming LFD=5 via Lemma 1.3. Other outcomes leave the upper bound unresolved.",
+    "threshold": "both branch W4_one values equal 1",
+    "verdict_vocabulary": [
+      "both_branches_refute_unverified",
+      "one_or_both_branches_open",
+      "resource_capped",
+      "failed"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": 0,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "No checkpoint; retain terminal output for each branch.",
+      "max_workers": 1,
+      "memory_per_worker_bytes": 4294967296,
+      "pod_memory_bytes": null
+    },
+    "queue": "local-exclusive-memory",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 3600
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "1471c34147e031a8ce4ea9703b53750aad27befce2ae618b5fe124ec7fb9c4d5",
+    "commit": "3ff508408575b633cea25b08d91757d1e70f24b4",
+    "frozen_at": "2026-11-02T20:10:06Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling native W4_one=1 a certified membership proof.",
+    "Selecting another variable or branch after seeing a result.",
+    "Using a failed branch to infer D5 nonmembership."
+  ],
+  "invalidation_rules": [
+    "Input, restriction source or binary hash mismatch prevents execution.",
+    "A missing or partial fixed-point transcript leaves the branch unknown.",
+    "Any LFD=5 upper claim requires independent checked W4 membership witnesses for both branches."
+  ],
+  "links": {
+    "binary_sha256": "f7f920e697b263129e91b44814e18c32b228392496770c29869ab4d00a9e6f04",
+    "input_path": "/home/ec2-user/fall-degree-data-20261029/expansion/fresh-n33-tr0-01/attempt-001/input.sys",
+    "input_sha256": "25d5079098df3c122d39b0decd89713256e9bc78b18af461eb3226c47467c05e",
+    "restrict_sha256": "310873f642ab1fc65a9e229a39a3f75c6bdb92b66d809eff6b99d95459ba1f9b",
+    "source_dossier": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md#lemma-13-branching"
+  },
+  "literature": [
+    {
+      "claim": "Lemma 1.3: two degree-d branch refutations imply original degree-(d+1) refutation.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md",
+      "verified_by": "Codex 2026-11-02"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "input_sha256",
+      "restricted_input_sha256",
+      "binary_sha256",
+      "argv",
+      "exit_status",
+      "W4_one",
+      "W4_dims",
+      "peak_rss_bytes"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "W4_one printed by the pinned closure binary after completing its fixed point; unverified until independent membership witness.",
+        "id": "branch_w4_one",
+        "kind": "exact",
+        "name": "native degree-four branch refutation screen",
+        "resolution": "1",
+        "source": "closure.stdout.txt W4_one",
+        "uncertainty": "none_exact",
+        "unit": "Boolean"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "SEMAEV-N33-TR0-01-BRANCH-D4-SCREEN-20261102-V1",
+  "question": "Do both fixed branches a_0=0 and a_0=1 of the named n33 system refute at W4, making an exact-degree-five upper-bound proof worth certifying?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Both algebraic branches must be included; no runtime comparison.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "Exhaustive Boolean branches of variable 0 on one named, previously published n33 input."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named instance seed retained; no new random input.",
+      "seeds": [
+        5717990903904197772
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Two-row exact branch outcome table; unknown explicit."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 2,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 3600,
+      "fixed_seconds": 0,
+      "measured_on": "Watchdog allocation only; no measured runtime estimate.",
+      "per_sample_seconds": 1800,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Exactly one D4 closure attempt for each of a_0=0 and a_0=1, in order, with a 3600-second aggregate watchdog and 4 GiB child limit; preserve every terminal result."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Hash mismatch, missing complete closure transcript, out-of-memory or timeout leaves that branch unknown; no upper-bound claim from native output alone."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact named-input algebra, no timing comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "a0-0",
+          "a0-1"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "branch"
+        ],
+        "id": "branch-screen",
+        "threshold": "both W4_one values equal 1"
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Exact retained input hash.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Pinned restriction source and closure binary.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Both values of variable zero, no selection.",
+        "name": "branch",
+        "treatment": "crossed"
+      },
+      {
+        "how": "Record memory and terminal status; no timing inference.",
+        "name": "host",
+        "treatment": "measured"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

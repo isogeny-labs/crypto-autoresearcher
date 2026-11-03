@@ -32,9 +32,11 @@ jobs:
           fetch-depth: 2
           filter: blob:none
           sparse-checkout-cone-mode: false
+          # The wiring check reads every tracked manifest; fetch them together.
           sparse-checkout: |
             /tools/artifacts/
             /.artifacts/
+            /**/.artifacts.json
             /.github/workflows/
       - name: Pull store data this workflow reads (tools/artifacts)
         env:
