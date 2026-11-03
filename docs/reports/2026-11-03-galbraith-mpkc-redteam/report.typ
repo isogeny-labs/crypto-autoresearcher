@@ -87,6 +87,8 @@
     columns(cols, doc)
   }
 }
+#show emph: it => it.body
+#show raw: set text(font: "Libertinus Serif", size: 1em)
 #show: doc => conf(
   paper: "a4",
   fontsize: 9pt,
@@ -117,11 +119,7 @@ literal statements
   that this intake brought into the program can be disproved, and which
   survive?
 
-#figure([#image("verdicts.svg")],
-  caption: [
-    verdicts
-  ]
-)
+_Figure (kept out of this PDF for the 64 KiB artifact limit): `verdicts.svg` / `verdicts.png` in this report directory._
 
 == 1. Summary
 <summary>

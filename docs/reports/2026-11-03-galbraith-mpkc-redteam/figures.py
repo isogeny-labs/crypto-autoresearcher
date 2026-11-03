@@ -31,4 +31,7 @@ for i, (r, n, f) in enumerate(zip(rates, [w["control_cases"], w["window_cases"]]
 ax.set_ylabel("% instances where Euclid misses d")
 ax.set_title("Thm 24.5.2 (Wiener): printed proof route fails\ninside the printed bound (p<q<2p<4000)")
 fig.tight_layout()
-for ext in ("svg", "png"): fig.savefig(here / f"verdicts.{ext}", dpi=150)
+for ext in ("svg", "png"): fig.savefig(here / f"verdicts.{ext}", dpi=72)
+# Keep the PNG under the artifact policy's 64 KiB data-file limit.
+from PIL import Image
+Image.open(here / "verdicts.png").convert("P", palette=Image.ADAPTIVE, colors=64).save(here / "verdicts.png", optimize=True)
