@@ -606,3 +606,16 @@ tampering refusal. The [report](../experiments/EXP-PEXT-bf8f96/reports/type2-ana
 records the fixture scope. Next bind the reducer into the complete analysis
 stage and implement descent and C0–C7 controls. The contract remains
 `review_required`; no scientific cohort trial was launched.
+
+## Four-cohort geometric analysis component, 2026-11-03
+
+The [campaign reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py)
+now requires the frozen supervisor trial plan and all three checked census
+stage directories, then binds q5/q7/q11 n3 and q3 n5 to their published
+join plans and sealed full-cohort candidate units. It reconciles class order,
+per-curve P1/P2/P3 totals, and separate cubic Type2 counts before emitting a
+read-only campaign table. Seven focused software tests pass. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/geometric-campaign-20261103/report.md)
+records the checked scope. Next build the full analyze-stage writer and add
+descent and C0–C7 controls. The contract remains `review_required`; no
+scientific cohort trial was launched.
