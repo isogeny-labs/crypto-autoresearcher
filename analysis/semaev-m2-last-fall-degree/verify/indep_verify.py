@@ -15,6 +15,8 @@ Usage: indep_verify.py n f_hex a2 a6_hex xR_hex D basis_hex...
 Environment: FIX=var=val[,var=val] restricts the system (skips the count);
 NOCOUNT=1 skips the count; NOCLOSURE=1 skips the closure; COUNT_SHARD=i/k
 counts only the s-values with index g = i mod k (sum the k shard counts).
+FULL_CLOSURE=1 continues the fixed point after 1 appears, so all W_D
+dimensions can be compared with a full-closure implementation.
 """
 import sys, random, itertools, time
 
@@ -234,7 +236,7 @@ def main():
         for v in range(N):
             h2 = reduce_insert(times_var(g, v))
             if h2 is not None and h2 < lowlim: queue_low.append(h2)
-        if 0 in piv: break
+        if 0 in piv and not os.environ.get("FULL_CLOSURE", ""): break
     one = 0 in piv
     dims = [sum(1 for h in piv if bin(order[h]).count("1") <= d) for d in range(D + 1)]
     print(f"W{D} dims {dims} contains_one {int(one)} rank {len(piv)} cols {len(order)} [{time.time()-t0:.1f}s]")
