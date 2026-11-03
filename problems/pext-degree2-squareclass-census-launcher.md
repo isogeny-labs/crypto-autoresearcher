@@ -415,3 +415,19 @@ keeps this software scope explicit. Next integrate a persistent supervised
 driver and full trial artifact index, then complete descent, Type2, controls
 and the approval packet. The contract remains review_required and unfrozen;
 no scientific cohort trial occurred.
+
+## Fixed candidate batch layout, 2026-11-03
+
+The [batch sealer](../experiments/EXP-PEXT-bf8f96/implementation/candidate_batch.py)
+now provides deterministic 16-unit tar chunks, per-member and tar digests,
+readback-before-source-removal, failure retention, and a complete full-cohort
+index verifier. The [layout inventory](../experiments/EXP-PEXT-bf8f96/reports/candidate-batches-20261103/layout-inventory.json)
+finds 8,178 class/T units in 513 fixed chunks across the four original cohorts.
+Eleven related software tests pass, including tamper and partial-chunk refusal.
+The 49 MiB chunk ceilings sum to 24.54 GiB, so the final storage route must
+be checked against the current local 20 GiB free space before approval. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-batches-20261103/report.md)
+records exact counts and fixture scope. Next integrate the supervised full
+driver and persistent checker, then complete descent, Type2, controls,
+analysis and the approval packet. The contract remains review_required and
+unfrozen; no scientific cohort trial occurred.
