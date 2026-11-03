@@ -676,7 +676,9 @@ jobs:
         run: python3 tools/ci_sparse_guard.py tripwires
 
       - name: Run harness tests (shard ${{ matrix.shard }} of 4)
-        timeout-minutes: 30
+        # Job 126205293514 completed 953 tests and 324 subtests in 29m40s,
+        # then the 30-minute step limit fired during teardown.
+        timeout-minutes: 40
         if: env.RUN_TESTS == 'true'
         env:
           SPARSE: ${{ matrix.shard != 1 && '1' || '' }}
