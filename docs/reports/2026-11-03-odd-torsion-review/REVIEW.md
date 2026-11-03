@@ -12,12 +12,14 @@ J3 independently downloaded hosted run `41494797344` and matched the named recei
 
 | Dimension | Current review finding |
 | --- | --- |
-| Machine evidence | **Passed for the archived named hosted run and byte-identical reviewed source**. The new current-head formal job `41718285530` was still running at the J3 freeze. |
+| Machine evidence | **Passed for the archived named run and a fresh hosted formal run** on byte-identical reviewed source. Run `41718285530` completed successfully after the J3 freeze; its named receipt and metadata passed the coordinator's 19 exact checks in `fresh-hosted-41718285530/checks.json`. |
 | Semantic fidelity | **faithful_scoped** for the conditional additive-law statement and its two conclusions. |
-| Review outcome | **Inconclusive for full current-head validation pending the fresh formal job**; the archived named proof and semantic component each hold at their stated scope. |
+| Review outcome | **validated_scoped** for the conditional additive-law theorem and the exact source claim. The concrete curve and factor-base bridges remain outside this outcome. |
 | Independent binary/kernel recheck | **not_verified**; the hosted runner and Lean binary remain within the trust boundary. |
 
-J2's supplied older `2026-10-31` receipt was a different run and has SHA-256 `c4ae843196160e477aa13de229c825ca3cf15452baa02c3db1019c3f20adfb52`, not the frozen run's receipt. It was used only as a matching printed-type comparison, never as the pinned receipt. J2's attempted fresh direct Lean elaboration reached a 45-second timeout without a compiler diagnostic; this is recorded as `infrastructure_error`, not a theorem failure. The archived hosted check remains the machine evidence J3 reviewed. A passing current-head formal run must be retrieved and checked before upgrading the full review outcome.
+J2's supplied older `2026-10-31` receipt was a different run and has SHA-256 `c4ae843196160e477aa13de229c825ca3cf15452baa02c3db1019c3f20adfb52`, not the frozen run's receipt. It was used only as a matching printed-type comparison, never as the pinned receipt. J2's attempted fresh direct Lean elaboration reached a 45-second timeout without a compiler diagnostic; this is recorded as `infrastructure_error`, not a theorem failure.
+
+After the three reviewers froze their reports, the coordinator downloaded the newly completed formal artifact from [run 41718285530](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41718285530), artifact ID `13272842471`. Its odd-torsion receipt SHA-256 is `5246d01c4a35fea1896f6b40a182deef1859171b4916abc5256d899aacedb45e`. The task, target, theorem, toolchain/manifest hashes, complete six-file workspace map, and ten-file verifier map match the independently reviewed archived receipt; the new receipt's execution checkout is `62d80a49f59cc097acc4369a99034a853e9e4de8`, whose GitHub parents include PR #3007 head `53b7f9813c8037818d5db8b42df9eee5cd1e0f12`. Its named build and zero-axiom audit passed, the forbidden-construct list is empty, and pre/post dependency pin files are identical at SHA-256 `289330f9eaa7070f9091336059f7c031804dc452e16de96f7000a2d87b933a73`. `fresh-hosted-41718285530/check_fresh.py` passed all 19 recorded checks. This is a post-freeze coordinator supplement; it does not alter any independent reviewer report or claim an independent binary/kernel recheck.
 
 ## Review custody and remaining bridge
 
