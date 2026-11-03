@@ -548,3 +548,17 @@ wrong-ordinal refusals. The
 records the exact scope. Next construct and check the fixed-field model and
 full compositum source-map compatibility before assigning an admissible
 genus. No scientific cohort trial was launched.
+
+## Type2 orbit and trace-zero predicate instrument, 2026-11-03
+
+The [Type2 instrument](../experiments/EXP-PEXT-bf8f96/implementation/type2_predicate.py)
+now checks the length-six Frobenius orbit signature with exponents
+`{0,1,3,4}` and separately searches the trace-zero base-field Möbius
+predicate. Three software tests pass: two synthetic F27 quartics have the
+Type2 signature, one with a matrix witness and one with an exhaustive
+no-witness result; a different `(2,2)` pattern and an irreducible quartic do
+not have the signature. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/type2-predicate-20261103/report.md)
+records the exact forms and source. Next bind Type2 rows into the full
+checker/analysis and independent witness review. No scientific cohort trial
+was launched.
