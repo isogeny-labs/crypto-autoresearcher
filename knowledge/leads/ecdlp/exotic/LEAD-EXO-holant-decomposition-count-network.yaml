@@ -9,36 +9,48 @@ mechanism: >-
   whose internal bonds carry x-coordinates of partial sums, with the indicator vector of FB on
   each leaf. Holant theory asks whether a basis change on the bond spaces (a holographic
   transformation) makes such a counting network cheap to contract. Contracting one leaf gives
-  the transfer matrix M[y,y'] = #{x in FB : S_3(x,y,y') = 0}. Up to multiplicity conventions
-  this is the quotient by negation of the Cayley graph of E(F_p) with connection set
-  {+-F : x(F) in FB}. Its eigenfunctions are the symmetrised characters chi_j + chi_(-j),
-  which are indexed by the discrete logarithm. So a basis that
-  diagonalises M already encodes the answer, and the open question is whether any cheaper
-  basis lowers the tensor rank of T. This differs from LEAD-ICE-gag-contraction-planner, which
+  the transfer matrix M[y,y'] = #{x in FB : S_3(x,y,y') = 0}. On the F_p alphabet M splits
+  into an E(F_p) block and a quadratic-twist block. For odd #E the E block is the symmetrised
+  quotient by negation of the Cayley graph of E(F_p) with connection set {+-F : x(F) in FB},
+  with the vertex O deleted, because O has no x-coordinate. Its eigenvalues are the zeros of
+  sum_j 1/(lambda_j - mu), where lambda_j are the character sums, plus any degenerate lambda_j.
+  Its eigenvectors are Green functions sum_j cos(2 pi j log P / n)/(lambda_j - mu), not single
+  characters, but they are still explicit functions of the discrete logarithm. For even #E the
+  2-torsion rows differ by a factor 2 (report 2026-11-03). So a basis that diagonalises M
+  already encodes the answer, and the open question is whether any cheaper basis lowers the
+  tensor rank of T. This differs from LEAD-ICE-gag-contraction-planner, which
   asks which presentation of the same system is cheapest for a Groebner solver, and from
   LEAD-EXO-hashed-factor-base-tensor-ecdl, which contracts a Boolean encoding by #SAT. Numbered
-  heuristics (scouting note, unproven). H1: an algorithm that only reads entries of T is
-  simulable in the generic group model with O(1) group operations per entry, as the x-oracle
-  is in LEAD-EXO-augmented-oracle-ggm; an algorithm that manipulates the polynomial S_3 is not
-  covered by that argument. H2: the Cai-Chen complex-weighted #CSP dichotomy is stated for a
+  heuristics. H1 (derivation and red-team review 2026-11-03, replacing the scouting version):
+  T and M are public, so building or transforming them costs 0 group queries. If entries are
+  indexed by group labels, an entry costs at most 4 group queries and Shoup's bound applies,
+  but that class cannot change basis on the F_p alphabet. A holographic basis change needs
+  x(R) of instance points as field elements, and an x-coordinate oracle is not
+  GGM-simulable with o(sqrt n) queries on any curve: two queries and free local work give the
+  logarithm. So the GGM excludes no basis change, and step (b) is the test. H2: the Cai-Chen complex-weighted #CSP dichotomy is stated for a
   fixed finite domain; here the domain F_p grows with the instance, so it gives no closure.
 disposition: open_next_step
 next_action:
   step: >-
-    (a) Write the entry-access simulation of H1 as a short proof note with its overhead. (b) At
+    (a) Done 2026-11-03: H1 restated, with no basis family removed from scope (report
+    holant-h1-ggm-lemma-20261103). (b) At
     toy primes p <= 2^10 (several curves per size, recorded seeds), build T and M explicitly;
     check that the spectrum of M matches the character prediction; then compare the tensor
     rank (or a computable proxy such as flattening ranks) of T after candidate bond-wise basis
     changes (additive Fourier on F_p, multiplicative characters, Legendre-symbol bases) against
     a null of random ternary tensors with the same support density.
   discriminates: >-
-    If (a) holds, only bases that use the algebraic form of S_3 remain in scope, and (b)
-    decides them at toy size. A rank drop for T beyond the random-support null that persists
+    (a) removed no basis family from scope, so (b) decides them all at toy size. A rank drop for T beyond the random-support null that persists
     across sizes is a first non-generic structure and goes to a charged comparison against
     matched rho. No drop at any toy size makes the lead exhausted_at_scale at the size reached,
     reopening if a basis family is found whose description length grows sub-polynomially in p.
 best_measured: null
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/holant-h1-ggm-lemma-20261103/README.md
+  note: >-
+    step (a): H1 restated (label-indexed reading closed but excludes basis changes, field-indexed
+    reading outside the GGM); transfer matrix is the O-deleted quotient; red-team review included
 - repo: crypto-autoresearcher
   path: docs/reports/ecdlp-exotic-scouting-20261101/README.md
   note: scouting note, novelty gates, heuristics H1-H2 and the transfer-matrix observation
@@ -66,4 +78,4 @@ forecloses:
 - Cayley graph spectrum of the factor base reveals discrete logs
 areas:
 - ECDLP
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-03'
