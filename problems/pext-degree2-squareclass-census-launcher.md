@@ -593,3 +593,16 @@ write-once batch and refusal of Type2 without full geometry. The
 records the exact fixture scope. Next bind these outputs in full analysis and
 measure full-cohort checker time/storage before approval. No scientific
 cohort trial was launched.
+
+## Type2 curve/T analysis join, 2026-11-03
+
+The [geometric reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py)
+now verifies the hash-linked Type2 batch and joins retained signatures to
+sealed exceptional unit rows by published class/T, ordinal, raw hash and
+matrix. It keeps signature and trace-zero predicate counts separate at unit,
+actual-curve and cohort level, and rejects stray Type2 files on noncubic
+cohorts. Four reducer software tests pass, including digest and matrix
+tampering refusal. The [report](../experiments/EXP-PEXT-bf8f96/reports/type2-analysis-20261103/report.md)
+records the fixture scope. Next bind the reducer into the complete analysis
+stage and implement descent and C0–C7 controls. The contract remains
+`review_required`; no scientific cohort trial was launched.

@@ -2,8 +2,7 @@
 
 The reducer consumes checked candidate artifacts, retains actual-curve and T
 identity, and never labels an observation as a scientific decision. Descent,
-Type2, control validity and independent counterexample rederivation are later
-gates in the full experiment.
+control validity and independent counterexample rederivation are later gates.
 """
 
 import hashlib
@@ -122,7 +121,7 @@ def curve_summary(cohort, class_index, model, units):
     all_maps = min(row["geometric_minimum"] for row in units)
     if len(units) == 1 and all_maps != baseline:
         raise ValueError("odd-order curve all-map minimum differs")
-    return {"cohort": cohort, "class_index": class_index, "model": model,
+    result = {"cohort": cohort, "class_index": class_index, "model": model,
             "T_count": len(units), "xline_geometric_minimum": baseline,
             "all_maps_geometric_minimum": all_maps,
             "strict_geometric_minimum_drop": all_maps < baseline,
@@ -130,6 +129,83 @@ def curve_summary(cohort, class_index, model, units):
             "geometric_spectrum_violation_count": sum(
                 row["geometric_spectrum_violation_count"] or 0 for row in units),
             "units": units}
+    if all("type2_signature_count" in row for row in units):
+        for key in ("type2_signature_count", "hyperelliptic_predicate_true_count",
+                    "hyperelliptic_predicate_false_count"):
+            result[key] = sum(row[key] for row in units)
+    return result
+
+
+def load_type2_artifacts(cohort_dir, cohort, plan_sha256, binary_sha256,
+                         candidate_check, review_bytes, units, degree):
+    """Verify the write-once Type2 batch and partition rows by published unit."""
+    cohort_dir = Path(cohort_dir)
+    paths = [cohort_dir / name for name in ("type2-check.json", "type2-rows.jsonl")]
+    if degree != 3:
+        if candidate_check.get("type2_check_sha256") is not None or any(
+                path.exists() or path.is_symlink() for path in paths):
+            raise ValueError("Type2 artifacts on noncubic cohort")
+        return None, None
+    if any(path.is_symlink() or not path.is_file() for path in paths):
+        raise ValueError("cubic Type2 artifacts missing")
+    summary_bytes, rows_bytes = (path.read_bytes() for path in paths)
+    summary = json.loads(summary_bytes)
+    if (candidate_check.get("type2_check_sha256") != hashlib.sha256(summary_bytes).hexdigest()
+            or summary.get("schema") != "pext.type2-batch-check/v1"
+            or summary.get("valid") is not True or summary.get("cohort") != cohort
+            or summary.get("join_plan_sha256") != plan_sha256
+            or summary.get("binary_sha256") != binary_sha256
+            or summary.get("candidate_reviews_sha256") != hashlib.sha256(review_bytes).hexdigest()
+            or summary.get("type2_rows_sha256") != hashlib.sha256(rows_bytes).hexdigest()
+            or summary.get("unit_count") != len(units)
+            or summary.get("status") != "full_independent_exceptional_scan"):
+        raise ValueError("Type2 batch identity or digest mismatch")
+    rows = [json.loads(line) for line in rows_bytes.splitlines() if line]
+    by_unit = {unit["name"]: [] for unit in units}
+    order = {unit["name"]: index for index, unit in enumerate(units)}
+    previous = (-1, -1)
+    for row in rows:
+        name = row.get("unit_name")
+        ordinal = row.get("ordinal")
+        if name not in by_unit or type(ordinal) is not int or ordinal < 0:
+            raise ValueError("Type2 row unit or ordinal invalid")
+        position = (order[name], ordinal)
+        if position <= previous:
+            raise ValueError("Type2 rows not in strict unit/ordinal order")
+        previous = position
+        by_unit[name].append(row)
+    if (summary.get("signature_count") != len(rows)
+            or summary.get("hyperelliptic_predicate_true_count") != sum(
+                row.get("hyperelliptic_predicate") is True for row in rows)
+            or summary.get("hyperelliptic_predicate_false_count") != sum(
+                row.get("hyperelliptic_predicate") is False for row in rows)):
+        raise ValueError("Type2 batch counts differ from retained rows")
+    return summary, by_unit
+
+
+def type2_unit_summary(unit, review, slot, rows):
+    """Join retained signatures to exact sealed exceptional geometry rows."""
+    geometry = {row[0]: row[1] for row in unit["rows"]}
+    raw = review["raw_sha256"]
+    for row in rows:
+        if (row.get("class_index") != slot["class_index"]
+                or row.get("T_index") != slot["T_index"]
+                or row.get("raw_sha256") != raw
+                or row["ordinal"] not in geometry
+                or row.get("matrix") != geometry[row["ordinal"]]
+                or type(row.get("hyperelliptic_predicate")) is not bool
+                or type(row.get("alpha_choices_checked")) is not int
+                or row["alpha_choices_checked"] < 1):
+            raise ValueError("Type2 signature differs from sealed exceptional row")
+    counts = {"exceptional_checked": len(unit["rows"]),
+              "type2_signature_count": len(rows),
+              "hyperelliptic_predicate_true_count": sum(
+                  row["hyperelliptic_predicate"] for row in rows),
+              "hyperelliptic_predicate_false_count": sum(
+                  not row["hyperelliptic_predicate"] for row in rows)}
+    if review.get("type2_counts") != counts:
+        raise ValueError("Type2 per-unit counts differ from independent review")
+    return counts
 
 
 def reduce_cohort(cohort_dir, binder, binary_sha256):
@@ -162,6 +238,9 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
     units = expected_units(binder.plan)
     if len(reviews) != len(units):
         raise ValueError("independent review cardinality differs from plan")
+    type2_check, type2_rows = load_type2_artifacts(
+        cohort_dir, cohort, binder.plan_sha256, binary_sha256, check,
+        review_bytes, units, binder.plan["field"]["degree"])
     curves, current = [], []
     all_unit_summaries = []
     for chunk_name in dict.fromkeys(row["chunk"] for row in units):
@@ -195,6 +274,8 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
             result = unit_summary(unit, n=binder.plan["field"]["degree"],
                                   target_count=len(targets), t_index=row["T_index"],
                                   expected_structures=binder.plan["structures_per_T"])
+            if type2_rows is not None:
+                result.update(type2_unit_summary(unit, review, row, type2_rows[name]))
             if (review["independent"].get("exceptional") != result["exceptional"]
                     or review["independent"].get("structures") != result["structures"]
                     or review.get("geometry_ordinals") != [item[0] for item in unit["rows"]]):
@@ -237,4 +318,14 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
                    row["geometric_spectrum_violation_count"] or 0 for row in all_unit_summaries),
                "curves_with_strict_geometric_minimum_drop": sum(
                    row["strict_geometric_minimum_drop"] for row in curves)}
+    if type2_check is not None:
+        if type2_check["exceptional_checked"] != total_exceptional:
+            raise ValueError("Type2 exceptional coverage differs from geometry")
+        metrics["type2_check_sha256"] = check["type2_check_sha256"]
+        for key in ("signature_count", "hyperelliptic_predicate_true_count",
+                    "hyperelliptic_predicate_false_count"):
+            output_key = "type2_" + key if key == "signature_count" else key
+            if type2_check[key] != sum(row[output_key] for row in all_unit_summaries):
+                raise ValueError("Type2 totals differ from curve/T rows")
+            metrics[output_key] = type2_check[key]
     return curves, metrics

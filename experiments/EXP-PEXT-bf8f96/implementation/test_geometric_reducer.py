@@ -1,6 +1,7 @@
 """Geometric reducer arithmetic on two fixed F27 software units."""
 
 import copy
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -8,7 +9,8 @@ import tempfile
 import unittest
 
 from geometric_reducer import (curve_summary, expected_pattern,
-                               genus_from_rank_and_support, unit_summary)
+                               genus_from_rank_and_support, load_type2_artifacts,
+                               type2_unit_summary, unit_summary)
 
 
 class GeometricReducerTests(unittest.TestCase):
@@ -72,6 +74,52 @@ class GeometricReducerTests(unittest.TestCase):
         first["T_index"] = 0
         with self.assertRaisesRegex(ValueError, "incomplete canonical T"):
             curve_summary("f27-software-fixture", 0, [0, 0], [first, first])
+
+    def test_type2_exact_curve_t_join_and_digest_refusal(self):
+        unit = self.units[0]
+        row = unit["rows"][0]
+        slot = {"name": "u000000", "class_index": 0, "T_index": 0}
+        review = {"raw_sha256": "a"*64,
+                  "type2_counts": {"exceptional_checked": len(unit["rows"]),
+                                   "type2_signature_count": 1,
+                                   "hyperelliptic_predicate_true_count": 1,
+                                   "hyperelliptic_predicate_false_count": 0}}
+        signature = {"unit_name": slot["name"], "class_index": 0, "T_index": 0,
+                     "raw_sha256": review["raw_sha256"], "ordinal": row[0],
+                     "matrix": row[1], "hyperelliptic_predicate": True,
+                     "alpha_choices_checked": 1}
+        self.assertEqual(type2_unit_summary(unit, review, slot, [signature]),
+                         review["type2_counts"])
+        bad = dict(signature, matrix=[0, 0, 0, 0])
+        with self.assertRaisesRegex(ValueError, "sealed exceptional"):
+            type2_unit_summary(unit, review, slot, [bad])
+        summarized = dict(self.summarize(0), T_index=0, **review["type2_counts"])
+        curve = curve_summary("fixture", 0, [0], [summarized])
+        self.assertEqual(curve["hyperelliptic_predicate_true_count"], 1)
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            rows = (json.dumps(signature, sort_keys=True) + "\n").encode()
+            reviews = b"fixture-review\n"
+            summary = {"schema": "pext.type2-batch-check/v1", "valid": True,
+                       "cohort": "fixture", "join_plan_sha256": "b"*64,
+                       "binary_sha256": "c"*64,
+                       "candidate_reviews_sha256": hashlib.sha256(reviews).hexdigest(),
+                       "type2_rows_sha256": hashlib.sha256(rows).hexdigest(),
+                       "unit_count": 1, "exceptional_checked": len(unit["rows"]),
+                       "signature_count": 1, "hyperelliptic_predicate_true_count": 1,
+                       "hyperelliptic_predicate_false_count": 0,
+                       "status": "full_independent_exceptional_scan"}
+            summary_bytes = json.dumps(summary).encode()
+            (root / "type2-rows.jsonl").write_bytes(rows)
+            (root / "type2-check.json").write_bytes(summary_bytes)
+            check = {"type2_check_sha256": hashlib.sha256(summary_bytes).hexdigest()}
+            loaded, partition = load_type2_artifacts(
+                root, "fixture", "b"*64, "c"*64, check, reviews, [slot], 3)
+            self.assertEqual((loaded["signature_count"], len(partition[slot["name"]])), (1, 1))
+            (root / "type2-rows.jsonl").write_bytes(rows + b"\n")
+            with self.assertRaisesRegex(ValueError, "digest mismatch"):
+                load_type2_artifacts(root, "fixture", "b"*64, "c"*64,
+                                     check, reviews, [slot], 3)
 
 
 if __name__ == "__main__":
