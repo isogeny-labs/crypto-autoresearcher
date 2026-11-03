@@ -1,0 +1,58 @@
+handoff:
+  id: TASK-20261103-f8f2d2
+  from: coordinator
+  to: validator
+  role: validator
+  recorded_at: '2026-11-03'
+  opened_by_decision: DEC-20261103-523d19
+  experiment_id: EXP-SEMAEV-93d5cc
+  goal_id: GOAL-ECDLP-001
+  lane: BATCH-7c689b
+  objective: >-
+    Independent-session re-validation of the seven EXP-SEMAEV-93d5cc and
+    EXP-SEMAEV-6e9dcf run records under review plan RP-BATCH-7c689b (joints
+    J1-J6, controls PTM and VAC), remedying the procedure deviation of
+    DEC-20261018-3b4a32.
+  uncertainty_reduced: Whether the run records support the per-cell values an evidence review may cite, as judged by a session independent of the producer.
+  inputs:
+  - AGENTS.md
+  - agents/validator.md
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-input-manifest.json
+  constraints:
+  - Fresh independent session under review-adversarial/xhigh; no fork of or context from the producing session, no fallback, no degradation.
+  - Read only what the review plan allows; never read anything on its blindness.may_not_read list, even after finishing.
+  - Reverify the manifest hashes before treating any file as the object under review.
+  - Zero scientific trials. Recompute and re-derive from frozen inputs only, with your own code for J5.
+  - Never edit producer files, runs, specifications, hypotheses, decisions or other reviews; change no research status.
+  - Verdicts holds/breaks/inconclusive per joint per run; missing or unrun is inconclusive. Attest the actual read set.
+  deliverables:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.json
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.md
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/report.pdf
+  artifact_paths:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.json
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.md
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/report.pdf
+  write_scope:
+  - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2
+  archived_by: TASK-20261103-2c99e6
+  depends_on: []
+  review_plan: coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml
+  frozen_input_sha256:
+    coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml: 387679801939f7f19d36e0951b877b4994c2a86eb4bb8691aeec4539aa8edfc4
+    coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-input-manifest.json: 3af6bd9c02a72edaed6cf2a32f80d55dd6cc2b9610a53f38b11503c21b58f8ab
+  joints_owned: [J1, J2, J3, J4, J5, J6, PTM, VAC]
+  completion_gate:
+  - review.json and review.md give a verdict for every joint and control on every run, with the read-set attestation
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+    wall_clock_seconds: 7200
+    memory_gb: 4

@@ -1,0 +1,156 @@
+{
+ "schema": "crypto.autoresearch.dispatch_queue.v1",
+ "goal_id": "GOAL-ECDLP-001",
+ "batch_id": "BATCH-7c689b",
+ "objective": "Independent-session re-validation of the EXP-SEMAEV-93d5cc / -6e9dcf run records (H-SEMAEV-94dab2); opening decision DEC-20261103-523d19.",
+ "max_concurrent": 1,
+ "max_concurrent_basis": "one validator session; not a research budget",
+ "notes": [
+  {
+   "at": "2026-11-03T17:05:00Z",
+   "kind": "opened",
+   "text": "Review plan RP-BATCH-7c689b and blind input manifest frozen; validator to run as a fresh cloud session."
+  }
+ ],
+ "tasks": [
+  {
+   "id": "TASK-20261103-f8f2d2",
+   "title": "Independent-session re-validation of the seven EXP-SEMAEV-93d5cc and EXP-SEMAEV-6e9dcf run",
+   "role": "validator",
+   "state": "queued",
+   "priority": 90,
+   "review_required": false,
+   "depends_on": [],
+   "read_scope": [
+    "AGENTS.md",
+    "agents/validator.md",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-input-manifest.json"
+   ],
+   "write_scope": [
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2"
+   ],
+   "artifact_paths": [
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.json",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.md",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/report.pdf"
+   ],
+   "handoff": {
+    "objective": "Independent-session re-validation of the seven EXP-SEMAEV-93d5cc and EXP-SEMAEV-6e9dcf run records under review plan RP-BATCH-7c689b (joints J1-J6, controls PTM and VAC), remedying the procedure deviation of DEC-20261018-3b4a32.",
+    "uncertainty_reduced": "Whether the run records support the per-cell values an evidence review may cite, as judged by a session independent of the producer.",
+    "inputs": [
+     "AGENTS.md",
+     "agents/validator.md",
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml",
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-input-manifest.json"
+    ],
+    "constraints": [
+     "Fresh independent session under review-adversarial/xhigh; no fork of or context from the producing session, no fallback, no degradation.",
+     "Read only what the review plan allows; never read anything on its blindness.may_not_read list, even after finishing.",
+     "Reverify the manifest hashes before treating any file as the object under review.",
+     "Zero scientific trials. Recompute and re-derive from frozen inputs only, with your own code for J5.",
+     "Never edit producer files, runs, specifications, hypotheses, decisions or other reviews; change no research status.",
+     "Verdicts holds/breaks/inconclusive per joint per run; missing or unrun is inconclusive. Attest the actual read set."
+    ],
+    "deliverables": [
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.json",
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.md",
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/report.pdf"
+    ],
+    "completion_gate": [
+     "review.json and review.md give a verdict for every joint and control on every run, with the read-set attestation"
+    ],
+    "budget": {
+     "maximum_runs": 0,
+     "wall_clock_seconds": 7200,
+     "memory_gb": 4
+    }
+   },
+   "inference": {
+    "policy": "review-adversarial",
+    "reasoning_effort": "xhigh",
+    "fallback_allowed": false,
+    "degraded_allowed": false,
+    "independent_session_required": true,
+    "delivery": "interactive"
+   },
+   "handoff_path": "ledger/handoffs/TASK-20261103-f8f2d2.yaml",
+   "archived_by": "TASK-20261103-2c99e6"
+  },
+  {
+   "id": "TASK-20261103-2c99e6",
+   "title": "Review the independent report of TASK-20261103-f8f2d2, record a decision on the strength o",
+   "role": "coordinator",
+   "state": "queued",
+   "priority": 80,
+   "review_required": false,
+   "depends_on": [
+    "TASK-20261103-f8f2d2"
+   ],
+   "read_scope": [
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/report.pdf",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.json",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.md",
+    "ledger/decisions/DEC-20261018-3b4a32.yaml",
+    "ledger/evidence/EV-SEMAEV-593b7a.yaml"
+   ],
+   "write_scope": [
+    "ledger/decisions/DEC-20261103-812d74.yaml",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/archives/TASK-20261103-2c99e6"
+   ],
+   "artifact_paths": [
+    "ledger/decisions/DEC-20261103-812d74.yaml",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/archives/TASK-20261103-2c99e6/ledger-receipt.json"
+   ],
+   "handoff": {
+    "objective": "Review the independent report of TASK-20261103-f8f2d2, record a decision on the strength of EV-SEMAEV-593b7a (it may stay preliminary, rise, or be superseded), lift the review blindness deliberately, and archive the lane.",
+    "uncertainty_reduced": "Whether the procedure deviation of DEC-20261018-3b4a32 is remedied.",
+    "inputs": [
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.json",
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/review.md",
+     "ledger/evidence/EV-SEMAEV-593b7a.yaml",
+     "ledger/decisions/DEC-20261018-3b4a32.yaml"
+    ],
+    "constraints": [
+     "Starts only after TASK-20261103-f8f2d2's report is committed.",
+     "Records are immutable; a strength change is a new decision and, if needed, a successor evidence record."
+    ],
+    "deliverables": [
+     "ledger/decisions/DEC-20261103-812d74.yaml",
+     "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/archives/TASK-20261103-2c99e6/ledger-receipt.json"
+    ],
+    "completion_gate": [
+     "decision recorded and lane archived"
+    ],
+    "budget": {
+     "maximum_runs": 0,
+     "wall_clock_seconds": 3600,
+     "memory_gb": 2
+    }
+   },
+   "inference": {
+    "policy": "coordinator-orchestration-code",
+    "fallback_allowed": false,
+    "degraded_allowed": false,
+    "independent_session_required": false,
+    "delivery": "interactive"
+   },
+   "handoff_path": "ledger/handoffs/TASK-20261103-2c99e6.yaml",
+   "archived_by": "TASK-20261103-2c99e6",
+   "archive": {
+    "kind": "ledger",
+    "binding_mode": "content_at_commit",
+    "source_task_ids": [
+     "TASK-20261103-f8f2d2"
+    ],
+    "record_ids": [
+     "DEC-20261103-812d74"
+    ],
+    "commit_sha": null,
+    "parent_sha": null,
+    "path_sha256": {},
+    "receipt": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/archives/TASK-20261103-2c99e6/ledger-receipt.json"
+   }
+  }
+ ]
+}
