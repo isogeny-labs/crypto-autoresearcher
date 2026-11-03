@@ -1,0 +1,405 @@
+experiment:
+  id: EXP-PEXT-bf8f96
+  hypothesis_id: H-PEXT-c3a11d
+  source_idea: IDEA-20261024-d84f20
+  question_id: RQ-PEXT-7c3e91
+  goal_id: GOAL-PEXT-4a1d6b
+  version: 1
+  title: 'All degree-two quotients of actual elliptic K-models: branch spectra and descent-admissible minima'
+  status: review_required
+  frozen: false
+  designed_at: '2026-11-02'
+  designed_by: coordinator
+  approved_by: null
+  execution_authorized: false
+  objective: Test P1-P4 with full original cohorts, explicit same-curve maps and coefficient-aware descent;
+    prepare exact counterexample certificates when present.
+  lead_atlas:
+    row: LEAD-TRF-odd-prime-ghs-cover-floor
+    path: knowledge/leads/ecdlp/transfer/LEAD-TRF-odd-prime-ghs-cover-floor.yaml
+    delta: Extend x-line-only genus accounting to all rational degree-two quotient classes on the same curve;
+      separate geometric branch genus from twist-dependent descent. No run/evidence delta claimed.
+  selection_basis: Coordinator selected the still-open ECC idea under standing authorization; ready existing
+    PEXT experiment has unresolved serving route.
+  design_rate:
+    utc_day: '2026-11-02'
+    observed_receipt_experiments_today: 0
+    observed_specs_designed_today_before_this_design: 0
+    this_session_new_experiments: 1
+    max_per_session: 1
+    max_per_day: 6
+    scope: Current fetched main/worktree census; root confirmed no earlier design in this session; recheck
+      receipts/refs before publication.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261024-d84f20.yaml
+    cohort:
+    - All K-isomorphism classes, n=3 q=5,7,11; full n=5 q=3 baseline cohort (proposal names 488; verify convention
+      before freeze)
+    - All abstract branch placements for n=3,5,7; no n=7 field census added
+    - H1 descriptive configuration/curve-count ratio arm at n=3,q=5,7,11,13; q13 is not silently included in
+      the P3 minimum cohort.
+    sources_to_bind:
+    - experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs
+    - experiments/EXP-PEXT-212d5c/implementation/fixtures/
+    - experiments/EXP-PEXT-0b2c75/implementation/pext4_census.rs
+    literature:
+    - ref: https://eprint.iacr.org/2015/805.pdf
+      provenance: retrieved
+      claim: 'Sections 3.1-3.3: square-class relations precede genus accounting; section 3.2 and Example 3.2
+        restrict coefficient classes for a cubic-extension rank-two descent.'
+      verified_by: Coordinator gpt-6.1-sol/high, 2026-11-02; indexed full PDF lines 199-556 read
+    - ref: https://maths.ucd.ie/~gmg/ECC2007Talks/chao.pdf
+      provenance: retrieved
+      claim: Slides 25-26 specify the cubic Type2 four-root pattern and a trace-zero Mobius condition for hyperellipticity.
+      verified_by: Coordinator gpt-6.1-sol/high, 2026-11-02; full slides 25-26 read
+    - ref: ledger/proposals/IDEA-20261024-d84f20.notes.md
+      provenance: internal
+      claim: Unreviewed degree-two torsor and orbit spectrum proposal; the source of predictions, not evidence.
+      verified_by: Coordinator gpt-6.1-sol/high, 2026-11-02
+    identity_rule: Canonical nonsingular K-Weierstrass model with explicit isomorphism witnesses under x=s^2*xnew+r,y=s^3*ynew
+      (odd char); handle char3 a2 and special automorphisms. Never identify solely by j.
+  controls:
+  - id: C0
+    kind: positive
+    description: T=O reproduces every n3 q5/q7 and n5 q3 fixture row after explicit identity alignment; original
+      488 convention reconciled before freeze.
+  - id: C1
+    kind: negative
+    description: Odd-order curves have no nonzero T class; all-map minimum equals xline minimum.
+  - id: C2
+    kind: positive
+    description: Synthetic valid four-cycle and (2,2) branch actions exercise predicted nonzero types; malformed
+      collision/cross-ratio certificates are rejected.
+  - id: C3
+    kind: aa
+    description: Reversed representative/enumeration order gives exactly identical sorted rows, coverage and
+      minima.
+  - id: C4
+    kind: nearby
+    description: Paired coefficient twists plus same-j distinct K-models expose j-only or branch-only misidentification;
+      section3.2 rank-two scalar restriction is exercised.
+  - id: C5
+    kind: independent
+    description: Blind second implementation recomputes fixed first/middle/last canonical unit per torsion/T/descent
+      stratum, all counterexamples, all special-j classes and all Type2 hyperelliptic witnesses.
+  - id: C6
+    kind: coordinate_isomorphism
+    description: 'C-coordinate: identity vs seeded PGL2(K) transport with full binary-form scalar; preserve
+      actual curve via inverse map, recompute branch ranks/connectedness. The expected exact invariant equality
+      is checked, not assumed.'
+  - id: C7
+    kind: matched_random
+    description: 'C-random-branch: seeded K-stable squarefree quartics matched on field, degree, branch factor
+      type and scalar class, sampled independently of source outputs. Compare weighted-factor and direct incidence
+      implementations; report random-destination identity separately. This is an instrument control, not an
+      ECDLP benefit comparison.'
+  independent_variables:
+  - name: degree_two_map_set
+    levels:
+    - T=O
+    - all T classes
+  - name: n_q
+    levels:
+    - 3/5
+    - 3/7
+    - 3/11
+    - 5/3
+    - abstract n7
+  metrics:
+    primary:
+    - branch_type_mismatch_count
+    - geometric_spectrum_violation_count
+    - full_T_and_structure_coverage
+    - geometric_minimum_by_actual_curve
+    - curves_with_strict_geometric_minimum_drop
+    secondary:
+    - geometric_vs_constant_squareclass_rank
+    - descent_certificate_status
+    - Type2_hyperelliptic_predicate
+    - special_j_twist_rows
+    - wall_seconds_descriptive
+    - peak_rss_bytes
+    - admissible_minimum_by_actual_curve_descriptive
+    - H1_configuration_and_curve_counts_q5_q7_q11_q13_descriptive
+    - H1_configuration_to_curve_ratio_descriptive
+  predictions:
+  - id: P1
+    statement: For each actual E/K and T in E(K)/2E(K), the Frobenius branch types are (1,3) only for odd order;
+      (1,1,2) at zero and (4) at nonzero for rational two-torsion rank one; (1,1,1,1) at zero and (2,2) at
+      nonzero for rank two.
+    decisive_comparison: C-types
+  - id: P2
+    statement: The geometric nonzero-T genus spectrum is contained in {1,(n-1)*2^n+1} for type (4), and {1,2^(n-2)*(n-2)+1,2^(n-1)*(n-1)+1,(n-1)*2^n+1}
+      for type (2,2), n=3,5,7.
+    decisive_comparison: C-spectrum
+  - id: P3
+    statement: For n=3 and q=5,7,11 at least one actual K-isomorphism class has a smaller geometric branch-genus
+      minimum after nonzero T is included; for n=5,q=3 none of the full baseline cohort gains a lower geometric
+      minimum. This preserves the proposal prediction. Descent-admissible minima are separately descriptive,
+      with no added falsification criterion.
+    decisive_comparison: C-minima
+  - id: P4
+    statement: A branch tuple of Chao Type2 form has the shared length-six orbit pattern; compute separately
+      whether the trace-zero Mobius hyperellipticity predicate holds. No equivalence with all nonzero-T curves
+      is assumed.
+    decisive_comparison: C-types
+  scale_relevance:
+    tier: toy
+    justification: Finite exact structural census; symbolic orbit placement n3/5/7 checked separately.
+    correspondence: null
+  replication:
+    seeds:
+    - 20261102
+    independent_instances: 0
+    unit: Exhaustive canonical curve/T/structure; no random inference; independent verifier covers declared
+      strata. H1 q13 configuration arm remains descriptive and separate from P3.
+  budget:
+    enforcement: hard local execution ceilings; no new cloud submission
+    maximum_runs: 6
+    maximum_workers: 1
+    maximum_memory_gb: 4
+    wall_clock_seconds_total: 86400
+    total_cpu_hours: 24
+    retry_limit: 0
+    cloud_dollars: 0
+    note: Finite local proposal; actual execution admission must verify available existing-host allocation.
+      Any cloud route needs a separate published finite dollar/capacity grant.
+  stages:
+  - id: regression
+    objective: T=O full fixture replay and identity/squareclass controls
+    watchdog_seconds: 7200
+  - id: orbits
+    objective: All abstract allowed n3/5/7 placements and polynomial-rank check
+    watchdog_seconds: 3600
+  - id: n3core
+    objective: Complete q5 and q7 same-curve all-T census
+    watchdog_seconds: 21600
+  - id: n3ext
+    objective: Complete q11 same-curve all-T census, and descriptive H1 shared-orbit configuration/curve-count
+      ratios at q5,7,11,13. Preserve partial coverage separately if watchdog reached.
+    watchdog_seconds: 28800
+  - id: n5
+    objective: Complete q3 original full cohort all-T census
+    watchdog_seconds: 21600
+  - id: analyze
+    objective: Exact joins, independent control reconciliation, export and report
+    watchdog_seconds: 3600
+  stopping_rules:
+  - Fixed whole cohorts; stop at stage watchdog or memory ceiling and retain all partial rows and exact remaining
+    coverage.
+  - Stop dependent stages after failed regression/instrument control; no replacement curve, seed or seventh
+    run.
+  - No automatic retry. Any retry needs Coordinator reconciliation, finite remaining budget and fresh IDs;
+    preserve failed records.
+  invalidation_rules:
+  - Incorrect same-curve/twist map, missing T coset, incomplete structure coverage, failed squareclass relation
+    or missing descent witness invalidates that admissible-minimum claim.
+  - A counterexample is mathematical only after independent checks of identity, connectedness, exact ranks
+    and all controls.
+  - A timeout/OOM is an operational outcome; partial minima are upper bounds, not exhaustive minima.
+  success_criterion: 'C-types and C-spectrum: no certified mismatch on complete scoped outputs. C-minima: P3
+    geometric-minimum exact counts satisfy the proposal inequalities only on full passing geometric cohorts.
+    Descent-admissible minima, Type2 signature/predicate cross-tab and H1 ratios are descriptive, with no added
+    success/falsification gates.'
+  falsification_criterion: Validated P1/P2 counterexample, or P3 failed on a completely covered control-valid
+    cohort; report separately by prediction.
+  inconclusive_criterion: Any incomplete cohort, absent identity/descent certificate, failed instrument or
+    insufficient source/independence check.
+  variable_ledger:
+    independent:
+    - name: degree_two_map_set
+      levels:
+      - xline
+      - all-maps
+    factors:
+    - name: curve_identity
+      treatment: fixed
+      value: actual K-model, twist, origin
+      how: Same canonical K-isomorphism identity in matched minima rows.
+    - name: coefficient_square_class
+      treatment: crossed
+      value: both
+      how: Both classes recorded; descent checked individually.
+    - name: field_basis
+      treatment: fixed
+      value: exact polynomial bound at implementation freeze
+      how: Publish irreducible polynomial and embeddings; same in all arms.
+    - name: quotient_T_class
+      treatment: crossed
+      value: every E(K)/2E(K) class
+      how: Exact representatives and coset certificates.
+    - name: projective_structure
+      treatment: crossed
+      value: every PGL2(K)/PGL2(Fq) representative
+      how: Exhaustion/orbit-stabilizer certificate.
+    - name: build
+      treatment: fixed
+      value: one archived source/build hash
+      how: Host compiler and binary recorded; no between-arm rebuild except A/A.
+    - name: enumeration_order
+      treatment: fixed
+      value: lexicographic; reversed in A/A
+      how: Exact counted outputs must agree after canonical sorting.
+    - name: host
+      treatment: measured
+      value: actual CPU/kernel/threads/RSS
+      how: Timing descriptive only; no timed primary claim.
+    - name: censoring
+      treatment: fixed
+      value: predeclared per-stage watchdog
+      how: Keep whole cohort and partial rows; never silently drop.
+    - name: analyst
+      treatment: fixed
+      value: predeclared exact analysis
+      how: No data-dependent thresholds; labels visible, script frozen before runs.
+    - name: projective_coordinate
+      treatment: crossed
+      value: identity plus 16 deterministic seeded invertible projective changes per available stratum
+      how: Transport the actual binary quartic including its scalar and exceptional infinity chart; invertible
+        model maps certify unchanged curve.
+    - name: matched_random_branch
+      treatment: randomized
+      value: 16 fresh K-stable squarefree quartics per available field and branch-factor-type stratum, two
+        scalar classes each
+      how: Seed20261102 SHA256 counter stream generates coefficient tuples before output; reject only nonsquarefree/wrong
+        factor pattern, cap4096 draws per stratum. Exhausted control is inconclusive. Match field, degree,
+        branch factor type, scalar class, instrument and resource cap; no curve identity matching or cost claim.
+    comparisons:
+    - id: C-types
+      arms:
+      - all-maps
+      differs_in: []
+      design: absolute
+      threshold: zero certified mismatches on complete control-valid scope
+    - id: C-spectrum
+      arms:
+      - orbit-enumeration
+      differs_in: []
+      design: absolute
+      threshold: zero certified mismatches on complete control-valid scope
+    - id: C-minima
+      arms:
+      - xline
+      - all-maps
+      differs_in:
+      - degree_two_map_set
+      design: one_factor
+    - id: C-aa
+      arms:
+      - all-maps
+      - all-maps-reversed
+      differs_in:
+      - enumeration_order
+      design: aa
+    - id: C-coordinate
+      arms:
+      - all-maps
+      - coordinate-control
+      differs_in:
+      - projective_coordinate
+      design: one_factor
+    - id: C-random-branch
+      arms:
+      - matched-random-branch
+      differs_in: []
+      design: absolute
+      threshold: zero weighted-factor/incidence-rank discrepancies between independent instruments; no same-curve
+        or descent conclusion from random destination
+    crosses_map: true
+  prediction_provenance:
+  - prediction: P1
+    first_recorded_in: ledger/proposals/IDEA-20261024-d84f20.yaml
+    written_at: '2026-10-24'
+    data_seen:
+    - path: ledger/proposals/IDEA-20261024-d84f20.notes.md
+      measured: Relayed sibling aggregate n3 minimum counts; no new all-T cohort run.
+    sample_status: partially_in_sample
+    overlap: T=O historical fixtures are calibration only.
+    decisive_scope: New all-T curve-matched rows after independent regression and descent checks.
+  - prediction: P2
+    first_recorded_in: ledger/proposals/IDEA-20261024-d84f20.yaml
+    written_at: '2026-10-24'
+    data_seen:
+    - path: ledger/proposals/IDEA-20261024-d84f20.notes.md
+      measured: Relayed sibling aggregate n3 minimum counts; no new all-T cohort run.
+    sample_status: partially_in_sample
+    overlap: T=O historical fixtures are calibration only.
+    decisive_scope: New all-T curve-matched rows after independent regression and descent checks.
+  - prediction: P3
+    first_recorded_in: ledger/proposals/IDEA-20261024-d84f20.yaml
+    written_at: '2026-10-24'
+    data_seen:
+    - path: ledger/proposals/IDEA-20261024-d84f20.notes.md
+      measured: Relayed sibling aggregate n3 minimum counts; no new all-T cohort run.
+    sample_status: partially_in_sample
+    overlap: T=O historical fixtures are calibration only.
+    decisive_scope: New all-T curve-matched rows after independent regression and descent checks.
+  - prediction: P4
+    first_recorded_in: ledger/proposals/IDEA-20261024-d84f20.yaml
+    written_at: '2026-10-24'
+    data_seen:
+    - path: ledger/proposals/IDEA-20261024-d84f20.notes.md
+      measured: Relayed sibling aggregate n3 minimum counts; no new all-T cohort run.
+    sample_status: partially_in_sample
+    overlap: T=O historical fixtures are calibration only.
+    decisive_scope: New all-T curve-matched rows after independent regression and descent checks.
+  transfer_obligations:
+  - map: E actual model -> f_T quartic -> conjugate compositum
+    kind: coordinate_change
+    source: Named E/K with origin and T
+    destination: Degree2 branch polynomial with explicit maps and descent status
+    preserves:
+    - actual curve identity and twist via invertible rational maps
+    - ramification including projective exceptional points
+    changes:
+    - coordinate and pole divisor
+    - Frobenius placement and possible constant square relations
+    controls:
+    - kind: coordinate_isomorphism
+      comparison: C-coordinate
+    - kind: matched_random
+      comparison: C-random-branch
+    - kind: source_baseline
+      comparison: C-minima
+    assessment: experiments/EXP-PEXT-bf8f96/transfer-assessment.json
+  execution_plan:
+    mode: experiments
+    trial_plan: null
+    protocol_hashes: {}
+    implementation_tier: executor-implementation
+    runbook: null
+    reason: Compiler/runbook unavailable until actual complete launcher exists; no mechanical card invented.
+  required_artifacts:
+  - experiments/EXP-PEXT-bf8f96/implementation/run.py
+  - experiments/EXP-PEXT-bf8f96/implementation/check.py
+  - experiments/EXP-PEXT-bf8f96/implementation/analyze.py
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_census.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/independent_check.py
+  - experiments/EXP-PEXT-bf8f96/implementation/degree2_identity.py
+  - experiments/EXP-PEXT-bf8f96/trial-plan.json
+  - experiments/EXP-PEXT-bf8f96/inputs/manifest.json
+  - experiments/EXP-PEXT-bf8f96/export.json
+  - experiments/EXP-PEXT-bf8f96/reports/run-<UTC>/report.md
+  - experiments/EXP-PEXT-bf8f96/reports/run-<UTC>/report.pdf
+  assigned_to: executor
+  readiness:
+    problem: problems/pext-degree2-squareclass-census-launcher.md
+    blockers:
+    - Complete quotient/census launcher and independent checker absent (root algebra helper is only one component).
+      Coordinate and matched-random quartic controls also require implementation.
+    - No full-cohort inputs manifest, exact trial-plan/RUN allocation, executor handoff or prospective dispatch
+      queue.
+    - 'No lawful additional lane reserved: two current PEXT lanes open; resolve lifecycle prospectively, preserving
+      failed outcomes and continuation.'
+    - Exact permitted Executor serving/runtime remains unavailable/unverified.
+    - Analysis source not implemented/hash-frozen; protocol is draft, no execution_plan.protocol_hashes binding.
+    - Exact prospective-byte packet not approvable/published; no approval decision allocated.
+  decision_impact:
+    on_positive: Archive the scoped geometric spectra and same-curve minima; commission independent review
+      of load-bearing quotient/coverage/rank joints before any mathematical promotion; use separately certified
+      descent rows to select a subsequent transfer question.
+    on_negative: Preserve the exact identity/rank/coverage-verified geometric counterexample, then obtain independent
+      rederivation and revise only the specific P1/P2/P3 claim implicated. Never interpret invalid instrument
+      output as a counterexample.
+    on_inconclusive: Retain all original cohorts and partial outputs; finish the named missing identity, coverage,
+      connectedness or descent obligation through additive continuation within an authorized finite budget.

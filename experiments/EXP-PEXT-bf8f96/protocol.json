@@ -1,0 +1,642 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "EXP-PEXT-bf8f96",
+  "version": 1,
+  "created": "2026-11-02",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "experiments/EXP-PEXT-bf8f96",
+  "authors": [
+    "Coordinator gpt-6.1-sol/high"
+  ],
+  "links": {
+    "hypothesis": "H-PEXT-c3a11d",
+    "spec": "experiments/EXP-PEXT-bf8f96/specification.yaml",
+    "problem": "problems/pext-degree2-squareclass-census-launcher.md"
+  },
+  "question": "Test P1-P4 with full original cohorts, explicit same-curve maps and coefficient-aware descent; prepare exact counterexample certificates when present.",
+  "claims": [
+    {
+      "id": "P1",
+      "text": "For each actual E/K and T in E(K)/2E(K), the Frobenius branch types are (1,3) only for odd order; (1,1,2) at zero and (4) at nonzero for rational two-torsion rank one; (1,1,1,1) at zero and (2,2) at nonzero for rank two.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "P2",
+      "text": "The geometric nonzero-T genus spectrum is contained in {1,(n-1)*2^n+1} for type (4), and {1,2^(n-2)*(n-2)+1,2^(n-1)*(n-1)+1,(n-1)*2^n+1} for type (2,2), n=3,5,7.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "P3",
+      "text": "For n=3 and q=5,7,11 at least one actual K-isomorphism class has a smaller geometric branch-genus minimum after nonzero T is included; for n=5,q=3 none of the full baseline cohort gains a lower geometric minimum. This preserves the proposal prediction. Descent-admissible minima are separately descriptive, with no added falsification criterion.",
+      "class": "comparative",
+      "decided_by": [
+        "C-minima"
+      ]
+    },
+    {
+      "id": "P4",
+      "text": "A branch tuple of Chao Type2 form has the shared length-six orbit pattern; compute separately whether the trace-zero Mobius hyperellipticity predicate holds. No equivalence with all nonzero-T curves is assumed.",
+      "class": "exact_computation",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [],
+  "arms": [
+    {
+      "id": "xline",
+      "role": "baseline",
+      "description": "xline as specified in specification.yaml",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "T=O"
+      }
+    },
+    {
+      "id": "all-maps",
+      "role": "candidate",
+      "description": "all-maps as specified in specification.yaml",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "all classes where applicable"
+      }
+    },
+    {
+      "id": "all-maps-reversed",
+      "role": "control_aa",
+      "description": "all-maps-reversed as specified in specification.yaml",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "all classes where applicable"
+      }
+    },
+    {
+      "id": "orbit-enumeration",
+      "role": "reference",
+      "description": "orbit-enumeration as specified in specification.yaml",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "all classes where applicable"
+      }
+    },
+    {
+      "id": "odd-order",
+      "role": "control_negative",
+      "description": "odd-order as specified in specification.yaml",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "all classes where applicable"
+      }
+    },
+    {
+      "id": "fixture-replay",
+      "role": "control_positive",
+      "description": "fixture-replay as specified in specification.yaml",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "all classes where applicable"
+      }
+    },
+    {
+      "id": "coordinate-control",
+      "role": "control_positive",
+      "description": "C-coordinate: identity vs seeded PGL2(K) transport with full binary-form scalar; preserve actual curve via inverse map, recompute branch ranks/connectedness. The expected exact invariant equality is checked, not assumed.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "all classes where applicable"
+      }
+    },
+    {
+      "id": "matched-random-branch",
+      "role": "control_negative",
+      "description": "C-random-branch: seeded K-stable squarefree quartics matched on field, degree, branch factor type and scalar class, sampled independently of source outputs. Compare weighted-factor and direct incidence implementations; report random-destination identity separately. This is an instrument control, not an ECDLP benefit comparison.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree_two_map_set": "all classes where applicable"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "fixture-replay",
+      "expected_detection": "Exact historical T=O rows and planted branch-action/malformed-certificate controls.",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "odd-order",
+      "null_population": {
+        "description": "All odd-order curves in each full cohort; no nonzero T quotient class.",
+        "generator": "Enumerate the fixed full cohort, select by independently certified odd group order, retain original curve identity.",
+        "n": 1,
+        "why_n": "One exhaustive negative-control census per declared finite cohort; n counts the complete census, not a sampled curve. Actual curve count is exported with coverage.",
+        "matched_on": [
+          "actual E/K model",
+          "field basis",
+          "instrument",
+          "complete projective structures"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "degree_two_map_set",
+        "levels": [
+          "xline",
+          "all-maps"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "curve_identity",
+        "treatment": "fixed",
+        "value": "actual K-model, twist, origin",
+        "how": "Same canonical K-isomorphism identity in matched minima rows."
+      },
+      {
+        "name": "coefficient_square_class",
+        "treatment": "crossed",
+        "value": "both",
+        "how": "Both classes recorded; descent checked individually."
+      },
+      {
+        "name": "field_basis",
+        "treatment": "fixed",
+        "value": "exact polynomial bound at implementation freeze",
+        "how": "Publish irreducible polynomial and embeddings; same in all arms."
+      },
+      {
+        "name": "quotient_T_class",
+        "treatment": "crossed",
+        "value": "every E(K)/2E(K) class",
+        "how": "Exact representatives and coset certificates."
+      },
+      {
+        "name": "projective_structure",
+        "treatment": "crossed",
+        "value": "every PGL2(K)/PGL2(Fq) representative",
+        "how": "Exhaustion/orbit-stabilizer certificate."
+      },
+      {
+        "name": "build",
+        "treatment": "fixed",
+        "value": "one archived source/build hash",
+        "how": "Host compiler and binary recorded; no between-arm rebuild except A/A."
+      },
+      {
+        "name": "enumeration_order",
+        "treatment": "fixed",
+        "value": "lexicographic; reversed in A/A",
+        "how": "Exact counted outputs must agree after canonical sorting."
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "value": "actual CPU/kernel/threads/RSS",
+        "how": "Timing descriptive only; no timed primary claim."
+      },
+      {
+        "name": "censoring",
+        "treatment": "fixed",
+        "value": "predeclared per-stage watchdog",
+        "how": "Keep whole cohort and partial rows; never silently drop."
+      },
+      {
+        "name": "analyst",
+        "treatment": "fixed",
+        "value": "predeclared exact analysis",
+        "how": "No data-dependent thresholds; labels visible, script frozen before runs."
+      },
+      {
+        "name": "projective_coordinate",
+        "treatment": "crossed",
+        "value": "identity plus 16 deterministic seeded invertible projective changes per available stratum",
+        "how": "Transport the actual binary quartic including its scalar and exceptional infinity chart; invertible model maps certify unchanged curve."
+      },
+      {
+        "name": "matched_random_branch",
+        "treatment": "randomized",
+        "value": "16 fresh K-stable squarefree quartics per available field and branch-factor-type stratum, two scalar classes each",
+        "how": "Seed20261102 SHA256 counter stream generates coefficient tuples before output; reject only nonsquarefree/wrong factor pattern, cap4096 draws per stratum. Exhausted control is inconclusive. Match field, degree, branch factor type, scalar class, instrument and resource cap; no curve identity matching or cost claim."
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-types",
+        "arms": [
+          "all-maps"
+        ],
+        "differs_in": [],
+        "design": "absolute",
+        "threshold": "zero certified mismatches on complete control-valid scope"
+      },
+      {
+        "id": "C-spectrum",
+        "arms": [
+          "orbit-enumeration"
+        ],
+        "differs_in": [],
+        "design": "absolute",
+        "threshold": "zero certified mismatches on complete control-valid scope"
+      },
+      {
+        "id": "C-minima",
+        "arms": [
+          "xline",
+          "all-maps"
+        ],
+        "differs_in": [
+          "degree_two_map_set"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "all-maps",
+          "all-maps-reversed"
+        ],
+        "differs_in": [
+          "enumeration_order"
+        ],
+        "design": "aa"
+      },
+      {
+        "id": "C-coordinate",
+        "arms": [
+          "all-maps",
+          "coordinate-control"
+        ],
+        "differs_in": [
+          "projective_coordinate"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-random-branch",
+        "arms": [
+          "matched-random-branch"
+        ],
+        "differs_in": [],
+        "design": "absolute",
+        "threshold": "zero weighted-factor/incidence-rank discrepancies between independent instruments; no same-curve or descent conclusion from random destination"
+      }
+    ],
+    "crosses_map": true,
+    "transfer_obligations": [
+      {
+        "map": "E actual model -> f_T quartic -> conjugate compositum",
+        "kind": "coordinate_change",
+        "source": "Named E/K with origin and T",
+        "destination": "Degree2 branch polynomial with explicit maps and descent status",
+        "preserves": [
+          "actual curve identity and twist via invertible rational maps",
+          "ramification including projective exceptional points"
+        ],
+        "changes": [
+          "coordinate and pole divisor",
+          "Frobenius placement and possible constant square relations"
+        ],
+        "controls": [
+          {
+            "kind": "coordinate_isomorphism",
+            "comparison": "C-coordinate"
+          },
+          {
+            "kind": "matched_random",
+            "comparison": "C-random-branch"
+          },
+          {
+            "kind": "source_baseline",
+            "comparison": "C-minima"
+          }
+        ],
+        "assessment": "experiments/EXP-PEXT-bf8f96/transfer-assessment.json"
+      }
+    ]
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact enumeration; matched xline/all-T joins and reversed-order A/A detect order bugs; no timed claim.",
+    "seed_derivation": {
+      "method": "explicit_list",
+      "seeds": [
+        20261102
+      ],
+      "nonce": null,
+      "note": "Only deterministic verifier/ordering; no selected random curves. Seed20261102 SHA256 counter stream also fixes 16 coordinate/random-quartic controls per available stratum, draw cap4096, before data."
+    },
+    "instance_sampling": {
+      "rule": "Entire declared K-isomorphism cohort, every T quotient and structure; no adaptive sampling.",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact deterministic census; independent verifier blind to producer formulas and output until its recomputation sealed.",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 1,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": true,
+      "note": "instances=1 denotes one complete finite census per declared cohort, not one sampled curve. Exact exhaustive violation/coverage tests, no p-values. Full row count computed from fixed enumeration and independently reconciled, not chosen for significance. H1 retains q=13 configuration/curve counts, descriptive only."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": null,
+      "per_sample_seconds": null,
+      "threads": 1,
+      "estimated_total_seconds": 86400,
+      "measured_on": "No new census or timing pilot run. Total is a hard proposed watchdog, not a measured runtime estimate."
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "branch_type_mismatch_count",
+        "name": "branch_type_mismatch_count",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "branch_type_mismatch_count on complete canonical rows; incomplete coverage flagged",
+        "source": "export.json measurements.branch_type_mismatch_count",
+        "aggregation": "sum",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "geometric_spectrum_violation_count",
+        "name": "geometric_spectrum_violation_count",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "geometric_spectrum_violation_count on complete canonical rows; incomplete coverage flagged",
+        "source": "export.json measurements.geometric_spectrum_violation_count",
+        "aggregation": "sum",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "curves_with_strict_geometric_minimum_drop",
+        "name": "curves_with_strict_geometric_minimum_drop",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "Number of actual K-isomorphism classes with strictly smaller geometric branch-genus minimum after all T, at full curve/T/structure coverage; descent not part of the P3 predicate.",
+        "source": "export.json measurements.curves_with_strict_geometric_minimum_drop",
+        "aggregation": "sum",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "curves",
+      "T_classes",
+      "structures",
+      "branch_factors",
+      "square_relations",
+      "descent_certificates"
+    ],
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "threads",
+      "peak_rss_bytes",
+      "wall_seconds_descriptive",
+      "git_commit",
+      "source_sha256",
+      "partial_coverage"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "prospective-unadmitted",
+    "placement": {
+      "cpus": 1,
+      "memory_gb": 4,
+      "spot": false
+    },
+    "measurement_class": "search",
+    "timeout_seconds": 86400,
+    "checkpoint": {
+      "policy": "application",
+      "interval_seconds": 300,
+      "grace_seconds": 30,
+      "restore_validation": "application_managed",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "Fixed whole cohorts; stop at stage watchdog or memory ceiling and retain all partial rows and exact remaining coverage.",
+      "kind": "fixed_n",
+      "preregistered": true
+    },
+    {
+      "rule": "Stop dependent stages after failed regression/instrument control; no replacement curve, seed or seventh run.",
+      "kind": "invalidation",
+      "preregistered": true
+    },
+    {
+      "rule": "No automatic retry. Any retry needs Coordinator reconciliation, finite remaining budget and fresh IDs; preserve failed records.",
+      "kind": "invalidation",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "Incorrect same-curve/twist map, missing T coset, incomplete structure coverage, failed squareclass relation or missing descent witness invalidates that admissible-minimum claim.",
+    "A counterexample is mathematical only after independent checks of identity, connectedness, exact ranks and all controls.",
+    "A timeout/OOM is an operational outcome; partial minima are upper bounds, not exhaustive minima."
+  ],
+  "decision_rule": {
+    "text": "C-types and C-spectrum: no certified mismatch on complete scoped outputs. C-minima: P3 geometric-minimum exact counts satisfy the proposal inequalities only on full passing geometric cohorts. Descent-admissible minima, Type2 signature/predicate cross-tab and H1 ratios are descriptive, with no added success/falsification gates.",
+    "comparison_ids": [
+      "C-types",
+      "C-spectrum",
+      "C-minima"
+    ],
+    "threshold": "zero exact P1/P2 violations, and exact P3 inequalities only at full coverage",
+    "statistic": "Exact P1/P2 mismatches and geometric same-curve P3 minima; admissible minima and H1 ratios descriptive.",
+    "interval": "none: exact enumeration",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "Integer difference in genus per actual curve; exact number of curves with a drop",
+    "verdict_vocabulary": [
+      "matches_within_scope",
+      "counterexample_verified",
+      "invalid_output",
+      "inconclusive_coverage"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [
+      "all canonical curve/T/structure rows and independent certificates"
+    ],
+    "outputs": [
+      "analysis.json",
+      "export.json",
+      "coverage.json",
+      "counterexamples.jsonl",
+      "report.md"
+    ],
+    "blinded": false,
+    "frozen_before_data": false
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "Branch type -> geometric genus -> coefficient/connectedness -> descent-admissible per-curve minima"
+    ],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "j-only matching of actual curves or merging twists",
+    "Assigning descended genus from branch rank without coefficient/constant and Frobenius-lift checks",
+    "Changing cohorts/controls after partial outputs",
+    "Equating Type2 with all nonzero T or with nonhyperellipticity",
+    "Reporting partial minima as exhaustive",
+    "Promoting a source review or local algebra check into completed census evidence",
+    "Treating matched-random quartic instrument controls as same-curve minima or a cost/transfer benefit."
+  ],
+  "literature": [
+    {
+      "ref": "https://eprint.iacr.org/2015/805.pdf",
+      "provenance": "retrieved",
+      "claim": "Sections 3.1-3.3: square-class relations precede genus accounting; section 3.2 and Example 3.2 restrict coefficient classes for a cubic-extension rank-two descent.",
+      "verified_by": "Coordinator gpt-6.1-sol/high, 2026-11-02; indexed full PDF lines 199-556 read"
+    },
+    {
+      "ref": "https://maths.ucd.ie/~gmg/ECC2007Talks/chao.pdf",
+      "provenance": "retrieved",
+      "claim": "Slides 25-26 specify the cubic Type2 four-root pattern and a trace-zero Mobius condition for hyperellipticity.",
+      "verified_by": "Coordinator gpt-6.1-sol/high, 2026-11-02; full slides 25-26 read"
+    },
+    {
+      "ref": "ledger/proposals/IDEA-20261024-d84f20.notes.md",
+      "provenance": "internal",
+      "claim": "Unreviewed degree-two torsor and orbit spectrum proposal; the source of predictions, not evidence.",
+      "verified_by": "Coordinator gpt-6.1-sol/high, 2026-11-02"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "draft",
+    "protocol_sha256": null,
+    "commit": null,
+    "frozen_at": null,
+    "filed_before_affected_data": false
+  }
+}

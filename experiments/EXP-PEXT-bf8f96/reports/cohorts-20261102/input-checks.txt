@@ -1,0 +1,74 @@
+SOURCE compact_class_inputs.rs c5f372eb30d4c4f3b243db985d69dfaf85761063133d5317b338a1555bafeff4
+SOURCE check_compact_class_inputs.py f0cfa02401eb46687254d7c718907e881deef40c794417f9033e082272179b31
+SOURCE legacy_class_bijection.py 35a2fcd13466182628135eced410ec9d947b46db3a8eba4e018e182b9ec37340
+SOURCE test_compact_class_inputs.py 28984dd8e358083e7c3ac3bddffb35216f322a39290b5323a5fd4bab226e1ac1
+SOURCE quotient_core.rs bd4b82b1792282e91d25ff4a610f4ff58fa74d73d20979ec59c89984493be1d9
+SOURCE check_quotient_certificate.py 054ec67dbb38851ec4984d80eeb07161795f0165bd353aa7ab5408aefb5f8c5d
+SOURCE check_curve_class_certificate.py 97f68a4155e82dd96f517fab7dcfc4b8ea4ad1d530db6cb0e9be1dfea6d29676
+COMMAND ["rustc", "--version"]
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+EXIT 0
+COMMAND ["/usr/bin/python3", "--version"]
+Python 3.9.25
+EXIT 0
+COMMAND ["rustc", "--edition=2021", "-O", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/compact_class_inputs.rs", "-o", "/var/tmp/pext-compact-inputs-final"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `Point`, `QuarticPoint`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:463:34
+    |
+463 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^ ^^^^^ ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/test_compact_class_inputs.py"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `Point`, `QuarticPoint`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:463:34
+    |
+463 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^ ^^^^^ ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+test_all_arithmetic_pairs (__main__.CompactTests) ... ok
+test_complete_control_coverage (__main__.CompactTests) ... ok
+test_explicit_bijection_witnesses (__main__.CompactTests) ... ok
+test_mutations_and_limits (__main__.CompactTests) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.149s
+
+OK
+EXIT 0
+COMMAND ["/var/tmp/pext-compact-inputs-final", "q3-n5"]
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q3-n5.json", "--cohort", "q3-n5"]
+EXIT 0
+COMMAND ["/var/tmp/pext-compact-inputs-final", "q5-n3"]
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q5-n3.json", "--cohort", "q5-n3"]
+EXIT 0
+COMMAND ["/var/tmp/pext-compact-inputs-final", "q7-n3"]
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q7-n3.json", "--cohort", "q7-n3"]
+EXIT 0
+COMMAND ["/var/tmp/pext-compact-inputs-final", "q11-n3"]
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q11-n3.json", "--cohort", "q11-n3"]
+EXIT 0
+COMMAND ["/var/tmp/pext-compact-inputs-final", "q13-n3-descriptive"]
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q13-n3-descriptive.json", "--cohort", "q13-n3-descriptive"]
+EXIT 0
+COMMAND ["/var/tmp/pext-compact-inputs-final", "q3-n5", "--field-only"]
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/legacy_class_bijection.py", "prepare", "--inputs", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q3-n5.json", "--builder-field", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q3-n5-field.json", "--fixture", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl", "--mapping", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-q3-n5-bijection.json"]
+{"prepared_classes": 488, "mapping_sha256": "8c86778044c1665eb5b3ca15456430fe8628ebe138b0f0b865304e1970243aa4"}
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/legacy_class_bijection.py", "verify", "--inputs", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q3-n5.json", "--builder-field", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/q3-n5-field.json", "--fixture", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl", "--mapping", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-q3-n5-bijection.json"]
+EXIT 0
+ALL_COHORT_INPUT_CHECKS_PASS
