@@ -3,6 +3,7 @@
 import hashlib
 import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 import tempfile
 
@@ -18,7 +19,7 @@ def digest(data):
 
 
 def check_batch(run_dir, cohort, binder, binary_sha256, *, scope="approved-cohort",
-                full_geometry=False):
+                full_geometry=False, deadline_utc=None, expected_limits=None):
     """Check exact index and each member, writing a complete review only on success."""
     run_dir = Path(run_dir)
     if (scope not in ("approved-cohort", "software-fixture")
@@ -26,6 +27,12 @@ def check_batch(run_dir, cohort, binder, binary_sha256, *, scope="approved-cohor
             or (scope == "approved-cohort"
                 and (not isinstance(binder, CandidateBinder) or binder.plan_path is None))):
         raise ValueError("checked production cohort binder required")
+    if (deadline_utc is not None and
+            (not isinstance(deadline_utc, datetime) or deadline_utc.tzinfo is None)):
+        raise ValueError("candidate checker deadline requires timezone")
+    if expected_limits is not None and (not isinstance(expected_limits, dict)
+            or set(expected_limits) != {"caps", "memory_bytes", "cpu_seconds", "unit_wall_seconds"}):
+        raise ValueError("frozen candidate limits missing")
     index = verify_complete_index(run_dir, cohort, binder.plan,
                                   binder.plan_sha256, binary_sha256)
     units = expected_units(binder.plan)
@@ -41,6 +48,17 @@ def check_batch(run_dir, cohort, binder, binary_sha256, *, scope="approved-cohor
         for chunk_name in dict.fromkeys(row["chunk"] for row in units):
             restored, _ = read_chunk(run_dir / "chunks" / chunk_name)
             for name, files in restored:
+                if deadline_utc is not None and datetime.now(timezone.utc) >= deadline_utc:
+                    raise TimeoutError("candidate checker stage deadline reached")
+                if expected_limits is not None:
+                    input_record = json.loads(files["input.json"])
+                    wall = input_record.get("wall_seconds")
+                    if (input_record.get("caps") != expected_limits["caps"]
+                            or input_record.get("memory_bytes") != expected_limits["memory_bytes"]
+                            or input_record.get("cpu_seconds") != expected_limits["cpu_seconds"]
+                            or type(wall) is not int
+                            or not 0 < wall <= expected_limits["unit_wall_seconds"]):
+                        raise ValueError("candidate unit limits differ from frozen stage")
                 ordinal = int(name[1:])
                 row = units[ordinal]
                 if row["name"] != name or row["chunk"] != chunk_name:

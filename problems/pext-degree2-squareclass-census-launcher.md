@@ -477,3 +477,19 @@ keeps this input-preparation scope explicit. Next bind the plans in the frozen
 six-stage trial plan and run entry point, then complete the remaining descent,
 Type2, controls, analysis and approval packet. No candidate or scientific
 cohort trial row was produced.
+
+## Supervisor-bound candidate stage component, 2026-11-03
+
+The [stage adapter](../experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py)
+now binds the source-checked Rust build, fixed cohort loops and persistent
+independent checker to the original `n3core`, `n3ext` and `n5` supervisor
+stages. It requires the approved plan's exact launch, live claim, six-stage
+watchdogs, cohort caps and declared artifacts. The
+[inventory](../experiments/EXP-PEXT-bf8f96/reports/candidate-stage-20261103/candidate-artifacts.json)
+lists 1,056 candidate-component artifact paths across those three stages.
+Driver and checker share the supervisor launch deadline, and the checker now
+compares every retained unit's limits to the frozen cohort config. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-stage-20261103/report.md)
+records software checks and exact scope. Next complete the full six-stage
+`run.py`/`check.py`, descent, Type2, C0-C7 controls, analysis and approval
+packet. No scientific cohort trial was launched.

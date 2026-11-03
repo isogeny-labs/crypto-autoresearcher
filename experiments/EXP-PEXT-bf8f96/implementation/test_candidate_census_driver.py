@@ -1,7 +1,9 @@
 """Fixed F27 software control for complete driver and failed-unit retention."""
 
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -108,6 +110,30 @@ class BatchDriverTests(unittest.TestCase):
             run_batch(self.runner(directory), directory, "q3-n3", "4"*64,
                       self.caps, 1024**3, 60, 60, 120)
         self.assertEqual(list(directory.iterdir()), [])
+
+    def test_checker_deadline_retains_partial(self):
+        directory = self.base / "deadline"
+        directory.mkdir()
+        runner = self.runner(directory)
+        run_batch(runner, directory, "q3-n3", "3"*64,
+                  self.caps, 1024**3, 60, 60, 120)
+        wrong_limits_dir = self.base / "wrong-limits"
+        shutil.copytree(directory, wrong_limits_dir)
+        wrong_limits = {"caps": dict(self.caps, structures=818),
+                        "memory_bytes": 1024**3, "cpu_seconds": 60,
+                        "unit_wall_seconds": 60}
+        with self.assertRaisesRegex(ValueError, "limits differ from frozen stage"):
+            check_batch(wrong_limits_dir, "q3-n3", self.binder,
+                        runner.binary_sha256, scope="software-fixture",
+                        expected_limits=wrong_limits)
+        self.assertFalse((wrong_limits_dir / "candidate-check.json").exists())
+        past = datetime.now(timezone.utc) - timedelta(seconds=1)
+        with self.assertRaisesRegex(TimeoutError, "checker stage deadline"):
+            check_batch(directory, "q3-n3", self.binder,
+                        runner.binary_sha256, scope="software-fixture",
+                        deadline_utc=past)
+        self.assertTrue((directory / "candidate-reviews.partial").is_file())
+        self.assertFalse((directory / "candidate-check.json").exists())
 
 
 if __name__ == "__main__":
