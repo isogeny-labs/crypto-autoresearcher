@@ -24,6 +24,7 @@ class CandidateBinder:
         if cohort not in CENSUS_COHORTS:
             raise ValueError("not a geometric census cohort")
         self.cohort = cohort
+        self.plan_path = None
         self.plan = expected_plan(cohort, Path(manifest_path))
         plan_bytes = canonical(self.plan) + b"\n"
         self.plan_sha256 = digest(plan_bytes)
@@ -31,6 +32,7 @@ class CandidateBinder:
             path = Path(plan_path)
             if path.is_symlink() or not path.is_file() or path.read_bytes() != plan_bytes:
                 raise ValueError("join plan bytes mismatch")
+            self.plan_path = path
         source = json.loads(checked_file(f"{INPUTS}/{cohort}.json"))
         if source["representatives"] != [row["model"] for row in self.plan["classes"]]:
             raise ValueError("class models mismatch")

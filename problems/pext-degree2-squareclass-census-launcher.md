@@ -399,3 +399,19 @@ keeps this software-fixture scope explicit. Next bind the checker to
 supervisor-owned cohort artifacts and complete the full controls, descent,
 analysis and approval packet. EXP-PEXT-bf8f96 remains review_required and
 unfrozen; no scientific trial occurred.
+
+## Independent artifact custody and synthetic n=5, 2026-11-03
+
+The [read-only artifact verifier](../experiments/EXP-PEXT-bf8f96/implementation/independent_check.py)
+now checks external cohort/T form and binary identity, receipt and payload
+hashes, command/caps, and failure/partial refusal before independent exact-set
+replay. Twelve software tests pass, including altered input, receipt and
+compressed-payload controls. A separate synthetic q3/n5 quartic exercises
+both 597,861-entry cocycle indices: one exceptional ordinal and the full
+generic complement match; checker time was 45.136 seconds at 211,592 KiB
+peak RSS under a 4 GiB cap. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/artifact-integration-20261103/report.md)
+keeps this software scope explicit. Next integrate a persistent supervised
+driver and full trial artifact index, then complete descent, Type2, controls
+and the approval packet. The contract remains review_required and unfrozen;
+no scientific cohort trial occurred.
