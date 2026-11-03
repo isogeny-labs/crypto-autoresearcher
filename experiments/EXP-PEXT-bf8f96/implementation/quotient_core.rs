@@ -6,6 +6,7 @@
 
 mod implementation {
     include!("../../EXP-PEXT-212d5c/implementation/cover_census_n7.rs");
+    include!("symbolic_extension.rs");
     use std::collections::{BTreeSet, BTreeMap as OrderedMap};
 
     #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -622,6 +623,47 @@ mod implementation {
     mod tests {
         use super::*;
         #[test]
+        fn symbolic_extensions_validate_irreducibility_and_field_laws() {
+            let ctx=Context::new(3,3,27).unwrap();
+            for degree in 2..=4 {
+                let mut selected=None;
+                for constant in 1..ctx.size() {
+                    for linear in 0..ctx.size() {
+                        let mut modulus=vec![0;degree+1];
+                        modulus[0]=constant;modulus[1]=linear;modulus[degree]=1;
+                        if ctx.symbolic_extension(&modulus).is_ok() {
+                            selected=Some(modulus);break;
+                        }
+                    }
+                    if selected.is_some() {break;}
+                }
+                let modulus=selected.expect("irreducible sparse modulus");
+                let extension=ctx.symbolic_extension(&modulus).unwrap();
+                assert_eq!(extension.degree(),degree);
+                assert_eq!(extension.modulus(),modulus);
+                let u=extension.variable();
+                assert_eq!(extension.evaluate(&modulus,u).unwrap(),extension.zero());
+                assert_eq!(extension.power(u,extension.size()),u);
+                let proper=27u64.pow(if degree==4 {2} else {1});
+                assert_ne!(extension.power(u,proper),u);
+                assert_eq!(extension.frobenius(u,3*degree as u32).unwrap(),u);
+                let sample=extension.add(u,extension.one());
+                assert_eq!(extension.mul(sample,extension.inverse(sample).unwrap()),extension.one());
+                assert_eq!(extension.sub(extension.add(sample,u),u),sample);
+                assert_eq!(extension.mul(u,extension.one()),u);
+                assert!(extension.inverse(extension.zero()).is_err());
+                let a=extension.element(&[2,3]).unwrap();
+                let b=extension.element(&[4,5]).unwrap();
+                assert_eq!(extension.frobenius(extension.mul(a,b),1).unwrap(),
+                    extension.mul(extension.frobenius(a,1).unwrap(),extension.frobenius(b,1).unwrap()));
+                assert!(extension.element(&vec![0;degree+1]).is_err());
+                assert!(extension.element(&[ctx.size()]).is_err());
+            }
+            assert!(ctx.symbolic_extension(&[0,0,1]).is_err());
+            assert!(ctx.symbolic_extension(&[0,1,2]).is_err());
+            assert!(ctx.symbolic_extension(&[1,1]).is_err());
+        }
+        #[test]
         fn quotient_witnesses_and_projective_charts() {
             // Fixed software fixtures, with hand-counted orders; no census/minimum data.
             for (q,a2,a4,a6,order,classes) in [(5,0,1,1,9,1),(5,0,0,1,6,2),(5,0,1,0,4,4),(3,1,0,1,6,2)] {
@@ -929,4 +971,4 @@ mod implementation {
         }
     }
 }
-pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,CurveClass,ModelWitness};
+pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,CurveClass,ModelWitness};

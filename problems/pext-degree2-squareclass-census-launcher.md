@@ -267,3 +267,17 @@ Next implement symbolic factor roots and linear cocycle candidates for degrees
 2/3/4, replay all factor patterns independently, then measure the full-cohort
 resource route and finish the frozen execution packet. No scientific trial or
 approval occurred.
+
+## Symbolic extension arithmetic, 2026-11-03
+
+The [native symbolic extension](../experiments/EXP-PEXT-bf8f96/implementation/symbolic_extension.rs)
+represents degree-2/3/4 roots in an explicit irreducible polynomial basis over
+the pinned K encoding. It validates the modulus by Frobenius and proper-subfield
+checks and provides field arithmetic, inversion and polynomial evaluation
+without tabulating all extension elements. Fourteen core native tests pass,
+including the three degrees over F27 and invalid-modulus controls. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/symbolic-extension-20261103/report.md)
+records its software scope. Next factor bound quartics, solve all nonrational
+root collisions, replay completeness independently and measure the proposed
+resource route. The contract remains review_required; no scientific trial or
+approval occurred.
