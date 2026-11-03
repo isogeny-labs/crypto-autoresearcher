@@ -369,7 +369,9 @@ jobs:
       !github.event.pull_request.draft &&
       (always() && !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.static != 'false'))
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Job 126126779357 exhausted the former 20m cap inside the full-history
+    # partial checkout, before any static command ran.
+    timeout-minutes: 45
     env:
       SCOPE_RESULT: ${{ needs.changes.result }}
       RUN_STATIC: ${{ needs.changes.outputs.static }}
