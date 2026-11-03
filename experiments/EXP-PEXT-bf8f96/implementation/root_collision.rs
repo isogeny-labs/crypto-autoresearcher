@@ -1,5 +1,16 @@
 // Exact K-projective maps sending beta to alpha in a symbolic extension.
 
+pub struct ExceptionalCandidateSummary {
+    pub rational_count: usize,
+    pub nonrational_count: usize,
+    pub duplicate_count: usize,
+    /// Sorted exact structure ordinal and independently checked support geometry.
+    pub exceptional: Vec<(u64,SupportGeometry)>,
+    /// Half-open intervals partitioning the generic complement.
+    pub generic_intervals: Vec<(u64,u64)>,
+    pub structures: u64,
+}
+
 impl SymbolicExtension<'_> {
     pub fn projective_root_maps(&self,alpha:SymbolicElement,beta:SymbolicElement,
         maximum_candidates:u64)->Result<Vec<[u32;4]>,&'static str> {
@@ -78,6 +89,48 @@ impl SymbolicExtension<'_> {
 }
 
 impl Context {
+    pub fn checked_exceptional_candidates(&self,form:[u32;5],
+        image_index:&RationalImageIndex,cocycle_indices:&[CocycleIndex],
+        maximum_rational_candidates:u64,maximum_nonrational_maps:u64,
+        maximum_total_candidates:u64)->Result<ExceptionalCandidateSummary,&'static str> {
+        let first=cocycle_indices.first().ok_or("missing first cocycle index")?;
+        let rational=self.rational_root_collision_ordinals(form,image_index,cocycle_indices,
+            maximum_rational_candidates)?;
+        let nonrational=self.nonrational_root_collision_ordinals(form,cocycle_indices,
+            maximum_nonrational_maps)?;
+        let mut ordinals=rational.clone();ordinals.extend_from_slice(&nonrational);
+        ordinals.sort_unstable();ordinals.dedup();
+        if ordinals.len() as u64>maximum_total_candidates {
+            return Err("checked candidate limit exceeded");
+        }
+        let structures=self.structure_count()?;
+        let mut exceptional=Vec::with_capacity(ordinals.len());
+        let mut generic_intervals=Vec::new();
+        let mut cursor=0u64;
+        for ordinal in ordinals {
+            if ordinal>=structures {return Err("candidate ordinal outside structure coverage");}
+            if cursor<ordinal {generic_intervals.push((cursor,ordinal));}
+            let matrix=self.structure_matrix(first,ordinal)?;
+            let transformed=self.transform_form(form,matrix)?;
+            let geometry=self.support_geometry(&self.conjugate_forms(transformed)?)?;
+            if geometry.pairwise_disjoint {
+                return Err("generated exceptional candidate has disjoint support");
+            }
+            exceptional.push((ordinal,geometry));
+            cursor=ordinal+1;
+        }
+        if cursor<structures {generic_intervals.push((cursor,structures));}
+        let covered=generic_intervals.iter().try_fold(exceptional.len() as u64,
+            |sum,(start,end)|sum.checked_add(end-start))
+            .ok_or("candidate coverage count overflow")?;
+        if covered!=structures {return Err("candidate complement coverage mismatch");}
+        Ok(ExceptionalCandidateSummary{
+            rational_count:rational.len(),nonrational_count:nonrational.len(),
+            duplicate_count:rational.len()+nonrational.len()-exceptional.len(),
+            exceptional,generic_intervals,structures,
+        })
+    }
+
     /// Nonrational branch-root contribution to the exceptional structure set.
     /// The caller must also union the complete K-rational-root contribution.
     pub fn nonrational_root_collision_ordinals(&self,form:[u32;5],

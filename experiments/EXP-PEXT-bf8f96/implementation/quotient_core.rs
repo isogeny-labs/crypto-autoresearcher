@@ -67,6 +67,7 @@ mod implementation {
         power:u32,
         nonrational_reps:Vec<u32>,
         entries:HashMap<[u32;4],u64>,
+        matrices:Vec<[u32;4]>,
     }
     impl CocycleIndex {
         pub fn len(&self)->usize {self.entries.len()}
@@ -306,13 +307,17 @@ mod implementation {
             let expected=self.structure_count()?;
             if expected>maximum_entries {return Err("cocycle index entry limit exceeded");}
             let capacity=usize::try_from(expected).map_err(|_|"cocycle index allocation limit")?;
-            let mut entries=HashMap::with_capacity(capacity);let mut ordinal=0u64;
+            let mut entries=HashMap::with_capacity(capacity);
+            let mut matrices=Vec::with_capacity(capacity);let mut ordinal=0u64;
             self.visit_structures(expected,|matrix| {
                 let key=self.structure_cocycle_power(matrix,k)?;
                 if entries.insert(key,ordinal).is_some() {return Err("duplicate projective cocycle");}
+                matrices.push(matrix);
                 ordinal+=1;Ok(())
             })?;
-            if ordinal!=expected || entries.len()!=capacity {return Err("incomplete cocycle index");}
+            if ordinal!=expected || entries.len()!=capacity || matrices.len()!=capacity {
+                return Err("incomplete cocycle index");
+            }
             let nonrational_reps=trans(&self.field).rep_b;
             let group=(self.field.q as u64).pow(3)-self.field.q as u64;
             if (nonrational_reps.len() as u64).checked_mul(group)
@@ -321,7 +326,7 @@ mod implementation {
             }
             Ok(CocycleIndex{prime:self.field.q,degree:self.field.n,
                 primitive_polynomial_index:self.field.idx_of[2],power:k,
-                nonrational_reps,entries})
+                nonrational_reps,entries,matrices})
         }
         pub fn cocycle_ordinal(&self,index:&CocycleIndex,cocycle:[u32;4])
             ->Result<Option<u64>,&'static str> {
@@ -331,6 +336,15 @@ mod implementation {
             }
             let key=self.normalize_matrix(cocycle)?;
             Ok(index.entries.get(&key).copied())
+        }
+        pub fn structure_matrix(&self,index:&CocycleIndex,ordinal:u64)
+            ->Result<[u32;4],&'static str> {
+            if (index.prime,index.degree,index.primitive_polynomial_index)
+                !=(self.field.q,self.field.n,self.field.idx_of[2]) {
+                return Err("cocycle index field mismatch");
+            }
+            let offset=usize::try_from(ordinal).map_err(|_|"structure ordinal overflow")?;
+            index.matrices.get(offset).copied().ok_or("structure ordinal out of range")
         }
         /// Once-per-field exact index for N(alpha) in P^1(F_q). The projective
         /// root encoding is 0..Q-1 for finite points and Q for infinity.
@@ -678,6 +692,11 @@ mod implementation {
                 let mut combined=rational;combined.extend(nonrational);
                 combined.sort_unstable();combined.dedup();
                 assert_eq!(combined.len(),if block==0 {279} else {1});
+                let checked=ctx.checked_exceptional_candidates(form,&images,&cocycles,1000,1000,819).unwrap();
+                assert_eq!(checked.exceptional.iter().map(|row|row.0).collect::<Vec<_>>(),combined);
+                assert_eq!((checked.rational_count,checked.nonrational_count,checked.duplicate_count),
+                    if block==0 {(273,7,1)} else {(0,1,0)});
+                assert!(ctx.checked_exceptional_candidates(form,&images,&cocycles,1000,1000,0).is_err());
                 let mut direct=Vec::new();let mut ordinal=0u64;
                 ctx.visit_structures(819,|matrix| {
                     let orbit=ctx.conjugate_forms(ctx.transform_form(form,matrix)?)?;
@@ -735,6 +754,10 @@ mod implementation {
                 let mut generated=ctx.rational_root_collision_ordinals(form,&images,&cocycles,2000).unwrap();
                 generated.extend(ctx.nonrational_root_collision_ordinals(form,&cocycles,2000).unwrap());
                 generated.sort_unstable();generated.dedup();
+                let checked=ctx.checked_exceptional_candidates(form,&images,&cocycles,2000,2000,819).unwrap();
+                assert_eq!(checked.exceptional.iter().map(|row|row.0).collect::<Vec<_>>(),generated);
+                assert_eq!(checked.generic_intervals.iter().map(|(start,end)|end-start).sum::<u64>()
+                    +checked.exceptional.len() as u64,819);
                 let mut direct=Vec::new();let mut ordinal=0u64;
                 ctx.visit_structures(819,|matrix| {
                     let orbit=ctx.conjugate_forms(ctx.transform_form(form,matrix)?)?;
@@ -882,6 +905,7 @@ mod implementation {
                 assert_eq!(index.power(),k);
                 for ordinal in [0,count/2,count-1] {
                     ctx.visit_structures_range(ordinal,ordinal+1,1,|matrix| {
+                        assert_eq!(ctx.structure_matrix(&index,ordinal)?,matrix);
                         let cocycle=ctx.structure_cocycle_power(matrix,k)?;
                         assert_eq!(ctx.cocycle_ordinal(&index,cocycle)?,Some(ordinal));
                         let scaled=cocycle.map(|a|ctx.field.mul(a,ctx.integer(2)));
@@ -889,6 +913,7 @@ mod implementation {
                         Ok(())
                     }).unwrap();
                 }
+                assert!(ctx.structure_matrix(&index,count).is_err());
                 assert!(ctx.cocycle_index(0,count).is_err());
                 assert!(ctx.cocycle_index(n,count).is_err());
             }
@@ -1108,4 +1133,4 @@ mod implementation {
         }
     }
 }
-    pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,BranchRoots,CurveClass,ModelWitness};
+    pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,BranchRoots,ExceptionalCandidateSummary,CurveClass,ModelWitness};

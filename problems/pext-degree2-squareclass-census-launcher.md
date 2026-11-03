@@ -323,3 +323,19 @@ and four mutation rejections. Next build production candidate receipts and
 direct checks, measure the full-cohort 4 GB and 24 CPU-hour route, and finish
 coefficient-aware descent, Type2, controls and the frozen execution packet.
 The contract remains review_required; no scientific trial or approval occurred.
+
+## Direct candidate checks and bounded q11 probe, 2026-11-03
+
+The [checked candidate path](../experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs)
+now retains exact structure matrices, verifies every generated exceptional
+ordinal against transported support, and partitions the generic complement
+into exact half-open intervals. Fixed F27 full-scan and independent replay
+checks still pass. A source-bound single-thread synthetic q11/n3 profile
+measured three factor patterns with cached 1,786,323-entry cocycle and
+21,435,876-entry rational-image indices: 2.347 seconds wall in total and
+253,368 KiB peak RSS under a 4 GiB address-space cap. The host load was
+recorded. The [report](../experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/report.md)
+keeps that software scope explicit. Next serialize production source-bound
+candidate/interval receipts and measure complete P1-P4, descent/Type2 and
+control costs before the 24 CPU-hour execution decision. The contract remains
+review_required; no scientific trial or approval occurred.
