@@ -33,19 +33,28 @@ disposition: open_next_step
 next_action:
   step: >-
     (a) Done 2026-11-03: H1 restated, with no basis family removed from scope (report
-    holant-h1-ggm-lemma-20261103). (b) At
-    toy primes p <= 2^10 (several curves per size, recorded seeds), build T and M explicitly;
-    check that the spectrum of M matches the character prediction; then compare the tensor
-    rank (or a computable proxy such as flattening ranks) of T after candidate bond-wise basis
-    changes (additive Fourier on F_p, multiplicative characters, Legendre-symbol bases) against
-    a null of random ternary tensors with the same support density.
+    holant-h1-ggm-lemma-20261103). (b) Done 2026-11-04 (report holant-step-b-qtt-20261104).
+    Ranks of T are invariant under invertible bond-wise basis changes, so the step was
+    reformulated as a frozen test of binary-digit tensor-train (QTT) rank of M. The verdict is
+    NULL with valid controls: the x-labelling sits at the rank ceiling 2^L, like 99 random
+    relabellings, on all 9 curves with p in {251, 509, 1021}. The discrete-log labelling
+    (positive control) has rank about 3.6 sqrt(p). Proposed for the Coordinator: disposition
+    exhausted_at_scale for QTT structure at p <= 2^10. Next, only if a candidate appears: a
+    basis or labelling family with description sub-polynomial in p and QTT rank below sqrt(p).
   discriminates: >-
-    (a) removed no basis family from scope, so (b) decides them all at toy size. A rank drop for T beyond the random-support null that persists
-    across sizes is a first non-generic structure and goes to a charged comparison against
-    matched rho. No drop at any toy size makes the lead exhausted_at_scale at the size reached,
-    reopening if a basis family is found whose description length grows sub-polynomially in p.
-best_measured: null
+    The positive control bounds the route. Even a labelling as good as knowing the logarithms
+    leaves rank of order sqrt(p), the scale of rho, so a labelling family can only help if it
+    beats the discrete-log labelling itself. Reopen on such a family, or on a contraction
+    model that is not a tensor train over digits.
+best_measured: >-
+  QTT rank of M, interleaved digits, p = 1021: x-labelling 1024 (the ceiling), random
+  relabelling 1023-1024, discrete-log labelling 109-121 (structure statistic, not a cost)
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/holant-step-b-qtt-20261104/README.md
+  note: >-
+    step (b): basis-change rank invariance, and the frozen QTT-rank test (verdict NULL,
+    controls valid)
 - repo: crypto-autoresearcher
   path: docs/reports/holant-h1-ggm-lemma-20261103/README.md
   note: >-
@@ -78,4 +87,4 @@ forecloses:
 - Cayley graph spectrum of the factor base reveals discrete logs
 areas:
 - ECDLP
-last_reviewed: '2026-11-03'
+last_reviewed: '2026-11-04'
