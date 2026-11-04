@@ -1,38 +1,42 @@
 id: LEAD-EXO-quadratic-phase-small-x-leakage
 family: exotic
-title: >-
-  Quadratic-phase (Gowers U^3-type) correlation of the small-x predicate in discrete-log order,
-  beyond the linear character sums of H-PSEUDO
-mechanism: >-
-  LEAD-EXO-dl-character-sum-pseudorandom tests linear phases e(k l / N) of the small-x set in log
-  order. A set can be Fourier-flat and still correlate with a quadratic phase e(alpha l^2 / N).
-  Relation yield is a complexity-1 count governed by linear structure, so this is a direct leakage
-  lead, not a yield lead. Exploitation path (memo derivation, numbered heuristic): a heavy quadratic
-  coefficient alpha* of f = 1_S - B/N makes g(r) = 1_S([r]Q) correlate with e(alpha* k^2 r^2 / N).
-  Because the factor base is negation-closed, g is even. Substituting u = r^2 on quadratic
-  residues gives a linear phase in u, and chosen-query sparse Fourier search (Akavia-Goldwasser-
-  Safra / Kushilevitz-Mansour, recalled) would recover k^2, hence k up to sign. No completion
-  argument through group characters bounds quadratic phases in log l, and no bound is known here.
+title: Quadratic-phase (Gowers U^3-type) correlation of the small-x predicate in discrete-log order, beyond
+  the linear character sums of H-PSEUDO
+mechanism: 'LEAD-EXO-dl-character-sum-pseudorandom tests linear phases e(k l / N) of the small-x set in
+  log order. A set can be Fourier-flat and still correlate with a quadratic phase e(alpha l^2 / N). Relation
+  yield is a complexity-1 count governed by linear structure, so this is a direct leakage lead, not a
+  yield lead. Exploitation path (memo derivation, numbered heuristic): a heavy quadratic coefficient alpha*
+  of f = 1_S - B/N makes g(r) = 1_S([r]Q) correlate with e(alpha* k^2 r^2 / N). Because the factor base
+  is negation-closed, g is even. Substituting u = r^2 on quadratic residues gives a linear phase in u,
+  and chosen-query sparse Fourier search (Akavia-Goldwasser- Safra / Kushilevitz-Mansour, recalled) would
+  recover k^2, hence k up to sign. No completion argument through group characters bounds quadratic phases
+  in log l, and no bound is known here. Scope note (owner decision 2026-11-04; WEAKCLASS-20261104, WEAKCLASS-I1-20261104,
+  PAIRED-ANOMALY-20261104): the character-sum instrument does not detect anomalous or small-embedding-degree
+  curves (36 curves per class, p <= 2^14, no detected shift (minimum detectable shift about 0.13 in u
+  at 50% power)). It is sensitive to factor-base symmetry: zeta-stable sets sit low (p < 1e-5). The digit-QTT
+  instrument shows no detection at p ~ 2^10, where it is rank-saturated. A NULL from these statistics
+  therefore excludes structure of their own type only, not an easy discrete logarithm. The quadratic-phase
+  statistic Q itself has not been run on weak curve classes, so this row''s NULL is uncalibrated against
+  easy-DLP curves.'
 disposition: open_next_step
 next_action:
-  step: >-
-    Done at N ~ 2^12-2^14 (2026-11-04, report quadphase-20261104): NULL with valid controls. Remaining,
-    optional: the 2^16 curve sat above its 5 null draws (chance 1/6); a 40-draw rerun at 2^16 settles it
-    (about 4.5 core-hours). Original plan: at N in {2^14, 2^16}, 3 curves each with the frozen small-x factor base rule, compute
-    Q = max over (alpha, beta) of |sum_l f(l) e((alpha l^2 + beta l)/N)| / sqrt(B) by one FFT per
-    alpha. Use 30 negation-closed random sets per size as the null (the symmetric-null lesson of
-    check D1, report leads-round2-20261104). The positive control is a planted negation-closed set
-    {l : alpha0 l^2 mod N in [0, B)}, which must spike at alpha0.
-  discriminates: >-
-    Run as amended in QUADPHASE-20261104 (sizes 2^12-2^14, 40 negation-closed null draws per
-    curve). NULL iff Q_EC is inside the null's 5-95% band on >= 8 of 9 decisive curves (met); SIGNAL
-    iff above the null maximum on 2 of 3 curves at 2 of 3 sizes (review-breakthrough). The test
-    sees coherent single-phase leakage of about 0.3 of the set or more; weaker or multi-peak
-    quadratic structure is untested. The memo's original 2^14/2^16 "5 of 6" rule was not run.
-best_measured: >-
-  NULL at N ~ 2^12-2^14 (9/9 decisive curves inside the negation-closed null's 90%; planted control
-  3.8-5.2x the null max); QUADPHASE-20261104
+  step: 'Done at N ~ 2^12-2^14 (QUADPHASE-20261104) and at one 2^16 curve (QUADPHASE-2P16-20261104): NULL
+    with valid controls. Remaining, optional: calibrate Q on weak curve classes, and test weaker or multi-peak
+    quadratic structure (the planted control is full-coherence only).'
+  discriminates: Run as amended in QUADPHASE-20261104 (sizes 2^12-2^14, 40 negation-closed null draws
+    per curve). NULL iff Q_EC is inside the null's 5-95% band on >= 8 of 9 decisive curves (met); SIGNAL
+    iff above the null maximum on 2 of 3 curves at 2 of 3 sizes (review-breakthrough). The test sees coherent
+    single-phase leakage of about 0.3 of the set or more; weaker or multi-peak quadratic structure is
+    untested. The memo's original 2^14/2^16 "5 of 6" rule was not run.
+best_measured: NULL at N ~ 2^12-2^14 (9/9 decisive curves inside the negation-closed null's 90%) and at
+  2^16 (one curve at the null median against 40 draws); QUADPHASE-20261104, QUADPHASE-2P16-20261104
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/quadphase-2p16-20261104/README.md
+  note: '2^16 settle: Q_EC at the null median (u 0.50) against 40 draws'
+- repo: crypto-autoresearcher
+  path: docs/reports/paired-anomaly-20261104/README.md
+  note: 'instrument scope: weak classes not detected; zeta-stable FB detected; paired anomaly not replicated'
 - repo: crypto-autoresearcher
   path: docs/reports/quadphase-20261104/README.md
   note: frozen test; NULL with valid controls at 2^12-2^14; one descriptive 2^16 curve above 5 null draws
