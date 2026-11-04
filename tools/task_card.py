@@ -556,7 +556,9 @@ def brief(receipt: dict[str, Any], receipt_rel: str, receipt_sha: str) -> str:
         if item["stderr_tail"]:
             lines.append(f"  stderr last {len(item['stderr_tail'])} lines:")
             lines += [f"    {line}" for line in item["stderr_tail"]]
-        for path, digest in item["outputs"].items():
+        # Sorted, so the brief printed by `run` (outputs in card order) and the one
+        # check-relay rebuilds from the receipt (written with sort_keys) agree.
+        for path, digest in sorted(item["outputs"].items()):
             lines.append(f"  output {path}: {digest or 'MISSING'}")
     not_run = receipt["commands_total"] - len(receipt["commands"])
     if not_run:
