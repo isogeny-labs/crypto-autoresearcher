@@ -9,7 +9,7 @@
 == Concrete progress
 A finite certificate checker now requires both primal derivations and a closed candidate space. It rejects unproved seed-kernel rows, verifies the entire low-degree intersection after elimination, and supports prime as well as binary coefficients. Explicit polynomial repair identities account for Boolean reductions using the bit equations.
 
-Nine deterministic software regressions pass. They include the retained eight-variable Semaev draw with full closure ranks 1, 11, 79; a closed superspace lacking primal provenance; an unclosed span whose literal inputs are all quadratic; malformed references; prime-field UNSAT; and normalization at coefficients 2, 5 and 65537. These are software controls, not new research samples.
+Ten deterministic software regressions pass. They include the retained eight-variable Semaev draw with full closure ranks 1, 11, 79; a closed superspace lacking primal provenance; an unclosed span whose literal inputs are all quadratic; malformed references; prime-field UNSAT; a handwritten SAT missing-consequence certificate; and normalization at coefficients 2, 5 and 65537. These are software controls, not new research samples.
 
 A scoped Lean 4.35.0 module builds on the unchanged pinned Mathlib revision. Its transitive audit covers nine new theorems with no nonstandard axioms or compiler-trusting evaluation. The statements concern ordinary polynomial closure certificates, exact last fall from adjacent bounds, a SAT missing-consequence criterion, assignment-indicator partition and final localization assembly.
 
@@ -30,7 +30,7 @@ For SAT inputs, evaluation on the entire Boolean solution set gives a linear map
 For UNSAT, an upper derivation of one and a lower closed separator at the preceding degree establish an exact value. The upper derivation proves unit-ideal membership, so the Lean exactness lemma does not assume a unit ideal circularly.
 
 == Sources, reproducibility and unresolved work
-The source arguments and hypotheses are in THEORY.md. README.md gives commands, software limits and the status of all four tracks. proof-map.json binds the exact sources and toolchain; validation/ retains failed attempts and successful checks. Independent review is tracked separately and is not implied by the author's build or tests.
+The source arguments and hypotheses are in THEORY.md. README.md gives commands, software limits and the status of all four tracks. proof-map.json binds the exact sources and toolchain; validation/ retains failed attempts and successful checks. A separate source-level review of five exact inputs found no correctness defects within scope. Its own fresh source elaboration, axiom audit and kernel replay passed. This is not an official scientific-status transition.
 
 Primary context: Huang--Kosters--Yang--Yeo, arXiv:1505.02532; Caminata--Gorla, arXiv:2112.05579v2. Internal evidence: the binary m=2 dossier, its 2026-10-19 dimension correction, the frozen prime digit closure convention, the 2026-10-26 Semaev closure audit, and the current degree-five quotient-lift/primal-witness work. No literature-priority claim is made.
 

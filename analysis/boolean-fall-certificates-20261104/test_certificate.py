@@ -85,6 +85,19 @@ class CertificateTests(unittest.TestCase):
         self.assertEqual(result['solutions'], 2)
         self.assertIsNone(result['lfd_lower_bound'])
 
+    def test_handwritten_sat_positive_witness(self):
+        # Handwritten certificate, independent of the fixture producer.
+        # The sole solution of xy-1=0 on the Boolean cube is (1,1).
+        # y-xy = -y*(xy-1) + x*(y^2-y) lies in the ordinary ideal,
+        # but is outside the one-dimensional W2 span of xy-1.
+        s = system(5, 2, {0: 4, 3: 1})
+        doc = {"schema": "boolean.closed-space-certificate/v1", "system": s,
+               "degree": 2, "steps": [{"op": "input", "index": 0}], "basis": [0]}
+        result = self.check(doc)
+        self.assertEqual(result['solutions'], 1)
+        self.assertEqual(result['lfd_lower_bound'], 3)
+        self.assertEqual(result['missing_consequence'], [[2, 1], [3, 4]])
+
     def test_historical_semaev_closed_filtration(self):
         path = ROOT / 'docs/reports/2026-10-26-semaev-closure-review/audit.py'
         spec = importlib.util.spec_from_file_location('historical_audit', path)

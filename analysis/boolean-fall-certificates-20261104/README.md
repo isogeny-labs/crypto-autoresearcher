@@ -13,10 +13,14 @@ tranche, not a completion claim for the entire research request.
 
 ## Validation performed
 
-- Nine deterministic regression tests pass, including the historical
+- Ten deterministic regression tests pass, including the historical
   source-bound eight-variable Semaev draw, malformed/tampered certificates,
   a closed superspace without primal provenance, composite moduli,
   prime-field two-sided refutation, and explicit field-equation repairs.
+- The additional handwritten SAT-positive control proves the checker can return
+  a missing ideal consequence without a producer-generated certificate. Initial
+  nine-test logs and the subsequent ten-test logs are both retained. The normal
+  pytest CI wrapper also passes.
 - The historical closure ranks reproduced are **1,11,79**; 53 is the old
   selected degree-three row rank, not the complete closure rank.
 - The target module builds with pinned Lean 4.35.0 and Mathlib
@@ -70,3 +74,12 @@ The existing [finite-profile problem](../../problems/lastfall-finite-profile-com
 and [Semaev semantic bridge problem](../../problems/semaev-degree-two-fall-nonzero-bridge.md)
 remain open with additive follow-up links. These steps preserve the original
 acceptance criteria; the report is not a substitute for their completion.
+
+## Independent technical review
+
+[The source-level review](independent-review.md) inspected the five exact
+committed inputs and found no correctness defects at that scope. Its own
+fresh source elaboration, nine-theorem axiom audit and fresh kernel replay
+passed. This is not an official scientific-status transition or a proof of
+the four remaining research obligations. The handwritten positive SAT control
+from that review is retained as the tenth regression.
