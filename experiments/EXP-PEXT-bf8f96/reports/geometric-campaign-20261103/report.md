@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: exact four-cohort geometric analysis component
+
+The [campaign reducer](../../implementation/geometric_campaign.py) requires exactly the frozen `n3core`, `n3ext`, and `n5` stage directories and an approved frozen supervisor trial plan. It verifies the stage run ID and plan hash, candidate build receipt, candidate-stage and checker hashes, and the exact published join plan for q5/q7/q11 at n=3 and q3 at n=5. Each cohort then passes the independently checked complete-unit geometric reducer, including the cubic Type2 rows. The campaign aggregate checks class order and per-curve P1/P2/P3/Type2 totals against each cohort summary.
+
+Its output is a read-only, complete checked geometric count table with separate P3 drop counts by cohort and Type2 signature/trace-zero counts for the three cubic cohorts. It carries `controls_and_descent_pending`, so it is not a final P1–P4 verdict or an admissible-genus claim. Seven focused software tests pass across the campaign, geometric reducer and Type2 unit scanner. The campaign test checks exact four-cohort scope and refuses inconsistent per-curve P3 and Type2 totals. No production cohort was reduced here.
+
+Next connect this component to the full analyze-stage artifact writer and implement the independent controls and coefficient-aware descent certification. EXP-PEXT-bf8f96 remains `review_required` and unfrozen; no scientific cohort trial was launched.

@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: prospective geometric analyze-stage artifacts
+
+The [geometric analysis stage](../../implementation/geometric_analysis_stage.py) now has `run` and `check` modes for a frozen supervisor analyze trial. It requires the six-stage plan, the exact analyze run directory, current supervisor claim, all three census dependencies, declared source hashes, and the geometric outputs in the trial artifact list. The campaign reducer additionally requires each census stage to have an `output_validated` supervisor execution receipt before it reads the complete checked cohorts.
+
+The `run` mode writes `geometric-curves.jsonl` and `geometric-analysis.json` once, with a curve-row digest, source run IDs and plan hash. The `check` mode recomputes the checked campaign and compares both output files byte for byte. An interrupted or conflicting write is retained and refused rather than silently replaced. The outputs retain a `controls_and_descent_pending` status and cannot serve as the final `analysis.json` or `export.json`. Six focused software tests pass across the stage writer, campaign reducer and geometric reducer, including write-once and tampered-row refusal. No production analyze trial was launched.
+
+Next implement the independent controls and coefficient-aware descent, then connect this component to the complete `analyze.py`, export, coverage, counterexample and report artifacts. EXP-PEXT-bf8f96 remains `review_required` and unfrozen.

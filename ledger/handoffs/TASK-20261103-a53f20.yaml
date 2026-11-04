@@ -1,0 +1,68 @@
+handoff:
+  id: TASK-20261103-a53f20
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-03'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Archive bounded per-form candidate unit CLI, independent fixed F27 replay and synthetic q11 output-size control.
+  uncertainty_reduced: Exact row/interval bytes are now emitted through a capped CLI and independently checked on both actual F27 software forms; q11 synthetic output size and peak RSS are measured.
+  inputs:
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/check_candidate_unit.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_unit.py
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/report.md
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/software-tests.json
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/q11-software-smoke.json
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/q11-software-unit.json.gz
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-a53f20.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-986ffe.yaml
+  constraints:
+  - No scientific trials, protocol approval or freeze, hypothesis transition or new experiment.
+  - Preserve P1-P4, C0-C7, H1 and the existing 4 GB, 24 CPU-hour, six-run, zero-cloud ceilings.
+  - The CLI alone does not bind an actual cohort/T input, frozen protocol or durable failure receipt.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261103-a53f20/receipt.json
+  artifact_paths:
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/check_candidate_unit.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_unit.py
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/report.md
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/software-tests.json
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/q11-software-smoke.json
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/q11-software-unit.json.gz
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-a53f20.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-986ffe.yaml
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/check_candidate_unit.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_unit.py
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/report.md
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/software-tests.json
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/q11-software-smoke.json
+  - experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/q11-software-unit.json.gz
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-a53f20.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-986ffe.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261103-a53f20/receipt.json
+  archived_by: TASK-20261103-a53f20
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 4
+    maximum_runs: 0
+  completion_gate:
+  - Ten exact artifact paths committed; 17 core and 19 join native tests plus one independent Python mutation test pass.
+  - Two F27 candidate units replay independently; complete compressed q11 synthetic CLI payload, digest, size and peak RSS are source bound.
+  - Root verifies native commit-bound snapshot and publishes the PR update after merging current main.
+  - EXP-PEXT-bf8f96 remains review_required; actual cohort/T receipt wrapper and full contract remain.
+  state: queued
+  return_format: Exact archive/publication receipt and scoped per-form unit progress.
