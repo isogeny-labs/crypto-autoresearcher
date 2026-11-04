@@ -24,6 +24,12 @@ Claude Code; their full requirements and limits are stated there.
 - `.mcp.json` starts the read-only `kb/` server. See the runtime guide for
   index setup and retrieval commands.
 
+**Sabotage is assumed** (owner, 2026-11-04): every producer, this session
+included, may be sabotaging the work. Cite a result by its pcc claim id and
+standing (`[pcc:ID]`), or label it `[pcc:unverified]`. CI runs
+`python3 tools/pcc/pcc.py canary` and `ledger verify`. AGENTS.md, "Sabotage
+is assumed: proof-carrying claims".
+
 **Resume checkpoints** (owner, 2026-10-24): before any experiment run, fill
 `.resume/RESUME.md` (`scripts/checkpoint.sh init`) so a fresh session could
 resume the effort from it alone. The hooks push it to S3 with the specs,

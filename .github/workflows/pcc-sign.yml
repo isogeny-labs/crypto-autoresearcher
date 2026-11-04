@@ -1,0 +1,98 @@
+name: pcc-sign
+# artifact-store: no-pull (re-verifies tracked pcc claims; store-backed proof bytes are pulled path by path)
+
+# Contract: docs/SABOTAGE_RESISTANCE.md, invariant I2. After a merge to main,
+# re-verify every claim whose standing is not yet verified and append a
+# verdict signed with PCC_SIGNING_KEY, a repository secret no producer session
+# holds. Without the secret it signs nothing and says so. The PR gate is
+# pcc-gate.yml; this job never runs on an unmerged pull request.
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pcc-sign
+  cancel-in-progress: false
+
+jobs:
+  sign:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      # Checks out main itself, never the pull request's head: the secret is
+      # only ever exposed to code that is already on main.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/pcc/
+            /tools/artifacts/
+            /pcc/
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Sign verdicts for claims that do not stand
+        env:
+          PCC_SIGNING_KEY: ${{ secrets.PCC_SIGNING_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
+        run: |
+          if [ -z "$PCC_SIGNING_KEY" ]; then
+            echo "::notice::PCC_SIGNING_KEY is not set; no verdicts signed"
+            exit 0
+          fi
+          python3 - <<'PY' > "$RUNNER_TEMP/claim-paths.txt"
+          import json, pathlib, posixpath
+          out = set()
+          def walk(o):
+              if isinstance(o, dict):
+                  for k, v in o.items():
+                      if k in ("path", "project", "evidence_dir") and isinstance(v, str) and v and not v.startswith("/") and ".." not in v.split("/"):
+                          out.add(v)
+                          if k == "path":
+                              out.add(posixpath.dirname(v) or ".")
+                      else:
+                          walk(v)
+              elif isinstance(o, list):
+                  for v in o:
+                      walk(v)
+          for p in sorted(pathlib.Path("pcc/claims").glob("*.json")):
+              walk(json.loads(p.read_text()))
+          for p in sorted(out - {"."}):
+              print(p)
+          PY
+          if [ -s "$RUNNER_TEMP/claim-paths.txt" ]; then
+            sed 's|^|/|' "$RUNNER_TEMP/claim-paths.txt" | xargs git sparse-checkout add
+            if [ -n "$AWS_ACCESS_KEY_ID" ]; then
+              xargs -a "$RUNNER_TEMP/claim-paths.txt" python3 tools/artifacts/artifacts.py pull
+            fi
+          fi
+          KEYFILE="$(mktemp)"
+          trap 'rm -f "$KEYFILE"' EXIT
+          chmod 600 "$KEYFILE"
+          printf '%s' "$PCC_SIGNING_KEY" > "$KEYFILE"
+          for f in pcc/claims/*.json; do
+            [ -e "$f" ] || continue
+            id="$(basename "$f" .json)"
+            if ! python3 tools/pcc/pcc.py standing "$id" > /dev/null; then
+              python3 tools/pcc/pcc.py verdict --sign-key "$KEYFILE" --key-id ci-main "$id" || true
+            fi
+          done
+          if [ -n "$(git status --porcelain pcc/ledger.jsonl)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add pcc/ledger.jsonl
+            git commit -m "pcc: signed verdicts for $(git rev-parse --short HEAD)"
+            git push origin HEAD:main
+          fi

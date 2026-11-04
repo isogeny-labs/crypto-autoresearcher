@@ -9,6 +9,9 @@
 #
 # A run that genuinely needs no checkpoint (a smoke test, a unit test that
 # happens to match) can opt out with "CHECKPOINT_SKIP=<reason>" in the command.
+# The opt-out still works, but it is recorded first: a bypass entry is appended
+# to pcc/ledger.jsonl (tools/pcc/pcc.py) and a checkpoint push is attempted, so
+# a skip is never invisible (docs/SABOTAGE_RESISTANCE.md, I6).
 set -uo pipefail
 
 input="$(cat)"
@@ -58,7 +61,22 @@ case "$event" in
   PreToolUse)
     cmd="$(field tool_input.command)"
     bg="$(field tool_input.run_in_background)"
-    [[ "$cmd" == *CHECKPOINT_SKIP=* ]] && exit 0
+    if [[ "$cmd" == *CHECKPOINT_SKIP=* ]]; then
+      reason="${cmd#*CHECKPOINT_SKIP=}"
+      reason="${reason%%[[:space:]]*}"
+      reason="${reason//\"/}"
+      reason="${reason//\'/}"
+      root="$(git -C "${cwd:-.}" rev-parse --show-toplevel 2>/dev/null)" || exit 0
+      if [ -f "$root/tools/pcc/pcc.py" ]; then
+        python3 "$root/tools/pcc/pcc.py" ledger append-bypass --reason "$reason" --command "$cmd" >/dev/null 2>&1 || true
+        pushed=failed
+        if [ -x "$root/scripts/checkpoint.sh" ] && (cd "$root" && scripts/checkpoint.sh push >/dev/null 2>&1); then
+          pushed=succeeded
+        fi
+        echo "CHECKPOINT_SKIP bypass recorded as a pcc ledger entry; checkpoint push $pushed." >&2
+      fi
+      exit 0
+    fi
     if [ "$bg" != "True" ] && ! printf '%s' "$cmd" | grep -qE "$LAUNCH_RE"; then
       exit 0
     fi
