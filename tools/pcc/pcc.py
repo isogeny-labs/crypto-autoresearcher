@@ -901,7 +901,12 @@ def _pinned_file(repo: Path, spec: Any, reasons: list[str], what: str) -> Path |
 
 def verify_attestation(proof: dict[str, Any], repo: Path, kr: dict[str, Any], reasons: list[str],
                        notes: list[str]) -> str:
-    spath = _pinned_file(repo, proof.get("subject"), reasons, "attestation subject")
+    # Older CLI KIND:PATH records used the common flat pin shape. Preserve
+    # those immutable records while applying the same pin/signature checks.
+    # An explicitly supplied subject never falls back to a different pin.
+    subject = proof.get("subject") if "subject" in proof else {
+        "path": proof.get("path"), "sha256": proof.get("sha256")}
+    spath = _pinned_file(repo, subject, reasons, "attestation subject")
     if spath is None:
         return "fail"
     kind = proof.get("subject_kind", "artifact")
@@ -1483,6 +1488,22 @@ def _run_canaries(fx: Fixture) -> list[tuple[str, str, str, list[str]]]:
         c["proofs"][0]["subject"]["sha256"] = sha256_file(copy / "att/artifact.txt")
     check("attestation:subject edited after signing", "fail", "attestation", att_other_subject)
 
+    def legacy_attestation(copy, c):
+        proof = c["proofs"][0]
+        proof.update(proof.pop("subject"))
+    check("attestation:legacy flat pin remains scoped", "not_covered", "attestation", legacy_attestation)
+
+    def legacy_bad_pin(copy, c):
+        legacy_attestation(copy, c)
+        c["proofs"][0]["sha256"] = "0" * 64
+    check("attestation:legacy corrupt pin", "fail", "attestation", legacy_bad_pin)
+
+    def subject_no_fallback(copy, c):
+        proof = c["proofs"][0]
+        proof.update(proof["subject"])
+        proof["subject"]["sha256"] = "0" * 64
+    check("attestation:canonical corrupt pin cannot fall back", "fail", "attestation", subject_no_fallback)
+
     return rows
 
 
@@ -1704,7 +1725,9 @@ def main(argv: list[str] | None = None) -> int:
                 p = (repo / rest).resolve()
                 if not p.is_file():
                     raise PccError(f"no such proof file {rest}")
-                proofs.append({"kind": kind, "path": rest, "sha256": sha256_file(p)})
+                pin = {"path": rest, "sha256": sha256_file(p)}
+                proofs.append({"kind": kind, "subject": pin} if kind == "attestation"
+                              else {"kind": kind, **pin})
         claim = {"schema": CLAIM_SCHEMA, "id": new_claim_id(), "kind": a.kind, "statement": a.statement,
                  "scope": a.scope, "proofs": proofs,
                  "producer": {"commit": head_commit(repo), "session": a.session, "model": a.model},
