@@ -24,6 +24,21 @@ def test_source_control_rejects_incomplete_or_inflated_rank_and_physical_counts(
         bad=copy.deepcopy(data);change(bad);assert read(bad)==[]
 
 
+def test_fresh_source_metrics_preserve_per_arm_costs_without_prefix_multiplication(monkeypatch):
+    cells=[dict(cell_id=f'p{p}-i{i}',arm=a,prefix=n,scope=s,verified=True,status='verified',base_columns=16,base_rank=2,base_nullity=14,anchor_gain=1,target_base_rank_gain=1,base_rank_after_target_cancellation=3,single_targets=0,joint_targets=0,early_joint_targets=0)
+           for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for n in (0,16,64) for s in ('relations','anchors')]
+    costs=[dict(cell_id=f'p{p}-i{i}',arm=a,source_construction=dict(counters={'source_scalar_multiplications':64,'Fp.field_mul':900,'Fp.group_add':300,'Fp.field_inv':280})) for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2')]
+    data=dict(panel_complete=True,cells=cells,per_arm_costs=costs,physical_work=dict(source_queries=49152,target_queries=1536,pair_entries=4928))
+    def read(d):
+        monkeypatch.setattr(M,'show',lambda ref,path:json.dumps(d));stream=io.StringIO()
+        with contextlib.redirect_stdout(stream):M.prime_field_fresh_source_panel('committed-ref','2026-11-04')
+        return [json.loads(v) for v in stream.getvalue().splitlines()]
+    out=read(data);assert len(out)==643
+    assert sum(r['value'] for r in out if r['metric'].endswith('construction.source_scalar_multiplications'))==1024
+    for mutate in (lambda d:d['per_arm_costs'].pop(),lambda d:d['per_arm_costs'][0]['source_construction']['counters'].update(source_scalar_multiplications=0),lambda d:d['physical_work'].update(source_queries=49152*6)):
+        bad=copy.deepcopy(data);mutate(bad);assert read(bad)==[]
+
+
 def test_committed_only_exact_panels_and_invalid_recoveries(tmp_path,monkeypatch):
     def git(*args):
         return subprocess.check_output(['git','-C',str(tmp_path),'-c','user.name=test',
