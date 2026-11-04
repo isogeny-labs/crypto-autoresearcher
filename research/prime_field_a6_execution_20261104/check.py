@@ -1,0 +1,238 @@
+"""Separate E arithmetic and dense algebra; reconstruct complete finite panel."""
+from collections import Counter,defaultdict
+from hashlib import sha256
+from itertools import combinations,product
+import importlib.util
+import json
+from pathlib import Path
+import sys
+ROOT=Path(__file__).resolve().parents[2]
+spec=importlib.util.spec_from_file_location('_a6_separate',ROOT/'research/prime_field_a4_execution_20261030/check.py')
+old=importlib.util.module_from_spec(spec);spec.loader.exec_module(old)
+add=old.add;multiply=old.multiply;rank=old.dense_rank
+def code(v):return json.dumps(v,sort_keys=True,separators=(',',':'))
+
+
+encoded=old.encoded
+hashed=old.hashed
+prime=old.prime
+curve_identity=old.curve_identity
+verify_fixture=old.verify_fixture
+
+
+def check_generation(rules,generated):
+    roots={};used=set();excluded={tuple(v) for v in rules['excluded_curves']};cells=[];trace=[];point_tests=0
+    for field in rules['fields']:
+        p=field['p'];root={}
+        for y in range(p): root.setdefault(y*y%p,y)
+        roots[p]=root
+        for index in range(rules['curves_per_field']):
+            for counter in range(rules['maximum_curve_candidates']):
+                b=1+int(hashed(rules['domain'],'curve',p,index,counter),16)%(p-1);a=rules['a'];fixture=None
+                if (p,b) in excluded: trial=dict(reason='prior_curve_excluded',point_tests=0)
+                elif (p,b) in used: trial=dict(reason='duplicate_selected_curve',point_tests=0)
+                elif b%p==0 or (4*a*a*a+27*b*b)%p==0: trial=dict(reason='singular_or_zero_B',point_tests=0)
+                else:
+                    r=p+1+sum(0 if (u:=(x**3+a*x+b)%p)==0 else 1 if u in root else -1 for x in range(p));point_tests+=p
+                    trial=dict(reason='composite_order',r=r,point_tests=p)
+                    if r>2 and prime(r):
+                        P=next((x,root[(x**3+a*x+b)%p]) for x in range(p) if (x**3+a*x+b)%p in root)
+                        base=[];seen=set()
+                        for x in range(p):
+                            u=x*x%p;y=root.get((u**3+a*u+b)%p)
+                            if y is None or u in seen: continue
+                            seen.add(u);base.append(dict(point=[u,y],lift=[x,y]))
+                            if len(base)==field['base_size']: break
+                        if len(base)!=field['base_size']: trial.update(reason='insufficient_distinct_factor_base',base_size=len(base))
+                        else:
+                            fixture=dict(p=p,a=a,b=b,r=r,P=list(P),factor_base=base)
+                            trial['reason']='eligible'
+                if fixture is not None and fixture['r']==p: fixture=None;trial['reason']='anomalous_order_excluded'
+                trace.append(dict(p=p,curve_index=index,counter=counter,b=b,**trial))
+                if fixture is None: continue
+                actual=generated['cells'][len(cells)];f=actual['fixture']
+                if any(f[k]!=v for k,v in fixture.items()): raise ValueError('holdout selection/base differs from independent construction')
+                uid=sha256(encoded(fixture).encode()).hexdigest()
+                if f['uid']!=uid: raise ValueError('fixture UID differs')
+                field_data=dict(characteristic=p,degree=1,representation='Z/pZ',element_encoding='canonical integers 0..p-1')
+                curve=dict(model='short_weierstrass',a4=a,a6=b,subgroup_order=f['r'],cofactor=1,generator=f['P'],target_group='E(Fp)')
+                identity=curve_identity(field_data,curve,'prymtoy');curve['curve_id']=identity['curve_id']
+                if f['ec1']!=dict(field=field_data,curve=curve,**identity): raise ValueError('canonical EC1 identity differs')
+                order=sorted(range(1,rules['sources']+1),key=lambda s:hashed(rules['domain'],'source',identity['curve_uid'],s))
+                if actual['id']!='p'+str(p)+'-i'+str(index) or actual['old_source_order']!=order:
+                    raise ValueError('source ordering or original empty preprocessing differs')
+                verify_fixture(f)
+                if actual['projection']!=old.public_projection(f,order):raise ValueError('fresh fixed projection differs')
+                target_trace=[];target_points=[];target_used=set()
+                for ti in range(rules['targets']):
+                    for tc in range(rules['maximum_target_candidates']):
+                        x=int(hashed(rules['domain'],'target',identity['curve_uid'],ti,tc),16)%p;y=root.get((x**3+a*x+b)%p)
+                        Q=None if y is None else (x,y);reason='not_rational' if Q is None else 'duplicate_target' if Q in target_used else 'selected'
+                        target_trace.append(dict(target_index=ti,counter=tc,x=x,y=y,reason=reason))
+                        if reason=='selected':target_used.add(Q);target_points.append(dict(index=ti,point=list(Q)));break
+                    else:raise ValueError('reference target gate exhausted')
+                if actual['target_generation']!=dict(targets=target_points,search_trace=target_trace):raise ValueError('fresh target recipe differs')
+                cells.append(actual);used.add((p,b));break
+            else: raise ValueError('independent candidate gate exhausted')
+    if generated.get('complete')is not True or generated['search_trace']!=trace or len(generated['cells'])!=len(cells): raise ValueError('full curve selection trace differs')
+    return dict(checked=True,curves=len(cells),candidate_records=len(trace),order_point_tests=point_tests,scope='Independent complete curve/exclusion/target selection, fixed projection and EC1 metadata; producer primitive counts not audited.')
+
+
+
+def selection(cell,rules):
+    result={'window':cell['old_source_order']};trace=[];r=cell['fixture']['r']
+    for seed in rules['seeds']:
+        values=[]
+        for index in range(rules['sources']):
+            for counter in range(rules['maximum_scalar_candidates']):
+                payload=rules['domain']+'|'+cell['fixture']['ec1']['curve_uid']+'|'+str(seed)+'|'+str(index)+'|'+str(counter)
+                s=1+int.from_bytes(sha256(payload.encode('utf-8')).digest(),'big')%(r-1)
+                selected=s not in values;trace.append(dict(seed=seed,index=index,counter=counter,scalar=s,selected=selected,payload_sha256=sha256(payload.encode()).hexdigest(),reason='selected' if selected else 'duplicate'))
+                if selected:values.append(s);break
+            else:raise ValueError('reference scalar gate exhausted')
+        result['hash'+str(seed)]=values
+    return dict(schedules=result,search_trace=trace)
+
+
+def check_prefix(cell,rules,result,rec):
+    f=cell['fixture'];p,r=f['p'],f['r'];projection=result['projection'];width=projection['U'];nt=rules['targets']
+    order=result['selection']['schedules'][rec['arm']];arm=result['arms'][rec['arm']]
+    ids=[i for i,row in enumerate(arm['rows']) if row['source_scalar'] in order[:rec['prefix']]]
+    anchors=arm['anchor_rows'] if rec['scope']=='anchors' else []
+    if rec['source_row_indices']!=ids or rec['anchor_rows_inserted']!=len(anchors):raise ValueError('wrong prefix or anchors')
+    projected=[old.project(arm['rows'][i],projection,r) for i in ids]+[old.project(row,projection,r) for row in anchors]
+    M=[v for v,b in projected];rhs=[b for v,b in projected]
+    window_order=result['selection']['schedules']['window'][:rec['prefix']]
+    window=[old.project(row,projection,r)[0] for row in result['arms']['window']['rows'] if row['source_scalar'] in window_order]
+    comparison=dict(reference_base_rank=rank(window,r),stacked_rank_with_window=rank(window+M,r),rank_gain_over_window=rank(window+M,r)-rank(window,r))
+    if any(rec[k]!=v for k,v in comparison.items()):raise ValueError('union rank against window differs')
+    if rec['base']['columns']!=width:raise ValueError('fixed columns changed')
+    old.check_system(rec['base'],M,rhs,r)
+    eq=set()
+    for v,b in projected:
+        row=v+[b];first=next((x for x in row if x),None);eq.add(tuple(x*pow(first,-1,r)%r for x in row) if first else tuple(row))
+    if rec['distinct_equations']!=len(eq):raise ValueError('distinct affine count differs')
+    target_rows=result['target_collection']['rows'];natural=[old.project(row,projection,r) for row in target_rows]
+    first={};cancel=[]
+    for i,(row,(v,b)) in enumerate(zip(target_rows,natural,strict=True)):
+        t=row['target_index']
+        if t not in first:first[t]=i;continue
+        j=first[t];oldv,offset=natural[j];weights=[0]*len(natural);weights[i]=1;weights[j]=r-1
+        cancel.append(dict(target_row_weights=weights,vector=[(x-y)%r for x,y in zip(v,oldv)],rhs=(b-offset)%r))
+    if rec['target_cancellations']!=cancel:raise ValueError('target cancellation certificate differs')
+    if len(rec['singles'])!=len(natural):raise ValueError('missing single records')
+    for i,(row,(v,b),ident) in enumerate(zip(target_rows,natural,rec['singles'],strict=True)):
+        if (ident['target_row_index'],ident['target_index'],ident['offset'])!=(i,row['target_index'],b):raise ValueError('target identity differs')
+        old.check_identified(ident,v,M,rhs,rec['base']['kernel'],r)
+        if ident['identifiable'] and (ident['scalar']!=(ident['value']-b)%r or multiply(p,0,f['a'],ident['scalar'],tuple(f['P']))!=tuple(row['target_point'])):raise ValueError('single public recovery differs')
+    J=[v+[0]*nt for v in M];jr=list(rhs)
+    for row,(v,b) in zip(target_rows,natural,strict=True):
+        suffix=[0]*nt;suffix[row['target_index']]=r-1;J.append(v+suffix);jr.append(b)
+    if rec['joint']['columns']!=width+nt:raise ValueError('joint columns changed')
+    old.check_system(rec['joint'],J,jr,r)
+    if len(rec['joint_recoveries'])!=nt:raise ValueError('missing target units')
+    for t,ident in zip(result['target_generation']['targets'],rec['joint_recoveries'],strict=True):
+        v=[0]*(width+nt);v[width+t['index']]=1
+        if ident['target_index']!=t['index']:raise ValueError('wrong target unit')
+        old.check_identified(ident,v,J,jr,rec['joint']['kernel'],r)
+        if ident['identifiable'] and (ident['scalar']!=ident['value'] or multiply(p,0,f['a'],ident['scalar'],tuple(f['P']))!=tuple(t['point'])):raise ValueError('joint public recovery differs')
+    outside=rank([v[width:] for v in J],r);after=rank(J,r)-outside
+    if rank(M+[v['vector'] for v in cancel],r)!=after:raise ValueError('base-only cancellation rank differs')
+    singles=sorted({v['target_index'] for v in rec['singles'] if v['identifiable']});joint=[v['target_index'] for v in rec['joint_recoveries'] if v['identifiable']]
+    if (rec['outside_target_rank']!=outside or rec['base_rank_after_target_cancellation']!=after or rec['target_base_rank_gain']!=after-rank(M,r) or rec['single_identified_targets']!=singles or rec['joint_identified_targets']!=joint):raise ValueError('outside-adjusted rank/targets differ')
+    A=[old.project(row,projection,r)[0] for row in arm['anchor_rows']];relations=[old.project(arm['rows'][i],projection,r)[0] for i in ids]
+    return dict(arm=rec['arm'],prefix=rec['prefix'],scope=rec['scope'],base_columns=width,base_rank=rec['base']['rank'],base_nullity=rec['base']['nullity'],**comparison,
+        source_rows=len(ids),anchor_rows=len(arm['anchor_rows']),anchor_rank=rank(A,r),relation_rank=rank(relations,r),
+        anchor_augmented_rank=rank(relations+A,r),distinct_equations=len(eq),outside_target_rank=outside,base_rank_after_target_cancellation=after,
+        target_base_rank_gain=after-rank(M,r),single_targets=len(singles),joint_targets=len(joint),
+        early_single_targets=len(singles) if rec['base']['nullity'] else 0,early_joint_targets=len(joint) if after<width else 0)
+
+
+def check(cell,rules,result,events):
+    f=cell['fixture'];p,r=f['p'],f['r'];n=len(f['factor_base']);old.verify_fixture(f)
+    selected=selection(cell,rules)
+    if result['selection']!=selected:raise ValueError('source scalar recipe differs')
+    if [{k:v for k,v in e.items() if k!='kind'} for e in events if e.get('kind')=='scalar_candidate']!=selected['search_trace']:raise ValueError('scalar journal differs')
+    if result['projection']!=cell['projection'] or result['projection']!=old.public_projection(f,cell['old_source_order']):raise ValueError('old public projection differs')
+    if result['target_generation']!=cell['target_generation']:raise ValueError('fixed targets changed')
+    orders=selected['schedules'];base=[tuple(a['point']) for a in f['factor_base']]
+    signed={(j,s):(q[0],s*q[1]%p) for j,q in enumerate(base) for s in (1,-1)}
+    plus=lambda x,y:add(p,0,f['a'],x,y)
+    sources={arm:{s:multiply(p,0,f['a'],s,tuple(f['P'])) for s in order} for arm,order in orders.items()}
+    targets=cell['target_generation']['targets'];wanted={q for values in sources.values() for q in values.values()}|{tuple(t['point']) for t in targets}
+    oracle=defaultdict(list);digest=sha256();count=0
+    for triple in combinations(range(n),3):
+        for signs in product((1,-1),repeat=3):
+            count+=1;Q=plus(plus(signed[triple[0],signs[0]],signed[triple[1],signs[1]]),signed[triple[2],signs[2]])
+            digest.update((code([triple,signs,Q])+'\n').encode())
+            if Q in wanted:oracle[Q].append((triple,signs))
+    def row(s,triple,signs):
+        v=[0]*n
+        for j,sign in zip(triple,signs):v[j]=sign%r
+        return dict(schema='direct-three-sum-row/v1',curve_uid=f['uid'],source_scalar=s,triple=list(triple),signs=list(signs),coefficients=v)
+    pairs=[];table=defaultdict(list)
+    for (j,k),signs in product(combinations(range(n),2),product((1,-1),repeat=2)):
+        Q=plus(signed[j,signs[0]],signed[k,signs[1]]);pairs.append(dict(indices=[j,k],signs=list(signs),point=None if Q is None else list(Q)));table[Q].append(len(pairs)-1)
+    if result['pair_entries']!=pairs:raise ValueError('complete pair table differs')
+    pair_events=[e for e in events if e.get('kind')=='pair_entry']
+    if [e['index'] for e in pair_events]!=list(range(len(pairs))) or [{k:v for k,v in e.items() if k not in ('kind','index')} for e in pair_events]!=pairs:raise ValueError('pair journal differs')
+    def queries(points):
+        blocks=[];attempts=0;digest=sha256()
+        for index,Q in points:
+            records=[]
+            for third,sign in product(range(n),(1,-1)):
+                v=signed[third,sign];key=plus(Q,(v[0],-v[1]%p));bucket=table.get(key,[])
+                rec=dict(third=third,sign=sign,wanted=None if key is None else list(key),bucket=list(bucket),accepted=[i for i in bucket if pairs[i]['indices'][1]<third])
+                records.append(rec);digest.update((code([index,rec])+'\n').encode());attempts+=1
+            blocks.append(dict(index=index,queries=records,attempts=attempts))
+        return dict(status_blocks=blocks,attempts=attempts,branch_sha256=digest.hexdigest())
+    for arm,order in orders.items():
+        value=result['arms'][arm];rows=sorted([row(s,triple,signs) for s,Q in sources[arm].items() for triple,signs in oracle[Q]],key=old.row_key)
+        expected=queries([(s,sources[arm][s]) for s in order])
+        if value['rows']!=rows or any(value[k]!=v for k,v in expected.items()):raise ValueError('source complete census/query differs')
+        actual=sorted([e['row'] for e in events if e.get('kind')=='source_accepted' and e['arm']==arm],key=old.row_key)
+        blocks=[{k:v for k,v in e.items() if k not in ('kind','arm','target')} for e in events if e.get('kind')=='query_complete' and e['arm']==arm]
+        if actual!=rows or blocks!=expected['status_blocks']:raise ValueError('source journal differs')
+        anchors=[]
+        for s in order:
+            for j,Q in enumerate(base):
+                for sign in (1,-1):
+                    if sources[arm][s]!=(Q[0],sign*Q[1]%p):continue
+                    v=[0]*n;v[j]=sign%r;anchor=dict(schema='explicit-public-anchor/v1',source_scalar=s,atom=j,sign=sign,coefficients=v,public_point=list(sources[arm][s]),projection_atom=result['projection']['native_to_projected'][j])
+                    anchor['projected_vector'],anchor['projected_rhs']=old.project(anchor,result['projection'],r);anchors.append(anchor)
+        if value['anchor_rows']!=anchors:raise ValueError('explicit anchor equation differs')
+        known={}
+        for which in (arm,'window'):
+            for s,Q in sources[which].items():known[Q]=s;known[(Q[0],-Q[1]%p)]=(-s)%r
+        schedule_points={point for Q in sources[arm].values() for point in (Q,(Q[0],-Q[1]%p))}
+        original_points={point for Q in sources['window'].values() for point in (Q,(Q[0],-Q[1]%p))}
+        base_lookup={point:[j,s] for (j,s),point in signed.items()};diagnostics=[]
+        for t in targets:
+            Q=tuple(t['point']);matches=[]
+            for k in range(1,rules['collision_multipliers']+1):
+                q=multiply(p,0,f['a'],k,Q)
+                if q in known:matches.append(dict(multiplier=k,public_source_scalar=known[q],from_schedule=q in schedule_points,from_original=q in original_points))
+            diagnostics.append(dict(target_index=t['index'],direct_public_scalar=known.get(Q),signed_base_atom=base_lookup.get(Q),bounded_multiple_matches=matches))
+        if value['collision_diagnostics']!=diagnostics:raise ValueError('public collision diagnostic differs')
+    rows=[]
+    for t in targets:
+        for triple,signs in oracle[tuple(t['point'])]:
+            v=row(0,triple,signs);v.update(schema='holdout-target-row/v1',target_index=t['index'],target_point=t['point']);rows.append(v)
+    rows.sort(key=old.target_key);natural=result['target_collection'];expected=queries([(t['index'],tuple(t['point'])) for t in targets])
+    if natural['rows']!=rows or any(natural[k]!=v for k,v in expected.items()):raise ValueError('natural target complete census/query differs')
+    blocks=[{k:v for k,v in e.items() if k not in ('kind','arm','target')} for e in events if e.get('kind')=='query_complete' and e['target']]
+    if blocks!=expected['status_blocks'] or sorted([e['row'] for e in events if e.get('kind')=='target_accepted'],key=old.target_key)!=rows:raise ValueError('target journal differs')
+    planned=[(a,c,s) for a in orders for c in rules['prefixes'] for s in ('relations','anchors')]
+    if [(v['arm'],v['prefix'],v['scope']) for v in result['prefixes']]!=planned:raise ValueError('incomplete analysis panel')
+    summaries=[check_prefix(cell,rules,result,v) for v in result['prefixes']]
+    total=Counter();phases=result['collection_phases']+[p for rec in result['prefixes'] for p in rec['phases']]
+    if len({p['phase'] for p in phases})!=len(phases):raise ValueError('duplicate phase label')
+    for phase in phases:
+        if phase['status']!='complete' or phase['wall_valid']is not False or any(type(v)is not int or v<0 for v in phase['counters'].values()):raise ValueError('invalid disjoint phase')
+        total.update(phase['counters'])
+    if dict(total)!=result['total_counters'] or total.get('source_queries')!=4*rules['sources']*n*2 or total.get('target_queries')!=rules['targets']*n*2 or total.get('pair_table_insertions')!=len(pairs):raise ValueError('physical counter conservation differs')
+    for arm in orders:
+        phase=next((v for v in result['collection_phases'] if v['phase']==arm+'_source_construction'),None)
+        if phase is None or phase['counters'].get('source_scalar_multiplications')!=rules['sources']:raise ValueError('missing or false per-arm construction cost')
+    return dict(checked=True,complete_sum_oracle=True,signed_triples_enumerated=count,sum_oracle_sha256=digest.hexdigest(),pair_entries_checked=len(pairs),source_queries_checked=4*rules['sources']*n*2,target_queries_checked=rules['targets']*n*2,prefixes=summaries,
+                scope='Separate arithmetic complete sum/table/query/anchor/affine/kernel/certificate/public identity checks; not staffed scientific review or primitive-cost audit.')
