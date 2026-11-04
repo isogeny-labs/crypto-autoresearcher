@@ -5,7 +5,7 @@ record outside child custody and pin its digest in a native/root launch or
 immutable archive. Replacing that external trust anchor is outside this check.
 """
 from pathlib import Path
-import datetime,hashlib,json,os,time
+import datetime,hashlib,json,math,os,time
 
 def os_fact(pid):
  raw=(Path('/proc')/str(pid)/'stat').read_bytes();tail=raw[raw.rfind(b')')+2:].split();argv=(Path('/proc')/str(pid)/'cmdline').read_bytes().split(b'\0');argv=[x.decode() for x in argv if x]
@@ -48,13 +48,30 @@ def native_binding(repo,out,plan_path,trial_id,config_path,driver_pid,live=True)
  if live:
   d.need(driver['ppid']==native['pid'] and driver['boot_id']==native['boot_id'] and driver['argv']==launch['argv'],'custody live driver/native ancestry/argv')
  return {'native':native,'driver':driver,'driver_pid':driver_pid,'launch':launch,'launch_sha256':d.sha_file(out/'launch.json'),'environment_sha256':d.sha_file(out/'environment.json'),'plan_path':str(Path(plan_path).resolve()),'plan_sha256':d.sha_file(plan_path),'trial_id':trial_id,'run_id':trial['run_id'],'config_path':str(Path(config_path).resolve()),'config_sha256':d.sha_file(config_path),'source_sha256':actual,'source_publication_commit':None if cfg['fixture_only'] else cfg['source_publication_commit'],'fixture_only':cfg['fixture_only'],'context_commit':env['commit'],'experiment_id':plan['experiment_id'],'task_id':plan['task_id'],'approved_by':plan['approved_by'],'interpreter_sha256':d.sha_file(Path(__import__('sys').executable).resolve())}
+def _deadline(timeout):
+ d=_d();d.need(type(timeout) in (int,float) and math.isfinite(timeout) and timeout>0,'observer IPC positive finite timeout')
+ deadline=time.monotonic()+timeout;d.need(math.isfinite(deadline),'observer IPC finite deadline');return deadline
+def _remaining(sock,deadline):
+ remaining=deadline-time.monotonic()
+ if remaining<=0:raise TimeoutError('observer IPC absolute deadline')
+ sock.settimeout(remaining)
+def _frame_send(sock,obj,deadline):
+ d=_d();payload=d.canonical(obj);d.need(len(payload)<=1<<20,'observer IPC framing')
+ _remaining(sock,deadline);sock.sendall(payload);_remaining(sock,deadline)
+def _send(sock,obj,timeout=5):
+ _frame_send(sock,obj,_deadline(timeout))
 def _message(sock,obj=None,timeout=5):
- d=_d();sock.settimeout(timeout)
- if obj is not None:sock.sendall(d.canonical(obj))
+ d=_d();deadline=_deadline(timeout)
+ if obj is not None:_frame_send(sock,obj,deadline)
  data=bytearray()
  while not data.endswith(b'\n'):
-  b=sock.recv(1);d.need(b,'observer IPC closed');data+=b;d.need(len(data)<=1<<20,'observer IPC framing')
- return d.loads(data)
+  _remaining(sock,deadline);b=sock.recv(1);d.need(b,'observer IPC closed');data+=b;d.need(len(data)<=1<<20,'observer IPC framing')
+ value=d.loads(data);_remaining(sock,deadline);return value
+def _quiet_timeout(cfg):
+ d=_d();d.need(type(cfg) is dict and type(cfg.get('limits',{})) is dict,'observer frozen limits mapping')
+ limits=dict(d.DEFAULT_LIMITS);limits.update(cfg.get('limits',{}));d.limits_check(limits)
+ timeout=limits['seconds']+limits['terminate_grace_seconds']+5
+ d.need(math.isfinite(timeout) and timeout>0,'observer finite quiet budget');return timeout
 class Service:
  def __init__(self,repo,out,plan_path,trial_id,config_path,fault=None):
   import socket,subprocess,sys
@@ -89,7 +106,7 @@ class Service:
   if not (self.directory/'wait.json').exists():d.write(self.directory/'wait.json',{'pid':self.proc.pid,'wait_returned':True,'returncode':self.proc.returncode,'aborted':True,'finished_at':d.now()})
 def serve(a):
  import socket,sys,time
- d=_d();d.source_closure.install(a.repo_root,d.HERE);out=Path(a.out);cfg=d.read(a.config);driver_pid=os.getppid();binding=native_binding(a.repo_root,out,a.plan,a.trial,a.config,driver_pid)
+ d=_d();d.source_closure.install(a.repo_root,d.HERE);out=Path(a.out);cfg=d.read(a.config);quiet_timeout=_quiet_timeout(cfg);driver_pid=os.getppid();binding=native_binding(a.repo_root,out,a.plan,a.trial,a.config,driver_pid)
  own=os_fact(os.getpid());control_links={os.readlink('/proc/self/fd/'+str(a.fd)),os.readlink('/proc/'+str(driver_pid)+'/fd/'+str(a.driver_fd))}
  sock=socket.socket(fileno=a.fd);observed={};closed={};expected={'candidate','baseline'}|({'generator'} if not cfg['fixture_only'] or cfg.get('fixed_generator') else set())
  d.write(out/'root-custody/start.json',{'binding':binding,'observer':own,'control_socket_links':sorted(control_links),'started_at':d.now()})
@@ -97,9 +114,9 @@ def serve(a):
   d.need(cfg['fixture_only'],'observer fault only fixedtoy')
   if a.fixture_fault=='start':raise RuntimeError('disclosed observer start failure')
   if a.fixture_fault=='timeout':time.sleep(8)
- sock.sendall(d.canonical({'ready':True}))
+ _send(sock,{'ready':True})
  while True:
-  req=_message(sock,timeout=120);op=req['op']
+  req=_message(sock,timeout=quiet_timeout if set(observed)-set(closed) else 5);op=req['op']
   if op=='observe':
    if a.fixture_fault=='death':os._exit(7)
    arm=req['arm'];d.need(arm in expected and arm not in observed,'custody duplicate/unknown arm');pid=req['pid'];ready=Path(req['ready']);deadline=time.monotonic()+3
@@ -117,17 +134,17 @@ def serve(a):
    rec={'arm':arm,'observed_at':d.now(),'observer_pid':os.getpid(),'os':fact,'executable':os.readlink('/proc/'+str(pid)+'/exe'),'popen_argv':fact['argv'],'input_path':req['input'],'input_sha256':d.sha_file(req['input']),'source_sha256':actual,'barrier_ready':r,'service_IPC_absent_from_worker':True}
    observed[arm]=rec
    with (out/'root-custody/observations.jsonl').open('ab') as f:f.write(d.canonical(rec));f.flush();os.fsync(f.fileno())
-   sock.sendall(d.canonical({'ok':True,'record':rec}))
+   _send(sock,{'ok':True,'record':rec})
   elif op=='closed':
    arm=req['arm'];d.need(arm in observed and arm not in closed,'custody closure membership');pr=d.read(req['process_path']);verify(pr,observed[arm]);d.need(not Path('/proc',str(pr['pid'])).exists(),'custody child remains');d.need(pr['termination_ack']=={'wait_returned':True,'returncode':pr['returncode']},'custody driver wait acknowledgment')
-   closed[arm]={'process_path':req['process_path'],'process_sha256':d.sha_file(req['process_path']),'driver_reported_wait':pr['termination_ack'],'observer_post_wait_proc_absent':True,'scope':'Actual wait is by direct driver parent; observer absence is not adopted waitpid.'};sock.sendall(d.canonical({'ok':True}))
+   closed[arm]={'process_path':req['process_path'],'process_sha256':d.sha_file(req['process_path']),'driver_reported_wait':pr['termination_ack'],'observer_post_wait_proc_absent':True,'scope':'Actual wait is by direct driver parent; observer absence is not adopted waitpid.'};_send(sock,{'ok':True})
   elif op=='finish':
    if a.fixture_fault=='finalize':raise RuntimeError('disclosed observer finalization failure')
    d.need(set(observed)==set(closed)==expected,'custody missing/extra arms');d.need(d.source_map(d.snapshot(a.repo_root,a.repo_root))==binding['source_sha256'],'custody final source change')
    body={'schema':'controlled-followup-v5.root-custody/v1','state':'finalized','binding':binding,'observer':own,'observations':observed,'closures':closed,'expected_arms':sorted(expected),'finished_at':d.now(),'trust':'Trusted source-pinned root observer FILE held fixed against child reseals; no arbitrary root-boundary replacement authentication or sameUID sandbox.'}
    d.write(out/'root-custody.json',body)
    with (out/'root-custody.json').open('rb') as f:os.fsync(f.fileno())
-   d.write(out/'root-custody/seal.json',{'state':'finalized','observer_pid':os.getpid(),'sha256':d.sha_file(out/'root-custody.json'),'bytes':(out/'root-custody.json').stat().st_size});sock.sendall(d.canonical({'finalized':True}));sock.close();return
+   d.write(out/'root-custody/seal.json',{'state':'finalized','observer_pid':os.getpid(),'sha256':d.sha_file(out/'root-custody.json'),'bytes':(out/'root-custody.json').stat().st_size});_send(sock,{'finalized':True});sock.close();return
   else:raise ValueError('observer IPC operation')
 def load_custody(path,repo,out):
  d=_d();out=Path(out);d.need(Path(path).resolve()==(out/'root-custody.json').resolve(),'fixed native custody path');c=d.read(path);seal=d.read(out/'root-custody/seal.json');wait=d.read(out/'root-custody/wait.json');d.need(c['state']==seal['state']=='finalized' and seal['sha256']==d.sha_file(path) and seal['bytes']==Path(path).stat().st_size,'custody finalization/seal')
