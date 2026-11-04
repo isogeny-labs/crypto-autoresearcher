@@ -206,6 +206,7 @@ For assessments of hidden mathematical advantage, follow [the full rule](docs/ag
     request. No alternative means a terminal infrastructure stop, never
     permission. The adapter's offline guard enforces it; records carry no
     attestation field for it; historical receipts stay immutable.
+17. [Assume sabotage](docs/pcc.md).
 
 ## Research-direction integrity
 

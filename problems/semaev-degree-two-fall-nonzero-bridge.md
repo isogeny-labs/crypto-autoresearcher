@@ -76,3 +76,15 @@ Meeting these conditions would settle the toy Boolean claim. General solving-deg
 - 2026-10-26: Three finite methods computed the least degree-bounded Boolean quotient closure for the same draw. They agree on rank 79 and low-degree dimension 23 at degree three, giving 12 new quotient low-degree classes against the degree-two rank 11. No polynomial-ring transfer or Lean closure theorem is claimed.
 - 2026-10-26: Extended the source-bound quotient calculation to all 80 archived Semaev draws. Independent field evaluation and three closure methods show unchanged 68/12 first-positive degree labels, but widespread differences in ranks and new-class multiplicities. The polynomial-ring and Lean proof obligations remain open.
 - 2026-10-26: Applied the same specified quotient closure to all 200 archived support-matched null controls. Eighteen first-positive degree labels shift compared with the selected-row policy, so the old null comparison cannot be read as a quotient-closure baseline without this correction.
+
+### 2026-11-04: exact finite closure certificate follow-up
+
+The [additive certificate implementation](../analysis/boolean-fall-certificates-20261104/THEORY.md)
+checks primal derivations and closed-space containment in both directions on
+the same fixed eight-variable normalized input. Its regression expects full
+closure ranks 1,11,79 and rejects the historical one-pass interpretation.
+A coefficient-generic written normalization bridge and explicit per-polynomial
+field-equation repairs are included. The generic bridge is not yet a Lean
+theorem, and the new ordinary-ring Lean certificate lemmas do not formalize the
+Python checker. Independent semantic review and the original generic descent
+and nonzero-first-fall obligations remain open. No frozen target was changed.
