@@ -26,21 +26,40 @@ mechanism: >-
   recalled and unverified). A proof would turn the low-degree families of
   LEAD-EXO-coordinate-statistic-leakage into a theorem in scope; a failure of the
   multi-point step would name the first low-degree coordinate test worth measuring.
+  Desk step (a), 2026-11-04 (report ecdlp-leads-desk-20261104): H1 as written is false
+  whenever a rank condition holds. A test's power is governed by the pulled-back degree
+  Delta = sum_i (2 d_x,i + 3 d_y,i) b_i^2, not by D, and large multipliers b_i cost only
+  O(log N) group operations. If the degree-<=D polynomials in the coordinates of t encodings
+  [b_i]Q have full rank N on E(F_p), interpolation in free local work makes each test answer
+  "k in S?" for any S, and binary search finds k with O(t log N) + log2 N queries. Full rank is
+  proved for the F_p^* analogue, observed at p = 101 (t = 4, D = 3, rank 102 of 102), and not
+  reached at p = 211 for the same (t, D) (161 of 222). Proved restatement H1': Pr[success] <=
+  (C(T_g+2,2) + sum_j (Delta_j + t_j) + 1)/N, which is meaningful only for small multipliers.
+  Kohel-Shparlinski verified (ANTS-IV, LNCS 1838, 2000, pp. 395-404); it covers t = 1 only.
 disposition: open_next_step
 next_action:
   step: >-
-    (a) Write the single-test lemma (one point, degree D) with explicit constants and check
-    whether adaptive multi-point tests reduce to character-sum bounds on curves of bounded
-    genus; verify the Kohel-Shparlinski reference before relying on it. (b) In parallel, a
-    cheap empirical check for p from 2^16 to 2^24: the maximum bias over degree-<=D tests on pairs
-    (P, kP) against a matched random-labelling null, compared with D / sqrt(p).
+    Replace the planned bias check, which cannot refute H1 at t = 2. Compute exactly the rank
+    r(t, D, b) of the evaluation matrix of degree-<=D monomials on the N points of
+    ([b_1]R, ..., [b_t]R), for p from 2^8 to 2^14, with (t, D) chosen so that C(2t+D, D)/N
+    spans [1/4, 4]. Use random pairwise-coprime b_i and arithmetic-progression b_i. Controls:
+    shifts b_i = 1 (rank <= 2Dt + 1), a uniformly random point set (expected min(N, #monomials)),
+    and the multiplicative analogue (full rank, proved). Report the attack's local work
+    (about N^omega field operations).
   discriminates: >-
-    A proof of H1 gives a proof-kind closure for degree-D coordinate tests, to be filed by the
-    Coordinator after review. A family of degree-D tests whose bias exceeds D / sqrt(p) by a
-    growing factor refutes H1 and is exactly the non-simulable oracle that reopens
-    LEAD-EXO-augmented-oracle-ggm; it goes to a charged comparison.
+    Rank near min(N, #monomials - t) for random b_i confirms the attack, and the row is
+    restated to H1' (proved) with a model note that query bounds must charge Delta or
+    restrict local work. A rank that stays O~(T^2 + T D sqrt p) would be an unexpected
+    structural result worth its own note. Neither outcome is an attack-cost claim, because
+    the attack spends exponential local work.
 best_measured: null
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/ecdlp-leads-desk-20261104/low-degree-desk.md
+  note: step (a) desk note; H1 false under full rank, H1' proved, Kohel-Shparlinski verified
+- repo: crypto-autoresearcher
+  path: docs/reports/ecdlp-leads-desk-20261104/lowdeg_rank_check.json
+  note: exact evaluation-matrix ranks at p = 101 and 211 (derivation check)
 - repo: crypto-autoresearcher
   path: docs/reports/ecdlp-exotic-scouting-20261101/README.md
   note: scouting note with conjecture H1 and its failure mode
@@ -68,4 +87,4 @@ forecloses:
 - coordinate oracle that the generic group model cannot simulate
 areas:
 - ECDLP
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-04'
