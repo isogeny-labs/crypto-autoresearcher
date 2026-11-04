@@ -11,6 +11,19 @@ spec=importlib.util.spec_from_file_location('fixed_panel_metrics',Path(__file__)
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 
 
+def test_source_budget_metrics_keep_prefix_and_shared_cost_boundaries(monkeypatch):
+    cells=[dict(cell_id=f'p{p}-i{i}',arm=a,prefix=b,scope=s,verified=True,status='verified',base_columns=16,base_rank=0,base_nullity=16,base_rank_after_target_cancellation=0,target_base_rank_gain=0,single_targets=0,joint_targets=0,early_joint_targets=0,construction_scalar_multiplications=b,construction_cache_hits=0,construction_field_multiplications=b*100,construction_group_additions=b*10,prerequisite_scalar_multiplications=64,source_queries=b*(16 if p==8191 else 32)*2)
+        for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for b in (0,8,16,24,32,48,64,96,128) for s in ('relations','anchors')]
+    data=dict(panel_complete=True,cells=cells,physical_work=dict(source_queries=98304,target_queries=1536,pair_entries=4928))
+    def read(value):
+        monkeypatch.setattr(M,'show',lambda ref,path:json.dumps(value));stream=io.StringIO()
+        with contextlib.redirect_stdout(stream):M.prime_field_source_budget_panel('committed-ref','2026-11-04')
+        return [json.loads(v) for v in stream.getvalue().splitlines()]
+    assert len(read(data))==1731
+    for change in (lambda v:v['cells'].pop(),lambda v:v['cells'][0].update(construction_cache_hits=1),lambda v:v['cells'][1].update(prerequisite_scalar_multiplications=0),lambda v:v['cells'][2].update(source_queries=999),lambda v:v['physical_work'].update(source_queries=98304*9)):
+        bad=copy.deepcopy(data);change(bad);assert read(bad)==[]
+
+
 def test_source_control_rejects_incomplete_or_inflated_rank_and_physical_counts(monkeypatch):
     cells=[dict(cell_id=f'p{p}-i{i}',arm=a,prefix=n,scope=s,verified=True,status='verified',base_columns=16,base_rank=2,base_nullity=14,anchor_gain=1,target_base_rank_gain=1,base_rank_after_target_cancellation=3,single_targets=0,joint_targets=0,early_joint_targets=0)
            for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for n in (0,16,64) for s in ('relations','anchors')]
