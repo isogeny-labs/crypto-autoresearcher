@@ -125,6 +125,28 @@ class RoundTripTests(unittest.TestCase):
         self.assertEqual(r.returncode, 3)
         self.assertIn("not the keyring key", r.stderr)
 
+    def test_attestation_path_shorthand_and_immutable_legacy_record(self):
+        artifact = self.repo / "artifact.txt"
+        artifact.write_text("producer observation, no independent signature\n")
+        made = run(["claim", "new", "--kind", "statement", "--statement", "scoped observation",
+                    "--proof", "attestation:artifact.txt"], self.repo)
+        self.assertEqual(made.returncode, 0, made.stderr)
+        path = self.repo / made.stdout.strip()
+        claim = json.loads(path.read_text())
+        self.assertEqual(claim["proofs"][0]["subject"],
+                         {"path": "artifact.txt", "sha256": pcc.sha256_file(artifact)})
+        checked = run(["verify", claim["id"], "--json"], self.repo)
+        self.assertEqual(checked.returncode, 2, checked.stdout + checked.stderr)
+        self.assertEqual(json.loads(checked.stdout)["verdict"], "not_covered")
+        legacy = json.loads(path.read_text())
+        legacy["proofs"][0].update(legacy["proofs"][0].pop("subject"))
+        verdict = pcc.verify_claim(legacy, self.repo, pcc.load_keyring(self.repo / pcc.KEYRING_PATH))
+        self.assertEqual(verdict["verdict"], "not_covered", verdict)
+        self.assertEqual(json.loads(path.read_text()), claim)
+        artifact.write_text("edited artifact\n")
+        bad = pcc.verify_claim(legacy, self.repo, pcc.load_keyring(self.repo / pcc.KEYRING_PATH))
+        self.assertEqual(bad["verdict"], "fail", bad)
+
     def test_ledger_prefix_against_base(self):
         cid = self.make_solve()
         self.commit("claim")
