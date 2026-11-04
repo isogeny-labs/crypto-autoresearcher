@@ -68,7 +68,7 @@ Lead: `LEAD-EXO-weak-class-instrument-calibration`. Protocol `protocol.json`, WE
 == Consequences
 <consequences>
 - I2 and I3: scope notes (blind to Smart- and MOV-weak classes).
-- I1: rerun with a calibrated A/A gate. The overdispersion should be measured directly with many draws per curve.
+- I1: #strong[rerun done] (`../weakclass-i1-20261104`): with a calibrated A/A gate on fresh curves, I1 is valid and BLIND to all three classes, and the overdispersion is not confirmed (CALIBRATED, 11 of 90 curves extreme, p \= 0.29). The j \= 0 shift above did not replicate.
 - Not a cost claim. BLIND does not mean a class is not weak.
 
 == Deviations
