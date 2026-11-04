@@ -112,3 +112,25 @@ observed, and the aggregate construction phase prevents a complete per-arm
 cost ratio. New holdouts test transfer; a separately controlled base-geometry
 study remains available afterward. No claim that bounded collision diagnostics
 exclude every alternative explanation. Status remains investigating.
+
+2026-11-04, fresh holdout continuation: [A6](../research/prime_field_a6_execution_20261104/RESULTS.md),
+run a6-fresh-holdouts-97bb80, selected four new coefficient curves and 32 targets
+after prospective freeze, excluding the four A4 pairs before eligibility work.
+All 96 scope observations and separate complete recipe/query/kernel/certificate
+checks passed. Hash2 reaches full rank on all four new bases. Eight distinct
+targets are identified with base uncertainty remaining in the relation-only
+scope (14 repeated schedule records). A further prefix16 explicit-anchor target
+has the registered alternate explanation [53]Q=-[8]P and stays separate. On
+p65537-i0/hash0, joint rows recover five targets versus two from
+isolated natural rows; target cancellation leaves rank 30/31. The construction
+phases now separately meter each arm's 64 public source scalars: hashed schedules
+require more primitive arithmetic than the small window, with original-window
+anchor and shared table prerequisites still charged. The v9 database preserves
+all earlier rows and traces. Four small rule-selected curves do not establish
+a general coverage law.
+
+The fresh-holdout and separate-construction-cost tests above are now completed.
+The next control is a matched source-budget sweep with single-row versus joint
+target recovery, fixed original columns, explicit anchors and finer construction
+increments. Base geometry and broader transfer remain separate open questions.
+Status remains investigating; no old run or scientific status is rewritten.

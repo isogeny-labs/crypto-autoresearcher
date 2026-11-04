@@ -41,6 +41,15 @@ def main():
                     recovered.append(r)
                     if record['base_rank_after_target_cancellation']<record['base']['columns']:early.append(r)
     distinct=len({(v['cell_id'],v['target_index']) for v in recovered});early_distinct=len({(v['cell_id'],v['target_index']) for v in early})
+    all_scope_early=[]
+    for cid in ids:
+        d=native[cid]
+        for record in d['prefixes']:
+            if record['base_rank_after_target_cancellation']>=record['base']['columns']:continue
+            for target in record['joint_recoveries']:
+                if target['identifiable']:
+                    all_scope_early.append(dict(cell_id=cid,scope=record['scope'],arm=record['arm'],prefix=record['prefix'],target_index=target['target_index'],scalar=target['scalar'],base_rank=record['base']['rank'],base_rank_after_target_cancellation=record['base_rank_after_target_cancellation'],base_columns=record['base']['columns'],collision_diagnostics=d['arms'][record['arm']]['collision_diagnostics'][target['target_index']]))
+    all_scope_distinct=len({(v['cell_id'],v['target_index']) for v in all_scope_early})
     costs=analysis['per_arm_costs'];cost_table=[];fig,axes=plt.subplots(1,2,figsize=(8.7,2.8))
     for ci,cid in enumerate(ids):
         values=[next(v for v in costs if v['cell_id']==cid and v['arm']==arm) for arm in arms]
@@ -51,7 +60,7 @@ def main():
         ax.set_xticks(range(4),arms);ax.set_ylabel('construction field multiplications');ax.legend(fontsize=7);ax.spines[['top','right']].set_visible(False)
     fig.tight_layout();fig.savefig(a.out/'construction.svg');plt.close(fig)
     for p in a.out.glob('*.svg'):p.write_text('\n'.join(v.rstrip() for v in p.read_text().splitlines())+'\n')
-    data=dict(run=a.run.name,cells=cells,full_prefix_summary=summary,cost_table=cost_table,recoveries=recovered,deficient_base_recoveries=early,distinct_recovered_targets=distinct,distinct_deficient_base_targets=early_distinct)
+    data=dict(run=a.run.name,cells=cells,full_prefix_summary=summary,cost_table=cost_table,recoveries=recovered,deficient_base_recoveries=early,distinct_recovered_targets=distinct,distinct_deficient_base_targets=early_distinct,all_scope_deficient_base_recoveries=all_scope_early,all_scope_distinct_deficient_base_targets=all_scope_distinct)
     (a.out/'plotted-data.json').write_text(json.dumps(data,indent=2)+'\n')
     fixtures='\n'.join('- '+c['id']+': p='+str(c['fixture']['p'])+', a='+str(c['fixture']['a'])+', b='+str(c['fixture']['b'])+', r='+str(c['fixture']['r'])+', native atoms='+str(len(c['fixture']['factor_base']))+', U='+str(c['projection']['U'])+'. EC1 '+c['fixture']['ec1']['curve_uid']+'.' for c in generated['cells'])
     text=f'''#set page(paper:"a4",margin:16mm)
@@ -88,6 +97,8 @@ Across the retained relation-only prefix records, {distinct} distinct targets ar
 {table([[v['cell_id'],v['arm'],v['prefix'],v['target_index'],v['scalar'],str(v['base_rank'])+'/'+str(v['base_columns']),v['bounded_matches']] for v in early[:24]])}
 )
 Display rule: first 24 retained deficient-base records in fixed fixture/arm/prefix/target order; all records and full misses are in plotted-data.json and the raw panel. Every reported scalar carries vN=0 or target-unit row weights, RHS and independently checked [k]P=Q. Target scalar labels never enter generation or solver inputs. The separately retained t=1..64 public-multiple diagnostic distinguishes original/scheduled source membership and signed base coincidences. A bounded nonmatch excludes only those finite coincidences.
+
+Across both scopes, {all_scope_distinct} distinct targets are identified while base uncertainty remains. The extra case is p8191-i0/hash2/target5 at prefix16 in the explicit-anchor scope: rank10 becomes11 of15 after inserting the public atom10 equation -z10=7192 (mod8101). Its scalar7948 is checked publicly. All64schedule points were constructed and known at this prefix, so this is not a cold16source construction. The registered diagnostic also records [53]Q=-[8]P, an alternate public explanation; this extra case is kept separate from the eight relation-only targets. The original report directory remains a valid relation-only summary; this expanded report adds scope accounting without changing native data.
 
 The separate implementation reconstructs all curve/exclusion/EC1/base/projection/target recipes, the full 88,320 signed-triple census once across four curves, all pair and source/target queries, explicit anchors, affine consistency/ranks/full kernels, union and outside-target cancellation ranks, carried weights and public recovery equations. Counter conservation and 64-call construction checks do not independently audit every primitive call. This is separate implementation checking, not staffed scientific review.
 
