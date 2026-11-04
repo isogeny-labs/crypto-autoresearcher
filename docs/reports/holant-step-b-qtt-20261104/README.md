@@ -57,11 +57,16 @@ All 1530 matrices were computed (exit 0, `run.log`). Applying the frozen `analyz
 * **Verdict: NULL.** 9 of 9 curves with L ≥ 8 lie inside the null's central 90%. Both validity checks pass:
   LOG is far below the null minimum on every curve, and the A/A median differences are 0. From
   L = 8 onwards, X and the null both sit at the rank ceiling 2^L. The secondary parameter count
-  Σ log2 rank also equals its maximum L² (64, 81, 100 bits) for X and every null draw.
-* The positive control shows the detector works: the discrete-log labelling has
-  rank 2.6–9.4 times below the ceiling (64/25 at p = 61 up to 1024/109 at p = 1021).
-* At L = 6 one curve has X = 48 against a null median of 59 (one-sided p = 0.05). Sizes below 8
-  are outside the decision rule by design. At larger sizes the effect is absent.
+  Σ log2 rank equals its maximum L² (64, 81, 100 bits) for X on every curve. Null draws reach it
+  or fall short by under 0.03 bits (118 of 891 draws at L ≥ 8 fall short; corrected after validation, F1).
+* The positive control shows that the detector sees a labelling-induced reduction: the discrete-log labelling has
+  rank 2.6–9.4 times below the ceiling (64/25 at p = 61 up to 1024/109 at p = 1021). Part of this margin is generic. In the validator's
+  exploratory run, packing the E-support into the low indices in random order already gives
+  2^(L-1). The discrete-log order adds a further factor of about 2.6–4.6.
+* At L = 6 one curve has X = 48 against a null median of 59 (one-sided p = 0.05). That curve has
+  #E = p = 61, so it is **anomalous**, the class where Smart's attack makes the DLP easy. Sizes below 8
+  are outside the decision rule by design, and one curve is not evidence, but it suggests a follow-up:
+  QTT ranks of M on anomalous curves against ordinary curves of the same size.
 
 ## Post-data observations (not preregistered)
 
@@ -70,11 +75,13 @@ All 1530 matrices were computed (exit 0, `run.log`). Applying the frozen `analyz
    cannot change that rank, so X, LOG and every null draw are identical there. This is why
    `verdict_blocked.json` reports INVALID_CONTROLS. It is a defect in the protocol's metric choice,
    not a finding about M.
-2. **Even the ideal labelling has rank of order √p.** LOG r_max grows from 25 to about 115 between p = 61 and
-   p = 1021, roughly 3.6√p. In LOG order M is Toeplitz-plus-Hankel with about 2|FB| ≈ 2√p
-   diagonals whose positions are effectively random, so its QTT rank grows with |FB|. If some
-   labelling were as good as knowing the logarithms, a QTT contraction would still carry rank
-   of order √p, the same scale as rho. This bounds what any labelling-based route through this network can gain.
+2. **Interpretation: the discrete-log labelling still has rank of order √p.** LOG r_max / √p is
+   2.2–3.8 across sizes (3.4–3.8 at p = 1021). In LOG order M is Toeplitz-plus-Hankel. In the
+   validator's exploratory |FB| sweep at p = 509, the rank saturates near 3.5√p rather than growing
+   with |FB|. Only three labellings were measured and no lower bound over all labellings is proved,
+   so this does **not** bound every labelling route. It shows that the labelling that knows the
+   logarithms is not low-rank in this format. Comparing a rank with rho's operation count is an
+   interpretation, not a priced comparison.
 
 ## Amendment A1 (filed 2026-11-04, after the data; does not affect the verdict)
 
@@ -85,14 +92,18 @@ from two encoding errors in the frozen protocol, found only when exporting:
 - The run script derives seeds as sha256(protocol_sha | tag | L | curve | draw), as the protocol's
   `seed_derivation.note` states. The checker's seed table uses its own formula.
 
-The run executed exactly the frozen script (hash-checked), and every seed is reproducible.
+The export also has `analysis.script` and its provenance fields (`source`, `host`, versions) empty, and it
+  lists an intermediate `rows_compact.jsonl` that was not kept. It is derived from `rows.jsonl` by the
+  flattening shown in the commit history. The run executed exactly the frozen script (hash-checked), and the independent
+  validator's rerun on Python 3.13 / NumPy 2.5.3 reproduced all 1530 rows byte for byte (`VALIDATION-review.md`).
 `protocol.json` is left unchanged, because amendments are inside the freeze hash. A follow-up protocol
 should encode null draws as replicates and use the checker's `derive_seed`.
 
 ## Deviations
 
 * The resume checkpoint was not pushed to S3, because the container has no upload token. With the
-  owner's approval, the pushed branch served as the resume record.
+  owner's approval, given in the session on 2026-11-04 (https://claude.ai/code/session_01AXUKfVusG4Typ9N2Tj6dYw),
+  the pushed branch served as the resume record.
 * `rows.jsonl` (569 KB) and `export.json` (1.6 MB) are kept as gzip files. The session cannot
   write to the artifact store, and the compressed files are under the 64 KiB threshold.
   Uncompressed hashes are in `data.sha256`.
@@ -104,6 +115,12 @@ form it gives NULL at p ≤ 2^10, and even an oracle labelling caps the rank at 
 row's discriminator, the lead becomes `exhausted_at_scale` for the QTT measure at
 p ≤ 2^10. It reopens only for a basis or labelling family whose description grows sub-polynomially in p
 and gives rank below √p. The positive control shows that even the discrete-log labelling does not.
+
+## Independent validation
+
+`VALIDATION-review.md` is a Sonnet validator's review. Hashes, the decision rule (210 of 210 verdict fields),
+six exact spot replays, the blocked-metric diagnosis and the invariance check are all confirmed. Its F1
+correction is applied above. F2 and F3 are folded into the wording, and F4 and F5 into Amendment A1.
 
 ## Reproduce
 
