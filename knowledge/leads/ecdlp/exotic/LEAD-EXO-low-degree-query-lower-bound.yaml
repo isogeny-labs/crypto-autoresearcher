@@ -39,21 +39,30 @@ mechanism: >-
 disposition: open_next_step
 next_action:
   step: >-
-    Replace the planned bias check, which cannot refute H1 at t = 2. Compute exactly the rank
-    r(t, D, b) of the evaluation matrix of degree-<=D monomials on the N points of
-    ([b_1]R, ..., [b_t]R), for p from 2^8 to 2^14, with (t, D) chosen so that C(2t+D, D)/N
-    spans [1/4, 4]. Use random pairwise-coprime b_i and arithmetic-progression b_i. Controls:
-    shifts b_i = 1 (rank <= 2Dt + 1), a uniformly random point set (expected min(N, #monomials)),
-    and the multiplicative analogue (full rank, proved). Report the attack's local work
-    (about N^omega field operations).
+    (a) Done 2026-11-04: desk step (report ecdlp-leads-desk-20261104). (b) Done 2026-11-04 (report
+    lowdeg-rank-20261104, frozen protocol LOWDEG-RANK-20261104): HOLDS, with valid controls. Random
+    multipliers give full rank on every candidate log once the monomials number about twice the
+    candidates, in 39 of 39 decisive cells at p = 251 to 2039, so the interpolation attack's
+    condition holds at toy size and H1 as stated is false there. Next, desk only: restate the row
+    to H1' (proved) with a model note. A query bound in this model must charge the pulled-back
+    degree Delta, or charge test description length. Heuristic HD2c (round-2 memo) says a
+    "k in S?" test with |S| about N/2 needs about N/2 monomials, so a plain DL table dominates the
+    attack.
   discriminates: >-
-    Rank near min(N, #monomials - t) for random b_i confirms the attack, and the row is
-    restated to H1' (proved) with a model note that query bounds must charge Delta or
-    restrict local work. A rank that stays O~(T^2 + T D sqrt p) would be an unexpected
-    structural result worth its own note. Neither outcome is an attack-cost claim, because
-    the attack spends exponential local work.
-best_measured: null
+    The rank question is settled at toy size. What stays open is whether any query or
+    description-length bound with Delta in place of D, or with charged local work, is provable.
+    That is a complexity question no GGM argument decides. Short multiplier relations
+    (sum c_i b_i = 0 mod N, |c| <= 2) cause the rank deficits seen below ratio 1.5 (round-2 check D2).
+best_measured: >-
+  full rank in 39 of 39 random-multiplier cells at monomials/candidates about 2, p = 251 to 2039
+  (exact computation, not a cost)
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/lowdeg-rank-20261104/README.md
+  note: step (b) exact rank experiment; verdict HOLDS, controls valid; export passes check-export
+- repo: crypto-autoresearcher
+  path: docs/reports/leads-round2-20261104/checks/d2.json
+  note: short multiplier relations explain the rank deficits (88-90% of random triples exact)
 - repo: crypto-autoresearcher
   path: docs/reports/ecdlp-leads-desk-20261104/low-degree-desk.md
   note: step (a) desk note; H1 false under full rank, H1' proved, Kohel-Shparlinski verified
