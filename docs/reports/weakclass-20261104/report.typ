@@ -63,12 +63,13 @@ Lead: `LEAD-EXO-weak-class-instrument-calibration`. Protocol `protocol.json`, WE
 <descriptive-observations-not-decisions>
 + #strong[I1 versus j \= 0.] The ζ-stable class lies at u \= 0.00, 0.00, 0.00 at L \= 10 and 0.00, 0.05, 0.03 at L \= 14, below its paired ordinary curves. This is the "small downward shift" the memo predicted from fewer independent frequencies, because a ζ-stable log set is closed under multiplication by λ. It is the only class-specific pattern seen. It reflects how the factor base was built, not the DLP’s ease.
 + #strong[I1 versus anomalous and small k.] There is no consistent pattern (u from 0.05 to 1.00 in both classes).
-+ #strong[I1 is overdispersed on ordinary curves.] About 10 of 27 paired ordinary curves fall at or beyond the 5%/95% marks, against about 12% expected if the small-x log set behaved like a random negation-closed set. So at these small sizes (n ≤ 2^14, |F| ≈ 2√n), the character-sum maximum of the small-x set is more variable than the matched null’s. The small-x factor base is exactly negation-closed here (n odd, so no 2-torsion), so this is not a construction artifact. It deserves its own check before I1 nulls are read at small n. See also the H-PSEUDO re-read in this round.
++ #strong[I1 is overdispersed on ordinary curves.] 10 of 27 paired ordinary curves fall at or beyond the 5%/95% marks, against 14.6% expected (3.95 curves; exact rate for 40 draws with mid-ranks), P(X ≥ 10) \= 0.0035, if the small-x log set behaved like a random negation-closed set. So at these small sizes (n ≤ 2^14, |F| ≈ 2√n), the character-sum maximum of the small-x set is more variable than the matched null’s. The small-x factor base is exactly negation-closed here (n odd, so no 2-torsion), so this is not a construction artifact. It deserves its own check before I1 nulls are read at small n. See also the H-PSEUDO re-read in this round.
 
 == Consequences
 <consequences>
 - I2 and I3: scope notes (blind to Smart- and MOV-weak classes).
-- I1: #strong[rerun done] (`../weakclass-i1-20261104`): with a calibrated A/A gate on fresh curves, I1 is valid and BLIND to all three classes, and the overdispersion is not confirmed (CALIBRATED, 11 of 90 curves extreme, p \= 0.29). The j \= 0 shift above did not replicate.
+- I1: #strong[rerun done] (`../weakclass-i1-20261104`). With a calibrated A/A gate on fresh curves, I1 is valid and BLIND to all three classes. The overdispersion was not reproduced on 90 independently picked ordinary curves, but the rerun’s 27 #emph[paired] ordinary curves again sit low. That is an unexplained anomaly; see that report. The j \= 0 cell did not replicate under the cell rule, but the direction partly did.
+- I3 caveat (validation): 8 of the 18 L \= 10 curves have a degenerate QTT null (statistic equal to the null constant, so u \= 0.5 by the tie rule). At p ≈ 2^10 the QTT instrument sits at its rank ceiling for random labellings, so its BLIND verdict has little dynamic range.
 - Not a cost claim. BLIND does not mean a class is not weak.
 
 == Deviations

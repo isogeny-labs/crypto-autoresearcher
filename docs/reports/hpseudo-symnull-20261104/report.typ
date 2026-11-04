@@ -9,7 +9,7 @@
 <h-pseudo-re-read-against-a-negation-matched-null>
 Lead: `LEAD-EXO-dl-character-sum-pseudorandom` (H-PSEUDO). The original run is EXP-ECDLP-1ed445 / RUN-ECDLP-1ed445-001 (EV-ECDLP-f83a17). Protocol `protocol.json`, HPSEUDO-SYMNULL-20261104, was frozen before data (sha256 `cf05250833d8…`, commit f9931a3e).
 
-#strong[Verdict (frozen rule): EXPLAINED, with every control valid.] H-PSEUDO’s recorded constant offset R ≈ 1.28–1.34 is fully accounted for by a null mismatch. The original run keys points by (x, y), so the small-x factor base is closed under negation and its character sums are real. The null was an asymmetric uniform subset. Against a negation-closed null, R is 1 within about 0.04 at every rung.
+#strong[Verdict (frozen rule): EXPLAINED, with every control valid.] H-PSEUDO’s recorded constant offset R ≈ 1.28–1.34 is fully accounted for by a null mismatch. The original run keys points by (x, y), so the small-x factor base is closed under negation and its character sums are real. The null was an asymmetric uniform subset. Against a negation-closed null, R is #strong[consistent with 1]. The upper 95% bound is 1.09 at 2^20 and 1.02 at 2^22 (out of sample), and the pooled 56 curves give 1.005 ± 0.008. The statistic is the B \= 512 maximum character sum of the small-x set only, and the frozen rule is a non-rejection rule, so a residual of up to about +9% at 2^20 is not excluded. (Wording corrected after independent validation, `VALIDATION-round3.md`.)
 
 == Design
 <design>
@@ -29,27 +29,27 @@ Lead: `LEAD-EXO-dl-character-sum-pseudorandom` (H-PSEUDO). The original run is E
   columns: 5,
   align: (col, row) => (left,right,left,left,right,).at(col),
   inset: 6pt,
-  [rung], [recorded R (asymmetric null)], [R\_sym, calibration (8 curves) \[95% CI\]], [R\_sym, out of sample \[95% CI\]], [mean u\_sym],
+  [rung], [recorded R (asymmetric null)], [R\_sym, calibration (8 curves) \[95% CI\]], [R\_sym, out of sample \[95% CI\]], [mean u\_sym: calibration / out of sample],
   [20],
   [1.334],
   [1.012 \[0.963, 1.061\]],
   [1.040 \[0.999, 1.092\] (n\=12)],
-  [0.62],
+  [0.55 / 0.66],
   [22],
   [1.280],
   [0.987 \[0.954, 1.032\]],
   [0.993 \[0.972, 1.017\] (n\=12)],
-  [0.42],
+  [0.36 / 0.47],
   [24],
   [1.275],
   [0.974 \[0.948, 1.000\]],
   [–],
-  [0.35],
+  [0.35 / –],
   [26],
   [1.342],
   [1.009 \[0.990, 1.036\]],
   [–],
-  [0.57],
+  [0.57 / –],
 )
 ]
 
@@ -60,7 +60,7 @@ Lead: `LEAD-EXO-dl-character-sum-pseudorandom` (H-PSEUDO). The original run is E
 )
 
 - #strong[Validity, all passed.]
-  - Replication: the asymmetric null reproduces the recorded C\_null\_mean to within 0.9% at every rung.
+  - Replication: the asymmetric null reproduces the recorded C\_null\_mean to within 0.94% at every rung.
   - Positive control: the planted AP is 3.5–4.0× the rung’s largest symmetric draw.
   - Replay: all 18 replayed curves reproduce the recorded C\_EC within 1e-5, with negation-closed factor bases.
   - A/A: within 2%.
@@ -69,7 +69,7 @@ Lead: `LEAD-EXO-dl-character-sum-pseudorandom` (H-PSEUDO). The original run is E
 
 == Consequence
 <consequence>
-The H-PSEUDO row’s `best_measured` (R ≈ 1.28–1.34) and its framing "the curve behaves like a random set up to a constant" are corrected. Against a matched null, the small-x factor base #strong[is] a random negation-closed set at 2#super[20–2]26, with no constant offset, within about ±0.04. The disposition `exhausted_at_scale` is unchanged and, if anything, strengthened. The revisit trigger should name the matched null. Any other comparison of a negation-closed factor base against an asymmetric null needs the same correction.
+The H-PSEUDO row’s `best_measured` (R ≈ 1.28–1.34) and its framing "the curve behaves like a random set up to a constant" are corrected. Against a matched null, the recorded excess disappears. The B \= 512 character-sum maximum of the small-x set is consistent with a random negation-closed set at 2#super[20–2]26 (upper bounds above). The 2^24 calibration interval \[0.948, 0.9995\] lies slightly below 1. The disposition `exhausted_at_scale` is unchanged. The revisit trigger should name the matched null. Any other comparison of a negation-closed factor base against an asymmetric null needs the same correction.
 
 == Deviations
 <deviations>
