@@ -545,12 +545,11 @@ On Cursor Cloud, follow the binding [environment instructions](docs/agent-contra
 ## Progress metrics (daily lab report)
 
 ## Resume checkpoints in S3 before every run
-A session can end at any moment (token or usage limits, a crash, a reclaimed
-container), and a worktree that only it knew about is then lost. So **before
-any experiment run starts, the leads, the spec and everything needed to
+A session can end at any moment and a worktree only it knew about is then
+lost. So **before any experiment run starts, the leads, the spec and everything needed to
 resume the effort are checked into S3**, and kept current while it runs.
 - `scripts/checkpoint.sh init` writes `.resume/RESUME.md` (gitignored). Fill
-  every section for a reader who has none of this conversation: goal, the
+  every section for a reader without this conversation: goal, the
   lead or hypothesis and where it came from, the spec or protocol path with
   frozen inputs, the current state with measured numbers and where raw output
   lives, next steps with exact commands, every run in flight (command, host,
@@ -572,21 +571,13 @@ resume the effort are checked into S3**, and kept current while it runs.
   that is not an experiment run may opt out with `CHECKPOINT_SKIP=<reason>`.
   **Other runtimes (Codex)** run `scripts/checkpoint.sh gate` before
   launching and do not launch if it fails.
-- Claude Code sessions have no AWS credentials, so the script works from a
-  token (tried first; an AWS profile is only a fallback). The token is a
-  presigned POST policy that can only write under `checkpoints/`, plus a
-  presigned link to an index of recent checkpoints, so push, `list`, `share`
-  and `restore` all work without credentials. A job on the owner's Mac
-  re-mints it every 15 minutes (7-day lifetime) into
-  `~/.config/checkpoint/upload-token`, where the script finds it; a session
-  elsewhere is given it as `CHECKPOINT_UPLOAD_TOKEN`. The bucket host is in
-  this repo's sandbox network allowlist (`.claude/settings.json`). It is a bearer credential: never
-  commit it or put it in a PR, report or task card.
+- Sessions without AWS credentials use the presigned upload token
+  (`CHECKPOINT_UPLOAD_TOKEN` or `~/.config/checkpoint/upload-token`; details in
+  the script header). It is a bearer credential: never commit it or put it in
+  a PR, report or task card.
 - To resume: `scripts/checkpoint.sh list` shows the latest checkpoint per
-  branch (from the index, up to 15 minutes behind);
-  `scripts/checkpoint.sh restore <repo>/<branch>[/<stamp>]` rebuilds the
-  worktree next to this checkout and puts `RESUME.md` in it. `share` prints a
-  presigned URL that `restore <url>` accepts anywhere.
+  branch; `restore <repo>/<branch>[/<stamp>]` rebuilds the worktree with
+  `RESUME.md` in it; `share` prints a presigned URL that `restore` accepts.
 A checkpoint is a safety net, not the record: the spec, protocol and results
 still land in a PR under the rules above. Switching runtimes:
 [docs/runtime-relay.md](docs/runtime-relay.md).
@@ -594,39 +585,15 @@ When changing tracked results, follow the binding [daily progress-metrics rule](
 
 ## Benchmark records: data in S3, metadata in Git, one progress report
 
-Owner's rule, 2026-11-04; mechanics in
-[docs/benchmark-records.md](docs/benchmark-records.md) (shared, byte-identical).
-**Every benchmark run leaves a `bench.record/v1` record in Git and its raw
-data in S3, and regenerates the progress report, in the same PR.** The record
-(`tools/benchrec.py`; `docs/benchmarks/records/`) names the commit, host, command,
-every raw file by SHA-256 and content-addressed S3 location
-(`s3://setec-astronomy-artifacts/store/sha256/<aa>/<hex>`, or the prefix the
-run already wrote to), and every measured value in the shared unit vocabulary
-(`S`, `gae`, `log2_gae`, `ns_per_gae`, `ir`, `ir_per_op`, `cycles_per_op`,
-`ipc`, `wall_s`, `cpu_s`, `ops_per_s`, `fmul`, `ratio`, `percent`, `count`,
-`bytes`); any other unit is rejected. Records are written once; a rerun, an
-invalid run and a censored run each get their own record.
-
-The progress report (`docs/benchmarks/progress/`: `progress.json`, `PROGRESS.md`,
-`progress.svg`, `progress.pdf`) is generated only from the records and always
-states progress the same way: gain versus the first record and versus the
-previous record, in percent within one series (same problem, metric and
-unit), and value over reference (the distance remaining to the matched rho,
-1.0 = parity). The headline panel is in `S`; every other unit has its own
-panel and is never mixed in. Derived numbers are labelled derived; a record
-is not a validated result and does not move the leaderboard, `benchmarks/`
-rows or `VALIDATION.json`, which keep their own gates.
-
-**Enforced.** Claude Code (`.claude/hooks/benchrec-hook.sh`) refuses a
-benchmark launcher (`ecbench`, `perfindex`, `perf_ipc`, `perf stat`,
-`callgrind`, `hyperfine`, `cargo bench`, `isolated_bench`, `tools/profile.sh`,
-`task_card.py run`, `autolab`, `icms`, `scripts/*bench*`, `make bench`) that
-does not run as `tools/benchrec.py run <record> -- ...` or carry
-`BENCHREC=<record>`, and refuses `git push` and `gh pr create` while
-`tools/benchrec.py gate` fails (a record opened here and not closed, an
-incomplete record, a stale progress report); `BENCHREC_SKIP=<reason>` opts a
-command that is not a benchmark out. Other runtimes run `python3
-tools/benchrec.py gate` before pushing. The `bench-records` workflow fails a
-PR that adds a `docs/benchmarks/` entry without a record naming it, carries a
-malformed, open or edited record, cites a raw object that is not in S3, or
-leaves the progress report stale.
+Owner's rule, 2026-11-04; mechanics and the unit table in
+[docs/benchmark-records.md](docs/benchmark-records.md). Every benchmark run
+leaves a write-once `bench.record/v1` record (`tools/benchrec.py`,
+`docs/benchmarks/records/`) in the same PR: commit, host, command, raw files
+by SHA-256 and S3 location, metrics in the shared units only. The progress
+report (`docs/benchmarks/progress/`) is regenerated from the records and
+always states gain vs first and vs previous record in percent within one
+series, and value over matched reference, headline unit `S`. Enforced: the
+Claude Code hook refuses unrecorded benchmark launchers and pushes
+(`BENCHREC_SKIP=<reason>` for non-benchmarks), other runtimes run
+`tools/benchrec.py gate` before pushing, and the `bench-records` check fails
+the PR.
