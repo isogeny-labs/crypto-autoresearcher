@@ -20,21 +20,20 @@ mechanism: 'LEAD-EXO-dl-character-sum-pseudorandom tests linear phases e(k l / N
   easy-DLP curves.'
 disposition: open_next_step
 next_action:
-  step: 'Done at N ~ 2^12-2^14 (2026-11-04, report quadphase-20261104): NULL with valid controls. Remaining,
-    optional: the 2^16 curve sat above its 5 null draws (chance 1/6); a 40-draw rerun at 2^16 settles
-    it (about 4.5 core-hours). Original plan: at N in {2^14, 2^16}, 3 curves each with the frozen small-x
-    factor base rule, compute Q = max over (alpha, beta) of |sum_l f(l) e((alpha l^2 + beta l)/N)| / sqrt(B)
-    by one FFT per alpha. Use 30 negation-closed random sets per size as the null (the symmetric-null
-    lesson of check D1, report leads-round2-20261104). The positive control is a planted negation-closed
-    set {l : alpha0 l^2 mod N in [0, B)}, which must spike at alpha0.'
+  step: 'Done at N ~ 2^12-2^14 (QUADPHASE-20261104) and at one 2^16 curve (QUADPHASE-2P16-20261104): NULL
+    with valid controls. Remaining, optional: calibrate Q on weak curve classes, and test weaker or multi-peak
+    quadratic structure (the planted control is full-coherence only).'
   discriminates: Run as amended in QUADPHASE-20261104 (sizes 2^12-2^14, 40 negation-closed null draws
     per curve). NULL iff Q_EC is inside the null's 5-95% band on >= 8 of 9 decisive curves (met); SIGNAL
     iff above the null maximum on 2 of 3 curves at 2 of 3 sizes (review-breakthrough). The test sees coherent
     single-phase leakage of about 0.3 of the set or more; weaker or multi-peak quadratic structure is
     untested. The memo's original 2^14/2^16 "5 of 6" rule was not run.
-best_measured: NULL at N ~ 2^12-2^14 (9/9 decisive curves inside the negation-closed null's 90%; planted
-  control 3.8-5.2x the null max); QUADPHASE-20261104
+best_measured: NULL at N ~ 2^12-2^14 (9/9 decisive curves inside the negation-closed null's 90%) and at
+  2^16 (one curve at the null median against 40 draws); QUADPHASE-20261104, QUADPHASE-2P16-20261104
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/quadphase-2p16-20261104/README.md
+  note: '2^16 settle: Q_EC at the null median (u 0.50) against 40 draws'
 - repo: crypto-autoresearcher
   path: docs/reports/paired-anomaly-20261104/README.md
   note: 'instrument scope: weak classes not detected; zeta-stable FB detected; paired anomaly not replicated'
