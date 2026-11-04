@@ -20,19 +20,29 @@ mechanism: >-
 disposition: open_next_step
 next_action:
   step: >-
-    Freeze a protocol for p in [2^10, 2^14], 3 curves per class per size, each instrument with its
-    own null, and record per (instrument, class, size) whether the class falls inside the null's
-    5-95% band. Expected blind (prior about 85%).
+    Done 2026-11-04 (frozen protocols WEAKCLASS-20261104 and WEAKCLASS-I1-20261104; reports
+    weakclass-20261104 and weakclass-i1-20261104). With valid controls, no instrument detects
+    anomalous, small-embedding-degree (k = 3-6) or j = 0 (zeta-stable factor base) curves under the
+    cell rule (3 curves per class per size, all 3 beyond 5-95%). Coverage: the character sum (after a
+    calibrated A/A rerun) and the m = 2 log-sumset yield at p <= 2^14; the QTT complexity of M at
+    p ~ 2^10 only, where it is rank-saturated (8 of 18 nulls degenerate). The I1 null is calibrated on
+    90 independently picked ordinary curves. Open: the paired ordinary curves sit low on I1 (mean u
+    0.28, p ~ 1e-4), which is unexplained and not a prime effect. Next: explain that anomaly, then add
+    the scope note "no detection of Smart- or MOV-weak classes at these sizes" to the rows whose
+    NULLs rest on these instruments.
   discriminates: >-
-    If blind, each exhausted_at_scale row resting on instruments (i), (ii) or (iv) gets a scope
-    note: "blind to Smart- and MOV-weak classes; a null excludes only structure of this statistic's
-    type". That is scoping, not closure. If an instrument separates A or B from D in the same
-    direction at 2 or more sizes, it is the first with natural dynamic range, and its signal is
-    explained before any ordinary-curve null from it is read.
+    A NULL from these instruments excludes only structure of the statistic's own type, not an
+    easy DLP. An instrument that detects a weak class would be the first with natural dynamic
+    range. None does at these sizes.
 best_measured: >-
-  QTT x anomalous measured: no difference from ordinary curves at p <= 127 (report
-  anomalous-qtt-20261104)
+  no detection in 9 cells (3 instruments x 3 weak classes), controls valid; p <= 2^14 (QTT p ~ 2^10)
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/weakclass-20261104/README.md
+  note: I2 and I3 BLIND with valid controls; I1 INVALID (miscalibrated A/A gate)
+- repo: crypto-autoresearcher
+  path: docs/reports/weakclass-i1-20261104/README.md
+  note: I1 rerun with a calibrated gate; BLIND to all classes; overdispersion not confirmed
 - repo: crypto-autoresearcher
   path: docs/reports/leads-round2-20261104/new-leads-memo.md
   note: proposal N1, with emulated novelty matches; the real lead_atlas --match gate is recorded in the round-2 report
