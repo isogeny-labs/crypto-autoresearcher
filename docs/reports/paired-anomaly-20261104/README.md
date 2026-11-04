@@ -32,16 +32,19 @@ both procedures draw a and b uniformly in [1, p) under the same acceptance condi
 ## What this changes
 
 1. The paired-curve anomaly is closed as chance. The weak-class cell comparisons can be read against their paired baselines.
-2. **I1 does not see the cryptographically weak classes.** With 36 curves per class there is no shift for anomalous or small-embedding-degree curves.
+2. **I1 does not see the cryptographically weak classes.** With 36 curves per class there is no detected shift for anomalous or small-embedding-degree curves (minimum detectable shift about 0.13 in u at 50% power).
    It **does** see the ζ-stable factor base of the j = 0 class. That reflects how the factor base is built: a log set closed under multiplication by the
    eigenvalue λ has fewer independent frequencies, so its character-sum maximum is lower, as the round-2 memo predicted. It says nothing about how easy the DLP is.
    The 3-curve cell rule of WEAKCLASS-20261104 and WEAKCLASS-I1-20261104 was underpowered to show this.
-3. The scope note for rows resting on I1 is therefore "no detection of Smart- or MOV-weak curves; sensitive to factor-base symmetry (ζ-stable sets sit low)".
+3. The scope note for rows resting on I1 is therefore "no detected shift for Smart- or MOV-weak curves (36 per class, p ≤ 2^14); sensitive to factor-base symmetry (ζ-stable sets sit low)".
 
 ## Deviations
 
 * No S3 checkpoint (no upload token). With the owner's approval, the pushed branch is the resume record.
-* The study ran on 1 core alongside the QUADPHASE 2^16 settle run. Values are exact.
+* The study ran on 1 core alongside the QUADPHASE 2^16 settle run. Values are exact. Environment: Python 3.13.18 and NumPy 2.5.3.
+* **Stale protocol fields.** Some fields were inherited from the WEAKCLASS-I1 template (for example, the null population's `n` reads 40 while 200 draws were run).
+  The frozen script and the `decision_rule` text are what ran. Independent validation (`VALIDATION.md`) replayed all 324 rows bit-exact and recomputed
+  the primary and secondary statistics, so the verdict is unaffected.
 
 ## Reproduce
 
