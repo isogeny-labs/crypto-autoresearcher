@@ -1,423 +1,423 @@
 {
- "schema": "experiment.protocol/v1",
- "protocol_id": "WEAKCLASS-20261104",
- "version": 1,
- "created": "2026-11-04",
- "repository": "crypto-autoresearcher",
- "study_dir": "docs/reports/weakclass-20261104",
- "authors": [
-  "Claude Code session (holant lead, step b)"
- ],
- "links": {
-  "lead": "knowledge/leads/ecdlp/exotic/LEAD-EXO-weak-class-instrument-calibration.yaml",
-  "memo": "docs/reports/leads-round2-20261104/new-leads-memo.md (N1)",
-  "note": "Instrument (iii) of the memo (low-degree rank) is omitted: at full rank it is curve-independent (LOWDEG-RANK-20261104). QTT runs at L = 10 only (cost)."
- },
- "question": "Do the numeric structure instruments (character-sum maximum, m = 2 log-sumset yield, QTT complexity of M) separate curves with an easy DLP (anomalous, small embedding degree) or a known extra symmetry (j = 0 with a zeta-stable factor base) from paired ordinary prime-order curves?",
- "claims": [
-  {
-   "id": "C1",
-   "text": "For each (instrument, class) the table reports DETECTS or BLIND by the preregistered rule.",
-   "class": "comparative",
-   "decided_by": [
-    "C-weak-vs-ordinary"
-   ],
-   "if_supported": "a BLIND cell adds the scope note 'blind to this weak class' to rows resting on that instrument; a DETECTS cell is the first natural dynamic range and must be explained before ordinary-curve nulls from that instrument are read",
-   "if_not_supported": "n/a: the table is descriptive per cell"
-  }
- ],
- "hypotheses": [
-  {
-   "id": "H1",
-   "statement": "All three instruments are blind to anomalous and small-embedding-degree curves; only j = 0 with a zeta-stable factor base may show a shift.",
-   "mechanism": "Smart and MOV weaknesses live in the p-adic formal group and the Weil pairing, which none of these log-order or coordinate-order statistics see; zeta-stability changes the log set by construction",
-   "predictions": [
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "WEAKCLASS-20261104",
+  "version": 1,
+  "created": "2026-11-04",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "docs/reports/weakclass-20261104",
+  "authors": [
+    "Claude Code session (holant lead, step b)"
+  ],
+  "links": {
+    "lead": "knowledge/leads/ecdlp/exotic/LEAD-EXO-weak-class-instrument-calibration.yaml",
+    "memo": "docs/reports/leads-round2-20261104/new-leads-memo.md (N1)",
+    "note": "Instrument (iii) of the memo (low-degree rank) is omitted: at full rank it is curve-independent (LOWDEG-RANK-20261104). QTT runs at L = 10 only (cost)."
+  },
+  "question": "Do the numeric structure instruments (character-sum maximum, m = 2 log-sumset yield, QTT complexity of M) separate curves with an easy DLP (anomalous, small embedding degree) or a known extra symmetry (j = 0 with a zeta-stable factor base) from paired ordinary prime-order curves?",
+  "claims": [
     {
-     "id": "P1",
-     "metric": "u",
-     "direction": "equal_within",
-     "minimum_effect": "no class A or B extreme (all 3 curves beyond 5/95%) at 2 sizes for any instrument",
-     "provenance": {
-      "written_at": "2026-11-04",
-      "data_seen": [
-       {
-        "path": "docs/reports/anomalous-qtt-20261104/README.md",
-        "measured": "QTT x anomalous at p <= 127: NULL (different sizes and statistic set)"
-       }
+      "id": "C1",
+      "text": "For each (instrument, class) the table reports DETECTS or BLIND by the preregistered rule.",
+      "class": "comparative",
+      "decided_by": [
+        "C-weak-vs-ordinary"
       ],
-      "sample_status": "out_of_sample"
-     },
-     "role": "decisive"
+      "if_supported": "a BLIND cell adds the scope note 'blind to this weak class' to rows resting on that instrument; a DETECTS cell is the first natural dynamic range and must be explained before ordinary-curve nulls from that instrument are read",
+      "if_not_supported": "n/a: the table is descriptive per cell"
     }
-   ]
-  }
- ],
- "arms": [
-  {
-   "id": "weak",
-   "role": "candidate",
-   "description": "anomalous (A), small embedding degree (B), j = 0 zeta-stable FB (C)",
-   "instrument": {
-    "repo": "crypto-autoresearcher",
-    "commit": null,
-    "build": [],
-    "binary_sha256": null,
-    "flags": {
-     "script": "docs/reports/weakclass-20261104/weakclass.py",
-     "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
-     "curves": "docs/reports/weakclass-20261104/weak_curves.py",
-     "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
-     "core": "docs/reports/weakclass-20261104/qtt_core.py",
-     "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "All three instruments are blind to anomalous and small-embedding-degree curves; only j = 0 with a zeta-stable factor base may show a shift.",
+      "mechanism": "Smart and MOV weaknesses live in the p-adic formal group and the Weil pairing, which none of these log-order or coordinate-order statistics see; zeta-stability changes the log set by construction",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "u",
+          "direction": "equal_within",
+          "minimum_effect": "no class A or B extreme (all 3 curves beyond 5/95%) at 2 sizes for any instrument",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [
+              {
+                "path": "docs/reports/anomalous-qtt-20261104/README.md",
+                "measured": "QTT x anomalous at p <= 127: NULL (different sizes and statistic set)"
+              }
+            ],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "weak",
+      "role": "candidate",
+      "description": "anomalous (A), small embedding degree (B), j = 0 zeta-stable FB (C)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/weakclass-20261104/weakclass.py",
+          "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
+          "curves": "docs/reports/weakclass-20261104/weak_curves.py",
+          "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
+          "core": "docs/reports/weakclass-20261104/qtt_core.py",
+          "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "classes": [
+          "A",
+          "B",
+          "C"
+        ]
+      }
     },
-    "env": {
-     "OMP_NUM_THREADS": "1"
+    {
+      "id": "ordinary",
+      "role": "reference",
+      "description": "one ordinary prime-order curve paired with each weak curve, same p",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/weakclass-20261104/weakclass.py",
+          "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
+          "curves": "docs/reports/weakclass-20261104/weak_curves.py",
+          "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
+          "core": "docs/reports/weakclass-20261104/qtt_core.py",
+          "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "class": "D"
+      },
+      "same_instrument_as": "weak"
     },
-    "threads": 1
-   },
-   "parameters": {
-    "classes": [
-     "A",
-     "B",
-     "C"
+    {
+      "id": "null",
+      "role": "control_negative",
+      "description": "per curve, 40 negation-closed random log sets (I1, I2) or random relabellings (I3)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/weakclass-20261104/weakclass.py",
+          "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
+          "curves": "docs/reports/weakclass-20261104/weak_curves.py",
+          "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
+          "core": "docs/reports/weakclass-20261104/qtt_core.py",
+          "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "draws": 40
+      },
+      "same_instrument_as": "weak"
+    },
+    {
+      "id": "planted",
+      "role": "control_positive",
+      "description": "negation-closed log-AP set (I1, I2); discrete-log labelling (I3)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/weakclass-20261104/weakclass.py",
+          "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
+          "curves": "docs/reports/weakclass-20261104/weak_curves.py",
+          "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
+          "core": "docs/reports/weakclass-20261104/qtt_core.py",
+          "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {},
+      "same_instrument_as": "weak"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "planted",
+      "expected_detection": "planted u >= 0.95 (I1) or <= 0.05 (I2, I3) on >= 90% of curves",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "null",
+      "null_population": {
+        "description": "negation-closed random log sets of the factor base's size (I1, I2); uniform relabellings of F_p (I3)",
+        "generator": "default_rng(derive_seed(sha,'N_sym'|'N_qtt',instance,draw))",
+        "n": 40,
+        "why_n": "u resolution 1/80; class extreme needs all 3 curves beyond 0.05/0.95",
+        "matched_on": [
+          "curve",
+          "N",
+          "set size",
+          "negation closure",
+          "statistic"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "curve_class",
+        "levels": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "size",
+        "treatment": "crossed",
+        "value": "L = 10, 12, 14 (I3 at 10 only)",
+        "how": "p in [2^(L-1), 2^L)"
+      },
+      {
+        "name": "p",
+        "treatment": "fixed",
+        "value": "paired: each weak curve's ordinary partner shares its p",
+        "how": "pairing removes the field size"
+      },
+      {
+        "name": "curve",
+        "treatment": "randomized",
+        "how": "primes permuted by derive_seed(sha,'pick',L,0); curves by random search; ordinary partners avoid j = 0, 1728, small k, anomaly and used orders"
+      },
+      {
+        "name": "factor_base",
+        "treatment": "fixed",
+        "value": "first 2 isqrt(n) points by (x,y); class C: whole zeta-orbits",
+        "how": "rule in fb_logs"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "exact values, no clock"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-weak-vs-ordinary",
+        "arms": [
+          "weak",
+          "ordinary"
+        ],
+        "differs_in": [
+          "curve_class"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-pos",
+        "arms": [
+          "planted",
+          "null"
+        ],
+        "differs_in": [
+          "curve_class"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "null",
+          "null"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "deterministic FFT values; order cannot change them",
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "derive_seed(protocol_sha, arm, instance, replicate) from tools/experiment_protocol.py"
+    },
+    "instance_sampling": {
+      "rule": "curves picked before any statistic is computed",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "frozen script applies a fixed rule",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 54,
+    "replicates": 40,
+    "warmups": 0,
+    "power": {
+      "method": "other",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": true,
+      "note": "cell rule, not a test: DETECTS needs all 3 curves of a class beyond the 5/95% band at 2 sizes (null probability ~ (0.05)^6 per direction); built to detect large, consistent effects only"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 10,
+      "per_sample_seconds": 2,
+      "threads": 1,
+      "estimated_total_seconds": 3000,
+      "measured_on": "this container: curve picking 0.1-5 s per size; QTT at p ~ 1000 about 2.4 s per matrix"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "u",
+        "name": "within-null percentile per instrument",
+        "unit": "fraction",
+        "kind": "derived",
+        "definition": "mid-rank percentile of the curve's statistic among its 40 null draws",
+        "source": "rows.jsonl I*_u",
+        "formula": "((#<)+0.5(#=))/40",
+        "aggregation": "distribution",
+        "resolution": "1/80",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "FFT maxima"
+    ],
+    "record": [
+      "python_version",
+      "numpy_version",
+      "script_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "instance_type": "Claude Code cloud container (CPU)",
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 21600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed design: 3 sizes x (3 A + 3 B + 3 C + 9 paired D) curves, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "decision_rule": {
+    "text": "Per (instrument, class): extreme at a size iff all 3 class curves have u <= 0.05 (or all >= 0.95) and the 3 paired ordinary curves are not all extreme in that direction. DETECTS iff extreme in one direction at >= 2 sizes (QTT: at L = 10). Else BLIND. An instrument whose positive control is extreme on < 90% of curves, or (I1) whose even/odd null means differ by > 5% on any curve, is INVALID.",
+    "comparison_ids": [
+      "C-weak-vs-ordinary",
+      "C-pos"
+    ],
+    "threshold": "as in text",
+    "statistic": "u per curve",
+    "interval": "null band",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "mean paired u difference",
+    "verdict_vocabulary": [
+      "DETECTS",
+      "BLIND",
+      "INVALID"
     ]
-   }
   },
-  {
-   "id": "ordinary",
-   "role": "reference",
-   "description": "one ordinary prime-order curve paired with each weak curve, same p",
-   "instrument": {
-    "repo": "crypto-autoresearcher",
-    "commit": null,
-    "build": [],
-    "binary_sha256": null,
-    "flags": {
-     "script": "docs/reports/weakclass-20261104/weakclass.py",
-     "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
-     "curves": "docs/reports/weakclass-20261104/weak_curves.py",
-     "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
-     "core": "docs/reports/weakclass-20261104/qtt_core.py",
-     "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+  "analysis_plan": {
+    "script": {
+      "path": "docs/reports/weakclass-20261104/analyze_weakclass.py",
+      "sha256": "f4deef80b8530f8115a06342979861c93335ab44bbbb36c7c0b08747913474cd"
     },
-    "env": {
-     "OMP_NUM_THREADS": "1"
-    },
-    "threads": 1
-   },
-   "parameters": {
-    "class": "D"
-   },
-   "same_instrument_as": "weak"
-  },
-  {
-   "id": "null",
-   "role": "control_negative",
-   "description": "per curve, 40 negation-closed random log sets (I1, I2) or random relabellings (I3)",
-   "instrument": {
-    "repo": "crypto-autoresearcher",
-    "commit": null,
-    "build": [],
-    "binary_sha256": null,
-    "flags": {
-     "script": "docs/reports/weakclass-20261104/weakclass.py",
-     "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
-     "curves": "docs/reports/weakclass-20261104/weak_curves.py",
-     "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
-     "core": "docs/reports/weakclass-20261104/qtt_core.py",
-     "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
-    },
-    "env": {
-     "OMP_NUM_THREADS": "1"
-    },
-    "threads": 1
-   },
-   "parameters": {
-    "draws": 40
-   },
-   "same_instrument_as": "weak"
-  },
-  {
-   "id": "planted",
-   "role": "control_positive",
-   "description": "negation-closed log-AP set (I1, I2); discrete-log labelling (I3)",
-   "instrument": {
-    "repo": "crypto-autoresearcher",
-    "commit": null,
-    "build": [],
-    "binary_sha256": null,
-    "flags": {
-     "script": "docs/reports/weakclass-20261104/weakclass.py",
-     "script_sha256": "ad46671ef721e1a1d6cdad51abd55226cec7afc03a8c971ba876926f7cc7cc01",
-     "curves": "docs/reports/weakclass-20261104/weak_curves.py",
-     "curves_sha256": "5477558ac8fac27d357a3e17ed336c428644417b5d7c9869ea10f1dcfa2d7277",
-     "core": "docs/reports/weakclass-20261104/qtt_core.py",
-     "core_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
-    },
-    "env": {
-     "OMP_NUM_THREADS": "1"
-    },
-    "threads": 1
-   },
-   "parameters": {},
-   "same_instrument_as": "weak"
-  }
- ],
- "controls": {
-  "aa": {
-   "present": true,
-   "comparison": "C-aa",
-   "not_applicable_reason": null
-  },
-  "positive": {
-   "present": true,
-   "arm": "planted",
-   "expected_detection": "planted u >= 0.95 (I1) or <= 0.05 (I2, I3) on >= 90% of curves",
-   "not_applicable_reason": null
-  },
-  "negative": {
-   "present": true,
-   "arm": "null",
-   "null_population": {
-    "description": "negation-closed random log sets of the factor base's size (I1, I2); uniform relabellings of F_p (I3)",
-    "generator": "default_rng(derive_seed(sha,'N_sym'|'N_qtt',instance,draw))",
-    "n": 40,
-    "why_n": "u resolution 1/80; class extreme needs all 3 curves beyond 0.05/0.95",
-    "matched_on": [
-     "curve",
-     "N",
-     "set size",
-     "negation closure",
-     "statistic"
-    ]
-   },
-   "not_applicable_reason": null
-  }
- },
- "variable_ledger": {
-  "independent": [
-   {
-    "name": "curve_class",
-    "levels": [
-     "A",
-     "B",
-     "C",
-     "D"
-    ]
-   }
-  ],
-  "factors": [
-   {
-    "name": "size",
-    "treatment": "crossed",
-    "value": "L = 10, 12, 14 (I3 at 10 only)",
-    "how": "p in [2^(L-1), 2^L)"
-   },
-   {
-    "name": "p",
-    "treatment": "fixed",
-    "value": "paired: each weak curve's ordinary partner shares its p",
-    "how": "pairing removes the field size"
-   },
-   {
-    "name": "curve",
-    "treatment": "randomized",
-    "how": "primes permuted by derive_seed(sha,'pick',L,0); curves by random search; ordinary partners avoid j = 0, 1728, small k, anomaly and used orders"
-   },
-   {
-    "name": "factor_base",
-    "treatment": "fixed",
-    "value": "first 2 isqrt(n) points by (x,y); class C: whole zeta-orbits",
-    "how": "rule in fb_logs"
-   },
-   {
-    "name": "host",
-    "treatment": "measured",
-    "how": "exact values, no clock"
-   }
-  ],
-  "comparisons": [
-   {
-    "id": "C-weak-vs-ordinary",
-    "arms": [
-     "weak",
-     "ordinary"
+    "inputs": [
+      "rows.jsonl"
     ],
-    "differs_in": [
-     "curve_class"
+    "outputs": [
+      "verdict.json"
     ],
-    "design": "one_factor"
-   },
-   {
-    "id": "C-pos",
-    "arms": [
-     "planted",
-     "null"
-    ],
-    "differs_in": [
-     "curve_class"
-    ],
-    "design": "one_factor"
-   },
-   {
-    "id": "C-aa",
-    "arms": [
-     "null",
-     "null"
-    ],
-    "differs_in": [],
-    "design": "aa"
-   }
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "inadmissible": [
+    "changing classes, sizes, draws, factor-base rules or the cell rule after seeing u",
+    "reading BLIND as evidence that a class is not weak"
   ],
-  "aa_not_applicable": null,
-  "crosses_map": false
- },
- "randomization": {
-  "arm_order": "fixed",
-  "arm_order_reason": "deterministic FFT values; order cannot change them",
-  "seed_derivation": {
-   "method": "protocol_hash_sha256",
-   "seeds": [],
-   "nonce": null,
-   "note": "derive_seed(protocol_sha, arm, instance, replicate) from tools/experiment_protocol.py"
-  },
-  "instance_sampling": {
-   "rule": "curves picked before any statistic is computed",
-   "independent_of_arm": true
-  },
-  "blinding": {
-   "analysis_labels_masked": false,
-   "how": "frozen script applies a fixed rule",
-   "unmasked_at": null
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "472123ace16b54bf0cc2f3fa4dd855ca326805b4aac6a560a69046e491436665",
+    "commit": "3d36b1a3f046994b382c27948acdec1e0e451a31",
+    "frozen_at": "2026-11-04T05:52:20Z",
+    "filed_before_affected_data": true
   }
- },
- "sample_size": {
-  "instances": 54,
-  "replicates": 40,
-  "warmups": 0,
-  "power": {
-   "method": "other",
-   "alpha": 0.05,
-   "tests_in_family": 1,
-   "correction": "none",
-   "rank_test_n": null,
-   "min_attainable_two_sided_p": null,
-   "passes": true,
-   "note": "cell rule, not a test: DETECTS needs all 3 curves of a class beyond the 5/95% band at 2 sizes (null probability ~ (0.05)^6 per direction); built to detect large, consistent effects only"
-  },
-  "preflight_runtime": {
-   "fixed_seconds": 10,
-   "per_sample_seconds": 2,
-   "threads": 1,
-   "estimated_total_seconds": 3000,
-   "measured_on": "this container: curve picking 0.1-5 s per size; QTT at p ~ 1000 about 2.4 s per matrix"
-  }
- },
- "metrics": {
-  "primary": [
-   {
-    "id": "u",
-    "name": "within-null percentile per instrument",
-    "unit": "fraction",
-    "kind": "derived",
-    "definition": "mid-rank percentile of the curve's statistic among its 40 null draws",
-    "source": "rows.jsonl I*_u",
-    "formula": "((#<)+0.5(#=))/40",
-    "aggregation": "distribution",
-    "resolution": "1/80",
-    "uncertainty": "none_exact"
-   }
-  ],
-  "secondary": []
- },
- "measurement": {
-  "isolation_required": "L0",
-  "warmups": 0,
-  "order": "sequential",
-  "clock": "counted",
-  "counters": [
-   "FFT maxima"
-  ],
-  "record": [
-   "python_version",
-   "numpy_version",
-   "script_sha256"
-  ],
-  "timed_primary_justification": null
- },
- "execution": {
-  "backend": "local",
-  "queue": "none",
-  "placement": {
-   "instance_type": "Claude Code cloud container (CPU)",
-   "cpus": 1,
-   "spot": false
-  },
-  "measurement_class": "measurement",
-  "timeout_seconds": 21600,
-  "checkpoint": {
-   "policy": "none",
-   "interval_seconds": null,
-   "grace_seconds": null,
-   "restore_validation": "none",
-   "after_restore": {
-    "wall_time": "invalid",
-    "counted_units": "valid"
-   }
-  },
-  "retries": {
-   "infrastructure_only": true,
-   "max_attempts": 1
-  }
- },
- "stopping_rules": [
-  {
-   "rule": "fixed design: 3 sizes x (3 A + 3 B + 3 C + 9 paired D) curves, then stop",
-   "kind": "fixed_n",
-   "preregistered": true
-  }
- ],
- "decision_rule": {
-  "text": "Per (instrument, class): extreme at a size iff all 3 class curves have u <= 0.05 (or all >= 0.95) and the 3 paired ordinary curves are not all extreme in that direction. DETECTS iff extreme in one direction at >= 2 sizes (QTT: at L = 10). Else BLIND. An instrument whose positive control is extreme on < 90% of curves, or (I1) whose even/odd null means differ by > 5% on any curve, is INVALID.",
-  "comparison_ids": [
-   "C-weak-vs-ordinary",
-   "C-pos"
-  ],
-  "threshold": "as in text",
-  "statistic": "u per curve",
-  "interval": "null band",
-  "multiple_comparison_correction": "none",
-  "effect_size_measure": "mean paired u difference",
-  "verdict_vocabulary": [
-   "DETECTS",
-   "BLIND",
-   "INVALID"
-  ]
- },
- "analysis_plan": {
-  "script": {
-   "path": "docs/reports/weakclass-20261104/analyze_weakclass.py",
-   "sha256": "f4deef80b8530f8115a06342979861c93335ab44bbbb36c7c0b08747913474cd"
-  },
-  "inputs": [
-   "rows.jsonl"
-  ],
-  "outputs": [
-   "verdict.json"
-  ],
-  "blinded": false,
-  "frozen_before_data": true
- },
- "inadmissible": [
-  "changing classes, sizes, draws, factor-base rules or the cell rule after seeing u",
-  "reading BLIND as evidence that a class is not weak"
- ],
- "amendments": [],
- "freeze": {
-  "status": "draft",
-  "protocol_sha256": null,
-  "commit": null,
-  "frozen_at": null,
-  "filed_before_affected_data": true
- }
 }
