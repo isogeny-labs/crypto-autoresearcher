@@ -1,51 +1,51 @@
 id: LEAD-EXO-weak-class-instrument-calibration
 family: exotic
-title: >-
-  Natural weak curve classes (anomalous, MNT small embedding degree, j = 0 with a stable factor
-  base) as positive controls for the numeric structure instruments: a detect-or-blind table
-mechanism: >-
-  Most null or exhausted structure rows rest on numeric instruments that have not been run on
-  curves whose discrete logarithm is known to be easy. The one exception so far is QTT on
-  anomalous curves, cited below. Synthetic planted signals
-  (LEAD-EXO-methodology-instruments) test detection of a signal of the instrument's own type, not
-  sensitivity to real cryptanalytic weakness. This lead runs natural weak classes through each
-  instrument: (A) anomalous, #E = p (Smart, polynomial time); (B) prime-order curves with embedding
-  degree k in {3, 4, 6} (MOV, subexponential); (C) j = 0 with a zeta-stable factor base; and (D)
-  ordinary prime-order curves as the reference. The instruments are (i) the digit-QTT rank of the
-  decomposition transfer matrix (holant step b), (ii) the character-sum maximum against a
-  negation-symmetric null (see report leads-round2-20261104, check D1), (iii) the low-degree
-  evaluation rank with multipliers free of short relations (check D2), and (iv) the m = 2 x-keyed
-  decomposition yield against a random factor base. The QTT x anomalous cell is already measured
-  (report anomalous-qtt-20261104: no difference from ordinary curves at p <= 127).
+title: 'Natural weak curve classes (anomalous, MNT small embedding degree, j = 0 with a stable factor
+  base) as positive controls for the numeric structure instruments: a detect-or-blind table'
+mechanism: 'Most null or exhausted structure rows rest on numeric instruments that have not been run on
+  curves whose discrete logarithm is known to be easy. The one exception so far is QTT on anomalous curves,
+  cited below. Synthetic planted signals (LEAD-EXO-methodology-instruments) test detection of a signal
+  of the instrument''s own type, not sensitivity to real cryptanalytic weakness. This lead runs natural
+  weak classes through each instrument: (A) anomalous, #E = p (Smart, polynomial time); (B) prime-order
+  curves with embedding degree k in {3, 4, 6} (MOV, subexponential); (C) j = 0 with a zeta-stable factor
+  base; and (D) ordinary prime-order curves as the reference. The instruments are (i) the digit-QTT rank
+  of the decomposition transfer matrix (holant step b), (ii) the character-sum maximum against a negation-symmetric
+  null (see report leads-round2-20261104, check D1), (iii) the low-degree evaluation rank with multipliers
+  free of short relations (check D2), and (iv) the m = 2 x-keyed decomposition yield against a random
+  factor base. The QTT x anomalous cell is already measured (report anomalous-qtt-20261104: no difference
+  from ordinary curves at p <= 127).'
 disposition: open_next_step
 next_action:
-  step: >-
-    Done 2026-11-04 (frozen protocols WEAKCLASS-20261104 and WEAKCLASS-I1-20261104; reports
-    weakclass-20261104 and weakclass-i1-20261104). With valid controls, no instrument detects
-    anomalous, small-embedding-degree (k = 3-6) or j = 0 (zeta-stable factor base) curves under the
-    cell rule (3 curves per class per size, all 3 beyond 5-95%). Coverage: the character sum (after a
-    calibrated A/A rerun) and the m = 2 log-sumset yield at p <= 2^14; the QTT complexity of M at
-    p ~ 2^10 only, where it is rank-saturated (8 of 18 nulls degenerate). The I1 null is calibrated on
-    90 independently picked ordinary curves. Open: the paired ordinary curves sit low on I1 (mean u
-    0.28, p ~ 1e-4), which is unexplained and not a prime effect. Next: explain that anomaly, then add
-    the scope note "no detection of Smart- or MOV-weak classes at these sizes" to the rows whose
-    NULLs rest on these instruments.
-  discriminates: >-
-    A NULL from these instruments excludes only structure of the statistic's own type, not an
-    easy DLP. An instrument that detects a weak class would be the first with natural dynamic
-    range. None does at these sizes.
-best_measured: >-
-  no detection in 9 cells (3 instruments x 3 weak classes), controls valid; p <= 2^14 (QTT p ~ 2^10)
+  step: 'Done 2026-11-04 (WEAKCLASS-20261104, WEAKCLASS-I1-20261104, PAIRED-ANOMALY-20261104). No instrument
+    detects anomalous or small-embedding-degree curves. With 36 curves per class the character sum shows
+    no detected shift (minimum detectable shift about 0.13 in u at 50% power) for them (p ~ 0.85) but
+    detects the zeta-stable factor base of the j = 0 class (mean u 0.23, p < 1e-5), a factor-base symmetry
+    effect. The paired-curve anomaly did not replicate (108 vs 108, p = 0.65), so the pairing baseline
+    stands. Scope notes are added to the H-PSEUDO, holant and quadratic-phase rows. Remaining, optional:
+    a larger-p calibration with a non-saturated QTT size, and natural weak classes for the sumset yield
+    at more curves per class.'
+  discriminates: An instrument that separates Smart- or MOV-weak classes from ordinary curves would be
+    the first with natural dynamic range for DLP ease. None does at these sizes. Factor-base symmetry
+    is detectable.
+best_measured: 'character sum: no detected shift for anomalous / small-k curves (36 per class, p <= 2^14);
+  zeta-stable FB detected (p < 1e-5). Sumset yield (p <= 2^14) and QTT (p ~ 2^10, rank-saturated): no
+  detection under the 3-curves-per-class cell rule'
 evidence:
 - repo: crypto-autoresearcher
+  path: docs/reports/paired-anomaly-20261104/README.md
+  note: paired anomaly NOT_REPLICATED; 36-curve class comparison
+- repo: crypto-autoresearcher
   path: docs/reports/weakclass-20261104/README.md
-  note: I2 and I3 BLIND with valid controls; I1 INVALID (miscalibrated A/A gate)
+  note: I2 and I3 BLIND with valid controls; I1 INVALID (miscalibrated A/A gate) (I1 superseded by the
+    I1 rerun and paired-anomaly-20261104)
 - repo: crypto-autoresearcher
   path: docs/reports/weakclass-i1-20261104/README.md
-  note: I1 rerun with a calibrated gate; BLIND to all classes; overdispersion not confirmed
+  note: 'I1 rerun with a calibrated gate; BLIND to all classes; overdispersion not confirmed (class C:
+    superseded by the 36-curve comparison in paired-anomaly-20261104, which detects it)'
 - repo: crypto-autoresearcher
   path: docs/reports/leads-round2-20261104/new-leads-memo.md
-  note: proposal N1, with emulated novelty matches; the real lead_atlas --match gate is recorded in the round-2 report
+  note: proposal N1, with emulated novelty matches; the real lead_atlas --match gate is recorded in the
+    round-2 report
 - repo: crypto-autoresearcher
   path: docs/reports/anomalous-qtt-20261104/README.md
   note: the QTT x anomalous cell

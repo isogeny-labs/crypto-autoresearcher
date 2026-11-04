@@ -53,3 +53,5 @@ no valid D5 nonmembership certificate for this named input can separate 1.
 The degree-six search therefore moves to other named candidates, with n47–51
 remaining unclassified at D5. This report makes no claim about them or an
 asymptotic LFD lower bound.
+The [named obstruction record](../../../../problems/semaev-n33-d5-nonmembership-impossible.md)
+keeps the frozen n33 request from being retried as a degree-six search.

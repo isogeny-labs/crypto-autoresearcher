@@ -1,0 +1,118 @@
+name: pcc-gate
+# artifact-store: no-pull (store bytes a claim cites are pulled by the claim-inputs step below, path by path)
+
+# Contract: docs/SABOTAGE_RESISTANCE.md (AGENTS.md, "Sabotage is assumed:
+# proof-carrying claims"). Runs the sabotage canaries and the pcc tests,
+# checks that the base branch's hash-chained ledger is a prefix of this one,
+# re-verifies every claim, and lints the PR body (a strong-claim word needs
+# [pcc:ID] or [pcc:unverified]). Signing verdicts is pcc-sign.yml, which runs
+# only after a merge, with a key no producer session holds.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+  pull_request_target:
+    branches: [main]
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pcc-gate-${{ github.event.action == 'closed' && github.sha || github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  gate:
+    if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # On a pull request HEAD is the merge commit and HEAD^1 the base tip, so
+      # depth 2 gives both the base ledger and the PR's changed files. A merged
+      # PR (pull_request_target) checks out main as it now stands.
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request_target' && 'main' || '' }}
+          fetch-depth: 2
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/pcc/
+            /tools/artifacts/
+            /pcc/
+            /docs/SABOTAGE_RESISTANCE.md
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Claim inputs (every path a claim cites) and changed prose
+        id: inputs
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
+          EVENT: ${{ github.event_name }}
+        run: |
+          python3 - <<'PY' > "$RUNNER_TEMP/claim-paths.txt"
+          import json, pathlib, posixpath
+          keys = ("path", "project", "evidence_dir")
+          out = set()
+          def walk(o):
+              if isinstance(o, dict):
+                  for k, v in o.items():
+                      if k in keys and isinstance(v, str) and v and not v.startswith("/") and ".." not in v.split("/"):
+                          out.add(v)
+                          if k == "path":
+                              out.add(posixpath.dirname(v) or ".")
+                      else:
+                          walk(v)
+              elif isinstance(o, list):
+                  for v in o:
+                      walk(v)
+          for p in sorted(pathlib.Path("pcc/claims").glob("*.json")):
+              walk(json.loads(p.read_text()))
+          for p in sorted(out - {"."}):
+              print(p)
+          PY
+          if [ "$EVENT" = pull_request ]; then
+            git diff --name-only HEAD^1 HEAD | grep -E '^docs/session-logs/.*\.md$|(^|/)(REPORT|README)\.md$' > "$RUNNER_TEMP/changed-prose.txt" || true
+          else
+            : > "$RUNNER_TEMP/changed-prose.txt"
+          fi
+          cat "$RUNNER_TEMP/claim-paths.txt" "$RUNNER_TEMP/changed-prose.txt" | sed 's|^|/|' > "$RUNNER_TEMP/add.txt"
+          if [ -s "$RUNNER_TEMP/add.txt" ]; then
+            xargs -a "$RUNNER_TEMP/add.txt" git sparse-checkout add
+          fi
+          echo "claim inputs: $(wc -l < "$RUNNER_TEMP/claim-paths.txt"); changed prose: $(wc -l < "$RUNNER_TEMP/changed-prose.txt")"
+          if [ -s "$RUNNER_TEMP/claim-paths.txt" ]; then
+            if [ -n "$AWS_ACCESS_KEY_ID" ]; then
+              xargs -a "$RUNNER_TEMP/claim-paths.txt" python3 tools/artifacts/artifacts.py pull
+            else
+              echo "::notice::no artifact-store credentials; a claim whose proof bytes live in the store will not verify"
+            fi
+          fi
+      - name: Sabotage canaries are all rejected
+        run: python3 tools/pcc/pcc.py canary
+      - name: pcc tests
+        run: python3 tools/pcc/test_pcc.py
+      - name: Ledger chain holds, and the base ledger is a prefix (pull request)
+        if: github.event_name == 'pull_request'
+        run: python3 tools/pcc/pcc.py ledger verify --base HEAD^1
+      - name: Ledger chain holds
+        if: github.event_name != 'pull_request'
+        run: python3 tools/pcc/pcc.py ledger verify
+      - name: Every claim verifies (exit 2, not covered, is allowed; exit 1 fails)
+        run: python3 tools/pcc/pcc.py verify-all || [ $? -eq 2 ]
+      - name: PR body is strict - a strong-claim word needs [pcc:ID] or [pcc:unverified]
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: printf '%s' "$PR_BODY" | python3 tools/pcc/pcc.py lint-prose --stdin
+      - name: Advisory prose lint of changed session logs and reports
+        if: github.event_name == 'pull_request'
+        continue-on-error: true
+        run: |
+          if [ ! -s "$RUNNER_TEMP/changed-prose.txt" ]; then echo "no session logs or reports changed"; exit 0; fi
+          xargs -a "$RUNNER_TEMP/changed-prose.txt" python3 tools/pcc/pcc.py lint-prose

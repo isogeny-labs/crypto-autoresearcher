@@ -197,6 +197,19 @@ seam this contract asks for, without satisfying any milestone.
 
 Milestones 1-6 above remain open.
 
+## pcc seam (2026-11-04)
+
+`tools/pcc/pcc.py` (shared with `crypto` and `cryptanalysis`;
+[`docs/SABOTAGE_RESISTANCE.md`](SABOTAGE_RESISTANCE.md)) carries the verifier
+side of this contract as its `execution` proof kind. It runs a verifier only
+when the binary hashes to its pin and that digest is listed under
+`trusted_verifiers` in `pcc/keyring.json`; it requires `verified: true`,
+`dev_mode: false`, the pinned image id, the receipt's own digest and a journal
+committing to the raw-result SHA-256, and its canary corpus shows each of
+those mutations rejected. No verifier digest is listed, so every `execution`
+proof is `not_covered`. Milestones 1-6 above remain open; the seam satisfies
+none of them.
+
 ## Related contracts and open work
 
 - [Cairn integration plan](cairn-integration-plan.md) includes this as a required

@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: Type2 orbit signature and trace-zero predicate
+
+The [Type2 instrument](../../implementation/type2_predicate.py) checks independently validated `[2,2]` quartic branch roots in the quadratic extension of a cubic K/k. It transports the roots through the selected projective matrix, then tests whether the four roots occupy Frobenius exponents `{0,1,3,4}` of one orbit of length six. For a Type2 signature, it separately tests the [trace-zero Möbius condition stated by Chao](https://maths.ucd.ie/~gmg/ECC2007Talks/chao.pdf) by exhausting `a,c∈k`; trace zero forces `d=-a`, and `b=c·αβ-a(α+β)` is uniquely determined. It emits a matrix witness or an exact no-witness result. This is a predicate column, not a descended-model certificate.
+
+Three [software tests](../../implementation/test_type2_predicate.py) pass. Synthetic F27 quartics `[20,0,22,0,1]` and `[13,6,0,8,1]` both have the Type2 signature. The first has trace-zero witness `[1,0,0,2]`; the second has no witness over the nine possible `(a,c)` pairs per eligible root. A base-field projective transport preserves the positive case. A different `[2,2]` quartic and an irreducible quartic lack the signature. A corrupted root certificate and singular matrix are refused.
+
+The full experiment must attach this instrument to checked candidate rows and independently review all Type2 witnesses. The original P4 claim is still a prediction pending complete cohort outputs and controls. No scientific cohort trial was launched; EXP-PEXT-bf8f96 remains `review_required` and unfrozen.

@@ -1,0 +1,150 @@
+review_attestation:
+  task_id: TASK-20261102-00e54b
+  reviewer: "Independent Reviewer C"
+  canonical_task: /root/review_cofactor
+  joints_owned:
+    - C
+  verdicts:
+    C: holds
+  scope: >-
+    Source-level semantic audit of the CofactorPushforward bad and good ZMod
+    controls, the generic product image/fibre equivalence, cardinal identity,
+    typeclass and distribution premises, weakened-hypothesis controls, and the
+    narrow comparison with RFC 9380 Sections 2-3 and 7. No overall batch,
+    machine-validity, concrete-suite, encoder-security, or ECDLP verdict.
+  fidelity: faithful_scoped
+  machine_status: pending
+  pending_machine_run: "41503944712"
+  review_head: fbb6c5d6f8bbae160e51404172996c837efb0a07
+  producer: 674b3248a8b007748a2cf4f10e5063e7de123be4
+  plan_sha256: 7a55598bad9dddb2f6b462fa981d6f4afb7e17871c417174692f1c3201f1f77f
+  hash_algorithm: SHA-256
+  producer_inputs_unchanged_at_review_head: true
+  sources_read:
+    - AGENTS.md
+    - docs/agent-contract-extended.md
+    - .claude/skills/review-evidence/SKILL.md
+    - .claude/skills/review-evidence/references/lean-review.md
+    - .claude/skills/formal/SKILL.md
+    - formal/README.md
+    - formal/targets/README.md
+    - orchestration/formal/cli.py
+    - formal/lean-toolchain
+    - formal/lake-manifest.json
+    - docs/reports/2026-11-02-attack-corpus-next-five-lean/review-plan.yaml
+    - formal/targets/attack-cofactor-pushforward.yaml
+    - formal/CryptoResearch/AttackCorpus/CofactorPushforward.lean
+    - research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md
+    - https://www.rfc-editor.org/rfc/rfc9380.txt
+  source_metadata:
+    AGENTS.md:
+      sha256: e95a5b68c7be0391c9b6d6ad039b5903127eb6ac8e8cf2bc1af5b06c91c23703
+      portions: complete
+    docs/agent-contract-extended.md:
+      sha256: 1dd0e607a772b19b733cfc2ac0971076e72d653e7703224522c6096fa3fc8692
+      portions:
+        - Literature first
+        - Observe first; interpret later
+        - Knowledge retrieval policy
+    .claude/skills/review-evidence/SKILL.md:
+      sha256: faadf52e1364483b09e8cb3c18b613477918df55e40f4ed404627f1eb0756fd7
+      portions: complete
+    .claude/skills/review-evidence/references/lean-review.md:
+      sha256: 05e69fdbd9749367a77e8a196a7c73e71b6a68b5cb1340398765346eda8c64cf
+      portions: complete
+    .claude/skills/formal/SKILL.md:
+      sha256: f5f589e11beed5e831294331208de863ac67c076ec32843f7aa92217db6edb2f
+      portions: complete
+    formal/README.md:
+      sha256: 9ed1c1626d0e284a1d70623524a6a76a9d2bccdd672929576cb2972febc63daf
+      portions: complete
+    formal/targets/README.md:
+      sha256: f4f4a7f08399e4556bb09bff5b172ff23784a38e76c0d6ac4da48137260be475
+      portions: complete
+    orchestration/formal/cli.py:
+      sha256: b1761581b53e49d6b80cdd5c0f9ae4925f3d886619efc79564d3c55885253429
+      portions: complete
+    formal/lean-toolchain:
+      sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+      portions: complete
+    formal/lake-manifest.json:
+      sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+      portions: complete
+    docs/reports/2026-11-02-attack-corpus-next-five-lean/review-plan.yaml:
+      sha256: 7a55598bad9dddb2f6b462fa981d6f4afb7e17871c417174692f1c3201f1f77f
+      portions: complete
+    formal/targets/attack-cofactor-pushforward.yaml:
+      sha256: 4313d96609a4335cdab3da50a5bf3bb07cac3727f80652e312a80b26d8109ff4
+      portions: complete
+    formal/CryptoResearch/AttackCorpus/CofactorPushforward.lean:
+      sha256: c28754bcf4568282f3524633bbfbbbc29e8ce432cd9068f2cecbdc3d072b90ca
+      portions: complete
+    research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md:
+      sha256: 4834787c796eec875c33ca16ad75801c99102b31bbc565e0694311cc63b70a68
+      portions: complete
+    "https://www.rfc-editor.org/rfc/rfc9380.txt":
+      sha256: a2e6ab02b2117d6f52ac293020857752972b2e23ae005c33f612e40436ff4b6d
+      portions:
+        - Section 2
+        - Section 3
+        - Section 7
+      provenance: retrieved
+  integrity_only_inputs:
+    - source: docs/reports/2026-11-02-attack-corpus-next-five-lean/blind-input.md
+      sha256: bc845a9593a1dfa67375707ece4272c49d68248e6b24077064c34d5c914767cf
+      access: hash-only; contents were not consulted
+  runtime:
+    product: Codex
+    mode: collaborative_subagent
+    model: "GPT-5-based Codex; exact deployment identifier was not exposed to this reviewer"
+    reasoning_effort: not exposed to this reviewer
+    scientific_runs: 0
+    formal_builds: 0
+  read_sibling_reports: false
+  sibling_reports_read: []
+  blindness_lifted: false
+  independence_statement: >-
+    I reviewed only joint C in a fresh specialist task. I did not read sibling
+    reviewer reports or conversations, did not receive a sibling verdict, did
+    not delegate this review, and did not edit the producer, target spec, Lean
+    source, or any other reviewer's files. The holds verdict is my own
+    source-level derivation and is independent of the pending machine run.
+  controls:
+    - id: remove_hkill
+      execution: hand-derived; no Lean run
+      retained: hperm
+      model: "K = ZMod 3, S = ZMod 3, h = 2"
+      result: >-
+        The map is bijective on all nine ambient points, its image is not the
+        target copy, each target fibre has size 1 rather than card K = 3, and
+        the claimed cardinal identity gives 3 rather than 9.
+      status: expected_failure_observed
+    - id: remove_hperm
+      execution: hand-derived; no Lean run
+      retained: hkill
+      model: "K = ZMod 2, S = ZMod 2, h = 2"
+      result: >-
+        The map is constant zero, the two target fibres have sizes 4 and 0
+        rather than card K = 2, and the target image equality fails.
+      status: expected_failure_observed
+    - id: remove_uniform_ambient_sampling
+      execution: hand-derived; no Lean run
+      retained: "hkill, hperm, and the good ZMod 2 x ZMod 3 product"
+      model: "point-mass input at (0,0)"
+      result: >-
+        The output is a point mass rather than uniform on the three-point
+        target, showing that equal set-theoretic fibres do not uniformize an
+        arbitrary encoder distribution.
+      status: expected_failure_observed
+  deviations:
+    - >-
+      Fresh machine verification, named-declaration audit, and #print axioms
+      were not performed in this specialist session: the precommitted plan
+      budgets zero formal builds for reviewers and exact hosted run
+      41503944712 remained pending. Machine status is therefore pending, and
+      no kernel-validity conclusion is issued.
+    - >-
+      The plan records that producer implementation was parallelized before
+      the independent-review plan; those implementation contributors were
+      excluded from this reviewer role, and no contributor output beyond the
+      pinned producer artifacts was consulted.

@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: published cohort/T candidate binding
+
+The read-only [candidate binding](../../implementation/candidate_binding.py) recomputes the complete canonical join plan from the published compact input manifest, optionally checks an on-disk plan byte for byte, and selects a canonical curve class and `E(K)/2E(K)` representative. It independently reconstructs that selected curve's target list, derives the literal quotient quartic, and gives the half-open structure-ordinal range for the T block. Its output includes the exact input, manifest, and join-plan hashes and the first three positional arguments for the per-form Rust unit. It does not execute that unit.
+
+For the first q5/n3 class and T=O, the checked preview has model `[0,0,1]`, quotient form `[1,0,0,1,0]`, and structure range `[0,16275)`. The [software check log](software-tests.json) binds source hashes and records two passing unit tests. Those tests also reject a mutated plan and invalid class/T indices. This is input/ordinal preparation, not a scientific cohort result.
+
+The remaining execution wrapper must pin the frozen protocol, approved source/binary and resource caps, and write a success or started-failure receipt without overwriting a prior attempt. Production independent checking must replay the form against the bound curve/T and check exceptional and generic coverage. The full trial plan, queue, runbook, C0-C7 controls, descent and Type2 analysis remain approval dependencies. EXP-PEXT-bf8f96 remains `review_required`; no scientific trial was launched.

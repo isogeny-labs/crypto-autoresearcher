@@ -1,0 +1,114 @@
+review_plan:
+  written_at: "2026-11-02T19:44:00Z"
+  state: prepared_before_dispatch
+  producer_snapshot: db090984ca1e78e92cea5e0840885ae982f12921
+  original_snapshot: 674b3248a8b007748a2cf4f10e5063e7de123be4
+  supersedes_plan: docs/reports/2026-11-02-attack-corpus-next-five-lean/correction-review-plan.yaml
+  superseded_producer: 49f57f88cc5be06b7e1fe42a9571aee3337fa510
+  superseding_reason: >-
+    Exact run 41509145327 built OneShotHistory, CubicEvalRank,
+    CofactorPushforward, and FiatShamirZeroHash, but left one closed ZMod 5
+    arithmetic goal in PedersenRelationKernel. The v1 review candidates were
+    stopped before writing attestations. This v2 plan binds the one-line
+    kernel-decide closure and assigns four fresh review tasks.
+  claim_under_review: >-
+    Final proof-only correction of four modules from the five-target attack
+    corpus. Public claims and target manifests are intended to remain
+    unchanged. Reviewers must verify the old-to-final proof delta, exact
+    finite mathematics, forbidden-construct boundary, and the final hosted
+    build plus named target/axiom audit.
+  coordinator_prior: >-
+    Exact run 41509145327 is positive machine evidence for four modules but
+    not a target receipt because the workspace gate failed. The final
+    Pedersen delta should only ask ordinary kernel `decide` to close a fully
+    reduced finite ZMod 5 proposition. No final module or gate is presumed to
+    pass.
+  corrected_source_sha256:
+    formal/CryptoResearch/AttackCorpus/OneShotHistory.lean: 5420db0c7a6f1e6db1cc7d3e167f6811cc2f3d20f0b23f202101d9aeaa923cc6
+    formal/CryptoResearch/AttackCorpus/CofactorPushforward.lean: 53445da9ae485ed4cd5d76088b6932d842dfc61299cf98d986a5cc34125a9d5c
+    formal/CryptoResearch/AttackCorpus/FiatShamirZeroHash.lean: b958dfb175dd7c0a7bcd59be48b5e3b9298a7729ff337cf3d96b76e48022bc4d
+    formal/CryptoResearch/AttackCorpus/PedersenRelationKernel.lean: 7b1cd73987824b69c5024b37ae9367e86b76346795375bf61f814e4031678b13
+  unchanged_control_sha256:
+    formal/CryptoResearch/AttackCorpus/CubicEvalRank.lean: ed62caa522eb7820784ed2674cb1d088a7581a6205f26b8e160292ef2dc56464
+  joints:
+    - id: A3
+      joint: Final OneShotHistory correction preserves the recurrence and finite-tail theorem
+      assigned_to: TASK-20261102-0a381c
+      attack_plan: >-
+        Compare original 674b3248 and final db090984 blobs. Verify unchanged
+        public declaration types and replay the N=0/successor range-sum
+        induction with the correct inequality orientation. Inspect final exact
+        machine evidence and named target audit.
+      breaking_artifact: Declaration/type delta, hand proof replay, and machine-qualified verdict.
+    - id: C3
+      joint: Final CofactorPushforward correction preserves image and exact fibre claims
+      assigned_to: TASK-20261102-0b8513
+      attack_plan: >-
+        Compare original and final blobs. Recheck image orientation, ZMod 2
+        annihilation, ZMod 3 permutation, bad 4/0 fibres, good-map
+        specialization, conjunction shape, unchanged public types, and final
+        exact machine evidence.
+      breaking_artifact: Line-level correction audit, finite table, and machine-qualified verdict.
+    - id: D3
+      joint: Final FiatShamirZeroHash correction preserves constant-challenge scope
+      assigned_to: TASK-20261102-c855e5
+      attack_plan: >-
+        Verify the lambda-token and local-prime-instance changes only resolve
+        elaboration; recheck the concrete ZMod 5 equation, unchanged public
+        quantifiers, forbidden constructs, and final exact machine evidence.
+      breaking_artifact: Source/type delta, finite calculation, and machine-qualified verdict.
+    - id: E3
+      joint: Final PedersenRelationKernel correction preserves kernel and collision claims
+      assigned_to: TASK-20261102-f768d3
+      attack_plan: >-
+        Audit both corrections from the original blob: the prime Fact, typed
+        pairs, and final ordinary `decide` after normalization. Recompute the
+        ZMod 5 collision, distinguish kernel decide from native_decide, verify
+        unchanged public claims, and inspect final exact machine evidence.
+      breaking_artifact: Source/type delta, kernel-trust audit, concrete calculation, and machine-qualified verdict.
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: >-
+      Four fresh tasks receive exact-path inputs and no sibling or original
+      reviewer report. The abandoned v1 candidates wrote no artifacts and
+      are not reused. The already sealed blind mathematical derivation is not
+      an input and need not be repeated because theorem statements did not
+      change.
+  proves_too_much:
+    objects:
+      - A type-changing, premise-dropping, or conclusion-weakening correction fails even if Lean accepts it.
+      - A sorry, admit, project axiom, unsafe escape, extern, implemented_by, or native_decide proof fails.
+      - A module build without the all-target verifier and named axiom audit is machine-incomplete.
+      - No finite proof repair implies an ECDLP, ROM/QROM, hash-to-curve, or computational-binding result absent from its type.
+    failure_signature: >-
+      Fail the round if any reviewer checks only textual plausibility, misses a
+      public type delta or forbidden trust escape, treats a partial build as a
+      receipt, or broadens a finite claim into an unmodeled security result.
+  blind_rederivation:
+    required: false
+  review_output:
+    verdicts: [holds, breaks, inconclusive]
+    required:
+      - Exact joint, commits, hashes, type delta, proof replay, machine status, and scoped verdict
+      - Reviewer-owned review.md and attestation.yaml with string-list sources_read and separate source_metadata
+      - Exact-path reads only and no edits outside the assigned correction-reviewer-v2 task directory
+  budget:
+    maximum_scientific_runs: 0
+    scientific_runs: 0
+    formal_builds_for_review: 0
+  procedure_deviations:
+    - >-
+      The v1 correction run failed one final finite normalization goal. Its
+      candidate correction reviewers were stopped before producing artifacts;
+      one candidate had self-reported an overbroad filename-only search and
+      was discarded. No v1 candidate is counted in this round.
+    - >-
+      This additive correction round does not rewrite the original six-way
+      review or its blind derivation, both of which remain bound to the failed
+      producer snapshot.
+  completion_gate:
+    - Exact Lean 4.35 workspace build, all-target verifier, and named axiom audits pass at producer_snapshot
+    - Four fresh v2 reviewers seal mutually blind scoped reports and attestations
+    - The independence checker passes against this committed v2 plan and exact SHA-256
+    - Final synthesis preserves both failed-run records and makes no unmodeled cryptographic claim

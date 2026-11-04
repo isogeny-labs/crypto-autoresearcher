@@ -1355,6 +1355,31 @@ def prime_field_holdout_panel(ref, since):
             emit(prefix+'.'+c['cell_id']+'.prefix'+str(c['prefix'])+'.'+k,c[k],unit=unit,label='Exact held-out curve/prefix observation',**common)
 
 
+def prime_field_source_control_panel(ref, since):
+    """A5 fixed-column source control; physical collection counted once."""
+    date='2026-11-04'
+    if date<since:return
+    path='research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9/analysis.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);cells=data['cells']
+        expected={(f'p{p}-i{i}',a,n,s) for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for n in (0,16,64) for s in ('relations','anchors')}
+        if data['panel_complete']is not True or len(cells)!=96 or {(c['cell_id'],c['arm'],c['prefix'],c['scope']) for c in cells}!=expected:return
+        if data['physical_work']!=dict(source_queries=49152,target_queries=1536,pair_entries=4928):return
+        for c in cells:
+            if c['verified']is not True or c['status']!='verified':return
+            for k in ('base_columns','base_rank','base_nullity','anchor_gain','target_base_rank_gain','base_rank_after_target_cancellation','single_targets','joint_targets','early_joint_targets'):
+                if type(c[k])is not int or c[k]<0:return
+            if c['base_rank']+c['base_nullity']!=c['base_columns'] or c['base_rank']+c['target_base_rank_gain']!=c['base_rank_after_target_cancellation'] or c['base_rank_after_target_cancellation']>c['base_columns'] or max(c['single_targets'],c['joint_targets'])>8 or c['early_joint_targets']>c['joint_targets']:return
+    except (ValueError,KeyError,TypeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a5'
+    for k,unit in (('source_queries','queries'),('target_queries','queries'),('pair_entries','entries')):
+        emit(prefix+'.'+k,data['physical_work'][k],unit=unit,label='Physical collection once; no multiplication by prefixes or scopes',**common)
+    for c in cells:
+        for k,unit in (('base_rank','dimensions'),('anchor_gain','dimensions'),('target_base_rank_gain','dimensions'),('single_targets','targets'),('joint_targets','targets'),('early_joint_targets','targets')):
+            emit(prefix+'.'+c['cell_id']+'.'+c['arm']+'.prefix'+str(c['prefix'])+'.'+c['scope']+'.'+k,c[k],unit=unit,label='Conditioned fixed-column source-selection observation',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -1529,6 +1554,7 @@ def main():
     exact_density_787704_observations(a.ref, a.since)
     prime_field_direct_panel(a.ref, a.since)
     prime_field_holdout_panel(a.ref, a.since)
+    prime_field_source_control_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 

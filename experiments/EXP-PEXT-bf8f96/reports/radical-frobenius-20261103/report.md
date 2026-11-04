@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: radical-algebra Frobenius lift component
+
+The [lift checker](../../implementation/radical_frobenius.py) constructs exact polynomial-square witnesses for an independent basis of arithmetic quartic relations. It derives coherent witnesses for every other arithmetic relation, applies coefficient Frobenius and cyclic permutation to each witness, and solves the finite sign equations for the radical generators. It requires the chosen action's n-th iterate to fix all generators. The result is labeled `order_n_radical_lift_checked; source_map_and_model_pending` and retains its relation basis, witnesses, signs and rank pair.
+
+Four new [software tests](../../implementation/test_radical_frobenius.py) pass; seven pass together with the preceding coefficient-ledger tests. Fixed F27 join rows admit a checked order-three action. A repeated-support F27 orbit with nontrivial coefficient conjugation needs sign vector `[1,0,1]` under the canonical square-root choices. The synthetic rank-two nonsquare twist retains geometric rank two and arithmetic rank three; its all-three product has no arithmetic square witness. Bad polynomial-square and nonsquare-constant inputs are refused.
+
+This is a candidate semilinear action on the source-field radical algebra. A source elliptic-curve map, descended model, model isomorphism, and admissible-genus certificate have not been constructed or independently checked. No scientific cohort trial was launched; EXP-PEXT-bf8f96 remains `review_required` and unfrozen.

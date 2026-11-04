@@ -664,3 +664,17 @@ analyzes retained, already verified rows without collecting new data. See the
 [prime-field continuation](../../../research/prime_field_factor_base_20261028/README.md)
 for the input shape, zero-completion collector, Dickson extractor, validation
 scope and execution boundaries. These interfaces add no performance claim.
+
+## Matched source-selection continuation (4 November 2026)
+
+The [A5 fixed-base control](../../../research/prime_field_a5_execution_20261104/RESULTS.md)
+keeps all four A4 curves, bases, original projected columns and32public targets.
+One fixed hashed schedule reaches full base rank on every fixture. Two others
+recover eight distinct target functionals on the65537fixtures while base
+uncertainty remains (13schedule/target records), with carried certificates and
+separate public verification. Equal ranks can identify different functionals:
+window/hash0/hash1 each have rank30/32on one fixture, while window plus either
+hash span reaches32/32. Explicit new anchors have no marginal final rank gain.
+All96scope observations and the complete finite oracle are retained in the
+v8database/report. These are conditioned results on observed A4 fixtures;
+fresh curve/target holdouts and per-arm construction costs are the next control.

@@ -1,0 +1,201 @@
+review_attestation:
+  task_id: TASK-20261102-70be48
+  reviewer: Independent Reviewer A
+  canonical_task_name: /root/review_one_shot
+  reviewed_at: "2026-11-02T19:13:11Z"
+  review_head: fbb6c5d6f8bbae160e51404172996c837efb0a07
+  producer_snapshot: 674b3248a8b007748a2cf4f10e5063e7de123be4
+  joints_owned:
+    - A
+  verdicts:
+    A: breaks
+  verdict_scope: >-
+    Breaks as an exact formal target because hosted Lean 4.35 run 41503944712
+    failed at line 117 with Unknown constant Finset.sum_le_sum. The underlying
+    Bool countermodels and real-sequence recurrence/tail derivation hold
+    mathematically and remain faithful in scope, but are not formally
+    discharged at this snapshot. The verdict excludes probability/expectation
+    semantics, independence, xedni/JKSST instantiation, and any batch-wide or
+    computational-security conclusion.
+  machine_status: failed
+  machine_evidence:
+    run_id: 41503944712
+    toolchain: leanprover/lean4:v4.35.0
+    reported_state: completed_failure
+    failing_file: formal/CryptoResearch/AttackCorpus/OneShotHistory.lean
+    failing_line: 117
+    diagnostic: Unknown constant Finset.sum_le_sum
+    treated_as_passed: false
+    local_formal_builds: 0
+    local_axiom_audits: 0
+  review_plan:
+    path: docs/reports/2026-11-02-attack-corpus-next-five-lean/review-plan.yaml
+    sha256: 7a55598bad9dddb2f6b462fa981d6f4afb7e17871c417174692f1c3201f1f77f
+  runtime_model_facts:
+    runtime: Codex agent session
+    execution_environment: shared workspace container at /workspace/crypto-autoresearcher
+    exact_resolved_model_id: not exposed to the reviewer session
+    reasoning_effort: not exposed to the reviewer session
+    fallback_status: not exposed to the reviewer session
+    degraded_requirements: not exposed to the reviewer session
+  sources_read:
+    - "AGENTS.md"
+    - "docs/agent-contract-extended.md"
+    - ".claude/skills/review-evidence/SKILL.md"
+    - ".claude/skills/review-evidence/references/lean-review.md"
+    - ".claude/skills/formal/SKILL.md"
+    - "formal/README.md"
+    - "formal/targets/README.md"
+    - "orchestration/formal/cli.py"
+    - "tools/check_review_independence.py"
+    - "docs/reports/2026-11-02-attack-corpus-next-five-lean/review-plan.yaml"
+    - "formal/targets/attack-one-shot-history.yaml"
+    - "formal/CryptoResearch/AttackCorpus/OneShotHistory.lean"
+    - "research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md"
+    - "research/cryptographic_assumption_attack_corpus_20261101/README.md"
+    - "knowledge/literature/KN-LIT-021.md"
+    - "docs/reports/xedni-sadek-20261101/README.md"
+    - "problems/xedni-sadek-explicit-cutoff.md"
+    - "formal/lean-toolchain"
+    - "formal/lake-manifest.json"
+    - "formal/.lake/packages/mathlib/Mathlib/Algebra/Ring/GeomSum.lean"
+    - "formal/.lake/packages/mathlib/Mathlib/Algebra/Order/BigOperators/Group/Finset.lean"
+    - "https://pages.cpsc.ucalgary.ca/~jacobs/PDF/xedni.pdf"
+  source_metadata:
+    "AGENTS.md":
+      sha256: e95a5b68c7be0391c9b6d6ad039b5903127eb6ac8e8cf2bc1af5b06c91c23703
+      portion_read: complete
+      provenance: repository_checkout
+    "docs/agent-contract-extended.md":
+      sha256: 1dd0e607a772b19b733cfc2ac0971076e72d653e7703224522c6096fa3fc8692
+      portion_read: literature-first, observation, review-architecture, and knowledge-retrieval sections
+      provenance: repository_checkout
+    ".claude/skills/review-evidence/SKILL.md":
+      sha256: faadf52e1364483b09e8cb3c18b613477918df55e40f4ed404627f1eb0756fd7
+      portion_read: complete
+      provenance: repository_checkout
+    ".claude/skills/review-evidence/references/lean-review.md":
+      sha256: 05e69fdbd9749367a77e8a196a7c73e71b6a68b5cb1340398765346eda8c64cf
+      portion_read: complete
+      provenance: repository_checkout
+    ".claude/skills/formal/SKILL.md":
+      sha256: f5f589e11beed5e831294331208de863ac67c076ec32843f7aa92217db6edb2f
+      portion_read: complete
+      provenance: repository_checkout
+    "formal/README.md":
+      sha256: 9ed1c1626d0e284a1d70623524a6a76a9d2bccdd672929576cb2972febc63daf
+      portion_read: complete
+      provenance: repository_checkout
+    "formal/targets/README.md":
+      sha256: f4f4a7f08399e4556bb09bff5b172ff23784a38e76c0d6ac4da48137260be475
+      portion_read: complete
+      provenance: repository_checkout
+    "orchestration/formal/cli.py":
+      sha256: b1761581b53e49d6b80cdd5c0f9ae4925f3d886619efc79564d3c55885253429
+      portion_read: complete
+      provenance: repository_checkout
+    "tools/check_review_independence.py":
+      sha256: 4931a4534e7e04e0e62b6145375ef11ef7b47a641da92d9269734936c5d1208c
+      portion_read: module contract, joint/attestation/source validation paths, and CLI help
+      provenance: repository_checkout
+    "docs/reports/2026-11-02-attack-corpus-next-five-lean/review-plan.yaml":
+      sha256: 7a55598bad9dddb2f6b462fa981d6f4afb7e17871c417174692f1c3201f1f77f
+      portion_read: complete
+      provenance: repository_checkout
+    "formal/targets/attack-one-shot-history.yaml":
+      sha256: 454e43192383e8e38c465eca5b2d9827c844e1d3a3edef6207918bfcda9c037e
+      portion_read: complete
+      provenance: producer_snapshot_674b3248a8b007748a2cf4f10e5063e7de123be4_and_identical_review_head
+    "formal/CryptoResearch/AttackCorpus/OneShotHistory.lean":
+      sha256: d0f23ea9395bc8b3a8e2da15f73fdb43d30025571b708cdb4f2ed8bb2b8e76c1
+      portion_read: complete
+      provenance: producer_snapshot_674b3248a8b007748a2cf4f10e5063e7de123be4_and_identical_review_head
+    "research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md":
+      sha256: 4834787c796eec875c33ca16ad75801c99102b31bbc565e0694311cc63b70a68
+      portion_read: complete
+      provenance: producer_snapshot_674b3248a8b007748a2cf4f10e5063e7de123be4_and_identical_review_head
+    "research/cryptographic_assumption_attack_corpus_20261101/README.md":
+      sha256: a96c1ba72851c01501622503443ea7094557f1b2aa9e7b5c0bfc5641de095bc6
+      portion_read: source review through the Priority-0 ONE-SHOT-REPEAT and direct-JKSST discussion
+      provenance: repository_checkout
+    "knowledge/literature/KN-LIT-021.md":
+      sha256: 6eeba734e25cd831716afd3c64c7940b28b5db7d9bb761c2e3ccbe4789e51e71
+      portion_read: complete
+      provenance: repository_checkout
+    "docs/reports/xedni-sadek-20261101/README.md":
+      sha256: 7b34dd77fe09e3f666f01a92a1e8b88117c29ef2e7d23f36e55a49fe5835843e
+      portion_read: complete
+      provenance: repository_checkout
+    "problems/xedni-sadek-explicit-cutoff.md":
+      sha256: 20c1661b782f32e24f937c2c294e1d32698f52588229f8c9e4d5be80b7745809
+      portion_read: complete
+      provenance: repository_checkout
+    "formal/lean-toolchain":
+      sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+      portion_read: complete
+      provenance: repository_checkout
+    "formal/lake-manifest.json":
+      sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+      portion_read: package names and pinned revisions
+      provenance: repository_checkout
+    "formal/.lake/packages/mathlib/Mathlib/Algebra/Ring/GeomSum.lean":
+      sha256: 39f8da4943e3f8aa91fd83c6bce755d792ce603e95a97156ec33eaa00ba51afe
+      portion_read: geom_sum_mul_neg declaration
+      provenance: pinned_local_mathlib_checkout
+    "formal/.lake/packages/mathlib/Mathlib/Algebra/Order/BigOperators/Group/Finset.lean":
+      sha256: 6c31074e3991a03e6f99c99229fbde4aba6dea19202dab72c880427d9ae351c4
+      portion_read: imports and sum_le_sum declaration/documentation region
+      provenance: pinned_local_mathlib_checkout
+    "https://pages.cpsc.ucalgary.ca/~jacobs/PDF/xedni.pdf":
+      sha256: 981bf955f7aecc5df4f271837f6653bd7666e5026f59df44196609d4a1dd6bc7
+      portion_read:
+        - Section 3.2
+        - Section 4, including Lemma 4.1 and Theorem 4.1
+        - Section 6
+      provenance: retrieved_author_hosted_pdf
+  read_sibling_reports: false
+  sibling_reports_read: []
+  blindness_lifted: false
+  independence_statement: >-
+    I did not read or list any sibling-review directory or report, did not
+    communicate with another reviewer, and used no subagent. I independently
+    derived the finite tables, recurrence, geometric identity, endpoint cases,
+    and same-marginals countercontrol before reading the Lean proof body. This
+    is a joint-A specialist check and is not represented as the designated
+    joint-F blind re-derivation.
+  controls:
+    - id: same_marginals_different_history
+      result: >-
+        With epsilon=1/2 the complementary history has S=(1,1/2,0,...),
+        so the recurrence and n=2 geometric bound require 1/4<=0; extending
+        S_n=0 for n>=2 makes the N=3 tail claim 7/8<=3/4. All are false despite
+        identical one-shot counts.
+    - id: correlated_persistent_failure
+      result: >-
+        Outcome false fails every natural-numbered correlated trial, while the
+        Bool one-shot success count remains one for each trial.
+    - id: epsilon_zero
+      result: >-
+        q=1; the recurrence propagates S_n>=1 and the finite-tail inequality is
+        0<=0 for every N.
+    - id: epsilon_one_and_N_zero
+      result: >-
+        q=0; n=0 and N=0 are exact equalities, and for positive indices the
+        conclusions reduce to stated nonnegativity plus the S_0 term.
+    - id: probability_semantics_proves_too_much
+      result: >-
+        S_n=2^n with epsilon=1/2 satisfies the typed algebraic premises while
+        not being a survival-probability sequence, so expectation or probability
+        semantics cannot be inferred from the theorem type.
+    - id: jksst_boundary
+      result: >-
+        The reviewed type contains no xedni sampler, height/discriminant premise,
+        Lang input, conditional-event law, independence premise, or expected-time
+        identification and therefore neither proves nor refutes JKSST Theorem 4.1.
+  unresolved_scope:
+    - Exact hosted Lean run 41503944712 failed at line 117; the declaration has no successful kernel check or transitive axiom audit.
+    - A prospective import/proof repair is untested and would require a new producer snapshot, verification run, and affected-joint review.
+    - No general probability-space, conditional-hazard, expectation, infinite-tail, or runtime bridge is formalized.
+    - No xedni/JKSST algorithm-specific premise or computational conclusion is covered.
+    - Joints B through F and the five-target composition are outside this review.
+  procedure_deviations: []

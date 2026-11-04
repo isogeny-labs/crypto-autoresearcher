@@ -42,6 +42,11 @@ experiment:
     - experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs
     - experiments/EXP-PEXT-212d5c/implementation/fixtures/
     - experiments/EXP-PEXT-0b2c75/implementation/pext4_census.rs
+    - experiments/EXP-PEXT-bf8f96/inputs/manifest.json
+    - experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/q3-n5.json
+    - experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/q5-n3.json
+    - experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/q7-n3.json
+    - experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/q11-n3.json
     literature:
     - ref: https://eprint.iacr.org/2015/805.pdf
       provenance: retrieved
@@ -368,7 +373,7 @@ experiment:
     protocol_hashes: {}
     implementation_tier: executor-implementation
     runbook: null
-    reason: Compiler/runbook unavailable until actual complete launcher exists; no mechanical card invented.
+    reason: Source-bound candidate compiler component exists; complete six-stage launcher, controls and runbook remain unavailable, so no mechanical card is asserted.
   required_artifacts:
   - experiments/EXP-PEXT-bf8f96/implementation/run.py
   - experiments/EXP-PEXT-bf8f96/implementation/check.py
@@ -385,10 +390,8 @@ experiment:
   readiness:
     problem: problems/pext-degree2-squareclass-census-launcher.md
     blockers:
-    - Complete quotient/census launcher and independent checker absent (root algebra helper is only one component).
-      Coordinate and matched-random quartic controls also require implementation.
-    - No full-cohort inputs manifest, exact trial-plan/RUN allocation, executor handoff or prospective dispatch
-      queue.
+    - Candidate build, bounded unit loop, batch custody and independent candidate-set checker exist; complete quotient/census launcher, coefficient-aware descent, Type2, C0-C7 controls and analysis remain.
+    - Compact full-cohort inputs manifest and exact four-cohort join plans exist; trial-plan/RUN allocation, executor handoff and prospective dispatch queue remain absent.
     - 'No lawful additional lane reserved: two current PEXT lanes open; resolve lifecycle prospectively, preserving
       failed outcomes and continuation.'
     - Exact permitted Executor serving/runtime remains unavailable/unverified.

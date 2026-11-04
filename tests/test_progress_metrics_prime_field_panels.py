@@ -11,6 +11,19 @@ spec=importlib.util.spec_from_file_location('fixed_panel_metrics',Path(__file__)
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 
 
+def test_source_control_rejects_incomplete_or_inflated_rank_and_physical_counts(monkeypatch):
+    cells=[dict(cell_id=f'p{p}-i{i}',arm=a,prefix=n,scope=s,verified=True,status='verified',base_columns=16,base_rank=2,base_nullity=14,anchor_gain=1,target_base_rank_gain=1,base_rank_after_target_cancellation=3,single_targets=0,joint_targets=0,early_joint_targets=0)
+           for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for n in (0,16,64) for s in ('relations','anchors')]
+    data=dict(panel_complete=True,cells=cells,physical_work=dict(source_queries=49152,target_queries=1536,pair_entries=4928))
+    def read(d):
+        monkeypatch.setattr(M,'show',lambda ref,path:json.dumps(d));stream=io.StringIO()
+        with contextlib.redirect_stdout(stream):M.prime_field_source_control_panel('committed-ref','2026-11-04')
+        return [json.loads(v) for v in stream.getvalue().splitlines()]
+    assert len(read(data))==579
+    for change in (lambda d:d['cells'].pop(),lambda d:d['cells'][0].update(target_base_rank_gain=9),lambda d:d['physical_work'].update(source_queries=49152*6),lambda d:d['cells'][0].update(joint_targets=9)):
+        bad=copy.deepcopy(data);change(bad);assert read(bad)==[]
+
+
 def test_committed_only_exact_panels_and_invalid_recoveries(tmp_path,monkeypatch):
     def git(*args):
         return subprocess.check_output(['git','-C',str(tmp_path),'-c','user.name=test',

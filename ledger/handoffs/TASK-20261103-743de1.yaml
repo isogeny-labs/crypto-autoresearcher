@@ -1,0 +1,55 @@
+handoff:
+  id: TASK-20261103-743de1
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-03'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Archive complete squarefree quotient-quartic factorization for the prospective exceptional-index generator.
+  uncertainty_reduced: All five branch patterns now have exact finite factors and an infinity flag; the 2+2 split is deterministic and complete.
+  inputs:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/branch_factorization.rs
+  - experiments/EXP-PEXT-bf8f96/reports/branch-factorization-20261103/report.md
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-743de1.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-9bbca8.yaml
+  constraints:
+  - No scientific trials, protocol approval or freeze, hypothesis transition or new experiment.
+  - Preserve P1-P4, C0-C7, H1 and the existing resource ceilings.
+  - Factorization alone does not generate exceptional structure indices; root embeddings and cocycle solving remain.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261103-743de1/receipt.json
+  artifact_paths:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/branch_factorization.rs
+  - experiments/EXP-PEXT-bf8f96/reports/branch-factorization-20261103/report.md
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-743de1.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-9bbca8.yaml
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/branch_factorization.rs
+  - experiments/EXP-PEXT-bf8f96/reports/branch-factorization-20261103/report.md
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-743de1.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-9bbca8.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261103-743de1/receipt.json
+  archived_by: TASK-20261103-743de1
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 2
+    maximum_runs: 0
+  completion_gate:
+  - Six exact artifact paths committed; 15 core and 17 join native tests pass over fixed F27 software fixtures.
+  - Root verifies native commit-bound snapshot and publishes the PR update after merging current main.
+  - EXP-PEXT-bf8f96 remains review_required; common-extension root embedding and exceptional-index completion remain next.
+  state: queued
+  return_format: Exact archive/publication receipt and scoped factorization progress.
