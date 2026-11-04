@@ -40,7 +40,7 @@ async def test_streamable_http_mcp_over_real_loopback(populated):
             )
             async with Client(transport) as client:
                 tools = await client.list_tools()
-                assert len(tools) == 7
+                assert len(tools) == 8
                 result = await client.call_tool("search_knowledge", {"query": "KN-LIT-001"})
                 results.append([(x["source_id"], x["content_hash"]) for x in result.data["results"]])
         assert results[0] == results[1]

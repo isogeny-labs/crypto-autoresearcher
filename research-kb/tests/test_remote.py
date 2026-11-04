@@ -72,6 +72,7 @@ async def test_mcp_tools_are_read_only_and_return_real_evidence(populated):
             "search_theorems",
             "get_theorem",
             "kb_status",
+            "recent_sources",
         }
         result = await client.call_tool("search_knowledge", {"query": "KN-LIT-001", "repo": "cryptanalysis"})
         assert result.data["results"][0]["origins"][0]["repo"] == "cryptanalysis"
