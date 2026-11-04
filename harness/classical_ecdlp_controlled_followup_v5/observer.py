@@ -139,7 +139,16 @@ def load_custody(path,repo,out):
  cfg=d.read(b['config_path']);expected={'candidate','baseline'}|({'generator'} if not cfg['fixture_only'] or cfg.get('fixed_generator') else set());d.need(set(c['observations'])==set(c['closures'])==set(c['expected_arms'])==expected,'custody launch/closure membership');d.need(len({r['os']['pid'] for r in c['observations'].values()})==len(expected),'custody cloned PID')
  for arm,r in c['observations'].items():
   d.need(r['arm']==arm and r['observer_pid']==c['observer']['pid'] and r['service_IPC_absent_from_worker'] is True and r['source_sha256']==b['source_sha256'],'custody observation source/identity')
-  pr=d.read(c['closures'][arm]['process_path']);verify(pr,r)
+  closure=c['closures'][arm]
+  d.need(type(closure) is dict and type(closure.get('process_path')) is str,'custody finalized closure structure: '+arm)
+  pr=d.read(closure['process_path'])
+  d.need(type(closure.get('process_sha256')) is str and d.sha_file(closure['process_path'])==closure['process_sha256'],'custody finalized process SHA mismatch: '+arm)
+  recorded=closure.get('driver_reported_wait');actual=pr.get('termination_ack')
+  d.need(type(recorded) is dict and set(recorded)=={'wait_returned','returncode'} and recorded['wait_returned'] is True and type(recorded['returncode']) is int,'custody finalized wait structure: '+arm)
+  d.need(type(pr.get('returncode')) is int and type(actual) is dict and set(actual)=={'wait_returned','returncode'} and actual['wait_returned'] is True and type(actual['returncode']) is int,'custody current wait structure: '+arm)
+  d.need(pr['returncode']==actual['returncode']==recorded['returncode'],'custody finalized wait mismatch: '+arm)
+  d.need(closure.get('observer_post_wait_proc_absent') is True,'custody finalized absence acknowledgment: '+arm)
+  verify(pr,r)
  return c
 if __name__=='__main__':
  import argparse
