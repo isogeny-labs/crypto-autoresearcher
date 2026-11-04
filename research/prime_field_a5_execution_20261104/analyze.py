@@ -6,7 +6,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
-from common import HERE,ROOT,INPUTS,ARMS,digest,write_once
+from common import HERE,ROOT,INPUTS,ARMS,digest,write_once,export_cell
 
 def load(path):
     candidates=[p for p in (path,Path(str(path)+'.gz')) if p.is_file()]
@@ -72,6 +72,7 @@ def main():
         checks.append(dict(cell_id=stem,verification=verification))
     complete=execution['returncode']==0 and execution['source_unchanged_after'] and not execution['timeout'] and not execution['exception'] and all(c['verified'] for c in cells)
     analysis=dict(schema='a5-source-control-analysis/v1',cells=cells,panel_complete=complete,unknown_cells=sum(not c['verified'] for c in cells),independent_checks=checks,physical_cost_records=costs,archived_a4_window_control=complete,
+        physical_work_coverage=dict(coverage='finalized_cells_only',finalized_cells=len(costs),total_cells=len(rules['cells']),partial_work_unknown=len(costs)<len(rules['cells']),note='Subtotals omit unfinalized work; missing cells are not zero-work observations.'),
         physical_work=dict(source_queries=sum(v['total_counters'].get('source_queries',0) for v in costs),target_queries=sum(v['total_counters'].get('target_queries',0) for v in costs),pair_entries=sum(v['total_counters'].get('pair_table_insertions',0) for v in costs)),
         cost_scope='Oneprocess,4sharedtables/targetstreams,16executedsource schedules,96scope analyses. Disjoint phases once; no summing cumulative/inclusive clocks or overlapping Fp/Fr/group/logical units.')
     write_once(a.run/'analysis.json',analysis)
@@ -86,7 +87,8 @@ def main():
             cost=next((v for v in costs if v['cell_id']==c['cell_id']),None)
             if cost:
                 native=load(a.run/'raw'/(c['cell_id']+'.json'));counters=native['collection_counters']
-        export['runs'].append(tools.run_row(run_id='A5-'+a.run.name+'-'+c['cell_id']+'-'+c['arm']+'-'+str(c['prefix'])+'-'+c['scope'],arm=c['arm'],instance_id=c['instance_id']+'-'+str(c['prefix'])+'-'+c['scope'],seed=0 if c['arm']=='window' else int(c['arm'][-1]),replicate=0,warmup=False,
+        instance,seed=export_cell(int(c['instance_id']),c['prefix'],c['scope'],c['arm'],rules['prefixes'])
+        export['runs'].append(tools.run_row(run_id='A5-'+a.run.name+'-'+c['cell_id']+'-'+c['arm']+'-'+str(c['prefix'])+'-'+c['scope'],arm=c['arm'],instance_id=instance,seed=seed,replicate=0,warmup=False,
             status='succeeded' if c['verified'] else 'timeout' if execution['timeout'] else 'interrupted',measurements=dict(counted={k:c[k] for k in keys if k in c},counters=counters,wall_seconds=None,wall_valid=False,cpu_user_seconds=None,cpu_sys_seconds=None,max_rss_bytes=None),
             isolation=dict(tier=None,contended=None,blockers=['shared managed workstation; diagnostic clocks']),verification=dict(status='verified' if c['verified'] else 'not_run',verifier='Separate complete hash/sum/table/query/anchor/dense-affine/weight checks'),started_at=execution['started_at'],finished_at=execution['finished_at'],worker=execution['owner']))
     export['backend_record']=dict(physical_executions=1,physical_work=analysis['physical_work'],physical_cost_records='analysis.json physical_cost_records',wall_valid=False,shared_diagnostic_resources={k:execution[k] for k in ('diagnostic_wall_seconds','cpu_user_seconds','cpu_sys_seconds','max_rss_bytes')})

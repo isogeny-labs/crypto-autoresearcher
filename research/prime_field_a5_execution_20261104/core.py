@@ -104,13 +104,15 @@ def collect(cell,rules,event,*,capability=None):
         for s,Q in sources[arm].items():known[Q]=s;known[meter.neg(Q)]=(-s)%r
         # Old public information remains available in every arm.
         for s,Q in sources['window'].items():known[Q]=s;known[meter.neg(Q)]=(-s)%r
-        values=[]
+        schedule_points={point for Q in sources[arm].values() for point in (Q,meter.neg(Q))}
+        original_points={point for Q in sources['window'].values() for point in (Q,meter.neg(Q))}
+        base_lookup={point:[j,s] for (j,s),point in signed.items()};values=[]
         for t in targets:
             Q=tuple(t['point']);matches=[]
             for k in range(1,rules['collision_multipliers']+1):
                 point=e.mul(k,Q);meter.other['public_multiple_lookups']+=1
-                if point in known:matches.append(dict(multiplier=k,public_source_scalar=known[point]))
-            values.append(dict(target_index=t['index'],direct_public_scalar=known.get(Q),bounded_multiple_matches=matches))
+                if point in known:matches.append(dict(multiplier=k,public_source_scalar=known[point],from_schedule=point in schedule_points,from_original=point in original_points))
+            values.append(dict(target_index=t['index'],direct_public_scalar=known.get(Q),signed_base_atom=base_lookup.get(Q),bounded_multiple_matches=matches))
         return values
     for arm in orders:
         arms[arm]['anchor_rows']=meter.stage(arm+'_explicit_anchors',lambda arm=arm:anchors(arm))
@@ -129,6 +131,15 @@ def analyze_prefix(cell,rules,result,meter,arm,count,with_anchors):
     raw=[result['arms'][arm]['rows'][i] for i in indices]
     anchor_rows=result['arms'][arm]['anchor_rows'] if with_anchors else []
     projected=meter.stage(label+'projection',lambda:[direct.project(row,projection,meter) for row in raw+anchor_rows])
+    def window_union():
+        window_order=result['selection']['schedules']['window'][:count]
+        window=[direct.project(row,projection,meter) for row in result['arms']['window']['rows'] if row['source_scalar'] in window_order]
+        union=previous.CertifiedSystem(width,meter)
+        for v,b in window:union.add(v,b)
+        before=len(union.pivots)
+        for v,b in projected:union.add(v,b)
+        return dict(reference_base_rank=before,stacked_rank_with_window=len(union.pivots),rank_gain_over_window=len(union.pivots)-before)
+    comparison=meter.stage(label+'window_union',window_union)
     natural=meter.stage(label+'target_projection',lambda:[direct.project(row,projection,meter) for row in result['target_collection']['rows']])
     def cancel():
         first={};rows=[]
@@ -168,7 +179,7 @@ def analyze_prefix(cell,rules,result,meter,arm,count,with_anchors):
         return values
     combined=meter.stage(label+'joint_recovery',recover)
     outside=len({row['target_index'] for row in result['target_collection']['rows']});after=len(joint.pivots)-outside
-    return dict(arm=arm,prefix=count,scope=scope,source_row_indices=indices,anchor_rows_inserted=len(anchor_rows),
+    return dict(arm=arm,prefix=count,scope=scope,source_row_indices=indices,anchor_rows_inserted=len(anchor_rows),**comparison,
                 base=system.summary(kernel),distinct_equations=len(equations),singles=single,joint=joint.summary(jk),joint_recoveries=combined,
                 outside_target_rank=outside,base_rank_after_target_cancellation=after,target_base_rank_gain=after-len(system.pivots),
                 single_identified_targets=sorted({v['target_index'] for v in single if v['identifiable']}),

@@ -10,6 +10,10 @@ NATIVE = HERE
 INPUTS = HERE/'inputs.json'
 PARAMETERS = dict(prefixes=[0,16,64],seeds=[0,1,2],sources=64,fixed_projection=True,max_retained_rows=2048,max_pair_entries=4096)
 ARMS = ['window','hash0','hash1','hash2']
+
+
+def export_cell(curve_index,prefix,scope,arm,prefixes):
+    return str(curve_index*6+prefixes.index(prefix)*2+int(scope=='anchors')),0 if arm=='window' else int(arm[-1])
 SOURCES = [HERE/(name+'.py') for name in ('core','check','driver')]+[
     *[ROOT/'research/prym_experiment_design_20261019/implementation'/(name+'.py') for name in ('arithmetic','independent','fixtures','relations')],
     ROOT/'research/prime_field_a3_execution_20261030/core.py',ROOT/'research/prime_field_a4_execution_20261030/core.py', ROOT/'research/prime_field_a4_execution_20261030/check.py', ROOT/'research/prime_field_a4_execution_20261030/protocol.json',ROOT/'tools/curve_identity.py',

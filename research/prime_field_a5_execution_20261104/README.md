@@ -13,16 +13,16 @@ The separate checker reconstructs all signed triples once percurve, every pair
 and query, explicit anchors, affine kernels/cancellation/target certificates.
 
 Administrative preparation commits and pushes exact inputs and sources first.
-`prepare.py protocol --source-commit <sha> --out <study>/protocol.json --freeze`
+`prepare.py protocol --source-commit <sha> --out <study>/protocol-v2.json --freeze`
 freezes the new protocol. An actual canonical S3checkpoint then precedes
-`prepare.py release --source-commit <sha> --protocol <study>/protocol.json
+`prepare.py release --source-commit <sha> --protocol <study>/protocol-v2.json
 --out <study>/release.json --owner root-a5 --authorize-root`; commit/push that
 release and checkpoint again before launching. All are native built-in gates.
 
 Exact native command (repository root, PYTHONPATH=src:.):
 
 ```
-/workspace/factor-base-venv/bin/python -B research/prime_field_a5_execution_20261104/supervise.py --protocol research/prime_field_a5_execution_20261104/protocol.json --release research/prime_field_a5_execution_20261104/release.json --owner root-a5 --out research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9
+/workspace/factor-base-venv/bin/python -B research/prime_field_a5_execution_20261104/supervise.py --protocol research/prime_field_a5_execution_20261104/protocol-v2.json --release research/prime_field_a5_execution_20261104/release.json --owner root-a5 --out research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9
 ```
 
 One existing workstation process/thread,2GiB and21600seconds CPU/wall protective
@@ -31,6 +31,6 @@ submission; unknown budget telemetry authorizes no new cloud capacity. Native
 scientific trial output is always write-once, including failure prefixes.
 After exit, `archive.py --run <run>` losslessly compresses large closed raw
 snapshots, then official artifacts push/remote verification stores them. Run
-`analyze.py --run <run> --protocol <study>/protocol.json`, verify export files,
+`analyze.py --run <run> --protocol <study>/protocol-v2.json`, verify export files,
 and commit/push raw data before rendering the inspected report. A fresh SQLite
 extension retains the v7parent and indexes every arm/anchor/prefix certificate.

@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+from time import perf_counter,process_time
 import core
 from check import check
 from common import SOURCES,PARAMETERS,digest,write_once
@@ -28,7 +29,12 @@ def main():
                             result['prefixes'].append(core.analyze_prefix(cell,rules,result,meter,arm,count,anchor))
                 result['total_counters']=meter.counters();write_once(a.out/(cell['id']+'.json'),result)
                 events=[json.loads(line) for line in (a.out/(cell['id']+'.events.jsonl')).read_text().splitlines()]
-                write_once(a.out/(cell['id']+'.verification.json'),check(cell,rules,result,events))
+                wall,cpu=perf_counter(),process_time()
+                try:
+                    verified=check(cell,rules,result,events)
+                    write_once(a.out/(cell['id']+'.verification.json'),verified)
+                finally:
+                    write_once(a.out/(cell['id']+'.check-phase.json'),dict(phase='separate_checker',diagnostic_wall_seconds=perf_counter()-wall,cpu_seconds=process_time()-cpu,wall_valid=False))
             except BaseException as error:
                 event(dict(kind='failure',error_type=type(error).__name__,error=str(error)));raise
     print(json.dumps(dict(complete=True,curves=len(rules['cells']),scope_records=96,physical_panels=1)))

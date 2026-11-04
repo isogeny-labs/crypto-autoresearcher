@@ -36,6 +36,10 @@ def check_prefix(cell,rules,result,rec):
     if rec['source_row_indices']!=ids or rec['anchor_rows_inserted']!=len(anchors):raise ValueError('wrong prefix or anchors')
     projected=[old.project(arm['rows'][i],projection,r) for i in ids]+[old.project(row,projection,r) for row in anchors]
     M=[v for v,b in projected];rhs=[b for v,b in projected]
+    window_order=result['selection']['schedules']['window'][:rec['prefix']]
+    window=[old.project(row,projection,r)[0] for row in result['arms']['window']['rows'] if row['source_scalar'] in window_order]
+    comparison=dict(reference_base_rank=rank(window,r),stacked_rank_with_window=rank(window+M,r),rank_gain_over_window=rank(window+M,r)-rank(window,r))
+    if any(rec[k]!=v for k,v in comparison.items()):raise ValueError('union rank against window differs')
     if rec['base']['columns']!=width:raise ValueError('fixed columns changed')
     old.check_system(rec['base'],M,rhs,r)
     eq=set()
@@ -71,7 +75,7 @@ def check_prefix(cell,rules,result,rec):
     singles=sorted({v['target_index'] for v in rec['singles'] if v['identifiable']});joint=[v['target_index'] for v in rec['joint_recoveries'] if v['identifiable']]
     if (rec['outside_target_rank']!=outside or rec['base_rank_after_target_cancellation']!=after or rec['target_base_rank_gain']!=after-rank(M,r) or rec['single_identified_targets']!=singles or rec['joint_identified_targets']!=joint):raise ValueError('outside-adjusted rank/targets differ')
     A=[old.project(row,projection,r)[0] for row in arm['anchor_rows']];relations=[old.project(arm['rows'][i],projection,r)[0] for i in ids]
-    return dict(arm=rec['arm'],prefix=rec['prefix'],scope=rec['scope'],base_columns=width,base_rank=rec['base']['rank'],base_nullity=rec['base']['nullity'],
+    return dict(arm=rec['arm'],prefix=rec['prefix'],scope=rec['scope'],base_columns=width,base_rank=rec['base']['rank'],base_nullity=rec['base']['nullity'],**comparison,
         source_rows=len(ids),anchor_rows=len(arm['anchor_rows']),anchor_rank=rank(A,r),relation_rank=rank(relations,r),
         anchor_augmented_rank=rank(relations+A,r),distinct_equations=len(eq),outside_target_rank=outside,base_rank_after_target_cancellation=after,
         target_base_rank_gain=after-rank(M,r),single_targets=len(singles),joint_targets=len(joint),
@@ -134,13 +138,15 @@ def check(cell,rules,result,events):
         known={}
         for which in (arm,'window'):
             for s,Q in sources[which].items():known[Q]=s;known[(Q[0],-Q[1]%p)]=(-s)%r
-        diagnostics=[]
+        schedule_points={point for Q in sources[arm].values() for point in (Q,(Q[0],-Q[1]%p))}
+        original_points={point for Q in sources['window'].values() for point in (Q,(Q[0],-Q[1]%p))}
+        base_lookup={point:[j,s] for (j,s),point in signed.items()};diagnostics=[]
         for t in targets:
             Q=tuple(t['point']);matches=[]
             for k in range(1,rules['collision_multipliers']+1):
                 q=multiply(p,0,f['a'],k,Q)
-                if q in known:matches.append(dict(multiplier=k,public_source_scalar=known[q]))
-            diagnostics.append(dict(target_index=t['index'],direct_public_scalar=known.get(Q),bounded_multiple_matches=matches))
+                if q in known:matches.append(dict(multiplier=k,public_source_scalar=known[q],from_schedule=q in schedule_points,from_original=q in original_points))
+            diagnostics.append(dict(target_index=t['index'],direct_public_scalar=known.get(Q),signed_base_atom=base_lookup.get(Q),bounded_multiple_matches=matches))
         if value['collision_diagnostics']!=diagnostics:raise ValueError('public collision diagnostic differs')
     rows=[]
     for t in targets:

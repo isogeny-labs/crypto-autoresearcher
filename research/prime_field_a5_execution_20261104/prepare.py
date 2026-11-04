@@ -33,7 +33,7 @@ def make_protocol(commit):
         raw=json.loads(gzip.decompress(path.read_bytes()) if path.suffix=='.gz' else path.read_bytes())
         if cell['fixture']!=prior['fixture'] or cell['old_source_order']!=prior['source_order'] or cell['projection']!=raw['projection'] or cell['target_generation']!=raw['target_generation']:raise ValueError('A4 fixture/projection/target copy differs')
     value=json.loads((ROOT/'research/prime_field_a4_execution_20261030/protocol.json').read_text())
-    value.update(protocol_id='PRIME-FIELD-A5-SOURCE-CONTROL-20261104',created='2026-11-04',study_dir=str(HERE.relative_to(ROOT)),
+    value.update(protocol_id='PRIME-FIELD-A5-SOURCE-CONTROL-20261104',version=2,created='2026-11-04',study_dir=str(HERE.relative_to(ROOT)),
         authors=['Delegated administrative Coordinator and root implementer; configured model unverified'],
         question='How do three fixed hash-selected public-source schedules change relation rank and natural target identifiability relative to 1..64 on the exact four observed A4 bases, retaining the old columns and explicit new anchors?',
         freeze=dict(status='draft',commit=None,filed_before_affected_data=None,frozen_at=None,protocol_sha256=None))
@@ -48,7 +48,7 @@ def make_protocol(commit):
     value['controls']['positive']['not_applicable_reason']='Marked tiny-field software fixture exercises all query and certificate paths; no native outcome selected.'
     value['controls']['negative']['not_applicable_reason']='Software corruptions of schedules, anchors, kernels, target weights, query misses and journal entries must refuse; native misses remain in census.'
     value['randomization'].update(arm_order='fixed',arm_order_reason='window,hash0,hash1,hash2; prefixes0/16/64 and relations/anchors. Shared pair and target work once per curve.',
-        seed_derivation=dict(method='explicit_list',seeds=[0,1,2],nonce=None,note='Exact deterministic SHA256 recipes in design.md and inputs.json; no yield-conditioned redraw.'),
+        seed_derivation=dict(method='explicit_list',seeds=[0]*48+[1]*24+[2]*24,nonce=None,note='24analysis labels per arm; window/hash0seed0,hash1seed1,hash2seed2. Native schedule seeds0/1/2 exact recipes in inputs.json; no yield-conditioned redraw.'),
         instance_sampling=dict(rule='All four already observed A4 fixtures and all 32 targets; conditioned follow-up, no regeneration or outcome-based subset.',independent_of_arm=True))
     value['sample_size']['instances']=24;value['sample_size']['power']['note']='24paired analysis labels (4curves x3prefixes x2scopes), not24independent curves. Complete finite census on four observed fixtures and three specified hash seeds; no population effect or p-value estimated.'
     value['sample_size']['preflight_runtime']['measured_on']='21600seconds is a protective local machine watchdog; no new cloud submission or billing forecast.'
@@ -58,7 +58,7 @@ def make_protocol(commit):
                  dict(name='query_count',treatment='fixed',value='64source blocks per arm, one8targetstream and onepairtable percurve',how='Every bucket/sign and overlap retained/charged; analyze prefixes0/16/64 in two scopes.')],
         comparisons=[dict(id='C-source',arms=['window','hash0','hash1','hash2'],differs_in=['source_schedule'],design='one_factor',threshold='Complete finite paired observations; no rank/recovery stop.')],
         aa_not_applicable='Deterministic archived window replay and separate complete oracle; no noisy performance claim.',crosses_map=False)
-    definitions=dict(source_rows='Source witnesses in this arm prefix, before explicit anchors.',base_columns='Constant original A4 projected unknown width.',base_rank='Rank of this relation-only or explicit-anchor system.',base_nullity='Original columns minus this scope rank.',
+    definitions=dict(source_rows='Source witnesses in this arm prefix, before explicit anchors.',base_columns='Constant original A4 projected unknown width.',base_rank='Rank of this relation-only or explicit-anchor system.',base_nullity='Original columns minus this scope rank.',reference_base_rank='Original window relation rank at the same prefix.',stacked_rank_with_window='Rank of this scope plus original window relation rows at same prefix.',rank_gain_over_window='Union rank minus original window relation rank; charge extra window collection when interpreting union.',
         anchor_rank='Rank of explicit schedule public-anchor rows alone.',relation_rank='Rank of collected source rows alone.',anchor_augmented_rank='Rank of relation rows plus explicit anchors.',distinct_equations='Normalized affine equations in this scope.',
         single_targets='Natural single-row functionals satisfying vN=0.',joint_targets='Identifiable target unit columns in the joint system.',early_single_targets='Single targets identified with base nullity positive.',early_joint_targets='Joint targets identified with base uncertainty after target cancellation.',
         target_base_rank_gain='rank([[M,0],[B,U]])-rank(U)-rank(M).',base_rank_after_target_cancellation='Joint rank minus outside target-column rank.')
@@ -76,6 +76,7 @@ def make_protocol(commit):
     value['reporting']['graphs']=['Per curve schedule ranks and explicit anchor gains at all fixed prefixes; single/joint target recovery and outside-adjusted ranks.']
     value['literature']=[dict(ref='research/prime_field_a4_execution_20261030/RESULTS.md; problems/prime-field-holdout-rank-and-target-coverage.md',provenance='internal',verified_by='/root and delegated administrative Coordinator,2026-11-04',claim='Completed A4 leaves source selection versus base geometry unresolved; same observed fixtures/targets isolate the next control.'),dict(ref='https://people.maths.ox.ac.uk/petit/files/16PKC_primeECDLP.pdf sections3.1-3.4',provenance='retrieved',verified_by='/root,2026-11-04; retained primary pages7-9 reread',claim='Random public combinations and signed base sums motivate source selection; precomputation/relations/linear algebra are separately charged.')]
     value['links']=dict(literature='literature.md',design='design.md',prior_A4='../prime_field_a4_execution_20261030/RESULTS.md')
+    value['amendments']=[dict(id='A5-PROSPECTIVE-METADATA-REPAIR',filed='2026-11-04',filed_before_affected_data=True,reason='Administrative assessment found export instance/seed-table incompatibility in unused v1 before any native execution.',changes=['Map24paired labels to decimal0..23 and explicit96arm seeds; native seeds unchanged.','Retain separate independent-checker diagnostic wall/CPU phase.','Add prospectively metered union rank against original window to distinguish equal ranks from equal spans; label source/base diagnostic matches.'],supersedes_fields=['version','randomization.seed_derivation','analysis_plan.script','metrics.primary','arms.instrument'])]
     return value
 
 

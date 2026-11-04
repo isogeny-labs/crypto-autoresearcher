@@ -27,7 +27,7 @@ any other recovered labels, or select only the deficient/favorable fixtures.
 
 Vary only the 64 queried public source scalars. Four schedules per fixture:
 
-- `small`: exact original A4 source_order of1..64, retaining its order.
+- `window`: exact original A4 source_order of1..64, retaining its order.
 - `hash0`, `hash1`, `hash2`: seed0,1,2 respectively. For index0..63, try
   counter0..9999 in ascending order. Hash the exact UTF-8 string
   `prime-field-source-control/20261104/v1|FULL_EC1_UID|SEED|INDEX|COUNTER`,
@@ -63,9 +63,9 @@ though no source relation rows are inserted. Its source construction and anchor
 discovery costs belong to that observation; prefix0 is not a cold/free attack.
 Report per scope, with A denoting explicit additional anchor rows:
 
-- `relation_only`: M contains accepted three-sum source rows in the prefix,
+- `relations`: M contains accepted three-sum source rows in the prefix,
   projected with original A4 anchors only.
-- `anchor_augmented`: insert the same M plus all schedule A rows, with carried
+- `anchors`: insert the same M plus all schedule A rows, with carried
   provenance and weights. Report rank(A),rank(M),rank([M;A]) and the marginal
   anchor gain rank([M;A])-rank(M), rather than silently shrinking U.
 
@@ -107,20 +107,20 @@ for base-only equations. Report outside rank, stacked rank,Delta_q, resulting ba
 rank and nullity. Do not credit outside target unknowns as extra base information.
 Public anchor gain is reported separately from target cancellation gain.
 
-Retain the prospective A4 collision diagnostic t1..64 against signed original
-public s1..64, plus separately labelled matches against each new schedule's
-signed64sources and signed base points. Direct target/source matches and
-schedule overlaps remain visible. Diagnostics never discard targets or become
+Retain t1..64 target-multiple diagnostics against the union of signed original
+public s1..64 and each schedule's signed64sources, with the matched public scalar
+and explicit from_schedule/from_original membership flags. Direct target signed
+base-atom matches are also retained; unchanged A4point identities remain bound. Direct target/source matches and schedule overlaps remain visible. Diagnostics never discard targets or become
 unannounced solver inputs. Nonmatches exclude only the declared finite tests.
 
 ## Controls, verification and decision boundary
 
-The freshly queried small schedule must reproduce exact archived A4 source and
+The freshly queried window schedule must reproduce exact archived A4 source and
 common target descriptor sets, affine mapping, prefix ranks and target outcomes
-under relation_only, after matching canonical order. This is an A/A historical
-correctness control, not a matched A4/A5 wall comparison. Anchor-augmented small
+under relations, after matching canonical order. This is an A/A historical
+correctness control, not a matched A4/A5 wall comparison. The anchors scope of window
 adds no information beyond original A4 anchors. Both scope widths remain fixed.
-New hash outcomes are not required to match the small schedule's spans or counts.
+New hash outcomes are not required to match the window schedule's spans or counts.
 
 The separate checker reconstructs hash recipes and all rejection traces, source
 points and signed coincidences using independent E arithmetic, the complete
@@ -138,8 +138,10 @@ Report all four matched cells and all three hash seeds. Changed relation-only
 rank/span or target syndromes isolates a finite schedule effect worth subsequent
 fresh holdouts; changes confined to anchor augmentation identify the declared
 public-anchor contribution. Equal ranks alone do not prove equal spans: retain
-kernels and, if implemented prospectively, union-rank action versus the small
-scope as a separately charged comparison. Unchanged deficient spans motivate a
+kernels and prospectively metered union rank versus the window relations at
+the same prefix, separately checked with dense rank. Record reference_base_rank,
+stacked_rank_with_window and rank_gain_over_window; interpreting their union
+requires the window collection as well as the candidate scope. Unchanged deficient spans motivate a
 separate one-factor base comparison. Unknown/censored/failed runs are not zeros
 or mathematical refutations; a bounded miss preserves the broader direction.
 
@@ -211,6 +213,25 @@ This delegation has generated no native schedule, source point, relation or targ
 Configured coordinator resolution on2026-11-04 is
 coordinator-orchestration-code → anthropic:claude-opus-5-5,effort high,
 model id unverified. No successful probe or verified-model approval is claimed.
-No final administrative admission assessment has yet been made: new exact source,
-checker, input/provenance, analysis/export and frozen protocol interfaces remain
-for parent to supply and this delegate to assess within its authorized scope.
+Administrative assessment of the revised prospective v2 implementation is complete:
+source/input provenance, fixed columns, explicit anchors, complete finite checker,
+carried cancellation/target certificates, shared cost ownership and corrected
+exporter interface are administratively approvable within this scope. This is
+not a scientific review or execution authorization. See admission-assessment.json
+for exact reviewed source/input hashes and pending publication/admission steps.
+
+The initial unused v1 protocol remains immutable at protocol.json, canonical
+SHA25638ae02b40fc97475a5eaa4e057efb8d7b9b1f22ef16a3055fa8d3fea8c8f3e2b,
+source0cea79436e17b4c5360886b4bfb8a3c2c0dd4c1b. It is superseded for this
+prospective route and must not be released. The v2 generator records the additive
+amendment; freeze a fresh protocol-v2.json only against the new exact committed,
+pushed source after this assessment. No native data preceded the repair.
+
+V2maps the24paired instance labels to decimal0..23, and the96explicit seed
+entries to window/hash0seed0,hash1seed1,hash2seed2, matching actual export rows.
+The new synthetic96row metadata test exercises the real tools.lint_export and
+rejects the previous symbolic instance ID and wrong-arm seed. It passed1test
+in0.21s in this delegation without point arithmetic or scientific generation.
+Separate checker diagnostic wall/CPU is retained in each check-phase.json.
+Incomplete panels label work subtotals finalized_cells_only and expose missing
+cell counts/partial_work_unknown; a zero subtotal is not a zero-work observation.
