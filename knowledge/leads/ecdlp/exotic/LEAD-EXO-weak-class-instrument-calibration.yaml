@@ -1,0 +1,58 @@
+id: LEAD-EXO-weak-class-instrument-calibration
+family: exotic
+title: >-
+  Natural weak curve classes (anomalous, MNT small embedding degree, j = 0 with a stable factor
+  base) as positive controls for the numeric structure instruments: a detect-or-blind table
+mechanism: >-
+  Most null or exhausted structure rows rest on numeric instruments that have not been run on
+  curves whose discrete logarithm is known to be easy. The one exception so far is QTT on
+  anomalous curves, cited below. Synthetic planted signals
+  (LEAD-EXO-methodology-instruments) test detection of a signal of the instrument's own type, not
+  sensitivity to real cryptanalytic weakness. This lead runs natural weak classes through each
+  instrument: (A) anomalous, #E = p (Smart, polynomial time); (B) prime-order curves with embedding
+  degree k in {3, 4, 6} (MOV, subexponential); (C) j = 0 with a zeta-stable factor base; and (D)
+  ordinary prime-order curves as the reference. The instruments are (i) the digit-QTT rank of the
+  decomposition transfer matrix (holant step b), (ii) the character-sum maximum against a
+  negation-symmetric null (see report leads-round2-20261104, check D1), (iii) the low-degree
+  evaluation rank with multipliers free of short relations (check D2), and (iv) the m = 2 x-keyed
+  decomposition yield against a random factor base. The QTT x anomalous cell is already measured
+  (report anomalous-qtt-20261104: no difference from ordinary curves at p <= 127).
+disposition: open_next_step
+next_action:
+  step: >-
+    Freeze a protocol for p in [2^10, 2^14], 3 curves per class per size, each instrument with its
+    own null, and record per (instrument, class, size) whether the class falls inside the null's
+    5-95% band. Expected blind (prior about 85%).
+  discriminates: >-
+    If blind, each exhausted_at_scale row resting on instruments (i), (ii) or (iv) gets a scope
+    note: "blind to Smart- and MOV-weak classes; a null excludes only structure of this statistic's
+    type". That is scoping, not closure. If an instrument separates A or B from D in the same
+    direction at 2 or more sizes, it is the first with natural dynamic range, and its signal is
+    explained before any ordinary-curve null from it is read.
+best_measured: >-
+  QTT x anomalous measured: no difference from ordinary curves at p <= 127 (report
+  anomalous-qtt-20261104)
+evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/leads-round2-20261104/new-leads-memo.md
+  note: proposal N1, with emulated novelty matches; the real lead_atlas --match gate is recorded in the round-2 report
+- repo: crypto-autoresearcher
+  path: docs/reports/anomalous-qtt-20261104/README.md
+  note: the QTT x anomalous cell
+ledger_refs: []
+known_results:
+- KR-RHO-13bf67
+related:
+- LEAD-EXO-methodology-instruments
+- LEAD-TRF-anomalous-padic-lift
+- LEAD-TRF-mov-small-embedding-degree
+- LEAD-EXO-dl-character-sum-pseudorandom
+- LEAD-EXO-holant-decomposition-count-network
+- LEAD-EXO-low-degree-query-lower-bound
+forecloses:
+- structure instruments calibrated on curves with an easy discrete logarithm
+- anomalous and MNT curves as positive controls for numeric statistics
+- detect-or-blind table of the ECDLP structure instruments
+areas:
+- ECDLP
+last_reviewed: '2026-11-04'

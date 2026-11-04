@@ -42,15 +42,25 @@ next_action:
     exhausted_at_scale for QTT structure at p <= 2^10. Next, only if a candidate appears: a
     basis or labelling family with description sub-polynomial in p and QTT rank below sqrt(p).
   discriminates: >-
-    Even the discrete-log labelling leaves QTT rank of order sqrt(p). That was measured for three
-    labellings and is not proved for all, so a labelling family helps only if it beats the
-    discrete-log labelling itself. Reopen on such a family, on a contraction model that is
-    not a tensor train over digits, or on the anomalous-curve observation in the report (one
-    p = 61 curve with #E = p sat below the null; it is outside the decision rule).
+    In log order M is Toeplitz-plus-Hankel in the factor base's log set. Round-2 check D3 shows
+    that the sqrt(p)-scale rank of the discrete-log labelling comes from how random log(FB) is, not
+    from the group law: a factor base whose logs form an arithmetic progression gives rank 12-18 at
+    every size. So the QTT branch reduces to the digit complexity of log(FB), and a low-rank
+    factor base means one whose logs are cheaply known, which is generic. A Coordinator could
+    file this branch closed_dominated by the character-sum row. Reopen on such a family, on a contraction model that is
+    not a tensor train over digits. The anomalous-curve pointer is closed: a frozen follow-up
+    (report anomalous-qtt-20261104) compared 63 anomalous with 63 ordinary curves over primes 37..127,
+    and found no difference (stratified permutation p = 0.83).
 best_measured: >-
   QTT rank of M, interleaved digits, p = 1021: x-labelling 1024 (the ceiling), random
   relabelling 1023-1024, discrete-log labelling 109-121 (structure statistic, not a cost)
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/leads-round2-20261104/checks/d3.json
+  note: log-order QTT rank tracks the log-set symbol; log-AP factor base gives rank 12-18 at p up to 1021
+- repo: crypto-autoresearcher
+  path: docs/reports/anomalous-qtt-20261104/README.md
+  note: anomalous vs ordinary curves, QTT percentile within own null; verdict NULL, controls valid
 - repo: crypto-autoresearcher
   path: docs/reports/holant-step-b-qtt-20261104/README.md
   note: >-
