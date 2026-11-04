@@ -1,0 +1,455 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "HOLANT-STEPB-QTT-20261104",
+  "version": 1,
+  "created": "2026-11-04",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "docs/reports/holant-step-b-qtt-20261104",
+  "authors": [
+    "Claude Code session (holant lead, step b)"
+  ],
+  "links": {
+    "lead": "knowledge/leads/ecdlp/exotic/LEAD-EXO-holant-decomposition-count-network.yaml",
+    "step_a_report": "docs/reports/holant-h1-ggm-lemma-20261103/README.md",
+    "note": "Step (b) as worded compares tensor/flattening ranks of T after invertible bond-wise basis changes; those ranks are GL-invariant (invariance.py, all flattening ranks 61 at p=61 under Fourier, multiplicative-character and random bases), so the step is reformulated with a basis-dependent measure: QTT ranks over the binary digits of the F_p alphabet."
+  },
+  "question": "For the decomposition transfer matrix M[y,z] = #{x in FB : S_3(x,y,z)=0} over F_p (p < 2^L, L = 6..10), is the binary-digit tensor-train (QTT) rank of M under the natural x-coordinate labelling lower than under a uniformly random relabelling of F_p, i.e. do x-coordinates carry digit-level structure that a poly(log p) contraction could use?",
+  "claims": [
+    {
+      "id": "C0",
+      "text": "Flattening and CP ranks of T are invariant under invertible bond-wise basis changes, so the original step (b) cannot discriminate (theorem; numerical identity check in invariance.py).",
+      "class": "theorem",
+      "decided_by": []
+    },
+    {
+      "id": "C1",
+      "text": "At p <= 2^10, the interleaved QTT rank r_max of M in x-labelling is (or is not) below the random-relabelling null, by the preregistered rule.",
+      "class": "comparative",
+      "decided_by": [
+        "C-x-vs-null"
+      ],
+      "if_supported": "first non-generic digit-level structure in the x-labelled network; next step is a charged comparison against matched rho on a size ladder",
+      "if_not_supported": "no digit-level QTT structure at p <= 2^10; the lead's step (b) records exhausted_at_scale for this measure, reopening only for a labelling or basis family with sub-polynomial description in p"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "x-coordinate labelling hides the Cayley-graph structure as well as a random labelling does (QTT ranks of M in x-labelling match the random-relabelling null).",
+      "mechanism": "x(P) for P in a cyclic group of prime order behaves like a pseudo-random function of log P; digit structure of x carries no information about the group law beyond the algebraic relation S_3.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "r_max_interleaved",
+          "direction": "equal_within",
+          "minimum_effect": "X inside the null's central 90% on >= 7 of 9 curves with L >= 8",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "X",
+      "role": "candidate",
+      "description": "M with natural x-coordinate labelling 0..p-1, padded to 2^L",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/holant-step-b-qtt-20261104/qtt_rank.py",
+          "script_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "labelling": "natural"
+      }
+    },
+    {
+      "id": "N",
+      "role": "control_negative",
+      "description": "M relabelled by a uniform random permutation of F_p; 99 draws per curve; draws split into streams 0/1 by parity for the A/A check",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/holant-step-b-qtt-20261104/qtt_rank.py",
+          "script_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "labelling": "random_permutation",
+        "draws": 99
+      },
+      "same_instrument_as": "X"
+    },
+    {
+      "id": "LOG",
+      "role": "control_positive",
+      "description": "E-block of M relabelled by discrete-log orbit index min(k, n-k) - 1 (a Toeplitz-plus-Hankel pattern in that order); twist x's keep natural order after it",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/holant-step-b-qtt-20261104/qtt_rank.py",
+          "script_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "labelling": "discrete_log_orbit"
+      },
+      "same_instrument_as": "X"
+    },
+    {
+      "id": "SH",
+      "role": "control_positive",
+      "description": "shift matrix [z = y + 1 mod p], a known low-QTT-rank object, run through the same rank code",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/holant-step-b-qtt-20261104/qtt_rank.py",
+          "script_sha256": "3b467fe6cab15a8432f430c42bf6d271afd0f8d01ee34116d06e898fa2b765d7"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "matrix": "shift"
+      },
+      "same_instrument_as": "X"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "LOG",
+      "expected_detection": "LOG r_max below the minimum null r_max on every curve with L >= 8; SH reported as detector sanity",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "N",
+      "null_population": {
+        "description": "uniform random relabellings of F_p applied to the same M of the same curve",
+        "generator": "numpy default_rng(sha256(protocol_sha|null|L|curve|draw)).permutation(p), applied as M[q][:,q]",
+        "n": 99,
+        "why_n": "min one-sided empirical p 0.01 per curve; the SIGNAL rule conjoins 9 curves",
+        "matched_on": [
+          "curve",
+          "factor base",
+          "graph",
+          "spectrum",
+          "nonzero count",
+          "padding to 2^L",
+          "rank code and tolerance"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "labelling",
+        "levels": [
+          "natural",
+          "random_permutation",
+          "discrete_log_orbit"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "prime_size",
+        "treatment": "crossed",
+        "value": "L in 6..10, p = largest prime < 2^L",
+        "how": "every size runs every arm"
+      },
+      {
+        "name": "curve",
+        "treatment": "randomized",
+        "how": "3 curves per size, (a,b) drawn from a stream seeded by sha256(protocol_sha|curves|L); accepted iff nonsingular and #E(F_p) an odd prime"
+      },
+      {
+        "name": "factor_base",
+        "treatment": "fixed",
+        "value": "floor(sqrt p) smallest x-coordinates of E(F_p)",
+        "how": "same FB for all arms of a curve"
+      },
+      {
+        "name": "generator_for_LOG",
+        "treatment": "fixed",
+        "value": "first enumerated point E[1]",
+        "how": "orbit index is generator-dependent only up to a multiplier; fixed rule"
+      },
+      {
+        "name": "rank_tolerance",
+        "treatment": "fixed",
+        "value": "s > s_max * max(dim) * 1e-12",
+        "how": "same numeric rank rule in every unfolding of every arm"
+      },
+      {
+        "name": "padding",
+        "treatment": "fixed",
+        "value": "zero-pad p x p to 2^L x 2^L, labels 0..p-1 occupy the low indices",
+        "how": "same for all arms"
+      },
+      {
+        "name": "null_seed",
+        "treatment": "randomized",
+        "how": "sha256(protocol_sha|null|L|curve|draw)"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "counts only; host recorded in the export, no clock read"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-x-vs-null",
+        "arms": [
+          "X",
+          "N"
+        ],
+        "differs_in": [
+          "labelling"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-pos",
+        "arms": [
+          "LOG",
+          "N"
+        ],
+        "differs_in": [
+          "labelling"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "N",
+          "N"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "ranks are exact deterministic counts of a fixed matrix; execution order cannot change them (no clock, no state carried between arms)",
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "every seed is sha256(freeze.protocol_sha256 | tag | L | curve | draw)[:8]; the hash is passed as --protocol-sha"
+    },
+    "instance_sampling": {
+      "rule": "curves drawn before and independently of any arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "analysis is a frozen script applying a fixed rule; no analyst choice remains",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 15,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": 99,
+      "min_attainable_two_sided_p": 0.02,
+      "passes": true,
+      "note": "the SIGNAL rule is one conjunctive test: X below all 99 null draws on all 9 curves with L >= 8 (null probability <= 0.01^9). The intended effect is large (a usable structure would need r_max far below the ~2^L null), so 99 draws per curve resolve it; a subtle effect is out of scope."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 5,
+      "per_sample_seconds": 2.4,
+      "threads": 1,
+      "estimated_total_seconds": 1100,
+      "measured_on": "this container; p=1021 build 0.55 s + ranks 2.36 s, p=251 0.22 s, on a curve drawn with a non-sample seed tag (timing only, ranks not read)"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "r_max_interleaved",
+        "name": "max interleaved QTT rank",
+        "unit": "rank",
+        "kind": "exact",
+        "definition": "max over the 2L-1 unfoldings of M (digits y_msb,z_msb,...,y_0,z_0) of the numeric rank",
+        "source": "rows.jsonl interleaved.r_max",
+        "aggregation": "distribution",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "r_max_blocked",
+        "name": "max blocked QTT rank",
+        "unit": "rank",
+        "kind": "exact",
+        "definition": "same, digits ordered y then z",
+        "source": "rows.jsonl blocked.r_max",
+        "aggregation": "distribution",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "log2_params",
+        "name": "sum of log2 ranks",
+        "unit": "bits",
+        "kind": "exact",
+        "definition": "sum over cuts of log2 rank (interleaved and blocked)",
+        "source": "rows.jsonl *.log2_params",
+        "aggregation": "distribution",
+        "resolution": "exact",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "unfolding ranks"
+    ],
+    "record": [
+      "python_version",
+      "numpy_version",
+      "host",
+      "script_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "instance_type": "Claude Code cloud container (CPU)",
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 7200,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed design: 5 sizes x 3 curves x (X, LOG, SH, 99 N) = 1530 matrices, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "decision_rule": {
+    "text": "Validity: LOG r_max < min null r_max on every curve with L >= 8, and |median(stream0) - median(stream1)| <= pooled null IQR on every such curve; otherwise INVALID_CONTROLS. SIGNAL: X r_max below every null draw on all 9 curves with L >= 8 and X r_max <= 0.75 x null median on every L = 10 curve. NULL: X inside the null's 5th..95th percentile on >= 7 of those 9 curves. Otherwise INCONCLUSIVE. (C-aa is a validity gate, not a deciding comparison.)",
+    "comparison_ids": [
+      "C-x-vs-null",
+      "C-pos"
+    ],
+    "threshold": "as in text",
+    "statistic": "interleaved r_max per curve; empirical one-sided p = (1 + #null <= X)/100",
+    "interval": "null 5th-95th percentile",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "X r_max / null median",
+    "verdict_vocabulary": [
+      "SIGNAL",
+      "NULL",
+      "INCONCLUSIVE",
+      "INVALID_CONTROLS"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "docs/reports/holant-step-b-qtt-20261104/analyze.py",
+      "sha256": "1930766809509912d2983e5bc255251e4f14c889b99831e37a3addf9a608d0a3"
+    },
+    "inputs": [
+      "rows.jsonl"
+    ],
+    "outputs": [
+      "verdict.json (interleaved, primary)",
+      "verdict_blocked.json (secondary)"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "inadmissible": [
+    "changing sizes, curves, FB rule, null draws, rank tolerance or the decision rule after seeing results",
+    "reading a SIGNAL as an attack-cost claim: QTT rank of M is a structure statistic, not a priced method",
+    "excluding a curve or a null draw after seeing its rank"
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "bdba447e899094f553eb43b857230191e0b5f8d494988d9cf9c4d6b577b34cd3",
+    "commit": "4970366bd4875e30ce09210c3e2b56359fd6348f",
+    "frozen_at": "2026-11-04T01:57:18Z",
+    "filed_before_affected_data": true
+  }
+}
