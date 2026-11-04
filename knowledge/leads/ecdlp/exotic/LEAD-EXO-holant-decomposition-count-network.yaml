@@ -1,60 +1,36 @@
 id: LEAD-EXO-holant-decomposition-count-network
 family: exotic
-title: >-
-  Holant / holographic view of the decomposition-count tensor network over F_p, and its
-  transfer-matrix spectrum
-mechanism: >-
-  Write the number of m-term decompositions of a target R over a factor base FB as a closed
-  tensor network over the alphabet F_p: a chain of ternary tensors T[x,y,z] = [S_3(x,y,z) = 0],
-  whose internal bonds carry x-coordinates of partial sums, with the indicator vector of FB on
-  each leaf. Holant theory asks whether a basis change on the bond spaces (a holographic
-  transformation) makes such a counting network cheap to contract. Contracting one leaf gives
-  the transfer matrix M[y,y'] = #{x in FB : S_3(x,y,y') = 0}. On the F_p alphabet M splits
-  into an E(F_p) block and a quadratic-twist block. For odd #E the E block is the symmetrised
-  quotient by negation of the Cayley graph of E(F_p) with connection set {+-F : x(F) in FB},
-  with the vertex O deleted, because O has no x-coordinate. Its eigenvalues are the zeros of
-  sum_j 1/(lambda_j - mu), where lambda_j are the character sums, plus any degenerate lambda_j.
-  Its eigenvectors are Green functions sum_j cos(2 pi j log P / n)/(lambda_j - mu), not single
-  characters, but they are still explicit functions of the discrete logarithm. For even #E the
-  2-torsion rows differ by a factor 2 (report 2026-11-03). So a basis that diagonalises M
-  already encodes the answer, and the open question is whether any cheaper basis lowers the
-  tensor rank of T. This differs from LEAD-ICE-gag-contraction-planner, which
-  asks which presentation of the same system is cheapest for a Groebner solver, and from
-  LEAD-EXO-hashed-factor-base-tensor-ecdl, which contracts a Boolean encoding by #SAT. Numbered
-  heuristics. H1 (derivation and red-team review 2026-11-03, replacing the scouting version):
-  T and M are public, so building or transforming them costs 0 group queries. If entries are
-  indexed by group labels, an entry costs at most 4 group queries and Shoup's bound applies,
-  but that class cannot change basis on the F_p alphabet. A holographic basis change needs
-  x(R) of instance points as field elements, and an x-coordinate oracle is not
-  GGM-simulable with o(sqrt n) queries on any curve: two queries and free local work give the
-  logarithm. So the GGM excludes no basis change, and step (b) is the test. H2: the Cai-Chen complex-weighted #CSP dichotomy is stated for a
-  fixed finite domain; here the domain F_p grows with the instance, so it gives no closure.
-disposition: open_next_step
-next_action:
-  step: >-
-    (a) Done 2026-11-03: H1 restated, with no basis family removed from scope (report
-    holant-h1-ggm-lemma-20261103). (b) Done 2026-11-04 (report holant-step-b-qtt-20261104).
-    Ranks of T are invariant under invertible bond-wise basis changes, so the step was
-    reformulated as a frozen test of binary-digit tensor-train (QTT) rank of M. The verdict is
-    NULL with valid controls: the x-labelling sits at the rank ceiling 2^L, like 99 random
-    relabellings, on all 9 curves with p in {251, 509, 1021}. The discrete-log labelling
-    (positive control) has rank about 2-4 sqrt(p). Proposed for the Coordinator: disposition
-    exhausted_at_scale for QTT structure at p <= 2^10. Next, only if a candidate appears: a
-    basis or labelling family with description sub-polynomial in p and QTT rank below sqrt(p).
-  discriminates: >-
-    In log order M is Toeplitz-plus-Hankel in the factor base's log set. Round-2 check D3 shows
-    that the sqrt(p)-scale rank of the discrete-log labelling comes from how random log(FB) is, not
-    from the group law: a factor base whose logs form an arithmetic progression gives rank 12-18 at
-    every size. So the QTT branch reduces to the digit complexity of log(FB), and a low-rank
-    factor base means one whose logs are cheaply known, which is generic. A Coordinator could
-    file this branch closed_dominated by the character-sum row. Reopen on such a family, on a contraction model that is
-    not a tensor train over digits. The anomalous-curve pointer is closed: a frozen follow-up
-    (report anomalous-qtt-20261104) compared 63 anomalous with 63 ordinary curves over primes 37..127,
-    and found no difference (stratified permutation p = 0.83).
-best_measured: >-
-  QTT rank of M, interleaved digits, p = 1021: x-labelling 1024 (the ceiling), random
-  relabelling 1023-1024, discrete-log labelling 109-121 (structure statistic, not a cost)
+title: Holant / holographic view of the decomposition-count tensor network over F_p, and its transfer-matrix
+  spectrum
+mechanism: 'Write the number of m-term decompositions of a target R over a factor base FB as a closed
+  tensor network over the alphabet F_p: a chain of ternary tensors T[x,y,z] = [S_3(x,y,z) = 0], whose
+  internal bonds carry x-coordinates of partial sums, with the indicator vector of FB on each leaf. Holant
+  theory asks whether a basis change on the bond spaces (a holographic transformation) makes such a counting
+  network cheap to contract. Contracting one leaf gives the transfer matrix M[y,y''] = #{x in FB : S_3(x,y,y'')
+  = 0}. On the F_p alphabet M splits into an E(F_p) block and a quadratic-twist block. For odd #E the
+  E block is the symmetrised quotient by negation of the Cayley graph of E(F_p) with connection set {+-F
+  : x(F) in FB}, with the vertex O deleted, because O has no x-coordinate. Its eigenvalues are the zeros
+  of sum_j 1/(lambda_j - mu), where lambda_j are the character sums, plus any degenerate lambda_j. Its
+  eigenvectors are Green functions sum_j cos(2 pi j log P / n)/(lambda_j - mu), not single characters,
+  but they are still explicit functions of the discrete logarithm. For even #E the 2-torsion rows differ
+  by a factor 2 (report 2026-11-03). So a basis that diagonalises M already encodes the answer, and the
+  open question is whether any cheaper basis lowers the tensor rank of T. This differs from LEAD-ICE-gag-contraction-planner,
+  which asks which presentation of the same system is cheapest for a Groebner solver, and from LEAD-EXO-hashed-factor-base-tensor-ecdl,
+  which contracts a Boolean encoding by #SAT. Numbered heuristics. H1 (derivation and red-team review
+  2026-11-03, replacing the scouting version): T and M are public, so building or transforming them costs
+  0 group queries. If entries are indexed by group labels, an entry costs at most 4 group queries and
+  Shoup''s bound applies, but that class cannot change basis on the F_p alphabet. A holographic basis
+  change needs x(R) of instance points as field elements, and an x-coordinate oracle is not GGM-simulable
+  with o(sqrt n) queries on any curve: two queries and free local work give the logarithm. So the GGM
+  excludes no basis change, and step (b) is the test. H2: the Cai-Chen complex-weighted #CSP dichotomy
+  is stated for a fixed finite domain; here the domain F_p grows with the instance, so it gives no closure.'
+disposition: closed_dominated
+best_measured: 'QTT rank of M, interleaved digits, p = 1021: x-labelling 1024 (the ceiling), random relabelling
+  1023-1024, discrete-log labelling 109-121 (structure statistic, not a cost)'
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/paired-anomaly-20261104/README.md
+  note: 'instrument scope: weak classes not detected; zeta-stable FB detected; paired anomaly not replicated'
 - repo: crypto-autoresearcher
   path: docs/reports/leads-round2-20261104/checks/d3.json
   note: log-order QTT rank tracks the log-set symbol; log-AP factor base gives rank 12-18 at p up to 1021
@@ -63,20 +39,18 @@ evidence:
   note: anomalous vs ordinary curves, QTT percentile within own null; verdict NULL, controls valid
 - repo: crypto-autoresearcher
   path: docs/reports/holant-step-b-qtt-20261104/README.md
-  note: >-
-    step (b): basis-change rank invariance, and the frozen QTT-rank test (verdict NULL,
-    controls valid)
+  note: 'step (b): basis-change rank invariance, and the frozen QTT-rank test (verdict NULL, controls
+    valid)'
 - repo: crypto-autoresearcher
   path: docs/reports/holant-h1-ggm-lemma-20261103/README.md
-  note: >-
-    step (a): H1 restated (label-indexed reading closed but excludes basis changes, field-indexed
-    reading outside the GGM); transfer matrix is the O-deleted quotient; red-team review included
+  note: 'step (a): H1 restated (label-indexed reading closed but excludes basis changes, field-indexed
+    reading outside the GGM); transfer matrix is the O-deleted quotient; red-team review included'
 - repo: crypto-autoresearcher
   path: docs/reports/ecdlp-exotic-scouting-20261101/README.md
   note: scouting note, novelty gates, heuristics H1-H2 and the transfer-matrix observation
 - repo: crypto-autoresearcher
   path: knowledge/literature/KN-LIT-c9e59d.md
-  note: Graphical Algebraic Geometry (Gao, Shaikh, Kissinger), #CSP as closed-diagram rewriting
+  note: Graphical Algebraic Geometry (Gao, Shaikh, Kissinger),
 - repo: crypto-autoresearcher
   path: knowledge/findings/KN-FIND-002.md
   note: GGM simulability of jet and endomorphism oracles, the template for H1
@@ -99,3 +73,26 @@ forecloses:
 areas:
 - ECDLP
 last_reviewed: '2026-11-04'
+dominated_by: LEAD-EXO-dl-character-sum-pseudorandom
+obstruction:
+  kind: measured
+  statement: 'Scope: contraction of the Semaev decomposition-count network through basis changes of the
+    F_p bond alphabet. (a) Invertible bond-wise basis changes cannot lower flattening or CP ranks (GL-invariance;
+    holant-step-b-qtt-20261104, invariance.py). (b) The GGM excludes no basis change: field-indexed access
+    is a coordinate oracle (holant-h1-ggm-lemma-20261103). (c) Measured with controls: the digit-QTT rank
+    of the transfer matrix M in x-labelling equals that of random relabellings at p <= 2^10 (HOLANT-STEPB-QTT-20261104,
+    NULL), and anomalous curves are no different (ANOMALOUS-QTT-20261104, NULL). (d) In discrete-log order
+    M is Toeplitz-plus-Hankel in the factor base''s log set, and its QTT rank tracks that set''s digit
+    complexity (round-2 check D3: a log-AP factor base gives rank 12-18, small-x and random-log bases
+    47-120). The branch therefore reduces to the digit/Fourier structure of log(FB), the object of LEAD-EXO-dl-character-sum-pseudorandom,
+    which measures it directly (consistent with random against a negation-matched null, HPSEUDO-SYMNULL-20261104).
+    Owner decision 2026-11-04 in session. Scope note (owner decision 2026-11-04; WEAKCLASS-20261104, WEAKCLASS-I1-20261104,
+    PAIRED-ANOMALY-20261104): the character-sum instrument does not detect anomalous or small-embedding-degree
+    curves (36 curves per class, p <= 2^14, no shift). It is sensitive to factor-base symmetry: zeta-stable
+    sets sit low (p < 1e-5). The digit-QTT instrument shows no detection at p ~ 2^10, where it is rank-saturated.
+    A NULL from these statistics therefore excludes structure of their own type only, not an easy discrete
+    logarithm.'
+  revisit_when: A contraction model that is not a tensor train over F_p digits (e.g. a contraction over
+    another factorisation of the alphabet or a non-linear transfer), or an x-describable factor base whose
+    log set has low digit complexity without known logs, or a measured excess in the dominating character-sum
+    row.

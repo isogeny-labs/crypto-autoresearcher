@@ -1,65 +1,53 @@
 id: LEAD-EXO-low-degree-query-lower-bound
 family: exotic
-title: >-
-  A query lower bound for solvers that also test low-degree polynomial conditions on point
-  coordinates (generic group model plus degree-D tests)
-mechanism: >-
-  LEAD-EXO-augmented-oracle-ggm closes every named oracle that the generic group model can
-  simulate, and reopens when a publicly computable oracle that it cannot simulate appears.
-  Polynomial tests on coordinates are candidates. This lead proposes a lower bound for the
-  low-degree part of that class rather than oracle by oracle. Model: the solver holds
-  encodings of group elements, may add and compare them, and may also ask whether
-  f(coordinates of X_1..X_t) = 0 for any f of degree at most D, with no auxiliary variables.
-  Scope of the model, stated per oracle family: small-x membership x(P) < B is a degree-B
-  condition in this model, so it enters only at D about B, where the bound below is weaker
-  than sqrt(N) for any useful B; the Legendre symbol of x has degree (p-1)/2; with auxiliary
-  variables small-x membership drops to degree 2 with about log B extra unknowns, and a bound
-  for that model would have to depend on their number (not proposed here). So this lead does
-  not address index calculus on small-x bases. It targets genuinely low-degree statistics
-  (low-degree curves through tuples of points, cross-ratios, bounded-degree relations among
-  coordinates of related points). Conjecture H1 (numbered heuristic, unproven): with T
-  queries, success probability is at most O(T^2/N) + O(T D p^(-1/2) polylog p), so T is
-  Omega(min(sqrt N, sqrt p / D)) for D = p^(o(1)). The single-point case is the counting
-  behind LEAD-ICP-algebraic-membership-factor-base (a degree-d locus holds O(d) points); the
-  risk is joint equidistribution of adaptively chosen tuples ((a_i + b_i k)P), which would
-  need character-sum bounds along multiples of a point (Kohel-Shparlinski type, citation
-  recalled and unverified). A proof would turn the low-degree families of
-  LEAD-EXO-coordinate-statistic-leakage into a theorem in scope; a failure of the
-  multi-point step would name the first low-degree coordinate test worth measuring.
-  Desk step (a), 2026-11-04 (report ecdlp-leads-desk-20261104): H1 as written is false
-  whenever a rank condition holds. A test's power is governed by the pulled-back degree
-  Delta = sum_i (2 d_x,i + 3 d_y,i) b_i^2, not by D, and large multipliers b_i cost only
-  O(log N) group operations. If the degree-<=D polynomials in the coordinates of t encodings
-  [b_i]Q have full rank N on E(F_p), interpolation in free local work makes each test answer
-  "k in S?" for any S, and binary search finds k with O(t log N) + log2 N queries. Full rank is
-  proved for the F_p^* analogue, observed at p = 101 (t = 4, D = 3, rank 102 of 102), and not
-  reached at p = 211 for the same (t, D) (161 of 222). Proved restatement H1': Pr[success] <=
-  (C(T_g+2,2) + sum_j (Delta_j + t_j) + 1)/N, which is meaningful only for small multipliers.
-  Kohel-Shparlinski verified (ANTS-IV, LNCS 1838, 2000, pp. 395-404); it covers t = 1 only.
+title: A query lower bound for solvers that also test low-degree polynomial conditions on point coordinates
+  (generic group model plus degree-D tests)
+mechanism: 'LEAD-EXO-augmented-oracle-ggm closes every named oracle that the generic group model can simulate,
+  and reopens when a publicly computable oracle that it cannot simulate appears. Polynomial tests on coordinates
+  are candidates. This lead proposes a lower bound for the low-degree part of that class rather than oracle
+  by oracle. Model: the solver holds encodings of group elements, may add and compare them, and may also
+  ask whether f(coordinates of X_1..X_t) = 0 for any f of degree at most D, with no auxiliary variables.
+  Scope of the model, stated per oracle family: small-x membership x(P) < B is a degree-B condition in
+  this model, so it enters only at D about B, where the bound below is weaker than sqrt(N) for any useful
+  B; the Legendre symbol of x has degree (p-1)/2; with auxiliary variables small-x membership drops to
+  degree 2 with about log B extra unknowns, and a bound for that model would have to depend on their number
+  (not proposed here). So this lead does not address index calculus on small-x bases. It targets genuinely
+  low-degree statistics (low-degree curves through tuples of points, cross-ratios, bounded-degree relations
+  among coordinates of related points). Restated 2026-11-04 (owner decision in session). The original
+  conjecture H1, a bound O(T^2/N) + O(T D p^(-1/2) polylog p) in terms of D, is withdrawn. It fails whenever
+  degree-<=D monomials on t encodings [b_i]Q have full rank (interpolation in free local work answers
+  ''k in S?'' for any S). That rank premise holds at p = 251-2039 (LOWDEG-RANK-20261104), but the failure
+  is only asymptotic, because at those sizes the attack costs 180-490 group operations, above sqrt N.
+  Proved restatement H1'': Pr[success] <= (C(T_g+2,2) + sum_j (Delta_j + t_j) + 1)/N, with Delta_j = sum_i
+  (2 d_x + 3 d_y) b_i^2 the pulled-back degree of test j (Bezout on E; desk note). H1'' is meaningful
+  only for small multipliers. The single-point case is the counting behind LEAD-ICP-algebraic-membership-factor-base
+  (a degree-d locus holds O(d) points); the risk is joint equidistribution of adaptively chosen tuples
+  ((a_i + b_i k)P), which would need character-sum bounds along multiples of a point (Kohel-Shparlinski
+  type, citation recalled and unverified). A proof would turn the low-degree families of LEAD-EXO-coordinate-statistic-leakage
+  into a theorem in scope; a failure of the multi-point step would name the first low-degree coordinate
+  test worth measuring. Desk step (a), 2026-11-04 (report ecdlp-leads-desk-20261104): H1 as written is
+  false whenever a rank condition holds. A test''s power is governed by the pulled-back degree Delta =
+  sum_i (2 d_x,i + 3 d_y,i) b_i^2, not by D, and large multipliers b_i cost only O(log N) group operations.
+  If the degree-<=D polynomials in the coordinates of t encodings [b_i]Q have full rank N on E(F_p), interpolation
+  in free local work makes each test answer "k in S?" for any S, and binary search finds k with O(t log
+  N) + log2 N queries. Full rank is proved for the F_p^* analogue, observed at p = 101 (t = 4, D = 3,
+  rank 102 of 102), and not reached at p = 211 for the same (t, D) (161 of 222). Proved restatement H1'':
+  Pr[success] <= (C(T_g+2,2) + sum_j (Delta_j + t_j) + 1)/N, which is meaningful only for small multipliers.
+  Kohel-Shparlinski verified (ANTS-IV, LNCS 1838, 2000, pp. 395-404); it covers t = 1 only.'
 disposition: open_next_step
 next_action:
-  step: >-
-    (a) Done 2026-11-04: desk step (report ecdlp-leads-desk-20261104). (b) Done 2026-11-04 (report
-    lowdeg-rank-20261104, frozen protocol LOWDEG-RANK-20261104): HOLDS, with valid controls. Random
-    multipliers give full rank on every candidate log once the monomials number about twice the
-    candidates, in 39 of 39 decisive cells at p = 251 to 2039. That is the rank premise of the desk
-    refutation of H1. The refutation is asymptotic: at these sizes the attack spends 180-490 group
-    operations, above sqrt(N), so no toy-size violation of H1 is shown. By the validator's rough
-    accounting, the attack beats sqrt(N)/D only for D >= 3 at N around 2^28 to 2^48, provided full rank persists at
-    t ~ N^(1/D), which is untested. Next, desk only: restate the row
-    to H1' (proved) with a model note. A query bound in this model must charge the pulled-back
-    degree Delta, or charge test description length. Heuristic HD2c (round-2 memo) says a
-    "k in S?" test with |S| about N/2 needs about N/2 monomials, so a plain DL table dominates the
-    attack.
-  discriminates: >-
-    The rank question is settled at toy size. What stays open is whether any query or
-    description-length bound with Delta in place of D, or with charged local work, is provable.
-    That is a complexity question no GGM argument decides. Two-term multiplier relations
-    (b_i = +-b_j or +-2 b_j mod N) account for about 70% of the rank deficits seen below ratio 1.5;
-    the rest are unexplained (round-2 check D2 and validation).
-best_measured: >-
-  full rank in 39 of 39 random-multiplier cells at monomials/candidates about 2, p = 251 to 2039
-  (exact computation of the rank premise; no toy-size violation of H1, not a cost)
+  step: 'Steps (a) desk and (b) exact rank are done (reports ecdlp-leads-desk-20261104, lowdeg-rank-20261104).
+    Next, desk only: formulate and attempt a bound that charges the test''s description length or local
+    work, not only queries. Heuristic HD2c says a ''k in S?'' test with |S| ~ N/2 needs about N/2 monomials,
+    so a DL table dominates the attack. Optional: test whether full rank persists at t ~ N^(1/D) for D
+    >= 3 and larger N, where the query count would beat sqrt(N)/D.'
+  discriminates: The rank question is settled at toy size. What stays open is whether any query or description-length
+    bound with Delta in place of D, or with charged local work, is provable. That is a complexity question
+    no GGM argument decides. Two-term multiplier relations (b_i = +-b_j or +-2 b_j mod N) account for
+    about 70% of the rank deficits seen below ratio 1.5; the rest are unexplained (round-2 check D2 and
+    validation).
+best_measured: full rank in 39 of 39 random-multiplier cells at monomials/candidates about 2, p = 251
+  to 2039 (exact computation of the rank premise; no toy-size violation of H1, not a cost)
 evidence:
 - repo: crypto-autoresearcher
   path: docs/reports/lowdeg-rank-20261104/README.md
