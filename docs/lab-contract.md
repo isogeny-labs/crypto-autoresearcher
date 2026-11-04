@@ -59,6 +59,7 @@ repository file is corrected.
 |:--|:--|:--|:--|
 | `store/sha256/<aa>/<hex>` | content-addressed data and blobs, write-once | `artifacts.py push`, `crypto store push`, `crax store push` | every repo, hash-checked |
 | `reports/<repo>/<path>` | published reports, graphs, PDFs, plus `_manifests/<commit>.json` | the `reports-s3` workflow on `main`, or an owner sync | every agent |
+| `store/sha256/<aa>/<hex>` (benchmark raw data) | raw files named by a `bench.record/v1` record (`docs/benchmark-records.md`) | `benchrec.py upload`, `artifacts.py push`, the `bench-records` workflow | every repo, hash-checked |
 | `ic/v1/isogeny-experiments/<run-id>` | resumable run state, head manifest written last | the run that owns the lock | the run that resumes it |
 
 Rules:
@@ -152,6 +153,9 @@ in the owner first:
 | `docs/research-wip.md` | `crypto-autoresearcher` |
 | `docs/lab-contract.md` (this file) | `crypto-autoresearcher` |
 | `validation/v1` JSON schema | `crypto` |
+| `tools/benchrec.py`, `tools/test_benchrec.py` | `crypto-autoresearcher` |
+| `.claude/hooks/benchrec-hook.sh` | `crypto-autoresearcher` |
+| `docs/benchmark-records.md` | `crypto-autoresearcher` |
 
 A parity check compares the digests and fails a PR that lets them drift. Forking
 a copy is not a fix: extend the owner or make the dependency explicit.

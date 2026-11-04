@@ -591,3 +591,42 @@ A checkpoint is a safety net, not the record: the spec, protocol and results
 still land in a PR under the rules above. Switching runtimes:
 [docs/runtime-relay.md](docs/runtime-relay.md).
 When changing tracked results, follow the binding [daily progress-metrics rule](docs/agent-contract-supplement.md#progress-metrics-daily-lab-report): extend the exporter in the same PR, retain stable metric ids and emit only measured, committed values.
+
+## Benchmark records: data in S3, metadata in Git, one progress report
+
+Owner's rule, 2026-11-04; mechanics in
+[docs/benchmark-records.md](docs/benchmark-records.md) (shared, byte-identical).
+**Every benchmark run leaves a `bench.record/v1` record in Git and its raw
+data in S3, and regenerates the progress report, in the same PR.** The record
+(`tools/benchrec.py`; `docs/benchmarks/records/`) names the commit, host, command,
+every raw file by SHA-256 and content-addressed S3 location
+(`s3://setec-astronomy-artifacts/store/sha256/<aa>/<hex>`, or the prefix the
+run already wrote to), and every measured value in the shared unit vocabulary
+(`S`, `gae`, `log2_gae`, `ns_per_gae`, `ir`, `ir_per_op`, `cycles_per_op`,
+`ipc`, `wall_s`, `cpu_s`, `ops_per_s`, `fmul`, `ratio`, `percent`, `count`,
+`bytes`); any other unit is rejected. Records are written once; a rerun, an
+invalid run and a censored run each get their own record.
+
+The progress report (`docs/benchmarks/progress/`: `progress.json`, `PROGRESS.md`,
+`progress.svg`, `progress.pdf`) is generated only from the records and always
+states progress the same way: gain versus the first record and versus the
+previous record, in percent within one series (same problem, metric and
+unit), and value over reference (the distance remaining to the matched rho,
+1.0 = parity). The headline panel is in `S`; every other unit has its own
+panel and is never mixed in. Derived numbers are labelled derived; a record
+is not a validated result and does not move the leaderboard, `benchmarks/`
+rows or `VALIDATION.json`, which keep their own gates.
+
+**Enforced.** Claude Code (`.claude/hooks/benchrec-hook.sh`) refuses a
+benchmark launcher (`ecbench`, `perfindex`, `perf_ipc`, `perf stat`,
+`callgrind`, `hyperfine`, `cargo bench`, `isolated_bench`, `tools/profile.sh`,
+`task_card.py run`, `autolab`, `icms`, `scripts/*bench*`, `make bench`) that
+does not run as `tools/benchrec.py run <record> -- ...` or carry
+`BENCHREC=<record>`, and refuses `git push` and `gh pr create` while
+`tools/benchrec.py gate` fails (a record opened here and not closed, an
+incomplete record, a stale progress report); `BENCHREC_SKIP=<reason>` opts a
+command that is not a benchmark out. Other runtimes run `python3
+tools/benchrec.py gate` before pushing. The `bench-records` workflow fails a
+PR that adds a `docs/benchmarks/` entry without a record naming it, carries a
+malformed, open or edited record, cites a raw object that is not in S3, or
+leaves the progress report stale.

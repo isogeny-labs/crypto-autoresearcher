@@ -1,0 +1,64 @@
+name: bench-records
+# artifact-store: no-pull (reads records, reports and the small raw files that are in Git)
+
+# docs/benchmark-records.md: every benchmark run leaves a bench.record/v1 file
+# in Git with its raw data hashed and located in S3, and regenerates the
+# progress report. This fails a pull request that adds a benchmark entry
+# without a record, carries a malformed, open or edited record, cites a raw
+# object that is not in S3, or leaves the progress report stale. It runs no
+# experiment. With the artifact-store credentials it first copies raw files
+# that are in Git into the content-addressed store, so a small raw file
+# reaches S3 from the PR itself; without them the S3 check fails closed.
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bench-records-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  records:
+    if: ${{ !github.event.pull_request.draft }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      KEY_ID: ${{ secrets.ARTIFACTS_AWS_ACCESS_KEY_ID || secrets.AWS_ACCESS_KEY_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+      - name: Tool tests
+        run: python3 -m unittest tools/test_benchrec.py
+      - name: Configure S3 credentials
+        if: ${{ env.KEY_ID != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.ARTIFACTS_AWS_ACCESS_KEY_ID || secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ARTIFACTS_AWS_SECRET_ACCESS_KEY || secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.ARTIFACTS_AWS_REGION || 'us-east-2' }}
+      - name: Copy raw files that are in Git into the store
+        if: ${{ env.KEY_ID != '' && github.event_name == 'pull_request' }}
+        run: |
+          set -e
+          base="origin/${{ github.base_ref }}"
+          records_dir="$(python3 -c 'import json,pathlib;c=pathlib.Path(".benchrec.json");print((json.loads(c.read_text()) if c.exists() else {}).get("records_dir","benchmarks/records"))')"
+          for r in $(git diff --name-only --diff-filter=ACMR "$(git merge-base "$base" HEAD)...HEAD" -- "$records_dir"); do
+            [ -f "$r" ] && python3 tools/benchrec.py upload "$r" || true
+          done
+      - name: Records complete, raw data in S3, progress report current
+        run: |
+          if [ "${{ github.event_name }}" = pull_request ]; then
+            python3 tools/benchrec.py check --base "origin/${{ github.base_ref }}" --verify-s3
+          else
+            python3 tools/benchrec.py check --verify-s3
+          fi

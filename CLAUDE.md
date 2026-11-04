@@ -29,3 +29,11 @@ Claude Code; their full requirements and limits are stated there.
 resume the effort from it alone. The hooks push it to S3 with the specs,
 leads and unpushed work, and refuse run launchers until that succeeds.
 AGENTS.md, "Resume checkpoints in S3 before every run".
+
+**Benchmark records** (owner, 2026-11-04): every benchmark run leaves a
+`bench.record/v1` record in Git (`python3 tools/benchrec.py init|run|add-raw|
+metric|close`), its raw data in S3 by SHA-256, and a regenerated progress
+report in `docs/benchmarks/progress/`, in the same PR. The hooks refuse unrecorded
+benchmark launchers and unrecorded pushes; the `bench-records` check fails
+the PR. AGENTS.md, "Benchmark records: data in S3, metadata in Git, one
+progress report"; [docs/benchmark-records.md](docs/benchmark-records.md).
