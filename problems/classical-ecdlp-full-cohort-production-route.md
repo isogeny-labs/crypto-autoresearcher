@@ -32,3 +32,12 @@ Implement TASK-20261030-29dff8 in newdisjoint harness/classical_ecdlp_controlled
 ## Resolution and history
 
 Unresolved. This prospective record and its index row do not claim a fix.
+
+
+## 2026-11-04 scoped software follow-up
+
+The earlier sections remain the historical 2026-10-30 record; status remains **open**. Archived DEC-20261104-d59957 and BATCH-e9f035 final archive distinguish source/public-workload holds and tested cleanup from a final-custody reconciliation break. The actual failed native receipt stays infrastructure_error; a same-path static checker accepted resealed completion against held-fixed failure waits. These are unverified assertions, not a mathematical verdict. [pcc:unverified]
+
+Current next step is TASK-20261104-fb3825 in BATCH-27c9d5: prospectively change only v5 observer.py/source-manifest.json at a NEW source publication, comparing each current expected-arm process SHA/returncode/terminationack with finalized custody process_sha256/driver_reported_wait. Preserve truthful nonzero incomplete. Rebuild honest complete/incomplete and exact same-public falsecomplete controls under NEW pins, with candidate/baseline/fixed-generator closure coverage and closure-specific refusal. Do not count stale-source mismatch as a repair check. [pcc:unverified]
+
+The delta source archive precedes a fresh independent xhigh review TASK-20261104-7e52b5; unchanged source/public/lifecycle findings are reused only within their archived fixed-software scope. Original/v2/v3/v4/math/native/check argv/full59keyset/oldDEL/history remain unchanged. No further raw deletion, scientific draw, new EXP/IDEA or source expansion is authorized. Exit condition: new published delta plus actual source custody, worked controls and independent delta acceptance; then separately freeze/admit the first fresh48 descriptive cohort. Fullcost/clock qualification stays separate. [pcc:unverified]
