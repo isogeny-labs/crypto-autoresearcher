@@ -1,0 +1,127 @@
+review_plan:
+  written_at: "2026-11-02T19:22:00Z"
+  state: prepared_before_dispatch
+  producer_snapshot: 49f57f88cc5be06b7e1fe42a9571aee3337fa510
+  superseded_snapshot: 674b3248a8b007748a2cf4f10e5063e7de123be4
+  claim_under_review: >-
+    Proof-only correction of four modules from the five-target attack corpus.
+    Public declaration statements and target manifests are intended to be
+    unchanged. The review asks whether the corrected proof terms elaborate,
+    preserve the finite mathematical claims already independently derived,
+    and introduce no stronger conclusion or forbidden trust escape.
+  coordinator_prior: >-
+    OneShotHistory, FiatShamirZeroHash, and PedersenRelationKernel appear to
+    need only import/elaboration disambiguation. CofactorPushforward has a
+    larger proof edit and is the highest-risk correction: equality orientation,
+    finite cardinal arithmetic, the ZMod 3 permutation, and the final
+    specialization must all be checked. No corrected module is presumed to
+    pass the exact build or semantic review.
+  corrected_source_sha256:
+    formal/CryptoResearch/AttackCorpus/OneShotHistory.lean: 5420db0c7a6f1e6db1cc7d3e167f6811cc2f3d20f0b23f202101d9aeaa923cc6
+    formal/CryptoResearch/AttackCorpus/CofactorPushforward.lean: 53445da9ae485ed4cd5d76088b6932d842dfc61299cf98d986a5cc34125a9d5c
+    formal/CryptoResearch/AttackCorpus/FiatShamirZeroHash.lean: b958dfb175dd7c0a7bcd59be48b5e3b9298a7729ff337cf3d96b76e48022bc4d
+    formal/CryptoResearch/AttackCorpus/PedersenRelationKernel.lean: f81357c38e240479683c9465e2ef672eacc4f584c0f51773d3e222e5cdba13cd
+  unchanged_control_sha256:
+    formal/CryptoResearch/AttackCorpus/CubicEvalRank.lean: ed62caa522eb7820784ed2674cb1d088a7581a6205f26b8e160292ef2dc56464
+  joints:
+    - id: A2
+      joint: OneShotHistory proof correction preserves the recurrence and finite-tail theorem
+      assigned_to: TASK-20261102-e4e2c4
+      attack_plan: >-
+        Compare commits 674b3248 and 49f57f88 for this file only. Check that
+        induction over range sums proves exactly the former pointwise-sum
+        inequality, including N=0 and the successor orientation. Confirm every
+        public declaration type is unchanged and inspect the exact hosted build
+        and named axiom-audit result when available.
+      breaking_artifact: >-
+        A declaration-type comparison and hand replay of the zero/successor
+        sum proof, with a machine-qualified verdict.
+    - id: C2
+      joint: CofactorPushforward proof correction preserves image and exact fibre claims
+      assigned_to: TASK-20261102-02b9a2
+      attack_plan: >-
+        Compare the old and corrected file. Recheck the image-equality
+        orientation, ZMod 2 annihilation, ZMod 3 self-inverse permutation,
+        four/zero bad fibres, definitional specialization to the good map, and
+        final conjunction association. Confirm no theorem statement changed
+        and inspect exact machine evidence when available.
+      breaking_artifact: >-
+        Line-by-line correction audit plus independent finite arithmetic and
+        type-matching derivation, with a machine-qualified verdict.
+    - id: D2
+      joint: FiatShamirZeroHash elaboration correction preserves constant-challenge scope
+      assigned_to: TASK-20261102-fe5252
+      attack_plan: >-
+        Confirm the lambda-token change is syntactic only, the local prime Fact
+        supplies exactly the ZMod 5 Field instance, and all public declaration
+        types and constant-challenge/nonzero-control quantifiers are unchanged.
+        Inspect exact machine evidence when available.
+      breaking_artifact: >-
+        Source/type delta and concrete ZMod 5 instance audit, with a
+        machine-qualified verdict.
+    - id: E2
+      joint: PedersenRelationKernel concrete-control correction preserves kernel claims
+      assigned_to: TASK-20261102-23c44e
+      attack_plan: >-
+        Confirm the local prime Fact and typed pair arguments only resolve the
+        concrete ZMod 5 elaboration ambiguity. Recompute the (0,0)/(2,4)
+        collision, compare every public declaration type, and inspect exact
+        machine evidence when available.
+      breaking_artifact: >-
+        Source/type delta and concrete commitment calculation, with a
+        machine-qualified verdict.
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: >-
+      Four fresh correction reviewers receive no sibling report or verdict.
+      They may read the immutable original producer commit, the corrected
+      commit, target/source material, this plan, and hosted machine metadata.
+      The already sealed blind mathematical derivation is not used as a review
+      input and is not repeated because the theorem statements did not change.
+  proves_too_much:
+    objects:
+      - >-
+        A correction that changes a public declaration type, drops a premise,
+        or weakens a conclusion fails even if Lean accepts it.
+      - >-
+        A correction containing sorry, admit, an added axiom, unsafe proof
+        escape, or an unaudited replacement declaration fails even if nearby
+        examples compile.
+      - >-
+        A successful module build without the target verifier and named
+        axiom-audit receipt remains machine-incomplete.
+      - >-
+        None of these proof repairs may be promoted into an ECDLP, ROM/QROM,
+        hash-to-curve, or computational-binding result absent from the types.
+    failure_signature: >-
+      The correction review fails if it checks only textual plausibility or a
+      nearby example, overlooks a public type delta, accepts a forbidden trust
+      escape, treats a partial build as a target receipt, or broadens the
+      finite claims into an unmodeled security conclusion.
+  blind_rederivation:
+    required: false
+  review_output:
+    verdicts: [holds, breaks, inconclusive]
+    required:
+      - Exact joint ID, bound commits and file hashes, declaration-type delta, proof replay, machine status, and scoped verdict
+      - A reviewer-owned attestation.yaml with string-list sources_read, source metadata, joints_owned, verdicts, sibling-read status, runtime facts, and deviations
+      - No edits outside the assigned correction-reviewer directory
+  budget:
+    maximum_scientific_runs: 0
+    scientific_runs: 0
+    formal_builds_for_review: 0
+  procedure_deviations:
+    - >-
+      This is an additive correction round. The original six-way review and
+      blind rederivation remain bound to the failed producer snapshot; no
+      original verdict is rewritten.
+    - >-
+      No second blind derivation is required because the public theorem
+      statements and mathematical witnesses are unchanged; each correction
+      reviewer instead performs an explicit declaration-type comparison.
+  completion_gate:
+    - Exact Lean 4.35 hosted build, target verification, and named axiom audit pass at producer_snapshot
+    - All four fresh correction reviewers seal independent scoped reports and attestations
+    - The independence checker passes against this committed plan and its exact SHA-256
+    - Final synthesis retains the failed-snapshot evidence and does not replace it with the corrected result

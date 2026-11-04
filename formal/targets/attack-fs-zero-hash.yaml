@@ -1,0 +1,38 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261102-466e91
+claim_id: ATTACK-FS-ZERO-HASH-COUNTERMODEL
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.FiatShamirZeroHash.zero_hash_acceptance_and_nonzero_control
+theorem_file: CryptoResearch/AttackCorpus/FiatShamirZeroHash.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  The countermodel is the abstract module equation s*G=R+H(m,R)*X. A
+  constant-zero hash accepts R=s*G for every public key without a witness
+  input; any known constant c admits R=s*G-c*X. The same declaration must also
+  carry the honest fixed-transcript nonzero-challenge uniqueness control.
+
+  Pointcheval--Stern assumes a random oracle, bounded queries and replay, same
+  commitment, and distinct challenges. This target is outside that model and
+  does not prove a ROM/QROM attack or knowledge extraction.
+claim: |
+  Over any field-module additive group, a Schnorr-style Fiat--Shamir verifier
+
+      s • G = R + H(m,R) • X
+
+  with constant-zero H accepts R=s•G for every public key X. More generally,
+  any known constant challenge c accepts R=s•G-c•X. Include a concrete finite
+  control where the same zero-hash transcript accepts two distinct public
+  keys.
+
+  Prove the algebraic control in the same declaration: for one fixed
+  transcript and a nonzero challenge, any two public group elements satisfying
+  the verification equation are equal. This is fixed-equation uniqueness, not
+  a Fiat--Shamir or proof-of-knowledge theorem.
+proof_map:
+  prerequisites:
+    - "The verifier is modeled only by a module equation; transcript serialization, group decoding and subgroup validation are outside the target"
+    - "The constant challenge is known before R is chosen and is not a random oracle"
+    - "The positive control fixes the transcript and nonzero challenge; it supplies no second fork, oracle replay probability, extractor, DLP reduction, ROM or QROM theorem"
