@@ -156,6 +156,8 @@ in the owner first:
 | `tools/benchrec.py`, `tools/test_benchrec.py` | `crypto-autoresearcher` |
 | `.claude/hooks/benchrec-hook.sh` | `crypto-autoresearcher` |
 | `docs/benchmark-records.md` | `crypto-autoresearcher` |
+| `tools/pcc/pcc.py`, `tools/pcc/test_pcc.py` | `crypto` |
+| `docs/SABOTAGE_RESISTANCE.md` | `crypto` |
 
 A parity check compares the digests and fails a PR that lets them drift. Forking
 a copy is not a fix: extend the owner or make the dependency explicit.
