@@ -27,7 +27,7 @@ research_goal:
   campaign_budget:
     maximum_batches: null
     total_wall_clock_seconds: null
-    max_concurrent: 4
+    max_concurrent: 5
   current_batch_id: BATCH-286bd3
   dispatch_queue_path: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-286bd3/dispatch_queue.json
   open_batches:
@@ -46,6 +46,16 @@ research_goal:
     branch: codex/prime-sat-five-tests-20261029
     opened_by: coordinator-prime-next
     opening_decision_id: DEC-20261029-b93571
+  - batch_id: BATCH-3505b3
+    dispatch_queue_path: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3505b3/dispatch_queue.json
+    branch: lane/pfdr-2d36f9-20261031
+    opened_by: coordinator-pfdr-2d36f9-20261031
+    opening_decision_id: DEC-20261031-e8e84b
+  - batch_id: BATCH-3a63a4
+    dispatch_queue_path: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json
+    branch: claude/pfdr-2d36f9-v2-20261101
+    opened_by: coordinator-pfdr-ada71b-20261101
+    opening_decision_id: DEC-20261101-49576f
   latest_verified_commit: null
   latest_verified_commit_note: 'Null on purpose: this is the goal-opening record and no artifact has been
     archived under it yet. The first value written here is the commit of the snapshot archive TASK-20261017-56402f
@@ -84,14 +94,32 @@ research_goal:
       executor handoff, and the preapproval probe reports approvable: true for those exact bytes.
     recheck: after the NA-1 snapshot archive verifies
     asserts_nothing_about: H-PFDR-ed7ccf, IDEA-20261018-a0830c or any growth rate of kappa
-  next_action: 'DEC-20261031-e8e84b NA-1: write the implementation handoff for EXP-PFDR-2d36f9 (executor-implementation;
+    status: cleared
+    cleared_by: DEC-20261031-47307d
+    cleared_at: '2026-10-31'
+    clears_when_met: >-
+      The NA-1 implementation and post-producer snapshots verified, the prospective queue/handoff existed,
+      and tools/experiment_preapproval.py reported approvable: true on the exact bytes archived by
+      DEC-20261031-47307d.
+  next_action: >-
+    DEC-20261101-49576f designed EXP-PFDR-ada71b, v2 of EXP-PFDR-2d36f9 (fresh 12,000,000 seed blocks,
+    32-curve pilot with margin 1.5, per-d null replicate for the A/A lines and z_cal; every threshold
+    unchanged). Next: approval under DEC-20261101-cb3277 only on preapproval approvable true, the design
+    snapshot archive TASK-20261101-125ee4, then /run EXP-PFDR-ada71b under TASK-20261101-8951b8 (BATCH-3a63a4).
+  prior_next_action_before_DEC-20261101-49576f: >-
+    EV-PFDR-c42190 and DEC-20261031-0fe2d3 record the v1 EXP-PFDR-2d36f9 reading as O-INVALID
+    (3 of 6 valid lines; calibration and C3-C6 fail). Next: design a revised v2 with a reachable
+    16-bit coincidence target and a plant/calibration construction that passes C3-C6, or close the
+    lane if no such construction is justified. Do not edit the v1 success criteria in place. No
+    hypothesis status changed.
+  prior_next_action_before_TASK-20261031-8ebedd: 'DEC-20261031-e8e84b NA-1: write the implementation handoff for EXP-PFDR-2d36f9 (executor-implementation;
     implementation/, 32-bit order certification, trial-plan.json, queue, run handoff; one snapshot archive), then
     re-run tools/experiment_preapproval.py; approval only on approvable: true (IMP-a0830c-1). Lane-level next
     actions of the EXP-PFDR-bb0d26 lanes stay in DEC-20261029-01405d and DEC-20261029-8d9b43. No completion
     criterion is met.'
   owner: coordinator
   created_at: '2026-10-17'
-  updated_at: '2026-10-31'
+  updated_at: '2026-11-01'
   five_lead_lane_note: 2026-10-29 explicit user do 1-5. Root authorized aggregate open-lane cap3 to preserve
     both historical open lanes and add BATCH-449a28. This lane queue and actual local worker stay strictly
     serial at1; no scientific status promotion.
@@ -101,3 +129,33 @@ research_goal:
   pnext_lane_cap_note: DEC-20261029-dc6fc4 authorizes four aggregate open lanes, preserving three prior
     lanes and adding the explicitly requested continuation. PNEXT scientific queue concurrency remains
     one, with one 4GiB worker and a7200s protection watchdog; no other lane is dispatched or closed.
+  checkpoint_note_20261031_batch3505b3: TASK-20261031-8ebedd opened BATCH-3505b3 (lane/pfdr-2d36f9-20261031,
+    DEC-20261031-e8e84b NA-1), a zero-run design-lane implementation batch for EXP-PFDR-2d36f9. The edit is additive
+    and limited to one open_batches entry, next_action replaced with the old value preserved under
+    prior_next_action_before_TASK-20261031-8ebedd, updated_at, and this note. Status stays active; impediments,
+    completion criteria and every other key are unchanged, and no status moved.
+  lane_cap_reconciliation_20261031: >-
+    DEC-20261031-e8e84b NA-1 authorized BATCH-3505b3 while four lanes were already open. The
+    authorized open set is now five; max_concurrent is reconciled 4 -> 5 as machine headroom, not a
+    research budget, and this note changes no scientific status.
+  checkpoint_note_20261031_approval: >-
+    DEC-20261031-47307d approved EXP-PFDR-2d36f9 after tools/experiment_preapproval.py reported
+    approvable: true on the exact prospective specification (d999feb6...), trial plan (2ad82df0...),
+    queue (2537adcd...) and executor handoff (232136cb...). The specification is frozen and approved;
+    H-PFDR-ed7ccf stays specified; IMP-a0830c-1 is cleared. Status stays active. No run launched.
+  checkpoint_note_20261031_oinvalid: >-
+    Seven EXP-PFDR-2d36f9 trials completed and all seven execution receipts are output_validated.
+    analyze-final reading O-INVALID at the tested toy scope: only theta=0.35 d=1,2,3 are valid;
+    the 16-bit theta=0.30 cells miss the 2500-coincidence pilot target; calibration and C3-C6 fail.
+    EV-PFDR-c42190 and DEC-20261031-0fe2d3 record the observation; H-PFDR-ed7ccf stays specified.
+    Next is a v2 design or lane closure, not a v1 criterion edit.
+  checkpoint_note_20261101_approval: >-
+    DEC-20261101-cb3277 approved EXP-PFDR-ada71b after tools/experiment_preapproval.py reported
+    approvable: true on the exact specification (51753c34...), trial plan (6750eea3...), queue
+    (5f0100a9...) and executor handoff (da08a752...). Six trials authorized; H-PFDR-ed7ccf stays
+    specified. Next: snapshot archive TASK-20261101-125ee4, then /run. No run launched.
+  checkpoint_note_20261101_v2_design: >-
+    DEC-20261101-49576f closed BATCH-3505b3 (outcome archived; v1 executed and read) and opened
+    BATCH-3a63a4 for EXP-PFDR-ada71b, so the open-lane count stays at five. The edit is additive: one
+    open_batches entry, next_action replaced with the old value preserved under
+    prior_next_action_before_DEC-20261101-49576f, updated_at, and this note. Status stays active; no status moved.

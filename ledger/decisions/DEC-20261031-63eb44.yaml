@@ -1,0 +1,180 @@
+coordinator_decision:
+  id: DEC-20261031-63eb44
+  context: TASK-20261031-7bf80e synthesis of independent range compiler review TASK-20261031-3e6f7e
+  decision: refine
+  decision_scope: Retain fixed authenticated compilation and range-certificate checks; correct production decoding
+    cost receipts and low-level empty-label validation before accepting the full software contract.
+  decided_by: coordinator
+  decided_at: '2026-11-01T05:28:05.637816+00:00'
+  target_ids:
+  - TASK-20261031-f722aa
+  - TASK-20261031-3e6f7e
+  rationale:
+  - The independent literal certificates pass the unchanged full-cube verifier, including interleaved and projection-crossing
+    layouts.
+  - The second retained suite exposes two precise interface counterexamples while all other groups pass.
+  - The cost omission affects the requested charged comparison; the parser failure is confined to the low-level
+    helper and does not invalidate the checked polynomial expansions.
+  evidence_strength: independent_fixed_software_review
+  claim_tier: scoped_software_fidelity
+  proof_status: retained_executable_contract_counterexamples_and_literal_certificate_checks
+  proof_assistant_verified: false
+  scoped_claim:
+    source_commit: 81d1e9c74f01a185e3eecbbd1eaf7eac1905b4a1
+    source_sha256: 130870fa17433ed36c1c7409631c14431fdb75369bf1a1fed34565a6b220a79b
+    review_commit: 5c6a3cca2d8d5946182fc515fd9cee9c90c38692
+    independent_joint_verdicts:
+      source_binding: holds
+      bit_substitution: breaks
+      range_exactness: holds
+      certificate_completion: holds
+      fixed_execution: holds
+      claim_boundary: breaks
+    fixed_suites:
+    - invocation: 1
+      passed_groups: 18
+      failed_groups: 0
+      exit_code: 0
+      test_source_sha256: 6bfc767d722eefa03df8787c4e9efb36524b772283bf7d78dc1f690255746b0f
+    - invocation: 2
+      passed_groups: 16
+      failed_groups: 2
+      exit_code: 1
+      test_source_sha256: 754e337efa36677e010a6a1b29e38f7d51d1c72285a22f50c5463fc5ee3bc03d
+    suite_interpretation: Attempt2 strengthens tests; target source unchanged. Group outcomes are contract checks,
+      not a performance comparison.
+    input_files: 21
+    source_hashes_stable: true
+    native_checkpoints_succeeded: 2
+    suite_watchdog_seconds: 240
+    memory_limit_bytes: 2147483648
+    literal_F7:
+      projected_models:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      excluded_prefix: 7
+      certificate:
+      - '0': 6
+      - '0': 1
+      identity: 6*(s-1)+s=1 over F7
+      certificate_serialization_bytes: 74
+      identity_multiplications: 3
+      model_term_visits: 21
+    assumptions:
+    - Prime p>3 and a trusted public descriptor; primality is a caller premise.
+    - Generic range-descriptor arithmetic meaning is the caller responsibility.
+    - Fixed F5/F7 canonical field blocks, prescribed witnesses and literal range examples; source-builder semantics
+      remain a dependency.
+  findings:
+  - id: TASK-20261031-3e6f7e/F1
+    kind: production_API_accounting
+    descriptor:
+      p: 5
+      curve:
+        a: 0
+        b: 1
+      kind: constant
+      k: null
+      projection:
+      - b0
+    assignment:
+      b0: 2
+      z: 3
+    bits: 26
+    canonical_builder_calls_observed: 2
+    returned_costs:
+      value_bit_reads: 6
+      state_bit_checks: 0
+    scope: Decoded witness is correct; authentication, compilation and typed-comparison phase receipts are dropped.
+    required_correction: Retain all executed phase receipts; optionally eliminate repeated authentication without
+      weakening canonical binding.
+  - id: TASK-20261031-3e6f7e/F2
+    kind: low_level_parser
+    input:
+      equations:
+      - label: ''
+        terms: []
+      layout: {}
+      p: 5
+      n: 0
+    observed: Accepted empty equation label.
+    scope: Canonical production builder emits nonempty labels, so this is not an authenticated production circuit
+      counterexample.
+    required_correction: Require a nonempty string label in substitute_equations.
+  verified_components:
+  - Typed canonical source binding rejects the retained content/public-descriptor mutations.
+  - Independent square/product/cancellation expansions agree; repeated-variable bit masks use union.
+  - Compressed ranges preserve unique canonical state extensions at the checked layouts.
+  - Range certificates and retained transcript records are checked by the unchanged adapter with empty domain CNF
+    and no auxiliary bound.
+  - Censored statuses remain censored; missing valid projections, malformed shadowed records, duplicate projections
+    and wrong recurrence states do not acquire false completeness.
+  next_actions:
+  - Archive exact review4 plus decision/report6 union, retaining both attempts and source snapshots.
+  - Admit additive F1/F2 corrections with explicit authentication/reconstruction accounting and nonempty-label rejection;
+    reuse retained counterexamples without altering historical files.
+  - Then integrate all chart strata and compare quartic, membership-augmented and quadratic-lift encodings on identical
+    complete projected sets, charging construction, search, reconstruction and certificate checks.
+  - Keep unchanged partial-matrix and two-bit-backdoor configurations unscaled; require a structural change for
+    new execution.
+  independence:
+    fresh_session: true
+    blind_rederivation: Independent sparse expansions, residual evaluator, literal certificates and phase-count
+      controls; producer outputs hidden.
+    post_dispatch_guidance: Root provided custody, source provenance and requested precise production-versus-low-level
+      scope; reviewer had already identified both findings. No expected algebraic outputs were supplied.
+    gate:
+      recorded_at: '2026-11-01T05:13:07.004113+00:00'
+      command:
+      - /home/ec2-user/prime-sat-research-venv/bin/python
+      - tools/check_review_independence.py
+      - --plan
+      - coordination/prime_sat_range_compiler_20261031/review-plan.yaml
+      - --expected-plan-sha256
+      - 523bb3a53a1cdb59777dcb5ee02c30333787852b640978ca998da33c1447d41b
+      - --reports
+      - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/attestation.yaml
+      - --no-addenda
+      returncode: 0
+      stdout: 'PASS: 1 report(s), every joint owned and attested, blindness respected, controls declared
+
+        '
+      stderr: ''
+      scope: Native declared attestation consistency only.
+    runtime_identity_authenticated: false
+    amendment: coordination/prime_sat_range_compiler_20261031/inference-amendment.yaml
+  evidence_refs:
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/test_independent.py
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/independent-results.json
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/review.md
+  - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/attestation.yaml
+  - research/prime_sat_range_compiler_20261031/software-results.json
+  - ledger/decisions/DEC-20261031-ca1521.yaml
+  limitations:
+  - This decision covers fixed compiler/certificate software, not complete chart solving or a regularity/performance
+    measurement.
+  - No solver, census, benchmark or remote scientific job ran in this review.
+  - Native independence gate checks declared consistency; actual model/provider and effective effort remain unauthenticated.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Two source-specific interface defects and fixed certificate checks belong to this software correction
+      record; no new general mathematical or performance finding is promoted.
+  report_paths:
+  - docs/reports/prime-sat-range-compiler-20261031/report.md
+  - docs/reports/prime-sat-range-compiler-20261031/diagram.svg
+  - docs/reports/prime-sat-range-compiler-20261031/report.typ
+  - docs/reports/prime-sat-range-compiler-20261031/report.pdf
+  - docs/reports/prime-sat-range-compiler-20261031/report-inputs.json
+  new_scientific_runs: 0
+  persistent_goal_complete: false
+  status_changes:
+    hypotheses: []
+    experiments: []
+    evidence: []
+    knowledge: []
+    goal_status_changes: []

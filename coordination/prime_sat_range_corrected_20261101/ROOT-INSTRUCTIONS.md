@@ -1,0 +1,1 @@
+Publish prospective metadata and artifact-backed queue, then native Ready/claim. Preserve all 70 prior tasks and frozen sources. Root owns Git/claims/archive/rendering. Fixed software only: publish/release producer, exact snapshot, fresh independent review, exact review4+ledger6 archive. Archive commit names task and decision IDs. Inspect all report PDF pages.

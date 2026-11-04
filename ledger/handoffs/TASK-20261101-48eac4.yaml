@@ -1,0 +1,65 @@
+{
+  "handoff": {
+    "id": "TASK-20261101-48eac4",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Snapshot the additive recovery receipt and open semantic review only after exact source/provenance/custody checks",
+    "uncertainty_reduced": "Durable binding of the one retry receipt to the immutable source snapshot while retaining the original timeout as visible non-proof infrastructure provenance.",
+    "inputs": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+      "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+      "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+      "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan.yaml",
+      "orchestration/formal/receipts.py",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "Run alone after the recovery verifier terminates; zero Lean builds, verification reruns, formalization runs, workflows or scientific trials.",
+      "Preserve and cite the original failed receipt SHA-256 eb8c230575ee2308536d7147cc82470bafeb93c7b42120aa41404a301eb76a9e and failed release. It remains verification=null infrastructure provenance and is never substituted for, merged into or overwritten by the recovery receipt.",
+      "Validate the retry receipt against source snapshot commit 68001c097fc57fcc4bf4ef4899dee8577760473a, exact spec hash e92ff4622a6d0a7b57b319780b8253f7c23f30b46ffc2b9517f24f861040fc86, theorem-source hash 6de9feca6adefdbb82c867c1740c93ad62aa897f70ff267920f74681e93b5d64, target name/type, toolchain/manifest hashes, complete maps, build/forbidden/axiom status and semantic_review pending.",
+      "Treat retry provenance.source_commit as invocation HEAD, not source-custody commit. verification-gate.json must record both and demonstrate exact byte/hash custody from 68001c097fc57fcc4bf4ef4899dee8577760473a; it must not require false equality between those commits.",
+      "Archive the exact retry receipt plus these two recovery archive artifacts. verification-gate.json may set allows_validator=true only when the retry is machine_verified and every custody check passes.",
+      "Commit, push, publish and natively verify the recovery snapshot before TASK-20261101-bab1cb starts. Do not edit either receipt or any source, and do not infer semantic fidelity or an algorithm/PFSE conclusion."
+    ],
+    "deliverables": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+    ],
+    "artifact_paths": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+    ],
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-48eac4/verification-gate.json"
+    ],
+    "archived_by": "TASK-20261101-48eac4",
+    "inference": {
+      "policy": "coordinator-orchestration-code",
+      "reasoning_effort": "high",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "wall_clock_seconds": null,
+      "memory_gb": null,
+      "maximum_runs": 0,
+      "scientific_runs": 0
+    },
+    "completion_gate": [
+      "Snapshot receipt binds actual commit/parent, exact changed paths and SHA-256s for the immutable retry receipt and two recovery archive files.",
+      "verification-gate.json binds the original failed receipt/release, retry receipt, invocation HEAD, source custody 68001c097fc57fcc4bf4ef4899dee8577760473a, exact spec/theorem hashes, target audit, build, forbidden-construct, axiom and semantic-pending statuses.",
+      "Native archive verification and publication pass; allows_validator=true only on complete recovery success. No scientific conclusion or status change."
+    ],
+    "return_format": "Verified recovery snapshot/gate, original-timeout provenance and exact invocation-HEAD/source-custody distinction, or fail-closed impediment."
+  }
+}
+

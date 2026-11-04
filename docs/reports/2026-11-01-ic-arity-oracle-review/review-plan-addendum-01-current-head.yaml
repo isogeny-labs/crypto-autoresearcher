@@ -1,0 +1,41 @@
+{
+  "review_plan_addendum": {
+    "extends": "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan.yaml",
+    "written_at": "2026-11-01T04:39:57Z",
+    "authorization": "Explicit driving Coordinator instruction on 2026-11-01; prospective preparation only, not a workflow launch.",
+    "reason": "Historical receipt strict reuse fails on the complete current workspace. Add a fresh current-published-head verification prerequisite rather than waive that mismatch or relabel the historical receipt.",
+    "unchanged": {
+      "base_plan_sha256": "2ce285e77cd85699f47a9ee4826775fdfc2a077168000fbae30e805b81813e92",
+      "blind_input_sha256": "a109fc6cdf7df0e6b52e0e3717d54bb20ec0803687d8602afda065ada4f79914",
+      "mathematical_claim_and_joints": true,
+      "joint_owners": true,
+      "mutual_blindness": true,
+      "no_blindness_lift": true,
+      "original_seven_task_zero_build_limits": true
+    },
+    "what_changes": {
+      "blind_from_additions": [
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/",
+        "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/",
+        "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml"
+      ]
+    },
+    "execution_prerequisite": {
+      "workflow_task": "TASK-20261101-9a4a63",
+      "verification_snapshot_task": "TASK-20261101-6fd5e3",
+      "route": "/run TASK-20261101-9a4a63",
+      "maximum_hosted_workflow_dispatch_runs": 1,
+      "source_rule": "Pin exact local/remote published branch head at execution time, require native run head and fresh receipt source_commit equality; no source edits.",
+      "required_before": [
+        "TASK-20261101-bd53ca",
+        "TASK-20261101-e90be2",
+        "TASK-20261101-bc06d9"
+      ],
+      "gate_file": "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json",
+      "gate_requires": "allows_reviewers=true only after exact current-head full formal verification and verified/published dedicated snapshot; all failures remain closed."
+    },
+    "scope": "The new workflow task alone permits one hosted formal gate; original seven tasks still permit no formal runs/builds. Zero scientific trials and no EV/DEC/H/status changes. No existing theorem/spec/proof altered.",
+    "blind_directory_refresh": "B's task card dependency metadata changes but its mathematical input does not; rebuild the three-file clean directory and bind new card/inventory hashes before any review.",
+    "procedure_deviations": []
+  }
+}

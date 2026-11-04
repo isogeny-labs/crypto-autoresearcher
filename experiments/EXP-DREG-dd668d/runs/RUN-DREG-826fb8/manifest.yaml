@@ -1,0 +1,60 @@
+run:
+  run_id: RUN-DREG-826fb8
+  experiment_id: EXP-DREG-dd668d
+  hypothesis_id: H-DREG-1d0e5d
+  question_id: RQ-DREG-d7b6d6
+  executed_by: executor (claude-sonnet-5-5)
+  date: '2026-11-02'
+  status: completed_valid   # measurement finished; certificates passed; label below is an instrument-free outcome label, not a hypothesis judgment
+  outcome_label: degenerate-unit-ideal
+  failure_class: none
+  certificate:
+    kind: edge_and_S3_certificates   # see certificates.json; pure rank measurement otherwise
+    S3_certified: true
+    edge_certified: true
+    independent_check: independent_bruteforce_check.py (enumerates all 2^8 assignments with scalar F_4 arithmetic; 0 solutions for both systems)
+specification:
+  path: experiments/EXP-DREG-dd668d/specification.yaml
+  sha256: 5296d4d25504cd820da333b82e71cc8210aeb1c89fae5faf2f00b493f0cdf2a2
+  approval: DEC-20260922-0397f8
+amendment:
+  path: experiments/EXP-DREG-dd668d/amendments/AMD-EXP-DREG-dd668d-20261102-glsample.yaml
+  sha256: b3bf06c6521f3db95e02e2db9e983e643bd35ad45ecacd5a7494020ad381faf6
+  approval: DEC-20261102-0dedaa
+git:
+  commit: 5a8cecc8acae529af7007987841be92b1fc6afba
+  branch: claude/point-decomposition-literature-taddl7
+  dirty_tree_before_run: false   # git status --short was empty; .resume/ is gitignored
+code:
+  - path: experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/run_protocol.py
+    sha256: e96a6ef775a8648dc17b0d3eacb4e46dfa89a5fe646f871ac5789fbf4ebb6454
+  - path: experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/independent_bruteforce_check.py
+command: command.txt
+environment: environment.json
+seed: 20260922
+randomness: random.Random(20260922), GL-8 only (one shared stream, per amendment A2). No other randomness.
+budget:
+  maximum_memory_gb: 4
+  workers: 1
+  wall_clock_seconds_observed: 0.3
+  checkpoint: scripts/checkpoint.sh push succeeded before launch (s3 checkpoint 20261102T043557Z-5a8cecc8acae)
+attempts:
+  total_launches: 1
+  crashed_or_discarded: none
+artifacts:
+  - metrics.json
+  - certificates.json
+  - report.md
+  - stdout.log
+  - stderr.log
+  - exitcode.txt
+  - grevlex_domain.sing / grevlex_domain.out
+  - grevlex_codomain.sing / grevlex_codomain.out
+  - rank_profiles.png / rank_profiles.pdf
+  - independent_bruteforce_check.py / independent_bruteforce_check.out
+deviations_and_interpretations:
+  - base-curve order read as lex on (coeff of 1, coeff of z); integer-order alternative first curve is (a2=0, a6=1), not run (max_runs 1)
+  - unit ideal recognised at any degree via exact Groebner basis, not only degree <= 1 (see report)
+  - codomain model a2' = a2 chosen (isomorphic alternative a2+1 gives same x-line and same S_3)
+  - delta read as boolean ANF degree of Weil-restricted cleared numerators; common-denominator variant recorded, same value
+  - grevlex_solving_degree of a unit ideal recorded as 0 (reduced GB = {1}), flagged as degenerate

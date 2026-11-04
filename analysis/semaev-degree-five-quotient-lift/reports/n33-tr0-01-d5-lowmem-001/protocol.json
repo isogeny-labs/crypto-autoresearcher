@@ -1,0 +1,389 @@
+{
+  "amendments": [
+    {
+      "changes": [
+        "Add the runner-required request SHA-256 list, preserving the exact one-request identity."
+      ],
+      "filed": "2026-11-02",
+      "filed_before_affected_data": true,
+      "id": "A1",
+      "reason": "Qualified runner requires links.request_sha256s as a list; the first frozen draft used a scalar-only link. No D5 data was taken.",
+      "supersedes_fields": [
+        "links.request_sha256s"
+      ]
+    }
+  ],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "runtime/n33-tr0-01-d5-local-request-001.json",
+      "published fresh-n33-tr0-01 D4 certificate",
+      "validation/n33-tr0-01-d5-profile-001/result.json",
+      "qualified worker bundle manifest"
+    ],
+    "outputs": [
+      "Fresh count, D4/D5 checker transcripts, raw D5 certificate if produced, terminal status and checkpoint manifests."
+    ],
+    "script": {
+      "path": "run_lift_worker_checkpoint.py",
+      "sha256": "4ba508f26f8c8fb35679817b7e8c68ae7371ce4020ab03c01b59b3dd7fe32067"
+    }
+  },
+  "arms": [
+    {
+      "description": "Recheck the published D4 seed, enumerate the exact solutions, run one bounded D5 quotient-lift producer, then invoke the original independent checker.",
+      "id": "producer",
+      "instrument": {
+        "binary_sha256": "fc0911db6560fe10b49d88d6206f89f8de6494616020a864c82d8be552749613",
+        "build": [
+          [
+            "reuse",
+            "qualified checkpoint binary"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "checker_sha256": "13d926240a99de4b3eede374932fe245d62e7de65102a4fdf2cccfb0e4463877",
+          "driver_sha256": "4ba508f26f8c8fb35679817b7e8c68ae7371ce4020ab03c01b59b3dd7fe32067",
+          "guard_sha256": "952cc55fbf485548ec6a50efd23b52a19c971ac08a83197abf2282622bdb59d9",
+          "manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "chunk": 4096,
+        "degree": 5,
+        "memory_bytes": 4294967296,
+        "seed_degree": 4
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Fresh exhaustive count on exactly the retained n33 trace-zero-01 input; require zero before D5.",
+      "id": "exact-count",
+      "instrument": {
+        "binary_sha256": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56",
+        "build": [
+          [
+            "reuse",
+            "qualified portable count_by_sum_worker"
+          ]
+        ],
+        "commit": "2346ca1a91ef1e40ea9a64c94da8b03d7ccabf48",
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "count_by_sum": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "input_dispatch": "All inputs are unchained m2."
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized degree-six search preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "acceptance"
+      ],
+      "id": "C1",
+      "text": "A separate checker accepting a D5 nonmembership certificate with positive checked codimension, against a fresh exact zero count, proves LFD at least six for this named Boolean presentation."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "One deterministic exact named input; no comparative runtime claim or sampled effect.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Corrupt-state and count-equality software guards are retained in the qualified worker. There is no null population or comparative arm.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "No accepted degree-six fixture exists. The qualified worker has retained software controls; a failed or missing D5 certificate never implies an upper bound.",
+      "present": false
+    }
+  },
+  "created": "2026-11-02",
+  "decision_rule": {
+    "comparison_ids": [
+      "acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "At any accepted degree d, exact_count < checked_codimension establishes LFD>=d+1; reaching6 requires an accepted degree5 certificate and this strict inequality.",
+    "threshold": "Independent acceptance and exact_count < checked_codimension",
+    "verdict_vocabulary": [
+      "certificate_verified",
+      "projection_kills_one",
+      "seed_without_certificate",
+      "failed",
+      "resource_capped",
+      "export_deferred",
+      "checkpointed_control"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": 7200,
+      "policy": "application",
+      "restore_validation": "manifest_sha256"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "Application snapshots after seed chunks and closure rounds; retained under a unique prefix with manifest/readback before prune. No automatic retry or restore in this first attempt.",
+      "counter_memory_bytes": 1073741824,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 4294967296,
+      "pod_memory_bytes": 5368709120
+    },
+    "queue": "local-exclusive-memory",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 7200
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "beed33e04c7c767293b64d649c982046ecf5dce29e73a8f7e6133088c7f44f7b",
+    "commit": "16088094881c14bcaedfae7371a538d38d011628",
+    "frozen_at": "2026-11-02T19:54:24Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling a killed constant a proved upper bound.",
+    "Calling native output certified before original checker acceptance.",
+    "Inferring LFD>=6 without accepted D5 map and strict count inequality.",
+    "Replacing original capped dense-engine records with cascade outcomes.",
+    "Treating a lower-degree accepted stage as degree-five completion."
+  ],
+  "invalidation_rules": [
+    "Any source or binary hash mismatch prevents execution.",
+    "A failed independent checker prevents a claim from that stage.",
+    "A counter failure prevents a solution-count comparison.",
+    "Killing1 in an over-approximating quotient is not membership evidence in the true closure.",
+    "Missing later stages remain unknown, even if an earlier stage proves a smaller lower bound.",
+    "Deferred export or missing checkpoint/certificate carries no mathematical bound.",
+    "Restore request mismatch or unverified state prevents native launch."
+  ],
+  "links": {
+    "exact_count_inference": "analysis/semaev-m2-last-fall-degree/submission-20261029/archive/fresh-n33-tr0-01.inference.json",
+    "launch_gate": "No D5 execution while account budget actual exceeds $25. A later execution needs finite charged/reserved allowance, exact command and absolute deadline, job/lock/S3 reconciliation, and current resource admission.",
+    "preflight": "n33-tr0-01-d5-preflight-001.json",
+    "profile": "validation/n33-tr0-01-d5-profile-001/result.json",
+    "profile_sha256": "3f77b8ce8b88ce86e8684222282742a6e0b5bdd008c8ad6a01d775228541de69",
+    "published_seed": "https://github.com/isogeny-labs/crypto-autoresearcher/releases/tag/semaev-closure-certificates-20261029",
+    "request": "runtime/n33-tr0-01-d5-local-request-001.json",
+    "request_sha256": "6649e25d1ed9252963af813f8b779a63d90a359aefe5294d4a79c65610c2c1c7",
+    "request_sha256s": [
+      "6649e25d1ed9252963af813f8b779a63d90a359aefe5294d4a79c65610c2c1c7"
+    ],
+    "seed_sha256": "b12d74605a9df9147d89d10191a36fa644cdd5fa70ce610c56e26d870a9fe813",
+    "worker_manifest_sha256": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa"
+  },
+  "literature": [
+    {
+      "claim": "Closure definition, independent-certificate gate and strict count-versus-codimension lower-bound bridge.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md",
+      "verified_by": "Codex 2026-11-02"
+    },
+    {
+      "claim": "Published named D4 acceptance and exact zero count; the D5 claim remains untested.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/submission-20261029/archive/fresh-n33-tr0-01.inference.json",
+      "verified_by": "Codex 2026-11-02"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "nq only after original independent checker acceptance; absent if no accepted certificate.",
+        "id": "certified_codimension_lower_bound",
+        "kind": "exact",
+        "name": "accepted D5 codimension lower bound",
+        "resolution": "1",
+        "source": "result.json certified_codimension_lower_bound only when status certificate_verified",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Fresh count from the pinned native counter; no copied historical value is a new measurement.",
+        "id": "exact_solutions",
+        "kind": "exact",
+        "name": "exhaustive Boolean solution count",
+        "resolution": "1",
+        "source": "result.json exact_solutions",
+        "uncertainty": "none_exact",
+        "unit": "solutions"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N33-TR0-01-D5-LOWMEM-20261102-V2",
+  "question": "Does the published n33 trace-zero-01 D4 seed lift to an independently checked D5 codimension greater than its freshly recounted zero solutions under one bounded local attempt?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One previously published zero-solution n33 trace-zero certificate, chosen for a smaller source-derived D5 coordinate profile; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named instance seed retained; no new random input.",
+      "seeds": [
+        5717990903904197772
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Per-instance D5 outcomes with unknown cells explicit; no runtime graph"
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 7200,
+      "fixed_seconds": 0,
+      "measured_on": "One bounded stage watchdog; no measured runtime prediction or timing claim.",
+      "per_sample_seconds": 7200,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named 7200-second attempt, no automatic retry or restore; retain every terminal status and checkpoint. Stop on hash, checker, count, budget, memory, disk, output or owner failure."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Timeout, killed constant, invalid certificate, resource refusal or counter failure leaves D5 unknown."
+    },
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Launch only after a fresh finite cost allowance with account-budget headroom, exact GitHub source/input publication, absolute deadline, and job/lock/S3-prefix reconciliation."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic exact certificates and enumeration; no timing comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "producer",
+          "exact-count"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "id": "acceptance",
+        "threshold": "Independent D5 checker acceptance with codimension greater than fresh exact count."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Exactly published fresh-n33-tr0-01 seed and field record, hash-pinned in request and profile.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Existing qualified checkpoint worker bundle, original checker and counter pinned by hashes.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "One local owner with proposed 4 GiB child limit, 5 GiB cgroup ceiling, fresh capacity and account-budget admission. The 454,586,900-byte profile envelope is arithmetic, not measured peak RSS.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Archive hash, independent D4 recheck, fresh exact count, one D5 producer, separate original D5 checker.",
+        "name": "order",
+        "treatment": "fixed"
+      },
+      {
+        "how": "D5 only follows accepted seed and zero count; missing later stages stay unknown.",
+        "name": "stage",
+        "treatment": "crossed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 2
+}

@@ -1,0 +1,104 @@
+schema: crypto.autoresearch.review_attestation.v1
+review_attestation:
+  task_id: TASK-20261031-f9c13a
+  joints_owned:
+    - J3_blind_shortest_word
+  sources_read:
+    - coordination/formal-reviews/ncp-pr2417-20261031/blind-input.yaml
+    - AGENTS.md
+    - coordination/formal-reviews/ncp-pr2417-20261031/review_plan.yaml
+    - coordination/formal-reviews/ncp-pr2417-20261031/handoffs/TASK-20261031-f9c13a.yaml
+    - formal/CryptoResearch/NCP/Reachability.lean
+    - formal/CryptoResearch/NCP/ReachabilityControls.lean
+    - formal/CryptoResearch/NCP/AffineNormalForm.lean
+    - formal/targets/ncp-reachability.yaml
+    - tools/check_review_independence.py
+    - templates/research-records.md
+    - docs/agent-contract-extended.md
+    - tools/review_phase_seals.py
+    - orchestration/fast_yaml.py
+    - /var/lib/spot-codex/home/skills/review-evidence/SKILL.md
+    - /var/lib/spot-codex/home/skills/review-evidence/references/lean-review.md
+    - /var/lib/spot-codex/home/skills/research-visuals/SKILL.md
+    - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/blind-reasoning.md
+    - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/raw-words.csv
+    - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/raw-minima.json
+    - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/formula-comparison.json
+    - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/controls.json
+    - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/initial-freeze.json
+    - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/raw/source-custody.json
+  sources_read_detail: coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/raw/source-custody.json
+  read_sibling_reports: false
+  blind_from_respected: false
+  blind_from_respected_scope: >-
+    False for the complete-session union of reads because four protected producer
+    paths were read after the initial commit. The initial blind phase respected
+    every protected path. This distinction is explicit because the pinned plan
+    does not declare the checker's prospective phased_release schema.
+  verdict: holds
+  verdict_scope: >-
+    Mathematical shortest-word criterion for the specified integer signed-count
+    definitions, every finite B including zero, e in {1,-1}, and at-most-length
+    budgets. Direct exhaustive corroboration covers B<=2 and length<=5 only.
+  initial_blind_phase:
+    blind_from_respected: true
+    mathematical_sources:
+      - coordination/formal-reviews/ncp-pr2417-20261031/blind-input.yaml
+    input_revision: 774a6a86f181740285ed9834a648b40fb9aa8ece
+    input_git_blob_sha: b181514e5166207aeb75c7623f23a699a5e022e7
+    initial_commit: 8b53f4c94b2b06f6cfdebfcd89b3ed2fd6ef6d9d
+    initial_commit_time_utc: "2026-11-01T03:53:46Z"
+    freeze_manifest: coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/initial-freeze.json
+    initial_sources_read: coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/blind-sources-read.json
+    verdict: holds
+    frozen_artifacts_unchanged: true
+  post_freeze_comparison:
+    producer_revision: f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f
+    plan_revision: 774a6a86f181740285ed9834a648b40fb9aa8ece
+    read_after_initial_commit: true
+    protected_sources_read:
+      - formal/CryptoResearch/NCP/Reachability.lean
+      - formal/CryptoResearch/NCP/ReachabilityControls.lean
+      - formal/CryptoResearch/NCP/AffineNormalForm.lean
+      - formal/targets/ncp-reachability.yaml
+    fidelity: faithful_scoped
+    basis: >-
+      Direct source-level comparison of definitions and stated theorem with
+      the previously committed mathematical derivation. No elaborated-type or
+      kernel replay was run by this reviewer.
+  machine_status: not_verified
+  machine_status_reason: >-
+    Task explicitly forbids Lean and other heavy builds; this reviewer ran only
+    the permitted standalone tiny enumerator and document/checker tooling.
+  formal_review_outcome: inconclusive
+  formal_review_outcome_scope: >-
+    Full formal workflow acceptance is not supplied by this own-joint report.
+    Fresh machine evidence and composition of the independently owned joints
+    remain Coordinator obligations; the pinned phase-contract mismatch is recorded.
+  independence_checker:
+    status: failed
+    exit_code: 1
+    problem_count: 3
+    plan_has_phased_release: false
+    complete_sources_reported: true
+    report: coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/raw/independence-check.json
+  procedure_deviations:
+    - >-
+      General workflow and repository guidance were read only after the initial
+      blind commit to comply with the first-read-only blind assignment.
+    - >-
+      The handoff authorizes comparison after the first report is committed,
+      but the pinned plan has no prospective phased_release declaration.
+      The complete read union therefore fails the checker. The plan and initial
+      artifacts were not changed to hide or retroactively cure that mismatch.
+  experiments_launched: 0
+  cloud_jobs_launched: 0
+  lean_builds_launched: 0
+  publication:
+    base_main: 4451a2bf8ff9d171442a10ca33997c58e7362a20
+    main_observed_before_final_commit: 2442f16821be5515c7b0ed064d6b07038ca296ad
+    base_refresh: No merge performed under the assigned no-merge scope.
+    branch: review/ncp-j3-blind-f9c13a-20261101
+    archived_by: TASK-20261031-20ed91
+    write_scope: coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-f9c13a/
+    merge_authorized_by_this_task: false

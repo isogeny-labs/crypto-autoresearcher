@@ -193,6 +193,22 @@ budget:
   # What unlimited does NOT mean: it removes the batch ceiling, not the duty to
   # rank. Never dispatch a task you cannot rank ahead of doing nothing.
 
+# Unlimited scientific work is deliberately separate from the rate at which
+# agents may mint administrative design records. These are UTC process limits,
+# not lifetime research ceilings: hitting one leaves the idea queued for the
+# next session/day and never limits runs, replications, validations, compute
+# batches, or follow-up on evidence. Added by user direction 2026-11-01 after
+# the 2026-10-01..04 template flood demonstrated that an unlimited campaign
+# budget without a design-rate boundary manufactures paperwork.
+process_budget:
+  effective_on: '2026-11-01'
+  max_new_ecc_ideas_per_session: 3
+  max_new_ecc_experiments_per_session: 1
+  max_new_ecc_ideas_per_utc_day: 12
+  max_new_ecc_experiments_per_utc_day: 6
+  unlimited_scientific_runs: true
+  on_limit: defer_unfiled_design_work
+
 priority:
   # Instruction 2. ECC first, always, across every selection point.
   ecc_first: true

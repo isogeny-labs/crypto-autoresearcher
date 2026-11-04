@@ -1,0 +1,38 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-f3a40d
+claim_id: ATTACK-MOD-ALIAS-BOUNDED-REPAIR
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_20261101/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.ModAlias.modulus_alias_and_bounded_repair
+theorem_file: CryptoResearch/AttackCorpus/ModAlias.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Finite-ring semantics only. The counterexample says that equality of residues
+  is weaker than equality of the represented natural numbers; it does not say a
+  particular circuit omits its range constraints. The repair uses the canonical
+  interval 0 <= x,y < q. Signed encodings, limb decompositions, non-native
+  fields, overflow between gates, and host-language serialization need separate
+  refinement theorems.
+
+  The exact target should expose both halves in one declaration: the alias
+  (q : ZMod q) = 0 and injectivity of Nat.cast into ZMod q on the half-open
+  interval below q. It must not replace the interval hypotheses by an opaque
+  "well formed" predicate.
+claim: |
+  For every natural modulus q with 2 <= q, the two distinct natural numbers
+  0 and q have equal images in ZMod q:
+
+      (0 : ZMod q) = (q : ZMod q).
+
+  Hence residue equality alone does not imply equality of represented natural
+  values. The exact bounded repair is also required: for all naturals x and y,
+  if x < q, y < q, and their casts to ZMod q are equal, then x = y.
+
+  This is a counterexample and an injectivity lemma about ZMod q. It is not a
+  theorem about the soundness of any named proof system or circuit.
+proof_map:
+  prerequisites:
+    - "Circuit wires being audited are modeled by ZMod q, while their claimed external values are natural numbers intended to lie in the canonical interval [0,q); no compiler or serialization refinement is formalized"
+    - "The target concerns equality only; arithmetic-gate overflow, signed representations, limb carries, foreign-field reduction and byte encodings are outside its statement"

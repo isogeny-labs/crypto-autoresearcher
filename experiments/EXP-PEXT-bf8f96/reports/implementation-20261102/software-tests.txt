@@ -1,0 +1,26 @@
+Producer software validation; no census/minimum/descent measurement.
+2026-11-02T18:56:55.103042+00:00
+source_sha256=52cf914b453fdd6e069362a49e0063199400d5622e5cf7366d7456c3ee8c50f8
+borrowed_source_sha256=0336e5c594fc7f27d56a27ed957e281af7e9af9d0b15df4797a12bf8e86d5251
+command=['rustc', '--version']
+exit_code=0
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+
+
+command=['rustc', '--edition', '2021', '--test', 'experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs', '-o', '/var/tmp/pext-quotient-core-tests']
+exit_code=0
+
+
+command=['/var/tmp/pext-quotient-core-tests', '--nocapture']
+exit_code=0
+
+running 4 tests
+test implementation::tests::rejects_invalid_domains ... ok
+test implementation::tests::quotient_witnesses_and_projective_charts ... ok
+test implementation::tests::constant_twist_relations_are_retained ... ok
+test implementation::tests::extension_encoding_and_charts ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+

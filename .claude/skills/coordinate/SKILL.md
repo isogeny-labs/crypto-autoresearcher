@@ -12,6 +12,8 @@ description: >-
 
 Budget estimates and the approved-unrun backlog are advisory
 (`docs/research-budget-policy.md`; `AGENTS.md`, "Approval is bounded by execution").
+ECC scientific work remains unlimited, but new design records are bounded per
+session and UTC day by `orchestration/research-priority.yaml`.
 
 Public **coordination** entry point. The session drives the Coordinator role
 (`agents/coordinator.md`, `.claude/agents/coordinator.md`). Detailed procedure:
@@ -70,9 +72,11 @@ protocol is complete. Do not ask the user to pick or confirm each idea.
    (`python3 tools/research_dispatch.py <queue.json> --ready-only`, not the
    whole plan),
    open lanes (`goal_lanes.py lanes <GOAL-ID>`), and `python3
-   tools/ecc_priority.py` (`--classify`, `--open-ideas`) at every selection
+   tools/ecc_priority.py` (`--classify`, `--open-ideas`,
+   `--process-budget-violations`) at every selection
    point. ECC first; unlimited ECC budget is not a license to dispatch
-   unranked work. Design ranked open ECC ideas; make complete contracts
+   unranked work. Design ranked open ECC ideas within the design-record process
+   budget; make complete contracts
    runnable before approval. The approved-unrun count does not block design.
 4. **Dispatch the coordinator subagent** for any act that ranks, approves,
    changes official status, writes a `DEC-*`/`TASK-*`, or opens a batch. The

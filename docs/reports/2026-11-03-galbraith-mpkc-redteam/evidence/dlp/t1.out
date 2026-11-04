@@ -1,0 +1,35 @@
+== brute-force validation of the exact formulas (N<=6) ==
+1 brute [2.0, 0.0, 1.0, 1.0] formula [2.0, 0.0, 1.0, 1.0]
+2 brute [2.5, 0.25, 1.25, 1.5] formula [2.5, 0.25, 1.25, 1.5]
+3 brute [2.8888888889, 0.4444444444, 1.4444444444, 1.8148148148] formula [2.8888888889, 0.4444444444, 1.4444444444, 1.8148148148]
+4 brute [3.21875, 0.609375, 1.609375, 2.1015625] formula [3.21875, 0.609375, 1.609375, 2.1015625]
+5 brute [3.5104, 0.7552, 1.7552, 2.34528] formula [3.5104, 0.7552, 1.7552, 2.34528]
+6 brute [3.774691358, 0.887345679, 1.887345679, 2.5663580247] formula [3.774691358, 0.887345679, 1.887345679, 2.5663580247]
+
+== Thm 14.1.1 bound E[X] < sqrt(pi N/2)+2 ; p.287 E = sqrt(pi N/2)+2/3+O(N^-1/2); Wiener E > sqrt(pi N/2)-0.4 ==
+N=       1 E[X]=2.000000 sqrt(piN/2)=1.253314 E-sqrt=0.746686 (claim +2/3=0.6667)
+N=       2 E[X]=2.500000 sqrt(piN/2)=1.772454 E-sqrt=0.727546 (claim +2/3=0.6667)
+N=      10 E[X]=4.660216 sqrt(piN/2)=3.963327 E-sqrt=0.696888 (claim +2/3=0.6667)
+N=     100 E[X]=13.209961 sqrt(piN/2)=12.533141 E-sqrt=0.676819 (claim +2/3=0.6667)
+N=    1000 E[X]=40.303213 sqrt(piN/2)=39.633273 E-sqrt=0.669940 (claim +2/3=0.6667)
+N=   10000 E[X]=125.999122 sqrt(piN/2)=125.331414 E-sqrt=0.667708 (claim +2/3=0.6667)
+N=  100000 E[X]=396.999726 sqrt(piN/2)=396.332730 E-sqrt=0.666997 (claim +2/3=0.6667)
+N= 1000000 E[X]=1253.980908 sqrt(piN/2)=1253.314137 E-sqrt=0.666771 (claim +2/3=0.6667)
+min slack of the +2 bound over tested N: 1.2533141373155
+
+== Wiener lower bound P(X>l) >= exp(-l^2/2N - l^3/6N^2) stated for N>=1000, 0<=l<=2N log N ==
+N=1000: first violation at l=181 (sqrt(2N lnN)=117.5, 2N lnN=13816); at l=N P=0 but bound=2.95e-290>0
+N=2000: first violation at l=288 (sqrt(2N lnN)=174.4, 2N lnN=30404); at l=N P=0 but bound=0>0
+N=10000: first violation at l=842 (sqrt(2N lnN)=429.2, 2N lnN=184207); at l=N P=0 but bound=0>0
+
+== Ex 14.1.2 / Ex 14.1.4 ==
+N=365: smallest l with P(collision within l samples)>=1/2 is 23; sqrt(2 ln2 N)=22.49
+N=10000: smallest l with P(collision within l samples)>=1/2 is 119; sqrt(2 ln2 N)=117.74
+N=1000000: smallest l with P(collision within l samples)>=1/2 is 1178; sqrt(2 ln2 N)=1177.41
+P(shared birthday among 23)= 0.5072972343239854  among 22= 0.4756953076625502
+
+== Heuristic 14.2.9 / Thm p292-1 / tail,cycle sqrt(pi N/8) ==
+N=1000: E[epact]/sqrt(piN/2)=0.82368 (claim 0.8225=zeta(2)/2); 3*E[epact]/sqrt N=3.0970 (claim 3.093); Algorithm16 walk calls 3e-2 -> 3.0338; E[tail]/sqrt(piN/8)=0.9664 E[cyc]/sqrt(piN/8)=1.0169
+N=10000: E[epact]/sqrt(piN/2)=0.82285 (claim 0.8225=zeta(2)/2); 3*E[epact]/sqrt N=3.0939 (claim 3.093); Algorithm16 walk calls 3e-2 -> 3.0739; E[tail]/sqrt(piN/8)=0.9894 E[cyc]/sqrt(piN/8)=1.0053
+N=100000: E[epact]/sqrt(piN/2)=0.82259 (claim 0.8225=zeta(2)/2); 3*E[epact]/sqrt N=3.0929 (claim 3.093); Algorithm16 walk calls 3e-2 -> 3.0866; E[tail]/sqrt(piN/8)=0.9966 E[cyc]/sqrt(piN/8)=1.0017
+pi^2/12*sqrt(pi/2)*3 = 3.092428681399143

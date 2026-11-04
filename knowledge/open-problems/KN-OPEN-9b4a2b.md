@@ -14,7 +14,7 @@ source_refs: [EV-GFPN-fc5950, DEC-20260923-d86ff2, EXP-GFPN-05ff43, H-GFPN-9a29b
   RQ-GFPN-c01af8, CORR-20260923-064d0d, CORR-20260923-27ce4f, KN-LIT-8aff72,
   KN-LIT-673219, TASK-20260923-404bf9, TASK-20260923-aa277e]
 added: 2026-09-23
-superseded_by: null
+superseded_by: KN-OPEN-814b4c
 ---
 
 ## Statement

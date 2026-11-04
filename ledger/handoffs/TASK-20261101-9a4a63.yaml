@@ -1,0 +1,86 @@
+{
+  "handoff": {
+    "id": "TASK-20261101-9a4a63",
+    "from": "coordinator",
+    "to": "executor",
+    "objective": "Capture one hosted current-published-head Lean verification workflow for the existing arity/oracle target",
+    "uncertainty_reduced": "Whether the exact current published source closure passes the existing full formal gate, without using the historical receipt as current-head evidence.",
+    "inputs": [
+      "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml",
+      "docs/reports/2026-11-01-ic-arity-oracle-review/receipt-manifest.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-510074/snapshot-receipt.json",
+      "formal/targets/ic-arity-oracle-threshold-20261024.yaml",
+      "formal/CryptoResearch/IC/ArityOracleThreshold.lean",
+      ".github/workflows/lean-verification.yml",
+      ".github/scripts/ci_scope.py",
+      "orchestration/formal/receipts.py",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "No committed source/proof/specification/toolchain/dependency/workflow edits, no scientific trials, no MathCode/proof generation, no EV/DEC/H or official scientific status changes.",
+      "This task alone may request at most one hosted workflow_dispatch run of existing lean-verification.yml; no retries, reruns, cancel/restart cycles, second workflow or local Lean/build invocation. Its existing workflow may generate its gitignored root on the hosted worker.",
+      "Run only after the source packet is actually committed, pushed and reviewable and its snapshot verifies. Pin local branch HEAD and the remote branch SHA at execution time; require equality and record the exact expected SHA and workflow/source/input hashes before dispatch.",
+      "Invoke through /run TASK-20261101-9a4a63. Existing hosted entry point: gh workflow run lean-verification.yml --repo isogeny-labs/crypto-autoresearcher --ref codex/pfse-wp2-20261101. This is a prospective command, not a launched workflow.",
+      "Discover the single workflow_dispatch run by exact repository/workflow/event/branch/expected head SHA and dispatch interval. Record run ID and attempt; verify run.head_sha and native receipt.provenance.source_commit both equal the pinned published head. Ambiguity, branch movement, skip/cancel/timeout/failure, missing receipt or stale artifact fails closed; no second attempt under this task.",
+      "Capture request/response, all job/step conclusions/logs, native artifact ID/name/digest, downloaded ZIP SHA and exact native target receipt bytes. Preserve failed/invalid/missing outcomes. Do not relabel the historical PR2854 receipt or edit the fresh receipt.",
+      "Use receipt-capture.json as an intake envelope carrying exact native target bytes losslessly (base64 plus digest/byte count); on absence record present=false and reason, never forge a native formal-verification record. The six output sidecars exist for every terminal outcome.",
+      "Retain downloaded native artifact bytes durably by the repository artifact-store policy when needed, with content hashes and stable locations in artifact-manifest.json; do not commit oversized raw data. Record missing capture/storage honestly and keep the review gate closed.",
+      "Compare the complete generated hosted workspace and verifier maps to the pinned source commit, including the three later Nagao modules and generated root. Use the repository receipt consistency checker against a matching materialized snapshot without mutating the shared worktree. Require exact named theorem audit, build/axiom pass, no forbidden constructs/infrastructure failure and semantic_review pending.",
+      "No task/claim completion or semantic verdict is granted by a green workflow. Failures are receipt/infrastructure observations and leave both reviewer and synthesis gates closed.",
+      "If provenance, capture, workflow or receipt correctness fails, this success-gating task must not be marked completed. Preserve failure sidecars and require an explicit additive recovery decision rather than enabling its snapshot/review successors."
+    ],
+    "deliverables": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/request.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/workflow-run.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/artifact-manifest.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/receipt-capture.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/receipt-validation.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/execution-report.json"
+    ],
+    "artifact_paths": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/request.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/workflow-run.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/artifact-manifest.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/receipt-capture.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/receipt-validation.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/execution-report.json"
+    ],
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/"
+    ],
+    "archived_by": "TASK-20261101-6fd5e3",
+    "inference": {
+      "policy": "executor-implementation",
+      "reasoning_effort": "medium",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "maximum_runs": 1,
+      "maximum_hosted_workflow_dispatch_runs": 1,
+      "scientific_runs": 0,
+      "memory_gb": 4
+    },
+    "completion_gate": [
+      "Six truthful capture/report sidecars preserve every actual outcome, exact commands/timestamps, requested/pinned source SHA, run/attempt, artifact IDs and content digests.",
+      "Success requires exactly one authorized workflow_dispatch run at the pinned published head; the real formal-workspace job ran (not skipped), full gate/build/audit passed, and exact TASK-20261024-9fbb0f/theorem receipt was captured unchanged.",
+      "Receipt schema/identity/version, complete current-source workspace/verifier maps, four primary hashes, source_commit, exact named theorem audit and run provenance pass. Source mismatch or missing evidence remains an open gate.",
+      "Fresh receipt remains semantic_review pending; no review dispatch until dedicated verification snapshot is committed, published and independently checked.",
+      "No scientific/EV/DEC/H change; actual executor session/runtime/model/effort and failures accurately reported."
+    ],
+    "return_format": "Exact capture artifact paths, actual head/run/artifact provenance, strict receipt checks and unresolved gates; no semantic conclusion.",
+    "execution_route": {
+      "kind": "existing_hosted_workflow",
+      "public_invocation": "/run TASK-20261101-9a4a63",
+      "workflow": ".github/workflows/lean-verification.yml",
+      "event": "workflow_dispatch",
+      "ref": "codex/pfse-wp2-20261101",
+      "head_sha": "pin_after_publication_at_execution_time",
+      "maximum_dispatches": 1,
+      "local_formal_execution": false
+    },
+    "authorization": "Explicit driving Coordinator instruction on 2026-11-01 to prepare one hosted workflow prerequisite; no launch has occurred."
+  }
+}

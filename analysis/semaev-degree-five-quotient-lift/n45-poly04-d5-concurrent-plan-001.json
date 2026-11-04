@@ -1,0 +1,42 @@
+{
+  "schema": "semaev.local-retained-lift-plan/v1",
+  "id": "n45-poly04-D5-concurrent-001",
+  "request": "/home/ec2-user/lfd-poly03-terminal-20261101/analysis/semaev-degree-five-quotient-lift/runtime/n45-poly04-d5-concurrent-request-001.json",
+  "output_root": "/home/ec2-user/fall-degree-data-20261029/n45-poly04-d5-concurrent-001",
+  "source_bundle": "/home/ec2-user/fall-degree-runtime-20261029/blocked-checkpoint-worker-cloud-001/bundle",
+  "python": "/home/ec2-user/fall-degree-runtime-20261029/venv/bin/python",
+  "memory_bytes": 8589934592,
+  "reserve_bytes": 8589934592,
+  "admission_wait_seconds": 900,
+  "admission_poll_seconds": 10,
+  "checkpoint_prefix": "s3://setec-astronomy-artifacts/checkpoints/semaev-n45-poly04-d5-concurrent-001",
+  "locks": [
+    "/home/ec2-user/fall-degree-data-20261029/n45-poly04-d5-concurrent-001.owner.lock"
+  ],
+  "hashes": {
+    "/home/ec2-user/lfd-poly03-terminal-20261101/analysis/semaev-degree-five-quotient-lift/runtime/n45-poly04-d5-concurrent-request-001.json": "60306cd279c6ee7f468dcf968387cab3075d5967d802d24c044023d277b75bde",
+    "/home/ec2-user/fall-degree-data-20261029/n45-poly04-d5-envelope-001/profile.json": "7878597345d94b54f2e51bc8b8f8d1d6d67cf69f6825428d8413b4c0656542c9",
+    "/home/ec2-user/lfd-poly03-terminal-20261101/analysis/semaev-degree-five-quotient-lift/launch_local_lift.py": "7970a181839cf98c00c388055fca50e2a5f8096caccd3d136b7617fd9fa31746",
+    "/home/ec2-user/lfd-poly03-terminal-20261101/analysis/semaev-degree-five-quotient-lift/launch_local_panel.py": "5d7739411785a218c834c8c51bf1972bc946c8276782fcd5f840125e52e92481",
+    "/home/ec2-user/fall-degree-runtime-20261029/blocked-checkpoint-worker-cloud-001/bundle/manifest.json": "28e0be1127afa741e89fd149e3464948c90e2eb04c8ed70f0248a885d0b0bbaa",
+    "/home/ec2-user/lfd-poly03-terminal-20261101/analysis/semaev-degree-five-quotient-lift/admit_concurrent_lift.py": "36870ca97e7edfe02cedd6a6959f99b5dd94178182cc9e1f94eca6b2392645bd"
+  },
+  "launch_gate": "One named n45 polynomial04 D5 search alongside only the existing n43/n44 tail and n50/n51 bounded-D4 panel. Before launch verify both owners live, aggregate declared caps 14+27+8 GiB plus 8 GiB host reserve below 123 GiB, fresh MemAvailable >= 16 GiB, S3 checkpoint prefix empty, published seed identity, and no other frontier owner. No automatic retry.",
+  "scope": "One exact retained D5 attempt; no runtime comparison. Accepted D5 certificate and strict fresh exact count required for LFD>=6.",
+  "concurrent_owners": [
+    {
+      "pid": 109514,
+      "command_contains": "resume_n43_n44_tail.py",
+      "plan": "/home/ec2-user/lfd-n43-tail-20261101/analysis/semaev-m2-last-fall-degree/submission-20261029/n43n44-d4-tail-plan-001.json",
+      "memory_bytes": 15032385536,
+      "plan_sha256": "0b152977a72d33c37d3dcd8606553bfd8d24569ee83987b1e4f09151e1ed50d9"
+    },
+    {
+      "pid": 359550,
+      "command_contains": "launch_concurrent_bounded_d4.py",
+      "plan": "/home/ec2-user/lfd-poly03-terminal-20261101/analysis/semaev-degree-five-quotient-lift/n50n51-bounded-d4-concurrent-plan-001.json",
+      "memory_bytes": 28991029248,
+      "plan_sha256": "86c96513567714d882c41a63fc5a3313b96f6f5148d31f32c0e1aac4bf1072d4"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# n=43 random-01: certified degree-4 lower bound and publication
+
+The independent checker accepted the D4 certificate for the unchanged `fresh-n43-rand-01` Boolean presentation. It verified all 44 variable-multiplication conditions, `1 ∉ W_4(F)`, and codimension at least **34,273**. Fresh exact enumeration found **zero ordered solutions**. The strict comparison establishes **last fall degree ≥ 5** for this named presentation.
+
+The retained certificate is **644,339,888 bytes**, SHA-256 `306779bcb402213bdc77ec0055f5564bf691bb6dc4058cf1842ef560da8b8853`. Its [result](evidence/result.json), [count inference](evidence/inference.json), and [tail closure receipt](evidence/closed.json) are copied byte-for-byte from the completed run. The checker stdout is included in the [archive receipt](../../archive/fresh-n43-rand-01.receipt.json).
+
+The compressed certificate is [publicly downloadable](https://github.com/isogeny-labs/crypto-autoresearcher/releases/download/semaev-closure-certificates-20261029/fresh-n43-rand-01.D4.cert.gz) and has SHA-256 `d54b2230320d6c3baa8994e41a8c4a5ba31c8f7184b8bf39d9f0ac70a325897e` (397,564,917 bytes). The [publication acknowledgement](../../archive/fresh-n43-rand-01.publication.json) records full anonymous HTTPS and S3 readbacks, decompression, and equality with the original certificate hash. The [content-addressed manifest](../../archive/.artifacts.json) retains the store identity. This result extends the n=43 random-subspace data; it is a D4 lower bound, not a D5 certificate.
+
+The accepted D4 seed also has a [read-only D5 capacity profile](evidence/d5-envelope-profile.json), bound to its [frozen plan](evidence/d5-envelope-plan.json): 42,548 border coordinates, 76,821 working coordinates, and a calculated 24,222,572,356-byte bounded-export envelope at 60,000-row chunks. This is a resource estimate for a possible continuation, not a D5 result.

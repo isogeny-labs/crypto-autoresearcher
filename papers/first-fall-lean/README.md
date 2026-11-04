@@ -1,0 +1,94 @@
+# Machine-checked first-fall-degree reasoning in Weil-descent ECDLP
+
+**Status: manuscript draft (LaTeX, `make check` passes, 7 pages), anonymized,
+not submitted, not cleared for posting.** The checklist below is owed first.
+The built PDF (about 330 KB) is not in git: it exceeds the 64 KiB data limit
+and waits for an artifact-store push (see Build).
+
+## What it says
+
+1. **Counterexample to Lemma 4 of Nagao, ePrint 2015/984** (d_ff <= d'_ff),
+   under the *equality* reading of condition (1) of Definitions 5-6. Two systems
+   over F_2 have true first fall degree 3 and fake first fall degree 2, with the
+   field equations inside the system (Lean: `lemma4_inside_false`). The printed
+   placement fails on the same witnesses (Lean: `lemma4_outside_false`), and
+   it fails under the literal `>=` reading too (reviewer computations, not Lean;
+   `ledger/corrections/CORR-20261101-4186ae.yaml`).
+   Proposition 6 gives the instance-wise recovery rule (Lean: `recovery`, over
+   Mathlib `MvPolynomial`); the paper's own uses (proof of its Lemma 6) satisfy it.
+2. **Caminata-Gorla Theorem 2.8, formalized** over Mathlib `MvPolynomial`: with
+   finite last fall degree and some fall, d_F is the largest fall degree
+   (`lastFallDegree_eq_max_degreeFall`). One observed fall is a lower bound only.
+3. **Finite Semaev S3 audit**: Lean-checked direct-row ranks 1/11/53 and new-class
+   counts 0/0/1 with an explicit degree-three witness; an independent code review
+   gives closure counts (12 new classes at degree three vs 1 direct). Over 80
+   draws the grades agree and the degree-three multiplicities differ for 77. The
+   earlier uniform degree-two first-fall inference is withdrawn.
+
+## What it does not say
+
+Nothing about Nagao's Proposition 5, Semaev's first-fall assumption in general,
+any complexity estimate, or ECDLP cost at any size. Under the literal `>=`
+reading of 2015/984 the inside form holds trivially, so that form is refuted
+only under the equality reading; the printed form fails under both readings
+(reviewer computations in `coordination/formal-reviews/BATCH-4c1c67/`, not Lean;
+correction record `ledger/corrections/CORR-20261101-4186ae.yaml`). Change class:
+correction of a published lemma plus formalization; no advance, engineering,
+relabelling or accounting claim.
+
+## Evidence
+
+| Paper item | Artefact | Kernel | Independent statement review |
+|---|---|---|---|
+| Thm 5 | `formal/CryptoResearch/Nagao/Lemma4Witness.lean`; target `formal/targets/nagao-lemma4-inside-counterexample-20261029.yaml` | hosted receipt, run 41155781140 (`docs/reports/2026-10-31-hosted-formal-receipts/`) | validated at scope, BATCH-4c1c67 (`coordination/formal-reviews/BATCH-4c1c67/decision.md`) |
+| Thm 5, printed placement | `formal/CryptoResearch/Nagao/Lemma4Outside.lean`; target `formal/targets/nagao-lemma4-outside-counterexample-20261031.yaml` | workspace gate, CI run 41247286804 (PR #2859) | validated at scope, BATCH-4c1c67 |
+| Thm 5, Python | `tools/lemma4_inside_form.py`, `tools/test_lemma4_inside_form.py`; `knowledge/findings/KN-FIND-936151.md`; `ledger/evidence/EV-SEMBIN-1ca3c8.yaml` | n/a | two blind implementations; 94/400 random violations |
+| Prop 6 | `formal/CryptoResearch/Nagao/RecoveryRule.lean`; target `formal/targets/nagao-lemma4-recovery-rule-20261101.yaml`; rule stated in `KN-FIND-936151` section 4 | workspace gate, CI run 41259822143 (PR #2867) | validated at scope, BATCH-4c1c67 |
+| Thm 5, `MvPolynomial` bridge | `formal/CryptoResearch/Nagao/Bridge.lean` (`lemma4_mv_false`, `red_sum_red`); target `formal/targets/nagao-lemma4-mvpolynomial-bridge-20261101.yaml` | workspace gate, CI run 41264005876 (PR #2871) | validated at scope, BATCH-4c1c67 |
+| Thm 5, `MvPolynomial` bridge, witness B | `formal/CryptoResearch/Nagao/BridgeB.lean` (`lemma4_mvB_false`); target `formal/targets/nagao-lemma4-mvpolynomial-bridge-b-20261101.yaml` | workspace gate, CI run 41280794617 (PR #2901) | validated at scope, BATCH-4c1c67 |
+| Thm 5, exact degrees (`d'_F = 2`, adopted for F2) | `formal/CryptoResearch/Nagao/FakeExact.lean` (`exact_first_fall_degrees`), proof by reviewer TASK-20261101-cd72e8; target `formal/targets/nagao-lemma4-exact-degrees-20261102.yaml` | workspace gate, CI run 41372240324 (PR #2956) | written by J3; adopted by Coordinator decision |
+| Thm 7 | `formal/CryptoResearch/FallDegree/LastFall.lean` | hosted run 41191503149 | validated at stated scope (`coordination/formal-reviews/lastfall-native-20261031/archive/synthesis.md`) |
+| Thm 8 | `formal/CryptoResearch/Semaev/BooleanParity*.lean`, `ConcreteFirstFallWitness.lean`, `FiniteEquationSemantics.lean` | hosted receipts, run 41155781140 | concrete witness validated at scope (`coordination/formal-reviews/BATCH-016711/`); rank family sheriff-audited only (`research/sheriff/SHF-20261023-7b9227/`) |
+| Closure counts | `docs/reports/2026-10-26-semaev-closure-review/` | not formalized | independent code review |
+| Withdrawn inference | `formal/targets/corrections/2026-10-25-semaev-s3-degree-two.md`; `docs/reports/2026-10-25-semaev-semantic-review/composition.md` | identity machine-verified | identity valid, inference withdrawn |
+
+The witnesses of Theorem 5 (both placements) were also re-derived by an
+exhaustive cofactor search while drafting; that script is not committed.
+
+## Build
+
+`make` (pdflatex), `make check`. No bibliography file; references are inline.
+Needs TeX Live's latex-base, latex-recommended and fonts-recommended packages
+and lmodern.
+
+`paper.pdf` is over the repository's 64 KiB data limit (AGENTS.md, "Data files
+live in the artifact store"). Until someone with store credentials runs
+`paper.pdf` lives in the artifact store (manifest `.artifacts.json`, sha256
+`0b1e7c51…6f18`, pushed 2026-11-02). Fetch it with
+`python3 tools/artifacts/artifacts.py pull papers/first-fall-lean/paper.pdf`, or
+rebuild with `make`. Push again after any change to the text.
+
+## Owed before submission
+
+- [x] Independent statement review of `lemma4_inside_false`,
+      `lemma4_outside_false`, `recovery`, `lemma4_mv_false` and `lemma4_mvB_false`
+      (formal lane gate): three reviewers, verdict holds, independence checker
+      PASS; decision in `coordination/formal-reviews/BATCH-4c1c67/decision.md`.
+- [x] Lean proof of the printed (outside) placement (PR #2859).
+- [x] Lean proof of Proposition 6 (PR #2867).
+- [x] Bridge from the list-of-monomials model to Mathlib `MvPolynomial`, with
+      unrestricted cofactors: witness A (PR #2871) and witness B (PR #2901).
+- [ ] Independent human check of Proposition 6 and of the reading of 2015/984's
+      Lemma 6 (`KN-FIND-936151` section 4). Checklist for the checker:
+      `HUMAN-CHECK.md`.
+- [x] Novelty audit: prior-remark search recorded in `../nagao-lemma4-note/note.md`
+      section 4 and `docs/ecdlp-literature-review-20260926.md` section 5; repeated
+      on 2026-11-02 against post-2015 citations of 2015/984 (3) and 2021/1611 (32),
+      `NOVELTY-AUDIT-20261102.md`. No prior refutation found. The search covered
+      Semantic Scholar only; Google Scholar, OpenAlex and dblp were unavailable,
+      and about nine journal-only citers were not read. Worth citing as context:
+      Caminata–Gorla §4 on adding field equations before comparing invariants.
+- [ ] Decide whether to contact the author of 2015/984 first.
+- [ ] `make deanonymize` and ePrint packaging (`make eprint`) only after the above.
+
+Supersedes nothing: `../nagao-lemma4-note/` remains the short Markdown note.

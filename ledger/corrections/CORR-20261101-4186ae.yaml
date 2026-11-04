@@ -1,0 +1,50 @@
+# Additive correction to KN-FIND-936151 section 3 and boundary 3 (the literal >= reading).
+# It annotates KN-FIND-936151 and changes no byte of it (the finding is write-once).
+correction:
+  id: CORR-20261101-4186ae
+  id_provenance: 'Allocated with tools/allocate_id.py --next correction --date 20261101, then --check: well-formed and free.'
+  recorded_at: '2026-11-01'
+  recorded_by: coordinator
+  decided_under: >-
+    User instruction of 2026-11-01 acting with Coordinator authority on open item O1 of
+    formal-review batch BATCH-4c1c67 ("apply the >= correction to the paper and KN-FIND").
+    No DEC record was filed for this decision; this correction is its record.
+  record_type: knowledge
+  record_id: KN-FIND-936151
+  field: section 3 ("The reading under which the target statement is TRUE") and section 5 boundary 3
+  prior_value: >-
+    "Under the literal >= printed in 2015/984 at :401 and :439, the inequality d_F <= d'_F HOLDS
+    -- and holds emptily, both quantities collapsing to 1 + (least degree of a nonzero ideal
+    element)." Boundary 3: "The equality reading of condition (1) -- see section 3. Void under the
+    printed >=."
+  corrected_value: >-
+    Under the literal >=, each quantity collapses to 1 + (least degree of a nonzero element of the
+    ideal it is computed from), as section 3 says. The inequality therefore holds emptily only when
+    both sides use the same ideal, which is the INSIDE placement (true side F u S_fe). In the
+    placement printed in Lemma 4 (true side {f_1..f_M} alone, fake side F u S_fe) the two ideals
+    differ: for witness A, <X^2 Y, X Y + X> has least nonzero degree 2 while <F> + S_fe contains X;
+    for witness B, <F> has least nonzero degree 2 while <F> + S_fe contains X_2 + X_3. Hence
+    d_F^>=(F) = 3 and d'_F^>= = 2, and Lemma 4 as printed is FALSE under the >= reading as well.
+    Boundary 3 applies to the inside placement only. The title's "under the equality reading of
+    condition (1), in every placement" remains true; it is not the strongest true statement for the
+    printed placement, which fails under both readings. Content of KN-FIND-936151 otherwise unchanged.
+  evidence_tier: >-
+    Reviewer computation, not a Lean theorem: BATCH-4c1c67 J1 finding F1 (Sage 10.9 Groebner bases
+    over GF(2), raw/ge_reading_check.*, raw/ge_fake_check.*) and, independently and blind, J2's nearby
+    control 1 (d_F under the lower-bound-only condition: A_F 3, A_F+S_fe 2, B_F 3, B_F+S_fe 2). The Lean
+    modules encode the equality reading only.
+  reason: >-
+    Section 3's collapse argument is correct per ideal but was applied as if both sides shared one
+    ideal. Both J1 and J2 of BATCH-4c1c67 found that the printed placement still fails under >=.
+  evidence_artifacts:
+  - knowledge/findings/KN-FIND-936151.md
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/review.md
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/raw/ge_reading_check.out
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/raw/ge_fake_check.out
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-6dcb20/review_attestation.yaml
+  also_affects:
+  - papers/first-fall-lean/paper.tex (Remark 3, abstract, section 3), corrected in the same change
+  - coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml proves_too_much object 2 and pre-review-plan.md
+    control 2, which inherit the same error; left unchanged because the dispatched plan is immutable;
+    this record is the correction
+  edits_target: false

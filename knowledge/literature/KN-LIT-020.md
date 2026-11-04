@@ -9,7 +9,7 @@ identifiers:
   eprint: null
   doi: 10.1023/A:1008319518035
   url: https://link.springer.com/article/10.1023/A:1008319518035
-tags: [xedni, lift, mordell-weil, rational-points, ecdlp, dead-end, novelty-check]
+tags: [xedni, lift, mordell-weil, rational-points, ecdlp, conditional-obstruction, novelty-check]
 confidence: reported
 citation_verified: web
 added: 2026-07-21
@@ -32,11 +32,13 @@ a subexponential relation-collection phase.
 
 ## Relevance to this program
 The canonical "reverse index calculus" / global-lift idea and a standard
-novelty-check reference. Its companion analysis (KN-LIT-021) makes it a
-documented DEAD END: any prime-field proposal that lifts to Q / uses rational
-points (e.g. the function-field xedni / Mordell-Weil-lattice candidate
-EXP-XEDN-001) is matching known-refuted territory unless it demonstrably changes
-the lift-success scaling. Keep it to classify such proposals as `known`.
+novelty-check reference. Its companion analysis (KN-LIT-021) gives a strong
+conditional height/probability obstruction for the classic fixed-arity
+construction. A prime-field proposal that lifts to Q therefore collides with
+known work and must identify which selected-lift, height, reduction,
+useful-relation, cofactor, or repeated-trial premise it changes. That collision
+is not an unconditional theorem that every characteristic-zero or
+function-field lifting strategy fails.
 
 ## Not verified here
 Full paper not read; the mechanism is relayed from the abstract and secondary

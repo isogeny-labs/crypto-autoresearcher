@@ -1,0 +1,6 @@
+python3 - <<'PY'
+from math import isqrt
+pairs = [(n,l) for n in range(2,17) for l in range(2,n+1) if n%l == 0 and all(l%d for d in range(2,isqrt(l)+1))]
+failures = [(n,l) for n,l in pairs if l*l > n]
+print({'C_equals_n_range':[2,16], 'prime_divisor_pairs':len(pairs), 'failed_sqrt_bound':failures, 'failed_linear_bound':[(n,l) for n,l in pairs if l>n]})
+PY

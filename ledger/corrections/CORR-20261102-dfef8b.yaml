@@ -1,0 +1,74 @@
+# Additive correction to the BATCH-4c1c67 review plan's ">=" proves-too-much control.
+# The dispatched plan is immutable; this record changes no byte of it.
+correction:
+  id: CORR-20261102-dfef8b
+  id_provenance: 'Allocated with tools/allocate_id.py --next correction --date 20261102, then --check: well-formed and free.'
+  recorded_at: '2026-11-02'
+  recorded_by: >-
+    Reviewer session of TASK-20261101-b3a351 (BATCH-4c1c67 J1), on the owner's instruction of
+    2026-11-02 ("file the correction for the review plan's >= control"). This record changes no
+    research status, joint verdict or decision.
+  record_type: review_plan
+  record_id: coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml
+  also_corrects:
+  - coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md
+  target_sha256:
+    coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml: 6a961e4ef250d90ec938e446e605606bbcd6e11f2c4a678980ed06501bb59818
+    coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md: 343622b5329d23022568826455e4beed469e34dd7325aa921601dcdb9b8e8d7b
+  relation_to_prior_corrections: >-
+    Complements CORR-20261101-4186ae, which corrects the source of this error (KN-FIND-936151
+    section 3) and names these two plan locations under also_affects. This record gives the plan
+    its own entry, with the exact prior text and its replacement. It does not change 4186ae.
+  field: review_plan.proves_too_much.objects[1] and failure_signature (review-plan.yaml lines 90-99); the "The `>=` reading" control (pre-review-plan.md lines 118-120)
+  prior_value:
+    review-plan.yaml_object_2: >-
+      "The literal >= reading of condition (1): Lemma 4 holds for every nonzero system, so the
+      counterexample must fail under it."
+    review-plan.yaml_failure_signature: >-
+      "A review that accepts recovery without U-4, finds the counterexample under the >= reading,
+      or accepts a first fall degree with no exhibited fall has proved too much."
+    pre-review-plan.md_control_2: >-
+      "Under >=, Lemma 4 holds for every nonzero system (KN-FIND-936151 section 3). A review that
+      finds the counterexample also holds under >= has misread D1."
+  corrected_value:
+    object_2: >-
+      The literal >= reading of condition (1) is a proves-too-much object for the INSIDE placement
+      only (true side F u S_fe). There, under >=, d_F <= d'_F holds for every system with at least
+      two generators: a fake fall at D gives a nonzero red(sum) in <F> + S_fe of degree < D, and a
+      Koszul syzygy makes some product reach degree >= D. A review that finds the inside-form
+      counterexample under >= has proved too much. In the PRINTED placement (true side {f_1..f_M}
+      alone, fake side {f_1..f_M} u S_fe) the >= reading is NOT a proves-too-much object: for both
+      witnesses d_F^>=(F) = 3 and d'_F^>= = 2, so Lemma 4 as printed is false under >= as well.
+    failure_signature: >-
+      A review that accepts recovery without U-4, finds the INSIDE-placement counterexample under
+      the >= reading, or accepts a first fall degree with no exhibited fall has proved too much.
+      Finding the printed-placement counterexample under >= is correct and is not a failure.
+    control_2: >-
+      Under >=, the inside form of Lemma 4 holds for every system with at least two generators,
+      and the printed form does not (witnesses A and B: 3 > 2). The equality reading (D1) carries
+      claim C1 (inside form) and not claim C2 (printed form).
+  evidence_tier: >-
+    Two reviewer computations from one round, not Lean theorems: J1 finding F1 (Sage 10.9 Groebner
+    bases over GF(2): least nonzero degree of <F> is 2 for A and B, while <F> + S_fe contains X for A
+    and X_2 + X_3 for B) and, blind and independently, J2's nearby control 1 (d_F with the
+    lower-bound-only condition: A with F 3, A with F + S_fe 2, B with F 3, B with F + S_fe 2; "with
+    S_fe the inequality holds for every system by construction; with F alone it still fails for A
+    and B"). The Lean modules encode the equality reading only.
+  effect_on_the_round: >-
+    None on any verdict. J2, which owned the controls, applied the correct split (holds by
+    construction with S_fe, still fails with F alone) rather than the plan's wording, and the
+    Coordinator decision (decision.md, item O1) already disposes of the issue through
+    CORR-20261101-4186ae. A future round that reuses this plan as a template should use the
+    corrected control above.
+  reason: >-
+    The plan copied KN-FIND-936151 section 3, which applied a per-ideal collapse as if the true and
+    fake sides shared one ideal. That holds only in the inside placement.
+  evidence_artifacts:
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/review.md
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/raw/ge_reading_check.out
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/raw/ge_fake_check.out
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-6dcb20/review.md
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-6dcb20/review_attestation.yaml
+  - coordination/formal-reviews/BATCH-4c1c67/decision.md
+  - ledger/corrections/CORR-20261101-4186ae.yaml
+  edits_target: false

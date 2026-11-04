@@ -1,0 +1,507 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "OI-n40-parity-replicate",
+  "version": 1,
+  "created": "2026-10-31",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "analysis/open-ideas-design-20261031/protocols",
+  "authors": [
+    "open-ideas design pass (design-experiment skill)"
+  ],
+  "links": {
+    "proposal": "ledger/proposals/IDEA-20261017-0e2dab.yaml",
+    "note": "Design for open idea IDEA-20261017-0e2dab; not yet approved or dispatched."
+  },
+  "question": "At n=40, k=20, does the sparse-f parity mixture give P=.316 (not .393) at 2000 z, with zero solutions whenever Tr(b/z)=1?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "N(z) is counted exactly for every z by exhaustive pushforward of V^2, split by Tr(b/z), and every table cell's instance band is recomputed from a(V).",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "Sparse-f P lies in [.30,.33] and differs from the dense-f .393 arm by more than the exact-count interval.",
+      "class": "comparative",
+      "decided_by": [
+        "C-window"
+      ],
+      "if_supported": "the claim holds within the frozen cells and instrument named here",
+      "if_not_supported": "the claim is refuted within the frozen cells; report the direction and effect"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "At |V|=2^20 the parity confinement makes the n=40 success probability .316 on sparse f, not .393.",
+      "mechanism": "If f has second exponent s<=20 then Tr(alpha^j)=0 for j<n-s, so N(z)=0 for every z with Tr(b/z)=1; the surviving mass gives (1-e^{-2mu})/2=.316 at mu=.5.",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "p_sparse",
+          "direction": "lower",
+          "minimum_effect": ".316+-.015",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P2",
+          "metric": "p_dense",
+          "direction": "different",
+          "minimum_effect": ".393+-.015",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P3",
+          "metric": "pi1_hits",
+          "direction": "lower",
+          "minimum_effect": "exactly 0",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P4",
+          "metric": "band_violations",
+          "direction": "lower",
+          "minimum_effect": "<=2 of 33 at 95%",
+          "provenance": {
+            "written_at": "2026-10-31",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "sparse-f",
+      "role": "candidate",
+      "description": "n=40, k=20, sparse f with s<=20, 2000 uniform z",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "sparse-f"
+      }
+    },
+    {
+      "id": "dense-f",
+      "role": "reference",
+      "description": "n=40, k=20, dense f with Tr(alpha)=1, same 2000 z",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "dense-f"
+      },
+      "same_instrument_as": "sparse-f"
+    },
+    {
+      "id": "sparse-aa",
+      "role": "control_aa",
+      "description": "sparse-f rerun on a fresh z stream",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "sparse-aa"
+      },
+      "same_instrument_as": "sparse-f"
+    },
+    {
+      "id": "n20-exhaustive",
+      "role": "control_positive",
+      "description": "n=20, k=10 exhaustive pushforward already measured at RUN-SEMBIN-8be036",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "n20-exhaustive"
+      }
+    },
+    {
+      "id": "curve-free",
+      "role": "control_negative",
+      "description": "curve-free random map at |V|=2^20 through the same z-loop; P=.393",
+      "instrument": {
+        "repo": "crypto",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "arm": "curve-free"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "n20-exhaustive",
+      "expected_detection": "the exhaustive n=20 pushforward reproduces its recorded hit profile",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "curve-free",
+      "null_population": {
+        "description": "curve-free random map with P=.393 at |V|=2^20",
+        "generator": "curve-free random map with P=.393 at |V|=2^20",
+        "n": 1000,
+        "why_n": "enough independent null draws to resolve the stated alpha under the family correction; the null is exact where the proposal states an exact count, and sampled otherwise",
+        "matched_on": [
+          "size",
+          "field and curve shape",
+          "instrument",
+          "seed law"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "arm",
+        "levels": [
+          "sparse-f",
+          "dense-f",
+          "sparse-aa",
+          "n20-exhaustive",
+          "curve-free"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one pinned build and binary per arm",
+        "how": "same commit, flags, threads"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "interleaved within every round"
+      },
+      {
+        "name": "instance",
+        "treatment": "fixed",
+        "value": "frozen inputs named in the proposal",
+        "how": "independent of arm"
+      },
+      {
+        "name": "host_load",
+        "treatment": "measured",
+        "how": "recorded per row; affects only wall time, which is not primary"
+      },
+      {
+        "name": "f_representation",
+        "treatment": "crossed",
+        "how": "sparse and dense f on the same z stream"
+      },
+      {
+        "name": "z_stream",
+        "treatment": "fixed",
+        "value": "2000 uniform z, protocol-hash seeds",
+        "how": "frozen before the count"
+      },
+      {
+        "name": "tr_split",
+        "treatment": "measured",
+        "how": "Tr(b/z) recorded per z"
+      },
+      {
+        "name": "map",
+        "treatment": "crossed",
+        "how": "varied by comparison C-window"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-f",
+        "arms": [
+          "sparse-f",
+          "dense-f"
+        ],
+        "differs_in": [
+          "f_representation"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "sparse-f",
+          "sparse-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "C-window",
+        "arms": [
+          "sparse-f",
+          "curve-free"
+        ],
+        "differs_in": [
+          "map"
+        ],
+        "design": "absolute",
+        "threshold": "p_sparse in [.30,.33] and p_curve_free in [.38,.41]"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "seeds derived from the frozen protocol hash, arm, instance and replicate"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by the frozen proposal and independent of arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": true,
+      "how": "arm labels masked until the analysis script is frozen and has run",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 2000,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 4,
+      "correction": "holm",
+      "rank_test_n": 200,
+      "min_attainable_two_sided_p": 0.009950248756,
+      "passes": true,
+      "note": "2/(N+1) resolution bound; test-specific power is argued in the proposal's minimum-effect row"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 1,
+      "per_sample_seconds": 1,
+      "threads": 1,
+      "estimated_total_seconds": 1800,
+      "measured_on": "estimate from the proposal's stated cell sizes; no run yet"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "p_sparse",
+        "name": "sparse-f success probability",
+        "unit": "probability",
+        "kind": "rate",
+        "definition": "hits/2000 on the sparse-f arm with Wilson interval",
+        "source": "results/p_sparse.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "p_dense",
+        "name": "dense-f success probability",
+        "unit": "probability",
+        "kind": "rate",
+        "definition": "hits/2000 on the dense-f arm with Wilson interval",
+        "source": "results/p_dense.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "pi1_hits",
+        "name": "hits with Tr(b/z)=1",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "solutions at z with Tr(b/z)=1 under sparse f",
+        "source": "results/pi1_hits.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      },
+      {
+        "id": "band_violations",
+        "name": "cells outside the instance band",
+        "unit": "count",
+        "kind": "exact",
+        "definition": "of the 33 Tables 1-2 cells, how many exp_prob falls outside the 95% instance band",
+        "source": "results/band_violations.csv",
+        "aggregation": "median",
+        "resolution": "1",
+        "uncertainty": "clopper_pearson_ci95"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "p_sparse",
+      "p_dense",
+      "pi1_hits",
+      "band_violations"
+    ],
+    "record": [
+      "binary_sha256",
+      "commit",
+      "threads",
+      "seed",
+      "arm"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": null,
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 3600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: 2000 z per arm x two f representations, plus the n=20 and curve-free controls, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "a row whose instrument hash differs from the frozen build is excluded and reported",
+    "a control that fails its expected detection voids the clean cells it was meant to protect"
+  ],
+  "decision_rule": {
+    "text": "C-f is supported when p_sparse in [.30,.33], p_dense in [.38,.41], pi1_hits=0 and <=4 band violations; sparse P outside [.30,.33] falsifies the parity mixture at |V|=2^20.",
+    "comparison_ids": [
+      "C-window"
+    ],
+    "threshold": "p_sparse in [.30,.33] and p_curve_free in [.38,.41]",
+    "statistic": "the primary metric named in C2, pooled as the proposal specifies",
+    "interval": "Clopper-Pearson or bootstrap 95% as the metric states",
+    "multiple_comparison_correction": "holm",
+    "effect_size_measure": ".316+-.015",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "within_control_distribution",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [],
+    "outputs": [],
+    "blinded": true,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "matching MAGMA's unknown default f instead of bracketing both representations",
+    "reading the result as a statement about Assumption 1 or any curve's security"
+  ],
+  "literature": [
+    {
+      "ref": "frozen Tables 1-2 and frozen paper population",
+      "provenance": "retrieved",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    },
+    {
+      "ref": "RUN-SEMBIN-8be036 n=20 exhaustive pushforward",
+      "provenance": "internal",
+      "claim": "cited by the frozen proposal",
+      "verified_by": "proposal record"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "334766c1e03649477f35fed9538dd73f24847b0c32a34f4a5116088b470b55a9",
+    "commit": "403b404574cac9f19a0db0aa140ea8f34ca121e5",
+    "frozen_at": "2026-11-01T04:36:19Z",
+    "filed_before_affected_data": true
+  }
+}

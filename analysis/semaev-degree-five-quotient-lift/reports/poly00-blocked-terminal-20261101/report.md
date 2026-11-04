@@ -1,0 +1,9 @@
+# n47 polynomial00 blocked D5: terminal run record
+
+The fixed polynomial00 attempt ended with `projection_kills_one` in the degree-five quotient and emitted no D5 certificate. Its independent D4 checker accepted `1 not in W_4(F)` with codimension at least 21,428, and a fresh exact counter returned zero. Under the frozen count-versus-codimension rule, this certifies **LFD at least 5** for the original named Boolean presentation. The quotient's killed constant does not prove membership in the true degree-five closure or an upper bound.
+
+The Job `semaev-n47-poly00-d5-blocked-20261031` (UID `6152117c-0717-4df8-8280-4b55e3728cc6`) ran from 2026-11-01 04:06:55 to 04:22:22 UTC. Its pod UID `653f4969-8bbb-4f8d-8c86-61187a061a8a` exited 0 with zero restarts. The [frozen request](../../runtime/poly00-blocked-frontier-request-001.json) pins the original published D4 seed and one 24 GiB cloud attempt. The [uploaded environment](environment.json) binds the request, protocol, seed, and binary digests.
+
+The [result](result.json) records 419.2 seconds for D4 checking, 7.6 seconds for exact counting, and 413.7 seconds for D5 production, with wall validity set false for comparison. The native [stdout](produce5.stdout.txt) reports 30,546 working coordinates and relation rank 30,546. The [diagram](flow.svg) shows the checked stages and the point at which mathematical acceptance stops. No checkpoint manifest or D5 checker transcript was produced before the terminal status.
+
+The [readback](readback.json) records complete S3 GET hashes for 14 small objects and cross-checks the independent [D4 transcript](check4.stdout.txt), [exact count transcript](count.stdout.txt), native terminal status, and absence of checkpoint manifests. An LFD ≥ 6 claim still requires an original-checker-accepted D5 certificate whose checked codimension exceeds the exact solution count.

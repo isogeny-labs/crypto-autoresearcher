@@ -1,0 +1,123 @@
+{
+  "review_plan": {
+    "written_at": "2026-11-01",
+    "state": "prepared_before_dispatch",
+    "goal_id": "GOAL-ECDLP-001",
+    "batch_id": "BATCH-5de665",
+    "producer_task_id": "TASK-20261101-978031",
+    "verification_task_id": "TASK-20261101-f6477d",
+    "verification_snapshot_task_id": "TASK-20261101-78aeef",
+    "validator_task_id": "TASK-20261101-bab1cb",
+    "claim_under_review": "For all real m>=2, k>=0 and beta>0, with d=m-1-k, q_F=max(k,2), q_G=max(k+1,2), the new additive target gives complete infima and all minimizers of F=max(1-d beta,q_F beta) and G=max(1-d beta,q_G beta), optimized and pointwise half-thresholds, F/G pointwise and optimized comparison/equality regimes, sharp MITM class bounds and their nonuniform gaps, plus the declared boundary controls, without an algorithm/PFSE inference.",
+    "coordinator_prior": "The elementary d/q envelope derived independently in the sealed prior review is likely formalizable at the stated real-domain scope. The most likely failures are quantifier drift between pointwise and optimized claims, treating an unattained infimum as a minimum when d<0, omitting equality plateaus when d=0, incompletely auditing the aggregate target name, or letting prose imply a model-to-PFSE bridge. No verification or validator verdict is presumed.",
+    "joints": [
+      {
+        "id": "A",
+        "joint": "Exact statement fidelity and hypothesis-delta audit",
+        "assigned_to": "TASK-20261101-bab1cb",
+        "attack_plan": "Build a row for every human requirement and every field of the exact aggregate Lean theorem. Record binders, hypotheses, conclusion, changed or absent assumptions relative to the original target, and whether the formal statement is equivalent, stronger, weaker, vacuous, or missing. Separate real-domain algebra from H1-H4 motivation and reject every algorithm/PFSE bridge.",
+        "breaking_artifact": "Exact hypothesis-delta and requirement-to-declaration tables with a counterexample or missing quantifier for every mismatch."
+      },
+      {
+        "id": "B",
+        "joint": "Blind d/q re-derivation, boundary controls, and proves-too-much attacks",
+        "assigned_to": "TASK-20261101-bab1cb",
+        "attack_plan": "Before reading the producer artifacts or prior closed forms, derive from blind-input.md the infimum, every minimizer/nonattainment case, optimized and pointwise half thresholds, F/G equality regimes, and MITM sharp envelopes. Then attack the candidate with F1-F5, m=5 beta=1/5 k=1, and the arity-three equality.",
+        "breaking_artifact": "A sealed first-phase derivation followed by explicit comparison rows; any mismatch must show exact parameters and evaluated values."
+      },
+      {
+        "id": "C",
+        "joint": "Target identity, proof-map, build, forbidden-construct, and transitive axiom audit",
+        "assigned_to": "TASK-20261101-bab1cb",
+        "attack_plan": "Require the fresh receipt to bind the exact spec, separate module, aggregate theorem qualified name, Lean toolchain and manifest. Check that the target audit is nonempty and names the requested theorem, the aggregate theorem covers the positive and known-false/weakened controls, only allowed standard axioms remain, proof_map names the original target and internal prerequisites, and no sorry/admit/custom axiom/unsafe construct or stale input is accepted.",
+        "breaking_artifact": "Exact target-name and axiom-audit table with receipt hashes and any uncovered declaration or trust gap."
+      }
+    ],
+    "blindness": {
+      "mutual": true,
+      "reviewers": [
+        "TASK-20261101-bab1cb"
+      ],
+      "lifted_for": [
+        {
+          "task_id": "TASK-20261101-bab1cb",
+          "when": "Only after the validator has written and locally sealed its blind first-phase derivation and source inventory.",
+          "rationale": "The same prospective affected-joint validator must next compare the independent derivation to the exact new source/spec/receipt. The read-order lift is explicit and does not permit producer or Coordinator conversation."
+        }
+      ],
+      "rationale": "One fresh review-adversarial xhigh session, fork_turns=none, distinct from producer, verifier, synthesis, and Coordinator. It receives only blind-input.md, its minimal task instruction, and AGENTS.md for phase one; it receives the frozen review packet only after sealing the derivation. No sibling review exists and no result is presumed."
+    },
+    "proves_too_much": {
+      "assigned_to": "TASK-20261101-bab1cb",
+      "objects": [
+        "Blanket attainment at m=2,k=2 is false: both model infima are 1 and are not attained on beta>0.",
+        "An optimized below-half condition is not pointwise: m=5,k=1 has optimized F=2/5 but F(5,1,1)=2.",
+        "A strict arity-three free-oracle conclusion is false: F(3,1/4,0)=1/2.",
+        "Strict optimized F<G at k=m-1 is false: both optimized infima are 1.",
+        "An unrestricted small-branch formula is false at m=2,k=3/2, where the true infimum is 1 and unattained.",
+        "Any conclusion about existence or nonexistence of a prime-field ECDLP algorithm, its success probability, rank, growing arity, total time, or memory is outside the theorem."
+      ],
+      "failure_signature": "A correct review must expose the nonattainment, optimized/pointwise distinction, equality boundary, invalid branch, or missing model bridge. A theorem or report that proves the false controls, hides them behind stronger assumptions, or infers PFSE scope fails."
+    },
+    "blind_rederivation": {
+      "required": true,
+      "assigned_to": "TASK-20261101-bab1cb",
+      "quantity": "Complete lower envelope over beta>0 of H_{d,q}(beta)=max(1-d beta,q beta), instantiated for F and G, all minimizers/nonattainment, optimized and pointwise half-thresholds, comparison/equality regimes, MITM sharp class bounds and absence of a uniform positive gap.",
+      "parameters": "Real m>=2, k>=0, beta>0; d=m-1-k; q_F=max(k,2); q_G=max(k+1,2).",
+      "allowed_inputs_phase_one": [
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/blind-input.md",
+        "AGENTS.md",
+        "the minimal phase-one dispatch prompt naming TASK-20261101-bab1cb"
+      ],
+      "blind_from_phase_one": [
+        "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+        "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+        "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/",
+        "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/",
+        "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/",
+        "producer, verifier, Coordinator, parent, and prior-review conversations",
+        "Git history and commit messages beyond the exact published packet binding supplied after phase one"
+      ],
+      "blind_from": [
+        "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+        "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+        "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+        "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/",
+        "docs/reports/2026-11-01-ic-arity-oracle-review/reviewers/",
+        "docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/",
+        "producer implementation, notes, report, receipt and conversations until the phase-one derivation is sealed"
+      ],
+      "lift_condition": "Write the blind derivation and phase-one source inventory first; record its SHA-256 in validation.md before opening any protected path. Any early exposure is a procedure deviation and requires a fresh successor task."
+    },
+    "review_output": {
+      "verdicts": [
+        "holds",
+        "breaks",
+        "inconclusive"
+      ],
+      "required": [
+        "Exact joint IDs A/B/C, mathematical derivation, worked attacks and controls",
+        "Exact hypothesis-delta table for every aggregate theorem clause",
+        "Exact target qualified-name, theorem-type, proof-map, source/spec/toolchain/manifest hash, build, forbidden-construct and transitive axiom audit",
+        "review_attestation with task_id, joints_owned, joint_verdicts, exact sources_read in order, phase-one seal hash, actual session/runtime/model/effort and independence",
+        "No source edit, proof edit, formal build, trial, algorithm/PFSE bridge, scientific promotion, or status transition"
+      ]
+    },
+    "budget": {
+      "maximum_runs": 0,
+      "scientific_runs": 0
+    },
+    "procedure_deviations": [],
+    "completion_gate": [
+      "Producer source snapshot and fresh formal-verification snapshot are committed, pushed, reviewable, and their gates pass before validator dispatch.",
+      "Fresh independent validator completes phase-one blind derivation before the declared read-order lift, then audits all three owned joints.",
+      "All F1-F5 controls, the m=5 positive case, and arity-three tie are evaluated exactly.",
+      "Synthesis publishes requirement-to-evidence mapping, editable graph/SVG, report source/PDF and truthful visual inspection.",
+      "Final EV/DEC remains scoped to correction/formalization evidence, records no hypothesis/lead/goal status change, and the lane closes only after verified ledger archival and publication."
+    ]
+  }
+}
+
