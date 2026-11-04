@@ -134,3 +134,22 @@ The next control is a matched source-budget sweep with single-row versus joint
 target recovery, fixed original columns, explicit anchors and finer construction
 increments. Base geometry and broader transfer remain separate open questions.
 Status remains investigating; no old run or scientific status is rewritten.
+
+2026-11-04, source-budget continuation: [A7](../research/prime_field_a7_execution_20261104/RESULTS.md)
+completed288scoped budget observations on all A6inputs, with prefix-only new
+point anchors and charged original64point prerequisites. Both64-budget semantic
+controls reproduceA6. On p65537-i0/window, joint recovery identifies five targets
+at checked48sources (rank24/31, target-cancellation rank29/31); isolated rows first
+identify them at checked96. All16curve/schedule combinations reach full source
+rank by128. These are checked operational budgets, not weighted-cost speedups
+or exact untested source thresholds. Ten distinct targets are identified with
+base uncertainty across the finer grid. The old A6anchor case's source7192 is
+at index54, so A7does not credit it at16; the same target is identified through
+available rows at checked24, with its public-multiple explanation retained.
+
+The next controlled implementation comparison is cancellation-first target
+recovery versus the full joint solver on the same immutable rows, with lifted
+certificates and separate Fr costs. Existing cancellation vectors make this
+concrete; equivalent identified functionals and any component-cost change must
+be measured. Status remains investigating; no old evidence or official state
+is replaced.
