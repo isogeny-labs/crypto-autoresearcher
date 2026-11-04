@@ -10,13 +10,15 @@ This report covers everything else from the round:
 
 None of it is a measurement of attack cost. No disposition is changed. Proposals for the Coordinator are marked.
 
+Independent validation of this round: `VALIDATION-review.md` (Sonnet validator; all verdicts confirmed, corrections applied).
+
 ## Derivation checks (`checks/`, each runs in seconds to minutes)
 
 | check | claim tested | result |
 |:--|:--|:--|
-| **D1** `d1_symnull.py` | H-PSEUDO's recorded R ≈ 1.28–1.34 is the effect of a negation-closed factor base against an asymmetric null | **Supported.** Random negation-closed sets, with no curve structure, give R = 1.29 (N ≈ 2^17) and 1.31 (N ≈ 2^20) against the same null. The H-PSEUDO run code keys points by (x, y), so its factor base is ±-closed with signed logs. Against a symmetric null the recorded 2^20 value is R ≈ 1.02. |
-| **D2** `d2_relations.py` | low-degree rank deficits come from short multiplier relations Σc_i b_i ≡ 0 mod N | **Supported.** At p = 211 and 227, 88–90% of fresh random triples are exact. Every deficient triple has a relation with \|c\| ≤ 2, and both original p = 211 triples do (b₂ ≡ −2b₃ and b₂ ≡ 2b₃). |
-| **D3** `d3_logfb.py` | the discrete-log labelling's √p-scale QTT rank comes from the factor base's log set, not from the group law | **Supported in mechanism, two numeric predictions missed.** A log-AP factor base gives rank 12, 18 and 16 at p = 251, 509 and 1021, against 55–120 for small-x and random-log factor bases. The predicted ≤ 12 at every size and the ratio range [1, 4] were missed (observed 18 at L = 9, ratio 4.3–6.1). |
+| **D1** `d1_symnull.py` | H-PSEUDO's recorded R ≈ 1.28–1.34 is the effect of a negation-closed factor base against an asymmetric null | **Supported.** Random negation-closed sets, with no curve structure, give R = 1.29 (N ≈ 2^17) and 1.31 (N ≈ 2^20) against the same null. The H-PSEUDO run code keys points by (x, y), so its factor base is ±-closed with signed logs. Matched to each rung's recorded parameters (the validator's recomputation), R against a negation-closed null is 1.01–1.03 ± 0.03 at the 2^20 rung (N_rep = 223,667, B = 512) and 0.96–1.02 across all rungs. |
+| **D2** `d2_relations.py` | low-degree rank deficits come from short multiplier relations Σc_i b_i ≡ 0 mod N | **Supported.** At p = 211 and 227, 88–90% of fresh random triples are exact. Every deficient triple has a relation with \|c\| ≤ 2, and both original p = 211 triples do (b₂ ≡ −2b₃ and b₂ ≡ 2b₃). Only two-term relations produce deficits; the 10 triples whose shortest relation has three terms are all exact. In the main low-degree run, two-term relations account for about 70% of deficient cells. |
+| **D3** `d3_logfb.py` | the discrete-log labelling's √p-scale QTT rank comes from the factor base's log set, not from the group law | **Supported in mechanism, two numeric predictions missed.** A log-AP factor base gives rank 12, 18 and 16 at p = 251, 509 and 1021, against 47–120 for small-x and random-log factor bases (E-block). The predicted ≤ 12 at every size and the ratio range [1, 4] were missed (observed 18 at L = 9, ratio 4.3–6.1). |
 
 ![D1](d1-symmetry.svg)
 

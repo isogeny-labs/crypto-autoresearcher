@@ -9,7 +9,7 @@
 <low-degree-query-lead-step-b-exact-rank-of-the-interpolation-matrix>
 Lead: `LEAD-EXO-low-degree-query-lower-bound`. Protocol `protocol.json`, LOWDEG-RANK-20261104, was frozen before data (sha256 `bbcdab319667…`, commit 3edaed22), with the run script, rank routine and analysis pinned by hash. Seeds use the export checker’s own `derive_seed`, and the export passes `check-export` with 0 findings.
 
-#strong[Verdict (frozen rule): HOLDS, with valid controls.] With random multipliers b\_i, the evaluation matrix of degree-≤D monomials in the coordinates of (\[b\_1\]R, …, \[b\_t\]R) has #strong[full rank on every candidate log] once the monomial count is about twice the number of candidates. This held in 39 of 39 decisive cells, at p \= 251, 509, 1021 and 2039. The desk note’s interpolation attack therefore goes through at toy size: each degree-D test can be made to answer "k ∈ S?" for any set S, so H1 of the row (a query bound in terms of D) is false there.
+#strong[Verdict (frozen rule): HOLDS, with valid controls.] With random multipliers b\_i, the evaluation matrix of degree-≤D monomials in the coordinates of (\[b\_1\]R, …, \[b\_t\]R) has #strong[full rank on every candidate log] once the monomial count is about twice the number of candidates. This held in 39 of 39 decisive cells, at p \= 251, 509, 1021 and 2039. So the #strong[rank premise] of the desk note’s refutation of H1 holds at toy size. The refutation itself is asymptotic. At the tested points the attack spends about 180–490 group operations, more than √N (32–45) and √p/D (11–16), so #strong[no toy-size violation of H1’s query bound is shown]. By the validator’s rough accounting, the attack beats √N/D only for D ≥ 3 and N roughly 2^28 (D \= 5) to 2^48 (D \= 3), and never for D \= 2. That rests on full rank persisting at t ~ N^(1/D), which was not tested. (Corrected after independent validation. Claim C1’s `if_supported` text in the frozen protocol overstated what a toy-size HOLDS shows.)
 
 #strong[This is not an attack-cost claim.] Building such a test uses about N^ω local field operations, and the test polynomial has about N/2 or more monomials (see the time-charging note below), so a plain DL table dominates it.
 
@@ -46,7 +46,7 @@ Lead: `LEAD-EXO-low-degree-query-lower-bound`. Protocol `protocol.json`, LOWDEG-
 ]
 
 - #strong[Controls.] The null is full rank in 100% of its cells, and every shift cell is within 3Dt + 1, far below full rank.
-- #strong[Small multipliers (ap).] These are also full rank at ratio ≥ 1.5 in 36 of 39 cells, so large multipliers are not required at this size. With b\_i ≤ 3t, Σ b\_i² is already about 9t³, far above N, so the pulled-back degree Δ is not limiting.
+- #strong[Small multipliers (ap).] These are full rank at ratio ≥ 1.5 in 36 of 39 cells. The 3 failures are exactly the smallest-multiplier cells: replicate 0 (b\_i \= 1..t), D \= 3, with Σ b\_i² \= 0.34–0.41 N. That is consistent with H1′, where the pulled-back degree Δ bounds the rank. 4 of 7 such cells are still full. Every cell with Σ b\_i² ≥ 2.1 N is full.
 
 #figure([#image("lowdeg-rank.svg")],
   caption: [
@@ -56,13 +56,14 @@ Lead: `LEAD-EXO-low-degree-query-lower-bound`. Protocol `protocol.json`, LOWDEG-
 
 == Post-data observations (not preregistered)
 <post-data-observations-not-preregistered>
-+ #strong[Deficits below ratio 1.5.] Random-multiplier cells fall below the generic expectation min(C, \#mon − t·C(2t+D−3, D−3)) at ratios below 1.5, with a mean deficit of 68 at p \= 1021 in the 0.75–1.5 band. The round-2 derivation check D2 (`docs/reports/leads-round2-20261104/checks/d2.json`) explains the p \= 211 deficits exactly: every deficient triple carries a short relation Σc\_i b\_i ≡ 0 mod N with |c| ≤ 2, and 88–90% of fresh triples are exact. With t up to 31 multipliers, such relations are almost certain to appear, so the frozen design confounds them in the middle band. They do not affect the decisive band, where rank is full regardless.
++ #strong[Deficits below ratio 1.5.] Random-multiplier cells fall below the generic expectation min(C, \#mon − t·C(2t+D−3, D−3)) at ratios below 1.5, with a mean deficit of 68 at p \= 1021 in the 0.75–1.5 band. The round-2 derivation check D2 (`docs/reports/leads-round2-20261104/checks/d2.json`) explains the p \= 211 deficits exactly: every deficient triple carries a short relation Σc\_i b\_i ≡ 0 mod N with |c| ≤ 2, and 88–90% of fresh triples are exact. Only #strong[two-term] relations (b\_i ≡ ±b\_j or ±2b\_j) produce deficits; three-term relations give none. In this run’s middle band, two-term relations account for about 70% of deficient cells (15 of 21 in 0.75–1.5, 10 of 14 below 0.75). The rest are unexplained. In the decisive band, 23 of 39 rand cells carry a two-term relation and all are full rank, so relations do not affect the verdict.
 + #strong[Time-charging note (memo heuristic HD2c).] A test answering "k ∈ S?" for |S| ≈ N/2 needs a polynomial from a span of dimension greater than N/2. Its description, and the per-target evaluation, cost at least about N/2 field operations. The attack is therefore a preprocessing attack with advice N^(1+o(1)), and a DL table beats it. The row’s model note should charge description length, not only queries.
 
 == Deviations
 <deviations>
 - #strong[No S3 checkpoint.] There is no upload token. With the owner’s approval (session 2026-11-04), the pushed branch is the resume record.
-- #strong[Compression.] Rows and export are stored as `.xz`. Uncompressed hashes are in `data.sha256`.
+- #strong[Compression.] Rows and export are stored as `.xz`. Uncompressed hashes are in `data.sha256`. The export’s raw-file entry `ld_rows.jsonl` is derived from `rows.jsonl` by `make_export_rows.py` and reproduces its declared hash (e2af7271…).
+- #strong[Provenance.] The export’s `source` and `host` fields are empty. The run used Python 3.13.18 and NumPy 2.5.3 on the session container, from the frozen-protocol commit. The independent validation (`../leads-round2-20261104/VALIDATION-review.md`) re-ranked 8 cells exactly and confirmed the verdict and the `check-export` pass.
 
 == Reproduce
 <reproduce>

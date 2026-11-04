@@ -45,8 +45,9 @@ prime-order curves at p ≤ 127. The p = 61 observation was chance. This is a st
 * The anomalous curves sit slightly **above** the ordinary ones, the opposite of the hypothesised direction. Both ECDFs follow the uniform
   line.
 * 1 of 63 anomalous curves (1.6%) fell below the 5th percentile, against 6 of 63 ordinary curves (9.5%).
-* The motivating curve, rerun under this protocol's seeds, again sits low (u_X = 0.025). Among 126 curves,
-  values that low occur in both families at about the rate chance predicts, so it is one draw from the tail.
+* The motivating curve, rerun under this protocol's seeds, again sits low (u_X = 0.025). At u ≤ 0.025 there are
+  4 ordinary curves and 0 anomalous ones among the 126, which is 4 against 3.2 expected under the null. So it is a tail draw, and the tail is not
+  anomalous-specific. (Wording corrected after independent validation.)
 * Both controls behave as designed. LOG is below every null draw on every curve (u = 0), and the A/A mean is 0.51.
 
 ## Consequence

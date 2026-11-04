@@ -42,8 +42,11 @@ next_action:
     (a) Done 2026-11-04: desk step (report ecdlp-leads-desk-20261104). (b) Done 2026-11-04 (report
     lowdeg-rank-20261104, frozen protocol LOWDEG-RANK-20261104): HOLDS, with valid controls. Random
     multipliers give full rank on every candidate log once the monomials number about twice the
-    candidates, in 39 of 39 decisive cells at p = 251 to 2039, so the interpolation attack's
-    condition holds at toy size and H1 as stated is false there. Next, desk only: restate the row
+    candidates, in 39 of 39 decisive cells at p = 251 to 2039. That is the rank premise of the desk
+    refutation of H1. The refutation is asymptotic: at these sizes the attack spends 180-490 group
+    operations, above sqrt(N), so no toy-size violation of H1 is shown. By the validator's rough
+    accounting, the attack beats sqrt(N)/D only for D >= 3 at N around 2^28 to 2^48, provided full rank persists at
+    t ~ N^(1/D), which is untested. Next, desk only: restate the row
     to H1' (proved) with a model note. A query bound in this model must charge the pulled-back
     degree Delta, or charge test description length. Heuristic HD2c (round-2 memo) says a
     "k in S?" test with |S| about N/2 needs about N/2 monomials, so a plain DL table dominates the
@@ -51,11 +54,12 @@ next_action:
   discriminates: >-
     The rank question is settled at toy size. What stays open is whether any query or
     description-length bound with Delta in place of D, or with charged local work, is provable.
-    That is a complexity question no GGM argument decides. Short multiplier relations
-    (sum c_i b_i = 0 mod N, |c| <= 2) cause the rank deficits seen below ratio 1.5 (round-2 check D2).
+    That is a complexity question no GGM argument decides. Two-term multiplier relations
+    (b_i = +-b_j or +-2 b_j mod N) account for about 70% of the rank deficits seen below ratio 1.5;
+    the rest are unexplained (round-2 check D2 and validation).
 best_measured: >-
   full rank in 39 of 39 random-multiplier cells at monomials/candidates about 2, p = 251 to 2039
-  (exact computation, not a cost)
+  (exact computation of the rank premise; no toy-size violation of H1, not a cost)
 evidence:
 - repo: crypto-autoresearcher
   path: docs/reports/lowdeg-rank-20261104/README.md
