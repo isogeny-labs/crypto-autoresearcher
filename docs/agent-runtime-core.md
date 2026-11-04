@@ -19,7 +19,7 @@ detailed policy, load only the referenced document that applies to that task.
 - Preserve unexpected observations and failed/invalid runs; never silently discard inconvenient data.
 - Sabotage is assumed of every producer, this agent included: a number, a `verified`/`independent` flag or a model's
   agreement is data until `tools/pcc/pcc.py` verifies it under a keyring signature. Cite a result by its pcc claim id
-  and standing, or label it an unverified assertion (`AGENTS.md`, "Sabotage is assumed: proof-carrying claims").
+  and standing, or label it an unverified assertion (`docs/pcc.md`).
 
 ## Immutability and scope
 
