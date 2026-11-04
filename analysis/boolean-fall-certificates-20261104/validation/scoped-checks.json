@@ -1,0 +1,32 @@
+{
+  "scope": "new module and deterministic software regressions only",
+  "tests": {
+    "command": "python -m unittest discover -s analysis/boolean-fall-certificates-20261104 -v",
+    "exit_code": 0,
+    "tests": 9
+  },
+  "build": {
+    "command": "lake build +CryptoResearch.FallDegree.ClosureCertificates",
+    "exit_code": 0,
+    "log": "closure-build-attempt7.log"
+  },
+  "axiom_audit": {
+    "command": "lake env lean --run .lake/packages/CryptoLean/tools/AuditAxioms.lean CryptoResearch.FallDegree.ClosureCertificates",
+    "exit_code": 0,
+    "log": "axiom-audit-attempt3.log",
+    "theorems": 9,
+    "failures": 0,
+    "compiler_trust_exceptions": 0
+  },
+  "fresh_kernel": {
+    "command": "lake env leanchecker --fresh CryptoResearch.FallDegree.ClosureCertificates",
+    "exit_code": 0,
+    "log": "fresh-kernel.log"
+  },
+  "not_run": [
+    "full-workspace verification",
+    "large scientific instances",
+    "performance benchmark"
+  ],
+  "semantic_review": "pending"
+}
