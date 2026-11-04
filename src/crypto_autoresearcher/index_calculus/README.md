@@ -678,3 +678,16 @@ hash span reaches32/32. Explicit new anchors have no marginal final rank gain.
 All96scope observations and the complete finite oracle are retained in the
 v8database/report. These are conditioned results on observed A4 fixtures;
 fresh curve/target holdouts and per-arm construction costs are the next control.
+
+The [A6 fresh holdouts](../../../research/prime_field_a6_execution_20261104/RESULTS.md)
+now complete that control on four new curves and 32 new public targets, with
+separate source-construction meters. Hash2 gives full rank on all four bases;
+eight distinct targets are identified with base uncertainty remaining in the
+relation-only scope. An additional prefix16 anchor-assisted target has a
+registered public-multiple explanation and is reported separately. On one
+fixture/hash0 system, joint target rows recover five targets where single
+natural rows identify two, leaving one base direction unresolved. Hashed source
+construction costs more arithmetic than the small scalar window; fixed anchor,
+generation and shared-table prerequisites remain charged. All 96 observations,
+complete finite checks and v9 database records are retained. A matched
+source-budget and joint-target recovery sweep is the next control.
