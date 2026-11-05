@@ -1,0 +1,23 @@
+{
+  "schema": "named-size-policy-check/v1",
+  "pr": 3032,
+  "parent": "1c490f9a2714dfeae502ee8c5f42f22a15758fad",
+  "workflow_original_git_blob": "bc9fa7f50ca212469a91add36540410a452ea052",
+  "canonical_tool_git_blob": "7ce68d532608a04747aaa6918904ec4fc328437b",
+  "change": "Add a size job that runs the existing canonical artifact size-policy check, with the original label semantics, independently; retain the entire original artifacts job",
+  "check_command": "python3 tools/artifacts/artifacts.py check HEAD^1 HEAD",
+  "credentials": "none supplied to the new size job",
+  "permissions": "contents: read",
+  "timeout_minutes": 10,
+  "expected_executed_checks": 22,
+  "observed_new_head_checks": false,
+  "preserved": [
+    "all original artifacts workflow job bytes",
+    "tool/config/policy",
+    "all21 original applicable check contexts",
+    "opt-in trusted-base migration workflow",
+    "all original parent journal bytes",
+    "all source/proof/frozen evidence/ledger"
+  ],
+  "standing": "unverified"
+}
