@@ -48,3 +48,13 @@ admission, not the poly00 memory peak or future feasibility.
 The current n51 polynomial-01 direct-W4 rank trial owns the frontier
 high-memory slot. This note does not authorize a concurrent poly00 D5
 trial or change any existing deadline, reservation or retry ceiling.
+
+The independent original-equation descent has now also been exported in
+the native checker's `SLCGEN01` format. The 144,520-byte file
+[`validation/n51-poly00-original-generators.bin`](validation/n51-poly00-original-generators.bin)
+has SHA-256
+`83042965fc5cdc78ffe76b79092b9daff1307161aba35476b031bb64caa9ac7b`.
+A [separate parser](validation/n51-poly00-original-generators-check-001.json)
+compared every term against the retained `input.sys`: all 51 quadratic
+generators and 18,011 monomial masks match in order. This prepares the
+input for a future full-size D5 checker; it does not check any D5 map.
