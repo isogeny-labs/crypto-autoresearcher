@@ -55,9 +55,12 @@ def remaining_watchdog(release,prior,now):
 def observed_journal_work(events):
     """Charge completed outputs and failed solver prefixes, not finalized rows alone."""
     from collections import Counter
-    completed={arm:Counter() for arm in ARMS};failed={arm:Counter() for arm in ARMS};shared=Counter();calls=0;failed_events=0;errors=0
+    completed={arm:Counter() for arm in ARMS};failed={arm:Counter() for arm in ARMS};shared=Counter();calls=0;failed_events=0;errors=0;started=set();checked=set()
     for event in events:
         kind=event['kind']
+        if kind in ('case_started','case_checked'):
+            identity=tuple(sorted(event['descriptor'].items()))
+            (started if kind=='case_started' else checked).add(identity)
         if kind=='case_input':
             for phase in event['shared_phases']:shared.update(phase['counters'])
         elif kind=='solver_complete':
@@ -66,4 +69,4 @@ def observed_journal_work(events):
             failed_events+=1
             for phase in event['phases']:failed[event['arm']].update(phase['counters'])
         elif kind=='failure':errors+=1
-    return dict(observed_completed_producer_calls=calls,failed_solver_events=failed_events,failure_events=errors,completed_arm_counters={a:dict(v) for a,v in completed.items()},failed_arm_phase_counters={a:dict(v) for a,v in failed.items()},observed_arm_counters={a:dict(completed[a]+failed[a]) for a in ARMS},shared_projection_counters=dict(shared),partial_work_unknown=bool(errors),coverage='Journalled completed outputs and solver_failed phase prefixes; a crash can leave unrecorded work, marked unknown. Inclusive processresources retained separately, never converted to Frunits.')
+    return dict(observed_completed_producer_calls=calls,failed_solver_events=failed_events,failure_events=errors,completed_arm_counters={a:dict(v) for a,v in completed.items()},failed_arm_phase_counters={a:dict(v) for a,v in failed.items()},observed_arm_counters={a:dict(completed[a]+failed[a]) for a in ARMS},shared_projection_counters=dict(shared),partial_work_unknown=bool(errors or failed_events or started-checked),coverage='Journalled completed outputs and solver_failed phase prefixes; a crash can leave unrecorded work, marked unknown. Inclusive processresources retained separately, never converted to Frunits.')

@@ -48,7 +48,8 @@ def main():
     for c in cells:c.pop('counters',None)
     prior=rules['prior_failed_attempt'];prior_exec=load(ROOT/prior['files'][0]['path']);prior_prefix=load(ROOT/prior['files'][2]['path'])
     old_events=[json.loads(v) for v in gzip.decompress((ROOT/prior['files'][3]['path']).read_bytes()).decode().splitlines()]
-    current_observed=observed_journal_work(all_events);old_observed=observed_journal_work(old_events)
+    current_observed=observed_journal_work(all_events);current_observed['partial_work_unknown']|=not complete or execution['timeout'] or execution['returncode']!=0 or execution['exception']is not None
+    old_observed=observed_journal_work(old_events)
     if old_observed['observed_completed_producer_calls']!=prior_prefix['computed_arm_outputs']:raise ValueError('priorprefix journal count differs')
     if old_observed['observed_arm_counters']!=prior_prefix['observed_arm_counters']:raise ValueError('priorprefix counters differ')
     if complete and current_observed['observed_completed_producer_calls']!=1152:raise ValueError('completedpanel journal coverage differs')
