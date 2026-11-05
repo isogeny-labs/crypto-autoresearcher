@@ -4,13 +4,15 @@
 - **Kind:** mathematical proof gap; not an impossibility or resource result
 - **Affected work:** [four-track request and proof note](../analysis/boolean-fall-certificates-20261104/THEORY.md), RQ-DREG-bd6c86, prime digit and binary descent lanes
 - **Next action owner:** formal/theory continuation of the current owner request
-- **Last updated:** 2026-11-04
+- **Last updated:** 2026-11-05
 
 ## Problem
 
-We cannot yet prove unbounded last fall for the fixed-degree Boolean/digit
-presentations because no separator construction has been established for
-arbitrarily growing parameters with full kernel closure.
+The characteristic-two fixed-degree growing lower bound remains unproved.
+The 2026-11-05 continuation supplies a written prime-digit family theorem
+with full closure and a fresh independent mathematical review; see the
+scoped progress below. This record remains open for the binary requirement
+and does not promote any official research claim.
 
 The binary target is the exact normalized S3 subspace descent with explicit
 Boolean equations (or a separately specified chained encoding). The prime
@@ -20,6 +22,28 @@ The arity, input normalization, target admissibility, subspace/digit maps,
 auxiliary blocks and field must be fixed in the family statement. Point/group
 interpretation is a separate obligation when the coordinate constraints omit
 rational-lift or sign restrictions.
+
+## Scoped progress, 2026-11-05
+
+For the exact prime single-S3, two s-bit-block presentation, with all bit
+equations, s>=2, p>=2^s prime and a nonsingular curve,
+[the written theorem](../analysis/rigorous-lfd-solving-20261105/THEOREM.md)
+proves `4+floor(s/2)<=d_F<=sd_sigma(F)<=2s+1` for every degree-compatible
+order. It explicitly computes the full strict closure at the separating cap
+and uses Boolean evaluation dimension to handle SAT as well as UNSAT.
+Rational-target SAT and UNSAT families exist for every width.
+[Fresh review](../analysis/rigorous-lfd-solving-20261105/prime-independent-review.md)
+found no mathematical gap at written-proof scope, with analytical controls.
+It supplies no complete Lean theorem or signed PCC/scientific promotion.
+The old measured widths are not being extrapolated as the proof.
+
+The characteristic-two lower bound remains open. The raw binary upper-bound
+Lean instantiation now compiles and is described in
+[BINARY-FORMAL.md](../analysis/rigorous-lfd-solving-20261105/BINARY-FORMAL.md).
+The exact remaining scope is in [the obligation record](../analysis/rigorous-lfd-solving-20261105/problems/remaining-binary-obligations.md).
+The earlier no-separator statements below describe the 2026-11-04 state;
+they are superseded for this exact prime presentation, not for binary or
+other encodings. The original requirement is retained.
 
 ## Evidence and uncertainty
 
@@ -67,3 +91,6 @@ scheduled by this record.
 2026-11-04: Opened while delivering the two-sided certificate and scoped
 formalization tranche. The original request remains unresolved at this
 mathematical obligation; no goal or hypothesis status was changed.
+
+2026-11-05: Added the scoped prime written theorem and independent review;
+binary obligations and official research statuses remain unchanged.
