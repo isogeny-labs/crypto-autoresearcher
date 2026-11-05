@@ -11,6 +11,47 @@ spec=importlib.util.spec_from_file_location('fixed_panel_metrics',Path(__file__)
 M=importlib.util.module_from_spec(spec);spec.loader.exec_module(M)
 
 
+def test_source_budget_metrics_keep_prefix_and_shared_cost_boundaries(monkeypatch):
+    cells=[dict(cell_id=f'p{p}-i{i}',arm=a,prefix=b,scope=s,verified=True,status='verified',base_columns=16,base_rank=0,base_nullity=16,base_rank_after_target_cancellation=0,target_base_rank_gain=0,single_targets=0,joint_targets=0,early_joint_targets=0,construction_scalar_multiplications=b,construction_cache_hits=0,construction_field_multiplications=b*100,construction_group_additions=b*10,prerequisite_scalar_multiplications=64,source_queries=b*(16 if p==8191 else 32)*2)
+        for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for b in (0,8,16,24,32,48,64,96,128) for s in ('relations','anchors')]
+    data=dict(panel_complete=True,cells=cells,physical_work=dict(source_queries=98304,target_queries=1536,pair_entries=4928))
+    def read(value):
+        monkeypatch.setattr(M,'show',lambda ref,path:json.dumps(value));stream=io.StringIO()
+        with contextlib.redirect_stdout(stream):M.prime_field_source_budget_panel('committed-ref','2026-11-04')
+        return [json.loads(v) for v in stream.getvalue().splitlines()]
+    assert len(read(data))==1731
+    for change in (lambda v:v['cells'].pop(),lambda v:v['cells'][0].update(construction_cache_hits=1),lambda v:v['cells'][1].update(prerequisite_scalar_multiplications=0),lambda v:v['cells'][2].update(source_queries=999),lambda v:v['physical_work'].update(source_queries=98304*9)):
+        bad=copy.deepcopy(data);change(bad);assert read(bad)==[]
+
+
+def test_source_control_rejects_incomplete_or_inflated_rank_and_physical_counts(monkeypatch):
+    cells=[dict(cell_id=f'p{p}-i{i}',arm=a,prefix=n,scope=s,verified=True,status='verified',base_columns=16,base_rank=2,base_nullity=14,anchor_gain=1,target_base_rank_gain=1,base_rank_after_target_cancellation=3,single_targets=0,joint_targets=0,early_joint_targets=0)
+           for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for n in (0,16,64) for s in ('relations','anchors')]
+    data=dict(panel_complete=True,cells=cells,physical_work=dict(source_queries=49152,target_queries=1536,pair_entries=4928))
+    def read(d):
+        monkeypatch.setattr(M,'show',lambda ref,path:json.dumps(d));stream=io.StringIO()
+        with contextlib.redirect_stdout(stream):M.prime_field_source_control_panel('committed-ref','2026-11-04')
+        return [json.loads(v) for v in stream.getvalue().splitlines()]
+    assert len(read(data))==579
+    for change in (lambda d:d['cells'].pop(),lambda d:d['cells'][0].update(target_base_rank_gain=9),lambda d:d['physical_work'].update(source_queries=49152*6),lambda d:d['cells'][0].update(joint_targets=9)):
+        bad=copy.deepcopy(data);change(bad);assert read(bad)==[]
+
+
+def test_fresh_source_metrics_preserve_per_arm_costs_without_prefix_multiplication(monkeypatch):
+    cells=[dict(cell_id=f'p{p}-i{i}',arm=a,prefix=n,scope=s,verified=True,status='verified',base_columns=16,base_rank=2,base_nullity=14,anchor_gain=1,target_base_rank_gain=1,base_rank_after_target_cancellation=3,single_targets=0,joint_targets=0,early_joint_targets=0)
+           for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for n in (0,16,64) for s in ('relations','anchors')]
+    costs=[dict(cell_id=f'p{p}-i{i}',arm=a,source_construction=dict(counters={'source_scalar_multiplications':64,'Fp.field_mul':900,'Fp.group_add':300,'Fp.field_inv':280})) for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2')]
+    data=dict(panel_complete=True,cells=cells,per_arm_costs=costs,physical_work=dict(source_queries=49152,target_queries=1536,pair_entries=4928))
+    def read(d):
+        monkeypatch.setattr(M,'show',lambda ref,path:json.dumps(d));stream=io.StringIO()
+        with contextlib.redirect_stdout(stream):M.prime_field_fresh_source_panel('committed-ref','2026-11-04')
+        return [json.loads(v) for v in stream.getvalue().splitlines()]
+    out=read(data);assert len(out)==643
+    assert sum(r['value'] for r in out if r['metric'].endswith('construction.source_scalar_multiplications'))==1024
+    for mutate in (lambda d:d['per_arm_costs'].pop(),lambda d:d['per_arm_costs'][0]['source_construction']['counters'].update(source_scalar_multiplications=0),lambda d:d['physical_work'].update(source_queries=49152*6)):
+        bad=copy.deepcopy(data);mutate(bad);assert read(bad)==[]
+
+
 def test_committed_only_exact_panels_and_invalid_recoveries(tmp_path,monkeypatch):
     def git(*args):
         return subprocess.check_output(['git','-C',str(tmp_path),'-c','user.name=test',
@@ -96,4 +137,30 @@ def test_holdout_metrics_charge_each_stream_once_and_reject_incomplete(tmp_path,
     assert len(rows)==51 and [r['value'] for r in rows[:3]]==[12288,1536,4928]
     target.write_text('{}');assert read(first)==rows
     for mutate in (lambda d:d.update(panel_complete=False),lambda d:d['cells'].pop(),lambda d:d['cells'][0].update(base_rank=17),lambda d:d['cells'][0].update(joint_targets=9)):
+        bad=copy.deepcopy(data);mutate(bad);assert read(commit(bad))==[]
+
+
+def test_cancellation_metrics_keep_split_units_and_complete_pairs(tmp_path,monkeypatch):
+    def git(*args):return subprocess.check_output(['git','-C',str(tmp_path),'-c','user.name=test','-c','user.email=test@example.invalid',*args],text=True).strip()
+    git('init','-q');monkeypatch.setattr(M,'REPO',tmp_path)
+    path='research/prime_field_a8_execution_20261105/runs/a8-cold-solvers-7f32b1/analysis.json';target=tmp_path/path;target.parent.mkdir(parents=True)
+    cells=[];i=0
+    for p in (8191,65537):
+        for curve in (0,1):
+            for schedule in ('window','hash0','hash1','hash2'):
+                for budget in (0,8,16,24,32,48,64,96,128):
+                    for scope in ('relations','anchors'):
+                        for arm in ('full_joint','cancellation_first'):
+                            cells.append(dict(cell_id=f'p{p}-i{curve}',schedule=schedule,prefix=budget,scope=scope,arm=arm,instance_id=str(i),verified=True,status='verified',identified_targets=1,matrix_columns=3,matrix_rank=2,matrix_nullity=1,fr_add=2,fr_sub=3,fr_mul=4,fr_inv=1,certificate_lift_sub=1,verified_original_certificates=1))
+                        i+=1
+    data=dict(panel_complete=True,cells=cells,physical_processes=1,solver_calls_verified=576)
+    def commit(value):target.write_text(json.dumps(value));git('add',path);git('commit','-qm','marked-solver-metadata');return git('rev-parse','HEAD')
+    def read(ref):
+        output=io.StringIO()
+        with contextlib.redirect_stdout(output):M.prime_field_cancellation_solver_panel(ref,'2026-11-05')
+        return [json.loads(v) for v in output.getvalue().splitlines()]
+    ref=commit(data);rows=read(ref);assert len(rows)==3457
+    assert {v['unit'] for v in rows}>={'Fr additions','Fr subtractions','Fr multiplications','Fr inversions'}
+    target.write_text('{}');assert read(ref)==rows
+    for mutate in (lambda d:d['cells'].pop(),lambda d:d['cells'][0].update(fr_sub=True),lambda d:d['cells'][0].update(identified_targets=2),lambda d:d.update(panel_complete=False)):
         bad=copy.deepcopy(data);mutate(bad);assert read(commit(bad))==[]

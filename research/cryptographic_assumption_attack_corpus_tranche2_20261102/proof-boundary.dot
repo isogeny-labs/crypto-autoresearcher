@@ -1,0 +1,74 @@
+digraph AttackCorpusTrancheTwo {
+  graph [
+    rankdir=LR,
+    bgcolor="transparent",
+    pad="0.18",
+    nodesep="0.22",
+    ranksep="0.58",
+    fontname="DejaVu Sans",
+    fontsize=14,
+    labelloc="t",
+    label="Attack corpus tranche two: finite obstruction, exact repair, remaining bridge"
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="DejaVu Sans",
+    fontsize=9.3,
+    margin="0.12,0.08",
+    color="#64748b",
+    penwidth=1.0
+  ];
+  edge [fontname="DejaVu Sans", fontsize=8.2, color="#64748b", arrowsize=0.62];
+
+  subgraph cluster_history {
+    label="ONE-SHOT-HISTORY";
+    color="#dbe4ee";
+    style="rounded";
+    h_bad [fillcolor="#fee2e2", color="#b91c1c", label="Same one-shot marginals\n≠ same joint survival"];
+    h_fix [fillcolor="#dcfce7", color="#15803d", label="Supply a history-uniform\nsurvival recurrence"];
+    h_gap [fillcolor="#fff7ed", color="#c2410c", label="Conditional-event model and\nexpectation bridge remain open"];
+    h_bad -> h_fix [label="repair"];
+    h_fix -> h_gap [label="does not supply"];
+  }
+
+  subgraph cluster_cubic {
+    label="CUBIC-EVAL-RANK";
+    color="#dbe4ee";
+    c_bad [fillcolor="#fee2e2", color="#b91c1c", label="Ten distinct collinear points\nleave Y Z² in the kernel"];
+    c_fix [fillcolor="#dcfce7", color="#15803d", label="Require nonzero determinant /\ninjective evaluation"];
+    c_gap [fillcolor="#e0f2fe", color="#0369a1", label="JKSST already requires rank;\nthis is a guardrail, not erratum"];
+    c_bad -> c_fix [label="repair"];
+    c_fix -> c_gap [label="source scope"];
+  }
+
+  subgraph cluster_cofactor {
+    label="COFACTOR-PUSHFORWARD";
+    color="#dbe4ee";
+    f_bad [fillcolor="#fee2e2", color="#b91c1c", label="×2 can collapse both factors;\n'cofactor' alone proves no uniformity"];
+    f_fix [fillcolor="#dcfce7", color="#15803d", label="K annihilated, S permuted:\nimage {0}×S, fibre size |K|"];
+    f_gap [fillcolor="#fff7ed", color="#c2410c", label="Concrete curve decomposition and\nsuite semantics remain open"];
+    f_bad -> f_fix [label="repair"];
+    f_fix -> f_gap [label="requires bridge"];
+  }
+
+  subgraph cluster_fs {
+    label="FS-ZERO-HASH";
+    color="#dbe4ee";
+    z_bad [fillcolor="#fee2e2", color="#b91c1c", label="Constant challenge c accepts\nR = sG - cX"];
+    z_fix [fillcolor="#dcfce7", color="#15803d", label="One nonzero fixed equation gives\npublic-key uniqueness only"];
+    z_gap [fillcolor="#fff7ed", color="#c2410c", label="Forking, replay, ROM/QROM and\nknowledge extraction remain open"];
+    z_bad -> z_fix [label="control"];
+    z_fix -> z_gap [label="not a security proof"];
+  }
+
+  subgraph cluster_pedersen {
+    label="PEDERSEN-RELATION-KERNEL";
+    color="#dbe4ee";
+    p_bad [fillcolor="#fee2e2", color="#b91c1c", label="H = αG gives kernel vector\n(α, -1) and alternate openings"];
+    p_fix [fillcolor="#dcfce7", color="#15803d", label="Collisions reveal α when\nmessages differ"];
+    p_gap [fillcolor="#fff7ed", color="#c2410c", label="Binding is computational under\na hidden-relation / DLP premise"];
+    p_bad -> p_fix [label="characterize"];
+    p_fix -> p_gap [label="model boundary"];
+  }
+}

@@ -64,6 +64,12 @@ def status(ctx: typer.Context):
 
 
 @app.command()
+def recent(ctx: typer.Context, limit: int = 10, repo: str | None = None):
+    """Newest ingested sources, useful for seeing findings that just landed."""
+    emit(library(ctx).recent(limit, repo))
+
+
+@app.command()
 def search(
     ctx: typer.Context,
     query: str,
@@ -73,6 +79,24 @@ def search(
     mode: str = "lexical",
 ):
     emit(library(ctx).search(query, top_k, repo, source_type, mode))
+
+
+@app.command()
+def brief(
+    ctx: typer.Context,
+    query: str,
+    repo: str | None = None,
+    source_type: str | None = None,
+    top_k: int = 6,
+    mode: str = "lexical",
+    max_chars: int = 14000,
+):
+    """Print a citation-bearing context pack for a batch or non-MCP model.
+
+    Delphi and shell wrappers use this; it is the same retriever the MCP tools
+    serve, not a second search path.
+    """
+    typer.echo(library(ctx).brief(query, top_k, repo, source_type, mode, max_chars))
 
 
 @app.command()
@@ -172,6 +196,67 @@ def mcp(ctx: typer.Context):
     from research_kb.server import build_mcp
 
     build_mcp(library(ctx)).run(transport="stdio", show_banner=False)
+
+
+@app.command("update-sources")
+def update_sources(ctx: typer.Context):
+    """Fast-forward each registered git checkout; never merges or overwrites local work."""
+    from research_kb.ingest import update_sources as update
+
+    results = update(library(ctx))
+    emit(results)
+    if any(item.get("ok") is False for item in results):
+        raise typer.Exit(1)
+
+
+@app.command("watch")
+def watch_command(
+    ctx: typer.Context,
+    interval: float = typer.Option(60.0, "--interval", help="Seconds between source checks."),
+    once: bool = typer.Option(False, "--once", help="Check and refresh once, then exit."),
+    pull: bool = typer.Option(False, "--pull", help="Fast-forward registered git checkouts each cycle."),
+    max_cycles: int | None = typer.Option(None, "--max-cycles", hidden=True),
+):
+    """Refresh the catalog when a registered source changes.
+
+    Run this under launchd/systemd/cron when agents should see new findings
+    without an operator remembering to run ``refresh``.
+    """
+    from research_kb.watch import watch
+
+    watch(library(ctx), interval=interval, once=once, max_cycles=max_cycles, pull=pull)
+
+
+@app.command("install-client")
+def install_client_command(
+    ctx: typer.Context,
+    client: list[str] = typer.Option(..., "--client", "-c", help="claude | codex | opencode | delphi | all"),
+    transport: str = typer.Option("stdio", help="stdio | http"),
+    url: str | None = typer.Option(
+        None, "--url", help="Base URL for HTTP transport, e.g. https://kb.example.com"
+    ),
+    command: str | None = typer.Option(None, "--command", help="Path to the research-kb executable."),
+):
+    """Register this KB in local agent clients. Idempotent, with backups."""
+    from research_kb import clients as client_installer
+
+    if transport not in {"stdio", "http"}:
+        raise typer.BadParameter("transport must be stdio or http")
+    names = list(client_installer.CLIENT_NAMES) if "all" in client else client
+    names = [part for name in names for part in name.split(",") if part]
+    unknown = sorted(set(names) - set(client_installer.CLIENT_NAMES))
+    if unknown:
+        raise typer.BadParameter(f"unknown clients: {', '.join(unknown)}")
+    executable = command or client_installer.default_command()
+    kwargs = {
+        "transport": transport,
+        "command": executable,
+        "state_home": ctx.obj.home.expanduser().resolve(),
+        "config": ctx.obj.config.expanduser().resolve(),
+        "url": url,
+    }
+    for name in names:
+        emit(client_installer.install(name, **kwargs))
 
 
 @app.command("serve")

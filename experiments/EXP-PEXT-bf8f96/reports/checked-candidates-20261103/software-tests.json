@@ -1,0 +1,90 @@
+{
+  "schema": "pext.software-check/v1",
+  "scope": "directly checked F27 candidates and bounded synthetic q11 profile; no scientific cohort",
+  "python": "3.9.25",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "source_sha256": {
+    "experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs": "0336e5c594fc7f27d56a27ed957e281af7e9af9d0b15df4797a12bf8e86d5251",
+    "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs": "3e09fbcd869938d8eb2538636f6aa9f67ec9c394fa2a6aba66dff1f0d0360e95",
+    "experiments/EXP-PEXT-bf8f96/implementation/symbolic_extension.rs": "c5d0b9290e9e462b83f1c1b715d19b97a05d8b0327b2de13e207ca2d039503d4",
+    "experiments/EXP-PEXT-bf8f96/implementation/branch_factorization.rs": "6a66e5a596994150a106ec5936db3c8159ab037fbcf0751fe2e4c63c39433d9b",
+    "experiments/EXP-PEXT-bf8f96/implementation/branch_roots.rs": "86aec4293ea02a5bf127d3da05e71b87c8d848c1ab0f85e7d47f5c1b22fe2ccf",
+    "experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs": "6d3cba83a4886a629e2d69d6ee7c262af9ee2dc8a8a26cf17fe00570422b27ba",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_core.rs": "f7f3466455b9c773552b0bde9aac43a103e8c051a6c1dc453499b90e69cdeffe",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs": "393068c993f9ec610a334df059b8ae9c34da77c37763aa75d55f51a7827b64c4",
+    "experiments/EXP-PEXT-bf8f96/implementation/all_degree_collision_certificate.rs": "454a0848a0a9304c6f6a8a1034f74e71fd815a1fbe8aacca35569cefb7f48c36",
+    "experiments/EXP-PEXT-bf8f96/implementation/profile_synthetic_candidates.rs": "4a0466ea0381f3578eb565b101d85cacf4217399821f3b1061582f212fe6b956",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_all_degree_collision_certificate.py": "a818e27502b1c8221ec56178a00e5afc9c57e6e9757b03cdb3d48d08a04ead99",
+    "experiments/EXP-PEXT-bf8f96/implementation/test_all_degree_collision_certificate.py": "55a5290d85a20f707b78f5363720209e8330395cc228e7149650513a56d12277",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py": "f0cfa02401eb46687254d7c718907e881deef40c794417f9033e082272179b31",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_join_certificate.py": "b04cb57115e559bf0c37603b8eee70fdebc013697b7810f14b54e28b5ab7f16f",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_quotient_certificate.py": "054ec67dbb38851ec4984d80eeb07161795f0165bd353aa7ab5408aefb5f8c5d",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_curve_class_certificate.py": "97f68a4155e82dd96f517fab7dcfc4b8ea4ad1d530db6cb0e9be1dfea6d29676",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_structure_certificate.py": "47fdadfe5afc2f22bbf872db7a902bcffa6301ee4174d3cd909733ebd8d36efc",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_rational_collision_certificate.py": "1281dd4356d978c505351d86d9856e3365e4e39c8dd68088f629783d9a51d587",
+    "experiments/EXP-PEXT-bf8f96/implementation/generic_disjoint.py": "48221b8d7f55695da57a67796ed0bdf92bc7b60ca4ee7ecafe1355caab28161b"
+  },
+  "steps": [
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs",
+        "-o",
+        "/tmp/pext-checked-candidates-rkh6g9g5/core"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/pext-checked-candidates-rkh6g9g5/core",
+        "--test-threads=1"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "\nrunning 17 tests\ntest implementation::tests::all_degree_root_candidates_equal_fixed_f27_exceptional_scan ... ok\ntest implementation::tests::branch_factorization_covers_all_squarefree_quartic_patterns ... ok\ntest implementation::tests::complete_cocycle_index_replays_structure_ordinals ... ok\ntest implementation::tests::complete_rational_root_set_matches_direct_f27_support_collision ... ok\ntest implementation::tests::constant_twist_relations_are_retained ... ok\ntest implementation::tests::curve_model_normalization_and_orbits ... ok\ntest implementation::tests::extension_encoding_and_charts ... ok\ntest implementation::tests::fixed_f27_support_geometry_matches_independent_relations ... ok\ntest implementation::tests::quotient_witnesses_and_projective_charts ... ok\ntest implementation::tests::rational_image_index_matches_direct_full_f27_scan ... ok\ntest implementation::tests::rational_pair_generator_matches_direct_full_f27_collision ... ok\ntest implementation::tests::rejects_invalid_domains ... ok\ntest implementation::tests::structure_bounds_and_exact_scalar_transport ... ok\ntest implementation::tests::structure_unranking_matches_nested_reference ... ok\ntest implementation::tests::support_geometry_validates_orbit_and_rank_one_n5 ... ok\ntest implementation::tests::symbolic_extensions_validate_irreducibility_and_field_laws ... ok\ntest implementation::tests::symbolic_root_kernels_match_direct_projective_matrix_scan ... ok\n\ntest result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.95s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs",
+        "-o",
+        "/tmp/pext-checked-candidates-rkh6g9g5/join"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "warning: unused imports: `BranchFactorization`, `BranchRoots`, `CocycleIndex`, `Coset`, `CurveClass`, `Curve`, `ExceptionalCandidateSummary`, `FieldIdentity`, `ModelWitness`, `QuarticPoint`, `RationalImageIndex`, `SquareClasses`, `SymbolicElement`, and `SymbolicExtension`\n    --> experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:1136:38\n     |\n1136 | ...xt,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,BranchRoots,ExceptionalCandidateSummary,CurveClass,ModelWitness};\n     |       ^^^^^       ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^                 ^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^\n     |\n     = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: 1 warning emitted\n\n"
+    },
+    {
+      "command": [
+        "/tmp/pext-checked-candidates-rkh6g9g5/join",
+        "--test-threads=1"
+      ],
+      "cwd": null,
+      "exit_code": 0,
+      "stdout": "\nrunning 19 tests\ntest quotient_core::implementation::tests::all_degree_root_candidates_equal_fixed_f27_exceptional_scan ... ok\ntest quotient_core::implementation::tests::branch_factorization_covers_all_squarefree_quartic_patterns ... ok\ntest quotient_core::implementation::tests::complete_cocycle_index_replays_structure_ordinals ... ok\ntest quotient_core::implementation::tests::complete_rational_root_set_matches_direct_f27_support_collision ... ok\ntest quotient_core::implementation::tests::constant_twist_relations_are_retained ... ok\ntest quotient_core::implementation::tests::curve_model_normalization_and_orbits ... ok\ntest quotient_core::implementation::tests::extension_encoding_and_charts ... ok\ntest quotient_core::implementation::tests::fixed_f27_support_geometry_matches_independent_relations ... ok\ntest quotient_core::implementation::tests::quotient_witnesses_and_projective_charts ... ok\ntest quotient_core::implementation::tests::rational_image_index_matches_direct_full_f27_scan ... ok\ntest quotient_core::implementation::tests::rational_pair_generator_matches_direct_full_f27_collision ... ok\ntest quotient_core::implementation::tests::rejects_invalid_domains ... ok\ntest quotient_core::implementation::tests::structure_bounds_and_exact_scalar_transport ... ok\ntest quotient_core::implementation::tests::structure_unranking_matches_nested_reference ... ok\ntest quotient_core::implementation::tests::support_geometry_validates_orbit_and_rank_one_n5 ... ok\ntest quotient_core::implementation::tests::symbolic_extensions_validate_irreducibility_and_field_laws ... ok\ntest quotient_core::implementation::tests::symbolic_root_kernels_match_direct_projective_matrix_scan ... ok\ntest tests::exact_ranges_and_rejection ... ok\ntest tests::exact_support_partition_and_shard_replay ... ok\n\ntest result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.81s\n\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "test_all_degree_collision_certificate.py",
+        "-v"
+      ],
+      "cwd": "experiments/EXP-PEXT-bf8f96/implementation",
+      "exit_code": 0,
+      "stdout": "{\"fixture\": \"f27-char3\", \"structures\": 819, \"targets\": [{\"exceptional\": 590, \"label\": \"split-1111\", \"nonrational\": 0, \"overlap\": 0, \"pattern\": [1, 1, 1, 1], \"rational\": 590}, {\"exceptional\": 279, \"label\": \"split-112\", \"nonrational\": 7, \"overlap\": 1, \"pattern\": [1, 1, 2], \"rational\": 273}, {\"exceptional\": 117, \"label\": \"split-13\", \"nonrational\": 0, \"overlap\": 0, \"pattern\": [1, 3], \"rational\": 117}, {\"exceptional\": 20, \"label\": \"split-22\", \"nonrational\": 20, \"overlap\": 0, \"pattern\": [2, 2], \"rational\": 0}, {\"exceptional\": 1, \"label\": \"irreducible-4\", \"nonrational\": 1, \"overlap\": 0, \"pattern\": [4], \"rational\": 0}, {\"exceptional\": 279, \"label\": \"actual-0\", \"nonrational\": 7, \"overlap\": 1, \"pattern\": [1, 1, 2], \"rational\": 273}, {\"exceptional\": 1, \"label\": \"actual-1\", \"nonrational\": 1, \"overlap\": 0, \"pattern\": [4], \"rational\": 0}], \"valid\": true}\n",
+      "stderr": "test_full_fixture_and_mutations (test_all_degree_collision_certificate.AllDegreeCollisionCertificateTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 12.130s\n\nOK\n"
+    }
+  ]
+}

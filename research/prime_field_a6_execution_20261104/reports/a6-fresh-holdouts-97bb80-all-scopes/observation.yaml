@@ -1,0 +1,406 @@
+schema: crypto.autoresearch.experiment_observation.v1
+report_kind: run_observations
+question: How do the fixed source schedules and separately counted construction costs
+  transfer to fresh curve/target holdouts?
+scope: Four prospectively rule-selected coefficient curves, two each over8191/65537
+  with16/32native atoms,32new targets; original-window projection fixed percurve.
+method:
+  description: Generate first eligible curves and canonical hash-x public targets
+    afteradmission; query four64source schedules and shared target stream; complete
+    separate finite checks.
+  command: /workspace/factor-base-venv/bin/python -B research/prime_field_a6_execution_20261104/supervise.py
+    --protocol research/prime_field_a6_execution_20261104/protocol.json --release
+    research/prime_field_a6_execution_20261104/release.json --owner root-a6 --out
+    research/prime_field_a6_execution_20261104/runs/a6-fresh-holdouts-97bb80
+  parameters:
+    curves: 4
+    targets: 32
+    source_schedules: 4
+    sources_per_schedule: 64
+    prefixes:
+    - 0
+    - 16
+    - 64
+    scopes:
+    - relations
+    - anchors
+  seeds:
+  - 0
+  - 1
+  - 2
+  sampling_unit: Curve/schedule/prefix/scope; targetpoints reusedacross schedules
+    andprefixes.
+  stopping_rule: Exactly96observations and fixedfull querycoverage; protective refusal
+    gates, no rank/recovery stop.
+runs:
+- experiment_id: PRIME-FIELD-A6-FRESH-SOURCE-CONTROL-20261104
+  run_id: a6-fresh-holdouts-97bb80
+  native_status: returncode=0; timeout=false; exception=null
+  evidence:
+  - artifact: execution
+    selector: /returncode,/timeout,/exception
+observations:
+- id: full-prefix-ranks
+  description: Relation-only ranks and target counts at64sources, allarms retained.
+  kind: measured
+  value:
+  - cell_id: p8191-i0
+    arm: window
+    base_columns: 15
+    base_rank: 15
+    single_targets: 3
+    joint_targets: 3
+    early_joint_targets: 0
+  - cell_id: p8191-i0
+    arm: hash0
+    base_columns: 15
+    base_rank: 15
+    single_targets: 3
+    joint_targets: 3
+    early_joint_targets: 0
+  - cell_id: p8191-i0
+    arm: hash1
+    base_columns: 15
+    base_rank: 15
+    single_targets: 3
+    joint_targets: 3
+    early_joint_targets: 0
+  - cell_id: p8191-i0
+    arm: hash2
+    base_columns: 15
+    base_rank: 15
+    single_targets: 3
+    joint_targets: 3
+    early_joint_targets: 0
+  - cell_id: p8191-i1
+    arm: window
+    base_columns: 16
+    base_rank: 16
+    single_targets: 4
+    joint_targets: 4
+    early_joint_targets: 0
+  - cell_id: p8191-i1
+    arm: hash0
+    base_columns: 16
+    base_rank: 16
+    single_targets: 4
+    joint_targets: 4
+    early_joint_targets: 0
+  - cell_id: p8191-i1
+    arm: hash1
+    base_columns: 16
+    base_rank: 16
+    single_targets: 4
+    joint_targets: 4
+    early_joint_targets: 0
+  - cell_id: p8191-i1
+    arm: hash2
+    base_columns: 16
+    base_rank: 16
+    single_targets: 4
+    joint_targets: 4
+    early_joint_targets: 0
+  - cell_id: p65537-i0
+    arm: window
+    base_columns: 31
+    base_rank: 29
+    single_targets: 0
+    joint_targets: 5
+    early_joint_targets: 0
+  - cell_id: p65537-i0
+    arm: hash0
+    base_columns: 31
+    base_rank: 28
+    single_targets: 2
+    joint_targets: 5
+    early_joint_targets: 5
+  - cell_id: p65537-i0
+    arm: hash1
+    base_columns: 31
+    base_rank: 30
+    single_targets: 4
+    joint_targets: 4
+    early_joint_targets: 4
+  - cell_id: p65537-i0
+    arm: hash2
+    base_columns: 31
+    base_rank: 31
+    single_targets: 5
+    joint_targets: 5
+    early_joint_targets: 0
+  - cell_id: p65537-i1
+    arm: window
+    base_columns: 31
+    base_rank: 29
+    single_targets: 0
+    joint_targets: 0
+    early_joint_targets: 0
+  - cell_id: p65537-i1
+    arm: hash0
+    base_columns: 31
+    base_rank: 30
+    single_targets: 3
+    joint_targets: 3
+    early_joint_targets: 3
+  - cell_id: p65537-i1
+    arm: hash1
+    base_columns: 31
+    base_rank: 30
+    single_targets: 2
+    joint_targets: 2
+    early_joint_targets: 2
+  - cell_id: p65537-i1
+    arm: hash2
+    base_columns: 31
+    base_rank: 31
+    single_targets: 3
+    joint_targets: 3
+    early_joint_targets: 0
+  unit: dimensions and targetcounts
+  sample:
+    n: 4
+    unit: fresh coefficientcurves
+    dependence: Four schedules reusebase/targets within eachcurve; two curves perfield;
+      no populationindependence estimate.
+  uncertainty: Exactfinite values; no populationinterval estimated.
+  evidence:
+  - artifact: analysis
+    selector: /cells filtered prefix64 andscope=relations
+- id: construction-costs
+  description: Eacharm sourceconstruction fields/calls, withcold/shared prerequisites
+    separate.
+  kind: measured
+  value:
+  - cell_id: p8191-i0
+    arm: window
+    counters:
+      Fp.field_add: 3199
+      Fp.field_inv: 457
+      Fp.field_mul: 2683
+      Fp.group_add: 521
+      source_scalar_multiplications: 64
+  - cell_id: p8191-i0
+    arm: hash0
+    counters:
+      Fp.field_add: 7812
+      Fp.field_inv: 1116
+      Fp.field_mul: 6416
+      Fp.group_add: 1180
+      source_scalar_multiplications: 64
+  - cell_id: p8191-i0
+    arm: hash1
+    counters:
+      Fp.field_add: 8050
+      Fp.field_inv: 1150
+      Fp.field_mul: 6594
+      Fp.group_add: 1214
+      source_scalar_multiplications: 64
+  - cell_id: p8191-i0
+    arm: hash2
+    counters:
+      Fp.field_add: 7777
+      Fp.field_inv: 1111
+      Fp.field_mul: 6437
+      Fp.group_add: 1175
+      source_scalar_multiplications: 64
+  - cell_id: p8191-i1
+    arm: window
+    counters:
+      Fp.field_add: 3199
+      Fp.field_inv: 457
+      Fp.field_mul: 2683
+      Fp.group_add: 521
+      source_scalar_multiplications: 64
+  - cell_id: p8191-i1
+    arm: hash0
+    counters:
+      Fp.field_add: 7959
+      Fp.field_inv: 1137
+      Fp.field_mul: 6519
+      Fp.group_add: 1201
+      source_scalar_multiplications: 64
+  - cell_id: p8191-i1
+    arm: hash1
+    counters:
+      Fp.field_add: 7700
+      Fp.field_inv: 1100
+      Fp.field_mul: 6328
+      Fp.group_add: 1164
+      source_scalar_multiplications: 64
+  - cell_id: p8191-i1
+    arm: hash2
+    counters:
+      Fp.field_add: 8071
+      Fp.field_inv: 1153
+      Fp.field_mul: 6571
+      Fp.group_add: 1217
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i0
+    arm: window
+    counters:
+      Fp.field_add: 3199
+      Fp.field_inv: 457
+      Fp.field_mul: 2683
+      Fp.group_add: 521
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i0
+    arm: hash0
+    counters:
+      Fp.field_add: 10115
+      Fp.field_inv: 1445
+      Fp.field_mul: 8203
+      Fp.group_add: 1509
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i0
+    arm: hash1
+    counters:
+      Fp.field_add: 9884
+      Fp.field_inv: 1412
+      Fp.field_mul: 8076
+      Fp.group_add: 1476
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i0
+    arm: hash2
+    counters:
+      Fp.field_add: 10094
+      Fp.field_inv: 1442
+      Fp.field_mul: 8234
+      Fp.group_add: 1506
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i1
+    arm: window
+    counters:
+      Fp.field_add: 3199
+      Fp.field_inv: 457
+      Fp.field_mul: 2683
+      Fp.group_add: 521
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i1
+    arm: hash0
+    counters:
+      Fp.field_add: 9912
+      Fp.field_inv: 1416
+      Fp.field_mul: 8120
+      Fp.group_add: 1480
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i1
+    arm: hash1
+    counters:
+      Fp.field_add: 10227
+      Fp.field_inv: 1461
+      Fp.field_mul: 8283
+      Fp.group_add: 1525
+      source_scalar_multiplications: 64
+  - cell_id: p65537-i1
+    arm: hash2
+    counters:
+      Fp.field_add: 9821
+      Fp.field_inv: 1403
+      Fp.field_mul: 8053
+      Fp.group_add: 1467
+      source_scalar_multiplications: 64
+  unit: Fp/group/logicalcountervector, overlappingunits
+  sample:
+    n: 16
+    unit: 64source constructionphases
+    dependence: Fourarms percurve; original-windowanchor work andtable generationshared;
+      valuesnotmultiplied byprefix/scope.
+  uncertainty: Meteredproducer counters withseparate call-count checks; no independentprimitiveaudit
+    or weightedcostmodel.
+  evidence:
+  - artifact: analysis
+    selector: /per_arm_costs
+- id: deficient-base-targets
+  description: Distinctfresh targets recoveredwhilebaseuncertaintyremains across retained
+    relation-onlysystems.
+  kind: derived
+  value:
+    distinct_targets: 8
+    repeated_records: 14
+    without_registered_bounded_match: 11
+  unit: targets and curve/schedule/targetrecords
+  sample:
+    n: 32
+    unit: freshpublic pointtargets
+    dependence: Eighttargetpoints percurve sharedacross schedules/prefixes;14recordsare
+      not14independentdraws.
+  uncertainty: Exactaggregation; boundedcollisionnonmatchesexclude onlyt1..64tests;
+    no populationsuccessrate.
+  evidence:
+  - artifact: raw0
+    selector: /prefixes, joint_recoveries andbase_rank_after_target_cancellation,
+      relations/hash0/hash1/prefix64
+  - artifact: raw1
+    selector: /prefixes and/arms collision_diagnostics under samefilter
+- id: anchor-assisted-earlier-target
+  description: One additional distincttarget atprefix16 in explicit-anchor scope;
+    retained separately fromthe eight relation-onlytargets.
+  kind: measured
+  value:
+    cell_id: p8191-i0
+    arm: hash2
+    prefix: 16
+    scope: anchors
+    target_index: 5
+    scalar: 7948
+    relation_rank: 10
+    anchor_augmented_rank: 11
+    base_columns: 15
+    registered_alternate_equation: '[53]Q=-[8]P'
+  unit: target/affine dimensions
+  sample:
+    n: 1
+    unit: fixedtarget case
+    dependence: Same32targets, all64sourcepoints public atprefix16; allconstructioncosts
+      charged.
+  uncertainty: Exactnativecertificate; boundeddiagnostic suppliespublic alternateexplanation.
+  evidence:
+  - artifact: anchorraw
+    selector: /prefixes filteredhash2,prefix16,scope=anchors; /arms/hash2/anchor_rows
+      andcollision_diagnostics target5
+controls:
+- id: fixed-window-reference
+  description: Samefreshbase/targets/projection acrosswindow andhasharms; complete
+    separateoracle checks both.
+  observation_ids:
+  - full-prefix-ranks
+  - construction-costs
+  matching: Onlysource schedule varies within a generatedfixture; Ucolumns andalltargets
+    fixed.
+  limitations:
+  - Different construction arithmetic ismeasured ratherthan assumed equal.
+  - Fourfresh smallcurves do notestablish a populationlaw.
+patterns: []
+limitations:
+- Hashrecipes define a deterministic prospective sample; notstandardized uniform hash-to-curve.
+- Sourceconstruction countersareincremental phases, notcomplete coldcost; generation/window/sharedprerequisitesremain.
+- Fp/group counters overlap; no calibratedS or matchedreference.
+missing: []
+next_checks:
+- question: Howdoes targetrecovery change with sourcebudget, includingjointtarget
+    cancellation?
+  method: Freeze a matched source-budget sweep with finerconstruction increments and
+    fixedcolumns.
+  control: Sameinputs perarm, explicitanchors, nooutcome stopping andretainedmisses.
+  status: proposed
+artifacts:
+- id: analysis
+  path: research/prime_field_a6_execution_20261104/runs/a6-fresh-holdouts-97bb80/analysis.json
+  commit: 2ab24a2aa10637663b5adaae1aa84332d9249fd2
+  sha256: 395767998395fd3550784bd2b5190c354f10e4a980c952f835fa22329216afbd
+- id: execution
+  path: research/prime_field_a6_execution_20261104/runs/a6-fresh-holdouts-97bb80/execution.json
+  commit: 2ab24a2aa10637663b5adaae1aa84332d9249fd2
+  sha256: 86ab7b0916739814998614ee2d22dfe073fb2129042bd7d36c7ef5cd2bf66119
+- id: raw0
+  path: research/prime_field_a6_execution_20261104/runs/a6-fresh-holdouts-97bb80/raw/p65537-i0.json.gz
+  commit: 2ab24a2aa10637663b5adaae1aa84332d9249fd2
+  sha256: 33a784a2d4c8a0013cbf26cf984f678b9f34bee4d1423972ffe9fe17a4357d5a
+- id: raw1
+  path: research/prime_field_a6_execution_20261104/runs/a6-fresh-holdouts-97bb80/raw/p65537-i1.json.gz
+  commit: 2ab24a2aa10637663b5adaae1aa84332d9249fd2
+  sha256: 8d5d0f7eb95a26f711f244b555f646ec64b32bdac36c8e90e10fc1a054654a75
+- id: anchorraw
+  path: research/prime_field_a6_execution_20261104/runs/a6-fresh-holdouts-97bb80/raw/p8191-i0.json.gz
+  commit: 2ab24a2aa10637663b5adaae1aa84332d9249fd2
+  sha256: 1eab7e3a333f5b693eaa698f5450820a57af539fe7008c42d232b392f92c5fae

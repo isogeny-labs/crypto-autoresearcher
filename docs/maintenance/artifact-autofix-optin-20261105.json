@@ -1,0 +1,29 @@
+{
+  "schema": "pr-maintenance/v1",
+  "date": "2026-11-05",
+  "standing": "unverified",
+  "base": "db053628da56f3d7771cd91b0bf42c38a8300060",
+  "source_workflow": {
+    "repository": "isogeny-labs/crypto",
+    "commit": "d9c228db855c475da6ee11843654d6dca7bd97a3",
+    "path": ".github/workflows/artifact-autofix.yml",
+    "blob": "25e7f27d61cc7387ad5f126782fcce90cc46ca4d"
+  },
+  "changes_from_source": [
+    "Require artifact-autofix opt-in label; labeled/synchronize/reopened events only",
+    "GitHub-hosted runner without new pool routing",
+    "15-minute bounded attempt",
+    "Allow existing AUTOFIX_GH_TOKEN as a CI-triggering PAT fallback; no GITHUB_TOKEN fallback"
+  ],
+  "trust_boundary": "Only trusted base artifact code/policy executes with S3 credentials. Exact PR head supplies changed Git data; policy must byte-match base.",
+  "transport": "Canonical shared artifact tool unchanged: conditional write-once upload and actual remote-byte hash/size replay before pointer commit.",
+  "initial_candidate": {
+    "repository": "isogeny-labs/crypto-autoresearcher",
+    "pr": 3031,
+    "head": "69b20afa6395463a3487cd640af99a8e3821a4f1",
+    "path": "analysis/rigorous-lfd-solving-20261105/report.pdf",
+    "bytes": 67987
+  },
+  "credentials": "Existing secret names only; availability/write access unknown. No IAM/secret/config mutation.",
+  "validation": "Pending actual CI. No local, remote-object, manifest or new scientific result asserted."
+}

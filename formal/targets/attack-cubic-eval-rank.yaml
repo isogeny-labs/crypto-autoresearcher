@@ -1,0 +1,35 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261102-355c9d
+claim_id: ATTACK-CUBIC-EVAL-RANK-FULL-RANK-REPAIR
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.CubicEvalRank.collinear_kernel_and_injective_repair
+theorem_file: CryptoResearch/AttackCorpus/CubicEvalRank.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Use the ten standard homogeneous cubic monomials and the rational points
+  P_i=(i,0,1). The target must expose their distinctness, a nonzero Y*Z^2
+  coefficient vector that vanishes at every point, singularity of the square
+  evaluation matrix, and the determinant-nonzero injectivity repair in one
+  exact declaration.
+
+  JKSST Section 3.2 already requires rank r for r <= 9 and never replaces it
+  by distinctness. This is a nearby square-matrix guardrail, not a correction
+  to the paper; the witness cubic is reducible and singular.
+claim: |
+  For the ten distinct rational projective representatives P_i=(i,0,1), the
+  nonzero homogeneous cubic Y*Z^2 vanishes at every P_i. Therefore the
+  ten-by-ten matrix evaluating the standard cubic monomials at these points
+  has a nontrivial kernel and determinant zero.
+
+  Prove the conditional repair in the same declaration: over any field, if
+  the ten-by-ten evaluation matrix of ten points has nonzero determinant, then
+  every cubic coefficient vector that evaluates to zero at all ten points is
+  the zero vector.
+proof_map:
+  prerequisites:
+    - "Projective points are represented by explicit triples; quotienting by projective scaling is outside the target"
+    - "The square determinant premise is the explicit full-rank condition for ten coefficient columns"
+    - "No nonsingularity/discriminant theorem, elliptic-curve construction, or claim about JKSST's actual r-by-10 rank-tested points is formalized"

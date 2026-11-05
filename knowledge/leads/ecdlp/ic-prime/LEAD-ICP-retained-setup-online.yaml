@@ -34,6 +34,15 @@ evidence:
 - repo: crypto
   path: RESEARCH_PRIME_FIELD_BREAKTHROUGH_PROGRAM.md
   note: 'Probe A: preprocessing rho on prime curves, online steps track 2 sqrt(n/S)'
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L12/REPORT.md
+  note: >-
+    L12 incremental prefix search (clause retention across the N attempts of one seed) is retained-
+    setup/advice, not a new mechanism: inc/fresh conflicts 0.025 [0.014, 0.040] (m = 2, b = 12, N =
+    171) and 0.201 [0.153, 0.248] (m = 3, b = 12, N = 256), but the retained solver fills a
+    |F|^(m-1) table, setup is never charged against the explicit enumeration reference (about 512
+    sums at l = 3), the fresh baseline is fully censored at m = 3 (0/256), target lists are 48%
+    duplicated and there is one seed. Do not make incremental the default.
 ledger_refs:
 - H-ICPERF-b3d1a4
 - H-ICPERF-2f52d1
@@ -44,6 +53,7 @@ ledger_refs:
 known_results:
 - KR-RHO-ea34b8
 - KR-RHO-46c2c6
+- KR-IC-f66b30
 forecloses:
 - retained factor base makes later targets cheaper than rho
 - dense root table online index calculus
@@ -51,4 +61,4 @@ forecloses:
 - orbit-folded m = 2 index calculus online
 areas:
 - ICPERF
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-02'
