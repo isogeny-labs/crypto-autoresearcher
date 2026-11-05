@@ -116,7 +116,7 @@ def serve(a):
   if a.fixture_fault=='timeout':time.sleep(8)
  _send(sock,{'ready':True})
  while True:
-  req=_message(sock,timeout=quiet_timeout if set(observed)-set(closed) else 5);op=req['op']
+  req=_message(sock,timeout=quiet_timeout);op=req['op']
   if op=='observe':
    if a.fixture_fault=='death':os._exit(7)
    arm=req['arm'];d.need(arm in expected and arm not in observed,'custody duplicate/unknown arm');pid=req['pid'];ready=Path(req['ready']);deadline=time.monotonic()+3
