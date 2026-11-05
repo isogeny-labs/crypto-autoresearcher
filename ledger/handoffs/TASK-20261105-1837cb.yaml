@@ -1,0 +1,56 @@
+handoff:
+  id: TASK-20261105-1837cb
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-05'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Prepare bounded first-stage full historical fixture replay for the frozen six-stage C0 plan.
+  uncertainty_reduced: Every one of 1,863 rows in four pinned fixtures has a precise replay comparison; only two declared timing fields may vary.
+  inputs:
+  - experiments/EXP-PEXT-bf8f96/implementation/historical_regression_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_historical_regression_stage.py
+  - experiments/EXP-PEXT-bf8f96/reports/historical-regression-stage-20261105/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - coordination/sessions/receipts/20261105/SR-20261105-677b2d.yaml
+  - ledger/handoffs/TASK-20261105-1837cb.yaml
+  constraints:
+  - No scientific cohort trial, protocol approval or freeze, hypothesis transition or new experiment.
+  - Preserve full P1-P4, C0-C7, H1 and the existing six-run, 4 GB, 24 CPU-hour, zero-cloud ceilings.
+  - Retain all failures and partial outputs; do not retry or replace a frozen arm.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261105-1837cb/receipt.json
+  artifact_paths:
+  - experiments/EXP-PEXT-bf8f96/implementation/historical_regression_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_historical_regression_stage.py
+  - experiments/EXP-PEXT-bf8f96/reports/historical-regression-stage-20261105/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - ledger/handoffs/TASK-20261105-1837cb.yaml
+  - coordination/sessions/receipts/20261105/SR-20261105-677b2d.yaml
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/historical_regression_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_historical_regression_stage.py
+  - experiments/EXP-PEXT-bf8f96/reports/historical-regression-stage-20261105/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - ledger/handoffs/TASK-20261105-1837cb.yaml
+  - coordination/sessions/receipts/20261105/SR-20261105-677b2d.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261105-1837cb/receipt.json
+  archived_by: TASK-20261105-1837cb
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 4
+    maximum_runs: 0
+  completion_gate:
+  - Frozen four-arm rows are compared in order with only named timing fields variable.
+  - Supervisor authority, source and fixture hashes, 4 GB memory and 7,200-second watchdog gate the future stage.
+  - Three source-only tests and native commit-bound archive pass; PR is updated.
+  - Contract remains review_required until complete six-stage plan and remaining controls are ready.
+  state: queued
+  return_format: Exact archive/publication receipt and future regression-stage scope.

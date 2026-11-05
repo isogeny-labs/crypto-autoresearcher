@@ -5,6 +5,7 @@ cocycle norm/Lang witnesses and literal support-gcd sets. Software fixture only.
 """
 
 import argparse
+from itertools import permutations
 import json
 from pathlib import Path
 
@@ -61,6 +62,9 @@ class Extension:
     def add(self, left, right):
         return tuple(self.field.add(a, b) for a, b in zip(left, right))
 
+    def sub(self, left, right):
+        return tuple(self.field.sub(a, b) for a, b in zip(left, right))
+
     def mul(self, left, right):
         field, degree = self.field, self.degree
         if degree == 1:
@@ -103,6 +107,30 @@ def root_degree(extension, root):
         if value == root:
             return degree
     raise ValueError("branch root orbit closure")
+
+
+def cross_ratio_orbit(extension, roots):
+    """All anharmonic values of four distinct finite branch roots."""
+    if len(roots) != 4 or len(set(roots)) != 4:
+        raise ValueError("cross-ratio requires four distinct finite roots")
+    values = set()
+    one = extension.constant(1)
+    for a, b, c, d in permutations(roots):
+        numerator = extension.mul(extension.sub(a, c), extension.sub(b, d))
+        denominator = extension.mul(extension.sub(a, d), extension.sub(b, c))
+        if denominator == extension.constant(0):
+            raise ValueError("cross-ratio denominator zero")
+        inverse = extension.power(denominator,
+                                  extension.field.size**extension.degree - 2)
+        if extension.mul(denominator, inverse) != one:
+            raise ValueError("cross-ratio inverse invalid")
+        value = extension.mul(numerator, inverse)
+        if value in (extension.constant(0), one):
+            raise ValueError("degenerate cross-ratio")
+        values.add(value)
+    if not 1 <= len(values) <= 6:
+        raise ValueError("cross-ratio anharmonic orbit size")
+    return [list(value) for value in sorted(values)]
 
 
 def projective_kernel(field, extension, alpha, beta):
@@ -238,6 +266,8 @@ def verify(certificate, joined):
                 joined["rows"][(index-5)*819]["original_form"])
         pattern = PATTERNS[index] if index < 5 else row.get("pattern")
         extension, roots = validate_row(field, row, form, pattern)
+        if index < 5 and row.get("cross_ratio_orbit") != cross_ratio_orbit(extension, roots):
+            raise ValueError("fixed cross-ratio orbit certificate mismatch")
         if index >= 5 and row["form"] != joined["rows"][(index-5)*819]["original_form"]:
             raise ValueError("actual quotient form")
         degrees = [root_degree(extension, root) for root in roots]

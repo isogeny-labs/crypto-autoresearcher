@@ -383,7 +383,7 @@ def _terminal_snapshot_dependencies(
     location = f"terminal snapshot {task['id']}"
     if (task.get("role") != "coordinator" or not isinstance(task.get("archive"), dict)
             or task["archive"].get("kind") != "snapshot"
-            or task["archive"].get("binding_mode", "commit") != "commit"
+            or task["archive"].get("binding_mode", "commit") not in {"commit", "content_at_commit"}
             or task.get("review_required") is not False):
         raise DispatchError(f"{location} requires a coordinator-owned commit-bound snapshot")
     handoff = task.get("handoff")

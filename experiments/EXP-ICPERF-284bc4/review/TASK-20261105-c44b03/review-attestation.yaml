@@ -1,0 +1,121 @@
+# Vocabulary-corrected review attestation for TASK-20261105-c44b03 (J2-scope),
+# written at the Coordinator's direction. red-team-report.yaml is not edited. This
+# block replaces only its attestation verdict vocabulary (holds_with_limitation ->
+# holds plus an explicit limitations list). The sources read are unchanged. No new
+# source was read, and no finding changed.
+review_attestation:
+  task_id: TASK-20261105-c44b03
+  joints_owned: [J2-scope]
+  supersedes_vocabulary_of: red-team-report.yaml
+  sources_read:
+    - docs/agent-runtime-core.md
+    - agents/red-team.md
+    - AGENTS.md (sections Intermediate-cost, Core rules, Review architecture, Curve identity and measured bounds; heading index)
+    - docs/sheriff.md (B5, lines 270-330)
+    - docs/lab-contract.md (lines 85-100)
+    - docs/benchmark-records.md (lines 45-60)
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+    - experiments/EXP-ICPERF-284bc4/implementation/run.py
+    - experiments/EXP-ICPERF-284bc4/implementation/check.py
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/graph.svg
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/raw-result.json (by key)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-30596e/raw-result.json (by key)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-850008/raw-result.json (by key)
+    - ledger/hypotheses/H-ICPERF-2f52d1.yaml
+    - ledger/proposals/IDEA-20261015-7a3c9e.yaml
+    - ledger/proposals/IDEA-20261015-7a3c9e.notes.md (lines 10-60 and grep)
+    - ledger/decisions/DEC-20261029-ca33b3.yaml (lines 110-140)
+    - ledger/decisions/DEC-20261029-9bc3ff.yaml (lines 115-170)
+    - ledger/decisions/DEC-20261029-22e05b.yaml (lines 1-30, 52-70)
+    - ledger/decisions/DEC-20261029-5554ee.yaml (lines 1-30)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml (grep only)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261029-0a9023.yaml (grep only)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/BATCH-38f344.yaml (grep only)
+    - ledger/handoffs/TASK-20261029-038368.yaml (grep only)
+    - tools/progress_metrics.py (lines 150-290)
+    - tools/test_progress_metrics.py (grep only)
+    - docs/reports/2026-10-26-icperf-n83-reconciliation/README.md (grep only; no match)
+    - pcc/ledger.jsonl at HEAD via git show (grep only)
+    - git commit messages of 1a0afc68c2, b825ee6ea5, af94114e9c
+    - tools/allocate_id.py (--help and --check only)
+  read_sibling_reports: false
+  sibling_note: >-
+    The directory name experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3
+    appeared in git status and ls. Its contents were not opened. Nothing under
+    experiments/EXP-ICPERF-283a70/review/ was opened. The content searches for
+    925/4 and ICPERF excluded both review trees. One unscoped `rg -l` for PR
+    #2776 listed only the two review-plan.yaml files by name. No sibling report
+    matched it and none was opened.
+  blind_from_respected: null
+  joint_verdicts:
+    - {joint: J2-scope, verdict: holds}
+  verdict: holds
+  verdict_basis: >-
+    None of the plan's breaking artifacts is present. No path from the record
+    to a latency, speedup or ranking claim was found. NEG-1 and NEG-2 can fail:
+    they kill mutants M1-M4. No ranked IC-vs-rho or IC-vs-BL comparison is
+    made, so no §5a band is owed. The joint holds only for the narrowest
+    statement in red-team-report.yaml and under the limitations below.
+  limitations:
+    - id: O1
+      text: >-
+        Computed integers are labelled "measured". runbook.yaml's metrics block
+        gives price_ratio_num/den, ratios_agree, all_match_bsgs and
+        matches_preregistered `label: measured`, and report.typ and data.json
+        repeat it. tools/progress_metrics.py exports c_probe_ns, c_state_ns,
+        c_step_ns (including NEG-1's planted 371) and price_ratio_num/den with
+        physical units and no "assumed" or "planted" note. This needs a new
+        correction record, not an edit to the frozen files.
+    - id: O2
+      text: >-
+        The provenance of the prices is undisclosed. 370/2100/40 are
+        IDEA-20261015-7a3c9e's n=83 inferred (c_probe, c_state) and assumed
+        (c_step) prices, so 925/4 = 231.25 is numerically the idea's "231 vs
+        measured 235". The pass adds no information to that comparison. 235x
+        [61, 645] is an unverified assertion.
+    - id: O3
+      text: >-
+        Only NEG-1 and NEG-2 can fail when the primary passes, and what they
+        detect is an implementation that ignores its inputs. CON-1, CON-2 and
+        CON-3 are deterministic duplicates of the primary's pinned cells.
+        Mutants M5 (BSGS replaced by the formula, the v1 SF-1 defect), M7 (price
+        ratio not computed separately), M8 (exactness rule removed) and M11 pass
+        every assertion.
+    - id: O4
+      text: >-
+        CON-3 matches the BSGS worst case against a formula that the parent
+        defines as a geometric mean. The BSGS mean is 25.5/100.5/13.0 against
+        50/200/25. CON-3 does not support "IC = BSGS on the quotient" at
+        expected cost.
+    - id: O5
+      text: >-
+        The BL formula is evaluated outside its regime at all three cells
+        (P = 525 is at least m at two cells, and T is about 20.9, above m^(1/3)).
+        bl_steps are formula values, not walk lengths. The record supports no
+        toy-tier BL cost reading.
+    - id: O6
+      text: >-
+        Integrality depends on the rounded constant 21/10. The unrounded
+        1.77*1.2 = 2.124 or 1.93*1.21 = 2.335 gives an inexact division, which
+        is an instrument failure, not falsification.
+    - id: O7
+      text: >-
+        "No latency effect, no n=83 speedup" should read "no latency or n=83
+        statement". The record measures neither and closes nothing there.
+    - id: O8
+      text: >-
+        No pcc claim exists for 925/4 at HEAD. Cite it as an unverified
+        assertion until pcc verifies it.
+    - id: O9
+      text: >-
+        The exactness rule has no positive control (M8 is undetectable).
+    - id: SCOPE
+      text: >-
+        Maximum claim: an instrument observation (sheriff B5 class
+        accounting), claim tier toy as a scale label only, evidence strength
+        preliminary at most. No measured bound, no cost claim, no ranking, and
+        no transfer to the parent idea, n=83 or any frontier.

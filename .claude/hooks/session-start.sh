@@ -24,6 +24,8 @@ set -uo pipefail
 
 cd "${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel)}" || exit 0
 
+echo "Research KB: query it before a survey, lead proposal or novelty claim (AGENTS.md \"Knowledge retrieval\"; skill research-kb)." >&2
+
 # Sparse checkout (docs/sparse-checkout.md). A full checkout is ~9 GB, 7 GB of
 # it run archives and reference bundles an execution session never reads, and
 # it leaves too little disk for SageMath. In the web container cloud-setup.sh

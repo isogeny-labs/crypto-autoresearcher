@@ -1,16 +1,19 @@
 """Geometric reducer arithmetic on two fixed F27 software units."""
 
 import copy
+import gzip
 import hashlib
 import json
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from geometric_reducer import (curve_summary, expected_pattern,
-                               genus_from_rank_and_support, load_type2_artifacts,
-                               type2_unit_summary, unit_summary)
+                               genus_from_rank_and_support, load_type2_artifacts, reduce_cohort,
+                               type2_unit_summary, type2_witness_ordinals,
+                               unit_summary)
 
 
 class GeometricReducerTests(unittest.TestCase):
@@ -45,6 +48,15 @@ class GeometricReducerTests(unittest.TestCase):
 
     def test_f27_spectrum_and_curve_matched_minima(self):
         first, second = self.summarize(0), self.summarize(1)
+        for index, canonical in enumerate((first, second)):
+            reversed_read = unit_summary(self.units[index], n=3,
+                                         target_count=2, t_index=index,
+                                         expected_structures=819,
+                                         reverse_exceptional=True)
+            self.assertEqual(canonical, reversed_read)
+        self.assertEqual(sum(first["m_r_histogram"].values()), 819)
+        self.assertEqual(sum(second["m_r_histogram"].values()), 819)
+        self.assertEqual(first["m_r_histogram"].get("3,12"), first["generic"])
         self.assertEqual(first["factor_pattern"], [1, 1, 2])
         self.assertEqual(second["factor_pattern"], [4])
         self.assertEqual(first["spectrum"], [1, 9, 11, 13, 17])
@@ -90,6 +102,18 @@ class GeometricReducerTests(unittest.TestCase):
                      "alpha_choices_checked": 1}
         self.assertEqual(type2_unit_summary(unit, review, slot, [signature]),
                          review["type2_counts"])
+        second_row = unit["rows"][1]
+        second = dict(signature, ordinal=second_row[0], matrix=second_row[1],
+                      hyperelliptic_predicate=False)
+        review_two = copy.deepcopy(review)
+        review_two["type2_counts"].update(type2_signature_count=2,
+                                           hyperelliptic_predicate_false_count=1)
+        counts, witnesses = type2_witness_ordinals(
+            unit, review_two, slot, [signature, second])
+        self.assertEqual(counts["type2_signature_count"], 2)
+        self.assertEqual(witnesses, [row[0]])
+        with self.assertRaisesRegex(ValueError, "strictly increasing"):
+            type2_witness_ordinals(unit, review_two, slot, [signature, signature])
         bad = dict(signature, matrix=[0, 0, 0, 0])
         with self.assertRaisesRegex(ValueError, "sealed exceptional"):
             type2_unit_summary(unit, review, slot, [bad])
@@ -120,6 +144,71 @@ class GeometricReducerTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "digest mismatch"):
                 load_type2_artifacts(root, "fixture", "b"*64, "c"*64,
                                      check, reviews, [slot], 3)
+
+    def test_reversed_sealed_unit_read_rebuilds_same_curve(self):
+        field = self.units[0]["field"]
+        plan = {"field": field, "structures_per_T": 819,
+                "classes": [{"model": [0, 0], "targets": [None, None]}]}
+
+        class FixtureBinder:
+            cohort = "f27-software-fixture"
+            plan_path = Path("fixture")
+            plan_sha256 = "b" * 64
+
+            def __init__(self, source_plan):
+                self.plan = source_plan
+
+            def bind(self, class_index, t_index):
+                return {"cohort": self.cohort, "join_plan_sha256": self.plan_sha256,
+                        "class_index": class_index, "T_index": t_index,
+                        "quotient_form": self.plan["forms"][t_index],
+                        "field": field, "structures_per_T": 819}
+
+        plan["forms"] = [unit["form"] for unit in self.units]
+        binder = FixtureBinder(plan)
+        restored, reviews = [], []
+        chunk = "chunk-000000.tar"
+        for ordinal, unit in enumerate(self.units):
+            name = f"u{ordinal:06d}"
+            binding = binder.bind(0, ordinal)
+            raw = json.dumps(unit, sort_keys=True).encode()
+            files = {"unit.json.gz": gzip.compress(raw, mtime=0),
+                     "input.json": json.dumps({"binding": binding}).encode(),
+                     "receipt.json": b"{}\n"}
+            restored.append((name, files))
+            reviews.append({"name": name, "class_index": 0,
+                            "T_index": ordinal, "chunk": chunk,
+                            "compressed_sha256": hashlib.sha256(files["unit.json.gz"]).hexdigest(),
+                            "input_sha256": hashlib.sha256(files["input.json"]).hexdigest(),
+                            "receipt_sha256": hashlib.sha256(files["receipt.json"]).hexdigest(),
+                            "raw_sha256": hashlib.sha256(raw).hexdigest(),
+                            "geometry_ordinals": [row[0] for row in unit["rows"]],
+                            "independent": {"valid": True,
+                                            "exceptional": unit["exceptional"],
+                                            "structures": 819}})
+        with tempfile.TemporaryDirectory() as scratch:
+            root = Path(scratch)
+            review_bytes = b"".join((json.dumps(row) + "\n").encode() for row in reviews)
+            (root / "candidate-reviews.jsonl").write_bytes(review_bytes)
+            check = {"schema": "pext.candidate-batch-check/v1", "valid": True,
+                     "scope": "approved-cohort", "cohort": binder.cohort,
+                     "join_plan_sha256": binder.plan_sha256,
+                     "binary_sha256": "d" * 64, "index_sha256": "c" * 64,
+                     "unit_count": 2, "chunk_count": 1,
+                     "candidate_reviews_sha256": hashlib.sha256(review_bytes).hexdigest(),
+                     "geometry_mode": "all-exceptional", "exceptional": 280,
+                     "generic": 2 * 819 - 280}
+            (root / "candidate-check.json").write_text(json.dumps(check))
+            index = {"index_sha256": "c" * 64, "unit_count": 2, "chunk_count": 1}
+            with patch("geometric_reducer.CandidateBinder", FixtureBinder), \
+                    patch("geometric_reducer.verify_complete_index", return_value=index), \
+                    patch("geometric_reducer.read_chunk", return_value=(restored, {})), \
+                    patch("geometric_reducer.load_type2_artifacts", return_value=(None, None)):
+                forward = reduce_cohort(root, binder, "d" * 64)
+                backward = reduce_cohort(root, binder, "d" * 64,
+                                         read_order="reverse")
+            self.assertEqual(forward, backward)
+            self.assertEqual(len(forward[0][0]["units"]), 2)
 
 
 if __name__ == "__main__":

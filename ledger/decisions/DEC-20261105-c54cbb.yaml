@@ -1,0 +1,165 @@
+coordinator_decision:
+  id: DEC-20261105-c54cbb
+  date: '2026-11-05'
+  context: Custody-only preservation of terminal failed producer01 RUN-PNEXT-201c3c.
+  decision: approve
+  target_ids:
+  - TASK-20261105-f5b52d
+  - TASK-20261105-e57fde
+  rationale:
+  - Published failed release02ce1d045a binds the actual failed execution receipt.
+    Preserve all actual artifacts without promoting producer completion.
+  - content_at_commit binds already published immutable output and actual snapshot
+    receipt.
+  evidence_refs:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/TASK-20261105-f5b52d.1.release.json
+  - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/execution-receipt.json
+  limitations:
+  - No software acceptance, second producer execution, scientific result, or complete
+    export coverage asserted.
+  - 404 cumulative partial observations retain unavailable per-arm mapping and seven
+    export findings.
+  - 'Physical Git snapshot binds committed .artifacts.json/.gitignore in place of
+    off-Git gzip. Named logical attempt-files.tar.gz remains mandatory: actual bytes34576744
+    SHA256 db10e77728bd51c0c938c68f8a150b37b30d181446b7c5f6072d26c83afbde59; snapshot
+    receipt must bind fresh native remote verification plus actual hydrated byte hash/size.
+    Do not report raw gzip as Git-byte-verified.'
+  next_actions:
+  - Publish exact terminal authorization and queue; native snapshot readiness, claim
+    and exact archive verification.
+  - Prepare source-only expected-exception repair; preserve original106+6 and independent
+    review obligations.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Custody disposition only; no scientific claim promotion.
+  decided_by: coordinator
+  decided_at: '2026-11-05T19:56:53.356610+00:00'
+  terminal_snapshot_authorizations:
+  - approved: true
+    task_id: TASK-20261105-e57fde
+    archive_kind: snapshot
+    archive_binding_mode: content_at_commit
+    depends_on:
+    - TASK-20261105-f5b52d
+    read_scope:
+    - AGENTS.md
+    - agents/coordinator.md
+    - docs/agent-contract-extended.md
+    - docs/research-budget-policy.md
+    - templates/research-records.md
+    - docs/pcc.md
+    - docs/SABOTAGE_RESISTANCE.md
+    - docs/benchmark-records.md
+    - coordination/prime_sat_transform_source_20261105/downstream-validation-plan.md
+    - coordination/prime_sat_transform_source_20261105/downstream-task-flow.md
+    - coordination/prime_sat_transform_validation_20261105/README.md
+    - coordination/prime_sat_transform_validation_20261105/protocol.json
+    - coordination/prime_sat_transform_validation_20261105/launch.py
+    - coordination/prime_sat_transform_validation_20261105/worker.py
+    - coordination/prime_sat_transform_validation_20261105/input-bindings.json
+    - coordination/prime_sat_transform_validation_20261105/resource-feasibility.json
+    - coordination/prime_sat_transform_validation_20261105/authorization.template.json
+    - coordination/prime_sat_transform_validation_20261105/review-plan.md
+    - coordination/prime_sat_transform_validation_20261105/export-mapping.md
+    - coordination/prime_sat_transform_validation_20261105/inference-amendment.yaml
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/manifest.json
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/summary.json
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export.json
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.md
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/diagram.svg
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.typ
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.pdf
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report-inputs.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/launch.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/execution-receipt.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/command.txt
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/environment.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/stdout.log
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/stderr.log
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/check.stdout.log
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/check.stderr.log
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/manifest.yaml
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/raw-result.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/bundle-manifest.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-files.tar.gz
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-authorization.json
+    - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export-check.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.artifacts.json
+    - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.gitignore
+    write_scope:
+    - coordination/prime_sat_transform_validation_20261105/result-snapshot-receipt.json
+    artifact_paths:
+    - coordination/prime_sat_transform_validation_20261105/result-snapshot-receipt.json
+    record_ids: []
+    source_tasks:
+    - task_id: TASK-20261105-f5b52d
+      state: failed
+      artifact_paths:
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/manifest.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/summary.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.md
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/diagram.svg
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.typ
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.pdf
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report-inputs.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/launch.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/execution-receipt.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/command.txt
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/environment.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/stdout.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/stderr.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/check.stdout.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/check.stderr.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/manifest.yaml
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/raw-result.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/bundle-manifest.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-authorization.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export-check.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.artifacts.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.gitignore
+      write_scope:
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/manifest.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/summary.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.md
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/diagram.svg
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.typ
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report.pdf
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/report-inputs.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/attempt01
+      - research/prime_sat_transform_integration_20261103/validation_20261105/campaign/owner.lock
+      - research/prime_sat_transform_integration_20261103/validation_20261105/campaign/slot-1.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/campaign/slot-1.terminal.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/launch.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/execution-receipt.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/command.txt
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/environment.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/stdout.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/stderr.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/check.stdout.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/check.stderr.log
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/manifest.yaml
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/raw-result.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/bundle-manifest.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-files.tar.gz
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-authorization.json
+      - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export-check.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.artifacts.json
+      - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.gitignore
+    dispatch_exception:
+      kind: terminal_failure_snapshot_archive
+      decision_id: DEC-20261105-c54cbb
+      decision_path: ledger/decisions/DEC-20261105-c54cbb.yaml
+      approved_by: coordinator
+      source_task_ids:
+      - TASK-20261105-f5b52d
+      scientific_effect: none
+      failed_tasks_reclassified_completed: false
+  logical_artifact_requirements:
+  - path: experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-files.tar.gz
+    sha256: db10e77728bd51c0c938c68f8a150b37b30d181446b7c5f6072d26c83afbde59
+    bytes: 34576744
+    physical_git_manifest: experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.artifacts.json
+    verification: Fresh native remote verification and hydrated byte digest/size bound
+      by actual snapshot receipt; raw bytes not asserted Git verified.

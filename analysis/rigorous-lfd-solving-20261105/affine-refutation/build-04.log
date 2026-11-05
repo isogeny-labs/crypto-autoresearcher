@@ -1,0 +1,27 @@
+../analysis/rigorous-lfd-solving-20261105/affine-refutation/AffineFibreRefutation.lean:107:22: error: unsolved goals
+case smul
+ι : Type u_1
+k : Type u_3
+inst✝¹ : Field k
+inst✝ : Fintype ι
+σ : Type u_4
+p : ι → MvPolynomial σ k
+haff : ∀ (i : ι), p i ∈ affinePolynomialSpace σ k
+hno : ¬∃ t, ∀ (i : ι), (eval t) (p i) = 0
+U : Submodule k (MvPolynomial σ k) := Submodule.span k (Set.range p)
+h1 : 1 ∉ U
+φ : Module.Dual k (MvPolynomial σ k)
+hφ1 : φ 1 ≠ 0
+hφU : Submodule.map φ U = ⊥
+ψ : Module.Dual k (MvPolynomial σ k) := (φ 1)⁻¹ • φ
+hψ1 : ψ 1 = 1
+t : σ → k := fun j => ψ (X j)
+q✝ : MvPolynomial σ k
+c : k
+q : MvPolynomial σ k
+hx✝ : q ∈ Submodule.span k ({1} ∪ Set.range fun j => X j)
+hq : ψ q = (eval t) q
+⊢ c • (eval t) q = c * (eval t) q
+'CryptoResearch.FallDegree.affine_inconsistency_certificate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CryptoResearch.FallDegree.affine_polynomial_refutation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'CryptoResearch.FallDegree.affine_span_refutation' depends on axioms: [propext, sorryAx, Classical.choice, Quot.sound]

@@ -1,0 +1,131 @@
+# Vocabulary-corrected review attestation for TASK-20261105-558a8b (joint J1-validity,
+# review plan REVIEW-ICPERF-283a70-20261105). Written at the Coordinator's request because
+# tools/check_review_independence.py accepts only holds|breaks|inconclusive. The original
+# attestation in validation-report.yaml used holds_with_limitation, as the task brief offered.
+# validation-report.yaml (sha256 33ea353ff64bea0dfd12b295bd2103dcf953f8cbb02104e4122491b024a8d990)
+# is not edited. It stays the full record of every check, and this file supersedes only its
+# attestation vocabulary.
+review_attestation:
+  task_id: TASK-20261105-558a8b
+  supersedes_vocabulary_of: validation-report.yaml
+  joints_owned: [J1-validity]
+  sources_read:
+    - CLAUDE.md (injected by the harness)
+    - AGENTS.md (section index via rg; "Review architecture" lines 329-342)
+    - docs/agent-runtime-core.md
+    - agents/validator.md
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml
+    - experiments/EXP-ICPERF-283a70/specification.yaml
+    - experiments/EXP-ICPERF-283a70/runbook.yaml
+    - experiments/EXP-ICPERF-283a70/runbook-lint.txt
+    - experiments/EXP-ICPERF-283a70/trial-plan.json
+    - experiments/EXP-ICPERF-283a70/implementation/run.py
+    - experiments/EXP-ICPERF-283a70/implementation/check.py
+    - experiments/EXP-ICPERF-283a70/implementation/unit-test-report.txt
+    - experiments/EXP-ICPERF-283a70/implementation/test_unit.py (sha256 only)
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/ (all 11 files; logs by sha256 and size)
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-0ef41e/ (all 11 files; logs by sha256 and size)
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-74e9a2/ (all 11 files; logs by sha256 and size)
+    - experiments/EXP-ICPERF-283a70/runbook-sessions/RBS-ICPERF-67df7d/journal.jsonl
+    - experiments/EXP-ICPERF-283a70/runbook-sessions/RBS-ICPERF-67df7d/outputs/S01-probe-python/attempt-1/environment.json
+    - experiments/EXP-ICPERF-283a70/runbook-sessions/RBS-ICPERF-67df7d/steps/ (all by sha256 via journal refs; S02-trials.attempt-1.supervisor.stdout and .stderr read)
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/audit.json
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/replay/RUN-ICPERF-f21eb1/ (raw-result.json, manifest.yaml, RESULTS.md via check.py, log sizes)
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/replay/RUN-ICPERF-0ef41e/ (same)
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/replay/RUN-ICPERF-74e9a2/ (same)
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/data.json
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.pdf (pdftotext, filtered)
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/graph.svg
+    - experiments/EXP-ICPERF-b2f2d0/specification.yaml (sha256 and rg for the integers, at HEAD and at 0fcf799458)
+    - experiments/EXP-ICPERF-b2f2d0/runs/RUN-ICPERF-b09be8/raw-result.json (git add-commit date only; content not read)
+    - ledger/decisions/DEC-20261029-0e40f3.yaml
+    - ledger/decisions/DEC-20261029-22e05b.yaml (lines 1-140 and rg)
+    - ledger/decisions/DEC-20261029-9bc3ff.yaml (header and rg)
+    - ledger/decisions/DEC-20261029-5554ee.yaml (header, rg, lines 150-174)
+    - ledger/handoffs/TASK-20261029-f370f1.yaml (sha256 only)
+    - tools/runbook.py (lines 86-89, 172-192, 1043-1055, 1137-1270, 1998-2085, 2253-2330, 2372-2373; imported for evaluate_file_block)
+    - tools/experiment_execution.py (lines 995-1010 and rg "published")
+    - tools/validate_ledger.py (lines 727-760, 1360-1380; imported and check_run executed)
+    - tools/allocate_id.py (header and --next error output)
+    - pcc/ledger.jsonl (committed blobs at f7eb8ae292 and 1e5baa38e6; only entries mentioning EXP-ICPERF-283a70 or its run ids; at 1e5baa38e6 only their type field)
+    - .gitignore (via git check-ignore)
+    - "git objects: commits af94114e9c, 980ff5f076, cd912cacbb, cb48b111d7, 0fcf799458, 8fcfa58fee, 1a0afc68c2 (and its first-parent diff), b825ee6ea5 (message), 1e5baa38e6 (subject line and names-only diff against f7eb8ae292)"
+    - tools/check_review_independence.py (lines 116, 183-225, 388-432, 843-880, 896-930, 990-1085; read for this vocabulary correction only; not executed)
+  sources_read_note: >-
+    The list is identical to the validation-report.yaml attestation except for the last
+    entry, tools/check_review_independence.py. It was read after that report was written,
+    to fit this file to the checker's vocabulary. It is added so that the list stays a
+    record of what was actually read.
+  read_sibling_reports: false
+  sibling_exposure_disclosure: >-
+    No sibling report content was displayed or read. Three disclosures. (1) An rg for
+    'b09be8|943efa' over experiments/EXP-ICPERF-283a70 was meant to exclude review/, but the
+    glob did not apply, so the search scanned review/. Its only review/ output was lines of
+    review-plan.yaml, and it returned zero lines from any other review file. (2) A
+    names-only listing of experiments/EXP-ICPERF-283a70/review/ showed the file
+    TASK-20261105-6d9502/blind-rederivation.yaml with mtime 2026-11-05T16:51:47Z (stat
+    metadata only). The validator never opened or printed it. (3) Checking whether HEAD's
+    move to 1e5baa38e6 changed any validated input exposed that commit's subject line and a
+    names-only diff. The diff showed paths under
+    experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/ and
+    experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/, with no content. Nothing
+    under experiments/EXP-ICPERF-284bc4/ was read.
+  blind_from_respected: null
+  joint_verdicts:
+    - {joint: J1-validity, verdict: holds}
+  verdict: holds
+  verdict_rationale: >-
+    None of the plan's breaking artifacts exists. The primary has exactly
+    2943/289567/28, CTL-1 and CTL-2 both have exact_match false with their frozen
+    integers, no unit has a median split, no band flag acts as a pass criterion, and no v1
+    run is cited. Every J1 component was verified directly: units, schema, manifests,
+    receipts, journal chain, raw/summary/report agreement, exact pass rule and exact
+    equality across interpreters. The limitations below narrow what the record shows, but
+    none breaks the joint or leaves it undetermined.
+  limitations:
+    - >-
+      PARITY-1. audit.json records recorded_python_version null and environment_drift [],
+      because tools/runbook.py _recorded_python reads /run/environment/python_version while
+      run.py writes /run/environment/python and /run/environment/version. The
+      DEC-20261029-5554ee parity comparison therefore never ran. A real drift, CPython
+      3.11.17 recorded and 3.13.18 replayed, went unreported, and the review plan's "no
+      environment drift" note is inaccurate. All compared pointers are ints or bools and
+      equal exactly across the two interpreters, and the specification pins no minor
+      version, so no value is affected. Remedy, for the Coordinator: a field-name fix or a
+      superseding audit note.
+    - >-
+      The 64 draws are not recorded in raw-result.json. Recomputation used draws
+      regenerated in scratch by a validator-written spec-prose sampler and by the
+      producer's run.py functions, not recorded draws. Both agree on 192 of 192 draws.
+    - >-
+      The validator's spec-prose sampler is not the plan's blind re-derivation (the
+      validator had seen the expected integers). The independent check remains
+      TASK-20261105-6d9502.
+    - >-
+      The validator's replay and the audit replay share one interpreter (CPython 3.13.18,
+      /usr/local/bin/python3). Only two interpreter versions are exercised.
+    - >-
+      One seed and one execution per arm, per the frozen stopping rule, and no execution
+      proof (verified_units 0).
+    - No memory measurement for any unit. Only a 256 MB ceiling is recorded, under an advisory budget.
+    - >-
+      No pcc claim id covers the integers. They are producer assertions, recomputed by the
+      validator.
+    - >-
+      The PR #2776 description could not be read (GitHub API 403). Its merge commit and diff
+      were checked locally.
+    - >-
+      The audit was run by the same session that wrote the review plan. Its deterministic
+      claims were re-verified with validator code.
+    - >-
+      The summary and report metrics cover the primary only (n 1). The control integers
+      appear only in the run directories.
+  checker_note: >-
+    Both this file and validation-report.yaml carry a top-level review_attestation for
+    TASK-20261105-558a8b. tools/check_review_independence.py (lines 906-916) reports
+    "duplicate attestation" when one task has two attestations in the scanned targets, and
+    the last one in sorted path order wins: validation-report.yaml sorts after
+    review-attestation.yaml. Per the Coordinator's instruction validation-report.yaml was
+    not edited. Composing the round so that the checker reads this file is the
+    Coordinator's step.

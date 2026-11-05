@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: source-derived special-j review stratum
+
+The [special-j classifier](../../implementation/curve_special_j.py) derives `j=c4^3/Delta` for the named model `y²=x³+a2x²+a4x+a6` over the published odd-characteristic field. It uses the integral `b2,b4,b6,b8` formulas, so characteristic three is handled without division by 2 or 3; a singular model is refused. It classifies `j=0` or `j=1728` for C5 review selection only. Actual curve identity remains the full named K-model and its canonical class index.
+
+The [C5 selector](../../implementation/c5_selection.py) now recomputes that flag from every published class model and rejects a complete but false metadata flag. Five focused tests pass. One test independently recomputes `Delta` from the cubic discriminant on every published class and agrees with the `b`-invariant calculation. The four plans contain 6 q5/n3, 8 q7/n3, 4 q11/n3 and 4 q3/n5 special-j classes. With all descent labels set to placeholder `unresolved` and no counterexample/Type2 flags, the prospective roster sizes are respectively 31, 32, 29 and 22 units. These are deterministic input-classification checks, not a scientific cohort run or an actual C5 selection certificate.
+
+Descent labels, counterexample flags, Type2 witness ordinals and their retained evidence must still be certified. The future stage must validate those sources, seal the blind roster and independently recompute selected units before C5 can pass. The experiment remains `review_required` and unfrozen.

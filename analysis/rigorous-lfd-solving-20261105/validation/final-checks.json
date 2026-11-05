@@ -1,0 +1,147 @@
+{
+  "schema": "scoped-degree-proof-checks/v1",
+  "date": "2026-11-05",
+  "scope": "New theorem modules only; no full-workspace success",
+  "scoped_builds": {
+    "BooleanNormalization": {
+      "passed": true,
+      "command": "lake build +CryptoResearch.FallDegree.BooleanNormalization"
+    },
+    "BinarySemaevShape": {
+      "passed": true,
+      "command": "lake build +CryptoResearch.FallDegree.BinarySemaevShape"
+    },
+    "AffineFibreRefutation": {
+      "passed": true,
+      "command": "lake build +CryptoResearch.FallDegree.AffineFibreRefutation"
+    },
+    "BinaryLocalization": {
+      "passed": true,
+      "command": "lake build +CryptoResearch.FallDegree.BinaryLocalization"
+    },
+    "BinaryCoefficientDescent": {
+      "passed": true,
+      "command": "lake build +CryptoResearch.FallDegree.BinaryCoefficientDescent"
+    }
+  },
+  "axiom_audits": {
+    "BooleanNormalization": {
+      "named_theorems": 31,
+      "passed": true,
+      "evidence": "normalization-axiom-audit-02.log"
+    },
+    "BinarySemaevShape": {
+      "automatic_declarations": 8,
+      "passed": true,
+      "evidence": "validation/binary-shape-axioms.log"
+    },
+    "AffineFibreRefutation": {
+      "named_theorems": 3,
+      "passed": true,
+      "method": "Exact-name print axioms on successful source check",
+      "evidence": "affine-refutation/build-05.log"
+    },
+    "BinaryLocalization": {
+      "named_theorems": 40,
+      "passed": true,
+      "evidence": "binary-localization/axiom-audit-01.log"
+    },
+    "BinaryCoefficientDescent": {
+      "named_theorems": 23,
+      "automatic_declarations": 27,
+      "passed": true,
+      "evidence": "coefficient-descent/axiom-audit-01.log"
+    }
+  },
+  "axiom_union": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "new_custom_axioms": false,
+  "new_native_decide_trust": false,
+  "fresh_kernel": {
+    "BooleanNormalization": {
+      "command": "lake env leanchecker --fresh CryptoResearch.FallDegree.BooleanNormalization",
+      "exit_code": 0,
+      "log": "validation/boolean-normalization-fresh-kernel.log"
+    },
+    "BinarySemaevShape": {
+      "command": "lake env leanchecker --fresh CryptoResearch.FallDegree.BinarySemaevShape",
+      "exit_code": 0,
+      "log": "validation/binary-shape-kernel.log"
+    },
+    "BinaryCoefficientDescent": {
+      "command": "lake env leanchecker --fresh CryptoResearch.FallDegree.BinaryCoefficientDescent",
+      "exit_code": 0,
+      "log": "coefficient-descent/fresh-kernel-01.log",
+      "includes": "Transitive imported support/localization and affine-refutation proofs"
+    }
+  },
+  "dependency_source_pins": {
+    "passed": true,
+    "evidence": "validation/dependency-pins-final.json"
+  },
+  "full_workspace": {
+    "passed": false,
+    "first_attempt": "900-second uncached dependency build timeout",
+    "second_attempt": "Existing BooleanParityDegreeThreeRankCertificate exit137; cgroupOOM observed",
+    "evidence": "validation/workspace-resource-failure.json",
+    "unreached_standard_targets": [
+      "boolean-lastfall-upper-20261105",
+      "binary-semaev-repair-20261105"
+    ],
+    "new_binary_standard_targets_not_run": "Known full-build OOM not repeated without changing the resource obstruction"
+  },
+  "pdf": {
+    "file": "report.pdf",
+    "pages": 4,
+    "all_pages_opened_and_inspected": true
+  },
+  "other_checks": {
+    "formal_target_specs_loaded": 5,
+    "merge_hygiene": "passed at current scoped snapshot",
+    "benchmark_record_gate": "passed, no benchmark run",
+    "text_whitespace": "Tracked text passed before staging; the later staged diff reported one blank line at EOF in the frozen raw review, retained unchanged for hash custody.",
+    "pr_body_pcc_lint": "passed after explicit unverified PCC standing labels"
+  },
+  "mathematical_scope": {
+    "prime_growth": "written proof plus independent source review; no full Lean theorem",
+    "binary_raw_upper": "Exact ordinary last-fall theorem compiled and audited in Lean",
+    "solving_degree": "Written use of Caminata--Gorla Theorem3.1, not Lean formalized",
+    "growing_characteristic_two_lower_bound": "unproved"
+  },
+  "formal_sources": {
+    "formal/CryptoResearch/FallDegree/BooleanNormalization.lean": "a7fde065840c9ad19c11932fb65f5747cc95eb75d799ae9de6ae059ca8d0ab8d",
+    "formal/CryptoResearch/FallDegree/BinarySemaevShape.lean": "49988ca63423b469677c5255e37f1deeff8efbacb471905c01757361ffbf8c31",
+    "formal/CryptoResearch/FallDegree/AffineFibreRefutation.lean": "a36a2d5b4977fb2a60a93804535daacfa27946d060d7f16de43da708f4dc3cc2",
+    "formal/CryptoResearch/FallDegree/BinaryLocalization.lean": "12ca51188d9042591a8835c92552eae3ea44670141476cce16e5fa0641125470",
+    "formal/CryptoResearch/FallDegree/BinaryCoefficientDescent.lean": "07e997fd1c6528d676db336b1df0f244652d47ad016b2969524505e021188758"
+  },
+  "independent_reviews": {
+    "prime_growth": {
+      "scope": "written theorem",
+      "verdict": "holds at written mathematical scope",
+      "sha256": "9b0bbaa8ab3a4b6596e490a30396462275900fdf18b43d2316d132cac604c33d"
+    },
+    "binary_core": {
+      "verdict": "holds; faithful_scoped",
+      "audited_theorems": 45,
+      "boundary_controls": 5,
+      "sha256": "75ed438e5ad45865c9a5ecba72e4ec8aac968cd90bc682d5d16c09f3318dfa5e"
+    },
+    "binary_raw": {
+      "verdict": "holds; faithful_scoped",
+      "target_module_audits": 27,
+      "control_theorem_audits": 12,
+      "sha256": "2f9a65df9ade8877d0aef8363f5a3c3d66a24be27bb05aa8dc2a7b33fb496537"
+    },
+    "machine_independence_gate": "not passed; prose-plan/Markdown attestation interface limitation recorded",
+    "signed_pcc_status": "not claimed"
+  },
+  "late_staged_check": {
+    "command": "git diff --cached --check",
+    "finding": "coefficient-descent/review.md: new blank line atEOF",
+    "scope": "Cosmetic independently hashed Markdown output; no theorem/source error; bytes retained"
+  }
+}

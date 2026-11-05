@@ -1,0 +1,299 @@
+evidence:
+  id: EV-ICPERF-84ff45
+  id_provenance: >-
+    Pre-allocated by the top-level session with tools/allocate_id.py --next
+    evidence --area ICPERF and confirmed with --check. The Coordinator had no
+    shell and minted no identifier.
+  recorded_at: '2026-11-05'
+  title: >-
+    Stage-0 seeded geometric-sample instrument v2 (EXP-ICPERF-283a70): exact
+    integers 2943/289567/28 reproduced and blind-rederived from the
+    specification prose; both wrong samplers fail the exact match; bands
+    non-discriminating
+  goal_id: GOAL-ICPERF-e6b6a4
+  question_id: RQ-ICPERF-94c86e
+  hypothesis_id: H-ICPERF-5adc9b
+  source_idea: IDEA-20261015-b41f68
+  experiment_ids: [EXP-ICPERF-283a70]
+  run_ids: [RUN-ICPERF-f21eb1, RUN-ICPERF-0ef41e, RUN-ICPERF-74e9a2]
+  runbook_session: RBS-ICPERF-67df7d
+  approval: DEC-20261029-0e40f3
+  binding_rulings: [DEC-20261029-9bc3ff, DEC-20261029-22e05b, DEC-20261029-5554ee]
+  not_evidence:
+    ids: [RUN-ICPERF-943efa, RUN-ICPERF-b09be8]
+    note: >-
+      Version-1 units, invalidated (DEC-20261029-9bc3ff, DEC-20261029-22e05b).
+      Named only to state that they are not cited; nothing below rests on them.
+  composed_from_review: REVIEW-ICPERF-283a70-20261105
+  review_plan:
+    path: experiments/EXP-ICPERF-283a70/review/review-plan.yaml
+    frozen_at_commit: f7eb8ae292
+    sha256: c4e49dbf7bfa986f187c53c354315d4fece373895ecd347577311f5254163368
+  analysis: experiments/EXP-ICPERF-283a70/analysis.md
+  decision_rule_applied: >-
+    The specification decisive_test and the DEC-20261029-0e40f3 restated pass
+    rule (DEC-20261029-22e05b F4/F5): pass only on exact sample_sum 2943,
+    sum_squares 289567 and median 28 with median_split false; cv_in_band and
+    median_ratio_in_band descriptive only; CTL-1 and CTL-2 must both fail the
+    exact match. The verbatim v1 success_criterion's band clauses are entailed
+    by the three integers and are not an independent criterion.
+  type: empirical
+  direction: supports
+  direction_scope: >-
+    Supports H-ICPERF-5adc9b's integer statement and only that: the xorshift32
+    sampler defined in the specification (shifts 13, 17, 5; step then test;
+    stop at x mod 50 = 0; support from 1; chained draws; seed untested), run 64
+    times from seed 20261017, yields sample sum 2943, sum of squares 289567
+    and median 28 with no median split; the statement's band clauses then
+    hold arithmetically. Neutral on geometric shape beyond this sample, on p,
+    on any table's or probe panel's probe-count law, on host latency, huge
+    pages, cross-host ratios, and IDEA-20261015-b41f68 claims (1)-(4).
+  strength: preliminary
+  strength_justification: >-
+    Valid run set (3 of 3 units, J1 holds), audit clean with 3 of 3 exact
+    replays, out-of-sample integers met exactly, both negative controls fail
+    the exact match with their frozen integers, and a blind implementation
+    written from the specification prose reproduces all three arms. The
+    blind re-derivation closes the single-lineage gap for the claim "the
+    specification text determines these integers". Strength stays
+    preliminary: one seed and one execution per arm, no independent second
+    run, no pcc claim, the audit's interpreter-parity check did not run, and
+    the content is a deterministic identity of a specified program, so
+    "replicated" would describe a reproduced effect that does not exist.
+  claim_tier: toy
+  claim_tier_note: >-
+    Scale label only: 64 synthetic draws at mean 50; no field, curve, table or
+    host. Not a cost claim; no measured_bound.
+  scale_relevance: >-
+    toy-scale: direct computation of one seeded sample. No transfer to an
+    8 GiB table, to n=83 or to a cross-host latency ratio (specification
+    scale_relevance).
+  certificate_refs: []
+  certificate_note: No unit claims a solve or relation (attack_claimed false, certificate kind none on all three manifests).
+  proof_status: derivation
+  proof_refs:
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/blind-rederivation.yaml
+  proof_status_note: >-
+    The supported statement is an exact property of a specified deterministic
+    program. Its checkable basis is the blind from-prose implementation with
+    its embedded script and the 64 draws per arm (committed at 1e5baa38e6
+    before this record), plus the code-free CTL-2 identity S' = S - 64,
+    Q' = Q - 2S + 64, median' = median - 1. Labelled derivation, not proved.
+  observations:
+    - id: O1
+      statement: >-
+        RUN-ICPERF-f21eb1 (primary; shifts 13,17,5; support_min 1)
+        raw-result.json: sample_sum 2943, sum_squares 289567, median 28,
+        median_split false, exact_match true, cv_sq_num 9871039, cv_sq_den
+        8661249 (CV^2 = 1.13968, CV = 1.0676), median_ratio_num 1792,
+        median_ratio_den 2943 (0.60890), cv_in_band true, median_ratio_in_band
+        true.
+    - id: O2
+      statement: >-
+        RUN-ICPERF-0ef41e (CTL-1; shifts 1,2,14): 2938 / 290138 / 29,
+        median_split false, exact_match false, CV^2 9936988/8631844 = 1.15120,
+        median ratio 1856/2938 = 0.63172, both band flags true.
+    - id: O3
+      statement: >-
+        RUN-ICPERF-74e9a2 (CTL-2; support_min 0): 2879 / 283745 / 27,
+        median_split false, exact_match false, CV^2 9871039/8288641 = 1.19091,
+        median ratio 1728/2879 = 0.60021, both band flags true.
+    - id: O4
+      statement: >-
+        Audit AUD-20261105T164530Z-b85ca9 verdict clean, 3 of 3 replayed,
+        matched 3, mismatch 0, 11 integer/boolean pointers each, no tolerance.
+        Recorded interpreter CPython 3.11.17; replay 3.13.18; audit
+        environment_drift [] is a false negative (PARITY-1: _recorded_python
+        reads /run/environment/python_version; manifests use /version and
+        /python). No value affected.
+    - id: O5
+      statement: >-
+        Blind re-derivation TASK-20261105-6d9502: A (13,17,5, support 1)
+        2943 / 289567 / 28, order statistics 32 and 33 both 28, CV^2
+        9871039/8661249, median/mean 1792/2943; B (1,2,14) 2938 / 290138 / 29,
+        29/29, CV^2 2484247/2157961 (= 9936988/8631844), 928/1469
+        (= 1856/2938); C (support 0) 2879 / 283745 / 27, 27/27, CV^2
+        9871039/8288641, 1728/2879. Equal to O1-O3 at every value. The blind
+        primary draws equal the validator's spec-prose draws element by
+        element.
+    - id: O6
+      statement: >-
+        Band flags are true on all three units (fraction_true 3/3) while
+        exact_match is true on the primary only (1/3). The band criterion does
+        not separate the frozen sampler from either wrong sampler.
+  inference: >-
+    The specification's sampler prose determines 2943 / 289567 / 28 (and the
+    two control triples): the producer runner, the audit replay, the
+    validator's spec-prose sampler, the red team's recomputation and the blind
+    from-prose implementation all agree. The exact integers discriminate the
+    declared parameters and conventions within the xorshift family (red team:
+    0 of 21202 completing wrong triples match sum and sum of squares; a
+    seed-tested convention misses by 1 in the sum). The bands discriminate
+    nothing here: both wrong samplers pass them, and at n = 64 they reject a
+    truly geometric sample about 53 percent of the time and accept a CV = 1
+    lognormal about 30 percent (red-team Monte Carlo, scratch, not evidence).
+    No statement about geometric shape beyond this sample, about p, or about
+    any table, probe panel or host follows.
+  narrowest_supported_statement: >-
+    Under session RBS-ICPERF-67df7d, run.py (sha256 53965863...9a38) at seed
+    20261017, p = 1/50, n = 64, shifts (13,17,5), support {1,2,...} wrote
+    sample_sum 2943, sum_squares 289567, median 28 with no median split,
+    equal to the integers fixed 2026-10-17. The wrong-triple arm wrote
+    2938/290138/29 and the support-0 arm 2879/283745/27; both failed the exact
+    match. An implementation written blind from the specification prose
+    reproduces all three arms. Both band flags were true on all three units,
+    so the bands distinguished none of them. Nothing follows about geometric
+    shape beyond this sample, p, any table's probe counts, host latency, or any
+    index-calculus or rho cost.
+  boundaries:
+    - Seed 20261017 only; p = 1/50; n = 64; shift triples (13,17,5) and (1,2,14); support_min 1 and 0.
+    - Sampler is the specification's xorshift32 recurrence; the attribution of the triple to Marsaglia (2003) is recalled provenance, a pointer only.
+    - CPython 3.11.17 recorded; 3.13.18 replayed; run.py sha256 53965863...9a38.
+    - The 64 draws are not persisted in raw-result.json; they were regenerated by the validator, the red team and the blind re-deriver.
+    - No transfer to an 8 GiB table, real probe panels, n=83, huge pages, cross-host ratios, or IDEA-20261015-b41f68 claims (1)-(4).
+  unresolved_confounds:
+    - >-
+      H-ICPERF-5adc9b is unamended v1 text ("Stage 0 checks that shape", "The
+      CV band is the shape control", prediction both_bands_hold, "draws from
+      the geometric law"). That shape reading is not adopted: the band flags
+      are implied by the integers and were true for both wrong samplers
+      (red-team L3; DEC-20261029-22e05b F4).
+    - >-
+      The run report (reports/run-20261030T1525Z) labels cv_in_band and
+      median_ratio_in_band "measured", fraction_true 1, n = 1 (primary only),
+      and omits the controls' band flags (red-team L4); tabulated for all
+      three units in O1-O3 and O6 here.
+    - >-
+      CTL-2 is an affine image of the primary and CTL-1 a known-outcome
+      choice from a design scan; both share step(), draw() and moments() with
+      the primary, so neither detects a common-mode code error (red-team L2).
+      The blind from-prose implementation is the check that does.
+  confound_assessment:
+    - {comparison: CMP-PRIMARY, verdict: isolated, basis: "Absolute comparison of one deterministic unit with out-of-sample integers fixed 2026-10-17 (EXP-ICPERF-b2f2d0 at 0fcf799458); seed, p_den, n_targets, shifts and support asserted; exact equality; blind from-prose implementation agrees."}
+    - {comparison: CMP-CTL-1, verdict: isolated, basis: "Arms differ only in the shift triple ((13,17,5) vs (1,2,14)), asserted /shifts; exact match fails as required. Control integers are in-sample calibration (PRED-CONTROLS) from an unretained design scan, now reproduced blind."}
+    - {comparison: CMP-CTL-2, verdict: isolated, basis: "Arms differ only in support_min (1 vs 0), asserted /support_min. Isolated but arithmetically tied to the primary (S-64, Q-2S+64, median-1), so it tests the support_min path, not the generator."}
+    - {comparison: CMP-AA, verdict: isolated, basis: "Recorded units against audit replays of the same run.py: 3 of 3 matched on 11 exact pointers. Process, host and interpreter (3.11.17 vs 3.13.18) co-varied; no value differs, so nothing needs attribution. The tool's parity note is a false negative (PARITY-1)."}
+  band_table:
+    note: Descriptive only, non-discriminating (red-team RC2). Bands are CV^2 in [81/100, 121/100] and median/mean in [3/5, 4/5].
+    rows:
+      - {run: RUN-ICPERF-f21eb1, arm: primary, cv_sq: 9871039/8661249, cv_sq_decimal: 1.13968, median_ratio: 1792/2943, median_ratio_decimal: 0.60890, cv_in_band: true, median_ratio_in_band: true, exact_match: true}
+      - {run: RUN-ICPERF-0ef41e, arm: CTL-1, cv_sq: 9936988/8631844, cv_sq_decimal: 1.15120, median_ratio: 1856/2938, median_ratio_decimal: 0.63172, cv_in_band: true, median_ratio_in_band: true, exact_match: false}
+      - {run: RUN-ICPERF-74e9a2, arm: CTL-2, cv_sq: 9871039/8288641, cv_sq_decimal: 1.19091, median_ratio: 1728/2879, median_ratio_decimal: 0.60021, cv_in_band: true, median_ratio_in_band: true, exact_match: false}
+  review_results:
+    J1-validity:
+      owner: TASK-20261105-558a8b
+      role: validator
+      verdict: holds
+      verdict_source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-558a8b/review-attestation.yaml
+      original_verdict: holds_with_limitation (validation-report.yaml, unedited)
+      basis: >-
+        Bound inputs equal at snapshot and all three commits; 30/30 receipt
+        digests; check_run clean on 3 manifests; journal chain intact (9
+        entries, tip c97b6c9d...); raw, RESULTS.md, summary and report agree;
+        exact pass rule applied verbatim; mutation test of the runbook
+        decision rule 18/18 as expected (band flips never change validity;
+        integer changes always do); no median split (32nd = 33rd in all
+        arms); no v1 run cited. PARITY-1 found; draws not persisted.
+    J2-scope:
+      owner: TASK-20261105-b3b41a
+      role: red_team
+      verdict: holds
+      verdict_source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/review-attestation.yaml
+      original_verdict: holds_with_limitation (red-team-report.yaml, unedited)
+      basis: >-
+        No band read at host scale; no latency, speedup or ranking claim; both
+        controls can fail, on narrow defects. Exact integers discriminate
+        within the xorshift family; bands discriminate nothing. No section-5a
+        band exists. Limitations L1-L8 carried.
+    blind_rederivation:
+      owner: TASK-20261105-6d9502
+      verdict: derived
+      source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/blind-rederivation.yaml
+      comparison_with_recorded: >-
+        Equal at every value for all three arms (primary 2943/289567/28 with
+        32nd = 33rd = 28; CTL-1 2938/290138/29; CTL-2 2879/283745/27; CV^2 and
+        median/mean fractions equal after reduction). Compared by the
+        Coordinator against runs/*/raw-result.json in this review.
+  proves_too_much:
+    band_criterion: fails the control; CTL-1 and CTL-2 both pass both bands with no split, so any argument accepting the primary on band shape accepts both wrong samplers.
+    exact_integer_rule: survives; CTL-1, CTL-2, the seed-tested reading, wrong-p and lognormal objects and all completing wrong triples fail it.
+    host_table: the instrument's bytes are identical whether or not any table exists; no conclusion about a table's probe-count law follows.
+  resource_reading:
+    examined: true
+    reading: >-
+      Red-team reversal reading: bit-exact cross-interpreter integer
+      reproduction with must-fail controls is a work-identity certificate.
+      IDEA-20261015-b41f68 claim (3) compares ns per probe across hosts and
+      needs such a certificate before a latency difference can be attributed.
+      A candidate for ranking, not evidence; no id minted; changes no status.
+    spawned_ids: []
+  independence_check:
+    tool: tools/check_review_independence.py
+    result: PASS
+    run_by: top-level session (as reported to the Coordinator; not re-run here)
+    expected_plan_sha256: c4e49dbf7bfa986f187c53c354315d4fece373895ecd347577311f5254163368
+    plan_frozen_at: f7eb8ae292
+    targets:
+      - experiments/EXP-ICPERF-283a70/review/TASK-20261105-558a8b/review-attestation.yaml
+      - experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/review-attestation.yaml
+      - experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/blind-rederivation.yaml
+    limit: >-
+      PASS checks declared ownership, verdict vocabulary, blind_from and
+      controls on pinned bytes; it does not authenticate read history or decide
+      scientific correctness. The duplicate attestations inside
+      validation-report.yaml and red-team-report.yaml were not the checker's
+      targets (procedure_deviations PD-1).
+  s5a_band:
+    applies: false
+    comparison_against_rho_made: false
+    band: none
+    reason: >-
+      The record has no rho arm, no index-calculus arm, no group or curve (so
+      S = total/sqrt(n) is undefined) and no counter in GAE. Its three arms are
+      sampler variants compared only with preregistered integers. The set of
+      priced arms is empty, so no band exists and no ranking is made or
+      licensed; pricing 64 synthetic draws in GAE would be a category error.
+      elapsed_seconds is never a bound (B5 item 5). Both red-teams found no
+      comparison against rho.
+  procedure_deviations:
+    - id: PD-1
+      text: >-
+        The top-level brief offered holds_with_limitation, which
+        tools/check_review_independence.py does not accept. Both reviewers
+        filed review-attestation.yaml addenda in checker vocabulary;
+        validation-report.yaml and red-team-report.yaml are unedited. The
+        checker was run on the addenda and the blind re-derivation, which also
+        avoids the duplicate-attestation collision the validator flagged.
+    - id: PD-2
+      text: >-
+        The plan's known_inputs audit_note says "no environment drift". It
+        repeats the tool and is inaccurate: the parity check did not run, and
+        the actual drift is 3.11.17 to 3.13.18 (no value effect).
+    - id: PD-3
+      text: >-
+        The audit was run by the same top-level session that wrote the review
+        plan; the validator re-verified its deterministic claims with its own
+        code.
+    - id: PD-4
+      text: >-
+        The review tasks TASK-20261105-558a8b, -b3b41a and -6d9502 have no
+        handoff records under ledger/handoffs/; they were dispatched in-session
+        and the blind brief is not archived. The re-derivation records the
+        verbatim sampler definition it used.
+    - id: PD-5
+      text: >-
+        HEAD moved to 1e5baa38e6 during review. The validator saw a sibling
+        filename and mtime and a names-only diff, and the red team one
+        filename; neither opened content. Inputs were confirmed byte-identical
+        to f7eb8ae292.
+  reviewed_by: coordinator
+  citations:
+    - {source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-558a8b/validation-report.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-558a8b/review-attestation.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/red-team-report.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/review-attestation.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/blind-rederivation.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: "experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-{f21eb1,0ef41e,74e9a2}/raw-result.json", provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full; values compared with the blind re-derivation'}
+    - {source: experiments/EXP-ICPERF-283a70/specification.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full'}
+    - {source: experiments/EXP-ICPERF-283a70/review/review-plan.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full'}
+    - {source: ledger/hypotheses/H-ICPERF-5adc9b.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full'}

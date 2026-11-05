@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: write-once C5 analyze preview
+
+The [C5 preview component](../../implementation/c5_preview_stage.py) now binds all four published join-plan byte hashes to the checked geometric campaign. For each complete cohort, it assembles canonical preliminary metadata and an explicitly incomplete blind-roster preview. It writes `c5-metadata-preview.jsonl`, `c5-rosters-preview.jsonl` and `c5-preview.json` once, retaining a partial attempt after interruption; the readback checker independently recomputes and compares every byte. The summary records the trial-plan hash, source RUN IDs, output hashes and exact unit/preview counts.
+
+The [analyze-stage component](../../implementation/geometric_analysis_stage.py) requires those three artifact names and their source closure in a future frozen six-stage trial plan. It computes C5 preview bytes before writing geometric outputs, then writes the geometric rows and C5 preview in order. Its checker requires both the geometric and C5 outputs to match recomputation. Five focused tests pass, including a four-cohort fixture, write-once refusal, tampered and symlinked roster rejection, and published join-plan hash mismatch.
+
+This is preview custody for checked geometric identity. It does not create descent or control-valid counterexample certificates, seal an actual blind review assignment, or run the second implementation. No trial plan or cohort stage was launched here; `EXP-PEXT-bf8f96` remains `review_required` and unfrozen.

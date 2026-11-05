@@ -1910,6 +1910,55 @@ class VoidSourceArtifactTests(unittest.TestCase):
                     repository_verifier=dispatch.GitRepositoryVerifier(root))
 
 
+class TerminalSnapshotContentAtCommitTests(TerminalSnapshotTests):
+    """Run every terminal authority guard against the historical-content mode."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.snapshot["archive"]["binding_mode"] = "content_at_commit"
+        self.authorize()
+
+    def test_archive_of_previously_published_failed_output_checks_every_byte(self) -> None:
+        source_path = self.source["artifact_paths"][0]
+        receipt_path = self.snapshot["artifact_paths"][0]
+        payloads = {source_path: b"failed producer output\n",
+                    receipt_path: b"terminal snapshot receipt\n"}
+        for path, payload in payloads.items():
+            target = self.root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(payload)
+            self.git("add", path)
+            self.git("-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid",
+                     "commit", "-qm", "SOURCE output" if path == source_path else "SNAPSHOT receipt")
+        self.snapshot["state"] = "completed"
+        self.snapshot["archive"].update(
+            commit_sha=self.git("rev-parse", "HEAD").strip(),
+            parent_sha=self.git("rev-parse", "HEAD^1").strip(),
+            path_sha256={p: hashlib.sha256(b).hexdigest() for p, b in payloads.items()})
+        plan = self.select()
+        self.assertEqual(plan["content_only_archives"][0]["paths_verified"], 2)
+        self.assertEqual(self.source["state"], "failed")
+
+        original = copy.deepcopy(self.snapshot["archive"])
+        self.snapshot["archive"]["path_sha256"][source_path] = "0" * 64
+        with self.assertRaisesRegex(dispatch.DispatchError, "content hash mismatch"):
+            self.select()
+        self.snapshot["archive"] = copy.deepcopy(original)
+        self.snapshot["archive"]["commit_sha"] = "f" * 40
+        with self.assertRaisesRegex(dispatch.DispatchError, "content_at_commit binding requires"):
+            self.select()
+
+        self.snapshot["archive"] = copy.deepcopy(original)
+        self.git("rm", source_path)
+        self.git("-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid",
+                 "commit", "-qm", "SNAPSHOT with missing source fixture")
+        self.snapshot["archive"].update(
+            commit_sha=self.git("rev-parse", "HEAD").strip(),
+            parent_sha=self.git("rev-parse", "HEAD^1").strip())
+        with self.assertRaises(dispatch.DispatchError):
+            self.select()
+
+
 class ReadyOnlyRenderTests(unittest.TestCase):
     """`--ready-only` prints the Ready Tasks alone (P1.7 of the track-record review)."""
 

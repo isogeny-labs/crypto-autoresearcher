@@ -629,6 +629,117 @@ class ExecutionTests(unittest.TestCase):
         self.queuepath.write_text(self.queuepath.read_text() + "\n")
         with self.assertRaisesRegex(execution.ExecutionError, "changed input"): self.run_plan()
 
+    def managed_queue(self):
+        manifest = self.queuepath.parent / ".artifacts.json"
+        binding = {"schema": "artifacts.manifest/v1", "files": {
+            self.queuepath.name: {"sha256": execution.sha256(self.queuepath),
+                                  "bytes": self.queuepath.stat().st_size}}}
+        manifest.write_text(json.dumps(binding))
+        (self.queuepath.parent / ".gitignore").write_text("/dispatch_queue.json\n")
+        self.git("rm", "--cached", "--", self.plan["queue"])
+        self.commit()
+        return manifest, binding
+
+    def test_managed_queue_authorizes_without_launching(self):
+        self.managed_queue()
+        self.assertEqual(self.authorize()["owner"], "test-owner")
+        self.assertFalse(self.directory().exists())
+
+    def test_managed_queue_changed_content_and_size_rejected(self):
+        self.managed_queue()
+        original = self.queuepath.read_bytes()
+        for content in (original + b" ", b"!" + original[1:]):
+            with self.subTest(size=len(content)):
+                self.queuepath.write_bytes(content)
+                with self.assertRaisesRegex(execution.ExecutionError, "digest or size mismatch"):
+                    self.authorize()
+
+    def test_managed_queue_manifest_must_be_committed_and_clean(self):
+        manifest, _ = self.managed_queue()
+        manifest.write_text(manifest.read_text() + "\n")
+        with self.assertRaisesRegex(execution.ExecutionError, "changed queue manifest"):
+            self.authorize()
+        self.git("rm", "--cached", "--", str(manifest.relative_to(self.root)))
+        self.git("commit", "-qm", "remove manifest")
+        with self.assertRaisesRegex(execution.ExecutionError, "committed regular file"):
+            self.authorize()
+
+    def test_managed_queue_malformed_bindings_rejected(self):
+        manifest, binding = self.managed_queue()
+        invalid = ["{", "[]", json.dumps({**binding, "schema": "other"}),
+                   '{"schema":"artifacts.manifest/v1","files":{},"files":{}}']
+        for field, value in (("bytes", True), ("bytes", -1), ("bytes", 1.0),
+                             ("bytes", 0), ("sha256", "z" * 64), ("sha256", "0" * 64)):
+            item = json.loads(json.dumps(binding))
+            item["files"][self.queuepath.name][field] = value
+            invalid.append(json.dumps(item))
+        invalid.append(json.dumps({**binding, "files": {}}))
+        invalid.append(json.dumps(binding).replace('"bytes":', '"bytes":0,"bytes":'))
+        for content in invalid:
+            with self.subTest(content=content):
+                manifest.write_text(content)
+                self.commit()
+                with self.assertRaisesRegex(execution.ExecutionError, "invalid managed queue binding"):
+                    self.authorize()
+
+    def test_managed_queue_cannot_override_changed_tracked_queue(self):
+        self.queuepath.write_text(self.queuepath.read_text() + "\n")
+        manifest = self.queuepath.parent / ".artifacts.json"
+        manifest.write_text(json.dumps({"schema": "artifacts.manifest/v1", "files": {
+            self.queuepath.name: {"sha256": execution.sha256(self.queuepath),
+                                  "bytes": self.queuepath.stat().st_size}}}))
+        self.git("add", "--", str(manifest.relative_to(self.root)))
+        self.git("commit", "-qm", "manifest only")
+        with self.assertRaisesRegex(execution.ExecutionError, "changed input"):
+            self.authorize()
+
+    def test_managed_queue_symlinks_rejected(self):
+        manifest, _ = self.managed_queue()
+        for path in (self.queuepath, manifest):
+            with self.subTest(path=path.name):
+                content = path.read_bytes()
+                target = self.root / "symlink-target"
+                target.write_bytes(content)
+                path.unlink()
+                path.symlink_to(target)
+                with self.assertRaisesRegex(execution.ExecutionError, "symlink"):
+                    self.authorize()
+                path.unlink()
+                path.write_bytes(content)
+
+    def test_managed_queue_git_error_is_not_absence(self):
+        self.managed_queue()
+        with mock.patch.object(execution.subprocess, "run", return_value=
+                               subprocess.CompletedProcess([], 128, b"", b"failure")):
+            with self.assertRaisesRegex(execution.ExecutionError, "cannot inspect committed queue"):
+                execution.committed_queue(self.root, self.queuepath)
+
+    def test_managed_queue_nonregular_head_entries_rejected(self):
+        manifest, _ = self.managed_queue()
+        for path in (self.queuepath, manifest):
+            with self.subTest(path=path.name):
+                content = path.read_bytes()
+                path.unlink()
+                path.symlink_to("fixture-target")
+                self.git("add", "-f", "--", str(path.relative_to(self.root)))
+                self.git("commit", "-qm", "nonregular entry")
+                path.unlink()
+                path.write_bytes(content)
+                with self.assertRaisesRegex(execution.ExecutionError, "regular file"):
+                    execution.committed_queue(self.root, self.queuepath)
+                if path == self.queuepath:
+                    self.git("rm", "--cached", "--", self.plan["queue"])
+                    self.git("commit", "-qm", "remove nonregular queue")
+
+    def test_managed_queue_does_not_relax_source_or_claim_checks(self):
+        self.managed_queue()
+        (self.root / "driver.py").write_text(DRIVER + "\n# modified")
+        with self.assertRaisesRegex(execution.ExecutionError, "changed input"):
+            self.authorize()
+        (self.root / "driver.py").write_text(DRIVER)
+        with self.assertRaisesRegex(execution.ExecutionError, "owner/epoch"):
+            execution.authorize(self.root, self.path, self.plan, "wrong-owner", 1)
+
     def test_unpublished_claim_refused(self):
         self.git("update-ref", "-d", "refs/remotes/origin/test")
         with self.assertRaisesRegex(execution.ExecutionError, "publish/fetch"): self.run_plan()

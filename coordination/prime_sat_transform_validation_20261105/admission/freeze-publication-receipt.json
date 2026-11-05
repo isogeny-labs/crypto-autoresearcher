@@ -1,0 +1,154 @@
+{
+  "started_at": "2026-11-05T18:01:04.276566+00:00",
+  "steps": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout": "65df60d9eafb9d22ef2828748a74f8b119f39187\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "coordination/prime_sat_transform_validation_20261105/protocol.json",
+        "experiments/EXP-PNEXT-6558d8/config.json",
+        "experiments/EXP-PNEXT-6558d8/specification.yaml",
+        "experiments/EXP-PNEXT-6558d8/trial-plan.json"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "returncode": 0,
+      "stdout": "coordination/prime_sat_transform_validation_20261105/protocol.json\nexperiments/EXP-PNEXT-6558d8/config.json\nexperiments/EXP-PNEXT-6558d8/specification.yaml\nexperiments/EXP-PNEXT-6558d8/trial-plan.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/ec2-user/prime-sat-research-venv/bin/python",
+        "tools/check_merge_hygiene.py",
+        "--base",
+        "origin/main"
+      ],
+      "returncode": 0,
+      "stdout": "PASS: no conflict markers, no unparseable records, no duplicate registry keys, no changed runbook-session files, no schema-failing new run manifests, no identifier collisions, no new legacy GOAL identifiers\n",
+      "stderr": "note: parseability scoped to 18 committed, staged, or tracked-worktree candidate path(s) vs origin/main; the absolute sweep runs on main\n"
+    },
+    {
+      "command": [
+        "/home/ec2-user/prime-sat-research-venv/bin/python",
+        "tools/check_run_immutability.py"
+      ],
+      "returncode": 0,
+      "stdout": "OK: no committed run artifacts were modified or deleted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/ec2-user/prime-sat-research-venv/bin/python",
+        "tools/benchrec.py",
+        "gate"
+      ],
+      "returncode": 0,
+      "stdout": "benchrec: OK, 4 record(s), progress report current\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "design: freeze EXP-PNEXT-6558d8 inputs against published validation source"
+      ],
+      "returncode": 0,
+      "stdout": "[codex/prime-full-chart-composition-20261101 75e52244e0] design: freeze EXP-PNEXT-6558d8 inputs against published validation source\n Committer: EC2 Default User <ec2-user@ip-172-31-17-161.us-east-2.compute.internal>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly:\n\n    git config --global user.name \"Your Name\"\n    git config --global user.email you@example.com\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 4 files changed, 14 insertions(+), 11 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout": "75e52244e01ff59d936037fa8e5473c2aaa48988\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "push"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "remote: This repository moved. Please use the new location:        \nremote:   https://github.com/isogeny-labs/crypto-autoresearcher.git        \nTo https://github.com/aburan28/crypto-autoresearcher.git\n   65df60d9ea..75e52244e0  codex/prime-full-chart-composition-20261101 -> codex/prime-full-chart-composition-20261101\n"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/isogeny-labs/crypto-autoresearcher/git/commits/75e52244e01ff59d936037fa8e5473c2aaa48988",
+        "--jq",
+        ".sha"
+      ],
+      "returncode": 0,
+      "stdout": "75e52244e01ff59d936037fa8e5473c2aaa48988\n",
+      "stderr": ""
+    }
+  ],
+  "completed": true,
+  "candidate_execution": 0,
+  "canonical_queue_changed": false,
+  "mapping": {
+    "coordination/prime_sat_transform_validation_20261105/protocol.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/freeze-v1/protocol.json",
+      "sha256": "a5171f5d540bddb71e5b073ebb8daf8395021188486eee7d4851405b8b9206e7",
+      "expected_current_sha256": "3d3336015831fc51baf8ae28ceb72496764ebd60b83a4834c1deffc4169aa01d"
+    },
+    "experiments/EXP-PNEXT-6558d8/config.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/freeze-v1/config.json",
+      "sha256": "8869390b92af55a11284e9fa6aa6cca750a81216746c3cca71d48855e57e62a2",
+      "expected_current_sha256": "d2b711873b7c9bf6e62a705b0096611a6134cc3cddf295a482b95aae08306da1"
+    },
+    "experiments/EXP-PNEXT-6558d8/specification.yaml": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/freeze-v1/draft-specification.yaml",
+      "sha256": "4a12d8b7cd219d216e27511989540ba93a65e64e32f39f58fb2f78f7819c7dae",
+      "expected_current_sha256": "35d6d077edb6bf40b8ba1e838898f4c03dc8bd4b1646cf27547aea7072dcde16"
+    },
+    "experiments/EXP-PNEXT-6558d8/trial-plan.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/freeze-v1/draft-trial-plan.json",
+      "sha256": "d307e9577b70bdfd742879acda261a419e36a06988c39f922ca695655ce99be8",
+      "expected_current_sha256": "ee642546505a9edaa86cfffd2874c5951188db767daf43cfb6269ffc43d18ae8"
+    }
+  },
+  "approval_sha256": "31c2c7ab144c64a7414b38a3032fadaa8df063935eb26684fa41ed91b5fbb4df",
+  "created_paths": [],
+  "base_commit": "65df60d9eafb9d22ef2828748a74f8b119f39187",
+  "commit": "75e52244e01ff59d936037fa8e5473c2aaa48988",
+  "all4_git_hashes_verified": true,
+  "ended_at": "2026-11-05T18:04:35.871296+00:00"
+}
