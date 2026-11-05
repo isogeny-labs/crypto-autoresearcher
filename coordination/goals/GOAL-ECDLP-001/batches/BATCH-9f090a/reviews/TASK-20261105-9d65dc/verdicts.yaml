@@ -1,0 +1,144 @@
+review_verdicts:
+  task_id: TASK-20261105-9d65dc
+  review_plan: RP-BATCH-9f090a
+  opened_by_decision: DEC-20261105-c5fcb6
+  routed_by: DEC-20260831-a9716f
+  policy: 'review-breakthrough, max, degradable false, independent session'
+  repo_commit_reviewed: b52e7c070
+  branch: ideas/round5-review-9d65dc
+  model: 'Shoup GGM (random labels; group-oracle queries counted; local computation free; exponent in largest prime factor N_prime)'
+  edits_to_records: none
+  status_changes: none
+  experiments_run: 0
+  derivation_checks: [checks/ggm_oracle_checks.py, checks/classify_dependents.py]
+
+  blind_ordering:
+    pre_read_file: pre-read-verdict.md
+    pre_read_sha256: 9119a4711019180ef6ef5166c249d8d6cf7926ac90219f1f2e739e4984911513
+    sealed_at_utc: '2026-11-05T04:36:38Z'
+    sealed_commit_pushed: 9c09f2f9d4
+    derivation_tier_inputs_read_after_seal:
+      - docs/reports/leads-round2-20261104/augmented-oracle-review.md
+      - docs/reports/holant-h1-ggm-lemma-20261103/README.md
+      - docs/reports/holant-h1-ggm-lemma-20261103/REDTEAM.md
+    extra_pre_seal_reads: [experiments/EXP-GGM-001/specification.yaml, knowledge/techniques/KN-TECH-005.md,
+      knowledge/literature/KN-LIT-7606.md, ledger/evidence/EV-GGM-79e710.yaml, ledger/decisions/DEC-20260804-3b4258.yaml,
+      coordination/goals/GOAL-ECDLP-001/batches/BATCH-060/tasks/TASK-20260804-051/ggm_analysis.md]
+
+  lemmas:
+    - id: lemma_R
+      tag: proved_here
+      statement: 'Overhead-C simulability gives T >= Omega(sqrt(eps N_prime)/max(1,C)); exponent 1/2 preserved iff C = N^{o(1)}; O(1) is sufficient, not necessary.'
+    - id: lemma_S
+      tag: proved_here
+      statement: 'Oracles answering from formal linear forms with O(1) new forms/comparisons per query (CHECK, label endomorphism image, label scalar multiple) close at exponent 1/2 with constant 1, independent of |I|, m or lambda.'
+    - id: corollary_field_valued
+      tag: proved_here
+      statement: 'A k-dependent field-valued answer to a fixed label-expressible query is not simulable with o(sqrt N_prime) calls; if O(1) answers fix log Q up to poly(log N) candidates, overhead is Theta(sqrt N_prime).'
+    - id: prop_A
+      tag: proved_here
+      statement: 'Unit-cost fixed-arity-m incidence SEARCH solves DLP with O(m N^{1/(m+1)}) group ops + calls (m=1 is BSGS); lower bound Omega(N_prime^{1/(2 ceil(m/2)+2)}).'
+    - id: prop_B
+      tag: proved_here
+      statement: 'Subset-form incidence SEARCH ("which subsets sum to Q") with FB {[2^i]G} returns bits of k in one call; not simulable with o(sqrt N_prime) overhead.'
+
+  joints:
+    - joint: J1
+      subject: 'KN-FIND-002 tier (CC-3)'
+      pre_read_verdict: breaks
+      post_read_verdict: breaks
+      breaking_artifacts:
+        - 'JET-W claimed simulator does not exist in Shoup; one query returns y(G+Q)/y(G) (C6, C6b); overhead Theta(sqrt N_prime)'
+        - 'structured GGM: own rule classifies the encoding control SIMULABLE C=0 (proves too much); no lower bound; closure does not follow from KN-TECH-005'
+        - 'END-L overhead C=0 wrong; correct <= 2 ceil(log2 N) (constant 1 in direct count); conclusion holds'
+        - 'NET-L (as the record defines it) is closed at 1/2 (record under-claims); NET-F (spec) not simulable'
+        - 'incidence "no sub-birthday advantage" refuted in the query metric by prop_A'
+      per_oracle:
+        JET-W: {simulable: false, overhead: 'Theta(sqrt N_prime)', closed_at_half: false, tag: proved_here}
+        JET-I: {simulable: true, overhead: 1, closed_at_half: vacuous, tag: proved_here}
+        END-L: {simulable: true, overhead: 'Theta(log N) reduction; 1 direct count', closed_at_half: true, tag: proved_here}
+        NET-L: {simulable: true, overhead: 'Theta(log N)', closed_at_half: true, tag: proved_here}
+        NET-F: {simulable: false, overhead: 'Theta(sqrt N_prime)', closed_at_half: false, tag: 'proved_here modulo recalled Stange identity'}
+        INC-SA: {simulable: true, overhead: 'O(m B^ceil(m/2))', closed_at_half: false, beaten_at: 'N^{1/(m+1)} (unit-cost calls)', tag: proved_here}
+      structured_ggm_lower_bound: none
+      chw_structured_ggm: 'heuristic: no non-trivial bound for JET-W/NET-F (delta ~ 1); paper body unread'
+    - joint: J2
+      subject: 'KN-FIND-b7e091 justification (CC-2)'
+      pre_read_verdict: breaks_as_written_conclusions_survive
+      post_read_verdict: breaks_as_written_conclusions_survive
+      breaking_artifacts:
+        - 'End_{F_p}(E) = Z false for every E/F_p (deg Frobenius = p, never a square); not needed (eigenvalue argument)'
+        - '"m group operations" is O(N) per query (lambda ~ N); correct <= 2 ceil(log2 N)'
+        - 'Oracle C sentence (l.22-24) reads as subset SEARCH, under which the claim is false (prop_B)'
+      survives:
+        - 'INC-C over a label factor base: closed at 1/2, constant 1 (lemma_S), any m'
+        - 'END-L: closed at 1/2'
+      scope_missing: 'coordinate-defined factor bases (C_t, KN-FIND-982fdf) are outside; real index calculus not closed'
+      tier_supported: 'confidence proved / theorem_backed for the corrected statements only'
+    - joint: J3
+      subject: 'CC-1 incidence disagreement and F-5 constant-overhead criterion'
+      pre_read_verdict: inconsistent_as_written_reconciled_under_pinned_definitions
+      post_read_verdict: inconsistent_as_written_reconciled_under_pinned_definitions
+      cc1: 'Different interfaces: KN-FIND-002 = INC-SA (arity m, FB size B); KN-FIND-b7e091 source = INC-C (FB size m). Inconsistent as written because b7e091 sentence reads INC-SS. Answers DEC-20260901-70ba34 Q1.'
+      criterion_G: 'Closure at exponent 1/2 (unit-query metric, exponent in N_prime) is licensed when answers are labels/bits determined by formal linear forms of held labels and public constants, AND either O(1) new forms/comparisons per query (lemma_S) or a k-independent label-only simulator with N^{o(1)} calls per query (lemma_R). Field-valued k-dependent answers: no Shoup bound.'
+      violations:
+        KN-FIND-002: ['NET-L refused closure despite Theta(log N)', 'END-L C=0', 'JET-W closed without simulator']
+        KN-FIND-b7e091: ['END-L "m group operations"', 'INC-SS reading closed at O(m)']
+      new_observation: 'NO-1: records also disagree on the jet oracle (JET-W simulable in 002 vs JET-K non-simulable in b7e091 lineage); neither closed by Shoup; 002 is in error.'
+    - joint: J4
+      subject: consequences
+      pre_read_recommendation: {KN-FIND-002: supersede, KN-FIND-b7e091: scoped_erratum}
+      post_read_recommendation: {KN-FIND-002: supersede, KN-FIND-b7e091: scoped_erratum}
+      output_shape_constraint: 'new records under freshly minted ids only (DEC-20260901-70ba34; KN-FIND-002 content-bound by archive TASK-20260724-236)'
+
+  recommendations:
+    - record: KN-FIND-002
+      action: supersede
+      superseding_statement_ref: 'REVIEW.md section 3, J4, R1 (exact text)'
+      discharges: 'CORR-20260727-003 owed superseding entry; DEC-20260901-70ba34 Q3'
+      new_record_confidence: 'proved (items 1-6), heuristic (CHW sub-item)'
+      new_record_evidence: 'this review and checks/, not EV-GGM-001'
+    - record: KN-FIND-b7e091
+      action: stands_with_scoped_erratum
+      erratum_text_ref: 'REVIEW.md section 3, J4, R2 (exact text)'
+      companion_corrections: [EV-GGM-79e710 O-2 O-3 proof_refs item 4, DEC-20260804-3b4258 rationale 1-2 and owed_promotions]
+      discharges: 'DEC-20260901-70ba34 Q1, Q2'
+
+  dependents:
+    grep: 'git grep -e KN-FIND-002 -e KN-FIND-b7e091 HEAD (sparse checkout; tree search)'
+    totals: {files: 508, lines: 1897}
+    full_list: checks/dependents_all_files.txt
+    classified_lines: checks/dependents_classified.tsv
+    action_needed:
+      - {path: knowledge/leads/ecdlp/exotic/LEAD-EXO-augmented-oracle-ggm.yaml, action: scoped_erratum, sentence: 'incidence SEARCH total-cost / "is generic" clause; evidence notes l.52-55; ledger_refs EV-GGM-001'}
+      - {path: knowledge/leads/ecdlp/exotic/LEAD-EXO-elliptic-net-eds.yaml, action: erratum, sentence: 'l.14 KN-FIND-002 net O(log N) parenthetical; l.35-36; l.49'}
+      - {path: knowledge/leads/ecdlp/exotic/LEAD-EXO-padic-jet-canonical-lift.yaml, action: erratum, sentence: 'l.16 jet O(1) (KN-FIND-002); l.35-36'}
+      - {path: knowledge/leads/ecdlp/exotic/LEAD-EXO-lattes-xline-dynamics.yaml, action: erratum, sentence: 'l.14 (KN-FIND-002 pattern)'}
+      - {path: knowledge/leads/ecdlp/exotic/LEAD-EXO-low-degree-query-lower-bound.yaml, action: repoint, sentence: 'l.69-70'}
+      - {path: knowledge/techniques/KN-TECH-069.md, action: erratum, sentence: 'l.71 closed jet and endomorphism'}
+      - {path: knowledge/techniques/KN-TECH-ee6696.md, action: erratum, sentence: 'l.221 model question open; l.265 net/incidence non-constant overhead'}
+      - {path: ledger/evidence/EV-GGM-79e710.yaml, action: companion_correction, sentence: 'O-2, O-3, proof_refs item 4'}
+      - {path: ledger/decisions/DEC-20260804-3b4258.yaml, action: companion_correction, sentence: 'rationale 1-2; owed_promotions'}
+      - {path: ledger/decisions/DEC-20260804-98a4a4.yaml, action: companion_correction, sentence: 'promotion of b7e091 (l.22, l.38)'}
+      - {path: ledger/corrections/CORR-20260808-334229.yaml, action: recite_criterion_G, sentence: 'l.154 inside KN-FIND-b7e091 closure'}
+      - {path: ledger/decisions/DEC-20260810-a4bec4.yaml, action: scope_note, sentence: 'l.84 incidence closure "extended"'}
+    stand_unchanged:
+      - knowledge/leads/ecdlp/structure/LEAD-STR-endo-scalar-action-generic.yaml
+      - knowledge/leads/ecdlp/exotic/LEAD-EXO-coordinate-revealing-oracles.yaml
+      - 'GOAL-ENDO-001 goal/checkpoints and DEC-20260807-4261e3, DEC-20260808-e75211, DEC-20260810-56db2d/-5aeeaa/-95a741/-d70ece ("b7e091 binding" for endomorphism)'
+      - 'hypotheses citing b7e091 for END-L (H-CMFB-7d4e1a, H-ICINV-*, H-JINV-5a0b9e, H-VOLC-dff1f8, ...)'
+    reread_at_next_revision: [ledger/hypotheses/H-ECDLP-3b589b.yaml, ledger/hypotheses/H-AOM-8d4a83.yaml]
+    process_only: 'routing/"not retiered" mentions (DEC-20260831-a9716f, EV-ECDLP-048824, DEC-20260901-*, EV-ECDLP-e6f5f2, EV-ECDLP-f5c698, DEC-20261105-*, KN-FIND-1ba0fe, GOAL-ECDLP-001 goal.yaml)'
+
+  post_read_comparison:
+    agreements: [jet_W_nonsimulable, structured_ggm_vacuous, endo_label_theta_logN, end_eq_Z_false, net_label_vs_field, inc_check_Om, inc_search_mitm, coordinate_fb_is_Ct, subpoly_criterion, exponent_in_N_prime, ev_ggm_001_void, cc1_two_interfaces]
+    disagreements:
+      - {id: D-1, direction: 'pre-read corrected toward input', text: 'NET-F "no sub-birthday advantage" is false in the query metric (O(1) coordinate answers + free local work), open only in time metric'}
+      - {id: D-2, direction: 'addition', text: 'unit-cost SEARCH beats 1/2 (prop_A); lead row "is generic"/total-cost clause holds only with SEARCH charged at simulation cost'}
+      - {id: D-3, direction: 'addition', text: 'KN-FIND-b7e091 l.22-24 is a SEARCH sentence (prop_B); input reads it as CHECK'}
+      - {id: D-4, direction: 'addition', text: 'lemma_S closes CHECK and END-L at constant 1 for any m'}
+      - {id: D-5, direction: 'witness only', text: 'W(2)=2y(Q) vs W(1,-1)=x_Q-x_P; both recalled'}
+      - {id: D-6, direction: 'addition', text: 'NO-1 jet disagreement between the records'}
+    joint_verdict_changes: none
+
+  procedure_deviations: [PD-1 branch, PD-2 extra pre-seal reads, PD-3 pushed-commit seal, PD-4 DEC-20260901-70ba34 already opened same round, PD-5 BENCHREC_SKIP on push, PD-6 same-model-family independence limit]

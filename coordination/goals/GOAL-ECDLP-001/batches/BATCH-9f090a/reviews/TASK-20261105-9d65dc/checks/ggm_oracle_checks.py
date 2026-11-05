@@ -318,7 +318,7 @@ def check_c6():
     E, N = prime_order_curve(14, rng)
     G = E.point(rng)
     p = E.p
-    vals, additive = set(), True
+    vals, additive, yratio = set(), True, True
     for _ in range(200):
         k = rng.randrange(2, N - 1)
         Q = E.mul(k, G)
@@ -328,6 +328,9 @@ def check_c6():
         dG = (1, (3 * G[0] ** 2 + E.a) * pow(2 * G[1], -1, p) % p)
         R, dR = dual_add(E, G, dG, Q, (0, 0))
         vals.add(dR[0])
+        # post-read addition (C6b): the answer is exactly y(G+Q)/y(G), i.e. a
+        # y-coordinate oracle on the instance point G+Q
+        yratio &= (dR[0] == R[1] * pow(G[1], -1, p) % p)
         # invariant reading
         tG, tQ = rng.randrange(p), rng.randrange(p)
         R2, dR2 = dual_add(E, G, tangent(E, G, tG), Q, tangent(E, Q, tQ))
@@ -336,6 +339,7 @@ def check_c6():
     print(f"   p={p} N={N}: eps-coefficient dx(G+Q) took {len(vals)} distinct values"
           " over 200 random k for ONE fixed query -> depends on k -> no label-only"
           " simulator (labels are k-independent in distribution)")
+    print(f"   C6b: answer == y(G+Q)/y(G) for all samples (a y-oracle on G+Q): {yratio}")
     print(f"   invariant coordinate t(G+Q) == t(G)+t(Q) for all samples: {additive}")
 
 
