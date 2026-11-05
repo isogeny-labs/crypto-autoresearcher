@@ -1,0 +1,179 @@
+# Pre-approval implementation card for EXP-MONO-1a1be2 (review_required; NOT approved).
+# The card widens the known-answer tests to field degrees 4..7 and to large-q fields
+# (DEC-20261105-f0b7c7 F-1). It adds the three composition residuals, P2(vii) to (ix),
+# and measures throughput on non-contract proxies (F-2), timings only. It computes no
+# contract cell and asserts no predicted value. Zero runs.
+handoff:
+  id: TASK-20261105-ac5ad6
+  from: coordinator
+  to: executor
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-8517aa
+  authorized_by: DEC-20261105-f0b7c7
+  objective: >-
+    Extend the EXP-MONO-1a1be2 instrument at its current main bytes (post-PR #2707):
+    (1) KATs at n = 4..7 over F_{5^n} and F_{13^n}, and over the large-q fields
+        F_{q'_n^n} for n = 2..7;
+    (2) the residuals P2(vii), P2(viii) and P2(ix) in the exhaustive-cell identities;
+    (3) arm-C cells added to the launcher's KAT refusal;
+    (4) timing-only throughput calibration on non-contract proxy cells;
+    (5) a re-check of trial-plan determinism.
+  uncertainty_reduced: >-
+    Readiness blockers B1 (KAT coverage at n >= 4 and at contract-size q), B2 (plan
+    determinism after #2707) and B7 (measured throughput). Nothing about the mathematics.
+  inputs:
+    - ledger/handoffs/TASK-20261105-ac5ad6.yaml
+    - ledger/decisions/DEC-20261105-f0b7c7.yaml
+    - experiments/EXP-MONO-1a1be2/specification.yaml
+    - experiments/EXP-MONO-1a1be2/code/fqn.py
+    - experiments/EXP-MONO-1a1be2/code/curves.py
+    - experiments/EXP-MONO-1a1be2/code/semaev.py
+    - experiments/EXP-MONO-1a1be2/code/counters.py
+    - experiments/EXP-MONO-1a1be2/code/kernel.c
+    - experiments/EXP-MONO-1a1be2/code/launcher.py
+    - experiments/EXP-MONO-1a1be2/code/make_trial_plan.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat.py
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-report.md
+    - experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview.json
+    - agents/executor.md
+  inputs_note: >-
+    Your context is the decision's sections f1_decision, f2_decision and
+    predictions_to_freeze (P2(vii)-(ix) definitions only), plus the specification's arms,
+    seeds and identities. The predictions are context for what must be computable, never
+    assertions for a test. Do not read coordination/goals/GOAL-PATH-001/review/.
+  constraints:
+    - KX-1 Write only the declared artifact paths, inside write_scope. The specification, src/, ledger/ and other experiments are read-only.
+    - >-
+      KX-2 IM-3 is widened by DEC-20261105-f0b7c7. KAT fields are now:
+      - q in {5, 13} at n <= 7;
+      - q'_n = the least prime greater than the arm-C q_n (by the trial-plan rule) at
+        degree n, for n = 2..7;
+      - prime fields as before.
+      Each must be checked disjoint from every arm-A, arm-B and arm-C (q, n) contract
+      pair, and the check is itself a test. Counter KATs compare the optimised code with
+      naive enumeration of the same definition. No KAT asserts a cross-convention identity,
+      a residual value, a ratio, a split frequency or any predicted value.
+    - >-
+      KX-3 Degree 4..7 KATs over F_{5^n} and F_{13^n}:
+      - least-irreducible g by trial division;
+      - field axioms, Frobenius as the q-th power, norm-method inverse equal to the Fermat
+        inverse, sqrt, and chi checked two independent ways (Euler's criterion, and
+        chi_q of the norm);
+      - kernel field ops equal the Python field ops;
+      - curve rules;
+      - group law: associativity on random triples, and N P = O;
+      - point count: compiled exhaustive equals BSGS equals the kernel character sum for
+        every Q < 2^27;
+      - factor base D, X and t2 from the definition where Q <= 10^6;
+      - S_{n+1} defining property on 200 tuples at k = n, over F_{5^4}, F_{13^4} and
+        F_{5^5};
+      - roots against the group-law signed sums at k = n, over F_{5^4} and F_{5^5};
+      - E1 exhaustive counters against naive enumeration at (5,4,m=2..4), (13,4,m=2) and
+        (5,5,m=2..5), each for line, random and twin bases;
+      - E2 sampled counter against naive enumeration at (5,6,m=6) and (5,7,m=7), for line
+        and random bases.
+    - >-
+      KX-4 Large-q KATs over F_{q'_n^n}, n = 2..7:
+      - field axioms, the two inverses and the two chi checks on at least 10^4 random
+        elements;
+      - kernel ops equal Python;
+      - curve rules;
+      - BSGS N inside the Hasse interval, N P = O on 5 random points, and
+        N + N_twist = 2Q + 2;
+      - D symmetric and on the curve, with t2 equal to the number of roots of f lying in
+        F_q;
+      - the E2 sampled counter at m in {2, 3} on at least 50 sampled targets, checked by
+        an independent membership method (iterate over (m-1)-multisets and test whether
+        the remainder is in D), line base only.
+    - >-
+      KX-5 Composition residuals (DEC-20261105-f0b7c7 predictions_to_freeze), added to
+      counters.exhaustive_cell identities and to the launcher summary:
+      - vii_TS_vs_TA_weighted_2j_special: the iii comparison on exactly the targets iii
+        skips (O and E[2]);
+      - viii_n2_TM_eq_TX_off_2torsion: at m = 2, the count of targets with 2R != O and
+        T_M != T_X;
+      - ix_symmetric_coverage_ceiling: per base, the observed number of targets with
+        T_M >= 1, C_sym = [z^m](1+z)^{|X|-1}(1-z)^{-(B-t2)/2-1} from that base's own B, t2
+        and |X|, and min(N, C_sym).
+      Each is withheld in KAT mode, like the existing residuals. Tests use fabricated
+      inputs only, plus C_sym against an independent series expansion. No residual value
+      at a real KAT cell is printed or recorded.
+    - KX-6 launcher.py --kat also refuses every arm-C (q_n, n) pair, and this is tested.
+    - >-
+      KX-7 Throughput, timing only (DEC-20261105-f0b7c7 TP-0), in a new script
+      code/throughput_calibration.py that never calls launcher cell and writes outputs to a
+      temporary directory.
+      - B1 analysis at (257, 2), (43, 3), (29, 4) and (13, 5), at least 10^4 tuples each,
+        with seed strings prefixed "f15270|throughput|", at worker counts 1 and the host's
+        usable core count.
+      - The arm-A exhaustive cell proxy (103, 4), all three bases with recount, and the
+        arm-C enumeration proxy (q'_2, 2), each in full or with a stated partial fraction
+        under the 16 GB cap.
+      - Record wall time, CPU time, peak RSS, tuples or multisets processed, the worker
+        count and the host. Record the projected per-cell time for every contract cell
+        class.
+      - No tally, split or chi-pattern count, histogram, coverage or residual is printed,
+        recorded or kept. The temporary directory is deleted unread.
+      This is an instrument calibration, not a benchmark result. If a repository hook
+      treats it as a benchmark, set BENCHREC_SKIP to "instrument throughput calibration for
+      watchdog sizing; no performance claim".
+    - KX-8 Regression. The full suite passes, including the three PR-2707 regression tests; report the count. make_trial_plan.py regenerates into implementation/trial-plan.preview-ac5ad6.json, which is compared byte for byte with trial-plan.preview.json (9ccbe614...fb4a). Any difference is reported with its cause, never absorbed.
+    - KX-9 If a widened KAT exposes a defect in fqn.py, curves.py, semaev.py, kernel.c or make_trial_plan.py, fix it inside write_scope. Record the failing KAT, the defect and the fix as scope finding SF-n in kat-report-ac5ad6.md, and list the extra modified paths in the release. 7083a8 then stops on the expected-path mismatch for a corrected snapshot card. This is infrastructure, never evidence.
+    - KX-10 IM-2 still binds. No contract cell is computed, and no T_A, T_M, T_S, T_X, coverage, kappa_rel, split frequency or rule agreement is computed on any contract cell. Zero experiment runs. Unit, KAT and timing invocations are not runs. If a hook refuses an invocation as a run launch, follow its instruction (scripts/checkpoint.sh init, fill .resume/RESUME.md) before retrying; .resume/ is session state, not an artifact.
+    - KX-11 No commit, no push. No KAT output, timing, residual or prediction value appears in any message. Never select, configure or contact Amazon Bedrock.
+  deliverables:
+    - "code/counters.py: KX-5 residuals"
+    - "code/launcher.py: KX-5 summary fields; KX-6 refusal"
+    - "code/tests/test_kat.py: KX-2 to KX-6 tests plus all existing tests"
+    - "code/throughput_calibration.py: KX-7 harness"
+    - "code/README.md: updated module map, widened KAT cells, new identities, throughput harness"
+    - "implementation/kat-report-ac5ad6.md: each new KAT, its cells and its result; pass count; scope findings; disjointness table"
+    - "implementation/kat-log-ac5ad6.json: raw outputs of the new KATs as text (no residuals)"
+    - "implementation/environment-ac5ad6.json: interpreter, libraries, compiler, flags, host, core count"
+    - "implementation/throughput-calibration.json: KX-7 timings and projections per cell class"
+    - "implementation/trial-plan.preview-ac5ad6.json: the regenerated plan (KX-8)"
+  artifact_paths:
+    - experiments/EXP-MONO-1a1be2/code/counters.py
+    - experiments/EXP-MONO-1a1be2/code/launcher.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat.py
+    - experiments/EXP-MONO-1a1be2/code/throughput_calibration.py
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-log-ac5ad6.json
+    - experiments/EXP-MONO-1a1be2/implementation/environment-ac5ad6.json
+    - experiments/EXP-MONO-1a1be2/implementation/throughput-calibration.json
+    - experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json
+  write_scope:
+    - experiments/EXP-MONO-1a1be2/code
+    - experiments/EXP-MONO-1a1be2/implementation
+  archived_by: TASK-20261105-7083a8
+  inference:
+    policy: executor-implementation
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default.
+    fallback_allowed: true
+    fallback_note: Backend or model substitution only, recorded as fallback_used. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    independence_note: Must not be the session of the code reviewer TASK-20261105-165da2.
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 28800
+    memory_gb: 16
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: XP-1, text: "archived_by TASK-20261105-7083a8 is bound."}
+    - {id: XP-2, text: "TASK-20261105-c0d167 is completed and verified, its commit is pushed, lane BATCH-8517aa is open, and lane BATCH-c53152 is closed."}
+    - {id: XP-3, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json TASK-20261105-ac5ad6 --as <addr> --ttl-minutes 600 --publish. Release with --outcome completed and --artifact <path>=<sha256> once per written artifact; confirm ten non-empty digests (plus any KX-9 extra path)."}
+  completion_gate:
+    - All ten artifact paths exist. Nothing outside write_scope is written, and any extra modified path is a reported KX-9 finding.
+    - The full KAT suite passes, including the KX-2 to KX-6 tests and the PR-2707 regression tests, and kat-report-ac5ad6.md records each new KAT, its cells, its result and the pass count.
+    - throughput-calibration.json holds measured timings and projections for every contract cell class and no count or statistic of any cell.
+    - trial-plan.preview-ac5ad6.json exists and its byte comparison with trial-plan.preview.json is reported.
+    - No contract cell computed; no KAT asserts a predicted value; zero experiment runs.
+  return_format: The artifact paths with sha256, the KAT pass count, the plan comparison outcome, any scope finding, and whether TP-1 would trigger (yes or no only). No KAT output, timing or residual values in the message.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. An instrument; it changes no claim. TASK-20261105-165da2 reviews it before approval.
+  runs_launched: 0
