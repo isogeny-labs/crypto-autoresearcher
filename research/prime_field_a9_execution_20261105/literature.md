@@ -112,3 +112,11 @@ A7 solver data and A8 checker-only controls, and preserves publication/freeze/
 actual-checkpoint/root-release prerequisites. It is not a verified-model/provider,
 staffed review, full-ledger pass or scientific-status receipt. The unavailable KB
 status and direct-source fallback remain explicit, without KB IDs or absence claims.
+
+The parent subsequently committed exact producer/dependency bytes as
+`2df9510e016c5795ae8d47f5826031f70e567616` and saved a final rerun of
+50 software controls passing in 1.25 seconds. The earlier 1.40-second pass was
+also observed; the current preparation-file hash in the assessment binds the
+newer run. Read-only committed-byte bindings were checked successfully.
+Publication verification, prospective freeze and execution release remain
+parent-owned conditions.

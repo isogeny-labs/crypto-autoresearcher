@@ -223,3 +223,11 @@ exact bytes, freeze against the actual published source SHA, obtain the real
 current S3 checkpoint/gate and publish the exact root release before native
 mathematics. Bound byte changes require additive reassessment. The KB backend
 remains unavailable; only the documented direct-source fallback was used.
+
+The parent subsequently committed exact producer/dependency bytes as
+`2df9510e016c5795ae8d47f5826031f70e567616` and saved a final rerun of
+50 software controls passing in 1.25 seconds. The earlier 1.40-second pass was
+also observed; the current preparation-file hash in the assessment binds the
+newer run. Read-only committed-byte bindings were checked successfully.
+Publication verification, prospective freeze and execution release remain
+parent-owned conditions.
