@@ -22,10 +22,9 @@ Claude Code; their full requirements and limits are stated there.
   never runs them. Follow AGENTS.md, "Skill routing", for other skills. Each
   skill writes a session receipt.
 - `.mcp.json` starts the read-only `kb/` server. See the runtime guide for
-  index setup and retrieval commands. The shared `research-kb` MCP server is the
-  canonical cross-repository retrieval layer; `kb/` remains this repository's
-  derived index. Query it before literature or lead claims and record the
-  source IDs (AGENTS.md, "Knowledge retrieval"; skill `research-kb`).
+  index setup and retrieval commands. Before literature or lead claims, query
+  the shared layer as AGENTS.md, "Knowledge retrieval", requires; the `kb/`
+  index here remains derived. Skill: `research-kb`.
 
 **Resume checkpoints** (owner, 2026-10-24): before any experiment run, fill
 `.resume/RESUME.md` (`scripts/checkpoint.sh init`) so a fresh session could
