@@ -5,7 +5,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from orbit_spectrum_stage import (compare_exact, enumerate_spectrum, placements,
+from orbit_spectrum_stage import (compare_donor, compare_exact, enumerate_spectrum, placements,
                                   polynomial_rank, shift_rank, write_once)
 
 
@@ -56,6 +56,15 @@ class OrbitSpectrumStageTests(unittest.TestCase):
             path.write_bytes(path.read_bytes() + b" ")
             with self.assertRaisesRegex(ValueError, "exact recomputation"):
                 compare_exact(path, (3,))
+
+    def test_all_n3_n5_n7_sets_match_prior_derivation(self):
+        spectrum = enumerate_spectrum()
+        self.assertEqual(sum(row["placement_count"] for row in spectrum["cases"]),
+                         43872)
+        self.assertEqual(compare_donor(spectrum)["cases_matched"], 9)
+        spectrum["cases"][0]["m_r"][0]["m"] += 1
+        with self.assertRaisesRegex(ValueError, "pinned derivation aid"):
+            compare_donor(spectrum)
 
 
 if __name__ == "__main__":

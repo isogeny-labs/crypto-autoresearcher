@@ -187,7 +187,10 @@ def _remaining(launch):
 
 def _limit_memory(memory_mb):
     limit = memory_mb * 1024 * 1024
-    resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
+    current_soft, current_hard = resource.getrlimit(resource.RLIMIT_AS)
+    if current_soft != resource.RLIM_INFINITY:
+        limit = min(limit, current_soft)
+    resource.setrlimit(resource.RLIMIT_AS, (limit, current_hard))
 
 
 def _run(command, stdout_path, stderr_path, launch, memory_mb):
