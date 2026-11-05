@@ -12,6 +12,18 @@ Keep resolved and superseded records in the index.
 
 | Problem | Status | What it blocks | What would unblock it |
 | --- | --- | --- | --- |
+| [Observer interstage closed-arm idle gap](classical-ecdlp-observer-interstage-idle-gap.md) | open | Same frozen full48 cohort execution after completed generator and before next native arm | Minimal bounded receive repair, independent old/new gap witness, then prospective same-EXP recovery amendment |
+| [One-physical-arm protocol schema obstruction](classical-ecdlp-one-physical-arm-schema-obstruction.md) | open; historical v2 preserved | Honest single-physical-arm export under mandatory two-arm protocol schema | Two actual local candidate/BSGS processes, complete positive/negative controls, new source review and prospective admission |
+| [Retained reference witnesses and complete cost qualification](classical-ecdlp-retained-reference-cost-qualification.md) | open | Historical BSGS internal witness/call-time code custody and fully paid matched native/full-process costs for EXP080f41 | Genuine retained witnesses or prospectively instrumented fresh evidence, defined complete primitive dimensions/memory and matched setup/success policies; preserve old native status |
+| [Controlled follow-up report destination collision](classical-ecdlp-controlled-followup-report-destination-collision-20261030.md) | open | Unclaimed successor composition/archive points at immutable old failed-attempt reports | Publish prospective observations-080f41 destination and separate source-reader assignment, then verify old report/reader preservation |
+| [Controlled follow-up full-protocol export coverage](classical-ecdlp-controlled-followup-source-integrity-repair.md#additional-full-protocol-export-coverage-blocker-discovered-after-source03-dispatch) | open | Active03 STATICLOCK: two-arm schema versus single composite exporter | Actual paired evaluator C3/M3 export, full frozen fixture protocol and fresh independent recheck |
+| [Controlled follow-up source integrity](classical-ecdlp-controlled-followup-source-integrity-repair.md) | open | Technical readiness/source admission: D1-D6 supervisor/provenance/schedule/parser/export/report gaps | Additive unchanged-math source repair, real C2/manifests snapshot and fresh independent recheck |
+| [Transfer analysis-script binding](classical-ecdlp-transfer-analysis-script-binding.md) | resolved for observed defects | Versioned v4 separates registered analysis and verifier; actual102828-row verification/export passed | Original v2/v3 refusals and postprocessing provenance retained |
+| [Transfer Modal proxy dependency](classical-ecdlp-transfer-modal-proxy-dependency.md) | resolved for observed route | Fresh successor completed genuine VM and independent checks | Original0create/0science failure and export gap retained |
+| [Exact-small transfer sampling collision](classical-ecdlp-transfer-small-order-exclusion-collision.md) | original v1 infeasible; v2 repair achieved | Complete40-curve distinct(p,j) cohort uses pre-data r29 replacement | Original frozen v1/collision proof assumptions preserved |
+| [Source-bound endpoint-reuse execution is available](classical-ecdlp-endpoint-reuse-isolated-runner-unavailable.md) | resolved for execution/custody | Three source-bound Modal studies completed; timing and independent counter-replay qualification remain separate | Reuse the observed B2/staged-source route with normal new-study admission; retain the separate qualification obligations |
+| [Generator-ordered half-root lacks a uniform constructor](classical-ecdlp-generator-ordered-root-constructor-missing.md) | open | A direct non-generic scalar-half solver from the ordered-root / sparse-antiderivative proposal | Explicit uniform circuit, all-target ordering proof and charged setup/evaluation/recovery recurrence |
+
 | [Growing fixed-degree Semaev lower bounds](growing-boolean-semaev-lower-bound.md) | open | Parameter-uniform lower bounds in binary Boolean / prime digit encodings | Construct a closed separating kernel family or a degree-controlled reduction; finite ladders do not establish growth |
 | [Rho distinguished-point destination cutover is unverified](rho-dp-destination-cutover-unverified.md) | investigating | A current rho operations panel and a source-to-destination migration claim | Scoped source read access, writer freeze, source/destination integrity comparison, and fresh post-cutover readback |
 | [n50 polynomial03 D5 checkpoint volume at small chunks](semaev-n50-d5-checkpoint-volume.md) | investigating | The 4,096-row V1 worker can publish 3,100 seed-phase snapshots before a D5 result | Qualify the V2 checkpoint-free runner and obtain an independently accepted D5 result under fresh resource and cost admission |
@@ -179,7 +191,15 @@ Coordinator decision and evidence.
 
 - [Legacy adapter output preservation and timing validation](legacy-adapter-output-preservation.md) — prospective successors validated; original approved bindings remain unchanged.
 
+| [Controlled-followup Modal filesystem failure](classical-ecdlp-controlled-followup-modal-filesystem-20261029.md) | Open transport/reconciliation obstruction; 1 VM, 0 candidate executions; C4 API repair and additive native envelope. |
+
+| [Native YAML / JSON compatibility](classical-ecdlp-native-yaml-json-compatibility-20261029.md) | Open representation-only bridge before host labels; original native invalid_output and sealed data preserved. |
+
 | [BINSTD f7ca97 original execution captures are missing](binstd-f7ca97-original-execution-captures-missing.md) | investigating | Complete native envelope and clean full-ledger claim for a real invalid-output run | Recover run-bound original command/environment captures, add a source-bound envelope preserving failure, and pass unchanged native/full checks |
 | [PEXT degree-two census needs coefficient-aware launcher](pext-degree2-squareclass-census-launcher.md) | open | EXP-PEXT-bf8f96: actual curve/twist/T identity, connectedness and descent-aware full census remain unimplemented | Complete projective quotient and square-class checks, full cohorts, lawful lane/runtime and exact-byte preapproval |
 
 - [ECDLP lead atlas source and validation gap](ecdlp-lead-atlas-unmerged-evidence.md) — crypto study files now match merged main, while source CI, full replay, the open ecc-challenges PR and four-repository validation remain pending.
+
+| [Exact-density frozen protocol/export conformance](classical-ecdlp-exact-density-export-conformance.md) | open | Actual one-bundle/analytical-reference row semantics, execution-commit pin and analysis metadata fail unchanged export check (7 findings); no scientific rerun. |
+
+| [Full-cohort classical ECDLP production route](classical-ecdlp-full-cohort-production-route.md) | open | Archived v3 is fixed-fixture only; full schedule/native authority/resource custody and independent source readiness precede fresh3x48 cohorts. |
