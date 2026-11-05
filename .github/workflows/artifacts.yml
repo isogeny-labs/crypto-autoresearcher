@@ -17,6 +17,38 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  size:
+    if: >-
+      !github.event.pull_request.draft &&
+      (github.event_name == 'pull_request')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/artifacts/
+            /.artifacts/
+      - name: No added or modified file that belongs in the store
+        env:
+          LARGE_FILE_OK: ${{ contains(github.event.pull_request.labels.*.name, 'large-file-ok') }}
+        run: |
+          # Full object IDs let cat-file fetch missing blobs in this partial clone.
+          # Abbreviated IDs cannot be resolved until those blobs are present.
+          git config --local core.abbrev 40
+          git remote set-url origin "${{ github.server_url }}/${{ github.repository }}.git"
+          if python3 tools/artifacts/artifacts.py check HEAD^1 HEAD; then exit 0; fi
+          if [ "$LARGE_FILE_OK" = true ]; then
+            echo "::warning::data files committed under the large-file-ok label"
+            exit 0
+          fi
+          exit 1
+
   artifacts:
     if: >-
       !github.event.pull_request.draft &&

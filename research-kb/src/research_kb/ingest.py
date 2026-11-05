@@ -93,7 +93,18 @@ def pdf_text(data):
     return text, page_map
 
 
-def ingest_bytes(library, *, repo, path, data, commit=None, environment=None, scan_id=None):
+def ingest_bytes(
+    library,
+    *,
+    repo,
+    path,
+    data,
+    commit=None,
+    environment=None,
+    scan_id=None,
+    existing=None,
+    touches=None,
+):
     if len(data) > library.settings.max_file_bytes:
         raise ValueError("source exceeds configured maximum file size")
     suffix = Path(path).suffix.lower()
@@ -140,19 +151,29 @@ def ingest_bytes(library, *, repo, path, data, commit=None, environment=None, sc
     if suffix == ".lean":
         meta["lean_environment"] = env
     version_id = "version:" + digest(document_id + sha + json.dumps(meta, sort_keys=True, default=str))
-    with library.catalog.connect() as db:
-        existing = db.execute(
-            "SELECT metadata,original_key FROM versions WHERE id=?", (version_id,)
-        ).fetchone()
-    if existing:
+    if existing is not None:
+        found = existing.get(version_id)
+    else:
+        with library.catalog.connect() as db:
+            row = db.execute(
+                "SELECT metadata,original_key FROM versions WHERE id=?", (version_id,)
+            ).fetchone()
+        found = (row["metadata"], row["original_key"]) if row else None
+    if found:
+        if touches is not None:
+            # The caller flushes these in one transaction at the end of a scan;
+            # opening a write connection per unchanged file is what made a
+            # no-op refresh take minutes on a 20k-document corpus.
+            touches.append((repo, path, document_id, version_id, commit, scan_id))
+            return document_id
         library.catalog.upsert(
             document_id=document_id,
             version_id=version_id,
             title=title,
             kind=kind,
             content_hash=sha,
-            metadata=json.loads(existing["metadata"]),
-            original_key=existing["original_key"],
+            metadata=json.loads(found[0]),
+            original_key=found[1],
             repo=repo,
             path=path,
             git_commit=commit,
@@ -165,7 +186,7 @@ def ingest_bytes(library, *, repo, path, data, commit=None, environment=None, sc
     if suffix == ".pdf":
         markdown, page_map = pdf_text(data)
         meta["page_numbering"] = "PDF pages starting at 1; printed page labels not inferred"
-    elif suffix in {".lean", ".tex"}:
+    elif suffix in {".lean", ".tex", ".py"}:
         markdown = data.decode("utf-8", errors="replace")
     else:
         markdown = parse(data, path).markdown
@@ -196,6 +217,8 @@ def ingest_bytes(library, *, repo, path, data, commit=None, environment=None, sc
         declarations=declarations,
         scan_id=scan_id,
     )
+    if existing is not None:
+        existing[version_id] = (json.dumps(meta, default=str), key)
     return document_id
 
 
@@ -203,12 +226,14 @@ def refresh(library):
     report = {"indexed": 0, "failed": 0, "missing_roots": [], "errors": []}
     library.catalog.initialize()
     with writer_lock(library.settings.home):
+        existing = library.catalog.existing_versions()
         for source in library.settings.sources():
             if not source.root.is_dir():
                 report["missing_roots"].append({"repo": source.name, "root": str(source.root)})
                 continue
             scan_id = uuid.uuid4().hex
             commit = git_commit(source.root)
+            touches = []
             for path, relative in source_files(source):
                 try:
                     if path.stat().st_size > library.settings.max_file_bytes:
@@ -222,14 +247,81 @@ def refresh(library):
                         commit=commit,
                         environment=env,
                         scan_id=scan_id,
+                        existing=existing,
+                        touches=touches,
                     )
                     report["indexed"] += 1
+                    if len(touches) >= 500:
+                        library.catalog.touch_many(touches, scan_id)
+                        touches.clear()
                 except Exception as exc:
                     library.catalog.record(source.name, relative, "failed", str(exc), scan_id)
                     report["failed"] += 1
                     report["errors"].append({"repo": source.name, "path": relative, "error": str(exc)})
+            library.catalog.touch_many(touches, scan_id)
             library.catalog.finish_scan(source.name, scan_id)
     return report
+
+
+def update_sources(library):
+    """Fast-forward every registered git checkout. Never merges or overwrites local work."""
+    results = []
+    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+    for source in library.settings.sources():
+        if not (source.root / ".git").exists():
+            results.append({"repo": source.name, "root": str(source.root), "skipped": "not a git checkout"})
+            continue
+        try:
+            upstream = subprocess.run(
+                ["git", "-C", str(source.root), "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"],
+                capture_output=True,
+                text=True,
+                timeout=15,
+                env=env,
+            )
+        except subprocess.TimeoutExpired:
+            results.append(
+                {
+                    "repo": source.name,
+                    "root": str(source.root),
+                    "ok": False,
+                    "detail": "upstream check timed out",
+                }
+            )
+            continue
+        if upstream.returncode != 0:
+            results.append(
+                {
+                    "repo": source.name,
+                    "root": str(source.root),
+                    "ok": False,
+                    "skipped": "branch has no upstream",
+                    "detail": upstream.stderr.strip()[-300:],
+                }
+            )
+            continue
+        try:
+            completed = subprocess.run(
+                ["git", "-C", str(source.root), "pull", "--ff-only", "--quiet"],
+                capture_output=True,
+                text=True,
+                timeout=90,
+                env=env,
+            )
+        except subprocess.TimeoutExpired:
+            results.append(
+                {"repo": source.name, "root": str(source.root), "ok": False, "detail": "pull timed out"}
+            )
+            continue
+        results.append(
+            {
+                "repo": source.name,
+                "root": str(source.root),
+                "ok": completed.returncode == 0,
+                "detail": (completed.stderr or completed.stdout).strip()[-400:],
+            }
+        )
+    return results
 
 
 def bundle(settings, destination: Path):

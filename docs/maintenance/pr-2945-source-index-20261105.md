@@ -1,0 +1,5 @@
+# PR #2945 source-index integration
+
+Merged main `ae6856b13b4b3155c8ac1c266d97a0b35da5707f` into `74a0d7f52eb2384f85008eed1e048dbe93539218`. The only conflicts were the generated `knowledge/SOURCES.md` and `knowledge/sources.json` summaries. Regenerated both with the repository's unchanged `tools/build_source_index.py` using all tracked canonical literature and intake sources. The JSON exactly equals Git's automatic merge with both parents' independent citation-status counts retained; no canonical source or citation status was chosen or rewritten. [pcc:unverified]
+
+The source-index freshness check, all five catalog unit/synthetic-PDF tests and the local four-record benchmark gate pass. Sparse-checkout record fixtures were restored exactly from main. The main PCC ledger is byte-identical. Frozen inputs, historical receipts, formal source and the target's pending semantic-review status are preserved. No PDF traversal, new theorem review, scientific execution or claim promotion was performed here. Fresh current-head CI and review remain required. [pcc:unverified]

@@ -1,0 +1,31 @@
+{
+  "schema": "static-census-schema-readback/v1",
+  "recorded_at": "2026-11-03T18:28:05.369532+00:00",
+  "method": "Source text inspection only; no imports, solver, census or tests",
+  "input_sha256": {
+    "research/prime_sat_followup_20261029/encoding.py": "2b18f50238db633eb91ac33a36660c52620e81c5f6fa1c9c78d40c261e99041f",
+    "research/prime_sat_five_tests_20261029/core.py": "c67fc44404b282ac963f1021a4b6197ebbb4a8bf382c70a2576db45172065a4f"
+  },
+  "closed_metric_names": [
+    "coefficient_additions",
+    "coefficient_multiplications",
+    "evaluation_term_visits",
+    "restriction_term_visits",
+    "membership_transform_subtractions",
+    "legendre_pow_calls",
+    "membership_curve_tests",
+    "domain_clauses",
+    "boolean_assignments_visited"
+  ],
+  "source_locators": {
+    "core.py:14-48": "Base arithmetic counter initialization and all arithmetic updates",
+    "encoding.py:18-29": "Three CountedRing visit/transform metrics",
+    "encoding.py:71-77": "Legendre, membership and domain metrics",
+    "encoding.py:211-223": "Census delta and assignment visits",
+    "encoding.py:31-32": "Delta preserves union of existing keys, including explicit zero history",
+    "encoding.py:327-351": "Original complete model, projection, budget, search certificate, reconstruction and lifted-set checks"
+  },
+  "allowed_future_change": "Versioned verifier may normalize only census costs at encoding.py:336 using the closed known-key schema. Retain original exact construction counter comparison and all other semantic checks. Raw payload and computed census remain archived. Reject unknown zero keys and invalid numeric types.",
+  "status": "Static implementation guidance, not software validation or admission",
+  "scientific_execution": 0
+}

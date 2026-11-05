@@ -1,0 +1,43 @@
+id: KR-IC-404dfe
+area: index-calculus
+kind: known_negative
+title: >-
+  Black-box D.1 index calculus does not cross rho below 2^256-bit groups under the stated cost
+  model (for D.1 constant c >= 1; threshold log2 b > 256 c^2), and the Bochum arity balance is
+  optimal inside it
+claim: >-
+  Model (assumed, not proved in Lean): relation phase costs 2^{b/m} attempts, each a black-box
+  Boolean tensor contraction of an mb-edge network at 2^{c*m*b/g}, g = sqrt(log2 b), c the
+  unspecified constant in Theorem D.1's O(s/sqrt(log s)); linear algebra, m! and polylog factors
+  dropped (all in the direction favourable to index calculus). Inside that model the Lean theorems
+  blackbox_balance (for every real m>0, E(m)^2 >= 4*c*b^2/g, so the Bochum m ~ (log b)^{1/4} is
+  optimal up to the constant), no_crossover (c >= 0: E(m)/b < 1/2 with m >= 3 forces g > 16c),
+  arity_two_blackbox (m = 2 is never below rho for any c >= 0) and crossover_bits (integer g > 16
+  and g*g <= log2 b gives log2 b > 256) are checked in Lean (crypto research/ic_prime_eth_leads_20261031/lean/IcTensorRoute.lean, rebuilt 2026-11-02 with standard axioms and no sorry, log docs/reports/ic-prime-eth-leads-20261102/rebuild_IcTensorRoute_20261102.txt; no KN-FIND or decision record backs this receipt yet). The step from g > 16c to
+  log2 b > 256 c^2, and the figure 2^256 for c >= 1, are hand algebra under an outside assumption
+  (D.1 states O(.), so c is unspecified); crossover_bits is not linked to no_crossover in Lean and
+  256 is not claimed tight. This is a conditional statement about the black-box model, not a proof
+  that the Bochum route fails, and it says nothing about a better contractor exponent than
+  s/sqrt(log s) or about relation networks with o(mb) edges. The relation-phase threshold is
+  separate from the paper's own limitation that D.1 is inert below about 2^{2^17} (Bochum) or
+  2^{2^85} (internal audit) edges.
+status: heuristic
+setting: {field: prime, model: black_box_boolean_tensor_contraction}
+cost: "E(m) = b/m + c*m*b/sqrt(log2 b) bits; minimum 2*b*sqrt(c/g) at m = sqrt(g/c); below b/2 only if log2 b > 256 c^2"
+sources:
+  - ref: KN-LIT-caa51d
+    locator: "Appendix D, Thm D.1 (2^{O(s/sqrt(log s))}, black-box vertices); statement as recalled in the lab's review, not re-read here"
+    verification_state: secondary_source
+  - ref: KN-LIT-eb8749
+    locator: "abstract; Thm 4 (O(m^2 b r^{1/m}) solver calls on O(mb)-edge graphs; time 2^{O(b/m + mb/sqrt(log b))})"
+    verification_state: full_text_read
+forecloses:
+  - Bochum hashed factor base beats rho
+  - subexponential ECDLP via tensor contraction at practical sizes
+  - choose a larger factor-base arity m to cross rho with the D.1 contractor
+  - D.1 black-box index calculus crossover
+internal: []
+open: []
+dominated_by: null
+added: '2026-11-02'
+superseded_by: null

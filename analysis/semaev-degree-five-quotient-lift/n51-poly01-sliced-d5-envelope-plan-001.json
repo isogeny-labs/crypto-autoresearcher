@@ -1,0 +1,41 @@
+{
+  "certificate": "/home/ec2-user/fall-degree-data-20261029/n51-poly01-sliced-rebased-local-001/degree4.bin",
+  "certificate_bytes": 1553961056,
+  "certificate_sha256": "be38aff828d9d3c73e70ea78914727fdca1305edbf5f99e99b28aa747cc396d8",
+  "checker_gate": "Run only after independent sliced D4 checker accepts rebased map with matching certificate SHA-256.",
+  "chunk_rows": [
+    4096
+  ],
+  "decision_rule": "Compare source-derived envelope and later binary admission to a fresh bounded D5 plan; neither alone is a measured RSS or an LFD result.",
+  "id": "n51-poly01-sliced-d5-envelope-001",
+  "launch_argv": [
+    "/usr/bin/prlimit",
+    "--as=4294967296",
+    "--",
+    "/usr/bin/timeout",
+    "600",
+    "/usr/bin/python3",
+    "/home/ec2-user/lfd-trace-slice-cert-20261102/analysis/semaev-degree-five-quotient-lift/profile_bounded_native_envelope.py",
+    "--plan",
+    "/home/ec2-user/lfd-trace-slice-cert-20261102/analysis/semaev-degree-five-quotient-lift/n51-poly01-sliced-d5-envelope-plan-001.json",
+    "--out",
+    "/home/ec2-user/lfd-trace-slice-cert-20261102/analysis/semaev-degree-five-quotient-lift/validation/n51-poly01-sliced-d5-envelope-001.json"
+  ],
+  "limits": {
+    "additional_reserved_usd": 0.5,
+    "attempts": 1,
+    "automatic_retries": 0,
+    "cpu_cores": 1,
+    "deadline_utc": "2026-11-05T23:30:00Z",
+    "memory_bytes": 4294967296,
+    "seconds": 600
+  },
+  "output": "analysis/semaev-degree-five-quotient-lift/validation/n51-poly01-sliced-d5-envelope-001.json",
+  "schema": "semaev.bounded-native-envelope-plan/v1",
+  "scope": "Read-only source-derived D5 allocation profile of independently checked n51 rebased D4 seed; no D5 producer and no LFD claim.",
+  "source_hashes": {
+    "capacity_profile.py": "082a71656c26da91959b77e11b01eb5b9bd2f3dcb5932b6f35cad78f751fc1b9",
+    "profile_bounded_native_envelope.py": "87f551a27446724bb029c066ab96e6d0281ae10a8a872ef01a79b689f3408589"
+  },
+  "status": "frozen"
+}

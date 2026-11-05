@@ -1,0 +1,6 @@
+1. Bit sizes: 40, 56, 64 as prescribed, plus 96 and 128 added (cheap) to separate finite-size slack from asymptotics.
+2. "Determinant step" implemented constructively as the lattice of integer polynomials on a monomial set M that vanish on C_R mod p^t (Heath-Brown's determinant argument made explicit; t=1 is the plain p-adic determinant method, t>=2 adds the higher-order p-adic multiplicity variant). A separate non-lattice determinant solver is not possible: the determinant argument is existential and needs s points of the curve in the box, which the oracle does not have.
+3. Success = planted pair recovered from two or more LLL vectors certified by l1 (scaled) norm < p^t, then resultant over Z and group verification. Threshold = largest tested delta with recovery >= 50% (grid step 0.01). 10-12 trials per cell; no bootstrap CI (the criterion is a threshold, not an exponent).
+4. The task of "finding all box points" was tested via planted single decompositions; the expected number of non-planted box points is about B^2/p << 1.
+5. WebFetch of arXiv 1111.1543 returned only the abstract; the small-box bound was not read in detail. The derivation here is self-contained (Hadamard/Howgrave-Graham), so no result depends on it.
+6. Optimal-shape search covers down-closed monomial sets only (staircase DP), up to 160x160.

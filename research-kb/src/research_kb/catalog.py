@@ -99,6 +99,7 @@ class Catalog:
             }
             dispositions = dict(db.execute("SELECT status,COUNT(*) FROM ingestion GROUP BY status"))
             revision = db.execute("SELECT value FROM state WHERE key='revision'").fetchone()
+            refreshed = db.execute("SELECT value FROM state WHERE key='last_refresh'").fetchone()
             active = db.execute(
                 "SELECT COUNT(DISTINCT document_id) FROM locations WHERE present=1"
             ).fetchone()[0]
@@ -108,6 +109,7 @@ class Catalog:
             "active_documents": active,
             "dispositions": dispositions,
             "revision": revision[0] if revision else None,
+            "last_refresh": refreshed[0] if refreshed else None,
             "ready": active > 0,
         }
 
@@ -298,6 +300,78 @@ class Catalog:
                 break
         return kept
 
+    def recent(self, limit=10, repo=None):
+        """Newest versions by ingestion time, one row per document."""
+        limit = max(1, min(limit, 50))
+        location = "JOIN locations l ON l.document_id=d.id AND l.version_id=v.id AND l.present=1" + (
+            " AND l.repo=?" if repo else ""
+        )
+        with self.connect() as db:
+            rows = db.execute(
+                "SELECT d.id document_id,d.title,d.kind,v.created_at,"
+                "l.repo,l.path,l.git_commit FROM documents d "
+                "JOIN versions v ON v.id=d.active_version "
+                + location
+                + " WHERE v.id=d.active_version GROUP BY d.id ORDER BY v.created_at DESC, d.id LIMIT ?",
+                [*([repo] if repo else []), limit],
+            ).fetchall()
+        return [
+            {
+                "source_id": row["document_id"],
+                "title": row["title"],
+                "kind": row["kind"],
+                "added_at": row["created_at"],
+                "repo": row["repo"],
+                "path": row["path"],
+                "git_commit": row["git_commit"],
+            }
+            for row in rows
+        ]
+
+    def existing_versions(self):
+        """Version ids already stored, with their metadata and original key."""
+        with self.connect() as db:
+            return {
+                row["id"]: (row["metadata"], row["original_key"])
+                for row in db.execute("SELECT id,metadata,original_key FROM versions")
+            }
+
+    def touch_many(self, rows, scan_id):
+        """Mark unchanged (repo, path) entries present without re-opening per file."""
+        if not rows:
+            return
+        with self.connect(True) as db:
+            db.executemany(
+                "INSERT INTO locations VALUES(?,?,?,?,?,1,?) ON CONFLICT(repo,path) DO UPDATE SET "
+                "document_id=excluded.document_id,version_id=excluded.version_id,"
+                "git_commit=excluded.git_commit,present=1,scan_id=excluded.scan_id",
+                rows,
+            )
+            db.executemany(
+                "INSERT INTO ingestion(repo,path,status,scan_id) VALUES(?,?,'indexed',?) "
+                "ON CONFLICT(repo,path) DO UPDATE SET status='indexed',reason=NULL,"
+                "scan_id=excluded.scan_id,updated_at=strftime('%Y-%m-%dT%H:%M:%SZ','now')",
+                [(repo, path, scan_id) for repo, path, *_rest in rows],
+            )
+            db.executemany(
+                "INSERT OR IGNORE INTO provenance VALUES(?,?,?,?)",
+                [(version_id, repo, path, commit) for repo, path, _doc, version_id, commit, _scan in rows],
+            )
+
+    def get_state(self, key):
+        if not self.path.exists():
+            return None
+        with self.connect() as db:
+            row = db.execute("SELECT value FROM state WHERE key=?", (key,)).fetchone()
+        return row[0] if row else None
+
+    def set_state(self, key, value):
+        with self.connect(True) as db:
+            db.execute(
+                "INSERT INTO state VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                (key, value),
+            )
+
     def source(self, source_id):
         with self.connect() as db:
             rows = db.execute(
@@ -361,6 +435,8 @@ class Catalog:
         return [self.enrich(r) for r in rows]
 
     def finish_scan(self, repo, scan_id):
+        from datetime import datetime, timezone
+
         with self.connect(True) as db:
             # Excluded or failed entries keep their last successful source but are not presented as current.
             db.execute(
@@ -373,6 +449,10 @@ class Catalog:
             db.execute(
                 "INSERT INTO state VALUES('revision',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
                 (scan_id,),
+            )
+            db.execute(
+                "INSERT INTO state VALUES('last_refresh',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value",
+                (datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),),
             )
 
     def backup(self, destination: Path):

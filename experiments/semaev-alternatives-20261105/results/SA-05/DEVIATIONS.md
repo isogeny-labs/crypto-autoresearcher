@@ -1,0 +1,10 @@
+# SA-05 deviations
+
+1. **Interrupted and resumed.** An API usage limit interrupted the original executor after all computations (closure, yield, supplement, criterion, verification) had finished. A different model (Claude Opus 5.5) resumed the run. It reused all existing outputs unchanged, re-ran nothing, and wrote this file. REPORT.md: see item 8. The outputs are complete: criterion_results.json covers k = 40, 48 and 56, and verify_results.json has 1,722 relations verified with 0 failures.
+2. **Height range.** h was capped at 100 (B <= 6,200) because pair enumeration costs O(B^2) on a shared 4-core host. The prereg asked for h = p^0.05..0.25; the run reached about p^0.12 at 2^56 and p^0.17 at 2^40.
+3. **Factoring.** We used PARI `core` (full factorization with PARI's internal ECM/MPQS) instead of trial division to 2^20 plus ECM. All 100,000 targets were rational-reconstructed at each p. Only 100,000, 30,000 and 10,000 were factored at 2^40, 2^48 and 2^56, because of time.
+4. **Yield measured by exhaustive enumeration.** Every 3-in-base relation in the base was counted, rather than estimating the yield only from the random-target sample. The random-target sample found 0 relations, and at the generic rate (about 1e-13 per target) it cannot estimate any ratio. The report gives both readings.
+5. **Primes.** We used 4 primes p ≡ 3 mod 4 just above 2^k for each k (simple square roots). The k = 40, h = 100 cell has 3 primes, because one prime exceeded the B cap.
+6. **Supplementary scale.** We added k = 22..30 (2 primes each) to measure the generic regime and to have more than 3 p values. This was not in the prereg.
+7. **Filter threshold.** For "admits (s, x_D) with heights <= h" we used a squarefree core of v(u^3 + 7v^3) <= 8h^4, a heuristic bound on the twist class of the base points.
+8. **REPORT.md not written by the executor.** The Write tool refused REPORT.md for this subagent. The full report text went to the main session in the final message, for the main session to save as REPORT.md.
