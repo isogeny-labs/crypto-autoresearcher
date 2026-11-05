@@ -38,6 +38,12 @@ Set `stride = ((103867+63)//64+2)*8` and
 2893164*40 + 52*45615*8 + 52*4096*8 +
 (45615+4096)*stride + 4096*seedstride`; the envelope is
 `payload*135//100 + 64*2**20`.
+As an arithmetic control, substituting the completed n51 polynomial-01
+slice's values (`N=51`, 2,621,112 next-degree columns, 272,052 seed
+columns, 103,877 working coordinates, 45,615 quotient coordinates)
+reproduces its native admission printout exactly:
+56,287,272,208 bytes. This checks the formula against one real producer
+admission, not the poly00 memory peak or future feasibility.
 
 The current n51 polynomial-01 direct-W4 rank trial owns the frontier
 high-memory slot. This note does not authorize a concurrent poly00 D5
