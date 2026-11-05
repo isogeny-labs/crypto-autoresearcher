@@ -1,7 +1,8 @@
 """Prospective write-once geometric analysis component for the analyze trial.
 
 The full analysis/export/checker remains separate. This component retains
-complete checked P1-P4 rows and refuses partial or unadmitted census stages.
+complete checked P1-P4 rows plus explicitly incomplete C5 previews and
+refuses partial or unadmitted census stages.
 """
 
 import hashlib
@@ -12,6 +13,9 @@ from pathlib import Path
 import sys
 
 from candidate_stage import COMPONENT_SOURCES as CANDIDATE_SOURCES, STAGE_ORDER
+from c5_preview_stage import (METADATA as C5_METADATA, ROSTERS as C5_ROSTERS,
+                              SUMMARY as C5_SUMMARY, artifact_bytes as c5_bytes,
+                              compare_preview, plans_from_campaign, write_preview)
 from geometric_campaign import reduce_campaign
 from input_manifest import ROOT
 
@@ -22,6 +26,10 @@ COMPONENT_SOURCES = CANDIDATE_SOURCES | {
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py",
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py",
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_analysis_stage.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c5_preview_stage.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c5_metadata_preview.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c5_selection.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/curve_special_j.py",
 }
 
 
@@ -51,7 +59,8 @@ def _preflight(trial_plan, run_dir):
         raise ValueError("analyze component trial plan differs from six-stage contract")
     trial = plan["trials"][-1]
     if (trial.get("stage") != "analyze"
-            or not {ROWS, SUMMARY} <= set(trial.get("artifacts", []))
+            or not {ROWS, SUMMARY, C5_METADATA, C5_ROSTERS, C5_SUMMARY}
+                   <= set(trial.get("artifacts", []))
             or not {"n3core", "n3ext", "n5"} <= set(trial.get("depends_on", []))
             or trial.get("watchdog_seconds") != 3600
             or not COMPONENT_SOURCES <= set(plan["source_sha256"])
@@ -93,7 +102,11 @@ def write_component(run_dir, curves, campaign, plan_sha256, source_runs):
 def run_component(trial_plan, run_dir):
     _, stage_dirs, source_runs, plan_sha256 = _preflight(trial_plan, run_dir)
     curves, campaign = reduce_campaign(trial_plan, stage_dirs)
-    return write_component(run_dir, curves, campaign, plan_sha256, source_runs)
+    plans = plans_from_campaign(campaign)
+    c5_bytes(curves, plans, plan_sha256, source_runs)
+    geometry = write_component(run_dir, curves, campaign, plan_sha256, source_runs)
+    c5_preview = write_preview(run_dir, curves, plans, plan_sha256, source_runs)
+    return {"geometry": geometry, "c5_preview": c5_preview}
 
 
 def compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs):
@@ -113,7 +126,10 @@ def check_component(trial_plan, run_dir):
     """Recompute the checked campaign and compare every retained output byte."""
     _, stage_dirs, source_runs, plan_sha256 = _preflight(trial_plan, run_dir)
     curves, campaign = reduce_campaign(trial_plan, stage_dirs)
-    return compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs)
+    plans = plans_from_campaign(campaign)
+    geometry = compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs)
+    c5_preview = compare_preview(run_dir, curves, plans, plan_sha256, source_runs)
+    return {"geometry": geometry, "c5_preview": c5_preview}
 
 
 if __name__ == "__main__":

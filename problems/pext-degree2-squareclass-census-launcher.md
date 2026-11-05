@@ -788,3 +788,15 @@ preview mode is requested, and preview output is labeled incomplete. The
 records seven focused tests and the evidence boundary. Next certify descent
 and control-valid counterexamples, then seal complete metadata and the blind
 independent roster. The contract remains `review_required` and unfrozen.
+
+## Write-once four-cohort C5 analyze preview, 2026-11-05
+
+The [C5 preview stage](../experiments/EXP-PEXT-bf8f96/implementation/c5_preview_stage.py)
+now writes preliminary metadata, incomplete roster and summary artifacts
+once, binding all four published plan hashes and source RUN IDs. The analyze
+component requires their names and source closure in the eventual frozen
+trial plan; its checker recomputes every byte. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-preview-stage-20261105/report.md)
+records five focused tests and the preview boundary. Next build certified
+descent/counterexample metadata and the final sealed blind C5 review; the
+contract remains `review_required` and unfrozen.
