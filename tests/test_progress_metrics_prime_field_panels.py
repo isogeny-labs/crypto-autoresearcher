@@ -164,3 +164,28 @@ def test_cancellation_metrics_keep_split_units_and_complete_pairs(tmp_path,monke
     target.write_text('{}');assert read(ref)==rows
     for mutate in (lambda d:d['cells'].pop(),lambda d:d['cells'][0].update(fr_sub=True),lambda d:d['cells'][0].update(identified_targets=2),lambda d:d.update(panel_complete=False)):
         bad=copy.deepcopy(data);mutate(bad);assert read(commit(bad))==[]
+
+def test_sparse_metrics_keep_four_modes_and_committed_scope(tmp_path,monkeypatch):
+    def git(*args):return subprocess.check_output(['git','-C',str(tmp_path),'-c','user.name=test','-c','user.email=test@example.invalid',*args],text=True).strip()
+    git('init','-q');monkeypatch.setattr(M,'REPO',tmp_path)
+    path='research/prime_field_a9_execution_20261105/runs/a9-sparse-functionals-6be915/analysis.json';target=tmp_path/path;target.parent.mkdir(parents=True)
+    cells=[];i=0
+    for p in (8191,65537):
+        for curve in (0,1):
+            for schedule in ('window','hash0','hash1','hash2'):
+                for budget in (0,8,16,24,32,48,64,96,128):
+                    for scope in ('relations','anchors'):
+                        for arm in ('dense_joint','dense_cancel','sparse_joint','sparse_cancel'):
+                            cells.append(dict(cell_id=f'p{p}-i{curve}',schedule=schedule,prefix=budget,scope=scope,arm=arm,instance_id=str(i),verified=True,status='verified',identified_targets=1,matrix_columns=3,matrix_rank=2,matrix_nullity=1,fr_add=2,fr_sub=3,fr_mul=4,fr_inv=1,certificate_lift_sub=1,verified_original_certificates=1))
+                        i+=1
+    data=dict(panel_complete=True,cells=cells,physical_processes=1,solver_calls_verified=1152)
+    def commit(value):target.write_text(json.dumps(value));git('add',path);git('commit','-qm','marked-solver-metadata');return git('rev-parse','HEAD')
+    def read(ref):
+        output=io.StringIO()
+        with contextlib.redirect_stdout(output):M.prime_field_sparse_functional_panel(ref,'2026-11-05')
+        return [json.loads(v) for v in output.getvalue().splitlines()]
+    ref=commit(data);rows=read(ref);assert len(rows)==6913
+    assert {v['unit'] for v in rows}>={'Fr additions','Fr subtractions','Fr multiplications','Fr inversions'}
+    target.write_text('{}');assert read(ref)==rows
+    for mutate in (lambda d:d['cells'].pop(),lambda d:d['cells'][0].update(fr_sub=True),lambda d:d['cells'][0].update(identified_targets=2),lambda d:d.update(panel_complete=False)):
+        bad=copy.deepcopy(data);mutate(bad);assert read(commit(bad))==[]
