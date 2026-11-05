@@ -17,6 +17,10 @@ from c2_control_stage import (ARTIFACTS as C2_ARTIFACTS,
                               SOURCES as C2_SOURCES,
                               check_control as check_c2,
                               run_control as run_c2)
+from c3_order_control import (ARTIFACT as C3_ARTIFACT,
+                              artifact_bytes as c3_bytes,
+                              compare_artifact as compare_c3,
+                              write_artifact as write_c3)
 from c5_preview_stage import (METADATA as C5_METADATA, ROSTERS as C5_ROSTERS,
                               SUMMARY as C5_SUMMARY, artifact_bytes as c5_bytes,
                               compare_preview, plans_from_campaign, write_preview)
@@ -33,6 +37,7 @@ SUMMARY = "geometric-analysis.json"
 COMPONENT_SOURCES = CANDIDATE_SOURCES | C2_SOURCES | {
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py",
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c3_order_control.py",
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_analysis_stage.py",
     "experiments/EXP-PEXT-bf8f96/implementation/c5_preview_stage.py",
     "experiments/EXP-PEXT-bf8f96/implementation/c5_metadata_preview.py",
@@ -79,7 +84,7 @@ def _preflight(trial_plan, run_dir):
     trial = plan["trials"][-1]
     if (trial.get("stage") != "analyze"
             or not ({ROWS, SUMMARY, C5_METADATA, C5_ROSTERS, C5_SUMMARY,
-                     T0_ARTIFACT} | set(C2_ARTIFACTS))
+                     T0_ARTIFACT, C3_ARTIFACT} | set(C2_ARTIFACTS))
                    <= set(trial.get("artifacts", []))
             or not {"n3core", "n3ext", "n5"} <= set(trial.get("depends_on", []))
             or trial.get("watchdog_seconds") != 3600
@@ -127,6 +132,10 @@ def write_component(run_dir, curves, campaign, plan_sha256, source_runs):
 def run_component(trial_plan, run_dir):
     plan, stage_dirs, source_runs, plan_sha256 = _preflight(trial_plan, run_dir)
     curves, campaign = reduce_campaign(trial_plan, stage_dirs)
+    reversed_curves, reversed_campaign = reduce_campaign(
+        trial_plan, stage_dirs, read_order="reverse")
+    c3_bytes(curves, campaign, reversed_curves, reversed_campaign,
+             plan_sha256, source_runs)
     plans = plans_from_campaign(campaign)
     c5_bytes(curves, plans, plan_sha256, source_runs)
     t0_bytes(curves, plan_sha256, source_runs)
@@ -135,8 +144,11 @@ def run_component(trial_plan, run_dir):
     geometry = write_component(run_dir, curves, campaign, plan_sha256, source_runs)
     c5_preview = write_preview(run_dir, curves, plans, plan_sha256, source_runs)
     t0 = write_t0(run_dir, curves, plan_sha256, source_runs)
+    c3 = write_c3(run_dir, curves, campaign, reversed_curves,
+                  reversed_campaign, plan_sha256, source_runs)
     return {"geometry": geometry, "c5_preview": c5_preview,
-            "historical_t0": t0, "c2_synthetic": c2}
+            "historical_t0": t0, "c2_synthetic": c2,
+            "c3_sealed_order": c3}
 
 
 def compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs):
@@ -158,12 +170,17 @@ def check_component(trial_plan, run_dir):
     c2 = check_c2(run_dir, plan["source_sha256"], plan_sha256,
                   plan["trials"][-1]["run_id"])
     curves, campaign = reduce_campaign(trial_plan, stage_dirs)
+    reversed_curves, reversed_campaign = reduce_campaign(
+        trial_plan, stage_dirs, read_order="reverse")
+    c3 = compare_c3(run_dir, curves, campaign, reversed_curves,
+                    reversed_campaign, plan_sha256, source_runs)
     plans = plans_from_campaign(campaign)
     geometry = compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs)
     c5_preview = compare_preview(run_dir, curves, plans, plan_sha256, source_runs)
     t0 = compare_t0(run_dir, curves, plan_sha256, source_runs)
     return {"geometry": geometry, "c5_preview": c5_preview,
-            "historical_t0": t0, "c2_synthetic": c2}
+            "historical_t0": t0, "c2_synthetic": c2,
+            "c3_sealed_order": c3}
 
 
 if __name__ == "__main__":

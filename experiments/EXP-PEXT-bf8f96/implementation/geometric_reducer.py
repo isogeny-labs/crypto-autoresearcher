@@ -53,7 +53,8 @@ def complement_intervals(ordinals, structures):
     return result
 
 
-def unit_summary(unit, *, n, target_count, t_index, expected_structures):
+def unit_summary(unit, *, n, target_count, t_index, expected_structures,
+                 reverse_exceptional=False):
     """Recompute counted geometric metrics from one exact unit JSON record."""
     if (type(n) is not int or n not in (3, 5)
             or not isinstance(unit, dict)
@@ -77,21 +78,23 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures):
         raise ValueError("exceptional/generic row coverage")
     ordinals, genera = [], []
     mr_counts = {}
-    for row in rows:
+    for row in (reversed(rows) if reverse_exceptional else rows):
         if (not isinstance(row, list) or len(row) != 5
                 or type(row[0]) is not int or not 0 <= row[0] < expected_structures
                 or not isinstance(row[1], list) or len(row[1]) != 4
                 or any(type(value) is not int or value < 0 for value in row[1])
                 or type(row[4]) is not int):
             raise ValueError("exceptional geometry row shape")
-        if ordinals and row[0] <= ordinals[-1]:
-            raise ValueError("exceptional ordinals not strictly increasing")
+        if ordinals and (row[0] >= ordinals[-1] if reverse_exceptional
+                         else row[0] <= ordinals[-1]):
+            raise ValueError("exceptional ordinals not strict in read order")
         if row[4] != genus_from_rank_and_support(row[2], row[3]):
             raise ValueError("exceptional Riemann-Hurwitz genus mismatch")
         mr_key = f"{row[2]},{row[3]}"
         mr_counts[mr_key] = mr_counts.get(mr_key, 0) + 1
         ordinals.append(row[0]); genera.append(row[4])
-    if unit.get("generic_intervals") != complement_intervals(ordinals, expected_structures):
+    canonical_ordinals = list(reversed(ordinals)) if reverse_exceptional else ordinals
+    if unit.get("generic_intervals") != complement_intervals(canonical_ordinals, expected_structures):
         raise ValueError("generic complement differs from exceptional rows")
     generic_genus = (n-1)*(1 << n)+1
     if generic:
@@ -231,10 +234,12 @@ def type2_witness_ordinals(unit, review, slot, rows):
     return counts, ordinals
 
 
-def reduce_cohort(cohort_dir, binder, binary_sha256):
+def reduce_cohort(cohort_dir, binder, binary_sha256, *, read_order="canonical"):
     """Read exact complete cohort/index/reviews and return curve-level rows."""
     if not isinstance(binder, CandidateBinder) or binder.plan_path is None:
         raise ValueError("checked published cohort binder required")
+    if read_order not in ("canonical", "reverse"):
+        raise ValueError("unknown geometric cohort read order")
     cohort_dir = Path(cohort_dir)
     cohort = binder.cohort
     index = verify_complete_index(cohort_dir, cohort, binder.plan,
@@ -264,11 +269,13 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
     type2_check, type2_rows = load_type2_artifacts(
         cohort_dir, cohort, binder.plan_sha256, binary_sha256, check,
         review_bytes, units, binder.plan["field"]["degree"])
-    curves, current = [], []
-    all_unit_summaries = []
-    for chunk_name in dict.fromkeys(row["chunk"] for row in units):
+    all_unit_summaries = {}
+    chunk_names = list(dict.fromkeys(row["chunk"] for row in units))
+    if read_order == "reverse":
+        chunk_names.reverse()
+    for chunk_name in chunk_names:
         restored, _ = read_chunk(cohort_dir / "chunks" / chunk_name)
-        for name, files in restored:
+        for name, files in (reversed(restored) if read_order == "reverse" else restored):
             ordinal = int(name[1:])
             row = units[ordinal]
             review = reviews[ordinal]
@@ -296,7 +303,8 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
             targets = binder.plan["classes"][row["class_index"]]["targets"]
             result = unit_summary(unit, n=binder.plan["field"]["degree"],
                                   target_count=len(targets), t_index=row["T_index"],
-                                  expected_structures=binder.plan["structures_per_T"])
+                                  expected_structures=binder.plan["structures_per_T"],
+                                  reverse_exceptional=read_order == "reverse")
             if type2_rows is not None:
                 counts, witness_ordinals = type2_witness_ordinals(
                     unit, review, row, type2_rows[name])
@@ -312,25 +320,27 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
             result["T_index"] = row["T_index"]
             result["unit_name"] = name
             result["candidate_unit_sha256"] = review["raw_sha256"]
-            all_unit_summaries.append(result)
-            if row["class_index"] != len(curves):
-                if not current or row["class_index"] != len(curves)+1:
-                    raise ValueError("curve class order skips published identity")
-                class_row = binder.plan["classes"][len(curves)]
-                if len(current) != len(class_row["targets"]):
-                    raise ValueError("curve T coverage differs from published plan")
-                curves.append(curve_summary(cohort, len(curves), class_row["model"], current))
-                current = []
+            if ordinal in all_unit_summaries:
+                raise ValueError("duplicate geometric unit in read order")
+            all_unit_summaries[ordinal] = result
+    if set(all_unit_summaries) != set(range(len(units))):
+        raise ValueError("geometric unit read order omitted canonical identity")
+    curves, position = [], 0
+    for class_index, class_row in enumerate(binder.plan["classes"]):
+        current = []
+        for t_index in range(len(class_row["targets"])):
+            result = all_unit_summaries[position]
+            if (result["T_index"] != t_index
+                    or result["unit_name"] != units[position]["name"]):
+                raise ValueError("curve T identity differs after read order")
             current.append(result)
-    if current:
-        class_row = binder.plan["classes"][len(curves)]
-        if len(current) != len(class_row["targets"]):
-            raise ValueError("curve T coverage differs from published plan")
-        curves.append(curve_summary(cohort, len(curves), class_row["model"], current))
+            position += 1
+        curves.append(curve_summary(cohort, class_index, class_row["model"], current))
     if len(curves) != len(binder.plan["classes"]):
         raise ValueError("curve coverage differs from published plan")
-    total_exceptional = sum(row["exceptional"] for row in all_unit_summaries)
-    total_generic = sum(row["generic"] for row in all_unit_summaries)
+    summaries = all_unit_summaries.values()
+    total_exceptional = sum(row["exceptional"] for row in summaries)
+    total_generic = sum(row["generic"] for row in summaries)
     if (check.get("exceptional") != total_exceptional
             or check.get("generic") != total_generic):
         raise ValueError("cohort check totals differ from geometric rows")
@@ -341,11 +351,11 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
                "unit_index_sha256": index["index_sha256"],
                "independent_check_sha256": hashlib.sha256(check_path.read_bytes()).hexdigest(),
                "classes": len(curves), "T_blocks": len(units),
-               "structures": sum(row["structures"] for row in all_unit_summaries),
+               "structures": sum(row["structures"] for row in summaries),
                "exceptional": total_exceptional, "generic": total_generic,
-               "branch_type_mismatch_count": sum(row["branch_type_mismatch_count"] for row in all_unit_summaries),
+               "branch_type_mismatch_count": sum(row["branch_type_mismatch_count"] for row in summaries),
                "geometric_spectrum_violation_count": sum(
-                   row["geometric_spectrum_violation_count"] or 0 for row in all_unit_summaries),
+                   row["geometric_spectrum_violation_count"] or 0 for row in summaries),
                "curves_with_strict_geometric_minimum_drop": sum(
                    row["strict_geometric_minimum_drop"] for row in curves)}
     if type2_check is not None:
@@ -355,7 +365,7 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
         for key in ("signature_count", "hyperelliptic_predicate_true_count",
                     "hyperelliptic_predicate_false_count"):
             output_key = "type2_" + key if key == "signature_count" else key
-            if type2_check[key] != sum(row[output_key] for row in all_unit_summaries):
+            if type2_check[key] != sum(row[output_key] for row in summaries):
                 raise ValueError("Type2 totals differ from curve/T rows")
             metrics[output_key] = type2_check[key]
     return curves, metrics

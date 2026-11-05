@@ -103,8 +103,10 @@ def aggregate_cohorts(curves, cohorts):
                 for name in EXPECTED if EXPECTED[name][1] == 3}}
 
 
-def reduce_campaign(trial_plan, stage_dirs):
+def reduce_campaign(trial_plan, stage_dirs, *, read_order="canonical"):
     """Require exact candidate-stage checks, then reduce every planned curve/T."""
+    if read_order not in ("canonical", "reverse"):
+        raise ValueError("unknown geometric campaign read order")
     sys.path.insert(0, str(ROOT / "tools"))
     from experiment_execution import load_plan, run_root, sha256, trial_state
     trial_plan = Path(trial_plan)
@@ -118,7 +120,11 @@ def reduce_campaign(trial_plan, stage_dirs):
     if not isinstance(stage_dirs, dict) or set(stage_dirs) != set(COHORTS):
         raise ValueError("geometric campaign requires exactly three census stages")
     curves, cohorts = [], {}
-    for stage, names in COHORTS.items():
+    stage_names = list(COHORTS)
+    if read_order == "reverse":
+        stage_names.reverse()
+    for stage in stage_names:
+        names = COHORTS[stage]
         validate_shape(plan, stage)
         if trial_state(ROOT, plan, trials[stage], plan_sha256) != "output_validated":
             raise ValueError("candidate stage lacks validated supervisor receipt")
@@ -149,7 +155,9 @@ def reduce_campaign(trial_plan, stage_dirs):
                 or len(stage_record["cohorts"]) != len(names)
                 or len(check["cohorts"]) != len(names)):
             raise ValueError("candidate stage and checker identity mismatch")
-        for index, cohort in enumerate(names):
+        indices = range(len(names)-1, -1, -1) if read_order == "reverse" else range(len(names))
+        for index in indices:
+            cohort = names[index]
             binder = CandidateBinder(cohort, plan_path=join_path(cohort))
             if (binder.plan["field"]["prime"], binder.plan["field"]["degree"]) != EXPECTED[cohort]:
                 raise ValueError("published cohort field differs from frozen campaign")
@@ -163,7 +171,8 @@ def reduce_campaign(trial_plan, stage_dirs):
                     or produced.get("chunk_count") != checked.get("chunk_count")):
                 raise ValueError("candidate cohort differs from checked stage")
             curve_rows, metrics = reduce_cohort(cohort_dir, binder,
-                                                 stage_record["binary_sha256"])
+                                                 stage_record["binary_sha256"],
+                                                 read_order=read_order)
             if (metrics["classes"] != len(binder.plan["classes"])
                     or metrics["T_blocks"] != sum(
                         len(row["targets"]) for row in binder.plan["classes"])
@@ -171,4 +180,6 @@ def reduce_campaign(trial_plan, stage_dirs):
                 raise ValueError("geometric reduction differs from published cohort")
             cohorts[cohort] = metrics
             curves.extend(curve_rows)
+    order = {name: index for index, name in enumerate(EXPECTED)}
+    curves.sort(key=lambda row: (order[row["cohort"]], row["class_index"]))
     return curves, aggregate_cohorts(curves, cohorts)
