@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Query the shared research-kb catalog without relying on an MCP client.
+#
+# The MCP server carries RESEARCH_KB_HOME and RESEARCH_KB_CONFIG in its client
+# config. A bare `research-kb` CLI run does not, so it defaults to an empty
+# ~/.local/share/research-kb and looks broken. This wrapper resolves the lab's
+# sibling-checkout layout and passes the same two values.
+#
+# Override any of these with the environment:
+#   RESEARCH_KB_BIN      server executable
+#   RESEARCH_KB_HOME     catalog directory (contains catalog.sqlite)
+#   RESEARCH_KB_CONFIG   sources.toml
+#
+# Usage:
+#   scripts/research-kb status
+#   scripts/research-kb search "point decomposition Curve25519" --top-k 8
+#   scripts/research-kb theorems "CryptoResearch.Semaev.S3_root_iff"
+#   scripts/research-kb brief "negative results for Semaev decomposition"
+set -euo pipefail
+
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+workspace="$(dirname "$repo_root")"
+
+bin="${RESEARCH_KB_BIN:-$workspace/crypto-autoresearcher/research-kb/.venv/bin/research-kb}"
+if [ ! -x "$bin" ]; then
+  bin="$(command -v research-kb 2>/dev/null || true)"
+fi
+if [ -z "$bin" ] || [ ! -x "$bin" ]; then
+  echo "research-kb: no executable found; set RESEARCH_KB_BIN or put research-kb on PATH" >&2
+  exit 127
+fi
+
+home="${RESEARCH_KB_HOME:-$workspace/research-kb/data}"
+config="${RESEARCH_KB_CONFIG:-$workspace/research-kb/sources.toml}"
+
+if [ ! -f "$home/catalog.sqlite" ]; then
+  echo "research-kb: catalog not found at $home/catalog.sqlite" >&2
+  echo "research-kb: set RESEARCH_KB_HOME or run research-kb refresh in the research-kb checkout" >&2
+  exit 2
+fi
+if [ ! -f "$config" ]; then
+  echo "research-kb: source registry not found at $config" >&2
+  echo "research-kb: set RESEARCH_KB_CONFIG" >&2
+  exit 2
+fi
+
+exec env RESEARCH_KB_HOME="$home" RESEARCH_KB_CONFIG="$config" "$bin" "$@"
