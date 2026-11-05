@@ -1,0 +1,33 @@
+{
+  "decoder_cell_fields": {
+    "recovered_scalars": "Claimed original x scalars; audit all, crosscheck consistency with word and scalar fields",
+    "scalar": "Claimed original x when non-null; audit independently even if statuses disagree",
+    "trace_id": "Joins closed trace independently; cell model/method variants are dependent views",
+    "words[].candidate_scalar": "x: integer candidate in original [x]G=Q equation",
+    "words[].candidate_scalar_prime": "k: integer candidate in transformed [k](aG)=bQ equation",
+    "words[].public_checks": "Ignore both booleans completely as evidence",
+    "words[].status": "RECOVERED marks an explicitly claimed solution, including claimed zero if present; status is only scope selection, never proof"
+  },
+  "enumeration_rule": "Every complete parseable cell; include every word with RECOVERED and every non-null claimed scalar/recovered_scalars value, including inconsistent duplicate field claims. Do not treat non-RECOVERED candidate_scalar words alone as claimed solutions. Preserve and flag disagreement/unknown schema as undefined rather than silently exclude.",
+  "provenance": [
+    {
+      "path": "harness/classical_ecdlp_controlled_followup_v5/format-contract.json",
+      "role": "Strict finite unique-key UTF8 JSON, LF-complete JSONL; flags insufficient.",
+      "sha256": "1ed8a10cded0dd8e1230868ae5e1f53edef9cc02d91be758f4bf9f235c949ac9"
+    },
+    {
+      "path": "harness/classical_ecdlp_controlled_followup/engine.py",
+      "role": "Coordinator read return-schema only; reviewer gets this schema declaration, never implementation.",
+      "sha256": "22da83d6494ea66c520b0e58eaa4b54e621c822d8f0275deda8822c7179915fb"
+    }
+  ],
+  "schema": "classical.ecdlp.independent-witness-field-semantics/v1",
+  "semantic_freeze": "Reviewer writes its interpretation and independently derives normalization from [k](aG)=bQ before evaluating candidate equations. Never select an interpretation because it happens to equate. If schema remains ambiguous, report INCONCLUSIVE and exact ambiguous rows.",
+  "trace_fields": {
+    "base_multiplier": "a: coefficient of original public base G in transformed base aG",
+    "curve_id": "Exact public curve ID",
+    "target_id": "Exact public target ID",
+    "target_multiplier": "b: coefficient of original public target Q in transformed target bQ",
+    "trace_id": "Unique trace join key"
+  }
+}

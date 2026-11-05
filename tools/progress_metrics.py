@@ -1672,6 +1672,8 @@ def full48_operational_observations(ref, since):
                 "attempted_native_trials": 1,
                 "output_validated_trials": int(validated),
                 "infrastructure_error_trials": int(receipt["status"] == "infrastructure_error"),
+                "claim_expired_trials": int(receipt["status"] == "claim_expired"),
+                "native_guard_censored_trials": int(receipt["status"] in {"claim_expired", "watchdog_expired", "memory_limit_exceeded"}),
                 "generated_curve_entries": generated["curve_entries"],
                 "generated_target_entries": generated["target_entries"],
                 "scheduled_job_entries": generated["job_entries"],
