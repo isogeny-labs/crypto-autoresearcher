@@ -1,7 +1,7 @@
 {
   "approval_required": true,
-  "approved_by": "DEC-20261105-88f7ec",
-  "candidate_only": false,
+  "approved_by": null,
+  "candidate_only": true,
   "experiment_id": "EXP-ECDLP-356403",
   "frozen": true,
   "hypothesis_id": "H-ECDLP-6674c9",
@@ -9,14 +9,11 @@
     "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/inputs/frozen-public-nonce.json": "519e2a3c745bd8aa7823b3ea192b16a03b8ba0813aa185f089f944064dcb04aa",
     "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/inputs/predraw-266-exclusions.json": "baffc51b5fb98b6e5ac36b428dd9c83abc2fe0dc92a52c944e268be98c754b0c",
     "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/frozen-cohort-recovery-binding.json": "986bea64676d089316c7f8cfa1d763d283bae20593c675e6bc6ad52dfb3ba76c",
-    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/new-review-hydration-exact-selection.json": "4f576b45459e83ce7bc67d63ffdba392e8dd3e44623295961ef7b79109414a1f",
-    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/prepare_new_review_hydration_retirement.py": "5c295a2cdf02f2ec0d7548e48ddacfe1935ea097650af5305ea5dc4b48397a2a",
-    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/retire_selected_new_review_hydration.py": "ecdd04e52c26db71992108ef25283fe81b27479dacc71add6382222b903161cf",
-    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/optional-review-hydration-retirement.json": "89e27524417a24a54c152360ca0cd60a1cf825cb1e1ae7343a4611b63b61227c",
-    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/recovery-amendment.json": "d297465317186f3817ff5c2e2104f40a0ca2b31ee9b7065b4401eb812201e31b",
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/historical-observations.json": "a2052db628c93089a27c0225e14817e490242ba45394aadc66a4c2057ede72b3",
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/recovery-amendment.json": "0274b5fc1068624dfca8c343cb9aef768d2f69b87edd81bccf157b8c26a9a1db",
     "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/native-closure.json": "0038b29ec3e19530132687d2b065ffaff31f2236077f2510b3eff449ed0bf56e",
-    "experiments/EXP-ECDLP-356403/recovery-v2/production-config.json": "28d8eef0fe666dcc8e4ab2d3ca6120cb780298b3cad3ee1e311f480ffebe7f18",
-    "experiments/EXP-ECDLP-356403/recovery-v2/protocol.json": "46507d087fa4cfe46ea5ada4b4162ec14745ec71486399bee058eef39f071a45"
+    "experiments/EXP-ECDLP-356403/recovery-v3/production-config.json": "8554980f376a1ba66e0740235277126c136f1b260a7854841846455a9a95cb29",
+    "experiments/EXP-ECDLP-356403/recovery-v3/protocol.json": "598acefd84c8485c983d50d1dcbaed635648f4f115e9e191095cb77f55f6783e"
   },
   "queue": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/dispatch_queue.json",
   "schema": "crypto.autoresearch.trial_plan.v1",
@@ -82,9 +79,9 @@
     "tools/validate_ledger_baseline.txt": "5dcfb52016dc59e2f921140604a3727ef509beab9c8e2455676311d85e05bd80"
   },
   "specification": "experiments/EXP-ECDLP-356403/specification.yaml",
-  "specification_sha256": "2824747e6728442751b6f6daaf3c0538bf91d567d41b86c5b074dc5218f5ca4b",
+  "specification_sha256": "d820b2bf032597207622215f9f4bb1ebad667edfec399e10d83657016e1f42c2",
   "stop_on_invalid_output": true,
-  "task_id": "TASK-20261105-4a9f92",
+  "task_id": "TASK-20261105-f379c9",
   "trials": [
     {
       "argv": [
@@ -93,15 +90,15 @@
         "harness/classical_ecdlp_controlled_followup_v5/driver.py",
         "production",
         "--repo-root",
-        "/workspace/classical-ecdlp-validation-ready",
+        "/tmp/classical-ecdlp-recovery-20261105",
         "--out",
         "{run_dir}",
         "--trial-plan",
         "experiments/EXP-ECDLP-356403/trial-plan.json",
         "--trial-id",
-        "recovery-full48",
+        "roomy-recovery-full48",
         "--config",
-        "experiments/EXP-ECDLP-356403/recovery-v2/production-config.json"
+        "experiments/EXP-ECDLP-356403/recovery-v3/production-config.json"
       ],
       "artifacts": [
         "manifest.yaml",
@@ -117,18 +114,18 @@
         "-B",
         "harness/classical_ecdlp_controlled_followup_v5/check.py",
         "--repo-root",
-        "/workspace/classical-ecdlp-validation-ready",
+        "/tmp/classical-ecdlp-recovery-20261105",
         "--out",
         "{run_dir}",
         "--native-custody",
         "{run_dir}/root-custody.json"
       ],
-      "id": "recovery-full48",
+      "id": "roomy-recovery-full48",
       "memory_mb": 12288,
       "parameters": {
         "config": {
-          "path": "experiments/EXP-ECDLP-356403/recovery-v2/production-config.json",
-          "sha256": "28d8eef0fe666dcc8e4ab2d3ca6120cb780298b3cad3ee1e311f480ffebe7f18"
+          "path": "experiments/EXP-ECDLP-356403/recovery-v3/production-config.json",
+          "sha256": "8554980f376a1ba66e0740235277126c136f1b260a7854841846455a9a95cb29"
         },
         "full_original_counts": {
           "BSGS_solves": 1536,
@@ -250,13 +247,13 @@
           "schema": "classical.ecdlp.fresh48-output-interface/v1"
         },
         "same_cohort_recovery": {
-          "binding": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/recovery-amendment.json",
+          "binding": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v3/recovery-amendment.json",
           "canonical_job_plan_sha256": "91a1730463e6cd8bec8453d6417a384709b240949085a04d0e941612defd5a3a",
           "frozen_public_sha256": "76c329506086cd8572534b49080f33b7c0725e3245215c0236b503faa2a4b0bc"
         }
       },
-      "run_id": "RUN-ECDLP-52de64",
-      "watchdog_reason": "Fixed7200s nativeguard plus independent originalclaim expiry; effective bound min(7200, remaining originallease), stages3600/grace2 unchanged, launchstrictlybefore05:53UTC without lateststart/fullguard-consumption requirement or fitassurance.",
+      "run_id": "RUN-ECDLP-45e1b5",
+      "watchdog_reason": "Fixed7200s plus original absolute05:53 cap; effective minimum, no guaranteed runtime or fullguard requirement.",
       "watchdog_seconds": 7200
     }
   ]
