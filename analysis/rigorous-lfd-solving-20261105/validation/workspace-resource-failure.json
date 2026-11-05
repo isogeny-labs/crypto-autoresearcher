@@ -1,0 +1,28 @@
+{
+  "scope": "Full workspace standard verifier; new modules checked separately",
+  "first_attempt": {
+    "receipt": "boolean-normalization-repair-20261105-receipt.json",
+    "exit_code": 3,
+    "cause": "lake build timeout after900s; pinned Mathlib cache not fully materialized"
+  },
+  "cache_repair": {
+    "download_command": "lake exe cache get-",
+    "download_exit_code": 0,
+    "unpack_command": "lake exe cache unpack",
+    "unpack_exit_code": 0
+  },
+  "second_attempt": {
+    "receipt": "boolean-normalization-repair-20261105-cached-receipt.json",
+    "exit_code": 1,
+    "reported_status": "formalization_blocked: lake build failed",
+    "failing_module": "CryptoResearch.Semaev.BooleanParityDegreeThreeRankCertificate",
+    "lean_exit_code": 137,
+    "cgroup_memory_limit_bytes": 17179869184,
+    "memory_events": {
+      "oom": 1,
+      "oom_kill": 1
+    },
+    "interpretation": "Observed resource failure in an existing unrelated certificate, not a mathematical counterexample to any new declaration"
+  },
+  "not_claimed": "Full standard workspace verification did not pass. No audit or target success is inferred from the failed broader build."
+}

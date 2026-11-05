@@ -1,0 +1,50 @@
+⚠ [1474/1557] Replayed CryptoResearch.FallDegree.LastFall
+warning: CryptoResearch/FallDegree/LastFall.lean: imports `Mathlib.RingTheory.MvPolynomial.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: CryptoResearch/FallDegree/LastFall.lean: imports `Mathlib.RingTheory.Ideal.Span` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+⚠ [1556/1557] Replayed CryptoResearch.FallDegree.FirstFallBounded
+warning: CryptoResearch/FallDegree/FirstFallBounded.lean: imports `Mathlib.Algebra.MvPolynomial.CommRing` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: CryptoResearch/FallDegree/FirstFallBounded.lean: imports `Mathlib.Algebra.CharP.Frobenius` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: CryptoResearch/FallDegree/FirstFallBounded.lean: imports `Mathlib.Algebra.CharP.Reduced` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+✖ [1557/1557] Building CryptoResearch.FallDegree.BooleanNormalization (2.1s)
+warning: CryptoResearch/FallDegree/BooleanNormalization.lean: imports `Mathlib.LinearAlgebra.Finsupp.LSum` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+trace: .> LEAN_PATH=/workspace/crypto-autoresearcher/formal/.lake/packages/Cli/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/batteries/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/Qq/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/aesop/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/plausible/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/CryptoLean/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/mathlib/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/build/lib/lean /home/agent/.elan/toolchains/leanprover--lean4---v4.35.0/bin/lean /workspace/crypto-autoresearcher/formal/CryptoResearch/FallDegree/BooleanNormalization.lean -o /workspace/crypto-autoresearcher/formal/.lake/build/lib/lean/CryptoResearch/FallDegree/BooleanNormalization.olean -i /workspace/crypto-autoresearcher/formal/.lake/build/lib/lean/CryptoResearch/FallDegree/BooleanNormalization.ilean -c /workspace/crypto-autoresearcher/formal/.lake/build/ir/CryptoResearch/FallDegree/BooleanNormalization.c --setup /workspace/crypto-autoresearcher/formal/.lake/build/ir/CryptoResearch/FallDegree/BooleanNormalization.setup.json --json
+warning: CryptoResearch/FallDegree/BooleanNormalization.lean:32:8: This simp argument is unused:
+  min_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+error: CryptoResearch/FallDegree/BooleanNormalization.lean:39:23: Unknown constant `Finsupp.not_mem_support_iff.mp`
+warning: CryptoResearch/FallDegree/BooleanNormalization.lean:44:10: This simp argument is unused:
+  Finsupp.single_apply
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hji]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+error: CryptoResearch/FallDegree/BooleanNormalization.lean:54:2: Type mismatch
+  (Finsupp.lsum k) fun s => monomial (booleanExponent s)
+has type
+  ((?m.36 →₀ ℕ) →₀ ?m.32) →ₗ[?m.32] MvPolynomial ?m.36 ?m.32
+but is expected to have type
+  MvPolynomial σ k →ₗ[k] MvPolynomial σ k
+error: CryptoResearch/FallDegree/BooleanNormalization.lean:58:2: Type mismatch
+  Finsupp.lsum_single ?m.21 ?m.32 ?m.33
+has type
+  ∀ (m : ?m.17), ((Finsupp.lsum ?m.21) ?m.32) (Finsupp.single ?m.33 m) = (?m.32 ?m.33) m
+but is expected to have type
+  booleanNF ((monomial s) c) = (monomial (booleanExponent s)) c
+error: CryptoResearch/FallDegree/BooleanNormalization.lean:60:0: Not a definitional equality: the left-hand side
+  booleanNF p
+is not definitionally equal to the right-hand side
+  ∑ s ∈ p.support, (monomial (booleanExponent s)) (p.coeff s)
+error: CryptoResearch/FallDegree/BooleanNormalization.lean:61:79: Type mismatch
+  rfl
+has type
+  ?m.27 = ?m.27
+but is expected to have type
+  booleanNF p = ∑ s ∈ p.support, (monomial (booleanExponent s)) (p.coeff s)
+Some required targets logged failures:
+- CryptoResearch.FallDegree.BooleanNormalization
+error: build failed

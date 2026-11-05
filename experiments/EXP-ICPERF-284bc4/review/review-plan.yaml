@@ -1,0 +1,146 @@
+# Claim-changing review plan for EXP-ICPERF-284bc4 (stage-0 instrument,
+# H-ICPERF-2f52d1). Written by the top-level review-evidence session under
+# Coordinator authority on 2026-11-05, BEFORE any reviewer was dispatched and
+# before analysis.md, the EV record or the decision exist. The deterministic
+# audit AUD-20261105T164527Z-d5036c (verdict flagged) had been run and read;
+# its findings are stated below as a known input, not as a verdict.
+review_plan:
+  id: REVIEW-ICPERF-284bc4-20261105
+  experiment_id: EXP-ICPERF-284bc4
+  hypothesis_id: H-ICPERF-2f52d1
+  goal_id: GOAL-ICPERF-e6b6a4
+  approval: DEC-20261029-ca33b3
+  runbook_session: RBS-ICPERF-8cdc92
+  runs: [RUN-ICPERF-8e3acd, RUN-ICPERF-2d715d, RUN-ICPERF-2c627f, RUN-ICPERF-779d41, RUN-ICPERF-30596e, RUN-ICPERF-850008]
+  invalidated_inputs_not_evidence: [RUN-ICPERF-943efa, RUN-ICPERF-b09be8]
+  binding_rulings: [DEC-20261029-9bc3ff, DEC-20261029-22e05b, DEC-20261029-5554ee]
+  written_at: '2026-11-05T16:55:00Z'
+  written_before_analysis: true
+  base_commit: 8fcfa58fee
+
+  claim_under_review: >-
+    Producer (PR #2776, report reports/run-20261030T1520Z): 6/6 units valid;
+    primary RUN-ICPERF-8e3acd gives reduced price ratio 925/4 with
+    ratios_agree true and all_match_bsgs true at cells (1000,2), (4000,2),
+    (1000,4) with 10 states; consistency controls (r-change, A-change, BSGS
+    enumeration) pass; negative controls (c_probe 371, precomputation model
+    changed) fail the preregistered match as designed. Scoped as a stage-0
+    observation: no latency effect, no n=83 speedup, no attack.
+
+  known_inputs_before_review:
+    audit: experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c
+    audit_verdict: flagged
+    audit_note: >-
+      All 6 units replayed. Every flagged comparison is a replay.compare
+      pointer absent from BOTH the recorded and the replayed raw-result.json
+      of that unit (the step-level pointer list is a union over trial kinds;
+      replay_unit treats absent-on-both as mismatch). Every pointer present in
+      a unit compared exactly equal, including /cells. No environment drift;
+      no float tolerance was passed (the runbook declares none).
+
+  coordinator_prior: >-
+    Expect the identity to hold: 370*2100*10 / (21*40^2) = 7770000/33600 =
+    925/4 is elementary, and the online ratios cancel r and A by construction.
+    Expect the audit flag to be a replay-coverage defect of the runbook's
+    pointer list, not fabrication, so the session is citable with that
+    limitation stated. Preferred decision: record the instrument pass as a
+    scoped stage-0 observation (no hypothesis support of the parent idea's
+    measured-price claim; claim tier no higher than an instrument/toy
+    observation; evidence strength preliminary at most, since the audit is
+    flagged and there is one deterministic execution). A replicate or
+    support of the parent idea is NOT expected. If the flag proves to hide a
+    value mismatch, the decision is to return the session to the Executor.
+
+  joints:
+    - id: J1-validity
+      joint: >-
+        J1 Run-set and audit validity: 6 units, schema, manifests, receipts,
+        journal chain, raw/summary agreement, interpreter parity, and the
+        classification of the AUD-20261105T164527Z-d5036c flag as a
+        pointer-coverage defect versus a value mismatch.
+      assigned_to: TASK-20261105-576b11
+      attack_plan: >-
+        Re-read audit.json replays row by row and confirm each mismatch row
+        has the pointer absent from both files; re-run check.py on each run
+        directory; recompute the summary metrics from raw-result.json; compare
+        recorded interpreter (raw-result /interpreter) with the audit replay
+        interpreter; confirm RUN-ICPERF-943efa / b09be8 are not cited anywhere
+        in the v2 record set as evidence.
+      breaking_artifact: >-
+        Any present pointer differing; a missing or failing unit; a journal
+        or digest failure; interpreter drift that changes an integer; v1 runs
+        cited as evidence.
+    - id: J2-scope
+      joint: >-
+        J2 Interpretation and scope: whether the pass licenses anything beyond
+        an integer-cancellation instrument check; controls' discriminating
+        power; whether AGENTS.md / crypto §5a (price unpriced native work at
+        0, 0.1, 1 GAE; rank only where the order holds) applies; hidden cost
+        omissions.
+      assigned_to: TASK-20261105-c44b03
+      attack_plan: >-
+        Show whether the negative controls could pass with a broken
+        implementation (proves-too-much); check whether 925/4 is read
+        anywhere as a measured speedup against rho or BL; decide whether any
+        cost comparison against rho is made, and if so compute the band.
+      breaking_artifact: >-
+        A path from the record to a latency, speedup or ranking claim; a
+        control that cannot fail; a §5a-relevant comparison left unpriced.
+
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: >-
+      Validator, red-team and blind re-deriver do not read each other's
+      reports. The Coordinator composes after all three have filed.
+
+  proves_too_much:
+    objects:
+      - >-
+        c_probe = 371 (RUN-ICPERF-30596e): an argument that "the instrument
+        passes" must not also accept this cell; it must reduce to 1855/8,
+        not 925/4.
+      - >-
+        Precomputation model with 10 steps (RUN-ICPERF-850008): must not
+        reproduce the 925/4 identity.
+      - >-
+        Deployed n=83 Bernstein-Lange arm: no argument from this record may
+        conclude a measured deficit of 235 or any speedup.
+    failure_signature: >-
+      Any reading that would mark the negative controls as passes, or that
+      turns the toy identity into a host-measured cost claim.
+
+  blind_rederivation:
+    required: true
+    assigned_to: TASK-20261105-b543c3
+    quantity: >-
+      Reduced price ratio c_probe*c_state*states*bl_den / (bl_num*c_step^2)
+      for the primary and for c_probe = 371; the probe counts (r/A)/states at
+      the three cells; the online ratio at each cell; the precomputation
+      step count implied by equal precomputation time.
+    parameters: >-
+      c_probe 370 ns (and 371 for the control), c_state 2100 ns, c_step 40 ns,
+      BL constant 21/10, states 10, cells (r, A) = (1000,2), (4000,2), (1000,4).
+    blind_from:
+      - experiments/EXP-ICPERF-284bc4/runs/
+      - experiments/EXP-ICPERF-284bc4/runbook-sessions/
+      - experiments/EXP-ICPERF-284bc4/reports/
+      - experiments/EXP-ICPERF-284bc4/audits/
+      - experiments/EXP-ICPERF-284bc4/implementation/
+      - experiments/EXP-ICPERF-284bc4/runbook.yaml
+      - experiments/EXP-ICPERF-284bc4/trial-plan.json
+      - experiments/EXP-ICPERF-e467a5/
+    method: >-
+      From the hypothesis statement/mechanism and the parameters above only,
+      derive each quantity in exact rationals, then (after filing) compare
+      with the recorded values supplied by the Coordinator.
+    expected_use: >-
+      Agreement confirms the recorded integers are the stated formula's;
+      disagreement localises to the implementation or the statement.
+
+  procedure_deviations:
+    - id: PD-1
+      description: >-
+        The audit tool counts a replay pointer absent from both files as a
+        mismatch, so the deterministic verdict is flagged with no value
+        difference. Recorded, not repaired; the Coordinator rules on it.

@@ -1,0 +1,82 @@
+task_id: TASK-20261105-b543c3
+hypothesis: H-ICPERF-2f52d1
+kind: blind_rederivation
+method: >
+  Independent exact-rational derivation from the task statement and parameters only,
+  using Python fractions.Fraction. Each division is checked for an integer result.
+  BSGS is enumerated by brute force over every target t in Z/m (m = r/A): the baby table
+  is {0..states-1}; giant step j looks up (t - j*states) mod m; lookups are counted up to
+  and including the first hit; bsgs_probes = max over all t. This is a derivation, not a
+  scientific trial.
+parameters: {c_probe_ns: 370, c_state_ns: 2100, c_step_ns: 40, bl_num: 21, bl_den: 10, states: 10,
+  cells: [[1000, 2], [4000, 2], [1000, 4]]}
+code_path: /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/blind-284bc4/derive.py
+code: |
+  from fractions import Fraction as F
+  exact=[]
+  def div(a,b,label):
+      q=F(a)/F(b); exact.append((label,q.denominator==1)); return q
+  def bsgs(m,s):
+      table=set(range(s)); worst=0
+      for t in range(m):
+          n=0; j=0
+          while True:
+              n+=1
+              if (t-j*s)%m in table: break
+              j+=1
+              assert j<=m
+          worst=max(worst,n)
+      return worst
+  def derive(c_probe,c_state,c_step,bl_num,bl_den,states,cells,pre_override=None):
+      pre=div(states*c_state,c_step,"pre") if pre_override is None else F(pre_override)
+      price=div(c_probe*c_state*bl_den,bl_num*c_step**2,"price")
+      out={"precomputation_steps":pre,"price_ratio":price,"cells":{}}
+      for r,A in cells:
+          bl=div(bl_num*r,bl_den*A*pre,f"bl_steps{(r,A)}"); bl_ns=bl*c_step
+          pr=div(r,A*states,f"probes{(r,A)}"); ic_ns=pr*c_probe
+          m=div(r,A,f"m{(r,A)}")
+          out["cells"][(r,A)]=dict(bl_steps=bl,bl_online_ns=bl_ns,probes=pr,ic_online_ns=ic_ns,
+              online_ratio=ic_ns/bl_ns,m=m,bsgs_probes=bsgs(int(m),states))
+      return out
+  cells=[(1000,2),(4000,2),(1000,4)]
+  for name,kw in [("main",{}),("control_a_cprobe371",dict(c_probe=371)),("control_b_pre10",dict(pre_override=10))]:
+      exact.clear()
+      p=dict(c_probe=370,c_state=2100,c_step=40,bl_num=21,bl_den=10,states=10,cells=cells); p.update(kw)
+      o=derive(**p)
+      print("==",name); print(" pre",o["precomputation_steps"]," price",o["price_ratio"])
+      for c,v in o["cells"].items(): print(" ",c,{k:str(x) for k,x in v.items()})
+      print(" non-integer divisions:",[l for l,e in exact if not e])
+derived:
+  main:
+    precomputation_steps: "525"      # 10*2100/40, exact
+    price_ratio: "925/4"             # 370*2100*10/(21*40^2) = 7770000/33600, not an integer
+    cells:
+      "(1000,2)": {m: 500,  bl_steps: "2", bl_online_ns: "80",  probes: "50",  ic_online_ns: "18500", online_ratio: "925/4", bsgs_probes: 50}
+      "(4000,2)": {m: 2000, bl_steps: "8", bl_online_ns: "320", probes: "200", ic_online_ns: "74000", online_ratio: "925/4", bsgs_probes: 200}
+      "(1000,4)": {m: 250,  bl_steps: "1", bl_online_ns: "40",  probes: "25",  ic_online_ns: "9250",  online_ratio: "925/4", bsgs_probes: 25}
+    online_ratio_equals_price_ratio_in_every_cell: true
+    bsgs_probes_equals_probes_in_every_cell: true
+    division_exactness: all integer except price_ratio (925/4); every online ratio is 925/4 as a reduced rational
+  control_a_c_probe_371:
+    precomputation_steps: "525"
+    price_ratio: "1855/8"
+    cells:
+      "(1000,2)": {ic_online_ns: "18550", bl_online_ns: "80",  online_ratio: "1855/8", bsgs_probes: 50}
+      "(4000,2)": {ic_online_ns: "74200", bl_online_ns: "320", online_ratio: "1855/8", bsgs_probes: 200}
+      "(1000,4)": {ic_online_ns: "9275",  bl_online_ns: "40",  online_ratio: "1855/8", bsgs_probes: 25}
+    note: price ratio and online ratios move together to 1855/8 (differs from 925/4)
+    division_exactness: all integer except price_ratio (1855/8)
+  control_b_precomputation_steps_10:
+    precomputation_steps: "10 (forced)"
+    "(1000,2)": {bl_steps: "105", bl_online_ns: "4200", ic_online_ns: "18500", online_ratio: "185/42"}
+    note: >
+      online ratio 185/42 differs from the price ratio 925/4 (the identity breaks when
+      precomputation_steps is not states*c_state/c_step). Also computed, though not asked:
+      (4000,2) gives 185/42; (1000,4) gives bl_steps 105/2, a non-integer, with online ratio 185/42.
+review_attestation:
+  task_id: TASK-20261105-b543c3
+  joints_owned: []
+  sources_read: []
+  read_sibling_reports: false
+  blind_from_respected: true
+  verdict: derived

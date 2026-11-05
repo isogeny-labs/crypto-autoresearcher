@@ -1,0 +1,51 @@
+{
+  "recorded_at": "2026-11-05T17:09:49.979484+00:00",
+  "inspection_only": true,
+  "probe_jobs": 0,
+  "systemd_version": "252.23-15.amzn2023",
+  "cgroup_version": 2,
+  "controllers": [
+    "cpu",
+    "memory"
+  ],
+  "current_cgroup": "/system.slice/spot-codex-recovery.service",
+  "current_delegation": false,
+  "current_cpu_quota": "infinity",
+  "current_memory_max": "infinity",
+  "user_bus": "unavailable: No medium found",
+  "existing_sudo_policy": "NOPASSWD ALL for ec2-user; read-only sudo -n -l observed",
+  "selected_route": "Existing host systemd transient service, root manager creates bounded unit running as ec2-user; no cluster or cloud job.",
+  "required_live_properties": {
+    "User": "ec2-user",
+    "CPUQuota": "100%",
+    "MemoryMax": 2147483648,
+    "MemorySwapMax": 0,
+    "RuntimeMaxSec": 600,
+    "KillMode": "control-group",
+    "TimeoutStopSec": 1,
+    "SendSIGKILL": true,
+    "OOMPolicy": "stop",
+    "KillSignal": "SIGKILL"
+  },
+  "feasibility_scope": "Tools/controllers/authorization present; no transient unit created and enforcement not yet tested. Worker must read actual cgroup constraints before importing candidate.",
+  "cloud_authorized": false,
+  "additional_cloud_spend_usd": 0,
+  "existing_host_cost": "Not asserted zero; no new instance/build/storage service allocated.",
+  "worker_uid": 1000,
+  "worker_gid": 1000,
+  "worker_user": "ec2-user",
+  "kill_boundary": "600s RuntimeMaxSec terminates control group with SIGKILL;1s stop timeout is collection guard, not additional admitted candidate runtime.",
+  "nonexistent_unit_readback": {
+    "returncode": 0,
+    "LoadState": "not-found",
+    "MainPID": "0",
+    "ActiveState": "inactive",
+    "SubState": "dead",
+    "operation": "read-only systemctl show; no unit created"
+  },
+  "worker_identity": {
+    "user": "ec2-user",
+    "uid": 1000,
+    "group": "ec2-user"
+  }
+}

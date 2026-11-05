@@ -1,0 +1,306 @@
+evidence:
+  id: EV-ICPERF-08f6f9
+  id_provenance: >-
+    Pre-allocated by the top-level session with tools/allocate_id.py --next
+    evidence --area ICPERF and confirmed with --check. The Coordinator had no
+    shell and minted no identifier.
+  recorded_at: '2026-11-05'
+  title: >-
+    Stage-0 price-ratio identity instrument v2 (EXP-ICPERF-284bc4): 925/4 at
+    three toy cells reproduced exactly and blind; audit flag is replay
+    coverage, not a value mismatch
+  goal_id: GOAL-ICPERF-e6b6a4
+  question_id: RQ-ICPERF-94c86e
+  hypothesis_id: H-ICPERF-2f52d1
+  source_idea: IDEA-20261015-7a3c9e
+  experiment_ids: [EXP-ICPERF-284bc4]
+  run_ids: [RUN-ICPERF-8e3acd, RUN-ICPERF-2d715d, RUN-ICPERF-2c627f, RUN-ICPERF-779d41, RUN-ICPERF-30596e, RUN-ICPERF-850008]
+  runbook_session: RBS-ICPERF-8cdc92
+  approval: DEC-20261029-ca33b3
+  binding_rulings: [DEC-20261029-9bc3ff, DEC-20261029-22e05b, DEC-20261029-5554ee]
+  not_evidence:
+    ids: [RUN-ICPERF-943efa, RUN-ICPERF-b09be8]
+    note: >-
+      Version-1 units, invalidated (DEC-20261029-9bc3ff, DEC-20261029-22e05b).
+      Named only to state that they are not cited; nothing below rests on them.
+  composed_from_review: REVIEW-ICPERF-284bc4-20261105
+  review_plan:
+    path: experiments/EXP-ICPERF-284bc4/review/review-plan.yaml
+    frozen_at_commit: f7eb8ae292
+    sha256: f4a34e9bd2aa961039c8371d09a110198ce8904a1dfc949e12ba718972fd6985
+  analysis: experiments/EXP-ICPERF-284bc4/analysis.md
+  type: empirical
+  direction: supports
+  direction_scope: >-
+    Supports H-ICPERF-2f52d1 as stated and only as stated: with c_probe 370 ns,
+    c_state 2100 ns, c_step 40 ns (assumed constants), BL constant 21/10 and 10
+    states, the reduced price ratio is 925/4, the online ratio at each of
+    (1000,2), (4000,2), (1000,4) is 925/4, and each probe count equals
+    (r/A)/states = 50, 200, 25. Neutral on IDEA-20261015-7a3c9e's
+    measured-price claim, on the n=83 arm, on host latency and on any rho or
+    Bernstein-Lange cost ranking; the record makes no statement there.
+  strength: preliminary
+  strength_justification: >-
+    Valid run set (6 of 6 units, J1 holds), out-of-sample preregistered
+    integers met exactly, both planted negatives moved the ratio, and an
+    implementation written blind from the statement reproduces every value.
+    Strength stays preliminary: one deterministic execution per unit with no
+    independent second run; the deterministic audit is flagged as recorded
+    (matched 0 of 6, a pointer-coverage defect) and its interpreter-parity
+    check did not run; no pcc claim covers the integers; and the content is an
+    algebraic identity that holds by construction, so "replicated" would
+    describe a reproduced effect that does not exist. Four mutants pass every
+    run assertion (red-team M5, M7, M8, M11).
+  claim_tier: toy
+  claim_tier_note: >-
+    Scale label only. No field, curve, group or target exists; three integer
+    cells. The record cannot carry a measured_bound and is not a cost claim
+    (AGENTS.md "Curve identity and measured bounds").
+  scale_relevance: >-
+    toy-scale: direct exact-rational evaluation at the stated cells only. No
+    transfer to section-23 sizes, to n=83, or to a memory-latency model
+    (specification scale_relevance).
+  certificate_refs: []
+  certificate_note: No unit claims a solve or relation (attack_claimed false, certificate kind none on all six manifests).
+  proof_status: derivation
+  proof_refs:
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+  proof_status_note: >-
+    The specification reference is /experiment/online_time_model/cancellation.
+    The supported statement is an exact arithmetic identity. Its checkable
+    basis is the blind exact-rational derivation (embedded script, committed
+    at 1e5baa38e6 before this record) and the specification's stated
+    cancellation (ic_online / bl_online reduces to c_probe * c_state * bl_den /
+    (bl_num * c_step^2)). Labelled derivation, not proved, not machine-verified.
+  observations:
+    - id: O1
+      statement: >-
+        RUN-ICPERF-8e3acd raw-result.json: price_ratio_num 925,
+        price_ratio_den 4, precomputation_steps 525, ratios_agree true,
+        all_match_bsgs true, matches_preregistered true. Cells (1000,2):
+        probes 50, bsgs_probes 50, bl_steps 2, ic_online_ns 18500,
+        bl_online_ns 80, ratio 925/4; (4000,2): 200, 200, 8, 74000, 320,
+        925/4; (1000,4): 25, 25, 1, 9250, 40, 925/4.
+    - id: O2
+      statement: >-
+        RUN-ICPERF-2d715d (CON-1) cells (1000,2) and (1000,4) both 925/4,
+        same_reduced_ratio true; RUN-ICPERF-2c627f (CON-2) cells (1000,2) and
+        (4000,2) both 925/4, same_reduced_ratio true; RUN-ICPERF-779d41
+        (CON-3) enumerated_probes 50, 200, 25 equal formula_probes, all_match
+        true. All three record matches_preregistered true.
+    - id: O3
+      statement: >-
+        RUN-ICPERF-30596e (NEG-1, c_probe 371): price ratio 1855/8 and online
+        ratio 1855/8 at all three cells, ic_online_ns 18550, 74200, 9275,
+        matches_preregistered false. RUN-ICPERF-850008 (NEG-2,
+        precomputation_steps 10): bl_steps 105, 420, 105/2; bl_online_ns
+        4200, 16800, 2100; online ratio 185/42 at all three cells;
+        matches_preregistered false; no price-ratio field (by the formula
+        the price ratio is unaffected by the precomputation model).
+    - id: O4
+      statement: >-
+        Audit AUD-20261105T164527Z-d5036c verdict flagged, matched 0 of 6.
+        Validator row audit: 66 rows, 27 present on both sides and exactly
+        equal, 39 absent from both files (each predicted by the bound run.py
+        observe() branch for its trial kind), 0 absent on one side, 0
+        differing. Whole documents equal except /elapsed_seconds and
+        /interpreter.
+    - id: O5
+      statement: >-
+        Recorded interpreter CPython 3.11.17 (all six units, S01); audit
+        replay CPython 3.13.18; audit environment_drift [] is a false negative
+        (tools/runbook.py _recorded_python reads /run/environment/python_version;
+        these manifests use /version and /python). Validator replays under
+        3.11.18, 3.12.3, 3.13.18: 18 of 18 identical, check.py rc 0.
+    - id: O6
+      statement: >-
+        Blind re-derivation TASK-20261105-b543c3 equals every recorded value
+        in O1-O3, including NEG-2 bl_steps 105/2 at (1000,4).
+  inference: >-
+    The instrument evaluates the stated closed-form model in exact rationals
+    and returns the preregistered integers; its output responds to a planted
+    change of c_probe and of the precomputation model; a blind implementation
+    agrees everywhere. The identity holds by construction: r and A cancel for
+    every price vector under the equal-precomputation-time definition
+    (red-team null-price control, 2000 of 2000), and NEG-2 shows the identity
+    is equivalent to that definition. Only the literal 925/4 carries
+    information, and it is a function of the frozen inputs. The session is
+    citable with the audit-flag and parity disclosures. Nothing follows about
+    prices, latency, n=83, Bernstein-Lange regime behaviour or rho.
+  narrowest_supported_statement: >-
+    At the frozen inputs (c_probe 370, c_state 2100, c_step 40 ns, all assumed
+    constants equal to IDEA-20261015-7a3c9e's n=83 inferred/assumed prices;
+    c_BL 21/10; 10 states; cells (1000,2), (4000,2), (1000,4)), run.py sha256
+    ef13257e... evaluates the stated closed-form online-time model in exact
+    rationals and returns 925/4 for the price formula and for each cell's
+    online ratio and the preregistered per-cell integers; its output responds
+    to a planted change of c_probe (1855/8) and of the precomputation model
+    (185/42). Accounting class (sheriff B5.1). It measures no price, latency,
+    step count or cost, makes no comparison with Pollard rho, ranks IC against
+    Bernstein-Lange in neither direction, and makes no latency or n=83
+    statement.
+  boundaries:
+    - Prices are assumed constants (370, 2100, 40 ns); no host receipt is read (stopping rule).
+    - BL constant 21/10 only; the unrounded 2.124 or 2.335 forces an inexact division (instrument failure, not falsification).
+    - Three cells (1000,2), (4000,2), (1000,4); 10 states; online phase only at matched precomputation time.
+    - Bernstein-Lange closed form evaluated outside its regime at all three cells (P = 525 at least m at two cells; implied table about 20.9 above m^(1/3)).
+    - CPython 3.11.17 recorded; 3.11.18, 3.12.3, 3.13.18 replayed; run.py sha256 ef13257e9973f7a447f37e1991fec948c5a8eb3a12395e510a7b8678cd5c434f.
+    - No transfer to IDEA-20261015-7a3c9e claims (1)-(4), the section-23 table, n=83, any memory-latency model, any frontier row.
+  unresolved_confounds:
+    - >-
+      Computed integers are labelled "measured" in runbook.yaml, the run
+      report and data.json, and tools/progress_metrics.py exports the assumed
+      prices (including NEG-1's planted 371) in physical units without an
+      assumed/planted qualifier (red-team O1). Ruled in DEC-20261105-8a9984
+      labelling_ruling; correction record pending.
+    - >-
+      Price provenance undisclosed in the specification and hypothesis:
+      925/4 = 231.25 is numerically the idea's "231 vs measured 235"; the 235x
+      [61, 645] comparator is unverified in the ledger (red-team O2).
+    - >-
+      CON-3 compares BSGS worst case with a quantity the parent idea defines
+      as a geometric mean; BSGS mean is 25.5/100.5/13.0 against 50/200/25
+      (red-team O4). In this configuration max equals m/s by theorem, so no
+      correct enumeration can disagree (M5 undetectable).
+    - >-
+      The replay contract flattens per-trial pointers into one union, and the
+      audit tool scores absent-on-both as mismatch and cannot see the
+      interpreter key; a tool defect, not a data defect.
+  confound_assessment:
+    - {comparison: CMP-PRIMARY, verdict: isolated, basis: "Absolute comparison of one deterministic unit with out-of-sample integers fixed 2026-10-17; every input (prices, BL constant, states, cells) fixed and asserted; exact equality; blind re-derivation agrees."}
+    - {comparison: CMP-CON-1, verdict: isolated, basis: "Arms differ only in A (2 vs 4), asserted per cell. Isolated but non-discriminating: A cancels by construction, so the check fails only through an inexact division or a code defect it shares with the primary."}
+    - {comparison: CMP-CON-2, verdict: isolated, basis: "Arms differ only in r (1000 vs 4000), asserted per cell. Isolated but non-discriminating for the same reason as CMP-CON-1 (r cancels for every price vector; red-team null-price control 2000/2000)."}
+    - {comparison: CMP-CON-3, verdict: isolated, basis: "Absolute comparison of enumerated BSGS worst-case lookups with the probe formula at three cells; deterministic. Statistic is worst case against a parent-defined mean, and max = m/s holds by theorem here, so it cannot discriminate a formula-duplicating implementation (M5)."}
+    - {comparison: CMP-NEG-1, verdict: isolated, basis: "Only c_probe differs (370 vs 371), asserted /c_probe_ns; ratio moved 925/4 -> 1855/8 at every cell and in the price formula. Control integers are in-sample calibration (PRED-CONTROLS), not a prediction."}
+    - {comparison: CMP-NEG-2, verdict: isolated, basis: "Only the precomputation model differs (525 vs 10 steps), asserted /precomputation_steps; online ratio moved to 185/42 at every cell. In-sample calibration; it shows the identity equals the equal-precomputation-time definition."}
+    - {comparison: CMP-AA, verdict: isolated, basis: "Recorded unit against audit replay of the same bound run.py. Process, host and interpreter (3.11.17 vs 3.13.18) co-varied; no value differs, so nothing needs attribution. The tool reported matched 0 of 6 because 39 compared pointers are absent on both sides; the validator's type-strict row audit (27 equal, 0 differing) and 18 replays across three interpreters carry the A/A reading."}
+  review_results:
+    J1-validity:
+      owner: TASK-20261105-576b11
+      role: validator
+      verdict: holds
+      verdict_source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-576b11/review-attestation.yaml
+      original_verdict: holds_with_limitation (validation-report.yaml, unedited)
+      basis: >-
+        6/6 units; 60/60 receipt digests; 180/180 manifest bindings; check_run
+        clean with a discriminating corrupted-manifest control; journal chain
+        intact (tip 534b1a29...); runbook verify OK; 268/268 assertions
+        independently re-evaluated; raw, RESULTS.md, summary and report agree;
+        no v1 run cited. Audit flag classified as pointer-coverage defect (27
+        equal, 39 absent-on-both, 0 differing); parity false negative found;
+        18/18 interpreter replays identical. Limitations L1-L8 carried.
+    J2-scope:
+      owner: TASK-20261105-c44b03
+      role: red_team
+      verdict: holds
+      verdict_source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/review-attestation.yaml
+      original_verdict: holds_with_limitation (red-team-report.yaml, unedited)
+      basis: >-
+        No path from the record to a latency, speedup or ranking claim; NEG-1
+        and NEG-2 can fail (kill M1-M4); no rho comparison, so no section-5a
+        band owed. Holds only for the narrowest supported statement, under
+        limitations O1-O9 (labels, price provenance, mutants M5/M7/M8/M11,
+        CON-3 max vs mean, BL out of regime, rounded constant, wording, no
+        pcc claim, no exactness positive control).
+    blind_rederivation:
+      owner: TASK-20261105-b543c3
+      verdict: derived
+      source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml
+      comparison_with_recorded: >-
+        Equal at every quantity: precomputation 525; price 925/4; probes and
+        BSGS maxima 50/200/25; bl_steps 2/8/1; online 18500/74000/9250 ns over
+        80/320/40 ns, ratio 925/4 per cell; c_probe 371 gives 1855/8 at price
+        and every cell (ic 18550/74200/9275); precomputation 10 gives 185/42 at
+        every cell with bl_steps 105, 420, 105/2. Compared by the Coordinator
+        against runs/*/raw-result.json in this review.
+  proves_too_much:
+    c_probe_371: rejected by the success criterion; RUN-ICPERF-30596e records 1855/8 and matches_preregistered false. The identity part (ratios agree, r and A invariance) survives at 371 and at every price vector, so it is not evidence about prices.
+    precomputation_10: does not reproduce 925/4 (185/42); the one perturbation that breaks the identity itself.
+    n83_bl_arm: no argument from this record concludes a measured deficit of 235 or any speedup; the record blocks the reading, and the numerical coincidence 925/4 = 231.25 is the idea's own back-of-envelope figure.
+  independence_check:
+    tool: tools/check_review_independence.py
+    result: PASS
+    run_by: top-level session (as reported to the Coordinator; not re-run here)
+    expected_plan_sha256: f4a34e9bd2aa961039c8371d09a110198ce8904a1dfc949e12ba718972fd6985
+    plan_frozen_at: f7eb8ae292
+    targets:
+      - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-576b11/review-attestation.yaml
+      - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/review-attestation.yaml
+      - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml
+    limit: >-
+      PASS checks declared ownership, verdict vocabulary, blind_from and
+      controls on pinned bytes; it does not authenticate read history or decide
+      scientific correctness. The original attestations inside
+      validation-report.yaml and red-team-report.yaml were not the checker's
+      targets (see procedure_deviations PD-1).
+  s5a_band:
+    applies: false
+    comparison_against_rho_made: false
+    band: none
+    reason: >-
+      No arm is Pollard rho, no target is solved and no counted unit exists, so
+      S = total/sqrt(n) is undefined and there are no unpriced counters to
+      weight at 0, 0.1 and 1 GAE. The only two-arm quantity, 925/4, is an
+      online-phase formula ratio against a Bernstein-Lange closed form at
+      assumed ns prices (sheriff B5.1 accounting; B5.4/B5.5 phases missing).
+      The record ranks nothing. Both red-teams found no comparison against rho.
+    illustrative_band_red_team: >-
+      Red-team pencil arithmetic under a counter model the record does not
+      contain (each IC probe, IC state and BL step = 1 group addition + 1
+      native unit): R = IC_online/BL_online = 10/21 = 0.476 at uniform weight
+      w in {0, 0.1, 1}; [0.119, 1.905] across the 27 independent-weight
+      corners, 4 of 27 putting BL ahead; the record's ns prices give 231.25.
+      The order is set entirely by the price assumption; no ranking in either
+      direction is licensed. Illustrative only, not evidence.
+  procedure_deviations:
+    - id: PD-1
+      text: >-
+        The top-level brief offered holds_with_limitation, which
+        tools/check_review_independence.py does not accept. Both reviewers
+        filed review-attestation.yaml addenda in checker vocabulary (holds plus
+        explicit limitations); validation-report.yaml and red-team-report.yaml
+        are unedited. The checker was run on the addenda and the blind
+        re-derivation.
+    - id: PD-2
+      text: >-
+        Plan PD-1 (recorded, not repaired): the audit tool counts a replay
+        pointer absent from both files as a mismatch, so the deterministic
+        verdict is flagged with no value difference.
+    - id: PD-3
+      text: >-
+        The plan's known_inputs audit_note says "No environment drift". That
+        repeats the tool's output and is inaccurate: the parity check did not
+        run, and the actual drift is 3.11.17 to 3.13.18 (no value effect).
+    - id: PD-4
+      text: >-
+        The plan's blind_rederivation.quantity writes the price ratio as
+        c_probe*c_state*states*bl_den / (bl_num*c_step^2), with a spurious
+        factor states (it would give 4625/2). The hypothesis statement and the
+        specification omit it, and the re-deriver used the omitting form
+        (c_probe*c_state*bl_den / (bl_num*c_step^2)). The derived quantity is
+        the hypothesis's; the plan text is a drafting defect.
+    - id: PD-5
+      text: >-
+        The review tasks TASK-20261105-576b11, -c44b03 and -b543c3 have no
+        handoff records under ledger/handoffs/; they were dispatched in-session
+        by the top-level session, and the blind re-derivation brief is not
+        archived. The re-derivation records its own method and parameters.
+    - id: PD-6
+      text: >-
+        HEAD moved to 1e5baa38e6 during review (adding the blind file). The
+        validator saw the sibling path and line count via git diff --stat, and
+        the red team saw the directory name; neither opened its content.
+        Inputs were confirmed byte-identical to f7eb8ae292.
+  reviewed_by: coordinator
+  citations:
+    - {source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-576b11/validation-report.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-576b11/review-attestation.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/review-attestation.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), review-evidence session 2026-11-05, read in full'}
+    - {source: experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/raw-result.json, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full; values compared with the blind re-derivation'}
+    - {source: "experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-{2d715d,2c627f,779d41,30596e,850008}/raw-result.json", provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full; values compared with the blind re-derivation'}
+    - {source: experiments/EXP-ICPERF-284bc4/specification.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full'}
+    - {source: experiments/EXP-ICPERF-284bc4/review/review-plan.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full'}
+    - {source: ledger/decisions/DEC-20261029-5554ee.yaml, provenance: internal, verified_by: 'Coordinator subagent (claude-opus-5-5), read in full'}

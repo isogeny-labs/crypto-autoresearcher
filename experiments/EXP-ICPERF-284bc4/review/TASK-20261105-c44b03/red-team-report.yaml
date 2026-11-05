@@ -1,0 +1,531 @@
+# Red-team report for REVIEW-ICPERF-284bc4-20261105, joint J2-scope only.
+# Task TASK-20261105-c44b03. Snapshot: branch claude/review-icperf-v2-evidence at
+# f7eb8ae292 (plan frozen there). Every experiment path read below is tracked and
+# clean at that commit. The sibling directory review/TASK-20261105-b543c3 showed up
+# in `git status` and `ls` as a name only and was not opened. No trial was run.
+# The pencil computations were run in a session scratchpad outside the repository
+# (listed under scratch_computations). They are reproducible checks, not evidence
+# records. Nothing was committed, and no existing file was edited.
+red_team_report:
+  id: RT-20261105-0c2a1f
+  id_provenance: >-
+    Random 6-hex suffix, confirmed with `python3 tools/allocate_id.py --check
+    RT-20261105-0c2a1f` (well-formed, free across 48006 paths). The allocator has
+    no RT type for --next.
+  task_id: TASK-20261105-c44b03
+  review_plan_id: REVIEW-ICPERF-284bc4-20261105
+  joint: J2-scope
+  experiment_id: EXP-ICPERF-284bc4
+  hypothesis_id: H-ICPERF-2f52d1
+  source_idea: IDEA-20261015-7a3c9e
+  goal_id: GOAL-ICPERF-e6b6a4
+  snapshot_commit: f7eb8ae292
+  bound_digests_checked:
+    implementation/run.py: ef13257e9973f7a447f37e1991fec948c5a8eb3a12395e510a7b8678cd5c434f (equals the runbook binds entry)
+    runbook.yaml: e5850bc6a3076225edb948c931884fb1439383e74109ef8e7a36af3dfbe1a62c (equals the sha named in report.typ)
+
+  claim_under_review: >-
+    PR #2776 and report reports/run-20261030T1520Z: 6/6 units valid. The primary
+    RUN-ICPERF-8e3acd gives the reduced price ratio 925/4 with ratios_agree true
+    and all_match_bsgs true at (1000,2), (4000,2), (1000,4) with 10 states. The
+    consistency controls pass. NEG-1 (c_probe 371, RUN-ICPERF-30596e) and NEG-2
+    (precomputation 10 steps, RUN-ICPERF-850008) fail the preregistered match as
+    designed. The PR scopes this as "an observation: no latency effect, no n=83
+    speedup, no attack". J2 asks whether the pass licenses anything beyond an
+    integer-cancellation instrument check.
+
+  joint_verdict: holds_with_limitation
+  verdict_rationale: >-
+    Breaking artifacts from the plan, checked one at a time:
+    (a) A path from the record to a latency, speedup or ranking claim. None was
+    found in the specification, hypothesis, run outputs, report, goal head or the
+    decisions read. Each of them disclaims n=83, speedup and latency. There is a
+    labelling exposure: the frozen runbook calls computed integers "measured",
+    and the committed progress export emits assumed prices with physical units
+    (O1). That needs a correction record. It does not break the scoped reading.
+    (b) A control that cannot fail. NEG-1 and NEG-2 can fail. They are the only
+    assertions that catch an implementation that ignores its inputs or returns
+    hardcoded values (mutants M1-M4). CON-1, CON-2 and CON-3 cannot fail unless
+    the primary also fails. The specification already says so for CON-1 and
+    CON-2. CON-3's "independent enumeration" cannot be told apart from the formula
+    it is compared with (M5 survives every assertion). These are limitations of
+    discriminating power. No control is mislabelled as discriminating.
+    (c) A §5a-relevant comparison left unpriced. The record ranks nothing and has
+    no rho arm, so no band is owed. The illustrative band below shows that any
+    ranking read from 925/4 would be set by the price assumption alone (§5a block).
+
+  proves_too_much_results:
+    - object: c_probe = 371 (RUN-ICPERF-30596e)
+      outcome: >-
+        The success criterion does not accept it. The recorded values are
+        price_ratio 1855/8, online ratio 1855/8 in every cell, and
+        matches_preregistered false. The literal 925/4 separates 370 from 371.
+      survival_found: >-
+        The identity part of the pass does survive. At 371 the online ratio
+        equals the price formula and does not change with r or A, exactly as at
+        370. A pencil null-price control in the scratchpad tried 2000 random
+        price triples (c_probe 1..1e4, c_state 1..1e5, c_step 1..500). The three
+        cell ratios agreed with each other and with the price formula in
+        2000/2000, with 2000 distinct literals. So ratios_agree, CON-1 and CON-2
+        hold for every price vector, including vectors where the parent idea's
+        quantitative claim would be false. Where the survival happens: the
+        specification's online_time_model.cancellation, which follows from
+        defining precomputation_steps = states*c_state/c_step (equal
+        precomputation time). Only the literal 925/4 carries information, and
+        the literal is a function of the frozen inputs alone.
+      failure_signature_triggered: false
+    - object: precomputation model with 10 steps (RUN-ICPERF-850008)
+      outcome: >-
+        It does not reproduce 925/4: the online ratio is 185/42 in every cell,
+        while the price formula is unchanged at 925/4 (in raw-result.json
+        price_ratio is null, and the closed form is unaffected by the
+        precomputation steps). This is the one perturbation that breaks the
+        identity itself. It shows the identity is equivalent to the
+        equal-precomputation-time assumption. It is not a property of the cells.
+      survival_found: none
+      failure_signature_triggered: false
+    - object: deployed n=83 Bernstein-Lange arm (no measured deficit of 235 and no speedup may be concluded)
+      outcome: >-
+        The record itself blocks this reading: the specification's objective and
+        preregistered_prediction.source, the hypothesis interpretation_limits,
+        CLAIM_BOUNDARY in run.py, and the RESULTS.md sentence checked by check.py.
+      survival_found: >-
+        There is a numerical path that the record does not disclose. The "toy"
+        prices are the n=83 back-of-envelope prices in
+        ledger/proposals/IDEA-20261015-7a3c9e.notes.md section 2. c_probe is
+        inferred as 63.324 ms / 169,070 = about 375 ns. c_state is inferred as
+        about 555 s / 2^28 = about 2.1 us. c_step is "not read", assumed 40 ns.
+        925/4 = 231.25 is the idea's own "370*2100/(2.1*1600) = 231 against the
+        measured 235". The same argument, unchanged, accepts any c_probe in
+        [97.6, 1032] ns as "consistent with 235 [61, 645]", and any c_probe in
+        [125.3, 1128] ns under the idea's within-factor-3 criterion. It accepts
+        371 (231.875) as readily as 370. The comparator 235x [61, 645] is itself
+        an unverified assertion: the idea's citation of cryptanalysis branch
+        claude/n83-bl-arm says "NOT opened: ... figure taken verbatim from the
+        2026-10-15 task handoff". No ledger record verifies it (rg of ledger/ for
+        "235x" finds only the idea). The pass therefore adds zero information
+        to "231 vs 235".
+      failure_signature_triggered: false
+
+  mutation_analysis:
+    method: >-
+      Copies of run.py (sha ef13257e) and runbook.yaml (sha e5850bc6) were placed
+      in the scratchpad. observe() was monkeypatched per mutant, and each trial's
+      payload was built the way run.py main() builds it. Every runbook S02
+      by_trial equals/length assertion was then evaluated. A crash counts as a
+      kill (instrument failure). M0, the unmodified code, passes every
+      assertion, which reproduces the recorded 6/6.
+    results:
+      - {mutant: M1 price_ratio() hardcoded to 925/4, killed_by: [ctl-neg-perturbed-price]}
+      - {mutant: M2 online ratio hardcoded to 925/4, killed_by: [ctl-neg-perturbed-price, ctl-neg-precomputation-model]}
+      - {mutant: M3 online() ignores its precomputation argument, killed_by: [ctl-neg-precomputation-model]}
+      - {mutant: M4 online() ignores its c_probe argument, killed_by: [ctl-neg-perturbed-price]}
+      - {mutant: "M5 bsgs_max_lookups replaced by ceil(m/s), the v1 SF-1 defect regressed", killed_by: []}
+      - {mutant: M6 BSGS mean lookups in place of max, killed_by: [price-ratio-identity, ctl-consistency-a-change, ctl-consistency-r-change, ctl-bsgs-enumeration]}
+      - {mutant: M7 price ratio taken from the online ratio (not computed separately), killed_by: []}
+      - {mutant: M8 exactness rule removed, killed_by: []}
+      - {mutant: M9 c_BL 2124/1000 (1.77*1.2 unrounded), killed_by: "all but ctl-bsgs-enumeration; the primary crashes on an inexact division (instrument failure, not falsification)"}
+      - {mutant: M10 c_BL 23353/10000 (1.93*1.21), killed_by: "all but ctl-bsgs-enumeration; the primary crashes on an inexact division"}
+      - {mutant: M11 common_ratio checks only the first row, killed_by: []}
+    reading: >-
+      Only NEG-1 and NEG-2 add discriminating power beyond the primary's
+      per-cell literal pins, and what they detect is an implementation that
+      ignores its inputs. No mutant is killed by CON-1, CON-2 or CON-3 without
+      also being killed by the primary. Four mutants survive every assertion:
+      M5, M7, M8 and M11. M5 matters because the hypothesis's proof obligation
+      that the BSGS count be independent, and DEC-20261029-9bc3ff SF-1's demand
+      that the probe count "come from a computation independent of the formula
+      it is compared with", are met only by reading run.py lines 100-113, not by
+      any assertion. For contiguous baby steps {0..s-1}, giant stride s and s
+      dividing m, the enumerated maximum equals m/s as a theorem, so in this
+      configuration no correct enumeration can disagree with the formula. M7
+      matters because the hypothesis proof_obligation "the price formula is
+      computed separately from the online times" is likewise unchecked by the
+      run. The pass discriminates exactly this: "run.py evaluates the stated
+      closed forms of its frozen constants and responds to c_probe and to P".
+
+  objections:
+    - id: O1
+      severity: medium
+      text: >-
+        Computed integers are labelled "measured". runbook.yaml's metrics block
+        gives price_ratio_num, price_ratio_den, ratios_agree, all_match_bsgs and
+        matches_preregistered `label: measured`, and the num/den unit is
+        `count`. report.typ and data.json repeat "measured". Nothing in this
+        session is measured except elapsed_seconds. The committed
+        tools/progress_metrics.py (icperf_trials, lines 215-285, commit
+        029903cba3) emits icperf.EXP-ICPERF-284bc4.<trial>.c_probe_ns = 370 with
+        unit "nanoseconds per probe", and likewise c_state_ns, c_step_ns and
+        price_ratio_num/den, for every validated trial. That includes NEG-1's
+        planted 371. None of these carries an "assumed input" or "planted"
+        qualifier. This is a path from the record to a reading of 370 ns as a
+        host-measured probe latency and of 925/4 as a measured ratio.
+        better=neutral prevents ranking, but not the misreading. Also, under
+        docs/lab-contract.md the `ratio` unit means reference/candidate, higher
+        is better. 925/4 is candidate(IC)/reference(BL) online time, so an
+        export under `ratio` would invert its direction into an apparent 231x
+        advantage.
+    - id: O2
+      severity: medium
+      text: >-
+        The provenance of the prices is undisclosed. The specification and the
+        hypothesis call the cell "toy" and say the integers are "not the n=83
+        figure". They do not say that 370/2100/40 are the idea's n=83
+        inferred/assumed prices, which makes 925/4 numerically the idea's
+        "231 vs 235" plausibility check. A reader who sees "6/6 valid, 925/4"
+        next to "235x" will read confirmation. The proves-too-much result above
+        shows that reading carries no information.
+    - id: O3
+      severity: low
+      text: >-
+        "Control validity: passed" over five controls overstates what the
+        controls discriminate. Two of them (NEG-1, NEG-2) have marginal power,
+        and only against implementations that ignore their inputs. CON-1 and
+        CON-2 re-evaluate primary_cell on two of the primary's own (r, A)
+        inputs. CON-3 recomputes the formula inline and calls the same
+        bsgs_max_lookups, so it is a deterministic duplicate of the primary's
+        all_match_bsgs and is pinned by the same literals. The specification
+        labels are honest. The report's single "passed" flag hides the
+        difference.
+    - id: O4
+      severity: low
+      text: >-
+        CON-3 compares statistics that are not like for like. It matches the
+        BSGS worst case (max lookups) against r/(A*states). The parent idea
+        defines r/(A*states) as the mean of a geometric probe count (its H1, a
+        memoryless walk probing with replacement). Deterministic BSGS on the
+        same table has mean (m/s+1)/2, which is 25.5, 100.5 and 13.0 at the three
+        cells against 50, 200 and 25. A like-for-like comparison of expected
+        cost fails by about 2x (mutant M6). CON-3 therefore gives no support to
+        the idea's bridge "the probe count is exactly BSGS-on-the-quotient" or
+        "identical to IC with #states = T" at the level of expected cost. In
+        expectation, deterministic BSGS with the same table does about twice as
+        well as memoryless probing.
+    - id: O5
+      severity: low
+      text: >-
+        The BL arm is evaluated outside the formula's regime. With
+        P = 525 steps, P >= m at (1000,2) (m = 500) and at (1000,4) (m = 250).
+        The implied BL table size T = sqrt(P/1.2), about 20.9, exceeds m^(1/3)
+        (7.9, 12.6 and 6.3) at all three cells. bl_steps = 2, 8 and 1 are values
+        of online*P = 2.1*m, not lengths of any realizable BL walk. So the cells
+        support not even a toy-tier BL cost reading. Only the formula
+        evaluation stands.
+    - id: O6
+      severity: low
+      text: >-
+        Integrality depends on the rounded constant. The hypothesis says 21/10
+        "stands for 1.77 * 1.2", which is 2.124. The notes give c_BL as
+        2.1-2.3, and the section-23.2 form 1.93*1.21 is 2.335. Under either
+        unrounded constant the primary hits an inexact division (M9, M10),
+        which the specification classifies as instrument failure, not
+        falsification. The instrument can therefore evaluate only 21/10. The
+        price ratio would be 228.6 at 2.124 and 207.9 at 2.335.
+    - id: O7
+      severity: low
+      text: >-
+        The closure wording is too broad. "No latency effect" and "no n=83
+        speedup" (PR #2776, as quoted in the review plan) can read as negative
+        findings. The record measures neither latency nor anything at n=83, so
+        it closes nothing there (AGENTS core rule 6). The parent thesis, that
+        c_probe growth (an 8 GiB table: TLB and DRAM) drives the n=83 deficit,
+        stays fully open. The correct wording is "makes no latency or n=83
+        statement". The specification's scope_note already says "No speedup or
+        latency statement". Only the PR phrasing departs from it. The PR body is
+        not in the repository: only the merge title of 1a0afc68c2 is, so it was
+        not reviewed.
+    - id: O8
+      severity: info
+      text: >-
+        No pcc claim exists. pcc/ledger.jsonl at HEAD holds 3 lines, which are
+        audit-command receipts, and none is a claim on 925/4. Under
+        docs/agent-runtime-core.md, the pass must be cited as an unverified
+        assertion until tools/pcc/pcc.py verifies it. The working-tree
+        pcc/ledger.jsonl is modified and uncommitted and was not read as
+        evidence.
+    - id: O9
+      severity: info
+      text: >-
+        The exactness rule has no positive control. No preregistered cell
+        exercises an inexact division in the primary path, so removing the rule
+        (M8) is undetectable.
+
+  required_controls:
+    - id: RC-1
+      kind: null_object (pencil, already run here)
+      text: >-
+        Null-price control: the identical identity check on random price
+        triples. Here it gave 2000/2000 agreement. The composing decision
+        should record that ratios_agree, CON-1 and CON-2 hold for every price
+        vector under the equal-time precomputation definition, so they carry no
+        information about prices, BL or the parent law.
+    - id: RC-2
+      kind: like-for-like statistic
+      text: >-
+        Before CON-3 is read as "IC = BSGS on the quotient", enumerate the BSGS
+        mean lookups and compare them with the geometric mean r/(A*states). The
+        prediction is a factor-of-about-2 mismatch (25.5 vs 50 at (1000,2)).
+        This is the cheapest missing falsification control. It costs one more
+        line of the existing enumeration and needs no host.
+    - id: RC-3
+      kind: discriminating configuration
+      text: >-
+        For any successor version, choose a CON-3 configuration in which the
+        enumerated count is not a closed-form identity of the compared formula
+        (for example a giant stride different from the table size, or a
+        non-contiguous baby set), so that a formula-duplicating implementation
+        (M5) fails an assertion.
+    - id: RC-4
+      kind: positive control
+      text: >-
+        Add one planted inexact-division cell that must stop the trial, so the
+        exactness rule (M8) can be shown to work.
+    - id: RC-5
+      kind: prerequisite for any later cost reading (not owed by this record)
+      text: >-
+        Any later IC-vs-BL or IC-vs-rho cost reading needs: counted units per
+        arm, with a rho arm on the same target in the same counted unit (S);
+        unpriced native counters priced at 0, 0.1 and 1 GAE; every phase
+        present; the memory axis reported; and prices read from receipts, not
+        inferred.
+
+  counterexample_or_mutation: >-
+    M5 (bsgs_max_lookups := ceil(m/s), the v1 SF-1 defect) and M7 (price ratio
+    derived from the online ratio) each pass all six units' runbook assertions,
+    so the run cannot detect either defect. M1-M4 (hardcoded or
+    input-insensitive implementations) are killed only by NEG-1 and/or NEG-2.
+
+  baseline_comparison:
+    pollard_rho: >-
+      There is no rho arm. No target is solved and no counted unit exists, so S
+      (total/sqrt n) cannot be computed. sheriff B5.2 ("Rho must solve the same
+      target in the same counted unit") is not met, and the record claims
+      nothing against rho.
+    bsgs: >-
+      CON-3 enumerates BSGS worst-case lookups with the same 10-entry table. For
+      this configuration they equal the IC probe formula by a theorem. BSGS
+      expected lookups are about half the IC geometric mean (O4), so on expected
+      cost, BSGS dominates the modelled IC probing at equal table size.
+    closest_specialized_baseline: >-
+      Bernstein-Lange (KR-RHO-ea34b8, KN-LIT-7cc07f abstract-level) enters only
+      as the closed form bl_steps = 2.1*(r/A)/P priced at an assumed 40 ns. It is
+      evaluated outside its regime at all three cells (O5), with a rounded and
+      ambiguous constant (O6). The hypothesis's dominated_by names BL and claims
+      no exponent delta. That is explicit and non-null, and no Pareto claim is
+      made that would need checking against the other frontier rows. The memory
+      axis is not computed: at the toy P, IC has 10 entries against BL's about
+      20.9.
+
+  section_5a_answer:
+    comparison_against_rho_made: false
+    exactly_why_not: >-
+      No arm is Pollard rho. The specification's comparisons (CMP-PRIMARY,
+      CMP-CON-1..3, CMP-NEG-1/2, CMP-AA) are identity, consistency, negative and
+      A/A comparisons. The only two-arm quantity is 925/4 =
+      IC_online_ns/BL_online_ns at equal precomputation time, against a BL
+      formula and not against rho. Even that one is not a cost comparison in the
+      §5a sense, for three reasons. (1) Neither arm has a counted unit: every
+      count is a formula output and every price is an assumed constant (no
+      host receipt is read, by the stopping rule). (2) It is online-phase only
+      at a matched precomputation, so it is a stage diagnostic (B5.5) with
+      setup, descent/recovery and verification missing, which makes the total
+      unknown (B5.4). (3) The record explicitly ranks nothing (scope_note: "No
+      speedup or latency statement"). §5a has no unpriced counters to weight,
+      so it owes no band and supports no ranking.
+    illustrative_band_if_925_over_4_were_read_as_ic_vs_bl_cost: >-
+      This is red-team pencil arithmetic under a counter model that the record
+      does not contain. The assumption: a BL step is 1 group addition plus 1
+      native unit (walk hash / DP check); an IC probe is 1 group addition (the
+      target walk step) plus 1 native unit (canonicalization and lookup); an IC
+      state is 1 group addition (pair sum) plus 1 native unit. Then
+      R = IC_online/BL_online = (1+w_p)(1+w_s)/(2.1(1+w_b)^2). With one weight
+      w in {0, 0.1, 1} across all native counters, R = 10/21 = 0.476 at every
+      w: IC is about 2.1x faster online. With independent weights at the
+      27 corners, R lies in [0.119, 1.905], and 4 of the 27 corners put BL
+      ahead. The record's ns prices give R = 925/4 = 231.25, which is BL ahead
+      by 231x and 485.6 times the uniform-band value. Those prices are
+      equivalent to pricing native work at 9.25 GAE per probe and 52.5 GAE per
+      state (with 40 ns = 1 GAE), far outside the band. That gap is the parent's
+      untested DRAM/latency thesis. The ordering is therefore set entirely by
+      the price assignment, which this record does not measure. No ranking in
+      either direction is licensed.
+    b5_class: >-
+      Accounting (sheriff B5.1). Only the evaluation of a cost model's algebra
+      is exercised. No pipeline is changed or measured.
+
+  heuristic_challenges:
+    - >-
+      heuristic_under_test is null and HEUR-001 is "not under test", which is
+      correct. Neither the parent's H1 (uniform classes, geometric probe count)
+      nor its H2 (BL tradeoff on the quotient) is touched. CON-3's max-vs-mean
+      coincidence (O4) must not be read as validating H1. The cheapest
+      experiment that would expose a deviation from the random model is a
+      probe-count distribution against Geometric(p) at a real table. That is
+      the lane's own route and was not reviewed here.
+    - >-
+      Random-model transfer: memoryless probing with replacement and
+      deterministic BSGS without replacement differ by about 2x in
+      expectation. The idea's "IC adds nothing to the tradeoff except how the
+      table is generated" is off by that factor in expected cost.
+
+  cost_model_challenges:
+    - >-
+      Equal precomputation time is a definition (c_state := P/#states) that
+      forces r and A to cancel. NEG-2 shows that breaking it breaks the
+      identity. The cancellation is not an empirical regularity.
+    - >-
+      Omitted phases: setup at n=83 includes base discovery and rank (folded
+      into c_state by definition, per the idea's own confounder). Also omitted
+      are discrete-log recovery from a stored pair-state after a hit,
+      verification, BL table construction details, and the walk-to-DP tail.
+      Cold-start and amortized costs are not separated, and no target count L
+      is named. Missing phases make the total unknown, not zero (B5.4).
+    - >-
+      The cost of the orbit-folding invariant (canonicalization to a
+      signed-Frobenius class) sits inside the assumed c_probe and c_state and
+      is not charged separately (KN-LIT-7593). Both arms are assumed to walk
+      the same quotient (the idea's assumption 1, unverified here), so A
+      cancels by assumption.
+    - >-
+      The memory axis is absent from the instrument. IC memory is P/c_state
+      entries and BL's is sqrt(P/1.2). The idea places IC in the memory-heavy
+      corner, but the instrument computes neither.
+
+  reduction_and_scope_challenges:
+    - >-
+      No reductions are cited. On scope: the "toy" tier label sits on prices
+      derived from n=83 (O2). The closure phrasing is too broad (O7). No
+      affected or safe scheme lists exist, and none are needed.
+
+  proof_architecture_challenges:
+    - >-
+      Observation fiber: hold the observable fixed (ratios_agree true,
+      r-invariance, A-invariance) and the fiber contains every price vector
+      (2000/2000). The missing separator is any measured price.
+    - >-
+      Quantifier order: the prices were fixed first, from the n=83
+      back-of-envelope. The cells (r, A, states) and the constant 21/10 make
+      every division exact (M9 and M10 show an unrounded constant does not).
+      The witness cells were chosen after the constant.
+    - >-
+      Method ceiling: the strongest certifiable claim is that Python Fraction
+      evaluates the stated closed forms of the frozen inputs. This matches the
+      hypothesis method_ceiling ("No measured speedup and no slope in r
+      follow").
+
+  narrowest_supported_statement: >-
+    At the frozen inputs (c_probe 370, c_state 2100 and c_step 40 ns, all
+    assumed constants and the idea's n=83 inferred/assumed prices; c_BL 21/10;
+    10 states; cells (1000,2), (4000,2), (1000,4)), run.py at sha ef13257e
+    evaluates the stated closed-form online-time model in exact rationals. It
+    returns 925/4 for the price formula and for each cell's online ratio, and
+    the preregistered per-cell integers. Its output responds to a planted
+    change of c_probe (1855/8) and of the precomputation model (185/42). This
+    is an arithmetic instrument check (B5 class: accounting). It measures no
+    price, latency, step count or cost. It makes no comparison with Pollard rho
+    and ranks IC against Bernstein-Lange in neither direction. It gives no
+    support to IDEA-20261015-7a3c9e claims (1)-(4) or to the unverified 235x
+    n=83 figure, and it closes nothing about latency or n=83.
+
+  recommended_maximum_claim:
+    claim_class: instrument observation (stage-0 arithmetic identity), not a cost claim
+    claim_tier: >-
+      toy, as a scale label only (docs/lab-contract.md). No group or curve
+      instance exists. The record cannot carry a measured_bound or ECBND1h seal
+      and cannot enter the ledger as a cost claim (AGENTS.md "Curve identity and
+      measured bounds").
+    evidence_strength: >-
+      preliminary at most. This is one deterministic execution, the audit flag
+      is pending J1, and there is no pcc claim id, so it is cited as an
+      unverified assertion until pcc verifies it. Strength must not exceed this
+      even if J1 clears the flag, because the content is an algebraic identity.
+    hypothesis_effect: >-
+      H-ICPERF-2f52d1's arithmetic statement may be recorded as observed at the
+      three cells. Nothing transfers to IDEA-20261015-7a3c9e, to the section-23
+      table, to n=83, or to any frontier. No frontier moves.
+    required_wording: >-
+      "no latency or n=83 statement" in place of "no latency effect, no n=83
+      speedup". In a new correction record, not an edit to the frozen runbook or
+      report: "computed from frozen inputs" in place of "measured" for the five
+      runbook metrics, plus the n=83 provenance of the three prices.
+
+  next_concrete_action: >-
+    In the composing decision for REVIEW-ICPERF-284bc4-20261105, the
+    Coordinator adopts the narrowest_supported_statement and the
+    recommended_maximum_claim above. In the same act it files one new
+    correction record that (a) relabels the five runbook "measured" metrics as
+    computed from frozen inputs, (b) discloses that 370/2100/40 are the idea's
+    n=83 inferred/assumed prices, and (c) routes a tooling task so that
+    tools/progress_metrics.py labels the c_*_ns and price_ratio exports as
+    assumed or planted inputs. Forward guidance for the parent lane, not part
+    of this action: the idea's own zero-compute stage 0 remains the first step
+    that could test anything. That means reading c_probe (from the K1798
+    one-point run's own probe count), c_state and c_step from receipts, and
+    verifying 235x [61, 645] on cryptanalysis:claude/n83-bl-arm, before any
+    formula-vs-measurement ratio is formed.
+
+  scratch_computations:
+    note: >-
+      Session scratchpad, outside the repository and not durable. These are
+      reproducible pencil checks, not evidence. The mutants and the band model
+      are fully described above, so they can be re-run from run.py and
+      runbook.yaml.
+    paths:
+      - /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/rt-284bc4/mutants.py
+      - /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/rt-284bc4/mutants.out
+      - /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/rt-284bc4/band.py
+      - /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/rt-284bc4/band.out
+
+  artifact_paths:
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml
+
+review_attestation:
+  task_id: TASK-20261105-c44b03
+  joints_owned: [J2-scope]
+  sources_read:
+    - docs/agent-runtime-core.md
+    - agents/red-team.md
+    - AGENTS.md (sections Intermediate-cost, Core rules, Review architecture, Curve identity and measured bounds; heading index)
+    - docs/sheriff.md (B5, lines 270-330)
+    - docs/lab-contract.md (lines 85-100)
+    - docs/benchmark-records.md (lines 45-60)
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+    - experiments/EXP-ICPERF-284bc4/implementation/run.py
+    - experiments/EXP-ICPERF-284bc4/implementation/check.py
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/graph.svg
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/raw-result.json (by key)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-30596e/raw-result.json (by key)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-850008/raw-result.json (by key)
+    - ledger/hypotheses/H-ICPERF-2f52d1.yaml
+    - ledger/proposals/IDEA-20261015-7a3c9e.yaml
+    - ledger/proposals/IDEA-20261015-7a3c9e.notes.md (lines 10-60 and grep)
+    - ledger/decisions/DEC-20261029-ca33b3.yaml (lines 110-140)
+    - ledger/decisions/DEC-20261029-9bc3ff.yaml (lines 115-170)
+    - ledger/decisions/DEC-20261029-22e05b.yaml (lines 1-30, 52-70)
+    - ledger/decisions/DEC-20261029-5554ee.yaml (lines 1-30)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml (grep only)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261029-0a9023.yaml (grep only)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/BATCH-38f344.yaml (grep only)
+    - ledger/handoffs/TASK-20261029-038368.yaml (grep only)
+    - tools/progress_metrics.py (lines 150-290)
+    - tools/test_progress_metrics.py (grep only)
+    - docs/reports/2026-10-26-icperf-n83-reconciliation/README.md (grep only; no match)
+    - pcc/ledger.jsonl at HEAD via git show (grep only)
+    - git commit messages of 1a0afc68c2, b825ee6ea5, af94114e9c
+    - tools/allocate_id.py (--help and --check only)
+  read_sibling_reports: false
+  sibling_note: >-
+    The directory name experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3
+    appeared in git status and ls. Its contents were not opened. Nothing under
+    experiments/EXP-ICPERF-283a70/review/ was opened. The content searches for
+    925/4 and ICPERF excluded both review trees. One unscoped `rg -l` for PR
+    #2776 listed only the two review-plan.yaml files by name. No sibling report
+    matched it and none was opened.
+  blind_from_respected: null
+  joint_verdicts:
+    - {joint: J2-scope, verdict: holds_with_limitation}
+  verdict: holds_with_limitation

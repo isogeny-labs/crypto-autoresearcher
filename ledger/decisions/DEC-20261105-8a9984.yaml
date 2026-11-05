@@ -1,0 +1,252 @@
+# DEC-20261105-8a9984: Coordinator evidence review of EXP-ICPERF-284bc4 (stage-0
+# price-ratio identity instrument v2, H-ICPERF-2f52d1): support, scoped to the
+# arithmetic identity at three toy cells; strength preliminary; claim tier toy.
+# Composed from REVIEW-ICPERF-284bc4-20261105. No trial was run.
+coordinator_decision:
+  id: DEC-20261105-8a9984
+  id_provenance: >-
+    Pre-allocated by the top-level session with tools/allocate_id.py --next
+    coordinator_decision --date 20261105 and confirmed with --check. The
+    Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-05'
+  decided_at: '2026-11-05'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent, policy coordinator-orchestration-code, model
+    claude-opus-5-5 as stated by the top-level session; no shell. Digests,
+    git state and checker exit codes are as reported by the reviewers and the
+    top-level session. Recorded values were read by the Coordinator from the
+    six committed raw-result.json files and compared with the blind
+    re-derivation.
+  goal_id: GOAL-ICPERF-e6b6a4
+  question_id: RQ-ICPERF-94c86e
+  review_plan: REVIEW-ICPERF-284bc4-20261105
+  subject: >-
+    Evidence review of EXP-ICPERF-284bc4 (approval DEC-20261029-ca33b3,
+    session RBS-ICPERF-8cdc92, runs RUN-ICPERF-8e3acd, 2d715d, 2c627f, 779d41,
+    30596e, 850008) under binding rulings DEC-20261029-9bc3ff,
+    DEC-20261029-22e05b, DEC-20261029-5554ee.
+  context: >-
+    Six of six units valid. Primary RUN-ICPERF-8e3acd records price ratio
+    925/4, ratios_agree true and all_match_bsgs true at (1000,2), (4000,2),
+    (1000,4) with 10 states; CON-1/2/3 hold; NEG-1 gives 1855/8 and NEG-2
+    gives 185/42, both failing the preregistered match as designed. Audit
+    AUD-20261105T164527Z-d5036c is flagged with matched 0 of 6; the validator
+    showed every flagged row is a pointer absent from both files (27 present
+    rows equal, 39 absent-on-both, 0 differing) and that the audit's parity
+    check did not run (3.11.17 recorded, 3.13.18 replayed; 18 of 18 replays
+    under 3.11.18/3.12.3/3.13.18 identical). The blind re-derivation
+    reproduces every value. J1 (validator) and J2 (red team) hold;
+    tools/check_review_independence.py PASS.
+  decision: support
+  decision_scope: >-
+    Support of H-ICPERF-2f52d1 as stated, and only as stated: the integer
+    identity at the three toy cells under the frozen assumed prices. Not
+    support of IDEA-20261015-7a3c9e or any of its claims (1)-(4), the n=83
+    arm, the 235x figure, any latency effect, any Bernstein-Lange or rho cost
+    ranking, or any frontier row.
+  target_ids:
+    - H-ICPERF-2f52d1
+    - EXP-ICPERF-284bc4
+    - EV-ICPERF-08f6f9
+    - RBS-ICPERF-8cdc92
+    - AUD-20261105T164527Z-d5036c
+  evidence_strength: preliminary
+  claim_tier: toy
+  proof_status: derivation
+  scoped_claim: >-
+    At c_probe 370, c_state 2100 and c_step 40 ns (assumed constants equal to
+    IDEA-20261015-7a3c9e's n=83 inferred/assumed prices), BL constant 21/10
+    and 10 states, run.py sha256 ef13257e... evaluates the stated closed-form
+    online-time model in exact rationals: the reduced price ratio and the
+    online ratio at each of (1000,2), (4000,2), (1000,4) are 925/4 and the
+    probe counts 50, 200, 25 equal the enumerated BSGS maxima; a planted
+    c_probe 371 gives 1855/8 and a planted 10-step precomputation gives
+    185/42. An implementation written blind from the statement agrees on
+    every value. This measures no price, latency, step count or cost, compares
+    nothing with Pollard rho, ranks IC against Bernstein-Lange in neither
+    direction, and makes no latency or n=83 statement.
+  rulings:
+    validity: >-
+      Valid run set. The audit flag is a replay-coverage defect of the runbook
+      replay.compare union list (absent-on-both scored as mismatch), not a
+      value mismatch; no return to the Executor. Session RBS-ICPERF-8cdc92 is
+      citable, scoped, in the sense of DEC-20261029-5554ee citability_meaning:
+      any citation discloses the flagged verdict (matched 0 of 6), the
+      row-level classification that carries replay assurance, and the
+      undetected interpreter drift 3.11.17 -> 3.13.18 that changed no value.
+      The audit stays flagged as recorded.
+    labelling_ruling: >-
+      For every reader of this experiment's records: (a) price_ratio_num,
+      price_ratio_den, ratios_agree, all_match_bsgs and matches_preregistered
+      are computed from frozen inputs, not measured, wherever runbook.yaml,
+      reports/run-20261030T1520Z (report.typ, data.json) or a metrics export
+      label them "measured"; only elapsed_seconds is measured. (b) 370, 2100
+      and 40 ns are IDEA-20261015-7a3c9e's n=83 inferred (c_probe, c_state)
+      and assumed (c_step) prices, so 925/4 = 231.25 is numerically the idea's
+      "231 against the measured 235", and this pass adds no information to
+      that comparison; 235x [61, 645] is unverified in the ledger. (c) The
+      producer phrasing "no latency effect, no n=83 speedup" (PR #2776, as
+      quoted in the review plan) reads "makes no latency or n=83 statement";
+      the record closes nothing there. Frozen files stay unedited; an
+      additive correction record carries this (NA-1).
+    section_5a: >-
+      No comparison against rho is made, so no band is owed (EV-ICPERF-08f6f9
+      s5a_band). The red team's illustrative band shows that any order read
+      from 925/4 would be set entirely by the price assumption (10/21 under
+      uniform 0/0.1/1 GAE weights, [0.119, 1.905] across corners, 231.25 at the
+      record's ns prices). No ranking in either direction is licensed.
+    v1_runs: RUN-ICPERF-943efa and RUN-ICPERF-b09be8 stay invalidated and are cited by nothing in this decision as evidence.
+  status_transitions:
+    - {record: H-ICPERF-2f52d1, from: approved, to: supported, via: analyzed, by: "hypothesis status edit in this decision's ledger archive"}
+    - {record: EXP-ICPERF-284bc4, from: completed, to: analyzed, by: "this decision record; specification.yaml is frozen and is not edited"}
+  status_transitions_note: >-
+    The hypothesis moves approved -> analyzed -> supported in one decision, as
+    in the H-PFDR-727bfc precedent (DEC-20261029-01405d). No asymptotic claim
+    is involved (asymptotic_claim null), so the four promotion gates do not
+    apply. The predefined success criterion was met, controls behaved as
+    designed, an independent verifier passed and the statement is not
+    surprising, so support rather than replicate. GOAL-ICPERF-e6b6a4 stays
+    active.
+  hypothesis_status_ruling:
+    hypothesis: H-ICPERF-2f52d1
+    old_status: approved
+    new_status: supported
+    scope_of_status: >-
+      The arithmetic statement at the three toy cells only. Interpretation
+      limits of the hypothesis stand: a pass is not evidence that a measured
+      n=83 deficit equals 235, and the alive conditions of IDEA-20261015-7a3c9e
+      (host ratios at seven sizes, slope band, ordinary-curve control) stay
+      open and untested.
+    not_adopted: >-
+      The proof obligation "the price formula is computed separately from the
+      online times" is met by code reading and the blind re-derivation, not by
+      any run assertion (red-team M7). CON-3 is not read as "IC equals BSGS on
+      the quotient" at expected cost (worst case 50/200/25 against BSGS mean
+      25.5/100.5/13.0).
+  rationale:
+    - >-
+      Validity before interpretation: run count, schema-complete manifests,
+      receipts, journal chain, raw/summary/report agreement and control
+      comparability all hold under independent code (J1). Seeds are absent by
+      design for deterministic arithmetic. The single audit defect changes no
+      value, so the run set is evidence, not a return to the Executor.
+    - >-
+      The recorded values equal the out-of-sample preregistered integers and
+      the blind re-derivation at every quantity, including the NEG-2
+      non-integer bl_steps 105/2. That is the check that can see a wrong but
+      self-consistent implementation, and it found none.
+    - >-
+      The coordinator prior (plan, written before any reviewer ran) expected a
+      scoped instrument pass, a replay-coverage flag and strength preliminary
+      at most. The review confirmed it, and added two things the prior did not
+      foresee: the audit's parity check silently did not run, and the prices
+      are the parent idea's n=83 estimates, which makes 925/4 its 231-vs-235
+      figure.
+    - >-
+      Strength preliminary: one deterministic execution per unit, flagged
+      audit, no pcc claim, four mutants passing every assertion, and content
+      that holds by construction. A replication would reproduce an identity,
+      not an effect, so none is commissioned.
+    - >-
+      Support, not refine: the hypothesis says what was tested and its
+      interpretation limits already fence the parent claims. The defects found
+      are in labels, exports and audit tooling, and are handled by an additive
+      correction and tooling tasks, not by a new hypothesis.
+    - >-
+      Research direction: this is a constant-level accounting instrument with
+      no exponent content. Its value is to clear the instrument so that the
+      parent idea's receipt-reading stage can be ranked on its merits; it is
+      not itself a lead.
+  evidence_refs:
+    - ledger/evidence/EV-ICPERF-08f6f9.yaml
+    - experiments/EXP-ICPERF-284bc4/analysis.md
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml (frozen f7eb8ae292, sha256 f4a34e9bd2aa961039c8371d09a110198ce8904a1dfc949e12ba718972fd6985)
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-576b11/validation-report.yaml and review-attestation.yaml
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml and review-attestation.yaml
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml
+    - experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c/audit.json
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-{8e3acd,2d715d,2c627f,779d41,30596e,850008}/raw-result.json
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/
+  limitations:
+    - No shell. Digests, the PASS of tools/check_review_independence.py and git state are as reported; not re-run here.
+    - One deterministic execution per unit; no independent second run; no pcc claim on 925/4.
+    - Audit flagged as recorded; its interpreter-parity check was inoperative; the recorded 3.11.17 build cannot be re-obtained.
+    - Only NEG-1 and NEG-2 discriminate beyond the primary's literal pins; M5, M7, M8 and M11 survive every assertion.
+    - BL closed form evaluated outside its regime; integrality depends on the rounded constant 21/10; no exactness positive control.
+    - Memory not recorded; timing only.
+  procedure_deviations:
+    - Original attestations used holds_with_limitation (top-level brief error); reviewers filed review-attestation.yaml addenda in checker vocabulary; originals unedited (EV-ICPERF-08f6f9 PD-1).
+    - Plan audit_note "No environment drift" inaccurate (PD-3); plan blind quantity text carries a spurious factor states (PD-4); review tasks have no ledger handoff records (PD-5).
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      Support at strength preliminary on an arithmetic identity that holds by
+      construction at three toy cells; the promotion rule applies at
+      replicated or strong, and the content (an equal-precomputation-time
+      cancellation) is a definition, not a finding. No KN-TECH: the
+      instrument is validated in one experiment only.
+  visual_record:
+    report: experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/
+    earlier_run_reports: [experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/]
+    canonical_graphs_checked: >-
+      knowledge/frontiers/ecdlp/ (README.md and the generic-rho and
+      index-calculus KR rows; no rendered graph source exists there). No row
+      cites EXP-ICPERF-284bc4, its runs, H-ICPERF-2f52d1 or
+      IDEA-20261015-7a3c9e. KR-RHO-ea34b8, cited by the hypothesis for the
+      1.77 and 1.2 factors, is unchanged. No canonical graph changes: a toy
+      instrument pass moves no frontier.
+  next_actions:
+    - id: NA-1
+      primary: true
+      owner: coordinator (record allocation and archive by the top-level session)
+      text: >-
+        File one additive correction record (id from tools/allocate_id.py,
+        confirmed with --check) whose content is rulings.labelling_ruling
+        (a)-(c): computed-not-measured for the five runbook metrics, the n=83
+        provenance of 370/2100/40 ns, and "makes no latency or n=83
+        statement". Frozen runbook, report and data.json stay unedited.
+        Archive it in this decision's ledger archive or the next one.
+    - id: NA-2
+      owner: executor (executor-implementation), via a new handoff
+      text: >-
+        Tooling: tools/progress_metrics.py ICPERF exports for EXP-ICPERF-284bc4
+        label c_probe_ns, c_state_ns, c_step_ns and price_ratio_num/den as
+        assumed inputs (NEG-1's 371 as planted) and never export 925/4 under
+        the lab `ratio` unit, which would invert its direction. Extend the
+        exporter and its test in the same PR.
+    - id: NA-3
+      owner: executor (executor-implementation)
+      text: >-
+        Tooling: the tools/runbook.py audit defects found here (absent-on-both
+        pointers scored as mismatch; no per-trial compare pointers;
+        _recorded_python key gap) are the single tooling handoff opened as
+        DEC-20261105-6e2616 NA-1. No separate task.
+    - id: NA-4
+      owner: coordinator, at the next GOAL-ICPERF-e6b6a4 rerank
+      text: >-
+        Rank the parent idea's zero-compute receipt stage for
+        IDEA-20261015-7a3c9e: read c_probe (from the K1798 one-point run's
+        probe count), c_state and c_step from receipts, and verify 235x
+        [61, 645] on cryptanalysis:claude/n83-bl-arm, before any
+        formula-vs-measurement ratio is formed. Any successor instrument
+        version adopts red-team RC-2 (BSGS mean against the geometric mean),
+        RC-3 (a CON-3 configuration that is not a closed-form identity), RC-4
+        (a planted inexact-division positive control) and RC-5 (counted units,
+        a matched rho arm, 0/0.1/1 GAE pricing, all phases, memory axis) for
+        any cost reading.
+    - id: NA-5
+      owner: top-level session
+      text: >-
+        Render graph.svg and report.pdf from
+        reports/review-DEC-20261105-8a9984/data.json and report.typ and inspect
+        them; write analysis.md from the Coordinator's returned text; run
+        tools/validate_ledger.py; archive EV-ICPERF-08f6f9, this decision, the
+        hypothesis status edit, analysis.md, the review reports and the
+        decision report as one ledger archive; push, refresh the PR (ready,
+        auto-merge on); checkpoint GOAL-ICPERF-e6b6a4 with exactly one next
+        action (recommended: NA-1 here). Support becomes official at that push.
+  archived_by_note: The top-level session binds the ledger archive task id at archive time.
+  official_effect_until_committed_pushed_reviewable: none

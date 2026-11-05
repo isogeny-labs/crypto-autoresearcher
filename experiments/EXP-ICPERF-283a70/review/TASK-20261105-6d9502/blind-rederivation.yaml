@@ -1,0 +1,83 @@
+schema: blind-rederivation/v1
+task_id: TASK-20261105-6d9502
+kind: derivation  # not a scientific trial
+parameters: {seed: 20261017, p: "1/50", n: 64}
+method: >-
+  Independent Python 3 (stdlib only, fractions.Fraction for exact arithmetic) implementation
+  written from the verbatim sampler definition supplied in the task. State is a 32-bit unsigned
+  integer starting at the seed; one step is x ^= (x<<a) mod 2^32; x ^= x>>b; x ^= (x<<c) mod 2^32.
+  Each draw steps then tests, stopping at the first stepped state with x mod 50 == 0; the value is
+  the test count (support from 1), or test count minus 1 for variant C. Draws chain from the
+  previous stopping state; the seed is never tested. Order statistics are 1-based on the sorted
+  64 values. CV^2 (denominator n) = (n*sumsq - sum^2)/sum^2; CV^2 (denominator n-1) =
+  n*(n*sumsq - sum^2)/((n-1)*sum^2); median/mean = median*n/sum. Consistency check: C equals A
+  with every value reduced by 1 (sum 2943-64=2879; sumsq 289567-2*2943+64=283745; same CV^2 numerator).
+script_path_scratch: /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/blind-283a70/derive.py
+script: |
+  from fractions import Fraction as F
+  M=0xFFFFFFFF
+  def draws(seed,a,b,c,n=64,mod=50,off=0):
+      x=seed&M; out=[]
+      for _ in range(n):
+          t=0
+          while True:
+              x^=(x<<a)&M; x^=x>>b; x^=(x<<c)&M
+              assert x!=0
+              t+=1
+              if x%mod==0: break
+          out.append(t-off)
+      return out,x
+  def stats(v):
+      n=len(v); s=sum(v); q=sum(i*i for i in v); o=sorted(v)
+      num=n*q-s*s
+      return dict(values=v,sample_sum=s,sum_squares=q,os32=o[31],os33=o[32],
+        median_well_defined=o[31]==o[32],
+        cv2_denom_n=F(num,s*s), cv2_denom_n_minus_1=F(n*num,(n-1)*s*s),
+        median_over_mean=F(o[31]*n,s))
+  for name,args in [("A",(13,17,5,0)),("B",(1,2,14,0)),("C",(13,17,5,1))]:
+      a,b,c,off=args; v,xf=draws(20261017,a,b,c,off=off); r=stats(v)
+      print(name,{k:(str(x) if isinstance(x,F) else x) for k,x in r.items()},"final_state",xf)
+results:
+  A_primary_13_17_5_support_from_1:
+    values: [7, 22, 69, 52, 26, 41, 29, 16, 3, 6, 23, 8, 48, 19, 2, 127, 47, 105, 39, 60, 80, 3, 28, 211, 52, 6, 24, 81, 1, 126, 2, 10, 5, 120, 66, 3, 18, 22, 11, 118, 95, 43, 15, 10, 56, 28, 160, 24, 18, 44, 18, 11, 28, 100, 53, 11, 68, 244, 9, 28, 59, 44, 13, 28]
+    sample_sum: 2943
+    sum_squares: 289567
+    order_stat_32: 28
+    order_stat_33: 28
+    median: 28
+    median_well_defined: true
+    cv2_denominator_n: "9871039/8661249"
+    cv2_denominator_n_minus_1: "631746496/545658687"
+    median_over_mean: "1792/2943"
+    final_state: 631224600
+  B_triple_1_2_14_support_from_1:
+    values: [60, 106, 20, 66, 2, 85, 28, 17, 46, 31, 15, 15, 81, 37, 14, 24, 44, 9, 2, 20, 24, 42, 11, 48, 21, 18, 306, 51, 21, 53, 15, 68, 77, 29, 11, 35, 2, 1, 123, 19, 130, 2, 111, 63, 15, 4, 1, 4, 58, 87, 75, 87, 118, 145, 17, 29, 51, 5, 1, 54, 67, 15, 1, 101]
+    sample_sum: 2938
+    sum_squares: 290138
+    order_stat_32: 29
+    order_stat_33: 29
+    median: 29
+    median_well_defined: true
+    cv2_denominator_n: "2484247/2157961"
+    cv2_denominator_n_minus_1: "158991808/135951543"
+    median_over_mean: "928/1469"
+    final_state: 611484950
+  C_primary_13_17_5_support_from_0:
+    values: [6, 21, 68, 51, 25, 40, 28, 15, 2, 5, 22, 7, 47, 18, 1, 126, 46, 104, 38, 59, 79, 2, 27, 210, 51, 5, 23, 80, 0, 125, 1, 9, 4, 119, 65, 2, 17, 21, 10, 117, 94, 42, 14, 9, 55, 27, 159, 23, 17, 43, 17, 10, 27, 99, 52, 10, 67, 243, 8, 27, 58, 43, 12, 27]
+    sample_sum: 2879
+    sum_squares: 283745
+    order_stat_32: 27
+    order_stat_33: 27
+    median: 27
+    median_well_defined: true
+    cv2_denominator_n: "9871039/8288641"
+    cv2_denominator_n_minus_1: "631746496/522184383"
+    median_over_mean: "1728/2879"
+    final_state: 631224600
+review_attestation:
+  task_id: TASK-20261105-6d9502
+  joints_owned: []
+  sources_read: []
+  read_sibling_reports: false
+  blind_from_respected: true
+  verdict: derived

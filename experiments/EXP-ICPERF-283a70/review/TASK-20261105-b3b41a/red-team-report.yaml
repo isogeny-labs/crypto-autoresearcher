@@ -1,0 +1,612 @@
+# Red-team report for EXP-ICPERF-283a70, joint J2-scope of review plan
+# REVIEW-ICPERF-283a70-20261105 (frozen at f7eb8ae292). Written by
+# TASK-20261105-b3b41a. Working-tree file: it becomes durable only when the
+# Coordinator's ledger archive task commits it. Sibling reports were not read.
+red_team_report:
+  id: RT-20261105-b3b41a
+  id_note: >-
+    tools/allocate_id.py has no RT record type. The id reuses this task's
+    6-hex token, following the RT-YYYYMMDD-<6hex> convention of earlier
+    red-team reports.
+  task_id: TASK-20261105-b3b41a
+  review_plan_id: REVIEW-ICPERF-283a70-20261105
+  joints_owned: [J2-scope]
+  experiment_id: EXP-ICPERF-283a70
+  hypothesis_id: H-ICPERF-5adc9b
+  parent_idea_id: IDEA-20261015-b41f68
+  goal_id: GOAL-ICPERF-e6b6a4
+  runs_reviewed: [RUN-ICPERF-f21eb1, RUN-ICPERF-0ef41e, RUN-ICPERF-74e9a2]
+  invalidated_not_cited: [RUN-ICPERF-943efa, RUN-ICPERF-b09be8]
+  snapshot:
+    plan_commit: f7eb8ae292
+    branch: claude/review-icperf-v2-evidence
+    byte_check: >-
+      git diff --quiet f7eb8ae292 over implementation/, specification.yaml,
+      runs/, the hypothesis, the idea and ledger/decisions: identical.
+      run.py sha256 53965863...9a38 and specification.yaml sha256
+      491106df...5973 equal the trial-plan and approval bindings.
+    working_tree_notes: >-
+      pcc/ledger.jsonl is modified in the working tree and was not read as
+      durable; only its committed copy at f7eb8ae292 was searched. Sibling
+      directories TASK-20261105-558a8b/ and TASK-20261105-6d9502/ appeared under
+      review/ after the freeze. Their contents were not opened. One filename
+      was visible in a git diff --stat used to check the snapshot.
+    pr_2776_body: >-
+      Not reachable from this session (GitHub API 403). This is a session
+      limitation, not evidence that the body is absent. The review covers the
+      committed artifacts and the claim restated in the review plan.
+
+  claim_under_review: >-
+    From the review plan: 3/3 units valid; primary RUN-ICPERF-f21eb1 (seed
+    20261017, p = 1/50, 64 draws) gives 2943 / 289567 / 28 with no median split,
+    the exact pass condition of DEC-20261029-0e40f3; CTL-1 (shift triple
+    (1,2,14)) and CTL-2 (support from 0) both fail the exact match. Stage-0
+    observation only: no latency effect and no attack. J2 asks what this
+    licenses.
+
+  joint_verdict:
+    joint: J2-scope
+    verdict: holds_with_limitation
+    plan_vocabulary_mapping: >-
+      In agents/red-team.md terms this is "holds", with the limitations L1-L7
+      below attached to any evidence record.
+    breaking_artifacts_checked:
+      - artifact: A reading that the bands support geometric shape at host scale.
+        found: false
+        detail: >-
+          No record reads the bands at host scale. H-ICPERF-5adc9b reads them
+          as a shape check at sample scale (limitation L3) and disclaims the
+          8 GiB table explicitly. The run report and RESULTS.md carry the
+          "does not measure host latency" sentence, and check.py enforces it.
+      - artifact: Any latency, speedup or ranking claim.
+        found: false
+        detail: See answers.q3_language and answers.q4_sec5a.
+      - artifact: A control that cannot fail.
+        found: false
+        detail: >-
+          Both controls can fail, but only on narrow defects. CTL-2 can fail
+          only if the support_min path is dead, because its integers are an
+          affine image of the primary's (limitation L2). CTL-1 can fail only if
+          the shifts path is dead or the runner diverges from the design-time
+          scratch code. Neither can detect a common-mode error in step(),
+          draw() or moments(), which all three arms share.
+
+  answers:
+    q1_exact_match_discrimination:
+      how_the_integers_were_frozen: >-
+        2943 / 289567 / 28 were produced by
+        experiments/EXP-ICPERF-b2f2d0/implementation/run.py in a design-time
+        directory before version 1 was frozen on 2026-10-17
+        (EXP-ICPERF-b2f2d0 specification.yaml preregistered_prediction.source;
+        restated in the v2 spec prediction_provenance PRED-PRIMARY). Version
+        1's own unit, RUN-ICPERF-b09be8, wrote the same integers. It is
+        invalid_output and is not cited here, and its values were seen by the
+        v2 designers (data_seen). The v2 sampler prose (spec
+        /experiment/sampler) was written under DEC-20261029-22e05b F5 to state
+        the recurrence v1's code already ran. The control integers
+        2938/290138/29 and 2879/283745/27 came from the v2 design session's
+        scratch computation outside the repository; it was not retained
+        (PRED-CONTROLS, in_sample). The v2 run.py draw() equals v1's draw()
+        for support_min 1: step, count, test x mod 50 = 0, continue from the
+        stop state.
+      single_lineage: >-
+        Integers, prose, runner and control constants all descend from one
+        code lineage: v1 run.py, then integers, then F5 prose describing that
+        code, then v2 run.py. The audit replay (AUD-20261105T164530Z-b85ca9)
+        re-ran the same run.py and is a self-replay. test_unit.py has no
+        independent sampler; it executes run.py.
+      what_it_discriminates:
+        - >-
+          Regression and determinism: v2 run.py reproduces v1 run.py's
+          output. Bit-exact across CPython 3.11.17 (run) and 3.13.18 (audit
+          replay).
+        - >-
+          Declared parameters: the shift triple and support offset (CTL-1,
+          CTL-2). Among 21202 completing wrong left/right/left triples at the
+          frozen seed (scan below), 19 reproduce the sum 2943 alone, 0
+          reproduce sum plus sum of squares, and 0 reproduce all three
+          integers. The (S, Q, median) triple identifies this program within
+          that family.
+        - >-
+          The F5 conventions. Every plausible misreading tested changes the
+          integers (counterexample_or_mutation). The closest miss is the
+          seed-tested reading: 2944 / 289582 / 28, +1 on the first draw only.
+          It passes both bands with no split, and the exact match rejects it
+          only through the sum.
+      what_it_cannot_discriminate:
+        - >-
+          A common-mode error shared by the prose and the code. The prose was
+          written from the code, so only an implementation written from the
+          prose without the code can test that the text pins the sample
+          (F5's stated aim). That is the blind re-derivation,
+          TASK-20261105-6d9502.
+        - >-
+          Any distributional property: geometric shape, independence of
+          draws, or the value of p (see q2).
+        - Anything about a table, a probe panel, a host, or the IDEA claims (1)-(4).
+      independent_implementation_adds: >-
+        Exactly one thing: an independent check that the specification text
+        determines 2943 / 289567 / 28 (and the control integers), i.e. that the
+        text is the definition and the code is one faithful evaluation of it.
+        It adds nothing about geometric shape, p, probe counts or latency. It
+        should cover all three arms, because the control integers come from
+        unretained scratch code.
+      red_team_recomputation: >-
+        This red team re-implemented the sampler from the spec prose in a
+        scratchpad and got all three arms' integers and band flags exactly.
+        It is NOT blind: the author had read run.py first. It is a separately
+        written check, not the plan's blind re-derivation.
+
+    q2_bands:
+      non_discriminating_on_the_record: >-
+        Both negative controls pass both bands with no median split, as
+        recorded in raw-result.json: RUN-ICPERF-0ef41e CV^2 9936988/8631844 =
+        1.1512, ratio 1856/2938 = 0.6317; RUN-ICPERF-74e9a2 CV^2
+        9871039/8288641 = 1.1909, ratio 1728/2879 = 0.60021. The primary's
+        values are 1.1397 and 0.6089. CTL-2 passes the median band by
+        8640 vs 8637 in the integer test (5*27*64 >= 3*2879), a ratio margin of
+        0.0002. CTL-2 has the same cv_sq_num (9871039) as the primary because
+        the variance is invariant under the shift by 1.
+      constructed_samplers_that_pass_the_bands:
+        - sampler: Seed-tested convention (test-then-step), same triple and seed
+          result: 2944 / 289582 / 28; CV^2 1.1383; ratio 0.6087; no split; both bands true; exact false
+        - sampler: 2047 of 21202 completing wrong triples at seed 20261017
+          result: Pass both bands with no median split. 6634/21202 = 31.29% pass both bands.
+          note: >-
+            This reproduces DEC-20261029-22e05b F4 (6635/21207) within this
+            scan's degeneracy cap of 20000 total steps.
+        - sampler: Ideal Geometric at p = 1/500 and p = 1/5000 (MT19937, 20000 replicates of n=64)
+          result: >-
+            Both bands pass at 0.4873 and 0.4858, against 0.4697 at
+            p = 1/50. The bands are scale-free and carry no information
+            about p, the parameter the parent idea predicts
+            (r/(A*#states)).
+        - sampler: Discretized lognormal, CV = 1, mean 50 (not memoryless, not geometric)
+          result: >-
+            Population CV^2 = 1.0 and median/mean = 2^(-1/2) = 0.7071, inside
+            both bands. Both bands pass at 0.3011 for n=64; 0.5776 at
+            n=256; 0.861 at n=1024; 0.978 at n=4096.
+      what_the_band_quantity_should_have_done: >-
+        A shape test's acceptance of a known non-geometric law should fall
+        toward 0 as n grows. Here it rises toward 1 (lognormal 0.30 at n=64,
+        0.98 at n=4096), and it is flat in p. Acceptance of the true law is
+        0.47 to 0.48 at n=64 (xorshift seeds 1..2000: 0.4815, reproducing F4's
+        48.2%; ideal geometric: 0.4697). So at n=64 the bands reject a truly
+        geometric sample more often than they accept one. A pass shifts the
+        odds by at most about 1.6x: 0.47/0.31 against a wrong triple, 0.47/0.30
+        against the lognormal, and about 1.0 against the wrong p.
+      inferential_use_in_records: >-
+        The frozen pass rule uses no band (DEC-20261029-0e40f3
+        pass_rule_restated; runbook.yaml S02-trials asserts the band flags
+        only as type boolean and asserts their exact integer inputs). No
+        record on the snapshot reads the bands as host-scale evidence. Four
+        residual readings must not be inherited by the evidence record (L3,
+        L4, L5, L7).
+
+    q3_language:
+      result: none found
+      searched: >-
+        All committed files outside review/ that cite EXP-ICPERF-283a70 or
+        its run ids (76 paths: ledger, coordination, tools, pcc, the
+        experiment directory), grepped for speedup, faster, slower, ns,
+        latency, rank, rho, GAE, shape, support and confirm. The experiment's
+        own files were read: spec, run.py, check.py, three raw-result.json
+        and RESULTS.md, report.typ, data.json, runbook.yaml and audit.json.
+      findings: >-
+        Every latency mention is a disclaimer: spec scale_relevance, scope_note
+        "No speedup or latency statement", invalidation rules, RESULTS.md
+        sentence, CLAIM_BOUNDARY, check.py gate. elapsed_seconds (0.000653,
+        0.000662, 0.000669 s) is recorded as a secondary metric and is never
+        compared or ranked; report.typ shows only its max for the primary.
+        "rank" hits are next_actions ordinals in decisions. "rho" hits are
+        in GOAL-ICPERF-e6b6a4/goal.yaml's general success criteria, which do
+        not cite this experiment's results. The parent idea's IC/rho ratios
+        (0.431 [0.138, 1.776], 1.543, interval [0.47, 3.29]) are neither
+        restated nor used by any EXP-ICPERF-283a70 artifact.
+
+    q4_sec5a:
+      question: >-
+        Does this record make any cost or speed comparison against rho
+        (docs/sheriff.md B5 item 3; §5a weights 0, 0.1, 1 GAE)?
+      answer: "No."
+      band: none
+      exact_reason: >-
+        §5a prices each arm's unpriced counters for a comparison that has a
+        matched rho arm. This record has no rho arm, no index-calculus arm,
+        no group or curve (so S = total/sqrt(n) is undefined) and no counter
+        in GAE. Its three arms are sampler variants compared only with
+        preregistered integers. The set of priced arms is empty, so no band
+        exists and no ranking is made or licensed. The 64 draws are
+        synthetic integers, not native work of any algorithm; pricing them
+        in GAE would be a category error, not a band. Wall time is never a
+        bound (B5 item 5), and the record does not use it as one.
+      downstream_guard: >-
+        No later vs_rho row may cite RUN-ICPERF-f21eb1 as support for the
+        parent idea's "a one-point IC/rho ratio carries a geometric spread"
+        reading. This record does not touch that question.
+
+    q5_tier_strength_and_cheapest_control:
+      maximum_claim_tier: toy
+      tier_basis: >-
+        Spec scale_relevance tier toy, with no field and no curve. Under
+        docs/claims-and-verification.md the record is an instrument
+        observation on 64 integers.
+      maximum_evidence_strength: preliminary
+      strength_basis: >-
+        One seed, one implementation lineage, a self-replay audit and no
+        pcc claim. The committed pcc/ledger.jsonl at f7eb8ae292 has 2 lines,
+        none for these runs, and the report's execution_proofs show
+        verified_units 0. In pcc terms the integers are unverified
+        assertions.
+      conditional_upgrade: >-
+        If the blind re-derivation independently reproduces all three arms'
+        integers from the prose, the arithmetic statement "the
+        specification's sampler yields 2943 / 289567 / 28" may be called
+        replicated, and only that statement. It is a deterministic identity,
+        not an empirical effect.
+      no_evidence_for:
+        - >-
+          Geometric shape of the sampler's output beyond this sample. The
+          bands cannot distinguish the explanations; the data are
+          non-discriminating by construction.
+        - The value of p.
+        - IDEA-20261015-b41f68 claims (1)-(4), any probe panel, any 8 GiB table, host latency, huge pages.
+        - Any IC or rho cost.
+      cheapest_missing_falsification_control: >-
+        An implementation of the sampler written from the specification
+        prose alone, by an author who has not seen run.py, run on all three
+        arms. It costs well under a second of CPU, and it is the only check
+        that can fail on an error shared by the prose, v1 run.py, v2 run.py
+        and the design scratch code. It is absent from the producer's record
+        and is assigned in the plan as TASK-20261105-6d9502.
+
+  proves_too_much:
+    failure_signature: Any acceptance criterion under which CTL-1 or CTL-2 passes.
+    criteria_tested:
+      band_criterion: >-
+        Fails the control. CTL-1 and CTL-2 both pass both bands with no
+        split. The criterion survives at its definition: CV^2 and
+        median/mean are two scale-free summaries that both wrong samplers
+        share with the primary.
+      frozen_exact_integer_rule: >-
+        Survives. CTL-1 and CTL-2 fail, and so do the seed-tested reading, the
+        wrong-p and lognormal objects (their sums differ), and all 21202
+        completing wrong triples.
+      sum_only_or_mean_only_rule: >-
+        A criterion on the sum alone would admit 19 of 21202 wrong triples.
+        The sum of squares is the separating integer within that family.
+    objects:
+      - object: CTL-1 shift triple (1,2,14)
+        result: >-
+          Passes both bands with no split (RUN-ICPERF-0ef41e). The exact match
+          rejects it. The failure signature is present only for the band criterion.
+      - object: CTL-2 support from 0
+        result: >-
+          Passes both bands (median band by 0.0002) with no split
+          (RUN-ICPERF-74e9a2). The exact match rejects it. The failure
+          signature is present only for the band criterion. CTL-2's integers
+          are the primary's mapped by d -> d-1, so this object is not
+          independent of the primary.
+      - object: An 8 GiB pointer-chasing table on a host
+        result: >-
+          The instrument's bytes are identical whether or not any table
+          exists. Take a table whose probe count is known non-geometric,
+          e.g. a direct-mapped table with exactly one probe (CV 0). The
+          instrument still passes. Any argument from this pass to a table's
+          probe-count law therefore proves too much. The argument would
+          survive at the step "the sampler is geometric, therefore probes
+          are". No record on the snapshot makes it: H-ICPERF-5adc9b
+          mechanism and interpretation_limits, and the spec decision_impact,
+          disclaim it.
+      - object: Seed-tested convention (added by this red team)
+        result: >-
+          2944 / 289582 / 28 with no split and both bands true. The exact
+          match rejects it by 1 in the sum.
+      - object: Lognormal with CV = 1, population law (added by this red team)
+        result: >-
+          The population values sit inside both bands, so the band criterion
+          accepts this non-memoryless law at every n. Acceptance rises from
+          0.30 at n=64 to 0.98 at n=4096.
+
+  objections:
+    - id: L1
+      text: >-
+        The exact match is a single-lineage fingerprint (q1). Until the blind
+        re-derivation lands it licenses runner determinism and sensitivity to
+        parameters and conventions. It does not show that the prose and the
+        code agree independently, and it never licenses a distributional
+        property.
+    - id: L2
+      text: >-
+        CTL-2 is redundant as a sampler control. Its integers equal
+        (S-64, Q-2S+64, median-1) of the primary: 2879 = 2943-64 and
+        283745 = 289567-5886+64. Its cv_sq_num equals the primary's. Given a
+        primary pass, CTL-2 fails the exact match by arithmetic unless the
+        support_min path is dead. It is a plumbing and off-by-one control,
+        not a second test of the generator. CTL-1 was selected from a
+        design-time scan whose integers were already known, so it too is a
+        known-outcome plumbing control. Both share step(), draw() and
+        moments() with the primary.
+    - id: L3
+      text: >-
+        H-ICPERF-5adc9b (v1-era, unamended) still says "Stage 0 checks that
+        shape" (mechanism), "The CV band is the shape control"
+        (method_ceiling.nearby_object_control), predicts both_bands_hold,
+        states the draws are "from the geometric law", and in dominated_by
+        speaks of "a sample that matches that law". DEC-20261029-22e05b F4
+        superseded the band-as-control reading, but the record is
+        immutable. The evidence record must not report both_bands_hold as a
+        confirmed shape prediction: it is implied arithmetically by the
+        integers and was also true for both wrong samplers.
+    - id: L4
+      text: >-
+        The run report (report.typ lines 36-45; data.json summary.metrics)
+        lists cv_in_band and median_ratio_in_band as "measured",
+        fraction_true=1, n=1 (primary only), beside exact_match, with no
+        descriptive-only tag. It omits the controls' band flags. The
+        null-object result that shows the bands' non-discrimination is
+        visible only in the raw-result.json files. The report is a
+        presentation, not a claim, but the evidence record should tabulate
+        both band flags for all three units.
+    - id: L5
+      text: >-
+        The spec success_criterion and falsification_criterion still name the
+        band flags verbatim from v1, and metrics.primary lists them while
+        metrics.descriptive_only lists them too. This is harmless because the
+        integers imply them (DEC-20261029-0e40f3 criterion_unchanged). The
+        evidence record should cite decisive_test and the restated pass rule
+        as the decision rule, not the verbatim success_criterion.
+    - id: L6
+      text: >-
+        No pcc claim exists. Cite the integers as unverified assertions
+        reproduced by a self-replay and by a non-blind red-team
+        recomputation until a pcc claim or the blind re-derivation stands.
+    - id: L7
+      text: >-
+        Forward scope, about the parent idea and not a defect of this record.
+        IDEA-20261015-b41f68 claim (1) and its first prediction use these same
+        bands, CV in [0.9, 1.1] and median/mean in [0.6, 0.8] over >= 64
+        targets, as the test that real probe counts are geometric. The
+        computations here show that test rejects a truly geometric 64-sample
+        about 53% of the time. It accepts a lognormal at 30% (98% at
+        n=4096). It cannot check the predicted mean. Its falsification
+        branch (CV < 0.6 or > 1.5) fires on the lognormal at 1.7% for n=64
+        and 0% for n=4096. The instrument pass must not be read as
+        validating that test for stage 1.
+
+  required_controls:
+    - id: RC1
+      text: >-
+        Blind from-prose re-derivation of all three arms
+        (TASK-20261105-6d9502). Compare against 2943/289567/28,
+        2938/290138/29 and 2879/283745/27 before any evidence record is
+        written.
+    - id: RC2
+      text: >-
+        In the evidence record, show the band flags for all three units side
+        by side (all true) as the null-object control, labelled
+        non-discriminating.
+    - id: RC3
+      text: >-
+        Stage-1 design guidance, not a condition on this record. If stage 1
+        tests geometric probe counts, fix the predicted p = A*#states/r in
+        advance. Use a goodness-of-fit test against Geometric(p_pred)
+        (CDF at fixed quantiles, or a direct memorylessness check
+        P(X > s+t | X > s) = P(X > t)) plus a mean check. State its power
+        against the lognormal (CV = 1) and wrong-p null objects before the
+        run.
+
+  counterexample_or_mutation: >-
+    The seed-tested reading of the F5 recurrence (test the starting state,
+    then step) gives 2944 / 289582 / 28, no split, CV^2 1.1383, ratio 0.6087.
+    Both bands pass and the exact match fails. It is the cheapest
+    demonstration that the bands cannot see a convention error that the
+    exact match catches at the plus-one level. The other mutations tested,
+    all failing the exact match: restart each draw from the seed (448 /
+    3136 / 7; both bands false); right/left/right (2961 / 299725 / 25,
+    split); triple reversed (5,17,13) (3270 / 464534 / 33, split); success
+    on x mod 50 = 49 (3476 / 345520 / 36, split); success on
+    x < floor(2^32/50) and the Lemire mapping (x*50)>>32 = 0 (both 3832 /
+    526854 / 36, split).
+
+  baseline_comparison: >-
+    Not applicable, and none is made. There is no attack, no rho arm, no BSGS
+    arm and no specialized baseline. The only comparison is each arm against
+    the preregistered integers (spec comparisons CMP-PRIMARY, CMP-CTL-1,
+    CMP-CTL-2, CMP-AA). The hypothesis's dominated_by is non-null and claims
+    no exponent or cost delta, so no frontier row or Pareto axis (time,
+    memory, data) is engaged. There is no eliminated search dimension and
+    no invariant cost to charge.
+
+  heuristic_challenges:
+    - >-
+      Implicit model: "xorshift32 stopped at x mod 50 = 0 yields i.i.d.
+      Geometric(1/50) draws." This is assumed, not tested. Band acceptance
+      over seeds 1..2000 (0.4815) matches ideal Geometric(1/50) (0.4697), but
+      a test with odds shift of 1.6x or less is weak consistency only. Only
+      p = floor((2^32-1)/50)/(2^32-1), from full-period counting, is
+      arithmetic; independence of consecutive draws is not examined. Not
+      load-bearing, since no claim rests on it.
+    - >-
+      Random-model transfer: the parent's H1 (probes per target ~
+      Geometric(A*#states/r)) is untouched. This cell draws the law directly
+      and walks no quotient (HEUR-001 says so). The cheapest experiment
+      exposing a deviation of real probe counts from the geometric law is
+      RC3 on an existing 64-point panel, which is zero compute per the idea's
+      stage 0.
+
+  cost_model_challenges:
+    - >-
+      elapsed_seconds (about 6.5e-4 s per unit) is driver wall time for 64
+      integer draws in CPython. It prices no arm of any attack and must not
+      enter a cost table. Sheriff B5 item 5: wall time is never a bound.
+    - >-
+      The §5a band does not exist (q4). A later record that attaches a
+      ranking to this experiment's runs would be fabricating an arm.
+
+  reduction_and_scope_challenges:
+    - >-
+      There is no reduction. The scope-inflation vectors are L3 (hypothesis
+      shape language), L7 (the parent idea's band test) and the parent
+      idea's IC/rho ratio readings. None is made by this record. All three
+      must be fenced in the evidence record.
+    - >-
+      The record closes nothing. It must not be read as opening or closing
+      IDEA-20261015-b41f68 (spec decision_impact on_positive says so), and
+      it does not advance GOAL-ICPERF-e6b6a4's matched-rho criterion.
+
+  proof_architecture_challenges:
+    - attack: observation_fiber
+      result: >-
+        Fix the observation "both bands true, no split". Its fiber contains
+        the correct sampler, CTL-1, CTL-2, the seed-tested reading, 2047
+        wrong triples, and lognormal samples, some geometric and some not.
+        The bands are no separator. The integer triple (S, Q, median)
+        separates within the xorshift family (0 of 21202 match S and Q).
+        The record has no separator for "geometric or not". The missing
+        separator is a fixed-p goodness-of-fit test (RC3).
+    - attack: quantifier_order
+      result: >-
+        The seed is the v1 design date and was fixed before the integers. The
+        integers were fixed before v1 froze. CTL-1's triple was chosen after
+        a scan that showed its integers. That is acceptable for a
+        demonstration object, but CTL-1 estimates no rate. Over seeds 1..2000,
+        P(both bands and no split) is 0.1195. Nothing shows the seed was
+        shopped for that property, and no distributional claim depends on it.
+    - attack: method_ceiling
+      result: >-
+        With one seed, one lineage and exact equality as the resource, the
+        largest certifiable claim is: this program, on this input, under
+        these interpreters, writes these integers, and parameter or
+        convention mutations change them. The headline restated in the plan
+        does not exceed this ceiling.
+
+  reversal_reading:
+    text: >-
+      Which theory takes this measurement as its hypothesis? The measured
+      resource is bit-exact cross-interpreter integer reproduction with
+      must-fail controls, i.e. a work-identity certificate. IDEA claim (3)
+      compares ns per probe across hosts and silently needs that
+      certificate: the work must be the same before a latency difference can
+      be attributed. If the stage-1 IC online phase emitted exact per-seed
+      probe counts gated the same way, a cross-host ns/probe difference could
+      not be blamed on divergent work. This is a candidate for ranking, not
+      evidence, and it changes no status.
+    spawned_ids: []
+    spawned_ids_note: >-
+      No id was minted. The red team has no ledger write in this task. The
+      Coordinator may file it.
+
+  narrowest_supported_statement: >-
+    Under runbook session RBS-ICPERF-67df7d, run.py (sha256 53965863...9a38)
+    ran at seed 20261017, p = 1/50, n = 64, shifts (13,17,5) and support
+    {1,2,...}. It wrote sample_sum 2943, sum_squares 289567 and median 28
+    with no median split. These equal the integers v1's runner computed at
+    design time on 2026-10-17. The wrong-triple arm wrote 2938/290138/29 and
+    the support-0 arm wrote 2879/283745/27, and both failed the exact match.
+    The audit replayed all three units bit-exactly under CPython 3.13.18
+    (runs: 3.11.17). Both band flags were true on all three units, so the
+    bands distinguished none of them. Nothing follows about geometric shape
+    beyond this sample, about p, about any table's probe counts, about host
+    latency, or about any index-calculus or rho cost. Claim tier toy;
+    evidence strength preliminary.
+
+  next_concrete_action: >-
+    Coordinator: before composing the evidence record, compare the
+    TASK-20261105-6d9502 blind integers for all three arms with
+    2943/289567/28, 2938/290138/29 and 2879/283745/27. Then write the record
+    at claim tier toy and strength preliminary. Upgrade to replicated only
+    for the arithmetic identity, and only if all three arms match. Include
+    the three-unit band table labelled non-discriminating, and a
+    non-inheritance note for H-ICPERF-5adc9b's shape language (L3) and
+    IDEA-20261015-b41f68 claim (1)'s band test (L7).
+
+  artifact_paths:
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml
+    - experiments/EXP-ICPERF-283a70/specification.yaml
+    - experiments/EXP-ICPERF-283a70/implementation/run.py
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-0ef41e/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-74e9a2/raw-result.json
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/data.json
+    - experiments/EXP-ICPERF-283a70/runbook.yaml
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/audit.json
+    - experiments/EXP-ICPERF-b2f2d0/implementation/run.py
+    - experiments/EXP-ICPERF-b2f2d0/specification.yaml
+    - ledger/hypotheses/H-ICPERF-5adc9b.yaml
+    - ledger/proposals/IDEA-20261015-b41f68.yaml
+    - ledger/decisions/DEC-20261029-22e05b.yaml
+    - ledger/decisions/DEC-20261029-0e40f3.yaml
+    - docs/sheriff.md
+
+  scratch_computations:
+    status: >-
+      Arithmetic checks, not trials and not durable artifacts. They sit in
+      this session's scratchpad outside the repository and are not
+      committed. Each re-runs in seconds with python3 -I. They are not blind
+      (the author had read run.py).
+    directory: /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/rt-283a70/
+    files:
+      - checks.py: from-prose recomputation of the three arms, the CTL-2 affine identity, and seven convention mutations
+      - bands.py: band acceptance for xorshift seeds 1..2000, ideal Geometric (MT19937, rng seed 12345) at p = 1/10, 1/50, 1/500, 1/5000, and the lognormal CV=1
+      - scan_par.py: all (a,b,c) in [1,31]^3 except (13,17,5) at seed 20261017, total-step cap 20000; 21202 completing, 8588 degenerate, 6634 both bands, 2047 both bands with no split, 19 sum hits, 0 sum-and-square hits
+      - bands_n.py: band acceptance against n (64, 256, 1024, 4096) for Geometric(1/50) and the lognormal (rng seed 777); IDEA falsification band CV < 0.6 or > 1.5
+    caveats:
+      - >-
+        Monte Carlo rates carry a binomial standard error of about 0.0035 at
+        20000 replicates, 0.007 at 5000, 0.011 at 2000 and 0.022 at 500.
+      - >-
+        The wrong-triple degeneracy definition (no success within 20000 total
+        steps, or state 0) differs slightly from F4's: 21202 vs 21207
+        completing and 6634 vs 6635 passing.
+
+review_attestation:
+  task_id: TASK-20261105-b3b41a
+  joints_owned: [J2-scope]
+  sources_read:
+    - CLAUDE.md
+    - docs/agent-runtime-core.md
+    - agents/red-team.md
+    - AGENTS.md (heading list; section "Review architecture", lines 329-340)
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml
+    - experiments/EXP-ICPERF-283a70/specification.yaml
+    - experiments/EXP-ICPERF-283a70/implementation/run.py
+    - experiments/EXP-ICPERF-283a70/implementation/check.py
+    - experiments/EXP-ICPERF-283a70/implementation/test_unit.py (grep for test names and imports only)
+    - experiments/EXP-ICPERF-283a70/implementation/unit-test-report.txt (first 30 lines)
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/RESULTS.md
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-0ef41e/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-0ef41e/RESULTS.md
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-74e9a2/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-74e9a2/RESULTS.md
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/data.json (first 120 lines)
+    - experiments/EXP-ICPERF-283a70/runbook.yaml (grep; lines 120-239)
+    - experiments/EXP-ICPERF-283a70/runbook-lint.txt
+    - experiments/EXP-ICPERF-283a70/trial-plan.json (first 80 lines)
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/audit.json (keys verdict, findings, scope, not_covered, detection_power, interpreters, float_tolerance, environment_drift; grep)
+    - experiments/EXP-ICPERF-b2f2d0/implementation/run.py
+    - experiments/EXP-ICPERF-b2f2d0/specification.yaml
+    - ledger/hypotheses/H-ICPERF-5adc9b.yaml
+    - ledger/proposals/IDEA-20261015-b41f68.yaml
+    - ledger/decisions/DEC-20261029-22e05b.yaml (grep; lines 100-194)
+    - ledger/decisions/DEC-20261029-0e40f3.yaml (grep; lines 40-109)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml (grep context only)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/BATCH-38f344.yaml (grep context only)
+    - docs/sheriff.md (lines 270-319)
+    - docs/claims-and-verification.md (lines 100-140)
+    - docs/evidence-and-reproducibility.md (lines 1-30, 220-240)
+    - pcc/ledger.jsonl at f7eb8ae292 (git show; grep for run ids)
+    - "grep-only hits across ledger/, coordination/, tools/, pcc/, research/, knowledge/, claims/ and experiments/EXP-ICPERF-283a70/ for this experiment's ids and claim words (76 paths; matching lines only)"
+    - "git metadata: commit messages of cd912cacbb, 1a0afc68c2, b825ee6ea5; git show --stat f7eb8ae292"
+  not_read:
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-558a8b/ (sibling; not opened)
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/ (sibling; not opened, one filename seen in git diff --stat)
+    - experiments/EXP-ICPERF-284bc4/review/ (not opened)
+  read_sibling_reports: false
+  blind_from_respected: null
+  joint_verdicts:
+    - {joint: J2-scope, verdict: holds_with_limitation}
+  verdict: holds_with_limitation
