@@ -137,11 +137,13 @@ def summarize_rate(samples: list[tuple[int, float]], start: int, end: int, perio
 class AwsQuery:
     """Minimal AWS query-protocol client. No boto3."""
 
-    def __init__(self, access_key: str, secret: str, region: str, timeout: float = 12.0):
+    def __init__(self, access_key: str, secret: str, region: str, timeout: float = 12.0,
+                 session_token: str | None = None):
         self.access_key = access_key
         self.secret = secret
         self.region = region
         self.timeout = timeout
+        self.session_token = session_token
 
     def call(self, service: str, host: str, action: str, version: str,
              params: dict[str, str]) -> ET.Element:
@@ -152,11 +154,16 @@ class AwsQuery:
         date_stamp = now.strftime("%Y%m%d")
         payload_hash = hashlib.sha256(payload).hexdigest()
         signed_headers = "content-type;host;x-amz-date"
+        token_header = ""
+        if self.session_token:
+            signed_headers += ";x-amz-security-token"
+            token_header = f"x-amz-security-token:{self.session_token}\n"
         canonical = (
             f"POST\n/\n\n"
             f"content-type:application/x-www-form-urlencoded; charset=utf-8\n"
             f"host:{host}\n"
             f"x-amz-date:{amz_date}\n"
+            f"{token_header}"
             f"\n{signed_headers}\n{payload_hash}"
         )
         scope = f"{date_stamp}/{self.region}/{service}/aws4_request"
@@ -175,6 +182,8 @@ class AwsQuery:
                 f"SignedHeaders={signed_headers}, Signature={signature}"
             ),
         }
+        if self.session_token:
+            headers["X-Amz-Security-Token"] = self.session_token
         req = urllib.request.Request(
             f"https://{host}/", data=payload, method="POST", headers=headers)
         try:
@@ -245,13 +254,21 @@ def _describe_instance(client: AwsQuery) -> dict[str, Any]:
         tag = node.tag.split("}", 1)[-1]
         if tag in ("Engine", "EngineVersion", "DBInstanceClass", "DBInstanceStatus",
                    "AllocatedStorage", "MaxAllocatedStorage", "StorageType",
-                   "PerformanceInsightsEnabled", "MonitoringInterval"):
+                   "PerformanceInsightsEnabled", "MonitoringInterval", "DBInstanceArn"):
             if node.text and tag not in fields:
                 fields[tag] = node.text.strip()
     allocated = int(fields.get("AllocatedStorage") or 0)
     maximum = int(fields.get("MaxAllocatedStorage") or 0)
+    arn = (fields.get("DBInstanceArn") or "").split(":", 5)
+    account_id = None
+    if (len(arn) == 6 and arn[:3] == ["arn", "aws", "rds"]
+            and arn[3] == client.region and len(arn[4]) == 12
+            and arn[4].isascii() and arn[4].isdecimal()
+            and arn[5] == f"db:{RDS_INSTANCE}"):
+        account_id = arn[4]
     return {
         "id": RDS_INSTANCE,
+        "account_id": account_id,
         "engine": fields.get("Engine") or "postgres",
         "engine_version": fields.get("EngineVersion"),
         "class": fields.get("DBInstanceClass"),
@@ -265,16 +282,18 @@ def _describe_instance(client: AwsQuery) -> dict[str, Any]:
     }
 
 
-def _s3_size(access: str, secret: str, now: int) -> dict[str, Any] | None:
+def _s3_size(access: str, secret: str, now: int,
+             session_token: str | None = None) -> dict[str, Any] | None:
     for region in S3_METRIC_REGIONS:
-        found = _s3_size_in(access, secret, now, region)
+        found = _s3_size_in(access, secret, now, region, session_token)
         if found:
             return found
     return None
 
 
-def _s3_size_in(access: str, secret: str, now: int, region: str) -> dict[str, Any] | None:
-    client = AwsQuery(access, secret, region)
+def _s3_size_in(access: str, secret: str, now: int, region: str,
+                session_token: str | None = None) -> dict[str, Any] | None:
+    client = AwsQuery(access, secret, region, session_token=session_token)
 
     def one(metric: str, storage_type: str) -> list[tuple[int, float]]:
         params = {
@@ -317,12 +336,13 @@ def _s3_size_in(access: str, secret: str, now: int, region: str) -> dict[str, An
 def collect_payload(*, now: int | None = None) -> dict[str, Any]:
     access = os.environ.get("AWS_ACCESS_KEY_ID") or ""
     secret = os.environ.get("AWS_SECRET_ACCESS_KEY") or ""
+    session_token = os.environ.get("AWS_SESSION_TOKEN") or None
     if not access or not secret:
         return unavailable("no AWS credentials in this environment")
     # The instance lives in us-west-2. A stray AWS_DEFAULT_REGION must not
     # redirect DescribeDBInstances / RDS CloudWatch to another region.
     now = now or int(time.time())
-    client = AwsQuery(access, secret, RDS_REGION)
+    client = AwsQuery(access, secret, RDS_REGION, session_token=session_token)
 
     try:
         instance = _describe_instance(client)
@@ -380,7 +400,7 @@ def collect_payload(*, now: int | None = None) -> dict[str, Any]:
         used_bytes = max(0, allocated - free_bytes)
 
     age = None if latest is None else max(0, now - latest)
-    object_store = _s3_size(access, secret, now)
+    object_store = _s3_size(access, secret, now, session_token)
 
     return {
         "available": True,
@@ -388,7 +408,7 @@ def collect_payload(*, now: int | None = None) -> dict[str, Any]:
         "sampled_at": _iso(now),
         "latest_point": _iso(latest),
         "latest_point_age_seconds": age,
-        "stale": bool(age is not None and age > STALE_AFTER_SECONDS),
+        "stale": age is None or age > STALE_AFTER_SECONDS or instance.get("status") != "available",
         "last_hour": {
             "basis": hour_basis,
             "empty": hour_write["samples"] == 0 and hour_read["samples"] == 0,

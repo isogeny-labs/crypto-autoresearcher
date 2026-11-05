@@ -1,0 +1,49 @@
+{
+  "schema": "crypto.autoresearch.design_snapshot_receipt.v1",
+  "task_id": "TASK-20261103-02808b",
+  "artifact_paths": [
+    "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs",
+    "experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs",
+    "experiments/EXP-PEXT-bf8f96/implementation/profile_synthetic_candidates.rs",
+    "experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/report.md",
+    "experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/software-tests.json",
+    "experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/software-profile.json",
+    "problems/pext-degree2-squareclass-census-launcher.md",
+    "ledger/handoffs/TASK-20261103-02808b.yaml",
+    "coordination/sessions/receipts/20261103/SR-20261103-4ca7bd.yaml"
+  ],
+  "archive": {
+    "kind": "snapshot",
+    "binding_mode": "commit",
+    "commit_sha": "393e5823b3b1c95bab2905e73f80d08086ec21a0",
+    "parent_sha": "ce6d4308de2e72871ecbda1ababf2a17e7fa2313",
+    "record_ids": [
+      "H-PEXT-c3a11d",
+      "EXP-PEXT-bf8f96"
+    ],
+    "path_sha256": {
+      "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs": "3e09fbcd869938d8eb2538636f6aa9f67ec9c394fa2a6aba66dff1f0d0360e95",
+      "experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs": "6d3cba83a4886a629e2d69d6ee7c262af9ee2dc8a8a26cf17fe00570422b27ba",
+      "experiments/EXP-PEXT-bf8f96/implementation/profile_synthetic_candidates.rs": "4a0466ea0381f3578eb565b101d85cacf4217399821f3b1061582f212fe6b956",
+      "experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/report.md": "6d28d17f52a32b5710b0096e34eba0c3b3512a35133fedff913bea44f2c60405",
+      "experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/software-tests.json": "5de95620c77ca5b8fe44ff8a50beffdb5aaf13d5e32c940e35b1b89fff3c6f50",
+      "experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/software-profile.json": "5a03017b669056da7c706bd8b86ade8ae905949715ee651b5cae2c6fa3e9046c",
+      "problems/pext-degree2-squareclass-census-launcher.md": "924f958e00a39ff3beaccf9dd55c9ee24ed4d6654b47b77dbd7109045130f079",
+      "ledger/handoffs/TASK-20261103-02808b.yaml": "353c35b23fd803d835bcf93826c6c390b32dc5f431d50316c3151e3bb1c9a172",
+      "coordination/sessions/receipts/20261103/SR-20261103-4ca7bd.yaml": "515628cd70bbf9240ddca1bac255c6fd3a8b8ae27cd299f67dba0dd379fa416b"
+    }
+  },
+  "verification": {
+    "native_verifier": "tools.research_dispatch.GitRepositoryVerifier.verify_archive",
+    "result": "pass"
+  },
+  "validation": {
+    "software_tests": "17 core and 19 join native tests and one independent Python mutation test pass",
+    "bounded_synthetic_q11": "three synthetic patterns directly checked; 253368 KiB peak RSS and 2.347287 seconds wall with cached indices under 4 GiB address-space cap",
+    "source_bound_logs": "software-tests.json and software-profile.json bind source and binary digests",
+    "merge_hygiene": "pass",
+    "protocol_schema": "0 findings under jsonschema Draft202012Validator",
+    "full_ledger": "only inherited RUN-BINSTD-f7ca97 manifest expected top-level run remains"
+  },
+  "authority": "Directly checked exceptional ordinal and generic complement on F27 fixtures plus bounded synthetic q11 feasibility; no full P1-P4 cohort, descent/Type2, 24 CPU-hour admission or protocol approval"
+}

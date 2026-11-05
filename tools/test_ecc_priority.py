@@ -44,6 +44,12 @@ class PolicyFileTests(unittest.TestCase):
         self.assertTrue((pol.get("budget") or {}).get("max_concurrent_still_bounded"))
         self.assertNotIn("max_concurrent", EP.unbounded_fields(pol))
 
+    def test_process_budget_limits_records_not_scientific_runs(self):
+        limits = EP.load_policy()["process_budget"]
+        self.assertTrue(limits["unlimited_scientific_runs"])
+        self.assertEqual(limits["max_new_ecc_ideas_per_session"], 3)
+        self.assertEqual(limits["max_new_ecc_experiments_per_session"], 1)
+
     def test_every_exclusion_carries_a_reason(self):
         for area, why in (EP.load_policy().get("excluded_areas") or {}).items():
             self.assertTrue(str(why).strip(), f"{area} excluded with no reason")
@@ -103,6 +109,91 @@ class BudgetTests(unittest.TestCase):
         for field in EP.unbounded_fields(pol):
             self.assertIn(field, ("maximum_batches", "total_wall_clock_seconds"))
 
+    def test_current_process_receipts_respect_post_cutover_limits(self):
+        self.assertEqual(EP.process_budget_violations(), [])
+
+    def test_process_budget_detects_session_and_daily_template_floods(self):
+        import tempfile
+        import yaml
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            (repo / "orchestration").mkdir()
+            (repo / "ledger/questions").mkdir(parents=True)
+            (repo / "ledger/proposals").mkdir()
+            receipt_dir = repo / "coordination/sessions/receipts/20261101"
+            receipt_dir.mkdir(parents=True)
+            policy = {
+                "ecc_areas": ["ECDLP"],
+                "process_budget": {
+                    "effective_on": "2026-11-01",
+                    "max_new_ecc_ideas_per_session": 3,
+                    "max_new_ecc_experiments_per_session": 1,
+                    "max_new_ecc_ideas_per_utc_day": 3,
+                    "max_new_ecc_experiments_per_utc_day": 1,
+                },
+            }
+            (repo / "orchestration/research-priority.yaml").write_text(
+                yaml.safe_dump(policy), encoding="utf-8")
+            (repo / "ledger/questions/q.yaml").write_text(yaml.safe_dump({
+                "research_question": {"id": "RQ-ECDLP-abc123"}}), encoding="utf-8")
+            ideas = [f"IDEA-20261101-abc12{i}" for i in range(4)]
+            for index, idea_id in enumerate(ideas):
+                (repo / f"ledger/proposals/{index}.yaml").write_text(yaml.safe_dump({
+                    "idea": {"id": idea_id, "question_id": "RQ-ECDLP-abc123"}}),
+                    encoding="utf-8")
+            receipt = {
+                "id": "SR-20261101-abc123", "recorded_at": "2026-11-01T12:00:00Z",
+                "records_created": {"IDEA": ideas,
+                                    "EXP": ["EXP-ECDLP-abc123", "EXP-ECDLP-def456"]},
+            }
+            (receipt_dir / "SR-20261101-abc123.yaml").write_text(
+                yaml.safe_dump(receipt), encoding="utf-8")
+            violations = EP.process_budget_violations(repo=repo)
+            self.assertEqual(
+                {(row["scope"], row["kind"]) for row in violations},
+                {("session", "ideas"), ("session", "experiments"),
+                 ("utc_day", "ideas"), ("utc_day", "experiments")})
+
+    def test_git_diff_gate_does_not_depend_on_session_receipts(self):
+        import tempfile
+        import yaml
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            (repo / "orchestration").mkdir()
+            (repo / "ledger/questions").mkdir(parents=True)
+            policy = {"ecc_areas": ["ECDLP"], "process_budget": {
+                "effective_on": "2026-11-01",
+                "max_new_ecc_ideas_per_session": 3,
+                "max_new_ecc_experiments_per_session": 1}}
+            (repo / "orchestration/research-priority.yaml").write_text(
+                yaml.safe_dump(policy), encoding="utf-8")
+            (repo / "ledger/questions/q.yaml").write_text(yaml.safe_dump({
+                "research_question": {"id": "RQ-ECDLP-abc123"}}), encoding="utf-8")
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(repo), "-c", "user.name=Test",
+                            "-c", "user.email=test@example.invalid", "commit", "-qm",
+                            "base"], check=True)
+            base = subprocess.check_output(
+                ["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+            (repo / "ledger/proposals").mkdir()
+            for index in range(4):
+                (repo / f"ledger/proposals/{index}.yaml").write_text(yaml.safe_dump({
+                    "idea": {"id": f"IDEA-20261101-abc12{index}",
+                             "question_id": "RQ-ECDLP-abc123"}}), encoding="utf-8")
+            for exp_id in ("EXP-ECDLP-abc123", "EXP-ECDLP-def456"):
+                path = repo / f"experiments/{exp_id}/specification.yaml"
+                path.parent.mkdir(parents=True)
+                path.write_text(yaml.safe_dump({"experiment": {"id": exp_id}}),
+                                encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", "."], check=True)
+            subprocess.run(["git", "-C", str(repo), "-c", "user.name=Test",
+                            "-c", "user.email=test@example.invalid", "commit", "-qm",
+                            "flood"], check=True)
+            violations = EP.process_budget_diff_violations(base, repo=repo)
+            self.assertEqual({row["kind"] for row in violations},
+                             {"ideas", "experiments"})
+
 
 class OpenIdeaWorklistTests(unittest.TestCase):
     def test_open_ecc_ideas_are_enumerable_and_all_ecc(self):
@@ -118,6 +209,42 @@ class OpenIdeaWorklistTests(unittest.TestCase):
         # IDEA-20260903-81a943 has H-PFDR-3c7d1e / EXP-PFDR-9b4f2a designed
         # against it, so it must not appear on the "still to design" worklist.
         self.assertNotIn("IDEA-20260903-81a943", ids)
+
+    def test_hash_bound_schema_redirects_replace_predecessors_in_worklist(self):
+        ids = {row["id"] for row in EP.open_ecc_ideas()}
+        predecessors = {"IDEA-20261016-7a138a", "IDEA-20261016-bb92bd",
+                        "IDEA-20261016-d0335b", "IDEA-20261016-e191a8"}
+        successors = {"IDEA-20261027-93b28d", "IDEA-20261027-4d8543",
+                      "IDEA-20261027-27d8bf", "IDEA-20261027-1ffd7c"}
+        self.assertTrue(predecessors.isdisjoint(ids))
+        self.assertTrue(successors.issubset(ids))
+
+    def test_redirect_with_changed_source_hash_fails_open(self):
+        import hashlib
+        import tempfile
+        import yaml
+
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            source = repo / "ledger/proposals/old.yaml"
+            target = repo / "ledger/proposals/new.yaml"
+            registry = repo / "tools/schema_supersession_registry.yaml"
+            source.parent.mkdir(parents=True)
+            target.write_text("idea:\n  id: IDEA-20261027-abc123\n")
+            original = b"idea:\n  id: IDEA-20261016-abc123\n"
+            source.write_bytes(original + b"# changed after registration\n")
+            registry.parent.mkdir(parents=True)
+            registry.write_text(yaml.safe_dump({
+                "schema": "schema-supersession-registry-v1",
+                "records": [{
+                    "kind": "ledger", "superseded_path": "ledger/proposals/old.yaml",
+                    "superseded_sha256": hashlib.sha256(original).hexdigest(),
+                    "superseding_path": "ledger/proposals/new.yaml",
+                    "superseding_sha256": hashlib.sha256(target.read_bytes()).hexdigest(),
+                    "redirect_id": "IDEA-20261027-abc123",
+                }],
+            }))
+            self.assertEqual(EP._verified_idea_redirects(repo), set())
 
     def test_legacy_three_digit_idea_ids_count_as_designed(self):
         """A designed LEGACY-form idea must drop off the worklist too.
@@ -155,6 +282,10 @@ class CLITests(unittest.TestCase):
 
     def test_budget_violations_exits_zero_when_clean(self):
         p = self._run("--budget-violations")
+        self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
+
+    def test_process_budget_violations_exits_zero_when_clean(self):
+        p = self._run("--process-budget-violations")
         self.assertEqual(p.returncode, 0, p.stdout + p.stderr)
 
     def test_list_areas_reports_inclusions_and_exclusions(self):

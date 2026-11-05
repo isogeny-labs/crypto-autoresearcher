@@ -1,0 +1,77 @@
+
+=== Lemma 2.11.2: g^-1 = N(g)^-1 prod_{i=1}^{m-1} g^{q^i}  (q=p prime, small fields)
+cases 441 failures 0
+
+=== Lemma 2.14.8 half trace (m odd): is x^2+x = alpha for every alpha?
+m=3: fails for 4/8 alpha; #Tr(alpha)=1 is 4 (fails exactly when Tr=1)
+m=5: fails for 16/32 alpha; #Tr(alpha)=1 is 16 (fails exactly when Tr=1)
+m=7: fails for 64/128 alpha; #Tr(alpha)=1 is 64 (fails exactly when Tr=1)
+
+=== Itoh-Tsujii identity 2^{m-1}-1 = (2^{2^{k-1}}-1)2^{2^{k-1}} + (2^{2^{k-1}}-1), m=2^k+1
+True
+
+=== Exercise 2.14.5 sqrt formula in F_2^m (m odd), with typo x_{m-1} read as a_{m-1}
+m=3: failures 0
+m=5: failures 0
+m=7: failures 0
+
+=== Theorem 2.14.2: 'there are q - m(m-1) elements u in F_q with G(u) normal' (exact count?)
+q=5 m=2: #normal G(u) = 4, q-m(m-1) = 3
+q=7 m=2: #normal G(u) = 6, q-m(m-1) = 5
+q=11 m=2: #normal G(u) = 10, q-m(m-1) = 9
+q=13 m=2: #normal G(u) = 12, q-m(m-1) = 11
+q=7 m=3: #normal G(u) = 7, q-m(m-1) = 1
+q=11 m=3: #normal G(u) = 11, q-m(m-1) = 5
+q=13 m=3: #normal G(u) = 11, q-m(m-1) = 7
+
+=== Exercise 2.12.9: F not square-free -> R_2 can have degree-1 factors
+F=x^2 over F_5: R1 = [0, 1]  F/R1 = [0, 1]  R2 = [0, 1] (degree 1, not 2)
+
+=== Normal-basis probability (2.14.1 cites >=1/34 if m<q^4, >=1/(16 log_q m) if m>=q^4)
+violations: [] ; min ratio prob/bound per q: {2: 1, 3: 1, 4: 1, 5: 1, 7: 1, 8: 1, 9: 1}
+
+=== Lemma A.5.1 / 2.14.1: #monic irreducibles N_{m,q} >= q^m/(2m)
+violations: []
+
+=== 2.15.3: phi(q-1)/(q-1) >= 1/(6 log log q) for prime powers q <= 2*10^5
+violations: [(3, 0.5, 1.772)]
+
+=== 2.15 intro: 'smallest 0<=f<=e_i with g^{(q-1)/l_i^f}=1'
+l=2: f with g^((q-1)/l^f)=1: [0, 1, 2]; smallest = 0 always 0; largest gives v_l(ord)=e-f
+l=3: f with g^((q-1)/l^f)=1: [0]; smallest = 0 always 0; largest gives v_l(ord)=e-f
+
+=== Algorithm 5: expected while-loop iterations (proof claims <= 2)
+[2] E[iterations] = 2.0
+[2, 3] E[iterations] = 2.3
+[2, 3, 5] E[iterations] = 2.4019
+[2, 3, 5, 7, 11, 13] E[iterations] = 2.5027
+simulated q=31: 2.42035
+
+=== Lemma 2.15.4 + Algorithm 4 (square-and-multiply cost) vs bound 2*ceil(log2 m)*log(N), log natural
+Lemma 2.15.4 all items: True
+m=2 correct=True cost=35 bound 2k ln N=27.7 bound 2k log2 N=40.0
+m=2 correct=True cost=76 bound 2k ln N=55.5 bound 2k log2 N=80.0
+m=4 correct=True cost=276 bound 2k ln N=221.8 bound 2k log2 N=320.0
+m=16 correct=True cost=3614 bound 2k ln N=3370.5 bound 2k log2 N=4862.6
+m=1: k=ceil(log2 1)=0, line 2 uses N_{2^{-1}+1}, returns h_{0,1}: undefined
+recursive F as printed: [32768, 2097152, 359738130]  target order g^{N/N_i}, i=1..m: [359738130, 2097152, 32768]
+
+=== Addition chains: 'every m has a chain of length log2 m + log2 wt(m)' (book's length l counts m1=1)
+m=2: min #additions=1 (book length l=2); log2 m + log2 wt = 1.000
+m=8: min #additions=3 (book length l=4); log2 m + log2 wt = 3.000
+m=127: min #additions=10 (book length l=11); log2 m + log2 wt = 9.796
+m=191: min #additions=11 (book length l=12); log2 m + log2 wt = 10.385
+
+=== Theorem 2.16.1 multipoint evaluation as sketched (with G_{t,1} for G_{t,0}); F_p, p=10007
+failures: 0
+
+=== Horner as printed: ((F_d a)a + F_{d-1})a + ... vs F(a), d=2
+printed: 386  true F(a): 86
+
+=== Toom-Cook exponent log_{k+1}(2k+1) (p.45)
+1 1.585
+2 1.465
+3 1.4037
+
+=== Simultaneous inversion multiplication count 3(m-1)
+True 12 == 3(m-1) = 12

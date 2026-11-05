@@ -1,0 +1,53 @@
+hypothesis:
+  id: H-PFDR-6c9fa7
+  area: PFDR
+  question_id: RQ-PFDR-ae2fba
+  source_proposal: IDEA-20261029-8d82e6
+  proposal_id: IDEA-20261029-8d82e6
+  title: Resume prime-field CDCL with certificate-producing finite-domain theory
+  status: specified
+  proposed_by: open-ideas design pass 2026-11-01
+  designed_by: opencode
+  created: '2026-11-01'
+  updated: '2026-11-01'
+  depends_on:
+  - IDEA-20261029-8d82e6
+  - RQ-PFDR-ae2fba
+  statement: Bounded-PC learning with certificate-producing finite-domain theory prunes
+    before whole-block enumeration and halves charged search cost.
+  mechanism: A learned theory prefix can exclude blocks earlier than enumeration;
+    it pays only if the explanation construction is cheaper than the enumeration it
+    replaces.
+  assumptions:
+  - User requests factor-base/SAT research; execution is not authorized here.
+  - Implicit membership is not an asserted escape from KN-OPEN-020.
+  predictions:
+  - metric: charged_search_cost
+    direction: lower
+    minimum_effect: <=0.5x strongest control
+  - metric: verified_model_count
+    direction: different
+    minimum_effect: exact agreement
+  - metric: actual_solving_degree
+    direction: different
+    minimum_effect: reported, not asserted lower
+  test_boundary:
+    instances:
+    - cells named in IDEA-20261029-8d82e6 and DESIGN.md
+    parameters:
+      instances: 6
+      replicates: 1
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 3600
+      backend: local
+  falsification_conditions:
+  - Pruning begins only after all but one factor-base block is fixed.
+  - Theory explanation construction costs as much as the pruned enumeration.
+  - Invalid certificates, omitted finite domains, or gains only on planted/SAT inputs.
+  interpretation_limits:
+  - Proposal only; no experiment or improvement established.
+  - Prime-field scope; regularity, solving degree and work are distinct.
+  - Independent relation verification; incomplete means UNKNOWN.

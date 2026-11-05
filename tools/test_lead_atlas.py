@@ -7,12 +7,15 @@ branch that adds a lead.
 from __future__ import annotations
 
 import copy
+import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lead_atlas as la  # noqa: E402
+import build_frontier_map as bfm  # noqa: E402
 import validate_ledger as vl  # noqa: E402
 
 FLOOR_PER_FAMILY = 3
@@ -47,6 +50,23 @@ class AtlasTests(unittest.TestCase):
         errors, _ = la.check_leads([row])
         self.assertTrue(any("next_action.step" in e for e in errors))
 
+    def test_inherited_revisit_requires_complete_obstruction(self) -> None:
+        row = copy.deepcopy(next(r for r in self.rows
+                                 if r["disposition"] in la.OPEN))
+        row["next_action"] = {"from_revisit_when": True}
+        row.pop("obstruction", None)
+        errors, _ = la.check_leads([row])
+        self.assertTrue(any("requires an obstruction block" in e
+                            for e in errors))
+
+    def test_inherited_revisit_and_explicit_step_are_exclusive(self) -> None:
+        row = copy.deepcopy(next(r for r in self.rows
+                                 if (r.get("next_action") or {}).get(
+                                     "from_revisit_when")))
+        row["next_action"]["step"] = "ambiguous action"
+        errors, _ = la.check_leads([row])
+        self.assertTrue(any("cannot combine step" in e for e in errors))
+
     def test_unknown_ledger_ref_fails(self) -> None:
         row = copy.deepcopy(self.rows[0])
         row["ledger_refs"] = ["H-NOPE-000000"]
@@ -71,6 +91,66 @@ class AtlasTests(unittest.TestCase):
         text = la.render(self.rows)
         for r in self.rows:
             self.assertIn(r["id"], text)
+
+    def test_only_scoped_obstructions_leave_pursuit_queue(self) -> None:
+        pursued = {r["id"] for r in la.pursuit_rows(self.rows)}
+        for row in self.rows:
+            with self.subTest(row=row["id"]):
+                self.assertEqual(row["id"] in pursued,
+                                 row["disposition"] != "closed_obstructed")
+
+    def test_closed_non_obstruction_uses_revisit_trigger(self) -> None:
+        row = next(r for r in self.rows if r["disposition"] in
+                   ("closed_known", "closed_dominated", "exhausted_at_scale"))
+        self.assertTrue(la.is_pursued(row))
+        self.assertIn(str(row["obstruction"]["revisit_when"]),
+                      la.pursuit_action(row))
+
+    def test_render_excludes_only_obstructed_from_pursuit_section(self) -> None:
+        text = la.render(self.rows)
+        section = text.split("## Pursuit queue", 1)[1].split("\n## ", 1)[0]
+        for row in self.rows:
+            with self.subTest(row=row["id"]):
+                self.assertEqual(f"| `{row['id']}` " in section,
+                                 row["disposition"] != "closed_obstructed")
+
+    def test_reopened_family_rows_render_the_inherited_action(self) -> None:
+        row = next(r for r in self.rows
+                   if (r.get("next_action") or {}).get("from_revisit_when"))
+        text = la.render(self.rows)
+        family = text.split(f"## {row['family']}", 1)[1].split(
+            "\n## ", 1)[0]
+        rendered = next(line for line in family.splitlines()
+                        if line.startswith(f"| `{row['id']}` "))
+        self.assertIn(la._one(row["obstruction"]["revisit_when"]), rendered)
+
+    def test_pursuit_action_is_not_markdown_escaped(self) -> None:
+        row = copy.deepcopy(next(r for r in self.rows
+                                 if r["disposition"] in la.OPEN))
+        row["next_action"] = {"step": "chain | tree"}
+        self.assertEqual(la.pursuit_action(row), "chain | tree")
+
+    def test_conditional_jksst_result_does_not_close_uncovered_lifts(self) -> None:
+        by_id = {row["id"]: row for row in self.rows}
+        for lead_id in (
+                "LEAD-TRF-global-lift-small-height",
+                "LEAD-ICP-char0-lifting-xedni-smoothness"):
+            with self.subTest(lead=lead_id):
+                row = by_id[lead_id]
+                self.assertEqual(row["disposition"], "open_next_step")
+                self.assertTrue(row["next_action"]["from_revisit_when"])
+                self.assertTrue(la.is_pursued(row))
+
+        kr = next(row for row in bfm.load_rows()
+                  if row["id"] == "KR-IC-cd159a")
+        self.assertIn("conditional", kr["title"].lower())
+        self.assertIn("not an unconditional", kr["claim"].lower())
+
+        cm = by_id["LEAD-TRF-cm-canonical-lift-heights"]
+        self.assertEqual(cm["disposition"], "closed_obstructed")
+        statement = cm["obstruction"]["statement"]
+        self.assertIn("fixed arity", statement)
+        self.assertIn("target-dependent arbitrary set-section", statement)
 
 
 class PriorArtLeadTests(unittest.TestCase):
@@ -105,6 +185,56 @@ class PriorArtLeadTests(unittest.TestCase):
                             self._errors(rid, self._block(lead="new"))))
         self.assertTrue(any("is not a lead" in e for e in self._errors(
             rid, self._block(lead="LEAD-ICB-does-not-exist"))))
+
+    def test_post_cutover_known_lead_requires_disposition_specific_delta(self) -> None:
+        closed = next(r for r in la.load_leads() if r["disposition"] in la.CLOSED)
+        opened = next(r for r in la.load_leads() if r["disposition"] in la.OPEN)
+        rid = f"IDEA-{vl.LEAD_DELTA_CUTOVER}-abc123"
+        self.assertTrue(any("lead_delta is required" in e for e in
+                            self._errors(rid, self._block(lead=closed["id"]))))
+        self.assertFalse(self._errors(rid, self._block(
+            lead=closed["id"], lead_delta={"kind": "answers_obstruction",
+                                            "statement": "changes assumption A"})))
+        self.assertFalse(self._errors(rid, self._block(
+            lead=opened["id"], lead_delta={"kind": "advances_next_action",
+                                            "statement": "runs its queued test"})))
+        self.assertTrue(any("advances_next_action" in e for e in self._errors(
+            rid, self._block(lead=opened["id"], lead_delta={
+                "kind": "answers_obstruction", "statement": "wrong kind"}))))
+
+
+class RecordAreaTests(unittest.TestCase):
+    """ecdlp_records() must see records the id prefix or line regex miss."""
+
+    def _area(self, fn, text: str, suffix: str = ".yaml") -> str | None:
+        with tempfile.NamedTemporaryFile("w", suffix=suffix,
+                                         delete=False) as fh:
+            fh.write(text)
+        try:
+            return fn(fh.name)
+        finally:
+            os.unlink(fh.name)
+
+    def test_one_line_json_idea(self) -> None:
+        text = ('{"idea":{"id":"IDEA-20261030-a62c58",'
+                '"question_id":"RQ-PFDR-ae2fba","status":"proposed"}}')
+        self.assertEqual(self._area(la._idea_area, text), "PFDR")
+
+    def test_yaml_idea_still_uses_the_line_form(self) -> None:
+        text = "idea:\n  id: IDEA-x\n  question_id: RQ-ECDLP-002\n"
+        self.assertEqual(self._area(la._idea_area, text), "ECDLP")
+
+    def test_hypothesis_area_from_its_question(self) -> None:
+        text = ("hypothesis:\n  id: H-SEMAEV-94dab2\n"
+                "  question_id: RQ-ECDLP-002\n")
+        self.assertEqual(self._area(la._record_area, text), "ECDLP")
+
+    def test_prefix_outside_areas_is_classified_by_question(self) -> None:
+        recs = la.ecdlp_records()
+        for rid in ("H-SEMAEV-94dab2", "H-PFIVE-6510c2",
+                    "IDEA-20261030-a62c58"):
+            with self.subTest(rid):
+                self.assertIn(rid, recs)
 
 
 if __name__ == "__main__":

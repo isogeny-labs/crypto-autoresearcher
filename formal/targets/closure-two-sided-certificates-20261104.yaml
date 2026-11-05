@@ -1,0 +1,22 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261104-df29f3
+claim_id: FALL-CERTIFICATE-TWO-SIDED-20261104
+kind: formalize_claim
+source: analysis/boolean-fall-certificates-20261104/THEORY.md
+source_status: PROVED
+theorem_name: CryptoResearch.FallDegree.exact_closure_of_two_sides
+theorem_file: CryptoResearch/FallDegree/ClosureCertificates.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Generic ordinary-ring certificate composition. Inputs and all allowed
+  polynomial products must lie in U, and every element of U must be in V.
+  The latter is the primal derivation obligation, not a consequence of a
+  dual-kernel check. No Semaev, Boolean normalization, parser correctness,
+  or growing lower-bound conclusion is included. Other declarations in
+  the same module supply the refutation and localization assembly lemmas.
+claim: |
+  Over a field k, let F be a subset of k[x] and let U be a k-subspace.
+  If U contains every input of degree at most D, is closed under every
+  multiplication whose sum of factor degrees is at most D, and U is
+  contained in the ordinary bounded closure V(F,D), then U=V(F,D).

@@ -25,6 +25,7 @@ stderr in --json mode, so the --json stdout stays a plain list of open rows.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import glob
 import json
 import os
@@ -116,6 +117,148 @@ def budget_violations(policy: dict | None = None) -> list[tuple[str, str, object
             if v is not None:
                 out.append((gid, f, v, str(p)))
     return out
+
+
+def _idea_area_index(repo: Path) -> dict[str, str]:
+    """Resolve date-keyed IDEA ids through their question ids."""
+    questions = _rq_area_index(repo)
+    out: dict[str, str] = {}
+    for path in _proposal_paths(repo):
+        try:
+            doc = fast_yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+            idea = doc.get("idea") or doc
+        except Exception:
+            continue
+        if not isinstance(idea, dict) or not idea.get("id"):
+            continue
+        qid = str(idea.get("question_id") or "")
+        area = questions.get(qid) or area_of(qid)
+        if area:
+            out[str(idea["id"])] = area
+    return out
+
+
+def process_budget_violations(policy: dict | None = None, *, repo: Path = REPO,
+                              extra_receipts: list[dict] | None = None) -> list[dict]:
+    """Return post-cutover ECC design-rate violations from session receipts.
+
+    Runs and evidence are intentionally not counted. The campaign remains
+    unlimited; this only prevents a single automated session/day from minting
+    another template-record flood faster than humans and executors can absorb.
+    """
+    pol = policy if policy is not None else load_policy(
+        repo / "orchestration" / "research-priority.yaml")
+    limits = pol.get("process_budget") or {}
+    effective = str(limits.get("effective_on") or "9999-12-31")
+    if not limits:
+        return []
+    receipts: list[dict] = []
+    for path in sorted((repo / "coordination/sessions/receipts").glob("*/SR-*.yaml")):
+        try:
+            row = fast_yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(row, dict):
+            receipts.append(row)
+    receipts.extend(extra_receipts or [])
+    ideas = _idea_area_index(repo)
+    ecc = ecc_areas(pol)
+
+    def counts(row: dict) -> tuple[set[str], set[str]]:
+        created = row.get("records_created") or {}
+        idea_ids = {str(x) for x in (created.get("IDEA") or [])
+                    if ideas.get(str(x)) in ecc}
+        experiment_ids = {str(x) for x in (created.get("EXP") or [])
+                          if is_ecc(str(x), pol)}
+        return idea_ids, experiment_ids
+
+    violations: list[dict] = []
+    by_day: dict[str, dict[str, set[str]]] = {}
+    for row in receipts:
+        day = str(row.get("recorded_at") or "")[:10]
+        if day < effective:
+            continue
+        idea_ids, experiment_ids = counts(row)
+        rid = str(row.get("id") or "unknown receipt")
+        for kind, ids, key in (
+                ("ideas", idea_ids, "max_new_ecc_ideas_per_session"),
+                ("experiments", experiment_ids,
+                 "max_new_ecc_experiments_per_session")):
+            limit = limits.get(key)
+            if isinstance(limit, int) and len(ids) > limit:
+                violations.append({"scope": "session", "receipt_ids": [rid],
+                                   "day": day, "kind": kind, "count": len(ids),
+                                   "limit": limit, "record_ids": sorted(ids)})
+        bucket = by_day.setdefault(day, {"ideas": set(), "experiments": set(),
+                                         "receipts": set()})
+        bucket["ideas"].update(idea_ids)
+        bucket["experiments"].update(experiment_ids)
+        if idea_ids or experiment_ids:
+            bucket["receipts"].add(rid)
+    for day, bucket in sorted(by_day.items()):
+        for kind, key in (("ideas", "max_new_ecc_ideas_per_utc_day"),
+                          ("experiments", "max_new_ecc_experiments_per_utc_day")):
+            limit = limits.get(key)
+            ids = bucket[kind]
+            if isinstance(limit, int) and len(ids) > limit:
+                violations.append({"scope": "utc_day",
+                                   "receipt_ids": sorted(bucket["receipts"]),
+                                   "day": day, "kind": kind, "count": len(ids),
+                                   "limit": limit, "record_ids": sorted(ids)})
+    return violations
+
+
+def process_budget_diff_violations(base_ref: str, policy: dict | None = None,
+                                   *, repo: Path = REPO) -> list[dict]:
+    """Enforce the per-session ceiling on added records even with no receipt."""
+    pol = policy if policy is not None else load_policy(
+        repo / "orchestration" / "research-priority.yaml")
+    limits = pol.get("process_budget") or {}
+    if not base_ref or not limits:
+        return []
+    result = subprocess.run(
+        ["git", "-C", str(repo), "diff", "--name-only", "--diff-filter=A", "-z",
+         base_ref, "HEAD", "--", "ledger/proposals", "ledger/ideas", "experiments"],
+        capture_output=True, check=True)
+    paths = [os.fsdecode(raw) for raw in result.stdout.split(b"\0") if raw]
+    questions = _rq_area_index(repo)
+    ecc = ecc_areas(pol)
+    idea_ids: set[str] = set()
+    experiment_ids: set[str] = set()
+    for relative in paths:
+        path = repo / relative
+        if (relative.startswith(("ledger/proposals/", "ledger/ideas/"))
+                and relative.endswith((".yaml", ".yml"))):
+            try:
+                doc = fast_yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+                idea = doc.get("idea") or doc
+            except Exception:
+                continue
+            if not isinstance(idea, dict):
+                continue
+            qid = str(idea.get("question_id") or "")
+            if (questions.get(qid) or area_of(qid)) in ecc and idea.get("id"):
+                idea_ids.add(str(idea["id"]))
+        elif (relative.startswith("experiments/")
+              and relative.endswith("/specification.yaml")):
+            try:
+                doc = fast_yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+                experiment = doc.get("experiment") or doc
+            except Exception:
+                continue
+            exp_id = str(experiment.get("id") or "") if isinstance(experiment, dict) else ""
+            if is_ecc(exp_id, pol):
+                experiment_ids.add(exp_id)
+    violations = []
+    for kind, ids, key in (
+            ("ideas", idea_ids, "max_new_ecc_ideas_per_session"),
+            ("experiments", experiment_ids, "max_new_ecc_experiments_per_session")):
+        limit = limits.get(key)
+        if isinstance(limit, int) and len(ids) > limit:
+            violations.append({"scope": "change", "base_ref": base_ref,
+                               "kind": kind, "count": len(ids), "limit": limit,
+                               "record_ids": sorted(ids)})
+    return violations
 
 
 def _goal_files():
@@ -392,6 +535,71 @@ def _taken_idea_ids(repo: Path = REPO) -> set[str]:
 PROPOSAL_DIRS = ("proposals", "ideas")
 
 
+def _verified_idea_redirects(repo: Path, *, warn=warn) -> set[str]:
+    """Return proposal paths with valid, hash-pinned IDEA redirects.
+
+    A redirect only affects scheduling when both immutable records still match
+    the registry and the target record carries the registered redirect ID.
+    Invalid entries fail open: the original proposal remains visible.
+    """
+    registry_path = repo / "tools" / "schema_supersession_registry.yaml"
+    try:
+        document = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+        if not isinstance(document, dict) or document.get("schema") != \
+                "schema-supersession-registry-v1":
+            raise ValueError("invalid schema supersession registry schema")
+        records = document.get("records")
+        if not isinstance(records, list):
+            raise ValueError("schema supersession records must be a list")
+    except FileNotFoundError:
+        # Fixture repositories used by callers may not model the registry.
+        # With no registry there are no applicable redirects to apply.
+        return set()
+    except (OSError, ValueError, yaml.YAMLError) as error:
+        warn(f"cannot read schema supersession registry ({error}); no IDEA "
+             "redirects are applied")
+        return set()
+
+    redirected = set()
+    root = repo.resolve()
+    for entry in records:
+        if not isinstance(entry, dict) or not entry.get("redirect_id"):
+            continue
+        source_rel = entry.get("superseded_path")
+        target_rel = entry.get("superseding_path")
+        if (entry.get("kind") != "ledger" or not isinstance(source_rel, str)
+                or not isinstance(target_rel, str)
+                or not source_rel.startswith("ledger/proposals/")
+                or not target_rel.startswith("ledger/proposals/")
+                or ".." in Path(source_rel).parts or ".." in Path(target_rel).parts):
+            continue
+        source, target = (root / source_rel).resolve(), (root / target_rel).resolve()
+        if root not in source.parents or root not in target.parents:
+            continue
+        try:
+            source_bytes, target_bytes = source.read_bytes(), target.read_bytes()
+            source_hash = hashlib.sha256(source_bytes).hexdigest()
+            target_hash = hashlib.sha256(target_bytes).hexdigest()
+            if (source_hash != entry.get("superseded_sha256") or
+                    target_hash != entry.get("superseding_sha256")):
+                warn(f"schema redirect for {source_rel} has a hash mismatch; "
+                     "original remains in the open-idea queue")
+                continue
+            target_doc = yaml.safe_load(target_bytes)
+            target_idea = (target_doc or {}).get("idea") or target_doc or {}
+            if (not isinstance(target_idea, dict) or
+                    target_idea.get("id") != entry["redirect_id"]):
+                warn(f"schema redirect for {source_rel} has a target ID mismatch; "
+                     "original remains in the open-idea queue")
+                continue
+        except (OSError, UnicodeError, yaml.YAMLError) as error:
+            warn(f"cannot verify schema redirect for {source_rel} ({error}); "
+                 "original remains in the open-idea queue")
+            continue
+        redirected.add(source_rel)
+    return redirected
+
+
 def _proposal_paths(repo: Path = REPO) -> list[str]:
     paths: list[str] = []
     for sub in PROPOSAL_DIRS:
@@ -413,9 +621,12 @@ def open_ecc_ideas(policy: dict | None = None, area: str | None = None,
     rq_area = _rq_area_index(repo)
     taken = _taken_idea_ids(repo)
     disposals = idea_disposition_state(repo) if honour_dispositions else {}
+    schema_redirects = _verified_idea_redirects(repo)
     disposed = []
     out = []
     for p in _proposal_paths(repo):
+        if os.path.relpath(p, repo) in schema_redirects:
+            continue
         try:
             with open(p) as fh:
                 d = fast_yaml.safe_load(fh)
@@ -479,6 +690,8 @@ def main(argv=None) -> int:
     ap.add_argument("--classify", nargs="+", metavar="ID")
     ap.add_argument("--open-ideas", action="store_true")
     ap.add_argument("--budget-violations", action="store_true")
+    ap.add_argument("--process-budget-violations", action="store_true")
+    ap.add_argument("--base-ref", help="also check newly added records against this git base")
     ap.add_argument("--area")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--json", action="store_true")
@@ -517,6 +730,22 @@ def main(argv=None) -> int:
             print(f"{len(v)} ECC goal budget violation(s) — ECC budgets must be null:")
             for gid, f, val, path in v:
                 print(f"  {gid:22s} {f} = {val!r}   ({path})")
+        return 1 if v else 0
+
+    if args.process_budget_violations:
+        v = process_budget_violations(pol)
+        if args.base_ref:
+            v.extend(process_budget_diff_violations(args.base_ref, pol))
+        if args.json:
+            print(json.dumps(v, indent=1, default=str))
+        elif not v:
+            print("OK: ECC campaign budget is unlimited; design-record process limits are respected.")
+        else:
+            print(f"{len(v)} ECC design-record process budget violation(s):")
+            for row in v:
+                sources = row.get("receipt_ids") or [f"base={row.get('base_ref')}"]
+                print(f"  {row.get('day', '-')} {row['scope']} {row['kind']}: "
+                      f"{row['count']} > {row['limit']} ({', '.join(sources)})")
         return 1 if v else 0
 
     if args.open_ideas:

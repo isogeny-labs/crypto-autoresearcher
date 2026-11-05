@@ -1,0 +1,172 @@
+Lemma 1 (Semaev [14]). Let x1 , ..., xm ∈ V and u1 , ..., um−2 ∈ Fpn . Suppose
+
+                          (X1 , ..., U1 , ...) = (x1 , ...u1 , ...) ∈ A2m−2 (Fpn )
+
+is a solution of EQS1(m,R) . Then we have the following;
+1) There exists P1 , ..., Pm ∈ E(F2n ) such that
+
+                         P1 + .. + Pm = R, x(P1 ) = x1 , ..., x(Pm ) = xm .
+
+2) Such P1 , .., Pm can be recovered from the solution of EQS1(m,R) .
+3) Put S :=
+          P {P | P ∈ {P1 , ..., Pm } ∩ E(Fpn )}. So, there exists some 2-torsion T ∈ E(Fpn )[2]
+satisfying P ∈S P + T = R.
+(Note #S ≤ m. From 1), T = ∞ when #S = m.)
+    From this Lemma, the decomposition of R reduces to solving EQS1(m,R) and solving
+EQS2(m,R) .
+    Semaev treats the case km ∼ n and we will suppose km ∼ n. Note that #F B ∼ #V = pk
+and the Probability that the element in E(Fpn ) is written by the form P1 + ... + Pm (Pi ∈ F b)
+is estimated by
+                           (#F b)m       1          (pk )m      1
+                                   ·            ∼           n
+                                                              ∼    .
+                              m!     #E(Fp )n      (m!) · p     m!
+     On the other hands, Probability that the element in E(Fpn ) is written by the form P1 +
+... + Pt + T (Pi ∈ F b, t < m, T ∈ E(Fpn )[2]\{∞}) is estimated by
+
+                        (#F b)t     1          (pk )t          1     1
+                    3           ·          ∼3         n
+                                                        ∼ 3 k(m−t) ¿    .
+                          t!      #E(Fpn )    (t!) · p     p      t! m!
+
+So the probability that R is written by R = P1 + ... + Pt + T for some t(< m) and T ∈
+E(Fpn )[2]\{∞} is very small and negligible. Thus, further, we assume that R is written by
+R = P1 + ... + Pm (Pi ∈ F b) and exceed the discussion.
+
+5   First fall degree assumption
+Definition 5 (First fall degree). Let K be a field and f1 , ..., fM ∈ K[X1 , ..., XN ]. First
+fall degree of {f1 , ..., fM } is the minimal integer dF satisfying the following.
+There exists g1 , ..., gM ∈ K[X1 , ..., XN ] such that
+1) maxi {deg gi fi } ≥ dF ,
+        PM
+2) deg( i=1 gi fi ) < dF ,
+    PM
+3) i=1 gi fi 6= 0.
+
+   Under the following assumption, the algorithm for solving ECDLP in sub-exponential
+complexity are proposed [12], [11], [14].
+
+Assumption 1 {f1 , ..., fM } Degree of the polynomial appears in the Gröbner basis compu-
+tation (by F4 algorithm) of {f1 , ..., fM } is ≤ dF .
+    From this assumption, the number of the monomial appears in the Gröbner basis compu-
+tation is ≤ O(N dF ) So, we have the following;
+Lemma 2. The complexity of Gröbner basis computation (by F4 algorithm) of {f1 , ..., fM }
+is ≤ O(N dF w ), where w ∼ 2.7 is the linear algebra constant.
+   Many researchers misunderstand the definition of first fall degree and use this assumption
+and estimation of the complexity using the following FAKE version.
+Definition 6 (Fake first fall degree). Let f1 , ..., fM ∈ Fp [X1 , ..., XN ] and let Sf e := {Xip −
+Xi | 1 ≤ i ≤ N } be the set of field equations Fake first fall degree of {f1 , ..., fM } ∪ Sf e is the
+minimal integer d0F satisfying the following.
+ There exists g1 , ..., gM ∈ K[X1 , ..., XN ] such that
+1) maxi {deg gi fi mod Sf e } ≥ dF ,
+         PM
+2) deg( i=1 gi fi mod Sf e ) < dF ,
+   PM
+3) i=1 gi fi 6≡ 0 mod Sf e .
+                                                                                       Pk
+PnIn [14], Semaev says from the equation S3 (x, u, RX ) = 0, where x =                    i=1 xi αi u =
+       u
+  i=1 i iα   and   R X   ∈ F pn , the  relations  of low   first degree   do  not appears. Considering
+xuS3 (x, u, RX ), one can easily have the relation that its Fake first fall degree d0F ≤ 4. He uses
+the true definition of first fall degree.
+    In [11], the author shows the following lemma and it has no problem to use Fake first fall
+degree instead of use true first fall degree.
+Lemma 3 ([11]). Let F = F (X1 , ..., XN ) be a polynomial in Fp [X1 , .., XN ] such that F ≡
+                                                                                PN
+0 mod Sf e . i.e., There are f1 , ..., fM ∈ Fp [X1 , .., XN ] such that F := i=1 fi · (Xip − Xi ). So,
+                                                                                    PN
+there are some polynomials f1new , ..., fM  new
+                                                 ∈ Fp [X1 , .., XN ] satisfying F := i=1 finew · (Xip −
+Xi ) and deg finew ≤ deg F − p (i = 1, ..., N ).
+Example 1 Let X, Y, Z are variables moves in F2 . Note that the set of field equations is
+written by Sf e = {X 2 + X, Y 2 + Y, Z 2 + Z}.
+Let F = (X 2 + X)(Y 2 + Y ) + (X 2 + X)(Y 2 + Z) ∈ F2 [X, Y, Z]. From its construction,
+F ≡ 0 mod Sf e and expanding the formula, we have F = X 2 Y +Y 2 Z +Y Z +X 2 Z +XY 2 +XZ
+and deg F = 3.
+    F can be transformed by F = (X 2 + X)(Y 2 + Y ) + (X 2 + X)(Y 2 + Z)
+= (X 2 + X)(Y 2 + Y ) + (X 2 + X)(Y 2 + Y ) + (X 2 + X)(Y 2 + Y ) + (X 2 + X)(Y 2 + Z)
+= (X + Z)(Y 2 + Y ) + (X 2 + X)(Y + Z), and F can be written by the sum of smaller degree
+polynomials, which are divided by a certain field equation.
+   Proof of this Lemma is complicated and not constructive.
+   From this lemma, we have the following:
+Lemma 4. Let f1 , ..., fM ∈ Fp [X1 , ..., XN ]. Put dF by the first fall degree of {f1 , ..., fM } and
+put d0F by the Fake first fall degree of {f1 , ..., fM } ∪ Sf e . Then dF ≤ d0F .
+   Now, we will estimate the first fall degree of EQS2(m,R) in case of p ≥ 3. For this purpose,
+we prepare the following
+Lemma 5 (Also the author ’s result in [11]). Let F = F (X1 , ..., XN ) be a polynomial
+in Fp [X1 , .., XN ] and let m = m(X1 , ..., XN ) be a monomial in Fp [X1 , .., XN ]. Then we have
+                                    n
+                                    X
+                     [m · F ]↓j ≡         [αi · m]↓j [F ]↓i mod Sf e          (j = 1, ..., n).
+                                    i=1
+
+Lemma 6. Let F = F (X1 , ..., Xn ) be a polynomial in Fpn [X1 , .., Xn ]. The first fall degree of
+the equations system {Fj↓ (∈ Fp [{Xij }]) | 1 ≤ j ≤ n} ∪ Sf e is heuristically ≤ (p − 1)n + deg F .
+
+Proof. Put m = m(X1 , ..., Xn ) = X1p−1 · · · Xnp−1 . From Lemma 5, we have
+                                           n
+                                           X
+                 [m · F ]↓j mod Sf e ≡           [αi · m]↓j [F ]↓i mod Sf e        (j = 1, ..., n).
+                                           i=1
+
+From field equation, deg([m · F ]↓j mod Sf e ) is ≤ (p − 1)n + deg F − 1. On the other hands,
+deg[αi · m]↓j is heuristically = (p − 1)n and deg[F ]↓i is also heuristically = deg F . 4 Thus the
+4
+    We use heuristic argument only here.
+Fake first fall degree of {Fj↓ (∈ Fp [{Xij }]) | 1 ≤ j ≤ n} is bounded by ≤ (p − 1)n + deg F and
+from Lemma 4, we have this lemma.
+  From this proposition, we have the following:
+Proposition 2 (Semaev [14] and its generalization to p ≥ 3). First fall degree of
+EQS2(m,R) 5 is bounded by          ½
+                                     4       (p = 2)
+                                                     .
+                                    3p + 1 (p ≥ 3)
+From this proposition and Lemma 2, we can estimate the complexity:
+Proposition 3 (Semaev [14] and its generalization to p ≥ 3). Under the first fall degree
+assumption, the complexity of solving EQS2(m,R) is bounded by
+                                ½
+                                  O((nm)4w )      (p = 2)
+                                         (3p+1)w          .
+                                  O((nm)          (p ≥ 3)
+
+6     Complexity estimation by Semaev
+Here, we adopt the easy and rough estimation. For this reason, the complexity of input size
+n is written by the form O(exp(nα+o(1) )), where limn→∞ o(1) = 0. Many complicated terms
+are included into the o(1) term and so for normal size input n, o(1) has HUGE value although
+limn→∞ o(1) = 0.
+                                                                      n
+    Semaev considers the case m ∼ n1/2+o(1) then k is taken k ∼ m          = n1/2+o(1) . Then we
+have               1/2+o(1)
+1) #F b ∼ pk = pn           = O(exp(n1/2+o(1) )),
+                                                    1           1
+2) The probability that decomposition success = m!    ∼ O(exp(n1/2+o(1) ))
+                                                                           ,
+3) The complexity of ”Decompose step” = #F b× cost  of solving EQS2
+                                                 Probability        = O(exp(n1/2+o(1) ))
+                                                     w              1/2+o(1)
+4) The complexity of ”linear algebra step” = (#F B) = O(exp(n                )) (w ∼ 2.7 linear
+algebra constant).
+   Thus we have the following;
+Proposition 4 (Semaev [14] and its generalization to p ≥ 3). Under the first fall
+degree assumption, the complexity of solving ECDLP for an elliptic curve E/Fpn is estimated
+by O(exp(n1/2+o(1) )).
+
+7     Disjoint factor base
+The idea of using disjoint factor base is known by [10] and recently re-discovered by [5].
+                   Pk
+   Recall V = { i=1 xi αi | xi ∈ Fp } be a dimension k vector space in Fpn and m, k be the
+parameter mk ∼ n.
+   Let v1 , ..., vm be elements in Fpn such that all V + vi (i = 1, ..., m) are disjoint. Put
+                                Vi := V + vi      (i = 1, ..., m),
+                     F bi := {P (∈ E(Fpn )) |x(P ) ∈ Vi }     (i = 1, ..., m),
+                                     F b := ∪m
+                                             i=1 F Bi , and
+consider the decomposition of R(∈ E(Fpn )) by
+                              R = P1 + ... + Pm        (Pi ∈ F bi )
+and the index calculus whose factor base is F b.
+   Note that #F bi ∼ #Vi = #V ∼ pk , #F b ∼ m · pk .
+   Using the similar argument in §2, the decomposition reduces to solving the following
+equations system
+5
+    Assume Sf e ⊆ EQS2(m,R)
+

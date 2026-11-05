@@ -1,0 +1,28 @@
+digraph hardening {
+  graph [bgcolor="white", rankdir=LR, nodesep=0.38, ranksep=0.62,
+         fontname="DejaVu Sans", label="Prime-field m=3 protocol: evidence and cost gates",
+         labelloc=t, fontsize=18, pad=0.18];
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=10,
+        color="#46657b", fillcolor="#eef5f8", margin="0.12,0.07"];
+  edge [color="#46657b", fontname="DejaVu Sans", fontsize=9];
+
+  semantics [label="Signed point semantics\ndisjoint x windows + lift signs"];
+  oracle [label="Native development oracle\nPASS at disclosed F7 fixture", fillcolor="#dff3e4", color="#2c7a4b"];
+  production [label="Production CDCL(T)/Fp\nOPEN: trail + proof replay", fillcolor="#fff2d8", color="#a16b00"];
+  panel [label="Complete natural panel\nOPEN: no censoring", fillcolor="#fff2d8", color="#a16b00"];
+  decision [label="Advance only if\ne < 0.5 and a < 1.5", fillcolor="#f3e7f7", color="#76428a"];
+
+  setup [label="Reusable setup\nS(s)=2^(a s)"];
+  query [label="2^s natural queries\nQ(s)=2^(e s)"];
+  cold [label="Cold collection\n2^(a s)+2^((e+1)s)"];
+
+  qfff [label="QF_FF\nSAT/model diagnostic", fillcolor="#f7e4e4", color="#9a3f3f"];
+  continuation [label="One-hot s=27\n805,306,365 variables\nNOT ADMITTED", fillcolor="#f7e4e4", color="#9a3f3f"];
+
+  semantics -> oracle -> production -> panel -> decision;
+  setup -> cold;
+  query -> cold;
+  cold -> decision;
+  qfff -> panel [style=dashed, label="no checked FF UNSAT"];
+  continuation -> panel [style=dashed, label="compact amendment first"];
+}

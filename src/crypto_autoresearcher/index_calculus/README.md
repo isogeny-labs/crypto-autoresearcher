@@ -9,6 +9,26 @@ multiplication, and counts the cost of every stage.
 Nothing here threatens a deployed curve. The point is to measure, honestly,
 how the classical prime-field index calculus scales.
 
+The [October 29 continuation](../../../research/prime_field_execution_20261029/README.md)
+adds target-row combination certificates without full base rank, a gated
+target-aware Prym collector, and optional Dickson stage diagnostics. These are
+software-tested interfaces. The [symmetry iteration](../../../research/prime_field_symmetries_20261029/README.md)
+now records the first admitted fixed P-256 C1 panel (all seven cases complete),
+a typed base/action catalog, complete target-branch replay, affine translation
+frames and a reusable operator prototype. Completed fixed prime-field panels
+include [B1 zero completion](../../../research/prime_field_b1_execution_20261029/RESULTS.md),
+[B2 matched shifted covers and D1 targets](../../../research/prime_field_b2_execution_20261030/RESULTS.md),
+[A1 residual cancellation](../../../research/prime_field_a1_execution_20261030/RESULTS.md),
+and [A2 norm completion](../../../research/prime_field_a2_execution_20261030/RESULTS.md).
+The [A3 direct three-sum comparison](../../../research/prime_field_a3_execution_20261030/RESULTS.md)
+now records exact enumeration/pair-table agreement on both original p4099 curves,
+with complete separate replay and stage accounting. These small fixed panels
+do not establish larger-field transfer or a complete attack-cost advantage.
+The [A4 holdout and target panel](../../../research/prime_field_a4_execution_20261030/RESULTS.md)
+adds four prospectively selected curves over8191/65537 and32public targets:
+one full-rank base, three deficient bases, and no target recovery while base
+uncertainty remains. Full checks, costs and all misses are retained.
+
 ## Layout
 
 | module | what it does |
@@ -20,6 +40,8 @@ how the classical prime-field index calculus scales.
 | `tails.py` | the table of tails: every signed sum of `h` factor-base points the search can reach, keyed by x-coordinate and built once per factor base; with numpy, two sorted arrays at 8 bytes a tail |
 | `_accel.py` | optional numpy scan that locates the useful `S_3` roots (in the base or in a table of tails); relations and every counter are identical to the pure-Python path |
 | `msolve.py` | algebraic decomposition: the Semaev system solved by the msolve Gröbner-basis engine |
+| `diagram.py` | the decomposition system as a string diagram of `S_3` boxes ([Graphical Algebraic Geometry](../../../knowledge/literature/KN-LIT-c9e59d.md)); presentations `chain` (default), `tree` (balanced merge tree) and `monolithic` (internal wire contracted by a resultant, `S_{m+1}`, m ≤ 3) for `msolve.py` (`--msolve-topology`); they return identical relations, only cost may differ ([lead](../../../knowledge/leads/ecdlp/ic-engine/LEAD-ICE-gag-contraction-planner.yaml)) |
+| `descent.py` | Gaudry/Diem decomposition over `F_{p^n}` (factor base: abscissas in `F_p`) by Weil descent of the `S_3` network, in any `diagram.py` presentation, solved with msolve (`p < 2^16`); pure-Python `F_{p^n}` and curve arithmetic, and a group-law brute force (`m ≤ 3`) as the reference; CLI `descent` |
 | `linalg.py` | incremental sparse elimination mod `N`, stopping at the first relation that fixes the target log; pivots on the column the fewest pivot rows hold (`min_fill`) or, as before, the lowest index (`min_index`) |
 | `rho.py` | Pollard rho with distinguished points and a Teske 20-adding walk on `{X, −X}` (negation map, look-ahead, short-cycle escape); `--rho-walk plain` walks on points |
 | `solver.py` | the end-to-end solver and its cost columns |
@@ -630,3 +652,64 @@ measurements; they do not imply a production-curve attack or a change in
 asymptotic complexity.
 
 The held-out balanced experiment [EXP-ICPERF-6c546e](../../../experiments/EXP-ICPERF-6c546e/reports/review-DEC-20261023-122e32/report.md) independently verified a **1.1606×** geometric complete-solve speedup (clustered95% interval approximately1.1268–1.1977×) on nine12/14/16-bit public curves, with two solver seeds and three repetitions. All162 executions include per-solve setup and final verification; arms cross every execution slot. This is one CPython/scalar-mitm host/session, with five slower candidate pairs, not a universal or vectorized result. The [structured claim](../../../claims/ic-target-balanced-6c546e.json) retains raw paired evidence, timing boundaries and uncertainty. Matched rho and Bernstein–Lange gaps were not measured.
+
+## Exact relation-quality diagnostics
+
+`relation_quality.AffineRelations` identifies target combinations from a
+consistent affine system without requiring individual base logs or full rank.
+It supplies original-row certificates and complete right kernels.
+`cancel_outside` scores partial relations only after eliminating their outside
+columns. `python -m crypto_autoresearcher.index_calculus.quality_cli INPUT.json`
+analyzes retained, already verified rows without collecting new data. See the
+[prime-field continuation](../../../research/prime_field_factor_base_20261028/README.md)
+for the input shape, zero-completion collector, Dickson extractor, validation
+scope and execution boundaries. These interfaces add no performance claim.
+
+## Matched source-selection continuation (4 November 2026)
+
+The [A5 fixed-base control](../../../research/prime_field_a5_execution_20261104/RESULTS.md)
+keeps all four A4 curves, bases, original projected columns and32public targets.
+One fixed hashed schedule reaches full base rank on every fixture. Two others
+recover eight distinct target functionals on the65537fixtures while base
+uncertainty remains (13schedule/target records), with carried certificates and
+separate public verification. Equal ranks can identify different functionals:
+window/hash0/hash1 each have rank30/32on one fixture, while window plus either
+hash span reaches32/32. Explicit new anchors have no marginal final rank gain.
+All96scope observations and the complete finite oracle are retained in the
+v8database/report. These are conditioned results on observed A4 fixtures;
+fresh curve/target holdouts and per-arm construction costs are the next control.
+
+The [A6 fresh holdouts](../../../research/prime_field_a6_execution_20261104/RESULTS.md)
+now complete that control on four new curves and 32 new public targets, with
+separate source-construction meters. Hash2 gives full rank on all four bases;
+eight distinct targets are identified with base uncertainty remaining in the
+relation-only scope. An additional prefix16 anchor-assisted target has a
+registered public-multiple explanation and is reported separately. On one
+fixture/hash0 system, joint target rows recover five targets where single
+natural rows identify two, leaving one base direction unresolved. Hashed source
+construction costs more arithmetic than the small scalar window; fixed anchor,
+generation and shared-table prerequisites remain charged. All 96 observations,
+complete finite checks and v9 database records are retained. A matched
+source-budget and joint-target recovery sweep is the next control.
+
+The [A7 checked-budget sweep](../../../research/prime_field_a7_execution_20261104/RESULTS.md)
+now completes that control on the same four bases and32targets. It retains
+288scoped observations at budgets0/8/16/24/32/48/64/96/128, with new point anchors
+limited to the available prefix and all original64point prerequisites charged.
+One window fixture recovers five joint targets at checked48sources, while
+isolated rows first recover them at96; two base directions remain unresolved
+at48after target cancellation. All schedules reach full base rank by128.
+The v10database preserves all earlier rows and stores budget-specific diagnostics
+and certificates. The next implementation comparison is cancellation-first
+recovery versus the full joint solver on those same immutable rows.
+
+[A8 cold-solver comparison](../../../research/prime_field_a8_execution_20261105/RESULTS.md)
+implements cancellation-first recovery on all 288 immutable A7 systems, with
+original-joint-row certificate lifting. All 576 cold solver calls agree on
+identified targets/scalars and pass separate dense/public checks. Fr add/sub/mul/
+inv are separate logical units, including construction, lifting and certificate
+checks; shared projection and historical collection remain separate. The v11
+archive preserves v10 history. Dense target-unit syndrome evaluation remains in
+the baseline, and 50 candidate cases use more subtractions, so the next matched
+control is sparse functional evaluation in both methods. No weighted or runtime
+speedup is asserted.

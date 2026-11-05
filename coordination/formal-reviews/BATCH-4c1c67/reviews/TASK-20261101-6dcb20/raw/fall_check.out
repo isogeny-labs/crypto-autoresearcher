@@ -1,0 +1,104 @@
+== A F d_F
+   D=1: none
+   D=2: none
+   D=3: FALL
+     cofactors: ['1', 'X']
+     products : ['X^2Y', 'X^2Y + X^2']
+     sum      : X^2
+     direct re-check of definition: True | sum X^2
+== A F d'_F
+   D=1: none
+   D=2: FALL
+     cofactors: ['1', '1']
+     products : ['XY', 'XY + X']
+     sum      : X
+     direct re-check of definition: True | sum X
+== A F control1 d_F (upper bound dropped, cofactor deg<=4)
+   D=1: none
+   D=2: none
+   D=3: FALL
+     cofactors: ['1', 'X']
+     products : ['X^2Y', 'X^2Y + X^2']
+     sum      : X^2
+== A F+S_fe d_F
+   D=1: none
+   D=2: none
+   D=3: FALL
+     cofactors: ['1', 'X', '0', '0']
+     products : ['X^2Y', 'X^2Y + X^2', '0', '0']
+     sum      : X^2
+     direct re-check of definition: True | sum X^2
+== A F+S_fe d'_F
+   D=1: none
+   D=2: FALL
+     cofactors: ['1', '1', '0', '0']
+     products : ['XY', 'XY + X', '0', '0']
+     sum      : X
+     direct re-check of definition: True | sum X
+== A F+S_fe control1 d_F (upper bound dropped, cofactor deg<=4)
+   D=1: none
+   D=2: FALL
+     cofactors: ['1', 'X', '1', '0']
+     products : ['X^2Y', 'X^2Y + X^2', 'X^2 + X', '0']
+     sum      : X
+== B F d_F
+   D=1: none
+   D=2: none
+   D=3: FALL
+     cofactors: ['X3', 'X2']
+     products : ['X1X2X3 + X3^2', 'X1X2X3 + X2^2']
+     sum      : X2^2 + X3^2
+     direct re-check of definition: True | sum X2^2 + X3^2
+== B F d'_F
+   D=1: none
+   D=2: FALL
+     cofactors: ['X1 + 1', '1']
+     products : ['X1X3 + X3', 'X1X3 + X2']
+     sum      : X2 + X3
+     direct re-check of definition: True | sum X2 + X3
+== B F control1 d_F (upper bound dropped, cofactor deg<=4)
+   D=1: none
+   D=2: none
+   D=3: FALL
+     cofactors: ['X3', 'X2']
+     products : ['X1X2X3 + X3^2', 'X1X2X3 + X2^2']
+     sum      : X2^2 + X3^2
+== B F+S_fe d_F
+   D=1: none
+   D=2: none
+   D=3: FALL
+     cofactors: ['X3', 'X2', '0', '0', '0']
+     products : ['X1X2X3 + X3^2', 'X1X2X3 + X2^2', '0', '0', '0']
+     sum      : X2^2 + X3^2
+     direct re-check of definition: True | sum X2^2 + X3^2
+== B F+S_fe d'_F
+   D=1: none
+   D=2: FALL
+     cofactors: ['X1 + 1', '1', '0', '0', '0']
+     products : ['X1X3 + X3', 'X1X3 + X2', '0', '0', '0']
+     sum      : X2 + X3
+     direct re-check of definition: True | sum X2 + X3
+== B F+S_fe control1 d_F (upper bound dropped, cofactor deg<=4)
+   D=1: none
+   D=2: FALL
+     cofactors: ['1', 'X1 + 1', 'X3', '0', '0']
+     products : ['X1X2 + X3', 'X1^2X3 + X1X2 + X1X3 + X2', 'X1^2X3 + X1X3', '0', '0']
+     sum      : X2 + X3
+== recovery illustration B, v=3: (True, frozenset({(0, 0, 1), (0, 1, 0)}))
+   unreduced sum p = X2^2 + X3^2 ; red(p) = X2 + X3
+   lifted true fall (X3, X2, 0, 1, 1): (True, frozenset({(0, 0, 1), (0, 1, 0)}))
+== control 2 on A: fake fall (1,1) at v=2: (True, frozenset({(1, 0)})) unreduced degs [3, 2] ; true fall of F+S_fe at 2: None
+
+SUMMARY
+  ('A', 'F', 'd_F') = 3
+  ('A', 'F', "d'_F") = 2
+  ('A', 'F', 'control1 d_F (upper bound dropped, cofactor deg<=4)') = 3
+  ('A', 'F+S_fe', 'd_F') = 3
+  ('A', 'F+S_fe', "d'_F") = 2
+  ('A', 'F+S_fe', 'control1 d_F (upper bound dropped, cofactor deg<=4)') = 2
+  ('B', 'F', 'd_F') = 3
+  ('B', 'F', "d'_F") = 2
+  ('B', 'F', 'control1 d_F (upper bound dropped, cofactor deg<=4)') = 3
+  ('B', 'F+S_fe', 'd_F') = 3
+  ('B', 'F+S_fe', "d'_F") = 2
+  ('B', 'F+S_fe', 'control1 d_F (upper bound dropped, cofactor deg<=4)') = 2

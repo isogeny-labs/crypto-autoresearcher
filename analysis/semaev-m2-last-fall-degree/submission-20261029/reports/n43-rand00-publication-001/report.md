@@ -1,0 +1,5 @@
+# n=43 random00: published D4 certificate and LFD lower bound
+
+The first remaining fixed n=43 random-subspace input produced an independently accepted degree-four certificate. The original checker reports `1 ∉ W_4(F)` and codimension at least **34,273**. A separate exhaustive counter found **2 ordered Boolean solutions**. The strict inequality `34,273 > 2` certifies **last fall degree at least 5** for this named Boolean presentation.
+
+The [machine-readable row](result.json) binds the retained computation result, [count inference](inference.json), and original certificate SHA-256. The [public archive readback](../../archive/fresh-n43-rand-00.publication.json) verifies the compressed certificate and evidence bundle through anonymous HTTPS downloads and canonical-store GETs, then checks the decompressed 644,339,888-byte certificate against its original SHA-256. The [flow diagram](flow.svg) shows the independent checks supporting the bound. This row belongs to the original frozen n=43–44 tail; the driver has moved to the next original input.

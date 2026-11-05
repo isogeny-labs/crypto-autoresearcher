@@ -46,7 +46,8 @@ except ImportError:  # imported as tools.<name>, the repository root importable
 import ecc_priority  # noqa: E402
 import sparse_checkout  # noqa: E402
 from experiment_execution import coverage, safe_path, sha256  # noqa: E402
-from research_dispatch import GitRepositoryVerifier, validate_queue  # noqa: E402
+from research_dispatch import (  # noqa: E402
+    TERMINAL_STATES, GitRepositoryVerifier, validate_queue)
 
 _EXP_ID_RE = re.compile(r"EXP-[A-Za-z0-9]+-(?:[0-9a-fA-F]{6}|\d{3})")
 
@@ -83,6 +84,13 @@ def _dispatch_queue_ready(repo: Path, plan: Path) -> tuple[bool, str, str | None
                  if isinstance(item, dict) and item.get("id") == task_id), None)
     if task is None:
         return False, f"{queue_name}: no valid dispatch queue entry for {task_id}", None
+    # A cancelled (or otherwise finished) executor task cannot be claimed, so
+    # its plan is not runnable even when the binding below still matches.
+    state = task.get("state")
+    if state in TERMINAL_STATES:
+        why = task.get("cancellation_reason") or task.get("reason") or ""
+        return False, (f"{queue_name}: {task_id} is {state}"
+                       + (f" ({why})" if why else "")), None
     try:
         validate_queue(queue, repository_verifier=GitRepositoryVerifier(repo))
     except ValueError as error:

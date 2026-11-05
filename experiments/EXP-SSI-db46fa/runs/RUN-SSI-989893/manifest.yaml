@@ -1,0 +1,112 @@
+run:
+  experiment_id: EXP-SSI-db46fa
+  metrics:
+    size_S: 2
+    O: 2
+    D: 0
+    deficit_F19: 0
+    deficit_instrument: 1
+  result:
+    certificate:
+      kind: none
+    raw_result: raw-result.json
+    metrics:
+      size_S: 2
+      O: 2
+      D: 0
+      deficit_F19: 0
+      deficit_instrument: 1
+    executor_receipt: execution-receipt.json
+  id: RUN-SSI-989893
+  hypothesis_id: H-SSI-bff8d9
+  task_id: TASK-20261007-05f4b2
+  trial_id: orbit-deficit-p19
+  approved_by: coordinator
+  status: completed
+  status_note: 'Written by tools/experiment_execution.py: the driver exited 0. Completed
+    is not a validity ruling.'
+  code:
+    commit: b78f54c1e7dd1edd45cb1a4a1626519d4615a798
+    commit_meaning: launch authority commit (launch.json, environment.json)
+    command_file: command.txt
+    command: '["python3", "experiments/EXP-SSI-db46fa/implementation/run.py", "--trial-plan",
+      "experiments/EXP-SSI-db46fa/trial-plan.json", "--run-dir", "/Users/adamburan/prtriage-work/crypto-autoresearcher/experiments/EXP-SSI-db46fa/runs/RUN-SSI-989893"]'
+    check_command: '["python3", "experiments/EXP-SSI-db46fa/implementation/check.py",
+      "/Users/adamburan/prtriage-work/crypto-autoresearcher/experiments/EXP-SSI-db46fa/runs/RUN-SSI-989893"]'
+  environment:
+    file: environment.json
+    commit: b78f54c1e7dd1edd45cb1a4a1626519d4615a798
+    platform: darwin
+    python: 3.12.8 (main, Apr  3 2026, 13:08:17) [Clang 17.0.0 (clang-1700.0.13.5)]
+    runtime_lock: null
+    runtime_lock_sha256: null
+    source_sha256:
+      experiments/EXP-SSI-db46fa/implementation/check.py: 2dc21194767a0e2817720ad8332dbbabd0fcdda51f421a7a21eb085056ed45f7
+      experiments/EXP-SSI-db46fa/implementation/run.py: b1ce2040c73cc9636e196285da843b5435a3daaf2e60329279e34990a5c66fab
+    specification_sha256: 52b5e26b1d8cbb557830003f64dd7c78770ef4c5764abb1f1d32d7306015be1e
+  inputs:
+    trial_plan: experiments/EXP-SSI-db46fa/trial-plan.json
+    plan_sha256: 287aa0c3980da8373ee110d610d50716c43d73680de51957ffdcb4ae8246e90a
+    trial_id: orbit-deficit-p19
+  timing:
+    started_at: '2026-11-01T17:47:58.239094+00:00'
+    finished_at: '2026-11-01T17:48:08.783111+00:00'
+    wall_seconds: 10.544017
+    source: supervisor clock around the driver process
+  artifacts:
+    stdout: stdout.log
+    stderr: stderr.log
+    check_stdout: check.stdout.log
+    check_stderr: check.stderr.log
+  envelope_completion:
+    schema: crypto.autoresearch.run_envelope_completion.v1
+    action: completed
+    driver_shape: nested
+    driver_manifest_sha256: 5e0eaccc820a9c44af69e869c2a7ccf034b0e4eaba18ee05ab63fea1146815cf
+    completed_by: tools/experiment_execution.py
+    added:
+    - run.id
+    - run.hypothesis_id
+    - run.task_id
+    - run.trial_id
+    - run.approved_by
+    - run.status
+    - run.status_note
+    - run.code.commit
+    - run.code.commit_meaning
+    - run.code.command_file
+    - run.code.command
+    - run.code.check_command
+    - run.environment
+    - run.inputs
+    - run.timing
+    - run.result.raw_result
+    - run.result.metrics
+    - run.result.executor_receipt
+    - run.artifacts
+    sources:
+      run.id: frozen trial run_id
+      run.hypothesis_id: frozen plan hypothesis_id
+      run.task_id: frozen plan task_id
+      run.trial_id: frozen trial id
+      run.approved_by: frozen plan approved_by
+      run.status: 'derived: the driver exited 0'
+      run.status_note: supervisor constant explaining run.status
+      run.code.commit: launch authority commit
+      run.code.commit_meaning: supervisor constant
+      run.code.command_file: supervisor constant (command.txt, written at launch)
+      run.code.command: launched argv, equal to command.txt
+      run.code.check_command: launched checker argv
+      run.environment: 'environment.json, plus file: environment.json'
+      run.inputs: frozen plan path and hash, frozen trial id, seed, parameters, curve_id
+      run.timing: supervisor clock around the driver process
+      run.result.raw_result: supervisor constant (raw-result.json exists)
+      run.result.metrics: copy of the driver's run.metrics
+      run.result.executor_receipt: supervisor constant; the supervisor writes this
+        file after completion
+      run.artifacts: supervisor constant; stdout.log and stderr.log exist, check.stdout.log
+        and check.stderr.log are written after completion
+    representation: 'published manifest.yaml is a yaml.safe_dump re-serialisation
+      of the driver''s values plus the added keys: comments and source formatting
+      are not kept; the driver''s exact bytes are in the execution receipt''s manifest_completion.driver_manifest_text,
+      hashed in driver_manifest_sha256'

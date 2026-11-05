@@ -1,0 +1,686 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "EXP-PFDR-ada71b-v1",
+  "version": 1,
+  "created": "2026-11-01",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "experiments/EXP-PFDR-ada71b",
+  "authors": [
+    "coordinator",
+    "executor"
+  ],
+  "links": {
+    "experiment_id": "EXP-PFDR-ada71b",
+    "hypothesis_ids": [
+      "H-PFDR-ed7ccf"
+    ],
+    "goal_id": "GOAL-PFDR-fd09e0",
+    "spec": "experiments/EXP-PFDR-ada71b/specification.yaml",
+    "predecessor": "EXP-PFDR-2d36f9"
+  },
+  "question": "For window and rank-d label-GAP symmetric bases on prime-order E/F_p, is the growth exponent delta of the pair-sum coincidence excess kappa in N below the h = 2 break-even rate 1/3 over 16-32 bits?",
+  "claims": [
+    {
+      "id": "SUB-BE",
+      "text": "Every valid structured line (theta 0.30/0.35 x d 1-3) has upper95(delta) < 1/3 with all blocking controls passing and at least 5 of 6 lines valid (reading O-SUB-BE).",
+      "class": "comparative",
+      "decided_by": [
+        "C-line-slope"
+      ],
+      "if_supported": "Record the six lines sub-break-even at h = 2 over 16-32 bits after independent review; toy scope only.",
+      "if_not_supported": "O-ALIVE: price the surviving line against matched rho in a successor contract; O-MIXED/O-INVALID: no reading, named repair."
+    },
+    {
+      "id": "INSTRUMENT",
+      "text": "The instrument recovers planted slopes (gamma 0, 1/6, 1/3, 1/2) within 0.03 and the Z/N interval slope 1 - theta within 0.05, and its null is calibrated (A/A, z_cal). C-aa-null and the z_cal band set the noise floor and are blocking gates (C5, C6), not deciding comparisons.",
+      "class": "comparative",
+      "decided_by": [
+        "C-plant-recovery",
+        "C-zn"
+      ],
+      "if_supported": "The slope reading is admissible.",
+      "if_not_supported": "O-INVALID; instrument repair only."
+    },
+    {
+      "id": "NO-COST",
+      "text": "No cost, speedup, attack or claim beyond 32 bits is made.",
+      "class": "out_of_scope",
+      "decided_by": []
+    }
+  ],
+  "arms": [
+    {
+      "id": "structured",
+      "role": "candidate",
+      "description": "Six preregistered window (d = 1) and label-GAP (d = 2, 3) symmetric bases of b = 2*round(2^(bits*theta)/2) points, per (rung, theta, d, curve).",
+      "instrument": {
+        "repo": "isogeny-labs/crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "python3",
+            "implementation/run.py",
+            "build",
+            "--out",
+            "{build_dir}"
+          ]
+        ],
+        "binary_sha256": null,
+        "threads": 4,
+        "flags": {
+          "identity_kind": "source sha256 bound in trial-plan.json source_sha256",
+          "run_py_sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+          "paircount_c_sha256": "0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696"
+        },
+        "env": {}
+      },
+      "parameters": {
+        "bits": [
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "theta": [
+          0.3,
+          0.35
+        ],
+        "d": [
+          1,
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "id": "null",
+      "role": "reference",
+      "description": "20 uniformly random symmetric bases of exactly b points per (rung, theta, curve), shared across d.",
+      "instrument": {
+        "repo": "isogeny-labs/crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "python3",
+            "implementation/run.py",
+            "build",
+            "--out",
+            "{build_dir}"
+          ]
+        ],
+        "binary_sha256": null,
+        "threads": 4,
+        "flags": {
+          "identity_kind": "source sha256 bound in trial-plan.json source_sha256",
+          "run_py_sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+          "paircount_c_sha256": "0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696"
+        },
+        "env": {}
+      },
+      "parameters": {
+        "bits": [
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "theta": [
+          0.3,
+          0.35
+        ],
+        "replicates": 20
+      }
+    },
+    {
+      "id": "gamma_plants",
+      "role": "control_positive",
+      "description": "{+-kG : k <= L} plus uniform fill; L per curve by seeded randomized rounding so design kappa grows as 2^(gamma (Lbar_r - Lbar_16)).",
+      "instrument": {
+        "repo": "isogeny-labs/crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "python3",
+            "implementation/run.py",
+            "build",
+            "--out",
+            "{build_dir}"
+          ]
+        ],
+        "binary_sha256": null,
+        "threads": 4,
+        "flags": {
+          "identity_kind": "source sha256 bound in trial-plan.json source_sha256",
+          "run_py_sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+          "paircount_c_sha256": "0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696"
+        },
+        "env": {}
+      },
+      "parameters": {
+        "bits": [
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "theta": [
+          0.3,
+          0.35
+        ],
+        "gamma": [
+          "1/6",
+          "1/3",
+          "1/2"
+        ]
+      }
+    },
+    {
+      "id": "gamma0_plant",
+      "role": "control_negative",
+      "description": "gamma = 0 plant: {+-kG : k <= L} with L constant in N (N-constant excess); must classify SUB-BE, never ALIVE.",
+      "instrument": {
+        "repo": "isogeny-labs/crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "python3",
+            "implementation/run.py",
+            "build",
+            "--out",
+            "{build_dir}"
+          ]
+        ],
+        "binary_sha256": null,
+        "threads": 4,
+        "flags": {
+          "identity_kind": "source sha256 bound in trial-plan.json source_sha256",
+          "run_py_sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+          "paircount_c_sha256": "0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696"
+        },
+        "env": {}
+      },
+      "parameters": {
+        "bits": [
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "theta": [
+          0.3,
+          0.35
+        ],
+        "gamma": [
+          "0"
+        ]
+      }
+    },
+    {
+      "id": "zn_interval",
+      "role": "control_positive",
+      "description": "{+-kG : 1 <= k <= b/2}; known slope 1 - theta.",
+      "instrument": {
+        "repo": "isogeny-labs/crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "python3",
+            "implementation/run.py",
+            "build",
+            "--out",
+            "{build_dir}"
+          ]
+        ],
+        "binary_sha256": null,
+        "threads": 4,
+        "flags": {
+          "identity_kind": "source sha256 bound in trial-plan.json source_sha256",
+          "run_py_sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+          "paircount_c_sha256": "0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696"
+        },
+        "env": {}
+      },
+      "parameters": {
+        "bits": [
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "theta": [
+          0.3,
+          0.35
+        ]
+      }
+    },
+    {
+      "id": "aa_null",
+      "role": "control_aa",
+      "description": "Null replicate d - 1 read as a pseudo-structured line for each (theta, d) against the other 19 replicates.",
+      "instrument": {
+        "repo": "isogeny-labs/crypto-autoresearcher",
+        "commit": null,
+        "build": [
+          [
+            "python3",
+            "implementation/run.py",
+            "build",
+            "--out",
+            "{build_dir}"
+          ]
+        ],
+        "binary_sha256": null,
+        "threads": 4,
+        "flags": {
+          "identity_kind": "source sha256 bound in trial-plan.json source_sha256",
+          "run_py_sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+          "paircount_c_sha256": "0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696"
+        },
+        "env": {}
+      },
+      "parameters": {
+        "bits": [
+          16,
+          20,
+          24,
+          28,
+          32
+        ],
+        "theta": [
+          0.3,
+          0.35
+        ],
+        "d": [
+          1,
+          2,
+          3
+        ]
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa-null",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "gamma_plants",
+      "expected_detection": "gamma 1/2 plant and Z/N interval classify ALIVE; gamma 1/6 classifies SUB-BE-GROWING; each slope within tolerance of its design value.",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "gamma0_plant",
+      "null_population": {
+        "description": "gamma = 0 plant (N-constant excess) against the 20 uniform null bases of the same curve",
+        "generator": "seeded uniform symmetric bases and the gamma = 0 plant",
+        "n": 20,
+        "why_n": "20 null replicates per curve as in EXP-PFDR-ca5e01 and v1",
+        "matched_on": [
+          "curve",
+          "b",
+          "symmetry",
+          "kernel"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "rung_bits",
+        "levels": [
+          16,
+          20,
+          24,
+          28,
+          32
+        ]
+      },
+      {
+        "name": "theta",
+        "levels": [
+          0.3,
+          0.35
+        ]
+      },
+      {
+        "name": "d",
+        "levels": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "gamma",
+        "levels": [
+          0,
+          0.1666666667,
+          0.3333333333,
+          0.5
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "curve",
+        "treatment": "randomized",
+        "value": "prime-order curves, seed = block + c",
+        "how": "frozen seed rule; all arms of a (rung, theta) share the curve set"
+      },
+      {
+        "name": "base_builder",
+        "treatment": "fixed",
+        "value": "window_base, gap_base, null_base, gamma_plant_base, zn_interval_base",
+        "how": "one sha256-bound implementation"
+      },
+      {
+        "name": "kernel",
+        "treatment": "fixed",
+        "value": "paircount.c (p < 2^32 key bound)",
+        "how": "one build; selftest gate"
+      },
+      {
+        "name": "seed_block",
+        "treatment": "fixed",
+        "value": "pilot 12000000; main 12100000; replication 12200000; selftest 12900000",
+        "how": "disjoint fresh blocks; v1 blocks never reused"
+      },
+      {
+        "name": "null_replicate",
+        "treatment": "randomized",
+        "value": "20 seeded uniform bases",
+        "how": "replicate d - 1 is the rank-d A/A pseudo-line"
+      },
+      {
+        "name": "pilot_sizing",
+        "treatment": "fixed",
+        "value": "32 pilot curves, margin 1.5, target 2500",
+        "how": "design.json written before any census and re-derived by check.py"
+      },
+      {
+        "name": "host_and_load",
+        "treatment": "measured",
+        "value": "recorded per job",
+        "how": "affects wall time only; no timed metric"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-line-slope",
+        "arms": [
+          "structured",
+          "null"
+        ],
+        "differs_in": [
+          "base_builder"
+        ],
+        "design": "absolute",
+        "threshold": "upper95(delta) < 1/3 on every valid line (SUB-BE/SUB-BE-GROWING); ALIVE iff lower95 > 0 and upper95 >= 1/3, replicated on the 12,200,000 block"
+      },
+      {
+        "id": "C-aa-null",
+        "arms": [
+          "aa_null",
+          "null"
+        ],
+        "differs_in": [
+          "null_replicate"
+        ],
+        "design": "aa",
+        "threshold": "interval contains 0 on >= 5 of 6 lines, none ALIVE; z_cal sd in [0.70, 1.30], |mean| <= 0.40"
+      },
+      {
+        "id": "C-plant-recovery",
+        "arms": [
+          "gamma_plants",
+          "gamma0_plant",
+          "null"
+        ],
+        "differs_in": [
+          "base_builder"
+        ],
+        "design": "one_factor",
+        "threshold": "|delta_hat - gamma_design| <= 0.03; classes gamma 0 SUB-BE, 1/6 SUB-BE-GROWING, 1/2 ALIVE"
+      },
+      {
+        "id": "C-zn",
+        "arms": [
+          "zn_interval",
+          "null"
+        ],
+        "differs_in": [
+          "base_builder"
+        ],
+        "design": "absolute",
+        "threshold": "|delta_hat - (1 - theta)| <= 0.05 and ALIVE"
+      }
+    ],
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact counts per job; no timing metric, so order cannot bias a primary metric.",
+    "seed_derivation": {
+      "method": "explicit_list",
+      "seeds": [
+        12000000,
+        12100000,
+        12200000,
+        12900000
+      ],
+      "note": "curve seed = block + c (c < 4000); base seeds sha256('EXP-PFDR-ada71b|' + labels)."
+    },
+    "instance_sampling": {
+      "rule": "Curves 0..n_curves-1 of each fresh block, n_curves from design.json; never selected by outcome.",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Frozen deterministic analysis (run.py analyze) with preregistered thresholds; no analyst choice after data."
+    }
+  },
+  "sample_size": {
+    "instances": 30,
+    "replicates": 20,
+    "warmups": 0,
+    "power": {
+      "method": "other",
+      "alpha": 0.05,
+      "tests_in_family": 6,
+      "correction": "none",
+      "passes": true,
+      "note": "Per cell M >= 2500 null coincidences (Poisson sd of log kappa about 0.02 per rung); v1 plant recovery at these sizes was within 0.012 of design on the valid theta, so a delta of 1/3 versus 0 is resolved by a wide margin. Classes are per line, not a family test; the reading requires every line."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": null,
+      "per_sample_seconds": null,
+      "threads": 4,
+      "estimated_total_seconds": 1800,
+      "measured_on": "v1 wall times (census-main 293 s, pilot 32 s) scaled by the v2 curve counts; protective watchdogs only."
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "delta_hat",
+        "name": "per-line slope",
+        "unit": "dimensionless exponent of N",
+        "kind": "derived",
+        "definition": "OLS slope of log2 kappa_r on rung mean log2 N over five rungs",
+        "source": "analysis.json /lines[] delta_hat",
+        "aggregation": "per_row",
+        "resolution": "float64",
+        "uncertainty": "bootstrap_ci95",
+        "formula": "delta_hat = sum((x_r - xbar)(y_r - ybar)) / sum((x_r - xbar)^2), x_r = mean log2 N over rung r curves, y_r = log2(S_r / M_r)"
+      },
+      {
+        "id": "reading",
+        "name": "reading",
+        "unit": "category",
+        "kind": "exact",
+        "definition": "first matching outcome rule (O-INVALID, O-ALIVE, O-PENDING-REPLICATION, O-SUB-BE, O-MIXED)",
+        "source": "analysis.json /reading",
+        "aggregation": "per_row",
+        "resolution": "category",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "S_M",
+        "name": "coincidence counts",
+        "unit": "integer pairs-of-pairs",
+        "kind": "exact",
+        "definition": "S (structured) and M (null mean) per cell under the CC convention",
+        "source": "analysis.json /cells",
+        "aggregation": "per_row",
+        "resolution": "one integer",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "z_cal",
+        "name": "calibration z",
+        "unit": "standard units",
+        "kind": "derived",
+        "definition": "(S_k - M_-k)/sqrt(V_-k (1 + 1/19)) with k = d - 1",
+        "source": "analysis.json /cells z_cal",
+        "aggregation": "distribution",
+        "resolution": "float64",
+        "uncertainty": "stdev",
+        "formula": "z_cal = (sum_c n_c[k] - sum_c mean(n_c[-k])) / sqrt(sum_c var(n_c[-k]) (1 + 1/19)), k = d - 1"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "none",
+    "counters": [],
+    "record": [
+      "source_sha256",
+      "trial_plan_sha256",
+      "seed blocks",
+      "n_curves",
+      "per-job counts",
+      "failed_infrastructure",
+      "checker result"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "measurement_class": "measurement",
+    "timeout_seconds": 43200,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "Six planned trials in order (selftest, pilot, census-main, analyze-main, census-rep, analyze-final); census-rep only for ALIVE lines.",
+      "kind": "fixed_n",
+      "preregistered": true
+    },
+    {
+      "rule": "A kernel call over 3600 s is failed_infrastructure; its cell is invalid, never null.",
+      "kind": "budget",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "selftest fails",
+    "check.py exits non-zero",
+    "design.json does not re-derive",
+    "manifest code or trial-plan hash differs from the frozen plan",
+    "trial-plan defaults differ from driver constants"
+  ],
+  "decision_rule": {
+    "text": "analysis.json /reading under the frozen outcome rules of the specification; O-SUB-BE supports, O-ALIVE (replicated) falsifies, O-MIXED and O-INVALID decide nothing. The six-line family is an intersection-union test (support needs every valid line below 1/3), which needs no per-line alpha adjustment; C-aa-null (C5) and z_cal (C6) are blocking gates.",
+    "comparison_ids": [
+      "C-line-slope",
+      "C-plant-recovery",
+      "C-zn"
+    ],
+    "statistic": "per-line OLS slope with curve-cluster bootstrap interval",
+    "interval": "95% percentile bootstrap, 2000 replicates",
+    "multiple_comparison_correction": "other",
+    "effect_size_measure": "delta_hat against 1/3",
+    "verdict_vocabulary": [
+      "O-SUB-BE",
+      "O-ALIVE",
+      "O-PENDING-REPLICATION",
+      "O-MIXED",
+      "O-INVALID"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "implementation/run.py",
+      "sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3"
+    },
+    "inputs": [
+      "design.json",
+      "main-jobs.jsonl",
+      "rep-jobs.jsonl",
+      "selftest.json"
+    ],
+    "outputs": [
+      "analysis-main.json",
+      "analysis.json",
+      "flags.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "experiments/EXP-PFDR-ada71b/reports/"
+    ],
+    "report_dir": "experiments/EXP-PFDR-ada71b/reports"
+  },
+  "inadmissible": [
+    "No statement beyond bits 16-32, h = 2 and these lines.",
+    "No cost, speedup or attack claim; delta is a growth exponent only.",
+    "v1 (EXP-PFDR-2d36f9) records are never pooled with v2.",
+    "No line is selected after data."
+  ],
+  "literature": [
+    {
+      "ref": "ledger/evidence/EV-PFDR-c42190.yaml",
+      "provenance": "internal",
+      "claim": "v1 O-INVALID reading and its instrument causes (R6)."
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "8b79516ca59170da5463fae3bac99f25e99497968f5abbd84d0e2f801d29b13c",
+    "commit": "a5c67eda4b7739ec0d32a83b927105163fd84822",
+    "frozen_at": "2026-11-01T02:01:02Z",
+    "filed_before_affected_data": true
+  }
+}

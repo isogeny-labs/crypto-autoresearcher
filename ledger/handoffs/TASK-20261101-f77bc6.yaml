@@ -1,0 +1,63 @@
+handoff:
+  id: TASK-20261101-f77bc6
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-01'
+  kind: design
+  goal_id: GOAL-PFDR-fd09e0
+  batch_id: BATCH-3a63a4
+  experiment_id: EXP-PFDR-ada71b
+  hypothesis_id: H-PFDR-ed7ccf
+  opened_by_decision: DEC-20261101-49576f
+  objective: 'Design EXP-PFDR-ada71b (v2 of EXP-PFDR-2d36f9) to runnable under DEC-20261101-49576f: specification,
+    protocol.json, implementation, trial plan, queue and handoffs; run the preapproval probe; record approval
+    DEC-20261101-cb3277 only on approvable true. Zero trials.'
+  uncertainty_reduced: None scientific; makes the v2 contract runnable and approvable.
+  inputs:
+  - ledger/decisions/DEC-20261101-49576f.yaml
+  - ledger/evidence/EV-PFDR-c42190.yaml
+  - experiments/EXP-PFDR-2d36f9/specification.yaml
+  - experiments/EXP-PFDR-2d36f9/implementation/
+  constraints:
+  - Zero scientific runs.
+  - Do not edit any EXP-PFDR-2d36f9 record.
+  - Approval only on preapproval approvable true.
+  deliverables: &id001
+  - experiments/EXP-PFDR-ada71b/specification.yaml
+  - experiments/EXP-PFDR-ada71b/trial-plan.json
+  - experiments/EXP-PFDR-ada71b/implementation/run.py
+  - experiments/EXP-PFDR-ada71b/implementation/check.py
+  - experiments/EXP-PFDR-ada71b/implementation/paircount.c
+  - experiments/EXP-PFDR-ada71b/implementation/vendor/curve.py
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json
+  - ledger/handoffs/TASK-20261101-8951b8.yaml
+  - ledger/handoffs/TASK-20261101-18d7f6.yaml
+  - ledger/handoffs/TASK-20261101-125ee4.yaml
+  - ledger/decisions/DEC-20261101-49576f.yaml
+  - ledger/decisions/DEC-20261101-cb3277.yaml
+  - experiments/EXP-PFDR-ada71b/protocol.json
+  - ledger/handoffs/TASK-20261101-f77bc6.yaml
+  artifact_paths: *id001
+  write_scope:
+  - experiments/EXP-PFDR-ada71b/
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/
+  - coordination/design/EXP-PFDR-ada71b-approval-20261101/
+  - ledger/handoffs/
+  - ledger/decisions/
+  archived_by: TASK-20261101-125ee4
+  depends_on: []
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: true
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  completion_gate:
+  - tools/experiment_preapproval.py reports approvable true on the packet
+  - zero trials
+  return_format: design package paths and the preapproval report
+  handoff_record: ledger/handoffs/TASK-20261101-f77bc6.yaml

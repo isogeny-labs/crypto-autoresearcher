@@ -1,24 +1,45 @@
 id: LEAD-EXO-dl-character-sum-pseudorandom
 family: exotic
 title: Additive-character bias of the discrete log on structured factor bases (H-PSEUDO)
-mechanism: >-
-  If max_k |sum_{P in F} e(2 pi i k DL(P)/N)| over the small-x set F were well above sqrt(B),
+mechanism: If max_k |sum_{P in F} e(2 pi i k DL(P)/N)| over the small-x set F were well above sqrt(B),
   the factor base would have super-random additive yield; by the Betti-yield duality (KN-FIND-9d2f56)
   exactly this is what a sub-rho combinatorial IC needs.
 disposition: exhausted_at_scale
 obstruction:
   kind: measured
-  statement: >-
-    Measured the character-sum constant against a matched random null at 2^20-2^26 (EV-ECDLP-f83a17):
-    R = C_EC/C_null is flat at about 1.28-1.34, i.e. the curve behaves like a random set up
-    to a constant; all six standard analytic proof routes are closed (KN-FIND-e7a3b1), so
-    neither a proof nor a measured bias exists. EXP7 Fourier flatness (8-14 bit) found no
-    candidate predicate.
-  revisit_when: >-
-    R trends upward with p beyond 2^30 on the same matched null, or a structured set other
-    than small-x shows R growing with N.
-best_measured: R = C_EC/C_null ~ 1.28-1.34, flat across 2^20..2^26 (EV-ECDLP-f83a17, toy)
+  statement: 'Measured the character-sum constant against an asymmetric random null (not negation-matched)
+    at 2^20-2^26 (EV-ECDLP-f83a17): R = C_EC/C_null is flat at about 1.28-1.34, i.e. the curve behaves
+    like a random set up to a constant; all six standard analytic proof routes are closed (KN-FIND-e7a3b1),
+    so neither a proof nor a measured bias exists. EXP7 Fourier flatness (8-14 bit) found no candidate
+    predicate. Re-read 2026-11-04 against a negation-matched null (frozen protocol HPSEUDO-SYMNULL-20261104,
+    report hpseudo-symnull-20261104): EXPLAINED. The run code keys the factor base by (x, y), so F = -F
+    and its character sums are real, while the recorded null was an asymmetric uniform subset. Against
+    negation-closed nulls at each curve''s own N, R is 1.040 [0.999, 1.092] and 0.993 [0.972, 1.017] on
+    out-of-sample curves at 2^20 and 2^22, and 0.974-1.012 on the R_mean curves at all four rungs (pooled
+    56 curves 1.005 +- 0.008). The recorded R ~ 1.3 is a null mismatch. The B = 512 character-sum maximum
+    of the small-x set is consistent with a random negation-closed set, with upper 95% bounds of 1.09
+    (2^20) and 1.02 (2^22). Scope note (owner decision 2026-11-04; WEAKCLASS-20261104, WEAKCLASS-I1-20261104,
+    PAIRED-ANOMALY-20261104): the character-sum instrument does not detect anomalous or small-embedding-degree
+    curves (36 curves per class, p <= 2^14, no detected shift (minimum detectable shift about 0.13 in u at 50% power)). It is sensitive to factor-base symmetry: zeta-stable
+    sets sit low (p < 1e-5). The digit-QTT instrument shows no detection at p ~ 2^10, where it is rank-saturated.
+    A NULL from these statistics therefore excludes structure of their own type only, not an easy discrete
+    logarithm.'
+  revisit_when: R measured against a negation-matched null exceeds 1 beyond its CI and trends upward with
+    p beyond 2^30, or a structured set other than small-x shows such growth. Any comparison of a negation-closed
+    factor base with an asymmetric null must be re-read first.
+best_measured: 'R against a negation-matched null: out of sample 1.040 [0.999, 1.092] (2^20) and 0.993
+  [0.972, 1.017] (2^22), calibration rungs 0.974-1.012 (HPSEUDO-SYMNULL-20261104). The recorded R ~ 1.28-1.34
+  (EV-ECDLP-f83a17) was measured against an asymmetric null'
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/paired-anomaly-20261104/README.md
+  note: 'instrument scope: weak classes not detected; zeta-stable FB detected; paired anomaly not replicated'
+- repo: crypto-autoresearcher
+  path: docs/reports/hpseudo-symnull-20261104/README.md
+  note: frozen re-read against a negation-matched null; EXPLAINED, all controls valid
+- repo: crypto-autoresearcher
+  path: docs/reports/leads-round2-20261104/checks/d1.json
+  note: negation-closed random sets reproduce R ~ 1.3 against the asymmetric null (desk Monte Carlo)
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-ECDLP-f83a17.yaml
   note: 'Character-sum ladder with matched null: ratio constant'
@@ -42,7 +63,7 @@ ledger_refs:
 - IDEA-20260805-c4f675
 - IDEA-20260808-726aa3
 known_results:
-- KR-IC-5931ee
+- KR-IC-401ebf
 forecloses:
 - discrete log character sum on small-x factor base
 - H-PSEUDO bias
@@ -52,4 +73,4 @@ forecloses:
 areas:
 - ECDLP
 - PSEUDO
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-04'

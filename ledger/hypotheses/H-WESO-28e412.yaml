@@ -1,0 +1,52 @@
+hypothesis:
+  id: H-WESO-28e412
+  question_id: RQ-WESO-8aff57
+  statement: The cited mixing results give no n with eps(n) < 2^-15 for the non-backtracking
+    walk used by Algorithm 3.
+  mechanism: A transferred success lower bound must keep at least half the uniform
+    bound; the budget 2^-15 is half the reciprocal of the printed NIST-I ratio 2^14.
+  assumptions:
+  - The budget 2^{-15} is half the printed reciprocal, chosen so a transferred lower
+    bound stays at least P0/2.
+  - "The ratio of the two printed \u2265 figures is the section\u2019s implied 1/P0."
+  - Remark 1 can raise the true success probability. This record does not estimate
+    that multiplicity.
+  predictions:
+  - metric: min_eps_log2
+    direction: lower
+    minimum_effect: '>=2^-15'
+  - metric: explicit_n
+    direction: lower
+    minimum_effect: '0'
+  - metric: separation
+    direction: different
+    minimum_effect: 0 mixed rows
+  test_boundary:
+    instances:
+    - cells and instances named in IDEA-20261016-cdb5e4 and DESIGN.md
+    parameters:
+      instances: 2
+      replicates: 1
+      warmups: 0
+      tests_in_family: 2
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 120
+      backend: local
+  falsification_conditions:
+  - "Lemma 14 or the [37] citation displays an n with \u03B5(n) < 2^{-15} for the\
+    \ non-backtracking walk. Coupling then keeps Lemma 3.5\u2019s lower bound positive\
+    \ by at least P0/2 at the printed P0."
+  interpretation_limits:
+  - "A missing \u03B5 does not prove the walk is biased and does not weaken Heuristic\
+    \ 1 on uniform curves."
+  - "A displayed \u03B5 < 2^{-15} does not validate the Section 4.2 Dickman comparison."
+  - "No spectral computation. IDEA-20260815-1cc763 remains the \u03BB2 measurement."
+  status: specified
+  proposed_by: open-ideas design pass 2026-10-31
+  source_proposal: IDEA-20261016-cdb5e4
+  proposal_id: IDEA-20261016-cdb5e4
+  depends_on:
+  - IDEA-20261016-cdb5e4
+  - RQ-WESO-8aff57

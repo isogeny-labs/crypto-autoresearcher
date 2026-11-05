@@ -11,6 +11,9 @@ description: >-
 
 Budget estimates and the approved-unrun backlog are advisory
 (`docs/research-budget-policy.md`; `AGENTS.md`, "Approval is bounded by execution").
+For ECC, this skill creates at most one new experiment per session; that is a
+design-record process limit, while scientific runs and campaign duration stay
+unlimited.
 
 Run lifecycle steps 3–5 (`docs/task-lifecycle.md`): hypothesis
 specification, experiment design, approval, and handoff.
@@ -104,6 +107,7 @@ specification, experiment design, approval, and handoff.
     design-experiment --role coordinator --outcome <approved|review_required>
     --created EXP-...,H-...,TASK-...` (see
     `docs/session-receipts.md`).
+    The receipt enforces the ECC process budget before it is written.
 
 ## Branch and PR hygiene
 

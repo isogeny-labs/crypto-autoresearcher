@@ -1,0 +1,9 @@
+# n51 polynomial-01 D5 stream: terminal attempt
+
+The single frozen Job `semaev-n51-poly01-d5-stream-20261101-r1` (UID `1e5ae49d-d5ed-48a6-87ed-e2774a04ddb5`) failed at 2026-11-01 21:09:31 UTC with Kubernetes reason `BackoffLimitExceeded`. Its pod (UID `dd1d3eac-3bf5-4464-95d8-63d353508aae`) is no longer retained by the Job status API, and the bounded log API returns no text. Those facts do not identify the underlying pod failure, so this report does not label it as preemption, memory exhaustion, or a producer error.
+
+The assigned S3 prefix still contains exactly the nine early-stage objects listed in [readback.json](early-stage/readback.json). Their local copies passed fresh byte-length and SHA-256 checks against that manifest. The original D4 checker returned zero and accepted codimension at least 45,615; fresh exact counting returned zero solutions. The D5 transport plan was uploaded at 20:40:32 UTC. A multipart upload for the candidate was initiated at 20:40:35 UTC, but at terminal reconciliation it had zero completed parts and no completed candidate object. There is no D5 checker transcript or final result object. This attempt therefore establishes no D5 closure claim and no LFD-at-least-six bound.
+
+The frozen protocol permits one named cloud attempt and no automatic retry. A subsequent computation needs its own frozen request and must address loss of all D5 work before the first completed upload part. A checkpoint-capable producer or a direct dual witness is the useful next construction. The 96 GiB pod admitted the seed and completed D4 verification, so the missing result is specifically after the D5 stage began.
+
+The [stage diagram](terminal-pipeline.svg) is used in the [PDF report](terminal-report.pdf). It is a pipeline diagram because this attempt has only one candidate trial and no comparable D5 measurements. The corresponding source is [terminal-report.tex](terminal-report.tex).

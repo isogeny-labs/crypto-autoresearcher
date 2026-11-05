@@ -1,0 +1,167 @@
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/compact_class_inputs.rs c5f372eb30d4c4f3b243db985d69dfaf85761063133d5317b338a1555bafeff4
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/curve_class_certificate.rs 846ce93403677518d2759c4b7b87790b95bb197d49b3b9a6f179caad4f6ffc31
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs cac785069929ffad5ae450b387bc08ef22eaebfcb84e4747d97787e7e7d92090
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/join_core.rs bbc07ca93a0d27989b70d7c15b903a092b9ad06ab74ae75657aa0abbc9ad414f
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/quotient_certificate.rs 5b77192febf81eb0dd9a288d39dfb01dccf6c9032874828579b99f516ae7f7b8
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs 40b68dc53fc1e5c3242b4077fc409347911011bbef066ba7ca9351fe36d98c15
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/structure_certificate.rs 46d0bc1479230f160be48d983481e8a885a0875f5fbe1828ff6c07684d9db769
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py f0cfa02401eb46687254d7c718907e881deef40c794417f9033e082272179b31
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/check_curve_class_certificate.py 97f68a4155e82dd96f517fab7dcfc4b8ea4ad1d530db6cb0e9be1dfea6d29676
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/check_join_certificate.py b04cb57115e559bf0c37603b8eee70fdebc013697b7810f14b54e28b5ab7f16f
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/check_quotient_certificate.py 054ec67dbb38851ec4984d80eeb07161795f0165bd353aa7ab5408aefb5f8c5d
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/check_structure_certificate.py 47fdadfe5afc2f22bbf872db7a902bcffa6301ee4174d3cd909733ebd8d36efc
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/degree2_identity.py 4152a54f4b7f38f0a1356d65cc391eb8dd62904877da734856b4d291626d16a6
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/legacy_class_bijection.py 35a2fcd13466182628135eced410ec9d947b46db3a8eba4e018e182b9ec37340
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/test_compact_class_inputs.py 28984dd8e358083e7c3ac3bddffb35216f322a39290b5323a5fd4bab226e1ac1
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/test_curve_class_certificate.py 2205463a2fc79aa351837345859f7df76af262e641224a41996106ba2eec2a29
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/test_join_certificate.py 7efd13d3c7594ba0a40cde7713ba31a7cce01c2cc3c9e30252a9bb0c039b01aa
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/test_quotient_certificate.py 3b7aec8a54811227a9a11ca8625078060c861e128a6542fbafe583b7e10d79f6
+SOURCE experiments/EXP-PEXT-bf8f96/implementation/test_structure_certificate.py eafb989b305e25b585ca752f426108f9c753bb5632794a7928a98f18a2f1905c
+COMMAND ["rustc", "--version"]
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+EXIT 0
+COMMAND ["/usr/bin/python3", "--version"]
+Python 3.9.25
+EXIT 0
+COMMAND ["rustc", "--edition=2021", "--test", "-O", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs", "-o", "/var/tmp/pext-join-final-tests"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `QuarticPoint`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:510:34
+    |
+510 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^       ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+EXIT 0
+COMMAND ["/var/tmp/pext-join-final-tests"]
+
+running 8 tests
+test quotient_core::implementation::tests::constant_twist_relations_are_retained ... ok
+test quotient_core::implementation::tests::rejects_invalid_domains ... ok
+test quotient_core::implementation::tests::quotient_witnesses_and_projective_charts ... ok
+test quotient_core::implementation::tests::extension_encoding_and_charts ... ok
+test quotient_core::implementation::tests::structure_bounds_and_exact_scalar_transport ... ok
+test quotient_core::implementation::tests::curve_model_normalization_and_orbits ... ok
+test tests::exact_ranges_and_rejection ... ok
+test quotient_core::implementation::tests::structure_unranking_matches_nested_reference ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/test_quotient_certificate.py"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:510:34
+    |
+510 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^                    ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+test_cli_expected_input_binding (__main__.CertificateTests) ... ok
+test_constant_relations_and_projective_rejection (__main__.CertificateTests) ... ok
+test_coverage_witness_chart_and_relation_mutations (__main__.CertificateTests) ... ok
+test_field_and_expected_input_rejection (__main__.CertificateTests) ... ok
+test_five_fixed_certificates (__main__.CertificateTests) ... ok
+test_strict_json_loading (__main__.CertificateTests) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.792s
+
+OK
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/test_structure_certificate.py"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `Point`, `QuarticPoint`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:510:34
+    |
+510 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^ ^^^^^ ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+test_cli_binding (__main__.StructureTests) ... ok
+test_complete_certificates (__main__.StructureTests) ... ok
+test_exhaustive_group_partition (__main__.StructureTests)
+Brute normalized PGL2(F27) is exactly disjoint union H*N. ... ok
+test_mutations_and_limits (__main__.StructureTests) ... ok
+test_wrong_orientation_and_scalar_controls (__main__.StructureTests) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 7.225s
+
+OK
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/test_curve_class_certificate.py"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `Point`, `QuarticPoint`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:510:34
+    |
+510 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^ ^^^^^ ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+test_cli_binding (__main__.CurveClassTests) ... ok
+test_complete_class_certificates (__main__.CurveClassTests) ... ok
+test_general_model_normalization_and_full_action (__main__.CurveClassTests) ... ok
+test_mutations_and_limits (__main__.CurveClassTests) ... ok
+test_witness_polynomial_identity_and_twists (__main__.CurveClassTests) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.283s
+
+OK
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/test_compact_class_inputs.py"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `Point`, `QuarticPoint`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:510:34
+    |
+510 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^ ^^^^^ ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+test_all_arithmetic_pairs (__main__.CompactTests) ... ok
+test_complete_control_coverage (__main__.CompactTests) ... ok
+test_explicit_bijection_witnesses (__main__.CompactTests) ... ok
+test_mutations_and_limits (__main__.CompactTests) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 2.040s
+
+OK
+EXIT 0
+COMMAND ["/usr/bin/python3", "/var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/test_join_certificate.py"]
+warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `QuarticPoint`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:510:34
+    |
+510 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,CurveClass,ModelWitness};
+    |                                  ^^^^^       ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+test_cli_replay (__main__.JoinTests) ... ok
+test_complete_fixed_joins (__main__.JoinTests) ... ok
+test_corrupted_identities_scalars_and_coverage (__main__.JoinTests) ... ok
+test_native_shards_and_union (__main__.JoinTests) ... ok
+test_translation_involution_on_all_control_points (__main__.JoinTests) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.975s
+
+OK
+{"T_classes": 14, "classes": 8, "fixture": "f3-classes", "rows": 14, "shards": 1, "structures": 1, "valid": true}
+{"T_classes": 24, "classes": 12, "fixture": "f5-classes", "rows": 24, "shards": 1, "structures": 1, "valid": true}
+{"T_classes": 2, "classes": 1, "fixture": "f27-char3", "rows": 1638, "shards": 1, "structures": 819, "valid": true}
+EXIT 0
+ALL_JOIN_SOFTWARE_CHECKS_PASS

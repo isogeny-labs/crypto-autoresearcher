@@ -1,0 +1,58 @@
+experiment:
+  id: EXP-PFDR-3569b5
+  hypothesis_id: H-PFDR-384bb7
+  version: 1
+  title: Shared divisor coefficients with a Graeffe membership tower
+  status: review_required
+  source_idea: IDEA-20261029-3d0e71
+  derived_from_idea: IDEA-20261029-3d0e71
+  objective: For p with d=2^k dividing p-1 and at least five usable distinct x, does
+    a shared-coefficient Graeffe tower reduce complete five-point decomposition work
+    by 2x against per-root PKM, symmetric S6 and quotient towers on three matched
+    cells? After matching permutation multiplicity and root sets, the Graeffe arm's
+    complete relation cost is at least 2x lower on three matched k=3,4 cells.
+  inputs:
+    proposal: ledger/proposals/IDEA-20261029-3d0e71.yaml
+    design_protocol: experiments/EXP-PFDR-3569b5/protocol.json
+    design_packet: analysis/open-ideas-design-20261101/DESIGN.md
+  controls:
+  - 'A/A: C-aa'
+  - 'positive: planted-relation'
+  - 'negative: k2-empty'
+  independent_variables:
+  - arm
+  metrics:
+    primary:
+    - complete_relation_cost
+    - verified_model_count
+    - chart_coverage
+    secondary: []
+  replication:
+    seeds:
+    - 20261101
+    - 20261102
+    - 20261103
+    independent_instances: 3
+  budget:
+    wall_clock_seconds_per_run: 3600
+    total_cpu_hours: null
+    maximum_memory_gb: 16.0
+    maximum_runs: 64
+  stopping_rules:
+  - 'fixed: three matched cells x four towers; exact model agreement first, timing
+    second; k=2 negative control; then stop'
+  invalidation_rules:
+  - a row whose instrument hash differs is excluded
+  - a failed control voids the cells it protects
+  success_criterion: C-gain is supported when complete relation cost is at most 0.5x
+    per-root PKM on three matched cells after matching permutation multiplicity and
+    root sets, with exact model agreement; any missing or spurious relation, or a
+    gain that is only a permutation constant, refutes it.
+  falsification_criterion: Any missing/spurious relation under declared chart equivalence.
+  required_artifacts:
+  - experiments/EXP-PFDR-3569b5/protocol.json
+  - experiments/EXP-PFDR-3569b5/runs/
+  - experiments/EXP-PFDR-3569b5/results/
+  - experiments/EXP-PFDR-3569b5/reports/
+  assigned_to: executor-mechanical
+  approved_by: null

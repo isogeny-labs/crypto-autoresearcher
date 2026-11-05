@@ -1,0 +1,100 @@
+review_plan:
+  batch_id: BATCH-4c1c67
+  status: dispatched
+  dispatched_at: '2026-11-01'
+  review_base_commit: 3102f9c04ab686e301dd5c61a2fc0441fa946203
+  pre_review_plan: coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md
+  pre_review_plan_sha256: 343622b5329d23022568826455e4beed469e34dd7325aa921601dcdb9b8e8d7b
+  input_bindings: coordination/formal-reviews/BATCH-4c1c67/input-bindings.json
+  producer_excluded_from_review: >-
+    The session that produced Lemma4Outside, RecoveryRule, Bridge and BridgeB
+    (and wrote this packet) may not own any joint.
+  claim_under_review: >-
+    C1: for witnesses A (X^2 Y, X Y + X) and B (X1 X2 + X3, X1 X3 + X2) over
+    F_2, with the equality reading of condition (1) of Nagao 2015/984
+    Definitions 5 and 6, d_F(F u S_fe) = 3 and d'_F = 2. C2: the same with the
+    true side F alone, fake side from F or F u S_fe. C3: a fake fall at degree v
+    whose unreduced products have degree <= v gives a true fall at degree v of
+    F u S_fe. C4: C1 and C2 hold with arbitrary polynomial cofactors in
+    Mathlib MvPolynomial, and the list-model data maps to these polynomials.
+  theorems:
+    - CryptoResearch.Nagao.Lemma4Witness.lemma4_inside_false
+    - CryptoResearch.Nagao.Lemma4Outside.lemma4_outside_false
+    - CryptoResearch.Nagao.RecoveryRule.recovery
+    - CryptoResearch.Nagao.Bridge.lemma4_mv_false
+    - CryptoResearch.Nagao.Bridge.red_sum_red
+    - CryptoResearch.Nagao.BridgeB.lemma4_mvB_false
+  coordinator_prior:
+    recorded_before_reviewers: true
+    expectation: >-
+      The producer expects the five modules to state C1 to C4 faithfully at the
+      stated scope. Kernel evidence exists from hosted runs 41155781140,
+      41247286804, 41259822143, 41264005876 and 41280794617. No reviewer has
+      rebuilt them, and the producer has not compared the Lean definitions with
+      the primary text of 2015/984 directly.
+    uncertainty: >-
+      Whether the equality reading, the fake-side conventions (dropped
+      generators, fake sum, unrestricted fake cofactors) and the first-fall range
+      match Definitions 5 and 6; whether any definition makes a statement vacuous.
+  joints:
+    - id: J1
+      joint: Primary-source correspondence of the fall definitions and Lemma 4
+      assigned_to: TASK-20261101-b3a351
+      attack_plan: >-
+        Read Definitions 5 and 6 and Lemma 4 of ePrint 2015/984 and Definition 1
+        of 2013/549 directly. For deltas D1, D4, D6 and D8 of the pre-review plan,
+        quote the source and state whether the Lean choice matches, narrows or
+        departs from it.
+      breaking_artifact: >-
+        A quoted source clause that no reading of the Lean definitions satisfies,
+        or a Lean choice that departs from the source in a way the claim relies on.
+    - id: J2
+      joint: Blind re-derivation of first fall degrees and the recovery statement
+      assigned_to: TASK-20261101-6dcb20
+      attack_plan: >-
+        From blind-input.yaml only, compute true and fake first fall degrees for
+        A and B in both placements with arbitrary cofactors, and prove or refute
+        the recovery statement. Run both nearby controls. Freeze the derivation
+        and read attestation before seeing any Lean source or sibling report.
+      breaking_artifact: >-
+        A first fall degree different from the claim, a fake fall at degree 1,
+        or a counterexample to recovery under its stated hypotheses.
+    - id: J3
+      joint: Elaborated Lean statements, axioms and fresh machine gate
+      assigned_to: TASK-20261101-cd72e8
+      attack_plan: >-
+        In an isolated checkout at the review base, build the five modules on the
+        pinned toolchain; print elaborated types of the named theorems and of
+        IsFall, IsFakeFall, withFe, red, FirstFall, FirstFallIs, Lemma4Inside,
+        Lemma4Outside, Lemma4OutsideFe, Lemma4Mv and Lemma4Mv'; print axioms for
+        each named theorem. Compare each clause with C1 to C4 and deltas D1 to
+        D10. Attack a wrong theorem name, an omitted module, an extra axiom and
+        any definition that makes a statement vacuous.
+      breaking_artifact: >-
+        A clause of C1 to C4 not implied by the elaborated statement, an axiom
+        beyond propext, Classical.choice and Quot.sound, or a vacuity.
+  blindness:
+    mutual: true
+    lifted_for: []
+  blind_rederivation:
+    required: true
+    assigned_to: TASK-20261101-6dcb20
+    quantity: true and fake first fall degrees of witnesses A and B in both placements
+    parameters: coordination/formal-reviews/BATCH-4c1c67/blind-input.yaml
+  proves_too_much:
+    objects:
+      - >-
+        Witness A inside, g = (1, 1): a fake fall at degree 2 with
+        deg(1 * X^2 Y) = 3 > 2. Recovery without U-4 would give a true fall at
+        degree 2, which Bridge.in_no_fall_two excludes.
+      - >-
+        The literal >= reading of condition (1): Lemma 4 holds for every nonzero
+        system, so the counterexample must fail under it.
+      - >-
+        Vacuous first fall: FirstFall and FirstFallIs must require an actual fall
+        at the stated degree.
+    failure_signature: >-
+      A review that accepts recovery without U-4, finds the counterexample under
+      the >= reading, or accepts a first fall degree with no exhibited fall has
+      proved too much.
+    assigned_to: TASK-20261101-6dcb20

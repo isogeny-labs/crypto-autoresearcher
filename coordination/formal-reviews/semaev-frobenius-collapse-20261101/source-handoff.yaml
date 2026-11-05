@@ -1,0 +1,68 @@
+handoff:
+  id: TASK-20261101-8995a6
+  from: coordinator
+  to: reviewer
+  objective: Independently check the pinned Lean statement, proof, and source-claim fidelity for THM-SEMAEV-FALL1-LEMMA-1.
+  uncertainty_reduced: Whether the named theorem proves the source identity under its stated hypotheses without hidden assumptions or overread conclusions.
+  inputs:
+    - formal/CryptoResearch/Semaev/FrobeniusCollapse.lean@f408877908fc156006c2b24cb38b26610461e03093ff88aadbf11d4bc2c2e398
+    - formal/targets/semaev-frobenius-collapse.yaml@e2b083a617fadec962d855e8dde425fef1fe010a15ea1652098ae4e57096ce7c
+    - research/THM_SEMAEV_FALL1.md@11b61f4f4bdaed0c323ec852f19fc4c0a7ff3972715bfe637604fb675db7fee4
+  constraints:
+    - Read no sibling review report before filing your own.
+    - Check the theorem as an identity modulo field equations; do not infer solver or solving-degree bounds.
+    - Do not modify the producer proof or official experiment status.
+  deliverables:
+    - Source fidelity report with per-joint verdicts, exact hypotheses, and review_attestation.
+  artifact_paths:
+    - coordination/formal-reviews/semaev-frobenius-collapse-20261101/source-report.md
+  archived_by: TASK-20261101-f62009
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget: {}
+  completion_gate:
+    - Each owned joint has a worked counterexample attempt or exact Lean/source crosswalk.
+    - Attestation lists every source read and states sibling reports were not read.
+  return_format: Markdown report with YAML review_attestation block.
+  review_plan:
+    claim_under_review: 'For prime p, q=p^e, K a field of characteristic p, R=K[x_1,...,x_M], and I_q=(x_i^q-x_i), every g in R satisfies g^q congruent to its coefficientwise q-Frobenius twist modulo I_q.'
+    coordinator_prior: 'I expect the identity to hold and the Lean theorem to generalize the ring assumptions; I suspect prose about semi-regularity and solver complexity is not established by this identity alone.'
+    joints:
+      - joint: 'Lean quotient proof handles constants, sums, and variable multiplication for arbitrary finite-support multivariate polynomials under ExpChar K p.'
+        assigned_to: TASK-20261101-8995a6
+        attack_plan: 'Trace each induction case through map and quotient rewrites; test characteristic-zero/zero-ring and e=0 boundaries for a hidden use of p prime or field structure.'
+        breaking_artifact: 'A concrete admitted instance with false congruence, or an unproved axiom/sorry in the named theorem dependency chain.'
+      - joint: 'The named theorem and target statement faithfully represent the producer source claim without importing Corollary 1 or a solving-degree assertion.'
+        assigned_to: TASK-20261101-8995a6
+        attack_plan: 'Compare exact Lean type and target YAML with source Lemma 1; identify each strengthened/weakened hypothesis and trace any claimed non-semi-regular or complexity consequence to a separate proof.'
+        breaking_artifact: 'A source clause absent from Lean, a narrower Lean hypothesis, or a stated downstream conclusion unsupported by the theorem.'
+      - joint: 'A derivation from the statement alone yields coefficientwise q-Frobenius after reduction by I_q for arbitrary finite monomial support.'
+        assigned_to: TASK-20261101-df39aa
+        attack_plan: 'Derive on a generic finite sum, then test mixed monomials, extension-field coefficients, and q=1 without reading producer notes or code.'
+        breaking_artifact: 'A polynomial/field/parameter counterexample or an omitted algebraic step in the independent derivation.'
+    blindness:
+      mutual: true
+      lifted_for: []
+      rationale: null
+    proves_too_much:
+      objects:
+        - 'Characteristic zero, p=2, e=1, K=Q, g=x+y: freshman dream is false.'
+        - 'Characteristic 2, q=2, I=(0), g=x: x^2 congruent to x is false.'
+      failure_signature: 'The argument must reject the missing ExpChar or field-equation hypothesis; an unrestricted proof on either control is invalid.'
+      assigned_to: TASK-20261101-df39aa
+    blind_rederivation:
+      required: true
+      quantity: 'For each finite-support g, derive the residue of g^q modulo I_q and compare it to coefficientwise q-Frobenius of g.'
+      parameters: 'Prime p, e>=0, q=p^e, any field K of characteristic p, finite variable set, g in K[x_i].'
+      blind_from:
+        - formal/CryptoResearch/Semaev/FrobeniusCollapse.lean
+        - formal/targets/semaev-frobenius-collapse.yaml
+        - research/THM_SEMAEV_FALL1.md
+        - coordination/formal-reviews/semaev-frobenius-collapse-20261101/source-report.md
+      assigned_to: TASK-20261101-df39aa
+    procedure_deviations: []

@@ -1,0 +1,161 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{longtable,array,hyperref}
+\hypersetup{colorlinks=true,urlcolor=blue}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.18}
+\sloppy
+\begin{document}
+\section*{J1 point action and canonical encoding}
+
+
+Task: \texttt{TASK\allowbreak{}-\allowbreak{}20261031\allowbreak{}-\allowbreak{}4b6d61}. Joint: \texttt{J1\allowbreak{}\_\allowbreak{}point\allowbreak{}\_\allowbreak{}action\allowbreak{}\_\allowbreak{}and\allowbreak{}\_\allowbreak{}encoding}.
+Reviewer session: \texttt{\allowbreak{}/\allowbreak{}root\allowbreak{}/\allowbreak{}ncp\allowbreak{}\_\allowbreak{}j1\allowbreak{}\_\allowbreak{}point}. Date: 2026-11-01 UTC.
+
+
+The source statements preserve chronological composition, give the affine normal form on an arbitrary additive commutative group, and require exact generator order for the scalar/point equivalence. The independent integer order controls and 2,115 finite canonical-encoding checks pass. The prescribed zero-generator control falsifies the equivalence when its order hypothesis is removed.
+
+
+\small\begin{longtable}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}}
+\hline
+Dimension & Result & Evidence scope \\ \hline
+Source fidelity & \texttt{faithful\allowbreak{}\_\allowbreak{}scoped} & Four named source signatures, their definitions, and the pinned encoding helper match the abstract point-action claim and Lemma 1. \\
+Fresh Lean machine status & \texttt{not\allowbreak{}\_\allowbreak{}verified} & No fresh elaborated-type output, named-module build, transitive axiom audit or independent kernel recheck was produced here. \\
+Own-joint review outcome & \texttt{inconclusive} & Fresh machine replay is still required for \texttt{validated\allowbreak{}\_\allowbreak{}scoped}; source fidelity and finite controls have been completed. \\
+\hline\end{longtable}\normalsize
+
+
+This is an own-joint review. It supplies no verdict on the shortest-word or commutator-witness joints. The separate order-two control below is included because the precommitted plan explicitly assigns its proves-too-much controls to this task.
+
+
+\subsection*{Immutable inputs and provenance}
+
+
+Producer: \href{https://github.com/isogeny-labs/crypto-autoresearcher/pull/2417}{PR \#2417}, exact commit \texttt{f4330e1a\allowbreak{}29feb8fd\allowbreak{}ea9f1eab\allowbreak{}7131ae5c\allowbreak{}de2e2b6f}. Plan and own handoff: PR \#2847 at \texttt{774a6a86\allowbreak{}f1817402\allowbreak{}85ed9834\allowbreak{}a648b40f\allowbreak{}b9aa8ece}. This branch starts at main \texttt{4451a2bf\allowbreak{}8ff9d171\allowbreak{}442a10ca\allowbreak{}33997c58\allowbreak{}e7362a20}; the producer snapshot was read through Git objects and was not changed.
+
+
+The claim under review is the plan's expressly scoped claim of chronological actions on additive-group points and canonical cyclic encoding. The source reference is \texttt{research\allowbreak{}/\allowbreak{}THM\allowbreak{}\_\allowbreak{}COMMUTATOR\allowbreak{}\_\allowbreak{}KERNEL1\allowbreak{}.\allowbreak{}md}, section 1 and Lemma 1. Its section 1 explicitly distinguishes the abstract formalization from the historical full kernel equalities. These primary sources, plus the pinned implementation dependency, were read before constructing controls; no novelty or literature-wide claim is made. Provenance is \texttt{internal} for repository sources and \texttt{retrieved} for the GitHub dependency fetch; verified by this task.
+
+
+Lean is pinned to \texttt{leanprover\allowbreak{}/\allowbreak{}lean4:v4\allowbreak{}.\allowbreak{}35\allowbreak{}.\allowbreak{}0}; CryptoLean to \texttt{60952c69\allowbreak{}6ded7f3d\allowbreak{}a4f45170\allowbreak{}06d9af64\allowbreak{}82662487}; Mathlib to \texttt{cfc55fc5\allowbreak{}8714a59d\allowbreak{}c06e6e79\allowbreak{}edc6d1d9\allowbreak{}5140d3c2}. The full manifest is retained in \texttt{raw\allowbreak{}/\allowbreak{}inputs\allowbreak{}/\allowbreak{}}.
+
+
+\small\begin{longtable}{>{\raggedright\arraybackslash}p{0.39\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}}
+\hline
+Source & SHA-256 \\ \hline
+\texttt{formal\allowbreak{}/\allowbreak{}CryptoResearch\allowbreak{}/\allowbreak{}NCP\allowbreak{}/\allowbreak{}PointAction\allowbreak{}.\allowbreak{}lean} & \texttt{52a2fb6e\allowbreak{}e809fb5b\allowbreak{}178ea103\allowbreak{}d30747e4\allowbreak{}6eb791be\allowbreak{}0a265832\allowbreak{}9a0cddda\allowbreak{}12063aa0} \\
+\texttt{formal\allowbreak{}/\allowbreak{}CryptoResearch\allowbreak{}/\allowbreak{}NCP\allowbreak{}/\allowbreak{}CyclicPointAction\allowbreak{}.\allowbreak{}lean} & \texttt{87beff30\allowbreak{}0f7c01b5\allowbreak{}350969eb\allowbreak{}dba59e31\allowbreak{}0066f5d6\allowbreak{}8a8ace2e\allowbreak{}87e4a663\allowbreak{}84fbf3b5} \\
+CryptoLean \texttt{CryptoLean\allowbreak{}/\allowbreak{}Group\allowbreak{}/\allowbreak{}CyclicEncoding\allowbreak{}.\allowbreak{}lean} & \texttt{2af79a2d\allowbreak{}7b95b265\allowbreak{}1f8eccb1\allowbreak{}be8a5bcd\allowbreak{}2f851aa4\allowbreak{}d50ad77c\allowbreak{}ebb9790c\allowbreak{}82c9a787} \\
+\hline\end{longtable}\normalsize
+
+
+\texttt{raw\allowbreak{}/\allowbreak{}source\allowbreak{}-\allowbreak{}manifest\allowbreak{}.\allowbreak{}json} binds all eleven snapshots by repository, commit, path, Git blob and SHA-256. \texttt{raw\allowbreak{}/\allowbreak{}source\allowbreak{}-\allowbreak{}integrity\allowbreak{}.\allowbreak{}json} records seven matching precommitted SHA-256 values and verifies dependency Git blob \texttt{673722ed\allowbreak{}5e5e413b\allowbreak{}8741646a\allowbreak{}71213cf5\allowbreak{}1039e2c6} against the fetched bytes. AffineNormalForm is additionally snapshotted and hashed; the plan did not supply its hash.
+
+
+\subsection*{Clause-by-clause source-type comparison}
+
+
+These are source signatures, with implicit parameters made explicit in the description. They are not presented as fresh \texttt{\#print} elaboration output. Exact source bytes are retained in \texttt{raw\allowbreak{}/\allowbreak{}inputs\allowbreak{}/\allowbreak{}}.
+
+
+\small\begin{longtable}{>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}}
+\hline
+Declaration and source & Quantifiers and hypotheses & Conclusion and comparison \\ \hline
+\texttt{word\allowbreak{}\_\allowbreak{}point\allowbreak{}\_\allowbreak{}affine\allowbreak{}\_\allowbreak{}normal\allowbreak{}\_\allowbreak{}form}, PointAction lines 34--37 & Arbitrary \texttt{B : Nat}, \texttt{A : Type*}, \texttt{[AddCommGroup A]}, \texttt{points : Fin B \allowbreak{}-\allowbreak{}> A}, word \texttt{w}, and point \texttt{X : A}. & \texttt{wordPointAction points w X = shadowSign w $\cdot$ X + sum\allowbreak{}\_\allowbreak{}i signedCount w i $\cdot$ points i}. This is Lemma 1's point identity, generalized to arbitrary translation points. Taking \texttt{points i = s\allowbreak{}\_\allowbreak{}i $\cdot$ P} recovers the cyclic bias. \\
+\texttt{word\allowbreak{}\_\allowbreak{}action\allowbreak{}\_\allowbreak{}encode}, PointAction lines 41--51 & In addition, arbitrary \texttt{n : Nat}, additive homomorphism \texttt{encode : ZMod n \allowbreak{}-\allowbreak{}>+ A}, scalars \texttt{s}, word \texttt{w}, and scalar \texttt{x}. & Executing the encoded translations at \texttt{encode x} equals encoding the scalar action. Additivity supplies translation and negation preservation. Neither injectivity nor its conclusion is assumed. It proves compatibility, without a reverse scalar-recovery implication. \\
+\texttt{word\allowbreak{}\_\allowbreak{}action\allowbreak{}\_\allowbreak{}canonical\allowbreak{}\_\allowbreak{}encode}, CyclicPointAction lines 10--15 & \texttt{P : A}, \texttt{hn : n $\cdot$ P = 0}, scalars \texttt{s}, word \texttt{w}, scalar \texttt{x}. & Specializes compatibility to the constructed \texttt{CryptoLean\allowbreak{}.\allowbreak{}Cyclic\allowbreak{}.\allowbreak{}encode P hn}. The hypothesis guarantees the map is well-defined modulo \texttt{n}; it does not imply injectivity. \\
+\texttt{canonical\allowbreak{}\_\allowbreak{}word\allowbreak{}\_\allowbreak{}action\allowbreak{}\_\allowbreak{}iff}, CyclicPointAction lines 17--27 & \texttt{P : A}, \texttt{ho : addOrderOf P = n}, scalars \texttt{s}, word \texttt{w}, and \texttt{x y : ZMod n}. & Point action reaches \texttt{encode y} iff scalar action reaches \texttt{y}. Its proof rewrites by the preceding theorem and applies \texttt{encode\allowbreak{}\_\allowbreak{}injective P ho}. The exact-order hypothesis is used at the only reverse-inference step. \\
+\hline\end{longtable}\normalsize
+
+
+The recursive action processes the head letter first and passes its result to the tail. \texttt{wordPointAction\allowbreak{}\_\allowbreak{}append} states action of \texttt{u ++ v} as action of \texttt{v} after action of \texttt{u}. \texttt{AffineNormalForm\allowbreak{}.\allowbreak{}wordAction} uses \texttt{foldl}, and \texttt{signedCount} assigns each occurrence the sign determined by negations to its right. These conventions agree with the source's chronological action.
+
+
+The pinned helper defines \texttt{encode} by \texttt{ZMod\allowbreak{}.\allowbreak{}lift} of integer multiples of \texttt{P}; \texttt{encode\allowbreak{}\_\allowbreak{}intCast} states \texttt{encode (z : ZMod n) = z $\cdot$ P}. \texttt{encode\allowbreak{}\_\allowbreak{}injective} uses exact additive order, and \texttt{encode\allowbreak{}\_\allowbreak{}range} identifies the range with \texttt{AddSubgroup\allowbreak{}.\allowbreak{}zmultiples P}. Thus a canonical cyclic map is supplied, rather than an unexplained embedding. Its range need not be all of the ambient group.
+
+
+No source signature above assumes a prime modulus, oddness, nonzero translations, positive \texttt{B}, or a finite ambient group. None needs those assumptions for this algebraic identity. \texttt{B = 0} is allowed; \texttt{n = 1} has a singleton scalar domain. At \texttt{n = 0}, \texttt{ZMod 0} is the integer case and exact additive order zero represents infinite order; that case was inspected at source level, not executed in the finite controls. The historical odd-prime conditions belong to the larger setup and full-kernel statements. The canonical iff compares two scalar values for one fixed word, and does not assert that distinct shadows induce distinct actions.
+
+
+\subsection*{Controls and their results}
+
+
+Command, run from this worktree:
+
+
+\begin{quote}\small \texttt{python3 coordination\allowbreak{}/\allowbreak{}formal\allowbreak{}-\allowbreak{}reviews\allowbreak{}/\allowbreak{}ncp\allowbreak{}-\allowbreak{}pr2417\allowbreak{}-\allowbreak{}20261031\allowbreak{}/\allowbreak{}reviews\allowbreak{}/\allowbreak{}TASK\allowbreak{}-\allowbreak{}20261031\allowbreak{}-\allowbreak{}4b6d61\allowbreak{}/\allowbreak{}raw\allowbreak{}/\allowbreak{}controls\allowbreak{}.\allowbreak{}py}\end{quote}
+
+
+The script exited 0. Full output is \texttt{raw\allowbreak{}/\allowbreak{}controls\allowbreak{}.\allowbreak{}json}; stderr is empty in \texttt{raw\allowbreak{}/\allowbreak{}controls\allowbreak{}.\allowbreak{}stderr}. These are deterministic Python integer/residue checks of the specified operations, not Lean evaluation or experiment measurements.
+
+
+\small\begin{longtable}{>{\raggedright\arraybackslash}p{0.39\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}}
+\hline
+Control & Exact result \\ \hline
+\texttt{A = Int}, \texttt{points 0 = 1}, \texttt{X = 0}, word \texttt{[trans 0, neg]} & Output \texttt{\allowbreak{}-\allowbreak{}1}; shadow sign \texttt{\allowbreak{}-\allowbreak{}1}, signed count \texttt{\allowbreak{}-\allowbreak{}1}. \\
+Same inputs, word \texttt{[neg, trans 0]} & Output \texttt{+1}; shadow sign \texttt{\allowbreak{}-\allowbreak{}1}, signed count \texttt{+1}. \\
+Empty word & Output \texttt{0}; sign \texttt{+1}, count \texttt{0}. \\
+Canonical map into \texttt{ZMod 2}, \texttt{P = 1}, \texttt{n = 2} & 120 cases pass. \\
+Canonical map into \texttt{ZMod 5}, \texttt{P = 1}, \texttt{n = 5} & 1,875 cases pass. \\
+Canonical map into \texttt{ZMod 6}, \texttt{P = 3}, \texttt{n = 2} & 120 cases pass; image is a proper cyclic subgroup of the ambient group. \\
+\hline\end{longtable}\normalsize
+
+
+Each positive panel covers every word of lengths 0 through 3 over one translation and negation, and every triple \texttt{(s, x, y)} modulo \texttt{n}. Each case checks the affine scalar formula, point/encoding compatibility and both directions of the point/scalar equality equivalence. The total is 2,115 cases; this count is test coverage, not a performance measurement.
+
+
+For the prescribed false case, let \texttt{A = ZMod 2}, \texttt{P = 0}, \texttt{n = 2}, \texttt{w = []}, \texttt{x = 0}, and \texttt{y = 1}. Then \texttt{2 $\cdot$ P = 0} and both encoded points are zero, while the scalar equality \texttt{0 = 1} is false. The order of \texttt{P} is \textbf{1}, so \texttt{addOrderOf P = 2} fails. This is an exact counterexample to deleting \texttt{ho}; it is not a counterexample to the submitted theorem. No Lean elaboration failure is claimed, because no attempted Lean application was run.
+
+
+The plan's second false-extension control also passes: at \texttt{n = 2}, \texttt{B = 1}, \texttt{s = 1}, negation acts trivially on the two points. In \texttt{C2 x C2}, the abstract elements \texttt{t = (1,0)} and \texttt{nu = (0,1)} satisfy \texttt{t\textasciicircum{}2 = nu\textasciicircum{}2 = (nu*t)\textasciicircum{}2 = 1}, with \texttt{nu} still nonidentity. Their point action has only two images. This rejects extending the historical full action-kernel presentation to order two. It leaves the tested order-two affine and canonical-encoding statements intact and makes no independent J2 verdict.
+
+
+\subsection*{Concrete curve and parser obligations}
+
+
+The four declarations assume a lawful additive commutative group. Applying them to a named curve and serialized implementation still requires the following individually identifiable bridges:
+
+
+1. Instantiate \texttt{A} as the validated point group of the specified nonsingular curve over the specified field, including its point at infinity and the group operations.
+2. Establish \texttt{addOrderOf P = n} for that concrete generator, and connect each factor-base point to its scalar encoding. \texttt{hn} alone is insufficient for the iff.
+3. Prove executable point addition, negation and chronological word execution refine the abstract operations, including exceptional coordinate cases.
+4. Prove the decoder accepts the intended canonical field and point encodings, checks curve/subgroup membership as required, handles infinity, and makes serialized equality agree with point equality.
+
+
+These bridges do not appear in the four cited theorem types. The producer's current scoped claim excludes a concrete elliptic-curve parser refinement, so their absence is a boundary of application rather than a mismatch with that claim.
+
+
+\subsection*{Remaining verification and publication checks}
+
+
+Fresh Lean replay has not been performed. The host snapshot in \texttt{raw\allowbreak{}/\allowbreak{}infrastructure\allowbreak{}.\allowbreak{}json} showed about 112 GiB available memory, an active Rust build, and an EFS mount whose advertised capacity does not establish local build/cache ownership. No exclusive exact-pin Lean workspace/cache was established for this task; the coordinator explicitly retained the separate machine lane. No heavy build, experiment or cloud job was launched. The next machine check is an isolated explicit build of \texttt{CryptoResearch\allowbreak{}.\allowbreak{}NCP\allowbreak{}.\allowbreak{}PointAction}, \texttt{CryptoResearch\allowbreak{}.\allowbreak{}NCP\allowbreak{}.\allowbreak{}CyclicPointAction}, and \texttt{CryptoResearch\allowbreak{}.\allowbreak{}NCP\allowbreak{}.\allowbreak{}ReachabilityControls} at the producer pins, with fresh named type output and transitive axiom audit for the four declarations. That gate must bind the complete workspace and verifier inputs.
+
+
+This review used Python 3.9.25 from \texttt{\allowbreak{}/\allowbreak{}usr\allowbreak{}/\allowbreak{}bin\allowbreak{}/\allowbreak{}python3} only for standard-library arithmetic and packet preparation. The historical Cursor-specific \texttt{\allowbreak{}/\allowbreak{}usr\allowbreak{}/\allowbreak{}local\allowbreak{}/\allowbreak{}bin\allowbreak{}/\allowbreak{}python3} path is absent; no harness or package-version claim relies on this interpreter. The cloud-environment status tool and network-policy file were unavailable; ordinary Git and the GitHub connector supplied immutable sources successfully. A stalled local dependency-object read was cancelled, and the pinned dependency was retrieved through the connector with its Git blob independently checked.
+
+
+The plan's blind shortest-word derivation is assigned to J3. This reviewer read producer source and does not claim to have performed that blind derivation. No sibling report or verdict was read. The independence checker is run with only this task's attestation; expected missing-J2/J3 report findings are retained in \texttt{raw\allowbreak{}/\allowbreak{}independence\allowbreak{}-\allowbreak{}check\allowbreak{}.\allowbreak{}txt}. Full-round composition is the coordinator's task. No ledger records or official scientific statuses are changed; full ledger validation belongs to the integrating review packet.
+
+
+The diagram and inspected PDF are local derived views of this source/control packet. No shared canonical graph is changed: this review adds coverage and an explicit machine-replay obligation without altering the historical measurements or an official claim status. The write scope permits only this task directory; any central problem-index update or session receipt outside it belongs to the coordinator.\subsection*{Scope diagram}
+\begin{center}
+\fbox{\parbox{0.83\linewidth}{\centering
+Pinned source signatures and definitions\\
+Chronological action; integer signed counts\\
+$\downarrow$\\
+Canonical cyclic map $\mathrm{encode}_P : \mathbf{Z}/n \to A$\\
+Well-defined when $nP=0$; injective when $\mathrm{ord}(P)=n$\\
+$\downarrow$\\
+Independent exact controls: 2,115 positive finite cases\\
+Zero-generator control rejects removing the order hypothesis\\[5pt]
+\textbf{Source fidelity: faithful at the scoped abstract level}\\
+\textbf{Fresh Lean replay: not verified in this task}\\[5pt]
+Concrete curve operations, generator order, and parser refinement\\
+remain separately named application obligations.
+}}
+\end{center}
+
+\end{document}

@@ -326,6 +326,139 @@ $$1=\sum_\sigma\sum_i\lambda_i^\sigma\,e_\sigma f_i .$$
 Each $e_\sigma f_i$ is a sum of products $m\,f_i$ with $m$ a monomial in $c$
 of degree $\le k$, so it lies in $M_{k+2}$. $\square$
 
+**Proposition 2.5a** (upper bound from affine constraints on the sum).
+**Proved.** Suppose the unsatisfiable $m=2$ system has $r$ affine-linear
+polynomials in $c=a+b$ in $\operatorname{span}F$ whose linear parts are
+linearly independent.
+Then
+
+$$1\in W_{k-r+2}(F),\qquad d_{\tilde F}\le k-r+2.$$
+
+In particular, if $\operatorname{Tr}|_V\ne0$, Theorem 2.1(c) supplies
+$\ell_0=\operatorname{Tr}(s)+\operatorname{Tr}(\alpha)$ and
+$d_{\tilde F}\le k+1$. This applies to every unsatisfiable instance with
+$V\not\subset K_0$. For odd $n$, a polynomial-basis subspace containing $1$
+meets that condition because $\operatorname{Tr}(1)=1$; for even $n$, it must
+be checked on the actual basis. The conclusion concerns the closure $W_d$; it does not assert
+$1\in M_{k-r+2}$.
+
+*Proof.* Make an invertible affine change among the $c$ variables so that
+the $r$ given polynomials are the coordinate variables $y_1,\ldots,y_r$.
+Write the other $k-r$ coordinates as $q$. Each $f_i(a,y,q)$ still has degree
+at most two and is affine in $a$ after fixing $(y,q)$, by the expression in
+Theorem 2.5. For each $\tau\in\mathbb F_2^{k-r}$ the affine system
+$\{f_i(a,0,\tau)\}$ is inconsistent, so choose constants
+$\lambda_i^\tau\in\mathbb F_2$ with
+$\sum_i\lambda_i^\tau f_i(a,0,\tau)=1$ identically in $a$.
+
+Let $e_\tau(q)$ be the Boolean indicator of $q=\tau$, and set
+$Q=\sum_{\tau,i}e_\tau(q)\lambda_i^\tau f_i(a,y,q)$.
+Each summand belongs to $W_D(F)$ for $D=k-r+2$: expand the indicator into
+monomials and multiply a generator by at most $k-r$ variables. At $y=0$,
+the indicator identity gives $Q(a,0,q)=1$. Therefore every monomial of
+$Q+1$ contains some $y_j$, and we can partition its monomials to write
+$Q+1=\sum_{j=1}^r y_jH_j$ with $\deg H_j\le D-1$.
+Each $y_j$ lies in $\operatorname{span}F\subseteq W_D(F)$. Multiplication by
+the monomials of $H_j$, one variable at a time, stays inside degree $D$;
+hence $y_jH_j\in W_D(F)$. Thus $1\in W_D(F)$, and Proposition 1.2 gives the
+last-fall-degree bound. The trace specialization follows from Theorem
+2.1(c). $\square$
+
+**Proposition 2.5b** (exact slicing by an affine equation). **Proved.**
+Suppose $y=b_j+L(a,b_{\ne j})$ is a nonconstant affine polynomial in
+$\operatorname{span}F$, where $L$ is affine and does not involve $b_j$.
+Let $G=F|_{b_j=L}$ be the system in the remaining $2k-1$ Boolean variables.
+For every $d\ge2$,
+
+$$W_d(G)=W_d(F)\cap B'_{\le d},\qquad
+ 1\in W_d(G)\iff1\in W_d(F),$$
+
+where $B'$ is the Boolean ring without $b_j$, embedded in $B$. In particular,
+an independently checked degree-five nonmembership certificate for $G$
+proves $1\notin W_5(F)$. When $F$ is unsatisfiable, so is $G$, and this gives
+$d_{\tilde F}\ge6$ by Proposition 1.2. For $V\not\subset K_0$, a coordinate
+$b_j$ with $\operatorname{Tr}(v_j)=1$ can be chosen using $y=\ell_0$.
+
+*Proof.* Let $\rho:B\to B'$ substitute $b_j=L$. Since $\rho$ does not
+increase degree and sends every old variable to an affine polynomial,
+restriction sends the generators and every allowed closure step of $W_d(F)$
+into $W_d(G)$. Hence $\rho(W_d(F))\subseteq W_d(G)$.
+
+Conversely, for each quadratic or lower-degree generator $f_i$, multilinearity
+in $b_j$ gives $f_i+\rho(f_i)=y h_i$ for an affine $h_i\in B'$. The polynomial
+$y$ is in $\operatorname{span}F$ and has degree one, so $yh_i\in W_d(F)$ for
+$d\ge2$. Thus every generator of $G$ lies in $W_d(F)$. Its closure steps
+multiply only by the remaining variables and are also allowed in $W_d(F)$.
+Therefore $W_d(G)\subseteq W_d(F)\cap B'_{\le d}$. Applying $\rho$ to an
+element of the latter intersection proves the opposite inclusion. $\square$
+
+The same restriction transfers a dual certificate: if
+$\pi_G:B'_{\le d}\to Z$ satisfies Proposition 1.5 for $G$, then
+$\pi_F=\pi_G\circ\rho$ is onto, annihilates $F$, and satisfies the closure
+condition for $F$. Indeed $\rho(x)$ is affine for every original variable
+$x$, so its product with a low-degree member of $\ker\pi_G$ is annihilated
+by the checked closure condition. Also $\pi_F(1)=\pi_G(1)$. This describes
+a certificate transfer, not a completed reduced-instance computation.
+
+**Corollary 2.5c** (slicing from a later affine fall). **Proved.** Fix
+$d\ge2$. The equality and nonmembership transfer of Proposition 2.5b still
+hold if its affine polynomial $y$ belongs to $W_d(F)$ rather than to
+$\operatorname{span}F$. In particular, an affine $y\in W_s(F)$ permits exact
+slicing at every degree $d\ge\max(2,s)$.
+
+*Proof.* The restriction map $\rho$ still sends $W_d(F)$ into $W_d(G)$.
+Conversely, $f_i+\rho(f_i)=y h_i$ with $h_i$ affine in the retained variables.
+Since $y\in W_d(F)$ has degree one, the closure rule puts $y h_i$ in
+$W_d(F)$; hence every generator of $G$ belongs to $W_d(F)$. Closure under
+the retained variables gives $W_d(G)\subseteq W_d(F)\cap B'_{\le d}$, and
+applying $\rho$ gives the reverse inclusion. Monotonicity of $W_d$ proves
+the final assertion. $\square$
+
+**Proposition 2.5d** (quadratic-rank formula). **Proved.** Let
+$P=\operatorname{span}_{\mathbb F_2}\{uv:u,v\in V\}\subseteq K$ and $z\ne0$.
+The rank of the quadratic coefficient matrix of the $n$ descended $m=2$
+equations is
+
+$$\dim_{\mathbb F_2}P-\mathbf 1_{z\in P}.$$
+
+Consequently, the space of equation combinations whose quadratic part
+vanishes has dimension $n-\dim P+\mathbf 1_{z\in P}$. Its members are affine
+polynomials in $c=a+b$ or zero. More precisely, identify coordinate-equation
+combinations with trace functionals $u\mapsto\operatorname{Tr}(\mu u)$ and put
+$A=L_z(P)^\perp$. The linear rank of the resulting affine constraints is
+
+$$r=\operatorname{rank}\left(A\longrightarrow\mathbb F_2^k,\quad
+\mu\longmapsto
+(\operatorname{Tr}(\mu z^2v_j^2))_{j=0}^{k-1}\right).$$
+
+Equivalently, with $Q=L_z(P)$ and $U=z^2V^2$,
+$r=\dim(Q+U)-\dim Q$, since the field trace pairing is nondegenerate.
+
+For every unsatisfiable such system, Proposition 2.5a therefore gives the
+computable upper bound $d_{\tilde F}\le k-r+2$. The constant terms depend on
+$a_6$, but do not affect $r$.
+
+*Proof.* In the invertible coordinates $(a,c)$, $c=a+b$, the expression in
+Theorem 2.5 shows that the only quadratic terms are
+$X_1^2s^2+zX_1s$. The coefficient of $a_ic_j$ is therefore
+$(v_iv_j)^2+zv_iv_j=L_z(v_iv_j)$, where $L_z(u)=u^2+zu$ is an
+$\mathbb F_2$-linear map on $K$. The $n$ coordinate equations have quadratic
+coefficient rank $\dim L_z(P)$, independently of the chosen field basis.
+Since $\ker L_z=\{0,z\}$, rank-nullity on $P$ gives the formula. An
+invertible Boolean coordinate change from $(a,b)$ to $(a,c)$ preserves the
+degree filtration and induces an isomorphism on $B_{\le2}/B_{\le1}$, so this
+is also the rank in the original Boolean coordinates. In fact, the full
+expression in Theorem 2.5 is
+$S=L_z(X_1^2+X_1s)+z^2s^2+a_6$.
+Both $X_1^2$ and $X_1s$ have coefficients in $P$, so every $\mu\in A$
+annihilates the first term. Its remaining equation combination is exactly
+$\operatorname{Tr}(\mu z^2s^2)+\operatorname{Tr}(\mu a_6)$, whose coefficient
+of $c_j$ is the displayed trace. A basis of the image supplies $r$
+independent affine linear parts in $c$. The kernel of that image map is
+$(Q+U)^\perp$, while its domain is $Q^\perp$, giving the equivalent
+dimension formula. Proposition 2.5a applies.
+$\square$
+
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$
 (the linear parts of $\operatorname{Tr}X_1$ and $\operatorname{Tr}X_2$). Let

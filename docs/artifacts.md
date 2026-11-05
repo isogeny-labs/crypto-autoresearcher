@@ -47,6 +47,7 @@ than 1 MiB goes to the store; a data-suffixed file (`.jsonl`, `.gz`, `.npy`,
 does too. Source, build and config text (`CODE_EXT`) never moves. `policy.keep`
 lists globs that stay in Git whatever their size: data files that code or CI
 outside the data trees name by path (inputs PDFs, `knowledge/sources.json`,
+`knowledge/leads/ecdlp/coverage.tsv` (read by `tools/lead_atlas.py --check`),
 `research_digest/manifest.jsonl`, two experiment summaries) and the generated
 `ledger/.index/*.jsonl`.
 
@@ -59,6 +60,15 @@ tracked files that belong in the store.
 - `.github/workflows/artifacts.yml` runs the tool's tests, `check HEAD^1 HEAD`
   and `wire_workflows.py --check` on every pull request. The `large-file-ok`
   label turns the check into a warning.
+- Opt-in `artifact-autofix.yml` migrates a same-repository PR carrying the
+  `artifact-autofix` label. It runs only trusted base tooling, requires the PR
+  policy/destination to equal the base, uploads write-once objects and replays
+  remote bytes before committing generated pointers/removals. It uses an
+  existing `ARTIFACT_AUTOFIX_PUSH_TOKEN` or `AUTOFIX_GH_TOKEN` so the normal new-head
+  CI runs; missing credentials or remote verification failures stop the job.
+  It never force-pushes. Apply the label only to a PR whose data migration is
+  authorized; remove it to stop future opt-in attempts. The new head still
+  needs all normal validation/review gates. No storage-policy waiver is applied.
 - A workflow that reads moved data needs a pull step after its
   `actions/checkout`. `python3 tools/artifacts/wire_workflows.py` inserts it
   (and adds `tools/artifacts` to a sparse checkout); `--check` fails when one

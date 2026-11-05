@@ -1,0 +1,29 @@
+id: KR-IC-310345
+area: index-calculus
+kind: known_negative
+title: Fermat-indicator counting of prime-field point decomposition has polynomial degree about p
+claim: >-
+  The k-CNF polynomial-method counter needs a clause polynomial of degree O(1) per clause. The
+  Boolean indicator of S(x_1..x_m) = 0 over F_p is 1 - S^{p-1}, of degree about deg(S)(p-1) in the
+  field, so the interpolation degree and point count scale with p. The additive-character
+  rewriting removes the degree but, for injective windows, reduces the count to window
+  enumeration / x-coordinate meet-in-the-middle. Tseitin width reduction of F_p arithmetic
+  instead inflates n by the multiplier-circuit size, and the existing binary obstruction (the #SAT
+  exponent outgrows enumeration once the CNF has omega(l sqrt(log l)) variables) applies the same
+  way. Heuristic argument from the lab's review; no Lean, no measurement.
+status: heuristic
+setting: {field: prime, model: polynomial_method_counting}
+sources:
+  - ref: KN-LIT-caa51d
+    locator: "main-text clause-product polynomial of degree <= 3n (sparsified 3-CNF)"
+    verification_state: secondary_source
+forecloses:
+  - Fermat indicator polynomial method counting of decompositions
+  - apply ETH counting algorithm directly to Semaev point decomposition over F_p
+  - character sum rewriting of S3 count
+internal:
+  - {ref: KN-LIT-eb8749, relation: cites, note: "the Bochum route avoids this by Boolean encodings of F_p arithmetic, at the edge counts of KR-IC-f66b30"}
+open: []
+dominated_by: null
+added: '2026-11-02'
+superseded_by: null

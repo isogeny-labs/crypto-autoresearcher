@@ -1,0 +1,290 @@
+coordinator_decision:
+  id: DEC-20261101-50edeb
+  id_provenance: >-
+    Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision
+    --date 20261101 and confirmed free with --check, then supplied to this Coordinator. The
+    Coordinator has no shell; it confirmed only that ledger/decisions/DEC-20261101-50edeb.yaml
+    did not exist before this write.
+  recorded_at: '2026-11-01'
+  decided_at: '2026-11-01'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator session coordinator-pfdr-125ee4 (claude_code /coordinate, goal mode, zero
+    trials) on branch coordinate/pfdr-125ee4-snapshot-bind-20261101 (from origin/main
+    bbc19e928e). The top-level session runs every git and tool command; this Coordinator wrote
+    this one record.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  experiment_id: EXP-PFDR-ada71b
+  batch_id: BATCH-3a63a4
+  mode: coordinate
+  kind: archive_custody_ruling
+  archived_by: >-
+    TASK-20261101-125ee4, re-performed archive commit C' (clause C-PRIME below). C' is the only
+    archival commit of this record.
+  context: >-
+    EXP-PFDR-ada71b was approved under DEC-20261101-cb3277 (commit
+    ad9295c6e7e9d3ab182a42d041e03ce0022aea02). In the BATCH-3a63a4 dispatch queue,
+    TASK-20261101-f77bc6 is completed. The snapshot archive TASK-20261101-125ee4 (kind snapshot,
+    binding_mode content_at_commit, depends on f77bc6) is still queued, with archive.commit_sha
+    null, parent_sha null and path_sha256 {}. The executor task TASK-20261101-8951b8 depends on
+    125ee4, so the /run of 2026-11-01 (PR #2908) correctly launched nothing.
+    Commit 41f255850279a3bec2f13544328dac83bda150d7 (on main, first parent ad9295c6) added
+    archives/TASK-20261101-125ee4/snapshot-receipt.json. The top-level session found all 16
+    receipt path_sha256 values equal to the bytes at 41f2558, at ad9295c6 and at HEAD. The 15
+    paths the dispatcher expects (125ee4 artifact_paths plus f77bc6 artifact_paths, receipt
+    included) also hash identically at 41f2558. The commit message, however, is only
+    "archive(PFDR): snapshot EXP-PFDR-ada71b approved design package (TASK-20261101-125ee4)".
+    The verifier's content_at_commit branch (tools/research_dispatch.py
+    GitRepositoryVerifier.verify_archive, lines 2010-2021, read by this Coordinator) requires
+    every id in [task_id, *archive.record_ids] to appear in the archive commit message. A scratch
+    dry-run that bound the queue block to 41f2558 failed because the message is missing
+    GOAL-PFDR-fd09e0, H-PFDR-ed7ccf, DEC-20261101-49576f, DEC-20261101-cb3277, BATCH-3a63a4,
+    TASK-20261101-f77bc6, TASK-20261101-8951b8 and TASK-20261101-18d7f6. 41f2558 is on main and
+    cannot be amended.
+  decision: revise
+  decision_label: >-
+    125ee4 not complete as performed (content custody intact, archive commit message
+    non-conforming); re-perform the archive at a fresh conforming commit C' that stages only this
+    record; bind the queue block to C' in a separate bind commit; record_ids and every other task
+    unchanged; zero trials
+  target_ids:
+  - TASK-20261101-125ee4
+  - TASK-20261101-f77bc6
+  - TASK-20261101-8951b8
+  - TASK-20261101-18d7f6
+  - BATCH-3a63a4
+  - EXP-PFDR-ada71b
+  - DEC-20261101-cb3277
+  - DEC-20261101-49576f
+  - H-PFDR-ed7ccf
+  - IDEA-20261018-a0830c
+  - GOAL-PFDR-fd09e0
+  authorised_by:
+  - AGENTS.md archival-task rules (Coordinator-only archive tasks; the post-commit verifier must
+    accept the commit before a result is treated as durable)
+  - DEC-20261101-cb3277 next_actions[0] (snapshot-archive the approved design package under
+    TASK-20261101-125ee4)
+  ruling:
+    classification: >-
+      This is an archive-procedure defect, not a custody failure and not a research result. The
+      bytes 41f2558 committed are the approved bytes; content_at_commit would bind them. The
+      verifier refuses only the commit message, which is a mandatory part of an archive commit
+      (docs/agent-contract-extended.md, "Durable research commits": the commit must "name the
+      task and record IDs"). TASK-20261101-125ee4 is therefore not complete, and its queue state
+      stays queued until clause BIND is committed.
+    prior_attempts:
+    - attempt: 1
+      commit: 41f255850279a3bec2f13544328dac83bda150d7
+      parent: ad9295c6e7e9d3ab182a42d041e03ce0022aea02
+      outcome: content verified; message non-conforming; not rebound
+      detail: >-
+        Adds the write-once snapshot-receipt.json. Its 16 path_sha256 values and the 15 expected
+        archive paths match the bytes at this commit. The message names only EXP-PFDR-ada71b and
+        TASK-20261101-125ee4. This attempt stays in history as the commit that added the receipt.
+        It is never written into the queue archive block.
+    clause_C_PRIME:
+      text: >-
+        Clause C-PRIME (DEC-20261101-50edeb). The TASK-20261101-125ee4 snapshot archive is
+        re-performed at one new commit C' on branch
+        coordinate/pfdr-125ee4-snapshot-bind-20261101, under these rules.
+        (1) C' runs alone. Before it, origin/main is merged into the branch (merge, never rebase)
+        and the index is empty.
+        (2) C' stages exactly one path, ledger/decisions/DEC-20261101-50edeb.yaml, and nothing
+        else. `git diff-tree --no-commit-id --name-status -r C'` must list exactly that one added
+        path. This decision is the record that authorizes that one path outside 125ee4's
+        write_scope. 125ee4's artifact_paths, write_scope and record_ids are not changed.
+        (3) C' changes none of the 15 expected archive paths. Each of them must hash at C' to the
+        value in the receipt's path_sha256; any difference is a STOP that returns here. The
+        receipt's two extra paths (ledger/proposals/IDEA-20261018-a0830c.yaml and
+        ledger/hypotheses/H-PFDR-ed7ccf.yaml) must also hash at C' to their receipt values; a
+        difference is also a STOP.
+        (4) The C' message is exactly the required_commit_message below. It names
+        TASK-20261101-125ee4, all ten archive.record_ids, IDEA-20261018-a0830c and this
+        decision. Naming ids beyond record_ids is additive (precedent DEC-20261008-6c79a2,
+        rerun_of_5ea531).
+        (5) The snapshot-receipt.json file is write-once and is not rewritten, re-staged or
+        duplicated. Its parent_sha (ad9295c6), parent_sha_note and commit_sha_note describe attempt
+        1 (41f2558). For the dispatcher, the binding of record is the queue archive block set by
+        clause BIND, read together with this decision.
+        (6) After C', the branch is pushed and the PR is opened or refreshed, naming the records.
+        Its merge method must preserve C' as an ancestor of main (gh pr merge --auto --merge).
+        A squash or rebase merge would make C' unreachable and break content_at_commit custody
+        (research_dispatch.py, lines 1955-1960). That counts as a STOP for the bind, not as
+        something to repair later.
+    clause_BIND:
+      text: >-
+        Clause BIND (DEC-20261101-50edeb). The bind is a later, separate commit, made on a second
+        dispatch to the Coordinator and descended from C'. Following the BATCH-3505b3
+        TASK-20261031-951cef precedent (archive commit e56946ecd4, then bind commit 0ef87f478f),
+        it changes only coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json,
+        and only in TASK-20261101-125ee4's entry:
+          state: queued -> completed;
+          archive.commit_sha: full sha of C';
+          archive.parent_sha: full sha of C'^1 (first parent);
+          archive.path_sha256: exactly the 15 expected archive paths, each hashed from C'.
+        These stay unchanged: archive.kind, binding_mode, source_task_ids and record_ids; the
+        entry's artifact_paths, write_scope, read_scope and handoff block; and every other task
+        (f77bc6, 8951b8, 18d7f6) and every note.
+        ledger/handoffs/TASK-20261101-125ee4.yaml has no state field (read by this Coordinator), so
+        the bind mirrors nothing there and does not edit it.
+        Before the bind is committed, the top-level session runs these checks in scratch:
+        tools/research_dispatch.py on the bound queue verifies 125ee4 and renders
+        TASK-20261101-8951b8 dispatchable; and tools/newest_experiments.py --experiment
+        EXP-PFDR-ada71b --json reports execution_state ready. That second check is 125ee4's
+        completion gate. Any failure is a STOP that returns here, with nothing committed.
+    approval_continuity: >-
+      Nothing about EXP-PFDR-ada71b changes: not its specification, protocol, trial plan,
+      implementation or executor handoff, not its approval, and not H-PFDR-ed7ccf's status.
+      DEC-20261101-cb3277's queue_sha256 (5f0100a9...fe58) names the pre-bind queue bytes. Those
+      bytes are exactly what C' carries, so content_at_commit preserves them. The bind then
+      changes the HEAD queue only in 125ee4's state and archive block, which is the transition
+      the approval's next action called for. tools/experiment_execution.py authorize() requires
+      the queue only to be committed at HEAD; it does not compare it with queue_sha256. The
+      specification and trial-plan hashes, which it does check, are unchanged.
+    refused_alternatives:
+    - option: narrow 125ee4's archive.record_ids to the ids 41f2558's message happens to contain
+      reason: >-
+        This tailors the check to an observed failure. record_ids were frozen in the approved
+        queue bytes (queue_sha256 in DEC-20261101-cb3277), so changing them would also change the
+        approved queue contents.
+    - option: hand-set 125ee4 state completed with archive.commit_sha 41f2558
+      reason: >-
+        This fails the verifier (the scratch dry-run shows it). A completed state that the
+        verifier rejects would block 8951b8 dispatch and is not durable custody.
+    - option: amend, rewrite or force-push main to fix the 41f2558 message
+      reason: Rewriting history is forbidden, and other records cite commits on main.
+    - option: re-perform C' by rewriting or re-staging snapshot-receipt.json
+      reason: >-
+        The receipt is write-once and its bytes are correct. Rewriting it would erase the record
+        of attempt 1 and is not needed: content_at_commit does not require C' to change any
+        expected path.
+  required_commit_message:
+    subject: 'archive(PFDR): re-perform snapshot archive TASK-20261101-125ee4 for EXP-PFDR-ada71b
+      (DEC-20261101-50edeb)'
+    body: |-
+      Re-performs the content_at_commit snapshot archive TASK-20261101-125ee4 of the
+      EXP-PFDR-ada71b design package approved under DEC-20261101-cb3277, per
+      DEC-20261101-50edeb clause C-PRIME. Attempt 1 (41f255850279a3bec2f13544328dac83bda150d7)
+      bound the correct bytes but its message did not name the archive record ids; it is not
+      rebound.
+
+      This commit stages only ledger/decisions/DEC-20261101-50edeb.yaml and changes none of the
+      15 expected archive paths; snapshot-receipt.json is write-once and unchanged.
+
+      Task: TASK-20261101-125ee4
+      Record ids: GOAL-PFDR-fd09e0 H-PFDR-ed7ccf EXP-PFDR-ada71b DEC-20261101-49576f
+      DEC-20261101-cb3277 BATCH-3a63a4 TASK-20261101-f77bc6 TASK-20261101-125ee4
+      TASK-20261101-8951b8 TASK-20261101-18d7f6
+      Also: IDEA-20261018-a0830c DEC-20261101-50edeb
+      Zero trials. A receipt is not evidence.
+
+      Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+      Claude-Session: https://claude.ai/code/session_01A52AU5HLG23mDFTP6muDvo
+  order_of_operations:
+  - step: 1
+    who: top-level session
+    what: >-
+      Merge origin/main into the branch (merge, never rebase). Confirm the index is empty and no
+      other archival task is running. Confirm the 15 expected paths and the 2 extra receipt paths
+      still hash to the receipt values; any mismatch is a STOP.
+  - step: 2
+    who: top-level session
+    what: >-
+      Stage only ledger/decisions/DEC-20261101-50edeb.yaml and commit C' with
+      required_commit_message, byte for byte. Check the diff-tree (one added path) and run a
+      scratch verify_archive dry-run against C' with the 15-path path_sha256. Push, open or
+      refresh the PR, and enable auto-merge with --merge.
+  - step: 3
+    who: coordinator (second dispatch)
+    what: >-
+      Apply clause BIND to dispatch_queue.json only. The top-level session runs the scratch
+      dispatcher and newest_experiments checks, then commits the bind alone, pushes and refreshes
+      the PR.
+  - step: 4
+    who: top-level session
+    what: >-
+      After merge to main, run /run EXP-PFDR-ada71b under TASK-20261101-8951b8 (executor,
+      implementation route). DEC-20261101-cb3277 records no committed runbook. Then archive
+      TASK-20261101-18d7f6 and open the evidence review.
+  rationale:
+  - >-
+    The custody fact that matters is that the archived bytes equal the approved bytes, and it is
+    already established. The missing piece is a conforming archive commit, which costs one commit
+    and changes no research artifact.
+  - >-
+    Staging only this decision in C' does two things at once. It commits the authority for the
+    re-performance before the bind relies on it, so no transition is made from an uncommitted
+    record. It also leaves every bound path untouched, so the hashes the receipt recorded remain
+    the hashes the bind will record.
+  - >-
+    Keeping record_ids, artifact_paths and the receipt unchanged means the verification standard
+    stays fixed and the check is satisfied, not moved. A separate bind commit follows the
+    951cef/0ef87f478f precedent and keeps the archive commit's tree equal to the approved package.
+  - >-
+    The empty run of PR #2908 was the dependency gate working as designed. It is infrastructure
+    signal and says nothing about H-PFDR-ed7ccf.
+  evidence_refs:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json (125ee4 state
+    queued; archive block unbound; record_ids)
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/archives/TASK-20261101-125ee4/snapshot-receipt.json
+    (16 path_sha256; parent_sha ad9295c6; commit_sha null by convention)
+  - tools/research_dispatch.py GitRepositoryVerifier.verify_archive (content_at_commit branch,
+    lines 1989-2022) and _verify_content_only (path_sha256 key set must equal expected paths,
+    line 1864)
+  - tools/experiment_execution.py authorize() (queue must be committed; spec and source hashes
+    rechecked)
+  - ledger/decisions/DEC-20261101-cb3277.yaml (approval; queue_sha256; no committed runbook)
+  - ledger/decisions/DEC-20261008-6c79a2.yaml (rerun in full; extra id in message is additive)
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3505b3/dispatch_queue.json (951cef
+    completed with content_at_commit archive block; bind precedent)
+  - commit 41f255850279a3bec2f13544328dac83bda150d7 (attempt 1; message per the top-level
+    session's report)
+  limitations:
+  - >-
+    This Coordinator ran no command. The hash equalities, the 41f2558 message and the failing
+    dry-run come from the top-level session's report. Steps 1 to 3 recompute them, and each one
+    is a STOP on mismatch.
+  - >-
+    This ruling asserts nothing about EXP-PFDR-ada71b's outcome or H-PFDR-ed7ccf. It covers the
+    custody of the approved design package only.
+  status_transitions:
+  - record: TASK-20261101-125ee4
+    note: >-
+      Stays queued. It becomes completed only through the clause BIND commit, after the C'
+      verifier dry-run passes.
+  - record: EXP-PFDR-ada71b
+    note: approved, frozen, execution_authorized (unchanged)
+  - record: H-PFDR-ed7ccf
+    note: specified (unchanged)
+  goal_update: >-
+    None in this record. The goal head's single next_action, "the design snapshot archive
+    TASK-20261101-125ee4, then /run EXP-PFDR-ada71b under TASK-20261101-8951b8", stays accurate.
+    The goal head is checkpointed at the next ledger archive.
+  next_actions:
+  - id: NA-1
+    role: top-level session
+    text: >-
+      Steps 1-2: commit C' with exactly this file and required_commit_message, verify, push, and
+      open or refresh the PR with auto-merge --merge.
+  - id: NA-2
+    role: coordinator
+    text: >-
+      Step 3: bind TASK-20261101-125ee4 to C' per clause BIND (second dispatch).
+  - id: NA-3
+    role: executor
+    text: >-
+      After merge to main, run /run EXP-PFDR-ada71b under TASK-20261101-8951b8 (executor
+      implementation route; no committed runbook per DEC-20261101-cb3277).
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      An archive-custody ruling with no evidence and no ECDLP content. The procedural lesson is
+      not promoted here: a content_at_commit archive commit message must name every
+      archive.record_id, so dry-run verify_archive before pushing.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261101-50edeb.yaml
+  official_effect_until_committed_pushed_reviewable: none

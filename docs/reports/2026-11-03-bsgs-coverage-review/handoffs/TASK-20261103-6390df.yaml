@@ -1,0 +1,42 @@
+handoff:
+  from: coordinator
+  to: reviewer
+  constraints:
+  - Use a separate reviewer session and own only the assigned joint.
+  - Do not read sibling reports until all first verdicts and attestations are frozen.
+  - No scientific trials, cloud jobs, or local memory-heavy builds.
+  - Keep machine, source, and semantic evidence separate; report actual controls and
+    failures.
+  archived_by: TASK-20261103-495df5
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget: {}
+  completion_gate:
+  - Own-joint report with a holds, breaks, or inconclusive verdict.
+  - Complete sources_read and sibling-report access attestation.
+  - Raw checks and negative-control outcomes retained under own task directory.
+  return_format: Review report, raw checks, read attestation, and exact artifact hashes.
+  id: TASK-20261103-6390df
+  objective: Independently check the named theorem type, source/target hashes, pinned
+    hosted receipt, dependency pins, axioms, and known-false boundary controls.
+  uncertainty_reduced: J2 exact Lean theorem, axioms and pinned receipt
+  inputs:
+  - docs/reports/2026-11-03-bsgs-coverage-review/review-plan.yaml
+  - docs/reports/2026-11-03-bsgs-coverage-review/input-bindings.json
+  - formal/targets/runbook-example-bsgs-coverage.yaml
+  - formal/CryptoResearch/Runbook/BsgsCoverage.lean
+  - formal/lean-toolchain
+  - formal/lake-manifest.json
+  deliverables:
+  - Own-joint review report
+  - Raw derivation and controls
+  - review_attestation
+  artifact_paths:
+  - docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-6390df/
+  write_scope: docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-6390df/
+  review_plan: docs/reports/2026-11-03-bsgs-coverage-review/review-plan.yaml

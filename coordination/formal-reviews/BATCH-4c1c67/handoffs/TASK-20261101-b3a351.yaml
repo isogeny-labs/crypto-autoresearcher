@@ -1,0 +1,41 @@
+handoff:
+  from: coordinator
+  to: reviewer
+  archived_by: null
+  inference:
+    policy: review-adversarial
+    independent_session_required: true
+    fallback_allowed: false
+    degraded_allowed: false
+  budget: {}
+  return_format: Own-joint report, raw source quotes, read attestation, exact hashes and unresolved obligations.
+  id: TASK-20261101-b3a351
+  objective: Joint J1. Compare the Lean fall definitions and Lemma 4 statements with Definitions 5 and 6 and Lemma 4 of ePrint 2015/984 and Definition 1 of 2013/549, for deltas D1, D4, D6 and D8.
+  uncertainty_reduced: Primary-source correspondence of the formal definitions
+  inputs:
+  - coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md
+  - coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml
+  - coordination/formal-reviews/BATCH-4c1c67/input-bindings.json
+  - https://eprint.iacr.org/2015/984
+  - https://eprint.iacr.org/2013/549
+  - formal/CryptoResearch/Nagao/Lemma4Witness.lean
+  - formal/CryptoResearch/Nagao/Lemma4Outside.lean
+  - formal/CryptoResearch/Nagao/RecoveryRule.lean
+  - formal/CryptoResearch/Nagao/Bridge.lean
+  - formal/CryptoResearch/Nagao/BridgeB.lean
+  constraints:
+  - Do not read sibling reports (TASK-20261101-6dcb20, TASK-20261101-cd72e8) before your report is committed.
+  - Quote the source text for every delta; a paraphrase is not a correspondence check.
+  - No scientific trials, cloud jobs or changes outside the write scope. Change no research status.
+  deliverables:
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/review.md
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/review_attestation.yaml
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/raw/
+  artifact_paths:
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/
+  write_scope:
+  - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-b3a351/
+  completion_gate:
+  - Per-delta verdict (matches, narrows, departs) with source quote and Lean line reference.
+  - review_attestation.yaml with sources_read and input hashes checked against input-bindings.json.
+  review_plan: coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml

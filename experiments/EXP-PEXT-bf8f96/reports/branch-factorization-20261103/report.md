@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: exact squarefree branch factorization
+
+The native design code now factors each squarefree projective quotient quartic over the pinned field K into monic irreducible finite factors plus an explicit infinity flag. It retains all five possible patterns: `1+1+1+1`, `1+1+2`, `1+3`, `2+2` and `4`. Each returned nonrational factor passes the symbolic extension's irreducibility check, and the reconstructed product must equal the normalized finite quartic.
+
+Rational roots are removed with exact polynomial division. A remaining degree-four polynomial is distinguished as irreducible or `2+2` by `gcd(f, X^(|K|^2)-X)`. For `2+2`, the trace `X+X^|K|` and norm `X^(|K|+1)` are constant on each quadratic factor. The code scans K for a value that splits the trace; if both traces agree, it splits by norm. Two distinct monic quadratics cannot share both invariants, so the finite scan is complete. This uses no random seed and no table of extension elements.
+
+Fixed F27 software tests reconstruct exact factor lists for each pattern, force the equal-trace norm fallback, handle infinity, reject a repeated-root form, and factor the actual quotient forms. All 15 core and 17 join native tests pass. The factorizer establishes the branch-factor input to the nonrational collision equations; common-extension embeddings, linear kernels, cocycle lookup, independent all-pattern replay and resource measurements remain to implement. EXP-PEXT-bf8f96 remains `review_required`; no scientific trial was launched.

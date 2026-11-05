@@ -34,9 +34,35 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/proposals/IDEA-20260806-94676a.yaml
   note: 'Representation learning for latent linearisation, costed: exact version is the DLP'
+- repo: crypto-autoresearcher
+  path: experiments/EXP-ECDLP-9f7772/specification.yaml
+  note: "frozen public trained candidate (x_mod_7 / exact / beam 8, 2048 training) on 48 fresh 12-18-bit curves with honest rho fallback and matched rho, Bernstein-Lange and BSGS costs; approved, no evidence record yet"
+- repo: crypto
+  path: problems/ml-ecdlp-dataset-durable-launch.md
+  note: 'ECDLP dataset worker lacks durable S3 publication and launch admission'
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L05/analysis_b8.txt
+  note: >-
+    L05 policy pilot on prime-field PDP: harness built and renaming null recorded (renaming is inert
+    in kissat by construction); the policy question is untested. 350 rows, 0 FAIL, reference slope
+    2.17 [1.93, 2.38] bits per window bit at m = 3, b = 8 (SAT-only 1.41). The ladder held p fixed
+    and varied l (not e against s = b/m), intervals ignore curve clustering (3 curves), and the
+    hooked CaDiCaL ExternalPropagator engine was never built. Do not fund an LLM search on renaming.
+    The WDSat learned-branching negative (16,097 against 3,092 conflicts) remains the only learned-
+    branching negative.
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L04/analysis.txt
+  note: >-
+    L04 strong-backdoor census (also recorded under LEAD-ICE-sat-xor-pdp-oracle): no sub-(m-1)s
+    strong backdoor under cap-bounded window-branching propagation at s <= 7. It does not close an
+    L5-style policy lane.
 ledger_refs:
 - IDEA-20260806-94676a
 - H-ECDLP-77fa7c
+- H-ECDLP-15dc5f
+- EXP-ECDLP-9f7772
+- DEC-20261025-ebc3a9
+- DEC-20261025-2963f2
 known_results:
 - KR-RHO-13bf67
 forecloses:
@@ -47,4 +73,4 @@ forecloses:
 - machine learning curve hardness predictor
 areas:
 - ECDLP
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-02'

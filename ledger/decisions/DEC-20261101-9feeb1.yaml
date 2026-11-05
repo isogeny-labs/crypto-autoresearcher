@@ -1,0 +1,274 @@
+coordinator_decision:
+  id: DEC-20261101-9feeb1
+  context: TASK-20261101-14984c synthesis of corrected range compiler review TASK-20261101-15771f
+  decision: support
+  decision_scope: Support corrected range compiler at retained fixed software/certificate scope; complete chart
+    solving and cost comparisons remain separate work.
+  decided_by: coordinator
+  decided_at: '2026-11-01T18:38:08.740228+00:00'
+  target_ids:
+  - TASK-20261101-42aebb
+  - TASK-20261101-15771f
+  rationale:
+  - Independent retained counterexamples confirm F1 single authentication with separate phase receipts and F2 empty-label
+    rejection.
+  - All24 fixed groups pass; root separates561 assertion records from43 retained witness-value observations rather
+    than calling all604 assertions.
+  - Six assigned joint verdicts hold. Original native attestation format failure is preserved; the reviewer explicitly
+    confirmed a mechanical projection of the existing joint verdict map into the checker-required field.
+  evidence_strength: independent_fixed_software_review
+  claim_tier: scoped_software_fidelity
+  proof_status: retained_independent_fixed_checks_and_literal_certificate_verification
+  proof_assistant_verified: false
+  scoped_claim:
+    source_commit: 9089fe463d90ea806818db9a8bc4f44b859243b4
+    source_sha256: 8501e320de27169cebc35f678759b5e33a3d7c76c86dc4bb5caf329a2e12fdd7
+    review_commit: db3718d113df7a65f9d78f2a1bc0efc2c8f6b840
+    independent_joint_verdicts:
+      source_binding: holds
+      bit_substitution: holds
+      range_exactness: holds
+      certificate_completion: holds
+      fixed_execution: holds
+      claim_boundary: holds
+    fixed_suites:
+    - number: 1
+      passed_groups: 24
+      failed_groups: 0
+      checks: 604
+      exit_code: 0
+      test_source_sha256: 71c8fca3e7195dbb7f31990ebe3f3457485c3e455452b6bc54907479635fa590
+      stdout_sha256: 90265ca4b092a3fdc815045aa47b910c5de804a2808408e006cad4db3e556266
+    assertion_records: 561
+    witness_observation_records: 43
+    group_record_counts:
+      literal_f7: 7
+      literal_f7_negatives: 5
+      direct_f5: 4
+      f7_fixed_states: 6
+      interleaving: 10
+      cross_projection: 9
+      zero_projection: 5
+      censored: 6
+      shadowed_bad_record: 4
+      domain_gap: 13
+      bootstrap: 14
+      layout_mutations: 26
+      content_mutations: 17
+      bit_substitution: 3
+      accepted_blocks: 144
+      fixed_root_roundtrip: 264
+      fidelity: 8
+      accounting: 2
+      nonempty_labels: 11
+      counted_encode: 5
+      single_decode_authentication: 4
+      nonzero_recurrence: 8
+      canonical_binding: 22
+      cost_receipt_isolation: 7
+    bound_input_files: 24
+    source_hashes_stable: true
+    native_checkpoints_succeeded: 1
+    suite_watchdog_seconds: 240
+    memory_limit_bytes: 2147483648
+    descriptor_cohort: 18
+    field_assignments: 43
+    satisfying_assignments: 36
+    canonical_nonroot_controls: 7
+    malformed_assignment_controls: 6
+    assumptions:
+    - Prime p>3 and trusted public descriptor; primality is a caller premise.
+    - Canonical field builder semantics remain a dependency; generic arithmetic meaning is caller-owned.
+    - Fixed prescribed descriptors, assignments and literal transcripts; no relation discovery or complete chart
+      search.
+  resolved_obligations:
+  - prior_decision: DEC-20261031-63eb44
+    finding: F1
+    resolution: Counted public encode/decode independently intercept exactly one canonical build and return separate
+      complete declared successful-operation phase receipts.
+  - prior_decision: DEC-20261031-63eb44
+    finding: F2
+    resolution: Exact empty-label counterexample rejects with ValueError; nonempty zero equation remains valid.
+  review_attestation:
+    task_id: TASK-20261101-15771f
+    joints_owned:
+    - source_binding
+    - bit_substitution
+    - range_exactness
+    - certificate_completion
+    - fixed_execution
+    - claim_boundary
+    sources_read:
+    - research/prime_sat_range_corrected_20261101/compiler.py
+    - research/prime_sat_rationality_authenticated_20261031/authenticated.py
+    - research/prime_sat_rationality_software_20261031/circuits.py
+    - research/prime_sat_rationality_software_20261031/rationality.py
+    - research/prime_sat_rationality_software_20261031/checker.py
+    - research/prime_sat_shared_signed_chart_20261030/quotient.py
+    - research/prime_sat_shared_signed_chart_20261030/charts.py
+    - research/prime_sat_shared_signed_chart_20261030/projectors.py
+    - research/prime_sat_shared_signed_chart_20261030/signed_recovery.py
+    - research/prime_sat_shared_signed_chart_20261030/check_chart.py
+    - research/prime_sat_prefix_adapter_20261030/adapter.py
+    - research/prime_sat_costbridge_controls_20261029/prefix_cover.py
+    - research/prime_sat_range_compiler_20261031/compiler.py
+    - research/prime_sat_range_compiler_20261031/TASK-20261031-3e6f7e/review.md
+    - coordination/prime_sat_range_compiler_20261031/fixed-software-contract.json
+    - coordination/prime_sat_range_corrected_20261101/SOURCE-API.md
+    - coordination/prime_sat_range_corrected_20261101/fixed-software-contract.json
+    - coordination/prime_sat_range_corrected_20261101/inference-amendment.yaml
+    - coordination/prime_sat_range_corrected_20261101/review-plan.yaml
+    - coordination/prime_sat_range_corrected_20261101/reviewer-brief.md
+    - coordination/prime_sat_range_corrected_20261101/theory/range.md
+    - coordination/prime_sat_range_corrected_20261101/theory/completion.md
+    - coordination/prime_sat_range_corrected_20261101/fixtures/f7.json
+    - coordination/prime_sat_rationality_authenticated_20261031/fixed-software-contract.json
+    - .resume/range-correction-reviewer-handoff.json
+    - .resume/range-correction-review-source-binding.json
+    - AGENTS.md
+    - docs/agent-contract-extended.md
+    - docs/agent-contract-supplement.md
+    - docs/lab-contract.md
+    - templates/research-records.md
+    - /var/lib/spot-codex/home/skills/review-evidence/SKILL.md
+    - /var/lib/spot-codex/home/skills/research-visuals/SKILL.md
+    - /var/lib/spot-codex/home/plugins/cache/openai-curated-remote/cloud-environment/0.1.2/skills/runtime/SKILL.md
+    - /var/lib/spot-codex/home/plugins/cache/openai-curated-remote/cloud-environment/0.1.2/skills/runtime/references/networking.md
+    - /var/lib/spot-codex/home/memories/MEMORY.md
+    read_sibling_reports: false
+    blind_from_respected: true
+    verdict:
+      source_binding: holds
+      bit_substitution: holds
+      range_exactness: holds
+      certificate_completion: holds
+      fixed_execution: holds
+      claim_boundary: holds
+    verdict_scope: Six assigned joints only; official claim composition belongs to Coordinator.
+    joint_verdicts:
+      source_binding: holds
+      bit_substitution: holds
+      range_exactness: holds
+      certificate_completion: holds
+      fixed_execution: holds
+      claim_boundary: holds
+  representation_correction:
+    recorded_at: '2026-11-01T18:16:24.291655+00:00'
+    source: research/prime_sat_range_corrected_20261101/TASK-20261101-15771f/attestation.yaml
+    source_sha256: 760aaa2e9881f5733e7a1c174294e74c5eddfa5c9e8d2a35d58f28d53f586ee6
+    producer: coordinator mechanical schema projection; original reviewer explicitly confirmed faithful representation
+    change: Only review_attestation.verdict replaced with an exact copy of original review_attestation.joint_verdicts
+    reviewer_confirmation: Yes. Replacing only review_attestation.verdict with an exact copy of the existing review_attestation.joint_verdicts
+      faithfully represents my six original verdicts. This is a mechanical representation correction. It introduces
+      no new judgment and does not change the reviewed scope, evidence, or verdicts.
+    original_gate_failure:
+      recorded_at: '2026-11-01T18:14:30.648138+00:00'
+      command:
+      - /home/ec2-user/prime-sat-research-venv/bin/python
+      - tools/check_review_independence.py
+      - --plan
+      - coordination/prime_sat_range_corrected_20261101/review-plan.yaml
+      - --expected-plan-sha256
+      - 919401d3845489145a928e791fdc38edb96427945e3bf6e5d01c64b302df4e3c
+      - --reports
+      - research/prime_sat_range_corrected_20261101/TASK-20261101-15771f/attestation.yaml
+      - --no-addenda
+      returncode: 1
+      stdout: 'FAIL: TASK-20261101-15771f: a reviewer with multiple joints needs a per-joint verdict mapping; one
+        scalar verdict cannot cover them
+
+        FAIL: TASK-20261101-15771f: a reviewer with multiple joints needs a per-joint verdict mapping; one scalar
+        verdict cannot cover them
+
+        FAIL: TASK-20261101-15771f: a reviewer with multiple joints needs a per-joint verdict mapping; one scalar
+        verdict cannot cover them
+
+        FAIL: TASK-20261101-15771f: a reviewer with multiple joints needs a per-joint verdict mapping; one scalar
+        verdict cannot cover them
+
+        FAIL: TASK-20261101-15771f: a reviewer with multiple joints needs a per-joint verdict mapping; one scalar
+        verdict cannot cover them
+
+        FAIL: TASK-20261101-15771f: a reviewer with multiple joints needs a per-joint verdict mapping; one scalar
+        verdict cannot cover them
+
+
+        6 independence problem(s) across 1 report(s)
+
+        '
+      stderr: ''
+      scope: Native declared attestation consistency only.
+    archive_destination: ledger/decisions/DEC-20261101-9feeb1.yaml, inside coordinator_decision.review_attestation
+      and representation_correction
+    scientific_content_changed: false
+    sealed_files_modified: false
+  independence:
+    fresh_session: true
+    source_aware: true
+    producer_outputs_hidden: true
+    gate_after_mechanical_representation:
+      recorded_at: '2026-11-01T18:16:24.849176+00:00'
+      command:
+      - /home/ec2-user/prime-sat-research-venv/bin/python
+      - tools/check_review_independence.py
+      - --plan
+      - coordination/prime_sat_range_corrected_20261101/review-plan.yaml
+      - --expected-plan-sha256
+      - 919401d3845489145a928e791fdc38edb96427945e3bf6e5d01c64b302df4e3c
+      - --reports
+      - .resume/range-correction-attestation-representation.json
+      - --no-addenda
+      returncode: 0
+      stdout: 'PASS: 1 report(s), every joint owned and attested, blindness respected, controls declared
+
+        '
+      stderr: ''
+      representation_sha256: 3f88dacf39414eb28c6dbe46acdfcb58233c579efccb1a5727d12b13bcc91893
+      original_attestation_sha256: 760aaa2e9881f5733e7a1c174294e74c5eddfa5c9e8d2a35d58f28d53f586ee6
+      scope: Native declared-consistency gate after reviewer-confirmed mechanical schema projection; original failed
+        gate and sealed source preserved. Canonical decision must retain this representation and rerun native gate
+        before archive.
+    actual_runtime_identity_authenticated: false
+    amendment: coordination/prime_sat_range_corrected_20261101/inference-amendment.yaml
+    post_dispatch_guidance: Custody/claim messages and lossless removal of duplicated parsed stdout only; no expected
+      mathematical values supplied.
+  evidence_refs:
+  - research/prime_sat_range_corrected_20261101/TASK-20261101-15771f/test_independent.py
+  - research/prime_sat_range_corrected_20261101/TASK-20261101-15771f/independent-results.json
+  - research/prime_sat_range_corrected_20261101/TASK-20261101-15771f/review.md
+  - research/prime_sat_range_corrected_20261101/TASK-20261101-15771f/attestation.yaml
+  - research/prime_sat_range_corrected_20261101/software-results.json
+  - ledger/decisions/DEC-20261031-63eb44.yaml
+  next_actions:
+  - Archive exact review4 plus decision/report6, including original failed attestation gate and reviewer-confirmed
+    mechanical representation.
+  - Admit complete symbolic chart composition with public zero/constant/linear B strata, all15 chart fixtures and
+    all rationality arms; retain full signed reconstruction.
+  - Compare quartic, membership-augmented and quadratic-lift encodings on identical complete projected model sets;
+    charge construction, failed operations, search, reconstruction and certificate checking.
+  - Independently review affine target elimination and its retained-row regularity argument before promoting those
+    separate drafts.
+  - Keep unchanged partial-matrix and two-bit-backdoor prototypes unscaled; require a structural change.
+  limitations:
+  - Successful-operation counters do not quantify rejected-operation or whole-workload cost.
+  - No SAT, census, sweep, benchmark or remote scientific job ran.
+  - Native independence checking covers declared consistency; actual serving model and effective effort remain unauthenticated.
+  - No regularity or measured performance conclusion follows from these fixed compiler checks.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Source-specific F1/F2 corrections and fixed certificate checks; no general mathematical or performance
+      finding promoted.
+  report_paths:
+  - docs/reports/prime-sat-range-corrected-20261101/report.md
+  - docs/reports/prime-sat-range-corrected-20261101/diagram.svg
+  - docs/reports/prime-sat-range-corrected-20261101/report.typ
+  - docs/reports/prime-sat-range-corrected-20261101/report.pdf
+  - docs/reports/prime-sat-range-corrected-20261101/report-inputs.json
+  new_scientific_runs: 0
+  persistent_goal_complete: false
+  status_changes:
+    hypotheses: []
+    experiments: []
+    evidence: []
+    knowledge: []
+    goal_status_changes: []

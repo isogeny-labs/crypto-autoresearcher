@@ -8,10 +8,51 @@ A target is a **pointer plus a claim, not an approval**. Writing one here
 queues nothing and approves nothing; the Coordinator decides what runs, and a
 machine-verified result is still pending semantic-fidelity review.
 
+A target that builds on other targets, or takes a statement as given without
+proving it, records that in an optional `proof_map` block
+(`docs/formal-research-lane.md`, "Hypothesis deltas, proof maps and errata"):
+
+```yaml
+proof_map:
+  depends_on: [semaev-frobenius-collapse.yaml]   # sibling specs, checked to exist
+  prerequisites:                                  # copied into the stanza's constraints
+    - "Semaev S3 vanishes exactly on x-coordinates of collinear triples"
+```
+
+Add `proof_map` only to **new** targets. A committed spec is frozen: its
+verification receipts bind its SHA-256 (`orchestration/formal/receipts.py`,
+"spec hash"), so adding the block to an old spec would make every receipt for
+it stale. Record the dependency map of an existing chain in this README
+instead, as the Semaev S₃ chain does below.
+
 Every `claim` here is quoted or tightly paraphrased from a committed theory
 note, and `source` names the note it came from. Do not write a claim that is
 not traceable to one: a formalization of a claim nobody made proves nothing
 about this program's research.
+
+## Cryptographic assumption attack corpus (2026-11-01)
+
+These five specs freeze the first finite trust-boundary tranche from the
+[attack-corpus source note](../../research/cryptographic_assumption_attack_corpus_20261101/README.md).
+Their corrected proof sources passed the pinned Lean 4.35 full-workspace
+verifier and axiom audit in
+[run 41365419446](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41365419446).
+Five assigned semantic reviews attest `holds`; the
+[technical review packet](../../docs/reports/2026-11-01-attack-corpus-five-lean/README.md)
+records its noncanonical handoff/independence limitations. No row makes a
+protocol-security or implementation-vulnerability claim.
+
+| target | kind | exact boundary | state |
+| --- | --- | --- | --- |
+| `attack-mod-alias.yaml` | `formal_counterexample` | residue equality versus bounded natural representatives | machine-verified; scoped review holds |
+| `attack-subgroup-membership.yaml` | `formal_counterexample` | ambient product group versus designated prime-order subgroup | machine-verified; scoped review holds |
+| `attack-batch-rlc-adaptive.yaml` | `formal_counterexample` | adaptive cancellation versus fixed-error finite counting | machine-verified; scoped review holds |
+| `attack-polynomial-function-alias.yaml` | `formal_counterexample` | polynomial functions versus bounded-degree formal polynomials | machine-verified; scoped review holds |
+| `attack-schnorr-special-soundness.yaml` | `formalize_claim` | scalar two-transcript extraction under same-commitment, distinct-challenge, prime-field hypotheses | machine-verified; scoped review holds |
+
+Each target requires its countermodel and conditional repair in the same
+module. Implementation impact remains gated on a separate source-to-model
+refinement and independent semantic-fidelity review.
 
 ## What is here, in ascending difficulty
 
@@ -56,6 +97,42 @@ of the latter at nonzero `x_R`. Thus the trace identity does not certify the
 historical uniform first-fall wording. The new finite target checks one
 transcribed counterexample's executable ranks; its semantic limits are stated
 in that target and the [open problem](../../problems/semaev-degree-two-fall-nonzero-bridge.md).
+The [independent semantic review](../../docs/reports/2026-10-25-semaev-semantic-review/composition.md)
+confirmed the finite degree-three first fall and the narrower trace theorem.
+Its [dated target correction](corrections/2026-10-25-semaev-s3-degree-two.md)
+withdraws the frozen target's uniform degree-two inference while preserving
+the original target bytes.
+
+### Proof map of the Semaev S₃ first-fall chain (recorded 2026-10-29)
+
+The finite chain was split into these targets after a hidden prerequisite
+surfaced: the map from equations to row space. The arrows follow the Lean
+`import` graph. The prerequisites are what each step takes as given without
+a Lean proof.
+
+```text
+semaev-s3-degree2-fall-witness          (DegreeTwoFall; standalone trace identity)
+  prerequisite: the descended degree-two coefficients have the form t^2 + t*x_R
+                (FFD_SEMAEV_MEASUREMENT1; a model of the S_3 descent, not formalized)
+  prerequisite: a vanishing degree-two part gives a new class outside V_1
+                (refuted as a uniform statement: corrections/2026-10-25-semaev-s3-degree-two.md)
+
+semaev-s3-boolean-parity-finite-20261022        (BooleanParityFiniteCertificate)
+  prerequisite: the transcribed equations are the archived n=n'=4, x_R=1 draw
+                (bound by source-binding receipts, not by Lean)
+├── semaev-s3-finite-equation-semantics-20261022   (FiniteEquationSemantics)
+└── semaev-s3-semantic-rank-degree2-20261022       (BooleanParitySemanticRankCertificate)
+    └── semaev-s3-semantic-rank-degree3-20261022   (BooleanParityDegreeThreeRankCertificate)
+        └── semaev-s3-finite-filtration-20261022   (BooleanParityFiltrationCertificate)
+            └── semaev-s3-concrete-first-fall-20261023 (ConcreteFirstFallWitness)
+```
+
+What is still open is a generic descent from abstract `S₃` and a general
+first-fall statement (`problems/semaev-degree-two-fall-nonzero-bridge.md`).
+That statement would also need Semaev's correspondence: `S₃` vanishes exactly
+on the x-coordinates of collinear triples. No target here proves that
+correspondence. `semaev-decomposition-certificate` checks the group law
+directly instead.
 
 **Its uniqueness clause is deliberately narrow** — the annihilating functional
 is NOT unique; only the root of `μ^{1/2} + μ x_R = 0` is. Caminata–Gorla **Theorem 3.1** (`sd_σ(F) = max{d_F, max.GB.deg_σ(F)}`)
@@ -64,6 +141,32 @@ bases, degree-compatible term orders and row-echelon Macaulay matrices.
 
 Note the direction, corrected in `CORR-20260916-0c9c0a`: the last fall degree is
 a **lower** bound for the solving degree, not an upper one.
+
+## K-163 conditional coprime recovery transfer
+
+`k163-coprime-recovery-transfer-20261031.yaml` proves a conditional
+cyclic-subgroup transfer theorem. It reuses the formal K-163 subgroup-order
+constant, kernel-checks
+`gcd(45641, 5846006549323611672814741753598448348329118574063) = 1`,
+and proves that additive homomorphisms satisfying
+`recovery(phi(X)) = [45641]X` preserve and reflect scalar relations on the
+selected prime-order subgroup.
+
+This target does **not** construct the K-163 degree-45,641 vertical isogeny,
+its algebraic dual, either point-level composition, an exact-order curve
+point, or an endpoint subgroup bridge. It also proves no transfer-cost or
+ECDLP advantage. Endpoint-to-source transfer requires the opposite
+composition separately. Those geometric and experimental obligations remain
+open in
+[`koblitz-vertical-isogeny-maps-not-persisted.md`](../../problems/koblitz-vertical-isogeny-maps-not-persisted.md).
+
+`k163-horizontal-recovery-control-20261031.yaml` strengthens the algebraic
+control in the same module. From an abstract additive endomorphism satisfying
+the Koblitz relation `tau^2 = tau - 2`, Lean derives both compositions for
+`alpha = 51 - 160 tau` and its conjugate and then proves exact image order and
+scalar-relation preservation. This is the already-known same-curve horizontal
+control, not a vertical conductor-floor map; the bridge from abstract `tau`
+to concrete sect163k1 Frobenius remains outside Lean.
 
 ## Batch-five discriminant wording
 
@@ -132,9 +235,26 @@ Sage refinement, execution-source custody and independent review remain open.
 `binstd-x17-factorization.yaml` checks the exact product of the three
 polynomials recorded as bitmasks 3, 313 and 471 in the n=17 Stage-1
 admissible-dimension files. It proves their product is `X^17+1` over
-`ZMod 2`. It does not prove that the degree-eight factors are irreducible,
-that the field Frobenius has the asserted normal-basis module structure,
-or that the listed dimensions exhaust all invariant subspaces.
+`ZMod 2`. `binstd-x17-degree-eight-irreducible.yaml` uses that product,
+the seventeenth cyclotomic polynomial, and the order of 2 modulo 17 to
+prove both archived degree-eight factors irreducible. These targets do
+not prove that the field Frobenius has the asserted normal-basis module
+structure or that the listed dimensions exhaust all invariant subspaces.
+
+`binstd-canonical-frobenius-minpoly.yaml` proves that the Frobenius on
+Mathlib's canonical `GaloisField 2 17` has order 17 and minimal polynomial
+equal to the source-bound three-factor product. It does not identify the
+archived runner's polynomial-basis field or subspace constructor with
+this canonical model; the exhaustive dimension classification is still open.
+
+`binstd-encoded-divisors.yaml` kernel-checks the archived integer masks
+131081, 313 and 471 against every monic bitmask divisor through half their
+degrees, using the exact XOR-and-shift remainder function in its Lean source.
+The three concrete Boolean equalities use `decide` and depend only on
+`propext`. This certifies the finite encoded computation; it does not prove
+the remainder function correct for `(ZMod 2)[X]` or that the masks denote the
+polynomials in `Factorization.lean`. The irreducibility and Frobenius-model
+obligations remain open.
 
 `binstd-yield-ceiling.yaml` targets the conditional arithmetic in
 `KN-FIND-48f0ae`: if a positive-count open arm hit every target and the tau
@@ -147,6 +267,43 @@ All three NCP targets come from one note that was read end to end. Do not add ta
 skimming a note for a quotable sentence — the surrounding definitions are the
 part the engine has to get right, and a claim detached from them formalizes
 into something that is not the claim.
+
+## Quotient translation commutation
+
+`quotient-translation-descent.yaml` proves the group-law identity of
+`THM_QUOTIENT_DESCENT1`: τ_T commutes with ι_S = [−1] ∘ τ_S, for every S,
+exactly when 2T = 0. It is stated in any additive commutative group. The
+[independent semantic review of 2026-10-29](../../docs/reports/2026-10-29-quotient-translation-descent-review/review.md)
+finds it faithful to the target's claim (`faithful_scoped`, `validated_scoped`
+for that claim only). It does **not** support the note's descent Lemma as
+titled: degree-2 maps as quotients by ι_S, and descent ⟺ commutation, are
+prose. It does not support the summation-polynomial Corollary either.
+
+## Nagao 2015/984 Lemma 4 counterexample
+
+`nagao-lemma4-inside-counterexample-20261029.yaml` (`formal_counterexample`) is the
+Lean twin of the Python certificate of `KN-FIND-936151`: for two finite `F_2`
+systems (N <= 3) the kernel-`decide` theorems give `d_F = 3 > 2 = d'_F` in the
+inside form under the equality reading of condition (1). It is a new spec and
+carries a `proof_map` naming the unformalized transcription of Nagao's
+definitions. See the [report](../../docs/reports/2026-10-29-nagao-lemma4-lean/report.md)
+(hypothesis-delta table, receipt). It says nothing about Proposition 5.
+
+## Galbraith MPKC v2 Montgomery reduction
+
+`galbraith-montgomery-reduction-20261101.yaml` targets the integer core of
+Galbraith's Lemma 2.5.3. Explicit witnesses for the two modular congruences
+construct `w`; representative bounds prove `0 <= w < n`; and the conclusion
+is stated as `R*w = a (mod n)`. The source's odd-`n`, power-of-two-`R`
+assumptions are replaced by the negative-inverse congruence they supply, as
+recorded in the target's
+[theory note](../../research/galbraith_mpkc_formalization_20261101/theory.md).
+
+The module compiles standalone on the pinned toolchain. It remains pending the
+formal lane's project-wide axiom audit and independent semantic-fidelity
+review: the first cold project build exhausted its execution environment while
+compiling an unrelated pre-existing Semaev certificate. The target proves no
+implementation, constant-time, inverse-construction, or complexity claim.
 
 ## Natural follow-ups, deliberately not specced yet
 

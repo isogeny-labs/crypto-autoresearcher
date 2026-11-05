@@ -116,7 +116,9 @@ def cmd_autopilot(args: argparse.Namespace) -> int:
     from orchestration.adapter.config import load as load_config
 
     from . import presets, workers
-    from .autopilot import candidates, report, select_next, supervise
+    from .autopilot import candidates, report, select_admitted, select_next, supervise
+    from tools.research_wip import Gate as WipGate
+    from tools.research_wip import PolicyError as WipPolicyError
 
     if args.list_presets:
         _emit({"default": presets.DEFAULT_PRESET, "presets": presets.describe()})
@@ -128,6 +130,16 @@ def cmd_autopilot(args: argparse.Namespace) -> int:
     if args.report:
         _emit(report(state_dir))
         return 0
+    wip_policy_path = (Path(args.wip_policy_file).expanduser().resolve()
+                       if args.wip_policy_file
+                       else repo / "docs" / "research-wip-policy.json")
+    wip_gate = None
+    if args.wip_policy != "off":
+        try:
+            wip_gate = WipGate(wip_policy_path, mode=args.wip_policy)
+        except WipPolicyError as exc:
+            print(f"autopilot: {exc}", file=sys.stderr)
+            return 2
     if args.model:
         if not args.model_caps:
             print("autopilot: --model needs --model-caps "
@@ -155,10 +167,16 @@ def cmd_autopilot(args: argparse.Namespace) -> int:
             "coordinator_candidates": [
                 {"backend": b, "model": m, "model_verified": r["verified_model"]}
                 for b, m, r in eligible],
-            "worker_binary": shutil.which(workers.binary_for(args.runtime))}
+            "worker_binary": shutil.which(workers.binary_for(args.runtime)),
+            "wip_policy": args.wip_policy,
+            "wip_policy_file": str(wip_policy_path)}
     if args.dry_run:
-        action = select_next(repo)
+        action, blocked = select_admitted(
+            repo, selector=select_next, excluded=set(), admission=wip_gate)
         _emit({"action": action.as_dict() if action else None, "plan": plan,
+               "wip": (wip_gate.report() if wip_gate else
+                       {"available": None, "source": "disabled", "violations": []}),
+               "admission_blocked": blocked,
                "advisory_only": True, "model_calls": 0})
         return 0
     if not plan["worker_binary"]:
@@ -189,12 +207,15 @@ def cmd_autopilot(args: argparse.Namespace) -> int:
                       timeout=args.timeout, attach=args.attach,
                       runtime=args.runtime, delivery=args.delivery, batch_lane=lane,
                       batch_poll_seconds=args.batch_poll_seconds,
-                      wait_batches=args.wait_batches)
+                      wait_batches=args.wait_batches, admission=wip_gate)
     _emit({"attempts": state["attempts"],
            "completed_actions": state["completed_actions"],
            "pending_reconcile": state.get("pending_reconcile"),
            "pending_batches": state.get("pending_batches"),
-           "plan": plan, "metrics": report(state_dir)})
+           "plan": plan,
+           "wip": (wip_gate.report() if wip_gate else
+                   {"available": None, "source": "disabled", "violations": []}),
+           "metrics": report(state_dir)})
     return 0
 
 
@@ -269,6 +290,12 @@ def build_parser() -> argparse.ArgumentParser:
     autopilot.add_argument("--max-actions", type=int)
     autopilot.add_argument("--dry-run", action="store_true")
     autopilot.add_argument("--report", action="store_true")
+    autopilot.add_argument("--wip-policy", choices=("off", "advisory", "enforce"),
+                           default="off",
+                           help="GitHub PR admission: off, report only, or block "
+                                "work-expanding actions while over cap")
+    autopilot.add_argument("--wip-policy-file", type=Path,
+                           help="policy JSON (default: docs/research-wip-policy.json)")
     autopilot.add_argument("--idle-seconds", type=int, default=60)
     autopilot.add_argument("--retry-seconds", type=int, default=300)
     autopilot.add_argument("--timeout", type=int, default=7200,

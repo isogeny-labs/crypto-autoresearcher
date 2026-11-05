@@ -1,0 +1,22 @@
+Snapshot: 856118cd598b7184884c91672421df2dc5191857
+Parent: a4054418d345c69df73be9381131298e4678cbd4
+
+python3 tools/check_merge_hygiene.py --base origin/main
+First attempt exit 1: trusted ledger/goals prefix absent from sparse checkout.
+After materializing ledger/goals, second attempt exit 1: sparse refresh pruned
+the two newly committed hypothesis/handoff files outside its original cones.
+Restored only those exact committed files with:
+git restore --ignore-skip-worktree-bits --source=HEAD -- ledger/hypotheses/H-XEDN-292264.yaml ledger/handoffs/TASK-20261101-fbd859.yaml
+Third attempt exit 0:
+PASS: no conflict markers, no unparseable records, no duplicate registry keys, no changed runbook-session files, no schema-failing new run manifests, no identifier collisions, no new legacy GOAL identifiers
+
+python3 tools/check_run_immutability.py origin/main HEAD
+Exit 0:
+OK: no committed run artifacts were modified or deleted
+
+No validation rules were changed. Full ledger validation remains unavailable
+locally due to sparse checkout; scoped checks do not substitute for it.
+Snapshot paths and SHA256 values in archive-receipt.json were computed from
+Git objects, not from guessed output. The receipt binds the prior snapshot
+commit and intentionally does not contain its own future commit SHA.
+Independent full-proof review and the proposed finite grid remain pending.

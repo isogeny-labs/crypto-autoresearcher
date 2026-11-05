@@ -1,0 +1,32 @@
+review_attestation:
+  task_id: TASK-20261103-594c2a
+  conductor_task: T-1468
+  source_commit: 7c028ce9ccdec6c1ee7d4c2b3b60120ed3dcbd9e
+  joints_owned:
+    - J1 frozen curve and source-to-code bridge
+  verdict: breaks
+  read_sibling_reports: false
+  sibling_report_access: false
+  scope: >-
+    Frozen curve and 14 modes pass their arithmetic and checker controls; the
+    identity-point driver path fails, and the reported counts do not attest
+    executed group additions.
+  sources_read:
+    - docs/reports/2026-11-03-bsgs-coverage-review/handoffs/TASK-20261103-594c2a.yaml
+    - docs/reports/2026-11-03-bsgs-coverage-review/review-plan.yaml
+    - docs/reports/2026-11-03-bsgs-coverage-review/blind-input.yaml
+    - docs/reports/2026-11-03-bsgs-coverage-review/input-bindings.json
+    - AGENTS.md (pinned git-show output, truncated by tool display)
+    - examples/runbooks/toy-ecdlp-bsgs/README.md (pinned git show)
+    - examples/runbooks/toy-ecdlp-bsgs/curve.json (pinned git show)
+    - examples/runbooks/toy-ecdlp-bsgs/solve.py (pinned git show)
+    - examples/runbooks/toy-ecdlp-bsgs/check.py (pinned git show)
+    - examples/runbooks/toy-ecdlp-bsgs/trial-plan.json (pinned git show and parsed fields)
+    - examples/runbooks/toy-ecdlp-bsgs/runbook.yaml (pinned excerpts and hash)
+    - tools and docs searched for attestation schema (no matching content)
+    - /var/lib/spot-codex/home/skills/review-evidence/SKILL.md (workflow applicability checked)
+    - /var/lib/spot-codex/home/memories/MEMORY.md (keyword search, no matching content)
+    - docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-594c2a/check_j1.py
+    - docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-594c2a/raw_checks.json
+  raw_checks: docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-594c2a/raw_checks.json
+  script: docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-594c2a/check_j1.py

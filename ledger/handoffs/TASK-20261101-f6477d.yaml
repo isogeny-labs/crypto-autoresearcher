@@ -1,0 +1,67 @@
+{
+  "handoff": {
+    "id": "TASK-20261101-f6477d",
+    "from": "coordinator",
+    "to": "executor",
+    "objective": "Run one fresh exact formal verification of the additive complete-real-model target and write a new immutable receipt",
+    "uncertainty_reduced": "Whether the exact published spec/module/aggregate theorem passes the pinned Lean build, forbidden-construct scan, named target audit and transitive axiom audit.",
+    "inputs": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+      "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+      "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+      "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+      "formal/lean-toolchain",
+      "formal/lake-manifest.json",
+      "formal/lakefile.toml",
+      "orchestration/formal/cli.py",
+      "orchestration/formal/receipts.py",
+      "tools/formal_task.py",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "Invoke only after the source snapshot is committed, pushed, reviewable and natively verified. Pin the exact source commit and require the materialized files to match its hashes.",
+      "No source, target, correction, note, queue, claim, ledger, workflow, dependency or toolchain edit; no MathCode/proof generation and no scientific trial.",
+      "Execute exactly one fresh verification work unit through /run TASK-20261101-f6477d using python3 -m orchestration.formal.cli verify --task-file formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml --artifact-out docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json --build-timeout 1800.",
+      "The receipt path must not preexist. Preserve any infrastructure failure or proof failure as the actual receipt; do not retry, overwrite, hand-edit or relabel it under this task.",
+      "Require exact task/spec/source/toolchain/manifest hashes, theorem_file CryptoResearch/IC/ArityOracleCompleteRealModel.lean, theorem_name CryptoResearch.IC.ArityOracleCompleteRealModel.complete_real_model, nonempty named theorem audit, module build, no forbidden constructs, and transitive axiom audit with no unapproved axiom/sorryAx.",
+      "A machine_verified receipt remains semantic_review pending. It is not an algorithm/PFSE result and cannot open review until the verification snapshot task independently accepts custody."
+    ],
+    "deliverables": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json"
+    ],
+    "artifact_paths": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json"
+    ],
+    "write_scope": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json"
+    ],
+    "archived_by": "TASK-20261101-78aeef",
+    "inference": {
+      "policy": "executor-implementation",
+      "reasoning_effort": "medium",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "wall_clock_seconds": 3600,
+      "memory_gb": 8,
+      "maximum_runs": 1,
+      "scientific_runs": 0
+    },
+    "completion_gate": [
+      "Exactly one new immutable formal_verification.v1 receipt records the actual command, source commit, exact four primary hashes, complete workspace/verifier maps, Lean version, build log, target audit, axiom audit and any infrastructure failure.",
+      "Success requires machine_verified=true for the exact requested aggregate theorem with build and axiom audit passed and no forbidden construct; otherwise task is not marked completed and no semantic conclusion follows.",
+      "semantic_review remains required/pending; actual executor runtime/model/effort and zero scientific runs are reported."
+    ],
+    "return_format": "Fresh receipt path/hash, exact target/build/axiom status and any infrastructure or proof obstruction; no semantic verdict.",
+    "execution_route": {
+      "kind": "formal_verify",
+      "public_invocation": "/run TASK-20261101-f6477d",
+      "maximum_verifications": 1
+    }
+  }
+}
+

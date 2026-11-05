@@ -1,0 +1,43 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-12feb5
+claim_id: ATTACK-SCHNORR-SPECIAL-SOUNDNESS
+kind: formalize_claim
+source: research/cryptographic_assumption_attack_corpus_20261101/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.SchnorrSpecialSoundness.extract_of_distinct_challenges
+theorem_file: CryptoResearch/AttackCorpus/SchnorrSpecialSoundness.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  This target is the scalar algebra at the core of two-transcript extraction,
+  not a proof of knowledge, Fiat-Shamir theorem, or discrete-log reduction.
+  The two equations share the same commitment scalar r, their challenges are
+  distinct, and ZMod q is a field because q is prime. Those hypotheses must
+  appear in the theorem statement.
+
+  Companion negative controls should be placed in the same Lean module even
+  though the exact audited declaration is the positive theorem: with equal
+  challenge zero, the equations do not constrain x; over ZMod 4, distinct
+  challenges differing by 2 are not enough because 2 is a nonunit (for
+  c1=2,c2=0,r=s1=s2=0, both x=0 and x=2 fit). These controls delimit the
+  theorem but are not claims about a concrete transcript parser or protocol.
+claim: |
+  Let q be prime and let r,s1,s2,c1,c2,x : ZMod q. If
+
+      s1 = r + c1*x,
+      s2 = r + c2*x,
+      c1 != c2,
+
+  then c1-c2 is invertible and the witness is uniquely determined by
+
+      x = (s1-s2) / (c1-c2).
+
+  The same-commitment, distinct-challenge and prime-field hypotheses are part
+  of the claim. This is only the scalar extraction identity; connecting group
+  transcript equations to these scalar equalities, proving knowledge
+  soundness, or applying Fiat-Shamir requires separate theorems.
+proof_map:
+  prerequisites:
+    - "Both accepting transcript equations have already been reduced faithfully to scalar equalities in ZMod q and use the same commitment scalar r"
+    - "q is prime, so ZMod q is a field and a nonzero challenge difference is invertible"
+    - "No extractor runtime, rewinding probability, random-oracle programming, transcript encoding, subgroup membership or discrete-log reduction is formalized"

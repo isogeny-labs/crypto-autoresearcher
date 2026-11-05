@@ -1,0 +1,37 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261101-178e5a
+claim_id: NAGAO-2015-984-LEMMA4-RECOVERY-RULE
+kind: formalize_claim
+source: knowledge/findings/KN-FIND-936151.md
+source_status: STATED
+theorem_name: CryptoResearch.Nagao.RecoveryRule.recovery
+theorem_file: CryptoResearch/Nagao/RecoveryRule.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Formalizes the recovery rule of KN-FIND-936151 section 4 (hypotheses U-3 and
+  U-4), proved on paper as Proposition 6 of papers/first-fall-lean/paper.tex.
+  Unlike the Lemma 4 certificates, this is a universally quantified theorem over
+  Mathlib MvPolynomial: any commutative ring R, any finite variable type, any
+  finite family of generators. The field equations are X_j^2 - X_j and `red`
+  clamps every exponent to at most one. Proof: p - red p is a combination
+  sum_j h_j (X_j^2 - X_j) with every product of total degree <= deg p (induction
+  on monomials, one exponent step at a time), and deg red p <= deg p. Built
+  locally against the pinned Mathlib before push; #print axioms reports only
+  propext, Classical.choice, Quot.sound.
+  The fake sum is defined as red of the unreduced sum; the list model of
+  Lemma4Witness.lean reduces the sum of reduced products, which agrees because
+  red is linear and idempotent (not proved here). Non-vacuity is not
+  machine-checked: over F_2[X_0, X_1], f_1 = X_0 X_1, f_2 = X_0 X_1 + X_0^2,
+  g = (1, 1) is a fake fall at degree 2 satisfying U-4 (f_1 + f_2 = X_0^2 reduces
+  to X_0), checked by hand only.
+claim: |
+  Let S = F u S_fe with S_fe the field equations X_j^2 - X_j, and let (g_i) be a
+  fake fall at degree v for the generators in F (products and sum taken after
+  reduction modulo S_fe, equality reading). If every unreduced product satisfies
+  deg(g_i f_i) <= v, then S has a true fall at degree v, so d_F(S) <= v.
+proof_map:
+  depends_on: [nagao-lemma4-outside-counterexample-20261031.yaml]
+  prerequisites:
+    - "the MvPolynomial definitions IsFall and IsFakeFall transcribe Definitions 5 and 6 of Nagao 2015/984 under the equality reading; the transcription is not a Lean theorem"
+    - "red of the unreduced sum equals the reduction of the sum of reduced products (linearity and idempotence of red), which is how the list model of Lemma4Witness.lean computes the fake sum"
