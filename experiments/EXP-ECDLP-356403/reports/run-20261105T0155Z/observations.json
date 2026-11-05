@@ -1,0 +1,374 @@
+{
+  "editables": {
+    "builder_python": {
+      "sha256": "c8b66873ba887d6886f7e80d990b0e073066a4ec19dc770cf3eda3af3b2b9e8c",
+      "text": "import datetime,hashlib,json,subprocess,time\nfrom pathlib import Path\nimport typst\nR=Path('/workspace/classical-ecdlp-validation-ready');W=Path(__file__).resolve().parent;P=W/'proposed';E='experiments/EXP-ECDLP-356403';REPORT=E+'/reports/run-20261105T0155Z';OUT=P/REPORT;OUT.mkdir(parents=True,exist_ok=True);RUN='RUN-ECDLP-0ade3c';BASE=E+'/runs/'+RUN;ORIG=E+'/reports/full48-'+RUN+'/observations.json';HEAD='662bfa4775086f2b756d746548157fd4ac5054d3'\ndef sha(b):return hashlib.sha256(b).hexdigest()\ndef read(p):return json.loads((R/p).read_text())\ndef pin(p,root=R):\n b=(root/p).read_bytes();return {'path':p,'bytes':len(b),'sha256':sha(b)}\nassert pin(ORIG)['sha256']=='641d91c89c764a4da923e28e0c60c112ea12dc60a09a393d812ad726ee4a58e3';o=read(ORIG);assert o['native_status']=='infrastructure_error' and o['generated']['curve_entries']==48 and o['candidate']['engine_output_present'] is False\nq=read('coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/dispatch_queue.json');assert {REPORT+'/'+x for x in ['observations.json','report.md','diagram.svg','report.pdf','visual-inspection.json']}.issubset(next(t for t in q['tasks'] if t['id']=='TASK-20261105-ad13ba')['artifact_paths'])\nreceipt=read(BASE+'/execution-receipt.json');benchmark='docs/benchmarks/records/20261105T0212Z-classical-fresh48-356403.json';bench=read(benchmark);assert bench['extensions']['physical_attempt_count_across_both_records']==1 and bench['extensions']['measurement_reexecuted'] is False\nsvg='''<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1000\" height=\"350\" viewBox=\"0 0 1000 350\"><rect width=\"1000\" height=\"350\" fill=\"#f7f9fc\"/><style>text{font-family:DejaVu Sans,sans-serif;fill:#15253d}.title{font-size:23px;font-weight:700}.body{font-size:17px}.small{font-size:15px}</style><text x=\"28\" y=\"38\" class=\"title\">One physical attempt; paired solver measurements absent</text><rect x=\"28\" y=\"65\" width=\"285\" height=\"135\" rx=\"10\" fill=\"#dcf0e7\" stroke=\"#39836a\"/><text x=\"46\" y=\"96\" class=\"title\">Generator complete</text><text x=\"46\" y=\"128\" class=\"body\">48 curves \u00b7 1,536 targets</text><text x=\"46\" y=\"158\" class=\"body\">382,464 scheduled jobs</text><text x=\"46\" y=\"184\" class=\"small\">return 0 \u00b7 actual wait recorded</text><path d=\"M313 130 H361\" stroke=\"#43546c\" stroke-width=\"3\"/><path d=\"M352 123 L362 130 L352 137\" fill=\"none\" stroke=\"#43546c\" stroke-width=\"3\"/><rect x=\"365\" y=\"65\" width=\"273\" height=\"135\" rx=\"10\" fill=\"#fff0d4\" stroke=\"#ba8635\"/><text x=\"383\" y=\"96\" class=\"title\">Interstage failure</text><text x=\"383\" y=\"128\" class=\"body\">Observer idle receive: 5 s</text><text x=\"383\" y=\"158\" class=\"body\">Timeout before next arm</text><text x=\"383\" y=\"184\" class=\"small\">No open arm in receive state</text><path d=\"M638 130 H680\" stroke=\"#43546c\" stroke-width=\"3\"/><path d=\"M671 123 L681 130 L671 137\" fill=\"none\" stroke=\"#43546c\" stroke-width=\"3\"/><rect x=\"686\" y=\"65\" width=\"286\" height=\"135\" rx=\"10\" fill=\"#f7dfdf\" stroke=\"#a85c5c\"/><text x=\"704\" y=\"96\" class=\"title\">Measurements absent</text><text x=\"704\" y=\"128\" class=\"body\">Candidate barrier: BrokenPipe</text><text x=\"704\" y=\"158\" class=\"body\">killed / waited \u22129</text><text x=\"704\" y=\"184\" class=\"small\">Engine absent; BSGS not run</text><text x=\"28\" y=\"247\" class=\"body\">RUN-ECDLP-0ade3c \u00b7 native infrastructure_error \u00b7 driver 1 \u00b7 checker absent</text><text x=\"28\" y=\"279\" class=\"body\">Outer observed elapsed 239.009645 s; wall_valid=false (unqualified operational timing)</text><text x=\"28\" y=\"314\" class=\"small\">Diagram of recorded pipeline: no two comparable solver values exist. Scheduled jobs are not completed candidate jobs.</text></svg>''';(OUT/'diagram.svg').write_text(svg)\ncommand=(R/BASE/'command.txt').read_text().strip();outer=' '.join(bench['commands'][0]['argv']);nonce=read(E+'/production-config.json')['sampler']['nonce']\nmd=f'''# Full48 generation completed; paired solver measurements absent\\n\\nEXP-ECDLP-356403 \u00b7 H-ECDLP-6674c9 \u00b7 GOAL-ECDLP-e70832 \u00b7 TASK-20261105-6c94f6\\n\\nOne physical attempt, `{RUN}`, ended in native `infrastructure_error`: driver 1, checker absent, outer wait returned 3. The generator completed 48 curves,1,536 targets and382,464 scheduled jobs, with return 0 and an actual wait. Candidate observation hit BrokenPipe before engine output; the candidate was killed and waited at \u22129. The baseline process/measurement is absent. These missing measurements are not zero recoveries.\\n\\n![Recorded pipeline](diagram.svg)\\n\\n## Recorded values and missing data\\n\\n| Item | Recorded observation |\\n|---|---|\\n| Requested / output-validated / infrastructure-failed native trials |1 /0 /1|\\n| Outer observed elapsed |239.00964503300202 seconds; wall_valid=false|\\n| Benchmark command wall |238.921 seconds; separate recorded command scope, INVALID|\\n| CPU time / solver timing / counters / aggregate RSS |Not recorded or not qualified|\\n| Generated public cohort |48 curve entries,1,536 target entries,382,464 scheduled jobs|\\n| Retained logical raw inventory |31 files;324,636,014 bytes|\\n| Candidate engine / working BSGS measurements |Absent / not executed|\\n| Native paired typed export / final checker |Absent / not run|\\n\\nThe observer trace records TimeoutError in the receive loop after the generator closed. With no outstanding arm, the original source selected a5-second receive timeout while adapter postprocessing continued. The subsequent candidate barrier failed. This report describes that operational sequence; it assigns no attack-cost, asymptotic, population or mathematical conclusion.\\n\\n## Frozen execution provenance\\n\\nSource publication: `af8a54211bcd6f0503c3d58d159289bff6a023ce`; launch context: `10b03d5572ab8894c323d7ca5f0cd409981da5e7`, recorded clean. Original plan SHA:`{receipt['plan_sha256']}`. Original approval DEC-20261105-219419, one-attempt contract retained unchanged.\\n\\nNative driver command: `{command}`\\n\\nOuter command: `{outer}`\\n\\nOriginal public nonce:`{nonce}`; literal266 exclusions and sampler remain in `{E}/production-config.json`. Stage 3600s/grace 2, child 6 GiB/native 12 GiB and other original limits are provenance, not fit assurance. Host recorded `{bench['host']['cpu']}`,5 online CPUs; declared CPU cap4.\\n\\nOriginal full schedule:216 setups,345,600 singles,36,864 intents/traces,73,728 cells,8 calibration arms,all6 confirmation cells,64 targets\u00d78 blindings per confirmation curve,1,536 working-BSGS solves. These are planned workload counts, not completed candidate/BSGS work. Existing fixed software controls were inherited; no new A/A, planted or null physical arm ran. No certificate or attack claim was established.\\n\\n## Custody and interpretation\\n\\nThe original observation sidecar remains byte-exact (`641d91c89c764a4da923e28e0c60c112ea12dc60a09a393d812ad726ee4a58e3`). Raw31 payload identities and native receipt were published before this report in commit `a66d1035b7fa9b8a4b1678e7efaef8dcfde9bed3`; large payload identities use committed storage pointers and root full-GET receipts. PCC-20261105-9149bd remains unverified.\\n\\nBenchmark records `20261105T0155Z-classical-fresh48-356403` and additive correction `20261105T0212Z-classical-fresh48-356403` describe the SAME physical RUN. Both are INVALID; the correction supplies raw inventory, explicitly measurement_reexecuted=false, physical_attempt_count_across_both_records=1. They do not count as two attempts.\\n\\nPublic cohort SHA:`{o['generated']['cohort_public_sha256']}`; canonical job-plan SHA:`{o['generated']['job_plan_sha256']}`. A prospective recovery must retain these identities and charge regeneration separately. This report approves no retry, recovery or source change and changes no hypothesis/goal status. The scoped operational next step is separately recorded interstage receive repair/control work; its outcomes are outside this first-attempt report.\\n''';(OUT/'report.md').write_text(md)\ntyp='''#set page(paper: \"a4\", margin: (x: 17mm, y: 15mm))\n#set text(font: \"DejaVu Sans\", size: 9.5pt)\n#set par(justify: false, leading: 0.55em)\n#set heading(numbering: none)\n#text(size: 20pt, weight: \"bold\")[Full48 generation completed]\n#linebreak()\n#text(size: 13pt)[Paired solver measurements absent]\n#v(6pt)\nEXP-ECDLP-356403 \u00b7 RUN-ECDLP-0ade3c \u00b7 5 November 2026\n\nThe single physical attempt ended in native infrastructure_error: driver 1, checker absent, outer wait returned 3. The generator completed 48 curves and1,536 targets. Candidate observation hit BrokenPipe before engine output; the candidate was killed and actually waited at \u22129. No baseline process measurement exists. Missing solver data is not zero recovery.\n\n#image(\"diagram.svg\", width: 100%)\n#table(columns: (1.4fr, 2.1fr), inset: 5pt, stroke: 0.4pt + luma(190),\n[Recorded quantity], [Value and scope],\n[Native attempts / validated / infrastructure failed], [1 / 0 / 1],\n[Generator public entries], [48 curves; 1,536 targets; 382,464 scheduled jobs],\n[Outer elapsed], [239.009645033 seconds; wall_valid=false],\n[Benchmark command wall], [238.921 seconds; separate scope; INVALID],\n[Logical raw inventory], [31 files; 324,636,014 bytes],\n[Candidate engine / BSGS measurements], [Absent / not executed],\n[CPU time, counters, qualified solver time], [Not recorded or not qualified])\n\nThe observer trace records TimeoutError after the generator closed. The original receive loop selected 5 seconds when no arm was outstanding while adapter postprocessing continued. The subsequent candidate barrier failed. This is an operational record; no attack-cost or asymptotic conclusion follows.\n\n#pagebreak()\n= Frozen execution and custody\n#text(size: 8pt)[Source: af8a54211bcd6f0503c3d58d159289bff6a023ce\\nLaunch context: 10b03d5572ab8894c323d7ca5f0cd409981da5e7 (recorded clean)\\nNative RUN: RUN-ECDLP-0ade3c; task: TASK-20261105-6c94f6\\nHypothesis: H-ECDLP-6674c9; goal: GOAL-ECDLP-e70832]\n\nThe exact native command is retained in command.txt and the report Markdown; the outer command ran tools/experiment_execution.py run --plan experiments/EXP-ECDLP-356403/trial-plan.json with the original owner and epoch 1. The original source/config/plan and public nonce/exclusion list remain preserved. Stage 3600s/grace 2, child 6 GiB/native 12 GiB and declared 4 CPU were resource caps, not predictions of completion. Host CPU: Intel Xeon Platinum 8573C ; 5 online CPUs recorded. CPU time is unavailable.\n\nOriginal schedule (planned, not completed candidate work): 216 setups; 345,600 singles; 36,864 intents and traces; 73,728 cells; 8 calibration arms; all 6 confirmation cells; 64 targets\u00d78 blindings per confirmation curve; 1,536 working-BSGS solves. The generator output is separately paid. Existing fixed software controls were inherited; no new A/A, planted or null physical arm ran. No paired export or final checker result exists.\n\nThe 31 raw payload identities and receipt were published first in a66d1035b7fa9b8a4b1678e7efaef8dcfde9bed3. Large payloads have committed identity pointers and root full-GET receipts. The original sidecar remains byte-exact. PCC-20261105-9149bd is unverified.\n\nTwo INVALID benchmark records refer to this SAME physical attempt. The 0212Z record additively corrects the 0155Z raw inventory and explicitly records measurement_reexecuted=false and physical_attempt_count_across_both_records=1. It is not a second attempt.\n\n#text(size: 8pt)[Public cohort SHA:\\n76c329506086cd8572534b49080f33b7c0725e3245215c0236b503faa2a4b0bc\\nCanonical job-plan SHA:\\n91a1730463e6cd8bec8453d6417a384709b240949085a04d0e941612defd5a3a]\n\nA prospective recovery must keep this public cohort and charge each actual regeneration. Nothing here authorizes a retry or changes source acceptance, mathematical status or the hypothesis. Later interstage control work is separate from these first-attempt observations.\n'''\n(W/'report.typ').write_text(typ);(OUT/'report.typ').write_text(typ);start=time.monotonic();typst.compile(str(OUT/'report.typ'),output=str(OUT/'report.pdf'));render={'argv':'typst Python binding compile report.typ -> report.pdf','returncode':0,'elapsed_seconds':time.monotonic()-start};(OUT/'report.typ').unlink();(W/'render-command.json').write_text(json.dumps(render,indent=2)+'\\n')\nsources=[ORIG,BASE+'/execution-receipt.json',BASE+'/execution/candidate/barrier-failure.json',BASE+'/shared/generator/seal.json','docs/benchmarks/records/20261105T0155Z-classical-fresh48-356403.json',benchmark,'pcc/claims/PCC-20261105-9149bd.json'];obs={'schema':'classical.ecdlp.full48-operational-run-report/v1','recorded_at':o['recorded_at'],'experiment_id':o['experiment_id'],'run_id':RUN,'source_observations':pin(ORIG),'metric_source_sha256':{x:pin(x)['sha256'] for x in sources},'native_status':o['native_status'],'original_observations':o,'physical_attempts_across_two_benchmark_records':1,'pcc_standing':'unverified','editables':{'report_typst':{'text':typ,'sha256':sha(typ.encode())},'builder_python':{'text':Path(__file__).read_text(),'sha256':sha(Path(__file__).read_bytes())}},'report_scope':'Descriptive first physicalattempt only; no scientificpairedmeasurement or C4/recovery/source-status decision.'};(OUT/'observations.json').write_text(json.dumps(obs,indent=2,sort_keys=True)+'\\n');subprocess.run(['pdftoppm','-scale-to','1400','-png',str(OUT/'report.pdf'),str(W/'view')],check=True);print(json.dumps({'reportroot':str(OUT),'PDF':pin(REPORT+'/report.pdf',P),'views':[str(p) for p in sorted(W.glob('view-*.png'))]},indent=2))\n"
+    },
+    "report_typst": {
+      "sha256": "f2209192c2a4b0d5781b175d83894bcaca523c7f9bdccb925395c829c5c5ddd9",
+      "text": "#set page(paper: \"a4\", margin: (x: 17mm, y: 15mm))\n#set text(font: \"DejaVu Sans\", size: 9.5pt)\n#set par(justify: false, leading: 0.55em)\n#set heading(numbering: none)\n#text(size: 20pt, weight: \"bold\")[Full48 generation completed]\n#linebreak()\n#text(size: 13pt)[Paired solver measurements absent]\n#v(6pt)\nEXP-ECDLP-356403 \u00b7 RUN-ECDLP-0ade3c \u00b7 5 November 2026\n\nThe single physical attempt ended in native infrastructure_error: driver 1, checker absent, outer wait returned 3. The generator completed 48 curves and1,536 targets. Candidate observation hit BrokenPipe before engine output; the candidate was killed and actually waited at \u22129. No baseline process measurement exists. Missing solver data is not zero recovery.\n\n#image(\"diagram.svg\", width: 100%)\n#table(columns: (1.4fr, 2.1fr), inset: 5pt, stroke: 0.4pt + luma(190),\n[Recorded quantity], [Value and scope],\n[Native attempts / validated / infrastructure failed], [1 / 0 / 1],\n[Generator public entries], [48 curves; 1,536 targets; 382,464 scheduled jobs],\n[Outer elapsed], [239.009645033 seconds; wall_valid=false],\n[Benchmark command wall], [238.921 seconds; separate scope; INVALID],\n[Logical raw inventory], [31 files; 324,636,014 bytes],\n[Candidate engine / BSGS measurements], [Absent / not executed],\n[CPU time, counters, qualified solver time], [Not recorded or not qualified])\n\nThe observer trace records TimeoutError after the generator closed. The original receive loop selected 5 seconds when no arm was outstanding while adapter postprocessing continued. The subsequent candidate barrier failed. This is an operational record; no attack-cost or asymptotic conclusion follows.\n\n#pagebreak()\n= Frozen execution and custody\n#text(size: 8pt)[Source: af8a54211bcd6f0503c3d58d159289bff6a023ce\nLaunch context: 10b03d5572ab8894c323d7ca5f0cd409981da5e7 (recorded clean)\nNative RUN: RUN-ECDLP-0ade3c; task: TASK-20261105-6c94f6\nHypothesis: H-ECDLP-6674c9; goal: GOAL-ECDLP-e70832]\n\nThe exact native command is retained in command.txt and the report Markdown; the outer command ran tools/experiment_execution.py run --plan experiments/EXP-ECDLP-356403/trial-plan.json with the original owner and epoch 1. The original source/config/plan and public nonce/exclusion list remain preserved. Stage 3600s/grace 2, child 6 GiB/native 12 GiB and declared 4 CPU were resource caps, not predictions of completion. Host CPU: Intel Xeon Platinum 8573C ; 5 online CPUs recorded. CPU time is unavailable.\n\nOriginal schedule (planned, not completed candidate work): 216 setups; 345,600 singles; 36,864 intents and traces; 73,728 cells; 8 calibration arms; all 6 confirmation cells; 64 targets\u00d78 blindings per confirmation curve; 1,536 working-BSGS solves. The generator output is separately paid. Existing fixed software controls were inherited; no new A/A, planted or null physical arm ran. No paired export or final checker result exists.\n\nThe 31 raw payload identities and receipt were published first in a66d1035b7fa9b8a4b1678e7efaef8dcfde9bed3. Large payloads have committed identity pointers and root full-GET receipts. The original sidecar remains byte-exact. PCC-20261105-9149bd is unverified.\n\nTwo INVALID benchmark records refer to this SAME physical attempt. The 0212Z record additively corrects the 0155Z raw inventory and explicitly records measurement_reexecuted=false and physical_attempt_count_across_both_records=1. It is not a second attempt.\n\n#text(size: 8pt)[Public cohort SHA:\n76c329506086cd8572534b49080f33b7c0725e3245215c0236b503faa2a4b0bc\nCanonical job-plan SHA:\n91a1730463e6cd8bec8453d6417a384709b240949085a04d0e941612defd5a3a]\n\nA prospective recovery must keep this public cohort and charge each actual regeneration. Nothing here authorizes a retry or changes source acceptance, mathematical status or the hypothesis. Later interstage control work is separate from these first-attempt observations.\n"
+    }
+  },
+  "experiment_id": "EXP-ECDLP-356403",
+  "metric_source_sha256": {
+    "docs/benchmarks/records/20261105T0155Z-classical-fresh48-356403.json": "3c3e3ff0fe86f3c2134c9923cfcd68c801790fc4e587d6ec2dfb7dc7f2cb1f30",
+    "docs/benchmarks/records/20261105T0212Z-classical-fresh48-356403.json": "4835fb0253d0b78848d41924444dfc0d911a1a4698900fea38da731984eb2d08",
+    "experiments/EXP-ECDLP-356403/reports/full48-RUN-ECDLP-0ade3c/observations.json": "641d91c89c764a4da923e28e0c60c112ea12dc60a09a393d812ad726ee4a58e3",
+    "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/execution-receipt.json": "938e2cd120951623948e206c00593e07b68aa82f1fd79d6d662940d5cf981e8c",
+    "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/execution/candidate/barrier-failure.json": "3d69c27a91fb02368f371cd4484d58da3d3108f1798e885e867c9c3401c750e7",
+    "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/seal.json": "2625b29189c25e66320d74b8a6f22c89932778b5c8f6503fb86b17da8fe12846",
+    "pcc/claims/PCC-20261105-9149bd.json": "6d5dc9c57c286d37bb13a5542dc7fd928b1e7af7c34d3298c629c50773c3f02f"
+  },
+  "native_status": "infrastructure_error",
+  "original_observations": {
+    "baseline": {
+      "measurement_status": "not_executed",
+      "process_record_present": false
+    },
+    "candidate": {
+      "barrier_failure": {
+        "error": "[Errno 32] Broken pipe",
+        "pid": 104692,
+        "returncode": -9,
+        "wait_returned": true
+      },
+      "engine_output_present": false,
+      "measurement_status": "not_completed"
+    },
+    "checker_returncode": null,
+    "driver_returncode": 1,
+    "expected_output_interface": {
+      "binding": "Native receipt hashes chosen top metadata and complete export/custody. Unchanged export/seals close inner raw; executor/result archive enumerate and directly bind all retained paths. No requirement to put innerraw into trial.artifacts.",
+      "complete_success_logical_paths": [
+        "check.stderr.log",
+        "check.stdout.log",
+        "command.txt",
+        "environment.json",
+        "execution-receipt.json",
+        "execution/baseline/barrier-ready.json",
+        "execution/baseline/command.txt",
+        "execution/baseline/environment.json",
+        "execution/baseline/launch.json",
+        "execution/baseline/manifest.yaml",
+        "execution/baseline/native-plan.json",
+        "execution/baseline/process.json",
+        "execution/baseline/raw-result.json",
+        "execution/baseline/result/analytical-reference.json",
+        "execution/baseline/result/bsgs.json",
+        "execution/baseline/result/verification.json",
+        "execution/baseline/seal.json",
+        "execution/baseline/source-after.json",
+        "execution/baseline/source-before.json",
+        "execution/baseline/stderr.log",
+        "execution/baseline/stdout.log",
+        "execution/candidate/barrier-ready.json",
+        "execution/candidate/command.txt",
+        "execution/candidate/environment.json",
+        "execution/candidate/launch.json",
+        "execution/candidate/manifest.yaml",
+        "execution/candidate/native-plan.json",
+        "execution/candidate/process.json",
+        "execution/candidate/raw-result.json",
+        "execution/candidate/result/raw/attempt-intents.jsonl",
+        "execution/candidate/result/raw/decoder-cells.jsonl",
+        "execution/candidate/result/raw/engine-completion.json",
+        "execution/candidate/result/raw/engine-summary.json",
+        "execution/candidate/result/raw/setups.jsonl",
+        "execution/candidate/result/raw/single-points.jsonl",
+        "execution/candidate/result/raw/traces.jsonl",
+        "execution/candidate/seal.json",
+        "execution/candidate/source-after.json",
+        "execution/candidate/source-before.json",
+        "execution/candidate/stderr.log",
+        "execution/candidate/stdout.log",
+        "execution/registry.json",
+        "execution/trusted-launch.jsonl",
+        "launch.json",
+        "manifest.yaml",
+        "raw-result.json",
+        "root-custody.json",
+        "root-custody/launch.json",
+        "root-custody/observations.jsonl",
+        "root-custody/seal.json",
+        "root-custody/start.json",
+        "root-custody/stderr.log",
+        "root-custody/stdout.log",
+        "root-custody/wait.json",
+        "shared/generation-process.json",
+        "shared/generation-start.json",
+        "shared/generation.json",
+        "shared/generator-public-guard.json",
+        "shared/generator/barrier-ready.json",
+        "shared/generator/process.json",
+        "shared/generator/result/generation.json",
+        "shared/generator/seal.json",
+        "shared/generator/source-after.json",
+        "shared/generator/source-before.json",
+        "shared/generator/stderr.log",
+        "shared/generator/stdout.log",
+        "shared/input.json",
+        "shared/trusted-launch.jsonl",
+        "shared/worker-context.json",
+        "stderr.log",
+        "stdout.log",
+        "typed-export/export.json",
+        "typed-export/export.validation.json"
+      ],
+      "conditional_failure_paths": [
+        "execution/{candidate,baseline}/barrier-failure.json",
+        "shared/generator/barrier-failure.json",
+        "every actual partial/error/temp/cache file and native generated failure output"
+      ],
+      "failure_custody": "Preserve every actual partial and failure; register actual selected additions and absent-output accounting before unclaimed result archive. Never fabricate missing members or retry a new cohort.",
+      "native_compaction_artifacts": [
+        "manifest.yaml",
+        "raw-result.json",
+        "typed-export/export.json",
+        "typed-export/export.validation.json",
+        "root-custody.json",
+        "root-custody/seal.json",
+        "root-custody/wait.json"
+      ],
+      "native_generated": [
+        "launch.json",
+        "execution-receipt.json",
+        "command.txt",
+        "environment.json",
+        "stdout.log",
+        "stderr.log",
+        "check.stdout.log",
+        "check.stderr.log"
+      ],
+      "publication": "Root-only declared publisher after actual native receipt/checker/waits; original hydrated bytes retained; identity .blob.json plus modern manifests; full uncached GET SHA/bytes verified without readback spool. Preserve immutable native artifact_storage mappings; hydrate exact native stored forms for status and all logical files for full export replay.",
+      "schema": "classical.ecdlp.fresh48-output-interface/v1"
+    },
+    "experiment_id": "EXP-ECDLP-356403",
+    "exponent": null,
+    "failure": {
+      "driver_trace": "stderr.log",
+      "mathematical_inference": null,
+      "observer_trace": "root-custody/stderr.log",
+      "recorded_exception": "Observer TimeoutError in receive loop; driver BrokenPipeError; candidate barrier killed/waited -9.",
+      "source_scope": "The receive loop selects5s when observed and closed arm sets are equal. Open-stage quiet budget and between-stage processing are distinct states."
+    },
+    "generated": {
+      "cohort_public_sha256": "76c329506086cd8572534b49080f33b7c0725e3245215c0236b503faa2a4b0bc",
+      "curve_entries": 48,
+      "curve_order_bit_counts": {
+        "10": 16,
+        "13": 16,
+        "16": 16
+      },
+      "expected_candidate_counts": {
+        "cells": 73728,
+        "intents": 36864,
+        "setups": 216,
+        "singles": 345600,
+        "traces": 36864
+      },
+      "generation_status": "complete",
+      "input_bytes": 72966009,
+      "input_sha256": "709ef1aa00668740e43d868840be167a1f13611b9dccd131e0d3465f0b69566f",
+      "job_entries": 382464,
+      "job_plan_sha256": "91a1730463e6cd8bec8453d6417a384709b240949085a04d0e941612defd5a3a",
+      "no_new_nonce_or_replacement_sampling": true,
+      "target_entries": 1536
+    },
+    "generator": {
+      "finished_at": "2026-11-05T01:58:42.453226+00:00",
+      "operational_complete": true,
+      "resource_stop": null,
+      "returncode": 0,
+      "started_at": "2026-11-05T01:55:06.638586+00:00",
+      "termination_ack": {
+        "returncode": 0,
+        "wait_returned": true
+      }
+    },
+    "goal_id": "GOAL-ECDLP-e70832",
+    "hypothesis_id": "H-ECDLP-6674c9",
+    "launch_context_commit": "10b03d5572ab8894c323d7ca5f0cd409981da5e7",
+    "native_status": "infrastructure_error",
+    "outer_actual_wait_returned": true,
+    "outer_elapsed_seconds": 239.00964503300202,
+    "outer_returncode": 3,
+    "performance_advantage": null,
+    "qualification": "[pcc:unverified] Descriptive source/receipt observations. Generator output is retained; candidate and baseline mathematical measurements were not produced. No failure rate or mathematical negative result inferred.",
+    "raw_bytes": 324636014,
+    "raw_inventory": [
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/check.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/check.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 416,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/command.txt",
+        "sha256": "7feda8f48c5e30e644249707cc651264eb6d39c9b78894f04556e7516e72aa18"
+      },
+      {
+        "bytes": 7210,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/environment.json",
+        "sha256": "0dc2fc6f816cda42cf5bd0e4f23718fb6d62f933e1fa793ff967eda6ac6744a8"
+      },
+      {
+        "bytes": 85,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/execution/candidate/barrier-failure.json",
+        "sha256": "3d69c27a91fb02368f371cd4484d58da3d3108f1798e885e867c9c3401c750e7"
+      },
+      {
+        "bytes": 2569220,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/execution/candidate/source-before.json",
+        "sha256": "1a036caa34e0f661ce3a132802c298139a4ff161f3a32193759495da1f75aa15"
+      },
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/execution/candidate/stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/execution/candidate/stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 1539,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/execution-receipt.json",
+        "sha256": "938e2cd120951623948e206c00593e07b68aa82f1fd79d6d662940d5cf981e8c"
+      },
+      {
+        "bytes": 1428,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/launch.json",
+        "sha256": "58a84bacf0c7bbd9fb930ba80c4a2fd061ca488e7897746e8d8c6e595a07df38"
+      },
+      {
+        "bytes": 821,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/root-custody/launch.json",
+        "sha256": "caf8568541ff00caa6055a4cb3dd4a9bfd4d58739bb800e0dfcdff0a69d2fcc9"
+      },
+      {
+        "bytes": 10416,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/root-custody/start.json",
+        "sha256": "4682f027a50a254ec39961a879fcc1102a761d258b78140719e1da92ed8c3a60"
+      },
+      {
+        "bytes": 1691,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/root-custody/stderr.log",
+        "sha256": "4d7bfa84bc4f929c0361d61bee6f2e48afcc00252451f56f91d3f0ca32073511"
+      },
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/root-custody/stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 115,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/root-custody/wait.json",
+        "sha256": "a01e92d099476046187732f7abad29665a8f040d165aa195650fa1d708f4204d"
+      },
+      {
+        "bytes": 5138757,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generation-process.json",
+        "sha256": "81decd929ffcad778a903b44c10b344d827605e1c31adc95a8fb12906f4f59f4"
+      },
+      {
+        "bytes": 10311,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generation-start.json",
+        "sha256": "aa71b8fd30e68db898fb14bb6d2d546b97c1625de4d812ae53253a4631609d73"
+      },
+      {
+        "bytes": 116790838,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generation.json",
+        "sha256": "3113b210f86286e13470381c63e6bc5c8878294717688038d384cc96682a642a"
+      },
+      {
+        "bytes": 5150204,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/process.json",
+        "sha256": "c8bf92fe73feeafe24d1750070d1881d980748e21510391b8d941486576f3979"
+      },
+      {
+        "bytes": 116790838,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/result/generation.json",
+        "sha256": "3113b210f86286e13470381c63e6bc5c8878294717688038d384cc96682a642a"
+      },
+      {
+        "bytes": 484,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/seal.json",
+        "sha256": "2625b29189c25e66320d74b8a6f22c89932778b5c8f6503fb86b17da8fe12846"
+      },
+      {
+        "bytes": 2569220,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/source-after.json",
+        "sha256": "68c25fbb18f1fcd2db8fb9f77104b864be9a62b042549f3542a67b5b54b16fee"
+      },
+      {
+        "bytes": 2569220,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/source-before.json",
+        "sha256": "4d1f0f4390dc2d86e6b59f730232bba35b999077706e3769cfe8722f91f0fafd"
+      },
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator/stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 582,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/generator-public-guard.json",
+        "sha256": "a1552cf87ca8fac0dc5c56e5d45beb8956ea2e266087592218fede4c6077af8b"
+      },
+      {
+        "bytes": 72966009,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/input.json",
+        "sha256": "709ef1aa00668740e43d868840be167a1f13611b9dccd131e0d3465f0b69566f"
+      },
+      {
+        "bytes": 8772,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/trusted-launch.jsonl",
+        "sha256": "c45c2458f153eb4208975645bdb652bcdfbad60699dfbd1c967012d63ca0d60a"
+      },
+      {
+        "bytes": 45181,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/shared/worker-context.json",
+        "sha256": "5308d939ff2d02c177dd983f64bc9cf58b3c64c60edf4c0adfceb1e98ea6efe6"
+      },
+      {
+        "bytes": 2657,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/stderr.log",
+        "sha256": "8cc4bf6b695df9c0f70c96b308aefd4713228f216a2ea3138d9a2d5ce6a9baeb"
+      },
+      {
+        "bytes": 0,
+        "path": "experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-0ade3c/stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "recorded_at": "2026-11-05T02:05:57.230538+00:00",
+    "run_id": "RUN-ECDLP-0ade3c",
+    "schema": "classical.ecdlp.failed-full48-observations/v1",
+    "scientific_validity": "not_assessed",
+    "source_publication_commit": "af8a54211bcd6f0503c3d58d159289bff6a023ce",
+    "task_id": "TASK-20261105-6c94f6",
+    "wall_valid": false
+  },
+  "pcc_standing": "unverified",
+  "physical_attempts_across_two_benchmark_records": 1,
+  "recorded_at": "2026-11-05T02:05:57.230538+00:00",
+  "report_scope": "Descriptive first physicalattempt only; no scientificpairedmeasurement or C4/recovery/source-status decision.",
+  "run_id": "RUN-ECDLP-0ade3c",
+  "schema": "classical.ecdlp.full48-operational-run-report/v1",
+  "source_observations": {
+    "bytes": 14046,
+    "path": "experiments/EXP-ECDLP-356403/reports/full48-RUN-ECDLP-0ade3c/observations.json",
+    "sha256": "641d91c89c764a4da923e28e0c60c112ea12dc60a09a393d812ad726ee4a58e3"
+  }
+}

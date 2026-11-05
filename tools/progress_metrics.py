@@ -1590,6 +1590,129 @@ def semaev_panel_snapshots(ref, since):
                  label=label, source=f"{path}@{ref}")
 
 
+def _full48_payload_identity(ref, path):
+    """Committed payload identity; large hydrated files need not be present."""
+    text = show(ref, path)
+    if text is not None:
+        blob = text.encode()
+        return hashlib.sha256(blob).hexdigest(), len(blob)
+    text = show(ref, path + ".blob.json")
+    if text is None:
+        return None
+    try:
+        pointer = json.loads(text)
+        digest = pointer.get("content_sha256", pointer["sha256"])
+        size = pointer.get("content_size", pointer["size"])
+        if (pointer.get("schema") != "crypto.autoresearch.blob_pointer.v1"
+                or not re.fullmatch(r"[0-9a-f]{64}", digest)
+                or type(size) is not int or size < 0):
+            return None
+        return digest, size
+    except (ValueError, TypeError, KeyError):
+        return None
+
+
+def full48_operational_observations(ref, since):
+    """Committed per-native-RUN facts, with public cohorts deduplicated by SHA.
+
+    Report observations bind the original operational sidecar and receipt. The
+    raw inventory must resolve to committed bytes or identity pointers. This
+    emits neither solver recovery rates nor performance/scientific conclusions.
+    """
+    attempts = {}
+    for path in sorted(ls(ref, "experiments")):
+        if "/reports/" not in path or not path.endswith("/observations.json"):
+            continue
+        text = show(ref, path)
+        if not text:
+            continue
+        try:
+            report = json.loads(text)
+            if report.get("schema") != "classical.ecdlp.full48-operational-run-report/v1":
+                continue
+            date = dt.date.fromisoformat(report["recorded_at"][:10]).isoformat()
+            exp, run = report["experiment_id"], report["run_id"]
+            if (date < since or not re.fullmatch(r"EXP-ECDLP-[0-9a-f]{6}", exp)
+                    or not re.fullmatch(r"RUN-ECDLP-[0-9a-f]{6}", run)
+                    or not path.startswith(f"experiments/{exp}/reports/")):
+                continue
+            bindings = report["metric_source_sha256"]
+            if not bindings or any(_full48_payload_identity(ref, p) is None
+                                   or _full48_payload_identity(ref, p)[0] != h
+                                   for p, h in bindings.items()):
+                continue
+            source_path = report["source_observations"]["path"]
+            receipt_path = f"experiments/{exp}/runs/{run}/execution-receipt.json"
+            if source_path not in bindings or receipt_path not in bindings:
+                continue
+            source = json.loads(show(ref, source_path))
+            receipt = json.loads(show(ref, receipt_path))
+            if (source.get("experiment_id") != exp or source.get("run_id") != run
+                    or receipt.get("run_id") != run
+                    or source.get("native_status") != receipt.get("status")
+                    or source.get("driver_returncode") != receipt.get("returncode")
+                    or source.get("checker_returncode") != receipt.get("check_returncode")):
+                continue
+            raw = source["raw_inventory"]
+            if (not raw or len({v["path"] for v in raw}) != len(raw)
+                    or any(not v["path"].startswith(f"experiments/{exp}/runs/{run}/")
+                           or type(v["bytes"]) is not int or v["bytes"] < 0
+                           or _full48_payload_identity(ref, v["path"]) != (v["sha256"], v["bytes"])
+                           for v in raw)):
+                continue
+            generated = source["generated"]
+            cohort, jobs = generated["cohort_public_sha256"], generated["job_plan_sha256"]
+            if (generated.get("generation_status") != "complete"
+                    or not re.fullmatch(r"[0-9a-f]{64}", cohort)
+                    or not re.fullmatch(r"[0-9a-f]{64}", jobs)):
+                continue
+            validated = (receipt["status"] == "output_validated"
+                         and receipt["returncode"] == 0 and receipt["check_returncode"] == 0)
+            values = {
+                "attempted_native_trials": 1,
+                "output_validated_trials": int(validated),
+                "infrastructure_error_trials": int(receipt["status"] == "infrastructure_error"),
+                "generated_curve_entries": generated["curve_entries"],
+                "generated_target_entries": generated["target_entries"],
+                "scheduled_job_entries": generated["job_entries"],
+                "candidate_measurements_completed": int(validated and source["candidate"].get("measurement_status") == "completed"),
+                "baseline_measurements_completed": int(validated and source["baseline"].get("measurement_status") == "completed"),
+                "retained_logical_raw_files": len(raw),
+                "retained_logical_raw_bytes": sum(v["bytes"] for v in raw),
+            }
+            if any(type(v) is not int or v < 0 for v in values.values()):
+                continue
+            key = exp, run
+            item = (values, cohort, jobs, date, path)
+            if key in attempts and (attempts[key] is None or attempts[key][:3] != item[:3]):
+                attempts[key] = None  # Conflicting duplicate report cannot select an answer.
+            elif key not in attempts:
+                attempts[key] = item
+        except (ValueError, TypeError, KeyError, AttributeError):
+            continue
+    cohorts = {}
+    inconsistent = set()
+    for (exp, run), item in sorted(attempts.items()):
+        if item is None:
+            continue
+        values, cohort, jobs, date, path = item
+        for name, value in values.items():
+            emit(f"controlled.full48.{run[10:]}.{name}", value, date=date,
+                 problem="ecdlp-controlled-followup", unit="bytes" if name.endswith("_bytes") else "count",
+                 better="neutral", label=f"{run}: {name.replace('_', ' ')} (native-validated component only)" if name in {"candidate_measurements_completed", "baseline_measurements_completed"} else f"{run}: {name.replace('_', ' ')} (operational only)",
+                 source=f"{path}@{ref}")
+        signature = values["generated_curve_entries"], jobs
+        if cohort in cohorts and cohorts[cohort] != signature:
+            inconsistent.add(cohort)
+        cohorts[cohort] = signature
+    if cohorts and not inconsistent:
+        for name, value in (("unique_public_cohorts", len(cohorts)),
+                            ("unique_generated_curves", sum(v[0] for v in cohorts.values()))):
+            emit("controlled.full48." + name, value, problem="ecdlp-controlled-followup", unit="count",
+                 better="neutral", label="Full48: " + name.replace("_", " ") + " (public-SHA deduplicated)",
+                 source=f"committed full48 operational reports@{ref}")
+
+
 def main():
     a = args()
     census(a.ref, a.since)
@@ -1607,6 +1730,7 @@ def main():
     transfer_study_observations(a.ref, a.since)
     controlled_followup_observations(a.ref, a.since)
     controlled_followup_080f41_observations(a.ref, a.since)
+    full48_operational_observations(a.ref, a.since)
     host_reference_audit_observations(a.ref, a.since)
     p256_factor_base_checks(a.ref, a.since)
     p256_factor_base_pass2_preparation(a.ref, a.since)
