@@ -9,6 +9,9 @@ import hashlib
 import json
 import re
 
+from check_quotient_certificate import Field
+from curve_special_j import special_j
+
 
 HEX = re.compile(r"[0-9a-f]{64}\Z")
 STATUSES = {"certified_admissible", "certified_inadmissible", "mixed", "unresolved"}
@@ -34,11 +37,15 @@ def select(plan, metadata):
     """
     if (not isinstance(plan, dict) or plan.get("schema") != "pext.join-plan/v1"
             or not isinstance(plan.get("classes"), list)
+            or not isinstance(plan.get("field"), dict)
             or type(plan.get("structures_per_T")) is not int
             or plan["structures_per_T"] < 1
             or not isinstance(metadata, list)):
         raise ValueError("published join plan and metadata required")
     cohort, structures = plan.get("cohort"), plan["structures_per_T"]
+    field = Field(plan["field"])
+    special_from_model = [special_j(field, curve["model"])
+                          for curve in plan["classes"]]
     expected = [(class_index, t_index, len(curve["targets"]))
                 for class_index, curve in enumerate(plan["classes"])
                 for t_index in range(len(curve["targets"]))]
@@ -66,6 +73,8 @@ def select(plan, metadata):
         previous = special.setdefault(class_index, row["special_j"])
         if previous != row["special_j"]:
             raise ValueError("special-j flag differs within actual curve")
+        if row["special_j"] != special_from_model[class_index]:
+            raise ValueError("special-j flag differs from published curve model")
         previous = curve_counterexample.setdefault(class_index, row["curve_counterexample"])
         if previous != row["curve_counterexample"]:
             raise ValueError("curve counterexample flag differs within actual curve")

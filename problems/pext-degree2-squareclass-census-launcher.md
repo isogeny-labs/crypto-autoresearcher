@@ -750,3 +750,15 @@ records two focused tests and a four-plan shape-only exercise over 8,178
 units. Actual selection awaits certificate-bound descent and exception
 metadata, stage write-once custody, independent recomputation and comparison.
 The contract remains `review_required` and unfrozen.
+
+## Source-derived special-j selection, 2026-11-05
+
+The [C5 special-j check](../experiments/EXP-PEXT-bf8f96/implementation/curve_special_j.py)
+derives the review flag from each named K-model and refuses false metadata
+flags. A second cubic-discriminant formula agrees on every published class:
+the four plans have 6, 8, 4 and 4 special-j classes respectively. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-special-j-20261105/report.md)
+records the five focused tests and the provisional roster sizes with
+placeholder descent labels. This grounds one C5 stratum in source arithmetic;
+descent and witness metadata, blind custody and independent recomputation
+remain. The contract remains `review_required` and unfrozen.

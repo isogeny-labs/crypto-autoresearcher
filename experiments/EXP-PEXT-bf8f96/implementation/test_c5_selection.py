@@ -1,6 +1,8 @@
 """Prospective C5 roster coverage and forced-witness selection."""
 
 import copy
+import json
+from pathlib import Path
 import unittest
 
 from c5_selection import select
@@ -8,9 +10,12 @@ from c5_selection import select
 
 class C5SelectionTests(unittest.TestCase):
     def setUp(self):
+        published = Path(__file__).parent.parent / "inputs/join-plans-20261103/q5-n3.json"
+        field = json.loads(published.read_text())["field"]
         self.plan = {"schema": "pext.join-plan/v1", "cohort": "fixture",
-                     "structures_per_T": 9,
-                     "classes": [{"targets": [None, [i]]} for i in range(7)]}
+                     "field": field, "structures_per_T": 9,
+                     "classes": [{"model": [0, 0, 1] if i == 2 else [0, 1, 1],
+                                  "targets": [None, [i]]} for i in range(7)]}
         self.metadata = [{"cohort": "fixture", "class_index": i, "T_index": t,
                           "torsion_count": 2, "descent_status": "certified_admissible",
                           "special_j": i == 2, "unit_counterexample": False,
@@ -48,6 +53,11 @@ class C5SelectionTests(unittest.TestCase):
         inconsistent[2*2+1]["special_j"] = False
         with self.assertRaisesRegex(ValueError, "special-j"):
             select(self.plan, inconsistent)
+        hidden = copy.deepcopy(self.metadata)
+        hidden[2*2]["special_j"] = False
+        hidden[2*2+1]["special_j"] = False
+        with self.assertRaisesRegex(ValueError, "published curve model"):
+            select(self.plan, hidden)
         inconsistent = copy.deepcopy(self.metadata)
         inconsistent[2*2+1]["curve_counterexample"] = True
         with self.assertRaisesRegex(ValueError, "curve counterexample"):
