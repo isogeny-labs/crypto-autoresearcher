@@ -73,6 +73,48 @@ theorem affine_polynomial_refutation (A : ι → τ → k) (c : ι → k)
   rw [hexp, hwc]
   simp only [hwA, map_zero, zero_mul, Finset.sum_const_zero, add_zero, map_one]
 
+
+/-- The actual affine polynomial subspace, over arbitrarily many variables. -/
+noncomputable def affinePolynomialSpace (σ k : Type*) [Field k] :
+    Submodule k (MvPolynomial σ k) :=
+  Submodule.span k ({1} ∪ Set.range fun j : σ => (X j : MvPolynomial σ k))
+
+/-- Inconsistency of affine polynomials implies that one lies in their
+constant-coefficient span. The hypothesis concerns field solutions. -/
+theorem affine_span_refutation {σ : Type*} (p : ι → MvPolynomial σ k)
+    (haff : ∀ i, p i ∈ affinePolynomialSpace σ k)
+    (hno : ¬ ∃ t : σ → k, ∀ i, eval t (p i) = 0) :
+    ∃ w : ι → k, (∑ i, w i • p i) = 1 := by
+  classical
+  let U := Submodule.span k (Set.range p)
+  have h1 : (1 : MvPolynomial σ k) ∈ U := by
+    by_contra h1
+    obtain ⟨φ, hφ1, hφU⟩ := U.exists_dual_map_eq_bot_of_notMem h1 inferInstance
+    let ψ : Module.Dual k (MvPolynomial σ k) := (φ 1)⁻¹ • φ
+    have hψ1 : ψ 1 = 1 := by
+      simp only [ψ, LinearMap.smul_apply, smul_eq_mul, inv_mul_cancel₀ hφ1]
+    let t : σ → k := fun j => ψ (X j)
+    have heval : ∀ q ∈ affinePolynomialSpace σ k, ψ q = eval t q := by
+      intro q hq
+      induction hq using Submodule.span_induction with
+      | mem q hq =>
+        rcases hq with hq | ⟨j,rfl⟩
+        · have he : q = 1 := Set.mem_singleton_iff.mp hq
+          rw [he, hψ1, map_one]
+        · simp only [eval_X, t]
+      | zero => simp
+      | add q r _ _ hq hr => simp only [map_add, hq, hr]
+      | smul c q _ hq => simp only [map_smul, smul_eval, hq, smul_eq_mul]
+    apply hno
+    refine ⟨t, fun i => ?_⟩
+    rw [← heval (p i) (haff i)]
+    have hm : φ (p i) ∈ U.map φ := Submodule.mem_map.mpr
+      ⟨p i, Submodule.subset_span ⟨i,rfl⟩,rfl⟩
+    rw [hφU, Submodule.mem_bot] at hm
+    simp only [ψ, LinearMap.smul_apply, hm, smul_zero]
+  exact (Submodule.mem_span_range_iff_exists_fun k).mp h1
+
 end CryptoResearch.FallDegree
 #print axioms CryptoResearch.FallDegree.affine_inconsistency_certificate
 #print axioms CryptoResearch.FallDegree.affine_polynomial_refutation
+#print axioms CryptoResearch.FallDegree.affine_span_refutation
