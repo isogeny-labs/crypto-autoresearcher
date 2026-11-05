@@ -153,3 +153,16 @@ certificates and separate Fr costs. Existing cancellation vectors make this
 concrete; equivalent identified functionals and any component-cost change must
 be measured. Status remains investigating; no old evidence or official state
 is replaced.
+
+## A8 cold-solver implementation observation, 2026-11-05
+
+[All 288 paired A8 row systems](../research/prime_field_a8_execution_20261105/RESULTS.md)
+completed, with identical target outcomes/scalars and valid original-joint-row
+certificates in both arms and A7. Separate full-joint/cancellation-first logical
+Fr multiplication totals were 1,616,582/813,356 including all solver phases and
+certificate checks. Subtractions rose in 50 cases; no weighted/end-to-end
+advantage is inferred. The older baseline evaluates target-unit kernel tests
+as dense dot products including zero products. The next controlled test is
+sparse functional evaluation in **both** solvers on these immutable cases,
+retaining full kernels, certificate lifting/checks and separate phase vectors.
+This finite implementation result changes no official scientific status.
