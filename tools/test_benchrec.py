@@ -87,6 +87,26 @@ class BenchrecTest(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn(rec2, (self.root / rec2).as_posix())
 
+    def test_store_backed_report_accepted_via_manifest(self):
+        """A report kept in the artifact store (listed in a .artifacts.json, absent from the
+        checkout) passes check; one that is neither on disk nor in a manifest fails."""
+        import hashlib
+        rec = self.make_record(value=100.0, reference=50.0)
+        self.commit_all()
+        body = json.loads((self.root / rec).read_text())
+        pdf_rel = body["reports"]["pdf"]
+        pdf = self.root / pdf_rel
+        digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+        size = pdf.stat().st_size
+        pdf.unlink()
+        r = self.br("check", check=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("is not in the checkout or a .artifacts.json manifest", r.stdout + r.stderr)
+        (pdf.parent / ".artifacts.json").write_text(json.dumps(
+            {"schema": "artifacts.manifest/v1", "files": {pdf.name: {"sha256": digest, "bytes": size}}}))
+        r = self.br("check", check=False)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
     def test_unknown_unit_and_bad_close_rejected(self):
         rec = self.br("init", "--slug", "unit-test", "--problem", "p:q").stdout.strip()
         r = self.br("metric", rec, "--name", "m", "--value", "1", "--unit", "furlongs", check=False)

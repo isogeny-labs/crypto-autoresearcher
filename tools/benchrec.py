@@ -492,15 +492,26 @@ def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed
                          "manifest, nor marked uploaded; run benchrec.py upload or artifacts.py push")
         if verify_s3 and not s3_exists(r["s3_uri"]):
             e.append(f"{name}: raw {r['path']} is not at {r['s3_uri']}")
+    def stored_ok(p: str, what: str) -> bool:
+        """True if p is in the checkout, or is store-backed through a .artifacts.json manifest
+        (docs/artifacts.md). With verify_s3, a store-backed file must also exist in the store."""
+        if (root / p).is_file():
+            return True
+        digest = manifests.get(p) if manifests is not None else None
+        if not digest:
+            return False
+        if verify_s3 and not s3_exists(store_uri(cfg, digest)):
+            e.append(f"{name}: {what} {p} is in a .artifacts.json manifest but not at {store_uri(cfg, digest)}")
+        return True
     for k in ("pdf",):
         p = rec["reports"].get(k)
-        if p and not (root / p).is_file():
-            e.append(f"{name}: report {p} is not in the checkout")
+        if p and not stored_ok(p, "report"):
+            e.append(f"{name}: report {p} is not in the checkout or a .artifacts.json manifest")
     for p in rec["reports"].get("svg", []) + rec["reports"].get("png", []):
-        if not (root / p).is_file():
-            e.append(f"{name}: graph {p} is not in the checkout")
-    if rec.get("validation") and not (root / rec["validation"]).is_file():
-        e.append(f"{name}: validation file {rec['validation']} is not in the checkout")
+        if not stored_ok(p, "graph"):
+            e.append(f"{name}: graph {p} is not in the checkout or a .artifacts.json manifest")
+    if rec.get("validation") and not stored_ok(rec["validation"], "validation file"):
+        e.append(f"{name}: validation file {rec['validation']} is not in the checkout or a .artifacts.json manifest")
     for d in rec["entries"]:
         if not (root / d).is_dir():
             e.append(f"{name}: entry directory {d} is not in the checkout")
