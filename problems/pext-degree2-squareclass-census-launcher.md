@@ -684,3 +684,16 @@ constant twist, and a published q3/n5 class/T fixture. The
 records the fixture scope. Next independently check descent and geometric
 connectedness, then implement the controls and remaining six-stage pipeline.
 The contract remains `review_required` and unfrozen.
+
+## Source-fixed component geometry, 2026-11-05
+
+The [component-geometry checker](../experiments/EXP-PEXT-bf8f96/implementation/fixed_model_geometry.py)
+replays square relations with the quotient checker's separate arithmetic and
+cross-checks rank, fixed-algebra dimension, component count and branch genus.
+It suppresses a connected-curve genus when a constant twist gives two geometric
+components. Thirteen related software tests pass on F27 source rows, the
+constant twist and a mismatch rejection. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/fixed-model-geometry-20261105/report.md)
+records the fixture scope. Next independently review the model multiplication
+and descent claim, then bind admissible minima and implement the controls.
+The contract remains `review_required` and unfrozen.
