@@ -10,7 +10,8 @@ import unittest
 
 from geometric_reducer import (curve_summary, expected_pattern,
                                genus_from_rank_and_support, load_type2_artifacts,
-                               type2_unit_summary, unit_summary)
+                               type2_unit_summary, type2_witness_ordinals,
+                               unit_summary)
 
 
 class GeometricReducerTests(unittest.TestCase):
@@ -90,6 +91,18 @@ class GeometricReducerTests(unittest.TestCase):
                      "alpha_choices_checked": 1}
         self.assertEqual(type2_unit_summary(unit, review, slot, [signature]),
                          review["type2_counts"])
+        second_row = unit["rows"][1]
+        second = dict(signature, ordinal=second_row[0], matrix=second_row[1],
+                      hyperelliptic_predicate=False)
+        review_two = copy.deepcopy(review)
+        review_two["type2_counts"].update(type2_signature_count=2,
+                                           hyperelliptic_predicate_false_count=1)
+        counts, witnesses = type2_witness_ordinals(
+            unit, review_two, slot, [signature, second])
+        self.assertEqual(counts["type2_signature_count"], 2)
+        self.assertEqual(witnesses, [row[0]])
+        with self.assertRaisesRegex(ValueError, "strictly increasing"):
+            type2_witness_ordinals(unit, review_two, slot, [signature, signature])
         bad = dict(signature, matrix=[0, 0, 0, 0])
         with self.assertRaisesRegex(ValueError, "sealed exceptional"):
             type2_unit_summary(unit, review, slot, [bad])

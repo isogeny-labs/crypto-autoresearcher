@@ -187,6 +187,12 @@ def type2_unit_summary(unit, review, slot, rows):
     """Join retained signatures to exact sealed exceptional geometry rows."""
     geometry = {row[0]: row[1] for row in unit["rows"]}
     raw = review["raw_sha256"]
+    if any(not isinstance(row, dict) for row in rows):
+        raise ValueError("Type2 signature row shape")
+    ordinals = [row.get("ordinal") for row in rows]
+    if (any(type(ordinal) is not int for ordinal in ordinals)
+            or ordinals != sorted(set(ordinals))):
+        raise ValueError("Type2 signature ordinals not strictly increasing")
     for row in rows:
         if (row.get("class_index") != slot["class_index"]
                 or row.get("T_index") != slot["T_index"]
@@ -206,6 +212,15 @@ def type2_unit_summary(unit, review, slot, rows):
     if review.get("type2_counts") != counts:
         raise ValueError("Type2 per-unit counts differ from independent review")
     return counts
+
+
+def type2_witness_ordinals(unit, review, slot, rows):
+    """Expose every checked predicate-true Type2 ordinal for the C5 roster."""
+    counts = type2_unit_summary(unit, review, slot, rows)
+    ordinals = [row["ordinal"] for row in rows if row["hyperelliptic_predicate"]]
+    if len(ordinals) != counts["hyperelliptic_predicate_true_count"]:
+        raise ValueError("Type2 witness count differs from checked summary")
+    return counts, ordinals
 
 
 def reduce_cohort(cohort_dir, binder, binary_sha256):
@@ -275,13 +290,20 @@ def reduce_cohort(cohort_dir, binder, binary_sha256):
                                   target_count=len(targets), t_index=row["T_index"],
                                   expected_structures=binder.plan["structures_per_T"])
             if type2_rows is not None:
-                result.update(type2_unit_summary(unit, review, row, type2_rows[name]))
+                counts, witness_ordinals = type2_witness_ordinals(
+                    unit, review, row, type2_rows[name])
+                result.update(counts)
+                result["type2_hyperelliptic_ordinals"] = witness_ordinals
+                result["type2_check_sha256"] = check["type2_check_sha256"]
+            else:
+                result["type2_hyperelliptic_ordinals"] = []
             if (review["independent"].get("exceptional") != result["exceptional"]
                     or review["independent"].get("structures") != result["structures"]
                     or review.get("geometry_ordinals") != [item[0] for item in unit["rows"]]):
                 raise ValueError("geometric counts differ from independent review")
             result["T_index"] = row["T_index"]
             result["unit_name"] = name
+            result["candidate_unit_sha256"] = review["raw_sha256"]
             all_unit_summaries.append(result)
             if row["class_index"] != len(curves):
                 if not current or row["class_index"] != len(curves)+1:

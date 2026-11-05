@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: retained Type2 witness identities for C5
+
+The [geometric reducer](../../implementation/geometric_reducer.py) already requires complete candidate-stage receipts, sealed unit chunks, full independent candidate reviews and the hash-bound Type2 batch. It now retains each predicate-true Type2 signature ordinal in the corresponding curve/T unit summary, alongside the raw candidate-unit SHA-256. Cubic rows also retain the Type2 batch-check SHA-256; noncubic rows have an empty Type2 witness list. The same verification rejects duplicate or out-of-order Type2 signature ordinals before the list can be exported.
+
+Four focused reducer tests pass on fixed F27 software units, including a paired true/false signature fixture, correct retention of only the true ordinal, duplicate-ordinal rejection, wrong-matrix rejection and Type2 digest tampering. This is a source-binding and output-custody component: the Type2 predicate is the checked instrument's trace-zero criterion, not a completed hyperelliptic-model or descent certificate. No full-cohort candidate stage was run in this work.
+
+The full C5 metadata builder must read these retained ordinals and hashes from completed, validated stage outputs; verify the prospective roster against every checked Type2 true row; add certified descent and counterexample fields; then seal the blind independent review before comparing results. The contract remains `review_required` and unfrozen.

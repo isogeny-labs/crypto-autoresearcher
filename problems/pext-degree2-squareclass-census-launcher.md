@@ -762,3 +762,16 @@ records the five focused tests and the provisional roster sizes with
 placeholder descent labels. This grounds one C5 stratum in source arithmetic;
 descent and witness metadata, blind custody and independent recomputation
 remain. The contract remains `review_required` and unfrozen.
+
+## Retained Type2 witness identities for C5, 2026-11-05
+
+The [geometric reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py)
+now carries every predicate-true Type2 ordinal from the hash-bound checked
+batch into its curve/T output, with the raw candidate-unit and Type2-check
+digests. It rejects duplicate or out-of-order signature ordinals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-type2-witness-custody-20261105/report.md)
+records four focused F27 software tests and the exact scope of this retained
+instrument output. Next assemble the complete C5 metadata table from
+validated stages, add descent and counterexample certificates, then seal and
+recompute the blind roster. The contract remains `review_required` and
+unfrozen.
