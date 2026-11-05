@@ -1,0 +1,242 @@
+# DEC-20261105-6e2616: Coordinator evidence review of EXP-ICPERF-283a70 (stage-0
+# seeded geometric-sample instrument v2, H-ICPERF-5adc9b): support, scoped to
+# the exact integers of the specified sampler; strength preliminary; claim tier
+# toy. Composed from REVIEW-ICPERF-283a70-20261105. No trial was run.
+coordinator_decision:
+  id: DEC-20261105-6e2616
+  id_provenance: >-
+    Pre-allocated by the top-level session with tools/allocate_id.py --next
+    coordinator_decision --date 20261105 and confirmed with --check. The
+    Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-05'
+  decided_at: '2026-11-05'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent, policy coordinator-orchestration-code, model
+    claude-opus-5-5 as stated by the top-level session; no shell. Digests,
+    git state and checker exit codes are as reported by the reviewers and the
+    top-level session. Recorded values were read by the Coordinator from the
+    three committed raw-result.json files and compared with the blind
+    re-derivation.
+  goal_id: GOAL-ICPERF-e6b6a4
+  question_id: RQ-ICPERF-94c86e
+  review_plan: REVIEW-ICPERF-283a70-20261105
+  subject: >-
+    Evidence review of EXP-ICPERF-283a70 (approval DEC-20261029-0e40f3,
+    session RBS-ICPERF-67df7d, runs RUN-ICPERF-f21eb1, 0ef41e, 74e9a2) under
+    binding rulings DEC-20261029-9bc3ff, DEC-20261029-22e05b,
+    DEC-20261029-5554ee.
+  context: >-
+    Three of three units valid. Primary RUN-ICPERF-f21eb1 (seed 20261017,
+    p = 1/50, 64 draws, shifts 13/17/5, support from 1) records 2943 / 289567
+    / 28 with no median split and exact_match true. CTL-1 (shifts 1/2/14)
+    records 2938 / 290138 / 29 and CTL-2 (support from 0) 2879 / 283745 / 27,
+    both exact_match false, both inside both bands. Audit
+    AUD-20261105T164530Z-b85ca9 clean, 3 of 3 exact; its parity check did not
+    run (3.11.17 recorded, 3.13.18 replayed; integers unaffected). The blind
+    from-prose re-derivation reproduces all three arms. J1 and J2 hold;
+    tools/check_review_independence.py PASS.
+  decision: support
+  decision_scope: >-
+    Support of H-ICPERF-5adc9b's integer statement only: the specified
+    xorshift32 sampler at seed 20261017 yields 2943 / 289567 / 28 with no
+    median split, and the statement's band clauses then hold arithmetically.
+    Not support of a geometric shape beyond this sample, of p, of any probe
+    panel or table, of host latency or huge pages, or of IDEA-20261015-b41f68
+    claims (1)-(4).
+  target_ids:
+    - H-ICPERF-5adc9b
+    - EXP-ICPERF-283a70
+    - EV-ICPERF-84ff45
+    - RBS-ICPERF-67df7d
+    - AUD-20261105T164530Z-b85ca9
+  evidence_strength: preliminary
+  claim_tier: toy
+  proof_status: derivation
+  scoped_claim: >-
+    Under session RBS-ICPERF-67df7d, run.py (sha256 53965863...9a38) at seed
+    20261017, p = 1/50, n = 64, shifts (13,17,5), support {1,2,...} wrote
+    sample_sum 2943, sum_squares 289567, median 28 with no median split, equal
+    to the integers fixed 2026-10-17; the wrong-triple arm wrote
+    2938/290138/29 and the support-0 arm 2879/283745/27, and both failed the
+    exact match. An implementation written blind from the specification prose
+    reproduces all three arms. Both band flags were true on all three units,
+    so the bands distinguished none of them. Nothing follows about geometric
+    shape beyond this sample, p, any table's probe counts, host latency, or
+    any index-calculus or rho cost.
+  rulings:
+    pass_rule: >-
+      Decided by the specification decisive_test and the DEC-20261029-0e40f3
+      restated pass rule (exact integers, no median split; bands descriptive;
+      CTL-1 and CTL-2 must fail the exact match). Met: primary exact, both
+      controls fail exact match with their frozen integers. The verbatim v1
+      success_criterion's band clauses are entailed by the integers and are
+      not used as a criterion.
+    bands: >-
+      Descriptive only and non-discriminating on this record: cv_in_band and
+      median_ratio_in_band are true on 3 of 3 units while exact_match is true
+      on 1 of 3. No band result is read as evidence of geometric shape, at
+      sample scale or at host scale.
+    hypothesis_wording: >-
+      H-ICPERF-5adc9b is unamended v1 text. Its mechanism sentence "Stage 0
+      checks that shape", method_ceiling "The CV band is the shape control",
+      the prediction both_bands_hold read as a shape check, and the phrase
+      "draws from the geometric law" are not adopted by this decision
+      (DEC-20261029-22e05b F4). The record is immutable; the status note
+      fences the reading.
+    parent_band_test: >-
+      IDEA-20261015-b41f68 claim (1) uses the same bands as its test that real
+      probe counts are geometric. This pass does not validate that test for
+      stage 1; red-team computations (scratch, not evidence) put its
+      rejection of a true geometric 64-sample near 53 percent and its
+      acceptance of a CV = 1 lognormal near 30 percent.
+    audit_parity: >-
+      The clean audit's "no environment drift" is a false negative (PARITY-1):
+      tools/runbook.py _recorded_python reads /run/environment/python_version
+      and these manifests write /version and /python, so the
+      DEC-20261029-5554ee interpreter-parity comparison never ran. Actual drift
+      3.11.17 -> 3.13.18 changed no integer or boolean. The audit stays as
+      recorded; the tool is repaired by NA-1.
+    section_5a: >-
+      No comparison against rho is made, so no band is owed (EV-ICPERF-84ff45
+      s5a_band): no rho or IC arm, no group, no GAE counter; the priced-arm
+      set is empty.
+    v1_runs: RUN-ICPERF-943efa and RUN-ICPERF-b09be8 stay invalidated and are cited by nothing in this decision as evidence.
+  status_transitions:
+    - {record: H-ICPERF-5adc9b, from: approved, to: supported, via: analyzed, by: "hypothesis status edit in this decision's ledger archive"}
+    - {record: EXP-ICPERF-283a70, from: completed, to: analyzed, by: "this decision record; specification.yaml is frozen and is not edited"}
+  status_transitions_note: >-
+    approved -> analyzed -> supported in one decision (H-PFDR-727bfc
+    precedent). No asymptotic claim (asymptotic_claim null), so the four
+    promotion gates do not apply. Not surprising and independently verified,
+    so support rather than replicate. GOAL-ICPERF-e6b6a4 stays active.
+  hypothesis_status_ruling:
+    hypothesis: H-ICPERF-5adc9b
+    old_status: approved
+    new_status: supported
+    scope_of_status: >-
+      The integer statement of the specified sampler at seed 20261017, p = 1/50,
+      n = 64, and the band clauses only as arithmetic consequences of those
+      integers. The interpretation limits stand: a pass is not evidence that
+      n=83 probe counts are geometric; the alive conditions of
+      IDEA-20261015-b41f68 (real probe panel, pointer-chase null, huge-page
+      pair) stay open and untested.
+    not_adopted: >-
+      The v1 shape wording listed in rulings.hypothesis_wording.
+  rationale:
+    - >-
+      Validity before interpretation: 3 of 3 units, receipts, manifests,
+      journal chain, raw/summary/report agreement and the exact pass rule all
+      hold under independent code (J1), and a mutation test of the frozen
+      runbook confirms that only the integers decide validity. Seed integrity:
+      seed 20261017 asserted in every unit.
+    - >-
+      The recorded integers equal the out-of-sample preregistration, the
+      audit replay, the validator's spec-prose sampler, the red team's
+      recomputation and the blind from-prose implementation, for all three
+      arms. The blind implementation is the only check that can fail on an
+      error shared by the prose, both runners and the design scratch code, and
+      it did not fail.
+    - >-
+      The coordinator prior (plan, written before any reviewer ran) expected
+      the exact integers to hold, both controls to fail exact match while
+      passing the bands, and strength preliminary. Confirmed. Not foreseen:
+      the clean audit's parity check silently did not run.
+    - >-
+      Strength preliminary: one seed and one execution per arm, no pcc claim,
+      and the content is a deterministic identity of a specified program. The
+      red team allowed "replicated" for the arithmetic identity once the blind
+      arms matched; the Coordinator declines it, because there is no effect to
+      replicate and the label would trigger promotion for a fact about one
+      seed.
+    - >-
+      Support, not refine: the defects are in hypothesis wording (immutable,
+      fenced by status note), report labels and audit tooling. A superseding
+      hypothesis for a 64-draw toy sample would rank behind the parent idea's
+      stage-1 design and is not commissioned.
+  evidence_refs:
+    - ledger/evidence/EV-ICPERF-84ff45.yaml
+    - experiments/EXP-ICPERF-283a70/analysis.md
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml (frozen f7eb8ae292, sha256 c4e49dbf7bfa986f187c53c354315d4fece373895ecd347577311f5254163368)
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-558a8b/validation-report.yaml and review-attestation.yaml
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/red-team-report.yaml and review-attestation.yaml
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/blind-rederivation.yaml
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/audit.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-{f21eb1,0ef41e,74e9a2}/raw-result.json
+    - experiments/EXP-ICPERF-283a70/specification.yaml
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/
+  limitations:
+    - No shell. Digests, the PASS of tools/check_review_independence.py and git state are as reported; not re-run here.
+    - One seed and one execution per arm; no independent second run; no pcc claim; no execution proof (verified_units 0).
+    - The 64 draws are not persisted in raw-result.json; draws were regenerated by reviewers, not read from the run.
+    - Audit parity check inoperative; only two interpreter versions exercised (3.11.17 recorded, 3.13.18 replayed by audit and validator).
+    - CTL-2 is an affine image of the primary and CTL-1 a known-outcome control; neither detects a common-mode code error on its own.
+    - The run report labels the band flags "measured" for the primary only and omits the controls' flags; tabulated here for all three units.
+    - Memory not recorded; timing only.
+  procedure_deviations:
+    - Original attestations used holds_with_limitation (top-level brief error); reviewers filed review-attestation.yaml addenda in checker vocabulary; originals unedited (EV-ICPERF-84ff45 PD-1).
+    - Plan audit_note "no environment drift" inaccurate (PD-2); audit run by the plan's author session (PD-3); review tasks have no ledger handoff records (PD-4).
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      Support at strength preliminary on a deterministic identity of one
+      seeded 64-draw sample; the promotion rule applies at replicated or
+      strong, and the only durable lesson (the CV and median bands do not
+      discriminate) is already recorded in DEC-20261029-22e05b F4 and this
+      evidence record. No KN-TECH: one instrument, one experiment.
+  visual_record:
+    report: experiments/EXP-ICPERF-283a70/reports/review-DEC-20261105-6e2616/
+    earlier_run_reports: [experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/]
+    canonical_graphs_checked: >-
+      knowledge/frontiers/ecdlp/ (README.md and the generic-rho and
+      index-calculus KR rows; no rendered graph source exists there). No row
+      cites EXP-ICPERF-283a70, its runs, H-ICPERF-5adc9b or
+      IDEA-20261015-b41f68. No canonical graph changes: a toy instrument pass
+      moves no frontier.
+  next_actions:
+    - id: NA-1
+      primary: true
+      owner: executor (executor-implementation), via one new tooling handoff (TASK id allocated by the top-level session)
+      text: >-
+        Repair the tools/runbook.py audit replay contract, covering both
+        defects found in this round: (a) _recorded_python also reads
+        /run/environment/version and /run/environment/python, so the
+        DEC-20261029-5554ee interpreter-parity comparison runs and reports
+        environment_drift (PARITY-1, both audits); (b) a replay.compare pointer
+        absent from both recorded and replayed files is reported as
+        not_applicable, not mismatch, and compare pointers may be declared per
+        trial (EXP-ICPERF-284bc4 flag). Regression tests on both sessions'
+        bytes; frozen runbooks and the two existing audits stay as recorded; no
+        scientific trial. Completion gate: tests pass and a dry re-audit of
+        RBS-ICPERF-67df7d and RBS-ICPERF-8cdc92 in scratch reports the drift
+        and no absent-on-both mismatch.
+    - id: NA-2
+      owner: coordinator, at the next GOAL-ICPERF-e6b6a4 rerank
+      text: >-
+        Rank a stage-1 design for IDEA-20261015-b41f68 per red-team RC3: fix
+        p_pred = A * #states / r in advance; test real probe counts against
+        Geometric(p_pred) (CDF at fixed quantiles or a memorylessness check)
+        plus a mean check; state power against the CV = 1 lognormal and wrong-p
+        null objects before any run; do not reuse the [0.9, 1.1] / [0.6, 0.8]
+        bands as the test; persist per-target counts.
+    - id: NA-3
+      owner: idea-generator, if ranked
+      text: >-
+        The red-team reversal reading (work-identity certificate as a
+        prerequisite for IDEA-20261015-b41f68 claim (3) cross-host ns/probe
+        comparisons) may be filed as a proposal and ranked on its merits. No
+        status changes by its existence.
+    - id: NA-4
+      owner: top-level session
+      text: >-
+        Render graph.svg and report.pdf from
+        reports/review-DEC-20261105-6e2616/data.json and report.typ and inspect
+        them; write analysis.md from the Coordinator's returned text; run
+        tools/validate_ledger.py; archive EV-ICPERF-84ff45, this decision, the
+        hypothesis status edit, analysis.md, the review reports and the
+        decision report in the same ledger archive as DEC-20261105-8a9984;
+        push, refresh the PR (ready, auto-merge on). Support becomes official
+        at that push.
+  archived_by_note: The top-level session binds the ledger archive task id at archive time.
+  official_effect_until_committed_pushed_reviewable: none
