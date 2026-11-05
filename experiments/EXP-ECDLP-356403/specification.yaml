@@ -1,13 +1,14 @@
 {
   "experiment": {
-    "approved_by": "DEC-20261105-219419",
+    "approved_by": null,
     "budget": {
       "cloud_compute_launches": 0,
       "cpu_count": 4,
-      "maximum_runs": 1,
+      "cumulative_absolute_deadline": "2026-11-05T05:53:00Z",
+      "maximum_runs": 2,
       "maximum_wall_seconds": 14400,
       "memory_gb": 12,
-      "retries": 0
+      "retries": 1
     },
     "class": "descriptive finite exact computation",
     "controls": {
@@ -34,24 +35,29 @@
       "on_negative": "Preserve actual finite zero/ordinary outcomes without family closure; reproducible integrity mismatch gets its exact bounded correction, not a replacement cohort.",
       "on_positive": "Archive complete finite descriptive observations and separately rank the next genuine-session cohort without selecting outcomes."
     },
-    "designed_at": "2026-11-05T01:38:40.041390+00:00",
-    "execution_authorized": true,
+    "designed_at": "2026-11-05T03:16:42.627603+00:00",
+    "execution_authorized": false,
     "execution_plan": {
       "backend": "local",
-      "candidate_only": false,
-      "executor_task_id": "TASK-20261105-6c94f6",
+      "candidate_only": true,
+      "executor_task_id": "TASK-20261105-4a9f92",
       "input_sha256": {
         "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/inputs/frozen-public-nonce.json": "519e2a3c745bd8aa7823b3ea192b16a03b8ba0813aa185f089f944064dcb04aa",
         "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/inputs/predraw-266-exclusions.json": "baffc51b5fb98b6e5ac36b428dd9c83abc2fe0dc92a52c944e268be98c754b0c",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/frozen-cohort-recovery-binding.json": "986bea64676d089316c7f8cfa1d763d283bae20593c675e6bc6ad52dfb3ba76c",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/new-review-hydration-exact-selection.json": "4f576b45459e83ce7bc67d63ffdba392e8dd3e44623295961ef7b79109414a1f",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/prepare_new_review_hydration_retirement.py": "5c295a2cdf02f2ec0d7548e48ddacfe1935ea097650af5305ea5dc4b48397a2a",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/retire_selected_new_review_hydration.py": "ecdd04e52c26db71992108ef25283fe81b27479dacc71add6382222b903161cf",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/recovery-amendment.json": "6dbfb6cc6c5b7ff525b9ae9d2e5501ddb6afae498592e0ceb35af18c081d9d0a",
         "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/native-closure.json": "0038b29ec3e19530132687d2b065ffaff31f2236077f2510b3eff449ed0bf56e",
-        "experiments/EXP-ECDLP-356403/production-config.json": "1c317c985b170c51245cf502ae58c1521c68ae76e637d3b9f3719ca0ef16faf0",
-        "experiments/EXP-ECDLP-356403/protocol.json": "ca96f9c17230d42a7c19381965c815a3c38eb6f2cea71800a724e19a8fc8d95f"
+        "experiments/EXP-ECDLP-356403/recovery-v2/production-config.json": "0afa7fba22f5e1dc13f7110ba436fb3e1fd10c028aa1d7ac965ac9f2be68eae2",
+        "experiments/EXP-ECDLP-356403/recovery-v2/protocol.json": "5df1cba79a827850287808724baff77396b4a4598ac606bca760ce44dbfb76b7"
       },
       "protocol_hashes": [
-        "2e0d7a3af72778246fbc0d6f2e5f57557e2d2b46eaef3dca35acdab302dfbdea"
+        "fdcf3f6f54229918be6898242c094d7a96d3963a2259e1f8bf2c06eca35e2ffa"
       ],
       "queue": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/dispatch_queue.json",
-      "route": "Existing unchanged v5/native CLI, executor-implementation; outerbenchrec initialized only after actual claim/checkpoint; no code change.",
+      "route": "Unchanged source-bound native production CLI after actual accepted interstage repair; deterministic same-cohort regeneration, no wrapper.",
       "source_sha256": {
         "harness/classical_ecdlp_controlled_followup/cohort.py": "cd5896f63f52351d499104ea14e36ddf66a4bd586efaba8e651ebce2053a8ff3",
         "harness/classical_ecdlp_controlled_followup/constructor.py": "31e58db07649df4e61ec2cbcaa1969789bc2c7f229c21f8555daaaaad8fdc451",
@@ -69,10 +75,10 @@
         "harness/classical_ecdlp_controlled_followup_v5/format-contract.json": "1ed8a10cded0dd8e1230868ae5e1f53edef9cc02d91be758f4bf9f235c949ac9",
         "harness/classical_ecdlp_controlled_followup_v5/interface.json": "0611ac0c7e7cda40e845c9376e88ab390e47ff7bf7695e1ec2e03f1a1c41c5ac",
         "harness/classical_ecdlp_controlled_followup_v5/lifecycle.py": "4e38ff307019f14b2947a714bfdc25d5b065928c71eaec2271432ef193556ad0",
-        "harness/classical_ecdlp_controlled_followup_v5/observer.py": "0be5edae8ba590af5bfe1085e0cf64e02b18a0599a5a265c1eb480e8b18309ed",
+        "harness/classical_ecdlp_controlled_followup_v5/observer.py": "986cda118dc688460bc6490a58db7b496e8541530461ef38f447622a630f231a",
         "harness/classical_ecdlp_controlled_followup_v5/public_verify.py": "e683d5147b043563b75e0579ff098b2c5673033b785e478e9b0cec82f0d9136f",
         "harness/classical_ecdlp_controlled_followup_v5/resource-envelope.json": "74eb31bdd30c1fdc8eae36ef09deb891a8687371d1fda58d335aebde6cc8d98f",
-        "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": "8c4566e41662781372c8bc2e10ccd295887303fa19eccd217f05bdf71312dcee",
+        "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": "32b047ce243568f47c64e36c19366bfc5dac28c30b111370650f5c2438af357c",
         "harness/classical_ecdlp_controlled_followup_v5/source_closure.py": "7e1e8e507894e6f0e45b3cc0e0c24ed6a160fc124e2537df8efcb776a1d92676",
         "harness/classical_ecdlp_controlled_followup_v5/test_contracts.py": "907c90d9f866c6afa123d32dd15ff61210145b8cd4524b87142f44f4e99bd181",
         "orchestration/__init__.py": "bdf396101583fe102cf004c8a260b70b08bdff7357ffc46d8cda303677009ea0",
@@ -137,28 +143,48 @@
     "input_bindings": {
       "frozen_inputs": [
         {
-          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/native-closure.json",
-          "sha256": "0038b29ec3e19530132687d2b065ffaff31f2236077f2510b3eff449ed0bf56e"
-        },
-        {
-          "path": "experiments/EXP-ECDLP-356403/protocol.json",
-          "sha256": "ca96f9c17230d42a7c19381965c815a3c38eb6f2cea71800a724e19a8fc8d95f"
-        },
-        {
-          "path": "experiments/EXP-ECDLP-356403/production-config.json",
-          "sha256": "1c317c985b170c51245cf502ae58c1521c68ae76e637d3b9f3719ca0ef16faf0"
-        },
-        {
           "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/inputs/frozen-public-nonce.json",
           "sha256": "519e2a3c745bd8aa7823b3ea192b16a03b8ba0813aa185f089f944064dcb04aa"
         },
         {
           "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/inputs/predraw-266-exclusions.json",
           "sha256": "baffc51b5fb98b6e5ac36b428dd9c83abc2fe0dc92a52c944e268be98c754b0c"
+        },
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/frozen-cohort-recovery-binding.json",
+          "sha256": "986bea64676d089316c7f8cfa1d763d283bae20593c675e6bc6ad52dfb3ba76c"
+        },
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/recovery-amendment.json",
+          "sha256": "6dbfb6cc6c5b7ff525b9ae9d2e5501ddb6afae498592e0ceb35af18c081d9d0a"
+        },
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/native-closure.json",
+          "sha256": "0038b29ec3e19530132687d2b065ffaff31f2236077f2510b3eff449ed0bf56e"
+        },
+        {
+          "path": "experiments/EXP-ECDLP-356403/recovery-v2/production-config.json",
+          "sha256": "0afa7fba22f5e1dc13f7110ba436fb3e1fd10c028aa1d7ac965ac9f2be68eae2"
+        },
+        {
+          "path": "experiments/EXP-ECDLP-356403/recovery-v2/protocol.json",
+          "sha256": "5df1cba79a827850287808724baff77396b4a4598ac606bca760ce44dbfb76b7"
+        },
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/new-review-hydration-exact-selection.json",
+          "sha256": "4f576b45459e83ce7bc67d63ffdba392e8dd3e44623295961ef7b79109414a1f"
+        },
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/prepare_new_review_hydration_retirement.py",
+          "sha256": "5c295a2cdf02f2ec0d7548e48ddacfe1935ea097650af5305ea5dc4b48397a2a"
+        },
+        {
+          "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/retire_selected_new_review_hydration.py",
+          "sha256": "ecdd04e52c26db71992108ef25283fe81b27479dacc71add6382222b903161cf"
         }
       ],
       "source_publication": {
-        "commit": "af8a54211bcd6f0503c3d58d159289bff6a023ce",
+        "commit": "964579a78b488fcfe8040837f5af138b5cd0be3c",
         "exact59": {
           "harness/classical_ecdlp_controlled_followup/cohort.py": "cd5896f63f52351d499104ea14e36ddf66a4bd586efaba8e651ebce2053a8ff3",
           "harness/classical_ecdlp_controlled_followup/constructor.py": "31e58db07649df4e61ec2cbcaa1969789bc2c7f229c21f8555daaaaad8fdc451",
@@ -176,10 +202,10 @@
           "harness/classical_ecdlp_controlled_followup_v5/format-contract.json": "1ed8a10cded0dd8e1230868ae5e1f53edef9cc02d91be758f4bf9f235c949ac9",
           "harness/classical_ecdlp_controlled_followup_v5/interface.json": "0611ac0c7e7cda40e845c9376e88ab390e47ff7bf7695e1ec2e03f1a1c41c5ac",
           "harness/classical_ecdlp_controlled_followup_v5/lifecycle.py": "4e38ff307019f14b2947a714bfdc25d5b065928c71eaec2271432ef193556ad0",
-          "harness/classical_ecdlp_controlled_followup_v5/observer.py": "0be5edae8ba590af5bfe1085e0cf64e02b18a0599a5a265c1eb480e8b18309ed",
+          "harness/classical_ecdlp_controlled_followup_v5/observer.py": "986cda118dc688460bc6490a58db7b496e8541530461ef38f447622a630f231a",
           "harness/classical_ecdlp_controlled_followup_v5/public_verify.py": "e683d5147b043563b75e0579ff098b2c5673033b785e478e9b0cec82f0d9136f",
           "harness/classical_ecdlp_controlled_followup_v5/resource-envelope.json": "74eb31bdd30c1fdc8eae36ef09deb891a8687371d1fda58d335aebde6cc8d98f",
-          "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": "8c4566e41662781372c8bc2e10ccd295887303fa19eccd217f05bdf71312dcee",
+          "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": "32b047ce243568f47c64e36c19366bfc5dac28c30b111370650f5c2438af357c",
           "harness/classical_ecdlp_controlled_followup_v5/source_closure.py": "7e1e8e507894e6f0e45b3cc0e0c24ed6a160fc124e2537df8efcb776a1d92676",
           "harness/classical_ecdlp_controlled_followup_v5/test_contracts.py": "907c90d9f866c6afa123d32dd15ff61210145b8cd4524b87142f44f4e99bd181",
           "orchestration/__init__.py": "bdf396101583fe102cf004c8a260b70b08bdff7357ffc46d8cda303677009ea0",
@@ -225,7 +251,8 @@
     "invalidation_rules": [
       "Wrong source/native authority/identity/input/export/seal/equation or altered full schedule invalidates affected observations; retain all partials.",
       "Resource/clock/free-space/proposal exhaustion remains truthful operationally incomplete, never mathematical rejection.",
-      "No repeat nonce/cohort, hidden fallback, omitted failures or synthetic physical rows."
+      "No new nonce/replacement cohort, hidden fallback, omitted failures or synthetic physical rows.",
+      "Recovered public/job hashes must equal original; mismatch invalid/no third attempt."
     ],
     "literature": [
       {
@@ -387,24 +414,99 @@
     "prediction_provenance": [
       {
         "data_seen": [
-          "Accepted immutable source/fixed software-control evidence",
-          "Historical selected-cohort byte sizes, not fit assurance"
+          "All original generated public models/bases/targets/jobs and generator/native infrastructure failure",
+          "Candidate engine/working BSGS outcomes absent",
+          "Accepted prior scoped source evidence; pending interstage independent review is not yet a pass"
         ],
+        "decisive_scope": "Only newly observed candidate-engine and working-BSGS exact computation outcomes conditional on this already-known fixed public cohort; no original generator/public identities or out-of-sample population claim is decided anew.",
         "first_recorded_in": "experiments/EXP-ECDLP-356403/protocol.json",
-        "note": "Existing exact full-schedule/source/public-equation integrity criterion; no desired correlation, recovery, advantage, population significance or outcome prediction. No fresh curve/target/job/outcome has been drawn.",
+        "note": "Same-cohort recovery with known public identities, no new out-of-sample cohort or outcome prediction; new candidate/BGS outcomes still unobserved.",
         "prediction": "C-integrity",
-        "sample_status": "out_of_sample",
+        "sample_status": "partially_in_sample",
         "written_at": "2026-11-05T01:38:40.041390+00:00"
       }
     ],
+    "recovery_amendment": {
+      "absolute_cumulative_deadline": "2026-11-05T05:53:00Z",
+      "additional_attempts": 1,
+      "canonical_job_plan_sha256": "91a1730463e6cd8bec8453d6417a384709b240949085a04d0e941612defd5a3a",
+      "claim_expiry_rule": "At actual claim compute floor((05:53UTC-now)/60) minutes, never extend beyond05:53; record exact absolute expiry. No reset of original four-hour cost/attempt account.",
+      "equality_check": "After native run, independently compare generated public E/G/Q/models/bases/targets hash and complete canonical job-plan hash with these literal values before calling it recovered same cohort. Mismatch invalidates attempt, preserve all bytes, no third attempt/newnonce. Whole input/provenance bytes legitimately differ with protocol/source fingerprint. No new wrapper/hook/bypass.",
+      "experiment_id": "EXP-ECDLP-356403",
+      "known_data": "Full public identities and jobs generated in original attempt are already known; candidate engine and BSGS outcomes were not obtained. This is recovery, never a fresh out-of-sample cohort.",
+      "launch_admission": "After actualC4+published review_required draft: nativeapprovable true, actualapprovalDEC, standing63 archive, readyselector, fresh fenced4a9 claim/checkpoint, publicRUNskill+OUTERbenchrec.",
+      "maximum_cumulative_attempts": 2,
+      "new_native_child_run_ids": {
+        "baseline": "RUN-ECDLP-5228d5",
+        "candidate": "RUN-ECDLP-9de6e3"
+      },
+      "new_native_parent_run_id": "RUN-ECDLP-52de64",
+      "optional_review_hydration_retirement": {
+        "actual_unlink_and_journal": "PENDING root underlive08claim; no deletion yet",
+        "logical_unlink_bytes": 190410571,
+        "only_NEW854_and_fb_largehydrations": true,
+        "only_after_finalad_and_freshbothGET_allmembers": true,
+        "preexisting_old_raw_or_remote_deletions": 0,
+        "selected_paths": 35,
+        "selected_unique_inode_bytes": 147891296,
+        "selected_unique_inodes": 33,
+        "selection_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/recovery-v2/inputs/new-review-hydration-exact-selection.json",
+        "selection_sha256": "4f576b45459e83ce7bc67d63ffdba392e8dd3e44623295961ef7b79109414a1f"
+      },
+      "original_immutable_data_commit": "a66d1035b7fa9b8a4b1678e7efaef8dcfde9bed3",
+      "original_max1_no_retry_preserved_in_history": true,
+      "original_native_run": "RUN-ECDLP-0ade3c",
+      "public_sha256": "76c329506086cd8572534b49080f33b7c0725e3245215c0236b503faa2a4b0bc",
+      "resource_protection": {
+        "child_limits": {
+          "document_bytes": 67108864,
+          "file_bytes": 2147483648,
+          "generation_bytes": 268435456,
+          "input_bytes": 100663296,
+          "log_bytes": 16777216,
+          "memory_bytes": 6442450944,
+          "reserve_bytes": 134217728,
+          "seconds": 3600,
+          "terminate_grace_seconds": 2,
+          "tree_bytes": 2415919104
+        },
+        "executor_task_max_wall_seconds": 9000,
+        "fit_assured": false,
+        "hard_absolute_stop": "2026-11-05T05:53:00Z",
+        "launch_condition": "Actual launch strictly before05:53UTC with live original-cap-bounded claim. ClaimTTL is floor remainingminutes and expiry never later05:53; if expired or no positive TTL, do not launch. No lateststart03:50 assumption; no deadline/reset or numericwatchdog relaxation.",
+        "native_memory_mb": 12288,
+        "native_outer_watchdog_seconds": 7200,
+        "why": "Original3600s stages/grace2 and fixed7200s nativeguard remain. Nativeclaim expiry independently enforces original05:53UTC cap: effective execution bound is min(7200 seconds, remaining original lease). No requirement that a launch can consume the fullguard; no fit/runtime/completion assurance and no shortened scientificworkload."
+      },
+      "same_exclusions": 266,
+      "same_nonce": "1adc3007efb46362d78934ca534cca91d3ea32043b4cdaa194e8f9d67bf96d1c",
+      "same_unique_cohort": true,
+      "schema": "classical.ecdlp.same-cohort-recovery-amendment/v2",
+      "separately_paid_costs": "Retain original239.009645s infrastructure failure, original full generator cost and8stored payloads. Deterministic regeneration in new native production is newly charged; never subtract first attempt or double-count one unique cohort as96curves.",
+      "source_acceptance": {
+        "PCC": "UNVERIFIED; no mathematical/hypothesis/goal promotion",
+        "archive_R1": "2a412cbee66c3445bea8de835d8e65fe69d682d8",
+        "archive_R2": "79e2d45787afc955f855af3843f8ab3ec9590c9d",
+        "decision": {
+          "bytes": 3503,
+          "path": "ledger/decisions/DEC-20261105-c4c30c.yaml",
+          "sha256": "e97af5e6b18dbf99034d8fa981fab74d2e7d9ff8c4c51348509720c65130324c"
+        },
+        "historical_inconclusives_and_budgetmisses_unwaived": true,
+        "published_completion": "7e1e3102c936c904004c4e16076178172b415437",
+        "source_pub": "964579a78b488fcfe8040837f5af138b5cd0be3c",
+        "status": "ACTUAL technicalC4 accepted; finalad completed/released"
+      }
+    },
     "resource_and_storage_contract": {
-      "claim_ttl_minutes": 300,
-      "executor_task_wall_seconds": 14400,
+      "claim_ttl_minutes": "floor remaining to05:53UTC, not reset",
+      "effective_time_bound": "min(fixed native7200s watchdog, remaining original claimlease ending no later05:53UTC); no fullguard-consumption or fit guarantee",
+      "executor_task_wall_seconds": 9000,
       "fit_assured": false,
       "generator_historical_approx_bytes": 219000000,
       "historical_candidate_bytes": 2113870604,
       "input_bytes": 100663296,
-      "last_root_free_bytes": 2574196736,
+      "last_root_free_bytes_approx": 2620000000,
       "limits": {
         "document_bytes": 67108864,
         "file_bytes": 2147483648,
@@ -418,8 +520,8 @@
         "tree_bytes": 2415919104
       },
       "native_memory_mb": 12288,
-      "outer_watchdog_seconds": 11400,
-      "resource_stop": "Actual free<128MiB/file/tree/log/RLIMIT/wall/expiry stop preserves all old and new bytes; no old raw deletion authorized. No full cached publication/readback copy; exact streaming root helper after completion.",
+      "outer_watchdog_seconds": 7200,
+      "resource_stop": "All original limits/reserve retained; optional exactNEW reviewer hydration retirement only after formal finalad archive+fullcapsuleGET+roundtrip/hash; no oldraw deletion or fit assurance.",
       "static_input_upper_bytes": 72973310,
       "unchanged_JSON_reader_bytes": 134217728
     },
@@ -429,17 +531,17 @@
       "All8 calibration arms/primary circuit2.a1/all6 confirmation cells stay nested under TWO physical solver rows; generator separately paid.",
       "Only this one cohort is filed; other two remain unfiled for genuine later sessions."
     ],
-    "source_publication_commit": "af8a54211bcd6f0503c3d58d159289bff6a023ce",
-    "status": "approved",
+    "source_publication_commit": "964579a78b488fcfe8040837f5af138b5cd0be3c",
+    "status": "review_required",
     "stopping_rules": [
       {
         "kind": "fixed_n",
         "preregistered": true,
-        "rule": "Exactly one original full48 cohort, one native call; no replacement/resampling/retry. Resource/expiry/identity/native failure stops and retains partials without mathematical inference."
+        "rule": "Same unique full48 cohort; this amendment authorizes at most ONE additional native call after actualadmission, cumulative max2. Retain first failure; no replacement/nonce/thirdattempt. Absolute05:53 cap/native7200s/free128MiB stop with all partials. Effective nativeexecution bound is min(fixed7200s watchdog, originalremaininglease), launchstrictlybefore05:53 withpositivefloorTTL; no guarantee to consume fullwatchdog and no latest03:50 start assumption."
       }
     ],
     "success_criterion": "Complete exact original workload and correctly linked source/public equations/process/closed export; zero or ordinary recovery outcomes remain valid observations.",
-    "title": "FIRST ONE full fresh48 original-sampler descriptive cohort on accepted v5 source",
+    "title": "Recover SAME full48 cohort after retained interstage infrastructure failure",
     "variable_ledger": {
       "aa_not_applicable": "No fresh A/A physical arm or noise-floor claim. Original/incremental paired integrity and accepted fixed source controls are inherited without reexecution.",
       "comparisons": [
@@ -457,7 +559,7 @@
       "crosses_map": false,
       "factors": [
         {
-          "how": "Exact59 AF8 bytes; native keyset frozen separately.",
+          "how": "Exact59 source keys at964579a78b488fcfe8040837f5af138b5cd0be3c; only observer/manifest repair, other57 fixed; native keyset DATA separate.",
           "name": "source",
           "treatment": "fixed"
         },
@@ -520,6 +622,6 @@
         }
       ]
     },
-    "version": 1
+    "version": 2
   }
 }
