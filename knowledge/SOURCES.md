@@ -25,13 +25,13 @@ a hash it cannot is an assertion by the session that recorded it.
 | — present but carrying no `.sha256` | 8 |
 | — sought and never retrieved | 1 |
 | Seed bibliography entries | 10 |
-| Literature entries (`KN-LIT-*`) | 8133 |
-| — with a resolvable external identifier | 2519 |
+| Literature entries (`KN-LIT-*`) | 8134 |
+| — with a resolvable external identifier | 2520 |
 | — with no identifier recorded | 5614 |
 
-Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1344, doi 183, eprint 837, isbn 1, url 154. Every identifier an entry carries is kept in `sources.json`.
+Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1344, doi 183, eprint 837, isbn 1, url 155. Every identifier an entry carries is kept in `sources.json`.
 
-`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full-pdf-mechanical-traversal-and-scoped-reading` 1, `full_text` 5, `full_text_supplied` 2, `metadata` 3, `partial` 5, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 524.
+`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full-pdf-mechanical-traversal-and-scoped-reading` 1, `full_text` 5, `full_text_supplied` 2, `metadata` 3, `partial` 6, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 524.
 
 ## 1. Frozen source packages
 
@@ -246,7 +246,7 @@ records that some fetch failed, and says nothing about the file that is here.
 
 ## 5. Literature citations with a resolvable identifier
 
-2519 of 8133 `KN-LIT-*` entries carry an
+2520 of 8134 `KN-LIT-*` entries carry an
 eprint, arXiv, DOI, ISBN or URL identifier.
 
 | ID | Title | Year | Identifier | Verified |
@@ -2732,6 +2732,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-e800e6 | A key-recovery side-channel attack on Classic McEliece implementations | 2022 | `eprint:2022/514` | web |
 | KN-LIT-e8eaf8 | A designer's guide to KEMs | 2003 | `eprint:2002/174` | web |
 | KN-LIT-eb2b9b | NIST IR 8545: Status Report on the Fourth Round of the NIST Post-Quantum Cryptography Standardization Process | 2025 | `doi:10.6028/nist.ir.8545` | web |
+| KN-LIT-eb8749 | A Subexponential Time Algorithm for Elliptic Curve Discrete Logarithm (Bochum/MPI-SP, v0.2) | 2026 | `url:github.com/bochum-crypto/subexponential-ecdl/tree/1ee44e562b1b9a50ea339f3b8f81112b5a24b96f` | partial |
 | KN-LIT-ebd657 | Decomposition formula of the Jacobian group of plane curve (Draft) | 2013 | `eprint:2013/548` | read |
 | KN-LIT-edd7ba | Point compression for the trace zero subgroup over a small degree extension field (read at source) | 2014 | `arxiv:1403.0126` | read |
 | KN-LIT-ef2183 | DKEM (Ding Key Encapsulation)（NGCC 公钥第一轮候选 · 密钥封装 13） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |

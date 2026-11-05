@@ -33,6 +33,23 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/proposals/IDEA-20260904-f7d47d.yaml
   note: The O2 line's load-bearing hole is an unmeasured second moment
+- repo: crypto-autoresearcher
+  path: docs/reports/ic-prime-eth-leads-20261102/planted_leak.md
+  note: >-
+    Desk note 2026-11-02 (surviving residue of a refuted proposal): a planted log-mod-M character
+    h(P) = chi(log P) is the Pohlig-Hellman leak, not a coordinate-computable filter (Lean: every
+    additive map Z/N -> Z/M is zero when gcd(N, M) = 1; for prime N a nonzero one forces N | M), so
+    a calibrator built on it measures the cost of a leak. The proposal's survival exponent
+    eps^(-2^(t+1)) double-counts one 2^t (correct exponent 2^t - 1, heuristic reconstruction of the
+    cost formula from the skeptic digest). The regime eps = 2^(-b^delta), delta < 1, cannot be told
+    from the Weil floor 2^(-b/2) at b <= 36. No run. The lead's own next step (bucket variance W) is
+    unchanged.
+- repo: crypto-autoresearcher
+  path: docs/reports/ic-prime-eth-leads-20261102/PlantedLeak.lean
+  note: >-
+    Lean file behind the desk note (4 theorems, rebuilt 2026-11-02 with exit 0 and standard axioms:
+    rebuild_PlantedLeak_20261102.txt). Proves the arithmetic only; identifying Lean ZMod N with the
+    cyclic group E(F_p) is argued in the note, not formalised.
 ledger_refs:
 - H-ECDLP-2ade73
 - H-ECDLP-07c7c6
@@ -58,4 +75,4 @@ forecloses:
 - output-sensitive partial verifier
 areas:
 - ECDLP
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-02'
