@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: abstract orbit spectrum component
+
+The [orbit component](../../implementation/orbit_spectrum_stage.py) enumerates canonical placements for the split, Z2 and odd branch types at n=3,5,7. It records an exact placement count and SHA-256 of the ordered witness stream for each of the nine cases, plus each distinct `(m,r)` pair, its multiplicity and first witness. Every placement gets two rank calculations: polynomial gcd in `F2[x]/(x^n-1)` and binary elimination of all cyclic shifts. A short orbit is permitted only when its branch-point degree is coprime to n.
+
+The component's source-only verification enumerated 43,872 abstract placements. All nine `(m,r)` sets matched the earlier [spectrum derivation aid](../../../EXP-PEXT-212d5c/implementation/spectrum.py). Five focused tests pass, covering exact rank examples, deterministic enumeration, short-orbit restriction, write-once custody and tampered-output rejection. Exact readback recomputes the full canonical output. These checks establish agreement for the stated abstract placement model; they do not establish that a placement is realized by a curve.
+
+This prepares the `orbits` stage output but does not bind it to an approved supervisor plan. `EXP-PEXT-bf8f96` remains `review_required` and unfrozen. Regression controls, certified descent, final C5 review, full analyze/export/checker, H1 q13, the six-run plan and preapproval packet are still required before execution approval. No scientific cohort run or cloud job was launched.

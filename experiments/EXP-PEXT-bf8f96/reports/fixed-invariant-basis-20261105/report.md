@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: exact fixed-vector basis of the radical action
+
+The [fixed-invariant basis](../../implementation/fixed_invariant_basis.py) partitions the checked radical-algebra monomial basis into Frobenius cycles. For each length-n cycle it traces the n polynomial-basis elements of K over k. For a fixed monomial it searches those basis seeds for a nonzero trace. Every returned vector is checked directly under the exact semilinear action; the polynomial-basis Moore matrix has full rank, and the number of vectors equals the K(x)-dimension of the radical algebra. This construction uses no division by n, so it also applies when the characteristic divides n.
+
+Nine related software tests pass. Four F27 source rows yield fixed-vector dimensions 2,8,8,8; their singleton cycles require the third polynomial-basis seed in characteristic 3. A nonsquare constant twist changes a synthetic F27 basis dimension from 4 to 8, matching arithmetic ranks 2 and 3. The published q3/n5 class/T-zero quartic yields a checked two-vector basis. These are exact fixture checks; no production cohort was reduced.
+
+The semilinear descent basis principle is stated in [Köck, *Belyi's Theorem Revisited*, Lemma 1.10](https://eprints.soton.ac.uk/29785/1/b45h1koe.pdf). Next express products of these invariant vectors with coefficients in k(x), then independently check the resulting fixed-field model, geometric connectedness and genus. EXP-PEXT-bf8f96 remains `review_required` and unfrozen; no scientific cohort trial was launched.

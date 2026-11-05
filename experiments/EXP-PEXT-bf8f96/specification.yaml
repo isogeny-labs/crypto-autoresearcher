@@ -40,9 +40,21 @@ experiment:
       the P3 minimum cohort.
     sources_to_bind:
     - experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs
+    - experiments/EXP-PEXT-212d5c/implementation/spectrum.py
     - experiments/EXP-PEXT-212d5c/implementation/fixtures/
+    - experiments/EXP-PEXT-bf8f96/implementation/historical_regression_stage.py
+    - experiments/EXP-PEXT-bf8f96/implementation/orbit_spectrum_stage.py
+    - experiments/EXP-PEXT-bf8f96/implementation/stage_router.py
+    - experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py
+    - experiments/EXP-PEXT-bf8f96/implementation/all_degree_collision_certificate.rs
+    - experiments/EXP-PEXT-bf8f96/implementation/check_all_degree_collision_certificate.py
+    - experiments/EXP-PEXT-bf8f96/implementation/c2_control_stage.py
+    - experiments/EXP-PEXT-bf8f96/implementation/geometric_analysis_stage.py
+    - experiments/EXP-PEXT-bf8f96/implementation/c3_order_control.py
     - experiments/EXP-PEXT-0b2c75/implementation/pext4_census.rs
     - experiments/EXP-PEXT-bf8f96/inputs/manifest.json
+    - experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-n3-alignment.json
+    - experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-q3-n5-bijection.json
     - experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/q3-n5.json
     - experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/q5-n3.json
     - experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/q7-n3.json
@@ -85,8 +97,13 @@ experiment:
       section3.2 rank-two scalar restriction is exercised.
   - id: C5
     kind: independent
-    description: Blind second implementation recomputes fixed first/middle/last canonical unit per torsion/T/descent
-      stratum, all counterexamples, all special-j classes and all Type2 hyperelliptic witnesses.
+    description: Blind second implementation recomputes first/lower-middle/last canonical class/T unit in each
+      occupied cohort/torsion-count/T-index/descent-status stratum, plus every unit carrying a counterexample,
+      every T unit of each special-j class and every unit carrying a Type2 hyperelliptic witness. Selection
+      uses a complete certificate-bound metadata table in canonical join-plan order; witness ordinals are
+      retained, the special-j flag is recomputed from the named model, and producer genus/minimum values are
+      withheld until independent recomputation is sealed. A preliminary table with unresolved descent is
+      preview-only and cannot enter the C5 review roster.
   - id: C6
     kind: coordinate_isomorphism
     description: 'C-coordinate: identity vs seeded PGL2(K) transport with full binary-form scalar; preserve
@@ -171,10 +188,12 @@ experiment:
       Any cloud route needs a separate published finite dollar/capacity grant.
   stages:
   - id: regression
-    objective: T=O full fixture replay and identity/squareclass controls
+    objective: Full four-arm historical fixture replay with only setup/wall timings variable, followed by T=O
+      identity/squareclass controls and checked new-cohort comparison in analyze
     watchdog_seconds: 7200
   - id: orbits
-    objective: All abstract allowed n3/5/7 placements and polynomial-rank check
+    objective: All abstract allowed n3/5/7 placements, independent polynomial and cyclic-shift ranks, and
+      exact cross-check against the pinned earlier spectrum
     watchdog_seconds: 3600
   - id: n3core
     objective: Complete q5 and q7 same-curve all-T census
@@ -187,7 +206,8 @@ experiment:
     objective: Complete q3 original full cohort all-T census
     watchdog_seconds: 21600
   - id: analyze
-    objective: Exact joins, independent control reconciliation, export and report
+    objective: Exact joins, write-once geometric and incomplete C5 preview custody, independent control
+      reconciliation, export and report
     watchdog_seconds: 3600
   stopping_rules:
   - Fixed whole cohorts; stop at stage watchdog or memory ceiling and retain all partial rows and exact remaining
@@ -373,7 +393,7 @@ experiment:
     protocol_hashes: {}
     implementation_tier: executor-implementation
     runbook: null
-    reason: Source-bound candidate compiler component exists; complete six-stage launcher, controls and runbook remain unavailable, so no mechanical card is asserted.
+    reason: Checked candidate and geometric-analysis components retain Type2 true ordinals with unit hashes; the analyze component now writes and readback-checks an incomplete four-cohort C5 metadata/roster preview and a fixed F27 synthetic C2 fixture. Fixed-field multiplication, independent fixture replay and one-row published-source binding exist. Certified descent/counterexample metadata, final C5 blind custody, full-cohort checker integration/runtime qualification, six-stage launcher, remaining controls and runbook remain unavailable, so no mechanical card is asserted.
   required_artifacts:
   - experiments/EXP-PEXT-bf8f96/implementation/run.py
   - experiments/EXP-PEXT-bf8f96/implementation/check.py
@@ -390,7 +410,7 @@ experiment:
   readiness:
     problem: problems/pext-degree2-squareclass-census-launcher.md
     blockers:
-    - Candidate build, bounded unit loop, batch custody and independent candidate-set checker exist; complete quotient/census launcher, coefficient-aware descent, Type2, C0-C7 controls and analysis remain.
+    - Candidate build, bounded unit loop, independent checker, Type2 and geometric-analysis components retain checked Type2 true ordinals and unit hashes; analyze now writes/readback-checks a four-cohort C5 preview and fixed F27 synthetic C2 fixture, with unresolved descent allowed only in explicit incomplete preview mode. Fixed-field multiplication, independent source/geometry fixture replays and one-row published-source binding exist. Certified descent/counterexample metadata, final C5 blind custody, full-cohort checker integration/runtime qualification, complete quotient/census launcher, remaining controls and final analysis remain.
     - Compact full-cohort inputs manifest and exact four-cohort join plans exist; trial-plan/RUN allocation, executor handoff and prospective dispatch queue remain absent.
     - 'No lawful additional lane reserved: two current PEXT lanes open; resolve lifecycle prospectively, preserving
       failed outcomes and continuation.'

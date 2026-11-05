@@ -645,3 +645,158 @@ wrong-source and wrong-conjugate refusal. The
 records the scope. Next construct the fixed-field model and independently
 check its descent and connectedness before assigning admissible genus. The
 contract remains `review_required`; no scientific cohort trial was launched.
+
+## Exact radical-algebra table, 2026-11-05
+
+The [radical-algebra model](../experiments/EXP-PEXT-bf8f96/implementation/radical_algebra_model.py)
+now builds an arithmetic-relation quotient basis, exact multiplication factors
+and a sign-corrected semilinear Frobenius table. It checks every basis-pair
+action identity and the order-n identity, and can bind generator zero to the
+named source curve and T. Ten related software tests pass, including the F27
+constant-twist rank increase from 2 to 3. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/radical-algebra-model-20261105/report.md)
+records the fixture scope. Next construct the fixed-invariant basis and
+base-field multiplication, then independently check connectedness and genus.
+The contract remains `review_required`; no scientific cohort trial was launched.
+
+## Fixed-invariant radical basis, 2026-11-05
+
+The [fixed-invariant basis](../experiments/EXP-PEXT-bf8f96/implementation/fixed_invariant_basis.py)
+now constructs and directly checks Frobenius-fixed vectors orbit by orbit from
+the exact radical-algebra table. It verifies full polynomial-basis Moore rank
+and the expected vector dimension without dividing by n, including the
+characteristic-3 cubic case. Nine related software tests pass across F27 and
+published q3/n5 fixtures. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/fixed-invariant-basis-20261105/report.md)
+records the scope. Next compute multiplication over the base rational-function
+field and independently check connectedness and genus. The contract remains
+`review_required`; no scientific cohort trial was launched.
+
+## Fixed-field multiplication table, 2026-11-05
+
+The [fixed-field multiplication builder](../experiments/EXP-PEXT-bf8f96/implementation/fixed_field_multiplication.py)
+computes every invariant-basis product in the exact radical algebra, decomposes
+it over k(x) by Frobenius-norm rationalization, and reconstructs the ambient
+product. It checks the unit identity and binds a table to the named source
+curve and T. Ten related software tests pass across F27 source rows, a
+constant twist, and a published q3/n5 class/T fixture. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/fixed-field-multiplication-20261105/report.md)
+records the fixture scope. Next independently check descent and geometric
+connectedness, then implement the controls and remaining six-stage pipeline.
+The contract remains `review_required` and unfrozen.
+
+## Source-fixed component geometry, 2026-11-05
+
+The [component-geometry checker](../experiments/EXP-PEXT-bf8f96/implementation/fixed_model_geometry.py)
+replays square relations with the quotient checker's separate arithmetic and
+cross-checks rank, fixed-algebra dimension, component count and branch genus.
+It suppresses a connected-curve genus when a constant twist gives two geometric
+components. Thirteen related software tests pass on F27 source rows, the
+constant twist and a mismatch rejection. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/fixed-model-geometry-20261105/report.md)
+records the fixture scope. Next independently review the model multiplication
+and descent claim, then bind admissible minima and implement the controls.
+The contract remains `review_required` and unfrozen.
+
+## Exact census-stage capacity check, 2026-11-05
+
+The [capacity checker](../experiments/EXP-PEXT-bf8f96/implementation/stage_capacity.py)
+rederives the published join plans and counts 8,178 class/T units and
+10,262,826,642 logical positions across the three census stages. The q11/n3
+stage has 5,322 units under a 28,800-second watchdog, giving a best-case
+average ceiling of 4,800/887 seconds per unit before build, checker and
+supervisor overhead. The sparse collision method can certify generic ranges
+without iterating every position; no measured runtime qualification exists.
+The [report](../experiments/EXP-PEXT-bf8f96/reports/stage-capacity-20261105/report.md)
+also records the independent read-only review's exact full-model replay gap.
+The contract remains `review_required` and unfrozen.
+
+## Independent source-fixed model replay, 2026-11-05
+
+The [standalone checker](../experiments/EXP-PEXT-bf8f96/implementation/independent_fixed_model_check.py)
+reconstructs the radical quotient and semilinear algebra action with separate
+field and polynomial arithmetic. It replays every fixed basis vector, product
+and unit after scalar extension, plus the named curve/T/matrix quartic and
+source generator square. A separate character-sum checker derives geometric
+components and genus without the producer geometry reducer. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/independent-fixed-model-20261105/report.md)
+records the fixture and tamper checks. Next bind this gate to every source-bound
+unit and qualify full-cohort runtime under the fixed watchdogs. The contract
+remains `review_required` and unfrozen.
+
+## Published exceptional-row fixed-model binding, 2026-11-05
+
+The [single-row adapter](../experiments/EXP-PEXT-bf8f96/implementation/source_fixed_unit.py)
+binds one retained exceptional ordinal and matrix to the published actual
+curve/T, the source quartic and its rational inverse charts, the fixed algebra
+and the separate algebra/character-genus replay. Two focused software tests
+pass on a q5/n3 class-zero T-zero fixture, including wrong-matrix and
+wrong-genus rejection. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/source-fixed-unit-20261105/report.md)
+records the scope. Next implement frozen row selection, stage custody,
+deadlines and C5 review strata. The contract remains `review_required` and
+unfrozen.
+
+## Prospective C5 independent-review roster, 2026-11-05
+
+The [C5 selector](../experiments/EXP-PEXT-bf8f96/implementation/c5_selection.py)
+now defines first/lower-middle/last canonical class/T units per occupied
+cohort/torsion-count/T-index/descent-status stratum and forces every flagged
+counterexample, special-j class and Type2 hyperelliptic-witness unit into the
+blind review roster. It refuses incomplete or misordered metadata and retains
+the flagged structure ordinals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-selection-20261105/report.md)
+records two focused tests and a four-plan shape-only exercise over 8,178
+units. Actual selection awaits certificate-bound descent and exception
+metadata, stage write-once custody, independent recomputation and comparison.
+The contract remains `review_required` and unfrozen.
+
+## Source-derived special-j selection, 2026-11-05
+
+The [C5 special-j check](../experiments/EXP-PEXT-bf8f96/implementation/curve_special_j.py)
+derives the review flag from each named K-model and refuses false metadata
+flags. A second cubic-discriminant formula agrees on every published class:
+the four plans have 6, 8, 4 and 4 special-j classes respectively. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-special-j-20261105/report.md)
+records the five focused tests and the provisional roster sizes with
+placeholder descent labels. This grounds one C5 stratum in source arithmetic;
+descent and witness metadata, blind custody and independent recomputation
+remain. The contract remains `review_required` and unfrozen.
+
+## Retained Type2 witness identities for C5, 2026-11-05
+
+The [geometric reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py)
+now carries every predicate-true Type2 ordinal from the hash-bound checked
+batch into its curve/T output, with the raw candidate-unit and Type2-check
+digests. It rejects duplicate or out-of-order signature ordinals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-type2-witness-custody-20261105/report.md)
+records four focused F27 software tests and the exact scope of this retained
+instrument output. Next assemble the complete C5 metadata table from
+validated stages, add descent and counterexample certificates, then seal and
+recompute the blind roster. The contract remains `review_required` and
+unfrozen.
+
+## Complete preliminary C5 metadata binding, 2026-11-05
+
+The [C5 metadata assembler](../experiments/EXP-PEXT-bf8f96/implementation/c5_metadata_preview.py)
+binds every canonical curve/T row to the published join plan, checked unit
+hash, Type2 batch hash and predicate-true witness ordinals. It derives the
+special-j flag and forces P1/P2 discrepancies into review. Descent is
+explicitly `unresolved`; the selector refuses such a table for review unless
+preview mode is requested, and preview output is labeled incomplete. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-metadata-preview-20261105/report.md)
+records seven focused tests and the evidence boundary. Next certify descent
+and control-valid counterexamples, then seal complete metadata and the blind
+independent roster. The contract remains `review_required` and unfrozen.
+
+## Write-once four-cohort C5 analyze preview, 2026-11-05
+
+The [C5 preview stage](../experiments/EXP-PEXT-bf8f96/implementation/c5_preview_stage.py)
+now writes preliminary metadata, incomplete roster and summary artifacts
+once, binding all four published plan hashes and source RUN IDs. The analyze
+component requires their names and source closure in the eventual frozen
+trial plan; its checker recomputes every byte. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-preview-stage-20261105/report.md)
+records five focused tests and the preview boundary. Next build certified
+descent/counterexample metadata and the final sealed blind C5 review; the
+contract remains `review_required` and unfrozen.

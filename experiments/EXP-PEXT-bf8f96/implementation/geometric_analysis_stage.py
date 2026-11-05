@@ -1,7 +1,8 @@
 """Prospective write-once geometric analysis component for the analyze trial.
 
 The full analysis/export/checker remains separate. This component retains
-complete checked P1-P4 rows and refuses partial or unadmitted census stages.
+complete checked P1-P4 rows plus explicitly incomplete C5 previews and
+refuses partial or unadmitted census stages.
 """
 
 import hashlib
@@ -12,16 +13,47 @@ from pathlib import Path
 import sys
 
 from candidate_stage import COMPONENT_SOURCES as CANDIDATE_SOURCES, STAGE_ORDER
+from c2_control_stage import (ARTIFACTS as C2_ARTIFACTS,
+                              SOURCES as C2_SOURCES,
+                              check_control as check_c2,
+                              run_control as run_c2)
+from c3_order_control import (ARTIFACT as C3_ARTIFACT,
+                              artifact_bytes as c3_bytes,
+                              compare_artifact as compare_c3,
+                              write_artifact as write_c3)
+from c5_preview_stage import (METADATA as C5_METADATA, ROSTERS as C5_ROSTERS,
+                              SUMMARY as C5_SUMMARY, artifact_bytes as c5_bytes,
+                              compare_preview, plans_from_campaign, write_preview)
 from geometric_campaign import reduce_campaign
 from input_manifest import ROOT
+from legacy_t0_compare import (ARTIFACT as T0_ARTIFACT,
+                               artifact_bytes as t0_bytes,
+                               compare_artifact as compare_t0,
+                               write_artifact as write_t0)
 
 
 ROWS = "geometric-curves.jsonl"
 SUMMARY = "geometric-analysis.json"
-COMPONENT_SOURCES = CANDIDATE_SOURCES | {
+COMPONENT_SOURCES = CANDIDATE_SOURCES | C2_SOURCES | {
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py",
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c3_order_control.py",
     "experiments/EXP-PEXT-bf8f96/implementation/geometric_analysis_stage.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c5_preview_stage.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c5_metadata_preview.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/c5_selection.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/curve_special_j.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/legacy_t0_compare.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/legacy_n3_alignment.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/legacy_class_bijection.py",
+    "experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs",
+}
+T0_INPUTS = {
+    "experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-n3-alignment.json",
+    "experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-q3-n5-bijection.json",
+    "experiments/EXP-PEXT-212d5c/implementation/fixtures/R1-n3-q5.jsonl",
+    "experiments/EXP-PEXT-212d5c/implementation/fixtures/R1-n3-q7.jsonl",
+    "experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl",
 }
 
 
@@ -51,12 +83,19 @@ def _preflight(trial_plan, run_dir):
         raise ValueError("analyze component trial plan differs from six-stage contract")
     trial = plan["trials"][-1]
     if (trial.get("stage") != "analyze"
-            or not {ROWS, SUMMARY} <= set(trial.get("artifacts", []))
+            or not ({ROWS, SUMMARY, C5_METADATA, C5_ROSTERS, C5_SUMMARY,
+                     T0_ARTIFACT, C3_ARTIFACT} | set(C2_ARTIFACTS))
+                   <= set(trial.get("artifacts", []))
             or not {"n3core", "n3ext", "n5"} <= set(trial.get("depends_on", []))
             or trial.get("watchdog_seconds") != 3600
             or not COMPONENT_SOURCES <= set(plan["source_sha256"])
+            or not T0_INPUTS <= set(plan.get("input_sha256", {}))
             or run_root(ROOT, plan, trial) != run_dir.resolve()):
         raise ValueError("analyze component absent from frozen stage")
+    for relative in T0_INPUTS:
+        path = ROOT / relative
+        if path.is_symlink() or not path.is_file() or sha256(path) != plan["input_sha256"][relative]:
+            raise ValueError(f"historical T=O input hash mismatch: {relative}")
     launch = read_json(run_dir / "launch.json")
     if (launch.get("trial_id") != "analyze"
             or launch.get("run_id") != trial["run_id"]
@@ -91,9 +130,25 @@ def write_component(run_dir, curves, campaign, plan_sha256, source_runs):
 
 
 def run_component(trial_plan, run_dir):
-    _, stage_dirs, source_runs, plan_sha256 = _preflight(trial_plan, run_dir)
+    plan, stage_dirs, source_runs, plan_sha256 = _preflight(trial_plan, run_dir)
     curves, campaign = reduce_campaign(trial_plan, stage_dirs)
-    return write_component(run_dir, curves, campaign, plan_sha256, source_runs)
+    reversed_curves, reversed_campaign = reduce_campaign(
+        trial_plan, stage_dirs, read_order="reverse")
+    c3_bytes(curves, campaign, reversed_curves, reversed_campaign,
+             plan_sha256, source_runs)
+    plans = plans_from_campaign(campaign)
+    c5_bytes(curves, plans, plan_sha256, source_runs)
+    t0_bytes(curves, plan_sha256, source_runs)
+    c2 = run_c2(run_dir, plan["source_sha256"], plan_sha256,
+                plan["trials"][-1]["run_id"])
+    geometry = write_component(run_dir, curves, campaign, plan_sha256, source_runs)
+    c5_preview = write_preview(run_dir, curves, plans, plan_sha256, source_runs)
+    t0 = write_t0(run_dir, curves, plan_sha256, source_runs)
+    c3 = write_c3(run_dir, curves, campaign, reversed_curves,
+                  reversed_campaign, plan_sha256, source_runs)
+    return {"geometry": geometry, "c5_preview": c5_preview,
+            "historical_t0": t0, "c2_synthetic": c2,
+            "c3_sealed_order": c3}
 
 
 def compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs):
@@ -111,9 +166,21 @@ def compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs):
 
 def check_component(trial_plan, run_dir):
     """Recompute the checked campaign and compare every retained output byte."""
-    _, stage_dirs, source_runs, plan_sha256 = _preflight(trial_plan, run_dir)
+    plan, stage_dirs, source_runs, plan_sha256 = _preflight(trial_plan, run_dir)
+    c2 = check_c2(run_dir, plan["source_sha256"], plan_sha256,
+                  plan["trials"][-1]["run_id"])
     curves, campaign = reduce_campaign(trial_plan, stage_dirs)
-    return compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs)
+    reversed_curves, reversed_campaign = reduce_campaign(
+        trial_plan, stage_dirs, read_order="reverse")
+    c3 = compare_c3(run_dir, curves, campaign, reversed_curves,
+                    reversed_campaign, plan_sha256, source_runs)
+    plans = plans_from_campaign(campaign)
+    geometry = compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs)
+    c5_preview = compare_preview(run_dir, curves, plans, plan_sha256, source_runs)
+    t0 = compare_t0(run_dir, curves, plan_sha256, source_runs)
+    return {"geometry": geometry, "c5_preview": c5_preview,
+            "historical_t0": t0, "c2_synthetic": c2,
+            "c3_sealed_order": c3}
 
 
 if __name__ == "__main__":
