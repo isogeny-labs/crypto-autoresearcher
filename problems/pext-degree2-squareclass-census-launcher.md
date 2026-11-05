@@ -775,3 +775,16 @@ instrument output. Next assemble the complete C5 metadata table from
 validated stages, add descent and counterexample certificates, then seal and
 recompute the blind roster. The contract remains `review_required` and
 unfrozen.
+
+## Complete preliminary C5 metadata binding, 2026-11-05
+
+The [C5 metadata assembler](../experiments/EXP-PEXT-bf8f96/implementation/c5_metadata_preview.py)
+binds every canonical curve/T row to the published join plan, checked unit
+hash, Type2 batch hash and predicate-true witness ordinals. It derives the
+special-j flag and forces P1/P2 discrepancies into review. Descent is
+explicitly `unresolved`; the selector refuses such a table for review unless
+preview mode is requested, and preview output is labeled incomplete. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-metadata-preview-20261105/report.md)
+records seven focused tests and the evidence boundary. Next certify descent
+and control-valid counterexamples, then seal complete metadata and the blind
+independent roster. The contract remains `review_required` and unfrozen.

@@ -21,7 +21,7 @@ class C5SelectionTests(unittest.TestCase):
                           "special_j": i == 2, "unit_counterexample": False,
                           "curve_counterexample": False, "counterexample_ordinals": [],
                           "type2_hyperelliptic_ordinals": [],
-                          "certificate_sha256": "a"*64}
+                          "candidate_unit_sha256": "a"*64}
                          for i in range(7) for t in range(2)]
 
     def test_canonical_strata_and_forced_rows(self):
