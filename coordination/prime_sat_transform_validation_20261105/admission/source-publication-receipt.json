@@ -1,0 +1,215 @@
+{
+  "started_at": "2026-11-05T17:50:42.561533+00:00",
+  "steps": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout": "a11062da91520ccde70e1a79b91c27a16617057d\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "coordination/prime_sat_transform_validation_20261105/README.md",
+        "coordination/prime_sat_transform_validation_20261105/protocol.json",
+        "coordination/prime_sat_transform_validation_20261105/launch.py",
+        "coordination/prime_sat_transform_validation_20261105/worker.py",
+        "coordination/prime_sat_transform_validation_20261105/input-bindings.json",
+        "coordination/prime_sat_transform_validation_20261105/resource-feasibility.json",
+        "coordination/prime_sat_transform_validation_20261105/authorization.template.json",
+        "coordination/prime_sat_transform_validation_20261105/review-plan.md",
+        "coordination/prime_sat_transform_validation_20261105/export-mapping.md",
+        "coordination/prime_sat_transform_validation_20261105/inference-amendment.yaml",
+        "experiments/EXP-PNEXT-6558d8/specification.yaml",
+        "experiments/EXP-PNEXT-6558d8/trial-plan.json",
+        "experiments/EXP-PNEXT-6558d8/config.json",
+        "coordination/prime_sat_transform_validation_20261105/trial-adapter.py"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "returncode": 0,
+      "stdout": "coordination/prime_sat_transform_validation_20261105/README.md\ncoordination/prime_sat_transform_validation_20261105/authorization.template.json\ncoordination/prime_sat_transform_validation_20261105/export-mapping.md\ncoordination/prime_sat_transform_validation_20261105/inference-amendment.yaml\ncoordination/prime_sat_transform_validation_20261105/input-bindings.json\ncoordination/prime_sat_transform_validation_20261105/launch.py\ncoordination/prime_sat_transform_validation_20261105/protocol.json\ncoordination/prime_sat_transform_validation_20261105/resource-feasibility.json\ncoordination/prime_sat_transform_validation_20261105/review-plan.md\ncoordination/prime_sat_transform_validation_20261105/trial-adapter.py\ncoordination/prime_sat_transform_validation_20261105/worker.py\nexperiments/EXP-PNEXT-6558d8/config.json\nexperiments/EXP-PNEXT-6558d8/specification.yaml\nexperiments/EXP-PNEXT-6558d8/trial-plan.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/ec2-user/prime-sat-research-venv/bin/python",
+        "tools/check_merge_hygiene.py",
+        "--base",
+        "origin/main"
+      ],
+      "returncode": 0,
+      "stdout": "PASS: no conflict markers, no unparseable records, no duplicate registry keys, no changed runbook-session files, no schema-failing new run manifests, no identifier collisions, no new legacy GOAL identifiers\n",
+      "stderr": "note: parseability scoped to 18 committed, staged, or tracked-worktree candidate path(s) vs origin/main; the absolute sweep runs on main\n"
+    },
+    {
+      "command": [
+        "/home/ec2-user/prime-sat-research-venv/bin/python",
+        "tools/check_run_immutability.py"
+      ],
+      "returncode": 0,
+      "stdout": "OK: no committed run artifacts were modified or deleted\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/ec2-user/prime-sat-research-venv/bin/python",
+        "tools/benchrec.py",
+        "gate"
+      ],
+      "returncode": 0,
+      "stdout": "benchrec: OK, 4 record(s), progress report current\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "design: EXP-PNEXT-6558d8 bounded software validation launcher and unapproved draft contract"
+      ],
+      "returncode": 0,
+      "stdout": "[codex/prime-full-chart-composition-20261101 65df60d9ea] design: EXP-PNEXT-6558d8 bounded software validation launcher and unapproved draft contract\n Committer: EC2 Default User <ec2-user@ip-172-31-17-161.us-east-2.compute.internal>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly:\n\n    git config --global user.name \"Your Name\"\n    git config --global user.email you@example.com\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 14 files changed, 1508 insertions(+)\n create mode 100644 coordination/prime_sat_transform_validation_20261105/README.md\n create mode 100644 coordination/prime_sat_transform_validation_20261105/authorization.template.json\n create mode 100644 coordination/prime_sat_transform_validation_20261105/export-mapping.md\n create mode 100644 coordination/prime_sat_transform_validation_20261105/inference-amendment.yaml\n create mode 100644 coordination/prime_sat_transform_validation_20261105/input-bindings.json\n create mode 100644 coordination/prime_sat_transform_validation_20261105/launch.py\n create mode 100644 coordination/prime_sat_transform_validation_20261105/protocol.json\n create mode 100644 coordination/prime_sat_transform_validation_20261105/resource-feasibility.json\n create mode 100644 coordination/prime_sat_transform_validation_20261105/review-plan.md\n create mode 100644 coordination/prime_sat_transform_validation_20261105/trial-adapter.py\n create mode 100644 coordination/prime_sat_transform_validation_20261105/worker.py\n create mode 100644 experiments/EXP-PNEXT-6558d8/config.json\n create mode 100644 experiments/EXP-PNEXT-6558d8/specification.yaml\n create mode 100644 experiments/EXP-PNEXT-6558d8/trial-plan.json\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "returncode": 0,
+      "stdout": "65df60d9eafb9d22ef2828748a74f8b119f39187\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "push"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "remote: This repository moved. Please use the new location:        \nremote:   https://github.com/isogeny-labs/crypto-autoresearcher.git        \nremote: \nremote: Create a pull request for 'codex/prime-full-chart-composition-20261101' on GitHub by visiting:        \nremote:      https://github.com/isogeny-labs/crypto-autoresearcher/pull/new/codex/prime-full-chart-composition-20261101        \nremote: \nTo https://github.com/aburan28/crypto-autoresearcher.git\n * [new branch]            codex/prime-full-chart-composition-20261101 -> codex/prime-full-chart-composition-20261101\n"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/isogeny-labs/crypto-autoresearcher/git/commits/65df60d9eafb9d22ef2828748a74f8b119f39187",
+        "--jq",
+        ".sha"
+      ],
+      "returncode": 0,
+      "stdout": "65df60d9eafb9d22ef2828748a74f8b119f39187\n",
+      "stderr": ""
+    }
+  ],
+  "completed": true,
+  "candidate_execution": 0,
+  "canonical_queue_changed": false,
+  "mapping": {
+    "coordination/prime_sat_transform_validation_20261105/README.md": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/README.md",
+      "sha256": "4c2454e82808b43929e0d423c9582fadd9f18dc86d18f4e203264d4a2d4212bf"
+    },
+    "coordination/prime_sat_transform_validation_20261105/protocol.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/protocol.json",
+      "sha256": "3d3336015831fc51baf8ae28ceb72496764ebd60b83a4834c1deffc4169aa01d"
+    },
+    "coordination/prime_sat_transform_validation_20261105/launch.py": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/launch.py",
+      "sha256": "b0f34b74aa2ea2b15a4d32243f21d0cfd8a58d1cb2b07972e1742b28bc9b0dc5"
+    },
+    "coordination/prime_sat_transform_validation_20261105/worker.py": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/worker.py",
+      "sha256": "9ecc68c1afa1f72781297d73fd76381c28c07c1e523adad72c494eb611af2283"
+    },
+    "coordination/prime_sat_transform_validation_20261105/input-bindings.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/input-bindings.json",
+      "sha256": "0cda119247b56a70928e8272d89184ccaa11bf904789aeb2e7a53df1698493fa"
+    },
+    "coordination/prime_sat_transform_validation_20261105/resource-feasibility.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/resource-feasibility.json",
+      "sha256": "1a1ba3dbd8297760a0414ecbe308913c9aaea94f547dc977bd282cd488f7aa62"
+    },
+    "coordination/prime_sat_transform_validation_20261105/authorization.template.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/authorization.template.json",
+      "sha256": "416d04b855be0b9e63b524ad899179fb8f99a41fc9975b79899ba4f702eb35af"
+    },
+    "coordination/prime_sat_transform_validation_20261105/review-plan.md": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/review-plan.md",
+      "sha256": "6c73479cd5a459d47e7d5356338dd40a4782ede430ece4e142474542f5266b00"
+    },
+    "coordination/prime_sat_transform_validation_20261105/export-mapping.md": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/export-mapping.md",
+      "sha256": "dcc137f6eb4870726a13d9a26cb79ec8de0494c6e510dbb05ef1d9365fe11097"
+    },
+    "coordination/prime_sat_transform_validation_20261105/inference-amendment.yaml": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/resolved/coordination/prime_sat_transform_validation_20261105/inference-amendment.yaml",
+      "sha256": "1ce704f66849e3fc1920591c53068e385c075e748b0ee42d904c4277a94d1d2f"
+    },
+    "experiments/EXP-PNEXT-6558d8/specification.yaml": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/experiment-stage/draft-specification.yaml",
+      "sha256": "35d6d077edb6bf40b8ba1e838898f4c03dc8bd4b1646cf27547aea7072dcde16"
+    },
+    "experiments/EXP-PNEXT-6558d8/trial-plan.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/experiment-stage/draft-trial-plan.json",
+      "sha256": "ee642546505a9edaa86cfffd2874c5951188db767daf43cfb6269ffc43d18ae8"
+    },
+    "experiments/EXP-PNEXT-6558d8/config.json": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/experiment-stage/config.json",
+      "sha256": "d2b711873b7c9bf6e62a705b0096611a6134cc3cddf295a482b95aae08306da1"
+    },
+    "coordination/prime_sat_transform_validation_20261105/trial-adapter.py": {
+      "source": ".resume/prime-sat-transform-validation-admission-20261105/trial-adapter.py",
+      "sha256": "fd75ab0ae9a71f678e2e8c7cad4533bf27e1980ac17e64c4c2a42570f16bf43b"
+    }
+  },
+  "approval_sha256": "648f98a83e96e481153a423dcd6705b7afa93875553a3ff4ddb04c87a6ae92d3",
+  "created_paths": [
+    "coordination/prime_sat_transform_validation_20261105/README.md",
+    "coordination/prime_sat_transform_validation_20261105/protocol.json",
+    "coordination/prime_sat_transform_validation_20261105/launch.py",
+    "coordination/prime_sat_transform_validation_20261105/worker.py",
+    "coordination/prime_sat_transform_validation_20261105/input-bindings.json",
+    "coordination/prime_sat_transform_validation_20261105/resource-feasibility.json",
+    "coordination/prime_sat_transform_validation_20261105/authorization.template.json",
+    "coordination/prime_sat_transform_validation_20261105/review-plan.md",
+    "coordination/prime_sat_transform_validation_20261105/export-mapping.md",
+    "coordination/prime_sat_transform_validation_20261105/inference-amendment.yaml",
+    "experiments/EXP-PNEXT-6558d8/specification.yaml",
+    "experiments/EXP-PNEXT-6558d8/trial-plan.json",
+    "experiments/EXP-PNEXT-6558d8/config.json",
+    "coordination/prime_sat_transform_validation_20261105/trial-adapter.py"
+  ],
+  "base_commit": "a11062da91520ccde70e1a79b91c27a16617057d",
+  "commit": "65df60d9eafb9d22ef2828748a74f8b119f39187",
+  "all14_git_hashes_verified": true,
+  "ended_at": "2026-11-05T17:56:08.442528+00:00"
+}
