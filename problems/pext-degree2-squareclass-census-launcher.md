@@ -645,3 +645,16 @@ wrong-source and wrong-conjugate refusal. The
 records the scope. Next construct the fixed-field model and independently
 check its descent and connectedness before assigning admissible genus. The
 contract remains `review_required`; no scientific cohort trial was launched.
+
+## Exact radical-algebra table, 2026-11-05
+
+The [radical-algebra model](../experiments/EXP-PEXT-bf8f96/implementation/radical_algebra_model.py)
+now builds an arithmetic-relation quotient basis, exact multiplication factors
+and a sign-corrected semilinear Frobenius table. It checks every basis-pair
+action identity and the order-n identity, and can bind generator zero to the
+named source curve and T. Ten related software tests pass, including the F27
+constant-twist rank increase from 2 to 3. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/radical-algebra-model-20261105/report.md)
+records the fixture scope. Next construct the fixed-invariant basis and
+base-field multiplication, then independently check connectedness and genus.
+The contract remains `review_required`; no scientific cohort trial was launched.
