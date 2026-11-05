@@ -191,6 +191,28 @@ $N$ variables. A certificate can be checked without knowing how it was found.
 `verify/cert_check.py` does this with its own descent of $S_3$, and
 `results/verification.md` lists the instances whose certificates it accepted.
 
+**Lemma 1.6** (lifting a checked kernel). **Proved.** Let
+$d\ge\max_{f\in F}\deg f$, and let $U\subseteq B_{\le d}$ contain $F$ and be
+closed under multiplication by each variable on $U\cap B_{\le d-1}$.
+Let $C_{d+1}(U)$ be the smallest subspace of $B_{\le d+1}$ containing $U$
+and closed under variable multiplication on its degree-at-most-$d$ part.
+Then
+
+$$W_{d+1}(F)\subseteq C_{d+1}(U).$$
+
+Equality holds whenever $U\subseteq W_{d+1}(F)$; in particular it holds
+when $U=W_d(F)$. Thus $1\notin C_{d+1}(U)$ proves
+$1\notin W_{d+1}(F)$, but $1\in C_{d+1}(U)$ alone does not prove
+$1\in W_{d+1}(F)$. A checked quotient map with kernel $U$ establishes
+$W_d(F)\subseteq U$, not the additional equality.
+
+*Proof.* Since $F\subseteq U\subseteq C_{d+1}(U)$, the definition of
+$W_{d+1}(F)$ gives the first inclusion. If
+$U\subseteq W_{d+1}(F)$, that latter space is closed under every allowed
+degree-$(d+1)$ multiplication and contains $U$, so minimality of
+$C_{d+1}(U)$ gives the reverse inclusion. Finally,
+$W_d(F)\subseteq W_{d+1}(F)$ by monotonicity. $\square$
+
 ---
 
 ## 2. Structure of the $m=2$ system
