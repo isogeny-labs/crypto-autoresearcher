@@ -50,3 +50,24 @@ ledger alongside new work; checker/IO/startup costs remain separately bounded by
 the inclusive resource records. Clean 1,152-call results, if obtained, and total
 1,156-call/two-attempt accounting are separate statements. Exact-byte readiness
 and actual admission/release remain prospective and parent-owned.
+
+Final administrative inspection read the corrective core/checker/driver and
+source/dependency closure, prepare/release/supervisor guards, journal exporter,
+input manifest and regression sources at
+`d8c25fa8cf20dc94ed627e1742a57ca401dd569f`. The JSON-roundtrip test imports the
+original frozen A9 checker and explicitly asserts old failure and corrected
+success on the same serialized control. Wrong representative values and
+noncanonical keys still refuse. The final source also repairs stopped-prefix
+accounting and enforces immediate hard timeout protection; neither changes the
+solver mathematics. Original failure/protocol/release/assessment bytes were
+checked against their published snapshot. All old A7/A8 data and public-fixture
+hashes were checked directly, without solving those cases.
+
+The saved parent software receipt reports 78 controls passed in 1.51 seconds.
+The delegated metadata-only export test passed once in 0.23 seconds; no native
+or tiny mathematical solver experiment was executed by this assessment. Current
+configured coordinator resolution remains
+`anthropic:claude-opus-5-5`, high effort, unverified. This records the resolver's
+configuration, not the serving model or a successful provider probe. The prior
+KB fallback and the sparse-checkout full-ledger refusal remain evidence gaps;
+there is no claimed full-ledger pass or staffed scientific review.

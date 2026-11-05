@@ -160,3 +160,44 @@ model/provider/probe, full-ledger or staffed scientific review claim is made.
 Final approval is pending exact runnable bytes, concrete remaining-resource guards,
 input/cost bindings and the regression result. No user reapproval is requested;
 standing authorization covers completing this bounded corrective contract.
+
+## Exact-byte administrative readiness, final corrective source
+
+The final assessment binds published source
+`d8c25fa8cf20dc94ed627e1742a57ca401dd569f` and the SHA maps in
+`admission-assessment.final.json`. All 24 source bindings, nine explicit input
+bindings and content-addressed parent/control/failure artifacts match. The
+original core differs only in its importlib module alias; the driver is
+byte-identical. The checker normalizes only the temporary representative-map
+keys. Values, complete kernels, certificates and exact arithmetic controls stay
+strict. The prospective metadata validates with zero schema/lint findings.
+
+The inspection found an additional custody issue before freeze: a stopped new
+pass could have completed outputs without a finalized case file. The final
+exporter now charges all journaled completed outputs, failed solver phase
+prefixes and shared projection, independently of finalized verified records.
+A hard-killed or otherwise incomplete pass explicitly retains unknown work even
+without a terminal failure event. The prior four outputs remain unverified and
+charged. A completed new panel means 1,152 verified calls; the campaign then has
+1,156 observed completed calls across two attempts. Further failure retains its
+actual prefix and does not authorize another attempt.
+
+The supervisor recomputes the floored remaining allowance at actual launch from
+the root release cap, original absolute deadline and prior CPU/wall use. Both
+CPU soft/hard limits equal that allowance, and timeout or supervisor error kills
+the process group immediately. There is no extra scientific-work grace. Actual
+termination and resource receipts remain authoritative; shared-host wall clocks
+remain invalid for performance inference.
+
+The parent's final software receipt records 78 controls passed in 1.51 seconds,
+including the actual JSON old-fail/new-pass, altered-value/counter refusals,
+stopped-prefix accounting and hard-kill coverage controls. This delegation read
+those controls and reran only the metadata export test: one passed in 0.23
+seconds. It did not execute tiny solver mathematics or any native case.
+
+This is administrative approvability for the existing standalone route, not an
+execution release, official ledger approval, model verification or independent
+scientific review. Parent must publish this assessment, freeze the fresh
+prospective protocol against the exact source, complete the current actual S3
+checkpoint and explicit committed root release, then use the admitted supervisor
+through the run skill. The old contract and failure records remain unchanged.
