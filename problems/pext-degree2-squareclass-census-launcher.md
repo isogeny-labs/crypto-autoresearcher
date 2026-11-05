@@ -736,3 +736,17 @@ wrong-genus rejection. The
 records the scope. Next implement frozen row selection, stage custody,
 deadlines and C5 review strata. The contract remains `review_required` and
 unfrozen.
+
+## Prospective C5 independent-review roster, 2026-11-05
+
+The [C5 selector](../experiments/EXP-PEXT-bf8f96/implementation/c5_selection.py)
+now defines first/lower-middle/last canonical class/T units per occupied
+cohort/torsion-count/T-index/descent-status stratum and forces every flagged
+counterexample, special-j class and Type2 hyperelliptic-witness unit into the
+blind review roster. It refuses incomplete or misordered metadata and retains
+the flagged structure ordinals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/c5-selection-20261105/report.md)
+records two focused tests and a four-plan shape-only exercise over 8,178
+units. Actual selection awaits certificate-bound descent and exception
+metadata, stage write-once custody, independent recomputation and comparison.
+The contract remains `review_required` and unfrozen.
