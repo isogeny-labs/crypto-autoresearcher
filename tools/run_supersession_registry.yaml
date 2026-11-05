@@ -2969,3 +2969,20 @@ records:
   notes: No experiment was rerun. manifest_v2.yaml remains immutable at SHA-256 c04b509e725efc20ec6f8745949340b51be0f1b8a76445961133a128f6a8cd47; manifest_v3.yaml adds the missing direct original-manifest pointer and is hash-pinned to the captured artifacts;
     raw-result.json is a byte-identical copy of metrics.json; the original manifest remains
     unchanged.
+- run_id: RUN-PNEXT-201c3c
+  superseded_path: experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/manifest.yaml
+  superseded_sha256: fb9d73bdab05e4a5b568711850fe84180486aa2118d11e87da8df5c95d80f747
+  superseding_path: experiments/EXP-PNEXT-6558d8/supersessions/RUN-PNEXT-201c3c/manifest_v2.yaml
+  superseding_sha256: f7d3c4b3b6ae8d8f0f324db1fc7bb3865073fe624df59200114a16944f7b5ff5
+  registered: '2026-11-05'
+  supersession_kind: additive_schema_completion
+  superseded_id_null: true
+  superseded_id_null_provenance: Original nested run envelope omits id. Actual launch.json
+    SHA256 345cd0a50106652ae6716c5a6a8ea64d17befe43ab7e3b61bca450e1224abc71 and execution-receipt.json
+    SHA256 28b8e150a19db988c8d35f9b7d5af9e5717aa2c87463f0f695e0bbc00c6069dc both explicitly
+    name RUN-PNEXT-201c3c, matching its directory. No identity invented.
+  defect: Sealed failed driver envelope omitted identity/provenance/environment/inputs/timing
+    because supervisor skips completion after nonzero driver exit.
+  notes: No rerun, repair or result promotion. New manifest outside sealed run transcribes
+    actual native failure and binds existing compressed bundle; original run bytes
+    remain immutable.
