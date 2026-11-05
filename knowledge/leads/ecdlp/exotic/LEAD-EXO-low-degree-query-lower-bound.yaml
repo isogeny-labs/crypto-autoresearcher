@@ -37,16 +37,26 @@ mechanism: 'LEAD-EXO-augmented-oracle-ggm now covers only label-valued and publi
   Kohel-Shparlinski verified (ANTS-IV, LNCS 1838, 2000, pp. 395-404); it covers t = 1 only.'
 disposition: open_next_step
 next_action:
-  step: 'Steps (a) desk and (b) exact rank are done (reports ecdlp-leads-desk-20261104, lowdeg-rank-20261104).
-    Next, desk only: formulate and attempt a bound that charges the test''s description length or local
-    work, not only queries. Heuristic HD2c says a ''k in S?'' test with |S| ~ N/2 needs about N/2 monomials,
-    so a DL table dominates the attack. Optional: test whether full rank persists at t ~ N^(1/D) for D
-    >= 3 and larger N, where the query count would beat sqrt(N)/D.'
-  discriminates: The rank question is settled at toy size. What stays open is whether any query or description-length
-    bound with Delta in place of D, or with charged local work, is provable. That is a complexity question
-    no GGM argument decides. Two-term multiplier relations (b_i = +-b_j or +-2 b_j mod N) account for
-    about 70% of the rank deficits seen below ratio 1.5; the rest are unexplained (round-2 check D2 and
-    validation).
+  step: 'Steps (a) desk, (b) exact rank and (c) the description-length bound are done (reports ecdlp-leads-desk-20261104,
+    lowdeg-rank-20261104, round5-desk-20261105/h1pp-note.md). Step (c) result: the minority-set reduction H1″
+    is proved, Pr[success] <= (C(T_g+2,2) + 1 + sum_j (mu_j + t_j))/N, where mu_j = min(|Z_j|, N - |Z_j|) is the
+    smaller side of test j (the simulator answers each test with its majority answer). H1'' is its special case mu <= Delta.
+    Also proved: no description-charged bound beats sum_j L_j, because an L-monomial test can vanish on any L - 1
+    chosen candidates; and a prescribed generic balanced set needs Omega(N / log N) monomials or SLP size Omega(N / log(pN))
+    (rigorous HD2c), which bounds nothing in the worst case because the solver picks its sets. A sqrt-type bound then
+    holds only under the heuristic H1″-strong, that every L-monomial test on a prime-order curve has mu <= L N^o(1).
+    That is open even for L = 2; Weil and Kohel-Shparlinski scale with Delta and are vacuous for large multipliers.
+    Composite order breaks it (F_p^*: x_1 - x_2 with b_2 = b_1 + (p-1)/2 splits the candidates in half). Toy check at
+    p = 263, N = 281 (exact, reproduced byte for byte): the largest binomial minority set is 10 of 140 classes, the
+    uniform-matrix null gives 8, and the F_p^* positive control gives 130. Next, desk only: bound the largest fiber
+    of prod_i x([b_i]R)^(e_i) on E(F_p), starting with t = 2. Optional: a toy max-fiber sweep over N, to see whether
+    max mu grows faster than log N.'
+  discriminates: A proof of the t = 2 fiber bound with large multipliers would be the first description-charged
+    sqrt-type bound for this model, and it would put the low-degree families of LEAD-EXO-coordinate-statistic-leakage in
+    scope of a theorem. A curve family whose binomial fibers reach a constant fraction of N would be the first low-degree
+    test worth measuring against matched rho. Unconditionally only the Delta bound (H1'') survives, plus the fact
+    that the interpolation attack pays description length Omega(N / log N) for almost every set it targets, which is
+    dominated by a DL table.
 best_measured: full rank in 39 of 39 random-multiplier cells at monomials/candidates about 2, p = 251
   to 2039 (exact computation of the rank premise; no toy-size violation of H1, not a cost)
 evidence:
@@ -62,6 +72,9 @@ evidence:
 - repo: crypto-autoresearcher
   path: docs/reports/ecdlp-leads-desk-20261104/lowdeg_rank_check.json
   note: exact evaluation-matrix ranks at p = 101 and 211 (derivation check)
+- repo: crypto-autoresearcher
+  path: docs/reports/round5-desk-20261105/h1pp-note.md
+  note: step (c) description-length bound; minority-set reduction H1″ proved, H1″-strong heuristic, toy check
 - repo: crypto-autoresearcher
   path: docs/reports/ecdlp-exotic-scouting-20261101/README.md
   note: scouting note with conjecture H1 and its failure mode
@@ -90,4 +103,4 @@ forecloses:
 - coordinate oracle that the generic group model cannot simulate
 areas:
 - ECDLP
-last_reviewed: '2026-11-04'
+last_reviewed: '2026-11-05'
