@@ -1,0 +1,856 @@
+                                           TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY
+
+
+                                                            T. CHINBURG, B. HEMENWAY FALK, N. HENINGER, AND Z. SCHERR
+arXiv:2111.14180v1 [math.NT] 28 Nov 2021
+
+
+
+
+                                                                                      1. Introduction
+                                              Coppersmith’s method [8] uses lattice basis reduction to find small solutions of polynomial con-
+                                           gruences. This method and its variants have been used to solve a number of problems across
+                                           cryptography, including attacks against low public exponent RSA [8], demonstrating the insecurity
+                                           of small private exponent RSA [2], factoring with partial knowledge [8], and the approximate integer
+                                           common divisor problem [11, 15, 7].
+                                              This paper is the second in a series relating Coppersmith’s method to adelic capacity theory. In
+                                           the most common approach to Coppersmith’s method, which is the perspective we adopt in this
+                                           paper, one constructs an auxiliary polynomial that is guaranteed by construction to have the desired
+                                           solutions as roots. Using adelic capacity theory, we showed in our first paper that in the univariate
+                                           case, Coppersmith’s constructive bounds are tight: Above the bound, no auxiliary polynomial of
+                                           the form constructed in the algorithm can exist.
+                                              Coppersmith’s method can also be applied to find solutions to multivariate polynomials or sys-
+                                           tems of polynomials. Unlike the univariate case, which is a fully rigorous method, the method used
+                                           in the existing cryptanalytic literature to address the multivariate case is heuristic. In order to solve
+                                           an m-variable system, one searches for m (or more) suitable auxiliary polynomials in an explicitly
+                                           constructed lattice, and then solves the system of auxiliary polynomials to find the possible roots. In
+                                           order for this method to work, one needs to find m suitable algebraically independent polynomials
+                                           constructed through the lattice. The existing constructions are unable to guarantee the algebraic
+                                           independence of multiple auxiliary polynomials, and thus the applications of this method all rely
+                                           on a heuristic assumption of algebraic independence.
+                                              In this paper, we apply adelic capacity theory to two-variable linear polynomial congruences.
+                                           This is the simplest case involving multivariate polynomials, and it includes the hidden number
+                                           problem and ring learning with errors as special cases. The analysis turns out to already be quite
+                                           involved, and we cannot apply existing results from adelic capacity theory in a black-box way.
+                                              It is always possible to find at least one auxiliary function that is linear from the construction in
+                                           Coppersmith’s method. We show that this function can be used to determine rigorously whether
+                                           Coppersmith’s method can succeed. That is, we show that one can use capacity theory to deter-
+                                           mine from the first auxiliary function whether there will be a second function that is algebraically
+                                           independent of the first. This is because the zero locus of the first function is an affine line, to which
+                                           one can apply the work on capacity theory by Cantor [4] and Rumely [14]. As a consequence of
+                                           this approach, we will show that the heuristic assumption of algebraic independence does not hold
+                                           in general for all problem instances. In particular, we give an infinite family of examples for which
+                                           there can be no pair of algebraically independent functions of any degree in Coppersmith’s method.
+                                           However, we have a method for determining rigorously whether such a pair exists in a given case.
+                                           We also give an infinite family of examples for which such a pair does exist.
+                                              If one is looking for small integral solutions of linear polynomial congruences in a particular
+                                           number field, one can apply lattice techniques directly, without constructing auxiliary functions.
+
+                                             Date: November 30, 2021.
+                                             T. C. was partially supported by NSF SaTC grants No. 1513671 and 1701785.
+                                             B. H-F. was supported by NSF SaTC grant No. 1513671.
+                                             N. H. was supported by NSF SaTC grants No. 1513671 and 1651344.
+                                             Z. Scherr was partially supported by NSF SaTC grant No. 1513671.
+
+
+                                                                                               1
+2                        CHINBURG, HEMENWAY FALK, HENINGER, AND SCHERR
+
+
+
+
+Coppersmith’s method pertains to finding all such solutions in all number fields, i.e. in the ring of
+all algebraic integers. In the case of homogenous congruences, one solution produces infinitely many
+by multiplying all the variables by an arbitrary root of unity. Thus in this case, there are either
+infinitely many solutions in the ring of all algebraic integers, or no solutions at all. For this reason,
+if one can use capacity theoretic arguments to show that there are only finitely many solutions, one
+knows that in fact there are no solutions at all. This leads in §1.2 and §4 to strong bounds on the
+number of solutions of inhomogeneous congruences as well. In particular, we show in §4 how this
+approach leads to a computable sufficient criterion for there to exist at most one solution in any
+number field to a hidden number problem involving two linear congruences.
+    Our methods amount to giving effective upper and lower bounds to various finite morphism
+capacities in multivariable capacity theory (see [6]). This is the first time to our knowledge that
+multivariable capacity theory has been applied to cryptography. For a discussion of how one variable
+capacity theory pertains to Coppersmith’s method, see [5].
+
+1.1. The Hidden Number Problem and Ring Learning with Errors. In cryptographic appli-
+cations, the hidden number problem is defined over the integers as follows. In the usual formulation,
+there is a public integer modulus n and a secret integer s. For a given non-negative integer ci less
+than n, one can compute the remainder bi = ci s mod n as a positive integer less than n. Let di be
+the integer defined by the ℓ most significant bits of bi , and let xi = bi − di . In the hidden number
+problem, one is given many samples {(ci , di )}m
+                                               i=0 and the problem is to compute the secret integer
+s mod n from these samples.
+   To put this problem into the framework we consider in this paper, note that each sample satisfies
+the linear relation
+                                        xi − ci s + di ≡ 0 mod n
+For each relation, the xi are unknown and small, and the value s is unknown. Suppose c0 is relatively
+prime to n, so that c0 c′0 ≡ 1 mod n for a readily computable integer c′0 . The above congruence for
+i = 0 then gives
+(1.1)                                    s ≡ c′0 (x0 + d0 ) mod n
+Substituting this into the congruences for i = 1, . . . , m then gives a new system of congruences
+(1.2)                         xi + ti x0 + ai ≡ 0 mod n    for 1 ≤ i ≤ m
+in small unknowns xi and x0 , where ti = −ci c′0 and ai = di − ci c′0 d0 are computable from the given
+data. Because of (1.1), we can reformulate the problem of finding s mod n as finding a solution
+{xi }mi=0 to the system of congruences (1.2) with appropriate size bounds on all of the xi .
+    The “usual” method used to solve this problem comes from Boneh and Venkatesan [3], and
+consists of solving a closest vector problem where the solution vector corresponds to the desired
+solution to the problem. In this paper we consider a dual construction, corresponding to Howgrave-
+Graham’s reformulation of Coppersmith’s method [10, 9]: Using lattice methods, we try to construct
+polynomials in the variables {xi }m    i=0 which must vanish on all solutions, and whose common zero
+locus is finite.
+    Boneh and Venkatesan give bounds for which with high probability there is a unique solution
+when the ti are generated uniformly at random modulo n. In practical applications of this method,
+one is dealing with fixed parameters. In these cases one can empirically measure the probability
+of success [1], but a rigorous analysis of the number of possible solutions has not been done in the
+literature.
+    In the ring learning with errors problem [13], one has a public commutative ring R, typically an
+order in the ring of integers OF of a number field F , and a secret s ∈ R. The input to the problem is
+a set of samples {(ai , bi )}ni=1 of pairs of elements of R for which bi is congruent to ai · s + ei modulo
+a given ideal I ⊂ R, where ei ∈ R is an unknown error that is small in some sense. Typically the
+ei must be “short” relative to the complex embeddings of R.
+                TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY                                     3
+
+
+
+
+1.2. Solution Counting and Capacity Theory. The problem that we consider in this paper
+unifies both of the above problems, but we limit ourselves to the case of two samples. As noted
+above, one can eliminate the unknown secret s and obtain a single two-variable linear polynomial
+where the desired solution for both variables is “small”. For a given solution, one can then use the
+original polynomials to solve for a unique s determined by that solution.
+   One basic question is: How unique is s? When n = 2, will show in §4 that there is at most one
+s when the capacity associated to an adelic set arising from the lattice construction is less than 1.
+   A peculiarity of this approach is that in the ring-LWE case, we can actually bound the number
+of solutions in all number fields, and not just in a particular F .
+   We will now describe the three related problems we will study. Let OF be the ring of integers of
+a number field F . Let J be a non-zero ideal of OF . We will suppose a and t are elements of OF
+such that J + tOF = OF , so that t projects to a unit of OF /J if J 6= OF . Let Z be the integral
+closure of OF in an algebraic closure Q of Q.
+Problem 1.1. For which real numbers X, Y > 0 is there a finite time algorithm for listing all
+x, y ∈ Z such that
+      1. x + ty + a ≡ 0 mod J Z and
+      2. For every ring embedding λ : Z → C, the images x′ and y ′ of x and y satisfy |x′ | ≤ X and
+         |y ′ | ≤ Y .
+Problem 1.2. For which real X, Y > 0 are there only finitely many algebraic integers x, y ∈ Z
+having the properties in Problem 1.1?
+Problem 1.3. Construct non-zero polynomials g(x, y) ∈ F [x, y] with the following properties:
+    1. For all x, y ∈ Z such that x + ty + a ≡ 0 mod J Z the value g(x, y) lies in Z.
+    2. Suppose x′ , y ′ ∈ C and that |x′ | ≤ X and |y ′ | ≤ Y . Then |λ(g)(x′ , y ′ )| < 1 for all embeddings
+       λ : F → C, where λ(g)(x, y) ∈ C[x, y] is the image of g(x, y) under the homomorphism
+       F [x, y] → C[x, y] induced by λ.
+    Note that Problem 1.1 is a constrained learning with errors problem with secret s = y ∈ Z = R
+when one has a single data point (a1 , b1 ) = (t, −a) , the ideal I is J Z and the error e1 is −x.
+    Coppersmith’s method relates these problems in the following way.
+    Suppose {gi (x, y)}i is a family of polynomials which each have the properties in Problem 1.3.
+Let (x, y) be a solution of Problem 1.2. Then gi (x, y) will be an algebraic integer. Every embedding
+of gi (x, y) into C lies in R and has the form λ(gi )(x′ , y ′ ) for some conjugates x′ = λ(x) of x and
+y ′ = λ(y) of y and some embedding λ : Z → C. Since |λ(gi )(x′ , y ′ )| < 1 for all such (x′ , y ′ ), the
+product formula (or an easy norm argument) shows gi (x, y) = 0.
+    Suppose now that the common zero locus of the family {gi (x, y)}i is finite. It follows that there
+are finitely many solutions (x, y) to Problem 1.2, and these solutions contain those of Problem 1.1.
+If one has an algorithm for producing a family of {gi (x, y)}i with all of these properties, as well as
+for finding their finite set of common zeros, one has an algorithm for solving Problem 1.1.
+    Suppose, to the contrary, that there are infinitely many solutions to Problem 1.2. Then the
+common zero locus of any family {gi (x, y)}i of the above kind cannot be finite, and Coppersmith’s
+method cannot lead to a finite time algorithm to solve Problem 1.1.
+    We can now state our main result in qualitative terms; a more quantitative version is given in
+Theorem 3.4. Let r1 (F ) and r2 (F ) be the number of real and complex places of F , and let DF/Q
+be the disciminant of F .
+Theorem 1.4. Suppose X > 0 and Y > 1/3 satisfy the inequality
+(1.3)               (π/2)3r2 (F ) · 3−3[F :Q] · |DF/Q |−3/2 · NormF/Q (J ) > (XY )[F :Q]
+There exists a non-zero linear function g1 (x, y) = τ x+γy+δ ∈ F [x, y] with the properties in Problem
+1.3. Given any such g1 (x, y), one of the following statements is true, and there is a procedure for
+determining which of the following alternatives hold:
+4                        CHINBURG, HEMENWAY FALK, HENINGER, AND SCHERR
+
+
+
+
+     1. Suppose we decrease both X and Y by arbitrarily small amounts. Then there is a polynomial
+        g(x, y) ∈ F [x, y] for which the conditions in Problem 1.3 hold for which the common zero
+        locus of g(x, y) and g1 (x, y) is finite. Such a g(x, y) leads to a solution of Problem 1.1 for
+        the new values of X and Y , and there are only finitely many solutions to Problem 1.2 for
+        these values.
+     2. Suppose we increase both X and Y by arbitrarily small amounts. Then for these new values
+        of X and Y , all polynomials g(x, y) ∈ F [x, y] of any degree having the properties in Problem
+        1.3 are divisible by g1 (x, y). There are infinitely many solutions to Problem 1.2 for the new
+        values of X and Y , and thus Coppersmith’s method in the above form cannot be used to
+        solve Problem 1.1.
+One of these alternatives must hold, and they are not mutually exclusive.
+   We show in Theorem 3.4 that the case in which both alternatives (1) and (2) occur is when a
+certain adelic capacity is exactly equal to 1. We construct in Theorem 3.8 infinitely many examples
+in which option (1) occurs but (2) does not, and infinitely many other examples in which option
+(2) occurs but (1) does not. For these examples, F = Q, J = pZ for a prime p of increasing size
+                 √
+and X = Y = c p for a fixed positive constant c. We show that each of options (1) and (2) occur
+for a positive proportion (as p → ∞) of pairs of t and a in Z/p for which t is prime to p.
+   In §4, we consider bounds on the number of solutions of Problem 1.3 when case (1) occurs. When
+a capacity associated to X and Y is sufficiently small, we show in Theorem 4.1 that there is at most
+one pair (x, y) with the properties in Problem 1.1. This relies on the fact that in the special case
+when a = 0, multiplying both x and y by a root of unity leads to another solution. Therefore when
+a = 0, either one has no solutions or an infinite number. Because of this, if one can show there
+are only finitely many solutions via capacity theory when a = 0, there in fact can be no solutions
+at all. This fact leads to another phenomenon, namely that when a = 0, a small solution to a
+linear homogeneous congruence prevents the existence of solutions which have uniformly smaller
+archimedean absolute values. We state one example here: a more general result is shown in Theorem
+4.3.
+Theorem 1.5. Suppose n is is a positive integer, J = nOF , a = 0 and XY ≤ n/2. Suppose
+(x0 , y0 ) is a pair of algebraic integers with the properties stated for x and y in Problem 1.1. Assume
+in addition that x0 , y0 and n are coprime in the sense that no pair of these numbers is contained
+in a proper ideal of OF . Then there is no non-zero pair (x1 , y1 ) of algebraic integers having the
+properties in Problem 1.1 for which the following is true: |λ(x1 )| ≤ |λ(x0 )| and |λ(y1 )| ≤ |λ(y0 )| for
+all embeddings λ : Z → C with strict inequality holding for at least one of x or y for at least one λ.
+
+                           2. Constructing one auxiliary function
+  It is well known that the existence of one function of the kind in Problem 1.3 for sufficiently
+small positive values of X and Y is a consequence of Minkowski’s theorem:
+Theorem 2.1. Suppose X > 0 and Y > 1/3 satisfy the inequality (1.3). There exists a a polynomial
+g1 (x, y) = b1 x + b2 y + b3 ∈ J −1 · OF [x, y] with the following properties:
+     i. For all embeddings λ : F → C one has
+                     |λ(b1 )| < 1/(3X),   |λ(b2 )| < 1/(3Y ),   and   |λ(b3 )| < 1/3.
+     ii. g1 (x, y) = 0 for all pairs algebraic integers (x, y) as in Problem 1.2.
+    iii. b1 6= 0 and g1 (x, y) ≡ b1 (x + ty + a) mod OF [x, y]
+All such g1 (x, y) have the properties in Problem 1.3.
+Proof. Let RF = R ⊗Q F = ⊕v∈M∞ Fv where M∞ is the set of archimedean places of F . Give
+RF the Euclidean norm resulting from the usual Euclidean norms | |v on the Fv . (Note that the
+                                      [F :R]
+normalized absolute value on Fv is | |v v .) Let V = RF x + RF y + RF be the real vector space of
+                 TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY                                         5
+
+
+
+
+all polynomials of degree at most 1 over RF . We give V the Euclidean inner product resulting from
+viewing it as a free RF -module on {x, y, 1}. Let L ⊂ V be the OF -sublattice
+(2.4)                               L = J −1 · (x + ty + a) + OF · y + OF .
+Then
+                           covolume(V /L) = 2−3r2 (F ) |DF/Q |3/2 NormF/Q (J )−1
+by [12, Lemma 2, Chap. V.2].
+   For d > 0 define B(0, d) to be the set of all ξ = (ξv )v∈M∞ ∈ RF = ⊕v∈M∞ Fv such that |xv | < d
+for all v ∈ M∞ . Consider the convex symmetric subset
+             S(d1 , d2 , d3 ) = {r1 x + r2 y + r3 : r1 ∈ B(0, d1 ), r2 ∈ B(0, d2 ), r3 ∈ B(0, d3 )}.
+Then
+                             vol(S(d1 , d2 , d3 )) = (2r1 (F ) π r2 (F ) )3 (d1 d2 d3 )[F :Q] .
+Suppose
+(2.5)                                   vol(S) > 23[F :Q] colvolume(V /L)
+Minkowski’s theorem then guarantees that there is a non-zero g1 (x, y) = b1 x + b2 y + b3 ∈ L ∩ S.
+                      2
+  Suppose (x, y) ∈ Z has the properties in Problem 1.2, so that x + ty + a ∈ J Z, |λ(x)| < X
+and |λ(y)| < Y for all embeddings λ : Z → C. From the definition of L and that fact that g1 is a
+polynomial in L ∩ X, we find that g1 (x, y) ∈ Z and
+                                        |λ(g1 (x, y))| < d1 X + d2 Y + d3
+for all λ. Thus if we choose d1 , d2 , d3 such that
+(2.6)                                           d1 X + d2 Y + d3 = 1
+we can conclude that g1 (x, y) = 0 since the norm of g1 (x, y) to Z is an integer of absolute value less
+than 1. The choice of d1 , d2 , d3 > 0 for which (2.6) holds and vol(S) is maximized is
+                                      (d1 , d2 , d3 ) = (1/(3X), 1/(3Y ), 1/3)
+leading to
+             vol(S) = (2r1 (F ) π r2 (F ) )3 (d1 d2 d3 )[F :Q] = (2r1 (F ) π r2 (F ) )3 · (3−3 /(XY ))[F :Q] .
+Combining this with the Minkowski inequality (2.5) leads to the conclusion that if XY satisfies the
+inequality in (1.3), then (i) and (ii) of Theorem 2.1 hold.
+    Finally, suppose b1 = 0. The definition of L in (2.4) then shows that g1 (x, y) = b2 y + b3 with
+b2 , b3 ∈ OF . However, property (i) of Theorem 2.1 together with our assumption that Y > 1/3
+forces b2 and b3 to have all conjugates of absolute value less than 1. This forces b2 = b3 = 0 as well,
+contradicting the fact that g1 (x, y) is a non-zero polynomial.                                     
+
+Remark 2.2. There may be more than one g1 (x, y) with the properties in Theorem 2.1.
+
+          3. Adelic subsets of the zero locus of the first auxiliary function.
+   The strategy now for studying Problem 1.2 is to use the fact that all solutions must be on the
+zero locus of the auxillary function described in Theorem 2.1. This zero locus is an affine line. We
+will determine the adelic constraints that the Galois conjugates of a point on this line must satisfy
+which are equivalent to providing a solution to Problem 1.2. We then apply adelic capacity theory
+on the line to determine whether or not there are infinitely many such solutions, and whether there
+is a second auxillary polynomial with the right adelic properties which is not divisible by the first
+one produced by Theorem 2.1.
+   Throughout this section, we fix the following notations.
+6                        CHINBURG, HEMENWAY FALK, HENINGER, AND SCHERR
+
+
+
+
+Definition 3.1. Let g1 (x, y) = b1 x + b2 y + b3 be a polynomial wth the properties in Theorem 2.1.
+Let MF = MF,fin ∪ MF,inf be the set of all absolute values v of F , where MF,fin (resp. MF,inf ) is the
+set of finite (resp. infinite) places. Let F v be an algebraic closure of Fv . If v ∈ MF,fin , let | |v be
+an extension to F v of the usual normalized absolute value on Fv , Let |J |v in this case be the value
+of | |v on any element of J ⊂ OF which generates the completion of J at v. If v ∈ MF,inf , identify
+F v with C and let | |v be the usual Euclidean absolute value. Define a subset of Ev of F v in the
+following way:
+       i. If v is non-archimedean, let Ev be the set of y ∈ F v such that |y|v ≤ 1, |b2 y + b3 |v ≤ |b1 |v
+          and | − (b2 y + b3 )/b1 + ty + a|v ≤ |J |v .
+      ii. If v is archimedean, let Ev be the set of y ∈ F v such that |y|v ≤ Y and |b2 y + b3|v ≤ |b1 |v ·X.
+Lemma 3.2. If v ∈ MF,fin then Ev is either empty or a disk of the form
+                                  D(cv , rv ) = {y ∈ F v : |y − cv |v ≤ rv }
+for some cv ∈ Fv and 0 ≤ rv ∈ R. For all but finitely many v ∈ MF,fin one can take cv = 0 and
+rv = 1, in which case Ev = D(0, 1). If v is archimedean, then Ev is either empty or the non-empty
+intersection of two disks in F v = C which have centers at 0 and at a point in Fv . The adelic set
+E = v Ev has capacity relative the point ∞ on P1F equal to
+     Q
+                                                 Y
+(3.7)                                  γ(E) =       γv (Ev )
+                                                    v∈MF
+
+where γv (Ev ) is the local capacity of Ev as a subset of P1 (F v ) − {∞} = A1 (F v ) = F v . One has
+            [Fv :Qp(v) ]
+γv (Ev ) = rv            if v is finite of residue characteristic p(v). If v is infinite, γv (Ev ) is computed
+in Theorem 3.5 below.
+Proof. The description of Ev is clear from Definition 3.1 together with the fact that the intersection
+of any two non-archimedean disks in F v for v ∈ MF,fin is either empty or equal to a disk. The fact
+that Ev = D(0, 1) for all but finitely many v ∈ MF,fin follows from the the fact each of the three
+inequalities defining Ev describes either D(0, 1) or all of F v for all but finitely many v. Hence E has
+a well defined capacity with respect to ∞, and the formula (3.7) is shown in [14, p. 366]. The fact
+                 [Fv :Qp(v) ]
+that γv (Ev ) = rv            for v ∈ MF,fin is shown in [14, p. 352] on taking account our normalization
+of | |v .                                                                                               
+Remark 3.3. The constants cv and rv for v ∈ MF,fin are readily computed from the coefficients
+of g1 (x, y) = b1 x + b2 y + b3 . The same is true for the centers and radii of the two disks whose
+intersection is Ev when v ∈ MF,inf . Thus (3.7) is readily computable from g1 (x, y) using Theorem
+3.5.
+Theorem 3.4. Let γ(E) be as in (3.7).
+   1. If γ(E) > 1 then there are infinitely many solutions (x, y) to Problem 1.2. In this case, any
+      polynomial gi (x, y) ∈ F [x, y] with the properties in Problem 1.3 must be divisible by g1 (x, y)
+      in F [x, y]. In particular, the intersection of the zero loci of all polynomials gi (x, y) with the
+      properties in Problem 1.3 is the zero locus of g1 (x, y), which is infinite.
+   2. If γ(E) < 1 then there are only finitely many solutions (x, y) to Problem 1.2. The common
+      zero locus of the polynomials in Problem 1.3 is finite.
+   3. Suppose γ(E) 6= 0. As a function of X > 0 and Y > 1/3, the value of γ(E) strictly increases
+      when both X and Y are increased. In particular, suppose γ(E) = 1 for particular values of
+      X and Y . Any increase of both X and Y leads to the conclusions of part (1), while any
+      decrease of both X and Y leads to the conclusions of part (2). This establishes parts (1)
+      and (2) of Theorem 1.4.
+Proof. Recall that a solution (x, y) to Problem 1.2 is a pair of x, y ∈ Z such that x + ty + a ≡ 0
+mod J Z and all archimedean conjugates x′ and y ′ of x and y ′ satisfy |x′ | ≤ X and |y ′ | ≤ Y . We
+                TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY                                  7
+
+
+
+
+know that
+                                      g1 (x, y) = b1 x + b2 y + b3 = 0
+for all such (x, y), where b1 6= 0. So we have
+                                                  −b2 y − b3
+(3.8)                                         x=
+                                                        b1
+Because of (3.8), these conditions on x and y translate into the condition that all conjugates over F
+of the element y ∈ F lie in the set Ev ⊂ F v described in Definition 3.1 for each v ∈ MF . Parts (1)
+and (2) of the Theorem are now consequences of Cantor’s results concerning Fekete-Szegö theorems
+for the projective line (see [4, Theorems 5.1.1 and 5.1.2] and [14, Theorems 6.3.1 and 6.3.2]).
+   For part (3), note that if γ(E) 6= 0 then γv (Ev ) 6= 0 for all v. In particular, Ev cannot be empty or
+a single point. Supose now that v ∈ MF,inf . Then Ev is intersection of two closed disks, and Ev has
+non-empty interior. Increasing X and Y to some X ′ > X and Y ′ > Y then expands both disks. This
+puts the set Ev for X and Y into λ · Ev′ for some positive real λ < 1 when Ev′ is the corresponding
+intersection of disks for X ′ and Y ′ . We thus have γ∞ (Ev ) ≤ γ∞ (λEv′ ) = λ · γ∞ (Ev′ ) < γ∞ (Ev′ ).
+This proves that γ∞ (Ev ) strictly increases when we increase both X and Y , which implies part (3)
+of the Theorem.                                                                                         
+   We now give the formula for the capacity γv (Ev ) for archimedean v which was referred to at the
+end of the statement of Lemma 3.2. Let D(a, t) the closed disk in C with center a ∈ C and radius
+r ≥ 0.
+Theorem 3.5. Suppose Ev is the intersection in F v = C of two closed disks, one of which is
+centered at the origin. Then there is non-zero complex number ξ such that Ev = ξ · V where
+V = D(0, r) ∩ D(1, s) for some r, s ≥ 0. One has γv (Ev ) = (|ξ| · γ∞ (V ))[Kv :R] where γ∞ (V ) is the
+classical transfinite diameter of V , which may computed in the following way. If V = ∅ or r + s = 1
+then γ∞ (V ) = 0. If r ≥ 1 + s then V = D(1, s) and γ∞ (V ) = s. If s ≥ 1 + r then V = D(0, r)
+and γ∞ (V ) = r. Otherwise, the boundaries of D(0, r) and D(1, s) intersect at two points u and u
+with u in the upper half plane. Let α ∈ (0, π) be the angle between the boundary of D(0, r) and the
+boundary of D(1, s) at the intersection point a. There is a unique point ζ in the upper half plane
+such that
+                                                   π/(2π−α)
+                                               u−r
+(3.9)                                    ζ=
+                                               u−r
+when we compute the complex exponential using the branch of log with imaginary part lying in
+[0, 2π]. One has
+                                        1        π
+(3.10)                      γ∞ (V ) =        ·        · |u − u|
+                                      2Im(ζ) 2π − α
+  To prove this result we will need the following fact from [14, p. 339] .
+Lemma 3.6. (Rumely) Suppose E is a connect subset of C. Let E c be the complement of E in
+P1 (C) = C ∪ {∞}. Suppose f (z) is a conformal map which takes E c to the complement of the closed
+disc D(0, R) of radius R > 0. Suppose further that limz→∞ f (z)/z = 1. Then γ∞ (E) = R. The
+Green’s function G(z, ∞ : E) equals log|f (z)/R)| for z ∈ E c and G(z, ∞; E) = 0 for z ∈ E.
+Proof of Theorem 3.5
+   The first statement is clear on rotating and dilating Ev appropriately, and the formula γ∞ (E∞ ) =
+(|ξ|γ∞ (V ))[Kv :R] is shown in [14, p. 352]. Since the transfinite diameter of a disk or radius R is R, it
+will suffice to construct an f (z) for the E = V of Theorem 3.5 on the assumption that the boundaries
+of D(0, r) and D(1, s) intersect at the distinct points u and u. The cross ratio w(z) = (u−z)(u−r)
+                                                                                                (u−r)(u−z)
+has w(u) = 0, w(r) = 1 and w(u) = ∞. Since fractional linear transformations send circles to either
+lines or circles, we find that z → w(z) sends the arc formed by the boundary of D(0, r) between
+u and u to the union of the non-negative real axis with ∞. Since fractional linear transformations
+8                         CHINBURG, HEMENWAY FALK, HENINGER, AND SCHERR
+
+
+
+
+also preserve angles, z → w(z) sends the arc formed by the boundary of D(1, s) between u and u
+to the union of {∞} with the ray L outward from w(u) = 0 which makes an angle of α from the
+positive real axis and lies in the lower half plane. Thus the image of V under z → w(z) is the union
+of {∞} with an angular sector in C bounded by the non-negative real axis and L. The complement
+V c is sent to set w(V c ) of non-zero complex numbers τ = |τ |e2πiθ for which 0 < θ < 2π − α.
+   On choosing the branch of the complex logarithm with imaginary part in [0, 2π), we have a
+conformal map ν taking w(V c ) to the upper half plane H defined by ν(w) = wπ/(2π−α) . This map
+sends w(∞) = u−r             c
+                 u−r ∈ w(V ) to the point ζ in (3.9). We can now use the conformal automorphism h
+     1                               1
+of P (C) defined by ν → h(ν) = ν−ζ      to send ζ to h(ζ) = ∞ and H = (ν ◦ w)(V c ) to the complement
+                                                                                   i
+in P1 (C) of a closed disk D which has a diameter going from 0 = h(∞) to Im(ζ)        = h(Re(ζ)).
+   Consider now the composition f (z) = c · (h ◦ ν ◦ w), where c is a non-zero constant we will choose
+so that limz∞ f (z)/z = 1. This f gives a conformal map from V c to the complement of the image
+cD of D by multiplication by c. Therefore Lemma 3.6 gives
+                                                                |c|
+(3.11)                                 γ∞ (V ) = γ∞ (D) =
+                                                             2Im(ζ)
+It just remains to find c. Here
+                                                                   π/(2π−α)           π/(2π−α)
+                                                  (u − z)(u − r)                 (u − r)
+       1/h(ν(w(z))) = ν(w(z)) − ν(w(∞)) =                                    −
+                                                  (u − r)(u − z)                 (u − r)
+Thus                                                              π/(2π−α)    !
+                                                     (1 − z −1 u)
+                                                   
+                          z/h(ν(w(z))) = ζ · z ·                            −1
+                                                     (1 − z −1 u)
+                  π/(2π−α)
+since ζ = (u−r)
+             (u−r)           . Using that
+
+                   (1 − z −1 u)/(1 − z −1 u) = 1 + (u − u)z −1 + higher order terms
+we find that on setting
+                                                        π
+                             c = lim z/h(ν(w(z))) = ζ ·       · (u − u)
+                               z→∞                    2π − α
+we will have limz→∞ f (z)/z = limz→∞ c · h(ν(w(z)))/z = 1, as required. Now (3.11) gives
+                                            1       π
+                                γ∞ (V ) =       ·        · |u − u|
+                                          2Im(ζ) 2π − α
+as claimed in Theorem 3.5 since |ζ| = 1.
+Remark 3.7. As a check on Theorem 3.5, consider the case in which s tends toward 1+r from below.
+Then V becomes closer and closer to being all of D(0, r), and some straightforward estimates show
+that the formula γ∞ (V ) in Theorem 3.5 tends toward γ∞ (D(0, r)) = r as s → (1 + r) from below.
+   We end this section by showing the claim made in the last sentence of the introduction that there
+are infinitely many examples of each of cases 1 and 2 of Theorem 1.4. We prove a more quantitative
+result under some additional hypotheses.
+Theorem 3.8. Suppose F = Q, so that OF = Z. Suppose J = pZ for some prime p, and that
+            √
+X = Y = c p > 1/3 for some fixed constant c for which 2/3 > c > 0.
+     i. For sufficiently large primes p there is a positive proportion of pairs (t, a) ∈ (Z/p)∗ × (Z/p)
+        for which the following is true. There is a unique polynomial g1 (x, y) = b1 x + b2 y + b3 =
+        (d1 x + d2 y + d3 )/p with the properties in Theorem 2.1 for which di ∈ Z for i = 1, 2, 3 and
+        g.c.d.(d1 , d2 ) = 1 and d1 > 0. Alternative (1) of Theorem 3.4 holds for this g1 (x, y) while
+        alternative (2) of the Theorem does not.
+    ii. For sufficiently large primes p there is a positive proportion of pairs (t, a) ∈ (Z/p)∗ × (Z/p),
+        all the statements in (i) up to the last one are true, but now alternative (2) of Theorem 3.4
+        holds while alternative (1) does not.
+                  TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY                                            9
+
+
+
+
+   We will first describe the strategy of the proof. Rather than begin by choosing (t, a), we instead
+choose polynomials b1 x + b2 y + b3 = (d1 x + d2 y + d3 )/p that will have the properties in Lemma
+3.9 for some pair of residue classes t and a mod pZ. In Lemma 3.9 we specify conditions on the di
+which ensure the uniqueness of the associated pair (t, a) mod pZ. In Lemma 3.10 we show that for
+the t and a which arise from the construction in Lemma 3.9, any polynomial with the properties
+in Theorem 2.1 for t and a must arise from an integer multiple of the polynomial in Lemma 3.9
+that gives rise to t and a. These steps are needed because in the end we will count the polynomials
+produced in Lemma 3.9 which lead to the capacity γ(E) associated to the triple {b1 x + b2 y + b3 , t, a}
+in Definition 3.1 and Lemma 3.2 being greater than 1 (respectively less than 1). We compute these
+capacities in Lemma 3.11. To complete the proof of Theorem 3.8 we then produce ranges for d1 ,
+d2 and d3 which lead to γ(E) > 1 (respectively γ(E) < 1). We show that these ranges lead to
+positive proportion of the possible residue classes of (t, a) mod p satisfying conditions (i) (resp. (ii))
+of Theorem 3.8.
+Lemma 3.9. Recall that 2/3 > c > 0, so 0 < 3c/2 < 1. Let w, z be real numbers such that
+0 < w ≤ 2 and 0 ≤ z < 1. Consider the set S(w, z) of all triples (d1 , d2 , d3 ) of integers such that
+(3.12)
+     √             √       √                 √        √
+ w3c p/4 ≤ d1 ≤ 3c p/2 < p; 1 ≤ d2 ≤ 3c p/2 < p; 0 ≤ d3 < zp and gcd(d1 , d2 ) = 1.
+There is an injective map λ : S(w, z) → Z/p × Z/p which sends (d1 , d2 , d3 ) to the class in Z/p × Z/p
+of (t, a) when t and a are the smallest non-negative integers for which d1 · (1, t, a) ≡ (d1 , d2 , d3 ) mod
+p. One has t 6≡ 0 6≡ d1 mod p.
+Proof. Suppose (d1 , d2 , d3 ) ∈ S(w, z). Since 0 < w3c/2 < w we have d1 6≡ 0 6≡ d2 mod p. Hence t
+and a are uniquely determined by (d1 , d2 , d3 ) and t 6≡ 0 mod p. Suppose λ(d1 , d2 , d3 ) = λ(d′1 , d′2 , d′3 )
+for some (d′1 , d′2 , d′3 ) ∈ S(w, z). Then d2 ≡ td1 mod p and d′2 ≡ td′1 mod p, so d2 d′1 − d′2 d1 ≡
+                                                                                        √          √
+td1 d′1 − td′1 d1 ≡ 0 mod p. But d1 , d2 , d′1 , d′2 all lie in the interval (0, 3c p/2) ⊂ (0, p), we have
+0 < d2 d1 < p and 0 < d2 d1 < p. So d2 d1 ≡ d2 d1 mod p forces d2 d1 = d2 d1 . Now since the di are
+         ′                    ′                  ′    ′                        ′         ′
+
+positive and g.c.d(d1 , d2 ) = g.c.d(d′1 , d′2 ), we conclude (d1 , d2 ) = (d′1 , d′2 ). Now d3 ≡ d1 a ≡ d′1 a ≡ d′3
+mod p, so z < 1 forces d3 = d′3 . Hence λ is injective.                                                          
+
+Lemma 3.10. With the notations and assumptions of Lemma 3.9, suppose λ(d1 , d2 , d3 ) = (1, t, a)
+and z ≤ 3wc2 . Suppose g1 (x, y) = b1 x + b2 y + b3 ∈ Q[x, y] has the properties in Theorem 2.1 for t
+and a. Then e1 = pb1 , e2 = pb2 and e3 = pb3 are in Z. Let q = g.c.d.(e1 , e2 , e3 ). Then b1 6= 0 and
+                                  g1 (x, y) = sign(b1 ) · q · (d1 x + d2 y + d3 )/p.
+Furthermore, (d1 x + d2 y + d3 )/p also has all the properties in Theorem 2.1 for t and a.
+Proof. By Theorem 2.1, 0 6= pg1 (x, y) = e1 x + e2 y + e3 ∈ Z[x, y] has e1 x + e2 y + e3 ≡ e1 (x + ty + a)
+mod pZ[x, y], so (e1 , e2 , e3 ) ≡ e1 (1, t, a) mod p. Furthermore,
+                                         √                          √
+(3.13)       0 < |e1 | < p/(3X) = p/(3c); |e2 | < p/(3Y ) = p/(3c); and |e3 | < p/3.
+These properties are preserved if we divide g1 (x, y) by the g.c.d. of e1 , e2 and e3 or if we multiply
+g1 (x, y) by −1. We will assume in what follows that this has been done, so that g.c.d(e1 , e2 , e3 ) = 1
+and e1 > 0.
+    Since λ(d1 , d2 , d3 ) = (t, a), we have d1 (1, t, a) ≡ (d1 , d2 , d3 ) mod p. Since (e1 , e2 , e3 ) ≡ e1 (1, t, a)
+mod p we conclude e1 d2 − d1 e2 ≡ 0 mod p. However,
+                                               |e1 d2 − d1 e2 | < p
+              √                          √
+since |ei | < p/(3c) and |di | ≤ 3c p/2 for i = 1, 2. Hence e1 d2 − d1 e2 = 0. Since gcd(d1 , d2 ) = 1,
+                                                                    √          √
+this forces (e1 , e2 ) = e(d1 , d2 ) for some e ∈ Z. Now w3c/2 p ≤ d1 so |e|w3c p/2 ≤ |ed1 | = |e1 | <
+√
+  p/(3c) because of (3.13). So
+                                                              2
+(3.14)                                             |e| <           .
+                                                           (3c)2 w
+10                          CHINBURG, HEMENWAY FALK, HENINGER, AND SCHERR
+
+
+
+
+     Since d1 6≡ 0 mod p, d1 d′1 ≡ 1 mod p for some integer d′1 . Therefore
+                    (ed1 , ed2 , e3 ) = (e1 , e2 , e3 ) ≡ e1 (1, t, a) ≡ e1 d′1 (d1 , d2 , d3 ) mod p.
+So e ≡ e1 d′1 mod p and e3 ≡ e1 d′1 d3 ≡ ed3 mod p. Thus (e1 , e2 , e3 ) − e(d1 , d2 , d3 ) ≡ (0, 0, 0) mod p,
+where e1 = ed1 and e2 = ed2 . We conclude that
+                            pg1 (x, y) = e1 x + e2 y + e3 = e(d1 x + d2 y + d3 ) + h
+when h = e3 − ed3 ≡ 0 mod p. Here
+                                                                   2zp
+                                        |ed3 | = |e| · |d3 | <           ≤ 2p/3
+                                                                 (3c)2 w
+because of (3.14), |d3 | < zp and the assumption that z ≤ w3c2 . Since |e3 | < p/3 we get |h| =
+|e3 − ed3 | < p/3 + 2p/3 < p, which forces h = 0 since h ≡ 0 mod p. Thus pg1 (x, y) = e1 x+ e2 y + e3 =
+e(d1 x + d2 y + d3 ). Since g.c.d(e1 , e2 , e3 ) = 1 and e1 and d1 are positive, we must have e = 1 and
+g1 (x, y) = (d1 x + d2 y + d3 )/p.                                                                    
+
+Lemma 3.11. Let E = v Ev be the adelic set associated by Definition 3.1 to g1 (x, y) = p1 (d1 x + d2 y + d3 )
+                            Q
+
+for some (d1 , d2 , d3 ) ∈ S(w, z) under the assumption that z ≤ 3wc2 in Lemma 3.10. Define
+                                       −d1 c   d3                                   d1 c   d3
+(3.15)               δ1 = max(−c,            −√    )         and     δ2 = min(c,         −√     )
+                                        d2     pd2                                  d2      pd2
+Suppose d1 and d2 are relatively prime. The capacity γ(E) of E is 0 if δ1 > δ2 . Otherwise,
+                                                               √
+                                 Y                              p(δ2 − δ1 )
+(3.16)                  γ(E) =      γv (Ev ) = d−1
+                                                1  γ ∞ (E∞ ) ≥
+                                  v
+                                                                  4d1
+
+where E∞ is the component of E at the archimedean place of Q.
+Proof. From Definition 3.1, the intersection of the real line with E∞ is trivial if δ1 > δ2 , in which
+case E∞ is empty and γ∞ (E∞ ) = 0 = γ(E). If δ1 ≤ δ2 then E∞ intersects the real line in the
+          √      √
+interval [ pδ1 , pδ2 ]. In this case, we have
+                                                               √
+                                               √     √           p
+(3.17)                        γ∞ (E∞ ) ≥ γ∞ ([ pδ1 , pδ2 ]) =      (δ2 − δ1 ).
+                                                                4
+   Suppose now that v is a finite place of Q. From Definition 3.1 and the equality b1 x + b2 y + b3 =
+p−1 (d1 x + d2 x + d3 ), we see that Ev is the set of y ∈ Qv satisfying these conditions:
+        i. |y|v ≤ 1
+       ii. |(d2 y + d3 )/d1 |v ≤ 1 and
+      iii. | − (d2 y + d3 )/d1 + ty + a|v ≤ |J |v
+where |J |v = 1 if v 6= p and |J |p = p−1 . Let us first show (i) and (ii) imply (iii). If v 6= p, this is clear
+from t, a ∈ Z. Suppose now that v = p. We know d1 is prime to p, and that (d1 , d2 , d3 ) ≡ d1 (1, t, a)
+mod p. So d2 ≡ d1 t mod p and d3 ≡ d1 a mod p. Thus
+                   |(−d2 /d1 + t)y|v = |d1 |−1
+                                            v · | − d2 + td1 |v · |y|v ≤ p
+                                                                           −1
+                                                                                         if   |y|v ≤ 1
+and
+                       | − d3 /d1 + a|v = |d1 |−1 · | − d3 + ad1 |v ≤ p−1           if   |y|v ≤ 1
+so (iii) is implied by (i) when v = p. Thus Ev is the set of y ∈ Qv satisfying (i) and (ii).
+    Recall now that d1 , d2 , d3 are non-zero integers and that by assumption g.c.d.(d1 , d2 ) = 1. Thus
+if |d1 |v < 1 then |d2 |v = 1, and otherwise |d1 |v = 1. If |d1 |v = 1, then (i) implies |(d2 y + d3 )/d1 |v =
+|d2 y + d3 |v ≤ 1, so (ii) holds. If |d1 |v < 1, then |d2 |v = 1 so (ii) is equivalent to |y − (−d3 /d2 )|v ≤
+|d1 /d2 |v = |d1 |v < 1. Since | − d3 /d2 |v = | − d3 |v ≤ 1, condition (ii) implies (i) if |d1 |v < 1. We thus
+find that for all finite v, Ev is a v-adic disc of radius rv = |d1 |v around point of Q.
+                TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY                              11
+
+
+                                           Q
+   We can now calculate the capacity of E = v Ev . The product of the local capacities at finite
+places is                  Y              Y         Y
+                               γv (Ev ) =    rv =       |d1 |v = d−1
+                                                                  1
+                            v finite         v finite   v finite
+by the product formula since d1 is a positive integer. We thus find as in Lemma 3.2 and (3.17) that
+                                                               √
+                                Y                                p(δ2 − δ1 )
+                        γ(E) =      γv (Ev ) = d−1
+                                                1  γ ∞ (E∞ ) ≥               .
+                                  v
+                                                                   4d1
+                                                                                                     
+Proof of Theorem 3.8
+                   √                     √
+   Let d1 = 3cχ1 p/2, d2 = 3cχ2 p/2 and d3 = χ3 p be as in Lemma 3.10, so that w ≤ χ1 ≤ 1,
+0 < χ2 ≤ 1 and 0 ≤ χ3 ≤ z. We have supposed 0 < w, 0 < 3c/2 < 1, 0 ≤ z < 1 and z ≤ 3wc2 . For
+i = 1, 2 let
+                                          1       (−1)i χ1 c        2χ3      (−1)i c       χ3
+                   zi (χ1 , χ2 , χ3 ) =        ·(               −         )=          − 2        .
+                                        6cχ1           χ2           3cχ2      6cχ2      9c χ1 χ2
+Then
+              √
+                 p          δ2               c                                  1     1       χ3
+(3.18)             δ2 =           = min(         , z2 (χ1 , χ2 , χ3 )) = min(     ,      − 2        )
+              4d1          6cχ1           6cχ1                                6χ1 6χ2      9c χ1 χ2
+             √
+               p          δ1                  c                                 −1 −1           χ3
+(3.19)           δ1 =            = max(−           , z1 (χ1 , χ2 , χ3 )) = max(     ,     − 2         )
+             4d1        6cχ1                6cχ1                                6χ1 6χ2      9c χ1 χ2
+   Suppose we let w = 1/24 and z = 9c2 /(24)2 < 9(2/3)2/(24)2 < 1. Then z ≤ 3wc2 = c2 /8, so all
+conditions on c, w and z are satisfied. Suppose χ1 , χ2 are in the interval [1/24, 1/12] and χ3 is in
+the interval [0, z]. Then
+                       √
+                         p            1   1       χ3
+                           δ2 = min(    ,    − 2         ) ≥ min(2, 2 − 1) ≥ 1.
+                       4d1           6χ1 6χ2   9c χ1 χ2
+      √
+          p
+Since 4d1 δ1 < 0, we will then have
+                                                  √
+                                                       p(δ2 − δ1 )
+                                       γ((E)) ≥                    > 1.
+                                                         4d1
+Suppose I1 and I2 are intervals on the non-negative real axis of lengths q1 , q2 > 0. By a siev-
+ing argument, as r →Q +∞, the number of coprime integers (d1 , d2 ) in a product rI1 × rI2 is
+                                                                                             √  √
+asymptotically r2 q1 q2 ℓ prime (1 − ℓ−2 ) = r2 q1 q2 6/π 2 . Applying this to I1 = [w3c p/2, 3c p/2]
+                    √
+and I2 = [0, 3c p/2] for w = 1/12 as above, we see that as p → ∞, the number of triples
+(d1 , d2 , d3 ) ∈ S(w, z) that have d1 and d2 coprime and γ(E) > 1 is bounded below by a positive
+                   √
+constant times p2 · p = p2 . Since the number of elements of S(w, z) grows as a positive constant
+times p2 , Lemmas 3.9 and 3.10 show that a positive fraction of all pairs (t, a) ∈ (Z/p)∗ × (Z/p)∗
+lead to γ(E) > 1.
+   To prove that there are a positive proportion of pairs (t, a) such that γ(E) = 0, note that (3.18)
+and (3.19) give
+                                χ1 χ2 δ2    χ1     χ3          χ1 χ2 δ1        χ2
+                                         ≤      − 2 and                  ≥−
+                                   6c        6    9c               6c          6
+so
+                                      χ1 χ2              χ1     χ3     χ2
+                                            (δ2 − δ1 ) <     − 2+         .
+                                        6c                6    9c       6
+The constraints on χ1 , χ2 and χ3 are that w ≤ χ1 ≤ 1, 0 < χ2 ≤ 1 and 0 ≤ χ3 ≤ z, where
+0 < w < 1, 0 < 3c/2 < 1, 0 ≤ z < 1 and z ≤ 3wc2 . We now assume 0 < w < 1/2. Let χ2 → 0+ ,
+χ1 → w+ , χ3 → z − and z = 3wc2 < 3c2 /2 < c < 2/3. Then χ61 − 9c           χ3    χ2
+                                                                             2 + 6 has limit
+
+
+                               w   z            1 3c2     w
+                                 − 2 + 0 = w · ( − 2 ) = − < 0.
+                               6  9c            6 9c      6
+12                       CHINBURG, HEMENWAY FALK, HENINGER, AND SCHERR
+
+
+
+
+Thus taking χ1 , χ2 and χ3 near these limits leads (via the same seiving argument used before) to a
+positive proportion of (t, a) ∈ (Z/p)∗ × (Z/p)∗ for which δ2 < δ1 . Lemma 3.11 shows γ(E) = 0 for
+such (t, a).
+   Theorem 3.4, together with the above constructions of a positive proportion of (t, a) with γ(E) > 1
+and of a positive proportion of (t, a) for which γ(E) = 0 now proves Theorem 3.8.
+
+                  4. Bounds on the number of solutions of Problem 1.1.
+   We will be concerned with finding upper bounds on the number N (t, a, J , X, Y ) of pairs (x, y)
+of algebraic integers having the properties in Problem 1.1, where N (t, a, J , X, Y ) may be infinite.
+This is relevant to the following case of the hidden number problem.
+   Suppose we are given two pairs (a1 , b1 ) and (a2 , b2 ) of elements of OF such that for an unknown
+secret s ∈ OF , one has bi = sai + ei mod J for a small error ei ∈ OF . Then e2 = b2 − sa2 =
+b2 − (b1 − e1 )a−1                                                  −1                            −1
+                1 a2 mod J . Thus if we let x = e2 , y = e1 , t = a1 a2 mod J and a = −b2 + b1 a1 a2
+mod J , we wil have x + ty + a ≡ 0 mod J with x and y small. Therefore N (t, a, J , X, Y ) gives a
+bound on the number of secrets s which can solve this case of the hidden number problem.
+   To bound N (t, a, J , X, Y ), it is simplest to deal with the case a = 0. This gives an upper bound
+for arbitrary a at the cost of halving the allowed sizes of archimedean conjugates.
+Theorem 4.1. The following is true for all t, J , X and Y .
+   1. When a = 0, there are either no (x, y) with the properties in Problem 1.1 or there are
+      infinitely many such (x, y).
+   2. Suppose a = 0 and γ(E) < 1 in Theorem 3.4. Then there are no (x, y) satisfying the
+      conditions in Problem 1.1, i.e. N (t, 0, J , X, Y ) = 0.
+   3. For all a one has N (t, a, J , X/2, Y /2) ≤ 1+N (t, 0, J , X, Y ). Thus either N (t, 0, J , X, Y ) =
+      ∞ or N (t, 0, J , X, Y ) = 0 and N (t, a, J , X/2, Y /2) ≤ 1.
+Proof. For part (1), observe that if (x, y) ∈ Z×Z has the properties in Problem 1.1 when a = 0, then
+so does (ζx, ζy) for any root of unity ζ. To prove (2), note that Theorem 3.4 shows N (t, 0, J , X, Y )
+is finite if γ(E) < 1. Then part (1) forces N (t, 0, J , X, Y ) = 0. Part (3) follows from the fact that
+the difference of two solutions (x, y) and (x′ , y ′ ) to Problem 1.1 for given t, a, J , X/2 and Y /2 is a
+solution (x′′ , y ′′ ) = (x′ − x, y ′ − y) to Problem 1.1 for t, 0, J , X and Y .                        
+Remark 4.2. The proof of parts (1) and (2) illustrates the advantages of working over the ring Z
+of all algebraic integers, rather than in the integers of a particular number field. This makes it
+possible to promote a finiteness result coming from capacity theory to a proof that a homogenous
+linear congruence has no small solutions at all.
+   We illustrate this result with a concrete application to the hidden number problem. Suppose as
+in §1.1 that we are given an ideal J of the integers OF of a number field F and a real number X.
+For a secret integer s ∈ OF we are given samples (ci , di ) ∈ OF × OF for i = 0, 1 for which c0 is
+prime to J and the following is true. There is an (unknown) element xi ∈ OF such that
+(4.20)                                  ci s − di ≡ xi   mod J
+and |λ(xi )| ≤ X/2 for all embeddings λ : F → C. We would like to determine s mod J from this
+information. Theorem 4.1 leads in the following way to a computable criterion for their to exist at
+most one solution s mod J .
+   As in §1.1, we find c′0 ∈ OF such that c0 c′0 ≡ 1 mod J . Then (4.20) for i = 0 gives
+                                      s ≡ c′0 (x0 + d0 ) mod J .
+Substituting this into (4.20) when i = 1 gives
+(4.21)                               x1 + ti x0 + a1 ≡ 0 mod J
+where t1 = −c1 c′0 and a1 = d1 − d + c1 c′0 d0 . Thus the problem of finding all s mod J
+                                                                                       satsifying the
+above conditions is converted to finding all solutions (x0 , x1 ) ∈ OF × OF of the congruence (4.21)
+such that |λ(xi )| < X/2 for i = 0, 1 and all embeddings λ : F → C.
+                TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY                              13
+
+
+
+
+   We bound the number of solutions s mod J in the following way. Using lattice basis reduction,
+find a polynomial b1 x + b2 y + b3 ∈ J −1 OF [x, y] with the properties in Theorem 2.1 for Y = X,
+t = −c1 c′0 and a = 0. Calculate the capacity γ(E) of the adelic set E associated to this adelic set in
+Definition 3.1, using Lemma 3.2 and Theorem 3.5. If γ(E) < 1, then parts (2) and (3) of Theorem
+4.1 show N (t, a, J , X/2, X/2) ≤ 1. Thus there is at most one pair (x0 , x1 ) as above, and at most
+one integer s mod J which solves the above case of the hidden number problem.
+   We conclude this paper with another example illustrating Theorem 4.1. Suppose a = 0, t ∈ OF
+and that J = OF α is a non-zero principal ideal of OF . Suppose (x0 , y0 ) ∈ OF satisfy the congruence
+(4.22)                                  x0 + ty0 ≡ 0        mod J
+and that
+(4.23)                          |x0 · y0 |v ≤ |α|v /2 for all v ∈ MF,inf .
+Suppose as before that t is prime to J = OF α, and that x0 , y0 and α are pairwise relatively prime,
+in the sense that the ideal generated by any two of them is OF .
+Theorem 4.3. With the above hypotheses, there are no non-zero pairs (x, y) ∈ Z × Z with the
+following properties:
+     1. x + ty ≡ 0 mod J · Z, and
+     2. For all embeddings λ : Z → C, one has
+                                |λ(x)| ≤ |λ(x0 )|     and   |λ(y)| ≤ |λ(y0 )|
+         with at least one of these inequalities being strict for at least one λ.
+   Thus in a small non-zero solution of the homogenous congruence resulting from setting a = 0
+prevents the existence of non-trivial solutions with smaller archimedean absolute values. Concerning
+the relation of the inequality (4.23) to Problem 1.1, note that if 0 < α ∈ Z, then (4.23) follows from
+requiring |x0 |v ≤ X and |y0 | ≤ Y for some real X, Y such that |XY | ≤ α/2.
+Proof of Theorem 4.3
+  Define a polynomial in the variables x and y by
+(4.24)                                b1 x + b2 y = (y0 x − x0 y)/α.
+Hypothesis (4.22) shows x0 + ty0 = αz0 for some z0 ∈ OF . Therefore
+(4.25)                b1 x + b2 y = y0 (x + ty)/α − z0 y ∈ J −1 · (x + ty) + OF · y.
+We now substitute for the variables x and y a pair of elements of Z satisfying conditions (1) and
+(2) of Theorem 4.3. The inequalities in condition (2) of Theorem 4.3 show that for each embedding
+λ : Z → C we have
+                                          y0 x − x0 y        λ(y0 )λ(x)     λ(x0 )λ(y)
+(4.26)             |λ(b1 x + b2 y)| = |λ(             )| ≤ |            |+|            |.
+                                               α                 α                 α
+Now (4.23) gives
+                             λ(y0 )        1               |λ(x0 )|       1
+                           |        |≤             and              ≤            .
+                               α       2|λ(x0 )|               α       2|λ(y0 )|
+Substituting this into (4.26) gives
+                                                       |λ(x)|    |λ(y)|
+                                 |λ(b1 x + b2 y)| ≤            +
+                                                      2|λ(x0 )| 2|λ(y0 )|
+Hypothesis (2) of Theorem 4.3 now implies |λ(b1 x + b2 y)| ≤ 1 with strict equality for at least one
+λ. Since b1 x + b2 y is an algebraic integer, we conclude that
+(4.27)                  b1 x + b2 y = 0 when b1 = y0 /α and b2 = −x0 /α.
+We enlarge F so that it includes x and y. There is then an archimedean place v∞ of F at which either
+|x|v∞ < |x0 |v∞ or |y|v∞ < |y0 |v∞ . For simplicity we will suppose that rv∞ = |y|v∞ |/|y0 |v∞ < 1, the
+other case being similar. Define rv = 1 if v∞ 6= v ∈ MF,inf .
+14                       CHINBURG, HEMENWAY FALK, HENINGER, AND SCHERR
+
+
+                                        Q
+   We now define an adelic set E = v∈MF Ev associated to b1 x + b2 y in the following way. Set
+b3 = 0 in Definition 3.1. If v ∈ MF,fin is finite, let Ev be as in part (i) of Definition (3.1). If
+v ∈ MF,inf is an infinite place, define
+(4.28)
+Ev = {y ∈ F v : |y|v ≤ rv |y0 |v and |x|v = |b2 y/b1 |v = |−x0 y/y0 |v ≤ |x0 |v } = {y ∈ F v : |y|v ≤ rv |y0 |v }
+where we have used rv ≤ 1.
+   As in the proof of part (2) of Theorem 3.4, if γ(E) < 1, then there will be only finitely many
+pairs (x, y) ∈ Z × Z satisfying the conditions in Theorem 4.3 and for which |y|v ≤ rv |y0 |v . Then
+Theorem 4.1 shows that in fact there are no such pairs, contradicting the hypothesis above that
+such a pair exists. We conclude that to prove Theorem 4.3 if will suffice to show γ(E) < 1.
+   We first need to describe explicitly the set Ev when v ∈ MF,fin . From Definition 3.1 and (4.24)
+we see that Ev is the set of y ∈ F v satisfying
+      i. |y|v ≤ 1
+     ii. | − x0 y/y0 |v ≤ 1 and
+    iii. |x0 y/y0 + ty|v ≤ |J |v = |α|v .
+Let us first show (i) and (ii) imply (iii). If |α|v = 1, this is clear from t ∈ OF . Suppose now
+that |α|v < 1. We know y0 is prime to α, so |y0 |v = 1. We have (y0 , −x0 ) ≡ y0 (1, t) mod J by
+multiplying the first equality in (4.25) by α, so |x0 + ty0 |v ≤ |J |v . Thus
+                   |(x0 /y0 + t)y|v = |y0 |−1
+                                           v · |x0 + ty0 |v · |y|v ≤ |J |v             if   |y|v ≤ 1.
+Therefore (iii) is implied by (i) when |α|v . Thus Ev is the set of y ∈ F v satisfying (i) and (ii).
+   Recall now that y0 and −x0 are coprime elements of OF by assumption. Thus if |y0 |v < 1 then
+| − x0 |v = 1, and otherwise |y0 |v = 1. If |y0 |v = 1, then (i) implies | − x0 y/y0 |v = | − x0 y|v ≤ 1,
+so (ii) holds. If |y0 |v < 1, then | − x0 |v = 1 so (ii) is equivalent to |y|v ≤ |y0 /(−x0 )|v = |y0 |v < 1.
+Hence condition (ii) implies (i) if |y0 |v < 1. We thus find that for all finite v, Ev is a v-adic disc of
+radius rv = |y0 |v around 0 ∈ Fv . The local capacity of Ev is therefore
+                                              [Fv :Qp(v) ]
+(4.29)                       γv (Ev ) = |y0 |v               = ||y0 ||v   for    v ∈ MF,fin
+where p(v) is the residue characteristic of v and || ||v is the normalized valuation at v.
+   We now consider archimedean v ∈ MF,inf . From (4.28) we see that Ev is the closed disc around
+0 in F v = C of radius rv |y0 |v . Thus the local capacity is
+(4.30)                 γv (Ev ) = (rv |y0 |v )[Fv :R] = rv[Fv :R] ||y0 ||v      for v ∈ MF,inf .
+     Now (4.29) and (4.30) together with the product formula give the global capacity of E as
+                        Y              Y                 Y            Y
+                γ(E) =     γv (Ev ) =        rv[Fv :R] ·   ||y0 ||v =     rv[Fv :R] < 1
+                         v                v∈MF,inf               v∈MF               v∈MF,inf
+
+which completes the proof of Theorem 4.3.
+                 TWO VARIABLE POLYNOMIAL CONGRUENCES AND CAPACITY THEORY                                       15
+
+
+
+
+                                                 References
+ [1] Martin R. Albrecht and Nadia Heninger. On bounded distance decoding with predicate: Breaking the “lattice
+     barrier” for the hidden number problem. In Anne Canteaut and François-Xavier Standaert, editors, Advances in
+     Cryptology – EUROCRYPT 2021, Part I, volume 12696 of Lecture Notes in Computer Science, pages 528–558,
+     Zagreb, Croatia, October 17–21, 2021. Springer, Heidelberg, Germany.
+ [2] Dan Boneh and Glenn Durfee. Cryptanalysis of RSA with private key d less than N 0.292 . In Jacques Stern,
+     editor, Advances in Cryptology – EUROCRYPT’99, volume 1592 of Lecture Notes in Computer Science, pages
+     1–11, Prague, Czech Republic, May 2–6, 1999. Springer, Heidelberg, Germany.
+ [3] Dan Boneh and Ramarathnam Venkatesan. Hardness of computing the most significant bits of secret keys in
+     Diffie-Hellman and related schemes. In Neal Koblitz, editor, Advances in Cryptology – CRYPTO’96, volume
+     1109 of Lecture Notes in Computer Science, pages 129–142, Santa Barbara, CA, USA, August 18–22, 1996.
+     Springer, Heidelberg, Germany.
+ [4] David G. Cantor. On an extension of the definition of transfinite diameter and some applications. J. Reine
+     Angew. Math., 316:160–207, 1980.
+ [5] Ted Chinburg, Brett Hemenway, Nadia Heninger, and Zachary Scherr. Cryptographic applications of capac-
+     ity theory: On the optimality of Coppersmith’s method for univariate polynomials. In Jung Hee Cheon and
+     Tsuyoshi Takagi, editors, Advances in Cryptology – ASIACRYPT 2016, Part I, volume 10031 of Lecture Notes
+     in Computer Science, pages 759–788, Hanoi, Vietnam, December 4–8, 2016. Springer, Heidelberg, Germany.
+ [6] Ted Chinburg, Laurent Moret-Bailly, Georgios Pappas, and Martin J. Taylor. Finite morphisms to projective
+     space and capacity theory:. Journal für die reine und angewandte Mathematik (Crelles Journal), 2017(727):69–
+     84, 2017.
+ [7] Henry Cohn and Nadia Heninger. Approximate common divisors via lattices. In ANTS X - Proceedings of the
+     Tenth Algorithmic Number Theory Symposium, volume 1 of Open Book Series, pages 271–293, Berkeley, CA,
+     2013. Mathematical Sciences Publishers.
+ [8] Don Coppersmith. Small solutions to polynomial equations, and low exponent RSA vulnerabilities. Journal of
+     Cryptology, 10(4):233–260, September 1997.
+ [9] Don Coppersmith. Finding small solutions to small degree polynomials. In Joseph H. Silverman, editor, Cryp-
+     tography and Lattices, pages 20–31, Berlin, Heidelberg, 2001. Springer Berlin Heidelberg.
+[10] Nicholas Howgrave-Graham. Finding small roots of univariate modular equations revisited. In Michael Darnell,
+     editor, Crytography and Coding, pages 131–142, Berlin, Heidelberg, 1997. Springer Berlin Heidelberg.
+[11] Nick Howgrave-Graham. Approximate integer common divisors. In Joseph H. Silverman, editor, Cryptography
+     and Lattices, pages 51–66, Berlin, Heidelberg, 2001. Springer Berlin Heidelberg.
+[12] Serge Lang. Algebraic number theory, volume 110 of Graduate Texts in Mathematics. Springer-Verlag, New
+     York, second edition, 1994.
+[13] Vadim Lyubashevsky, Chris Peikert, and Oded Regev. On ideal lattices and learning with errors over rings. In
+     Henri Gilbert, editor, Advances in Cryptology – EUROCRYPT 2010, volume 6110 of Lecture Notes in Computer
+     Science, pages 1–23, French Riviera, May 30 – June 3, 2010. Springer, Heidelberg, Germany.
+[14] Robert S. Rumely. Capacity theory on algebraic curves, volume 1378 of Lecture Notes in Mathematics. Springer-
+     Verlag, Berlin, 1989.
+[15] Marten van Dijk, Craig Gentry, Shai Halevi, and Vinod Vaikuntanathan. Fully homomorphic encryption over the
+     integers. In Henri Gilbert, editor, Advances in Cryptology – EUROCRYPT 2010, volume 6110 of Lecture Notes
+     in Computer Science, pages 24–43, French Riviera, May 30 – June 3, 2010. Springer, Heidelberg, Germany.
+
+   T. Chinburg, Dept. of Mathematics, Univ. of Pennsylvania, Philadelphia, PA 19104, USA
+   Email address: ted@math.upenn.edu
+
+   B. Hemenway Falk, Dept. of Computer Science, Univ. of Pennsylvania, Philadelphia, PA 19104, USA
+   Email address: fbrett@cis.upenn.edu
+
+   N. Heninger, Dept. of Computer Science and Engineering, U. C. S. D., La Jolla, CA 92093
+   Email address: nadia@cs.ucsd.edu
+
+   Z. Scherr, Dept. of Math and Computer Science, Susquehanna University, Selinsgrove, PA 17870
+   Email address: scherr@susqu.edu
+
