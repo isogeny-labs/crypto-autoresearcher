@@ -740,6 +740,33 @@ def prime_field_source_budget_panel(ref,since):
             emit(prefix+'.'+c['cell_id']+'.'+c['arm']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+k,c[k],unit=unit,label='Fixed checked-budget observation; prepaid shared prerequisite retained, not free/cold',**common)
 
 
+def prime_field_cancellation_solver_panel(ref,since):
+    """A8 cold algebra comparison: immutable supplied rows, component units only."""
+    date='2026-11-05'
+    if date<since:return
+    path='research/prime_field_a8_execution_20261105/runs/a8-cold-solvers-7f32b1/analysis.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);cells=data['cells']
+        expected={(f'p{p}-i{i}',schedule,b,scope,arm) for p in (8191,65537) for i in (0,1) for schedule in ('window','hash0','hash1','hash2') for b in (0,8,16,24,32,48,64,96,128) for scope in ('relations','anchors') for arm in ('full_joint','cancellation_first')}
+        if data['panel_complete']is not True or len(cells)!=576 or data['physical_processes']!=1 or data['solver_calls_verified']!=576:return
+        if {(c['cell_id'],c['schedule'],c['prefix'],c['scope'],c['arm']) for c in cells}!=expected:return
+        for c in cells:
+            if c['verified']is not True or c['status']!='verified':return
+            for k in ('identified_targets','matrix_columns','matrix_rank','matrix_nullity','fr_add','fr_sub','fr_mul','fr_inv','certificate_lift_sub','verified_original_certificates'):
+                if type(c[k])is not int or c[k]<0:return
+            if c['matrix_rank']+c['matrix_nullity']!=c['matrix_columns'] or c['identified_targets']>8 or c['verified_original_certificates']!=c['identified_targets']:return
+        pairs={}
+        for c in cells:pairs.setdefault(c['instance_id'],[]).append(c)
+        if len(pairs)!=288 or any(len(v)!=2 or v[0]['identified_targets']!=v[1]['identified_targets'] for v in pairs.values()):return
+    except (KeyError,TypeError,ValueError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a8'
+    emit(prefix+'.solver_calls',576,unit='solver calls',label='Two cold arms per 288 fixed dependent systems; one process',**common)
+    for c in cells:
+        for k,unit in (('identified_targets','targets'),('fr_add','Fr additions'),('fr_sub','Fr subtractions'),('fr_mul','Fr multiplications'),('fr_inv','Fr inversions'),('certificate_lift_sub','Fr subtractions')):
+            emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Cold supplied-row solver including cancellation/lifting/checks; shared projection separate; no unit weights',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -909,6 +936,7 @@ def main():
     prime_field_source_control_panel(a.ref, a.since)
     prime_field_fresh_source_panel(a.ref, a.since)
     prime_field_source_budget_panel(a.ref, a.since)
+    prime_field_cancellation_solver_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 
