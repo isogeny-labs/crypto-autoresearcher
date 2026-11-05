@@ -41,6 +41,7 @@ experiment:
     sources_to_bind:
     - experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs
     - experiments/EXP-PEXT-212d5c/implementation/fixtures/
+    - experiments/EXP-PEXT-bf8f96/implementation/historical_regression_stage.py
     - experiments/EXP-PEXT-0b2c75/implementation/pext4_census.rs
     - experiments/EXP-PEXT-bf8f96/inputs/manifest.json
     - experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-n3-alignment.json
@@ -178,7 +179,8 @@ experiment:
       Any cloud route needs a separate published finite dollar/capacity grant.
   stages:
   - id: regression
-    objective: T=O full fixture replay and identity/squareclass controls
+    objective: Full four-arm historical fixture replay with only setup/wall timings variable, followed by T=O
+      identity/squareclass controls and checked new-cohort comparison in analyze
     watchdog_seconds: 7200
   - id: orbits
     objective: All abstract allowed n3/5/7 placements and polynomial-rank check
