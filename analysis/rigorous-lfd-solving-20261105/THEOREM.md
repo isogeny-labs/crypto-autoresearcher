@@ -26,6 +26,31 @@ The same bounds hold with raw S3 in place of f. Both input presentations have
 non-bit degree exactly four. The statement includes SAT inputs; no asserted
 UNSAT distribution or first-fall-to-last-fall inference is needed.
 
+### Closure conventions and the ordinary bridge
+
+In P=F_p[T_1,...,T_N], V(F,D) is the least linear space containing the
+inputs of degree<=D and closed under multiplication when the sum of factor
+degrees is<=D. Last fall degree is the least d such that every q in(F)
+lies in V(F,max(d,deg q)). In the Boolean quotient, W_D contains eligible
+normalized inputs and is closed under linear combinations and NF(T_i*w)
+whenever deg w+1<=D. These are iterated closures, not initial row spans.
+
+For D>=2 the exact bridge is
+
+    V(F,D)={q:deg q<=D and NF(q) in W_D}.
+
+Indeed replacing a repeated monomial power T_i^e by T_i^(e-1) subtracts
+a multiple of T_i^2-T_i within the original degree. Iteration proves
+q-NF(q) in V(FE_2,deg q). Every allowed ordinary multiplier can be split
+into monomials and projected one variable at a time without exceeding its
+original sum-of-degrees budget, so the right-hand preimage is an admissible
+closed superspace. Conversely every strict quotient derivation lifts:
+first obtain its multilinear representative by subtracting the repair,
+multiply by the permitted variable in ordinary V, then subtract the new
+repair. Both inclusions follow, and every low-degree polynomial with that
+normal form differs by a derivable bit-equation consequence. Raw input
+normalization preserves these closures whenever D>=the maximum raw degree.
+
 ## 1. Elementary inclusion-matrix lemma
 
 For n>=2j+2, let coefficients c_S in a field of characteristic zero or prime
