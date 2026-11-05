@@ -49,10 +49,34 @@ binary-raw-chain-lastfall-20261105.yaml. Standard broader receipts and scoped
 check evidence are in validation/; their different outcomes are explicit. The prime growth and solving-degree comparison remain written mathematics.
 The final binary raw-chain LFD theorem is instantiated in
 BinaryCoefficientDescent.lean; the separate shape module is only one component.
-Full-workspace standard verification did not pass because an old rank
-certificate was killed by OOM (16GiB, exit137); this is preserved in
-validation/workspace-resource-failure.json. Scoped proof checks pass.
+Earlier local full-workspace verification hit an existing rank-certificate
+OOM (16GiB, exit137); its records remain in validation/workspace-resource-failure.json.
+Later complete-workspace CI passed for the proof snapshot, as documented below.
 
 Historical input `PRIME-PROOF.md` and `CLAIM.md` retain their candidate
 wording because they were frozen before independent review. THEOREM.md is
 the consolidated proof; review bindings retain the original input hashes.
+
+## Later CI and publication update
+
+GitHub run [41996349062](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41996349062)
+subsequently passed the complete workspace build and discharged-target verifier
+for proof head69b20afa (synthetic merge0cfa6988). Its archive contains120
+machine-verified receipts; the five LFD receipts match current theorem/spec,
+local imported-source and toolchain/manifest hashes. Historical local OOM
+receipts are preserved and describe the earlier machine, not a failed theorem.
+The later evidence and exact scope are in
+[publication readiness](../../docs/reports/2026-11-05-lfd-publication-readiness/README.md).
+
+One command checks bundle custody plus the five retained canonical receipts:
+
+```sh
+python tools/verify_lfd_bundle.py --ci-receipts docs/reports/2026-11-05-lfd-publication-readiness/ci-receipts
+```
+
+This replays recorded CI evidence; it does not execute Lean. `--integrity-only`
+checks file hashes without claiming proof verification. `--run-lean
+--artifact-dir <fresh-directory>` invokes the unchanged canonical verifier,
+including its full-workspace build and axiom audits. Later delivery commits
+need their own CI result. No novelty or submission-readiness claim follows
+from these software checks.

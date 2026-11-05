@@ -28,3 +28,12 @@ Next useful step: isolate that existing module and inspect its large `decide`
 steps for row/column proof decomposition before any new full rerun. Repeating
 the same full build with unchanged16GiB memory provides no new evidence.
 No paid infrastructure, cloud run or permission request is scheduled here.
+
+## Later CI scope update
+
+Full-workspace GitHub run41996349062 succeeded for proof head69b20afa on
+synthetic merge0cfa6988. Its five matching LFD receipts are retained in the
+publication-readiness packet. This clears the absence of a passing complete-
+workspace result for that proof snapshot. The16GiB local replay obstruction
+and all original failed receipts remain as recorded. Later delivery revisions
+still require their own CI.

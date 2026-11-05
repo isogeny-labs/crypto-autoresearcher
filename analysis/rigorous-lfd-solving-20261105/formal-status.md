@@ -78,7 +78,7 @@ Exact source hashes, fresh-kernel outcomes and command exits are in
 proof-map.json and validation/final-checks.json. Failed construction attempts
 are retained, including the fixed simplifier cleanup in the raw module.
 
-## Full-workspace check did not pass
+## Historical local full-workspace attempts
 
 The standard verifier was launched after the original sources/specs were
 committed/pushed. Its first receipt records an infrastructure timeout after
@@ -111,3 +111,17 @@ Core output:75ed438e5ad45865c9a5ecba72e4ec8aac968cd90bc682d5d16c09f3318dfa5e;
 raw output:2f9a65df9ade8877d0aef8363f5a3c3d66a24be27bb05aa8dc2a7b33fb496537.
 The core review retains a failed machine-independence-checker parse attempt;
 no procedural gate pass is inferred from the mathematical review outcomes.
+
+## Additive update: later complete-workspace CI success
+
+GitHub job127140800110 in run41996349062 passed the full workspace build,
+all discharged-target verification, and before/after installed source-pin
+checks for PR head69b20afa (the actual verification revision is synthetic
+merge0cfa6988e8ec1fb1c1a98379d1c876fc3754ef55). The downloaded archive contains
+120 machine_verified receipts. Five unchanged LFD receipts are retained under
+docs/reports/2026-11-05-lfd-publication-readiness/ci-receipts/; they match current
+exact theorem/specification and every local imported-source byte hash, plus
+toolchain and package-manifest digests. The archive ZIP digest also matches
+GitHub's artifact metadata. This is the later positive full-workspace result
+for that proof snapshot. It does not rewrite the earlier failed local receipts
+or assert that a later delivery revision has already passed CI.

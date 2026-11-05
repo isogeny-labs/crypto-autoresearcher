@@ -105,10 +105,15 @@ This solving-degree identification is a written application of the primary
 source, not a Lean formalization of Groebner/Macaulay solving-degree
 machinery. The theorem does not prove a growing binary lower bound.
 
-The full standard workspace verification did not pass: the first attempt
+Earlier local full-workspace verification did not pass: the first attempt
 timed out while building uncached dependencies; after cache repair, an
 existing unrelated degree-three rank certificate was killed with exit137
 and an observed cgroupOOM. These preserved receipts do not negate the
 successful scoped build/axiom checks and are not reported as a passing full
 workspace gate. Exact source pins and fresh-kernel outcomes are in
 formal-status.md and the final validation summary.
+
+Later full-workspace CI succeeded for proof head69b20afa on merge0cfa6988.
+The five retained standard receipts match current theorem/import/spec/pin
+hashes; see docs/reports/2026-11-05-lfd-publication-readiness/ for the additive
+CI evidence and one-command replay. Historical failure records remain unchanged.

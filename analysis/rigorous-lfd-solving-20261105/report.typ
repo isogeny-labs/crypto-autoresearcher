@@ -57,8 +57,8 @@ The normalization module proves original-degree repair, the exact bit-equation k
 
 The prime proof has a fresh independent statement-first derivation and false-claim controls. A separate core reviewer checks support localization, interpolation and the F₂ inconsistency step. Another reviewer owns the raw coefficient projection and final S3 instantiation. Exact source hashes, programs, scope and verdicts are in the three review files and proof-map.json. Their source reviews do not assert signed PCC or official scientific promotion.
 
-== Full-workspace check remains unsuccessful
-The first standard verifier timed out after 900 seconds while compiling uncached Mathlib. After fetching and unpacking the pinned cache, the full build failed in an existing 80-row degree-three rank certificate: Lean exited 137, and the workspace recorded an out-of-memory kill under its 16 GiB limit. Both receipts are preserved. Successful scoped checks are not represented as a passing full-workspace gate. The obstruction and a safe next diagnostic are in problems/workspace-rank-resource.md.
+== Complete-workspace CI now passes
+The earlier local verifier timed out and then hit an out-of-memory kill in an existing rank certificate under its 16 GiB limit. Those failed receipts remain unchanged. Later GitHub run 41996349062 completed the full build and canonical target verification: its archive contains 120 machine-verified receipts. The five LFD receipts match the current theorem, specification, imported-source and configuration hashes. The run checked PR head 69b20afa using merge revision 0cfa6988; it does not certify later delivery edits. A new checker replays these receipts or delegates a fresh run to the canonical verifier.
 
 == Still unproved
 A growing characteristic-two lower bound remains open. The prime-field top form and large-characteristic rank argument do not transfer. The full prime growing lower-bound theorem also remains a written theorem, rather than a complete Lean proof. These remaining obligations are separate from the now-instantiated raw binary upper bound.
