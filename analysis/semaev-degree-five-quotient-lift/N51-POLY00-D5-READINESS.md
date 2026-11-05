@@ -17,6 +17,27 @@ of W4 in its kernel, so this prediction is conditional on seed exactness;
 even without exactness, a surviving independently checked D5 quotient
 of dimension at least seven would still prove the lower bound.
 
+The bridge for this **satisfiable** instance is Proposition 1.4 of the
+theorem dossier: codimension strictly greater than the exact solution
+count forces last fall degree at least the next degree. The literature
+metadata in the frozen V1 and V2 protocols mistakenly points to
+Proposition 1.2, the unsatisfiable-system bridge. This citation erratum
+does not change their frozen threshold, input, run limits, or decision
+rule. Interpret any later accepted D5 certificate using Proposition 1.4
+and preserve both protocol versions as filed.
+
+There is also conditional evidence for using this seed. The retained
+polynomial-00 D3 producer reported rank 10,970 in 23,479 columns after
+two fixed-point iterations, and its separate checker accepted the
+12,509-dimensional quotient. The bounded D4 receipt records the same
+blocked-lift binary and a completed producer, followed by the accepted
+45,615-dimensional quotient. The source invariant in
+`D3-D4-EXACTNESS-AUDIT.md` would make this D4 kernel equal to W4 if the
+pinned native executions faithfully implement the audited source. This
+is source-and-receipt evidence, not an independent primal-rank certificate;
+the D5 lower-bound decision still rests on its own independent quotient
+check and the fresh count of six.
+
 The published profile predicts 2,893,164 degree-at-most-five monomial
 columns, 103,867 working coordinates and 58,252 border coordinates.
 Applying the blocked-rewrite source's exact allocation formula at
