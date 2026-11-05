@@ -1,52 +1,90 @@
 {
-  "schema": "degree-bound-proof-map/v1",
+  "schema": "degree-bound-proof-map/v2",
   "recorded_at": "2026-11-05",
-  "source_snapshot": "ed5d9e60",
   "formal_toolchain": {
     "lean": "4.35.0",
     "mathlib": "cfc55fc58714a59dc06e6e79edc6d1d95140d3c2",
     "CryptoLean": "60952c696ded7f3da4f4517006d9af6482662487"
   },
   "proof_status": {
-    "prime_growth": "written proof; independent mathematical review found no gap; no full Lean proof or signed PCC status",
-    "binary_unsat_upper": "written proof for exact stated presentation; full Lean instantiation remains open",
-    "boolean_repair_and_general_lfd_upper": "scoped Lean build and exact-name audit pass; standard target receipts recorded separately",
-    "binary_s3_shape": "scoped Lean build, axiom audit and fresh kernel pass"
+    "prime_growth": "written proof; independent mathematical review holds; no complete Lean proof",
+    "binary_raw_unsat_upper": "complete instantiated Lean ordinary last-fall theorem; scoped builds/audits/fresh kernel and two separate joint reviews pass",
+    "solving_degree": "written primary-source application; no full Lean Groebner/Macaulay comparison",
+    "full_workspace": "unsuccessful: initial timeout then observedOOM in existing rank certificate"
   },
-  "review": {
-    "task": "TASK-20261105-52b792",
-    "session": "/root/prime_growth_review",
+  "reviews": [
+    {
+      "task": "TASK-20261105-52b792",
+      "session": "/root/prime_growth_review",
+      "original_snapshot": "047002010983c6deba923743bba110e45ef137dd",
+      "supplement_snapshot": "2ede864c11b9da0f46504d77422deb1b3738ec46",
+      "joint": "prime growth and solving-degree sandwich"
+    },
+    {
+      "task": "TASK-20261105-583517",
+      "session": "/root/binary_localization_review",
+      "snapshot": "397dcae257ee7a422816103603a8dcbdd52bee46",
+      "joint": "generic support localization and affine-field inconsistency"
+    },
+    {
+      "task": "TASK-20261105-72286d",
+      "session": "/root/binary_raw_review",
+      "snapshot": "98a188b4ee3b2d0134856251ce02043e42128119",
+      "joint": "raw coefficient projection and exact S3/cap instantiation"
+    }
+  ],
+  "dispatch_metadata": {
     "fork_turns": "none",
     "requested_reasoning_effort": "max",
     "spawn_accepted": true,
-    "backend_probe": false,
-    "blind_rederivation": true,
-    "original_snapshot": "047002010983c6deba923743bba110e45ef137dd",
-    "supplement_snapshot": "2ede864c11b9da0f46504d77422deb1b3738ec46",
-    "post_review_presentation_change": "Final THEOREM adds explicit closure definitions and the bridge argument already derived in the independent report; original reviewed snapshots remain unchanged."
+    "independent_serving_probe": false
   },
+  "procedure_limits": [
+    "No signed PCC/scientific promotion",
+    "No passing machine independence-checker result; exact interface limitations and blinding/source order are in reports",
+    "Final THEOREM adds explicit definitions/bridge already derived in independent prime review; original snapshots remain binding",
+    "Core overall verdict was communicated to raw reviewer after its own verdict narrative was written, as reported by that reviewer"
+  ],
   "not_claimed": [
     "growing characteristic-two lower bound",
-    "complete binary 3ell+1 formal theorem",
-    "full prime growth Lean proof",
-    "all four original tracks complete",
-    "official scientific promotion",
+    "complete prime growth Lean proof",
+    "full solving-degree Lean formalization",
+    "all original four tracks complete",
+    "whole-workspace verification passed",
     "timing or attack-cost advantage"
   ],
   "artifacts": {
     "analysis/rigorous-lfd-solving-20261105/CLAIM.md": "4de97e516126db542d0a1056ef7e3e6b807fd4ed1dd75b2b64021e8f6bfde466",
     "analysis/rigorous-lfd-solving-20261105/PRIME-PROOF.md": "1b4068c4e67eb26efde0b8b1f20ad5fe453bba5359f8423be9d247361acf5724",
     "analysis/rigorous-lfd-solving-20261105/THEOREM.md": "4239279675de8aa1f52c7f7206869a009d104a21616e0487609eaeb273725556",
-    "analysis/rigorous-lfd-solving-20261105/BOUNDS.md": "18339b9ad8cfdaf90001abcae06bc8c305c8910de29f4960a00a23b2111a4632",
+    "analysis/rigorous-lfd-solving-20261105/BOUNDS.md": "c359181b6bbc150ce51411f4d9729633e80ad759696cfb4a10f17f3e6d56ee96",
+    "analysis/rigorous-lfd-solving-20261105/BINARY-FORMAL.md": "031103010d3bedec9ffc977dcc8489c5cfc348494fd425e7756e0780f1878a3f",
+    "analysis/rigorous-lfd-solving-20261105/README.md": "8c24bbd32519a6891fc3a278c014e3055f6659f842f888ead47bf91f7ef2ced0",
+    "analysis/rigorous-lfd-solving-20261105/formal-status.md": "318b7d1aa57759e355bbc211fd03f8680aceec56e1f4e9ad186c38f066afb07c",
     "analysis/rigorous-lfd-solving-20261105/prime-independent-review.md": "9b0bbaa8ab3a4b6596e490a30396462275900fdf18b43d2316d132cac604c33d",
     "analysis/rigorous-lfd-solving-20261105/normalization-status.md": "c4b79f5c9efca0d12524e9362d597978a64ccda9a13063624fd0fa9b4fdb56e8",
-    "analysis/rigorous-lfd-solving-20261105/diagram.dot": "7e6f0dc4d4968ac53cbe92b011e86aaef208dce7ebba8dfad2742d252a89a873",
-    "analysis/rigorous-lfd-solving-20261105/diagram.svg": "f943bde2bac975b77122f0cd922ffe714e5152a5af20836af04999439f98db9e",
-    "analysis/rigorous-lfd-solving-20261105/report.typ": "2ef20662969abc98f344bfc020935e140740f81af4603cdbd7e3a7a2fabf6bf0",
-    "analysis/rigorous-lfd-solving-20261105/report.pdf": "2f2219e9eca8d995ceea72438b23568b3f7b3a0df39372a78df73e9567ac718a",
+    "analysis/rigorous-lfd-solving-20261105/binary-localization/status.md": "2553ebec75cb6c183d8027e420321375a9ef37ec6264fabfb978142f47aa9ac3",
+    "analysis/rigorous-lfd-solving-20261105/binary-localization/review.md": "75ed438e5ad45865c9a5ecba72e4ec8aac968cd90bc682d5d16c09f3318dfa5e",
+    "analysis/rigorous-lfd-solving-20261105/coefficient-descent/review.md": "2f9a65df9ade8877d0aef8363f5a3c3d66a24be27bb05aa8dc2a7b33fb496537",
+    "analysis/rigorous-lfd-solving-20261105/binary-localization-archive.md": "f1f8b320ef9bbf1b63cec0eae54adb2b419f44b2445ddd3938bd0f155dc9ba3b",
+    "analysis/rigorous-lfd-solving-20261105/diagram.dot": "d2d421e295dc1beef81f4115f45974f98e8ad1f03783b73a8b5839406ef4a965",
+    "analysis/rigorous-lfd-solving-20261105/diagram.svg": "a571af8cdc87a3dfdaa00509c1b725b36242d2f89d48b6e1ef5bc9e81ec6a757",
+    "analysis/rigorous-lfd-solving-20261105/report.typ": "f44fb4e28da233a938b12a50bcc020560bcb078fd32e3d452ad14538cd18d9fa",
+    "analysis/rigorous-lfd-solving-20261105/report.pdf": "41fe79ab9379581b66e11011e0b182e008e069c1c907195bef3cb8f3da0bec3a",
+    "analysis/rigorous-lfd-solving-20261105/validation/final-checks.json": "f42d60f48c5fa3ac4cae3471172e86d184753e186482085877a6d5b64c0cf668",
+    "analysis/rigorous-lfd-solving-20261105/validation/dependency-pins-final.json": "73aea69f975440f6f9eb2fa6c55e3cf7114e438e52ffce850534ec8d514773bd",
+    "analysis/rigorous-lfd-solving-20261105/validation/workspace-resource-failure.json": "0ff8ffe19dce8080dd3d290faf34dcae01abc985338f924ce2299f10ac3dee26",
     "formal/CryptoResearch/FallDegree/BooleanNormalization.lean": "a7fde065840c9ad19c11932fb65f5747cc95eb75d799ae9de6ae059ca8d0ab8d",
     "formal/CryptoResearch/FallDegree/BinarySemaevShape.lean": "49988ca63423b469677c5255e37f1deeff8efbacb471905c01757361ffbf8c31",
+    "formal/CryptoResearch/FallDegree/AffineFibreRefutation.lean": "a36a2d5b4977fb2a60a93804535daacfa27946d060d7f16de43da708f4dc3cc2",
+    "formal/CryptoResearch/FallDegree/BinaryLocalization.lean": "12ca51188d9042591a8835c92552eae3ea44670141476cce16e5fa0641125470",
+    "formal/CryptoResearch/FallDegree/BinaryCoefficientDescent.lean": "07e997fd1c6528d676db336b1df0f244652d47ad016b2969524505e021188758",
     "formal/lean-toolchain": "ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c",
-    "formal/lake-manifest.json": "b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7"
+    "formal/lake-manifest.json": "b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7",
+    "formal/targets/boolean-normalization-repair-20261105.yaml": "b5b982cdea352edc40498607e57892c44f845a6ec538bab9f76aa8f2903b0bd8",
+    "formal/targets/boolean-lastfall-upper-20261105.yaml": "e3522d6b8bee9097ddea225fe7b1cbb6d8ce0abc4634ad88bd396b4d174035a0",
+    "formal/targets/binary-semaev-repair-20261105.yaml": "dd97eb5a9df2373dab003ca7553e4b387f811ff540d4efafc04f1b7418a138c7",
+    "formal/targets/binary-supported-affine-lastfall-20261105.yaml": "445e6276c76900dfe06014843b06809d838b078f0fd488a2086f3d90fc944773",
+    "formal/targets/binary-raw-chain-lastfall-20261105.yaml": "9f71663384fab2c68d0e92a086fa5e230d6bd985493252e2bf73fed011575165"
   }
 }

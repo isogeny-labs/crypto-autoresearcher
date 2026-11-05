@@ -158,10 +158,14 @@ systems with explicit bit equations satisfying
 It treats both SAT and UNSAT, and provides an infinite SAT rational-target
 family. It gives no characteristic-two growing lower bound. There the top
 form and inclusion-matrix argument are different; the prime proof cannot be
-transferred by changing coefficient fields. The binary support lemma above
-is proved here in writing; the complete instantiated support/interpolation
-and coefficient-descent theorem is not yet Lean verified. These distinct
-obligations remain named in problems/remaining-binary-obligations.md.
+transferred by changing coefficient fields. The binary support lemma and complete raw two-S3 coefficient-descent
+instantiation now compile in Lean: BinaryLocalization.lean and
+BinaryCoefficientDescent.lean. BINARY-FORMAL.md names the exact final theorem,
+which derives every structural and degree condition from the source forms.
+The prime growth theorem remains a written proof; a growing binary lower
+bound is still a separate open obligation. Broader whole-workspace checks
+hit an existing rank-certificate resource failure; scoped new-module checks
+are reported separately in formal-status.md.
 
 ## Sources, read and scope
 

@@ -37,8 +37,10 @@ found no mathematical gap at written-proof scope, with analytical controls.
 It supplies no complete Lean theorem or signed PCC/scientific promotion.
 The old measured widths are not being extrapolated as the proof.
 
-The characteristic-two lower bound and the full binary upper-bound Lean
-instantiation remain [separate obligations](../analysis/rigorous-lfd-solving-20261105/problems/remaining-binary-obligations.md).
+The characteristic-two lower bound remains open. The raw binary upper-bound
+Lean instantiation now compiles and is described in
+[BINARY-FORMAL.md](../analysis/rigorous-lfd-solving-20261105/BINARY-FORMAL.md).
+The exact remaining scope is in [the obligation record](../analysis/rigorous-lfd-solving-20261105/problems/remaining-binary-obligations.md).
 The earlier no-separator statements below describe the 2026-11-04 state;
 they are superseded for this exact prime presentation, not for binary or
 other encodings. The original requirement is retained.

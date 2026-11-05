@@ -24,9 +24,11 @@ false transfer from Boolean UNSAT to field inconsistency in odd
 characteristic. Over k=F2, every field coordinate is Boolean, so the
 hypothesis is exactly the required affine-fibre inconsistency.
 
-`AffineFibreRefutation.lean` currently lives here as a compiling candidate
-outside formal while another verification freezes formal/. build-01.log
+`AffineFibreRefutation.lean` is now staged in formal/CryptoResearch/FallDegree/
+and composes into BinaryLocalization.lean. The copy here preserves its source
+construction. build-01.log
 preserves two unsuccessful rewrite steps; build-02.log proves the scalar
 certificate; build-03.log proves both exact statements. Both successful
-axiom outputs are only propext, Classical.choice, Quot.sound. Full formal
-module staging and any verification receipts are recorded separately.
+axiom outputs are only propext, Classical.choice, Quot.sound. build-05.log adds the arbitrary-variable affine-span refutation used by the
+binary core. formal-build-01.log passes. Scoped and full-workspace outcomes
+are recorded separately in formal-status.md.

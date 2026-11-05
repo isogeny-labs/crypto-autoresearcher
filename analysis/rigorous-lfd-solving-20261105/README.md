@@ -16,33 +16,42 @@ formal coverage is stated separately. No official scientific status changed.
 - [Independent prime review](prime-independent-review.md): blind derivation,
   elementary inclusion-rank induction, five false-claim controls, frozen
   proof audit and declared supplemental consistency check.
+- [Complete raw binary formalization](BINARY-FORMAL.md): the actual raw
+  coefficient projections of the two-S3 chain and optional guard satisfy
+  LFD<=3ell+1 on Boolean UNSAT, without supplied localized rows or refutations.
+  [Generic core review](binary-localization/review.md) and
+  [raw-instantiation review](coefficient-descent/review.md) have separate joints.
 - [Formal coverage and verification](formal-status.md): exact new Lean
   statements, pins, builds, axiom audits and target receipts.
 - [Report PDF](report.pdf), [editable report](report.typ), [diagram source](diagram.dot)
   and [vector diagram](diagram.svg).
 - [Remaining binary obligations](problems/remaining-binary-obligations.md):
-  complete instantiated support/localization formalization and unbounded
-  characteristic-two lower bound. Neither is claimed completed.
+  unbounded characteristic-two lower bound and full prime growth Lean proof.
+  These remain open.
 
 The non-bit input degree stays four as s grows. The lower bound is a full
 iterated-closure bound, including SAT missing consequences, not a first-fall
 measurement. It covers this exact F_p-coefficient digit presentation, not a
 GF(2) carry circuit or a presentation with extra chain/membership constraints.
 
-Lean: `formal/CryptoResearch/FallDegree/{BooleanNormalization,BinarySemaevShape}.lean`.
+Lean modules live in `formal/CryptoResearch/FallDegree/`; see formal-status.md.
 All failed and successful proof-construction logs remain in this directory
 and `validation/`. Run the scoped builds from `formal/`:
 
 ```sh
 lake build +CryptoResearch.FallDegree.BooleanNormalization
-lake build +CryptoResearch.FallDegree.BinarySemaevShape
+lake build +CryptoResearch.FallDegree.BinaryCoefficientDescent
 ```
 
-Frozen target specs are `formal/targets/{boolean-normalization-repair,
-boolean-lastfall-upper,binary-semaev-repair}-20261105.yaml`. Their exact
-receipts are in `validation/`. The generic normalizer and last-fall upper
-bound are not a Lean formalization of the prime growth or solving-degree
-sandwich. The binary S3-shape module is not the full binary 3ell+1 theorem.
+Frozen target specs under formal/targets/ include the original repair/upper
+and S3-shape targets plus binary-supported-affine-lastfall-20261105.yaml and
+binary-raw-chain-lastfall-20261105.yaml. Standard broader receipts and scoped
+check evidence are in validation/; their different outcomes are explicit. The prime growth and solving-degree comparison remain written mathematics.
+The final binary raw-chain LFD theorem is instantiated in
+BinaryCoefficientDescent.lean; the separate shape module is only one component.
+Full-workspace standard verification did not pass because an old rank
+certificate was killed by OOM (16GiB, exit137); this is preserved in
+validation/workspace-resource-failure.json. Scoped proof checks pass.
 
 Historical input `PRIME-PROOF.md` and `CLAIM.md` retain their candidate
 wording because they were frozen before independent review. THEOREM.md is
