@@ -1,0 +1,17 @@
+C1 End_{F_p}(E) != Z: deg(pi)=p, deg([m])=m^2; p prime is never a square
+   primes p < 2e5 that are perfect squares: []  (expected [])
+   toy E: p=15619 N=15761; pi(G)==G on E(F_p): True (pi acts as [1] on E(F_p), yet pi != [1] as an isogeny: deg p vs 1)
+C2 endomorphism image oracle on a prime-order j=0 curve
+   p=43651 N=43633 lam=30778 lam^2+lam+1 mod N = 0
+   phi(Q)==[lam]Q for 50 random Q: True
+   label-only simulator cost (double-and-add) = 21 group ops; bound 2*ceil(log2 N) = 32; literal 'm group operations' with m=lam would be ~30778
+C3 incidence SEARCH (subset form) solves DLP in one query
+   p=12487 N=12343 (14 bits): recovered k in 5/5 trials; adversary cost = 13 group ops + 1 SEARCH query (vs sqrt(N) ~ 111)
+C4 incidence SEARCH, fixed arity m: exponent 1/(m+1) in queries+ops
+   m=1: N=9851, B=100, recovered 3/3; mean group ops 155 + mean queries 40 ; N^(1/(m+1)) = 99, sqrt(N) = 99
+   m=2: N=9851, B=22, recovered 3/3; mean group ops 82 + mean queries 9 ; N^(1/(m+1)) = 21, sqrt(N) = 99
+C5 incidence CHECK: Shoup form count (one new form per query)
+   40 group ops, 25 CHECK queries (|I| up to 41): distinct-form collision events bounded by 886 pairs; failure prob <= 886/N; CHECK contributes 25, i.e. 1 per query independent of |I|
+C6 jet oracle: Weierstrass reading leaks k-dependent field data; invariant reading is additive
+   p=15329 N=15107: eps-coefficient dx(G+Q) took 198 distinct values over 200 random k for ONE fixed query -> depends on k -> no label-only simulator (labels are k-independent in distribution)
+   invariant coordinate t(G+Q) == t(G)+t(Q) for all samples: True
