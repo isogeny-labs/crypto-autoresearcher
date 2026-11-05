@@ -166,3 +166,20 @@ as dense dot products including zero products. The next controlled test is
 sparse functional evaluation in **both** solvers on these immutable cases,
 retaining full kernels, certificate lifting/checks and separate phase vectors.
 This finite implementation result changes no official scientific status.
+
+## A9 sparse-functional control, 2026-11-05
+
+[Corrected A9](../research/prime_field_a9_json_control_20261105/RESULTS.md)
+completed 288 cases/four modes, with exact A8 dense replay and unchanged target
+outcomes/certificates. After sparse evaluation in both methods, Fr multiplications
+are 688,054 joint and 605,078 cancellation; candidate counts rise in two cases
+and subtractions rise in 50. The original JSON-key failure remains invalid with
+four retained/unverified outputs; cumulative accounting charges 1,156 calls/two
+attempts, including projection and whole failed-process resources.
+
+Next work is fresh AP-source versus optimized fixed-base hash-source holdouts,
+with symmetric kernel-free row-space recovery as a strong baseline prerequisite.
+Charge cold tables/prerequisite walks and retain setup/intermediate-point labels
+as explicit anchors/diagnostics. AP correlations may harm yield. These are proposed
+controls, not fresh native results or a campaign completion claim. Status remains
+investigating; complete-cost fresh transfer is unresolved.
