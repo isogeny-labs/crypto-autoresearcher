@@ -1,0 +1,22 @@
+{
+  "schema": "semaev.quotient-rebase-attempt/v1",
+  "id": "n50-poly03-sliced-d4-fast-rebase-001",
+  "scope": "One deterministic coordinate conversion of an already accepted affine-sliced n50 D4 quotient map. No closure or LFD claim is made by this conversion.",
+  "source_revision": "1d75e97d55f8f54404810b13f8e0507391d696ae",
+  "source_path": "analysis/semaev-degree-five-quotient-lift/rebase_quotient_certificate_fast.cpp",
+  "source_sha256": "937609a04115abbca2a683e5894449e13005e345e3e965d079a78b088d967fa1",
+  "control_path": "analysis/semaev-degree-five-quotient-lift/test_rebase_quotient_certificate_fast.py",
+  "control_sha256": "b68a46e2731b83b657ba3e7fac416732fd0284d6d60c3ab923fc8ebceb5135c8",
+  "input_path": "/home/ec2-user/fall-degree-data-20261029/n50-poly03-slice-d4-20261103/degree4-sliced.bin",
+  "input_sha256": "e15eaf5f9b314637fed9421f4d1526f193d3e8202b500e94dd5c6523be8484b6",
+  "input_bytes": 1120585872,
+  "output_path": "/home/ec2-user/fall-degree-data-20261029/n50-poly03-slice-d4-20261103/degree4-rebased.bin",
+  "build_argv": ["g++", "-O3", "-std=c++17", "-Wall", "-Wextra", "-Werror", "analysis/semaev-degree-five-quotient-lift/rebase_quotient_certificate_fast.cpp", "-lcrypto", "-o", "/home/ec2-user/fall-degree-data-20261029/n50-poly03-slice-d4-20261103/rebase_quotient_certificate_fast"],
+  "run_argv": ["/home/ec2-user/fall-degree-data-20261029/n50-poly03-slice-d4-20261103/rebase_quotient_certificate_fast", "/home/ec2-user/fall-degree-data-20261029/n50-poly03-slice-d4-20261103/degree4-sliced.bin", "/home/ec2-user/fall-degree-data-20261029/n50-poly03-slice-d4-20261103/degree4-rebased.bin", "e15eaf5f9b314637fed9421f4d1526f193d3e8202b500e94dd5c6523be8484b6"],
+  "preconditions": ["The Python conversion and first native conversion are terminal with no final or partial output.", "The 231526-row source has 37687 unit coordinates, 942 missing coordinates, and zero later-occurrence conflicts.", "The source hash and published GitHub revision match."],
+  "controls": ["Fast output matches the generic reverse-greedy output on an 11-row exhaustive-kernel fixture.", "Fast output matches the generic output on a 73-coordinate multiword fixture.", "Wrong source hash is refused without an output file."],
+  "limits": {"cpu_cores": 1, "memory_bytes": 8589934592, "concurrency": 1, "wall_seconds": 1800, "latest_deadline_utc": "2026-11-05T15:45:00Z", "attempts": 1, "automatic_retries": 0, "reserved_usd": 2.0, "includes": ["build", "host time", "failure", "idle time during attempt", "storage", "transfer"]},
+  "cost_context": {"instance_type": "m8i.8xlarge", "spot_zone": "us-east-2b", "spot_usd_per_hour_observed": 0.7956, "daily_budget_usd": 200.0, "daily_budget_actual_usd_observed": 44.765, "budget_readback_is_delayed": true},
+  "acceptance": ["Native process exits zero before its deadline and publishes an output digest.", "The independent affine-slice checker accepts the rebased file against the original n50 plan and descent source.", "The capacity profiler finds a unit-triangular seed and derives a bounded D5 payload."],
+  "interpretation": "Only the independent checker can promote the output to an accepted D4 seed. D5 nonmembership and an LFD lower bound of six remain separate obligations."
+}
