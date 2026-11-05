@@ -14,16 +14,24 @@ next_action:
   step: >-
     The uniform degree-two bridge is refuted in the reviewed finite Boolean model (n = n' = 4,
     x_R = 1: no new class at degree 2, one at degree 3; 2026-10-25 correction, KR-IC-139da0), and the
-    corrected-parity replay (68/12) supersedes the fall_profile table. Next: read Kosters-Yeo Sec. 4
-    and Hodges-Petit-Schlather in full to record their exact first-fall definition and hypotheses,
+    corrected-parity replay (68/12) supersedes the fall_profile table. The independent
+    BATCH-4c1c67 joints now validate the five Nagao counterexample/recovery theorems at their
+    equality-reading/F2 scope and FakeExact supplies exact degrees. Next: independently check
+    Nagao Proposition 6 and the Lemma 6 reading, complete the novelty audit, and read Kosters-Yeo
+    Sec. 4 and Hodges-Petit-Schlather in full to record their exact definitions and hypotheses,
     then state, and attempt in Lean, a scoped first-fall theorem under hypotheses the counterexample
-    does not violate.
+    does not violate. For any claimed exact last fall degree, also bind the reported rows to the
+    iterative V_(F,i) closure and supply a checked cutoff proving no later fall; use the G_N/H_N
+    same-prefix control.
   discriminates: >-
     If the sources' definition or hypotheses exclude the finite counterexample, the reported
     first-fall-2 mechanism stands in that scope and the FFD route keeps its premise there; if they do
     not, the reported uniform first fall at degree 2 is false and the FFD route loses its last uniform
-    premise. The at-scale degree question itself lives in LEAD-ICE-descent-closure-degree-at-scale.
-  blocked_by: problems/semaev-degree-two-fall-nonzero-bridge.md (crypto-autoresearcher)
+    premise. A finite profile without a completion certificate establishes at most a witnessed lower
+    bound, never exact d_F. The at-scale question lives in LEAD-ICE-descent-closure-degree-at-scale.
+  blocked_by: >-
+    problems/semaev-degree-two-fall-nonzero-bridge.md and
+    problems/lastfall-finite-profile-completeness.md (crypto-autoresearcher)
 evidence:
 - repo: crypto-autoresearcher
   path: problems/semaev-degree-two-fall-nonzero-bridge.md
@@ -53,6 +61,18 @@ evidence:
 - repo: crypto-autoresearcher
   path: knowledge/open-problems/KN-OPEN-57907f.md
   note: does omega <= 9/4 transfer to GF(2^k)? entropy inequality and detecting-characters lemma unchecked
+- repo: crypto-autoresearcher
+  path: problems/lastfall-finite-profile-completeness.md
+  note: a finite rank prefix has no exact d_F semantics without iterative-closure equality and a no-later-fall cutoff
+- repo: crypto-autoresearcher
+  path: coordination/formal-reviews/BATCH-4c1c67/decision.md
+  note: three independent joints hold for five Nagao counterexample/recovery theorems at the stated F2 equality-reading scope
+- repo: crypto-autoresearcher
+  path: formal/CryptoResearch/Nagao/FakeExact.lean
+  note: exact first/fake-first-fall degrees for the reviewed witnesses
+- repo: crypto-autoresearcher
+  path: ledger/corrections/CORR-20261101-4186ae.yaml
+  note: corrects the literal >= control; printed outside placement still fails, inside placement is trivial
 ledger_refs:
 - H-SEMBIN-2d7708
 - H-SEMBIN-a7e721
@@ -72,12 +92,10 @@ known_results:
 - KR-IC-58213c
 - KR-IC-9e610d
 forecloses:
-- Nagao coset-shift invariance of first fall degree
-- fake first fall degree bounds the true one
-- Semaev Assumption 1 d_F4 at most 4
-- trace morphism forces first fall at degree 2
-- polynomial-time ECDLP over F_2^n under FFD assumption
+- Nagao Lemma 4's universal fake-degree upper bound at the reviewed F2 equality-reading scope
+- the uniform degree-two bridge in the reviewed n=n'=4, x_R=1 finite Boolean model
+- a finite fall-profile prefix proves an exact last fall degree without a no-later-fall cutoff
 areas:
 - SEMBIN
 - DREG
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-02'

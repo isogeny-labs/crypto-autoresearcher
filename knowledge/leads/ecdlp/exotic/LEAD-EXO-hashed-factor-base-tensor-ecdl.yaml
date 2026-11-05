@@ -19,24 +19,28 @@ next_action:
     (crypto problems/hashed-ecdl-tensor-backend.md). It must check whether the obstruction
     recorded in LEAD-ICB-decomposition-encoding-and-sat applies to this encoding: there the
     #SAT exponent outgrows enumeration once the CNF has omega(l sqrt(log l)) variables.
-    (b) Run the frozen 84-case comparison panel (crypto research/hashed_ecdl_speed_20261029,
-    cryptanalysis docs/hashed-ecdl-panel.md). It is blocked on checkpoint transport and native
-    execution access. Price it in ecbench's counted unit against matched rho on the same toy
-    curves.
+    (b) Freeze a successor that exercises the recursive kernel (`root_u > 0`), fully prices the
+    native work and obtains complete verified native-source/native-width cells against the matched
+    rho-neg-v2 reference. Use independent measurement seeds or multiple rounds, and bind raw
+    sessions, source commit, build flags and rebuilt binaries in a gate-shaped custody receipt.
   discriminates: >-
     An audit that finds the encoding's variable count makes the counting bound lose to
-    enumeration or rho (as for descended Semaev systems) closes the lead with that cost model.
-    A clean audit leaves the claim conditional on the preprint. A measured counted-cost slope
-    below rho's on toy curves, with controls, would be the first evidence of a gain. No result
-    either way exists yet.
+    enumeration or rho closes only this exact encoding/backend under that proved cost model.
+    A clean audit leaves the claim conditional on the preprint. A fully charged recursive-kernel
+    cell below matched rho would be the first evidence for the claimed mechanism. A worse bounded
+    successor scopes only that backend and scale; exhaustion, incomplete cells or missing custody
+    remain unknown rather than mathematical negatives.
 best_measured: >-
-  none: 34 native correctness tests pass and certificate parity holds. Matched profiling and
-  performance runs are blocked. ECC2K-130 and ECCp-131 attempts exceed their exact-leaf budget
-  without a relation; no runtime, S or S/rho figure.
+  Counted-S v2 ran: receipt validation passed and all 416 executions replayed (306 verified,
+  110 exhausted). Across fp10..fp16, complete tensor-m2 cells cost 4,318--1,206,158x matched rho;
+  the three complete native cells cost 495.6--2,801.5x. Native-source and native-width produced
+  0/64 verified executions and remain unknown. Every row used finite fallback (`root_u=0`), so the
+  recursive kernel was unexercised; native counts are lower bounds, one-round shared-seed A/A is
+  vacuous for noise, and original binary-to-commit custody remains incomplete.
 evidence:
-- repo: cryptanalysis
+- repo: crypto
   path: docs/hashed-ecdl.md
-  note: 'native tensor implementation; scope, sources and validation boundary; no performance claim'
+  note: native tensor implementation, source scope and validation boundary
 - repo: crypto
   path: research/hashed_ecdl_speed_20261029/README.md
   note: 'engineering update and frozen protocol; correctness checked, matched evaluation blocked'
@@ -46,14 +50,27 @@ evidence:
 - repo: crypto-autoresearcher
   path: knowledge/literature/KN-LIT-caa51d.md
   note: 'openai/math ETH preprint the theorem is conditional on (unverified proof)'
-ledger_refs: []
+- repo: crypto
+  path: research/hashed_ecdl_counts_20261031/DECISION.md
+  note: counted-S-only v2 frozen after L2 proved inapplicable and approved before execution
+- repo: crypto
+  path: research/hashed_ecdl_counts_20261031/results/RESULTS-v2-superseding.md
+  note: >-
+    completed 416-row result and scoped corrections: 306 verified / 110 exhausted, recursive
+    kernel unexercised, incomplete native cells unknown
+- repo: crypto
+  path: research/hashed_ecdl_counts_20261031/VALIDATOR.md
+  note: >-
+    receipt passed and 416/416 replayed; exact ratios confirmed, with binary custody, lower-bound
+    native counts and one-round A/A limitations retained
+ledger_refs:
+- DEC-20261031-77e2b3
 related:
 - LEAD-ICB-decomposition-encoding-and-sat
 forecloses:
-- subexponential ECDLP via hashed factor base
-- tensor contraction counting for point decomposition
-- ETH refutation gives a subexponential elliptic curve discrete log
-- Akshima Bochum hashed ECDL algorithm
+- a counted-S v2 tensor-m2 speedup over matched rho on the complete fp10--fp16 toy cells
+- native-selectors fp10 or native-partial fp10/fp12 beats matched rho in the frozen counted unit
+- describing the 416-row counted-S v2 receipt as unrun or unreplayed
 areas:
 - ECDLP
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'

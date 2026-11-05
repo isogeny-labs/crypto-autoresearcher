@@ -10,18 +10,27 @@ mechanism: >-
 disposition: open_blocked
 next_action:
   step: >-
-    Implement Smith's Props. 2 and 4 / the trigonal construction and test F_q-rationality
-    and non-degeneracy on the odd-characteristic genus-3 descents already enumerated.
+    Start from a completed Joux--Vitse descended model with a passing rational tractable subgroup,
+    construct its Smith trigonal quotient and executable maps, and check smoothness, actual kernel,
+    dual composition and equality of L-polynomials. Then source-verify a mapped one-target solve
+    against matched rho with every transfer cost charged. Treat N4-v2 as a separate direct route
+    unless a certified overlap is first constructed: Joux--Vitse uses (m,r)=(3,5), whereas the
+    measured N4-v2 family is m=2 only.
   discriminates: >-
-    Rational, non-degenerate Smith images give an executable q^{4/3} route on that class (then
-    measure against matched rho with the isogeny walk charged); failure closes the pipeline.
-    The characteristic-2 version is already closed (Smith excludes char 2, 3).
+    A checked quotient and source-verified solve gives an executable route on that exact class.
+    Failure of quotient/map construction on a frozen cohort is a bounded negative for that cohort,
+    not a theorem about all odd-characteristic descents. The direct m=2 N4-v2 cost cannot rank the
+    distinct (3,5) Joux--Vitse composition. Smith's stated construction remains exactly unavailable
+    in characteristics 2 and 3.
   blocked_by: >-
-    crypto problems/ghs-to-smith-pipeline-characteristic-mismatch.md (Smith construction not
-    implemented)
+    crypto problems/odd-isogeny-quartic-transfer-execution.md (quotient/map construction and
+    Smith-negative holdout remain incomplete)
 best_measured: >-
-  toy plane-quartic IC on the GHS quartic: S = 6.5e5 to 3.8e7 ops/sqrt(l) at q = 5..11 (correctness
-  only, 90/90)
+  Proposition 2/4 testing is complete on the p=7..31 Joux--Vitse descent cohort: every descended H
+  has a rational tractable subgroup and 0.53--0.61 have `full_success`. The quotient/map composition
+  is still unconstructed. Separately, on its direct m=2 non-hyperelliptic GHS-weak family, N4-v2's
+  double-large-prime arm is below negation rho from q=991 and reaches 0.004--0.005x at the top toy
+  sizes; this is not a cost comparison for the (3,5) Joux--Vitse route.
 evidence:
 - repo: crypto
   path: problems/ghs-to-smith-pipeline-characteristic-mismatch.md
@@ -37,7 +46,20 @@ evidence:
   note: quartic class arithmetic resolved for toy smokes
 - repo: crypto
   path: problems/odd-isogeny-quartic-transfer-execution.md
-  note: "executable odd-isogeny transfer to a rational quartic missing (five-leads L1/L2)"
+  note: quotient-from-kernel and Smith-negative mapped transfer remain open despite positive controls
+- repo: crypto
+  path: research/smith_prop24_native_20261014/REPORT.pdf
+  note: native Proposition 2/4 implementation and 10^6-model calibration
+- repo: crypto
+  path: problems/smith-kernel-isogeny-class-walk.md
+  note: >-
+    completed p=7..31 Joux--Vitse screens: every descended H tractable and full_success 0.53--0.61;
+    quotient/map execution remains separate
+- repo: crypto
+  path: research/quartic_n4v2_20261020/README.md
+  note: >-
+    direct plane-quartic IC win on the special GHS-weak family; not evidence that the Smith
+    quotient from a hyperelliptic descent has been constructed
 - repo: crypto
   path: problems/cubic-extension-transfer-admission.md
   note: "cubic-extension transfer evidence not yet admitted"
@@ -50,10 +72,9 @@ known_results:
 - KR-IC-5ea2f8
 - KR-IC-a4dd54
 forecloses:
-- Smith isogeny to a plane quartic
-- Diem plane quartic index calculus
-- genus 3 Weil descent in odd characteristic
-- GHS to Smith pipeline
+- applying Smith's characteristic-at-least-five trigonal formulae directly to a characteristic-2 GHS descent
+- applying those same formulae directly in characteristic 3
+- treating the direct N4 plane-quartic route as construction of the missing hyperelliptic Smith quotient
 areas:
 - ECDLP
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-02'

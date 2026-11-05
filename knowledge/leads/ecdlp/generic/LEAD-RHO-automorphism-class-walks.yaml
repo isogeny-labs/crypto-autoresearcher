@@ -13,13 +13,17 @@ obstruction:
     1.089 [0.927, 1.261] x sqrt(pi/4n) on Koblitz curves log2 r 32.1-47.2 (medium tier, 144
     runs); strong-rho steps/ideal 0.99, 0.92, 0.94 at n = 41, 53, 61; j=0 crater rho.cubic/rho.negation
     0.573 [0.562, 0.585] against theory 0.577 (volcano census). The ceiling is sqrt|Aut| and
-    the program sits on it.
+    the program sits on it. E41 Stage 0 on fresh seeds measured steps/ideal 1.027 ± 0.023
+    for order 6 and 1.038 ± 0.023 for order 24 over 512 walks per order, with no order-24-specific
+    cause visible above 0.1%; the apparent E34 shortfall did not reproduce, while the registered
+    full E41 fix/reference run remains unrun.
   revisit_when: >-
     A curve family with a larger efficiently computable automorphism group is found, or a
     medium-tier run shows a shortfall >5% from the sqrt(A) ceiling.
 best_measured: >-
   rho.signed_frobenius_strong 1.089 [0.927, 1.261] x sqrt(pi/4n), log2 r 32.1-47.2 (ECBND1h05a2ea918f3c);
-  j=0 cubic/negation 0.573 vs 0.577
+  j=0 cubic/negation 0.573 vs 0.577; E41 Stage 0 order-6/order-24 steps/ideal 1.027 ±
+  0.023 / 1.038 ± 0.023 over 512 walks per order, with the full registered run pending
 evidence:
 - repo: crypto
   path: docs/bounds/FRONTIER.md
@@ -41,6 +45,17 @@ evidence:
 - repo: cryptanalysis
   path: problems/sixclass-secp-throughput-unmeasured.md
   note: "open: no secp256k1 throughput or matched field-op meter for the six-class walk"
+- repo: crypto
+  path: research/notes/index-calculus/RESEARCH_GLV_INVARIANT_FACTOR_BASES.md
+  note: >-
+    section 9.52 records the E41 Stage-0 diagnosis and pre-registers G2.216-G2.229; section
+    9.53 is absent, so no full-run correction or final rank is claimed
+- repo: crypto
+  path: experiments/48_twist24_shortfall/stage0_run.log
+  note: >-
+    fresh 512-walk-per-order Stage-0 summary: the E34 order-24 shortfall does not reproduce
+    and no order-24-specific cause is visible above 0.1%; the raw stage0_run.json is checksum-bound
+    by .artifacts.json and the registered fix/reference run is unrun
 ledger_refs:
 - H-EWALK-f9ebe4
 - H-EWALK-690e11
@@ -64,4 +79,4 @@ areas:
 - EWALK
 - ENDO
 - RHO
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-02'

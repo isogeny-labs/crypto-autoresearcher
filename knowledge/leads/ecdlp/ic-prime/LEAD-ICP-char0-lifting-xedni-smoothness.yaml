@@ -25,14 +25,18 @@ obstruction:
     lacks a compositional identity because the x-line addition law is two-valued;
     it does not exclude a different relation-preserving statistic.
   revisit_when: >-
-    implement and freeze the bounded H-XEDN-4a5b50 search and either certify an
-    exact dependent prescribed lift with all setup/certificate costs charged or
-    exhaust only its declared finite domain; in parallel, an integer-lift route
-    must supply an exact compositional relation identity and a sub-rho yield/cost
-    bound rather than smoothness alone
+    Independently audit H-XEDN-292264 against Sadek's source, including admissible
+    Kummer exponents, field selection, zero/unit cases and the complete test-prime
+    set. Separately implement and freeze the bounded H-XEDN-4a5b50 prescribed-lift
+    search. A valid-domain cutoff counterexample rejects only that proposed repair;
+    a clean finite grid leaves its number-theoretic bridge unproved. An exact
+    dependent lift advances the construction, while finite exhaustion closes only
+    the declared domain. Any integer-lift route must still supply an exact
+    compositional identity and a sub-rho yield/cost bound rather than smoothness.
 best_measured: >-
   p = 353 example reproduced; 2/2 historical pairs certified independent; Xedni V2 curve-fitting
-  0 certified dependencies among 20 bounded pairs
+  0 certified dependencies among 20 bounded pairs. H-XEDN-292264 is a proposed supplied-data
+  cutoff repair, not a proved theorem or lift construction.
 next_action: {from_revisit_when: true}
 evidence:
 - repo: crypto-autoresearcher
@@ -47,10 +51,20 @@ evidence:
 - repo: crypto
   path: RESEARCH_PRIME_FIELD_BREAKTHROUGH_PROGRAM.md
   note: historical section 4.6 closure wording, now narrowed by the JKSST audit
+- repo: crypto
+  path: research/jksst_xedni_audit_20261101/README.md
+  note: kernel-checked scoped audit; finite pieces exact, overbroad inferences rejected, bridges open
+- repo: crypto-autoresearcher
+  path: ledger/hypotheses/H-XEDN-292264.yaml
+  note: proposed conditional supplied-data cutoff repair; no independent review or run
+- repo: crypto-autoresearcher
+  path: problems/xedni-sadek-explicit-cutoff.md
+  note: invalid square-root prime-divisor inference; theorem repair and verification remain open
 ledger_refs:
 - H-XEDN-0ea2b6
 - H-XEDN-4a5b50
 - H-XEDN-5befd8
+- H-XEDN-292264
 - H-PFDR-e0988d
 - IDEA-20261016-0e002c
 - IDEA-20261016-3049ff
@@ -74,4 +88,4 @@ forecloses:
 areas:
 - XEDN
 - PFDR
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

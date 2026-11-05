@@ -7,7 +7,7 @@ mechanism: >-
   Certify for each standard curve that k is large, #E != p, the field degree is not descent-weak
   and the parameters were not chosen to land in a weak class (NIST seed reproduction, SafeCurves-style
   audits).
-disposition: closed_known
+disposition: open_next_step
 obstruction:
   kind: literature
   statement: >-
@@ -17,7 +17,20 @@ obstruction:
   revisit_when: >-
     an audit finds a deployed curve with small k, trace one, or a composite-degree binary
     field in use
-best_measured: NIST prime-curve seeds independently reproduced (provenance only)
+next_action:
+  step: >-
+    Complete the exact P-256 block-876 degree-2 twist factorization and native prime/product
+    replay, then finish the large-field certificate and extension-twist audit across the fixed
+    standardized-curve roster without substituting easier targets.
+  discriminates: >-
+    A certified weak trace, embedding degree or factor changes only the affected curve's audit;
+    a complete benign roster records a known safety check. Bounded ECM/NFS failure, timeout or
+    unavailable infrastructure leaves the explicit residual and the broader audit open.
+best_measured: >-
+  NIST prime-curve seeds independently reproduced. The separate P-521 n+1 follow-up is complete:
+  84/84 factor records and all four families over 21 curves replayed. In the extension-twist
+  cohort, 8/9 distinct targets (13/14 timeout-valued fields) are resolved; one exact 444-bit
+  P-256 residual remains unsplit after bounded searches.
 evidence:
 - repo: crypto
   path: research/nist_seed_provenance_20261016/README.md
@@ -36,10 +49,10 @@ evidence:
   note: "supplied-curve extension-field twist factorizations open"
 - repo: crypto
   path: problems/nist-extension-twist-composite-cofactors.md
-  note: "one NIST extension-twist composite cofactor remains unsplit"
+  note: one exact 444-bit P-256 extension-twist residual remains composite and unsplit; failures are neutral
 - repo: crypto
   path: problems/nist-p521-nplus1-composite-cofactor.md
-  note: "P-521 n+1 composite cofactor resolved"
+  note: P-521 n+1 residual resolved and the full 84/84 factor-record cohort replayed
 ledger_refs:
 - IDEA-20260807-98a970
 - IDEA-20261011-fb7b7e
@@ -53,4 +66,4 @@ forecloses:
 - anomalous standard curve
 areas:
 - ECDLP
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-02'

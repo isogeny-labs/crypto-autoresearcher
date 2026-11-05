@@ -24,7 +24,24 @@ obstruction:
     Someone constructs a prime-field curve where a norm-2 or norm-3 endomorphism has eigenvalue
     order near log_n N (the equality case, a prime-field Koblitz analogue) and a canonical
     orbit representative costs o(h) maps. Findings file NEW LEAD 1.
-next_action: {from_revisit_when: true}
+next_action:
+  step: >-
+    Freeze IDEA-20261031-6610ed's three-arm equality-case panel: negation rho, full alpha-class
+    canonicalisation and x-only/batched canonicalisation, for h=16..32 and N about 2^20..2^32
+    with at least 200 planted instances per cell. Include matched j=0 positive, generic-D null
+    and matched-rho controls; record iterations, complete counted cost, kappa per step, exact
+    identities and seeds, and verify every eigenvalue order and map.
+  discriminates: >-
+    The expected 1/sqrt(h) iteration saving validates the class walk only. Total counted cost
+    below 0.9 of negation rho at h>=16 advances the sought o(h) canonicaliser. Cost at least
+    negation rho at every tested h, with the iteration saving confirmed, discharges only this
+    equality-case candidate and representative rules. Missing iteration saving is an invalid
+    implementation; no bounded panel closes other nonunit maps or a future sublinear canonicaliser.
+best_measured: >-
+  The D=-7 equality construction is designed but unrun: h=19 and h=23 are the certified exact
+  equality cases found by its design probes, with Velu alpha=[lambda] checked on 10/10 points.
+  Separately, merged R7.3 endomorphism-mixed walks cost 1.22x and 1.79x plain rho on bounded
+  crater/floor panels; those panels do not instantiate the proposed equality-case family.
 evidence:
 - repo: crypto-autoresearcher
   path: research/endosweep_dk_exact_batch5_20261023
@@ -36,7 +53,14 @@ evidence:
 - repo: crypto-autoresearcher
   path: analysis/endomorphism-isogeny-decomposition/DECOMPOSITION.md
   note: T4, the class fixes D and the available automorphism group
+- repo: crypto-autoresearcher
+  path: ledger/proposals/IDEA-20261031-6610ed.yaml
+  note: equality-case three-arm design, exact controls and charged metrics; unrun
+- repo: crypto
+  path: RESEARCH_ISOGENY_FIBERS_ECDLP.md
+  note: section 20.3 R7.3 mixed-walk costs exceed plain rho on its bounded crater/floor panels
 ledger_refs:
+- IDEA-20261031-6610ed
 - IDEA-20260901-6b63a4
 - IDEA-20260826-506ba2
 - IDEA-20260901-e4184f
@@ -47,12 +71,10 @@ ledger_refs:
 known_results:
 - KR-RHO-0528e7
 forecloses:
-- small CM discriminant makes ECDLP easier
-- class number one curves are weak beyond automorphisms
-- cheap endomorphism of degree 2 gives rho equivalence classes
-- endomorphism claw from small D_0
-- closed isogeny-graph walk gives an orbit invariant
+- a fixed-size nonunit norm-2 or norm-3 orbit on growing prime-order subgroups
+- small |D_0| adds finite unit orbits beyond D_0 in {-3,-4}
+- the R7.3 endomorphism-mixed walk beats plain rho on its measured crater/floor panels
 areas:
 - JINV
 - EWALK
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

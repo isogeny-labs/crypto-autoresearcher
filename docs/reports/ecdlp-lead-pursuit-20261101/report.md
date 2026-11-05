@@ -2,22 +2,31 @@
 
 Date: 2026-11-01
 
+Current disposition update: 2026-11-02
+
 Atlas snapshot: `crypto-autoresearcher@7072741f712c`
 
 Crypto evidence snapshot: `crypto@b6ffdca53494`
 
 Xedni correction evidence: `crypto@34caae22581045ec59fe779d86f8bf2d495cc14a`
 
+Latest scoped filter evidence: `crypto@b825c0c0d535215a6b01571350fa5b54a05ea0fd`
+
+Latest scoped F4-presentation evidence: `crypto@20e19b9fcbd790f86bf66be41d3b25e5cc3ceced`
+
+Latest scoped Curve25519 PKM evidence: `crypto@8491be7ed89642fa2f3715f8d5452839d26c384a`
+
+Latest scoped JV cover review: `crypto@434d356433b2118dfd5a916db222e2181bd7462d`
+
 ## Decision
 
 The existing 159-row ECDLP atlas was reviewed family by family. That review also identified and
 added one missing live split-graph/secant successor, so the reconciled atlas has **160 leads**.
-Exactly **21 narrowly scoped mechanisms have mechanism-wide obstruction evidence under their
-stated assumptions** and may leave
-the pursuit queue. The other **139 leads remain pursued** through either their next action or
-their explicit revisit trigger.
+The 2026-11-01 audit recorded **21 narrowly scoped mechanisms** outside the pursuit queue and
+**139 pursued leads**. The confirmed 2026-11-02 arity/oracle correction narrows one of those
+rows: the current accounting is **20 `closed_obstructed` rows** and **140 pursued leads**.
 
-This is a scope decision, not a claim that 21 broad research areas are impossible. Each stopped
+This is a scope decision, not a claim that 20 broad research areas are impossible. Each stopped
 row is stopped only for the mechanism stated in its obstruction. A non-generic oracle, different
 presentation, different locus, non-homomorphic statistic, or other stated escape remains a
 separate live lead.
@@ -48,18 +57,17 @@ mechanism in the queue.
 | Family scope | Reviewed | Scoped obstruction | Pursued |
 | --- | ---: | ---: | ---: |
 | Binary-field index calculus | 23 | 2 | 21 |
-| Index-calculus engines | 20 | 2 | 18 |
+| Index-calculus engines | 20 | 1 | 19 |
 | Prime-field index calculus | 27 | 3 | 24 |
 | Generic, transfer, structure, and exotic | 90 | 14 | 76 |
-| **Total** | **160** | **21** | **139** |
+| **Total** | **160** | **20** | **140** |
 
-The 21 suppressed mechanisms are:
+The 20 currently suppressed mechanisms are:
 
 | Family | Lead | Exact stopped scope |
 | --- | --- | --- |
 | Binary IC | `LEAD-ICB-generic-table-oracle` | Generic group-operation/table/membership oracle |
 | Binary IC | `LEAD-ICB-frobenius-orbit-factor-base` | Linear/subspace Frobenius orbit-column claim beyond exact orbit savings |
-| IC engine | `LEAD-ICE-generic-oracle-arity-cost-floor` | Coordinate-blind enumeration and MITM oracle floor |
 | IC engine | `LEAD-ICE-semaev-cover-monodromy` | Generic-fibre cycle-type census on the stated rational locus |
 | Prime IC | `LEAD-ICP-generic-table-decomposition` | Generic enumeration/table decomposition |
 | Prime IC | `LEAD-ICP-representation-subset-sum` | Generic group-operation/equality subset filter |
@@ -127,12 +135,117 @@ bound plus constant-size coefficient enlargement, with the generic class-polynom
 as a separate setup gate. Target-dependent arbitrary sections, growing arity or `C0`, and
 unenumerated CM lift families are explicitly outside that closure.
 
-This correction changes two rows from `closed_known` to `open_next_step`; it does not change the
-audit totals of **21 scoped obstructions** and **139 pursued leads**, because `closed_known` was
-already retained in the pursuit queue. The primary PDF checked was the author-hosted JKSST copy,
+At that stage, this correction changed two rows from `closed_known` to `open_next_step`; it did
+not change the then-current audit totals of **21 scoped obstructions** and **139 pursued leads**,
+because `closed_known` was already retained in the pursuit queue. The primary PDF checked was the
+author-hosted JKSST copy,
 SHA-256 `981bf955f7aecc5df4f271837f6653bd7666e5026f59df44196609d4a1dd6bc7`, especially
 Section 4, Lemma 4.1, Theorem 4.1, Sections 5--6, and notes 7--8. Silverman's proposal remains a
 metadata/first-page evidence gap; no inaccessible text was treated as read.
+
+## Arity/oracle correction after the family and Xedni audits
+
+On 2026-11-02, `LEAD-ICE-generic-oracle-arity-cost-floor` moved from
+`closed_obstructed` to `open_next_step`. The exact fixed-arity negative evidence is preserved:
+`EV-SEMBIN-b6d042` has zero in-domain sub-rho cells for `ENUM`, `MITM`, and `MITM_CAPPED` in
+the frozen model, and the reviewed Lean declaration `mitm_never_sub_generic` proves
+`costAll(m,beta,k) > 1/2` when `m >= 2`, `beta > 0`, and `k >= m/2`. Those are exact
+in-model obstructions, not discarded results.
+
+The independent semantic review rejected the bundled blanket-attainment and literal
+pointwise-threshold wording. The fixed model does not supply an executable algorithm, actual
+oracle output and useful-rank semantics, the required yield hypotheses, or a uniform
+model-to-algorithm theorem. Its `FREE` control has 7,850 sub-VOW model cells, and free oracles,
+growing arity, and coordinate-reading constructions remain outside the exact negative theorem.
+Those unrefuted branches therefore remain pursued while the fixed-arity `ENUM`/`MITM` result
+stays recorded in the row's obstruction and `forecloses` fields.
+
+This additive correction changes the IC-engine family from **2 obstructed / 18 pursued** to
+**1 obstructed / 19 pursued**, and the full atlas from **21 / 139** to **20 / 140**. It leaves
+the original dated 26-row statement and the subsequent Xedni reconciliation narrative intact;
+neither historical account is rewritten by this disposition update.
+
+## Coordinate-visible Wagner-filter evidence after the disposition audit
+
+The exact ECCp-131 study at
+`crypto:research/eccp131_representation_filter_20261102/REPORT.md` evaluated 3,450 frozen
+simple 1--8-bit coordinate configurations in each of six small-x/random-base cells at
+`B=64,128,256`. Every recorded held-out Wilson lower enrichment ratio was below one
+(`0.6093--0.7783`). The
+two positive small-x point estimates were post-add predicates that first require all
+`Theta(B^2)` pair sums. Planted four-sum, modular-solver, A/A, and bounded relation-oracle
+controls passed; the exact arity-2/3 probes still returned zero natural rows and rank. Exact-width
+F4/F5 was unavailable and unmeasured. Local clocks are invalid; the retained export-shape and
+interval-label deviations support no performance claim.
+
+This result rejects only the frozen source/combiner/bit-slice family. It does not obstruct
+learned multibit hashes, algebraic bucket generators, larger bases, other curves, or another
+coordinate-visible filter with a proved subquadratic qualifying-pair enumerator. The existing
+`LEAD-EXO-four-list-ktree-join` row therefore remains the pursued carrier. Its next action now
+includes that explicit successor alongside the unresolved O2 bucket-variance branch.
+
+The generic theorem in `LEAD-ICP-representation-subset-sum` is unchanged, but its scope is now
+stated exactly: it covers filters that see only generic group operations and encoding equality.
+Coordinate-reading predicates are outside that theorem. No disposition or family total changes:
+the atlas remains **160 total / 140 pursued / 20 scoped obstructions**.
+
+The later Q5 replay at
+`crypto:research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md`
+ran msolve F4 on 6,486 frozen `m=2` toy systems with zero gate failures or timeouts. The
+Möbius-presented μ_k and Vélu-chain arms had identical matrix-cell counts in 16/16 comparisons,
+and the registered coordinate search improved 0/16. That rejects only the tested toy
+presentations/candidates: `m>=4`, larger primes, other engines/orders, relation collection,
+rank, linear algebra, and complete ECDLP/rho cost remain open. The two carrier cards stay
+`open_next_step` and `open_blocked`; counts do not change.
+
+## Curve25519 PKM whole-solve and guess-depth evidence
+
+The later bounded study at
+`crypto:research/curve25519_algebraic_ecbench_20261102/README.md` supplies the first complete
+PKM algebraic row in this audit: on one `k=20` Curve25519 miniature (`p=1048573`, `r=131203`),
+six `m=2`, isogeny-tower `t=6`, `G=4` solves were behind the projected-abscissa MITM baseline
+by **2.58x / 1.35e5x / 8.17e5x** and behind `rho-neg` by
+**18.2x / 9.55e5x / 5.85e6x** at `w=0 / 0.1 / 1`. Session 1 had 24/24 verified records and
+eight identical replays. It was nevertheless local L0, with no second host or validator; the
+one-target `G=0` control is excluded from ranking because its replay differs in phase counts.
+
+The companion `m=2` guess-depth study found that every successful measured series fell to the
+edge `G=t-1`; the registered interior U-shape was false, and the best modelled coverage cost was
+`1.18e7` at `k=20,t=10,G=9`. That edge cell has no common-unit whole-solve or matched-rho row.
+The committed data contain 32 successful rows and 35 status rows, despite stale `27/30` prose in
+the README. The remaining `k=28,t=14` cells are explicitly unmeasured: `G=11` failed allocation,
+`G=12` timed out before its first target, and `G=13` hit the code's `G<=12` cap.
+
+These results reject only the frozen `t=6,G=4` winning prediction and the registered interior
+U-shape on its finite grid. They provide no theorem or scaling exponent. The `t=10,G=9`
+whole-solve comparison, `m>=4`, other factor-base forms, curves and scales, useful rank, a
+second-host replay and independent validation remain pursued. The PKM carrier stays
+`open_blocked`, the charged-toy exponent carrier stays `exhausted_at_scale` and pursued through
+its revisit trigger, and the atlas remains **160 total / 140 pursued / 20 scoped obstructions**.
+
+## JV cover line-search review
+
+The independent validator and red team at
+`crypto:research/jv_cover_fbline_20261102/review/README.md` reproduce the bounded component
+gain: best-of-65,536 factor-base-line selection lowers the Nagao-only arm to
+`0.5865 [0.530,0.650]` of its plain cost, or **1.705x**, on all nine weak-class cells at
+`p=1301,1451,1601`, with the search charged. The result is a finite constant factor whose model
+gain decays with `p`, not an exponent change.
+
+The same review refutes the new-frontier framing. In like-for-like F_p multiplications the
+Nagao arm remains **1.900 / 1.585 / 1.318x rho**. Its apparent U1 crossing uses a schoolbook rho
+price and omits the cover's F_p additions, so U1 is a lower bound and is not rankable. More
+decisively, the existing same-class JV sieve is **83--100x cheaper** (21--25x against its
+additions/lookups-inclusive cost). `LEAD-TRF-jv-nagao-genus2-cover-decomp` therefore stays
+`closed_dominated` and pursued at its revisit trigger; no general cover obstruction is added.
+
+The charged successor moves to `LEAD-TRF-jv-sieve-fp6-weak-class`: freeze line selection on the
+V2 sieve panel at `p in {1009,1511,1823}`, seeds 17--32, emit the missing native counters, charge
+the search and isogeny walk, and compare in `bitop/v1` with matched strong rho. The red team's
+`n=4096` pilot (**1.42x [1.18,1.73]**) is exploratory and unfrozen, hence not evidence;
+`n=65536` was a **0.92x** net loss.
+Large-prime, exhaustive-table and other-subline successors remain open. Counts stay
+**160 / 140 / 20**.
 
 ## Evidence and reproducibility
 
@@ -148,14 +261,25 @@ The audit used the following repository evidence as load-bearing cross-checks:
 - `crypto:research/prime_factor_base_degree_20261031/parallel_20261031/RESULTS.md`
 - `crypto:research/jksst_xedni_audit_20261101/README.md`
 - `crypto:research/jksst_xedni_audit_20261101/PROOF_MAP.md`
+- `crypto:research/eccp131_representation_filter_20261102/REPORT.md`
+- `crypto:problems/eccp131-full-parameter-index-calculus.md`
+- `crypto:research/isogeny_vs_mu_factor_base_20261102/reports/run-q5-20261102T1820Z/REPORT.md`
+- `crypto:research/curve25519_algebraic_ecbench_20261102/README.md`
+- `crypto:research/curve25519_guess_optimum_20261102/README.md`
+- `crypto:research/jv_cover_fbline_20261102/review/README.md`
+- `crypto:research/jv_cover_fbline_20261102/review/red_team/REPORT.md`
 - `crypto:docs/ecdlp-hardness-corpus/REPORT.md`
+- `docs/reports/2026-11-01-ic-arity-oracle-review/synthesis/report.md`
+- `ledger/proposals/IDEA-20261024-a2b05d.yaml`
+- `ledger/decisions/DEC-20261101-8adb11.yaml`
 - `crypto:problems/ghs-higher-magic-descent-not-executable.md`
 - `crypto:problems/factor-base-shape-to-successful-work.md`
 - the `obstruction`, `forecloses`, `revisit_when`, `evidence`, and `related` fields of all 160
   atlas rows.
 
-No performance result is introduced by this report. It records a disposition audit and the
-queue invariant.
+No validated leaderboard, cryptographic-scale, or asymptotic performance result is introduced
+by this report. It records one bounded local full-solve row, scoped component evidence, the
+remaining unmeasured cells, and the queue invariant.
 
 ## Review boundary
 

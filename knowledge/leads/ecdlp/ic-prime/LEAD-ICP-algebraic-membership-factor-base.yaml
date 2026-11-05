@@ -19,7 +19,12 @@ obstruction:
     <= 1.582, constant in N). Measured: subgroup, small_x and random bases within 7 % at 32
     bits; exact mean-yield ratio 1.000000 for six geometries at N ~ 2^14..2^18 (EV-FBG-001);
     msolve on subgroup bases grows deg^{4.4} at m = 3. Scope: prime-order E/F_p, any base
-    of size B.
+    of size B. Separately, in the coefficient-labelled-base model with structured set S of
+    size s, labelled subset B <= s, label-sampling cost at least B*N/s and an output-sensitive
+    decomposition oracle, the model cost
+    C >= B*N/s + (m!*N/B^m)*max(1, s^m/(m!*N)) is at least 2*sqrt(N). Lean kernel-checks this
+    inequality once the cost formula is assumed; the sampling and output-cost premises are
+    modelling assumptions, not a theorem about every elliptic-curve oracle.
   revisit_when: >-
     KN-OPEN-020 is answered positively (a size-B set with sub-B-degree membership surviving
     substitution), or a base raises coverage or variance with an excess that grows with N.
@@ -28,10 +33,14 @@ obstruction:
     Dickson images and rational-map images all sit within 0.0003 bits of a size-matched random
     base at m = 2, and a learned selector has 0.0011 bits of headroom: consistent with the
     conservation law; the 'Dickson / image of a low-degree map' phrases in forecloses are now
-    tried, not only argued.
+    tried, not only argued. For coefficient-labelled bases, revisit if structure supplies labels
+    inside S below the N/s sampling charge or permits a useful labelled-subset query without
+    enumerating its decompositions; neither possibility is covered by the 2*sqrt(N) cost model.
 best_measured: >-
   mean-yield ratio vs matched random 1.000000 at N ~ 2^14..2^18 (EV-FBG-001); subgroup vs
-  random within 7 % at 32 bits
+  random within 7 % at 32 bits. The coefficient-labelled route has no pipeline measurement;
+  its exact result is the conditional model inequality C >= 2*sqrt(N), not an unconditional
+  lower bound for all structured labelling oracles.
 next_action: {from_revisit_when: true}
 evidence:
 - repo: crypto-autoresearcher
@@ -61,6 +70,12 @@ evidence:
 - repo: crypto-autoresearcher
   path: problems/p256-natural-useful-factor-base-relations.md
   note: "labelled bases, divisor stitching and orbit control: no costed supply of natural useful relations"
+- repo: crypto
+  path: research/labelled_bases_20261026/README.md
+  note: >-
+    merged through c2b49d7682: derives the coefficient-labelled sampling/output cost model and
+    kernel-checks C >= 2*sqrt(N) in Lean; explicitly records that the cost model itself is assumed
+    and lists automorphism, decomposition-produced-label and structured-labelled-subset exceptions
 external_evidence:   # repo not in tools/lead_atlas.py REPOS; paths unverified by --check; local toy-scale, PR #53 open stacked on #52
 - repo: aburan28/ml-cryptanalysis
   path: experiments/fb-prime-transfer/report.md
@@ -91,8 +106,10 @@ forecloses:
 - algebraic factor base with low-degree membership polynomial
 - character sums bias decompositions over a coset base
 - image of a low-degree map as factor base
+- coefficient-labelled factor-base sampling route under the stated B*N/s label charge and
+  output-sensitive decomposition-oracle cost model
 areas:
 - PFDR
 - PATH
 - ICLIFT
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

@@ -8,20 +8,31 @@ mechanism: >-
   high-degree implicit membership and unchanged yield, including chart and root recovery costs.
   Arity-two theorem cells are component evidence only: if a PDP costs 2^(e s) at s=log2(p)/m,
   reusable setup costs 2^(a s), and collection needs Theta(2^s) natural queries, the strict
-  gates are a<m/2 and e<m/2-1; the latter is impossible at m=2.
+  gates are a<m/2 and e<m/2-1; the latter is impossible at m=2. For the normalized finite-target
+  chart, affine elimination of chart.A0 now has an independently derived exact reconstruction
+  and a conditional non-increase theorem for highest-part degree of regularity; strict
+  complete-chart regularity and solver work remain unproved.
 disposition: open_next_step
 next_action:
   step: >-
-    Prove chart correspondence. Freeze k=3,4 censuses only after checking at least five usable
-    distinct x; compare per-root PKM, symmetric, quotient and Graeffe circuits. Use k=2 only as
-    a deliberate empty squarefree-chart negative control, with repeated roots in a separate arm;
-    never cite an m=2 cell as exponent-changing. Route any solver-slope claim through the
-    source-bound m=3 protocol hardened in cryptanalysis PR #1347: natural-only complete-panel
-    e<0.5, reusable setup a<1.5, signed lifts, compact field ranges and checked explanations/UNSAT
-    proofs. Retain explicit rationality circuits when the shared construction reaches arity at
-    least four, and do not inherit the unadmitted one-hot s=15..27 continuation.
-  discriminates: A cheaper shared proof/solve circuit beyond permutation constants, versus algebraic degree merely
-    hidden in auxiliary coefficients or excluded charts.
+    Treat the reviewed finite-target chart.A0 elimination as a presentation theorem only: it
+    removes one projected field coefficient, keeps U and every other auxiliary, and requires
+    every nonzero substituted row. Next perform the authenticated original/projected complete
+    model comparison with affine reconstruction and a common signed-output/fiber map, then
+    determine regularity for the complete retained-row chart with all interval, rationality,
+    stratum and surviving field equations. Measure solving degree, matrix/search work, pruning
+    and runtime separately; the four-variable diagnostic is only a control. Preserve both the
+    original 106-cell coordinate cohort and distinct six-cell coefficient cohort. Freeze k=3,4
+    censuses only after checking at least five usable distinct x; compare per-root PKM, symmetric,
+    quotient and Graeffe circuits. Use k=2 only as an empty squarefree-chart negative control,
+    with repeated roots separate. Route any solver-slope claim through the source-bound m=3
+    protocol hardened in cryptanalysis PR #1347, with natural-only e<0.5, reusable-setup a<1.5,
+    signed lifts, compact field ranges and checked explanations/UNSAT proofs.
+  discriminates: >-
+    Strict regularity reduction on the complete retained-row chart plus lower fully charged
+    proof/solve work would advance the shared circuit. Non-strictness or no work reduction leaves
+    only an exact representation simplification. The diagnostic 2p to p+1 thresholds do not
+    transfer to the complete chart without its own analysis.
 evidence:
 - repo: crypto-autoresearcher
   path: ledger/proposals/IDEA-20260918-5a9a51.yaml
@@ -40,10 +51,18 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/decisions/DEC-20261101-26f1fa.yaml
   note: additive complete-cost, population, proof and continuation-admission correction
+- repo: crypto-autoresearcher
+  ref: origin/main
+  path: research/prime_sat_affine_regularity_20261102/TASK-20261102-5288b1/review.md
+  note: >-
+    independent six-joint proof of exact finite-target A0 reconstruction, retained-row graded
+    quotient and conditional dreg non-increase; strict complete-chart dreg, authenticated model
+    comparison, solving degree, work and runtime remain unresolved
 ledger_refs:
 - IDEA-20260918-5a9a51
 - RQ-PFDR-ae2fba
 - IDEA-20261029-3d0e71
+- H-PFDR-384bb7
 - IDEA-20261030-a62c58
 - DEC-20261031-b51282
 - DEC-20261101-26f1fa
@@ -52,10 +71,10 @@ known_results:
 - KR-IC-8b9daa
 - KR-IC-fbdb61
 forecloses:
-- shared Graeffe root-squaring coefficients for all factor-base roots
-- quotient-ring coefficient membership coupled to a Riemann-Roch norm
-- permutation-only savings presented as a reduction in complete relation-generation work
-- per-root PKM and symmetric membership circuits with repeated root tests
+- one affine pivot universally gives a strict highest-part degree-of-regularity decrease
+- ordinary-ideal redundancy alone permits dropping a nonzero substituted row in a regularity comparison
+- the diagnostic values 2p and p+1 transfer unchanged after adding complete-chart rows
+- an eliminated field equation is redundant without retained surviving field equations and an F_p affine map
 areas:
 - PFDR
-last_reviewed: '2026-11-01'
+last_reviewed: '2026-11-02'

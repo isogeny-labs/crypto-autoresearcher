@@ -16,15 +16,20 @@ next_action:
     degree, F4 solve time and complete charged IC cost S for S_3/S_4 decompositions on j=0
     and j=1728 curves against generic-j curves. Use the automorphism-orbit factor base and
     a sham-curve null of the same support shape. Report the gap to matched rho with the automorphism
-    discount applied to rho too.
+    discount applied to rho too. Before using the j=0 matched-rho reference, complete and adjudicate
+    E41 G2.216-G2.229; its Stage 0 diagnoses E34's apparent order-24 shortfall on fresh seeds,
+    but the registered fix/reference run and section 9.53 remain unrun, and Stage 0 alone does
+    not reprice an IC row.
   discriminates: >-
-    An equal or higher charged S at matched N closes the lead: support reduction is cost-invisible,
-    consistent with the callgrind j=0 order-6 base costing 4% more Ir. A lower S that survives
-    the sham null and exceeds the sqrt(|Aut|) rho discount is a measured IC improvement on
-    special-j classes, which include secp256k1.
+    An equal or higher charged S rejects only the tested j/arity/factor-base/solver cells as
+    a cost advantage; untested special-j classes, arities, bases, solvers and degeneration
+    mechanisms remain pursued. A lower S that survives the sham null and exceeds the sqrt(|Aut|)
+    rho discount is a measured IC improvement on the tested special-j class.
 best_measured: >-
   S_3 support 9 (j=0) / 10 (j=1728) / 13 generic (EV-ENDO-e8d3e5); j=0 order-6 base 3x signed
-  points at +4% Ir (crypto perf history), no cost gain
+  points at +4% Ir (crypto perf history), no cost gain. E41 Stage 0 on fresh seeds measured
+  steps/ideal 1.027 ± 0.023 for order 6 and 1.038 ± 0.023 for order 24 over 512 walks
+  per order; the registered full reference/fix run remains unrun.
 evidence:
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-ENDO-e8d3e5.yaml
@@ -50,6 +55,18 @@ evidence:
 - repo: cryptanalysis
   path: docs/quartic-review-20261029/README.md
   note: 'quartic study repairs: portable integer replay, all 42 auditors pass, 1,404 frozen hashes preserved; results retrospective; no new ECDLP result'
+- repo: crypto
+  path: research/notes/index-calculus/RESEARCH_GLV_INVARIANT_FACTOR_BASES.md
+  note: >-
+    section 9.52 records E41 Stage 0 and pre-registers G2.216-G2.229; section 9.53 is absent,
+    the registered fix/reference run is unrun, and Stage 0 changes a rho reference rather
+    than an IC cost
+- repo: crypto
+  path: experiments/48_twist24_shortfall/stage0_run.log
+  note: >-
+    fresh 512-walk-per-order Stage-0 summary; order-6 and order-24 steps/ideal agree within
+    noise and no order-24-specific cause is visible above 0.1%; the raw stage0_run.json is
+    checksum-bound by .artifacts.json, and this is not a completed E41 adjudication
 ledger_refs:
 - H-JINV-5a0b9e
 - H-JINV-0e8819
@@ -74,4 +91,4 @@ forecloses:
 - automorphism-quotient coordinate factor base on special-j curves
 areas:
 - JINV
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'

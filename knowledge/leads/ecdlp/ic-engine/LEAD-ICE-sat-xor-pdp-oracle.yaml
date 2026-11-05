@@ -10,16 +10,20 @@ mechanism: >-
 disposition: open_next_step
 next_action:
   step: >-
-    Calibrate ns per conflict and per propagation against ns per group addition on the count-qualified-main
-    hardware, reprice the native-XOR SAT arm of ecbench_sat_pdp at 0, 0.1 and 1 GAE per solver
-    op, and fit alpha(m) of the conflict count at m in {3,4,5} (H-SATIC-5c526c).
+    Carry the admitted n=17 price band into a fresh PROTOCOL-4: emit propagations, freeze a
+    usable n=23 per-curve base and conflict budget, retain w in {0,0.1,1}, and measure the
+    l-ladder/cross-size comparison before fitting alpha(m) at m in {3,4,5}
+    (H-SATIC-5c526c). A calibrated point may augment but never replace the mandatory band.
   discriminates: >-
-    Priced S/rho below 1 across the band would be a sub-rho toy row to send through the validation
-    gate; above 1 with conflicts tracking 2^(ml)/m! confirms SAT is enumeration at a constant
-    and closes the lead as dominated by the pair table.
+    The n=17,m=2 arm is already not sub-rho across the mandatory band. A control-valid larger
+    cell can order only that measured arm when the same direction holds at every band weight;
+    a crossing leaves it unresolved. Conflict scaling can support or refute a stated exponent
+    model, but no finite cell, budget exit or missing propagation count closes SAT/XOR PDP in
+    other arities, presentations or solver models.
 best_measured: >-
-  native-XOR SAT S/rho 0.854 lower bound, conflicts unpriced, n = 17 Koblitz, 40/40 verified
-  (ecbench_sat_pdp count-qualified-main)
+  n=17,m=2 native-XOR SAT / strong-rho = 0.854, 7.34 and 51.0 at w=0,0.1,1,
+  crossing at w*=1/458=2^-8.84; 40/40 pairs verified. Propagations are unrecorded, so the
+  true positive-price cost is no smaller; the pair is unresolved inside (0,0.1).
 evidence:
 - repo: crypto
   path: research/ecbench_sat_pdp_20261009/README.md
@@ -49,7 +53,11 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/goals/GOAL-SATIC-c49b77.yaml
   note: SATIC lane active, blocked on review-tier transport; no completion criterion met
+- repo: crypto-autoresearcher
+  path: ledger/proposals/IDEA-20261024-741c49.notes.md
+  note: admitted n=17 band and crossing; rules out only the across-band sub-rho claim at that m=2 cell
 ledger_refs:
+- IDEA-20261024-741c49
 - GOAL-SATIC-c49b77
 - H-SATIC-5c526c
 - IDEA-20260904-3c7a91
@@ -60,11 +68,9 @@ known_results:
 - KR-IC-5765d2
 - KR-IC-e847d1
 forecloses:
-- SAT solver for point decomposition
-- CryptoMiniSat Gaussian elimination on Weil descent
-- WDSat XOR reasoning for summation polynomials
-- CNF-XOR encoding of the PDP
-- DPLL conflict law 2^(ml)/m!
+- native-XOR SAT is sub-rho across w in {0,0.1,1} at the measured n=17,m=2 cell
+- the measured n=17,m=2 conflict count equals the registered 2^(ml)/m! closure clause
+- the w=0.1 or w=1 repricing supports a sub-rho row for the measured n=17,m=2 arm
 areas:
 - SATIC
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-02'

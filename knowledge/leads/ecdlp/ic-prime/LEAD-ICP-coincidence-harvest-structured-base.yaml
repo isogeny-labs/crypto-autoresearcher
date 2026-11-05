@@ -12,25 +12,22 @@ mechanism: >-
 disposition: open_next_step
 next_action:
   step: >-
-    Run the break-even growth ladder (IDEA-20261018-a0830c): measure kappa_rel for the best
-    FAM-1 geometry at 3+ rungs from 16 to 32 bits with planted positive controls, and require
-    growth of 2^(8 delta*) per rung. The log-GAP validation EXP-PFDR-bb0d26 has run (five
-    trials, DEC-20261022-9aec2b records observations only). Its review is complete:
-    DEC-20261029-01405d records support and H-PFDR-727bfc is supported (KN-FIND-c81e5b).
-    The second round, DEC-20261029-8d9b43, concurs but grades EV-PFDR-07d608 preliminary,
-    not strong (correction CORR-A not yet written); EV-PFDR-28183c is preliminary. The ladder
-    is designed as EXP-PFDR-2d36f9 (H-PFDR-ed7ccf, DEC-20261031-e8e84b): six log-GAP lines
-    at 16-32 bits, FAM-1 arms deferred, not yet approvable (implementation, trial plan,
-    queue and handoff missing).
+    Preserve EXP-PFDR-2d36f9 v1 as O-INVALID: its 16-bit theta=0.30 target was unreachable
+    and its plant/A-A calibration was not independent. Preserve the v2 selftest and refused
+    pilot exactly. Obtain Coordinator authorization for a fresh immutable pilot RUN id with
+    the same trial identity, seeds and parameters, then run the remaining four dependency-gated
+    trials without moving HEAD during a trial. This repair changes provenance handling only;
+    FAM-1 arms remain deferred.
   discriminates: >-
-    kappa constant in N (as observed so far) closes the family as sub-break-even by law (exhausted_at_scale);
-    kappa growing at or above the break-even rate is the first structural relation source
-    on F_p and must then be priced end to end against matched rho. Side evidence 2026-10-28
-    (different statistic, mean yield and collision count, not kappa_rel): fb-prime-transfer found
-    additive and multiplicative energy of the abscissa set do not predict the collision count at
-    cofactor 1, and fb-prime-learned-2p24 found no structured family above random by more than
-    0.0003 bits at N up to 2^26. This does not run the kappa_rel ladder; the next_action stands.
+    A control-valid v2 reading can test whether kappa_rel grows at the registered break-even
+    rate; a growing excess must then be priced end to end against matched rho. Another invalid,
+    censored or infrastructure outcome remains neutral. A bounded null reading can exhaust only
+    the tested family, h and scale with an explicit larger-scale revisit condition.
 best_measured: >-
+  EXP-PFDR-2d36f9 v1 is O-INVALID and neutral. EXP-PFDR-ada71b has 1/6 output-validated
+  trials (selftest: 126/126 kernel/brute-force checks agree), one pilot refused as invalid_output
+  after a commit/provenance mismatch, and four dependency-blocked/unlaunched trials; it has no
+  scientific kappa reading. Earlier valid evidence:
   EXP-PFDR-bb0d26 (reviewed; H-PFDR-727bfc supported, EV-PFDR-07d608 preliminary after DEC-20261029-8d9b43; KN-FIND-c81e5b: 44 of 45 cells within 5% of a uniform label set): all 44 powered toy cells null, max |kappa
   - 1| = 0.041, max |z| = 3.13, no cell flagged, planted kappa >= 1.29 recovered at z >= 21.9
   (20-28 bits, n <= 4096); EXP-PFDR-ca5e01 O-MIXED: 63 null / 16 intermediate / 11 underpowered cells, kappa in [0.889,
@@ -62,6 +59,30 @@ evidence:
 - repo: crypto-autoresearcher
   path: knowledge/findings/KN-FIND-c81e5b.md
   note: 'finding: rank <= 3 log-GAP half-boxes carry uniform-set pair-sum coincidence counts (h = 2 only; relation-bearing log-GAPs untested)'
+- repo: crypto-autoresearcher
+  path: ledger/evidence/EV-PFDR-c42190.yaml
+  note: 'v1 O-INVALID: unreachable pilot target and failed plant/calibration controls; neutral evidence'
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261031-0fe2d3.yaml
+  note: records O-INVALID as an instrument/design fact, not negative mathematical evidence about kappa growth
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261101-49576f.yaml
+  note: designs v2 EXP-PFDR-ada71b on fresh blocks; no result
+- repo: crypto-autoresearcher
+  path: ledger/decisions/DEC-20261101-cb3277.yaml
+  note: approved the v2 protocol before its later impeded execution attempt
+- repo: crypto-autoresearcher
+  path: coordination/sessions/receipts/20261101/SR-20261101-39eaa4.yaml
+  note: process receipt; selftest valid, pilot invalid_output from provenance mismatch, four trials unlaunched, no scientific reading
+- repo: crypto-autoresearcher
+  path: experiments/EXP-PFDR-ada71b/reports/run-20261101T2056Z/report.typ
+  note: preserved run report and fresh-RUN-id retry requirement
+- repo: crypto
+  ref: b825c0c0d535215a6b01571350fa5b54a05ea0fd
+  path: research/eccp131_representation_filter_20261102/REPORT.md
+  note: >-
+    simple coordinate-bit preselection family had no qualifying held-out enrichment on exact
+    ECCp-131; this does not run the registered kappa_rel growth ladder or test other predictors
 external_evidence:   # repo not in tools/lead_atlas.py REPOS; paths unverified by --check; local toy-scale, PR #53 open stacked on #52
 - repo: aburan28/ml-cryptanalysis
   path: experiments/fb-prime-transfer/report.md
@@ -99,17 +120,19 @@ ledger_refs:
 - DEC-20261029-01405d
 - DEC-20261029-8d9b43
 - H-PFDR-ed7ccf
+- EV-PFDR-c42190
+- DEC-20261031-0fe2d3
+- DEC-20261101-49576f
+- DEC-20261101-cb3277
 - DEC-20261031-e8e84b
 - DEC-20261029-8b2734
 - DEC-20261029-5554ee
 known_results:
 - KR-IC-73db3f
 forecloses:
-- harvest x-key collisions the mitm engine discards
-- pair-sum coincidence excess of structured factor bases
-- additive energy of label-GAP bases gives free relations
-- rho-trail harvest of coincidences
-- only attempt targets whose x(R) predicts a decomposition
+- a powered mean coincidence excess in the 44 valid h=2 toy log-GAP cells already measured
+- the invalid EXP-PFDR-ada71b pilot supplies a kappa-growth reading
+- the EXP-PFDR-ada71b selftest alone supplies a scientific coincidence-growth verdict
 areas:
 - PFDR
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-02'

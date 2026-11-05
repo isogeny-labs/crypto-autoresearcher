@@ -25,14 +25,19 @@ next_action:
     intermediate n (41-47), where only encoding size is known. A conflict price at n = 131
     is not measured. In parallel finish the dimension-5/6 Weil-polynomial census over F_2
     for 131 | #A (H-FROB-ff99bf hit an impediment at dims 5-6; H-BINSTD-944a66 has preliminary
-    support) and read the Couveignes-Lercier primary source.
+    support) and read the Couveignes-Lercier primary source. Independently execute the still-unbuilt
+    multiplicative-subgroup lane H-KIC-3b4af8: Stage 0 factor/certify 2^n-1 through prime n<=200
+    (including the balanced n=163 cases), Stage 1 exact n=23/n=29 coverage against random stable
+    unions, explicit lists and the n=23 subspace control, then Stage 2 charged construction cost.
   discriminates: >-
     If non-stable (polynomial-basis, random-basis) balls of the same weight are as cheap as the
     normal-basis ball, the saving is sparsity, not Frobenius stability, and it carries no n-fold
     orbit gain, so the Koblitz lever is not restored. If only the stable ball is cheap and the
     cost stays within [0.5, 2] of (or below) the subspace arm at larger n, the n-fold gain at
-    prime n is kept and justifies an n = 131 price; cost above 2x closes the non-linear stable
-    lane. A census with no dimension-5/6 abelian variety having 131 | #A closes the
+    prime n is kept and justifies an n = 131 price; cost above 2x rejects only that tested
+    base/encoding schedule. For the multiplicative lane, a certified census or controlled
+    coverage/cost miss rejects only the registered cells; the unrun balanced n=163 branch is not
+    decided by the earlier n=23 cyclotomic null. A census with no dimension-5/6 abelian variety having 131 | #A closes the
     Couveignes-Lercier route at g <= 6.
 best_measured: >-
   Matched-|F| per-attempt cost (CryptoMiniSat conflicts substituting for WDSat; local toy scale,
@@ -75,6 +80,12 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-BINSTD-2d41c3.yaml
   note: g = 5, 6 Weil-polynomial census, preliminary support
+- repo: crypto-autoresearcher
+  path: ledger/hypotheses/H-KIC-3b4af8.yaml
+  note: specified but unbuilt multiplicative-subgroup Stage 0-2 census, coverage and charged-cost lane
+- repo: crypto-autoresearcher
+  path: ledger/proposals/IDEA-20261018-329d0a.yaml
+  note: balanced n=163 bases and exact n=23/n=29 controls; no attack or completed experiment claimed
 external_evidence:   # repo not in tools/lead_atlas.py REPOS; PR #53 open
 - repo: aburan28/ml-cryptanalysis
   path: experiments/fb-koblitz-nonlinear/report.md
@@ -91,6 +102,7 @@ ledger_refs:
 - IDEA-20260926-bbf2ed
 - IDEA-20260926-b6cc43
 - IDEA-20261018-329d0a
+- H-KIC-3b4af8
 - H-FROB-66d9ae
 - H-FROB-ff99bf
 - DEC-20261007-0c298a
@@ -107,11 +119,11 @@ known_results:
 forecloses:
 - trace-spectrum or trace-conditioned Frobenius-stable base at prime degree
 - Couveignes-Lercier elliptic periods or algebraic-group factor base at n = 131
-- multiplicative-subgroup x^d = 1 factor base on Koblitz curves
+- a yield advantage for the previously measured n=23 cyclotomic-sparse cells
 - tau-adic factor base over an orbit union
 areas:
 - FROB
 - CERTBIN
 - BINSTD
 - KIC
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-02'
