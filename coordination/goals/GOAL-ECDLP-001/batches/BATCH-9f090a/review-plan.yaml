@@ -1,0 +1,77 @@
+review_plan:
+  id: RP-BATCH-9f090a
+  written_at: '2026-11-05T00:00:00Z'
+  frozen: true
+  goal_id: GOAL-ECDLP-001
+  batch_id: BATCH-9f090a
+  opened_by_decision: DEC-20261105-c5fcb6
+  routed_by: DEC-20260831-a9716f (routed_separately_not_this_lane)
+  required_policy: review-breakthrough, max effort, degradable false, independent session
+  claim_under_review: '(CC-3) KN-FIND-002''s recorded tier: jet and endomorphism oracles ''GGM-simulable
+    with O(1) overhead, closing their candidate families at exponent 1/2'', and elliptic-net and incidence
+    oracles simulable with non-constant overhead. (CC-2) KN-FIND-b7e091''s recorded justification for
+    closing the incidence and endomorphism-image oracles (confidence proved, evidence_level theorem_backed),
+    including its End(E) = Z premise. (CC-1) the incidence-oracle disagreement between the two records.
+    (F-5) the constant-overhead criterion''s inconsistency across records.'
+  coordinator_prior: 'Recorded before the round, without numbers. I expect the round to find that (a)
+    the oracles that reveal coordinates of instance points (jet as field data, x-valued variants) are
+    not Shoup-GGM-simulable, so no exponent-1/2 closure follows for them from Shoup''s bound; (b) label-valued
+    endomorphism-image and label halving are simulable at Theta(log N), not O(1), and the End(E) = Z premise
+    is false but replaceable by the eigenvalue argument; (c) incidence CHECK over a label factor base
+    is simulable at O(m) while SEARCH is not a per-query O(1) statement; (d) KN-FIND-002''s ''structured
+    GGM'' gives no lower bound. The likeliest ways I am wrong: the records may define their oracles more
+    narrowly than the atlas text did, or a reading of ''structured GGM'' may support a weaker but real
+    bound. Concurrence alone is not proof.'
+  frozen_inputs:
+    records:
+    - knowledge/findings/KN-FIND-002.md
+    - knowledge/findings/KN-FIND-b7e091.md
+    - knowledge/findings/KN-FIND-194294.md
+    - knowledge/findings/KN-FIND-982fdf.md
+    - ledger/evidence/EV-GGM-001.yaml
+    - ledger/evidence/EV-GGM-002.yaml
+    - ledger/evidence/EV-ECDLP-048824.yaml
+    - ledger/corrections/CORR-20260727-003.yaml
+    - ledger/decisions/DEC-20260831-a9716f.yaml
+    derivation_tier_inputs_never_conclusions:
+    - docs/reports/leads-round2-20261104/augmented-oracle-review.md
+    - docs/reports/holant-h1-ggm-lemma-20261103/README.md
+    - docs/reports/holant-h1-ggm-lemma-20261103/REDTEAM.md
+    blind_note: The reviewer derives each joint's verdict from the records and first principles BEFORE
+      reading the derivation-tier inputs, records that verdict, then reads them and reports agreements
+      and disagreements separately.
+  joints:
+  - joint: J1 KN-FIND-002 tier (CC-3)
+    assigned_to: TASK-20261105-9d65dc
+    attack_plan: For each oracle KN-FIND-002 classifies (jet, endomorphism, elliptic net, incidence),
+      fix its exact input/output from the record and EXP-GGM-001; decide Shoup-GGM simulability with an
+      explicit simulator or a counterexample (e.g. a reduction that extracts the log from few queries
+      plus free local work); state overhead with constants. Decide whether 'closed at exponent 1/2' follows,
+      and under which model (Shoup vs the record's 'structured GGM').
+    breaking_artifact: A simulator the record claims that does not exist, an overhead that is wrong, or
+      a closure that does not follow from KN-TECH-005 in the stated model.
+  - joint: J2 KN-FIND-b7e091 justification (CC-2)
+    assigned_to: TASK-20261105-9d65dc
+    attack_plan: Check the End_{F_p}(E) = Z premise and its role; give the correct simulator for the endomorphism-image
+      and incidence oracles (CHECK vs SEARCH, label vs field outputs) with overheads; decide whether 'confidence
+      proved / theorem_backed' is supported for each closed family.
+    breaking_artifact: A false premise that the closure needs, or a closed family whose simulator is missing
+      or super-polylogarithmic per query.
+  - joint: J3 incidence disagreement (CC-1) and constant-overhead criterion (F-5)
+    assigned_to: TASK-20261105-9d65dc
+    attack_plan: 'Reconcile the two records'' incidence-oracle verdicts by pinning definitions; state
+      one criterion for when a simulable verdict closes a family at exponent 1/2 (cf. H-ECDLP-5a484e:
+      overhead sub-polynomial in N) and apply it uniformly to every oracle in both records.'
+    breaking_artifact: Two records that remain inconsistent under any single definition, or a criterion
+      that one of them violates.
+  - joint: J4 consequences
+    assigned_to: TASK-20261105-9d65dc
+    attack_plan: 'For each record, recommend exactly one of: stands as committed / stands with a scoped
+      erratum (give text) / retier (give the new tier and text) / supersede (give the superseding statement).
+      List every lead row, finding and decision that cites the affected sentences (grep the repository).'
+    breaking_artifact: A recommendation without the exact replacement text, or a missed dependent.
+  deliverables:
+    report: coordination/goals/GOAL-ECDLP-001/batches/BATCH-9f090a/reviews/TASK-20261105-9d65dc/REVIEW.md
+    machine_summary: coordination/goals/GOAL-ECDLP-001/batches/BATCH-9f090a/reviews/TASK-20261105-9d65dc/verdicts.yaml
+    constraints: Write only under the reviews/TASK-20261105-9d65dc directory. Edit no finding, row, decision
+      or evidence record. Change no status. Commit and push to branch ideas/round5-20261105.
