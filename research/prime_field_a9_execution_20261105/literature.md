@@ -93,3 +93,22 @@ independently constrain support entries/visits, coordinate reads or unchanged
 identification counters. Final readiness requires the corresponding structural
 checks before exact source hashes are approved. No KB result ID, fresh corpus
 search, native count result or scientific review is implied by this inspection.
+
+## Final source-readiness receipt
+
+Reviewed the cost-control repair: all four sparse traversal counts are rederived
+from canonical functional supports and full kernel dimensions, exact add/mul
+deltas are checked, and all other identification/phase counters must match the
+dense control. The branch uses validated arm identity rather than trusting a
+producer method label. Mutations that change both phase and total counters are
+now exercised, so conservation alone cannot hide the reported gap.
+
+Root's final saved preparation record reports 50 selected software controls passed
+in 1.40 seconds. This administrative delegate directly ran only the metadata-only
+control already recorded and inspected exact source/input provenance; it did not
+execute the native row systems. The final draft has zero schema/lint findings.
+The administrative assessment hashes current source/tool/checkpoint dependencies,
+A7 solver data and A8 checker-only controls, and preserves publication/freeze/
+actual-checkpoint/root-release prerequisites. It is not a verified-model/provider,
+staffed review, full-ledger pass or scientific-status receipt. The unavailable KB
+status and direct-source fallback remain explicit, without KB IDs or absence claims.

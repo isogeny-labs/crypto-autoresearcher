@@ -199,3 +199,27 @@ identification counters could pass a matching phase/total mutation. Before final
 approval, require support/kernel-derived visits/coordinate counts, exact preserved
 non-add/mul identification counters, and exact expected add/mul changes. This
 refines the planned cost controls and is not a mathematical result or native run.
+
+## Final administrative readiness
+
+Parent repaired the prospective cost-control gap before native execution.
+The checker now reconstructs canonical query supports from the case and validated
+arm identity, checks all four traversal counts, and derives the identification
+add/mul difference as dense dot visits minus sparse generic visits. It requires
+every other identification counter, including Fr sub/inv, and every other phase
+counter vector to remain unchanged. New matched phase-plus-total corruption
+controls cover support entries, coordinate reads and identification sub/inv.
+
+The final saved preparation record reports 50 software controls passed in 1.40
+seconds, including four-arm equality, valid public checks, third-arm failure
+retention and cost corruptions. This delegate directly ran only the metadata test
+noted above; it did not rerun the scientific software suite or native row panel.
+The final draft has zero findings, and all 1,152 metadata seed-0 cells match.
+
+The exact 24 source dependencies and all explicit/content-addressed input hashes
+are bound in admission-assessment.json. Administrative approvability grants no
+execute authority or scientific state change. Parent must still publish those
+exact bytes, freeze against the actual published source SHA, obtain the real
+current S3 checkpoint/gate and publish the exact root release before native
+mathematics. Bound byte changes require additive reassessment. The KB backend
+remains unavailable; only the documented direct-source fallback was used.
