@@ -24,3 +24,6 @@ Then lossless archive.py, official explicit-file S3 push/remote verify, analyze.
 and unified export --verify-files. Commit/push raw results before report.py.
 Build v11 from untouched v10; inspect every report/progress PDF page. Publish
 ready PR with auto-merge; observe actual merged state before claiming merge.
+
+Completed panel: [RESULTS.md](RESULTS.md), with full paired primitive vectors,
+original-row certificate checks and the proposed sparse-functional control.

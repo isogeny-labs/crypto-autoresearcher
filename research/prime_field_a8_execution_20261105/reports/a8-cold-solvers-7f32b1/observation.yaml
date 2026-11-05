@@ -1,0 +1,128 @@
+schema: crypto.autoresearch.experiment_observation.v1
+report_kind: run_observations
+question: Do cancellation-first and full-joint recovery agree on identical supplied
+  rows, and what separate primitive counts do they incur?
+scope: All288fixed A7 systems/four observedcurves/32publictargets;576coldsolvercalls
+  inoneprocess.
+method:
+  description: Freshsame-target differences/base-only elimination/representative recovery/original-joint-row
+    lifting versus fulljoint; independentdense/publicchecks.
+  command: /workspace/factor-base-venv/bin/python -B research/prime_field_a8_execution_20261105/supervise.py
+    --protocol research/prime_field_a8_execution_20261105/protocol.json --release
+    research/prime_field_a8_execution_20261105/release.json --owner root-a8 --out
+    research/prime_field_a8_execution_20261105/runs/a8-cold-solvers-7f32b1
+  parameters:
+    paired_systems: 288
+    solver_arms:
+    - full_joint
+    - cancellation_first
+    targets_per_system: 8
+    cold_rebuild: true
+  seeds:
+  - 0
+  sampling_unit: Fixed curve/schedule/budget/scope with both solvers; no new targetdraw.
+  stopping_rule: All288pairs, no outcome/coststop; retain failures.
+runs:
+- experiment_id: PRIME-FIELD-A8-CANCELLATION-FIRST-20261105
+  run_id: a8-cold-solvers-7f32b1
+  native_status: returncode=0;timeout=false;exception=null
+  evidence:
+  - artifact: execution
+    selector: /returncode,/timeout,/exception
+observations:
+- id: exact-paired-outcomes
+  description: Allpaired outcomes match eachother and originalA7; original-row certificates
+    checked.
+  kind: measured
+  value:
+    paired_systems: 288
+    solver_rows: 576
+    unknown: 0
+    identified_reused_slots_per_arm: 486
+  unit: dependent systems/solverrows/targetslots
+  sample:
+    n: 288
+    unit: fixedpairedrow systems
+    dependence: Fourcurves andsame32publictargets reused acrossschedules/budgets/scopes.
+  uncertainty: Exactfinite census; no newindependentpopulation.
+  evidence:
+  - artifact: analysis
+    selector: /cells,/panel_complete,/solver_calls_verified
+- id: scalar-primitive-vectors
+  description: Complete coldsolver logicalFrvectors include cancellation/lifting/original-row
+    checks; sharedprojection separate.
+  kind: measured
+  value:
+    cancellation_first:
+      Fp.field_add: 64792
+      Fp.field_inv: 9256
+      Fp.field_mul: 53472
+      Fp.group_add: 9742
+      Fr.field_add: 322672
+      Fr.field_inv: 4428
+      Fr.field_mul: 813356
+      Fr.field_sub: 506680
+      affine_rows_inserted: 7915
+      cancellation_rows_constructed: 432
+      original_row_certificates_verified: 486
+      original_row_weight_coefficients_emitted: 25396
+      point_comparisons: 486
+      public_target_certificates_verified: 486
+    full_joint:
+      Fp.field_add: 64792
+      Fp.field_inv: 9256
+      Fp.field_mul: 53472
+      Fp.group_add: 9742
+      Fr.field_add: 1097774
+      Fr.field_inv: 5508
+      Fr.field_mul: 1616582
+      Fr.field_sub: 537790
+      affine_rows_inserted: 8995
+      original_row_certificates_verified: 486
+      original_row_weight_coefficients_emitted: 25396
+      point_comparisons: 486
+      public_target_certificates_verified: 486
+  unit: separate logicalFr/Fp/group/descriptorcalls; no scalar weighting
+  sample:
+    n: 288
+    unit: pairedsystems
+    dependence: Bothmethods rebuildcold on eachsameinput; prefixes andtargets reused.
+  uncertainty: CounterAPI coverage excludes inversioninternals, Pythontraversal/IO
+    andindependentchecker; diagnosticclocks invalid.
+  evidence:
+  - artifact: analysis
+    selector: /arm_totals,/arm_phase_totals,/shared_projection_counters
+controls:
+- id: a7-outcome-control
+  description: Fulljoint results agree with all originalA7outcomes after newproducerrecords
+    are journaled.
+  observation_ids:
+  - exact-paired-outcomes
+  matching: Exactsource/targetrow order, projection, targets andscope.
+  limitations:
+  - Savedoutputs are checker-only, notsolverinputs.
+patterns: []
+limitations:
+- Candidate Frsub count is higher in50of288cases; adversecases retained.
+- Fulljoint baseline still computes unitfunctional kernel syndromes with dense dotproducts
+  including zeroproducts; counts reflect these exact implementations.
+- No runtime/full-S/weighted/endtoend/novelty claim; historicalcollection is not rerun
+  or calledfree.
+missing: []
+next_checks:
+- question: How do sparse functional-kernel evaluations change both coldsolver componentvectors?
+  method: Use identical immutable systems; replace dense zero-product dot loops by
+    sparse coefficient evaluation in BOTHarms; retain certificates/fullkernels/coldcost
+    boundaries.
+  control: Compare exactoutcomes/originalrowweights/publicchecks and allphaseprimitivevectors
+    toA8, including adversecostcells.
+  status: proposed
+artifacts:
+- id: analysis
+  path: research/prime_field_a8_execution_20261105/runs/a8-cold-solvers-7f32b1/analysis.json
+  commit: f41d2ad00a61960de7d14975695a97b7feb3e226
+  sha256: 773503baddb21e4ad98517c2423e8d0e3a8283d12f7119fb5a563cb2fa2406c4
+- id: execution
+  path: research/prime_field_a8_execution_20261105/runs/a8-cold-solvers-7f32b1/execution.json
+  commit: f41d2ad00a61960de7d14975695a97b7feb3e226
+  sha256: c1f99e4c240f1996fa7e1c2defaf4a9f92c426424f7b0d95da51e54a37902cca

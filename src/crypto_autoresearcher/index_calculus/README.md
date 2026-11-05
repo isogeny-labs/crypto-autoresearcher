@@ -702,3 +702,14 @@ at48after target cancellation. All schedules reach full base rank by128.
 The v10database preserves all earlier rows and stores budget-specific diagnostics
 and certificates. The next implementation comparison is cancellation-first
 recovery versus the full joint solver on those same immutable rows.
+
+[A8 cold-solver comparison](../../../research/prime_field_a8_execution_20261105/RESULTS.md)
+implements cancellation-first recovery on all 288 immutable A7 systems, with
+original-joint-row certificate lifting. All 576 cold solver calls agree on
+identified targets/scalars and pass separate dense/public checks. Fr add/sub/mul/
+inv are separate logical units, including construction, lifting and certificate
+checks; shared projection and historical collection remain separate. The v11
+archive preserves v10 history. Dense target-unit syndrome evaluation remains in
+the baseline, and 50 candidate cases use more subtractions, so the next matched
+control is sparse functional evaluation in both methods. No weighted or runtime
+speedup is asserted.
