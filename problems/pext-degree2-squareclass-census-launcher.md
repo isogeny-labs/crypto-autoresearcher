@@ -710,3 +710,16 @@ without iterating every position; no measured runtime qualification exists.
 The [report](../experiments/EXP-PEXT-bf8f96/reports/stage-capacity-20261105/report.md)
 also records the independent read-only review's exact full-model replay gap.
 The contract remains `review_required` and unfrozen.
+
+## Independent source-fixed model replay, 2026-11-05
+
+The [standalone checker](../experiments/EXP-PEXT-bf8f96/implementation/independent_fixed_model_check.py)
+reconstructs the radical quotient and semilinear algebra action with separate
+field and polynomial arithmetic. It replays every fixed basis vector, product
+and unit after scalar extension, plus the named curve/T/matrix quartic and
+source generator square. A separate character-sum checker derives geometric
+components and genus without the producer geometry reducer. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/independent-fixed-model-20261105/report.md)
+records the fixture and tamper checks. Next bind this gate to every source-bound
+unit and qualify full-cohort runtime under the fixed watchdogs. The contract
+remains `review_required` and unfrozen.
