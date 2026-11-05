@@ -18,6 +18,10 @@ from c5_preview_stage import (METADATA as C5_METADATA, ROSTERS as C5_ROSTERS,
                               compare_preview, plans_from_campaign, write_preview)
 from geometric_campaign import reduce_campaign
 from input_manifest import ROOT
+from legacy_t0_compare import (ARTIFACT as T0_ARTIFACT,
+                               artifact_bytes as t0_bytes,
+                               compare_artifact as compare_t0,
+                               write_artifact as write_t0)
 
 
 ROWS = "geometric-curves.jsonl"
@@ -30,6 +34,17 @@ COMPONENT_SOURCES = CANDIDATE_SOURCES | {
     "experiments/EXP-PEXT-bf8f96/implementation/c5_metadata_preview.py",
     "experiments/EXP-PEXT-bf8f96/implementation/c5_selection.py",
     "experiments/EXP-PEXT-bf8f96/implementation/curve_special_j.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/legacy_t0_compare.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/legacy_n3_alignment.py",
+    "experiments/EXP-PEXT-bf8f96/implementation/legacy_class_bijection.py",
+    "experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs",
+}
+T0_INPUTS = {
+    "experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-n3-alignment.json",
+    "experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-q3-n5-bijection.json",
+    "experiments/EXP-PEXT-212d5c/implementation/fixtures/R1-n3-q5.jsonl",
+    "experiments/EXP-PEXT-212d5c/implementation/fixtures/R1-n3-q7.jsonl",
+    "experiments/EXP-PEXT-212d5c/implementation/fixtures/D-n5-q3-cosets.jsonl",
 }
 
 
@@ -59,13 +74,18 @@ def _preflight(trial_plan, run_dir):
         raise ValueError("analyze component trial plan differs from six-stage contract")
     trial = plan["trials"][-1]
     if (trial.get("stage") != "analyze"
-            or not {ROWS, SUMMARY, C5_METADATA, C5_ROSTERS, C5_SUMMARY}
+            or not {ROWS, SUMMARY, C5_METADATA, C5_ROSTERS, C5_SUMMARY, T0_ARTIFACT}
                    <= set(trial.get("artifacts", []))
             or not {"n3core", "n3ext", "n5"} <= set(trial.get("depends_on", []))
             or trial.get("watchdog_seconds") != 3600
             or not COMPONENT_SOURCES <= set(plan["source_sha256"])
+            or not T0_INPUTS <= set(plan.get("input_sha256", {}))
             or run_root(ROOT, plan, trial) != run_dir.resolve()):
         raise ValueError("analyze component absent from frozen stage")
+    for relative in T0_INPUTS:
+        path = ROOT / relative
+        if path.is_symlink() or not path.is_file() or sha256(path) != plan["input_sha256"][relative]:
+            raise ValueError(f"historical T=O input hash mismatch: {relative}")
     launch = read_json(run_dir / "launch.json")
     if (launch.get("trial_id") != "analyze"
             or launch.get("run_id") != trial["run_id"]
@@ -104,9 +124,11 @@ def run_component(trial_plan, run_dir):
     curves, campaign = reduce_campaign(trial_plan, stage_dirs)
     plans = plans_from_campaign(campaign)
     c5_bytes(curves, plans, plan_sha256, source_runs)
+    t0_bytes(curves, plan_sha256, source_runs)
     geometry = write_component(run_dir, curves, campaign, plan_sha256, source_runs)
     c5_preview = write_preview(run_dir, curves, plans, plan_sha256, source_runs)
-    return {"geometry": geometry, "c5_preview": c5_preview}
+    t0 = write_t0(run_dir, curves, plan_sha256, source_runs)
+    return {"geometry": geometry, "c5_preview": c5_preview, "historical_t0": t0}
 
 
 def compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs):
@@ -129,7 +151,8 @@ def check_component(trial_plan, run_dir):
     plans = plans_from_campaign(campaign)
     geometry = compare_artifacts(run_dir, curves, campaign, plan_sha256, source_runs)
     c5_preview = compare_preview(run_dir, curves, plans, plan_sha256, source_runs)
-    return {"geometry": geometry, "c5_preview": c5_preview}
+    t0 = compare_t0(run_dir, curves, plan_sha256, source_runs)
+    return {"geometry": geometry, "c5_preview": c5_preview, "historical_t0": t0}
 
 
 if __name__ == "__main__":

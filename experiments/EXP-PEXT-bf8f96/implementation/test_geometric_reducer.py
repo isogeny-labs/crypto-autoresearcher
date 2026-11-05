@@ -46,6 +46,9 @@ class GeometricReducerTests(unittest.TestCase):
 
     def test_f27_spectrum_and_curve_matched_minima(self):
         first, second = self.summarize(0), self.summarize(1)
+        self.assertEqual(sum(first["m_r_histogram"].values()), 819)
+        self.assertEqual(sum(second["m_r_histogram"].values()), 819)
+        self.assertEqual(first["m_r_histogram"].get("3,12"), first["generic"])
         self.assertEqual(first["factor_pattern"], [1, 1, 2])
         self.assertEqual(second["factor_pattern"], [4])
         self.assertEqual(first["spectrum"], [1, 9, 11, 13, 17])

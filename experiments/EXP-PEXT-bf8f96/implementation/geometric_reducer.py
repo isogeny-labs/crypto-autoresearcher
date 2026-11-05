@@ -76,6 +76,7 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures):
             or len(rows) != exceptional or exceptional + generic != expected_structures):
         raise ValueError("exceptional/generic row coverage")
     ordinals, genera = [], []
+    mr_counts = {}
     for row in rows:
         if (not isinstance(row, list) or len(row) != 5
                 or type(row[0]) is not int or not 0 <= row[0] < expected_structures
@@ -87,12 +88,18 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures):
             raise ValueError("exceptional ordinals not strictly increasing")
         if row[4] != genus_from_rank_and_support(row[2], row[3]):
             raise ValueError("exceptional Riemann-Hurwitz genus mismatch")
+        mr_key = f"{row[2]},{row[3]}"
+        mr_counts[mr_key] = mr_counts.get(mr_key, 0) + 1
         ordinals.append(row[0]); genera.append(row[4])
     if unit.get("generic_intervals") != complement_intervals(ordinals, expected_structures):
         raise ValueError("generic complement differs from exceptional rows")
     generic_genus = (n-1)*(1 << n)+1
     if generic:
         genera.append(generic_genus)
+        mr_key = f"{n},{4*n}"
+        mr_counts[mr_key] = mr_counts.get(mr_key, 0) + generic
+    if sum(mr_counts.values()) != expected_structures:
+        raise ValueError("m/r histogram does not cover every structure")
     if not genera:
         raise ValueError("unit has no geometric genus")
     allowed = None
@@ -108,6 +115,7 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures):
             "branch_type_mismatch_count": int(pattern != wanted_pattern),
             "geometric_spectrum_violation_count": violations,
             "spectrum": sorted(set(genera)), "geometric_minimum": min(genera),
+            "m_r_histogram": dict(sorted(mr_counts.items())),
             "structures": expected_structures, "exceptional": exceptional,
             "generic": generic}
 
