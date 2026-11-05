@@ -1,0 +1,101 @@
+# DEC-20261102-0dedaa - approve the pre-run clarifying amendment
+# AMD-EXP-DREG-dd668d-20261102-glsample to EXP-DREG-dd668d.
+coordinator_decision:
+  id: DEC-20261102-0dedaa
+  id_provenance: >-
+    The Coordinator session (no shell) proposed DEC-20261102-3e91c7; the
+    committing session found it reported taken by tools/allocate_id.py
+    --check, allocated DEC-20261102-0dedaa with tools/allocate_id.py --next
+    coordinator_decision --date 20261102, and verified it with --check
+    (OK: well-formed and free across the union) before the commit.
+  recorded_at: '2026-11-02'
+  decided_at: '2026-11-02'
+  decided_by: coordinator
+  archived_by: null
+  context: >-
+    The executor declined to launch EXP-DREG-dd668d (approved by
+    DEC-20260922-0397f8, task TASK-20260922-4a49b0) because
+    frozen_ladder.gl_sample does not determine the eight GL-8 matrices and
+    the edge certificate and rung scope leave choices open. runs/ holds only
+    .gitkeep. No run, partial run or scratch computation exists.
+  decision: approve
+  decision_label: >-
+    Approve AMD-EXP-DREG-dd668d-20261102-glsample, an additive clarifying
+    amendment written before any run. It fixes the GL-8 control and related
+    conventions and changes no hypothesis, prediction, metric, label or claim
+    ceiling.
+  target_ids:
+    - EXP-DREG-dd668d
+    - H-DREG-1d0e5d
+    - AMD-EXP-DREG-dd668d-20261102-glsample
+  rationale:
+    - >-
+      The refusal is correct. An undetermined control cannot be replayed, so
+      gl_check_passed, and every label conditioned on it, would not be
+      reproducible. The executor could not choose the values without making
+      an unrecorded protocol decision.
+    - >-
+      Values fixed (amendment section A2): N = 4 v^2 (256 at v = 8); one
+      random.Random(20260922) stream shared by the eight matrices in order
+      k = 0..7, never re-seeded; per transvection p = rng.randrange(v) and then
+      t = rng.randrange(v), with a p == t pair discarded and redrawn; T(p, t) =
+      I + E_{t,p} left-multiplied, so row p is added to row t; up to 100
+      attempts per matrix, with the existing instrument label if attempt 100
+      is singular.
+    - >-
+      N is fixed before any data and does not depend on any outcome. It is
+      about 24 times the counting floor of about 11 steps at v = 8. It is a
+      formula in v, so LADDER-W-v1 stays rung-uniform. Uniformity of the sample
+      is not load-bearing, because the hypothesis's mechanism claims
+      invariance under every invertible substitution.
+    - >-
+      Conventions (sections A1 and A3): the base vector is b = (x1, x2, x3, x4,
+      u1[1], u1[z], u2[1], u2[z]), in the grevlex order and base_curve basis
+      the specification already freezes. The substitution is x -> M x on b,
+      applied to the base ideal's generators and square-free reduced, with the
+      field equations kept; over F_2 these map to themselves. NEARBY-DEG2's
+      "x0 |-> x0 + x1*x2" reads as b_0 |-> b_0 + b_1 b_2. This is the only
+      reading available, since the chained system has no x0.
+    - >-
+      Rung n=2 is out of scope for this single-edge run: the objective, the
+      stopping rules and H-DREG-1d0e5d test_boundary fix rung n=1. The 32
+      F_16 triples are left open on purpose. A further amendment in the same
+      directory fixes them before EXP-DREG-ab3fee builds rung n=2.
+    - >-
+      Edge-certificate item 4 is read as existential over recorded explicit
+      maps E' -> E. DUAL-FROB (Frobenius, then an explicit isomorphism) must be
+      attempted before a failure is declared. DUAL-VELU is allowed, as the
+      executor asked. The amendment records that standard theory predicts the
+      dual of a separable 2-isogeny on an ordinary char-2 curve to be
+      inseparable, so DUAL-VELU is expected to fail. This expectation sets no
+      gate, and the label rule is unchanged.
+    - >-
+      The resume-checkpoint rule (AGENTS.md, owner 2026-10-24) applies to this
+      toy run because it has no tier exemption. A failed push stops the launch
+      as infrastructure.
+  evidence_refs: []
+  limitations:
+    - This decision approves a clarification of an unexecuted protocol. It is not evidence and asserts nothing about H-DREG-1d0e5d.
+    - The runnable-approval probe (tools/experiment_preapproval.py) and tools/newest_experiments.py were not run in this session (no shell). Dispatch waits for them.
+    - The sha256 of specification.yaml and of the amendment are bound by the archival commit, not computed here.
+    - The item-4 dual check stays finite (at most 8 F_4-points) and is not strengthened.
+  next_actions:
+    - >-
+      Committing session: run python3 tools/allocate_id.py --check
+      DEC-20261102-0dedaa. Then commit the amendment and this decision as one
+      ledger archive on the branch, push, and open or refresh the PR against
+      main naming both records.
+    - >-
+      Coordinator: after that commit, confirm that tools/newest_experiments.py
+      --experiment EXP-DREG-dd668d --json reports execution_state ready. Then
+      mint one new executor handoff whose inputs name specification.yaml,
+      AMD-EXP-DREG-dd668d-20261102-glsample.yaml and this decision, with the
+      same deliverables and completion gate as TASK-20260922-4a49b0 and a
+      resume-checkpoint dispatch precondition. If the state is not ready,
+      record the blocker as an additive correction.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: An amendment to an unexecuted protocol creates no finding.
+  user_authorization: >-
+    AGENTS.md standing user authorization, 2026-09-06. The amendment completes
+    an approved protocol and needs no further user confirmation.

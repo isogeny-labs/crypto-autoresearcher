@@ -1,0 +1,45 @@
+== Algorithm 13 exhaustive on F_p^* (all h) ==
+all correct, 2518 instances; Example 13.2.3 (p=19,g=2,h=5) -> 16
+
+== Ex 13.2.7: sum x_i <= B log N / log B for 2<=x_i<=B, B>3 ==
+B=3: max x/log x = 2.8854, B/log B = 2.7307, holds=False
+B=4: max x/log x = 2.8854, B/log B = 2.8854, holds=True
+B=5: max x/log x = 3.1067, B/log B = 3.1067, holds=True
+(tight at B=4: 2/ln2 = 4/ln4)
+
+== Algorithm 14 as printed, h not in <g> ==
+giant-step loop still running after j=100000 iterations (no bound in line 10); line 16 "return ⊥" unreachable
+
+== Lemma 13.4.4 (Schwartz-Zippel) exhaustive, r=5, k=2, total degree <=2 ==
+max Pr[F=0]/(d/r) = 1 (<=1 required)
+
+== Lemma 13.5.6 counterexample (l=2, S1=S2=Z/rZ): BSGS with a1=0 ==
+r=13: representation h=g1^0 g2^1 found with 4 group ops; #S1^(l/2) = r = 13; ratio ops/r=0.3077
+r=29: representation h=g1^0 g2^19 found with 9 group ops; #S1^(l/2) = r = 29; ratio ops/r=0.3103
+r=9091: representation h=g1^0 g2^5974 found with 158 group ops; #S1^(l/2) = r = 9091; ratio ops/r=0.0174
+r=9901: representation h=g1^0 g2^2263 found with 122 group ops; #S1^(l/2) = r = 9901; ratio ops/r=0.0123
+
+== Lemma 13.6.6 splitting system (cyclic B_i, i<n/2), exhaustive ==
+holds for all even n<=18, even w<=n
+
+== Lemma 13.6.7 formula, exhaustive n<=14 ==
+formula exact for all even n<=14, even w
+
+== Thm 13.6.9 proof inequalities: 2^k/sqrt(2k) <= C(k,k/2) <= 2^k sqrt(2/(pi k)), even k ==
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-user/98db1f19-f745-5cea-bbb2-82920372e57a/scratchpad/dlp-redteam/t4_ch13.py", line 96, in <module>
+    viol = [k for k in range(2, 4001, 2) if not (2 ** k / math.sqrt(2 * k) <= comb(k, k // 2) <= 2 ** k * math.sqrt(2 / (math.pi * k)))]
+                                                 ~~~~~~~^~~~~~~~~~~~~~~~~~
+OverflowError: int too large to convert to float
+== Lemma 13.6.6 splitting system (cyclic B_i, i<n/2), exhaustive ==
+holds for all even n<=18, even w<=n
+
+== Lemma 13.6.7 formula, exhaustive n<=14 ==
+formula exact for all even n<=14, even w
+
+== Thm 13.6.9 proof inequalities: 2^k/sqrt(2k) <= C(k,k/2) <= 2^k sqrt(2/(pi k)), even k ==
+violations for even k in [2,4000]: [2]
+max (1/p_YB)/sqrt(w) over even 2<=w<n<=400: 1.4107 at (400, 2); sqrt(8/pi)=1.5958
+
+== "WLOG n,w even (add one)": Algorithm 15 searches weight exactly w/2 per half ==
+a=7 (weight 3) found by Algorithm 15 with w:=4 over ALL B? False

@@ -1,26 +1,33 @@
 id: KR-IC-cd159a
 area: index-calculus
 kind: known_negative
-title: Xedni calculus and lifting to characteristic zero fail
-claim: Silverman's xedni calculus (lift points to Q and look for rank-deficient lifts) was shown by Jacobson–Koblitz–Silverman–Stein–Teske
-  to succeed with negligible probability; lifting-based ECDLP approaches inherit this obstruction.
+title: Conditional height and probability obstruction for classic xedni
+claim: >-
+  Jacobson–Koblitz–Silverman–Stein–Teske derive one-attempt success below C0/p
+  for classic fixed-arity xedni under their selected-lift
+  height/discriminant hypothesis, Lang's canonical-height conjecture, an
+  approximate random-image/sampling model, and the correspondence from an
+  algorithmic lift to a useful scalar relation. A linear-in-p repeated-trial
+  obstruction additionally needs bounded cofactor and a history-uniform
+  adaptive-hazard bridge. This is a strong conditional implication, not an
+  unconditional theorem that every characteristic-zero lifting algorithm fails.
 status: proven
 sources:
 - ref: KN-LIT-020
   locator: abstract
   verification_state: abstract_read
 - ref: KN-LIT-021
-  locator: abstract
-  verification_state: abstract_read
+  locator: §4, Lemma 4.1, Theorem 4.1, §5-6, notes 7-8
+  verification_state: full_text_read
 forecloses:
-- xedni
-- lift to characteristic zero
-- canonical lift for ECDLP
-- rank of lifted curve
+- classic fixed-arity xedni under the JKSST height hypotheses
+- bounded-coefficient rational lifts satisfying the JKSST selected-lift comparison
+- repeated xedni trials with a history-uniform O(1/p) useful-success hazard
+- treating the conditional C0/p bound as premise-free
 internal:
 - ref: GOAL-ICLIFT-001
   relation: applies
-  note: exact-counting closure of FB-geometry and xedni lifting (completed 2026-07-24)
+  note: exact-counting closure applies to its frozen function-field family, not every lift family
 dominated_by: null
 added: '2026-09-26'
 superseded_by: null

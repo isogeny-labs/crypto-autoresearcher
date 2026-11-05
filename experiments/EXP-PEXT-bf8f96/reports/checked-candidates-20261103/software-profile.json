@@ -1,0 +1,103 @@
+{
+  "schema": "pext.synthetic-candidate-resource-check/v1",
+  "scope": "design-only F11-defined squarefree forms embedded in F_(11^3); no elliptic cohort",
+  "git_parent": "ce6d4308de2e72871ecbda1ababf2a17e7fa2313",
+  "source_sha256": {
+    "experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs": "0336e5c594fc7f27d56a27ed957e281af7e9af9d0b15df4797a12bf8e86d5251",
+    "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs": "3e09fbcd869938d8eb2538636f6aa9f67ec9c394fa2a6aba66dff1f0d0360e95",
+    "experiments/EXP-PEXT-bf8f96/implementation/symbolic_extension.rs": "c5d0b9290e9e462b83f1c1b715d19b97a05d8b0327b2de13e207ca2d039503d4",
+    "experiments/EXP-PEXT-bf8f96/implementation/branch_factorization.rs": "6a66e5a596994150a106ec5936db3c8159ab037fbcf0751fe2e4c63c39433d9b",
+    "experiments/EXP-PEXT-bf8f96/implementation/branch_roots.rs": "86aec4293ea02a5bf127d3da05e71b87c8d848c1ab0f85e7d47f5c1b22fe2ccf",
+    "experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs": "6d3cba83a4886a629e2d69d6ee7c262af9ee2dc8a8a26cf17fe00570422b27ba",
+    "experiments/EXP-PEXT-bf8f96/implementation/profile_synthetic_candidates.rs": "4a0466ea0381f3578eb565b101d85cacf4217399821f3b1061582f212fe6b956"
+  },
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "binary_sha256": "b7479b20bf4fd1bab3ebd9526ea0704010340360f1defaa78f37017462e0eba8",
+  "host": {
+    "cpu_model": "Intel(R) Xeon(R) 6975P-C",
+    "logical_cpus": 32,
+    "load_average_before": [
+      43.13,
+      34.57,
+      27.78
+    ]
+  },
+  "limits": {
+    "address_space_bytes": 4294967296,
+    "cpu_seconds": 300,
+    "wall_seconds": 300
+  },
+  "compile": {
+    "command": [
+      "rustc",
+      "--edition=2021",
+      "-O",
+      "experiments/EXP-PEXT-bf8f96/implementation/profile_synthetic_candidates.rs",
+      "-o",
+      "/tmp/pext-synthetic-q11-profile-sqmo_3kx/profile_synthetic_candidates"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "warning: unused imports: `BranchFactorization`, `BranchRoots`, `CocycleIndex`, `Coset`, `CurveClass`, `Curve`, `ExceptionalCandidateSummary`, `FieldIdentity`, `ModelWitness`, `Point`, `QuarticPoint`, `RationalImageIndex`, `SquareClasses`, `SupportGeometry`, `SymbolicElement`, and `SymbolicExtension`\n    --> experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:1136:38\n     |\n1136 | ...xt,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,BranchRoots,ExceptionalCandidateSummary,CurveClass,ModelWitness};\n     |       ^^^^^ ^^^^^ ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^\n     |\n     = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: 1 warning emitted\n\n"
+  },
+  "run": {
+    "command": [
+      "/usr/bin/time",
+      "-v",
+      "timeout",
+      "300s",
+      "/tmp/pext-synthetic-q11-profile-sqmo_3kx/profile_synthetic_candidates"
+    ],
+    "exit_code": 0,
+    "stdout": "{\"schema\":\"pext.synthetic-candidate-profile/v1\",\"q\":11,\"n\":3,\"synthetic\":true,\"structures\":1786323,\"cocycle_entries\":1786323,\"rational_image_entries\":21435876,\"field_seconds\":0.001045,\"cocycle_seconds\":0.536366,\"image_seconds\":0.382075,\"total_seconds\":2.347287,\"rows\":[{\"label\":\"split-1111\",\"rational_candidates\":79223,\"nonrational_candidates\":0,\"duplicate_candidates\":0,\"exceptional\":79223,\"generic_intervals\":58530,\"generic_positions\":1707100,\"candidate_seconds\":0.922475},{\"label\":\"split-112\",\"rational_candidates\":34713,\"nonrational_candidates\":111,\"duplicate_candidates\":1,\"exceptional\":34823,\"generic_intervals\":16037,\"generic_positions\":1751500,\"candidate_seconds\":0.493913},{\"label\":\"split-22\",\"rational_candidates\":0,\"nonrational_candidates\":229,\"duplicate_candidates\":0,\"exceptional\":229,\"generic_intervals\":227,\"generic_positions\":1786094,\"candidate_seconds\":0.010975}]}\n",
+    "stderr": "\tCommand being timed: \"timeout 300s /tmp/pext-synthetic-q11-profile-sqmo_3kx/profile_synthetic_candidates\"\n\tUser time (seconds): 1.87\n\tSystem time (seconds): 0.08\n\tPercent of CPU this job got: 82%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 0:02.38\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 253368\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 63729\n\tVoluntary context switches: 3\n\tInvoluntary context switches: 88\n\tSwaps: 0\n\tFile system inputs: 0\n\tFile system outputs: 0\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n",
+    "parsed": {
+      "schema": "pext.synthetic-candidate-profile/v1",
+      "q": 11,
+      "n": 3,
+      "synthetic": true,
+      "structures": 1786323,
+      "cocycle_entries": 1786323,
+      "rational_image_entries": 21435876,
+      "field_seconds": 0.001045,
+      "cocycle_seconds": 0.536366,
+      "image_seconds": 0.382075,
+      "total_seconds": 2.347287,
+      "rows": [
+        {
+          "label": "split-1111",
+          "rational_candidates": 79223,
+          "nonrational_candidates": 0,
+          "duplicate_candidates": 0,
+          "exceptional": 79223,
+          "generic_intervals": 58530,
+          "generic_positions": 1707100,
+          "candidate_seconds": 0.922475
+        },
+        {
+          "label": "split-112",
+          "rational_candidates": 34713,
+          "nonrational_candidates": 111,
+          "duplicate_candidates": 1,
+          "exceptional": 34823,
+          "generic_intervals": 16037,
+          "generic_positions": 1751500,
+          "candidate_seconds": 0.493913
+        },
+        {
+          "label": "split-22",
+          "rational_candidates": 0,
+          "nonrational_candidates": 229,
+          "duplicate_candidates": 0,
+          "exceptional": 229,
+          "generic_intervals": 227,
+          "generic_positions": 1786094,
+          "candidate_seconds": 0.010975
+        }
+      ]
+    },
+    "user_cpu_seconds": 1.87,
+    "system_cpu_seconds": 0.08,
+    "peak_rss_kbytes": 253368
+  }
+}

@@ -1,0 +1,33 @@
+schema: formal.bsgs-blind-input/v1
+task: Independently derive a complete baby-step giant-step exponent coverage statement
+  and its exact boundary cases. Do not read producer Lean, solver, checker, receipts,
+  reviews, or this review plan before freezing your derivation.
+definitions:
+  m: a natural-number table width
+  k: a natural-number exponent
+  baby_steps: indices j with 0 <= j < m
+  giant_steps: indices i with 0 <= i < m
+  coverage_question: For m>0, characterize which k admit k=i*m+j with the stated index
+    bounds.
+concrete_parameters:
+  p: 1048571
+  a: 3
+  b: 20
+  claimed_group_order: 1047689
+  G:
+  - 2
+  - 199837
+controls:
+- m=0
+- k=m*m
+- an arbitrary point Q outside a chosen subgroup if the ambient group is not known
+  to equal it
+permitted_reads:
+- this blind-input.yaml
+- public mathematical definitions of elliptic-curve group law and division algorithm
+forbidden_reads:
+- formal/CryptoResearch/Runbook/BsgsCoverage.lean
+- formal/targets/runbook-example-bsgs-coverage.yaml
+- examples/runbooks/toy-ecdlp-bsgs/solve.py
+- examples/runbooks/toy-ecdlp-bsgs/check.py
+- any producer or sibling review report

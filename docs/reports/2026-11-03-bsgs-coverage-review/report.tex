@@ -1,0 +1,29 @@
+\documentclass[10pt]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage[T1]{fontenc}
+\title{Independent review of BSGS runbook coverage}
+\author{Formal and source review packet}
+\date{3 November 2026}
+\begin{document}
+\maketitle
+\section*{Scoped result}
+The pinned Lean theorem correctly decomposes every natural exponent $k<m^2$ for $m>0$ into indices $i,j<m$. The named hosted Lean 4.35.0 build and axiom audit passed. Independent point enumeration confirms that the supplied toy curve has prime order $1{,}047{,}689$ and its supplied nonidentity point generates the curve. With $m=1024$, the mathematical indices cover every curve point.
+
+The Python runbook's broader all-point bridge fails at the identity: \texttt{known-k=0} raises a \texttt{TypeError} before writing a result. The checker accepts a synthetic record without solver execution and an arbitrary \texttt{setup\_ops}. These defects do not change the 14 frozen trial outcomes, all of which passed their pinned checks.
+
+\begin{center}\includegraphics[width=\linewidth]{evidence-flow.pdf}\end{center}
+\section*{Independent joints}
+\begin{tabular}{p{0.12\linewidth}p{0.16\linewidth}p{0.64\linewidth}}
+\toprule
+Joint & Verdict & Reproducible evidence\\\midrule
+J2 & Holds & Exact declaration, 11 input hashes, 89 workspace inputs, 10 verifier inputs, 10 pins; receipt from GitHub run 41698891260; false-boundary controls.\\
+J3 & Holds & Blind quotient/remainder derivation, exhaustive character-sum point count; width 1023 misses 1160 points.\\
+J1 & Breaks bridge & Independent curve count and 14 trial checks hold; zero-scalar crash and synthetic-record acceptance disprove the all-point execution and count bridge.\\
+\bottomrule
+\end{tabular}
+
+\section*{Next technical repair}
+Encode the identity consistently in the driver and checker and verify \texttt{known-k=0}. Separate table entries, lookup rounds, and actual group additions; attach an execution-authentic trace before using count fields as measured operations. Keep the frozen 14-unit record immutable. Full hashes, controls, first verdict attestations, and checker output are in the companion repository packet.
+\end{document}

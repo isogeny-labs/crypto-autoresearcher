@@ -27,7 +27,11 @@ The exact-source [verification receipt](proof-verification.json) has SHA-256
 On pinned Lean 4.35.0-rc1, its 8,971-job workspace build and 3,092-job
 target build passed. The forbidden-construct scan found none; the target
 axiom audit passed; the workspace audit found 588 theorem declarations using
-standard axioms only. Independent semantic review remains pending.
+standard axioms only. A subsequent [independent semantic review](../2026-10-25-frob-c5-semantic-review/composition.md)
+checked this named declaration and its characteristic-five interpretation.
+Its fresh source-body elaboration and axiom audit support the stated
+polynomial negative control; the review does not authenticate the archived
+Sage execution.
 
 ## Why this is the right negative control
 
@@ -45,15 +49,23 @@ historical C3/C4 sample identities, finish C8, or establish an ECDLP
 performance improvement. The merged [factor-kernel proof
 #2475](https://github.com/aburan28/crypto-autoresearcher/pull/2475) carries
 the q=11/13/19 mathematical proof and source-bound matrix replay; its
-historical model bridge and independent review remain open.
+historical model bridge remains open. The later independent review found that
+the original loaded Sage source is not authenticated and that the archived
+direct-trace flag is not an independent check.
 
 ## Graphs and next check
 
 The editable [DOT](proof.dot), [SVG](proof.svg), [PNG](proof.png),
 [figure PDF](proof-figure.pdf), and [report PDF](report.pdf) render the new
-boundary. The C5 factor-proof diagram is checked separately in merged PR #2475.
+boundary. The rebuilt report PDF is recorded by [its artifact manifest](.artifacts.json)
+with SHA-256 `58c0ad316c8ebecc0163d2f950dcd2df22bccca91507addcf3add9bfc46eb853`;
+materialize it with `python3 tools/artifacts/artifacts.py pull
+docs/reports/2026-10-22-frob-c5-characteristic-five-control/report.pdf`.
+The C5 factor-proof diagram is checked separately in merged PR #2475.
 No run value, performance graph, or dashboard row changed because this task
 made no measurement. Separate Lean certificates now check the archived
-quotient-basis matrix entries and exact matrix factor kernels. The next proof
-obligation is explicit quotient-kernel basis transport and historical Sage
-refinement, with source custody and independent semantic/code review.
+quotient-basis matrix entries and exact matrix factor kernels. The next
+obligation is historical Sage refinement and loaded-source custody; the
+[later review](../2026-10-25-frob-c5-semantic-review/composition.md) records
+the precise break. The characteristic-five theorem has its own independent
+semantic review in that packet.

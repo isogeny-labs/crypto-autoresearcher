@@ -7,26 +7,38 @@ mechanism: >-
   Lift (E, P, Q) to a curve over Q or a number field and hope the relation between the lifts
   is a short Mordell-Weil relation, readable from heights or a rank deficiency (Silverman's
   xedni calculus and its number-field / SNFS variants).
-disposition: closed_known
+disposition: open_next_step
 obstruction:
   kind: literature
   statement: >-
-    Jacobson-Koblitz-Silverman-Stein-Teske: lifted points have canonical height of order log
-    of the group size per relation and the number of points of height <= B grows like (log
-    B)^{r/2}, so covering a target residue mod p needs exponentially large height; the program
-    re-measured uniform reduction of small points on rank 0-11 curves and over Q(2^{1/3})
-    (CZLIFT round 2026-10-23: H-CZLIFT-9a32e9, -cb95b8, -27a184 weakened, two run sets returned as inadmissible). Scope: lifts to E(Q) and E(K) for bounded-degree K, any rank
-    reachable by known constructions.
+    JKSST Theorem 4.1 derives the classic fixed-arity C0/p bound only under a
+    uniform selected-point height/global-minimal-discriminant comparison,
+    Lang's conjecture, an approximate random-image/sampling model, and the
+    good-reduction/subgroup/useful-relation correspondence. Bounded cofactor and
+    a history-uniform adaptive-hazard bridge are additionally needed for the
+    full waiting-time conclusion. The program's rank 0-11 and Q(2^{1/3}) panels
+    retain their finite measured scope (CZLIFT round 2026-10-23: H-CZLIFT-9a32e9,
+    -cb95b8, -27a184 weakened; two run sets inadmissible). Together these obstruct
+    the historical construction under its complete premise chain and the tested
+    families; they do not cover every selected-lift rule over Q or bounded-degree K.
   revisit_when: >-
-    a lift family with rank growing like log p and provably small regulator, or an exact dependent-lift
-    finder (RQ-XEDN-3bfe2e) that hits a prescribed residue faster than p^{1/2}
+    one explicit prime-field lift family either composes the selected-lift,
+    minimal-discriminant height, Mordell-Weil packing, good-reduction/subgroup,
+    nonzero-denominator, bounded-cofactor, and adaptive-hazard bridges, or
+    falsifies one of them; alternatively, an exact dependent-lift finder
+    (RQ-XEDN-3bfe2e) hits prescribed residues with every setup and certificate
+    cost charged below p^{1/2}
 best_measured: >-
   toy: small points reduce like uniform points; xedni dependence never seen within relation
   bound 6 (planted dependence detected)
+next_action: {from_revisit_when: true}
 evidence:
 - repo: crypto-autoresearcher
   path: knowledge/frontiers/ecdlp/index-calculus/KR-IC-cd159a.yaml
-  note: xedni and characteristic-zero lifting fail
+  note: conditional height/probability obstruction for classic fixed-arity xedni
+- repo: crypto-autoresearcher
+  path: knowledge/literature/KN-LIT-021.md
+  note: primary-source premise and experiment audit
 - repo: crypto-autoresearcher
   path: ideas/ECDLP-IDEA-005_height_compressing_global_lift_hypothesis.md
   note: height-compressing global lift idea and its obstruction
@@ -82,4 +94,4 @@ forecloses:
 areas:
 - CZLIFT
 - XEDN
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-01'

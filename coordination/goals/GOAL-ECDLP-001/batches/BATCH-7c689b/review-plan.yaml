@@ -1,0 +1,124 @@
+review_plan:
+  id: RP-BATCH-7c689b
+  written_at: '2026-11-03T17:10:00Z'
+  frozen: true
+  goal_id: GOAL-ECDLP-001
+  batch_id: BATCH-7c689b
+  opened_by_decision: DEC-20261103-523d19
+  remedies: >-
+    The procedure deviation in DEC-20261018-3b4a32: the first validation of
+    these runs (TASK-20261018-83a561) ran as a subagent of the producing
+    session although its handoff required an independent session.
+  claim_under_review: >-
+    The seven output_validated run records of the matched legacy/repaired
+    s4_expr rerun (EXP-SEMAEV-93d5cc RUN-SEMAEV-9cab7b, -3e69b6, -4be606,
+    -894e27, -2a8498, -fcd67c; EXP-SEMAEV-6e9dcf RUN-SEMAEV-0e5876) are
+    intact, use exactly their pinned arms, pass the frozen legacy-reproduction
+    control in every cell, and carry per-cell metric and conclusion-field
+    values that follow from their raw outputs; and RUN-SEMAEV-0e5876 wrote
+    only inside its own run directory (CORR-20261024-8df12c observed_conduct).
+  coordinator_prior: >-
+    Recorded before the round, deliberately without numbers. I expect the
+    records to be intact and the arms correctly pinned. The likeliest failure
+    points are the reproduction comparison in the capped cells (where caps
+    can make two different polynomials look identical), timing-derived
+    fields that rest on one execution per arm, the store-backed archive of
+    RUN-SEMAEV-0e5876, and manifests whose recorded commit is the run-end
+    head. A blind result may disagree; concurrence alone is not proof.
+  frozen_inputs: coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-input-manifest.json
+  joints:
+  - joint: J1 run integrity
+    assigned_to: TASK-20261103-f8f2d2
+    attack_plan: >-
+      Rehash every manifest file. Check each run's execution-receipt,
+      manifest, launch and environment against each other and against the
+      specification's argv and caps; check arms.tar.gz members against
+      arms-manifest.json (hydrate RUN-SEMAEV-0e5876's store-backed archive
+      and check its .artifacts.json sha256); run
+      tools/check_run_immutability.py.
+    breaking_artifact: A hash mismatch, an inconsistent receipt field, a missing member or an argv that differs from the frozen plan.
+  - joint: J2 arm provenance
+    assigned_to: TASK-20261103-f8f2d2
+    attack_plan: >-
+      Hash the legacy vendored source and harness/semaev.py against the
+      pinned sha256 in the implementation; check the installed fingerprints
+      and the per-child arm log lines in every run; confirm that nothing but
+      the s4_expr binding differs between arms.
+    breaking_artifact: An arm that imported another s4_expr, a missing or wrong fingerprint, or a second varying factor.
+  - joint: J3 legacy-reproduction control
+    assigned_to: TASK-20261103-f8f2d2
+    attack_plan: >-
+      Per cell, compare the legacy arm's deterministic fields with the
+      archived run it reproduces, using the specification's definition and
+      tolerance (CTRL-LEGACY-REPRO); list the fields compared.
+    breaking_artifact: Any deterministic field outside tolerance, or a compared field set that omits a conclusion field.
+  - joint: J4 independent extraction
+    assigned_to: TASK-20261103-f8f2d2
+    attack_plan: >-
+      With your own code, recompute from the raw arm outputs every metric and
+      conclusion field the specification names, for both arms, and state per
+      field whether the arms differ. Do not reuse the producer's compare.py
+      output as a source of values.
+    breaking_artifact: A recorded value that does not follow from the raw outputs, or an extraction that depends on producer summaries.
+  - joint: J5 blind re-derivation
+    assigned_to: TASK-20261103-f8f2d2
+    attack_plan: >-
+      From the statement of S4 (resultant in t of S3(x1,x2,t) and
+      S3(x3,x4,t)) and the cell parameters alone, with independent code:
+      compute the s4_support term count for at least two ICINV curves with
+      the exact polynomial and with the sequential substitution that drops
+      x3; and the Groebner basis size and maximal degree for at least one
+      FIB C16-1 target. Compare with the recorded arm outputs.
+    breaking_artifact: A re-derived value that differs from the corresponding arm output.
+  - joint: J6 successor write conduct
+    assigned_to: TASK-20261103-f8f2d2
+    attack_plan: >-
+      Check CORR-20261024-8df12c observed_conduct: every file
+      RUN-SEMAEV-0e5876 wrote lies under its handoff artifact_paths
+      (TASK-20261019-212d85), no archived or parent file changed in its run
+      commit, and dependency reads were hash-checked.
+    breaking_artifact: A write outside the run directory, a changed parent or archived file, or an unchecked dependency read.
+  blindness:
+    mutual: false
+    lifted_for: []
+    may_not_read:
+    - ledger/evidence/EV-SEMAEV-593b7a.yaml
+    - ledger/decisions/DEC-20261018-3b4a32.yaml
+    - ledger/corrections/CORR-20261018-d51221.yaml
+    - experiments/EXP-SEMAEV-93d5cc/analysis.md
+    - experiments/EXP-SEMAEV-93d5cc/reports/
+    - experiments/EXP-SEMAEV-88c46c/reports/
+    - experiments/EXP-SEMAEV-6e9dcf/reports/
+    - experiments/EXP-SEMAEV-93d5cc/reviews/
+    - coordination/sessions/receipts/20261024/
+    - descriptions, comments and reviews of pull requests 2412 and 2545
+    - any later record that cites EV-SEMAEV-593b7a or DEC-20261018-3b4a32
+    rationale: >-
+      The validator derives every number from specifications, run records
+      and archived runs, and never reads the producer's interpretation,
+      tables or the first validation report, even after finishing. Only the
+      Coordinator lifts blindness, after the report is committed.
+  proves_too_much:
+    assigned_to: TASK-20261103-f8f2d2
+    objects:
+    - 'The repaired arm against the archive in the ICINV cell: the polynomials differ by construction, so a reproduction comparator applied there must report breaks.'
+    - 'A copy of one legacy arm output with one deterministic field perturbed: the comparator must report breaks for that field.'
+    - 'The two arms in a cell where every solve hits its cap: identical capped outputs must not be read as evidence that the polynomials agree.'
+    failure_signature: >-
+      A comparator that reports holds on either known-different object, or an
+      inference that capped equality shows polynomial equality, invalidates
+      J3 and J4 for every cell.
+  blind_rederivation:
+    required: true
+    assigned_to: TASK-20261103-f8f2d2
+    quantity: ICINV s4_support term counts (exact and x3-dropping substitution) and one FIB C16-1 Groebner basis size and maximal degree.
+    parameters: the cell parameters in experiments/EXP-SEMAEV-93d5cc/specification.yaml and the archived run inputs
+    blind_from:
+    - experiments/EXP-SEMAEV-93d5cc/implementation/
+    - harness/semaev.py
+  verdicts:
+    vocabulary: [holds, breaks, inconclusive]
+    rule: One verdict per joint per run; missing data, an unreadable file or an unrun check is inconclusive, never holds.
+  limits:
+  - Zero scientific trials; recomputation and re-derivation on frozen inputs only.
+  - No edits outside the task write_scope; no research-status change; no repair.

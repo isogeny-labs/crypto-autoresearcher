@@ -1,0 +1,388 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "QUADPHASE-20261104",
+  "version": 1,
+  "created": "2026-11-04",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "docs/reports/quadphase-20261104",
+  "authors": [
+    "Claude Code session (holant lead, step b)"
+  ],
+  "links": {
+    "lead": "knowledge/leads/ecdlp/exotic/LEAD-EXO-quadratic-phase-small-x-leakage.yaml",
+    "memo": "docs/reports/leads-round2-20261104/new-leads-memo.md (N2)",
+    "note": "Sizes reduced from the memo's 2^14, 2^16 to decisive 2^12-2^14 plus a descriptive 2^16, because one Q evaluation costs about 400 s at 2^16 here."
+  },
+  "question": "Does the small-x factor base, in discrete-log order, correlate with a quadratic phase e((alpha l^2 + beta l)/N) more than negation-closed random sets of the same size do?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Q_EC lies inside its negation-closed null's 5-95% band on at least 8 of 9 decisive curves (NULL), or exceeds the null maximum on 2 of 3 curves at 2 of 3 sizes (SIGNAL), by the preregistered rule.",
+      "class": "comparative",
+      "decided_by": [
+        "C-ec-vs-sym"
+      ],
+      "if_supported": "NULL: degree-2 phase leakage of the small-x predicate closed at toy scale beside H-PSEUDO",
+      "if_not_supported": "SIGNAL goes to review-breakthrough as the first non-linear Fourier bias on record"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "No quadratic-phase correlation beyond the negation-closed null.",
+      "mechanism": "x-coordinates are pseudo-random in log order beyond linear phases as well",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "Q_EC_percentile",
+          "direction": "equal_within",
+          "minimum_effect": "u in [0.05, 0.95] on >= 8 of 9 decisive curves",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "EC",
+      "role": "candidate",
+      "description": "logs of the first 512 points sorted by (x,y)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/quadphase-20261104/quadphase.py",
+          "script_sha256": "a26745b182e7347b155d900f60c624d85555f88acb9ce44a42be7fa75961787f"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "set": "small_x"
+      }
+    },
+    {
+      "id": "N_sym",
+      "role": "control_negative",
+      "description": "negation-closed random 512-sets",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/quadphase-20261104/quadphase.py",
+          "script_sha256": "a26745b182e7347b155d900f60c624d85555f88acb9ce44a42be7fa75961787f"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "set": "random_symmetric"
+      },
+      "same_instrument_as": "EC"
+    },
+    {
+      "id": "planted",
+      "role": "control_positive",
+      "description": "{l : alpha0 l^2 mod N < 512}, negation-closed",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/quadphase-20261104/quadphase.py",
+          "script_sha256": "a26745b182e7347b155d900f60c624d85555f88acb9ce44a42be7fa75961787f"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "set": "planted_quadratic"
+      },
+      "same_instrument_as": "EC"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "planted",
+      "expected_detection": "Q >= 3 x the null max with argmax alpha = alpha0 or N - alpha0, every curve",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "N_sym",
+      "null_population": {
+        "description": "negation-closed uniform random 512-sets of Z_N",
+        "generator": "256 distinct l in [1,(N-1)/2] by default_rng(derive_seed(sha,'N_sym',instance,draw)), set {l, N-l}",
+        "n": 40,
+        "why_n": "min attainable two-sided p 2/41 < 0.05; 9 decisive curves",
+        "matched_on": [
+          "N",
+          "|S| = 512",
+          "negation closure",
+          "statistic"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "set_law",
+        "levels": [
+          "small_x",
+          "random_symmetric",
+          "planted_quadratic"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "size",
+        "treatment": "crossed",
+        "value": "L = 12, 13, 14 (3 curves) and 16 (1 curve, descriptive)",
+        "how": "p = largest prime < 2^L"
+      },
+      {
+        "name": "curve",
+        "treatment": "randomized",
+        "how": "prime order != p, distinct orders, derive_seed(sha,'curve',L,0)"
+      },
+      {
+        "name": "generator",
+        "treatment": "fixed",
+        "value": "first point by increasing x",
+        "how": "same rule for all curves"
+      },
+      {
+        "name": "B",
+        "treatment": "fixed",
+        "value": 512,
+        "how": "the H-PSEUDO frozen B"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "exact values, no clock"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-ec-vs-sym",
+        "arms": [
+          "EC",
+          "N_sym"
+        ],
+        "differs_in": [
+          "set_law"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-pos",
+        "arms": [
+          "planted",
+          "N_sym"
+        ],
+        "differs_in": [
+          "set_law"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "N_sym",
+          "N_sym"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "deterministic FFT values; order cannot change them",
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "derive_seed(protocol_sha, arm, instance, replicate) from tools/experiment_protocol.py"
+    },
+    "instance_sampling": {
+      "rule": "curves drawn before any Q is computed",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "frozen script applies a fixed rule",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 10,
+    "replicates": 40,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": 40,
+      "min_attainable_two_sided_p": 0.04878048780487805,
+      "passes": true,
+      "note": "decision is a conjunctive count rule over 9 curves, not a per-curve test; a SIGNAL needs Q above all 40 draws on 2 of 3 curves at 2 sizes (null probability ~1e-4)"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 30,
+      "per_sample_seconds": 10,
+      "threads": 3,
+      "estimated_total_seconds": 3000,
+      "measured_on": "this container: Q at N=4093 0.9 s, 16381 22 s, 65521 395 s (contended)"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "Q_EC_percentile",
+        "name": "within-null percentile of Q_EC",
+        "unit": "fraction",
+        "kind": "derived",
+        "definition": "mid-rank percentile of Q_EC among the curve's N_sym draws",
+        "source": "rows.jsonl Q",
+        "formula": "((#<)+0.5(#=))/draws",
+        "aggregation": "distribution",
+        "resolution": "1/80",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "Q",
+        "name": "quadratic-phase maximum",
+        "unit": "ratio",
+        "kind": "exact",
+        "definition": "max over alpha, beta of |sum e((alpha l^2+beta l)/N)| / sqrt(|S|)",
+        "source": "rows.jsonl Q",
+        "aggregation": "distribution",
+        "resolution": "1e-9",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "FFT maxima"
+    ],
+    "record": [
+      "python_version",
+      "numpy_version",
+      "script_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "instance_type": "Claude Code cloud container (CPU)",
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 21600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed design: 10 curves x (1 EC + 40 or 5 nulls + 1 planted), then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "decision_rule": {
+    "text": "Validity: planted Q >= 3x null max with argmax alpha in {alpha0, N - alpha0} on every curve; A/A even/odd null means within 3% per decisive size; else INVALID_CONTROLS. SIGNAL iff Q_EC exceeds the null max on >= 2 of 3 curves at >= 2 of the 3 decisive sizes. NULL iff Q_EC's percentile is in [0.05, 0.95] on >= 8 of 9 decisive curves. Otherwise INCONCLUSIVE. L = 16 is descriptive.",
+    "comparison_ids": [
+      "C-ec-vs-sym",
+      "C-pos"
+    ],
+    "threshold": "as in text",
+    "statistic": "Q percentile per curve",
+    "interval": "null band",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "Q_EC / null mean",
+    "verdict_vocabulary": [
+      "SIGNAL",
+      "NULL",
+      "INCONCLUSIVE",
+      "INVALID_CONTROLS"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "docs/reports/quadphase-20261104/analyze_quadphase.py",
+      "sha256": "7d03cb87710192b1129d4deb2157f2de51ed3497c07540e70a6d5f4a6c3e962b"
+    },
+    "inputs": [
+      "rows.jsonl"
+    ],
+    "outputs": [
+      "verdict.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "inadmissible": [
+    "changing sizes, curves, draws or the rule after seeing Q",
+    "reading a SIGNAL as an attack cost before the sparse-Fourier recovery step is costed"
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "6a44309417a905167606a10754a6fad66de617a16c81feed73cd9cace0a02efb",
+    "commit": "2d6c661a216caba14cc58fd3d539a338ebb55346",
+    "frozen_at": "2026-11-04T05:49:12Z",
+    "filed_before_affected_data": true
+  }
+}

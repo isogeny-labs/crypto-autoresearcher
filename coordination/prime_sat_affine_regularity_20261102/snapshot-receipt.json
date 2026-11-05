@@ -1,0 +1,213 @@
+{
+  "schema": "prime-affine-regularity-source-snapshot/v1",
+  "recorded_at": "2026-11-02T17:41:38.210013+00:00",
+  "task_id": "TASK-20261102-300dde",
+  "source_task_id": "TASK-20261102-143be1",
+  "source_commit": "f5f40c2bfb7b3d99574ed4a87b7b350b4681b57b",
+  "producer_publication": {
+    "started_at": "2026-11-02T17:27:56.923238+00:00",
+    "steps": [
+      {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--name-only"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "add",
+          "--",
+          "research/prime_sat_affine_regularity_20261102/monotonicity.md",
+          "research/prime_sat_affine_regularity_20261102/strict-control.md",
+          "research/prime_sat_affine_regularity_20261102/provenance.json",
+          "research/prime_sat_affine_regularity_20261102/report.md",
+          "research/prime_sat_affine_regularity_20261102/diagram.svg",
+          "research/prime_sat_affine_regularity_20261102/report.typ",
+          "research/prime_sat_affine_regularity_20261102/report.pdf",
+          "research/prime_sat_affine_regularity_20261102/report-inputs.json"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--name-only"
+        ],
+        "returncode": 0,
+        "stdout": "research/prime_sat_affine_regularity_20261102/diagram.svg\nresearch/prime_sat_affine_regularity_20261102/monotonicity.md\nresearch/prime_sat_affine_regularity_20261102/provenance.json\nresearch/prime_sat_affine_regularity_20261102/report-inputs.json\nresearch/prime_sat_affine_regularity_20261102/report.md\nresearch/prime_sat_affine_regularity_20261102/report.pdf\nresearch/prime_sat_affine_regularity_20261102/report.typ\nresearch/prime_sat_affine_regularity_20261102/strict-control.md\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/check_merge_hygiene.py",
+          "--base",
+          "origin/main"
+        ],
+        "returncode": 0,
+        "stdout": "PASS: no conflict markers, no unparseable records, no duplicate registry keys, no changed runbook-session files, no schema-failing new run manifests, no identifier collisions, no new legacy GOAL identifiers\n",
+        "stderr": "note: parseability scoped to 26 committed, staged, or tracked-worktree candidate path(s) vs origin/main; the absolute sweep runs on main\n"
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/check_run_immutability.py"
+        ],
+        "returncode": 0,
+        "stdout": "OK: no committed run artifacts were modified or deleted\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "commit",
+          "-m",
+          "research: preserve affine regularity drafts and scoped report"
+        ],
+        "returncode": 0,
+        "stdout": "[codex/prime-full-chart-composition-20261101 f5f40c2bfb] research: preserve affine regularity drafts and scoped report\n Committer: EC2 Default User <ec2-user@ip-172-31-26-169.us-east-2.compute.internal>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly:\n\n    git config --global user.name \"Your Name\"\n    git config --global user.email you@example.com\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 8 files changed, 213 insertions(+)\n create mode 100644 research/prime_sat_affine_regularity_20261102/diagram.svg\n create mode 100644 research/prime_sat_affine_regularity_20261102/monotonicity.md\n create mode 100644 research/prime_sat_affine_regularity_20261102/provenance.json\n create mode 100644 research/prime_sat_affine_regularity_20261102/report-inputs.json\n create mode 100644 research/prime_sat_affine_regularity_20261102/report.md\n create mode 100644 research/prime_sat_affine_regularity_20261102/report.pdf\n create mode 100644 research/prime_sat_affine_regularity_20261102/report.typ\n create mode 100644 research/prime_sat_affine_regularity_20261102/strict-control.md\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "returncode": 0,
+        "stdout": "f5f40c2bfb7b3d99574ed4a87b7b350b4681b57b\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "push"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "remote: This repository moved. Please use the new location:        \nremote:   https://github.com/isogeny-labs/crypto-autoresearcher.git        \nTo https://github.com/aburan28/crypto-autoresearcher.git\n   0ee1b73845..f5f40c2bfb  codex/prime-full-chart-composition-20261101 -> codex/prime-full-chart-composition-20261101\n"
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/goal_lanes.py",
+          "release",
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/dispatch_queue.json",
+          "TASK-20261102-143be1",
+          "--as",
+          "executor-prime-affine-regularity",
+          "--expected-epoch",
+          "1",
+          "--outcome",
+          "completed",
+          "--note",
+          "Eight exact unreviewed proof/report outputs published; all report pages inspected. No suites, CAS, solver or scientific runs. Independent analytical review pending.",
+          "--publish"
+        ],
+        "returncode": 0,
+        "stdout": "  bound 8 artifact hash(es)\nreleased TASK-20261102-143be1 as completed -> coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/TASK-20261102-143be1.1.release.json\npublished 186e8f4444 and pushed\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          ".resume/ready-claim-active-support.py",
+          "affine-regularity-snapshot",
+          "TASK-20261102-300dde",
+          "coordinator-prime-affine-regularity",
+          "prime-affine-regularity-snapshot-20261102"
+        ],
+        "returncode": 0,
+        "stdout": ".resume/active-support-affine-regularity-snapshot-ready.json\n.resume/active-support-affine-regularity-snapshot-claim.json\n",
+        "stderr": ""
+      }
+    ],
+    "completed": true,
+    "hashes": {
+      "research/prime_sat_affine_regularity_20261102/monotonicity.md": "e4281119268e4ecc939321f7b6e1c0d24c9587010b03228fc36539a11de5010a",
+      "research/prime_sat_affine_regularity_20261102/strict-control.md": "98e84341026434b15532264b72da6b7e03e2d672c1545fe3c9dc0aa503e8df19",
+      "research/prime_sat_affine_regularity_20261102/provenance.json": "a228ed6014c8e5a163266cbad2eb8a4d851dd70d96b4aa09f872dbbeb389329a",
+      "research/prime_sat_affine_regularity_20261102/report.md": "a3d3be4f288a124cd29275e0110e3338511d633ab6ceae7d238cb9e5a32b609a",
+      "research/prime_sat_affine_regularity_20261102/diagram.svg": "84bb517743de915823611117b3cbb583de832649e48ed37566a992c84db5fdfd",
+      "research/prime_sat_affine_regularity_20261102/report.typ": "fae994bcd1bdc9c050eb5d0dad8a5ac5f3dd5eb7facb47f89349fa8766d327b5",
+      "research/prime_sat_affine_regularity_20261102/report.pdf": "6648824642bbf9dc1767068e6cae6338e9b64599d8abf406f082a80be6259d75",
+      "research/prime_sat_affine_regularity_20261102/report-inputs.json": "528cf59f5102cf36bc104cc60a6ba97fcb6d0b266371efe689cbbf9cf1f5a01a"
+    },
+    "claim_epoch": 1,
+    "unrelated_dirty_hashes": {
+      "ledger/.index/experiments.jsonl": "9766ecc5baadeabc5584a130eeb8f352ee249efdc100ae6bf28a6ca9dc07e989",
+      "ledger/.index/hypotheses.jsonl": "be79cd480cfc429a5f95789d18738a7146c7e03a9de7456a17bed686c0a859f4",
+      "ledger/.index/proposals.jsonl": "adf24d9badf1b81d5ce8eff85ff597a73aeebe18eb2c49055b1453073a2816e9"
+    },
+    "scientific_runs": 0,
+    "software_suites": 0,
+    "independent_review": "pending",
+    "source_commit": "f5f40c2bfb7b3d99574ed4a87b7b350b4681b57b"
+  },
+  "snapshot_claim": {
+    "command": [
+      "/home/ec2-user/prime-sat-research-venv/bin/python",
+      "tools/goal_lanes.py",
+      "claim",
+      "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/dispatch_queue.json",
+      "TASK-20261102-300dde",
+      "--as",
+      "coordinator-prime-affine-regularity",
+      "--session",
+      "prime-affine-regularity-snapshot-20261102",
+      "--ttl-minutes",
+      "120",
+      "--publish"
+    ],
+    "started_at": "2026-11-02T17:36:28.036027+00:00",
+    "returncode": 0,
+    "stdout": "claimed TASK-20261102-300dde -> coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/TASK-20261102-300dde.1.claim.json\npublished e987851355 and pushed\n",
+    "stderr": "",
+    "ended_at": "2026-11-02T17:37:12.012257+00:00"
+  },
+  "source_sha256": {
+    "research/prime_sat_affine_regularity_20261102/monotonicity.md": "e4281119268e4ecc939321f7b6e1c0d24c9587010b03228fc36539a11de5010a",
+    "research/prime_sat_affine_regularity_20261102/strict-control.md": "98e84341026434b15532264b72da6b7e03e2d672c1545fe3c9dc0aa503e8df19",
+    "research/prime_sat_affine_regularity_20261102/provenance.json": "a228ed6014c8e5a163266cbad2eb8a4d851dd70d96b4aa09f872dbbeb389329a",
+    "research/prime_sat_affine_regularity_20261102/report.md": "a3d3be4f288a124cd29275e0110e3338511d633ab6ceae7d238cb9e5a32b609a",
+    "research/prime_sat_affine_regularity_20261102/diagram.svg": "84bb517743de915823611117b3cbb583de832649e48ed37566a992c84db5fdfd",
+    "research/prime_sat_affine_regularity_20261102/report.typ": "fae994bcd1bdc9c050eb5d0dad8a5ac5f3dd5eb7facb47f89349fa8766d327b5",
+    "research/prime_sat_affine_regularity_20261102/report.pdf": "6648824642bbf9dc1767068e6cae6338e9b64599d8abf406f082a80be6259d75",
+    "research/prime_sat_affine_regularity_20261102/report-inputs.json": "528cf59f5102cf36bc104cc60a6ba97fcb6d0b266371efe689cbbf9cf1f5a01a"
+  },
+  "metadata_sha256": {
+    "coordination/prime_sat_affine_regularity_20261102/statement-contract.json": "92ccc4d94e996ae21e59c36bbaff358350970f6e1a0926272a8d27590e8d7056",
+    "coordination/prime_sat_affine_regularity_20261102/reviewer-brief.md": "8ca6ea168309f4d3f8a6e16fb658111fd9cbdba4435d3f1cbd7fd4b21a0b8701",
+    "coordination/prime_sat_affine_regularity_20261102/review-plan.yaml": "e89606b29ab72ce4d50e2fdd2775d4049469ab82ed7b85c62302b8734acfc50f",
+    "coordination/prime_sat_affine_regularity_20261102/source-inputs.json": "d53fe39d1f4ad64a871ddc9faf62e7d38fc517e950dbe2d2c49a295f19f3358b",
+    "coordination/prime_sat_affine_regularity_20261102/inference-amendment.yaml": "5f4b66a0d85742900a5482bc25b244346efabac56cce1dcd164f6809bc19a1f4",
+    "coordination/prime_sat_affine_regularity_20261102/admission-proposal.yaml": "8ec1ebd54ac6ce573607a3fdb918d8394bb216e10257d6873b29bac61d871d32",
+    "coordination/prime_sat_affine_regularity_20261102/producer-materialization.json": "a79723edf9cf8cda69e81af3f1d42c899d4d53c4044ab2b6ea300ac8bf7a3d9b",
+    "coordination/prime_sat_affine_regularity_20261102/ROOT-INSTRUCTIONS.md": "af7eb933be3b753127a01784f228eb539f4043e8740d5b4a64cec1f27f7f0d8b",
+    "coordination/prime_sat_affine_regularity_20261102/id-checks.json": "5db5f07b7e1c847791c7f8cd835273acac1f0a5cdda62b837ef8fc1d33dfcc28",
+    "coordination/prime_sat_affine_regularity_20261102/prior-archive-binding.json": "96b54a1e7aa5708931c75266de774577bec46868dab210cbdd266af578b0fe84",
+    "coordination/prime_sat_affine_regularity_20261102/producer-inputs/monotonicity.md": "e4281119268e4ecc939321f7b6e1c0d24c9587010b03228fc36539a11de5010a",
+    "coordination/prime_sat_affine_regularity_20261102/producer-inputs/strict-control.md": "98e84341026434b15532264b72da6b7e03e2d672c1545fe3c9dc0aa503e8df19"
+  },
+  "base_commit_inspected": "7e05ee6fa92f20f6a34af812caef67b1dfcbe709",
+  "base_relation": "1\t4",
+  "merge_outcome": "merged fetched origin/main; producer and dependency hashes rechecked",
+  "pre_snapshot_head": "1ee87fde89fe1b91eca3d770d9abb390feba6c4a",
+  "source_immutability": true,
+  "bound_inputs_unchanged": 4,
+  "independent_review": "pending; producer proofs remain unreviewed",
+  "scientific_runs": 0,
+  "software_suite_attempts": 0,
+  "solver_invocations": 0,
+  "archive_binding": "Native exact content_at_commit union binds this receipt after commit; no self hash."
+}

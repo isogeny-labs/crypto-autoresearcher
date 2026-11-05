@@ -15,6 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import lead_atlas as la  # noqa: E402
+import build_frontier_map as bfm  # noqa: E402
 import validate_ledger as vl  # noqa: E402
 
 FLOOR_PER_FAMILY = 3
@@ -128,6 +129,28 @@ class AtlasTests(unittest.TestCase):
                                  if r["disposition"] in la.OPEN))
         row["next_action"] = {"step": "chain | tree"}
         self.assertEqual(la.pursuit_action(row), "chain | tree")
+
+    def test_conditional_jksst_result_does_not_close_uncovered_lifts(self) -> None:
+        by_id = {row["id"]: row for row in self.rows}
+        for lead_id in (
+                "LEAD-TRF-global-lift-small-height",
+                "LEAD-ICP-char0-lifting-xedni-smoothness"):
+            with self.subTest(lead=lead_id):
+                row = by_id[lead_id]
+                self.assertEqual(row["disposition"], "open_next_step")
+                self.assertTrue(row["next_action"]["from_revisit_when"])
+                self.assertTrue(la.is_pursued(row))
+
+        kr = next(row for row in bfm.load_rows()
+                  if row["id"] == "KR-IC-cd159a")
+        self.assertIn("conditional", kr["title"].lower())
+        self.assertIn("not an unconditional", kr["claim"].lower())
+
+        cm = by_id["LEAD-TRF-cm-canonical-lift-heights"]
+        self.assertEqual(cm["disposition"], "closed_obstructed")
+        statement = cm["obstruction"]["statement"]
+        self.assertIn("fixed arity", statement)
+        self.assertIn("target-dependent arbitrary set-section", statement)
 
 
 class PriorArtLeadTests(unittest.TestCase):

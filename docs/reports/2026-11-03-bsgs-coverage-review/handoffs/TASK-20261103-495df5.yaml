@@ -1,0 +1,34 @@
+handoff:
+  id: TASK-20261103-495df5
+  from: coordinator
+  to: coordinator
+  objective: After all three independent reports are frozen, check independence, compose
+    scoped machine/fidelity/outcome verdicts, render and inspect diagram/PDF, and
+    archive the complete packet on a PR.
+  inputs:
+  - docs/reports/2026-11-03-bsgs-coverage-review/review-plan.yaml
+  - docs/reports/2026-11-03-bsgs-coverage-review/input-bindings.json
+  - docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-594c2a/
+  - docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-6390df/
+  - docs/reports/2026-11-03-bsgs-coverage-review/reviews/TASK-20261103-016b84/
+  constraints:
+  - Wait for all three independent reports and attestations.
+  - Do not change official hypothesis or evidence status.
+  - Do not call a receipt a semantic review.
+  deliverables:
+  - Synthesis report
+  - Independence checker output
+  - Diagram source and SVG
+  - Inspected report PDF
+  - PR link and current-head check evidence
+  artifact_paths:
+  - docs/reports/2026-11-03-bsgs-coverage-review/synthesis/
+  inference:
+    policy: coordinator-orchestration-code
+    delivery: interactive
+  budget: {}
+  completion_gate:
+  - All reviewer outputs frozen and independence check passes.
+  - Exact source/current-main binding reconciled.
+  - All applicable exact-head PR checks pass before merge.
+  return_format: Scoped per-claim verdict and artifact paths.

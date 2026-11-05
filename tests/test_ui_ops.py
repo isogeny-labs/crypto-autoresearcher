@@ -8,7 +8,9 @@ point, and never invent a rate of zero for an empty window.
 
 from __future__ import annotations
 
+import io
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 from xml.etree.ElementTree import Element
 
@@ -80,6 +82,61 @@ def test_collect_payload_does_not_invent_rates_without_credentials(monkeypatch):
     assert payload == unavailable("no AWS credentials in this environment")
     assert "write_iops" not in payload
     assert "last_hour" not in payload
+
+
+def test_temporary_credentials_sign_and_send_the_session_token(monkeypatch):
+    from ui.ops import AwsQuery
+
+    class FixedDatetime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return datetime(2024, 1, 2, 3, 4, 5, tzinfo=tz or timezone.utc)
+
+    requests = []
+
+    def fake_open(request, timeout):  # noqa: ARG001
+        requests.append(request)
+        return io.BytesIO(b"<DescribeDBInstancesResponse />")
+
+    monkeypatch.setattr("ui.ops.datetime", FixedDatetime)
+    monkeypatch.setattr("ui.ops.urllib.request.urlopen", fake_open)
+    for token in (None, "temporary-session-token"):
+        client = AwsQuery("ASIATEST", "test-secret", RDS_REGION, session_token=token)
+        client.call("rds", f"rds.{RDS_REGION}.amazonaws.com",
+                    "DescribeDBInstances", "2014-10-31", {"DBInstanceIdentifier": "rho-dp"})
+
+    long_term, temporary = requests
+    assert long_term.get_header("X-amz-security-token") is None
+    assert "x-amz-security-token" not in long_term.get_header("Authorization")
+    assert temporary.get_header("X-amz-security-token") == "temporary-session-token"
+    assert "SignedHeaders=content-type;host;x-amz-date;x-amz-security-token" in (
+        temporary.get_header("Authorization")
+    )
+    # Cross-checked with botocore SigV4Auth on the same frozen request.
+    assert temporary.get_header("Authorization").endswith(
+        "Signature=3c78047a03af0bdbd770e30dce4315678e0a7cce0a2f426ac39b6c6c9b979bc7"
+    )
+    assert long_term.get_header("Authorization") != temporary.get_header("Authorization")
+
+
+def test_session_token_reaches_rds_and_cloudwatch_queries(monkeypatch):
+    from ui.ops import AwsQuery
+
+    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "ASIATEST")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "test-secret")
+    monkeypatch.setenv("AWS_SESSION_TOKEN", "temporary-session-token")
+    seen = []
+
+    def fake_call(self, service, host, action, version, params):  # noqa: ARG001
+        seen.append((service, self.session_token))
+        return Element("DescribeDBInstancesResponse" if service == "rds"
+                       else "GetMetricStatisticsResponse")
+
+    monkeypatch.setattr(AwsQuery, "call", fake_call)
+    payload = collect_payload(now=1_700_000_000)
+    assert payload["available"] is True
+    assert {service for service, _ in seen} == {"rds", "monitoring"}
+    assert all(token == "temporary-session-token" for _, token in seen)
 
 
 def test_rds_queries_stay_in_us_west_2_even_if_the_shell_region_differs(monkeypatch):

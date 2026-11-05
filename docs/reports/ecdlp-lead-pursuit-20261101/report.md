@@ -6,6 +6,8 @@ Atlas snapshot: `crypto-autoresearcher@7072741f712c`
 
 Crypto evidence snapshot: `crypto@b6ffdca53494`
 
+Xedni correction evidence: `crypto@34caae22581045ec59fe779d86f8bf2d495cc14a`
+
 ## Decision
 
 The existing 159-row ECDLP atlas was reviewed family by family. That review also identified and
@@ -64,7 +66,7 @@ The 21 suppressed mechanisms are:
 | Prime IC | `LEAD-ICP-self-pairing-prime-order` | Bilinear self-pairing on the stated prime-order line |
 | Generic | `LEAD-RHO-generic-sqrt-lower-bound` | Generic group algorithms |
 | Generic | `LEAD-RHO-cheon-aux-acquisition` | Generic acquisition of the required auxiliary powers |
-| Transfer | `LEAD-TRF-cm-canonical-lift-heights` | Ordinary prime-field canonical/CM lift under its complete dichotomy |
+| Transfer | `LEAD-TRF-cm-canonical-lift-heights` | Twelve audited ordinary prime-field canonical/CM mechanisms at fixed arity and absolute coefficient bound |
 | Transfer | `LEAD-TRF-one-point-self-pairing` | One-point bilinear self-pairing/distortion-map route |
 | Transfer | `LEAD-TRF-padic-canonical-section` | Homomorphic prime-to-characteristic torsion section/formal-log route |
 | Transfer | `LEAD-TRF-prime-field-isogeny-to-weak` | Weaknesses determined only by field and group order |
@@ -99,6 +101,39 @@ high-arity discriminator in
 degree but leaves total work, yield, rank, and operational root discovery unresolved; it is
 therefore a live successor, not closure evidence.
 
+## Xedni correction after the family audit
+
+The later primary-source and kernel-checked review at
+`crypto:research/jksst_xedni_audit_20261101/` found that the broad xedni wording inherited by
+two atlas rows exceeded the theorem it cited. JKSST Theorem 4.1 explicitly begins "under certain
+plausible assumptions". Lemma 4.1 assumes a uniform selected-lift height/discriminant comparison
+and Lang's conjecture; the displayed `C0/p` step uses an approximate random-image model. An
+end-to-end repeated-trial obstruction additionally needs good-reduction/subgroup correspondence,
+a useful relation with nonzero denominator, bounded cofactor, and a history-uniform adaptive
+hazard.
+
+Accordingly, `LEAD-TRF-global-lift-small-height` and
+`LEAD-ICP-char0-lifting-xedni-smoothness` are now `open_next_step`. Their historical
+obstructions and finite negative measurements remain in place, but the uncovered selected-lift
+and relation-preserving-statistic mechanisms stay in the pursuit queue. `KR-IC-cd159a` now records
+the conditional theorem instead of the broader sentence that characteristic-zero lifting fails.
+`LEAD-EXO-global-lift-height` carries both the function-field timing action and the
+characteristic-zero bridge-composition action.
+
+The CM row remains `closed_obstructed` only within the corrected L9 boundary from
+`CORR-20260810-930c42`: ordinary prime-field Serre--Tate/global CM models, fixed arity `2..9`,
+absolute `C0`, and the twelve enumerated mechanisms. Its support is the target-independent-output
+bound plus constant-size coefficient enlargement, with the generic class-polynomial construction
+as a separate setup gate. Target-dependent arbitrary sections, growing arity or `C0`, and
+unenumerated CM lift families are explicitly outside that closure.
+
+This correction changes two rows from `closed_known` to `open_next_step`; it does not change the
+audit totals of **21 scoped obstructions** and **139 pursued leads**, because `closed_known` was
+already retained in the pursuit queue. The primary PDF checked was the author-hosted JKSST copy,
+SHA-256 `981bf955f7aecc5df4f271837f6653bd7666e5026f59df44196609d4a1dd6bc7`, especially
+Section 4, Lemma 4.1, Theorem 4.1, Sections 5--6, and notes 7--8. Silverman's proposal remains a
+metadata/first-page evidence gap; no inaccessible text was treated as read.
+
 ## Evidence and reproducibility
 
 The canonical row evidence is stored beside each lead under `knowledge/leads/ecdlp/`. The policy
@@ -111,6 +146,9 @@ The audit used the following repository evidence as load-bearing cross-checks:
 
 - `crypto:research/factor_base_arity_review_20261024/README.md`
 - `crypto:research/prime_factor_base_degree_20261031/parallel_20261031/RESULTS.md`
+- `crypto:research/jksst_xedni_audit_20261101/README.md`
+- `crypto:research/jksst_xedni_audit_20261101/PROOF_MAP.md`
+- `crypto:docs/ecdlp-hardness-corpus/REPORT.md`
 - `crypto:problems/ghs-higher-magic-descent-not-executable.md`
 - `crypto:problems/factor-base-shape-to-successful-work.md`
 - the `obstruction`, `forecloses`, `revisit_when`, `evidence`, and `related` fields of all 160

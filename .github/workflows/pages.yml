@@ -64,7 +64,9 @@ concurrency:
 jobs:
   build:
     if: ${{ !github.event.pull_request.draft }}
-    timeout-minutes: 15
+    # Two PR builds on 2026-11-03 spent the full 15 minutes in full-history
+    # checkout before tests could start; the main publication build passed.
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
