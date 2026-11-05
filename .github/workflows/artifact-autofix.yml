@@ -1,0 +1,88 @@
+name: artifact-autofix
+# artifact-store: no-pull (migrates newly tracked Git bytes using trusted base tooling)
+
+# Runs the artifact tool from the trusted base commit. The PR checkout supplies
+# data bytes only; no workflow or script from it is executed with S3 secrets.
+on:
+  pull_request_target:
+    types: [labeled, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: artifact-autofix-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    if: >-
+      contains(github.event.pull_request.labels.*.name, 'artifact-autofix') &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref != github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Require a push token that starts CI on the new commit
+        env:
+          PUSH_TOKEN: ${{ secrets.ARTIFACT_AUTOFIX_PUSH_TOKEN || secrets.AUTOFIX_GH_TOKEN }}
+        run: test -n "$PUSH_TOKEN"
+
+      - name: Checkout trusted artifact tool and policy
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: trusted
+          persist-credentials: false
+          sparse-checkout: |
+            tools/artifacts
+            .artifacts
+
+      - name: Checkout exact PR head without data blobs
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: candidate
+          token: ${{ secrets.ARTIFACT_AUTOFIX_PUSH_TOKEN || secrets.AUTOFIX_GH_TOKEN }}
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /tools/artifacts/
+            /.artifacts/
+
+      - name: Require the trusted artifact destination and policy
+        run: cmp trusted/.artifacts/config.json candidate/.artifacts/config.json
+
+      - name: Upload changed data and replay remote bytes
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ARTIFACTS_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ARTIFACTS_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ vars.ARTIFACTS_AWS_REGION || 'us-west-2' }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          test -n "$AWS_ACCESS_KEY_ID" && test -n "$AWS_SECRET_ACCESS_KEY"
+          cd candidate
+          base=$(git merge-base "$BASE_SHA" HEAD)
+          python3 ../trusted/tools/artifacts/artifacts.py migrate "$base" HEAD
+          git diff --cached --check
+
+      - name: Commit pointers and remove tracked data from the PR branch
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          cd candidate
+          if git diff --cached --quiet; then
+            echo "No changed data files require migration." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m 'Move PR data files to the artifact store'
+          # A newer human push makes this non-fast-forward push fail. Never
+          # force-push or rewrite a shared PR branch.
+          git push origin "HEAD:refs/heads/$HEAD_REF"
+          echo "Uploaded and replayed changed data; committed manifests and removals." >> "$GITHUB_STEP_SUMMARY"
