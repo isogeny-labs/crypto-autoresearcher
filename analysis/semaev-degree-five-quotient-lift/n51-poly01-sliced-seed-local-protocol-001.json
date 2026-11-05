@@ -1,0 +1,319 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n51-poly01-sliced-seed-local-plan-001.json",
+      "SHA-pinned original n51 D4 certificate and original checker receipt"
+    ],
+    "outputs": [
+      "Projected D4 file, SHA-256, projection and checker transcripts and terminal receipts."
+    ],
+    "script": {
+      "path": "slice_trace_certificate.py",
+      "sha256": "8c14642013ad1383e229a1c63bcf1d6b3376d80fa8bc7138c026f2dda47f0bb3"
+    }
+  },
+  "arms": [
+    {
+      "description": "Project the SHA-pinned accepted original D4 map by eliminating variable 26.",
+      "id": "projection",
+      "instrument": {
+        "binary_sha256": "8c14642013ad1383e229a1c63bcf1d6b3376d80fa8bc7138c026f2dda47f0bb3",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source"
+          ]
+        ],
+        "commit": "1a612dc0a04001b0fd2cf2015b7e8cf80ab25ba7",
+        "env": {},
+        "flags": {
+          "source_sha256": "c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "variable": 26
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Rebuild descent and trace relation and check C0-C3 on the projected map.",
+      "id": "independent-check",
+      "instrument": {
+        "binary_sha256": "ca5a760e138e667a687418bb5d69c31c9b462b32029295b15a50e70c56f77e89",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source"
+          ]
+        ],
+        "commit": "1a612dc0a04001b0fd2cf2015b7e8cf80ab25ba7",
+        "env": {},
+        "flags": {
+          "descent_sha256": "b6e28168091986b3cb04790f51889723db0ec5838633767bb80a6dc4ac97bd70"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "variable": 26
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "seed-acceptance"
+      ],
+      "id": "C1",
+      "text": "The projected map is an accepted sliced D4 nonmembership certificate only when the independent checker validates C0-C3 and the trace relation."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "One deterministic named map and exact algebra, with no timing comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "SHA mismatch and malformed certificate are rejection conditions, not statistical controls.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The original n51 D4 map was already independently accepted; this run checks its new slice.",
+      "present": false
+    }
+  },
+  "created": "2026-11-05",
+  "decision_rule": {
+    "comparison_ids": [
+      "seed-acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Only checker status valid_affine_slice_nonmembership is an accepted sliced D4 seed. A projected file alone has no LFD conclusion. Any refusal or timeout leaves slice seed unknown.",
+    "threshold": "Checker reports valid_affine_slice_nonmembership, with correct pinned source and plan hashes.",
+    "verdict_vocabulary": [
+      "accepted_sliced_seed",
+      "invalid",
+      "unknown"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "No checkpoints or automatic retries; partial output is not evidence.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 17179869184,
+      "pod_memory_bytes": 21474836480
+    },
+    "queue": "local-seed-preparation",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 5400
+  },
+  "freeze": {
+    "commit": null,
+    "filed_before_affected_data": false,
+    "frozen_at": null,
+    "protocol_sha256": null,
+    "status": "draft"
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Calling a projection an accepted certificate before independent checker acceptance.",
+    "Inferring LFD >= 6 from a D4 sliced seed.",
+    "Retrying after timeout under this one-attempt protocol."
+  ],
+  "invalidation_rules": [
+    "Any source or binary hash mismatch prevents execution.",
+    "A failed independent checker prevents a claim from that stage.",
+    "A counter failure prevents a solution-count comparison.",
+    "Killing1 in an over-approximating quotient is not membership evidence in the true closure.",
+    "Missing later stages remain unknown, even if an earlier stage proves a smaller lower bound.",
+    "Deferred export or missing checkpoint/certificate carries no mathematical bound.",
+    "Restore request mismatch or unverified state prevents native launch."
+  ],
+  "links": {
+    "checker_source_sha256": "ca5a760e138e667a687418bb5d69c31c9b462b32029295b15a50e70c56f77e89",
+    "original_certificate_sha256": "c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6",
+    "original_plan": "n51-poly01-d5-stream-request-001.json",
+    "plan": "n51-poly01-sliced-seed-local-plan-001.json",
+    "plan_sha256": "5e0434f7569b834419565c69a0e67b138d8f527489e4f3f9f4cb00658f94d7c8",
+    "projection_source_sha256": "8c14642013ad1383e229a1c63bcf1d6b3376d80fa8bc7138c026f2dda47f0bb3"
+  },
+  "literature": [
+    {
+      "claim": "Trace projection and C0-C3 independent check are defined in the affine slice dossier.",
+      "provenance": "internal",
+      "ref": "TRACE-SLICE-CERTIFICATES.md",
+      "verified_by": "Codex 2026-11-05"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Codimension from an independently accepted sliced quotient map; absent on checker failure.",
+        "id": "accepted_seed_codimension",
+        "kind": "exact",
+        "name": "checked sliced D4 codimension lower bound",
+        "resolution": "1",
+        "source": "checker stdout codimension_lower_bound",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "SEMAEV-N51-POLY01-SLICED-SEED-LOCAL-20261105-V1",
+  "question": "Does exact trace projection of the accepted named n51 polynomial01 D4 map pass an independent sliced D4 closure check?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One fixed n51 polynomial01 record from the prior certified frontier; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named input seed, no resampling.",
+      "seeds": [
+        1812300214742206507
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "One-row evidence flow with unknown state explicit."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 5400,
+      "fixed_seconds": 0,
+      "measured_on": "Hard 1800-second projection and 3600-second checker limits; not a timing claim.",
+      "per_sample_seconds": 5400,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One projection and one checker attempt on the fixed named n51 D4 map; stop on checker acceptance, refusal, timeout, or resource failure."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact certificate verification, no performance comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "projection",
+          "independent-check"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "id": "seed-acceptance",
+        "threshold": "Independent checker accepts C0-C3 and the trace relation."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Original n51 polynomial01 record and accepted D4 certificate are SHA-pinned.",
+        "name": "named-input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Eliminate trace variable 26 with the independent descent checker.",
+        "name": "slice",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Existing Spot host, one seed-prep CPU process at a time alongside the n50 producer; 16 GiB checker cap, USD 3 additional reservation, USD 95.56 conservative shared daily headroom at preflight.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Projection writes candidate rows; independent checker reconstructs sliced equations and tests C0-C3.",
+        "name": "stage",
+        "treatment": "crossed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}
