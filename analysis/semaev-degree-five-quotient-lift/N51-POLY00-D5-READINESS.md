@@ -49,6 +49,18 @@ The current n51 polynomial-01 direct-W4 rank trial owns the frontier
 high-memory slot. This note does not authorize a concurrent poly00 D5
 trial or change any existing deadline, reservation or retry ceiling.
 
+The original queued protocol required that *other* instance's rank to
+equal its D4 seed dimension. That is a cost-selection heuristic, not a
+premise of the proposed polynomial-00 lower-bound proof: a positive D5
+quotient independently checked against the original equations, with
+codimension at least seven and a fresh exact count of six, suffices
+regardless of the polynomial-01 rank. The unlaunched V1 remains frozen.
+The V2 amendment permits the same one bounded attempt after the rank
+trial is terminal with a noncontradictory status, while retaining both
+exclusive locks and every original memory, disk, dollar, deadline and
+no-retry limit. A contradictory rank result still stops launch for
+diagnosis. Neither version has emitted polynomial-00 D5 data yet.
+
 The independent original-equation descent has now also been exported in
 the native checker's `SLCGEN01` format. The 144,520-byte file
 [`validation/n51-poly00-original-generators.bin`](validation/n51-poly00-original-generators.bin)
