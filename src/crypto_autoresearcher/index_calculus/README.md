@@ -691,3 +691,14 @@ construction costs more arithmetic than the small scalar window; fixed anchor,
 generation and shared-table prerequisites remain charged. All 96 observations,
 complete finite checks and v9 database records are retained. A matched
 source-budget and joint-target recovery sweep is the next control.
+
+The [A7 checked-budget sweep](../../../research/prime_field_a7_execution_20261104/RESULTS.md)
+now completes that control on the same four bases and32targets. It retains
+288scoped observations at budgets0/8/16/24/32/48/64/96/128, with new point anchors
+limited to the available prefix and all original64point prerequisites charged.
+One window fixture recovers five joint targets at checked48sources, while
+isolated rows first recover them at96; two base directions remain unresolved
+at48after target cancellation. All schedules reach full base rank by128.
+The v10database preserves all earlier rows and stores budget-specific diagnostics
+and certificates. The next implementation comparison is cancellation-first
+recovery versus the full joint solver on those same immutable rows.

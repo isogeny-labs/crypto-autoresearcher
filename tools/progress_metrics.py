@@ -1414,6 +1414,33 @@ def prime_field_fresh_source_panel(ref, since):
             emit(prefix+'.'+v['cell_id']+'.'+v['arm']+'.construction.'+k,v['source_construction']['counters'].get(k,0),unit=unit,label='Per-arm source construction counted once; shared window prerequisite and other phases remain separate',**common)
 
 
+def prime_field_source_budget_panel(ref,since):
+    """A7 fixed checked budgets; retain all cells and count physical work once."""
+    date='2026-11-04'
+    if date<since:return
+    path='research/prime_field_a7_execution_20261104/runs/a7-source-budgets-d1f98d/analysis.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);cells=data['cells'];budgets=(0,8,16,24,32,48,64,96,128)
+        expected={(f'p{p}-i{i}',a,b,scope) for p in (8191,65537) for i in (0,1) for a in ('window','hash0','hash1','hash2') for b in budgets for scope in ('relations','anchors')}
+        if data['panel_complete']is not True or len(cells)!=288 or {(c['cell_id'],c['arm'],c['prefix'],c['scope']) for c in cells}!=expected:return
+        if data['physical_work']!=dict(source_queries=98304,target_queries=1536,pair_entries=4928):return
+        for c in cells:
+            if c['verified']is not True or c['status']!='verified':return
+            for k in ('base_columns','base_rank','base_nullity','base_rank_after_target_cancellation','target_base_rank_gain','single_targets','joint_targets','early_joint_targets','construction_scalar_multiplications','construction_cache_hits','construction_field_multiplications','construction_group_additions','prerequisite_scalar_multiplications','source_queries'):
+                if type(c[k])is not int or c[k]<0:return
+            n=16 if c['cell_id'].startswith('p8191-') else 32
+            if c['source_queries']!=c['prefix']*n*2 or c['construction_scalar_multiplications']+c['construction_cache_hits']!=c['prefix'] or c['prerequisite_scalar_multiplications']!=64:return
+            if c['base_rank']+c['base_nullity']!=c['base_columns'] or c['base_rank']+c['target_base_rank_gain']!=c['base_rank_after_target_cancellation'] or c['base_rank_after_target_cancellation']>c['base_columns'] or max(c['single_targets'],c['joint_targets'])>8 or c['early_joint_targets']>c['joint_targets']:return
+    except (ValueError,KeyError,TypeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a7'
+    for k,unit in (('source_queries','queries'),('target_queries','queries'),('pair_entries','entries')):
+        emit(prefix+'.'+k,data['physical_work'][k],unit=unit,label='Physical panel work once; checked budgets/scopes are shared views',**common)
+    for c in cells:
+        for k,unit in (('base_rank','dimensions'),('single_targets','targets'),('joint_targets','targets'),('early_joint_targets','targets'),('construction_scalar_multiplications','scalar multiplications'),('construction_field_multiplications','field multiplications')):
+            emit(prefix+'.'+c['cell_id']+'.'+c['arm']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+k,c[k],unit=unit,label='Fixed checked-budget observation; prepaid shared prerequisite retained, not free/cold',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -1590,6 +1617,7 @@ def main():
     prime_field_holdout_panel(a.ref, a.since)
     prime_field_source_control_panel(a.ref, a.since)
     prime_field_fresh_source_panel(a.ref, a.since)
+    prime_field_source_budget_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 
