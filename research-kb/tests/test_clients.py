@@ -91,6 +91,49 @@ def test_codex_http_uses_bearer_env(isolated_clients):
     assert entry["bearer_token_env_var"] == "RESEARCH_KB_TOKEN"
 
 
+def test_codex_handles_quoted_headers_and_preserves_commented_tables(isolated_clients):
+    path = clients.client_path("codex")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    original = (
+        'model = "custom"\n'
+        '[mcp_servers."research-kb"] # existing server\ncommand = "/old"\n'
+        '[mcp_servers."research-kb".env] # existing environment\nOLD = "old"\n'
+        '[mcp_servers.other] # preserve this server\ncommand = "keep"\n'
+        '[profiles.fast] # preserve this profile\nmodel = "fast"\n'
+    )
+    path.write_text(original)
+    install("codex")
+    first = path.read_text()
+    install("codex")
+    assert path.read_text() == first
+    parsed = tomllib.loads(first)
+    assert parsed["mcp_servers"]["other"] == {"command": "keep"}
+    assert parsed["profiles"]["fast"] == {"model": "fast"}
+    assert parsed["model"] == "custom"
+    assert parsed["mcp_servers"]["research-kb"]["command"] == "/opt/kb/bin/research-kb"
+    assert path.with_name(path.name + ".bak-research-kb").read_text() == original
+
+
+def test_codex_refuses_invalid_toml_without_writing(isolated_clients):
+    path = clients.client_path("codex")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    original = 'model = "unterminated\n'
+    path.write_text(original)
+    with pytest.raises(clients.ClientConfigError):
+        install("codex")
+    assert path.read_text() == original
+
+
+def test_codex_refuses_to_change_table_like_text_in_multiline_strings(isolated_clients):
+    path = clients.client_path("codex")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    original = 'banner = """\n[mcp_servers.research-kb]\nkeep me\n[other]\nalso keep me\n"""\n'
+    path.write_text(original)
+    with pytest.raises(clients.ClientConfigError):
+        install("codex")
+    assert path.read_text() == original
+
+
 def test_opencode_accepts_jsonc_and_preserves_comments_elsewhere(isolated_clients):
     path = clients.client_path("opencode")
     path.parent.mkdir(parents=True, exist_ok=True)

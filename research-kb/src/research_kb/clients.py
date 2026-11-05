@@ -19,6 +19,7 @@ import shlex
 import shutil
 import sys
 import tempfile
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -222,9 +223,14 @@ def _drop_server_block(text: str, name: str) -> str:
     skipping = False
     for line in lines:
         stripped = line.strip()
-        if stripped.startswith("[") and stripped.endswith("]"):
-            table = stripped.strip("[]").strip()
-            skipping = table == f"mcp_servers.{name}" or table.startswith(f"mcp_servers.{name}.")
+        if stripped.startswith("["):
+            try:
+                header = tomllib.loads(stripped + "\n__header_probe__ = true\n")
+            except tomllib.TOMLDecodeError:
+                pass
+            else:
+                servers = header.get("mcp_servers")
+                skipping = isinstance(servers, dict) and name in servers
         if not skipping:
             kept.append(line)
     # Collapse the blank lines the removal can leave behind.
@@ -237,6 +243,10 @@ def _drop_server_block(text: str, name: str) -> str:
 def install_codex(*, transport: str, command: str, state_home: Path, config: Path, url: str | None) -> dict:
     path = client_path("codex")
     text = path.read_text(encoding="utf-8") if path.exists() else ""
+    try:
+        original = tomllib.loads(text)
+    except tomllib.TOMLDecodeError as exc:
+        raise ClientConfigError(f"cannot parse {path}: {exc}") from exc
     text = _drop_server_block(text, SERVER_NAME)
     if transport == "http":
         if not url:
@@ -255,8 +265,28 @@ def install_codex(*, transport: str, command: str, state_home: Path, config: Pat
             f"RESEARCH_KB_HOME = {_toml_string(str(state_home))}\n"
             f"RESEARCH_KB_CONFIG = {_toml_string(str(config))}\n"
         )
+    candidate = (text + "\n" if text.strip() else "") + block
+    try:
+        updated = tomllib.loads(candidate)
+    except tomllib.TOMLDecodeError as exc:
+        raise ClientConfigError(f"cannot safely update {path}: {exc}") from exc
+
+    def unrelated(data):
+        result = dict(data)
+        servers = result.pop("mcp_servers", {})
+        if not isinstance(servers, dict):
+            raise ClientConfigError(f"{path}: mcp_servers must be a table")
+        retained = {key: value for key, value in servers.items() if key != SERVER_NAME}
+        if retained:
+            result["mcp_servers"] = retained
+        return result
+
+    # Table-looking lines inside multiline strings must never cause unrelated
+    # user settings to be removed by the text-preserving block replacement.
+    if unrelated(original) != unrelated(updated):
+        raise ClientConfigError(f"cannot safely preserve unrelated settings in {path}")
     backup = _backup(path)
-    _atomic_write(path, (text + "\n" if text.strip() else "") + block)
+    _atomic_write(path, candidate)
     return {"client": "codex", "path": str(path), "backup": str(backup) if backup else None}
 
 

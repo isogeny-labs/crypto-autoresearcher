@@ -19,6 +19,8 @@ import time
 
 from research_kb.ingest import git_commit, refresh, source_files, update_sources
 
+SIGNATURE_STATE = "source_signature_v2"
+
 
 def _signature_for(source) -> tuple:
     if not source.root.is_dir():
@@ -67,7 +69,9 @@ def watch(
     previous = signal.signal(signal.SIGTERM, _stop)
     events: list[dict] = []
     cycles = 0
-    stored = library.catalog.get_state("source_signature")
+    # Legacy signatures acknowledged edits after the scan and may hide stale
+    # content. Seed the corrected acknowledgement once from a fresh scan.
+    stored = library.catalog.get_state(SIGNATURE_STATE)
     last = tuple(tuple(item) for item in json.loads(stored)) if stored else None
     try:
         while not stop:
@@ -96,8 +100,10 @@ def watch(
                             "errors": report["errors"][:10],
                         }
                     )
-                    last = signature(library)
-                    library.catalog.set_state("source_signature", json.dumps(last))
+                    # A change during ingestion must trigger the next poll.
+                    # Only acknowledge the signature sampled before this scan.
+                    last = current
+                    library.catalog.set_state(SIGNATURE_STATE, json.dumps(last))
                 except Exception as exc:
                     # Another operator may hold the writer lock, or one source
                     # may be temporarily unreadable. Keep the watcher alive and

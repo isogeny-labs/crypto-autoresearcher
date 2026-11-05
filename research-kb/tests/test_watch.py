@@ -80,3 +80,36 @@ def test_second_refresh_reuses_versions_and_keeps_them_searchable(populated):
     assert after["active_documents"] == before["active_documents"]
     assert after["documents"] == before["documents"]
     assert lib.search("Semaev decomposition", top_k=1)["results"]
+
+
+def test_watch_does_not_acknowledge_changes_after_ingestion(tmp_path, monkeypatch):
+    import importlib
+
+    watcher = importlib.import_module("research_kb.watch")
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "note.md").write_text("# Initial\n\nThe first document has enough prose to index.\n")
+    config = tmp_path / "sources.toml"
+    config.write_text(f'[[sources]]\nname="source"\nroot={json.dumps(str(source))}\n')
+    library = Library(Settings(home=tmp_path / "state", config=config))
+    actual_refresh = watcher.refresh
+
+    def refresh_then_edit(lib):
+        report = actual_refresh(lib)
+        (source / "late.md").write_text("# Late arrival\n\nLatearrivalquartz must be indexed next cycle.\n")
+        return report
+
+    monkeypatch.setattr(watcher, "refresh", refresh_then_edit)
+    watch(library, interval=5, once=True)
+    monkeypatch.setattr(watcher, "refresh", actual_refresh)
+    following = watch(library, interval=5, once=True)
+    assert following[0]["changed"] is True
+    assert library.search("Latearrivalquartz", top_k=1)["results"]
+
+
+def test_watch_does_not_reuse_a_legacy_postscan_signature(populated):
+    from research_kb.watch import signature
+
+    lib, _a, _b = populated
+    lib.catalog.set_state("source_signature", json.dumps(signature(lib)))
+    assert watch(lib, interval=5, once=True)[0]["changed"] is True
