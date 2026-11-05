@@ -1,0 +1,40 @@
+# WRITE-ONCE. Corrections create a new checkpoint file.
+# Session checkpoint for /review-evidence EXP-ICPERF-284bc4 EXP-ICPERF-283a70
+# (GOAL-ICPERF-e6b6a4), keyed by the ledger archive task TASK-20261105-8924a8.
+# No trial was launched; audit replays wrote only under audits/.
+batch_checkpoint:
+  batch_id: BATCH-38f344
+  goal_id: GOAL-ICPERF-e6b6a4
+  recorded_at: '2026-11-05'
+  mode: review
+  branch: claude/review-icperf-v2-evidence
+  base_commit: 8fcfa58fee
+  audit_ids:
+    - AUD-20261105T164527Z-d5036c   # 284bc4, flagged: absent-on-both pointers only, 0 values differ
+    - AUD-20261105T164530Z-b85ca9   # 283a70, clean, 3/3
+  review_plans:
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml   # frozen f7eb8ae292
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml   # frozen f7eb8ae292
+  review_task_ids: [TASK-20261105-576b11, TASK-20261105-b543c3, TASK-20261105-c44b03,
+                    TASK-20261105-558a8b, TASK-20261105-6d9502, TASK-20261105-b3b41a]
+  independence_check: >-
+    tools/check_review_independence.py PASS for both plans with
+    --expected-plan-sha256 from f7eb8ae292, over review-attestation.yaml and
+    blind-rederivation.yaml.
+  evidence_ids: [EV-ICPERF-08f6f9, EV-ICPERF-84ff45]
+  decision_ids: [DEC-20261105-8a9984, DEC-20261105-6e2616]
+  hypothesis_transitions:
+    H-ICPERF-2f52d1: approved -> supported (scoped to the arithmetic identity; DEC-20261105-8a9984)
+    H-ICPERF-5adc9b: approved -> supported (scoped to the exact integers; DEC-20261105-6e2616)
+  section_5a: not applicable to either experiment; no comparison against rho is made, so no band is owed.
+  next_action:
+    role: coordinator
+    source: DEC-20261105-8a9984 NA-1
+    text: >-
+      File one additive correction record (id from tools/allocate_id.py,
+      confirmed with --check) carrying DEC-20261105-8a9984
+      rulings.labelling_ruling: the five runbook metrics of EXP-ICPERF-284bc4
+      are computed from frozen inputs, not measured; 370/2100/40 ns are the
+      parent idea's n=83 inferred/assumed prices; and the stage-0 records make
+      no latency or n=83 statement. Frozen runbook, report and data.json stay
+      unedited.

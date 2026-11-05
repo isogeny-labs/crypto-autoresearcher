@@ -1,0 +1,112 @@
+review_attestation:
+  task_id: TASK-20261105-b3b41a
+  joints_owned: [J2-scope]
+  sources_read:
+    - CLAUDE.md
+    - docs/agent-runtime-core.md
+    - agents/red-team.md
+    - AGENTS.md (heading list; section "Review architecture", lines 329-340)
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml
+    - experiments/EXP-ICPERF-283a70/specification.yaml
+    - experiments/EXP-ICPERF-283a70/implementation/run.py
+    - experiments/EXP-ICPERF-283a70/implementation/check.py
+    - experiments/EXP-ICPERF-283a70/implementation/test_unit.py (grep for test names and imports only)
+    - experiments/EXP-ICPERF-283a70/implementation/unit-test-report.txt (first 30 lines)
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/RESULTS.md
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-0ef41e/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-0ef41e/RESULTS.md
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-74e9a2/raw-result.json
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-74e9a2/RESULTS.md
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/data.json (first 120 lines)
+    - experiments/EXP-ICPERF-283a70/runbook.yaml (grep; lines 120-239)
+    - experiments/EXP-ICPERF-283a70/runbook-lint.txt
+    - experiments/EXP-ICPERF-283a70/trial-plan.json (first 80 lines)
+    - experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9/audit.json (keys verdict, findings, scope, not_covered, detection_power, interpreters, float_tolerance, environment_drift; grep)
+    - experiments/EXP-ICPERF-b2f2d0/implementation/run.py
+    - experiments/EXP-ICPERF-b2f2d0/specification.yaml
+    - ledger/hypotheses/H-ICPERF-5adc9b.yaml
+    - ledger/proposals/IDEA-20261015-b41f68.yaml
+    - ledger/decisions/DEC-20261029-22e05b.yaml (grep; lines 100-194)
+    - ledger/decisions/DEC-20261029-0e40f3.yaml (grep; lines 40-109)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml (grep context only)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/BATCH-38f344.yaml (grep context only)
+    - docs/sheriff.md (lines 270-319)
+    - docs/claims-and-verification.md (lines 100-140)
+    - docs/evidence-and-reproducibility.md (lines 1-30, 220-240)
+    - pcc/ledger.jsonl at f7eb8ae292 (git show; grep for run ids)
+    - "grep-only hits across ledger/, coordination/, tools/, pcc/, research/, knowledge/, claims/ and experiments/EXP-ICPERF-283a70/ for this experiment's ids and claim words (76 paths; matching lines only)"
+    - "git metadata: commit messages of cd912cacbb, 1a0afc68c2, b825ee6ea5; git show --stat f7eb8ae292"
+  not_read:
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-558a8b/ (sibling; not opened)
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/ (sibling; not opened, one filename seen in git diff --stat)
+    - experiments/EXP-ICPERF-284bc4/review/ (not opened)
+  read_sibling_reports: false
+  blind_from_respected: null
+  joint_verdicts:
+    - {joint: J2-scope, verdict: holds}
+  verdict: holds
+  supersedes_vocabulary_of: red-team-report.yaml
+  limitations:
+    - id: L1
+      text: >-
+        The exact match is a single-lineage fingerprint: v1 run.py produced the
+        integers, the F5 prose describes that code, v2 run.py reimplements it,
+        and the control integers came from unretained design scratch code.
+        Until the blind re-derivation (TASK-20261105-6d9502) matches all three
+        arms, it licenses runner determinism and sensitivity to parameters and
+        conventions only. It never licenses a distributional property.
+    - id: L2
+      text: >-
+        CTL-2 is the primary with every draw reduced by one, (S-64, Q-2S+64,
+        median-1), and has the same cv_sq_num 9871039. Given a primary pass it
+        fails the exact match by arithmetic unless the support_min path is
+        dead. It is a wiring and off-by-one control. CTL-1 is a known-outcome
+        wiring control chosen from a design-time scan. Both share step(),
+        draw() and moments() with the primary, so neither can detect a
+        common-mode error.
+    - id: L3
+      text: >-
+        H-ICPERF-5adc9b is unamended v1 text: "Stage 0 checks that shape", "The
+        CV band is the shape control", the both_bands_hold prediction, "draws
+        from the geometric law", and "a sample that matches that law". The
+        evidence record must not report both_bands_hold as a confirmed shape
+        prediction. The integers imply it arithmetically, and both wrong
+        samplers also had it.
+    - id: L4
+      text: >-
+        The run report (report.typ lines 36-45; data.json summary.metrics)
+        labels cv_in_band and median_ratio_in_band "measured", fraction_true=1,
+        n=1 (primary only), beside exact_match, and omits the controls' band
+        flags. The evidence record must tabulate both band flags for all three
+        units, labelled non-discriminating.
+    - id: L5
+      text: >-
+        The spec success_criterion and falsification_criterion still name the
+        band flags verbatim from v1, and metrics.primary lists them while
+        metrics.descriptive_only lists them too. The evidence record must cite
+        decisive_test and the DEC-20261029-0e40f3 restated pass rule as the
+        decision rule.
+    - id: L6
+      text: >-
+        There is no pcc claim for these runs. The committed pcc/ledger.jsonl at
+        f7eb8ae292 has none, and execution_proofs show verified_units 0. Cite
+        the integers as unverified assertions, reproduced by a self-replay
+        audit and a non-blind red-team recomputation.
+    - id: L7
+      text: >-
+        Forward scope, about the parent idea. IDEA-20261015-b41f68 claim (1)
+        uses the same bands as its geometric test on real probe panels. At
+        n=64 that test rejects a true geometric sample about 53% of the time
+        and accepts a CV=1 lognormal 30% of the time (98% at n=4096). It cannot
+        check p. The instrument pass must not be read as validating that test
+        for stage 1.
+    - id: L8
+      text: >-
+        Scope ceiling: one seed, claim tier toy, evidence strength
+        preliminary. Upgrade to replicated applies only to the arithmetic
+        identity, and only if the blind re-derivation matches all three arms.
+        There is no evidence about geometric shape, p, any table or probe
+        panel, host latency, or any IC or rho cost. The §5a band does not
+        exist.
