@@ -102,6 +102,10 @@ and `aburan28/ml-cryptanalysis`:
 
 ## Knowledge retrieval
 
+The shared `research-kb` MCP server is the cross-repository layer; the local
+`kb/` index is this repository's derived store. Both are read-only. The full
+procedure is `crypto:.agents/skills/research-kb/SKILL.md`; lab contract §11.
+
 `kb/` is a derived, read-only MCP index over the corpus; no agent writes to it.
 Call `search_knowledge` before asserting an avenue was tested or known to fail,
 citing a paper or prior experiment, proposing a likely duplicate, or changing an
