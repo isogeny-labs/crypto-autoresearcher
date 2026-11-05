@@ -154,3 +154,494 @@ Scientific descent/genus/analysis and frozen launcher remain subsequent interfac
 See the [fresh join report](../experiments/EXP-PEXT-bf8f96/reports/joins-20261102/report.md).
 Original criteria and scientific/goal statuses remain unchanged; review_required
 and unapproved status persists.
+
+## Exact target-coordinate transport progress, 2026-11-03
+
+The new [transport component](../experiments/EXP-PEXT-bf8f96/implementation/target_transport.py)
+constructs normalized Mobius A and nonzero weighted-ordinate kappa for supplied
+T,Q with T'=T+2Q. It verifies both rational coordinate identities in K(E) by
+clearing denominators and the literal quartic identity F_T'(A(X,Z))=kappa^2*F_T(X,Z).
+The [source-bound software log](../experiments/EXP-PEXT-bf8f96/reports/transport-20261103/software-tests.txt)
+records five methods PASS: all T,Q on all8F3classes(156pairs), all12F5classes(500),
+F9A/twist/B(144/225/256), selected F27(12)/F125(9),216F3composition triples,
+three F27 projective-cocycle reindex controls, mutations and CLI expected-input
+checks. Coordinator static inspection found no defect in the inspected paths.
+Synthesis and verification share the rational engine; this is exact component
+software replay, not an independent arithmetic implementation or scientific review.
+
+The explicit coordinate/scalar witness gap named in the previous entry is now
+implemented at that scope. Next integrate transport and normalization scales with
+the complete published cohort/plan identities and production streaming/checkpoint/
+shard custody, including an exact full structure reindexing certificate. Preserve
+all original cohorts: q3/n5(488), q5/n3(252), q7/n3(690), q11/n3(2662), descriptive
+q13/n3(4400); abstract n3/5/7placements, original coordinate/random-branch controls,
+geometric P3 and separate q5/7/11/13H1 arms retain their original requirements.
+Connectedness/geometric genus, Frobenius lift/descent, Type2 and analysis/export
+remain scientific interfaces. The fresh read-only preapproval diagnostic remains
+approvable:false for missing implementation/runbook/route, lawful lane, trial-plan,
+queue/handoff and published/frozen source/approval bindings. The original exit
+criteria remain; no approval, freeze or scientific status transition occurs.
+See the [fresh transport report](../experiments/EXP-PEXT-bf8f96/reports/transport-20261103/report.md)
+and TASK-20261103-69adf4 for exact successor custody scope.
+
+## Published input, plan and generic-support progress, 2026-11-03
+
+The [input manifest](../experiments/EXP-PEXT-bf8f96/inputs/manifest.json)
+now binds the exact five complete class inputs/checks and q3/n5 legacy
+bijection artifact. The [all-T plan builder](../experiments/EXP-PEXT-bf8f96/implementation/join_plan.py)
+specifies canonical T targets and exact structure offsets for the four geometric
+cohorts; fixed F3/F5/F27 plans match the separate Rust join producer. No full
+production plan was generated before protocol freeze. The q11/n3 design count
+is 5322 T blocks times 1,786,323 structures, or 9,506,811,006 positions;
+the current per-position output design has no demonstrated fit within the
+proposed 24 CPU-hour total budget across all stages.
+
+The new [generic support classifier](../experiments/EXP-PEXT-bf8f96/implementation/generic_disjoint.py)
+checks squarefree Frobenius-conjugate quartics and all projective support gcds.
+Disjoint supports certify rank n, connectedness and geometric genus
+`(n-1)*2^n+1`; any overlap retains its pair for full analysis. On the complete
+F27 software fixture, 1358/1638 rows are generic and all agree with the
+separate square-relation checker; 280 require exceptional handling. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/generic-disjoint-20261103/report.md)
+and source-bound log show the exact control scope, diagram and checks.
+
+Next construct an exact exceptional-index generator and independent completeness
+certificate so the generic complement can be counted without visiting every
+structure. Then implement exceptional rank/genus and the original P1-P4,
+descent/Type2, H1, controls, analysis and frozen execution packet. The contract
+remains review_required and unapproved; no scientific trial was launched.
+
+## Exceptional geometric support progress, 2026-11-03
+
+The [support calculator](../experiments/EXP-PEXT-bf8f96/implementation/generic_disjoint.py)
+now computes the exact parity-support span for every emitted overlapping
+conjugate family. Its rank, projective union size and Riemann–Hurwitz genus
+agree with a character-subcover genus sum. On all 280 overlapping positions
+of the fixed F27 software fixture, a separate polynomial-product relation
+checker agrees on geometric rank. The rank/branch/genus fixture breakdown and
+source hashes are in the [new report](../experiments/EXP-PEXT-bf8f96/reports/exceptional-geometry-20261103/report.md).
+
+This closes the emitted-row **geometric** rank/genus arithmetic interface at
+the stated input scope. An exact exceptional-index generator with independent
+completeness remains the next throughput construction. Coefficient classes,
+descent and Type2 predicates must still be added before the complete P1–P4
+and H1 contract can be frozen. No scientific run or approval occurred.
+
+## Native screening and complete-index derivation, 2026-11-03
+
+The [native arithmetic](../experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs)
+now checks exact geometric support rank, branch count and genus for a complete
+squarefree Frobenius orbit. The [join path](../experiments/EXP-PEXT-bf8f96/implementation/join_core.rs)
+screens exact ordinal shards, counts generic positions and emits overlapping
+rows only; it defers cocycle construction on generic rows. Its full fixed F27
+software fixture yields 1358 generic and 280 exceptional positions, and
+113-position shard replay gives identical exceptional ordinals and genera.
+Nine core and eleven join Rust tests pass, including q3/n5 rank-one validation.
+This path still visits every ordinal, so no 24 CPU-hour fit is inferred.
+
+The [prospective exceptional-index derivation](../experiments/EXP-PEXT-bf8f96/reports/exceptional-index-design-20261103/report.md)
+handles all rational and degree-2/3/4 branch roots by finite-field orbit
+normalization, a small linear system for each nonrational root pair and a
+Lang/Hilbert-90 cocycle solve. It retains the existing left-coset ordinal order
+and all cohort types. The full generator, independent completeness checker,
+resource measurement, constant coefficient classes, descent, Type2 and frozen
+execution packet remain to implement. No scientific trial or approval occurred.
+
+## Rational-root exceptional-index generator, 2026-11-03
+
+The [native arithmetic](../experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs)
+now builds reusable, complete cocycle-to-ordinal and rational-image indices
+for the exact left-coset structure order. It emits the full contribution from
+K-rational branch roots, including simple infinity and collisions between
+distinct roots. Nonrational point-orbit representatives are cached once per
+field. The [independent checker](../experiments/EXP-PEXT-bf8f96/implementation/check_rational_collision_certificate.py)
+recomputes the full fixed F27 candidate sets with polynomial-basis arithmetic
+and rejects missing or inserted ordinals. Its first T block has 273 rational-
+root exceptional indices; the second has none. Direct support checking leaves
+six and one exceptional indices respectively for the degree-2/3/4 root
+generator. Native 13-core/15-join and one independent Python test pass; the
+[source-bound report](../experiments/EXP-PEXT-bf8f96/reports/rational-collision-index-20261103/report.md)
+gives the exact scope and modeled index sizes.
+
+Next implement symbolic factor roots and linear cocycle candidates for degrees
+2/3/4, replay all factor patterns independently, then measure the full-cohort
+resource route and finish the frozen execution packet. No scientific trial or
+approval occurred.
+
+## Symbolic extension arithmetic, 2026-11-03
+
+The [native symbolic extension](../experiments/EXP-PEXT-bf8f96/implementation/symbolic_extension.rs)
+represents degree-2/3/4 roots in an explicit irreducible polynomial basis over
+the pinned K encoding. It validates the modulus by Frobenius and proper-subfield
+checks and provides field arithmetic, inversion and polynomial evaluation
+without tabulating all extension elements. Fourteen core native tests pass,
+including the three degrees over F27 and invalid-modulus controls. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/symbolic-extension-20261103/report.md)
+records its software scope. Next factor bound quartics, solve all nonrational
+root collisions, replay completeness independently and measure the proposed
+resource route. The contract remains review_required; no scientific trial or
+approval occurred.
+
+## Complete branch-factor input, 2026-11-03
+
+The [native branch factorizer](../experiments/EXP-PEXT-bf8f96/implementation/branch_factorization.rs)
+now returns exact irreducible factors for all five squarefree projective
+quartic patterns, including a deterministic trace/norm split for `2+2` and
+an explicit infinity flag. Fixed F27 fixtures exercise each pattern, the
+equal-trace norm fallback, and actual quotient forms. Fifteen core and
+seventeen join native tests pass; the [report](../experiments/EXP-PEXT-bf8f96/reports/branch-factorization-20261103/report.md)
+states the construction and scope. Next embed all roots in a common symbolic
+extension and solve the nonrational collision equations, then independently
+replay completeness and measure the resource route. The contract remains
+review_required; no scientific trial or approval occurred.
+
+## All-degree exceptional candidates, 2026-11-03
+
+The [common-extension roots](../experiments/EXP-PEXT-bf8f96/implementation/branch_roots.rs)
+and [linear collision solver](../experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs)
+now emit candidate structure ordinals for branch roots of degrees 1 through 4.
+Each of the five synthetic squarefree factor patterns matches a full fixed
+F27 structure scan. The two actual quotient forms yield complete exceptional
+unions of 279 and 1 ordinals; the degree-greater-than-one contribution is
+7 and 1 before one overlap with the rational set. Seventeen core and nineteen
+join native tests pass. The [report](../experiments/EXP-PEXT-bf8f96/reports/all-degree-collision-20261103/report.md)
+states the exact fixed-fixture scope. Next independently replay all factor
+patterns, check each production candidate against literal support gcd,
+measure full-cohort resource feasibility, and complete descent, Type2,
+controls and the frozen execution packet. The contract remains
+review_required; no scientific trial or approval occurred.
+
+## Independent all-pattern software replay, 2026-11-03
+
+The [independent polynomial-basis checker](../experiments/EXP-PEXT-bf8f96/implementation/check_all_degree_collision_certificate.py)
+now reconstructs the roots, projective linear kernels, cocycle norm and joined
+Lang witnesses for all five squarefree factor patterns and both actual F27
+quotient forms. Every exact candidate union agrees with a literal support-gcd
+scan. The [source-bound report](../experiments/EXP-PEXT-bf8f96/reports/all-degree-independent-20261103/report.md)
+records counts, 17 core and 19 join native tests, one independent Python test
+and four mutation rejections. Next build production candidate receipts and
+direct checks, measure the full-cohort 4 GB and 24 CPU-hour route, and finish
+coefficient-aware descent, Type2, controls and the frozen execution packet.
+The contract remains review_required; no scientific trial or approval occurred.
+
+## Direct candidate checks and bounded q11 probe, 2026-11-03
+
+The [checked candidate path](../experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs)
+now retains exact structure matrices, verifies every generated exceptional
+ordinal against transported support, and partitions the generic complement
+into exact half-open intervals. Fixed F27 full-scan and independent replay
+checks still pass. A source-bound single-thread synthetic q11/n3 profile
+measured three factor patterns with cached 1,786,323-entry cocycle and
+21,435,876-entry rational-image indices: 2.347 seconds wall in total and
+253,368 KiB peak RSS under a 4 GiB address-space cap. The host load was
+recorded. The [report](../experiments/EXP-PEXT-bf8f96/reports/checked-candidates-20261103/report.md)
+keeps that software scope explicit. Next serialize production source-bound
+candidate/interval receipts and measure complete P1-P4, descent/Type2 and
+control costs before the 24 CPU-hour execution decision. The contract remains
+review_required; no scientific trial or approval occurred.
+
+## Bounded per-form candidate unit, 2026-11-03
+
+The [per-form Rust CLI](../experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs)
+now emits exact field identity, factors/roots, checked exceptional matrix and
+geometry rows, and generic complement intervals under explicit count caps.
+An [independent unit checker](../experiments/EXP-PEXT-bf8f96/implementation/check_candidate_unit.py)
+replayed both actual F27 forms against the complete joined fixture, and seven
+negative mutations or caps were rejected. A source-bound synthetic q11/n3
+CLI smoke emitted a 3,623,945-byte JSON unit for 79,223 exceptional rows;
+peak RSS was 267,204 KiB under a 4 GiB address-space cap. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-unit-20261103/report.md)
+preserves the fixed software scope. Next bind each unit to the published
+cohort/T plan and frozen source/protocol, add atomic success and failure
+receipts, and complete the remaining controls and descent interfaces before
+approval. The contract remains review_required; no scientific trial occurred.
+
+## Published cohort/T candidate binding, 2026-11-03
+
+The [read-only binding](../experiments/EXP-PEXT-bf8f96/implementation/candidate_binding.py)
+recomputes the published all-T join plan, checks an optional plan byte for byte,
+reconstructs the selected curve and canonical T list, and derives the exact
+quotient form and structure-ordinal interval. The first q5/n3 class at T=O
+binds form `[1,0,0,1,0]` to `[0,16275)`. Two software tests pass, including
+mutated-plan and invalid-index refusals; the
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-binding-20261103/report.md)
+records the exact scope. Next add frozen protocol/source/binary admission and
+write-once success/failure receipts, then complete independent production
+checks and the remaining full execution packet. The contract remains
+review_required; no scientific trial occurred.
+
+## Supervisor-gated candidate artifacts, 2026-11-03
+
+The [candidate artifact helper](../experiments/EXP-PEXT-bf8f96/implementation/candidate_unit_artifact.py)
+now requires the frozen plan's live supervisor claim and exact source/input
+bindings for production construction. Each unit directory is exclusive;
+successful raw output is compressed with digests, and started failures retain
+partial stdout, stderr and a write-once failure record. Fixed F27 software
+checks replayed one successful unit and a forced-cap failure, plus duplicate,
+limit, digest and admission refusals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-artifact-20261103/report.md)
+binds the scope. Next build the full run driver, independent production
+checker and exact trial/queue/runbook packet. The experiment remains
+review_required and unfrozen; no cohort trial was launched.
+
+## Independent candidate-set replay, 2026-11-03
+
+The [independent Python checker](../experiments/EXP-PEXT-bf8f96/implementation/independent_candidate_unit.py)
+now reconstructs the frozen structure ordinal map, exact rational and
+higher-degree-root candidate unions, and generic complement intervals. All
+fixed F27 rows match, including direct geometry checks; five mutation controls
+are rejected. The retained synthetic q11 unit independently matches 79,223
+exceptional ordinals and 58,530 complement intervals. Its 498,348 KiB peak
+RSS and 96.04-second profile separate the 89.15-second one-time index from
+3.98 seconds of unit verification. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/independent-candidate-20261103/report.md)
+keeps this software-fixture scope explicit. Next bind the checker to
+supervisor-owned cohort artifacts and complete the full controls, descent,
+analysis and approval packet. EXP-PEXT-bf8f96 remains review_required and
+unfrozen; no scientific trial occurred.
+
+## Independent artifact custody and synthetic n=5, 2026-11-03
+
+The [read-only artifact verifier](../experiments/EXP-PEXT-bf8f96/implementation/independent_check.py)
+now checks external cohort/T form and binary identity, receipt and payload
+hashes, command/caps, and failure/partial refusal before independent exact-set
+replay. Twelve software tests pass, including altered input, receipt and
+compressed-payload controls. A separate synthetic q3/n5 quartic exercises
+both 597,861-entry cocycle indices: one exceptional ordinal and the full
+generic complement match; checker time was 45.136 seconds at 211,592 KiB
+peak RSS under a 4 GiB cap. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/artifact-integration-20261103/report.md)
+keeps this software scope explicit. Next integrate a persistent supervised
+driver and full trial artifact index, then complete descent, Type2, controls
+and the approval packet. The contract remains review_required and unfrozen;
+no scientific cohort trial occurred.
+
+## Fixed candidate batch layout, 2026-11-03
+
+The [batch sealer](../experiments/EXP-PEXT-bf8f96/implementation/candidate_batch.py)
+now provides deterministic 16-unit tar chunks, per-member and tar digests,
+readback-before-source-removal, failure retention, and a complete full-cohort
+index verifier. The [layout inventory](../experiments/EXP-PEXT-bf8f96/reports/candidate-batches-20261103/layout-inventory.json)
+finds 8,178 class/T units in 513 fixed chunks across the four original cohorts.
+Eleven related software tests pass, including tamper and partial-chunk refusal.
+The 49 MiB chunk ceilings sum to 24.54 GiB, so the final storage route must
+be checked against the current local 20 GiB free space before approval. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-batches-20261103/report.md)
+records exact counts and fixture scope. Next integrate the supervised full
+driver and persistent checker, then complete descent, Type2, controls,
+analysis and the approval packet. The contract remains review_required and
+unfrozen; no scientific cohort trial occurred.
+
+## Supervised candidate batch driver and replay, 2026-11-03
+
+The [candidate driver](../experiments/EXP-PEXT-bf8f96/implementation/candidate_census_driver.py)
+now iterates the fixed full-cohort class/T slots through the live-admitted
+unit runner, enforces bounded per-unit/stage limits, stops on failure and
+seals a complete index only after every unit succeeds. The
+[persistent checker](../experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py)
+verifies that index and independently replays each unit against its bound form
+and binary digest using one reusable field index. Fourteen related software
+tests pass; the F27 two-unit fixture gives 280 exceptional and 1,358 generic
+structure ordinals with all exceptional geometry checked. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-driver-20261103/report.md)
+records the exact software scope. Next integrate binary build provenance and
+supervisor-compatible stage artifacts in `run.py`, then the remaining descent,
+Type2, controls, analysis and approval packet. The contract remains
+review_required and unfrozen; no scientific cohort trial occurred.
+
+## Candidate build provenance and nested cohort slots, 2026-11-03
+
+The [build helper](../experiments/EXP-PEXT-bf8f96/implementation/candidate_build.py)
+checks seven transitive Rust source hashes and records the invoked rustc shim,
+real compiler executable, version, flags, logs and binary digest in a
+write-once receipt. Production candidate units may now live in an exact
+`cohorts/<cohort>` subdirectory of one supervisor run, so q5/n3 and q7/n3
+fit the prescribed `n3core` stage without a new run. Sixteen related software
+tests pass, including source/binary tamper refusal and nested F27 replay. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-build-20261103/report.md)
+records the software scope. Next integrate this build and the cohort slots in
+the six-stage launcher, then complete the remaining descent, Type2, controls,
+analysis and approval packet. EXP-PEXT-bf8f96 remains review_required and
+unfrozen; no scientific cohort trial occurred.
+
+## Exact published four-cohort join-plan inputs, 2026-11-03
+
+The four [canonical join plans](../experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/)
+are now materialized and recomputed against the published compact
+class manifest. Their [set receipt](../experiments/EXP-PEXT-bf8f96/inputs/join-plans-20261103/receipt.json)
+binds 4,092 classes, 8,178 class/T blocks and 10,262,826,642 structure
+ordinals to exact plan hashes. The draft specification now names the four
+input paths and reflects the actual readiness state. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/join-plans-published-20261103/report.md)
+keeps this input-preparation scope explicit. Next bind the plans in the frozen
+six-stage trial plan and run entry point, then complete the remaining descent,
+Type2, controls, analysis and approval packet. No candidate or scientific
+cohort trial row was produced.
+
+## Supervisor-bound candidate stage component, 2026-11-03
+
+The [stage adapter](../experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py)
+now binds the source-checked Rust build, fixed cohort loops and persistent
+independent checker to the original `n3core`, `n3ext` and `n5` supervisor
+stages. It requires the approved plan's exact launch, live claim, six-stage
+watchdogs, cohort caps and declared artifacts. The
+[inventory](../experiments/EXP-PEXT-bf8f96/reports/candidate-stage-20261103/candidate-artifacts.json)
+lists 1,056 candidate-component artifact paths across those three stages.
+Driver and checker share the supervisor launch deadline, and the checker now
+compares every retained unit's limits to the frozen cohort config. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/candidate-stage-20261103/report.md)
+records software checks and exact scope. Next complete the full six-stage
+`run.py`/`check.py`, descent, Type2, C0-C7 controls, analysis and approval
+packet. No scientific cohort trial was launched.
+
+## Exact geometric reducer component, 2026-11-03
+
+The [reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py)
+now recomputes P1 factor-pattern mismatches, P2 nonzero-T genus-spectrum
+violations and P3 same-curve geometric minimum drops from complete candidate
+units. It requires a full independent geometry review of every exceptional
+row, sealed chunk and review hashes, published class/T bindings, and exact
+cohort totals. Ten related software tests pass on fixed F27 units, including
+Riemann–Hurwitz and incomplete-coverage refusals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/geometric-reducer-20261103/report.md)
+records the fixture's spectra and boundaries. Next integrate the reducer in
+full analysis with descent, Type2, C0-C7 controls and frozen output bindings.
+No approved scientific cohort was reduced or launched.
+
+## Coefficient-aware square-class relations, 2026-11-03
+
+The [relation ledger](../experiments/EXP-PEXT-bf8f96/implementation/squareclass_relations.py)
+now enumerates the branch-support and leading-coefficient square class of
+every subset of a checked n=3/5/7 conjugate quartic orbit. It distinguishes
+geometric from arithmetic relations over K(X), including a nonsquare constant
+relation in a synthetic rank-two coefficient twist. Three software tests pass
+against the independent polynomial-square routine. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/squareclass-relations-20261103/report.md)
+records the exact fixture result. Next construct and check the Frobenius lift
+and cocycle before assigning any descended/admissible genus. No scientific
+cohort trial was launched.
+
+## Radical-algebra Frobenius lift component, 2026-11-03
+
+The [lift checker](../experiments/EXP-PEXT-bf8f96/implementation/radical_frobenius.py)
+now constructs coherent polynomial-square witnesses for arithmetic relations,
+checks their cyclic Frobenius images, solves the generator sign equations and
+checks an order-n action. Seven related software tests pass, including a
+nonzero sign correction on a fixed F27 repeated-support orbit and refusal of
+the synthetic nonsquare rank-two relation as an arithmetic square. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/radical-frobenius-20261103/report.md)
+records the exact algebraic scope. Next bind the action to the actual source
+elliptic map and construct/check the descended model before reporting an
+admissible genus. No scientific cohort trial was launched.
+
+## Source elliptic map to moved quotient quartic, 2026-11-03
+
+The [binding checker](../experiments/EXP-PEXT-bf8f96/implementation/source_map_binding.py)
+now checks the named elliptic model and canonical T map into the quotient
+quartic, then the projective structure change with its determinant-dependent
+ordinate factor. It verifies the quartic equation and rational inverse in the
+elliptic function field and binds the result to a published class/T and an
+independent structure ordinal. Seven related software tests pass on F27
+fixtures and the q5/n3 published input binding, including wrong-matrix and
+wrong-ordinal refusals. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/source-map-binding-20261103/report.md)
+records the exact scope. Next construct and check the fixed-field model and
+full compositum source-map compatibility before assigning an admissible
+genus. No scientific cohort trial was launched.
+
+## Type2 orbit and trace-zero predicate instrument, 2026-11-03
+
+The [Type2 instrument](../experiments/EXP-PEXT-bf8f96/implementation/type2_predicate.py)
+now checks the length-six Frobenius orbit signature with exponents
+`{0,1,3,4}` and separately searches the trace-zero base-field Möbius
+predicate. Three software tests pass: two synthetic F27 quartics have the
+Type2 signature, one with a matrix witness and one with an exhaustive
+no-witness result; a different `(2,2)` pattern and an irreducible quartic do
+not have the signature. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/type2-predicate-20261103/report.md)
+records the exact forms and source. Next bind Type2 rows into the full
+checker/analysis and independent witness review. No scientific cohort trial
+was launched.
+
+## Type2 full-review unit scanner, 2026-11-03
+
+The [unit scanner](../experiments/EXP-PEXT-bf8f96/implementation/type2_unit_scan.py)
+now cross-tabs Type2 signatures and trace-zero predicate results only after
+every exceptional candidate row has passed independent geometry review.
+Type2's length-six root placement forces overlap with a Frobenius-conjugate
+branch set, so the certified generic complement is excluded without scanning
+each generic structure. Five related software tests pass; three complete F27
+units give signature counts `6,8,6` and trace-zero-positive counts `2,0,2`,
+and partial reviews are refused. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/type2-unit-scan-20261103/report.md)
+records the exact fixture scope. Next persist the rows in the frozen checker
+and cross-tab by published curve/T identity; full-cohort runtime remains to
+be measured. No scientific cohort trial was launched.
+
+## Type2 persistent checker integration, 2026-11-03
+
+The [batch checker](../experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py)
+now persists Type2 signature rows and a hash-linked summary for cubic
+cohorts after full independent exceptional-geometry review. The candidate
+check binds the Type2 summary hash. The
+[stage adapter](../experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py)
+requires this mode and declares both files per cubic cohort; its candidate
+artifact inventory is now 254 paths in `n3core`, 677 in `n3ext` and 131 in
+`n5`, 1,062 total. Eight related software tests pass, including the F27
+write-once batch and refusal of Type2 without full geometry. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/type2-stage-integration-20261103/report.md)
+records the exact fixture scope. Next bind these outputs in full analysis and
+measure full-cohort checker time/storage before approval. No scientific
+cohort trial was launched.
+
+## Type2 curve/T analysis join, 2026-11-03
+
+The [geometric reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py)
+now verifies the hash-linked Type2 batch and joins retained signatures to
+sealed exceptional unit rows by published class/T, ordinal, raw hash and
+matrix. It keeps signature and trace-zero predicate counts separate at unit,
+actual-curve and cohort level, and rejects stray Type2 files on noncubic
+cohorts. Four reducer software tests pass, including digest and matrix
+tampering refusal. The [report](../experiments/EXP-PEXT-bf8f96/reports/type2-analysis-20261103/report.md)
+records the fixture scope. Next bind the reducer into the complete analysis
+stage and implement descent and C0–C7 controls. The contract remains
+`review_required`; no scientific cohort trial was launched.
+
+## Four-cohort geometric analysis component, 2026-11-03
+
+The [campaign reducer](../experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py)
+now requires the frozen supervisor trial plan and all three checked census
+stage directories, then binds q5/q7/q11 n3 and q3 n5 to their published
+join plans and sealed full-cohort candidate units. It reconciles class order,
+per-curve P1/P2/P3 totals, and separate cubic Type2 counts before emitting a
+read-only campaign table. Seven focused software tests pass. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/geometric-campaign-20261103/report.md)
+records the checked scope. Next build the full analyze-stage writer and add
+descent and C0–C7 controls. The contract remains `review_required`; no
+scientific cohort trial was launched.
+
+## Geometric analyze-stage component, 2026-11-03
+
+The [geometric analysis stage](../experiments/EXP-PEXT-bf8f96/implementation/geometric_analysis_stage.py)
+now writes and rechecks exact curve rows and a hash-bound campaign summary
+inside a frozen supervisor analyze trial. It requires the validated supervisor
+execution receipt for each of the three prior census stages, the current
+analyze claim, plan/source bindings and declared output paths. Six focused
+software tests pass, including write-once and tampered-row refusal. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/geometric-analysis-stage-20261103/report.md)
+records the component scope. Next implement descent and controls, then bind
+the final analyze/export artifacts. The contract remains `review_required`;
+no scientific cohort trial was launched.
+
+## Source radical binding, 2026-11-03
+
+The [source-radical binder](../experiments/EXP-PEXT-bf8f96/implementation/source_radical_binding.py)
+now identifies generator zero of the coherent radical algebra with the exact
+moved quartic reached from the named elliptic curve and T. It checks the full
+coefficient Frobenius orbit and order-n radical action, with optional
+published class/T/ordinal binding. Nine related software tests pass, including
+wrong-source and wrong-conjugate refusal. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/source-radical-binding-20261103/report.md)
+records the scope. Next construct the fixed-field model and independently
+check its descent and connectedness before assigning admissible genus. The
+contract remains `review_required`; no scientific cohort trial was launched.

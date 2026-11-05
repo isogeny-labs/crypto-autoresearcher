@@ -1,0 +1,81 @@
+review_plan:
+  status: prospective_before_reviewer_dispatch
+  conductor_task: T-1460
+  source_commit: 7c028ce9ccdec6c1ee7d4c2b3b60120ed3dcbd9e
+  target: formal/targets/runbook-example-bsgs-coverage.yaml
+  named_theorem: CryptoResearch.Runbook.BsgsCoverage.coverage
+  claim_under_review: 'For every natural m>0 and k<m*m, division with remainder gives
+    k=i*m+j with i,j<m. On the frozen toy curve the separate premises p prime, #E=n
+    prime, G nonidentity and n<=m*m would connect this counting fact to every curve
+    point; code execution and reported counts require separate inspection.'
+  coordinator_prior:
+    recorded_before_reviewers: true
+    expectation: The counting theorem likely matches the frozen target. Independent
+      point count matches n and a hosted named receipt passes, but a proof of the
+      Python implementation and its measured operation count is not supplied by the
+      theorem.
+    uncertainty: Whether the actual solver/checker satisfy the claimed bridge for
+      all frozen modes, whether source and target bind exact inputs, and whether independent
+      reviewers find an exceptional case or false cost assertion.
+  immutable_inputs: input-bindings.json
+  joints:
+  - joint: J1 frozen curve and source-to-code bridge
+    assigned_to: TASK-20261103-594c2a
+    attack_plan: Independently check p and n primality, nonsingularity, point count,
+      G membership and all frozen input modes. Trace the solver and checker on zero,
+      near-boundary, positive and off-curve cases. Test a forged count and an out-of-subgroup
+      case; distinguish output correctness from execution-cost attestation. Do not
+      read sibling reports.
+    breaking_artifact: A wrong count/order, uncovered frozen input, incorrect exceptional
+      group-law case, accepted forged result, or broader source claim than the checker
+      establishes.
+  - joint: J2 named Lean proof and pinned machine evidence
+    assigned_to: TASK-20261103-6390df
+    attack_plan: Check exact elaborated type, source/target hashes, toolchain, dependency
+      pins, named receipt and axiom audit. Reproduce a nearby false boundary or show
+      it fails. Distinguish receipt consistency from execution authentication and
+      code refinement. Do not read sibling reports.
+    breaking_artifact: A hidden premise, weaker quantifier, wrong theorem name or
+      hash, unapproved axiom, stale pin, or false boundary accepted.
+  - joint: J3 blind coverage and exceptional-case derivation
+    assigned_to: TASK-20261103-016b84
+    attack_plan: Read only blind-input.yaml and allowed mathematical definitions.
+      Derive the exact index coverage and boundary cases independently; count toy-curve
+      points or give a reproducible arithmetic certificate. Freeze raw derivation
+      and read attestation before seeing any producer proof or sibling report.
+    breaking_artifact: A counterexample within the claimed m,k domain, a different
+      curve order, or a missing premise in the proposed curve-wide conclusion.
+  blindness:
+    mutual: true
+    lifted_for: []
+    lift_only_after_all_reports_frozen: true
+  proves_too_much:
+    objects:
+    - m=0
+    - k=m*m
+    - an ambient point outside <G> when the ambient group is not known to have prime
+      order n
+    - a valid scalar result with fabricated group_ops
+    failure_signature: A sound review refuses coverage at m=0 or k=m*m, requires the
+      group-order bridge for arbitrary Q, and does not infer executed group operations
+      from a reported count.
+    assigned_to: TASK-20261103-6390df
+  blind_rederivation:
+    required: true
+    quantity: Division-algorithm coverage, endpoint failure, and independent finite-curve
+      order check
+    parameters: blind-input.yaml
+    blind_from:
+    - input-bindings.json
+    - review-plan.yaml
+    - formal/CryptoResearch/Runbook/BsgsCoverage.lean
+    - formal/targets/runbook-example-bsgs-coverage.yaml
+    - examples/runbooks/toy-ecdlp-bsgs/solve.py
+    - examples/runbooks/toy-ecdlp-bsgs/check.py
+    - all sibling reports
+    assigned_to: TASK-20261103-016b84
+  procedure_deviations: []
+  publication_rule: This plan asserts no verdict. Commit and push before reviewer
+    dispatch; each reviewer gets a separate handoff and report directory. A validated_scoped
+    result requires pinned machine evidence, source/semantic fidelity, independent
+    attestations, controls, and an inspected graph/PDF packet.

@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: checked Type2 curve/T analysis join
+
+The geometric reducer now consumes the persistent cubic Type2 batch after the complete candidate index and independent all-exceptional review have passed. It verifies the candidate-check to Type2-check hash, the Type2-check to retained-row hash, the independent-review hash, cohort/plan/binary identity, unit ordering, and batch counts. Each retained signature must point to the same published class/T, raw unit hash, exceptional ordinal, and matrix in the sealed candidate unit. Per-unit counts must equal the independent review; totals must equal the Type2 batch. Noncubic cohorts reject stray Type2 files.
+
+The output keeps the geometric P1–P3 rows and adds separate Type2 signature and trace-zero predicate counts at unit, actual-curve, and cohort level. It does not turn the predicate into a descent or hyperelliptic-model certificate. Four geometric reducer software tests pass, including exact join and digest/matrix tampering refusal. The positive join test is a synthetic structural row; the independently checked F27 Type2-positive predicate fixture remains in the earlier unit-scan report. No scientific cohort was reduced here.
+
+Next bind this reducer into the complete analysis stage, then implement the separate descent and C0–C7 controls, full launcher and frozen execution packet. EXP-PEXT-bf8f96 remains `review_required` and unfrozen.

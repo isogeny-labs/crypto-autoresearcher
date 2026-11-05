@@ -1,0 +1,28 @@
+⚠ [1474/1475] Replayed CryptoResearch.FallDegree.LastFall
+warning: CryptoResearch/FallDegree/LastFall.lean: imports `Mathlib.RingTheory.MvPolynomial.Basic` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+warning: CryptoResearch/FallDegree/LastFall.lean: imports `Mathlib.RingTheory.Ideal.Span` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+✖ [1475/1475] Building CryptoResearch.FallDegree.ClosureCertificates (894ms)
+warning: CryptoResearch/FallDegree/ClosureCertificates.lean: imports `Mathlib.Algebra.BigOperators.Ring.Finset` from package `mathlib`, which is designed for use with the module system; consider adding `module` to the start of this file
+trace: .> LEAN_PATH=/workspace/crypto-autoresearcher/formal/.lake/packages/Cli/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/batteries/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/Qq/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/aesop/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/plausible/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/CryptoLean/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/packages/mathlib/.lake/build/lib/lean:/workspace/crypto-autoresearcher/formal/.lake/build/lib/lean /home/agent/.elan/toolchains/leanprover--lean4---v4.35.0/bin/lean /workspace/crypto-autoresearcher/formal/CryptoResearch/FallDegree/ClosureCertificates.lean -o /workspace/crypto-autoresearcher/formal/.lake/build/lib/lean/CryptoResearch/FallDegree/ClosureCertificates.olean -i /workspace/crypto-autoresearcher/formal/.lake/build/lib/lean/CryptoResearch/FallDegree/ClosureCertificates.ilean -c /workspace/crypto-autoresearcher/formal/.lake/build/ir/CryptoResearch/FallDegree/ClosureCertificates.c --setup /workspace/crypto-autoresearcher/formal/.lake/build/ir/CryptoResearch/FallDegree/ClosureCertificates.setup.json --json
+error: CryptoResearch/FallDegree/ClosureCertificates.lean:79:30: Unknown identifier `add_sub_cancel_comm`
+error: CryptoResearch/FallDegree/ClosureCertificates.lean:79:2: Type mismatch: After simplification, term
+  Eq.symm (Finset.prod_add (fun i => X i) (fun i => 1 - X i) s)
+ has type
+  ∑ t ∈ s.powerset, (∏ i ∈ t, X i) * ∏ i ∈ s \ t, (1 - X i) = ∏ i ∈ s, (X i + (1 - X i))
+but is expected to have type
+  ∑ t ∈ s.powerset, (∏ i ∈ t, X i) * ∏ i ∈ s \ t, (1 - X i) = 1
+info: CryptoResearch/FallDegree/ClosureCertificates.lean:103:0: 'CryptoResearch.FallDegree.exact_closure_of_two_sides' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CryptoResearch/FallDegree/ClosureCertificates.lean:104:0: 'CryptoResearch.FallDegree.exact_lastFallDegree_of_refutation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CryptoResearch/FallDegree/ClosureCertificates.lean:105:0: 'CryptoResearch.FallDegree.lastFallDegree_gt_of_missing_consequence' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CryptoResearch/FallDegree/ClosureCertificates.lean:106:0: 'CryptoResearch.FallDegree.assignmentIndicator_partition' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Quot.sound]
+info: CryptoResearch/FallDegree/ClosureCertificates.lean:107:0: 'CryptoResearch.FallDegree.refutation_of_localized_fibres' depends on axioms: [propext, Classical.choice, Quot.sound]
+Some required targets logged failures:
+- CryptoResearch.FallDegree.ClosureCertificates
+error: build failed

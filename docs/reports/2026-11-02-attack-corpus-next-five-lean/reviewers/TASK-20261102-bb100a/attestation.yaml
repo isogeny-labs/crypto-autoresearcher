@@ -1,0 +1,125 @@
+review_attestation:
+  task_id: TASK-20261102-bb100a
+  reviewer: Reviewer F
+  canonical_task_name: /root/review_blind
+  joints_owned: [F]
+  verdicts: {F: holds}
+  verdict_scope:
+    F: >-
+      Holds only for the independent hand derivation in derivation.md: the five
+      finite combinatorial and algebraic boundary answers, their explicit
+      counterexamples, exact repaired hypotheses, endpoint cases, and stated
+      controls. This is not a verdict on any unseen producer theorem, Lean
+      artifact, implementation, paper claim, machine receipt, or computational
+      security claim.
+  blind_from_respected: true
+  sources_read:
+    - /tmp/attack-next-five-blind.TiBZbL/AGENTS.md
+    - /tmp/attack-next-five-blind.TiBZbL/.claude/skills/review-evidence/SKILL.md
+    - /tmp/attack-next-five-blind.TiBZbL/.claude/skills/review-evidence/references/lean-review.md
+    - /tmp/attack-next-five-blind.TiBZbL/docs/reports/2026-11-02-attack-corpus-next-five-lean/blind-input.md
+  source_metadata:
+    /tmp/attack-next-five-blind.TiBZbL/AGENTS.md:
+      sha256: e95a5b68c7be0391c9b6d6ad039b5903127eb6ac8e8cf2bc1af5b06c91c23703
+      read_complete: true
+    /tmp/attack-next-five-blind.TiBZbL/.claude/skills/review-evidence/SKILL.md:
+      sha256: faadf52e1364483b09e8cb3c18b613477918df55e40f4ed404627f1eb0756fd7
+      read_complete: true
+    /tmp/attack-next-five-blind.TiBZbL/.claude/skills/review-evidence/references/lean-review.md:
+      sha256: 05e69fdbd9749367a77e8a196a7c73e71b6a68b5cb1340398765346eda8c64cf
+      read_complete: true
+    /tmp/attack-next-five-blind.TiBZbL/docs/reports/2026-11-02-attack-corpus-next-five-lean/blind-input.md:
+      sha256: bc845a9593a1dfa67375707ece4272c49d68248e6b24077064c34d5c914767cf
+      read_complete: true
+  review_plan_dispatch_metadata:
+    path: docs/reports/2026-11-02-attack-corpus-next-five-lean/review-plan.yaml
+    sha256: 7a55598bad9dddb2f6b462fa981d6f4afb7e17871c417174692f1c3201f1f77f
+    source: dispatcher-supplied metadata
+    read: false
+    hash_independently_verified: false
+  runtime_model_facts:
+    runtime: Codex
+    declared_model_family: GPT-5
+    exact_model_identifier: not exposed to this reviewer
+    reasoning_effort_setting: not exposed to this reviewer
+    role: independent blind Reviewer F
+    mathematical_method: unaided symbolic hand derivation
+    solver_or_formalizer_used: false
+    scientific_trial_or_code_used_for_mathematics: false
+  read_sibling_reports: false
+  sibling_reports_read: []
+  blindness_lifted: false
+  independence_and_exposure:
+    independent_rederivation: true
+    parent_conversation_used_as_evidence: false
+    producer_material_read: false
+    candidate_witnesses_or_verdicts_read: false
+    repository_or_tmp_tree_listed_or_searched: false
+    git_used: false
+    network_used: false
+    statement: >-
+      The reviewer received only the dispatch instructions (identity, joint,
+      four allowed input paths, two output paths, and unread review-plan path
+      and digest metadata) and read as inputs only the four exact paths
+      enumerated in sources_read. No producer theorem, specification, source, proof, report,
+      full review plan, sibling output, candidate construction, candidate
+      verdict, repository history, or other parent-conversation content was
+      consulted. The two output artifacts were not treated as sources and were
+      hashed after writing by their exact paths, as the dispatch permitted. The
+      five answers were reconstructed from definitions in the
+      blind input before any exposure to other review results. Exact-path shell
+      reads were used only to read and hash the allowed inputs; apply_patch was
+      used only for the two authorized outputs.
+  mathematical_controls:
+    - item: 1
+      weakened_or_removed_premise: >-
+        Marginal one-shot counts were substituted for the history recurrence,
+        and separately epsilon <= 1 was removed.
+      result: >-
+        Same-size success sets give both a forever-failing outcome and no such
+        outcome; with epsilon=2, S=(1,0,0,...) satisfies the recurrence but
+        violates the proposed q^2 bound.
+    - item: 2
+      weakened_or_removed_premise: det(M) != 0 was replaced by distinct points.
+      result: >-
+        The ten points (1,i,0), i=0,...,9, have rank at most four and admit the
+        nonzero vanishing cubic z^3; nine unrestricted rows also retain a
+        nonzero kernel even at full row rank.
+    - item: 3
+      weakened_or_removed_premise: bijectivity of multiplication by h on S was removed.
+      result: >-
+        For K=S=Z/2Z and h=2, K is killed but S is killed too, so the image is
+        a singleton rather than the intended target.
+    - item: 4
+      weakened_or_removed_premise: >-
+        The nonzero challenge premise was removed, and separately the field
+        premise was weakened to the ring Z/4Z.
+      result: >-
+        Zero challenge permits one transcript for distinct keys; nonzero
+        c=2 over Z/4Z also admits X=0 and X=2 for one fixed equation. Fixed-key
+        uniqueness was additionally checked not to imply unforgeability.
+    - item: 5
+      weakened_or_removed_premise: >-
+        Injectivity of a |-> aG was removed, and separately alpha != 0 was removed.
+      result: >-
+        With G=H=0 the kernel is all of F^2 and the recovery denominator may
+        vanish; with alpha=0 the arbitrary-message blinder formula is undefined
+        and different-message equivocation does not follow.
+  computational_nonimplication: >-
+    No finite result in this review establishes or refutes a ROM/QROM theorem,
+    a hash-to-curve or unspecified-encoder theorem, computational binding,
+    unforgeability or extraction, an ECDLP algorithm, or any paper-specific
+    claim whose actual hypotheses were not modeled.
+  machine_status: not inspected
+  procedure_deviations:
+    - >-
+      Relative to the generic review-evidence/Lean workflow, literature review,
+      producer/source binding, fresh Lean verification, axiom audit, runtime
+      inspection, and sibling reconciliation were deliberately not performed:
+      the dispatch assigned only the mutually blind mathematical joint F and
+      expressly prohibited those inputs. This limits the verdict to the hand
+      derivation and cannot support a machine-status or validated-scoped verdict.
+    - >-
+      The generic workflow's wider packet, diagram/PDF, repository archive, and
+      PR steps were not performed because the dispatch authorized exactly two
+      reviewer output files and no other writes.

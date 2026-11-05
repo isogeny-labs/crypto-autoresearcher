@@ -54,4 +54,31 @@ mod tests {
   assert!(JoinPlan::new(&ctx,&[[ctx.size(),0,1]],1).is_err());
   let even=Context::new(3,2,9).unwrap();assert!(JoinPlan::new(&even,&[model],1).is_err());
  }
+ #[test]
+ fn exact_support_partition_and_shard_replay() {
+  let ctx=Context::new(3,3,27).unwrap();let model=[ctx.integer(1),0,ctx.integer(1)];
+  let plan=JoinPlan::new(&ctx,&[model],1).unwrap();
+  let mut full=Vec::new();
+  let summary=plan.visit_support_range(0,plan.total(),plan.total(),|row|{
+   assert!(!row.geometry.pairwise_disjoint);
+   assert_eq!(row.geometry.geometric_rank,ctx.square_classes(&row.joined.conjugates)?.geometric_rank);
+   full.push((row.joined.ordinal,row.geometry.geometric_genus));Ok(())
+  }).unwrap();
+  assert_eq!((summary.visited,summary.generic_disjoint,summary.exceptional),(1638,1358,280));
+  assert_eq!(full.len(),280);
+  assert!(full.windows(2).all(|pair|pair[0].0<pair[1].0));
+  let mut replay=Vec::new();let mut covered=0;let mut start=0;
+  while start<plan.total() {let end=(start+113).min(plan.total());
+   let part=plan.visit_support_range(start,end,113,|row|{
+    replay.push((row.joined.ordinal,row.geometry.geometric_genus));Ok(())
+   }).unwrap();
+   assert_eq!(part.visited,end-start);covered+=part.visited;start=end;
+  }
+  assert_eq!(covered,plan.total());assert_eq!(replay,full);
+  assert_eq!(plan.visit_support_range(plan.total(),plan.total(),0,|_|panic!("empty")),
+   Ok(join_core::SupportSummary{visited:0,generic_disjoint:0,exceptional:0}));
+  assert!(plan.visit_support_range(0,plan.total(),plan.total()-1,|_|panic!("cap")).is_err());
+  assert!(plan.visit_support_range(1,0,0,|_|panic!("reverse")).is_err());
+  assert!(plan.visit_support_range(0,plan.total()+1,plan.total()+1,|_|panic!("bounds")).is_err());
+ }
 }

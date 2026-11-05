@@ -239,6 +239,55 @@ class Library:
     def source(self, source_id):
         return self.with_source_link(self.catalog.source(source_id))
 
+    def recent(self, limit=10, repo=None):
+        return {
+            "sources": self.catalog.recent(limit, repo),
+            "revision": self.catalog.status().get("revision"),
+            "note": "Ordered by when this KB first ingested the version, not by publication date.",
+        }
+
+    def brief(self, query, top_k=6, repo=None, source_type=None, mode="lexical", max_chars=14000):
+        """Render a bounded, citation-bearing context pack for a non-MCP caller.
+
+        Delphi (and any shell or batch model client) has no MCP transport. This
+        is the same retriever the MCP tools use, rendered as plain markdown so
+        it can be prepended to a prompt without a private code path.
+        """
+        result = self.search(query, top_k, repo, source_type, mode)
+        lines = [
+            "## Research KB context",
+            "",
+            f"Query: {query}",
+            f"Corpus revision: {result.get('revision')}",
+            "",
+            "Retrieved passages are relevance-ranked, not verified. Cite the source ID;",
+            "an empty result does not prove absence.",
+        ]
+        used = 0
+        for index, item in enumerate(result["results"], 1):
+            text = (item.get("text") or "").strip()
+            if not text:
+                continue
+            section = " / ".join(item.get("section_path") or [])
+            origins = item.get("origins") or []
+            origin = origins[0] if origins else {}
+            header = (
+                f"### {index}. {item.get('title', '(untitled)')}\n"
+                f"- source_id: `{item.get('source_id')}`\n"
+                f"- kind: {item.get('kind')}"
+                + (f"\n- section: {section}" if section else "")
+                + (f"\n- repo: {origin.get('repo')}  path: `{origin.get('path')}`" if origin else "")
+                + (f"\n- git_commit: {origin.get('git_commit')}" if origin.get("git_commit") else "")
+            )
+            block = header + "\n\n" + text + "\n"
+            if used + len(block) > max_chars:
+                break
+            lines.append(block)
+            used += len(block)
+        if used == 0:
+            lines.append("_No matching passages._")
+        return "\n".join(lines)
+
     def with_source_link(self, result):
         if result.get("version_id"):
             if self.settings.public_url:

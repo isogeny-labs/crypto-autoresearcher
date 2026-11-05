@@ -1,6 +1,6 @@
 //! Streaming supplied-model x canonical-T-class x projective-structure join.
 //! The caller must bind the supplied ordered models to verified cohort bytes.
-use crate::quotient_core::{Context,Point};
+use crate::quotient_core::{Context,Point,SupportGeometry};
 use std::collections::BTreeSet;
 
 #[derive(Debug)]
@@ -29,6 +29,17 @@ pub struct JoinedRow {
     pub transformed_form:[u32;5],
     pub conjugates:Vec<[u32;5]>,
 }
+#[derive(Debug,PartialEq,Eq)]
+pub struct SupportSummary {
+    pub visited:u64,
+    pub generic_disjoint:u64,
+    pub exceptional:u64,
+}
+#[derive(Debug)]
+pub struct ExceptionalRow {
+    pub joined:JoinedRow,
+    pub geometry:SupportGeometry,
+}
 impl<'a> JoinPlan<'a> {
     /// Construct the exact plan for this supplied ordered model slice. No
     /// assertion of cohort completeness is made by this arithmetic layer.
@@ -54,6 +65,48 @@ impl<'a> JoinPlan<'a> {
     pub fn classes(&self)->&[PlannedClass] { &self.classes }
     pub fn structures(&self)->u64 { self.structures }
     pub fn total(&self)->u64 { self.total }
+    /// Screen an exact ordinal interval and emit only overlapping supports.
+    /// This still visits every index; it is an exact bounded-memory generator,
+    /// not a sublinear exceptional-index oracle or a throughput claim.
+    pub fn visit_support_range<F>(&self,start:u64,end:u64,maximum_visited:u64,mut exceptional:F)
+        ->Result<SupportSummary,&'static str>
+    where F:FnMut(ExceptionalRow)->Result<(),&'static str> {
+        if start>end || end>self.total {return Err("invalid support range");}
+        if end-start>maximum_visited {return Err("support visit limit exceeded");}
+        let mut summary=SupportSummary{visited:0,generic_disjoint:0,exceptional:0};
+        for (class_index,class) in self.classes.iter().enumerate() {
+            let class_end=class.offset+(class.targets.len() as u64)*self.structures;
+            if class_end<=start {continue;} if class.offset>=end {break;}
+            let curve=self.context.curve(class.model[0],class.model[1],class.model[2])?;
+            for (coset_index,&target) in class.targets.iter().enumerate() {
+                let offset=class.offset+(coset_index as u64)*self.structures;
+                let lo=start.max(offset);let hi=end.min(offset+self.structures);
+                if lo>=hi {continue;}
+                let original_form=curve.quotient_form(target)?;
+                let mut ordinal=lo;
+                self.context.visit_structures_range(lo-offset,hi-offset,hi-lo,|matrix| {
+                    let transformed_form=self.context.transform_form(original_form,matrix)?;
+                    let conjugates=self.context.conjugate_forms(transformed_form)?;
+                    let geometry=self.context.support_geometry(&conjugates)?;
+                    summary.visited+=1;
+                    if geometry.pairwise_disjoint {summary.generic_disjoint+=1;}
+                    else {
+                        let joined=JoinedRow{ordinal,class_index,coset_index,structure_index:ordinal-offset,
+                            model:class.model,target,matrix,cocycle:self.context.structure_cocycle(matrix)?,
+                            original_form,transformed_form,conjugates};
+                        exceptional(ExceptionalRow{joined,geometry})?;
+                        summary.exceptional+=1;
+                    }
+                    ordinal+=1;Ok(())
+                })?;
+                if ordinal!=hi {return Err("support shard cardinality mismatch");}
+            }
+        }
+        if summary.visited!=end-start || summary.generic_disjoint+summary.exceptional!=summary.visited {
+            return Err("support partition mismatch");
+        }
+        Ok(summary)
+    }
     /// Exact half-open ordinal interval. Empty intervals are valid; caps,
     /// invalid bounds and callback errors never silently truncate a shard.
     pub fn visit_range<F>(&self,start:u64,end:u64,maximum_emitted:u64,mut body:F)->Result<u64,&'static str>
