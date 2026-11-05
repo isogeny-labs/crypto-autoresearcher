@@ -4,7 +4,7 @@ Opened 2026-11-05. Owner request: pursue all 18 directions of the campaign repor
 
 ## Contents
 
-- `report/semaev_alternatives_report.pdf` and `.md`: the campaign report. It holds the closure map, the structural diagnosis, the 18 directions and the bibliography.
+- `report/semaev_alternatives_report.md`: the campaign report. It holds the closure map, the structural diagnosis, the 18 directions and the bibliography. The rendered PDF and the Section 6 figure are binaries, so they are not in git (the `artifacts` policy keeps data files in the S3 store, and this session had no store credentials). Regenerate the figure with `report/calibration/fig.py`; the PDF was delivered to the owner directly.
 - `report/calibration/`: the scripts and data behind the report's Section 6.
 - `prereg/SA-01.md` … `prereg/SA-18.md`: one frozen pre-registration per direction. Each holds the mechanism, prediction, protocol, success and kill criteria, and the lead-atlas row it advances or proposes.
 - `registry.tsv`: id, kind, lead and the SHA-256 of each pre-registration as committed. A later edit to a pre-registration is detectable against this file.
