@@ -1,0 +1,553 @@
+# COMPOSITION AND PRE-APPROVAL DECISION for EXP-MONO-1a1be2. This is the successor act
+# named by DEC-20261029-71d757 NA-1. It composes REVIEW-PATH-20261029-3ac467, clears
+# readiness blocker B3, and pins the composed predictions before any contract data
+# exists. It writes the BATCH-c53152 checkpoint and opens BATCH-8517aa for the
+# pre-approval work: KAT widening (F-1), measured throughput (F-2), composition residuals,
+# an independent code review, and their archives. It APPROVES NO EXPERIMENT. It changes
+# no hypothesis, idea or goal status, and it launches zero runs. It takes effect only when
+# the ledger archive TASK-20261105-c0d167 verifies. Written by a Coordinator subagent
+# with no shell. The top-level session reserved every id, and the --check results go in
+# the c0d167 receipt.
+coordinator_decision:
+  id: DEC-20261105-f0b7c7
+  task_id: TASK-20261105-18a59d
+  archived_by: TASK-20261105-c0d167
+  mode: review composition and pre-approval revision (coordinate; /design-experiment step 5; no trials)
+  decided_by: coordinator
+  decided_at: '2026-11-05'
+  authorized_by: >-
+    Coordinator authority (agents/coordinator.md: approve experiments, reprioritize, open
+    batches, compose review rounds). DEC-20261029-71d757 NA-1
+    declared_successor_not_an_additional_next_action. AGENTS.md "ECC comes first" rule 3.
+    The standing user authorization (2026-09-06) is noted but NOT used, because no
+    contract here is approvable yet ("Approval is bounded by execution").
+
+  context: >-
+    Branch claude/quotient-summation-ecc2k-130-4y7t3o equals origin/main 8fcfa58fee
+    (2026-11-05), as the top-level session reported. All BATCH-c53152 tasks are completed:
+    - 37675c ledger archive at 26a72871e7.
+    - 02a714 snapshot of the implementation at f4a5347a84, with 174 KATs passing.
+    - fe6c9d snapshot of the blind re-derivation at 618e0c81d5.
+    check_review_independence.py --batch/--reports printed "PASS: 1 report(s), every
+    joint owned and attested, blindness respected, controls declared". The history check
+    is UNCHECKABLE (plan PD-1).
+    After the snapshot, on the owner's explicit instruction, PR #2707 (merged at
+    f7b61f7e0d) fixed three launcher defects found by Codex review:
+    - an empty approval.lock bypassed every check;
+    - a B2 instance with fewer than n factor-base x-coordinates crashed (KeyError);
+    - B1 dropped tuple_seed_aa, so CTL-aa / C-aa-tupleseed never ran.
+    #2707 added three regression tests, and 177 KATs now pass. The 02a714 snapshot keeps
+    the pre-fix bytes. The executor reported two scope findings: F-1, no KAT at n >= 4;
+    F-2, the B1 throughput is modeled, not measured.
+    EXP-MONO-1a1be2 is a review_required draft carrying blockers B1-B6.
+    H-MONO-23d347 is proposed. Lane BATCH-c53152 is open. Nobody else has acted on this
+    lineage since 2026-10-29.
+
+  decision: revise
+  decision_scope: >-
+    (1) Composes REVIEW-PATH-20261029-3ac467: every joint holds, J2, J3 and J4 with
+    refinements, and none is broken. B3 clears without a version-2 amendment for a
+    broken joint.
+    (2) Pins the predictions to freeze (section predictions_to_freeze): P1-P8 unchanged
+    in value, plus three exact identities and three reported quantities that come from
+    the composition, all written before any contract cell exists.
+    (3) F-1: requires a pre-approval KAT extension.
+    (4) F-2: requires a measured throughput on non-contract proxy cells; a compiled B1
+    port is needed only under rule TP-1.
+    (5) Chooses option (b): keeps EXP-MONO-1a1be2 review_required with the updated
+    blocker list below, and opens BATCH-8517aa with six tasks.
+    (6) Writes the BATCH-c53152 checkpoint, and closes that lane after c0d167 verifies.
+    It approves NO experiment, protocol, runbook or run.
+    The committed specification is NOT edited. It stays the v1 pre-approval draft,
+    bound at 26a72871e7 with sha256 d81a85b3...c373.
+
+  target_ids:
+    - EXP-MONO-1a1be2
+    - H-MONO-23d347
+    - IDEA-20261023-f15270
+    - REVIEW-PATH-20261029-3ac467
+    - BATCH-c53152
+    - BATCH-8517aa
+    - GOAL-PATH-001
+    - RQ-MONO-001
+    - KN-OPEN-62c870
+
+  # ------------------------------------------------------------ 1. composition
+  composition:
+    round_id: REVIEW-PATH-20261029-3ac467
+    reports_read:
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261029-3ac467/blind_rederivation.md (read in full)
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261029-3ac467/review_attestation.yaml (read in full)
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261029-3ac467/computations.json (step ids located; values not re-opened beyond what the report cites)
+    compared_against: review-plan.yaml claim_under_review (the producer's L1-L6, L8) and EXP-MONO-1a1be2 v1 P2, P5
+    reading_rule: >-
+      A joint "holds" when the re-derived statement and its leading value agree with the
+      producer's. If it agrees but carries a sharper or extra term, that term is recorded
+      as a refinement. A different leading value, or a counterexample to the producer's
+      statement, would be a break.
+    joints:
+      - id: J1
+        producer: L1 sum_R T_A = B^n; L2 ratio B^n/C(B+n-1,n) = n!/prod_{i<n}(1+i/B) in [n! exp(-n(n-1)/(2B)), n!]; T_A = sum over multisets of n!/prod m_j!; baseline slice C(q+n-1,n)/q^n = (1/n!) prod_{i<n}(1+i/q)
+        rederived: >-
+          Identical statements, including the bracket and the multinomial form. Also
+          derived: the expansion n!(1 - n(n-1)/(2B) + O(n^4/B^2)); the alternative lower
+          bound n!(1+(n-1)/B)^{-(n-1)}; and the observation that B = q is the card's
+          specialisation, not an identity (for generic a, b in F_Q, B fluctuates around q).
+        composed: holds
+        effect_on_contract: >-
+          None. Every ratio and denominator in the contract uses the actual B, N and t2
+          (CTL-exact-denominator), not B = q.
+      - id: J2
+        producer: L3 T_S(R) = sum over ordered tuples with sum R of 2^j for 2R != O; L4 T_M - T_X supported on x-multisets with x(R) a multiple root; n = 2 answers T_A(O) = B, T_M(O) = (B+t2)/2; cancellation-free count [z^n]((1+z)/(1-z))^((B-t2)/2)(1+z)^t2
+        rederived: >-
+          The same statements and values. Three additions:
+          (a) for R in G[2] the class count is half of sum 2^{t(P)}, so in the
+              sign-vector convention T_S(R) = sum 2^{t(P)} holds at every target;
+          (b) T_M - T_X = sum_Xi (a(Xi,R) - 1)_+ exactly; this is at most
+              sum_Xi (mult_{x(R)} - 1)_+, with equality on simple Xi; strict
+              inequality occurs off simple Xi (56 targets in one case);
+          (c) at n = 2 with 2R != O, T_M(R) = T_X(R).
+        composed: holds, refined (additions a to c)
+        prior_check: >-
+          The prior named L4 as the most likely break in the round (about 0.75). It did
+          not break.
+        effect_on_contract: >-
+          P2 (i) to (vi) are unchanged. Additions (a) and (c) become exact identities
+          P2(vii) and P2(viii) (predictions_to_freeze). Addition (b) confirms the
+          producer's "nonzero only where x(R) is a multiple root" as a necessary condition.
+      - id: J3
+        producer: L5 c <= min(1, mu_M), c >= mu^2/E[T^2], no base exceeds rate C(B+n-1,n)/N; Poisson-null ceilings 0.346, 0.119, 0.030, 0.006 (n = 2..5)
+        rederived: >-
+          The same bounds and the same four ceiling values to three decimals. Additions:
+          (a) every symmetric base (n >= 2, |X| >= 2) obeys a strictly lower ceiling,
+              c <= min(1, mu_sym), with
+              N mu_sym = [z^n](1+z)^{|X|-1}(1-z)^{-(B-t2)/2-1};
+              when mu_M <= 1, no symmetric base attains mu_M;
+          (b) the Poisson ceiling table is a large-B model; at small B, random symmetric
+              bases fall below 1 - exp(-mu).
+        composed: holds, refined (additions a, b)
+        effect_on_contract: >-
+          F1's threshold min(1, C(B+n-1,n)/N) is unchanged. Addition (a) becomes the exact
+          bound P2(ix), whose failure is read under F7, never as F1. Addition (b) makes the
+          per-cell exact ceiling ratio a reported quantity beside P3 (RQ-1), and it is a
+          stated limitation of P6 at n = 6, 7, where B is about 37 and 23.
+      - id: J4
+        producer: L6 generic complete-split probability 2^{1-n}(1 + O(n/sqrt Q)); 1 on the factor-base locus; exact over proxy 2^{n-1}
+        rederived: >-
+          The leading value is 2^{1-n}, and the probability on the locus is exactly 1.
+          Exact form:
+            P_split = 2^{1-n}(1 + eta) - (t/Q)^n + delta,
+          where eta = nt/Q + O(n^2/Q) and 0 <= delta <= C(n,2)(|W'|/Q)^2, with delta = 0
+          when t = 0. The relative error is O(n^2/Q) + O(n^2 2^n/Q^2).
+          The probability that all nonzero chi are equal is exactly
+            M_n = (p_+ + p_0)^n + (p_- + p_0)^n - p_0^n.
+          A mixed nondegenerate tuple never splits.
+          Exact over proxy is (1 - zeta)/P_split, with 0 <= zeta <= 1/|X|; its leading
+          value is 2^{n-1}.
+        composed: holds, refined (sharper error term; zeta correction)
+        prior_check: >-
+          The prior expected exactly this sharper error term, O(n^2/Q) relative, and said
+          a sharper term would be a refinement, not a break. Same leading value, so not a
+          break. The zeta correction is O(1/|X|) and leaves the leading value unchanged.
+        effect_on_contract: >-
+          P5(a) and the comparator in P5(b) are confirmed as stated. Conditional on every
+          chi being nonzero, the comparator (p_+^n + p_-^n)/(p_+ + p_-)^n is exactly the
+          probability that all chi are equal, and on nondegenerate fibres splitting is
+          exactly that event. P5(c) is unchanged. M_n + delta is not adopted as a
+          prediction (rationale R-5).
+      - id: J5
+        producer: L8 2^{n-1} = q^{Theta(1)} forces n = Theta(log q); a 2^{n-1} gain in rate 1/n! changes log_q(1/rate) by the relative amount ln 2/(ln n - 1) -> 0
+        rederived: >-
+          log_q(n!) = Theta(log log q) and log_q(2^{n-1}) -> c. The relative change is
+          -ln 2/(ln n - 1)(1 + o(1)) -> 0. The exponent class q^{Theta(log log q)} is
+          unchanged, and so is its leading constant c/ln 2.
+        composed: holds (as stated; the sign is a convention)
+        effect_on_contract: None (no run tests L8).
+    proves_too_much:
+      O1: passes. The cap allows coverage up to min(1, mu); a non-symmetric base attained mu. A greedy symmetric base beat matched random bases, at 1.116 and 1.243, while staying below its ceiling.
+      O2: passes. The locus split probability is 1, not the generic value.
+      O3: passes. For D' (one point per pair), T_S depends only on X and differs from T_A'. The T_M - T_X identity is stated to need D = -D.
+      O4: passes. Every factor is 1 at n = 1.
+    verdict_against_prior: >-
+      This concurs with the recorded prior (about 0.6 that every joint holds as stated;
+      about 0.85 that no joint breaks in a way that changes a provisional value). No
+      provisional value changes. The prior's most likely break did not occur, and its
+      specific expectation for J4 was met. A concurrence with a written prior informs less
+      than an overturn would, but it is recorded as such, not as a vote.
+    b3: >-
+      CLEARS when TASK-20261105-c0d167 verifies. No version-2 amendment is needed for a
+      broken joint. The final specification still differs from v1 by the additions pinned
+      below. The approval act writes them as a protocol_amendment (handling_of_specification).
+    limitations_of_the_round:
+      - "PD-2: one re-deriver owned all five joints and the control. There is no second reviewer."
+      - "PD-1: the blind-history check is UNCHECKABLE, never passed. Hygiene is attested by the reviewer and by the commit messages of the archives."
+      - Independence is between sessions only, not between models. The producer, the re-deriver (self-reported claude-opus-5-5, model_verified false) and this composing session are the same model id. This was not a rule-12 round (DEC-20261029-71d757 R-5, OI-5), and nothing here triggers rule 12. There is no closure, no promotion, and no contradiction of validated evidence.
+      - Corroboration covers toy fields only (counting up to Q = 961, splitting up to Q = 1,953,125, n <= 4 computed). Semaev's theorem was not read. The T1 transfer of KN-FIND-4f0d84 is corroborated over F_{p^2} and F_{p^3} at small p, not at contract scale.
+      - Convention note, so that the run analysis does not misread a factor of 2. The card's T_S counts sign classes with sums in {R, -R}, while the code's T_S counts sign vectors with sum R. The two agree on 2R != O and differ by exactly a factor of 2 at R in E[2]. T_X is the same in both.
+      - P2(iv)'s multiple-root clause is not tested by arm A, which builds no fibre at n >= 3. It rests on J2 (10,011 multiplicity checks) and on the arm-B group-law cross-checks.
+    procedure_observation: >-
+      The PR #2707 bytes reached main through an owner-instructed PR outside this batch's
+      archive chain. Nothing is wrong with that, but no archival task binds them. The
+      TASK-20261105-7083a8 snapshot re-binds every code file at its final bytes, and the
+      approval binds the code sha256 from that snapshot (approval_lock_binding).
+
+  # ------------------------------------------------------ 2. predictions to freeze
+  predictions_to_freeze:
+    written_before_data: >-
+      No contract cell has been counted. The KAT cells and the re-deriver's fields are
+      disjoint from every contract cell. These entries are recorded here first
+      (first_recorded_in: ledger/decisions/DEC-20261105-f0b7c7.yaml), and the approval act
+      copies them verbatim into the final specification. Their values never change after
+      any run.
+    unchanged: P1, P2 (i)-(vi), P3, P4, P5 (a)-(c), P6, P7, P8 as in specification v1, in value and tolerance
+    provenance_upgrade: >-
+      P2 source becomes "IDEA-20261023-f15270 L1-L4, independently re-derived by
+      TASK-20261029-3ac467 (composed in DEC-20261105-f0b7c7)". P5 source adds "L6 leading
+      value and the conditional comparator re-derived by TASK-20261029-3ac467 Q4".
+    added:
+      - id: P2(vii)
+        quantity: per exhaustive cell, the targets O and E[2] that the current iii comparison skips
+        prediction: >-
+          T_S(R) (code convention: ordered x-tuples with sign vectors summing to R) equals
+          sum over ordered point tuples with sum R of 2^{t(P)} at EVERY target, including
+          O and E[2]. Reported as the count of skipped targets with nonzero residual;
+          predicted 0.
+        source: TASK-20261029-3ac467 Q2 (fibre of phi has size 2^{t(P)}; class form with factor 1/2 on G[2])
+        decisive: true (C-identities; a failure in a valid cell is F7)
+      - id: P2(viii)
+        quantity: n = 2 exhaustive cells, every target with 2R != O
+        prediction: T_M(R) = T_X(R); the count of such targets with T_M != T_X is predicted 0
+        source: TASK-20261029-3ac467 Q2 corollary
+        decisive: true (C-identities; F7)
+      - id: P2(ix)
+        quantity: per exhaustive cell and base (line, matched_random, half_twin), the number of targets with T_M >= 1
+        prediction: >-
+          at most min(N, C_sym), where C_sym = [z^n](1+z)^{|X|-1}(1-z)^{-(B-t2)/2-1} is
+          computed with the base's own B, t2 and |X|. Reported as observed, C_sym and the
+          margin; predicted no excess.
+        source: TASK-20261029-3ac467 Q3 item 4
+        decisive: >-
+          true as an exact bound. An excess in a valid cell is read under F7: a
+          derivation-correction record, or a counter defect investigated first. It is
+          never read as F1 / CLAUSE_SUPPORTED, because F1's threshold is unchanged.
+    reported_not_decisive:
+      - {id: RQ-1, what: "per arm-A cell, min(1, C_sym/N) divided by the matched-random coverage: the exact per-cell ceiling on kappa_rel, shown beside P3 (J3 addition b)"}
+      - {id: RQ-2, what: "per B1 cell, the fractions of zero, degree-deficient, non-squarefree and any-chi-zero tuples (already secondary), now also named as the scale of the conditioning gap in P5(b)"}
+      - {id: RQ-3, what: "the J4 exact-over-proxy factor (1 - zeta)/P_split is NOT measured by any arm; it is cited in the eventual evidence review as a derivation, never as a measurement"}
+    not_adopted:
+      - {what: "unconditional split fraction against M_n + delta on all B1 tuples", why: "B1 tests splitting only on squarefree full-degree fibres with nonzero chi; adding it means changing the fibre analysis; at rung 2 the degenerate and chi-zero mass is about 1e-3 or less, so it adds little beyond P5(b) (R-5)"}
+      - {what: "tightening F1 to min(1, mu_sym)", why: "that would change a falsification threshold; P2(ix) carries the sharper bound under F7 instead"}
+
+  # ------------------------------------------------------------ 3. F-1 and F-2
+  f1_decision:
+    choice: require a pre-approval KAT extension (TASK-20261105-ac5ad6 KX-1 to KX-5); IM-3 is widened by this decision
+    reasons:
+      - >-
+        The untested code paths carry most of the contract: arm A and B at n = 4, 5, and
+        four of the six arm-C n values (4 to 7).
+      - >-
+        An arithmetic defect at n >= 4 would not be caught by P1. The conservation
+        identity holds for any map from tuples to targets.
+      - >-
+        Such a defect would surface first as a P2 identity failure, which the contract
+        routes to F7, a derivation-correction record. An instrument defect would then be
+        filed against a derivation that two independent sessions now agree on. That is
+        the program's most expensive misreading, and the start-up self-test cannot
+        prevent it while the KATs stop at n = 3.
+      - >-
+        The extension costs a few hours and zero runs. The cells
+        F_{5^n} and F_{13^n} (n = 4..7), and F_{q'_n^n} with q'_n the least prime > q_n
+        (n = 2..7), are disjoint from every contract cell.
+    widened_im3: >-
+      Field, curve and counter KATs may use q in {5, 13} at n <= 7, and q'_n = the least
+      prime greater than the arm-C q_n at degree n, for n = 2..7. The throughput proxies
+      of TP-0 are timing-only. All other IM-3 terms stand: naive against optimised only,
+      no cross-convention identity or predicted value asserted, and no derived statistic
+      recorded.
+  f2_decision:
+    choice: require a measured throughput on non-contract proxy cells (TP-0); no compiled port unless TP-1 triggers
+    reasons:
+      - Watchdogs and worker counts are set from the throughput. A watchdog sized from a 4x-uncertain model either wastes cells as failed_infrastructure or hides a hang.
+      - The measurement costs less than one B1 cell; a port costs a new implementation and its own KATs.
+    TP-0: >-
+      Timing only. Measure B1 analysis per tuple at n = 2..5 on (257, 2), (43, 3),
+      (29, 4) and (13, 5), the least primes above each rung-2 q, with at least 10^4 tuples
+      each. Also time the largest arm-A cell proxy (103, 4) and the arm-C n = 2 proxy
+      (q'_2, 2), each in full or with a stated partial fraction. Record wall time, CPU time,
+      peak RSS and the worker count. No tally, split count, chi pattern, histogram or
+      coverage is printed, recorded or kept; the outputs go to a temporary directory
+      deleted unread.
+    TP-1: >-
+      If the measured projection for one B1 cell of 10^6 tuples exceeds 24 h of wall time
+      at the worker count the host can sustain, the approval act does not approve. It
+      opens a compiled-B1-port task instead. Otherwise the approval act sets every
+      per-arm watchdog to 3x the measured projection (minimum 1 h) and records it.
+
+  # ------------------------------------------------------------ 4. choice
+  choice:
+    chosen: (b) keep EXP-MONO-1a1be2 review_required and open BATCH-8517aa
+    why_not_a: >-
+      Option (a) needs every one of B1-B6 to clear in this act. B1 cannot honestly clear
+      while the KATs stop at n = 3 (f1_decision), and the watchdog values for B5/B6 would
+      rest on a model (f2_decision). The cost of (b) is one implementation task, one code
+      review and two archives, all with zero runs. The cost of (a) going wrong is a run of
+      about 100 cells whose n >= 4 rows could be misfiled as derivation failures.
+    ranked_ahead_of_doing_nothing: >-
+      The batch clears the last instrument blockers on the only designed contract of an
+      ECC lineage. Its outputs are needed under every outcome of the eventual run. No other
+      open act on GOAL-PATH-001 is claimed. The next Q1 act, the C-Q1d absorption check
+      (DEC-20261023-19c53b), keeps its rank and is not displaced.
+    updated_blockers:
+      - {id: B1, status: open (narrowed), text: "Instrument exists (02a714; 177 KATs after #2707). Remaining: F-1 widened KATs and the composition residuals (P2(vii)-(ix)).", clears_when: "TASK-20261105-7083a8 verifies with the full KAT suite passing, and TASK-20261105-49716d verifies with no unresolved blocking finding from TASK-20261105-165da2"}
+      - {id: B2, status: open (narrowed), text: "Launcher and generator exist. The regenerated plan must be byte-identical to, or a recorded successor of, the 9ccbe614...fb4a preview.", clears_when: "the approval act binds trial_plan_sha256 of the plan regenerated from the 7083a8 code"}
+      - {id: B3, status: cleared, text: "Composed here: every joint holds, three refined; additions pinned in predictions_to_freeze.", clears_when: "TASK-20261105-c0d167 verifies"}
+      - {id: B4, status: open, text: "protocol.json not written", clears_when: "approval act: validate and freeze, hash bound in execution_plan.protocol_hashes"}
+      - {id: B5, status: open, text: "no runbook or mechanical card", clears_when: "approval act: experiment-director compile, LINT OK, then CARD OK"}
+      - {id: B6, status: open, text: "no preapproval packet or run handoff", clears_when: "approvable true on the exact prospective bytes; after the approval archive, execution_state ready"}
+      - {id: B7, status: open (new), text: "throughput measured, watchdogs set (F-2)", clears_when: "throughput-calibration.json in the 7083a8 snapshot, and TP-1 not triggered"}
+      - {id: B8, status: open (new), text: "independent code review of the final code", clears_when: "the 165da2 report is archived by 49716d with no blocking finding left unresolved"}
+
+  # ---------------------------------------------------- specification handling
+  handling_of_specification:
+    now: >-
+      Not edited. experiments/EXP-MONO-1a1be2/specification.yaml stays the v1
+      review_required draft (sha256 d81a85b3...c373). Its blocker list is superseded, for
+      decision purposes, by updated_blockers above. Its own header requires that any change
+      before approval be an amendment that keeps the original on record.
+    approval_act: >-
+      /design-experiment step 5 asks for preview copies of the exact final bytes in a
+      packet. The launcher reads experiments/EXP-MONO-1a1be2/specification.yaml and checks
+      its sha256 against approval.lock, so the approved bytes must end up at that path.
+      The approval act therefore:
+      (i) writes experiments/EXP-MONO-1a1be2/amendments/AMEND-v2-<DEC-id>.yaml, a
+          protocol_amendment listing every v1 -> v2 change with this decision as the
+          reason (zero runs, so no outcome informed it);
+      (ii) writes the v2 bytes, with status approved and approved_by coordinator, to the
+           preview path experiments/EXP-MONO-1a1be2/preapproval/specification.v2.preview.yaml;
+      (iii) builds the packet on that preview and requires approvable: true;
+      (iv) only then, in the approval archive, writes byte-identical v2 content to
+           specification.yaml.
+      v1 stays on record through the 26a72871e7 binding and the amendment. The design
+      skill allows this: the pre-approval draft becomes the frozen contract at approval.
+      What it forbids is an edit after approval.
+  approval_lock_binding: >-
+    The approval decision records four things: the 7083a8 snapshot commit; the per-file
+    sha256 of the seven CODE_FILES at that commit; code_sha256 = launcher.code_sha256()
+    (one sha256 over "name:sha256\n" for fqn.py, curves.py, semaev.py, counters.py,
+    kernel.c, launcher.py and make_trial_plan.py, in that order) computed on those bytes;
+    and the sha256 of code/tests/test_kat.py.
+    The approval archive writes experiments/EXP-MONO-1a1be2/approval.lock as JSON with
+    approved_by, specification_sha256 (the v2 bytes), code_sha256 and trial_plan_sha256.
+    The launcher's gate is the post-#2707 code, and it refuses a missing, empty or
+    mismatched lock. The 02a714 bytes stay bound as history and are never the approved
+    build. The start-up self-test receipt binds the same code_sha256 and the test-file
+    sha256.
+
+  # ------------------------------------------------------------ visual report
+  visual_report:
+    owed_by_this_act: true
+    reason: >-
+      This act records a DEC that composes a review round, clears a readiness blocker and
+      pins predictions. That is the review step of coordinate (research-visuals, "Every
+      evidence review"). There is no evidence record and no status move, so the report is
+      small.
+    directory: experiments/EXP-MONO-1a1be2/reports/review-DEC-20261105-f0b7c7/
+    files:
+      - report.typ (source)
+      - report.pdf (rendered, inspected)
+      - composition.svg
+      - split-fraction.svg
+      - figures.py (draws both SVGs from figure-data.json)
+      - figure-data.json (values copied by key from computations.json, each with its step id)
+    report_contents: >-
+      Decision, claim tier (derivation, toy corroboration) and scope, citing
+      DEC-20261105-f0b7c7, REVIEW-PATH-20261029-3ac467, TASK-20261029-3ac467, fe6c9d
+      (618e0c81d5) and EXP-MONO-1a1be2. Observation is kept separate from comparison,
+      inference and limitation.
+      - Observation: the per-joint table (producer statement, re-derived statement,
+        composed verdict) and the O1-O4 results.
+      - Comparison: against the recorded prior.
+      - Inference: B3 clears and the predictions_to_freeze.
+      - Limitation: limitations_of_the_round.
+      - Next actions: the BATCH-8517aa queue.
+      The report says that no run exists and no evidence record is decided.
+    figure_1_composition_svg: >-
+      A diagram. Five rows, J1-J5. Left column: the producer lemma (L1/L2, L3/L4, L5, L6,
+      L8) as short labels, no formulas. Middle column: the re-derivation step (Q1-Q5).
+      Right column: the verdict badge (holds / holds-refined) with the refinement named in
+      words: "2-torsion targets; n=2 equality", "symmetric ceiling", "sharper error term;
+      zeta correction". Under it, a strip for O1-O4 marked passes. A side box lists the
+      three added predictions P2(vii), P2(viii), P2(ix), with arrows from J2 and J3. Every
+      edge is labelled "derivation (re-derived), not measured".
+    figure_2_split_fraction_svg: >-
+      A quantitative graph of RECORDED values only, from computations.json step q4_split
+      Part A (all 22 rows). For each row, x = row label (field, t, n) and y = split
+      fraction (measured), with markers for exact M_n and 2^{1-n}. Error bars are binomial
+      SE for sampled rows; exhaustive rows are marked "exh.". The measured delta is shown
+      as a stacked offset where nonzero. Caption: TASK-20261029-3ac467 q4_split; toy
+      fields Q <= 1,953,125; none is a contract cell; no new computation.
+    canonical_graphs: >-
+      None should change: no evidence record, status or knowledge entry moves. The session
+      lists the canonical graphs it checked and left unchanged in report.typ. That includes
+      docs/reports/2026-10-23-idea-f15270-rescope/convention-map.svg, which is not
+      canonical and is not edited.
+    rendering: >-
+      The top-level session renders this report under research-visuals "Rendering"
+      (typst wheel in a scratch venv), inspects every page, and stages the six files in
+      TASK-20261105-c0d167. If no renderer can be installed, it commits the source and
+      SVGs and states the blocker in report.typ and in the receipt.
+
+  # ------------------------------------------------------------ batch
+  batch:
+    id: BATCH-8517aa
+    goal_id: GOAL-PATH-001
+    dispatch_queue: coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json
+    tasks:
+      - TASK-20261105-18a59d (coordinator; this act; completed on writing; archived by c0d167)
+      - TASK-20261105-c0d167 (coordinator; ledger archive of this act, ALONE; closes lane BATCH-c53152)
+      - TASK-20261105-ac5ad6 (executor, executor-implementation; KAT widening, composition residuals, throughput calibration; zero runs; archived by 7083a8)
+      - TASK-20261105-7083a8 (coordinator; snapshot of ac5ad6, ALONE among commit tasks)
+      - TASK-20261105-165da2 (validator, review-adversarial, independent session; code review of the 7083a8 bytes; archived by 49716d)
+      - TASK-20261105-49716d (coordinator; snapshot of 165da2, ALONE among commit tasks)
+    order: >-
+      The tasks run strictly in sequence:
+      (1) commit the queue alone, render it, open lane BATCH-8517aa;
+      (2) c0d167 alone, then close lane BATCH-c53152;
+      (3) ac5ad6;
+      (4) 7083a8 alone;
+      (5) 165da2 on the 7083a8 commit;
+      (6) 49716d alone;
+      (7) the approval act (declared successor, outside this queue).
+    max_concurrent: 1
+    focus:
+      decisive_evidence: KAT suite passing with n = 4..7 and large-q fields; measured throughput; code review with no unresolved blocking finding
+      inconclusive_decision: >-
+        If a widened KAT fails, the defect is fixed inside ac5ad6's write scope and
+        reported as a scope finding. The snapshot then binds the fix, or stops on an
+        expected-path mismatch and returns to a fresh Coordinator act (spare
+        DEC-20261105-c7974d). That outcome is infrastructure, never evidence.
+      excluded_peripheral_work: L7, reading C, the 2^36 extension, a compiled B1 port (unless TP-1), M_n + delta (R-5), any contract cell
+      rerank_trigger: >-
+        Any of: TP-1 triggers; a blocking code-review finding; a widened KAT exposes an
+        arithmetic defect that changes trial-plan identity fields.
+      stage_budget: >-
+        Advisory (docs/research-budget-policy.md): implementation 28800 s, code review
+        10800 s, three archives about 6300 s together. Zero runs.
+    pairing_duty: >-
+      Unchanged. Arm C remains the paired heuristic-validation arm (HEUR-F-1, HEUR-F-2),
+      and ac5ad6 continues the proof-of-concept implementation.
+    review: >-
+      165da2 is an instrument review, not a claim-changing round, so it has no
+      review_plan. The eventual runs get their own independent validation in review-evidence.
+
+  # ------------------------------------------------------------ checkpoint
+  batch_c53152_checkpoint:
+    written_to: ledger/goals/GOAL-PATH-001.yaml batch_checkpoints (appended item)
+    lane_closure: >-
+      tools/goal_lanes.py close-lane GOAL-PATH-001 BATCH-c53152 --outcome archived
+      --decision DEC-20261105-f0b7c7, run by c0d167 after its archive verifies.
+    summary: >-
+      A design batch. All six tasks completed, with zero runs:
+      - 111e6a: design act, DEC-20261029-71d757;
+      - 37675c: ledger archive at 26a72871e7;
+      - 3ac467: blind re-derivation (J1-J5 hold);
+      - a97206: toolchain, 174 KATs;
+      - 02a714: snapshot at f4a5347a84;
+      - fe6c9d: snapshot at 618e0c81d5.
+      Composed by DEC-20261105-f0b7c7. Launcher fixes merged in PR #2707 (f7b61f7e0d) on
+      owner instruction, outside the batch.
+
+  rationale:
+    - R-1 The declared successor of DEC-20261029-71d757 is carried out. It composes the round, checkpoints and closes the lane, and keeps or amends the predictions. Every value is kept; three exact identities are added before any data.
+    - R-2 Approval is withheld for a stated, checkable reason, namely that KATs are missing on code paths that carry most of the contract. It is not withheld for convenience. The fix is scheduled now in a batch whose every task has a completion gate.
+    - R-3 The refinements are added as predictions because they are exact, were derived blind, cost one residual each, and give P2(iv) teeth at n = 2. As implemented, P2(iv) checks only T_X <= T_M, which holds by definition.
+    - R-4 F1 is not tightened. A falsification threshold is changed only when the evidence demands it. The sharper bound becomes a separate exact check under F7.
+    - R-5 M_n + delta is not adopted. It needs a change to the fibre analysis for a quantity P5(b) already pins to within the degenerate mass, which is about 1e-3 at rung 2.
+    - R-6 A composition is not evidence. Nothing here moves H-MONO-23d347, supports a lemma as a finding, or speaks to any exponent.
+
+  scope_and_limitations:
+    - This act ran no tool and computed no hash. The ECC classification, autoresearch_focus output, archive commits and PR-2707 are as the top-level session reported. c0d167 re-checks what it can.
+    - computations.json was not re-run. Its numbers are cited only as the report states them.
+    - Coordinator estimate, not a derivation. The conditioning of P5(b) on nondegenerate fibres biases phi_hat_n by a relative amount of about (number of 2-relation patterns) x (t+1)/N, which is under 1e-3 at every rung-2 cell. That is well under 1 SE at 10^6 tuples. It is recorded so that the eventual review can check it against RQ-2. It changes no tolerance.
+    - Toy tier throughout. KN-OPEN-62c870 CS-D2 and CS-R7 bind every later citation.
+
+  evidence_refs:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261029-3ac467/blind_rederivation.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261029-3ac467/review_attestation.yaml
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261029-3ac467/computations.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c53152/review-plan.yaml
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c53152/archives/TASK-20261029-fe6c9d/snapshot-receipt.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c53152/archives/TASK-20261029-02a714/snapshot-receipt.json
+    - experiments/EXP-MONO-1a1be2/specification.yaml
+    - experiments/EXP-MONO-1a1be2/implementation/kat-report.md
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/code/counters.py (exhaustive_cell identities, by function)
+    - experiments/EXP-MONO-1a1be2/code/launcher.py (check_approval, code_sha256, _analyse_block, by function)
+    - ledger/decisions/DEC-20261029-71d757.yaml
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      This is a composition of a derivation review, not an evidence-review decision, and
+      no hypothesis is supported or rejected. The contract's decision_impact ties promotion
+      for KN-OPEN-62c870 Q3, and the clause correction, to the run's review-evidence
+      decision. Revisit condition: L8 (J5) does not depend on any run. If EXP-MONO-1a1be2
+      is not approved by 2026-12-15, a stand-alone act ranks a correction of the "WOULD
+      move an exponent" clause on L8 alone, which has been derived twice independently.
+
+  goal_checkpoint:
+    goal_id: GOAL-PATH-001
+    lane: BATCH-8517aa
+    queue: coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json
+    branch: claude/quotient-summation-ecc2k-130-4y7t3o
+    completed_tasks: [TASK-20261105-18a59d]
+    impediments: IMP-PATH-20261105-1 (approval of EXP-MONO-1a1be2 impeded by B1, B2, B4-B8; asserts nothing about H-MONO-23d347)
+    next_action: NA-1 (exactly one)
+
+  next_actions:
+    - id: NA-1
+      role: coordinator (shell-holding top-level session; archive and dispatch; no status authority)
+      action: >-
+        (1) Commit the BATCH-8517aa queue alone, render it, and open lane BATCH-8517aa.
+        (2) Render the decision report.
+        (3) Run TASK-20261105-c0d167 alone (LA-1 to LA-13), push, open or refresh the
+            ready-for-review PR with auto-merge, and close lane BATCH-c53152.
+        (4) Then dispatch TASK-20261105-ac5ad6 to the executor.
+        The tasks 7083a8, 165da2 and 49716d follow in queue order.
+      declared_successor_not_an_additional_next_action: >-
+        After 49716d verifies, a fresh Coordinator act carries out the approval:
+        - reads the 165da2 report and the throughput calibration, and applies TP-1;
+        - writes the v2 amendment and the v2 preview (handling_of_specification) with
+          predictions_to_freeze;
+        - writes, validates and freezes protocol.json;
+        - dispatches experiment-director compile (runbook LINT OK);
+        - writes the executor run handoff (inference.policy executor-mechanical,
+          write_scope including experiments/EXP-MONO-1a1be2/runbook-sessions/ and
+          reports/) and the next queue;
+        - builds the preapproval packet, and approves only on approvable: true;
+        - writes approval.lock as approval_lock_binding;
+        - requires execution_state ready, and .resume/RESUME.md filled and pushed, before
+          any run.
+
+  conditions:
+    - {id: OC-1, text: "The BATCH-8517aa queue is committed alone and renders clean under tools/research_dispatch.py --ready-only before c0d167 stages anything."}
+    - {id: OC-2, text: "tools/ecc_priority.py --classify reports ECC for RQ-MONO-001 and GOAL-PATH-001 with no budget violation; tools/autoresearch_focus.py output recorded (advisory). Otherwise stop; a fresh act uses spare DEC-20261105-c7974d."}
+    - {id: OC-3, text: "The GOAL-PATH-001 diff is exactly the additive set in c0d167 LA-3; status stays active."}
+    - {id: OC-4, text: "Every reserved id is free under tools/allocate_id.py --check except for this batch's own files."}
+    - {id: OC-5, text: "The specification is byte-identical to its 37675c-bound bytes (d81a85b3...c373); check_review_independence.py --batch .../BATCH-c53152 --reports .../review/TASK-20261029-3ac467 still prints PASS."}
+    - {id: OC-6, text: "validate_ledger.py and check_merge_hygiene.py report no new error attributable to a staged path."}
+
+  reserved_ids_used_and_unused:
+    used: [DEC-20261105-f0b7c7, BATCH-8517aa, TASK-20261105-18a59d, TASK-20261105-c0d167, TASK-20261105-ac5ad6, TASK-20261105-7083a8, TASK-20261105-165da2, TASK-20261105-49716d]
+    unused: [DEC-20261105-c7974d (spare; kept for a fresh act if OC-1 to OC-6 fail or a snapshot stops on an expected-path mismatch)]
+    provenance: Reserved by the top-level session. This session minted and checked nothing.
+
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    resolved_model_id_reported: claude-opus-5-5
+    model_verified: false
+    model_verified_reason: No adapter probe receipt exists for this session.
