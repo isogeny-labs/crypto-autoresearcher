@@ -1,0 +1,452 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "EXP-PKM-RADIX-001",
+  "version": 1,
+  "created": "2026-11-04",
+  "repository": "crypto",
+  "study_dir": "research/pkm_radix_grading_20261104",
+  "authors": [
+    "Claude (session for the repository owner)"
+  ],
+  "links": {
+    "narrative": "research/pkm_radix_grading_20261104/PROTOCOL.md",
+    "motivation": "research/notes/ecdlp-general/RESEARCH_PRIME_FIELD_BARRIER_MAP_20261104.md",
+    "prior_result": "research/prime_fall_degree_t14_20261101/runs/R-t9-t10.jsonl",
+    "engine_note": "research/notes/index-calculus/RESEARCH_PKM_TOWER_ORACLE.md",
+    "status": "Frozen definition; no study row exists at freeze."
+  },
+  "question": "On the same Kummer-tower refutation systems, does a radix-4 or radix-8 grading of the tower change F4's counted multiply-adds by a factor of 2 or more against the unit (radix-2) grading, and does that factor grow with N = m*t?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "The unit-graded instrument reproduces the committed R-t9-t10 rows exactly.",
+      "class": "exact_computation",
+      "decided_by": [
+        "G0"
+      ]
+    },
+    {
+      "id": "C2",
+      "text": "Every graded run decides every system as the unit run does; every planted row has planted_ok.",
+      "class": "exact_computation",
+      "decided_by": [
+        "L2",
+        "L3",
+        "X2",
+        "A1"
+      ]
+    },
+    {
+      "id": "C3",
+      "text": "Per (m, t, control) the radix-2^k grading changes refutation multiply-adds by the reported ratio r_k(t).",
+      "class": "exact_computation",
+      "decided_by": [
+        "L2",
+        "L3",
+        "X2"
+      ]
+    },
+    {
+      "id": "C4",
+      "text": "The ratio grows, fades or holds with N over the ladder.",
+      "class": "comparative",
+      "decided_by": [
+        "L2",
+        "L3",
+        "X2"
+      ]
+    },
+    {
+      "id": "C5",
+      "text": "Any statement about N >= 24, cryptographic sizes or Pollard rho.",
+      "class": "out_of_scope",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H0",
+      "text": "no_material_effect: 0.5 < r_k(t_max) < 2 for m in {2,3}, k in {2,3}, tower and null (author's prediction).",
+      "preregistered_prediction": true
+    },
+    {
+      "id": "H1",
+      "text": "gain_growing or gain_constant for some (m, k) on the tower: falsifies H0."
+    }
+  ],
+  "arms": [
+    {
+      "id": "radix2",
+      "role": "reference",
+      "description": "Unit grading (every committed row).",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "recorded in commit.txt at run time (this PR's head)",
+        "build": "see amendments[A1]",
+        "binary_sha256": "recorded in binary.sha256 at run time",
+        "flags": {
+          "engine": "tower",
+          "radix": "2"
+        },
+        "env": {
+          "RAYON_NUM_THREADS": "2"
+        },
+        "threads": 2
+      }
+    },
+    {
+      "id": "radix4",
+      "role": "candidate",
+      "description": "Weights 1,2 on each block of 2 tower levels.",
+      "same_instrument_as": "radix2",
+      "parameters": {
+        "radix": 4
+      }
+    },
+    {
+      "id": "radix8",
+      "role": "candidate",
+      "description": "Weights 1,2,4 on each block of 3 tower levels.",
+      "same_instrument_as": "radix2",
+      "parameters": {
+        "radix": 8
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "A1 vs L2-t8-r4",
+      "kind": "determinism",
+      "expected": "bit-identical counted metrics",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "G0",
+      "expected_detection": "t=9: D=5, max_cols=8644, muladds=45957046778; t=10: D=6, max_cols=33446, muladds=481960954036; both draws, inconsistent=true",
+      "note": "Regression positive control of the instrument. The grading itself is checked by unit tests and the per-row weights field; no input with a known grading effect size exists.",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "L2 controls=null",
+      "null_population": "S3 monomial support with random coefficients and a planted zero, same tower, same grading",
+      "matched_on": [
+        "p",
+        "m",
+        "t",
+        "tower",
+        "grading",
+        "monomial support"
+      ],
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": {
+      "name": "radix",
+      "levels": [
+        2,
+        4,
+        8
+      ]
+    },
+    "factors": [
+      {
+        "name": "system (p, curve, g, target)",
+        "treatment": "fixed",
+        "value": "pilot cell seeds; identical across arms",
+        "how": "same --p/--m/--t/--seed; rows record curve, g, x_r"
+      },
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "one binary",
+        "how": "binary.sha256, commit.txt, rustc.txt"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "value": "local-ccr-2vcpu, 7 GiB",
+        "how": "counted metrics only; host cannot move them"
+      },
+      {
+        "name": "order",
+        "treatment": "fixed",
+        "value": "t even: 2,4,8; t odd: 8,4,2",
+        "how": "affects clock only; no clock metric"
+      },
+      {
+        "name": "budget",
+        "treatment": "fixed",
+        "value": "1800 s, max-nnz 2e9, vmem 6.5 GB",
+        "how": "censored rows reported, not imputed"
+      },
+      {
+        "name": "control",
+        "treatment": "crossed",
+        "value": "tower, null (L2)",
+        "how": "same cells"
+      },
+      {
+        "name": "prime",
+        "treatment": "crossed",
+        "value": "2013265921 (all), 786433 (X2)",
+        "how": "replication"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-r4",
+        "arms": [
+          "radix4",
+          "radix2"
+        ],
+        "differs_in": [
+          "radix"
+        ],
+        "design": "one_factor",
+        "threshold": "bands of section 5"
+      },
+      {
+        "id": "C-r8",
+        "arms": [
+          "radix8",
+          "radix2"
+        ],
+        "differs_in": [
+          "radix"
+        ],
+        "design": "one_factor",
+        "threshold": "bands of section 5"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "radix4",
+          "radix4"
+        ],
+        "differs_in": [],
+        "design": "aa",
+        "threshold": "bit-identical"
+      }
+    ],
+    "crosses_map": true
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Counted metrics are order-independent; a fixed rotation is recorded for the clock only.",
+    "seed_derivation": {
+      "method": "harness_rule",
+      "seeds": [
+        "pilot default --seed 0x504B4D54; cell seeds derived by the pilot"
+      ],
+      "nonce": null,
+      "note": "Same rule and seeds on every arm; systems are identical across arms."
+    },
+    "instance_sampling": {
+      "rule": "The pilot's deterministic draw of 1 planted (t <= planted-max-t) and 2 random targets per cell.",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact counts against a frozen band rule; arm labels cannot change a count.",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": "2 random refutation systems per (cell, t, control), plus planted correctness rows",
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": null,
+      "tests_in_family": 4,
+      "correction": "none (band rules on exact counts; no p-values)",
+      "passes": true,
+      "note": "Deterministic counts; no inference beyond the ladder."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 120,
+      "per_sample_seconds": "5 (m=2,t=9) to 47 (m=2,t=10) at 4 vCPU; x2 at 2 vCPU; grading factor 0.25..4",
+      "threads": 2,
+      "estimated_total_seconds": 5400,
+      "measured_on": "committed R-t9-t10 rows (4 vCPU); L3 unpriced"
+    }
+  },
+  "metrics": {
+    "primary": {
+      "id": "muladds",
+      "name": "F_p multiply-adds in all eliminations",
+      "unit": "multiply-adds",
+      "kind": "counted",
+      "definition": "row field muladds of a completed refutation system",
+      "source": "runs/*.jsonl muladds",
+      "aggregation": "per_row",
+      "resolution": "1",
+      "uncertainty": "none_exact"
+    },
+    "secondary": [
+      {
+        "id": "max_cols",
+        "unit": "columns",
+        "kind": "counted",
+        "source": "max_cols"
+      },
+      {
+        "id": "max_dense_entries",
+        "unit": "entries",
+        "kind": "counted",
+        "source": "extra max_dense_entries"
+      },
+      {
+        "id": "solving_degree_max",
+        "unit": "degree in the arm's grading",
+        "kind": "counted",
+        "source": "solving_degree_max"
+      },
+      {
+        "id": "steps",
+        "unit": "F4 steps",
+        "kind": "counted",
+        "source": "steps"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 0,
+    "order": "fixed_rotation",
+    "clock": "none",
+    "counters": [
+      "muladds",
+      "max_cols",
+      "max_dense_entries",
+      "steps"
+    ],
+    "record": "jsonl per cell",
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "backend_reason": "No Iso Lab route from this session (no isolab MCP; AWS credentials rejected by STS 2026-11-04; isolab-experiment.yml takes ecbench specs only). Primary metric is counted and host-independent.",
+    "queue": null,
+    "placement": {
+      "cpus": 2,
+      "memory_mb": 7168,
+      "spot": false,
+      "paid": false
+    },
+    "measurement_class": "counted",
+    "timeout_seconds": 1800,
+    "checkpoint": {
+      "policy": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 2
+    }
+  },
+  "stopping_rules": {
+    "rule": "Run G0; stop if C1 fails. Then L2, L3, X2, A1 once each in that order. No reruns for outcome; censored rows stay censored.",
+    "kind": "fixed_n",
+    "preregistered": true
+  },
+  "invalidation_rules": [
+    "C1 mismatch: whole study instrument_invalid.",
+    "Any graded row disagreeing with the unit row on inconsistent, or a planted row with planted_ok false: instrument_invalid.",
+    "A graded row without a non-unit weights field: that row invalid.",
+    "A1 not bit-identical to L2-t8-r4: instrument_invalid."
+  ],
+  "decision_rule": {
+    "text": "Per (m,k): gain_growing if r_k(t_max) <= 0.5 on every draw and r_k non-increasing over the last three completed t; gain_constant if <= 0.5 on every draw otherwise; loss if >= 2 on every draw; no_material_effect if strictly between on every draw; mixed if draws disagree. Null control verdict computed the same way for attribution. X2 at t=10 must agree in band with L2 or the verdict is not_replicated.",
+    "comparison_ids": [
+      "C-r4",
+      "C-r8",
+      "C-aa"
+    ],
+    "threshold": "factor 2 bands at t_max",
+    "statistic": "r_k(t) = muladds(radix 2^k) / muladds(radix 2) per draw",
+    "interval": "none; exact counts",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "ratio r_k at t_max and its trend over the last three t",
+    "verdict_vocabulary": [
+      "instrument_invalid",
+      "gain_growing",
+      "gain_constant",
+      "no_material_effect",
+      "loss",
+      "mixed",
+      "not_replicated"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "research/pkm_radix_grading_20261104/analyze.py",
+      "sha256": "194a4232b208970dc90281ebd41f2f5d2fe2d47a352f449824f970f8a37f55e5"
+    },
+    "inputs": [
+      "runs/*.jsonl"
+    ],
+    "outputs": [
+      "results.json",
+      "REPORT.md",
+      "ratio_vs_t.svg"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "ratio_vs_t.svg",
+      "muladds_vs_N.svg"
+    ],
+    "report_dir": "research/pkm_radix_grading_20261104"
+  },
+  "inadmissible": [
+    "clock comparisons",
+    "extrapolation beyond the ladder",
+    "calling a constant factor an exponent change"
+  ],
+  "literature": [
+    {
+      "ref": "Petit, Kosters, Messeng, PKC 2016",
+      "provenance": "retrieved",
+      "claim": "tower factor bases"
+    },
+    {
+      "ref": "research/notes/index-calculus/RESEARCH_PKM_TOWER_ORACLE.md section 2.4",
+      "provenance": "repository",
+      "claim": "tower quotient = group algebra; square-free normal forms"
+    }
+  ],
+  "amendments": [
+    {
+      "id": "A1",
+      "date": "2026-11-04",
+      "filed_before_affected_data": true,
+      "text": "Instrument build from a pruned module list (build_prune.diff, deletions only in src/lib.rs and src/cryptanalysis/mod.rs; every compiled module is committed source). opt-level 3 if it fits this host's memory, else opt-level 1; recorded in build.txt. Counted metrics are build-independent; G0 regression decides admissibility.",
+      "files": [
+        "build_prune.diff",
+        "prune_closure.py",
+        "prune_modules.py"
+      ],
+      "build_prune_diff_sha256": "a80c0f6800ad87f37f701ce6be704c10da733476c022da9a5f4f634eef4676cc"
+    }
+  ],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "5cd90ce40c639df82aeb9b8a54cfbc484e544e481c18718d4f6ba2f01b3b53ee",
+    "commit": null,
+    "frozen_at": "2026-11-04",
+    "filed_before_affected_data": true,
+    "note": "protocol_sha256 = SHA-256 of this file as canonical JSON (sort_keys, compact separators) with freeze.protocol_sha256 = null. Commit: the commit that adds this file, before any study row. The canonical freeze tool lives in crypto-autoresearcher and was not available in this session."
+  }
+}
