@@ -172,6 +172,21 @@ class BenchrecTest(unittest.TestCase):
         self.assertEqual(r.returncode, 1)
         self.assertIn("neither in Git", r.stdout)
 
+    def test_edited_raw_fails(self):
+        self.make_record()
+        (self.root / "out" / "rho-step-100.0.json").write_text("edited\n")
+        r = self.br("check", check=False)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("differs from its recorded sha256", r.stdout)
+
+    def test_living_path_is_not_checked_against_the_checkout(self):
+        (self.root / ".benchrec.json").write_text(json.dumps({"living_paths": ["out/rho-step-100.0.json"]}))
+        self.make_record()
+        (self.root / "out" / "rho-step-100.0.json").write_text("the catalog moved on\n")
+        r = self.br("check", check=False)
+        self.assertNotIn("differs from its recorded sha256", r.stdout)
+        self.assertEqual(r.returncode, 0, r.stdout)
+
     def test_config_override(self):
         (self.root / ".benchrec.json").write_text(json.dumps({
             "records_dir": "docs/benchmarks/records", "progress_dir": "docs/benchmarks/progress",
