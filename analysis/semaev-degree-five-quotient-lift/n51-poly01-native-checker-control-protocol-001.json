@@ -1,0 +1,343 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n51-poly01-native-checker-control-plan-001.json",
+      "SHA-pinned D4 map and independent generator export",
+      "Prior accepted Python checker stdout"
+    ],
+    "outputs": [
+      "Write-once native build and checker transcripts; exact comparison to prior accepted result."
+    ],
+    "script": {
+      "path": "check_quotient_map_native.cpp",
+      "sha256": "6d4e1579cd7f7632513016b7101ac5267cdd666fab2939746ebf47b538ef29d0"
+    }
+  },
+  "arms": [
+    {
+      "description": "Check C0-C3 from the SHA-pinned n51 D4 map and independently exported sliced generators.",
+      "id": "native-check",
+      "instrument": {
+        "binary_sha256": "6d4e1579cd7f7632513016b7101ac5267cdd666fab2939746ebf47b538ef29d0",
+        "build": [
+          [
+            "/usr/bin/g++",
+            "-O3",
+            "-std=c++17",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "/home/ec2-user/lfd-trace-slice-cert-20261102/analysis/semaev-degree-five-quotient-lift/check_quotient_map_native.cpp",
+            "-lcrypto",
+            "-o",
+            "/home/ec2-user/fall-degree-data-20261029/n51-poly01-native-checker-control-001/check_quotient_map_native"
+          ]
+        ],
+        "commit": "389de7829fdd257ba2ec85cbc5c593c87f4cfe50",
+        "env": {},
+        "flags": {
+          "certificate_sha256": "be38aff828d9d3c73e70ea78914727fdca1305edbf5f99e99b28aa747cc396d8",
+          "generator_sha256": "31bb28a3f45ca99ed169f3fcc850ef3c88a96157296161f15a6150543e8e0ec6"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "quotient_codimension": 45615,
+        "variables": 51
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Use the already accepted independent Python checker transcript as an exact reference, without rerunning it.",
+      "id": "python-reference",
+      "instrument": {
+        "binary_sha256": "ca5a760e138e667a687418bb5d69c31c9b462b32029295b15a50e70c56f77e89",
+        "build": [
+          [
+            "reuse",
+            "prior checked transcript"
+          ]
+        ],
+        "commit": "389de7829fdd257ba2ec85cbc5c593c87f4cfe50",
+        "env": {},
+        "flags": {
+          "stdout_sha256": "96bd60f44b2b830cf3b6f89c605e600115e10e43f6df1f9bb165e818034ac0a1"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "variables": 51
+      },
+      "role": "reference"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "qualification"
+      ],
+      "id": "C1",
+      "text": "The native checker agrees with the prior Python checker on the named D4 map status, dimensions, codimension and low-kernel dimension, using independently exported generators."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic checker replay, no timing comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Synthetic C0, C1, C2, C3 and hash failures were refused; no statistical null population applies.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "A synthetic 73-coordinate evaluation map passed the native and Python checkers; it is a software fixture.",
+      "present": false
+    }
+  },
+  "created": "2026-11-05",
+  "decision_rule": {
+    "comparison_ids": [
+      "qualification"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Only exit zero with the exact reference D4 status, dimensions, codimension and low-kernel dimension qualifies this native verifier on the named D4 map. Failure or timeout leaves native qualification unknown.",
+    "threshold": "Exact native/Python D4 result match with both pinned input SHA-256 values",
+    "verdict_vocabulary": [
+      "qualified",
+      "failed",
+      "unknown"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "One build and one checker run; no checkpoint or automatic retry. Preserve stdout, stderr and failures.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 12884901888,
+      "pod_memory_bytes": 17179869184
+    },
+    "queue": "local-checker-qualification",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 3900
+  },
+  "freeze": {
+    "commit": null,
+    "filed_before_affected_data": false,
+    "frozen_at": null,
+    "protocol_sha256": null,
+    "status": "draft"
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Inferring D5 correctness or LFD>=6 from a D4 control.",
+    "Calling a native checker qualified if status or any exact field differs.",
+    "Retrying after failure or timeout under this one-attempt protocol."
+  ],
+  "invalidation_rules": [
+    "Any source or binary hash mismatch prevents execution.",
+    "A failed independent checker prevents a claim from that stage.",
+    "A counter failure prevents a solution-count comparison.",
+    "Killing1 in an over-approximating quotient is not membership evidence in the true closure.",
+    "Missing later stages remain unknown, even if an earlier stage proves a smaller lower bound.",
+    "Deferred export or missing checkpoint/certificate carries no mathematical bound.",
+    "Restore request mismatch or unverified state prevents native launch."
+  ],
+  "links": {
+    "certificate_sha256": "be38aff828d9d3c73e70ea78914727fdca1305edbf5f99e99b28aa747cc396d8",
+    "generators_sha256": "31bb28a3f45ca99ed169f3fcc850ef3c88a96157296161f15a6150543e8e0ec6",
+    "plan": "n51-poly01-native-checker-control-plan-001.json",
+    "plan_sha256": "d6e0c442de11fd595e76992340d5ba8815cbdadf88512b44c98541cee764d83d",
+    "prior_generator_plan": "n51-poly01-native-generators-plan-001.json",
+    "reference_stdout_sha256": "96bd60f44b2b830cf3b6f89c605e600115e10e43f6df1f9bb165e818034ac0a1",
+    "source_sha256": "6d4e1579cd7f7632513016b7101ac5267cdd666fab2939746ebf47b538ef29d0"
+  },
+  "literature": [
+    {
+      "claim": "Trace projection and C0-C3 independent check are defined in the affine slice dossier.",
+      "provenance": "internal",
+      "ref": "TRACE-SLICE-CERTIFICATES.md",
+      "verified_by": "Codex 2026-11-05"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Native codimension equals the prior accepted Python value 45615 on the same SHA-pinned D4 map.",
+        "id": "codimension_agreement",
+        "kind": "exact",
+        "name": "native checker codimension match",
+        "resolution": "1",
+        "source": "native stdout codimension_lower_bound",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Native low-kernel dimension equals the prior Python value 10194.",
+        "id": "low_kernel_agreement",
+        "kind": "exact",
+        "name": "native low-kernel dimension match",
+        "resolution": "1",
+        "source": "native stdout low_kernel_dimension",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N51-NATIVE-CHECKER-D4-CONTROL-20261105-V1",
+  "question": "Does the independent native C0-C3 checker reproduce the already accepted n51 affine-sliced D4 map result exactly?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One fixed named n51 D4 map already accepted by Python checker; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named n51 input seed; no new random inputs.",
+      "seeds": [
+        1812300214742206507
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Exact D4 native/Python checker comparison; no timing graph."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 3900,
+      "fixed_seconds": 0,
+      "measured_on": "Hard 300-second build and 3600-second checker caps; not a timing claim.",
+      "per_sample_seconds": 3900,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named D4 map, one native checker build, and one bounded checker attempt; stop on exact match, refusal, timeout or resource failure."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic exact map verification, no speed comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "native-check",
+          "python-reference"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "checker"
+        ],
+        "id": "qualification",
+        "threshold": "Exact agreement on valid status, D4, 51 variables, 51 generators, codimension 45615 and low-kernel dimension 10194."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "One SHA-pinned independently accepted n51 rebased D4 map.",
+        "name": "certificate",
+        "treatment": "fixed"
+      },
+      {
+        "how": "One SHA-pinned export from independent descent and trace slicing.",
+        "name": "generators",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Native checker result compared to prior Python checker result on identical map.",
+        "name": "checker",
+        "treatment": "crossed"
+      },
+      {
+        "how": "Existing Spot host, one validation core alongside active D5 producer; 12 GiB checker cap and USD 3 reservation.",
+        "name": "host",
+        "treatment": "measured"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}
