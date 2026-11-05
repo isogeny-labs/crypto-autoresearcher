@@ -697,3 +697,16 @@ constant twist and a mismatch rejection. The
 records the fixture scope. Next independently review the model multiplication
 and descent claim, then bind admissible minima and implement the controls.
 The contract remains `review_required` and unfrozen.
+
+## Exact census-stage capacity check, 2026-11-05
+
+The [capacity checker](../experiments/EXP-PEXT-bf8f96/implementation/stage_capacity.py)
+rederives the published join plans and counts 8,178 class/T units and
+10,262,826,642 logical positions across the three census stages. The q11/n3
+stage has 5,322 units under a 28,800-second watchdog, giving a best-case
+average ceiling of 4,800/887 seconds per unit before build, checker and
+supervisor overhead. The sparse collision method can certify generic ranges
+without iterating every position; no measured runtime qualification exists.
+The [report](../experiments/EXP-PEXT-bf8f96/reports/stage-capacity-20261105/report.md)
+also records the independent read-only review's exact full-model replay gap.
+The contract remains `review_required` and unfrozen.
