@@ -1,0 +1,137 @@
+# Claim-changing review plan for EXP-ICPERF-283a70 (stage-0 instrument,
+# H-ICPERF-5adc9b). Written by the top-level review-evidence session under
+# Coordinator authority on 2026-11-05, BEFORE any reviewer was dispatched and
+# before analysis.md, the EV record or the decision exist. The deterministic
+# audit AUD-20261105T164530Z-b85ca9 (verdict clean) had been run.
+review_plan:
+  id: REVIEW-ICPERF-283a70-20261105
+  experiment_id: EXP-ICPERF-283a70
+  hypothesis_id: H-ICPERF-5adc9b
+  goal_id: GOAL-ICPERF-e6b6a4
+  approval: DEC-20261029-0e40f3
+  runbook_session: RBS-ICPERF-67df7d
+  runs: [RUN-ICPERF-f21eb1, RUN-ICPERF-0ef41e, RUN-ICPERF-74e9a2]
+  invalidated_inputs_not_evidence: [RUN-ICPERF-943efa, RUN-ICPERF-b09be8]
+  binding_rulings: [DEC-20261029-9bc3ff, DEC-20261029-22e05b, DEC-20261029-5554ee]
+  written_at: '2026-11-05T16:56:00Z'
+  written_before_analysis: true
+  base_commit: 8fcfa58fee
+
+  claim_under_review: >-
+    Producer (PR #2776, report reports/run-20261030T1525Z): 3/3 units valid;
+    primary RUN-ICPERF-f21eb1 at seed 20261017, p = 1/50, 64 draws gives
+    sample_sum 2943, sum_squares 289567, median 28, no median split, which is
+    the exact approval pass condition of DEC-20261029-0e40f3; CTL-1
+    (wrong shift triple (1,2,14)) and CTL-2 (support from 0) both fail the
+    exact match. Stage-0 observation only: no latency effect, no attack.
+
+  pass_rule: >-
+    DEC-20261029-22e05b F4/F5 as restated by DEC-20261029-0e40f3: pass only on
+    the exact integers 2943 / 289567 / 28 with no median split; the CV and
+    median-to-mean band flags are descriptive only; CTL-1 and CTL-2 must both
+    fail the exact match, and a passing negative control invalidates control
+    validity.
+
+  known_inputs_before_review:
+    audit: experiments/EXP-ICPERF-283a70/audits/AUD-20261105T164530Z-b85ca9
+    audit_verdict: clean
+    audit_note: 3 of 3 units replayed and matched exactly; no environment drift; no float tolerance passed (the runbook declares none).
+
+  coordinator_prior: >-
+    Expect the exact integers to hold (the audit replay matched) and both
+    negative controls to fail exact match while passing the bands, which is
+    by design (the bands are not discriminating). Preferred decision: record
+    the instrument pass as a scoped stage-0 observation; evidence strength
+    preliminary (one deterministic seed, self-consistent replay, no
+    independent implementation of xorshift32 yet unless the blind
+    re-derivation supplies one); claim tier instrument/toy observation; no
+    statement about host latency or 8 GiB tables. Not support of
+    IDEA-20261015-b41f68's host claim.
+
+  joints:
+    - id: J1-validity
+      joint: >-
+        J1 Run-set and audit validity: 3 units, schema, manifests, receipts,
+        journal chain, raw/summary agreement, interpreter parity, the exact
+        pass rule applied verbatim, CTL-1 and CTL-2 fail exact match, no
+        median split, and v1 run RUN-ICPERF-b09be8 not cited as evidence.
+      assigned_to: TASK-20261105-558a8b
+      attack_plan: >-
+        Re-read audit.json; re-run check.py on each run directory; recompute
+        sum, sum of squares, median and band fractions from the recorded
+        draws (if recorded); compare the recorded interpreter with the audit
+        replay interpreter; check exact_match flags against the rule.
+      breaking_artifact: >-
+        Any integer off the exact values; a control with exact_match true;
+        a median split; a band flag used as the pass criterion; v1 cited.
+    - id: J2-scope
+      joint: >-
+        J2 Interpretation and scope: what a one-seed exact match licenses;
+        whether the controls discriminate the sampler; whether the bands
+        were used inferentially; whether any cost/speed comparison against
+        rho is made (§5a band).
+      assigned_to: TASK-20261105-b3b41a
+      attack_plan: >-
+        Construct a different sampler that would also pass the bands (the
+        controls already do) and argue whether the exact match is the only
+        discriminating test; check the record for latency or speedup language.
+      breaking_artifact: >-
+        A reading that the bands support geometric shape at host scale; any
+        latency/speedup/ranking claim; a control that cannot fail.
+
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: >-
+      Validator, red-team and blind re-deriver do not read each other's
+      reports. The Coordinator composes after all three have filed.
+
+  proves_too_much:
+    objects:
+      - >-
+        CTL-1 shift triple (1,2,14): passes both bands and has no median
+        split; any argument that accepts the primary on band shape accepts
+        this wrong sampler too.
+      - >-
+        CTL-2 support from 0: also passes both bands; must fail the exact
+        match.
+      - >-
+        An 8 GiB pointer-chasing table on a host: no conclusion about its
+        probe-count law follows from this sample.
+    failure_signature: >-
+      Any acceptance criterion under which CTL-1 or CTL-2 passes.
+
+  blind_rederivation:
+    required: true
+    assigned_to: TASK-20261105-6d9502
+    quantity: >-
+      The 64 geometric draws at p = 1/50 from xorshift32 seeded 20261017 with
+      the primary shift triple (13,17,5), support from 1; their sum, sum of
+      squares and median (and whether the two central order statistics are
+      equal); the same three integers for shift triple (1,2,14) and for
+      support from 0; the CV^2 and median/mean fractions for the primary.
+    parameters: >-
+      seed 20261017, p = 1/50, n = 64, xorshift32 triples (13,17,5) and
+      (1,2,14), support_min 1 and 0. The mapping from a 32-bit word to a
+      Bernoulli(1/50) trial is taken from the specification text, not from
+      run.py.
+    blind_from:
+      - experiments/EXP-ICPERF-283a70/runs/
+      - experiments/EXP-ICPERF-283a70/runbook-sessions/
+      - experiments/EXP-ICPERF-283a70/reports/
+      - experiments/EXP-ICPERF-283a70/audits/
+      - experiments/EXP-ICPERF-283a70/implementation/
+      - experiments/EXP-ICPERF-283a70/runbook.yaml
+      - experiments/EXP-ICPERF-283a70/trial-plan.json
+      - experiments/EXP-ICPERF-b2f2d0/
+    method: >-
+      Write an independent sampler from the specification's prose description
+      of the generator and the Bernoulli mapping; compute the integers; file;
+      then compare with recorded values supplied by the Coordinator.
+    expected_use: >-
+      An independent implementation that reproduces 2943 / 289567 / 28 is
+      the only check here that is not the producer's own code replayed.
+      If the specification does not pin the mapping, report that as a
+      specification gap rather than reading run.py.
+
+  procedure_deviations: []
