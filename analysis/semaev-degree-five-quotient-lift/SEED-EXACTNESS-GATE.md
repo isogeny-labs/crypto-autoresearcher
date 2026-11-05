@@ -78,3 +78,13 @@ distinguishes an overly coarse certificate from a genuine degree-five
 refutation. It prevents more frontier instances from repeating an
 uninterpretable `projection_kills_one` outcome. No exact $W_4$ dimension
 or degree-five membership claim is supplied by this note.
+
+The named `fresh-n51-poly-00` original system is a useful next control:
+its published D4 receipt records six exact solutions and a checked
+45,615-dimensional D4 quotient. By Lemma 1.7 of the theorem dossier,
+an **exact** D4 seed on that instance forces a degree-five lift to keep
+$1$ nonzero and to have quotient dimension at least six. A checked D5
+quotient dimension of **at least seven** would exceed the solution count
+and prove LFD at least six by Proposition 1.2. Dimension exactly six
+would not give that lower bound. This is a selection criterion, not a
+run result or an assertion that the existing D4 kernel is exact.

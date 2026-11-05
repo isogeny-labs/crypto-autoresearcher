@@ -213,6 +213,30 @@ degree-$(d+1)$ multiplication and contains $U$, so minimality of
 $C_{d+1}(U)$ gives the reverse inclusion. Finally,
 $W_d(F)\subseteq W_{d+1}(F)$ by monotonicity. $\square$
 
+**Lemma 1.7** (solutions constrain an exact-seed lift). **Proved.** Let
+$S\ne\varnothing$ be the Boolean zero set of $F$, and write $I(S)$ for
+its vanishing ideal in $B$. If $U\subseteq I(S)\cap B_{\le d}$, then
+$C_{d+1}(U)\subseteq I(S)\cap B_{\le d+1}$ and $1\notin C_{d+1}(U)$.
+Moreover, if $|S|=s$ and $d+1\ge s-1$, then
+
+$$\operatorname{codim}(C_{d+1}(U)\subseteq B_{\le d+1})\ge s.$$
+
+In particular, the conclusion holds for the exact seed $U=W_d(F)$.
+A checked quotient kernel known only to contain $W_d(F)$ need not lie in
+$I(S)$, so its provisional lift can kill $1$ even when solutions exist.
+
+*Proof.* The vanishing ideal contains $U$ and is closed under every
+variable multiplication, giving the first inclusion by minimality.
+The constant one does not vanish on nonempty $S$. For the codimension,
+fix $p\in S$. For each $q\in S\setminus\{p\}$, select a coordinate on
+which $p$ and $q$ differ and an affine coordinate factor that is one at
+$p$ and zero at $q$. Their product has degree at most $s-1$ and restricts
+to the indicator of $p$ on $S$. These $s$ indicators show that evaluation
+$B_{\le d+1}\to\mathbb F_2^S$ is onto when $d+1\ge s-1$. Since
+$C_{d+1}(U)$ lies in its kernel, its codimension is at least $s$.
+Finally, all generators vanish on $S$, and their allowed closure steps
+still vanish there, so $W_d(F)\subseteq I(S)$. $\square$
+
 ---
 
 ## 2. Structure of the $m=2$ system
