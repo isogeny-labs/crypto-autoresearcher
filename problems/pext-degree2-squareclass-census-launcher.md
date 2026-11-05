@@ -658,3 +658,16 @@ constant-twist rank increase from 2 to 3. The
 records the fixture scope. Next construct the fixed-invariant basis and
 base-field multiplication, then independently check connectedness and genus.
 The contract remains `review_required`; no scientific cohort trial was launched.
+
+## Fixed-invariant radical basis, 2026-11-05
+
+The [fixed-invariant basis](../experiments/EXP-PEXT-bf8f96/implementation/fixed_invariant_basis.py)
+now constructs and directly checks Frobenius-fixed vectors orbit by orbit from
+the exact radical-algebra table. It verifies full polynomial-basis Moore rank
+and the expected vector dimension without dividing by n, including the
+characteristic-3 cubic case. Nine related software tests pass across F27 and
+published q3/n5 fixtures. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/fixed-invariant-basis-20261105/report.md)
+records the scope. Next compute multiplication over the base rational-function
+field and independently check connectedness and genus. The contract remains
+`review_required`; no scientific cohort trial was launched.
