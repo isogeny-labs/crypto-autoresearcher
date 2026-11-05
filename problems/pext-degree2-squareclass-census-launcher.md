@@ -723,3 +723,16 @@ components and genus without the producer geometry reducer. The
 records the fixture and tamper checks. Next bind this gate to every source-bound
 unit and qualify full-cohort runtime under the fixed watchdogs. The contract
 remains `review_required` and unfrozen.
+
+## Published exceptional-row fixed-model binding, 2026-11-05
+
+The [single-row adapter](../experiments/EXP-PEXT-bf8f96/implementation/source_fixed_unit.py)
+binds one retained exceptional ordinal and matrix to the published actual
+curve/T, the source quartic and its rational inverse charts, the fixed algebra
+and the separate algebra/character-genus replay. Two focused software tests
+pass on a q5/n3 class-zero T-zero fixture, including wrong-matrix and
+wrong-genus rejection. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/source-fixed-unit-20261105/report.md)
+records the scope. Next implement frozen row selection, stage custody,
+deadlines and C5 review strata. The contract remains `review_required` and
+unfrozen.
