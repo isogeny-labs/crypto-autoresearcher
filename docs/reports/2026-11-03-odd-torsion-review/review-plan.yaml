@@ -1,0 +1,80 @@
+review_plan:
+  status: prospective_before_reviewers
+  source_commit: 004355570fa983535696439b1781cb762dae3607
+  claim_under_review: >-
+    In an associative commutative additive model with two-sided zero,
+    if r is odd, rP=0, 2T=0, and T is nonzero, then r(P+T)=T and P+T
+    lies outside the zero-kernel of multiplication by r.
+  producer_target: formal/targets/scoped-odd-torsion-translation.yaml
+  producer_source: research/ten-lead-evidence/torsion-proof-note.md
+  exact_bindings: input-bindings.json
+  coordinator_prior:
+    expectation: >-
+      The elementary additive-law statement is likely true and the Lean
+      source appears to express it, but existing named receipts do not
+      themselves supply independent semantic fidelity or an elliptic-curve bridge.
+    uncertainty: >-
+      Whether the printed theorem type has precisely the source's laws,
+      whether oddness and nonzero are load-bearing, and whether a fresh
+      named build can be authenticated to current source and pins.
+  joints:
+    - joint: J1 blind mathematical rederivation and countermodels
+      assigned_to: TASK-20261103-a1d701
+      attack_plan: >-
+        Given only the mathematical statement and definitions, derive
+        r(P+T)=T without producer Lean or proof. Construct a nonvacuous
+        positive model and an even-r countermodel; check why T!=0 is needed.
+      breaking_artifact: >-
+        A countermodel under all stated assumptions or an indispensable
+        unstated cancellation or inverse law.
+    - joint: J2 source and elaborated-type fidelity
+      assigned_to: TASK-20261103-a1d702
+      attack_plan: >-
+        Compare the source note, exact Lean declarations, and hosted
+        elaborated type. Check the quantifier order, explicit odd witness,
+        all five additive-law fields, nontrivial witness, and whether the
+        zero-kernel conclusion is stronger than the Lean type. Identify
+        every concrete curve or factor-base bridge that remains absent.
+      breaking_artifact: >-
+        Missing law, vacuous or circular premise, wrong direction,
+        or a claimed curve-level conclusion unsupported by the type.
+    - joint: J3 named machine receipt and proof boundary
+      assigned_to: TASK-20261103-a1d703
+      attack_plan: >-
+        Independently retrieve the pinned GitHub artifact, compare the
+        exact target/source hashes and full input maps, check the named
+        declaration and axiom audit, dependency pins, controls and
+        failure modes. Use a fresh hosted run if it becomes available;
+        distinguish receipt consistency from independent kernel execution.
+      breaking_artifact: >-
+        Stale named target, source mismatch, forbidden axiom or hole,
+        absent named build, or a false success inference from JSON alone.
+  blindness:
+    mutual: true
+    lift_only_after_all_reports_frozen: true
+    lifted_for: []
+  blind_rederivation:
+    required: true
+    assigned_to: TASK-20261103-a1d701
+    quantity: odd scalar multiple of a translated element and kernel exclusion
+    blind_from:
+      - formal/scoped-obstructions/ScopedObstructions/Torsion.lean
+      - research/ten-lead-evidence/torsion-proof-note.md
+      - research/lean_retrospective_20261018
+      - docs/reports/formal-target-inventory-20261102
+      - sibling reviewer reports and receipts
+  proves_too_much:
+    objects:
+      - even scalar r=2 in a two-element XOR additive model
+      - T=zero for the kernel-exclusion conclusion
+      - concrete elliptic-curve point arithmetic without a refinement map
+      - factor-base membership and mixed-domain closure
+    failure_signature: >-
+      A sound review accepts the conditional additive theorem, rejects
+      the even-r and zero-T generalizations, and does not infer a concrete
+      curve or factor-base result.
+    assigned_to: TASK-20261103-a1d701
+  publication_rule: >-
+    Freeze three mutually independent verdicts and attestations, run the
+    independence checker, and publish scoped machine/fidelity/bridge outcomes
+    with a diagram and inspected PDF. Change no official research status here.

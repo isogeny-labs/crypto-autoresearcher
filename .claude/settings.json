@@ -44,6 +44,16 @@
             "timeout": 120
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/benchrec-hook.sh",
+            "timeout": 60
+          }
+        ]
       }
     ],
     "PostToolUse": [
@@ -64,6 +74,15 @@
           {
             "type": "command",
             "command": "python3 \"$CLAUDE_PROJECT_DIR\"/scripts/relay.py --runtime claude snapshot",
+            "timeout": 20
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/benchrec-hook.sh",
             "timeout": 20
           }
         ]

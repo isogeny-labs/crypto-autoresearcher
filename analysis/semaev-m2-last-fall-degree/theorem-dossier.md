@@ -337,8 +337,9 @@ $$1\in W_{k-r+2}(F),\qquad d_{\tilde F}\le k-r+2.$$
 In particular, if $\operatorname{Tr}|_V\ne0$, Theorem 2.1(c) supplies
 $\ell_0=\operatorname{Tr}(s)+\operatorname{Tr}(\alpha)$ and
 $d_{\tilde F}\le k+1$. This applies to every unsatisfiable instance with
-$V\not\subset K_0$, including Semaev's polynomial-basis subspace (which
-contains $1$). The conclusion concerns the closure $W_d$; it does not assert
+$V\not\subset K_0$. For odd $n$, a polynomial-basis subspace containing $1$
+meets that condition because $\operatorname{Tr}(1)=1$; for even $n$, it must
+be checked on the actual basis. The conclusion concerns the closure $W_d$; it does not assert
 $1\in M_{k-r+2}$.
 
 *Proof.* Make an invertible affine change among the $c$ variables so that
@@ -398,6 +399,65 @@ condition for $F$. Indeed $\rho(x)$ is affine for every original variable
 $x$, so its product with a low-degree member of $\ker\pi_G$ is annihilated
 by the checked closure condition. Also $\pi_F(1)=\pi_G(1)$. This describes
 a certificate transfer, not a completed reduced-instance computation.
+
+**Corollary 2.5c** (slicing from a later affine fall). **Proved.** Fix
+$d\ge2$. The equality and nonmembership transfer of Proposition 2.5b still
+hold if its affine polynomial $y$ belongs to $W_d(F)$ rather than to
+$\operatorname{span}F$. In particular, an affine $y\in W_s(F)$ permits exact
+slicing at every degree $d\ge\max(2,s)$.
+
+*Proof.* The restriction map $\rho$ still sends $W_d(F)$ into $W_d(G)$.
+Conversely, $f_i+\rho(f_i)=y h_i$ with $h_i$ affine in the retained variables.
+Since $y\in W_d(F)$ has degree one, the closure rule puts $y h_i$ in
+$W_d(F)$; hence every generator of $G$ belongs to $W_d(F)$. Closure under
+the retained variables gives $W_d(G)\subseteq W_d(F)\cap B'_{\le d}$, and
+applying $\rho$ gives the reverse inclusion. Monotonicity of $W_d$ proves
+the final assertion. $\square$
+
+**Proposition 2.5d** (quadratic-rank formula). **Proved.** Let
+$P=\operatorname{span}_{\mathbb F_2}\{uv:u,v\in V\}\subseteq K$ and $z\ne0$.
+The rank of the quadratic coefficient matrix of the $n$ descended $m=2$
+equations is
+
+$$\dim_{\mathbb F_2}P-\mathbf 1_{z\in P}.$$
+
+Consequently, the space of equation combinations whose quadratic part
+vanishes has dimension $n-\dim P+\mathbf 1_{z\in P}$. Its members are affine
+polynomials in $c=a+b$ or zero. More precisely, identify coordinate-equation
+combinations with trace functionals $u\mapsto\operatorname{Tr}(\mu u)$ and put
+$A=L_z(P)^\perp$. The linear rank of the resulting affine constraints is
+
+$$r=\operatorname{rank}\left(A\longrightarrow\mathbb F_2^k,\quad
+\mu\longmapsto
+(\operatorname{Tr}(\mu z^2v_j^2))_{j=0}^{k-1}\right).$$
+
+Equivalently, with $Q=L_z(P)$ and $U=z^2V^2$,
+$r=\dim(Q+U)-\dim Q$, since the field trace pairing is nondegenerate.
+
+For every unsatisfiable such system, Proposition 2.5a therefore gives the
+computable upper bound $d_{\tilde F}\le k-r+2$. The constant terms depend on
+$a_6$, but do not affect $r$.
+
+*Proof.* In the invertible coordinates $(a,c)$, $c=a+b$, the expression in
+Theorem 2.5 shows that the only quadratic terms are
+$X_1^2s^2+zX_1s$. The coefficient of $a_ic_j$ is therefore
+$(v_iv_j)^2+zv_iv_j=L_z(v_iv_j)$, where $L_z(u)=u^2+zu$ is an
+$\mathbb F_2$-linear map on $K$. The $n$ coordinate equations have quadratic
+coefficient rank $\dim L_z(P)$, independently of the chosen field basis.
+Since $\ker L_z=\{0,z\}$, rank-nullity on $P$ gives the formula. An
+invertible Boolean coordinate change from $(a,b)$ to $(a,c)$ preserves the
+degree filtration and induces an isomorphism on $B_{\le2}/B_{\le1}$, so this
+is also the rank in the original Boolean coordinates. In fact, the full
+expression in Theorem 2.5 is
+$S=L_z(X_1^2+X_1s)+z^2s^2+a_6$.
+Both $X_1^2$ and $X_1s$ have coefficients in $P$, so every $\mu\in A$
+annihilates the first term. Its remaining equation combination is exactly
+$\operatorname{Tr}(\mu z^2s^2)+\operatorname{Tr}(\mu a_6)$, whose coefficient
+of $c_j$ is the displayed trace. A basis of the image supplies $r$
+independent affine linear parts in $c$. The kernel of that image map is
+$(Q+U)^\perp$, while its domain is $Q^\perp$, giving the equivalent
+dimension formula. Proposition 2.5a applies.
+$\square$
 
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$

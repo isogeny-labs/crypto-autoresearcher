@@ -1,0 +1,358 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "checkpoint-cadence-native-control-plan-001.json",
+      "Hash-pinned retained n6 seed and native binary in the prepared control bundle"
+    ],
+    "outputs": [
+      "Three raw worker cases: fresh, source checkpoint-stop, and restored, with fake-store objects and original-checker transcripts."
+    ],
+    "script": {
+      "path": "qualify_checkpoint_worker.py",
+      "sha256": "1f2b133def845df4a66a9cb20141520282777c2a5b8b886875fa977c503eab44"
+    }
+  },
+  "arms": [
+    {
+      "description": "Native worker fresh completion under bounded publication",
+      "id": "fresh",
+      "instrument": {
+        "binary_sha256": "388b27edb886bf00b6f6ef388db7b7e6038a68c0fbe4cadd0abad4e19f77b99e",
+        "build": [
+          [
+            "reuse",
+            "hash-pinned compiled binary"
+          ]
+        ],
+        "commit": "5673863f2787171974a91ba3aef1b09490e89369",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "plan_sha256": "e358ce7401c1a5f7547c4597232810976b4a1985a48b6549443e68c84d079999",
+          "checkpoint_publish_every": "3",
+          "scope": "Local fake storage; retained n6 original checker and exact count"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "mode": "fresh",
+        "memory_bytes": 1073741824,
+        "checkpoint_publish_every": 3
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Native worker deliberate stop after published checkpoint sequence 3",
+      "id": "source",
+      "instrument": {
+        "binary_sha256": "388b27edb886bf00b6f6ef388db7b7e6038a68c0fbe4cadd0abad4e19f77b99e",
+        "build": [
+          [
+            "reuse",
+            "hash-pinned compiled binary"
+          ]
+        ],
+        "commit": "5673863f2787171974a91ba3aef1b09490e89369",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "plan_sha256": "e358ce7401c1a5f7547c4597232810976b4a1985a48b6549443e68c84d079999",
+          "checkpoint_publish_every": "3",
+          "scope": "Local fake storage; retained n6 original checker and exact count"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "mode": "source",
+        "memory_bytes": 1073741824,
+        "checkpoint_publish_every": 3
+      },
+      "role": "baseline"
+    },
+    {
+      "description": "Native worker completion after restore from published sequence 3",
+      "id": "restored",
+      "instrument": {
+        "binary_sha256": "388b27edb886bf00b6f6ef388db7b7e6038a68c0fbe4cadd0abad4e19f77b99e",
+        "build": [
+          [
+            "reuse",
+            "hash-pinned compiled binary"
+          ]
+        ],
+        "commit": "5673863f2787171974a91ba3aef1b09490e89369",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "plan_sha256": "e358ce7401c1a5f7547c4597232810976b4a1985a48b6549443e68c84d079999",
+          "checkpoint_publish_every": "3",
+          "scope": "Local fake storage; retained n6 original checker and exact count"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "mode": "restored",
+        "memory_bytes": 1073741824,
+        "checkpoint_publish_every": 3
+      },
+      "role": "candidate"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized D5 software qualification"
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "class": "exact_computation",
+      "text": "For the fixed retained n6 input, fresh and sparse-checkpoint-restored native executions produce the same original-checker-accepted D5 certificate hash and exact count; this qualifies software only and makes no n50 LFD inference.",
+      "decided_by": [
+        "equivalence"
+      ]
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Deterministic exact outputs; no timing comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Separate six-case hook test rejects invalid cadence and context before deletion; this frozen native control is a fixed positive replay, not a null-population test.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The retained n6 reference certificate SHA-256 7cf2d46d96fe00dfddd1277935c7f0b6577c7ab9cbdc774151c81f56fee82d73, independent checker and exact count 3 are asserted for fresh and restored cases.",
+      "present": false
+    }
+  },
+  "created": "2026-11-02",
+  "decision_rule": {
+    "comparison_ids": [
+      "equivalence"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "All three actual worker cases pass; source stops at a published sequence-3 checkpoint, restore selects it, and fresh/restored original-checker-accepted D5 certificates equal the retained hash with exact count 3.",
+    "threshold": "No missing or failed case; fresh and restored hashes equal retained reference.",
+    "verdict_vocabulary": [
+      "passed",
+      "incomplete",
+      "failed"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": 120,
+      "policy": "application",
+      "restore_validation": "manifest_sha256"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "max_workers": 1,
+      "memory_per_worker_bytes": 1073741824,
+      "checkpoint_detail": "Native binary saves every chunk; hook publishes every third seed snapshot and every phase transition/closure round; fake object store only. Source stops at published checkpoint 3; restore must select it."
+    },
+    "queue": "local-software-controls",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 900
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "e79d0deb1632dff6b4c16c0cd24846abc325c221e4c6a9b91918cbcba57eb255",
+    "commit": "5673863f2787171974a91ba3aef1b09490e89369",
+    "frozen_at": "2026-11-02T18:21:42Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Inferring a new LFD bound from these fixtures.",
+    "Treating a checkpoint stop as a completed certificate.",
+    "Restarting fresh when a requested restore cannot be verified."
+  ],
+  "invalidation_rules": [
+    "Any input or source hash mismatch prevents launch.",
+    "Missing or failed actual cases leave integration unqualified.",
+    "Local fake storage does not qualify cloud frontier resources.",
+    "Missing published sequence-3 checkpoint, restore from a different context, or certificate hash mismatch invalidates software qualification."
+  ],
+  "links": {
+    "plan": "checkpoint-cadence-native-control-plan-001.json",
+    "plan_sha256": "e358ce7401c1a5f7547c4597232810976b4a1985a48b6549443e68c84d079999",
+    "request_sha256s": [
+      "f8a8631b9cc1a132e416841218c4e91bf7d68f39fd3c8c39265a47156f4c9c86"
+    ]
+  },
+  "literature": [
+    {
+      "claim": "Full degree-bounded closure defines last fall degree; this qualification does not itself certify a new bound.",
+      "provenance": "retrieved",
+      "ref": "https://eprint.iacr.org/2015/573.pdf, Section 2",
+      "verified_by": "Codex 2026-11-02"
+    },
+    {
+      "claim": "Candidate bounded publication semantics and remaining native qualification gate.",
+      "provenance": "internal",
+      "ref": "BOUNDED-CADENCE.md",
+      "verified_by": "Codex 2026-11-02"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "One if all frozen assertions for this actual case pass.",
+        "id": "controls_passed",
+        "kind": "exact",
+        "name": "exact recovery control result",
+        "resolution": "1",
+        "source": "result.json rows[].passed",
+        "uncertainty": "none_exact",
+        "unit": "boolean"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "SEMAEV-CHECKPOINT-CADENCE-NATIVE-CONTROL-20261102-V1",
+  "question": "Does one retained n6 input produce the same independently checked D5 certificate after native stop and restore across two unpublished seed chunks?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One fixed retained n6 fixture, reused in every arm; no population inference."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Seed 0 labels fixed input ids 0..2; no random generation.",
+      "seeds": [
+        0
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Fixed control outcomes and recovery coverage, no timing graph"
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 900,
+      "fixed_seconds": 0,
+      "measured_on": "Conservative one-fixture three-arm software-control watchdog; not a runtime prediction.",
+      "per_sample_seconds": 900,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One attempt per mode, in fresh/source/restored order; withhold dependent restore after source failure and record it as incomplete. No automatic retry."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic exact software controls; no performance comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "fresh",
+          "source",
+          "restored"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "entry_path"
+        ],
+        "id": "equivalence",
+        "threshold": "All three modes pass on the one retained fixture; restored certificate and count match fresh and retained reference."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Fresh completion, deliberate stop at published checkpoint 3 after two unpublished seed saves, then restore through the same native binary.",
+        "name": "entry_path",
+        "treatment": "crossed"
+      },
+      {
+        "how": "One retained n6 Semaev seed and reference D5 certificate, with exact record and count pinned by hashes.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Same local fake object store and 1 GiB child cap; no performance inference or cloud spend.",
+        "name": "environment",
+        "treatment": "fixed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

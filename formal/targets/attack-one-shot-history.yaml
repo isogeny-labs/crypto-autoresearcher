@@ -1,0 +1,43 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261102-61d810
+claim_id: ATTACK-ONE-SHOT-HISTORY-CONDITIONAL-REPAIR
+kind: formal_counterexample
+source: research/cryptographic_assumption_attack_corpus_tranche2_20261102/README.md
+source_status: STATED
+theorem_name: CryptoResearch.AttackCorpus.OneShotHistory.correlated_history_and_hazard_repair
+theorem_file: CryptoResearch/AttackCorpus/OneShotHistory.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  The finite Bool models must prove that identical one-shot success counts can
+  have different two-trial survival and that one fully correlated outcome
+  fails forever. The repair must appear in the exact audited declaration: a
+  history-uniform recurrence on a nonnegative real survival sequence implies
+  the geometric survival lower bound and its finite tail-sum inequality.
+
+  This target does not model the xedni sampler, derive conditional event
+  probabilities, identify a tail sum with an expectation, or refute JKSST
+  Theorem 4.1's conditional one-attempt bound.
+claim: |
+  Construct two processes over the same two-outcome uniform sample space such
+  that every individual Bool-indexed trial has exactly one successful outcome,
+  but the fully correlated process has one outcome that fails both trials and
+  the complementary process has none. Also exhibit an outcome that fails every
+  natural-numbered correlated trial.
+
+  Prove the conditional repair in the same exact declaration: if a real
+  sequence S satisfies S 0 = 1, 0 <= epsilon <= 1, S n >= 0, and
+
+      (1 - epsilon) * S n <= S (n + 1)
+
+  for every n, then (1-epsilon)^n <= S n for every n and
+
+      1 - (1-epsilon)^N <= epsilon * sum i in range N, S i.
+
+  The recurrence is an explicit premise, not a consequence of a marginal
+  one-shot bound.
+proof_map:
+  prerequisites:
+    - "Bool outcome counts are used as an exact finite proxy for one-shot uniform probabilities; no general probability measure is formalized"
+    - "The repair assumes a history-uniform survival recurrence directly; deriving it from conditional success probabilities is a separate theorem"
+    - "No xedni lift construction, height/discriminant premise, Lang input, independence claim or expected-runtime model is supplied"

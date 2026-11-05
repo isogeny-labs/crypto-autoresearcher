@@ -38,3 +38,16 @@ Meeting both conditions would support an exact `d_F` claim for that system. It w
 
 - 2026-10-31: Opened from the independent LastFall review; no actual rank run was promoted.
 - 2026-10-31: Selected R35a as a concrete historical candidate; verified public custody bytes and freshly replayed the pinned dual-certificate checker under a bounded, exclusive host slot. The separate unsatisfiability and upper-bound steps remain unverified here. Unresolved.
+
+### 2026-11-04: additive two-sided certificate implementation
+
+The [new certificate work](../analysis/boolean-fall-certificates-20261104/THEORY.md)
+constructs primal derivations for every candidate basis row and independently
+checks all eligible inputs and the low-degree intersection's variable products.
+This addresses exact closure equality on bounded normalized Boolean systems;
+it does not replay R35a's large upper/lower packet or supply a generic later-fall
+cutoff. The historical eight-variable source fixture is a software regression,
+not a fresh sampling campaign. Generic ordinary-closure certificate composition
+and the final assignment-localization assembly now have a separate Lean module;
+its full bound and Boolean-normalization instantiation remain open.
+The original exit conditions and scientific statuses remain unchanged.

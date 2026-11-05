@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: source elliptic map to moved quotient quartic
+
+The [binding checker](../../implementation/source_map_binding.py) now verifies the rational map from a named K-Weierstrass model and canonical T to the quotient quartic, followed by a selected projective branch-coordinate change. For a matrix `(a,b,c,d)` it retains `det=ad-bc` and checks the ordinate factor `det²/(ct+d)²`; omitting that factor would change the square-class coefficient. It checks the moved quartic equation and both inverse rational charts directly in the elliptic function field. The published-cohort entry point recomputes the canonical class/T binding, checks the independent structure ordinal, and records the join-plan hash.
+
+Seven related software tests pass: two new source-map tests and five existing quotient-transport tests. The new tests match fixed F27 zero-T and nonzero-T join rows, including a matrix with determinant 19, and bind both T indices of a published q5/n3 class to structure ordinal zero. Wrong matrix and ordinal inputs are refused. These checks are algebraic software fixtures and published input binding, not scientific cohort measurements.
+
+The map connects the actual source curve to the first moved quartic radical. The fixed-field model of the checked radical Frobenius action, its source-map compatibility in the full compositum, and an admissible-genus certificate remain to be constructed. No scientific cohort trial was launched; EXP-PEXT-bf8f96 remains `review_required` and unfrozen.

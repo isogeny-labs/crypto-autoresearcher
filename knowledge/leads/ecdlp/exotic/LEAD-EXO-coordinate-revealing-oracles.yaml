@@ -1,0 +1,75 @@
+id: LEAD-EXO-coordinate-revealing-oracles
+family: exotic
+title: 'Coordinate-revealing oracles (x, y, full point, x-valued halving, field-valued jet and net, threshold
+  C_t, degree-D coordinate tests): the GGM gives no bound'
+mechanism: Give the solver coordinates, or functions or predicates of coordinates, of instance points
+  and hope they supply sub-birthday information or guided decomposition. Split from LEAD-EXO-augmented-oracle-ggm
+  on 2026-11-04 (owner decision in session).
+disposition: open_next_step
+next_action:
+  step: 'The GGM gives no bound for this class. Two x-queries plus free local work give log_P Q up to
+    sign on any curve, so x, y, full point, x-valued halving and field-valued jet and net have simulation
+    overhead Theta(sqrt N'') (holant-h1-ggm-lemma-20261103 Lemma 3; KN-FIND-194294), and C_t and degree-D
+    tests are non-simulable (KN-FIND-982fdf; ecdlp-leads-desk-20261104 low-degree-desk §1). The open question
+    is time-bounded advantage from coordinate access on prime-order prime-field curves, i.e. index calculus
+    itself (KN-OPEN-001). Concrete steps: (1) zero-compute: open the review-breakthrough round routed
+    by DEC-20260831-a9716f with this per-oracle table as subject, in Shoup''s model, separating label-valued
+    from field-valued readings and CHECK from SEARCH, and record a finding that supersedes the x, jet
+    and net verdicts of KN-FIND-002 and KN-FIND-b7e091; (2) literature: read the body of KN-LIT-7606 (Corrigan-Gibbs,
+    Henzinger, Wu, ePrint 2026/384, EUROCRYPT 2026; the record states the body was not read) and decide
+    whether its elliptic-curve-point bound covers an algorithm that sees coordinates of a delta-fraction
+    of elements or of a coordinate-defined factor base; (3) bit-valued low-degree tests proceed under
+    LEAD-EXO-low-degree-query-lower-bound (rank computation); (4) field-valued x/y/full-point access is
+    pursued as prime-field index calculus in the ic-prime and ic-engine rows (e.g. LEAD-ICE-semaev-yield-model-coset-typing,
+    which already holds H-XOR-YIELD), priced against matched rho under the boundary-table-ratio rule.'
+  discriminates: If the CHW structured-GGM bound covers partial coordinate access, that sub-class gets
+    a non-vacuous query bound Omega(min(sqrt N, 1/delta)) and can close by theorem at that delta; if not,
+    no query-model closure exists for this class, and it is decided only by time-bounded index-calculus
+    measurements against matched rho.
+best_measured: 'toy 7-8 bits, m = 3, x-membership-filtered Semaev MITM: Y_A = Y_B; split-attributable
+  constant-factor saving B/A 0.0557 (preliminary). Not a bound.'
+evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/leads-round2-20261104/augmented-oracle-review.md
+  note: 'per-oracle review: x, y, full point, x-halving, field-valued jet/net not simulable'
+- repo: crypto-autoresearcher
+  path: docs/reports/holant-h1-ggm-lemma-20261103/README.md
+  note: 'Lemma 3: two x-queries give the log on any curve'
+- repo: crypto-autoresearcher
+  path: knowledge/findings/KN-FIND-194294.md
+  note: x-oracle NON-SIMULABLE
+- repo: crypto-autoresearcher
+  path: knowledge/findings/KN-FIND-982fdf.md
+  note: threshold oracle C_t non-simulable, publicly computable
+- repo: crypto-autoresearcher
+  path: docs/reports/ecdlp-leads-desk-20261104/low-degree-desk.md
+  note: degree-D coordinate tests leak via interpolation
+ledger_refs:
+- CORR-20261026-c94668
+- EV-ECDLP-284817
+- EV-ECDLP-7367e2
+- EV-ECDLP-fd61e4
+- H-ECDLP-76c89f
+- H-ECDLP-9b5aa9
+- H-ECDLP-9d5e78
+- H-XOR-YIELD
+known_results:
+- KR-RHO-13bf67
+related:
+- LEAD-EXO-augmented-oracle-ggm
+- LEAD-EXO-low-degree-query-lower-bound
+- LEAD-EXO-coordinate-statistic-leakage
+- LEAD-ICE-semaev-yield-model-coset-typing
+- LEAD-EXO-holant-decomposition-count-network
+forecloses:
+- x-coordinate oracle meet in the middle
+- y-coordinate oracle guided decomposition
+- full-point oracle
+- x-valued halving query oracle
+- coordinate oracle that the generic group model cannot simulate
+areas:
+- ECDLP
+- GGM
+- GGMB
+- XOR
+last_reviewed: '2026-11-04'

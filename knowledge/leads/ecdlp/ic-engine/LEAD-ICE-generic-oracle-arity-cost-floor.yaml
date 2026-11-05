@@ -35,6 +35,10 @@ obstruction:
     Revisit the exact ENUM/MITM obstruction if a measured oracle violates one of its yield,
     useful-rank, linear-algebra or B^k-cost premises. Coordinate-reading oracles are tracked by
     LEAD-ICE-descent-closure-degree-at-scale; free and growing-arity schedules remain open here.
+    Also: a data-structure or fine-grained bound for kSUM-Indexing
+    over an implicitly given set in a group with |G| much larger than any polynomial in the set
+    size (outside the |G| <= N^c regime of Golovnev et al., STOC 2020) would extend the wall to
+    RAM-model oracles; none is known (literature check 2026-11-04).
 best_measured: >-
   Scoped fixed-arity evidence: zero sub-rho ENUM/MITM/MITM_CAPPED cells in EV-SEMBIN-b6d042;
   at m = 3 the ECC2K-130 FREE control costs 2^68.58 versus rho 2^60.81, while the same FREE
@@ -42,6 +46,15 @@ best_measured: >-
   additive complete-real-model source is archived, but its first formal receipt has
   verification=null after a 1,800-second build timeout; that is infrastructure evidence only.
 evidence:
+- repo: crypto-autoresearcher
+  path: docs/reports/leads-round2-20261104/amendments-literature.md
+  note: >-
+    Literature check 2026-11-04 (scouting amendment A1). Golovnev-Guo-Horel-Park-Vaikuntanathan
+    (STOC 2020, pp. 294-307): 3SUM-Indexing over an explicit list in a group with |G| <= N^c,
+    with unbounded preprocessing. The only unconditional bound is non-adaptive,
+    S = Omega~(N^(1+1/T)), and S^3 T = O~(N^6) refutes the strong conjecture. Kane-Lovett-Moran
+    (STOC 2018) rule out query-model proofs. 3SUM-Indexing is Goldstein-Kopelowitz-Lewenstein-Porat
+    (WADS 2017). This is context for the oracle-class scope, not an extension of the obstruction.
 - repo: crypto-autoresearcher
   path: ledger/evidence/EV-SEMBIN-b6d042.yaml
   note: >-
@@ -99,4 +112,4 @@ areas:
 - ICEX
 - SEMBIN
 - RELN
-last_reviewed: '2026-11-02'
+last_reviewed: '2026-11-04'

@@ -1,0 +1,452 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "HPSEUDO-SYMNULL-20261104",
+  "version": 1,
+  "created": "2026-11-04",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "docs/reports/hpseudo-symnull-20261104",
+  "authors": [
+    "Claude Code session (holant lead, step b)"
+  ],
+  "links": {
+    "lead": "knowledge/leads/ecdlp/exotic/LEAD-EXO-dl-character-sum-pseudorandom.yaml",
+    "original": "experiments/EXP-ECDLP-1ed445 (RUN-ECDLP-1ed445-001), EV-ECDLP-f83a17",
+    "desk_check": "docs/reports/leads-round2-20261104/checks/d1.json and VALIDATION-review.md",
+    "note": "Re-reads recorded EC values against a negation-matched null. The EC arm is not re-measured except for a replay subset."
+  },
+  "question": "Against a negation-closed null at each curve's own N, is the H-PSEUDO character-sum constant of the small-x factor base (B = 512, bits 20-26) consistent with R = 1, i.e. is the recorded R ~ 1.3 explained by the null mismatch?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "On the out-of-sample curves (curve_index 8..19, bits 20 and 22), mean R_sym is within 0.05 of 1 with a bootstrap CI containing 1 at both rungs, by the preregistered rule.",
+      "class": "comparative",
+      "decided_by": [
+        "C-ec-vs-sym"
+      ],
+      "if_supported": "the recorded constant offset of H-PSEUDO is a null mismatch; the row's best_measured and revisit trigger are restated against the matched null",
+      "if_not_supported": "a residual EC-specific excess beyond negation symmetry exists (RESIDUAL) or is unresolved (INCONCLUSIVE); RESIDUAL goes to review-breakthrough"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "R_sym = 1 within 0.05 at every rung (memo HD1; desk check D1 and the validator's matched recomputation 0.96-1.03).",
+      "mechanism": "the (x,y)-keyed small-x factor base is closed under negation with signed logs, so its character sums are real; a matched real null has the same extreme-value law",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "mean_R_sym",
+          "direction": "equal_within",
+          "minimum_effect": "|mean R_sym - 1| <= 0.05, CI contains 1, every rung",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [
+              {
+                "path": "docs/reports/leads-round2-20261104/checks/d1.json",
+                "measured": "random symmetric sets give R 1.29-1.31 against the asymmetric null"
+              },
+              {
+                "path": "docs/reports/leads-round2-20261104/VALIDATION-review.md",
+                "measured": "matched recomputation from recorded C_EC: 0.96-1.03"
+              }
+            ],
+            "sample_status": "in_sample"
+          },
+          "role": "calibration"
+        },
+        {
+          "id": "P2",
+          "metric": "mean_R_sym",
+          "direction": "equal_within",
+          "minimum_effect": "|mean R_sym - 1| <= 0.05, CI contains 1, at bits 20 and 22 on curve_index 8..19",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [
+              {
+                "path": "experiments/EXP-ECDLP-1ed445/runs/RUN-ECDLP-1ed445-001/raw-result.json",
+                "measured": "recorded C_EC for curves 8..19 exist, but no matched-null ratio has been computed for them by anyone"
+              }
+            ],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "EC_recorded",
+      "role": "candidate",
+      "description": "recorded per-curve C_EC: curve_index < 8 at bits 20-26 (calibration) and curve_index 8..19 at bits 20, 22 (out of sample, decisive)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/hpseudo-symnull-20261104/hpseudo_symnull.py",
+          "script_sha256": "191e6e00d48311e188132104c6e15c81523ada99d3b38228b082de7236a53f7e",
+          "recorded_input": "experiments/EXP-ECDLP-1ed445/runs/RUN-ECDLP-1ed445-001/raw-result.json",
+          "original_code": "experiments/EXP-ECDLP-1ed445/run_character_sum_ladder.py"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "source": "stage2.per_curve"
+      }
+    },
+    {
+      "id": "N_sym",
+      "role": "control_negative",
+      "description": "20 negation-closed random B-sets per curve at the curve's N",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/hpseudo-symnull-20261104/hpseudo_symnull.py",
+          "script_sha256": "191e6e00d48311e188132104c6e15c81523ada99d3b38228b082de7236a53f7e",
+          "recorded_input": "experiments/EXP-ECDLP-1ed445/runs/RUN-ECDLP-1ed445-001/raw-result.json",
+          "original_code": "experiments/EXP-ECDLP-1ed445/run_character_sum_ladder.py"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "law": "negation_closed"
+      },
+      "same_instrument_as": "EC_recorded"
+    },
+    {
+      "id": "N_asym",
+      "role": "reference",
+      "description": "40 uniform B-subsets at each rung's representative N (original law; replication)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/hpseudo-symnull-20261104/hpseudo_symnull.py",
+          "script_sha256": "191e6e00d48311e188132104c6e15c81523ada99d3b38228b082de7236a53f7e",
+          "recorded_input": "experiments/EXP-ECDLP-1ed445/runs/RUN-ECDLP-1ed445-001/raw-result.json",
+          "original_code": "experiments/EXP-ECDLP-1ed445/run_character_sum_ladder.py"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "law": "uniform"
+      },
+      "same_instrument_as": "EC_recorded"
+    },
+    {
+      "id": "planted_sym_AP",
+      "role": "control_positive",
+      "description": "negation-closed arithmetic progression in log space, forced C ~ sqrt(B)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/hpseudo-symnull-20261104/hpseudo_symnull.py",
+          "script_sha256": "191e6e00d48311e188132104c6e15c81523ada99d3b38228b082de7236a53f7e",
+          "recorded_input": "experiments/EXP-ECDLP-1ed445/runs/RUN-ECDLP-1ed445-001/raw-result.json",
+          "original_code": "experiments/EXP-ECDLP-1ed445/run_character_sum_ladder.py"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "law": "planted"
+      },
+      "same_instrument_as": "EC_recorded"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "planted_sym_AP",
+      "expected_detection": "C >= 3 x the rung's max N_sym draw",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "N_sym",
+      "null_population": {
+        "description": "negation-closed uniform random B-sets of Z_N",
+        "generator": "B/2 distinct l in [1,(N-1)/2] by default_rng(derive_seed(sha,'N_sym',instance,draw)), set {l, N-l}",
+        "n": 20,
+        "why_n": "SE of the null mean ~0.17/sqrt(20) ~ 0.04 absolute, ~0.01 on R; the decision threshold is 0.05",
+        "matched_on": [
+          "N per curve",
+          "B = 512",
+          "negation closure",
+          "FFT statistic"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "null_law",
+        "levels": [
+          "negation_closed",
+          "uniform",
+          "planted"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "rung",
+        "treatment": "crossed",
+        "value": "bits 20, 22, 24, 26",
+        "how": "all arms per rung"
+      },
+      {
+        "name": "curve",
+        "treatment": "fixed",
+        "value": "the recorded 8 curves per rung (curve_index < 8) that define R_mean",
+        "how": "from raw-result.json"
+      },
+      {
+        "name": "N",
+        "treatment": "fixed",
+        "value": "each curve's own subgroup order",
+        "how": "null matched per curve (the original used one representative N per rung)"
+      },
+      {
+        "name": "B",
+        "treatment": "fixed",
+        "value": 512,
+        "how": "as recorded"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "exact FFT values, no clock"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-ec-vs-sym",
+        "arms": [
+          "EC_recorded",
+          "N_sym"
+        ],
+        "differs_in": [
+          "null_law"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-pos",
+        "arms": [
+          "planted_sym_AP",
+          "N_sym"
+        ],
+        "differs_in": [
+          "null_law"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "N_sym",
+          "N_sym"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "deterministic FFT values; order cannot change them",
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "derive_seed(protocol_sha, arm, instance, draw) from tools/experiment_protocol.py"
+    },
+    "instance_sampling": {
+      "rule": "curves are the recorded ones, fixed before this protocol",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "frozen script applies a fixed rule",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 56,
+    "replicates": 20,
+    "warmups": 0,
+    "power": {
+      "method": "paired_bootstrap",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": true,
+      "note": "decisive: 12 out-of-sample curves at each of bits 20, 22 (CI half-width about 0.05 at curve sd 0.09); calibration: the 8 R_mean curves at each of 4 rungs"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 60,
+      "per_sample_seconds": 9,
+      "threads": 3,
+      "estimated_total_seconds": 2400,
+      "measured_on": "this container: one rfft at N = 33,570,083 (prime) 38 s; smaller N proportionally faster"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "mean_R_sym",
+        "name": "mean R against the negation-closed null",
+        "unit": "ratio",
+        "kind": "derived",
+        "definition": "per rung, mean over curves of C_EC / mean(N_sym C at that curve's N)",
+        "source": "rows.jsonl",
+        "formula": "mean_c C_EC(c)/mean_d C_sym(c,d)",
+        "aggregation": "mean",
+        "resolution": "1e-6",
+        "uncertainty": "bootstrap_ci95"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "u_sym",
+        "name": "within-null percentile of C_EC",
+        "unit": "fraction",
+        "kind": "derived",
+        "definition": "mid-rank percentile of C_EC among its 20 N_sym draws",
+        "source": "rows.jsonl",
+        "formula": "((#<)+0.5(#=))/20",
+        "aggregation": "mean",
+        "resolution": "1/40",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "FFT maxima"
+    ],
+    "record": [
+      "python_version",
+      "numpy_version",
+      "script_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "instance_type": "Claude Code cloud container (CPU)",
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 14400,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed design: 56 curves (32 calibration + 24 out of sample) x 20 symmetric draws, 4 rungs x 40 asymmetric draws, 4 planted, replay of 18 calibration curves; then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "decision_rule": {
+    "text": "Validity: V1 asymmetric replication within 2% of recorded C_null_mean at every rung; V2 planted AP >= 3x the rung's max symmetric draw; V3 every replayed C_EC equals the record within 1e-5 and its factor base is negation-closed; V4 even/odd symmetric-draw means within 2%. Decisive cells are the out-of-sample curves (curve_index 8..19) at bits 20 and 22; the 8 R_mean curves per rung are calibration and reported. EXPLAINED iff at both decisive rungs the bootstrap CI of mean R_sym contains 1 and |mean R_sym - 1| <= 0.05. RESIDUAL iff at both decisive rungs mean R_sym > 1.05 with CI excluding 1. Otherwise INCONCLUSIVE.",
+    "comparison_ids": [
+      "C-ec-vs-sym",
+      "C-pos"
+    ],
+    "threshold": "as in text",
+    "statistic": "mean R_sym per rung",
+    "interval": "percentile bootstrap over curves, 10000 resamples",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "mean R_sym - 1",
+    "verdict_vocabulary": [
+      "EXPLAINED",
+      "RESIDUAL",
+      "INCONCLUSIVE",
+      "INVALID_CONTROLS"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "docs/reports/hpseudo-symnull-20261104/analyze_symnull.py",
+      "sha256": "edc43c2a75e612c2d0a2da79757aec829e1bfb6fdc5fae6ebde9e720d5c2055d"
+    },
+    "inputs": [
+      "rows.jsonl"
+    ],
+    "outputs": [
+      "verdict.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "inadmissible": [
+    "changing curves, B, draw counts, tolerance or decision rule after seeing values",
+    "reading EXPLAINED as a proof of pseudorandomness at cryptographic size"
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "cf05250833d83b48fa05f8df8e37a0f3f2ff71e0da4d14b15c790d428987b135",
+    "commit": "f9931a3e069d44612a6c67a488bd3dffa9785028",
+    "frozen_at": "2026-11-04T05:39:48Z",
+    "filed_before_affected_data": true
+  }
+}

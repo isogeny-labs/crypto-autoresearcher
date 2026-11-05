@@ -359,6 +359,8 @@ reads.
 The home page shows write IOPS, read IOPS, throughput and storage for the
 rho distinguished-point Postgres instance (`rho-dp` in `us-west-2`).
 Those numbers come from CloudWatch, not from ledger record counts.
+The current source-to-destination cutover and fresh-panel validation are
+tracked in [the rho cutover problem record](../problems/rho-dp-destination-cutover-unverified.md).
 
 `ui/ops.py` is stdlib-only (no boto3). It:
 
@@ -369,7 +371,9 @@ Those numbers come from CloudWatch, not from ledger record counts.
 - names the instance, never the hostname.
 
 Locally, put `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in `.env`
-(gitignored) or the shell, then:
+(gitignored) or the shell. Temporary role credentials also require
+`AWS_SESSION_TOKEN`; the client sends and signs it with each RDS and CloudWatch
+request. Then:
 
 ```sh
 set -a && source .env && set +a

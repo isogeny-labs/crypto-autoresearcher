@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: symbolic branch-root extension arithmetic
+
+The native design code now represents an element of a degree-2, degree-3 or degree-4 extension of the pinned field K as coefficients in `K[u]/m(u)`. It validates a monic irreducible modulus with the finite-field Frobenius criterion, then supplies addition, subtraction, multiplication, exponentiation, inversion, Frobenius and polynomial evaluation. It uses the existing logarithmic K encoding and allocates no table of all extension elements. The extension modulus is explicit, so the eventual branch-root certificate can bind its basis.
+
+The F27 software checks construct an irreducible sparse modulus in each supported degree, verify `m(u)=0`, `u^(|K|^d)=u`, exclusion of the proper subfield, the prime-field Frobenius period, multiplication/inversion and Frobenius multiplicativity. They reject reducible, nonmonic, unsupported-degree and out-of-basis inputs. All 14 core and 16 join native tests pass. These checks exercise the arithmetic interface, not a scientific P1–P4 cohort or a complete exceptional-index generator.
+
+Next factor each bound quartic over K, represent its degree-2/3/4 roots in a common symbolic extension, solve the corresponding projective linear collision constraints, and map the resulting cocycles to exact structure ordinals. An independent all-factor-pattern replay and resource measurements are still required before the proposed contract can be frozen. EXP-PEXT-bf8f96 remains `review_required`; no scientific trial was launched.

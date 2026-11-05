@@ -1,0 +1,399 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "QUADPHASE-2P16-20261104",
+  "version": 1,
+  "created": "2026-11-04",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "docs/reports/quadphase-2p16-20261104",
+  "authors": [
+    "Claude Code session (holant lead, step b)"
+  ],
+  "links": {
+    "lead": "knowledge/leads/ecdlp/exotic/LEAD-EXO-quadratic-phase-small-x-leakage.yaml",
+    "previous": "docs/reports/quadphase-20261104 (2^16 curve descriptive: Q_EC above 5 null draws)"
+  },
+  "question": "Is the 2^16 curve's quadratic-phase maximum Q_EC = 4.7249 above a 40-draw negation-closed null, or inside it?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "EXCESS iff Q_EC exceeds all 40 null draws; NULL iff its percentile is <= 0.95.",
+      "class": "comparative",
+      "decided_by": [
+        "C-ec-vs-sym"
+      ],
+      "if_supported": "EXCESS: a single-curve quadratic-phase excess at 2^16, to be replicated on more 2^16 curves before any interpretation",
+      "if_not_supported": "NULL: the 5-draw observation was chance"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "The 5-draw exceedance was chance (probability 1/6).",
+      "mechanism": "as QUADPHASE-20261104",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "Q_EC_percentile",
+          "direction": "equal_within",
+          "minimum_effect": "u <= 0.95",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [
+              {
+                "path": "docs/reports/quadphase-20261104/rows.jsonl.xz",
+                "measured": "Q_EC 4.725 vs 5 draws max 4.708"
+              }
+            ],
+            "sample_status": "in_sample"
+          },
+          "role": "calibration"
+        },
+        {
+          "id": "P2",
+          "metric": "Q_EC_percentile",
+          "direction": "equal_within",
+          "minimum_effect": "u <= 0.95 against 40 fresh null draws",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "EC",
+      "role": "candidate",
+      "description": "logs of the first 512 points sorted by (x,y)",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/quadphase-2p16-20261104/rerun_2p16.py",
+          "script_sha256": "b68d7a0d057d0b647d17d8a13659ccccc12fc8e225eb8ebaad78e36a86b900eb",
+          "core": "docs/reports/quadphase-2p16-20261104/quadphase.py",
+          "core_sha256": "a26745b182e7347b155d900f60c624d85555f88acb9ce44a42be7fa75961787f"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "set": "small_x"
+      }
+    },
+    {
+      "id": "N_sym",
+      "role": "control_negative",
+      "description": "negation-closed random 512-sets",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/quadphase-2p16-20261104/rerun_2p16.py",
+          "script_sha256": "b68d7a0d057d0b647d17d8a13659ccccc12fc8e225eb8ebaad78e36a86b900eb",
+          "core": "docs/reports/quadphase-2p16-20261104/quadphase.py",
+          "core_sha256": "a26745b182e7347b155d900f60c624d85555f88acb9ce44a42be7fa75961787f"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "set": "random_symmetric"
+      },
+      "same_instrument_as": "EC"
+    },
+    {
+      "id": "planted",
+      "role": "control_positive",
+      "description": "{l : alpha0 l^2 mod N < 512}, negation-closed",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/quadphase-2p16-20261104/rerun_2p16.py",
+          "script_sha256": "b68d7a0d057d0b647d17d8a13659ccccc12fc8e225eb8ebaad78e36a86b900eb",
+          "core": "docs/reports/quadphase-2p16-20261104/quadphase.py",
+          "core_sha256": "a26745b182e7347b155d900f60c624d85555f88acb9ce44a42be7fa75961787f"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 3
+      },
+      "parameters": {
+        "set": "planted_quadratic"
+      },
+      "same_instrument_as": "EC"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "C-aa",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "planted",
+      "expected_detection": "planted Q >= 3 x null max at alpha0; EC replay equals the recorded Q_EC",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "N_sym",
+      "null_population": {
+        "description": "negation-closed uniform random 512-sets of Z_N",
+        "generator": "256 distinct l in [1,(N-1)/2] by default_rng(derive_seed(sha,'N_sym',instance,draw)), set {l, N-l}",
+        "n": 40,
+        "why_n": "min attainable one-sided p 1/41",
+        "matched_on": [
+          "N",
+          "|S| = 512",
+          "negation closure",
+          "statistic"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "set_law",
+        "levels": [
+          "small_x",
+          "random_symmetric",
+          "planted_quadratic"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "curve",
+        "treatment": "fixed",
+        "value": "p=65521, a=48322, b=6694, n=65167",
+        "how": "the QUADPHASE 2^16 curve"
+      },
+      {
+        "name": "B",
+        "treatment": "fixed",
+        "value": 512,
+        "how": "as frozen"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "exact values"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-ec-vs-sym",
+        "arms": [
+          "EC",
+          "N_sym"
+        ],
+        "differs_in": [
+          "set_law"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-pos",
+        "arms": [
+          "planted",
+          "N_sym"
+        ],
+        "differs_in": [
+          "set_law"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-aa",
+        "arms": [
+          "N_sym",
+          "N_sym"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "deterministic FFT values; order cannot change them",
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "derive_seed(protocol_sha, arm, instance, replicate) from tools/experiment_protocol.py"
+    },
+    "instance_sampling": {
+      "rule": "curves drawn before any Q is computed",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "frozen script applies a fixed rule",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 1,
+    "replicates": 40,
+    "warmups": 0,
+    "power": {
+      "method": "rank_test",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": 40,
+      "min_attainable_two_sided_p": 0.04878048780487805,
+      "passes": true,
+      "note": "single-curve settle"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 30,
+      "per_sample_seconds": 300,
+      "threads": 3,
+      "estimated_total_seconds": 4500,
+      "measured_on": "QUADPHASE-20261104: one Q at N=65521 about 400 s under contention"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "Q_EC_percentile",
+        "name": "within-null percentile of Q_EC",
+        "unit": "fraction",
+        "kind": "derived",
+        "definition": "mid-rank percentile of Q_EC among the curve's N_sym draws",
+        "source": "rows.jsonl Q",
+        "formula": "((#<)+0.5(#=))/draws",
+        "aggregation": "distribution",
+        "resolution": "1/80",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "Q",
+        "name": "quadratic-phase maximum",
+        "unit": "ratio",
+        "kind": "exact",
+        "definition": "max over alpha, beta of |sum e((alpha l^2+beta l)/N)| / sqrt(|S|)",
+        "source": "rows.jsonl Q",
+        "aggregation": "distribution",
+        "resolution": "1e-9",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "FFT maxima"
+    ],
+    "record": [
+      "python_version",
+      "numpy_version",
+      "script_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "instance_type": "Claude Code cloud container (CPU)",
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 21600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed: 1 EC replay + 40 nulls + 1 planted, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "decision_rule": {
+    "text": "Validity: EC replay equals the recorded Q_EC within 1e-9; planted Q >= 3x null max at alpha0 or N-alpha0; even/odd null means within 3%. EXCESS iff Q_EC exceeds every one of the 40 draws; NULL iff u <= 0.95; else BORDERLINE.",
+    "comparison_ids": [
+      "C-ec-vs-sym",
+      "C-pos"
+    ],
+    "threshold": "as in text",
+    "statistic": "u",
+    "interval": "null rank",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "(Q_EC - null mean)/null sd",
+    "verdict_vocabulary": [
+      "EXCESS",
+      "NULL",
+      "BORDERLINE",
+      "INVALID_CONTROLS"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "docs/reports/quadphase-2p16-20261104/analyze_2p16.py",
+      "sha256": "f81a2afeed867d4c963aa96f2008ecb52555ee404fb9a97a70f9b3e2351e11a3"
+    },
+    "inputs": [
+      "rows.jsonl"
+    ],
+    "outputs": [
+      "verdict.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "inadmissible": [
+    "changing sizes, curves, draws or the rule after seeing Q",
+    "reading a SIGNAL as an attack cost before the sparse-Fourier recovery step is costed"
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "d7250cca5e90d25c8ea0ef17e750bfee09d8c47a28ae6a910fcc9056fccbd1b9",
+    "commit": "82dd79797d7f52322bce1b2ae6218a1a4810fb08",
+    "frozen_at": "2026-11-04T16:33:57Z",
+    "filed_before_affected_data": true
+  }
+}

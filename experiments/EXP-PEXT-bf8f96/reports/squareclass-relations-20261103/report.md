@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: coefficient-aware square-class relation ledger
+
+The [relation ledger](../../implementation/squareclass_relations.py) now enumerates every subset of a checked Frobenius orbit of three, five or seven squarefree quartics. It keeps the projective branch-support parity and the leading-coefficient square class in the source field. It reports each geometric and arithmetic relation, both ranks, and whether a geometrically trivial relation retains a nonsquare constant. It checks that the two relation kernels are Frobenius-stable.
+
+Three [software tests](../../implementation/test_squareclass_relations.py) pass. Fixed F27 generic and exceptional join rows match the older independent polynomial-product square test. Repeated support with square and nonsquare coefficients retains the coefficient bit. A synthetic rank-two orbit built from three conjugate quadratic factors has geometric and arithmetic ranks `(2,2)` before a nonsquare coefficient twist and `(2,3)` afterward. The all-three subset retains a nonsquare constant after the twist; the independent polynomial-square routine confirms it is no longer an arithmetic square.
+
+These are source-field `K(X)` square-class relations. The ledger does not construct a Frobenius lift, verify the cocycle, or certify a descended curve or admissible genus. It is a component of the coefficient-aware descent check required by the full experiment. No scientific cohort trial was launched; EXP-PEXT-bf8f96 remains `review_required` and unfrozen.

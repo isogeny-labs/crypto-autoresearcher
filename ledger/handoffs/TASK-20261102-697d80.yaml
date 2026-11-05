@@ -1,0 +1,81 @@
+handoff:
+  id: TASK-20261102-697d80
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-02'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Archive the new quotient component and scoped implementation/source-review report without editing
+    or rebinding the original design snapshot.
+  uncertainty_reduced: Durable custody of point/coset/chart/squareclass construction and its actual software
+    checks, with full launcher obligations preserved.
+  inputs:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - ledger/handoffs/TASK-20261102-697d80.yaml
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.md
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.typ
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.pdf
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/construction.svg
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/construction.mmd
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/software-tests.txt
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/artifact-manifest.json
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - experiments/EXP-PEXT-bf8f96/design-obligations.md
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - coordination/sessions/receipts/20261102/SR-20261102-41055c.yaml
+  constraints:
+  - Zero scientific runs; no approval, claim, new EXP or status promotion.
+  - Archive exactly declared paths. Preserve original design specification/protocol and archive receipt; append
+    progress to the mutable problem record without erasing its initial obligations.
+  - Actual test commands/output must exist; use final field-identity source and match hashes before commit.
+  - The root implementing session is the producer; static code review is not independent scientific validation.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261102-697d80/receipt.json
+  artifact_paths:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - ledger/handoffs/TASK-20261102-697d80.yaml
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.md
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.typ
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.pdf
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/construction.svg
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/construction.mmd
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/software-tests.txt
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/artifact-manifest.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - coordination/sessions/receipts/20261102/SR-20261102-41055c.yaml
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - ledger/handoffs/TASK-20261102-697d80.yaml
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.md
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.typ
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/report.pdf
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/construction.svg
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/construction.mmd
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/software-tests.txt
+  - experiments/EXP-PEXT-bf8f96/reports/implementation-20261102/artifact-manifest.json
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261102-697d80/receipt.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - coordination/sessions/receipts/20261102/SR-20261102-41055c.yaml
+  archived_by: TASK-20261102-697d80
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 2
+    maximum_runs: 0
+  completion_gate:
+  - Final software-tests.txt records actual commands/compiler and all test outcomes; report/PDF scope matches.
+  - Inspect complete report PDF; verify deduplicated artifact manifest excluding its own hash.
+  - Commit only exact artifact_paths; retain actual content commit and parent.
+  - Use native tools.research_dispatch.GitRepositoryVerifier.verify_archive with exact path set and commit/parent
+    hashes; save verified content_at_commit receipt under declared archive path.
+  - Push branch and verify GitHub revision, update the scoped PR; original specification remains review_required
+    and protocol draft.
+  - No whole-census, descent certificate, speedup, mathematical support or completed experiment is inferred.
+  state: queued
+  return_format: Verified successor archive receipt, exact remote revision/PR and next implementation obligation.

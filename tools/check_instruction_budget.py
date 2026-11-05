@@ -6,9 +6,9 @@ contract at 12,146 words -- more than the longest skill, read by every session
 before it did anything -- and set two budgets:
 
   * ALWAYS_LOADED: AGENTS.md + CLAUDE.md, loaded by every runtime on every
-    wake, at most 5,000 words.
+    wake, at most 6,000 words.
   * WAKE: the always-loaded set plus the one skill or agent contract a session
-    actually runs, at most 8,000 words. Checked for every skill under
+    actually runs, at most 9,000 words. Checked for every skill under
     .claude/skills and every generated agent under .claude/agents, since a
     session loads one of each at most.
 
@@ -32,8 +32,12 @@ ALWAYS_LOADED = ("AGENTS.md", "CLAUDE.md")
 # grow to 5,000 words provided what it adds is new, which
 # tools/instruction_uniqueness.py measures (no statement may restate another).
 # WAKE rises by the same 1,000 so a skill keeps its 3,000-word allowance.
-ALWAYS_LOADED_BUDGET = 5_000
-WAKE_BUDGET = 8_000
+# Raised again from 5,000 / 8,000 on user direction (2026-11-05): the pcc rule
+# (docs/pcc.md) left main exactly at 5,000 words, so any further addition would
+# have failed this check. WAKE rises by the same 1,000 to keep the 3,000-word
+# skill allowance. The uniqueness condition above still applies.
+ALWAYS_LOADED_BUDGET = 6_000
+WAKE_BUDGET = 9_000
 SKILL_GLOB = ".claude/skills/*/SKILL.md"
 AGENT_GLOB = ".claude/agents/*.md"
 
