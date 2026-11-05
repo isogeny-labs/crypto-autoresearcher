@@ -1,0 +1,20 @@
+{
+  "schema": "semaev.native-checker-d5-control/v1",
+  "id": "n8-d5-native-checker-fixture-20261105-001",
+  "scope": "One deterministic degree-five control for the already built native quotient checker; no n51 or LFD-six claim.",
+  "fixture_rule": "N=8, D=5; quotient coordinates evaluate on the first 73 Boolean points of weight at most 3, ordered by weight then mask; one generator is x0*x1*x2*x3.",
+  "fixture_source_sha256": "8d727d0f96856c76006902e7cf9f13b5eb03da78cd286f985fa3654e7c5a6851",
+  "certificate": "validation/d5-checker-fixture.bin",
+  "certificate_sha256": "216b3772ea8559c3b7cff8100666aab528aa5f92766e5684119e5e2cd2650c65",
+  "generators": "validation/d5-checker-fixture-generators.bin",
+  "generators_sha256": "7b184be37c88fc36736565fa14e417372f4a65b0f26bcfbc9b22cc149a0bb9a4",
+  "checker_binary": "/home/ec2-user/fall-degree-data-20261029/n51-poly01-native-checker-control-001/check_quotient_map_native",
+  "checker_binary_sha256": "5adf9d71ceef5810774a833f8e18ecb0ae4a5656d5c23899db4e190178ef3b27",
+  "launch_argv": ["prlimit", "--as=1073741824", "--", "check_quotient_map_native", "d5-checker-fixture.bin", "d5-checker-fixture-generators.bin", "216b3772ea8559c3b7cff8100666aab528aa5f92766e5684119e5e2cd2650c65", "7b184be37c88fc36736565fa14e417372f4a65b0f26bcfbc9b22cc149a0bb9a4"],
+  "expected": {"status": "valid_native_quotient_nonmembership", "degree": 5, "variables": 8, "codimension_lower_bound": 73, "generators": 1, "low_kernel_dimension": 90},
+  "reason": "The degree-at-most-three monomials evaluated on the selected points contain a 73 by 73 triangular submatrix, so the map is onto. The degree-at-most-four space has dimension 163, giving a low kernel of dimension 90. Evaluation commutes with every Boolean variable multiplication, and the degree-four generator vanishes on every selected point.",
+  "decision_rule": "Only exact exit-zero agreement with every expected field, plus a separate Python checker agreement, qualifies this D5 control. Any mismatch leaves D5 qualification unknown.",
+  "limits": {"attempts": 1, "automatic_retries": 0, "cpu_cores": 1, "as_bytes": 1073741824, "timeout_seconds": 120, "additional_reserved_usd": 0.25, "deadline_utc": "2026-11-05T23:30:00Z"},
+  "concurrency": "Fixture is 5,288 bytes and reuses a built checker; no second frontier producer or high-memory reservation. Run alongside the existing n51 D5 job only if live host memory and budget gates pass.",
+  "freeze": "Commit and verify GitHub revision before the one checker attempt. Preserve stdout, stderr, exit, and hashes; no retry."
+}
