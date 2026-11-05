@@ -49,6 +49,8 @@ handoff:
   - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-files.tar.gz
   - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-authorization.json
   - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export-check.json
+  - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.artifacts.json
+  - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/.gitignore
   constraints:
   - Only exact published fixed software controls; all full106+6 scientific comparison
     cells and five leads remain downstream.
@@ -79,6 +81,13 @@ handoff:
   - Native failed run/slot1 and all counters remain immutable; original execution
     plan/preapproval bytes remain historical authority, not regenerated for this custody
     correction.
+  - Terminal failure preservation only; failed producer remains failed. No second
+    producer attempt authorized.
+  - 'Physical Git snapshot binds committed .artifacts.json/.gitignore in place of
+    off-Git gzip. Named logical attempt-files.tar.gz remains mandatory: actual bytes34576744
+    SHA256 db10e77728bd51c0c938c68f8a150b37b30d181446b7c5f6072d26c83afbde59; snapshot
+    receipt must bind fresh native remote verification plus actual hydrated byte hash/size.
+    Do not report raw gzip as Git-byte-verified.'
   deliverables:
   - coordination/prime_sat_transform_validation_20261105/result-snapshot-receipt.json
   artifact_paths:
