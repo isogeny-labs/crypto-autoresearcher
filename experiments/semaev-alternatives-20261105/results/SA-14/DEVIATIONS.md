@@ -1,0 +1,7 @@
+# Deviations (SA-14)
+
+1. Encoding. The repository's PKM Kummer encoding (RESEARCH_PKM_TOWER_ORACLE.md) was not available to this executor (only the lead YAML and the report were readable). I used my own Kummer tower: V_t = {x : x^(q^t) = 1}, per summand variables x = w0, w1..w_{t-1}, equations w_j - w_{j-1}^q and w_{t-1}^q - 1, plus S_3(x1,x2,xR) = 0 (m = 2 summands, xR fixed). Same family and same m = 2 shape, but the F4 degrees are not guaranteed to be the same objects as the repository's medians. They agree for t >= 2 (see REPORT), differ by one at t = 1 (4 vs 3).
+2. Measured with msolve (pip passagemath-msolve), grevlex, -g 2, 1 thread, degree = largest "deg" column in the F4 round table. Singular (pip passagemath-singular) degBound sweeps and a hand-written Macaulay-matrix code were used as cross-checks of different quantities (Buchberger-with-degBound degree, and XL/Macaulay degree). They are NOT the F4 degree and are reported separately.
+3. Scale. msolve reached t = 9 (all seeds t <= 7, one seed at t = 8 and 9). The repository's t = 10 cell (predicted 6) was not reached. Fewer than the 4 doublings asked for exponent fits; this is a slope-in-t question and the data are a step function with one step, so no CI beyond "consistent with" is claimed.
+4. The "11 measured medians" are taken from the lead YAML (10 values for m = 2, t = 1..10: 3 4 4 4 4 5 5 5 5 6, plus m = 3 values 5 6 6 7 and m = 4 values 6 7 listed there). I did not have the raw 11-cell table.
+5. m = 3, 4 not run (needs S_4, S_5 and sizes beyond budget).
