@@ -1,0 +1,439 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "LOWDEG-RANK-20261104",
+  "version": 1,
+  "created": "2026-11-04",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "docs/reports/lowdeg-rank-20261104",
+  "authors": [
+    "Claude Code session (holant lead, step b)"
+  ],
+  "links": {
+    "lead": "knowledge/leads/ecdlp/exotic/LEAD-EXO-low-degree-query-lower-bound.yaml",
+    "desk_note": "docs/reports/ecdlp-leads-desk-20261104/low-degree-desk.md",
+    "note": "Exact rank computation replacing the row's planned bias check. Rank over F_p is an exact computation; the comparison across multiplier families is descriptive except for the preregistered full-rank rule."
+  },
+  "question": "For random multipliers b_i, does the evaluation matrix of degree-<=D monomials in the coordinates of ([b_1]R, ..., [b_t]R), over all candidate logs, reach full rank once the monomial count is about twice the number of candidates (p from 2^8 to 2^11)?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Random-multiplier evaluation matrices reach full rank at monomial/candidate ratio about 2 on at least 90% of cells at every size (the interpolation attack's condition holds at toy size), by the preregistered rule.",
+      "class": "comparative",
+      "decided_by": [
+        "C-rand-vs-null"
+      ],
+      "if_supported": "H1 of the low-degree lead is refuted at toy size with an explicit query-cheap attack; the row restates to H1' (proved)",
+      "if_not_supported": "a structural rank deficit for elliptic multiples, worth a note; H1 survives this test"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H1",
+      "statement": "Full rank at ratio about 2 for random multipliers (heuristic of the desk note).",
+      "mechanism": "for random large b_i, the points ([b_i]R) behave like generic points for low-degree polynomials beyond the t curve equations",
+      "predictions": [
+        {
+          "id": "P1",
+          "metric": "full_rate_rand_ratio2",
+          "direction": "higher",
+          "minimum_effect": ">= 0.9 at every size",
+          "provenance": {
+            "written_at": "2026-11-04",
+            "data_seen": [
+              {
+                "path": "docs/reports/ecdlp-leads-desk-20261104/lowdeg_rank_check.json",
+                "measured": "full rank at p=101 (t=4, D=3); 161/222 at p=211 for the same (t,D), ratio < 1"
+              }
+            ],
+            "sample_status": "out_of_sample"
+          },
+          "role": "decisive"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "rand",
+      "role": "candidate",
+      "description": "random multipliers b_i in [2, N-2], a_i = 0",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/lowdeg-rank-20261104/lowdeg_rank.py",
+          "script_sha256": "1b7a30b7b832079a9567ad0541a6957ec2640989d69788d350a0297992288cd0",
+          "modrank": "docs/reports/lowdeg-rank-20261104/modrank.py",
+          "modrank_sha256": "f1e0ed19d49025326dc10b0f5a23e08069ebfb6fced1f361ef9030197ad82368"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "multipliers": "random"
+      }
+    },
+    {
+      "id": "ap",
+      "role": "reference",
+      "description": "small arithmetic-progression multipliers 1+rep*t+i",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/lowdeg-rank-20261104/lowdeg_rank.py",
+          "script_sha256": "1b7a30b7b832079a9567ad0541a6957ec2640989d69788d350a0297992288cd0",
+          "modrank": "docs/reports/lowdeg-rank-20261104/modrank.py",
+          "modrank_sha256": "f1e0ed19d49025326dc10b0f5a23e08069ebfb6fced1f361ef9030197ad82368"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "multipliers": "small_ap"
+      },
+      "same_instrument_as": "rand"
+    },
+    {
+      "id": "shift",
+      "role": "control_positive",
+      "description": "X_i = R + [a_i]P (b_i = 1): rank provably <= 3Dt+1",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/lowdeg-rank-20261104/lowdeg_rank.py",
+          "script_sha256": "1b7a30b7b832079a9567ad0541a6957ec2640989d69788d350a0297992288cd0",
+          "modrank": "docs/reports/lowdeg-rank-20261104/modrank.py",
+          "modrank_sha256": "f1e0ed19d49025326dc10b0f5a23e08069ebfb6fced1f361ef9030197ad82368"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "multipliers": "shift"
+      },
+      "same_instrument_as": "rand"
+    },
+    {
+      "id": "null",
+      "role": "control_negative",
+      "description": "uniformly random points of F_p^{2t} in place of the curve points",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": null,
+        "flags": {
+          "script": "docs/reports/lowdeg-rank-20261104/lowdeg_rank.py",
+          "script_sha256": "1b7a30b7b832079a9567ad0541a6957ec2640989d69788d350a0297992288cd0",
+          "modrank": "docs/reports/lowdeg-rank-20261104/modrank.py",
+          "modrank_sha256": "f1e0ed19d49025326dc10b0f5a23e08069ebfb6fced1f361ef9030197ad82368"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "points": "uniform_random"
+      },
+      "same_instrument_as": "rand"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "ranks are exact deterministic computations; there is no measurement noise for an A/A arm to calibrate, and replicate-to-replicate variation within the rand arm is itself reported"
+    },
+    "positive": {
+      "present": true,
+      "arm": "shift",
+      "expected_detection": "rank <= 3Dt+1 < candidates: the detector reports a deficit where one is proved",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "null",
+      "null_population": {
+        "description": "uniformly random point sets of the same size in F_p^{2t}",
+        "generator": "numpy default_rng(derive_seed(protocol_sha,'null',instance,rep)).integers(0,p,(C,2t))",
+        "n": 111,
+        "why_n": "3 replicates x 37 instances; checks that generic points give full rank min(C, #monomials)",
+        "matched_on": [
+          "p",
+          "t",
+          "D",
+          "number of rows",
+          "monomial set",
+          "rank routine"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "multipliers",
+        "levels": [
+          "random",
+          "small_ap",
+          "shift",
+          "uniform_points"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "size",
+        "treatment": "crossed",
+        "value": "p = largest prime below 2^L, L in 8,9,10 (full grid) and 11 (one decisive instance)",
+        "how": "every arm on every instance"
+      },
+      {
+        "name": "curve",
+        "treatment": "randomized",
+        "how": "2 curves per size (1 at L=11), prime order != p, distinct orders, seeded by derive_seed(sha,'curve',L,0)"
+      },
+      {
+        "name": "degree",
+        "treatment": "crossed",
+        "value": "D in {2,3} (D=3 only at L=11)",
+        "how": "all arms"
+      },
+      {
+        "name": "t",
+        "treatment": "fixed",
+        "value": "t chosen so C(2t+D,D)/(N-1) is nearest to 0.5, 1, 2 on a log scale",
+        "how": "rule in instances()"
+      },
+      {
+        "name": "generator",
+        "treatment": "fixed",
+        "value": "first point with y != 0 found by scanning x",
+        "how": "same for all arms"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "exact counts, no clock"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-rand-vs-null",
+        "arms": [
+          "rand",
+          "null"
+        ],
+        "differs_in": [
+          "multipliers"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-pos",
+        "arms": [
+          "shift",
+          "null"
+        ],
+        "differs_in": [
+          "multipliers"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "C-rand-vs-ap",
+        "arms": [
+          "rand",
+          "ap"
+        ],
+        "differs_in": [
+          "multipliers"
+        ],
+        "design": "one_factor"
+      }
+    ],
+    "aa_not_applicable": "exact computation, no measurement noise",
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "exact deterministic computations; order cannot change a rank",
+    "seed_derivation": {
+      "method": "protocol_hash_sha256",
+      "seeds": [],
+      "nonce": null,
+      "note": "tools/experiment_protocol.py derive_seed(protocol_sha, arm, instance index, replicate) for every row; curves by derive_seed(sha,'curve',L,0)"
+    },
+    "instance_sampling": {
+      "rule": "instances fixed by instances(); curves drawn before any rank is computed",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "frozen script applies a fixed rule",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 37,
+    "replicates": 3,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": true,
+      "note": "ranks are exact; the rule is a threshold on full-rank fractions over 12 to 18 decisive cells per size (3 at L=11), not a significance test"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 10,
+      "per_sample_seconds": 4,
+      "threads": 1,
+      "estimated_total_seconds": 1600,
+      "measured_on": "this container; 1998x3654 at p=2039: build 0.4 s, rank 80 s (rank not read); 1020x2040 random 7 s"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "full_rate_rand_ratio2",
+        "name": "full-rank fraction, random multipliers, ratio >= 1.5",
+        "unit": "fraction",
+        "kind": "derived",
+        "definition": "fraction of rand (instance, replicate) cells with monomials/candidates >= 1.5 whose rank equals the candidate count, per size",
+        "source": "rows.jsonl full",
+        "formula": "mean(full) over decisive cells, per L",
+        "aggregation": "mean",
+        "resolution": "1/cells",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "deficit",
+        "name": "rank deficit against the generic expectation",
+        "unit": "rank",
+        "kind": "exact",
+        "definition": "expected_generic - rank, expected_generic = min(C, #monomials - t*C(2t+D-3, D-3)) (D < 6) or min(C,#monomials) for null",
+        "source": "rows.jsonl",
+        "aggregation": "distribution",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "rank over F_p"
+    ],
+    "record": [
+      "python_version",
+      "numpy_version",
+      "script_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "instance_type": "Claude Code cloud container (CPU)",
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 7200,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed design: 37 instances x 4 arms x 3 replicates = 444 matrices, then stop",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "decision_rule": {
+    "text": "Validity: null full (rank == min(C,#monomials)) in >= 95% of null cells, and every shift cell rank <= 3Dt+1, else INVALID_CONTROLS. HOLDS iff the full-rank fraction of rand cells with ratio >= 1.5 is >= 0.9 at every size. FAILS iff that fraction is <= 0.5 at L = 10 and L = 11. Otherwise MIXED.",
+    "comparison_ids": [
+      "C-rand-vs-null",
+      "C-pos"
+    ],
+    "threshold": "as in text",
+    "statistic": "full-rank fraction per size",
+    "interval": "none (exact)",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "rank deficit",
+    "verdict_vocabulary": [
+      "HOLDS",
+      "FAILS",
+      "MIXED",
+      "INVALID_CONTROLS"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "docs/reports/lowdeg-rank-20261104/analyze_lowdeg.py",
+      "sha256": "e8f5a75bf148ee892eb72ddb3e84bcc851f125bc43ebb71ca8e26af631f705c8"
+    },
+    "inputs": [
+      "rows.jsonl"
+    ],
+    "outputs": [
+      "verdict.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "inadmissible": [
+    "changing sizes, (t, D) rule, curves, multipliers or the decision rule after seeing ranks",
+    "reading HOLDS as a practical attack: the attack's local work is about N^omega field operations"
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "bbcdab31966734404349e193614ef75b9b6bc2cdc0495aa63a5ccb2cce737756",
+    "commit": "3edaed224208947b40b5dc1c9f32bdbf935f724b",
+    "frozen_at": "2026-11-04T03:26:59Z",
+    "filed_before_affected_data": true
+  }
+}

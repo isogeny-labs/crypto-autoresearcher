@@ -1,0 +1,19 @@
+digraph G {
+  graph [rankdir=TB, bgcolor="white", nodesep=0.28, ranksep=0.34, pad=0.2, fontname="DejaVu Sans"];
+  node [shape=box, style="rounded,filled", fillcolor="#eaf1ff", color="#48658c", fontname="DejaVu Sans", fontsize=11, margin="0.16,0.12"];
+  edge [color="#48658c", arrowsize=0.7];
+  digit [label="Exact prime digit S3 + all bit equations\ns >= 2, p >= 2^s, nonsingular curve"];
+  rank [label="Elementary inclusion-rank induction\nTop multiplication injective below floor(s/2)"];
+  closure [label="Full closure at D = 3 + floor(s/2)\nW_D = {NF(h f) : deg h <= floor(s/2)-1}"];
+  count [label="At most 2^(s+1) Boolean zeros\nStrict dimension gap gives a missing consequence"];
+  lower [label="Written prime lower theorem\nd_F >= 4 + floor(s/2)", fillcolor="#e3f4e8", color="#38714e"];
+  upper [label="Lean: Boolean repair at original degree\nGeneric N-variable LFD <= N+1", fillcolor="#e3f4e8", color="#38714e"];
+  solving [label="Degree-compatible order + C-G Thm 3.1\n4+floor(s/2) <= d_F <= sd <= 2s+1"];
+  binarycore [label="Lean: support localization + affine refutations\nAdditive coefficient descent + raw S3 repair", fillcolor="#e3f4e8", color="#38714e"];
+  binary [label="Lean raw binary UNSAT theorem: d_F <= 3 ell + 1\nWritten solving-degree link: sd = d_F", fillcolor="#e3f4e8", color="#38714e"];
+  gap [label="Still open: growing characteristic-two lower bound\nand full prime growth Lean proof", fillcolor="#fff0d9", color="#a5742b", style="rounded,dashed,filled"];
+  digit -> rank -> closure -> count -> lower -> solving;
+  upper -> solving;
+  upper -> binarycore -> binary;
+  binary -> gap [style=dashed];
+}

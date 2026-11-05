@@ -52,24 +52,34 @@ files are downloaded. The tool is standard library only, so a copy of the file
 can run before any checkout exists. Anything read later outside the profile
 (`git show HEAD:<path>`, `add --experiment`) is fetched on demand.
 
-**Session start.** In Claude Code on the web, set
-`CRYPTO_AR_SPARSE_PROFILE=harness` in the environment's variables and
-`.claude/hooks/session-start.sh` applies the profile before anything else
-runs, which also leaves room for the SageMath install (it needs 10 GiB free).
-Without the variable the hook prints a one-line hint when a full checkout
-leaves less than 20 GiB free. The hook's history fetch is now
+**Session start.** In Claude Code on the web,
+`.claude/hooks/session-start.sh` runs aburan28/crypto's `scripts/cloud-setup.sh`
+(at the pinned `CRYPTO_SETUP_REF`), which applies the `harness` profile here and
+to a crypto checkout next to this one. That leaves room for its SageMath
+install, which needs 4 GiB free. The same script is the environment's
+setup-script line, `bash crypto/scripts/cloud-setup.sh`, when crypto is
+attached. `CRYPTO_AR_SPARSE_PROFILE=full` keeps this checkout full. Outside the
+web container the hook applies `CRYPTO_AR_SPARSE_PROFILE=harness` when set,
+and otherwise prints a one-line hint when a full checkout leaves less than
+20 GiB free. The hook's history fetch is now
 `tools/sparse_checkout.py deepen`: `git fetch --unshallow --filter=blob:none`,
 commits and trees only. The plain `--unshallow` it replaces downloaded every
 blob of all ~1,300 branches; archive verification needs reachability and
 trees, and reads the few old blobs it needs on demand. `goal_portfolio_health.py`
 deepens the same way.
 
-**Not the default.** Unlike aburan28/crypto, whose hook applies its harness
-profile unless told otherwise, this repository stays opt-in:
-`validate_ledger`, `goal_portfolio_health` and `portfolio_kpis` refuse a
-sparse checkout, and `coordinate`, `research-status`, `design-experiment`,
-`review-evidence`, `propose-ideas` and `curate-knowledge` run them. Opt in for
-execution (`run`) sessions only.
+**Default in the web container, opt-in elsewhere.** `validate_ledger`,
+`goal_portfolio_health` and `portfolio_kpis` refuse a sparse checkout, and
+`coordinate`, `research-status`, `design-experiment`, `review-evidence`,
+`propose-ideas` and `curate-knowledge` run them. In the web container the
+harness profile is the default (owner, 2026-11-01), so a coordination session
+keeps the checkout full. In Claude Code the setup script cannot read the
+environment's variables, so put the opt-out on the setup line,
+`CRYPTO_AR_SPARSE_PROFILE=full bash crypto/scripts/cloud-setup.sh`, and set
+the same variable in the environment's variables for the hook. Alternatively,
+run `python3 tools/sparse_checkout.py disable` in the session, which needs
+about 6 GiB free again. Outside the web container, opt in for execution
+(`run`) sessions only.
 
 **Child sessions.** A cloud session clones before any hook runs, so only the
 new session's settings shrink the download. When one session starts another

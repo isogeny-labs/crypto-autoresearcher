@@ -1,0 +1,30 @@
+../analysis/rigorous-lfd-solving-20261105/affine-refutation/AffineFibreRefutation.lean:26:22: error: `simp` made no progress
+../analysis/rigorous-lfd-solving-20261105/affine-refutation/AffineFibreRefutation.lean:43:8: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  ∑ i, ?x i * v i
+in the target expression
+  (φ c)⁻¹ * ∑ i, v i * c i = 1
+
+case refine_1
+ι : Type u_1
+τ : Type u_2
+k : Type u_3
+inst✝² : Field k
+inst✝¹ : Fintype ι
+inst✝ : Fintype τ
+A : ι → τ → k
+c : ι → k
+hno : ¬∃ t, ∀ (i : ι), c i + ∑ j, A i j * t j = 0
+col : τ → ι → k := fun j i => A i j
+U : Submodule k (ι → k) := Submodule.span k (Set.range col)
+hc : c ∉ U
+φ : Module.Dual k (ι → k)
+hφc : φ c ≠ 0
+hφU : Submodule.map φ U = ⊥
+hz : ∀ (j : τ), φ (col j) = 0
+v : ι → k := fun i => φ ((Pi.basisFun k ι) i)
+hrepr : ∀ (x : ι → k), ∑ i, x i * v i = φ x
+⊢ (φ c)⁻¹ * ∑ i, v i * c i = 1
+'CryptoResearch.FallDegree.affine_inconsistency_certificate' depends on axioms: [propext,
+ sorryAx,
+ Classical.choice,
+ Quot.sound]

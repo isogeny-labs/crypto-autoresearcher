@@ -88,6 +88,42 @@ def test_empty_execution_queue_selects_open_ecc_idea(tmp_path: Path) -> None:
     assert (action.kind, action.target, action.role) == (
         "design", "IDEA-20260926-abcdef", "coordinator")
     assert autopilot.select_next(tmp_path, excluded={action.key}).kind == "portfolio"
+    assert autopilot.select_next(tmp_path, allowed_kinds={"repair", "review"}) is None
+
+
+def test_admission_skips_expansion_and_selects_existing_repair(tmp_path: Path) -> None:
+    actions = [
+        autopilot.Action("design", "IDEA-1", "design", "coordinator"),
+        autopilot.Action("repair", "EXP-1", "repair", "coordinator"),
+    ]
+
+    def select(_repo, *, excluded):
+        return next((action for action in actions if action.key not in excluded), None)
+
+    def admit(action):
+        return {"allowed": action.kind == "repair", "mode": "enforce",
+                "reason": "fixture", "report": {"violations": ["over cap"]}}
+
+    action, blocked = autopilot.select_admitted(
+        tmp_path, selector=select, excluded=set(), admission=admit)
+    assert action == actions[1]
+    assert [row["action"]["kind"] for row in blocked] == ["design"]
+
+
+def test_supervisor_records_blocked_admission_without_scientific_cooldown(
+        tmp_path: Path) -> None:
+    action = autopilot.Action("portfolio", "ecdlp", "rank", "coordinator")
+    state = autopilot.supervise(
+        tmp_path, tmp_path / "state", backends=[], max_actions=1,
+        selector=lambda _repo, *, excluded: None if action.key in excluded else action,
+        admission=lambda _action: {"allowed": False, "mode": "enforce",
+                                   "reason": "over cap", "report": {}},
+        invoke=lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            AssertionError("blocked action must not invoke a worker")),
+    )
+    assert state["attempts"] == 0
+    assert action.key not in state["cooldowns"]
+    assert autopilot.report(tmp_path / "state")["admission_blocked_actions"] == 1
 
 
 def test_design_to_approved_plan_then_partial_run_needs_reconciliation(tmp_path: Path) -> None:

@@ -1,0 +1,29 @@
+id: KR-IC-28c357
+area: index-calculus
+kind: known_negative
+title: Leading-form degree of regularity is presentation-dependent; one-hot grouping forces at most G+1
+claim: >-
+  Scoped as in the lab's sources: for the two-summand Boolean-digit Semaev system the accepted
+  result is d_reg(grouped, raw S3) = s+1 (even s; s+2 at odd s, reviewer-derived) against
+  s + ceil((s+2)/2) for the bit presentation (Caminata-Gorla Def. 1.4 convention); the accepted
+  general statement is the UPPER bound d_reg <= G+1 (DEC-20261029-0857a9). Equality G+1 for any
+  Boolean system is the producer's own Section D (unreviewed, elementary, derived by hand with no
+  Lean). The local quotient keeps dimension 4^s in both presentations, so a lower d_reg here is a
+  regrading, not lower solving cost. Do not use leading-form d_reg as a progress metric; use last
+  fall degree and measured solver work.
+status: heuristic
+setting: {field: prime, curve_family: generic, model: boolean_digit_semaev_m2}
+sources:
+  - ref: KN-LIT-4e8513
+    locator: "Def 1.4 (degree of regularity); corpus note KN-LIT-4e8513 (ePrint 2021/1611)"
+    verification_state: secondary_source
+forecloses:
+  - lower degree of regularity by one-hot re-encoding
+  - grouped Boolean encoding reduces regularity
+  - membership predicate lowers d_reg as a complexity gain
+internal:
+  - {ref: DEC-20261029-0857a9, relation: cites, note: "accepted <=G+1 and exact S3 case"}
+open: []
+dominated_by: null
+added: '2026-11-02'
+superseded_by: null

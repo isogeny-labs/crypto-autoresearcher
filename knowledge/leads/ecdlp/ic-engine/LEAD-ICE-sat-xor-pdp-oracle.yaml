@@ -49,6 +49,24 @@ evidence:
 - repo: crypto-autoresearcher
   path: ledger/goals/GOAL-SATIC-c49b77.yaml
   note: SATIC lane active, blocked on review-tier transport; no completion criterion met
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L04/analysis.txt
+  note: >-
+    L04 (prime field, m = 3, s = 4..7, 3 curves x 32 targets): exhaustive minimal strong-backdoor
+    search with a cap-bounded finite-domain filtering propagator and F_p root finding. Offset (m-1)s
+    - B* is 1..3 (cap 2), 3..5 (cap 4), 5..7 (cap 8), i.e. 2*log2(cap) - 1: enumeration moved inside
+    the propagator. Supportable: no sub-(m-1)s backdoor under cap-bounded window-branching
+    propagation at s <= 7. The propagator is not Gaussian elimination over slope/t variables, B* is
+    identical across the 32 targets of a curve (effective n = 3 per cell), and the m = 4 cap-2 upper
+    bound fails, so it does not close the ring-linear propagator question (never run) or exponent
+    hopes for SAT.
+- repo: crypto-autoresearcher
+  path: docs/reports/ic-prime-eth-leads-20261102/rebuild_IcTensorRoute_20261102.txt
+  note: >-
+    Lean rebuild log (IcTensorRoute.lean, rebuilt 2026-11-02, standard axioms, no sorry). Covers only
+    the stated cost-model arithmetic: the ladder rule, solver-saving floor and E(m) balance are
+    necessary conditions for the relation phase; E(m) itself is a hypothesis and PrimePdpEncoding
+    rho_floor was not rebuilt.
 ledger_refs:
 - GOAL-SATIC-c49b77
 - H-SATIC-5c526c
@@ -59,6 +77,9 @@ ledger_refs:
 known_results:
 - KR-IC-5765d2
 - KR-IC-e847d1
+- KR-IC-ecebb6
+- KR-IC-9278b9
+- KR-IC-aaf521
 forecloses:
 - SAT solver for point decomposition
 - CryptoMiniSat Gaussian elimination on Weil descent
@@ -67,4 +88,4 @@ forecloses:
 - DPLL conflict law 2^(ml)/m!
 areas:
 - SATIC
-last_reviewed: '2026-10-24'
+last_reviewed: '2026-11-02'

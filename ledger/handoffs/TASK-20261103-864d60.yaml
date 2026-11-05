@@ -1,0 +1,55 @@
+handoff:
+  id: TASK-20261103-864d60
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-03'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Archive degree-2/3/4 symbolic K extension arithmetic for the exceptional-index design.
+  uncertainty_reduced: Explicit irreducible polynomial bases and field operations support nonrational branch-root equations without a full extension-element table.
+  inputs:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/symbolic_extension.rs
+  - experiments/EXP-PEXT-bf8f96/reports/symbolic-extension-20261103/report.md
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-864d60.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-85bf9c.yaml
+  constraints:
+  - No scientific trials, protocol approval or freeze, hypothesis transition or new experiment.
+  - Preserve P1-P4, C0-C7, H1 and the existing resource ceilings.
+  - Symbolic arithmetic is a prerequisite; factorization, collision solving and independent completeness are not yet implemented.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261103-864d60/receipt.json
+  artifact_paths:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/symbolic_extension.rs
+  - experiments/EXP-PEXT-bf8f96/reports/symbolic-extension-20261103/report.md
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-864d60.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-85bf9c.yaml
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/symbolic_extension.rs
+  - experiments/EXP-PEXT-bf8f96/reports/symbolic-extension-20261103/report.md
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261103-864d60.yaml
+  - coordination/sessions/receipts/20261103/SR-20261103-85bf9c.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261103-864d60/receipt.json
+  archived_by: TASK-20261103-864d60
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 2
+    maximum_runs: 0
+  completion_gate:
+  - Six exact artifact paths committed; 14 core and 16 join native tests pass over the fixed F27 software fixture.
+  - Root verifies native commit-bound snapshot and publishes the PR update after merging current main.
+  - EXP-PEXT-bf8f96 remains review_required; all-root candidate generation and protocol completion remain next.
+  state: queued
+  return_format: Exact archive/publication receipt and scoped arithmetic progress.

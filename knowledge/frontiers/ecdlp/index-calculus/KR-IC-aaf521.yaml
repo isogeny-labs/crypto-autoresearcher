@@ -1,0 +1,29 @@
+id: KR-IC-aaf521
+area: index-calculus
+kind: known_negative
+title: Polynomial-method GF(2) solvers lose to guessing m-1 windows when m <= 2d (model-bound)
+claim: >-
+  Model: a Boolean degree-d system on n = m*l variables (m windows of l bits) is solved by a
+  polynomial-method algorithm in 2^{(1-1/(2d)) n}; enumeration guesses m-1 windows and finishes
+  the last by root finding, 2^{(m-1) l}. Lean polymethod_vs_enumeration (crypto research/ic_prime_eth_leads_20261031/lean/IcTensorRoute.lean, rebuilt 2026-11-02 with standard axioms and no sorry, log docs/reports/ic-prime-eth-leads-20261102/rebuild_IcTensorRoute_20261102.txt; real m, d>0, l>=0,
+  m <= 2d): (m-1) l <= (1-1/(2d)) m l, i.e. enumeration is no worse (non-strict). A weaker saving
+  1/(c d) with c >= 2 (the 1/(5d), 1/(2.7d) bounds) is covered a fortiori because the condition
+  becomes m <= c d, which contains m <= 2d; this monotonicity step is NOT stated in Lean. Whether
+  Weil-descended or digit Semaev systems have d >= 2 at m = 3 (hence m <= 2d up to m = 4) is NOT
+  in the Lean file. The exponents attributed to LPTWY, BKW and Dinur are quoted from the lab's
+  review; the curated KN-LIT-3290 note is title-only and holds no constants.
+status: heuristic
+setting: {field: any, model: boolean_polynomial_method}
+sources:
+  - ref: KN-LIT-3290       # Cryptanalytic Applications of the Polynomial Method over GF(2)
+    locator: "title only in the curated note; exponent constants quoted from the lab's review (LEADS.md), not from the paper"
+    verification_state: secondary_source
+forecloses:
+  - polynomial method for summation polynomials
+  - Lokshtanov Paturi Tamaki Williams Weil descent
+  - Dinur parity counting for point decomposition
+internal: []
+open: []
+dominated_by: null
+added: '2026-11-02'
+superseded_by: null

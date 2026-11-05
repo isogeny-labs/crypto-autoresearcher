@@ -1,0 +1,231 @@
+# Review attestation for TASK-20261101-cd72e8 (BATCH-4c1c67, joint J3).
+# Written by the independent session that performed the fresh build and the
+# statement comparison. Zero experiment runs. Nothing written outside this directory.
+review_attestation:
+  task_id: TASK-20261101-cd72e8
+  batch_id: BATCH-4c1c67
+  joints_owned: [J3]
+  role: reviewer
+  requested_policy: review-adversarial
+  resolved_runtime: claude_code
+  resolved_model_id: claude-opus-5-5   # the runtime's configured id from the session prompt; unprobed
+  model_verified: false
+  fallback_used: false
+  independent_session: true            # did not write any Nagao module, the packet, or a sibling report
+  read_sibling_reports: false          # reviews/TASK-20261101-b3a351/ and reviews/TASK-20261101-6dcb20/ never opened
+  runs_launched: 0                     # Lean builds and checks only; no scientific trial, no cloud job
+  card_sha256: f61747a7d5b2ca17c7cc21c259088e8c81a216d2e027b859174046986a868755
+  branch_head_at_start: 9882686d2150b901539f346ae85451e41c66eabd
+  review_base_commit: 3102f9c04ab686e301dd5c61a2fc0441fa946203
+  pre_review_plan_sha256:
+    recorded_in_review_plan: 343622b5329d23022568826455e4beed469e34dd7325aa921601dcdb9b8e8d7b
+    computed: 343622b5329d23022568826455e4beed469e34dd7325aa921601dcdb9b8e8d7b
+  sources_read:                        # paths opened, in order
+    - coordination/formal-reviews/BATCH-4c1c67/handoffs/TASK-20261101-cd72e8.yaml
+    - coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md
+    - coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml
+    - coordination/formal-reviews/BATCH-4c1c67/input-bindings.json
+    - coordination/formal-reviews/BATCH-4c1c67/README.md
+    - formal/lean-toolchain
+    - formal/lakefile.toml
+    - formal/setup.sh                  # first 80 lines
+    - formal/lake-manifest.json        # package revs only
+    - formal/CryptoResearch/Nagao/Lemma4Witness.lean
+    - formal/CryptoResearch/Nagao/Lemma4Outside.lean
+    - formal/CryptoResearch/Nagao/RecoveryRule.lean
+    - formal/CryptoResearch/Nagao/Bridge.lean
+    - formal/CryptoResearch/Nagao/BridgeB.lean
+    - AGENTS.md                        # Handoffs, Review architecture, Concurrency, Artifact policy, Data files sections
+    - formal/README.md
+    - CLAUDE.md                        # loaded by the runtime
+    - papers/first-fall-lean/paper.tex # lines 120-132 and 236-282 only, for D9 (Proposition 6 scope)
+    - knowledge/findings/KN-FIND-936151.md   # grep hits only (p-scope, U-3/U-4 lines), for D9
+    - docs/artifacts.md                # first 60 lines, for the artifact-store rule
+    - coordination/goals/GOAL-MONO-001/review/TASK-20261017-ccd10c/review_attestation.yaml  # format example only
+  sources_read_notes:
+    - "paper.tex and KN-FIND-936151.md are bound inputs, not on this card's input list; they were opened narrowly and only to answer D9 ('check the theorem is not cited beyond p = 2'). The blind-input.yaml of joint J2 was not read."
+    - "Input hashes: every one of the 17 bound files matches input-bindings.json at both the branch head and the review base (git show <base>:<path>); see input_hash_check."
+  input_hash_check:
+    all_match: true
+    files:
+    - path: formal/CryptoResearch/Nagao/Bridge.lean
+      bound_sha256: 3c21a7c38e82a69ba6d43b0217fd8a2eaf5eff47218e0d3c9097ef4f41aada66
+      head_sha256: 3c21a7c38e82a69ba6d43b0217fd8a2eaf5eff47218e0d3c9097ef4f41aada66
+      base_sha256: 3c21a7c38e82a69ba6d43b0217fd8a2eaf5eff47218e0d3c9097ef4f41aada66
+      match: true
+    - path: formal/CryptoResearch/Nagao/BridgeB.lean
+      bound_sha256: 48aca0b30cd7f2b144ac8bb82f05f045eff8e5efea457eb63162a21c1c24d2f4
+      head_sha256: 48aca0b30cd7f2b144ac8bb82f05f045eff8e5efea457eb63162a21c1c24d2f4
+      base_sha256: 48aca0b30cd7f2b144ac8bb82f05f045eff8e5efea457eb63162a21c1c24d2f4
+      match: true
+    - path: formal/CryptoResearch/Nagao/Lemma4Outside.lean
+      bound_sha256: 1ca0df032ea40a45ad3005862abb7c4bb59adca79be2573293f8fba03889c442
+      head_sha256: 1ca0df032ea40a45ad3005862abb7c4bb59adca79be2573293f8fba03889c442
+      base_sha256: 1ca0df032ea40a45ad3005862abb7c4bb59adca79be2573293f8fba03889c442
+      match: true
+    - path: formal/CryptoResearch/Nagao/Lemma4Witness.lean
+      bound_sha256: 73bbc30d7734babcd67b45675dfddf70292c6962e76f1fc1e99f5cb3e7fbdeeb
+      head_sha256: 73bbc30d7734babcd67b45675dfddf70292c6962e76f1fc1e99f5cb3e7fbdeeb
+      base_sha256: 73bbc30d7734babcd67b45675dfddf70292c6962e76f1fc1e99f5cb3e7fbdeeb
+      match: true
+    - path: formal/CryptoResearch/Nagao/RecoveryRule.lean
+      bound_sha256: 9556879c08d7d7173d9be684e6056c1ce9621857dbf6afca8368eb61f95ff6ee
+      head_sha256: 9556879c08d7d7173d9be684e6056c1ce9621857dbf6afca8368eb61f95ff6ee
+      base_sha256: 9556879c08d7d7173d9be684e6056c1ce9621857dbf6afca8368eb61f95ff6ee
+      match: true
+    - path: formal/lake-manifest.json
+      bound_sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+      head_sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+      base_sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+      match: true
+    - path: formal/lean-toolchain
+      bound_sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+      head_sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+      base_sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+      match: true
+    - path: formal/targets/nagao-lemma4-inside-counterexample-20261029.yaml
+      bound_sha256: fb4715b3a8c0e3d7e77c91414504ad9a750b74062b27590ebb1e07cfe7f85b21
+      head_sha256: fb4715b3a8c0e3d7e77c91414504ad9a750b74062b27590ebb1e07cfe7f85b21
+      base_sha256: fb4715b3a8c0e3d7e77c91414504ad9a750b74062b27590ebb1e07cfe7f85b21
+      match: true
+    - path: formal/targets/nagao-lemma4-mvpolynomial-bridge-20261101.yaml
+      bound_sha256: ff5b4f2de0f9c04e2c7e70bb7e6a728d318f9ccaff826dd5d36a7ee06e32460f
+      head_sha256: ff5b4f2de0f9c04e2c7e70bb7e6a728d318f9ccaff826dd5d36a7ee06e32460f
+      base_sha256: ff5b4f2de0f9c04e2c7e70bb7e6a728d318f9ccaff826dd5d36a7ee06e32460f
+      match: true
+    - path: formal/targets/nagao-lemma4-mvpolynomial-bridge-b-20261101.yaml
+      bound_sha256: ce136c56c5cf525a632807418db2594d6acf9f0970d3cbe8ef92bd813e773abc
+      head_sha256: ce136c56c5cf525a632807418db2594d6acf9f0970d3cbe8ef92bd813e773abc
+      base_sha256: ce136c56c5cf525a632807418db2594d6acf9f0970d3cbe8ef92bd813e773abc
+      match: true
+    - path: formal/targets/nagao-lemma4-outside-counterexample-20261031.yaml
+      bound_sha256: d498ec7ab1fe040b1980a47230b1528db91af4b4c737af60fc4c9a1cc6219a47
+      head_sha256: d498ec7ab1fe040b1980a47230b1528db91af4b4c737af60fc4c9a1cc6219a47
+      base_sha256: d498ec7ab1fe040b1980a47230b1528db91af4b4c737af60fc4c9a1cc6219a47
+      match: true
+    - path: formal/targets/nagao-lemma4-recovery-rule-20261101.yaml
+      bound_sha256: 7e5abda0a5c5da729098c4cb32b266a60e9039cb86b29b14bf2c99a5306c1ccb
+      head_sha256: 7e5abda0a5c5da729098c4cb32b266a60e9039cb86b29b14bf2c99a5306c1ccb
+      base_sha256: 7e5abda0a5c5da729098c4cb32b266a60e9039cb86b29b14bf2c99a5306c1ccb
+      match: true
+    - path: knowledge/findings/KN-FIND-936151.md
+      bound_sha256: a17623ab3189cba00089ce095950dd182e165c3be545af97869b49720af96a13
+      head_sha256: a17623ab3189cba00089ce095950dd182e165c3be545af97869b49720af96a13
+      base_sha256: a17623ab3189cba00089ce095950dd182e165c3be545af97869b49720af96a13
+      match: true
+    - path: ledger/evidence/EV-SEMBIN-1ca3c8.yaml
+      bound_sha256: d8b443001514beeca1978e79d7d30d624199925450c016d7a9a7fd2ba615cf80
+      head_sha256: d8b443001514beeca1978e79d7d30d624199925450c016d7a9a7fd2ba615cf80
+      base_sha256: d8b443001514beeca1978e79d7d30d624199925450c016d7a9a7fd2ba615cf80
+      match: true
+    - path: papers/first-fall-lean/paper.tex
+      bound_sha256: e27b0aa6c844bdcee682f7e5b5e15ceb95aefa290e3ac27db500dba566cc870c
+      head_sha256: e27b0aa6c844bdcee682f7e5b5e15ceb95aefa290e3ac27db500dba566cc870c
+      base_sha256: e27b0aa6c844bdcee682f7e5b5e15ceb95aefa290e3ac27db500dba566cc870c
+      match: true
+    - path: tools/lemma4_inside_form.py
+      bound_sha256: 779e865265a768a7373827940e98abebebeba3f7173c6db2d27a04a6a51bd235
+      head_sha256: 779e865265a768a7373827940e98abebebeba3f7173c6db2d27a04a6a51bd235
+      base_sha256: 779e865265a768a7373827940e98abebebeba3f7173c6db2d27a04a6a51bd235
+      match: true
+    - path: tools/test_lemma4_inside_form.py
+      bound_sha256: 2335ddcc371f33b97e20d540fd967a53ef128426dccd5355070bf3d9b135611d
+      head_sha256: 2335ddcc371f33b97e20d540fd967a53ef128426dccd5355070bf3d9b135611d
+      base_sha256: 2335ddcc371f33b97e20d540fd967a53ef128426dccd5355070bf3d9b135611d
+      match: true
+  environment:
+    container: "4 vCPU, 16 GB RAM, single memory cgroup charging tmpfs /dev/shm"
+    elan_home: /dev/shm/j3/elan        # toolchain later moved to /root/j3 behind a symlink to free tmpfs
+    lean: "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)"
+    lake: "Lake version 5.0.0-src+eb6cafb (Lean version 4.35.0)"
+    mathlib_checkout_head: cfc55fc58714a59dc06e6e79edc6d1d95140d3c2
+    mathlib_oleans: "lake exe cache get, then pruned to the 1,387-module import closure; part of the closure was recompiled locally by lake from the same pinned sources"
+  build:
+    Lemma4Witness: {driver: "lake build", exit: 0, wall_s: 361.8, peak_rss_mib: 8931, olean_sha256: b0af61902f7deec9caa08c61cfc33686bc84f9b5d5e5fec9625db9743b33e9fa}
+    Lemma4Outside: {driver: "lake build", exit: 0, wall_s: 31.2, peak_rss_mib: 5001, olean_sha256: 8848028952d37a840264586c40f8c596247738a9a328835dc5917861f62e9c34}
+    RecoveryRule: {driver: "lake env lean", exit: 0, wall_s: 4.3, peak_rss_mib: 2033, olean_sha256: 2017e6229238ffafb3f465ec130465d2f31dd94b59a894d90878b15050d79ac2}
+    Bridge: {driver: "lake env lean", exit: 0, wall_s: 4.9, peak_rss_mib: 2313, olean_sha256: f56b44d94ca6b17cdceb908c60d473608eb63f54ff752830220d2f824161f975}
+    BridgeB: {driver: "lake env lean", exit: 0, wall_s: 6.1, peak_rss_mib: 2319, olean_sha256: 82897d6d173e5856d021a3ab754c8d10714035e5e68f85e512865703cf30bdfb}
+    final_uniform_pass: "all five exit 0 under lake env lean (raw/final-pass.log); RecoveryRule, Bridge, BridgeB oleans byte-identical to the build above"
+    failed_attempts_retained: [build-attempt1-oom.log, build-attempt2-concurrent.log, build-attempt3-oom.log, build-attempt3b-j1-oom.log, dmesg-oom.txt]
+    failed_attempts_not_retained: ["attempt 0 (/usr/bin/time absent, exit 127, nothing built): log overwritten by attempt 1"]
+  axioms:
+    allowed: [propext, Classical.choice, Quot.sound]
+    audited:
+      CryptoResearch.Nagao.Lemma4Witness.lemma4_inside_false: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Lemma4Witness.lemma4_inside_false_A: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Lemma4Witness.lemma4_inside_false_B: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Lemma4Outside.lemma4_outside_false: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Lemma4Outside.lemma4_outside_false_A: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Lemma4Outside.lemma4_outside_false_B: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Lemma4Outside.lemma4_outside_fe_false_A: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Lemma4Outside.lemma4_outside_fe_false_B: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.RecoveryRule.recovery: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Bridge.lemma4_mv_false: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.Bridge.red_sum_red: [propext, Classical.choice, Quot.sound]
+      CryptoResearch.Nagao.BridgeB.lemma4_mvB_false: [propext, Classical.choice, Quot.sound]
+    extra_axioms_found: false
+  verdict:
+    J3: holds                          # no breaking artifact: every C clause implied (C4 fake-side exactness via reviewer control), no extra axiom, no vacuity
+  claims:
+    C1: implied
+    C2: implied
+    C3: implied
+    C4: implied_true_side_and_refutation; fake_side_exact_only_with_reviewer_control   # F2
+  deltas:
+    D1: scoping
+    D2: scoping
+    D3: scoping_discharged             # true side by Bridge/BridgeB; fake side by J3Controls.C4_fake_side
+    D4: implied
+    D5: implied
+    D6: scoping                        # survives multilinear and deg <= D cofactors; fails if Def. 6 bounds unreduced product degree (F3)
+    D7: implied
+    D8: implied
+    D9: scoping
+    D10: implied
+  vacuity_found: false
+  proves_too_much_controls:
+    recovery_without_U4: "false, machine-checked (J3Controls.recovery_without_U4_false)"
+    ge_reading: "not encoded; definitions are equality-reading only (D1)"
+    vacuous_first_fall: "excluded; positive clause in FirstFall/FirstFallIs/FirstFallIs'; all certificates real falls (#eval and kernel)"
+  reviewer_lean_controls: raw/J3/Controls.lean   # axioms clean; reviewer evidence, not producer artifacts
+  procedure_deviations:
+    - "RecoveryRule, Bridge and BridgeB went through `lake env lean` (lake's LEAN_PATH, same compiler and kernel), not `lake build`, after lake began recompiling Mathlib because pruned ir/ artifacts were missing."
+    - "Mathlib build tree pruned to the import closure to fit the 16 GB memory cgroup; part of the closure was recompiled locally from the pinned sources."
+    - "Attempt 2 overlapped attempt 1 (two concurrent builds); retained but not relied on."
+    - "The modules were built from a copy of the formal/ workspace at branch head 9882686d, not from a checkout at the review base; all bound files are byte-identical to the base."
+  unresolved_obligations:
+    - "J1: whether Definition 6 of 2015/984 bounds fake cofactors or unreduced product degrees (F3/D6), and whether condition (1) is the equality reading (D1)."
+    - "Coordinator: accept C4 in the producer-only form d'_F <= 2, or adopt J3Controls.C4_fake_side for d'_F = 2 (F2)."
+    - "Coordinator: accept the lake env lean driver and the pruned Mathlib tree, or require a plain lake build on a host with at least 12 GB free cgroup memory (F5)."
+    - "Citations of C1/C2 for witness B and for the exact degrees must name the per-witness theorems, not only lemma4_inside_false / lemma4_outside_false (F1)."
+  artifact_paths:
+    - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/review.md
+    - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/review_attestation.yaml
+    - coordination/formal-reviews/BATCH-4c1c67/reviews/TASK-20261101-cd72e8/raw/
+  raw_sha256:
+    "axioms.log": 2bcc810e3ea3ab608612d3b90531a7bc8853b93926ad4306df2e1df36a4d5a69
+    "build-attempt1-oom.log": ac3cb3370a7ca355e9a4b570a4a3d45e3226294d151c042ffb2f1b60690c3342
+    "build-attempt2-concurrent.log": 992bae287f098c73bcf601425c6bcbe26fb36213d21453c91320dfda30662ccd
+    "build-attempt3-oom.log": 9d52c90da2882f002244934a1d8670443e33c90e4bb884ee9ea53da76126ea07
+    "build-attempt3b-j1-oom.log": 05dd6438f105b89d37f9e3f5352de377883662eae0b722b161d79a06501ed184
+    "build-attempt4-lake.log": 41e2b425d9134bcbc3893bbab3af5d067d1006b72bec4f2c2ea885249c503036
+    "build-attempt5-direct.log": 7e034cf013abeb2212be06db78b255810b53fcc9c3999b3fdf2bf2523a315376
+    "checks-run1-axioms-and-failed-controls.log": 821f53e74a31796b0db8bde6c8c8d417adad8a68917082c6007a9de46b3802d9
+    "controls.log": f3a6bbb02c1f87b09a0069232aefe176452700e4ff188e1b9e90bc85e3f2862e
+    "dmesg-oom.txt": 8c8895f6d6852ada614f454c8645de7d9133c28e32a11bdc6b4d3ac12b779e38
+    "final-pass.log": 0663830520835aa55cd1967affcd562332aa32e952bb4e530fb8957ef6a7a28a
+    "mathlib-closure.txt": ffa74d15456a9409eea035fb031242a5626f7e12a9c8fe02463ab98a00729b0c
+    "setup.log": a014c391e44e9ba7f043d9a1ff3bfde8d39e76ef7759aab7ab3d4759f843f770
+    "statements.log": f8b3110510e41518e98ffa5b5449d0018111002683c1e894b87c1a2f51bbff32
+    "J3/Axioms.lean": f61cfcf686fd7e035111c8447622a27345b26c1be48b48cb470cfbf7a571a4f5
+    "J3/Controls.lean": a68bd56f4f764a81e1514d10d3ae17db902e1e6b424b0a300efceca2ef02973f
+    "J3/Statements.lean": 4335bc3698dbdaa1793d19f4147bc92d12c1d0573cde7c0585fedb08d0d713a1
+    "scripts/build-direct.sh": cdc7c7457e36dc7cc4600f6c4831ac759caf3f1c56742ddf705be7ee62e77e81
+    "scripts/build-j1.sh": 29aa736839d3d4dfb31d2dffedc43e438775eec5d4e82c18a7e80cfc28456d87
+    "scripts/build.sh": 3228992827d9a65a93595fdbef97f3fd5713956a27dadd11a9d18308098103ff
+    "scripts/closure.py": 88c72a5e60b8cea26252963d329330c70efa0ad7a88e09bb8f8825af26066b21
+    "scripts/final-pass.sh": 1653871057b4345120c7796dffcc9c8a33f1b5080bd6d4c223b86ef8e7879b2b
+    "scripts/run-checks.sh": 0e2878462a47c9a519f3459398f885ba80565a1769232624b7d803b9a5f311df
+    "scripts/setup.sh": 62139e7c5edcaea7aaaac20bc8c51504286dfc841720498bf0258f60451dc66e
+    "scripts/timed.py": 87c11922edd3055891c4b088869bf8e59290fa90dc9796fcc7810bfb2cd45262

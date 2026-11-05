@@ -1,0 +1,95 @@
+review_attestation:
+  task_id: TASK-20261101-b3a351
+  batch_id: BATCH-4c1c67
+  joints_owned:
+    - J1
+  verdict: holds
+  verdict_scope: >-
+    Holds at the declared scope (equality reading of condition (1), F_2). The
+    printed >= is the only quoted clause no Lean definition satisfies, and the
+    claim scopes it out. Finding F1: under >= the printed (outside) placement is
+    still false at both witnesses (d_F = 3, d'_F = 2), so D1 is load-bearing for C1 only
+    and the packet's second proves-too-much control is wrong for the printed placement.
+  delta_verdicts:
+    D1: "departs (narrower: max = D instead of printed max >= D); declared; matches conditions 1-3 of 2013/549 Def 1; load-bearing for C1, not C2"
+    D4: "matches (Def 6 gives cofactors only to f_1..f_M; dropping S_fe, or giving it zero cofactors, is equivalent)"
+    D6: "matches in MvPolynomial (unrestricted cofactors); the list model narrows to multilinear cofactors of degree <= D, harmless for both witnesses"
+    D8: "matches (minimal integer; D >= 1 is forced by conditions 2-3; positive clause present)"
+  other_findings:
+    F1: ">= reading: printed placement still refuted at A and B; KN-FIND-936151 section 3 holds only for the inside placement"
+    F2: "Def 6 conditions print unprimed dF; Lean uses the bound D (the only coherent reading)"
+    F3: "2013/549 Def 1 condition 4 deg(f_i) <= Dff is omitted (correct for 2015/984); witness B is robust to it, witness A's fake side is not with unreduced degrees"
+    F4: "inside placement is implied by printed Lemma 4 (monotonicity) and is the form Lemma 6 uses"
+    F5: "p = 2 only; red is reduction mod X^2-X; red(sum) != 0 encodes not-congruent-to-0 mod S_fe"
+    F6: "universal statements range over malformed lists; refutation uses well-formed instances"
+  branch_head_at_read: 9882686d2150b901539f346ae85451e41c66eabd
+  review_base_commit: 3102f9c04ab686e301dd5c61a2fc0441fa946203
+  input_hashes_checked:
+    against: coordination/formal-reviews/BATCH-4c1c67/input-bindings.json
+    all_match: true
+    files:
+      - {path: formal/CryptoResearch/Nagao/Bridge.lean, sha256: 3c21a7c38e82a69ba6d43b0217fd8a2eaf5eff47218e0d3c9097ef4f41aada66, matches_binding: true}
+      - {path: formal/CryptoResearch/Nagao/BridgeB.lean, sha256: 48aca0b30cd7f2b144ac8bb82f05f045eff8e5efea457eb63162a21c1c24d2f4, matches_binding: true}
+      - {path: formal/CryptoResearch/Nagao/Lemma4Outside.lean, sha256: 1ca0df032ea40a45ad3005862abb7c4bb59adca79be2573293f8fba03889c442, matches_binding: true}
+      - {path: formal/CryptoResearch/Nagao/Lemma4Witness.lean, sha256: 73bbc30d7734babcd67b45675dfddf70292c6962e76f1fc1e99f5cb3e7fbdeeb, matches_binding: true}
+      - {path: formal/CryptoResearch/Nagao/RecoveryRule.lean, sha256: 9556879c08d7d7173d9be684e6056c1ce9621857dbf6afca8368eb61f95ff6ee, matches_binding: true}
+      - {path: formal/lake-manifest.json, sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7, matches_binding: true}
+      - {path: formal/lean-toolchain, sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c, matches_binding: true}
+      - {path: formal/targets/nagao-lemma4-inside-counterexample-20261029.yaml, sha256: fb4715b3a8c0e3d7e77c91414504ad9a750b74062b27590ebb1e07cfe7f85b21, matches_binding: true}
+      - {path: formal/targets/nagao-lemma4-mvpolynomial-bridge-20261101.yaml, sha256: ff5b4f2de0f9c04e2c7e70bb7e6a728d318f9ccaff826dd5d36a7ee06e32460f, matches_binding: true}
+      - {path: formal/targets/nagao-lemma4-mvpolynomial-bridge-b-20261101.yaml, sha256: ce136c56c5cf525a632807418db2594d6acf9f0970d3cbe8ef92bd813e773abc, matches_binding: true}
+      - {path: formal/targets/nagao-lemma4-outside-counterexample-20261031.yaml, sha256: d498ec7ab1fe040b1980a47230b1528db91af4b4c737af60fc4c9a1cc6219a47, matches_binding: true}
+      - {path: formal/targets/nagao-lemma4-recovery-rule-20261101.yaml, sha256: 7e5abda0a5c5da729098c4cb32b266a60e9039cb86b29b14bf2c99a5306c1ccb, matches_binding: true}
+      - {path: knowledge/findings/KN-FIND-936151.md, sha256: a17623ab3189cba00089ce095950dd182e165c3be545af97869b49720af96a13, matches_binding: true}
+      - {path: ledger/evidence/EV-SEMBIN-1ca3c8.yaml, sha256: d8b443001514beeca1978e79d7d30d624199925450c016d7a9a7fd2ba615cf80, matches_binding: true}
+      - {path: papers/first-fall-lean/paper.tex, sha256: e27b0aa6c844bdcee682f7e5b5e15ceb95aefa290e3ac27db500dba566cc870c, matches_binding: true}
+      - {path: tools/lemma4_inside_form.py, sha256: 779e865265a768a7373827940e98abebebeba3f7173c6db2d27a04a6a51bd235, matches_binding: true}
+      - {path: tools/test_lemma4_inside_form.py, sha256: 2335ddcc371f33b97e20d540fd967a53ef128426dccd5355070bf3d9b135611d, matches_binding: true}
+    nagao_modules_unchanged_base_to_head: true
+  sources_read:
+    - git:9882686d2150b901539f346ae85451e41c66eabd:coordination/formal-reviews/BATCH-4c1c67/handoffs/TASK-20261101-b3a351.yaml
+    - git:9882686d2150b901539f346ae85451e41c66eabd:coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md
+    - git:9882686d2150b901539f346ae85451e41c66eabd:coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml
+    - git:9882686d2150b901539f346ae85451e41c66eabd:coordination/formal-reviews/BATCH-4c1c67/input-bindings.json
+    - git:9882686d2150b901539f346ae85451e41c66eabd:coordination/formal-reviews/BATCH-4c1c67/README.md
+    - git:9882686d2150b901539f346ae85451e41c66eabd:coordination/formal-reviews/BATCH-4c1c67/blind-input.yaml
+    - git:9882686d2150b901539f346ae85451e41c66eabd:formal/CryptoResearch/Nagao/Lemma4Witness.lean
+    - git:9882686d2150b901539f346ae85451e41c66eabd:formal/CryptoResearch/Nagao/Lemma4Outside.lean
+    - git:9882686d2150b901539f346ae85451e41c66eabd:formal/CryptoResearch/Nagao/RecoveryRule.lean
+    - git:9882686d2150b901539f346ae85451e41c66eabd:formal/CryptoResearch/Nagao/Bridge.lean
+    - git:9882686d2150b901539f346ae85451e41c66eabd:formal/CryptoResearch/Nagao/BridgeB.lean
+    - git:9882686d2150b901539f346ae85451e41c66eabd:inputs/NAGAO-2015-984/eprint-2015-984.pdf
+    - git:9882686d2150b901539f346ae85451e41c66eabd:inputs/NAGAO-2015-984/provenance.json
+    - git:9882686d2150b901539f346ae85451e41c66eabd:inputs/NAGAO-2013-549/eprint-2013-549.pdf
+    - git:9882686d2150b901539f346ae85451e41c66eabd:inputs/NAGAO-2013-549/provenance.json
+    - git:9882686d2150b901539f346ae85451e41c66eabd:AGENTS.md
+    - git:9882686d2150b901539f346ae85451e41c66eabd:CLAUDE.md
+    - git:9882686d2150b901539f346ae85451e41c66eabd:tools/check_review_independence.py
+    - git:9882686d2150b901539f346ae85451e41c66eabd:coordination/formal-reviews/lastfall-native-20261031/reviews/TASK-20261031-43dc46/review_attestation.yaml
+    - git:9882686d2150b901539f346ae85451e41c66eabd:knowledge/findings/KN-FIND-936151.md#3 (section 3 only, read AFTER the >= computation in raw/ was frozen)
+  sources_attempted_not_obtained:
+    - https://eprint.iacr.org/2015/984.pdf (Cloudflare challenge page, no PDF)
+    - https://eprint.iacr.org/2013/549.pdf (Cloudflare challenge page, no PDF)
+  pdf_hashes:
+    inputs/NAGAO-2015-984/eprint-2015-984.pdf: e6af06ae2701df9f0f27be76d7e4584850b281821d4870e3a7e6a59c00685898
+    inputs/NAGAO-2013-549/eprint-2013-549.pdf: 5971667527aad7af2d19a9a5690a753b0585a0f168cbb835b3fa477b056f4c15
+  not_read:
+    - papers/first-fall-lean/paper.tex
+    - tools/lemma4_inside_form.py
+    - inputs/NAGAO-2015-984/paper_fulltext.md (producer transcript; the PDF was read directly)
+  read_sibling_reports: false
+  blind_from_respected: null
+  lean_build_run: false
+  raw:
+    eprint-2013-549.p3.pdftotext-layout.txt: 24bcc51f2e2d00912d0a5f46fc845b1a26365cd52474167c1a1282578e0ec581
+    eprint-2015-984.p4-6.pdftotext-layout.txt: 25557e836544b76b61cdfb88c4beba437e83e383ccb468478ea05e7374f682c5
+    ge_fake_check.out: e0709b66fc0987e3e2411edc41143ae50a35dd406286609c39a417cf54631b9c
+    ge_fake_check.sage: 6eb1008ad20d07f1f82f5ab4b6951a5f5632fb96c263b830ec10ee4f97f288ba
+    ge_reading_check.out: eecb9e55862f07f9d7d5272ce8cdab143c355f96acbf195806bd296d08065e9d
+    ge_reading_check.sage: 45aecfadeb294c00a37a8356170902107d3f7df330101ddfaea2bb14b2b227a7
+    source-retrieval.md: 4d39263983dcc51e2178a7dba3097da2df67eff311b4a11311fad4bf252ca62a
+  unresolved_obligations:
+    - "O1 Coordinator: decide whether the second proves-too-much control and KN-FIND-936151 section 3 need a correction scoping them to the inside placement (evidence raw/ge_*; reviewer Sage, not kernel-checked; J2 should cross-check)"
+    - "O2 the equivalences for D4, D6, K vs F_2 and monotonicity are reviewer arguments with no Lean theorem; the Lean refutations do not need them"
+    - "O3 no live ePrint copy was obtained; correspondence rests on vendored PDFs at the recorded hashes"
+    - "O4 the list-model d'_F = 2 is proved only for restricted cofactors; a citation as a property of Definition 6 needs the unrestricted argument or an MvPolynomial fake no-fall-at-1 theorem"

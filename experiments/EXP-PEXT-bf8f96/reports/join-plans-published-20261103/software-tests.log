@@ -1,0 +1,41 @@
+test_fixed_control_offsets_match_rust (test_join_plan.JoinPlanTests) ... warning: unused imports: `BranchFactorization`, `BranchRoots`, `CocycleIndex`, `Coset`, `CurveClass`, `Curve`, `ExceptionalCandidateSummary`, `FieldIdentity`, `ModelWitness`, `QuarticPoint`, `RationalImageIndex`, `SquareClasses`, `SymbolicElement`, and `SymbolicExtension`
+    --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:1136:38
+     |
+1136 | ...xt,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,SymbolicExtension,SymbolicElement,BranchFactorization,BranchRoots,ExceptionalCandidateSummary,CurveClass,ModelWitness};
+     |       ^^^^^       ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^                 ^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^
+     |
+     = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `SupportSummary` is never constructed
+  --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/join_core.rs:33:12
+   |
+33 | pub struct SupportSummary {
+   |            ^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: struct `ExceptionalRow` is never constructed
+  --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/join_core.rs:39:12
+   |
+39 | pub struct ExceptionalRow {
+   |            ^^^^^^^^^^^^^^
+
+warning: method `visit_support_range` is never used
+  --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/join_core.rs:71:12
+   |
+43 | impl<'a> JoinPlan<'a> {
+   | --------------------- method in this implementation
+...
+71 |     pub fn visit_support_range<F>(&self,start:u64,end:u64,maximum_visited:u64,mut exceptional:F)
+   |            ^^^^^^^^^^^^^^^^^^^
+
+warning: 4 warnings emitted
+
+ok
+test_published_class_and_t (test_candidate_binding.CandidateBindingTests) ... ok
+test_rejects_wrong_plan_and_indices (test_candidate_binding.CandidateBindingTests) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 4.960s
+
+OK

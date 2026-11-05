@@ -1,0 +1,160 @@
+{
+  "schema": "experiment.review/v1",
+  "review_id": "REV-20261101T180217Z-c184b3",
+  "created": "2026-11-01T18:02:17Z",
+  "export": {
+    "path": "../runs/run-001/export.json",
+    "sha256": "d0c965705ba554a2899140d924596884711948190f7308fba1d9078409237dcb",
+    "export_id": "GAG-PM-run-001"
+  },
+  "protocol_sha256": "609c701cd648631cd0d7e85bd428dd9d1025fee55da53c45b6724fc27bf35ad2",
+  "reviewer": {
+    "runtime": "claude_code",
+    "model": "claude-sonnet-5-5",
+    "session": null,
+    "role": "validator",
+    "independence": {
+      "same_session_as_producer": false,
+      "same_host_class": true,
+      "shares_code_with_producer": true,
+      "declared_conflicts": [
+        "same model family and same host class as the producer; replay imported the producer's descent.py and the same msolve binary (sha256 c2722288), so it detects nondeterminism and fabrication, not a bug shared by builder and parser; the re-parse of stdout and the headline recompute were written afresh"
+      ]
+    }
+  },
+  "checks": [
+    {
+      "id": "hashes",
+      "kind": "hashes",
+      "result": "pass",
+      "detail": "6 files and every artifact hash recomputed from disk"
+    },
+    {
+      "id": "adherence",
+      "kind": "protocol_adherence",
+      "result": "pass",
+      "detail": "export binds the frozen protocol; arms, seeds, row counts and isolation agree"
+    },
+    {
+      "id": "controls",
+      "kind": "controls",
+      "result": "pass",
+      "detail": "A/A (chain vs chain-aa, form_seed 0 vs 1), 30 pairs: max |log2| 1.000 at p=1009, 0.000 at 4099 and 32749. The 1.000 is one row, 0035-p1009-i7-chain-aa (23,590,914 cells = two charged attempts of 11,795,457; attempt 1 status failed, attempt 2 ok); excluding it the p=1009 A/A max is 0.000576 (instance 1). No positive or negative control arm by protocol; C1 (planted relation found, verified by point addition) held on all 124 rows (123 one attempt, 1 two), which is the exercised detector. Not otherwise assessable: the protocol has no null population."
+    },
+    {
+      "id": "recompute",
+      "kind": "recompute",
+      "result": "pass",
+      "detail": "Recomputed from rows.jsonl.gz without analysis.json. Median F4 cells per arm, identical at all three primes: chain 11,795,457; tree 12,911,317; monolithic 1,298,729; chain-aa 11,795,457. Median ratio monolithic/chain 0.1101 (log2 -3.1831) at every prime, 10/10 negative at each prime; tree/chain 1.0946 (log2 0.1304), 10/10 positive at each prime. Report table min/max cells for all 12 arm-prime cells match. Relations and ideal degree (384) agree across the four arms on all 30 instances."
+    },
+    {
+      "id": "statistics",
+      "kind": "statistics",
+      "result": "pass",
+      "detail": "Sign-flip p with 10/10 same sign is 2/1024 = 0.001953 <= 0.05/6 (computed analytically, matches analysis.json). The Bonferroni bootstrap interval was not re-run; with near-constant log2 ratios of one sign it cannot include 0 and equals the analysis.json interval to within the printed values. Rule applied by hand: C-mono passes at every prime (|median| 3.183 > A/A max 1.0, 0, 0; one sign) = supported_within_scope. C-tree: |median| 0.1304 > 0 at p=4099 and 32749 but < 1.000 at p=1009, so the 'beyond A/A' clause fails at one prime = inconclusive. Both verdicts follow the frozen rule as written."
+    },
+    {
+      "id": "scope",
+      "kind": "scope",
+      "result": "pass",
+      "detail": "Rows cover 30 planted n=m=3 instances over F_{p^3}, p in {1009, 4099, 32749}, one msolve 0.6.5 binary, one 2-vCPU host, flags -c 0 -P 1 -t 1 -v 2, counted F4 cells only. No ECDLP cost, scaling, n=m=4, other solver, wall-time or prime-field claim is supported. Instances are near-deterministic in cells (monolithic/chain log2 ratio spread 0.0005 over 30 pairs), so the 10-per-prime design says little about instance variation beyond the structure of the system."
+    },
+    {
+      "id": "blinding",
+      "kind": "blinding",
+      "result": "pass",
+      "detail": "Protocol declares arm labels unmasked (frozen analysis script, no free choice); the run followed that. Nothing to check beyond analyze.py sha256 89648c11 matching protocol analysis_plan."
+    },
+    {
+      "id": "freeze-before-data",
+      "kind": "provenance",
+      "result": "pass",
+      "detail": "git log: draft 7635a467f2 (2026-11-01T04:49:27Z), frozen protocol.json first committed in bfccbce57c (04:49:36Z), run-001 started 17:55:01Z, run records committed fd38388fe1 17:57:37Z. protocol.json at bfccbce sha matches export (609c701c), analyze.py and design.json sha256 match their frozen hashes, driver.py unchanged since 7635a467f2, environment.json commit bfccbce57c with dirty=false. The protocol's freeze.commit field names the draft commit 7635a467f2 (code commit), not the commit that holds the frozen protocol.json; the report repeats this wording."
+    },
+    {
+      "id": "checkpoint-gate",
+      "kind": "provenance",
+      "result": "fail",
+      "detail": "checkpoint_gate.txt records gate_rc=1 (no upload credentials; nothing checkpointed) yet the run proceeded. CLAUDE.md/AGENTS.md require a successful S3 resume checkpoint before any run launcher. The export and report state the owner waived it on 2026-11-01 before launch; no waiver artifact is in the bundle, so the waiver cannot be verified from the record. Counted results are unaffected (single 56 s run, not interrupted)."
+    },
+    {
+      "id": "raw-reparse",
+      "kind": "recompute",
+      "result": "pass",
+      "detail": "Re-parsed msolve stdout (round table, cells = sum rows x cols) for nonce-drawn rows 0120-p32749-i8-monolithic, 0055-p4099-i2-monolithic, 0094-p32749-i2-monolithic, 0030-p1009-i6-tree, 0052-p4099-i1-monolithic, plus 0035-p1009-i7-chain-aa (both attempts): all six equal the row's f4_cells and f4_rounds (1,298,729 x4; 12,911,317; 23,590,914). raw.sha256: 500 of 500 files OK."
+    },
+    {
+      "id": "measurement-validity",
+      "kind": "measurement_validity",
+      "result": "pass",
+      "detail": "Flow: planned 124, completed 124, no not_completed, interrupted or resumed rows. Wall time is wall_valid false (isolation none) and was used by neither the claims nor this review. The one retry (0035) is a protocol-charged msolve 'failed' attempt, not an infrastructure stop."
+    }
+  ],
+  "replay": {
+    "performed": true,
+    "method": "rebuilt each system with descent.descent_system using the driver's instance, form-seed and attempt rules (written afresh, driver not imported), compared the input sha256 with raw/*.in.sha256, ran /usr/bin/msolve -c 0 -P 1 -t 1 -v 2 on it, parsed cells and relations. Rows 0036-p1009-i7-chain, 0034-p1009-i7-monolithic, 0015-p1009-i2-tree; the failed-then-ok attempt pair of 0035-p1009-i7-chain-aa also reproduced (11,795,457 failed, 11,795,457 ok) as an extra, not counted in units_sampled. For every sampled row: input hash identical, F4 cells identical, relations identical, ideal degree 384.",
+    "units_sampled": 3,
+    "nonce": "737856205",
+    "identical": 3,
+    "mismatched": 0,
+    "miss_probability": {
+      "0.5": 0.125,
+      "0.2": 0.512,
+      "0.1": 0.729
+    }
+  },
+  "observations": [
+    "All 124 rows have status ok, planted relation found, unlifted 0; 123 took one attempt, 0035-p1009-i7-chain-aa two.",
+    "Median F4 cells at p=1009, 4099, 32749 are identical: chain 11,795,457; chain-aa 11,795,457; tree 12,911,317; monolithic 1,298,729. monolithic/chain = 0.1101 (about 9.08x fewer cells), tree/chain = 1.0946, at every prime; monolithic F4 max degree 15 with 33 rounds, chain and tree 8 with 20.",
+    "Chain/chain-aa F4 cells are equal on 28 of 30 pairs, differ by log2 -0.00058 on p1009-i1, and by log2 1.000 on p1009-i7 (0035) (log2 = 1.000, a charged failed attempt). At p=4099 and 32749 the A/A max is 0.000.",
+    "Ratios are nearly constant across instances: monolithic/chain log2 within [-3.1836, -3.1825] on all 30 instances; tree/chain log2 0.1236 to 0.1304.",
+    "Four rows of one instance (p4099-i8, all four arms) have two relations and 12 rational solutions; every other row has one relation and 6. The report says three instances at p=4099 have two decompositions; the rows show one.",
+    "checkpoint_gate.txt: gate_rc=1, run launched anyway; waiver stated only in export/report text.",
+    "My replay shares descent.py (builder) and the msolve binary with the producer."
+  ],
+  "judgments": [
+    {
+      "claim_id": "C1",
+      "verdict": "supported_within_scope",
+      "basis": "All four arms ok, ideal degree 384, same relation set containing the planted decomposition on all 30 instances (recomputed from rows, 3 rows replayed).",
+      "effect_size": null,
+      "scope": "the 30 instances, msolve 0.6.5, n=m=3"
+    },
+    {
+      "claim_id": "C2",
+      "verdict": "supported_within_scope",
+      "basis": "Median log2 ratio -3.183 at each prime, 10/10 negative each, sign-flip p 0.00195, exceeds A/A max (1.0, 0, 0). Matches the producer.",
+      "effect_size": "monolithic uses 0.1101 x the chain's F4 cells (9.08x fewer), all three primes",
+      "scope": "counted F4 cells of msolve 0.6.5 on these n=m=3 F_{p^3} systems; no ECDLP cost, wall time or scaling"
+    },
+    {
+      "claim_id": "C3",
+      "verdict": "inconclusive",
+      "basis": "Frozen rule requires |median| above the A/A max at every prime. Tree/chain log2 = 0.1304 (ratio 1.0946, 10/10 positive each prime) but the p=1009 A/A max is 1.000, set by the single charged-retry row 0035; at 4099 and 32749 the A/A max is 0. The rule as written gives inconclusive; the retry row, not form spread, sets the floor (without it the p=1009 floor would be 0.00058). The rule was not and must not be altered post hoc.",
+      "effect_size": "tree 1.0946 x chain cells, consistent sign and size at all three primes",
+      "scope": "as C2"
+    },
+    {
+      "claim_id": "C4",
+      "verdict": "not_established",
+      "basis": "Out of scope by protocol (no isolation, wall_valid false); not evaluated as evidence.",
+      "effect_size": null,
+      "scope": null
+    }
+  ],
+  "open_questions": [
+    "Is the checkpoint-gate waiver recorded anywhere the hooks or a reviewer can read (owner message, committed note)? Not in the bundle.",
+    "The A/A floor at p=1009 comes from one failed-attempt retry; whether a retry should count in the form-spread floor is a protocol design question, answerable only in a new preregistered study, not by reanalysis of this one.",
+    "Report text 'three instances at p=4099 have two decompositions' disagrees with rows (one instance, p4099-i8); should be corrected.",
+    "Cell counts are nearly identical across primes and instances (generic structure); whether the 9.1x gap persists at n=m=4 or for other msolve versions is untested."
+  ],
+  "recommendation": {
+    "action": "replicate",
+    "reason": "Hashes, adherence, freeze-before-data, recompute and a nonce-chosen replay all agree with the export and the verdicts follow the frozen rule (C-mono supported_within_scope, C-tree inconclusive). Remaining defects are the unverifiable checkpoint-gate waiver and a one-instance miscount in the report. A preregistered replicate at a new prime/instance set, with the retry-in-floor question settled in advance, would settle C-tree."
+  },
+  "asserts_nothing_about": [
+    "official research status",
+    "hypothesis status",
+    "the correctness of the design"
+  ]
+}

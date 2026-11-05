@@ -1,0 +1,32 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261031-a25006
+claim_id: THM-K163-HORIZONTAL-RECOVERY1
+kind: formalize_claim
+source: research/THM_K163_COPRIME_TRANSFER1.md
+source_status: DERIVATION
+theorem_name: CryptoResearch.Isogeny.CoprimeTransfer.k163_horizontal_control_preserves_scalar_relations
+theorem_file: CryptoResearch/Isogeny/CoprimeTransfer.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  Same-curve horizontal control, not the missing vertical conductor descent.
+  Lean derives the scalar-45,641 recovery composition from the abstract
+  Koblitz quadratic relation tau^2 = tau - 2, then applies the coprime
+  transfer theorem. It does not identify tau with Frobenius on sect163k1,
+  construct an elliptic-curve endomorphism, or establish an ECDLP advantage.
+claim: |
+  Let r be the standard K-163 subgroup-order constant. In an additive
+  commutative group with an additive endomorphism tau satisfying
+  tau(tau(X)) = tau(X) - [2]X, define alpha = [51] - [160]tau and
+  alpha_bar = [-109] + [160]tau. Lean proves both compositions are [45641].
+  Because gcd(45641,r)=1, alpha preserves the exact order of an order-r
+  generator and preserves and reflects every scalar relation on r-torsion.
+proof_map:
+  depends_on:
+    - endosweep-koblitz-curve-certificates.yaml
+    - k163-coprime-recovery-transfer-20261031.yaml
+  prerequisites:
+    - "The actual sect163k1 Frobenius is represented by the supplied additive endomorphism tau; Lean does not construct or identify that curve map."
+    - "The point-level Frobenius satisfies tau^2 - tau + 2 = 0 on the concrete curve group; this theorem assumes the relation abstractly."
+    - "Interpreting alpha as a degree-45,641 elliptic-curve endomorphism requires the external CM/Frobenius/degree bridge; Lean proves the norm factorization and point-action algebra only."
+    - "This horizontal same-curve control is not a vertical isogeny to the conductor floor and proves no transfer speedup or weak-curve claim."

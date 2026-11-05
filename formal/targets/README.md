@@ -30,6 +30,30 @@ note, and `source` names the note it came from. Do not write a claim that is
 not traceable to one: a formalization of a claim nobody made proves nothing
 about this program's research.
 
+## Cryptographic assumption attack corpus (2026-11-01)
+
+These five specs freeze the first finite trust-boundary tranche from the
+[attack-corpus source note](../../research/cryptographic_assumption_attack_corpus_20261101/README.md).
+Their corrected proof sources passed the pinned Lean 4.35 full-workspace
+verifier and axiom audit in
+[run 41365419446](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/41365419446).
+Five assigned semantic reviews attest `holds`; the
+[technical review packet](../../docs/reports/2026-11-01-attack-corpus-five-lean/README.md)
+records its noncanonical handoff/independence limitations. No row makes a
+protocol-security or implementation-vulnerability claim.
+
+| target | kind | exact boundary | state |
+| --- | --- | --- | --- |
+| `attack-mod-alias.yaml` | `formal_counterexample` | residue equality versus bounded natural representatives | machine-verified; scoped review holds |
+| `attack-subgroup-membership.yaml` | `formal_counterexample` | ambient product group versus designated prime-order subgroup | machine-verified; scoped review holds |
+| `attack-batch-rlc-adaptive.yaml` | `formal_counterexample` | adaptive cancellation versus fixed-error finite counting | machine-verified; scoped review holds |
+| `attack-polynomial-function-alias.yaml` | `formal_counterexample` | polynomial functions versus bounded-degree formal polynomials | machine-verified; scoped review holds |
+| `attack-schnorr-special-soundness.yaml` | `formalize_claim` | scalar two-transcript extraction under same-commitment, distinct-challenge, prime-field hypotheses | machine-verified; scoped review holds |
+
+Each target requires its countermodel and conditional repair in the same
+module. Implementation impact remains gated on a separate source-to-model
+refinement and independent semantic-fidelity review.
+
 ## What is here, in ascending difficulty
 
 | target | kind | from | expectation |
@@ -117,6 +141,32 @@ bases, degree-compatible term orders and row-echelon Macaulay matrices.
 
 Note the direction, corrected in `CORR-20260916-0c9c0a`: the last fall degree is
 a **lower** bound for the solving degree, not an upper one.
+
+## K-163 conditional coprime recovery transfer
+
+`k163-coprime-recovery-transfer-20261031.yaml` proves a conditional
+cyclic-subgroup transfer theorem. It reuses the formal K-163 subgroup-order
+constant, kernel-checks
+`gcd(45641, 5846006549323611672814741753598448348329118574063) = 1`,
+and proves that additive homomorphisms satisfying
+`recovery(phi(X)) = [45641]X` preserve and reflect scalar relations on the
+selected prime-order subgroup.
+
+This target does **not** construct the K-163 degree-45,641 vertical isogeny,
+its algebraic dual, either point-level composition, an exact-order curve
+point, or an endpoint subgroup bridge. It also proves no transfer-cost or
+ECDLP advantage. Endpoint-to-source transfer requires the opposite
+composition separately. Those geometric and experimental obligations remain
+open in
+[`koblitz-vertical-isogeny-maps-not-persisted.md`](../../problems/koblitz-vertical-isogeny-maps-not-persisted.md).
+
+`k163-horizontal-recovery-control-20261031.yaml` strengthens the algebraic
+control in the same module. From an abstract additive endomorphism satisfying
+the Koblitz relation `tau^2 = tau - 2`, Lean derives both compositions for
+`alpha = 51 - 160 tau` and its conjugate and then proves exact image order and
+scalar-relation preservation. This is the already-known same-curve horizontal
+control, not a vertical conductor-floor map; the bridge from abstract `tau`
+to concrete sect163k1 Frobenius remains outside Lean.
 
 ## Batch-five discriminant wording
 
@@ -238,6 +288,22 @@ inside form under the equality reading of condition (1). It is a new spec and
 carries a `proof_map` naming the unformalized transcription of Nagao's
 definitions. See the [report](../../docs/reports/2026-10-29-nagao-lemma4-lean/report.md)
 (hypothesis-delta table, receipt). It says nothing about Proposition 5.
+
+## Galbraith MPKC v2 Montgomery reduction
+
+`galbraith-montgomery-reduction-20261101.yaml` targets the integer core of
+Galbraith's Lemma 2.5.3. Explicit witnesses for the two modular congruences
+construct `w`; representative bounds prove `0 <= w < n`; and the conclusion
+is stated as `R*w = a (mod n)`. The source's odd-`n`, power-of-two-`R`
+assumptions are replaced by the negative-inverse congruence they supply, as
+recorded in the target's
+[theory note](../../research/galbraith_mpkc_formalization_20261101/theory.md).
+
+The module compiles standalone on the pinned toolchain. It remains pending the
+formal lane's project-wide axiom audit and independent semantic-fidelity
+review: the first cold project build exhausted its execution environment while
+compiling an unrelated pre-existing Semaev certificate. The target proves no
+implementation, constant-time, inverse-construction, or complexity claim.
 
 ## Natural follow-ups, deliberately not specced yet
 

@@ -1,0 +1,23 @@
+#set page(paper:"a4",margin:16mm,numbering:"1")
+#set text(size:9pt)
+= Corrected range compiler: independent review
+*DEC-20261101-9feeb1 · TASK-20261101-14984c*
+#image("diagram.svg",width:100%)
+
+The corrected compiler satisfies the retained F1/F2 obligations in the independent fixed review. All 24 groups passed in one attempt, exit 0, with empty stderr. Root recomputed 561 assertion records and distinguished 43 retained encoded-witness observations within the suite's 604 records. These counts are test coverage, not solver workloads. All 24 bound source/input hashes and the test-source snapshot matched; the successful native checkpoint preceded the 240-second,2-GiB suite.
+
+F1, accounting. The F5 constant witness b0=2, z=3 encodes to26. Independent interception observed exactly one canonical builder call per counted encode/decode. Authentication, reconstruction and decoding retain separate dictionaries. Reconstruction records three threshold visits, two canonical-value checks, six value-bit writes and two initial-state reads; decoding adds six value-bit reads and zero state checks. The literal source receipt includes 382 canonical bytes and 184 typed-comparison nodes. The F7 interleaved x=6 witness encodes to52, with one recurrence product and one state write; wrong-state value 20 and noncanonical value 53 reject. Receipt mutation leaves source and later operations unchanged. The integer-only compatibility encoder is not a cost receipt.
+
+F2, parsing. The original empty equation-label counterexample now raises ValueError. A nonempty zero equation is still accepted. Duplicate labels, noncanonical coefficients, unknown variables and malformed monomials reject. Historical source and review remain unchanged.
+
+Retained coverage. Independent expansions cover squares, products, repeated-variable diagonal terms, cancellation, zero and constant polynomials. All 18 public descriptors cover nilpotent k=0..5 and guard/slack/constant over the two fixed curves. The 43 canonical field assignments comprise 36 satisfying witnesses and seven nonroots; six additional malformed assignments reject. Every canonical assignment's original arithmetic residual agrees with its bit residual. Invalid arithmetic assignments remain nonroots rather than being mistaken for unsatisfiability. Both beta signs and every frozen nilpotent/guard fixture are retained.
+
+Certificates. For the literal F7 range block, e=s-x2\*x1 and g=s\*x0. At the forbidden prefix, 6\*(s-1)+s=1. The exact serialized multipliers pass the unchanged verifier. Its final call uses empty domain CNF and a null auxiliary bound. Interleaving, projection crossing, omitted valid projections, bad original records, duplicate projections and wrong states retain their required behavior. Censored status remains censored; range completion fabricates no arithmetic root. Literal completion counts include 74 certificate bytes, three identity multiplications and 21 model-term visits, kept as separate units.
+
+Independent review. Six assigned joints hold: source binding, bit substitution, ranges, certificate completion, fixed execution and claim boundary. The reviewer was source-aware and blind to current producer tests/results. Actual serving identity and effective effort remain unauthenticated under the published amendment. No additional suite was run during Coordinator verification.
+
+Attestation correction. The first native consistency check failed because the sealed attestation placed scalar holds in verdict and the six individual verdicts in joint_verdicts. The reviewer explicitly confirmed replacing only verdict with that existing exact map. The original sealed file and failed gate are preserved. This decision contains the mechanical representation and source hash; the native checker passed that representation. The same unchanged checker must pass this canonical decision before archive. No scientific judgment or read inventory changed.
+
+Next work. Compose all chart constraints from public descriptors, with public zero/constant/linear B strata, all 15 chart fixtures and all three rationality arms. Then perform the requested complete projected SAT comparison, charging failures, reconstruction and certificate verification. Affine target elimination and its regularity argument remain separate unreviewed drafts. Successful-operation receipts here do not quantify rejected operations. No canonical frontier graph changes: this diagram records a scoped software correction, and neither prior frontier nor full-chart result is promoted.
+
+Review publication: db3718d113df7a65f9d78f2a1bc0efc2c8f6b840. Exact sources: report-inputs.json.

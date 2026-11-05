@@ -1,0 +1,113 @@
+id: LEAD-EXO-hashed-factor-base-tensor-ecdl
+family: exotic
+title: >-
+  Hashed-factor-base ECDL with a compact low-degree Boolean encoding and exact tensor
+  contraction (Akshima et al., Bochum v0.2), conditional on the openai/math #k-SAT result
+mechanism: >-
+  Akshima et al., "A Subexponential Time Algorithm for Elliptic Curve Discrete Logarithm"
+  (Bochum v0.2, pinned 1ee44e56), hash-select a factor base and encode relation finding as a
+  compact low-degree Boolean system (ripple arithmetic, Fourier integer products, affine
+  hashes, cofactor clearing). They solve it by exact tensor contraction with the recursive
+  counting backend of the openai/math ETH preprint (KN-LIT-caa51d, Appendix D.1/D.4), then
+  collect N + 1 relations and do linear algebra. The claimed subexponential bound is conditional
+  on that unverified preprint. The program has an independent native implementation in crypto
+  and cryptanalysis (identical sources), checked on small curves only.
+disposition: open_next_step
+next_action:
+  step: >-
+    Two steps, either first. (a) Independent audit of correctness and of the complexity proof
+    (crypto problems/hashed-ecdl-tensor-backend.md). It must check whether the obstruction
+    recorded in LEAD-ICB-decomposition-encoding-and-sat applies to this encoding: there the
+    #SAT exponent outgrows enumeration once the CNF has omega(l sqrt(log l)) variables.
+    (b) Run the frozen 84-case comparison panel (crypto research/hashed_ecdl_speed_20261029,
+    cryptanalysis docs/hashed-ecdl-panel.md). It is blocked on checkpoint transport and native
+    execution access. Price it in ecbench's counted unit against matched rho on the same toy
+    curves.
+  discriminates: >-
+    An audit that finds the encoding's variable count makes the counting bound lose to
+    enumeration or rho (as for descended Semaev systems) closes the lead with that cost model.
+    A clean audit leaves the claim conditional on the preprint. A measured counted-cost slope
+    below rho's on toy curves, with controls, would be the first evidence of a gain. No result
+    either way exists yet.
+best_measured: >-
+  none: 34 native correctness tests pass and certificate parity holds. Matched profiling and
+  performance runs are blocked. ECC2K-130 and ECCp-131 attempts exceed their exact-leaf budget
+  without a relation; no runtime, S or S/rho figure.
+evidence:
+- repo: cryptanalysis
+  path: docs/hashed-ecdl.md
+  note: 'native tensor implementation; scope, sources and validation boundary; no performance claim'
+- repo: crypto
+  path: research/hashed_ecdl_speed_20261029/README.md
+  note: 'engineering update and frozen protocol; correctness checked, matched evaluation blocked'
+- repo: crypto
+  path: problems/hashed-ecdl-tensor-backend.md
+  note: 'independent general correctness/complexity audit open'
+- repo: crypto-autoresearcher
+  path: knowledge/literature/KN-LIT-caa51d.md
+  note: 'openai/math ETH preprint the theorem is conditional on (unverified proof)'
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/SYNTHESIS.md
+  note: >-
+    2026-10-31 review of twelve measurable prime-field leads, reconciled 2026-11-02: none moved the
+    exponent; each is a constant, a known negative or an unfinished harness. Conditional on the
+    unverified D.1 proof; nothing here audits it.
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/SKEPTIC_DIGEST.md
+  note: >-
+    Authoritative standing of the twelve 2026-10-31 prime-field leads and nine proposals after two
+    skeptics each (reconciled in SYNTHESIS.md, 2026-11-02).
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L06/REPORT.md
+  note: >-
+    L06: plain tree-decomposition DP on the school CNF loses to enumeration at b <= 16 (MMD+ lower
+    bound 15..51 against enumeration 2..10.7, on a Python structural model of the Rust encoder, not
+    a graph dump). Treewidth of the dense gate graph is the wrong proxy for D.1 (black-box vertices,
+    Hermite interpolation); the Fourier arm is dense-arity only and the structured transform-word
+    cut was effectively not run. Not a closure of the tensor route.
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L09/table2.json
+  note: >-
+    L09 BTN census tool, 34 rows: no encoding is D.1-admitted (margin -16.1..-16.3 bits of log2
+    lambda; D.1 needs lambda >= 2^85). With D.1 constant 1, s/sqrt(log2 s) is at least 37x the
+    enumeration exponent, but s is for the one-constraint-per-vertex partition (an upper bound on
+    the best legal partition), so this is a harness constant with a downgraded yardstick until a
+    cut-minimising clustering column exists.
+- repo: crypto-autoresearcher
+  path: docs/reports/ic-prime-eth-leads-20261102/clustering_closure.md
+  note: >-
+    Desk note 2026-11-02: the clustering loophole is closed by non-admission outright (no row
+    reaches the D.1 threshold) and conditionally by steps 3-5 if admission were granted (closure for
+    b < 2^36 is m = 3 specific; m = 4: b < 2^16; m >= 4 by no_crossover with c >= 1). Not shown: an
+    unconditional bound for clustered graphs with deterministic hidden circuits.
+- repo: crypto-autoresearcher
+  path: docs/reports/ic-prime-eth-leads-20261102/rebuild_IcTensorRoute_20261102.txt
+  note: >-
+    Lean rebuild log (IcTensorRoute.lean, rebuilt 2026-11-02, standard axioms, no sorry). Covers only
+    the stated cost-model arithmetic: the ladder rule, solver-saving floor and E(m) balance are
+    necessary conditions for the relation phase; E(m) itself is a hypothesis and PrimePdpEncoding
+    rho_floor was not rebuilt.
+- repo: crypto-autoresearcher
+  path: knowledge/literature/KN-LIT-eb8749.md
+  note: >-
+    Curated note for the Bochum/MPI-SP preprint v0.2 (Theorem 4 and the stated limitation read
+    2026-11-02; the lemmas were not re-read).
+ledger_refs: []
+related:
+- LEAD-ICB-decomposition-encoding-and-sat
+- LEAD-ICE-generic-oracle-arity-cost-floor
+- LEAD-ICE-sat-xor-pdp-oracle
+- LEAD-ICP-digit-presentation-solving-degree
+known_results:
+- KR-IC-404dfe
+- KR-IC-9278b9
+- KR-IC-f66b30
+- KR-IC-310345
+forecloses:
+- subexponential ECDLP via hashed factor base
+- tensor contraction counting for point decomposition
+- ETH refutation gives a subexponential elliptic curve discrete log
+- Akshima Bochum hashed ECDL algorithm
+areas:
+- ECDLP
+last_reviewed: '2026-11-02'

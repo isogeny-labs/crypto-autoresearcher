@@ -1,0 +1,76 @@
+{
+  "python": "3.9.25",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "schema": "pext.software-check/v1",
+  "scope": "fixed F27 rational-root candidate and q3/n5 index controls; no scientific cohort",
+  "source_sha256": {
+    "experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs": "0336e5c594fc7f27d56a27ed957e281af7e9af9d0b15df4797a12bf8e86d5251",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_compact_class_inputs.py": "f0cfa02401eb46687254d7c718907e881deef40c794417f9033e082272179b31",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_curve_class_certificate.py": "97f68a4155e82dd96f517fab7dcfc4b8ea4ad1d530db6cb0e9be1dfea6d29676",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_quotient_certificate.py": "054ec67dbb38851ec4984d80eeb07161795f0165bd353aa7ab5408aefb5f8c5d",
+    "experiments/EXP-PEXT-bf8f96/implementation/check_rational_collision_certificate.py": "1281dd4356d978c505351d86d9856e3365e4e39c8dd68088f629783d9a51d587",
+    "experiments/EXP-PEXT-bf8f96/implementation/generic_disjoint.py": "48221b8d7f55695da57a67796ed0bdf92bc7b60ca4ee7ecafe1355caab28161b",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs": "393068c993f9ec610a334df059b8ae9c34da77c37763aa75d55f51a7827b64c4",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_core.rs": "f7f3466455b9c773552b0bde9aac43a103e8c051a6c1dc453499b90e69cdeffe",
+    "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs": "7698ac00397798716263ab4cb6b2e66f00b982bb105f3bff6743b77bea587d81",
+    "experiments/EXP-PEXT-bf8f96/implementation/rational_collision_certificate.rs": "0f864645d3b5985c9bec27363e8ee7d1f743c06da86d2b6cde34ec3a04ba0c31",
+    "experiments/EXP-PEXT-bf8f96/implementation/test_rational_collision_certificate.py": "d16966ffe48a3346ad54c313ee6a5a22ff3c3167e3259c6b342b4c6aa79597e3"
+  },
+  "steps": [
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs",
+        "-o",
+        "/tmp/pext-rational-checks-uuka6qsy/quotient_core"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "command": [
+        "/tmp/pext-rational-checks-uuka6qsy/quotient_core"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "\nrunning 13 tests\ntest implementation::tests::constant_twist_relations_are_retained ... ok\ntest implementation::tests::extension_encoding_and_charts ... ok\ntest implementation::tests::complete_rational_root_set_matches_direct_f27_support_collision ... ok\ntest implementation::tests::rejects_invalid_domains ... ok\ntest implementation::tests::quotient_witnesses_and_projective_charts ... ok\ntest implementation::tests::structure_bounds_and_exact_scalar_transport ... ok\ntest implementation::tests::curve_model_normalization_and_orbits ... ok\ntest implementation::tests::support_geometry_validates_orbit_and_rank_one_n5 ... ok\ntest implementation::tests::fixed_f27_support_geometry_matches_independent_relations ... ok\ntest implementation::tests::structure_unranking_matches_nested_reference ... ok\ntest implementation::tests::rational_image_index_matches_direct_full_f27_scan ... ok\ntest implementation::tests::complete_cocycle_index_replays_structure_ordinals ... ok\ntest implementation::tests::rational_pair_generator_matches_direct_full_f27_collision ... ok\n\ntest result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.64s\n\n"
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs",
+        "-o",
+        "/tmp/pext-rational-checks-uuka6qsy/join_certificate"
+      ],
+      "exit_code": 0,
+      "stderr": "warning: unused imports: `CocycleIndex`, `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `QuarticPoint`, `RationalImageIndex`, and `SquareClasses`\n   --> experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:932:34\n    |\n932 | ...xt,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CocycleIndex,RationalImageIndex,CurveClass,ModelWitness};\n    |       ^^^^^       ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^                 ^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^ ^^^^^^^^^^ ^^^^^^^^^^^^\n    |\n    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: 1 warning emitted\n\n",
+      "stdout": ""
+    },
+    {
+      "command": [
+        "/tmp/pext-rational-checks-uuka6qsy/join_certificate"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "\nrunning 15 tests\ntest quotient_core::implementation::tests::rejects_invalid_domains ... ok\ntest quotient_core::implementation::tests::quotient_witnesses_and_projective_charts ... ok\ntest quotient_core::implementation::tests::structure_bounds_and_exact_scalar_transport ... ok\ntest quotient_core::implementation::tests::constant_twist_relations_are_retained ... ok\ntest quotient_core::implementation::tests::extension_encoding_and_charts ... ok\ntest quotient_core::implementation::tests::support_geometry_validates_orbit_and_rank_one_n5 ... ok\ntest quotient_core::implementation::tests::complete_rational_root_set_matches_direct_f27_support_collision ... ok\ntest quotient_core::implementation::tests::curve_model_normalization_and_orbits ... ok\ntest tests::exact_ranges_and_rejection ... ok\ntest quotient_core::implementation::tests::fixed_f27_support_geometry_matches_independent_relations ... ok\ntest tests::exact_support_partition_and_shard_replay ... ok\ntest quotient_core::implementation::tests::structure_unranking_matches_nested_reference ... ok\ntest quotient_core::implementation::tests::rational_image_index_matches_direct_full_f27_scan ... ok\ntest quotient_core::implementation::tests::complete_cocycle_index_replays_structure_ordinals ... ok\ntest quotient_core::implementation::tests::rational_pair_generator_matches_direct_full_f27_collision ... ok\n\ntest result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s\n\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-m",
+        "unittest",
+        "test_rational_collision_certificate.py",
+        "-v"
+      ],
+      "cwd": "experiments/EXP-PEXT-bf8f96/implementation",
+      "exit_code": 0,
+      "stderr": "test_full_fixed_fixture_and_mutations (test_rational_collision_certificate.RationalCollisionCertificateTests) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 1.591s\n\nOK\n",
+      "stdout": "{\"fixture\": \"f27-char3\", \"structures_per_T\": 819, \"targets\": [{\"candidate_indices\": 273, \"coset_index\": 0, \"rational_roots\": 2}, {\"candidate_indices\": 0, \"coset_index\": 1, \"rational_roots\": 0}], \"valid\": true}\n"
+    }
+  ]
+}

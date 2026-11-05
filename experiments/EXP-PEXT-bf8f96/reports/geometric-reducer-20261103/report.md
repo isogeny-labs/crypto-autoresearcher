@@ -1,0 +1,9 @@
+# EXP-PEXT-bf8f96: exact geometric P1–P3 reducer component
+
+The [reducer](../../implementation/geometric_reducer.py) recomputes P1 branch-type mismatches, P2 nonzero-T genus-spectrum violations and P3 same-curve geometric minimum drops from complete candidate units. It preserves each published cohort's actual curve-class and canonical T identity, checks the Riemann–Hurwitz genus of every exceptional row, and counts the generic complement at the prescribed genus. Its output is marked `geometric_rows_reduced; scientific_decision_pending_controls`.
+
+The production entry point requires a published, recomputed join plan; a complete sealed chunk index; matching binary, input and review hashes; and an independent batch review in `all-exceptional` geometry mode. It checks every review's exceptional ordinal list and reconciles cohort totals. A selected-geometry review cannot produce a full geometric count. The reducer does not itself launch candidates or convert these geometric counts into an official decision.
+
+The fixed F27 software units test the arithmetic. The zero-T form has factor pattern `[1,1,2]`, genus spectrum `{1,9,11,13,17}` and 279 exceptional of 819 structures. The nonzero-T form has `[4]`, spectrum `{1,17}` and 1 exceptional of 819. Both minima are 1 in the synthetic two-T reducer fixture. The 10 related software tests passed, including refusal of mutated genus/complement and incomplete or duplicate T coverage; the fixture is not an approved scientific cohort or a certified actual-curve P3 result.
+
+No approved cohort artifact was supplied to the production entry point, so that path remains unexercised. The full six-stage launcher/checker and analysis still need coefficient-aware descent and lift, Type2, C0–C7 controls, exact exports and approval bindings. The contract remains `review_required` and unfrozen; no scientific trial was launched.

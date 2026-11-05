@@ -8,7 +8,7 @@ mechanism: >-
   Re-present the point-decomposition system (symmetric coordinates, chained S_3 vs direct
   S_4, Nagao cosets, normal vs polynomial basis, field polynomial) and solve it with SAT/XOR
   or enumeration, hoping the per-attempt cost grows slower than exhaustive search.
-disposition: closed_obstructed
+disposition: open_next_step
 obstruction:
   kind: measured
   statement: >-
@@ -27,6 +27,7 @@ obstruction:
 best_measured: >-
   Cheapest m = 3 arm / enumeration floor 3.0e2 (n = 13) to 3.8e4 (n = 31); m = 4 wide chain
   / floor 5.5e2 (n = 11) to 3.1e4 (n = 23).
+next_action: {from_revisit_when: true}
 evidence:
 - repo: crypto-autoresearcher
   path: analysis/ecdlp2m-iteration-20261009/ctrial-harvest
@@ -50,6 +51,34 @@ evidence:
     revisit_when: with N = omega(l sqrt(log l)) CNF variables (Tseitin multiplications,
     Theta(l^2)) its exponent outgrows m*l, so it loses to enumeration at every l; no
     constant-locality structure in descended summation polynomials
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L01/raw/slopes.json
+  note: >-
+    L01 char-2 Fourier gadget as a WDSat encoding (finished l = 5..7 runs): gadget slope about 2.58
+    bits of conflicts per window bit against the ladder bar 0.5 (m = 3) and 3.16 [2.95, 3.44] for
+    the standard encoding; conflict ratio gadget/standard about 1.2 at l = 7 with CPU 3x worse. The
+    earlier ratio fall fits a constant padding floor (about 11k conflicts), not a slope change:
+    constant_only, no gain. The census constants (0.026..0.074 of 1100n) count XOR-layer wires only
+    and omit about 48k internal ANDs at n = 131; they must be restated before use.
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L11/analysis.md
+  note: >-
+    L11 prime multiplier encodings in pure CDCL: propagation-complete (pc) against schoolbook,
+    paired geometric-mean ratio of median conflicts 0.78 [0.67, 0.92] at b = 9 only (one prime,
+    reverses at b = 6 where pc is 1.15x worse, b >= 12 cap-saturated, Karatsuba tested at one
+    recursion level). A weak provisional preference; no slope measured.
+- repo: crypto
+  path: research/ic_prime_eth_leads_20261031/leads/L09/table2.json
+  note: >-
+    L09 BTN census tool and table (harness constant; yardstick downgraded, see LEAD-EXO-hashed-
+    factor-base-tensor-ecdl).
+- repo: crypto-autoresearcher
+  path: docs/reports/ic-prime-eth-leads-20261102/rebuild_IcTensorRoute_20261102.txt
+  note: >-
+    Lean rebuild log (IcTensorRoute.lean, rebuilt 2026-11-02, standard axioms, no sorry). Covers only
+    the stated cost-model arithmetic: the ladder rule, solver-saving floor and E(m) balance are
+    necessary conditions for the relation phase; E(m) itself is a hypothesis and PrimePdpEncoding
+    rho_floor was not rebuilt.
 ledger_refs:
 - H-BINSTD-770ec3
 - DEC-20261001-670969
@@ -71,6 +100,9 @@ known_results:
 - KR-IC-e847d1
 - KR-IC-f3da82
 - KR-IC-1fcdbc
+- KR-IC-aaf521
+- KR-IC-310345
+- KR-IC-ecebb6
 forecloses:
 - SAT or XOR solver for point decomposition beats rho
 - Karabina symmetric formulation or crossbred for binary PDP
@@ -82,4 +114,4 @@ areas:
 - CERTBIN
 - FROB
 - NISTBIN
-last_reviewed: '2026-10-27'
+last_reviewed: '2026-11-02'

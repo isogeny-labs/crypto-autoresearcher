@@ -1,0 +1,174 @@
+{
+  "task_id": "TASK-20261101-9a4a63",
+  "recorded_at": "2026-11-01T05:29:54.996719+00:00",
+  "run_id": 41275109694,
+  "run_attempt": 1,
+  "expected_head_sha": "7e1827b530349c633d98c96185e8196669812cb4",
+  "schema": "crypto.autoresearch.hosted-formal-execution-report.v1",
+  "requested_scope": "One hosted existing lean-verification.yml workflow at published pinned head, native target receipt capture and strict current-source consistency; six sidecars; zero scientific trials.",
+  "actual": {
+    "workflow_dispatches": 1,
+    "workflow_runs": 1,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "success",
+    "formal_targets_reported_verified": 98,
+    "formal_targets_reported_not_verified": 0,
+    "formal_targets_reported_infrastructure": 0,
+    "formal_targets_reported_undischarged": 0,
+    "scientific_trials": 0,
+    "local_lean_or_build_invocations": 0,
+    "source_proof_spec_workflow_edits": 0,
+    "official_scientific_status_changes": 0
+  },
+  "runtime": {
+    "runtime": "Codex subagent /root/pfse_formal_runner",
+    "session": "pfse-wp2-formal-20261101",
+    "policy": "executor-implementation",
+    "requested_model_override": "gpt-6.1-sol",
+    "requested_reasoning_effort": "medium",
+    "fork_turns": "none",
+    "metadata_provenance": "Driving Coordinator dispatch metadata",
+    "actual_serving_model_id": null,
+    "actual_serving_effort": null,
+    "actual_serving_metadata_verified": false,
+    "fallback_used": false,
+    "degraded_execution_claimed": false
+  },
+  "requirement_status": [
+    {
+      "requirement": "run_id",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "attempt",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "workflow_path",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "event",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "branch",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "head",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "run_success",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "formal_job_success",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "required_steps_ran_and_passed",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "receipt_source_commit",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "strict_checker",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "workspace_exact",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "verifier_exact",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "semantic_review_pending",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "dependency_pins_before_after",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "full_gate_summary",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "formal-verification-receipts_digest",
+      "status": "verified_complete"
+    },
+    {
+      "requirement": "lean-controls_digest",
+      "status": "verified_complete"
+    }
+  ],
+  "execution_and_receipt_gate_passed": true,
+  "task_completion_gate": "Executor technical capture/consistency criteria passed; final custody and published archival completion reserved for Coordinator snapshot. No claim release or task status change performed.",
+  "custody": {
+    "s3_archival": "unavailable_not_attempted",
+    "reason": "No AWS CLI, ARTIFACTS_AWS override, OIC manifest, AWS_PROFILE or ambient credential binding; managed runtime reported no secrets or outbound identities. Driving Coordinator instructed no credential search or alternate upload.",
+    "github_retention_expires_at": "2027-01-30T04:58:42Z",
+    "temporary_paths_are_not_durable": true,
+    "target_receipt_losslessly_preserved_in": "receipt-capture.json",
+    "coordinator_custody_gate": "Dedicated snapshot task TASK-20261101-6fd5e3 decides final custody; no S3 success claimed.",
+    "scope": "ZIP transport and full external job logs remain in GitHub retention plus local temporary files; exact target receipt including build and named-audit logs is encoded in the intake envelope."
+  },
+  "open_gates": [
+    "Dedicated snapshot TASK-20261101-6fd5e3 must be committed, published and independently checked before reviewer dispatch.",
+    "Semantic fidelity review remains pending; no semantic conclusion.",
+    "External full artifact/log ZIP retention is finite; S3 unavailable/not attempted and custody decision belongs to snapshot.",
+    "Exact actual serving model/effort not independently probed."
+  ],
+  "checkpoint_diagnostic": {
+    "command": "CHECKPOINT_SKIP='Hosted formal verification capture; zero scientific experiments' bash <(git show HEAD:scripts/checkpoint.sh) gate",
+    "exit_code": 2,
+    "output": "checkpoint gate: missing .resume/RESUME.md",
+    "applicability": "Driving Coordinator determined non-applicable: AGENTS experiment-run checkpoint gate does not cover zero-scientific-run hosted verification of already published inputs. CHECKPOINT_SKIP is Claude-hook-only; no successful checkpoint claimed."
+  },
+  "preparation_failure": {
+    "operation": "git archive pinned formal orchestration source snapshot",
+    "outcome": "Lazy fetch hung; only local archive processes terminated; replaced with copied snapshot verified against all 191 pinned tracked blob IDs."
+  },
+  "sources_checked": [
+    "AGENTS.md",
+    "docs/agent-contract-extended.md#literature-first",
+    "plugins/crypto-autoresearcher-harness/skills/run/SKILL.md",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/receipt-manifest.json",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-510074/snapshot-receipt.json",
+    "formal/targets/ic-arity-oracle-threshold-20261024.yaml",
+    "formal/CryptoResearch/IC/ArityOracleThreshold.lean",
+    ".github/workflows/lean-verification.yml",
+    ".github/scripts/ci_scope.py",
+    "orchestration/formal/receipts.py",
+    "orchestration/formal/workspace.py",
+    "tools/verify_formal_targets.py",
+    "docs/artifacts.md",
+    "gh workflow run --help",
+    "cloud-environment-runtime skill and networking reference",
+    "report-evidence skill"
+  ],
+  "source_review_scope": "Existing formal gate and historical current-workspace mismatch determine acquisition/checks; no new mathematics or novelty claim.",
+  "commands": {
+    "dispatch": "gh workflow run lean-verification.yml --repo isogeny-labs/crypto-autoresearcher --ref codex/pfse-wp2-20261101",
+    "remote_head": "gh api repos/isogeny-labs/crypto-autoresearcher/branches/codex%2Fpfse-wp2-20261101 --jq .commit.sha",
+    "run": "gh api repos/isogeny-labs/crypto-autoresearcher/actions/runs/41275109694",
+    "jobs": "gh api 'repos/isogeny-labs/crypto-autoresearcher/actions/runs/41275109694/attempts/1/jobs?per_page=100'",
+    "artifacts": "gh api 'repos/isogeny-labs/crypto-autoresearcher/actions/runs/41275109694/artifacts?per_page=100'",
+    "logs": "gh api repos/isogeny-labs/crypto-autoresearcher/actions/runs/41275109694/attempts/1/logs",
+    "strict_validation": "Python receipt_errors over exact native ZIP member and pinned materialized snapshot; expected maps from workspace_inputs and verifier_inputs; no local Lean."
+  },
+  "publication": {
+    "committed": false,
+    "pushed": false,
+    "claim_released": false,
+    "reviewer_outputs_accessed": false
+  }
+}

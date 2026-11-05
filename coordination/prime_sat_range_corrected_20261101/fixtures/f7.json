@@ -1,0 +1,107 @@
+{
+  "schema": "prospective-hand-derived-fixture/v1",
+  "created_at": "2026-10-31T16:54:31.474267+00:00",
+  "status": "hand-derived test input; not executed or independently verified",
+  "p": 7,
+  "n": 4,
+  "projected_bits": 3,
+  "variables": [
+    "x0",
+    "x1",
+    "x2",
+    "s2"
+  ],
+  "public_interpretation": "X=x0+2*x1+4*x2 must be less than7; s2=x2*x1.",
+  "polynomials": [
+    {
+      "8": 1,
+      "6": 6
+    },
+    {
+      "9": 1
+    }
+  ],
+  "generator_meanings": [
+    "e2=s2-x2*x1",
+    "g0=s2*x0"
+  ],
+  "actual_solver_domain_cnf": [
+    [
+      -1,
+      -2,
+      -3
+    ]
+  ],
+  "checker_domain_cnf": [],
+  "checker_aux_bound": null,
+  "hand_constructed_complete_answer": {
+    "status": "complete",
+    "models": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      14
+    ],
+    "learned": [
+      {
+        "depth": 3,
+        "prefix": 7,
+        "clause": [
+          -1,
+          -2,
+          -3
+        ],
+        "certificate": [
+          {
+            "0": 6
+          },
+          {
+            "0": 1
+          }
+        ]
+      }
+    ]
+  },
+  "expected_projected_models": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "derivation": {
+    "model_witnesses": "For X0..5, x1*x2=0 and s2=0. For X6, x1=x2=1 so s2=1 and full bit integer is6+8=14. Every g0 vanishes.",
+    "restricted_generators_at_prefix7": [
+      {
+        "8": 1,
+        "0": 6
+      },
+      {
+        "8": 1
+      }
+    ],
+    "identity": "6*(s2+6)+s2=7*s2+36=1 mod7.",
+    "coverage": "Model projections0..6 cover those depth3 cylinders; the certified prefix7 covers the remaining cylinder, including both state assignments.",
+    "auxiliary_fixed_controls": "At depth4 prefix7, e2=6 and g0=0; at depth4 prefix15, e2=0 and g0=1. Same multipliers yield1 in both cases."
+  },
+  "required_negative_controls": [
+    "Remove the learned prefix7: full-cube coverage must fail.",
+    "Remove model14/projection6: coverage must fail at a domain-valid assignment.",
+    "Replace multiplier6 by1: identity must fail.",
+    "Replace model14 by6: recurrence evaluation must fail.",
+    "Pass comparator CNF directly to unchanged full-cube adapter: domain parsing must reject it."
+  ],
+  "source_audit": "engine.solve returns answer without offline verification; run_cell invokes legacy EC wrapper and must not be used for this fixture. Generic adapter.verify_transcript is the intended check.",
+  "source_hashes": {
+    "research/prime_sat_prefix_search_20261030/engine.py": "ad46f7109f25f7c2f6794be7d3a1f42f19571f98953e7e6b9fe0234cad1ef2ee",
+    "research/prime_sat_prefix_adapter_20261030/adapter.py": "cbc038001273d0a351b86f94d3ac0708eb698e51ab3d8bbef39d7798c4e8fc65"
+  },
+  "software_tests_executed": 0,
+  "solver_invocations": 0,
+  "research_scope": "Candidate fixed compiler fixture, outside current authenticated-interface review; no measured claim."
+}

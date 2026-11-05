@@ -1,0 +1,97 @@
+coordinator_decision:
+  id: DEC-20261101-cb3277
+  id_provenance: Allocated with tools/allocate_id.py --next coordinator_decision --date
+    20261101, confirmed free with --check, and reserved as approval_decision_id in the
+    preapproval packet.
+  recorded_at: '2026-11-01'
+  decided_at: '2026-11-01'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: Coordinator session claude_code /design-experiment; execution observed
+    by the top-level session.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  mode: design-experiment
+  kind: approval
+  context: >-
+    DEC-20261101-49576f designed EXP-PFDR-ada71b, v2 of EXP-PFDR-2d36f9, repairing the two v1
+    O-INVALID instrument causes (pilot sizing; shared null replicate) on fresh seed blocks with
+    every threshold unchanged. tools/experiment_preapproval.py reported approvable: true with no
+    blockers on the exact prospective bytes below; those bytes are now the canonical files.
+  decision: approve
+  target_ids:
+  - EXP-PFDR-ada71b
+  - H-PFDR-ed7ccf
+  - GOAL-PFDR-fd09e0
+  - BATCH-3a63a4
+  - TASK-20261101-8951b8
+  - TASK-20261101-125ee4
+  - TASK-20261101-18d7f6
+  approval:
+    recorded: true
+    standing_authorization: AGENTS.md "Standing user authorization" (user, 2026-09-06);
+      experiments are approved once the protocol is complete and approvable.
+    experiment_id: EXP-PFDR-ada71b
+    specification: experiments/EXP-PFDR-ada71b/specification.yaml
+    specification_sha256: 51753c34e903fd15e4f98410dc5297c97af66c8b9e14130b33156179441a6cb0
+    trial_plan: experiments/EXP-PFDR-ada71b/trial-plan.json
+    trial_plan_sha256: 6750eea39119604434ae6277dc0fc8f3bc899fe6c4062e3bed32698b3cdd9d7a
+    queue: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-3a63a4/dispatch_queue.json
+    queue_sha256: 5f0100a9ab6fffee6c9ab4c9567821f3502e7063482caef3a4149a643499fe58
+    executor_handoff: ledger/handoffs/TASK-20261101-8951b8.yaml
+    executor_handoff_sha256: da08a75201bb9118bc63e2374621e9345b96ff95b40d2583e6f8005a3d61ea75
+    protocol: experiments/EXP-PFDR-ada71b/protocol.json
+    protocol_sha256: 8b79516ca59170da5463fae3bac99f25e99497968f5abbd84d0e2f801d29b13c
+    protocol_sha256_note: freeze.protocol_sha256 (canonical JSON without the freeze block), the
+      convention of EXP-PNEXT-624f41; the file bytes hash to 18ce2a9cfe9f6600b7fe9da32b88648021db7ed3777dfaee27dcd58bc46d4de5.
+    preapproval_packet: coordination/design/EXP-PFDR-ada71b-approval-20261101/preapproval-packet.json
+    preapproval_report: coordination/design/EXP-PFDR-ada71b-approval-20261101/preapproval-report.json
+    preapproval_approvable: true
+    approved_runs: 6
+    execution_route: implementation
+    runbook: >-
+      Not committed. experiment-director compiled a candidate runbook (sha256
+      99f0b3999602872a586a755081a577cd6275b83840ffbb0202a13ad4eb146acb) that printed LINT OK only
+      in a scratch tree holding the preview bytes and a runbook-sessions/ write_scope; in the
+      repository it binds canonical bytes that exist only after this approval, and the runbook
+      route needs a committed LINT OK receipt before preapproval. Per design-experiment step 5a the
+      task stays executor-implementation (as for EXP-PFDR-2d36f9).
+    scope: The six trials in trial-plan.json only (selftest, pilot, census-main, analyze-main,
+      census-rep, analyze-final); bits 16-32, theta 0.30/0.35, d 1-3, h = 2; seed blocks
+      12,000,000 / 12,100,000 / 12,200,000 / 12,900,000. No cost, attack or transfer claim.
+    resource_limits: maximum_runs 6, 4 workers, 4 GiB, per-trial protection watchdogs from the
+      trial plan (machine protection only).
+    asserts_nothing_about: H-PFDR-ed7ccf or any growth rate of kappa.
+  rationale:
+  - Every required scientific-contract field is present; the variable ledger has an A/A
+    comparison, prediction provenance discloses the v1 data seen, and protocol.json validates
+    and is frozen before any v2 data.
+  - The preapproval probe is approvable on these exact bytes; the canonical files equal them.
+  status_transitions:
+  - record: EXP-PFDR-ada71b
+    note: review_required -> approved, frozen, execution_authorized
+  - record: H-PFDR-ed7ccf
+    note: specified unchanged
+  goal_update: next_action is the TASK-20261101-125ee4 snapshot archive, then /run EXP-PFDR-ada71b
+    under TASK-20261101-8951b8.
+  next_actions:
+  - Snapshot-archive the approved design package (TASK-20261101-125ee4); require
+    tools/newest_experiments.py --experiment EXP-PFDR-ada71b --json to report ready.
+  - /run EXP-PFDR-ada71b under TASK-20261101-8951b8, then archive TASK-20261101-18d7f6 and open
+    the evidence review.
+  - Optional follow-up via a versioned amendment, never an in-place edit - compile and commit the
+    mechanical runbook against the approved bytes.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Approval is not an evidence review and no result exists.
+  limitations:
+  - Approval asserts no scientific outcome.
+  - Producer-written check.py is not independent review.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261101-cb3277.yaml
+  - experiments/EXP-PFDR-ada71b/specification.yaml
+  - experiments/EXP-PFDR-ada71b/trial-plan.json
+  - coordination/design/EXP-PFDR-ada71b-approval-20261101/preapproval-report.json
+  official_effect_until_committed_pushed_reviewable: none

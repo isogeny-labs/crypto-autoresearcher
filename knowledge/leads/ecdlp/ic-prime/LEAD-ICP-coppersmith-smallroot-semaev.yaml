@@ -9,7 +9,7 @@ mechanism: >-
   addition trees and kept windowed internal nodes, all-S_3 degree-2 blocks have the largest
   reach; if reach exceeded the index-calculus demand the decomposition would cost polynomial
   time per attempt at a factor base large enough to beat rho.
-disposition: closed_obstructed
+disposition: open_next_step
 obstruction:
   kind: proof
   statement: >-
@@ -29,46 +29,25 @@ obstruction:
     more than the per-block sum, a non-convex monomial set or an unequal-bound allocation beats
     1/2 per block, a rank-r >= 2 GAP substitution (H-PFDR-3c7d1e) changes the block polynomial
     beyond S_3, or a non-Coppersmith small-root solver is proposed.
-atlas_scope: >-
-  Source-attributed single-S_3-block obstruction from crypto
-  research/smallroot_optimal_reach_20261026/README.md sections 2 and 5 at
-  a6855c198089433512890375299caf71c4d898eb. The source labels this analysis,
-  not an index-calculus measurement. Its proof scope is convex monomial sets,
-  equal per-variable bounds and one ideal (p, f)^t; unequal-bound results are
-  numerical within the recorded search. The disposition and forecloses labels
-  have that scope only. Joint three-equation/six-unknown lattices, non-convex
-  sets, other solvers and rank-r GAP substitutions outside that block remain
-  revisit cases. This derived-index merge makes no new mathematical verdict,
-  hypothesis/goal transition or verified IC improvement claim.
 former_next_action:
   step: >-
-    Independently review the finite determinant accounting in
-    research/joint_smallroot_reach_20261024/ and reconcile the historical
-    modulus-budget calculation; do not use 0.8408 or its 0.0481 gap as validated
-    reach. Then verify applicability of the proposed optimal-shift machinery
-    to the joint three-equation system and rank-r >= 2 GAP substitutions,
-    and implement root extraction with full costs.
+    Compute the provably optimal shift set (Ryan, EUROCRYPT 2025; Feng-Luo-Chen-Nitaj-Pan
+    sumset bounds) for the 13-monomial S_3 polytope and the full-tree (m, w) = (4, 2) system,
+    and the rank-r >= 2 GAP substitution of H-PFDR-3c7d1e, with tools/smallroot_reach.py as
+    the calibrated calculator; then a planted direct-box S_4/S_5 recovery (H-PFDR-621852)
+    at 40-56 bits only if the computed reach clears 8/9.
   discriminates: >-
-    Correct finite determinant identities qualify the accounting only. A justified joint
-    bound above the rederived, fully charged demand motivates planted-root and random-target
-    experiments. Finite diagnostic failures or a single shift-family optimum do not close
-    arbitrary joint-system methods or the prime-field ECDLP.
+    Optimal reach >= 0.8889 at (4,2) (or any rank-r GAP cell with positive margin) reopens
+    a concrete lattice decomposition oracle to be measured; optimal reach < 0.8889 everywhere
+    turns the current heuristic -0.0481 closure into a strategy-independent one and closes
+    the family.
 best_measured: >-
-  source-reported analysis bound (crypto research/smallroot_optimal_reach_20261026):
-  one S_3 block, convex monomial sets and equal per-variable bounds,
+  derived bound (crypto research/smallroot_optimal_reach_20261026): any lattice, equal bounds,
   0.3293 (S_3 in 3 unknowns) / 0.3536 (2 unknowns); numerical best region 0.4357 / 0.4892
   (-> 1/2); demand 8/9 at (m,w) = (4,2); HG-corrected JM extended reach 0.2803 (CORR-20261024-b2a799).
   Earlier probe figures (S_3 rigorous delta <= 0.10, Probes B/C at 40/56 bits) are consistent.
-  These per-block bounds and the HG analysis correction do not supply the pending
-  EXP-ECDLP-64fa3d convention audit, joint-system applicability, executed parity,
-  root extraction or complete IC improvement.
+next_action: {from_revisit_when: true}
 evidence:
-- repo: crypto-autoresearcher
-  path: research/joint_smallroot_reach_20261024/report.md
-  note: Additive software audit; exact finite determinants and candidate joint accounting retain their independent-review qualifications
-- repo: crypto-autoresearcher
-  path: problems/joint-smallroot-reach-baseline-and-oracle-unverified.md
-  note: Baseline reconciliation, optimized shifts, executed parity, root extraction and matched pipeline comparison remain obligations
 - repo: crypto
   path: RESEARCH_PRIME_FIELD_BREAKTHROUGH_PROGRAM.md
   note: >-
@@ -84,11 +63,7 @@ evidence:
     scope only (margin superseded by CORRECTION.md and the 2026-10-26 reach bound)
 - repo: crypto-autoresearcher
   path: tools/smallroot_reach.py
-  note: >-
-    Historical TOOL calculator calibrated to Coppersmith 1/d at n=1; univariate
-    calibration alone does not validate finite multivariate accounting.
-    CORR-20261024-b2a799 reports the HG convention correction; the frozen
-    EXP-ECDLP-64fa3d remains the designated audit.
+  note: reach calculator calibrated to Coppersmith 1/d
 - repo: crypto
   path: research/smallroot_optimal_reach_20261026/README.md
   note: >-
@@ -102,7 +77,7 @@ evidence:
     extended 0.8408 -> 0.2803)
 - repo: crypto-autoresearcher
   path: ledger/proposals/IDEA-20260904-39336c.yaml
-  note: Historical slack 0.1592 versus miss 0.0481; superseded analysis figures, not validated joint reach
+  note: slack 0.1592 vs miss 0.0481; optimal-strategy machines never run
 - repo: crypto-autoresearcher
   path: research/p256_factor_base_parallel_20261025/report.md
   note: "P-256 track F6: 28 rectangle and 9 digit lattice cases with exact determinant bounds and one known-offset control; failure of the sufficient-bound family is not a general impossibility"
@@ -141,4 +116,4 @@ forecloses:
 areas:
 - PFDR
 - PATH
-last_reviewed: '2026-10-29'
+last_reviewed: '2026-11-01'

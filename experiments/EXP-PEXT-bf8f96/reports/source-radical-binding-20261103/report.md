@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: source elliptic map bound to radical generator zero
+
+The [source-radical binder](../../implementation/source_radical_binding.py) composes two existing exact checkers. The source-map certificate proves that the named K-Weierstrass model, canonical T and projective matrix give an invertible rational map to the moved quartic. The binder requires that quartic to be generator zero of the conjugate radical algebra, checks each subsequent form by coefficient Frobenius, and checks orbit closure. The radical checker then gives coherent relation witnesses and an order-n semilinear action on the generators. A published-binding entry additionally checks the actual class/T and independent structure ordinal.
+
+Nine related software tests pass. Six F27 source rows bind to an order-three action; mutations of the first and second conjugate and a changed source model are refused. A published q5/n3 class/T/ordinal-zero entry also binds. This is a formal source embedding and radical-action certificate. It does not construct the fixed-field curve, prove its model is geometrically connected over the destination, or assign a descent-admissible genus. No scientific cohort trial was launched.
+
+Next construct and independently check a fixed-field model for this action, including coefficient/constant relations, before the admissible-genus column can be populated. EXP-PEXT-bf8f96 remains `review_required` and unfrozen.

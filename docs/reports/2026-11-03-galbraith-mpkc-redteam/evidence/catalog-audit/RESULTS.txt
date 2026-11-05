@@ -1,0 +1,8 @@
+Audit of Galbraith MPKC catalog (pymupdf 2.1 default env; 1.26.6 installed to pm1266/ for repro)
+1. pymupdf 1.26.6: sha 764d1249...789d, summary/errata/indexes byte-identical. pymupdf 2.1: 1817 objects but sha 0e473889...e752; summary differs (absent 122, citation 52, present_complete 257, appx-B 440); 381 index lines differ, 14 non-hash.
+2. Independent bold-heading detector (indep.py, cmp.py, boldany.py, mentions.py): 1806 labelled + 9 Notation + 2 unnumbered (Definition p93, Theorem p292) = 1817; 0 spurious, 0 missed, 0 numbering gaps/dups, 0 page mismatches; per-kind counts confirmed.
+3. proofs.py; sample seed 20261103: sample_absent.json (25), sample_pc.json (15). 
+   absent sample: 2/25 wrong (24.2.14, 24.2.16). Full population: 11/119 wrong: same-block proofs 2.9.1 9.6.13 10.1.14 10.7.4(citation) 14.1.1 19.3.1 22.1.5 24.2.16; displaced proofs 7.7.11 (p137) 11.1.4 (p239 after Alg 6) 24.2.14 (p518).
+   present_complete sample 0/15 wrong; but >=10 'Proof: <citation>' rows classed present_complete (8.7.2 9.10.12 9.11.2 10.2.6 10.2.11 10.9.5 19.2.1 A.6.7 A.7.2 A.10.8).
+4. errata: 47 confirmed; 31 objects/33 errata ids exact. No erratum on Sec 2.5/Montgomery. ERRATA-041 (Wiener bound, v2 Theorem 24.5.2 p528) wrongly attached to Lemma 2.3.3 (merely cited) and missed on 24.5.2. Drift: 2012 Lemma 5.2.20 = v2 Lemma 5.2.25; Theorem 5.3.8 = v2 Theorem 5.3.10; 'Definition 7.3.1' typo for 17.3.1.
+5. solns3.py: independent Appendix B entry scan = 486 exercise entries (catalog 444; all 444 are in mine; 42 missed because get_text(sort=True) merges lines).

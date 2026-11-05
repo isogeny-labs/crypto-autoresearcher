@@ -6,6 +6,7 @@ without anyone trusting it. Each lint rule is shown to bite.
 """
 from __future__ import annotations
 
+import subprocess
 import sys
 from copy import deepcopy
 from pathlib import Path
@@ -190,6 +191,30 @@ def test_run_executes_records_and_relays_verbatim(tmp_path):
     assert relay["relay_verbatim"] and relay["verify_findings"] == []
     rounded = tc.check_relay(card, printed.replace("value=42", "value=40"), repo)
     assert not rounded["relay_verbatim"]
+
+
+def test_relay_with_outputs_declared_out_of_sorted_order_is_verbatim(tmp_path):
+    # Regression: the receipt is written with sorted keys, so check-relay used to
+    # rebuild the brief with outputs in sorted order while `run` printed them in
+    # card order, and every multi-output relay was flagged as edited.
+    repo, script, _ = _git_repo(tmp_path)
+    writer = repo / "tools" / "write.py"
+    writer.write_text("from pathlib import Path\nPath('out').mkdir(exist_ok=True)\n"
+                      "Path('out/z.txt').write_text('z')\nPath('out/a.txt').write_text('a')\n")
+    for args in (["add", "-A"], ["commit", "-q", "-m", "writer"]):
+        subprocess.run(["git", *args], cwd=repo, check=True)
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True,
+                          text=True, check=True).stdout.strip()
+    card = _frozen_card(script, head)
+    card["binds"].append({"path": "tools/write.py", "sha256": rb.sha256_file(writer)})
+    card["commands"] = [{"argv": ["python3", "tools/write.py"], "timeout_seconds": 30,
+                         "success_exit_codes": [0], "outputs": ["out/z.txt", "out/a.txt"]}]
+    assert tc.lint(card, repo) == []
+    receipt = tc.run_card("card.yaml", "0" * 64, card, repo)
+    assert receipt["status"] == "completed"
+    printed = tc.brief(receipt, "out/receipt.json", rb.sha256_file(repo / "out/receipt.json"))
+    relay = tc.check_relay(card, "Output:\n" + printed, repo)
+    assert relay["relay_verbatim"], relay["missing_lines"]
 
 
 def test_a_failing_command_stops_the_card_and_is_recorded(tmp_path):
@@ -493,3 +518,160 @@ def test_lane_without_a_backend_is_an_impediment_that_writes_nothing(tmp_path, m
                    {"conductor": "/nonexistent/conductor", "delphi": "/nonexistent/delphi"}, repo, lines.append)
     assert code == 2 and lines[-1].startswith("IMPEDIMENT no batch backend")
     assert not (repo / "cards").exists()
+
+
+# ---------------------------------------------------------------------------
+# Lane --route: Delphi's registry chooses each step's model; refused replies escalate
+# ---------------------------------------------------------------------------
+
+def _routed_delphi(tmp_path, routes, behaviour, log):
+    """A stand-in delphi with `route` (routes: family -> route JSON or an error string) and
+    `run`, whose answer depends on the model: ok, bad (an invented digest), refuse, specerr."""
+    return _fake(tmp_path, "delphi", f"""
+args = sys.argv[1:]
+routes, behaviour, log = {routes!r}, {behaviour!r}, {str(log)!r}
+free = os.environ.get("DELPHI_FREE", "")
+if args[0] == "route":
+    family = args[args.index("-family") + 1]
+    r = routes.get(family + "@" + free, routes.get(family)) if free else routes[family]
+    print(json.dumps({{"route": {{}}, "error": r}} if isinstance(r, str) else {{"route": r}}))
+    sys.exit(1 if isinstance(r, str) else 0)
+out = args[args.index("-out") + 1]
+prompt = args[args.index("-prompt") + 1]
+model = args[args.index("-model") + 1]
+open(log, "a").write(json.dumps({{"provider": args[args.index("-provider") + 1], "model": model,
+                                 "effort": args[args.index("-effort") + 1] if "-effort" in args else "",
+                                 "free": free}}) + "\\n")
+kind = behaviour.get(model, "ok")
+row = {{"id": "prompt-1", "status": "succeeded", "model": model, "batch_id": "b-" + model}}
+if kind == "refuse":
+    row.update(status="refused", refusal={{"category": "test"}})
+elif kind == "bad":
+    row["text"] = answer(prompt, "0" * 64)
+elif kind == "specerr":
+    row["text"] = answer(prompt).replace("specification_errors: []", "specification_errors:\\n- the design gives no timeout")
+else:
+    row["text"] = answer(prompt)
+os.makedirs(out, exist_ok=True)
+open(os.path.join(out, "results.jsonl"), "w").write(json.dumps(row) + "\\n")
+""")
+
+
+def _route(choice, *escalation):
+    return {"choice": choice, "escalation": list(escalation), "basis": f"{choice} measured good enough"}
+
+
+def _calls(log):
+    return [json.loads(line) for line in log.read_text().splitlines()] if log.exists() else []
+
+
+def _run_routed(tmp_path, routes, behaviour, via="delphi", route=True, free=None):
+    repo = _lane_repo(tmp_path)
+    (tmp_path / "bin").mkdir()
+    log = tmp_path / "delphi.log"
+    lines = []
+    code = tc.lane(["design.md"], ["tools/emit.py"], "cards/c.yaml", "out/assessment.yaml", via,
+                   {"delphi": _routed_delphi(tmp_path / "bin", routes, behaviour, log), "route": route,
+                    "free": free},
+                   repo, lines.append)
+    record = json.loads((repo / "cards/c.lane/lane.json").read_text()) if (repo / "cards/c.lane/lane.json").exists() else None
+    return code, lines, _calls(log), record, repo
+
+
+def test_lane_route_sends_each_step_to_its_routed_model(tmp_path):
+    code, lines, calls, record, _ = _run_routed(tmp_path, {
+        "card-compile": _route("vllm:glm-5.3", "anthropic:claude-sonnet-5-5@high"),
+        "assess": _route("anthropic:claude-haiku-5-5")}, {})
+    assert code == 0, lines
+    assert calls == [{"provider": "vllm", "model": "glm-5.3", "effort": "", "free": ""},
+                     {"provider": "anthropic", "model": "claude-haiku-5-5", "effort": "", "free": ""}]
+    assert record["routes"]["compile"]["basis"] == "vllm:glm-5.3 measured good enough"
+    assert record["calls"]["compile"]["target"]["model"] == "glm-5.3"
+    assert any("routed to vllm:glm-5.3" in line for line in lines)
+
+
+def test_lane_route_escalates_a_reply_the_tool_refuses(tmp_path):
+    code, lines, calls, record, repo = _run_routed(tmp_path, {
+        "card-compile": _route("vllm:glm-5.3", "anthropic:claude-sonnet-5-5@high"),
+        "assess": _route("anthropic:claude-haiku-5-5")}, {"glm-5.3": "bad"})
+    assert code == 0, lines
+    assert [c["model"] for c in calls] == ["glm-5.3", "claude-sonnet-5-5", "claude-haiku-5-5"]
+    assert calls[1]["effort"] == "high"
+    assert record["calls"]["compile"]["accepted"] is False
+    assert record["calls"]["compile-escalation-1"]["accepted"] is True
+    assert (repo / "cards/c.yaml").is_file()
+
+
+def test_lane_route_escalates_a_model_refusal(tmp_path):
+    code, lines, calls, record, _ = _run_routed(tmp_path, {
+        "card-compile": _route("anthropic:claude-haiku-5-5", "anthropic:claude-sonnet-5-5@high"),
+        "assess": _route("anthropic:claude-haiku-5-5")}, {"claude-haiku-5-5": "refuse"})
+    # Compile escalates past the refusal; assess has nowhere to escalate and stops there.
+    assert [c["model"] for c in calls] == ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"]
+    assert "refused" in record["calls"]["compile"] and record["calls"]["compile-escalation-1"]["accepted"]
+    assert code == 1 and record["outcome"] == "assessment_refused"
+
+
+def test_lane_route_never_escalates_a_specification_error(tmp_path):
+    code, lines, calls, record, repo = _run_routed(tmp_path, {
+        "card-compile": _route("vllm:glm-5.3", "anthropic:claude-sonnet-5-5@high"),
+        "assess": _route("anthropic:claude-haiku-5-5")}, {"glm-5.3": "specerr"})
+    assert code == 1 and record["outcome"] == "card_refused"
+    assert [c["model"] for c in calls] == ["glm-5.3"], "a design's gap must not be escalated to a pricier model"
+    assert not (repo / "cards/c.yaml").exists()
+
+
+def test_lane_route_refuses_conductor_and_an_unroutable_family(tmp_path):
+    code, lines, calls, _, _ = _run_routed(tmp_path, {"card-compile": _route("vllm:glm-5.3"),
+                                                       "assess": _route("vllm:glm-5.3")}, {}, via="conductor")
+    assert code == 2 and "--route needs standalone delphi" in lines[-1] and calls == []
+    code, lines, calls, record, _ = _run_routed(tmp_path / "second", {
+        "card-compile": "no model qualifies for card-compile: considered: vllm:glm-5.3 (worse)",
+        "assess": _route("vllm:glm-5.3")}, {})
+    assert code == 2 and "no routed model for card-compile" in lines[-1] and calls == []
+    assert record["outcome"] == "impeded"
+
+
+# ---------------------------------------------------------------------------
+# Lane --free: standalone delphi in free mode (DELPHI_FREE)
+# ---------------------------------------------------------------------------
+
+def test_lane_free_runs_delphi_in_free_mode_and_records_it(tmp_path, monkeypatch):
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)  # free mode needs no paid key
+    code, lines, calls, record, _ = _run_routed(tmp_path, {}, {}, via="auto", route=False, free="local")
+    assert code == 0, lines
+    assert record["backend"] == "delphi" and record["free"] == "local"
+    assert len(calls) == 2 and all(c["free"] == "local" for c in calls)
+    assert "free mode (local)" in lines[0]
+
+
+def test_lane_free_with_route_asks_the_free_route(tmp_path):
+    code, lines, calls, record, _ = _run_routed(tmp_path, {
+        "card-compile": _route("anthropic:claude-sonnet-5-5@high"),
+        "card-compile@public": _route("openrouter:vendor/model:free"),
+        "assess": _route("anthropic:claude-haiku-5-5"),
+        "assess@public": _route("colab:qwen")}, {}, free="public")
+    assert code == 0, lines
+    assert [(c["provider"], c["model"], c["free"]) for c in calls] == [
+        ("openrouter", "vendor/model:free", "public"), ("colab", "qwen", "public")]
+    assert record["free"] == "public"
+
+
+def test_lane_takes_an_inherited_delphi_free_and_records_it(tmp_path, monkeypatch):
+    monkeypatch.setenv("DELPHI_FREE", "public")
+    code, _, calls, record, _ = _run_routed(tmp_path, {}, {}, route=False)
+    assert code == 0 and all(c["free"] == "public" for c in calls) and record["free"] == "public"
+
+
+def test_lane_without_free_mode_calls_delphi_without_it(tmp_path, monkeypatch):
+    monkeypatch.delenv("DELPHI_FREE", raising=False)
+    code, _, calls, record, _ = _run_routed(tmp_path, {}, {}, route=False)
+    assert code == 0 and all(c["free"] == "" for c in calls) and "free" not in record
+
+
+def test_lane_free_refuses_conductor_and_writes_nothing(tmp_path):
+    code, lines, calls, _, repo = _run_routed(tmp_path, {}, {}, via="conductor", route=False, free="local")
+    assert code == 2 and "--free (DELPHI_FREE) needs standalone delphi" in lines[-1] and calls == []
+    assert not (repo / "cards").exists()
+    assert tc.lane(["design.md"], [], "cards/d.yaml", "out/d.yaml", "delphi", {"free": "paid"}, repo,
+                   lines.append) == 2 and "--free must be one of" in lines[-1]

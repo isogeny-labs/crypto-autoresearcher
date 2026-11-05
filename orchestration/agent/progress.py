@@ -14,7 +14,10 @@ from typing import Any, Sequence
 
 from langchain_core.messages import AIMessage, AnyMessage, ToolMessage
 
-DEFAULT_FAILURE_ROUNDS = 3
+# One retry gives a model a chance to repair a malformed tool call.  Paying for
+# a third byte-identical failure has no additional diagnostic value and is the
+# exact failure mode preserved in TASK-20260822-40389d.
+DEFAULT_FAILURE_ROUNDS = 2
 _ERROR_STRING_TOOLS = {
     "read_file", "search_files", "write_file", "edit_file", "run_command",
 }

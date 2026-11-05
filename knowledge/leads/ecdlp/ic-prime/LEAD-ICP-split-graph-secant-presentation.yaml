@@ -1,0 +1,81 @@
+id: LEAD-ICP-split-graph-secant-presentation
+family: ic-prime
+title: Split-graph and Boolean-offset secant presentations for prime-field relation finding
+mechanism: >-
+  Choose a prime-field factor base from rational intersections of an elliptic curve with a
+  low-degree ordinate graph, or with a Boolean-offset family of such graphs, and express a
+  two-point decomposition through the secant-line variables rather than a dense membership
+  polynomial and S_3. For a completely split degree-d graph the exact presentation has
+  homogeneous first-vanishing degree d+1 instead of 2d+1 for the same-base dense system.
+  A Boolean-offset successor removes the complete-splitting requirement and proves a smaller
+  canonical degree than its same-base dense presentation, at the cost of selector variables.
+  Whether either reduction lowers complete cost per independent relation remains open.
+disposition: open_next_step
+next_action:
+  step: >-
+    Implement native exact triangular factorization or an FGLM-style zero-dimensional root
+    extractor for the saved split-graph bases, with no coordinate-cube assignment search, and
+    share elimination across the four ordinate-sign branches without dropping branch work.
+    Freeze a prospective comparison over at least three growing field/degree cells. Compare
+    candidate secant, the same-base dense presentation, and equal-size nongraph, low-x and
+    hash-x controls. Charge graph construction and rejected proposals, every sign branch,
+    deduplication, exact rational-root discovery, group replay, field operations, usable-relation
+    yield, independent relation-row rank and the resulting linear-algebra work. Keep the 26
+    original F127/d5 extraction caps censored in the historical panel rather than rewriting
+    them with the new extractor. Then test the exact one-bit-per-slot projection of the
+    Boolean-offset successor under the same accounting.
+  discriminates: >-
+    A reproducible reduction in complete same-base field operations per independent relation
+    on at least three prospective cells, with exact root sets and all controls passing, advances
+    the presentation to higher arity and an end-to-end comparison. Lower handled degree without
+    lower complete same-base cost leaves the algebraic theorem intact but rejects that extractor
+    and presentation as a performance route at the tested scale. A cap, timeout, incomplete
+    root set or failed control is unmeasured and cannot close the lead.
+best_measured: >-
+  The checked split-graph systems have homogeneous degree d+1 versus 2d+1 for their same-base
+  dense presentation. Stock F4 observed handled degree 3 versus 6 on all 18 finite F17 targets,
+  and d+1 versus 2d or 2d+2 on completed F83/F101/F127 degree-3..5 panels. The complete toy
+  candidate used fewer branch-summed reduced rows than the matched nongraph secant control but
+  more than its own dense presentation. Original verification completed for 14,194 of 14,220
+  systems; 26 F127/d5 roots hit the 2,000,000-assignment extraction cap and remain censored.
+  Offline saved-basis verification later proved all 14,220 saved root sets with zero mismatches,
+  but supplied neither operational root discovery nor complete field-operation, timing,
+  independent-rank or end-to-end cost.
+evidence:
+- repo: crypto
+  path: research/prime_factor_base_degree_20261031/SECANT_GRAPH.md
+  note: >-
+    exact secant/group equivalence, complete four-sign treatment, homogeneous d+1 versus 2d+1
+    theorem and the F17 matched nongraph control; no runtime benefit is inferred
+- repo: crypto
+  path: research/prime_factor_base_degree_20261031/parallel_20261031/RESULTS.md
+  note: >-
+    complete toy audit, prospective d=3..5 construction ladder, stock-F4 handled degrees,
+    branch-summed counters, 26 retained extraction caps and the remaining complete-cost duties
+- repo: crypto
+  path: research/prime_factor_base_degree_20261031/parallel_20261031/HANDOFF.md
+  note: >-
+    explicitly leaves triangular extraction, cross-sign sharing, field-operation pricing,
+    independent rank, higher arity and literature-wide novelty open
+- repo: crypto
+  path: research/prime_factor_base_degree_20261031/pencil_search_20261101/README.md
+  note: >-
+    Boolean-offset successor proves exact group semantics and degree 7 versus same-base dense
+    degree 9, while exposing the selector-variable tax and leaving solving work unmeasured
+related:
+- LEAD-ICP-pkm-tower-algebraic-oracle
+- LEAD-ICP-algebraic-membership-factor-base
+- LEAD-ICP-shared-coefficient-membership
+- LEAD-ICE-prime-field-semaev-solving-degree
+- LEAD-ICE-descent-closure-degree-at-scale
+forecloses:
+- split-graph factor base with secant-line relation equations
+- ordinate-graph presentation lowering prime-field Semaev degree
+- cross-sign elimination for a completely split graph factor base
+- triangular or FGLM root extraction for split-graph relation systems
+- Boolean-offset ordinate selector as a prime-field factor base
+areas:
+- ECDLP
+- PFDR
+- DREG
+last_reviewed: '2026-11-01'

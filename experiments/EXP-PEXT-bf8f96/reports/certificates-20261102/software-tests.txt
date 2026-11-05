@@ -1,0 +1,60 @@
+Software validation only; no scientific census/trials.
+UTC 2026-11-02T19:15:03.880029+00:00
+054ec67dbb38851ec4984d80eeb07161795f0165bd353aa7ab5408aefb5f8c5d  experiments/EXP-PEXT-bf8f96/implementation/check_quotient_certificate.py
+4152a54f4b7f38f0a1356d65cc391eb8dd62904877da734856b4d291626d16a6  experiments/EXP-PEXT-bf8f96/implementation/degree2_identity.py
+5b77192febf81eb0dd9a288d39dfb01dccf6c9032874828579b99f516ae7f7b8  experiments/EXP-PEXT-bf8f96/implementation/quotient_certificate.rs
+d7da2710f4bb4e4d473603573c2c74cd1d25028c6a69f42672880678da1a4f3c  experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+3b7aec8a54811227a9a11ca8625078060c861e128a6542fbafe583b7e10d79f6  experiments/EXP-PEXT-bf8f96/implementation/test_quotient_certificate.py
+0336e5c594fc7f27d56a27ed957e281af7e9af9d0b15df4797a12bf8e86d5251  experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs
+
+COMMAND ['rustc', '--version']
+rustc 1.99.1 (58cf8f9c3 2026-10-13)
+
+EXIT 0
+
+COMMAND ['/usr/bin/python3', '--version']
+Python 3.9.25
+
+EXIT 0
+
+COMMAND ['rustc', '--edition', '2021', '--test', 'experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs', '-o', '/tmp/pext-core-check-p5x8v_c_/core-tests']
+
+EXIT 0
+
+COMMAND ['/tmp/pext-core-check-p5x8v_c_/core-tests']
+
+running 4 tests
+test implementation::tests::quotient_witnesses_and_projective_charts ... ok
+test implementation::tests::rejects_invalid_domains ... ok
+test implementation::tests::constant_twist_relations_are_retained ... ok
+test implementation::tests::extension_encoding_and_charts ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+
+EXIT 0
+
+COMMAND ['/usr/bin/python3', 'experiments/EXP-PEXT-bf8f96/implementation/test_quotient_certificate.py']
+warning: unused imports: `Coset`, `Curve`, `FieldIdentity`, and `SquareClasses`
+   --> /var/tmp/crypto-coordinate-resume-20261102/experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:293:34
+    |
+293 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses};
+    |                                  ^^^^^                    ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^
+    |
+    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: 1 warning emitted
+
+test_cli_expected_input_binding (__main__.CertificateTests) ... ok
+test_constant_relations_and_projective_rejection (__main__.CertificateTests) ... ok
+test_coverage_witness_chart_and_relation_mutations (__main__.CertificateTests) ... ok
+test_field_and_expected_input_rejection (__main__.CertificateTests) ... ok
+test_five_fixed_certificates (__main__.CertificateTests) ... ok
+test_strict_json_loading (__main__.CertificateTests) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.744s
+
+OK
+
+EXIT 0

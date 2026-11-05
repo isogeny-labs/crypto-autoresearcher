@@ -1,0 +1,56 @@
+hypothesis:
+  id: H-PFDR-abef79
+  area: PFDR
+  question_id: RQ-PFDR-ae2fba
+  source_proposal: IDEA-20261029-2e292c
+  proposal_id: IDEA-20261029-2e292c
+  title: Strong algebraic backdoors selected without witnesses
+  status: specified
+  proposed_by: open-ideas design pass 2026-11-01
+  designed_by: opencode
+  created: '2026-11-01'
+  updated: '2026-11-01'
+  depends_on:
+  - IDEA-20261029-2e292c
+  - RQ-PFDR-ae2fba
+  statement: A small instance-computable backdoor chosen without any witness reduces
+    complete residual cost by at least 2x against equal-entropy random and fixed-block
+    cuts.
+  mechanism: Conditioning a small set of carry or intermediate variables splits the
+    system; if the split is chosen from instance structure rather than the solution,
+    the residual branches shrink faster than a uniform-entropy cut.
+  assumptions:
+  - User requests factor-base/SAT research; execution is not authorized here.
+  - Implicit membership is not an asserted escape from KN-OPEN-020.
+  predictions:
+  - metric: total_backdoor_solve_cost
+    direction: lower
+    minimum_effect: <=0.5x random and fixed-block
+  - metric: verified_model_count
+    direction: different
+    minimum_effect: equal to the exact oracle
+  - metric: exception_coverage
+    direction: different
+    minimum_effect: '1.0'
+  test_boundary:
+    instances:
+    - cells named in IDEA-20261029-2e292c and DESIGN.md
+    parameters:
+      instances: 50
+      replicates: 1
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 1800
+      backend: local
+  falsification_conditions:
+  - A purported strong backdoor has even one unresolved legal assignment.
+  - Policy needs known roots or tuning on test instances.
+  - Selection plus all residual branches is no cheaper than fixed-block or random
+    cuts.
+  - Backdoor entropy scales like the full known enumeration exponent.
+  interpretation_limits:
+  - Proposal only; no experiment or improvement established.
+  - Prime-field scope; regularity, solving degree and work are distinct.
+  - Independent relation verification; incomplete means UNKNOWN.

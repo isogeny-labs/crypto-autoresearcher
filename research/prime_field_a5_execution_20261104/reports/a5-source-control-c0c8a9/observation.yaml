@@ -1,0 +1,212 @@
+schema: crypto.autoresearch.experiment_observation.v1
+report_kind: run_observations
+question: How do fixed public-source schedules change rank and natural target identifiability
+  on unchanged A4 bases?
+scope: Four already observed A4 curves over8191/65537, original16/14/32/31columns
+  and32fixed public targets; three hash seeds, conditioned follow-up.
+method:
+  description: One supervised collector, shared pair/target tables; separate complete
+    arithmetic oracle; analyze prefixes0/16/64 with relation-only and explicit-anchor
+    scopes.
+  command: /workspace/factor-base-venv/bin/python -B research/prime_field_a5_execution_20261104/supervise.py
+    --protocol research/prime_field_a5_execution_20261104/protocol-v2.json --release
+    research/prime_field_a5_execution_20261104/release.json --owner root-a5 --out
+    research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9
+  parameters:
+    curves: 4
+    source_schedules: 4
+    sources_per_schedule: 64
+    targets_per_curve: 8
+    prefixes:
+    - 0
+    - 16
+    - 64
+    scopes:
+    - relations
+    - anchors
+  seeds:
+  - 0
+  - 1
+  - 2
+  sampling_unit: Fixed curve/schedule/prefix/scope; targets reused across schedules.
+  stopping_rule: Complete all96scope records; no rank/recovery stop; fixed protective
+    refusal gates.
+runs:
+- experiment_id: PRIME-FIELD-A5-SOURCE-CONTROL-20261104
+  run_id: a5-source-control-c0c8a9
+  native_status: returncode=0; timeout=false; exception=null
+  evidence:
+  - artifact: execution
+    selector: /returncode,/timeout,/exception
+observations:
+- id: full-prefix-ranks
+  description: Relation-only original-column ranks at64sources; all fixed arms shown.
+  kind: measured
+  value:
+  - cell_id: p8191-i0
+    arm: window
+    base_columns: 16
+    base_rank: 15
+    joint_targets: 0
+  - cell_id: p8191-i0
+    arm: hash0
+    base_columns: 16
+    base_rank: 16
+    joint_targets: 4
+  - cell_id: p8191-i0
+    arm: hash1
+    base_columns: 16
+    base_rank: 16
+    joint_targets: 4
+  - cell_id: p8191-i0
+    arm: hash2
+    base_columns: 16
+    base_rank: 16
+    joint_targets: 4
+  - cell_id: p8191-i1
+    arm: window
+    base_columns: 14
+    base_rank: 14
+    joint_targets: 1
+  - cell_id: p8191-i1
+    arm: hash0
+    base_columns: 14
+    base_rank: 14
+    joint_targets: 1
+  - cell_id: p8191-i1
+    arm: hash1
+    base_columns: 14
+    base_rank: 14
+    joint_targets: 1
+  - cell_id: p8191-i1
+    arm: hash2
+    base_columns: 14
+    base_rank: 14
+    joint_targets: 1
+  - cell_id: p65537-i0
+    arm: window
+    base_columns: 32
+    base_rank: 30
+    joint_targets: 0
+  - cell_id: p65537-i0
+    arm: hash0
+    base_columns: 32
+    base_rank: 30
+    joint_targets: 3
+  - cell_id: p65537-i0
+    arm: hash1
+    base_columns: 32
+    base_rank: 30
+    joint_targets: 3
+  - cell_id: p65537-i0
+    arm: hash2
+    base_columns: 32
+    base_rank: 32
+    joint_targets: 4
+  - cell_id: p65537-i1
+    arm: window
+    base_columns: 31
+    base_rank: 23
+    joint_targets: 0
+  - cell_id: p65537-i1
+    arm: hash0
+    base_columns: 31
+    base_rank: 28
+    joint_targets: 4
+  - cell_id: p65537-i1
+    arm: hash1
+    base_columns: 31
+    base_rank: 30
+    joint_targets: 3
+  - cell_id: p65537-i1
+    arm: hash2
+    base_columns: 31
+    base_rank: 31
+    joint_targets: 4
+  unit: dimensions and target counts
+  sample:
+    n: 4
+    unit: observed curves
+    dependence: Four schedules percurve share base/targets; two curves perfield, no
+      population independence claim.
+  uncertainty: Exact finite ranks; no population interval estimated.
+  evidence:
+  - artifact: analysis
+    selector: /cells filtered prefix64 and scope=relations
+- id: deficient-base-targets
+  description: Distinct fixed targets recovered while base uncertainty remains, aggregated
+    overhash schedules.
+  kind: derived
+  value:
+    distinct_targets: 8
+    curve_schedule_target_records: 13
+    without_registered_bounded_match: 11
+  unit: targets and recovery records
+  sample:
+    n: 32
+    unit: fixed public targets
+    dependence: Eight targets percurve reused across all schedules;13records are not13independent
+      draws.
+  uncertainty: Exact aggregation; three fixedhash seeds on observed fixtures, no transfer-rate
+    estimate.
+  evidence:
+  - artifact: raw0
+    selector: /prefixes filtered prefix64/scope=relations/hash0,hash1; joint_recoveries
+      and base nullity
+  - artifact: raw1
+    selector: /prefixes and /arms collision_diagnostics under same filter
+- id: archive-control
+  description: Original-window affine systems, kernels and target certificates reproduce
+    A4.
+  kind: measured
+  value: true
+  unit: boolean
+  sample:
+    n: 4
+    unit: original-window curve streams
+    dependence: Identical deterministic inputs from A4.
+  uncertainty: Exact saved-record equality; not a wall-clock benchmark.
+  evidence:
+  - artifact: analysis
+    selector: /archived_a4_window_control
+controls:
+- id: original-window
+  description: Historical deterministic collector and algebra replay.
+  observation_ids:
+  - archive-control
+  - full-prefix-ranks
+  matching: Exact curves, atoms, old projection, public source order and fixed target
+    rows.
+  limitations:
+  - These are observed fixtures and targets, not fresh holdouts.
+patterns: []
+limitations:
+- No new curve or target selection; conditional finite follow-up.
+- Bounded t1..64nonmatches exclude only registered collisions.
+- Source construction is aggregated acrossarms; Fp/Fr/group/logicalcosts overlap,
+  no complete weightedS.
+missing: []
+next_checks:
+- question: Does source-span and functional recovery transfer to fresh curves/targets?
+  method: Freeze a new holdout panel before generation; separate source-construction
+    meters perarm.
+  control: Same bases/projection policy/querycounts and retained explicit anchors
+    within each new fixture.
+  status: proposed
+artifacts:
+- id: analysis
+  path: research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9/analysis.json
+  commit: 2bdc2ce44dcf6c9f5d24412f1cda6014c9444c3b
+  sha256: d07d31c407f4fc271215ffd65417ab1a590d18b479bc55a9c7547806bb6f3029
+- id: execution
+  path: research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9/execution.json
+  commit: 2bdc2ce44dcf6c9f5d24412f1cda6014c9444c3b
+  sha256: 91a1ea47f92b566deef343578ece0f2d1593ce887871de0bf6a7f364581722ff
+- id: raw0
+  path: research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9/raw/p65537-i0.json.gz
+  commit: 2bdc2ce44dcf6c9f5d24412f1cda6014c9444c3b
+  sha256: c58158ceb855cd16cf0d94cfdf75bb934e565034aa3281e26532e5eb784496af
+- id: raw1
+  path: research/prime_field_a5_execution_20261104/runs/a5-source-control-c0c8a9/raw/p65537-i1.json.gz
+  commit: 2bdc2ce44dcf6c9f5d24412f1cda6014c9444c3b
+  sha256: 6bb54bbc038b95b6105db33904c8853a72ff1ef3c2773edb7be9fd78104be209

@@ -119,6 +119,148 @@ def budget_violations(policy: dict | None = None) -> list[tuple[str, str, object
     return out
 
 
+def _idea_area_index(repo: Path) -> dict[str, str]:
+    """Resolve date-keyed IDEA ids through their question ids."""
+    questions = _rq_area_index(repo)
+    out: dict[str, str] = {}
+    for path in _proposal_paths(repo):
+        try:
+            doc = fast_yaml.safe_load(Path(path).read_text(encoding="utf-8")) or {}
+            idea = doc.get("idea") or doc
+        except Exception:
+            continue
+        if not isinstance(idea, dict) or not idea.get("id"):
+            continue
+        qid = str(idea.get("question_id") or "")
+        area = questions.get(qid) or area_of(qid)
+        if area:
+            out[str(idea["id"])] = area
+    return out
+
+
+def process_budget_violations(policy: dict | None = None, *, repo: Path = REPO,
+                              extra_receipts: list[dict] | None = None) -> list[dict]:
+    """Return post-cutover ECC design-rate violations from session receipts.
+
+    Runs and evidence are intentionally not counted. The campaign remains
+    unlimited; this only prevents a single automated session/day from minting
+    another template-record flood faster than humans and executors can absorb.
+    """
+    pol = policy if policy is not None else load_policy(
+        repo / "orchestration" / "research-priority.yaml")
+    limits = pol.get("process_budget") or {}
+    effective = str(limits.get("effective_on") or "9999-12-31")
+    if not limits:
+        return []
+    receipts: list[dict] = []
+    for path in sorted((repo / "coordination/sessions/receipts").glob("*/SR-*.yaml")):
+        try:
+            row = fast_yaml.safe_load(path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if isinstance(row, dict):
+            receipts.append(row)
+    receipts.extend(extra_receipts or [])
+    ideas = _idea_area_index(repo)
+    ecc = ecc_areas(pol)
+
+    def counts(row: dict) -> tuple[set[str], set[str]]:
+        created = row.get("records_created") or {}
+        idea_ids = {str(x) for x in (created.get("IDEA") or [])
+                    if ideas.get(str(x)) in ecc}
+        experiment_ids = {str(x) for x in (created.get("EXP") or [])
+                          if is_ecc(str(x), pol)}
+        return idea_ids, experiment_ids
+
+    violations: list[dict] = []
+    by_day: dict[str, dict[str, set[str]]] = {}
+    for row in receipts:
+        day = str(row.get("recorded_at") or "")[:10]
+        if day < effective:
+            continue
+        idea_ids, experiment_ids = counts(row)
+        rid = str(row.get("id") or "unknown receipt")
+        for kind, ids, key in (
+                ("ideas", idea_ids, "max_new_ecc_ideas_per_session"),
+                ("experiments", experiment_ids,
+                 "max_new_ecc_experiments_per_session")):
+            limit = limits.get(key)
+            if isinstance(limit, int) and len(ids) > limit:
+                violations.append({"scope": "session", "receipt_ids": [rid],
+                                   "day": day, "kind": kind, "count": len(ids),
+                                   "limit": limit, "record_ids": sorted(ids)})
+        bucket = by_day.setdefault(day, {"ideas": set(), "experiments": set(),
+                                         "receipts": set()})
+        bucket["ideas"].update(idea_ids)
+        bucket["experiments"].update(experiment_ids)
+        if idea_ids or experiment_ids:
+            bucket["receipts"].add(rid)
+    for day, bucket in sorted(by_day.items()):
+        for kind, key in (("ideas", "max_new_ecc_ideas_per_utc_day"),
+                          ("experiments", "max_new_ecc_experiments_per_utc_day")):
+            limit = limits.get(key)
+            ids = bucket[kind]
+            if isinstance(limit, int) and len(ids) > limit:
+                violations.append({"scope": "utc_day",
+                                   "receipt_ids": sorted(bucket["receipts"]),
+                                   "day": day, "kind": kind, "count": len(ids),
+                                   "limit": limit, "record_ids": sorted(ids)})
+    return violations
+
+
+def process_budget_diff_violations(base_ref: str, policy: dict | None = None,
+                                   *, repo: Path = REPO) -> list[dict]:
+    """Enforce the per-session ceiling on added records even with no receipt."""
+    pol = policy if policy is not None else load_policy(
+        repo / "orchestration" / "research-priority.yaml")
+    limits = pol.get("process_budget") or {}
+    if not base_ref or not limits:
+        return []
+    result = subprocess.run(
+        ["git", "-C", str(repo), "diff", "--name-only", "--diff-filter=A", "-z",
+         base_ref, "HEAD", "--", "ledger/proposals", "ledger/ideas", "experiments"],
+        capture_output=True, check=True)
+    paths = [os.fsdecode(raw) for raw in result.stdout.split(b"\0") if raw]
+    questions = _rq_area_index(repo)
+    ecc = ecc_areas(pol)
+    idea_ids: set[str] = set()
+    experiment_ids: set[str] = set()
+    for relative in paths:
+        path = repo / relative
+        if (relative.startswith(("ledger/proposals/", "ledger/ideas/"))
+                and relative.endswith((".yaml", ".yml"))):
+            try:
+                doc = fast_yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+                idea = doc.get("idea") or doc
+            except Exception:
+                continue
+            if not isinstance(idea, dict):
+                continue
+            qid = str(idea.get("question_id") or "")
+            if (questions.get(qid) or area_of(qid)) in ecc and idea.get("id"):
+                idea_ids.add(str(idea["id"]))
+        elif (relative.startswith("experiments/")
+              and relative.endswith("/specification.yaml")):
+            try:
+                doc = fast_yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+                experiment = doc.get("experiment") or doc
+            except Exception:
+                continue
+            exp_id = str(experiment.get("id") or "") if isinstance(experiment, dict) else ""
+            if is_ecc(exp_id, pol):
+                experiment_ids.add(exp_id)
+    violations = []
+    for kind, ids, key in (
+            ("ideas", idea_ids, "max_new_ecc_ideas_per_session"),
+            ("experiments", experiment_ids, "max_new_ecc_experiments_per_session")):
+        limit = limits.get(key)
+        if isinstance(limit, int) and len(ids) > limit:
+            violations.append({"scope": "change", "base_ref": base_ref,
+                               "kind": kind, "count": len(ids), "limit": limit,
+                               "record_ids": sorted(ids)})
+    return violations
+
+
 def _goal_files():
     base = REPO / "ledger" / "goals"
     return sorted(list(base.glob("*.yaml")) + list(base.glob("*/goal.yaml")))
@@ -548,6 +690,8 @@ def main(argv=None) -> int:
     ap.add_argument("--classify", nargs="+", metavar="ID")
     ap.add_argument("--open-ideas", action="store_true")
     ap.add_argument("--budget-violations", action="store_true")
+    ap.add_argument("--process-budget-violations", action="store_true")
+    ap.add_argument("--base-ref", help="also check newly added records against this git base")
     ap.add_argument("--area")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--json", action="store_true")
@@ -586,6 +730,22 @@ def main(argv=None) -> int:
             print(f"{len(v)} ECC goal budget violation(s) — ECC budgets must be null:")
             for gid, f, val, path in v:
                 print(f"  {gid:22s} {f} = {val!r}   ({path})")
+        return 1 if v else 0
+
+    if args.process_budget_violations:
+        v = process_budget_violations(pol)
+        if args.base_ref:
+            v.extend(process_budget_diff_violations(args.base_ref, pol))
+        if args.json:
+            print(json.dumps(v, indent=1, default=str))
+        elif not v:
+            print("OK: ECC campaign budget is unlimited; design-record process limits are respected.")
+        else:
+            print(f"{len(v)} ECC design-record process budget violation(s):")
+            for row in v:
+                sources = row.get("receipt_ids") or [f"base={row.get('base_ref')}"]
+                print(f"  {row.get('day', '-')} {row['scope']} {row['kind']}: "
+                      f"{row['count']} > {row['limit']} ({', '.join(sources)})")
         return 1 if v else 0
 
     if args.open_ideas:

@@ -1,0 +1,57 @@
+{
+  "handoff": {
+    "id": "TASK-20261101-6fd5e3",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Snapshot the fresh current-head workflow evidence and verify its gate before either reviewer",
+    "uncertainty_reduced": "Durable custody and exact current-head receipt/run binding before semantic review.",
+    "inputs": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/",
+      "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml",
+      "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan.yaml",
+      "docs/reports/2026-11-01-ic-arity-oracle-review/receipt-manifest.json",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "Zero formal builds/runs, workflow dispatches or scientific trials within this archive task.",
+      "Run alone after the verification operation; verify all captures and complete maps against its pinned published SHA, exact run ID/attempt and actual workflow step outcomes.",
+      "Archive all six sidecars, preserve failures and native artifact content bindings. Only a successful exact full formal gate and verified snapshot may open current-head-gate.json.",
+      "On any failure, archive actual failure evidence when possible but keep current-head-gate.json allows_reviewers=false; task terminal status alone cannot bypass the gate.",
+      "Commit/push/publication are future driving-session operations, not performed by authoring this card. No source/proof/EV/DEC/H changes or scientific promotion."
+    ],
+    "deliverables": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+    ],
+    "artifact_paths": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+    ],
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+    ],
+    "archived_by": "TASK-20261101-6fd5e3",
+    "inference": {
+      "policy": "coordinator-orchestration-code",
+      "reasoning_effort": "high",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "maximum_runs": 0,
+      "scientific_runs": 0,
+      "memory_gb": 4
+    },
+    "completion_gate": [
+      "Source task captures exact immutable current-head receipt and real workflow evidence; every required correctness/custody check passes, or record allows_reviewers=false.",
+      "Snapshot actual commit/parent/exact changed paths/SHA-256s verified, pushed and reviewable before either reviewer starts.",
+      "current-head-gate.json binds pinned source SHA, workflow run/attempt, receipt hash, complete map check and actual snapshot publication; allows_reviewers=true only when every gate is met.",
+      "No official scientific conclusion or status change.",
+      "This success-gating archive must not be marked completed unless current-head-gate.json has allows_reviewers=true and its exact source/run/custody checks pass; failed-capture archival needs an explicit additive route and never enables reviewers."
+    ],
+    "return_format": "Verified archive/gate paths and actual custody/provenance, or exact fail-closed impediment."
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "platform": "Linux-6.18.54-121.166.amzn2023.x86_64-x86_64-with-glibc2.34",
+  "rustc": "rustc 1.99.1 (58cf8f9c3 2026-10-13)",
+  "schema": "pext.software-check/v1",
+  "scope": "fixed F27 full join and n5 rank-one software controls; no scientific cohort",
+  "source_sha256": {
+    "experiments/EXP-PEXT-212d5c/implementation/cover_census_n7.rs": "0336e5c594fc7f27d56a27ed957e281af7e9af9d0b15df4797a12bf8e86d5251",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs": "393068c993f9ec610a334df059b8ae9c34da77c37763aa75d55f51a7827b64c4",
+    "experiments/EXP-PEXT-bf8f96/implementation/join_core.rs": "f7f3466455b9c773552b0bde9aac43a103e8c051a6c1dc453499b90e69cdeffe",
+    "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs": "029d27db98cfb839b8684af93cda91c522ade74d8a4dd330ffdfa75fb45d2639"
+  },
+  "steps": [
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs",
+        "-o",
+        "/tmp/pext-support-native-on4qyvis/quotient_core"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": ""
+    },
+    {
+      "command": [
+        "/tmp/pext-support-native-on4qyvis/quotient_core"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "\nrunning 9 tests\ntest implementation::tests::constant_twist_relations_are_retained ... ok\ntest implementation::tests::rejects_invalid_domains ... ok\ntest implementation::tests::structure_bounds_and_exact_scalar_transport ... ok\ntest implementation::tests::quotient_witnesses_and_projective_charts ... ok\ntest implementation::tests::support_geometry_validates_orbit_and_rank_one_n5 ... ok\ntest implementation::tests::extension_encoding_and_charts ... ok\ntest implementation::tests::curve_model_normalization_and_orbits ... ok\ntest implementation::tests::fixed_f27_support_geometry_matches_independent_relations ... ok\ntest implementation::tests::structure_unranking_matches_nested_reference ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s\n\n"
+    },
+    {
+      "command": [
+        "rustc",
+        "--edition=2021",
+        "--test",
+        "experiments/EXP-PEXT-bf8f96/implementation/join_certificate.rs",
+        "-o",
+        "/tmp/pext-support-native-on4qyvis/join_certificate"
+      ],
+      "exit_code": 0,
+      "stderr": "warning: unused imports: `Coset`, `CurveClass`, `Curve`, `FieldIdentity`, `ModelWitness`, `QuarticPoint`, and `SquareClasses`\n   --> experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs:605:34\n    |\n605 | pub use implementation::{Context,Curve,Point,QuarticPoint,Coset,FieldIdentity,SquareClasses,SupportGeometry,CurveClass,ModelWitness};\n    |                                  ^^^^^       ^^^^^^^^^^^^ ^^^^^ ^^^^^^^^^^^^^ ^^^^^^^^^^^^^                 ^^^^^^^^^^ ^^^^^^^^^^^^\n    |\n    = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default\n\nwarning: 1 warning emitted\n\n",
+      "stdout": ""
+    },
+    {
+      "command": [
+        "/tmp/pext-support-native-on4qyvis/join_certificate"
+      ],
+      "exit_code": 0,
+      "stderr": "",
+      "stdout": "\nrunning 11 tests\ntest quotient_core::implementation::tests::structure_bounds_and_exact_scalar_transport ... ok\ntest quotient_core::implementation::tests::rejects_invalid_domains ... ok\ntest quotient_core::implementation::tests::quotient_witnesses_and_projective_charts ... ok\ntest quotient_core::implementation::tests::constant_twist_relations_are_retained ... ok\ntest quotient_core::implementation::tests::support_geometry_validates_orbit_and_rank_one_n5 ... ok\ntest quotient_core::implementation::tests::extension_encoding_and_charts ... ok\ntest quotient_core::implementation::tests::curve_model_normalization_and_orbits ... ok\ntest tests::exact_ranges_and_rejection ... ok\ntest quotient_core::implementation::tests::fixed_f27_support_geometry_matches_independent_relations ... ok\ntest tests::exact_support_partition_and_shard_replay ... ok\ntest quotient_core::implementation::tests::structure_unranking_matches_nested_reference ... ok\n\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.15s\n\n"
+    }
+  ]
+}

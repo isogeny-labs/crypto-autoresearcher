@@ -1,0 +1,31 @@
+review_plan_addendum:
+  extends: review-plan.yaml
+  written_at: '2026-11-01T21:30:00Z'
+  written_after_review: true
+  reason: >-
+    The dispatched plan (review-plan.yaml, SHA-256 6a961e4ef250d90ec938e446e605606bbcd6e11f2c4a678980ed06501bb59818)
+    left blind_rederivation.blind_from empty, so tools/check_review_independence.py could not compare
+    the blind reviewer's declared reads against any protected source. The restriction itself was
+    stated before the review, in the handoff card TASK-20261101-6dcb20.yaml (constraints) and the
+    session prompt, which allowed only the card and blind-input.yaml before the derivation commit.
+    This addendum, filed after TASK-20261101-6dcb20 committed its report, lists those protected
+    sources so the check is mechanical. It only widens blind_from; it changes no joint, owner,
+    control or verdict, and it cannot make the blind reviewer's earlier reads compliant if they
+    were not.
+  blind_from_additions:
+    - formal/CryptoResearch/Nagao/Lemma4Witness.lean
+    - formal/CryptoResearch/Nagao/Lemma4Outside.lean
+    - formal/CryptoResearch/Nagao/RecoveryRule.lean
+    - formal/CryptoResearch/Nagao/Bridge.lean
+    - formal/CryptoResearch/Nagao/BridgeB.lean
+    - formal/targets/nagao-lemma4-inside-counterexample-20261029.yaml
+    - formal/targets/nagao-lemma4-outside-counterexample-20261031.yaml
+    - formal/targets/nagao-lemma4-recovery-rule-20261101.yaml
+    - formal/targets/nagao-lemma4-mvpolynomial-bridge-20261101.yaml
+    - formal/targets/nagao-lemma4-mvpolynomial-bridge-b-20261101.yaml
+    - knowledge/findings/KN-FIND-936151.md
+    - papers/first-fall-lean/paper.tex
+    - tools/lemma4_inside_form.py
+    - tools/test_lemma4_inside_form.py
+    - coordination/formal-reviews/BATCH-4c1c67/pre-review-plan.md
+    - coordination/formal-reviews/BATCH-4c1c67/review-plan.yaml

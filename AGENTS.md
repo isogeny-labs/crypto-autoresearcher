@@ -18,22 +18,25 @@ wins over a skill, a runtime file or a generated block.
 
 ## Observe first; interpret later
 
-Before planning or reporting research, read and follow the complete [observation-first rule](docs/agent-contract-extended.md#observe-first-interpret-later). Its observation, interpretation, ownership, performance-scope, and evidence requirements are binding; they supersede an improvement-only definition of research success.
+Lead with scoped results and checks, recognize component progress, and pursue
+the next technical step. Follow the
+[observation and communication rule](docs/agent-contract-extended.md#observe-first-interpret-later)
+for evidence, ownership, comparison scope, and the 2026-10-30 rule against
+repeated overall-goal verdicts.
 
 ## Name the obstruction
 
 When substantial research, cryptanalysis or audit work cannot meet a proof, implementation, experiment or validation requirement, create or update a linked problem record before repeating or handing off the blocked approach. The full [problem-record rule](docs/agent-contract-supplement.md#name-the-obstruction) is binding, including its evidence distinctions, exit criteria, next test and preservation of the original requirement. A problem record alone resolves nothing.
 
-## Budgets: progress first
+## Cloud budgets and GitHub custody
 
-Research cost estimates are advisory, may be null, and never need repeated user
-approval (user, 2026-09-06). Only a committed Coordinator stagnation review (≥
-90 days without documented progress; evidence, scope, a next action, an
-assessment from the last seven days) may cap spending. Memory/concurrency limits
-and justified process watchdogs protect the machine; they are not budget. Fixed
-sample counts, locked plans, write scopes, controls, immutable records,
-independent review and the Bedrock ban still bind.
-`docs/research-budget-policy.md`.
+Owner, 2026-11-01: EKS/IsoLab cost and CPU/RAM ceilings bind ECC too,
+superseding advisory/unlimited cloud spending. Commit and push experiment inputs
+before cloud builds/runs; verify GitHub publication. Budget all attempts and
+publish outcomes, including failures. Queue unaffordable work without changing
+frozen controls or bypassing caps. Follow
+[research budget policy](docs/research-budget-policy.md) for limits, custody and
+operational stops; scientific status and immutable records remain unchanged.
 
 ## Entry points
 
@@ -203,6 +206,7 @@ For assessments of hidden mathematical advantage, follow [the full rule](docs/ag
     request. No alternative means a terminal infrastructure stop, never
     permission. The adapter's offline guard enforces it; records carry no
     attestation field for it; historical receipts stay immutable.
+17. [Assume sabotage](docs/pcc.md).
 
 ## Research-direction integrity
 
@@ -243,26 +247,26 @@ changes no status.
 This is a scheduling rule and relaxes nothing: an impediment is never negative
 mathematical evidence (rule 5); an unservable `review-breakthrough`
 (`degradable: false`) leaves the claim un-promoted, never downgraded to
-`validator`. Routine estimates do not stop research: only the exceptional
-stagnation policy caps a budget, and a watchdog stop is not campaign
-exhaustion. Terminal retirement (`completed`, `closed_at_budget`,
+`validator`. Routine estimates do not stop research. Owner cloud limits and
+stagnation caps can stop spending; a watchdog stop is not campaign exhaustion.
+Terminal retirement (`completed`, `closed_at_budget`,
 `cancelled`) is a deliberate Coordinator act with a committed decision. A goal
 that can never be parked always looks runnable: never dispatch a task you
 cannot rank ahead of doing nothing; report an impeded goal with its `recheck`
 and move on.
 
-## ECC comes first, and its budget is unlimited
+## ECC comes first within owner cloud limits
 
 User, 2026-09-04. The ECC area set is declared once in
 `orchestration/research-priority.yaml` and read via `tools/ecc_priority.py`
 (`--list-areas`, `--classify`, `--open-ideas`, `--budget-violations`); never
 infer it from an id prefix.
 
-1. **Unlimited budget.** Active and draft ECC goals have
+1. **Open scientific campaign horizon.** Active and draft ECC goals retain
    `campaign_budget.maximum_batches: null` and
    `total_wall_clock_seconds: null` (validated). `max_concurrent` stays
-   bounded: machine headroom. Unlimited removes the batch ceiling, not the
-   duty to rank: never dispatch a task you cannot rank ahead of doing nothing.
+   bounded. Null campaign fields waive no cloud ceiling. Never dispatch
+   a task you cannot rank ahead of doing nothing.
 2. **ECC first, always.** Every selection point considers ECC goals first; a
    non-ECC goal is worked only when no ECC goal offers a ranked, justified
    task. Priority orders the queue, manufactures no work, and lowers no
@@ -271,14 +275,16 @@ infer it from an id prefix.
 3. **Open ECC ideas are designed, not shelved.** An open idea is `proposed`
    with no hypothesis or experiment citing it; `/design-experiment` makes it a
    hypothesis and a frozen contract at `approved_by: null` until a committed
-   Coordinator decision approves it under the standing authorization.
+   Coordinator decision approves it under the standing authorization. From
+   2026-11-01, an ECDLP idea names its lead-atlas row and exact next-action or
+   obstruction delta; citation alone is not progress.
 
 ### Approval is bounded by execution
 
-The approved-unrun capacity cap from 2026-10-07 is removed by user direction
-(2026-10-11). `tools/portfolio_kpis.py` reports the backlog for prioritization;
-neither its count nor `--capacity` blocks design or approval. An open ECC idea
-is ranked and designed when its protocol can be completed. Approval requires:
+ECC has no fixed campaign batch ceiling; owner cloud limits bind each launch.
+The old backlog cap stays removed. From
+2026-11-01, design-record rates follow `orchestration/research-priority.yaml`.
+The guard defers unfiled designs, never science. Approval requires:
 
 - **Runnable.** Before approval, require `python3
   tools/experiment_preapproval.py --packet <PACKET.json>` to report
@@ -362,10 +368,9 @@ not one). Reviewers report on their joints and the Coordinator composes;
 
 ## Concurrency: many agents, many worktrees
 
-- **Generated artifacts are never committed**: `knowledge/INDEX.md`,
-  `coordination/**/dispatch_plan.*` and `ledger/.index/` are gitignored and
-  rebuilt on demand; only `main-health.yml` writes the committed
-  `coordination/portfolio_health/latest.json`.
+- **Generated artifacts**: `knowledge/INDEX.md`, `coordination/**/dispatch_plan.*`,
+  and `ledger/.index/` are gitignored. `main-health.yml` archives its cache;
+  checked-in `coordination/portfolio_health/latest.json` is historical pending review.
 - **`main` takes merge commits only** (repository setting; never squash or
   rebase): archive receipts bind branch shas, which a squash orphans
   (`CORR-20260802-a1f151`).
@@ -541,12 +546,11 @@ On Cursor Cloud, follow the binding [environment instructions](docs/agent-contra
 ## Progress metrics (daily lab report)
 
 ## Resume checkpoints in S3 before every run
-A session can end at any moment (token or usage limits, a crash, a reclaimed
-container), and a worktree that only it knew about is then lost. So **before
-any experiment run starts, the leads, the spec and everything needed to
+A session can end at any moment and a worktree only it knew about is then
+lost. So **before any experiment run starts, the leads, the spec and everything needed to
 resume the effort are checked into S3**, and kept current while it runs.
 - `scripts/checkpoint.sh init` writes `.resume/RESUME.md` (gitignored). Fill
-  every section for a reader who has none of this conversation: goal, the
+  every section for a reader without this conversation: goal, the
   lead or hypothesis and where it came from, the spec or protocol path with
   frozen inputs, the current state with measured numbers and where raw output
   lives, next steps with exact commands, every run in flight (command, host,
@@ -568,22 +572,29 @@ resume the effort are checked into S3**, and kept current while it runs.
   that is not an experiment run may opt out with `CHECKPOINT_SKIP=<reason>`.
   **Other runtimes (Codex)** run `scripts/checkpoint.sh gate` before
   launching and do not launch if it fails.
-- Claude Code sessions have no AWS credentials, so the script works from a
-  token (tried first; an AWS profile is only a fallback). The token is a
-  presigned POST policy that can only write under `checkpoints/`, plus a
-  presigned link to an index of recent checkpoints, so push, `list`, `share`
-  and `restore` all work without credentials. A job on the owner's Mac
-  re-mints it every 15 minutes (7-day lifetime) into
-  `~/.config/checkpoint/upload-token`, where the script finds it; a session
-  elsewhere is given it as `CHECKPOINT_UPLOAD_TOKEN`. The bucket host is in
-  this repo's sandbox network allowlist (`.claude/settings.json`). It is a bearer credential: never
-  commit it or put it in a PR, report or task card.
+- Sessions without AWS credentials use the presigned upload token
+  (`CHECKPOINT_UPLOAD_TOKEN` or `~/.config/checkpoint/upload-token`; details in
+  the script header). It is a bearer credential: never commit it or put it in
+  a PR, report or task card.
 - To resume: `scripts/checkpoint.sh list` shows the latest checkpoint per
-  branch (from the index, up to 15 minutes behind);
-  `scripts/checkpoint.sh restore <repo>/<branch>[/<stamp>]` rebuilds the
-  worktree next to this checkout and puts `RESUME.md` in it. `share` prints a
-  presigned URL that `restore <url>` accepts anywhere.
+  branch; `restore <repo>/<branch>[/<stamp>]` rebuilds the worktree with
+  `RESUME.md` in it; `share` prints a presigned URL that `restore` accepts.
 A checkpoint is a safety net, not the record: the spec, protocol and results
 still land in a PR under the rules above. Switching runtimes:
 [docs/runtime-relay.md](docs/runtime-relay.md).
 When changing tracked results, follow the binding [daily progress-metrics rule](docs/agent-contract-supplement.md#progress-metrics-daily-lab-report): extend the exporter in the same PR, retain stable metric ids and emit only measured, committed values.
+
+## Benchmark records: data in S3, metadata in Git, one progress report
+
+Owner's rule, 2026-11-04; mechanics and the unit table in
+[docs/benchmark-records.md](docs/benchmark-records.md). Every benchmark run
+leaves a write-once `bench.record/v1` record (`tools/benchrec.py`,
+`docs/benchmarks/records/`) in the same PR: commit, host, command, raw files
+by SHA-256 and S3 location, metrics in the shared units only. The progress
+report (`docs/benchmarks/progress/`) is regenerated from the records and
+always states gain vs first and vs previous record in percent within one
+series, and value over matched reference, headline unit `S`. Enforced: the
+Claude Code hook refuses unrecorded benchmark launchers and pushes
+(`BENCHREC_SKIP=<reason>` for non-benchmarks), other runtimes run
+`tools/benchrec.py gate` before pushing, and the `bench-records` check fails
+the PR.

@@ -1,0 +1,73 @@
+{
+  "handoff": {
+    "id": "TASK-20261101-caeb64",
+    "from": "coordinator",
+    "to": "executor",
+    "objective": "Run one additive infrastructure-recovery verification work unit with a distinct immutable receipt and a 3600-second build timeout",
+    "uncertainty_reduced": "Whether the exact source packet that timed out during the full 1800-second lake build passes the same pinned formal verifier when given one bounded longer infrastructure window.",
+    "inputs": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/review-plan-addendum-01-verification-timeout-recovery.yaml",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/claims/TASK-20261101-f6477d.1.release.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-5de665/archives/TASK-20261101-c8df5e/snapshot-receipt.json",
+      "formal/targets/corrections/2026-11-01-ic-arity-oracle-complete-real-model.md",
+      "formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml",
+      "formal/CryptoResearch/IC/ArityOracleCompleteRealModel.lean",
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/source-note.md",
+      "formal/lean-toolchain",
+      "formal/lake-manifest.json",
+      "formal/lakefile.toml",
+      "orchestration/formal/cli.py",
+      "orchestration/formal/receipts.py",
+      "tools/formal_task.py",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "The original TASK-20261101-f6477d receipt at docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101.json is immutable, has SHA-256 eb8c230575ee2308536d7147cc82470bafeb93c7b42120aa41404a301eb76a9e, verification=null and TimeoutExpired during full lake build at 1800 seconds. It is infrastructure provenance only, not proof evidence; do not edit, overwrite, relabel, delete or rerun that task.",
+      "Run only after this recovery addendum/queue/handoff is committed, pushed and reviewable. The immutable mathematical source custody is source snapshot commit 68001c097fc57fcc4bf4ef4899dee8577760473a; require exact spec SHA-256 e92ff4622a6d0a7b57b319780b8253f7c23f30b46ffc2b9517f24f861040fc86 and theorem-source SHA-256 6de9feca6adefdbb82c867c1740c93ad62aa897f70ff267920f74681e93b5d64 before and after verification.",
+      "The formal CLI records provenance.source_commit as the invocation checkout HEAD, which will include this additive recovery packet and therefore need not equal source snapshot commit 68001c097fc57fcc4bf4ef4899dee8577760473a. Record both values distinctly. Accept the invocation HEAD only if the source snapshot is its ancestor or otherwise exact byte custody is independently established and every frozen source/spec hash matches; never misstate invocation HEAD as the source-production commit.",
+      "Execute exactly one fresh CLI work unit through /run TASK-20261101-caeb64: python3 -m orchestration.formal.cli verify --task-file formal/targets/ic-arity-oracle-complete-real-model-20261101.yaml --artifact-out docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json --build-timeout 3600.",
+      "The retry receipt path must not preexist. No retry, rerun, timeout extension, hosted workflow, local substitute, source/proof/spec/note/toolchain/dependency/verifier edit, MathCode generation or scientific trial is authorized under this task.",
+      "Preserve every actual outcome. Require exact task/spec/source/toolchain/manifest hashes, complete workspace/verifier maps, theorem_file CryptoResearch/IC/ArityOracleCompleteRealModel.lean, theorem_name CryptoResearch.IC.ArityOracleCompleteRealModel.complete_real_model, nonempty named target audit, full build, forbidden-construct scan and transitive axiom audit.",
+      "A machine_verified retry remains semantic_review required/pending and cannot open review until the dedicated recovery snapshot is committed, published and natively verified. Any timeout/failure remains infrastructure/proof-obligation provenance and requires a new Coordinator act; it is never negative mathematical evidence."
+    ],
+    "deliverables": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+    ],
+    "artifact_paths": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+    ],
+    "write_scope": [
+      "docs/reports/2026-11-01-ic-arity-oracle-complete-real-model/receipts/ic-arity-oracle-complete-real-model-20261101-recovery-01.json"
+    ],
+    "archived_by": "TASK-20261101-48eac4",
+    "inference": {
+      "policy": "executor-implementation",
+      "reasoning_effort": "medium",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "wall_clock_seconds": 7200,
+      "memory_gb": 8,
+      "maximum_runs": 1,
+      "scientific_runs": 0
+    },
+    "completion_gate": [
+      "Exactly one distinct immutable formal_verification.v1 retry receipt records actual invocation HEAD, exact frozen source/spec/toolchain/manifest hashes, complete maps, Lean version, build/audit logs and any infrastructure failure.",
+      "The retry receipt preserves the distinction between invocation provenance.source_commit and source custody at 68001c097fc57fcc4bf4ef4899dee8577760473a; exact spec/theorem hashes must remain e92ff4622a6d0a7b57b319780b8253f7c23f30b46ffc2b9517f24f861040fc86 and 6de9feca6adefdbb82c867c1740c93ad62aa897f70ff267920f74681e93b5d64.",
+      "Success requires machine_verified=true for the exact aggregate theorem, full build and axiom audit passed, no forbidden construct and semantic_review pending. Otherwise the task is not completed and no semantic conclusion follows.",
+      "Actual executor runtime/model/effort, exactly one work unit and zero scientific runs are reported."
+    ],
+    "return_format": "Distinct retry receipt path/hash, invocation HEAD versus source-custody binding, exact target/build/axiom status and any infrastructure or proof obstruction; no semantic verdict.",
+    "execution_route": {
+      "kind": "formal_verify_infrastructure_recovery",
+      "public_invocation": "/run TASK-20261101-caeb64",
+      "maximum_verifications": 1,
+      "build_timeout_seconds": 3600
+    }
+  }
+}
+

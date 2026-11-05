@@ -1,0 +1,744 @@
+{
+  "schema": "prime-full-chart-composition-fixed-software/v1",
+  "recorded_at": "2026-11-01T17:58:44.981520+00:00",
+  "status": "prospective fixed contract; published admission, native ownership and checkpoint required",
+  "scope": "Complete symbolic chart composition and fixed witness/certificate fidelity; complete SAT model comparison remains a separate required stage",
+  "dependency_contract": {
+    "path": "coordination/prime_sat_rationality_software_20261031/fixed-software-contract.json",
+    "sha256": "9ba28b373343131074f66e60408b92eb13112dec7c62f785f59dce2b2299fbf2"
+  },
+  "candidate_arms": [
+    "uniform_nilpotent_square",
+    "stratified_slack_with_nilpotent_zero_B",
+    "stratified_guard_with_nilpotent_zero_B"
+  ],
+  "public_strata": [
+    "zero",
+    "constant",
+    "linear"
+  ],
+  "chart_fixtures": [
+    {
+      "id": "identity_zero",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [],
+      "target": null,
+      "expected": "valid all-identity"
+    },
+    {
+      "id": "finite_zero_impossible",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [],
+      "target": [
+        0,
+        1
+      ],
+      "expected": "reject nonrelation/impossible chart"
+    },
+    {
+      "id": "finite_one",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ]
+      ],
+      "target": [
+        0,
+        1
+      ],
+      "expected": "valid d2 B=0"
+    },
+    {
+      "id": "identity_one_impossible",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ]
+      ],
+      "target": null,
+      "expected": "reject exact pole1"
+    },
+    {
+      "id": "finite_two_repeat",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "target": [
+        0,
+        4
+      ],
+      "expected": "valid tangent"
+    },
+    {
+      "id": "identity_two_inverse",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ]
+      ],
+      "target": null,
+      "expected": "valid inverse pair/B=0"
+    },
+    {
+      "id": "finite_three_common",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ]
+      ],
+      "target": [
+        0,
+        1
+      ],
+      "expected": "valid common A/B root and target overlap"
+    },
+    {
+      "id": "identity_three",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "target": null,
+      "expected": "valid exact pole3"
+    },
+    {
+      "id": "finite_four",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "target": [
+        0,
+        1
+      ],
+      "expected": "valid exact pole5"
+    },
+    {
+      "id": "identity_four",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          4
+        ]
+      ],
+      "target": null,
+      "expected": "valid exact pole4"
+    },
+    {
+      "id": "finite_five_characteristic5",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 0,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "target": [
+        0,
+        4
+      ],
+      "expected": "valid U=X^5; A=X^3+2,B=3; no factorial inverse/trace-rank alias"
+    },
+    {
+      "id": "identity_five_two_torsion",
+      "p": 7,
+      "a": 0,
+      "b": 1,
+      "t": 0,
+      "s": 2,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "target": null,
+      "expected": "valid h=(X-3)(y-1), U=X^3(X-3)^2"
+    },
+    {
+      "id": "wrapped_five_balanced",
+      "p": 5,
+      "a": 1,
+      "b": 1,
+      "t": 4,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "target": [
+        0,
+        1
+      ],
+      "expected": "valid wrapped support, B=0, A=X^2(X-4), signed target subtraction"
+    },
+    {
+      "id": "target_outside_interval",
+      "p": 5,
+      "a": 1,
+      "b": 1,
+      "t": 0,
+      "s": 1,
+      "points": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "target": [
+        4,
+        2
+      ],
+      "expected": "valid U=X^2, A=2X+4,B=1; norm support must add r=4 outside interval"
+    },
+    {
+      "id": "finite_two_torsion",
+      "p": 7,
+      "a": 0,
+      "b": 1,
+      "t": 3,
+      "s": 0,
+      "points": [
+        [
+          3,
+          0
+        ]
+      ],
+      "target": [
+        3,
+        0
+      ],
+      "expected": "valid h=X-3, norm multiplicity2 and one signed target subtraction"
+    }
+  ],
+  "nilpotent_fixtures": [
+    {
+      "id": "empty",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "U": [
+        1
+      ],
+      "C": [],
+      "valid": true
+    },
+    {
+      "id": "simple_square",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "U": [
+        0,
+        1
+      ],
+      "C": [
+        1
+      ],
+      "valid": true
+    },
+    {
+      "id": "repeated_branch",
+      "p": 5,
+      "a": 1,
+      "b": 0,
+      "U": [
+        0,
+        0,
+        1
+      ],
+      "C": [
+        0
+      ],
+      "valid": true,
+      "control": "Exact square congruence wrongly rejects; nilpotence accepts"
+    },
+    {
+      "id": "nonsquare",
+      "p": 5,
+      "a": 1,
+      "b": 1,
+      "U": [
+        4,
+        1
+      ],
+      "C": [
+        0
+      ],
+      "valid": false
+    },
+    {
+      "id": "multiplicity_characteristic",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "U": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "C": [
+        1
+      ],
+      "valid": true
+    },
+    {
+      "id": "wrapped_roots",
+      "p": 5,
+      "a": 1,
+      "b": 1,
+      "U": [
+        0,
+        1,
+        1
+      ],
+      "C": [
+        1,
+        4
+      ],
+      "valid": true
+    },
+    {
+      "id": "corrupt_square",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "U": [
+        0,
+        1
+      ],
+      "C": [
+        2
+      ],
+      "valid": false
+    },
+    {
+      "id": "repeated_nonbranch",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "U": [
+        0,
+        0,
+        1
+      ],
+      "C": [
+        1,
+        1
+      ],
+      "valid": true
+    }
+  ],
+  "guard_fixtures": [
+    {
+      "id": "coprime_nonsquare_irrelevant",
+      "p": 5,
+      "c": 2,
+      "F": 3,
+      "e": 0,
+      "u": 3,
+      "beta": 0,
+      "valid": true
+    },
+    {
+      "id": "common_zero",
+      "p": 5,
+      "c": 0,
+      "F": 0,
+      "e": 1,
+      "u": 0,
+      "beta": 0,
+      "valid": true
+    },
+    {
+      "id": "common_square_positive",
+      "p": 5,
+      "c": 0,
+      "F": 1,
+      "e": 1,
+      "u": 0,
+      "beta": 1,
+      "valid": true
+    },
+    {
+      "id": "common_square_negative",
+      "p": 5,
+      "c": 0,
+      "F": 1,
+      "e": 1,
+      "u": 0,
+      "beta": 4,
+      "valid": true
+    },
+    {
+      "id": "common_nonsquare_invalid",
+      "p": 5,
+      "c": 0,
+      "F": 3,
+      "e": 1,
+      "u": 0,
+      "beta": 1,
+      "valid": false
+    },
+    {
+      "id": "wrong_guard",
+      "p": 5,
+      "c": 0,
+      "F": 1,
+      "e": 0,
+      "u": 0,
+      "beta": 1,
+      "valid": false
+    },
+    {
+      "id": "free_inverse_removed",
+      "p": 5,
+      "c": 0,
+      "F": 1,
+      "e": 1,
+      "u": 1,
+      "beta": 1,
+      "valid": false
+    },
+    {
+      "id": "free_beta_removed",
+      "p": 5,
+      "c": 2,
+      "F": 3,
+      "e": 0,
+      "u": 3,
+      "beta": 1,
+      "valid": false
+    }
+  ],
+  "signed_recovery_regressions": [
+    {
+      "id": "F1_unbalanced_common_root",
+      "p": 5,
+      "a": 0,
+      "b": 1,
+      "target": "O",
+      "A": [
+        0,
+        4
+      ],
+      "B": [
+        0,
+        1
+      ],
+      "U": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "guard_beta_values": [
+        1,
+        4
+      ],
+      "expected_divisor": [
+        {
+          "point": [
+            0,
+            1
+          ],
+          "multiplicity": 4
+        },
+        {
+          "point": [
+            0,
+            4
+          ],
+          "multiplicity": 1
+        }
+      ],
+      "required_checks": [
+        "Both beta assignments satisfy guard equations.",
+        "Both project to identical normalized chart.",
+        "Both recover exactly the prescribed divisor through residual-ratio recovery.",
+        "Reject swapped multiplicities and any balanced multiplicity substitution."
+      ],
+      "execution_status": "not executed"
+    }
+  ],
+  "fixed_checks": [
+    {
+      "id": "public_descriptor",
+      "obligation": "Strict typed p,a,b,k,target,t,s,arm,stratum; nonsingular curve, prime p>3 caller premise, k0..5, on-curve target, 2^s<p. No source IR or witness values accepted as public mathematics."
+    },
+    {
+      "id": "canonical_source",
+      "obligation": "Build symbolic source from public descriptor alone. Byte-equivalent source for two different supplied assignments with same descriptor; retain all coefficient positions even when witnesses are zero."
+    },
+    {
+      "id": "normalization",
+      "obligation": "Use chart_spec basis and highest pole coefficient1; all lower A/B coefficients remain projected variables in basis order. No elimination of U in the base arm."
+    },
+    {
+      "id": "public_strata",
+      "obligation": "Zero: B0=B1=0; constant: B1=0 and B0*z=1; linear: B1*z=1. Apply these to symbolic normalized coefficients, with structurally absent coefficients equal0. Source construction cannot choose stratum from a witness. Union of all three public strata, without dropping impossible ones."
+    },
+    {
+      "id": "norm_and_sign",
+      "obligation": "All coefficients of A^2-fB^2-c*U or A^2-fB^2-c*(X-xT)*U; finite sign A(xT)-yT*B(xT). Verify sign by unchanged signed recovery, including two-torsion."
+    },
+    {
+      "id": "interval_idempotents",
+      "obligation": "For each j<s, degree<k e_j, quotient degree<=k-2, coefficient identity e_j^2-e_j=U*Q_j. k1 has no quotient coefficients."
+    },
+    {
+      "id": "interval_nilpotence",
+      "obligation": "N=X-t-sum(2^j*e_j) modU. Use exact chains k2:[2],k3:[2,3],k4:[2,4],k5:[2,4,5]; last product has remainder0. k1 enforces N=0. k0 has no quotient block. Never replace N^k=0 by N=0 for k>1."
+    },
+    {
+      "id": "interval_counts",
+      "obligation": "For k>=2 interval variables excluding U: s*(2k-1)+(ell-1)*(2k-1)+(k-1); equations (s+ell)*(2k-1), ell={2:1,3:2,4:2,5:3}. k1: s variables and s+1 equations. Independent static derivation, not measured cost."
+    },
+    {
+      "id": "rationality_arms",
+      "obligation": "All three candidate rationality arms; shared auxiliary U, shared symbolic A/B. Uniform uses nilpotent square for every stratum; stratified arms use nilpotent at zero B, inverse at constant B, declared guard/slack at linear B. Do not strengthen to exact square moduloU."
+    },
+    {
+      "id": "block_renaming",
+      "obligation": "Injective deterministic names, no aliases; reuse shared U and A/B by explicit substitution. Reject bool/int aliases, stale equations, reordered variables and wrong block metadata."
+    },
+    {
+      "id": "full_degree",
+      "obligation": "Every aggregate coefficient equation total degree<=2 before field-to-bit substitution. Independently evaluate monomials; include every modular quotient and intermediate remainder."
+    },
+    {
+      "id": "fixed_cohort",
+      "obligation": "All15 copied chart fixtures, including the two impossible cases; all candidate arms and public strata. For supplied valid witnesses, wrong-stratum assignment rejection is not an unsatisfiability proof."
+    },
+    {
+      "id": "special_charts",
+      "obligation": "All-identity k0,targetO has one empty coefficient projection; k0 finite and k1 targetO emit literal1=0. Preserve stratum convention: only zero stratum accepts identity, other strata explicitly impossible."
+    },
+    {
+      "id": "known_witness_roundtrip",
+      "obligation": "Checked original chart -> aggregate assignment -> independent field residuals -> authenticated bit equations -> decoded chart -> unchanged signed checker; compare exact signed multiplicities, not only group sums."
+    },
+    {
+      "id": "F1_regression",
+      "obligation": "Retain both beta signs of unbalanced common root; identical coefficient projection and signed divisor. Reject swapped or artificially balanced multiplicities."
+    },
+    {
+      "id": "nilpotent_and_guard_controls",
+      "obligation": "Retain all8 nilpotent fixtures and all8 guard fixtures as component regressions; include characteristic-sized multiplicity and repeated branch roots."
+    },
+    {
+      "id": "authentication",
+      "obligation": "Trusted whole-chart descriptor independently rebuilds aggregate arithmetic then derives generic range descriptor internally. Generic caller arithmetic alone does not authenticate chart semantics."
+    },
+    {
+      "id": "mutation_negatives",
+      "obligation": "Mutate norm, sign, sharedU, membership quotient, idempotents, power chain, rationality block, range data and projected coefficient. Reject late malformed data and descriptor/content mismatches."
+    },
+    {
+      "id": "costs",
+      "obligation": "Separate chart construction, source authentication, assignment construction, decoding, signed reconstruction and certificate checks. Count each executed phase including duplicated builds. Fixed successful counters do not cover failed workload costs."
+    },
+    {
+      "id": "projection_boundary",
+      "obligation": "Same normalized coefficient projection across the three rationality arms and strata. Preserve coordinate quartic/membership/lift comparison as separate same-coordinate projection cohort; cross-family comparison requires explicit common signed-output mapping with complete fibers."
+    },
+    {
+      "id": "certificate_preservation",
+      "obligation": "Unchanged compiler completion and full-cube adapter; preserve every supplied transcript record, status and missing-coverage rejection. No nonempty bootstrap CNF used as final proof."
+    },
+    {
+      "id": "custody",
+      "obligation": "Frozen source hashes, all suite attempts, exact command/environment/raw output/checkpoint, fresh independent source-aware review blind to producer tests/results."
+    }
+  ],
+  "maximum_suite_attempts": 4,
+  "reviewer_maximum_suite_attempts": 4,
+  "suite_watchdog_seconds": 240,
+  "memory_limit_bytes": 2147483648,
+  "scientific_runs": 0,
+  "solver_instances": 0,
+  "remote_jobs": 0,
+  "enumeration": "No field/coefficient/Boolean cube/projected model census; no SAT calls. Literal supplied fixtures only.",
+  "admission_requires": [
+    "Correction independent review and scoped decision",
+    "Complete source API and native task admission/ownership",
+    "Checkpoint before suites"
+  ],
+  "completion_does_not_establish": [
+    "full projected model equality",
+    "degree of regularity reduction",
+    "solver performance advantage"
+  ],
+  "source_api": "coordination/prime_sat_full_chart_composition_20261101/SOURCE-API.md",
+  "prerequisite_decision": "ledger/decisions/DEC-20261101-9feeb1.yaml"
+}

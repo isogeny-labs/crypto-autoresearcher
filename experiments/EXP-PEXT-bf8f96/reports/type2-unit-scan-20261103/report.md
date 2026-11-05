@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: Type2 scan over independently checked candidate units
+
+The [unit scanner](../../implementation/type2_unit_scan.py) consumes one candidate unit and its full independent geometry review. It requires every exceptional ordinal and matrix to have been independently checked. Type2’s length-six orbit contains a branch root in common with a Frobenius conjugate; the [instrument](../../implementation/type2_predicate.py) verifies that overlap for every positive signature. Therefore the exact independently certified generic complement cannot contain a Type2 signature, and the scanner visits only exceptional rows. It retains every signature ordinal, matrix, root witness and separate trace-zero Möbius result.
+
+Five related software tests pass. The new complete F27 scans of three `[2,2]` units return Type2 signature counts `6, 8, 6` and trace-zero-positive counts `2, 0, 2`, with all signature ordinals inside the independent exceptional set. Removing one geometry ordinal or lowering the independently checked count is refused. The tests verify the software boundary; no full scientific cohort was scanned.
+
+The full checker must persist these per-unit rows and digests in its frozen artifact inventory, and the analysis must cross-tab them by actual curve and T. Full-cohort Type2 runtime and storage remain prospective admission measurements. EXP-PEXT-bf8f96 remains `review_required` and unfrozen; no scientific cohort trial was launched.

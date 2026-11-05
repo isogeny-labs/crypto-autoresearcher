@@ -1,0 +1,37 @@
+schema: crypto.autoresearch.blind_algebra_problem.v1
+question: >-
+  Work over the field F_2. Use only the definitions below. Derive every answer
+  yourself and freeze your derivation and source-read list before you see any
+  Lean source, producer proof, finding, paper, receipt or sibling report.
+definitions:
+  fall: >-
+    For a finite list S = (s_1, ..., s_M) of polynomials in F_2[X_1..X_N] and an
+    integer D >= 1, a fall at degree D is a tuple (g_1, ..., g_M) of arbitrary
+    polynomials with (a) deg(g_i s_i) <= D for every i, with equality for at least
+    one i; (b) sum_i g_i s_i != 0; (c) deg(sum_i g_i s_i) < D.
+  first_fall_degree: d_F(S) is the least D >= 1 at which a fall exists.
+  reduction: >-
+    red(p) replaces every monomial X^a of p by X^{min(a,1)} coordinatewise and
+    sums over F_2 (reduction modulo the field equations X_i^2 + X_i).
+  fake_fall: >-
+    As fall, but with deg(red(g_i s_i)) in (a), red(sum_i g_i s_i) != 0 in (b),
+    and deg(red(sum_i g_i s_i)) in (c). Generators s_i with red(s_i) = 0 may be
+    given the zero cofactor.
+  fake_first_fall_degree: d'_F(S) is the least D >= 1 at which a fake fall exists.
+  field_equations: S_fe = (X_1^2 + X_1, ..., X_N^2 + X_N).
+systems:
+  A: {ring: "F_2[X, Y]", F: ["X^2 Y", "X Y + X"]}
+  B: {ring: "F_2[X_1, X_2, X_3]", F: ["X_1 X_2 + X_3", "X_1 X_3 + X_2"]}
+tasks:
+  - For A and for B, compute d_F(F) and d_F(F followed by S_fe), quantifying over all cofactors.
+  - For A and for B, compute d'_F(F) and d'_F(F followed by S_fe).
+  - >-
+    Prove or refute: if S = F followed by S_fe and (g_i) is a fake fall at degree v
+    for the generators in F such that every unreduced product satisfies
+    deg(g_i f_i) <= v, then S has a fall at degree v.
+  - State whether the inequality d_F <= d'_F holds for each system and placement.
+nearby_controls:
+  - >-
+    Replace condition (a) by "deg(g_i s_i) >= D for at least one i" and say what
+    happens to d_F and to the inequality.
+  - Drop the hypothesis deg(g_i f_i) <= v from the recovery statement and test it on system A.

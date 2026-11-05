@@ -1,0 +1,56 @@
+hypothesis:
+  id: H-PFDR-afc29a
+  area: PFDR
+  question_id: RQ-PFDR-ae2fba
+  source_proposal: IDEA-20261029-e4edce
+  proposal_id: IDEA-20261029-e4edce
+  title: Partial multigraded Macaulay layers instead of whole-degree expansion
+  status: specified
+  proposed_by: open-ideas design pass 2026-11-01
+  designed_by: opencode
+  created: '2026-11-01'
+  updated: '2026-11-01'
+  depends_on:
+  - IDEA-20261029-e4edce
+  - RQ-PFDR-ae2fba
+  statement: Partial Macaulay layers plus valid multigrading reduce measured algebraic
+    solving work on structured prime-field PDP without asserting lower intrinsic regularity.
+  mechanism: Multigrading restricts rows to the needed degrees; if the required source
+    rank assumptions hold, the selected submatrices stay smaller and the complete
+    solve is cheaper.
+  assumptions:
+  - User requests factor-base/SAT research; execution is not authorized here.
+  - Implicit membership is not an asserted escape from KN-OPEN-020.
+  predictions:
+  - metric: peak_matrix_entries_and_field_ops
+    direction: lower
+    minimum_effect: 2x fewer entries and 20% lower work
+  - metric: actual_solving_degree
+    direction: different
+    minimum_effect: reported, not asserted lower
+  - metric: unknown_rate
+    direction: different
+    minimum_effect: no increase against baseline
+  test_boundary:
+    instances:
+    - cells named in IDEA-20261029-e4edce and DESIGN.md
+    parameters:
+      instances: 6
+      replicates: 1
+      tests_in_family: 3
+    implementation: Not built. The design names the harness and cells; no implementation
+      is claimed ready.
+    budget:
+      preflight_seconds: 3600
+      backend: local
+  falsification_conditions:
+  - Required source rank assumptions fail and selected matrices reach full size before
+    success.
+  - Variable inflation or saturation at infinity removes the work benefit.
+  - Improvements disappear once selection, retries and root extraction are charged.
+  interpretation_limits:
+  - Proposal only; no experiment or improvement established.
+  - Prime-field scope; regularity, solving degree and work are distinct.
+  - Independent relation verification; incomplete means UNKNOWN.
+  - This is primarily a solver-work improvement candidate; a smaller submatrix is
+    not evidence that d_reg fell.

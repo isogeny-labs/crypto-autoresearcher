@@ -1,0 +1,112 @@
+review_attestation:
+  task_id: TASK-20261031-8a54e2
+  reviewer: independent Codex subagent /root/ncp_j2_commutator
+  recorded_at: '2026-11-01T03:58:31.332520+00:00'
+  joints_owned:
+  - J2_commutator_witness
+  verdict:
+    J2_commutator_witness: holds
+  verdict_scope: Source-level fidelity and independent arithmetic of the two companion witness declarations;
+    no whole-claim vote or fresh Lean validation.
+  producer_head: f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f
+  review_plan_head: 774a6a86f181740285ed9834a648b40fb9aa8ece
+  review_base: 4451a2bf8ff9d171442a10ca33997c58e7362a20
+  machine_status: infrastructure_error
+  fidelity: faithful_scoped
+  review_outcome: inconclusive
+  fresh_lean_check:
+    attempted: false
+    reason: Parent dispatch retains heavy-build ownership; no owned verifier allocation for this reviewer.
+      No local Lean/Lake or cloud job launched.
+    elaborated_types_obtained: false
+    transitive_axiom_audit_obtained: false
+    kernel_rechecker_obtained: false
+  subclaim_findings:
+  - claim: neg_translate_square_not_in_commutators
+    verdict: holds
+    evidence: Zero-generator augmentation is -1 and kills every algebra commutator.
+    machine: source inspection plus exact Python controls; no fresh Lean
+  - claim: neg_translate_square_in_action_kernel
+    verdict: holds
+    evidence: The affine reflection x -> -(x+s) squares to identity; its group-algebra basis image squares
+      to 1.
+    machine: source inspection plus exact Python controls; no fresh Lean
+  - claim: historical group algebra embeds into point-operator algebra
+    verdict: breaks
+    evidence: 'n=3: sum translations minus sum translated reflections is nonzero with six group-algebra
+      coefficients and has the zero 3x3 operator matrix.'
+    scope: Historical E2 target-identification sentence; companion target remains group algebra.
+  - claim: full historical J presentation extends to n=2
+    verdict: breaks
+    evidence: nu-1 is in the action kernel; t -> 1, nu -> -1 kills J and sends nu-1 to -2.
+    scope: Known-false extension already excluded by exact producer note.
+  sources_read:
+  - git:f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f:formal/CryptoResearch/NCP/CommutatorCompanion.lean
+  - git:f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f:formal/CryptoResearch/NCP/CommutatorIdeal.lean
+  - git:f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f:research/THM_COMMUTATOR_KERNEL1.md
+  - git:f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f:formal/targets/ncp-commutator-ideal-refutation.yaml
+  - git:f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f:formal/lean-toolchain
+  - git:f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f:formal/lakefile.toml
+  - git:f4330e1a29feb8fdea9f1eab7131ae5cde2e2b6f:formal/lake-manifest.json
+  - git:774a6a86f181740285ed9834a648b40fb9aa8ece:coordination/formal-reviews/ncp-pr2417-20261031/review_plan.yaml
+  - git:774a6a86f181740285ed9834a648b40fb9aa8ece:coordination/formal-reviews/ncp-pr2417-20261031/handoffs/TASK-20261031-8a54e2.yaml
+  - git:4451a2bf8ff9d171442a10ca33997c58e7362a20:AGENTS.md
+  - git:4451a2bf8ff9d171442a10ca33997c58e7362a20:docs/agent-contract-extended.md
+  - git:4451a2bf8ff9d171442a10ca33997c58e7362a20:docs/agent-contract-supplement.md
+  - git:4451a2bf8ff9d171442a10ca33997c58e7362a20:docs/lab-contract.md
+  - git:4451a2bf8ff9d171442a10ca33997c58e7362a20:tools/check_review_independence.py
+  - git:4451a2bf8ff9d171442a10ca33997c58e7362a20:orchestration/fast_yaml.py
+  - git:8b77d405e297f275a15cba425cdebb09fcc799c3:AGENTS.md
+  - git:8b77d405e297f275a15cba425cdebb09fcc799c3:tools/check_review_independence.py
+  - git-blob:ebd9503683c48ed84e0e6049f4dbe005a74e9e88
+  - /var/lib/spot-codex/home/skills/review-evidence/SKILL.md
+  - /var/lib/spot-codex/home/skills/review-evidence/references/lean-review.md
+  - /var/lib/spot-codex/home/skills/research-visuals/SKILL.md
+  - /var/lib/spot-codex/home/plugins/cache/openai-curated-remote/cloud-environment/0.1.2/skills/runtime/SKILL.md
+  - /var/lib/spot-codex/home/plugins/cache/openai-curated-remote/cloud-environment/0.1.2/skills/runtime/references/networking.md
+  - https://raw.githubusercontent.com/leanprover-community/mathlib4/cfc55fc58714a59dc06e6e79edc6d1d95140d3c2/Mathlib/GroupTheory/Perm/Basic.lean
+  - https://raw.githubusercontent.com/leanprover-community/mathlib4/cfc55fc58714a59dc06e6e79edc6d1d95140d3c2/Mathlib/Algebra/FreeAlgebra.lean
+  - https://raw.githubusercontent.com/leanprover-community/mathlib4/cfc55fc58714a59dc06e6e79edc6d1d95140d3c2/Mathlib/RingTheory/TwoSidedIdeal/Kernel.lean
+  - https://raw.githubusercontent.com/leanprover-community/mathlib4/cfc55fc58714a59dc06e6e79edc6d1d95140d3c2/Mathlib/Algebra/Group/End.lean
+  - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-8a54e2/raw/controls.py
+  - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-8a54e2/raw/controls_initial.py
+  - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-8a54e2/raw/controls.json
+  - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-8a54e2/raw/controls_initial.json
+  - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-8a54e2/review.md
+  - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-8a54e2/raw/report.tex
+  - coordination/formal-reviews/ncp-pr2417-20261031/reviews/TASK-20261031-8a54e2/raw/diagram.svg
+  - /proc/meminfo
+  - git:4451a2bf8ff9d171442a10ca33997c58e7362a20:tools/review_phase_seals.py
+  source_hash_manifest: raw/source_manifest.json
+  read_sibling_reports: false
+  sibling_report_paths_read: []
+  blind_rederivation_performed: false
+  blind_rederivation_compliance: The blind shortest-word task is assigned to TASK-20261031-f9c13a. J2
+    permits producer proof inspection; these calculations are independent arithmetic after source inspection
+    and are not claimed blind.
+  blind_from_respected: true
+  independence_limits:
+  - Producer proof text and the precommitted plan were read.
+  - No sibling review report or verdict was read.
+  - Pinned library sources were read, but dependency binaries and elaboration were not checked.
+  procedure_deviations:
+  - Fresh named-module Lean replay and transitive axiom audit remain unperformed under the parent execution-ownership
+    constraint.
+  - 'No whole-round independence pass is claimed: this reviewer supplies only its own attestation.'
+  controls:
+    script: raw/controls.py
+    output: raw/controls.json
+    receipt: raw/controls_receipt.json
+    status: passed
+    scientific_runs: 0
+  unresolved_bridges:
+  - Fresh exact-pin machine evidence for both named companion declarations.
+  - Historical free-group presentation and precise chronological-composition bridge.
+  - Definition of historical J and both inclusions for its full group-algebra kernel equality.
+  - Quotient basis or finite-rank injectivity with generation and sign-faithfulness hypotheses.
+  - Concrete cyclic-point identification if an elliptic-curve interpretation is claimed.
+  - Correct operator representation and its additional kernel; the historical claimed algebra embedding
+    is false.
+  archived_by: TASK-20261031-20ed91
+  scientific_status_changed: false
+  archive_parent: 514b3669bf20f6e094ead43b396bb0d802efab4e

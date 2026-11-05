@@ -1,0 +1,244 @@
+{
+  "schema": "prime-range-correction-source-snapshot/v1",
+  "recorded_at": "2026-11-01T07:07:47.974053+00:00",
+  "task_id": "TASK-20261101-cca9dd",
+  "source_task_id": "TASK-20261101-42aebb",
+  "source_commit": "9089fe463d90ea806818db9a8bc4f44b859243b4",
+  "producer_publication": {
+    "started_at": "2026-11-01T07:00:28.759827+00:00",
+    "steps": [
+      {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--name-only"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "fetch",
+          "origin",
+          "main"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "From https://github.com/aburan28/crypto-autoresearcher\n * branch                  main       -> FETCH_HEAD\n   bd073ea734..a4054418d3  main       -> origin/main\n"
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "origin/main"
+        ],
+        "returncode": 0,
+        "stdout": "a4054418d345c69df73be9381131298e4678cbd4\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-list",
+          "--left-right",
+          "--count",
+          "HEAD...origin/main"
+        ],
+        "returncode": 0,
+        "stdout": "3\t48\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "add",
+          "--",
+          "research/prime_sat_range_corrected_20261101/compiler.py",
+          "research/prime_sat_range_corrected_20261101/test_compiler.py",
+          "research/prime_sat_range_corrected_20261101/software-results.json",
+          "research/prime_sat_range_corrected_20261101/README.md"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "diff",
+          "--cached",
+          "--name-only"
+        ],
+        "returncode": 0,
+        "stdout": "research/prime_sat_range_corrected_20261101/README.md\nresearch/prime_sat_range_corrected_20261101/compiler.py\nresearch/prime_sat_range_corrected_20261101/software-results.json\nresearch/prime_sat_range_corrected_20261101/test_compiler.py\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/check_merge_hygiene.py",
+          "--base",
+          "origin/main"
+        ],
+        "returncode": 0,
+        "stdout": "PASS: no conflict markers, no unparseable records, no duplicate registry keys, no changed runbook-session files, no schema-failing new run manifests, no identifier collisions, no new legacy GOAL identifiers\n",
+        "stderr": "note: parseability scoped to 23 committed, staged, or tracked-worktree candidate path(s) vs origin/main; the absolute sweep runs on main\n"
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/check_run_immutability.py"
+        ],
+        "returncode": 0,
+        "stdout": "OK: no committed run artifacts were modified or deleted\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "commit",
+          "-m",
+          "research: TASK-20261101-42aebb corrected range compiler phase receipts and strict labels"
+        ],
+        "returncode": 0,
+        "stdout": "[codex/prime-range-corrected-20261101 9089fe463d] research: TASK-20261101-42aebb corrected range compiler phase receipts and strict labels\n Committer: EC2 Default User <ec2-user@ip-172-31-26-169.us-east-2.compute.internal>\nYour name and email address were configured automatically based\non your username and hostname. Please check that they are accurate.\nYou can suppress this message by setting them explicitly:\n\n    git config --global user.name \"Your Name\"\n    git config --global user.email you@example.com\n\nAfter doing this, you may fix the identity used for this commit with:\n\n    git commit --amend --reset-author\n\n 4 files changed, 772 insertions(+)\n create mode 100644 research/prime_sat_range_corrected_20261101/README.md\n create mode 100644 research/prime_sat_range_corrected_20261101/compiler.py\n create mode 100644 research/prime_sat_range_corrected_20261101/software-results.json\n create mode 100644 research/prime_sat_range_corrected_20261101/test_compiler.py\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "rev-parse",
+          "HEAD"
+        ],
+        "returncode": 0,
+        "stdout": "9089fe463d90ea806818db9a8bc4f44b859243b4\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "git",
+          "push"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "remote: This repository moved. Please use the new location:        \nremote:   https://github.com/isogeny-labs/crypto-autoresearcher.git        \nTo https://github.com/aburan28/crypto-autoresearcher.git\n   1372245993..9089fe463d  codex/prime-range-corrected-20261101 -> codex/prime-range-corrected-20261101\n"
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          "tools/goal_lanes.py",
+          "release",
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/dispatch_queue.json",
+          "TASK-20261101-42aebb",
+          "--as",
+          "executor-prime-range-correction",
+          "--expected-epoch",
+          "1",
+          "--outcome",
+          "completed",
+          "--note",
+          "Four producer outputs published with all fixed-suite attempts retained. Independent review pending; no SAT or scientific runs.",
+          "--publish"
+        ],
+        "returncode": 0,
+        "stdout": "  bound 4 artifact hash(es)\nreleased TASK-20261101-42aebb as completed -> coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/TASK-20261101-42aebb.1.release.json\npublished 3028f60756 and pushed\n",
+        "stderr": ""
+      },
+      {
+        "command": [
+          "/home/ec2-user/prime-sat-research-venv/bin/python",
+          ".resume/ready-claim-active-support.py",
+          "range-correction-snapshot",
+          "TASK-20261101-cca9dd",
+          "coordinator-prime-range-correction",
+          "prime-range-correction-snapshot-20261101"
+        ],
+        "returncode": 0,
+        "stdout": ".resume/active-support-range-correction-snapshot-ready.json\n.resume/active-support-range-correction-snapshot-claim.json\n",
+        "stderr": ""
+      }
+    ],
+    "hashes": {
+      "research/prime_sat_range_corrected_20261101/compiler.py": "8501e320de27169cebc35f678759b5e33a3d7c76c86dc4bb5caf329a2e12fdd7",
+      "research/prime_sat_range_corrected_20261101/test_compiler.py": "fd98e87609b19cf700facc69c02507a2b2da0b0afaa820c29d8192dc46519f9b",
+      "research/prime_sat_range_corrected_20261101/software-results.json": "3eb6a9ba0f66569d5c87b1cc956f53c7efb1ce3189cc894f971499f93bf94286",
+      "research/prime_sat_range_corrected_20261101/README.md": "c8e432eea79223713bec5771684c99584e092a983a1814026d6e1292325ddddb"
+    },
+    "claim_epoch": 1,
+    "assertions": 273,
+    "unrelated_dirty_hashes": {
+      "ledger/.index/experiments.jsonl": "9766ecc5baadeabc5584a130eeb8f352ee249efdc100ae6bf28a6ca9dc07e989",
+      "ledger/.index/hypotheses.jsonl": "be79cd480cfc429a5f95789d18738a7146c7e03a9de7456a17bed686c0a859f4",
+      "ledger/.index/proposals.jsonl": "adf24d9badf1b81d5ce8eff85ff597a73aeebe18eb2c49055b1453073a2816e9"
+    },
+    "active_command": [
+      "/home/ec2-user/prime-sat-research-venv/bin/python",
+      ".resume/ready-claim-active-support.py",
+      "range-correction-snapshot",
+      "TASK-20261101-cca9dd",
+      "coordinator-prime-range-correction",
+      "prime-range-correction-snapshot-20261101"
+    ],
+    "base_commit": "a4054418d345c69df73be9381131298e4678cbd4",
+    "base_relation": "3\t48",
+    "merge_outcome": "inspected divergence; no merge performed",
+    "source_commit": "9089fe463d90ea806818db9a8bc4f44b859243b4",
+    "completed": true
+  },
+  "snapshot_claim": {
+    "command": [
+      "/home/ec2-user/prime-sat-research-venv/bin/python",
+      "tools/goal_lanes.py",
+      "claim",
+      "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/dispatch_queue.json",
+      "TASK-20261101-cca9dd",
+      "--as",
+      "coordinator-prime-range-correction",
+      "--session",
+      "prime-range-correction-snapshot-20261101",
+      "--ttl-minutes",
+      "120",
+      "--publish"
+    ],
+    "started_at": "2026-11-01T07:06:05.535810+00:00",
+    "returncode": 0,
+    "stdout": "claimed TASK-20261101-cca9dd -> coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/TASK-20261101-cca9dd.1.claim.json\npublished e5378a4ca4 and pushed\n",
+    "stderr": "",
+    "ended_at": "2026-11-01T07:07:31.346509+00:00"
+  },
+  "source_sha256": {
+    "research/prime_sat_range_corrected_20261101/compiler.py": "8501e320de27169cebc35f678759b5e33a3d7c76c86dc4bb5caf329a2e12fdd7",
+    "research/prime_sat_range_corrected_20261101/test_compiler.py": "fd98e87609b19cf700facc69c02507a2b2da0b0afaa820c29d8192dc46519f9b",
+    "research/prime_sat_range_corrected_20261101/software-results.json": "3eb6a9ba0f66569d5c87b1cc956f53c7efb1ce3189cc894f971499f93bf94286",
+    "research/prime_sat_range_corrected_20261101/README.md": "c8e432eea79223713bec5771684c99584e092a983a1814026d6e1292325ddddb"
+  },
+  "metadata_sha256": {
+    "coordination/prime_sat_range_corrected_20261101/SOURCE-API.md": "a10779a0bbc11a9e803666fbdcd8d7207f3c3c1a23a64942c72d5f3d2b404e56",
+    "coordination/prime_sat_range_corrected_20261101/fixed-software-contract.json": "5cec7b99580718bb9d5f7cc01bb9973919d89ee8ab543e76aea87d095ea32e20",
+    "coordination/prime_sat_range_corrected_20261101/admission.yaml": "4a9681731c06705fc2f59ee817d35b482453b625da908841bd4ce366fafe1534",
+    "coordination/prime_sat_range_corrected_20261101/source-inputs.json": "385956ba5cbf87e8186dd1c59e3fe7e19ef1a70200e6516296c2075b053cc527",
+    "coordination/prime_sat_range_corrected_20261101/inference-amendment.yaml": "ec5094a499db03bb6379b8afaa849d98864663d1b0bc0b676e69265f3a496e5e",
+    "coordination/prime_sat_range_corrected_20261101/review-plan.yaml": "919401d3845489145a928e791fdc38edb96427945e3bf6e5d01c64b302df4e3c",
+    "coordination/prime_sat_range_corrected_20261101/reviewer-brief.md": "7f11eacc6a5219d70a277f0127ec7e282006f610afc83b65675776dd49fa913e",
+    "coordination/prime_sat_range_corrected_20261101/ROOT-INSTRUCTIONS.md": "3718585e2d9a58c332925c9d4d94c7c6609d5943e8f0f741fec33cfbbd335c97",
+    "coordination/prime_sat_range_corrected_20261101/id-checks.json": "4faf1de1a41f72dba9a5fb78ec5cb258585daa1c1062368a4052451a8d08723d",
+    "coordination/prime_sat_range_corrected_20261101/theory/range.md": "15ca8ff2c681ddc1befc0a1c92606e45f92e428b6b33739f684691cc85bd045b",
+    "coordination/prime_sat_range_corrected_20261101/theory/completion.md": "bc6df16657b4d9e98ededc3502d4b5a6b73a51187ea11450dc7dd721a5098747",
+    "coordination/prime_sat_range_corrected_20261101/fixtures/f7.json": "13dd6d778321d4d48ed86322fc801d312dc2cf532e091fbe9dbdf11833444cd0"
+  },
+  "base_commit_inspected": "a4054418d345c69df73be9381131298e4678cbd4",
+  "base_relation": "6\t48",
+  "merge_outcome": "merged fetched origin/main; producer and dependency hashes rechecked",
+  "pre_snapshot_head": "0b6ce07122087c363af466589760631395b0a43c",
+  "source_immutability": true,
+  "bound_inputs_unchanged": 16,
+  "independent_review": "pending; fixed producer suite is not independent acceptance",
+  "scientific_runs": 0,
+  "software_suite_attempts": 1,
+  "producer_assertions": 273,
+  "solver_invocations": 0,
+  "archive_binding": "Native exact content_at_commit union binds this receipt after commit; no self hash."
+}

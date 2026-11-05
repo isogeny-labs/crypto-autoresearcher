@@ -1,0 +1,32 @@
+handoff:
+  id: TASK-20261101-f62009
+  from: coordinator
+  to: coordinator
+  objective: Archive the pinned review inputs, independent reports, and scoped technical packet in write-once commits before PR delivery.
+  uncertainty_reduced: Whether each review artifact has one accountable archival task and a reachable source commit.
+  inputs:
+    - coordination/formal-reviews/semaev-frobenius-collapse-20261101/source-handoff.yaml
+    - coordination/formal-reviews/semaev-frobenius-collapse-20261101/blind-handoff.yaml
+  constraints:
+    - Stage only artifacts declared in this review directory.
+    - Record exact parent, committed paths, and SHA-256 digests in the archive receipt.
+    - Fetch and merge current main before final archival and PR publication.
+  deliverables:
+    - Snapshot commit for plan and handoffs.
+    - Ledger commit for reviewer reports and technical packet.
+    - Exact commit and artifact digest receipt.
+  artifact_paths:
+    - coordination/formal-reviews/semaev-frobenius-collapse-20261101/
+  archived_by: TASK-20261101-f62009
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: medium
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget: {}
+  completion_gate:
+    - Each declared input and reviewer report is committed and reachable from the PR head.
+    - Final packet states only the proved and independently reviewed scope.
+  return_format: Commit hashes, artifact digests, and PR link.

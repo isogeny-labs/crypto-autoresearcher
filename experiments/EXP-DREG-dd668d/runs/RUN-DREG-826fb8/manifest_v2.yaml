@@ -1,0 +1,155 @@
+run:
+  id: RUN-DREG-826fb8
+  experiment_id: EXP-DREG-dd668d
+  hypothesis_id: H-DREG-1d0e5d
+  question_id: RQ-DREG-d7b6d6
+  executed_by: executor
+  recorded_at: '2026-11-02'
+  schema_completion:
+    kind: additive_schema_completion
+    defect: 'The original manifest.yaml (published in PR #2963) uses a non-schema run layout (run_id,
+      no code/environment/inputs/timing/result envelope, certificate.kind outside the accepted vocabulary)
+      and its run directory had no raw-result.json. The schema-valid completion was pushed two minutes
+      after the merge, so it is published here as a superseding record.'
+    derived_from:
+      experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/manifest.yaml: f1b137b2eafe76e5d0534afc741e5422ad383613e0804a88f222340fd13b7408
+      experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/metrics.json: f3703ec5b7d9015936ceaf117231c4790bd617e2923f594655da009783281248
+      experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/certificates.json: 0a9b4dd01a793ff3aecb9b9f35918eb6dde06c212330587c978bd9503f1b4200
+      experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/environment.json: 5bc25ccbdc5c58e3cb448b4d2138d86bec00a305f742772d8b18d13c89b694ca
+      experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/command.txt: be2181ba5d39b637ed92d9672f172d60268758424391737e24b66e6b725eaf41
+      experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/stdout.log: 1d194a488287ab8b25a2522610079fcaa89c8f17a9c2a892b552544b0dcf8892
+      experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/run_protocol.py: e96a6ef775a8648dc17b0d3eacb4e46dfa89a5fe646f871ac5789fbf4ebb6454
+    notes: No trial was rerun. raw-result.json is a byte-identical copy of metrics.json (the program output),
+      added alongside; every original file is unchanged.
+  status: completed_valid
+  code:
+    commit: 5a8cecc8acae529af7007987841be92b1fc6afba
+    branch: claude/point-decomposition-literature-taddl7
+    dirty: false
+    dirty_ruling: git status --short was empty before the run; .resume/ is gitignored
+    command:
+    - python3
+    - -I
+    - experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/run_protocol.py
+    - experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8
+    command_source: command.txt (run from the run directory with $PWD as the argument; the independent
+      check is python3 -I independent_bruteforce_check.py)
+    files:
+    - path: experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/run_protocol.py
+      sha256: e96a6ef775a8648dc17b0d3eacb4e46dfa89a5fe646f871ac5789fbf4ebb6454
+    - path: experiments/EXP-DREG-dd668d/runs/RUN-DREG-826fb8/independent_bruteforce_check.py
+      sha256: c1226776282ee7a207efa1976a55d2ac3046aeaf586702487aa384756f68eba5
+  environment:
+    python: 3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]
+    platform: Linux-6.18.44-fc-v185-x86_64-with-glibc2.39
+    singular: "Singular for x86_64-Linux version 4.3.2 (4330, 64 bit) Apr  1 2024 04:44:00\nwith\n\tGMP(6.3.0),NTL(11.5.1),FLINT(3.0.1),\n\
+      \tomalloc,static readline(8),Plural,vspace(2),DBM,\n\tdynamic modules,OM_NDEBUG,SING_NDEBUG,\n\t\
+      CC:OPTIMIZE,GenericAdd,TableMult,no invTable,\n\teigenvalues,Gauss-Manin system,random=1793594442\n\
+      built-in modules: {}\nAC_CONFIGURE_ARGS =  '--build=x86_64-linux-gnu' '--prefix=/usr' '--includedir=${prefix}/include'\
+      \ '--mandir=${prefix}/share/man' '--infodir=${prefix}/share/info' '--sysconfdir=/etc' '--localstatedir=/var'\
+      \ '--disable-option-checking' '--disable-silent-rules' '--libdir=${prefix}/lib/x86_64-linux-gnu'\
+      \ '--runstatedir=/run' '--disable-maintainer-mode' '--disable-dependency-tracking' '--libexecdir=/usr/libexec/x86_64-linux-gnu'\
+      \ '--htmldir=/usr/share/doc/singular/html' '--with-libparse' '--enable-streamio' 'build_alias=x86_64-linux-gnu'\
+      \ 'CFLAGS=-g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=.\
+      \ -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security\
+      \ -fcf-protection -fdebug-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=/usr/src/singular-1:4.3.2-p10+ds-1.1build1'\
+      \ 'LDFLAGS=-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,-z,now' 'CPPFLAGS=-Wdate-time\
+      \ -D_FORTIFY_SOURCE=3' 'CXXFLAGS=-g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=.\
+      \ -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security\
+      \ -fcf-protection -fdebug-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=/usr/src/singular-1:4.3.2-p10+ds-1.1build1'\
+      \ 'PYTHON=/usr/bin/python3' --enable-omalloc  OMALLOC_LIBS='/build/singular-HDHwVv/singular-4.3.2-p10+ds/omalloc/libsingular-omalloc.la'\
+      \ OMALLOC_INCLUDES='-I/build/singular-HDHwVv/singular-4.3.2-p10+ds'  --with-Singular RESOURCES_LIBS='/build/singular-HDHwVv/singular-4.3.2-p10+ds/resources/libsingular-resources.la'\
+      \ RESOURCES_INCLUDES='-I/build/singular-HDHwVv/singular-4.3.2-p10+ds ' FACTORY_LIBS='/build/singular-HDHwVv/singular-4.3.2-p10+ds/factory/libsingular-factory.la'\
+      \ FACTORY_INCLUDES='-I/build/singular-HDHwVv/singular-4.3.2-p10+ds -I/build/singular-HDHwVv/singular-4.3.2-p10+ds/factory\
+      \ -I/build/singular-HDHwVv/singular-4.3.2-p10+ds/factory/include',\nCC = gcc,FLAGS :  -g -O2 -fno-omit-frame-pointer\
+      \ -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=.\
+      \ -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security\
+      \ -fcf-protection -fdebug-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=/usr/src/singular-1:4.3.2-p10+ds-1.1build1\
+      \ -pipe -fno-common -O3 -Wno-unused-function -Wno-trigraphs -Wno-unused-parameter -Wunknown-pragmas\
+      \ -Wno-unused-variable -fomit-frame-pointer -fwrapv -fvisibility=default -finline-functions -fno-exceptions\
+      \ -fno-threadsafe-statics -fno-enforce-eh-specs -fconserve-space -funroll-loops -pthread -pthread,\n\
+      CXX = g++,FLAGS : -g -O2 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -ffile-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=.\
+      \ -flto=auto -ffat-lto-objects -fstack-protector-strong -fstack-clash-protection -Wformat -Werror=format-security\
+      \ -fcf-protection -fdebug-prefix-map=/build/singular-HDHwVv/singular-4.3.2-p10+ds=/usr/src/singular-1:4.3.2-p10+ds-1.1build1\
+      \ -pipe -fno-common -O3 -Wno-unused-function -Wno-trigraphs -Wno-unused-parameter -Wunknown-pragmas\
+      \ -Wno-unused-variable -fomit-frame-pointer -fwrapv -fvisibility=default -finline-functions -fno-exceptions\
+      \ -fno-threadsafe-statics -fno-enforce-eh-specs -fconserve-space -funroll-loops -fno-rtti -fno-delete-null-pointer-checks\
+      \ -pthread,\nDEFS : ,CPPFLAGS : -Wdate-time -D_FORTIFY_SOURCE=3,\nLDFLAGS : -Wl,-Bsymbolic-functions\
+      \ -flto=auto -ffat-lto-objects -Wl,-z,relro -Wl,-z,now -pipe -fno-common -g -O3 -Wno-unused-function\
+      \ -Wno-trigraphs -Wno-unused-parameter -Wunknown-pragmas -Wno-unused-variable -fomit-frame-pointer\
+      \ -fwrapv -fvisibility=default -finline-functions -fno-exceptions -fno-threadsafe-statics -fno-enforce-eh-specs\
+      \ -fconserve-space -funroll-loops  -rdynamic -Wl,-undefined,dynamic_lookup,LIBS : -lreadline -lncurses\
+      \  -lgmp -lrt  -lpthread (ver: 13.2.0)\nargv[0]   :\tSingular\nSearchPath:\t/usr/bin/../share/singular/LIB:/usr/bin/../share/singular/factory:/usr/libexec/x86_64-linux-gnu/singular/MOD:/usr/bin\n\
+      Singular  :\t/usr/bin/Singular\nBinDir    :\t/usr/bin\nProcDir   :\t/usr/libexec/x86_64-linux-gnu/singular/MOD\n\
+      RootDir   :\t/usr/bin/..\nDataDir   :\t/usr/bin/../share\nDefaultDir:\t/usr\nInfoFile  :\t\nIdxFile\
+      \   :\t\nHtmlDir   :\t\nManualUrl :\thttps://www.singular.uni-kl.de/Manual/\nExDir     :\t\nPath\
+      \      :\t/usr/bin:/usr/libexec/x86_64-linux-gnu/singular/MOD:/nix/var/nix/profiles/default/bin:/root/.local/bin:/root/.cargo/bin:/usr/local/go/bin:/opt/node22/bin:/opt/maven/bin:/opt/gradle/bin:/opt/rbenv/bin:/root/.bun/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/sbin:/bin\n\
+      emacs     :\t\nxemacs    :\t\nSingularEmacs:\t/usr/bin/Singular\nEmacsLoad :\t\nEmacsDir  :\t\n\
+      SingularXterm:\t/usr/bin/Singular\nxterm     :\t/usr/bin/xterm\nEmacsDir  :\t\nAvailable HelpBrowsers:\
+      \ dummy, emacs, \nCurrent HelpBrowser: dummy \n                     SINGULAR                   \
+      \              /  Development\n A Computer Algebra System for Polynomial Computations       /  \
+      \ version 4.3.2\n                                                           0<\n by: W. Decker,\
+      \ G.-M. Greuel, G. Pfister, H. Schoenemann     \\   Feb 2023\nFB Mathematik der Universitaet, D-67653\
+      \ Kaiserslautern        \\  Debian 1:4.3.2-p10+ds-1.1build1\nAuf Wiedersehen."
+    cores_used: 1
+    memory_cap_gb: 4
+    source: environment.json
+  inputs:
+    parameters:
+      seed: 20260922
+      rung: n1
+      D_max: 4
+      gl_N: 256
+      gl_matrices: 8
+      base_curve:
+        a2: '0'
+        a6: z
+    specification:
+      path: experiments/EXP-DREG-dd668d/specification.yaml
+      sha256: 5296d4d25504cd820da333b82e71cc8210aeb1c89fae5faf2f00b493f0cdf2a2
+      approval: DEC-20260922-0397f8
+    amendment:
+      path: experiments/EXP-DREG-dd668d/amendments/AMD-EXP-DREG-dd668d-20261102-glsample.yaml
+      sha256: b3bf06c6521f3db95e02e2db9e983e643bd35ad45ecacd5a7494020ad381faf6
+      approval: DEC-20261102-0dedaa
+    randomness: random.Random(20260922), GL-8 only (one shared stream, per amendment A2). No other randomness.
+  timing:
+    wall_clock_seconds: 0.3
+    date: '2026-11-02'
+    checkpoint: scripts/checkpoint.sh push succeeded before launch (s3 checkpoint 20261102T043557Z-5a8cecc8acae)
+    attempts:
+      total_launches: 1
+      crashed_or_discarded: none
+  result:
+    outcome_label: degenerate-unit-ideal
+    failure_class: none
+    raw_result: raw-result.json
+    raw_result_note: byte-identical copy of metrics.json, the program output
+    certificate:
+      kind: none
+      note: pure measurement run; no discrete-log or decomposition claimed. Instrument certificates (edge,
+        S_3) are in certificates.json
+      S3_certified: true
+      edge_certified: true
+      independent_check: independent_bruteforce_check.py (enumerates all 2^8 assignments with scalar F_4
+        arithmetic; 0 solutions for both systems)
+    artifacts:
+    - metrics.json
+    - certificates.json
+    - report.md
+    - stdout.log
+    - stderr.log
+    - exitcode.txt
+    - grevlex_domain.sing / grevlex_domain.out
+    - grevlex_codomain.sing / grevlex_codomain.out
+    - rank_profiles.png / rank_profiles.pdf
+    - independent_bruteforce_check.py / independent_bruteforce_check.out
+    - raw-result.json
+    deviations_and_interpretations:
+    - base-curve order read as lex on (coeff of 1, coeff of z); integer-order alternative first curve
+      is (a2=0, a6=1), not run (max_runs 1)
+    - unit ideal recognised at any degree via exact Groebner basis, not only degree <= 1 (see report)
+    - codomain model a2' = a2 chosen (isomorphic alternative a2+1 gives same x-line and same S_3)
+    - delta read as boolean ANF degree of Weil-restricted cleared numerators; common-denominator variant
+      recorded, same value
+    - grevlex_solving_degree of a unit ideal recorded as 0 (reduced GB = {1}), flagged as degenerate

@@ -1,0 +1,123 @@
+{
+  "id": "TASK-20261101-6fd5e3",
+  "title": "Snapshot the fresh current-head workflow evidence and verify its gate before either reviewer",
+  "role": "coordinator",
+  "state": "completed",
+  "priority": 95,
+  "review_required": false,
+  "depends_on": [
+    "TASK-20261101-9a4a63"
+  ],
+  "read_scope": [
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan.yaml",
+    "docs/reports/2026-11-01-ic-arity-oracle-review/receipt-manifest.json",
+    "AGENTS.md"
+  ],
+  "write_scope": [
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+  ],
+  "artifact_paths": [
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+    "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+  ],
+  "archived_by": "TASK-20261101-6fd5e3",
+  "handoff": {
+    "id": "TASK-20261101-6fd5e3",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Snapshot the fresh current-head workflow evidence and verify its gate before either reviewer",
+    "uncertainty_reduced": "Durable custody and exact current-head receipt/run binding before semantic review.",
+    "inputs": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/",
+      "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan-addendum-01-current-head.yaml",
+      "docs/reports/2026-11-01-ic-arity-oracle-review/review-plan.yaml",
+      "docs/reports/2026-11-01-ic-arity-oracle-review/receipt-manifest.json",
+      "AGENTS.md"
+    ],
+    "constraints": [
+      "Zero formal builds/runs, workflow dispatches or scientific trials within this archive task.",
+      "Run alone after the verification operation; verify all captures and complete maps against its pinned published SHA, exact run ID/attempt and actual workflow step outcomes.",
+      "Archive all six sidecars, preserve failures and native artifact content bindings. Only a successful exact full formal gate and verified snapshot may open current-head-gate.json.",
+      "On any failure, archive actual failure evidence when possible but keep current-head-gate.json allows_reviewers=false; task terminal status alone cannot bypass the gate.",
+      "Commit/push/publication are future driving-session operations, not performed by authoring this card. No source/proof/EV/DEC/H changes or scientific promotion."
+    ],
+    "deliverables": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+    ],
+    "artifact_paths": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+    ],
+    "write_scope": [
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json"
+    ],
+    "archived_by": "TASK-20261101-6fd5e3",
+    "inference": {
+      "policy": "coordinator-orchestration-code",
+      "reasoning_effort": "high",
+      "fallback_allowed": false,
+      "degraded_allowed": false,
+      "independent_session_required": false,
+      "delivery": "interactive"
+    },
+    "budget": {
+      "maximum_runs": 0,
+      "scientific_runs": 0,
+      "memory_gb": 4
+    },
+    "completion_gate": [
+      "Source task captures exact immutable current-head receipt and real workflow evidence; every required correctness/custody check passes, or record allows_reviewers=false.",
+      "Snapshot actual commit/parent/exact changed paths/SHA-256s verified, pushed and reviewable before either reviewer starts.",
+      "current-head-gate.json binds pinned source SHA, workflow run/attempt, receipt hash, complete map check and actual snapshot publication; allows_reviewers=true only when every gate is met.",
+      "No official scientific conclusion or status change.",
+      "This success-gating archive must not be marked completed unless current-head-gate.json has allows_reviewers=true and its exact source/run/custody checks pass; failed-capture archival needs an explicit additive route and never enables reviewers."
+    ],
+    "return_format": "Verified archive/gate paths and actual custody/provenance, or exact fail-closed impediment."
+  },
+  "archive": {
+    "kind": "snapshot",
+    "binding_mode": "content_at_commit",
+    "source_task_ids": [
+      "TASK-20261101-9a4a63"
+    ],
+    "commit_sha": "5b3ad6957cb48260d354d9aec6d47cc8159878d8",
+    "parent_sha": "7ecd8396c797d2e8e591bed461ac3401b98e469a",
+    "path_sha256": {
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/current-head-gate.json": "2f4014654dfe1c697b7398ba2e0449b8f62a9c20ce84df8e02a82a8a9498c125",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/archives/TASK-20261101-6fd5e3/snapshot-receipt.json": "308f60d9cd1a9c358af8fb95c85eaa16a4a2e03cf6f5ec73ad681d1326e93286",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/artifact-manifest.json": "e17a15baa6c03ff2274a629fca084fbc8d2f890cd9f7f83424457a87afc69458",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/execution-report.json": "440d99823316e7993e1064d7ef4cd0dbd0361eacba1d4105e820168fe2e33e0e",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/receipt-capture.json": "4144555530e50c76744264f580fa0c785fa5110a83b508042d47bb3f81b9e0a9",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/receipt-validation.json": "a221042dace2abcac9e61c45380a21b52faa5a7ccca8135df0b32dec12d56e77",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/request.json": "aabeb13df2ba4e728e389ff5fe03fedbc38f691fe2e7038eed66b3bc34f97a76",
+      "coordination/goals/GOAL-ECDLP-001/batches/BATCH-a68666/tasks/TASK-20261101-9a4a63/workflow-run.json": "d01c3a2d1f1734ff4b437256663bafdf469178fe203ae4ae2926989513e651a6"
+    },
+    "record_ids": [
+      "TASK-20261101-9a4a63"
+    ]
+  },
+  "archive_registration": {
+    "state": "verified",
+    "source_output_commit": "e887f4cd75b16db6e47342d1f319bf393888707c",
+    "archive_commit_sha": "5b3ad6957cb48260d354d9aec6d47cc8159878d8",
+    "archive_parent_sha": "7ecd8396c797d2e8e591bed461ac3401b98e469a",
+    "verified_at": "2026-11-01T05:39:30Z",
+    "full_native_archive_passed": true,
+    "paths_verified": 8,
+    "generated_paths_skipped": [],
+    "custody_criterion_satisfied": true,
+    "snapshot_outputs_committed": true,
+    "snapshot_outputs_pushed": true,
+    "allows_reviewers": true,
+    "allows_reviewers_scope": "Evidence/snapshot eligibility only; actual launches separately require finalization publication, release of snapshot claim and real independent reviewer claims.",
+    "finalization_metadata_commit_pending": true,
+    "claim_released": false,
+    "s3_archival": "unavailable_not_attempted",
+    "github_artifact_expires_at": "2027-01-30T04:58:42Z"
+  }
+}

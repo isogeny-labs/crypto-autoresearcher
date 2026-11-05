@@ -1,0 +1,32 @@
+review_plan_addendum:
+  extends: coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml
+  written_at: '2026-11-03T22:40:00Z'
+  reason: The J5 owner (TASK-20261103-f8f2d2) also owned J2 and, after finishing J5, read experiments/EXP-SEMAEV-93d5cc/implementation/, a blind_from path; tools/check_review_independence.py reports that
+    read. In addition the specification and hypothesis state calibration values for J5, so no reviewer who reads them is blind to the answer. A separate blind task repeats J5 from a statement of the inputs
+    only; the Coordinator compares.
+  joints_added:
+  - joint: J5b blind re-derivation from statement
+    assigned_to: TASK-20261103-7fc24f
+    attack_plan: From blind-statement.yaml alone, with code written in this session, compute s4_support (exact and legacy definitions) for every ICINV record, and the FIB C16-1 reduced Groebner basis size,
+      maximal total degree and unit-ideal flag for every target. Freeze the outputs and attest the read set before any comparison. Do not compare.
+    breaking_artifact: An output that cannot be computed from the statement as written (record it as such), or a statement ambiguity.
+  what_changes:
+    blind_rederivation_assigned_to: TASK-20261103-7fc24f
+    blind_rederivation_parameters: coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-statement.yaml
+    blind_from_additions:
+    - experiments/
+    - harness/
+    - ledger/
+    - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/review-plan.yaml
+    - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-input-manifest.json
+    - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/dispatch_queue.json
+    - coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/reviews/TASK-20261103-f8f2d2/
+    - coordination/sessions/receipts/
+    - descriptions, comments and reviews of pull requests 2412, 2545, 2996 and 3003
+    - Git commit messages and history
+    - Producer, validator and Coordinator conversation beyond the blind dispatch prompt
+  comparison:
+    assigned_to: TASK-20261103-2c99e6
+    rule: The Coordinator compares the frozen blind outputs with the recorded arm outputs and the archive, after the blind report is committed.
+  blindness_lifted_for_additions: []
+  blind_phase_hygiene_file: coordination/goals/GOAL-ECDLP-001/batches/BATCH-7c689b/blind-phase-hygiene.yaml
