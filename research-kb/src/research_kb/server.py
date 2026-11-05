@@ -80,6 +80,15 @@ def build_mcp(library: Library):
         """Check shared corpus counts, revision and whether hybrid indexing is current."""
         return library.status()
 
+    @mcp.tool
+    def recent_sources(limit: int = 10, repo: str | None = None) -> dict:
+        """List the newest documents this KB ingested; use it to catch recent findings.
+
+        Ordered by ingestion time, not publication date. A stale `kb_status.last_refresh`
+        means the list may predate a repository change.
+        """
+        return library.recent(limit, repo)
+
     return mcp
 
 

@@ -11,7 +11,15 @@ endpoint makes the same corpus accessible to local and cloud clients.
 
 ## Install and search locally
 
-Requires Python 3.11+, Linux or macOS. Install the package in a virtual environment:
+The fastest path installs the package, builds the catalog and registers every
+agent client in one command (details below):
+
+```sh
+cd research-kb
+make setup
+```
+
+To do it by hand: requires Python 3.11+, Linux or macOS. Install the package in a virtual environment:
 
 ```sh
 python3 -m venv .venv
@@ -38,6 +46,95 @@ Default state is `~/.local/share/research-kb`. Override it with
 `RESEARCH_KB_HOME` or `--home`. `RESEARCH_KB_CONFIG` or `--config` selects the
 source registry. Both agent clients can launch the same installed `research-kb
 mcp` command with the same shared home; no project checkout is needed to query it.
+
+## One-command MCP setup for every local agent
+
+`scripts/setup-mcp.sh` installs the package, writes a source registry if none
+exists, builds the catalog, and registers the same server in Claude Code,
+Codex, OpenCode and Delphi:
+
+```sh
+cd research-kb
+./scripts/setup-mcp.sh                          # stdio, all clients, refresh now
+./scripts/setup-mcp.sh --watch                  # + refresh when sources move
+./scripts/setup-mcp.sh --clients claude,codex   # only these clients
+./scripts/setup-mcp.sh --update-sources         # fast-forward checkouts, then refresh
+./scripts/setup-mcp.sh --transport http --url https://kb.example.com
+```
+
+The script is idempotent and safe to re-run. Every client config is backed up
+once as `*.bak-research-kb`, unrelated entries are preserved, and an existing
+`~/.config/research-kb/sources.toml` is never overwritten without
+`--force-config`. Source roots are detected from sibling checkouts; override
+them with `RESEARCH_KB_SOURCE_CRYPTO_AUTORESEARCHER`, `..._CRYPTO`,
+`..._CRYPTANALYSIS`, `..._CRYPTO_LEAN` or `..._CRYPTOLOGIC_ARCHIVES`.
+
+| client | how it reaches the KB |
+| --- | --- |
+| Claude Code | user-scope `~/.claude.json`, stdio |
+| Codex | `~/.codex/config.toml` (or `$CODEX_HOME`), stdio |
+| OpenCode | `$XDG_CONFIG_HOME/opencode/opencode.{json,jsonc}`, local |
+| Delphi | `~/.local/bin/delphi-kb` and `delphi-kb-ask` wrappers |
+
+Claude, Codex and OpenCode speak MCP directly. Delphi does not, so it gets the
+same retriever through `research-kb brief`: `delphi-kb "question"` prints the
+context pack; `delphi-kb-ask "question"` prefixes it to `delphi ask`. No second
+search implementation, and every passage carries the same source ID and hash.
+
+### Keeping the catalog current
+
+The MCP server stays read-only. Freshness is an operator process:
+
+```sh
+research-kb watch --interval 60 --pull   # refresh when a source (or its upstream) moved
+research-kb watch --once                 # one check, useful in cron
+```
+
+`--pull` fast-forwards each registered git checkout before the check, so a
+commit pushed by another machine becomes searchable without an operator step.
+It never merges: a checkout on a feature branch or with a dirty conflict is
+reported and left alone. `--watch` on the setup script installs a launchd agent
+on macOS or a systemd user unit on Linux, with `--pull` enabled. The watcher
+compares git HEAD, file count, total bytes and newest mtime, then takes the
+writer lock and re-runs the content-hashed `refresh`. Agents see the new
+`revision` on their next `kb_status` or search.
+
+### Verify all clients see the same corpus
+
+```sh
+research-kb status
+research-kb search "KN-FIND-001" --top-k 1
+research-kb brief "negative results for Semaev decomposition" | head -40
+```
+
+Then ask each client to call `kb_status` and `search_knowledge` with the same
+query. They should report the same `revision`, `source_id` and `content_hash`.
+
+For a scripted check of all three layers (catalog, CLI, a real stdio MCP
+subprocess, and client configs):
+
+```sh
+research-kb/.venv/bin/python research-kb/scripts/verify_mcp.py
+```
+
+### Troubleshooting
+
+- **A client returns nothing.** Run `research-kb status` with the same
+  `RESEARCH_KB_HOME`. An uninitialized catalog is `ready: false`; run
+  `research-kb refresh`. The server never falls back to a different home.
+- **OpenCode ignored the entry.** OpenCode follows `$XDG_CONFIG_HOME`; this
+  machine may set it outside `~/.config`. The installer writes to
+  `opencode.json` if it exists, otherwise the existing `opencode.jsonc`, and
+  never creates a new minimal file that would shadow a real config.
+- **Codex ignored the entry.** Set `CODEX_HOME` for both the installer and the
+  running Codex, or let it default to `~/.codex`.
+- **The catalog is stale.** Check `kb_status.last_refresh`; start
+  `research-kb watch` or re-run the setup script with `--watch`.
+- **A repo root changed.** Edit `sources.toml` and run `research-kb refresh`;
+  client configs do not need to change because they point at the shared home.
+- **Hybrid is not current.** `kb_status.hybrid_current` turns false after a
+  refresh. Lexical search keeps working; rebuild with `research-kb index` when
+  `RESEARCH_KB_QDRANT_URL` points at a running Qdrant.
 
 ## Hosted architecture
 
@@ -100,6 +197,8 @@ Configure one user-level MCP entry and reuse it from every repo. Templates:
 
 - [Codex](clients/codex.toml): native HTTP using `bearer_token_env_var`.
 - [Claude Code](clients/claude-code.json): HTTP with a runtime-secret header.
+- [OpenCode](clients/opencode.json): project or user `mcp` block, local stdio or `type = "remote"`.
+- [Delphi](clients/delphi-kb.sh): no MCP client; the context-pack wrapper template.
 - [Local stdio](clients/local-stdio.json): direct access to the shared local data.
 - `research-kb connect https://kb.example.com`: stdio-to-remote bridge.
 
@@ -134,6 +233,7 @@ cannot configure a managed cloud product’s account settings automatically.
 | `search_theorems` | Lean names or source statements, with repo/environment filters |
 | `get_theorem` | Declaration statement, assumptions and any bound verification receipt |
 | `kb_status` | Coverage counts, active revision and hybrid freshness |
+| `recent_sources` | Newest ingested documents, to catch findings that just landed |
 
 REST provides `/v1/search?q=...`, `/v1/theorems?q=...`, `/v1/status`,
 `/v1/sources/{id}` and authenticated original downloads. `/healthz` exposes only
