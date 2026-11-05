@@ -1,0 +1,55 @@
+handoff:
+  id: TASK-20261105-47d2ed
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-05'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Bind prospective C1 odd-order control to complete checked geometric campaign rows.
+  uncertainty_reduced: Every qualifying no-nonzero-T curve is counted and its sole T=O minimum equality checked; zero qualifying rows are labeled not_exercised.
+  inputs:
+  - experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_geometric_campaign.py
+  - experiments/EXP-PEXT-bf8f96/reports/c1-odd-order-20261105/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - coordination/sessions/receipts/20261105/SR-20261105-137513.yaml
+  - ledger/handoffs/TASK-20261105-47d2ed.yaml
+  constraints:
+  - No scientific cohort trial, protocol approval or freeze, hypothesis transition or new experiment.
+  - Preserve full P1-P4, C0-C7, H1 and the six-run, 4 GB, 24 CPU-hour, zero-cloud ceilings.
+  - Source-only C1 does not establish an observed cohort control result.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261105-47d2ed/receipt.json
+  artifact_paths:
+  - experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_geometric_campaign.py
+  - experiments/EXP-PEXT-bf8f96/reports/c1-odd-order-20261105/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - ledger/handoffs/TASK-20261105-47d2ed.yaml
+  - coordination/sessions/receipts/20261105/SR-20261105-137513.yaml
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/geometric_campaign.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_geometric_campaign.py
+  - experiments/EXP-PEXT-bf8f96/reports/c1-odd-order-20261105/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - ledger/handoffs/TASK-20261105-47d2ed.yaml
+  - coordination/sessions/receipts/20261105/SR-20261105-137513.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261105-47d2ed/receipt.json
+  archived_by: TASK-20261105-47d2ed
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 4
+    maximum_runs: 0
+  completion_gate:
+  - C1 emits exact per-cohort counts from complete checked rows and refuses unequal minima or incomplete T coverage.
+  - Focused tests and native commit-bound archive pass; PR is updated.
+  - Contract remains review_required until full plan, other controls and analysis are ready.
+  state: queued
+  return_format: Exact archive and publication receipt with prospective C1 scope.

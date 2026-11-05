@@ -20,6 +20,35 @@ EXPECTED = {"q5-n3": (5, 3), "q7-n3": (7, 3),
             "q11-n3": (11, 3), "q3-n5": (3, 5)}
 
 
+def c1_odd_order_control(curves):
+    """Check the no-nonzero-rational-2-torsion arm on complete curve rows."""
+    counts = {name: 0 for name in EXPECTED}
+    for curve in curves:
+        name = curve.get("cohort")
+        targets = curve.get("T_count")
+        if name not in counts or type(targets) is not int or targets not in (1, 2, 4):
+            raise ValueError("C1 curve cohort or rational 2-torsion count invalid")
+        units = curve.get("units")
+        if not isinstance(units, list) or len(units) != targets:
+            raise ValueError("C1 curve lacks complete T units")
+        if targets != 1:
+            continue
+        unit = units[0]
+        minimum = unit.get("geometric_minimum") if isinstance(unit, dict) else None
+        if (not isinstance(unit, dict) or unit.get("T_index") != 0
+                or type(minimum) is not int or minimum < 0
+                or curve.get("xline_geometric_minimum") != minimum
+                or curve.get("all_maps_geometric_minimum") != minimum
+                or curve.get("strict_geometric_minimum_drop") is not False):
+            raise ValueError("C1 odd-order curve has a nonzero T or unequal minima")
+        counts[name] += 1
+    total = sum(counts.values())
+    return {"schema": "pext.control-c1-odd-order/v1",
+            "status": "checked" if total else "not_exercised",
+            "odd_order_curves_by_cohort": counts,
+            "odd_order_curves_total": total}
+
+
 def _record(path):
     path = Path(path)
     if path.is_symlink() or not path.is_file():
@@ -61,9 +90,10 @@ def aggregate_cohorts(curves, cohorts):
         "classes", "T_blocks", "structures", "exceptional", "generic",
         "branch_type_mismatch_count", "geometric_spectrum_violation_count",
         "curves_with_strict_geometric_minimum_drop")}
+    c1 = c1_odd_order_control(curves)
     return {"schema": "pext.geometric-campaign/v1",
             "status": "complete_checked_geometric_counts; controls_and_descent_pending",
-            "cohorts": cohorts, "totals": counts,
+            "cohorts": cohorts, "totals": counts, "control_c1": c1,
             "p3_geometric_drop_by_cohort": {name: cohorts[name][
                 "curves_with_strict_geometric_minimum_drop"] for name in EXPECTED},
             "type2_by_cubic_cohort": {name: {key: cohorts[name][key]
