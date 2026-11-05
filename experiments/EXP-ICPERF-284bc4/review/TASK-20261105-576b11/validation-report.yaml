@@ -1,0 +1,538 @@
+# Independent validation of joint J1-validity, review plan
+# REVIEW-ICPERF-284bc4-20261105 (frozen at f7eb8ae292). Written by
+# TASK-20261105-576b11 (validator). Not committed by this task. No existing
+# file was edited. No new scientific trial was run: every replay below is a
+# read-only verification written only to the session scratch directory.
+validation_report:
+  id: VAL-20261105-91249f
+  id_provenance: >-
+    tools/allocate_id.py has no validation-report type. The random 6-hex
+    suffix came from secrets.token_hex(3), and rg found no use of
+    VAL-20261105-91249f anywhere in the repository.
+  task_id: TASK-20261105-576b11
+  review_plan: REVIEW-ICPERF-284bc4-20261105
+  joint: J1-validity
+  experiment_id: EXP-ICPERF-284bc4
+  hypothesis_id: H-ICPERF-2f52d1
+  approval: DEC-20261029-ca33b3
+  binding_rulings: [DEC-20261029-9bc3ff, DEC-20261029-22e05b, DEC-20261029-5554ee]
+  runbook_session: RBS-ICPERF-8cdc92
+  audit: experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c
+  run_ids: [RUN-ICPERF-8e3acd, RUN-ICPERF-2d715d, RUN-ICPERF-2c627f, RUN-ICPERF-779d41, RUN-ICPERF-30596e, RUN-ICPERF-850008]
+  invalidated_inputs_not_evidence: [RUN-ICPERF-943efa, RUN-ICPERF-b09be8]
+
+  snapshot:
+    frozen_plan_commit: f7eb8ae292c662c8b6247d90a3ca25dea9e24cd5
+    session_commit: af94114e9c2ff7fac8c7aeedf588c648c2098b99
+    producer_merge: 1a0afc68c2a57d8f91652eb32e8c8ea40c98f937 (PR #2776)
+    head_moved_during_review: >-
+      HEAD moved from f7eb8ae292 to 1e5baa38e6 while this review ran.
+      1e5baa38e6 adds one file, experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml
+      (a sibling report). Its path and line count were visible in git diff
+      --stat. Its content was not read.
+    inputs_identical_to_frozen: true
+    how: >-
+      git diff --stat f7eb8ae292 over experiments/EXP-ICPERF-284bc4,
+      tools/runbook.py, ledger/decisions and experiments/EXP-ICPERF-e467a5
+      shows only that sibling file. git diff af94114e9c f7eb8ae292 over runs/,
+      runbook-sessions/, reports/, specification.yaml, runbook.yaml,
+      implementation/ and trial-plan.json is empty. All 144 non-review files
+      under the experiment are tracked (no working-tree-only artifact). A
+      sha256 manifest of those 144 files, taken before and after every
+      command below, is unchanged.
+
+  artifact_checks:
+    - id: A1-bindings
+      ran: sha256sum of specification.yaml, trial-plan.json, implementation/run.py, implementation/check.py, runbook.yaml, experiments/EXP-ICPERF-e467a5/specification.yaml
+      result: >-
+        All equal the runbook binds, the trial-plan source_sha256 and
+        input_sha256, the approval DEC-20261029-ca33b3 (runbook e5850bc6...,
+        spec 704b0f99..., plan 7da0779a..., run.py ef13257e..., check.py
+        ed49e349...), the journal session_started binds, and the spec's
+        predecessor binding (dc1824e8...). runbook-lint.txt reads LINT OK at
+        e5850bc6.
+    - id: A2-receipt-digests
+      ran: scratch c2_receipts.py hashes every file in each run dir against execution-receipt.json artifact_sha256
+      result: >-
+        60 of 60 artifact digests equal (10 per unit). No receipt-listed file
+        is missing, and no unlisted file is present. Every receipt has status
+        output_validated, returncode 0, check_returncode 0,
+        scientific_conclusion null, detail null and published false. Per
+        tools/experiment_execution.py:1006, published false is a constant
+        written into every receipt at write-once time, not a failure signal.
+        driver_manifest_sha256 equals the manifest.yaml bytes, with
+        manifest_completion action unchanged.
+    - id: A3-manifest-bindings
+      ran: scratch c2_receipts.py, 30 cross-file checks per unit (180 total)
+      result: >-
+        180 of 180 pass. manifest id, trial, experiment, hypothesis, task
+        TASK-20261029-65798b, approved_by DEC-20261029-ca33b3, attack_claimed
+        false and certificate kind none are all correct. Manifest and
+        environment.json source_sha256 and specification_sha256 equal the
+        current bound files. The plan sha agrees across manifest, launch and
+        receipt. The commit 5200f03900 agrees across manifest, environment.json,
+        launch.json and receipt authority. command.txt equals launch.argv
+        equals the manifest command, and the launch argv equals the frozen plan
+        argv apart from run_dir. The manifest environment version and
+        executable equal raw /interpreter. Manifest metrics equal both
+        result.metrics and raw-result.json. Timing order holds.
+    - id: A4-manifest-schema
+      ran: tools/validate_ledger.py check_run (imported, empty Ctx) on each of the 6 manifest.yaml files
+      result: >-
+        0 errors, 0 warnings and 0 advisories on all 6. Negative control: a
+        scratch copy of RUN-ICPERF-8e3acd with attack_claimed true and
+        approved_by, code and status corrupted gives 3 errors, so the checker
+        does discriminate. This settles the spec invalidation rule ("A
+        manifest.yaml that fails check_run ... invalidates the unit"): not
+        triggered.
+    - id: A5-revision-and-dirty-tree
+      ran: git cat-file / merge-base / show --stat on 9d13fcfde5 and 5200f03900; git show of each bound file at both commits
+      result: >-
+        The session preflight commit 9d13fcfde5 records tracked_dirty false.
+        The unit launch authority commit 5200f03900 is the executor's claim
+        commit directly on top of it (one file,
+        claims/TASK-20261029-65798b.1.claim.json). All 5 bound files are
+        byte-identical at both commits. The claim write_scope is runs/,
+        runbook-sessions/ and reports/. All 66 artifact hashes bound by the
+        release record TASK-20261029-65798b.1.release.json recompute equal.
+    - id: A6-journal-chain-and-digests
+      ran: >-
+        scratch c4_journal.py (own implementation of the chain rule
+        sha256(domain || canonical(entry minus hash)), prev from 64 zeros,
+        contiguous seq); git log --all on the journal path; git hash-object
+      result: >-
+        12 entries with seq contiguous, prev links intact and every hash
+        recomputing. The tip 534b1a29241d91679683028f5afe99a2bf52d1a3483826a983df48833a1ccdff
+        equals audit.json journal_tip and report data.json journal_tip. 21 of
+        21 recorded output/log digests are equal. All 6 unit receipt_sha256
+        values equal their execution-receipt.json bytes, and 18 of 18 unit
+        artifact digests are equal. Every file in the session directory is
+        accounted for by the journal. Git history has exactly one blob
+        (724ab3bc2c10ed20ee9d6d6238f897aa651e7caf, first and only commit
+        af94114e9c), equal to the working-tree blob, so there is one chain and
+        one execution (one session_started). This matches the audit's
+        journal_chains.
+    - id: A7-tool-verify
+      ran: PYTHONHASHSEED=0 python3 tools/runbook.py verify experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92 --rerun-checks
+      result: >-
+        VERIFY OK, rc 0, 0 findings. This covers the chain, binds, recorded
+        digests, re-evaluation of the 6 units from scratch, coverage of the
+        plan's 6 trials, the recorded summary against a recomputation, and
+        check.py re-run on every recorded unit.
+    - id: A8-check-py
+      ran: PYTHONHASHSEED=0 python3 experiments/EXP-ICPERF-284bc4/implementation/check.py <run_dir>, once per recorded run directory
+      result: >-
+        rc 0 with empty stdout/stderr for all 6. check.py is read-only (it
+        opens files for reading only). It also exits 0 on each of the 18
+        scratch replays in R2.
+    - id: A9-runbook-assertions-independent
+      ran: scratch c7_assertions.py evaluates every S02-trials validity assertion (common files plus by_trial) with its own pointer resolver and type-strict equality
+      result: >-
+        268 of 268 assertions pass across the 6 units (68, 51, 51, 39, 30, 29),
+        0 failures. This independently reproduces the journal's 6 valid
+        verdicts.
+    - id: A10-raw-vs-results-md
+      ran: >-
+        scratch c2_receipts.py parses every "- key: value" line and every
+        cell line of RESULTS.md and compares it with raw-result.json
+      result: >-
+        All agree. The single parser hit on RUN-ICPERF-850008 r1000_a4
+        bl_steps is a formatting artifact. RESULTS.md prints the Python repr
+        {'num': 105, 'den': 2} for the same value raw stores as {"den": 2,
+        "num": 105}. The value is identical.
+    - id: A11-summary-and-report
+      ran: own recomputation of the 6 summary metrics from RUN-ICPERF-8e3acd raw-result.json; canonical comparison of reports/run-20261030T1520Z/data.json with the journal session_finished entry; pdftotext of report.pdf
+      result: >-
+        The summary metrics aggregate over non-control trials only, per
+        tools/runbook.py metric_values, which skips step.controls when trials
+        is all. So n = 1, the primary unit. My recomputation gives
+        price_ratio_num min=max=925, price_ratio_den min=max=4, ratios_agree
+        1.0, all_match_bsgs 1.0, matches_preregistered 1.0 and elapsed_seconds
+        max 0.015766769996844232, equal to the recorded summary. data.json's
+        summary is byte-canonical-equal to the journal summary. Its units list
+        equals the journal's unit entries, its graph point
+        (price-ratio-identity, 925.0) equals raw, and its tip equals the
+        journal. The report.pdf text shows the same tip, "6 valid of 6",
+        925/4 and the metric values. The report states no verdict.
+    - id: A12-v1-runs-not-cited
+      ran: rg 943efa|b09be8 over experiments/EXP-ICPERF-284bc4 (review/ siblings excluded; review-plan.yaml included), and over the ledger, tools and coordination records that name EXP-ICPERF-284bc4; PR #2776 merge commit message
+      result: >-
+        No v1 run is cited as evidence. RUN-ICPERF-943efa appears in the v2
+        set only as "invalid_output and is not citable as an observation"
+        (specification.yaml:18) and "It is not an observation"
+        (specification.yaml:220, prediction_provenance data_seen). It also
+        appears in ledger/hypotheses/H-ICPERF-2f52d1.yaml:24 as "invalidated
+        (DEC-20261029-9bc3ff) ... no evidence exists", and in
+        review-plan.yaml as invalidated_inputs_not_evidence. RUN-ICPERF-b09be8
+        does not appear in the v2 experiment set at all. The report, the audit,
+        the run records, the session, tools/progress_metrics.py (ICPERF_RUNS
+        lists only the 6 v2 runs), DEC-20261029-ca33b3, 316bfb and 3bfa78, the
+        handoff TASK-20261029-65798b, goal.yaml, the GOAL-ICPERF-e6b6a4
+        checkpoints and the PR #2776 merge message contain 0 occurrences.
+        The PR #2776 body was not readable (see limitations).
+    - id: A13-seeds-environment-resources
+      ran: read of manifests, receipts, journal session_started.environment_overlay, specification /experiment/replication
+      result: >-
+        The arithmetic is deterministic and no seed is drawn (the spec says so
+        and none is recorded). PYTHONHASHSEED 0 is in the session
+        environment_overlay. The interpreter is recorded per unit and in S01
+        (CPython 3.11.17, the same executable for all 6). Resource records are
+        driver wall_seconds 0.0226 to 0.0427 s and elapsed_seconds 6.5e-5 to
+        0.0158 s, against an advisory 60 s per run and a 256 MB watchdog.
+        Peak memory is not recorded (limitation L5).
+
+  replay_row_audit:
+    question: >-
+      Is every audit "mismatch" row a replay.compare pointer that is absent
+      from BOTH the recorded and the replayed raw-result.json, and is every
+      present pointer exactly equal?
+    ran: >-
+      scratch c1_replay_rows.py. It re-reads every one of the 66 rows of
+      audit.json replays[*].compared, resolves each pointer in
+      runs/<RUN>/raw-result.json and in
+      audits/AUD-20261105T164527Z-d5036c/replay/<RUN>/raw-result.json with
+      its own RFC 6901 resolver (sharing no code with tools/runbook.py,
+      duplicate JSON keys rejected), and compares type-strictly, so bool is
+      not int and int is not float.
+    why_independent_check_needed: >-
+      replay_unit (tools/runbook.py:2443-2445) sets result mismatch whenever
+      either pointer_get is not found, and pointer_get returns (False, None).
+      So the audit's detail text "recorded null, replay null" cannot by
+      itself distinguish absent from present-null or from absent on one side.
+    totals: {rows: 66, present_both_and_exactly_equal: 27, absent_both: 39, absent_one_side_only: 0, present_both_but_differing: 0, rows_where_audit_equal_flag_disagrees_with_mine: 0}
+    per_unit:
+      - {run: RUN-ICPERF-8e3acd, trial: price-ratio-identity, audit_mismatch_rows: 4, all_absent_both: true, present_equal: 7, present: "/matches_preregistered true, /cells [3], /price_ratio_num 925, /price_ratio_den 4, /ratios_agree true, /all_match_bsgs true, /precomputation_steps 525", absent_both: "/same_reduced_ratio, /all_match, /online_ratio_num, /online_ratio_den"}
+      - {run: RUN-ICPERF-2d715d, trial: ctl-consistency-a-change, audit_mismatch_rows: 8, all_absent_both: true, present_equal: 3, present: "/matches_preregistered true, /cells [2], /same_reduced_ratio true", absent_both: "/price_ratio_num, /price_ratio_den, /ratios_agree, /all_match_bsgs, /precomputation_steps, /all_match, /online_ratio_num, /online_ratio_den"}
+      - {run: RUN-ICPERF-2c627f, trial: ctl-consistency-r-change, audit_mismatch_rows: 8, all_absent_both: true, present_equal: 3, present: "/matches_preregistered true, /cells [2], /same_reduced_ratio true", absent_both: "/price_ratio_num, /price_ratio_den, /ratios_agree, /all_match_bsgs, /precomputation_steps, /all_match, /online_ratio_num, /online_ratio_den"}
+      - {run: RUN-ICPERF-779d41, trial: ctl-bsgs-enumeration, audit_mismatch_rows: 8, all_absent_both: true, present_equal: 3, present: "/matches_preregistered true, /cells [3], /all_match true", absent_both: "/price_ratio_num, /price_ratio_den, /ratios_agree, /all_match_bsgs, /precomputation_steps, /same_reduced_ratio, /online_ratio_num, /online_ratio_den"}
+      - {run: RUN-ICPERF-30596e, trial: ctl-neg-perturbed-price, audit_mismatch_rows: 5, all_absent_both: true, present_equal: 6, present: "/matches_preregistered false, /cells [3], /price_ratio_num 1855, /price_ratio_den 8, /online_ratio_num 1855, /online_ratio_den 8", absent_both: "/ratios_agree, /all_match_bsgs, /precomputation_steps, /same_reduced_ratio, /all_match"}
+      - {run: RUN-ICPERF-850008, trial: ctl-neg-precomputation-model, audit_mismatch_rows: 6, all_absent_both: true, present_equal: 5, present: "/matches_preregistered false, /cells [3], /precomputation_steps 10, /online_ratio_num 185, /online_ratio_den 42", absent_both: "/price_ratio_num, /price_ratio_den, /ratios_agree, /all_match_bsgs, /same_reduced_ratio, /all_match"}
+    absence_is_structural: >-
+      Each unit's absent set is exactly the complement, within the runbook's
+      11-pointer union list, of the key set that the bound run.py observe()
+      branch emits for that trial kind (run.py:150-210). The 39 absences are
+      4+8+8+8+5+6, and every one is predicted by code that was bound before
+      execution. None is an omitted or dropped output.
+    whole_document_check: >-
+      Recorded and audit-replayed raw-result.json have identical key sets in
+      all 6 units. With only /elapsed_seconds and /interpreter excluded (the
+      two fields the frozen spec says replay never compares), the whole
+      documents are type-strictly equal in all 6 units. That covers every
+      integer, boolean, cell row and string.
+    under_spec_replay_contract: >-
+      specification.yaml /experiment/replay declares compared_pointers
+      [/matches_preregistered, /cells] for every unit, plus
+      compared_pointers_primary [/price_ratio_num, /price_ratio_den,
+      /ratios_agree, /all_match_bsgs, /precomputation_steps] for the primary.
+      That gives 6x2 + 5 = 17 rows, all present on both sides and all exactly
+      equal. runbook.yaml S02-trials replay.compare flattens this into one
+      11-pointer union, adding the control-only /same_reduced_ratio,
+      /all_match, /online_ratio_num and /online_ratio_den, and applies it to
+      every trial. The flattening is what produces the absent-on-both rows.
+      runbook-lint passed it, and the approval bound it (runbook sha256
+      e5850bc6).
+    result: confirmed
+    audit_internal_consistency: >-
+      challenge_seed recomputes from journal_tip and nonce. detection_power
+      recomputes from k = 6, e.g. miss 0.015625 at f = 0.5. The population is
+      6, sample 6, so all units were replayed. not_covered, lean and
+      float_tolerance are empty or null. All 6 audit findings are replay rows:
+      the audit's own verify and journal-chain stages contributed none.
+
+  interpreter_parity:
+    recorded: CPython 3.11.17, executable /home/ec2-user/.cache/uv/builds-v0/.tmp93Odp8/bin/python3, in every unit's raw /interpreter, manifest /run/environment/version and /python, and session step S01 environment.json
+    audit_replay: CPython 3.13.18, /usr/local/bin/python3 (audit.json replay_interpreters and each replay /interpreter)
+    drift_present: true
+    audit_reported_drift: >-
+      No. environment_drift is [] and recorded_python_version is null in all 6
+      replays. That is a false negative. tools/runbook.py _recorded_python
+      (:2253-2260) reads /run/environment/python_version, and these manifests
+      record the version under /run/environment/version and
+      /run/environment/python, so the comparison never ran. The interpreter
+      parity that DEC-20261029-5554ee replay_contract_ruling.interpreter_parity
+      requires ("compare it with the replayed unit's manifest python_version,
+      and report a difference as its own environment_drift note") was
+      therefore silently disabled for this session. The review plan's
+      audit_note "No environment drift" repeats the tool's output and is
+      inaccurate as a statement of fact.
+    float_tolerance: >-
+      None was declared (runbook) and none was passed (audit float_tolerance
+      null). The only float leaf in any of the 6 raw results is
+      /elapsed_seconds, which is never compared. Exact equality is therefore
+      the correct contract, and it was met.
+    my_replays:
+      ran: >-
+        scratch c5_replay.py. The bound run.py (hash asserted) runs for each
+        of the 6 frozen trials under /usr/bin/python3.11 (3.11.18),
+        /usr/bin/python3.12 (3.12.3) and /usr/local/bin/python3.13 (3.13.18),
+        with PYTHONHASHSEED 0, into scratch run dirs only. check.py runs on
+        each. Each replay's whole raw-result.json is compared with the
+        recorded one, excluding only /elapsed_seconds and /interpreter.
+      result: >-
+        18 of 18 replays: run.py rc 0, check.py rc 0, 0 differing keys (19 to
+        23 keys compared per unit). The recorded 3.11.17 build itself (an
+        ephemeral uv build path, runtime_lock null) cannot be re-obtained, so
+        3.11.18 is the nearest available patch level.
+    conclusion: >-
+      The interpreter drift is real and it changes no integer, boolean or
+      cell. The breaking artifact "interpreter drift that changes an integer"
+      is not present.
+
+  metric_recomputations:
+    - id: M1-spec-model
+      ran: >-
+        scratch c3_recompute.py. It uses exact Fractions from
+        specification.yaml /experiment/online_time_model and
+        /experiment/bsgs_probe_count only: its own enumeration of BSGS
+        worst-case lookups in Z/(r/A) with baby table {0..9} and giant step
+        -10, and no producer code. It compares every derived value with every
+        run's raw-result.json.
+      result: >-
+        0 discrepancies. precomputation_steps 525. Primary price ratio 925/4.
+        Cells (1000,2) give probes 50, bl_steps 2, 80 ns and 18500 ns.
+        (4000,2) give 200, 8, 320 ns and 74000 ns. (1000,4) give 25, 1, 40 ns
+        and 9250 ns. Each reduced online ratio is 925/4, and every primary
+        quantity is an integer (the exactness rule holds). Enumerated BSGS is
+        50, 200 and 25. NEG-1 (c_probe 371): price and online ratios 1855/8,
+        ic_online 18550, 74200 and 9275 ns. NEG-2 (precomputation 10):
+        bl_steps 105, 420 and 105/2, bl_online 4200, 16800 and 2100 ns, online
+        ratio 185/42 at every cell. Every flag (ratios_agree, all_match_bsgs,
+        matches_bsgs_probes, matches_price_ratio, same_reduced_ratio,
+        all_match, match, matches_preregistered) equals its value recomputed
+        from the model.
+      note: >-
+        This recomputation follows the spec's stated formulas. It is not the
+        plan's blind re-derivation (TASK-20261105-b543c3), which this task
+        neither performed nor read.
+    - id: M2-summary
+      result: see A11-summary-and-report; equal.
+
+  control_checks:
+    - {id: CON-1, run: RUN-ICPERF-2d715d, frozen_pass_condition: "same_reduced_ratio true and matches_preregistered true", observed: "same_reduced_ratio true, matches_preregistered true, both cells 925/4", behaved_as_designed: true}
+    - {id: CON-2, run: RUN-ICPERF-2c627f, frozen_pass_condition: "same_reduced_ratio true and matches_preregistered true", observed: "same_reduced_ratio true, matches_preregistered true, both cells 925/4", behaved_as_designed: true}
+    - {id: CON-3, run: RUN-ICPERF-779d41, frozen_pass_condition: "all_match true, enumerated_probes 50, 200, 25", observed: "all_match true, enumerated 50/200/25 equal formula 50/200/25", behaved_as_designed: true}
+    - {id: NEG-1, run: RUN-ICPERF-30596e, frozen_pass_condition: "matches_preregistered false, price 1855/8, online 1855/8", observed: "matches_preregistered false, price_ratio 1855/8, online_ratio 1855/8", behaved_as_designed: true}
+    - {id: NEG-2, run: RUN-ICPERF-850008, frozen_pass_condition: "matches_preregistered false, online 185/42", observed: "matches_preregistered false, online_ratio 185/42, precomputation_steps 10", behaved_as_designed: true}
+    - id: session_control_validity
+      result: >-
+        The journal summary control_validity is "passed" (5 control units, all
+        valid). Both negative controls record matches_preregistered false, as
+        designed, and the 4 non-negative units record true.
+    - id: discriminating_power
+      result: Out of joint (J2-scope). Not assessed here.
+
+  heuristic_validation_checks: []
+  heuristic_validation_note: >-
+    Not applicable. specification heuristic_under_test is null and no
+    sampling or distributional prediction is made.
+  cost_model_checks: []
+  cost_model_note: >-
+    Not applicable to J1. The 925/4 price ratio is a stated-formula integer
+    identity on preset toy prices, not a measured cost table. Any cost or
+    section-5a pricing question belongs to J2.
+  proof_architecture_checks: []
+  inventor_ladder_note: >-
+    Not applicable. The claim under review is scoped to a stage-0 instrument
+    with no speedup claimed (spec scope_note and claim_boundary), so the
+    docs/inventor-protocol.md section 6 ladder is not triggered.
+  null_object_note: >-
+    Not applicable. No correlation, bias or excess is reported, so there is
+    no statistical signal needing a null-object control.
+
+  audit_flag_classification: >-
+    Pointer-coverage defect, not a value mismatch. AUD-20261105T164527Z-d5036c
+    flags all 6 replays (matched 0, mismatch 6) solely because 39 of the 66
+    compared rows name a pointer that neither the recorded nor the replayed
+    raw-result.json contains. runbook.yaml S02-trials replay.compare is one
+    11-pointer union over the five trial kinds, flattened from the
+    specification's two-tier contract (/matches_preregistered and /cells for
+    every unit, plus five primary-only pointers). tools/runbook.py
+    replay_unit:2445 scores any pointer not found on either side as
+    mismatch. The other 27 rows, the only rows carrying a value, are present
+    on both sides and exactly, type-strictly equal, including /cells in all
+    6 units. With /elapsed_seconds and /interpreter excluded, the whole
+    documents are identical. The absences are fixed in advance by the bound
+    run.py. My 18 fresh replays under CPython 3.11.18, 3.12.3 and 3.13.18
+    reproduce every value. There is no fabrication signal and no value
+    difference anywhere. A second, independent audit-coverage defect
+    accompanies it: the audit's "no environment drift" is a false negative
+    caused by a manifest key-name mismatch (python_version vs
+    version/python), and the real drift 3.11.17 to 3.13.18 changes no value.
+    Both defects are in the replay contract and audit tooling, not in the
+    producer's data. Per PD-1 they are recorded, not repaired here, and the
+    audit stays flagged as recorded.
+
+  session_citability: >-
+    Citable, scoped (same sense as DEC-20261029-5554ee citability_meaning).
+    RBS-ICPERF-8cdc92 and its 6 run records may be cited as the intact record
+    of one deterministic execution of the frozen stage-0 instrument. Any
+    citation must disclose three things: the audit verdict is flagged, and
+    the flag is the pointer-coverage defect above with zero value
+    differences; the audit's own replay_results give matched 0, so
+    replay-level assurance comes from this row-level classification and the
+    independent replays here, not from the tool's verdict; and there is
+    undetected-by-tool interpreter drift (3.11.17 recorded, 3.13.18
+    replayed) that changes no value. Citable does not mean evidence for
+    H-ICPERF-2f52d1, and the session cannot be returned to the Executor on J1
+    grounds, because no value mismatch exists. Whether it supports anything
+    beyond the integer identity is J2's and the Coordinator's decision.
+
+  verdict: passed
+  verdict_meaning: >-
+    The receipts are admissible evidence of what ran and what it recorded. It
+    does not support an ECDLP claim, demonstrate a speedup or latency effect,
+    support the parent idea's measured-price claim, or authorize promotion.
+
+  limitations:
+    - id: L1
+      text: >-
+        The audit verdict is flagged and stays flagged. In the tool's own
+        terms it gives no clean replay (matched 0 of 6). The assurance in this
+        report rests on the row-by-row classification and on independent
+        scratch replays, neither of which is a durable audit record.
+    - id: L2
+      text: >-
+        The audit's interpreter-parity check (DEC-20261029-5554ee) was
+        inoperative for this session because of the manifest key name, so
+        "no environment drift" in audit.json and in the review plan's
+        audit_note is a false negative. Actual drift was 3.11.17 to 3.13.18,
+        with no value effect.
+    - id: L3
+      text: >-
+        A replay of the same run.py is an A/A repetition. It cannot detect a
+        wrong-but-consistent implementation. M1 recomputes from the spec's
+        formulas with disjoint code and agrees, but the spec's formulas were
+        written with run.py in view. Independence from the statement belongs
+        to the blind re-derivation (not read here).
+    - id: L4
+      text: >-
+        One deterministic execution, with independent_instances 1 and no
+        seeds. This is by design (spec /experiment/replication).
+    - id: L5
+      text: >-
+        Resource records are timing only. Peak memory is not recorded. The
+        spec budget is advisory, and runs took under 0.05 s each.
+    - id: L6
+      text: >-
+        The PR #2776 body could not be read: GitHub API access to the
+        repository is not enabled for this session. The merge commit message
+        (1a0afc68c2) contains no v1 run id. The in-repository v2 record set
+        was searched in full.
+    - id: L7
+      text: >-
+        The recorded interpreter build (ephemeral uv path, runtime_lock null)
+        cannot be reconstructed, so parity was tested at 3.11.18, the nearest
+        available patch.
+    - id: L8
+      text: >-
+        HEAD moved during review, and a sibling report's path became visible
+        through git diff --stat. Its content was not read, and the inputs were
+        confirmed byte-identical to f7eb8ae292.
+
+  out_of_joint_observations_for_coordinator:
+    - >-
+      Not judged here (J2): the NEG-2 trial reports no price ratio. By the
+      spec's own formula, precomputation_steps does not enter the price
+      ratio, which would stay 925/4. NEG-2 moves only the online ratio.
+    - >-
+      Tooling, not a ruling: replay_unit cannot express per-trial compare
+      pointers, and it scores absent-on-both as mismatch. _recorded_python
+      reads only /run/environment/python_version. Either change belongs to a
+      separate tooling task, never to this frozen runbook.
+
+  commands_run:
+    - sha256sum <bound files>
+    - PYTHONHASHSEED=0 python3 tools/runbook.py verify experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92 --rerun-checks
+    - PYTHONHASHSEED=0 python3 experiments/EXP-ICPERF-284bc4/implementation/check.py experiments/EXP-ICPERF-284bc4/runs/<RUN> (x6)
+    - python3 -I <scratch>/c1_replay_rows.py <repo>
+    - python3 -I <scratch>/c2_receipts.py <repo>
+    - python3 -I <scratch>/c3_recompute.py <repo>
+    - python3 -I <scratch>/c4_journal.py <repo>
+    - python3 -I <scratch>/c5_replay.py <repo> <scratch>/replay /usr/bin/python3.11 /usr/bin/python3.12 /usr/local/bin/python3.13
+    - python3 <scratch>/c6_check_run.py <repo>; python3 <scratch>/c6b.py <repo> <scratch>/negctl/RUN-ICPERF-8e3acd/manifest.yaml
+    - python3 -I <scratch>/c7_assertions.py <repo>
+    - git diff/log/show/cat-file/merge-base/hash-object (read-only)
+    - pdftotext reports/run-20261030T1520Z/report.pdf <scratch>/report.txt
+  scratch_dir: /tmp/claude-0/-home-user-crypto-autoresearcher/07fcda66-83c3-5bc6-99e7-f81af94fa447/scratchpad/val-284bc4
+  scratch_is_not_a_record: >-
+    The scratch outputs are verifications. They are not runs, are never
+    committed, and are not evidence on their own.
+  resume_checkpoint_note: >-
+    No experiment run was launched, so the CLAUDE.md resume-checkpoint rule
+    for run launchers did not apply.
+
+  artifact_paths:
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml
+    - experiments/EXP-ICPERF-284bc4/trial-plan.json
+    - experiments/EXP-ICPERF-284bc4/implementation/run.py
+    - experiments/EXP-ICPERF-284bc4/implementation/check.py
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-2d715d/
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-2c627f/
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-779d41/
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-30596e/
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-850008/
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/journal.jsonl
+    - experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c/audit.json
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-38f344/claims/TASK-20261029-65798b.1.release.json
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-576b11/validation-report.yaml
+
+review_attestation:
+  task_id: TASK-20261105-576b11
+  role: validator
+  review_plan: REVIEW-ICPERF-284bc4-20261105
+  joints_owned: [J1-validity]
+  sources_read:
+    - CLAUDE.md (auto-loaded)
+    - docs/agent-runtime-core.md
+    - agents/validator.md
+    - AGENTS.md (heading list; section "Review architecture", lines 329-341)
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml
+    - experiments/EXP-ICPERF-284bc4/runbook-lint.txt
+    - experiments/EXP-ICPERF-284bc4/trial-plan.json
+    - experiments/EXP-ICPERF-284bc4/implementation/run.py
+    - experiments/EXP-ICPERF-284bc4/implementation/check.py
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md}
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-2d715d/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-2c627f/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-779d41/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-30596e/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-850008/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md}
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/journal.jsonl
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/outputs/S01-probe-python/attempt-1/environment.json
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/steps/S02-trials.attempt-1.{claim-fetch.stderr,claim.stdout,claim-committed.stdout,claim-branch.stdout,claim-commit.stdout,release.stdout,supervisor.stdout}
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/** (hashed by script against journal digests)
+    - experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c/audit.json
+    - experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c/replay/<6 runs>/raw-result.json (by script)
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/{data.json,report.typ,graph.svg,report.pdf}
+    - experiments/EXP-ICPERF-e467a5/specification.yaml (sha256 only)
+    - tools/runbook.py (lines 184-192, 214-240, 353-391, 1087-1135, 1202-1255, 1998-2043, 2044-2110, 2111-2220, 2220-2465, 2780-2888)
+    - tools/validate_ledger.py (lines 727-752, 1360-1372; check_run executed)
+    - tools/experiment_execution.py (lines 995-1010)
+    - tools/allocate_id.py (lines 1-40, argparse lines)
+    - tools/progress_metrics.py (lines 195-225)
+    - ledger/decisions/DEC-20261029-ca33b3.yaml (rg-matched lines)
+    - ledger/decisions/DEC-20261029-9bc3ff.yaml (lines 1-6, 90-184; key list)
+    - ledger/decisions/DEC-20261029-22e05b.yaml (lines 1-6, 52-87; key list)
+    - ledger/decisions/DEC-20261029-5554ee.yaml (lines 1-6, 89-188; key list)
+    - ledger/hypotheses/H-ICPERF-2f52d1.yaml (rg-matched lines 17-25, 46, 134-138)
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-38f344/claims/TASK-20261029-65798b.1.release.json
+    - pcc/ledger.jsonl (one rg-matched line, truncated)
+    - "rg occurrence counts only (content not read): ledger/decisions/DEC-20261029-316bfb.yaml, ledger/decisions/DEC-20261029-3bfa78.yaml, ledger/handoffs/TASK-20261029-65798b.yaml, ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml, ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/{BATCH-38f344,TASK-20261029-225ed8,TASK-20261029-0a9023}.yaml"
+    - "git metadata: commits 5200f03900, 9d13fcfde5, af94114e9c, 1a0afc68c2 (PR #2776 merge message), f7eb8ae292, 1e5baa38e6 (diff --stat only)"
+  read_sibling_reports: false
+  sibling_exposure_disclosure: >-
+    While confirming the snapshot, git diff --stat f7eb8ae292 showed the path
+    and line count (82) of experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml,
+    added by 1e5baa38e6 during this review. Its content was not opened. No
+    file under experiments/EXP-ICPERF-284bc4/review/ other than
+    review-plan.yaml, and nothing under experiments/EXP-ICPERF-283a70/review/,
+    was read.
+  blind_from_respected: null
+  joint_verdicts:
+    - {joint: J1-validity, verdict: holds_with_limitation}
+  verdict: holds_with_limitation
