@@ -1,0 +1,63 @@
+# Prospective checked transformation and certified SAT integration
+
+Designer preparation, 2026-11-03. No IDs, admission, implementation, validation outcome or execution is supplied. The active k2 review has no assumed verdict. Sealed earlier packets remain unchanged. This work is the next concrete software dependency for the requested original comparison; the separate k3 theory packet does not block it.
+
+## Deliverable and dependency
+
+Deliver an additive implementation of (i) an exact k2 appended-row/A0-substitution document and checker, (ii) a generic full-chart certified SAT adapter, (iii) exception-safe attempted-work receipts, and (iv) a versioned census-counter correction. Preserve the original canonical chart authenticator, range compiler and independent certificate/signed verifiers byte-for-byte. A changed source must use a separately named transform authenticator rooted in the original descriptor; it must never be passed off as an unchanged canonical document.
+
+Before fixing scientific claim wording, bind the actual sealed k2 review and scoped Coordinator decision. Record holds/fails/unresolved per relevant joint. No current result is presumed. Source-level transform implementation requires the exact ordinary-equivalence/projection scope and software checks; any strict-regularity annotation additionally requires its actual accepted theorem premises. If the k2 result does not support a joint, leave that feature/claim unavailable and continue generic chart integration/accounting on the original source. Do not repeat the theorem review or wait for k3 to proceed with the original comparison.
+
+## Proposed candidate locations and APIs
+
+All new implementation files, if subsequently admitted, live under `research/prime_sat_transform_integration_20261103/`. These are proposed paths, not files created by this packet.
+
+| Candidate path | Interface and purpose |
+| --- | --- |
+| `transform.py` | `build_transform(trusted_descriptor, mode)` and `authenticate_transform(document, trusted_descriptor, mode)`; modes `identity`, `k2_raw_A0`, `k2_addrow_A0`. Reconstruct exact original bytes, certificate, substituted source and layout internally. |
+| `transport.py` | `reconstruct_original_assignment`, `project_original_coefficients`, `encode_transformed_assignment`, `decode_and_check_original`; preserve ordered coefficient maps and all auxiliary fibers. |
+| `chart_solver.py` | `solve_chart(document, trusted_descriptor, mode, limits, strategy, checkpoint)` and `verify_chart_answer`; generic polynomial/domain/projection transport into the counted bridge and unchanged completion checker. |
+| `engine_counted.py` | Scoped copy of frozen `engine.py`; narrowly change `_charge` and solve finalization/receipts. Preserve search, refutation, certificate and clause semantics. New source identity, never replace historical engine bytes. |
+| `bridge_counted.py` | Scoped adaptation of frozen per-solve `engine_bridge.py` loading only `engine_counted.py`; preserve private refuter namespace, sidecars and shared-state guard; forward failures to the attempt sink. |
+| `attempt_receipt.py` | Durable begin/checkpoint/seal and phase scopes; attach partial evidence to failures without masking original exceptions or fabricating native statistics. |
+| `census_v2.py` | Versioned prospective producer/verification adapter for complete-model census counters; preserve raw dictionaries and all legacy semantic checks. No historical record rewriting. |
+| `software_controls.py` | Fixed source/transport/mutation/failure/schema controls and separately tagged native smoke tests, bounded as below. |
+| `SOURCE-API.md`, `software-contract.json`, `source-provenance.json` | Exact schema, phase/metric units, limits, input digests and scoped fork differences before any validation. |
+
+The source inventory freezes baseline code, prior contracts and audit. A software reviewer independently checks candidate source and develops its own controls without producer tests/results; actual source-aware read restrictions and runtime amendment belong to later admission. Do not add k3 sharing or normalization to these modules.
+
+## Transformation document and fidelity
+
+Trust root: original public descriptor, original `canonical_chart` content/digest, original `compile_chart` content/digest, operation identifier/version, and admitted source digests. Authenticate original content using unchanged original routines. Construct an expected transformation from public data; do not trust a caller-supplied rewritten equation list.
+
+For finite k2 constant stratum, original A=A0+qX, B=1, U=X²+u1X+u0. Original rows are N2=q²+u1-a, N1=2*A0*q+u0-a*u1-alpha, N0=A0²-a*u0-beta, and L=A0+a*q-b. Bind these to actual labels/terms, not strings alone. In `k2_addrow_A0`, append exactly R=N1+2*a*N2 without replacing any row, then substitute A0=b-a*q in every row. In `k2_raw_A0`, perform only the substitution as the equality/control presentation. Retain all nonzero transformed rows and duplicates; omit only identically zero rows with explicit row map. No coefficient pivot on q, no row pruning, no target normalization. Outside exact applicability, return explicit `not_applicable` for a requested transform or use separately requested `identity`; never silently claim transformation occurred.
+
+Document fields include original and transformed variable orders/roles, original projection [A0,q], transformed projection [q], forward coefficient map, inverse A0 reconstruction, full original-to-transformed row map, appended-row certificate, canonical sparse field arithmetic, compiled bit/range layout and its exact digest. Reject arbitrary coefficients, labels, aliases, stale originals, extra/missing rows, and unrequested operations. Keep q projected. The original coefficient pair must be reconstructed and used when comparing projected sets; reduced bit masks cannot be compared directly with original masks.
+
+The theorem's all-variable polynomial field augmentation is distinct from the source's Boolean range representation. Represent these explicitly as separate schema concepts. Verify reconstruction A0=b-a*q is canonical modulo p and that original field/range conditions follow from the actual retained variables. Never insert degree-p rows into a quadratic arithmetic API by pretending they were exported before. If a later mathematical statement discusses an omitted transformed field row, bind its precise certificate separately; do not infer permission to delete other source rows.
+
+For returned transformed assignments, reconstruct ALL original variables and invoke unchanged original aggregate and signed checks. This costs a real phase. Compare exact signed multiplicities, both common-root beta signs and original ordered normalized coefficients. A polynomial solution/fiber bijection does not by itself establish a Boolean auxiliary-fiber bijection: map range-state bits and validate canonical encoding/decoding in both directions, preserving explicit records for all returned auxiliary witnesses. Runtime blocking concerns original coefficient fibers, not a changed or empty projection.
+
+## Generic bridge and independent final verification
+
+Use the range document's exact `n`, `p`, `projected_bits`, `polynomials` and `bootstrap_cnf`. Convert canonical serialized monomial keys to ring masks under strict typed/range checks; bind conversion to the document hash. Use `CountedRing(n,p)` and generic solve, not coordinate `run_cell` or its `2*s` projection assumption. Preserve the coordinate wrapper unchanged.
+
+An identity document continues through original `complete_chart_transcript`. A transformed document first passes `authenticate_transform`, then its independently reconstructed trusted range descriptor goes through unchanged `compiler.complete_transcript(..., kind='range', bootstrap_cnf=exact_cnf)` and the unchanged final prefix/certificate adapter. Subsequently decode every model, reconstruct and validate the original chart. Archive original solver transcript and augmented range-proof transcript separately, including every invalid record and gap. Domain CNF alone is never a terminal full-cube certificate. Native `False`, complete-model coverage, and final checker acceptance are separate observations; final certified completion requires all necessary original checks and no missing projection coverage.
+
+Freeze limits explicitly. Legacy coordinate `sat_candidates` counts full native models returned by its outer solver. Prefix-engine `sat_calls`, callback `model_checks`, accepted projected models and native decisions/conflicts are different units. Record each; do not rename or convert one into another. Preserve the original106-cell limits in the later comparison and prospectively specify any additional engine caps/mapping. Software smoke caps below do not amend comparison limits. No exhaustive oracle can steer search or provide learned clauses.
+
+## Failure receipts and census schema
+
+`_charge` must capture phase arithmetic deltas in `finally` even when a callback raises. Accumulate each delta once, retain original exception identity, and record non-arithmetic event counts separately. Avoid nested scopes double-counting totals: retain hierarchical phases but sum disjoint leaves only.
+
+Before solver initialization emit an attempt record. During solve retain models, learned certificates, refuter sidecars and stop reasons. Capture available `accum_stats` while the native object is still alive, then record final partial snapshot in all exits, including failed model conversion/domain validation, callback, reconstruction, checkpoint and teardown exceptions. Native-stat access/receipt failure must not replace the primary exception; attach secondary failures. A missing statistic is `unknown` with a reason, never zero. A forced termination may leave only the last durable checkpoint and incomplete cost coverage; label that explicitly.
+
+Suggested envelope: schema/version, attempt/source/document/config hashes, phase, monotonic sequence, declared solver status, completion-check status, stop reason, primary/secondary errors, raw/partial transcript pointers, counters by unit/phase, native-stat availability, cost-coverage flags, timestamps, environment/toolchain evidence and output hashes. Observed solver status remains untouched; envelope `failed`, `interrupted`, `censored`, `invalid_output`, `complete_unverified` and `verified_complete` are distinct. No exception becomes UNSAT/completion. Seal per-attempt receipts atomically without overwriting prior attempts. If storage fails, retain in-memory/stdout diagnostics and state persistence failure; do not claim a durable receipt exists.
+
+The census v2 adapter is prospective only. Preserve exact model sets, projection/order, witnesses, learned-certificate checks, limits, controls and completion checks from original `encoding.verify`. Original code and `RUN-PNEXT-ad1645` invalid-output artifacts stay unchanged. Store raw costs plus a versioned canonical vector over the closed metric names: coefficient_additions, coefficient_multiplications, evaluation_term_visits, restriction_term_visits, membership_transform_subtractions, legendre_pow_calls, membership_curve_tests, domain_clauses, boolean_assignments_visited. Confirm this list against the frozen counter sources during implementation; adding a metric requires an explicit schema version/update before validation, not silently filtering it.
+
+Canonical equality allows ONLY omitted-versus-explicit-zero for a known metric. Reject unknown keys (including unknown zero-valued keys), booleans, nonintegers, negatives and any differing nonzero count. The independent v2 verifier recomputes its own fresh census and checks the canonical vector, while retaining BOTH raw dictionaries. Reuse unchanged original semantic verification functions where possible; any required versioned verifier adaptation must have a line-by-line scope map proving that only the specified cost equality changed. Do not normalize a whole payload or drop unsupported metrics. Test the counter-history behavior with bounded synthetic states and tiny Boolean rings only; do not rerun historical full cohorts in the software stage.
+
+## Completion artifacts, not outcomes
+
+Candidate source/API/provenance; exact bounded test plan and immutable raw attempt receipts (including failure/timeout); producer software report/diagram/PDF/input manifest; fresh independent source-aware review/attestation and its raw controls; scoped Coordinator synthesis. Rendering/custody belongs to root. No result values, successful validation, reviewed theorem, performance conclusion or completed comparison are written by this packet.
