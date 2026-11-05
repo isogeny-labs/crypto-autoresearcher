@@ -12,6 +12,18 @@ fn numbers(values:impl IntoIterator<Item=u32>)->String {
 fn ordinals(values:&[u64])->String {
     array(values.iter().map(ToString::to_string))
 }
+fn cross_ratio_orbit(label:&str)->&'static str {
+    // Fixed fixture values; the separate polynomial-basis checker recomputes
+    // all 24 orderings from the certified roots rather than trusting these.
+    match label {
+        "split-1111" => "[[10],[14],[17],[18],[23],[26]]",
+        "split-112" => "[[0,1],[0,2],[1,1],[1,2],[2,1],[2,2]]",
+        "split-13" => "[[2,14,14],[2,14,25],[2,25,14],[2,25,25],[13,0,25],[24,0,14]]",
+        "split-22" => "[[3,0],[7,0],[9,0],[12,0],[19,0],[25,0]]",
+        "irreducible-4" => "[[2,0,0,0]]",
+        _ => "null",
+    }
+}
 fn main() {
     if std::env::args().len()!=1 {
         eprintln!("fixed F27 all-degree software certificate takes no arguments");
@@ -54,9 +66,9 @@ fn main() {
             numbers(modulus.into_iter().map(|value|encoding[value as usize])));
         let root_values=array(roots.finite_roots.iter().map(|root|
             numbers(root.coefficients()[..extension_degree].iter().map(|&value|encoding[value as usize]))));
-        rows.push(format!("{{\"label\":\"{label}\",\"form\":{},\"pattern\":{},\"infinity\":{},\"factors\":{},\"extension_modulus\":{},\"roots\":{},\"rational_indices\":{},\"nonrational_indices\":{},\"union_indices\":{}}}",
+        rows.push(format!("{{\"label\":\"{label}\",\"form\":{},\"pattern\":{},\"infinity\":{},\"factors\":{},\"extension_modulus\":{},\"roots\":{},\"cross_ratio_orbit\":{},\"rational_indices\":{},\"nonrational_indices\":{},\"union_indices\":{}}}",
             numbers(basis_form),numbers(roots.factorization.pattern().into_iter().map(|value|value as u32)),
-            roots.factorization.infinity,factors,modulus,root_values,
+            roots.factorization.infinity,factors,modulus,root_values,cross_ratio_orbit(&label),
             ordinals(&rational),ordinals(&nonrational),ordinals(&union)));
     }
     println!("{{\"schema\":\"pext.all-degree-collision-software/v1\",\"fixture\":\"f27-char3\",\"structures\":{},\"cocycle_entries\":{},\"rational_image_entries\":{},\"rows\":{}}}",

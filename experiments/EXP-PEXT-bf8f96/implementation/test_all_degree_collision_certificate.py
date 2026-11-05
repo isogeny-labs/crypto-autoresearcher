@@ -34,6 +34,16 @@ class AllDegreeCollisionCertificateTests(unittest.TestCase):
                          [590, 279, 117, 20, 1, 279, 1])
         self.assertEqual([row["pattern"] for row in result["targets"][:5]],
                          [[1, 1, 1, 1], [1, 1, 2], [1, 3], [2, 2], [4]])
+        self.assertEqual([len(row["cross_ratio_orbit"]) for row in
+                          self.certificate["rows"][:5]], [6, 6, 6, 6, 1])
+        broken_ratio = copy.deepcopy(self.certificate)
+        broken_ratio["rows"][3]["cross_ratio_orbit"][0][0] = 4
+        with self.assertRaisesRegex(ValueError, "cross-ratio orbit certificate"):
+            verify(broken_ratio, self.joined)
+        missing_ratio = copy.deepcopy(self.certificate)
+        missing_ratio["rows"][4].pop("cross_ratio_orbit")
+        with self.assertRaisesRegex(ValueError, "cross-ratio orbit certificate"):
+            verify(missing_ratio, self.joined)
         missing = copy.deepcopy(self.certificate)
         missing["rows"][3]["nonrational_indices"].pop()
         with self.assertRaisesRegex(ValueError, "nonrational_indices candidate set mismatch"):
