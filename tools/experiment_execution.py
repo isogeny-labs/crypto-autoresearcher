@@ -669,9 +669,66 @@ def committed(root: Path, path: Path) -> None:
         raise ExecutionError(f"uncommitted or changed input: {relative}")
 
 
+def committed_queue(root: Path, path: Path) -> None:
+    """Verify a queue's Git blob or its committed managed-artifact binding."""
+    relative = path.relative_to(root.resolve()).as_posix()
+    path = safe_path(root, relative)
+    tracked = subprocess.run(
+        ["git", "-C", str(root), "ls-tree", "HEAD", "--", relative],
+        capture_output=True, check=False)
+    if tracked.returncode:
+        raise ExecutionError(f"cannot inspect committed queue: {relative}")
+    if tracked.stdout:
+        if tracked.stdout.split(maxsplit=2)[:2] not in ([b"100644", b"blob"], [b"100755", b"blob"]):
+            raise ExecutionError(f"committed queue is not a regular file: {relative}")
+        # A changed tracked file must never fall back to a matching manifest.
+        committed(root, path)
+        return
+    manifest_relative = str(PurePosixPath(relative).parent / ".artifacts.json")
+    manifest = safe_path(root, manifest_relative)
+    manifest_entry = subprocess.run(
+        ["git", "-C", str(root), "ls-tree", "HEAD", "--", manifest_relative],
+        capture_output=True, check=False)
+    if (manifest_entry.returncode or manifest_entry.stdout.split(maxsplit=2)[:2]
+            not in ([b"100644", b"blob"], [b"100755", b"blob"])):
+        raise ExecutionError(f"queue manifest is not a committed regular file: {manifest_relative}")
+    result = subprocess.run(
+        ["git", "-C", str(root), "show", f"HEAD:{manifest_relative}"],
+        capture_output=True, check=False)
+    if result.returncode or not manifest.is_file() or result.stdout != manifest.read_bytes():
+        raise ExecutionError(f"uncommitted or changed queue manifest: {manifest_relative}")
+
+    def unique_object(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError(f"duplicate manifest key: {key}")
+            value[key] = item
+        return value
+
+    try:
+        binding = json.loads(result.stdout, object_pairs_hook=unique_object)
+        if (not isinstance(binding, dict) or set(binding) != {"schema", "files"}
+                or binding["schema"] != "artifacts.manifest/v1"
+                or not isinstance(binding["files"], dict)):
+            raise ValueError("invalid manifest schema")
+        entry = binding["files"].get(path.name)
+        if (not isinstance(entry, dict) or set(entry) != {"sha256", "bytes"}
+                or not isinstance(entry["sha256"], str)
+                or not SHA256.fullmatch(entry["sha256"])
+                or type(entry["bytes"]) is not int or entry["bytes"] < 0):
+            raise ValueError("invalid queue entry")
+        content = path.read_bytes()
+        if len(content) != entry["bytes"] or hashlib.sha256(content).hexdigest() != entry["sha256"]:
+            raise ValueError("queue digest or size mismatch")
+    except (ValueError, OSError) as error:
+        raise ExecutionError(f"invalid managed queue binding: {relative}: {error}") from error
+
+
 def authorize(root: Path, path: Path, plan: dict[str, Any], owner: str, epoch: int) -> dict[str, Any]:
     """Re-render the existing dispatcher, including its archive and claims gates."""
-    for relative in (plan["specification"], plan["queue"], *plan["source_sha256"]):
+    committed_queue(root, safe_path(root, plan["queue"]))
+    for relative in (plan["specification"], *plan["source_sha256"]):
         file = safe_path(root, relative)
         committed(root, file)
         if relative in plan["source_sha256"] and sha256(file) != plan["source_sha256"][relative]:
