@@ -217,3 +217,46 @@ provides administrative design/readiness only: no official scientific ledger or
 status records, independent staffed review, verified resolver/provider/probe,
 full-ledger pass or native execution is inferred. Exact-byte assessment follows
 the parent's completed implementation and selected software checks.
+
+## Exact-source administrative assessment
+
+Read the completed core, checker, common source/input bindings, admitted driver,
+protocol builder, supervisor, exporter and software controls. Both solvers now
+use the same ScalarField instrument with distinct Fr add/sub/mul/inv counters,
+including shared per-case projection and original-row certificate verification.
+Fresh differences, representatives, lifted signs, missing groups, dense rank/full
+kernel checks and public equations match the specified interfaces. Projection is
+performed once per case; every solver and elimination state is rebuilt cold.
+
+The copied fixture input matches its original A7 input bytes and source revision.
+The four final gzip hashes match the artifact manifest in the named immutable
+main snapshot. Actual release bindings include the current manifest, fixture
+copy and A7 protocol template, while parent raw files and original fixture bytes
+are also checked by their declared content hashes. No old recovered label is
+passed to either solver; the A7 semantic comparison runs after new results exist.
+
+A prospective inspection found a retention gap: compare initially returned only
+after both arms completed, so failure in the second arm could discard a completed
+baseline result. Parent added immediate per-arm completion callbacks and explicit
+failed-arm phase/partial-result journaling. A fault-injection control retains the
+completed full-joint scalar/result and candidate failed-phase subtraction count.
+No affected native panel preceded the repair.
+
+This delegation directly ran the metadata-only export test: one passed in 0.13
+seconds, exercising actual 576-row export lint and invalid ID/seed controls without
+solver calls. The final draft has zero schema/lint findings and all 576 seed-0
+cells match the protocol table. Parent's final preparation record reports 39
+software controls passed in 1.49 seconds, including public-point checks and the
+retention regression. Those scientific software controls were read, not rerun
+by this administrative delegate. Full-ledger validation remained refused in the
+sparse checkout; no pass is inferred.
+
+The exact hashes and pending publication/admission conditions are recorded in
+admission-assessment.json. Administrative approvability is not an execution
+release or independent scientific review. Parent must publish the exact source
+and bound input material, freeze a fresh protocol against the actual published
+source SHA, obtain the current real S3 checkpoint/gate and issue/publish its exact
+root release before native mathematics. Bound byte changes require reassessment.
+The study preregistration is prospective metadata; an executed benchmark wrapper
+is not claimed. Final benchmark custody must record the actual native command,
+measurements and raw/report provenance under the current publication rules.

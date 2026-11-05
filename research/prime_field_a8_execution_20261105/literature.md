@@ -62,3 +62,30 @@ in the panel. The rank identity and lifting formula specify checks; their native
 implementation equivalence and measured costs remain unexecuted at this design
 stage. No scalar aggregate weights, isolated timing advantage, complete S or
 new target-recovery mechanism follows from the design.
+
+## Prospective implementation and readiness
+
+Read all completed native/admin modules and tests, including the ScalarField
+replacement that separates Fr add/sub calls for both arms. Independently checked
+all four parent gzip byte hashes against the manifest at main
+5440a26b36693841b89fc803baf73d4061df4826, and the identical fixture-copy input
+against that snapshot and its original source commit. No new row projection,
+solver panel or target computation was executed in this delegation.
+
+The actual metadata-only export test passed directly: one test in 0.13 seconds.
+All 576 deterministic seed-0 export cells match the protocol table; the final
+unfrozen draft has zero findings. Root's final saved software record reports
+39 controls passed in 1.49 seconds, including marked public multiplication,
+missing/deficient/grouped affine systems, counter separation and second-arm
+failure retention. The delegate read those controls and results without claiming
+an independent scientific rerun or staffed review.
+
+The completed-arm retention gap identified before native work was repaired:
+per-arm results are now journaled immediately, and failures retain phase/counter
+prefixes plus any available result. Original-row/public certificate checks,
+shared projection, fresh cancellation construction and lifting costs remain
+separate. The administrative assessment binds exact source/input hashes and
+records remaining Git publication, freeze, actual checkpoint and root-release
+conditions. It grants no execute authority, verified provider/model claim or
+official scientific state transition. Benchmark preregistration is not an
+executed launcher record; final custody must use actual measured provenance.
