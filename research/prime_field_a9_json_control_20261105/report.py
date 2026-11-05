@@ -31,6 +31,7 @@ def main():
   c=data['arm_totals'][arm];logical.append([arm]+[(c.get(k,0) if arm.startswith('sparse_') else 'unmeasured') for k in ('functional_coefficients_scanned','functional_support_entries','kernel_support_visits','kernel_coordinate_reads')])
  outcomes={arm:sum(c['identified_targets'] for c in data['cells'] if c['arm']==arm) for arm in ARMS}
  (a.out/'plotted-data.json').write_text(json.dumps(dict(cells=data['cells'],totals=rows,phases=phases,logical=logical,outcomes=outcomes),separators=(',',':'))+'\n')
+ cumulative=[[key]+[data['campaign_accounting']['cumulative_arm_counters'][arm].get(key,0) for arm in ARMS] for key in KEYS]
  text=f'''#set page(paper:"a4",margin:16mm)
 #set text(size:9pt)
 = Sparse functional evaluation in both solver representations
@@ -67,7 +68,7 @@ Independent plain projection/dense-affine rank/consistency/full-kernel spans/uni
 
 Raw records were committed/pushed before this report. Lossless gzip hashes and official S3manifests bind all snapshots/journals. v12appends the retained failed attempt and this completed factorial study/1152solver-certificate records to untouched v11history; no old data is rewritten. The pipeline/protocol/export/benchrecord/report/database/progress artifacts preserve finite observations, not campaign completion. Fresh curves/targets with all construction/collection/elimination/extraction/lifting/verification costs remain necessary before claiming an improvement over the strongest baseline.
 
-Sources: A8RESULTS.md and archived dense controls; A4CertifiedSystem.identify; design.md/literature.md. PrimaryPKM2016p8section3.2 reread (SHAa53030a6cde720c354aebfb65b1eb01e07766ce2d26e543d77f2516c0a49ef5b) separates relation and linear-algebra costs without calibrating these Frcalls. Canonical research-kb skill read viaGitHub crypto@bc10008055; MCP unavailable and wrapperstatus127/noexecutable. Explicit direct-source/rg fallback used; no KBsourceIDs, absence or novelty claim. All generated graphs describe retained counters only.
+Sources: A8RESULTS.md and archived dense controls; A4CertifiedSystem.identify; design.md/literature.md. PrimaryPKM2016p8section3.2 reread (SHAa53030a6cde720c354aebfb65b1eb01e07766ce2d26e543d77f2516c0a49ef5b) separates relation and linear-algebra costs without calibrating these Frcalls. Canonical research-kb skill read viaGitHub crypto commit bc10008055; MCP unavailable and wrapperstatus127/noexecutable. Explicit direct-source/rg fallback used; no KBsourceIDs, absence or novelty claim. All generated graphs describe retained counters only.
 '''
  (a.out/'report.typ').write_text(text);typst.compile(str(a.out/'report.typ'),output=str(a.out/'report.pdf'))
  for path in a.out.glob('*.svg'):path.write_text('\n'.join(v.rstrip() for v in path.read_text().splitlines())+'\n')

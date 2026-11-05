@@ -713,3 +713,12 @@ archive preserves v10 history. Dense target-unit syndrome evaluation remains in
 the baseline, and 50 candidate cases use more subtractions, so the next matched
 control is sparse functional evaluation in both methods. No weighted or runtime
 speedup is asserted.
+
+[A9 sparse-functional controls](../../../research/prime_field_a9_json_control_20261105/RESULTS.md)
+match all kernels/certificates/outcomes on 288 immutable systems/four modes. Sparse
+joint recovery records 688,054 Fr multiplications versus 605,078 for sparse
+cancellation, including all method phases; candidate counts regress in two cases.
+The failed archived-JSON attempt is preserved and charged in cumulative costs.
+v12 retains both attempts and all historical rows. Fresh AP-vs-optimized-fixed-base
+source holdouts, with symmetric kernel-free row-space recovery and explicit setup
+anchors/costs, are the next proposed control; no end-to-end gain is asserted.
