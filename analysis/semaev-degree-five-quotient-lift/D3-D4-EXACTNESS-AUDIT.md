@@ -25,12 +25,20 @@ independent of the queued sliced direct-W4 rank calculation:
    `fc0911db6560fe10b49d88d6206f89f8de6494616020a864c82d8be552749613`
    and output SHA-256
    `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`.
-   The plan pins `quotient_lift_checkpoint.cpp` SHA-256
-   `ce6424270a807bdb47ca7e391fd74467fedb6d5a6759a8a71655b99e7d96f7d6`
+   The build receipt `runtime/blocked-checkpoint-build-001.json` binds this
+   binary to the actual `quotient_lift_blocked_checkpoint.cpp` source,
+   SHA-256 `b9cbe65514244d15b2a4de1c653783d50322ba18e9334eb5891f348dd487c0cf`,
    and `quotient_checkpoint.hpp` SHA-256
    `553e26f10907206d622684bec776d1e65ee1b91f096b8f0b271b378b9d27816e`.
-   Those source hashes match the preserved source worktree.
-3. In the D4 source, each old nonrepresentative monomial relation is
+   Both hashes match the preserved source worktree. The D4 plan lists the
+   earlier `quotient_lift_checkpoint.cpp` source hash; that is not the
+   source of this binary and must not be used for its provenance. The
+   blocked source changes only the triangular high-monomial rewrite:
+   outside-block dependencies are accumulated by an F2 matrix product,
+   while within-block dependencies are substituted in descending order.
+   Its relation-generation and fixed-point loops are unchanged from the
+   earlier source.
+3. In the actual D4 source, each old nonrepresentative monomial relation is
    multiplied by every variable (the `seed variable` loop), and every
    new relation whose pivot is in the old-coordinate block is multiplied
    by every variable in the `closure round` loop. Each row therefore
