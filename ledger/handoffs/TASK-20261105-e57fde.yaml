@@ -27,7 +27,6 @@ handoff:
   - coordination/prime_sat_transform_validation_20261105/review-plan.md
   - coordination/prime_sat_transform_validation_20261105/export-mapping.md
   - coordination/prime_sat_transform_validation_20261105/inference-amendment.yaml
-  - research/prime_sat_transform_integration_20261103/validation_20261105/producer/attempt-files.tar
   - research/prime_sat_transform_integration_20261103/validation_20261105/producer/manifest.json
   - research/prime_sat_transform_integration_20261103/validation_20261105/producer/summary.json
   - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export.json
@@ -47,8 +46,9 @@ handoff:
   - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/manifest.yaml
   - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/raw-result.json
   - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/bundle-manifest.json
-  - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-files.tar
+  - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-files.tar.gz
   - experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/attempt-authorization.json
+  - research/prime_sat_transform_integration_20261103/validation_20261105/producer/export-check.json
   constraints:
   - Only exact published fixed software controls; all full106+6 scientific comparison
     cells and five leads remain downstream.
@@ -69,6 +69,16 @@ handoff:
     must preserve incomplete outcomes.
   - No execution until exact protocol/launcher/source publication and publication-bound
     authorization; template remains false.
+  - Post-execution custody amendment only for failed RUN-PNEXT-201c3c; never authorize
+    redispatch or second attempt.
+  - Producer manifest.json references existing native attempt-files.tar.gz with logical/stored
+    hashes and sizes. Separate producer tar removed; native logical tar represented
+    by its actual gzip storage.
+  - Failure export and export-check retain seven missing-arm/count/identity findings;
+    no full-coverage acceptance.
+  - Native failed run/slot1 and all counters remain immutable; original execution
+    plan/preapproval bytes remain historical authority, not regenerated for this custody
+    correction.
   deliverables:
   - coordination/prime_sat_transform_validation_20261105/result-snapshot-receipt.json
   artifact_paths:
