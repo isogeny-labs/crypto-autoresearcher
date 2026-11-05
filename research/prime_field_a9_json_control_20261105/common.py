@@ -50,3 +50,20 @@ def remaining_watchdog(release,prior,now):
     remaining=floor(min(release['watchdog_seconds'],(datetime.fromisoformat(release['absolute_deadline'])-now).total_seconds(),maximum-prior['cpu_user_seconds']-prior['cpu_sys_seconds'],maximum-prior['diagnostic_wall_seconds']))
     if remaining<=0:raise ValueError('original cumulative deadline/allowance exhausted')
     return remaining
+
+
+def observed_journal_work(events):
+    """Charge completed outputs and failed solver prefixes, not finalized rows alone."""
+    from collections import Counter
+    completed={arm:Counter() for arm in ARMS};failed={arm:Counter() for arm in ARMS};shared=Counter();calls=0;failed_events=0;errors=0
+    for event in events:
+        kind=event['kind']
+        if kind=='case_input':
+            for phase in event['shared_phases']:shared.update(phase['counters'])
+        elif kind=='solver_complete':
+            result=event['result'];calls+=1;completed[result['arm']].update(result['counters'])
+        elif kind=='solver_failed':
+            failed_events+=1
+            for phase in event['phases']:failed[event['arm']].update(phase['counters'])
+        elif kind=='failure':errors+=1
+    return dict(observed_completed_producer_calls=calls,failed_solver_events=failed_events,failure_events=errors,completed_arm_counters={a:dict(v) for a,v in completed.items()},failed_arm_phase_counters={a:dict(v) for a,v in failed.items()},observed_arm_counters={a:dict(completed[a]+failed[a]) for a in ARMS},shared_projection_counters=dict(shared),partial_work_unknown=bool(errors),coverage='Journalled completed outputs and solver_failed phase prefixes; a crash can leave unrecorded work, marked unknown. Inclusive processresources retained separately, never converted to Frunits.')

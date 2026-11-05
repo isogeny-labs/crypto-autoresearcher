@@ -2,7 +2,7 @@
 import argparse,json,os,gzip
 from pathlib import Path
 from collections import Counter
-from common import HERE,ROOT,INPUTS,ARMS,load,digest,write_once,tools
+from common import HERE,ROOT,INPUTS,ARMS,load,digest,write_once,tools,observed_journal_work
 
 def optional(path):
     path=Path(path);candidates=[p for p in (path,Path(str(path)+'.gz')) if p.is_file()]
@@ -11,11 +11,12 @@ def optional(path):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--run',type=Path,required=True);p.add_argument('--protocol',type=Path,required=True);a=p.parse_args()
-    rules=load(INPUTS);protocol=load(a.protocol);execution=load(a.run/'execution.json');host=load(a.run/'host.json');fixtures=load(ROOT/rules['public_fixtures']['path']);cells=[];caseindex=0;shared=[];phase_totals={arm:{} for arm in ARMS}
+    rules=load(INPUTS);protocol=load(a.protocol);execution=load(a.run/'execution.json');host=load(a.run/'host.json');fixtures=load(ROOT/rules['public_fixtures']['path']);cells=[];caseindex=0;shared=[];all_events=[];phase_totals={arm:{} for arm in ARMS}
     for cell in fixtures['cells']:
         data=optional(a.run/'raw'/(cell['id']+'.json'));records={} if data is None else {(v['descriptor']['arm'],v['descriptor']['prefix'],v['descriptor']['scope']):v for v in data['records']}
         journal=a.run/'raw'/(cell['id']+'.events.jsonl');encoded=journal if journal.is_file() else Path(str(journal)+'.gz');events=[]
         if encoded.is_file():events=[json.loads(v) for v in (gzip.decompress(encoded.read_bytes()).decode() if encoded.suffix=='.gz' else encoded.read_text()).splitlines()]
+        all_events.extend(events)
         for schedule in rules['source_schedules']:
             for prefix in rules['prefixes']:
                 for scope in rules['scopes']:
@@ -47,9 +48,11 @@ def main():
     for c in cells:c.pop('counters',None)
     prior=rules['prior_failed_attempt'];prior_exec=load(ROOT/prior['files'][0]['path']);prior_prefix=load(ROOT/prior['files'][2]['path'])
     old_events=[json.loads(v) for v in gzip.decompress((ROOT/prior['files'][3]['path']).read_bytes()).decode().splitlines()]
-    old_shared=[p for v in old_events if v['kind']=='case_input' for p in v['shared_phases']]
-    prior_projection=dict(sum((Counter(p['counters']) for p in old_shared),Counter()))
-    summary['campaign_accounting']=dict(physical_attempts=2,completed_panel_solver_calls=summary['solver_calls_verified'],prior_observed_unverified_solver_calls=prior_prefix['computed_arm_outputs'],cumulative_observed_producer_calls=summary['solver_calls_verified']+prior_prefix['computed_arm_outputs'],prior_arm_counters=prior_prefix['observed_arm_counters'],prior_projection_counters=prior_projection,cumulative_arm_counters={arm:dict(Counter(totals[arm])+Counter(prior_prefix['observed_arm_counters'].get(arm,{}))) for arm in ARMS},cumulative_projection_counters=dict(Counter(shared_counts)+Counter(prior_projection)),prior_execution=prior_exec,current_execution=execution,absolute_deadline=prior['absolute_deadline'],cost_scope='Observed prior4produceroutputs remainunverifiedbutcharged, plus successfulpanel work. Projectioneachattempt once. WholeprocessCPU/wall includes failedchecker/IO/startup overhead separately; no assigning it to invented Frunits or summing inclusivephaseclocks.')
+    current_observed=observed_journal_work(all_events);old_observed=observed_journal_work(old_events)
+    if old_observed['observed_completed_producer_calls']!=prior_prefix['computed_arm_outputs']:raise ValueError('priorprefix journal count differs')
+    if old_observed['observed_arm_counters']!=prior_prefix['observed_arm_counters']:raise ValueError('priorprefix counters differ')
+    if complete and current_observed['observed_completed_producer_calls']!=1152:raise ValueError('completedpanel journal coverage differs')
+    summary['campaign_accounting']=dict(physical_attempts=2,completed_panel_solver_calls=summary['solver_calls_verified'],current_observed_completed_producer_calls=current_observed['observed_completed_producer_calls'],prior_observed_unverified_solver_calls=old_observed['observed_completed_producer_calls'],cumulative_observed_producer_calls=current_observed['observed_completed_producer_calls']+old_observed['observed_completed_producer_calls'],current_journal_work=current_observed,prior_journal_work=old_observed,prior_arm_counters=old_observed['observed_arm_counters'],prior_projection_counters=old_observed['shared_projection_counters'],cumulative_arm_counters={arm:dict(Counter(current_observed['observed_arm_counters'][arm])+Counter(old_observed['observed_arm_counters'][arm])) for arm in ARMS},cumulative_projection_counters=dict(Counter(current_observed['shared_projection_counters'])+Counter(old_observed['shared_projection_counters'])),prior_execution=prior_exec,current_execution=execution,absolute_deadline=prior['absolute_deadline'],cost_scope='Completed and failed-prefix producer phases charged fromjournals regardlessof finalization. Prior4outputs remainunverified. Unrecorded crashwork explicitunknown, notzero. Old/newinclusiveCPU/wall includechecker/IO/startup separately, no invented Frunits or inclusivephaseclock sums.')
     write_once(a.run/'analysis.json',summary,compact=True);t=tools();e=t.export_skeleton(protocol,str(a.protocol.resolve()),'local','A9-'+a.run.name)
     e['producer']=dict(runtime='codex',model=None,session=None,role='executor');e['source']=dict(repo='crypto-autoresearcher',commit=execution['observed_git_head'],dirty=host['git_dirty']);e['host'].update(path='host.json',sha256=digest(a.run/'host.json'),summary={k:host[k] for k in e['host']['summary']});e['runs']=[]
     keys=[v['id'] for v in protocol['metrics']['primary']]

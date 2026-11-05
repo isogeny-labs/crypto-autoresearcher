@@ -98,3 +98,13 @@ def test_original_cumulative_budget_and_deadline_are_not_reset():
  assert m.remaining_watchdog(release,{**prior,'diagnostic_wall_seconds':21599},now)==1
  for kwargs in (dict(absolute_deadline=now.isoformat()),dict(watchdog_seconds=0)):
   with pytest.raises(ValueError,match='exhausted'):m.remaining_watchdog({**release,**kwargs},prior,now)
+
+
+def test_failed_prefix_accounting_does_not_require_finalized_case_files():
+ spec=importlib.util.spec_from_file_location('_json_repair_journal_accounting',ROOT/'research/prime_field_a9_json_control_20261105/common.py');m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+ events=[dict(kind='case_input',shared_phases=[dict(counters={'Fr.field_mul':7})]),dict(kind='solver_complete',result=dict(arm='dense_joint',counters={'Fr.field_mul':11})),dict(kind='solver_failed',arm='dense_cancel',phases=[dict(status='complete',counters={'Fr.field_mul':3}),dict(status='failed',counters={'Fr.field_sub':2})]),dict(kind='failure')]
+ out=m.observed_journal_work(events)
+ assert out['observed_completed_producer_calls']==1 and out['failed_solver_events']==1
+ assert out['observed_arm_counters']['dense_joint']=={'Fr.field_mul':11}
+ assert out['observed_arm_counters']['dense_cancel']=={'Fr.field_mul':3,'Fr.field_sub':2}
+ assert out['shared_projection_counters']=={'Fr.field_mul':7} and out['partial_work_unknown']

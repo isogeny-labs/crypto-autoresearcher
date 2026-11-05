@@ -69,7 +69,7 @@ def main():
         timeout=remaining_watchdog(release,prior_execution,datetime.now(timezone.utc))
         def constrain():
             resource.setrlimit(resource.RLIMIT_AS, (release['memory_bytes'], release['memory_bytes']))
-            resource.setrlimit(resource.RLIMIT_CPU, (timeout, timeout+5))
+            resource.setrlimit(resource.RLIMIT_CPU, (timeout, timeout))
         timed_out, returncode, exception = False, None, None
         with (args.out/'stdout.txt').open('x') as stdout, (args.out/'stderr.txt').open('x') as stderr:
             child = None
@@ -78,19 +78,16 @@ def main():
                                          start_new_session=True, preexec_fn=constrain)
                 write_once(args.out/'child.json', dict(supervisor_pid=os.getpid(), child_pid=child.pid,
                                                       child_process_group=child.pid, argv=argv, started_at=now()))
-                returncode = child.wait(timeout=timeout)
+                returncode = child.wait(timeout=remaining_watchdog(release,prior_execution,datetime.now(timezone.utc)))
             except subprocess.TimeoutExpired:
                 timed_out = True
-                os.killpg(child.pid, signal.SIGTERM)
-                try:
-                    returncode = child.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    os.killpg(child.pid, signal.SIGKILL)
-                    returncode = child.wait()
+                # No further scientific work after the original absolute deadline.
+                os.killpg(child.pid, signal.SIGKILL)
+                returncode = child.wait()
             except BaseException as error:
                 exception = dict(type=type(error).__name__, reason=str(error))
                 if child is not None:
-                    os.killpg(child.pid, signal.SIGTERM)
+                    os.killpg(child.pid, signal.SIGKILL)
                     child.wait()
         unchanged = True
         try:
