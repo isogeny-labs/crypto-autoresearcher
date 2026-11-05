@@ -671,3 +671,16 @@ published q3/n5 fixtures. The
 records the scope. Next compute multiplication over the base rational-function
 field and independently check connectedness and genus. The contract remains
 `review_required`; no scientific cohort trial was launched.
+
+## Fixed-field multiplication table, 2026-11-05
+
+The [fixed-field multiplication builder](../experiments/EXP-PEXT-bf8f96/implementation/fixed_field_multiplication.py)
+computes every invariant-basis product in the exact radical algebra, decomposes
+it over k(x) by Frobenius-norm rationalization, and reconstructs the ambient
+product. It checks the unit identity and binds a table to the named source
+curve and T. Ten related software tests pass across F27 source rows, a
+constant twist, and a published q3/n5 class/T fixture. The
+[report](../experiments/EXP-PEXT-bf8f96/reports/fixed-field-multiplication-20261105/report.md)
+records the fixture scope. Next independently check descent and geometric
+connectedness, then implement the controls and remaining six-stage pipeline.
+The contract remains `review_required` and unfrozen.
