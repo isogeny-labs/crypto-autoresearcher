@@ -1,12 +1,12 @@
 # Formal workspace build does not fit in 16 GB of RAM
 
-- **Status:** `investigating` (narrowed 2026-10-29: does not affect the CI gate)
-- **Kind:** resource limit. The module needs **more than about 15.2 GiB**
-  of anonymous memory, resident plus swapped (lower bound, hosted runner,
-  2026-11-06). The cloud containers cap Bash commands at a 13.36 GiB memory
-  cgroup with no swap, so they cannot build it. The `ubuntu-latest` gate
-  runner (15.6 GiB RAM + 3 GiB swap) builds it only by swapping, with an
-  unmeasured and possibly thin margin
+- **Status:** `resolved` (2026-11-06, exit criterion 1; limitations below)
+- **Kind:** resource limit. The module's peak anonymous footprint is
+  **15.23 GiB** (RssAnon + VmSwap, 15,974,696 kB; frozen protocol v3, hosted
+  runner, 2026-11-06). The `ubuntu-latest` gate runner (15.6 GiB RAM + 3 GiB
+  swap) builds it by swapping, with about 1.1–3.4 GiB to spare. The cloud
+  containers cap Bash commands at a 13.36 GiB memory cgroup with no swap, so
+  they cannot build it
 - **Affected work:** the `formal-workspace` proof gate
   (`tools/verify_formal_targets.py`, `.github/workflows/lean-verification.yml`,
   active as of 2026-10-28; it was disabled when this record was opened); every `autoresearch formal verify` run, which starts
@@ -14,7 +14,7 @@
   (`lean-verification` never built the Quotient target);
   [the 2026-10-23 rename report](../docs/reports/2026-10-23-translation-commutes-rename/report.md)
 - **Next action owner:** unassigned (formal lane maintainer)
-- **Last updated:** 2026-11-06
+- **Last updated:** 2026-11-06 (v3)
 
 ## Problem
 
@@ -53,9 +53,19 @@ established for the standard runner; why the two differ is unknown.
   `set_option maxHeartbeats 0` and checks a large finite rank certificate by
   kernel reduction. Peak elaboration memory grows with the certificate. Peak
   RSS was not measured.
-- **Missing capability:** the module's full peak memory (only a lower
-  bound is measured: about 15.2 GiB resident plus swap), and a container
-  with more than ~16 GB available to commands.
+- **Missing capability:** a cloud container with more than ~16 GB, or with
+  swap, available to commands. The full peak is now measured (v3 below).
+- **Observed, 2026-11-06, hosted runner, frozen protocol v3**
+  ([report](../docs/reports/2026-11-06-degree-three-module-rss-rerun/README.md),
+  run 42161794163, `export-v3.json`). The v3 watchdog counts swap. All three
+  arms finished with exit 0: no watchdog kill, no kernel OOM, empty
+  `dmesg-oom.txt`. Peak RssAnon + VmSwap was 15,973,664 / 15,971,572 /
+  15,974,696 kB (default / `LEAN_NUM_THREADS=1` / default), with 1.25–1.99 GB
+  of it in swap. Elaboration took 485–525 s. The lowest MemAvailable +
+  SwapFree during a default arm was 1,117,936 kB. Frozen verdicts: C1
+  supported (15.23 GiB); C2 within_control_distribution, so one thread does
+  not help; C3 margin 3,537,668 kB, not fragile by the protocol's 1 GiB
+  threshold.
 - **Observed, 2026-11-06, hosted runner, frozen protocol v2**
   ([report](../docs/reports/2026-11-06-degree-three-module-rss-rerun/README.md),
   PR #3057, run 42137803829). Lean 4.35.0, Mathlib `cfc55fc5`, module sha256
@@ -145,10 +155,11 @@ established for the standard runner; why the two differ is unknown.
 
 ## What would unblock it
 
-- [ ] `lake build` of the committed `formal/` workspace exits 0 on the host
+- [x] `lake build` of the committed `formal/` workspace exits 0 on the host
   class the gate runs on (16 GB, or a declared larger runner), with peak RSS
-  recorded. The exit-0 half is met by the hosted runs of 2026-10-28 (two job
-  logs read on 2026-10-29); the peak-RSS half is not; or
+  recorded. Exit 0: the hosted runs of 2026-10-28 (job logs read on
+  2026-10-29). Peak recorded: 15.23 GiB anonymous for the heaviest module,
+  the frozen v3 measurement of 2026-11-06. Met; or
 - [ ] the gate builds the requested module and its closure (`lake build
   +Module`) and runs the axiom audit on a root restricted to built modules,
   and records which modules it did not build. That is a verifier change, and
@@ -160,13 +171,10 @@ per-target.
 
 ## Next discriminating step
 
-- **Action:** either measure the full peak, or act without it.
-  - **Measure:** a v3 amendment to the 2026-11-06 protocol, with a watchdog
-    that counts swap (`MemAvailable + SwapFree`) and a floor low enough to
-    let the module finish, run through `.github/workflows/formal-module-rss.yml`.
-  - **Act:** treat the gate as fragile now, since the lower bound already
-    reaches the runner's RAM. The 2026-11-06 run did not measure the full
-    peak: its watchdog ignored swap.
+- **Action (done 2026-11-06):** the full peak was measured under frozen
+  protocol v3. Nothing more is needed unless a recheck trigger fires. To
+  re-measure, start `.github/workflows/formal-module-rss.yml` by hand
+  (`workflow_dispatch`) under a new frozen protocol version.
 - **Outcomes:** if the hosted peak is within about 1 GB of the runner's
   available memory, the gate is fragile. Then restructure the module (a
   smaller certificate per declaration, or `decide` split across lemmas) or
@@ -211,3 +219,14 @@ per-target.
   `investigating`: the full peak and the margin are unmeasured. The next
   step is either a v3 measurement or treating the gate as fragile now (owner's
   call). Unresolved.
+- 2026-11-06 (v3): full peak measured under frozen protocol v3 with a
+  swap-aware watchdog (run 42161794163). All arms were valid: the peak is
+  15.23 GiB of RssAnon + VmSwap, `LEAN_NUM_THREADS=1` has no effect, and the
+  margin is 3.37 GiB by the protocol's formula, 1.07 GiB at the tightest
+  observed moment. Exit criterion 1 is met: **resolved**. Remaining
+  limitations: (1) the gate builds this module only with swap, so a runner
+  without the 3 GiB swapfile, or any growth of the module or its toolchain
+  past about 1 GiB, would OOM it; (2) the cloud containers (13.36 GiB memcg,
+  no swap) cannot build the whole workspace, so a `formalization_blocked`
+  from this module there says nothing about the target. Recheck on any
+  change to the module, the toolchain pin or the runner image's swap.
