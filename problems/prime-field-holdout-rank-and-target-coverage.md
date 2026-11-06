@@ -207,3 +207,25 @@ compares paid consecutive versus randomized target offsets at matched query
 budgets on fresh holdouts, naming the production aP+bQ baseline and explicit
 affine-label/offset obligations. Broader curve coverage, calibrated costs and
 independent scientific review remain open. Status remains investigating.
+
+## A11 fresh affine-target coverage, 2026-11-06
+
+[A11](../research/prime_field_a11_execution_20261106/RESULTS.md) records four
+fresh curves/32public targets,1,152dependent systems/2,304cold solver calls.
+Both general-U methods return identical target identities/scalars. All three
+policies cover the32point panel at eight queried endpoints per target. Smaller
+budgets differ: at budget2,relations-scope target slots are275walk/311hashed/
+260general over48dependent source views; anchor-scope counts276/325/348 include
+explicit paid intermediate coincidences. Source prefixes64/128 and branches
+reuse points. These are unverified producer measurements under
+PCC-20261106-70a1b5 andPCC-20261106-648bb8, without signed replay/recomputation.
+[pcc:unverified]
+
+Outside-first again trades fewer inversions for more other Fr work; no weighted
+winner follows. Complete cold source/target constructor vectors, actual shared
+queries, general outside cancellation weights, original-row/public certificates,
+negative residuals and closed-curve S3 receipts are retained. The v14 database
+preserves prior rows and failures. The [new worklist](../research/prime_field_a11_execution_20261106/next-leads.md)
+selects the next bounded comparison. Broader transfer, calibrated costs and
+independent scientific standing remain unresolved. Status remains investigating;
+this continuation changes no official hypothesis/goal state. [pcc:unverified]

@@ -100,3 +100,13 @@ SQLite integrity and lossless gzip are checked. Hydrate the adjacent official
 artifact manifest, then decompress prime-fields-v13.sqlite.gz to the ignored
 SQLite filename. [A10 results](../prime_field_a10_execution_20261106/RESULTS.md)
 state separate costs, target-coverage limits and the scope of software checks.
+
+The additive [v14 affine-target snapshot](../prime_field_a11_execution_20261106/database/v14-affine-holdout/generation-v14.json)
+preserves v13 and adds four fresh curves,32public targets,144constructor
+branches,74,291affine labels,702physical query records,1,152dependent systems
+and2,304general-U solver certificates. History contains18curves/18bases and16
+physical execution records, including prior unsuccessful attempts. Parent-byte,
+historical-row, foreign-key, integrity and gzip checks are producer assertions;
+measurement standing remains unverified. The [A11 report](../prime_field_a11_execution_20261106/RESULTS.md)
+keeps cold construction references and shared physical work distinct.
+[pcc:unverified]
