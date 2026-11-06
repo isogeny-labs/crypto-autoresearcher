@@ -658,8 +658,8 @@ def budget_skip(a, CD, D):
     if best is None:
         return None
     pred = best["wall_s"] * (CD / best["C"]) ** 3
-    if pred > a.remaining_seconds - 1200:
-        return {"predicted_s": pred, "remaining_s": a.remaining_seconds, "reserve_s": 1200,
+    if pred > a.remaining_seconds - a.reserve_seconds:
+        return {"predicted_s": pred, "remaining_s": a.remaining_seconds, "reserve_s": a.reserve_seconds,
                 "measured_basis": best}
     return None
 
@@ -791,6 +791,7 @@ def parse(argv=None):
     p.add_argument("--wall-cap", type=float, default=None, help="override per-instance-per-D wall cap (tests)")
     p.add_argument("--remaining-seconds", type=float, default=None)
     p.add_argument("--timings-file", default=None)
+    p.add_argument("--reserve-seconds", type=float, default=1200.0, help="reporting reserve of SR-3")
     p.add_argument("--ann-max-bytes", type=int, default=512 << 20)
     p.add_argument("--skip-m7", action="store_true")
     p.add_argument("--require-fixtures", default=None,

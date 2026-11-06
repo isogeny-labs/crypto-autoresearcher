@@ -343,3 +343,40 @@ with detail `certificate_pending`.
     `D` equals the closure degree of the certificate record; otherwise the
     status stays `pending_checker` and the analysis records the
     `verdict_problem`. A bare string verdict is not sufficient.
+
+## 9. Per-trial records under the supervisor (round 5)
+
+Two directories are involved. The SHARED run directory is the one `run.py` and
+`certify.py` append to (`instances.jsonl.gz`, `closures.jsonl.gz`, `cost.jsonl`,
+`systems/`, `certificates/`, `trials/<trial-id>.json`, `fixtures.json`,
+`session_start.json`). The per-trial directory `{run_dir}` belongs to the
+supervisor (`tools/experiment_execution.py`), which writes `launch.json`,
+`command.txt`, `environment.json` and the logs there; `code/adapter.py` adds
+two files to it.
+
+* `raw-result.json` (`sembin.trial_raw_result.v1`): `trial_id`, `trial_key`
+  (`cell/arm/r`, `-U` suffix for an A/A of EQS4-U, `cell/certify` for a
+  certify trial), `kind` (`trial` | `certify`), the launched `command`,
+  `exit_code`, `attack_claimed: false`, `budget` (`total_seconds`,
+  `reserve_seconds`, `elapsed_seconds` since `session_start.json`,
+  `remaining_seconds = total - reserve - elapsed`, and what was passed to
+  `run.py`: `remaining_seconds = total - elapsed` plus `reserve_seconds`, so
+  that run.py's test "predicted > remaining - reserve" is the same inequality),
+  `shared_artifacts_appended` (per shared file that is new or grew: `sha256`,
+  `size`, `size_before`, `new`), `shared_artifact_violations` (existing shared
+  files whose old bytes changed; append-only logs may only grow), and for a
+  trial the whole shared trial record (`trial_record`, `trial_record_path`,
+  `trial_record_sha256`) or for a certify trial the JSON line `certify.py`
+  printed (`certify`, with `trial`).
+* `manifest.yaml`: a `run:` envelope (`id` = the directory name, `experiment_id`,
+  `hypothesis_id`, `trial_id`, `status` completed | failed, `code`, `environment`,
+  `inputs.trial_id` and `inputs.parameters`, `timing`, `metrics`,
+  `result.raw_result`, `result.certificate.kind: none`, `artifacts`) that passes
+  the run schema of `tools/validate_ledger.py`.
+
+`code/check_trial.py` exit codes: 0 valid (a censored closure is a completed
+trial and a recorded infrastructure kill is not a scientific result; both are
+listed in `warnings`); 1 invalid measurement or instrument defect (IR-1/IR-2/IR-3
+invalid instance, IR-5 stale or mismatching code hashes, SR-1 fixtures not all
+pass, SR-4 PC-TRI, SR-5 A/A or C-FE-EQ, DER-3 versus direct-membership
+mismatch, trial error, record disagreement); 2 usage error.
