@@ -294,11 +294,15 @@ with detail `certificate_pending`.
    increasing leading monomial in grevlex: degree ascending and, inside a
    degree, ascending grevlex, i.e. DEscending bitmask. Informational only;
    (d) does not use it.
-4. **`instance` / `Z`.** `instance` is a JSON object (the parameters of
-   section 1 for EQS4 / EQS4-U / EQS2 instances; for nulls, PC-TRI and
-   re-encodings (EQS4-AA) it is the EMPTY object `{}`, because their systems
-   are not the Weil descent of any parameter set; `instance` must then be
-   absent or empty and `Z` is verified by brute force from the system). `Z` is a list of hex integers.
+4. **`instance` / `Z`.** `instance` is either ABSENT or a fully populated JSON
+   object (the parameters of section 1: `n, field_poly, A, B, m, k, v, x_R,
+   num_points_E`). It is present for EQS4 / EQS4-U / EQS2 instances. For nulls,
+   PC-TRI and re-encodings (EQS4-AA) the key is OMITTED, because their systems
+   are not the Weil descent of any parameter set; `Z` is then verified by brute
+   force from the system. An empty `instance` object (`{}`) is never written and
+   is malformed. `Z`, when present, is a non-empty list of hex integers; an
+   empty `Z` is never written (the key is omitted). No optional key is ever
+   written as `null`, `{}` or `[]`.
 5. **Hex fields.** Lowercase hex without prefix; the zero value is `"0"`;
    leading zeros are not written (a checker may accept them); the empty string
    is invalid; a value must be `< 2^C` with `C` the number of columns of

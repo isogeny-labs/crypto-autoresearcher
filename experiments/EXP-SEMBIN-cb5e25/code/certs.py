@@ -23,6 +23,15 @@ from closure import SembinClosure, popcount, reduce_member
 from descent import canonical_bytes, system_sha256, _vars_of  # noqa: F401
 
 
+def _optional(cert: dict, Z, meta) -> None:
+    """Optional informational keys are written only when populated: an empty `instance`
+    object or an empty `Z` list is never written (a checker treats an empty block as malformed)."""
+    if Z:
+        cert["Z"] = [format(z, "x") for z in Z]
+    if meta:
+        cert["instance"] = meta
+
+
 def mask_vars(mask: int):
     return list(_vars_of(mask))
 
@@ -131,9 +140,8 @@ def make_ann_cert(cl: SembinClosure, nv: int, eqs, g_masks, g_index: int, meta: 
         "system_sha256": system_sha256(nv, eqs),
         "form": form,
         "g": poly_to_json(g_masks), "g_gb_index": g_index,
-        "Z": [format(z, "x") for z in Z],
-        "instance": meta,
     }
+    _optional(cert, Z, meta)
     if form == "dual":
         cert["L_hex"] = annihilator_hex(cl)
     else:
@@ -272,14 +280,15 @@ def make_wdag_cert(cl: SembinClosure, nv: int, eqs, targets, meta: dict, Z: list
         rows = sorted([mask_vars(mu), kk] for (mu, kk), p in nd["rows"].items() if p)
         prods = sorted([j, ids[c]] for (j, c), p in nd["prods"].items() if p)
         out_nodes.append({"id": ids[k], "rows": rows, "prods": prods})
-    return {
+    cert = {
         "schema": "sembin-wdag-v1", "D": cl.D, "nv": nv, "neq": len(eqs),
         "system_sha256": system_sha256(nv, eqs),
         "nodes": out_nodes, "outputs": [ids[k] for k in outs],
         "targets": [poly_to_json(g) for g in targets],
-        "Z": [format(z, "x") for z in Z], "instance": meta,
         "levels": len(levels),
     }
+    _optional(cert, Z, meta)
+    return cert
 
 
 # --------------------------------------------------------------------------

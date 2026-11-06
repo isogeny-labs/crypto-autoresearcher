@@ -823,7 +823,7 @@ def test_raw_hash_serialisation_includes_zero_generators():
         "k", cell, sh, inst, inst["raw_eqs"], inst["raw_eqs"], {})["raw_system_sha256"]
 
 
-def test_non_eqs_certificates_have_empty_instance_block(tmp_path):
+def test_non_eqs_certificates_omit_instance_block(tmp_path):
     rd = str(tmp_path / "run")
     os.makedirs(rd)
     st = RUN.run_trial(_args(rd, "m3n07", "NULL-PROF", 1, "--cert-degree", "4", "--always-ann", "--wdag", "never"))
@@ -832,4 +832,28 @@ def test_non_eqs_certificates_have_empty_instance_block(tmp_path):
     if not recs:
         pytest.skip("this null is contained at D=4")
     cert = json.loads(gzip.open(os.path.join(rd, recs[0]["M8"]["path"])).read())
-    assert cert["instance"] == {}
+    assert "instance" not in cert        # absent, never empty
+
+
+def _no_empty_optional(c):
+    for k in ("instance", "Z", "levels", "g_gb_index"):
+        if k in c:
+            assert c[k] not in (None, {}, []) or k == "g_gb_index" and c[k] == 0, k
+
+
+def test_no_optional_key_written_empty_or_null():
+    inst = mk_instance("m3n05", 1)[2]
+    eqs, _ = CL.adapted_basis(inst["raw_eqs"])
+    gb = enumz.groebner_from_Z(inst["Z"], inst["nv"])
+    gp = enumz.gb_polys(gb)
+    rec, cl = CL.w_closure_record(inst["nv"], 2, eqs)
+    idx = next(i for i, g in enumerate(gp) if not cl.member(g))
+    for meta, Z in (({}, inst["Z"]), ({"n": 5}, []), ({}, [])):
+        for form in ("dual", "primal"):
+            c = certs.make_ann_cert(cl, inst["nv"], eqs, gp[idx], idx, meta, Z, form=form)
+            _no_empty_optional(c)
+            assert ("instance" in c) == bool(meta) and ("Z" in c) == bool(Z)
+    rec3, cl3 = CL.w_closure_record(inst["nv"], 3, eqs)
+    w = certs.make_wdag_cert(cl3, inst["nv"], eqs, gp, {}, [], expected_final_dim=rec3["final_dim"])
+    _no_empty_optional(w)
+    assert "instance" not in w and "Z" not in w and w["levels"] >= 1
