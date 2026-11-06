@@ -82,7 +82,7 @@ def test_geometry_and_partial_certificates_survive_json_without_integer_key_assu
 def test_zero_helper_label_and_native_overflow_refuse(control):
     fixture, labels, _, _, _ = control
     with pytest.raises(ValueError, match='scalar encoding'):
-        geometry.build(fixture, 2, dict(labels, **{}) | {2: 0}, solver.Meter(fixture))
+        geometry.build(fixture, 2, {**labels, 2: 0}, solver.Meter(fixture))
     large = dict(fixture, factor_base=fixture['factor_base']*13)
     with pytest.raises(ValueError, match='size gate'):
         geometry.build(large, 2, {}, solver.Meter(large))

@@ -56,7 +56,9 @@ def test_native48_helper16_keeps_old_coordinates_even_when_one_is_revealed():
     assert len(result['unknown_basis']) == 31 and [5, 1] in result['unknown_basis']
     assert result['recoveries'][0]['scalar'] == q[0]
     assert sum(v['identifiable'] for v in result['recoveries']) == 1
-    assert check(c, known, basis, result)['delta'] == 0
+    info = check(c, known, basis, result)
+    assert info['delta'] == 0 and info['source_rank'] == 1 and info['native_source_rank'] == 18
+    assert info['original_unknown_columns'] == 31 and info['base_rank_after_cancellation'] == 1
 
 
 def test_all_known_matches_executed_a13_direct_field_counts():

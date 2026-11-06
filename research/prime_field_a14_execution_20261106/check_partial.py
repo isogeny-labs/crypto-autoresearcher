@@ -68,7 +68,12 @@ def check(case, known, basis, result, fixture=None):
     if [v['phase'] for v in result['phases']] != names:
         raise ValueError('partial phase order')
     outside_rank, source_rank = check_source.rank([v['outside'] for v in case['target']], r), check_source.rank(M, r)
+    projected_source_rank = check_source.rank([project(v, b)[0] for v, b in case['source'][len(known):]], r)
+    if projected_source_rank+len(known) != source_rank:
+        raise ValueError('partial/native source span mismatch')
     return dict(checked=True, native_joint_rank=native_rank, supplied_columns=len(known),
-                reduced_joint_rank=rr, source_rank=source_rank, outside_rank=outside_rank,
+                reduced_joint_rank=rr, native_source_rank=source_rank,
+                source_rank=projected_source_rank, original_unknown_columns=len(basis), outside_rank=outside_rank,
+                base_rank_after_cancellation=native_rank-outside_rank-len(known),
                 delta=native_rank-outside_rank-source_rank,
                 identified=sum(v['identifiable'] for v in result['recoveries']))

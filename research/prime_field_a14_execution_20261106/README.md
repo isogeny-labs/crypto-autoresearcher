@@ -18,6 +18,10 @@ Implemented components:
 - `geometry.py` keeps native coefficient slots while querying one representative
   per geometric sign class. A helper/norm coincidence supplies a paid equation
   on the old coordinate. That coordinate remains in the original unknown basis.
+- `query_index.py` and `check_query.py` build the paid geometric pair/batch
+  index and compare native equations against a complete signed-triple/miss
+  oracle. Partial failures retain pair and accepted-row prefixes; native
+  parameters require admission before index work.
 - The tiny software controls exercise signed/permuted bases, native48/helper16
   dimensions, incomplete target spans, JSON roundtrips and corruptions. The
   all-known specialization is compared with A13's executed direct solver,
@@ -26,11 +30,12 @@ Implemented components:
 ```sh
 /workspace/factor-base-venv/bin/python -m pytest \
   research/prime_field_a14_execution_20261106/test_partial.py \
-  research/prime_field_a14_execution_20261106/test_geometry.py -q
+  research/prime_field_a14_execution_20261106/test_geometry.py \
+  research/prime_field_a14_execution_20261106/test_query.py -q
 ```
 
-Still required: geometry-aware collection/query caches and independent complete
-triple/miss controls; own paid helper16 and known32 constructor/cache paths;
+Still required: integrated source collection and target caches; own paid
+helper16 and known32 constructor/cache paths;
 source/target/native-row assembly and cost references; exact original-base
 information attribution; complete driver/export/source bindings, prospective
 protocol/current S3/root release and ordinary admission. No helper labels or
