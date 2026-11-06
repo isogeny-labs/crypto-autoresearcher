@@ -38,7 +38,7 @@ absence or independent isomorphism classes.
 
 Keep three paired AP/hash source seeds 0/1/2 and 128 sources per schedule, source
 algebra prefixes 64/128, scopes relations/anchors, target budgets 1/2/4/8, target
-programs walk/hashedoffset/general and two kernel-free solvers. The exact grid
+programs walk/hash_offset/general and two kernel-free solvers. The exact grid
 is 4 curves * 6 source schedules * 2 source prefixes * 2 scopes * 4 target budgets * 3 programs
 =1,152 supplied row systems, then two solvers =2,304 cold solver calls. Source
 construction retains knowledge checkpoints 0/64/128; prefix 0 is not another
@@ -148,10 +148,13 @@ For target t, first reduce the outside unit functional e_t through the outside
 pivots. If no lambda satisfies lambda*U=e_t, it remains unidentifiable. Otherwise
 lambda*B*z+q_t=lambda*b. Test lambda*B against the certified base system M+C;
 if its value is v, then q_t=lambda*b-v. Carry all outside/base elimination and
-normalization weights back to the original M and raw [B,U] rows. Every positive
-recovery must reproduce a unit target column, zero base coefficients, the claimed
-RHS and public [k]P=Q. Missing beta factors, wrong offsets or certificates valid
-only on a normalized intermediate matrix must refuse.
+normalization weights back to the original M and raw [B,U] rows. The current
+implementation retains cancellation certificates as sparse [row_index,coefficient]
+pairs, avoiding quadratic zero padding while preserving canonical indices and
+complete original-row action. Every positive recovery must reproduce a unit
+target column, zero base coefficients, the claimed RHS and public [k]P=Q.
+Missing beta factors, wrong offsets or certificates valid only on a normalized
+intermediate matrix must refuse.
 
 Both solvers use sparse certified echelon reduction and negative residuals,
 without a production full right kernel. Independent dense checks reconstruct
@@ -196,11 +199,30 @@ group arithmetic and dense row-space checks. These describe proposed controls,
 not controls run by this delegation or signed verification standing.
 
 Journal generated points, labelled constructor progress, accepted rows, query
-records and complete/failed phases immediately, as in repaired A10. Full collection
-snapshots precede analysis; completed solver outputs precede later checker calls.
-On failure retain partial counters and outputs; a kill without a terminal event
-marks missing work unknown, not zero. A row/memory/candidate guard refuses with
-the observed prefix, never truncates/replaces a hard case.
+records and complete/failed phases immediately, as in repaired A10. The current
+driver streams separate per-curve case-input, solver-output, case-check, branch
+and event JSONL records; it does not retain every case in RAM. Each solver output
+is flushed and its byte/hash receipt retained before the separate checker runs.
+Full source/collection records precede the associated analysis. Sparse coefficient
+certificates and bounded streaming are part of the intended memory boundary.
+
+After a complete curve, close every curve writer before losslessly streaming
+its closed records to gzip with original/archive hashes and a checked byte
+roundtrip. With the scientific worker paused, invoke the actual canonical S3
+push and retain its command/status/URI receipt. There are four closed-curve
+progress checkpoints, plus the ordinary run-start admission gate before any
+native math. Do not tar a growing journal or add redundant in-flight gates.
+Checkpoint/gzip/transfer work remains inside the original watchdog/resources;
+checkpoint success is an upload receipt, not signed execution verification or
+a claim that every oversized file was included. Preserve manifest/skipped-file
+scope and final artifact-store custody separately where applicable.
+
+A failed checkpoint or scientific step stops the one attempt, retains local
+closed/partial raw bytes, counters and receipts, and leaves unexecuted cases
+unknown. There is no in-row restore, implicit rerun or retry of a partial native
+panel. A kill without a terminal event marks unrecorded work unknown, not zero.
+A row/memory/candidate guard refuses with the observed prefix, never truncates
+or replaces a hard case.
 
 ## PCC, authority and machine limits
 
@@ -211,14 +233,18 @@ a local arithmetic pass but also lacks trusted signed standing; it covers only
 its stated equation. These are the prior records' scope, not new verification
 claims. [pcc:unverified]
 
-At A11 source publication the parent must register applicable source/prospective
-program claim records with exact artifact hashes and explicitly unverified
-standing. A source/configuration claim does not assert future outcomes. After
-execution, register measurement/execution claims against actual artifacts and
-retain the local/signed standing and coverage gaps. Do not repeat A10's late
-registration omission, relabel a local self-check as signed PCC verification,
-forge a replay/signature or retroactively rewrite the registration date. This
-delegation neither writes the PCC ledger nor supplies independent proof.
+A11 source-publication prose describes prospective programs only; no A11
+scientific outcome yet exists to assert. Publish the unverified proof/coverage
+scope from that stage. If a source/configuration assertion itself requires a
+claim record, the parent owns its exact typed record; it cannot assert a future
+measurement. Before the first citation of any new outcome, register the typed
+measurement/execution claim against actual artifact bytes and report its actual
+standing. Do not repeat A10's late outcome-registration correction, relabel local
+self-checks as signed PCC verification, forge replay/signature coverage or rewrite
+registration dates. This delegation does not write the PCC ledger or supply
+independent proof. A10's standing above describes the read coverage snapshot;
+a later signed seam must be read if relied upon, not assumed or polled as part
+of this administrative source-alignment task.
 
 One existing local worker/thread, 2 GiB, 21600 CPU/wall seconds and one recorded
 attempt; no automatic retry, new paid capacity or pool/provider substitution.
@@ -233,5 +259,75 @@ All budgets and targets remain fixed regardless of rank/recovery. No favorable
 effect is required for a valid finite observation. An outcome explained only by
 more queries, paid public collisions or extra precomputation is reported as such.
 No claim of novelty, globally strongest whole attack, broader goal completion
-or scientific-state promotion follows automatically. Exact-source readiness
-waits for the parent's final runnable interfaces, bindings and controls.
+or scientific-state promotion follows automatically. Exact-source readiness is now recorded in admission-assessment.final.json for
+published source 26d24174c4cc079d8318c87ab82a9686f121b9bf; prospective freeze
+and explicit checkpoint-backed root release still precede native work.
+
+## Stage-one source alignment (historical preparation)
+
+Stage-one source ea7df70535 contains affine_core/affine_construct/affine_registry/
+affine_solver, affine_check/check_solver/check_source, rules and small controls.
+The parent reports 42 tiny software controls passed in 0.35 seconds, with zero
+fresh A11 native experiments; these are unsigned producer preparation records,
+not signed standing. [pcc:unverified]
+
+The twelve exclusions in inputs.json consist of the exact eight older A4/A6
+pairs plus A10's (8191,8090), (8191,2681), (65537,38058), (65537,61540), bound by
+A10 rules/generated-file hashes. The policy ID is hash_offset. max_affine_labels
+is8192; row/pair bounds remain4096, alongside the declared source/target candidate
+gates. Registry lookups use a shared base-point hash index whose actual setup
+is charged in the query cache, rather than assuming an uncharged full scan or
+counting an O(n) scan that does not execute. check_source reuses the complete
+once-per-curve triple oracle for affine queries instead of enumerating it again.
+
+Driver/common/streaming and final protocol/export/release entrypoints are still
+being completed. This note alignment is not final readiness: actual byte closure,
+stream/checkpoint failure controls, live input bindings, proof-status pointers
+and source publication must be inspected once final runnable code is supplied.
+
+
+## Final administrative source readiness
+
+All runnable entrypoints are now complete. The final assessment binds exact
+published source 26d24174c4cc079d8318c87ab82a9686f121b9bf, 65 source files and
+four inputs. The source map includes transitive A10/package dependencies,
+actual constructor, streaming helper, admission/checkpoint script and protocol/
+export tools. Inputs bind A11 rules, the A10 protocol template and exact two
+exclusion sources. The twelve coefficient pairs were reconstructed directly.
+Earlier pending-entrypoint descriptions above refer to preparation, not current
+code completeness. No fresh A11 native run has occurred.
+
+Both joint and outside-first/base elimination now share unit and negative-unit
+pivot shortcuts. A +1 pivot avoids needless inversion/scaling; a -1 pivot uses
+paid sign operations. General pivots still pay inversion/scaling. This is a
+symmetric implementation baseline, not an unmeasured advantage assertion.
+Natural decomposition-cache seeding, each cache lookup and each new physical
+point query have separate disjoint counter phases. Conditional cold query views
+reference retained deterministic query records; they do not invent executions
+or clocks. Physical totals retain all branch and cache work.
+
+Three final custody defects were repaired in the bound source. Mutable local
+.gitignore files are excluded from immutable export entries, so later lossless
+export encoding cannot invalidate an earlier pinned ignore-file hash. Branch
+JSONL records are checked against branch_output SHA/byte receipts before their
+costs are consumed. Native completeness also requires all four successful
+closed-curve checkpoint receipts with the exact curve, ordinal and cumulative
+case count; missing/failed receipts are retained as errors, not inferred from
+an exit code. Partial/corrupt input streams preserve completed-prefix accounting
+and unknown cells. Compact metrics retain every planned case; larger full
+analysis/export JSON uses lossless encodings with original/archive receipts
+and hydrated logical files for subsequent file checks.
+
+The retained software-controls.json reports 48 local tiny controls in 1.07
+seconds, including streamed driver/export roundtrip and receipt-corruption
+refusals. This is unsigned producer preparation evidence, not a delegated test,
+signed PCC standing or a native experiment. [pcc:unverified]
+
+This delegation ran no tests, generators, solvers or mathematical experiments;
+its checks were source reads, static path enumeration, artifact hashes and Git
+publication ancestry. Administrative approvability supplies no scientific proof,
+independent signed replay/execution standing, verified model or official status
+transition. Parent must still publish these notes/assessment, freeze and publish
+the source-bound protocol, obtain current actual canonical S3 custody, issue
+and commit the fresh-deadline root release and invoke the real supervisor once.
+The original counter/PCC limits and no-new-capacity policy remain explicit.

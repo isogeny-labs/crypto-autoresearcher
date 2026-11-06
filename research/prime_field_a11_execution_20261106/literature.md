@@ -77,13 +77,16 @@ only that public scalar equation, not source rank, cost, distribution, novelty
 or whole-solver advantage. Existing raw/protocol/PDF bytes and registration dates
 remain unchanged. [pcc:unverified]
 
-A11 source/prospective program records must be registered by the parent from
-source publication with explicit unverified standing. Measurements require their
-own actual-artifact claims after data exists. Neither a hash, this administrative
-assessment, producer-written checker code nor a model's agreement constitutes
-signed standing. The requested numerical tests are local software checks unless
-and until the separately required proof coverage exists. This delegation cannot
-write claims/ledger outside its three-path scope or fabricate such coverage.
+A11 source-publication prose is prospective and has no A11 scientific outcomes
+to cite. Its proof-status scope must be explicit from publication; any typed
+source/configuration claim must avoid asserting future results. Before citing
+a new outcome, parent must register its typed measurement/execution claim using
+actual artifacts and actual standing. A hash, this administrative assessment,
+producer-written checker or model agreement is not signed standing. Numerical
+checks remain local software checks unless the separately required coverage
+exists. This delegation cannot write the PCC ledger or fabricate coverage.
+The A10 standing described here is the read local snapshot; later signed standing
+is neither inferred nor polled during this alignment task.
 
 ## Design arithmetic and pending interfaces
 
@@ -121,3 +124,56 @@ paid; joint retains raw U. The global decomposition cache shares physical point
 queries, but a cold-arm query-cost reference is not another execution/clock or
 permission to import another branch's affine knowledge. These refinements will
 be checked against actual final source and controls before readiness.
+
+## Stage-one source and streaming custody alignment
+
+Read the actual inputs, affine_solver sparse cancellation certificates,
+affine_registry hash-index lookups, streaming.py and driver.py after stage-one
+source publication ea7df70535. The retained software-stage1.json reports 42 tiny
+controls in 0.35 seconds, native_experiments0 and no signed PCC standing. This
+is a producer preparation assertion, not a delegated test or experiment. [pcc:unverified]
+
+The source now carries sparse [index,coefficient] cancellation weights, a shared
+charged base-point index and reuse of check_source's once-per-curve signed-triple
+oracle. Streamed per-curve JSONL inputs/outputs/checks/branches/events prevent
+all-case RAM retention; each solver output is flushed before the separate
+checker call. Closing all curve writers, lossless gzip with original/archive
+hashes, then paused canonical S3 push avoids reading a growing journal during
+checkpoint. Four successful closed-curve checkpoints are intended; a failure
+stops the attempt and leaves later cases unknown without in-row restore/retry.
+These are code/plan interfaces, not observations of an executed A11 panel.
+
+inputs.json has twelve explicit coefficient-pair exclusions bound to A10
+inputs/generated-file provenance, the actual hash_offset policy name and
+max_affine_labels8192. Final driver/common/protocol/export/resource byte closure
+and failure controls remain pending final source readiness; no assessment or
+execution release is issued at this stage.
+
+
+## Final source and proof-scope assessment
+
+The completed entrypoints were read at published source
+26d24174c4cc079d8318c87ab82a9686f121b9bf. Static dependency/input maps bind 65
+source files and four inputs, including the A10 protocol template and exact
+A10 rules/generated-file exclusion provenance. No project module, test, target
+generator or solver was executed by this delegation. Final source completeness
+supersedes earlier preparation-stage pending descriptions in these notes.
+
+Read the symmetric +1/-1 pivot shortcut in affine_solver, separately phased
+natural-cache seeding/lookups/queries, streaming/closed-curve gzip/S3 logic and
+the final analyzer. The analyzer now rejects changed branch-cost records against
+journal SHA/byte receipts, requires all native closed-curve checkpoint receipts,
+retains parse/failure unknowns and excludes mutable .gitignore from immutable
+export hashes. Software controls exercise these metadata paths and the full
+marked-small streamed pipeline; the retained producer log reports 48 passed
+in 1.07 seconds. This is local producer software evidence, not independent signed
+replay, execution proof or PCC standing. [pcc:unverified]
+
+The final assessment is administrative source readiness only. It preserves
+legacy generation merged-subtraction and incomplete rejected-fixture/pow/IO/
+checker primitive coverage, symbolic-target knowledge limits, conditional
+many-target cold views and the distinction between actual physical queries and
+reused counter references. No calibrated whole-attack cost, runtime improvement,
+novelty, absence or scientific-state promotion is asserted. Typed unverified
+PCC records must precede any new outcome citation; an eventual signed standing
+must come from the actual trusted seam, never this producer assessment.
