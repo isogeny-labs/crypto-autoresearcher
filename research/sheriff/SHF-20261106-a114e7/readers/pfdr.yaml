@@ -180,6 +180,16 @@ checks:
     command: "python3 compare of reports/review-DEC-20261029-01405d/plot_data.json cells against analysis.json"
     output: inline
     result: "pass. 45 cells, 0 mismatches. report.pdf is gitignored and absent (sha pinned in .artifacts.json): PDF currency and page-1 rendering not_covered."
+  - id: K17-kernel-recount
+    command: "python3 -B scripts/readers/pfdr/kernel_spotcheck.py implementation/vendor runs/RUN-PFDR-4d8c71/toy-main-jobs.jsonl kernel_spotcheck.json 16  (own nonce fbcf11839bc9b78e; ok jobs with n <= 1024, plus the 4 degenerate jobs)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/kernel_spotcheck.json
+    result: >-
+      pass. 20 jobs, 88 checks, 0 failures: gap_meta, gap_C, gap_D and all 20 null_C / null_D vectors equal the record
+      on 16 sampled ok jobs (12 at 28 bits, 1 at 24, 3 at 20; n 256-512), and the four degenerate jobs' metadata
+      (T 10, 4630 enumerated, duplicate/infinity skips) is reproduced with no n-label set. Own group law, multiples,
+      half-box odometer, label test and counter; the seeded stream, vendored generator and random_point are
+      producer semantics (binding). Not covered: n >= 2048 jobs (the 3.13 census replay of K9 covers those by
+      full-record comparison).
 
 blind_rederivation:
   quantity: >-
@@ -269,6 +279,7 @@ findings:
       - ledger/evidence/EV-PFDR-07d608.yaml:91
       - ledger/decisions/DEC-20261029-01405d.yaml:116
       - knowledge/findings/KN-FIND-c81e5b.md:46
+      - experiments/EXP-PFDR-bb0d26/analysis.md:186
       - experiments/EXP-PFDR-bb0d26/review/validator-report-TASK-20261029-958053.yaml:99
       - experiments/EXP-PFDR-bb0d26/review/validator-report-TASK-20261029-958053.yaml:102
       - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/py311_replay_compare.json

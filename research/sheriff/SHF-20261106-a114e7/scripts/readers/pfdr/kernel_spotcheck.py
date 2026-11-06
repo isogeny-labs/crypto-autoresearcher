@@ -48,8 +48,9 @@ def counts(X, p):
     X = np.array(X, dtype=np.int64)
     iu = np.triu_indices(len(X), k=1)
     sums = (X[:, None] + X[None, :])[iu] % p
-    m = np.bincount(sums, minlength=p).astype(np.int64)
-    return int((m * (m - 1) // 2).sum()), int((m > 0).sum())
+    _, m = np.unique(sums, return_counts=True)  # no p-sized table (p is up to 2^28)
+    m = m.astype(np.int64)
+    return int((m * (m - 1) // 2).sum()), int(len(m))
 
 
 def own_gap(E, r, n, rng):

@@ -160,11 +160,12 @@ checks:
       pass. Across all refs, runs/ and runbook-sessions/ of 284bc4 are touched only by af94114e9c
       and those of 283a70 only by cd912cacbb; first-commit-to-HEAD diff is 0 paths (88 and 55
       files); audits/ only by f7eb8ae292 (0-path diff to HEAD); check_run_immutability OK for both
-      ranges. Per-file `git log --follow` shows >1 commit for some files, every one traced to
-      copy detection, not edits: 62 empty step/log files are attributed to unrelated empty blobs
-      (45404af187...), 283a70 claim-step logs to the 284bc4 twins (C100/C060) or to the claim JSON
-      (C100), and audit replay files to the run files they copy (C086). The plain per-path history of
-      each of those files is a single add.
+      ranges. Per-file `git log --follow` over all 208 run, session and audit files: 76 show one
+      commit; 132 show 2-8, every one a copy-detection artefact, not an edit. 98 are empty files
+      that --follow chains to unrelated empty blobs (oldest 45404af187); the other 34 are chained
+      to near-identical twins (283a70 claim-step logs to 284bc4's, C060-C100; a claim log to the
+      claim JSON, C100; audit replay files to the run files they copy, C086). For all 132,
+      `git log --all -- <path>` (no --follow) shows exactly one commit.
   - id: K10-preregistration
     command: "git log --follow on spec/runbook/plan/run.py/check.py; git merge-base --is-ancestor; yaml diff of v1 vs v2 criteria (chronology.txt)"
     output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/chronology.txt
@@ -282,7 +283,7 @@ controls_inventory:
   - {id: CTL-2, exp: 283a70, kind: negative, declared: "exact_match false with 2879/283745/27", raw_rows: "RUN-ICPERF-74e9a2 as declared", visible_in_raw: true, can_fail: "yes, but it is an affine image of the primary (S-64, Q-2S+64, median-1)"}
   - {id: DESC-1/DESC-2, exp: 283a70, kind: descriptive_band, declared: "descriptive; inputs 9871039/8661249 and 1792/2943 asserted", raw_rows: "primary as declared; both flags true on all 3 arms", visible_in_raw: true, can_fail: "no (descriptive by declaration)"}
   - {id: CMP-AA, exp: both, kind: aa, declared: "tools/runbook.py audit exact replay, noise floor zero", raw_rows: "67df7d: tool clean 3/3; 8cdc92: tool flagged 0/6 (absent-on-both), whole documents equal 6/6", visible_in_raw: true, can_fail: "only via nondeterminism or fabrication"}
-  positive_controls: "None declared in either spec (no planted inexact-division case for the 284bc4 exactness rule; no planted known-good alternative sampler). Not a defect of the record; noted."
+positive_controls: "None declared in either spec (no planted inexact-division case for the 284bc4 exactness rule; no planted known-good alternative sampler). Not a defect of the record; noted."
 
 prior_finding_verdicts:
   - id: "PARITY-1 (producer item, DEC-20261105-6e2616 NA-1(a); EV-ICPERF-08f6f9 O5, EV-ICPERF-84ff45 O4)"
@@ -348,7 +349,7 @@ findings:
       in EV-ICPERF-84ff45 boundaries.
     evidence:
       - "experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json:30"
-      - "ledger/evidence/EV-ICPERF-84ff45.yaml:159"
+      - "ledger/evidence/EV-ICPERF-84ff45.yaml:152"
     fix: "Persist per-draw (per-target) counts in any successor, as DEC-20261105-6e2616 NA-2 already asks for stage 1."
   - id: ICV-4
     beat: B8
@@ -362,7 +363,7 @@ findings:
       orders no correction. This is a coverage gap of the correction programme, not an inaccuracy in
       CORR-20261106-243c4d.
     evidence:
-      - "experiments/EXP-ICPERF-283a70/runbook.yaml:286"
+      - "experiments/EXP-ICPERF-283a70/runbook.yaml:315"
       - "ledger/decisions/DEC-20261105-6e2616.yaml:175"
       - "ledger/corrections/CORR-20261106-243c4d.yaml:20"
     fix: "An additive correction for EXP-ICPERF-283a70 labels (computed, not measured; only elapsed_seconds measured), mirroring CORR-20261106-243c4d."
@@ -425,19 +426,19 @@ claims:
     beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
   - id: ICV-C7
     text: "the preapproval probe reported approvable true at source_ref origin/main (862fea464cb0e28e4a1a20363a053b45052df7a8): approvable true, blockers []"
-    location: "ledger/decisions/DEC-20261029-ca33b3.yaml approvability; ledger/decisions/DEC-20261029-0e40f3.yaml:69-70"
+    location: "ledger/decisions/DEC-20261029-ca33b3.yaml:47-55 (approvability); ledger/decisions/DEC-20261029-0e40f3.yaml:69-70"
     suggested_verdict: upheld
     scoped_to: null
     beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: n/a}
   - id: ICV-C8
     text: "approved_bytes: specification, trial_plan, runbook, runbook_lint, implementation, executor_handoff and queue sha256 as listed; Runs only after a committed decision names this file's sha256 (runbook_sha256)"
-    location: "ledger/decisions/DEC-20261029-ca33b3.yaml approved_bytes; DEC-20261029-0e40f3.yaml:97-131; experiments/EXP-ICPERF-28*/runbook.yaml:2"
+    location: "ledger/decisions/DEC-20261029-ca33b3.yaml:70-115 (approved_bytes); DEC-20261029-0e40f3.yaml:97-131; experiments/EXP-ICPERF-28*/runbook.yaml:2"
     suggested_verdict: upheld
     scoped_to: null
     beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: n/a}
   - id: ICV-C9
     text: "raise GOAL-ICPERF-e6b6a4 campaign_budget.max_concurrent from 2 to 3 ... opens one shared lane, BATCH-38f344 ... One new lane makes 3, which is not greater than 3. ... The shared queue's max_concurrent 1 serialises this task with TASK-20261029-f370f1."
-    location: "ledger/decisions/DEC-20261029-3bfa78.yaml:1-3, 110-116; ledger/decisions/DEC-20261029-ca33b3.yaml dispatch.gate"
+    location: "ledger/decisions/DEC-20261029-3bfa78.yaml:1-3, 110-116; ledger/decisions/DEC-20261029-ca33b3.yaml:197-205 (dispatch.gate)"
     suggested_verdict: upheld_scoped
     scoped_to: "Working-tree lane view (include_refs=False) at 862fea464c, a919d4d812, 5200f03900, 980ff5f076; the refs-scanning view the decision also mentions was not checked."
     beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: n/a}
@@ -449,7 +450,7 @@ claims:
     beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
   - id: ICV-C11
     text: "Valid run set. The audit flag is a replay-coverage defect ... not a value mismatch; ... Session RBS-ICPERF-8cdc92 is citable, scoped ... any citation discloses the flagged verdict (matched 0 of 6) ... The audit stays flagged as recorded."
-    location: "ledger/decisions/DEC-20261105-8a9984.yaml rulings.validity (lines 70-79)"
+    location: "ledger/decisions/DEC-20261105-8a9984.yaml:71-79 (rulings.validity)"
     suggested_verdict: upheld_scoped
     scoped_to: "Citable with the flagged-verdict disclosure; the A/A instrument itself still fails at HEAD (ICV-1), so the replay assurance rests on independent full-document comparisons."
     beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
