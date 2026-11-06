@@ -5,6 +5,10 @@
 - **Goal:** generate 100 novel ideas for ecdlp index calculus for prime fields and make sure to thoroughly review ideas we've tested previously in isogeny-labs/crypto cryptanalysis and crypto-autoresearcher repos
 - **Method:** delphi staged pipeline (frame -> expand -> critique -> synthesize), preceded by the ECDLP lead-atlas review in `prior-work.md`.
 
+## Status
+
+Frame: 100 directions (complete). Expanded plans: 33/100. The remaining 67 expansions were blocked by repeated HTTP 500 responses from the free-tier provider after three attempts on two models (the `done` records for this run carry the retryable error); the critique and synthesis stages wait on the expansions. Requeue the missing directions when the provider recovers.
+
 ## Prior work
 
 The sweep was checked against the program's ECDLP lead atlas (`crypto-autoresearcher/knowledge/leads/ecdlp/`, 154 leads, 2,178/2,185 ledger records mapped) and the measured prime-field IC, summation-polynomial, p256 factor-base and lattice-IC rounds in `isogeny-labs/crypto`, `isogeny-labs/cryptanalysis` and `isogeny-labs/crypto-autoresearcher`. The full digest is in [`prior-work.md`](prior-work.md). A direction marked *variant* must name what differs; a direction marked *closed* is not a new idea until the named obstruction is escaped.
