@@ -1,19 +1,16 @@
 name: formal-module-rss
 # Peak-memory measurement of one heavy formal module on the hosted runner,
-# under the frozen protocol in the study directory below. It runs only when
-# this workflow or that protocol changes, or by hand, so it costs nothing on
-# ordinary PRs. Protocol: docs/reports/2026-11-06-degree-three-module-rss-rerun/protocol.json
+# under the frozen protocol in the study directory below. Manual only
+# (workflow_dispatch): a measurement runs when someone starts it under a
+# frozen protocol, never because a PR touched a file (a PR trigger also
+# restarted runs on every push, see amendment A1).
+# Protocol: docs/reports/2026-11-06-degree-three-module-rss-rerun/protocol.json
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - .github/workflows/formal-module-rss.yml
-      - docs/reports/2026-11-06-degree-three-module-rss-rerun/protocol.json
   workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: formal-module-rss-${{ github.event.pull_request.number || github.sha }}
+  group: formal-module-rss-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   measure:
