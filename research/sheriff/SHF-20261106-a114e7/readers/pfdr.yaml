@@ -1,0 +1,629 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: >-
+  PFX. B4/B6/B7/B8 PFDR evidence review chain: EV-PFDR-07d608, DEC-20261029-01405d, KN-FIND-c81e5b,
+  CORR-20261029-1aaef6 and the 3.11 replay claim, merged in crypto-autoresearcher #2693 (af483ea361) and #2699
+  (3419d0f4c4); cited runbook session RBS-PFDR-bb0d26 (EXP-PFDR-bb0d26, H-PFDR-727bfc)
+reader:
+  role: validator
+  model: claude-opus-5-5
+  independence: >-
+    Did not produce, review or compose anything under audit (not TASK-20261029-958053, -e5fe6b, -ff0453, -5a5213 or
+    -25fc17). Judged from committed records, run artifacts, git history and my own reruns. PR descriptions and PR
+    discussion were not read; commit subjects shown by git log were not used as evidence. The red-team, validator
+    and blind-rederivation reports of the audited round were read only to learn WHAT was claimed (J1 wording,
+    rt_ap_bound.json, rt_analysis.json values), and every number I rely on was recomputed by my own scripts.
+target:
+  repo: isogeny-labs/crypto-autoresearcher
+  path: /home/user/crypto-autoresearcher
+  audited_head: da442739db82a5f99d95e4ab9413cbe6fb326f0a
+  at_origin_main: true
+  head_note: >-
+    During this reading the session committed case-directory work on top of da442739db (HEAD 52b5005d17 on branch
+    claude/sheriff-reaudit-20261106). `git diff --stat da442739db HEAD -- . ':!research/sheriff/SHF-20261106-a114e7'`
+    shows only problems/post-merge-checks-mask-pre-merge-state.md added; no audited file differs from da442739db.
+    pcc/ledger.jsonl modified by a hook (ignored, as briefed).
+  merges:
+    - {pr: 2693, merge: af483ea361fa5b8553b7f74530139b34f76a1f76, at: '2026-10-29T06:38:39Z', adds: [EV-PFDR-07d608, DEC-20261029-01405d, KN-FIND-c81e5b, H-PFDR-727bfc status edit, review reports and scripts, analysis.md, review report source]}
+    - {pr: 2699, merge: 3419d0f4c4be931d25c96b944afa6de02ab68b67, at: '2026-10-29T07:07:10Z', adds: [CORR-20261029-1aaef6 (only file)]}
+  other_repos: "crypto (3a7a0f98a) and cryptanalysis (5bdfb496d): not touched by this joint"
+  sweep_binding: "research/sheriff/SHF-20261106-a114e7/sweep.json repos and canary (passed: 15 caught, 0 missed, 0 false positives); keys read: repos, canary only"
+
+sources_read:
+  crypto-autoresearcher:
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - .claude/skills/sheriff/SKILL.md
+    - docs/sheriff.md (lines 17-106 and 239-463; heading list)
+    - research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml (format model only)
+    - research/sheriff/SHF-20261028-0f3f64/findings.yaml (lines 950-975, LGN-9, for what was claimed only)
+    - ledger/evidence/EV-PFDR-07d608.yaml (all)
+    - ledger/decisions/DEC-20261029-01405d.yaml (all)
+    - knowledge/findings/KN-FIND-c81e5b.md (all)
+    - ledger/corrections/CORR-20261029-1aaef6.yaml (all)
+    - "ledger/hypotheses/H-PFDR-727bfc.yaml (git diff af483ea361^1..af483ea361; status lines)"
+    - experiments/EXP-PFDR-bb0d26/specification.yaml (lines 75-184, 240-374, 405-604)
+    - experiments/EXP-PFDR-bb0d26/runbook.yaml (all); trial-plan.json (trial ids, argv, watchdogs)
+    - experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26/journal.jsonl (all 18 entries, by key)
+    - experiments/EXP-PFDR-bb0d26/runs/RUN-PFDR-{e44a19,4d8c71,243425,cd03e2,089edc}/ (manifests, receipts, environment, command, raw-result; analysis*.json and toy-main-jobs.jsonl read by my scripts)
+    - experiments/EXP-PFDR-bb0d26/audits/AUD-20261029T012603Z-0b6353/audit.json and audit-review.yaml (lines 1-60)
+    - "experiments/EXP-PFDR-bb0d26/review/validator-report-TASK-20261029-958053.yaml (lines 60-231, J1 and J2 wording), TASK-20261029-958053/replay.sh, j1-replay-summary.json (first replay entry)"
+    - experiments/EXP-PFDR-bb0d26/review/TASK-20261029-ff0453/rt_ap_bound.py, rt_ap_bound.json, rt_analysis.json (value lookups only)
+    - experiments/EXP-PFDR-bb0d26/reports/review-DEC-20261029-01405d/ (plot_data.json, .artifacts.json; report.pdf is gitignored and absent)
+    - "experiments/EXP-PFDR-bb0d26/implementation/vendor/curve.py (lines 115-125 and 216-256: generator signature, for the seed-binding spot check)"
+    - "ledger/decisions/DEC-20261029-5554ee.yaml (grep hits and lines 104-135: what 'exact audit replay' was required to supply)"
+    - "ledger/decisions/DEC-20261029-8d9b43.yaml (lines 195-275), ledger/corrections/CORR-20261029-b45e67.yaml and CORR-20261029-a8c797.yaml (later records that correct the audited ones; read to learn what was corrected)"
+    - "ledger/decisions/DEC-20261031-e8e84b.yaml, DEC-20261101-49576f.yaml, DEC-20261105-8a9984.yaml (grep hits only)"
+    - experiments/EXP-PFDR-ca5e01/runs/*/manifest.yaml (trial wall times) and audits/AUD-20261029T011541Z-b300b2/audit.json (verdict)
+    - docs/evidence-and-reproducibility.md (lines 1-40, evidence hierarchy)
+    - tools/runbook.py (audit, replay_unit, verify, load_session, chain_findings, read_journal, _subprocess_env, resolve)
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read)
+  - research/sheriff/SHF-20261106-a114e7/readers/* other than this file (not read)
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than pfdr/ (not read; `git status` and `git show --stat HEAD` displayed sibling file NAMES, no contents opened)"
+  - research/sheriff/SHF-20261106-a114e7/sweep.md and checks/ (not read)
+  - PR #2693 / #2699 descriptions and review threads (not read; the Codex discussion id is known only from CORR-20261029-1aaef6's own text)
+  - "the round's blind-rederivation report body (blind-rederivation-TASK-20261029-e5fe6b.yaml) and cells.json: not read; my re-derivations were done first and from the specification text"
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: K1-bind
+    command: "git rev-parse HEAD origin/main; git diff --stat da442739db HEAD -- . ':!research/sheriff/SHF-20261106-a114e7'; python3 read of sweep.json repos/canary"
+    output: inline (target block)
+    result: pass. Audited bytes are da442739db (origin/main); canary passed.
+  - id: K2-receipt-hashes
+    command: "python3 -I research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/hash_check.py /home/user/crypto-autoresearcher hash_check.json"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/hash_check.json
+    result: >-
+      pass. 53/53 receipt-named files re-hash to their recorded sha256 (11/10/11/10/11); no extra files; each
+      execution-receipt.json hashes to the journal's receipt_sha256; journal artifact hashes equal the receipts; every
+      manifest records commit 48bd193a, dirty false, python_version 3.11.15, plan sha 9b25b15b... equal to the plan
+      on disk; specification e294b040... and implementation hashes equal the bound values.
+  - id: K3-immutability
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/check_run_immutability.py e85a8dbe1a; git log -- experiments/EXP-PFDR-bb0d26/runs experiments/EXP-PFDR-bb0d26/runbook-sessions"
+    output: inline
+    result: "pass. 'OK: no committed run artifacts were modified or deleted'; runs and session were added once in e85a8dbe1a (2026-10-24T01:28Z) and never touched since."
+  - id: K4-preregistration-chronology
+    command: "git log --format='%h %ad' -- specification.yaml trial-plan.json runbook.yaml implementation/run.py runs/ runbook-sessions/; git merge-base --is-ancestor 22c1b3c349 e85a8dbe1a; git diff --stat 22c1b3c349 HEAD -- spec plan implementation runbook; git log --diff-filter=A -- ledger/proposals/IDEA-20261017-078074.yaml ledger/decisions/DEC-20261022-f1efde.yaml"
+    output: inline
+    result: >-
+      pass. IDEA-20261017-078074 added 2026-10-17T21:59Z (343513685f); spec, plan and approval DEC-20261022-f1efde
+      committed 2026-10-22T08:46Z (22c1b3c349), an ancestor of the runs commit e85a8dbe1a; runs executed
+      2026-10-23T21:49-22:11Z (manifests); spec/plan/implementation/runbook byte-unchanged since 22c1b3c349 (empty
+      diff; sha256 equal to the journal binds). Review plan and coordinator prior frozen in 1eddb4740b
+      (2026-10-29T05:18:33Z), before the J1 replay start recorded in j1-replay-summary.json (05:23:40Z); plan bytes
+      unchanged since.
+  - id: K5-headline-recompute
+    command: "python3 -I scripts/readers/pfdr/pfdr_recompute.py runs/RUN-PFDR-4d8c71/toy-main-jobs.jsonl runs/RUN-PFDR-e44a19/design.json runs/RUN-PFDR-089edc/analysis.json ledger/evidence/EV-PFDR-07d608.yaml recompute.json (under python3 3.13.18, and again under /usr/bin/python3.11 3.11.18 -> recompute-py311.json)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/recompute.json, recompute-py311.json, recompute.stdout.txt
+    result: >-
+      pass. Own code from the specification's statistics text, no producer import. Census: 6657 jobs = 6657 planned
+      keys (design.json), 6653 ok + 4 degenerate, 0 duplicate keys, 1580 distinct (bits, c) curves, 0 ok jobs with
+      duplicate_skips. Per cell S, M, V, kappa, z, z_cal, plant_kappa, plant_z, kappa_even, kappa_odd equal the
+      recorded values to <= 4e-16 relative under 3.11.18 (<= 6.47e-11 under 3.13.18, the known sum() drift).
+      Classes: 44 null + 1 invalid, 0 disagreements (with my own bootstrap interval and with the recorded one).
+      Calibration n 44, mean -0.267570136623859 (3.11) / -0.26757013662383594 (3.13), sd 0.9735699770654103 (3.11),
+      pass; fraction_valid 0.9777...; flagged []; O-NULL; SUPPORT_SCOPED. EV OBS-3/OBS-6/tail numbers: max
+      |kappa-1| 0.041401 at b28-r1-n256; 0.0088996 at n>=1024; 0.0024493 at n>=2048; lowest recorded ci95 lower
+      0.936844 b28-r2-n512 (own bootstrap 0.937055); largest |z| 3.1315 b24-r1-n2048; smallest plant_kappa
+      1.288521 b20-r2-n4096; smallest plant_z 21.926 b24-r2-n256; max |slope| 0.0087833 (all 9 slopes equal the
+      recorded ones); sum z^2 71.4318 (chi2_44 p 0.00554), mean 0.17531, pop sd 1.26203, six |z|>2 cells exactly
+      the listed six and the same six intervals exclude 1; sum z_cal^2 44.855 (p 0.436); even/odd A/A sum z^2
+      40.499 under my own definition (difference of half-excess over its SE); widest ci95 half-width 0.03405
+      b28-r1-n512; weakest cell by relative SE b28-r1-n512 (M 3922.5), MDE at |z|>4 0.06685; expected max |z| of
+      44 normals 2.464; P(max|z| >= 3.13) 0.0737; P(any |z|>3) 0.112. Own bootstrap ci95 endpoints within 0.0036 of
+      the recorded ones (the spec fixes no bootstrap seed derivation). The EV obstruction table (45 rows, 5
+      decimals) equals analysis.json in every row. degenerate jobs c 6, 30, 42, 47 hold 4630 - dup - inf =
+      3566, 4006, 3030, 2641 distinct labels.
+  - id: K6-loo-aa
+    command: "python3 -I scripts/readers/pfdr/loo_check.py runs/RUN-PFDR-4d8c71/toy-main-jobs.jsonl loo_check.json"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/loo_check.json
+    result: "pass. 880 leave-one-out null-vs-null comparisons (44 cells x 20), 0 flagged; max |z| 3.32; mean z^2 1.058."
+  - id: K7-instance-identity
+    command: "python3 -I scripts/readers/pfdr/curve_identity.py runs/RUN-PFDR-4d8c71/toy-main-jobs.jsonl curve_identity.json 5"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/curve_identity.json
+    result: >-
+      pass. Own arithmetic: all 1580 curves have p prime of the stated bit length, N prime, |p+1-N| within Hasse,
+      N != p, a b != 0, nonsingular; exact point count (quadratic-character table) equals N for all 50 20-bit
+      curves and the first 5 24-bit curves.
+  - id: K8-seed-binding
+    command: "python3 -B scripts/readers/pfdr/seed_binding.py implementation/vendor runs/RUN-PFDR-4d8c71/toy-main-jobs.jsonl seed_binding_b{20,24,28}.json <bits> 2000"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/seed_binding_b20.json, seed_binding_b24.json, seed_binding_b28.json
+    result: >-
+      pass, as a BINDING check only. All 50 + 90 + 1440 curves equal the vendored
+      generate_prime_order_curve(bits, 8100000 + c) (vendor/curve.py sha256 fcca2beb... asserted). This runs producer
+      code, so it binds the seed rule; it is not independent of the generator.
+  - id: K9-runbook-audit-default
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/runbook.py audit experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26 --out research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-default --auditor sheriff-reader-pfdr/claude-opus-5-5  (nonce-sampled; no --nonce; replay interpreter python3 = /usr/local/bin/python3 3.13.18)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-default/audit.json
+    result: PENDING
+  - id: K10-recorded-audit-compare
+    command: "read experiments/EXP-PFDR-bb0d26/audits/AUD-20261029T012603Z-0b6353/audit.json; float_leaves.py on my audit's replays"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-default/replay/ (and inline)
+    result: PENDING
+  - id: K11-py311-replay
+    command: "scripts/readers/pfdr/py311_replay.sh /usr/bin/python3.11 <scratch>/root <scratch>/out311 <trial> <run> for selftest, analyze-main, census-toy-rep, analyze-final; scratch root = git archive 48bd193a (implementation, plan, spec, runbook) + git archive HEAD (runs); then python3 -I compare_replay.py"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/py311_replay_compare.json
+    result: >-
+      pass for the replayed units. Under CPython 3.11.18 (GCC 13.3.0 build, Oct 26 2026; PyYAML 6.0.1 system),
+      run.py and check.py exit 0 for all four units, and every measurement file is byte-identical to the record:
+      raw-result.json, analysis-main.json, analysis.json, flags.json, selftest.json, design.json,
+      toy-rep-jobs.jsonl, plus stdout/stderr and the check.py streams. Only manifest.yaml (provenance) differs; the
+      four supervisor-written files are absent from a direct replay by construction. My own 3.11.18 recompute (K5)
+      also lands on the recorded floats, and under 3.13.18 on the audit's drifted floats, which independently fits
+      the explanation that CPython 3.12+ made float sum() compensated. census-toy-main was NOT replayed under 3.11
+      (by J1 or by me); see K9 for its 3.13 replay.
+  - id: K12-review-independence
+    command: "CHECKPOINT_SKIP=audit python3 tools/check_review_independence.py --plan review/review-plan.yaml --reports <3 reports> --expected-plan-sha256 d8adb5e2... (sha of the plan at 1eddb4740b)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/review_independence.txt
+    result: "pass. 'PASS: 3 report(s), every joint owned and attested, blindness respected, controls declared'. Session independence only; one model family throughout (disclosed by the records)."
+  - id: K13-validate-ledger
+    command: "CRYPTO_AR_ALLOW_SPARSE=1 CHECKPOINT_SKIP=audit python3 tools/validate_ledger.py --no-baseline (sparse: on-disk paths only)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/validate_ledger_pfdr_lines.txt
+    result: "pass for the audited records: 0 errors mention EV-PFDR-07d608, DEC-20261029-01405d, KN-FIND-c81e5b, CORR-20261029-1aaef6, H-PFDR-727bfc or EXP-PFDR-bb0d26 (other PFDR experiments carry unrelated sparse/legacy errors). Coverage limited to the sparse checkout."
+  - id: K14-pending-audits
+    command: "CHECKPOINT_SKIP=audit python3 tools/runbook.py pending-audits"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/pending_audits.txt
+    result: "pass for this joint: RBS-PFDR-bb0d26 and RBS-PFDR-ca5e01 are no longer pending (2 other sessions are)."
+  - id: K15-correction-additivity
+    command: "git diff --stat 3419d0f4c4^1 3419d0f4c4; git diff --stat af483ea361 HEAD -- EV, DEC, KN-FIND, analysis.md, report dir, CORR; grep -rln '2 to 47' ledger knowledge experiments docs; python3 read of rt_ap_bound.json"
+    output: inline
+    result: >-
+      pass with one propagation note. #2699 adds only ledger/corrections/CORR-20261029-1aaef6.yaml; none of the
+      corrected records changed after af483ea361. rt_ap_bound.json gives 2.6, 2.0 and 2.2 labels for
+      b28-r{1,2,3}-n256 (min 2.0, max 46.5 overall), and C(X) counts pairs of disjoint pairs, so fewer than 4
+      labels carry 0 internal coincidences: the withdrawal reason holds. also_corrects names every record of the
+      round that states the bound (EV INF-3/obstruction, analysis.md, KN-FIND, report.typ); the red-team report is
+      left as the reviewer's record. A LATER record, DEC-20261029-8d9b43 FR-3 (committed 07:57Z, after the
+      correction at 07:06Z), restates "(2 to 47 labels)" without citing the withdrawal (PFX-5).
+  - id: K16-plot-data
+    command: "python3 compare of reports/review-DEC-20261029-01405d/plot_data.json cells against analysis.json"
+    output: inline
+    result: "pass. 45 cells, 0 mismatches. report.pdf is gitignored and absent (sha pinned in .artifacts.json): PDF currency and page-1 rendering not_covered."
+
+blind_rederivation:
+  quantity: >-
+    kappa = S/M, the pooled pair-sum (h = 2) coincidence count of x-labels of rank-r log-GAP half-boxes over the
+    mean of 20 matched uniform label sets on the same curve, and the random-set law E[C] = 3 binom(n,4)/p.
+  method: >-
+    research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/blind_rederive.py, written from the hypothesis and
+    the specification text only (counting_convention, log_gap_builder, null_builder): own prime-order curve
+    generation (random 20-bit p = 3 mod 4, exact point count by quadratic-character table, N prime, N != p), own
+    affine group law, own half-box enumerator (first nonzero coordinate positive, lexicographic, coordinates
+    ascending from -T, T minimal with ((2T+1)^r - 1)/2 >= ceil(1.02 n) + 8, O and repeated labels skipped), own
+    uniform null builder and own counter C = sum_s binom(m_s, 2). 50 FRESH curves from my own seed string (none of
+    the producer's seed block), r in {1,2,3}, n in {256, 1024}, 20 null sets per curve, own percentile bootstrap.
+    Analytic sketch: for the label universe L, E(L) = |L|^4/p + (1/p) sum_{xi != 0} |L^(xi)|^4 and the Weil bound
+    |L^(xi)| = O(sqrt p) give E[C] = 3 binom(n,4)/p (1 + O(1/p)).
+  output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/blind_rederive.json (and .stdout.txt)
+  result: >-
+    Agrees with the claim at the re-derived scale. kappa = 0.99948 (b20-r1-n256), 1.00023 (r1-n1024), 1.00343
+    (r2-n256), 0.99987 (r2-n1024), 1.00011 (r3-n256), 1.00053 (r3-n1024); |z| <= 1.59; every own-bootstrap 95%
+    interval inside [0.90, 1.10]; all six read null under the 5% rule. Measured null mean over 3 binom(n,4)/p:
+    0.9967 to 1.0011. |L| = (N-1)/2 on all 50 curves. Declared restrictions: bits 20 only, p = 3 mod 4 only,
+    n <= 1024, my own curve family (not the vendored generator), so it re-derives the law, not the producer's 24-
+    and 28-bit cells.
+proves_too_much_control:
+  - object: tampered journal byte (scratch copy; seq 13 timestamp ...391812Z -> ...391813Z)
+    command: "CHECKPOINT_SKIP=audit python3 tools/runbook.py --repo <scratch>/ptm1 audit experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26 --samples 1 --out audit-ptm1  (nonce-sampled)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-ptm1-tampered-journal.audit.json
+    expected: fail
+    result: "pass (the audit fails): verdict flagged, exit 1, finding 'journal entry 13: content does not match its hash (edited after writing)'. Untampered scratch copy ptm0: VERIFY OK (ptm-verify-ptm0.txt), so the copy itself adds no finding."
+  - object: planted wrong number (scratch copy; analysis.json b28-r2-n512 kappa 0.96489887411483 -> 1.06489887411483, receipts not resealed)
+    command: "CHECKPOINT_SKIP=audit python3 tools/runbook.py --repo <scratch>/ptm2 verify --rerun-checks experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/ptm-verify-ptm2.txt
+    expected: fail
+    result: "pass (fails): 'artifacts recorded as ... changed' and 'valid recorded as True, now False' (check.py rejects the planted value). My recompute (K5) on the planted file reports a 9.4% relative mismatch for that cell and 1 EV-table mismatch."
+  - object: own instruments on a known-false input
+    command: "pfdr_recompute.py ... --tamper-cell b28-r2-n512 --tamper-factor 1.2; blind_rederive.py planted controls"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/recompute-tamper-x1.2.stdout.txt, blind_rederive.json (controls)
+    expected: fail (non-null reading)
+    result: >-
+      pass. Inflating one cell's structured counts by 20% reads kappa 1.157, z 9.73, class flagged, outcome no
+      longer O-NULL (headline INCONCLUSIVE). In my blind pipeline a pure 256-label AP reads kappa 960, and a 16-label
+      AP inside 240 random labels reads kappa 1.148, z 17.9 (20 curves): neither reads null.
+  - object: FULL RESEAL forgery (scratch copy; every b28-r2-n512 gap_C x 1.04, both analysis units regenerated with run.py under 3.11.18, three receipts and the journal chain rehashed)
+    command: "python3 -I scripts/readers/pfdr/ptm3_reseal.py <scratch>/ptm3 tools /usr/bin/python3.11; tools/runbook.py --repo <scratch>/ptm3 verify --rerun-checks ...; tools/runbook.py --repo <scratch>/ptm3 audit ... --samples 1 --out audit-ptm3"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/ptm3_reseal.out.txt, ptm-verify-ptm3.txt, audit-ptm3-full-reseal.audit.json
+    expected: fail (the cell's kappa moved from 0.96490 to 1.00209, changing EV OBS-3's lowest interval bound and OBS-6's six-cell list)
+    result: >-
+      DOES NOT FAIL: VERIFY OK and audit verdict clean (selftest sampled, matched). Expected by design (unkeyed
+      seals; docs/sheriff.md B7.2) but sharper here: the runbook's replay contract compares only raw-result.json
+      /summary, which for census-toy-main is {jobs, failed_infrastructure, degenerate} and for the analysis units
+      is {calibration, flagged_cells, fraction_valid, outcome, headline}. A census or analysis replay therefore
+      cannot see altered per-cell values that keep those fields. The only witnesses are git history (K3: runs
+      unmodified since e85a8dbe1a) and full-file comparisons against committed bytes (K2, K5, K11). PFX-3.
+
+prior_finding_verdicts:
+  - id: LGN-9
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: >-
+      For this joint's part (RBS-PFDR-ca5e01, RBS-PFDR-bb0d26 awaiting audit). Both now have committed audits
+      (AUD-20261029T011541Z-b300b2 clean; AUD-20261029T012603Z-0b6353 flagged on interpreter float drift, with an
+      audit-review and DEC-20261029-5554ee), and `tools/runbook.py pending-audits` no longer lists either. The two
+      ICPERF sessions of LGN-9 are outside this joint (not_covered here).
+    evidence:
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/pending_audits.txt
+      - experiments/EXP-PFDR-bb0d26/audits/AUD-20261029T012603Z-0b6353/audit.json
+
+findings:
+  - id: PFX-1
+    beat: B8
+    severity: minor
+    claim_ids: [PFX-C-EV-strength, PFX-C-DEC-rationale, PFX-C-KN-reproduced, PFX-C-311-replay]
+    what: >-
+      Replay wording outruns what a replay is. EV strength_basis says "The result was independently reproduced four
+      ways: an exact audit replay under the recorded interpreter version, validity checks, a disjoint kernel
+      recount, and a strictly blind re-derivation"; DEC rationale says "reproduced four independent ways"; KN-FIND
+      says "The reading was reproduced four ways", one of which is "a red-team power and scope review". Facts: the
+      J1 replay re-executes the producer's run.py on the producer's recorded census (it is not independent); it
+      covered 4 of 5 units chosen by the plan, NOT census-toy-main, the run that produced every count; it ran on a
+      different 3.11.15 build (uv Clang 22.1.3, PyYAML 6.0.3 injected) than the recorded GCC build; all four
+      "ways" re-read one census from one seed block; and a power/scope review reproduces nothing. The records do
+      not call it an execution proof (each says there is none), and my own 3.11.18 replay confirms the bytes, so
+      the facts stand and only the words overreach. The substance was later narrowed by DEC-20261029-8d9b43 R-2
+      and CORR-20261029-b45e67 / CORR-20261029-a8c797 (strength preliminary); the KN-FIND sentence itself is
+      unchanged ("Content unchanged").
+    evidence:
+      - ledger/evidence/EV-PFDR-07d608.yaml:91
+      - ledger/decisions/DEC-20261029-01405d.yaml:116
+      - knowledge/findings/KN-FIND-c81e5b.md:46
+      - experiments/EXP-PFDR-bb0d26/review/validator-report-TASK-20261029-958053.yaml:99
+      - experiments/EXP-PFDR-bb0d26/review/validator-report-TASK-20261029-958053.yaml:102
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/py311_replay_compare.json
+    fix: >-
+      An additive note on KN-FIND-c81e5b and EV-PFDR-07d608: "the analysis, selftest and empty replication units
+      were re-executed byte-identically from the recorded census under CPython 3.11 (a replay, not an independent
+      reproduction); per-cell statistics were recomputed from the job records by disjoint code; the census was
+      re-executed only under 3.13 and only its job fields were compared; no clean-run reproduction exists".
+      Drop the red-team review from the list of reproductions.
+  - id: PFX-2
+    beat: B6
+    severity: minor
+    claim_ids: [PFX-C-EV-strength, PFX-C-DEC-strength, PFX-C-KN-promotion]
+    what: >-
+      EV-PFDR-07d608 and DEC-20261029-01405d grade the evidence strong while stating there is no fresh-curve census
+      and one run set; docs/evidence-and-reproducibility.md orders strong above replicated. KN-FIND-c81e5b was
+      admitted on "decision support on strong evidence". Overgraded at merge. Already corrected by later additive
+      records CORR-20261029-b45e67 (strength -> preliminary) and CORR-20261029-a8c797 (promotion basis unmet, cite
+      with disclosure), so this is recorded for completeness, not as an open defect.
+    evidence:
+      - ledger/evidence/EV-PFDR-07d608.yaml:83
+      - ledger/evidence/EV-PFDR-07d608.yaml:93
+      - ledger/decisions/DEC-20261029-01405d.yaml:97
+      - ledger/decisions/DEC-20261029-01405d.yaml:334
+      - docs/evidence-and-reproducibility.md:11
+      - ledger/corrections/CORR-20261029-b45e67.yaml:13
+      - ledger/corrections/CORR-20261029-a8c797.yaml:13
+    fix: None beyond the corrections already recorded; every citation of EV-PFDR-07d608 / KN-FIND-c81e5b must carry them.
+  - id: PFX-3
+    beat: B7
+    severity: minor
+    claim_ids: [PFX-C-311-replay, PFX-C-DEC-validity-replay]
+    what: >-
+      The audit instrument for RBS-PFDR-bb0d26 cannot detect a full reseal, and its replays cannot see per-cell
+      values. runbook.yaml replay mode fields compares raw-result.json /summary only: three integer counts for
+      census-toy-main and five decision fields for the analysis units. In a scratch copy, a forgery that moved
+      b28-r2-n512 kappa from 0.96490 to 1.00209 (changing EV OBS-3's lowest interval bound and one of OBS-6's six
+      |z| > 2 cells) passed verify --rerun-checks and a nonce-sampled audit (verdict clean). The recorded audit's
+      "census-toy-main matched" therefore binds only those counts (DEC-20261029-5554ee's fuller jobs-file
+      comparison was a reader's extra check). The audited records do not rely on the audit for per-cell values,
+      and git history shows no modification, so no verdict changes.
+    evidence:
+      - experiments/EXP-PFDR-bb0d26/runbook.yaml:164
+      - tools/runbook.py:2506
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-ptm3-full-reseal.audit.json
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/ptm-verify-ptm3.txt
+    fix: >-
+      In future runbooks of this shape, compare the census jobs file (all fields except seconds, keyed by
+      (cell, block, c)) and analysis*.json /cells, or record a canonical digest of the jobs set in raw-result.json
+      /summary; keep citing git-history immutability as the witness against a reseal.
+  - id: PFX-4
+    beat: B8
+    severity: minor
+    claim_ids: [PFX-C-KN-use, PFX-C-EV-resource]
+    what: >-
+      The "Use" sentence licenses "the random-label null rate 3 binom(n,4)/p for label-sum coincidence harvests from
+      proper rank <= 3 GAP bases". The tested object is narrower: fixed-origin, lexicographically filled half-box
+      prefixes with T minimal, x-labels, 20-28-bit generated curves, n 256-4096, within a 5% tolerance and with
+      unexplained over-dispersion. The same records' own scope bullets say other fills, orders, translated boxes
+      and full boxes are untested, so "GAP bases" reads wider than the evidence.
+    evidence:
+      - knowledge/findings/KN-FIND-c81e5b.md:52
+      - ledger/evidence/EV-PFDR-07d608.yaml:427
+      - knowledge/findings/KN-FIND-c81e5b.md:66
+    fix: Say "for label-sum coincidence harvests from proper rank <= 3 log-GAP half-box label sets of the tested construction and sizes, to within the 5% tolerance".
+  - id: PFX-5
+    beat: B8
+    severity: minor
+    claim_ids: [PFX-C-CORR-scope]
+    what: >-
+      CORR-20261029-1aaef6 is additive and correct, but a record composed after it, DEC-20261029-8d9b43 FR-3
+      (commit 68f6c4670f, 2026-10-29T07:57Z; the correction landed 07:06Z), restates "the planted-type label-AP
+      detectability bound (2 to 47 labels)" as a first-round addition without citing the withdrawal. Outside merges
+      #2693/#2699; recorded because it is where the withdrawn number survives.
+    evidence:
+      - ledger/decisions/DEC-20261029-8d9b43.yaml:204
+      - ledger/corrections/CORR-20261029-1aaef6.yaml:23
+    fix: An additive note on DEC-20261029-8d9b43 pointing FR-3 at CORR-20261029-1aaef6.
+
+claims:
+  # ---------------- EV-PFDR-07d608 ----------------
+  - id: PFX-C-EV-direction
+    text: "Supports H1 of H-PFDR-727bfc at the preregistered 5% tolerance on 44 of the 45 toy cells, for x-labels of proper (relation-free) rank-r log-GAP half-boxes and the pair-sum (h = 2) coincidence count only."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:78
+    suggested_verdict: upheld_scoped
+    scoped_to: "as stated, on one census (main seed block 8,100,000 + c, one producer session); strength preliminary per CORR-20261029-b45e67"
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-strength
+    text: "strength: strong ... The result was independently reproduced four ways: an exact audit replay under the recorded interpreter version, validity checks, a disjoint kernel recount, and a strictly blind re-derivation that matched every class."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:84-96
+    suggested_verdict: overclaimed
+    scoped_to: "preliminary: one valid census re-read by a byte-exact analysis replay, a disjoint recount and a blind re-derivation; no independent or clean-run reproduction of the effect"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: fail, B7: pass, B8: fail}
+  - id: PFX-C-311-replay
+    text: "This round's J1 then made an exact audit replay under CPython 3.11.15 (byte-identical outputs). ... Every measurement output was byte-identical, and DEC-20261029-5554ee's float tolerance was never needed."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:35-50 (also OBS-4 :176-179; DEC-20261029-01405d.yaml:61,65; KN-FIND-c81e5b.md:47,83)
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      a process-level replay (replay.sh, outside a git checkout; units fixed by the plan, not nonce-sampled; not
+      tools/runbook.py audit) of selftest, analyze-main, census-toy-rep and analyze-final under a uv Clang build of
+      CPython 3.11.15 with PyYAML 6.0.3 supplied reproduces every measurement file byte for byte; reproduced here
+      under CPython 3.11.18 (GCC) for the same four units. census-toy-main was not replayed under 3.11. A replay,
+      not an independent reproduction and not an execution proof.
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: PFX-C-EV-validity
+    text: "53/53 receipt-named files re-hash to their recorded values. census-toy-main's summary {jobs 6657, failed_infrastructure 0, degenerate 4} equals a recount ... All 1580 distinct (bits, c) curves equal generate_prime_order_curve(bits, 8100000 + c). There is one record per planned key (6657, with 0 missing, extra or duplicate)."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:126-143
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-reading
+    text: "outcome O-NULL and headline SUPPORT_SCOPED; calibration n 44, mean -0.26757013662385903, sd 0.9735699770654103, pass true; fraction_valid 0.9777777777777777, flagged_cells [], powered_cells 44 ...; 44 cells are class null and b20-r3-n4096 is class invalid."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:157-165
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-extremes
+    text: "largest |kappa - 1| 0.04140 at b28-r1-n256 ...; lowest ci95 bound 0.93684 (b28-r2-n512); largest |z| 3.131 (b24-r1-n2048); |kappa - 1| <= 0.0089 at n >= 1024 and <= 0.0025 at n >= 2048; smallest plant_kappa 1.28852 (b20-r2-n4096) and smallest plant_z 21.93 (b24-r2-n256); |log-kappa slope| <= 0.0088"
+    location: ledger/evidence/EV-PFDR-07d608.yaml:167-173
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-degenerate
+    text: "The four degenerate jobs (c 6, 30, 42, 47) each carry a short relation among the seeded base points (sup-norm 8 to 14) ... H(3, 10) holds only 3566, 4006, 3030 and 2641 distinct labels. Every one of the 6653 ok jobs has duplicate_skips 0."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:181-185
+    suggested_verdict: upheld_scoped
+    scoped_to: "label counts, c values and duplicate_skips recomputed from gap_meta; the sup-norm 8-14 relations were not re-derived here"
+    beats: {B2: n/a, B3: n/a, B4: not_covered, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-overdispersion
+    text: "sum of z^2 = 71.43 on 44 (p about 0.006 under independence), population sd 1.262 and mean 0.175. Six cells have |z| > 2 (...), and the same six intervals exclude 1. The A/A arms on the same cells give 44.9 on 44 (z_cal) and 40.5 on 44 (even/odd)."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:187-194
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-controls
+    text: "The plant reads flagged in 44/44 cells (lowest bootstrap lower bound 1.2877). The A/A null reads null in 44/44 and flags 0/880 in leave-one-out. The even/odd A/A flags 0/44 (2 intermediate). The selftest scaling identity passes for 12 sets."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:196-200
+    suggested_verdict: upheld_scoped
+    scoped_to: "plant recovery (min plant_kappa 1.2885, min plant_z 21.9), z_cal and 0/880 LOO recomputed; the plant bootstrap bound 1.2877 and the even/odd class counts traced to rt_analysis.json only; selftest replayed byte-identically (K11)"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-blindcompare
+    text: "The ci95 endpoints agree within a Monte Carlo tolerance ... The largest endpoint difference is 0.0034 ... no endpoint is within 0.024 of the band."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:209-212
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: PFX-C-EV-power
+    text: "The plant is recovered everywhere, and an MDE of 0.079 in the weakest powered cell (b28-r1-n512, M 3922.5) would have read non-null with 95% probability. ... Replay, recount and blind re-derivation each reproduce the reading."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:231-235
+    suggested_verdict: upheld_scoped
+    scoped_to: "0.079 traces to rt_analysis.json 0.07858 (my normal approximation 0.0775); 'reproduce the reading' holds for the analysis of one census (PFX-1)"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-apbound
+    text: "An additive (small-doubling or label-AP) label predicate for these label sets is not supported at these sizes, beyond planted-type substructure of about 2 to 47 labels (red team rt_ap_bound, a scaling estimate)."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:238-242 (and :345, :350, :407-408)
+    suggested_verdict: broken
+    scoped_to: "the size bound is withdrawn by CORR-20261029-1aaef6 (2.0-2.6 labels cannot carry any coincidence); 'not supported at these sizes' stands without a size figure"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: fail, B7: pass, B8: fail}
+  - id: PFX-C-EV-scoped
+    text: "the exact pair-sum (h = 2) coincidence count matches the matched uniform-label null within the preregistered 5% tolerance in 44 of the 45 toy cells ... The observed |kappa - 1| is at most 0.041 overall and at most 0.009 at n >= 1024. Cell b20-r3-n4096 is not assessed, relation-bearing log-GAPs are untested, and support is for the 5% tolerance, not for exact random-set behaviour."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:260-268 (identical at DEC-20261029-01405d.yaml:88-96)
+    suggested_verdict: upheld_scoped
+    scoped_to: "as stated, on one census from one seed block; strength preliminary (CORR-20261029-b45e67)"
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-table
+    text: "cells: [45 rows of kappa and ci95 rounded to 5 decimals] ... Values and classes were reproduced blind by TASK-20261029-e5fe6b (kappa equal at 6 decimals; ci95 within 0.0034)."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:353-403
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-resource
+    text: "At toy scale it licenses the random-label null rate for label-sum coincidence harvests from proper rank <= 3 GAP bases, so a later harvest design may use the uniform-set expectation 3 binom(n,4)/p as its null for these bases at these sizes. ... paired with the group-side dual EXP-PFDR-ca5e01 (which has no evidence record yet)."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:424-432
+    suggested_verdict: overclaimed
+    scoped_to: "half-box label sets of the tested construction and sizes, within 5% (PFX-4); 'no evidence record yet' was true on 2026-10-29 (EV-PFDR-c42190 added 2026-10-31)"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: fail}
+  - id: PFX-C-EV-tail
+    text: "Largest |z| 3.13 against an expected maximum of about 2.46 over 44 cells (P(max |z| >= 3.13) about 0.073 under independence); 1 cell with |z| > 3 (P about 0.11)."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:442-445
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: PFX-C-EV-prereg
+    text: "Predefined frozen protocol, with predictions recorded out of sample on 2026-10-17 and frozen at approval on 2026-10-22, before the runs of 2026-10-23."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:85-86
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-noproof
+    text: "No execution proof (docs/execution-proof-chain.md milestones open)."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:256
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PFX-C-EV-tier
+    text: "claim_tier: toy ... Max log2 p = 28 ... no correspondence and no transfer asserted."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:97-101
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: pass, B6: n/a, B7: n/a, B8: pass}
+  # ---------------- DEC-20261029-01405d ----------------
+  - id: PFX-C-DEC-transition
+    text: "decision: support ... H-PFDR-727bfc: approved -> analyzed (this decision) -> supported (this decision, scoped to scoped_claim); EXP-PFDR-bb0d26: completed -> analyzed"
+    location: ledger/decisions/DEC-20261029-01405d.yaml:30, 184-208
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      follows the frozen success_criterion (SUPPORT_SCOPED headline, calibration pass, 44/45 valid all null, plant
+      recovered, selftest pass, check.py 0 x5; all recomputed) and decision_impact.on_positive (analyzed -> supported
+      after independent review incl. blind recount and kernel spot-check), with the on_positive "label-describable"
+      consequence narrowed, not adopted; spec frozen before data (K4); support rests on preliminary-strength evidence
+      (CORR-20261029-b45e67)
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-DEC-strength
+    text: "strength: strong"
+    location: ledger/decisions/DEC-20261029-01405d.yaml:97 (rationale :133-135)
+    suggested_verdict: overclaimed
+    scoped_to: "preliminary (CORR-20261029-b45e67)"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: fail, B7: n/a, B8: fail}
+  - id: PFX-C-DEC-rationale
+    text: "The run set is valid and reproduced four independent ways: an exact replay under the recorded interpreter version, validity checks, a disjoint recount and a strictly blind re-derivation. No defect changes a count, class, outcome or headline."
+    location: ledger/decisions/DEC-20261029-01405d.yaml:115-118
+    suggested_verdict: overclaimed
+    scoped_to: "the run set is valid and its analysis was re-executed and recomputed three ways from one census; no defect changes a count, class, outcome or headline (true: K2, K5, K11)"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: fail}
+  - id: PFX-C-DEC-validity-replay
+    text: "replay: exact byte reproduction of analyze-main, analyze-final, selftest and census-toy-rep under CPython 3.11.15; the DEC-20261029-5554ee tolerance was not needed (J1)"
+    location: ledger/decisions/DEC-20261029-01405d.yaml:61
+    suggested_verdict: upheld_scoped
+    scoped_to: "as scoped under PFX-C-311-replay"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PFX-C-DEC-nothreshold
+    text: "The frozen success criterion of the specification is met on the frozen comparison C-struct-null ... No threshold was moved after the runs."
+    location: ledger/decisions/DEC-20261029-01405d.yaml:119-123
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-DEC-instrument
+    text: "The weakest powered cell would read a true |kappa - 1| >= 0.079 as non-null with 95% probability, and the planted AP reads flagged everywhere. The A/A arms do not flag above nominal."
+    location: ledger/decisions/DEC-20261029-01405d.yaml:124-127
+    suggested_verdict: upheld_scoped
+    scoped_to: "0.079 traced to rt_analysis.json (0.07858); plant and A/A recomputed"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: PFX-C-DEC-wording
+    text: "The phrases 'scoped closure of label-describable rank <= 3 log-GAP bases' and 'the implicit-membership route of KN-OPEN-020 ... is then not opened by a label predicate at these sizes' are NOT adopted ... KN-OPEN-020 remains open."
+    location: ledger/decisions/DEC-20261029-01405d.yaml:165-174
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: PFX-C-DEC-independence
+    text: "tools/check_review_independence.py PASS, run by the top-level session. ... The top-level session wrote the review plan and the coordinator prior and froze both in commit 1eddb4740b before any reviewer ran."
+    location: ledger/decisions/DEC-20261029-01405d.yaml:48-53
+    suggested_verdict: upheld_scoped
+    scoped_to: "checker rerun PASS (K12); freeze precedes the self-recorded J1 start time; session independence only, one model family"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-DEC-noproof
+    text: "No execution proof (docs/execution-proof-chain.md milestones open); nothing here is execution verified."
+    location: ledger/decisions/DEC-20261029-01405d.yaml:159
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  # ---------------- KN-FIND-c81e5b ----------------
+  - id: PFX-C-KN-headline
+    text: "x-labels of proper rank <= 3 log-GAP half-boxes on toy prime-order curves (20-28 bits, n 256-4096) carry the pair-sum coincidence count of a uniform random label set within 5% in 44 of 45 cells. This is an h = 2 additive statement only; relation-bearing log-GAPs are untested."
+    location: knowledge/findings/KN-FIND-c81e5b.md:4-7 (body :25-38)
+    suggested_verdict: upheld_scoped
+    scoped_to: "one census, one seed block; promotion basis preliminary per CORR-20261029-a8c797"
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-KN-law
+    text: "It matches the mean over 20 uniform n-subsets of the same curve's label universe, with E[C] = 3 binom(n,4)/p (1 + O(1/p))"
+    location: knowledge/findings/KN-FIND-c81e5b.md:31-33
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: PFX-C-KN-instrument
+    text: "a planted label arithmetic progression reads flagged in every powered cell (plant_kappa >= 1.288); in the weakest powered cell, a true |kappa - 1| >= 0.079 would have read non-null with 95% probability; planted-type label-AP substructure is detectable from about 2 to 47 labels (a scaling estimate); the null-vs-null and even/odd A/A comparisons stay at nominal."
+    location: knowledge/findings/KN-FIND-c81e5b.md:40-44
+    suggested_verdict: overclaimed
+    scoped_to: "bullets 1, 2 and 4 hold (recomputed or traced); bullet 3 is withdrawn by CORR-20261029-1aaef6"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: fail, B7: pass, B8: fail}
+  - id: PFX-C-KN-reproduced
+    text: "The reading was reproduced four ways: an exact audit replay under the recorded interpreter version (CPython 3.11.15); a disjoint brute-force recount of sampled jobs ...; a strictly blind re-derivation of every cell statistic and class from the job records; a red-team power and scope review."
+    location: knowledge/findings/KN-FIND-c81e5b.md:46-50
+    suggested_verdict: overclaimed
+    scoped_to: "the analysis reading of one census was replayed byte-exactly under 3.11 and recomputed from the job records; the census was not replayed under 3.11; a power/scope review is not a reproduction (PFX-1)"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: PFX-C-KN-use
+    text: "At toy scale this licenses the random-label null rate 3 binom(n,4)/p for label-sum coincidence harvests from proper rank <= 3 GAP bases. That is the kappa = 1 input of the harvest rate in IDEA-20261017-bbc53e. It is a null, not a lever."
+    location: knowledge/findings/KN-FIND-c81e5b.md:52-54
+    suggested_verdict: overclaimed
+    scoped_to: "the tested half-box construction and sizes, within 5% (PFX-4); the bbc53e base itself is untested, as the entry's scope section says"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: fail}
+  - id: PFX-C-KN-scope
+    text: "Additive (pair-sum, h = 2) structure only ... It is not a closure of 'label-describable' log-GAPs ... Proper log-GAPs only ... Tested sizes only. ... The 5% tolerance, not exact randomness."
+    location: knowledge/findings/KN-FIND-c81e5b.md:56-84
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-KN-promotion
+    text: "knowledge_promotion: promoted: [KN-FIND-c81e5b]; required_because: decision support on strong evidence"
+    location: ledger/decisions/DEC-20261029-01405d.yaml:332-334
+    suggested_verdict: overclaimed
+    scoped_to: "promotion basis unmet at preliminary strength; cite only with the CORR-20261029-a8c797 disclosure"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: fail, B7: n/a, B8: fail}
+  # ---------------- CORR-20261029-1aaef6 ----------------
+  - id: PFX-C-CORR-additive
+    text: "This record annotates; it changes no byte of EV-PFDR-07d608, DEC-20261029-01405d, KN-FIND-c81e5b, analysis.md, the decision report or the red-team report. The decision is unchanged."
+    location: ledger/corrections/CORR-20261029-1aaef6.yaml:3-5
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PFX-C-CORR-reason
+    text: "any set of fewer than four labels has exactly zero internal coincidences. rt_ap_bound inverts an assumed cubic signal, which gives bounds of 2.0 to 2.6 labels for the 28-bit n = 256 cells, a regime where the cubic signal does not apply."
+    location: ledger/corrections/CORR-20261029-1aaef6.yaml:35-39
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: PFX-C-CORR-effect
+    text: "None on the decision ... No rationale, status transition or knowledge promotion rested on the bound."
+    location: ledger/corrections/CORR-20261029-1aaef6.yaml:40-44
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+  - id: PFX-C-CORR-scope
+    text: "also_corrects: EV-PFDR-07d608 (analysis INF-3; obstruction statement, quantity and summary); analysis.md (Inference I3); KN-FIND-c81e5b (Finding ...); report.typ and report.pdf (Inference, third bullet)"
+    location: ledger/corrections/CORR-20261029-1aaef6.yaml:17-21
+    suggested_verdict: upheld_scoped
+    scoped_to: "complete for the round's records; a later decision (DEC-20261029-8d9b43 FR-3) restates the bound uncorrected (PFX-5); report.pdf is absent here (not_covered)"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PFX-C-CORR-corrected
+    text: "the planted label AP of the frozen plant-size rule ... is read flagged in all 44 powered cells, and in the weakest powered cell a true homogeneous |kappa - 1| of at least 0.079 would have read non-null with 95% probability. The statement 'an additive label predicate for these label sets is not supported at these sizes' stands without a size figure."
+    location: ledger/corrections/CORR-20261029-1aaef6.yaml:28-33
+    suggested_verdict: upheld_scoped
+    scoped_to: "h = 2 additive predicates at the tested cells within 5%; in my blind control a 16-label AP in 240 random labels already reads kappa 1.148 at b20 n = 256, so substantial label-AP structure would show, but no size bound is established"
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: n/a, B8: pass}
+
+lead_dispositions: []
+not_covered:
+  - what: census-toy-main replay under CPython 3.11 (by J1 or by me)
+    command: "PATH=<dir with python3 -> /usr/bin/python3.11>:$PATH CHECKPOINT_SKIP=audit python3 tools/runbook.py audit experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26 --out <case dir>  (or py311_replay.sh ... census-toy-main RUN-PFDR-4d8c71, then compare_jobs.py)"
+  - what: RBS-PFDR-ca5e01 audit (the records mention EXP-PFDR-ca5e01 only as a pairing; no number of the joint rests on it)
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/runbook.py audit experiments/EXP-PFDR-ca5e01/runbook-sessions/RBS-PFDR-ca5e01 --out <case dir>/audit-ca5e01"
+  - what: "report.pdf currency and page-1 values (gitignored, absent; sha pinned in .artifacts.json)"
+    command: "typst compile experiments/EXP-PFDR-bb0d26/reports/review-DEC-20261029-01405d/report.typ and compare sha256 with .artifacts.json d5d67d13..."
+  - what: the sup-norm 8-14 base-point relations of the four degenerate jobs
+    command: "own lattice search for small (c1,c2,c3) with c1 P1 + c2 P2 + c3 P3 = O on the regenerated base points of b20-r3-n4096 c = 6, 30, 42, 47"
+  - what: the plant's bootstrap lower bound 1.2877 and the even/odd class counts (traced to rt_analysis.json only)
+    command: "extend pfdr_recompute.py with a plant-arm bootstrap and the red team's even/odd class rule"
+limitations:
+  - "Every replay and audit here is a replay: it bounds fabrication only for what it compares and proves no execution."
+  - "My blind re-derivation covers bits 20 only, p = 3 mod 4, n <= 1024, on my own curve family."
+  - "The seed-binding check runs the producer's vendored generator; it binds, it does not independently derive."
+  - "The default audit's replay interpreter is 3.13.18 (python3 on PATH); interpreter parity is mismatch by construction, as in the recorded audit."
+artifact_paths:
+  - research/sheriff/SHF-20261106-a114e7/readers/pfdr.yaml
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/
+review_attestation: >-
+  I read the records and recomputed what they state; I wrote only this file and files under
+  scripts/readers/pfdr/ (plus scratch copies in the session scratchpad); I changed no research state.
