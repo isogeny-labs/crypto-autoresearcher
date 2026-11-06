@@ -5,7 +5,27 @@ ROOT=Path(__file__).resolve().parents[2]
 def module(name,path):
     spec=importlib.util.spec_from_file_location(name,ROOT/path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
 parent=module('_a11_kernel_free','research/prime_field_a10_execution_20261106/solver.py')
-Meter=parent.Meter;KernelFreeSystem=parent.KernelFreeSystem;old=parent.old;counters=parent.counters
+Meter=parent.Meter;old=parent.old;counters=parent.counters
+
+def normalize_pivot(row,value,weights,pivot,meter):
+    f=meter.ring;lead=row[pivot]
+    if lead==1:
+        meter.other['unit_pivot_shortcuts']+=1;return row,value,weights
+    if lead==f.p-1:
+        meter.other['negative_unit_pivot_shortcuts']+=1
+        return {j:f.sub(0,x) for j,x in row.items()},f.sub(0,value) if value else 0,{j:f.sub(0,x) for j,x in weights.items()}
+    inverse=f.inv(lead)
+    return {j:f.mul(x,inverse) for j,x in row.items()},f.mul(value,inverse) if value else 0,{j:f.mul(x,inverse) for j,x in weights.items()}
+
+class KernelFreeSystem(parent.KernelFreeSystem):
+    def add(self,vector,rhs):
+        if len(vector)!=self.width:raise ValueError('affine width')
+        f=self.f;row={j:x%f.p for j,x in enumerate(vector) if x%f.p};i=len(self.rows)
+        reduced,value,weights=self.reduce(dict(row),rhs%f.p,{i:1})
+        if not reduced and value:raise ValueError('inconsistent affine system')
+        if reduced:
+            pivot=min(reduced);self.pivots[pivot]=normalize_pivot(reduced,value,weights,pivot,self.meter)
+        self.rows.append([row.get(j,0) for j in range(self.width)]);self.rhs.append(rhs%f.p);self.meter.other['affine_rows_inserted']+=1
 
 def validate(case):
     w=case['width'];nt=case['target_count'];r=case['modulus']
@@ -38,8 +58,7 @@ class OutsideSystem(KernelFreeSystem):
         self.rows.append([row.get(j,0) for j in range(self.width)]);self.rhs.append(0)
         self.meter.other['outside_rows_inserted']+=1
         if residual:
-            pivot=min(residual);inverse=f.inv(residual[pivot])
-            self.pivots[pivot]=({j:f.mul(x,inverse) for j,x in residual.items()},0,{j:f.mul(x,inverse) for j,x in weights.items()})
+            pivot=min(residual);self.pivots[pivot]=normalize_pivot(residual,0,weights,pivot,self.meter)
             return None
         return [[i,a] for i,a in sorted(weights.items()) if a]
 

@@ -63,20 +63,29 @@ class QueryCache:
                 q=tuple(atom['point']);self.base_index.setdefault(q,[]).append(j);self.meter.other['affine_base_index_entries']+=1;signed[j,1]=q;signed[j,-1]=self.meter.neg(q)
             return signed
         self.signed=self.meter.stage('target_query_cache_setup',setup)
-        for target in collected['target_generation']['targets']:
-            t=target['index'];point=tuple(target['point']);rows=[{k:v for k,v in row.items() if k not in ('target_index','target_point')} for row in collected['target_collection']['rows'] if row['target_index']==t]
-            trace=[row for row in collected['target_collection']['trace'] if row['index']==t]
-            rec=dict(id=len(self.records),point=list(point),rows=rows,trace=trace,seeded_natural=True,phase_ids=['source.target_queries'])
-            self.lookup[point]=rec['id'];self.records.append(rec)
+        def seed():
+            for target in collected['target_generation']['targets']:
+                t=target['index'];point=tuple(target['point']);rows=[{k:v for k,v in row.items() if k not in ('target_index','target_point')} for row in collected['target_collection']['rows'] if row['target_index']==t]
+                trace=[row for row in collected['target_collection']['trace'] if row['index']==t]
+                rec=dict(id=len(self.records),point=list(point),rows=rows,trace=trace,seeded_natural=True,phase_ids=['source.target_queries'])
+                self.lookup[point]=rec['id'];self.records.append(rec);self.meter.other['query_cache_seed_points']+=1;self.meter.other['seed_relation_references']+=len(rows);self.meter.other['seed_trace_references']+=len(trace)
+        self.meter.stage('natural_decomposition_cache_seed',seed)
     def request(self,point,context):
-        self.meter.other['logical_target_requests']+=1;self.meter.other['target_cache_lookups']+=1
-        hit=point in self.lookup;self.event(dict(kind='target_request',context=context,point=None if point is None else list(point),cache_hit=hit))
-        if hit:
-            self.meter.other['target_cache_hits']+=1
-            return self.lookup[point]
+        serial=self.meter.other.get('logical_target_requests',0)
+        def lookup():
+            self.meter.other['logical_target_requests']+=1;self.meter.other['target_cache_lookups']+=1
+            index=self.lookup.get(point);hit=index is not None
+            if hit:self.meter.other['target_cache_hits']+=1
+            return index,hit
+        index,hit=self.meter.stage('target_cache_lookup_'+str(serial),lookup)
+        self.event(dict(kind='target_request',context=context,point=None if point is None else list(point),cache_hit=hit))
+        if hit:return index
+        maximum=self.rules['targets']*(1+len(self.rules['target_policies'])*(self.rules['target_queries_per_point']-1))
+        if len(self.records)>=maximum:raise ValueError('fixed affine endpoint cache gate')
         index=len(self.records);self.lookup[point]=index;record=dict(id=index,point=None if point is None else list(point),rows=[],trace=[],seeded_natural=False,phase_ids=['target_query_'+str(index)])
         self.records.append(record)
         def query():
+            self.meter.other['target_cache_records_added']+=1
             e=self.meter.e
             for third,sign in product(range(self.n),(1,-1)):
                 self.meter.other['target_queries']+=1;wanted=e.add(point,self.meter.neg(self.signed[third,sign]));bucket=self.table.get(wanted,[]);accepted=[];self.meter.other['table_lookups']+=1

@@ -1,8 +1,8 @@
 # A11: paid affine-target coverage with general outside columns
 
-Implementation in progress; **no native A11 curves, targets or experiment have
-been generated**. No frozen protocol, root release or launch interface exists
-yet. [Design](design.md) and [literature](literature.md) are prospective notes.
+Runnable implementation prepared; **no native A11 curves, targets or experiment
+have been generated**. The launch interface is `supervise.py`; prospective
+protocol freeze and explicit root release must precede its one native attempt. [Design](design.md) and [literature](literature.md) are prospective notes.
 The A10 source collector and kernel-free arithmetic are reused as code, with
 new rules to be frozen before fresh generation; the closed A10 trial is not rerun.
 
@@ -22,14 +22,15 @@ all aliases while cold-prefix views reference deterministic query counts rather
 than inventing executions or clocks. Base matches, identity, public and
 cross-target coincidences remain explicit paid equations.
 
-Current tiny software controls cover general-U positive/negative/corrupt cases,
+The 47 local tiny software controls (recorded in
+[software-controls.json](validation/software-controls.json)) cover general-U positive/negative/corrupt cases,
 JSON roundtrips, independent dense rank and certificates, all nine cache-aware
 constructor policies, affine labels/offsets/identities/cross-target equalities,
 query misses, prefix availability and failed construction prefixes. These are
 producer software checks, not signed PCC standing. [pcc:unverified]
 
 ```sh
-PYTHONPATH=src:. /workspace/factor-base-venv/bin/python -m pytest -q research/prime_field_a11_execution_20261106/test_solver.py research/prime_field_a11_execution_20261106/test_construct.py research/prime_field_a11_execution_20261106/test_collection.py
+PYTHONPATH=src:. /workspace/factor-base-venv/bin/python -m pytest -q research/prime_field_a11_execution_20261106/--tb=short
 ```
 
 Planned fixed panel: four fresh curves,32public targets,six source schedules,

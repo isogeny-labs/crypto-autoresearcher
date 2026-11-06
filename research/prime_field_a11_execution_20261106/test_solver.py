@@ -54,3 +54,16 @@ def test_inconsistent_and_malformed_rows_refuse():
   with pytest.raises(ValueError,match='inconsistent'):solver.solve(c,arm,solver.Meter(fixture()))
  c=case(1,1,[],[[1]],[[100]],[3],[7]);c['target'][0]['outside']=[]
  with pytest.raises(ValueError,match='encoding'):solver.solve(c,'sparse_joint',solver.Meter(fixture()))
+
+def test_unit_sign_pivot_shortcuts_keep_old_canonical_certificates():
+ c=list(cases())[0]
+ for arm in ('sparse_joint','sparse_cancel'):
+  first=solver.solve(c,arm,solver.Meter(fixture()));second=solver.solve(c,arm,solver.Meter(fixture()))
+  assert first['counters']==second['counters']
+  assert first['recoveries']==second['recoveries'] and first['system']==second['system']
+ m=solver.Meter(fixture());new=solver.KernelFreeSystem(2,m);old=solver.parent.KernelFreeSystem(2,solver.parent.Meter(fixture()))
+ for vector,b in [([100,0],5),([1,1],8),([0,2],26)]:
+  # Use a consistent span: -z0=5, z0+z1=8 => z1=13.
+  new.add(vector,b);old.add(vector,b)
+ assert new.summary()==old.summary()
+ assert m.other['negative_unit_pivot_shortcuts'] and m.other['unit_pivot_shortcuts']
