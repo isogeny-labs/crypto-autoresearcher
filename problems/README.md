@@ -12,6 +12,7 @@ Keep resolved and superseded records in the index.
 
 | Problem | Status | What it blocks | What would unblock it |
 | --- | --- | --- | --- |
+| [Public-reference claim validation and shared operational accounting](classical-ecdlp-public-reference-claim-validation.md) | investigating; source gaps | Complete retained-claim/source-fit and scientific admission for new public-reference witness search | New V2 F1/F2/G1-G4 repairs, exact CBC publication, independent Delta and native preapproval; original source/review preserved |
 | [Native full-cohort free-byte reserve](classical-ecdlp-native-free-byte-reserve.md) | open; operational | Completion of same48cohort under unchanged byte/memory caps | Explicit prospective roomier native worktree and normal admission; preserve failed attempts, no mathematical inference |
 | [Native full-cohort free-byte reserve](classical-ecdlp-native-free-byte-reserve.md) | open; operational | Completion of same48cohort under unchanged byte/memory caps | Explicit prospective roomier native worktree and normal admission; preserve failed attempts, no mathematical inference |
 | [Observer interstage closed-arm idle gap](classical-ecdlp-observer-interstage-idle-gap.md) | open | Same frozen full48 cohort execution after completed generator and before next native arm | Minimal bounded receive repair, independent old/new gap witness, then prospective same-EXP recovery amendment |
