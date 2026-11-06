@@ -44,6 +44,13 @@ coordinator_decision:
   - 'Pre-freeze checks F1, F4, F6 and F6b recorded as passing in prefreeze-checks-v6.md (local, development seeds, no
     candidate wall data read). Frozen protocol_sha256 12415faa3330276b6ccbed718a03bc598d9717576c332577024ebc4e9752543c
     at crypto commit 7c173e5a1d418dce4c734c43a25718a71107a36c, filed before affected data.'
+  - 'Revision 3 (approve, 2026-11-06): the budget rule uses the hard bound (100-minute CodeBuild timeout); before every launch,
+    actual spend + this launch''s hard bound + the hard bound of every unlaunched first-attempt job must be at most USD 5
+    (USD 0.931 per 3,600 s job). The wall launch passes at USD 2.84. The qualification card''s CodeBuild undercount is an
+    accounting error with no effect (actual spend about USD 0.05). Concurrency: the two wall jobs are submitted back
+    to back, each on its own fresh L2 node.'
+  - 'Qualification ic-line-v6-qual-20261106 passed every PROTOCOL-V6.md section 5.1 condition (48/48 verified, all
+    graded L2, minimum solve >= 5 ms); its wall fields stay sealed.'
   evidence_refs:
   - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md
   - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/TERMINAL-OBSERVATION-V3A2-20261106.md
@@ -51,6 +58,7 @@ coordinator_decision:
   - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6.md
   - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md
   - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/analyze-v6.sh
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/QUALIFICATION-V6-20261106.md
   limitations:
   - F6 and F6b grade L2 on the local host, not on a c8a node; the qualification is the c8a check.
   - The launcher's control-comparison.json and the full 576-record and 128-pair counts are first exercised by the qualification.
