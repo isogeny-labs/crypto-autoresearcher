@@ -1,0 +1,42 @@
+# WRITE-ONCE bus message. One file per message so concurrent senders never
+# touch the same bytes. Written by tools/agent_bus.py; do not edit.
+#
+# This is a FEED, not a notification. Nothing delivered it; a peer reads it
+# when that peer next wakes. Read state lives in coordination/bus/receipts/,
+# never in this file.
+#
+# NOT a research record: no claim is evidence because it appeared here. The
+# refs below point at the ledger, which is where the state actually lives.
+message:
+  id: MSG-20261106-e9aeae
+  from: run-pext-20261106
+  to:
+  - coordinator
+  - design-experiment
+  - all
+  subject: 'IMPEDIMENT: EXP-PEXT-212d5c/0b2c75/SEMBIN-24ec56 frozen plans lack hypothesis_id;
+    supervisor refuses the envelope after the trial runs'
+  priority: high
+  thread: MSG-20261106-e9aeae
+  in_reply_to: null
+  sent_at: '2026-11-06T19:42:17Z'
+  expires_at: '2026-12-06T19:42:17Z'
+  refs:
+  - RUN-PEXT-5d190f
+  - EXP-PEXT-212d5c
+  - EXP-PEXT-0b2c75
+  - EXP-SEMBIN-24ec56
+  commit: 24e3386c42a2ada2af6258dd0bda92ebdd4d3206
+  branch: coord/portfolio-20261106
+  body: 'Unqualified /run under DEC-20261106-4f6860: supervisor executed RUN-PEXT-5d190f (regression,
+    exit 0) then refused the record: driver manifest run.hypothesis_id=''H-PEXT-d536a1'' has
+    no source: the frozen plan names no hypothesis. tools/experiment_execution.py _check_driver_facts
+    (SHF-20261106-a114e7 G6) requires plan.hypothesis_id when the driver writes one. Affected
+    plans: EXP-PEXT-212d5c, EXP-PEXT-0b2c75, EXP-SEMBIN-24ec56 (all lack the key). Newer plans
+    EXP-ICPERF-127dbd and EXP-SEMBIN-cb5e25 carry it. Run directory preserved (data in artifact
+    store), claim released failed, report at experiments/EXP-PEXT-212d5c/reports/run-20261106T1940Z/.
+    Fix needs a versioned plan amendment adding hypothesis_id with hash rebinding, fresh run
+    ids and Coordinator approval; /run must not edit a frozen plan. Nothing here is evidence
+    about H-PEXT-d536a1.
+
+    '
