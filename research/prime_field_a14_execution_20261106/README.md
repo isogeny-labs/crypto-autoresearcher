@@ -1,7 +1,15 @@
 # A14: paid known16 helpers on the original norm base
 
-Implementation in progress; no native A14 curves, targets or relations have
-been generated, and no execution protocol or release exists yet.
+One admitted native attempt completed:1,248dependent cases,2,496actual target-solver
+calls and576separate information diagnostics on four fresh coefficient curves
+and32shared public targets. Producer standing remains unverified under
+[PCC-20261106-35c953](../../pcc/claims/PCC-20261106-35c953.json). [pcc:unverified]
+
+See [observations](RESULTS.md), [proof standing](PROOF-STATUS.md), the inspected
+[five-page report](reports/a14-mixed-known-helpers-4bbcf6/report.pdf), and
+[v17 database validation](database/v17-mixed-known-helpers/validation.json).
+Raw publication3057b1fe70101ecf2dafc511fd4fade8f98c5bc4 preceded rendering.
+The source and protocol/release remain immutable; this release is consumed.
 
 The next comparison keeps norm32, adds16 separately constructed public-log
 helpers, and retains source-free known32 and known48 controls. Known48 matches
@@ -42,7 +50,7 @@ Implemented components:
 - The tiny software controls exercise signed/permuted bases, native48/helper16
   dimensions, incomplete target spans, JSON roundtrips and corruptions. The
   all-known specialization is compared with A13's executed direct solver,
-  including its Fr operation counters.
+  including its Fr operation counters. [pcc:unverified]
 
 ```sh
 /workspace/factor-base-venv/bin/python -m pytest \
@@ -70,8 +78,10 @@ The tiny mocked-admission control covers all four programs, both solver arms,
 information audits, counter conservation and altered-row refusal.
 See [the exact implementation handoff](execution-plan.md).
 
-Still required: publish and assess exact source/input/protocol bytes, prospectively
-freeze, current actual S3/root release and ordinary admission. No helper labels or
+The corrected source was published and administratively assessed, prospectively
+frozen, checkpointed to actual S3 and explicitly released before normal admission.
+Follow-up work is ranked in [next leads](next-leads.md), with a new prospective
+contract before any further execution. No helper labels or
 known-base certainty may be counted as learned rank. No cross-base Delta is
 used against known32. One existing worker/thread,2GiB,21600CPU/wall seconds,
 one future attempt with no automatic retry or new paid capacity.
@@ -79,5 +89,6 @@ one future attempt with no automatic retry or new paid capacity.
 The first administrative assessment identified diagnostic custody before any
 native execution. See the additive [custody correction](diagnostic-custody-correction.md)
 and [129-control receipt](validation/diagnostic-custody-software-status.json).
-The old published source and blocked assessment remain unchanged; a corrected
-source snapshot and additive reassessment precede prospective freeze/release.
+The old published source and blocked assessment remain unchanged; corrected
+source f5ea52dee9706cc6277f02b6358cbd3d733b787c and the additive
+[v2 assessment](implementation-readiness.v2.md) preceded freeze/release and data.
