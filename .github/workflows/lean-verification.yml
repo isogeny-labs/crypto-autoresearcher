@@ -19,6 +19,7 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' && github.event.action != 'closed' }}
 jobs:
   changes:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}changes"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -35,6 +36,7 @@ jobs:
         run: python3 .github/scripts/ci_scope.py
 
   kernel-controls:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}kernel-controls"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
@@ -141,7 +143,7 @@ jobs:
   # separate: kernel-controls stays fast and still gates every PR that touches
   # the harness, while this one gates the mathematics.
   formal-workspace:
-    name: formal workspace (lake build + axiom audit)
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}formal workspace (lake build + axiom audit)"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
