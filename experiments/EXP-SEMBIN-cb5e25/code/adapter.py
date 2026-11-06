@@ -72,6 +72,15 @@ def snapshot(shared):
     return snap
 
 
+def portable(cmd, shared):
+    """The command with machine-specific absolute paths replaced by tokens."""
+    out = []
+    for c in cmd:
+        c = c.replace(shared, "<SHARED>").replace(_paths.CODE_DIR, "<CODE>")
+        out.append(os.path.basename(c) if c == sys.executable else c)
+    return out
+
+
 def trial_id_of(a):
     if a.trial_id:
         return a.trial_id
@@ -190,14 +199,14 @@ def main(argv=None, clock=time.time):
             violations.append(rel + " (deleted)")
     raw = {"schema": "sembin.trial_raw_result.v1", "experiment_id": EXPERIMENT_ID, "trial_id": tid,
            "trial_key": key, "kind": a.kind, "cell": a.cell, "arm": a.arm, "r": a.r,
-           "protocol_sha256": a.protocol_sha256, "command": cmd, "exit_code": proc.returncode,
+           "protocol_sha256": a.protocol_sha256, "command": portable(cmd, shared), "exit_code": proc.returncode,
            "attack_claimed": False,
            "budget": {"total_seconds": a.total_seconds, "reserve_seconds": a.reserve_seconds,
                       "elapsed_seconds": elapsed, "remaining_seconds": remaining_net,
                       "passed_to_run_py": {"remaining_seconds": a.total_seconds - elapsed,
                                            "reserve_seconds": a.reserve_seconds},
                       "session_start_file": "session_start.json"},
-           "shared_run_dir": shared, "shared_artifacts_appended": appended,
+           "shared_run_dir": os.path.relpath(shared, rdir), "shared_artifacts_appended": appended,
            "shared_artifact_violations": violations}
     if a.kind == "trial":
         tpath = os.path.join(shared, "trials", tid + ".json")
@@ -235,9 +244,13 @@ def main(argv=None, clock=time.time):
         "attack_claimed": False,
         "code": {"commit": commit, "command_file": "command.txt", "command": launched},
         "environment": {"file": "environment.json", "python": sys.version.split()[0]},
+        # the supervisor refuses inputs.parameters / seed / curve_id when the frozen trial declares none
+        # (tools/experiment_execution._check_trial_inputs): derived values live under inputs.derived;
+        # shared_run_dir is relative to the per-trial directory (never an absolute, machine-specific path)
         "inputs": {"trial_id": tid,
-                   "parameters": {"cell": a.cell, "arm": a.arm, "r": a.r, "kind": a.kind,
-                                  "protocol_sha256": a.protocol_sha256, "shared_run_dir": shared}},
+                   "derived": {"cell": a.cell, "arm": a.arm, "r": a.r, "kind": a.kind,
+                               "protocol_sha256": a.protocol_sha256,
+                               "shared_run_dir": os.path.relpath(shared, rdir)}},
         "timing": {"started_at": t_start_iso, "finished_at": datetime.fromtimestamp(finished, timezone.utc).isoformat(),
                    "wall_seconds": finished - started, "source": "adapter clock"},
         "metrics": metrics,

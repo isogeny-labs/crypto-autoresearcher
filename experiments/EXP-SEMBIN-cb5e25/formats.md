@@ -370,7 +370,7 @@ two files to it.
   printed (`certify`, with `trial`).
 * `manifest.yaml`: a `run:` envelope (`id` = the directory name, `experiment_id`,
   `hypothesis_id`, `trial_id`, `status` completed | failed, `code`, `environment`,
-  `inputs.trial_id` and `inputs.parameters`, `timing`, `metrics`,
+  `inputs.trial_id` and `inputs.derived` (cell, arm, r, kind, protocol_sha256 and `shared_run_dir` relative to the per-trial directory; NOT `inputs.parameters`, `seed` or `curve_id`, which the supervisor refuses when the frozen trial declares none), `timing`, `metrics`,
   `result.raw_result`, `result.certificate.kind: none`, `artifacts`) that passes
   the run schema of `tools/validate_ledger.py`.
 

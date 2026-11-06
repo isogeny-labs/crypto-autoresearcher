@@ -330,3 +330,116 @@ def test_check_fullfe_disagreement_and_der3_mismatch(tmp_path, capsys):
     bad["der3_mismatch"] = True
     rdir2, shared2 = build(sub, rows=[bad], summ=summary(k2, "EQS4", {"contained": True}, 4))
     assert run_check(rdir2, shared2, capsys)[0] == 1
+
+
+# ------------------------------------------------------------------ against the real supervisor code
+def _supervisor():
+    import experiment_execution as EE
+    return EE
+
+
+def _plan_and_trial(run_id="RUN-SEMBIN-abc123", tid="m3n06__EQS4__r0"):
+    """A plan/trial shaped like experiments/EXP-SEMBIN-cb5e25/trial-plan.json's first trial:
+    only argv, artifacts, check_argv, depends_on, id, memory_mb, note, run_id."""
+    trial = {"argv": ["python3", "x/adapter.py", "--run-dir", "{run_dir}"], "artifacts": ["manifest.yaml", "raw-result.json"],
+             "check_argv": ["python3", "x/check_trial.py", "{run_dir}"], "depends_on": [], "id": tid,
+             "memory_mb": 10240, "note": "plan row", "run_id": run_id}
+    plan = {"experiment_id": "EXP-SEMBIN-cb5e25", "hypothesis_id": "H-SEMBIN-e5b2db", "task_id": "TASK-20261106-aaaaaa",
+            "approved_by": "DEC-20261106-aaaaaa", "trials": [trial]}
+    return plan, trial
+
+
+def _drive_complete_manifest(tmp_path, mutate=None):
+    """Run the adapter for a tiny trial, then feed its manifest.yaml to the supervisor's
+    complete_manifest with launch facts shaped like execute_trial's."""
+    EE = _supervisor()
+    from datetime import datetime, timezone
+    rdir, shared = make_dirs(tmp_path)
+    plan, trial = _plan_and_trial()
+    argv = ["python3", "experiments/EXP-SEMBIN-cb5e25/code/adapter.py", "--run-dir", str(rdir)]
+    (rdir / "command.txt").write_text(json.dumps(argv) + "\n")
+    authority = {"commit": "1" * 40}
+    (rdir / "environment.json").write_text(json.dumps({
+        "python": sys.version, "platform": sys.platform, "source_sha256": {"a": "0" * 64},
+        "specification_sha256": "2" * 64, "commit": authority["commit"], "runtime_lock": None,
+        "runtime_lock_sha256": None}))
+    started = datetime.now(timezone.utc).isoformat()
+    assert adapter.main(args(rdir, shared)) == 0
+    finished = datetime.now(timezone.utc).isoformat()
+    if mutate:
+        man = yaml.safe_load(open(rdir / "manifest.yaml"))
+        mutate(man["run"])
+        yaml.safe_dump(man, open(rdir / "manifest.yaml", "w"), sort_keys=False)
+    return EE, EE.complete_manifest(rdir, plan, "experiments/EXP-SEMBIN-cb5e25/trial-plan.json", "3" * 64, trial,
+                                    authority, argv, ["python3", "check"], started, finished), rdir
+
+
+def test_adapter_manifest_is_accepted_by_supervisor_complete_manifest(tmp_path):
+    EE, completion, rdir = _drive_complete_manifest(tmp_path)
+    assert completion["action"] in ("unchanged", "completed")
+    assert EE.manifest_schema_errors(rdir / "manifest.yaml") == []
+    man = yaml.safe_load(open(rdir / "manifest.yaml"))["run"]
+    assert "parameters" not in man["inputs"] and "seed" not in man["inputs"] and "curve_id" not in man["inputs"]
+    assert not os.path.isabs(man["inputs"]["derived"]["shared_run_dir"])
+    raw = json.load(open(rdir / "raw-result.json"))
+    assert not os.path.isabs(raw["shared_run_dir"]) and "<SHARED>" in " ".join(raw["command"])
+
+
+def test_old_manifest_shape_with_parameters_is_refused_by_supervisor(tmp_path):
+    EE = _supervisor()
+    def old_shape(run):
+        run["inputs"]["parameters"] = {"cell": "m3n06", "arm": "EQS4", "r": 0}
+    with pytest.raises(EE.EnvelopeRefused, match="has no source"):
+        _drive_complete_manifest(tmp_path, old_shape)
+
+
+def test_supervisor_refuses_seed_and_curve_id_too(tmp_path):
+    EE = _supervisor()
+    for key in ("seed", "curve_id"):
+        sub = tmp_path / key
+        sub.mkdir()
+        with pytest.raises(EE.EnvelopeRefused):
+            _drive_complete_manifest(sub, lambda run, key=key: run["inputs"].__setitem__(key, 1))
+
+
+def test_supervisor_drives_two_adapter_trials_end_to_end(tmp_path, monkeypatch):
+    """The real execute_trial (process launch, memory ceiling, complete_manifest, check_argv,
+    schema gate, receipt) on a 2-trial scratch plan outside the repo; no claims."""
+    EE = _supervisor()
+    from datetime import datetime, timedelta, timezone
+    root = tmp_path / "scratch_root"
+    spec_dir = root / "experiments" / "EXP-SEMBIN-cb5e25"
+    (spec_dir / "runs").mkdir(parents=True)
+    shared = root / "shared"
+    shared.mkdir()
+    (shared / "fixtures.json").write_text(json.dumps(
+        {"fixtures": [{"id": f"F-{i}", "verdict": "pass"} for i in range(1, 9)], "sr1_all_pass": True}))
+    code = os.path.join(CODE, "adapter.py")
+    chk = os.path.join(CODE, "check_trial.py")
+    plan = {"experiment_id": "EXP-SEMBIN-cb5e25", "hypothesis_id": "H-SEMBIN-e5b2db",
+            "task_id": "TASK-20261106-aaaaaa", "approved_by": "DEC-20261106-aaaaaa",
+            "specification": "experiments/EXP-SEMBIN-cb5e25/specification.yaml", "specification_sha256": "2" * 64,
+            "source_sha256": {code: "0" * 64}, "trials": []}
+    for i, arm in enumerate(("EQS4", "EQS2")):
+        plan["trials"].append({
+            "argv": ["python3", code, "--run-dir", "{run_dir}", "--shared-run-dir", str(shared), "--kind", "trial",
+                     "--cell", "m3n05", "--arm", arm, "--r", "0", "--protocol-sha256", PROTO],
+            "artifacts": ["manifest.yaml", "raw-result.json"],
+            "check_argv": ["python3", chk, "{run_dir}", "--shared-run-dir", str(shared)],
+            "depends_on": [], "id": f"m3n05__{arm}__r0", "memory_mb": 60000, "note": "scratch",
+            "run_id": f"RUN-SEMBIN-00000{i}"})
+    plan_path = root / "experiments" / "EXP-SEMBIN-cb5e25" / "trial-plan.json"
+    plan_path.write_text(json.dumps(plan))
+    # the checker's own code-hash gate compares CODE_SHA256.json with disk: keep it real but pinned
+    authority = {"commit": "1" * 40, "expires_at": (datetime.now(timezone.utc) + timedelta(hours=1)).isoformat()}
+    lock = os.open(os.devnull, os.O_RDONLY)
+    statuses = []
+    for trial in plan["trials"]:
+        statuses.append(EE.execute_trial(root, plan_path, plan, trial, authority, lock))
+    receipts = [json.load(open(spec_dir / "runs" / t["run_id"] / "execution-receipt.json")) for t in plan["trials"]]
+    assert statuses == ["output_validated", "output_validated"], [r["detail"] for r in receipts]
+    assert all(r["scientific_conclusion"] is None and r["published"] is False for r in receipts)
+    assert (shared / "session_start.json").exists()
+    first = json.load(open(spec_dir / "runs" / "RUN-SEMBIN-000000" / "raw-result.json"))
+    second = json.load(open(spec_dir / "runs" / "RUN-SEMBIN-000001" / "raw-result.json"))
+    assert second["budget"]["elapsed_seconds"] >= first["budget"]["elapsed_seconds"]
