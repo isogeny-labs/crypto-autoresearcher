@@ -2,7 +2,7 @@
 
 usage: plot.py STUDY [DATADIR=data] [OUT=memory.svg]   (v3: data-v3 memory-v3.svg)
 """
-import csv, sys
+import csv, gzip, sys
 from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
@@ -17,7 +17,9 @@ fig, ax = plt.subplots(figsize=(9, 4.6))
 colors = {"default-a": "#1f6feb", "threads1": "#d97706", "default-b": "#7c3aed"}
 GiB = 1024 * 1024
 for arm, c in colors.items():
-    rows = list(csv.DictReader(open(d / data / f"{arm}.samples.tsv"), delimiter="\t"))
+    f = d / data / f"{arm}.samples.tsv"
+    fh = gzip.open(f.with_suffix(".tsv.gz"), "rt") if not f.exists() else open(f)
+    rows = list(csv.DictReader(fh, delimiter="\t"))
     t = [float(r["t_s"]) for r in rows]
     anon = [int(r["lean_rss_anon_kb"]) / GiB for r in rows]
     tot = [(int(r["lean_rss_anon_kb"]) + int(r["lean_vm_swap_kb"])) / GiB for r in rows]

@@ -118,6 +118,8 @@ what is still unknown is how much margin it has.
   the v3 `analysis.py`. Validate it at `ad3ae7b9`, or note that its pinned
   sha256 `4bfd334a…` equals `analysis-v2.py`'s.
 - v3 data: [data-v3/](data-v3/) holds the artifact `formal-module-rss`
+  (the three `*.samples.tsv` gzipped with `gzip -9 -n` to stay under the
+  64 KB in-git data limit)
   (id 13478781155; zip sha256 in [data-v3/ARTIFACT.txt](data-v3/ARTIFACT.txt))
   and the kernel OOM log. With it come [rows-v3.jsonl](rows-v3.jsonl) and
   [export-v3.json](export-v3.json). `check-export --verify-files` against
