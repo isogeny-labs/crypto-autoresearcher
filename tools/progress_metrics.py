@@ -212,6 +212,9 @@ ICPERF_RUNS = {
 }
 
 
+ICPERF_PLANTED_PRICE_TRIAL = "ctl-neg-perturbed-price"
+
+
 def icperf_trials(ref, since):
     """Export only ICPERF rows whose committed raw output and receipt agree."""
     all_rows = []
@@ -270,19 +273,31 @@ def icperf_trials(ref, since):
         source = f"{raw_path} + {receipt_path}@{ref}"
         emit(f"icperf.{exp_id}.validated_trials", 1, date=day, problem="icperf", unit="trial records",
              kind="event", label=f"{exp_id} validated completed trial {trial_id}", source=source)
+        # Stage-0 values are computed by a seeded program from assumed or
+        # planted inputs. None is a measured latency or a table-probe count,
+        # so no unit may read as one (DEC-20261105-8a9984 NA-2; sheriff case
+        # SHF-20261106-a114e7, ICR-1).
         if exp_id == "EXP-ICPERF-283a70":
-            fields = (("n_targets", "target samples"), ("sample_sum", "probe-count sum"),
-                      ("median", "probes per target"))
+            fields = (("n_targets", "synthetic xorshift samples (count)"),
+                      ("sample_sum", "synthetic xorshift draw-count sum (not table probes)"),
+                      ("median", "draws (synthetic, not table probes)"))
+            qualifier = "synthetic xorshift sample, not table probes"
         else:
-            fields = (("states", "model states"), ("c_probe_ns", "nanoseconds per probe"),
-                      ("c_state_ns", "nanoseconds per state"), ("c_step_ns", "nanoseconds per step"),
-                      ("price_ratio_num", "dimensionless ratio numerator"),
-                      ("price_ratio_den", "dimensionless ratio denominator"))
+            # NEG-1 (ctl-neg-perturbed-price) plants a perturbed price; every
+            # other trial uses the assumed cost-model constants.
+            kind = "planted input" if trial_id == ICPERF_PLANTED_PRICE_TRIAL else "assumed input"
+            fields = (("states", "model states"),
+                      ("c_probe_ns", f"{kind}: nanoseconds per probe (cost-model constant, not measured)"),
+                      ("c_state_ns", f"{kind}: nanoseconds per state (cost-model constant, not measured)"),
+                      ("c_step_ns", f"{kind}: nanoseconds per step (cost-model constant, not measured)"),
+                      ("price_ratio_num", "dimensionless ratio numerator (computed from assumed inputs)"),
+                      ("price_ratio_den", "dimensionless ratio denominator (computed from assumed inputs)"))
+            qualifier = f"{kind}s, not a measurement"
         for field, unit in fields:
             value = raw.get(field)
             if type(value) in (int, float) and math.isfinite(value):
                 emit(f"icperf.{exp_id}.{trial_id}.{field}", value, date=day, problem="icperf", unit=unit,
-                     better="neutral", label=f"{exp_id} {trial_id}: {field}", source=source)
+                     better="neutral", label=f"{exp_id} {trial_id}: {field} ({qualifier})", source=source)
 
 
 def prym_census(ref):
