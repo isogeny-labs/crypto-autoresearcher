@@ -1,0 +1,228 @@
+# DEC-20261106-3a91f7: Coordinator ruling on the stop of runbook session RBS-ICPERF-de8978
+# (EXP-ICPERF-127dbd, C1 route A at fp28): a GitHub transient on the claim push, before any launch.
+# It authorizes a reopen of the same session at the unchanged runbook b3676f85... It approves no new bytes.
+coordinator_decision:
+  id: DEC-20261106-3a91f7
+  id_provenance: >-
+    Chosen by the Coordinator subagent, which has no shell, as an unused 6-hex token (no match for
+    "3a91f7" in the clone). It is NOT allocator-confirmed. Before committing, the top-level session
+    runs `python3 tools/allocate_id.py --check DEC-20261106-3a91f7`. If that fails, it allocates
+    with `--next coordinator_decision --date 20261106`, renames this file and replaces the id
+    everywhere in it and in goal.yaml next_action. No other change is permitted.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It wrote this file and the next_action of
+    ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml, and nothing else. In the clone (branch
+    claude/c1-launch-20261106, pushed at c04a15753c on origin/main 4b285cb838) it read
+    experiments/EXP-ICPERF-127dbd/{runbook.yaml (S02-trials lines 210-303),
+    task-cards/CARD-EXP-ICPERF-127dbd-2.yaml,
+    runbook-sessions/RBS-ICPERF-de8978/{journal.jsonl, steps/S02-trials.attempt-1.claim.stdout,
+    steps/S02-trials.attempt-1.claim.stderr}}, and the claim file
+    coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/claims/TASK-20261106-724d14.1.claim.json.
+    It also read the queue states, DEC-20261106-ecf261, DEC-20261106-c69de4,
+    ledger/handoffs/TASK-20261106-724d14.yaml (artifact_paths), docs/runbook-execution.md
+    ("Execution semantics"), .claude/agents/executor-mechanical.md ("Runbook execution: the
+    procedure"), and these functions: tools/runbook.py (REOPENABLE, run, execute, _supervise,
+    _release_claim, _sync_claim, _live_claim_epoch, step_state, latest_units, find_approval),
+    tools/goal_lanes.py (classify, claim_task, release_task,
+    failed_run_has_bound_execution_receipt) and tools/experiment_execution.py (execute_trial
+    and the claim_expired watchdog). It ran no tool and computed no hash. The S3 facts below
+    come from the top-level session's report and were not checked here.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: approve
+  decision_scope: >-
+    The approval covers only the reopen of RBS-ICPERF-de8978 (the runbook `session_reopened`
+    path) at the bytes DEC-20261106-ecf261 approved. It approves no new specification, plan,
+    runbook, card, handoff or queue bytes, and no new session id. DEC-20261106-ecf261 remains the
+    approval of record for the runbook. Its key `runbook_sha256` is deliberately absent here, so
+    that tools/runbook.py find_approval keeps returning ecf261. That matches trial-plan.json
+    approved_by and the S02 validity assertion /approved_by == DEC-20261106-ecf261.
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  session_runbook: {path: experiments/EXP-ICPERF-127dbd/runbook.yaml, sha256: b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b}
+  runbook_session_id: RBS-ICPERF-de8978
+  context: >-
+    DEC-20261106-ecf261, merged through PR #3110 (db0f296edb), approved RBS-ICPERF-de8978 at runbook
+    b3676f85... with card CARD-EXP-ICPERF-127dbd-2 (5e5e3323...). The owner's EKS go-ahead was
+    "/ic-autolab go" at 2026-11-06T22:05Z, under a ceiling of USD 5 with USD 0 spent. The session
+    started at 23:09:36.79Z, and S01-probe passed at 23:09:39.68Z. In S02-trials attempt 1,
+    `goal_lanes.py claim ... --publish` wrote claim TASK-20261106-724d14 epoch 1 (acquired
+    23:09:40Z, expires 2026-11-07T01:54:40Z, branch claude/c1-launch-20261106) and committed it
+    locally as 82dd4ae094. The push was then rejected by GitHub with "remote: Internal Server
+    Error", Request ID 800F:2D87BA:841C02:B55E05:6AEE5E36, at 23:09:46Z. The claim exited 2, and
+    the session stopped at 23:09:46.12Z. The executor's later step-6 publish push succeeded, so
+    82dd4ae094 is now on origin. The session receipt is SR-20261106-fdb6fa (outcome impeded),
+    and the report is reports/run-20261106T2309Z.
+
+  # ---------------------------------------------------------------- ruling 1
+  stop_classification:
+    session: RBS-ICPERF-de8978
+    class: infrastructure_error
+    subclass: GitHub server error (HTTP 500) on the claim publish push, before the supervisor ran, no submission, no spend
+    basis:
+      - "journal.jsonl seq 6 step_finished S02-trials attempt 1: status failed, failure_class infrastructure_error, exit_code 2, detail 'claim failed (exit 2)'. data has claim_argv and no supervisor_argv. seq 7 session_finished status stopped with the same class. Journal tip 2ed8c747..., VERIFY OK (reported)."
+      - "steps/S02-trials.attempt-1.claim.stdout: 'claimed TASK-20261106-724d14 -> .../claims/TASK-20261106-724d14.1.claim.json'. claim.stderr: 'REFUSE: git push failed: ... remote: Internal Server Error ... ! [remote rejected] claude/c1-launch-20261106 -> claude/c1-launch-20261106 (Internal Server Error)'. The remote-side 500 is a GitHub transient. It is not a defect in our bytes."
+      - "tools/runbook.py _supervise returns infrastructure_error from the claim branch (code != 0) before _sync_claim and before tools/experiment_execution.py run. No run directory can exist, because execute_trial makes it exclusively and only the supervisor calls it. experiments/EXP-ICPERF-127dbd/runs/ holds only RUN-ICPERF-c7f69e, so launch_eks.sh never ran in this session."
+      - "seq 4 and seq 5 unit_recorded for T1 RUN-ICPERF-8b0d47 and T2 RUN-ICPERF-5ffa79: receipt_status not_run, run_dir null, receipt_sha256 null, valid false. These are journal placeholders, not runs."
+    rulings:
+      - "Infrastructure signal, not evidence (AGENTS.md rule 5). Nothing about C1 sessions S1 or S2 was observed. No negative result exists, and H-ICPERF-4cb536 stays as it is."
+      - "Not terminal. docs/runbook-execution.md: 'A session stopped by infrastructure_error or resource_exhaustion may be reopened by rerunning once the cause is fixed (session_reopened)'. tools/runbook.py REOPENABLE = (infrastructure_error, resource_exhaustion). run() appends session_reopened and resumes at the first step not done, here S02-trials attempt 2, because S01-probe has passed. The cause is external and transient, and it has cleared: the step-6 push of the same branch succeeded."
+      - "Not a protocol section 9 infrastructure outcome. No C1 job was launched, so no -r2 trigger occurred and the -r2 allowance stays unconsumed (DEC-20261106-ecf261 request_ruling)."
+      - "Budget: USD 0 contributed to actual_spend. No job was launched, so no hard bound is assigned. Spent to date is USD 0."
+
+  # ---------------------------------------------------------------- ruling 2
+  run_id_ruling:
+    consumed: false
+    ids: [RUN-ICPERF-8b0d47, RUN-ICPERF-5ffa79]
+    basis: >-
+      A run id is consumed when the supervisor creates its run directory (experiment_execution.py
+      execute_trial: 'directory.mkdir()  # exclusive; even an empty interrupted attempt is never
+      reused') or when a release binds its execution receipt (goal_lanes.py
+      failed_run_has_bound_execution_receipt). Neither happened. No directory, launch.json,
+      receipt, raw result, S3 object or AWS submission exists for either id, and no release
+      exists. The journal's not_run unit entries are superseded on reopen. tools/runbook.py
+      latest_units keeps the last unit_recorded per (step, trial), and verify re-evaluates every
+      unit. Reusing the ids is therefore not a redispatch of a consumed registration. It is the
+      first execution of each, in the same session that registered them.
+    replacement_ids: none. The reopen uses T1 RUN-ICPERF-8b0d47, then T2 RUN-ICPERF-5ffa79, session RBS-ICPERF-de8978, task TASK-20261106-724d14, snapshot TASK-20261106-d5ec1e and card CARD-EXP-ICPERF-127dbd-2, all unchanged.
+    why_not_a_new_session: >-
+      A new session id would need a recompiled runbook (session_id is bound), new run ids, a new
+      trial plan and specification (required_artifacts), a new executor handoff (its
+      artifact_paths name RUN-ICPERF-8b0d47 and RUN-ICPERF-5ffa79), a new card, a new snapshot
+      handoff, a new queue and a new approval with a probe. The tool provides reopen for exactly
+      this stop class. Recompiling would be the larger and less lawful change.
+
+  # ---------------------------------------------------------------- ruling 3
+  claim_ruling:
+    claim: {task: TASK-20261106-724d14, epoch: 1, owner: executor-mechanical-icperf-127dbd, branch: claude/c1-launch-20261106, acquired_at: '2026-11-06T23:09:40Z', expires_at: '2026-11-07T01:54:40Z', commit: 82dd4ae094, on_origin: true, released: false}
+    blocks_new_claim: >-
+      Only while it is live. goal_lanes.py claim_task refuses another claim on a live claim
+      (unless --force, which is forbidden here) and allows epoch 2 once epoch 1 is expired or
+      released. The release would be artifact-free, so the receipt-bound block does not apply.
+    must_not_be_reused: >-
+      If epoch 1 is still live at the reopen, runbook.py _live_claim_epoch finds a live claim
+      with the session owner (the journal fixes owner executor-mechanical-icperf-127dbd), and
+      _supervise reuses epoch 1 with only its remaining TTL. experiment_execution.py stops a
+      trial with claim_expired when the claim expires. The step needs up to 9600 s, and the
+      claim TTL of 165 min (9900 s) is sized for that. A partly used epoch 1 could kill the
+      supervision of a paid EKS job. So the reopen runs only after epoch 1 has expired.
+    how_released: >-
+      Epoch 1 is left to expire at 2026-11-07T01:54:40Z. It is not released. Its owner session
+      has ended, and tools/goal_lanes.py says 'only the owner releases (fencing). If the owner is
+      gone, let the claim expire.' No other session releases it as
+      executor-mechanical-icperf-127dbd, and nobody claims with --force. The Coordinator records
+      here that the expiry is the planned end of epoch 1, not a crash to reconcile. On reopen,
+      runbook.py claims epoch 2 (supersedes {epoch 1, status expired}) with a fresh 165-min TTL,
+      publishes it, proves it on the fetched branch, and releases it as completed or failed after
+      the supervisor.
+
+  # ---------------------------------------------------------------- ruling 4
+  replacement_ruling:
+    action: reopen RBS-ICPERF-de8978 (S02-trials attempt 2). Do not create a replacement session.
+    record_changes:
+      - "This decision, ledger/decisions/DEC-20261106-3a91f7.yaml (new)."
+      - "ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml: next_action replaced (checkpoint). Nothing else changes."
+    unchanged: >-
+      runbook.yaml (b3676f85..., no recompile), runbook-lint.txt, trial-plan.json, specification.yaml,
+      launch_eks.sh v3a, card -2 (5e5e3323...), dispatch_queue.json, TASK-20261106-724d14,
+      TASK-20261106-d5ec1e, and the journal and attempt-1 files of RBS-ICPERF-de8978 (append-only;
+      never edited).
+    owner_gate: >-
+      The 2026-11-06T22:05Z go-ahead covers the reopen. Protocol section 11 defines the go-ahead
+      per launch (S1, S2 and any -r2 under the USD 5.00 cap), as DEC-20261106-ecf261
+      owner_gate_ruling held. No launch has happened, USD 0 is spent, and no request, instance,
+      deadline, budget line or cap changes. The same conditions apply. The relay quotes the
+      message verbatim with its timestamp. A later withdrawal, limit or qualification by the
+      owner governs. Recommended, not a gate: tell the owner that the second session stopped
+      before submission at USD 0, on a GitHub 500.
+    budget_gate: "Unchanged (protocol section 10). S1: 0 + 0.93108 + 0.93108 = 1.86216 <= 5.00. S2: 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00. Ceiling USD 5.00; worst case committed USD 3.72; spent USD 0."
+    approvability: >-
+      Runnable (AGENTS.md "Approval is bounded by execution"). The bytes are those whose probe
+      DEC-20261106-ecf261 ruled on (blocker B1 accepted by name). S01-probe passed on these exact
+      bytes at 23:09:39Z. execution_state ready is re-checked before the relay. Capacity: same
+      lane BATCH-0e0902, same cap, max_concurrent 1, no new lane.
+    repeat_allowance: >-
+      If the reopened session stops again in S02-trials before the supervisor runs (step_finished
+      data has no supervisor_argv, and runs/ has no RUN-ICPERF-8b0d47 or RUN-ICPERF-5ffa79), with
+      failure_class infrastructure_error from the claim, its push, the claim fetch, or the
+      containment proof, then one further reopen is authorized under this decision, with the
+      same before_relay conditions. Claim expiry is checked against that attempt's epoch, unless
+      runbook.py released it. Any other stop, any second repeat, or any stop after the
+      supervisor started comes back to the Coordinator.
+
+  execution_conditions:
+    before_relay:
+      - "This decision and the goal.yaml checkpoint are committed, pushed, and merged to origin/main (ready-for-review PR with auto-merge). Record the commit sha."
+      - "The time is at or after 2026-11-07T01:55Z. `python3 tools/goal_lanes.py claims coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json --json` (after git fetch) shows TASK-20261106-724d14 at epoch 1 with status expired, and no epoch >= 2."
+      - "The working tree is on claude/c1-launch-20261106 and holds runbook-sessions/RBS-ICPERF-de8978/journal.jsonl with tip 2ed8c747ca282963754a834ddd8a5f01965672b22afeaba7d061067ac875d9e0. origin/main is merged in (merge, never rebase). No tracked file is dirty. After git fetch, every ref's copy of the journal is a byte prefix of the local one, as runbook.py session_id_collisions requires."
+      - "`python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml` prints LINT OK b3676f85.... `python3 tools/task_card.py lint experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml` prints CARD OK. `python3 tools/newest_experiments.py --experiment EXP-ICPERF-127dbd --json` reports execution_state ready."
+      - "Read-only S3 re-check, repeating F5 (archives/TASK-20261106-de6d19/s3-readonly-checks.txt): runs/ic-c1-dg-s1-20261106/, runs/ic-c1-dg-s2-20261106/ and both -r2 prefixes hold 0 objects, and the S1 and S2 request objects are absent. If any object exists, stop and return here."
+      - ".resume/RESUME.md is updated for the reopen (this decision, epoch 2, run ids). `scripts/checkpoint.sh init`, `push` and `gate` exit 0."
+      - "The owner's go-ahead has not been withdrawn, limited or qualified."
+    relay: >-
+      Relay the unchanged text that `python3 tools/task_card.py prompt
+      experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml` prints, verbatim, to
+      executor-mechanical, with the four relay facts of DEC-20261106-ecf261. Add a fifth: the
+      origin/main commit sha of DEC-20261106-3a91f7, which authorizes this rerun of procedure step
+      2. Step 2 is the same command. It reopens the session, and the executor does nothing beyond
+      the card. The card note's "do not reopen" applies to the outcome of this run.
+    never:
+      - release claim TASK-20261106-724d14 epoch 1 as anyone, or claim with --force
+      - relay before epoch 1 has expired
+      - create a new session id, new run ids, or recompile the runbook for this stop
+      - edit the journal or any attempt-1 file
+      - launch a -r2 request, or run launch_eks.sh outside the supervised trial argv except with --dry-run
+      - reopen again on any stop outside repeat_allowance without a new Coordinator decision
+
+  status_transitions: []
+  unchanged_records:
+    - {record: RBS-ICPERF-de8978, state: "stopped (infrastructure_error), reopenable; reopen authorized here"}
+    - {record: RUN-ICPERF-8b0d47, state: "registered, not run, not consumed"}
+    - {record: RUN-ICPERF-5ffa79, state: "registered, not run, not consumed"}
+    - {record: TASK-20261106-724d14, state: "queued; claim epoch 1 live until 2026-11-07T01:54:40Z, then expired"}
+    - {record: TASK-20261106-d5ec1e, state: "queued; runs alone after the reopened session ends, before any review"}
+    - {record: TASK-20261106-dccfdc, state: "queued, impeded (DEC-20261106-ecf261 ruling 6)"}
+    - {record: EXP-ICPERF-127dbd, state: "approved (approved_by DEC-20261106-ecf261)"}
+    - {record: H-ICPERF-4cb536, state: unchanged}
+    - {record: GOAL-ICPERF-e6b6a4, state: "active; next_action checkpointed"}
+  target_ids:
+    - EXP-ICPERF-127dbd
+    - H-ICPERF-4cb536
+    - TASK-20261106-724d14
+    - TASK-20261106-d5ec1e
+    - BATCH-0e0902
+    - GOAL-ICPERF-e6b6a4
+  related_records:
+    prior_decisions: [DEC-20261106-c69de4, DEC-20261106-ecf261]
+    sessions: {stopped_reopenable: RBS-ICPERF-de8978, receipt: SR-20261106-fdb6fa}
+    runs: {unconsumed: [RUN-ICPERF-8b0d47, RUN-ICPERF-5ffa79]}
+    commits: {claim: 82dd4ae094, branch_head_reported: c04a15753c, approval_merge: db0f296edb}
+  rationale:
+    - "Validity before interpretation: 2 planned units, 0 valid, 0 run. The stop is a server-side GitHub error on a bookkeeping push, before supervision. It is infrastructure signal and not evidence (rule 5)."
+    - "Smallest lawful change: the runbook tool's reopen path. No bytes, ids or handoffs change, so the approved contract, the declared archive paths and the owner's per-launch go-ahead all carry over."
+    - "Waiting for the claim to expire keeps the full claim TTL for a paid run. It also keeps fencing intact, because no session impersonates the claim owner."
+    - "Scope: constant-factor counted engineering at fp28, as in DEC-20261106-c69de4. No asymptotic, wall-time or rho-beating claim is made."
+  evidence_refs:
+    - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/journal.jsonl (tip 2ed8c747...)
+    - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/steps/S02-trials.attempt-1.claim.stderr (sha256 73c73919..., per journal)
+    - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/steps/S02-trials.attempt-1.claim.stdout (sha256 409f3778..., per journal)
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/claims/TASK-20261106-724d14.1.claim.json
+    - coordination/sessions/receipts/20261106/SR-20261106-fdb6fa.yaml
+    - experiments/EXP-ICPERF-127dbd/reports/run-20261106T2309Z/
+    - docs/runbook-execution.md (Execution semantics)
+    - tools/runbook.py (REOPENABLE; run; _supervise; _live_claim_epoch; latest_units; find_approval)
+    - tools/goal_lanes.py (classify; claim_task; release_task)
+    - tools/experiment_execution.py (execute_trial; claim_expired)
+  limitations:
+    - "No shell. The Coordinator did not run git, aws, verify or the allocator. 'No AWS submission' rests on the absence of run directories and on the code path. The before_relay S3 re-check is the confirmation."
+    - "That 82dd4ae094 and c04a15753c are on origin is as the top-level session reports."
+    - "The snapshot TASK-20261106-d5ec1e has to cover the attempt-1 files as well, including report run-20261106T2309Z and receipt SR-20261106-fdb6fa. If its declared paths cannot cover them, DEC-20261106-ecf261 ruling 6 applies: return here, and do not work around it."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session, text: "Confirm the id with the allocator. Commit this decision and the goal.yaml checkpoint on claude/c1-launch-20261106 (named paths only), push, open or refresh a ready-for-review PR against main naming DEC-20261106-3a91f7, and enable auto-merge. After 2026-11-07T01:55Z, once every before_relay condition holds, re-relay card -2 unchanged with the five relay facts. Then record token_usage and run snapshot TASK-20261106-d5ec1e alone before any review."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "Infrastructure stop classification and a reopen authorization. No evidence exists, and no claim is decided."
