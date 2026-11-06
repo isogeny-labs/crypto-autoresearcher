@@ -41,6 +41,38 @@ in a `.artifacts.json` manifest, or marked `uploaded` by `benchrec.py upload`
 (which needs AWS credentials: CI has them, a session usually does not). CI
 with `--verify-s3` HEADs every object.
 
+### Closed raw data when a checkout path is reused
+
+`living_paths` remains an accepted configuration field for evolving catalogs.
+It never waives byte verification: configured and other changed paths follow
+the same strict archival checks below.
+
+The record and its original hashes, byte counts, URI, metrics and status stay
+immutable. A newer generated file at the same checkout path is not the raw
+data of the historical run. For a closed record only, the checker can verify
+the original bytes from its existing canonical content-addressed store URI.
+Online verification requires both the recorded length and a fresh bounded GET
+whose complete SHA-256 matches the original pin; HEAD alone, the filename and
+the `uploaded` flag are insufficient. Denied, missing, truncated, oversized or
+corrupt archive reads fail the check. Open runs never use this fallback.
+Closing an open record also cannot use the fallback: its current raw bytes must
+match the original capture before the closed record is written. The fallback
+only verifies records that were already closed before the command.
+
+For offline checking, exact original bytes may be staged at
+`.benchrec/raw-archive-cache/<sha256>` (inside the checkout). The checker
+recomputes both length and digest and rejects symlinks or escapes. This proves
+the recorded bytes locally, not their availability in S3. `--verify-s3` still
+performs a fresh archive GET even when that cache is populated, and retains
+the original per-object HEAD checks. Missing cache bytes do not relax an
+offline failure. `upload` never uploads the differing newer file or marks it
+uploaded; it accepts only the independently verified existing archive.
+
+These checks concern the old recorded bytes only. They do not validate the
+different current file, change a closed record, promote a measurement or
+replace any current-source/scientific validation gate. Prefer immutable raw
+output paths for new runs so this compatibility handling is unnecessary.
+
 ## One unit vocabulary
 
 A metric is rejected unless its unit is one of these. The headline unit of
