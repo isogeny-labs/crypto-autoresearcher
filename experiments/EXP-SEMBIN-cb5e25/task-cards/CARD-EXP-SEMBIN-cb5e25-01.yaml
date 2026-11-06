@@ -1,0 +1,24 @@
+# DRAFT mechanical task card for EXP-SEMBIN-cb5e25, written by experiment-director.
+# Not relayable: the runbook it names is a draft (see the compile report) and no
+# approval decision names its sha256 yet. Regenerate after the runbook is final.
+schema: crypto.autoresearch.mechanical-task-card.v1
+card_id: CARD-EXP-SEMBIN-cb5e25-01
+experiment_id: EXP-SEMBIN-cb5e25
+author_role: experiment-director
+executor_role: executor-mechanical
+kind: runbook
+runbook: experiments/EXP-SEMBIN-cb5e25/runbook.yaml
+runbook_sha256: c3ec8dbc291ef2fd1ec59234ef63fa53f87369edb3c5fb77a768a629925a0480
+bus_address: executor-mechanical-exp-sembin-cb5e25
+background: true
+write_scope:
+  - experiments/EXP-SEMBIN-cb5e25/runbook-sessions/
+  - experiments/EXP-SEMBIN-cb5e25/reports/
+  - experiments/EXP-SEMBIN-cb5e25/runs/
+stop_when:
+  - The last line of step 1 does not begin with LINT OK.
+  - Step 2 exits with status 2.
+  - Step 2 prints a line that begins with IMPEDIMENT.
+  - Step 3 does not print VERIFY OK.
+  - Page 1 of the report does not show EXP-SEMBIN-cb5e25 and the session directory.
+notes: Step 2 can run for up to 43200 seconds, so run it in the background and read only its last line.
