@@ -11,6 +11,8 @@ report is labelled derived.
 One record per run, schema `bench.record/v1`, at
 `<records_dir>/<YYYYMMDD>T<HHMM>Z-<slug>.json` (default `benchmarks/records/`;
 `.benchrec.json` at the repository root overrides the layout).
+`living_paths` in `.benchrec.json` names catalogs that keep changing after a run
+(e.g. a curve registry): a raw entry on one is checked in the store, not the checkout.
 
     benchrec.py init --slug SLUG --problem PROBLEM [--curve UID] [--entry DIR]
     benchrec.py run RECORD -- COMMAND...          run a launcher under the record
@@ -56,6 +58,7 @@ DEFAULT_CONFIG = {
     "entry_re": r"^\d{8}-[A-Za-z0-9_.-]+$",
     "bucket": BUCKET,
     "store_prefix": STORE_PREFIX,
+    "living_paths": [],
 }
 OPEN_LIST = ".benchrec/open.jsonl"
 
@@ -482,7 +485,12 @@ def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed
         if not str(r.get("s3_uri", "")).startswith("s3://"):
             e.append(f"{name}: raw {r.get('path')} has no s3:// location")
         local = root / r.get("path", "")
-        if local.is_file():
+        if r.get("path") in cfg.get("living_paths", ()):
+            # A living catalog (e.g. a curve registry) keeps changing after the run.
+            # The record's snapshot of it lives in the store at s3_uri and is checked
+            # there with --verify-s3, not against the checkout.
+            pass
+        elif local.is_file():
             if sha256_file(local) != r.get("sha256"):
                 e.append(f"{name}: raw {r['path']} differs from its recorded sha256")
         else:
