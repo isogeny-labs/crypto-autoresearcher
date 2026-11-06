@@ -28,6 +28,17 @@ Implemented components:
   without importing affine labels. `source_construct.py` selects full AP/hash
   source programs using public scalar inputs and owned paid caches, with a
   separately coded integer/group checker.
+- `mixed_collection.py` executes owned fixed prerequisites, preserves the old norm
+  basis, collects AP/hash native equations and retains source-free known controls.
+  Its plain checker reconstructs paid cache scope and every geometric query.
+- `affine_branch.py` constructs symbolic target combinations using the same paid
+  cache rules for every program. `native_case.py` retains native supplied units,
+  cache matches and collected rows, with an incremental4096-row guard that
+  retains failed prefixes. Partial-substitution and full-joint certificates
+  agree under the small public-group controls.
+- `information.py` meters old-base substitution, outside cancellation and native
+  unit lifting. The dense checker verifies the exact rank identity and action
+  on the old kernel, separately attributing supplied, collected and target gains.
 - The tiny software controls exercise signed/permuted bases, native48/helper16
   dimensions, incomplete target spans, JSON roundtrips and corruptions. The
   all-known specialization is compared with A13's executed direct solver,
@@ -40,12 +51,17 @@ Implemented components:
   research/prime_field_a14_execution_20261106/test_query.py \
   research/prime_field_a14_execution_20261106/test_base.py \
   research/prime_field_a14_execution_20261106/test_cache.py \
-  research/prime_field_a14_execution_20261106/test_construct.py -q
+  research/prime_field_a14_execution_20261106/test_construct.py \
+  research/prime_field_a14_execution_20261106/test_mixed.py \
+  research/prime_field_a14_execution_20261106/test_native.py \
+  research/prime_field_a14_execution_20261106/test_information.py -q
 ```
 
-Still required: complete collector/branch integration of these components;
-source/target/native-row assembly and cost references; exact original-base
-information attribution; complete driver/export/source bindings, prospective
+Latest additive component receipt: [122 software controls](validation/mixed-native-information-component-status.json).
+The small known48 budget3 row-cap refusal is retained in the adjacent preparation
+failure receipt; it changes no future native limits.
+
+Still required: complete driver/export/source bindings and cold cost references, prospective
 protocol/current S3/root release and ordinary admission. No helper labels or
 known-base certainty may be counted as learned rank. No cross-base Delta is
 used against known32. One existing worker/thread,2GiB,21600CPU/wall seconds,

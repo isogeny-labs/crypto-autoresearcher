@@ -64,4 +64,3 @@ def check(original_cell, rules, size, actual):
     if counts.get('public_base_certificates_verified', 0) != size or counts.get('base_label_hashes', 0) != len(trace):
         raise ValueError('known-base certificate or draw counts')
     return dict(checked=True, base_size=size, draw_records=len(trace), constructor_points=len(knowledge), supplied_equations=size)
-

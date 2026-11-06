@@ -1,7 +1,7 @@
 """Public-only full-horizon source constructors using owned paid caches."""
+from shared import core
 from baseline import construct
 from guards import require_fields
-from shared import core
 from crypto_autoresearcher.index_calculus.targets import FixedBaseMultiplier
 
 
