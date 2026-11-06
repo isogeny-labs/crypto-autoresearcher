@@ -1,0 +1,303 @@
+# DEC-20261106-beee1e -- Coordinator record of the remaining ICPERF record-level
+# next actions of sheriff case SHF-20261106-a114e7 (findings ICR-1, ICR-8,
+# ICR-9, ICV-1, ICV-2, ICV-5), with companion corrections CORR-20261106-b7fdbf
+# (EXP-ICPERF-284bc4) and CORR-20261106-50204c (EXP-ICPERF-283a70). Zero runs.
+# No research status changes. GOAL-ICPERF-e6b6a4 stays active.
+coordinator_decision:
+  id: DEC-20261106-beee1e
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py
+    --next coordinator_decision --date 20261106, then confirmed with --check
+    DEC-20261106-beee1e ("OK: well-formed and free across the union", 48,138
+    identifier-bearing paths scanned), as reported by the top-level session.
+    The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent dispatched by top-level session
+    https://claude.ai/code/session_01TCbLH7HXJioSw2Bzx7P9p9; model
+    claude-opus-5-5 as stated by the top-level session; no shell. This session
+    produced none of the audited records (no commit on main carries its id).
+    The work was commissioned by session session_016SURwTvgaQmnMnhpa1SLXQ,
+    which produced many of the audited records, including EV-ICPERF-08f6f9,
+    EV-ICPERF-84ff45 (commit 714ebc4565) and CORR-20261106-243c4d (commit
+    c9cdb19c25), as verified in git by the top-level session (case finding
+    SES-INDEP). Git facts are as verified by the top-level session.
+  mode: integrity_remediation
+  decision: record
+  decision_label: >-
+    Record the ICPERF record-level next actions of SHF-20261106-a114e7:
+    extend DEC-20261105-8a9984 NA-2 to the EXP-ICPERF-283a70 exports with a
+    record-level reading of every ICPERF progress-export row; fix the
+    framing of the stage-1 band test for DEC-20261105-6e2616 NA-2; keep the
+    flagged-audit disclosure until DEC-20261105-6e2616 NA-1(b) lands; and
+    route the lead-atlas annotation. The two companion corrections carry the
+    remaining record wording.
+  goal_id: GOAL-ICPERF-e6b6a4
+  target_ids:
+    - DEC-20261105-8a9984
+    - DEC-20261105-6e2616
+    - EXP-ICPERF-284bc4
+    - EXP-ICPERF-283a70
+    - EV-ICPERF-08f6f9
+    - EV-ICPERF-84ff45
+    - RBS-ICPERF-8cdc92
+  related_records:
+    sheriff_case:
+      case: SHF-20261106-a114e7
+      findings_file: research/sheriff/SHF-20261106-a114e7/findings.yaml
+      branch: claude/sheriff-reaudit-20261106
+      pr: '#3071 (unmerged)'
+      head_commit: ef52d97e641c17bbe5a6dd2c60a28b813fbbdacf
+      read_from: >-
+        Byte copies made with git show by the top-level session in the
+        session scratchpad (case/findings_flat.txt, case/findings.yaml,
+        case/readers/icperf-interpretation.yaml, case/readers/icperf-receipts.yaml
+        by reference); the case files are not in this checkout.
+    findings_decided_here: [ICR-1, ICR-8, ICR-9, ICV-1, ICV-2, ICV-5]
+    companion_corrections:
+      - id: CORR-20261106-b7fdbf
+        covers: [ICR-2, ICR-4, ICR-5, ICR-6 (EXP-ICPERF-284bc4 half), ICR-7]
+      - id: CORR-20261106-50204c
+        covers: [ICR-3, ICV-4, ICR-6 (EXP-ICPERF-283a70 half), ICV-3]
+    hypotheses_unchanged: [H-ICPERF-2f52d1, H-ICPERF-5adc9b]
+  context: >-
+    DEC-20261105-8a9984 and DEC-20261105-6e2616 recorded support, scoped to
+    instrument validation at toy scale, for H-ICPERF-2f52d1 and
+    H-ICPERF-5adc9b, both at strength preliminary. The re-audit
+    SHF-20261106-a114e7 upheld their operative conclusions and found one
+    major and several minor record-level defects: the progress export
+    presents assumed, planted and synthetic values in latency and probe
+    units (ICR-1); several readings of the two experiments' records need
+    narrowing (ICR-2 to ICR-7, ICV-3, ICV-4; carried by the companion
+    corrections); and the stage-1 framing, audit disclosure and lead-atlas
+    references need standing instructions (ICR-8, ICV-1, ICR-9). No finding
+    changes a value, verdict, strength or status.
+  rulings:
+    ICR-1_export_units:
+      finding: SHF-20261106-a114e7 ICR-1 (major, B8)
+      ruling: >-
+        DEC-20261105-8a9984 NA-2 is extended. No ruling covered
+        EXP-ICPERF-283a70's exported units; this decision is the
+        record-level ruling for both experiments. Until the exporter is
+        fixed, any dashboard or report reading of these rows reads them as
+        follows, and none of them is a measured nanoseconds-per-probe or a
+        measured probes-per-target.
+      readings:
+        EXP-ICPERF-284bc4: >-
+          icperf.EXP-ICPERF-284bc4.<trial>.c_probe_ns (unit "nanoseconds per
+          probe"), c_state_ns ("nanoseconds per state") and c_step_ns
+          ("nanoseconds per step") are "assumed input": 370, 2100 and 40 ns
+          are assumed constants equal to IDEA-20261015-7a3c9e's n=83
+          inferred/assumed prices (CORR-20261106-243c4d (b)). On trial
+          ctl-neg-perturbed-price (RUN-ICPERF-30596e, NEG-1) c_probe_ns 371 is
+          "planted input". price_ratio_num and price_ratio_den are computed
+          from those assumed inputs, never measured (CORR-20261106-243c4d (a);
+          NA-2 as written).
+        EXP-ICPERF-283a70: >-
+          icperf.EXP-ICPERF-283a70.<trial>.sample_sum (unit "probe-count sum")
+          reads "synthetic xorshift draw-count sum", and .median (unit "probes
+          per target") reads "draws (synthetic, not table probes)". This holds
+          on all three trials, including both wrong-sampler controls
+          ctl-neg-wrong-triple and ctl-neg-support-zero, which fail the exact
+          match by design. The wording "probe-count sum" / "probes per target"
+          is that of the n=83 table-probe hypothesis H-ICPERF-b3d1a4 and does
+          not apply to these rows.
+        observed_here_not_a_case_finding: >-
+          The .n_targets row (unit "target samples", value 64) counts
+          synthetic draws, not targets of any table, and reads "synthetic
+          draws (count)". The frozen trial id "geometric-probe-sample" is an
+          identifier, not a unit, and is not read as a probe measurement.
+      tooling: >-
+        The exporter change and its test are tooling in tools/progress_metrics.py
+        (ICPERF_RUNS lines 198-212; unit table lines 273-285, read here, not
+        edited), held by another session. The case's fix is: label the c_*_ns
+        rows "assumed input" ("planted input" for NEG-1) or drop them; rename
+        the 283a70 units to "synthetic xorshift draw-count sum" and "draws
+        (synthetic, not table probes)", or export only exact_match; and add a
+        test asserting that no ICPERF stage-0 row carries a probe or latency
+        unit. DEC-20261105-8a9984 NA-2 stays open, owner executor (tooling).
+      severity_note: >-
+        The rows are emitted better=neutral, so nothing is ranked; the defect
+        is that a dashboard reader sees physical units for values that are
+        assumed, planted or synthetic.
+    ICR-8_stage1_band_test:
+      finding: SHF-20261106-a114e7 ICR-8
+      ruling: >-
+        When DEC-20261105-6e2616 NA-2 (stage-1 design for
+        IDEA-20261015-b41f68) is ranked, the ranking record states that the
+        parent band test (CV^2 in [0.81, 1.21] and median/mean in [0.6, 0.8])
+        is non-identifying in the limit, not only underpowered at n = 64. It
+        is scale-free: it accepts Geometric(1/30) and Geometric(1/80) at the
+        same rate as the true law, and its pass rate tends to 1 as n grows
+        for every small-p geometric and for a CV = 1 lognormal (CV^2 = 1 and
+        median/mean = 2^-0.5, about 0.707, lie inside both bands). A stage-1
+        test must therefore add a p/mean check against p_pred fixed in
+        advance and a distributional check (CDF at fixed quantiles or a
+        memorylessness check); a larger panel with the same bands remains a
+        null-accepting test. This is consistent with, and sharpens,
+        DEC-20261105-6e2616 NA-2 as written (which already forbids reusing the
+        bands as the test).
+      basis: >-
+        Case finding ICR-8 and reader claims C10 and C15 (reproduced 52.4%
+        rejection of a true geometric and 31-32% acceptance of a CV = 1
+        lognormal at n = 64; simulated pass rate 1.0 at n = 8192;
+        band_asymptotics.out.json, not read here). The analytic part (the
+        lognormal's CV^2 and median/mean values against the bands) is
+        checkable from the band definitions alone.
+    ICV-1_audit_disclosure:
+      finding: SHF-20261106-a114e7 ICV-1
+      ruling: >-
+        Until DEC-20261105-6e2616 NA-1(b) (absent-on-both pointers reported
+        not_applicable; per-trial compare pointers) lands with a regression
+        test on the 8cdc92 bytes and a fresh audit of RBS-ICPERF-8cdc92 that
+        reports clean, every citation of RBS-ICPERF-8cdc92 or
+        EXP-ICPERF-284bc4 keeps the flagged-verdict disclosure (audit
+        AUD-20261105T164527Z-d5036c flagged, matched 0 of 6), as
+        DEC-20261105-8a9984 rulings.validity already requires. The A/A
+        reading rests on the validator's post-hoc row classification and
+        independent replays, not on the declared CMP-AA instrument. The
+        tooling is not done here; per the case, #3059 fixed only NA-1(a).
+    ICV-2_source_provenance:
+      finding: SHF-20261106-a114e7 ICV-2
+      ruling: >-
+        No record repair. The nine manifests stay as recorded. Recording
+        code.dirty and code.source (or teaching
+        tools/check_run_source_provenance.py to accept
+        run.environment.source_sha256 with a recorded clean-tree flag) is
+        tooling for future units only.
+    ICV-5_controls:
+      finding: SHF-20261106-a114e7 ICV-5
+      ruling: >-
+        No record repair; the specification labels the non-failing controls
+        honestly. Any successor that wants a discriminating control adopts
+        red-team RC-3 and RC-4 as DEC-20261105-8a9984 NA-4 already requires.
+    ICR-9_lead_atlas:
+      finding: SHF-20261106-a114e7 ICR-9
+      ruling: >-
+        knowledge/leads/ecdlp/ic-prime/LEAD-ICP-retained-setup-online.yaml
+        (outside this record's scope; not edited) lists H-ICPERF-2f52d1 and
+        H-ICPERF-5adc9b in ledger_refs (lines 48-49) while its measured
+        obstruction includes the clause "orbit-folded m = 2 Koblitz IC is BSGS
+        on the quotient and sits on the BL r/P law" (lines 16-17). At its next
+        lead review the two refs are annotated "stage-0 instrument checks; no
+        support for the BL-law clause", or dropped. DEC-20261105-8a9984
+        hypothesis_status_ruling.not_adopted (lines 122-127) declined the "IC
+        equals BSGS on the quotient" reading of CON-3. The lead predates the
+        support (last_reviewed 2026-11-02) and does not cite it, so this is a
+        conflation risk, not an asserted claim.
+  finding_dispositions:
+    - {finding: ICR-1, disposition: "ruled here (rulings.ICR-1_export_units); tooling open under DEC-20261105-8a9984 NA-2"}
+    - {finding: ICR-2, disposition: "corrected in CORR-20261106-b7fdbf"}
+    - {finding: ICR-3, disposition: "corrected in CORR-20261106-50204c"}
+    - {finding: ICR-4, disposition: "canonical head named in CORR-20261106-b7fdbf"}
+    - {finding: ICR-5, disposition: "corrected in CORR-20261106-b7fdbf; frozen report unedited"}
+    - {finding: ICR-6, disposition: "corrected in CORR-20261106-b7fdbf (284bc4) and CORR-20261106-50204c (283a70)"}
+    - {finding: ICR-7, disposition: "citation rule in CORR-20261106-b7fdbf; frozen report unedited"}
+    - {finding: ICR-8, disposition: "ruled here; applies when DEC-20261105-6e2616 NA-2 is ranked"}
+    - {finding: ICR-9, disposition: "next action NA-4 here (lead-atlas review)"}
+    - {finding: ICV-1, disposition: "ruled here; tooling under DEC-20261105-6e2616 NA-1(b)"}
+    - {finding: ICV-2, disposition: "no record repair; future-unit tooling"}
+    - {finding: ICV-3, disposition: "noted in CORR-20261106-50204c; no repair"}
+    - {finding: ICV-4, disposition: "corrected in CORR-20261106-50204c"}
+    - {finding: ICV-5, disposition: "no record repair; successors adopt RC-3/RC-4 (DEC-20261105-8a9984 NA-4)"}
+  status_transitions: []
+  status_note: >-
+    No research status changes. H-ICPERF-2f52d1 and H-ICPERF-5adc9b stay
+    supported as scoped; EXP-ICPERF-284bc4 and EXP-ICPERF-283a70 stay
+    analyzed; EV-ICPERF-08f6f9 and EV-ICPERF-84ff45 keep direction supports
+    and strength preliminary; GOAL-ICPERF-e6b6a4 stays active.
+  rationale:
+    - >-
+      AGENTS.md core rule 4: records are immutable and corrections are new
+      records. Every reading above is additive; no existing file is edited.
+    - >-
+      AGENTS.md core rule 9 and "Curve identity and measured bounds": a value
+      that is assumed, planted or synthetic must not be presented in physical
+      or probe units as if measured, even when unranked (better neutral).
+    - >-
+      Each finding was checked against the cited lines in this checkout
+      before it was ruled on (tools/progress_metrics.py lines 198-212 and
+      273-285; the 283a70 runbook, report and data.json labels; the review
+      plan and red-team phrases; the lead's ledger_refs). The ICR-8 limit
+      argument is the case's; its analytic core follows from the band
+      definitions.
+    - >-
+      None of these defects changes a value or the scoped supports, so the
+      decision is record, not weaken or revise. The operative conclusions of
+      both evidence reviews (instrument validation; no ranking; no latency
+      or n=83 statement) stand.
+    - >-
+      Research direction: these are constant-level accounting instruments
+      with no exponent content. Their records are kept accurate so that the
+      parent ideas' receipt-reading and stage-1 stages can be ranked on their
+      merits.
+  evidence_refs:
+    - research/sheriff/SHF-20261106-a114e7/findings.yaml (ICR-1 to ICR-9, ICV-1 to ICV-5; branch claude/sheriff-reaudit-20261106 at ef52d97e64, read from scratchpad copies)
+    - ledger/decisions/DEC-20261105-8a9984.yaml (rulings; hypothesis_status_ruling.not_adopted; next_actions NA-2, NA-4)
+    - ledger/decisions/DEC-20261105-6e2616.yaml (rulings.parent_band_test; next_actions NA-1, NA-2)
+    - ledger/evidence/EV-ICPERF-08f6f9.yaml
+    - ledger/evidence/EV-ICPERF-84ff45.yaml
+    - ledger/corrections/CORR-20261106-243c4d.yaml
+    - ledger/corrections/CORR-20261105-1d848a.yaml
+    - ledger/corrections/CORR-20261106-b7fdbf.yaml
+    - ledger/corrections/CORR-20261106-50204c.yaml
+    - tools/progress_metrics.py (lines 198-212, 273-285; read only)
+    - knowledge/leads/ecdlp/ic-prime/LEAD-ICP-retained-setup-online.yaml (read only)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261106-ed3fa9.yaml
+  limitations:
+    - No shell. No exporter output, audit, checker, validator or simulation was run here; the export rows, the ICV-1 audit verdict at HEAD and the ICR-8 simulations are the case's.
+    - tools/progress_metrics.py was read at this checkout (origin/main fd2697b3e8), not at the case's da442739db; the unit strings read here match the case's.
+    - Whether a handoff record already exists for the exporter change held by another session was not checked; this decision dispatches no task.
+    - The case is unmerged (PR #3071) and was commissioned by the producing session (SES-INDEP). Its findings are cited as the case's; this record was written by a session that produced none of the audited records.
+  next_actions:
+    - id: NA-1
+      owner: executor (executor-implementation, tooling; change held by another session)
+      text: >-
+        DEC-20261105-8a9984 NA-2 as extended by rulings.ICR-1_export_units:
+        relabel or drop the EXP-ICPERF-284bc4 c_*_ns rows ("assumed input";
+        "planted input" for NEG-1), rename the EXP-ICPERF-283a70 units
+        ("synthetic xorshift draw-count sum"; "draws (synthetic, not table
+        probes)") or export only exact_match, and add a test asserting that no
+        ICPERF stage-0 row carries a probe or latency unit. Completion gate:
+        the test passes and an export at the merged commit shows no ICPERF
+        stage-0 row in latency or probe units.
+    - id: NA-2
+      owner: coordinator, at the next GOAL-ICPERF-e6b6a4 rerank
+      text: >-
+        When DEC-20261105-6e2616 NA-2 is ranked, its record carries
+        rulings.ICR-8_stage1_band_test (bands non-identifying in the limit; a
+        p/mean check and a distributional check required).
+    - id: NA-3
+      owner: executor (executor-implementation, tooling), as DEC-20261105-6e2616 NA-1
+      text: >-
+        Land NA-1(b) with a regression test on the RBS-ICPERF-8cdc92 bytes,
+        then file a fresh audit of RBS-ICPERF-8cdc92. Until it reports clean,
+        rulings.ICV-1_audit_disclosure binds every citation.
+    - id: NA-4
+      owner: coordinator, at the next lead-atlas review of LEAD-ICP-retained-setup-online
+      text: >-
+        Annotate H-ICPERF-2f52d1 and H-ICPERF-5adc9b in its ledger_refs as
+        "stage-0 instrument checks; no support for the BL-law clause", or drop
+        them (rulings.ICR-9_lead_atlas).
+    - id: NA-5
+      owner: top-level session
+      text: >-
+        Run tools/validate_ledger.py; archive this decision with
+        CORR-20261106-b7fdbf, CORR-20261106-50204c and the sibling records of
+        this case in one ledger archive staging only declared paths; push,
+        open or refresh the PR against main, enable auto-merge, and have the
+        merge made by a session that did not produce the audited records
+        (SES-INDEP fix). Checkpoint GOAL-ICPERF-e6b6a4 with exactly one next
+        action; this decision recommends keeping the current one,
+        DEC-20261105-6e2616 NA-1 (checkpoint TASK-20261106-ed3fa9), which is
+        also NA-3 here. Official effect begins at that push.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      Integrity remediation; it records no research result and is not an
+      evidence-review decision. The underlying supports are preliminary.
+  archived_by_note: The top-level session binds the ledger archive task id at archive time.
+  official_effect_until_committed_pushed_reviewable: none

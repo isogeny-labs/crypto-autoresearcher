@@ -1,0 +1,110 @@
+handoff:
+  id: TASK-20261106-4b3dc6
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py --next
+    handoff --date 20261106, then --check TASK-20261106-4b3dc6: "OK: well-formed
+    and free across the union" (48,138 identifier-bearing paths scanned), as
+    reported by the top-level session. The Coordinator had no shell and minted no
+    identifier.
+  from: coordinator
+  to: coordinator
+  authorized_by: DEC-20261106-2f9a94
+  recorded_at: '2026-11-06'
+  objective: >-
+    Archive the frozen review plan and handoffs of the quotient-translation-descent
+    independent review round in a snapshot commit before any reviewer is
+    dispatched. After both reviews, archive the two reports, their attestations
+    and evidence, and the Coordinator's composition and decision in one ledger
+    commit. Each commit gets an exact archive receipt.
+  uncertainty_reduced: >-
+    Whether every artifact of the round has one accountable archival task, a
+    reachable commit and recorded digests, so the plan provably predates the
+    reports it governs.
+  inputs:
+    - coordination/formal-reviews/quotient-translation-descent-20261106/source-handoff.yaml
+    - coordination/formal-reviews/quotient-translation-descent-20261106/blind-handoff.yaml
+    - coordination/formal-reviews/quotient-translation-descent-20261106/archive-handoff.yaml
+    - ledger/decisions/DEC-20261106-2f9a94.yaml
+    - ledger/decisions/DEC-20261106-0c4c43.yaml
+  constraints:
+    - >-
+      Snapshot archive (phase 1, this PR, branch claude/sheriff-a114e7-records):
+      one commit that stages exactly the three handoff files above and nothing
+      else. The two DEC records are committed in this PR in their own commit, not
+      in the snapshot commit. Push the branch and open or refresh its PR against
+      main before TASK-20261106-6d4fa6 or TASK-20261106-bb6ab4 is dispatched.
+    - >-
+      Snapshot receipt: after the snapshot commit, write
+      coordination/formal-reviews/quotient-translation-descent-20261106/archive-receipt.json
+      in a later commit, never inside the commit it describes. It holds archive
+      kind snapshot, source_task_ids [TASK-20261106-6d4fa6, TASK-20261106-bb6ab4],
+      commit_sha, parent_sha, path_sha256 for each staged path, and record_ids
+      [TASK-20261106-6d4fa6, TASK-20261106-bb6ab4, TASK-20261106-4b3dc6]. Also record
+      the plan file's sha256, for use as --expected-plan-sha256 if the plan is ever
+      checked with explicit joint ids.
+    - >-
+      Ledger archive (phase 2): only after both reviewers' reports and
+      attestations are committed by their own sessions and the Coordinator has
+      composed. One commit that stages exactly source-report.md,
+      source-attestation.yaml, source-evidence/, blind-report.md,
+      blind-attestation.yaml, blind-evidence/ (if present), the Coordinator's
+      composition file in this directory, and the new outcome coordinator_decision
+      (ledger/decisions/DEC-<new>.yaml, id from tools/allocate_id.py --next
+      coordinator_decision, confirmed with --check). Then write a second receipt
+      (kind ledger, archive-receipt-ledger.json) in a later commit.
+    - >-
+      Run python3 tools/check_review_independence.py --batch
+      coordination/formal-reviews/quotient-translation-descent-20261106 before the
+      ledger commit. Retain its full output and exit status in the batch directory,
+      and cite them in the outcome decision. A failure is retained and recorded,
+      never edited away. If the plan has to change, file a review_plan_addendum.
+      Never edit source-handoff.yaml. The --batch scan takes the first YAML file
+      it finds with a review_plan key as the plan, so no other YAML file in this
+      directory may carry a review_plan or read_plan key. Store the checker output
+      as a .txt file.
+    - >-
+      Before each archive, merge origin/main into the working branch (merge,
+      never rebase). Stage only declared paths. The post-commit verifier must
+      accept each commit before it is treated as durable. Never resolve a sync
+      conflict by editing a record.
+    - >-
+      Commits carry only the committing session's own Claude-Session trailer
+      (DEC-20261106-0c4c43 forward_rule). Reviewer deliverables are committed by
+      the reviewers' own sessions, not by this task.
+    - >-
+      maximum_runs 0: archival only; no experiment run.
+  deliverables:
+    - Snapshot commit for the plan and handoffs (three handoff files only).
+    - Snapshot archive receipt with parent, commit, paths and sha256.
+    - >-
+      Ledger commit for the reviewer reports, attestations, evidence, the
+      Coordinator's composition and the outcome decision, with the
+      check_review_independence.py output.
+    - Ledger archive receipt with parent, commit, paths and sha256.
+    - PR link(s) for each archive, with auto-merge enabled where the base is main.
+  artifact_paths:
+    - coordination/formal-reviews/quotient-translation-descent-20261106/
+  archived_by: TASK-20261106-4b3dc6
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: medium
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget: {}
+  completion_gate:
+    - >-
+      The three handoffs are committed and pushed, and reachable from a PR head,
+      before either reviewer is dispatched. The snapshot receipt binds their
+      sha256.
+    - >-
+      Every reviewer report and attestation is committed by its own session and
+      reachable from the PR head, and its sha256 is in the ledger receipt.
+    - >-
+      check_review_independence.py --batch output and exit status are retained
+      and cited by the outcome decision.
+    - >-
+      The final outcome decision states only the proved and independently
+      reviewed scope.
+  return_format: Commit hashes, artifact digests, check output path and PR link.

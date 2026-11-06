@@ -1,0 +1,278 @@
+# Additive interpretation and citation correction for EXP-ICPERF-284bc4,
+# EV-ICPERF-08f6f9 and DEC-20261105-8a9984, filed on sheriff case
+# SHF-20261106-a114e7 findings ICR-2 (primary), ICR-7, ICR-6 (284bc4 half),
+# ICR-5 and ICR-4. It annotates; it changes no byte of any cited record, and
+# it changes no status, value, verdict, strength or decision.
+correction:
+  id: CORR-20261106-b7fdbf
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py
+    --next correction --date 20261106, then confirmed with --check
+    CORR-20261106-b7fdbf ("OK: well-formed and free across the union", 48,138
+    identifier-bearing paths scanned), as reported by the top-level session.
+    The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent dispatched by top-level session
+    https://claude.ai/code/session_01TCbLH7HXJioSw2Bzx7P9p9; model
+    claude-opus-5-5 as stated by the top-level session; no shell. This session
+    produced none of the audited records (no commit on main carries its id).
+    The work was commissioned by session session_016SURwTvgaQmnMnhpa1SLXQ,
+    which produced many of the audited records, including EV-ICPERF-08f6f9
+    (commit 714ebc4565) and CORR-20261106-243c4d (commit c9cdb19c25), as
+    verified in git by the top-level session (case finding SES-INDEP). Git
+    facts below are as verified by the top-level session.
+  decided_under: >-
+    DEC-20261106-beee1e (Coordinator integrity-remediation decision for the
+    ICPERF findings of SHF-20261106-a114e7); the ruling corrected in ICR-2 is
+    DEC-20261105-8a9984 rulings.section_5a.
+  type: interpretation_and_citation_correction
+  supersedes: []
+  supersedes_note: >-
+    Supersedes no record's content. Item ICR-4 names a canonical head for a
+    two-headed correction chain; both heads stay immutable and readable.
+  case_ref:
+    case: SHF-20261106-a114e7
+    findings_file: research/sheriff/SHF-20261106-a114e7/findings.yaml
+    branch: claude/sheriff-reaudit-20261106
+    pr: '#3071 (unmerged)'
+    head_commit: ef52d97e641c17bbe5a6dd2c60a28b813fbbdacf
+    findings: [ICR-2, ICR-7, ICR-6, ICR-5, ICR-4]
+    read_from: >-
+      Byte copies made with git show by the top-level session in the
+      session scratchpad (case/findings_flat.txt, case/readers/icperf-interpretation.yaml,
+      case/rederive_price_ratio.out.json); the case files are not in this
+      checkout.
+  target_ids:
+    - EXP-ICPERF-284bc4
+    - EV-ICPERF-08f6f9
+    - DEC-20261105-8a9984
+    - CORR-20261106-243c4d
+    - CORR-20261105-1d848a
+  corrects:
+    - ledger/evidence/EV-ICPERF-08f6f9.yaml
+    - ledger/decisions/DEC-20261105-8a9984.yaml
+    - experiments/EXP-ICPERF-284bc4/analysis.md
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml
+    - experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/plot.py
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261105-8924a8.yaml
+  corrections:
+    - label: ICR-2 (primary) section 5a applies to the IC/BL ratio
+      finding: SHF-20261106-a114e7 ICR-2
+      record_type: evidence_and_decision_ruling
+      record_id: EV-ICPERF-08f6f9 / DEC-20261105-8a9984
+      field: >-
+        The section-5a "not applicable" reason: EV-ICPERF-08f6f9 s5a_band
+        (applies false, comparison_against_rho_made false, band none, reason)
+        and DEC-20261105-8a9984 rulings.section_5a.
+      locations:
+        - ledger/evidence/EV-ICPERF-08f6f9.yaml s5a_band, lines 237-255 (applies false line 238; reason lines 241-247; illustrative_band_red_team lines 248-255)
+        - ledger/decisions/DEC-20261105-8a9984.yaml rulings.section_5a, lines 94-99
+        - ledger/evidence/EV-ICPERF-08f6f9.yaml review_results.J2-scope.basis, lines 201-202 ("no rho comparison, so no section-5a band owed")
+        - experiments/EXP-ICPERF-284bc4/analysis.md line 58 ("no comparison against rho is made, so no band is owed")
+        - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261105-8924a8.yaml line 29 (section_5a, "no comparison against rho is made, so no band is owed")
+      prior_value: >-
+        "No comparison against rho is made, so no band is owed"
+        (DEC-20261105-8a9984 rulings.section_5a, citing EV-ICPERF-08f6f9
+        s5a_band, whose reason begins "No arm is Pollard rho"); s5a_band
+        applies false.
+      corrected_value: >-
+        Section 5a applies to the IC/BL ratio. No arm emits a counted unit, so
+        the arms are unrankable; the band is unresolved: the order flips
+        across the band (10/21 at uniform w in {0, 0.1, 1}; [0.119, 1.905]
+        across the 27 corners with 4 of 27 putting BL ahead; [0.212, 1.071]
+        under unknown native-op multiplicities; about 0.24 with mean probes
+        -- illustrative counter models, not evidence). No ranking in either
+        direction.
+      band_status:
+        band_computed_from_counters: false
+        why: No arm of EXP-ICPERF-284bc4 emits a counter; every count is a formula output and every price an assumed constant.
+        figure_sources: >-
+          Every band figure comes from an illustrative counter model that the
+          record does not contain: the red team's pencil arithmetic
+          (experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml
+          lines 335-351, transcribed in EV-ICPERF-08f6f9 s5a_band
+          illustrative_band_red_team) and the case's icperf-interpretation
+          reader re-derivation
+          (research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.out.json;
+          scratch copy read here: RT_uniform 10/21 at w 0, 1/10 and 1;
+          RT_27_corners min 0.1190, max 1.9048, 4 of 27 with BL ahead;
+          MULT_uniform_w min 0.2116, max 1.0714 over 24 cases;
+          RT_uniform_with_mean_probes 0.2429, 0.2393, 0.2476).
+        status: unresolved
+      unchanged: >-
+        The operative conclusion stands: no ranking in either direction is
+        licensed, and the narrowest supported statement of EV-ICPERF-08f6f9
+        ("ranks IC against Bernstein-Lange in neither direction") is
+        unchanged.
+      precedent_rule: >-
+        "No rho arm, so no band" must not be cited as precedent for any
+        non-rho cross-method ratio (IC vs BL, IC vs BSGS, or any other pair of
+        methods). Any record that cites DEC-20261105-8a9984 rulings.section_5a
+        or EV-ICPERF-08f6f9 s5a_band reads it through this correction.
+      successor_note: >-
+        DEC-20261105-8a9984 NA-4 already requires any successor cost reading to
+        adopt red-team RC-5 (counted units, a matched rho arm, 0/0.1/1 GAE
+        pricing, all phases, memory axis), so the band is already owed for the
+        successor; this item changes no next action.
+      reason: >-
+        crypto:AGENTS.md section 5a binds "every cross-method comparison and
+        every ranking" in ledger rows and papers, not only comparisons against
+        rho (quoted by the case reader from crypto:AGENTS.md lines 1106-1135;
+        not read in this checkout). 925/4 is IC-online over
+        Bernstein-Lange-online, both arms priced with assumed ns (the review
+        graph's y-axis label, plot.py line 18, reads "reduced ratio IC online /
+        BL online (dimensionless, assumed prices)"). The red team's own section
+        (red-team-report.yaml lines 325-334) reached "owes no band" on the
+        ground that neither arm has a counted unit; under this correction that
+        same fact makes the arms unrankable, not the rule inapplicable.
+    - label: ICR-7 citation rule for "IC is about 2.1x faster online"
+      finding: SHF-20261106-a114e7 ICR-7
+      record_type: reviewer_report_citation
+      record_id: experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml
+      field: illustrative_band_if_925_over_4_were_read_as_ic_vs_bl_cost (lines 335-351)
+      locations:
+        - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml lines 341-343 (the sentence ending "R = 10/21 = 0.476 at every w" followed by "IC is about 2.1x faster online", line 343)
+      prior_value: '"IC is about 2.1x faster online"'
+      corrected_value: >-
+        Any citation reads "R = 10/21 under one illustrative counter model; no
+        ordering licensed".
+      reason: >-
+        The ratio holds only under one counter model with worst-case probes;
+        with mean probes it is about 0.24, and it is unordered ([0.21, 1.07])
+        once native-op multiplicities differ between arms; memory is
+        uncharged and the BL closed form is out of regime at these cells (case
+        reader claim C6b). EV-ICPERF-08f6f9 lines 248-255 transcribe the number
+        without the word "faster" and need no correction. The frozen report is
+        not edited.
+    - label: ICR-6 (284bc4 half) "out of sample" applied to a design-time computation
+      finding: SHF-20261106-a114e7 ICR-6
+      record_type: evidence_wording
+      record_id: EV-ICPERF-08f6f9 / DEC-20261105-8a9984 / EXP-ICPERF-284bc4
+      field: description of the preregistered integers
+      locations:
+        - ledger/evidence/EV-ICPERF-08f6f9.yaml strength_justification, lines 43-46 ("out-of-sample preregistered integers met exactly", line 44)
+        - ledger/decisions/DEC-20261105-8a9984.yaml rationale item 2, line 136 ("The recorded values equal the out-of-sample preregistered integers")
+        - experiments/EXP-ICPERF-284bc4/specification.yaml prediction_provenance PRED-PRIMARY, sample_status out_of_sample (line 224); source lines 208-212
+        - ledger/evidence/EV-ICPERF-08f6f9.yaml confound_assessment CMP-PRIMARY, line 171 ("out-of-sample integers fixed 2026-10-17"; same wording, found while reading)
+      prior_value: '"out-of-sample preregistered integers"'
+      corrected_value: >-
+        "design-time computed values reproduced (instrument validation)". The
+        integers were produced by executing the version-1 runner
+        (experiments/EXP-ICPERF-e467a5/implementation/run.py) in a design-time
+        directory (specification.yaml lines 208-212); for a deterministic
+        program a later match reproduces that computation and is not an
+        out-of-sample prediction. The only independent evidence for the values
+        is the blind re-derivation (TASK-20261105-b543c3).
+      reason: >-
+        Case finding ICR-6 and reader claim C13. The hypothesis's only negative
+        outcome is "instrument invalid" (H-ICPERF-2f52d1 falsification
+        conditions, lines 133-138), so its support means instrument validation.
+      effect: >-
+        No verdict or strength change: EV-ICPERF-08f6f9 strength is already
+        preliminary and DEC-20261105-8a9984 support stays as scoped.
+    - label: ICR-5 review graph blind series is not an independent display
+      finding: SHF-20261106-a114e7 ICR-5
+      record_type: decision_report_figure
+      record_id: experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/
+      field: panel A series "blind re-derived (TASK-20261105-b543c3), equal at every point"
+      locations:
+        - experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/plot.py line 13 (y values [p["value"] for p in pts if True]; label line 14)
+        - experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/data.json line 59 (graph_spec field "value when blind_rederived equals recorded")
+      prior_value: the panel is labelled as the blind re-derived series
+      corrected_value: >-
+        The panel draws the recorded `value` field unconditionally and is not
+        an independent display of the blind re-derivation; it could not show
+        a disagreement. The data agree (15/15 string-equal per the case
+        reader), so the rendered figure is not wrong. Any later report plots
+        blind_rederived, as the EXP-ICPERF-283a70 review plot already does
+        (experiments/EXP-ICPERF-283a70/reports/review-DEC-20261105-6e2616/plot.py
+        line 15).
+      reason: Case finding ICR-5. The frozen report, plot.py and graph.svg are not edited.
+    - label: ICR-4 canonical head of the NA-1 correction chain
+      finding: SHF-20261106-a114e7 ICR-4
+      record_type: correction_chain
+      record_id: CORR-20261106-243c4d / CORR-20261105-1d848a
+      field: which record closes DEC-20261105-8a9984 NA-1
+      locations:
+        - ledger/corrections/CORR-20261106-243c4d.yaml lines 1-3 and 16 (decided_under NA-1)
+        - ledger/corrections/CORR-20261105-1d848a.yaml lines 2-3 and 137 (closes DEC-20261105-8a9984 NA-1)
+        - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261106-ed3fa9.yaml lines 14-15 (names CORR-20261105-1d848a only)
+        - coordination/sessions/receipts/20261106/SR-20261106-e32b11.yaml lines 16-18 (names CORR-20261106-243c4d only)
+      prior_value: >-
+        Two correction records each close DEC-20261105-8a9984 NA-1, which asks
+        for "one additive correction record"; neither supersedes or cites the
+        other.
+      corrected_value: >-
+        CORR-20261106-243c4d is the canonical NA-1 record: it was the first
+        merged to main (PR #3058, merge edfc50a373, 2026-11-05T18:13:14-08:00,
+        against PR #3056, merge cfbf4940af, 2026-11-05T18:20:46-08:00, as
+        verified by the top-level session), and its content is exactly
+        DEC-20261105-8a9984 rulings.labelling_ruling (a)-(c).
+        CORR-20261105-1d848a is a duplicate head, consistent in content with
+        the canonical record (checked by the case and re-read here), immutable
+        and still readable. Neither record is edited. Readers of checkpoint
+        TASK-20261106-ed3fa9 read its correction_ids through this item.
+      extra_scope_of_duplicate: >-
+        Read here in full, CORR-20261105-1d848a carries scope beyond the
+        canonical record that stays readable through it: target_sha256
+        digests of the three corrected files (supplied by the top-level
+        session at origin/main 1c5b597368, not recomputed); the reading that
+        the five metrics are also not "derived from measured values" in the
+        sense of report.typ line 37; a not_in_field note that the `unit`
+        fields (count / fraction) are not corrected; a_metrics_export_note
+        applying the reading to tools/progress_metrics.py (ICPERF_RUNS, line
+        198) with the code fix left to DEC-20261105-8a9984 NA-2; reliance on
+        red-team O7 and the explicit statement that the record is not a
+        negative finding on latency or an n=83 speedup; and an
+        effect_on_the_round statement. Its also_corrects lists only report.typ
+        and data.json; tools/progress_metrics.py and
+        ledger/proposals/IDEA-20261015-7a3c9e.yaml appear in its
+        evidence_artifacts (and in a_metrics_export_note /
+        b_price_provenance), not in also_corrects. The canonical record in
+        turn names "any metrics export of these five values" among its
+        locations and cites IDEA-20261015-7a3c9e lines 77-81 and
+        review-plan.yaml lines 21-28. No content of either record conflicts
+        with the other.
+      reason: Case finding ICR-4 (fix "one superseding note naming a canonical record and marking the other a duplicate; both stay immutable").
+  preservation:
+    scientific_quantity_changed: false
+    decision_changed: false
+    hypothesis_status_changed: false
+    experiment_status_changed: false
+    evidence_strength_changed: false
+    claim_ceiling_changed: false
+    specification_changed: false
+    frozen_files_edited: false
+    note: >-
+      Nothing changes: no status, value, verdict, strength or decision.
+      H-ICPERF-2f52d1 stays supported as scoped in DEC-20261105-8a9984;
+      EXP-ICPERF-284bc4 stays analyzed; EV-ICPERF-08f6f9 keeps direction
+      supports and strength preliminary; GOAL-ICPERF-e6b6a4 stays active.
+  edits_target: false
+  evidence_artifacts:
+    - ledger/evidence/EV-ICPERF-08f6f9.yaml (strength_justification; review_results.J2-scope; s5a_band; confound_assessment)
+    - ledger/decisions/DEC-20261105-8a9984.yaml (rulings.section_5a; rulings.labelling_ruling; rationale; next_actions NA-1, NA-4)
+    - experiments/EXP-ICPERF-284bc4/analysis.md (line 58)
+    - experiments/EXP-ICPERF-284bc4/specification.yaml (lines 200-227)
+    - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml (lines 325-351)
+    - experiments/EXP-ICPERF-284bc4/reports/review-DEC-20261105-8a9984/plot.py and data.json
+    - experiments/EXP-ICPERF-283a70/reports/review-DEC-20261105-6e2616/plot.py (line 15)
+    - ledger/hypotheses/H-ICPERF-2f52d1.yaml (lines 133-149)
+    - ledger/corrections/CORR-20261106-243c4d.yaml
+    - ledger/corrections/CORR-20261105-1d848a.yaml
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261105-8924a8.yaml
+    - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261106-ed3fa9.yaml
+    - coordination/sessions/receipts/20261106/SR-20261106-e32b11.yaml
+    - research/sheriff/SHF-20261106-a114e7/findings.yaml (ICR-2, ICR-4, ICR-5, ICR-6, ICR-7) and readers/icperf-interpretation.yaml (claims C1, C4, C6, C6b, C7, C13), branch claude/sheriff-reaudit-20261106 at ef52d97e64, read from scratchpad copies
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-interpretation/rederive_price_ratio.out.json (scratchpad copy)
+  limitations:
+    - No shell. Line numbers and quotations were read by the Coordinator from the files in this checkout (branch claude/sheriff-a114e7-records from origin/main fd2697b3e8); no digest, checker, validator or plot was run here.
+    - crypto:AGENTS.md section 5a was not read here (not in this checkout); its wording "every cross-method comparison and every ranking" is as quoted by the case reader (lines 1106-1135 at crypto 3a7a0f98a).
+    - Every band figure is from an illustrative counter model (red team and case reader). This record computes no band and adds no number; the case reader's script was not run here, only its output copy read.
+    - The 15/15 agreement in ICR-5 and the content-consistency check in ICR-4 are the case reader's; the ICR-4 extra-scope listing was made by reading both records here.
+    - Merge order, merge commits, times and authoring sessions are as verified in git by the top-level session.
+    - The case is unmerged (PR #3071) and was commissioned by the producing session (SES-INDEP); its findings are cited as the case's, and this record was written by a session that produced none of the audited records.
+  archived_by_note: Committed by the top-level session in the PR that adds this record.
