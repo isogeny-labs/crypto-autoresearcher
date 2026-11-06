@@ -42,7 +42,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: python -m pip install -e '.[research-loop,dev]'
+      # jsonschema: tools/experiment_protocol.py needs it and the extras do not carry it.
+      - run: python -m pip install -e '.[research-loop,dev]' jsonschema
       - name: Check the frozen protocol and analysis before any data
         run: |
           python3 tools/experiment_protocol.py validate "$STUDY/protocol.json"
@@ -79,6 +80,7 @@ jobs:
         working-directory: formal
         run: lake build CryptoResearch.Semaev.BooleanParitySemanticRankCertificate
       - name: Record host facts
+        id: host
         run: |
           mkdir -p "$OUT"
           python3 - <<'PY'
@@ -112,17 +114,17 @@ jobs:
         working-directory: formal
         run: python3 -I "../$STUDY/measure.py" default-a "$OUT" -- lake env lean "$MODULE_FILE"
       - name: Arm threads1 (LEAN_NUM_THREADS=1)
-        if: always()
+        if: ${{ !cancelled() && steps.host.outcome == 'success' }}
         working-directory: formal
         env:
           LEAN_NUM_THREADS: '1'
         run: python3 -I "../$STUDY/measure.py" threads1 "$OUT" -- lake env lean "$MODULE_FILE"
       - name: Arm default-b (A/A repeat of default-a)
-        if: always()
+        if: ${{ !cancelled() && steps.host.outcome == 'success' }}
         working-directory: formal
         run: python3 -I "../$STUDY/measure.py" default-b "$OUT" -- lake env lean "$MODULE_FILE"
       - name: Frozen analysis
-        if: always()
+        if: ${{ !cancelled() && steps.host.outcome == 'success' }}
         run: python3 -I "$STUDY/analysis.py" "$OUT" | tee "$OUT/analysis.json"
       - uses: actions/upload-artifact@v4
         if: always()
