@@ -276,13 +276,22 @@ def icperf_trials(ref, since):
         else:
             fields = (("states", "model states"), ("c_probe_ns", "nanoseconds per probe"),
                       ("c_state_ns", "nanoseconds per state"), ("c_step_ns", "nanoseconds per step"),
-                      ("price_ratio_num", "dimensionless ratio numerator"),
-                      ("price_ratio_den", "dimensionless ratio denominator"))
+                      ("price_ratio_num", "numerator of computed price ratio (dimensionless; not the lab `ratio` unit)"),
+                      ("price_ratio_den", "denominator of computed price ratio (dimensionless; not the lab `ratio` unit)"))
         for field, unit in fields:
             value = raw.get(field)
             if type(value) in (int, float) and math.isfinite(value):
+                label = f"{exp_id} {trial_id}: {field}"
+                if exp_id == "EXP-ICPERF-284bc4":
+                    if field == "c_probe_ns" and trial_id == "ctl-neg-perturbed-price":
+                        label += " - planted control input (371 instead of 370), not a price"
+                    elif field in ("c_probe_ns", "c_state_ns", "c_step_ns"):
+                        label += " - assumed input (IDEA-20261015-7a3c9e n=83 estimate), not measured"
+                    elif field in ("price_ratio_num", "price_ratio_den"):
+                        label += (" - computed from assumed inputs by a closed-form model, not measured; "
+                                  "numerator/denominator of one reduced ratio, never export as a single ratio")
                 emit(f"icperf.{exp_id}.{trial_id}.{field}", value, date=day, problem="icperf", unit=unit,
-                     better="neutral", label=f"{exp_id} {trial_id}: {field}", source=source)
+                     better="neutral", label=label, source=source)
 
 
 def prym_census(ref):

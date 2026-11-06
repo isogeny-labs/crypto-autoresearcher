@@ -136,7 +136,10 @@ class ProgressMetricsTests(unittest.TestCase):
                 if exp_id == "EXP-ICPERF-283a70":
                     raw.update({"n_targets": 64, "sample_sum": 2943, "median": 28})
                 else:
-                    raw.update({"states": 10, "c_probe_ns": 370, "c_state_ns": 2100, "c_step_ns": 40})
+                    neg1 = trial_id == "ctl-neg-perturbed-price"
+                    raw.update({"states": 10, "c_probe_ns": 371 if neg1 else 370, "c_state_ns": 2100,
+                                "c_step_ns": 40, "price_ratio_num": 1855 if neg1 else 925,
+                                "price_ratio_den": 8 if neg1 else 4})
                 raw_text = json.dumps(raw, sort_keys=True)
                 manifest_text = "run: fixture\n"
                 hashes = {"raw-result.json": hashlib.sha256(raw_text.encode()).hexdigest(),
@@ -161,6 +164,51 @@ class ProgressMetricsTests(unittest.TestCase):
         self.assertEqual((sample["value"], sample["unit"]), (2943, "probe-count sum"))
         modeled = metrics["icperf.EXP-ICPERF-284bc4.price-ratio-identity.c_probe_ns"]
         self.assertEqual((modeled["value"], modeled["unit"]), (370, "nanoseconds per probe"))
+
+    def icperf_rows(self):
+        self.add_icperf_fixture()
+        return self.capture(pm.icperf_trials, "HEAD", "2026-10-01")
+
+    def test_icperf_284bc4_inputs_labelled_assumed_and_planted(self):
+        rows = [r for r in self.icperf_rows() if r["metric"].startswith("icperf.EXP-ICPERF-284bc4.")]
+        for r in rows:
+            field = r["metric"].rsplit(".", 1)[1]
+            planted = r["metric"].endswith("ctl-neg-perturbed-price.c_probe_ns")
+            if field in ("c_probe_ns", "c_state_ns", "c_step_ns") and not planted:
+                self.assertIn("assumed input", r["label"])
+                self.assertIn("not measured", r["label"])
+                self.assertIn("IDEA-20261015-7a3c9e", r["label"])
+        neg = next(r for r in rows if r["metric"].endswith("ctl-neg-perturbed-price.c_probe_ns"))
+        self.assertEqual(neg["value"], 371)
+        self.assertIn("planted control input", neg["label"])
+        self.assertIn("not a price", neg["label"])
+        other = next(r for r in rows if r["metric"].endswith("price-ratio-identity.c_probe_ns"))
+        self.assertNotIn("planted", other["label"])
+        self.assertEqual(other["unit"], "nanoseconds per probe")
+
+    def test_icperf_284bc4_ratio_rows_computed_not_measured_and_never_lab_ratio(self):
+        rows = self.icperf_rows()
+        r284 = [r for r in rows if r["metric"].startswith("icperf.EXP-ICPERF-284bc4.")]
+        parts = [r for r in r284 if r["metric"].rsplit(".", 1)[1] in ("price_ratio_num", "price_ratio_den")]
+        self.assertEqual(len(parts), 12)
+        for r in parts:
+            self.assertIn("computed from assumed inputs", r["label"])
+            self.assertIn("not measured", r["label"])
+            self.assertIn("never export as a single ratio", r["label"])
+        for r in r284:
+            self.assertNotEqual(r["unit"], "ratio")
+            self.assertNotEqual(r["value"], 231.25)
+        self.assertFalse([r for r in rows if r["metric"].endswith(".price_ratio")])
+
+    def test_icperf_283a70_rows_unchanged(self):
+        units = {"n_targets": "target samples", "sample_sum": "probe-count sum", "median": "probes per target"}
+        rows = [r for r in self.icperf_rows() if r["metric"].startswith("icperf.EXP-ICPERF-283a70.")
+                and not r["metric"].endswith("validated_trials")]
+        self.assertEqual(len(rows), 9)
+        for r in rows:
+            trial, field = r["metric"].split(".")[2:]
+            self.assertEqual(r["unit"], units[field])
+            self.assertEqual(r["label"], f"EXP-ICPERF-283a70 {trial}: {field}")
 
     def test_icperf_cohort_is_not_partially_exported_after_receipt_mismatch(self):
         self.add_icperf_fixture()
