@@ -106,15 +106,19 @@ def f3():
         eqs = E_to_eqs(inst["E_hex"])
         a = arch[inst["key"]]
         mrec, _ = CL.m_closure_record(20, 4, eqs)
-        wrec, _ = CL.w_closure_record(20, 4, eqs)
-        good = (wrec["one"] is True and mrec["one"] is False
-                and a["W_4"]["one"] is True and a["M_4"]["one"] is False
-                and mrec["rank"] == a["M_4"]["rank"] and mrec["dims_by_deg"] == a["M_4"]["dims_by_deg"]
-                and wrec["dims_by_deg"] == a["W_4"]["dims_by_deg"] and wrec["dims"] == a["W_4"]["dims"])
+        good = (mrec["one"] is False and a["W_4"]["one"] is True and a["M_4"]["one"] is False
+                and mrec["rank"] == a["M_4"]["rank"] and mrec["dims_by_deg"] == a["M_4"]["dims_by_deg"])
+        loops = {}
+        for name, stream in (("inherited", False), ("streamed", True)):
+            wrec, _ = CL.w_closure_record(20, 4, eqs, stream=stream)
+            g = (wrec["loop"] == ("streamed" if stream else "engine") and wrec["one"] is True
+                 and wrec["dims_by_deg"] == a["W_4"]["dims_by_deg"] and wrec["dims"] == a["W_4"]["dims"]
+                 and wrec["final_dim"] == a["W_4"]["final_dim"])
+            loops[name] = {"W4_one": wrec["one"], "W4_final_dim": wrec["final_dim"], "match": g}
+            good &= g
         ok &= good
-        rows.append({"key": inst["key"], "W4_one": wrec["one"], "M4_one": mrec["one"],
-                     "M4_rank": mrec["rank"], "archived_M4_rank": a["M_4"]["rank"],
-                     "W4_final_dim": wrec["final_dim"], "match": good})
+        rows.append({"key": inst["key"], "M4_one": mrec["one"], "M4_rank": mrec["rank"],
+                     "archived_M4_rank": a["M_4"]["rank"], "loops": loops, "match": good})
     return _res("F-3", ok and len(rows) == 10, {"instances": rows})
 
 
@@ -200,7 +204,7 @@ def f4(n_systems=50):
     finally:
         sys.path.remove(drv)
     rng = HashRng(40404, "F-4")
-    bad, checked, oracle_checked = [], 0, 0
+    bad, checked, oracle_checked, raw_ad_checked, d2_differs = [], 0, 0, 0, 0
     for t in range(n_systems):
         nv = 5 + rng.randbelow(6)                        # 5..10
         neq = max(3, nv - 1 + rng.randbelow(3))
@@ -234,13 +238,129 @@ def f4(n_systems=50):
                 rk = MAC.rank_mod_p(dense, C, 2)
                 oracle_checked += 1
                 same &= (rk == a["dims"][0])
+            # DER-8(b): raw against adapted generators (D >= 3 must agree, D = 2 is recorded)
+            ad, _ = CL.adapted_basis(eqs)
+            c, _ = CL.w_closure_record(nv, D, ad, stream=not bool(t % 2))
+            if D >= 3:
+                raw_ad_checked += 1
+                if not (a["final_dim"] == c["final_dim"] and a["dims_by_deg"] == c["dims_by_deg"]):
+                    same = False
+                    bad.append({"system": t, "nv": nv, "D": D, "raw_vs_adapted": [a["final_dim"], c["final_dim"]]})
+            elif a["final_dim"] != c["final_dim"] or a["dims_by_deg"] != c["dims_by_deg"]:
+                d2_differs += 1
             checked += 1
             if not same:
                 bad.append({"system": t, "nv": nv, "D": D, "engine": a["dims"], "reference": b["dims"]})
     return _res("F-4", not bad, {"systems": n_systems, "comparisons": checked,
-                                 "rank_mod_p_oracle_comparisons": oracle_checked, "mismatches": bad[:5]})
+                                 "rank_mod_p_oracle_comparisons": oracle_checked,
+                                 "raw_vs_adapted_comparisons_D3_5": raw_ad_checked,
+                                 "raw_vs_adapted_D2_differences_recorded": d2_differs, "mismatches": bad[:5]})
 
 
+
+
+
+def affine_hull_forms(Z, nv):
+    """Affine forms a.x + b vanishing on all of Z (nullspace of [z | 1]) as polynomials (mask lists)."""
+    if not Z:
+        return [[0]]
+    rows = [(z << 1) | 1 for z in Z]           # bit 0 = constant, bit i+1 = variable i
+    piv = {}
+    for r in rows:
+        for p, pr in piv.items():
+            if (r >> p) & 1:
+                r ^= pr
+        if r:
+            p = (r & -r).bit_length() - 1
+            for q in list(piv):
+                if (piv[q] >> p) & 1:
+                    piv[q] ^= r
+            piv[p] = r
+    free = [k for k in range(nv + 1) if k not in piv]
+    forms = []
+    for fk in free:
+        v = 1 << fk
+        for p, pr in piv.items():
+            if (pr >> fk) & 1:
+                v |= 1 << p
+        poly = [0] if v & 1 else []
+        poly += [1 << (i - 1) for i in range(1, nv + 1) if (v >> i) & 1]
+        forms.append(sorted(poly))
+    return forms
+
+
+def exhaustive_predicate(Lints, nv, D, eqs, g_masks):
+    """Reference predicate for F-5: conditions (a), (b), (c) of a dual-form ann certificate recomputed
+    from the definitions with plain integer linear algebra, by a route different from the checker's
+    (here U is built explicitly as a kernel and X_j * (U cap B_{<=D-1}) is tested vector by vector).
+    Returns (a, b, c)."""
+    cols = []
+    for d in range(D, -1, -1):
+        cols += sorted(sum(1 << i for i in c) for c in combinations(range(nv), d))
+    idx = {m: i for i, m in enumerate(cols)}
+    par = lambda x: bin(x).count("1") & 1
+    # (a) every Macaulay row t * f_k (deg t + deg f_k <= D) lies in ker Lambda
+    a_ok = True
+    for f in eqs:
+        if not f:
+            continue
+        e = max(bin(m).count("1") for m in f)
+        for td in range(0, D - e + 1):
+            for c in combinations(range(nv), td):
+                t = sum(1 << i for i in c)
+                acc = {}
+                for m in f:
+                    acc[t | m] = acc.get(t | m, 0) ^ 1
+                v = 0
+                for m, p in acc.items():
+                    if p:
+                        v |= 1 << idx[m]
+                if any(par(l & v) for l in Lints):
+                    a_ok = False
+    # (b) U cap B_{<=D-1} = {u supported on low columns : lambda(u) = 0 for all lambda}; X_j u in U
+    low = [i for i, m in enumerate(cols) if bin(m).count("1") <= D - 1]
+    pos = {c: k for k, c in enumerate(low)}
+    # solve  sum_k u_k * lambda(e_k) = 0  for every lambda: nullspace of the matrix M[l][k] = lambda_l(e_k)
+    rows = []
+    for l in Lints:
+        r = 0
+        for c in low:
+            if (l >> c) & 1:
+                r |= 1 << pos[c]
+        rows.append(r)
+    piv = {}
+    for r in rows:
+        for p, pr in piv.items():
+            if (r >> p) & 1:
+                r ^= pr
+        if r:
+            p = (r & -r).bit_length() - 1
+            for q in list(piv):
+                if (piv[q] >> p) & 1:
+                    piv[q] ^= r
+            piv[p] = r
+    free = [k for k in range(len(low)) if k not in piv]
+    kernel = []
+    for fk in free:
+        u = 1 << fk
+        for p, pr in piv.items():
+            if (pr >> fk) & 1:
+                u |= 1 << p
+        kernel.append(u)
+    b_ok = True
+    for u in kernel:
+        for j in range(nv):
+            v = 0
+            for k, c in enumerate(low):
+                if (u >> k) & 1:
+                    v ^= 1 << idx[cols[c] | (1 << j)]
+            if any(par(l & v) for l in Lints):
+                b_ok = False
+    gv = 0
+    for m in g_masks:
+        gv ^= 1 << idx[m]
+    c_ok = any(par(l & gv) for l in Lints)
+    return a_ok, b_ok, c_ok
 
 
 def _f5_impl():
@@ -282,20 +402,36 @@ def _f5_impl():
         return d
     const_col = cl.const_col
     tamper = RC.check_ann(flipped(0, const_col), sysb)
-    n_flips = rejected = 0
+    n_flips = rejected = accepted_flips = disagreements = 0
+    equivalent = []
     for i in range(len(L)):
         for c in range(cl.C):
             n_flips += 1
-            rejected += 0 if RC.check_ann(flipped(i, c), sysb)["accept"] else 1
+            d = flipped(i, c)
+            acc_ = RC.check_ann(d, sysb)["accept"]
+            Lf = [int(h, 16) for h in d["L_hex"]]
+            pa, pb, pc = exhaustive_predicate(Lf, nv, D, eqs, gp[idx])
+            if acc_ != (pa and pb and pc):
+                disagreements += 1
+            if acc_:
+                accepted_flips += 1
+                equivalent.append([i, c])
+            else:
+                rejected += 1
+    # the declared tamper must also be rejected by the predicate
+    dec_pred = exhaustive_predicate([int(h, 16) for h in flipped(0, const_col)["L_hex"]], nv, D, eqs, gp[idx])
     dimW = int(cl._final[0].shape[0])
     ok = (dimW == 0 and not dec["contained"] and dec["type"] == "L" and acc["accept"] and acc_full
-          and not tamper["accept"])
+          and not tamper["accept"] and disagreements == 0 and not all(dec_pred))
     return _res("F-5", ok, {"dim_W4": dimW, "decision": dec, "n_functionals_full": len(cert["L_hex"]),
                             "n_functionals_pruned": len(L), "checker": "tests/ref_checker.py (producer-side; "
                             "the independent Validator checker is pending)",
                             "accepted_pruned": acc["accept"], "accepted_full": acc_full,
                             "tampered_constant_bit_accepted": tamper["accept"],
-                            "single_bit_flips_rejected": f"{rejected}/{n_flips}"})
+                            "single_bit_flips": {"total": n_flips, "rejected": rejected, "accepted": accepted_flips,
+                                                 "checker_vs_exhaustive_predicate_disagreements": disagreements,
+                                                 "accepted_flips_equivalent_encodings": equivalent},
+                            "declared_tamper_predicate_abc": list(dec_pred)})
 
 
 def f7():
@@ -343,6 +479,14 @@ def f6(no_sage=False, tmpdir=None):
             sysd = DS.build_system(F, B, vv, k, x_R)
             cases.append({"n": n, "k": k, "m": m, "poly": F.poly, "A": A, "B": B, "v": vv, "x_R": x_R})
             mine.append({"eqs": sysd["eqs"], "E": curve.count_points(fast=False)})
+    # group-order cross-check on 12 further curves over n in the grid range (DR-7)
+    n_descent = len(cases)
+    for ci, n in enumerate((9, 10, 11, 12, 13, 14, 15, 16, 17, 19, 12, 17)):
+        F = DS.Field(n)
+        A = rng.randbelow(2)
+        B = 2 + rng.randbelow((1 << n) - 2)
+        cases.append({"E_only": True, "n": n, "poly": F.poly, "A": A, "B": B})
+        mine.append({"eqs": None, "E": DS.Curve(F, A, B).count_points()})
     try:
         p = subprocess.run([SAGE, "-python", os.path.join(_paths.CODE_DIR, "f6_sage_oracle.py")],
                            input=json.dumps(cases), capture_output=True, text=True, timeout=900)
@@ -353,6 +497,11 @@ def f6(no_sage=False, tmpdir=None):
     oracle = json.loads(p.stdout.strip().splitlines()[-1])
     rows, ok = [], True
     for c, mi, o in zip(cases, mine, oracle):
+        if c.get("E_only"):
+            ok &= mi["E"] == o["num_points_E"]
+            rows.append({"n": c["n"], "E_only": True, "E_mine": mi["E"], "E_sage": o["num_points_E"],
+                         "match": mi["E"] == o["num_points_E"]})
+            continue
         mine_nz = [sorted(e) for e in mi["eqs"] if e]
         same = mine_nz == o["gens"]
         e_same = mi["E"] == o["num_points_E"]
@@ -363,7 +512,7 @@ def f6(no_sage=False, tmpdir=None):
                             "polynomials are skipped by the oracle and by the comparison"})
 
 
-def f8(protocol_sha256):
+def f8(protocol_sha256, n_affine=10, brute_cells_big=True):
     """IR-2 standing fixture: Z enumeration == brute force on EQS4/EQS2 (N <= 20)
     and on nulls (N <= 24) for the small cells, seeds 0..2."""
     import run as RUN
@@ -383,13 +532,56 @@ def f8(protocol_sha256):
                 good = bz == inst["Z"] and inst["plant"]["s"] in bz
                 ok &= good
                 rows.append({"cell": cid, "r": r, "arm": arm, "N": inst["nv"], "z": len(bz), "match": good})
-        # one null per cell (N <= 24)
+        # one null per cell (N <= 26 here, nulls are brute-forced up to 26)
         sh = RUN.shared_part(cell, 0, protocol_sha256)
         inst = RUN.eqs_instance(cell, sh, "EQS4", 0, protocol_sha256)
         raw, s = nulls.null_prof(inst["nv"], nulls.profile_of(inst["raw_eqs"]), HashRng(1, "f8null"))
         bz = enumz.brute_force_Z(inst["nv"], raw)
         ok &= s in bz
         rows.append({"cell": cid, "arm": "NULL-PROF", "N": inst["nv"], "z": len(bz), "planted_in_Z": s in bz})
+    for cid in ("m3n12", "m3n13", "m3n14", "m4n08", "m4n09"):
+        if brute_cells_big:
+            cell = CE.CELLS[cid]
+            sh = RUN.shared_part(cell, 0, protocol_sha256)
+            inst = RUN.eqs_instance(cell, sh, "EQS4", 0, protocol_sha256)
+            for nm, mk in (("NULL-PROF", lambda: nulls.null_prof(inst["nv"], nulls.profile_of(inst["raw_eqs"]), HashRng(2, "f8big"))),
+                           ("NULL-SHUF", lambda: nulls.null_shuf(inst["nv"], inst["raw_eqs"], HashRng(3, "f8big")))):
+                raw, s = mk()
+                bz = enumz.brute_force_Z(inst["nv"], raw)
+                ok &= s in bz
+                rows.append({"cell": cid, "arm": nm, "N": inst["nv"], "z": len(bz), "planted_in_Z": s in bz})
+    # affine-subspace Z search against brute force on >= 10 nulls with 18 <= N <= 22
+    import closure as CL
+    aff, tries = [], 0
+    for cid in ("m3n09", "m3n10", "m3n11"):
+        cell = CE.CELLS[cid]
+        for r in range(40):
+            if len(aff) >= n_affine:
+                break
+            tries += 1
+            sh = RUN.shared_part(cell, r, protocol_sha256)
+            try:
+                inst = RUN.eqs_instance(cell, sh, "EQS4", r, protocol_sha256)
+            except DS.PlantInfeasible:
+                continue
+            raw, s = nulls.null_prof(inst["nv"], nulls.profile_of(inst["raw_eqs"]), HashRng(r, "f8aff" + cid))
+            eqs_ad, _ = CL.adapted_basis(raw)
+            rec, cl = CL.w_closure_record(inst["nv"], 4, eqs_ad)
+            bz = enumz.brute_force_Z(inst["nv"], raw)
+            forms = cl.linear_part()
+            src = "W4_linear_forms"
+            if not forms:       # random nulls are not contained: W_4 has no linear forms; use the
+                src = "affine_hull_of_brute_Z (valid forms in the ideal)"   # affine relations of Z itself
+                forms = affine_hull_forms(bz, inst["nv"])
+            res = enumz.affine_subspace_Z(inst["nv"], raw, forms)
+            if res is None:
+                continue
+            good = res[0] == bz
+            ok &= good
+            aff.append({"cell": cid, "r": r, "N": inst["nv"], "free": res[1], "z": len(bz), "forms": src,
+                        "n_forms": len(forms), "match": good})
+    ok &= len(aff) >= n_affine
+    rows.append({"affine_subspace_comparisons": len(aff), "required": n_affine, "tries": tries, "detail": aff})
     return _res("F-8", ok, {"instances": len(rows), "rows": rows})
 
 
@@ -418,8 +610,8 @@ def main():
         out.append(r)
         print(fid, r["verdict"], r["wall_s"], flush=True)
     with open(a.out, "w") as f:
-        json.dump({"fixtures": out, "all_pass_or_not_covered_explained": all(
-            x["verdict"] != "fail" for x in out)}, f, indent=1, default=str)
+        json.dump({"fixtures": out, "sr1_all_pass": all(x["verdict"] == "pass" for x in out),
+                   "note": "SR-1: a not_covered fixture counts as a failure"}, f, indent=1, default=str)
     sys.exit(0 if all(x["verdict"] == "pass" for x in out) else 1)
 
 

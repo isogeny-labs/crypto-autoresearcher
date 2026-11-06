@@ -19,6 +19,14 @@ import semaev_tree as ST  # noqa: E402
 
 
 def run_case(c):
+    if c.get("E_only"):
+        P2 = PolynomialRing(GF(2), "t")
+        t = P2.gen()
+        mod = sum(t ** i for i in range(c["n"] + 1) if (c["poly"] >> i) & 1)
+        Fq = GF(2 ** c["n"], name="alpha", modulus=mod)
+        alpha = Fq.gen()
+        el = lambda x: sum(((x >> i) & 1) * alpha ** i for i in range(c["n"]))
+        return {"num_points_E": int(EllipticCurve(Fq, [1, el(c["A"]), 0, 0, el(c["B"])]).order())}
     n, k, m = c["n"], c["k"], c["m"]
     P2 = PolynomialRing(GF(2), "t")
     t = P2.gen()

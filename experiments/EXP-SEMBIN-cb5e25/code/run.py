@@ -174,39 +174,81 @@ def closure_task(task):
             m7["gb_in_M"] = False
         out["m7"] = m7
         del mcl
-    # certificates (only at the claim degree)
-    cert_info = []
-    if D == task.get("cert_degree", CERT_D) and dec is not None and task.get("cert_prefix"):
-        meta = task["cert_meta"]
-        Z = task["Z"]
-        if not dec["contained"] and dec["type"] in ("L", "G") and task.get("want_ann"):
-            gp = gbt["gens"]
-            idx = next((i for i, g in enumerate(gp) if not cl.member(g)), None)
-            if idx is None:
-                cert_info.append({"kind": "ann", "not_emitted": "no GB element outside W_D found (DER-3 mismatch)"})
-            else:
-                c = certs.make_ann_cert(cl, nv, eqs, gp[idx], idx, meta, Z,
-                                        max_bytes=task.get("ann_max_bytes", 512 << 20))
-                if "not_emitted" in c:
-                    cert_info.append({"kind": "ann", **c})
-                else:
-                    info = certs.write_cert(task["cert_prefix"] + ".ann.json.gz", c)
-                    info["path"] = os.path.relpath(info["path"], task["run_dir"])
-                    info.update(kind="ann", form=c["form"], g_gb_index=idx,
-                                cert_sha256=certs.cert_sha256(c))
-                    cert_info.append(info)
-        if dec["contained"] and task.get("want_wdag"):
-            try:
-                c = certs.make_wdag_cert(cl, nv, eqs, gbt["gens"], meta, Z,
-                                         expected_final_dim=rec["final_dim"])
-                info = certs.write_cert(task["cert_prefix"] + ".wdag.json.gz", c)
-                info["path"] = os.path.relpath(info["path"], task["run_dir"])
-                info.update(kind="wdag", nodes=len(c["nodes"]), cert_sha256=certs.cert_sha256(c))
-                cert_info.append(info)
-            except MemoryError as exc:
-                cert_info.append({"kind": "wdag", "not_emitted": f"memory: {exc}"})
-    out["certificates"] = cert_info
     return out
+
+
+WDAG_WALL_CAP_S = 900
+WDAG_MAX_JSON_BYTES = 400 * 10 ** 6
+
+
+def cert_task(task):
+    """Certificate child (separate from the closure child). Recomputes W_D, must
+    reproduce the recorded final dimension, then emits one certificate."""
+    nv, D, eqs = task["nv"], task["D"], task["eqs"]
+    rec, cl = CL.w_closure_record(nv, D, eqs)
+    if rec["final_dim"] != task["expected_final_dim"]:
+        return {"info": {"status": "not_emitted", "reason": "dimension_mismatch",
+                         "recomputed": rec["final_dim"], "expected": task["expected_final_dim"], "flag": True}}
+    gp = task["gens"]
+    prefix = task["cert_prefix"]
+    if task["kind"] == "ann":
+        idx = next((i for i, g in enumerate(gp) if not cl.member(g)), None)
+        if idx is None:
+            return {"info": {"status": "not_emitted", "reason": "no GB element outside W_D found", "flag": True}}
+        c = certs.make_ann_cert(cl, nv, eqs, gp[idx], idx, task["cert_meta"], task["Z"],
+                                max_bytes=task.get("ann_max_bytes", 512 << 20))
+        if "not_emitted" in c:
+            return {"info": {"status": "not_emitted", "reason": c["not_emitted"], "form": c.get("form")}}
+        info = certs.write_cert(prefix + ".ann.json.gz", c)
+        info.update(status="pending_checker", form=c["form"], g_gb_index=idx, g=c["g"],
+                    cert_sha256=certs.cert_sha256(c))
+    else:
+        c = certs.make_wdag_cert(cl, nv, eqs, gp, task["cert_meta"], task["Z"],
+                                 expected_final_dim=rec["final_dim"])
+        info = certs.write_cert(prefix + ".wdag.json.gz", c, max_bytes=task.get("max_json_bytes", WDAG_MAX_JSON_BYTES))
+        if "not_emitted" in info:
+            return {"info": {"status": "not_emitted", "reason": info["not_emitted"]}}
+        info.update(status="pending_checker", nodes=len(c["nodes"]), cert_sha256=certs.cert_sha256(c))
+    info["path"] = os.path.relpath(info["path"], task["run_dir"])
+    return {"info": info}
+
+
+def emit_certificate(run_dir, cfile, costfile, key, cell_id, kind, D, nv, eqs, Z, gens, meta, expected_dim,
+                     isolate=True, ann_max_bytes=512 << 20, wall_cap=WDAG_WALL_CAP_S):
+    """Run the certificate child and append a certificate record (M-8 status vocabulary:
+    pending_checker | not_emitted). Never alters any closure record."""
+    task = {"nv": nv, "D": D, "eqs": eqs, "Z": Z, "gens": gens, "kind": kind, "cert_meta": meta,
+            "expected_final_dim": expected_dim, "run_dir": run_dir, "ann_max_bytes": ann_max_bytes,
+            "max_json_bytes": WDAG_MAX_JSON_BYTES,
+            "cert_prefix": os.path.join(run_dir, "certificates", safe(key) + f".D{D}")}
+    st, payload, m9 = run_isolated(cert_task, task, wall_cap if kind == "wdag" else 7200, isolate=isolate)
+    if st == "ok":
+        info = payload["info"]
+    elif st == "censored_wall":
+        info = {"status": "not_emitted", "reason": f"wall cap exceeded ({wall_cap}s)"}
+    elif st == "censored_rss":
+        info = {"status": "not_emitted", "reason": "RSS watchdog (10 GB)"}
+    else:
+        info = {"status": "not_emitted", "reason": f"{st}: {payload}"}
+    m9.update(kind="certificate", cert_kind=kind)
+    append_gz_jsonl(cfile, {"kind": "certificate", "key": key, "cell": cell_id, "D": D, "cert_kind": kind,
+                            "M8": info, "M9": m9})
+    append_jsonl(costfile, {"key": key, "D": D, "status": st, "what": "certificate_" + kind, **m9})
+    return info
+
+
+def wdag_policy(a, N):
+    """wdag emission rule (DR-8): 'now' (N <= 20), 'selection_pass' (21..26, two per cell by the
+    nonce, see certify.py), 'none' (N >= 27). --wdag always/never override (tests, repairs)."""
+    if a.wdag == "never":
+        return "none"
+    if a.wdag == "always":
+        return "now"
+    if N <= 20:
+        return "now"
+    if N <= 26:
+        return "selection_pass"
+    return "none"
 
 
 # --------------------------------------------------------------------------
@@ -273,8 +315,9 @@ def run_trial(a):
         if not os.path.exists(a.require_fixtures):
             raise SystemExit("SR-1: fixtures.json missing; fixtures must run first")
         fx = json.load(open(a.require_fixtures))["fixtures"]
-        if any(x["verdict"] == "fail" for x in fx):
-            raise SystemExit("SR-1: a fixture failed; instrument failure, no target instance may run")
+        if any(x["verdict"] != "pass" for x in fx) or len(fx) < 8:
+            raise SystemExit("SR-1: a fixture failed or is not_covered (counts as failure) or F-1..F-8 incomplete; "
+                             "no target instance may run")
     cell = CE.CELLS[a.cell]
     CE.check_cell(cell)
     run_dir = a.run_dir
@@ -345,7 +388,12 @@ def pick_unique(cell, sh, a, results, evaluate=True):
     log = []
     chosen = None
     for att in range(32):
-        inst = eqs_instance(cell, sh, "EQS4", a.r, a.protocol_sha256, a=att, with_system=False)
+        try:
+            inst = eqs_instance(cell, sh, "EQS4", a.r, a.protocol_sha256, a=att, with_system=False)
+        except DS.PlantInfeasible as exc:
+            log.append({"attempt": att, "z": None, "plant_infeasible": str(exc),
+                        "curve": [sh["A"], sh["B"]], "counted_as": "non-unique"})
+            continue
         # arm stream: attempt 0 uses the EQS4 stream (same instance), a>=1 EQS4-U/<cell>/a<a>
         log.append({"attempt": att, "z": len(inst["Z"]), "R": list(inst["plant"]["R"]),
                     "curve": [sh["A"], sh["B"]], "x_R": inst["x_R"]})
@@ -486,12 +534,7 @@ def evaluate_closures(a, cell, key, arm, nv, eqs, Z, meta, cfile, costfile, wall
                        if gb is not None else None),
                 "direct_membership": CD <= 30000, "compute_m7": CD <= 30000 and not a.skip_m7,
                 "lin_forms": null_route and D == 4,
-                "cert_degree": a.cert_degree,
-                "cert_prefix": None,
-                "want_ann": want_certs or a.always_ann, "want_wdag": want_certs and wdag_wanted(a, N),
-                "cert_meta": meta, "run_dir": a.run_dir, "Z": Z if Z is not None else [], "ann_max_bytes": a.ann_max_bytes}
-        if D == a.cert_degree:
-            task["cert_prefix"] = os.path.join(a.run_dir, "certificates", safe(key) + f".D{D}")
+                }
         la = load_avg()
         st, payload, m9 = run_isolated(closure_task, task, wall_cap, isolate=not a.no_isolate)
         m9.update(load_avg_1min_at_start=la, C=CD, D=D)
@@ -512,7 +555,7 @@ def evaluate_closures(a, cell, key, arm, nv, eqs, Z, meta, cfile, costfile, wall
                                                   "rank_ev_D": gb["rank_ev"][D],
                                                   "codim_W_in_B_le_D": CD - rec["final_dim"]}
                                                  if gb else {"z": None}),
-                    "M7": payload.get("m7"), "certificates": payload.get("certificates"),
+                    "M7": payload.get("m7"),
                     "direct_membership": payload.get("direct_membership"),
                     "der3_mismatch": payload.get("der3_mismatch", False)})
         if gb is not None:
@@ -524,6 +567,29 @@ def evaluate_closures(a, cell, key, arm, nv, eqs, Z, meta, cfile, costfile, wall
             row["lin_forms"] = payload.get("lin_forms")
         append_gz_jsonl(cfile, row)
         recs.append(row)
+        # certificates: a SEPARATE child, started only after the closure record is on disk
+        if D == a.cert_degree and gb is not None and (want_certs or a.always_ann):
+            dec = row["M1"]
+            ck = dict(run_dir=a.run_dir, cfile=cfile, costfile=costfile, key=key, cell_id=cell["id"], D=D,
+                      nv=nv, eqs=eqs, Z=Z, gens=gb["gens"], meta=meta, expected_dim=rec["final_dim"],
+                      isolate=not a.no_isolate)
+            if not dec["contained"] and dec["type"] in ("L", "G"):
+                emit_certificate(kind="ann", ann_max_bytes=a.ann_max_bytes, **ck)
+            elif dec["contained"] and want_certs:
+                pol = wdag_policy(a, N)
+                if pol == "now":
+                    emit_certificate(kind="wdag", **ck)
+                else:
+                    append_gz_jsonl(cfile, {"kind": "certificate", "key": key, "cell": cell["id"], "D": D,
+                                            "cert_kind": "wdag",
+                                            "M8": {"status": "not_attempted_by_rule",
+                                                   "rule": "N<=20 all; 21..26 two per cell by nonce "
+                                                           "(certify.py selection pass); N>=27 none",
+                                                   "policy": pol}})
+            elif not dec["contained"]:
+                append_gz_jsonl(cfile, {"kind": "certificate", "key": key, "cell": cell["id"], "D": D,
+                                        "cert_kind": "none", "M8": {"status": "not_attempted_by_rule",
+                                                                    "rule": "Type-D needs no closure certificate"}})
         if gb is not None and row["M1"]["contained"] and d_solve is None:
             d_solve = D
         if null_route and gb is None and D >= 4:
@@ -570,14 +636,6 @@ def evaluate_closures(a, cell, key, arm, nv, eqs, Z, meta, cfile, costfile, wall
             summary["M1_at_4"] = {"contained": "censored", "note": "a censored M-1 is never false"}
     append_gz_jsonl(cfile, summary)
     results["summary"] = summary
-
-
-def wdag_wanted(a, N):
-    if a.wdag == "never":
-        return False
-    if a.wdag == "always":
-        return True
-    return N <= 26
 
 
 def budget_skip(a, CD, D):
@@ -685,15 +743,16 @@ def fullfe_instance(a, cell, sh, inst, src, key, arm, ifile, cfile, costfile, wa
         return
     raw = inst["raw_eqs"]
     with_fe = arm == "EQS4-FULLFE"
-    rec = instance_record(key, cell, sh, inst, raw, raw, {"mode": "raw"},
-                          {"system_file": save_system(a.run_dir, key, nv, raw), "valid": True,
+    # both arms run on the SAME adapted generators (C-FE-OUT differs in S_fe only)
+    eqs_ad, st_ad = CL.adapted_basis(raw)
+    rec = instance_record(key, cell, sh, inst, raw, eqs_ad, st_ad,
+                          {"system_file": save_system(a.run_dir, key, nv, eqs_ad), "valid": True,
                            "M6": dfeq_record(raw, nv, include_fe=with_fe)})
     rec["meta"] = base_meta(cell, sh, src)
     append_gz_jsonl(ifile, rec)
-    eqs_ad, _ = CL.adapted_basis(raw)
     out = []
     for D in range(2, min(cell["D_max"], 4) + 1):
-        st, payload, m9 = run_isolated(fullfe_task, {"nv": nv, "D": D, "eqs": eqs_ad if with_fe else raw,
+        st, payload, m9 = run_isolated(fullfe_task, {"nv": nv, "D": D, "eqs": eqs_ad,
                                                       "with_fe": with_fe, "bool_eqs": eqs_ad}, 1800, isolate=not a.no_isolate)
         row = {"key": key, "arm": arm, "cell": cell["id"], "r": a.r, "D": D, "status": st, "M9": m9}
         if st == "ok":
@@ -720,7 +779,7 @@ def parse(argv=None):
     p.add_argument("--aa-source", default="EQS4", choices=["EQS4", "EQS4-U"])
     p.add_argument("--aa-density", type=float, default=0.5)
     p.add_argument("--aa-certs", action="store_true", help="also emit certificates for the AA instance")
-    p.add_argument("--always-ann", action="store_true")
+    p.add_argument("--always-ann", action="store_true", help="also emit ann certificates for non-decisive arms (AA)")
     p.add_argument("--generator-mode", default="adapted", choices=["adapted", "raw"])
     p.add_argument("--cert-degree", type=int, default=4, help="closure degree D at which certificates are emitted")
     p.add_argument("--wdag", default="auto", choices=["auto", "always", "never"])

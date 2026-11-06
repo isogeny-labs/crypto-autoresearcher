@@ -225,3 +225,44 @@ target is in `W_D`; with (f) the targets are a Groebner basis of `I(Z)` inside
 * `M4` is the list, one entry per elimination of the fixpoint (entry 0 is
   `M_D`), of `{rank, dims_by_deg}` where `dims_by_deg[d]` is the number of
   echelon rows with leading degree `<= d`, i.e. `dim(W^(i) cap B_{<=d})`.
+
+## 7. Certificate records and the M-8 status vocabulary (revision 2)
+
+Certificates are produced by a child process separate from the closure child,
+started only after the closure record has been appended to
+`closures.jsonl.gz`. A certificate failure (size guard, 900 s wall cap, 10 GB
+RSS watchdog, dimension mismatch on recomputation) never changes any closure
+record. Each attempt appends one line to `closures.jsonl.gz`:
+
+```
+{"kind": "certificate", "key": "<cell>/<arm>/r<r>", "cell": ..., "D": 4,
+ "cert_kind": "ann" | "wdag" | "none",
+ "M8": {"status": <closed vocabulary>, ...}, "M9": {...}}
+```
+
+Closed `M8.status` vocabulary:
+
+| status | meaning |
+| --- | --- |
+| `accepted` | emitted and accepted by the independent checker (set by the analysis from the checker's verdict file, keyed by `cert_sha256`) |
+| `rejected` | emitted and rejected by the independent checker (IR-4a) |
+| `not_emitted` | a guard tripped (IR-4b): `reason` is one of an `ann_max_bytes` size estimate, JSON before gzip above 400 MB (wdag), wall above 900 s, RSS watchdog, `dimension_mismatch` (the recomputed `dim W_D` differs from the recorded one; flagged) |
+| `not_attempted_by_rule` | the wdag emission rule did not select the instance (also `cert_kind: "none"` for a Type-D non-containment, which needs no closure certificate) |
+| `pending_checker` | emitted (`path`, `cert_sha256`, `content_bytes`, `form` / `nodes`), checker not yet run |
+
+For an `ann` record that was emitted, `M8` also carries `g` (the named reduced
+Groebner basis element, same encoding as section 4) and `g_gb_index`. The
+latest record per `(key, cert_kind)` wins.
+
+wdag emission rule (a function of N and a nonce): `N <= 20`: every contained
+decisive instance (arms EQS4, EQS4-U); `21 <= N <= 26`: exactly two contained
+decisive instances per cell, chosen after the cell's trials by
+`i = int(sha256(protocol_sha256 + "\nWDAG\n" + cell_id), 16) mod n` over the
+`n` contained decisive keys sorted as strings, taking index `i` and
+`(i + 1) mod n` (all of them if `n < 2`); `N >= 27`: none (containment is then
+reported "engine-decided, uncertified").
+
+A non-containment (Type-L or Type-G) whose `ann` status is not `accepted` is
+reported as `non_containment_uncertified`; it is neither a counterexample nor
+contained, and the analysis reports the F-MAIN gate as `incomplete_censored`
+with detail `certificate_pending`.

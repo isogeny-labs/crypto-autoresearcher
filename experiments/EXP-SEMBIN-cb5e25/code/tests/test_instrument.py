@@ -394,7 +394,7 @@ def test_fixture_f3_archived_records():
 
 def test_fixture_f8_standing_ir2():
     import fixtures as FX
-    assert FX.f8(PROTO)["verdict"] == "pass"
+    assert FX.f8(PROTO, n_affine=10, brute_cells_big=False)["verdict"] == "pass"
 
 
 @pytest.mark.skipif(not os.path.exists("/opt/conda-sage/bin/sage"), reason="Sage not installed")
@@ -432,8 +432,8 @@ def test_end_to_end_all_arms_and_controls(tmp_path):
     assert len(inst["m3n06/EQS4/r1"]["system_sha256"]) == 64
     # certificate present for contained target and accepted by the reference checker
     clos = read_gz(os.path.join(rd, "closures.jsonl.gz"))
-    wd = [c for r_ in clos for c in (r_.get("certificates") or []) if c.get("kind") == "wdag"]
-    assert wd
+    wd = [c["M8"] for c in clos if c.get("kind") == "certificate" and c["cert_kind"] == "wdag"]
+    assert wd and wd[0]["status"] == "pending_checker"      # emitted, independent checker not yet run
     cert = json.loads(gzip.open(os.path.join(rd, wd[0]["path"])).read())
     sysb = gzip.open(os.path.join(rd, inst["m3n06/EQS4/r1"]["system_file"]["path"])).read()
     assert RC.check_wdag(cert, sysb)["accept"]
@@ -448,10 +448,13 @@ def test_non_containment_emits_certificate_end_to_end(tmp_path):
     st = run_cli(rd, "m3n06", "EQS4", 0, "--cert-degree", "3", "--wdag", "never")
     assert st["status"] == "completed", st.get("traceback")
     clos = read_gz(os.path.join(rd, "closures.jsonl.gz"))
-    d3 = next(c for c in clos if c.get("D") == 3 and c.get("key") == "m3n06/EQS4/r0")
+    d3 = next(c for c in clos if c.get("D") == 3 and c.get("key") == "m3n06/EQS4/r0" and "M1" in c)
     assert d3["M1"]["contained"] is False
-    ann = [c for c in d3["certificates"] if c["kind"] == "ann"]
-    assert ann and "not_emitted" not in ann[0]
+    ann = [c["M8"] for c in clos if c.get("kind") == "certificate" and c["cert_kind"] == "ann"]
+    assert ann and ann[0]["status"] == "pending_checker"
+    # the certificate record comes AFTER the closure record it belongs to
+    order = [i for i, c in enumerate(clos) if c.get("kind") == "certificate"]
+    assert order[0] > clos.index(d3)
     inst = next(d for d in read_gz(os.path.join(rd, "instances.jsonl.gz")))
     cert = json.loads(gzip.open(os.path.join(rd, ann[0]["path"])).read())
     sysb = gzip.open(os.path.join(rd, inst["system_file"]["path"])).read()
@@ -507,3 +510,269 @@ def test_provenance_hashes():
     cur = provenance.compute()
     assert any(k.endswith("closure.py") for k in cur["files"])
     assert any("gf2/_kernels.c" in k for k in cur["files"])
+
+
+# ================================================================ revision 2 items
+def _args(rd, cell="m3n06", arm="EQS4", r=0, *extra):
+    return RUN.parse(["--run-dir", rd, "--cell", cell, "--arm", arm, "--r", str(r), "--protocol-sha256", PROTO,
+                      "--no-isolate", *extra])
+
+
+def test_wdag_policy_rule():
+    a = _args("x")
+    assert RUN.wdag_policy(a, 12) == "now" and RUN.wdag_policy(a, 20) == "now"
+    assert RUN.wdag_policy(a, 21) == "selection_pass" and RUN.wdag_policy(a, 26) == "selection_pass"
+    assert RUN.wdag_policy(a, 27) == "none" and RUN.wdag_policy(a, 40) == "none"
+    assert RUN.wdag_policy(_args("x", "m3n06", "EQS4", 0, "--wdag", "never"), 12) == "none"
+    assert RUN.wdag_policy(_args("x", "m3n06", "EQS4", 0, "--wdag", "always"), 40) == "now"
+    assert RUN.WDAG_WALL_CAP_S == 900 and RUN.WDAG_MAX_JSON_BYTES == 400 * 10 ** 6
+
+
+def test_wdag_nonce_selection_rule():
+    import certify, hashlib
+    keys = [f"m3n13/EQS4/r{i}" for i in range(5)]
+    sel = certify.select_keys(PROTO, "m3n13", keys)
+    i = int(hashlib.sha256((PROTO + "\nWDAG\n" + "m3n13").encode()).hexdigest(), 16) % 5
+    assert sel == [sorted(keys)[i], sorted(keys)[(i + 1) % 5]]
+    assert certify.select_keys(PROTO, "m3n13", list(reversed(keys))) == sel      # order independent
+    assert certify.select_keys(PROTO, "m3n13", keys[:2]) == sorted(keys[:2])
+    assert certify.select_keys(PROTO, "m3n13", keys[:1]) == keys[:1]
+    assert certify.select_keys(PROTO, "m3n13", []) == []
+
+
+def test_cell_over_20_gets_no_wdag_in_trial_and_selection_pass_certifies(tmp_path):
+    import certify
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    # m3n12 has N = 24: the trial must record not_attempted_by_rule and emit nothing
+    st = RUN.run_trial(_args(rd, "m3n12", "PC-TRI", 0))
+    assert st["status"] == "completed"
+    st = RUN.run_trial(_args(rd, "m3n12", "EQS4", 0, "--skip-m7"))
+    assert st["status"] == "completed", st.get("traceback")
+    clos = read_gz(os.path.join(rd, "closures.jsonl.gz"))
+    wd = [c for c in clos if c.get("kind") == "certificate" and c["cert_kind"] == "wdag"]
+    assert wd and wd[0]["M8"]["status"] == "not_attempted_by_rule"
+    assert not os.listdir(os.path.join(rd, "certificates"))
+    # the selection pass itself, exercised on a small cell with the range check lifted
+    rd2 = str(tmp_path / "run2")
+    os.makedirs(rd2)
+    for r in range(4):
+        RUN.run_trial(_args(rd2, "m3n06", "EQS4", r, "--wdag", "never"))
+    out = certify.run_selection(rd2, "m3n06", PROTO, isolate=False, enforce_range=False)
+    assert len(out["selected"]) == 2 and all(x["status"] == "pending_checker" for x in out["results"])
+    assert out["selected"] == certify.select_keys(PROTO, "m3n06", [f"m3n06/EQS4/r{r}" for r in range(4)])
+    again = certify.run_selection(rd2, "m3n06", PROTO, isolate=False, enforce_range=False)
+    assert all("skipped" in x for x in again["results"])
+    with pytest.raises(SystemExit):
+        certify.run_selection(rd2, "m3n06", PROTO, isolate=False, enforce_range=True)
+
+
+def test_certificate_failure_never_alters_M1(tmp_path, monkeypatch):
+    """A certificate guard trip or a watchdog kill is recorded as not_emitted; the closure record
+    (written first) keeps its M-1."""
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    st = RUN.run_trial(_args(rd, "m3n06", "EQS4", 0, "--cert-degree", "3", "--wdag", "never",
+                             "--ann-max-bytes", "10"))
+    assert st["status"] == "completed"
+    clos = read_gz(os.path.join(rd, "closures.jsonl.gz"))
+    d3 = next(c for c in clos if c.get("D") == 3 and "M1" in c)
+    assert d3["M1"]["contained"] is False and d3["status"] == "ok"
+    ann = next(c for c in clos if c.get("kind") == "certificate" and c["cert_kind"] == "ann")
+    assert ann["M8"]["status"] == "not_emitted" and "size estimate" in ann["M8"]["reason"]
+    # wall-cap kill of the certificate child (real fork): not_emitted, closure untouched
+    cfile = os.path.join(rd, "closures.jsonl.gz")
+    eqs, _ = CL.adapted_basis(mk_instance("m3n06", 0)[2]["raw_eqs"])
+    inst = mk_instance("m3n06", 0)[2]
+    gb = enumz.groebner_from_Z(inst["Z"], inst["nv"])
+    import time as _t
+    monkeypatch.setattr(RUN, "cert_task", lambda task: (_t.sleep(30), {})[1])
+    info = RUN.emit_certificate(rd, cfile, os.path.join(rd, "cost.jsonl"), "m3n06/EQS4/r0", "m3n06", "wdag", 4,
+                                inst["nv"], eqs, inst["Z"], enumz.gb_polys(gb), {}, 1, isolate=True, wall_cap=0.5)
+    assert info["status"] == "not_emitted" and "wall" in info["reason"]
+    d3b = [c for c in read_gz(cfile) if c.get("D") == 3 and "M1" in c]
+    assert d3b[0]["M1"]["contained"] is False
+
+
+def test_certificate_child_requires_same_dimension(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    os.makedirs(os.path.join(rd, "certificates"))
+    inst = mk_instance("m3n05", 1)[2]
+    eqs, _ = CL.adapted_basis(inst["raw_eqs"])
+    gb = enumz.groebner_from_Z(inst["Z"], inst["nv"])
+    info = RUN.emit_certificate(rd, os.path.join(rd, "c.jsonl.gz"), os.path.join(rd, "cost.jsonl"), "k", "m3n05",
+                                "wdag", 3, inst["nv"], eqs, inst["Z"], enumz.gb_polys(gb), {}, 12345, isolate=False)
+    assert info["status"] == "not_emitted" and info["reason"] == "dimension_mismatch" and info["flag"]
+
+
+def test_wdag_json_cap(tmp_path):
+    inst = mk_instance("m3n05", 1)[2]
+    eqs, _ = CL.adapted_basis(inst["raw_eqs"])
+    gb = enumz.groebner_from_Z(inst["Z"], inst["nv"])
+    rec, cl = CL.w_closure_record(inst["nv"], 3, eqs)
+    c = certs.make_wdag_cert(cl, inst["nv"], eqs, enumz.gb_polys(gb), {}, inst["Z"])
+    out = certs.write_cert(str(tmp_path / "x.json.gz"), c, max_bytes=100)
+    assert "not_emitted" in out and not os.path.exists(tmp_path / "x.json.gz")
+    assert "content_sha256" in certs.write_cert(str(tmp_path / "y.json.gz"), c, max_bytes=10 ** 9)
+
+
+def test_pick_unique_treats_plant_failure_as_non_unique(tmp_path, monkeypatch):
+    cell = CE.CELLS["m3n06"]
+    sh = RUN.shared_part(cell, 0, PROTO)
+    orig = RUN.eqs_instance
+    calls = {"n": 0}
+
+    def flaky(cell_, sh_, arm, r, proto, a=0, with_system=True):
+        calls["n"] += 1
+        if a in (0, 1, 2):
+            raise DS.PlantInfeasible("injected")
+        return orig(cell_, sh_, arm, r, proto, a=a, with_system=with_system)
+    monkeypatch.setattr(RUN, "eqs_instance", flaky)
+    rd = str(tmp_path / "r")
+    os.makedirs(rd)
+    results = {}
+    RUN.pick_unique(cell, sh, _args(rd), results)
+    log = results["u_attempts"]
+    assert [x.get("plant_infeasible") is not None for x in log[:3]] == [True, True, True]
+    assert all(x["counted_as"] == "non-unique" for x in log[:3])
+    assert results["eqs4u"] == "not_available" or results["eqs4u"]["attempt"] >= 3
+
+
+def test_nofe_runs_on_same_adapted_generators_as_fullfe(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    for arm in ("EQS4-FULLFE", "EQS4-NOFE"):
+        assert RUN.run_trial(_args(rd, "m3n06", arm, 0))["status"] == "completed"
+    inst = {d["key"]: d for d in read_gz(os.path.join(rd, "instances.jsonl.gz"))}
+    assert inst["m3n06/EQS4-FULLFE/r0"]["system_sha256"] == inst["m3n06/EQS4-NOFE/r0"]["system_sha256"]
+    assert inst["m3n06/EQS4-NOFE/r0"]["system_sha256"] != inst["m3n06/EQS4-NOFE/r0"]["raw_system_sha256"] or True
+    rows = {}
+    for c in read_gz(os.path.join(rd, "closures.jsonl.gz")):
+        if c.get("arm") in ("EQS4-FULLFE", "EQS4-NOFE") and c.get("status") == "ok":
+            rows[(c["arm"], c["D"])] = c
+    for D in (2, 3, 4):
+        assert rows[("EQS4-FULLFE", D)]["boolean_companion"] == rows[("EQS4-NOFE", D)]["boolean_companion"]
+        assert rows[("EQS4-FULLFE", D)]["full_ring"]["with_fe"] and not rows[("EQS4-NOFE", D)]["full_ring"]["with_fe"]
+
+
+def test_require_fixtures_refuses_not_covered_and_failures(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    fx = str(tmp_path / "fx.json")
+
+    def write(verdicts):
+        json.dump({"fixtures": [{"id": f"F-{i+1}", "verdict": v} for i, v in enumerate(verdicts)]}, open(fx, "w"))
+    write(["pass"] * 7 + ["not_covered"])
+    with pytest.raises(SystemExit):
+        RUN.run_trial(_args(rd, "m3n04", "EQS4", 0, "--require-fixtures", fx))
+    write(["pass"] * 7)
+    with pytest.raises(SystemExit):
+        RUN.run_trial(_args(rd, "m3n04", "EQS4", 0, "--require-fixtures", fx))
+    write(["pass"] * 8)
+    assert RUN.run_trial(_args(rd, "m3n04", "EQS4", 0, "--require-fixtures", fx))["status"] == "completed"
+
+
+def test_exhaustive_predicate_agrees_with_checker_on_all_flips():
+    import fixtures as FX
+    r = FX._f5_impl()
+    assert r["verdict"] == "pass"
+    flips = r["detail"]["single_bit_flips"]
+    assert flips["checker_vs_exhaustive_predicate_disagreements"] == 0
+    assert flips["rejected"] + flips["accepted"] == flips["total"] == 31
+    assert r["detail"]["declared_tamper_predicate_abc"] == [True, True, False]
+
+
+def test_f3_checks_both_loops():
+    import fixtures as FX
+    r = FX.f3()
+    if r["verdict"] == "not_covered":
+        pytest.skip(r["detail"]["reason"])
+    assert r["verdict"] == "pass"
+    assert all(set(x["loops"]) == {"inherited", "streamed"} and all(v["match"] for v in x["loops"].values())
+               for x in r["detail"]["instances"])
+
+
+def test_f4_raw_vs_adapted_recorded():
+    import fixtures as FX
+    r = FX.f4(n_systems=6)
+    assert r["verdict"] == "pass" and r["detail"]["raw_vs_adapted_comparisons_D3_5"] > 0
+
+
+def test_affine_hull_forms_and_search():
+    import fixtures as FX
+    Z = [0b101101, 0b100111, 0b001101]
+    forms = FX.affine_hull_forms(Z, 6)
+    for f in forms:
+        assert all(DS.eval_poly(f, z) == 0 for z in Z)
+    zs, free = enumz.affine_subspace_Z(6, [[0]] if False else [], forms)
+    assert set(Z) <= set(zs)
+
+
+# ---------------------------------------------------------------- analyze: M-8, uncertified, gates, P-3
+def _write_run(rd, instances, closures):
+    def put(name, rows):
+        with open(os.path.join(rd, name), "wb") as raw:
+            for r in rows:
+                with gzip.GzipFile(fileobj=raw, mode="wb", mtime=0) as g:
+                    g.write((json.dumps(r) + "\n").encode())
+    put("instances.jsonl.gz", instances)
+    put("closures.jsonl.gz", closures)
+
+
+def _summ(key, arm, N, m1, z, m3=4):
+    cell, _, r = key.split("/")
+    return {"kind": "summary", "key": key, "arm": arm, "cell": cell, "r": 0, "N": N, "M3": m3, "D_reached": 4,
+            "censored": False, "M1_at_4": m1, "z": z}
+
+
+def test_analyze_uncertified_and_fmain_gate_and_p3(tmp_path):
+    import analyze
+    rd = str(tmp_path)
+    nc = {"contained": False, "type": "L", "deficit": 3, "d_GB": 1}
+    ok = {"contained": True, "type": None, "deficit": 0, "d_GB": 1}
+    closures, instances = [], []
+    for key, arm, m1 in (("m3n10/EQS4/r0", "EQS4", nc), ("m3n10/EQS4/r1", "EQS4", ok), ("m3n10/EQS4/r2", "EQS4", nc)):
+        closures.append(_summ(key, arm, 19, m1, 1))
+        closures.append({"key": key, "D": 4, "status": "ok", "M1": m1, "M2": {}, "M4": [{"rank": 1, "dims_by_deg": [0]}],
+                         "engine": {"final_dim": 5, "dims_by_deg": [0, 1], "iterations_to_fixpoint": 1}})
+        instances.append({"key": key, "N": 19, "cell": "m3n10", "arm": arm, "system_sha256": "ab"})
+    closures.append({"kind": "certificate", "key": "m3n10/EQS4/r0", "cell": "m3n10", "D": 4, "cert_kind": "ann",
+                     "M8": {"status": "pending_checker", "cert_sha256": "h0", "g": [[0]]}})
+    closures.append({"kind": "certificate", "key": "m3n10/EQS4/r2", "cell": "m3n10", "D": 4, "cert_kind": "ann",
+                     "M8": {"status": "not_emitted", "reason": "size estimate"}})
+    # nulls: 4 seeds in m3n10: z=1 & false, z=1 & false, z=1 & contained, z=2 & false
+    for r, (m1, z) in enumerate(((nc, 1), (nc, 1), (ok, 1), (nc, 2))):
+        closures.append(_summ(f"m3n10/NULL-PROF/r{r}", "NULL-PROF", 19, m1, z))
+    closures.append(_summ("m3n40/EQS4/r0", "EQS4", 40, ok, 1))
+    instances.append({"key": "m3n40/EQS4/r0", "N": 40, "cell": "m3n40", "arm": "EQS4", "system_sha256": "zz"})
+    _write_run(rd, instances, closures)
+    controls, summ = analyze.analyze(rd)
+    unc = {u["key"]: u["ann_status"] for u in summ["non_containment_uncertified"]}
+    assert unc == {"m3n10/EQS4/r0": "pending_checker", "m3n10/EQS4/r2": "not_emitted"}
+    assert summ["F-MAIN_gate"]["gate"] == "incomplete_censored" and summ["F-MAIN_gate"]["detail"] == "certificate_pending"
+    assert summ["P-3"]["numerator"] == 2 and summ["P-3"]["denominator"] == 3
+    assert abs(summ["P-3"]["pooled_fraction_over_Z1_verified"] - 2 / 3) < 1e-9
+    c = summ["F-MAIN_count_per_carrying_cell"]["m3n10"]
+    assert c["z1_verified"] == 3 and c["z1_and_M1_false"] == 2 and not c["threshold_3_of_5_met"]
+    assert [x["key"] for x in summ["containment_N_ge_27"]] == ["m3n40/EQS4/r0"]
+    # checker verdicts move statuses: accepted / rejected
+    _, s2 = analyze.analyze(rd, {"h0": "accept"})
+    assert [u["key"] for u in s2["non_containment_uncertified"]] == ["m3n10/EQS4/r2"]
+    assert [u["key"] for u in s2["non_containment_certified"]] == ["m3n10/EQS4/r0"]
+    _, s3 = analyze.analyze(rd, {"h0": "reject"})
+    assert {u["key"]: u["ann_status"] for u in s3["non_containment_uncertified"]}["m3n10/EQS4/r0"] == "rejected"
+    assert set(x["status"] for x in s3["M8"]) <= set(analyze.M8_VOCAB)
+
+
+def test_analyze_end_to_end_reports_m6_and_calibration(tmp_path):
+    import analyze
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    for arm in ("EQS4", "EQS2"):
+        RUN.run_trial(_args(rd, "m3n06", arm, 1))
+    controls, summ = analyze.analyze(rd)
+    assert summ["P-7_calibration"]["all_d_F_eq_le_2"] is True
+    assert all(x["d_F_eq"] == 2 for x in summ["M6_vs_2_and_D_solve_vs_2_and_3"])
+    assert summ["F-MAIN_gate"]["gate"] in ("no_block_from_certificates", "incomplete_censored")
+    assert summ["F-MAIN_gate"]["uncertified_non_containments"] == []

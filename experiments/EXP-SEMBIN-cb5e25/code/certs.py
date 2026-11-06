@@ -55,8 +55,12 @@ def cert_sha256(cert: dict) -> str:
     return hashlib.sha256(cert_bytes(cert)).hexdigest()
 
 
-def write_cert(path: str, cert: dict) -> dict:
+def write_cert(path: str, cert: dict, max_bytes=None) -> dict:
+    """Gzip the canonical JSON. If max_bytes is given and the JSON (before gzip) is
+    larger, nothing is written and {"not_emitted": reason} is returned."""
     data = cert_bytes(cert)
+    if max_bytes is not None and len(data) > max_bytes:
+        return {"not_emitted": f"JSON before gzip is {len(data)} bytes, guard {max_bytes}"}
     with gzip.GzipFile(path, "wb", mtime=0) as f:
         f.write(data)
     return {"path": path, "content_sha256": hashlib.sha256(data).hexdigest(),
