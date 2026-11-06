@@ -1,0 +1,121 @@
+# TASK-20261106-9da2e3: prospective executor handoff for EXP-SEMBIN-cb5e25 (DRAFT, not approved).
+# Written by the Coordinator under DEC-20261106-36e212 without a shell, so exactly two things in
+# this file are NOT final and are replaced byte for byte by the top-level session from the final
+# regenerated plan (design-notes.md step 8):
+#   1. execution.trial_plan_sha256 holds the token TRIAL-PLAN-SHA256-TOKEN.
+#   2. artifact_paths ends at the marker comment below; the per-trial supervisor files (10 per
+#      trial, about 5,870 paths) are appended after it from the plan, and the same list goes into
+#      the queue task of the same id.
+# Nothing is approved by this file. Execution needs DEC-20261106-e7576f, which is reserved and
+# unwritten, and python3 tools/newest_experiments.py --experiment EXP-SEMBIN-cb5e25 --json
+# reporting execution_state ready.
+handoff:
+  id: TASK-20261106-9da2e3
+  from: coordinator
+  to: executor
+  role: executor
+  recorded_at: '2026-11-06'
+  goal_id: GOAL-SEMBIN-fcb7a2
+  hypothesis_ids:
+  - H-SEMBIN-e5b2db
+  objective: Run the runbook experiments/EXP-SEMBIN-cb5e25/runbook.yaml as session RBS-SEMBIN-19ce78
+    through tools/runbook.py (the /run route), pass 1 of the grid. Leave the observation files in the run
+    directories and in the shared run directory experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f.
+    Do not interpret them and do not edit the frozen specification, protocol or code.
+  uncertainty_reduced: Whether, on the tested instances of the frozen grid, the degree-4 mutant closure
+    of coset-shifted EQS4 systems contains the reduced Groebner basis, with the controls and the
+    independently checkable certificates the specification requires. Observations only.
+  inputs:
+  - ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+  - ledger/decisions/DEC-20261106-36e212.yaml
+  - ledger/decisions/DEC-20261106-e7576f.yaml
+  - experiments/EXP-SEMBIN-cb5e25/specification.yaml
+  - experiments/EXP-SEMBIN-cb5e25/protocol.json
+  - experiments/EXP-SEMBIN-cb5e25/trial-plan.json
+  - experiments/EXP-SEMBIN-cb5e25/runbook.yaml
+  - experiments/EXP-SEMBIN-cb5e25/collision-search.json
+  - experiments/EXP-SEMBIN-cb5e25/code/CODE_SHA256.json
+  - experiments/EXP-SEMBIN-cb5e25/code/adapter.py
+  - experiments/EXP-SEMBIN-cb5e25/code/check_trial.py
+  - experiments/EXP-SEMBIN-cb5e25/code/run.py
+  - experiments/EXP-SEMBIN-cb5e25/code/certify.py
+  - experiments/EXP-SEMBIN-cb5e25/code/fixtures.py
+  - experiments/EXP-SEMBIN-cb5e25/code/analyze.py
+  constraints:
+  - Pass 1 only. This task is run 1 of the specification's maximum_runs 3. Do not add seeds, cells,
+    hosts, arms or nulls. Do not re-draw an instance. The EQS4-AA re-runs of non-contained instances
+    (SR-6), the one infrastructure retry (SR-7) and any raised certificate size guard are pass 2, a
+    separate plan with its own approval; do not perform them here.
+  - Do not edit specification.yaml, protocol.json, the trial plan, the runbook, any file under code/,
+    the checker under review/, or the hypothesis. The frozen protocol hash is in protocol.json.
+  - The binding memory limit is the resident-set watchdog in code/run.py at 10 GiB. memory_gb 32 in
+    this budget is the supervisor's RLIMIT_AS virtual address-space ceiling (DEC-20261106-36e212,
+    RUL-3). It is not a grant of 32 GB of resident memory. Do not raise or lower either.
+  - Dispatch only with CRYPTO_AR_BLOBSTORE set and the blob store round-trip step passing, and while
+    no other task of GOAL-SEMBIN-fcb7a2 holds a live claim (DEC-20261106-36e212, RUL-2 and RUL-10).
+  - A crash, an RSS watchdog kill, a kill at the virtual ceiling, a timeout, a disk or host failure
+    is an infrastructure signal under SR-7. It is never a negative mathematical result and never a
+    censored M-1. Report it; do not retry beyond what tools/runbook.py does.
+  - An invalid stop (SR-4, SR-5, IR-1, IR-2, IR-3, IR-5) is terminal for the session. Do not run the
+    session again; report the printed failure class and the run directory.
+  - State no verdict, no speedup and no statement about any curve or key. The session stops at the
+    tool-written summary.
+  deliverables:
+  - experiments/EXP-SEMBIN-cb5e25/runbook-sessions/RBS-SEMBIN-19ce78/journal.jsonl
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/fixtures.json
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/collision-search.json
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/controls.json
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/summary.json
+  - 'The shared run directory records written by the instrument and kept in their stored form per tools/artifact_store.py: instances.jsonl.gz, closures.jsonl.gz, cost.jsonl, session_start.json, systems/, certificates/ and trials/ under experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f.'
+  - 'For every planned trial, manifest.yaml and raw-result.json in its supervisor run directory experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-<suffix>, enumerated in artifact_paths.'
+  - experiments/EXP-SEMBIN-cb5e25/reports/ as written by tools/runbook.py (the tool-written session report).
+  artifact_paths:
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/fixtures.json
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/collision-search.json
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/session_start.json
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/controls.json
+  - experiments/EXP-SEMBIN-cb5e25/runs/RUN-SEMBIN-d1204f/summary.json
+  # PER-TRIAL-ARTIFACT-PATHS-MARKER: the top-level session appends, for each trial of the final plan,
+  # the ten supervisor files launch.json, execution-receipt.json, command.txt, environment.json,
+  # stdout.log, stderr.log, check.stdout.log, check.stderr.log, manifest.yaml and raw-result.json under
+  # experiments/EXP-SEMBIN-cb5e25/runs/<run_id>/, in plan order (design-notes.md step 8).
+  write_scope:
+  - experiments/EXP-SEMBIN-cb5e25/runs
+  - experiments/EXP-SEMBIN-cb5e25/runbook-sessions
+  - experiments/EXP-SEMBIN-cb5e25/reports
+  archived_by: TASK-20261106-c5d001
+  inference:
+    degraded_allowed: false
+    fallback_allowed: false
+    independent_session_required: false
+    policy: executor-mechanical
+    reasoning_effort: null
+    delivery: interactive
+  budget:
+    maximum_runs: 587
+    memory_gb: 32
+    wall_clock_seconds: 50400
+  completion_gate:
+  - python3 tools/runbook.py lint experiments/EXP-SEMBIN-cb5e25/runbook.yaml prints LINT OK, and python3
+    tools/task_card.py lint on the approved card prints CARD OK.
+  - tools/runbook.py run executes session RBS-SEMBIN-19ce78 under DEC-20261106-e7576f; the journal holds
+    exactly one session_started entry.
+  - Fixtures F-1 to F-8 each pass in fixtures.json before any trial starts (SR-1); otherwise the session
+    stops at step S03 or S04 and the task reports that, with no trial run.
+  - Every planned trial's run directory holds manifest.yaml and raw-result.json, and its receipt is
+    output_validated or the session journal records why not.
+  - python3 tools/runbook.py verify for the session prints VERIFY OK, and the tool-written summary
+    reports the SR-4 and SR-5 flags false in summary.json.
+  - The specification, protocol, trial plan, runbook and every file under code/ are byte-unchanged,
+    and CODE_SHA256.json still matches (code/provenance.py --check exits 0).
+  - No trial process outlives the session, and no file outside write_scope changed.
+  return_format: Session directory, shared run directory, run directory count and the tool-written
+    summary, verbatim. The last line of each step output, the failure class if any, and nothing else.
+    No host latency, speedup, interpretation or deployed-curve statement.
+  execution:
+    approved_by: DEC-20261106-e7576f
+    experiment_id: EXP-SEMBIN-cb5e25
+    kind: run
+    mode: experiments
+    trial_plan: experiments/EXP-SEMBIN-cb5e25/trial-plan.json
+    trial_plan_sha256: TRIAL-PLAN-SHA256-TOKEN
