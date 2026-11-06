@@ -1,6 +1,8 @@
 # A13: paid public-log factor-base control
 
-Implementation and prospective preparation. No native A13 panel has run.
+The admitted panel completed 624 dependent systems and 1248 actual solver
+calls, with zero unknown systems. Producer measurements remain unverified
+under PCC-20261106-dcf58c. [pcc:unverified]
 
 Compare a source-free, independently hash-labelled known-log base with the
 unchanged norm-base collector on four fresh coefficient curves and eight
@@ -20,9 +22,10 @@ systems and 1248 actual solver calls; these are not independent target draws.
 
 See [design](design.md), [sources](literature.md), [input rules](inputs.json)
 and the retained [software-control output](validation/software-controls-20261106T2056Z.txt).
-Only tiny p<=211 controls have run, with admission explicitly mocked for the
-stream/export software test. Native release, prospective source binding,
-current S3 custody and the normal gate remain required.
+The native source/input publication, prospective freeze, current S3 custody,
+root release and normal gate preceded collection. Tiny p<=211 software controls
+use explicitly mocked admission only for their stream/export test. The one
+native attempt is consumed; its original deadline does not permit a rerun.
 
 ```sh
 /workspace/factor-base-venv/bin/python -m pytest \
@@ -30,19 +33,22 @@ current S3 custody and the normal gate remain required.
   research/prime_field_a13_execution_20261106/test_admin13.py -q
 ```
 
-After the complete source/input commit is pushed, prepare and freeze once:
+The paid known arm identifies16walk/22hash-offset/22general targets of32 at
+budget8. Norm relation/anchor views reuse these points across six source
+programs, so their dependent denominators differ; exact masks and all vectors
+are retained. Supplied labels are not learned rank. [pcc:unverified]
 
-```sh
-/workspace/factor-base-venv/bin/python research/prime_field_a13_execution_20261106/prepare.py protocol \
-  --source-commit <published-source-SHA> \
-  --out research/prime_field_a13_execution_20261106/protocol.json --freeze
-```
+- [Results and sampling/cost scope](RESULTS.md)
+- [Inspected report](reports/a13-paid-known-base-62d664/report.pdf)
+- [Database v16 preservation receipt](database/v16-paid-known-base/validation.json)
+- [Proof standing](PROOF-STATUS.md)
+- [Next ranked lead](next-leads.md)
 
-Publish that protocol and current canonical checkpoint before issuing an
-explicit root release. The supervisor enforces one attempt, one existing
-worker/thread, 2 GiB and a fresh deadline within 21600 CPU/wall seconds.
-No automatic retry or new paid capacity. Publish every raw outcome before
-rendering reports, then append the database/export/benchmark record and PR.
+Raw commit `a97b4b6a22de9156599257cffdc05d6b89569a95` preceded report rendering.
+The parent import failure before admission is retained in validation; the
+corrected PYTHONPATH selects the same pinned runtime helper. Native source
+bytes remained unchanged. Future experiments need their own prospective
+contracts; no automatic retry or new paid capacity is authorized here.
 
 Cost vectors retain incomplete generation/hash/pow/checker/Python/NumPy
 internal/OS/IO accounting and unisolated clock limits. Local controls and
