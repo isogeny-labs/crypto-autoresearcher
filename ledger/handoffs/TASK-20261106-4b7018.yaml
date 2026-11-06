@@ -1,0 +1,155 @@
+# TASK-20261106-4b7018: prospective executor handoff for EXP-ICPERF-127dbd (preview; canonical path ledger/handoffs/TASK-20261106-4b7018.yaml after approval).
+# Approves nothing. It takes effect only with DEC-20261106-c69de4 committed on origin/main and the
+# owner's explicit EKS go-ahead.
+handoff:
+  id: TASK-20261106-4b7018
+  from: coordinator
+  to: executor
+  role: executor
+  recorded_at: '2026-11-06'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Run the runbook experiments/EXP-ICPERF-127dbd/runbook.yaml as session RBS-ICPERF-e2a5c2
+    through tools/runbook.py (the /run route), from the relay of card
+    task-cards/CARD-EXP-ICPERF-127dbd-1.yaml. S01-probe, then S02-trials (T1 = S1 as
+    RUN-ICPERF-c7f69e, then T2 = S2 as RUN-ICPERF-6f784c, T2 depending on T1), then S03-verify.
+    Leave the observation files in the run directories. Do not interpret them and do not edit
+    any frozen byte.
+  uncertainty_reduced: >-
+    Whether the two pre-registered C1 sessions give valid, replay-certified counted
+    observations of the frozen C1 decision rule at fp28.
+  inputs:
+  - ledger/hypotheses/H-ICPERF-4cb536.yaml
+  - ledger/decisions/DEC-20261106-c69de4.yaml
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  - experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  - experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/check_job.py
+  - experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256
+  inputs_note: >-
+    The runbook, the card and the trial plan are the worker's context. The protocol, specs
+    and requests are bound bytes the runbook checks; the executor does not read them for
+    content.
+  constraints:
+  - >-
+    The relay must state, with evidence, before any command: DEC-20261106-c69de4 committed on
+    origin/main (commit sha); the owner's explicit EKS go-ahead (quoted, with timestamp);
+    scripts/checkpoint.sh gate exit 0 (the line); and the aws --version line of the binary
+    on the relay PATH, beginning aws-cli/1.46.2. Any missing item: stop before step 1.
+  - >-
+    The relay starts with PATH=/tmp/claude-0/awsvenv/bin:$PATH. The runbook carries no PATH
+    overlay. Do not install or substitute another aws binary.
+  - >-
+    Protocol section 10 budget gate lines, checked before each launch: S1 0 + 0.93108 +
+    0.93108 = 1.86216 <= 5.00; S2 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00 (actual S1 spend
+    from billing replaces its 0.93108 if available, never an estimate). A line above 5.00:
+    stop.
+  - >-
+    Each request launches once. Do not rerun, relaunch, reopen or resume this runbook
+    session on any failure; wait for a Coordinator decision. The -r2 requests are not part
+    of this session.
+  - >-
+    Do not edit specification.yaml, the trial plan, the runbook, the card, the inputs, the
+    implementation or the hypothesis. Do not declare additional artifacts.
+  - >-
+    A crash, timeout, deadline hit, host loss or refused manifest is an infrastructure or
+    instrument outcome, not a scientific result. Do not read verdict.json for a conclusion
+    and do not report U_w, L_w or any ratio as a finding.
+  - >-
+    Do not stage or commit anything. The snapshot archive is TASK-20261106-dccfdc and runs
+    alone after this task.
+  deliverables:
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-e2a5c2/journal.jsonl
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/launch.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/execution-receipt.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/command.txt
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/environment.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/check.stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/check.stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/request.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/launch.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/launcher/result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/launcher/build.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/session/records.jsonl
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/session/plan.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/launch.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/execution-receipt.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/command.txt
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/environment.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/check.stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/check.stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/request.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/launch.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/launcher/result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/launcher/build.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/session/records.jsonl
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/session/plan.json
+  artifact_paths_note: >-
+    The seven per-trial files declared in the trial plan, the supervisor-generated files, and
+    the undeclared build.json, records.jsonl and plan.json (RULINGS-COMPILE A2(a) and C2).
+    records.jsonl and plan.json are bound through SHA256SUMS, not through the runbook.
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/runs
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions
+  - experiments/EXP-ICPERF-127dbd/reports
+  archived_by: TASK-20261106-dccfdc
+  inference:
+    degraded_allowed: false
+    fallback_allowed: false
+    independent_session_required: false
+    policy: executor-mechanical
+    reasoning_effort: null
+    delivery: interactive
+  budget:
+    maximum_runs: 2
+    memory_gb: 4
+    wall_clock_seconds: 9600
+  completion_gate:
+  - python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml prints LINT OK with the runbook sha256 the card names.
+  - tools/runbook.py run executes session RBS-ICPERF-e2a5c2 under DEC-20261106-c69de4, and no other session.
+  - Each trial that ran holds its seven declared files, and its receipt is output_validated, or the session journal records why not.
+  - Each manifest.yaml passes tools/validate_ledger.py check_run and carries attack_claimed false.
+  - S03-verify ran on both sessions, or the journal records the step that stopped the session.
+  - The specification, trial plan, runbook, card, inputs and implementation bytes are unchanged, and no request was launched twice.
+  return_format: >-
+    Session directory, run directories, the tool-written summary and the session receipt.
+    No verdict, ratio, speedup, wall-time or rho-beating statement.
+  execution:
+    approved_by: DEC-20261106-c69de4
+    experiment_id: EXP-ICPERF-127dbd
+    kind: run
+    mode: experiments
+    trial_plan: experiments/EXP-ICPERF-127dbd/trial-plan.json
+    trial_plan_sha256: b8de54a14b3e32bf7ce12946ce9ee113a1e498f73906a20ee76fb26ca133e1c3
+  review_required: false
+  runs_launched: 0

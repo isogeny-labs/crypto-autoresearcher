@@ -1,0 +1,69 @@
+# TASK-20261106-788595: LEDGER ARCHIVE of the EXP-ICPERF-127dbd approval (DEC-20261106-c69de4), BATCH-0e0902.
+# Rename this file to the allocated id. Executed by the shell-holding top-level session in the coordinator
+# role. Runs ALONE. Zero runs. Authorizes no EKS spend.
+handoff:
+  id: TASK-20261106-788595
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-06'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  authorized_by: DEC-20261106-c69de4 approval_archive
+  hypothesis_ids: [H-ICPERF-4cb536]
+  objective: >-
+    Make the approval of EXP-ICPERF-127dbd durable in four commits, in the order of
+    DEC-20261106-c69de4 approval_archive.commit_order, reproducing every approved_bytes sha256,
+    with one push to a ready-for-review PR with auto-merge. Runs ALONE.
+  uncertainty_reduced: None about the mathematics. It makes the approval and its exact bytes durable together, or none of them.
+  inputs:
+    - scratchpad/next-candidate/packet/DEC-20261106-c69de4.yaml
+    - scratchpad/next-candidate/packet/preapproval-run3-pushed.json
+    - scratchpad/next-candidate/packet/preview/experiments/EXP-ICPERF-127dbd/specification.yaml
+    - scratchpad/next-candidate/packet/preview/coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+    - scratchpad/next-candidate/packet/preview/ledger/handoffs/TASK-20261106-4b7018.yaml
+    - scratchpad/next-candidate/packet/preview/ledger/handoffs/TASK-20261106-dccfdc.yaml
+  constraints:
+    - "AA-1 Merge origin/main first; never rebase. Record base_commit_checked and merge_outcome. A conflict inside a record stops the archive."
+    - "AA-2 Before staging, sha256 each byte copy and compare with DEC-20261106-c69de4 approved_bytes (spec 50172e2a..., plan b8de54a1... as committed, queue d882d91a..., executor handoff 5a8f732f...). Any mismatch: stop; nothing takes effect."
+    - "AA-3 After commit 2, python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml must print LINT OK with sha256 d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93. Otherwise stop before commit 3."
+    - "AA-4 Commit 3 holds the queue alone. Render it with tools/research_dispatch.py <queue> --ready-only; it must pass."
+    - "AA-5 Stage named paths one by one; no git add -A, git add . or directory adds. Run tools/validate_ledger.py (no new error over the recorded baseline) and tools/check_merge_hygiene.py before the last commit."
+    - "AA-6 One push of all four commits. Open or refresh the ready-for-review PR against main naming every record id, and enable auto-merge (gh pr merge <n> --auto --merge). Never amend, rebase or force-push."
+    - "AA-7 No relay and no launch. After merge, record python3 tools/newest_experiments.py --experiment EXP-ICPERF-127dbd --json; execution_state must be ready. Then hold for the owner's explicit EKS go-ahead."
+  deliverables:
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-788595/ledger-receipt.json with commit shas (null inside its own commit), base_commit_checked, merge_outcome, path_sha256, record_ids, the AA-2 comparisons, the AA-3 lint line, the AA-4 render result and the hygiene outcome.
+    - Four commits in the stated order, one push, a ready-for-review PR with auto-merge.
+  artifact_paths:
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-788595/ledger-receipt.json
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-788595/preapproval-report.json
+    - ledger/decisions/DEC-20261106-c69de4.yaml
+    - ledger/hypotheses/H-ICPERF-4cb536.yaml
+    - experiments/EXP-ICPERF-127dbd/specification.yaml
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+    - ledger/handoffs/TASK-20261106-4b7018.yaml
+    - ledger/handoffs/TASK-20261106-dccfdc.yaml
+    - ledger/handoffs/TASK-20261106-788595.yaml
+  write_scope:
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-788595
+  archived_by: TASK-20261106-788595
+  archive:
+    kind: ledger
+    binding_mode: content_at_commit
+    record_ids: [DEC-20261106-c69de4, EXP-ICPERF-127dbd, H-ICPERF-4cb536, TASK-20261106-4b7018, TASK-20261106-dccfdc, TASK-20261106-788595, BATCH-0e0902]
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: true
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  completion_gate:
+    - Every approved_bytes sha256 reproduced and recorded; the runbook lints LINT OK at d31f7178... on the repository tree.
+    - Four commits in the decision's order, one push, a ready-for-review PR with auto-merge naming every record id.
+    - validate_ledger shows no new error over baseline; the post-commit verifier accepts the receipt. Zero runs.
+  return_format: The ledger receipt, PR reference, the lint line and, after merge, the newest_experiments execution_state.
+  review_required: false
+  runs_launched: 0
