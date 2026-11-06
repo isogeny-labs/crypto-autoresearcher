@@ -1,0 +1,134 @@
+# Composing session's own claims, findings, prior-finding verdicts and lead dispositions.
+# Read by scripts/compose.py.
+header:
+  target: "all deep: origin/main of crypto-autoresearcher da442739db, isogeny-labs/crypto 3a7a0f98a, isogeny-labs/cryptanalysis 5bdfb496d; seven change areas since SHF-20261028-0f3f64 plus every finding of SHF-20261016-3caa6f, SHF-20261017-e4d7f6 and SHF-20261028-0f3f64"
+  prior: "prior.md (written before any producer artifact was read): expected loaders/refusals to land narrowly, run-manifest errors to recur, a non-isolating zk test, residual 'descends' prose, an overstated PFDR replay, ICPERF wording sliding into speed/latency/n=83 and a §5a fork, band numbers holding with no rank-finder port, and CI enforcement still missing with pull_request_target the riskiest change."
+  supersedes_nothing: true
+  original_cases: [research/sheriff/SHF-20261016-3caa6f, research/sheriff/SHF-20261017-e4d7f6, research/sheriff/SHF-20261028-0f3f64]
+  audit_session: "https://claude.ai/code/session_01TCbLH84PotMkHyFGFE4ifE"
+  commissioning_session: "https://claude.ai/code/session_016SURwTvgaQmnMnhpa1SLXQ (requested this audit and its Claude-Session commit trailer; it authored 91 commits on main including several records under audit - see finding SES-INDEP)"
+  impediments:
+    - "Executing code from the crypto and cryptanalysis clones (cargo test, their python, their Lean projects, paper builds) was refused by the session's permission policy as external code; every such check is not_covered. The deep sweep was therefore split: sweep.json scans all three repositories with --no-checkers; checks/sweep-home runs this repository's checkers only."
+    - "add_repo for isogeny-labs/crypto was refused; treeless read-only clones of the public repositories were used, cone-sparse for crypto."
+    - "crypto-autoresearcher is a sparse checkout (44,841 tracked files outside it): validate_ledger refuses to run sparse; the ledger reader ran it on a materialised tree with 2,607 empty placeholders for large non-record files."
+    - "Disk (about 1.4 GB free at peak) and memory (one Lean module OOM-killed, exit 137, during the deep sweep) limited the full formal build; see claim SES/C-LEAN-WS."
+    - "GitHub rulesets could not be read (no ruleset API; gh restricted to search); readers saw HTTP 403 from gh."
+reader:
+  role: "session (sheriff composer)"
+  model: claude-opus-5-5
+  joint: "B0/B1 binding and prior; sweeps and lead dispositions; Lean build, axioms and proves-too-much of TranslationDescent; B7 CI and merge gating (item 7, CI1); spot re-checks of ZKX-3, ICR-1 and LGX-3; composition"
+  report: REPORT.md
+prior_finding_verdicts:
+  - id: CI1
+    verdict: partially_fixed
+    reader: REPORT.md
+    why: "Workflow readback 2026-11-06 (checks/ci/merge_timings.yaml): validate, lean-verification, progress-fidelity, artifacts and lab-parity are active, so the gates exist and run. 13 workflow files remain disabled_manually, among them sync-branches, which AGENTS.md says runs every six hours. Running is not gating: see CIX-1."
+claims:
+  - id: SES/C-LEAN-TD
+    text: "CryptoResearch.Quotient.translation_commutes_iff_two_torsion: for every S, T in an additive commutative group, (forall P, -(P + S) + T = -(P + T + S)) iff 2 • T = 0"
+    location: formal/CryptoResearch/Quotient/TranslationDescent.lean:37
+    verdict: upheld_scoped
+    scoped_to: "Builds on Lean v4.35.0 with the pinned Mathlib (lake build CryptoResearch.Quotient.TranslationDescent, 631 jobs, exit 0); #print axioms gives [propext] only; the same proof script fails on the 3 • T variant (proves-too-much). Statement fidelity and the commutation-vs-descent gap: readers/lean.yaml. Formal-lane semantic_review stays pending; this screen does not substitute for it."
+    beats: {B3: pass, B9: pass}
+    evidence: [research/sheriff/SHF-20261106-a114e7/scripts/lean/axioms.out, research/sheriff/SHF-20261106-a114e7/scripts/lean/ptm_control.out, research/sheriff/SHF-20261106-a114e7/scripts/lean/axioms.lean]
+    findings: []
+  - id: SES/C-LEAN-WS
+    text: "formal workspace builds and AxiomAudit.lean audits every CryptoResearch.* theorem to the standard axioms (the formal workspace gate)"
+    location: "formal/AxiomAudit.lean; .github/workflows/lean-verification.yml"
+    verdict: not_covered
+    beats: {B3: not_covered}
+    evidence: [research/sheriff/SHF-20261106-a114e7/checks/sweep-home/sweep.json]
+    findings: []
+    note: "REPLACED_BY_REBUILD"
+  - id: SES/C-CI-MERGE
+    text: "Merge the PR ... when ... the current head has all required and applicable checks successful (or legitimately skipped), no check pending ... or failed"
+    location: "AGENTS.md, section Concurrency (many agents, many worktrees), Merge bullet"
+    verdict: broken
+    beats: {B7: fail}
+    evidence: [research/sheriff/SHF-20261106-a114e7/checks/ci/merge_timings.yaml]
+    findings: [CIX-1, CIX-2]
+  - id: SES/C-CI-2805
+    text: "pull_request_target: This trigger is limited to merged PRs on main. GitHub checks out the base-branch commit, whose first parent is the pre-merge main tip (validate compares the merged PR's ledger against that base)"
+    location: "ci_scope.py:115-123 and validate.yml:7-9,321-347 under .github (#2805, 9636ddf672)"
+    verdict: upheld_scoped
+    scoped_to: "The post-merge validate run checks out trusted base-branch code (no head checkout, contents: read), so the privileged trigger does not run PR-controlled code; for a closed+merged event it diffs HEAD^1..HEAD of whatever main commit it checks out. It does not verify that HEAD^2 is the PR head (back-to-back merges can attribute another PR's diff; latent, not observed), and its result is posted against the PR head SHA, which masks the pre-merge state (CIX-2, CIX-3). It is a post-merge check and gates nothing."
+    beats: {B7: pass}
+    evidence: [.github/scripts/ci_scope.py, .github/workflows/validate.yml, research/sheriff/SHF-20261106-a114e7/checks/ci/merge_timings.yaml]
+    findings: [CIX-3]
+  - id: SES/C-SWEEP
+    text: "sheriff sweep: canary passes (planted defects caught, look-alikes not flagged)"
+    location: research/sheriff/SHF-20261106-a114e7/sweep.json canary
+    verdict: upheld_scoped
+    scoped_to: "15 caught, 0 missed, 0 false positives in both sweeps (sweep.json, checks/sweep-home/sweep.json). Sibling checkers not run (external code); sparse checkouts make every passing checker partial."
+    beats: {B9: pass, B7: not_covered}
+    evidence: [research/sheriff/SHF-20261106-a114e7/sweep.json, research/sheriff/SHF-20261106-a114e7/checks/sweep-home/sweep.json]
+    findings: []
+findings:
+  - id: CIX-1
+    beat: B7
+    severity: major
+    claim_ids: [SES/C-CI-MERGE]
+    reader: REPORT.md
+    what: "ledger-and-harness and merge-hygiene still do not gate merge. PR #3065 (head 4a55bcc5f6) merged 2026-11-06T02:20:55Z while its own validate run 42149688322 (pull_request) still had ledger, merge-hygiene, ledger-and-harness, static-checks, records, changes and the harness shards running; only progress-fidelity, formal workspace, artifacts and fast checks had completed - consistent with exactly the three contexts problems/pr-merge-checks-not-enforced.md records as required. All later passed, which does not satisfy the pre-merge rule. PRs #3058 and #3059 did wait."
+    evidence: [research/sheriff/SHF-20261106-a114e7/checks/ci/merge_timings.yaml, problems/pr-merge-checks-not-enforced.md]
+    fix: "Add ledger-and-harness (the validate aggregate) and merge-hygiene to the main ruleset's required contexts, or disarm auto-merge whenever applicable checks extend beyond the required set; prove it on a controlled PR with a pending and a failing merge-hygiene (problems/post-merge-checks-mask-pre-merge-state.md)."
+  - id: CIX-2
+    beat: B7
+    severity: major
+    claim_ids: [SES/C-CI-MERGE]
+    reader: REPORT.md
+    what: "Post-merge pull_request_target (closed) runs post success against the PR head SHA and mask a failed pre-merge result. PR #3056 (head 51a2e0fa34) merged 02:20:46Z with lab-parity run 42137487481 (pull_request) concluded failure; run 42149730300 (pull_request_target, created 02:20:50Z, after merge) reports success on the same head SHA, so the PR rollup now reads green. The post-merge run validated main, not the merged head."
+    evidence: [research/sheriff/SHF-20261106-a114e7/checks/ci/merge_timings.yaml, .github/workflows/lab-parity.yml, .github/workflows/validate.yml]
+    fix: "Give post-merge jobs distinct check names or post them only on the merge commit; never let a post-merge run be read as the head's pre-merge result. Record #3056 in the problem record."
+  - id: CIX-3
+    beat: B7
+    severity: minor
+    claim_ids: [SES/C-CI-2805]
+    reader: REPORT.md
+    what: "ci_scope.resolve_base for pull_request_target takes HEAD^1 of the base-branch commit GitHub checked out, without checking HEAD^2 == pull_request.head.sha; with two merges before checkout the post-merge validation can diff another PR. Latent; not observed."
+    evidence: [.github/scripts/ci_scope.py]
+    fix: "Check out pull_request.merge_commit_sha explicitly, or refuse when HEAD^2 differs from the event's head sha."
+  - id: SES-INDEP
+    beat: B9
+    severity: major
+    claim_ids: []
+    reader: REPORT.md
+    what: "Independence and attribution. This case was run in session 01TCbLH84PotMkHyFGFE4ifE, which produced nothing under audit (no commit on main carries its id). It was commissioned by session 016SURwTvgaQmnMnhpa1SLXQ, which authored 91 commits on main including EV-ICPERF-08f6f9/DEC-20261105-8a9984, EV-ICPERF-84ff45/DEC-20261105-6e2616, the ICPERF approvals and lane, CORR-20261106-243c4d, #3059, and EV-PFDR-07d608/DEC-20261029-01405d/KN-FIND-c81e5b/CORR-20261029-1aaef6, and that session asked that this case's commits carry its Claude-Session trailer and that it merge this PR. The trailer therefore names the producer; reader LNX-3 read it as self-audit. The skill's refusal condition (this session produced the result) is not met, but the commissioner and merger is the producer of much of the audited scope."
+    evidence: [research/sheriff/SHF-20261106-a114e7/readers/lean.yaml]
+    fix: "Read this case's verdicts on ICPERF and PFDR records as an audit commissioned by their producer; the Coordinator should have a session that did not produce them merge the PR and cite the case. Commits from 2026-11-06 carry an Audit-Session trailer naming the auditing session."
+  - id: SES-UNLINKED
+    beat: B9
+    severity: minor
+    claim_ids: []
+    reader: REPORT.md
+    what: "A reader suggested overclaimed/unsupported for a claim without linking a finding; the reason is in that reader's claim text and checks."
+    evidence: [research/sheriff/SHF-20261106-a114e7/readers]
+    fix: "See the reader file for the claim; the producer narrows the wording or supplies the artifact."
+lead_dispositions:
+  - rule: "lean.sorry (10), lean.axiom (3): the 13 blockers"
+    repo: crypto-autoresearcher
+    disposition: dismissed
+    why: "All under research/lean_review_evidence_20261018/: planted negative-control fixtures of the Lean review gate, never imported by formal/ (same set as SHF-20261028-0f3f64)."
+  - rule: lean.no_axiom_audit (32)
+    repo: crypto-autoresearcher
+    disposition: dismissed
+    why: "Control-source fixtures, coordination/formal-reviews/*/raw/inputs snapshots of the formal workspace, and formal/smoke (one-import smoke project, no theorems)."
+  - rule: lean.unpinned
+    repo: crypto-autoresearcher
+    path: analysis/rigorous-lfd-solving-20261105/affine-refutation/AffineFibreRefutation.lean
+    disposition: dismissed
+    why: "Byte-identical (sha256 a36a2d5b...cc2) to formal/CryptoResearch/FallDegree/AffineFibreRefutation.lean, which is in the pinned workspace and its AxiomAudit namespace."
+  - rule: lean.no_axiom_audit
+    repo: cryptanalysis
+    path: verification/pqc-assay/lean
+    disposition: not_covered
+    why: "Modarith.lean (Init only) is audited by tools/lean/proof-gate.sh per VALIDATION.md:95 (propext, Quot.sound); not rerun here (external code)."
+  - rule: zk.no_negative_test
+    repo: crypto
+    path: src/zk/groth16.rs
+    disposition: confirmed
+    why: "Carried as S2N-9 (partially_fixed, readers/stark.yaml); Groth16 is documented non-functional."
+  - rule: "minor/info leads (B2 zk.trust_comment/proof_language, B3 lean.native_decide/vacuous/no_ci, B8 strong words, paper numbers) and 430 not_covered rows"
+    repo: all
+    disposition: not_covered
+    why: "Not individually read beyond the reader joints; the not_covered rows are outside-sparse roots and sibling checkers. A lead not looked at is not_covered for its claim, never clean."
