@@ -1,5 +1,11 @@
 # Fresh AP/hash source holdout
 
+**Proof standing:** these panel observations are an unverified producer assertion,
+recorded as `PCC-20261106-028bb6`; signed independent replay/recomputation and
+execution coverage are absent. The local scalar-certificate pass for
+`PCC-20261106-6f9635` has unverified standing and covers only the public toy
+scalar equation. See [proof-status correction](PROOF-STATUS.md). [pcc:unverified]
+
 The panel completed **432 paired row systems and 864 cold kernel-free solver
 evaluations**, on four fresh curves and 32 fresh public target points. Both
 solvers agree on every target outcome and scalar; all original-row, public-group,
@@ -133,7 +139,7 @@ The [v13 database receipt](database/v13-ap-holdout/generation-v13.json) verifies
 unchanged parentv12bytes, every inherited row, foreign keys, SQLite integrity and
 lossless gzip. It adds4curves/32fresh targets/432cases/864solver certificates and
 6746labelled-point records. Combined history:14curves,14bases,15executions.
-No canonical mathematical graph edge changes from these component observations.
+No canonical mathematical graph edge changes from these component observations. [pcc:unverified]
 
 The [next worklist](next-leads.md) ranks matched paid target translations against
 optimized randomized offsets on fresh holdouts, identifies the existing general

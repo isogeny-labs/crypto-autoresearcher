@@ -46,3 +46,5 @@ Counter coverage: new collector/solvers split Fp and Fr add/sub/mul/inv; legacy
 curve-generation field_add merges subtraction and rejected-fixture arithmetic is
 not fully primitive-expanded. Candidate point tests and inclusive process CPU,
 RSS and diagnostic clocks remain separate; no end-to-end advantage is inferred.
+
+Panel proof standing is an unverified producer assertion: [proof status](PROOF-STATUS.md), measurement claim `PCC-20261106-028bb6`; separate toy scalar certificate `PCC-20261106-6f9635` has a local pass, pending signed standing. [pcc:unverified]
