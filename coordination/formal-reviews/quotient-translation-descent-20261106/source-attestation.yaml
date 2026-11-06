@@ -1,0 +1,105 @@
+review_attestation:
+  task_id: TASK-20261106-6d4fa6
+  authorized_by: DEC-20261106-2f9a94
+  role: reviewer
+  joints_owned: [J1, J2, J3]
+  verdict:
+    J1: holds
+    J2: holds
+    J3: breaks
+  verdict_basis:
+    J1: >-
+      Fresh elaboration (source-evidence/J1Fidelity.out) gives
+      ∀ {E : Type u} [AddCommGroup E] (S T : E),
+      (∀ P, -(P + S) + T = -(P + T + S)) ↔ (2 : ℕ) • T = 0. The hypothesis-delta
+      table has no scoping or unjustified row. Both iff directions are constructed,
+      and the declaration's only axiom is propext. Kernel-decide checks agree on
+      ZMod 1, ZMod 2, ZMod 4 and ZMod 2 × ZMod 4, every S and T, with an instrument
+      control that detects a mutant. The theorem instantiates on
+      WeierstrassCurve.Affine.Point, including over AlgebraicClosure k.
+    J2: >-
+      Hosted lean-verification run 42167929729 (workflow_dispatch by this session
+      on main d5001059cd), job 127728745985 success. Receipt
+      quotient-translation-descent.json (sha256 db4824f8…6d90) is machine_verified
+      for the named declaration, with theorem, spec, toolchain and manifest sha256
+      equal to the pinned or bound values. Target axiom audit passed, [propext]
+      only. Locally, lake build +CryptoResearch.Quotient.TranslationDescent exited
+      0 and #print axioms gives [propext]. lean4checker was unavailable (no
+      v4.35 tag), so no independent kernel recheck was run.
+    J3: >-
+      Breaks: crypto-autoresearcher formal/targets/README.md:276-277 cites the
+      2026-10-29 check as an independent semantic review that is validated_scoped.
+      In isogeny-labs/crypto, papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex
+      (blob 2bb77127) states that 2-torsion descent and the Galbraith closure are
+      "Proved (Lean-formalized)". research/ic_mega_pass_20261031/brief/build_map_ideas_corpus.py
+      (blob e0d4af03) and MAP_ideas_corpus.json (blob f3c894d1) attach the Lean
+      name to the descent statement, the Corollary and the Galbraith closure.
+      The crypto evidence is code-search fragments only.
+  review_head: d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806
+  bound_hashes:
+    formal/CryptoResearch/Quotient/TranslationDescent.lean: 359a5cedaedd1be8aa728f7ca5e71e185377dbc9f2a9fed78e073321d6bf401e
+    formal/targets/quotient-translation-descent.yaml: 12fa5950f33f807c5968337053ab402edbd6392c6b088fe0c226f6bc44bdd24b
+    research/THM_QUOTIENT_DESCENT1.md: ac91debeb577ddcece45e13b190c048797662801a3a21e973df1325c9199b08e
+    formal/lean-toolchain: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+    formal/lake-manifest.json: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+  sources_read:
+    - AGENTS.md (working tree at git:a9717726f2fd6f59f213f43d05e16604a61fe998)
+    - CLAUDE.md (session context)
+    - git:a9717726f2fd6f59f213f43d05e16604a61fe998:coordination/formal-reviews/quotient-translation-descent-20261106/source-handoff.yaml
+    - git:a9717726f2fd6f59f213f43d05e16604a61fe998:coordination/formal-reviews/quotient-translation-descent-20261106/blind-handoff.yaml (lines 1-30 only, for the session-independence check; not a sibling report)
+    - git:a9717726f2fd6f59f213f43d05e16604a61fe998:.claude/skills/review-evidence/references/lean-review.md
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:formal/CryptoResearch/Quotient/TranslationDescent.lean
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:formal/targets/quotient-translation-descent.yaml
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:research/THM_QUOTIENT_DESCENT1.md
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:formal/lakefile.toml
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:formal/lake-manifest.json
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:formal/lean-toolchain
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:formal/setup.sh (lines 1-40)
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:.github/workflows/lean-verification.yml
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:.github/scripts/ci_scope.py (lines 100-145 and grep)
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:tools/verify_formal_targets.py (--help docstring)
+    - formal/.lake/packages/mathlib/Mathlib/AlgebraicGeometry/EllipticCurve/Affine/Point.lean (mathlib cfc55fc58714, grep around lines 28-50, 540-805)
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:formal/targets/README.md (lines 265-285)
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:docs/reports/2026-10-29-quotient-translation-descent-review/review.yaml (lines 1-60; read after J1/J2 draft)
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:docs/reports/2026-10-31-hosted-formal-receipts/receipts/quotient-translation-descent.json (fields; after J1/J2 draft)
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:docs/reports/2026-11-03-stark-affine-proof-review/reviews/TASK-20261103-bf45a0/hosted/quotient-translation-descent.json (fields; after J1/J2 draft)
+    - git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806:docs/reports/2026-11-03-odd-torsion-review/reviews/TASK-20261103-a1d703/raw/run-41494797344/quotient-translation-descent.json (fields; after J1/J2 draft)
+    - "J3 grep hits (matched lines with a few lines of context), all at git:d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806: ledger/decisions/DEC-20260920-11b44c.yaml, DEC-20260921-683a85.yaml, DEC-20260923-d86ff2.yaml, DEC-20261017-edb475.yaml; ledger/corrections/CORR-20260923-064d0d.yaml; ledger/goals/GOAL-GFPN-380702/goal.yaml; ledger/handoffs/TASK-20260923-aa277e.yaml; ledger/proposals/IDEA-20260920-0490f5.yaml; problems/formal-workspace-build-exceeds-16gb.md; problems/sheriff-sibling-execution-and-lean-not-covered-20261028.md; research/gfp5_deployed_curves_20260920.md; experiments/EXP-GFPN-05ff43/amendments/v1_to_v2_reanchor_and_arm_iii.yaml; docs/reports/2026-10-23-translation-commutes-rename/report.md; research/sheriff/SHF-20261028-0f3f64/{REPORT.md,findings.yaml,prior.md,readers/ledger.yaml}; the review_attestation.yaml files listed in source-report.md; docs/reports/2026-10-31-formal-target-links/links.json, 2026-10-25-formal-target-provenance/{provenance.json,corpus-pointer-coverage.json}, 2026-10-27 and 2026-10-30 formal-pointer-coverage/inventory.json (filtered fields)"
+    - git:a9717726f2fd6f59f213f43d05e16604a61fe998:ledger/decisions/DEC-20261106-2f9a94.yaml (grep lines naming quotient/translation only; file not read in full)
+    - git:a9717726f2fd6f59f213f43d05e16604a61fe998:pcc/ledger.jsonl (grep hits only)
+    - "isogeny-labs/crypto@12a2b3d85f1796a9e793b7206763691e994012cd via GitHub code-search text-match fragments only: papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex, research/ic_mega_pass_20261031/brief/build_map_ideas_corpus.py, research/ic_mega_pass_20261031/brief/MAP_ideas_corpus.json, research/ic_mega_pass_20261031/verdicts/MP-symmetry-2.refute.json, research/ic_mega_pass_20261031/verdicts/MP-additive_comb-1.collision.json, research/ic_mega_pass_20261031/ideas/symmetry.json, and further fragments listed in source-report.md J3"
+    - hosted artifact formal-verification-receipts (run 42167929729, artifact 13481426066), including quotient-translation-descent.json and dependency-pins-{before,after}.json
+    - hosted job logs, job 127728745985 (final 60 lines) and the job step listing
+  not_read:
+    - coordination/formal-reviews/quotient-translation-descent-20261106/blind-report.md
+    - coordination/formal-reviews/quotient-translation-descent-20261106/blind-attestation.yaml
+    - research/sheriff/SHF-20261106-a114e7/ (absent on both fetched refs)
+    - docs/reports/2026-10-29-quotient-translation-descent-review/review.md and controls.py (only grep-listed)
+  read_order: >-
+    Inputs, workspace and verifier first. J1 and J2 machine checks next. J1 and
+    J2 verdicts drafted at 2026-11-06T05:25:40Z, with J2 pending the hosted run.
+    Only after that were the prior-verdict records (2026-10-29 review.yaml,
+    archived receipts) read, plus the sheriff case lines that surfaced as J3 grep
+    hits. The hosted run completed at 05:56:29Z, and J2 was finalized from its
+    receipt.
+  read_sibling_reports: false
+  blind_from_respected: null
+  machine_checks:
+    local_module_build: {command: "lake build +CryptoResearch.Quotient.TranslationDescent", exit: 0}
+    local_control_file: {command: "lake env lean source-evidence/J1Fidelity.lean", exit: 0}
+    local_print_axioms: "[propext]"
+    hosted_gate: {run: 42167929729, job: 127728745985, conclusion: success, receipt_sha256: db4824f8c60e0513049e25d40c9013b7a6ccd1a73fa4a8e92c64a41a02d66d90, artifact_zip_sha256: 3cc06bc37af67614e5e8180a812ce17cc21f6c0cdf8d3e5c0ceb253ad55dfcb6}
+    lean4checker: not_available
+    full_local_workspace_gate: not_run (local disk allowance; the hosted run is the gate route)
+  infrastructure_notes:
+    - add_repo for isogeny-labs/crypto and isogeny-labs/cryptanalysis was denied by the session permission policy, and the contents API returned 403. J3 sibling evidence is code-search fragments only.
+  session_id: session_01TCbLH8Dra5BPD9qPmhUPhz
+  session_lineage: >-
+    parent_session_id session_01TCbLH7HXJioSw2Bzx7P9p9 (the plan author), from
+    get_session. This is a separate session with its own context, not one of the
+    three sessions the handoff excludes, and not the session given
+    TASK-20261106-bb6ab4. The Coordinator should weigh the lineage when composing.
+  model_id: claude-opus-5-5
+  model_id_provenance: get_session session_context.model and external_metadata.last_served_model
+  commit_trailer: "Claude-Session: https://claude.ai/code/session_01TCbLH8Dra5BPD9qPmhUPhz"
+  experiment_runs: 0

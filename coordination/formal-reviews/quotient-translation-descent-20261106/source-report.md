@@ -18,12 +18,12 @@
 | Joint | Verdict | One-line basis |
 | --- | --- | --- |
 | J1 | **holds** | The fresh elaborated type is exactly the claim. The hypothesis-delta table has no `scoping` or `unjustified` row. Both directions are proved, and the only axiom is `propext`. The kernel-`decide` checks agree on every (S, T) in ZMod 1, ZMod 2, ZMod 4 and ZMod 2 × ZMod 4. The theorem instantiates on Mathlib's elliptic-curve point group. |
-| J2 | **HOSTED_VERDICT** | HOSTED_BASIS |
+| J2 | **holds** | The hosted `lean-verification` run 42167929729 was dispatched by this session on main `d5001059cd`. Its formal-workspace job succeeded: `lake build` and `tools/verify_formal_targets.py --min-verified 66` both passed. The receipt for the exact declaration is `machine_verified` and binds all four pinned or bound hashes. The fresh `#print axioms` output is `[propext]`, both locally and hosted. |
 | J3 | **breaks** | `formal/targets/README.md:276-277` (live) cites the 2026-10-29 check as an "independent semantic review" that is `validated_scoped`. In isogeny-labs/crypto, `companion_catalogue.tex` and `build_map_ideas_corpus.py` present descent, the Corollary and the Galbraith closure as Lean-formalized. |
 
 ## Pinned inputs and head
 
-The review used head `d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806` (origin/main at 2026-11-06T05:0xZ;
+The review used head `d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806` (origin/main as fetched at 2026-11-06 about 05:05 UTC;
 at or after fd2697b3e8). Bytes were checked with `git show <rev>:<path> | sha256sum` and in the checkout.
 
 | Path | sha256 at d5001059cd | Pinned in handoff |
@@ -144,7 +144,7 @@ cd formal && lake env lean ../coordination/formal-reviews/quotient-translation-d
 exit 0 (real 3.7s); output: source-evidence/J1Fidelity.out
 ```
 
-## J2: machine evidence (HOSTED_VERDICT)
+## J2: machine evidence (holds)
 
 ### Fresh local evidence (module-scope check, labelled as such)
 
@@ -176,7 +176,46 @@ lists no tag for v4.34 or v4.35. No independent kernel replay was run, and none 
 
 ### Fresh hosted evidence (primary route)
 
-HOSTED_SECTION
+This session dispatched `lean-verification.yml` with `workflow_dispatch` on `main` at 2026-11-06T05:21:19Z.
+
+- Run: https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/42167929729 (run 3239, attempt 1, head `d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806`).
+- Job `formal workspace (lake build + axiom audit)` 127728745985: **success**, 05:21:37Z to 05:56:29Z. These steps all passed:
+  - "Verify actual installed dependency source pins before proof checks"
+  - "Build the workspace" (`lake build`, 05:26:19Z to 05:46:22Z)
+  - "Machine-check every discharged formal target" (`python3 tools/verify_formal_targets.py --artifact-dir formal-receipts --min-verified 66`, 05:46:22Z to 05:55:28Z)
+  - the dependency-pin check after the proof checks
+- Job `kernel-controls` 127728746028: success (positive and negative controls through the harness).
+- Artifact `formal-verification-receipts`, id 13481426066. Zip sha256 `3cc06bc37af67614e5e8180a812ce17cc21f6c0cdf8d3e5c0ceb253ad55dfcb6`; the GitHub-reported digest equals the sha256 of the local download. It holds 122 files, and all 120 target receipts report `machine_verified`.
+
+Receipt `source-evidence/hosted-42167929729/quotient-translation-descent.json`, sha256 `db4824f8c60e0513049e25d40c9013b7a6ccd1a73fa4a8e92c64a41a02d66d90`:
+
+| Field | Value | Equals pinned or bound |
+| --- | --- | --- |
+| verification.status | machine_verified (build_passed true, axiom_audit_passed true, forbidden_constructs []) | — |
+| verification.theorem_name / task.theorem_name | CryptoResearch.Quotient.translation_commutes_iff_two_torsion | the named declaration |
+| task.claim | the yaml claim, verbatim | yes |
+| provenance.source_commit | d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806 | the review head |
+| provenance.theorem_sha256 | 359a5ced…f401e | yes |
+| provenance.task_spec_sha256 | 12fa5950…bd24b | yes |
+| provenance.lean_toolchain_sha256 | ca5f1f60…330c | yes (bound) |
+| provenance.lake_manifest_sha256 | b46170db…cec7 | yes (bound) |
+| provenance.workspace_inputs["CryptoResearch/Quotient/TranslationDescent.lean"] | 359a5ced…f401e | yes. The module is in the gate's audited inputs |
+| provenance.lean_version | Lean 4.35.0, commit eb6cafb7290e | same as the local build |
+| infrastructure_failure | null | — |
+| semantic_review.status | pending | (this round) |
+
+Audit log (`source-evidence/hosted-42167929729/audit_log.txt`): "axiom audit: 1285 theorem(s), all
+standard axioms only"; "target axiom audit passed: CryptoResearch.Quotient.translation_commutes_iff_two_torsion".
+It prints the same type as the local elaboration, and `'…translation_commutes_iff_two_torsion' depends on axioms: [propext]`.
+`dependency-pins-before.json` and `dependency-pins-after.json` both report `passed: true` with
+`manifest_sha256` b46170db…cec7. They also report `binary_or_independent_kernel_recheck: false`,
+which is the trust limit disclosed above.
+
+The receipt's `build_log` and `audit_log` say "Reused fresh … from this invocation". The workspace
+build and project audit ran once in this job, and the per-target verification reused them with all
+inputs unchanged. As lean-review.md section 2 says, a receipt's JSON does not by itself
+authenticate execution. The run, job, step timings and artifact digest above are the hosted
+provenance, and the local build and `#print axioms` are independent corroboration on this machine.
 
 ### Archived receipts (corroboration only, not J2 evidence)
 
@@ -267,7 +306,24 @@ whether a separate data source generates that row is unresolved.
 
 ## Evidence files
 
-EVIDENCE_TABLE
+| File | sha256 |
+| --- | --- |
+| `source-evidence/J1Fidelity.lean` | `5cd9ae19fe2fd3caadfacac943ca47f9ed1bd6226081ea7318756b3e70d93c90` |
+| `source-evidence/J1Fidelity.out` | `7f76e741bb0c8cf0347a9b5546e57f8aa445e8cadce04e25980cc0033022136b` |
+| `source-evidence/hosted-42167929729/artifact-SHA256SUMS` | `3e19d5aed3e2db50aa795a6b82baf12d7f62a9f8092e839aea20d2d363beed08` |
+| `source-evidence/hosted-42167929729/artifact-zip.sha256` | `fe548bb0e78627de445094d81ba888a5d1017201973ad1120c0f20f2bffb400f` |
+| `source-evidence/hosted-42167929729/audit_log.txt` | `d75e23966fd5f785750ea5ca7abc9c7249907b213988b41ccec1c5db2c6669d4` |
+| `source-evidence/hosted-42167929729/dependency-pins-after.json` | `7b0e77d5881e525ae397dad9df5ef31220117b5dc0d9d1c17cfd03eb6499c7c5` |
+| `source-evidence/hosted-42167929729/dependency-pins-before.json` | `7b0e77d5881e525ae397dad9df5ef31220117b5dc0d9d1c17cfd03eb6499c7c5` |
+| `source-evidence/hosted-42167929729/quotient-translation-descent.json` | `db4824f8c60e0513049e25d40c9013b7a6ccd1a73fa4a8e92c64a41a02d66d90` |
+| `source-evidence/installed-package-revs.txt` | `ee96941369bccb46793fd1281cd7a099d3eb330b23a51d7ec786abffe493d958` |
+| `source-evidence/j3-autoresearcher-hits-origin-main.txt.gz` | `ef33d947e2e9e0b619cdba42099599f7b6912726abfe046afe197e6a8435c25a` |
+| `source-evidence/j3-autoresearcher-prose-hits.txt` | `d25c42e8128e6ce3572bb7a78164a19b1eb5592b991727a656465e5e3a28e524` |
+| `source-evidence/local-cache-get.log` | `84bfa833983f633881d211eecbfc8ba909b3022885bc987be5bed5091d582421` |
+| `source-evidence/local-lake-build-module.log` | `d7c21ba6c84a095d3edb345f08a56748468c5f3384e173977957c31cc17cc5b5` |
+| `source-evidence/manifest-revs.txt` | `03a64ebf8db507946d4f505af84715b18eba56ce3c4975d264ba8f937d1771f8` |
+| `source-evidence/search-THM_QUOTIENT_DESCENT1.json` | `955743c26501fa9c4c050b683a57081327b55ccc6e62779fab62a0935cb11546` |
+| `source-evidence/search-translation_commutes_iff_two_torsion.json` | `b221294c47ab826f0bbbcc251ce4a3d7c9cf9980f6d7357a4495f59bb33cd761` |
 
 ## Limits
 
