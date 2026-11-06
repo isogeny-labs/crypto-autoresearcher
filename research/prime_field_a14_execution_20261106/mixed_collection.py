@@ -150,7 +150,9 @@ def collect(prepared, target_generation, rules, event, capability=None):
     meter = core.ProgressMeter(f, event, dict(kind='native_collection'))
     index = QueryIndex(f, prepared['geometry'], rules, meter, event, capability)
     arms = {}
-    for schedule, values in prepared['selection']['orders'].items():
+    schedules = [kind+str(seed) for seed in rules['seeds'] for kind in ('ap', 'hash')]
+    for schedule in schedules if prepared['selection']['orders'] else []:
+        values = prepared['selection']['orders'][schedule]
         ap = prepared['selection']['ap'].get(schedule)
         stream = source_construct.build(f, rules, prepared['initial'], values,
             'ap' if ap is not None else 'hash', ap, schedule, event, capability)

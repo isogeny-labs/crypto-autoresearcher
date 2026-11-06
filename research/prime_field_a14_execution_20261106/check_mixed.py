@@ -143,7 +143,9 @@ def collection(prepared, rules, actual):
         raise ValueError('source schedule census')
     oracle = Oracle(f, prepared['geometry'])
     endpoints, results = [], []
-    for schedule, values in prepared['selection']['orders'].items():
+    order = [kind+str(seed) for seed in rules['seeds'] for kind in ('ap', 'hash')]
+    for schedule in order if prepared['selection']['orders'] else []:
+        values = prepared['selection']['orders'][schedule]
         arm = actual['arms'][schedule]
         ap = prepared['selection']['ap'].get(schedule)
         check_construct.check(f, rules, prepared['initial'], values, 'ap' if ap else 'hash', ap, arm['construction'])
@@ -189,7 +191,58 @@ def collection(prepared, rules, actual):
         oracle.check(query, actual['pairs'])
         endpoints.append(target['point'])
     geometric = dict(f, factor_base=[f['factor_base'][j] for j in prepared['geometry']['native_indices']])
-    batch_check.records(dict(fixture=geometric), actual['query_engine_records'], endpoints)
+    engines = batch_check.records(dict(fixture=geometric), actual['query_engine_records'], endpoints)
     known_checks.phase_counts(dict(phases=actual['collection_phases'], counters=actual['collection_counters']))
     return dict(checked=True, schedules=results, natural_targets=len(targets),
-                physical_query_endpoints=len(endpoints), geometric_atoms=len(prepared['geometry']['points'])), oracle
+                physical_query_endpoints=len(endpoints), geometric_atoms=len(prepared['geometry']['points']),
+                query_engines=engines), oracle
+
+
+def targets(cell, rules, actual):
+    f = cell['fixture']
+    p, uid = f['p'], f['ec1']['curve_uid']
+    roots = {}
+    for y in range(p):
+        roots.setdefault(y*y % p, y)
+    result, trace, used = [], [], set()
+    for index in range(rules['targets']):
+        for counter in range(rules['maximum_target_candidates']):
+            value = '|'.join(map(str, (rules['domain'], 'target', uid, index, counter)))
+            x = int(sha256(value.encode()).hexdigest(), 16) % p
+            y = roots.get((x**3+f['a']*x+f['b']) % p)
+            point = None if y is None else (x, y)
+            reason = 'not_rational' if y is None else 'duplicate_target' if point in used else 'selected'
+            trace.append(dict(target_index=index, counter=counter, x=x, y=y, reason=reason))
+            if reason == 'selected':
+                result.append(dict(index=index, point=list(point)))
+                used.add(point)
+                break
+        else:
+            raise ValueError('independent public target candidate gate')
+    if actual != dict(targets=result, search_trace=trace):
+        raise ValueError('independent target points or candidate trace')
+    return dict(checked=True, targets=len(result), candidates=len(trace))
+
+
+def target_cache(prepared, collected, cache, oracle):
+    if len(cache.records) != len(cache.lookup):
+        raise ValueError('target cache geometric census')
+    natural = collected['natural_records']
+    for i, record in enumerate(cache.records):
+        point = None if record['point'] is None else tuple(record['point'])
+        if record['id'] != i or cache.lookup.get(point) != i:
+            raise ValueError('target cache point alias')
+        if record['seeded_natural'] is not (i < len(natural)):
+            raise ValueError('target cache seeded scope')
+        if i < len(natural) and any(record[key] != value for key, value in natural[i].items()):
+            raise ValueError('target cache imported nonnatural knowledge')
+        expected_phases = ['natural_target_queries'] if i < len(natural) else ['target_query_'+str(i)]
+        if record['phase_ids'] != expected_phases:
+            raise ValueError('target cache paid phase reference')
+        oracle.check(record, collected['pairs'])
+    f = prepared['cell']['fixture']
+    geometric = dict(f, factor_base=[f['factor_base'][j] for j in prepared['geometry']['native_indices']])
+    value = batch_check.records(dict(fixture=geometric), cache.engines.records[cache.engine_start:],
+        [v['point'] for v in cache.records if not v['seeded_natural']], start=cache.engine_start)
+    known_checks.phase_counts(dict(phases=cache.meter.phases, counters=cache.meter.counters()))
+    return dict(checked=True, records=len(cache.records), query_engines=value)

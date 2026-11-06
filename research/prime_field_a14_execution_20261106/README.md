@@ -54,15 +54,24 @@ Implemented components:
   research/prime_field_a14_execution_20261106/test_construct.py \
   research/prime_field_a14_execution_20261106/test_mixed.py \
   research/prime_field_a14_execution_20261106/test_native.py \
-  research/prime_field_a14_execution_20261106/test_information.py -q
+  research/prime_field_a14_execution_20261106/test_information.py \
+  research/prime_field_a14_execution_20261106/test_runner14.py -q
 ```
 
-Latest additive component receipt: [122 software controls](validation/mixed-native-information-component-status.json).
+Latest complete pipeline receipt: [127 software controls](validation/runnable-source-software-status.json).
+Earlier additive component receipt: [122 software controls](validation/mixed-native-information-component-status.json).
 The small known48 budget3 row-cap refusal is retained in the adjacent preparation
 failure receipt; it changes no future native limits.
 
-Still required: complete driver/export/source bindings and cold cost references, prospective
-protocol/current S3/root release and ordinary admission. No helper labels or
+`driver14.py`, `analyze14.py`, `custody14.py`, `cold14.py`, `prepare14.py`,
+`streams14.py` and `supervise14.py` now implement the admitted runner, raw
+journals, full export, cold counter references and one-attempt custody.
+The tiny mocked-admission control covers all four programs, both solver arms,
+information audits, counter conservation and altered-row refusal.
+See [the exact implementation handoff](execution-plan.md).
+
+Still required: publish and assess exact source/input/protocol bytes, prospectively
+freeze, current actual S3/root release and ordinary admission. No helper labels or
 known-base certainty may be counted as learned rank. No cross-base Delta is
 used against known32. One existing worker/thread,2GiB,21600CPU/wall seconds,
 one future attempt with no automatic retry or new paid capacity.

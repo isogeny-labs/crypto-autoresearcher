@@ -106,3 +106,13 @@ def test_hybrid_cannot_accept_known32_as_a_free_helper_prefix(controls):
     original, built, _, _, _ = controls
     with pytest.raises(ValueError, match='separate paid helper16'):
         mixed_collection.prepare(original, rules(), built[32], lambda v: None)
+
+
+def test_multiple_seed_query_order_survives_sorted_json_reload(controls):
+    original = controls[0]
+    value = dict(rules(), seeds=[0, 1])
+    prepared = mixed_collection.prepare(original, value, None, lambda v: None)
+    collected = mixed_collection.collect(prepared, controls[3], value, lambda v: None)
+    checked, _ = check_mixed.collection(json.loads(json.dumps(prepared, sort_keys=True)), value,
+                                        json.loads(json.dumps(collected, sort_keys=True)))
+    assert checked['physical_query_endpoints'] == 66
