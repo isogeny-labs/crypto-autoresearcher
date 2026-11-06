@@ -1,0 +1,52 @@
+{
+  "schema": "research-visual-inspection/v1",
+  "task_id": "TASK-20261106-2ff273",
+  "pdf": "report.pdf",
+  "pdf_sha256": "12d3e772b48b6ef526b9537c169ef51e9b52216f1622403a9ca64ad98d501edb",
+  "page_count": 3,
+  "all_pages_actually_viewed": true,
+  "pages": [
+    {
+      "page": 1,
+      "result": "legible; diagram labels and F1/F2 findings visible; no clipping observed"
+    },
+    {
+      "page": 2,
+      "result": "legible; checks and additional scoped gaps visible; no clipping observed"
+    },
+    {
+      "page": 3,
+      "result": "legible; source pins, citations, independence and budget visible; no clipping observed"
+    }
+  ],
+  "render": {
+    "compile_command": "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python -c \"import typst; typst.compile('/tmp/independent-reference-source-review-render-20261106/report.typ', output='/tmp/independent-reference-source-review-20261106/report.pdf', root='/')\"",
+    "raster_command": "pdftoppm -r 65 -png /tmp/independent-reference-source-review-20261106/report.pdf /tmp/independent-reference-source-review-render-20261106/page",
+    "pdfinfo_command": "pdfinfo /tmp/independent-reference-source-review-20261106/report.pdf",
+    "attempts": [
+      {
+        "result": "TypstError: unclosed label",
+        "exit_code": 1
+      },
+      {
+        "result": "TypstError: file not found (searched at /tmp/tmp/independent-reference-source-review-20261106/diagram.svg)",
+        "exit_code": 1
+      },
+      {
+        "result": "success; Creator Typst0.15.0; PDF1.7; A4;3pages;55833bytes",
+        "exit_code": 0
+      }
+    ],
+    "corrections": "Escaped literal < signs in editable Typst source and used filesystem root=/ for the embedded absolute SVG path. No scientific retry occurred.",
+    "page_view_tool": "tools.view_image via functions.exec",
+    "pages_viewed": [
+      1,
+      2,
+      3
+    ]
+  },
+  "inspected_at_epoch_seconds": 1793982743.1355922,
+  "limitations": [
+    "Page images viewed at65dpi; no print or accessibility audit."
+  ]
+}
