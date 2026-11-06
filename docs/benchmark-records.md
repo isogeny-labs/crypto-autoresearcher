@@ -43,6 +43,10 @@ with `--verify-s3` HEADs every object.
 
 ### Closed raw data when a checkout path is reused
 
+`living_paths` remains an accepted configuration field for evolving catalogs.
+It never waives byte verification: configured and other changed paths follow
+the same strict archival checks below.
+
 The record and its original hashes, byte counts, URI, metrics and status stay
 immutable. A newer generated file at the same checkout path is not the raw
 data of the historical run. For a closed record only, the checker can verify

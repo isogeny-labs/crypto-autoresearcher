@@ -1,0 +1,76 @@
+"""Tiny affine/public controls for the A9 four-arm functional experiment."""
+from pathlib import Path
+from copy import deepcopy
+import importlib.util
+import pytest
+ROOT=Path(__file__).resolve().parents[1]
+def load(name):
+ p=ROOT/'research/prime_field_a9_execution_20261105'/(name+'.py');s=importlib.util.spec_from_file_location('_tiny_a9_'+name,p);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+core=load('core');checker=load('check');F=dict(p=101,r=101,a=2,b=3,P=[1,1],software_control=True);ARMS=('dense_joint','dense_cancel','sparse_joint','sparse_cancel')
+def case():return dict(width=3,target_count=3,modulus=101,source=[([1,0,0],2)],target=[dict(target_index=0,vector=[0,1,0],rhs=0),dict(target_index=0,vector=[0,2,0],rhs=3),dict(target_index=1,vector=[0,1,1],rhs=5)],targets=[])
+def run(c):return [core.solve(c,arm,core.Meter(F)) for arm in ARMS]
+
+def test_complete_factorial_affine_oracle_and_unchanged_certificates():
+ c=case();r=run(c);v=checker.check(c,r,None)
+ assert v['factorial_arms']==4 and v['all_modes_equal'] and v['identified']==1
+ for dense,sparse in ((r[0],r[2]),(r[1],r[3])):
+  assert dense['recoveries']==sparse['recoveries'] and dense['system']==sparse['system']
+  assert dense['counters'].get('functional_coefficients_scanned')is None
+  assert sparse['counters']['functional_coefficients_scanned']>0
+  assert sparse['counters'].get('Fr.field_mul',0)<=dense['counters'].get('Fr.field_mul',0)
+  assert sparse['counters'].get('Fr.field_sub',0)==dense['counters'].get('Fr.field_sub',0)
+
+@pytest.mark.parametrize('vector',[[0,0,0],[0,1,0],[0,100,0],[0,2,0],[1,100,0],[0,0,1]])
+def test_support_unit_nonunit_and_zero_syndromes(vector):
+ meters=[core.Meter(F),core.Meter(F)];systems=[core.CertifiedSystem(3,meters[0]),core.SparseCertifiedSystem(3,meters[1])]
+ for s in systems:s.add([1,0,0],2)
+ values=[s.identify(vector,s.kernel()) for s in systems]
+ assert values[0]==values[1]
+ if vector==[0,1,0]:assert meters[1].other['kernel_coordinate_reads']==2
+ if vector==[0,100,0]:assert meters[1].other.get('kernel_coordinate_reads',0)==0
+
+@pytest.mark.parametrize('kind',['weight','syndrome','phase','count','scan','support','coordinate','ident_sub','ident_inv','mode'])
+def test_independent_checks_refuse_factorial_corruption(kind):
+ c=case();r=run(c)
+ if kind=='weight':r[2]['recoveries'][0]['original_row_weights'][0]+=1
+ elif kind=='syndrome':r[2]['recoveries'][0]['syndrome'].append(1)
+ elif kind=='phase':r[2]['phases'][0]['counters']['Fr.field_add']=1;r[2]['counters']['Fr.field_add']=r[2]['counters'].get('Fr.field_add',0)+1
+ elif kind=='count':r[2]['counters']['Fr.field_mul']+=1
+ elif kind=='scan':
+  r[2]['counters']['functional_coefficients_scanned']+=1
+  next(p for p in r[2]['phases'] if p['phase']=='identification')['counters']['functional_coefficients_scanned']+=1
+ elif kind in ('support','coordinate','ident_sub','ident_inv'):
+  key={'support':'functional_support_entries','coordinate':'kernel_coordinate_reads','ident_sub':'Fr.field_sub','ident_inv':'Fr.field_inv'}[kind]
+  r[2]['counters'][key]=r[2]['counters'].get(key,0)+1
+  phase=next(p for p in r[2]['phases'] if p['phase']=='identification');phase['counters'][key]=phase['counters'].get(key,0)+1
+ elif kind=='mode':r[3]['arm']='sparse_joint'
+ with pytest.raises(ValueError):checker.check(c,r,None)
+
+
+def test_public_and_retention_failure_controls(monkeypatch):
+ fixture=next(f for b in range(1,101) if (f:=core.old.describe(101,2,b,8)[0])is not None and f['r']!=101);fixture['software_control']=True
+ q=core.Meter(fixture).e.mul(3,tuple(fixture['P']));c=dict(width=1,target_count=1,modulus=fixture['r'],source=[([1],3)],target=[dict(target_index=0,vector=[1],rhs=0)],targets=[dict(index=0,point=list(q))]);results=core.compare(c,fixture);checker.check(c,results,fixture)
+ oldsolve=core.solve;retained=[];failed=[]
+ def fault(case,arm,meter):
+  if arm=='sparse_joint':
+   def fail():meter.ring.mul(1,2);raise ValueError('third-arm fault')
+   meter.stage('injected_failure',fail)
+  return oldsolve(case,arm,meter)
+ monkeypatch.setattr(core,'solve',fault)
+ with pytest.raises(ValueError,match='third-arm'):core.compare(c,fixture,on_result=retained.append,on_failure=lambda arm,phases,result,error:failed.append((arm,phases)))
+ assert [r['arm'] for r in retained]==['dense_joint','dense_cancel']
+ assert failed[0][1][-1]['status']=='failed' and failed[0][1][-1]['counters']['Fr.field_mul']==1
+ with pytest.raises(ValueError,match='admission'):core.compare(c,{**fixture,'software_control':False})
+
+@pytest.mark.parametrize('width,nt',[(0,0),(0,2),(2,0),(2,2)])
+def test_empty_cases_and_deterministic_aa(width,nt):
+ c=dict(width=width,target_count=nt,modulus=101,source=[([0]*width,0)],target=[],targets=[]);a=run(c);b=run(c);checker.check(c,a,None)
+ for x,y in zip(a,b,strict=True):assert x['system']==y['system'] and x['recoveries']==y['recoveries'] and x['counters']==y['counters']
+
+
+def test_tiny_dense_modes_replay_original_a8_phase_vectors():
+ spec=importlib.util.spec_from_file_location('_tiny_original_a8',ROOT/'research/prime_field_a8_execution_20261105/core.py');a8=importlib.util.module_from_spec(spec);spec.loader.exec_module(a8)
+ c=case();control=dict(results=[a8.solve(c,arm,a8.Meter(F)) for arm in ('full_joint','cancellation_first')])
+ assert checker.check(c,run(c),None,control=control)['a8_dense_control']
+ bad=deepcopy(control);bad['results'][0]['counters']['Fr.field_mul']+=1
+ with pytest.raises(ValueError,match='A8 dense'):checker.check(c,run(c),None,control=bad)

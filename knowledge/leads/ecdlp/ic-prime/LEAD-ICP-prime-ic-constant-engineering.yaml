@@ -28,8 +28,12 @@ next_action:
     at 32 bits only, a regression at 24 bits, and 28 bits undecidable, with no 28-bit successor (DEC-20261029-5eb8e6 (B)).
     At 32 bits the filter cut target_PDP by 25.9 % but that phase is 29 % of the solve wall, and target_query (56 %) is untouched
     (descriptive phase sums), so further work on the probe side is bounded by the PDP share. Still open on this item: software
-    prefetch, or a compact lane layout (crypto research/prime_ic_program_20261029/hashtable_prefetch, uncompiled layout=lines
-    patch and draft protocol). Scope note: under the owner criterion of 2026-10-24 these pair-table pipelines are the prime-table
+    prefetch, or a compact lane layout. Its implementation is on crypto main as the opt-in `layout=lines` oracle option (cache-line
+    pair index plus prefetched line guard; PR #3116, commit afb671d56c, 2026-11-01), so the hashtable_prefetch patch.diff is
+    superseded and must not be re-ported. Its fp20 tournament (crypto research/ic_line_layout_tournament_20261031) is blocked at
+    the EKS L2 isolation gate on the GitHub-launcher route: both v1 sessions exited 42, and the single v2 qualification failed,
+    which stopped v2; v3 (PROTOCOL-V3.md) is frozen but undispatched (crypto problems/ic-line-layout-eks-failure-cause.md). The
+    next step is to dispatch v3 once that route passes L2, or under a v3 amendment that moves it to the agent-submitted isolab-eks route. Scope note: under the owner criterion of 2026-10-24 these pair-table pipelines are the prime-table
     track (reference only, never ranked against the algebraic track; docs/ic/SWEEPER.md), so a gain here improves the reference
     baseline, not a counted algebraic IC row. Pending: crypto research/prime_ic_program_20261029/DECISIONS.md R1 (Option C,
     delegated, confirmed when its PR merges) makes these pipelines a counted generic-decomposition track, so a verified gain

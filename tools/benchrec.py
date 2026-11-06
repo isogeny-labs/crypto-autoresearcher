@@ -11,6 +11,8 @@ report is labelled derived.
 One record per run, schema `bench.record/v1`, at
 `<records_dir>/<YYYYMMDD>T<HHMM>Z-<slug>.json` (default `benchmarks/records/`;
 `.benchrec.json` at the repository root overrides the layout).
+`living_paths` may name evolving catalogs for configuration compatibility;
+a changed checkout still requires exact original archive bytes for a closed run.
 
     benchrec.py init --slug SLUG --problem PROBLEM [--curve UID] [--entry DIR]
     benchrec.py run RECORD -- COMMAND...          run a launcher under the record
@@ -57,6 +59,7 @@ DEFAULT_CONFIG = {
     "entry_re": r"^\d{8}-[A-Za-z0-9_.-]+$",
     "bucket": BUCKET,
     "store_prefix": STORE_PREFIX,
+    "living_paths": [],
 }
 OPEN_LIST = ".benchrec/open.jsonl"
 

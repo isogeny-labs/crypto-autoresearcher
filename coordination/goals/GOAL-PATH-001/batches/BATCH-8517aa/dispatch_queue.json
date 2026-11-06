@@ -59,7 +59,11 @@
   }
  ],
  "tasks_state_revisions": [
-  {"at": "2026-11-05T17:06:52Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261105-c0d167", "from_state": "queued", "to_state": "completed", "reason": "Ledger archive committed alone at 09575dd1c916 (parent 5ade5cac2a6d) with exactly the fifteen expected paths after LA-1 to LA-10; goal-head line repaired byte-identical before checks (recorded in the receipt). Zero runs.", "paths_or_records_added": []}
+  {"at": "2026-11-05T17:06:52Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261105-c0d167", "from_state": "queued", "to_state": "completed", "reason": "Ledger archive committed alone at 09575dd1c916 (parent 5ade5cac2a6d) with exactly the fifteen expected paths after LA-1 to LA-10; goal-head line repaired byte-identical before checks (recorded in the receipt). Zero runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T00:40:51Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261105-ac5ad6", "from_state": "queued", "to_state": "completed", "reason": "Executor session wrote the ten artifacts; released at 1aca3d075c with ten non-empty digests. Deviation DEV-1 recorded in the release note. Zero experiment runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T00:40:51Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261105-7083a8", "from_state": "queued", "to_state": "completed", "reason": "Snapshot archive committed alone at 72f51766a67b (parent 1a1bfc5bb15c) with exactly the eleven expected paths after SA-1 to SA-5; code_sha256 recorded in the receipt. Zero runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T02:18:18Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261105-165da2", "from_state": "queued", "to_state": "completed", "reason": "Fresh validator session in a sparse worktree at 72f51766a6; released at 437f258735 with 2 non-empty digests. Findings: 1 blocking, 6 non-blocking. Zero runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T02:18:18Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261105-49716d", "from_state": "queued", "to_state": "completed", "reason": "Snapshot archive committed alone at 608902a44d43 (parent da5857f85de5) with exactly the three expected paths after SA-1 to SA-3. Zero runs.", "paths_or_records_added": []}
  ],
  "tasks": [
   {
@@ -270,7 +274,7 @@
    "id": "TASK-20261105-ac5ad6",
    "title": "Executor (executor-implementation): widen KATs to n = 4..7 and large-q fields, add composition residuals P2(vii)-(ix), arm-C KAT refusal, timing-only throughput calibration; zero runs",
    "role": "executor",
-   "state": "queued",
+   "state": "completed",
    "priority": 90,
    "review_required": false,
    "review_required_note": "FALSE. An instrument; it changes no claim. TASK-20261105-165da2 reviews it before approval.",
@@ -351,7 +355,7 @@
    "id": "TASK-20261105-7083a8",
    "title": "Snapshot archive of the EXP-MONO-1a1be2 pre-approval implementation (TASK-20261105-ac5ad6), alone among commit tasks; records code_sha256 for the approval lock",
    "role": "coordinator",
-   "state": "queued",
+   "state": "completed",
    "priority": 89,
    "review_required": false,
    "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
@@ -389,9 +393,21 @@
      "experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json"
     ],
     "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
-    "commit_sha": null,
-    "parent_sha": null,
-    "path_sha256": {}
+    "commit_sha": "72f51766a67be05f6d8de0f4ed962c4c615d52bd",
+    "parent_sha": "1a1bfc5bb15c9c75e6394cb8c26f654d63ce40dd",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/archives/TASK-20261105-7083a8/snapshot-receipt.json": "87aad5ab9302cd588edb578441851f384daff1969ebba303153062063d47fb66",
+     "experiments/EXP-MONO-1a1be2/code/README.md": "06c17a6bbffa1dd9edf10af15ae2a7b092963362d57bea8b280a3bab05a2e387",
+     "experiments/EXP-MONO-1a1be2/code/counters.py": "5e6d6f24854d520fa3bf28ffbd5af89bf11778262ba97c156478ecfab1977727",
+     "experiments/EXP-MONO-1a1be2/code/launcher.py": "d2833c702412e17b6288dc68fcbf53aa77960c92222e09f04f568963cf52b40f",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat.py": "4305f722e8c6839584177b23817bfe4e20a917677cd5fad58344c3f183169e07",
+     "experiments/EXP-MONO-1a1be2/code/throughput_calibration.py": "22a84f636387f40cb6d6933b5c0cc738d9ba0d0c59220c1dce3bf444271f0733",
+     "experiments/EXP-MONO-1a1be2/implementation/environment-ac5ad6.json": "08e0e40424e21c75ecde671a695da09d9b807050636f7bf0e81993a377184501",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-log-ac5ad6.json": "3fb87a15b2be70c304ea722334be79ae0bfd19541ca5924f257463f98922e962",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md": "ff33dbe14fac55f6de43dd4978c19c6a7a432b2aff86f952f6f58c0065bedd7f",
+     "experiments/EXP-MONO-1a1be2/implementation/throughput-calibration.json": "64df086e7e72bba91b678cd997ce20749597403c074b14742d6cd1f08312fed5",
+     "experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json": "9ccbe61445fba836ec44bdea6e55255220a4d08e8d09c9198e5bd28696d8fb4a"
+    }
    },
    "handoff_record": "ledger/handoffs/TASK-20261105-7083a8.yaml",
    "handoff": {
@@ -432,7 +448,7 @@
    "title": "Validator (review-adversarial, fresh session): independent code review of the EXP-MONO-1a1be2 instrument at the 7083a8 commit, CR-1 to CR-7; zero experiment cells",
    "role": "validator",
    "subagent_binding": "validator",
-   "state": "queued",
+   "state": "completed",
    "priority": 88,
    "review_required": false,
    "review_required_note": "FALSE. This IS the independent instrument review; it changes no claim and has no review_plan.",
@@ -497,7 +513,7 @@
    "id": "TASK-20261105-49716d",
    "title": "Snapshot archive of the EXP-MONO-1a1be2 code review (TASK-20261105-165da2), alone among commit tasks",
    "role": "coordinator",
-   "state": "queued",
+   "state": "completed",
    "priority": 87,
    "review_required": false,
    "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
@@ -528,9 +544,13 @@
      "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml"
     ],
     "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
-    "commit_sha": null,
-    "parent_sha": null,
-    "path_sha256": {}
+    "commit_sha": "608902a44d43274a3dbb8142141872a9ed7fea50",
+    "parent_sha": "da5857f85de5ee01a56d3020645fb2bebef0282a",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/archives/TASK-20261105-49716d/snapshot-receipt.json": "bd6b9ee705fbc61c65dc56ef4e2b46be1d0bee4a5aec86b68196ce0440fbb08d",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md": "4c77c2350f597713f5281d48c04f496693470b761573e4c8a7a0169c1103c101",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml": "01d5f9584c7820814cf87c89be8cf5d3d52a60760cf9d3057eceae2b1265c0cf"
+    }
    },
    "handoff_record": "ledger/handoffs/TASK-20261105-49716d.yaml",
    "handoff": {

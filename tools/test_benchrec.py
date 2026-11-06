@@ -172,6 +172,65 @@ class BenchrecTest(unittest.TestCase):
         self.assertEqual(r.returncode, 1)
         self.assertIn("neither in Git", r.stdout)
 
+    def test_edited_raw_fails(self):
+        self.make_record()
+        (self.root / "out" / "rho-step-100.0.json").write_text("edited\n")
+        r = self.br("check", check=False)
+        self.assertEqual(r.returncode, 1)
+        self.assertIn("differs from its recorded sha256", r.stdout)
+
+    def test_living_path_is_not_checked_against_the_checkout(self):
+        (self.root / ".benchrec.json").write_text(json.dumps({"living_paths": ["out/rho-step-100.0.json"]}))
+        rec = self.make_record()
+        old_record = (self.root / rec).read_bytes()
+        raw = json.loads(old_record)["raw"][0]
+        data = self.root / raw["path"]
+        original = data.read_bytes()
+        data.write_text("the catalog moved on\n")
+        newer = data.read_bytes()
+        missing = self.br("check", check=False)
+        self.assertEqual(missing.returncode, 1, missing.stdout + missing.stderr)
+        self.assertIn("differs from its recorded sha256", missing.stdout)
+        cache = self.root / ".benchrec/raw-archive-cache" / raw["sha256"]
+        cache.parent.mkdir(parents=True)
+        cache.write_bytes(original)
+        r = self.br("check", check=False)
+        self.assertNotIn("differs from its recorded sha256", r.stdout)
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("original raw bytes verified", r.stdout)
+        self.assertIn("differing checkout bytes are not validated", r.stdout)
+        self.assertEqual((self.root / rec).read_bytes(), old_record)
+        self.assertEqual(data.read_bytes(), newer)
+
+    def test_living_path_requires_fresh_online_archive_even_with_exact_cache(self):
+        (self.root / ".benchrec.json").write_text(json.dumps({"living_paths": ["out/rho-step-100.0.json"]}))
+        rec, old_record, raw, data, archive = self.archived_fixture()
+        newer = data.read_bytes()
+        cache = self.root / ".benchrec/raw-archive-cache" / raw["sha256"]
+        cache.parent.mkdir(parents=True)
+        cache.write_bytes(archive.read_bytes())
+        for mode in ("get-denied", "corrupt", "truncated", "oversized", "wrong-size", "no-head"):
+            with self.subTest(mode=mode):
+                self.env["FAKE_ARCHIVE_MODE"] = mode
+                r = self.br("check", "--verify-s3", check=False)
+                self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+                self.assertIn("differs from its recorded sha256", r.stdout)
+                self.assertEqual((self.root / rec).read_bytes(), old_record)
+                self.assertEqual(data.read_bytes(), newer)
+        self.env["FAKE_ARCHIVE_MODE"] = "good"
+        r = self.br("check", "--verify-s3", check=False)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertTrue(any(a[:2] == ["s3api", "get-object"] for a in self.archive_calls()))
+        self.assertFalse(any(a[:2] == ["s3", "cp"] for a in self.archive_calls()))
+
+    def test_living_path_cannot_substitute_archive_for_open_record(self):
+        (self.root / ".benchrec.json").write_text(json.dumps({"living_paths": ["out/rho-step-100.0.json"]}))
+        self.test_open_record_cannot_substitute_an_old_archive()
+
+    def test_living_path_cannot_download_noncanonical_archive(self):
+        (self.root / ".benchrec.json").write_text(json.dumps({"living_paths": ["out/rho-step-100.0.json"]}))
+        self.test_noncanonical_archive_uri_is_never_downloaded_for_fallback()
+
     def test_config_override(self):
         (self.root / ".benchrec.json").write_text(json.dumps({
             "records_dir": "docs/benchmarks/records", "progress_dir": "docs/benchmarks/progress",
