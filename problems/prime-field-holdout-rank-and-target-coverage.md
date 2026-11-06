@@ -4,7 +4,7 @@
 - **Kind:** observed finite rank/target-coverage limitation; cause unknown
 - **Affected work:** [A4 results](../research/prime_field_a4_execution_20261030/RESULTS.md), [frozen protocol](../research/prime_field_a4_execution_20261030/protocol.json), and [A3 comparison](../research/prime_field_a3_execution_20261030/RESULTS.md)
 - **Next action owner:** prospective design Coordinator, then admitted Executor
-- **Last updated:** 2026-11-04
+- **Last updated:** 2026-11-06
 
 ## Problem
 
@@ -183,3 +183,27 @@ Charge cold tables/prerequisite walks and retain setup/intermediate-point labels
 as explicit anchors/diagnostics. AP correlations may harm yield. These are proposed
 controls, not fresh native results or a campaign completion claim. Status remains
 investigating; complete-cost fresh transfer is unresolved.
+
+
+## A10 fresh source and kernel-free target control, 2026-11-06
+
+[A10](../research/prime_field_a10_execution_20261106/RESULTS.md) completed four
+fresh curves/32public targets,432dependent scope systems and864cold kernel-free
+joint/cancellation calls with identical outcomes. Source/control bytes and
+prospective protocol were pushed before generation; all witnesses, misses,
+negative residuals and original-row/public certificates are retained.
+
+Relation-only targets are recovered in24cases with base uncertainty remaining
+even after target cancellation (23cases contain a recovered target absent from
+the recorded constructor direct matches). A fresh example has rank6/14 and a
+two-original-row certificate; this does not rule out other public offset
+shortcuts. Natural target collection yields15equations covering11of32points.
+Across216matched source views, AP has more identified targets in10cases, hash
+in37, ties169. This is a finite observation with separate constructor/collection/
+algebra costs; no complete weighted or end-to-end improvement is inferred.
+
+The [ranked next worklist](../research/prime_field_a10_execution_20261106/next-leads.md)
+compares paid consecutive versus randomized target offsets at matched query
+budgets on fresh holdouts, naming the production aP+bQ baseline and explicit
+affine-label/offset obligations. Broader curve coverage, calibrated costs and
+independent scientific review remain open. Status remains investigating.

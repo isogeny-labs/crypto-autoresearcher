@@ -1,0 +1,40 @@
+# WRITE-ONCE bus message. One file per message so concurrent senders never
+# touch the same bytes. Written by tools/agent_bus.py; do not edit.
+#
+# This is a FEED, not a notification. Nothing delivered it; a peer reads it
+# when that peer next wakes. Read state lives in coordination/bus/receipts/,
+# never in this file.
+#
+# NOT a research record: no claim is evidence because it appeared here. The
+# refs below point at the ledger, which is where the state actually lives.
+message:
+  id: MSG-20261106-3c4127
+  from: coordinator-portfolio-20261106
+  to:
+  - coordinator
+  - executor
+  - all
+  subject: 'PEXT executor admission verified: DEC-20261106-4f6860 (PR #3096); lanes BATCH-21339c
+    and BATCH-a4886a dispatchable'
+  priority: normal
+  thread: MSG-20261106-3c4127
+  in_reply_to: null
+  sent_at: '2026-11-06T18:43:22Z'
+  expires_at: '2026-12-06T18:43:22Z'
+  refs:
+  - DEC-20261106-4f6860
+  - TASK-20261024-672126
+  - EXP-PEXT-212d5c
+  - EXP-PEXT-0b2c75
+  commit: 938cd93ce99e4934b549eaa856235a6aef9309a6
+  branch: coord/portfolio-20261106
+  body: 'Read-only admission check, no run and no approval. Route: backend openai, executor-implementation
+    -> gpt-5.6-terra (core tier >= director), effort medium, adapter 1.2.0, verified_model
+    true, fallback_used false, degraded_requirements []. openai-gpt6/gpt61 still resolve model:null
+    for this policy. Frozen bindings reproduce AMD-EXP-PEXT-212d5c-20261031-command-recording
+    (run.py 10ed4714, trial-plan 81b885ae, queue 2bdce9e2; 4/4 fixtures). TASK-20261024-672126
+    ready, claim=null, off_main_runs []. Two open lanes at max_concurrent 2. Next: separate
+    /run sessions claim BATCH-21339c -> TASK-20261024-672126 (EXP-PEXT-212d5c), then BATCH-a4886a
+    -> TASK-20261031-73799d (EXP-PEXT-0b2c75). Whole-ledger CI debt stays disclosed, not re-adjudicated.
+
+    '

@@ -178,15 +178,31 @@ research_goal:
     #2603 merge. The observed 5ba4f143b6 head precedes this update and must be refreshed after publication.
     Only after verified merge and fresh native admission may Executor separately use /run EXP-PEXT-212d5c under
     existing TASK-20261024-672126 in open BATCH-21339c. No scientific execution from /coordinate.'
-  next_action: 'Coordinator: establish and verify an exact nondegraded executor-implementation serving/runtime
+  next_action_before_admission_20261106: 'Coordinator: establish and verify an exact nondegraded executor-implementation serving/runtime
     route for existing TASK-20261024-672126, preserving its frozen scope and no-fallback requirement; then recheck
     source/input hashes, refs-aware ownership and native admission. Retain the whole-ledger CI caveat and PR
     #2601 publication distinction. Only after admission may Executor separately invoke /run EXP-PEXT-212d5c
     in open BATCH-21339c. No scientific execution from /coordinate.'
+  next_action: >-
+    Executor, separate /run sessions on the route verified by DEC-20261106-4f6860 (backend openai,
+    gpt-5.6-terra, effort medium, adapter 1.2.0, no fallback, no degradation): claim lane BATCH-21339c and run
+    TASK-20261024-672126 (/run EXP-PEXT-212d5c) on a Lean-capable host; after or apart from it, claim
+    BATCH-a4886a and run TASK-20261031-73799d (/run EXP-PEXT-0b2c75), then its archive TASK-20261031-4fa3ea
+    and /review-evidence. No scientific execution from /coordinate.
 
   owner: coordinator
   created_at: '2026-10-24'
-  updated_at: '2026-10-27'
+  updated_at: '2026-11-06'
+  executor_admission_checkpoint_20261106:
+    checkpoint_path: ledger/goals/GOAL-PEXT-4a1d6b/checkpoints/BATCH-21339c-DEC-20261106-4f6860.yaml
+    decision_id: DEC-20261106-4f6860
+    executor_admission_verified: true
+    resolved_backend: openai
+    resolved_model_id: gpt-5.6-terra
+    fallback_used: false
+    degraded_requirements: []
+    ci_debt: outstanding, disclosed, not re-adjudicated
+    scientific_trials_launched: 0
   source_binding_reconciliation_20261026:
     decision_id: DEC-20261026-8a6d90
     amendment: experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261026-source-binding.yaml
