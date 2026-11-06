@@ -3867,8 +3867,16 @@ sheriff_case:
       B3: not_covered
     evidence:
     - research/sheriff/SHF-20261106-a114e7/checks/sweep-home/sweep.json
+    - research/sheriff/SHF-20261106-a114e7/checks/.artifacts.json (formal-rebuild.log)
+    - research/sheriff/SHF-20261106-a114e7/checks/axiom-audit.log
     findings: []
-    note: REPLACED_BY_REBUILD
+    note: 'Two full lake builds on this host (15 GB RAM): 9141 of 9142 jobs built without a Lean error;
+      CryptoResearch.Semaev.BooleanParityDegreeThreeRankCertificate was killed by the kernel both times
+      (exit 137, out of memory, after 1060 s and 362 s), so CryptoResearch.olean was never produced and
+      AxiomAudit.lean could not import it. An impediment, not evidence about that module. Covered by:
+      lake build && lake env lean AxiomAudit.lean in formal/ on a host with more memory (CI job ''formal
+      workspace (lake build + axiom audit)'' reports success on recent heads, which is a claim about a
+      check, not re-run here).'
   - id: SES/C-CI-MERGE
     text: Merge the PR ... when ... the current head has all required and applicable checks successful
       (or legitimately skipped), no check pending ... or failed
