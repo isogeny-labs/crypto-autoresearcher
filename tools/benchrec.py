@@ -465,7 +465,10 @@ def cmd_close(a, root: Path, cfg: dict) -> int:
         rec["summary"] = a.summary
     rec["status"] = a.status
     rec["closed_utc"] = utcnow().isoformat()
-    errors = record_errors(root, cfg, rec, rel(root, path), require_closed=True)
+    # The record is still open on disk. Its temporary closing status must
+    # not unlock the fallback reserved for already-closed historical records.
+    errors = record_errors(root, cfg, rec, rel(root, path), require_closed=True,
+                           allow_archived_raw=False)
     if errors:
         rec["status"] = "open"
         rec["closed_utc"] = None
@@ -483,7 +486,8 @@ def cmd_close(a, root: Path, cfg: dict) -> int:
 # ---------------------------------------------------------------------- checks
 
 def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed: bool,
-                  verify_s3: bool = False, manifests: dict | None = None) -> list[str]:
+                  verify_s3: bool = False, manifests: dict | None = None,
+                  allow_archived_raw: bool = True) -> list[str]:
     e: list[str] = []
     for k in ("schema", "id", "slug", "problem", "repo", "created_utc", "status", "commit",
               "branch", "host", "entries", "commands", "raw", "metrics", "reports"):
@@ -542,7 +546,8 @@ def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed
         local = root / r.get("path", "")
         if local.is_file():
             if sha256_file(local) != r.get("sha256"):
-                if (rec["status"] in ("measured", "invalid", "censored")
+                if (allow_archived_raw
+                        and rec["status"] in ("measured", "invalid", "censored")
                         and archived_raw_matches(root, cfg, r, remote=verify_s3)):
                     source = "S3 archive" if verify_s3 else "local archive cache"
                     print(f"benchrec: {name}: original raw bytes verified from {source} "

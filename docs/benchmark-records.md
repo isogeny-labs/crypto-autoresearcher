@@ -55,6 +55,9 @@ Online verification requires both the recorded length and a fresh bounded GET
 whose complete SHA-256 matches the original pin; HEAD alone, the filename and
 the `uploaded` flag are insufficient. Denied, missing, truncated, oversized or
 corrupt archive reads fail the check. Open runs never use this fallback.
+Closing an open record also cannot use the fallback: its current raw bytes must
+match the original capture before the closed record is written. The fallback
+only verifies records that were already closed before the command.
 
 For offline checking, exact original bytes may be staged at
 `.benchrec/raw-archive-cache/<sha256>` (inside the checkout). The checker

@@ -390,6 +390,40 @@ raise SystemExit(99)
         self.assertEqual(len(gets), 1)
         self.assertFalse(Path(gets[0][-1]).exists())
 
+    def test_closing_open_record_cannot_use_archive_fallback(self):
+        (self.root / ".benchrec.json").write_text(json.dumps({"living_paths": ["raw.txt"]}))
+        rec = self.br("init", "--slug", "open-close", "--problem", "fixture:archive-close").stdout.strip()
+        self.br("run", rec, "--", "true")
+        data = self.root / "raw.txt"
+        original = b"original raw fixture\n"
+        data.write_bytes(original)
+        self.br("add-raw", rec, str(data))
+        self.br("metric", rec, "--name", "control", "--value", "1", "--unit", "count")
+        report = self.root / "report.pdf"
+        report.write_bytes(b"%PDF-1.4\n")
+        before = (self.root / rec).read_bytes()
+        raw = json.loads(before)["raw"][0]
+        cache = self.root / ".benchrec/raw-archive-cache" / raw["sha256"]
+        cache.parent.mkdir(parents=True)
+        cache.write_bytes(original)
+        data.write_bytes(b"different current fixture\n")
+        changed = data.read_bytes()
+        for status in ("measured", "invalid", "censored"):
+            with self.subTest(status=status):
+                r = self.br("close", rec, "--status", status, "--summary", "synthetic control",
+                            "--report", str(report), check=False)
+                self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+                self.assertIn("differs from its recorded sha256", r.stderr)
+                self.assertEqual((self.root / rec).read_bytes(), before)
+                self.assertEqual(json.loads((self.root / rec).read_text())["status"], "open")
+                self.assertEqual(data.read_bytes(), changed)
+        # An open record can close normally after its actual recorded bytes
+        # are restored; the cache does not replace this requirement.
+        data.write_bytes(original)
+        self.br("close", rec, "--status", "measured", "--summary", "synthetic control",
+                "--report", str(report))
+        self.assertEqual(json.loads((self.root / rec).read_text())["status"], "measured")
+
     def test_open_record_cannot_substitute_an_old_archive(self):
         rec, old_record, raw, data, archive = self.archived_fixture()
         body = json.loads(old_record)
