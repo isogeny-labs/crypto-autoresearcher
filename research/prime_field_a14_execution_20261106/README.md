@@ -4,7 +4,8 @@ Implementation in progress; no native A14 curves, targets or relations have
 been generated, and no execution protocol or release exists yet.
 
 The next comparison keeps norm32, adds16 separately constructed public-log
-helpers, and retains source-free known32 as its implemented generic control.
+helpers, and retains source-free known32 and known48 controls. Known48 matches
+the hybrid's nominal atom count; see [control refinement](controls-refinement.md).
 See [design](design.md), [sources](literature.md) and
 [A13's ranked lead](../prime_field_a13_execution_20261106/next-leads.md).
 
@@ -22,6 +23,11 @@ Implemented components:
   index and compare native equations against a complete signed-triple/miss
   oracle. Partial failures retain pair and accepted-row prefixes; native
   parameters require admission before index work.
+- `public_base.py` constructs16/32/48 labelled points with independent paid
+  constructor choices and caches. `target_cache.py` reuses geometric responses
+  without importing affine labels. `source_construct.py` selects full AP/hash
+  source programs using public scalar inputs and owned paid caches, with a
+  separately coded integer/group checker.
 - The tiny software controls exercise signed/permuted bases, native48/helper16
   dimensions, incomplete target spans, JSON roundtrips and corruptions. The
   all-known specialization is compared with A13's executed direct solver,
@@ -31,11 +37,13 @@ Implemented components:
 /workspace/factor-base-venv/bin/python -m pytest \
   research/prime_field_a14_execution_20261106/test_partial.py \
   research/prime_field_a14_execution_20261106/test_geometry.py \
-  research/prime_field_a14_execution_20261106/test_query.py -q
+  research/prime_field_a14_execution_20261106/test_query.py \
+  research/prime_field_a14_execution_20261106/test_base.py \
+  research/prime_field_a14_execution_20261106/test_cache.py \
+  research/prime_field_a14_execution_20261106/test_construct.py -q
 ```
 
-Still required: integrated source collection and target caches; own paid
-helper16 and known32 constructor/cache paths;
+Still required: complete collector/branch integration of these components;
 source/target/native-row assembly and cost references; exact original-base
 information attribution; complete driver/export/source bindings, prospective
 protocol/current S3/root release and ordinary admission. No helper labels or

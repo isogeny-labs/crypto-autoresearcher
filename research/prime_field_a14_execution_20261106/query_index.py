@@ -2,17 +2,11 @@
 from collections import defaultdict
 from itertools import combinations, product
 from shared import core, batch_query
-
-NATIVE_CAPABILITY = object()
+from guards import NATIVE_CAPABILITY, require_fields
 
 
 def require(rules, fixture, geometry, capability):
-    if capability is not NATIVE_CAPABILITY and not (
-        rules.get('software_control') is True and rules['fields'] and
-        fixture['p'] <= 211 and all(v['p'] <= 211 for v in rules['fields'])):
-        raise ValueError('A14 native query admission required')
-    if fixture['p'] not in {v['p'] for v in rules['fields']}:
-        raise ValueError('query field differs from declared rules')
+    require_fields(rules, fixture, capability)
     if (geometry['native_width'] != len(fixture['factor_base']) or not
         1 <= len(geometry['points']) <= geometry['native_width'] <= 48):
         raise ValueError('query native/geometric width gate')
