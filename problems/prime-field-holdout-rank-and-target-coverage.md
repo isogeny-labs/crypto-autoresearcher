@@ -31,7 +31,7 @@ asymptotic scaling comparison.
   found [62]Q=-P, an elementary alternate explanation of its scalar1466.
   No early single or joint recovery occurred. See immutable run
   [a4-holdout-panel-c47bc8](../research/prime_field_a4_execution_20261030/runs/a4-holdout-panel-c47bc8/analysis.json),
-  scientific source d12aee8d6bec91cd225afe2d5b5ceec605129cd6.
+  scientific source d12aee8d6bec91cd225afe2d5b5ceec605129cd6. [pcc:unverified]
 - **Derived:** target-column cancellation adds one base dimension on two
   fixtures at prefix0; at prefix64 the corresponding base gains are0/0/1/0.
   Dense rank subtraction and carried target-unit certificates were checked.
@@ -145,7 +145,7 @@ rank by128. These are checked operational budgets, not weighted-cost speedups
 or exact untested source thresholds. Ten distinct targets are identified with
 base uncertainty across the finer grid. The old A6anchor case's source7192 is
 at index54, so A7does not credit it at16; the same target is identified through
-available rows at checked24, with its public-multiple explanation retained.
+available rows at checked24, with its public-multiple explanation retained. [pcc:unverified]
 
 The next controlled implementation comparison is cancellation-first target
 recovery versus the full joint solver on the same immutable rows, with lifted
@@ -200,7 +200,7 @@ two-original-row certificate; this does not rule out other public offset
 shortcuts. Natural target collection yields15equations covering11of32points.
 Across216matched source views, AP has more identified targets in10cases, hash
 in37, ties169. This is a finite observation with separate constructor/collection/
-algebra costs; no complete weighted or end-to-end improvement is inferred.
+algebra costs; no complete weighted or end-to-end improvement is inferred. [pcc:unverified]
 
 The [ranked next worklist](../research/prime_field_a10_execution_20261106/next-leads.md)
 compares paid consecutive versus randomized target offsets at matched query
@@ -258,3 +258,38 @@ including adverse target masks and all omitted-work boundaries. Outside-point
 pools remain the next base-preserving option, requiring cancellation of all
 auxiliary unknowns before crediting information. Status remains investigating;
 no old record, hypothesis or goal status is changed.
+
+
+## A13 paid known-base control executed, 2026-11-06
+
+[A13](../research/prime_field_a13_execution_20261106/RESULTS.md) executes the
+specific paid-known-log discriminator above on four fresh18/19bit curves and
+32public targets:624systems/1248actual algebra calls,zero unknown cases,
+matching within-system target identities/scalars. Known base32 is independently
+hash-labelled and constructed before targets; its source-free program pays
+all retained base/intermediate/sign/certificate/table/affine/direct-lift work.
+At budget8 it identifies16walk/22hash-offset/22general targets of32. Norm
+relation slots0/2/0 and anchor slots1/5/76 use24dependent source views with192
+maximum slots, reusing the same points. This is finite producer evidence under
+PCC-20261106-dcf58c, unverified without signed replay/recomputation.
+[pcc:unverified]
+
+The specific missing-control requirement is now populated by prospective raw
+records and per-arm construction/collection/assembly/algebra/lifting/public
+checks. It does not resolve calibrated costs or full-cost transfer. Public
+known labels are supplied knowledge; different base sets cannot be compared
+by rank/Delta. Exact target-mask containment and separate cold vectors expose
+remaining incomparable cases, including method-specific logical counts. The
+first parent import failure preceded admission/generation and is retained;
+one admitted scientific attempt completed. [pcc:unverified]
+
+The [ranked next discriminator](../research/prime_field_a13_execution_20261106/next-leads.md)
+keeps norm32 and adds a paid known16 helper pool against norm32 and source-free
+known32 on fresh holdouts. Reduce supplied helper logs into the RHS and measure
+Delta only on unchanged original norm unknowns, then exact target units/costs.
+A48-atom table needs explicit8192pair gating (4512actual signed pairs), distinct
+paid16/32constructor caches and no free future/full-base prefix state. Unknown
+outside pools, full triple-atlas amortization and original Prym/Dickson leads
+remain distinct alternatives. Future source/protocol/cost review must precede
+execution. Status remains investigating; no official hypothesis/goal state
+changes or old records are rewritten.
