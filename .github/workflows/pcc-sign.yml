@@ -22,6 +22,7 @@ concurrency:
 
 jobs:
   sign:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}sign"
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
