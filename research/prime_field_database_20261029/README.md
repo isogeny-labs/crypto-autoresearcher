@@ -110,3 +110,14 @@ historical-row, foreign-key, integrity and gzip checks are producer assertions;
 measurement standing remains unverified. The [A11 report](../prime_field_a11_execution_20261106/RESULTS.md)
 keeps cold construction references and shared physical work distinct.
 [pcc:unverified]
+
+The additive [v15 larger-field snapshot](../prime_field_a12_execution_20261106/database/v15-batched-holdout/generation-v15.json)
+preserves v14 and adds four coefficient curves on18/19bit fields,32public
+targets,144constructor branches,93,248affine labels,703cached query records,
+3,775paired scalar/batch engine records,1,152systems and2,304solver certificates.
+History contains22curves/22bases and17physical executions. The builder checks
+historical row inclusion in SQL with a bounded cache and streams gzip; parent
+bytes, foreign keys and integrity passed locally. Producer measurements remain
+unverified; see [A12 results](../prime_field_a12_execution_20261106/RESULTS.md)
+for sparse recovery, actual query arithmetic and separate cold/physical scopes.
+[pcc:unverified]

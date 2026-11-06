@@ -229,3 +229,32 @@ preserves prior rows and failures. The [new worklist](../research/prime_field_a1
 selects the next bounded comparison. Broader transfer, calibrated costs and
 independent scientific standing remain unresolved. Status remains investigating;
 this continuation changes no official hypothesis/goal state. [pcc:unverified]
+
+## A12 larger fields and paid known-log baseline requirement, 2026-11-06
+
+[A12](../research/prime_field_a12_execution_20261106/RESULTS.md) retains base32
+and fixed source/query programs on four fresh18/19bit coefficient curves.
+All1,152systems/2,304solver calls completed, but source ranks are2..21of31.
+At budget8 relation-only repeated slots are3walk/0hash/7general across48views
+per policy; anchors give3/4/96. Both methods agree. Counts reuse32public points,
+not384fresh targets; this is finite transfer evidence rather than a universal
+rank obstruction. Measurement PCC-20261106-7a4122 remains unverified without
+signed replay/recomputation. [pcc:unverified]
+
+The [next discriminator](../research/prime_field_a12_execution_20261106/next-leads.md)
+is a completely paid public-known-log base control. Production factor_base.py
+already provides H017 small-multiple points and harvest.py knows their formal
+log relations, while the builder's separate Curve omits construction from
+E.ops. A strong comparison must meter real construction and all intermediates,
+allow the known-log deployment to omit useless relation-learning work, and
+compare exact named targets at cold costs. Independently hash-labelled points
+avoid confusing known knowledge with a short-interval sumset. Supplied base
+labels are explicit paid knowledge; ranks across different bases are not a
+fixed-base Delta gain. No such new experiment has run under this note.
+
+This linked requirement remains open until a prospectively frozen fresh matched
+control records construction, learning/query/algebra/lifting/public-check costs,
+including adverse target masks and all omitted-work boundaries. Outside-point
+pools remain the next base-preserving option, requiring cancellation of all
+auxiliary unknowns before crediting information. Status remains investigating;
+no old record, hypothesis or goal status is changed.
