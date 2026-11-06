@@ -1,0 +1,130 @@
+# Review attestation for TASK-20261106-7c2b01: a focused independent re-review of the EXP-MONO-1a1be2 fixes
+# (blocker B8 of DEC-20261106-843cf7). It is an instrument review, not a claim-changing round, and it launched zero runs.
+review_attestation:
+  task_id: TASK-20261106-7c2b01
+  role: validator
+  report: coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md
+  commit_reviewed: 9a0b5955146a6a87584774f8018da3559df86275
+  commit_reviewed_note: >-
+    The TASK-20261106-5c1258 snapshot commit ("archive(TASK-20261106-5c1258): snapshot TASK-20261106-4c4831
+    fixes for EXP-MONO-1a1be2"). The worktree was clean at it. The card sha256 is
+    76c7cda7c4d38fe9a80753be432aaf3e9748cb7b47b4841e235e796b0aeb11bc, verified on disk and at the commit.
+  review_plan: null
+  joints_owned: null
+  joints_owned_note: There is no review_plan (card review_plan null). The scope is RR-1 to RR-8 of the card.
+  blindness:
+    lifted_for: coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+    rationale: >-
+      Fix verification needs the defect list and the reproductions (DEC-20261106-843cf7 batch.review; card
+      inputs_note). Only that report was read. The 165da2 review_attestation.yaml and every other file under
+      coordination/goals/GOAL-PATH-001/review/ were not read. The producer's session was not read.
+  read_sibling_reports:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md (deliberately, under blindness.lifted_for)
+  sources_read:
+    - {path: ledger/handoffs/TASK-20261106-7c2b01.yaml, extent: full}
+    - {path: docs/agent-runtime-core.md, extent: "full, via git show 9a0b5955146a:docs/agent-runtime-core.md (not in the sparse checkout)"}
+    - {path: agents/validator.md, extent: full}
+    - {path: AGENTS.md, extent: "full; injected into context by the session's tool hook when the card was read, not requested"}
+    - {path: ledger/decisions/DEC-20261106-843cf7.yaml, extent: full}
+    - {path: coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json, extent: full}
+    - {path: coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md, extent: "full (treated as a claim)"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json, extent: "full (treated as a claim)"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json, extent: "full (treated as a claim)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/launcher.py, extent: "full (lines 1-1301)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/counters.py, extent: "git diff 72f51766a6..9a0b5955 (full); rg matches for recount, identities and arm-C keys; lines 50-75, 80-86, 505-564"}
+    - {path: experiments/EXP-MONO-1a1be2/code/tests/test_kat.py, extent: "rg listings of test and helper definitions; lines 715-739, 918-967, 1400-1494, 1617-2253"}
+    - {path: experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/kernel.c, extent: "rg for p_idx and e_mul; lines 61-86; the hunks of the reviewer's own mutant edits (around lines 74 and 184-188)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/semaev.py, extent: "rg for roots_via_group_law (lines 155, 170-173, 186)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/make_trial_plan.py, extent: "rg for argparse lines only"}
+    - {path: experiments/EXP-MONO-1a1be2/specification.yaml, extent: "rg for F2, CTL-null, stopping, invalidation and status lines; lines 140-169, 380-419"}
+    - {path: /home/user/crypto-autoresearcher/conftest.py, extent: "lines 1-60 (main checkout; blob afaa38ee equal to the commit)"}
+    - {path: /home/user/crypto-autoresearcher/pyproject.toml, extent: "lines 88-92 and rg 'pytest' (main checkout; blob 8b60f44a equal to the commit)"}
+  sources_hashed_not_read:
+    - experiments/EXP-MONO-1a1be2/implementation/environment-4c4831.json (git show | sha256sum; equals the receipt)
+    - experiments/EXP-MONO-1a1be2/code/README.md (sha256 only)
+    - experiments/EXP-MONO-1a1be2/code/fqn.py, curves.py, throughput_calibration.py (sha256 only; executed in tests and scripts)
+  not_read:
+    - the producer's (TASK-20261106-4c4831) session
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml and any other file under coordination/goals/GOAL-PATH-001/review/
+  environment_note: >-
+    Full-checkout requirement (RR-2, VP-3). A separate full worktree did not fit on the disk. As the dispatching
+    session directed, the full main checkout /home/user/crypto-autoresearcher was used strictly read-only.
+    - Its HEAD 1378475d64 descends from 9a0b5955.
+    - experiments/EXP-MONO-1a1be2 (tree 327b6ad1), conftest.py (blob afaa38ee) and pyproject.toml (blob 8b60f44a)
+      are identical git objects at both commits. The on-disk experiment directory differs from git archive
+      9a0b5955 only by two ignored reports/*/report.pdf files outside code/.
+    - Every output (junit, result JSON, TMPDIR) went to the session scratchpad. Its git status (with ignored
+      files) over the experiment, conftest.py, pyproject.toml and tests/conftest.py was identical before and
+      after, and no file under the experiment was newer than the launch.
+  procedure_deviations:
+    - id: PD-1
+      text: VP-3 (a FULL worktree at the 5c1258 commit) was replaced by the read-only main checkout, as the environment_note states.
+    - id: PD-2
+      text: >-
+        VP-4 (claim and release through tools/goal_lanes.py) was not performed by this session. The dispatching
+        session instructed it not to claim, release, add, commit or push.
+    - id: PD-3
+      text: >-
+        RR-5 FX-16 fallback. Re-running FX-16 on a random subset of 10 or more of its 50 targets is not cheaper
+        than the full cell: the kernel enumerates all C(B+2, 3) = 1.61e11 multisets of the full base whatever the
+        number of targets, which projects to about 32,000-35,000 s at the measured 4.6e6-5.0e6 multisets/s. The
+        closest feasible check was run instead: FX-16's own sampled targets, the subset
+        random.Random(0x7c2b01).sample(range(50), 10) plus 5 constructed targets, a 2,500-point sub-base, and a
+        reviewer-written Python membership method. It is reported as not FX-16.
+    - id: PD-4
+      text: >-
+        RR-2 gate scenarios used a KAT-field plan cell (13, 2) in scratch experiment roots instead of
+        NO-SUCH-CELL. The 5c1258 cmd_cell looks the cell up in the plan before the self-test, so NO-SUCH-CELL never
+        reaches the receipt and suite checks. The two positive controls and the probes ran that KAT-field cell in
+        the scratch root.
+  findings_summary:
+    must_fix_closed: [F-1, N-1, N-2, N-3, N-4]
+    must_fix_not_closed:
+      - N-5 (item 5): the shadowing route stays open through sourceless bytecode (code/yaml.pyc, code/pytest.pyc); items 1-4 are closed
+      - DEV-1: the FX-16 substitute cell was not run in full (stopped on projection; SF-1)
+    counts: {closed: 5, not_closed: 2}
+    new_findings:
+      blocking:
+        - NF-1: code/__pycache__ bytecode (skipped by stray_python_files) replaces hashed modules while code_sha256 is unchanged
+      non_blocking:
+        - NF-2: cdf.json top-level keys (N, s, q, n, seed, curve_id, cell_id) are not compared by the raw/summary check
+        - NF-3: a missing recount for a single convention is not detected
+        - NF-4: F2 enforcement edges (CLI-only refusal; earlier arm-A cells keep valid; broken-symlink sentinel ignored; run id STOP-F2.json collides)
+        - NF-5: the large-Q arm-C S-set path (S_counts, m_S) has no non-vacuous KAT; mutant M6 survives all 379 items
+        - NF-6: the launcher validity block does not reflect V2-1 (library-forged GateResult yields valid); a symlinked runs/ writes outside the experiment
+        - NF-7: peak_rss_kb_children includes the start-up suite and gcc in ran mode
+    m5_killed_by_reviewer_run: true
+    m5_detail: The full suite under the FX-3 command fails 8 of 379 items, all new or strengthened FX-7 and W10 items at (41, 6) and (29, 7).
+    m3_control: killed (58 of 379 failed, all at n >= 4)
+    full_checkout_selftest: collected 379 = EXPECTED_KAT_ITEMS; 379 passed; rootdir = code dir
+    baseline_suite: 379 passed of 379 (fresh 9a0b5955 extract, FX-3 command, 1265.5 s)
+    trial_plan_sha256: 9ccbe61445fba836ec44bdea6e55255220a4d08e8d09c9198e5bd28696d8fb4a (byte-identical)
+    code_sha256: 5e16c7577d9f0b8820369e2350530d2df52aa9e82aa35313eb1dcf2bdd1de1e3 (equals the 5c1258 receipt)
+  verdict: failed
+  verdict_scope: >-
+    B8 instrument gate only. It fails because DEV-1 and N-5 (5) are not closed and NF-1 is blocking. Nothing here
+    is evidence about H-MONO-23d347, any prediction or any mathematics.
+  inference:
+    requested_policy: review-adversarial
+    reasoning_effort: null
+    reasoning_effort_note: The policy default as served. The effort level is not observable from inside the session.
+    resolved_model_id: claude-opus-5-5
+    resolved_model_provenance: the session environment's stated model id; no adapter doctor --probe receipt exists for this session
+    model_verified: false
+    fallback_used: false
+    degraded: false
+    bedrock: none (the resolved model id contains no 'bedrock')
+    independent_session: true
+    independent_session_basis: >-
+      This session was started by the dispatching session for TASK-20261106-7c2b01 only. It has no transcript,
+      memory or tool history of the TASK-20261106-4c4831, TASK-20261105-ac5ad6, TASK-20261029-a97206, PR #2707 or
+      TASK-20261105-165da2 sessions, and it received no message from any producer. Independence is between
+      sessions only, not between models: DEC-20261106-843cf7 records claude-opus-5-5 for 165da2 as well.
+  runs_launched: 0
+  experiment_cells_computed: 0
+  writes:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/review_attestation.yaml
+  committed_by_this_session: false
