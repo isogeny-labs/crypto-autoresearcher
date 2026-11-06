@@ -7,6 +7,13 @@ Author task: TASK-20261106-028825 (certificate-checker author, `spec.certificate
 (`m3n05`, `m3n06`: serialised systems, `wdag` certificates, `instances.jsonl.gz`, `closures.jsonl.gz`).
 `EXP-CERTBIN-060020/impl/closures.py` was **not** read (formats.md decided everything).
 
+Blindness: nothing under `experiments/EXP-SEMBIN-cb5e25/code/` or `review/` (other than this directory) was opened, and no
+git log/commit message was read (only `git status --short` and `git diff -- formats.md`, to see what the producer changed in
+formats.md while I worked). The sample trial JSONs (`trials/*.json`) were opened at the top: their `provenance` block lists
+the *names and hashes* of the producer's source files; no contents. The long sweeps were launched with the documented
+`CHECKPOINT_SKIP=<reason>` opt-out of the run-launcher hook (AGENTS.md, "Resume checkpoints in S3 before every run": a command
+that is not an experiment run may opt out); they are checker unit-test sweeps, not experiment trials.
+
 Files (stdlib + numpy only):
 
 | file | role |
@@ -20,7 +27,7 @@ Files (stdlib + numpy only):
 ```
 python3 check_certs.py --system systems/<key>.sys.json.gz --cert certificates/<name>.json.gz [--z-bruteforce]
         [--expect-system-sha256 HEX] [--expect-cert-sha256 HEX] [--instances instances.jsonl.gz]
-        [--max-brute-nv 24] [--auto-brute-nv 20] [--out verdict.json]
+        [--expect-D D] [--max-brute-nv 26] [--auto-brute-nv 24] [--out verdict.json]
         [--allow-nonreduced-g] [--allow-extra-keys] [--lenient-canonical] [--skip-descent]
 ```
 
@@ -29,12 +36,14 @@ text, `cert_file_sha256`, `checks{name: {ok, detail}}`, `failed_checks`, `warnin
 `Z_methods`). `--out` also writes it to a file (formats.md section 7 speaks of "the checker's verdict file,
 keyed by `cert_sha256`" without defining it; this JSON is the proposal).
 Exit code: **0 only on `accept`**; 1 = `reject` (failed check or malformed input); 2 = unreadable input/usage;
-3 = internal error (never an accept). A run that finishes without one of the mandatory checks having been
+3 = internal error (never an accept); 4 = `weakened_accept` (every check passed but `--skip-descent` skipped the raw
+re-derivation: not an accept). A run that finishes without one of the mandatory checks having been
 executed is an internal error, not an accept.
 
-`--z-bruteforce`: also run the bit-sliced brute force over `F_2^nv` whenever `nv <= --max-brute-nv` (24).
-Without the flag the brute force runs automatically only for `nv <= --auto-brute-nv` (20); above that, and when the
-certificate carries an `instance` block, Z comes from the algebraic chain alone and a warning says so. Chain and brute
+`--z-bruteforce`: force the bit-sliced brute force over `F_2^nv` for every `nv <= --max-brute-nv` (26; refused above).
+Without the flag it runs automatically for `nv <= --auto-brute-nv` (24; 0.4 s at N = 24, 2 s at N = 26 on this
+machine); above that, when the certificate carries an `instance` block, Z comes from the algebraic chain alone and a
+warning says so. Chain and brute
 force must agree when both run. If neither can run (no `instance`, `nv` too large) the certificate is rejected.
 
 ## What is checked
@@ -99,7 +108,7 @@ and an RREF in descending-grevlex column order; the field-level exhaustive solut
   sizes), `ColSpace` order/index, reduced-GB and standard-monomial count (random point sets), grevlex RREF, both
   closure routes of `dual_check_b`.
 
-Unit tests: `python3 test_check_certs.py` -> `Ran 39 tests ... OK` (about 30 s).
+Unit tests: `python3 test_check_certs.py` -> `Ran 42 tests ... OK` (about 50 s).
 
 ### Single-bit-flip results
 
@@ -108,22 +117,64 @@ Each flip is run through the checker and classified; every *accepted* flip is re
 Z, standard monomials counted by explicit enumeration of all `2^nv` masks). **`ACCEPTED_UNSOUND` and `ERROR` counts are
 0 everywhere.** (`python3 test_check_certs.py sweep [--full]` regenerates the numbers below.)
 
-SWEEP_TABLE_PLACEHOLDER
+| certificate | flipped field | single-bit flips | rejected | accepted (all re-judged sound by the oracle) |
+| --- | --- | ---: | ---: | --- |
+| ann_dual_i5z_D2 | `L_hex` bits (every bit) | 740 | 620 | 120 semantic_sound |
+| ann_dual_i5z_D2 | `g`: toggle each monomial of B_{<=D} | 37 | 37 | - |
+| ann_dual_i5z_D2 | `system_sha256`, `nv`, `neq`, `D`, `Z`, `instance` (all bits) | 341 | 341 | - |
+| ann_dual_i5z_D2 | `g_gb_index` (informational) | 8 | 0 | 8 informational |
+| ann_primal_i5z_D2 | `basis_hex` bits (every bit) | 629 | 629 | - |
+| ann_primal_i5z_D2 | `g`: toggle each monomial of B_{<=D} | 37 | 37 | - |
+| ann_primal_i5z_D2 | `system_sha256`, `nv`, `neq`, `D`, `Z`, `instance` (all bits) | 341 | 341 | - |
+| ann_primal_i5z_D2 | `g_gb_index` (informational) | 8 | 0 | 8 informational |
+| ann_dual_i6_D3 | `L_hex` bits (every bit) | 9269 | 9083 | 186 semantic_sound |
+| ann_dual_i6_D3 | `g`: toggle each monomial of B_{<=D} | 298 | 298 | - |
+| ann_dual_i6_D3 | `system_sha256`, `nv`, `neq`, `D`, `Z`, `instance` (all bits) | 365 | 364 | 1 semantic_sound |
+| ann_dual_i6_D3 | `g_gb_index` (informational) | 8 | 0 | 8 informational |
+| ann_primal_i6_D3 | `basis_hex` bits (every 11-th column) | 7504 | 5969 | 1535 semantic_sound |
+| ann_primal_i6_D3 | `g`: toggle each monomial of B_{<=D} | 298 | 298 | - |
+| ann_primal_i6_D3 | `system_sha256`, `nv`, `neq`, `D`, `Z`, `instance` (all bits) | 365 | 364 | 1 semantic_sound |
+| ann_primal_i6_D3 | `g_gb_index` (informational) | 8 | 0 | 8 informational |
+| ann_dual_m4_D3 | `L_hex` bits (every 5-th column) | 11280 | 10320 | 960 semantic_sound |
+| ann_dual_m4_D3 | `g`: toggle each monomial of B_{<=D} | 470 | 470 | - |
+| ann_dual_m4_D3 | `system_sha256`, `nv`, `neq`, `D`, `Z`, `instance` (all bits) | 348 | 348 | - |
+| ann_dual_m4_D3 | `g_gb_index` (informational) | 8 | 0 | 8 informational |
+| ann_dual_i5z_D2 (old hash kept) | every monomial of degree <= 3 toggled in every system equation | 930 | 930 | - |
+| wdag_text_sample_m3n05 (producer sample, 1668 bytes) | every bit of the JSON text | 13344 | 13339 | 2 D_increased_weaker_claim, 3 informational |
+| wdag_text_sample_m3n06 (producer sample, 10687 bytes) | every bit of the JSON text | 85496 | 85490 | 2 D_increased_weaker_claim, 3 informational, 1 semantic_sound |
+| wdag_text_own_i5z (own reference-built, 13082 bytes) | every bit of the JSON text (every 5-th) | 20932 | 20026 | 1 D_increased_weaker_claim, 905 unreferenced_node |
+| wdag_text_own_i6 (own reference-built, 155281 bytes) | every bit of the JSON text (every 5-th) | 248450 | 234603 | 1 D_increased_weaker_claim, 1 informational, 13845 unreferenced_node |
+| wdag_text_own_m4 (own reference-built, 182179 bytes) | every bit of the JSON text (every 5-th) | 291487 | 272960 | 1 D_increased_weaker_claim, 2 semantic_sound, 18524 unreferenced_node |
+| **total** | | **693001** | **656867** | 7 D_increased_weaker_claim, 47 informational, 2806 semantic_sound, 33274 unreferenced_node |
 
-Reading the accepted flips: (i) ann `L_hex`/`basis_hex`: flips at columns whose unit functional already lies in the span
-of `L` (monomials that no vector of `W_D` involves) leave `U` equal or larger and the proof intact; (ii) wdag text flips:
-only inside nodes that no output reaches (dead nodes of my own reference-built DAGs; the producer's samples have none);
-(iii) informational keys `g_gb_index`, `levels`; (iv) `instance.A` when `n` is even: `A` does not enter `S_3`
-and for even `n` the curves `A=0`/`A=1` are isomorphic (same x-coordinates, same `#E`), so nothing the checker verifies
-can see it. Flips of `num_points_E` are rejected (n <= 18). Flips of `system_sha256` (256/256), `nv`, `neq`, `Z`
-(every bit), `D`, every monomial of `g`, every system monomial (all `<=3`-degree toggles with the old hash) are rejected.
-"Rejected although `W_D` is inside `U`" cases are the expected incompleteness of the sufficient closure condition (b).
+Sweep run on `check_certs.py` sha256 `cf6c4f65663003406c6111850e480cd073f18dac99a23da8d6acc431e0f6ed85` and
+`test_check_certs.py` sha256 `ad87247a1684e1bec2c323b275d45321ced2e55d711464ed6eb3b59a6a0dabb1`
+(`python3 test_check_certs.py sweep --full`, about 57 minutes on 4 cores). Strides are stated in the table; the producer's
+two sample certificates were swept at every one of their 98,840 bits. In the unit tests the same machinery runs on
+subsamples (`TestFlips`, `TestFuzz` with 1250 random structural mutations).
+
+Reading the accepted flips (36,134 of 693,001, every one explained and re-judged sound by the oracle):
+(i) ann `L_hex`/`basis_hex` (2,801): flips at columns whose unit functional already lies in the span of `L`
+(monomials that no vector of `W_D` involves) leave `U` equal or larger and the proof intact, and a flip that removes a whole
+functional enlarges `U` harmlessly; (ii) wdag text flips inside nodes that no output reaches (33,274; dead nodes of my own
+reference-built DAGs only: the producer's samples have **no** unreachable node); (iii) informational keys `g_gb_index`,
+`levels` (47); (iv) `instance.A` when `n` is even (3 flips: `m3n06` sample, `i6` dual and primal): `A` does not enter `S_3`, and for even
+`n` the curves `A=0`/`A=1` are isomorphic (same x-coordinates, same `#E`), so nothing the checker verifies can see it (for odd
+`n` the `#E` recomputation catches it); (v) one `outputs` pointer redirected to a node that computes the same polynomial
+(own `m4` DAG; 2 flips); (vi) **`D` raised to 5 or 6 in a wdag (7 flips)**: a DAG valid for `D` is valid for every larger `D'`
+(containment is monotone), so this is a true but *weaker* statement. The certificate's `D` therefore does not pin the claim:
+the verdict carries `D` and `info.dag_minimal_D`, a warning is raised when `D` exceeds the minimal degree, and
+`--expect-D` (check `D_expected`) lets the analysis pin the closure record's `D`. Lowering `D` is always rejected.
+Flips of `num_points_E` are rejected (n <= 18). Flips of `system_sha256` (every bit), `nv`, `neq`, `Z` (every bit), `g` (every
+monomial), the whole `instance` block except `A` (even `n`), and every system monomial (all `<=3`-degree toggles with the old
+hash) are rejected. "Rejected although `W_D` is inside `U`" never occurred in the sweeps (the closure condition (b) is
+sufficient, not necessary, so it could in principle).
 
 ## Performance probe (synthetic, garbage `L`, so the verdict is a rejection; stages were all executed)
 
 At the real cell shapes with D = 4 (`m3n12` N=24, `m3n14` N=26, `m4n10` N=28, `m3n17` N=32, `m3n19k7` N=40, C4 = 102091):
-descent + RREF + chain Z + hash + (a)/(b) each finished in about 0.1-1.0 s per certificate; the bit-sliced brute force at
-N = 24 took about 0.4 s. Dual `L` of realistic size (non-containment leaves a small `L`) is cheap; **not** measured: a
+descent + RREF + chain Z + hash + (a)/(b) each finished in about 0.1-1.0 s per certificate; with the bit-sliced brute force
+added, 0.4 s at N = 24 and 2.0 s at N = 26 (chain and brute force agreed on |Z| = 2 in both). Dual `L` of realistic size (non-containment leaves a small `L`) is cheap; **not** measured: a
 real wdag DAG with 10^4+ nodes (Python parsing is the bottleneck, estimated minutes per 10^7 rows) or a dual `L` with
 `|L|` in the 10^4 range at C4 >= 17902 (dense GF(2) algebra, estimated tens of seconds to minutes).
 
@@ -132,7 +183,8 @@ real wdag DAG with 10^4+ nodes (Python parsing is the bottleneck, estimated minu
 * No `ann` certificate written by the producer was available: the producer-side hex/bit/column convention for
   `L_hex`/`basis_hex` is implemented exactly as formats.md section 3/4 states and exercised only against my own builder.
   The first real ann certificate is the real test of that convention.
-* Z for `nv > --max-brute-nv` (and by default `nv > 20`) is the chain enumeration only: each chain point is verified
+* Z for `nv > --auto-brute-nv` (default 24; with `--z-bruteforce` for `nv > --max-brute-nv`, default 26) is the chain
+  enumeration only: each chain point is verified
   against the serialised system (soundness of the points); completeness of Z rests on the chain argument of
   formats.md section 1 and on the descent re-derivation. With an `instance` block absent, the system's relation to
   the experiment's instance is only as good as `--expect-system-sha256` / `--instances`.
@@ -171,3 +223,10 @@ real wdag DAG with 10^4+ nodes (Python parsing is the bottleneck, estimated minu
     for the file whose `cert_sha256` matches. The mapping from a certificate record (`key`) to its system file
     (`systems/<cell>_<arm>_r<r>.sys.json.gz`) is also only implicit.
 12. `D` range: nothing says `D >= 1`, nor what `COL(D, nv)` means for `D > nv` (all monomials; I follow that).
+13. A wdag valid for `D` is valid for every `D' >= D`, so the certificate's `D` does not identify which containment claim
+    (`D_solve`, the closure record's `D`) is being certified. formats.md should say the analysis must pin `D` (use
+    `--expect-D` or compare the verdict's `D`/`info.dag_minimal_D` with the record). For ann certificates a changed `D`
+    changes the column layout; every `D` flip tested was rejected.
+14. Section 7 says `accepted` is "set by the analysis from the checker's verdict file, keyed by `cert_sha256`": it should
+    also require the verdict's `system_sha256` to equal the instance's M-10 hash (use `--instances` / `--expect-system-sha256`),
+    otherwise a valid certificate for the wrong system could be filed as `accepted`.

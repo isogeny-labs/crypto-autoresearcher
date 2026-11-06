@@ -608,6 +608,8 @@ def classify_text_flip(sysb, cert_obj, orig_bytes, i, b, oracle, opts):
     diff = leaf_paths(cert_obj, flipped)
     if all(tuple(p) in INFORMATIONAL for p in diff):
         return "accepted_informational"
+    if diff == [("D",)] and cert_obj.get("schema") == "sembin-wdag-v1" and flipped["D"] > cert_obj["D"]:
+        return "accepted_D_increased_weaker_claim" if oracle(flipped) else "ACCEPTED_UNSOUND"
     if only_unreferenced_nodes(cert_obj, diff):
         return "accepted_unreferenced_node" if oracle(flipped) else "ACCEPTED_UNSOUND"
     return "accepted_semantic_sound" if oracle(flipped) else "ACCEPTED_UNSOUND"
@@ -839,6 +841,27 @@ class TestSamples(unittest.TestCase):
         self.assertEqual(code, 1)
         code, res, _ = cli("--system", s6, "--cert", c5)
         self.assertEqual(code, 1)
+
+    def test_D_pinning_and_inflation(self):
+        sp, cp, ip = self.samples[1]
+        sysb, cert = read(sp), json.loads(read(cp))
+        res = run(sysb, cert)
+        self.assertEqual((res["verdict"], res["D"], res["info"]["dag_minimal_D"]), ("accept", 4, 4))
+        self.assertEqual(res["warnings"], [])
+        infl = dict(cert, D=6)                      # valid DAG, weaker claim: accepted but flagged
+        res = run(sysb, infl)
+        self.assertEqual(res["verdict"], "accept")
+        self.assertTrue(any("exceeds the minimal degree" in w for w in res["warnings"]))
+        self.assertEqual(run(sysb, infl, expect_D=4)["failed_checks"], ["D_expected"])
+        self.assertEqual(run(sysb, cert, expect_D=4)["verdict"], "accept")
+        self.assertEqual(run(sysb, dict(cert, D=3))["verdict"], "reject")   # below the minimal degree
+
+    def test_skip_descent_is_not_an_accept(self):
+        sp, cp, ip = self.samples[0]
+        code, res, _ = cli("--system", sp, "--cert", cp, "--skip-descent")
+        self.assertEqual(code, 4)
+        self.assertEqual(res["verdict"], "weakened_accept")
+        self.assertTrue(res["weakened"])
 
     def test_io_errors_exit_2(self):
         sp, cp, _ = self.samples[0]
@@ -1259,30 +1282,49 @@ def flip_int_hex(h, c):
     return format(int(h, 16) ^ (1 << c), "x")
 
 
-def ann_flip_sweeps(name="i5z", D=2, form="dual", stride=1):
+_ANN_CTX = {}
+
+
+def _ann_worker(args):
+    key, mutated = args
+    sysb, cert, cl, Z, N, D = _ANN_CTX[key]
+    return classify_obj(sysb, cert, mutated, lambda c: ann_truly_sound(c, cl, Z, N, D), cc.Options())
+
+
+def _classify_many(key, cert, mutated_list, workers):
+    if workers > 1 and len(mutated_list) > 200:
+        import multiprocessing as mp
+        with mp.get_context("fork").Pool(workers) as pool:
+            return pool.map(_ann_worker, [(key, m) for m in mutated_list], chunksize=32)
+    return [_ann_worker((key, m)) for m in mutated_list]
+
+
+def ann_flip_sweeps(name="i5z", D=2, form="dual", stride=1, workers=0):
     inst, eqs, N, gens, Z = get_instance(name)
     cert, sysb, cl, g = build_ann(eqs, N, D, Z, inst, form)
+    key = f"{name}-{D}-{form}"
+    _ANN_CTX[key] = (sysb, cert, cl, Z, N, D)
     opts = cc.Options()
     oracle = lambda c: ann_truly_sound(c, cl, Z, N, D)      # noqa: E731
     out = {}
-    key = "L_hex" if form == "dual" else "basis_hex"
-    classes = []
-    for i in range(len(cert[key])):
+    vec_key = "L_hex" if form == "dual" else "basis_hex"
+    muts = []
+    for i in range(len(cert[vec_key])):
         for c in range(0, cl.C, stride):
             m = json.loads(jb(cert))
-            m[key][i] = flip_int_hex(m[key][i], c)
-            classes.append(classify_obj(sysb, cert, m, oracle, opts))
-    out[f"{key}_bits"] = summarise(classes)
+            m[vec_key][i] = flip_int_hex(m[vec_key][i], c)
+            muts.append(m)
+    out[f"{vec_key}_bits"] = summarise(_classify_many(key, cert, muts, workers))
+    out[f"{vec_key}_bits"]["stride"] = stride
     # monomial toggles in g (every monomial of B_{<=D})
-    classes = []
     gm = {sum(1 << i for i in mono) for mono in cert["g"]}
-    for mk in cl.masks[::stride]:
+    muts = []
+    for mk in cl.masks:
         m = json.loads(jb(cert))
         m["g"] = poly_json(gm ^ {mk})
-        if not m["g"]:
-            continue
-        classes.append(classify_obj(sysb, cert, m, oracle, opts))
-    out["g_monomial_toggles"] = summarise(classes)
+        if m["g"]:
+            muts.append(m)
+    out["g_monomial_toggles"] = summarise(_classify_many(key, cert, muts, workers))
     out.update(scalar_field_flips(sysb, cert, oracle, opts))
     return out
 
@@ -1423,6 +1465,54 @@ class TestFlips(unittest.TestCase):
         print("\nwdag text flips (sample m3n06, stride 211):", json.dumps(r))
 
 
+class TestFuzz(unittest.TestCase):
+    """random structural mutations (junk values, deletions) of valid certificates:
+    never an internal error, never an accepted certificate the oracle calls unsound"""
+
+    JUNK = [None, "x", [], {}, -1, 10 ** 30, 1.5, True, "0x1f", "", [[]], [1, 2], {"a": 1}, 0, 2 ** 70]
+
+    @staticmethod
+    def _paths(o, p=()):
+        yield p
+        if isinstance(o, dict):
+            for k, v in o.items():
+                yield from TestFuzz._paths(v, p + (k,))
+        elif isinstance(o, list):
+            for i, v in enumerate(o[:40]):
+                yield from TestFuzz._paths(v, p + (i,))
+
+    def test_fuzz(self):
+        rnd = random.Random(7)
+        for name, kind in (("i5z", "ann"), ("i6", "ann"), ("i5z", "annp"), ("i5z", "wdag"), ("m4", "wdag")):
+            inst, eqs, N, gens, Z = get_instance(name)
+            D = 2
+            if kind == "wdag":
+                cert, sysb, cl = build_wdag(eqs, N, 4, Z, inst)
+                D = 4
+                oracle = lambda c: wdag_truly_sound(c, cl, Z, N, D)      # noqa: E731
+            else:
+                cert, sysb, cl, g = build_ann(eqs, N, 2, Z, inst, "primal" if kind == "annp" else "dual")
+                oracle = lambda c: ann_truly_sound(c, cl, Z, N, D)       # noqa: E731
+            ps = [p for p in self._paths(cert) if p]
+            for _ in range(250):
+                c = json.loads(jb(cert))
+                p = rnd.choice(ps)
+                tgt = c
+                for k in p[:-1]:
+                    tgt = tgt[k]
+                if rnd.random() < 0.2:
+                    tgt.pop(p[-1])
+                else:
+                    tgt[p[-1]] = rnd.choice(self.JUNK)
+                res = cc.run_check(sysb, json.dumps(c).encode(), cc.Options())
+                self.assertNotEqual(res["verdict"], "error", (kind, p, res.get("error")))
+                if res["verdict"] == "accept":
+                    diff = leaf_paths(cert, c)
+                    if diff and not all(tuple(q) in INFORMATIONAL for q in diff) \
+                            and not only_unreferenced_nodes(cert, diff):
+                        self.assertTrue(oracle(c), (kind, p))
+
+
 class TestCliOnOwnFiles(unittest.TestCase):
     def test_cli_roundtrip_and_exit_codes(self):
         import tempfile
@@ -1450,15 +1540,19 @@ class TestCliOnOwnFiles(unittest.TestCase):
 # ===========================================================================
 
 def sweep_main(argv):
+    """--full: every bit of the sample certificates' text and of the small ann certificates;
+    strided (documented in the output) for the larger own certificates."""
     full = "--full" in argv
     workers = 4
     out = {}
-    for name, D, form in (("i5z", 2, "dual"), ("i5z", 2, "primal"), ("i6", 3, "dual"), ("i6", 3, "primal"), ("m4", 3, "dual")):
-        out[f"ann_{form}_{name}_D{D}"] = ann_flip_sweeps(name, D, form, stride=1)
-        print(json.dumps({f"ann_{form}_{name}_D{D}": out[f"ann_{form}_{name}_D{D}"]}, sort_keys=True), flush=True)
+    plan = [("i5z", 2, "dual", 1), ("i5z", 2, "primal", 1), ("i6", 3, "dual", 1),
+            ("i6", 3, "primal", 11 if full else 29), ("m4", 3, "dual", 5 if full else 17)]
+    for name, D, form, stride in plan:
+        k = f"ann_{form}_{name}_D{D}"
+        out[k] = ann_flip_sweeps(name, D, form, stride=stride, workers=workers)
+        print(json.dumps({k: out[k]}, sort_keys=True), flush=True)
     out["system_toggles_i5z"] = system_flip_sweep("i5z", 2)
     print(json.dumps({"system_toggles_i5z": out["system_toggles_i5z"]}), flush=True)
-    stride = 1 if full else 17
     for cell in ("m3n05", "m3n06"):
         s = sample(cell)
         if s is None:
@@ -1469,15 +1563,15 @@ def sweep_main(argv):
         eqs = [set(a.tolist()) for a in sysd.eqs]
         cl = RefClosure(eqs, sysd.nv, 4)
         Z = sorted(int(h, 16) for h in cert_obj["Z"])
-        out[f"wdag_text_sample_{cell}"] = wdag_text_sweep(sysb, cert_obj, cl, Z, sysd.nv, 4, stride=stride, workers=workers)
-        print(json.dumps({f"wdag_text_sample_{cell}": out[f"wdag_text_sample_{cell}"]}, sort_keys=True), flush=True)
+        k = f"wdag_text_sample_{cell}"
+        out[k] = wdag_text_sweep(sysb, cert_obj, cl, Z, sysd.nv, 4, stride=1 if full else 17, workers=workers)
+        print(json.dumps({k: out[k]}, sort_keys=True), flush=True)
     for name in ("i5z", "i6", "m4"):
         inst, eqs, N, gens, Z = get_instance(name)
-        D = 4
-        b = build_wdag(eqs, N, D, Z, inst)
-        cert, sysb, cl = b
-        out[f"wdag_text_own_{name}"] = wdag_text_sweep(sysb, cert, cl, Z, N, D, stride=stride, workers=workers)
-        print(json.dumps({f"wdag_text_own_{name}": out[f"wdag_text_own_{name}"]}, sort_keys=True), flush=True)
+        cert, sysb, cl = build_wdag(eqs, N, 4, Z, inst)
+        k = f"wdag_text_own_{name}"
+        out[k] = wdag_text_sweep(sysb, cert, cl, Z, N, 4, stride=5 if full else 31, workers=workers)
+        print(json.dumps({k: out[k]}, sort_keys=True), flush=True)
     print(json.dumps(out, indent=1, sort_keys=True))
 
 

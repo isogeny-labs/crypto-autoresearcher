@@ -7,8 +7,8 @@ producer's ``code/``).  CLI::
     python3 check_certs.py --system SYS.json.gz --cert CERT.json.gz [--z-bruteforce]
 
 prints a JSON verdict and exits 0 only when the certificate is accepted
-(1 = rejected, 2 = usage / unreadable input, 3 = internal error; never accept
-on an exception).  Dependencies: Python stdlib + numpy.
+(1 = rejected, 2 = usage / unreadable input, 3 = internal error, 4 = weakened_accept:
+every check passed but a re-derivation was skipped by an option; never accept on an exception).  Dependencies: Python stdlib + numpy.
 
 Layout of this file
   1. low level helpers (JSON, hashing, monomials as bitmasks)
@@ -945,10 +945,11 @@ class Report:
 
 class Options:
     z_bruteforce = False
-    max_brute_nv = 24
-    auto_brute_nv = 20
+    max_brute_nv = 26
+    auto_brute_nv = 24
     expect_system_sha256 = None
     expect_cert_sha256 = None
+    expect_D = None
     instances = None
     skip_descent = False
     allow_nonreduced_g = False
@@ -1049,6 +1050,8 @@ def check_common(rep: Report, ctx: Ctx, cert, hash_check_name: str):
     if opts.expect_system_sha256 is not None:
         rep.check("system_expected_hash", sysd.sha256 == opts.expect_system_sha256,
                   {"expected": opts.expect_system_sha256, "recomputed": sysd.sha256})
+    if opts.expect_D is not None:
+        rep.check("D_expected", D == opts.expect_D, {"expected": opts.expect_D, "certificate": D})
     return D
 
 
@@ -1326,7 +1329,7 @@ WDAG_OPT = ("Z", "instance", "levels")
 
 
 def check_wdag(rep: Report, ctx: Ctx, cert):
-    sysd, opts = ctx.sysd, ctx.opts
+    sysd = ctx.sysd
     nv, neq = sysd.nv, sysd.neq
     D = check_common(rep, ctx, cert, "g_system_hash")
     nodes, outputs, targets_raw = cert["nodes"], cert["outputs"], cert["targets"]
@@ -1368,6 +1371,7 @@ def check_wdag(rep: Report, ctx: Ctx, cert):
     # (a)..(d) with exact polynomial evaluation
     viol = {"a": None, "b": None, "c": None, "d": None}
     polys, deg = {}, []
+    min_D = 0                      # least D for which (b)-(d) all hold
     for i, (rows, prods) in enumerate(P):
         parts = []
         for (mu, k) in rows:
@@ -1377,6 +1381,7 @@ def check_wdag(rep: Report, ctx: Ctx, cert):
             if sysd.degs[k] < 0:
                 viol["b"] = viol["b"] or f"node {i}: row references the zero generator {k}"
                 continue
+            min_D = max(min_D, mu.bit_count() + sysd.degs[k])
             if mu.bit_count() + sysd.degs[k] > D:
                 viol["b"] = viol["b"] or f"node {i}: deg(mu)+deg(f_{k}) = {mu.bit_count() + sysd.degs[k]} > D"
             parts.append(sysd.eqs[k] | np.int64(mu))
@@ -1384,12 +1389,14 @@ def check_wdag(rep: Report, ctx: Ctx, cert):
             if not (0 <= c < i):
                 viol["a"] = viol["a"] or f"node {i}: child {c} is not < {i}"
                 continue
+            min_D = max(min_D, deg[c] + 1)
             if deg[c] > D - 1:
                 viol["c"] = viol["c"] or f"node {i}: child {c} has degree {deg[c]} > D-1"
             parts.append(polys[c] | np.int64(1 << j))     # c in children, hence stored
         p = pxor(parts)
         d_i = poly_degree(p)
         deg.append(d_i)
+        min_D = max(min_D, d_i)
         if d_i > D:
             viol["d"] = viol["d"] or f"node {i}: degree {d_i} > D"
         if i in keep:
@@ -1403,6 +1410,11 @@ def check_wdag(rep: Report, ctx: Ctx, cert):
                 if c not in reach:
                     reach.add(c)
                     stack.append(c)
+        rep.info["dag_minimal_D"] = min_D
+        if D > min_D and not any(viol.values()):
+            rep.warnings.append(f"certificate D={D} exceeds the minimal degree {min_D} the DAG needs: "
+                                f"it certifies containment in W_{D} (weaker than W_{min_D}); "
+                                f"compare D with the closure record's D (--expect-D)")
         rep.info["nodes_total"] = len(P)
         rep.info["nodes_unreachable_from_outputs"] = len(P) - len(reach)
     names = {"a": "a_child_order", "b": "b_row_degree", "c": "c_child_degree", "d": "d_node_degree"}
@@ -1474,6 +1486,7 @@ def run_check(system_bytes: bytes, cert_bytes: bytes, opts: Options = None) -> d
         if type(cert) is not dict:
             raise Malformed("certificate is not a JSON object")
         out["cert_file_sha256"] = sha256_hex(cert_bytes)
+        out["D"] = cert.get("D") if is_int(cert.get("D")) else None
         out["cert_sha256"] = sha256_hex(canon_json_bytes(cert))
         if opts.expect_cert_sha256 is not None:
             rep.check("cert_expected_hash", out["cert_sha256"] == opts.expect_cert_sha256,
@@ -1493,6 +1506,8 @@ def run_check(system_bytes: bytes, cert_bytes: bytes, opts: Options = None) -> d
         if missing:
             raise RuntimeError(f"internal error: mandatory checks not run: {missing}")
         out["verdict"] = "accept" if rep.all_ok() else "reject"
+        if out["verdict"] == "accept" and rep.weakened:
+            out["verdict"] = "weakened_accept"       # not an accept: a mandatory re-derivation was skipped
         if ctx.Z is not None:
             out["Z_size"] = len(ctx.Z)
         out["Z_methods"] = ctx.Z_methods
@@ -1518,10 +1533,12 @@ def main(argv=None) -> int:
     ap.add_argument("--z-bruteforce", action="store_true",
                     help="also run the bit-sliced brute force for Z whenever nv <= --max-brute-nv "
                          "(without the flag it runs automatically when nv <= --auto-brute-nv)")
-    ap.add_argument("--max-brute-nv", type=int, default=24)
-    ap.add_argument("--auto-brute-nv", type=int, default=20)
+    ap.add_argument("--max-brute-nv", type=int, default=26)
+    ap.add_argument("--auto-brute-nv", type=int, default=24)
     ap.add_argument("--expect-system-sha256", help="M-10 hash the system must have")
     ap.add_argument("--expect-cert-sha256", help="cert_sha256 the certificate must have")
+    ap.add_argument("--expect-D", type=int, help="closure degree D of the claim being certified (a wdag valid for D "
+                    "is also valid for any larger D, so the analysis must pin D)")
     ap.add_argument("--instances", help="instances.jsonl.gz holding the M-10 record to cross-check")
     ap.add_argument("--skip-descent", action="store_true",
                     help="do not re-derive the raw Weil descent (WEAKENS the verdict; reported)")
@@ -1538,7 +1555,7 @@ def main(argv=None) -> int:
         return 2
     opts = Options(z_bruteforce=a.z_bruteforce, max_brute_nv=a.max_brute_nv, auto_brute_nv=a.auto_brute_nv,
                    expect_system_sha256=a.expect_system_sha256, expect_cert_sha256=a.expect_cert_sha256,
-                   instances=a.instances, skip_descent=a.skip_descent, allow_nonreduced_g=a.allow_nonreduced_g,
+                   expect_D=a.expect_D, instances=a.instances, skip_descent=a.skip_descent, allow_nonreduced_g=a.allow_nonreduced_g,
                    allow_extra_keys=a.allow_extra_keys, lenient_canonical=a.lenient_canonical)
     res = run_check(sb, cb, opts)
     text = json.dumps(res, indent=2, sort_keys=True)
@@ -1546,7 +1563,7 @@ def main(argv=None) -> int:
         with open(a.out, "w") as f:
             f.write(text + "\n")
     print(text)
-    return {"accept": 0, "reject": 1}.get(res["verdict"], 3)
+    return {"accept": 0, "reject": 1, "weakened_accept": 4}.get(res["verdict"], 3)
 
 
 if __name__ == "__main__":
