@@ -156,10 +156,20 @@ def parse_entries(text: str, name: str) -> list[dict]:
 def audit_root(root: Path, since: str | None, ref: str | None = None) -> dict:
     files = log_paths(root, ref)
     rows: list[dict] = []
+    # Merge conflicts have copied whole dated blocks into the same file with
+    # the same heading. An entry is identified by its heading (which carries
+    # the date and usually the time), so an exact repeat is the same entry,
+    # not a second session.
+    seen: set[str] = set()
+    duplicates = 0
     for name in files:
         for entry in parse_entries(read_log(root, name, ref), name):
             if since and entry["date"] and entry["date"] < since:
                 continue
+            if entry["heading"] in seen:
+                duplicates += 1
+                continue
+            seen.add(entry["heading"])
             entry["file"] = name
             rows.append(entry)
     receipt_rows = [r for r in rows if r["receipt"]]
@@ -177,6 +187,7 @@ def audit_root(root: Path, since: str | None, ref: str | None = None) -> dict:
         "name": root.name,
         "logs": len(files),
         "entries": len(rows),
+        "duplicates": duplicates,
         "receipts": len(receipt_rows),
         "coverage": (len(receipt_rows) / len(rows)) if rows else 0.0,
         "unavailable": sum(1 for r in rows if r["unavailable"]),
