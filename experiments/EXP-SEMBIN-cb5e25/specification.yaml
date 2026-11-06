@@ -137,6 +137,52 @@ experiment:
         - >-
           Budget: modelled total 26,400 s, was 22,400 s. The 43,200 s total and
           the 10 GB cap are unchanged and still hold.
+    - revision: 3
+      date: '2026-11-06'
+      by: coordinator
+      scope: >-
+        Draft only: status review_required, approved_by null, no grid cell run,
+        no frozen record touched except protocol.json, which was frozen first
+        (filed before affected data) and is bound below. Driven by the
+        experiment-director's compile findings and DEC-20261106-36e212.
+      changes:
+        - id: DR-11
+          finding: >-
+            tools/experiment_execution.py applies RLIMIT_AS = memory_mb to every
+            supervised trial and requires memory_mb, so the plan cannot avoid
+            RLIMIT_AS.
+          ruling: >-
+            The binding limit stays the resident-set watchdog in code/run.py
+            (VmRSS, 10 GiB). The supervisor's RLIMIT_AS is set to a loose
+            virtual ceiling of 32768 MB that is not a resource cap and decides
+            nothing; a kill at it is an infrastructure failure under SR-7, never
+            a censored M-1 or negative evidence. This is a declared deviation
+            from the letter of "never RLIMIT_AS", faithful to its intent (a
+            tight RLIMIT_AS fires on virtual size and mimics a result).
+            DEC-20261106-36e212 RUL-3. A confirmation on a trivial cell
+            (rlimit-confirmation.json) shows the ceiling does not bind in the
+            design range; the kill-inside-child path is untested.
+        - id: DR-12
+          finding: SR-8's clock start was unstated.
+          ruling: >-
+            The 43200 s total is charged from the first trial
+            (code/adapter.py session_start.json). The time of step S03 fixtures
+            (timeout 3600 s) is outside it and recorded in the session journal.
+            RUL-6.
+        - id: DR-13
+          finding: >-
+            Pass 1 cannot express outcome-dependent steps, replay of a
+            shared-directory step, or an undecided positive control.
+          ruling: >-
+            Pass 1 runs the static grid and the five certify passes. SR-6
+            re-runs of non-contained instances, the SR-7 infrastructure retry
+            and a raised certificate size guard are pass 2 (run 2 of
+            maximum_runs 3), separately approved; no seed or null is re-drawn.
+            Replay of the trials step is not covered in pass 1 (shared run
+            directory); no contained-side evidence decision rests on pass-1
+            data before a nonce-sampled scratch replay is archived. An
+            undecided PC-TRI instance is a warning, and the C-PC gate then does
+            not hold for its cell. RUL-4, RUL-5, RUL-9.
   hypothesis_id: H-SEMBIN-e5b2db
   source_idea: IDEA-20261006-8f4f02
   question_id: RQ-SEMBIN-9e8f82
@@ -1188,7 +1234,10 @@ experiment:
       A resident-set watchdog, never RLIMIT_AS (EXP-SEMBIN-4fa22c budget note).
       Mutant products are streamed in chunks so that the product buffer never
       dominates. Estimated dense echelon is about C4^2/8 bytes (1.3 GB at
-      N = 40).
+      N = 40). Revision 3 (DR-11): the supervisor's mandatory RLIMIT_AS is a
+      loose 32768 MB virtual ceiling that is not a resource cap; the binding
+      limit is the resident-set watchdog (VmRSS, 10 GiB) in code/run.py, and a
+      kill at the ceiling is an infrastructure failure under SR-7.
     wall_clock_seconds_per_instance_per_D: {N_le_32: 1800, N_40: 7200}
     maximum_runs: 3
     maximum_runs_note: >-
@@ -1699,43 +1748,40 @@ experiment:
 
   execution_plan:
     mode: experiments
-    trial_plan: null
-    protocol_hashes: {}
+    trial_plan: experiments/EXP-SEMBIN-cb5e25/trial-plan.json
+    protocol_hashes: {experiments/EXP-SEMBIN-cb5e25/protocol.json: a1b0063ed17ded481a3f5d40e71f3227a3fc71661643fd331a7ad9c76e5b8ace}
     implementation_tier: executor-implementation
-    runbook: null
+    runbook: experiments/EXP-SEMBIN-cb5e25/runbook.yaml
     reason: >-
-      Contract designed and implemented (code/ written, 41 unit tests pass, no
-      grid cell run). Trial plan, runbook, handoff, queue and protocol freeze
-      do not exist yet (see readiness).
+      Contract designed and implemented (code/ with adapter and per-trial
+      checker, 76 unit tests pass; independent certificate checker
+      cross-checked; no grid cell run). protocol.json is frozen and bound.
+      The trial plan and runbook are compiled against it by the
+      experiment-director; the dispatch queue, executor handoff, preapproval
+      probe and approval decision remain (see readiness).
   readiness:
     blockers:
       - >-
-        code/ exists and its unit tests pass, but it must be brought in line
-        with revision 2 before approval (implementation_alignment below) and
-        committed clean, so that CODE_SHA256.json and the analysis-script hash
-        are of committed bytes.
-      - protocol.json is a draft. It needs tools/experiment_protocol.py validate and freeze, then binding in execution_plan.protocol_hashes.
-      - No trial plan, executor handoff (TASK-*), dispatch queue or lane claim exists.
-      - The runbook is not compiled (experiment-director compile mode). Until it lints clean the task stays executor-implementation.
-      - The tools/experiment_preapproval.py packet has not been built or probed.
+        The trial plan and runbook are being recompiled against the frozen
+        protocol, the adapter and check_trial argv and the real task, queue and
+        approval ids; until the runbook lints clean the task stays
+        executor-implementation.
+      - The dispatch queue (one task, every trial run file in artifact_paths) and the tools/experiment_preapproval.py packet are not built or probed.
       - >-
-        The Validator certificate-checker task card (blind to code/, with the
-        blind re-derivation of DER-1, DER-2, DER-3, DER-8, DER-9) is not
-        written. The checker itself must exist before the first
-        non-containment is counted.
-      - The observation-collision search has not been performed.
+        The observation-collision search is incomplete: the research-kb
+        executable is not available in this environment (recorded in
+        collision-search.json); it gates the approval decision (RUL-12).
+      - >-
+        The approval decision (a committed Coordinator decision) and its
+        archive do not exist; this contract stays review_required, frozen
+        false, approved_by null.
       - >-
         The resume checkpoint (scripts/checkpoint.sh init, then push, with
         RESUME.md complete) is required before any experiment run starts.
       - >-
-        Measured timings are missing for the revision 2 additions: wdag at
-        N = 20 and 24..26, null brute force at N = 24..26. The preapproval
+        Measured timings are missing for the revision 2 additions (wdag at
+        N = 20 and 24..26, null brute force at N = 24..26); the preapproval
         probe replaces the modelled figures by them.
-      - >-
-        This subagent had no shell. The design-rate guard
-        (orchestration/research-priority.yaml), tools/validate_ledger.py and
-        the ECC focus check were not run on these records and must be run by
-        the session before archive.
   implementation_alignment:
     note: >-
       Revision 2 contract points that code/ must realise before approval. Each
