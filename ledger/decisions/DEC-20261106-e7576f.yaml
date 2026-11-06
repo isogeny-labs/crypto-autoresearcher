@@ -1,0 +1,651 @@
+# DEC-20261106-e7576f: Coordinator approval of EXP-SEMBIN-cb5e25 (pass 1 of the
+# counterexample search for H-SEMBIN-e5b2db, GOAL-SEMBIN-fcb7a2) under the
+# standing user authorization, after the preapproval probe reported approvable
+# true at source_ref origin/main. It names the approval-time runbook bytes. It
+# launches no run, and it attaches hard dispatch conditions that are NOT yet
+# met in the environment where it was written. Approval is not dispatch.
+coordinator_decision:
+  id: DEC-20261106-e7576f
+  id_provenance: >-
+    Pre-allocated by the top-level session with tools/allocate_id.py, confirmed
+    free with --check, and reserved in DEC-20261106-36e212. The approval archive
+    id TASK-20261106-a97981 was allocated by the top-level session. The
+    Coordinator minted no id.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent, no shell, branch claude/sembin-true-dF-search from
+    origin/main 2598c7c76f (PR #3085). The top-level session ran the probe and
+    computed the approval-time hashes. The Coordinator read AGENTS.md
+    ("Standing user authorization", "Approval is bounded by execution",
+    "Knowledge retrieval"), DEC-20261029-ca33b3, DEC-20261106-36e212,
+    design-notes.md sections 2 (steps 10 to 12), 3, 4 and 8, the working-tree
+    specification (header, design_revision 3, proof_search_map, input_bindings,
+    execution_plan, readiness), the probe report, runbook-lint.txt, the card,
+    the handoff (head, tail, budget, execution), collision-search.json, the
+    runbook (binds, step ids, thresholds) and the BATCH-501c2f lane file. It
+    computed no sha256 and ran no command; every hash below is the
+    top-level session's, compared by reading against the hashes the on-disk
+    bytes carry where they carry one (runbook binds, specification
+    input_bindings, CODE_SHA256.json, card).
+  goal_id: GOAL-SEMBIN-fcb7a2
+  decision: approve
+  experiment_id: EXP-SEMBIN-cb5e25
+  runbook_sha256: 054b45287bd5e34006dfc07f61af4b0a7929e59d3279bd37fc206cf36b60a7f0
+  runbook_path: experiments/EXP-SEMBIN-cb5e25/runbook.yaml
+  runbook_session_id: RBS-SEMBIN-19ce78
+  authorization: >-
+    Standing user authorization, AGENTS.md "Standing user authorization"
+    ("All is approved. Ideas/experiments should be always approved", user,
+    2026-09-06). It applies once a protocol is complete and approvable
+    (AGENTS.md "Approval is bounded by execution"). Approval asserts nothing
+    about the hypothesis. It is not a statement that the experiment may start:
+    dispatch.gate below decides that.
+  context: >-
+    EXP-SEMBIN-cb5e25 was designed under DEC-20261106-36e212 (RUL-1 to RUL-13).
+    The lane BATCH-e0a0c1 was closed late by its own record and BATCH-501c2f
+    was opened, so two lanes (BATCH-cbb416, BATCH-501c2f) are open at the cap
+    of 2 (max_concurrent was not raised). The design archive
+    TASK-20261106-d8dbfa merged PR #3085 into main as 2598c7c76f. The probe now
+    reports approvable true with no blockers.
+
+  approvability:
+    probe_command: >-
+      python3 tools/experiment_preapproval.py --packet
+      coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/packet.json
+    source_ref: origin/main (2598c7c76f0462abadcc365ba7ddf7570ea0bcad)
+    result: approvable true, blockers []
+    report_archived_at: coordination/design/TASK-20261106-a97981/EXP-SEMBIN-cb5e25/preapproval-report.json
+    report_sha256_before_move: dca294827899b11aef0e694adbbbd15a084c5e094612f643293a77827b94d929
+    prospective_sha256:
+      specification: 3e8ad23cac0135a7cdb0c2a1e01ea8e6d03b19845c6197d53b608dada66677f5
+      trial_plan: 45bc1b75f599cbaa28dd41a71c9cc18ed123f13aba8371e8e54783da662a94d6
+      queue: 9af82a9bb91059fd1d079670199104fddad25e6fe809b1e4ffd1006d76a073f5
+      handoff: f3a2dae08ecb6fd181133a81fde577f0f96554be040da98890ac74446b792c6b
+    lane:
+      batch_id: BATCH-501c2f
+      queue: coordination/goals/GOAL-SEMBIN-fcb7a2/batches/BATCH-501c2f/dispatch_queue.json
+      queue_max_concurrent: 1
+      open_lanes_at_probe: [BATCH-cbb416, BATCH-501c2f]
+      cap: 2 (unchanged; RUL-1 of DEC-20261106-36e212)
+      closed_late: BATCH-e0a0c1 (coordination/goals/GOAL-SEMBIN-fcb7a2/lanes/BATCH-e0a0c1.closed.json)
+    lint_receipt: >-
+      experiments/EXP-SEMBIN-cb5e25/runbook-lint.txt (sha256 ef138eb2f86964402969a9307f3fd1dafe78372f9a6d8755a1742138184e67a3
+      as reported by the top-level session) reads, on its one line, LINT OK
+      experiments/EXP-SEMBIN-cb5e25/runbook.yaml sha256
+      054b45287bd5e34006dfc07f61af4b0a7929e59d3279bd37fc206cf36b60a7f0. The
+      Coordinator read that line.
+    card_lint_status: >-
+      The card's only lint finding, per the top-level session, is that no
+      committed approval decision names runbook_sha256 R_A. This decision is
+      that record; the finding clears when this decision is committed.
+
+  approved_bytes:
+    note: >-
+      The top-level session computed these bytes on the working tree. TASK-20261106-a97981
+      must reproduce them exactly. If any sha256 differs, that archive stops and
+      nothing here takes effect. The Coordinator read the header, binds and
+      references of each file and found them consistent with these hashes
+      (below) but could not hash any file.
+    specification:
+      path: experiments/EXP-SEMBIN-cb5e25/specification.yaml
+      sha256: 3e8ad23cac0135a7cdb0c2a1e01ea8e6d03b19845c6197d53b608dada66677f5
+      source: >-
+        Byte copy of
+        coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/specification.preview.yaml,
+        the bytes the probe hashed. The header reads status approved, frozen
+        true, approved_by DEC-20261106-e7576f, execution_authorized true
+        (specification lines 194 to 199, read).
+    trial_plan:
+      path: experiments/EXP-SEMBIN-cb5e25/trial-plan.json
+      sha256: 45bc1b75f599cbaa28dd41a71c9cc18ed123f13aba8371e8e54783da662a94d6
+      change_at_approval: none
+    runbook:
+      path: experiments/EXP-SEMBIN-cb5e25/runbook.yaml
+      sha256: 054b45287bd5e34006dfc07f61af4b0a7929e59d3279bd37fc206cf36b60a7f0
+      change_at_approval: >-
+        Only the experiments/EXP-SEMBIN-cb5e25/specification.yaml bind (runbook
+        line 15 now reads 3e8ad23c...), from the review_required specification
+        hash to the approved-bytes hash.
+    runbook_lint:
+      path: experiments/EXP-SEMBIN-cb5e25/runbook-lint.txt
+      sha256: ef138eb2f86964402969a9307f3fd1dafe78372f9a6d8755a1742138184e67a3
+      output: LINT OK experiments/EXP-SEMBIN-cb5e25/runbook.yaml sha256 054b45287bd5e34006dfc07f61af4b0a7929e59d3279bd37fc206cf36b60a7f0
+    handoff:
+      path: ledger/handoffs/TASK-20261106-9da2e3.yaml
+      sha256: f3a2dae08ecb6fd181133a81fde577f0f96554be040da98890ac74446b792c6b
+      source: >-
+        Byte copy of
+        coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/handoff.preview.yaml,
+        the bytes the probe hashed. Its first-line comment still reads
+        "prospective executor handoff ... (preview)" because the probe hashed
+        those bytes. Its execution block names approved_by
+        DEC-20261106-e7576f and trial_plan_sha256 45bc1b75... (read).
+    queue:
+      path: coordination/goals/GOAL-SEMBIN-fcb7a2/batches/BATCH-501c2f/dispatch_queue.json
+      sha256: 9af82a9bb91059fd1d079670199104fddad25e6fe809b1e4ffd1006d76a073f5
+      change_at_approval: none
+    card:
+      path: experiments/EXP-SEMBIN-cb5e25/task-cards/CARD-EXP-SEMBIN-cb5e25-01.yaml
+      sha256: 03f33cf6f9c9bc75f2ef00ae1f22b9a91ff8268378773d8088b495ee29bf78bb
+      change_at_approval: runbook_sha256 regenerated to 054b4528... (read, line 13). Its header comment still says "Not relayable yet"; that comment is not a gate, the lint is.
+    implementation:
+      code/CODE_SHA256.json: adffdb207c9f85f56ef664d10e1a3b1cae681c9d430e43d246944a0a8cf730f4
+      code/analyze.py: cb20a7ca1ca78756728fd9c0cd7feb0bf336d12aa665d1ee27bd211fcbd83eea
+      change_at_approval: none
+    protocol:
+      path: experiments/EXP-SEMBIN-cb5e25/protocol.json
+      file_sha256: 265e0d6788b5192562393650efc638ab852c2a59032af25fad0e817bcdfa0279
+      canonical_freeze_sha256: a1b0063ed17ded481a3f5d40e71f3227a3fc71661643fd331a7ad9c76e5b8ace
+      change_at_approval: none
+    collision_search:
+      path: experiments/EXP-SEMBIN-cb5e25/collision-search.json
+      sha256: 1b3d863baeda65420771563116c39d34752ddb386d8c34ca80be7bd0cb2d2e50
+      completeness: PARTIAL (see declared_limitations DL-1 and dispatch.gate DG-1)
+      change_at_approval: none
+    binds_read_by_coordinator: >-
+      runbook.yaml lines 15 to 33 bind the specification (3e8ad23c...), the
+      protocol file (265e0d67...), the trial plan (45bc1b75...), the collision
+      search (1b3d863b...), CODE_SHA256.json (adffdb20...) and analyze.py
+      (cb20a7ca...) to the hashes above; the specification's input_bindings and
+      execution_plan.protocol_hashes carry 265e0d67..., 1b3d863b... and
+      a1b0063e... (read). The runbook asserts the frozen protocol hash
+      a1b0063e... per trial.
+
+  protocol_completeness_check:
+    read_by_coordinator:
+      - experiments/EXP-SEMBIN-cb5e25/specification.yaml (header, design_revision 3, hypothesis-facing tail, proof_search_map, input_bindings, execution_plan, readiness, decision_impact)
+      - ledger/hypotheses/H-SEMBIN-e5b2db.yaml (in full)
+      - experiments/EXP-SEMBIN-cb5e25/runbook.yaml (binds, step ids, S01 thresholds, S02, S04, S07 head, replay exemption)
+      - ledger/handoffs/TASK-20261106-9da2e3.yaml (head, deliverables, tail, budget, execution; the 5,900-line artifact_paths list only by sampling)
+      - experiments/EXP-SEMBIN-cb5e25/task-cards/CARD-EXP-SEMBIN-cb5e25-01.yaml
+    against_DEC-20261106-36e212:
+      RUL-3_memory: >-
+        Met. Handoff budget.memory_gb is 32, the handoff constraint states that
+        it is the RLIMIT_AS ceiling and not a resident grant, and DR-11
+        (revision 3) records the deviation.
+      RUL-4_RUL-5_RUL-9_replay_and_two_pass: >-
+        Met as ruled. The handoff constraints keep pass 1 static and exclude
+        SR-6, SR-7 and a raised certificate guard; the runbook trials step is
+        replay-exempt with a stated reason (runbook line 15505); DR-13 records
+        the interpretation gate.
+      RUL-6_timeouts: >-
+        Met. S01 60 s, S02 120 s, S03 60 s, S04 60 s, S05 fixtures 3600 s, S06
+        60 s, S07 trials 43200 s with ttl 750 minutes, S08 analysis 1800 s, S09
+        60 s; handoff wall_clock_seconds 50400. The ruling's step names (S05
+        trials) are renumbered in the compiled runbook (trials is S07, the
+        blob store check is S02, the collision copy is S04); the compiled
+        runbook governs.
+      RUL-10_disk_memory_blobstore: >-
+        Met in the runbook: S01 asserts disk free at least 6442450944 bytes and
+        MemAvailable at least 11534336 kB and that CRYPTO_AR_BLOBSTORE begins
+        with s3:// or file:///; S02 is the put and get round trip. Whether the
+        environment satisfies them is NOT verified (DG-3).
+      RUL-12_gates: >-
+        Gate 1 NOT met in full (partial search): ruled on below in
+        gate_ruling_collision_search. Gates 2 and 3 met for the probe and the
+        runbook lint; the card lint clears when this decision commits. Gate 4
+        (resume checkpoint) met at the time of writing per the top-level
+        session, and must be re-pushed by hand immediately before launch (DG-2).
+        Gate 5 (validate_ledger, design-rate guard, ECC focus check) is the
+        session's to run on the approval archive; the Coordinator did not see
+        its output.
+    controls_metrics_budget_stopping: >-
+      The specification carries fixtures F-1 to F-8, controls C-PC, C-AA-ENC,
+      C-FE-EQ, C-FE-OUT, C-NULL, C-NULL-SHUF and C-SHIFT, stopping rules SR-1
+      to SR-8, a budget of 43200 s and a 10 GiB resident watchdog, invalidation
+      rules, distinct decision_impact for positive, negative and inconclusive
+      outcomes, and required_artifacts. The Coordinator did not re-derive the
+      science of any control; that was ruled and reviewed in the design lane.
+    new_session: >-
+      RBS-SEMBIN-19ce78. The design notes say to keep it unless a journal for
+      it already exists on any ref; the top-level session reported no
+      objection and the probe passed. A pre-existing journal on a non-fetched
+      ref would make the first run fail loudly (the journal must hold exactly
+      one session_started entry); it cannot silently corrupt.
+
+  gate_ruling_collision_search:
+    question: >-
+      RUL-12 gate 1 required the observation-collision search to be performed
+      with research-kb and the repository greps before this decision. The
+      research-kb executable, the local kb/ index and the sibling crypto
+      repository were unavailable, so only the in-repository half was done and
+      collision-search.json declares itself PARTIAL. Approve with the partial
+      search declared, or hold until the knowledge base can be queried?
+    ruling: >-
+      Approve, with the research-kb half converted from an approval gate into a
+      hard dispatch gate (DG-1). This amends RUL-12 gate 1 on the Coordinator's
+      own authority and says so here; it is not a silent waiver.
+    reasons:
+      - >-
+        What a collision costs. The specification names two things a collision
+        would mean: a replication (reframe cheaply) or an existing
+        counterexample or corroboration that changes the ranking of this run.
+        Both are about not wasting a 12-hour, 10 GiB, four-CPU run. Neither
+        makes a completed run invalid or misleading. A collision found late
+        costs compute; it does not corrupt evidence, because the run is
+        observation-only and moves no status. That bounds the harm of a partial
+        search at "possibly duplicate work", which is not zero but is not a
+        validity defect.
+      - >-
+        What approval buys. Approval here writes a ledger state and starts
+        nothing. The run is independently unlaunchable today (CRYPTO_AR_BLOBSTORE
+        unset, S02 unverified), so holding approval would not prevent a
+        premature launch that approval does not also prevent, if DG-1 is a
+        gate. The risk is a dispatcher that reads execution_state ready and
+        skips the decision text; DG-1 is therefore also required to be a
+        committed file whose existence the dispatcher checks, not a memory.
+      - >-
+        What the partial search does show. The in-repository half found no
+        prior measurement of the degree-4 mutant closure's containment of the
+        Groebner basis on satisfiable Nagao disjoint-coset EQS4. The adjacent
+        records (EXP-SEMBIN-22a1a2, EXP-SEMBIN-4fa22c, EXP-SEMBIN-d9767f,
+        EXP-SEMBIN-24ec56, EXP-CERTBIN-060020, KN-FIND-936151) measure
+        different quantities, as the file maps. The one hit the hypothesis
+        itself leans on, the sibling-repository research/dreg_closure_*
+        results, enters only through the lead-atlas row summary and was not
+        re-read; that is exactly the part DG-1 closes.
+      - >-
+        Why not hold. Holding would park a complete, probed, linted contract on
+        an environmental absence that may be indefinite, with no one assigned to
+        remove it. AGENTS.md says an incomplete protocol is completed or records
+        its impediment, never parked. The honest alternative to parking is a
+        gate with an owner, a deadline (before the first measurement) and a
+        defined consequence (withdraw by a superseding decision), which is what
+        DG-1 is. AGENTS.md "Knowledge retrieval" itself states "No result is
+        not evidence of absence" and treats missing access as an access gap,
+        never as mathematical evidence; the converse holds here: a partial
+        search is not evidence of novelty.
+    what_this_does_not_permit: >-
+      No record, report or promotion may call this measurement novel, first, or
+      unreplicated on the basis of collision-search.json. The file supports only
+      "no prior measurement was found in the searched in-repository sources".
+    consequence_if_dg1_finds_a_collision: >-
+      A hit that is a replication, an existing counterexample or a
+      corroboration is read by the Coordinator before dispatch. If it reframes
+      the contract the Coordinator writes a superseding decision that
+      withdraws this approval (EXP-SEMBIN-cb5e25 back to review_required by an
+      additive record, never by editing this one) and the experiment returns
+      to design. Dispatch does not proceed meanwhile.
+
+  status_transitions:
+    - {record: EXP-SEMBIN-cb5e25, from: review_required, to: approved, by: specification.yaml byte swap in TASK-20261106-a97981}
+    - {record: H-SEMBIN-e5b2db, from: specified, to: approved, by: hypothesis status edit in TASK-20261106-a97981}
+  status_transitions_note: >-
+    H-SEMBIN-e5b2db moves as DEC-20261106-36e212 status_transitions_note
+    prescribes, following DEC-20261029-ca33b3 for H-ICPERF-2f52d1. Approval
+    asserts nothing about the hypothesis. No evidence exists. GOAL-SEMBIN-fcb7a2
+    stays active; BATCH-cbb416 keeps current_batch_id and the operative next
+    action.
+
+  scoped_claim_this_experiment_can_support:
+    summary: >-
+      Pass 1 can support only a statement about the instances of the frozen
+      grid it completes: for coset-shifted Nagao EQS4 and EQS4-U systems at
+      p = 2, over the sampled cells (m = 3, n = 3..17; m = 4, k = 2, n = 8..10;
+      and the single stretch cell (3, 19, 7) if budget allows), under the
+      specified sampling rule, closure W_D and budget, whether the degree-4
+      mutant closure W_4 contains a degree-compatible Groebner basis of the
+      ideal. Either (O-1) at least one instance is not contained, with a
+      certificate that the independent checker accepts, which is a
+      counterexample to the operational form of "Proposition 5 and Assumption 1"
+      (that degree 4 suffices) at that instance; or (O-2) every decisive
+      instance is contained while the null arm discriminates, which corroborates
+      the operational form at the tested cells only and is breakthrough-adjacent;
+      or inconclusive or invalid (O-3, O-5, O-6).
+    cannot_support:
+      - >-
+        The user's goal wording, "run harness until subexp ecdlp algo
+        disproved". No run of this experiment, in pass 1 or in any pass within
+        its maximum_runs, can disprove or prove a subexponential ECDLP
+        algorithm. It is a bounded counterexample search against the
+        refutable content of one conditional theorem (Nagao 2015/984, Theorem 1
+        at p = 2). Theorem 1 is conditional and a counterexample does not
+        refute it as a conditional (interpretation_limits); an all-contained
+        outcome does not prove it, does not measure complexity, and does not
+        establish a cost or speedup. A subexponential-time claim for ECDLP is
+        an asymptotic statement over all n; this contract has no FORALL-n
+        statement and no asymptotic_claim (null), and the promotion gates for
+        an asymptotic claim are not in play and are not met.
+      - >-
+        Any statement about a deployed or standardised curve (sect163k1, B-163,
+        K-233 and the like) or about ECDLP security in either direction.
+      - >-
+        Transfer to n >= 20 except the single stretch cell, to m >= 5, to
+        p >= 3, to non-degree-compatible orders, to algorithms outside the
+        linear-algebra closure model (SAT, exhaustive search, hybrid guessing),
+        or to Nagao's asymptotic regime (k = C0, m ~ n/C0). A D_solve series
+        over n is confounded and decides nothing.
+      - >-
+        Containment at N >= 27, which is engine-decided and uncertified. A
+        contained instance shows only that a degree-4 route exists, not that a
+        particular F4 selection strategy stays inside degree 4.
+      - >-
+        Any evidence decision that rests on the contained side of pass-1 data
+        before the nonce-sampled scratch replay is archived (DG-5).
+      - >-
+        Anything about which this decision claims novelty (DL-1).
+    goal_pointer: >-
+      The user's wording stays an unreachable end-state, not a task. What the
+      goal can do next after this experiment is the specification's
+      decision_impact; this decision changes none of it.
+
+  declared_limitations:
+    - id: DL-1
+      text: >-
+        Collision search partial. Not searched: scripts/research-kb (no
+        executable), the local kb/ derived index service, aburan28/crypto
+        research/dreg_closure_* (not checked out), and the cryptanalysis
+        repository beyond AGENTS.md and CLAUDE.md. The lead-atlas rows cited
+        were last reviewed 2026-10-30 with 127 changed paths since. The search
+        was performed by the top-level session (claude-sonnet-5-5), not an
+        independent reviewer. The Coordinator read the file and its seven
+        mapped hits; it did not re-run the greps. Resolved only by DG-1.
+    - id: DL-2
+      text: >-
+        The approved specification bytes still contain pre-approval narrative:
+        proof_search_map.observation_collision_search.status reads "required
+        before the first run, not yet performed", and readiness.blockers lists
+        the collision search, the recompiled plan, the unbuilt queue, the
+        missing approval decision ("this contract stays review_required, frozen
+        false, approved_by null") and unmeasured timings. These are stale
+        design-time lists inside a file whose header fields (lines 194 to 199)
+        read approved/frozen/execution_authorized. The header and this decision
+        govern; the stale lists are not gates and the probe did not treat them
+        as blockers. They cannot be edited without changing the approved hash;
+        a later additive amendment may correct them.
+    - id: DL-3
+      text: >-
+        DR-11 declared deviation (RUL-3). The supervisor's RLIMIT_AS is set to
+        a loose 32768 MB virtual ceiling; the binding limit is the run.py VmRSS
+        watchdog at 10 GiB. This deviates from the specification's "never
+        RLIMIT_AS" in letter and not in intent. The ceiling was checked only on
+        a trivial cell (experiments/EXP-SEMBIN-cb5e25/rlimit-confirmation.json,
+        not re-read) and is unmeasured for the wdag at N = 26 and the N = 40
+        closure; the kill-inside-child path is untested. A kill at the ceiling
+        is an infrastructure signal under SR-7, never a censored M-1. A
+        resident-set spike between watchdog polls can exceed 10 GiB for one
+        interval (about 5 GB of host margin). Pass-2 SR-7 selection must select
+        every row with status error, failed_infrastructure or crash.
+    - id: DL-4
+      text: >-
+        DR-13 declared deviation (RUL-4, RUL-5, RUL-9). Pass 1 runs the static
+        grid and five certify passes only. The trials step is replay-exempt, so
+        the audit's replay field-compare is not_covered for it. An undecided
+        PC-TRI instance is a warning, the C-PC gate then does not hold for its
+        cell, and neither S-MAIN nor F-MAIN may be called from that cell.
+        SR-6 re-runs, the SR-7 retry and a raised certificate guard belong to
+        pass 2, which is a separate plan, runbook, session id, shared run
+        directory and approval, and counts as run 2 of maximum_runs 3.
+    - id: DL-5
+      text: >-
+        Identifier defect in the approved specification: design_revision
+        contains two entries both numbered DR-11, one in revision 2 (certificate
+        emission child, null degree-1 mismatch, F-6 as failure, EQS4-NOFE
+        generators, P-7 calibration) and one in revision 3 (RLIMIT_AS). In this
+        decision and its dispatch gate, "DR-11" means the revision 3 RLIMIT_AS
+        ruling unless "revision 2" is said. The duplicate cannot be repaired
+        without changing the approved hash; record a correction in the pass-1
+        archive.
+    - id: DL-6
+      text: >-
+        SR-8 clock (DR-12). The 43200 s is charged from the first trial; the
+        S05 fixtures step (up to 3600 s) is outside it. Whether SR-8 is per
+        pass or cumulative across passes, and the pass-2 shared run directory
+        and clock, are not decided here (RUL-9).
+    - id: DL-7
+      text: >-
+        Neither the Coordinator nor, as far as the record shows, any session has
+        measured host timings for the revision 2 additions (wdag at N = 20 and
+        24..26, null brute force at N = 24..26); the 26,400 s modelled total
+        against the 43200 s cap is a model. A budget censoring is incomplete,
+        not negative (O-6).
+    - id: DL-8
+      text: >-
+        The Coordinator did not hash any file, did not run the probe, the
+        runbook lint or the card lint, did not read the 5,900-line artifact_paths
+        list in full, and did not read the 587-trial plan or the queue beyond
+        its max_concurrent and task states. The queue and trial plan are
+        bound by the probe's hashes and the runbook's binds only.
+    - id: DL-9
+      text: >-
+        The run-archive task TASK-20261106-c5d001 exists as the handoff's
+        archived_by and as the card embedded in the committed queue. No
+        ledger/handoffs file for it is written in this package. It is a
+        snapshot-kind archive, runs alone after the session and before any
+        independent review, and its read_scope is experiments/EXP-SEMBIN-cb5e25/runs,
+        runbook-sessions and reports. The collision-search addendum required by
+        DG-1 is outside that scope and needs its own ledger archive.
+
+  dispatch:
+    executor_task: TASK-20261106-9da2e3
+    executor_policy: executor-mechanical
+    run_archive_task: TASK-20261106-c5d001
+    approval_archive_task: TASK-20261106-a97981
+    design_archive_task: TASK-20261106-d8dbfa
+    lane: BATCH-501c2f
+    route: /run EXP-SEMBIN-cb5e25 (tools/runbook.py run, session RBS-SEMBIN-19ce78)
+    relationship_of_tasks: >-
+      TASK-20261106-a97981 (ledger kind, runs alone) carries this decision and
+      the byte swaps and launches nothing. TASK-20261106-9da2e3 is the executor
+      task: it runs the runbook session and writes observation files only.
+      TASK-20261106-c5d001 is its declared archived_by: a snapshot archive that
+      runs alone after the session, before any independent review. A later
+      ledger archive after review carries any evidence decision. None of the
+      three is the other; a card names exactly one archival task.
+    gate: >-
+      A dispatch needs ALL of the following. Success of any step waives none.
+      A mismatch stops dispatch and requires an additive correction, never an
+      edit of a record.
+      DG-0. TASK-20261106-a97981 is committed, pushed and merged into main with
+      every approved_bytes sha256 reproduced; python3 tools/runbook.py lint
+      experiments/EXP-SEMBIN-cb5e25/runbook.yaml prints LINT OK with sha256
+      054b4528...; python3 tools/task_card.py lint on the card prints CARD OK;
+      and python3 tools/newest_experiments.py --experiment EXP-SEMBIN-cb5e25
+      --json reports execution_state ready.
+      DG-1. The research-kb half of the collision search is done and
+      committed. With research-kb, the local kb/ index and the sibling
+      repository available, run the queries the specification's
+      observation_collision_search names (measured solving degree, closure
+      degree or Groebner-basis containment on Nagao EQS4 with coset shifts or
+      disjoint-coset factor bases; sibling research/dreg_closure_* for
+      satisfiable or shifted variants), and commit a dated, additive addendum
+      beside collision-search.json (a new file, collision-search-addendum-<date>.json;
+      collision-search.json itself is bound by hash and is not edited), with
+      queries, hits, who read them, and the Coordinator's reading. The
+      Coordinator reads the addendum before dispatch. If it reports a
+      replication, an existing counterexample or a corroboration that
+      reframes the contract, dispatch does not proceed and the Coordinator
+      writes a superseding decision. If the knowledge base remains unavailable,
+      dispatch remains blocked; the approval does not expire and the blocker is
+      recorded as an impediment on the goal.
+      DG-2. The resume checkpoint is filled (scripts/checkpoint.sh init) and
+      pushed by hand with env -u CHECKPOINT_UPLOAD_TOKEN through the AWS
+      credentials, immediately before launch, because any change after the
+      push makes the hook's gate retry the expired upload token. The state as
+      of writing was complete at s3://setec-astronomy-artifacts/checkpoints/crypto-autoresearcher/claude__sembin-true-dF-search/20261106T162542Z-2598c7c76f04/
+      and that push is stale for any launch after a later commit.
+      DG-3. CRYPTO_AR_BLOBSTORE is set (s3://bucket/prefix, or file:///dir on a
+      volume with at least 20 GiB free that is not the repository volume; the
+      configured store is s3://setec-astronomy-artifacts/store per
+      .artifacts/config.json) and the credentials work. Its put and get round
+      trip (runbook step S02) must pass; S01 asserts that the variable begins
+      with s3:// or file:///, disk free at least 6 GiB (6442450944 bytes) on
+      the volume holding experiments/EXP-SEMBIN-cb5e25, and MemAvailable at
+      least 11 GiB (11534336 kB). At writing the variable was unset and the
+      credentials unverified, and the host reported about 9 GB free disk and 15
+      GB RAM. If S01 or S02 fails the session stops before any trial and the
+      failure is infrastructure signal, not a result; it is retried only after
+      the cause is removed and only by a new dispatch that satisfies every
+      line of this gate.
+      DG-4. No live claim on any other queue of GOAL-SEMBIN-fcb7a2: python3
+      tools/goal_lanes.py claims
+      coordination/goals/GOAL-SEMBIN-fcb7a2/batches/BATCH-cbb416/dispatch_queue.json
+      shows none (RUL-2), and the host is not running another producer of this
+      goal or a quiet-machine solver benchmark. The same exclusion binds
+      TASK-20260916-0c2802 from the other side: its dispatcher must check
+      BATCH-501c2f's queue first. BATCH-501c2f has max_concurrent 1.
+      DG-5. (Pass-1 replay, RUL-5.) No evidence-review decision of support,
+      weaken, reject_scoped or corroboration may rest on the contained side of
+      pass-1 data until a nonce-sampled scratch replay (same adapter, a
+      scratch --shared-run-dir, seeds from the frozen protocol hash) has been
+      archived and compared with the declared records. Pass 1 itself states no
+      verdict. A non-containment still needs a certificate that the
+      independent checker (review/checker) accepts; review-breakthrough at max
+      is required for a counterexample presented as contradicting a published
+      chain and for the all-contained corroboration (core rule 12,
+      undegradable). If that tier cannot be served the claim stays un-promoted.
+      DG-6. Declared inputs are committed and pushed (AGENTS.md "Handoffs");
+      the lane claim is taken through the runbook's supervisor (the engine
+      claims TASK-20261106-9da2e3 with ttl 750 minutes); the executor is
+      dispatched with executor-mechanical and the card relayed verbatim; the
+      executor reads only the last line of the long trials step (S07 in the
+      compiled runbook; the card calls it step 2) and runs it in the
+      background, never re-running an invalid session (an SR-4, SR-5, IR-1,
+      IR-2, IR-3 or IR-5 stop is terminal).
+      DG-7. The Coordinator checks the validity of the pass-1 session before
+      any interpretation: expected run count (587 per the budget, to be
+      confirmed against the plan), schema-complete manifests, seed integrity,
+      raw/summary agreement, control comparability, and VERIFY OK.
+    never:
+      - /run EXP-SEMBIN-cb5e25 before DG-0 to DG-4 and DG-6 hold
+      - interpreting pass-1 contained-side data before DG-5
+      - any pass-2 action (SR-6, SR-7, raised certificate guard, a second session) without its own plan, runbook, session id, shared run directory and approval
+
+  target_ids:
+    - EXP-SEMBIN-cb5e25
+    - H-SEMBIN-e5b2db
+    - GOAL-SEMBIN-fcb7a2
+    - BATCH-501c2f
+    - TASK-20261106-9da2e3
+    - TASK-20261106-c5d001
+    - TASK-20261106-a97981
+  related_records:
+    prior_decisions: [DEC-20261106-36e212]
+    template_packet: [DEC-20261029-ca33b3]
+    design_archive: TASK-20261106-d8dbfa
+    approval_archive: TASK-20261106-a97981
+    reserved_not_written: [DEC-20261106-c897df]
+    lane_closed_late: BATCH-e0a0c1
+    lane_kept_open: BATCH-cbb416
+    design_notes: experiments/EXP-SEMBIN-cb5e25/design-notes.md
+
+  rationale:
+    - >-
+      The protocol is complete: frozen protocol bound by hash, controls and
+      fixtures with the instrument's SR-1 gate, an independent blind certificate
+      checker cross-checked 7 of 7, stopping and invalidation rules,
+      distinct outcomes with distinct next decisions, declared deviations
+      DR-11 and DR-13, and a runbook that lints clean against the
+      approved-bytes specification.
+    - >-
+      The probe reports approvable true on the exact prospective bytes at
+      source_ref origin/main, inside a lawful lane within cap 2 that was made
+      lawful by recording a finished lane's closure, not by raising the cap.
+      That satisfies AGENTS.md "Approval is bounded by execution".
+    - >-
+      The one RUL-12 gate not fully met, the research-kb half of the collision
+      search, is bounded in harm (possible duplicate work, no validity damage)
+      and is made a hard dispatch gate with an owner and a defined consequence
+      rather than waved through or left to park the contract. The approved
+      state does not authorise a launch, and the launch is also blocked today
+      by unmet environment preconditions.
+    - >-
+      The user's goal wording cannot be satisfied by any run; stating the
+      scoped claim here prevents a later reading of a pass-1 result as more
+      than a bounded counterexample search over a fixed grid.
+  evidence_refs:
+    - coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/preapproval-report.json
+    - coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/packet.json
+    - coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/specification.preview.yaml
+    - coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/handoff.preview.yaml
+    - experiments/EXP-SEMBIN-cb5e25/specification.yaml
+    - experiments/EXP-SEMBIN-cb5e25/runbook.yaml
+    - experiments/EXP-SEMBIN-cb5e25/runbook-lint.txt
+    - experiments/EXP-SEMBIN-cb5e25/collision-search.json
+    - experiments/EXP-SEMBIN-cb5e25/rlimit-confirmation.json
+    - experiments/EXP-SEMBIN-cb5e25/design-notes.md
+    - ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+    - ledger/handoffs/TASK-20261106-9da2e3.yaml
+    - ledger/decisions/DEC-20261106-36e212.yaml
+    - ledger/decisions/DEC-20261029-ca33b3.yaml
+    - coordination/goals/GOAL-SEMBIN-fcb7a2/lanes/BATCH-501c2f.lane.json
+  limitations:
+    - >-
+      The Coordinator computed no sha256 and ran no command. Every hash is the
+      top-level session's. It compared them by reading against the hashes the
+      files themselves carry (runbook binds, specification input_bindings,
+      CODE_SHA256.json, card line 13, runbook-lint.txt line 1) and against the
+      probe report; it could not verify the trial-plan, queue, handoff, card,
+      runbook-lint or CODE_SHA256.json file hashes independently. They bind
+      only if TASK-20261106-a97981 reproduces them exactly.
+    - >-
+      The Coordinator could not verify CRYPTO_AR_BLOBSTORE, the S3
+      credentials, free disk, MemAvailable, the absence of live claims on
+      BATCH-cbb416, the resume checkpoint object in S3, or the open-PR state.
+      DG-2 to DG-4 are conditions, not findings.
+    - >-
+      The probe ran against the pre-swap specification bytes (the preview). The
+      approval archive replaces them; execution_state ready, checked after the
+      archive, is the gate on the post-approval bytes (DG-0).
+    - >-
+      The research-kb half of the collision search is unperformed (DL-1).
+  next_actions:
+    - id: NA-1
+      rank: 1
+      owner: top-level session
+      text: >-
+        Run TASK-20261106-a97981 alone (ledger kind): stage by exact path the
+        decision, specification.yaml (byte copy of the preview), runbook.yaml,
+        runbook-lint.txt, the card, ledger/handoffs/TASK-20261106-9da2e3.yaml,
+        ledger/hypotheses/H-SEMBIN-e5b2db.yaml, and the preapproval report
+        moved to coordination/design/TASK-20261106-a97981/EXP-SEMBIN-cb5e25/.
+        Verify every sha256 against approved_bytes before committing; any
+        mismatch stops the archive. After the commit confirm LINT OK, CARD OK
+        and execution_state ready, push, open PR B naming DEC-20261106-e7576f
+        and the other records, and enable auto-merge. Do not launch.
+    - id: NA-2
+      rank: 2
+      owner: top-level session, then coordinator
+      text: >-
+        Obtain the research-kb half of the collision search (DG-1) as soon as
+        research-kb, kb/ and the sibling repository are reachable; commit the
+        addendum through its own ledger archive; the Coordinator reads it and
+        either confirms dispatch or writes a superseding decision. Record the
+        unavailability as an impediment on GOAL-SEMBIN-fcb7a2 meanwhile.
+    - id: NA-3
+      rank: 3
+      owner: top-level session
+      text: >-
+        Provision the blob store (DG-3): set CRYPTO_AR_BLOBSTORE, confirm the
+        credentials with a put and get, and confirm at least 6 GiB free disk
+        and 11 GiB MemAvailable on the host. Do not edit the runbook to make a
+        failing S01 pass.
+    - id: NA-4
+      rank: 4
+      owner: top-level session, after DG-0 to DG-4
+      text: >-
+        Re-push the resume checkpoint by hand immediately before launch, then
+        dispatch TASK-20261106-9da2e3 (/run EXP-SEMBIN-cb5e25) under the gate,
+        and run TASK-20261106-c5d001 alone afterwards.
+    - id: NA-5
+      rank: 5
+      owner: coordinator, after pass 1
+      text: >-
+        Check validity of the session before any interpretation (DG-7). Then
+        schedule the nonce-sampled scratch replay (DG-5) and the Validator
+        round, and design pass 2 under its own decision, deciding the SR-8 and
+        shared-directory questions left open in DEC-20261106-36e212 RUL-9.
+  opened_tasks: [TASK-20261106-a97981]
+  archived_by: TASK-20261106-a97981
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      This is an approval decision. There is no evidence record, no support or
+      reject_scoped decision and no durable research claim; no result exists.
+  visual_record: >-
+    Not an evidence-review decision, and it produces no run. No graph source or
+    rendering changes.
+  official_effect_until_committed_pushed_reviewable: none
