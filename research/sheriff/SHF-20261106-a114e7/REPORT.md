@@ -53,15 +53,15 @@ and the session:
 | broken | 2 |
 | not_covered | 3 |
 
-There are 51 findings: **no blocker, 11 major, 40 minor.**
+There are 52 findings: **no blocker, 11 major, 41 minor.**
 
 The two `broken` claims:
 - **SES/C-CI-MERGE**, the AGENTS.md merge rule as practised: PRs merge with
   applicable checks pending or failed (CIX-1, CIX-2).
 - **pfdr/PFX-C-EV-apbound**, the label-AP size bound in EV-PFDR-07d608: it was
-  invalid, and CORR-20261029-1aaef6 has since withdrawn it. The correction is
-  additive and accurate. The reader found nothing that still rests on the
-  bound.
+  invalid below 4 labels (PFX-6), and CORR-20261029-1aaef6 has since
+  withdrawn it. The correction is additive and accurate; one later record
+  restates the bound (PFX-5).
 
 ## Blockers
 
@@ -172,8 +172,10 @@ The core reading of EV-PFDR-07d608 is upheld.
 - Preregistration holds, no threshold moved, and no execution proof is
   claimed.
 
-**The 3.11 replay claim is upheld, scoped.** An exact audit replay under
-CPython 3.11.15 was made. A 3.13.17 control reproduces the recorded drift
+**The 3.11 replay claim is upheld, scoped.** The producers' exact replay ran
+on a different build of CPython 3.11.15 and covered 4 of the 5 runs, not the
+census run. The reader repeated those four under 3.11.18 and every output file
+is byte-identical. The census under 3.11 is not covered here. A 3.13.17 control reproduces the recorded drift
 exactly: 2 summary leaves (416 and 402 ulps) and 479 analysis leaves. What a
 replay is (it bounds fabrication and is not reproduction), and what the audit
 instrument can see, are findings:

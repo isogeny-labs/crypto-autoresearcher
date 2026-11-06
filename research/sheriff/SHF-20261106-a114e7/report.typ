@@ -9,7 +9,7 @@
 
 Independent re-audit of origin/main in crypto-autoresearcher (`da442739db`), isogeny-labs/crypto (`3a7a0f98a`) and isogeny-labs/cryptanalysis (`5bdfb496d`). An audit record: it changes no research state and repairs nothing. Full text: `REPORT.md`. Verdicts: `findings.yaml`, which passes `check-case`. Audit session `01TCbLH84PotMkHyFGFE4ifE`, commissioned by `016SURwTvgaQmnMnhpa1SLXQ`, which produced the ICPERF and PFDR records under audit (SES-INDEP).
 
-*Result: 146 claims. 45 upheld, 59 upheld (scoped), 32 overclaimed, 5 unsupported, 2 broken, 3 not covered. No blocker; 11 major and 40 minor findings. Of the 83 prior findings: 62 fixed, 15 partially fixed, 6 not fixed.*
+*Result: 146 claims. 45 upheld, 59 upheld (scoped), 32 overclaimed, 5 unsupported, 2 broken, 3 not covered. No blocker; 11 major and 41 minor findings. Of the 83 prior findings: 62 fixed, 15 partially fixed, 6 not fixed.*
 
 #figure(image("sweep.svg", width: 92%), caption: [Deterministic sweep (tools/sheriff.py, scans of all three repositories). Canary 15/15 caught, 0 missed, 0 false positives. All 13 blocker leads are planted Lean-review fixtures.])
 
@@ -17,7 +17,7 @@ Independent re-audit of origin/main in crypto-autoresearcher (`da442739db`), iso
 - *Merge rule as practised (CIX-1, CIX-2).*
   - \#3065 merged with ledger, merge-hygiene and ledger-and-harness still running on its head.
   - \#3056 merged with lab-parity failed, and a post-merge `pull_request_target` run then posted green on the same SHA.
-- *EV-PFDR-07d608 label-AP bound.* It was invalid and is withdrawn by CORR-20261029-1aaef6, an additive and accurate correction. Nothing found still rests on it.
+- *EV-PFDR-07d608 label-AP bound.* It was invalid below 4 labels (PFX-6) and is withdrawn by CORR-20261029-1aaef6, an additive and accurate correction; a later record restates it (PFX-5).
 
 == Major findings
 - *ZKX-1:* the FRI last-layer fold comparison has no isolating test, so S2N-1 is only partly fixed.

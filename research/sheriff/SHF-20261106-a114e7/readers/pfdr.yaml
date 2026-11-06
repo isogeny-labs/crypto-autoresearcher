@@ -672,6 +672,10 @@ limitations:
   - "My blind re-derivation covers bits 20 only, p = 3 mod 4, n <= 1024, on my own curve family."
   - "The seed-binding check runs the producer's vendored generator; it binds, it does not independently derive."
   - "The default audit's replay interpreter is 3.13.18 (python3 on PATH); interpreter parity is mismatch by construction, as in the recorded audit."
+side_effects:
+  - "tools/__pycache__/runbook.cpython-313.pyc (gitignored bytecode cache) was (re)written at 03:06Z when ptm3_reseal.py imported tools/runbook.py for entry_hash; no tracked file outside this reader's scope changed (git status)."
+  - "Scratch copies of the session (four control repos), the 3.11 replay root and their outputs live in the session scratchpad, outside the repository; run.py's temporary /tmp/bb0d26-build-* directories were created by the replays."
+  - "Attempt-1 and attempt-2 census replay jobs files were deleted from this directory after comparison (hashes kept in census_replay_files.json)."
 artifact_paths:
   - research/sheriff/SHF-20261106-a114e7/readers/pfdr.yaml
   - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/

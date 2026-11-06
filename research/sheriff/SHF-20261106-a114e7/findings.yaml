@@ -2990,12 +2990,10 @@ sheriff_case:
     - research/sheriff/SHF-20261106-a114e7/readers/pfdr.yaml
     - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr
     findings:
-    - SES-UNLINKED
+    - PFX-6
     reader: readers/pfdr.yaml
     scoped_to: the size bound is withdrawn by CORR-20261029-1aaef6 (2.0-2.6 labels cannot carry any coincidence);
       'not supported at these sizes' stands without a size figure
-    composition_note:
-    - no reader finding linked; linked to composer finding SES-UNLINKED
   - id: pfdr/PFX-C-EV-scoped
     text: the exact pair-sum (h = 2) coincidence count matches the matched uniform-label null within the
       preregistered 5% tolerance in 44 of the 45 toy cells ... The observed |kappa - 1| is at most 0.041
@@ -3364,11 +3362,9 @@ sheriff_case:
     - research/sheriff/SHF-20261106-a114e7/readers/pfdr.yaml
     - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr
     findings:
-    - SES-UNLINKED
+    - PFX-6
     reader: readers/pfdr.yaml
     scoped_to: bullets 1, 2 and 4 hold (recomputed or traced); bullet 3 is withdrawn by CORR-20261029-1aaef6
-    composition_note:
-    - no reader finding linked; linked to composer finding SES-UNLINKED
   - id: pfdr/PFX-C-KN-reproduced
     text: 'The reading was reproduced four ways: an exact audit replay under the recorded interpreter
       version (CPython 3.11.15); a disjoint brute-force recount of sampled jobs ...; a strictly blind
@@ -4781,6 +4777,25 @@ sheriff_case:
     - ledger/decisions/DEC-20261029-8d9b43.yaml:204
     - ledger/corrections/CORR-20261029-1aaef6.yaml:23
     fix: An additive note on DEC-20261029-8d9b43 pointing FR-3 at CORR-20261029-1aaef6.
+    reader: readers/pfdr.yaml
+  - id: PFX-6
+    beat: B6
+    severity: minor
+    claim_ids:
+    - pfdr/PFX-C-EV-apbound
+    - pfdr/PFX-C-KN-instrument
+    what: 'The label-AP detectability bound "about 2 to 47 labels" in EV-PFDR-07d608 (INF-3, obstruction
+      statement, quantity, summary) and KN-FIND-c81e5b is wrong at its low end: rt_ap_bound.json gives
+      2.0 to 2.6 labels at b28-r{1,2,3}-n256, and C(X) cannot register any coincidence inside fewer than
+      4 labels, so the cubic inversion is invalid there. Already withdrawn by CORR-20261029-1aaef6 (checked:
+      additive, correct, complete for the round); the original bytes remain and are read with the correction.'
+    evidence:
+    - ledger/evidence/EV-PFDR-07d608.yaml:240
+    - knowledge/findings/KN-FIND-c81e5b.md:43
+    - experiments/EXP-PFDR-bb0d26/review/TASK-20261029-ff0453/rt_ap_bound.py:1
+    - ledger/corrections/CORR-20261029-1aaef6.yaml:35
+    fix: None beyond CORR-20261029-1aaef6; a size bound, if wanted, needs the discrete planted-prefix
+      recount the correction names.
     reader: readers/pfdr.yaml
   - id: ZKX-1
     beat: B2
