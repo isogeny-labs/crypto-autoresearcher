@@ -1,0 +1,105 @@
+# Additive correction of the labelling of EXP-ICPERF-284bc4 records, filed as
+# next action NA-1 of ledger/decisions/DEC-20261105-8a9984.yaml; its content is
+# that decision's rulings.labelling_ruling (a)-(c).
+# It is additive: it annotates the frozen runbook.yaml, the run report
+# (report.typ, data.json), EV-ICPERF-08f6f9 and DEC-20261105-8a9984, and
+# changes no byte of any of them. It changes no status, value or decision.
+correction:
+  id: CORR-20261106-243c4d
+  id_provenance: >-
+    Allocated by the top-level session with tools/allocate_id.py --next
+    correction --date 20261106, then --check: well-formed and free (0
+    occurrences across 48101 paths, as reported by the top-level session). The
+    Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  decided_under: DEC-20261105-8a9984 (next_actions NA-1; rulings.labelling_ruling)
+  type: labelling_and_provenance_correction
+  supersedes: []
+  target_ids:
+    - EXP-ICPERF-284bc4
+    - EV-ICPERF-08f6f9
+    - DEC-20261105-8a9984
+  corrects:
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json
+  corrections:
+    - label: (a) computed, not measured
+      ruling_ref: ledger/decisions/DEC-20261105-8a9984.yaml rulings.labelling_ruling (a)
+      record_type: experiment_metrics_labels
+      record_id: EXP-ICPERF-284bc4
+      field: metric label of price_ratio_num, price_ratio_den, ratios_agree, all_match_bsgs, matches_preregistered
+      locations:
+        - experiments/EXP-ICPERF-284bc4/runbook.yaml metrics block (label lines 515, 524, 533, 541, 549)
+        - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ Metrics table (lines 41, 43-46)
+        - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json metrics.<name>.label (lines 32, 52, 62, 73, 84)
+        - any metrics export of these five values that labels them "measured"
+      prior_value: label measured
+      corrected_value: >-
+        computed: each of the five is computed from frozen inputs by the
+        closed-form online-time model that run.py evaluates in exact
+        rationals; none is measured. Only elapsed_seconds (runbook.yaml line
+        557, report.typ line 42, data.json line 42) is measured, and its label
+        stands.
+      reason: >-
+        DEC-20261105-8a9984 rulings.labelling_ruling (a); EV-ICPERF-08f6f9
+        inference ("The instrument evaluates the stated closed-form model in
+        exact rationals"; "Only the literal 925/4 carries information, and it
+        is a function of the frozen inputs") and unresolved_confounds item 1
+        (red-team O1).
+    - label: (b) provenance of the assumed prices
+      ruling_ref: ledger/decisions/DEC-20261105-8a9984.yaml rulings.labelling_ruling (b)
+      record_type: experiment_inputs_provenance
+      record_id: EXP-ICPERF-284bc4
+      field: provenance of c_probe 370 ns, c_state 2100 ns, c_step 40 ns, and reading of 925/4
+      prior_value: provenance undisclosed in the specification and hypothesis (EV-ICPERF-08f6f9 unresolved_confounds item 2)
+      corrected_value: >-
+        370, 2100 and 40 ns are the n=83 back-of-envelope prices of
+        ledger/proposals/IDEA-20261015-7a3c9e.yaml (lines 77-81): c_probe and
+        c_state inferred, c_step assumed; none was measured in
+        EXP-ICPERF-284bc4. Hence 925/4 = 231.25 is numerically that idea's
+        "370*2100/(2.1*1600) = 231 against the measured 235" figure, and
+        EXP-ICPERF-284bc4 adds no information to that comparison. The 235x
+        [61, 645] figure remains unverified in the ledger.
+      reason: >-
+        DEC-20261105-8a9984 rulings.labelling_ruling (b); the idea itself
+        states at line 81 "Consistent, not confirmed: two of the three prices
+        are inferred, not read"; EV-ICPERF-08f6f9 narrowest_supported_statement
+        and boundaries item 1 (prices are assumed constants; no host receipt is
+        read).
+    - label: (c) reading of the producer scope phrase
+      ruling_ref: ledger/decisions/DEC-20261105-8a9984.yaml rulings.labelling_ruling (c)
+      record_type: producer_claim_wording
+      record_id: EXP-ICPERF-284bc4
+      field: producer scope phrase (PR #2776, as quoted in experiments/EXP-ICPERF-284bc4/review/review-plan.yaml claim_under_review, line 28)
+      prior_value: '"no latency effect, no n=83 speedup"'
+      corrected_value: '"makes no latency or n=83 statement"'
+      reason: >-
+        DEC-20261105-8a9984 rulings.labelling_ruling (c). The experiment
+        measures no price or latency and tests nothing at n=83, so it can
+        neither find nor exclude a latency effect or an n=83 speedup. This
+        record itself makes no latency or n=83 statement and closes nothing
+        there.
+  preservation:
+    scientific_quantity_changed: false
+    decision_changed: false
+    hypothesis_status_changed: false
+    experiment_status_changed: false
+    claim_ceiling_changed: false
+    specification_changed: false
+    frozen_files_edited: false
+  edits_target: false
+  evidence_artifacts:
+    - ledger/decisions/DEC-20261105-8a9984.yaml (rulings.labelling_ruling; next_actions NA-1)
+    - ledger/evidence/EV-ICPERF-08f6f9.yaml (inference; narrowest_supported_statement; boundaries; unresolved_confounds items 1-2)
+    - ledger/proposals/IDEA-20261015-7a3c9e.yaml (lines 77-81)
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml (metrics block, lines 513-560)
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ (lines 41-46)
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json (metrics labels)
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml (claim_under_review, lines 21-28)
+  limitations:
+    - No shell. Values and line numbers are as read from the committed files on branch claude/corr-icperf-284bc4-na1; no digest, checker or validator was run here.
+    - The correction covers the labels in the three named files and any metrics export; the exporter fix itself is DEC-20261105-8a9984 NA-2 (tooling), not this record.
+    - It adds no measurement and no number beyond those in the cited files, and verifies nothing about the 235x figure or any price.
+  archived_by_note: Committed by the top-level session in the PR that adds this record.

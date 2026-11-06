@@ -1,0 +1,52 @@
+id: LEAD-ICP-hecke-cm-class-point-rank-completion
+family: ic-prime
+title: >-
+  Hecke/CM class points on X_0(11) - rank-completion collection of anchored, subgroup-projected
+  known-log points as a relation source, and its costed connection to an arbitrary public target
+mechanism: >-
+  Collect CM class points on X_0(11) over F_p whose logarithms are known, project them to the
+  prime-order subgroup, and use Hecke (and Atkin-Lehner) correspondences between them as linear
+  relations on the unknown labels. Rank completion then fixes all labels from few generic base-log
+  queries, and a public target is connected through a BSGS-style oracle over the labelled points.
+disposition: open_next_step
+next_action:
+  step: >-
+    Compare the rank-completion collector against the pair-index-reuse generic control (not only
+    the doubling/tripling-only baseline) on the same cells, report Hecke's marginal rank over
+    pair-only per cell, and price setup (CM search, geometric construction), collection and linear
+    algebra at 0, 0.1 and 1 GAE per unnamed native operation against matched rho. Locate the
+    D79 support-seven/support-eight and query-order records first; they are the owner's cited
+    evidence and were not found in any merged or open PR.
+  discriminates: >-
+    A positive marginal rank over pair-only that survives complete pricing across the band
+    opens a measurable improvement; zero marginal rank (as on the r=769 and conductor-30 cells)
+    or an unpriced setup dominating the saving closes it as dominated by the generic control.
+  blocked_by: docs/reports/hecke-cm-prioritization-20261106/REPORT.md
+evidence:
+- repo: cryptanalysis
+  path: experiments/hecke-sparse-target-20261030/RESULT.md
+  note: 'D_K=-39 on X_0(11)/F_p: Hecke leaves 12 free base logs versus 32 scalar-only; target connected through a replayed BSGS oracle on three of four cells; reduction is in generic queries, not complete setup or wall time'
+- repo: cryptanalysis
+  path: experiments/hecke-sparse-target-20261030/PAIR_REUSE_RESULT.md
+  note: 'pair-index reuse leaves 1 free log on three cells; Hecke marginal rank over pair-only is 0, 10, 19, 0; same-total-budget superiority unestablished'
+- repo: cryptanalysis
+  path: experiments/hecke-sparse-target-20261030/COST_CELL_PROTOCOL.md
+  note: 'prepared complete fixed-base workload; unexecuted after a retained no-CUDA preflight failure'
+- repo: cryptanalysis
+  path: experiments/ecdlp-hecke-d39-holdout-20261026/RESULT.md
+  note: 'exploratory D_K=-39 f=6 control: 64 class points, 48 verified Hecke relations, rank 40, Atkin-Lehner rank 52'
+- repo: crypto-autoresearcher
+  path: docs/reports/ecdlp-special-structure-leads-20261031/family-C-lifting.md
+  note: 'C4 rated Hecke/Atkin-Lehner relation sources on X_0(11)/F_367 as no IC advantage'
+- repo: crypto-autoresearcher
+  path: docs/reports/hecke-cm-prioritization-20261106/REPORT.md
+  note: 'prioritization, evidence status (D79 records not located) and the Q-attachment experiment design'
+ledger_refs: []
+known_results: []
+forecloses:
+- Hecke correspondence relations as a stand-alone relation source on X_0(11)
+- class-point rank completion without the pair-reuse control
+- Atkin-Lehner relation sources on X_0(11) without complete setup pricing
+areas:
+- PATH
+last_reviewed: '2026-11-06'

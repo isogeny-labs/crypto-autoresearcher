@@ -2250,14 +2250,78 @@ def _replay_interpreter(runbook: Runbook, trial: dict[str, Any], cache: dict[str
     return cache[program]
 
 
-def _recorded_python(run_dir: Path) -> str | None:
-    """/run/environment/python_version of a unit's manifest, when present."""
-    try:
-        manifest = yaml.safe_load((run_dir / "manifest.yaml").read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
+# Where a unit's run directory records the interpreter it ran under, in the
+# order the audit reads them; the first that yields a version wins. Real run
+# manifests (EXP-ICPERF-284bc4, 283a70) write /run/environment/python, not
+# python_version, and the supervisor's environment.json writes "python" as the
+# full sys.version string; reading only python_version made the parity check
+# a silent no-op (DEC-20261105-6e2616 NA-1).
+RECORDED_PYTHON_SOURCES: tuple[tuple[str, str], ...] = (
+    ("manifest.yaml", "/run/environment/python_version"),
+    ("manifest.yaml", "/run/environment/python"),
+    ("manifest.yaml", "/run/environment/driver_python_version"),
+    ("manifest.yaml", "/run/environment/version"),
+    ("environment.json", "/python_version"),
+    ("environment.json", "/python"),
+)
+PYTHON_VERSION = re.compile(r"^\s*(?:CPython\s+|Python\s+)?(\d+\.\d+(?:\.\d+)?)(?=$|[\s+a-z])")
+
+
+def _python_version_of(value: Any) -> str | None:
+    """The bare X.Y[.Z] a recorded field states: "3.11.17", or the leading
+    version of a sys.version string; None for anything else."""
+    if isinstance(value, (int, float)) or value is None or isinstance(value, bool):
         return None
-    found, value = pointer_get(manifest, "/run/environment/python_version")
-    return str(value) if found and value is not None else None
+    match = PYTHON_VERSION.match(str(value))
+    return match.group(1) if match else None
+
+
+def _load_record(path: Path) -> Any:
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    try:
+        return json.loads(text) if path.suffix == ".json" else yaml.safe_load(text)
+    except (ValueError, yaml.YAMLError):
+        return None
+
+
+def recorded_interpreter(run_dir: Path) -> dict[str, Any]:
+    """The interpreter a unit was recorded under, from the canonical places in
+    RECORDED_PYTHON_SOURCES order: {"python_version", "source"}, or
+    {"python_version": None, "source": None, "searched": [...]} when none
+    records one. /run/environment/version counts only beside
+    implementation CPython, since other manifests use it for other things."""
+    documents: dict[str, Any] = {}
+    for name, pointer in RECORDED_PYTHON_SOURCES:
+        if name not in documents:
+            documents[name] = _load_record(run_dir / name)
+        found, value = pointer_get(documents[name], pointer) if documents[name] is not None else (False, None)
+        if not found:
+            continue
+        if pointer == "/run/environment/version":
+            _, implementation = pointer_get(documents[name], "/run/environment/implementation")
+            if str(implementation).lower() != "cpython":
+                continue
+        version = _python_version_of(value)
+        if version:
+            return {"python_version": version, "source": f"{name}#{pointer}"}
+    return {"python_version": None, "source": None,
+            "searched": [f"{name}#{pointer}" for name, pointer in RECORDED_PYTHON_SOURCES]}
+
+
+def _recorded_python(run_dir: Path) -> str | None:
+    """The recorded interpreter's bare version, when any canonical place has it."""
+    return recorded_interpreter(run_dir)["python_version"]
+
+
+def _same_version(recorded: str, replay: str) -> bool:
+    """Equal versions, or equal where the recorded one states fewer parts
+    (a recorded "3.11" matches a replay "3.11.17")."""
+    a, b = recorded.split("."), replay.split(".")
+    n = min(len(a), len(b))
+    return a[:n] == b[:n]
 
 
 def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce: str | None = None,
@@ -2289,6 +2353,7 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
     replays = []
     not_covered = []
     interpreters: dict[str, Any] = {}
+    interpreter_unknown: list[str] = []
     pinned = (runbook.doc.get("environment") or {}).get("python")
     for step in runbook.doc["steps"]:
         if step["kind"] != "trials":
@@ -2313,11 +2378,21 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
                 continue
             unit = units[(step["id"], trial_id)]
             record = replay_unit(repo, runbook, step, plan, trial, unit, target, float_tolerance=float_tolerance)
-            recorded = _recorded_python(resolve(repo, unit["run_dir"]))
+            found = recorded_interpreter(resolve(repo, unit["run_dir"])) if unit.get("run_dir") else \
+                {"python_version": None, "source": None, "searched": []}
+            recorded = found["python_version"]
+            parity = "unknown" if recorded is None or have is None else \
+                "match" if _same_version(recorded, have) else "mismatch"
             record["interpreter"] = {"version": interpreter.get("version"),
                                      "executable": interpreter.get("executable"),
-                                     "python_version": have, "recorded_python_version": recorded}
-            if recorded is not None and recorded != have:
+                                     "python_version": have, "recorded_python_version": recorded,
+                                     "recorded_source": found["source"], "interpreter_parity": parity}
+            if parity == "unknown":
+                why = (f"no recorded interpreter in {unit.get('run_dir')} (searched "
+                       f"{', '.join(found.get('searched') or []) or 'nothing: no run directory'})"
+                       if recorded is None else "the replay interpreter did not report its version")
+                interpreter_unknown.append(f"{step['id']}/{trial_id}: interpreter_parity: unknown; {why}")
+            if parity == "mismatch":
                 record["environment_drift"] = {
                     "kind": "interpreter_version", "recorded_python_version": recorded,
                     "replay_python_version": have,
@@ -2371,6 +2446,11 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
         "replay_interpreters": sorted(interpreters.values(), key=lambda i: i["program"]),
         "environment_drift": [{"step_id": r["step_id"], "trial_id": r["trial_id"], **r["environment_drift"]}
                               for r in replays if r.get("environment_drift")],
+        # Every replayed unit's parity is match, mismatch or unknown; unknown
+        # is stated here and in notes, never skipped (DEC-20261105-6e2616).
+        "interpreter_parity": {state: sum(r.get("interpreter", {}).get("interpreter_parity") == state
+                                          for r in replays) for state in ("match", "mismatch", "unknown")},
+        "notes": interpreter_unknown,
         "journal_chains": journal_chains,
         "lean": lean,
         "not_covered": not_covered,
@@ -2869,6 +2949,8 @@ def main(argv: list[str] | None = None) -> int:
                               "findings": result["findings"], "replayed_units": len(result["replays"]),
                               "replay_results": result["replay_results"],
                               "environment_drift": result["environment_drift"],
+                              "interpreter_parity": result["interpreter_parity"],
+                              "notes": result["notes"],
                               "not_covered": result["not_covered"]}, indent=2))
             return 0 if result["verdict"] == "clean" else 1
         rows = pending_audits(repo)

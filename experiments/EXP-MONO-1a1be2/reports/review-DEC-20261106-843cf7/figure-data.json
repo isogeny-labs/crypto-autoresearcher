@@ -1,0 +1,77 @@
+{
+ "schema": "decision-report-figure-data.v1",
+ "decision_id": "DEC-20261106-843cf7",
+ "review_task_id": "TASK-20261105-165da2",
+ "experiment_id": "EXP-MONO-1a1be2",
+ "no_new_computation": "Every value is copied by key or by section and table from the named source. figures.py derives nothing but layout and label text.",
+ "sources": {
+  "decision": {"path": "ledger/decisions/DEC-20261106-843cf7.yaml", "sha256": "fd0debc239ec2f5f95b1ca869199c429113fc38d1e7f67c5c24b5e70b601c45d"},
+  "code_review": {"path": "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md", "sha256": "4c77c2350f597713f5281d48c04f496693470b761573e4c8a7a0169c1103c101", "snapshot": "TASK-20261105-49716d at 608902a44d", "commit_reviewed": "72f51766a6"},
+  "fix_card": {"path": "ledger/handoffs/TASK-20261106-4c4831.yaml", "sha256": "8ef4c9d183d48b520225d6db31f381a851104c11733db2021bf38cb605a31fee"},
+  "rereview_card": {"path": "ledger/handoffs/TASK-20261106-7c2b01.yaml", "sha256": "76c7cda7c4d38fe9a80753be432aaf3e9748cb7b47b4841e235e796b0aeb11bc"}
+ },
+ "figure_1_findings": {
+  "edge_label": "instrument, not evidence",
+  "source": {
+   "severity": "code_review.md '## Result' table, column severity; DEV-1 from decision dev1_decision",
+   "description": "code_review.md '## Result' table, column finding (shortened to one line, no formula); DEV-1 from decision dev1_decision.deviation",
+   "disposition": "decision code_review_composition.findings[id].disposition and fix_ids; DEV-1 decision dev1_decision.choice",
+   "owner_direction": "decision owner_direction.text_as_relayed items (1)-(3) and effect",
+   "rereview": "rereview_card constraints RR-1..RR-8 (finding named in each item); N-6 from fix_card FX-12 and rereview_card RR-1"
+  },
+  "rows": [
+   {"id": "F-1", "severity": "blocking", "description": "Start-up known-answer gate neither bound to the lock nor recorded in the package", "disposition": "must-fix", "fix": "FX-2 to FX-6", "owner_direction": false, "rr": "RR-2"},
+   {"id": "N-1", "severity": "non-blocking", "description": "Mutant M5 (32-bit target index) survives all 316 KATs; large-Q arm-C KAT compares zero vectors", "disposition": "must-fix", "fix": "FX-7", "owner_direction": true, "rr": "RR-3"},
+   {"id": "N-2", "severity": "non-blocking", "description": "Invalidation and stopping rules not applied in the run package; no validity field", "disposition": "must-fix", "fix": "FX-8", "owner_direction": true, "rr": "RR-4"},
+   {"id": "N-3", "severity": "non-blocking", "description": "Arm-C lambda taken from the closed form, counted total never compared", "disposition": "must-fix", "fix": "FX-9", "owner_direction": false, "rr": "RR-5"},
+   {"id": "N-4", "severity": "non-blocking", "description": "KAT-mode arm-C packages still write derived keys (IM-3 hygiene)", "disposition": "must-fix", "fix": "FX-10", "owner_direction": false, "rr": "RR-5"},
+   {"id": "N-5", "severity": "non-blocking", "description": "Gate and record hardening: spec flags, run id, target seed, peak RSS, shadowing", "disposition": "must-fix", "fix": "FX-11", "owner_direction": true, "rr": "RR-4"},
+   {"id": "N-6", "severity": "non-blocking", "description": "B2 reuses one tuple seed for both rung instances; unreachable in this plan", "disposition": "recorded limitation", "fix": "L-2", "trigger": "a B2 instance above 10^4 subsets in a successor plan", "owner_direction": false, "rr": "RR-1 (plan byte-identical; FX-12 no change)"},
+   {"id": "DEV-1", "severity": "executor deviation", "description": "m = 3 large-q check at (32779, 2) not run: about 17 h, over the 8 h budget", "disposition": "must-fix", "fix": "FX-16", "fix_note": "substitute cell, owner direction", "owner_direction": true, "rr": "RR-5"}
+  ],
+  "blockers_source": "decision updated_blockers[id].status",
+  "blockers": [
+   {"id": "B1", "status": "open (narrowed)"},
+   {"id": "B2", "status": "open (determinism confirmed)"},
+   {"id": "B3", "status": "cleared"},
+   {"id": "B4", "status": "open"},
+   {"id": "B5", "status": "open"},
+   {"id": "B6", "status": "open"},
+   {"id": "B7", "status": "cleared"},
+   {"id": "B8", "status": "open (failed once)"}
+  ]
+ },
+ "figure_2_mutation_kill": {
+  "suite_items": 316,
+  "suite_items_source": "code_review.md '## Review environment and bytes', Baseline control: 316 passed in 1159.52 s, exit 0",
+  "mutants_source": "code_review.md '## CR-3 KAT strength (mutants)', Outcome table, column 'full suite'",
+  "mutants": [
+   {"id": "M1", "site": "fqn.py FQ.mul, n >= 4", "failed": 92, "passed": 224},
+   {"id": "M2", "site": "fqn.py FQ.inv, n >= 4", "failed": 92, "passed": 224},
+   {"id": "M3", "site": "kernel.c e_mul, n >= 4", "failed": 56, "passed": 260},
+   {"id": "M4", "site": "kernel.c e_inv, n >= 4", "failed": 40, "passed": 276},
+   {"id": "M5", "site": "kernel.c p_idx, Q > 2^31", "failed": 0, "passed": 316, "survives": true}
+  ],
+  "w10_source": "code_review.md '## CR-3', 'Why M5 survives' table (W10 cell, targets with nonzero count), itself read by key from kat-log-ac5ad6.json; grouped rows expanded one per m",
+  "w10_targets_sampled": 50,
+  "w10_cells": [
+   {"q": 32779, "n": 2, "m": 2, "nonzero": 22},
+   {"q": 1033, "n": 3, "m": 2, "nonzero": 0},
+   {"q": 1033, "n": 3, "m": 3, "nonzero": 8},
+   {"q": 193, "n": 4, "m": 2, "nonzero": 0},
+   {"q": 193, "n": 4, "m": 3, "nonzero": 0},
+   {"q": 71, "n": 5, "m": 2, "nonzero": 0},
+   {"q": 71, "n": 5, "m": 3, "nonzero": 0},
+   {"q": 41, "n": 6, "m": 2, "nonzero": 0},
+   {"q": 41, "n": 6, "m": 3, "nonzero": 0},
+   {"q": 29, "n": 7, "m": 2, "nonzero": 0},
+   {"q": 29, "n": 7, "m": 3, "nonzero": 0}
+  ],
+  "differential_source": "code_review.md '## CR-3', 'M5 is a real (non-equivalent) mutant' paragraph, first bullet",
+  "differential": [
+   {"field": "(41, 6)", "points": 300, "m5_differs": 164},
+   {"field": "(29, 7)", "points": 300, "m5_differs": 251}
+  ],
+  "differential_words": "Reviewer differential: the committed kernel equals Python target_index on 300 random points per field; M5 differs on 164 of 300 at (41, 6) and 251 of 300 at (29, 7), the points whose index is at least 2^32, and on O."
+ }
+}

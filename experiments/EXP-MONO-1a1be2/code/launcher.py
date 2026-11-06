@@ -13,7 +13,7 @@ Two entry points:
 
   launcher.py --kat kat --arm {A,B,C} --q Q --n N [--m M] --curve-seed STR [...]
       A known-answer cell, explicit flag, written under a temporary directory and never under runs/. Refused
-      for any (q, n) that is an arm-A/arm-B contract cell (KAT cells are disjoint from the contract).
+      for any (q, n) that is an arm-A/arm-B or arm-C contract cell (KAT cells are disjoint from the contract).
       Derived statistics (ratios, coverage, frequencies) are withheld in KAT mode; only raw counts are written.
 
 Nothing here is a run until a cell is executed through `cell`. Library functions (run_cell) are used by the
@@ -57,6 +57,17 @@ CODE_FILES = ["fqn.py", "curves.py", "semaev.py", "counters.py", "kernel.c", "la
 TEST_FILE = os.path.join(HERE, "tests", "test_kat.py")
 EXIT_REFUSED = 3
 EXIT_SELFTEST = 4
+
+
+# ----------------------------------------------------------------------------- contract pairs (KX-6)
+def arm_c_pairs() -> set:
+    """The arm-C (q_n, n) pairs by the trial-plan rule (least prime p > 3 with p^n >= 2^30)."""
+    return {(mtp.q_rule(n), n) for n in mtp.ARM_C_NS}
+
+
+def contract_pairs() -> set:
+    """Every contract (q, n) pair: arm A (hence arm B) and arm C. A KAT cell must be disjoint from all."""
+    return mtp.contract_cells_qn() | arm_c_pairs()
 
 
 # ----------------------------------------------------------------------------- hashes and gate
@@ -202,6 +213,9 @@ def _cell_summary_arm_a(res: dict, derived: bool):
              "recount": r["recount"]}
         if "identities" in r:
             d["identities"] = r["identities"]
+            if derived:                      # KX-5: the composition residuals P2(vii) to (ix), named in the summary
+                d["composition_residuals"] = {k: v for k, v in r["identities"].items()
+                                              if k.startswith(("vii_", "viii_", "ix_"))}
         if derived:
             conv = {}
             for c in ("A", "M", "S", "X"):
@@ -601,8 +615,9 @@ def cmd_cell(args) -> int:
 
 
 def cmd_kat(args) -> int:
-    if (args.q, args.n) in mtp.contract_cells_qn():
-        print(f"REFUSED: (q={args.q}, n={args.n}) is a contract cell; KAT cells must be disjoint", file=sys.stderr)
+    if (args.q, args.n) in contract_pairs():
+        print(f"REFUSED: (q={args.q}, n={args.n}) is a contract cell (arm A/B or arm C); KAT cells must be disjoint",
+              file=sys.stderr)
         return EXIT_REFUSED
     cid = f"KAT-{args.arm}-n{args.n}-q{args.q}"
     m = args.m or args.n
