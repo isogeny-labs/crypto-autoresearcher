@@ -67,7 +67,7 @@ def main():
         cid = original['id']
         with ExitStack() as stack:
             streams = {name: stack.enter_context((args.out/(cid+'.'+name+'.jsonl')).open('x'))
-                       for name in ('events', 'branches', 'case-inputs', 'solver-outputs', 'case-checks', 'information')}
+                       for name in ('events', 'branches', 'case-inputs', 'solver-outputs', 'case-checks', 'information', 'information-checks')}
             def event(value): return append(streams['events'], value)
             try:
                 # All independent paid constructors and base choices precede targets.
@@ -162,13 +162,26 @@ def main():
                                     if base == 'norm': norm_cases[key] = (count, case)
                                     if base == 'hybrid':
                                         norm_id, old_case = norm_cases[key]
-                                        diagnostic = information.compare(old_case, prepared['norm'], case, prep, solver.Meter(f))
-                                        checked = timed(lambda: check_information.check(old_case, prepared['norm'], case, prep, diagnostic))
-                                        receipt = append(streams['information'], dict(norm_case_id=norm_id, hybrid_case_id=count,
-                                            descriptor=desc, result=diagnostic, **checked))
-                                        emit(dict(kind='information_checked', case_id=count, norm_case_id=norm_id,
-                                            record=receipt, counters=diagnostic['counters'], verification=checked['verification']))
-                                        audits += 1
+                                        diagnostic_meter = core.ProgressMeter(f, emit,
+                                            dict(kind='information_diagnostic', case_id=count, norm_case_id=norm_id))
+                                        diagnostic, output_receipt = None, None
+                                        try:
+                                            diagnostic = information.compare(old_case, prepared['norm'], case, prep, diagnostic_meter)
+                                            output_receipt = append(streams['information'], dict(norm_case_id=norm_id,
+                                                hybrid_case_id=count, descriptor=desc, result=diagnostic))
+                                            emit(dict(kind='information_output', case_id=count, norm_case_id=norm_id,
+                                                record=output_receipt, counters=diagnostic['counters']))
+                                            checked = timed(lambda: check_information.check(old_case, prepared['norm'], case, prep, diagnostic))
+                                            receipt = append(streams['information-checks'], dict(norm_case_id=norm_id,
+                                                hybrid_case_id=count, descriptor=desc, **checked))
+                                            emit(dict(kind='information_checked', case_id=count, norm_case_id=norm_id,
+                                                record=receipt, verification=checked['verification']))
+                                            audits += 1
+                                        except BaseException as error:
+                                            emit(dict(kind='information_failed', case_id=count, norm_case_id=norm_id,
+                                                output_record=output_receipt, phases=diagnostic_meter.phases,
+                                                error_type=type(error).__name__, error=str(error)))
+                                            raise
                                     count += 1
                     write_once(args.out/(cid+'.'+base+'.query-cache.json'), dict(records=cache.records,
                         engine_records=cache.engines.records[cache.engine_start:], engine_start=cache.engine_start,

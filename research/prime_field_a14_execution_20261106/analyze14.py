@@ -58,9 +58,12 @@ def main():
                     label = 'input' if kind == 'case_input' else 'check' if kind == 'case_checked' else event['arm']
                     refs[event['case_id'], label] = event['record']
                     if kind == 'solver_complete': observed[arm_id(event['descriptor'], event['arm'])].update(event['counters'])
-                elif kind == 'information_checked':
-                    info_refs[event['case_id']] = event['record']
-                    physical['hybrid.information_diagnostic'].update(event['counters'])
+                elif kind in ('information_output', 'information_checked'):
+                    info_refs[event['case_id'], 'output' if kind == 'information_output' else 'check'] = event['record']
+                elif kind == 'information_failed':
+                    # Paid phase prefixes were already journaled immediately by
+                    # ProgressMeter; never add them a second time here.
+                    errors.append(dict(cell_id=cid, event=event))
                 elif kind == 'solver_failed':
                     observed[arm_id(event['descriptor'], event['arm'])].update(total(event['phases']))
                     errors.append(dict(cell_id=cid, event=event))
@@ -133,19 +136,27 @@ def main():
                         for method in methods(desc)}
                     cold.append(dict(case_id=idx, descriptor=desc, identified_mask=row['identified_mask'], collection=view, solver_engine_counters=options))
                 rows[idx] = row
+            information_checks = iter(readlines(raw/(cid+'.information-checks.jsonl')))
             for item in readlines(raw/(cid+'.information.jsonl')):
                 idx, norm_idx = item['hybrid_case_id'], item['norm_case_id']
-                if not prior.record_binding(item, info_refs.get(idx)): raise ValueError('information stream/journal binding')
+                if not prior.record_binding(item, info_refs.get((idx, 'output'))): raise ValueError('information output/journal binding')
                 if plans.get(idx) != item['descriptor'] or plans[idx]['base_arm'] != 'hybrid' or plans.get(norm_idx, {}).get('base_arm') != 'norm':
                     raise ValueError('information matched case identities')
                 if any(plans[idx][key] != plans[norm_idx][key] for key in plans[idx] if key != 'base_arm'):
                     raise ValueError('information source/policy/budget/scope differs')
-                valid = bool(rows.get(idx, {}).get('verified') and rows.get(norm_idx, {}).get('verified') and item['verification']['checked'])
+                check = next(information_checks, None)
+                if check and (check['hybrid_case_id'] != idx or check['norm_case_id'] != norm_idx or check['descriptor'] != item['descriptor']
+                    or not prior.record_binding(check, info_refs.get((idx, 'check')))):
+                    raise ValueError('information checker alignment/journal binding')
+                valid = bool(rows.get(idx, {}).get('verified') and rows.get(norm_idx, {}).get('verified') and check and check['verification']['checked'])
+                if not check: errors.append(dict(cell_id=cid, case_id=idx, error='information output retained without successful checker receipt'))
+                if total(item['result']['phases']) != item['result']['counters']:
+                    raise ValueError('information output phase conservation')
                 audits.append(dict(norm_case_id=norm_idx, hybrid_case_id=idx, descriptor=item['descriptor'], verified=valid,
                     ranks=item['result']['ranks'], increments=item['result']['increments'], delta_vs_old=item['result']['delta_vs_old'],
-                    outside_rank=item['verification']['outside_rank'], counters=item['result']['counters'],
-                    old_kernel_dimension=len(item['verification']['old_kernel'])))
-            if curve_valid and any(next(stream, None) is not None for stream in (branches, outputs, checked)):
+                    outside_rank=item['result']['outside']['rank'], counters=item['result']['counters'],
+                    old_kernel_dimension=len(check['verification']['old_kernel']) if valid else None))
+            if curve_valid and any(next(stream, None) is not None for stream in (branches, outputs, checked, information_checks)):
                 raise ValueError('extra records beyond fixed census')
     cells = [rows.get(idx, dict(case_id=idx, **desc, verified=False)) for idx, desc in plans.items()]
     full = bool(execution['returncode'] == 0 and not execution['timeout'] and not execution['exception']

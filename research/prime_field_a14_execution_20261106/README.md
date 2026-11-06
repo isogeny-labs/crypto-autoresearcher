@@ -75,3 +75,9 @@ freeze, current actual S3/root release and ordinary admission. No helper labels 
 known-base certainty may be counted as learned rank. No cross-base Delta is
 used against known32. One existing worker/thread,2GiB,21600CPU/wall seconds,
 one future attempt with no automatic retry or new paid capacity.
+
+The first administrative assessment identified diagnostic custody before any
+native execution. See the additive [custody correction](diagnostic-custody-correction.md)
+and [129-control receipt](validation/diagnostic-custody-software-status.json).
+The old published source and blocked assessment remain unchanged; a corrected
+source snapshot and additive reassessment precede prospective freeze/release.
