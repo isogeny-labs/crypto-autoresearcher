@@ -1,0 +1,28 @@
+# WRITE-ONCE. Corrections create a new checkpoint file.
+# Session checkpoint for the follow-up to /review-evidence of EXP-ICPERF-284bc4
+# and EXP-ICPERF-283a70 (PR #3044, merged as 38b8aac01e): files the correction
+# record that closes DEC-20261105-8a9984 NA-1. Keyed by archive task
+# TASK-20261106-ed3fa9. No trial, no status move.
+batch_checkpoint:
+  batch_id: BATCH-38f344
+  goal_id: GOAL-ICPERF-e6b6a4
+  recorded_at: '2026-11-06'
+  mode: review_followup
+  branch: claude/review-icperf-v2-evidence
+  base_commit: 1c5b597368
+  prior_checkpoint: ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261105-8924a8.yaml
+  correction_ids: [CORR-20261105-1d848a]
+  closes: [DEC-20261105-8a9984 NA-1]
+  next_action:
+    role: executor (executor-implementation), via one new tooling handoff
+    source: DEC-20261105-6e2616 NA-1
+    text: >-
+      Repair the tools/runbook.py audit replay contract: _recorded_python also
+      reads /run/environment/version and /run/environment/python so the
+      DEC-20261029-5554ee interpreter-parity check runs; a replay pointer
+      absent from both recorded and replayed files reports not_applicable, not
+      mismatch; compare pointers may be declared per trial. Gate: regression
+      tests pass and a scratch re-audit of RBS-ICPERF-67df7d and
+      RBS-ICPERF-8cdc92 reports the 3.11.17 -> 3.13.18 drift and no
+      absent-on-both mismatch. Frozen runbooks and existing audits stay as
+      recorded.
