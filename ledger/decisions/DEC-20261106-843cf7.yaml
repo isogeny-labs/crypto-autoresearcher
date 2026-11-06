@@ -1,0 +1,492 @@
+# CODE-REVIEW COMPOSITION AND PRE-APPROVAL REVISION for EXP-MONO-1a1be2. This is the declared
+# successor of DEC-20261105-f0b7c7 NA-1. It composes the instrument review
+# TASK-20261105-165da2 (verdict failed on gate B8: one blocking, six non-blocking findings),
+# decides executor deviation DEV-1, writes the BATCH-8517aa checkpoint, and opens BATCH-69d9a2
+# for the fixes and a focused re-review. It APPROVES NO EXPERIMENT. It changes no hypothesis,
+# idea or goal status, and it launches zero runs. It takes effect only when the ledger archive
+# TASK-20261106-0c8aee verifies. Written by a Coordinator subagent with no shell; the
+# top-level session reserved every id, and the --check results go in the 0c8aee receipt.
+coordinator_decision:
+  id: DEC-20261106-843cf7
+  task_id: TASK-20261106-fdd5c2
+  archived_by: TASK-20261106-0c8aee
+  mode: instrument-review composition and pre-approval revision (coordinate; /design-experiment step 5; no trials)
+  decided_by: coordinator
+  decided_at: '2026-11-06'
+  authorized_by: >-
+    Coordinator authority (agents/coordinator.md: approve experiments, reprioritize, open
+    batches). DEC-20261105-f0b7c7 NA-1 declared_successor_not_an_additional_next_action.
+    AGENTS.md "ECC comes first" rule 3. The standing user authorization (2026-09-06) is noted
+    but NOT used: the B8 gate failed, so no contract is approvable ("Approval is bounded by
+    execution").
+
+  context: >-
+    The working branch equals origin/main da442739db (2026-11-06), as the top-level session
+    reported. BATCH-8517aa is complete and merged (PRs #3040, #3061, #3065, as reported); all
+    six queue tasks are completed:
+    - c0d167: ledger archive of DEC-20261105-f0b7c7 at 09575dd1c9.
+    - ac5ad6 (executor): KATs widened to n = 4..7 and to large-q fields, P2(vii)-(ix)
+      residuals, arm-C KAT refusal, timing-only throughput calibration. 316 KATs pass. TP-1
+      not triggered (throughput-calibration.json tp1.would_trigger false). Trial plan
+      byte-identical (9ccbe614...fb4a). One deviation, DEV-1.
+    - 7083a8: snapshot at 72f51766a6, code_sha256 e12fe0f3...fd38 with per-file hashes.
+    - 165da2 (fresh validator, review-adversarial): verdict failed for B8. F-1 blocking;
+      N-1 to N-6 non-blocking.
+    - 49716d: snapshot of the review at 608902a44d.
+    Lane BATCH-8517aa is still open. EXP-MONO-1a1be2 is a review_required draft;
+    H-MONO-23d347 is proposed. The specification is unedited (d81a85b3...c373).
+
+  owner_direction:
+    given_at: '2026-11-06'
+    provenance: >-
+      An owner instruction given to the top-level session in this session. That session
+      relayed it to this composing subagent mid-act. This subagent did not see the user's
+      message directly, and records the direction as relayed, not as an approval of
+      anything.
+    text_as_relayed: >-
+      All three items are to be FIXED before approval, not recorded as limitations.
+      (1) DEV-1: the m = 3 large-q check must actually be run, either on a substitute
+      non-contract large-q cell at m = 3 within a stated budget or with a one-off budget
+      for (32779, 2) at m = 3, saying which and why, with zero contract cells. (2) N-1: a
+      KAT that kills the 32-bit target-index mutant, for example a Q > 2^32 index test with
+      nonzero large-q counts on a non-contract cell, confirmed killed by the re-review.
+      (3) N-2 and N-5: fixed in the launcher before approval, with tests that fail on the
+      old code. N-3, N-4 and N-6 are left to the Coordinator.
+    effect: >-
+      Items (2) and (3) agree with this composition as first drafted (N-1, N-2 and N-5
+      must-fix), and the direction makes them binding. Item (1) reverses the first draft,
+      which accepted DEV-1 as a limitation: DEV-1 is now must-fix by a substitute cell
+      (FX-16, dev1_decision). Draft limitation L-1 is withdrawn. N-3 and N-4 stay must-fix
+      and N-6 stays a recorded limitation, by this act's own judgement.
+
+  decision: revise
+  decision_scope: >-
+    (1) Composes the 165da2 code review: F-1 and N-1 to N-5 are fixed before approval;
+    N-6 is a recorded limitation with a trigger. (2) Under owner_direction, DEV-1 is fixed
+    before approval by running the m = 3 large-q check on a substitute non-contract cell
+    (FX-16); it is not a limitation. (3) Amends, before any approval
+    and with zero runs, the approval-lock content of DEC-20261105-f0b7c7
+    approval_lock_binding (approval_lock_binding_v2 below) and pins four specification
+    additions for the v2 amendment (specification_additions_for_v2). (4) Writes the
+    BATCH-8517aa checkpoint and opens BATCH-69d9a2 with six tasks. It approves NO
+    experiment, protocol, runbook or run. predictions_to_freeze of DEC-20261105-f0b7c7 is
+    unchanged in every value.
+
+  target_ids:
+    - EXP-MONO-1a1be2
+    - H-MONO-23d347
+    - IDEA-20261023-f15270
+    - BATCH-8517aa
+    - BATCH-69d9a2
+    - GOAL-PATH-001
+    - RQ-MONO-001
+    - KN-OPEN-62c870
+
+  # ------------------------------------------------------------ 1. code-review composition
+  code_review_composition:
+    review: coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md (read in full; sha256 4c77c235...c101 at 608902a44d)
+    attestation: coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml (read in full; sha256 01d5f958...c0cf)
+    commit_reviewed: 72f51766a67be05f6d8de0f4ed962c4c615d52bd
+    reading_rule: >-
+      A finding is MUST-FIX when, left alone, it lets a cell that violates the
+      specification's stopping or invalidation rules be recorded as valid, or lets an
+      instrument defect reach a P-reading under F7 or F8, or when its fix costs less than its
+      separate tracking. It is a RECORDED LIMITATION only when no path the approved plan
+      executes can reach it, and the limitation then carries a trigger that turns it into a
+      must-fix.
+    findings:
+      - id: F-1
+        reviewer_severity: blocking
+        disposition: must_fix
+        fix_ids: [FX-2, FX-3, FX-4, FX-5, FX-6]
+        reason: >-
+          Stopping rule 1 is the only guard against an arithmetic difference on the
+          executing host (DEC-20261105-f0b7c7 f1_decision); the R1 recount shares the kernel.
+          Each of the five gaps (a)-(e) alone lets a cell start without the full suite having
+          passed, and the package cannot show it. I adopt the reviewer's five-part repair,
+          with two additions found in reading it: the self-test environment must also scrub
+          PYTEST_ADDOPTS and PYTEST_PLUGINS and disable plugin autoload, since either can
+          deselect items as the root conftest did; and a receipt that fails a check must
+          REFUSE the cell, not fall through silently to a full run (gap (e) third point).
+      - id: N-1
+        reviewer_severity: non-blocking
+        disposition: must_fix
+        fix_ids: [FX-7]
+        reason: >-
+          The approved bytes are correct on this path (reviewer differential), so this is
+          not an instrument defect. But the start-up suite exists to guard the EXECUTING
+          host, not the review host, and arm-C n = 6, 7 is a third of arm C. A start-up suite
+          that cannot fail on the large-Q index path does not guard it. The fix is two KATs
+          on existing KAT fields and asserts no predicted value. W10 is also made
+          non-vacuous at every n >= 3, since nine of its eleven cells compare zero vectors.
+          Acceptance: the M5 mutant must fail at least one new item, and 7c2b01 confirms the
+          kill independently (RR-3). Owner direction item 2 makes this binding.
+      - id: N-2
+        reviewer_severity: non-blocking
+        disposition: must_fix
+        fix_ids: [FX-8]
+        reason: >-
+          The run will be executed by the mechanical tier from a runbook. AGENTS.md "Artifact
+          policy" requires a validity status and reason per run. A launcher-side validity
+          block and an enforced F2 family stop remove a judgement the mechanical tier should
+          not make. The analysis still recomputes validity from raw fields, and the stricter
+          reading wins (V2-2). Owner direction item 3 makes this binding, with tests that fail
+          on the 72f51766a6 code.
+      - id: N-3
+        reviewer_severity: non-blocking
+        disposition: must_fix
+        fix_ids: [FX-9]
+        reason: >-
+          lambda from the P2(vi) closed form couples P6 (F8) to P2(vi) (F7): a P2(vi) defect
+          would move every arm-C lambda and could be misread as a refutation of HEUR-F-1.
+          The specification defines lambda from the cancellation-free total, so using the
+          counted value is the definition, not a change. Agreement is recorded per cell and
+          base, and disagreement withholds that cell's P6 reading (V2-3).
+      - id: N-4
+        reviewer_severity: non-blocking
+        disposition: must_fix
+        fix_ids: [FX-10]
+        reason: IM-3 says no derived statistic is recorded in KAT mode. The fix gates three keys and costs minutes.
+      - id: N-5
+        reviewer_severity: non-blocking
+        disposition: must_fix
+        fix_ids: [FX-11]
+        reason: >-
+          Five small hardening items. (1) Approved specifications in this repository set
+          execution_authorized and frozen true; the gate must check them and the lock's
+          approved_by. (2) An unsanitized run id can write a package outside runs/, where no
+          archive finds it. (3) and (4) make the arm-C sample reproducible from cdf.json
+          alone and the memory metric honest under the 16 GB cap. (5) closes an unhashed
+          shadowing route. All are cheap and the launcher is being changed anyway. Owner
+          direction item 3 makes this binding, with a test per item that fails on the
+          72f51766a6 code.
+      - id: N-6
+        reviewer_severity: non-blocking
+        disposition: recorded_limitation
+        limitation_id: L-2
+        reason: >-
+          Unreachable in this plan: no B2 instance exceeds 10^4 subsets (max 8,515), so the
+          B2 tuple seed is never consumed. Changing seed derivation risks the plan's byte
+          identity for no gain.
+        trigger_to_must_fix: >-
+          Any successor plan in which some B2 instance has more than 10^4 subsets. Per-rung
+          seeds are then required before that plan is approved.
+    held: >-
+      CR-1 refusals (13 scenarios), CR-2 seeds and byte-identical plan, CR-3 kills of M1-M4
+      by widened KATs only, CR-4 residuals equal to an independent recomputation on 33 cases,
+      CR-5 discipline, CR-6 sampler and cdf.json keys. These are not re-reviewed in full; the
+      re-review checks that the fixes do not regress them (RR-6).
+    composed_verdict_b8: >-
+      B8 stays OPEN. It clears when TASK-20261106-649ebb archives a TASK-20261106-7c2b01
+      report that finds every must-fix closed and no new blocking finding.
+
+  # ------------------------------------------------------------ 2. DEV-1
+  dev1_decision:
+    deviation: >-
+      KX-4 asked for the large-q E2 sampled-counter KAT at m in {2, 3} for every n = 2..7.
+      The cell (32779, 2, m = 3) was not run (about 6e12 multisets, about 17 h, over the 8 h
+      budget). (32779, 2) was checked at m = 2 only. The card was silent on a substitute.
+    choice: >-
+      FIX before approval, as the owner directs (owner_direction item 1). The fix is a
+      SUBSTITUTE non-contract large-q cell (FX-16), not a one-off budget for
+      (32779, 2, m = 3). The cell is F_{q''^2} with q'' the least prime greater than 10,000
+      (the test computes it by trial division and checks it disjoint from every contract
+      pair; 10,007 is expected by the rule). It runs the large-q E2 sampled-counter KAT at
+      m = 3 on the line base with s = 50 targets, checked by an independent membership
+      method in Python field arithmetic, under the KX-4 rules. Budget: 14,400 s wall and
+      16 GB for this cell, inside 4c4831. The executor first records a measured
+      projection; if that exceeds the budget, it stops and reports, and never shrinks the
+      cell silently.
+    why_substitute_not_budget:
+      - >-
+        The substitute keeps every property the omitted cell would test: degree n = 2, tuple
+        size m = 3, depth-3 multiset enumeration in the compiled kernel, a field large
+        enough (Q about 1e8) to sit in the same index-width class as the n = 2 contract
+        cell (Q < 2^31), the same kernel and sampler code, and nonzero counts on sampled
+        targets (about C(B+2,3)/N, i.e. thousands per target, at B about q), so the
+        comparison is not vacuous.
+      - >-
+        The exact cell needs about 6e12 multisets in the kernel (about 17 h at the
+        calibrated rate). Its independent membership method needs a pair-sum table of
+        about 5e8 entries built by Python point additions: hours of time, and memory
+        comparable to the 16 GB cap. Together that is over 20 h, with real risk of a
+        memory-bound failure that would be infrastructure and prove nothing. The
+        substitute does the same check in well under 4 h, about 1/30 of the multisets.
+      - >-
+        No contract cell runs m = 3 at n = 2: every arm-C cell has tuple_size_m equal to n
+        (e.g. C-n2-q32771-c0, tuple_size_m 2). The check therefore guards the code path,
+        not a contract configuration, and a substitute on that path is sufficient.
+    residual_note: >-
+      Not a limitation; recorded for completeness. The exact (32779, 2, m = 3) cell stays
+      unrun. If a successor plan ever runs m = 3 at n = 2 at contract size, or any
+      configuration whose multiset count exceeds 2^32, a KAT at that scale is required
+      before approval.
+
+  # ------------------------------------------------------------ 3. amendments pinned now
+  approval_lock_binding_v2:
+    supersedes: DEC-20261105-f0b7c7 approval_lock_binding (lock content and the receipt clause only)
+    why_before_data: The 165da2 review found the test file unbound (F-1 (a)); no approval and no run exists, so the lock is amended, not repaired.
+    lock_content: >-
+      experiments/EXP-MONO-1a1be2/approval.lock is JSON with five fields: approved_by,
+      specification_sha256 (the v2 bytes), code_sha256 (launcher.code_sha256() over the same
+      seven CODE_FILES in the same order, unchanged definition), trial_plan_sha256, and the
+      NEW test_file_sha256 (sha256 of code/tests/test_kat.py). check_approval refuses a lock
+      missing any field or mismatching any hash (FX-2).
+    approval_records: >-
+      The approval decision records the TASK-20261106-5c1258 snapshot commit, the per-file
+      sha256 of the seven CODE_FILES and of tests/test_kat.py at that commit, code_sha256,
+      and EXPECTED_KAT_ITEMS and DESIGNED_SKIPS as read from launcher.py at that commit.
+      The 72f51766a6 bytes stay bound as history and are never the approved build.
+    selftest_receipts: >-
+      A start-up self-test receipt is written only by the launcher's selftest subcommand,
+      after approval.lock exists, into experiments/EXP-MONO-1a1be2/selftest-receipts/<id>/.
+      It binds code_sha256, test_file_sha256, the lock sha256, an environment key and the
+      junit XML sha256 (FX-5). The run handoff's write_scope must include that directory.
+  specification_additions_for_v2:
+    written_before_data: >-
+      No contract cell exists. These are invalidation and reading rules, not predictions.
+      The approval act copies them verbatim into the v2 amendment and specification;
+      predictions_to_freeze of DEC-20261105-f0b7c7 is unchanged.
+    items:
+      - id: V2-1
+        text: >-
+          Stopping rule 1, made checkable. A cell is INVALID (infrastructure) unless its
+          manifest carries (a) a gate block whose specification, lock, plan, code and
+          test-file sha256 equal the approved values, and (b) a startup_selftest block
+          showing, for the executing host, a full pass: collected equal to
+          EXPECTED_KAT_ITEMS, zero failures and errors, and skipped node ids exactly
+          DESIGNED_SKIPS for an approved specification, either run in-process or by an
+          accepted receipt whose bytes are copied into the package.
+      - id: V2-2
+        text: >-
+          Each manifest carries a launcher-written validity block (status valid, void or
+          invalid, with reasons) from the R1 recount, the group-law cross-check counts,
+          identity-field completeness, raw/summary agreement and the curve selection rule.
+          The analysis recomputes validity from the raw fields; where the two differ the
+          stricter status applies and the difference is reported as an instrument finding.
+      - id: V2-3
+        text: >-
+          Arm-C lambda = (N_cf_counted - m_S)/(N - |S|), with N_cf_counted the kernel's
+          counted cancellation-free total. The P2(vi) closed form is recorded beside it with
+          an equality flag per cell and base. Inequality withholds that cell's P6 reading
+          (INCONCLUSIVE for P6) and is investigated under F7 first, never read as F8.
+      - id: V2-4
+        text: >-
+          The F2 family stop is enforced by the launcher: the first arm-A cell with a
+          CTL-null all-target identity failure writes runs/STOP-F2.json, is void, and every
+          later arm-A cell is refused while the sentinel exists. The runbook checks the
+          sentinel before each arm-A cell. Removing the sentinel requires a new implementation
+          commit and a Coordinator decision.
+
+  # ------------------------------------------------------------ 4. blockers after this act
+  updated_blockers:
+    - {id: B1, status: open (narrowed), text: "Widened KATs pass (316, 7083a8). Remaining: a non-vacuous large-Q index KAT that kills M5 (N-1), and the m = 3 large-q substitute cell (DEV-1, FX-16).", clears_when: "TASK-20261106-5c1258 verifies with the full suite passing and the FX-16 cell passed, and 7c2b01 confirms M5 is killed and FX-16 ran as specified"}
+    - {id: B2, status: open (determinism confirmed), text: "Plan regenerates byte-identical (9ccbe614...fb4a) at 72f51766a6, twice by 165da2. The fix must keep it identical.", clears_when: "the approval act binds trial_plan_sha256 of the plan regenerated from the 5c1258 code"}
+    - {id: B3, status: cleared, text: "DEC-20261105-f0b7c7.", clears_when: "met"}
+    - {id: B4, status: open, text: "protocol.json not written", clears_when: "approval act: validate and freeze; hash bound in execution_plan.protocol_hashes"}
+    - {id: B5, status: open, text: "no runbook or mechanical card; must carry V2-1 and V2-4 checks and the selftest step", clears_when: "approval act: experiment-director compile, LINT OK, then CARD OK"}
+    - {id: B6, status: open, text: "no preapproval packet or run handoff", clears_when: "approvable true on the exact prospective bytes; after the approval archive, execution_state ready"}
+    - {id: B7, status: cleared, text: "Throughput measured on non-contract proxies; TP-1 not triggered (throughput-calibration.json at 72f51766a6). The fix does not touch the counting paths (FX-1), so no re-measurement is due.", clears_when: "met; reopens if kernel.c or a counting loop changes"}
+    - {id: B8, status: open (failed once), text: "165da2 verdict failed on F-1.", clears_when: "TASK-20261106-649ebb archives a 7c2b01 report finding every must-fix closed and no new blocking finding"}
+
+  # ------------------------------------------------------------ 5. visual report
+  visual_report:
+    owed_by_this_act: true
+    reason: >-
+      This act records a DEC that composes a review and changes a readiness gate (the review
+      step of coordinate; research-visuals "Every evidence review"). There is no evidence
+      record and no status move, so the report is small. Consistent with
+      review-DEC-20261105-f0b7c7.
+    directory: experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/
+    files:
+      - report.typ (source)
+      - report.pdf (rendered, every page inspected)
+      - findings.svg
+      - mutation-kill.svg
+      - figures.py (draws both SVGs from figure-data.json)
+      - figure-data.json (well under 64 KiB; values copied from code_review.md by section and table, each with its source)
+    report_contents: >-
+      Decision (revise; nothing approved), claim tier (instrument review; no mathematics) and
+      scope, citing DEC-20261106-843cf7, TASK-20261105-165da2 (608902a44d),
+      TASK-20261105-ac5ad6 (72f51766a6), DEC-20261105-f0b7c7 and EXP-MONO-1a1be2.
+      Observation (the findings table and what held), Comparison (reviewer severity against
+      this disposition), Inference (must-fix list, V2-1 to V2-4, lock v2, DEV-1 fixed by
+      the FX-16 substitute under the owner's direction), and Limitation (L-2, session-only
+      independence, KAT-field scope) are kept separate. The owner direction is quoted as
+      relayed.
+      Next actions: the BATCH-69d9a2 queue. The report says that no run exists, no evidence
+      record is decided, and no KAT value is evidence about any prediction.
+    figure_1_findings_svg: >-
+      A diagram. Rows F-1, N-1 to N-6, and DEV-1. Columns: reviewer severity badge (blocking
+      or non-blocking; DEV-1 "executor deviation"); one-line description in words, no
+      formula; disposition badge (must-fix FX-n, or recorded limitation L-2 with its
+      trigger; DEV-1 must-fix FX-16 "substitute cell, owner direction"; N-1, N-2 and N-5
+      marked "owner direction"); the re-review check that verifies it (RR-n). Below, a strip B1 to B8 with
+      the status after this act (open, narrowed, cleared). Every edge is labelled
+      "instrument, not evidence".
+    figure_2_mutation_kill_svg: >-
+      A quantitative graph of RECORDED values only, from code_review.md CR-3. Panel A: for
+      mutants M1 to M5, the number of failing items out of 316 in the full suite (bars;
+      M5 marked "survives"). Panel B: the eleven W10 cells (field, n, m) with the number of
+      the 50 sampled targets that have a nonzero count (bars on a 0-50 axis), marking the
+      nine all-zero cells "vacuous". An annotation gives the reviewer differential in words
+      with its two recorded counts (M5 differs on 164 of 300 and 251 of 300 points at
+      (41, 6) and (29, 7)). Caption: TASK-20261105-165da2 code_review.md CR-3; KAT fields
+      only, none a contract cell; no new computation.
+    canonical_graphs: >-
+      None changes: no evidence record, status or knowledge entry moves. report.typ lists the
+      canonical graphs checked and left unchanged, including the two figures of
+      review-DEC-20261105-f0b7c7.
+    rendering: >-
+      The top-level session renders under research-visuals "Rendering" (typst wheel in a
+      scratch venv), inspects every page, and stages the six files in TASK-20261106-0c8aee.
+      If no renderer installs, it commits the source and SVGs, states the blocker in
+      report.typ and the receipt, and 0c8aee's expected paths drop report.pdf by a recorded
+      deviation.
+
+  # ------------------------------------------------------------ 6. batch
+  batch:
+    id: BATCH-69d9a2
+    goal_id: GOAL-PATH-001
+    dispatch_queue: coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json
+    tasks:
+      - TASK-20261106-fdd5c2 (coordinator; this act; completed on writing; archived by 0c8aee)
+      - TASK-20261106-0c8aee (coordinator; ledger archive of this act, ALONE; closes lane BATCH-8517aa; pins 4c4831 inputs)
+      - TASK-20261106-4c4831 (executor, executor-implementation; FX-1 to FX-16, including the DEV-1 substitute cell; zero contract cells, zero runs; archived by 5c1258)
+      - TASK-20261106-5c1258 (coordinator; snapshot of 4c4831, alone among commit tasks; re-binds code_sha256)
+      - TASK-20261106-7c2b01 (validator, review-adversarial, fresh independent session; focused re-review RR-1 to RR-8; archived by 649ebb)
+      - TASK-20261106-649ebb (coordinator; snapshot of 7c2b01, alone among commit tasks)
+    order: >-
+      Strictly in sequence: (1) commit the queue alone, render it, open lane BATCH-69d9a2;
+      (2) render the decision report; 0c8aee alone, then close lane BATCH-8517aa;
+      (3) 4c4831; (4) 5c1258 alone; (5) 7c2b01 on the 5c1258 commit; (6) 649ebb alone;
+      (7) the approval act (declared successor, outside this queue).
+    max_concurrent: 1
+    focus:
+      decisive_evidence: the 7c2b01 report finding every must-fix closed, M5 killed, the gate scenarios refused, the plan byte-identical and no new blocking finding
+      inconclusive_decision: >-
+        If 7c2b01 finds a must-fix not closed or a new blocking finding, a fresh Coordinator
+        act (spare DEC-20261106-720ace) composes it and opens one further fix round. A second
+        consecutive failed re-review is a rerank trigger. A fix that needs kernel.c, fqn.py,
+        curves.py, semaev.py, make_trial_plan.py or throughput_calibration.py stops 4c4831
+        and returns to that fresh act. All of this is infrastructure, never evidence.
+      excluded_peripheral_work: N-6 seed derivation; the exact (32779, 2, m = 3) cell (replaced by the FX-16 substitute); a compiled B1 port; L7; reading C; the 2^36 extension; M_n + delta; any contract cell
+      rerank_trigger: >-
+        Any of: two consecutive failed re-reviews; a fix requires a kernel or plan change;
+        the regenerated plan differs from 9ccbe614...fb4a; EXP-MONO-1a1be2 not approved by
+        2026-12-15 (DEC-20261105-f0b7c7 knowledge_promotion revisit condition, which stands).
+      stage_budget: >-
+        Advisory (docs/research-budget-policy.md): fixes 36000 s (21600 s of code and tests
+        plus 14400 s for the FX-16 cell), re-review 14400 s, three archives about 8100 s
+        together. Zero runs.
+    pairing_duty: >-
+      Unchanged. Arm C remains the paired heuristic-validation arm (HEUR-F-1, HEUR-F-2);
+      4c4831 continues the proof-of-concept implementation. The fixes strengthen exactly the
+      arm-C path (N-1, N-3) that the pairing rests on.
+    review: >-
+      7c2b01 is an instrument re-review, not a claim-changing round, so it has no
+      review_plan. Blindness is lifted deliberately: it reads the 165da2 report, because a
+      fix-verification review must know what was found. It does not read the fix producer's
+      session. The eventual runs get their own independent validation in review-evidence.
+
+  # ------------------------------------------------------------ 7. checkpoint
+  batch_8517aa_checkpoint:
+    written_to: ledger/goals/GOAL-PATH-001.yaml batch_checkpoints (appended item)
+    lane_closure: >-
+      tools/goal_lanes.py close-lane GOAL-PATH-001 BATCH-8517aa --outcome archived
+      --decision DEC-20261106-843cf7, run by 0c8aee after its archive verifies.
+    summary: >-
+      Pre-approval batch, six tasks completed, zero runs: 18a59d (DEC-20261105-f0b7c7),
+      c0d167 at 09575dd1c9, ac5ad6 (316 KATs; DEV-1), 7083a8 at 72f51766a6, 165da2 (B8
+      failed: F-1 blocking, six non-blocking), 49716d at 608902a44d. B7 cleared; B8 not.
+
+  rationale:
+    - R-1 The declared successor of DEC-20261105-f0b7c7 is carried out: the review is read and composed, the deviation decided, the lane checkpointed, and approval withheld for a stated, checkable reason.
+    - R-2 F-1 is accepted as blocking. A cell that starts without the full suite passing violates stopping rule 1 yet would carry a matching code_sha256 and status completed. That is precisely the misrouting into F7 that DEC-20261105-f0b7c7 f1_decision exists to prevent.
+    - R-3 Five of the six non-blocking findings are fixed now, because the launcher is being changed anyway, each fix is small and testable, and two of them (N-1, N-3) protect the arm-C readings P6 rests on. Leaving them to the runbook would place an instrument check in the mechanical tier.
+    - R-4 N-6 is a limitation, not a fix, because no path in the approved plan reaches it; it carries a trigger. DEV-1 is fixed by a substitute cell under the owner's direction. The substitute rather than the exact cell was chosen on cost and memory risk (dev1_decision).
+    - R-5 The lock and the invalidation rules are amended before any data, by this record, and changed nowhere else. No prediction value, tolerance or falsification threshold changes.
+    - R-6 A code review is not evidence. Nothing here moves H-MONO-23d347, supports a lemma, or speaks to any exponent.
+
+  scope_and_limitations:
+    - This act ran no tool and computed no hash. Merge state, PR numbers, commit ids and the TP-1 flag are as the top-level session and the committed receipts report; 0c8aee re-checks what it can.
+    - L-2 (N-6) as stated above. No L-1 is recorded; draft L-1 for DEV-1 was withdrawn under owner_direction, and FX-16 replaces it.
+    - The 165da2 review reproduced F-1 (b) on a scratch tree, not in the full repository checkout. The fix (FX-3) is tested against both, and 7c2b01 checks it in a full checkout (RR-2).
+    - Independence of 165da2 and of 7c2b01 is between sessions only, not between models (resolved model claude-opus-5-5, model_verified false). This is not a rule-12 round and nothing here triggers rule 12.
+    - Receipts are not cryptographically authenticated (FX-5). They are made forgeable only by deliberate fabrication inside the experiment directory and are checkable after the fact, because the receipt and junit bytes are archived with every cell and the run's review-evidence must check them.
+    - Toy tier throughout. KN-OPEN-62c870 CS-D2 and CS-R7 bind every later citation.
+
+  evidence_refs:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/archives/TASK-20261105-7083a8/snapshot-receipt.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/archives/TASK-20261105-49716d/snapshot-receipt.json
+    - experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md (DEV-1; W10 row)
+    - experiments/EXP-MONO-1a1be2/implementation/throughput-calibration.json (tp1 keys only)
+    - experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json (arm-C tuple_size_m, by key)
+    - experiments/EXP-MONO-1a1be2/specification.yaml (stopping_rules, invalidation_rules, status fields)
+    - ledger/decisions/DEC-20261105-f0b7c7.yaml
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      An instrument-review composition, not an evidence-review decision; no hypothesis is
+      supported or rejected and no finding about the mathematics exists. The revisit
+      condition of DEC-20261105-f0b7c7 (an L8-only clause correction if EXP-MONO-1a1be2 is
+      not approved by 2026-12-15) stands unchanged.
+
+  goal_checkpoint:
+    goal_id: GOAL-PATH-001
+    lane: BATCH-69d9a2
+    queue: coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json
+    completed_tasks: [TASK-20261106-fdd5c2]
+    impediments: IMP-PATH-20261106-1 (approval of EXP-MONO-1a1be2 impeded by B1, B2, B4-B6, B8; narrows IMP-PATH-20261105-1; asserts nothing about H-MONO-23d347)
+    next_action: NA-1 (exactly one)
+
+  next_actions:
+    - id: NA-1
+      role: coordinator (shell-holding top-level session; archive and dispatch; no status authority)
+      action: >-
+        (1) Commit the BATCH-69d9a2 queue alone, render it, and open lane BATCH-69d9a2.
+        (2) Render the decision report. (3) Run TASK-20261106-0c8aee alone (LA-1 to LA-13),
+        push, refresh the ready-for-review PR with auto-merge, and close lane BATCH-8517aa.
+        (4) Then dispatch TASK-20261106-4c4831 to the executor. 5c1258, 7c2b01 and 649ebb
+        follow in queue order.
+      declared_successor_not_an_additional_next_action: >-
+        After 649ebb verifies with B8 cleared, a fresh Coordinator act carries out the
+        approval: reads the 7c2b01 report; writes the v2 amendment (predictions_to_freeze of
+        DEC-20261105-f0b7c7, V2-1 to V2-4, status approved, approved_by coordinator,
+        execution_authorized true, frozen true) and the v2 preview; writes, validates and
+        freezes protocol.json; sets per-arm watchdogs at 3x the measured projection
+        (minimum 1 h) from throughput-calibration.json plus the self-test time; dispatches
+        experiment-director compile (runbook LINT OK, first step the launcher selftest
+        subcommand on the executing host, the STOP-F2 check before every arm-A cell);
+        writes the executor run handoff (inference.policy executor-mechanical; write_scope
+        including runs/, selftest-receipts/, runbook-sessions/ and reports/); builds the
+        preapproval packet and approves only on approvable true; writes approval.lock per
+        approval_lock_binding_v2; and requires execution_state ready, and .resume/RESUME.md
+        filled and pushed (scripts/checkpoint.sh), before any run.
+
+  conditions:
+    - {id: OC-1, text: "The BATCH-69d9a2 queue is committed alone and renders clean under tools/research_dispatch.py --ready-only before 0c8aee stages anything."}
+    - {id: OC-2, text: "tools/ecc_priority.py --classify reports ECC for RQ-MONO-001 and GOAL-PATH-001 with no budget violation; tools/autoresearch_focus.py output recorded (advisory). Otherwise stop; a fresh act uses spare DEC-20261106-720ace."}
+    - {id: OC-3, text: "The GOAL-PATH-001 diff is exactly the additive set in 0c8aee LA-3; status stays active; no existing byte changes."}
+    - {id: OC-4, text: "Every reserved id is free under tools/allocate_id.py --check except for this batch's own files."}
+    - {id: OC-5, text: "The specification is byte-identical to d81a85b3...c373; the seven CODE_FILES and tests/test_kat.py equal the 7083a8 receipt hashes (code_sha256 e12fe0f3...fd38); the two 165da2 files equal the 49716d path_sha256."}
+    - {id: OC-6, text: "validate_ledger.py and check_merge_hygiene.py report no new error attributable to a staged path."}
+
+  reserved_ids_used_and_unused:
+    used: [DEC-20261106-843cf7, BATCH-69d9a2, TASK-20261106-fdd5c2, TASK-20261106-0c8aee, TASK-20261106-4c4831, TASK-20261106-5c1258, TASK-20261106-7c2b01, TASK-20261106-649ebb]
+    unused: [DEC-20261106-720ace (spare; for a fresh act if OC-1 to OC-6 fail, a snapshot stops on an expected-path mismatch, 4c4831 stops under FX-1, or 7c2b01 fails)]
+    provenance: Reserved by the top-level session. This session minted and checked nothing.
+
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    resolved_model_id_reported: claude-opus-5-5
+    model_verified: false
+    model_verified_reason: No adapter probe receipt exists for this session.
