@@ -133,14 +133,31 @@ checks:
       pass, as a BINDING check only. All 50 + 90 + 1440 curves equal the vendored
       generate_prime_order_curve(bits, 8100000 + c) (vendor/curve.py sha256 fcca2beb... asserted). This runs producer
       code, so it binds the seed rule; it is not independent of the generator.
-  - id: K9-runbook-audit-default
-    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/runbook.py audit experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26 --out research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-default --auditor sheriff-reader-pfdr/claude-opus-5-5  (nonce-sampled; no --nonce; replay interpreter python3 = /usr/local/bin/python3 3.13.18)"
-    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-default/audit.json
-    result: PENDING
+  - id: K9-runbook-audit
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/runbook.py audit experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26 --out research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-attempt2 --auditor '...'  (nonce-sampled, fresh randomness, no --nonce; replay interpreter = python3 on PATH = /usr/local/bin/python3 3.13.18)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-attempt2/audit.json (stdout in audit-bb0d26-attempt2.stdout.txt)
+    result: >-
+      flagged, exactly as recorded and for the same reason. Attempt 2 (03:48:39-04:17:00Z, nonce e7c7baac19775c56...,
+      journal tip 47f92d81... over 18 entries = the recorded tip, tool sha 8de36933...): verify with checker reruns
+      gives no integrity finding; replays census-toy-main matched, selftest matched, analyze-main and analyze-final
+      mismatch on raw-result.json /summary/calibration mean and sd only (-0.26757013662383594 vs recorded
+      -0.26757013662385903; 0.9735699770653656 vs 0.9735699770654103); interpreter_parity mismatch 4/4 (recorded
+      3.11.15, replay 3.13.18); miss probability at f = 0.1 is 0.656 for k = 4. Beyond the contract I compared the
+      full census replay record by record: 6657/6657 job records equal in every field except seconds
+      (census_replay_full_compare.json). Attempt 1 (02:48Z, auditor default dir) was killed by this session's 1 h
+      background limit during the census replay and wrote no audit.json; its finished analysis/selftest replays
+      show the same drift and its 557 census records were all equal (attempt1_partial_census_compare.json). The
+      large replay jobs files were removed after comparison (hashes in census_replay_files.json).
   - id: K10-recorded-audit-compare
-    command: "read experiments/EXP-PFDR-bb0d26/audits/AUD-20261029T012603Z-0b6353/audit.json; float_leaves.py on my audit's replays"
-    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-default/replay/ (and inline)
-    result: PENDING
+    command: "read experiments/EXP-PFDR-bb0d26/audits/AUD-20261029T012603Z-0b6353/audit.json; python3 -I scripts/readers/pfdr/float_leaves.py <recorded> <replay> on the analysis and raw-result files of attempt 2"
+    output: inline (and audit-bb0d26-attempt2/replay/)
+    result: >-
+      consistent. Recorded audit (2026-10-29, nonce 224678a9..., same tip): flagged on the same two analysis units with
+      the same replay values; census-toy-main and census-toy-rep matched; selftest not sampled. My audit sampled
+      census-toy-main, selftest, analyze-main and analyze-final. Leaf counts on my 3.13.18 replays reproduce EV OBS-4
+      exactly: raw-result.json 2 of 3 float leaves differ (416 and 402 ulps, max rel 8.63e-14), analysis.json and
+      analysis-main.json 479 of 673 float leaves differ (max rel 6.4675e-11, max 341992 ulps), 0 non-float leaves;
+      flags.json, selftest.json, design.json and census raw-result.json byte-identical.
   - id: K11-py311-replay
     command: "scripts/readers/pfdr/py311_replay.sh /usr/bin/python3.11 <scratch>/root <scratch>/out311 <trial> <run> for selftest, analyze-main, census-toy-rep, analyze-final; scratch root = git archive 48bd193a (implementation, plan, spec, runbook) + git archive HEAD (runs); then python3 -I compare_replay.py"
     output: research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/py311_replay_compare.json
@@ -358,6 +375,22 @@ findings:
       - ledger/decisions/DEC-20261029-8d9b43.yaml:204
       - ledger/corrections/CORR-20261029-1aaef6.yaml:23
     fix: An additive note on DEC-20261029-8d9b43 pointing FR-3 at CORR-20261029-1aaef6.
+  - id: PFX-6
+    beat: B6
+    severity: minor
+    claim_ids: [PFX-C-EV-apbound, PFX-C-KN-instrument]
+    what: >-
+      The label-AP detectability bound "about 2 to 47 labels" in EV-PFDR-07d608 (INF-3, obstruction statement,
+      quantity, summary) and KN-FIND-c81e5b is wrong at its low end: rt_ap_bound.json gives 2.0 to 2.6 labels at
+      b28-r{1,2,3}-n256, and C(X) cannot register any coincidence inside fewer than 4 labels, so the cubic inversion
+      is invalid there. Already withdrawn by CORR-20261029-1aaef6 (checked: additive, correct, complete for the
+      round); the original bytes remain and are read with the correction.
+    evidence:
+      - ledger/evidence/EV-PFDR-07d608.yaml:240
+      - knowledge/findings/KN-FIND-c81e5b.md:43
+      - experiments/EXP-PFDR-bb0d26/review/TASK-20261029-ff0453/rt_ap_bound.py:1
+      - ledger/corrections/CORR-20261029-1aaef6.yaml:35
+    fix: None beyond CORR-20261029-1aaef6; a size bound, if wanted, needs the discrete planted-prefix recount the correction names.
 
 claims:
   # ---------------- EV-PFDR-07d608 ----------------
