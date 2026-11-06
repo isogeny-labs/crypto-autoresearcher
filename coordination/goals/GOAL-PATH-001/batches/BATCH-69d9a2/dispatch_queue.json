@@ -1,0 +1,520 @@
+{
+ "schema": "crypto.autoresearch.dispatch_queue.v1",
+ "goal_id": "GOAL-PATH-001",
+ "batch_id": "BATCH-69d9a2",
+ "objective": "PRE-APPROVAL FIX batch for EXP-MONO-1a1be2, decided by DEC-20261106-843cf7. TASK-20261106-fdd5c2 composes the TASK-20261105-165da2 code review (B8 failed: F-1 blocking, N-1 to N-6 non-blocking). Under the owner's direction (as relayed in-session) it fixes F-1 and N-1 to N-5 and runs the DEV-1 m = 3 large-q check on a substitute non-contract cell; N-6 is a recorded limitation. It amends the approval-lock content and pins four v2 invalidation additions before any data, writes the BATCH-8517aa checkpoint, this queue and six handoffs. TASK-20261106-0c8aee ledger-archives them ALONE and closes lane BATCH-8517aa. TASK-20261106-4c4831 (executor) makes the fixes with tests that fail on the old code. TASK-20261106-5c1258 snapshots them and re-binds code_sha256. TASK-20261106-7c2b01 (fresh validator) re-reviews the fixes, and TASK-20261106-649ebb snapshots that re-review. Zero runs in every card. No experiment is approved and no status moves.",
+ "opening_decision_id": "DEC-20261106-843cf7",
+ "opened_by_decision": "DEC-20261106-843cf7",
+ "authorized_by": "DEC-20261105-f0b7c7 NA-1 declared_successor; DEC-20261106-843cf7 NA-1",
+ "question_ids": ["RQ-MONO-001"],
+ "reserved_ids": {
+  "decision": "DEC-20261106-843cf7",
+  "batch": "BATCH-69d9a2",
+  "composing_task": "TASK-20261106-fdd5c2",
+  "ledger_archive_task": "TASK-20261106-0c8aee",
+  "fix_task": "TASK-20261106-4c4831",
+  "fix_snapshot_task": "TASK-20261106-5c1258",
+  "re_review_task": "TASK-20261106-7c2b01",
+  "re_review_snapshot_task": "TASK-20261106-649ebb",
+  "unused": "DEC-20261106-720ace (spare; for a fresh Coordinator act if any of OC-1 to OC-6 fails, a snapshot stops on an expected-path mismatch, 4c4831 stops under FX-1, or 7c2b01 fails B8)",
+  "provenance": "All reserved by the top-level session and supplied to the composing session, which holds no shell and minted and re-checked nothing. The --check results belong in the 0c8aee receipt (LA-5)."
+ },
+ "max_concurrent": 1,
+ "max_concurrent_basis": "The tasks form a strict chain; each depends on the previous one's verified commit. GOAL-PATH-001 campaign_budget.max_concurrent is 3; one lane (DEC-20261106-843cf7 batch.focus).",
+ "notes": [
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "batch_record",
+   "text": "This queue is the task record; no batch.yaml is written. Timestamps are date-granular because the authoring role holds no clock. TASK-20261106-fdd5c2 wrote the additive head update on the flat file ledger/goals/GOAL-PATH-001.yaml: the two pointers moved, with prior values kept in *_before_BATCH-69d9a2 keys; the BATCH-8517aa checkpoint was appended to batch_checkpoints; one open_batches item and one impediment were appended; new keys current_batch_note_2026_11_06, open_batches_note_2026_11_06 and next_action_2026_11_06 were added. No existing byte changed; status is unchanged; tools/shard_goal.py is not run."
+  },
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "opening_custody",
+   "text": "Written by a Coordinator subagent with no shell, at origin/main da442739db as the top-level session reported. New files: this queue; ledger/decisions/DEC-20261106-843cf7.yaml; six handoffs. Edited: ledger/goals/GOAL-PATH-001.yaml (additive). The top-level session renders the decision report into experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/. This queue is committed alone first (0c8aee LA-1) and is never staged by an archive. The committed specification is not edited."
+  },
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "owner_direction",
+   "text": "On 2026-11-06 the owner, through the top-level session, directed that DEV-1, N-1, N-2 and N-5 be fixed before approval, not recorded as limitations, with tests that fail on the old code and a re-review confirming the M5 kill. DEC-20261106-843cf7 owner_direction records the direction and its relayed provenance. The DEV-1 route chosen is a substitute non-contract cell (dev1_decision)."
+  },
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "review_requirement_assessment",
+   "text": "No producer card here is review_required true. 4c4831 fixes an instrument; 7c2b01 IS its independent re-review (instrument, not a claim-changing round, so no review_plan; blindness lifted deliberately for fix verification). The eventual runs of EXP-MONO-1a1be2 get independent validation in review-evidence."
+  },
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "input_pinning_and_release_digests",
+   "text": "0c8aee records the sha256 of every input of 4c4831 in its receipt (LA-10). 5c1258 SA-3 re-checks them and records the new code_sha256, the seven per-file hashes, both test-file hashes, EXPECTED_KAT_ITEMS and DESIGNED_SKIPS that the approval lock (v2) will bind. Every release carries --artifact <path>=<64-hex sha256> for every declared artifact."
+  },
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "inference_declared_up_front",
+   "text": "Every card sets fallback_allowed true for backend or model substitution only, and degraded_allowed false. Coordinator cards run under the session model by runtime inheritance. 4c4831 uses executor-implementation. 7c2b01 uses review-adversarial with independent_session_required true; it is not the 4c4831 session and not the 165da2 session. Amazon Bedrock is never selected, configured or contacted."
+  },
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "archive_order",
+   "text": "(1) The queue is committed alone, pushed and rendered clean, and lane BATCH-69d9a2 is opened (0c8aee LA-1). (2) The decision report is rendered. 0c8aee runs ALONE and is verified and pushed; the PR gets auto-merge; lane BATCH-8517aa is closed (LA-12). (3) 4c4831. (4) 5c1258 alone. (5) 7c2b01 on the 5c1258 commit. (6) 649ebb alone. (7) The lane stays open until the approval act writes its checkpoint. If any condition fails, stop before staging and return to a fresh Coordinator act (spare DEC-20261106-720ace). This record is not edited except for archive blocks and tasks_state_revisions."
+  },
+  {
+   "at": "2026-11-06T00:00:00Z",
+   "kind": "outcome_discipline",
+   "text": "Until 0c8aee verifies, no text describes the composition or the batch opening as official. No text describes EXP-MONO-1a1be2 as approved. No text describes a KAT, a mutant result, the FX-16 cell or a throughput figure as evidence about compounding, relation rates or any exponent. Commit messages and PR text state no lemma value, formula, prediction value, KAT value or prior (PD-1 binds anything derived)."
+  }
+ ],
+ "tasks_state_revisions": [
+  {"at": "2026-11-06T04:13:16Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-0c8aee", "from_state": "queued", "to_state": "completed", "reason": "Ledger archive committed alone at 7337c8d2b55a (parent c3270969a1f4) with exactly the fifteen expected paths after LA-1 to LA-10. Zero runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T06:03:35Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-4c4831", "from_state": "queued", "to_state": "completed", "reason": "Executor session completed FX-1..FX-15; FX-16 stopped per its budget rule (scope finding SF-1, not an FX-1 finding); released at 6cae473836 with nine non-empty digests. Zero experiment runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T06:03:35Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-5c1258", "from_state": "queued", "to_state": "completed", "reason": "Snapshot archive committed alone at 9a0b5955146a (parent 82885e8a6efd) with exactly the ten expected paths after SA-1 to SA-5; start-up suite passed in full on a byte-identical extract. Zero runs.", "paths_or_records_added": []}
+ ],
+ "tasks": [
+  {
+   "id": "TASK-20261106-fdd5c2",
+   "title": "Coordinator: compose the 165da2 code review, decide DEV-1 under owner direction, pin lock v2 and V2-1..V2-4, open BATCH-69d9a2, checkpoint BATCH-8517aa (DEC-20261106-843cf7)",
+   "role": "coordinator",
+   "state": "completed",
+   "priority": 92,
+   "review_required": false,
+   "review_required_note": "FALSE. A composing and design act; it changes no claim.",
+   "depends_on": [],
+   "read_scope": ["ledger", "coordination/goals/GOAL-PATH-001", "experiments/EXP-MONO-1a1be2", "templates/research-records.md", ".claude/skills", "AGENTS.md", "agents/coordinator.md", "docs/artifacts.md"],
+   "write_scope": [
+    "ledger/goals/GOAL-PATH-001.yaml",
+    "ledger/handoffs/TASK-20261106-fdd5c2.yaml",
+    "ledger/handoffs/TASK-20261106-0c8aee.yaml",
+    "ledger/handoffs/TASK-20261106-4c4831.yaml",
+    "ledger/handoffs/TASK-20261106-5c1258.yaml",
+    "ledger/handoffs/TASK-20261106-7c2b01.yaml",
+    "ledger/handoffs/TASK-20261106-649ebb.yaml",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7"
+   ],
+   "write_scope_note": "The act also wrote ledger/decisions/DEC-20261106-843cf7.yaml, owned by TASK-20261106-0c8aee, and this queue, which is committed alone and never staged by an archive. The top-level session renders the report directory from the decision's visual_report.",
+   "artifact_paths": [
+    "ledger/goals/GOAL-PATH-001.yaml",
+    "ledger/handoffs/TASK-20261106-fdd5c2.yaml",
+    "ledger/handoffs/TASK-20261106-0c8aee.yaml",
+    "ledger/handoffs/TASK-20261106-4c4831.yaml",
+    "ledger/handoffs/TASK-20261106-5c1258.yaml",
+    "ledger/handoffs/TASK-20261106-7c2b01.yaml",
+    "ledger/handoffs/TASK-20261106-649ebb.yaml",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.typ",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.pdf",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/findings.svg",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/mutation-kill.svg",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figures.py",
+    "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figure-data.json"
+   ],
+   "archived_by": "TASK-20261106-0c8aee",
+   "handoff_record": "ledger/handoffs/TASK-20261106-fdd5c2.yaml",
+   "handoff": {
+    "id": "TASK-20261106-fdd5c2",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Compose the TASK-20261105-165da2 code review, decide the must-fix set and DEV-1 (under the owner's relayed direction), amend the lock content and pin V2-1..V2-4 before any data, and write the BATCH-8517aa checkpoint, this queue, six handoffs, the additive goal-head update and DEC-20261106-843cf7.",
+    "uncertainty_reduced": "Exactly what must change in the EXP-MONO-1a1be2 instrument before approval, and how the change is verified.",
+    "inputs": [
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml",
+     "ledger/decisions/DEC-20261105-f0b7c7.yaml",
+     "experiments/EXP-MONO-1a1be2/specification.yaml",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md"
+    ],
+    "constraints": ["As ledger/handoffs/TASK-20261106-fdd5c2.yaml, which is authoritative: no approval, no status change, no edit of the committed specification, additive goal-head edit with no existing byte changed, zero runs."],
+    "deliverables": ["ledger/decisions/DEC-20261106-843cf7.yaml (owned by 0c8aee)", "this queue (committed alone)", "the thirteen artifact paths above"],
+    "artifact_paths": [
+     "ledger/goals/GOAL-PATH-001.yaml",
+     "ledger/handoffs/TASK-20261106-fdd5c2.yaml",
+     "ledger/handoffs/TASK-20261106-0c8aee.yaml",
+     "ledger/handoffs/TASK-20261106-4c4831.yaml",
+     "ledger/handoffs/TASK-20261106-5c1258.yaml",
+     "ledger/handoffs/TASK-20261106-7c2b01.yaml",
+     "ledger/handoffs/TASK-20261106-649ebb.yaml",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.typ",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.pdf",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/findings.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/mutation-kill.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figures.py",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figure-data.json"
+    ],
+    "archived_by": "TASK-20261106-0c8aee",
+    "inference": {"policy": "coordinator-orchestration-code", "reasoning_effort": "high", "fallback_allowed": true, "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 3600, "memory_gb": 1, "maximum_runs": 0},
+    "completion_gate": ["Decision, queue, six handoffs and goal-head update exist in the working tree.", "The decision disposes of every finding and DEV-1 with a reason, records the owner direction with provenance, states updated blockers, lock v2, V2-1..V2-4, knowledge_promotion, the visual-report specification and exactly one next action.", "Zero runs."],
+    "return_format": "Decisions and reasons; files; ids used and unused; queue table; ordered steps and the single next action; what was not done.",
+    "review_plan_ref": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261106-0c8aee",
+   "title": "Ledger archive of DEC-20261106-843cf7 and the fdd5c2 artifacts, ALONE, checking OC-1 to OC-6, pinning 4c4831 inputs, then closing lane BATCH-8517aa",
+   "role": "coordinator",
+   "state": "completed",
+   "priority": 91,
+   "review_required": false,
+   "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
+   "depends_on": ["TASK-20261106-fdd5c2"],
+   "read_scope": ["ledger", "experiments/EXP-MONO-1a1be2", "coordination/goals/GOAL-PATH-001", "templates/research-records.md", "AGENTS.md", "tools"],
+   "write_scope": [
+    "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-0c8aee",
+    "ledger/decisions/DEC-20261106-843cf7.yaml"
+   ],
+   "artifact_paths": [
+    "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-0c8aee/ledger-receipt.json",
+    "ledger/decisions/DEC-20261106-843cf7.yaml"
+   ],
+   "archived_by": "TASK-20261106-0c8aee",
+   "archive": {
+    "kind": "ledger",
+    "binding_mode": "content_at_commit",
+    "binding_mode_note": "GOAL-PATH-001.yaml has a life after this archive. commit_sha, parent_sha and path_sha256 are filled at archive time, in a later commit.",
+    "source_task_ids": ["TASK-20261106-fdd5c2"],
+    "record_ids": ["DEC-20261106-843cf7", "GOAL-PATH-001", "BATCH-69d9a2", "BATCH-8517aa", "EXP-MONO-1a1be2", "TASK-20261106-fdd5c2", "TASK-20261106-0c8aee", "TASK-20261106-4c4831", "TASK-20261106-5c1258", "TASK-20261106-7c2b01", "TASK-20261106-649ebb"],
+    "expected_paths": [
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-0c8aee/ledger-receipt.json",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figure-data.json",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figures.py",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/findings.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/mutation-kill.svg",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.pdf",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.typ",
+     "ledger/decisions/DEC-20261106-843cf7.yaml",
+     "ledger/goals/GOAL-PATH-001.yaml",
+     "ledger/handoffs/TASK-20261106-0c8aee.yaml",
+     "ledger/handoffs/TASK-20261106-4c4831.yaml",
+     "ledger/handoffs/TASK-20261106-5c1258.yaml",
+     "ledger/handoffs/TASK-20261106-649ebb.yaml",
+     "ledger/handoffs/TASK-20261106-7c2b01.yaml",
+     "ledger/handoffs/TASK-20261106-fdd5c2.yaml"
+    ],
+    "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
+    "commit_sha": "7337c8d2b55a89cdcdcc59d97846ac3e8edfcde4",
+    "parent_sha": "c3270969a1f4821901a2f304ce81de02533d5855",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-0c8aee/ledger-receipt.json": "9e53c1300c8bf4af94902f48a018d08adf1023379a0531cd762eb91adc89ed6b",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figure-data.json": "0493383c9347f1a61ee3d393ccecd6cdfb19fd64a021ffda3fe689ec2f2bdb41",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figures.py": "f4f0c85006addb30d454beaf2b90d79095f2f93c3f3e74e7f732231e3cda3c28",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/findings.svg": "45c9833575c9e3b91edc64f5201ae4177132814db8310406c8a2022d2a5dc79f",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/mutation-kill.svg": "6075ddd558f9db6a347db011d80765395b7f1c0ffc91cdf874087f0cd87baea6",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.pdf": "7e011a22a963e50525fe792abbe563a83d6447f741608a4d6bdf2a033a271b42",
+     "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.typ": "3e73272aa2363300a3b15aa326cd108849f4ed6b03d1beebf95812bae34b9674",
+     "ledger/decisions/DEC-20261106-843cf7.yaml": "fd0debc239ec2f5f95b1ca869199c429113fc38d1e7f67c5c24b5e70b601c45d",
+     "ledger/goals/GOAL-PATH-001.yaml": "a7e7d2ecb36b21c64cf9116419ec6941c41eb0f2795f6031dead8605662caa4f",
+     "ledger/handoffs/TASK-20261106-0c8aee.yaml": "3cc92119d0f41ad025427fe98813a75c449e9e328f338ec74a4d4b47cea86f4e",
+     "ledger/handoffs/TASK-20261106-4c4831.yaml": "8ef4c9d183d48b520225d6db31f381a851104c11733db2021bf38cb605a31fee",
+     "ledger/handoffs/TASK-20261106-5c1258.yaml": "4d45d8f385b193f46e5107d3ea86c4755bd21b73f312d3031ce7674802f1c9d0",
+     "ledger/handoffs/TASK-20261106-649ebb.yaml": "0f9834f7e543bb9188b4574d0e2faad4030725936b618f9483375d586b3d0c87",
+     "ledger/handoffs/TASK-20261106-7c2b01.yaml": "76c7cda7c4d38fe9a80753be432aaf3e9748cb7b47b4841e235e796b0aeb11bc",
+     "ledger/handoffs/TASK-20261106-fdd5c2.yaml": "9e4980bf1247ca827b6e5e799572cdd1d434fb7c6987a2e8e8b8faebc03d42dc"
+    }
+   },
+   "handoff_record": "ledger/handoffs/TASK-20261106-0c8aee.yaml",
+   "handoff": {
+    "id": "TASK-20261106-0c8aee",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Commit and bind, in ONE isolated ledger archive commit, exactly the fifteen expected paths after checking OC-1 to OC-6. Record the 4c4831 input pins. Verify, push, refresh the ready-for-review PR with auto-merge. Then close lane BATCH-8517aa. Runs ALONE.",
+    "uncertainty_reduced": "None about the mathematics. It makes the code-review composition, the pre-data amendments and the batch opening durable together.",
+    "inputs": ["ledger/decisions/DEC-20261106-843cf7.yaml", "ledger/goals/GOAL-PATH-001.yaml", "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json", "experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/"],
+    "constraints": ["LA-1 to LA-13 of ledger/handoffs/TASK-20261106-0c8aee.yaml, which is authoritative. In brief: queue alone first and lane opened; origin/main merged, never rebased; mechanical goal-head diff with no existing byte changed and yaml.safe_load passing; card and queue agreement; --check on every reserved id; ECC and focus outputs; specification, code and review byte checks; decision report present and inspected; fifteen paths staged one by one; validator and hygiene; 4c4831 input pins; content_at_commit; commit message with no value or formula; ready-for-review PR with auto-merge; close lane BATCH-8517aa; release digests; zero runs."],
+    "deliverables": ["The ledger receipt as specified in the ledger card.", "One isolated commit, pushed branch, ready-for-review PR with auto-merge, lane BATCH-69d9a2 open and BATCH-8517aa closed."],
+    "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-0c8aee/ledger-receipt.json", "ledger/decisions/DEC-20261106-843cf7.yaml"],
+    "archived_by": "TASK-20261106-0c8aee",
+    "inference": {"policy": "coordinator-orchestration-code", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default (high).", "fallback_allowed": true, "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 3600, "memory_gb": 1, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "LP-1", "text": "archived_by is bound (SELF)."},
+     {"id": "LP-2", "text": "LA-1 is done: queue committed, pushed, renders clean; lane BATCH-69d9a2 open."},
+     {"id": "LP-3", "text": "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json TASK-20261106-0c8aee --as <addr> --ttl-minutes 60 --publish."},
+     {"id": "LP-4", "text": "RUNS ALONE."}
+    ],
+    "completion_gate": ["origin/main merged, base and merge outcome recorded.", "OC-1 to OC-6 hold and are recorded.", "One commit binds exactly the expected paths and verifies under tools/research_dispatch.py.", "Branch pushed, PR ready with auto-merge, lane BATCH-8517aa closed, 4c4831 input pins recorded.", "Two non-empty release digests. Zero runs."],
+    "return_format": "Ledger receipt, PR reference, lane record paths, input pins, release digests.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261106-4c4831",
+   "title": "Executor (executor-implementation): fix F-1 and N-1 to N-5 with tests that fail on the old code, run the DEV-1 m = 3 large-q substitute cell; zero contract cells, zero runs",
+   "role": "executor",
+   "state": "completed",
+   "priority": 90,
+   "review_required": false,
+   "review_required_note": "FALSE. An instrument; it changes no claim. TASK-20261106-7c2b01 re-reviews it before approval.",
+   "depends_on": ["TASK-20261106-0c8aee"],
+   "read_scope": [
+    "experiments/EXP-MONO-1a1be2/specification.yaml",
+    "experiments/EXP-MONO-1a1be2/code",
+    "experiments/EXP-MONO-1a1be2/implementation",
+    "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md",
+    "ledger/handoffs/TASK-20261106-4c4831.yaml",
+    "ledger/decisions/DEC-20261106-843cf7.yaml",
+    "agents/executor.md",
+    "AGENTS.md"
+   ],
+   "read_scope_note": "Reads the 165da2 code review (its defect list). Never reads any other file under coordination/goals/GOAL-PATH-001/review/.",
+   "write_scope": [
+    "experiments/EXP-MONO-1a1be2/code",
+    "experiments/EXP-MONO-1a1be2/implementation"
+   ],
+   "artifact_paths": [
+    "experiments/EXP-MONO-1a1be2/code/launcher.py",
+    "experiments/EXP-MONO-1a1be2/code/counters.py",
+    "experiments/EXP-MONO-1a1be2/code/tests/test_kat.py",
+    "experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py",
+    "experiments/EXP-MONO-1a1be2/code/README.md",
+    "experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md",
+    "experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json",
+    "experiments/EXP-MONO-1a1be2/implementation/environment-4c4831.json",
+    "experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json"
+   ],
+   "archived_by": "TASK-20261106-5c1258",
+   "handoff_record": "ledger/handoffs/TASK-20261106-4c4831.yaml",
+   "handoff": {
+    "id": "TASK-20261106-4c4831",
+    "from": "coordinator",
+    "to": "executor",
+    "objective": "Fix the EXP-MONO-1a1be2 instrument at its 72f51766a6 bytes: bind and harden the start-up KAT gate (F-1); add a non-vacuous large-Q index KAT that kills M5 (N-1); launcher-side validity and an enforced F2 stop (N-2); lambda from the counted N_cf (N-3); KAT-mode key gating (N-4); gate and record hardening (N-5); run the DEV-1 m = 3 substitute cell over F_{q''^2}, q'' the least prime > 10,000 (FX-16). Trial plan byte-identical.",
+    "uncertainty_reduced": "Readiness blockers B1 and B8. Nothing about the mathematics.",
+    "inputs": [
+     "ledger/handoffs/TASK-20261106-4c4831.yaml",
+     "ledger/decisions/DEC-20261106-843cf7.yaml",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md",
+     "experiments/EXP-MONO-1a1be2/specification.yaml",
+     "experiments/EXP-MONO-1a1be2/code/",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md",
+     "experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json",
+     "agents/executor.md"
+    ],
+    "constraints": ["FX-1 to FX-16 of ledger/handoffs/TASK-20261106-4c4831.yaml, which is authoritative. In brief: declared paths only, and fqn/curves/semaev/kernel/make_trial_plan/throughput_calibration byte-identical, or stop; lock gains test_file_sha256; isolated self-test (no conftest, no ini, no plugin autoload, scrubbed PYTEST_* env); pass-in-full by junit counts against EXPECTED_KAT_ITEMS and DESIGNED_SKIPS; launcher-written host-keyed receipts that refuse on mismatch; gate and startup_selftest blocks in every manifest; M5-killing large-Q KAT; validity block and STOP-F2 sentinel; counted-N_cf lambda with flag; derived-only keys; N-5 items 1-5; every new test fails on the old code; plan sha256 unchanged; the FX-16 cell within 14,400 s or stop; no contract cell; zero runs; no commit; never Bedrock."],
+    "deliverables": ["The nine artifact paths with the full test_kat.py suite passing and the FX-16 cell passed."],
+    "artifact_paths": [
+     "experiments/EXP-MONO-1a1be2/code/launcher.py",
+     "experiments/EXP-MONO-1a1be2/code/counters.py",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat.py",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py",
+     "experiments/EXP-MONO-1a1be2/code/README.md",
+     "experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json",
+     "experiments/EXP-MONO-1a1be2/implementation/environment-4c4831.json",
+     "experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json"
+    ],
+    "archived_by": "TASK-20261106-5c1258",
+    "inference": {"policy": "executor-implementation", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default.", "fallback_allowed": true, "fallback_note": "Backend or model substitution only, recorded as fallback_used. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 36000, "memory_gb": 16, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "XP-1", "text": "archived_by TASK-20261106-5c1258 is bound."},
+     {"id": "XP-2", "text": "TASK-20261106-0c8aee completed and verified, pushed; lane BATCH-69d9a2 open; lane BATCH-8517aa closed."},
+     {"id": "XP-3", "text": "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json TASK-20261106-4c4831 --as <addr> --ttl-minutes 720 --publish. Release with nine non-empty --artifact digests."}
+    ],
+    "completion_gate": ["All nine artifact paths exist; every FX-1 file byte-identical.", "Full test_kat.py passes; EXPECTED_KAT_ITEMS equals the collected count; every new test shown failing on the old code or killing its mutant (M5 killed).", "FX-16 ran in full within budget and matched, or stopped with a reported projection.", "Plan sha256 equals 9ccbe614...fb4a.", "No contract cell; no predicted value asserted; zero runs."],
+    "return_format": "Paths with sha256, KAT pass count and EXPECTED_KAT_ITEMS, plan comparison, M5 outcome, FX-16 outcome, scope findings. No values.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261106-5c1258",
+   "title": "Snapshot archive of the EXP-MONO-1a1be2 fixes (TASK-20261106-4c4831), alone among commit tasks; re-binds code_sha256 for the approval lock v2",
+   "role": "coordinator",
+   "state": "completed",
+   "priority": 89,
+   "review_required": false,
+   "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
+   "depends_on": ["TASK-20261106-4c4831"],
+   "read_scope": ["experiments/EXP-MONO-1a1be2", "ledger/handoffs/TASK-20261106-4c4831.yaml", "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2", "tools"],
+   "write_scope": ["coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258"],
+   "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json"],
+   "archived_by": "TASK-20261106-5c1258",
+   "archive": {
+    "kind": "snapshot",
+    "binding_mode": "content_at_commit",
+    "binding_mode_note": "The approval binds code_sha256 and the test-file hash computed at this commit. commit_sha, parent_sha and path_sha256 are filled at archive time, in a later commit.",
+    "source_task_ids": ["TASK-20261106-4c4831"],
+    "record_ids": ["EXP-MONO-1a1be2", "BATCH-69d9a2", "TASK-20261106-4c4831", "TASK-20261106-5c1258"],
+    "expected_paths": [
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json",
+     "experiments/EXP-MONO-1a1be2/code/README.md",
+     "experiments/EXP-MONO-1a1be2/code/counters.py",
+     "experiments/EXP-MONO-1a1be2/code/launcher.py",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat.py",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py",
+     "experiments/EXP-MONO-1a1be2/implementation/environment-4c4831.json",
+     "experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json",
+     "experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json"
+    ],
+    "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
+    "commit_sha": "9a0b5955146a6a87584774f8018da3559df86275",
+    "parent_sha": "82885e8a6efd1e084620d6932ab80b0ac7413c82",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json": "52f178cb80133df195406829b45dee58a84637089db4e12e586bd1553477c332",
+     "experiments/EXP-MONO-1a1be2/code/README.md": "99c86e2b9413b13022e4ee3c0c6b6367648271ffc8152616e0856c94135755bf",
+     "experiments/EXP-MONO-1a1be2/code/counters.py": "f085e26ef7efaeb1f6727a102738c03d472b9f62e8ce4e020f5a35bafba024e1",
+     "experiments/EXP-MONO-1a1be2/code/launcher.py": "41afc2cc0db2e091559da97ad0b16aaf6d8d86121a53b6eff2303f298befb1c7",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat.py": "c34b8fe0c94faedad8e35a8135a639aa09bfa6b13f1aac2f26d4cc899df2539a",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py": "79894702c2ee086aa33522233c7933281b4d217abab9dd39163e8f9503ed06b5",
+     "experiments/EXP-MONO-1a1be2/implementation/environment-4c4831.json": "f32249db924116044388ed07e30abbb110e7729cbc794e93c1adb4e5d53429be",
+     "experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md": "8ef65becb7ea1ffdef91e314abe19ad81aad2cccc232af3d719d3f328525b282",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json": "b8b0336f5ffc23d44e2789aff12fcac89c6cb456d24a8af46b01faf9b4eb98a4",
+     "experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json": "ccb3f55c4ab380eaa54746b9b38d2606b3f0f395ced323d8bb33b081deec71c8"
+    }
+   },
+   "handoff_record": "ledger/handoffs/TASK-20261106-5c1258.yaml",
+   "handoff": {
+    "id": "TASK-20261106-5c1258",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Commit and bind, in ONE isolated snapshot commit, exactly the ten expected paths after SA-1 to SA-7, recording code_sha256, the per-file and test-file hashes, EXPECTED_KAT_ITEMS and DESIGNED_SKIPS. Verify, push, refresh the PR. Runs alone among commit tasks.",
+    "uncertainty_reduced": "None about the mathematics. It makes the fixed instrument bytes durable for the re-review and the approval.",
+    "inputs": ["ledger/handoffs/TASK-20261106-4c4831.yaml", "experiments/EXP-MONO-1a1be2/code/", "experiments/EXP-MONO-1a1be2/implementation/", "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-0c8aee/ledger-receipt.json"],
+    "constraints": ["SA-1 to SA-7 of ledger/handoffs/TASK-20261106-5c1258.yaml, which is authoritative."],
+    "deliverables": ["The snapshot receipt as specified in the ledger card.", "One isolated commit, pushed branch, refreshed PR."],
+    "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json"],
+    "archived_by": "TASK-20261106-5c1258",
+    "inference": {"policy": "coordinator-orchestration-code", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default (high).", "fallback_allowed": true, "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 4500, "memory_gb": 4, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "SP-1", "text": "archived_by is bound (SELF)."},
+     {"id": "SP-2", "text": "4c4831 released with nine non-empty digests and no FX-1 scope-finding path."},
+     {"id": "SP-3", "text": "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json TASK-20261106-5c1258 --as <addr> --ttl-minutes 75 --publish."},
+     {"id": "SP-4", "text": "No other commit task is live."}
+    ],
+    "completion_gate": ["origin/main merged, recorded.", "SA-2 to SA-5 in the receipt, with code_sha256, hashes, EXPECTED_KAT_ITEMS, DESIGNED_SKIPS, junit counts, plan sha256.", "Exactly ten paths bound; receipt verifies.", "Pushed; PR names EXP-MONO-1a1be2 and 4c4831.", "Non-empty release digest. Zero runs."],
+    "return_format": "Receipt, SA-5 junit counts, plan sha256 outcome, code_sha256, PR reference, release digest.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261106-7c2b01",
+   "title": "Validator (review-adversarial, fresh independent session): focused re-review of the EXP-MONO-1a1be2 fixes at the 5c1258 commit, RR-1 to RR-8; M5 kill confirmed by the reviewer; zero experiment cells",
+   "role": "validator",
+   "subagent_binding": "validator",
+   "state": "queued",
+   "priority": 88,
+   "review_required": false,
+   "review_required_note": "FALSE. This IS the independent re-review of the instrument; it changes no claim and has no review_plan.",
+   "depends_on": ["TASK-20261106-5c1258"],
+   "read_scope": [
+    "ledger/handoffs/TASK-20261106-7c2b01.yaml",
+    "ledger/decisions/DEC-20261106-843cf7.yaml",
+    "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md",
+    "experiments/EXP-MONO-1a1be2",
+    "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258",
+    "agents/validator.md",
+    "AGENTS.md"
+   ],
+   "read_scope_note": "Blindness lifted for the 165da2 report only (fix verification). No other file under coordination/goals/GOAL-PATH-001/review/, and never the producer's session.",
+   "write_scope": ["coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01"],
+   "artifact_paths": [
+    "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md",
+    "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/review_attestation.yaml"
+   ],
+   "archived_by": "TASK-20261106-649ebb",
+   "handoff_record": "ledger/handoffs/TASK-20261106-7c2b01.yaml",
+   "handoff": {
+    "id": "TASK-20261106-7c2b01",
+    "from": "coordinator",
+    "to": "validator",
+    "objective": "Verify at the 5c1258 commit that every must-fix of DEC-20261106-843cf7 (F-1, N-1 to N-5, DEV-1 via FX-16) is closed, that nothing the 165da2 review found holding regressed, and that the changed code adds no defect that lets an invalid cell pass or misroutes an instrument defect into a scientific reading; give a terminal B8 verdict.",
+    "uncertainty_reduced": "Whether blocker B8 clears. Nothing about the mathematics.",
+    "inputs": [
+     "ledger/handoffs/TASK-20261106-7c2b01.yaml",
+     "ledger/decisions/DEC-20261106-843cf7.yaml",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md",
+     "experiments/EXP-MONO-1a1be2/specification.yaml",
+     "experiments/EXP-MONO-1a1be2/code/",
+     "experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md",
+     "experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json",
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json",
+     "agents/validator.md"
+    ],
+    "constraints": ["RR-1 to RR-8 of ledger/handoffs/TASK-20261106-7c2b01.yaml, which is authoritative: byte checks and plan regeneration; every 165da2 gate scenario plus the new self-test and receipt attacks, one self-test in a full checkout; the reviewer's own M5 mutant run (must be killed) and an M3 control; old-code-fails/new-code-passes for every N-2 and N-5 test plus one independent attack each; N-3, N-4 and FX-16 checks; regression spot checks; a read of every changed line; zero experiment cells; no commit; never Bedrock."],
+    "deliverables": ["fix_review.md and review_attestation.yaml as specified in the ledger card."],
+    "artifact_paths": [
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/review_attestation.yaml"
+    ],
+    "archived_by": "TASK-20261106-649ebb",
+    "inference": {"policy": "review-adversarial", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default; never below the review floor.", "fallback_allowed": true, "fallback_note": "Backend or model substitution only, recorded as fallback_used. Never a cheaper policy, never degraded, never Bedrock.", "degraded_allowed": false, "independent_session_required": true},
+    "budget": {"wall_clock_seconds": 14400, "memory_gb": 16, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "VP-1", "text": "archived_by TASK-20261106-649ebb is bound."},
+     {"id": "VP-2", "text": "5c1258 completed, verified, pushed."},
+     {"id": "VP-3", "text": "A full (non-sparse) worktree at the 5c1258 commit for RR-2; scratch extracts for mutants."},
+     {"id": "VP-4", "text": "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json TASK-20261106-7c2b01 --as <addr> --ttl-minutes 300 --publish. Release with two non-empty digests."},
+     {"id": "VP-5", "text": "Fresh validator session: not the 4c4831, ac5ad6, a97206, PR #2707-author or 165da2 session; resolved model id contains no 'bedrock'."}
+    ],
+    "completion_gate": ["fix_review.md covers RR-1 to RR-7 with commands, outcomes, the must-fix table and a terminal B8 verdict.", "M5 confirmed killed by the reviewer's own run.", "review_attestation.yaml parses and names the commit reviewed.", "Zero experiment cells; nothing outside write_scope."],
+    "return_format": "Two paths with sha256, B8 verdict, must-fix closed/not closed counts, new findings by severity, commit reviewed.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  },
+  {
+   "id": "TASK-20261106-649ebb",
+   "title": "Snapshot archive of the EXP-MONO-1a1be2 fix re-review (TASK-20261106-7c2b01), alone among commit tasks",
+   "role": "coordinator",
+   "state": "queued",
+   "priority": 87,
+   "review_required": false,
+   "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
+   "depends_on": ["TASK-20261106-7c2b01"],
+   "read_scope": ["coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01", "ledger/handoffs/TASK-20261106-7c2b01.yaml", "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2", "experiments/EXP-MONO-1a1be2/code", "tools"],
+   "write_scope": ["coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-649ebb"],
+   "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-649ebb/snapshot-receipt.json"],
+   "archived_by": "TASK-20261106-649ebb",
+   "archive": {
+    "kind": "snapshot",
+    "binding_mode": "content_at_commit",
+    "binding_mode_note": "commit_sha, parent_sha and path_sha256 are filled at archive time, in a later commit.",
+    "source_task_ids": ["TASK-20261106-7c2b01"],
+    "record_ids": ["EXP-MONO-1a1be2", "BATCH-69d9a2", "TASK-20261106-7c2b01", "TASK-20261106-649ebb"],
+    "expected_paths": [
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-649ebb/snapshot-receipt.json",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/review_attestation.yaml"
+    ],
+    "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
+    "commit_sha": null,
+    "parent_sha": null,
+    "path_sha256": {}
+   },
+   "handoff_record": "ledger/handoffs/TASK-20261106-649ebb.yaml",
+   "handoff": {
+    "id": "TASK-20261106-649ebb",
+    "from": "coordinator",
+    "to": "coordinator",
+    "objective": "Commit and bind, in ONE isolated snapshot commit, exactly the three expected paths after SA-1 to SA-5. Verify, push, refresh the PR. Runs alone among commit tasks.",
+    "uncertainty_reduced": "None about the mathematics. It makes the re-review durable before the approval act reads it.",
+    "inputs": ["ledger/handoffs/TASK-20261106-7c2b01.yaml", "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/", "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json"],
+    "constraints": ["SA-1 to SA-5 of ledger/handoffs/TASK-20261106-649ebb.yaml, which is authoritative."],
+    "deliverables": ["The snapshot receipt as specified in the ledger card.", "One isolated commit, pushed branch, refreshed PR."],
+    "artifact_paths": ["coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-649ebb/snapshot-receipt.json"],
+    "archived_by": "TASK-20261106-649ebb",
+    "inference": {"policy": "coordinator-orchestration-code", "reasoning_effort": null, "reasoning_effort_note": "null means the policy default (high).", "fallback_allowed": true, "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.", "degraded_allowed": false, "independent_session_required": false},
+    "budget": {"wall_clock_seconds": 1800, "memory_gb": 1, "maximum_runs": 0},
+    "dispatch_preconditions": [
+     {"id": "RP-1", "text": "archived_by is bound (SELF)."},
+     {"id": "RP-2", "text": "7c2b01 released with two non-empty digests."},
+     {"id": "RP-3", "text": "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json TASK-20261106-649ebb --as <addr> --ttl-minutes 45 --publish."},
+     {"id": "RP-4", "text": "No other commit task is live."}
+    ],
+    "completion_gate": ["origin/main merged, recorded.", "SA-2 and SA-3 in the receipt.", "Exactly three paths bound; receipt verifies.", "Pushed; PR names 7c2b01.", "Non-empty release digest. Zero runs."],
+    "return_format": "Receipt, B8 verdict and finding counts, PR reference, release digest.",
+    "review_plan": null,
+    "runs_launched": 0
+   },
+   "outcome": null
+  }
+ ]
+}

@@ -1,0 +1,86 @@
+# Code-review composition and pre-approval revision for EXP-MONO-1a1be2
+# (DEC-20261106-843cf7). Coordinator subagent, no shell. Completed when written; the
+# top-level session renders the decision report this act specifies. Archived by
+# TASK-20261106-0c8aee. Zero runs.
+handoff:
+  id: TASK-20261106-fdd5c2
+  from: coordinator
+  to: coordinator
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-69d9a2
+  authorized_by: DEC-20261105-f0b7c7 NA-1 declared successor
+  objective: >-
+    Compose the TASK-20261105-165da2 code review, decide which findings are fixed before
+    approval, decide deviation DEV-1 (under the owner's direction as relayed in-session),
+    amend the approval-lock content and pin the v2 invalidation additions before any data.
+    Write the BATCH-8517aa checkpoint, the BATCH-69d9a2 queue and its handoffs, the
+    additive goal-head update, and DEC-20261106-843cf7.
+  uncertainty_reduced: >-
+    Exactly what must change in the EXP-MONO-1a1be2 instrument before it can be approved,
+    and how the change is verified.
+  inputs:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json
+    - ledger/decisions/DEC-20261105-f0b7c7.yaml
+    - experiments/EXP-MONO-1a1be2/specification.yaml
+    - experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md
+    - experiments/EXP-MONO-1a1be2/implementation/throughput-calibration.json
+    - ledger/goals/GOAL-PATH-001.yaml
+  constraints:
+    - No approval, no status change, no edit of the committed specification, additive goal-head edit only (no existing byte changed), zero runs, no shell, no new identifier.
+  deliverables:
+    - ledger/decisions/DEC-20261106-843cf7.yaml (owned by TASK-20261106-0c8aee)
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json (committed alone, never staged by an archive)
+    - the six BATCH-69d9a2 handoffs and the additive GOAL-PATH-001 update
+    - the decision-report specification (DEC visual_report), rendered by the top-level session into the six report paths below
+  artifact_paths:
+    - ledger/goals/GOAL-PATH-001.yaml
+    - ledger/handoffs/TASK-20261106-fdd5c2.yaml
+    - ledger/handoffs/TASK-20261106-0c8aee.yaml
+    - ledger/handoffs/TASK-20261106-4c4831.yaml
+    - ledger/handoffs/TASK-20261106-5c1258.yaml
+    - ledger/handoffs/TASK-20261106-7c2b01.yaml
+    - ledger/handoffs/TASK-20261106-649ebb.yaml
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.typ
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/report.pdf
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/findings.svg
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/mutation-kill.svg
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figures.py
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7/figure-data.json
+  artifact_paths_note: >-
+    The top-level session renders the six report paths from DEC-20261106-843cf7
+    visual_report before 0c8aee stages them. If no renderer installs, report.pdf is absent:
+    the session states the blocker in report.typ and the receipt, and 0c8aee's expected
+    paths drop report.pdf by a recorded deviation.
+  write_scope:
+    - ledger/goals/GOAL-PATH-001.yaml
+    - ledger/handoffs/TASK-20261106-fdd5c2.yaml
+    - ledger/handoffs/TASK-20261106-0c8aee.yaml
+    - ledger/handoffs/TASK-20261106-4c4831.yaml
+    - ledger/handoffs/TASK-20261106-5c1258.yaml
+    - ledger/handoffs/TASK-20261106-7c2b01.yaml
+    - ledger/handoffs/TASK-20261106-649ebb.yaml
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-843cf7
+  archived_by: TASK-20261106-0c8aee
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 3600
+    memory_gb: 1
+    maximum_runs: 0
+  completion_gate:
+    - The decision, the queue, six handoffs and the goal-head update exist in the working tree.
+    - The decision disposes of every finding (F-1, N-1 to N-6) and DEV-1 with a reason, records the owner direction with its provenance, states the updated blockers, approval_lock_binding_v2, specification_additions_for_v2, knowledge_promotion, the visual-report specification and exactly one next action.
+    - Zero runs.
+  return_format: Decisions and reasons; files written; ids used and unused; queue table; ordered steps for the top-level session and the single next action; what was not done.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. A composing and design act; it changes no claim.
+  runs_launched: 0

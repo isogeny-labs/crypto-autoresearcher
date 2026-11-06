@@ -41,6 +41,7 @@ env:
 
 jobs:
   changes:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}changes"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     # A cold blobless checkout can consume nearly five minutes before scope
@@ -104,6 +105,7 @@ jobs:
   # PRs. Sparse is safe only for paths explicitly classified as documentation;
   # archive, record, code and unknown paths receive the full checkout.
   merge-hygiene:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}merge-hygiene"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     needs: changes
     runs-on: ubuntu-latest
@@ -153,6 +155,7 @@ jobs:
           fi
 
   runtime-regressions:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}runtime-regressions (${{ matrix.python }})"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
@@ -254,6 +257,7 @@ jobs:
   # Each component installs the dependencies its checker needs.
 
   ledger:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}ledger"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
@@ -366,6 +370,7 @@ jobs:
           if-no-files-found: ignore
 
   static-checks:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}static-checks"
     needs: changes
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
@@ -572,7 +577,7 @@ jobs:
       (github.event.action != 'closed' || github.event.pull_request.merged) &&
       !github.event.pull_request.draft &&
       (always())
-    name: harness-tests (${{ matrix.shard }}/4)
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}harness-tests (${{ matrix.shard }}/4)"
     env:
       SCOPE_RESULT: ${{ needs.changes.result }}
       RUN_TESTS: ${{ needs.changes.outputs.tests }}
@@ -710,6 +715,7 @@ jobs:
 
   # Keeps the check name branch protection and auto-merge already know.
   ledger-and-harness:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}ledger-and-harness"
     needs: [changes, merge-hygiene, ledger, static-checks, harness-tests, runtime-regressions]
     if: >-
       (github.event.action != 'closed' || github.event.pull_request.merged) &&

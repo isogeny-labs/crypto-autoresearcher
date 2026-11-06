@@ -97,8 +97,8 @@ research_goal:
       SUPERSEDED, not spent-or-exceeded by this record; any accounting note
       already attached to it stands immutable.
     max_concurrent: 3
-  current_batch_id: BATCH-8517aa
-  dispatch_queue_path: coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json
+  current_batch_id: BATCH-69d9a2
+  dispatch_queue_path: coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json
   dispatch_queue_path_note: >-
     DELIBERATELY STILL BATCH-001. BATCH-002 was decision-only and has no PATH-owned
     coordination directory or dispatch queue (see its checkpoint below); pointing this
@@ -155,6 +155,12 @@ research_goal:
   dispatch_queue_path_before_BATCH-8517aa: coordination/goals/GOAL-PATH-001/batches/BATCH-c53152/dispatch_queue.json
   current_batch_note_2026_11_05: >-
     Pointer moved under DEC-20261105-f0b7c7, staged by TASK-20261105-c0d167. The prior
+    values are kept in the two keys above. Every earlier note and *_before_* key is
+    unchanged. latest_verified_commit is not changed here. The file stays flat.
+  current_batch_id_before_BATCH-69d9a2: BATCH-8517aa
+  dispatch_queue_path_before_BATCH-69d9a2: coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json
+  current_batch_note_2026_11_06: >-
+    Pointer moved under DEC-20261106-843cf7, staged by TASK-20261106-0c8aee. The prior
     values are kept in the two keys above. Every earlier note and *_before_* key is
     unchanged. latest_verified_commit is not changed here. The file stays flat.
   latest_verified_commit: 67c2e5bf27c3b014e25829554130199d7918ae2b
@@ -302,6 +308,33 @@ research_goal:
       A design and a derivation-review round. Nothing approved, no status moved, no
       evidence record produced. It moves no exponent in either direction;
       KN-OPEN-62c870 CS-D2 and CS-R7 bind.
+  - batch_id: BATCH-8517aa
+    recorded_at: '2026-11-06'
+    recorded_by_decision: DEC-20261106-843cf7
+    opened_by_decision: DEC-20261105-f0b7c7
+    dispatch_queue_path: coordination/goals/GOAL-PATH-001/batches/BATCH-8517aa/dispatch_queue.json
+    ledger_archive_task_id: TASK-20261105-c0d167
+    ledger_commit: 09575dd1c91630b793360e9a79ebe4aa083a1eca
+    snapshot_archives:
+      - {task_id: TASK-20261105-7083a8, commit: 72f51766a67be05f6d8de0f4ed962c4c615d52bd, of: "TASK-20261105-ac5ad6 (widened KATs, residuals, throughput calibration)"}
+      - {task_id: TASK-20261105-49716d, commit: 608902a44d43274a3dbb8142141872a9ed7fea50, of: "TASK-20261105-165da2 (independent code review)"}
+    bindings_note: >-
+      Commits as recorded in the queue's archive blocks, reported verified by the top-level
+      session and merged to main in PRs #3040, #3061 and #3065, as reported. They were not
+      recomputed by the authoring session, which holds no shell.
+    completed_tasks: [TASK-20261105-18a59d, TASK-20261105-c0d167, TASK-20261105-ac5ad6, TASK-20261105-7083a8, TASK-20261105-165da2, TASK-20261105-49716d]
+    outcome: pre_approval_work_completed_code_review_gate_failed
+    outcome_detail: >-
+      KATs widened to n = 4..7 and large q, with residuals and timing-only throughput; TP-1
+      not triggered (B7 cleared). The independent code review failed gate B8 on one
+      blocking finding (the start-up KAT gate unbound) and six non-blocking ones. Composed by
+      DEC-20261106-843cf7, which opens BATCH-69d9a2 for the fixes and the DEV-1 substitute
+      cell under the owner's direction. Zero runs.
+    lane_closure: tools/goal_lanes.py close-lane GOAL-PATH-001 BATCH-8517aa --outcome archived, run by TASK-20261106-0c8aee LA-12 after its archive verifies
+    claim_boundary: >-
+      Instrument work and an instrument review. Nothing approved, no status moved, no
+      evidence record produced. It moves no exponent in either direction;
+      KN-OPEN-62c870 CS-D2 and CS-R7 bind.
   child_goal_ids:
   - GOAL-FIND-001
   - GOAL-ECDLP-001
@@ -415,6 +448,18 @@ research_goal:
         composition residuals and measured throughput (ac5ad6), with an independent code
         review (165da2) and their archives. Zero runs; nothing approved. Not the
         authoritative lane list; read tools/goal_lanes.py lanes.
+    - batch_id: BATCH-69d9a2
+      opened_at: '2026-11-06'
+      opening_decision_id: DEC-20261106-843cf7
+      dispatch_queue_path: coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json
+      checkpoint: Not yet written. The approval act for EXP-MONO-1a1be2 writes it.
+      question_ids: [RQ-MONO-001]
+      note: >-
+        Added additively by TASK-20261106-fdd5c2 (archived by TASK-20261106-0c8aee).
+        Pre-approval fixes for EXP-MONO-1a1be2: the 165da2 findings F-1 and N-1 to N-5 and
+        the DEV-1 substitute cell (4c4831), a fresh focused re-review (7c2b01) and their
+        archives. Zero runs; nothing approved. Not the authoritative lane list; read
+        tools/goal_lanes.py lanes.
   open_batches_note_2026_10_29: >-
     BATCH-7ca353 is checkpointed in batch_checkpoints (DEC-20261029-71d757) and its
     lane is closed by TASK-20261029-37675c LA-12. Its open_batches item above is
@@ -422,6 +467,10 @@ research_goal:
   open_batches_note_2026_11_05: >-
     BATCH-c53152 is checkpointed in batch_checkpoints (DEC-20261105-f0b7c7), and its lane
     is closed by TASK-20261105-c0d167 LA-12. Its open_batches item above is left as
+    written; that checkpoint entry answers its "Not yet written" text.
+  open_batches_note_2026_11_06: >-
+    BATCH-8517aa is checkpointed in batch_checkpoints (DEC-20261106-843cf7), and its lane
+    is closed by TASK-20261106-0c8aee LA-12. Its open_batches item above is left as
     written; that checkpoint entry answers its "Not yet written" text.
   impediments:
     - id: IMP-PATH-20261029-1
@@ -451,6 +500,21 @@ research_goal:
         and the approval act gets approvable true from experiment_preapproval.py
       recheck: when TASK-20261105-7083a8 or TASK-20261105-49716d completes
       asserts_nothing_about: H-MONO-23d347, IDEA-20261023-f15270 or any lemma; an unrun contract is neither evidence nor a failure
+    - id: IMP-PATH-20261106-1
+      raised: '2026-11-06'
+      narrows: IMP-PATH-20261105-1 (KATs widened and throughput measured, B7 cleared; the code review returned)
+      condition: >-
+        EXP-MONO-1a1be2 is still not approvable. The independent code review failed gate B8:
+        the start-up KAT gate is not bound or recorded (F-1), and five further findings and
+        the DEV-1 m = 3 large-q check are to be fixed before approval (owner direction).
+        protocol.json, the runbook and the preapproval packet do not exist (blockers B1,
+        B2, B4-B6 and B8 in DEC-20261106-843cf7).
+      what_is_blocked: approval and execution of EXP-MONO-1a1be2
+      clears_when: >-
+        5c1258 and 649ebb verify, the 7c2b01 re-review passes B8, and the approval act gets
+        approvable true from experiment_preapproval.py
+      recheck: when TASK-20261106-5c1258 or TASK-20261106-649ebb completes
+      asserts_nothing_about: H-MONO-23d347, IDEA-20261023-f15270 or any lemma; an unrun contract is neither evidence nor a failure
   next_action_2026_10_23: >-
     Additive (lane BATCH-7ca353; decision DEC-20261023-19c53b). It rewrites
     nothing above and neither restates nor supersedes next_action. Ranked
@@ -477,6 +541,12 @@ research_goal:
     open its lane; render the decision report; run TASK-20261105-c0d167 alone and close
     lane BATCH-c53152; then dispatch TASK-20261105-ac5ad6 (executor). 7083a8, 165da2 and
     49716d follow in queue order. Approval waits on them (IMP-PATH-20261105-1).
+  next_action_2026_11_06: >-
+    Additive (lane BATCH-69d9a2; decision DEC-20261106-843cf7); rewrites nothing above.
+    One next action for the top-level session: commit the BATCH-69d9a2 queue alone and
+    open its lane; render the decision report; run TASK-20261106-0c8aee alone and close
+    lane BATCH-8517aa; then dispatch TASK-20261106-4c4831 (executor). 5c1258, 7c2b01 and
+    649ebb follow in queue order. Approval waits on them (IMP-PATH-20261106-1).
   owner: coordinator
   created_at: '2026-07-24T21:30:00-07:00'
   updated_at: '2026-08-28'

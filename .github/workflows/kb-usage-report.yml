@@ -1,0 +1,49 @@
+name: kb-usage-report
+
+# Advisory measurement of research-kb adoption (AGENTS.md, "Knowledge base
+# first"; docs/knowledge-base-usage.md). It counts dated session-log entries
+# that carry a "Sources checked (KB)" receipt, on committed history, and
+# reports the number. It never blocks a pull request, edits a log or changes a
+# result; `--fail-under` is deliberately not used here.
+#
+# The scheduled run audits this repository only. Run the same command on a
+# machine with the sibling checkouts for the whole-lab number.
+
+on:
+  schedule:
+    - cron: '17 13 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kb-usage-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit tests
+        run: python3 scripts/test_kb_usage_report.py -q
+      - name: Measure committed receipt coverage
+        run: |
+          python3 scripts/kb_usage_report.py --root . --ref HEAD --since 2026-11-05 \
+            | tee "$RUNNER_TEMP/kb-usage.txt"
+          cat "$RUNNER_TEMP/kb-usage.txt" >> "$GITHUB_STEP_SUMMARY"
+          python3 scripts/kb_usage_report.py --root . --ref HEAD --since 2026-11-05 \
+            --json --out "$RUNNER_TEMP/kb-usage.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kb-usage-report
+          path: ${{ runner.temp }}/kb-usage.json
+          if-no-files-found: ignore
