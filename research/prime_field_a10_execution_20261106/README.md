@@ -1,8 +1,8 @@
 # Fresh progression/hash sources with kernel-free recovery
 
-Prospective finite A10 follow-up to [A9](../prime_field_a9_json_control_20261105/RESULTS.md).
+Completed finite A10 follow-up to [A9](../prime_field_a9_json_control_20261105/RESULTS.md).
 See [design](design.md), [literature](literature.md), and fixed [rules](inputs.json).
-No native results exist at source publication.
+Source was published before native generation. The single attempt now completed432systems/864checkedkernel-free calls. See [results](RESULTS.md), [observations](observations.json), the [inspected report](reports/a10-ap-holdout-276654/report.pdf), and [next worklist](next-leads.md). The one-attempt release is consumed; do not rerun it.
 
 The panel generates four fresh synthetic curves and 32 public target points only
 AFTER admission. It collects six paired AP/hash source schedules, each 128points,
