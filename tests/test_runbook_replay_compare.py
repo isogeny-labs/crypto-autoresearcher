@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 import pytest
@@ -99,22 +100,38 @@ def test_lint_checks_per_trial_compare_items() -> None:
             assert any(".trials:" in f for f in rb.lint(rb.load_runbook(root, RUNBOOK))), bad
 
 
-@pytest.mark.skipif(not (REPO / SESSION_8CDC92 / "journal.jsonl").is_file(),
-                    reason="RBS-ICPERF-8cdc92 is outside this checkout")
-def test_rbs_icperf_8cdc92_recorded_outputs_compare_clean_against_themselves() -> None:
+def committed_bytes(relative: str) -> bytes | None:
+    """A file as committed at HEAD, read from Git: CI's sparse checkouts do
+    not put run directories on disk."""
+    result = subprocess.run(["git", "-C", str(REPO), "show", f"HEAD:{relative}"],
+                            capture_output=True, check=False)
+    return result.stdout if result.returncode == 0 else None
+
+
+@pytest.mark.skipif(committed_bytes(f"{SESSION_8CDC92}/journal.jsonl") is None,
+                    reason="RBS-ICPERF-8cdc92 is not in this repository's history")
+def test_rbs_icperf_8cdc92_recorded_outputs_compare_clean_against_themselves(tmp_path) -> None:
     """Regression on the committed 8cdc92 bytes: each valid unit's recorded
     raw-result.json, compared with an identical replay, has no problem, and
     the pointers it does not write are the 39 not_applicable rows the
     sheriff reader saw as 'recorded null, replay null' mismatches."""
-    _, entries, runbook = rb.load_session(REPO, SESSION_8CDC92)
-    trials_step = next(s for s in runbook.doc["steps"] if s["kind"] == "trials")
+    import yaml
+    entries = [json.loads(line) for line in
+               committed_bytes(f"{SESSION_8CDC92}/journal.jsonl").decode().splitlines() if line.strip()]
+    runbook_doc = yaml.safe_load(committed_bytes("experiments/EXP-ICPERF-284bc4/runbook.yaml"))
+    trials_step = next(s for s in runbook_doc["steps"] if s["kind"] == "trials")
     units = rb.latest_units(entries)
     valid = {tid: unit for (sid, tid), unit in units.items()
              if sid == trials_step["id"] and unit["valid"]}
     assert len(valid) == 6
     not_applicable = 0
     for trial_id, unit in valid.items():
-        run_dir = rb.resolve(REPO, unit["run_dir"])
+        run_dir = tmp_path / trial_id
+        run_dir.mkdir()
+        for item in trials_step["replay"]["compare"]:
+            data = committed_bytes(f"{unit['run_dir']}/{item['file']}")
+            assert data is not None, (trial_id, item["file"])
+            (run_dir / item["file"]).write_bytes(data)
         record: dict = {}
         problems, toleranced = rb.compare_outputs(trials_step, trial_id, run_dir, run_dir, record)
         assert problems == [] and toleranced is False, (trial_id, problems)
