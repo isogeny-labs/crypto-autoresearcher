@@ -840,6 +840,45 @@ def prime_field_json_functional_panel(ref,since):
             emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Cold supplied-row solver including cancellation/lifting/checks; shared projection separate; no unit weights',**common)
 
 
+
+def prime_field_ap_holdout_panel(ref,since):
+    """Fresh A10 measured rows only; no multiplication of shared physical work."""
+    date='2026-11-06'
+    if date<since:return
+    path='research/prime_field_a10_execution_20261106/runs/a10-ap-holdout-276654/analysis.json';raw=show(ref,path)
+    if raw is None:return
+    schedules=tuple(kind+str(seed) for seed in range(3) for kind in ('ap','hash'));budgets=(0,8,16,24,32,48,64,96,128)
+    try:
+        data=json.loads(raw);cells=data['cells'];costs=data['construction'];physical=data['collection_counters']
+        expected={(f'p{p}-i{i}',a,b,s,m) for p in (8191,65537) for i in (0,1) for a in schedules for b in budgets for s in ('relations','anchors') for m in ('sparse_joint','sparse_cancel')}
+        if data['panel_complete']is not True or data['generation_valid']is not True or data['physical_attempts']!=1 or data['solver_calls_verified']!=864 or data['partial_work_unknown']is not False:return
+        if len(cells)!=864 or {(c['cell_id'],c['schedule'],c['prefix'],c['scope'],c['arm']) for c in cells}!=expected:return
+        for c in cells:
+            if c['verified']is not True or c['status']!='verified':return
+            for k in ('identified_targets','source_rank','delta','base_rank_after_cancellation','base_columns','matrix_rank','matrix_columns','distinct_equations','fr_add','fr_sub','fr_mul','fr_inv'):
+                if type(c[k])is not int or c[k]<0:return
+            if c['source_rank']+c['delta']!=c['base_rank_after_cancellation'] or c['base_rank_after_cancellation']>c['base_columns'] or c['matrix_rank']>c['matrix_columns'] or c['identified_targets']>8 or len(c['identified_indices'])!=c['identified_targets']:return
+        pairs={}
+        for c in cells:pairs.setdefault(c['instance_id'],[]).append(c)
+        if len(pairs)!=432 or any(len(v)!=2 or v[0]['identified_indices']!=v[1]['identified_indices'] or v[0]['delta']!=v[1]['delta'] or v[0]['source_rank']!=v[1]['source_rank'] for v in pairs.values()):return
+        if any(physical.get(k)!=v for k,v in dict(source_queries=147456,target_queries=1536,pair_table_insertions=4928).items()):return
+        expected_cost={(f'p{p}-i{i}',a,b) for p in (8191,65537) for i in (0,1) for a in schedules for b in budgets}
+        if len(costs)!=216 or {(c['cell_id'],c['schedule'],c['prefix']) for c in costs}!=expected_cost:return
+        for c in costs:
+            if c['source_count']!=c['prefix'] or any(type(v)is not int or v<0 for v in c['constructor_counters'].values()):return
+    except (KeyError,TypeError,ValueError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a10'
+    emit(prefix+'.solver_calls',864,unit='solver calls',label='432dependent fresh scope systems, two cold kernel-free solvers',**common)
+    for k in ('source_queries','target_queries','pair_table_insertions'):
+        emit(prefix+'.physical.'+k,physical[k],unit='calls',label='Actual physical collection once per curve/schedule increment, no prefix/view multiplication',**common)
+    for c in cells:
+        for k,unit in (('identified_targets','target slots'),('source_rank','rank'),('delta','rank'),('distinct_equations','equations'),('fr_add','Fr additions'),('fr_sub','Fr subtractions'),('fr_mul','Fr multiplications'),('fr_inv','Fr inversions')):
+            emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Exact dependent scope observation; solver-only vector, cold shared construction separate',**common)
+    for c in costs:
+        for k in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','constructor_group_add_calls'):
+            emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.construction.'+k,c['constructor_counters'].get(k,0),unit='calls',label='Cumulative prefix view of paid constructor work; do not sum overlapping views or mix primitive units',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -1012,6 +1051,7 @@ def main():
     prime_field_cancellation_solver_panel(a.ref, a.since)
     prime_field_sparse_functional_panel(a.ref, a.since)
     prime_field_json_functional_panel(a.ref, a.since)
+    prime_field_ap_holdout_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 
