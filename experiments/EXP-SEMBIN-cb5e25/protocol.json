@@ -865,7 +865,7 @@
     "queue": null,
     "placement": {
       "memory_mb": 10240,
-      "memory_enforcement": "resident-set watchdog, never RLIMIT_AS",
+      "memory_enforcement": "resident-set watchdog (VmRSS, 10 GiB) in code/run.py is the binding memory limit; the supervisor's mandatory RLIMIT_AS is a loose 32768 MB virtual ceiling that is not a resource cap, and a kill at it is an infrastructure failure under SR-7 (DEC-20261106-36e212 RUL-3)",
       "machine": "4 CPUs, 15 GB, single worker",
       "per_instance_per_D_cap_seconds": {
         "N_le_32": 1800,
@@ -961,7 +961,7 @@
   "analysis_plan": {
     "script": {
       "path": "experiments/EXP-SEMBIN-cb5e25/code/analyze.py",
-      "sha256": null
+      "sha256": "cb20a7ca1ca78756728fd9c0cd7feb0bf336d12aa665d1ee27bd211fcbd83eea"
     },
     "inputs": [
       "runs/<RUN-ID>/instances.jsonl.gz",
@@ -976,7 +976,7 @@
       "experiments/EXP-SEMBIN-cb5e25/reports/run-<UTC>/report.pdf"
     ],
     "blinded": false,
-    "frozen_before_data": false
+    "frozen_before_data": true
   },
   "reporting": {
     "export_schema": "experiment.export/v1",
