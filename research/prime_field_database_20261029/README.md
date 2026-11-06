@@ -89,3 +89,14 @@ The published combined snapshot is
 its adjacent generation-v2.json binds original/archived byte hashes. Hydrate
 the artifact, then `gzip -dk` to reconstruct the ignored local SQLite file.
 The membership-only all-tie subset candidates are retained in cover-subsets.json.
+
+
+The additive [v13 fresh-source snapshot](../prime_field_a10_execution_20261106/database/v13-ap-holdout/generation-v13.json)
+extends the preserved v12 history with four fresh curves,32public targets,
+432dependent AP/hash scope systems,864kernel-free solver/certificate records
+and6746labelled constructor-point records. It contains14curves/14bases and15
+physical execution records. Parent bytes and all historical rows, foreign keys,
+SQLite integrity and lossless gzip are checked. Hydrate the adjacent official
+artifact manifest, then decompress prime-fields-v13.sqlite.gz to the ignored
+SQLite filename. [A10 results](../prime_field_a10_execution_20261106/RESULTS.md)
+state separate costs, target-coverage limits and the scope of software checks.
