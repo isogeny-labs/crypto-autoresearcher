@@ -1,0 +1,141 @@
+# H-ICPERF-4cb536: C1-primary (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, hypothesis H-C1).
+# Allocated before the version-1 freeze (PROTOCOL.md revision 6). Written by the Coordinator
+# for the EXP-ICPERF-127dbd preapproval packet. Status proposed. No run exists. This record
+# approves nothing and authorizes no spend.
+hypothesis:
+  id: H-ICPERF-4cb536
+  question_id: RQ-ICPERF-94c86e
+  goal_id: GOAL-ICPERF-e6b6a4
+  lead_id: LEAD-ICP-prime-ic-constant-engineering
+  experiment_id: EXP-ICPERF-127dbd
+  protocol_id: IC-C1-DEFERRED-GUARD-FP28-20261106
+  protocol_hypothesis_id: H-C1
+  selected_by_decision: DEC-20261106-1d23b6
+  specified_at: '2026-11-06'
+  proposed_by: coordinator
+  status: proposed
+  status_note: >-
+    Proposed. Written into the preapproval packet. No status transition happens before the
+    approval decision DEC-20261106-c69de4 is committed, and none happens on a run until an
+    evidence-review decision.
+  title: >-
+    C1 route A at fp28: prime-abscissa size 304 with the deferred repeat guard lowers counted
+    S against the walk incumbent at size 407, at every weight of the section 5a band
+  statement: >-
+    On fresh fp28 prime_search curves, the recipe prime-abscissa:size=304 +
+    mitm:negation_folded=1 + targets=stride-renew-deferred-guard has lower counted cost S
+    than the walk incumbent (prime-abscissa:size=407 + mitm:negation_folded=1 + targets=walk)
+    at every weight w in {0, 0.1, 1} GAE per priced native operation. The scope is
+    ic.pipeline, max_trials 26479085, linalg incremental-gauss, the executable pinned at
+    ea8e9ef71c3c82027dd9e01535302725519c3fca (ecbench sha256
+    73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01), with accounting as
+    that executable emits it. The claim is about the recipe, at a constant factor, on
+    counted cost only. It is not asymptotic, not about wall time, and not rho-beating.
+  mechanism: >-
+    Pre-data design model (protocol H-C1 mechanism):
+    M(N, w, g) = N(N+1) + (1 + w k_g) T407 (407/N) + F + w G(N).
+    A smaller N cuts the N(N+1) oracle set-up. The trial count grows about as 1/N. The
+    deferred guard probes only decomposing targets, which halves the per-trial native work
+    (k_deferred = 1 against k_eager = 2) and leaves the target stream unchanged.
+    The model chose N; no claim depends on it as a heuristic (PROTOCOL.md section 8,
+    "Promotion gates").
+  assumptions:
+    - >-
+      Counted cost is deterministic given the seeds and is certified by ecbench verify
+      --replay-all. A timeout, crash, host loss or deadline hit is infrastructure signal,
+      not evidence (protocol invalidation_rules).
+    - >-
+      The A/A twins (incumbent-aa, rho-neg-aa) are record-for-record identical, so the noise
+      floor of the counted metric is zero. A twin that is not exact invalidates the session.
+    - >-
+      Equal-N parity of the eager and deferred guard holds (protocol section 5, rules 1 to 4).
+      A parity failure is an implementation defect, never a negative result.
+  predictions:
+    - metric: m-s-w0
+      direction: lower
+      minimum_effect: >-
+        U_0 < 1 in each of S1 and S2 (protocol prediction P-w0; the projected ratio 0.915 is
+        a model output, not a claim)
+    - metric: m-s-w01
+      direction: lower
+      minimum_effect: U_0.1 < 1 in each of S1 and S2 (protocol prediction P-w01; projected 0.894)
+    - metric: m-s-w1
+      direction: lower
+      minimum_effect: U_1 < 1 in each of S1 and S2 (protocol prediction P-w1; projected 0.798)
+  test_boundary:
+    instances:
+      - >-
+        S1: fp28 prime_search curves of seeds 2026110628201 and 2026110628202
+        (icv1-fp28-t10999-67500d78, icv1-fp28-tm6425-08e2435f), 60 public targets per curve
+        from target seed 2026110628203, measurement seed 2026110628204
+      - >-
+        S2: fp28 prime_search curves of seeds 2026110628211 and 2026110628212
+        (icv1-fp28-t14969-7ca8e8a5, icv1-fp28-tm4717-89c926fe), 60 public targets per curve
+        from target seed 2026110628213, measurement seed 2026110628214
+    parameters:
+      weights: [0, 0.1, 1]
+      candidate: {prime_abscissa_size: 304, targets: stride-renew-deferred-guard, oracle: "mitm:negation_folded=1"}
+      incumbent: {prime_abscissa_size: 407, targets: walk, oracle: "mitm:negation_folded=1"}
+      max_trials: 26479085
+      linalg: incremental-gauss
+      rounds: 8
+      warmup: 1
+      executions_per_session: 10800
+      workloads_per_session: 120
+    implementation: >-
+      crypto ecbench at ea8e9ef71c3c82027dd9e01535302725519c3fca, image
+      104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914,
+      on EKS Spot c8a.2xlarge through the frozen requests; the analysis is the frozen
+      analyze-c1.sh (sha256 66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc)
+    budget:
+      enforcement: hard_cap
+      usd_hard_cap: 5.0
+      note: protocol section 10 rolling hard-bound gate; worst case committed USD 3.72
+  falsification_conditions:
+    - >-
+      In a valid session, U_w >= 1 at any w in {0, 0.1, 1} is a fail for that session. Fail in
+      both S1 and S2 is not_supported_within_scope. If L_w > 1 at a common weight in both, it
+      is refuted_within_scope at that weight. Either adverse transition needs an archived
+      empirical_only refutation note first (protocol section 8).
+    - >-
+      One valid fail with the other session invalid after its permitted rerun allows weaken
+      plus replication only, never reject_scoped.
+  interpretation_limits:
+    - >-
+      Scope is fp28, these four seeded curves, this recipe, this executable and this
+      accounting. Nothing transfers to other sizes, target sources, hosts or commits.
+    - >-
+      Recipe-level only. No statement attributes the effect to guard placement, target source
+      or N beyond the descriptive factorial table (protocol claim C-attribution).
+    - No wall-time field is read or reported (protocol claim C-wall).
+    - >-
+      Distance to matched rho-neg is reported as distance remaining, not as a gate. An IC arm
+      ranks against rho only where the order holds across the band.
+    - >-
+      An invalid session (gate failure, parity failure, timeout, crash, deadline) is not
+      evidence about the hypothesis.
+  heuristic_assumptions: []
+  heuristic_assumptions_note: >-
+    None. The decision rests on counted, replay-certified cost. The N model is a pre-data
+    design aid and is not a dependence of any claim.
+  secondary_claims_note: >-
+    The protocol also declares C1-guard (H-C1-guard, a component result) and the positive
+    control H-C1-control. They are decided by the same sessions, are not part of this
+    hypothesis and move no status of it.
+  asymptotic_claim: null
+  dominated_by: >-
+    Constant-factor engineering on a pipeline that the 2026-10-26 cost model reads as BSGS
+    needing c|F| hits, with a structural ratio to rho growing as r^(1/6)
+    (DEC-20261106-1d23b6, roadmap caveat).
+  sota_delta: >-
+    None in exponent. At most a counted constant-factor improvement of the prime-table
+    reference baseline at fp28.
+  citations:
+    - ref: DEC-20261106-1d23b6
+      provenance: internal
+      claim: C1 selected for design; route A ruling; closes_when
+      verified_by: read by the Coordinator
+    - ref: crypto:research/ic_c1_deferred_guard_fp28_20261106/protocol.json (version 2, protocol_sha256 9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166)
+      provenance: internal
+      claim: the frozen protocol this hypothesis restates (H-C1)
+      verified_by: digest reported by the experiment director; the Coordinator did not hash it

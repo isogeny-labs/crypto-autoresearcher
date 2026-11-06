@@ -1,0 +1,68 @@
+# DEC-20261106-c4601c: Close lane BATCH-38f344 (archived) to restore lane capacity for BATCH-0e0902
+coordinator_decision:
+  id: DEC-20261106-c4601c
+  id_provenance: 'Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (re-checked by the Executor before writing: OK, well-formed and free across the union). The
+    Coordinator had no shell and minted no identifier.'
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  relates_to: DEC-20261106-aa7448
+  subject: Close lane BATCH-38f344 of GOAL-ICPERF-e6b6a4 (outcome archived) to restore lane capacity for BATCH-0e0902; BATCH-8f7bd6
+    and BATCH-ac3c38 stay open
+  context: Lane capacity for GOAL-ICPERF-e6b6a4 (max_concurrent 3, three lanes open) blocks opening BATCH-0e0902 for EXP-ICPERF-127dbd.
+    Disposition of the open lanes BATCH-38f344, BATCH-8f7bd6 and BATCH-ac3c38.
+  decision: close
+  target_ids:
+  - BATCH-38f344
+  - EXP-ICPERF-284bc4
+  - EXP-ICPERF-283a70
+  - TASK-20261029-fe381b
+  - TASK-20261029-6b18a6
+  rationale:
+  - 'BATCH-38f344 is finished: TASK-20261029-65798b and TASK-20261029-f370f1 released completed on 2026-10-30; all nine run
+    manifests are on main; EV-ICPERF-08f6f9 and EV-ICPERF-84ff45 are decided by DEC-20261105-8a9984 and DEC-20261105-6e2616;
+    CORR-20261105-1d848a closed NA-1; the owner''s branch is deleted.'
+  - 'TASK-20261029-fe381b and TASK-20261029-6b18a6 never ran (no claim, release, handoff file or receipt); their pre-review
+    custody purpose was served (EV-ICPERF-84ff45 J1: bound inputs equal at snapshot and all three commits, 30/30 receipt digests);
+    they are superseded, not run.'
+  - The open DEC-20261105-6e2616 NA-1 tooling repair is goal-level and is not a BATCH-38f344 task; closure does not drop it.
+  - 'BATCH-8f7bd6 stays open: reviewer tasks are blocked on the still-open IMP-ICPERF-REVIEW-BACKEND-20261019 and no decision
+    has disposed of the binary m8 blind review; dormancy is not abandonment.'
+  - 'BATCH-ac3c38 stays open: its branch is live on origin and PR #2439''s state is unverified; it is rechecked read-only before
+    any ruling.'
+  - After closure two lanes are open, so BATCH-0e0902 brings the count to the cap of 3, which is lawful; no lane is reused.
+  actions:
+  - python3 tools/goal_lanes.py close-lane GOAL-ICPERF-e6b6a4 BATCH-38f344 --outcome archived --decision DEC-20261106-c4601c
+    --ledger-commit cd912cacbb1a7f04348809d46e99ea2a6f345725 (the later of the two commits that added the runs/ directories;
+    EXP-ICPERF-284bc4 runs/ was added in af94114e9c, EXP-ICPERF-283a70 runs/ in cd912cacbb) --as executor-c1-20261106 --publish
+  - additive goal.yaml edit to the BATCH-38f344 open_batches entry (closed_at, closing_decision_id, checkpoint, closed_note)
+  - 'later commit: additive tasks_state_revisions entry in the BATCH-38f344 queue marking fe381b and 6b18a6 superseded by this
+    decision'
+  evidence_refs:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/lanes/BATCH-38f344.lane.json
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-38f344/claims/TASK-20261029-65798b.1.release.json
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-38f344/claims/TASK-20261029-f370f1.1.release.json
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-38f344/dispatch_queue.json
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-8f7bd6/dispatch_queue.json
+  - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml (campaign_budget L76-93; open_batches L157-169; IMP-ICPERF-REVIEW-BACKEND-20261019)
+  - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261105-8924a8.yaml
+  - ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/TASK-20261106-ed3fa9.yaml
+  - ledger/evidence/EV-ICPERF-84ff45.yaml (J1-validity)
+  - scratchpad/next-candidate/packet/lanes-before.txt
+  limitations:
+  - Read from the sparse car clone (origin/main 63f2c12d); branch deletion and last-commit dates are as the main session reported.
+  - The run-records add commit is to be identified by the main session; if absent, this decision does not take effect and a
+    fresh act decides.
+  - BATCH-ac3c38 was not inspected (no lane file in the tree).
+  - The ledger commit cd912cacbb1a7f04348809d46e99ea2a6f345725 (EXP-ICPERF-283a70 runs/) and af94114e9c (EXP-ICPERF-284bc4 runs/)
+    were supplied by the main session and are named here as the two adding commits; the close-lane tool verifies the commit
+    it is given.
+  next_actions:
+  - 'Main session: allocate and --check the id, commit this decision, close BATCH-38f344, make the additive goal.yaml edit,
+    re-list lanes (expect 2 open), then continue the C5 order with open-lane BATCH-0e0902; separately run the D3 read-only recheck
+    of BATCH-ac3c38 and report it.'
+  knowledge_promotion:
+    promoted: []
+    not_warranted: coordination act on lanes; no evidence decision and no new claim

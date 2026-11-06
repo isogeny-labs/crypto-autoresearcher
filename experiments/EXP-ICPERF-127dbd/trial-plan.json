@@ -1,0 +1,130 @@
+{
+  "approved_by": "DEC-20261106-c69de4",
+  "experiment_id": "EXP-ICPERF-127dbd",
+  "frozen": true,
+  "goal_id": "GOAL-ICPERF-e6b6a4",
+  "hypothesis_id": "H-ICPERF-4cb536",
+  "input_sha256": {
+    "experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh": "66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc",
+    "experiments/EXP-ICPERF-127dbd/inputs/protocol.json": "c2f38c4284bf4268e385ebdd42dabf5094b5fffdba27edbe969fb46b506295c8",
+    "experiments/EXP-ICPERF-127dbd/inputs/request-s1.json": "683cc67d136ab6a2e5f1f3fbc7f6ae20ba981194f4781418340d883620b6c779",
+    "experiments/EXP-ICPERF-127dbd/inputs/request-s2.json": "d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1",
+    "experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json": "d2af59dd9f62d46f28c0287a475becfe468e8e0a17eabe5f96681e2abf09e8ad",
+    "experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json": "688ec9a004648933231302935704d9307cfc441aaa231fc6efb25205a302cf34"
+  },
+  "queue": "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json",
+  "schema": "crypto.autoresearch.trial_plan.v1",
+  "source_sha256": {
+    "experiments/EXP-ICPERF-127dbd/implementation/check_job.py": "d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d",
+    "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh": "130164868a21d1b1ee4ff66ba89ea0c4fdfee2e20decc6451abd2ab10ef6d41f",
+    "experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256": "7b7531895ea935bf996fb983d837c57fe5a14439e93bb38917d9ee5a7468ee0f"
+  },
+  "specification": "experiments/EXP-ICPERF-127dbd/specification.yaml",
+  "specification_sha256": "50172e2a2a0a4e47fff95d7f363afd67b291899bb8f89d0c5f36a0024c99942b",
+  "stop_on_invalid_output": true,
+  "task_id": "TASK-20261106-4b7018",
+  "trials": [
+    {
+      "allow_empty_artifacts": [],
+      "argv": [
+        "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh",
+        "--protocol",
+        "experiments/EXP-ICPERF-127dbd/inputs/protocol.json",
+        "--experiment-id",
+        "EXP-ICPERF-127dbd",
+        "--hypothesis-id",
+        "H-ICPERF-4cb536",
+        "--task-id",
+        "TASK-20261106-4b7018",
+        "--approved-by",
+        "DEC-20261106-c69de4",
+        "--trial-id",
+        "T1",
+        "--run-id",
+        "RUN-ICPERF-c7f69e",
+        "--out",
+        "{run_dir}/job",
+        "--record-dir",
+        "{run_dir}",
+        "experiments/EXP-ICPERF-127dbd/inputs/request-s1.json"
+      ],
+      "artifacts": [
+        "raw-result.json",
+        "manifest.yaml",
+        "job/request.json",
+        "job/launch.log",
+        "job/launcher/result.json",
+        "job/artifacts/SHA256SUMS",
+        "job/artifacts/job-exit.json"
+      ],
+      "check_argv": [
+        "python3",
+        "-I",
+        "experiments/EXP-ICPERF-127dbd/implementation/check_job.py",
+        "{run_dir}/job/artifacts",
+        "--request",
+        "experiments/EXP-ICPERF-127dbd/inputs/request-s1.json",
+        "--launcher-result",
+        "{run_dir}/job/launcher/result.json"
+      ],
+      "depends_on": [],
+      "id": "T1",
+      "memory_mb": 4096,
+      "run_id": "RUN-ICPERF-c7f69e",
+      "watchdog_reason": "Job deadline 3600 s plus 180 s CodeBuild slack plus about 720 s for provisioning and download (PROTOCOL section 18).",
+      "watchdog_seconds": 4500
+    },
+    {
+      "allow_empty_artifacts": [],
+      "argv": [
+        "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh",
+        "--protocol",
+        "experiments/EXP-ICPERF-127dbd/inputs/protocol.json",
+        "--experiment-id",
+        "EXP-ICPERF-127dbd",
+        "--hypothesis-id",
+        "H-ICPERF-4cb536",
+        "--task-id",
+        "TASK-20261106-4b7018",
+        "--approved-by",
+        "DEC-20261106-c69de4",
+        "--trial-id",
+        "T2",
+        "--run-id",
+        "RUN-ICPERF-6f784c",
+        "--out",
+        "{run_dir}/job",
+        "--record-dir",
+        "{run_dir}",
+        "experiments/EXP-ICPERF-127dbd/inputs/request-s2.json"
+      ],
+      "artifacts": [
+        "raw-result.json",
+        "manifest.yaml",
+        "job/request.json",
+        "job/launch.log",
+        "job/launcher/result.json",
+        "job/artifacts/SHA256SUMS",
+        "job/artifacts/job-exit.json"
+      ],
+      "check_argv": [
+        "python3",
+        "-I",
+        "experiments/EXP-ICPERF-127dbd/implementation/check_job.py",
+        "{run_dir}/job/artifacts",
+        "--request",
+        "experiments/EXP-ICPERF-127dbd/inputs/request-s2.json",
+        "--launcher-result",
+        "{run_dir}/job/launcher/result.json"
+      ],
+      "depends_on": [
+        "T1"
+      ],
+      "id": "T2",
+      "memory_mb": 4096,
+      "run_id": "RUN-ICPERF-6f784c",
+      "watchdog_reason": "Job deadline 3600 s plus 180 s CodeBuild slack plus about 720 s for provisioning and download (PROTOCOL section 18).",
+      "watchdog_seconds": 4500
+    }
+  ]
+}
