@@ -15,7 +15,9 @@ a declared or audit-time tolerance turns a float-only drift into
 matched_within_tolerance, never matched; a non-float difference is a mismatch
 under any tolerance; the replay interpreter is recorded and a version
 difference is an environment_drift note; a pinned interpreter that differs
-makes the unit not_covered.
+makes the unit not_covered. The recorded interpreter is read from the
+canonical places real manifests use (DEC-20261105-6e2616 NA-1), and a unit
+that records none is an explicit interpreter_parity: unknown note.
 """
 from __future__ import annotations
 
@@ -82,7 +84,20 @@ out.mkdir(parents=True, exist_ok=True)
     "n": len(xs), "mean": total / len(xs), "positive": sum(1 for x in xs if x > 0),
     "label": label}, sort_keys=True) + "\\n")
 version = os.environ.get("RUNBOOK_TEST_PYTHON_VERSION") or platform.python_version()
-(out / "manifest.yaml").write_text(f"run:\\n  environment:\\n    python_version: {version}\\n")
+shape = os.environ.get("RUNBOOK_TEST_MANIFEST_SHAPE")
+if shape == "icperf":
+    # The shape of EXP-ICPERF-284bc4 / 283a70 run manifests: /run/environment
+    # names python and version, never python_version, and environment.json
+    # carries the full sys.version string.
+    (out / "manifest.yaml").write_text(json.dumps({"run": {"id": "RUN-FLT", "environment": {
+        "file": "environment.json", "implementation": "CPython", "version": version,
+        "executable": "/opt/py/bin/python3", "python": version}}}, indent=2) + "\\n")
+    (out / "environment.json").write_text(json.dumps({
+        "platform": "linux", "python": version + " (main, Oct 14 2026, 01:05:33) [Clang 23.1.3 ]"}) + "\\n")
+elif shape == "none":
+    (out / "manifest.yaml").write_text(json.dumps({"run": {"id": "RUN-FLT", "status": "completed"}}) + "\\n")
+else:
+    (out / "manifest.yaml").write_text(f"run:\\n  environment:\\n    python_version: {version}\\n")
 '''
 
 CHECK = '''#!/usr/bin/env python3
@@ -166,7 +181,8 @@ def record(root: Path, monkeypatch, **env: str) -> None:
 
 def audit(root: Path, monkeypatch, *, env: dict | None = None, **kwargs):
     with monkeypatch.context() as patch:
-        for key in ("RUNBOOK_TEST_SUM", "RUNBOOK_TEST_LABEL", "RUNBOOK_TEST_PYTHON_VERSION"):
+        for key in ("RUNBOOK_TEST_SUM", "RUNBOOK_TEST_LABEL", "RUNBOOK_TEST_PYTHON_VERSION",
+                    "RUNBOOK_TEST_MANIFEST_SHAPE"):
             patch.delenv(key, raising=False)
         for key, value in (env or {}).items():
             patch.setenv(key, value)
@@ -401,6 +417,74 @@ def test_a_pinned_interpreter_that_differs_is_not_covered_and_not_replayed(tmp_p
     assert report["replays"] == []
     assert sum("pins python 3.99" in item and "not replayed" in item for item in report["not_covered"]) == 2
     assert not (written["_target"] / "replay").exists()
+
+
+def _here() -> str:
+    return ".".join(str(n) for n in sys.version_info[:3])
+
+
+def test_icperf_shaped_manifests_record_the_interpreter_and_a_3_11_record_drifts(tmp_path, monkeypatch) -> None:
+    """DEC-20261105-6e2616 NA-1: the ICPERF manifests write
+    /run/environment/python, and the parity check must read it."""
+    root = build(tmp_path, tolerance=TOLERANCE)
+    record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold", RUNBOOK_TEST_PYTHON_VERSION="3.11.17",
+           RUNBOOK_TEST_MANIFEST_SHAPE="icperf")
+    report, written = audit(root, monkeypatch, env={"RUNBOOK_TEST_SUM": "compensated"})
+    for replay in report["replays"]:
+        assert replay["interpreter"]["recorded_python_version"] == "3.11.17"
+        assert replay["interpreter"]["recorded_source"] == "manifest.yaml#/run/environment/python"
+        assert replay["result"] == "matched_within_tolerance"
+    assert written["notes"] == []
+    if _here() != "3.11.17":
+        assert written["interpreter_parity"] == {"match": 0, "mismatch": 2, "unknown": 0}
+        assert len(written["environment_drift"]) == 2
+        assert {d["recorded_python_version"] for d in written["environment_drift"]} == {"3.11.17"}
+        assert {d["replay_python_version"] for d in written["environment_drift"]} == {_here()}
+
+
+def test_environment_json_is_read_when_the_manifest_has_no_interpreter(tmp_path) -> None:
+    run = tmp_path / "RUN-X"
+    run.mkdir()
+    (run / "manifest.yaml").write_text(json.dumps({"run": {"environment": {"file": "environment.json"}}}))
+    (run / "environment.json").write_text(json.dumps({"python": "3.11.17 (main, Oct 14 2026) [Clang 23.1.3 ]"}))
+    assert rb.recorded_interpreter(run) == {"python_version": "3.11.17", "source": "environment.json#/python"}
+    # python_version stays first; a non-CPython "version" is not an interpreter.
+    (run / "manifest.yaml").write_text(yaml.safe_dump({"run": {"environment": {
+        "python_version": "3.13.18", "python": "3.11.17"}}}))
+    assert rb.recorded_interpreter(run)["python_version"] == "3.13.18"
+    (run / "manifest.yaml").write_text(yaml.safe_dump({"run": {"environment": {
+        "implementation": "pari", "version": "2.15.4"}}}))
+    (run / "environment.json").unlink()
+    assert rb.recorded_interpreter(run)["python_version"] is None
+
+
+@pytest.mark.parametrize("run_id", ["RUN-ICPERF-8e3acd", "RUN-ICPERF-2c627f", "RUN-ICPERF-850008"])
+def test_the_committed_icperf_runs_record_cpython_3_11(run_id) -> None:
+    run = REPO / "experiments/EXP-ICPERF-284bc4/runs" / run_id
+    if not (run / "manifest.yaml").exists():
+        pytest.skip("the ICPERF run records are not in this checkout")
+    assert rb.recorded_interpreter(run)["python_version"] == "3.11.17"
+
+
+def test_no_recorded_interpreter_is_an_explicit_unknown_note(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path)
+    record(root, monkeypatch, RUNBOOK_TEST_MANIFEST_SHAPE="none")
+    report, written = audit(root, monkeypatch)
+    assert written["interpreter_parity"] == {"match": 0, "mismatch": 0, "unknown": 2}
+    assert len(written["notes"]) == 2
+    assert all("interpreter_parity: unknown" in n and "no recorded interpreter" in n for n in written["notes"])
+    assert all(r["interpreter"]["interpreter_parity"] == "unknown"
+               and r["interpreter"]["recorded_python_version"] is None for r in report["replays"])
+    # Unknown is a note beside the result, never a drift and never a finding.
+    assert written["environment_drift"] == [] and report["verdict"] == "clean"
+
+
+def test_matching_versions_report_parity_match(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path)
+    record(root, monkeypatch, RUNBOOK_TEST_MANIFEST_SHAPE="icperf")
+    _, written = audit(root, monkeypatch)
+    assert written["interpreter_parity"] == {"match": 2, "mismatch": 0, "unknown": 0}
+    assert written["environment_drift"] == [] and written["notes"] == []
 
 
 # ---------------------------------------------------------------------------
