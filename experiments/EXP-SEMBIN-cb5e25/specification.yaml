@@ -1746,6 +1746,67 @@ experiment:
     instance-level certificate may still be recorded as evidence with
     proof_status certificate, as KN-FIND-936151 was.
 
+  input_bindings:
+    nagao_paper:
+      path: inputs/NAGAO-2015-984/paper_fulltext.md
+      sha256: 337fae555450162e56432ee137d0cb4bb20e2bd901c29f69b38a2f949e913218
+      role: >-
+        Definitions 2-8, Assumption 1, Lemma 2, Propositions 2 and 5, Theorem 1, footnote 6: the claim under test.
+    frozen_protocol:
+      path: experiments/EXP-SEMBIN-cb5e25/protocol.json
+      sha256: 265e0d6788b5192562393650efc638ab852c2a59032af25fad0e817bcdfa0279
+      role: >-
+        experiment.protocol/v1, frozen before any data (file hash).
+    padding_derivation:
+      path: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.py
+      sha256: 8ae86b196bf211506e642a63c98f1d658d8de68e85905bf2e91843baae56d0f2
+      role: >-
+        Why Proposition 5 alone cannot have a counterexample (DER-4).
+    padding_derivation_output:
+      path: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.out
+      sha256: f43c88d73eec4726208c01c301e8ff1539e76753a7da05cd11fe7a3521aca703
+      role: >-
+        Recorded output of the derivation check.
+    proposal:
+      path: ledger/proposals/IDEA-20261006-8f4f02.yaml
+      sha256: 0addd3c820567481c907e3b56aa214c76155772b6a1afcf756323e57a9508594
+      role: >-
+        Parent idea of this contract.
+    formats:
+      path: experiments/EXP-SEMBIN-cb5e25/formats.md
+      sha256: 487f8191e03dc80b63b601c3968efe10fe3d2afbd6faed119b0ae933b46f76c7
+      role: >-
+        Serialisation and certificate formats the independent checker was written from.
+    independent_checker:
+      path: experiments/EXP-SEMBIN-cb5e25/review/checker/check_certs.py
+      sha256: cf6c4f65663003406c6111850e480cd073f18dac99a23da8d6acc431e0f6ed85
+      role: >-
+        Certificate checker written blind to code/ (TASK-20261106-028825).
+    collision_search:
+      path: experiments/EXP-SEMBIN-cb5e25/collision-search.json
+      sha256: 1b3d863baeda65420771563116c39d34752ddb386d8c34ca80be7bd0cb2d2e50
+      role: >-
+        Partial observation-collision search (research-kb unavailable).
+    engine_closure:
+      path: src/crypto_autoresearcher/gf2/closure.py
+      sha256: 143fdced7ea024a33484117aed3381fe4a8b1cb1c0fbd89e86eb81f15894b4b4
+      role: >-
+        Shared GF(2) closure engine, imported and subclassed (reuse_rule).
+    engine_kernels:
+      path: src/crypto_autoresearcher/gf2/kernels.py
+      sha256: 569dcf1a5d1062d8fd48eaa1b12557209e2f8389b24e89164bebd0360d7778fe
+      role: >-
+        Shared kernels; column_pass is wrapped to record M-4.
+    engine_rankprofile:
+      path: src/crypto_autoresearcher/gf2/rankprofile.py
+      sha256: 58239e6476e783b28c15a615de7d53da6aaee73b856d914aeb043bb206c54d18
+      role: >-
+        Shape used by the SembinClosure subclass.
+    lemma4_oracle:
+      path: tools/lemma4_inside_form.py
+      sha256: 779e865265a768a7373827940e98abebebeba3f7173c6db2d27a04a6a51bd235
+      role: >-
+        Oracle for fixture F-2.
   execution_plan:
     mode: experiments
     trial_plan: experiments/EXP-SEMBIN-cb5e25/trial-plan.json

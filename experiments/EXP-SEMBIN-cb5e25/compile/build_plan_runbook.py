@@ -41,8 +41,8 @@ PREVIEW = "coordination/design/TASK-20261106-d8dbfa/EXP-SEMBIN-cb5e25/specificat
 # Pinned values (design-notes.md section 6 and the Coordinator's dispatch); each is asserted below.
 PH = "a1b0063ed17ded481a3f5d40e71f3227a3fc71661643fd331a7ad9c76e5b8ace"      # protocol canonical hash
 PF = "265e0d6788b5192562393650efc638ab852c2a59032af25fad0e817bcdfa0279"      # protocol.json file sha256
-S_R = "09ba2ac3229b473c533a36d84f2bd05f1dc2161d154f5d39778841cf7d337ac8"     # specification, review_required bytes
-S_A = "4824229c61ee0de67d21d7190878b262965e06fb6bbb748b7d010aa8cf22a5fd"     # approved-bytes preview
+S_R = "2276130dc363314e9621ff8a8179a98d88aa1cb7f6283f76ff7d6a3aa17a8a6a"     # specification, review_required bytes
+S_A = "3e8ad23cac0135a7cdb0c2a1e01ea8e6d03b19845c6197d53b608dada66677f5"     # approved-bytes preview
 MEMORY_MB = 32768            # RUL-3: loose virtual ceiling for the supervisor's RLIMIT_AS; no watchdog_seconds
 TOTAL_SECONDS = 43200
 RESERVE_SECONDS = 1200
