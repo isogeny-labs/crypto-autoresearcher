@@ -1,0 +1,684 @@
+# Sweep-tier reading review of one runbook session (audit-runs step 3). A screen: never a
+# validation_report, never evidence about H-ICPERF-2f52d1, never an execution proof, never a
+# review gate. It does not clear the deterministic `flagged` verdict in audit.json.
+audit_review:
+  audit_id: AUD-20261106T042058Z-b2606c
+  session_dir: experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92
+  journal_tip: 534b1a29241d91679683028f5afe99a2bf52d1a3483826a983df48833a1ccdff
+  auditor_model: claude-sonnet-5-5
+  reviewed_on: '2026-11-06'
+
+  independence: >-
+    I did not produce this run and have no part in the session, the runbook or the driver.
+    Read, in this order: .claude/skills/audit-runs/SKILL.md, .claude/agents/validator-sweep.md,
+    agents/validator.md, docs/agent-runtime-core.md, AGENTS.md (Review architecture; Curve
+    identity and measured bounds), docs/runbook-execution.md (replay, tolerance, interpreter
+    parity), audit.json of this audit, specification.yaml, runbook.yaml, trial-plan.json, the
+    session journal (all 12 entries), the six runs' raw-result.json / manifest.yaml / RESULTS.md /
+    execution-receipt.json, this audit's replay/ folder, and the replay/ folder and audit.json
+    of the earlier audit AUD-20261105T164527Z-d5036c (read only, not edited). The blind
+    re-derivation script was written and run BEFORE implementation/run.py and check.py were
+    opened; both were read afterwards. After my conclusions were fixed I grepped
+    ledger/evidence/EV-ICPERF-08f6f9.yaml, ledger/decisions/DEC-20261105-6e2616.yaml,
+    ledger/corrections/CORR-20261105-1d848a.yaml and the head of experiments/EXP-ICPERF-284bc4/
+    analysis.md only to place the finding. They report the same 27 equal / 39 absent-on-both /
+    0 differing split from an earlier reader; I did not use them as evidence and my numbers
+    were obtained from the raw files. `git status` also showed an untracked audit-review.yaml
+    of a different experiment (EXP-ICPERF-283a70, another reviewer's work); I saw the first
+    five lines of it (title, audit id, session id), used nothing from it, and did not read the
+    rest. I read tools/runbook.py at the audit-time revision (git f364cb9f6a, sha256 8de36933...)
+    and at HEAD (git 43fc2e2c19, sha256 e5431ae3...), both for the replay-comparison code only.
+  procedure_note: >-
+    audit-runs step 3 sends a `flagged` deterministic audit to the Opus `validator`. I was
+    dispatched at the sweep tier (Sonnet 5.5) by the parent session and answer the questions it
+    posed. This is recorded as a departure: the review is a screen, and `escalate: true` below
+    keeps the full-validation route open.
+
+  deterministic_audit_recap:
+    verdict: flagged
+    audit_tool_sha256: 8de36933d52efe04c503c1711a85b4e3ea715738db9f3de356372130a743d7ae
+    audit_tool_git_revision: f364cb9f6a
+    head_tool_sha256_at_review: e5431ae35e943c0a378b6ea3517303376277a89f9d7697d1cb0db4a710207e2a
+    head_tool_git_revision: 43fc2e2c19 (committed 2026-11-06 05:02:09Z, after this audit's 04:21:02Z)
+    journal: 12 entries, one chain, one session_started, tip equals the session_finished hash
+    replay_results: {matched: 0, matched_within_tolerance: 0, mismatch: 6}
+    replayed_units: 6 of a population of 6 (every valid unit was in the sample)
+    interpreter_parity: {match: 0, mismatch: 6, unknown: 0}
+    not_covered_in_audit_json: []
+    detection_power_reading: >-
+      The tool's miss probabilities (0.94148 at 1%, 0.531441 at 10%, 0.015625 at 50%) equal
+      (1-rate)^6, a per-unit independent model. Because all 6 of 6 units were replayed there is
+      no unreplayed unit in S02; the figures are conservative for this session. They say nothing
+      about a driver that is itself wrong, which replay cannot detect.
+
+  replay_mismatch_analysis:
+    question: >-
+      Do the 6 flagged replays hide any real recorded-versus-replay difference, or are they the
+      absent-on-both artefact the parent hypothesised?
+    answer: >-
+      They hide no recorded-versus-replay difference. The hypothesis is confirmed on the data.
+      All 39 compared rows scored `mismatch` in audit.json are pointers that are absent from
+      BOTH the recorded and the replayed raw-result.json (the "recorded null, replay null"
+      detail in every finding). Every one of the other 27 compared rows is genuinely equal,
+      including /matches_preregistered and /cells in all six units. No compared pointer is
+      present on one side only, and none is present on both sides with different values.
+    method:
+      - >-
+        For each of the six units I loaded the recorded runs/RUN-ICPERF-*/raw-result.json and the
+        replay/RUN-ICPERF-*/raw-result.json and, for each of the 11 runbook compare pointers,
+        classified it as absent-on-both, present-on-one-side, equal, or differing
+        (scratch script sha256 9c9fd01308b62f99ca95def3363975c7e73a2ffb448935181cb81628ae1afbd2).
+      - >-
+        I cross-checked that classification against every row of audit.json `compared`: all 39
+        rows with result `mismatch` are absent-on-both, and all 27 rows with result `equal` are
+        present on both sides with identical values.
+      - >-
+        I then diffed ALL leaves of each pair, not only the compared pointers (320 leaves in
+        total across the six recorded files, identical key sets in recorded and replay). 302
+        leaves are equal. The 18 that differ (3 per unit) are /elapsed_seconds (wall-clock
+        timing), /interpreter/executable (a path under /home/ec2-user/.cache/uv recorded; /usr/
+        local/bin/python3 on replay) and /interpreter/version (3.11.17 versus 3.13.18). None is
+        a compared pointer; the specification excludes /interpreter and /elapsed_seconds from
+        replay by name (specification.yaml replay.interpreter).
+      - >-
+        RESULTS.md differs between recorded and replay only on its `- elapsed_seconds:` line in
+        all six runs. manifest.yaml differs only in provenance and timing leaves (code.command,
+        code.commit, code.check_command, environment.*, timing.*), which is expected: a replay
+        directory has no supervisor environment.json (run.py says so in
+        environment.note).
+      - >-
+        The first audit's replay folder (AUD-20261105T164527Z-d5036c/replay, a separate process
+        on the same 3.13.18 interpreter) differs from the recorded runs on the same three leaves
+        only, and from this audit's replay on /elapsed_seconds only. Two independent replays
+        agree on every value.
+    absent_on_both_table:
+      note: >-
+        Which of the 11 compared pointers each trial writes (from the recorded files). It agrees
+        with the observe() branch each trial takes in run.py, read after the table was built.
+      price-ratio-identity: {equal: 7, absent_on_both: 4, absent: [same_reduced_ratio, all_match, online_ratio_num, online_ratio_den]}
+      ctl-consistency-a-change: {equal: 3, absent_on_both: 8}
+      ctl-consistency-r-change: {equal: 3, absent_on_both: 8}
+      ctl-bsgs-enumeration: {equal: 3, absent_on_both: 8}
+      ctl-neg-perturbed-price: {equal: 6, absent_on_both: 5}
+      ctl-neg-precomputation-model: {equal: 5, absent_on_both: 6}
+      totals: {equal: 27, absent_on_both: 39, mismatch_with_a_real_difference: 0}
+    coverage_cross_check: >-
+      For each trial I intersected the compare list with the pointers that trial's own
+      by_trial validity block asserts. No pointer the trial asserts is absent from its
+      raw-result.json, so the 39 absences are pointers a trial is not required to write, not
+      pointers silently dropped. The only compared pointer present but not asserted by validity
+      is /cells for the two negative controls (ctl-neg-perturbed-price and
+      ctl-neg-precomputation-model); replay covers their per-cell values, validity does not, and
+      they replayed equal.
+    root_cause: >-
+      runbook.yaml S02-trials replay.compare is one list of 11 pointers applied to a step whose
+      six trials write different fields. The audit-time tool (f364cb9f6a) scored a pointer
+      absent from both sides as `mismatch`: its code is `outcome = compare_tolerant(va, vb,
+      tolerance) if fa and fb else {"result": "mismatch"}`. The runbook could not express
+      per-trial lists at freeze because `replay.compare[].trials` arrived later
+      (DEC-20261105-6e2616 NA-1(b)). HEAD tool 43fc2e2c19 scores absent-on-both as
+      `not_applicable` and still scores one-sided presence and an all-absent replay as
+      `mismatch`.
+    head_tool_dry_run: >-
+      Read-only. I imported HEAD's tools/runbook.py compare_outputs (bytecode writing disabled,
+      nothing written to the repository; `git status` shows no change from this) and applied it
+      to the six existing recorded/replay pairs with the frozen runbook's S02 step. Result: 27
+      equal, 39 not_applicable, 0 mismatch, no problems on any unit
+      (scratch script sha256 dd95b2be8299070d68a7c0dad153a76d3c05aef1f1eed5b41f83315b17133b58).
+      This is a prediction of what a fresh audit under HEAD would score on these files. It is
+      not an audit, does not replace audit.json, and a fresh audit would re-execute the replays.
+    what_remains_flagged: >-
+      audit.json (and the earlier d5036c audit.json) keep `flagged`, correctly, as write-once
+      records of what the tool of the day said. Nothing in my reading clears them. Only a new
+      AUD-* directory produced by `tools/runbook.py audit` under the current tool can carry a
+      different deterministic verdict.
+
+  interpreter_drift_assessment:
+    drift: >-
+      Recorded under CPython 3.11.17 (S01 environment.json, raw-result /interpreter/version,
+      manifest environment.python all say 3.11.17; the recorded executable path is an
+      ephemeral uv build directory under /home/ec2-user/.cache/uv that does not exist on the
+      audit host, so that interpreter could not be re-run here). Both audits replayed under 3.13.18. interpreter_parity
+      is `mismatch` in the tool's sense of "versions differ", not "values differ".
+    conclusion: >-
+      The drift cannot matter for this computation and, empirically, did not. Both findings
+      rest on the driver and on data, not on trust in the note.
+    reasons:
+      - >-
+        Code inspection of implementation/run.py (hash-bound, sha256 ef13257e...). Every value
+        written to raw-result.json other than timing is an int, a bool, a string, or a
+        reduced pair from fractions.Fraction built from ints (+, *, /, == and numerator and
+        denominator only). There is no float arithmetic feeding any output value, no sum()
+        (grep finds none), no random, no hash() and no iteration over a set or dict whose order
+        affects an output: the two sets are set(range(table)), used only for membership, and the
+        set of reduced ratios in common_ratio(), which is read only when it has exactly one
+        element (so pop() is order-free), and JSON is written with sort_keys=True. The one float in the file is elapsed_seconds from
+        time.perf_counter(), which is outside the compare list.
+      - >-
+        The CPython 3.12 change that broke RBS-PFDR-bb0d26's replay (compensated builtin sum()
+        of floats, docs/runbook-execution.md) has no analogue here: no float is summed or
+        compared.
+      - >-
+        The specification anticipated this: replay.interpreter says no minor version is pinned
+        because the arithmetic is exact rational arithmetic, and variable_ledger lists the
+        interpreter as measured, "no effect is expected and none is credited". The runbook
+        pins no Python and sets PYTHONHASHSEED=0 as an extra.
+      - >-
+        Measurement: 302 of 320 leaves identical across the interpreter change; the 18 that
+        differ are timing and interpreter self-identification (above). Two separate replays on
+        3.13.18 agree with each other on every value. My blind script and pure-integer checker
+        (below) agree with both the 3.11.17 recorded values and the 3.13.18 replay values.
+    limits_of_this_assessment: >-
+      Two interpreter versions on one replay host class were tested; I did not run 3.12, other
+      builds, or another platform. The conclusion for other interpreters rests on the code
+      having no float, hash-order or sum() dependence. The interpreter facts are self-reported
+      by the processes (S01 and each raw-result), not independently attested. I did not verify
+      that the replay processes actually received PYTHONHASHSEED=0; run.py has no dependence on
+      it.
+
+  specification_fidelity:
+    summary: >-
+      Every arm, control, metric and stopping rule in specification.yaml has a counterpart in
+      runbook.yaml, trial-plan.json or run.py, and the session executed them: six distinct
+      runs, one attempt each, all six valid, control validity passed. One item is implemented
+      with a note (the replay pointer list). No item is missing. I found no place where the
+      runbook is weaker than the specification in a way that could change an outcome.
+    items:
+      - spec_item: "inputs: c_probe 370, c_state 2100, c_step 40, BL 21/10, states 10, precomputation 525, three (r, A) cells, c_probe 371 for NEG-1, precomputation 10 for NEG-2"
+        runbook_counterpart: >-
+          12 spec_bindings pin these values in specification.yaml (a 13th pins the session id); per-run assertions pin
+          /c_state_ns, /c_step_ns, /bl_num, /bl_den, /states for every trial and /c_probe_ns,
+          /precomputation_steps per trial; trial-plan.json and the four bound files hash
+          to their bound digests (I re-hashed run.py, check.py, trial-plan.json, specification.yaml,
+          runbook.yaml; the same digests also hold at the claim commit 5200f03900).
+        status: implemented
+      - spec_item: "online time model, exactness rule (inexact division invalidates the primary)"
+        runbook_counterpart: >-
+          run.py exact() raises on a non-integer probe count, BL step count or online time in
+          primary cells; the primary by_trial block asserts every cell integer.
+        status: implemented
+      - spec_item: "bsgs_probe_count by enumeration, not by the formula"
+        runbook_counterpart: >-
+          run.py bsgs_max_lookups tries every target in Z/m; primary asserts bsgs_probes 50,
+          200, 25 and matches_bsgs_probes; ctl-bsgs-enumeration asserts enumerated_probes
+          against formula_probes. I re-derived the count independently (below).
+        status: implemented
+      - spec_item: "CMP-PRIMARY and primary metrics price_ratio_num, price_ratio_den, ratios_agree, all_match_bsgs"
+        runbook_counterpart: >-
+          by_trial.price-ratio-identity asserts 925, 4, true, true, matches_preregistered true,
+          precomputation_steps 525 and all three cells; metrics[] aggregate the four over valid
+          non-control units (n=1: the primary only), giving 925/925, 4/4, 1.0, 1.0.
+        status: implemented
+      - spec_item: "secondary metric elapsed_seconds"
+        runbook_counterpart: "metrics[elapsed_seconds] aggregate max; excluded from replay as the specification requires"
+        status: implemented
+      - spec_item: "CON-1 (ctl-consistency-a-change) and CON-2 (ctl-consistency-r-change), labelled arithmetic-consistency checks"
+        runbook_counterpart: >-
+          by_trial blocks assert cell values, same_reduced_ratio true and matches_preregistered
+          true; both are listed in `controls`.
+        status: implemented
+        note: >-
+          The specification itself says r and A cancel, so these cannot discriminate and can fail
+          only through an inexact division or a defect. They are honestly labelled; do not read
+          them as discriminating controls.
+      - spec_item: "CON-3 (ctl-bsgs-enumeration)"
+        runbook_counterpart: "by_trial asserts enumerated 50/200/25, per-cell match, all_match true; listed in `controls`"
+        status: implemented
+      - spec_item: "NEG-1 (c_probe 371 gives 1855/8) and NEG-2 (precomputation 10 gives 185/42)"
+        runbook_counterpart: >-
+          by_trial asserts exactly the specification's pass conditions (price 1855/8 and online
+          1855/8; online 185/42; matches_preregistered false for both); both listed in `controls`.
+        status: implemented
+        note: >-
+          A negative control passes when the preregistered ratio is NOT reproduced. The
+          control_validity `passed` therefore means these planted wrong inputs moved the ratio
+          as predicted. I re-derived 1855/8 and 185/42 blind and both agree.
+      - spec_item: "preregistered prediction and success criterion (925/4, three probe counts, ratios_agree and all_match_bsgs true)"
+        runbook_counterpart: >-
+          The primary unit's validity assertions equal the preregistered integers, so the
+          session decides the frozen criterion itself: a differing value makes the unit invalid
+          and, with on_invalid: stop, ends the session. The summary reports execution_validity
+          `complete`, control_validity `passed`, inferential_validity `not_assessed`.
+        status: implemented
+      - spec_item: "replay: compared pointers /matches_preregistered, /cells; primary pointers /price_ratio_num, /price_ratio_den, /ratios_agree, /all_match_bsgs, /precomputation_steps; never /interpreter or /elapsed_seconds"
+        runbook_counterpart: >-
+          replay.compare lists the specification's seven pointers plus /same_reduced_ratio,
+          /all_match, /online_ratio_num, /online_ratio_den (a superset that also covers the
+          controls' own outputs), once for all six trials; /interpreter and /elapsed_seconds are
+          not listed. mode: fields, sample: 6 of 6.
+        status: implemented_with_note
+        note: >-
+          Coverage is a superset of the specification. The cost is the 39 absent-on-both rows
+          that tripped the audit-time tool (see replay_mismatch_analysis). That is an
+          instrument-construction property, not a missed specification item.
+      - spec_item: "CMP-AA: the audit replay as the A/A repetition, noise floor zero by construction"
+        runbook_counterpart: >-
+          Not a runbook item; realised by the audit replay. Two replays (d5036c and b2606c)
+          both reproduced every compared value exactly.
+        status: realised_by_audit
+      - spec_item: "stopping rule: six preregistered trials, one run each; budget maximum_runs 6, 60 s per run, 1 GB"
+        runbook_counterpart: >-
+          trial-plan has six trials with distinct run ids; the journal has six unit_recorded
+          entries and one attempt of S02; watchdog_seconds 60 and memory_mb 256 per trial; step
+          timeout_seconds 360 (6 x 60). The on_failure retry (max 2 on timeout) was never used.
+        status: implemented
+      - spec_item: "invalidation: crash, timeout, inexact division, or a manifest.yaml that fails check_run"
+        runbook_counterpart: >-
+          step on_failure, validity.exit_code and the manifest.yaml assertions; all six execution
+          receipts read `output_validated`, `published: false`, and each journal receipt_sha256
+          equals the file's sha256.
+        status: implemented
+      - spec_item: "required_artifacts: manifest.yaml, raw-result.json, RESULTS.md for each of the six runs"
+        runbook_counterpart: >-
+          trial-plan `artifacts`; all 18 files exist and their sha256 equals the digest in the
+          matching unit_recorded entry (I recomputed them with hashlib, independent of the
+          audit tool).
+        status: implemented
+      - spec_item: "heuristic_under_test null; scale_relevance toy; tail_checks none; seeds none; no host receipt; no n=83 arm"
+        runbook_counterpart: "none required; no seeded sampling, no heuristic, no cost-table or memory claim is made"
+        status: not_applicable
+    additional_observations:
+      - >-
+        The specification names ratios_agree and all_match_bsgs as primary metrics but defines
+        neither in prose. I inferred "every cell's reduced online ratio equals the price ratio"
+        and "bsgs_probes equals probes in every cell". My reading agrees with the driver, but a
+        reader of the specification alone could not have fixed them. Minor.
+      - >-
+        ratios_agree compares two expressions that are algebraically the same after
+        cancellation (the specification says so under `cancellation`). It can fail only through
+        an arithmetic or coding defect. This is declared, not hidden.
+      - >-
+        preflight.tracked_dirty is false; the session started at commit 9d13fcfd and the units
+        record the claim-publication commit 5200f03900 (an ancestor of origin/main) as their
+        launch authority; the bound files hash identically there. The decision
+        DEC-20261029-ca33b3 is `approve` and names runbook sha256 e5850bc6....
+      - >-
+        Statistical null-object control: the experiment draws no sample and reports no
+        correlation, bias or excess, so the protocol's null-object requirement has nothing to
+        apply to. Its planted negatives (NEG-1, NEG-2) are the closest analogue and behave as
+        predicted (the quantity moves when and only when the model is wrong).
+
+  blind_rederivation:
+    primary_metric: >-
+      The specification's primary metrics are price_ratio_num, price_ratio_den, ratios_agree
+      and all_match_bsgs. I derived all four, plus every per-cell integer, the 1855/8 and 185/42
+      control values, and the BSGS enumeration, from the specification alone.
+    script: >-
+      Run from /tmp/claude-0/-home-user-crypto-autoresearcher/cf97ad04-254b-5f2a-bd80-b1131332709c/scratchpad/blind_rederive.py
+      (scratch, outside the repository, ephemeral); full source embedded under `scripts`
+      below. sha256 c9335f2f5080b09e0b764de23baf7e75bd0f60aae32560fdfbb83e429d2be2ab.
+    inputs_read_by_script: >-
+      Constants transcribed from specification.yaml /experiment/inputs and the formulas in
+      /experiment/online_time_model and /experiment/bsgs_probe_count. Producer artifacts
+      (trial-plan.json for run ids, raw-result.json, the journal's final summary) are opened
+      only after every blind value is computed, for comparison.
+    blind_from_respected: true
+    blind_from_caveats:
+      - >-
+        run.py, check.py and the producer's reports were not read before the script ran. The
+        JSON key names used for comparison (price_ratio_num, cells[].ratio_num, ...) came from
+        the runbook's validity assertions, not from the driver.
+      - >-
+        The specification states the expected numbers (925/4, 50/200/25, 18500 ns and so on) in
+        `derived_values` and `preregistered_prediction`, and I had read them. The derivation
+        recomputes them from the model, so agreement is independent of run.py but not
+        independent of the specification's own model. A flaw in the model (for example that the
+        formula is not the real Bernstein-Lange cost) is outside what this check can see.
+    underspecification_found: >-
+      The BSGS count convention is fully fixed by the specification ("table lookups up to and
+      including the first hit", maximum over targets). ratios_agree and all_match_bsgs are not
+      defined in prose and were inferred (see additional_observations). Neither blocked the
+      derivation.
+    method: >-
+      Exact fractions.Fraction arithmetic for the model; BSGS count by trying every target in
+      Z/m with baby table {0..9} and giant step -10; inexact division raises, as the
+      specification requires of the primary.
+    results:
+      price_ratio: {blind: "925/4", producer: "925/4", recorded: equal, replay: equal}
+      precomputation_steps: {blind: 525, producer: 525}
+      ratios_agree: {blind: true, producer: true}
+      all_match_bsgs: {blind: true, producer: true}
+      cells:
+        r1000_a2: {probes: 50, bsgs_probes: 50, bl_steps: 2, bl_online_ns: 80, ic_online_ns: 18500, ratio: "925/4", producer_equal: true}
+        r4000_a2: {probes: 200, bsgs_probes: 200, bl_steps: 8, bl_online_ns: 320, ic_online_ns: 74000, ratio: "925/4", producer_equal: true}
+        r1000_a4: {probes: 25, bsgs_probes: 25, bl_steps: 1, bl_online_ns: 40, ic_online_ns: 9250, ratio: "925/4", producer_equal: true}
+      NEG-1_perturbed_price: {blind: "1855/8 (price and every online ratio)", producer: "1855/8", matches_preregistered: false}
+      NEG-2_precomputation_10: {blind: "185/42 (every cell)", producer: "185/42", matches_preregistered: false, note: "bl_steps for r1000_a4 is 105/2; the producer records it as {num: 105, den: 2}, equal to mine"}
+      session_summary:
+        price_ratio_num: {blind_min_max: [925, 925], summary_min_max: [925, 925]}
+        price_ratio_den: {blind_min_max: [4, 4], summary_min_max: [4, 4]}
+        ratios_agree_fraction_true: {blind: 1.0, summary: 1.0}
+        all_match_bsgs_fraction_true: {blind: 1.0, summary: 1.0}
+    comparison_outcome: >-
+      ALL OK against the six recorded raw-result.json files and against the six replay files
+      (0 differences in either run of the script) and against the journal's final summary.
+    agreement_with_producer: true
+
+  certificate_checks:
+    note: >-
+      This experiment has no ECDLP certificate: every manifest carries
+      result.certificate.kind none and attack_claimed false. The "certificates" are exact
+      integer claims (reduced ratios, probe counts, BSGS worst-case lookups). The requested
+      split of two replayed and two unreplayed units cannot be made literally: the audit
+      replayed all six, so no unreplayed unit exists. I checked all six, recorded and replay.
+    verifier: >-
+      Pure integer arithmetic with math.gcd for reduction, cross-multiplication for division,
+      and a forward giant-step construction for the BSGS count (a different algorithm from the
+      driver's per-target walk). It shares no code with the producer; the only shared
+      dependency is the Python standard library. Source under `scripts`; sha256
+      4c44fb44d14580d8877e74936719a5af1446b2b7288b862f7e0c8b862d80aa12.
+    units:
+      - {unit: price-ratio-identity, run: RUN-ICPERF-8e3acd, replayed: true, claims: "3 cells: probes, BL steps, BL and IC online ns, reduced ratio 925/4, bsgs_probes 50/200/25; price 925/4", recorded_result: agree, replay_result: agree}
+      - {unit: ctl-consistency-a-change, run: RUN-ICPERF-2d715d, replayed: true, claims: "2 cells ratio 925/4, probes, bsgs_probes", recorded_result: agree, replay_result: agree}
+      - {unit: ctl-consistency-r-change, run: RUN-ICPERF-2c627f, replayed: true, claims: "2 cells ratio 925/4, probes, bsgs_probes", recorded_result: agree, replay_result: agree}
+      - {unit: ctl-bsgs-enumeration, run: RUN-ICPERF-779d41, replayed: true, claims: "formula_probes and enumerated_probes 50/200/25", recorded_result: agree, replay_result: agree}
+      - {unit: ctl-neg-perturbed-price, run: RUN-ICPERF-30596e, replayed: true, claims: "price 1855/8, three cells with ratio 1855/8", recorded_result: agree, replay_result: agree}
+      - {unit: ctl-neg-precomputation-model, run: RUN-ICPERF-850008, replayed: true, claims: "three cells with ratio 185/42 and BL steps 105, 420, 105/2", recorded_result: agree, replay_result: agree}
+    unreplayed_units_checked: none exist (6 of 6 replayed)
+    verifier_negative_control: >-
+      I copied the six recorded raw-result.json files to scratch, planted two edits
+      (price-ratio-identity cell r4000_a2 ratio_num 925 -> 926; ctl-bsgs-enumeration cell
+      r1000_a4 enumerated_probes 25 -> 24) and ran the verifier: exactly those two edits are
+      reported as DIFF and nothing else. The verifier can fail. The tampered copies were never
+      in the repository.
+    what_this_does_not_show: >-
+      That the model itself is the right one. The checks confirm the driver computes the
+      specification's stated integer model; they say nothing about measured prices, n=83, or
+      any deployed curve (scale_relevance: toy).
+
+  lean_statement_fidelity:
+    obligations: []
+    summary: >-
+      The runbook has no `lean` step, audit.json `lean` is empty, and the specification declares
+      no formal obligation. There is no statement to read and no receipt whose semantic_review
+      is pending. Nothing is claimed or assumed formally. Not a gap in this session.
+
+  not_covered:
+    from_audit_json: []
+    added_by_reader:
+      - >-
+        Nothing in audit.json's not_covered, but the following were not established.
+      - >-
+        S01-probe-python declares no replay and is not listed as not_covered. It records the
+        launching interpreter (3.11.17) and a host path (/home/ec2-user/.cache/uv/...) that is
+        not present on the audit host; the facts are self-reported and were not independently
+        reproduced. They match each unit's own
+        self-report.
+      - >-
+        Replay re-runs the same bound driver. A driver that is itself wrong would replay
+        identically; only the blind re-derivation above guards that, and it checks the
+        specification's model, not the model's relation to Bernstein-Lange or to any
+        measurement.
+      - >-
+        Interpreter independence is shown for 3.11.17 versus 3.13.18 on one replay setup (both
+        audits used /usr/local/bin/python3 3.13.18). Not another version, build or platform.
+      - >-
+        The two audits' replay processes differ from the recorded run in process, host path
+        and interpreter at once (CMP-AA co-variation); no value differs, so nothing needs
+        attributing, but the three factors cannot be separated.
+      - >-
+        No execution proof: docs/execution-proof-chain.md milestones are open
+        (verified_units 0 in the summary). Replay bounds fabrication; it does not prove the
+        computation.
+      - >-
+        Inferential validity is `not_assessed` by design. This screen says nothing about
+        H-ICPERF-2f52d1 or IDEA-20261015-7a3c9e, nothing about a speedup, and nothing about the
+        n=83 arm.
+      - >-
+        I did not re-run tools/runbook.py verify or audit (not to be repeated at the reading
+        tier), and I did not re-run the checkers. I did recompute every unit's artifact digests
+        against the journal and re-hash the bound files, but I did not re-verify the journal
+        hash chain itself.
+      - >-
+        I did not read the evidence records, decisions or the reviewer reports that cite this
+        session beyond locating the finding; I give no opinion on how they use it.
+      - >-
+        The execution receipts read `published: false`. I did not investigate what publication
+        the supervisor withholds or who performs it.
+
+  findings_for_the_coordinator:
+    - id: RV-1
+      severity: tool_artefact
+      text: >-
+        The `flagged` verdict of this audit and of d5036c is explained entirely by the audit
+        tool scoring 39 absent-on-both pointers as mismatches. No recorded-versus-replay value
+        differs. The condition is fixed at HEAD (43fc2e2c19); the existing records stay
+        flagged as written.
+    - id: RV-2
+      severity: instrument_design_note
+      text: >-
+        The frozen runbook lists one 11-pointer compare for six heterogeneous trials. For a
+        future runbook, use `replay.compare[].trials` per-trial lists (available since
+        DEC-20261105-6e2616 NA-1(b)) so a pointer a trial is not required to write is not in
+        its list. This runbook is frozen and nothing is to be repaired.
+    - id: RV-3
+      severity: record_state
+      text: >-
+        No deterministic audit of this session's current journal tip has a verdict other than
+        `flagged`. A reader's `clean` cannot substitute. A new AUD-* from the current tool is
+        the route; my dry run predicts 27 equal, 39 not_applicable, 0 mismatch on the existing
+        replay files.
+    - id: RV-4
+      severity: informational
+      text: >-
+        For the two negative controls, per-cell values are covered by replay only, not by
+        validity assertions (the specification's pass conditions name only the ratios). They
+        replayed equal.
+
+  verdict: clean
+  verdict_reason: >-
+    The reading checks found no defect in the session. The runbook implements every item of the
+    specification, an independent derivation from the specification reproduces every recorded
+    and replayed value and the session summary, a pure-integer verifier agrees for all six
+    units and can fail, there are no Lean obligations, and the interpreter change from 3.11.17 to
+    3.13.18 has no mechanism to affect this exact-integer computation and left no value
+    changed. The six deterministic mismatches contain no real recorded-versus-replay
+    difference: all 39 are pointers absent from both files. `clean` here is the reader's screen
+    only. It does not change the deterministic verdict in audit.json, which stays `flagged`.
+  escalate: true
+  escalate_reasons:
+    - >-
+      The deterministic audit is `flagged` and a reader cannot clear it; the skill routes a
+      flagged session to the Opus `validator`, and this review was produced at the sweep tier.
+    - >-
+      The session is already cited by ledger records (EV-ICPERF-08f6f9, DEC-20261105-8a9984,
+      DEC-20261105-6e2616, CORR-20261105-1d848a), so the rule "escalate whenever the session
+      will be cited by an evidence review" applies. I did not examine how they cite it.
+
+  scripts:
+    note: >-
+      Embedded so the review stays checkable after the scratch directory is gone. Neither script
+      is part of the producer's artifacts. Both ran under `python3 -I`.
+    blind_rederive.py: |
+        """Blind re-derivation for EXP-ICPERF-284bc4 from specification.yaml only
+        (/experiment/inputs, /experiment/online_time_model, /experiment/bsgs_probe_count,
+        /experiment/controls). Exact Fractions; no code shared with the producer.
+        Usage: blind_rederive.py <experiment_dir> <runs_dir_or_replay_dir> <session_journal>
+        Producer values are loaded only AFTER every value below has been computed."""
+        import json, sys
+        from fractions import Fraction as F
+        from math import gcd
+        
+        # --- inputs transcribed from specification.yaml /experiment/inputs
+        C_PROBE, C_STATE, C_STEP = 370, 2100, 40
+        BL_NUM, BL_DEN, STATES = 21, 10, 10
+        CELLS = [("r1000_a2", 1000, 2), ("r4000_a2", 4000, 2), ("r1000_a4", 1000, 4)]
+        
+        def red(fr):  # reduced (num, den) of a Fraction
+            return (fr.numerator, fr.denominator)
+        
+        def exact_int(fr):
+            assert fr.denominator == 1, f"inexact division {fr}"
+            return fr.numerator
+        
+        def bsgs_max_lookups(m, states):
+            """spec: Z/m, baby steps {0..states-1}, giant step subtracts states; for each
+            target count table lookups up to and including the first hit; max over targets."""
+            baby = set(range(states))
+            worst = 0
+            for t in range(m):
+                x, n = t, 0
+                while True:
+                    n += 1                      # one lookup of x in the baby table
+                    if x in baby:
+                        break
+                    x = (x - states) % m
+                worst = max(worst, n)
+            return worst
+        
+        def model(c_probe=C_PROBE, precomp=None):
+            pre = F(STATES * C_STATE, C_STEP) if precomp is None else F(precomp)
+            price = F(c_probe * C_STATE * BL_DEN, BL_NUM * C_STEP ** 2)
+            out = {"precomputation_steps": exact_int(pre), "price": red(price), "cells": []}
+            for name, r, A in CELLS:
+                bl_steps = F(BL_NUM * r) / (BL_DEN * A * pre)
+                bl_ns = bl_steps * C_STEP
+                probes = F(r, A * STATES)
+                ic_ns = probes * c_probe
+                ratio = ic_ns / bl_ns
+                out["cells"].append(dict(name=name, r=r, A=A, probes=probes, bl_steps=bl_steps,
+                                         bl_online_ns=bl_ns, ic_online_ns=ic_ns, ratio=red(ratio)))
+            return out
+        
+        primary = model()
+        for c in primary["cells"]:
+            for k in ("probes", "bl_steps", "bl_online_ns", "ic_online_ns"):
+                c[k] = exact_int(c[k])          # spec: inexact division invalidates the primary
+            c["bsgs_probes"] = bsgs_max_lookups(c["r"] // c["A"], STATES)
+        mine = {
+            "price_ratio": primary["price"],
+            "precomputation_steps": primary["precomputation_steps"],
+            "ratios_agree": all(c["ratio"] == primary["price"] for c in primary["cells"]),
+            "all_match_bsgs": all(c["bsgs_probes"] == c["probes"] for c in primary["cells"]),
+            "cells": primary["cells"],
+        }
+        neg1 = model(c_probe=371)
+        neg2 = model(precomp=10)
+        # NEG-2 online ratios may be inexact in bl_steps/probes: only ratio is needed
+        print("BLIND price ratio:", mine["price_ratio"], "precomp:", mine["precomputation_steps"],
+              "ratios_agree:", mine["ratios_agree"], "all_match_bsgs:", mine["all_match_bsgs"])
+        for c in mine["cells"]:
+            print("  ", c["name"], "probes", c["probes"], "bsgs", c["bsgs_probes"], "bl_steps", c["bl_steps"],
+                  "bl_ns", c["bl_online_ns"], "ic_ns", c["ic_online_ns"], "ratio", c["ratio"])
+        print("BLIND NEG-1 price", neg1["price"], "online", {c["name"]: c["ratio"] for c in neg1["cells"]})
+        print("BLIND NEG-2 online", {c["name"]: c["ratio"] for c in neg2["cells"]})
+        
+        # --- only now compare with producer artifacts
+        exp_dir, runs_dir, journal = sys.argv[1:4]
+        plan = json.load(open(f"{exp_dir}/trial-plan.json"))
+        rid = {t["id"]: t["run_id"] for t in plan["trials"]}
+        ok = True
+        def chk(label, a, b):
+            global ok
+            good = (a == b); ok &= good
+            print(f"  [{'OK ' if good else 'DIFF'}] {label}: blind={a} producer={b}")
+        for tid in ("price-ratio-identity", "ctl-consistency-a-change", "ctl-consistency-r-change",
+                    "ctl-bsgs-enumeration", "ctl-neg-perturbed-price", "ctl-neg-precomputation-model"):
+            d = json.load(open(f"{runs_dir}/{rid[tid]}/raw-result.json"))
+            print("UNIT", tid, rid[tid], "dir", runs_dir)
+            byname = {c["name"]: c for c in d["cells"]}
+            if tid == "price-ratio-identity":
+                chk("price_ratio", mine["price_ratio"], (d["price_ratio_num"], d["price_ratio_den"]))
+                chk("precomputation_steps", mine["precomputation_steps"], d["precomputation_steps"])
+                chk("ratios_agree", mine["ratios_agree"], d["ratios_agree"])
+                chk("all_match_bsgs", mine["all_match_bsgs"], d["all_match_bsgs"])
+                for c in mine["cells"]:
+                    p = byname[c["name"]]
+                    for k in ("probes", "bsgs_probes", "bl_steps", "bl_online_ns", "ic_online_ns"):
+                        chk(f"{c['name']}.{k}", c[k], p[k])
+                    chk(f"{c['name']}.ratio", c["ratio"], (p["ratio_num"], p["ratio_den"]))
+            elif tid in ("ctl-consistency-a-change", "ctl-consistency-r-change"):
+                want = ["r1000_a2", "r1000_a4"] if "a-change" in tid else ["r1000_a2", "r4000_a2"]
+                chk("cell names", want, [c["name"] for c in d["cells"]])
+                mm = {c["name"]: c for c in mine["cells"]}
+                for n in want:
+                    p = byname[n]
+                    chk(f"{n}.ratio", mm[n]["ratio"], (p["ratio_num"], p["ratio_den"]))
+                    chk(f"{n}.probes/bsgs", (mm[n]["probes"], mm[n]["bsgs_probes"]), (p["probes"], p["bsgs_probes"]))
+                chk("same_reduced_ratio", True, d["same_reduced_ratio"])
+            elif tid == "ctl-bsgs-enumeration":
+                for c in mine["cells"]:
+                    p = byname[c["name"]]
+                    chk(f"{c['name']}.formula/enumerated", (c["probes"], c["bsgs_probes"]), (p["formula_probes"], p["enumerated_probes"]))
+                chk("all_match", True, d["all_match"])
+            elif tid == "ctl-neg-perturbed-price":
+                chk("price_ratio", neg1["price"], (d["price_ratio_num"], d["price_ratio_den"]))
+                chk("online_ratio", neg1["cells"][0]["ratio"], (d["online_ratio_num"], d["online_ratio_den"]))
+                chk("matches_preregistered", False, d["matches_preregistered"])
+            else:
+                chk("online_ratio", neg2["cells"][0]["ratio"], (d["online_ratio_num"], d["online_ratio_den"]))
+                chk("all NEG-2 cells same ratio", True, len({c["ratio"] for c in neg2["cells"]}) == 1)
+                chk("precomputation_steps", 10, d["precomputation_steps"])
+                chk("matches_preregistered", False, d["matches_preregistered"])
+        # session summary
+        tail = [json.loads(l) for l in open(journal)][-1]["summary"]["metrics"]
+        print("SESSION SUMMARY")
+        chk("summary price_ratio_num min/max", (925, 925), (tail["price_ratio_num"]["values"]["min"], tail["price_ratio_num"]["values"]["max"]))
+        chk("summary price_ratio_den min/max", (4, 4), (tail["price_ratio_den"]["values"]["min"], tail["price_ratio_den"]["values"]["max"]))
+        chk("summary ratios_agree", 1.0, tail["ratios_agree"]["values"]["fraction_true"])
+        chk("summary all_match_bsgs", 1.0, tail["all_match_bsgs"]["values"]["fraction_true"])
+        print("ALL OK" if ok else "SOME DIFF")
+    cert_check.py: |
+        """Certificate-style re-verification, pure integer arithmetic (no fractions module,
+        no producer code). Checks every claimed number in raw-result.json for all six units
+        against the frozen model, for a recorded dir and a replay dir."""
+        import json, sys
+        from math import gcd
+        C_PROBE, C_STATE, C_STEP, BL_NUM, BL_DEN, S = 370, 2100, 40, 21, 10, 10
+        def red(n, d):
+            g = gcd(n, d); return (n // g, d // g)
+        def bsgs_forward(m, s):
+            """independent construction: giant step k marks every target (b + k*s) mod m, b<s;
+            a target first marked at giant step k costs k+1 lookups; return the max over Z/m."""
+            first = {}
+            k = 0
+            while len(first) < m:
+                for b in range(s):
+                    first.setdefault((b + k * s) % m, k + 1)
+                k += 1
+            assert len(first) == m
+            return max(first.values())
+        def cells(c_probe, pre_num, pre_den):
+            out = {}
+            for name, r, A in (("r1000_a2",1000,2),("r4000_a2",4000,2),("r1000_a4",1000,4)):
+                # probes = r/(A*S);  bl_steps = BL_NUM*r*pre_den/(BL_DEN*A*pre_num);  all as num/den
+                pn, pd = r, A * S
+                bn, bd = BL_NUM * r * pre_den, BL_DEN * A * pre_num
+                bl_ns = (bn * C_STEP, bd)
+                ic_ns = (pn * c_probe, pd)
+                ratio = red(ic_ns[0] * bl_ns[1], ic_ns[1] * bl_ns[0])
+                out[name] = dict(probes=red(pn,pd), bl_steps=red(bn,bd), bl_ns=red(*bl_ns), ic_ns=red(*ic_ns), ratio=ratio)
+            return out
+        price = red(C_PROBE*C_STATE*BL_DEN, BL_NUM*C_STEP*C_STEP)
+        assert price == (925, 4)
+        assert (S*C_STATE) % C_STEP == 0 and S*C_STATE//C_STEP == 525
+        P = cells(C_PROBE, 525, 1)
+        N1 = cells(371, 525, 1)
+        N2 = cells(C_PROBE, 10, 1)
+        base = sys.argv[1]
+        plan = json.load(open(sys.argv[2]))
+        rid = {t["id"]: t["run_id"] for t in plan["trials"]}
+        bad = 0
+        def eq(label, got, want):
+            global bad
+            if got != want: bad += 1; print("  DIFF", label, got, want)
+        def jf(x):  # int or {"num","den"} -> reduced pair
+            return red(x["num"], x["den"]) if isinstance(x, dict) else (x, 1)
+        for tid, run in rid.items():
+            d = json.load(open(f"{base}/{run}/raw-result.json")); by = {c["name"]: c for c in d["cells"]}
+            for name, ref in (N1 if tid == "ctl-neg-perturbed-price" else N2 if tid == "ctl-neg-precomputation-model" else P).items():
+                if name not in by: continue
+                c = by[name]
+                if "ratio_num" in c: eq(f"{tid}.{name}.ratio", (c["ratio_num"], c["ratio_den"]), ref["ratio"])
+                if "probes" in c: eq(f"{tid}.{name}.probes", jf(c["probes"]), ref["probes"])
+                if "bl_steps" in c: eq(f"{tid}.{name}.bl_steps", jf(c["bl_steps"]), ref["bl_steps"])
+                if "bl_online_ns" in c: eq(f"{tid}.{name}.bl_ns", jf(c["bl_online_ns"]), ref["bl_ns"])
+                if "ic_online_ns" in c: eq(f"{tid}.{name}.ic_ns", jf(c["ic_online_ns"]), ref["ic_ns"])
+                m = {"r1000_a2":500,"r4000_a2":2000,"r1000_a4":250}[name]
+                if "bsgs_probes" in c: eq(f"{tid}.{name}.bsgs", c["bsgs_probes"], bsgs_forward(m, S))
+                if "enumerated_probes" in c: eq(f"{tid}.{name}.enum", c["enumerated_probes"], bsgs_forward(m, S))
+                if "formula_probes" in c: eq(f"{tid}.{name}.formula", c["formula_probes"], ref["probes"][0])
+            if "price_ratio_num" in d:
+                eq(f"{tid}.price", (d["price_ratio_num"], d["price_ratio_den"]), red(d["c_probe_ns"]*C_STATE*BL_DEN, BL_NUM*C_STEP*C_STEP))
+            print("checked", tid, run, "(", len(d["cells"]), "cells )")
+        print("pure-integer cert check on", base, "->", "ALL AGREE" if bad == 0 else f"{bad} DIFFS")
