@@ -371,8 +371,9 @@ claims:
       tools/runbook.py audit) of selftest, analyze-main, census-toy-rep and analyze-final under a uv Clang build of
       CPython 3.11.15 with PyYAML 6.0.3 supplied reproduces every measurement file byte for byte; reproduced here
       under CPython 3.11.18 (GCC) for the same four units. census-toy-main was not replayed under 3.11. A replay,
-      not an independent reproduction and not an execution proof.
-    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+      not an independent reproduction and not an execution proof. (The overreach is in the "reproduced four
+      ways" sentences that count this replay, PFX-1, not in this sentence.)
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
   - id: PFX-C-EV-validity
     text: "53/53 receipt-named files re-hash to their recorded values. census-toy-main's summary {jobs 6657, failed_infrastructure 0, degenerate 4} equals a recount ... All 1580 distinct (bits, c) curves equal generate_prime_order_curve(bits, 8100000 + c). There is one record per planned key (6657, with 0 missing, extra or duplicate)."
     location: ledger/evidence/EV-PFDR-07d608.yaml:126-143
@@ -385,6 +386,12 @@ claims:
     suggested_verdict: upheld
     scoped_to: null
     beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PFX-C-EV-drift
+    text: "A 3.13.17 control reproduces the audit's drift exactly: 2 summary float leaves (416 and 402 ulps) and 479 analysis float leaves, max rel 6.47e-11, with 0 non-float leaves."
+    location: ledger/evidence/EV-PFDR-07d608.yaml:177-179
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
   - id: PFX-C-EV-extremes
     text: "largest |kappa - 1| 0.04140 at b28-r1-n256 ...; lowest ci95 bound 0.93684 (b28-r2-n512); largest |z| 3.131 (b24-r1-n2048); |kappa - 1| <= 0.0089 at n >= 1024 and <= 0.0025 at n >= 2048; smallest plant_kappa 1.28852 (b20-r2-n4096) and smallest plant_z 21.93 (b24-r2-n256); |log-kappa slope| <= 0.0088"
     location: ledger/evidence/EV-PFDR-07d608.yaml:167-173
