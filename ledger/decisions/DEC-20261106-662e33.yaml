@@ -1,0 +1,65 @@
+# DEC-20261106-662e33: Coordinator redesign and freeze approval of the IC layout=lines tournament, protocol version 6 (fp28, walk incumbent), after the v5 fp20 qualification failed the L2 1 ms solve minimum.
+coordinator_decision:
+  id: DEC-20261106-662e33
+  id_provenance: Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision --date 20261106
+    and confirmed with --check. The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  source: isogeny-labs/crypto research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md (sha256 924a095b4fba073c4314b8460dc75c41ffef319affd5f999f6f4f2cc0caf0af6;
+    transcribed from its sections 11, 12 and 13, crypto PR 3527)
+  subject: 'IC-LINE-LAYOUT-E2E-FP28-V6-20261106: revise the fp20 design (v5) to fp28 and approve the version 6 freeze,
+    conditional on pre-freeze check F6b (recorded as passing before the freeze)
+
+    '
+  context: 'v5 (IC-LINE-LAYOUT-E2E-FP20-V3A2-20261106) stopped at its qualification: 108/108 verified and audit OK, but
+    the L2 gate refused 102/108 executions as solves under the 1.0 ms minimum (fp20 rho, BSGS and kangaroo 44-314 us,
+    ic-mitm 549-996 us on ecbench 73362eed). At fp20 the qualification also recorded rho.plain faster than rho.negation in
+    wall time, contrary to the v3 positive-control prediction. Owner sign-off 2026-11-06: "Use walk, accept the B1/B2 fixes,
+    freeze and run v6"; the noise-rerun clause was not adopted; the USD 5 ceiling and the ea8e9ef7 pin stand.
+
+    '
+  decision: approve
+  target_ids:
+  - IC-LINE-LAYOUT-E2E-FP20-V3A2-20261106
+  - IC-LINE-LAYOUT-E2E-FP28-V6-20261106
+  rationale:
+  - 'Revision 0 (revise): size fp28, where the deterministic oracle set-up floors every IC solve well above 1 ms; rho moves
+    to a counted-only L2 companion session (matched rho and the section 5a band, no wall field read); positive control
+    pc-fb2x (size=814, a counted slowdown by construction); purpose-built fp28 qualification; two 576-execution wall
+    sessions; keep the ea8e9ef7 / 73362eed pin, the only image with layout=lines.'
+  - 'Revision 1 (revise), B1: run-ecbench refuses fewer than 5 rounds and any isolation level but L2, so the qualification
+    is 2 targets x 4 arms x (1 warmup + 5 rounds) = 48 executions with 10 A/A pairs, and the counted session runs at L2
+    under the exit 0/42/43 acceptance clause.'
+  - 'Revision 1, B2: run-ecbench compares the first reference arm with the first control arm, so roles are incumbent=baseline,
+    incumbent-aa=control, candidate=candidate, pc-fb2x=reference (arm order unchanged); the A/A gate reads aa_ci95 from
+    the candidate comparison and from control-comparison.json.'
+  - 'Revision 1, F2: the incumbent is the recipe merged on main (prime-abscissa:size=407, mitm:negation_folded=1,
+    targets=walk, max_trials=26479085); v6 does not wait for crypto PR 2826 (stride-renew).'
+  - 'Revision 2 (approve): freeze approved conditional on F6b; F6 seeds 2026110628904/905/906 are development-only;
+    the director''s verdict precedence adopted; counted bootstrap seed 20261002 (binary default); corrected worst case
+    6.5 node-hours, with the launch card returned before launch if 6.5 x on-demand price plus CodeBuild could exceed USD 5;
+    incumbent confirmed against crypto main 23cf569058.'
+  - 'Pre-freeze checks F1, F4, F6 and F6b recorded as passing in prefreeze-checks-v6.md (local, development seeds, no
+    candidate wall data read). Frozen protocol_sha256 12415faa3330276b6ccbed718a03bc598d9717576c332577024ebc4e9752543c
+    at crypto commit 7c173e5a1d418dce4c734c43a25718a71107a36c, filed before affected data.'
+  evidence_refs:
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/TERMINAL-OBSERVATION-V3A2-20261106.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/protocol-v6.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/analyze-v6.sh
+  limitations:
+  - F6 and F6b grade L2 on the local host, not on a c8a node; the qualification is the c8a check.
+  - The launcher's control-comparison.json and the full 576-record and 128-pair counts are first exercised by the qualification.
+  - The pc-fb2x stand-in tests the comparison shape that the candidate comparison is expected to share.
+  - The AWS price list was not read; the budget rule is a launch-card gate.
+  - pc-fb2x checks direction fidelity, not few-percent sensitivity; the v6 claim is fp28-only on the pinned executable.
+  knowledge_promotion: not_warranted
+  next_actions:
+  - 'Main session: merge crypto PR 3527 (the freeze), then publication receipt, checkpoint gate, director card for the qualification,
+    executor-mechanical launch.'
+  - Only on a qualification pass, the two wall sessions, then the counted companion; then analyze-v6.sh, an independent
+    validator and an evidence-review decision.
