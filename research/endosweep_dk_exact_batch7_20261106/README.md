@@ -1,0 +1,287 @@
+# Exact CM discriminant of brainpoolP512r1 (batch 7), and the two composites still open
+
+**Question.**  Batches 1 to 6
+([`../endosweep_dk_exact_20261016`](../endosweep_dk_exact_20261016/README.md),
+[`../endosweep_dk_exact_batch2_20261016`](../endosweep_dk_exact_batch2_20261016/README.md),
+[`../endosweep_dk_exact_batch3_20261017`](../endosweep_dk_exact_batch3_20261017/README.md),
+[`../endosweep_dk_exact_batch4_20261022`](../endosweep_dk_exact_batch4_20261022/README.md),
+[`../endosweep_dk_exact_batch5_20261023`](../endosweep_dk_exact_batch5_20261023/README.md),
+[`../endosweep_dk_exact_batch6_20261105`](../endosweep_dk_exact_batch6_20261105/README.md))
+recorded the exact CM field discriminant `D_K`, the conductor `f` and the least
+non-scalar endomorphism degree for the 36 curves whose `4q − t²` was split
+completely by the sixth frozen driver snapshot (2026-11-06, about 13:13Z).
+This directory answers two questions:
+
+* **Part A.** Which curve was completed by the seventh frozen snapshot, and
+  what are its exact `D_K`, `f` and degree bound?
+* **Part B.** For the two `4q − t²` still open, what is known and how much ECM
+  has been spent on them?
+
+**Answers.**
+
+* **Part A.** One curve was completed: brainpool/brainpoolP512r1.  Its
+  `4q − t²` is `557 · p54 · p98`, squarefree and `≡ 3 (mod 4)`, so `f = 1` and
+  `D_K = −(4q − t²)` (155 digits, log2 |D_K| = 512.41).  The last split, of
+  the 152-digit cofactor into p54 and p98, was found by this project's driver
+  with GMP-ECM 7.0.5 at B1 = 11·10^6 (2026-11-06T14:01:46Z).
+* **Part B.** Two curves are still open:
+
+  | curve | open cofactor |
+  |:--|--:|
+  | nums/w-510-mont | C146 |
+  | nums/ed-512-mont | C151 |
+
+  Each has had all ECM tiers up to B1 = 3·10^6 and 1700 of the 4480 curves at
+  B1 = 11·10^6.  FactorDB lists both as composite with no known factor
+  (queried 2026-11-06 ≈16:45Z).
+
+With this batch, 41 of the 43 curves of the sweep have an exact `D_K`
+(the four NIST-sweep curves and batches 1 to 7).
+
+## Part A: method
+
+This is batch 6's process, by the same scripts, run as batch 6 ran them, with
+one data line added (below).
+
+1. **A seventh frozen snapshot** of the driver state,
+   [`provenance/driver_state.snapshot7.json`](provenance/driver_state.snapshot7.json),
+   was copied from the live `state.json` at about 16:40Z on 2026-11-06.  The
+   driver had stopped at its two-hour background limit at about 14:17Z and was
+   not running when the copy was made; it was relaunched afterwards.
+   * It has the same 43 composites as snapshot 6.  Every snapshot-6 entry that
+     was complete is unchanged.  The two still-open entries changed only in
+     their B1 = 11·10^6 curve counts (1500 → 1700).
+   * Exactly one entry went from open to complete: brainpool/brainpoolP512r1.
+   * The event log is
+     [`provenance/driver_events.snapshot7.log`](provenance/driver_events.snapshot7.log).
+     Its first 185 lines are byte-identical to batch 6's
+     `driver_events.snapshot6.log`.
+   * The driver file was byte-identical to batch 5's
+     [`provenance/driver.snapshot5.py`](../endosweep_dk_exact_batch5_20261023/provenance/driver.snapshot5.py),
+     so it is not copied again.
+2. **The survey record** of brainpoolP512r1 is copied verbatim from batch 6's
+   `provenance/survey_open.jsonl` into
+   [`provenance/survey_selected.jsonl`](provenance/survey_selected.jsonl); the
+   other two lines are [`provenance/survey_open.jsonl`](provenance/survey_open.jsonl).
+3. **Certificates.**  Batch 1's
+   [`make_factorizations.py`](../endosweep_dk_exact_20261016/make_factorizations.py)
+   writes [`factorizations.jsonl`](factorizations.jsonl), with
+   `--snapshot provenance/driver_state.snapshot7.json` and `--exclude-certified`
+   six times, once for each earlier batch.  `found_by` is replayed from the
+   snapshot's split log.  Every factor is proved prime by PARI `isprime`, and
+   the factors must multiply back to `4q − t²`.
+4. **Results.**  Batch 1's
+   [`build_dk_exact.py`](../endosweep_dk_exact_20261016/build_dk_exact.py)
+   writes [`dk_exact.json`](dk_exact.json) and [`dk_exact.md`](dk_exact.md).
+   The curve is reloaded from std-curves and verified again; `t` and
+   `N = 4q − t²` are recomputed from the curve parameters; `D_K` and `f` come
+   from `nist.exact_discriminant`.  std-curves records no `cm_disc` for
+   brainpoolP512r1, so `D_K` was not checked against literature.
+5. **The factor record.**
+   [`brainpoolP512r1.factors.json`](brainpoolP512r1.factors.json) was committed
+   and pushed (commit `752de68c3f`) right after the split was noticed and
+   verified, before any of the above.
+
+**The one script change.**  `make_factorizations.py` maps each ECM B1 to its
+driver tier and had no entry for B1 = 11·10^6 (tier 6): no earlier factor had
+been found at that B1.  One entry was added, `"11000000": 6`, exactly as batch 4
+added `"3000000": 5`.  Afterwards batches 1 to 6's `factorizations.jsonl` were
+regenerated by the commands in their READMEs and came out byte-identical
+(`git status` clean).
+
+## Part A: result
+
+| curve | p bits | 4q−t² digits | factorisation of 4q−t² | f | D_K | log2 \|D_K\| | least non-scalar degree | already public? |
+|:--|--:|--:|:--|--:|:--|--:|--:|:--|
+| brainpool/brainpoolP512r1 | 512 | 155 | 557 · p54 · p98 | 1 | −(155 digits) | 512.41 | 2^510.41 | (not checked against literature) |
+
+* For the recorded integers, `h = 1`, and `4q − t²` is squarefree with
+  `4q − t² ≡ 3 (mod 4)`.  Thus `D_K = −s = t² − 4q` and `f = 1`.
+  Identifying this discriminant with the endomorphism ring of the named curve
+  requires that `q` is its prime field size, `t` is its actual Frobenius
+  trace, and the listed large factors are prime.  Under those hypotheses and
+  the standard ordinary-curve order theorem, `End(E) = O_K`.  The Lean target
+  below does not prove that curve-model bridge or primality.
+* The gap `log2(4q) − log2 |D_K|` is 1.00 bit: here `t² ≈ 4q/2`, so
+  `4q − t²` is about half of `4q`.
+* `|D_K| ≥ 2^512`, and the abstract quadratic-order model has minimum
+  non-scalar norm at least 2^510 (Lean, below).
+* brainpoolP512r1 and brainpoolP512t1 are the same curve up to isomorphism
+  (`same_curve_as` in `dk_exact.json`), so the result applies to both.
+* [`dk_exact.json`](dk_exact.json) has every number in full.
+
+**Who found the factors** (from [`dk_exact.md`](dk_exact.md)):
+
+| factor | found by | where it is recorded |
+|:--|:--|:--|
+| 557 | PARI `factor(N, 2^32)` (survey, 10 s screen) | `provenance/survey_selected.jsonl` |
+| p54, p98 | GMP-ECM 7.0.5, B1 = 11·10^6 (driver tier 6), on the C152 | event log 2026-11-06T14:01:46Z; split log `ECM B1=11000000: 152-digit -> 54 x 98` |
+
+**Already public?**  FactorDB listed the C152 as composite with no known
+factor before this record (batch 6, 2026-11-06 ≈13:23Z, and again just before
+submission).  After the split the factors were submitted; see "FactorDB".
+Whether `D_K` itself is published anywhere (for example in the Brainpool
+curve-generation documents) was not checked.
+
+## Part A: provenance of the ECM split
+
+* **When.**  The driver resumed ECM at B1 = 11·10^6 on the three open
+  cofactors right after batch 6's CADO-NFS split (event log 13:01:45Z).  Its
+  progress lines show 1550, 1600 and 1650 curves on each.  At 14:01:46Z it
+  logged the raw factor and `found 54-digit factor of C152` for
+  brainpoolP512r1; the next progress line (14:03:05Z) lists only the other two,
+  at 1700.  So the p54 came from the 50-curve chunk after 1650, i.e. somewhere
+  in curves 1651 to 1700 at B1 = 11·10^6 (the driver does not log which curve).
+* **It was lucky.**  Against GMP-ECM's own table, the total effort spent on the
+  C152 was about 0.01 expected curves for a 55-digit factor (`ecm_effort.svg`
+  shows the same model for the two open cofactors).  The model gives no reason
+  to expect such a find at this effort; it happened.
+* **Not seen until later.**  The driver was stopped at its two-hour limit
+  at about 14:17Z and the split was noticed at 16:38Z.  The factors were then
+  verified (PARI `isprime` proof, `p54 · p98 = C152`) and committed at once.
+* **What is relied on for correctness:** nothing above.  Both primes are
+  proved here by PARI `isprime`, the certificate multiplies back to `4q − t²`
+  recomputed from the std-curves parameters, and the test checks the snapshot
+  entry against the committed factor record.
+
+## FactorDB
+
+[`provenance/factordb_20261106.json`](provenance/factordb_20261106.json) holds:
+
+* the API responses for the C152 and for the whole `4q − t²` just before
+  submission (status `C` and `CF`);
+* the submission at 16:44:52Z: one `POST https://factordb.com/report.php`
+  with two lines, `C152 = p54 * p98` and `4q−t² = 557 * p54 * p98`;
+* the API responses afterwards: both `FF` (fully factored), with the factors
+  above.  The C152's FactorDB id (1100000000558399329) is old, so FactorDB had
+  held the composite before batch 6 queried it.
+
+## Part B: the two composites still open
+
+[`open_composites.md`](open_composites.md) and
+[`open_composites.json`](open_composites.json) are written by
+[`open_composites.py`](open_composites.py), batch 6's script with the snapshot,
+log and FactorDB file names changed to this batch's.  No `D_K`, `f` or degree
+is stated for these two.
+
+| curve | 4q−t² digits | known primes (proved) | open cofactor | FactorDB (2026-11-06 ≈16:45Z) |
+|:--|--:|:--|--:|:--|
+| nums/w-510-mont | 155 | 247993621 | C146 | C (composite, no factor known) |
+| nums/ed-512-mont | 155 | 2² · 6857 | C151 | C |
+
+**ECM effort** (GMP-ECM 7.0.5, from snapshot 7): B1 = 11e3 to 3e6 complete
+(90, 240, 500, 900, 2400 curves), and 1700 of 4480 curves at B1 = 11e6 for
+each.  In units of GMP-ECM's expected curves: Σ ≈ 19.7 at 35 digits (a miss is
+essentially impossible), 3.12 at 40 digits (miss ≈ 4 %), 0.43 at 45 digits
+(miss ≈ 65 %), 0.05 at 50 digits.  `exp(−Σ)` is the usual idealised model, not
+a measured probability.  [`report/ecm_effort.svg`](report/ecm_effort.svg)
+draws it.
+
+**What is not feasible here.**  The C146 and C151 are beyond practical NFS on
+this 4-core machine (the C133 took about 20 hours of elapsed time, batch 6).
+The driver continues ECM at B1 = 11e6 toward 4480 curves; only more ECM, or an
+external result, is in reach.
+
+## Scope
+
+* Part A certifies integer facts about `t² − 4q`.  Conditional on the named
+  curve having prime field size `q` and actual Frobenius trace `t`, and on the
+  listed large factors being prime, standard ordinary-curve theory identifies
+  `End(E)` as an order of `K = Q(√D_K)` containing `Z[π]`; with `f = 1` that
+  order is `O_K`.  This curve-model identification is not Lean-certified here.
+* Part B records effort and status.  It makes no claim that any cofactor has no
+  small factor, beyond the approximate model above.
+* No attack, speed-up or weakness is claimed.  A large `|D_K|` rules out a
+  small-degree endomorphism and nothing else.
+* Primality is PARI `isprime`, which is a proof.  Lean proves 557 prime (it is
+  below 10^8) and proves neither p54 nor p98 prime.
+
+## Files
+
+| file | what |
+|:--|:--|
+| `brainpoolP512r1.factors.json` | the factor record committed right after the split was verified |
+| `factorizations.jsonl` | the complete factorisation certificate of brainpoolP512r1's `4q − t²`, in batch 1's schema |
+| `dk_exact.json`, `dk_exact.md` | the result for brainpoolP512r1, with who found each factor, and the 40 excluded curves |
+| `open_composites.py` | writes `open_composites.json` / `.md`, and with `--plot` the graph `report/ecm_effort.svg` |
+| `open_composites.json`, `open_composites.md` | the two open `4q − t²`: known primes, cofactor in full, ECM effort, coverage, FactorDB status |
+| `provenance/driver_state.snapshot7.json`, `driver_events.snapshot7.log` | the seventh frozen driver state and its event log |
+| `provenance/survey_selected.jsonl`, `survey_open.jsonl` | survey records of brainpoolP512r1 and of the two open curves |
+| `provenance/factordb_20261106.json` | FactorDB before and after the submission of the C152's factors |
+| `provenance/factordb_status_snapshot7.json` | FactorDB's responses for the two open cofactors |
+| `provenance/gmp_ecm_expected_curves.txt` | GMP-ECM 7.0.5's expected-curve table per B1 (copied from batch 6) |
+| `report/` | `report.typ`, `dk_exact.svg`, `ecm_effort.svg`, `report.pdf` |
+| `SHA256SUMS` | hashes of the data files |
+
+## Regenerating
+
+From the repository root, with `STD_CURVES_CHECKOUT` J08nY/std-curves at commit
+`77fe6e3585ca2c2225b59d7df24b7c775437276f`:
+
+```sh
+B1=research/endosweep_dk_exact_20261016
+B7=research/endosweep_dk_exact_batch7_20261106
+EX=""
+for d in endosweep_dk_exact_20261016 endosweep_dk_exact_batch2_20261016 endosweep_dk_exact_batch3_20261017 \
+         endosweep_dk_exact_batch4_20261022 endosweep_dk_exact_batch5_20261023 endosweep_dk_exact_batch6_20261105; do
+  EX="$EX --exclude-certified research/$d/factorizations.jsonl"
+done
+nice -n 10 python3 $B1/make_factorizations.py STD_CURVES_CHECKOUT research/endosweep_curves_20261006 \
+    --dir $B7 --snapshot provenance/driver_state.snapshot7.json $EX
+nice -n 10 python3 $B1/build_dk_exact.py STD_CURVES_CHECKOUT research/endosweep_curves_20261006 \
+    --dir $B7 $EX
+python3 $B1/lean/gen_dk_exact_lean.py . formal/CryptoResearch/Endosweep/DkExactBatch7.lean \
+    --dir $B7 --module DkExactBatch7 --target formal/targets/endosweep-dk-exact-batch7-discriminants.yaml
+nice -n 10 python3 $B7/open_composites.py STD_CURVES_CHECKOUT research/endosweep_curves_20261006
+python3 $B7/open_composites.py --plot
+python3 $B1/report/plot_dk.py $B7/report
+python3 -c "import typst; typst.compile('$B7/report/report.typ', \
+    output='$B7/report/report.pdf', root='$B7')"
+(cd $B7 && sha256sum -c SHA256SUMS)
+python3 -m pytest -q tests/test_endosweep_dk_exact_batch7.py
+```
+
+## Lean verification
+
+`formal/CryptoResearch/Endosweep/DkExactBatch7.lean` is generated by batch 1's
+`lean/gen_dk_exact_lean.py` with `--module DkExactBatch7`, unchanged.
+
+* **What it imports and reuses.** It imports `CryptoResearch.Endosweep.DkExact`
+  and reuses `DkCert`, `DkCert.Statement` and `DkCert.statement_of_holds`.  It
+  is core Lean, with no Mathlib.
+* **Its target** is `formal/targets/endosweep-dk-exact-batch7-discriminants.yaml`
+  (`TASK-20261106-966c20`).  The id occurs nowhere else in the tree at `HEAD`.
+  As in batch 6, the remote branch tips were not scanned for it; the id has
+  24 random bits.
+* **Build.**  Lean 4.35.0 (the pinned `formal/lean-toolchain`), compiling
+  `DkExactBatch7` with `lean -o` against the `Discriminant`,
+  `NistCertificates` and `DkExact` objects built for batch 6 from byte-identical
+  sources: it succeeds.  `#print axioms` for `DkExactBatch7.exact_discriminants`
+  and `brainpool_brainpoolP512r1_certificate` gives
+  `[propext, Classical.choice, Quot.sound]`.  A negative control with the last
+  digit of p54 changed fails with "`decide` proved that the proposition … is
+  false".
+
+The theorems:
+
+* `brainpool_brainpoolP512r1_holds` is closed arithmetic checked by
+  `decide +kernel`.
+* `brainpool_brainpoolP512r1_certificate : brainpool_brainpoolP512r1.Statement`
+  states the same propositions as batches 1 to 6: `q + 1 − t = h·n`;
+  `t² − 4q = D_K·f²`; the factorisation multiplies back; the squarefree part
+  and the construction of `D_K` from it; `IsDisc D_K` and the recorded degree;
+  `2^512 ≤ |D_K| < 2^513`, and the degree is at least `2^510`; if the listed
+  factors above 10^8 are prime, `D_K` is fundamental.
+* **`DkExactBatch7.exact_discriminants`** collects it, with `|D_K| ≥ 2^512` and
+  `min_nonscalar_degree(D_K) ≥ 2^510`.
+
+**The primality hypothesis.**  p54 and p98 are above 10^8, so they are in
+`largePrimes`; 557 is in `smallPrimes` and is checked in Lean.  Fundamentality
+of `D_K` is conditional on the two large primes.  PARI `isprime` proved them;
+Lean did not.
+
+**Not certified:**
+
+* the primality of `p` and `n`;
+* that `t` is the trace of Frobenius of brainpoolP512r1;
+* any elliptic-curve fact.
