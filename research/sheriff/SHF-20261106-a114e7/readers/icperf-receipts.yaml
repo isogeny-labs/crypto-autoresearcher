@@ -1,0 +1,481 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: "ICV - B4/B6/B7 ICPERF v2: receipts, controls, preregistration, re-derivation of 925/4 (EXP-ICPERF-284bc4, session RBS-ICPERF-8cdc92) and 2943/289567/28 (EXP-ICPERF-283a70, session RBS-ICPERF-67df7d); approvals DEC-20261029-ca33b3 / DEC-20261029-0e40f3, cap DEC-20261029-3bfa78, lane BATCH-38f344; correction CORR-20261106-243c4d"
+reader:
+  role: validator
+  model: claude-opus-5-5
+  independence: >-
+    Did not produce anything under audit. Judged from committed records, raw run rows, my own
+    scripts and my own reruns of crypto-autoresearcher tools. PR descriptions were not read.
+    Commit subjects were displayed by git log and are not used as evidence. The producer's
+    review files (validation-report.yaml, red-team-report.yaml, blind-rederivation.yaml),
+    analysis.md and reports were not read before the blind re-derivation was written and run
+    (see blind_rederivation.order). I wrote nothing outside readers/icperf-receipts.yaml and
+    scripts/readers/icperf-receipts/, plus a scratch clone under this session's scratchpad.
+    I made no commits. The orchestrating session committed case-directory WIP
+    (db4592579a, 22ad076fcd, 52b5005d17) on top of da442739db during this read; those commits touch only
+    research/sheriff/SHF-20261106-a114e7/ and problems/post-merge-checks-mask-pre-merge-state.md,
+    so no audited byte changed (git diff da442739db HEAD outside the case dir = that one problems file).
+target:
+  repo: crypto-autoresearcher
+  path: /home/user/crypto-autoresearcher
+  head: da442739db82a5f99d95e4ab9413cbe6fb326f0a
+  at_origin_main: true
+  binding_evidence: "sweep.json repos.crypto-autoresearcher.head == da442739db, at_origin_main true, canary.passed true (15 caught, 0 missed, 0 false positives); git rev-parse origin/main == da442739db"
+  merges_in_scope:
+    - "#2692 be79317981 (v2 design)"
+    - "#2709 862fea464c (cap raise DEC-20261029-3bfa78, lane BATCH-38f344; commit 658ed12a3b)"
+    - "#2710 a919d4d812 (approvals DEC-20261029-ca33b3, DEC-20261029-0e40f3; commit cb48b111d7)"
+    - "#2776 1a0afc68c2 (runs: af94114e9c RBS-ICPERF-8cdc92, cd912cacbb RBS-ICPERF-67df7d)"
+    - "#3044 38b8aac01e (audits f7eb8ae292, EV-ICPERF-08f6f9 / DEC-20261105-8a9984, EV-ICPERF-84ff45 / DEC-20261105-6e2616)"
+    - "#3058 edfc50a373 (CORR-20261106-243c4d, commit c9cdb19c25)"
+    - "#3059 351420eafc (tools/runbook.py interpreter parity)"
+
+sources_read:
+  crypto-autoresearcher_at_da442739db:
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - CLAUDE.md (auto-loaded)
+    - .claude/skills/sheriff/SKILL.md
+    - docs/sheriff.md (heading list; lines 239-463)
+    - docs/agent-runtime-core.md
+    - agents/validator.md
+    - AGENTS.md (heading list; lines 102-115, 282-306, 329-341)
+    - docs/agent-contract-topic-rules.md (lines 238-256, A/A gate rule)
+    - research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml (lines 1-80, format model only)
+    - research/sheriff/SHF-20261106-a114e7/sweep.json (keys, canary, target, repos only)
+    - experiments/EXP-ICPERF-284bc4/specification.yaml (all)
+    - experiments/EXP-ICPERF-283a70/specification.yaml (all)
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml (all); experiments/EXP-ICPERF-283a70/runbook.yaml (all, partly via yaml.safe_load)
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/trial-plan.json (header fields, trial ids/run ids/argv)
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/runs/*/raw-result.json (all 9, in full)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/{manifest.yaml, execution-receipt.json, launch.json, environment.json, command.txt, RESULTS.md}; the other 8 run dirs read by verify_receipts.py only
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/runbook-sessions/*/journal.jsonl (all entries; seq 0 and final summary in full)
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/runbook-lint.txt
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/implementation/run.py and check.py (imports, write/subprocess grep, run.py 284bc4 lines 95-125) - read only AFTER the blind re-derivation was run
+    - experiments/EXP-ICPERF-28{4bc4,3a70}/audits/AUD-*/audit.json (verdict, findings, compared rows; to compare with my rerun)
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ (lines 38-48) and data.json (lines 28-43, label grep) - to check CORR line references
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml (lines 20-29, claim_under_review, to check CORR (c))
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/blind-rederivation.yaml (grep 'draws' only, after my derivation; 3 lines displayed)
+    - experiments/EXP-ICPERF-e467a5/specification.yaml and experiments/EXP-ICPERF-b2f2d0/specification.yaml (grep for the preregistered integers; success/falsification/prediction fields via yaml)
+    - ledger/decisions/DEC-20261029-ca33b3.yaml (all)
+    - ledger/decisions/DEC-20261029-0e40f3.yaml (grep of hashes, probe result, lane text)
+    - ledger/decisions/DEC-20261029-3bfa78.yaml (grep of lines 1-160 for cap, lane, user direction)
+    - ledger/decisions/DEC-20261105-8a9984.yaml (lines 40-100; next_actions)
+    - ledger/decisions/DEC-20261105-6e2616.yaml (grep; lines 90-102 and 197-235)
+    - ledger/evidence/EV-ICPERF-08f6f9.yaml (all)
+    - ledger/evidence/EV-ICPERF-84ff45.yaml (lines 1-180)
+    - ledger/corrections/CORR-20261106-243c4d.yaml (all)
+    - ledger/proposals/IDEA-20261015-7a3c9e.yaml (lines 75-82)
+    - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml (max_concurrent lines, at 4 commits)
+    - coordination/design/TASK-20261029-f8b6eb/EXP-ICPERF-28{4bc4,3a70}/packet.json and preapproval-report.json
+    - coordination/design/TASK-20261029-0a9023/EXP-ICPERF-28{4bc4,3a70}/preapproval-report.json
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-38f344/dispatch_queue.json (via script) and claims/*.json (4 files)
+    - coordination/goals/GOAL-ICPERF-e6b6a4/lanes/* (via tools/goal_lanes.load_lanes; one git-show listing partially displayed)
+    - tools/experiment_preapproval.py (all); tools/runbook.py (lines 2111-2200, 2327-2420, 2478-2545 grep, 2520-2545, 2862-2960); tools/check_run_source_provenance.py (lines 1-95); tools/check_run_immutability.py (docstring); tools/newest_experiments.py (grep)
+    - "git diff 351420eafc^1 351420eafc -- tools/runbook.py (first 40 changed lines)"
+    - "git log / git show / git diff / git merge-base over the commits listed in scripts/readers/icperf-receipts/chronology.txt"
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read)
+  - research/sheriff/SHF-20261106-a114e7/readers/* other than this file (not read)
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than icperf-receipts/ (not read; one unscoped `git status --short` displayed the NAMES of files under scripts/readers/cryptanalysis/ and scripts/readers/lean/fidelity.out; no content opened)"
+  - research/sheriff/SHF-20261106-a114e7/sweep.md and checks/ (not read)
+  - prior sheriff cases' findings/readers/REPORT for ICPERF (not read)
+  - "producer review files for both experiments: review/TASK-*/validation-report.yaml, red-team-report.yaml, review-attestation.yaml, blind-rederivation.yaml (not read; one 3-line grep of the 283a70 blind file after my derivation)"
+  - experiments/EXP-ICPERF-28{4bc4,3a70}/analysis.md and reports/review-DEC-* (not read)
+  - PR descriptions (not read)
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: K1-bind
+    command: "git rev-parse HEAD origin/main; python3 read of sweep.json keys repos/canary"
+    output: inline (target block)
+    result: "pass. Audited bytes are da442739db == origin/main; canary passed."
+  - id: K2-blind-rederivation
+    command: "python3 -I scripts/readers/icperf-receipts/blind_rederive.py > blind_rederive.json"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/blind_rederive.json
+    result: "pass. Written from the two specifications' statement text only, before any producer code, report or review was opened. Every preregistered and control integer reproduced exactly (blind_rederivation below)."
+  - id: K3-raw-rows-vs-blind
+    command: "python3 -I scripts/readers/icperf-receipts/verify_receipts.py /home/user/crypto-autoresearcher > verify_receipts.json"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/verify_receipts.json
+    result: >-
+      pass. problems: []. 284bc4: primary 925/4, precomputation 525, all three cells equal my
+      exact-rational values (probes, bl_steps, ic/bl online ns, reduced ratio recomputed from the
+      row's own online times, enumerated BSGS 50/200/25); CON-1/CON-2 cells equal and
+      same_reduced_ratio true; CON-3 enumerated == formula == my enumeration; NEG-1 1855/8 price
+      and online, matches_preregistered false; NEG-2 185/42 at all cells, precomputation 10,
+      bl_steps 105/2 at r1000_a4 (non-integer, allowed outside the primary), matches_preregistered
+      false. 283a70: all 11 decision/descriptive fields of all 3 rows equal my sampler; internal
+      arithmetic (cv_sq_num = 64*Q - S^2, cv_sq_den = S^2, median_ratio = 64*median/S, band flags
+      from exact fractions) holds on every row.
+  - id: K4-receipt-digests
+    command: same script (R1, R2, R3, R6)
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/verify_receipts.json
+    result: >-
+      pass. 9 run dirs x 10 artifact_sha256 entries all match file bytes; no unlisted files;
+      journal unit digests (RESULTS.md, manifest.yaml, raw-result.json, receipt_sha256) match;
+      journal prev-links and seq contiguous (12 and 9 entries); manifest/launch/raw trial and run
+      ids agree; task ids TASK-20261029-65798b / -f370f1 and approved_by match the plans;
+      environment.json source_sha256 and specification_sha256 equal the plan's bindings; every
+      receipt status output_validated, returncode 0, check_returncode 0.
+  - id: K5-bound-bytes
+    command: "sha256sum of spec, trial-plan, run.py, check.py, runbook.yaml at HEAD; git show <c>:<path> | sha256sum at 5200f03900, 980ff5f076, af94114e9c"
+    output: inline
+    result: >-
+      pass. HEAD bytes equal the runbook binds and journal seq-0 binds (284bc4 spec 704b0f99...,
+      plan 7da0779a..., run.py ef13257e..., check.py ed49e349...; 283a70 spec 491106df...,
+      plan e8344b19..., run.py 53965863..., check.py 3168dc51...). runbook.yaml sha256 e5850bc6...
+      / 2d5aa752... equal journal runbook_sha256 and the approvals' runbook_sha256, and are
+      identical at both claim commits and at HEAD.
+  - id: K6-runbook-audit-rerun
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/runbook.py audit <session> --out research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/audit-<session> --auditor 'validator icperf-receipts reader claude-opus-5-5 (SHF-20261106-a114e7)'  (fresh random nonce, no --nonce)"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/audit-RBS-ICPERF-8cdc92/ and audit-RBS-ICPERF-67df7d/ (audit.json, replay/), plus *.stdout.json"
+    result: >-
+      RBS-ICPERF-67df7d: clean, nonce ffaaf906bd7066d4b7a5a0cd66f48ca7, 3 of 3 replayed and
+      matched, findings [], verify chain OK. RBS-ICPERF-8cdc92: FLAGGED (exit 1), nonce
+      b8b7ddb017f81fc008780492171fe3bb, 6 of 6 replayed, matched 0, mismatch 6; every finding is
+      'recorded null, replay null' - 39 pointer rows absent from both files (tools/runbook.py:2525
+      scores absent-on-both as mismatch; runbook.yaml:486 replay.compare is one union list for six
+      heterogeneous trials). No present pointer differs. Both audits now report environment_drift
+      3.11.17 -> 3.13.18 for every unit (interpreter_parity mismatch 6/6 and 3/3), i.e. the #3059
+      parity repair works; the absent-on-both defect is not repaired at HEAD. The population was
+      replayed in full in both sessions, so nonce sampling left no unit unreplayed.
+  - id: K7-full-document-replay
+    command: "verify_receipts.py R7 on my audit replays; python3 -I scripts/readers/icperf-receipts/replay_interpreters.py <repo> <scratchpad>/replays /usr/bin/python3.11 /usr/bin/python3.12 /usr/bin/python3.13"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/verify_receipts.json (R7) and replay_interpreters.json"
+    result: >-
+      pass. Whole raw-result.json documents equal the recorded ones on every key except
+      /interpreter and /elapsed_seconds: 9/9 audit replays (3.13.18) and 27/27 direct replays
+      (9 units x CPython 3.11.18, 3.12.3, 3.13.18; rc 0). The A/A comparison holds in substance;
+      the tool verdict for 8cdc92 does not (ICV-1). A replay bounds fabrication; it is not an
+      execution proof.
+  - id: K8-runbook-lint-verify
+    command: "python3 tools/runbook.py lint <runbook>; python3 tools/runbook.py verify <session> --rerun-checks"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/lint_head.txt, verify_head.txt"
+    result: "pass. LINT OK at the approved sha256 for both runbooks; VERIFY OK for both sessions (chain, binds, digests, unit re-evaluation, coverage, summary recomputation, check.py rerun)."
+  - id: K9-immutability
+    command: "git log (plain and --all) on runs/ and runbook-sessions/; git diff --name-only <first-commit> HEAD; python3 tools/check_run_immutability.py af94114e9c HEAD and cd912cacbb HEAD; git log --follow --format=%h -- <each file> (background, per file)"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/chronology.txt, provenance_checks.txt, immutability.txt"
+    result: >-
+      pass. Across all refs, runs/ and runbook-sessions/ of 284bc4 are touched only by af94114e9c
+      and those of 283a70 only by cd912cacbb; first-commit-to-HEAD diff is 0 paths (88 and 55
+      files); audits/ only by f7eb8ae292 (0-path diff to HEAD); check_run_immutability OK for both
+      ranges. Per-file `git log --follow` shows >1 commit for some files, every one traced to
+      copy detection, not edits: 62 empty step/log files are attributed to unrelated empty blobs
+      (45404af187...), 283a70 claim-step logs to the 284bc4 twins (C100/C060) or to the claim JSON
+      (C100), and audit replay files to the run files they copy (C086). The plain per-path history of
+      each of those files is a single add.
+  - id: K10-preregistration
+    command: "git log --follow on spec/runbook/plan/run.py/check.py; git merge-base --is-ancestor; yaml diff of v1 vs v2 criteria (chronology.txt)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/chronology.txt
+    result: >-
+      pass. Predictions 925/4 and 2943/289567/28 first committed in the v1 specs 0a2ac1737c
+      (2026-10-17T17:43Z) and 0fcf799458 (2026-10-17T18:25Z), unchanged since, sha256 equal to
+      the v2 input_bindings (dc1824e8..., 36e31929...). v2 success_criterion,
+      falsification_criterion and preregistered_prediction quantity/formula are byte-equal to v1.
+      v2 specs: 66ccdc9153 (2026-10-29T05:34Z) then cb48b111d7 (2026-10-29T15:14Z), which changes
+      only the header comment, status, frozen, approved_by and execution_authorized; runbooks and
+      plans changed only in bind hashes and the queue path (658ed12a3b). cb48b111d7 is an ancestor
+      of af94114e9c (2026-10-30T15:22Z) and cd912cacbb (15:26Z), the first raw-output commits.
+      No edit after data. N run = N planned (6/6, 3/3, run dirs equal the plans' run ids); every
+      unit valid; one attempt per step; no failed, timed-out or excluded unit to retain.
+      Disclosed: the v1 invalid units' outputs (same integers) were seen by the v2 designers
+      (prediction_provenance.data_seen); PRED-CONTROLS are in-sample calibration.
+  - id: K11-approval-probe-rerun
+    command: "scratch `git clone --shared --no-checkout` of crypto-autoresearcher into the session scratchpad, sparse to the needed paths, detached at 862fea464c with refs/remotes/origin/main := 862fea464c (scratch clone only); CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/experiment_preapproval.py --packet coordination/design/TASK-20261029-f8b6eb/<EXP>/packet.json"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/preapproval_rerun_EXP-ICPERF-284bc4.json, preapproval_rerun_EXP-ICPERF-283a70.json"
+    result: >-
+      pass. Both approvable: true, blockers [], exit 0, with prospective sha256 equal to the
+      archived reports and to the approvals' approved_bytes (284bc4 spec 704b0f99, plan 7da0779a,
+      queue 1150f935, handoff 3d7c2e9e; 283a70 spec 491106df, plan e8344b19, queue 1150f935,
+      handoff 6be4c826). Canonical handoff and queue bytes at cb48b111d7, a919d4d812, 9d13fcfde5
+      and 5200f03900 equal those prospective hashes. The earlier f8b6eb reports (approvable false,
+      3 blockers: goal concurrency, lane, lint not committed at source_ref) predate the #2709 merge,
+      as expected.
+  - id: K12-execution-state-gate
+    command: "same scratch clone detached at 9d13fcfde5 (session preflight commit): python3 tools/newest_experiments.py --experiment <EXP> --json"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/execution_state_at_9d13fcfde5.txt
+    result: "pass, scoped. execution_state ready for both, coverage required 6 / 3, output_validated 0, off_main_runs []. Limitation: sparse scratch checkout, so any input of newest_experiments outside the materialized paths was absent."
+  - id: K13-cap-lane
+    command: "scratch clone at 862fea464c, a919d4d812, 5200f03900, 980ff5f076: python3 scripts/readers/icperf-receipts/lanes_at_commits.py (tools/goal_lanes.load_lanes include_refs=False + goal.yaml cap + queue max_concurrent); claim/release JSON and git log of the BATCH-38f344 dir"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/lanes_at_commits.jsonl, chronology.txt"
+    result: >-
+      pass. Cap 3 (raised from 2 in 658ed12a3b, 2026-10-29T14:59Z, merged 862fea464c 15:02Z, before
+      the approval commit cb48b111d7 15:14Z and the runs on 2026-10-30). Open lanes at all four
+      commits {BATCH-38f344, BATCH-5bfb57, BATCH-8f7bd6} = 3 <= 3. Queue max_concurrent 1 held:
+      TASK-20261029-65798b claimed 15:16:47Z (expires 15:46:47 - ttl 30), released 15:19:32Z after
+      its last unit finished 15:19:31.477Z; TASK-20261029-f370f1 claimed 15:23:37Z, released 15:24:47Z;
+      windows disjoint. Not checked: the refs-scanning lane view (include_refs=True) that
+      DEC-20261029-3bfa78 also discusses.
+  - id: K14-source-provenance
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit python3 tools/check_run_source_provenance.py --experiment <EXP> --strict"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/provenance_checks.txt
+    result: "fail (schema), substance pass. 0 pinned / 9 unpinned, FAIL --strict: manifests carry no code.source.all_pinned and no code.dirty. Source is pinned in substance by run.environment.source_sha256 (run.py, check.py; both import only the standard library, check.py also yaml), equal to the plan and to HEAD. ICV-2."
+  - id: K15-corr-additive-accurate
+    command: "git diff --stat edfc50a373^1 edfc50a373; git diff --name-only edfc50a373 HEAD -- <targets>; awk/sed of the cited lines"
+    output: inline and chronology.txt
+    result: >-
+      pass. The #3058 merge adds exactly two files (the CORR and session receipt
+      SR-20261106-e32b11); no byte of runbook.yaml, report.typ, data.json, EV-ICPERF-08f6f9 or
+      DEC-20261105-8a9984 changed then or since. Every cited location is right: runbook.yaml
+      label lines 515/524/533/541/549 (five metrics) and 557 (elapsed_seconds); report.typ rows
+      41, 43-46 and 42; data.json label lines 32, 52, 62, 73, 84 and 42; IDEA-20261015-7a3c9e
+      lines 77-81 with the 370*2100/(2.1*1600) = 231 vs 235 sentence at 80 and 'Consistent, not
+      confirmed...' at 81; review-plan claim_under_review lines 21-28 with the quoted phrase at 28.
+      (a)-(c) match DEC-20261105-8a9984 rulings.labelling_ruling. 370*2100/(2.1*1600) = 231.25 = 925/4 exactly.
+  - id: K16-resources
+    command: "read of manifest timing and execution receipts"
+    output: inline
+    result: "partial. wall_seconds and started/finished recorded per unit (all < 1 s; budget 60 s). No peak-memory record in any manifest or receipt (budget 1 GB advisory, plan memory_mb 256). Not material for exact integer arithmetic; reported, not a finding."
+
+blind_rederivation:
+  order: >-
+    Read the two frozen specifications (statement, inputs, controls), wrote and ran
+    blind_rederive.py, then opened raw-result.json rows. Producer run.py/check.py were opened only
+    afterwards (imports, write paths, the BSGS enumeration), producer reviews never.
+  what_925_4_counts: >-
+    A reduced dimensionless ratio, not a count of anything observed: c_probe*c_state*bl_den /
+    (bl_num*c_step^2) = 370*2100*10/(21*40^2) = 7770000/33600 = 925/4 = 231.25. Equivalently, at
+    each cell, (IC online time = r/(A*states) probes x 370 ns) / (BL online time = 21*r/(10*A*525)
+    steps x 40 ns), where 525 = states*c_state/c_step is the BL precomputation step budget that
+    equals the IC table-build time. r, A and states cancel identically, so every cell gives 925/4.
+  what_2943_289567_28_count: >-
+    For 64 chained draws of a xorshift32 (left 13, right 17, left 5, all mod 2^32) started at
+    seed 20261017, each draw = number of step-then-test iterations until the state is 0 mod 50
+    (support {1,2,...}, seed never tested): the sum of the 64 draws (2943), the sum of their
+    squares (289567), and the 32nd smallest draw (28), which equals the 33rd (no median split).
+  results:
+    "284bc4 primary": "price 925/4; precomputation 525; cells (1000,2) probes 50, bl 2, 18500/80 ns; (4000,2) 200, 8, 74000/320; (1000,4) 25, 1, 9250/40; every ratio 925/4; all integer; enumerated BSGS max 50/200/25"
+    "284bc4 NEG-1 c_probe 371": "price and every cell 1855/8 (ic 18550, 74200, 9275 ns)"
+    "284bc4 NEG-2 precomputation 10": "every cell 185/42 (bl_steps 105, 420, 105/2; bl ns 4200, 16800, 2100); price ratio unchanged 925/4, so ratios_agree false"
+    "283a70 primary": "2943 / 289567 / 28, no split; cv_sq 9871039/8661249 in [81/100,121/100]; median ratio 1792/2943 in [3/5,4/5]; first draws 7, 22, 69, 52, 26, 41, 29, 16"
+    "283a70 CTL-1 (1,2,14)": "2938 / 290138 / 29, no split, exact_match false, both bands true"
+    "283a70 CTL-2 support 0": "2879 / 283745 / 27, no split, exact_match false, both bands true"
+  comparison_with_recorded: "exact match on every recorded field of all 9 raw rows (verify_receipts.json R4/R5; problems [])."
+  limitation: "283a70 raw rows do not persist the 64 draws (ICV-3), so the aggregates are checked against an independent regeneration from the seed, not recomputed from stored draws."
+
+proves_too_much_control:
+  284bc4: >-
+    Inputs whose conclusion '925/4' is known false must fail, and do: c_probe 371 -> 1855/8;
+    c_state 2101 -> 77737/336; c_step 41 -> 370000/1681; BL 21/11 -> 2035/8; precomputation 10 ->
+    185/42 online. But the identity proves too much in r, A and states: states 11 still gives
+    925/4 at every cell and ratios_agree true (caught only by the precomputation_steps 525
+    assertion and the primary exactness rule: probes 500/11). So ratios_agree, CON-1 and CON-2
+    cannot fail except through a code defect or an inexact division, and CON-3 cannot fail for a
+    correct enumeration because max lookups = m/states exactly when states divides m. The spec
+    says this itself (online_time_model.cancellation; controls labelled arithmetic_consistency).
+    Only NEG-1/NEG-2 discriminate, and they discriminate inputs, not any measured quantity.
+  283a70: >-
+    Wrong samplers must fail the exact match, and do: seed 20261018 -> 2779/228939/26; triple
+    (5,17,13) -> 3270/464534/33 with a median split; p_den 49 -> 3550/354018/45 with a split;
+    plus the declared CTL-1 and CTL-2. The bands prove too much: seed 20261018 passes the CV band,
+    and CTL-1/CTL-2 pass both bands (spec DESC-1/DESC-2 labels them descriptive).
+  output: research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/blind_rederive.json
+
+controls_inventory:
+  - {id: CON-1, exp: 284bc4, kind: arithmetic_consistency, declared: pass, raw_rows: "RUN-ICPERF-2d715d both cells 925/4, same_reduced_ratio true, matches_preregistered true", visible_in_raw: true, can_fail: "only via code defect or inexact division (A cancels)"}
+  - {id: CON-2, exp: 284bc4, kind: arithmetic_consistency, declared: pass, raw_rows: "RUN-ICPERF-2c627f both cells 925/4, same_reduced_ratio true", visible_in_raw: true, can_fail: "only via code defect or inexact division (r cancels)"}
+  - {id: CON-3, exp: 284bc4, kind: arithmetic_consistency, declared: pass, raw_rows: "RUN-ICPERF-779d41 enumerated 50/200/25 == formula, all_match true", visible_in_raw: true, can_fail: "only via an enumeration bug (max = m/states by theorem here)"}
+  - {id: NEG-1, exp: 284bc4, kind: negative, declared: "must not match", raw_rows: "RUN-ICPERF-30596e 1855/8 price and online, matches_preregistered false", visible_in_raw: true, can_fail: yes}
+  - {id: NEG-2, exp: 284bc4, kind: negative, declared: "must not match", raw_rows: "RUN-ICPERF-850008 online 185/42 at 3 cells, precomputation 10, matches_preregistered false (no price-ratio field; by formula 925/4)", visible_in_raw: true, can_fail: yes}
+  - {id: CTL-1, exp: 283a70, kind: negative, declared: "exact_match false with 2938/290138/29", raw_rows: "RUN-ICPERF-0ef41e as declared", visible_in_raw: true, can_fail: yes}
+  - {id: CTL-2, exp: 283a70, kind: negative, declared: "exact_match false with 2879/283745/27", raw_rows: "RUN-ICPERF-74e9a2 as declared", visible_in_raw: true, can_fail: "yes, but it is an affine image of the primary (S-64, Q-2S+64, median-1)"}
+  - {id: DESC-1/DESC-2, exp: 283a70, kind: descriptive_band, declared: "descriptive; inputs 9871039/8661249 and 1792/2943 asserted", raw_rows: "primary as declared; both flags true on all 3 arms", visible_in_raw: true, can_fail: "no (descriptive by declaration)"}
+  - {id: CMP-AA, exp: both, kind: aa, declared: "tools/runbook.py audit exact replay, noise floor zero", raw_rows: "67df7d: tool clean 3/3; 8cdc92: tool flagged 0/6 (absent-on-both), whole documents equal 6/6", visible_in_raw: true, can_fail: "only via nondeterminism or fabrication"}
+  positive_controls: "None declared in either spec (no planted inexact-division case for the 284bc4 exactness rule; no planted known-good alternative sampler). Not a defect of the record; noted."
+
+prior_finding_verdicts:
+  - id: "PARITY-1 (producer item, DEC-20261105-6e2616 NA-1(a); EV-ICPERF-08f6f9 O5, EV-ICPERF-84ff45 O4)"
+    verdict: fixed
+    why: "My re-audits at HEAD report environment_drift 3.11.17 -> 3.13.18 and interpreter_parity mismatch 6/6 and 3/3, via the RECORDED_PYTHON_SOURCES added in #3059. The committed audits AUD-20261105T164527Z-d5036c and AUD-20261105T164530Z-b85ca9 keep environment_drift [] as recorded, which is correct for write-once records."
+  - id: "absent-on-both replay mismatch (producer item, DEC-20261105-6e2616 NA-1(b); DEC-20261105-8a9984 NA-3; EV-ICPERF-08f6f9 PD-2)"
+    verdict: not_fixed
+    why: "tools/runbook.py:2525 still scores a pointer absent on both sides as mismatch; my HEAD re-audit of RBS-ICPERF-8cdc92 is flagged, matched 0 of 6, with the same 39 null/null rows. No per-trial compare pointers exist. ICV-1."
+  - id: "sheriff prior findings for this joint"
+    verdict: not_covered
+    why: "Blind from prior.md by brief rule 4; any prior sheriff finding on ICPERF is for the composing session to map onto ICV-1..ICV-5."
+
+findings:
+  - id: ICV-1
+    beat: B7
+    severity: minor
+    claim_ids: [ICV-C2, ICV-C11]
+    what: >-
+      The preregistered A/A instrument (CMP-AA: 'tools/runbook.py audit compares the replay
+      pointers exactly') still returns a failing verdict for RBS-ICPERF-8cdc92 at HEAD: flagged,
+      matched 0 of 6, exit 1, all 39 problem rows 'recorded null, replay null'. The runbook's
+      single replay.compare list unions pointers of six heterogeneous trials, and the tool scores
+      absent-on-both as mismatch. In substance the A/A holds (whole documents equal on 6/6 audit
+      replays and 18/18 direct replays under 3.11.18/3.12.3/3.13.18), and the producer discloses the
+      flag in EV-ICPERF-08f6f9 (title, O4, PD-2) and DEC-20261105-8a9984 rulings.validity. But the
+      A/A reading rests on a post-hoc row classification plus independent comparisons, not on the
+      declared instrument, and the tool fix ordered as DEC-20261105-6e2616 NA-1(b) is not on main
+      (#3059 fixed only (a)). Minor because CMP-AA is not part of the decisive test and no value
+      differs.
+    evidence:
+      - "tools/runbook.py:2525"
+      - "experiments/EXP-ICPERF-284bc4/runbook.yaml:486"
+      - "experiments/EXP-ICPERF-284bc4/specification.yaml:188"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/audit-RBS-ICPERF-8cdc92/audit.json"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/replay_interpreters.json"
+      - "ledger/decisions/DEC-20261105-6e2616.yaml:197"
+    fix: "Land DEC-20261105-6e2616 NA-1(b) (absent-on-both = not_applicable; per-trial compare pointers) with a regression test on the 8cdc92 bytes, then file a fresh audit of RBS-ICPERF-8cdc92 that reports clean. Until then, any citation keeps the flagged-verdict disclosure."
+  - id: ICV-2
+    beat: B7
+    severity: minor
+    claim_ids: [ICV-C1, ICV-C8]
+    what: >-
+      None of the 9 run manifests records code.dirty or code.source (all_pinned), so
+      tools/check_run_source_provenance.py --strict reports 0 pinned / 9 unpinned and fails. The
+      source is pinned in substance (run.environment.source_sha256 for run.py and check.py, which
+      import only the standard library and yaml, equals the plan bindings and HEAD), and a clean
+      tracked tree is recorded only once per session at preflight (journal seq 0, tracked_dirty
+      false at 9d13fcfde5 / af94114e9c), not at each unit's launch commit (5200f03900 / 980ff5f076).
+    evidence:
+      - "experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/manifest.yaml:12"
+      - "experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/journal.jsonl:1"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/provenance_checks.txt"
+    fix: "Have run.py (or the supervisor) write code.dirty and code.source.files/all_pinned in the manifest, or teach check_run_source_provenance.py to accept run.environment.source_sha256 together with a recorded clean-tree flag; future units only, these manifests stay as recorded."
+  - id: ICV-3
+    beat: B6
+    severity: minor
+    claim_ids: [ICV-C5]
+    what: >-
+      EXP-ICPERF-283a70 raw-result.json stores only aggregates (sum, sum of squares, median,
+      band inputs), not the 64 draws, so the headline integers cannot be recomputed from raw
+      rows. They were checked here by an independent regeneration from the seed and the
+      specification prose (exact match), and the internal arithmetic of every row holds. Disclosed
+      in EV-ICPERF-84ff45 boundaries.
+    evidence:
+      - "experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json:30"
+      - "ledger/evidence/EV-ICPERF-84ff45.yaml:159"
+    fix: "Persist per-draw (per-target) counts in any successor, as DEC-20261105-6e2616 NA-2 already asks for stage 1."
+  - id: ICV-4
+    beat: B8
+    severity: minor
+    claim_ids: [ICV-C10]
+    what: >-
+      CORR-20261106-243c4d corrects 'measured' to 'computed' only for EXP-ICPERF-284bc4. The same
+      mislabel exists in EXP-ICPERF-283a70: runbook.yaml labels sample_sum, sum_squares, median,
+      cv_in_band, median_ratio_in_band and exact_match 'measured', though each is computed by a
+      deterministic seeded program. DEC-20261105-6e2616 notes only the report's band-flag labels and
+      orders no correction. This is a coverage gap of the correction programme, not an inaccuracy in
+      CORR-20261106-243c4d.
+    evidence:
+      - "experiments/EXP-ICPERF-283a70/runbook.yaml:286"
+      - "ledger/decisions/DEC-20261105-6e2616.yaml:175"
+      - "ledger/corrections/CORR-20261106-243c4d.yaml:20"
+    fix: "An additive correction for EXP-ICPERF-283a70 labels (computed, not measured; only elapsed_seconds measured), mirroring CORR-20261106-243c4d."
+  - id: ICV-5
+    beat: B6
+    severity: minor
+    claim_ids: [ICV-C1, ICV-C3]
+    what: >-
+      Most of the 284bc4 control set cannot fail by construction. ratios_agree, CON-1 and CON-2 are
+      invariant in r, A and states for every price vector (my states=11 input still gives 925/4),
+      and CON-3's worst-case enumeration equals m/states by theorem. Only NEG-1 and NEG-2 can move
+      the outcome, and neither study declares a positive control (e.g. a planted inexact division
+      for the exactness rule). The spec labels all of this honestly (cancellation;
+      arithmetic_consistency), so no record is wrong. But '925/4 at three cells' plus 'consistency
+      controls pass' certify only that run.py evaluates the stated closed form correctly. Inference
+      beyond that is the red-team joint.
+    evidence:
+      - "experiments/EXP-ICPERF-284bc4/specification.yaml:83"
+      - "experiments/EXP-ICPERF-284bc4/specification.yaml:101"
+      - "experiments/EXP-ICPERF-284bc4/specification.yaml:121"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/icperf-receipts/blind_rederive.json"
+    fix: "No repair to these records. Any successor that wants a discriminating control should adopt the producer's own RC-3/RC-4 (DEC-20261105-8a9984 NA-4)."
+
+claims:
+  - id: ICV-C1
+    text: "run.py sha256 ef13257e... evaluates the stated closed-form online-time model in exact rationals and returns 925/4 for the price formula and for each cell's online ratio and the preregistered per-cell integers; its output responds to a planted change of c_probe (1855/8) and of the precomputation model (185/42)."
+    location: "ledger/evidence/EV-ICPERF-08f6f9.yaml:131 (narrowest_supported_statement); ledger/decisions/DEC-20261105-8a9984.yaml scoped_claim"
+    suggested_verdict: upheld_scoped
+    scoped_to: "A computed identity of the stated closed form at the frozen assumed inputs; receipts admissible; no measurement. Interpretation and cost reading not covered by this joint."
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: not_covered, B6: pass, B7: pass, B8: pass}
+  - id: ICV-C2
+    text: "audit flag is replay coverage, not a value mismatch"
+    location: "ledger/evidence/EV-ICPERF-08f6f9.yaml:8 (title); O4 line 101; DEC-20261105-8a9984 rulings.validity"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: ICV-C3
+    text: "Valid run set (6 of 6 units, J1 holds), out-of-sample preregistered integers met exactly, both planted negatives moved the ratio, and an implementation written blind from the statement reproduces every value."
+    location: "ledger/evidence/EV-ICPERF-08f6f9.yaml:43 (strength_justification)"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: ICV-C4
+    text: "Recorded interpreter CPython 3.11.17 ...; audit replay CPython 3.13.18; audit environment_drift [] is a false negative ... Validator replays under 3.11.18, 3.12.3, 3.13.18: 18 of 18 identical, check.py rc 0."
+    location: "ledger/evidence/EV-ICPERF-08f6f9.yaml:109 (O5)"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ICV-C5
+    text: "exact integers 2943/289567/28 reproduced and blind-rederived from the specification prose; both wrong samplers fail the exact match; bands non-discriminating"
+    location: "ledger/evidence/EV-ICPERF-84ff45.yaml:8 (title); narrowest_supported_statement line 137"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: not_covered, B6: pass, B7: pass, B8: pass}
+  - id: ICV-C6
+    text: "Audit AUD-20261105T164530Z-b85ca9 verdict clean, 3 of 3 replayed, matched 3, mismatch 0, 11 integer/boolean pointers each, no tolerance."
+    location: "ledger/evidence/EV-ICPERF-84ff45.yaml:101 (O4)"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: ICV-C7
+    text: "the preapproval probe reported approvable true at source_ref origin/main (862fea464cb0e28e4a1a20363a053b45052df7a8): approvable true, blockers []"
+    location: "ledger/decisions/DEC-20261029-ca33b3.yaml approvability; ledger/decisions/DEC-20261029-0e40f3.yaml:69-70"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: n/a}
+  - id: ICV-C8
+    text: "approved_bytes: specification, trial_plan, runbook, runbook_lint, implementation, executor_handoff and queue sha256 as listed; Runs only after a committed decision names this file's sha256 (runbook_sha256)"
+    location: "ledger/decisions/DEC-20261029-ca33b3.yaml approved_bytes; DEC-20261029-0e40f3.yaml:97-131; experiments/EXP-ICPERF-28*/runbook.yaml:2"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: n/a}
+  - id: ICV-C9
+    text: "raise GOAL-ICPERF-e6b6a4 campaign_budget.max_concurrent from 2 to 3 ... opens one shared lane, BATCH-38f344 ... One new lane makes 3, which is not greater than 3. ... The shared queue's max_concurrent 1 serialises this task with TASK-20261029-f370f1."
+    location: "ledger/decisions/DEC-20261029-3bfa78.yaml:1-3, 110-116; ledger/decisions/DEC-20261029-ca33b3.yaml dispatch.gate"
+    suggested_verdict: upheld_scoped
+    scoped_to: "Working-tree lane view (include_refs=False) at 862fea464c, a919d4d812, 5200f03900, 980ff5f076; the refs-scanning view the decision also mentions was not checked."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: n/a}
+  - id: ICV-C10
+    text: "It is additive: it annotates the frozen runbook.yaml, the run report (report.typ, data.json), EV-ICPERF-08f6f9 and DEC-20261105-8a9984, and changes no byte of any of them. It changes no status, value or decision."
+    location: "ledger/corrections/CORR-20261106-243c4d.yaml:4-6, 84-92"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ICV-C11
+    text: "Valid run set. The audit flag is a replay-coverage defect ... not a value mismatch; ... Session RBS-ICPERF-8cdc92 is citable, scoped ... any citation discloses the flagged verdict (matched 0 of 6) ... The audit stays flagged as recorded."
+    location: "ledger/decisions/DEC-20261105-8a9984.yaml rulings.validity (lines 70-79)"
+    suggested_verdict: upheld_scoped
+    scoped_to: "Citable with the flagged-verdict disclosure; the A/A instrument itself still fails at HEAD (ICV-1), so the replay assurance rests on independent full-document comparisons."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: ICV-C12
+    text: "6/6 units valid; primary RUN-ICPERF-8e3acd gives reduced price ratio 925/4 ...; consistency controls (r-change, A-change, BSGS enumeration) pass; negative controls (c_probe 371, precomputation model changed) fail the preregistered match as designed."
+    location: "experiments/EXP-ICPERF-284bc4/review/review-plan.yaml:21-28 (producer claim of PR #2776 as quoted)"
+    suggested_verdict: upheld_scoped
+    scoped_to: "Receipts and control outcomes are as stated; the consistency controls cannot fail by construction (ICV-5), and 'no latency effect, no n=83 speedup' reads 'makes no latency or n=83 statement' per CORR-20261106-243c4d (c)."
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: not_covered, B6: pass, B7: pass, B8: pass}
+  - id: ICV-C13
+    text: "Frozen under DEC-20261029-ca33b3 / DEC-20261029-0e40f3. No run, outcome, or conclusion is in this file. The success and falsification criteria below are version 1's, verbatim."
+    location: "experiments/EXP-ICPERF-284bc4/specification.yaml:3,20-21; experiments/EXP-ICPERF-283a70/specification.yaml:3,19-20"
+    suggested_verdict: upheld
+    scoped_to: null
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: n/a}
+
+not_covered:
+  - what: "Execution proof of any unit (B2)"
+    why: "Replays, hashes and journal chains bound fabrication but are not execution proofs; docs/execution-proof-chain.md milestones are open (journal summary execution_proofs.chain incomplete)."
+    command: "none available"
+  - what: "Refs-scanning lane census (include_refs=True) at approval time"
+    why: "Not run; the working-tree view is the one experiment_preapproval.py uses."
+    command: "python3 -c 'import sys;sys.path.insert(0,\"tools\");from goal_lanes import load_lanes;from pathlib import Path;print(load_lanes(Path(\".\"),\"GOAL-ICPERF-e6b6a4\",include_refs=True))' in a checkout at 862fea464c with the 2026-10-29 remote refs"
+  - what: "Interpretation, cost model, hypothesis-status moves to supported (B5)"
+    why: "Red-team joint; out of scope for this reader."
+    command: "n/a"
+  - what: "Peak memory per unit"
+    why: "No memory record exists in any manifest or receipt."
+    command: "a resource-recording rerun is a new trial, which a reader may not run"
