@@ -66,7 +66,9 @@
  "tasks_state_revisions": [
   {"at": "2026-11-06T04:13:16Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-0c8aee", "from_state": "queued", "to_state": "completed", "reason": "Ledger archive committed alone at 7337c8d2b55a (parent c3270969a1f4) with exactly the fifteen expected paths after LA-1 to LA-10. Zero runs.", "paths_or_records_added": []},
   {"at": "2026-11-06T06:03:35Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-4c4831", "from_state": "queued", "to_state": "completed", "reason": "Executor session completed FX-1..FX-15; FX-16 stopped per its budget rule (scope finding SF-1, not an FX-1 finding); released at 6cae473836 with nine non-empty digests. Zero experiment runs.", "paths_or_records_added": []},
-  {"at": "2026-11-06T06:03:35Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-5c1258", "from_state": "queued", "to_state": "completed", "reason": "Snapshot archive committed alone at 9a0b5955146a (parent 82885e8a6efd) with exactly the ten expected paths after SA-1 to SA-5; start-up suite passed in full on a byte-identical extract. Zero runs.", "paths_or_records_added": []}
+  {"at": "2026-11-06T06:03:35Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-5c1258", "from_state": "queued", "to_state": "completed", "reason": "Snapshot archive committed alone at 9a0b5955146a (parent 82885e8a6efd) with exactly the ten expected paths after SA-1 to SA-5; start-up suite passed in full on a byte-identical extract. Zero runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T18:23:05Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-7c2b01", "from_state": "queued", "to_state": "completed", "reason": "Fresh validator re-review released at bec59d2203 with 2 non-empty digests. B8 failed: 5 must-fix closed, 2 open, 1 new blocking, 6 new non-blocking. Zero runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T18:23:05Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-649ebb", "from_state": "queued", "to_state": "completed", "reason": "Snapshot archive committed alone at 573356f303ab (parent b6fbbe3ff9b1) with exactly the three expected paths after SA-1 to SA-3. Zero runs.", "paths_or_records_added": []}
  ],
  "tasks": [
   {
@@ -397,7 +399,7 @@
    "title": "Validator (review-adversarial, fresh independent session): focused re-review of the EXP-MONO-1a1be2 fixes at the 5c1258 commit, RR-1 to RR-8; M5 kill confirmed by the reviewer; zero experiment cells",
    "role": "validator",
    "subagent_binding": "validator",
-   "state": "queued",
+   "state": "completed",
    "priority": 88,
    "review_required": false,
    "review_required_note": "FALSE. This IS the independent re-review of the instrument; it changes no claim and has no review_plan.",
@@ -464,7 +466,7 @@
    "id": "TASK-20261106-649ebb",
    "title": "Snapshot archive of the EXP-MONO-1a1be2 fix re-review (TASK-20261106-7c2b01), alone among commit tasks",
    "role": "coordinator",
-   "state": "queued",
+   "state": "completed",
    "priority": 87,
    "review_required": false,
    "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
@@ -485,9 +487,13 @@
      "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/review_attestation.yaml"
     ],
     "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
-    "commit_sha": null,
-    "parent_sha": null,
-    "path_sha256": {}
+    "commit_sha": "573356f303ab4a98d1fa65f477739b89495a5715",
+    "parent_sha": "b6fbbe3ff9b108c50bfc8ce58bdab340fc664647",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-649ebb/snapshot-receipt.json": "6e70bab8be1aaa55388cf239ddea029bc0dfae0ff54e6ce401db129fe464b3f7",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md": "52198231b3b19c589d69dffa156bd660a726cf0dc238b6a1fb9d2db0c1872e1a",
+     "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/review_attestation.yaml": "50e14bb55bf9c47378a938b8fdcd0e73d80d4202c71d071b55fb3cf3c55c2c21"
+    }
    },
    "handoff_record": "ledger/handoffs/TASK-20261106-649ebb.yaml",
    "handoff": {
