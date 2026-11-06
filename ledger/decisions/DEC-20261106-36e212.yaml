@@ -1,0 +1,675 @@
+# DEC-20261106-36e212: Coordinator design rulings for EXP-SEMBIN-cb5e25
+# (H-SEMBIN-e5b2db, GOAL-SEMBIN-fcb7a2), /design-experiment steps 5-8, and the
+# lane disposition that makes a lawful lane for BATCH-501c2f possible without
+# raising max_concurrent. NOTHING IS APPROVED. EXP-SEMBIN-cb5e25 stays
+# review_required with approved_by null, H-SEMBIN-e5b2db stays specified, and
+# the reserved approval id DEC-20261106-e7576f is NOT written. No run is
+# launched and no immutable record is edited. Every ruling below is narrow and
+# says what it changes and what it does not.
+coordinator_decision:
+  id: DEC-20261106-36e212
+  id_provenance: >-
+    Pre-allocated by the top-level session with tools/allocate_id.py and
+    confirmed free with --check, together with BATCH-501c2f,
+    TASK-20261106-9da2e3, TASK-20261106-c5d001, DEC-20261106-c897df and
+    DEC-20261106-e7576f. The Coordinator minted no id. DEC-20261106-c897df was
+    reserved for a separate lane ruling; the lane ruling is carried here
+    instead and DEC-20261106-c897df stays unwritten.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent, no shell, branch claude/sembin-true-dF-search. The
+    experiment-director's compile report was relayed by the top-level session
+    as a summary of its impediments; the Coordinator did not see the report
+    itself. The Coordinator read by tool the specification (budget, stopping
+    rules, certificates, execution_plan, readiness), protocol.json (execution,
+    analysis_plan, freeze), the draft trial-plan.json header and first two
+    trials, the draft runbook.yaml (binds, spec_bindings, steps S01 to S07,
+    metrics head), the draft task card, code/adapter.py and check_trial.py
+    headers, code/cells.py, code/plan.py, tools/goal_lanes.py,
+    tools/experiment_preapproval.py, tools/experiment_execution.py
+    (admission, run_process), tools/research_dispatch.py (handoff budget
+    validation), tools/artifact_store.py, tools/experiment_protocol.py
+    (freeze and lint), the goal head, both open lane files, both open
+    checkpoints, both open queues, the BATCH-e0a0c1 ledger receipt, and the
+    ICPERF v2 approval packet used as the template. It ran nothing and
+    computed no hash.
+  goal_id: GOAL-SEMBIN-fcb7a2
+  mode: design_rulings_and_lane_disposition
+  decision: revise
+  decision_label: >-
+    Thirteen narrow rulings (RUL-1 to RUL-13) for EXP-SEMBIN-cb5e25, the first
+    of them a lane disposition. BATCH-e0a0c1, whose own committed closing checkpoint and
+    ledger archive say it is finished, is to be closed with
+    tools/goal_lanes.py close-lane. That leaves BATCH-cbb416 and the new
+    BATCH-501c2f open, which is exactly the existing cap of 2. The cap is not
+    raised. The experiment stays review_required.
+  context: >-
+    EXP-SEMBIN-cb5e25 has an implemented and unit-tested instrument (code/,
+    adapter.py, check_trial.py, 76 tests) and an independent certificate
+    checker (review/checker, cross-checked 7 of 7 against producer ann
+    certificates). The experiment-director produced a DRAFT runbook and trial
+    plan with eight impediments (I-4 to I-8, A-1 to A-4 as relayed). The draft
+    plan is not approvable: queue, task_id and approved_by are null, the
+    protocol is not frozen, and the argv carry an unfrozen placeholder hash.
+    GOAL-SEMBIN-fcb7a2 has max_concurrent 2 and two lanes open from September.
+
+  verified_facts:
+    - id: VF-1
+      fact: >-
+        ledger/goals/GOAL-SEMBIN-fcb7a2/goal.yaml campaign_budget.max_concurrent
+        is 2. Its max_concurrent_basis (lines 192-204) is machine headroom
+        written when EXP-SEMBIN-4fa22c's peak resident set was 1.471 GB: "this
+        host has 4 CPUs and roughly 6 GB free ... two is what fits without
+        degrading".
+    - id: VF-2
+      fact: >-
+        coordination/goals/GOAL-SEMBIN-fcb7a2/lanes/ holds exactly two lane
+        files in the working tree, BATCH-cbb416.lane.json and
+        BATCH-e0a0c1.lane.json, and no .closed.json. Two lanes are open.
+    - id: VF-3
+      fact: >-
+        tools/experiment_preapproval.py assess() (lines 326-350) loads lanes
+        with include_refs False and blocks when the number of open lanes is
+        greater than the cap, when the packet lane is missing or not open, or
+        when the lane dispatch_queue_path differs from the packet queue. With
+        BATCH-501c2f open as a third lane the count is 3, greater than 2, so
+        the probe refuses. tools/goal_lanes.py open_lane() itself does not
+        enforce the cap.
+    - id: VF-4
+      fact: >-
+        BATCH-e0a0c1's dispatch_queue.json (max_concurrent 2) has nine tasks and
+        every one is state completed (TASK-20260916-7ecd0f, -b88c5a, -9da6e0,
+        -64a93b, -92128f, -a8e5b5, -d4fb62, TASK-20260921-d61759, -d3d13a).
+        Every claim file in its claims/ directory has a release file at the
+        highest epoch except TASK-20260916-9da6e0 epoch 1, which epoch 2
+        supersedes with a release.
+    - id: VF-5
+      fact: >-
+        ledger/goals/GOAL-SEMBIN-fcb7a2/checkpoints/BATCH-e0a0c1.closing.yaml
+        records closed_at 2026-09-21, closing_decision_id DEC-20260916-87fc5c,
+        closing_archive_task TASK-20260916-d4fb62 and "campaign_status:
+        active". The queue's archive block for TASK-20260916-d4fb62 records
+        commit_sha 80242e204f9c393ec4353ad9dde5409c930c1665 with a bound
+        path_sha256 set. The closing archive's own receipt (defect ND-1)
+        records that the goal head's open_batches entry for BATCH-e0a0c1 still
+        reads status open, that the closing shard is the authority, and that
+        the one-line correction belongs to "whichever archive next legitimately
+        holds the goal head's open_batches". Nobody ran close-lane.
+    - id: VF-6
+      fact: >-
+        BATCH-cbb416's dispatch_queue.json still has five queued tasks:
+        TASK-20260916-0c2802 (execute EXP-SEMBIN-4fa22c, 43200 s, 10 GB, 4
+        runs), TASK-20260916-8eb394, -90af14, -7be96a and -6a2fcf. Its
+        checkpoint owns the goal's operative next action and current_batch_id
+        names it. EXP-SEMBIN-cb5e25 is not a successor of EXP-SEMBIN-4fa22c
+        (cb5e25 specification dependencies: "no dependency on EXP-SEMBIN-4fa22c's
+        code or runs"). BATCH-cbb416 carries live work and is not closeable.
+    - id: VF-7
+      fact: >-
+        tools/experiment_execution.py applies RLIMIT_AS = trial memory_mb to
+        every supervised child (run_process lines 934-948), and admission
+        refuses a plan when trial memory_mb exceeds handoff budget memory_gb
+        times 1024 (lines 788-790). tools/research_dispatch.py (lines 706-711)
+        requires budget.memory_gb to be a positive number for a task that is
+        not declared zero-compute. The specification (budget.memory_enforcement)
+        and protocol.json (execution.placement.memory_enforcement) say
+        "resident-set watchdog, never RLIMIT_AS". code/run.py implements that
+        watchdog on VmRSS with RSS_CAP_BYTES 10 GiB.
+    - id: VF-8
+      fact: >-
+        tools/experiment_protocol.py lint requires, for a frozen protocol, a
+        non-null analysis_plan.script.sha256 and analysis_plan.frozen_before_data
+        true (lines 321-325). protocol.json today has script.sha256 null,
+        frozen_before_data false and freeze.status draft. The seeds derive from
+        the canonical protocol hash (derive_seed), so every argv, every run id
+        and the wdag nonce depend on the frozen bytes.
+    - id: VF-9
+      fact: >-
+        The draft runbook step S05-trials has replay mode exempt with a reason
+        (trials append to the one shared run directory by a literal path, and
+        run.py refuses to overwrite a finished trial). Its S01 probe asserts
+        /disk_free only as an integer, /mem_kb only as an integer (the line
+        read is the first line of /proc/meminfo, which is MemTotal), and has no
+        blob store check. tools/artifact_store.py offloads only when
+        CRYPTO_AR_BLOBSTORE is set; unset, large artifacts are only
+        compressed and would stay in the working tree.
+    - id: VF-10
+      fact: >-
+        The cells with 21 <= N <= 26 in code/cells.py are m3n12 (N 24), m3n13
+        (25), m3n14 (26), m4n08 (24) and m4n09 (26). m3n11 has N 20 and m4n10
+        has N 28. These five equal the five cells the specification's
+        containment_wdag emission rule and its cost table name.
+    - id: VF-11
+      fact: >-
+        The specification's observation_collision_search status reads
+        "required before the first run, not yet performed ... Performed by the
+        Coordinator or the design lane before approval", and its
+        readiness.blockers still list the collision search, the resume
+        checkpoint, the unfrozen protocol, the missing trial plan, queue and
+        handoff, and unmeasured timings for the revision 2 additions.
+
+  rulings:
+    - id: RUL-1
+      title: Lane capacity. Close BATCH-e0a0c1 by its own record. Do not raise the cap.
+      ruling: >-
+        The lawful route is to record the closure of BATCH-e0a0c1, a lane whose
+        own committed closing checkpoint, closing decision (DEC-20260916-87fc5c)
+        and landed ledger archive (TASK-20260916-d4fb62, commit 80242e204f9c)
+        say the work is finished, and whose queue has nine completed tasks and
+        no live claim. The top-level session runs, on this decision's
+        instruction, python3 tools/goal_lanes.py close-lane GOAL-SEMBIN-fcb7a2
+        BATCH-e0a0c1 with outcome "archived; late-recorded under
+        DEC-20261106-36e212", --decision DEC-20260916-87fc5c and --ledger-commit
+        80242e204f9c393ec4353ad9dde5409c930c1665. It then opens BATCH-501c2f.
+        Open lanes are then BATCH-cbb416 and BATCH-501c2f: 2, not greater than
+        the cap of 2, so the probe's lane test passes.
+      what_it_changes: >-
+        Adds one write-once file, lanes/BATCH-e0a0c1.closed.json, that
+        records a fact the lane's own archive established on 2026-09-21. Opens
+        one lane. Corrects, in the goal head's open_batches, the entry for
+        BATCH-e0a0c1 from status open to closed (defect ND-1 of
+        TASK-20260916-d4fb62, which named "the next legitimate archive" as the
+        place), additively, and adds an entry for BATCH-501c2f.
+      what_it_does_not_change: >-
+        max_concurrent stays 2 and its basis text is not edited. No
+        BATCH-e0a0c1 record is edited: its opening and closing shards, queue,
+        claims, reads and ruling are untouched. BATCH-cbb416 is not closed, not
+        edited, and keeps current_batch_id and the operative next action.
+        BATCH-e0a0c1's findings (EV-SEMBIN-1ca3c8, KN-FIND-936151) and the
+        un-promoted claim and IMP-SEMBIN-FCB7A2-LEMMA4-TIER are unchanged. No
+        hypothesis, experiment or goal status moves.
+      why_this_is_not_a_raise_by_another_name: >-
+        A raise would admit a third lane while two stay open. This closes a
+        lane that is already done, so the number of open lanes after the
+        operation is the number the cap already allows. The user's explicit
+        direction that justified the ICPERF raise (DEC-20261029-3bfa78) does not
+        exist here and is not claimed.
+      why_not_the_other_routes: >-
+        Closing BATCH-cbb416: it holds a queued run of EXP-SEMBIN-4fa22c and the
+        goal's next action. Writing the SEMBIN run into BATCH-cbb416's queue:
+        that lane's write_scope and objective belong to a different contract
+        (AGENTS.md "Lanes"). Raising max_concurrent: forbidden to this
+        Coordinator without the user's direction. If the close cannot be
+        recorded for any reason, no lawful route remains, the probe stays
+        blocked on the lane, and the experiment stays review_required.
+      preconditions_the_top_level_session_must_verify_first: >-
+        (1) python3 tools/goal_lanes.py lanes GOAL-SEMBIN-fcb7a2 (all refs, not
+        --local-only) lists exactly BATCH-cbb416 and BATCH-e0a0c1 as open and
+        no other open SEMBIN lane on any fetched ref. A third open lane on any
+        ref voids this ruling: stop and report. (2) python3 tools/goal_lanes.py
+        claims on BATCH-e0a0c1's queue shows no live claim. (3) git fetch
+        origin and merge origin/main before generating (merge, never rebase).
+    - id: RUL-2
+      title: Heavy-task exclusion between the two open lanes. The cap is count-based and the basis is stale for this work.
+      ruling: >-
+        The cap of 2 counts lanes. It does not say two 10 GB tasks fit on a 15
+        GB host. TASK-20261106-9da2e3 (10 GiB resident cap) is therefore not
+        dispatched while any other task of this goal holds a live claim
+        (python3 tools/goal_lanes.py claims
+        coordination/goals/GOAL-SEMBIN-fcb7a2/batches/BATCH-cbb416/dispatch_queue.json
+        must show none). The same exclusion binds TASK-20260916-0c2802 from the
+        other side: its dispatcher checks BATCH-501c2f's queue before launch.
+        BATCH-501c2f's queue has max_concurrent 1 and the experiment has
+        maximum_workers 1, so there is one worker in this lane.
+      what_it_changes: A dispatch condition on two tasks. Nothing about the cap or the lanes.
+      what_it_does_not_change: >-
+        The goal's max_concurrent_basis text still describes a 1.471 GB block.
+        That it is stale for a 10 GiB task is recorded here, not edited and
+        not decided. Revising the number or the text is a separate Coordinator
+        decision that needs the user's direction if it would raise the cap.
+    - id: RUL-3
+      title: I-4. A loose RLIMIT_AS ceiling of 32768 MB; the binding memory cap is the run.py VmRSS watchdog at 10 GiB.
+      ruling: >-
+        Every trial in the regenerated trial plan carries memory_mb 32768.
+        tools/experiment_execution.py applies that as RLIMIT_AS (a virtual
+        address-space ceiling) and the handoff budget carries memory_gb 32 so
+        that admission passes. The resident-set limit that actually bounds the
+        experiment is unchanged: code/run.py's VmRSS watchdog at 10 GiB
+        (specification budget.peak_rss_gb 10, protocol.json
+        execution.placement.memory_mb 10240, runbook spec_binding on that
+        value). The runbook keeps asserting 10240 against protocol.json and 10
+        against the specification.
+      declared_deviation: >-
+        This deviates from the letter of the specification's "never
+        RLIMIT_AS", which the supervisor makes unavoidable: it applies
+        RLIMIT_AS to every supervised trial and requires memory_mb. It is
+        recorded before the freeze, as a revision of the draft contract (design
+        revision DR-11 in the specification and an edit of the protocol's
+        memory_enforcement sentence, text in
+        experiments/EXP-SEMBIN-cb5e25/design-notes.md), so the frozen contract
+        says what is enforced instead of contradicting its own launcher.
+      why_it_is_faithful_to_the_intent: >-
+        The prohibition exists because RLIMIT_AS bounds virtual address space,
+        not resident memory. numpy, OpenBLAS arenas, mmap of the packed
+        kernels and fork all reserve address space the process never touches,
+        so a tight RLIMIT_AS kills a legitimate trial far below its real
+        footprint and the failure looks like a result (EXP-SEMBIN-4fa22c budget
+        note). A ceiling of 32 GiB, above any plausible virtual footprint of a
+        process whose resident set is capped at 10 GiB, cannot fire first on a
+        legitimate trial, so it measures nothing and decides nothing. It still
+        bounds a runaway mapping. The physical bound, 10 GiB resident on a 15
+        GB host, is the watchdog's and is no looser than the specification
+        states. Nothing is gained against the owner's CPU/RAM ceiling
+        (AGENTS.md "Cloud budgets"): the real cap is not raised.
+      consequences_declared: >-
+        (a) A trial that dies at the virtual ceiling (MemoryError or ENOMEM from
+        RLIMIT_AS) is an infrastructure signal under SR-7, never a censored M-1
+        and never negative evidence. As the code reads today (run.py lines
+        85-140 and 540-551, check_trial.py line 130, analyze.py lines 52 and
+        260), two paths differ. (i) Inside the isolated closure or certificate
+        child, a MemoryError is caught by _child_main and returned as status
+        "error" (not "failed_infrastructure"); the row is appended with M-1
+        "failed", the trial still completes with exit 0, check_trial.py reports
+        a warning and not an invalid, and analyze.py counts only M-1 True or
+        False, so such a row lands in "censored or undetermined" and the
+        outcome is incomplete_censored, never a counterexample. That is the
+        right consequence, but the label is "error", so the pass-2 SR-7
+        selection must select every row whose status is error,
+        failed_infrastructure or crash, not only the second. (ii) In the parent
+        process (instance construction, Z enumeration, null brute force) a
+        MemoryError exits nonzero, check_trial.py reports "driver exit code"
+        as invalid, and the session stops as terminal. The parent's address
+        space is far below 32 GiB at every cell, so this is accepted as a
+        remote risk and stated. The Coordinator has not run either path; an
+        optional scratch confirmation is in design-notes.md step 2.4. (b) The watchdog polls,
+        so a resident-set spike between polls can exceed 10 GiB for one
+        interval; the poll interval is recorded in the manifests as the
+        specification requires. 15 GB host RAM less 10 GiB leaves about 5 GB of
+        margin for that. (c) The 32 GiB figure is the director's proposal and
+        has not been checked against a measured virtual-to-resident ratio of
+        the wdag and N = 40 closures (no shell here). If the first dry-run of
+        the largest unit shows a higher virtual footprint, the ceiling is
+        raised by a new Coordinator decision before approval, not silently.
+      what_it_changes: trial-plan memory_mb (10240 to 32768), handoff budget.memory_gb (32), and one sentence in protocol.json and the specification.
+      what_it_does_not_change: The 10 GiB resident cap, the 43200 s budget, the per-instance caps, and every scientific quantity.
+    - id: RUL-4
+      title: A-3. on_invalid stop is right; an undecided PC-TRI is a warning and blocks the C-PC gate.
+      ruling: >-
+        check_trial.py exits 1 only on a scientific or measurement defect
+        (SR-4: PC-TRI M-1 false or D_solve above 3; SR-5: EQS4-AA or C-FE-EQ
+        disagreement; IR-1/IR-2/IR-3/IR-5; a modified shared artifact; a
+        fixtures.json without sr1_all_pass). The specification itself says the
+        run "stops and is invalid" on SR-4 and SR-5, and an invalid session is
+        terminal in tools/runbook.py. So the step's on_invalid stop and the
+        plan's stop_on_invalid_output true are kept. A PC-TRI instance whose
+        closure is censored or otherwise undecided is not a violation of SR-4
+        and exits 0 with a warning. It is not silence: the C-PC validity gate
+        then does not hold, so neither S-MAIN nor F-MAIN may be called from that
+        run for the affected cells, and the Coordinator's interpretation is
+        inconclusive on that gate.
+      what_it_changes: Nothing in the runbook. It fixes how an undecided PC-TRI is read.
+      what_it_does_not_change: Any criterion. S-MAIN and F-MAIN are as frozen.
+    - id: RUL-5
+      title: I-7. Replay exempt for the trials step is acceptable for pass 1, with named compensating controls and one hard condition.
+      ruling: >-
+        Accepted. The reason is mechanical, not evasive: every trial argv
+        writes into one shared directory by a literal path and the instrument
+        refuses to overwrite a finished trial, so the audit's re-execution under
+        a scratch directory cannot use the frozen argv. A replay field-compare
+        is therefore reported not_covered for S05 and the runbook says so.
+      compensating_controls: >-
+        (1) tools/runbook.py audit --rerun-checks re-runs check_trial.py on
+        every unit, which recounts the DER-3 against direct membership
+        agreement, the EQS4-AA against EQS4 equality, the code hashes and the
+        append-only shared-artifact rule from the files. (2) Every decisive
+        non-containment is independently certified by review/checker, written
+        blind to code/ and cross-checked 7 of 7, so a fabricated counterexample
+        cannot pass. (3) Seeds are deterministic functions of the frozen
+        protocol hash, arm, instance and r, so a later review-run can replay a
+        nonce-chosen sample into a scratch --shared-run-dir with the same
+        adapter and compare the declared records.
+      hard_condition: >-
+        No evidence-review decision of support, weaken, reject_scoped or
+        corroboration may rest on pass-1 data for the "contained" side until a
+        nonce-sampled scratch replay has been archived and compared. This
+        matters because the independent checker cannot catch a fabricated
+        "contained" (a suppressed counterexample); wdag certification covers
+        only the sampled cells at N up to 26, and N of 27 or more is "engine-decided,
+        uncertified" by the specification. Pass 1 itself states no verdict.
+      what_it_changes: Records not_covered as the accepted state of S05 replay and adds one gate on interpretation.
+      what_it_does_not_change: The tool-written journal, the post-condition assertions, the checker, the independent certificate checker.
+    - id: RUL-6
+      title: A-4. Step timeouts, the claim ttl, the handoff wall time, and the SR-8 clock.
+      ruling: >-
+        S01 host probe 60 s; S02 create run directory 60 s; new blob store check
+        120 s; new collision-search copy 60 s; S03 fixtures 3600 s (down from
+        43200 s; the fixtures are exact finite computations plus 12 Sage
+        group-order checks, and a fixture that needs an hour is itself a
+        finding); S04 60 s; S05 trials 43200 s, equal to the pre-registered SR-8
+        total and to protocol.json execution.timeout_seconds, which the runbook
+        already asserts; S06 analysis 1800 s (above the 1200 s SR-3 reporting
+        reserve, so the reserve is not the cutoff); S07 60 s. The claim ttl for
+        S05 is 750 minutes (45000 s), so the step timeout fires first and is
+        classed timed_out rather than the claim expiring mid-trial. The
+        handoff budget wall_clock_seconds is 50400, which exceeds the step
+        timeouts' sum of 48,960 s. It is an advisory limit.
+      sr8_clock_reading: >-
+        The adapter starts the SR-8 clock at the first trial (session_start.json
+        is written once and never overwritten). Time spent in S03 fixtures is
+        therefore not charged to the 43200 s and is bounded by the S03 timeout
+        and recorded in the journal. This reading is declared here and in
+        DR-11 before the freeze; the specification does not say whether
+        fixtures are inside the 43200 s.
+      no_per_trial_watchdog: >-
+        No trial carries watchdog_seconds. The pre-registered limits are the
+        per-instance-per-D wall caps (SR-2), the wdag cap of 900 s, the step
+        timeout and the RSS watchdog. A derived per-trial watchdog could kill a
+        legitimate slow trial inside its caps, and a kill would be reported as
+        a failure rather than as a censored M-1.
+      what_it_changes: The runbook's S03 and S06 timeouts, S05 claim ttl, handoff wall_clock_seconds.
+      what_it_does_not_change: SR-8's 43200 s and every per-instance cap.
+    - id: RUL-7
+      title: A-1. The certify trials cover the five cells with 21 <= N <= 26.
+      ruling: >-
+        The five wdag selection passes (kind certify, one per cell, run after
+        that cell's trials) are for m3n12, m3n13, m3n14, m4n08 and m4n09. For N
+        of 20 or less every contained decisive instance is certified inside its
+        own trial, and for N of 27 or more none is, as the specification's
+        containment_wdag rule states. The selection is the specification's
+        pre-registered rule (nonce sha256(protocol_sha256 + "\nWDAG\n" +
+        cell_id) modulo the number of contained decisive instances, the second
+        by the next index, all if fewer than two), computed at run time from
+        the shared records. A cell with no contained decisive instance is a
+        certify trial that emits nothing and is valid.
+      what_it_changes: Fixes which cells the plan's certify trials name.
+      what_it_does_not_change: The emission rule.
+    - id: RUL-8
+      title: A-2. Fixtures and every trial carry the real frozen protocol hash.
+      ruling: >-
+        The draft's bb174a51b5d9... is the unfrozen canonical hash and is
+        stale as soon as analysis_plan.script.sha256, frozen_before_data or the
+        memory_enforcement sentence is edited. S03, every trial argv, every
+        by_trial assertion on /args/protocol_sha256 and
+        /provenance/protocol_sha256, and the wdag nonce use
+        freeze.protocol_sha256 of the frozen protocol.json, read from the file.
+        The runbook adds spec_bindings on protocol.json
+        /freeze/status equals frozen and /freeze/protocol_sha256 equals that
+        hash, so a copy error is a lint finding.
+      what_it_changes: Every argv and assertion that carries the hash.
+      what_it_does_not_change: The seed derivation.
+    - id: RUL-9
+      title: I-5, SR-6, SR-7. Pass 1 has no outcome-dependent step; pass 2 is a separately approved repair pass.
+      ruling: >-
+        The first plan contains only the static grid (the trials of
+        plan.py and the five certify passes). SR-6 (an EQS4-AA re-run of every
+        non-contained EQS4 or EQS4-U instance and its immediate ann
+        certificate), SR-7 (one infrastructure retry of an instance recorded
+        failed_infrastructure) and the certificates.non_containment_uncertified
+        repair (the same deterministic instance re-run alone with ann_max_bytes
+        up to 4 GiB, written through the artifact store) depend on pass-1
+        outcomes. They are a second plan, runbook, session id and approval
+        built after pass 1, and they count as run 2 of the specification's
+        maximum_runs 3. Run 3 is the single extension and needs a
+        protocol_amendment. None of this re-draws a seed or a null.
+      what_it_changes: Declares the two-pass structure and that SR-6 and SR-7 are executed in pass 2 not pass 1.
+      not_decided_here: >-
+        (a) Whether SR-8's 43200 s is per pass or cumulative across passes. The
+        specification's maximum_runs counts passes and its cost reserve for the
+        contingency sits inside one pass's total, which favours per pass, but
+        the text does not say. (b) The pass-2 shared run directory: the adapter
+        computes remaining time from a session_start.json that is never
+        overwritten, so reusing RUN-SEMBIN-d1204f days later would show
+        negative remaining time and mark every instance not_attempted_budget.
+        Pass 2 therefore needs its own shared run directory and clock, or an
+        explicit remaining-seconds. Both are decided in the pass-2 design
+        decision, from measured pass-1 time. Nothing in pass 1 depends on
+        either.
+    - id: RUL-10
+      title: I-6. Disk. Blob store offload and a free-disk floor, both asserted before the first trial.
+      ruling: >-
+        The host reports about 9 GB free. Dispatch requires
+        CRYPTO_AR_BLOBSTORE to be set (s3://bucket/prefix, or file:///dir on a
+        volume with at least 20 GiB free that is not the repository volume) and
+        a put and get round trip through tools/artifact_store.py to succeed,
+        recorded by a new runbook command step (purpose probe) before S05. The
+        S01 probe asserts /disk_free at least 6442450944 bytes (6 GiB) on the
+        volume holding experiments/EXP-SEMBIN-cb5e25, and /mem_kb, read from
+        the MemAvailable line, at least 11534336 kB (11 GiB). A failed
+        assertion stops the session before any file is written. Without the
+        store the artifacts above 10 MiB compressed stay in the working tree and
+        a pass-1 non-containment (each ann certificate up to 512 MiB by the
+        size guard) could fill the volume.
+      known_risk: >-
+        A disk-full during a trial makes the driver exit nonzero, which
+        check_trial reports invalid, which stops the session as terminal. That
+        is safe (no wrong data) but expensive, so the floor and the offload are
+        gates, not advice.
+      pass_2_floor: >-
+        Pass 2 with ann_max_bytes up to 4 GiB needs at least 12 GiB free plus a
+        verified offload store; it is re-ruled when pass 2 is designed.
+      what_it_changes: Adds two runbook probes and two assertions; sets two dispatch preconditions.
+      what_it_does_not_change: The ann_max_bytes default of 512 MiB in pass 1.
+    - id: RUL-11
+      title: I-8. The protocol is frozen before any hash that depends on it is bound.
+      ruling: >-
+        Order is fixed in experiments/EXP-SEMBIN-cb5e25/design-notes.md. In
+        short: code clean and CODE_SHA256.json current; protocol.json edited
+        (analysis script hash, frozen_before_data true, memory_enforcement
+        sentence), validated and frozen; the specification revised once
+        (design revision DR-11 and execution_plan bindings including the frozen
+        protocol hash); the approved-bytes preview of the specification hashed;
+        the trial plan regenerated with that hash, the frozen protocol hash, the
+        task id, the reserved approval id and the queue path; the runbook
+        regenerated and linted; the queue and handoff finalized from the plan;
+        committed, pushed, probed. Any edit of an earlier item invalidates every
+        later one. A protocol that is not frozen when the plan is built is a
+        defect that stops the design.
+      what_it_changes: Fixes the order. Binds nothing new.
+    - id: RUL-12
+      title: Gates before the approval decision (restated, not new)
+      ruling: >-
+        The approval DEC-20261106-e7576f is not written until all hold. (1) The
+        observation-collision search required by the specification
+        (observation_collision_search, status "required before the first run,
+        not yet performed") is performed with the research-kb skill and the
+        repository greps it names, committed at
+        experiments/EXP-SEMBIN-cb5e25/collision-search.json, and read by the
+        Coordinator for a replication or an existing counterexample; the
+        runbook copies it into the run directory before the first measurement.
+        A hit that reframes the contract returns the experiment to design.
+        (2) The probe reports approvable true on the exact prospective bytes.
+        (3) The runbook lints LINT OK and the card lints CARD OK after approval.
+        (4) The resume checkpoint is pushed (CLAUDE.md). (5) validate_ledger,
+        the design-rate guard and the ECC focus check have been run on the new
+        records by the session, because this Coordinator had no shell.
+      what_it_changes: Nothing; it lists conditions already in the contract and AGENTS.md.
+    - id: RUL-13
+      title: Per-trial validity assertions are regenerated against the adapter's real outputs; manifest.yaml is not asserted as JSON.
+      ruling: >-
+        The draft by_trial assertions were written against run.py. The trial
+        file that the supervisor validates is written by code/adapter.py, whose
+        raw-result.json holds trial_id (not trial), trial_key, kind, cell, arm,
+        r, protocol_sha256, exit_code, attack_claimed false and
+        shared_artifact_violations, and has no run_id key. Its manifest.yaml is
+        written with yaml.safe_dump in block style and the runbook's
+        validity "json: true" cannot parse it. The regenerated runbook
+        therefore asserts, per trial and from the plan, on raw-result.json only:
+        /schema equals sembin.trial_raw_result.v1, /experiment_id,
+        /trial_id equals the trial id, /kind, /cell, /arm and /r equal the
+        prescribed parameters, /protocol_sha256 equals the frozen hash,
+        /attack_claimed false, and /shared_artifact_violations length 0
+        (certify trials: /trial_id and /kind). It asserts no exit code of the
+        science, no status, no M-1 and no value that is an outcome. The
+        manifest-to-record consistency stays with check_trial.py as the plan's
+        checker, re-run by the audit. The adapter is not changed to make
+        manifest.yaml JSON, because that would change code and every hash.
+      what_it_changes: The runbook's by_trial validity block. Nothing in the code.
+      what_it_does_not_change: Any success or falsification criterion.
+
+  protocol_completeness_note: >-
+    This record does not assert the contract is complete. It rules on the
+    director's impediments. Completeness against AGENTS.md "Approval is bounded
+    by execution" is the approval decision's to check, on the probe report and
+    the regenerated bytes. The contract is a counterexample search against a
+    published conditional assumption (Nagao 2015/984 Assumption 1 as the
+    operational "degree 4 suffices"), with the independent certificate checker
+    as its heuristic-validation companion; it is not a complexity claim and
+    none of the promotion gates for an asymptotic claim is in play.
+
+  status_transitions: []
+  status_transitions_note: >-
+    None. EXP-SEMBIN-cb5e25 stays review_required (frozen false, approved_by
+    null, execution_authorized false). H-SEMBIN-e5b2db stays specified; the
+    approval decision, if it is ever written, records specified to approved as
+    DEC-20261029-ca33b3 did for H-ICPERF-2f52d1. GOAL-SEMBIN-fcb7a2 stays
+    active. DEC-20261106-e7576f is reserved and unwritten, and
+    DEC-20261106-c897df is reserved and unwritten.
+
+  dispatch:
+    executor_task: TASK-20261106-9da2e3
+    executor_policy: executor-mechanical
+    run_archive_task: TASK-20261106-c5d001
+    lane: BATCH-501c2f
+    route: /run EXP-SEMBIN-cb5e25 (tools/runbook.py run, session RBS-SEMBIN-19ce78 as drafted)
+    gate: >-
+      No dispatch exists until the approval decision is committed and merged,
+      python3 tools/newest_experiments.py --experiment EXP-SEMBIN-cb5e25 --json
+      reports execution_state ready, the resume checkpoint is pushed, the
+      RUL-2 exclusion and the RUL-10 preconditions hold, and the host is not
+      running another producer of this goal. Queued tasks carry no execution
+      authority.
+    never: [/run EXP-SEMBIN-cb5e25 before DEC-20261106-e7576f is committed and merged]
+
+  target_ids:
+    - GOAL-SEMBIN-fcb7a2
+    - EXP-SEMBIN-cb5e25
+    - H-SEMBIN-e5b2db
+    - BATCH-501c2f
+    - BATCH-e0a0c1
+    - TASK-20261106-9da2e3
+    - TASK-20261106-c5d001
+  related_records:
+    reserved_not_written: [DEC-20261106-e7576f, DEC-20261106-c897df]
+    template_packet: [DEC-20261029-ca33b3, DEC-20261029-3bfa78, DEC-20261029-316bfb]
+    lane_closed_late: BATCH-e0a0c1 (DEC-20260916-87fc5c, TASK-20260916-d4fb62, commit 80242e204f9c393ec4353ad9dde5409c930c1665)
+    lane_kept_open: BATCH-cbb416 (TASK-20260916-0c2802 queued)
+    design_notes: experiments/EXP-SEMBIN-cb5e25/design-notes.md
+
+  rationale:
+    - >-
+      The cap is a count of lanes tied to machine headroom, and the Coordinator
+      may not raise it without the user. A finished lane that nobody closed is
+      a record gap, and closing it by its own recorded facts is the repository's
+      route (close-lane exists to "record that a lane's ledger archive
+      landed"). It frees the slot without admitting any extra work.
+    - >-
+      The memory ruling keeps the real cap exactly where the specification put
+      it and supplies the number the supervisor forces on the plan, rather than
+      leaving the plan unapprovable or hiding RLIMIT_AS in a mechanical default.
+      A loose ceiling above the resident cap is the least faithful-to-the-letter
+      and the most faithful-to-the-intent option available, and the deviation is
+      declared before the freeze.
+    - >-
+      Accepting replay-exempt for pass 1 without a condition would let a
+      mechanical-tier session's "all contained" stand on tool-written but
+      unreplayed records. The hard condition on interpretation keeps the
+      exemption from becoming evidence.
+    - >-
+      Freezing the protocol first is the only order in which the argv, the run
+      ids, the wdag nonce and the plan hash are final; any other order produces
+      a plan that must be regenerated after approval, which approval forbids.
+  evidence_refs:
+    - ledger/goals/GOAL-SEMBIN-fcb7a2/goal.yaml (campaign_budget, open_batches)
+    - coordination/goals/GOAL-SEMBIN-fcb7a2/lanes/BATCH-cbb416.lane.json
+    - coordination/goals/GOAL-SEMBIN-fcb7a2/lanes/BATCH-e0a0c1.lane.json
+    - ledger/goals/GOAL-SEMBIN-fcb7a2/checkpoints/BATCH-e0a0c1.closing.yaml
+    - ledger/goals/GOAL-SEMBIN-fcb7a2/checkpoints/BATCH-cbb416.yaml
+    - coordination/goals/GOAL-SEMBIN-fcb7a2/batches/BATCH-e0a0c1/dispatch_queue.json
+    - coordination/goals/GOAL-SEMBIN-fcb7a2/batches/BATCH-e0a0c1/archives/TASK-20260916-d4fb62/ledger-receipt.json
+    - coordination/goals/GOAL-SEMBIN-fcb7a2/batches/BATCH-cbb416/dispatch_queue.json
+    - tools/goal_lanes.py (open_lane, close_lane, cmd_close_lane)
+    - tools/experiment_preapproval.py (assess, lines 200-353)
+    - tools/experiment_execution.py (admission lines 775-792, run_process lines 931-960)
+    - tools/research_dispatch.py (handoff budget validation lines 696-721)
+    - tools/experiment_protocol.py (lint lines 316-329, freeze lines 375-392)
+    - tools/artifact_store.py (store_for, store_from_env, OFFLOAD_MIN)
+    - experiments/EXP-SEMBIN-cb5e25/specification.yaml (budget, stopping_rules, certificates, execution_plan, readiness)
+    - experiments/EXP-SEMBIN-cb5e25/protocol.json (execution, analysis_plan, freeze)
+    - experiments/EXP-SEMBIN-cb5e25/runbook.yaml (draft; steps S01 to S07)
+    - experiments/EXP-SEMBIN-cb5e25/code/cells.py
+    - experiments/EXP-SEMBIN-cb5e25/code/plan.py
+    - experiments/EXP-SEMBIN-cb5e25/code/adapter.py
+    - experiments/EXP-SEMBIN-cb5e25/code/check_trial.py
+    - ledger/decisions/DEC-20261029-ca33b3.yaml
+    - ledger/decisions/DEC-20261029-3bfa78.yaml
+    - ledger/decisions/DEC-20261029-316bfb.yaml
+  limitations:
+    - >-
+      The Coordinator saw the director's impediments only as a summary relayed
+      by the top-level session. A director finding not in that summary is not
+      ruled on here.
+    - >-
+      The lane census is of the working tree. Lane files on other refs were not
+      read. RUL-1 is conditional on the all-refs listing the top-level session
+      runs first.
+    - >-
+      The machine figures (4 CPUs, 15 GB RAM, about 9 GB free disk) were
+      relayed. No virtual-to-resident ratio of the largest units has been
+      measured, so 32768 MB is a proposal that has not been tested at scale.
+    - >-
+      No hash is computed or asserted in this record. The trial-plan, runbook,
+      specification, protocol and queue hashes exist only after the order of
+      operations is executed. The handoff TASK-20261106-9da2e3 carries two
+      marked tokens that the top-level session replaces from the final plan.
+    - >-
+      Two archive task ids (the design archive that carries the lane files and
+      the goal-head edit, and the approval archive) were not pre-allocated.
+      The Coordinator minted none; the top-level session allocates them.
+    - >-
+      The goal head open_batches edit (BATCH-e0a0c1 to closed, BATCH-501c2f
+      added) and the specification and protocol edits are not in this task's
+      write scope; they are specified in the design notes for the session that
+      carries the design archive.
+    - >-
+      The collision search, the measured timings for the revision 2 additions,
+      and the director's regeneration are not done. This record does not
+      pre-judge them.
+  next_actions:
+    - id: NA-1
+      rank: 1
+      owner: top-level session
+      text: >-
+        Run the preconditions of RUL-1, then execute the order of operations in
+        experiments/EXP-SEMBIN-cb5e25/design-notes.md steps 0 to 9 (lane close
+        and open, protocol edit and freeze, specification revision, plan and
+        runbook regeneration, queue, handoff tokens, design archive, PR).
+    - id: NA-2
+      rank: 2
+      owner: coordinator
+      text: >-
+        Perform and commit the observation-collision search (RUL-12 gate 1)
+        before the approval decision is considered.
+    - id: NA-3
+      rank: 3
+      owner: top-level session, then coordinator
+      text: >-
+        After the design archive merges, run the preapproval probe at
+        origin/main. Only on approvable true write DEC-20261106-e7576f and
+        carry out the approval archive (steps 10 to 14). On any blocker, leave
+        the experiment review_required and record the blocker.
+    - id: NA-4
+      rank: 4
+      owner: coordinator, after pass 1
+      text: >-
+        Check validity of the pass-1 session before any interpretation. Then
+        design pass 2 (RUL-9) under its own decision, deciding the two items
+        left open there.
+  opened_tasks: [TASK-20261106-9da2e3, TASK-20261106-c5d001]
+  archived_by: TASK-20261106-d8dbfa
+  archived_by_note: >-
+    Replace this token with the design archive task id the top-level session
+    allocates (design-notes.md step 0.5) before the design archive commit. It
+    is not TASK-20261106-c5d001, which archives the run records.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      These are design rulings and a lane disposition. There is no evidence
+      record, no support or reject_scoped decision and no durable research
+      claim.
+  visual_record: >-
+    Not an evidence-review decision, and it produces no run. No graph source
+    or rendering changes.
+  official_effect_until_committed_pushed_reviewable: none
