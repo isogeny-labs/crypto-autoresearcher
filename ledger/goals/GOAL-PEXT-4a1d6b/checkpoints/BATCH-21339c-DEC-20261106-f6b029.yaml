@@ -1,0 +1,83 @@
+# WRITE-ONCE goal checkpoint shard (tools/shard_goal.py layout). One checkpoint
+# per file. Never edit or reorder this file. A correction is a new record.
+# GOAL-PEXT-4a1d6b, BATCH-21339c amendment checkpoint written with
+# DEC-20261106-f6b029. It records the two refusal repairs and the hash rebinding.
+# It approves no new contract and launches no run.
+batch_checkpoint:
+  batch_id: BATCH-21339c
+  checkpoint_id: BATCH-21339c-DEC-20261106-f6b029
+  goal_id: GOAL-PEXT-4a1d6b
+  kind: amendment_after_refused_launch
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  decision_id: DEC-20261106-f6b029
+  decision_ids:
+  - DEC-20261106-f6b029
+  status: active
+  goal_status_after: active
+  question_ids:
+  - RQ-PEXT-7c3e91
+  records_opened:
+  - DEC-20261106-f6b029
+  - AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse
+  - CORR-20261106-6c99d8
+  completion_criteria_discharged: none
+  observation_ids: []
+  refused_runs:
+  - run_id: RUN-PEXT-5d190f
+    trial: regression
+    status: invalid_output
+    reason: driver hypothesis_id had no plan source
+    retained: true
+  - run_id: RUN-PEXT-4d23b9
+    trial: lean
+    status: infrastructure_error
+    reason: IndexError in run.py axiom classifier after a successful Lean build
+    retained: true
+  amendment:
+    path: experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse.yaml
+    sha256: 6f22b91fc00411e021c25654b4e616814be42875aac00f6e112a7b5b809466b3
+    scientific_protocol_unchanged: true
+    added_plan_key: 'hypothesis_id: H-PEXT-d536a1'
+    repaired_expression: run.py stage_lean custom-axiom guard
+    reassigned_run_ids:
+      regression: RUN-PEXT-87595f
+      lean: RUN-PEXT-946361
+  rebinding:
+    trial_plan_sha256:
+      from: 81b885ae3f1bcc479ffa948db8dd888b128eeb6d11bda0a861e5c5f1e233489f
+      to: 06b801b5c98b1e2476a97d37eded50e1dfc4b4a6a82bd99b10f623595c1747a7
+    dispatch_queue_sha256:
+      from: 2bdce9e2cb517b7093336c73f7e983e4dfd42013b198340b78b4372f4186579a
+      to: cb7292e30d17464b51a6fcf31bcabbb455b544124dc3b6bc87e9c34930564463
+    executor_handoff_sha256:
+      from: 411d537c209a201fdeba7ca6908fc65eef3ae0856de2825e933c4210c97d2b08
+      to: 1c1f9540e3b05e54a74f6fbc14cacb9470468e504a2bc9d0fa55bc1a9c27ae8c
+    implementation_run_py_sha256:
+      from: 10ed4714870dba07ea99934f6241b014fa4a4df83520a1265cc33bfd72d76939
+      to: 17c6518e79b22acec3acf16a05254fa7f101d6188ef579476a487052469c9171
+  admission_after_amendment:
+    dispatcher_ready_task: TASK-20261024-672126
+    claim: null
+    experiment_execution_status: 'remaining 6, planned 2, needs_reconciliation 0'
+    executor_route: openai:gpt-5.6-terra, effort medium, no fallback
+  hypotheses:
+    H-PEXT-d536a1: approved (pre-run, DEC-20261024-992998); no result exists
+    H-PEXT-ad0073: approved (pre-run, DEC-20261031-dcfdee); no result exists
+  impediments_changed: none
+  next_action: >-
+    Executor: claim lane BATCH-21339c and run TASK-20261024-672126 (/run EXP-PEXT-212d5c)
+    on amended plan 06b801b5... and the verified route; census needs its ~20.5 h window.
+    Then lane BATCH-a4886a for EXP-PEXT-0b2c75. No scientific execution from /coordinate.
+  scientific_trials_launched: 0
+  scientific_status_change: none
+  scope_preserved: >-
+    Only the mutable goal head, this new checkpoint shard, the amendment, the correction,
+    the decision, the plan, run.py, the handoff and the queue are written. No hypothesis,
+    evidence, approval, run directory or prior amendment changed.
+  inference:
+    requested_policy: coordinator-orchestration-code
+    reasoning_effort: high
+    resolved_backend: null
+    resolved_model_id: null
+    note: The OpenCode runtime did not resolve an adapter model for this session.

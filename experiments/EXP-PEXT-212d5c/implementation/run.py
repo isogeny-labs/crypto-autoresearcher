@@ -211,8 +211,9 @@ def stage_lean(rd: str) -> tuple:
             src = open(os.path.join(HERE, "lean", "CoverCensusN7.lean")).read()
             bad = [w for w in ("sorry", "native_decide") if re.search(r"\b%s\b" % w, src.split("-/", 1)[1])]
             axioms = re.findall(r"'([^']+)' (depends on axioms: \[[^\]]*\]|does not depend on any axioms)", text)
-            custom = [a for a, s in axioms if any(x not in ("propext", "Quot.sound", "Classical.choice")
-                                                  for x in re.findall(r"[\w.]+", s.split("[", 1)[1]) if "[" in s)]
+            custom = [a for a, s in axioms if "[" in s and any(
+                x not in ("propext", "Quot.sound", "Classical.choice")
+                for x in re.findall(r"[\w.]+", s.split("[", 1)[1]))]
             res = {"status": "built" if p.returncode == 0 else "build_failed", "built": p.returncode == 0,
                    "returncode": p.returncode, "axioms": dict(axioms), "forbidden_tokens": bad, "custom_axioms": custom}
         finally:

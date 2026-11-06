@@ -1,0 +1,173 @@
+# DEC-20261106-f6b029: Coordinator approval of AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse
+# under the standing user authorization. It binds the frozen plan to the hypothesis the
+# approved specification already names, repairs one guard in the Lean axiom classifier,
+# rebinds two consumed run ids and the three dependent hashes. Scientific protocol
+# unchanged. It launches no run.
+coordinator_decision:
+  id: DEC-20261106-f6b029
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (well-formed, 0 occurrences across 48,179 paths).
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  archive_task: TASK-20261106-a3393a
+  session_provenance: >-
+    Coordinator session in an OpenCode runtime, branch coord/portfolio-20261106, base
+    origin/main 311a5de2c0 plus the merged DEC-20261106-4f6860 archive. Requested role
+    policy coordinator-orchestration-code; the runtime resolved no adapter model id for
+    this session, so none is asserted. The session read the two refused-run receipts and
+    manifests, the 2026-11-06 report, run.py stage_lean, the frozen plan, the handoff,
+    the queue and both prior amendments. It ran the read-only checks recorded below.
+  subject: >-
+    Approve the additive amendment that (a) adds hypothesis_id H-PEXT-d536a1 to the
+    frozen plan so a driver-stated hypothesis has a plan source, (b) guards the Lean
+    axiom-classifier split, and (c) reassigns the two run ids consumed by the refusals,
+    with plan/queue/handoff hash rebinding. No scientific content changes.
+  goal_id: GOAL-PEXT-4a1d6b
+  decision: revise
+  target_ids:
+  - EXP-PEXT-212d5c
+  - TASK-20261024-672126
+  - GOAL-PEXT-4a1d6b
+  - RUN-PEXT-5d190f
+  - RUN-PEXT-4d23b9
+  - AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse
+  - CORR-20261106-6c99d8
+
+  authorization: >-
+    Standing user authorization, AGENTS.md "Standing user authorization" ("All is
+    approved. Ideas/experiments should be always approved", user, 2026-09-06), applied to
+    a protocol amendment of an already-approved contract. Approval is bounded by
+    execution: the contract is runnable on the amended bytes and the amendment creates no
+    new contract, so the approved-unrun count does not grow. This is not a fresh
+    scientific approval and asserts nothing about the hypothesis.
+
+  context: >-
+    The supervised launch of 2026-11-06 under DEC-20261106-4f6860 produced two refusals
+    in one session. Regression RUN-PEXT-5d190f ran to driver exit 0 and was refused:
+    "driver manifest run.hypothesis_id='H-PEXT-d536a1' has no source: the frozen plan
+    names no hypothesis" (_check_driver_facts, SHF-20261106-a114e7 G6). Lean
+    RUN-PEXT-4d23b9 built all three Lean jobs (axioms propext, Quot.sound only) and then
+    failed with "failed_infrastructure: IndexError: list index out of range" in run.py's
+    axiom classifier. Both directories are immutable refused-run records; their run ids
+    are consumed.
+
+  amendment:
+    path: experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse.yaml
+    sha256: 6f22b91fc00411e021c25654b4e616814be42875aac00f6e112a7b5b809466b3
+    kind: prospective_plan_hypothesis_binding_and_lean_axiom_parse_repair
+    original_approval: DEC-20261024-992998
+    prior_rebindings_retained:
+    - AMD-EXP-PEXT-212d5c-20261026-source-binding (DEC-20261026-8a6d90)
+    - AMD-EXP-PEXT-212d5c-20261031-command-recording (DEC-20261031-e3ee70)
+    correction: CORR-20261106-6c99d8
+    scientific_protocol_unchanged: true
+
+  findings:
+    hypothesis_binding:
+      observation: >-
+        The specification names hypothesis_id H-PEXT-d536a1 and DEC-20261024-992998
+        approved that specification (specification_sha256 61c12cd4...). The plan omitted
+        the key, so the supervisor could not accept the driver's own value.
+      change: 'plan gains top-level hypothesis_id: H-PEXT-d536a1; no other plan field changes except the two run ids and the run.py source hash.'
+      not_a_new_binding: the hypothesis was already named in the approved specification; this makes the execution plan agree with it.
+    lean_classifier:
+      observation: >-
+        run.py classified custom axioms with a comprehension whose iterable evaluates
+        s.split("[", 1)[1] before the trailing `if "[" in s` guard. The Lean output line
+        "does not depend on any axioms" has no bracket, so the split raised IndexError.
+        The Lean build itself succeeded, so this is a driver defect, not a Lean or
+        mathematical failure.
+      change: >-
+        The split now runs only after `"[" in s`. allow-list (propext, Quot.sound,
+        Classical.choice) unchanged; the axiom dict and every other stage unchanged.
+      verification: >-
+        Read-only replay over the recorded RUN-PEXT-4d23b9 lean-build.log: 8 axiom
+        declarations parsed, 0 custom axioms, no exception. This is a code-level replay,
+        not a trial.
+      sha256:
+        from: 10ed4714870dba07ea99934f6241b014fa4a4df83520a1265cc33bfd72d76939
+        to: 17c6518e79b22acec3acf16a05254fa7f101d6188ef579476a487052469c9171
+    run_ids:
+      retained_refused:
+      - RUN-PEXT-5d190f
+      - RUN-PEXT-4d23b9
+      reassigned:
+        regression: RUN-PEXT-5d190f -> RUN-PEXT-87595f
+        lean: RUN-PEXT-4d23b9 -> RUN-PEXT-946361
+      unchanged: [RUN-PEXT-056770, RUN-PEXT-708f11, RUN-PEXT-3fd19f, RUN-PEXT-422517]
+    rebinding:
+      trial_plan_sha256:
+        from: 81b885ae3f1bcc479ffa948db8dd888b128eeb6d11bda0a861e5c5f1e233489f
+        to: 06b801b5c98b1e2476a97d37eded50e1dfc4b4a6a82bd99b10f623595c1747a7
+      dispatch_queue_sha256:
+        from: 2bdce9e2cb517b7093336c73f7e983e4dfd42013b198340b78b4372f4186579a
+        to: cb7292e30d17464b51a6fcf31bcabbb455b544124dc3b6bc87e9c34930564463
+      executor_handoff_sha256:
+        from: 411d537c209a201fdeba7ca6908fc65eef3ae0856de2825e933c4210c97d2b08
+        to: 1c1f9540e3b05e54a74f6fbc14cacb9470468e504a2bc9d0fa55bc1a9c27ae8c
+
+  admission_after_amendment:
+    dispatcher: 'ready: 1 task(s) — TASK-20261024-672126, claim=null'
+    experiment_execution_status: >-
+      plan_sha256 06b801b5..., required 6, remaining 6, planned 2 (regression, lean),
+      waiting_on_dependencies 4, needs_reconciliation 0
+    newest_experiments: execution_state ready
+    executor_route: 'openai:gpt-5.6-terra, effort medium, no fallback, no degradation (DEC-20261106-4f6860)'
+    scientific_trials_launched: 0
+
+  rationale:
+  - 'Both refusals are execution-binding defects, not mathematics: the regression computed and matched its fixtures, and the Lean development built cleanly. Leaving them unrepaired would retire a complete ECC contract over a missing plan key and a one-line guard.'
+  - 'The hypothesis binding adds no new claim: H-PEXT-d536a1 is the hypothesis the approved specification already names. Binding the plan to it is what the supervisor check exists to require.'
+  - 'The Lean fix is a guard reorder that preserves the accepted axiom allow-list exactly; the recorded build log replays with 0 custom axioms, so the check it enforces still does its job.'
+  - 'Two run ids are reassigned, never reused, and both refused directories stay as immutable records. The amendment is additive and names every from/to hash.'
+  - 'No new contract, no new approval, approved-unrun unchanged. The alternative (declaring the contract unrunnable) would assert an impediment that no longer exists after these two edits.'
+
+  evidence_refs:
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-5d190f/execution-receipt.json
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9/execution-receipt.json
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9/lean-build.log
+  - experiments/EXP-PEXT-212d5c/reports/run-20261106T1940Z/report.md
+  - experiments/EXP-PEXT-212d5c/implementation/run.py (stage_lean)
+  - experiments/EXP-PEXT-212d5c/trial-plan.json
+  - experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse.yaml
+  - ledger/handoffs/TASK-20261024-672126.yaml
+  - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json
+  - tools/experiment_execution.py (_check_driver_facts)
+
+  limitations:
+  - 'The Lean replay is over a recorded build log, not a fresh build in this session; the next supervised launch is the first full proof.'
+  - 'The census remains a ~20.5 h trial on 4 threads; this decision does not shorten it or promise completion in one session.'
+  - 'The whole-ledger validation CI debt is untouched and is not a finding about this experiment.'
+
+  next_actions:
+  - id: NA-1
+    rank: 1
+    owner: top-level session
+    text: >-
+      Archive this decision, the amendment, the correction, the amended plan, run.py,
+      the handoff and the queue, reproducing the hashes above; commit, push, open PR,
+      enable auto-merge. Any hash mismatch stops the archive.
+  - id: NA-2
+    rank: 2
+    owner: executor session (separate /run)
+    text: >-
+      Claim lane BATCH-21339c and invoke /run EXP-PEXT-212d5c under TASK-20261024-672126
+      on the verified route (openai:gpt-5.6-terra, effort medium, no fallback), on the
+      Lean-capable host. The census trial needs its ~20.5 h window.
+  - id: NA-3
+    rank: 3
+    owner: coordinator, after the runs
+    text: >-
+      Snapshot-archive the run records before any interpretation; then the independent
+      blind recount and review_plan.
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      This is an amendment and execution-admission decision. No evidence record and no
+      durable research claim exists.
+
+  conclusions: []
