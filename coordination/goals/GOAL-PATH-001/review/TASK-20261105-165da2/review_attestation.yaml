@@ -1,0 +1,131 @@
+# Review attestation for TASK-20261105-165da2: independent code review of the EXP-MONO-1a1be2
+# instrument (blocker B8 of DEC-20261105-f0b7c7). This is an instrument review, not a claim-changing
+# round, so there is no review_plan and no joints. Report: code_review.md in this directory.
+review_attestation:
+  task_id: TASK-20261105-165da2
+  batch_id: BATCH-8517aa
+  goal_id: GOAL-PATH-001
+  experiment_id: EXP-MONO-1a1be2
+  authorized_by: DEC-20261105-f0b7c7
+  archived_by: TASK-20261105-49716d
+  role: validator
+  review_kind: instrument code review (review_plan null; review_required false)
+  commit_reviewed: 72f51766a67be05f6d8de0f4ed962c4c615d52bd
+  commit_reviewed_subject: "archive(TASK-20261105-7083a8): snapshot TASK-20261105-ac5ad6 for EXP-MONO-1a1be2"
+  worktree_clean_at_commit: true
+  card_sha256_verified: f3a20a014c062cabb328f30dc31bce347f5e11ea7d00806aae288b09e04d6e9b
+  code_hashes_at_commit:
+    fqn.py: c5c967f1ba6d0c7cfd34c08ee3ff67f7551d0b3163e695c464b8e93b49f80f09
+    curves.py: 9e52804cbac32ce5d9fae7e9627dd97a9ad200917b3ffaaa9aa7b5b975b5fc7f
+    semaev.py: 936af457d9fb52a4ff9286fed361861f0e2ad99bb901eee999e26a01bf9ba9c1
+    counters.py: 5e6d6f24854d520fa3bf28ffbd5af89bf11778262ba97c156478ecfab1977727
+    kernel.c: e0152279833973b1f7bdcba70ae28e5d7d9d456caab985ee206604a91c4aa021
+    launcher.py: d2833c702412e17b6288dc68fcbf53aa77960c92222e09f04f568963cf52b40f
+    make_trial_plan.py: b7010bd2bdd5df9f28dcedffb53a628e61425fb3d83aae1806895a313ac7eef9
+    code_sha256: e12fe0f3f07dc79bc093d70174cf05dff7ab3fc90f04711f903a56565cb4fd38
+    tests/test_kat.py: 4305f722e8c6839584177b23817bfe4e20a917677cd5fad58344c3f183169e07
+    specification.yaml: d81a85b36961647d6d6caccdf988d5650a7376fa581173f9761ab3ed594bc373
+    trial_plan_regenerated_sha256: 9ccbe61445fba836ec44bdea6e55255220a4d08e8d09c9198e5bd28696d8fb4a
+  sources_read:   # in the order read; paths relative to the repository root at the reviewed commit
+    - {path: ledger/handoffs/TASK-20261105-165da2.yaml, extent: full}
+    - {path: agents/validator.md, extent: full}
+    - {path: AGENTS.md, extent: "full text injected into context by the session hook on the first file read; not opened separately"}
+    - {path: docs/agent-runtime-core.md, extent: "full, via git show at the commit (outside the sparse checkout)"}
+    - {path: experiments/EXP-MONO-1a1be2/specification.yaml, extent: full}
+    - {path: ledger/decisions/DEC-20261105-f0b7c7.yaml, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/launcher.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/counters.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/kernel.c, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/fqn.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/curves.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/semaev.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/make_trial_plan.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/README.md, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/code/tests/test_kat.py, extent: "definition index by grep, then full in four ranges"}
+    - {path: pyproject.toml, extent: "lines 88-100 at the commit, to settle F-1 (b)"}
+    - {path: conftest.py, extent: "first 60 lines at the commit (entire hook), to settle F-1 (b)"}
+    - {path: tools/ci_test_supersession.py, extent: "full at the commit, to settle F-1 (b)"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/kat-log-ac5ad6.json, extent: "W10 entries only, by key (KAT cells)"}
+    - {path: experiments/EXP-MONO-1a1be2/code/throughput_calibration.py, extent: full}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/throughput-calibration.json, extent: "key names only"}
+    - {path: ledger/proposals/IDEA-20261023-f15270.yaml, extent: "lines 648-657 only (validation_arm.machine_readable_output), for CR-6"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview.json, extent: "sha256 only"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json, extent: "sha256 only"}
+    - {path: experiments/EXP-MONO-1a1be2/implementation/kat-report.md, extent: full}
+  session_context_not_requested: "CLAUDE.md of /home/user/crypto and of crypto-autoresearcher, injected by the runtime"
+  read_sibling_reports: false
+  sibling_reports_note: "Nothing under coordination/goals/GOAL-PATH-001/review/ was read except this task's own output."
+  findings_summary:
+    blocking: 1
+    non_blocking: 6
+    blocking_ids: [F-1]
+    non_blocking_ids: [N-1, N-2, N-3, N-4, N-5, N-6]
+    by_cr:
+      CR-1: {F-1: blocking, N-2: non-blocking, N-5: non-blocking}
+      CR-2: {N-6: non-blocking}
+      CR-3: {N-1: non-blocking (surviving mutant M5)}
+      CR-4: {N-4: non-blocking}
+      CR-5: {N-4: non-blocking}
+      CR-6: {N-3: non-blocking, N-5: non-blocking}
+  checks_held:
+    - "CR-1: all 13 refusal scenarios, 17 invocations (missing, empty, non-object lock; null approved_by in the lock or the spec; wrong spec, code or plan hash; status review_required or running; --plan omitted; code edited after the lock) refuse with no runs/ entry; code_sha256 covers every local module a cell imports, and kernel.c"
+    - "CR-2: plan regenerates byte-identical twice (9ccbe614...fb4a); 298 seed strings follow the rules; no cross-role reuse; tuple_seed_aa consumed by the four curve-0 B1 cells"
+    - "CR-3: n >= 4 mutants M1 to M4 (Python and C; reduction and inversion loop) killed first by widened KAT test_wide_field_axioms_and_kernel_ops[5-4]; full-suite failures 92, 92, 56 and 40, all widened items; large-q mutant M5 survives the full suite, 316 passed (N-1)"
+    - "CR-4: P2(vii), (viii), (ix) equal an independent naive recomputation on 33 KAT cell and base cases, including t2 > 0; each base's own B, t2 and |X| used; withheld in KAT mode"
+    - "CR-5: no KAT asserts a prediction or a cross-convention identity; KAT refusal 96 of 96 (24 contract pairs x 4 arms); the throughput harness records timings only and never calls cell or run_cell"
+    - "CR-6: sampler follows the rule and excludes S by class; lambda is an exact Fraction; cdf.json holds all 22 IDEA keys"
+  baseline_control: "full KAT suite on the committed bytes: 316 passed in 1159.52 s, exit 0"
+  verdict: failed
+  verdict_scope: >-
+    The B8 instrument-review gate: one blocking finding (F-1) is unresolved. This verdict asserts nothing about
+    H-MONO-23d347, any prediction, or the mathematics, and it is not negative evidence about any of them.
+  inference:
+    requested_policy: review-adversarial
+    reasoning_effort_requested: null   # card value; the policy default applies, never below the review floor
+    resolved_model: claude-opus-5-5
+    resolved_model_provenance: runtime-reported model id for this session
+    model_verified: false
+    model_verified_reason: no adapter doctor --probe receipt exists for this session
+    fallback_used: false
+    degraded: false
+    independent_session: true
+    independence_basis: >-
+      A fresh subagent session launched for this card, with no transcript, memory or artifacts of
+      TASK-20261105-ac5ad6, TASK-20261029-a97206 or the PR #2707 author session. Independence is between
+      sessions only, not between models: the producer sessions may have used the same model id.
+    delivery: interactive
+  lane_claim: "Not performed by this session: the launching session instructed no claim, release, git add, commit or push."
+  runs_launched: 0
+  experiment_cells_computed: 0
+  contract_parameter_computation: "Two regenerations of the trial plan's identity fields (inputs) with code/make_trial_plan.py, as CR-2 requires; nothing else."
+  scratch: "Under /tmp/claude-0/-home-user/d72a143b-1bef-500a-b9ca-d25907246d76/scratchpad/165da2/, outside the repository; deleted at the end."
+  writes:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml
+  validation_report:
+    id: null   # no VAL id minted here; the archive task allocates one with tools/allocate_id.py if a record is wanted
+    task_id: TASK-20261105-165da2
+    run_ids: []
+    artifact_checks:
+      - "commit 72f51766 is checked out clean; the card sha256 matches; code hashes recorded above"
+      - "committed trial-plan previews and the regenerated plan agree (9ccbe614...fb4a)"
+      - "throughput-calibration.json: timing, host, modeled and identity keys only"
+    metric_recomputations:
+      - "P2(vii), (viii), (ix) recomputed independently on KAT cells: equal to the implementation (values not recorded)"
+      - "KAT suite re-run on the committed bytes: 316 passed"
+    control_checks:
+      - "Launcher gate: 13 refusal scenarios (17 invocations) refuse, with no runs/ entry; positive control passes the gate (by a hand-written receipt, F-1)"
+      - "Mutation controls: M1 to M4 killed, M5 survives"
+    heuristic_validation_checks: []
+    cost_model_checks: []
+    proof_architecture_checks: []
+    verdict: failed
+    limitations:
+      - "Instrument review only; nothing about the mathematics or any prediction."
+      - "Mutant and residual checks ran on KAT fields; contract-scale behaviour is inferred from identical code paths."
+      - "F-1 (b) was reproduced on a scratch tree with the same pytest rootdir mechanism, not in the full repository checkout (sparse)."
+      - "Independence is between sessions only; resolved model not probe-verified."
+    artifact_paths:
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/review_attestation.yaml
