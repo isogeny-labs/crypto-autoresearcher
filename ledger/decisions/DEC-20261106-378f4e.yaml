@@ -1,0 +1,149 @@
+# DEC-20261106-378f4e: Coordinator closure of ranked candidate C3 (trim the "unidentified fixed overhead" at fp28) without a run, on its own pre-stated closure criterion, after the zero-cost per-phase decomposition of the v6 counted records; correction of the ranking's remainder figure (about 1.5 S / 7 % -> 0.189 S / 0.91 %); ruling that the N(N+1) set-up finding does not change C1's frozen interpretation plan, with post-C1 follow-ups only. Approves nothing, launches nothing, moves no hypothesis.
+coordinator_decision:
+  id: DEC-20261106-378f4e
+  id_provenance: Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision --date 20261106
+    and confirmed free with --check. The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  relates_to: DEC-20261106-1d23b6
+  source: 'Local decomposition by the main session, 2026-11-06, no AWS or EKS: scratchpad/c3-decomp/DECOMP.md (sha256 885579d5...,
+    sections 1 and 2) and decomp.json (sha256 ba8cfa7f...), over the v6 counted records.jsonl (sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b).
+    The Coordinator read DECOMP.md in full; it did not re-run the scripts or read decomp.json values beyond those DECOMP.md
+    quotes.'
+  subject: 'C3 (rank 3 in DEC-20261106-1d23b6): closed at fp28 on its own closure criterion; ranking remainder corrected;
+    C1 interpretation unchanged'
+  context: 'DEC-20261106-1d23b6 ranked C3 third: "Trim the unidentified fixed overhead (about 7 % of S), for example restart
+    or renewal scalar multiplications via the fixed-window aP+bQ generator, if it is not already the default." Its closes_when,
+    stated before the decomposition: "The phase decomposition shows a reducible share under about 3 % of S, or the generator
+    is already the default on main." Its next_actions item (c) named the per-phase decomposition of the v6 counted records
+    as the free test. That decomposition is now done.
+
+
+    Measured (DECOMP.md section 1; incumbent prime-abscissa:size=407, mitm:negation_folded=1, targets=walk; 128 measured
+    runs, 16 targets = 2 curves x 8; w = 0; 95 % percentile bootstrap over the 16 targets): mean S 20.771; oracle_setup
+    54.007 % [52.45, 55.64] (11.259 S); relations 45.981 % [44.35, 47.54] (9.509 S); verify 0.013 %; factor_base and linear_algebra
+    0 GAE at w = 0; residual total_gae minus the sum of phases exactly 0 in every record. Inside relations: walk steps 45.071
+    % [43.42, 46.65] (exact counter); restart additions 0.0135 % (exact); restart offset draws 0.396 % [0.387, 0.405] (exact);
+    jump table plus initial point 0.500 % [0.488, 0.513] (derived as the remainder of relations adds and doubles, not a counter).
+
+
+    Set-up (DECOMP.md section 2): oracle_setup is PairTable::build_negation_folded (ic_boundary.rs 6370-6408 at ea8e9ef7),
+    N(N+1) = 166,056 point additions of factor-base point pairs per run, identical in all 128 runs, with 0 doublings and 0
+    scalar multiplications; it scales as N^2. Generator (DECOMP.md section 3): at ea8e9ef7 CountedGroup::mul is plain double-and-add
+    (ic_boundary.rs 1132-1147) with no override; the only joint routine is Shamir joint_mul (1410-1440), used by stride targets,
+    not by Targets::Walk; a pathspec-limited git grep for fixed-window or repeated-base names found nothing.
+
+    '
+  decision: close
+  target_ids:
+  - LEAD-ICP-prime-ic-constant-engineering
+  - GOAL-ICPERF-e6b6a4
+  - DEC-20261106-1d23b6
+  closure:
+    item: C3 (DEC-20261106-1d23b6 ranking rank 3)
+    outcome: closed_without_run
+    criterion_applied: 'The first clause of C3''s own closes_when, "reducible share under about 3 % of S". The second clause
+      ("generator already the default") is FALSE at ea8e9ef7 and is not relied on.'
+    reducible_share: 'Upper bound 0.92 % of S at w = 0, about 0.19 S: everything C3''s mechanism could touch, taken as fully
+      removable, i.e. restart offset draws 0.396 % + jump table and initial point 0.500 % + restart additions 0.0135 % + verify
+      0.013 %. A fixed-window generator would remove only part of the scalar-multiplication ops inside those lines, so the realistic
+      gain is a fraction of that bound. The bound is under the 3 % line by more than a factor of 3, and the derived jump-table
+      line''s unresolved 45-versus-38 ops-per-multiplication gap (DECOMP.md section 1) moves it by well under 0.1 % of S.'
+    dominant_phases_outside_mechanism: 'oracle_setup (54 %) contains no scalar multiplication, so the generator cannot act
+      on it; its pairs are distinct factor-base points, not multiples of a fixed base. Walk steps (45 %) are single additions
+      per trial and are the search itself. Neither is fixed overhead in C3''s sense.'
+    refutation_basis: 'empirical_only plus source reading. The share figures are counted, deterministic records of one v6
+      session on two fp28 curves; the N(N+1) identity and the absence of the generator are read from ea8e9ef7 source and
+      agree exactly with the counters. This is the closure of a ranked candidate on its pre-stated criterion, not a rejection
+      of a hypothesis; no hypothesis record exists for C3 and none moves.'
+    weights: 'Measured at w = 0 only. At w = 0.1 and 1 the fixed-overhead lines (once-per-run jump table, per-restart draws,
+      one verification) carry little native work beside the per-trial lookups and guard probes, so their share is expected
+      to fall, not rise. This is an inference, not a measurement.'
+    reopen_when: 'A later commit makes scalar multiplication a material share of S at fp28 (for example a target source that
+      draws a fresh aP+bQ per trial, or restarts per trial), or a decomposition at another size shows a fixed-overhead share
+      of at least about 3 % of S.'
+  correction:
+    corrects: 'DEC-20261106-1d23b6 context paragraph 2 ("oracle set-up ... about 10.5 S (about 51 %) at sqrt(r) = 15,786;
+      trials ... about 8.8 S (about 42 %) ...; about 1.5 S (about 7 %) unidentified"), its ranking rank 3 item text ("about
+      7 % of S"), rationale bullet 6 ("about 7 % of S at best"), and RANKING.md sections 2 and 3 (session scratch, uncommitted).'
+    corrected_values: 'Set-up 11.259 S (54.0 %); relations 9.509 S (46.0 %), of which walk steps 45.1 %; trials counted as
+      targets_tried at 1 GAE each 9.322 S; remainder S - set-up - trials 0.189 S (0.91 %), CI [0.184, 0.195]. Per curve:
+      r 191,494,577 gives S 20.970 and remainder 0.200 S; r 249,209,281 gives S 20.572 and remainder 0.179 S.'
+    cause: 'The ranking used one r (249,209,281, sqrt about 15,786) for both curves of the session and a trial count derived
+      from lookups_uncharged. The two curves have different r and different mean total_gae (290,184 and 324,760 GAE per run).
+      The ranking''s own limitation bullet 1 flagged this split as Coordinator arithmetic that the records could confirm.'
+    form: 'Additive. DEC-20261106-1d23b6 and RANKING.md are not edited. This record is the durable corrected statement; a
+      reader of DEC-20261106-1d23b6 follows relates_to back here. The ranking order is unaffected: C3 was already third, and
+      the correction only lowers its ceiling.'
+  c1_interpretation_ruling:
+    ruling: no change to C1's frozen protocol, decision rule or interpretation plan
+    why: 'C1 decides on the counted candidate/incumbent ratio of S at w = 0, 0.1 and 1 (U_w), which is measured, not modelled.
+      The decomposition confirms the set-up term C1''s pre-data model M(N, w, g) already uses, N(N+1) = 166,056 at N = 407,
+      exactly. It measures no C1 curve and no C1 arm; the v6 records it reads are already listed in C1''s data_seen; no C1
+      data exists. The model''s projected ratios (0.915 / 0.894 / 0.798) are labelled model outputs, not claims, in the frozen
+      protocol and in H-ICPERF-4cb536, and they decide nothing.'
+    caveat: 'If the protocol''s fixed term F in M(N, w, g) was taken from the ranking''s 1.5 S remainder rather than measured
+      per curve, the model overstated F by about 1.3 S. That would affect only the choice of N = 304 and the projections,
+      never the validity of the sessions or the verdict. The Coordinator has not checked which F the frozen protocol used.'
+    post_c1_follow_ups:
+    - 'In the C1 evidence review, as a descriptive consistency check: confirm from each arm''s records that oracle_setup equals
+      N(N+1) additions (92,720 at N 304; 166,056 at N 407; 663,410 at N 814) with 0 scalar multiplications, and report the
+      set-up share per arm. An arm that departs from N(N+1) is an implementation finding, not a result.'
+    - 'In the same review, recompute the M(N, w, g) projection with per-curve r and F measured as in DECOMP.md section 1, and
+      report the projection error against the observed ratios descriptively. It moves no verdict.'
+    - 'After C1, any further set-up work at fp28 must reduce the N(N+1) pair additions themselves or N. RANKING.md section 4
+      already records that a rectangular or partial table gains nothing for aN + cr/a with a <= N, that x-only sum/difference
+      sharing is GAE-neutral, and that retained set-up across targets is an accounting change (closed_dominated). This decision
+      opens no new candidate.'
+  rationale:
+  - C3's pre-stated first closure clause is met with a wide margin. The whole mechanism-reachable share is at most 0.92 %
+    of S at w = 0, under the 3 % line, so a counted A/B (about USD 0.5-1) could not show a material improvement.
+  - The decomposition is exact (residual 0 in every record), so the "unidentified" overhead the ranking assigned to C3 does
+    not exist at the scale it stated. It was an artefact of using one r for two curves.
+  - The generator is not the default at ea8e9ef7, but there is almost nothing for it to act on. The dominant phase contains
+    no scalar multiplication.
+  - Closing on a criterion fixed before the test, with the test's artefacts archived first, is not a post-hoc criterion change.
+  - The success criterion (owner, 2026-10-15) counts any verified, measured improvement. A sub-1 % ceiling would not justify a paid run. It
+    is dominated by C1 (approval DEC-20261106-c69de4 drafted, not yet archived) and by exponent-targeting work (DEC-20261106-1d23b6
+    roadmap caveat).
+  scope: fp28, the v6 counted session's two prime_search curves, the walk incumbent at N 407 with mitm:negation_folded=1 and
+    max_trials 26479085, the executable ea8e9ef7 and its accounting, w = 0. No transfer to other sizes, target sources or commits
+    is assumed.
+  evidence_refs:
+  - scratchpad/c3-decomp/DECOMP.md (sha256 885579d5...)
+  - scratchpad/c3-decomp/decomp.json (sha256 ba8cfa7f...)
+  - scratchpad/c3-decomp/scripts/decomp.py, scripts/oracle_setup.py
+  - scratchpad/c3-decomp/phase_shares.svg, phase_shares.png
+  - scratchpad/v6/counted-untrusted/session/records.jsonl (sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b)
+  - isogeny-labs/crypto:src/cryptanalysis/ic_boundary.rs@ea8e9ef71c3c82027dd9e01535302725519c3fca (lines 1132-1147, 1410-1440,
+    6363-6408, 7866-7893, 8494-8521, 9163-9170)
+  - DEC-20261106-1d23b6
+  - scratchpad/next-candidate/RANKING.md sections 2, 3 and 4
+  limitations:
+  - One counted session, two curves, 16 targets, one executable, w = 0 only. The share figures are exact for those records,
+    and the bootstrap CIs reflect curve and target variation only.
+  - The jump-table and initial-point line is derived, not counted, and its ops-per-multiplication gap is unresolved. It is
+    bounded inside the 0.92 % total.
+  - 'The generator search was a pathspec-limited grep over ic_boundary.rs, ic_framework/ and ecbench/ at ea8e9ef7, not repository-wide.
+    The closure does not rely on it: clause 1 holds whether or not a generator exists elsewhere.'
+  - The dispatch from the mitm:negation_folded=1 option to build_negation_folded was not traced. The exact counter match is
+    the evidence.
+  - The input records live in session scratch and are not committed. The archive below commits the analysis artefacts, and
+    the records stay identified by sha256 (they are the v6 study's counted file).
+  - The Coordinator did not re-run the scripts or hash the files. The sha256 values are the main session's.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: 'Closure of a ranked candidate, not an evidence-review support or reject_scoped decision. The evidence is
+      one unreplicated counted session. The decomposition is recorded on the lead (next_actions), not as a KN-FIND.'
+  next_actions:
+  - 'Main session: allocate one archive TASK id and archive this record ALONE, after the C1 approval archive, with the decomposition
+    artefacts (DECOMP.md, decomp.json, the two scripts, phase_shares.svg and phase_shares.png) under coordination/design/<TASK>/c3-decomp/
+    and their sha256 values in the receipt. The artefacts must land in the same commit as or before this decision. Run the
+    post-commit verifier, push, then open or refresh a ready-for-review PR against main with auto-merge. If the analysis also
+    lands in isogeny-labs/crypto, the research-visuals report, graph and PDF are owed there.'
+  - 'Lead record (curate path, in that archive): add to LEAD-ICP-prime-ic-constant-engineering that the C3 fixed-overhead
+    trim is closed at fp28 on ea8e9ef7, with a mechanism-reachable share of at most 0.92 % of S at w = 0 (this decision),
+    and that the set-up is N(N+1) pair additions with no scalar multiplication.'
+  - 'Coordinator, in the C1 evidence review: carry out the two post_c1_follow_ups checks. No change to the frozen C1 protocol.'

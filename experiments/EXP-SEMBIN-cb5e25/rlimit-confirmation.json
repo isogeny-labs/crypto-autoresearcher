@@ -1,0 +1,20 @@
+{
+  "schema": "sembin-design-observation-v1",
+  "date": "2026-11-06",
+  "purpose": "Optional confirmation of DEC-20261106-36e212 RUL-3(a): effect of a supervisor RLIMIT_AS (ulimit -v) on code/adapter.py + check_trial.py. Trivial cell m3n03 EQS4 r0, real fixtures.json (all 8 pass, dummy protocol hash), scratch directories outside the repository. Not an experiment run; nothing here is an observation about the hypothesis.",
+  "results_virtual_ceiling_kB": {
+    "3000000": "completed, check_trial valid",
+    "2000000": "completed, check_trial valid",
+    "1500000": "completed, check_trial valid",
+    "1000000": "completed, check_trial valid",
+    "700000": "completed, check_trial valid",
+    "500000": "completed, check_trial valid",
+    "400000": "completed, check_trial valid",
+    "300000": "completed, check_trial valid",
+    "250000": "parent died with MemoryError at start-up, no trial record, check_trial invalid (driver exit 1, record missing)",
+    "200000": "OpenBLAS allocation failure at start-up, no trial record, check_trial invalid",
+    "150000": "OpenBLAS allocation failure at start-up, no trial record, check_trial invalid"
+  },
+  "reading": "A ceiling that stops only the closure child while the parent survives was not found on this cell: the trivial cell needs about 300 MB of virtual memory in total, and below that the parent dies at import time, before any record. That path is a terminal invalid stop (the remote risk RUL-3 accepts). The supervisor's 32768 MB ceiling is more than 10 times the largest measured closure resident set (3.1 GB at N = 40, synthetic proxy), so it does not bind in the design range. The kill-inside-child path of RUL-3(a) is therefore untested, not contradicted.",
+  "also_found": "The Coordinator's suggested stub fixtures.json ({sr1_all_pass: true, fixtures: []}) is refused by run.py's SR-1 gate (fewer than 8 fixtures): the gate works."
+}

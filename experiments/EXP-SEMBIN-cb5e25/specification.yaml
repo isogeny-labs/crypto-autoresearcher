@@ -1,0 +1,1933 @@
+# Draft revision 2026-11-06 (design_revision below). Nothing in this contract
+# has been approved, frozen or run, so it is revised in place and the changes
+# are recorded in design_revision. After approval any change is an additive
+# amendment under amendments/.
+experiment:
+  id: EXP-SEMBIN-cb5e25
+  design_revision:
+    - revision: 2
+      date: '2026-11-06'
+      by: coordinator
+      scope: >-
+        Draft only: status review_required, approved_by null, no grid cell run,
+        no frozen record touched. Driven by the implementer's report after code/
+        was completed (41 unit tests pass). Ten findings, each ruled below.
+      changes:
+        - id: DR-1
+          finding: >-
+            Implementer finding 1. The Macaulay space M_D of a raw generator
+            list is not invariant under recombination of mixed-degree equations,
+            so exact A/A equality (SR-5, noise floor 0) cannot hold on raw
+            generators.
+          ruling: adopted, with a stronger statement than the implementer's default
+          change: >-
+            New DC-9 (adapted generators) and new DER-8. Closure, certificates
+            and every exact metric run on the degree-adapted reduced row echelon
+            form of the F_2-span of the raw generators (grevlex pivots); the raw
+            hash is also recorded. DER-8 shows (a) M_D, W_D and the whole M-4
+            series of the adapted system are functions of the span and covariant
+            under affine variable maps, so A/A equality is exact at every D,
+            and (b) for D >= 3, W_D(raw) = W_D(adapted) because every raw
+            generator has degree <= 3. So the decisive quantity (M-1 at D = 4)
+            does not depend on the convention, DER-2 and DER-3 are unchanged for
+            D >= 3, and the convention matters only at D = 2, for plain M_D
+            (M-7) and for iteration 0 of M-4. C-AA-ENC, SR-5, DC-1, DER-2, F-4
+            and the Validator's blind re-derivation list are updated.
+        - id: DR-2
+          finding: >-
+            Implementer finding 2. Every EQS4 instance has a degree-1 element,
+            so d_F^eq = 2 and S-AS1-EXACT with prediction P-7 (d_F^eq = 3) is
+            vacuous.
+          ruling: >-
+            adopted. DER-9 proves the degree-1 element for every m >= 3 instance
+            (EQS4 and EQS2). S-AS1-EXACT is demoted to a descriptive report and
+            P-7 is re-stated as a calibration prediction on M-6 (d_F^eq <= 2).
+            S-MAIN and F-MAIN are logically unchanged. The reading of what an
+            all-contained outcome corroborates is narrowed (DER-5, S-REPORTING
+            and the hypothesis interpretation_limits): the operational form
+            "degree 4 suffices", not Assumption 1 with the exact d_F.
+        - id: DR-3
+          finding: Implementer finding 3. Planted decompositions can be infeasible at tiny cells.
+          ruling: adopted and specified (instance_specification.planted_decomposition, cell_notes)
+          change: >-
+            EQS4 and EQS4-U: deterministic redraw of the SHARED (curve, shifts)
+            draw until a valid decomposition exists, counted and recorded. EQS2:
+            not_available when no valid decomposition exists. The redraw depends
+            on feasibility only, never on a closure outcome.
+        - id: DR-4
+          finding: Implementer finding 4. EQS4-U stream labelling.
+          ruling: adopted (replication.seeds, protocol.json seed_derivation.note)
+          change: a = 0 is the EQS4 stream (arm EQS4, instance cell_id); a >= 1 is arm EQS4-U, instance cell_id/a<a>.
+        - id: DR-5
+          finding: Implementer finding 5. Z for nulls.
+          ruling: >-
+            adopted. The F-MAIN threshold (>= 3 of 5 seeds with |Z| = 1
+            verified and M-1 false in one completed cell with N >= 18) stands
+            unchanged. It can only be met in cells with N in 18..26 (eight
+            cells, named in falsification_criterion). Prediction P-3 is
+            re-worded because, as written, it required at least 4 of 5 seeds to
+            be uniqueness-verified, which random planted systems with M close to
+            N rarely are.
+        - id: DR-6
+          finding: Implementer finding 6. F-5 tamper evidence.
+          ruling: >-
+            adopted as a re-statement. Fixture F-5 requires the declared tamper
+            to be rejected and, for every single-bit flip, the checker's verdict
+            to equal an exhaustive validity predicate. Four of 31 flips are
+            equivalent encodings and are legitimately accepted. Byte-level
+            tamper evidence is the certificate sha256 in M-8.
+        - id: DR-7
+          finding: 'Implementer finding 7. The group order is counted by exact enumeration (cross-checked against Sage in F-6), and substreams use the HashRng sha256 counter generator.'
+          ruling: adopted (instance_specification.curve, F-6, dependencies, replication.seeds)
+        - id: DR-8
+          finding: Implementer finding 8. Certificate cost.
+          ruling: >-
+            adopted with a pre-registered emission rule. wdag containment
+            certificates: every contained decisive instance with N <= 20, two
+            nonce-chosen per cell for 21 <= N <= 26, none for N >= 27. Wall cap
+            900 s and the 10 GB RSS watchdog, in a child separate from the
+            closure so that a certificate failure can never alter M-1. An
+            uncertified non-containment is never a counterexample and never a
+            contained instance (IR-4 split into IR-4a and IR-4b). Modelled
+            total budget re-computed to 26,400 s (was 22,400 s).
+        - id: DR-9
+          finding: Implementer finding 9. Engine reuse.
+          ruling: adopted (reuse_rule, inputs, F-3, F-4). The engine is imported and subclassed.
+        - id: DR-10
+          finding: Implementer finding 10. Stretch cell N = 40.
+          ruling: >-
+            adopted as an observation only. The cell stays in the grid. The
+            synthetic-system probe (151 s, 3.1 GB) is recorded beside, and does
+            not replace, the conservative modelled figure. SR-3 and the caps use
+            measured values from the run.
+        - id: DR-11
+          finding: >-
+            Raised by the Coordinator while ruling on findings 1, 2, 5 and 8,
+            not by the implementer.
+          ruling: adopted
+          change: >-
+            (a) Certificate emission must run in a child separate from the
+            closure child, because in the current code a certificate memory kill
+            would censor a valid M-1. (b) NULL-PROF and NULL-SHUF lack the
+            degree-1 element that every EQS4 span has (DER-9): declared
+            mismatch, the null is a discrimination check. (c) F-6 not_covered
+            counts as failure for SR-1. (d) EQS4-NOFE runs on the same adapted
+            generators as EQS4-FULLFE, so C-FE-OUT differs in S_fe only. (e) An
+            EQS4-U attempt that cannot be planted counts as non-unique. (f)
+            P-7 changes role from decisive to calibration in protocol.json.
+      criteria_changes_explicit:
+        - >-
+          S-MAIN, F-MAIN, falsification and success logic: unchanged in
+          structure. F-MAIN gains a precise definition of "uniqueness-verified"
+          and the cell list that can carry it. IR-4 is split. A non-containment
+          that cannot be certified blocks F-MAIN and does not count toward
+          S-MAIN.
+        - >-
+          Predictions: P-3 re-worded (see DR-5), P-7 re-stated as a calibration
+          prediction (DR-2). P-1, P-2, P-4, P-5, P-6 unchanged. No prediction
+          was written or changed after any grid data, because none exists.
+        - >-
+          Interpretation: an all-contained outcome corroborates the operational
+          form (degree 4 suffices) only. Assumption 1 with the exact equality
+          d_F = 2 is violated on inspection at every instance under DC-6 (DER-9
+          and DER-5), so it is not what this run can corroborate.
+        - >-
+          Fixtures: F-3, F-4, F-5, F-6 and F-8 gain clauses. F-6 must pass
+          (not_covered counts as a failure for SR-1).
+        - >-
+          Budget: modelled total 26,400 s, was 22,400 s. The 43,200 s total and
+          the 10 GB cap are unchanged and still hold.
+    - revision: 3
+      date: '2026-11-06'
+      by: coordinator
+      scope: >-
+        Draft only: status review_required, approved_by null, no grid cell run,
+        no frozen record touched except protocol.json, which was frozen first
+        (filed before affected data) and is bound below. Driven by the
+        experiment-director's compile findings and DEC-20261106-36e212.
+      changes:
+        - id: DR-11
+          finding: >-
+            tools/experiment_execution.py applies RLIMIT_AS = memory_mb to every
+            supervised trial and requires memory_mb, so the plan cannot avoid
+            RLIMIT_AS.
+          ruling: >-
+            The binding limit stays the resident-set watchdog in code/run.py
+            (VmRSS, 10 GiB). The supervisor's RLIMIT_AS is set to a loose
+            virtual ceiling of 32768 MB that is not a resource cap and decides
+            nothing; a kill at it is an infrastructure failure under SR-7, never
+            a censored M-1 or negative evidence. This is a declared deviation
+            from the letter of "never RLIMIT_AS", faithful to its intent (a
+            tight RLIMIT_AS fires on virtual size and mimics a result).
+            DEC-20261106-36e212 RUL-3. A confirmation on a trivial cell
+            (rlimit-confirmation.json) shows the ceiling does not bind in the
+            design range; the kill-inside-child path is untested.
+        - id: DR-12
+          finding: SR-8's clock start was unstated.
+          ruling: >-
+            The 43200 s total is charged from the first trial
+            (code/adapter.py session_start.json). The time of step S03 fixtures
+            (timeout 3600 s) is outside it and recorded in the session journal.
+            RUL-6.
+        - id: DR-13
+          finding: >-
+            Pass 1 cannot express outcome-dependent steps, replay of a
+            shared-directory step, or an undecided positive control.
+          ruling: >-
+            Pass 1 runs the static grid and the five certify passes. SR-6
+            re-runs of non-contained instances, the SR-7 infrastructure retry
+            and a raised certificate size guard are pass 2 (run 2 of
+            maximum_runs 3), separately approved; no seed or null is re-drawn.
+            Replay of the trials step is not covered in pass 1 (shared run
+            directory); no contained-side evidence decision rests on pass-1
+            data before a nonce-sampled scratch replay is archived. An
+            undecided PC-TRI instance is a warning, and the C-PC gate then does
+            not hold for its cell. RUL-4, RUL-5, RUL-9.
+  hypothesis_id: H-SEMBIN-e5b2db
+  source_idea: IDEA-20261006-8f4f02
+  question_id: RQ-SEMBIN-9e8f82
+  goal_id: GOAL-SEMBIN-fcb7a2
+  version: 1
+  title: >-
+    Counterexample search against Nagao 2015/984's binary chain: does the
+    degree-4 mutant closure of coset-shifted EQS4 contain its Groebner basis?
+  status: review_required
+  frozen: false
+  designed_at: '2026-11-06'
+  designed_by: coordinator
+  approved_by: null
+  execution_authorized: false
+  approval_note: >-
+    Designing is not approving. This contract stays review_required until the
+    implementation, trial plan, runbook, executor handoff and dispatch queue
+    exist, protocol.json is validated and frozen and bound in
+    execution_plan.protocol_hashes, and tools/experiment_preapproval.py
+    reports approvable true on the exact prospective bytes. Approval then
+    needs a committed Coordinator decision under the standing user
+    authorization (AGENTS.md). After that, any change to the scientific
+    protocol is an additive amendment under amendments/.
+  lead_atlas:
+    row: LEAD-ICE-first-fall-degree-assumptions
+    path: knowledge/leads/ecdlp/ic-engine/LEAD-ICE-first-fall-degree-assumptions.yaml
+    related_row: knowledge/leads/ecdlp/ic-engine/LEAD-ICE-descent-closure-degree-at-scale.yaml
+    delta: >-
+      Moves the Nagao part of the row off "Prop. 5 unproven" onto a decidable
+      instance question. Proposition 5 is true as printed by Koszul padding
+      (derivations/koszul_padding_check.py), so the row's remaining Nagao
+      premise is Assumption 1, tested here as GB containment in W_4 on EQS4
+      with an independently checkable counterexample certificate. For the
+      related row it adds the shifted, satisfiable analogue of the C1 cell
+      (m, n, l) = (3, 19, 7) within a 10 GB cap. It does not discharge that
+      row's next action, which is unsatisfiable draws at degree 5.
+    no_run_or_evidence_delta_claimed: true
+
+  objective: >-
+    Search the frozen grid of EQS4(m, R) instances (Nagao 2015/984 Definition
+    8, p = 2) for an instance whose degree-4 mutant closure W_4 does not
+    contain a degree-compatible Groebner basis of its ideal. Such an instance
+    is a counterexample certificate to "Proposition 5 AND Assumption 1". On
+    every instance, also record the smallest closure degree D_solve whose W_D
+    contains the Groebner basis, together with matched EQS2, null, positive,
+    A/A and field-equation-placement controls.
+
+  why_proposition_5_alone_is_untestable:
+    derivation_ref: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.py
+    derivation_output: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.out
+    statement: >-
+      Take any two quadratics f_1, f_2 over F_2, with g_1 = f_2 + 1 and
+      g_2 = f_1. Then max deg(g_i f_i) = 4 exactly, and sum g_i f_i = f_1,
+      which is nonzero of degree 2 (the script checks this on the two field
+      equations X_1^2 + X_1 and X_2^2 + X_2). EQS4 contains S_fe
+      (paper_fulltext.md:709-713), so Definition 5 (:398-410) gives
+      d_F(EQS4) <= 4 under the printed ">=" and under the equality reading.
+      Proposition 5 (:719-729) therefore has no counterexample as printed. The
+      refutable content of Theorem 1 at p = 2 is the conjunction with
+      Assumption 1 (:416-417), which predicts that every EQS4 instance is
+      solved inside degree 4. That prediction is what this contract tests.
+
+  relation_to_existing_contracts:
+    EXP-SEMBIN-4fa22c: >-
+      Measures the fake d'_F (Boolean ring, Definition 6). By its S-1 it
+      cannot refute Proposition 5: a Boolean-ring fall degree cannot exhibit
+      d_F > 4, and the padding above shows that d_F > 4 is impossible anyway.
+      This contract's decisive quantity is not a fall degree. It is Groebner
+      basis containment in W_4, a solving-degree statement that tests
+      Assumption 1 directly and whose failure carries a certificate. It reuses
+      that contract's DC-3 (shifts are part of the instance), DC-4 (reduced
+      multilinear generators) and the grevlex order. It shares no run and no
+      result.
+    LEAD-ICE-descent-closure-degree-at-scale: >-
+      That row covers chained S_3 with one common V (EQS1/EQS2 type, Semaev
+      parameterisation, l = dim V), unsatisfiable draws, refutation degree,
+      measured in the crypto repo. Here the object is Nagao's disjoint-coset
+      EQS4 with V_i = V + v_i, planted satisfiable R, and Groebner basis
+      containment, including Nagao's fixed-k regime (m = 4, k = 2). The
+      stretch cell matches that row's C1 (m, n, l) but changes the system
+      (shifts) and the question (satisfiable GB containment against
+      unsatisfiable refutation).
+    H-SEMBIN-ce9e29: >-
+      Stage-0 labels on one S_3 polynomial over F_8. Not a chain and not a
+      Groebner question. Not a duplicate.
+
+  # ==========================================================================
+  declared_conventions:
+    DC-1-closure: >-
+      W_D is the least GF(2)-subspace of B_{<=D} (multilinear polynomials of
+      total degree <= D in N Boolean variables, B = F_2[X]/(X_j^2 + X_j))
+      that contains the Boolean Macaulay space M_D, the span of rho(t * f_i)
+      over multilinear monomials t with deg t + deg f_i <= D (the f_i being
+      the adapted generators of DC-9), and is closed
+      under g -> rho(X_j * g) for every g in W_D with deg g <= D - 1. Here rho
+      is the multilinear reduction. It is computed by the fixpoint iteration of
+      src/crypto_autoresearcher/gf2/closure.py (W^(0) = M_D,
+      W^(i+1) = W^(i) + sum_j X_j * (W^(i) cap B_{<=D-1})), the same closure as
+      KN-FIND-5a8d3e and KN-FIND-c3a917. Plain M_D containment is recorded
+      beside it (secondary metric M-7) but decides nothing.
+    DC-2-why-boolean: >-
+      The Boolean closure is computed because, by DER-1, it equals the
+      full-ring closure of the generators together with S_fe, intersected with
+      multilinear polynomials. That is exactly the space an F4 run with the
+      field equations among its inputs can reach inside degree D (DER-2).
+      C-FE-EQ checks DER-1 computationally on small cells, and agreement there
+      is structurally forced.
+    DC-3-shifts: >-
+      Inherited from EXP-SEMBIN-4fa22c DC-3. The coset shifts are part of the
+      instance. EQS4 has every v_i outside V, and the cosets V + v_i are
+      pairwise disjoint. A v = 0 system is EQS2 and is reported only as the
+      matched arm, never against Proposition 5.
+    DC-4-generators: >-
+      Inherited from EXP-SEMBIN-4fa22c DC-4. The generators are the n
+      coordinate polynomials of each S_3 link after Weil descent in the
+      polynomial basis, reduced mod S_fe to the multilinear representative
+      (Definition 3, :262). Links S_3(X_1, X_2, U_1), ..., S_3(U_{m-3},
+      X_{m-1}, U_{m-2}) are cubic. The last link S_3(U_{m-2}, X_m, x(R)) is
+      quadratic, because x(R) is a constant and Frobenius squaring is F_2-linear.
+    DC-5-reading-of-condition-1: >-
+      The d_F value reported (M-6) is Definition 5 under the equality reading
+      of condition (1): max_i deg(g_i f_i) = d, deg(sum) < d, sum != 0, with
+      S_fe inside the system (true side). The printed ">=" reading is
+      handled by DER-5 without compute. The decisive test does not depend on
+      the reading, because both readings give d_F <= 4 (DER-4).
+    DC-6-reading-of-assumption-1: >-
+      "Degree of the polynomial appears in the Groebner basis computation (by
+      F4)" is read as the total degree of every row formed, including
+      symbolic-preprocessing multiples. That is the reading under which Lemma
+      2 (:423-424) bounds matrix size by O(N^{d_F}).
+    DC-7-order: >-
+      Graded reverse lexicographic, variables in the order bits of X_1,
+      ..., bits of X_m, then bits of U_1, ..., U_{m-2}. W_D is
+      order-independent as a subspace, and DER-3 holds for every
+      degree-compatible order. The order is fixed only because the engine's
+      column layout uses it. C-AA-ENC permutes it.
+    DC-8-groebner-basis-of-Z: >-
+      The reduced grevlex Groebner basis of I(Z) in B, with field equations
+      omitted. It is computed from the algebraically enumerated solution set Z
+      by Buchberger-Moeller interpolation (or Sage ideal-of-points), with d_GB
+      its maximum degree. For |Z| = 1, Z = {s}, it is {X_j + s_j : j = 1..N}.
+    DC-9-adapted-generators: >-
+      (Added in revision 2, DR-1.) The raw generators are the M = (m-1)n
+      reduced multilinear descended coordinates of DC-4, in the order of the
+      links. Every closure, every certificate and every exact metric is
+      computed on the ADAPTED generators: the reduced row echelon form of the
+      F_2-span of the raw generators, columns in descending grevlex (degree
+      first, then the engine's column order), the pivot of a row being its
+      grevlex-largest monomial, each pivot column cleared in all other rows,
+      zero rows dropped. It is a function of the span alone. Its
+      serialisation hash is system_sha256 and the hash of the raw list is
+      raw_system_sha256 (both recorded per instance, formats.md section 2).
+      Justification. (i) M_D of a raw list depends on the chosen basis of the
+      span, because deg f_i enters the multiplier bound, so raw M_D is not
+      invariant under equation recombination and A/A equality with noise floor
+      0 is impossible on raw lists. (ii) DER-8 shows that for D >= 3 the
+      closure W_D is the same for raw and adapted generators, because every
+      raw generator has degree <= 3. So the decisive quantity (M-1 at D = 4),
+      the Groebner-basis criterion DER-3 and the F4 containment statement DER-2
+      are independent of this convention. (iii) The convention differs from raw
+      only at D = 2 (raw cubics are not in M_2, the adapted span contains its
+      lower-degree combinations such as the degree-1 element of DER-9), in the
+      plain Macaulay space M-7, and in iteration 0 of M-4. At D = 2 the adapted
+      W_2 is the closure of the degree-<=2 part of the span, which an F4 run
+      sees only after interreduction of its inputs. D = 2 values are therefore
+      descriptive under this reading and are labelled adapted in every report.
+      (iv) Honest limit: this is the degree-4 closure of what an F4 run sees
+      once it has interreduced its input, and for D >= 3 even without
+      interreduction (DER-8). It is an upper bound on what an F4 run can reach,
+      as DER-2 states, and not a model of any implementation's selection
+      strategy.
+
+  declared_derivations:
+    note: >-
+      These are derivation notes in the sense of docs/claims-and-verification.md:
+      checkable arguments, not machine proofs. Each is re-checked by an
+      independent reviewer joint before any claim rests on it. DER-1, DER-3,
+      DER-6 and DER-8 also have computational checks in this contract. DER-9
+      is checked on every instance by M-6.
+    DER-1: >-
+      For D >= 2, W_D^full(F u S_fe) cap B_{<=D} = W_D^bool(F). Argument:
+      (i) for p of degree <= D, p - rho(p) lies in the span of
+      t(X_j^2 + X_j) with deg <= D (repeated replacement of X_j^2 by X_j lowers
+      degree), so rho(W^full) = W^full cap B. (ii) Induct along the fixpoint
+      chain. Generators: rho(t f_i) = rho(rho(t) f_i), with deg rho(t) <= deg t.
+      Field-equation rows map to 0. Mutant steps: rho(X_j g) = rho(X_j rho(g))
+      with deg rho(g) <= D - 1. This gives rho(W^full) contained in W^bool.
+      (iii) Conversely, W^bool rows rho(t f_i) and mutant images
+      rho(X_j b) of b in W^bool cap W^full lie in W^full. Checked by C-FE-EQ.
+    DER-2: >-
+      Every polynomial produced by an F4-type computation (F4 or Buchberger
+      under any selection strategy, XL, MutantXL) in which every formed row
+      t * g has total degree <= D lies in W_D^full, for D >= 3 (the largest
+      input degree; for D = 2 the cubic inputs are not rows of degree <= 2 and
+      the statement is not made for raw inputs). Argument: the inputs lie
+      in M_D. A row t * g with g already in W and t = X_{a1}...X_{ar} is
+      reached by r mutant steps whose intermediates have degree
+      <= deg(t g) - 1 <= D - 1. Reduction and S-polynomials are linear
+      combinations. Consequence: if the Groebner basis is not in W_4, every
+      such computation forms a row of degree >= 5.
+    DER-3: >-
+      For a degree-compatible order and I = ideal(EQS4) in B (radical, equal
+      to I(Z) by the Boolean Nullstellensatz), the following are equivalent:
+      (a) some Groebner basis G of I is contained in W_D; (b) d_GB <= D and
+      dim W_D = dim B_{<=D} - rank(ev_{Z,D}), where ev_{Z,D} is evaluation of
+      B_{<=D} on Z. (a) implies (b): reduction by G of any element of
+      I cap B_{<=D} subtracts rows t * g of degree <= D, which lie in W_D, so
+      I cap B_{<=D} is contained in W_D, which is contained in I; the reduced
+      GB has degree <= D. (b) implies (a): the reduced GB lies in
+      I cap B_{<=D} = W_D. For |Z| = 1 this reduces to dim(W_D cap B_{<=1}) = N
+      with 1 not in W_D, that is, every X_j + s_j is in W_D.
+    DER-4: >-
+      d_F(EQS4) <= 4 under both readings of condition (1) for every instance
+      with N >= 2 (Koszul padding on two field equations, the derivation
+      file). Under the equality reading, d_F^eq <= 3 exactly when a nonzero
+      homogeneous top syzygy exists at degree <= 3 with a nonzero lower-degree
+      sum (computed as M-6). A degree-3 fall cannot come from field-equation
+      multipliers alone, because l_j X_j^2 terms are non-multilinear and
+      pairwise distinct across j. By DER-9 the value is in fact <= 2 on every
+      EQS4 and EQS2 instance with m >= 3, so the cases d_F^eq = 3 and 4 are not
+      expected to occur. M-6 still computes the exact value and records it.
+    DER-5: >-
+      Under the printed ">=" reading, d_F = 1 + (least degree of a nonzero
+      ideal element), which is 2 on every satisfiable instance with a unique
+      solution (KN-FIND-936151 section 3). Assumption 1 would then require
+      every polynomial in the computation to have degree <= 2, while the
+      inputs include cubics. So the ">=" reading is violated on inspection on
+      every m >= 3 instance. Recorded, never used as this experiment's
+      evidence. The same holds under the equality reading on any instance
+      with d_F^eq = 2, and by DER-9 that is every instance with m >= 3. So
+      Assumption 1 with the exact equality-reading d_F is violated on
+      inspection at every instance of the grid under DC-6 (cubic input rows
+      count as polynomials of the computation). This is a statement about the
+      reading of Assumption 1, not an experimental result. It is the reason the
+      decisive test is the operational form "degree 4 suffices", the form that
+      the cost bound O((nm)^{4w}) uses via Proposition 5's d_F <= 4. If
+      Assumption 1 is read as bounding only rows formed beyond the inputs, the
+      inspection argument does not apply, and D_solve against d_F^eq = 2 is
+      reported descriptively (S-AS1-EXACT).
+    DER-6: >-
+      PC-TRI is contained in W_3. Construction: f_j = X_j + s_j +
+      q_j(X_1..X_{j-1}) - q_j(s) for j = 1..N, plus extra equations
+      q_e(X) - q_e(s), with q random multilinear of degree <= 3, followed by
+      a random invertible affine variable map phi and a random invertible
+      recombination of equations. Induction: if X_i + s_i is in W_3 for every
+      i < j, each monomial X_a X_b X_c - s_a s_b s_c equals
+      X_a X_b (X_c + s_c) + s_c X_a (X_b + s_b) + s_c s_b (X_a + s_a), whose
+      terms are reached by mutant steps from degree-1 elements with
+      intermediate degree <= 2, so X_j + s_j is in W_3. phi is a
+      degree-preserving automorphism of B (linear forms are idempotent in B),
+      and W_3(phi(F)) = phi(W_3(F)). Hence D_solve <= 3 and |Z| = 1.
+    DER-7: >-
+      Without S_fe, the descended system alone still has d_F^eq <= 4 at
+      m >= 3: padding on two quadratic last-link generators. So "S_fe outside"
+      does not rescue a counterexample to Proposition 5 either. Recorded for
+      the C-FE-OUT reading only.
+    DER-8: >-
+      (Added in revision 2, DR-1.) Let S be the F_2-span of the raw generators
+      and S_ad the adapted basis (DC-9). Write M_D(S) for the span of
+      rho(t h) over h in S and monomials t with deg t + deg h <= D.
+      (a) M_D(S_ad) = M_D(S). The adapted basis has pairwise distinct leading
+      monomials in a degree-compatible order, so every nonzero h in S is a sum
+      of basis rows each of degree <= deg h (the largest leading monomial is
+      the leading monomial of h, and a degree-compatible order makes its degree
+      deg h). Hence t * h is a sum of rows t * b_i with deg t + deg b_i <= D.
+      The reverse inclusion is trivial. So M_D(S_ad) is a function of S, and
+      M_D(raw list) is contained in it, with equality only for raw lists that
+      are themselves degree-adapted.
+      (b) For D >= 3 and every raw generator of degree <= 3, W_D(raw) =
+      W_D(S_ad). W_D(raw) is contained in W_D(S_ad) by (a). Conversely any h
+      in S is a sum of raw generators, each a row t = 1 of M_D(raw) because
+      its degree is <= 3 <= D, so h is in M_D(raw), hence in W_D(raw). For t =
+      X_{a1}...X_{ar} with deg t + deg h <= D, the intermediate polynomials
+      h_i = rho(X_{ai} h_{i-1}) have degree <= deg h + i - 1 <= D - 1 before
+      the step, so each step is a legal mutant step, and t h is in W_D(raw).
+      So M_D(S_ad) is contained in W_D(raw), and therefore W_D(S_ad) is
+      contained in W_D(raw). The raw maximum degree is recorded per instance
+      (raw_degree_profile) and the statement is used only for D >= it.
+      (c) Covariance. Let phi be an invertible affine substitution of the
+      variables. In B, a linear form l satisfies l^2 = l, so phi is a
+      well-defined algebra automorphism with phi(B_{<=d}) = B_{<=d}, and it
+      preserves degree. Then phi(M_D(S)) = M_D(phi(S)). The mutant step is
+      covariant too: sum_j phi(X_j) * g' and sum_j X_j * g' differ only by
+      affine combinations of g' itself, which already lie in W^(i). So
+      phi(W^(i)) is the i-th iterate for phi(S) at every i and every D, and
+      the dims-by-degree series (M-4, including iteration 0), M-1, M-2, M-3,
+      M-5 and M-7 of an A/A re-encoding on adapted generators are equal to the
+      source's exactly (equation recombination changes S not at all, and the
+      affine map acts as phi). This is why C-AA-ENC has noise floor exactly 0.
+      Computational checks: F-4 (raw against adapted final dimensions at D =
+      3, 4, 5 on the 50 random mixed-degree systems) and C-AA-ENC.
+    DER-9: >-
+      (Added in revision 2, DR-2.) For every EQS4 or EQS2 instance with m >= 3
+      the F_2-span of the n coordinate polynomials of the last link
+      S_3(U_{m-2}, X_m, x_R) contains the nonzero affine form
+      Tr(U_{m-2}) + Tr(X_m) + Tr(x_R^{-2} B). Proof. Put x1 = U, x2 = X, x3 =
+      x_R (a nonzero constant). In characteristic 2,
+      S_3 = U^2 X^2 + x_R^2 U^2 + x_R^2 X^2 + x_R U X + B. For gamma in
+      F_{2^n} the functional Tr(gamma * S_3) is an F_2-linear combination of the
+      coordinates. Tr(gamma U^2 X^2) = Tr(gamma^{1/2} U X), because
+      Tr(a^2) = Tr(a). So the bilinear part of Tr(gamma * S_3) is
+      Tr((gamma^{1/2} + gamma x_R) U X), which vanishes for gamma = x_R^{-2}.
+      What remains is Tr(U^2) + Tr(X^2) + Tr(gamma B) = Tr(U) + Tr(X) +
+      Tr(x_R^{-2} B). It is a nonzero function of the bits because the trace
+      form is a nonzero functional of the polynomial basis. Consequences.
+      (i) The span has an element of degree 1, so the adapted system and W_D for
+      every D >= 1 contain a linear form that no random profile-matched null
+      has (declared mismatch of NULL-PROF and NULL-SHUF, C-NULL). (ii) With
+      constant multipliers g_i = c_i on the last-link coordinates (degree 2
+      each in the involved rows), the sum is that degree-1 element, so
+      d_F^eq <= 2 at every instance, and d_F^eq = 2 unless a degree-1 fall
+      exists (two linear elements of the span with equal top forms). M-6 reports
+      the exact value. (iii) The linear form eliminates one Boolean variable, so
+      the effective number of free variables is N - 1 or fewer. It does not by
+      itself decide containment, because W_4 must still contain the other
+      linear forms X_j + s_j of the Groebner basis, which is the quantity under
+      test. It does not change DER-3. (iv) Only the last link is degenerate in
+      this way: the cubic term x1 x2 x3 of a link with three non-constant
+      arguments prevents the cancellation. Checked computationally on every
+      instance by M-6 and by the linear-forms count M-2 at D = 2.
+
+  # ==========================================================================
+  inputs:
+    paper: inputs/NAGAO-2015-984/paper_fulltext.md (Definitions 2-8, Assumption 1, Lemma 2, Propositions 2, 5, 6, Theorem 1, footnote 6)
+    derivation: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.py and .out
+    hypothesis: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+    proposal: ledger/proposals/IDEA-20261006-8f4f02.yaml
+    reused_code_reference_or_engine:
+      - path: src/crypto_autoresearcher/gf2/closure.py
+        use: >-
+          engine for M_D and W_D (bit-packed, native kernels), imported AND
+          subclassed (revision 2, DR-9): code/closure.py defines
+          SembinClosure(Closure), which overrides only the constructor tables
+          (the engine's constructor allocates a 2^nv table, infeasible beyond
+          nv of about 28) and build_M/row_pair/vec (the engine's build_M assumes
+          generator degree <= 2). The engine's fixpoint iteration is inherited
+          for C4 < 20000; for C4 >= 20000 a memory-lean streamed variant of the
+          same iteration replaces it. kernels.column_pass is wrapped while an
+          engine call runs, to record the M-4 series. Version and sha256 of
+          every engine file recorded.
+      - path: src/crypto_autoresearcher/gf2/kernels.py
+        use: elimination, product and back-trace kernels, used unchanged except for the recording wrapper above
+      - path: src/crypto_autoresearcher/gf2/rankprofile.py
+        use: column tables (Shape) without 2^nv arrays, used unchanged
+      - path: src/crypto_autoresearcher/gf2/reference.py
+        use: numpy reference kernels, oracle for fixture F-4 only
+      - path: experiments/EXP-CERTBIN-060020/impl/closures.py
+        use: wdag-v1 and ann-v1 certificate formats; reference only, never imported into the measurement path
+      - path: experiments/EXP-CERTBIN-060020/runs/RUN-CERTBIN-a3fc60/instances.jsonl.gz
+        use: fixture F-3 systems (first 10 S3-PRIMARY lines), read through tools/artifact_store.py
+      - path: src/semaev_tree.py
+        use: Weil-descent oracle for fixture F-6 only (Sage); Sage is also the cross-check of the group order in F-6
+      - path: experiments/EXP-ECTD-9e4248/driver/reused/macaulay.py
+        use: rank_mod_p as an independent rank oracle on fixtures only
+      - path: experiments/EXP-ECTD-9e4248/driver/reused/mvpoly.py
+        use: reference only
+      - path: experiments/EXP-SIG-007/src/ic_first_fall_fast.py
+        use: reference only (a first-fall scan, not this contract's quantity)
+      - path: tools/lemma4_inside_form.py
+        use: oracle for fixture F-2 (d_F^eq on KN-FIND-936151 witnesses A and B)
+    reuse_rule: >-
+      The descent builder, the instance sampler, the Z enumerator, the d_F^eq
+      computation and the certificate emitter are written fresh under
+      code/. The gf2 closure engine (closure.py, kernels.py, rankprofile.py)
+      is imported, because it is the program's tested shared engine and three
+      archived reviews exercised it, and it is subclassed, not used
+      unmodified: SembinClosure(Closure) in code/closure.py overrides the
+      constructor tables and build_M (cubic generators, large nv) and, at
+      C4 >= 20000, the fixpoint loop (memory-lean streaming, same eliminations
+      and the same new-row rule). The unmodified engine cannot run these cells.
+      What is exercised against the unmodified engine: fixtures F-3 (archived
+      quadratic systems at nv = 20, both the inherited and the streamed loop)
+      and F-4 (against the independent set-based fixpoint, on mixed-degree
+      systems, with the streamed loop forced on half of them). The unmodified
+      engine is not exercised on cubic generators and not at C4 >= 20000, and
+      the run says so. Every other listed file is a reference or oracle only,
+      and the run manifest records which files were read.
+
+  # ==========================================================================
+  instance_specification:
+    field: >-
+      F_{2^n} = F_2[t]/(p_n(t)), where p_n is the lowest-weight irreducible
+      (trinomial if one exists, else pentanomial), lexicographically smallest
+      among those. The polynomial is recorded per n.
+    curve: >-
+      An ordinary binary curve y^2 + xy = x^3 + A x^2 + B, drawn per
+      (cell, seed) from the SHARED substream: A uniform in {0, 1}, B uniform in
+      F_{2^n} minus {0, 1} (Koblitz B = 1 excluded). The group order #E is
+      recorded; it is counted by exact enumeration of x in F_{2^n} (point at
+      infinity, x = 0, and two points per x != 0 with trace 0), which costs
+      0.3 s at n = 19, and is cross-checked against Sage on 12 curves in
+      fixture F-6, not at run time (revision 2, DR-7). The matched EQS2 arm
+      uses the same curve. All randomness is drawn from HashRng, a sha256
+      counter-mode generator (block i = sha256(seed8 || label || i), seed8 the
+      8 seed bytes of the replication rule), which has no dependence on any
+      numpy or Python random-module version.
+    subspace: V = span_F2{1, t, ..., t^{k-1}} (polynomial basis), as in the KN-FIND cells
+    coset_shifts: >-
+      v_1, ..., v_m drawn from the SHARED substream, each uniform among
+      polynomials of degree in [k, n-1] (so v_i is outside V). A draw is
+      rejected if V + v_i equals an earlier V + v_j. Every v_i is recorded as
+      an explicit field element. EQS2 sets every v_i = 0.
+    feasibility_redraw: >-
+      (Revision 2, DR-3.) At tiny cells a coset V + v_i can contain no
+      x-coordinate of an F_{2^n}-point, or every choice of points can have a
+      partial sum equal to O or R with x(R) = 0, so that no planted
+      decomposition exists. The SHARED draw (curve, then shifts) is therefore
+      repeated, deterministically from the same SHARED substream, until every
+      coset V + v_i has an x-coordinate of a curve point and a valid
+      decomposition exists (decided exhaustively when the product of the
+      coset point counts is at most 20000, otherwise assumed). The number of
+      such redraws and of coset-collision redraws is recorded per instance
+      (shared_info). The redraw depends on feasibility of the EQS4 shape only
+      and never on a closure outcome. It conditions the sampled (curve,
+      shifts) distribution on feasibility, which is declared, and which is the
+      only reading under which an EQS4 instance with a planted satisfiable R
+      exists at those cells. The EQS2 arm shares the accepted curve (its V
+      contains 0, hence a point with x = 0). If its own planting finds no valid
+      decomposition within 20000 tries, EQS2 is recorded not_available for that
+      seed, which is not a result and does not affect any other arm. An EQS4 or
+      EQS4-U planting that exhausts 20000 tries is recorded not_available in
+      the same way, and an EQS4-U attempt that cannot be planted counts as a
+      non-unique attempt (logged).
+    planted_decomposition: >-
+      From the arm substream: for each i, draw x uniform in V_i (V_i = V for
+      EQS2) until x is the x-coordinate of an F_{2^n}-point (trace
+      condition), then choose y uniformly among the two roots. Set R = sum P_i,
+      and redraw the whole decomposition if R = O, if any partial sum
+      P_1 + ... + P_j is O (U_j would be undefined), or if x(R) = 0.
+      U_j = x(P_1 + ... + P_{j+1}). The planted
+      solution s is the bit vector of (x(P_i) - v_i in V-coordinates, U_j in
+      the polynomial basis). Every redraw is counted and recorded, split into
+      trace rejections, partial-sum-O, R = O and x(R) = 0.
+    system: >-
+      EQS4(m, R) of Definition 8: links S_3(X_1, X_2, U_1), S_3(U_1, X_3, U_2),
+      ..., S_3(U_{m-2}, X_m, x(R)), where
+      S_3(x1, x2, x3) = (x1 x2 + x1 x3 + x2 x3)^2 + x1 x2 x3 + B is the binary
+      third summation polynomial. Substitute X_i = v_i + sum_{b<k} x_{i,b} t^b
+      and U_j = sum_{a<n} u_{j,a} t^a, take the n coordinates, and reduce to
+      multilinear (DC-4). The Boolean ring carries S_fe (DC-2).
+      N = m*k + (m-2)*n and M = (m-1)*n.
+    descent_check: >-
+      Required per instance: every generator vanishes at s, and at 64 random
+      points of F_2^N each generator equals the corresponding coordinate of
+      the field-side S_3 evaluation. One mismatch invalidates the instance
+      (IR-1).
+    solution_set_Z: >-
+      Enumerated algebraically, not by point arithmetic and not by Boolean
+      evaluation. Iterate x_1 in V_1 and x_2 in V_2, find all U_1 in F_{2^n}
+      with S_3(x_1, x_2, U_1) = 0 (degree-2 root finding), and continue along
+      the chain. At the last link, solve for X_m in V_m. Every element of Z is
+      checked against the Boolean system. Where N <= 20 (targets) or N <= 26
+      (nulls), Z is cross-checked (targets) or determined (nulls) by
+      brute-force bit-sliced evaluation over F_2^N. Disagreement invalidates
+      the instance (IR-2).
+    solution_set_Z_nulls: >-
+      (Revision 2, DR-5.) A null system has no field-side structure, so Z is
+      found by evaluation, never assumed. For N <= 26, by brute-force
+      bit-sliced evaluation over F_2^N (this covers NULL-SHUF, which runs at
+      N <= 26 only). For N >= 27 (NULL-PROF at cell m4n10 and the T2 cells), Z
+      is the affine-subspace search: the degree-<=1 elements of W_4 are linear
+      forms of the ideal, so Z lies in the affine subspace they cut out, and
+      Z is found exactly by enumerating that subspace when it has at most 16
+      free variables. Otherwise M-1 is recorded undetermined_Z_unknown (not
+      false, not true), because "contained" would need Z = {s} and "not
+      contained" needs the Groebner basis. Consequence, stated here so that it
+      is not rediscovered: a null can show "not contained for the right
+      reason" only where Z is known. Null discrimination (C-NULL, F-MAIN) is
+      therefore established only in cells with N in 18..26.
+    uniqueness_selection_EQS4-U: >-
+      For (cell, r), attempts a = 0, 1, ..., 31 draw the planted
+      decomposition from a stream labelled as follows (revision 2, DR-4).
+      Attempt a = 0 uses the EQS4 stream, arm "EQS4" and instance cell_id, so
+      it is the same instance as EQS4. Attempt a >= 1 uses arm "EQS4-U" and
+      instance cell_id + "/a" + a. The SHARED substream (curve, shifts) is the
+      same for every attempt. EQS4-U takes the first attempt with
+      |Z| = 1. If the a = 0 attempt is unique, EQS4-U is the same instance as
+      EQS4 and is evaluated once. If none of the 32 attempts is unique, EQS4-U
+      is recorded as not_available for that seed, which is not a result.
+      Rejected attempts are recorded with |Z|, curve and R, and are not
+      closure-evaluated. The selection depends on |Z| only, never on a
+      closure outcome.
+    d_F_equality: >-
+      M-6, computed on the true side with S_fe inside, on the RAW generators
+      (Definition 5 is a property of the system as given, and d_F^eq depends on
+      the chosen generating list, unlike W_D for D >= 3; the adapted list is
+      not used here). For d = 1, 2, 3, the
+      exact GF(2) rank of the homogeneous top-form map (h_i) ->
+      sum h_i top(f_i) at degree d in the full ring, with multipliers on every
+      generator including the field equations. A fall at d is declared when
+      the kernel is nonzero and either some kernel element gives a nonzero
+      sum or some generator has degree < d (the lower-perturbation rule). At
+      d = 4, existence is certified by the explicit padding witness (DER-4),
+      not by rank. The realising witness is recorded.
+
+  parameter_grid:
+    rule: >-
+      m = 3 primary with k = floor(n/3), from the smallest n at which three
+      pairwise-disjoint non-zero cosets of a k >= 1 subspace exist (n = 3) up
+      to n = 17 (N = 32). m = 4 with Nagao's fixed k = 2 at n = 8, 9, 10. One
+      stretch cell (3, 19, 7) at N = 40. The upper end is bounded by the
+      10 GB RSS cap and the 43200 s total. Dense echelon memory for W_4 is
+      about C4^2/8 bytes: 2.1e8 B at N = 32, 1.3e9 B at N = 40. Time, not
+      memory, is the binding constraint. C4 = sum_{d<=4} C(N, d) is the W_4
+      column count. D_max(N) is the largest D in {4, 5, 6} with
+      sum_{d<=D} C(N, d) <= 45000; D = 4 is always attempted.
+    cells:
+      - {id: m3n03, m: 3, n: 3, k: 1, N: 6, M: 6, C4: 57, D_max: 6, tier: T1}
+      - {id: m3n04, m: 3, n: 4, k: 1, N: 7, M: 8, C4: 99, D_max: 6, tier: T1}
+      - {id: m3n05, m: 3, n: 5, k: 1, N: 8, M: 10, C4: 163, D_max: 6, tier: T1}
+      - {id: m3n06, m: 3, n: 6, k: 2, N: 12, M: 12, C4: 794, D_max: 6, tier: T1}
+      - {id: m3n07, m: 3, n: 7, k: 2, N: 13, M: 14, C4: 1093, D_max: 6, tier: T1}
+      - {id: m3n08, m: 3, n: 8, k: 2, N: 14, M: 16, C4: 1471, D_max: 6, tier: T1}
+      - {id: m3n09, m: 3, n: 9, k: 3, N: 18, M: 18, C4: 4048, D_max: 6, tier: T1}
+      - {id: m3n10, m: 3, n: 10, k: 3, N: 19, M: 20, C4: 5036, D_max: 6, tier: T1}
+      - {id: m3n11, m: 3, n: 11, k: 3, N: 20, M: 22, C4: 6196, D_max: 5, tier: T1}
+      - {id: m3n12, m: 3, n: 12, k: 4, N: 24, M: 24, C4: 12951, D_max: 4, tier: T1}
+      - {id: m3n13, m: 3, n: 13, k: 4, N: 25, M: 26, C4: 15276, D_max: 4, tier: T1}
+      - {id: m3n14, m: 3, n: 14, k: 4, N: 26, M: 28, C4: 17902, D_max: 4, tier: T1}
+      - {id: m4n08, m: 4, n: 8, k: 2, N: 24, M: 24, C4: 12951, D_max: 4, tier: T1}
+      - {id: m4n09, m: 4, n: 9, k: 2, N: 26, M: 27, C4: 17902, D_max: 4, tier: T1}
+      - {id: m4n10, m: 4, n: 10, k: 2, N: 28, M: 30, C4: 24158, D_max: 4, tier: T1}
+      - {id: m3n15, m: 3, n: 15, k: 5, N: 30, M: 30, C4: 31931, D_max: 4, tier: T2}
+      - {id: m3n16, m: 3, n: 16, k: 5, N: 31, M: 32, C4: 36457, D_max: 4, tier: T2}
+      - {id: m3n17, m: 3, n: 17, k: 5, N: 32, M: 34, C4: 41449, D_max: 4, tier: T2}
+      - {id: m3n19k7, m: 3, n: 19, k: 7, N: 40, M: 38, C4: 102091, D_max: 4, tier: T3}
+    cell_notes:
+      - >-
+        Disjoint non-zero cosets need 2^(n-k) - 1 >= m. This holds at every
+        cell (n - k >= 2 for m = 3, n - k >= 6 for m = 4).
+      - >-
+        At m3n19k7, k*m = 21 > n = 19, so several solutions per instance are
+        expected and EQS4-U will usually be not_available. That cell is read
+        by the general DER-3 criterion (Type-G). It is the shifted,
+        satisfiable analogue of the related lead's C1 cell. M = 38 < N = 40
+        there. PC-TRI uses M = N = 40 at that cell, recorded as a declared
+        mismatch.
+      - >-
+        m = 5 (k = 2, n = 10, N = 40) is excluded from this version as a
+        successor cell. Its cost equals the stretch cell's, and the stretch
+        cell was ranked first because the lead locates the degree rise at
+        l = 7.
+      - >-
+        (Revision 2.) At the smallest cells (n = 3, 4, 5 with k = 1, V has two
+        elements) many (curve, shifts) draws admit no planted decomposition.
+        They are redrawn under feasibility_redraw with counts, and EQS2 may be
+        not_available at those cells. Neither is a result. These cells carry
+        almost no weight in the pooled non-containment bound.
+      - >-
+        (Revision 2, DR-10.) Cell m3n19k7 (N = 40, C4 = 102,091). A probe of the
+        engine subclass on synthetic PC-shaped systems at this size took 151 s
+        and 3.1 GB RSS, so the cell fits the 10 GB cap and the 7200 s
+        per-instance-per-D cap with a wide margin. It is a probe of the
+        instrument on synthetic systems, not a measurement of real EQS4
+        dynamics, which may need more fixpoint iterations. It is recorded as an
+        observation only. The planning figure keeps the conservative modelled
+        1,660 s per instance (budget.cost_estimate_modeled), and SR-3 uses
+        times measured in the run. No wdag or ann certificate is attempted
+        beyond the rules in certificates (N >= 27: no wdag).
+      - >-
+        (Revision 2, DR-5.) Cells where null discrimination can be established
+        (Z of a null known, N in 18..26): m3n09, m3n10, m3n11, m3n12, m3n13,
+        m3n14, m4n08, m4n09. At the other cells a null can only say
+        undetermined_Z_unknown or is not run.
+    execution_order: >-
+      T0 fixtures, then T1 cells in ascending N, then T3, then T2 in ascending
+      N. T3 runs before T2 because it is the cell where the related lead
+      reports the degree rising, and so the most informative per second.
+      Within a cell, arms interleave by seed: for r = 0..4, EQS4, EQS2,
+      NULL-PROF, NULL-SHUF, PC-TRI, then EQS4-AA (r in {0, 1}), then EQS4-U
+      (when it is a distinct instance), then EQS4-FULLFE and EQS4-NOFE (r in
+      {0, 1}, N <= 20).
+    arms_per_tier:
+      T1: >-
+        EQS4 x5, EQS4-U (up to 5 distinct), EQS2 x5, NULL-PROF x5, NULL-SHUF x5
+        (N <= 26 only), PC-TRI x5, EQS4-AA x2, EQS4-FULLFE x2 and EQS4-NOFE x2
+        (N <= 20 only)
+      T2: EQS4 x5, EQS4-U (up to 5), EQS2 x5, NULL-PROF x3, PC-TRI x2, EQS4-AA x1
+      T3: EQS4 x5, PC-TRI x1, NULL-PROF x1, EQS4-AA x1
+    closure_degree_walk: >-
+      Every instance computes W_2, W_3 and W_4. Target arms (EQS4, EQS4-U,
+      EQS2) that are not contained at 4 continue upward to D_max(N). Null arms
+      continue upward to min(D_max(N), 5). Containment is monotone in D (M_D
+      is contained in M_{D+1}, and the mutant rule at D is allowed at D + 1),
+      so D_solve is the first contained D and no lower D is skipped.
+
+  arms:
+    - id: EQS4
+      role: candidate
+      what: Nagao EQS4 on draw a = 0 of (cell, r). Unconditioned on |Z|. The target.
+    - id: EQS4-U
+      role: candidate
+      what: EQS4 conditioned on |Z| = 1 by uniqueness_selection_EQS4-U. Supplies Type-L certificates.
+    - id: EQS2
+      role: baseline
+      what: >-
+        Matched unshifted system (v = 0). Same curve, V, field and order as
+        EQS4 at (cell, r). Planted from its own arm substream with all P_i in
+        Fb = {x(P) in V}. Usually |Z| >= 2 because S_3 is symmetric in X_1 and
+        X_2, so it is read by the general DER-3 criterion.
+    - id: NULL-PROF
+      role: control_negative
+      what: >-
+        Random multilinear planted system with the EQS4 instance's N, M and
+        exact per-equation per-degree monomial counts. Supports are drawn
+        uniformly, coefficients are 1 on the support, and the constant term is
+        set so a uniform planted s is a solution. This is the profile-matched
+        null that the user's "quadratic/quartic" wording maps to after
+        reduction: cubic links plus the quadratic last link, with the quartic
+        unreduced form not used (DC-4). |Z| is brute-forced where N <= 26 and
+        found by the affine-subspace search otherwise (solution_set_Z_nulls).
+        Declared mismatch (DER-9): the profile is that of the raw generators,
+        so the null's span has no degree-1 element, while every EQS4 and EQS2
+        span has one. NULL-PROF is therefore a discrimination check of the
+        instrument, and a coarse structural contrast, not a control matched on
+        the degree filtration of the span.
+    - id: NULL-SHUF
+      role: control_negative
+      what: >-
+        The EQS4 instance's own (equation, monomial) incidences, with the
+        monomial multiset of each degree permuted uniformly across equations
+        and the constants re-set to plant a uniform s. The stricter nearby
+        null: same global support, S_3 structure destroyed. Run at N <= 26
+        only.
+    - id: PC-TRI
+      role: control_positive
+      what: >-
+        DER-6 triangular planted system at the EQS4 instance's N and M, with
+        degree profile matched as closely as the triangular shape allows,
+        hidden by a random affine variable map and a random equation
+        recombination. Provably D_solve <= 3 and |Z| = 1.
+    - id: EQS4-AA
+      role: control_aa
+      what: >-
+        The EQS4 instance re-encoded by a random invertible affine change of
+        variables over F_2 (includes a permutation) and a random invertible
+        M x M recombination of equations, applied to the raw generators; the
+        closure then runs on the adapted generators of the re-encoded system
+        (DC-9). By DER-8(c) every exact metric (M-1, M-2, M-3, M-4 including
+        iteration 0, M-5, M-7, at every D) must be identical (noise floor
+        exactly 0). The raw generator hash differs by construction and is not
+        compared. Also run on every EQS4 or EQS4-U instance found not contained.
+    - id: EQS4-FULLFE
+      role: reference
+      what: >-
+        The same EQS4 instance in the full ring F_2[X] with S_fe as explicit
+        generators. Columns C(N+4, 4) at D = 4 (10626 at N = 20). N <= 20 only.
+        C-FE-EQ against EQS4 checks DER-1.
+    - id: EQS4-NOFE
+      role: baseline
+      what: >-
+        The same descended generators in the full ring WITHOUT S_fe, on the
+        same adapted generators as EQS4-FULLFE so that C-FE-OUT differs in S_fe
+        only. Reports linear forms in W_D^full, whether 1 is in W_D^full, and
+        d_F^eq (DER-7). N <= 20 only. Descriptive. Decides nothing about the
+        hypothesis, because EQS4 contains S_fe by definition.
+
+  independent_variables:
+    - {name: n, levels: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19]}
+    - {name: m, levels: [3, 4]}
+    - {name: arm_system_family, levels: [EQS4, EQS4-U, EQS2, NULL-PROF, NULL-SHUF, PC-TRI]}
+    - {name: coset_shift, levels: [nonzero_disjoint, zero]}
+    - {name: closure_degree_D, levels: [2, 3, 4, 5, 6]}
+
+  # ==========================================================================
+  metrics:
+    primary:
+      - id: M-1
+        name: gb_contained_W4
+        unit: boolean
+        kind: exact
+        definition: >-
+          True iff W_4 contains a degree-compatible Groebner basis of the
+          instance's ideal, decided by DER-3: d_GB(Z) <= 4 and
+          dim W_4 = dim B_{<=4} - rank(ev_{Z,4}). For |Z| = 1, equivalently
+          dim(W_4 cap B_{<=1}) = N and 1 not in W_4. When false, the type is
+          recorded: Type-L (|Z| = 1, a linear form missing), Type-G (|Z| > 1,
+          d_GB <= 4, closure deficit) or Type-D (d_GB > 4).
+        resolution: exact
+        decisive_for: [C-EQS4-ABS, C-NULL, C-NULL-SHUF, C-PC]
+      - id: M-3
+        name: D_solve
+        unit: degree (integer)
+        kind: exact
+        definition: >-
+          The least D in 2..D_reached with the Groebner basis contained in W_D.
+          Recorded as "> D_reached" when not reached. A censored value is
+          never a value.
+        resolution: 1 degree
+    secondary:
+      - id: M-2
+        name: linear_forms_L_D
+        unit: count
+        kind: exact
+        definition: dim(W_D cap B_{<=1}) per D, and whether 1 is in W_D.
+      - id: M-4
+        name: closure_series
+        unit: dimension per degree per iteration
+        kind: exact
+        definition: >-
+          For each D and each fixpoint iteration i: dims_by_degree of W^(i)
+          (dim W^(i) cap B_{=d} in the leading-term filtration, d = 0..D) and
+          the total rank. M-1, M-2 and M-3 must be re-derivable from this
+          series and from Z without re-running the algebra. Entry 0 is M_D of
+          the adapted generators (DC-9). The series is recorded by wrapping
+          kernels.column_pass during the engine call (the subclass, DR-9), not
+          by the engine itself; the wrapper is covered by F-3 and F-4.
+      - id: M-5
+        name: solution_geometry
+        unit: counts
+        kind: exact
+        definition: 'The size |Z|, Z itself, d_GB, rank(ev_{Z,D}) for D = 1..D_reached, and codim of W_D in B_{<=D}.'
+      - id: M-6
+        name: d_F_equality_true_side
+        unit: degree (integer)
+        kind: exact
+        definition: >-
+          d_F^eq per instance_specification.d_F_equality, with its realising
+          witness: multipliers, unreduced product degrees and the sum.
+          Calibration against DER-4 and DER-9 (P-5, P-7): the value is expected
+          to be 2 on every EQS4 and EQS2 instance. Also used by the descriptive
+          report S-AS1-EXACT.
+      - id: M-7
+        name: plain_macaulay_contained
+        unit: boolean per D
+        kind: exact
+        definition: Groebner basis contained in plain M_D (no mutant steps). Reported against M-1, as in KN-FIND-5a8d3e.
+      - id: M-8
+        name: certificate_status
+        unit: label
+        kind: exact
+        definition: >-
+          Per instance: certificate emitted (non-containment ann-cert or
+          containment wdag), its sha256, and the independent checker's
+          accept/reject. The status vocabulary is closed: accepted (emitted
+          and accepted by the independent checker), rejected (emitted and
+          rejected: IR-4a), not_emitted (a size, wall or memory guard tripped:
+          IR-4b), not_attempted_by_rule (the wdag emission rule did not select
+          the instance), pending_checker (emitted, checker not yet run). A
+          non-containment whose status is rejected, not_emitted or
+          pending_checker is reported as non_containment_uncertified (IR-4).
+      - id: M-9
+        name: cost
+        unit: seconds, kilobytes
+        kind: timed
+        definition: >-
+          Wall, CPU and peak RSS per instance per D, with the RSS poll
+          interval. A budget quantity only. No ratio is reported between two
+          figures that both fall inside the poll interval (CORR-20260916-33068f).
+          No conclusion rests on M-9.
+      - id: M-10
+        name: system_shape
+        unit: counts and sha256
+        kind: exact
+        definition: >-
+          N, M, M_effective (rank of the generator span), per-degree monomial
+          counts per equation of the raw list, raw_system_sha256 and
+          system_sha256 (adapted) of the canonical serialisation, the raw
+          maximum degree, field polynomial, curve (A, B, #E), V
+          basis, every v_i, P_i, R, s, and the redraw counts.
+
+  heuristic_under_test: HEUR-SEMBIN-e5b2db-1
+  preregistered_prediction:
+    quantity: M-1 on every EQS4 and EQS4-U instance
+    formula: >-
+      Assumption 1 together with d_F(EQS4) <= 4 (DER-4) predicts M-1 = true
+      on every instance (the operational form in HEUR-SEMBIN-e5b2db-1).
+    source: >-
+      Nagao 2015/984 Assumption 1 (:416-417), Proposition 5 (:719-729),
+      Proposition 6 and Theorem 1 (:731-839). The O((nm)^{4w})
+      per-decomposition cost needs exactly this.
+  preregistered_predictions:
+    - {id: P-1, text: 'All decisive EQS4 and EQS4-U instances at cells with k <= 6 have M-1 true. Coordinator prior 0.70.'}
+    - {id: P-2, text: 'At m3n19k7, at least one of 5 EQS4 instances has M-1 false. Prior 0.45.'}
+    - {id: P-3, text: 'Among NULL-PROF seeds whose solution set is verified to be a single point (brute force, N <= 26), M-1 is false on at least 80% pooled over completed cells with N in 18..26, with the per-cell counts reported. Prior 0.90 (revision 2: the original wording demanded at least 4 of 5 seeds per cell to be uniqueness-verified, which random planted systems with M close to N rarely are; the prior concerned non-containment given uniqueness and is unchanged).'}
+    - {id: P-4, text: 'Every PC-TRI instance has M-1 true with D_solve <= 3 (DER-6).'}
+    - {id: P-5, text: 'd_F^eq <= 4 on every instance (DER-4). The exact value is reported, not predicted (it is expected to be 2, see P-7).'}
+    - {id: P-6, text: 'EQS4 and matched EQS2 have equal D_solve on >= 80% of matched pairs. Prior 0.60. Descriptive.'}
+    - {id: P-7, text: 'Calibration (revision 2: the original P-7 about d_F^eq = 3 instances is vacuous by DER-9). d_F^eq <= 2 on every EQS4 and EQS2 instance with m >= 3, because the last-link coordinates span a degree-1 element. A derivation, probability 1 unless the builder or the d_F module is wrong.'}
+
+  scale_relevance:
+    tier: toy
+    justification: >-
+      Direct sampling at n <= 19 and N <= 40. No correspondence is used to
+      reach scale. Nagao's asymptotic regime (k = C0, m ~ n/C0, n -> infinity)
+      and every standardised binary field (n >= 113) are out of reach. A
+      counterexample is complete at its instance, at any scale. Corroboration
+      transfers to nothing outside the tested cells. No stability assumption
+      in n is made.
+    correspondence: null
+  sample_size_justification: >-
+    This is a counterexample search, not an estimate. With R decisive EQS4 and
+    EQS4-U instances pooled over completed cells, and a per-instance
+    non-containment probability q under the sampling rule, the chance of
+    seeing none is (1 - q)^R. At the planned R of about 90 to 140 (5 to 10
+    per cell over 19 cells, minus censoring), an all-contained outcome bounds
+    q below 3/R (the rule of three, 95%), which is about 2-3% for the pooled
+    sampling distribution. Per cell, 5 seeds bound only q < 0.45, and a
+    per-cell all-contained reading is stated at that weakness. The bound is
+    about the sampling distribution, never about every instance, and never
+    about cells not run.
+  tail_checks:
+    - The EQS4 instance with the largest codim(W_4) - rank(ev_{Z,4}) deficit per cell, reported with its full M-4 series.
+    - The latest fixpoint iteration at which containment occurs per cell. A containment that needs many iterations near the cap is flagged.
+    - Per cell, the maximum D_solve over EQS4 and EQS2, beside NULL-PROF's minimum.
+    - Any EQS4 instance whose M-7 (plain M_4) and M-1 (W_4) differ, listed explicitly.
+
+  # ==========================================================================
+  controls:
+    - id: C-PC
+      name: positive control (PC-TRI), absolute
+      what_it_detects: >-
+        That the instrument returns "contained" where DER-6 proves it, at
+        every scale run. A miss at any instance invalidates the run (SR-4).
+    - id: C-NULL
+      name: profile-matched null (NULL-PROF), one-factor against EQS4
+      what_it_detects: >-
+        That the instrument can return "not contained" for the right reason
+        (|Z| = 1 verified by brute force or by the affine-subspace search) at
+        the scale run, and whether EQS4 behaves unlike a generic system of its
+        shape. The discrimination count of a cell is the number of its 5
+        NULL-PROF seeds that are both |Z| = 1 verified and M-1 false (a
+        non-unique null with Z known is reported but not counted, which is
+        conservative). It can be established only in cells with N in 18..26
+        (solution_set_Z_nulls). The null is not matched on the degree
+        filtration of the span (DER-9), so the EQS4-against-null contrast is
+        coarse. Reported before any EQS4 value is interpreted (controls before
+        belief).
+    - id: C-NULL-SHUF
+      name: support-shuffled null (NULL-SHUF), one-factor against EQS4
+      what_it_detects: >-
+        Whether a containment on EQS4 belongs to the S_3 structure or to the
+        support shape alone.
+    - id: C-SHIFT
+      name: matched EQS2 (v = 0), one-factor against EQS4
+      what_it_detects: >-
+        Whether the coset shift changes D_solve. This bears on footnote 6's
+        "the situation is the same as the Semaev's case". Descriptive for the
+        hypothesis. |Z| is recorded as a covariate because the shift changes
+        the solution geometry.
+    - id: C-AA-ENC
+      name: A/A re-encoding (EQS4-AA)
+      what_it_detects: >-
+        Instrument defects that depend on variable order, support or equation
+        basis. Stated on the adapted generators (DC-9): the re-encoding
+        recombines and substitutes the RAW generators, and the closure of both
+        sides runs on the adapted form, so by DER-8(c) the exact metrics M-1,
+        M-2, M-3, M-4 (entry 0 included), M-5 and M-7 at every D = 2..D_reached
+        are equal exactly, a noise floor of 0, and any discrepancy invalidates
+        (SR-5). It is not a claim that raw M_D is invariant, which is false.
+        The raw hash is not compared. The raw-against-adapted equality of W_D
+        for D >= 3 (DER-8(b)) is checked separately in F-4.
+    - id: C-FE-EQ
+      name: field-equation handling (EQS4 Boolean against EQS4-FULLFE)
+      what_it_detects: >-
+        That the Boolean closure is the full-ring closure with S_fe inside
+        (DER-1). Agreement is structurally forced, and is labelled as such.
+        Disagreement invalidates (SR-5).
+    - id: C-FE-OUT
+      name: S_fe present against absent (EQS4-FULLFE against EQS4-NOFE)
+      what_it_detects: >-
+        The role of the field equations in reaching the linear basis.
+        Reported. Decides nothing.
+  fixtures:
+    - id: F-1
+      check: >-
+        d_F^eq of {X_1^2 + X_1, X_2^2 + X_2} is 4, with the padding witness of
+        the derivation file. d_F^eq of {X_1^2 + X_1} alone records no fall
+        at d <= 4.
+    - id: F-2
+      check: >-
+        d_F^eq with S_fe inside equals 3 on KN-FIND-936151 witness A
+        (X^2 Y, XY + X) and witness B (X1X2 + X3, X1X3 + X2), agreeing with
+        tools/lemma4_inside_form.py.
+    - id: F-3
+      check: >-
+        On the first 10 S3-PRIMARY instances of RUN-CERTBIN-a3fc60 (quadratic
+        systems at nv = 20), 1 is in W_4 and 1 is not in M_4, matching the
+        archived per-instance records (M_4 rank and dims-by-degree, W_4
+        dims and dims-by-degree), for the subclass SembinClosure run both with
+        the inherited engine fixpoint and with the streamed fixpoint forced on
+        (revision 2, DR-9). This is the fixture that ties the subclass to the
+        unmodified engine's archived behaviour.
+    - id: F-4
+      check: >-
+        On 50 random systems with N <= 10 and generators of mixed degree 1 to
+        3, the W_D dims series for D = 2..5 from the subclass (inherited
+        and streamed loops, alternating) equals that of an independent
+        set-based fixpoint written under code/ that uses reference.py, with
+        macaulay.rank_mod_p as a rank oracle. Revision 2 adds DER-8(b): on the
+        same systems, for D = 3, 4, 5 the final dimension and dims-by-degree of
+        W_D computed from the raw generator list equal those computed from the
+        adapted generators (a difference fails the fixture); for D = 2 the pair
+        is recorded and may differ.
+    - id: F-5
+      check: >-
+        Known non-containment: f = X1X2X3X4X5 + 1 (N = 5) gives W_4 = {0},
+        M-1 false, and an ann-certificate (full and irredundant-pruned
+        Lambda) that the checker accepts. Tamper evidence (revision 2, DR-6) is
+        stated as follows, because some single-bit changes of a certificate
+        yield another valid certificate (an equivalent encoding; 4 of 31
+        single-bit flips of the pruned Lambda were observed to stay valid) and
+        a fixture cannot demand their rejection. (i) The declared tamper, the
+        constant-monomial column bit of the first functional of the pruned
+        Lambda, a rule fixed here before any outcome, is rejected. (ii) For
+        every single-bit flip of the pruned Lambda, the checker's verdict equals
+        the verdict of an exhaustive reference predicate that recomputes
+        conditions (a), (b) and (c) of the certificate by plain integer
+        linear algebra from the definitions: no flip that violates any
+        condition is accepted, and no flip that satisfies all three is rejected.
+        The counts (rejected, accepted) are recorded. (iii) Tamper evidence of
+        stored files is the certificate sha256 recorded in M-8 and the artifact
+        index, not the checker. Until the independent Validator checker exists
+        the fixture is run against the producer-side reference checker, labelled
+        as not independent, and F-5 is re-run against the independent checker
+        before any non-containment is counted.
+    - id: F-6
+      check: >-
+        At n <= 8, for 3 instances each with v = 0 and with v != 0, the
+        builder's generators equal src/semaev_tree.py weil_descend_to_F2
+        output after variable mapping and multilinear reduction. Revision 2:
+        on 12 curves over n in the grid range the exact-enumeration group
+        order equals Sage's point count. F-6 must pass. A verdict of
+        not_covered (for example Sage absent on the host) counts as a failure
+        for SR-1, because the Sage oracle is the only builder check that does
+        not share the producer's field arithmetic.
+    - id: F-7
+      check: Hand PC-TRI at N = 6, with D_solve <= 3 verified by hand-written expected dims.
+    - id: F-8
+      check: >-
+        Z enumeration equals brute force on every target instance with
+        N <= 20 and every null with N <= 26 (that is IR-2 applied as a
+        standing fixture), and the affine-subspace Z search equals brute
+        force on at least 10 nulls with 18 <= N <= 22.
+
+  replication:
+    seeds: >-
+      5 per (cell, arm) as listed in arms_per_tier, derived by the
+      protocol-hash rule of protocol.json: seed = first 8 bytes of
+      sha256(protocol_sha256 \n arm \n instance \n r), big-endian, where
+      instance = cell_id. The SHARED substream (curve, shifts) uses
+      arm = "SHARED", so matched arms share curve and V. Revision 2 labels:
+      EQS4 uses arm "EQS4"; EQS2 uses arm "EQS2"; EQS4-U attempt a = 0 is the
+      EQS4 stream, and attempt a >= 1 uses arm "EQS4-U" with instance
+      cell_id + "/a" + a; the nulls, PC-TRI and the re-encodings use their
+      own arm label with instance = cell_id; descent-check sampling uses arm
+      "DESCENT-CHECK" with the trial key as instance. Each label opens a
+      HashRng with a fixed sub-label.
+    independent_instances: 5 per cell per primary arm (more for EQS4-U where it differs)
+    replication_rule: >-
+      Every EQS4 or EQS4-U instance found not contained is re-run as EQS4-AA
+      (mandatory) and certified by the independent checker. No further seeds
+      are added inside this version (fixed-N). An extension is an amendment.
+
+  certificates:
+    non_containment_ann_cert: >-
+      For an instance with M-1 false: a family Lambda of linear functionals
+      on B_{<=D} (dual basis of the closed superspace U = ker Lambda,
+      ann-v1-style as in experiments/EXP-CERTBIN-060020/impl/closures.py),
+      plus a named element g of the reduced Groebner basis of Z with
+      Lambda(g) != 0. The checker verifies five things. (a) Lambda kills
+      every Boolean Macaulay row rho(t f_i), which the checker regenerates
+      from the serialised system. (b) Closure: for each j, every functional of
+      Lambda composed with g -> rho(X_j g), restricted to B_{<=D-1}, lies in
+      the row space of Lambda restricted to B_{<=D-1}. (c) Lambda(g) != 0.
+      (d) g vanishes on Z, and Z is re-enumerated by the checker's own code.
+      (e) The system serialisation hashes to M-10's sha256. Together these
+      give W_D contained in ker Lambda and g in I minus W_D. The primal form
+      (an echelon basis of U with (a) and (b) as reductions to zero) is
+      accepted instead when codim exceeds dim. The certificate is stored
+      gzipped, through the artifact store above 64 KiB. A size guard
+      (ann_max_bytes, default 512 MiB, estimated before the family is built)
+      records not_emitted instead of building an oversized family. Revision 2
+      status handling: see non_containment_uncertified below.
+    non_containment_uncertified: >-
+      (Revision 2, DR-8.) A non-containment (M-1 false, Type-L or Type-G) whose
+      certificate is rejected by the independent checker (IR-4a), not emitted
+      because a size, wall or memory guard tripped (IR-4b), or not yet checked
+      is reported as non_containment_uncertified. It is never a counterexample,
+      never a contained instance, and never silently dropped. Rules. (1) It
+      does not count toward C-EQS4-ABS or S-MAIN. (2) It blocks F-MAIN: F-MAIN
+      needs every decisive instance contained, and an uncertified
+      non-containment is not contained, so the outcome is then
+      incomplete_censored with the detail certificate_pending, not
+      corroboration and not a falsification. (3) It is reported with its
+      identity, system hash, dims-by-degree, the M-4 series, M-2, the missing
+      Groebner-basis element, its EQS4-AA re-encoding result (mandatory, SR-6),
+      and the guard that tripped. (4) Repair is allowed inside maximum_runs and
+      is not a re-draw: the same deterministic instance is re-run alone with
+      the guard raised (ann_max_bytes up to 4 GiB, written through the artifact
+      store) and, if the guard still trips, with the primal form or a pruned
+      family. The repair cannot change M-1, which stays as computed. (5) If it
+      remains uncertifiable on the available host, the goal records an
+      impediment (certificate size at that N) and the claim stays at "candidate
+      counterexample, uncertified", with no hypothesis-status consequence.
+      Realistic cases: at N = 40 the estimated size min(codim, dim) * C4 / 4 can
+      exceed 512 MiB, so a non-containment at the stretch cell is the case most
+      likely to need the repair path.
+    containment_wdag: >-
+      (Revision 2, DR-8; supersedes the earlier rule that certified every
+      contained instance up to N = 26.) A degree-disciplined wdag-v1
+      certificate (EXP-CERTBIN-060020 format, every node of degree <= 4) for
+      the reduced Groebner basis of a contained EQS4 or EQS4-U instance, as one
+      multi-output DAG. It exists to catch an engine that over-reports W_4,
+      the error that would hide a counterexample, and it supports only the
+      corroboration reading. It never decides M-1, which is decided by DER-3
+      (and by direct membership when C4 <= 30000). Pre-registered emission rule,
+      a function of N and a nonce, never of an outcome other than "contained":
+      for N <= 20, every contained decisive instance; for 21 <= N <= 26,
+      exactly two contained decisive instances per cell, chosen by the nonce
+      sha256(protocol_sha256 + "\nWDAG\n" + cell_id) taken modulo the number
+      of contained decisive instances of the cell (the second by the next
+      index), if the cell has fewer than two they are all taken; for N >= 27,
+      none. Reason for the cut: measured cost of one certificate is 126 s,
+      4.2 GB RSS and 139 MB of JSON before gzip at N = 25, and the memory scales
+      roughly with C4 squared, giving about 5.8 GB at N = 26 and above the
+      10 GB cap from N = 28. Containment at N >= 27 is therefore labelled
+      "engine-decided, uncertified" in every report, and is cross-checked only
+      by C-PC and C-AA-ENC at the same cell, which test the same engine. That
+      is an optimistic assumption and is flagged as such. Per-instance caps for
+      a wdag: wall 900 s, JSON before gzip 400 MB, and the run RSS watchdog
+      (10 GB). A guard trip records wdag not_emitted with the reason and leaves
+      M-1 untouched. Isolation requirement: certificate emission runs in a
+      child process separate from the closure child, started after the closure
+      record has been appended; a certificate failure, including a watchdog
+      kill, can never turn a completed M-1 into a censored or failed one. The
+      certificate child recomputes W_D and must reproduce the recorded final
+      dimension, else it emits nothing and the instance is flagged.
+    checker_independence: >-
+      The checker is written by a Validator task that reads this contract,
+      the serialised systems and the certificate format, and not the
+      producer's code/ (blind_from: experiments/EXP-SEMBIN-cb5e25/code/).
+      It is outside this contract's write scope (the review round's
+      directory). The same Validator task re-derives DER-1, DER-2, DER-3,
+      DER-8 and DER-9 blind from this contract alone. Its task card must be
+      committed before approval and its delivery precedes the first
+      non-containment that is counted.
+
+  # ==========================================================================
+  budget:
+    enforcement: declared_limits
+    enforcement_note: >-
+      Owner cloud and CPU/RAM ceilings bind (AGENTS.md, 2026-11-01). The two
+      limits below are stop rules enforced by the runner. They are not
+      advisory estimates.
+    wall_clock_seconds_total: 43200
+    peak_rss_gb: 10
+    memory_enforcement: >-
+      A resident-set watchdog, never RLIMIT_AS (EXP-SEMBIN-4fa22c budget note).
+      Mutant products are streamed in chunks so that the product buffer never
+      dominates. Estimated dense echelon is about C4^2/8 bytes (1.3 GB at
+      N = 40). Revision 3 (DR-11): the supervisor's mandatory RLIMIT_AS is a
+      loose 32768 MB virtual ceiling that is not a resource cap; the binding
+      limit is the resident-set watchdog (VmRSS, 10 GiB) in code/run.py, and a
+      kill at the ceiling is an infrastructure failure under SR-7.
+    wall_clock_seconds_per_instance_per_D: {N_le_32: 1800, N_40: 7200}
+    maximum_runs: 3
+    maximum_runs_note: >-
+      An initial pass, a repair pass and one extension. This is not a licence
+      to re-draw seeds or nulls until an outcome appears.
+    maximum_workers: 1
+    maximum_workers_note: >-
+      A single process. Raising it needs parallel.verify_determinism and an
+      amendment.
+    machine: 4 CPUs, 15 GB, the same class as EXP-SEMBIN-4fa22c. Record the 1-minute load average at each instance start.
+    cost_estimate_modeled:
+      label: modeled, not measured on this instrument
+      basis: >-
+        RUN-CERTBIN-a3fc60 cell-summary.json, closure_wall_seconds_measured
+        "W_4+extraction": median 0.373 s, max 3.305 s, n = 2100 at nv = 20
+        (C4 = 6196). Scaled by (C4/6196)^3 for dense elimination.
+      per_instance_W4_median_seconds: {N20: 0.4, N24: 3.4, N26: 9, N28: 22, N30: 51, N32: 112, N40: 1660}
+      totals_seconds: {T0: 300, T1: 4000, T3: 13300, T2: 4800, all: 22400}
+      revision_2_additions_seconds:
+        label: >-
+          modeled by scaling one measured point, not measured at the cells
+          concerned. The brute-force figures are unmeasured upper bounds.
+        wdag_N_le_20: >-
+          400 (all contained decisive instances; N = 18, 19, 20 about 5, 8, 13 s
+          each by C4^2.5 scaling from 126 s at N = 25, smaller cells under 1 s)
+        wdag_N_21_to_26: >-
+          1600 (two per cell at m3n12, m3n13, m3n14, m4n08, m4n09: about 83,
+          126, 188, 83, 188 s each, sum 668 s, times 2, plus 20 percent
+          allowance)
+        null_brute_force_N_le_26: >-
+          1400 (bit-sliced evaluation over 2^N points, at most 40 s each at
+          N = 26 and about 10 s at N = 24, for 5 NULL-PROF and 5 NULL-SHUF seeds
+          in each of the 5 cells with N in 24..26, plus the smaller cells)
+        ann_certificates_contingency: >-
+          600 (only if non-containments occur, including their mandatory
+          EQS4-AA re-runs; unknown count, a reserve, not an expectation)
+        modeled_total_all: 26400
+        modeled_total_with_reporting_reserve: 27600
+        margin_to_wall_total: >-
+          43200 - 27600 = 15600 s, about 36 percent of the cap. SR-3 and SR-8
+          still apply.
+        observation_informed_comparison: >-
+          Not used for gating. If the synthetic-system probe at N = 40 (151 s,
+          3.1 GB) transferred to the 8 N = 40 instances, T3 would be about
+          1,200 s instead of 13,300 s and the total about 14,300 s. Real EQS4
+          dynamics may differ.
+        peak_rss_gb_expected: >-
+          closure at N = 40: 3.1 GB (probe). wdag at N = 26: about 5.8 GB
+          (extrapolated from 4.2 GB at N = 25). Both are below the 10 GB cap,
+          which the watchdog enforces on every child.
+      optimistic_assumptions:
+        - Median scaling. The archived max/median ratio is about 9, so tails can exceed the per-instance cap at N = 40, and censoring is likely there.
+        - Assumes the engine's archived behaviour at nv = 20 extrapolates. Mutant product volume (about dim(W cap B_{<=3}) * N rows per iteration) is not modelled separately.
+        - The wdag and brute-force additions scale a single measurement (126 s at N = 25) and an unmeasured bound. The preapproval probe is to replace them with measured timings.
+      use: >-
+        Planning only. The budget-skip rule (SR-3) uses measured timings from
+        this run, never these figures.
+
+  stopping_rules:
+    - id: SR-1
+      rule: >-
+        Fixtures F-1..F-8 (F-8 as its first applications) run first. Any
+        failure stops the run before any target instance and is reported as
+        an instrument failure. A verdict of not_covered counts as a failure
+        for F-6 (and for any fixture whose oracle is absent); F-5 may run
+        against the producer-side checker only until the independent checker
+        exists, and is then labelled not independent.
+    - id: SR-2
+      rule: >-
+        An instance that exceeds its per-instance-per-D wall cap at degree D
+        stops. M-3 is recorded as "> D-1" if no lower D contained it, and M-1
+        is recorded as censored if D = 4 was not completed. A censored M-1 is
+        never false.
+    - id: SR-3
+      rule: >-
+        Before each instance, predicted cost = (largest measured W_4 seconds
+        so far at column count C_meas) x (C4_new/C_meas)^3. If the prediction
+        exceeds the remaining total budget minus a 1200 s reporting reserve,
+        the instance is recorded not_attempted_budget and the runner moves to
+        the next cell in execution_order. Such a record is not evidence.
+    - id: SR-4
+      rule: >-
+        If any PC-TRI instance has M-1 false or D_solve > 3, the run stops and
+        is invalid (instrument defect).
+    - id: SR-5
+      rule: >-
+        If any EQS4-AA instance differs from its EQS4 source in M-1, M-2, M-3,
+        M-4 (iteration 0 included), M-5 or M-7 at any D, all computed on the
+        adapted generators (DC-9, DER-8(c)), or C-FE-EQ disagrees, the run
+        stops and is invalid. If the F-4 raw-against-adapted check of W_D for
+        D >= 3 (DER-8(b)) ever fails, the run is invalid for the same reason.
+    - id: SR-6
+      rule: >-
+        A non-contained EQS4 or EQS4-U instance does not stop the run. It is
+        re-run as EQS4-AA, its ann-certificate is emitted immediately, and the
+        plan continues (fixed-N).
+    - id: SR-7
+      rule: >-
+        An RSS watchdog kill, crash or host failure ends that instance as
+        failed_infrastructure. One infrastructure retry is allowed. It is
+        never negative evidence (AGENTS.md core rule 5).
+    - id: SR-8
+      rule: The total wall budget of 43200 s ends the run. Completed cells are reported, and the remainder is listed as not attempted.
+  invalidation_rules:
+    - id: IR-1
+      rule: A descent_check mismatch invalidates the instance, and the builder is suspect for the cell. Every instance of that cell is re-checked.
+    - id: IR-2
+      rule: >-
+        A disagreement between Z enumeration and brute force (targets N <= 20,
+        nulls N <= 26) invalidates the instance, and every Type-G or Type-D
+        reading in the cell is suspended. For N >= 27 nulls, Z comes from the
+        affine-subspace search only, which has no second method, and an
+        undetermined_Z_unknown is not a disagreement.
+    - id: IR-3
+      rule: >-
+        A planted s that fails a generator, a v_i inside V, or two equal
+        cosets invalidates the instance. EQS4 without valid shifts is never
+        reported (DC-3).
+    - id: IR-4
+      rule: >-
+        IR-4a: a non-containment certificate rejected by the independent
+        checker voids that instance's M-1 = false reading. IR-4b (revision 2):
+        a non-containment certificate that is not emitted (size, wall or
+        memory guard) or not yet checked leaves the reading unconfirmed. In
+        both cases the instance is reported as non_containment_uncertified
+        (certificates.non_containment_uncertified), is not counted toward
+        C-EQS4-ABS, is never reported as a counterexample, and is never counted
+        as contained. It blocks F-MAIN until repaired or recorded as an
+        impediment.
+    - id: IR-5
+      rule: A dirty tree without per-file sha256 of every code file that ran voids the run's provenance (CORR-20260916-33068f D-2).
+
+  success_criterion: >-
+    S-MAIN, which supports H-SEMBIN-e5b2db at the named instances. Fixtures
+    F-1..F-8 pass (SR-1). The absolute comparison C-PC holds, with every
+    PC-TRI instance at M-1 true and D_solve <= 3 as prediction P-4 states.
+    The A/A comparison C-AA-ENC shows zero discrepancies, which is the exact
+    noise floor. The absolute comparison C-EQS4-ABS then records at least one
+    EQS4 or EQS4-U instance with M-1 false of Type-L or Type-G. Each such
+    instance carries an ann-certificate accepted by the independent checker
+    (IR-4) and is confirmed on its EQS4-AA re-encoding. Predictions P-1 and
+    P-2 are scored against this outcome as written and are never adjusted.
+    Type-D instances do not count toward S-MAIN.
+  falsification_criterion: >-
+    F-MAIN, which falsifies H-SEMBIN-e5b2db at the tested scope only. The
+    same validity gates hold: F-1..F-8, C-PC with P-4, and C-AA-ENC at zero
+    discrepancies. Every decisive EQS4 and EQS4-U instance in C-EQS4-ABS has
+    M-1 true. The one-factor comparison C-NULL discriminates: NULL-PROF has
+    M-1 false on at least 3 of the 5 seeds of at least one completed cell
+    with N >= 18, where each counted seed is uniqueness-verified (|Z| = 1,
+    established by brute force for N <= 26 or by the affine-subspace search)
+    and has M-1 false, scored against prediction P-3. Revision 2 states what
+    this can mean: Z of a null is known only for N <= 26 (and for N >= 27 only
+    when at most 16 variables remain free), so the threshold can be met only in
+    the cells m3n09, m3n10, m3n11, m3n12, m3n13, m3n14, m4n08 and m4n09. The
+    threshold itself is unchanged. Modelled, for orientation and not as a
+    promise: a random planted null with M near N has a unique solution with
+    probability about 0.4 (M = N), 0.6 (M = N + 1) and 0.8 (M = N + 2), so a
+    cell carries the threshold with probability about 0.2, 0.6 and 0.85 and the
+    eight cells together almost surely. If no completed cell reaches it, or if
+    those cells are not completed, the all-contained outcome is
+    inconclusive and not a falsification. A non-containment of an EQS4 or
+    EQS4-U instance that is uncertified (IR-4) is not contained and blocks
+    F-MAIN (certificates.non_containment_uncertified). The scope of F-MAIN is
+    the completed cells, the instance_specification sampling rule (including
+    the feasibility redraw) and the closure W_4. Skipped or censored cells are
+    outside it. Containment at N >= 27 is engine-decided and uncertified by
+    wdag, and is labelled so inside the scope.
+  secondary_criteria:
+    S-AS1-EXACT: >-
+      (Revision 2, DR-2: demoted to a descriptive report; it decides nothing
+      and cannot contribute to S-MAIN or F-MAIN.) By DER-9 every EQS4 and EQS2
+      instance with m >= 3 has a degree-1 element and d_F^eq <= 2, so the
+      original premise, instances with d_F^eq = 3, is expected to be empty and
+      the original prediction P-7 was vacuous. The report is the table of M-6
+      (expected 2 everywhere; any other value is a defect of the builder or of
+      the d_F module and is investigated before anything else), together with,
+      per instance, D_solve against 2 (the exact d_F^eq, relevant under the
+      reading of Assumption 1 that bounds only rows beyond the inputs) and
+      against 3 (the input degree, the smallest closure that sees every
+      input row). The readings stay separate from the operational form, which
+      the main criteria test.
+    S-TYPE-D: >-
+      Type-D instances (d_GB > 4) are reported as a separate claim: a
+      violation of Assumption 1 as printed that follows from Z alone, with no
+      closure content.
+    S-REPORTING: >-
+      For every non-contained instance, the report states both consequences:
+      Assumption 1 fails at that instance, while Theorem 1 as a conditional is
+      untouched and nothing follows for any deployed curve. For the
+      all-contained reading, it states that this is breakthrough-adjacent
+      corroboration at tested scale only, and that what is corroborated is the
+      operational form (degree 4 suffices, the form the cost bound uses via
+      Proposition 5's d_F <= 4), not Assumption 1 with the exact equality
+      d_F = 2, which is violated on inspection at every instance (DER-5 with
+      DER-9). It also states that every instance contains a degree-1 element
+      (DER-9), which removes one variable but does not decide containment, and
+      that the null controls lack it.
+
+  # ==========================================================================
+  variable_ledger:
+    independent:
+      - {name: n, levels: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 19]}
+      - {name: m, levels: [3, 4]}
+      - {name: arm_system_family, levels: [EQS4, EQS4-U, EQS2, NULL-PROF, NULL-SHUF, PC-TRI]}
+      - {name: coset_shift, levels: [nonzero_disjoint, zero]}
+      - {name: closure_degree_D, levels: [2, 3, 4, 5, 6]}
+    factors:
+      - name: subspace_dim_k
+        treatment: fixed
+        value: k = floor(n/3) for m = 3, k = 2 for m = 4, k = 7 at m3n19k7
+        how: fixed per cell by parameter_grid. It co-varies with n, which is why C-SCALE is confounded.
+      - name: field_modulus
+        treatment: fixed
+        value: lowest-weight, lexicographically smallest irreducible p_n
+        how: one polynomial per n, recorded, shared by every arm
+      - name: field_basis
+        treatment: fixed
+        value: polynomial basis {1, t, ..., t^{n-1}}
+        how: one builder for every arm
+      - name: subspace_V
+        treatment: fixed
+        value: span{1, ..., t^{k-1}}
+        how: one construction for every arm in the cell
+      - name: coset_shift_draw
+        treatment: randomized
+        how: SHARED substream per (cell, r) by the frozen rule. EQS2 sets v = 0.
+      - name: curve
+        treatment: randomized
+        how: SHARED substream per (cell, r). Matched arms use the same curve. Koblitz excluded.
+      - name: planted_decomposition
+        treatment: randomized
+        how: arm substream per (cell, r, a) by the frozen rule, independent of any closure outcome
+      - name: generator_representative
+        treatment: fixed
+        value: reduced multilinear (DC-4), closure on the adapted span basis (DC-9)
+        how: one reduction routine and one adaptation routine (the raw hash is recorded as well)
+      - name: monomial_and_variable_order
+        treatment: fixed
+        value: grevlex, block order X bits then U bits
+        how: frozen in the engine layout. Varied only inside the encoding factor of EQS4-AA.
+      - name: engine_build
+        treatment: fixed
+        value: src/crypto_autoresearcher/gf2 at the run commit, sha256 per file
+        how: one build for every arm. The reference oracle is used in F-4 only.
+      - name: encoding
+        treatment: fixed
+        value: canonical
+        how: EQS4-AA applies a random invertible affine variable map and an equation recombination (the A/A nuisance factor)
+      - name: field_equation_handling
+        treatment: fixed
+        value: Boolean reduction (DC-2)
+        how: EQS4-FULLFE puts S_fe in as explicit generators in the full ring
+      - name: field_equations_present
+        treatment: fixed
+        value: present
+        how: EQS4-NOFE drops S_fe in the full ring
+      - name: uniqueness_selection
+        treatment: fixed
+        value: EQS4 unconditioned (given a feasible shared draw), EQS4-U first |Z| = 1 attempt of 32
+        how: frozen rule that depends on |Z| and on planting feasibility only, never on a closure outcome
+      - name: solution_set_size_Z
+        treatment: measured
+        how: recorded per instance as a covariate. It changes with the shift (EQS2 symmetry), so C-SHIFT is read with it.
+      - name: censoring_limits
+        treatment: fixed
+        value: per-instance caps 1800 s (N <= 32) and 7200 s (N = 40), D_max(N) rule, 43200 s total, 10 GB RSS
+        how: runner-enforced, recorded per row
+      - name: seeds
+        treatment: randomized
+        how: protocol-hash rule (replication.seeds). Never chosen after a look.
+      - name: host_load
+        treatment: measured
+        how: per-row load average and host facts. Affects M-9 only, never a primary metric.
+    comparisons:
+      - id: C-EQS4-ABS
+        arms: [EQS4, EQS4-U]
+        differs_in: []
+        design: absolute
+        threshold: M-1 true on every decisive instance (Assumption 1's operational prediction). One certified false falsifies the threshold.
+      - id: C-PC
+        arms: [PC-TRI]
+        differs_in: []
+        design: absolute
+        threshold: M-1 true and D_solve <= 3 on every instance (DER-6)
+      - id: C-NULL
+        arms: [EQS4, NULL-PROF]
+        differs_in: [arm_system_family]
+        design: one_factor
+      - id: C-NULL-SHUF
+        arms: [EQS4, NULL-SHUF]
+        differs_in: [arm_system_family]
+        design: one_factor
+      - id: C-SHIFT
+        arms: [EQS4, EQS2]
+        differs_in: [coset_shift]
+        design: one_factor
+      - id: C-AA-ENC
+        arms: [EQS4, EQS4-AA]
+        differs_in: [encoding]
+        design: aa
+      - id: C-FE-EQ
+        arms: [EQS4, EQS4-FULLFE]
+        differs_in: [field_equation_handling]
+        design: one_factor
+      - id: C-FE-OUT
+        arms: [EQS4-FULLFE, EQS4-NOFE]
+        differs_in: [field_equations_present]
+        design: one_factor
+      - id: C-DF-EXACT
+        arms: [EQS4, EQS4-U]
+        differs_in: []
+        design: absolute
+        threshold: descriptive only (revision 2). M-6 equals 2 on every EQS4 and EQS2 instance (DER-9, P-7 as calibration), with D_solve reported against 2 and 3 (S-AS1-EXACT). No containment threshold, decides nothing.
+      - id: C-SCALE
+        arms: [EQS4]
+        differs_in: [n, subspace_dim_k]
+        design: confounded
+        reason: n, k and N co-vary along the grid. A D_solve series over n is an observation and decides nothing.
+      - id: C-M
+        arms: [EQS4]
+        differs_in: [m, n, subspace_dim_k]
+        design: confounded
+        reason: m = 3 and m = 4 cells at equal N (24, 26) differ in n and k as well. Reported only.
+    aa_not_applicable: null
+    crosses_map: false
+    crosses_map_note: >-
+      The claim concerns EQS4 itself: the descended Boolean system is the
+      object that Proposition 5 and Assumption 1 speak about. No conclusion is
+      moved back across the descent to curves, groups or ECDLP cost, and the
+      interpretation limits forbid doing so. The descent's correctness is an
+      instrument check (descent_check, F-6), not a transfer.
+
+  prediction_provenance:
+    - prediction: P-1
+      first_recorded_in: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+      written_at: '2026-11-06'
+      data_seen:
+        - path: knowledge/leads/ecdlp/ic-engine/LEAD-ICE-descent-closure-degree-at-scale.yaml
+          measured: summary of chained-S_3 unsatisfiable refutation degree 3-4 through (m, l) = (4, 6), common V, no shifts (crypto repo; the underlying RESULTS.md files were not read)
+        - path: knowledge/findings/KN-FIND-c3a917.md
+          measured: W_4 refutes 400/400 unsatisfiable m = 2 unshifted S_3 descents at n = 19
+        - path: knowledge/findings/KN-FIND-5a8d3e.md
+          measured: W_4 refutes 386/386 unsatisfiable m = 2 S_3 descents at n = 17
+      sample_status: out_of_sample
+      overlap: >-
+        A neighbouring quantity (refutation degree of unsatisfiable systems)
+        on neighbouring objects (m = 2 or common-V chains, no shifts). No
+        GB-containment measurement on coset-shifted satisfiable EQS4 was
+        consulted or is known to exist.
+    - prediction: P-2
+      first_recorded_in: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+      written_at: '2026-11-06'
+      data_seen:
+        - path: knowledge/leads/ecdlp/ic-engine/LEAD-ICE-descent-closure-degree-at-scale.yaml
+          measured: '"degree rises at l = 7 at m = 3"; the (3, 19, 7) degree-5 closure was capped at 169 GB (unsatisfiable, unshifted)'
+      sample_status: out_of_sample
+      overlap: >-
+        Same (m, n, l) as the lead's C1 cell, but a different system (with
+        shifts) and a different question (satisfiable GB containment against
+        unsatisfiable refutation) on a different instrument.
+    - prediction: P-3
+      first_recorded_in: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+      written_at: '2026-11-06'
+      data_seen:
+        - path: knowledge/findings/KN-FIND-5a8d3e.md
+          measured: same-support random bilinear nulls at n = 17 are exactly semi-regular (rank M_4 = 2771 on 124/124)
+      sample_status: out_of_sample
+      overlap: >-
+        Different null family (bilinear, m = 2, unsatisfiable). Profile-matched
+        cubic planted nulls at these N were not seen. Revision 2 (2026-11-06,
+        before any grid datum) re-worded the prediction from "at least 4 of 5
+        uniqueness-verified seeds per cell" to a pooled fraction over
+        uniqueness-verified seeds, because the original could not be met
+        arithmetically when random planted systems with M near N are rarely
+        unique. No datum on any null was seen in making the change.
+    - prediction: P-4
+      first_recorded_in: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+      written_at: '2026-11-06'
+      data_seen: []
+      sample_status: out_of_sample
+      overlap: none. The prediction is a derivation (DER-6).
+    - prediction: P-5
+      first_recorded_in: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+      written_at: '2026-11-06'
+      data_seen:
+        - path: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.out
+          measured: padding on two field equations gives products of degree 4 and a nonzero degree-2 sum
+      sample_status: out_of_sample
+      overlap: a derivation check, not an EQS4 measurement
+    - prediction: P-6
+      first_recorded_in: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+      written_at: '2026-11-06'
+      data_seen: []
+      sample_status: out_of_sample
+      overlap: none
+    - prediction: P-7
+      first_recorded_in: ledger/hypotheses/H-SEMBIN-e5b2db.yaml
+      written_at: '2026-11-06'
+      data_seen:
+        - path: knowledge/findings/KN-FIND-c3a917.md
+          measured: W_3 refuted 3 of 3 S_3 systems and 0 of 2 tensor-arm systems at n = 19, m = 2 (review verification objects)
+      sample_status: out_of_sample
+      overlap: >-
+        different m, unsatisfiable, unshifted, five systems. Revision 2
+        (2026-11-06, before any grid datum) replaced the original prediction
+        (d_F^eq = 3 instances) by the calibration d_F^eq <= 2 of DER-9, a
+        derivation, because the original premise is empty. The data listed
+        above bear on the original wording only.
+
+  # ==========================================================================
+  proof_search_map:
+    why_present: >-
+      The contract bears on a published bound and is a counterexample search,
+      so it is proof-oriented (docs/inventor-protocol.md section 8). The
+      audits are cheap and run before compute.
+    exact_baseline_reproduction:
+      audit: F-3 (archived RUN-CERTBIN-a3fc60 W_4 and M_4 outcomes), F-1 and F-2 (padding and the KN-FIND-936151 witnesses)
+      status: designed, not yet run
+    observation_collision_search:
+      audit: >-
+        Before the first run, query the shared research-kb and the local kb/
+        for any measured solving degree, closure degree or GB containment on
+        Nagao EQS4 with coset shifts, or on disjoint-coset factor bases (the
+        paper cites [10] and [5], recalled only). Also grep crypto-repo
+        research/dreg_closure_* for satisfiable or shifted variants. Record
+        the queries and hits in the run directory.
+      status: >-
+        required before the first run, not yet performed. Performed by the
+        Coordinator or the design lane before approval so that a collision can
+        still reframe the contract; its record is then copied into the run
+        directory as collision-search.json before the first measurement.
+      what_a_collision_would_mean: >-
+        A replication (reframe cheaply), or an existing counterexample or
+        corroboration that changes the ranking of this run.
+    quantifier_order:
+      statement: >-
+        Assumption 1 (operational) is FORALL instances: GB in W_4. The search
+        is EXISTS an instance: GB not in W_4. Corroboration is FORALL tested
+        instances under the sampling rule. No FORALL-n statement.
+      status: passed as a design audit
+    method_ceiling_and_nearby_object_control:
+      ceiling: >-
+        W_4 non-containment certifies failure for every degree-<= 4
+        linear-algebra Groebner computation (DER-2), and no more: nothing on
+        SAT, hybrid guessing or any solver outside the closure model, and
+        nothing on cost.
+      nearby_object_control: EQS2 (C-SHIFT), NULL-SHUF (C-NULL-SHUF), NULL-PROF (C-NULL)
+      status: passed as a design audit
+    proves_too_much:
+      object: >-
+        PC-TRI, where the conclusion "not contained" is provably false
+        (DER-6). It must be contained at every scale (C-PC, SR-4). F-5 is the
+        mirror case, where "contained" is provably false.
+      status: designed
+
+  # ==========================================================================
+  required_artifacts:
+    - experiments/EXP-SEMBIN-cb5e25/code/ (descent builder, sampler, Z enumerator, d_F^eq, closure driver, certificate emitter, analysis script analyze.py)
+    - experiments/EXP-SEMBIN-cb5e25/code/CODE_SHA256.json (every code file that ran, with sha256, including imported engine files)
+    - experiments/EXP-SEMBIN-cb5e25/runs/INDEX.json (the allocated RUN id and the artifacts it contains)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/manifest.yaml (exact commands, commit and dirty state, environment and versions, poll interval, host facts, files read under reuse_rule)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/instances.jsonl.gz (M-10 per instance, the canonical system serialisation or its artifact-store pointer, Z, redraw logs)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/closures.jsonl.gz (M-1..M-7 per instance per D with the full M-4 series)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/certificates/ (ann-certs and wdag-v1, gzipped, with .artifacts.json when over the size limits)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/fixtures.json (F-1..F-8 verdicts)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/controls.json (C-PC, C-AA-ENC, C-FE-EQ, C-FE-OUT, C-NULL, C-NULL-SHUF and C-SHIFT tables, controls reported first)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/collision-search.json (proof_search_map queries and hits, written before the first measurement)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/cost.jsonl (M-9 with poll interval)
+    - experiments/EXP-SEMBIN-cb5e25/runs/<RUN-ID>/stdout.log and stderr.log
+    - experiments/EXP-SEMBIN-cb5e25/export.json (experiment.export/v1 bound to protocol.json by hash)
+    - experiments/EXP-SEMBIN-cb5e25/runbook-sessions/ (when executed by runbook)
+    - experiments/EXP-SEMBIN-cb5e25/reports/run-<UTC>/report.md, a graph source and its rendering, and report.pdf (research-visuals), including negative and censored cells
+  write_scope_when_dispatched:
+    - experiments/EXP-SEMBIN-cb5e25/code/
+    - experiments/EXP-SEMBIN-cb5e25/runs/
+    - experiments/EXP-SEMBIN-cb5e25/runbook-sessions/
+    - experiments/EXP-SEMBIN-cb5e25/reports/
+  write_scope_note: >-
+    derivations/, specification.yaml, protocol.json and amendments/ are
+    Coordinator-owned and never written by the executor. The independent
+    certificate checker lives in the review round's directory and not here.
+  dependencies:
+    - inputs/NAGAO-2015-984/paper_fulltext.md and its sha256 sidecar
+    - src/crypto_autoresearcher/gf2/ at the run commit
+    - Sage, for the F-6 oracle and the F-6 group-order cross-check on 12 curves only (version recorded). Not used at run time for #E or root finding (revision 2, DR-7).
+    - tools/artifact_store.py for the F-3 instances and for large outputs
+    - no dependency on EXP-SEMBIN-4fa22c's code or runs, nor on GOAL-ICPERF instruments
+
+  inference:
+    policy: executor-implementation
+    independent_session_required: false
+    note: >-
+      Fallback and degraded flags are set on the executor handoff from the
+      route that adapter doctor resolves at dispatch. Nothing is assumed here.
+  review_plan_required_before_any_claim_transition: >-
+    A non-containment result goes first to a Validator task that writes the
+    independent certificate checker (blind to code/), together with a blind
+    re-derivation of DER-1, DER-2, DER-3, DER-8 and DER-9 from this contract
+    alone. A
+    counterexample presented as contradicting a published chain, and the
+    all-contained corroboration (breakthrough-adjacent), each need
+    review-breakthrough at max under AGENTS.md core rule 12, which is
+    undegradable. As EXP-SEMBIN-4fa22c recorded, this contract does not
+    pre-authorise a cheaper tier for a result it has not seen. The
+    instance-level certificate may still be recorded as evidence with
+    proof_status certificate, as KN-FIND-936151 was.
+
+  input_bindings:
+    nagao_paper:
+      path: inputs/NAGAO-2015-984/paper_fulltext.md
+      sha256: 337fae555450162e56432ee137d0cb4bb20e2bd901c29f69b38a2f949e913218
+      role: >-
+        Definitions 2-8, Assumption 1, Lemma 2, Propositions 2 and 5, Theorem 1, footnote 6: the claim under test.
+    frozen_protocol:
+      path: experiments/EXP-SEMBIN-cb5e25/protocol.json
+      sha256: 265e0d6788b5192562393650efc638ab852c2a59032af25fad0e817bcdfa0279
+      role: >-
+        experiment.protocol/v1, frozen before any data (file hash).
+    padding_derivation:
+      path: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.py
+      sha256: 8ae86b196bf211506e642a63c98f1d658d8de68e85905bf2e91843baae56d0f2
+      role: >-
+        Why Proposition 5 alone cannot have a counterexample (DER-4).
+    padding_derivation_output:
+      path: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.out
+      sha256: f43c88d73eec4726208c01c301e8ff1539e76753a7da05cd11fe7a3521aca703
+      role: >-
+        Recorded output of the derivation check.
+    proposal:
+      path: ledger/proposals/IDEA-20261006-8f4f02.yaml
+      sha256: 0addd3c820567481c907e3b56aa214c76155772b6a1afcf756323e57a9508594
+      role: >-
+        Parent idea of this contract.
+    formats:
+      path: experiments/EXP-SEMBIN-cb5e25/formats.md
+      sha256: 487f8191e03dc80b63b601c3968efe10fe3d2afbd6faed119b0ae933b46f76c7
+      role: >-
+        Serialisation and certificate formats the independent checker was written from.
+    independent_checker:
+      path: experiments/EXP-SEMBIN-cb5e25/review/checker/check_certs.py
+      sha256: cf6c4f65663003406c6111850e480cd073f18dac99a23da8d6acc431e0f6ed85
+      role: >-
+        Certificate checker written blind to code/ (TASK-20261106-028825).
+    collision_search:
+      path: experiments/EXP-SEMBIN-cb5e25/collision-search.json
+      sha256: 1b3d863baeda65420771563116c39d34752ddb386d8c34ca80be7bd0cb2d2e50
+      role: >-
+        Partial observation-collision search (research-kb unavailable).
+    engine_closure:
+      path: src/crypto_autoresearcher/gf2/closure.py
+      sha256: 143fdced7ea024a33484117aed3381fe4a8b1cb1c0fbd89e86eb81f15894b4b4
+      role: >-
+        Shared GF(2) closure engine, imported and subclassed (reuse_rule).
+    engine_kernels:
+      path: src/crypto_autoresearcher/gf2/kernels.py
+      sha256: 569dcf1a5d1062d8fd48eaa1b12557209e2f8389b24e89164bebd0360d7778fe
+      role: >-
+        Shared kernels; column_pass is wrapped to record M-4.
+    engine_rankprofile:
+      path: src/crypto_autoresearcher/gf2/rankprofile.py
+      sha256: 58239e6476e783b28c15a615de7d53da6aaee73b856d914aeb043bb206c54d18
+      role: >-
+        Shape used by the SembinClosure subclass.
+    lemma4_oracle:
+      path: tools/lemma4_inside_form.py
+      sha256: 779e865265a768a7373827940e98abebebeba3f7173c6db2d27a04a6a51bd235
+      role: >-
+        Oracle for fixture F-2.
+  execution_plan:
+    mode: experiments
+    trial_plan: experiments/EXP-SEMBIN-cb5e25/trial-plan.json
+    protocol_hashes: {experiments/EXP-SEMBIN-cb5e25/protocol.json: a1b0063ed17ded481a3f5d40e71f3227a3fc71661643fd331a7ad9c76e5b8ace}
+    implementation_tier: executor-implementation
+    runbook: experiments/EXP-SEMBIN-cb5e25/runbook.yaml
+    reason: >-
+      Contract designed and implemented (code/ with adapter and per-trial
+      checker, 76 unit tests pass; independent certificate checker
+      cross-checked; no grid cell run). protocol.json is frozen and bound.
+      The trial plan and runbook are compiled against it by the
+      experiment-director; the dispatch queue, executor handoff, preapproval
+      probe and approval decision remain (see readiness).
+  readiness:
+    blockers:
+      - >-
+        The trial plan and runbook are being recompiled against the frozen
+        protocol, the adapter and check_trial argv and the real task, queue and
+        approval ids; until the runbook lints clean the task stays
+        executor-implementation.
+      - The dispatch queue (one task, every trial run file in artifact_paths) and the tools/experiment_preapproval.py packet are not built or probed.
+      - >-
+        The observation-collision search is incomplete: the research-kb
+        executable is not available in this environment (recorded in
+        collision-search.json); it gates the approval decision (RUL-12).
+      - >-
+        The approval decision (a committed Coordinator decision) and its
+        archive do not exist; this contract stays review_required, frozen
+        false, approved_by null.
+      - >-
+        The resume checkpoint (scripts/checkpoint.sh init, then push, with
+        RESUME.md complete) is required before any experiment run starts.
+      - >-
+        Measured timings are missing for the revision 2 additions (wdag at
+        N = 20 and 24..26, null brute force at N = 24..26); the preapproval
+        probe replaces the modelled figures by them.
+  implementation_alignment:
+    note: >-
+      Revision 2 contract points that code/ must realise before approval. Each
+      is checked by the executor's unit tests or by a fixture, not by the
+      Coordinator.
+    items:
+      - >-
+        Certificate emission in a child separate from the closure child, after
+        the closure record is appended (certificates.containment_wdag,
+        isolation requirement). Currently closure_task builds certificates in
+        the closure child, so a certificate memory kill would censor a valid M-1.
+      - >-
+        wdag emission rule: N <= 20 all contained, 21..26 two nonce-chosen per
+        cell, N >= 27 none, caps 900 s and 400 MB (wdag_wanted).
+      - >-
+        Non-containment status vocabulary of M-8 and the
+        non_containment_uncertified report in analyze.py; F-MAIN blocked by an
+        uncertified non-containment.
+      - >-
+        Fixtures: F-3 both loops, F-4 raw against adapted at D = 3..5, F-5
+        declared tamper plus exhaustive reference predicate, F-6 with the group
+        order cross-check on 12 curves and not_covered treated as failure
+        (SR-1), F-8 nulls to N <= 26 and the affine-subspace Z search against
+        brute force.
+      - >-
+        pick_unique handles a planting failure as a non-unique attempt (logged)
+        instead of raising.
+      - >-
+        EQS4-NOFE closure on the same adapted generators as EQS4-FULLFE.
+      - >-
+        analyze.py scores P-3 as the pooled fraction over uniqueness-verified
+        seeds with per-cell counts, the F-MAIN count as seeds with |Z| = 1 and
+        M-1 false out of 5, M-6 against 2 and D_solve against 2 and 3, and
+        reports every containment at N >= 27 as engine-decided and uncertified.
+  decision_impact:
+    on_positive: >-
+      (A certified counterexample, S-MAIN.) Record evidence with proof_status
+      certificate scoped to the instance(s), and open the Validator and
+      red-team round. Hold the derived claim "Nagao's polynomial-time chain
+      fails at p = 2" behind review-breakthrough. Update
+      LEAD-ICE-first-fall-degree-assumptions so that Nagao Assumption 1 is
+      refuted at a named instance. Next, map the boundary: the smallest
+      failing (m, n, k), and whether EQS2 at the same cell also fails, which
+      bears on Semaev's own assumption (a different statement, not touched
+      here).
+    on_negative: >-
+      (All contained with C-NULL discriminating, F-MAIN.) Record corroboration
+      at tested scope only, flagged breakthrough-adjacent and un-promoted
+      pending review-breakthrough. No cost claim. Rank, as the successor, a
+      larger-N design (sparse or host-scaled closure, m = 5 at k = 2, and
+      n >= 20 at k = 7), and feed the D_solve series to the related lead as a
+      confounded observation.
+    on_inconclusive: >-
+      (Nulls never say no, censoring at every informative cell, an invalid
+      run, or a non-containment that cannot be certified.) Report as an
+      instrument, budget or certificate-size outcome. Repair through an
+      amendment, or re-scope to cells where NULL-PROF discriminates. Nothing
+      changes about Nagao.
+
+  citations:
+    - id: NAGAO-2015-984
+      provenance: retrieved
+      what: Definitions 2-8, Assumption 1, Lemma 2, Propositions 2, 5, 6, Theorem 1 and footnote 6, read in the frozen text
+      verified_by: coordinator subagent, 2026-11-06 (lines 130-410, 416-446, 652-760, 828-844)
+    - id: koszul_padding_check
+      provenance: internal
+      what: d_F <= 4 for any two quadratics (script and output)
+      verified_by: coordinator subagent, 2026-11-06, read both files
+    - id: KN-FIND-936151
+      provenance: internal
+      what: the ">=" collapse, inertness, and witnesses A and B (fixture F-2)
+      verified_by: coordinator subagent, 2026-11-06
+    - id: KN-FIND-5a8d3e
+      provenance: internal
+      what: the W_D definition, M_D against W_D, and the certificate discipline
+      verified_by: coordinator subagent, 2026-11-06
+    - id: KN-FIND-c3a917
+      provenance: internal
+      what: W_4 at n = 19, the semi-regular transfer failure, and W_3 on 5 systems
+      verified_by: coordinator subagent, 2026-11-06
+    - id: EXP-SEMBIN-4fa22c
+      provenance: internal
+      what: DC-3, DC-4, the budget conventions, and S-1 (cannot refute)
+      verified_by: coordinator subagent, 2026-11-06, read the specification
+    - id: RUN-CERTBIN-a3fc60
+      provenance: internal
+      what: closure_wall_seconds_measured, used for the modeled cost estimate, and the archived instances for F-3
+      verified_by: coordinator subagent, 2026-11-06, read cell-summary.json lines 1151-1174
