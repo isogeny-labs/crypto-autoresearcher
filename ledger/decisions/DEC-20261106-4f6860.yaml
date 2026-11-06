@@ -1,0 +1,206 @@
+# DEC-20261106-4f6860: Executor serving/runtime route verified for GOAL-PEXT-4a1d6b;
+# the IMP-PEXT-CI-PUBLICATION-20261026 blocking condition is met and the two open
+# lanes may be dispatched. Revises the recorded next action only. Nothing is approved,
+# nothing is run, and no hypothesis or goal status changes.
+coordinator_decision:
+  id: DEC-20261106-4f6860
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (well-formed, 0 occurrences across the 48,173-path union).
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  archive_task: TASK-20261106-b85324
+  session_provenance: >-
+    Coordinator session in an OpenCode runtime, branch coord/portfolio-20261106 from
+    origin/main 311a5de2c0 (PR #3091). Requested role policy coordinator
+    (coordinator-orchestration-code). The runtime resolved no adapter model id for this
+    session, so no resolved model is asserted. The session read AGENTS.md
+    ("Approval is bounded by execution", "Handoffs", "Goals are never paused"), the
+    goal head and its 2026-10-27 shards, DEC-20261024-992998, DEC-20261026-8a6d90,
+    DEC-20261027-f250a0, DEC-20261031-e3ee70, DEC-20261031-dcfdee, the frozen
+    specification and amendment of EXP-PEXT-212d5c, the handoff TASK-20261024-672126,
+    orchestration/model-policies.yaml and orchestration/model-bindings.yaml. It ran only
+    read-only admission commands plus the two sha256 verification blocks recorded below.
+  subject: >-
+    Verify and record an exact, permitted, nondegraded executor-implementation
+    serving/runtime route for TASK-20261024-672126, recheck frozen source/input bindings
+    and refs-aware ownership, and revise the goal's recorded next action so an Executor
+    session may dispatch the two approved contracts in their two open lanes.
+  goal_id: GOAL-PEXT-4a1d6b
+  decision: revise
+  target_ids:
+  - GOAL-PEXT-4a1d6b
+  - TASK-20261024-672126
+  - EXP-PEXT-212d5c
+  - TASK-20261031-73799d
+  - EXP-PEXT-0b2c75
+  - IMP-PEXT-CI-PUBLICATION-20261026
+
+  authority: >-
+    This decision is not an approval, an admission of a scientific claim, or an
+    execution. It approves no experiment (both contracts named here were approved by
+    DEC-20261024-992998 and DEC-20261031-dcfdee), changes no hypothesis or goal status,
+    and launches no run. Its only state effect is the goal's recorded next_action and the
+    executor-admission finding the 2026-10-27 checkpoint left false.
+
+  context: >-
+    The goal's recorded next action since 2026-10-26/27 has required the Coordinator to
+    establish an exact nondegraded executor-implementation serving/runtime route before
+    TASK-20261024-672126 could be dispatched, and the 2026-10-27 post-merge shard records
+    executor_admission_verified: false with the note that the default Anthropic backend
+    was unusable (ANTHROPIC_API_KEY unset) while executor-implementation on openai-gpt61
+    resolved to model:null. Two approved ECC contracts are now runnable and queued:
+    EXP-PEXT-212d5c (lane BATCH-21339c, task TASK-20261024-672126) and EXP-PEXT-0b2c75
+    (lane BATCH-a4886a, task TASK-20261031-73799d). No runs exist for either, no claims
+    are held, and the goal holds no scientific result since the 2026-10-31 amendment.
+
+  route_verification:
+    command: python3 -m orchestration.adapter resolve --role executor --backend openai --json
+    requested_policy: executor-implementation
+    canonical_policy: executor-implementation
+    backend: openai
+    provider: OpenAI Responses/Chat-compatible API
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY (present in this environment)
+    resolved_model_id: gpt-5.6-terra
+    model_tier: core
+    required_model_tier: director
+    model_tiers_order: [mechanical, director, core, frontier]
+    tier_satisfied: required director is below the resolved core tier
+    reasoning_effort: medium
+    required_reasoning_effort: medium
+    tool_use: true
+    structured_output: true
+    context_tokens: 1050000 (policy minimum 120000)
+    max_output_tokens: 128000 (policy minimum 24000)
+    request_max_tokens: 32000
+    verified_model: true
+    fallback_used: false
+    fallback_reason: null
+    degraded_requirements: []
+    below_model_tier: false
+    adapter_version: '1.2.0'
+    config_digest: sha256:4ba20de58738333b2a9252214edd9f16
+    doctor_probe_line: 'OK    openai: serves gpt-5.6-terra'
+    backend_choice_rationale: >-
+      defaults.backend is anthropic, whose binding cannot serve this policy here because
+      ANTHROPIC_API_KEY is unset. executor-implementation has fallback_policy: null, so
+      there is no declared fallback to take and none was taken: the backend was selected
+      explicitly and the adapter reports fallback_used false, fallback_reason null and
+      degraded_requirements []. Choosing a different binding of the same policy is not a
+      fallback substitution, and the handoff's fallback_allowed: false is therefore
+      satisfied rather than waived. openai-gpt6 and openai-gpt61 still resolve model:null
+      for this policy and remain unusable; the working route is the plain `openai`
+      backend.
+
+  admission_recheck:
+    dispatcher_command: >-
+      python3 tools/research_dispatch.py
+      coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json
+      --ready-only --claims refs
+    dispatcher_result: 'ready: 1 task(s); deferred: 1 — TASK-20261024-672126 (executor, queued, p85, claim=null)'
+    execution_state: >-
+      python3 tools/newest_experiments.py --experiment EXP-PEXT-212d5c --json reports
+      execution_state ready, off_main_runs [] (no unmerged work on another branch).
+    lane_capacity: >-
+      python3 tools/goal_lanes.py lanes GOAL-PEXT-4a1d6b lists exactly two open lanes,
+      BATCH-21339c and BATCH-a4886a, against max_concurrent 2. No third lane is opened here.
+    frozen_bindings:
+      basis: >-
+        AMD-EXP-PEXT-212d5c-20261031-command-recording (DEC-20261031-e3ee70) publishes the
+        post-amendment bytes; the working tree at origin/main 311a5de2c0 reproduces them.
+      run.py:
+        path: experiments/EXP-PEXT-212d5c/implementation/run.py
+        sha256: 10ed4714870dba07ea99934f6241b014fa4a4df83520a1265cc33bfd72d76939
+        matches_amendment_to: true
+      trial_plan:
+        path: experiments/EXP-PEXT-212d5c/trial-plan.json
+        sha256: 81b885ae3f1bcc479ffa948db8dd888b128eeb6d11bda0a861e5c5f1e233489f
+        matches_amendment_to: true
+      dispatch_queue:
+        path: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json
+        sha256: 2bdce9e2cb517b7093336c73f7e983e4dfd42013b198340b78b4372f4186579a
+        matches_amendment_to: true
+      input_fixtures: 4 declared in specification.input_bindings; 4 of 4 sha256 match; 0 missing.
+      specification_status: approved, frozen true, approved_by DEC-20261024-992998, execution_authorized true
+    publication_verified:
+      note: >-
+        Carried forward unchanged from the 2026-10-27 post-merge shard: PR #2603 merged at
+        1ca331520f920d9dd8863faa56a7d0e98d968f8c with merged head
+        4938bec95d33628d5e0236b75cdb68b2cd1dffb8. This decision did not re-open that
+        verification.
+    executor_admission_verified: true
+    scientific_trials_launched: 0
+
+  ci_debt:
+    statement: >-
+      The inherited whole-ledger validation errors disclosed in problems/full-ledger-validation-errors.md
+      and in IMP-PEXT-CI-PUBLICATION-20261026 remain outstanding under their own owning
+      scope. They are not PEXT scientific evidence, this decision does not re-adjudicate
+      them, and no all-green CI claim is made. The impediment's blocking clause names the
+      Executor handoff, and that clause is the condition met here; the disclosure duty
+      continues independently and is not deleted or rewritten by this record.
+
+  rationale:
+  - The recorded blocker was an unverified executor route, not a scientific or budget defect; a permitted binding that satisfies every stated requirement now exists and was resolved, so leaving the lane parked would idle a complete, approved ECC contract for an environmental reason that no longer holds.
+  - 'Every frozen byte that the 2026-10-31 amendment rebinds reproduces exactly, and all four declared fixture hashes match: the contract an Executor would execute is the approved contract.'
+  - Ref's-aware ownership is clear (claim null, no off-main runs) and the lane count is at, not over, the goal's max_concurrent 2. The dispatch gate therefore has no remaining component this session can verify.
+  - No approval is issued and no approved-unrun count changes: both contracts were already approved, so this act neither raises nor conceals the approved-but-unrun KPI.
+  - 'Two contracts, two lanes, one order: EXP-PEXT-212d5c is the goal''s first-batch n = 7 census and its lane carries the older task; DEC-20261031-dcfdee itself requires EXP-PEXT-0b2c75 to run after or apart from that census. The order below preserves both.'
+  - 'A route recorded only in a decision is not admission a dispatcher can check. The next action must name the lane claim and the route, because a later session otherwise repeats this discovery.'
+
+  evidence_refs:
+  - ledger/goals/GOAL-PEXT-4a1d6b/goal.yaml
+  - ledger/goals/GOAL-PEXT-4a1d6b/checkpoints/BATCH-21339c-20261027-post-merge.yaml
+  - ledger/decisions/DEC-20261024-992998.yaml
+  - ledger/decisions/DEC-20261031-e3ee70.yaml
+  - ledger/decisions/DEC-20261031-dcfdee.yaml
+  - ledger/handoffs/TASK-20261024-672126.yaml
+  - experiments/EXP-PEXT-212d5c/specification.yaml
+  - experiments/EXP-PEXT-212d5c/trial-plan.json
+  - experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261031-command-recording.yaml
+  - experiments/EXP-PEXT-212d5c/implementation/run.py
+  - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json
+  - orchestration/model-policies.yaml (policies.executor-implementation, model_tiers.order)
+  - orchestration/model-bindings.yaml (bindings.openai.executor-implementation)
+  - problems/full-ledger-validation-errors.md (referenced, not re-adjudicated)
+
+  limitations:
+  - 'The route is verified at the adapter/config level plus the provider model listing. It is not a statement that any particular harness session is already launched under it; the Executor session that runs /run must record backend, resolved_model_id, effort and adapter_version in its run manifest.'
+  - 'The EXP-PEXT-212d5c plan contains a Lean trial. This decision does not verify that the eventual execution host has Lean or enough disk; the lane task remains responsible for its own host preconditions.'
+  - 'The inherited ledger CI debt remains outstanding and is not cleared here.'
+
+  next_actions:
+  - id: NA-1
+    rank: 1
+    owner: executor session (separate /run; not this skill)
+    text: >-
+      Claim lane BATCH-21339c, then invoke /run EXP-PEXT-212d5c under TASK-20261024-672126
+      in an interactive executor-implementation session on the verified route (backend
+      openai, resolved model gpt-5.6-terra, effort medium, adapter 1.2.0, no fallback, no
+      degradation), on a Lean-capable host with the handoff's 4 GiB / 192600 s limits.
+      Record the route fields in each run manifest. Do not run alongside the second lane.
+  - id: NA-2
+    rank: 2
+    owner: executor session (separate /run), after or apart from NA-1
+    text: >-
+      Claim lane BATCH-a4886a, then invoke /run EXP-PEXT-0b2c75 under TASK-20261031-73799d
+      on the same verified route, then its declared archive TASK-20261031-4fa3ea and
+      /review-evidence with the blind recount. A pass does not promote the candidate law.
+  - id: NA-3
+    rank: 3
+    owner: coordinator, after each lane's runs
+    text: >-
+      Write the snapshot archive before any interpretation, then the independent
+      review_plan for the census results; recheck the inherited ledger CI debt only under
+      its own owning scope and publish the recheck separately.
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      This is an admission and routing decision. No evidence record, no support or
+      reject_scoped decision, and no durable research claim exists.
+
+  conclusions: []
