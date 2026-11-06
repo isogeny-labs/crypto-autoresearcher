@@ -64,3 +64,21 @@ Run `python3 tools/lead_atlas.py --match` first; the atlas is 128 paths behind i
 - Locate the D79, support-seven, query-order and Prym records.
 - Complete the `crypto` fetch (it was killed by the disk limit) and re-run the searches.
 - Fold the atlas delta, then file the two leads.
+
+## 5. Addendum (2026-11-06, second pass): what the cryptanalysis repo already holds
+
+Searched `cryptanalysis` `origin/main` at 5bdfb496 and the open PRs of all three repos. The D79 / support-seven / query-order / Prym records are still **not located**: no open PR in cryptanalysis (none open), crypto-autoresearcher (8 open) or crypto (10 open, first page) names them. They may sit on an unpushed branch, in a closed PR, or in a repo outside this session's scope.
+
+What does exist, and corrects section 3 and section 1:
+
+- `cryptanalysis/experiments/hecke-sparse-target-20261030/` (README, RESULT, PAIR_REUSE_RESULT, COST_CELL_PROTOCOL) already runs Hecke relations on X_0(11)/F_p with D_K=-39 and **does connect a target**: a BSGS-based target oracle on the fixed-base labels, with scalars replayed independently (three of four cells verified; the r=206,477 cell found no match in 256 attempts). Section 3's "Q-attachment" is therefore not wholly missing; what is missing is its **complete pricing** (setup, geometric construction, linear algebra), which that study also states.
+- Its reduction is in required generic base-log queries (e.g. 32 -> 12 free logs), not in complete setup or wall time. It claims no sub-rho result.
+- **Stronger generic control.** `PAIR_REUSE_RESULT.md` shows signed pair-index collisions, which reuse the index the target oracle already needs, leave only 1 free log on the r=769 and r=16,319 cells and 1 on conductor 30 (from 9, 12 and 45). Hecke's marginal rank over that control is 0, 10, 19 and 0 on the four cells. At conductor 30 pair-only already has rank 158, so Hecke adds nothing there. The study says same-total-budget superiority is unestablished.
+- The family-C verdict (C4, "no IC advantage") is therefore consistent with this data: the Hecke gain shrinks against the best generic baseline.
+
+Consequences for the proposed lead and experiment:
+
+1. Any D79 rank-completion result must be compared against the **pair-reuse control**, not only doubling/tripling or scalar-only collection. Add it as a required arm in section 3.
+2. Report Hecke's marginal rank over pair-only, per cell, alongside the 25-35-source collection figures.
+3. File the proposed lead as a sub-lead of the hecke-sparse-target line, with the pair-reuse control named as its comparator; do not file it as a new family.
+4. Open items stay: locate the D79 records; fold the atlas delta (which now includes this PR line of work); then file.
