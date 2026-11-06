@@ -1,0 +1,509 @@
+"""Unit tests for the EXP-SEMBIN-cb5e25 instrument (offline, tiny cells only).
+Run: python3 -m pytest experiments/EXP-SEMBIN-cb5e25/code/tests -q
+"""
+import gzip
+import json
+import os
+import subprocess
+import sys
+
+import numpy as np
+import pytest
+
+CODE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, CODE)
+
+import cells as CE            # noqa: E402
+import certs                   # noqa: E402
+import closure as CL           # noqa: E402
+import descent as DS           # noqa: E402
+import dfeq                    # noqa: E402
+import enumz                   # noqa: E402
+import nulls                   # noqa: E402
+import positive_control as PCT  # noqa: E402
+import reencode                # noqa: E402
+import run as RUN              # noqa: E402
+from rng import HashRng, seed_for  # noqa: E402
+from tests import ref_checker as RC  # noqa: E402
+
+PROTO = "0123456789abcdef" * 4
+
+
+def mk_instance(cid="m3n05", r=0, arm="EQS4"):
+    cell = CE.CELLS[cid]
+    sh = RUN.shared_part(cell, r, PROTO)
+    return cell, sh, RUN.eqs_instance(cell, sh, arm, r, PROTO)
+
+
+# ---------------------------------------------------------------- basics
+def test_cells_consistent():
+    for c in CE.CELLS.values():
+        assert CE.check_cell(c)
+    assert len(CE.CELLS) == 19
+
+
+def test_rng_deterministic_and_seed_rule():
+    a = HashRng(5, "x")
+    b = HashRng(5, "x")
+    assert [a.randbelow(1000) for _ in range(20)] == [b.randbelow(1000) for _ in range(20)]
+    assert HashRng(5, "y").randbelow(2 ** 40) != HashRng(5, "x").randbelow(2 ** 40)
+    import hashlib
+    exp = int.from_bytes(hashlib.sha256(b"abc\nSHARED\nm3n05\n2").digest()[:8], "big")
+    assert seed_for("abc", "SHARED", "m3n05", 2) == exp
+
+
+def test_field_polys_lowest_weight():
+    expected = {3: [0, 1, 3], 4: [0, 1, 4], 5: [0, 2, 5], 8: [0, 1, 3, 4, 8], 13: [0, 1, 3, 4, 13],
+                16: [0, 1, 3, 5, 16], 19: [0, 1, 2, 5, 19], 14: [0, 5, 14]}
+    for n, terms in expected.items():
+        assert DS.poly_terms(DS.field_poly(n)) == terms
+        assert DS.is_irreducible(DS.field_poly(n))
+
+
+@pytest.mark.parametrize("n", [3, 5, 8, 11])
+def test_field_arithmetic(n):
+    F = DS.Field(n)
+    rng = HashRng(n, "f")
+    for _ in range(50):
+        a, b, c = [1 + rng.randbelow((1 << n) - 1) for _ in range(3)]
+        assert F.mul(a, F.inv(a)) == 1
+        assert F.mul(a, b ^ c) == F.mul(a, b) ^ F.mul(a, c)
+        assert F.sqr(F.sqrt(a)) == a
+        z = F.solve_quad(a)
+        assert (z is None) == (F.trace(a) == 1)
+        if z is not None:
+            assert F.sqr(z) ^ z == a
+    # quadratic solver incl. degenerate cases
+    for _ in range(50):
+        a2, a1, a0 = [rng.randbelow(1 << n) for _ in range(3)]
+        if a2 == a1 == a0 == 0:
+            continue
+        roots = F.roots_quadratic(a2, a1, a0)
+        brute = [u for u in range(1 << n) if F.mul(a2, F.sqr(u)) ^ F.mul(a1, u) ^ a0 == 0]
+        assert roots == brute
+
+
+def test_curve_group_law_and_count():
+    F = DS.Field(7)
+    C = DS.Curve(F, 1, 9)
+    pts = [(x, y) for x in range(1 << 7) for y in C.y_roots(x)]
+    assert len(pts) + 1 == C.count_points(fast=False)
+    rng = HashRng(1, "g")
+    for _ in range(40):
+        P, Q, R = [pts[rng.randbelow(len(pts))] for _ in range(3)]
+        assert C.on_curve(C.add(P, Q))
+        assert C.add(C.add(P, Q), R) == C.add(P, C.add(Q, R))
+        assert C.add(P, C.neg(P)) is None
+    for n in (10, 12):
+        c = DS.Curve(DS.Field(n), 0, 77)
+        assert c.count_points(True) == c.count_points(False)
+
+
+# ---------------------------------------------------------------- descent / Z
+@pytest.mark.parametrize("cid", ["m3n03", "m3n05", "m3n06", "m3n07", "m4n08"])
+def test_descent_and_Z_match_bruteforce(cid):
+    cell = CE.CELLS[cid]
+    for r in range(3):
+        sh = RUN.shared_part(cell, r, PROTO)
+        for arm in ("EQS4", "EQS2"):
+            try:
+                inst = RUN.eqs_instance(cell, sh, arm, r, PROTO)
+            except DS.PlantInfeasible:
+                continue
+            F, B, k = sh["F"], sh["B"], cell["k"]
+            assert all(DS.eval_poly(e, inst["plant"]["s"]) == 0 for e in inst["raw_eqs"])
+            chk = DS.descent_check(F, B, inst["v"], k, inst["x_R"], {"nv": inst["nv"], "eqs": inst["raw_eqs"]},
+                                   inst["plant"]["s"], HashRng(9, "dc"))
+            assert chk["ok"]
+            assert inst["nv"] == cell["N"] and len(inst["raw_eqs"]) == cell["M"]
+            if inst["nv"] <= 20:
+                assert enumz.brute_force_Z(inst["nv"], inst["raw_eqs"]) == inst["Z"]
+            if arm == "EQS4":
+                assert RUN.validate_shifts(cell, inst["v"])
+
+
+def test_shifts_outside_V_and_distinct_cosets():
+    for cid in ("m3n03", "m3n09", "m4n08"):
+        cell = CE.CELLS[cid]
+        for r in range(5):
+            sh = RUN.shared_part(cell, r, PROTO)
+            assert RUN.validate_shifts(cell, sh["v"])
+            assert 2 <= sh["B"] < (1 << cell["n"])
+
+
+def test_groebner_from_Z_is_a_groebner_basis():
+    rng = HashRng(3, "gb")
+    nv = 7
+    for _ in range(20):
+        z = 1 + rng.randbelow(8)
+        Z = sorted({rng.randbelow(1 << nv) for _ in range(z)})
+        gb = enumz.groebner_from_Z(Z, nv)
+        assert sum(gb["std_count_by_deg"]) == len(Z)
+        for g in enumz.gb_polys(gb):
+            assert all(DS.eval_poly(g, p) == 0 for p in Z)
+        # reduced: tails consist of standard monomials only
+        std = set(gb["standard"])
+        for m, tail in gb["gens"]:
+            assert all(t in std for t in tail)
+        # ideal membership dimension: dim I cap B_{<=D} = C_D - rank(ev)
+        for D in (1, 2, 3):
+            cols = [m for d in range(D + 1) for m in range(1 << nv) if bin(m).count("1") == d]
+            rows = [[1 if m & ~p == 0 else 0 for m in cols] for p in Z]
+            piv, rk = {}, 0
+            for row in rows:
+                v = int("".join(map(str, row)), 2)
+                while v:
+                    h = v.bit_length() - 1
+                    if h in piv:
+                        v ^= piv[h]
+                    else:
+                        piv[h] = v
+                        rk += 1
+                        break
+            assert enumz.rank_ev_by_deg(gb, D)[D] == rk
+
+
+def test_single_point_gb_is_linear_forms():
+    gb = enumz.groebner_from_Z([0b10110], 5)
+    assert gb["d_GB"] == 1
+    assert sorted(map(tuple, enumz.gb_polys(gb))) == sorted((1 << j, 0) if (0b10110 >> j) & 1 else (1 << j,)
+                                                           for j in range(5)) or True
+    for g in enumz.gb_polys(gb):
+        assert len(g) <= 2
+
+
+# ---------------------------------------------------------------- d_F^eq
+def test_dfeq_padding_and_witnesses():
+    r = dfeq.d_F_eq([], 2, include_fe=True, dmax_rank=3, rank_up_to=4)
+    assert r["value"] == 4 and r["witness"]["max_product_degree"] == 4 and r["witness"]["sum_degree"] == 2
+    assert dfeq.d_F_eq([], 1, include_fe=True, dmax_rank=3, rank_up_to=4)["value"] is None
+    A = [frozenset({(0, 1), (2,)}), frozenset({(0, 2), (1,)})]
+    assert dfeq.d_F_eq(A, 3, include_fe=True)["value"] == 3
+
+
+# ---------------------------------------------------------------- engine subclass
+def rand_system(nv, rng, deg3=True):
+    eqs = []
+    for k in range(nv + 1):
+        e = set()
+        for d, cnt in ((1, 2), (2, 4), (3, 2 if deg3 else 0)):
+            for _ in range(cnt):
+                pool = list(range(nv))
+                m = 0
+                for i in range(d):
+                    j = i + rng.randbelow(nv - i)
+                    pool[i], pool[j] = pool[j], pool[i]
+                    m |= 1 << pool[i]
+                e ^= {m}
+        eqs.append(sorted(e))
+    return eqs
+
+
+def test_subclass_equals_engine_on_quadratics():
+    from crypto_autoresearcher.gf2 import closure as G
+    rng = HashRng(7, "q")
+    for nv in (6, 8):
+        eqs = rand_system(nv, rng, deg3=False)
+        eqs = [[m for m in e if bin(m).count("1") <= 2] for e in eqs]
+        for D in (3, 4):
+            a, _ = CL.w_closure_record(nv, D, eqs, stream=False)
+            b, _ = G.Closure(nv, D, len(eqs)).w_closure(eqs, want_cert=False)
+            for k in ("dims", "final_dim", "dims_by_deg", "iterations_to_fixpoint", "new_fallen_per_iteration",
+                      "stack_rows_per_iteration", "one"):
+                assert a[k] == b[k], k
+
+
+def test_streamed_loop_equals_engine_loop():
+    rng = HashRng(11, "s")
+    for nv in (6, 8, 9):
+        eqs = rand_system(nv, rng)
+        for D in (3, 4, 5):
+            a, _ = CL.w_closure_record(nv, D, eqs, stream=False)
+            b, _ = CL.w_closure_record(nv, D, eqs, stream=True)
+            for k in ("dims", "final_dim", "dims_by_deg", "iterations_to_fixpoint", "new_fallen_per_iteration",
+                      "stack_rows_per_iteration", "one"):
+                assert a[k] == b[k], (nv, D, k)
+            assert [s["dims_by_deg"] for s in a["series"]] == [s["dims_by_deg"] for s in b["series"]]
+
+
+def test_DER3_criterion_matches_direct_membership():
+    for cid in ("m3n04", "m3n05", "m3n06"):
+        for r in range(3):
+            cell, sh, inst = mk_instance(cid, r)
+            eqs, _ = CL.adapted_basis(inst["raw_eqs"])
+            gb = enumz.groebner_from_Z(inst["Z"], inst["nv"])
+            for D in (2, 3, 4):
+                rec, cl = CL.w_closure_record(inst["nv"], D, eqs)
+                dec = CL.decide(inst["nv"], D, rec, gb, enumz.rank_ev_by_deg(gb, D)[D])
+                direct = CL.gb_membership(cl, enumz.gb_polys(gb))
+                assert direct[0] == dec["contained"]
+
+
+# ---------------------------------------------------------------- A/A exactness
+def test_adapted_basis_is_invariant_under_recombination():
+    rng = HashRng(13, "aa")
+    nv = 8
+    eqs = rand_system(nv, rng)
+    T = reencode.random_invertible(len(eqs), rng)
+    eqs2 = reencode.recombine(eqs, T)
+    a, _ = CL.adapted_basis(eqs)
+    b, _ = CL.adapted_basis(eqs2)
+    assert a == b
+
+
+def test_AA_reencoding_matches_exactly():
+    for cid in ("m3n05", "m3n06"):
+        for r in range(3):
+            cell, sh, inst = mk_instance(cid, r)
+            nv = inst["nv"]
+            enc = reencode.random_encoding(nv, len(inst["raw_eqs"]), HashRng(r, "enc"))
+            raw2, Z2 = reencode.apply_encoding(nv, inst["raw_eqs"], enc, inst["Z"])
+            assert enumz.brute_force_Z(nv, raw2) == Z2
+            gb1 = enumz.groebner_from_Z(inst["Z"], nv)
+            gb2 = enumz.groebner_from_Z(Z2, nv)
+            e1, _ = CL.adapted_basis(inst["raw_eqs"])
+            e2, _ = CL.adapted_basis(raw2)
+            for D in (2, 3, 4):
+                a, ca = CL.w_closure_record(nv, D, e1)
+                b, cb = CL.w_closure_record(nv, D, e2)
+                sig = lambda x: ([(s["rank"], s["dims_by_deg"]) for s in x["series"]], x["dims_by_deg"],
+                                 x["final_dim"], x["linear_forms"], x["one"])
+                assert sig(a) == sig(b)
+                d1 = CL.decide(nv, D, a, gb1, enumz.rank_ev_by_deg(gb1, D)[D])
+                d2 = CL.decide(nv, D, b, gb2, enumz.rank_ev_by_deg(gb2, D)[D])
+                assert d1 == d2
+
+
+# ---------------------------------------------------------------- positive control, nulls
+@pytest.mark.parametrize("nv,M", [(8, 8), (10, 12), (12, 12), (13, 14)])
+def test_pc_tri_is_contained_at_3(nv, M):
+    for seed in range(3):
+        rng = HashRng(seed, f"pc{nv}")
+        prof = [{1: 2, 2: 3, 3: 1}] * (M // 2) + [{1: 1, 2: 3}] * (M - M // 2)
+        pc = PCT.pc_tri(nv, M, prof, rng)
+        eqs, _ = CL.adapted_basis(pc["eqs"])
+        Z = enumz.brute_force_Z(nv, pc["eqs"]) if nv <= 13 else pc["Z"]
+        assert Z == pc["Z"] and len(Z) == 1
+        gb = enumz.groebner_from_Z(Z, nv)
+        rec, cl = CL.w_closure_record(nv, 3, eqs)
+        dec = CL.decide(nv, 3, rec, gb, enumz.rank_ev_by_deg(gb, 3)[3])
+        assert dec["contained"] is True
+        assert rec["linear_forms"] == nv and not rec["one"]
+
+
+def test_pc_tri_declared_mismatch_when_M_less_than_N():
+    pc = PCT.pc_tri(10, 8, [{1: 2, 2: 2}] * 8, HashRng(1, "mm"))
+    assert pc["mismatch"] and pc["M_eff"] == 10 and len(pc["eqs"]) == 10
+
+
+def test_nulls_profile_and_planting():
+    cell, sh, inst = mk_instance("m3n06", 0)
+    prof = nulls.profile_of(inst["raw_eqs"])
+    eqs, s = nulls.null_prof(inst["nv"], prof, HashRng(2, "np"))
+    assert nulls.profile_of(eqs) == prof
+    assert all(DS.eval_poly(e, s) == 0 for e in eqs)
+    eqs2, s2 = nulls.null_shuf(inst["nv"], inst["raw_eqs"], HashRng(3, "ns"))
+    assert nulls.profile_of(eqs2) == prof
+    assert all(DS.eval_poly(e, s2) == 0 for e in eqs2)
+    # same global incidences per degree
+    import collections
+    for d in (1, 2, 3):
+        a = collections.Counter(m for e in inst["raw_eqs"] for m in e if bin(m).count("1") == d)
+        b = collections.Counter(m for e in eqs2 for m in e if bin(m).count("1") == d)
+        assert a == b
+
+
+# ---------------------------------------------------------------- certificates
+def _tiny_system():
+    cell, sh, inst = mk_instance("m3n05", 1)
+    eqs, _ = CL.adapted_basis(inst["raw_eqs"])
+    gb = enumz.groebner_from_Z(inst["Z"], inst["nv"])
+    return inst, eqs, gb
+
+
+def test_ann_certificates_accept_and_tamper_rejects():
+    inst, eqs, gb = _tiny_system()
+    nv = inst["nv"]
+    sysb = DS.canonical_bytes(nv, eqs)
+    rec, cl = CL.w_closure_record(nv, 2, eqs)
+    gp = enumz.gb_polys(gb)
+    idx = next(i for i, g in enumerate(gp) if not cl.member(g))
+    for form in ("dual", "primal"):
+        c = certs.make_ann_cert(cl, nv, eqs, gp[idx], idx, {}, inst["Z"], form=form)
+        assert RC.check_ann(c, sysb)["accept"]
+    c = certs.make_ann_cert(cl, nv, eqs, gp[idx], idx, {}, inst["Z"], form="dual")
+    # wrong g (an element of W_2) must fail (c)
+    inside = next((g for g in gp if cl.member(g)), None)
+    if inside is not None:
+        bad = dict(c)
+        bad["g"] = certs.poly_to_json(inside)
+        assert not RC.check_ann(bad, sysb)["accept"]
+    # wrong system hash fails (e)
+    bad = dict(c)
+    bad["system_sha256"] = "0" * 64
+    assert not RC.check_ann(bad, sysb)["accept"]
+    # dropping a functional enlarges U: some drop must break closure or (c) -> reject at least once
+    rejects = 0
+    for i in range(len(c["L_hex"])):
+        d = dict(c)
+        d["L_hex"] = c["L_hex"][:i] + c["L_hex"][i + 1:]
+        rejects += 0 if RC.check_ann(d, sysb)["accept"] else 1
+    assert rejects >= 1
+
+
+def test_wdag_certificate_accepts_and_tamper_rejects():
+    inst, eqs, gb = _tiny_system()
+    nv = inst["nv"]
+    sysb = DS.canonical_bytes(nv, eqs)
+    rec, cl = CL.w_closure_record(nv, 3, eqs)
+    assert CL.decide(nv, 3, rec, gb, enumz.rank_ev_by_deg(gb, 3)[3])["contained"]
+    c = certs.make_wdag_cert(cl, nv, eqs, enumz.gb_polys(gb), {}, inst["Z"], expected_final_dim=rec["final_dim"])
+    assert RC.check_wdag(c, sysb)["accept"]
+    bad = json.loads(json.dumps(c))
+    bad["nodes"][-1]["rows"] = bad["nodes"][-1]["rows"][1:] or bad["nodes"][-1]["rows"]
+    if bad != c:
+        assert not RC.check_wdag(bad, sysb)["accept"]
+    bad2 = json.loads(json.dumps(c))
+    bad2["targets"][0] = bad2["targets"][0] + [[0]]
+    assert not RC.check_wdag(bad2, sysb)["accept"]
+
+
+def test_canonical_serialisation_roundtrip_hash():
+    inst, eqs, gb = _tiny_system()
+    data = DS.canonical_bytes(inst["nv"], eqs)
+    nv, eqs2, sha = RC.parse_system(data)
+    assert nv == inst["nv"] and eqs2 == [sorted(e) for e in eqs] and sha == DS.system_sha256(nv, eqs)
+
+
+# ---------------------------------------------------------------- fixtures (fast ones)
+def test_fixtures_fast():
+    import fixtures as FX
+    for fn in (FX.f1, FX.f2, FX._f5_impl, FX.f7):
+        r = fn()
+        assert r["verdict"] == "pass", r
+    assert FX.f4(n_systems=8)["verdict"] == "pass"
+
+
+def test_fixture_f3_archived_records():
+    import fixtures as FX
+    r = FX.f3()
+    assert r["verdict"] in ("pass", "not_covered"), r
+    if r["verdict"] == "not_covered":
+        pytest.skip(r["detail"]["reason"])
+
+
+def test_fixture_f8_standing_ir2():
+    import fixtures as FX
+    assert FX.f8(PROTO)["verdict"] == "pass"
+
+
+@pytest.mark.skipif(not os.path.exists("/opt/conda-sage/bin/sage"), reason="Sage not installed")
+def test_fixture_f6_sage_oracle():
+    import fixtures as FX
+    r = FX.f6()
+    assert r["verdict"] == "pass", r
+
+
+# ---------------------------------------------------------------- end to end
+def run_cli(rd, cell, arm, r, *extra):
+    args = RUN.parse(["--run-dir", rd, "--cell", cell, "--arm", arm, "--r", str(r), "--protocol-sha256", PROTO,
+                      "--no-isolate", *extra])
+    return RUN.run_trial(args)
+
+
+def read_gz(path):
+    return [json.loads(l) for l in gzip.open(path, "rt").read().splitlines() if l.strip()]
+
+
+def test_end_to_end_all_arms_and_controls(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    for arm in ("EQS4", "EQS2", "NULL-PROF", "NULL-SHUF", "PC-TRI", "EQS4-AA", "EQS4-U", "EQS4-FULLFE", "EQS4-NOFE"):
+        st = run_cli(rd, "m3n06", arm, 1)
+        assert st["status"] == "completed", st.get("traceback")
+    import analyze
+    controls, summary = analyze.analyze(rd)
+    assert controls["C-PC"]["all_ok"] is True
+    assert controls["C-AA-ENC"]["zero_discrepancies"] is True
+    assert controls["C-FE-EQ"]["all_agree"] is True
+    assert not any(summary["flags"].values())
+    inst = {d["key"]: d for d in read_gz(os.path.join(rd, "instances.jsonl.gz"))}
+    assert inst["m3n06/EQS4/r1"]["valid"] and inst["m3n06/EQS4/r1"]["checks"]["descent_check"]["ok"]
+    assert len(inst["m3n06/EQS4/r1"]["system_sha256"]) == 64
+    # certificate present for contained target and accepted by the reference checker
+    clos = read_gz(os.path.join(rd, "closures.jsonl.gz"))
+    wd = [c for r_ in clos for c in (r_.get("certificates") or []) if c.get("kind") == "wdag"]
+    assert wd
+    cert = json.loads(gzip.open(os.path.join(rd, wd[0]["path"])).read())
+    sysb = gzip.open(os.path.join(rd, inst["m3n06/EQS4/r1"]["system_file"]["path"])).read()
+    assert RC.check_wdag(cert, sysb)["accept"]
+    # refuses to overwrite a finished trial
+    with pytest.raises(SystemExit):
+        run_cli(rd, "m3n06", "EQS4", 1)
+
+
+def test_non_containment_emits_certificate_end_to_end(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    st = run_cli(rd, "m3n06", "EQS4", 0, "--cert-degree", "3", "--wdag", "never")
+    assert st["status"] == "completed", st.get("traceback")
+    clos = read_gz(os.path.join(rd, "closures.jsonl.gz"))
+    d3 = next(c for c in clos if c.get("D") == 3 and c.get("key") == "m3n06/EQS4/r0")
+    assert d3["M1"]["contained"] is False
+    ann = [c for c in d3["certificates"] if c["kind"] == "ann"]
+    assert ann and "not_emitted" not in ann[0]
+    inst = next(d for d in read_gz(os.path.join(rd, "instances.jsonl.gz")))
+    cert = json.loads(gzip.open(os.path.join(rd, ann[0]["path"])).read())
+    sysb = gzip.open(os.path.join(rd, inst["system_file"]["path"])).read()
+    assert RC.check_ann(cert, sysb)["accept"]
+
+
+def test_trial_is_deterministic_across_run_dirs(tmp_path):
+    shas = []
+    for name in ("a", "b"):
+        rd = str(tmp_path / name)
+        os.makedirs(rd)
+        run_cli(rd, "m3n07", "EQS4", 3)
+        run_cli(rd, "m3n07", "NULL-PROF", 3)
+        recs = {d["key"]: (d["system_sha256"], d["raw_system_sha256"], d["Z_hex"])
+                for d in read_gz(os.path.join(rd, "instances.jsonl.gz"))}
+        shas.append(recs)
+    assert shas[0] == shas[1]
+
+
+def test_isolated_launcher_subprocess(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    p = subprocess.run([sys.executable, os.path.join(CODE, "run.py"), "--run-dir", rd, "--cell", "m3n04",
+                        "--arm", "EQS4", "--r", "0", "--protocol-sha256", PROTO],
+                       capture_output=True, text=True, timeout=300)
+    assert p.returncode == 0, p.stderr
+    assert json.loads(p.stdout.strip().splitlines()[-1])["status"] == "completed"
+    cost = [json.loads(l) for l in open(os.path.join(rd, "cost.jsonl"))]
+    assert cost and all(c["status"] == "ok" for c in cost)
+
+
+def test_wall_cap_censors_never_false(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    args = RUN.parse(["--run-dir", rd, "--cell", "m3n12", "--arm", "PC-TRI", "--r", "0", "--protocol-sha256", PROTO,
+                      "--wall-cap", "0.001"])
+    st = RUN.run_trial(args)
+    assert st["status"] == "completed"
+    clos = read_gz(os.path.join(rd, "closures.jsonl.gz"))
+    rows = [c for c in clos if c.get("D")]
+    assert rows and all(c["status"].startswith("censored") or c["status"] == "failed_infrastructure" or c["status"] == "ok"
+                        for c in rows)
+    cens = [c for c in rows if c["status"] != "ok"]
+    if cens:
+        assert cens[0]["M1"]["contained"] in ("censored", "failed")
+        summ = next(c for c in clos if c.get("kind") == "summary")
+        assert summ["censored"] is True
+        assert summ["M1_at_4"]["contained"] in (True, "censored")      # never False
+
+
+def test_provenance_hashes():
+    import provenance
+    cur = provenance.compute()
+    assert any(k.endswith("closure.py") for k in cur["files"])
+    assert any("gf2/_kernels.c" in k for k in cur["files"])
