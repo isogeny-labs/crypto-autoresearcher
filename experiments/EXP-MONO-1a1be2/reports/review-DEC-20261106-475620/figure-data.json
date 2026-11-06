@@ -1,0 +1,72 @@
+{
+ "schema": "decision-report-figure-data.v1",
+ "decision_id": "DEC-20261106-475620",
+ "review_task_id": "TASK-20261106-7c2b01",
+ "experiment_id": "EXP-MONO-1a1be2",
+ "no_new_computation": "Every value is copied by key or by section and table from the named source. figures.py derives nothing but layout and label text.",
+ "sources": {
+  "decision": {"path": "ledger/decisions/DEC-20261106-475620.yaml", "sha256": "d161625377de5731e12972e549476d4576d1314c6fe19fcb5c81ba5dd325ea56"},
+  "fix_review": {"path": "coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md", "sha256": "52198231b3b19c589d69dffa156bd660a726cf0dc238b6a1fb9d2db0c1872e1a", "snapshot": "TASK-20261106-649ebb at 573356f303", "commit_reviewed": "9a0b5955146a"},
+  "fix_report_4c4831": {"path": "experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md", "sha256": "8ef65becb7ea1ffdef91e314abe19ad81aad2cccc232af3d719d3f328525b282"},
+  "fix_card_2b7223": {"path": "ledger/handoffs/TASK-20261106-2b7223.yaml", "sha256": "b8fa2ab590ca7e183cadb3dcb2b9f6f875969699e80393eb83b48447fd54099c"},
+  "rereview_card_941825": {"path": "ledger/handoffs/TASK-20261106-941825.yaml", "sha256": "d67413d279e291b403965ce4dee41762634cee060f2131c5edec1fe5addc9e63"}
+ },
+ "figure_1_findings": {
+  "edge_label": "instrument, not evidence",
+  "source": {
+   "status": "fix_review.md '## Result' Must-fix table (column status) and New findings table (column severity); observation from 'Observations, not findings'",
+   "description": "fix_review.md Must-fix table and New findings table, column finding (shortened to one line, no formula)",
+   "disposition": "decision re_review_composition.closed_items_held and findings[id].disposition and fix_ids; DEV-1 from dev1_decision_v2",
+   "owner_direction": "decision owner_direction.effect",
+   "rr": "rereview_card_941825 constraints RR-1..RR-8 (finding named in each item) and deliverables (closed items as regression rows)"
+  },
+  "rows": [
+   {"id": "F-1", "status": "closed", "description": "Start-up gate bound to the lock and recorded; caveat: bytecode route reopens it", "disposition": "closed", "fix": "held (caveat under HX-2)", "owner_direction": false, "rr": "RR-2, RR-6"},
+   {"id": "N-1", "status": "closed", "description": "Mutant M5 now killed by 8 items; vacuity guards recounted; M3 still killed", "disposition": "closed", "fix": "held", "owner_direction": false, "rr": "RR-3 (M5, M3 controls)"},
+   {"id": "N-2", "status": "closed", "description": "Launcher validity and F2 stop applied; gaps opened separately as NF-2 to NF-4", "disposition": "closed", "fix": "held", "owner_direction": false, "rr": "RR-6 (regression row)"},
+   {"id": "N-3", "status": "closed", "description": "Arm-C lambda from the counted total; mismatch withholds the P6 reading", "disposition": "closed", "fix": "held", "owner_direction": false, "rr": "RR-6 (regression row)"},
+   {"id": "N-4", "status": "closed", "description": "KAT-mode arm-C packages carry no derived keys", "disposition": "closed", "fix": "held", "owner_direction": false, "rr": "RR-6 (regression row)"},
+   {"id": "N-5", "status": "not closed", "description": "Item 5: sourceless .pyc files in code/ shadow yaml and pytest past the .py-only check", "disposition": "must-fix", "fix": "HX-2", "owner_direction": false, "rr": "RR-2"},
+   {"id": "DEV-1", "status": "not closed", "description": "The FX-16 m = 3 substitute cell never ran: projection over the 14,400 s budget", "disposition": "must-fix", "fix": "96fee7, 43,200 s", "fix_note": "owner direction; cell unchanged", "owner_direction": true, "rr": "RR-5"},
+   {"id": "NF-1", "status": "new blocking", "description": "Cached bytecode in code/__pycache__ runs in place of hashed source; code hash unchanged", "disposition": "must-fix", "fix": "HX-2", "owner_direction": false, "rr": "RR-2"},
+   {"id": "NF-2", "status": "new non-blocking", "description": "Top-level cdf.json keys (N, s, q, n, seed, ids) never compared", "disposition": "must-fix", "fix": "HX-3", "owner_direction": true, "rr": "RR-4"},
+   {"id": "NF-3", "status": "new non-blocking", "description": "One recount convention missing leaves the cell valid", "disposition": "must-fix", "fix": "HX-4", "owner_direction": true, "rr": "RR-4"},
+   {"id": "NF-4", "status": "new non-blocking", "description": "F2 stop edges: library path, earlier cells, broken symlink, run id STOP-F2.json", "disposition": "must-fix", "fix": "HX-5", "owner_direction": true, "rr": "RR-4"},
+   {"id": "NF-5", "status": "new non-blocking", "description": "Mutant M6 (32-bit truncation of arm-C S-set keys) survives all 379 items", "disposition": "must-fix", "fix": "HX-6", "owner_direction": true, "rr": "RR-3 (own M6 run)"},
+   {"id": "NF-6", "status": "new non-blocking", "description": "Forged gate result with the module token yields valid; symlinked runs/ escapes", "disposition": "must-fix", "fix": "HX-7", "owner_direction": true, "rr": "RR-4"},
+   {"id": "NF-7", "status": "new non-blocking", "description": "Children peak memory includes the start-up suite and compiler, not cell workers", "disposition": "must-fix", "fix": "HX-8", "owner_direction": true, "rr": "RR-4"},
+   {"id": "OBS-receipt-clash", "status": "observation", "description": "Two selftest receipts within one second collide (refusal direction)", "disposition": "must-fix", "fix": "HX-9", "fix_note": "cheap", "owner_direction": false, "rr": "RR-4"}
+  ],
+  "blockers_source": "decision updated_blockers[id].status",
+  "blockers": [
+   {"id": "B1", "status": "open (narrowed)"},
+   {"id": "B2", "status": "open (determinism confirmed again)"},
+   {"id": "B3", "status": "cleared"},
+   {"id": "B4", "status": "open"},
+   {"id": "B5", "status": "open"},
+   {"id": "B6", "status": "open"},
+   {"id": "B7", "status": "cleared"},
+   {"id": "B8", "status": "open (failed twice)"}
+  ]
+ },
+ "figure_2_mutation_kill": {
+  "suite_items": 379,
+  "suite_items_source": "fix_review.md '## RR-3', run table, row baseline: 379 tests, 379 passed, rc 0, 1265.5 s",
+  "mutants_source": "fix_review.md '## RR-3 N-1: M5, the vacuity guards and the M3 control', run table (full suite at 9a0b5955 under launcher.run_selftest_suite)",
+  "mutants": [
+   {"id": "M3", "site": "kernel.c e_mul, n >= 4 (control)", "failed": 58, "passed": 321},
+   {"id": "M5", "site": "kernel.c p_idx, uint32 index", "failed": 8, "passed": 371},
+   {"id": "M6", "site": "counters.arm_c_cell, uint32 S_idx", "failed": 0, "passed": 379, "survives": true, "fix": "HX-6"}
+  ],
+  "dev1_wall_s": [
+   {"label": "old cell budget", "value": 14400, "kind": "parameter", "source": "decision dev1_rate_correction.consequence ('The 14,400 s FX-16 budget'); fix-report-4c4831.md '## FX-16'"},
+   {"label": "producer projection (4c4831)", "value": 33800, "approx": true, "kind": "projection", "note": "about 4.8e6 multisets/s", "source": "fix-report-4c4831.md '## FX-16 (DEV-1 substitute cell): STOPPED, scope finding SF-1', modeled projection, total"},
+   {"label": "reviewer projection, sub-base 200", "value": 32394, "kind": "projection", "note": "4.97e6 multisets/s, loaded host", "source": "fix_review.md '## RR-5', '### DEV-1 (FX-16)', re-run feasibility table, row 200"},
+   {"label": "reviewer projection, sub-base 2,500", "value": 34727, "kind": "projection", "note": "4.64e6 multisets/s, loaded host", "source": "fix_review.md '## RR-5', '### DEV-1 (FX-16)', re-run feasibility table, row 2,500"},
+   {"label": "new go threshold", "value": 39600, "kind": "parameter", "source": "decision dev1_decision_v2.budget"},
+   {"label": "new task budget", "value": 43200, "kind": "parameter", "source": "decision dev1_decision_v2.budget"}
+  ],
+  "dev1_watchdog_s": {"value": 41400, "projection_step_limit_s": 1200, "source": "decision dev1_decision_v2.budget (cell watchdog 41,400 s after the full cell starts; projection step limited to 1,200 s)"},
+  "dev1_multisets": {"value": "C(B+2, 3) = 161,080,269,536 at B = 9,886", "source": "fix-report-4c4831.md '## FX-16', field values"}
+ }
+}

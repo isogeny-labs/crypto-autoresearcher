@@ -54,7 +54,7 @@ rank. `old_kernel_syndrome_json` retains B1's old-space test separately.
 The `kernels` table retains each fresh cell's checked right-kernel basis for
 later target-identifiability tests `v*N=0`; it does not require full base rank.
 It does not invent kernels missing from the retained historical catalog.
-No SQL view estimates collision probabilities, total attack cost or speedup.
+No SQL view estimates collision probabilities, total attack cost or speedup. [pcc:unverified]
 
 Version2 adds `native_atoms` with the original sixteen-atom indexing,
 `cover_sources` in the exact source order and all `cover_frames` masks and
@@ -100,3 +100,38 @@ SQLite integrity and lossless gzip are checked. Hydrate the adjacent official
 artifact manifest, then decompress prime-fields-v13.sqlite.gz to the ignored
 SQLite filename. [A10 results](../prime_field_a10_execution_20261106/RESULTS.md)
 state separate costs, target-coverage limits and the scope of software checks.
+
+The additive [v14 affine-target snapshot](../prime_field_a11_execution_20261106/database/v14-affine-holdout/generation-v14.json)
+preserves v13 and adds four fresh curves,32public targets,144constructor
+branches,74,291affine labels,702physical query records,1,152dependent systems
+and2,304general-U solver certificates. History contains18curves/18bases and16
+physical execution records, including prior unsuccessful attempts. Parent-byte,
+historical-row, foreign-key, integrity and gzip checks are producer assertions;
+measurement standing remains unverified. The [A11 report](../prime_field_a11_execution_20261106/RESULTS.md)
+keeps cold construction references and shared physical work distinct.
+[pcc:unverified]
+
+The additive [v15 larger-field snapshot](../prime_field_a12_execution_20261106/database/v15-batched-holdout/generation-v15.json)
+preserves v14 and adds four coefficient curves on18/19bit fields,32public
+targets,144constructor branches,93,248affine labels,703cached query records,
+3,775paired scalar/batch engine records,1,152systems and2,304solver certificates.
+History contains22curves/22bases and17physical executions. The builder checks
+historical row inclusion in SQL with a bounded cache and streams gzip; parent
+bytes, foreign keys and integrity passed locally. Producer measurements remain
+unverified; see [A12 results](../prime_field_a12_execution_20261106/RESULTS.md)
+for sparse recovery, actual query arithmetic and separate cold/physical scopes.
+[pcc:unverified]
+
+
+The additive [v16 paid-known-base snapshot](../prime_field_a13_execution_20261106/database/v16-paid-known-base/validation.json)
+preserves v15 and adds four fresh curves with two32-atom bases each,32shared
+public targets,84branches,56,935point labels,1,408cached queries,4,480engine
+point records,624systems and1,248solver certificates. Its128public base labels
+are supplied paid knowledge, not learned rank. History now contains26curves,
+30bases and18physical execution records, including prior failures. Parent
+bytes/all historical rows/FKs/integrity and streamed gzip roundtrip passed
+locally; these are producer assertions. The archive is31,278,333bytes, so
+normal checkpoint payload limits list it while the official artifact store
+carries its bytes. See [A13 results](../prime_field_a13_execution_20261106/RESULTS.md)
+for exact target masks, different dependent denominators, separate cold/physical
+costs and unverified PCC standing. [pcc:unverified]

@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 0
           filter: blob:none
       - name: Tool tests
-        run: python3 -m unittest tools/test_benchrec.py
+        run: python3 -m unittest tools/test_benchrec.py tools/test_hydrate_bench_validations.py
       - name: Configure S3 credentials
         if: ${{ env.KEY_ID != '' }}
         uses: aws-actions/configure-aws-credentials@v4
@@ -67,6 +67,8 @@ jobs:
           if paths:
               subprocess.run([sys.executable, 'tools/artifacts/artifacts.py', 'pull', *sorted(paths)], check=True)
           PY
+      - name: Restore lossless logical validation files
+        run: python3 tools/hydrate_bench_validations.py
       - name: Copy raw files that are in Git into the store
         if: ${{ env.KEY_ID != '' && github.event_name == 'pull_request' }}
         run: |

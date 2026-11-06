@@ -1,0 +1,151 @@
+# DEV-1 CELL card for EXP-MONO-1a1be2 (review_required; NOT approved). Runs the unchanged FX-16
+# substitute cell (F_{10007^2}, m = 3, s = 50; code/tests/test_kat_extended.py) on the final fix
+# bytes of TASK-20261106-2b7223, under the owner-granted budget of 43,200 s wall and 16 GB
+# (DEC-20261106-475620 dev1_decision_v2). KAT mode, non-contract: no contract curve is built and
+# no predicted value is asserted. It is not an experiment run. Zero runs.
+handoff:
+  id: TASK-20261106-96fee7
+  from: coordinator
+  to: executor
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-a8825c
+  authorized_by: DEC-20261106-475620 (dev1_decision_v2; owner direction as relayed)
+  objective: >-
+    Run the FX-16 cell of code/tests/test_kat_extended.py in full and unmodified, on a verified
+    copy of the 2b7223 bytes. It runs the large-q E2 sampled counter at m = 3, s = 50, on the
+    line base of the KAT curve over F_{10007^2}, against the independent membership method.
+    Measure the projection first, then run within the owner's budget, and record the outcome
+    (passed, mismatch, or stopped/infrastructure) with the timing needed to read the kernel's
+    m = 3 rate.
+  uncertainty_reduced: >-
+    Readiness blocker B1 (DEV-1): whether the compiled kernel's depth-3 multiset enumeration at
+    n = 2, in the same index-width class as the n = 2 contract cell, agrees with an independent
+    method on sampled targets with nonzero counts. It also yields one measured (n = 2, m = 3)
+    rate for the approval act's arm-C watchdog check (SC-3). Nothing about the mathematics.
+  inputs:
+    - ledger/handoffs/TASK-20261106-96fee7.yaml
+    - ledger/decisions/DEC-20261106-475620.yaml
+    - experiments/EXP-MONO-1a1be2/code/
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-2b7223.md
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-779e02/ledger-receipt.json
+    - agents/executor.md
+  inputs_note: >-
+    Your context consists of: the decision's dev1_decision_v2 and dev1_rate_correction; the
+    4c4831 fix report's FX-16 section and the kat-log FX16 key (the earlier partial
+    measurements and their method); the 2b7223 fix report's summary (to learn the hardened
+    self-test command); and test_kat_extended.py. Do not read any file under
+    coordination/goals/GOAL-PATH-001/review/.
+  constraints:
+    - >-
+      DX-1 Bytes. After TASK-20261106-2b7223 releases, copy experiments/EXP-MONO-1a1be2/code
+      into a fresh scratch directory outside the repository. Verify that every file's sha256
+      equals the 2b7223 release digest (for launcher.py, tests/test_kat.py, README.md) or the
+      779e02 input_pins_TASK-20261106-96fee7_frozen (for every other file).
+      tests/test_kat_extended.py must be 79894702c2ee086aa33522233c7933281b4d217abab9dd39163e8f9503ed06b5.
+      The copy must pass the launcher's code-tree allow-list check. Any mismatch stops the task
+      with a report. Record the per-file sha256 and launcher.code_sha256() of the copy in
+      dev1-kat-log-96fee7.json, and re-verify them after the cell.
+    - >-
+      DX-2 Command. Run tests/test_kat_extended.py (all of its items) from the copy under the
+      same isolation as the copy's launcher.run_selftest_suite. That means: the hardened
+      interpreter flags and pycache prefix; --noconftest -c os.devnull --rootdir <copy code dir>;
+      plugin autoload off; scrubbed PYTEST_* and PYTHONPATH; cwd outside the code dir; and junit
+      written outside the code dir. KAT_EXT_LOG_PATH points at a scratch file. Do not edit the
+      test file, the kernel or any code file; do not parallelize by editing code. Record the
+      exact command and environment.
+    - >-
+      DX-3 Projection first. On the executing host, before the full cell, repeat the 4c4831
+      partial measurements with the same sub-base method: kernel sub-bases of 800, 1,250 and
+      2,500 points, and the pair-sum table's first 200 rows. Spend no more than 1,200 s. Record
+      the projected total. Start the full cell only if the projection is at most 39,600 s.
+      Otherwise stop and report it as a scope finding. Never shrink the cell, use a subset of
+      targets, or substitute another field.
+    - >-
+      DX-4 Budget. 43,200 s wall for the whole task and 16 GB memory. The cell watchdog kills
+      the full cell 41,400 s after it starts. No other heavy job runs on the host during the
+      cell (the queue is serial). A watchdog kill, crash or out-of-memory kill is
+      infrastructure, recorded as stopped_infrastructure with its log, and never as a KAT
+      outcome. The modeled memory need is about 0.4 GB; record peak RSS.
+    - >-
+      DX-5 Resume checkpoint (CLAUDE.md, owner 2026-10-24). Before launching the full cell, run
+      scripts/checkpoint.sh init and fill .resume/RESUME.md for a reader without this
+      conversation: goal GOAL-PATH-001; DEV-1 and DEC-20261106-475620; the copy path and its
+      hashes; the exact command; host, pid, log and junit paths; how to collect; the stop and
+      success conditions of DX-3, DX-4 and DX-6. Then push it (scripts/checkpoint.sh push). Push
+      again when the cell finishes. .resume/ is session state, not an artifact. If a hook
+      refuses a background launch, satisfy it; do not bypass it with CHECKPOINT_SKIP.
+    - >-
+      DX-6 Outcome.
+      - passed: every test_kat_extended.py item passes, all 50 kernel/membership pairs are
+        equal, the guard (nonzero on at least 25 of 50) is met, and the multiset count equals
+        C(B + 2, 3).
+      - mismatch: any unequal pair or failed guard. Record it verbatim as an instrument finding;
+        never re-run it to obtain a different answer and never repair anything.
+      - stopped_projection or stopped_infrastructure: as in DX-3 and DX-4.
+      The outcome is a KAT-field result. It is never evidence about any prediction.
+    - >-
+      DX-7 Records.
+      - dev1-kat-log-96fee7.json, under 64 KiB, holds: q'', B, N, the multiset count, the 50
+        per-target (kernel, membership) count pairs, the guard count, kernel, table, query and
+        total wall time, peak RSS, the measured multisets/s of the full kernel pass, the DX-3
+        projection inputs and result, the per-file hashes from before and after the cell, and
+        the outcome.
+      - dev1-junit-96fee7.xml is the junit file.
+      - dev1-report-96fee7.md gives the bytes verified, the command, the projection, the
+        outcome, the timings, the checkpoint pushes and the scope findings.
+      - environment-96fee7.json holds the interpreter, libraries, pytest, compiler and flags,
+        host, cores and memory.
+      All values are KAT-field values only.
+    - >-
+      DX-8 No contract cell is computed. Zero experiment runs. Write only the four declared
+      paths; scratch stays outside the repository. No commit, no push of the repository. No KAT
+      count, timing or prediction value appears in any message. Never select, configure or
+      contact Amazon Bedrock.
+  deliverables:
+    - "implementation/dev1-kat-log-96fee7.json: DX-7 contents"
+    - "implementation/dev1-junit-96fee7.xml: the junit of the full test_kat_extended.py run (or of the partial run, if stopped)"
+    - "implementation/dev1-report-96fee7.md: DX-7 contents and the DX-6 outcome"
+    - "implementation/environment-96fee7.json: the execution environment"
+  artifact_paths:
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-junit-96fee7.xml
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md
+    - experiments/EXP-MONO-1a1be2/implementation/environment-96fee7.json
+  write_scope:
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-junit-96fee7.xml
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md
+    - experiments/EXP-MONO-1a1be2/implementation/environment-96fee7.json
+  archived_by: TASK-20261106-dfd0ed
+  inference:
+    policy: executor-implementation
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default.
+    fallback_allowed: true
+    fallback_note: Backend or model substitution only, recorded as fallback_used. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    independence_note: Must not be the session of the re-reviewers TASK-20261106-941825 or TASK-20261106-7c2b01. It may be the 2b7223 session.
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 43200
+    memory_gb: 16
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: DP-1, text: "archived_by TASK-20261106-dfd0ed is bound."}
+    - {id: DP-2, text: "TASK-20261106-2b7223 has a completed release with seven non-empty digests and no HX-1 scope-finding path."}
+    - {id: DP-3, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/dispatch_queue.json TASK-20261106-96fee7 --as <addr> --ttl-minutes 780 --publish. Release with --outcome completed and four --artifact <path>=<sha256> digests, whatever the DX-6 outcome."}
+    - {id: DP-4, text: "The host is otherwise idle: no other BATCH-a8825c task and no other heavy job is live."}
+  completion_gate:
+    - All four artifact paths exist, and nothing outside them is modified.
+    - The DX-1 byte checks passed before and after the cell, and the hashes are recorded.
+    - The projection was measured and recorded first. The cell then either ran in full within 41,400 s with outcome passed or mismatch, or stopped with outcome stopped_projection or stopped_infrastructure; it was never shrunk.
+    - .resume/RESUME.md was filled and pushed before the full cell.
+    - No contract cell, no predicted value, zero experiment runs.
+  return_format: The four artifact paths with sha256, the DX-6 outcome, the projection outcome (within or over 39,600 s, with no value), whether the byte checks held, and any scope finding. No KAT count or timing values in the message.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. An instrument KAT; it changes no claim. TASK-20261106-941825 re-reviews it before approval.
+  runs_launched: 0

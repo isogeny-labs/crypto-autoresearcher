@@ -1,0 +1,138 @@
+amendment:
+  id: AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse
+  experiment_id: EXP-PEXT-212d5c
+  goal_id: GOAL-PEXT-4a1d6b
+  recorded_at: '2026-11-06'
+  kind: prospective_plan_hypothesis_binding_and_lean_axiom_parse_repair
+  decision_id: DEC-20261106-f6b029
+  original_approval: DEC-20261024-992998
+  prior_rebindings:
+  - AMD-EXP-PEXT-212d5c-20261026-source-binding (DEC-20261026-8a6d90), retained
+  - AMD-EXP-PEXT-212d5c-20261031-command-recording (DEC-20261031-e3ee70), retained
+  status: prepared_pending_archive_and_publication
+  reason: >-
+    The supervised launch of 2026-11-06 produced two refusals in one session.
+    (1) The regression trial RUN-PEXT-5d190f ran to driver exit 0 and was then
+    refused because the driver manifest carries run.hypothesis_id while the
+    frozen plan names no hypothesis: tools/experiment_execution.py
+    _check_driver_facts (SHF-20261106-a114e7 G6) refuses a driver-stated
+    hypothesis that has no plan source. The specification already names
+    H-PEXT-d536a1 and DEC-20261024-992998 approved that specification; the plan
+    simply omits the field the newer supervisor requires. (2) The independent
+    lean trial RUN-PEXT-4d23b9 built all three Lean jobs successfully (axioms
+    propext, Quot.sound only) and then crashed with
+    "failed_infrastructure: IndexError: list index out of range" in run.py's
+    axiom-classification expression, which evaluates s.split("[", 1)[1] before
+    the guard `if "[" in s`; the line "does not depend on any axioms" has no
+    bracket. Both run directories exist as immutable refused-run records and
+    their run ids are consumed.
+  refused_run_records:
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-5d190f
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9
+  refusal_report: experiments/EXP-PEXT-212d5c/reports/run-20261106T1940Z/report.md
+  correction: CORR-20261106-6c99d8
+  changes:
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: top-level hypothesis_id (new key)
+    from: absent
+    to: H-PEXT-d536a1
+    effect: >-
+      Binds the execution plan to the hypothesis the approved specification
+      (sha256 61c12cd4...) already names and DEC-20261024-992998 approved. No
+      hypothesis, prediction, trial, seed, metric or threshold changes.
+  - path: experiments/EXP-PEXT-212d5c/implementation/run.py
+    field: stage_lean axiom classification (custom axiom detector)
+    from: 'custom = [a for a, s in axioms if any(x not in (...) for x in re.findall(r"[\w.]+", s.split("[", 1)[1]) if "[" in s)]'
+    to: 'custom = [a for a, s in axioms if "[" in s and any(x not in (...) for x in re.findall(r"[\w.]+", s.split("[", 1)[1]))]'
+    effect: >-
+      Guards the split before it runs, so an axiom line of the form "does not
+      depend on any axioms" is classified as having no custom axioms instead of
+      raising IndexError. The accepted axiom allow-list (propext, Quot.sound,
+      Classical.choice) and every other Lean stage behaviour are unchanged.
+    sha256:
+      from: 10ed4714870dba07ea99934f6241b014fa4a4df83520a1265cc33bfd72d76939
+      to: 17c6518e79b22acec3acf16a05254fa7f101d6188ef579476a487052469c9171
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: source_sha256[experiments/EXP-PEXT-212d5c/implementation/run.py]
+    from: 10ed4714870dba07ea99934f6241b014fa4a4df83520a1265cc33bfd72d76939
+    to: 17c6518e79b22acec3acf16a05254fa7f101d6188ef579476a487052469c9171
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: trials[regression].run_id and its --run-id argv element
+    from: RUN-PEXT-5d190f
+    to: RUN-PEXT-87595f
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: trials[lean].run_id and its --run-id argv element
+    from: RUN-PEXT-4d23b9
+    to: RUN-PEXT-946361
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: trials[analyze].inputs_from.regression and .lean
+    from: {regression: RUN-PEXT-5d190f, lean: RUN-PEXT-4d23b9}
+    to: {regression: RUN-PEXT-87595f, lean: RUN-PEXT-946361}
+  hash_rebinding:
+    trial_plan_sha256:
+      from: 81b885ae3f1bcc479ffa948db8dd888b128eeb6d11bda0a861e5c5f1e233489f
+      to: 06b801b5c98b1e2476a97d37eded50e1dfc4b4a6a82bd99b10f623595c1747a7
+    dispatch_queue_sha256:
+      path: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json
+      from: 2bdce9e2cb517b7093336c73f7e983e4dfd42013b198340b78b4372f4186579a
+      to: cb7292e30d17464b51a6fcf31bcabbb455b544124dc3b6bc87e9c34930564463
+    executor_handoff_sha256:
+      path: ledger/handoffs/TASK-20261024-672126.yaml
+      from: 411d537c209a201fdeba7ca6908fc65eef3ae0856de2825e933c4210c97d2b08
+      to: 1c1f9540e3b05e54a74f6fbc14cacb9470468e504a2bc9d0fa55bc1a9c27ae8c
+    rebound_in:
+    - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json (trial_plan_sha256; handoff objective and execution binding; artifact_paths and archive record_ids of the two reassigned trials)
+    - ledger/handoffs/TASK-20261024-672126.yaml (trial_plan_sha256; objective and artifact_paths run ids of the two reassigned trials)
+  run_id_reassignment:
+    reason: >-
+      Both prior run directories are retained as immutable refused-run records;
+      a run id is never reused and a run directory is never overwritten.
+    retained_refused_runs:
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-5d190f
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9
+    prior_refused_runs_still_retained:
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-fccfb9
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-af1b2a
+    specification_note: >-
+      specification.yaml is hash-pinned and unchanged; its narrative and trial
+      table still name the original run ids. The executed ids are those of the
+      frozen trial plan above; load_plan compares the specification by hash only.
+  approval_semantics: >-
+    Retains DEC-20261024-992998 as the scientific protocol approval and both
+    earlier rebindings. This additive decision prospectively supersedes only the
+    execution-binding values named above (plan hypothesis binding, one Lean
+    axiom-parse expression, two run ids, plan/queue/handoff hashes). It does not
+    rewrite those immutable records and does not assert a fresh experiment
+    approval. Approval capacity is unchanged: no new contract is created and
+    the approved-unrun count does not grow.
+  preserved:
+  - specification and hypothesis bytes
+  - every implementation source byte other than the one guarded expression in run.py
+  - fourteen source paths and four input paths
+  - six trial ids, the run ids and argv of construct, char2, census and analyze, check_argv, dependency order
+  - seeds, sample sizes, controls, metrics, thresholds, stopping and invalidation rules
+  - original lane BATCH-21339c, executor task TASK-20261024-672126 and downstream archive ownership TASK-20261024-5ab5b8
+  - all four earlier refused run directories and the 2026-10-29 and 2026-11-06 reports, none edited
+  scientific_protocol_unchanged: true
+  run_state: >-
+    No trial launched by this amendment. The runs tree holds four refused-run
+    directories (two from 2026-10-29, two from 2026-11-06); none is evidence
+    about H-PEXT-d536a1.
+  verification_scope: >-
+    The new Lean expression was replayed read-only over the recorded
+    RUN-PEXT-4d23b9 lean-build.log: 8 axiom declarations parsed, 0 custom
+    axioms, no exception. The plan hypothesis binding was checked against the
+    driver's own recorded value H-PEXT-d536a1. Neither is a trial run; the first
+    full proof is the next supervised launch.
+  outstanding_not_resolved:
+  - The whole-ledger validation CI debt (pre-existing errors in unrelated paths) is NOT resolved.
+  - The 2026-11-06 regression output is an unvalidated driver report; it is not adopted.
+  - The census remains a ~20.5 h trial and needs its watchdog window.
+  activation_gate: >-
+    Publish and verify through a Coordinator ledger archive task; until then this
+    is a prepared packet and confers no new dispatch authority. Then a separate
+    Executor claims the lane and invokes /run EXP-PEXT-212d5c under
+    TASK-20261024-672126.
+  asserts_nothing_about: >-
+    genus floors, full theorem fidelity, transfer, novelty, attack costs or
+    deployed curves.

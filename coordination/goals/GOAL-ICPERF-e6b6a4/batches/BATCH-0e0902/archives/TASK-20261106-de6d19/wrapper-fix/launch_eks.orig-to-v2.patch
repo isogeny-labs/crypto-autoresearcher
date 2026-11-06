@@ -1,0 +1,17 @@
+--- launch_eks.sh.orig	2026-11-06 22:12:11.773920835 +0000
++++ launch_eks.v2.sh	2026-11-06 22:34:57.142766578 +0000
+@@ -171,9 +171,13 @@
+ [[ $rc == 0 ]] && refuse 3 duplicate "DUPLICATE: s3://$ISOLAB_BUCKET/$key exists: this exact request was already submitted"
+ [[ $rc != 1 ]] && refuse 4 duplicate_check_failed "duplicate check failed (aws s3 ls exit $rc)"
+ set +e
+-ids=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --max-items 100 --query 'ids[]' --output text); rc=$?
++# --no-paginate: one page (at most 100 ids). aws-cli v1 with --max-items appends the pagination
++# token ("None" or a token) to text output, which batch-get-builds rejects as a build id (RBS-ICPERF-e2a5c2).
++ids_raw=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --no-paginate --query 'ids[]' --output text); rc=$?
++ids=$(printf '%s\n' "$ids_raw" | tr '\t ' '\n\n' | grep -E "^${ISOLAB_CODEBUILD_PROJECT}:[0-9a-f-]+$" || true)
+ set -e
+ [[ $rc != 0 ]] && refuse 4 duplicate_check_failed "duplicate check failed (codebuild list)"
++[[ -n ${ids_raw//[[:space:]]/} && -z $ids ]] && refuse 4 duplicate_check_failed "duplicate check failed (codebuild list returned no build id: $ids_raw)"
+ if [[ -n $ids ]]; then
+   set +e
+   # shellcheck disable=SC2086

@@ -1,0 +1,28 @@
+# NOT AUTHORIZED. Relay only after (1) the Coordinator's approval DEC-20261106-c69de4 is committed and names runbook_sha256 d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93,
+# (2) the owner has given the EKS spend go-ahead (protocol section 11), and (3) `scripts/checkpoint.sh init` has been filled for C1 and
+# `scripts/checkpoint.sh push` and `scripts/checkpoint.sh gate` have succeeded. The relay is the text `python3 tools/task_card.py prompt <this card>` prints.
+# Written by the experiment director. Replaces the withdrawn markdown cards card-c1-s1.md and card-c1-s2.md.
+schema: crypto.autoresearch.mechanical-task-card.v1
+card_id: CARD-EXP-ICPERF-127dbd-1
+experiment_id: EXP-ICPERF-127dbd
+author_role: experiment-director
+executor_role: executor-mechanical
+kind: runbook
+runbook: experiments/EXP-ICPERF-127dbd/runbook.yaml
+runbook_sha256: d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93
+bus_address: executor-mechanical-icperf-127dbd
+background: true
+write_scope:
+  - experiments/EXP-ICPERF-127dbd/runs/
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/
+  - experiments/EXP-ICPERF-127dbd/reports/
+stop_when:
+  - The relay message does not state that DEC-20261106-c69de4 is committed, that the owner has given the EKS spend go-ahead, and that scripts/checkpoint.sh gate exited with status 0.
+  - The last line of step 1 does not begin with LINT OK.
+  - Step 2 exits with status 2.
+  - Step 2 exits with a status other than 0, 2 or 3.
+  - Step 3 does not print VERIFY OK.
+  - Step 5 shows a page 1 that lacks the text EXP-ICPERF-127dbd or the text RBS-ICPERF-e2a5c2.
+  - Any command in steps 1 to 8 would need an argument that this card does not give.
+  - A command would write a file outside the three write_scope paths.
+notes: Budget gate lines of protocol section 10, recorded before launch, in USD. S1 launch, 0 + 0.93108 + 0.93108 = 1.86216, at most 5.00, pass. S2 launch, 0.93108 (HB of S1, used as actual_spend) + 0.93108 + 0 = 1.86216, at most 5.00, pass. Step 2 exit status 3 is a recorded result; still run steps 3 to 8, then do not run step 2 again and do not reopen this runbook session; wait for a Coordinator decision.

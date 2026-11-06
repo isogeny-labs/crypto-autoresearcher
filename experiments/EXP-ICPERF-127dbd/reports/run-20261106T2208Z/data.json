@@ -1,0 +1,80 @@
+{
+  "experiment_id": "EXP-ICPERF-127dbd",
+  "failure": {
+    "class": "implementation_error",
+    "detail": "supervisor exit 3 (trials remain or need reconciliation); see experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-e2a5c2/steps/S02-trials.attempt-1.supervisor.stderr",
+    "step_id": "S02-trials",
+    "tell": "The launch step stopped. Report the printed status line, the run directory names under experiments/EXP-ICPERF-127dbd/runs, and the outcome_class in each raw-result.json that exists. Do not rerun or reopen this runbook session; wait for a Coordinator decision. Do not run launch_eks.sh again and do not start any other launch. Do not open records.jsonl."
+  },
+  "generator": "tools/runbook.py report",
+  "graph": {
+    "metric": "launch_remote_exit",
+    "points": []
+  },
+  "journal_tip": "49e9e2d2f0a1287a1732cc05deaac088f5e8af3f4bb049188cd7f91422af47a3",
+  "session_dir": "experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-e2a5c2",
+  "status": "stopped",
+  "summary": {
+    "audit": "not audited: tools/runbook.py audit (audit-runs skill)",
+    "control_validity": "not_applicable",
+    "execution_proofs": {
+      "chain": "incomplete: docs/execution-proof-chain.md milestones are open",
+      "failed_units": 0,
+      "unavailable_units": 0,
+      "verified_units": 0
+    },
+    "execution_validity": "incomplete",
+    "inferential_validity": "not_assessed: review-evidence and the Coordinator decide",
+    "lean_obligations": [],
+    "metrics": {
+      "launch_remote_exit": {
+        "excluded_trials": [
+          "T1",
+          "T2"
+        ],
+        "label": "measured",
+        "n": 0,
+        "source": "S02-trials:raw-result.json/launch_remote_exit",
+        "unit": "exit_status",
+        "values": {
+          "count": 0,
+          "max": null
+        }
+      }
+    },
+    "steps": {
+      "S01-probe": "passed",
+      "S02-trials": "failed",
+      "S03-verify": "not_run"
+    },
+    "units": {
+      "invalid": [
+        "T1",
+        "T2"
+      ],
+      "total": 2,
+      "valid": 0
+    }
+  },
+  "tool_sha256": "e5431ae35e943c0a378b6ea3517303376277a89f9d7697d1cb0db4a710207e2a",
+  "units": [
+    {
+      "control": false,
+      "detail": "job/request.json is missing; job/launch.log is missing; job/launcher/result.json is missing; job/artifacts/SHA256SUMS is missing; job/artifacts/job-exit.json is missing; /submitted equals true: observed false; /outcome_class equals \"job_completed\": observed \"other\"; /launch_remote_exit is absent; /codebuild_status is absent; /job_exit_json_present is absent; /sha256sums_present is absent; /job_exit_code is absent; /results_uri is absent",
+      "receipt_status": "infrastructure_error",
+      "run_id": "RUN-ICPERF-c7f69e",
+      "step_id": "S02-trials",
+      "trial_id": "T1",
+      "valid": false
+    },
+    {
+      "control": false,
+      "detail": "no receipt (not_run)",
+      "receipt_status": "not_run",
+      "run_id": "RUN-ICPERF-6f784c",
+      "step_id": "S02-trials",
+      "trial_id": "T2",
+      "valid": false
+    }
+  ]
+}

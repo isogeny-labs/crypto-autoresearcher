@@ -879,6 +879,215 @@ def prime_field_ap_holdout_panel(ref,since):
             emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.construction.'+k,c['constructor_counters'].get(k,0),unit='calls',label='Cumulative prefix view of paid constructor work; do not sum overlapping views or mix primitive units',**common)
 
 
+def prime_field_affine_holdout_panel(ref,since):
+    """A11 compact committed census, with physical aliases and solver vectors."""
+    date='2026-11-06'
+    if date<since:return
+    path='research/prime_field_a11_execution_20261106/runs/a11-affine-holdout-30245e/metrics.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw)
+        if data['schema']!='prime-field-a11-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or data['planned_systems']!=1152 or data['planned_solver_calls']!=2304 or data['verified_systems']!=1152 or data['partial_work_unknown']is not False:return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True)) for v in data['rows']]
+        if len(set(columns))!=len(columns) or len(rows)!=1152:return
+        expected={(f'p{p}-i{i}',k+str(seed),sp,policy,tp,scope) for p in (8191,65537) for i in (0,1) for seed in range(3) for k in ('ap','hash') for sp in (64,128) for policy in ('walk','hash_offset','general') for tp in (1,2,4,8) for scope in ('relations','anchors')}
+        if {(v['cell_id'],v['source_schedule'],v['source_prefix'],v['target_policy'],v['target_prefix'],v['scope']) for v in rows}!=expected or {v['case_id'] for v in rows}!=set(range(1152)):return
+        fields=('base_columns','source_rank','outside_rank','delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows','joint_rank','joint_columns','cancel_rank','cancel_columns')+tuple(a+'_fr_'+k for a in ('joint','cancel') for k in ('add','sub','mul','inv'))
+        for v in rows:
+            if v['verified']is not True or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            if v['identified_targets']>8 or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets'] or v['outside_rank']>8:return
+            if v['source_rank']+v['delta']!=v['after_cancellation_rank'] or v['after_cancellation_rank']>v['base_columns'] or v['joint_rank']!=v['after_cancellation_rank']+v['outside_rank'] or v['cancel_rank']!=v['after_cancellation_rank']:return
+            if v['joint_columns']!=v['base_columns']+8 or v['cancel_columns']!=v['base_columns'] or v['decomposition_rows']+v['knowledge_rows']!=v['target_rows'] or v['scope']=='relations' and v['knowledge_rows']!=0:return
+        physical=data['physical_counters']
+        if any(type(v)is not int or v<0 for group in physical.values() for v in group.values()):return
+        if physical['source'].get('source_queries')!=147456 or physical['source'].get('pair_table_insertions')!=4928:return
+        queries=data['query_summary'];ids={f'p{p}-i{i}' for p in (8191,65537) for i in (0,1)}
+        if len(queries)!=4 or {v['cell_id'] for v in queries}!=ids:return
+        for v in queries:
+            n=16 if v['cell_id'].startswith('p8191-') else 32
+            if any(type(v[k])is not int for k in ('physical_cached_points','queries','logical_requests')) or not 8<=v['physical_cached_points']<=176 or v['queries']!=2*n*v['physical_cached_points'] or v['logical_requests']!=2304:return
+        target_queries=sum(v['queries'] for v in queries)
+        if target_queries!=physical['source'].get('target_queries',0)+physical['target_queries'].get('target_queries',0) or physical['target_queries'].get('logical_target_requests')!=9216:return
+        checkpoints=data['closed_curve_checkpoints']
+        if len(checkpoints)!=4 or {v['cell_id'] for v in checkpoints}!=ids or any(v['valid']is not True or v['receipt']['returncode']!=0 or v['receipt']['closed_curve']!=v['cell_id'] for v in checkpoints):return
+        for short,arm in [('joint','sparse_joint'),('cancel','sparse_cancel')]:
+            for key in ('add','sub','mul','inv'):
+                if sum(v[short+'_fr_'+key] for v in rows)!=data['observed_arm_counters'][arm].get('Fr.field_'+key,0):return
+    except (KeyError,TypeError,ValueError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a11'
+    emit(prefix+'.solver_calls',2304,unit='solver calls',label='1152dependent affine scope systems, two cold kernel-free solvers; producer checks',**common)
+    for key in ('source_queries','pair_table_insertions'):
+        emit(prefix+'.physical.'+key,physical['source'][key],unit='calls',label='Physical work counted once, no prefix/policy multiplication',**common)
+    emit(prefix+'.physical.target_queries',target_queries,unit='calls',label='Signed queries at distinct cached points, natural endpoints included once',**common)
+    emit(prefix+'.logical.target_requests',9216,unit='requests',label='Repeated logical endpoint requests, separate from physical queries',**common)
+    for v in rows:
+        name=prefix+'.'+v['cell_id']+'.'+v['source_schedule']+'.source'+str(v['source_prefix'])+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('source_rank','rank'),('outside_rank','rank'),('delta','rank'),('after_cancellation_rank','rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Exact dependent affine scope observation; producer standing only',**common)
+        for arm in ('joint','cancel'):
+            for key,unit in [('add','Fr additions'),('sub','Fr subtractions'),('mul','Fr multiplications'),('inv','Fr inversions')]:
+                emit(name+'.'+arm+'.fr_'+key,v[arm+'_fr_'+key],unit=unit,label='Cold solver component including lift/checks, separate from collection/construction',**common)
+
+
+def prime_field_batched_holdout_panel(ref,since):
+    """A12 compact committed census, with physical aliases and solver vectors."""
+    date='2026-11-06'
+    if date<since:return
+    path='research/prime_field_a12_execution_20261106/runs/a12-batched-holdout-6ba98a/metrics.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw)
+        if data['schema']!='prime-field-a12-metrics/v1' or data['panel_complete']is not True or data['physical_attempts']!=1 or data['planned_systems']!=1152 or data['planned_solver_calls']!=2304 or data['verified_systems']!=1152 or data['partial_work_unknown']is not False:return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True)) for v in data['rows']]
+        if len(set(columns))!=len(columns) or len(rows)!=1152:return
+        expected={(f'p{p}-i{i}',k+str(seed),sp,policy,tp,scope) for p in (262139,524287) for i in (0,1) for seed in range(3) for k in ('ap','hash') for sp in (64,128) for policy in ('walk','hash_offset','general') for tp in (1,2,4,8) for scope in ('relations','anchors')}
+        if {(v['cell_id'],v['source_schedule'],v['source_prefix'],v['target_policy'],v['target_prefix'],v['scope']) for v in rows}!=expected or {v['case_id'] for v in rows}!=set(range(1152)):return
+        fields=('base_columns','source_rank','outside_rank','delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows','joint_rank','joint_columns','cancel_rank','cancel_columns')+tuple(a+'_fr_'+k for a in ('joint','cancel') for k in ('add','sub','mul','inv'))
+        for v in rows:
+            if v['verified']is not True or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            if v['identified_targets']>8 or v['identified_mask']>255 or v['identified_mask'].bit_count()!=v['identified_targets'] or v['outside_rank']>8:return
+            if v['source_rank']+v['delta']!=v['after_cancellation_rank'] or v['after_cancellation_rank']>v['base_columns'] or v['joint_rank']!=v['after_cancellation_rank']+v['outside_rank'] or v['cancel_rank']!=v['after_cancellation_rank']:return
+            if v['joint_columns']!=v['base_columns']+8 or v['cancel_columns']!=v['base_columns'] or v['decomposition_rows']+v['knowledge_rows']!=v['target_rows'] or v['scope']=='relations' and v['knowledge_rows']!=0:return
+        if any(len({v['base_columns'] for v in rows if v['cell_id']==cid})!=1 for cid in {v['cell_id'] for v in rows}):return
+        if any(v['base_columns']>32 or v['source_rank']>v['source_rows'] or v['outside_rank']>v['target_rows'] for v in rows):return
+        physical=data['physical_counters']
+        if any(type(v)is not int or v<0 for group in physical.values() for v in group.values()):return
+        if physical['source'].get('source_queries')!=196608 or physical['source'].get('pair_table_insertions')!=7936:return
+        queries=data['query_summary'];ids={f'p{p}-i{i}' for p in (262139,524287) for i in (0,1)}
+        if len(queries)!=4 or {v['cell_id'] for v in queries}!=ids:return
+        for v in queries:
+            n=32
+            if any(type(v[k])is not int for k in ('physical_cached_points','queries','logical_requests')) or not 8<=v['physical_cached_points']<=176 or v['queries']!=2*n*v['physical_cached_points'] or v['logical_requests']!=2304:return
+        target_queries=sum(v['queries'] for v in queries)
+        if target_queries!=physical['source'].get('target_queries',0)+physical['target_queries'].get('target_queries',0) or physical['target_queries'].get('logical_target_requests')!=9216:return
+        engines=data['query_engine_totals']
+        for engine in ('scalar','batch'):
+            if any(type(v)is not int or v<0 for v in engines[engine].values()):return
+            keys={key[len('query_'+engine+'.'):] for group in physical.values() for key in group if key.startswith('query_'+engine+'.')}
+            if keys!=set(engines[engine]):return
+            if any(sum(group.get('query_'+engine+'.'+key,0) for group in physical.values())!=value for key,value in engines[engine].items()):return
+        if engines['scalar'].get('Fp.group_add')!=196608+target_queries:return
+        checkpoints=data['closed_curve_checkpoints']
+        if len(checkpoints)!=4 or {v['cell_id'] for v in checkpoints}!=ids or any(v['valid']is not True or v['receipt']['returncode']!=0 or v['receipt']['closed_curve']!=v['cell_id'] for v in checkpoints):return
+        for short,arm in [('joint','sparse_joint'),('cancel','sparse_cancel')]:
+            for key in ('add','sub','mul','inv'):
+                if sum(v[short+'_fr_'+key] for v in rows)!=data['observed_arm_counters'][arm].get('Fr.field_'+key,0):return
+    except (KeyError,TypeError,ValueError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a12'
+    emit(prefix+'.solver_calls',2304,unit='solver calls',label='1152dependent affine scope systems, two cold kernel-free solvers; producer checks',**common)
+    for key in ('source_queries','pair_table_insertions'):
+        emit(prefix+'.physical.'+key,physical['source'][key],unit='calls',label='Physical work counted once, no prefix/policy multiplication',**common)
+    emit(prefix+'.physical.target_queries',target_queries,unit='calls',label='Signed queries at distinct cached points, natural endpoints included once',**common)
+    emit(prefix+'.logical.target_requests',9216,unit='requests',label='Repeated logical endpoint requests, separate from physical queries',**common)
+    for engine in ('scalar','batch'):
+        for key,unit in [('add','Fp additions'),('sub','Fp subtractions'),('mul','Fp multiplications'),('inv','Fp inversions')]:
+            emit(prefix+'.query.'+engine+'.fp_'+key,engines[engine].get('Fp.field_'+key,0),unit=unit,label='Executed engine element operations, separate from combined physical work and cold references',**common)
+        emit(prefix+'.query.'+engine+'.explicit_array_allocated_bytes',engines[engine].get('query_array_allocated_bytes',0),unit='bytes',label='Explicit query array allocation traffic, not peak live RSS; NumPy internal allocation excluded',**common)
+    for v in rows:
+        name=prefix+'.'+v['cell_id']+'.'+v['source_schedule']+'.source'+str(v['source_prefix'])+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('source_rank','rank'),('outside_rank','rank'),('delta','rank'),('after_cancellation_rank','rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Exact dependent affine scope observation; producer standing only',**common)
+        for arm in ('joint','cancel'):
+            for key,unit in [('add','Fr additions'),('sub','Fr subtractions'),('mul','Fr multiplications'),('inv','Fr inversions')]:
+                emit(name+'.'+arm+'.fr_'+key,v[arm+'_fr_'+key],unit=unit,label='Cold solver component including lift/checks, separate from collection/construction',**common)
+
+
+def prime_field_paid_known_base_panel(ref, since):
+    """Committed-only A13 different-base census; supplied logs are not rank gain."""
+    date = '2026-11-06'
+    if date < since:
+        return
+    path = 'research/prime_field_a13_execution_20261106/runs/a13-paid-known-base-62d664/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a13-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['planned_systems'] != 624 or data['planned_solver_calls'] != 1248 or
+            data['verified_systems'] != 624 or data['verified_solver_calls'] != 1248 or
+            data['unknown_systems'] != 0 or data['partial_work_unknown'] is not False):
+            return
+        columns = data['columns']
+        rows = [dict(zip(columns, value, strict=True)) for value in data['rows']]
+        if len(set(columns)) != len(columns) or len(rows) != 624 or {v['case_id'] for v in rows} != set(range(624)):
+            return
+        ids = {f'p{p}-i{i}' for p in (262139, 524287) for i in (0, 1)}
+        expected = {(cid, 'norm', k+str(seed), 128, policy, budget, scope)
+            for cid in ids for seed in range(3) for k in ('ap', 'hash')
+            for policy in ('walk', 'hash_offset', 'general') for budget in (1, 2, 4, 8)
+            for scope in ('relations', 'anchors')}
+        expected |= {(cid, 'known', 'known', 0, policy, budget, 'supplied')
+            for cid in ids for policy in ('walk', 'hash_offset', 'general') for budget in (1, 2, 4, 8)}
+        keys = ('cell_id', 'base_arm', 'source_schedule', 'source_prefix', 'target_policy', 'target_prefix', 'scope')
+        if {tuple(v[k] for k in keys) for v in rows} != expected:
+            return
+        fields = ('base_columns', 'source_rank', 'outside_rank', 'delta', 'after_cancellation_rank',
+                  'identified_targets', 'identified_mask', 'source_rows', 'target_rows', 'decomposition_rows', 'knowledge_rows')
+        for row in rows:
+            if row['verified'] is not True or any(type(row[k]) is not int or row[k] < 0 for k in fields):
+                return
+            if (row['base_columns'] > 32 or row['source_rank'] > row['source_rows'] or row['outside_rank'] > min(8, row['target_rows']) or
+                row['identified_targets'] > 8 or row['identified_mask'] > 255 or
+                row['identified_mask'].bit_count() != row['identified_targets'] or
+                row['source_rank']+row['delta'] != row['after_cancellation_rank'] or row['after_cancellation_rank'] > row['base_columns'] or
+                row['decomposition_rows']+row['knowledge_rows'] != row['target_rows'] or
+                row['scope'] == 'relations' and row['knowledge_rows'] != 0):
+                return
+            if row['base_arm'] == 'known' and (row['base_columns'], row['source_rank'], row['source_rows'], row['delta']) != (32, 32, 32, 0):
+                return
+        if any(len({v['base_columns'] for v in rows if v['cell_id'] == cid and v['base_arm'] == 'norm'}) != 1 for cid in ids):
+            return
+        physical, engines = data['physical_counters'], data['query_engine_totals']
+        if any(type(v) is not int or v < 0 for group in physical.values() for v in group.values()):
+            return
+        if physical['norm_collection'].get('source_queries') != 196608 or physical['norm_collection'].get('pair_table_insertions') != 7936:
+            return
+        if (physical['known.known_base_collection'].get('source_queries', 0) != 0 or
+            physical['known.known_base_collection'].get('pair_table_insertions') != 7936 or
+            physical['known.known_base_construction'].get('public_base_certificates_verified') != 128 or
+            physical['norm.shared_target_queries'].get('logical_target_requests') != 4608 or
+            physical['known.shared_target_queries'].get('logical_target_requests') != 768):
+            return
+        target_queries = sum(v.get('target_queries', 0) for v in physical.values())
+        for engine in ('scalar', 'batch'):
+            if any(type(v) is not int or v < 0 for v in engines[engine].values()):
+                return
+            namespace = 'query_'+engine+'.'
+            keys = {k[len(namespace):] for group in physical.values() for k in group if k.startswith(namespace)}
+            if keys != set(engines[engine]) or any(sum(group.get(namespace+k, 0) for group in physical.values()) != v for k, v in engines[engine].items()):
+                return
+        if engines['scalar'].get('Fp.group_add') != 196608+target_queries:
+            return
+        checkpoints = data['closed_curve_checkpoints']
+        if len(checkpoints) != 4 or {v['cell_id'] for v in checkpoints} != ids or any(
+            v['valid'] is not True or v['receipt']['returncode'] != 0 or v['receipt']['closed_curve'] != v['cell_id'] for v in checkpoints):
+            return
+        for arm in ('norm_joint', 'norm_cancel', 'known_direct', 'known_joint'):
+            if any(type(v) is not int or v < 0 for v in data['observed_arm_counters'][arm].values()):
+                return
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return
+    common = dict(date=date, problem='prime-field-factor-bases', better='neutral', source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a13'
+    for key in ('verified_systems', 'verified_solver_calls', 'unknown_systems'):
+        emit(prefix+'.'+key, data[key], unit='objects', label='Actual finite census; dependent systems, producer standing unverified', **common)
+    for group, counts in physical.items():
+        for key in ('Fp.field_add', 'Fp.field_sub', 'Fp.field_mul', 'Fp.field_inv',
+                    'Fr.field_add', 'Fr.field_sub', 'Fr.field_mul', 'Fr.field_inv',
+                    'source_queries', 'target_queries', 'pair_table_insertions', 'public_base_certificates_verified'):
+            if key in counts:
+                emit(prefix+'.physical.'+group+'.'+key, counts[key], unit='calls',
+                     label='Physical component once; namespaces, cold/nested views and scalar/batch controls are not additive', **common)
+    for row in rows:
+        name = prefix+'.'+row['cell_id']+'.'+row['base_arm']+'.'+row['source_schedule']+'.'+row['target_policy']+'.target'+str(row['target_prefix'])+'.'+row['scope']
+        for key, unit in [('identified_targets', 'target slots'), ('identified_mask', 'bit mask'),
+                          ('source_rank', 'within-base rank'), ('delta', 'within-base rank'),
+                          ('target_rows', 'equations'), ('knowledge_rows', 'equations')]:
+            emit(name+'.'+key, row[key], unit=unit,
+                 label='Dependent within-base producer observation; known labels supplied, no rank/Delta comparison across bases', **common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -1052,6 +1261,9 @@ def main():
     prime_field_sparse_functional_panel(a.ref, a.since)
     prime_field_json_functional_panel(a.ref, a.since)
     prime_field_ap_holdout_panel(a.ref, a.since)
+    prime_field_affine_holdout_panel(a.ref, a.since)
+    prime_field_batched_holdout_panel(a.ref, a.since)
+    prime_field_paid_known_base_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 
