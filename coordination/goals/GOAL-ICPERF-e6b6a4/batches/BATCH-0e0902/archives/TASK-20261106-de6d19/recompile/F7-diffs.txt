@@ -1,0 +1,1047 @@
+--- HEAD:coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
++++ recompile:coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+@@ -6,9 +6,10 @@
+   "notes": [
+     "Opened by DEC-20261106-aa7448 (compile rulings and lane). Execution needs DEC-20261106-c69de4 committed on origin/main and the owner's explicit EKS go-ahead; neither exists when this queue is drafted.",
+     "File name dispatch_queue.json by RULINGS-COMPILE C4: CI validates coordination/**/dispatch_queue.json only.",
+-    "job/launcher/build.json, session/records.jsonl and session/plan.json are archived but not declared trial artifacts (RULINGS-COMPILE A2(a), C2)."
++    "job/launcher/build.json, session/records.jsonl and session/plan.json are archived but not declared trial artifacts (RULINGS-COMPILE A2(a), C2).",
++    "DEC-20261106-ecf261 approves the re-session RBS-ICPERF-de8978: the first session RBS-ICPERF-e2a5c2 stopped at S02-trials before any submission (implementation_error, wrapper duplicate check; USD 0), so TASK-20261106-4b7018 is failed and its snapshot TASK-20261106-dccfdc stays queued and impeded (the dispatcher cannot archive partial output of a failed source); no dispatch_exception is added."
+   ],
+-  "objective": "Run EXP-ICPERF-127dbd (C1 route A at fp28, protocol IC-C1-DEFERRED-GUARD-FP28-20261106 v2) as runbook session RBS-ICPERF-e2a5c2, then archive the run records alone as a snapshot before independent review.",
++  "objective": "Run EXP-ICPERF-127dbd (C1 route A at fp28, protocol IC-C1-DEFERRED-GUARD-FP28-20261106 v2) as runbook session RBS-ICPERF-de8978 under DEC-20261106-ecf261, then archive the run records alone as a snapshot before independent review.",
+   "schema": "crypto.autoresearch.dispatch_queue.v1",
+   "tasks": [
+     {
+@@ -183,7 +184,7 @@
+       ],
+       "review_required": false,
+       "role": "executor",
+-      "state": "queued",
++      "state": "failed",
+       "title": "Run EXP-ICPERF-127dbd runbook session RBS-ICPERF-e2a5c2",
+       "write_scope": [
+         "experiments/EXP-ICPERF-127dbd/runs",
+@@ -290,6 +291,336 @@
+       "write_scope": [
+         "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-dccfdc"
+       ]
++    },
++    {
++      "archived_by": "TASK-20261106-d5ec1e",
++      "artifact_paths": [
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/launch.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/execution-receipt.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/command.txt",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/environment.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/stdout.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/stderr.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/check.stdout.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/check.stderr.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/raw-result.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/manifest.yaml",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/request.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launch.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/build.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/SHA256SUMS",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/job-exit.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/records.jsonl",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/plan.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/launch.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/execution-receipt.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/command.txt",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/environment.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/stdout.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/stderr.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/check.stdout.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/check.stderr.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/raw-result.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/manifest.yaml",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/request.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launch.log",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launcher/result.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launcher/build.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/SHA256SUMS",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/job-exit.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/records.jsonl",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/plan.json"
++      ],
++      "depends_on": [],
++      "handoff": {
++        "archived_by": "TASK-20261106-d5ec1e",
++        "artifact_paths": [
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/launch.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/execution-receipt.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/command.txt",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/environment.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/stdout.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/stderr.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/check.stdout.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/check.stderr.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/raw-result.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/manifest.yaml",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/request.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launch.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/build.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/SHA256SUMS",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/job-exit.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/records.jsonl",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/plan.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/launch.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/execution-receipt.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/command.txt",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/environment.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/stdout.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/stderr.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/check.stdout.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/check.stderr.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/raw-result.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/manifest.yaml",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/request.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launch.log",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launcher/result.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launcher/build.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/SHA256SUMS",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/job-exit.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/records.jsonl",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/plan.json"
++        ],
++        "artifact_paths_note": "The seven per-trial files declared in the trial plan, the supervisor-generated files, and the undeclared build.json, records.jsonl and plan.json (RULINGS-COMPILE A2(a) and C2). records.jsonl and plan.json are bound through SHA256SUMS, not through the runbook.",
++        "batch_id": "BATCH-0e0902",
++        "budget": {
++          "maximum_runs": 2,
++          "memory_gb": 4,
++          "wall_clock_seconds": 9600
++        },
++        "completion_gate": [
++          "python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml prints LINT OK with the runbook sha256 the card names.",
++          "tools/runbook.py run executes session RBS-ICPERF-de8978 under DEC-20261106-ecf261, and no other session.",
++          "Each trial that ran holds its seven declared files, and its receipt is output_validated, or the session journal records why not.",
++          "Each manifest.yaml passes tools/validate_ledger.py check_run and carries attack_claimed false.",
++          "S03-verify ran on both sessions, or the journal records the step that stopped the session.",
++          "The specification, trial plan, runbook, card, inputs and implementation bytes are unchanged, and no request was launched twice."
++        ],
++        "constraints": [
++          "The relay must state, with evidence, before any command: DEC-20261106-ecf261 committed on origin/main (commit sha); the owner's explicit EKS go-ahead (quoted, with timestamp); scripts/checkpoint.sh gate exit 0 (the line); and the aws --version line of the binary on the relay PATH, beginning aws-cli/1.46.2. Any missing item: stop before step 1.",
++          "The relay starts with PATH=/tmp/claude-0/awsvenv/bin:$PATH. The runbook carries no PATH overlay. Do not install or substitute another aws binary.",
++          "Protocol section 10 budget gate lines, checked before each launch: S1 0 + 0.93108 + 0.93108 = 1.86216 <= 5.00; S2 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00 (actual S1 spend from billing replaces its 0.93108 if available, never an estimate). A line above 5.00: stop.",
++          "Each request launches once. Do not rerun, relaunch, reopen or resume this runbook session on any failure; wait for a Coordinator decision. The -r2 requests are not part of this session.",
++          "Do not edit specification.yaml, the trial plan, the runbook, the card, the inputs, the implementation or the hypothesis. Do not declare additional artifacts.",
++          "A crash, timeout, deadline hit, host loss or refused manifest is an infrastructure or instrument outcome, not a scientific result. Do not read verdict.json for a conclusion and do not report U_w, L_w or any ratio as a finding.",
++          "Do not stage or commit anything. The snapshot archive is TASK-20261106-d5ec1e and runs alone after this task.",
++          "launch_eks.sh runs only as the supervised trial argv of tools/runbook.py run. Never run the original or the fixed launch_eks.sh by hand, except with --dry-run."
++        ],
++        "deliverables": [
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/manifest.yaml",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/raw-result.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/SHA256SUMS",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/job-exit.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/manifest.yaml",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/raw-result.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/SHA256SUMS",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/job-exit.json",
++          "experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/journal.jsonl"
++        ],
++        "execution": {
++          "approved_by": "DEC-20261106-ecf261",
++          "experiment_id": "EXP-ICPERF-127dbd",
++          "kind": "run",
++          "mode": "experiments",
++          "trial_plan": "experiments/EXP-ICPERF-127dbd/trial-plan.json",
++          "trial_plan_sha256": "b6626655b3c83dd8c8526ee722572ac1f7d3e6848ba3708c6e70e34acf5b8270"
++        },
++        "from": "coordinator",
++        "goal_id": "GOAL-ICPERF-e6b6a4",
++        "hypothesis_ids": [
++          "H-ICPERF-4cb536"
++        ],
++        "id": "TASK-20261106-724d14",
++        "inference": {
++          "degraded_allowed": false,
++          "delivery": "interactive",
++          "fallback_allowed": false,
++          "independent_session_required": false,
++          "policy": "executor-mechanical",
++          "reasoning_effort": null
++        },
++        "inputs": [
++          "ledger/hypotheses/H-ICPERF-4cb536.yaml",
++          "ledger/decisions/DEC-20261106-ecf261.yaml",
++          "experiments/EXP-ICPERF-127dbd/specification.yaml",
++          "experiments/EXP-ICPERF-127dbd/trial-plan.json",
++          "experiments/EXP-ICPERF-127dbd/runbook.yaml",
++          "experiments/EXP-ICPERF-127dbd/inputs/protocol.json",
++          "experiments/EXP-ICPERF-127dbd/inputs/request-s1.json",
++          "experiments/EXP-ICPERF-127dbd/inputs/request-s2.json",
++          "experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh",
++          "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh",
++          "experiments/EXP-ICPERF-127dbd/implementation/check_job.py",
++          "experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh",
++          "experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256"
++        ],
++        "inputs_note": "The runbook, the card and the trial plan are the worker's context. The protocol, specs and requests are bound bytes the runbook checks; the executor does not read them for content.",
++        "objective": "Run the runbook experiments/EXP-ICPERF-127dbd/runbook.yaml as session RBS-ICPERF-de8978 through tools/runbook.py (the /run route), from the relay of card task-cards/CARD-EXP-ICPERF-127dbd-2.yaml. S01-probe, then S02-trials (T1 = S1 as RUN-ICPERF-8b0d47, then T2 = S2 as RUN-ICPERF-5ffa79, T2 depending on T1), then S03-verify. Leave the observation files in the run directories. Do not interpret them and do not edit any frozen byte.",
++        "recorded_at": "2026-11-06",
++        "return_format": "Session directory, run directories, the tool-written summary and the session receipt. No verdict, ratio, speedup, wall-time or rho-beating statement.",
++        "review_required": false,
++        "role": "executor",
++        "runs_launched": 0,
++        "to": "executor",
++        "uncertainty_reduced": "Whether the two pre-registered C1 sessions give valid, replay-certified counted observations of the frozen C1 decision rule at fp28.",
++        "write_scope": [
++          "experiments/EXP-ICPERF-127dbd/runs",
++          "experiments/EXP-ICPERF-127dbd/runbook-sessions",
++          "experiments/EXP-ICPERF-127dbd/reports"
++        ]
++      },
++      "id": "TASK-20261106-724d14",
++      "priority": 10,
++      "read_scope": [
++        "experiments/EXP-ICPERF-127dbd",
++        "ledger/hypotheses/H-ICPERF-4cb536.yaml",
++        "ledger/decisions/DEC-20261106-ecf261.yaml"
++      ],
++      "review_required": false,
++      "role": "executor",
++      "state": "queued",
++      "title": "Run EXP-ICPERF-127dbd runbook session RBS-ICPERF-de8978",
++      "write_scope": [
++        "experiments/EXP-ICPERF-127dbd/runs",
++        "experiments/EXP-ICPERF-127dbd/runbook-sessions",
++        "experiments/EXP-ICPERF-127dbd/reports"
++      ]
++    },
++    {
++      "archive": {
++        "binding_mode": "commit",
++        "commit_sha": null,
++        "kind": "snapshot",
++        "parent_sha": null,
++        "path_sha256": {},
++        "record_ids": [
++          "H-ICPERF-4cb536",
++          "EXP-ICPERF-127dbd",
++          "DEC-20261106-ecf261"
++        ],
++        "source_task_ids": [
++          "TASK-20261106-724d14"
++        ]
++      },
++      "archived_by": "TASK-20261106-d5ec1e",
++      "artifact_paths": [
++        "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e/snapshot-receipt.json"
++      ],
++      "depends_on": [
++        "TASK-20261106-724d14"
++      ],
++      "handoff": {
++        "archive": {
++          "binding_mode": "commit",
++          "expected_paths_note": "This card's artifact_paths together with the existing artifact_paths of its source task. If the dispatcher's computed set differs, stop and report.",
++          "kind": "snapshot",
++          "record_ids": [
++            "H-ICPERF-4cb536",
++            "EXP-ICPERF-127dbd",
++            "DEC-20261106-ecf261"
++          ],
++          "source_task_ids": [
++            "TASK-20261106-724d14"
++          ]
++        },
++        "archived_by": "TASK-20261106-d5ec1e",
++        "artifact_paths": [
++          "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e/snapshot-receipt.json"
++        ],
++        "batch_id": "BATCH-0e0902",
++        "budget": {
++          "maximum_runs": 0
++        },
++        "completion_gate": [
++          "origin/main merged (never rebased), with base_commit_checked and merge_outcome recorded.",
++          "SHA256SUMS checked per run directory before compaction, with the outputs in the receipt.",
++          "One commit binds exactly the existing expected paths and the receipt, and the receipt verifies under tools/research_dispatch.py.",
++          "The branch is pushed and a ready-for-review PR with auto-merge names every record id. Zero runs."
++        ],
++        "constraints": [
++          "SA-1 Precondition: TASK-20261106-724d14 has stopped (its session journal holds a final status), and no other BATCH-0e0902 task is live. Do not start while the runbook session is running.",
++          "SA-2 Merge origin/main into the working branch first; never rebase. Record base_commit_checked and merge_outcome. A conflict inside a record stops the archive; it is never resolved by editing a record.",
++          "SA-3 Integrity before staging, per run directory that exists: run sha256sum -c SHA256SUMS inside job/artifacts and record the output verbatim. A mismatch or missing listed file stops the archive and returns to the Coordinator; nothing is repaired.",
++          "SA-4 Compaction: run tools/artifact_store.py compact on files of 1 MiB or more (records.jsonl expected), and record each original sha256 and the compacted path. The SHA256SUMS check of SA-3 happens before compaction.",
++          "SA-5 Stage only paths in TASK-20261106-724d14 artifact_paths that exist (or their compacted form), and this receipt. git add -A, git add . and directory adds are forbidden. A missing path is recorded as missing, never created. The queue is never staged by an archive.",
++          "SA-6 Run tools/validate_ledger.py and tools/check_merge_hygiene.py before committing. Record pre-existing errors as pre-existing.",
++          "SA-7 The commit message names TASK-20261106-d5ec1e, TASK-20261106-724d14, the run ids and every record_id literally. It states zero new runs by the archive and no verdict. No commit message or PR text states U_w, L_w, a ratio or a verdict.",
++          "SA-8 Verify the receipt with tools/research_dispatch.py (the post-commit verifier must accept it). Push, open or refresh the PR against main ready for review naming every record id, and enable auto-merge (gh pr merge <n> --auto --merge). Never amend, rebase or force-push."
++        ],
++        "deliverables": [
++          "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e/snapshot-receipt.json with commit_sha (null inside the commit), parent_sha, base_commit_checked, merge_outcome, binding_mode, path_sha256, record_ids, the SA-3 sha256sum outputs, SA-4 compaction map, missing paths, hygiene and dispatcher outcomes.",
++          "One isolated commit, a pushed branch and a ready-for-review PR with auto-merge."
++        ],
++        "dispatch_preconditions": [
++          {
++            "id": "SP-1",
++            "text": "archived_by is bound (SELF)."
++          },
++          {
++            "id": "SP-2",
++            "text": "TASK-20261106-724d14 has stopped; its journal holds a final status."
++          },
++          {
++            "id": "SP-3",
++            "text": "RUNS ALONE. No other BATCH-0e0902 task is live."
++          }
++        ],
++        "from": "coordinator",
++        "goal_id": "GOAL-ICPERF-e6b6a4",
++        "hypothesis_ids": [
++          "H-ICPERF-4cb536"
++        ],
++        "id": "TASK-20261106-d5ec1e",
++        "inference": {
++          "degraded_allowed": false,
++          "delivery": "interactive",
++          "fallback_allowed": true,
++          "fallback_note": "Runtime inheritance under the Claude Code harness. Backend or model substitution only.",
++          "independent_session_required": false,
++          "policy": "coordinator-orchestration-code",
++          "reasoning_effort": null
++        },
++        "inputs": [
++          "ledger/handoffs/TASK-20261106-724d14.yaml",
++          "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json",
++          "experiments/EXP-ICPERF-127dbd/trial-plan.json",
++          "experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/",
++          "experiments/EXP-ICPERF-127dbd/runs/",
++          "tools/research_dispatch.py",
++          "tools/artifact_store.py",
++          "tools/validate_ledger.py",
++          "tools/check_merge_hygiene.py"
++        ],
++        "objective": "Commit and bind, in ONE isolated snapshot archive commit, exactly the artifact paths of TASK-20261106-724d14 that exist after runbook session RBS-ICPERF-de8978 stops, plus this task's receipt. Verify, push, open or refresh the ready-for-review PR with auto-merge. Runs ALONE, before any independent review or evidence decision.",
++        "read_scope": [
++          "experiments/EXP-ICPERF-127dbd",
++          "experiments/EXP-ICPERF-127dbd/runs",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/records.jsonl",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/plan.json",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/records.jsonl",
++          "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/plan.json"
++        ],
++        "recorded_at": "2026-11-06",
++        "return_format": "The snapshot receipt, PR reference, compaction map and missing-path list.",
++        "review_required": false,
++        "review_required_note": "An archive stages and verifies. It judges nothing.",
++        "role": "coordinator",
++        "runs_launched": 0,
++        "to": "coordinator",
++        "uncertainty_reduced": "None about the mathematics. It makes the run records durable and hash-bound before anyone reviews or interprets them.",
++        "write_scope": [
++          "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e"
++        ]
++      },
++      "id": "TASK-20261106-d5ec1e",
++      "priority": 20,
++      "read_scope": [
++        "experiments/EXP-ICPERF-127dbd",
++        "experiments/EXP-ICPERF-127dbd/runs",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/records.jsonl",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/plan.json",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/records.jsonl",
++        "experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/plan.json"
++      ],
++      "review_required": false,
++      "role": "coordinator",
++      "state": "queued",
++      "title": "Snapshot archive of EXP-ICPERF-127dbd run records (alone, before review)",
++      "write_scope": [
++        "coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e"
++      ]
+     }
+   ]
+-}
++}
+\ No newline at end of file
+--- HEAD:experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
++++ recompile:experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+@@ -53,6 +53,7 @@
+ [[ -f $req && -f $protocol ]] || { echo "request or protocol file not found" >&2; exit 2; }
+ 
+ echo "experiment_id=$eid hypothesis_id=$hid task_id=$tid approved_by=$appr trial_id=$trial run_id=$runid"
++t0=$(date -u +%FT%TZ); s0=$(date -u +%s)
+ 
+ # 1. The request must be byte-identical to one of the four frozen requests.
+ rsha=$(sha256sum "$req" | cut -d ' ' -f1)
+@@ -140,6 +141,11 @@
+       validated_request_sha256:$digest, retried:false, job_files:$files,
+       note:"launch evidence only; the job exit is judged from job-exit.json by check_job.py and analyze-c1.sh"} + $extra' \
+     > "$rec/raw-result.json"
++  # Exit-0 path (outcome job_completed): the flat manifest below, byte-identical to v2; the supervisor completes it
++  # (complete_manifest) and validity stays with check_job.py and S03-verify. Exit 3, 4 and 5 paths get no supervisor
++  # completion, so they get a schema-complete manifest (schemas/run-manifest.schema.json) instead (DEC-20261106-ecf261
++  # ruling on v3a; RBS-ICPERF-e2a5c2 published a schema-invalid manifest).
++  if [[ $(jq -r '.outcome_class // empty' <<<"$extra") == job_completed ]]; then
+   cat > "$rec/manifest.yaml" <<MANIFEST
+ run:
+   id: $runid
+@@ -152,6 +158,34 @@
+   result:
+     raw_result: raw-result.json
+ MANIFEST
++  else
++    local commit cmd s1
++    commit=$(jq -r '.commit // empty' "$rec/environment.json" 2>/dev/null || true)
++    [[ -n $commit ]] || commit=$(git rev-parse HEAD 2>/dev/null || echo unknown)
++    cmd=$(cat "$rec/command.txt" 2>/dev/null || true)
++    s1=$(date -u +%s)
++    jq -n --slurpfile raw "$rec/raw-result.json" --arg commit "$commit" --arg cmd "$cmd" \
++      --arg t0 "$t0" --arg t1 "$(date -u +%FT%TZ)" --argjson wall "$((s1 - s0))" \
++      '$raw[0] as $r
++       | (if $r.submitted != true then "failed_implementation" else "failed_infrastructure" end) as $status
++       | {run: {id: $r.run_id, experiment_id: $r.experiment_id, hypothesis_id: $r.hypothesis_id, task_id: $r.task_id,
++           trial_id: $r.trial_id, approved_by: $r.approved_by, attack_claimed: false, status: $status,
++           code: {commit: $commit, dirty: false, command: $cmd},
++           environment: {file: "environment.json", note: "interpreter and source hashes are in the supervisor environment.json"},
++           inputs: {parameters: {job_name: $r.job_name, request_sha256: $r.request_sha256,
++             validated_request_sha256: $r.validated_request_sha256}},
++           timing: {started_at: $t0, finished_at: $t1, wall_seconds: $wall},
++           resources: {peak_rss_bytes: null, cpu_seconds: null},
++           result: {raw_result: "raw-result.json",
++             metrics: {submitted: $r.submitted, outcome_class: $r.outcome_class,
++               launch_remote_exit: ($r.launch_remote_exit // null), job_exit_code: ($r.job_exit_code // null)},
++             valid: false,
++             invalid_reason: ("outcome " + ($r.outcome_class // "none") + (if $r.refusal then ", refusal " + $r.refusal else "" end)
++               + "; mechanical wrapper label; the Coordinator classifies the stop"),
++             certificate: {kind: "none", verified: false, verifier: "none (launch wrapper; no discrete-log or decomposition claim)"}},
++           artifacts: {raw_result: "raw-result.json", job_dir: "job", job_files: ($r.job_files // {})}}}' \
++      > "$rec/manifest.yaml"
++  fi
+ }
+ 
+ # 2. Refuse a second submission for this job name or this exact request. Read-only AWS calls.
+@@ -171,9 +205,13 @@
+ [[ $rc == 0 ]] && refuse 3 duplicate "DUPLICATE: s3://$ISOLAB_BUCKET/$key exists: this exact request was already submitted"
+ [[ $rc != 1 ]] && refuse 4 duplicate_check_failed "duplicate check failed (aws s3 ls exit $rc)"
+ set +e
+-ids=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --max-items 100 --query 'ids[]' --output text); rc=$?
++# --no-paginate: one page (at most 100 ids). aws-cli v1 with --max-items appends the pagination
++# token ("None" or a token) to text output, which batch-get-builds rejects as a build id (RBS-ICPERF-e2a5c2).
++ids_raw=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --no-paginate --query 'ids[]' --output text); rc=$?
++ids=$(printf '%s\n' "$ids_raw" | tr '\t ' '\n\n' | grep -E "^${ISOLAB_CODEBUILD_PROJECT}:[0-9a-f-]+$" || true)
+ set -e
+ [[ $rc != 0 ]] && refuse 4 duplicate_check_failed "duplicate check failed (codebuild list)"
++[[ -n ${ids_raw//[[:space:]]/} && -z $ids ]] && refuse 4 duplicate_check_failed "duplicate check failed (codebuild list returned no build id: $ids_raw)"
+ if [[ -n $ids ]]; then
+   set +e
+   # shellcheck disable=SC2086
+--- HEAD:experiments/EXP-ICPERF-127dbd/runbook-lint.txt
++++ recompile:experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+@@ -1 +1 @@
+-LINT OK experiments/EXP-ICPERF-127dbd/runbook.yaml sha256 d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93
++LINT OK experiments/EXP-ICPERF-127dbd/runbook.yaml sha256 b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b
+--- HEAD:experiments/EXP-ICPERF-127dbd/runbook.yaml
++++ recompile:experiments/EXP-ICPERF-127dbd/runbook.yaml
+@@ -1,9 +1,9 @@
+-# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 2). Compiled by the experiment director. NOT AUTHORIZED.
+-# NOT APPROVED. Runs only after a committed decision names this file's sha256 (runbook_sha256) and the owner gives the EKS spend go-ahead.
+-# The digests of specification.yaml and trial-plan.json bound below are those of stand-ins (see NOTES.md) until the committed ones are bound.
++# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 2), session RBS-ICPERF-de8978, recompiled after the stopped session RBS-ICPERF-e2a5c2. Compiled by the experiment director. NOT AUTHORIZED.
++# NOT APPROVED. Runs only after a committed decision (DEC-20261106-ecf261) names this file's sha256 (runbook_sha256) and the owner gives the EKS spend go-ahead.
++# The specification.yaml digest bound below is that of the preview specification that approval archive TASK-20261106-de6d19 swaps in; the trial-plan.json digest is that of the committed plan.
+ schema: crypto.autoresearch.runbook.v1
+ experiment_id: EXP-ICPERF-127dbd
+-session_id: RBS-ICPERF-e2a5c2
++session_id: RBS-ICPERF-de8978
+ title: Launch the two frozen C1 requests on EKS once each, check each download, and run the frozen analyze-c1.sh gates
+ purpose: Executes protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 2 (protocol_sha256 9844f78d..., which carries AMENDMENT-1; the version 1
+   hash was 43b1ca91...). S1 and S2 are each submitted once through launch-remote by implementation/launch_eks.sh under the trial supervisor, which
+@@ -14,9 +14,9 @@
+   mode: decision_record
+ binds:
+ - path: experiments/EXP-ICPERF-127dbd/specification.yaml
+-  sha256: 50172e2a2a0a4e47fff95d7f363afd67b291899bb8f89d0c5f36a0024c99942b
++  sha256: 1f9e2092fbd4ef96770955101cb3161ad26a45de0ef782c7bf63a05a631cd21a
+ - path: experiments/EXP-ICPERF-127dbd/trial-plan.json
+-  sha256: b8de54a14b3e32bf7ce12946ce9ee113a1e498f73906a20ee76fb26ca133e1c3
++  sha256: b6626655b3c83dd8c8526ee722572ac1f7d3e6848ba3708c6e70e34acf5b8270
+ - path: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+   sha256: c2f38c4284bf4268e385ebdd42dabf5094b5fffdba27edbe969fb46b506295c8
+ - path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+@@ -30,7 +30,7 @@
+ - path: experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+   sha256: 66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc
+ - path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+-  sha256: 130164868a21d1b1ee4ff66ba89ea0c4fdfee2e20decc6451abd2ab10ef6d41f
++  sha256: 0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0
+ - path: experiments/EXP-ICPERF-127dbd/implementation/check_job.py
+   sha256: d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d
+ - path: experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+@@ -40,10 +40,10 @@
+ spec_bindings:
+ - file: experiments/EXP-ICPERF-127dbd/specification.yaml
+   pointer: /experiment/runbook/session_id
+-  equals: RBS-ICPERF-e2a5c2
++  equals: RBS-ICPERF-de8978
+ - file: experiments/EXP-ICPERF-127dbd/specification.yaml
+   pointer: /experiment/approved_by
+-  equals: DEC-20261106-c69de4
++  equals: DEC-20261106-ecf261
+ - file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+   pointer: /protocol_id
+   equals: IC-C1-DEFERRED-GUARD-FP28-20261106
+@@ -232,9 +232,9 @@
+       - pointer: /hypothesis_id
+         equals: H-ICPERF-4cb536
+       - pointer: /task_id
+-        equals: TASK-20261106-4b7018
++        equals: TASK-20261106-724d14
+       - pointer: /approved_by
+-        equals: DEC-20261106-c69de4
++        equals: DEC-20261106-ecf261
+       - pointer: /trial_id
+         equals: '{trial_id}'
+       - pointer: /run_id
+@@ -314,8 +314,8 @@
+   - '{out}/analysis'
+   - experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+   - experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+-  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/session
+-  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/session
++  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session
++  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session
+   timeout_seconds: 5400
+   validity:
+     exit_code: 0
+--- HEAD:experiments/EXP-ICPERF-127dbd/specification.yaml
++++ recompile:experiments/EXP-ICPERF-127dbd/specification.yaml
+@@ -1,6 +1,6 @@
+ # EXP-ICPERF-127dbd: C1 route A at fp28, protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 2.
+-# Approved form (preapproval preview 1). Its bytes become the canonical specification only in the
+-# approval archive of DEC-20261106-c69de4. No run, outcome or conclusion is in this file.
++# Approved form (preapproval preview 2, the re-session after the stopped RBS-ICPERF-e2a5c2). Its bytes become the canonical specification only in the
++# approval archive TASK-20261106-de6d19 of DEC-20261106-ecf261. No run, outcome or conclusion is in this file.
+ experiment:
+   id: EXP-ICPERF-127dbd
+   hypothesis_id: H-ICPERF-4cb536
+@@ -13,7 +13,7 @@
+     size 304 with the deferred repeat guard against the walk incumbent at size 407
+   status: approved
+   frozen: true
+-  approved_by: DEC-20261106-c69de4
++  approved_by: DEC-20261106-ecf261
+   execution_authorized: true
+   designed_at: '2026-11-06'
+   designed_by_decision: DEC-20261106-1d23b6
+@@ -336,18 +336,23 @@
+       evaluate the route B trigger: C1-primary fails, C1-guard passes, and incumbent to
+       srenew-eager-n407 has L_0 > 1 in both sessions.
+   required_artifacts:
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/manifest.yaml
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/raw-result.json
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/SHA256SUMS
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/job-exit.json
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/manifest.yaml
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/raw-result.json
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/SHA256SUMS
+-    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/job-exit.json
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/manifest.yaml
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/raw-result.json
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/SHA256SUMS
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/job-exit.json
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/manifest.yaml
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/raw-result.json
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/SHA256SUMS
++    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/job-exit.json
+   runbook:
+     path: experiments/EXP-ICPERF-127dbd/runbook.yaml
+-    session_id: RBS-ICPERF-e2a5c2
++    session_id: RBS-ICPERF-de8978
+     route: runbook (PROTOCOL.md section 18, revision 6 option (i); protocol extensions.execution_route)
++    prior_sessions:
++      - session_id: RBS-ICPERF-e2a5c2
++        approved_by: DEC-20261106-c69de4
++        outcome: 'stopped at S02-trials before any submission (implementation_error, wrapper duplicate check)'
++        classified_by: DEC-20261106-ecf261
+   assigned_to: executor
+   executor_tier: mechanical
+   scope_note: >-
+--- worktree:experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-1.yaml
++++ recompile:experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml
+@@ -1,15 +1,15 @@
+-# NOT AUTHORIZED. Relay only after (1) the Coordinator's approval DEC-20261106-c69de4 is committed and names runbook_sha256 d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93,
++# NOT AUTHORIZED. Relay only after (1) the Coordinator's approval DEC-20261106-ecf261 is committed and names runbook_sha256 b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b,
+ # (2) the owner has given the EKS spend go-ahead (protocol section 11), and (3) `scripts/checkpoint.sh init` has been filled for C1 and
+ # `scripts/checkpoint.sh push` and `scripts/checkpoint.sh gate` have succeeded. The relay is the text `python3 tools/task_card.py prompt <this card>` prints.
+ # Written by the experiment director. Replaces the withdrawn markdown cards card-c1-s1.md and card-c1-s2.md.
+ schema: crypto.autoresearch.mechanical-task-card.v1
+-card_id: CARD-EXP-ICPERF-127dbd-1
++card_id: CARD-EXP-ICPERF-127dbd-2
+ experiment_id: EXP-ICPERF-127dbd
+ author_role: experiment-director
+ executor_role: executor-mechanical
+ kind: runbook
+ runbook: experiments/EXP-ICPERF-127dbd/runbook.yaml
+-runbook_sha256: d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93
++runbook_sha256: b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b
+ bus_address: executor-mechanical-icperf-127dbd
+ background: true
+ write_scope:
+@@ -17,12 +17,12 @@
+   - experiments/EXP-ICPERF-127dbd/runbook-sessions/
+   - experiments/EXP-ICPERF-127dbd/reports/
+ stop_when:
+-  - The relay message does not state that DEC-20261106-c69de4 is committed, that the owner has given the EKS spend go-ahead, and that scripts/checkpoint.sh gate exited with status 0.
++  - The relay message does not state that DEC-20261106-ecf261 is committed, that the owner has given the EKS spend go-ahead, and that scripts/checkpoint.sh gate exited with status 0.
+   - The last line of step 1 does not begin with LINT OK.
+   - Step 2 exits with status 2.
+   - Step 2 exits with a status other than 0, 2 or 3.
+   - Step 3 does not print VERIFY OK.
+-  - Step 5 shows a page 1 that lacks the text EXP-ICPERF-127dbd or the text RBS-ICPERF-e2a5c2.
++  - Step 5 shows a page 1 that lacks the text EXP-ICPERF-127dbd or the text RBS-ICPERF-de8978.
+   - Any command in steps 1 to 8 would need an argument that this card does not give.
+   - A command would write a file outside the three write_scope paths.
+ notes: Budget gate lines of protocol section 10, recorded before launch, in USD. S1 launch, 0 + 0.93108 + 0.93108 = 1.86216, at most 5.00, pass. S2 launch, 0.93108 (HB of S1, used as actual_spend) + 0.93108 + 0 = 1.86216, at most 5.00, pass. Step 2 exit status 3 is a recorded result; still run steps 3 to 8, then do not run step 2 again and do not reopen this runbook session; wait for a Coordinator decision.
+--- HEAD:experiments/EXP-ICPERF-127dbd/trial-plan.json
++++ recompile:experiments/EXP-ICPERF-127dbd/trial-plan.json
+@@ -1,5 +1,5 @@
+ {
+-  "approved_by": "DEC-20261106-c69de4",
++  "approved_by": "DEC-20261106-ecf261",
+   "experiment_id": "EXP-ICPERF-127dbd",
+   "frozen": true,
+   "goal_id": "GOAL-ICPERF-e6b6a4",
+@@ -16,13 +16,13 @@
+   "schema": "crypto.autoresearch.trial_plan.v1",
+   "source_sha256": {
+     "experiments/EXP-ICPERF-127dbd/implementation/check_job.py": "d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d",
+-    "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh": "130164868a21d1b1ee4ff66ba89ea0c4fdfee2e20decc6451abd2ab10ef6d41f",
++    "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh": "0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0",
+     "experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256": "7b7531895ea935bf996fb983d837c57fe5a14439e93bb38917d9ee5a7468ee0f"
+   },
+   "specification": "experiments/EXP-ICPERF-127dbd/specification.yaml",
+-  "specification_sha256": "50172e2a2a0a4e47fff95d7f363afd67b291899bb8f89d0c5f36a0024c99942b",
++  "specification_sha256": "1f9e2092fbd4ef96770955101cb3161ad26a45de0ef782c7bf63a05a631cd21a",
+   "stop_on_invalid_output": true,
+-  "task_id": "TASK-20261106-4b7018",
++  "task_id": "TASK-20261106-724d14",
+   "trials": [
+     {
+       "allow_empty_artifacts": [],
+@@ -35,13 +35,13 @@
+         "--hypothesis-id",
+         "H-ICPERF-4cb536",
+         "--task-id",
+-        "TASK-20261106-4b7018",
++        "TASK-20261106-724d14",
+         "--approved-by",
+-        "DEC-20261106-c69de4",
++        "DEC-20261106-ecf261",
+         "--trial-id",
+         "T1",
+         "--run-id",
+-        "RUN-ICPERF-c7f69e",
++        "RUN-ICPERF-8b0d47",
+         "--out",
+         "{run_dir}/job",
+         "--record-dir",
+@@ -70,7 +70,7 @@
+       "depends_on": [],
+       "id": "T1",
+       "memory_mb": 4096,
+-      "run_id": "RUN-ICPERF-c7f69e",
++      "run_id": "RUN-ICPERF-8b0d47",
+       "watchdog_reason": "Job deadline 3600 s plus 180 s CodeBuild slack plus about 720 s for provisioning and download (PROTOCOL section 18).",
+       "watchdog_seconds": 4500
+     },
+@@ -85,13 +85,13 @@
+         "--hypothesis-id",
+         "H-ICPERF-4cb536",
+         "--task-id",
+-        "TASK-20261106-4b7018",
++        "TASK-20261106-724d14",
+         "--approved-by",
+-        "DEC-20261106-c69de4",
++        "DEC-20261106-ecf261",
+         "--trial-id",
+         "T2",
+         "--run-id",
+-        "RUN-ICPERF-6f784c",
++        "RUN-ICPERF-5ffa79",
+         "--out",
+         "{run_dir}/job",
+         "--record-dir",
+@@ -122,7 +122,7 @@
+       ],
+       "id": "T2",
+       "memory_mb": 4096,
+-      "run_id": "RUN-ICPERF-6f784c",
++      "run_id": "RUN-ICPERF-5ffa79",
+       "watchdog_reason": "Job deadline 3600 s plus 180 s CodeBuild slack plus about 720 s for provisioning and download (PROTOCOL section 18).",
+       "watchdog_seconds": 4500
+     }
+=== NEW FILE ledger/handoffs/TASK-20261106-724d14.yaml
+# TASK-20261106-724d14: prospective executor handoff for EXP-ICPERF-127dbd, runbook session RBS-ICPERF-de8978 (preview; canonical path ledger/handoffs/TASK-20261106-724d14.yaml after approval).
+# Approves nothing. It takes effect only with DEC-20261106-ecf261 committed on origin/main and the
+# owner's explicit EKS go-ahead. The first session RBS-ICPERF-e2a5c2 stopped before any submission.
+handoff:
+  id: TASK-20261106-724d14
+  from: coordinator
+  to: executor
+  role: executor
+  recorded_at: '2026-11-06'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Run the runbook experiments/EXP-ICPERF-127dbd/runbook.yaml as session RBS-ICPERF-de8978
+    through tools/runbook.py (the /run route), from the relay of card
+    task-cards/CARD-EXP-ICPERF-127dbd-2.yaml. S01-probe, then S02-trials (T1 = S1 as
+    RUN-ICPERF-8b0d47, then T2 = S2 as RUN-ICPERF-5ffa79, T2 depending on T1), then S03-verify.
+    Leave the observation files in the run directories. Do not interpret them and do not edit
+    any frozen byte.
+  uncertainty_reduced: >-
+    Whether the two pre-registered C1 sessions give valid, replay-certified counted
+    observations of the frozen C1 decision rule at fp28.
+  inputs:
+  - ledger/hypotheses/H-ICPERF-4cb536.yaml
+  - ledger/decisions/DEC-20261106-ecf261.yaml
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  - experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  - experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/check_job.py
+  - experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256
+  inputs_note: >-
+    The runbook, the card and the trial plan are the worker's context. The protocol, specs
+    and requests are bound bytes the runbook checks; the executor does not read them for
+    content.
+  constraints:
+  - >-
+    The relay must state, with evidence, before any command: DEC-20261106-ecf261 committed on
+    origin/main (commit sha); the owner's explicit EKS go-ahead (quoted, with timestamp);
+    scripts/checkpoint.sh gate exit 0 (the line); and the aws --version line of the binary
+    on the relay PATH, beginning aws-cli/1.46.2. Any missing item: stop before step 1.
+  - >-
+    The relay starts with PATH=/tmp/claude-0/awsvenv/bin:$PATH. The runbook carries no PATH
+    overlay. Do not install or substitute another aws binary.
+  - >-
+    Protocol section 10 budget gate lines, checked before each launch: S1 0 + 0.93108 +
+    0.93108 = 1.86216 <= 5.00; S2 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00 (actual S1 spend
+    from billing replaces its 0.93108 if available, never an estimate). A line above 5.00:
+    stop.
+  - >-
+    Each request launches once. Do not rerun, relaunch, reopen or resume this runbook
+    session on any failure; wait for a Coordinator decision. The -r2 requests are not part
+    of this session.
+  - >-
+    Do not edit specification.yaml, the trial plan, the runbook, the card, the inputs, the
+    implementation or the hypothesis. Do not declare additional artifacts.
+  - >-
+    A crash, timeout, deadline hit, host loss or refused manifest is an infrastructure or
+    instrument outcome, not a scientific result. Do not read verdict.json for a conclusion
+    and do not report U_w, L_w or any ratio as a finding.
+  - >-
+    Do not stage or commit anything. The snapshot archive is TASK-20261106-d5ec1e and runs
+    alone after this task.
+  - >-
+    launch_eks.sh runs only as the supervised trial argv of tools/runbook.py run. Never run the
+    original or the fixed launch_eks.sh by hand, except with --dry-run.
+  deliverables:
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/journal.jsonl
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/launch.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/execution-receipt.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/command.txt
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/environment.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/check.stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/check.stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/request.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launch.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/build.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/records.jsonl
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/plan.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/launch.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/execution-receipt.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/command.txt
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/environment.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/check.stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/check.stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/request.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launch.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launcher/result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/launcher/build.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/records.jsonl
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/plan.json
+  artifact_paths_note: >-
+    The seven per-trial files declared in the trial plan, the supervisor-generated files, and
+    the undeclared build.json, records.jsonl and plan.json (RULINGS-COMPILE A2(a) and C2).
+    records.jsonl and plan.json are bound through SHA256SUMS, not through the runbook.
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/runs
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions
+  - experiments/EXP-ICPERF-127dbd/reports
+  archived_by: TASK-20261106-d5ec1e
+  inference:
+    degraded_allowed: false
+    fallback_allowed: false
+    independent_session_required: false
+    policy: executor-mechanical
+    reasoning_effort: null
+    delivery: interactive
+  budget:
+    maximum_runs: 2
+    memory_gb: 4
+    wall_clock_seconds: 9600
+  completion_gate:
+  - python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml prints LINT OK with the runbook sha256 the card names.
+  - tools/runbook.py run executes session RBS-ICPERF-de8978 under DEC-20261106-ecf261, and no other session.
+  - Each trial that ran holds its seven declared files, and its receipt is output_validated, or the session journal records why not.
+  - Each manifest.yaml passes tools/validate_ledger.py check_run and carries attack_claimed false.
+  - S03-verify ran on both sessions, or the journal records the step that stopped the session.
+  - The specification, trial plan, runbook, card, inputs and implementation bytes are unchanged, and no request was launched twice.
+  return_format: >-
+    Session directory, run directories, the tool-written summary and the session receipt.
+    No verdict, ratio, speedup, wall-time or rho-beating statement.
+  execution:
+    approved_by: DEC-20261106-ecf261
+    experiment_id: EXP-ICPERF-127dbd
+    kind: run
+    mode: experiments
+    trial_plan: experiments/EXP-ICPERF-127dbd/trial-plan.json
+    trial_plan_sha256: b6626655b3c83dd8c8526ee722572ac1f7d3e6848ba3708c6e70e34acf5b8270
+  review_required: false
+  runs_launched: 0
+=== NEW FILE ledger/handoffs/TASK-20261106-d5ec1e.yaml
+# TASK-20261106-d5ec1e: prospective SNAPSHOT archive for the EXP-ICPERF-127dbd run records (preview;
+# canonical path ledger/handoffs/TASK-20261106-d5ec1e.yaml after approval). Runs ALONE, after
+# TASK-20261106-724d14 and before independent review. Executed by the shell-holding top-level session in
+# the coordinator role. Judges nothing. Zero runs.
+handoff:
+  id: TASK-20261106-d5ec1e
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-06'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Commit and bind, in ONE isolated snapshot archive commit, exactly the artifact paths of
+    TASK-20261106-724d14 that exist after runbook session RBS-ICPERF-de8978 stops, plus this
+    task's receipt. Verify, push, open or refresh the ready-for-review PR with auto-merge. Runs
+    ALONE, before any independent review or evidence decision.
+  uncertainty_reduced: >-
+    None about the mathematics. It makes the run records durable and hash-bound before anyone
+    reviews or interprets them.
+  inputs:
+  - ledger/handoffs/TASK-20261106-724d14.yaml
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/
+  - experiments/EXP-ICPERF-127dbd/runs/
+  - tools/research_dispatch.py
+  - tools/artifact_store.py
+  - tools/validate_ledger.py
+  - tools/check_merge_hygiene.py
+  constraints:
+  - >-
+    SA-1 Precondition: TASK-20261106-724d14 has stopped (its session journal holds a final
+    status), and no other BATCH-0e0902 task is live. Do not start while the runbook session
+    is running.
+  - >-
+    SA-2 Merge origin/main into the working branch first; never rebase. Record
+    base_commit_checked and merge_outcome. A conflict inside a record stops the archive; it
+    is never resolved by editing a record.
+  - >-
+    SA-3 Integrity before staging, per run directory that exists: run sha256sum -c SHA256SUMS
+    inside job/artifacts and record the output verbatim. A mismatch or missing listed file
+    stops the archive and returns to the Coordinator; nothing is repaired.
+  - >-
+    SA-4 Compaction: run tools/artifact_store.py compact on files of 1 MiB or more
+    (records.jsonl expected), and record each original sha256 and the compacted path. The
+    SHA256SUMS check of SA-3 happens before compaction.
+  - >-
+    SA-5 Stage only paths in TASK-20261106-724d14 artifact_paths that exist (or their
+    compacted form), and this receipt. git add -A, git add . and directory adds are
+    forbidden. A missing path is recorded as missing, never created. The queue is never
+    staged by an archive.
+  - >-
+    SA-6 Run tools/validate_ledger.py and tools/check_merge_hygiene.py before committing.
+    Record pre-existing errors as pre-existing.
+  - >-
+    SA-7 The commit message names TASK-20261106-d5ec1e, TASK-20261106-724d14, the run ids and
+    every record_id literally. It states zero new runs by the archive and no verdict. No commit
+    message or PR text states U_w, L_w, a ratio or a verdict.
+  - >-
+    SA-8 Verify the receipt with tools/research_dispatch.py (the post-commit verifier must
+    accept it). Push, open or refresh the PR against main ready for review naming every record
+    id, and enable auto-merge (gh pr merge <n> --auto --merge). Never amend, rebase or
+    force-push.
+  deliverables:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e/snapshot-receipt.json
+    with commit_sha (null inside the commit), parent_sha, base_commit_checked, merge_outcome,
+    binding_mode, path_sha256, record_ids, the SA-3 sha256sum outputs, SA-4 compaction map,
+    missing paths, hygiene and dispatcher outcomes.
+  - One isolated commit, a pushed branch and a ready-for-review PR with auto-merge.
+  artifact_paths:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e/snapshot-receipt.json
+  write_scope:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-d5ec1e
+  read_scope:
+  - experiments/EXP-ICPERF-127dbd
+  - experiments/EXP-ICPERF-127dbd/runs
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/records.jsonl
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session/plan.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/records.jsonl
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session/plan.json
+  archived_by: TASK-20261106-d5ec1e
+  archive:
+    kind: snapshot
+    binding_mode: commit
+    source_task_ids: [TASK-20261106-724d14]
+    record_ids:
+    - H-ICPERF-4cb536
+    - EXP-ICPERF-127dbd
+    - DEC-20261106-ecf261
+    expected_paths_note: >-
+      This card's artifact_paths together with the existing artifact_paths of its source
+      task. If the dispatcher's computed set differs, stop and report.
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  dispatch_preconditions:
+  - {id: SP-1, text: "archived_by is bound (SELF)."}
+  - {id: SP-2, text: "TASK-20261106-724d14 has stopped; its journal holds a final status."}
+  - {id: SP-3, text: "RUNS ALONE. No other BATCH-0e0902 task is live."}
+  completion_gate:
+  - origin/main merged (never rebased), with base_commit_checked and merge_outcome recorded.
+  - SHA256SUMS checked per run directory before compaction, with the outputs in the receipt.
+  - One commit binds exactly the existing expected paths and the receipt, and the receipt verifies under tools/research_dispatch.py.
+  - The branch is pushed and a ready-for-review PR with auto-merge names every record id. Zero runs.
+  return_format: The snapshot receipt, PR reference, compaction map and missing-path list.
+  review_required: false
+  review_required_note: An archive stages and verifies. It judges nothing.
+  runs_launched: 0
+=== NEW FILE ledger/handoffs/TASK-20261106-de6d19.yaml
+# TASK-20261106-de6d19: LEDGER ARCHIVE of the EXP-ICPERF-127dbd re-session approval (DEC-20261106-ecf261), BATCH-0e0902.
+# Executed by the shell-holding top-level session in the coordinator role. Runs ALONE. Zero runs. Authorizes no EKS spend.
+handoff:
+  id: TASK-20261106-de6d19
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-06'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  authorized_by: DEC-20261106-ecf261 approval_archive
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: Make the re-session approval of EXP-ICPERF-127dbd (DEC-20261106-ecf261, session RBS-ICPERF-de8978) durable in four commits, in the order of DEC-20261106-ecf261 approval_archive.commit_order, reproducing every approved_bytes sha256, with one push to a ready-for-review PR with auto-merge. Runs ALONE. Zero runs.
+  uncertainty_reduced: None about the mathematics. It makes the approval and its exact bytes durable together, or none of them.
+  inputs:
+  - scratchpad/c1-fix/DEC-20261106-ecf261.yaml
+  - scratchpad/c1-fix/recompile/experiments/EXP-ICPERF-127dbd/specification.yaml
+  - scratchpad/c1-fix/recompile/coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+  - scratchpad/c1-fix/recompile/ledger/handoffs/TASK-20261106-724d14.yaml
+  - scratchpad/c1-fix/recompile/ledger/handoffs/TASK-20261106-d5ec1e.yaml
+  - scratchpad/c1-fix/FINDINGS.md
+  - scratchpad/c1-fix/evidence/fix-tests.log
+  - scratchpad/c1-fix/evidence/crypto-binding-grep.txt
+  - scratchpad/c1-fix/evidence/s3-readonly-checks.txt
+  - scratchpad/c1-fix/evidence/rbs-e2a5c2-verify.txt
+  constraints:
+  - AA-1 Merge origin/main first; never rebase. Record base_commit_checked and merge_outcome. A conflict inside a record stops the archive; it is resolved by a superseding record, never by editing.
+  - 'AA-2 Before staging, the pre_check: DEC-20261106-ecf261 contains no unfilled placeholder value and no draft_state key. Then sha256 each byte copy and compare with DEC-20261106-ecf261 approved_bytes (specification, trial plan, runbook, launcher, queue, executor handoff, snapshot handoff, card). Any mismatch: stop; nothing takes effect.'
+  - AA-3 After commit C2, python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml must print LINT OK with the runbook_sha256 of DEC-20261106-ecf261 approved_bytes, and python3 tools/task_card.py lint experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml must print CARD OK. Otherwise stop before commit C3.
+  - AA-4 Commit C3 holds the queue alone. Render it with tools/research_dispatch.py <queue> --ready-only, and run validate_queue with GitRepositoryVerifier at HEAD; both must pass.
+  - AA-5 Stage named paths one by one; no git add -A, git add . or directory adds. Run tools/validate_ledger.py (no new error over the recorded baseline) and tools/check_merge_hygiene.py before the last commit.
+  - AA-6 One push of all four commits. Open or refresh the ready-for-review PR against main naming every record id, and enable auto-merge (gh pr merge <n> --auto --merge). If that PR merged before the push, open a new ready-for-review PR from a branch based on the merge. Never amend, rebase or force-push.
+  - AA-7 No relay and no launch. After merge, record python3 tools/newest_experiments.py --experiment EXP-ICPERF-127dbd --json; execution_state must be ready.
+  - AA-8 TASK-20261106-dccfdc stays queued and impeded (DEC-20261106-ecf261 ruling 6). The receipt records, as interim custody, the sha256 of the ten existing RUN-ICPERF-c7f69e files and of every file under runbook-sessions/RBS-ICPERF-e2a5c2/ at b0d984b99, with the F6 VERIFY OK output. The receipt takes no archival ownership of TASK-20261106-4b7018.
+  deliverables:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/ledger-receipt.json with commit shas (null inside its own commit), base_commit_checked, merge_outcome, path_sha256, record_ids, the AA-2 comparisons, the AA-3 lint lines, the AA-4 render and verifier results, the AA-8 custody hashes and the hygiene outcome.
+  - Four commits in the stated order, one push, a ready-for-review PR with auto-merge.
+  artifact_paths:
+  - ledger/decisions/DEC-20261106-ecf261.yaml
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/preapproval-report.json
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/FINDINGS.md
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/launch_eks.patch
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/fix-tests.log
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/crypto-binding-grep.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/s3-readonly-checks.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/rbs-e2a5c2-verify.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/dccfdc-scratch-validate.txt
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+  - ledger/handoffs/TASK-20261106-724d14.yaml
+  - ledger/handoffs/TASK-20261106-d5ec1e.yaml
+  - ledger/handoffs/TASK-20261106-de6d19.yaml
+  - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/ledger-receipt.json
+  write_scope:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19
+  archived_by: TASK-20261106-de6d19
+  archive:
+    kind: ledger
+    binding_mode: content_at_commit
+    record_ids:
+    - DEC-20261106-ecf261
+    - EXP-ICPERF-127dbd
+    - H-ICPERF-4cb536
+    - TASK-20261106-4b7018
+    - TASK-20261106-724d14
+    - TASK-20261106-dccfdc
+    - TASK-20261106-d5ec1e
+    - TASK-20261106-de6d19
+    - BATCH-0e0902
+    - GOAL-ICPERF-e6b6a4
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: true
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  completion_gate:
+  - Every approved_bytes sha256 reproduced and recorded; runbook lint prints LINT OK and card -2 lint prints CARD OK on the repository tree after C2.
+  - Four commits in the decision's order, one push, a ready-for-review PR with auto-merge naming every record id.
+  - validate_ledger shows no new error over baseline; the post-commit verifier accepts the receipt. Zero runs.
+  return_format: The ledger receipt, PR reference, the lint lines and, after merge, the newest_experiments execution_state.
+  review_required: false
+  runs_launched: 0

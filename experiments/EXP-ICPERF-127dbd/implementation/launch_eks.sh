@@ -53,6 +53,7 @@ for v in protocol eid hid tid appr trial runid out rec req; do [[ -n ${!v} ]] ||
 [[ -f $req && -f $protocol ]] || { echo "request or protocol file not found" >&2; exit 2; }
 
 echo "experiment_id=$eid hypothesis_id=$hid task_id=$tid approved_by=$appr trial_id=$trial run_id=$runid"
+t0=$(date -u +%FT%TZ); s0=$(date -u +%s)
 
 # 1. The request must be byte-identical to one of the four frozen requests.
 rsha=$(sha256sum "$req" | cut -d ' ' -f1)
@@ -140,6 +141,11 @@ write_records() { # write_records JSON_FIELDS_OBJECT
       validated_request_sha256:$digest, retried:false, job_files:$files,
       note:"launch evidence only; the job exit is judged from job-exit.json by check_job.py and analyze-c1.sh"} + $extra' \
     > "$rec/raw-result.json"
+  # Exit-0 path (outcome job_completed): the flat manifest below, byte-identical to v2; the supervisor completes it
+  # (complete_manifest) and validity stays with check_job.py and S03-verify. Exit 3, 4 and 5 paths get no supervisor
+  # completion, so they get a schema-complete manifest (schemas/run-manifest.schema.json) instead (DEC-20261106-ecf261
+  # ruling on v3a; RBS-ICPERF-e2a5c2 published a schema-invalid manifest).
+  if [[ $(jq -r '.outcome_class // empty' <<<"$extra") == job_completed ]]; then
   cat > "$rec/manifest.yaml" <<MANIFEST
 run:
   id: $runid
@@ -152,6 +158,34 @@ run:
   result:
     raw_result: raw-result.json
 MANIFEST
+  else
+    local commit cmd s1
+    commit=$(jq -r '.commit // empty' "$rec/environment.json" 2>/dev/null || true)
+    [[ -n $commit ]] || commit=$(git rev-parse HEAD 2>/dev/null || echo unknown)
+    cmd=$(cat "$rec/command.txt" 2>/dev/null || true)
+    s1=$(date -u +%s)
+    jq -n --slurpfile raw "$rec/raw-result.json" --arg commit "$commit" --arg cmd "$cmd" \
+      --arg t0 "$t0" --arg t1 "$(date -u +%FT%TZ)" --argjson wall "$((s1 - s0))" \
+      '$raw[0] as $r
+       | (if $r.submitted != true then "failed_implementation" else "failed_infrastructure" end) as $status
+       | {run: {id: $r.run_id, experiment_id: $r.experiment_id, hypothesis_id: $r.hypothesis_id, task_id: $r.task_id,
+           trial_id: $r.trial_id, approved_by: $r.approved_by, attack_claimed: false, status: $status,
+           code: {commit: $commit, dirty: false, command: $cmd},
+           environment: {file: "environment.json", note: "interpreter and source hashes are in the supervisor environment.json"},
+           inputs: {parameters: {job_name: $r.job_name, request_sha256: $r.request_sha256,
+             validated_request_sha256: $r.validated_request_sha256}},
+           timing: {started_at: $t0, finished_at: $t1, wall_seconds: $wall},
+           resources: {peak_rss_bytes: null, cpu_seconds: null},
+           result: {raw_result: "raw-result.json",
+             metrics: {submitted: $r.submitted, outcome_class: $r.outcome_class,
+               launch_remote_exit: ($r.launch_remote_exit // null), job_exit_code: ($r.job_exit_code // null)},
+             valid: false,
+             invalid_reason: ("outcome " + ($r.outcome_class // "none") + (if $r.refusal then ", refusal " + $r.refusal else "" end)
+               + "; mechanical wrapper label; the Coordinator classifies the stop"),
+             certificate: {kind: "none", verified: false, verifier: "none (launch wrapper; no discrete-log or decomposition claim)"}},
+           artifacts: {raw_result: "raw-result.json", job_dir: "job", job_files: ($r.job_files // {})}}}' \
+      > "$rec/manifest.yaml"
+  fi
 }
 
 # 2. Refuse a second submission for this job name or this exact request. Read-only AWS calls.
@@ -171,9 +205,13 @@ set -e
 [[ $rc == 0 ]] && refuse 3 duplicate "DUPLICATE: s3://$ISOLAB_BUCKET/$key exists: this exact request was already submitted"
 [[ $rc != 1 ]] && refuse 4 duplicate_check_failed "duplicate check failed (aws s3 ls exit $rc)"
 set +e
-ids=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --max-items 100 --query 'ids[]' --output text); rc=$?
+# --no-paginate: one page (at most 100 ids). aws-cli v1 with --max-items appends the pagination
+# token ("None" or a token) to text output, which batch-get-builds rejects as a build id (RBS-ICPERF-e2a5c2).
+ids_raw=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --no-paginate --query 'ids[]' --output text); rc=$?
+ids=$(printf '%s\n' "$ids_raw" | tr '\t ' '\n\n' | grep -E "^${ISOLAB_CODEBUILD_PROJECT}:[0-9a-f-]+$" || true)
 set -e
 [[ $rc != 0 ]] && refuse 4 duplicate_check_failed "duplicate check failed (codebuild list)"
+[[ -n ${ids_raw//[[:space:]]/} && -z $ids ]] && refuse 4 duplicate_check_failed "duplicate check failed (codebuild list returned no build id: $ids_raw)"
 if [[ -n $ids ]]; then
   set +e
   # shellcheck disable=SC2086
