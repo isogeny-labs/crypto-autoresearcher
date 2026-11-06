@@ -1,0 +1,131 @@
+name: formal-module-rss
+# Peak-memory measurement of one heavy formal module on the hosted runner,
+# under the frozen protocol in the study directory below. It runs only when
+# this workflow or that protocol changes, or by hand, so it costs nothing on
+# ordinary PRs. Protocol: docs/reports/2026-11-06-degree-three-module-rss-rerun/protocol.json
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/formal-module-rss.yml
+      - docs/reports/2026-11-06-degree-three-module-rss-rerun/protocol.json
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: formal-module-rss-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+jobs:
+  measure:
+    name: degree-three module peak RSS (frozen protocol)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      STUDY: docs/reports/2026-11-06-degree-three-module-rss-rerun
+      MODULE_FILE: CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean
+      OUT: ${{ github.workspace }}/rss-out
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            formal
+            tools
+            orchestration
+            schemas
+            src
+            harness
+            docs/reports/2026-11-06-degree-three-module-rss-rerun
+      - name: Reclaim disk before fetching Mathlib
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc || true
+          df -h /
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e '.[research-loop,dev]'
+      - name: Check the frozen protocol and analysis before any data
+        run: |
+          python3 tools/experiment_protocol.py validate "$STUDY/protocol.json"
+          python3 - <<'PY'
+          import hashlib, json, os
+          study = os.environ["STUDY"]
+          p = json.load(open(f"{study}/protocol.json"))
+          assert p["freeze"]["status"] == "frozen", "protocol is not frozen"
+          want = p["analysis_plan"]["script"]["sha256"]
+          got = hashlib.sha256(open(f"{study}/analysis.py", "rb").read()).hexdigest()
+          assert got == want, f"analysis.py {got} != frozen {want}"
+          print("frozen protocol", p["freeze"]["protocol_sha256"], "analysis", got)
+          PY
+      - name: Generate the workspace root module
+        run: python3 tools/rebuild_formal_root.py --workspace formal
+      - name: Prefetch pinned proof toolchain
+        run: bash tools/prefetch_pinned_lean.sh formal/lean-toolchain
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: formal
+          build: 'false'
+          test: 'false'
+          lint: 'false'
+          use-mathlib-cache: 'false'
+      - name: Restore pinned Mathlib dependencies
+        uses: actions/cache@v4
+        with:
+          path: formal/.lake/packages
+          key: mathlib-${{ runner.os }}-${{ hashFiles('formal/lean-toolchain', 'formal/lake-manifest.json') }}
+      - name: Fetch prebuilt Mathlib oleans
+        working-directory: formal
+        run: lake exe cache get
+      - name: Build the module's dependencies (not measured)
+        working-directory: formal
+        run: lake build CryptoResearch.Semaev.BooleanParitySemanticRankCertificate
+      - name: Record host facts
+        run: |
+          mkdir -p "$OUT"
+          python3 - <<'PY'
+          import json, os, platform, subprocess
+          mi = {l.split(":")[0]: int(l.split()[1]) for l in open("/proc/meminfo")}
+          cg = open("/proc/self/cgroup").read().strip()
+          def read(p):
+              try:
+                  return open(p).read().strip()
+              except OSError:
+                  return None
+          rel = cg.split("::", 1)[1] if "::" in cg else None
+          host = {"MemTotal_kb": mi["MemTotal"], "SwapTotal_kb": mi.get("SwapTotal", 0),
+                  "MemAvailable_kb_before": mi["MemAvailable"], "nproc": os.cpu_count(),
+                  "kernel": platform.release(), "cgroup": cg,
+                  "cgroup_memory_max": read(f"/sys/fs/cgroup{rel}/memory.max") if rel else None,
+                  "cgroup_memory_swap_max": read(f"/sys/fs/cgroup{rel}/memory.swap.max") if rel else None,
+                  "swapon": subprocess.run(["swapon", "--show"], capture_output=True, text=True).stdout,
+                  "image": os.environ.get("ImageOS"), "image_version": os.environ.get("ImageVersion"),
+                  "runner_name": os.environ.get("RUNNER_NAME"),
+                  "lean_version": subprocess.run(["lean", "--version"], capture_output=True, text=True,
+                                                 cwd="formal").stdout.strip(),
+                  "module_sha256": subprocess.run(["sha256sum", "formal/" + os.environ["MODULE_FILE"]],
+                                                  capture_output=True, text=True).stdout.split()[0],
+                  "commit": os.environ.get("GITHUB_SHA")}
+          json.dump(host, open(os.path.join(os.environ["OUT"], "host.json"), "w"), indent=1)
+          print(json.dumps(host, indent=1))
+          PY
+      # Arm order fixed by the protocol: default-a, threads1, default-b.
+      - name: Arm default-a (default Lean threads)
+        working-directory: formal
+        run: python3 -I "../$STUDY/measure.py" default-a "$OUT" -- lake env lean "$MODULE_FILE"
+      - name: Arm threads1 (LEAN_NUM_THREADS=1)
+        if: always()
+        working-directory: formal
+        env:
+          LEAN_NUM_THREADS: '1'
+        run: python3 -I "../$STUDY/measure.py" threads1 "$OUT" -- lake env lean "$MODULE_FILE"
+      - name: Arm default-b (A/A repeat of default-a)
+        if: always()
+        working-directory: formal
+        run: python3 -I "../$STUDY/measure.py" default-b "$OUT" -- lake env lean "$MODULE_FILE"
+      - name: Frozen analysis
+        if: always()
+        run: python3 -I "$STUDY/analysis.py" "$OUT" | tee "$OUT/analysis.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: formal-module-rss
+          path: rss-out
