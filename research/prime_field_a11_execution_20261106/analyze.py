@@ -23,6 +23,14 @@ def encode_large(path):
     receipt=dict(original_path=path.name,original_sha256=digest(path),original_bytes=len(data),archive_path=archive.name,archive_sha256=digest(archive),archive_bytes=archive.stat().st_size,encoding='gzip6mtime0; logicalJSON retainedhydrated/ignored')
     write_once(path.parent/'derived-encodings'/(path.stem+'.json'),receipt);return receipt
 
+def record_binding(value,reference):
+    import hashlib
+    encoded=(json.dumps(value,sort_keys=True,separators=(',',':'))+'\n').encode()
+    return bool(reference and reference['sha256']==hashlib.sha256(encoded).hexdigest() and reference['bytes']==len(encoded))
+
+def checkpoint_valid(receipt,cid,ordinal,cases):
+    return bool(receipt and receipt.get('returncode')==0 and receipt.get('closed_curve')==cid and receipt.get('completed_curves')==ordinal and receipt.get('checked_cases')==cases)
+
 def descriptors(rules):
     index=0
     for field in rules['fields']:
@@ -56,7 +64,7 @@ def source_cost(collected,arm,prefix,rules):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--run',type=Path,required=True);p.add_argument('--protocol',type=Path,required=True);a=p.parse_args();rules=load(INPUTS);protocol=load(a.protocol);execution=load(a.run/'execution.json');host=load(a.run/'host.json');raw=a.run/'raw'
-    plans=list(descriptors(rules));planned=len(plans);expected_curves=len(rules['fields'])*rules['curves_per_field'];source_schedules=2*len(rules['seeds']);expected=dict(plans);rows={};costs=[];observed={arm:Counter() for arm in ARMS};failed={arm:Counter() for arm in ARMS};physical={k:Counter() for k in ('source','target_recipes','target_queries','target_construction','projection')};journalrefs={};errors=[];checked_curves=[];query_summary=[];curve_info=[]
+    plans=list(descriptors(rules));planned=len(plans);expected_curves=len(rules['fields'])*rules['curves_per_field'];source_schedules=2*len(rules['seeds']);expected=dict(plans);rows={};costs=[];observed={arm:Counter() for arm in ARMS};failed={arm:Counter() for arm in ARMS};physical={k:Counter() for k in ('source','target_recipes','target_queries','target_construction','projection')};journalrefs={};branchrefs={};checkpoints=[];errors=[];checked_curves=[];query_summary=[];curve_info=[]
     def read_optional(path):
         try:return optional(path)
         except Exception as error:errors.append(dict(path=str(path),error_type=type(error).__name__,error=str(error)));return None
@@ -69,7 +77,8 @@ def main():
             cid='p'+str(field['p'])+'-i'+str(ci)
             for event in read_lines(raw/(cid+'.events.jsonl')):
                 kind=event['kind']
-                if kind=='solver_complete':observed[event['arm']].update(event['counters']);journalrefs[event['case_id'],event['arm']]=event['record']
+                if kind=='branch_output':branchrefs[cid,json.dumps(event['context'],sort_keys=True)]=event['record']
+                elif kind=='solver_complete':observed[event['arm']].update(event['counters']);journalrefs[event['case_id'],event['arm']]=event['record']
                 elif kind=='solver_failed':failed[event['arm']].update(total(event['phases']));errors.append(dict(cell_id=cid,event=event))
                 elif kind=='case_input':physical['projection'].update(total(event['shared_phases']));journalrefs[event['case_id'],'input']=event['record']
                 elif kind=='case_checked':journalrefs[event['case_id'],'check']=event['record']
@@ -81,6 +90,10 @@ def main():
             target_recipe=read_optional(raw/(cid+'.target-recipes.json'))
             curve_valid=bool(source and cache and target_recipe and generation_valid and sourcecheck and sourcecheck['verification']['checked'] and cachecheck and cachecheck['verification']['checked'] and complete and complete['complete'])
             if curve_valid:checked_curves.append(cid)
+            if rules['closed_curve_checkpoint']:
+                receipt=read_optional(a.run/('checkpoint-'+cid+'.json'));ordinal=1+len(checkpoints);valid=checkpoint_valid(receipt,cid,ordinal,ordinal*planned//expected_curves)
+                checkpoints.append(dict(cell_id=cid,valid=valid,receipt=receipt))
+                if not valid:errors.append(dict(cell_id=cid,error='Missing or failed closed-curve canonical checkpoint receipt'))
             if not source:continue
             cell=source['cell'];col=source['collection'];curve_info.append(dict(cell_id=cid,fixture=cell['fixture'],base_columns=col['projection']['U']))
             if cache:
@@ -93,7 +106,9 @@ def main():
                 if expected.get(idx)!=desc:raise ValueError('fixed case descriptor/order')
                 context=dict(source_schedule=desc['source_schedule'],source_prefix=desc['source_prefix'],target_policy=desc['target_policy'])
                 if current_branch is None or current_branch['context']!=context:
-                    entry=next(branches,None);current_branch=None if entry is None else entry['branch']
+                    entry=next(branches,None)
+                    if entry is not None and not record_binding(entry,branchrefs.get((cid,json.dumps(context,sort_keys=True)))):raise ValueError('branch stream/journal digest')
+                    current_branch=None if entry is None else entry['branch']
                     if current_branch is not None and current_branch['context']!=context:raise ValueError('branch stream order')
                 result=[next(outputs,None),next(outputs,None)];checked=next(checks,None)
                 valid=bool(curve_valid and current_branch and all(v is not None and v['case_id']==idx and v['arm']==arm for v,arm in zip(result,ARMS,strict=True)) and checked and checked['case_id']==idx and checked['verification']['checked'])
@@ -136,9 +151,9 @@ def main():
         maximum_queries=sum(2*v['base_size'] for v in rules['fields'])*rules['curves_per_field']*rules['targets']*(1+len(rules['target_policies'])*(rules['target_queries_per_point']-1))
         if len(costs)!=expected_views or physical['source'].get('source_queries')!=expected_sources or physical['source'].get('pair_table_insertions')!=expected_pairs:raise ValueError('complete physical census')
         if sum(v['logical_requests'] for v in query_summary)!=expected_requests or sum(v['queries'] for v in query_summary)>maximum_queries:raise ValueError('physical endpoint alias budget')
-    metric_rows=[[c.get(k) for k in COLS] for c in cells];metrics=dict(schema='prime-field-a11-metrics/v1',panel_complete=full,physical_attempts=1,planned_systems=planned,planned_solver_calls=2*planned,verified_systems=sum(v['verified'] for v in cells),columns=COLS,rows=metric_rows,source_commit=execution['source_commit'],protocol_sha256=execution['protocol_sha256'],physical_counters={k:dict(v) for k,v in physical.items()},query_summary=query_summary,observed_arm_counters={a:dict(observed[a]+failed[a]) for a in ARMS},partial_work_unknown=not full or bool(errors))
+    metric_rows=[[c.get(k) for k in COLS] for c in cells];metrics=dict(schema='prime-field-a11-metrics/v1',panel_complete=full,physical_attempts=1,planned_systems=planned,planned_solver_calls=2*planned,verified_systems=sum(v['verified'] for v in cells),columns=COLS,rows=metric_rows,source_commit=execution['source_commit'],protocol_sha256=execution['protocol_sha256'],physical_counters={k:dict(v) for k,v in physical.items()},query_summary=query_summary,closed_curve_checkpoints=checkpoints,observed_arm_counters={a:dict(observed[a]+failed[a]) for a in ARMS},partial_work_unknown=not full or bool(errors))
     write_once(a.run/'metrics.json',metrics,compact=True)
-    summary=dict(schema='prime-field-a11-analysis/v1',panel_complete=full,physical_attempts=1,verified_systems=metrics['verified_systems'],verified_solver_calls=2*metrics['verified_systems'],unknown_systems=planned-metrics['verified_systems'],cells=cells,cold_collection_views=costs,physical_counters=metrics['physical_counters'],observed_arm_counters=metrics['observed_arm_counters'],failed_arm_phase_counters={a:dict(v) for a,v in failed.items()},partial_work_unknown=metrics['partial_work_unknown'],query_summary=query_summary,curves=curve_info,generation_check=generation,errors=errors,diagnostic_resources=execution,metrics_sha256=digest(a.run/'metrics.json'),cost_scope='Separate Fp/Fr/group/logical vectors; actual physical work disjoint and cold views reference shared deterministic point queries, never extra executions/clocks. Legacy fixture/rejection/checker/OS/pow internals not fully primitive-expanded. No complete calibrated whole-attack cost or signed replay standing.')
+    summary=dict(schema='prime-field-a11-analysis/v1',panel_complete=full,physical_attempts=1,verified_systems=metrics['verified_systems'],verified_solver_calls=2*metrics['verified_systems'],unknown_systems=planned-metrics['verified_systems'],cells=cells,cold_collection_views=costs,physical_counters=metrics['physical_counters'],observed_arm_counters=metrics['observed_arm_counters'],failed_arm_phase_counters={a:dict(v) for a,v in failed.items()},partial_work_unknown=metrics['partial_work_unknown'],query_summary=query_summary,closed_curve_checkpoints=checkpoints,curves=curve_info,generation_check=generation,errors=errors,diagnostic_resources=execution,metrics_sha256=digest(a.run/'metrics.json'),cost_scope='Separate Fp/Fr/group/logical vectors; actual physical work disjoint and cold views reference shared deterministic point queries, never extra executions/clocks. Legacy fixture/rejection/checker/OS/pow internals not fully primitive-expanded. No complete calibrated whole-attack cost or signed replay standing.')
     write_once(a.run/'analysis.json',summary,compact=True);encode_large(a.run/'analysis.json')
     t=tools();e=t.export_skeleton(protocol,str(a.protocol.resolve()),'local','A11-'+a.run.name);e['producer']=dict(runtime='codex',model=None,session=None,role='executor');e['source']=dict(repo='crypto-autoresearcher',commit=execution['observed_git_head'],dirty=host['git_dirty']);e['host'].update(path='host.json',sha256=digest(a.run/'host.json'),summary={k:host[k] for k in e['host']['summary']});e['runs']=[];keys=[v['id'] for v in protocol['metrics']['primary']]
     for c in cells:

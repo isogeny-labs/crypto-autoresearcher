@@ -22,7 +22,7 @@ all aliases while cold-prefix views reference deterministic query counts rather
 than inventing executions or clocks. Base matches, identity, public and
 cross-target coincidences remain explicit paid equations.
 
-The 47 local tiny software controls (recorded in
+The 48 local tiny software controls (recorded in
 [software-controls.json](validation/software-controls.json)) cover general-U positive/negative/corrupt cases,
 JSON roundtrips, independent dense rank and certificates, all nine cache-aware
 constructor policies, affine labels/offsets/identities/cross-target equalities,

@@ -58,3 +58,15 @@ def test_tiny_streamed_driver_and_full_export_roundtrip(tmp_path,monkeypatch):
  assert all(v.get('path')!='.gitignore' for v in export['files'])
  (run/'.gitignore').write_text('/software-local-only.json\n/export.json\n')
  assert common.tools().lint_export(export,common.load(protocolpath),run,True)==[]
+
+
+def test_branch_cost_journal_binding_and_closed_checkpoint_receipt():
+ value={'context':{'target_policy':'walk'},'branch':{'budgets':[{'counters':{'calls':17}}]}}
+ data=(json.dumps(value,sort_keys=True,separators=(',',':'))+'\n').encode();ref=dict(sha256=hashlib.sha256(data).hexdigest(),bytes=len(data))
+ assert analyze.record_binding(value,ref)
+ value['branch']['budgets'][0]['counters']['calls']=16
+ assert not analyze.record_binding(value,ref)
+ receipt=dict(returncode=0,closed_curve='p211-i0',completed_curves=1,checked_cases=72)
+ assert analyze.checkpoint_valid(receipt,'p211-i0',1,72)
+ for corrupt in (None,dict(receipt,returncode=1),dict(receipt,closed_curve='other'),dict(receipt,completed_curves=2),dict(receipt,checked_cases=71)):
+  assert not analyze.checkpoint_valid(corrupt,'p211-i0',1,72)
