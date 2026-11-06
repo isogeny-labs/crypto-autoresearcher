@@ -941,15 +941,18 @@ def test_launcher_approval_gate_logic_with_synthetic_specs(tmp_path):
     lock = tmp_path / "approval.lock"
     plan = tmp_path / "plan.json"
     plan.write_text("{}")
-    spec.write_text("experiment:\n  status: approved\n  approved_by: someone\n")
+    approved = "experiment:\n  status: approved\n  approved_by: someone\n  execution_authorized: true\n  frozen: true\n"
+    spec.write_text(approved)
     ok, reasons = launcher.check_approval(str(spec), str(lock), str(plan))
     assert not ok and any("lock missing" in r for r in reasons)
     lock.write_text(json.dumps({"approved_by": "someone", "specification_sha256": "0" * 64,
-                                "code_sha256": "0" * 64, "trial_plan_sha256": "0" * 64}))
+                                "code_sha256": "0" * 64, "trial_plan_sha256": "0" * 64,
+                                "test_file_sha256": "0" * 64}))
     ok, reasons = launcher.check_approval(str(spec), str(lock), str(plan))
-    assert not ok and len(reasons) == 3
+    assert not ok and len(reasons) == 4
     lock.write_text(json.dumps({"approved_by": "someone", "specification_sha256": launcher.sha256_file(str(spec)),
-                                "code_sha256": launcher.code_sha256(), "trial_plan_sha256": launcher.sha256_file(str(plan))}))
+                                "code_sha256": launcher.code_sha256(), "trial_plan_sha256": launcher.sha256_file(str(plan)),
+                                "test_file_sha256": launcher.sha256_file(launcher.TEST_FILE)}))
     assert launcher.check_approval(str(spec), str(lock), str(plan)) == (True, [])
     spec.write_text("experiment:\n  status: approved\n  approved_by: null\n")
     ok, reasons = launcher.check_approval(str(spec), str(lock), str(plan))
@@ -1436,6 +1439,26 @@ def membership_counts(E, D, m, keys):
 LARGE_E2_CELLS = [(q, n, m) for q, n in LARGE_FIELDS for m in (2, 3) if not (n == 2 and m == 3)]
 
 
+def constructed_target_keys(F, E, D, m, count, rng):
+    """`count` distinct target keys drawn as sums of m base points (a uniform multiset of D, summed with the group
+    law), excluding O and E[2]. A property of the construction: every one has a nonzero membership count."""
+    keys = []
+    seen = set()
+    while len(keys) < count:
+        idx = rng.integers(0, len(D), size=m)
+        R = None
+        for i in idx:
+            R = E.add(R, D[int(i)])
+        if R is None or F.is_zero(R[1]):
+            continue
+        k = counters.target_index(F, R)
+        if k in seen:
+            continue
+        seen.add(k)
+        keys.append(k)
+    return keys
+
+
 @pytest.mark.parametrize("q,n,m", LARGE_E2_CELLS)
 def test_large_q_sampled_counter_against_membership_method(q, n, m, kernel):
     F, E, _ = large_instance(q, n)
@@ -1448,12 +1471,26 @@ def test_large_q_sampled_counter_against_membership_method(q, n, m, kernel):
     assert len(keys) == s == len(set(k >> 1 for k in keys))
     for k in keys:
         assert F.chi(E.f(F.from_code(k >> 1))) == 1
-    want = membership_counts(E, D, m, keys)
+    # FX-7: for n >= 3 the count comparison must not be vacuous. A second set of 50 targets is drawn as sums of m
+    # base points (so at least half of this test's 100 targets are constructed), and compared through run_sampled.
+    ckeys = []
+    if n >= 3:
+        ckeys = constructed_target_keys(F, E, D, m, 50, curves.make_rng(f"kat|constructed|large|{q}|{n}|{m}"))
+    want_all = membership_counts(E, D, m, keys + ckeys)
+    want = want_all[:s]
     assert [int(c) for c in r["sampled_counts"]] == want
     assert r["multisets"] == math.comb(len(D) + m - 1, m)
-    record("W10-large-q-sampled-vs-membership", f"q={q},n={n},m={m},base=line",
-           {"B": len(D), "N": N, "s": s, "sampled_counts": [int(c) for c in r["sampled_counts"]],
-            "membership_counts": want})
+    out = {"B": len(D), "N": N, "s": s, "sampled_counts": [int(c) for c in r["sampled_counts"]],
+           "membership_counts": want}
+    if ckeys:
+        assert len(ckeys) >= s // 2 and len(set(ckeys)) == len(ckeys)
+        assert all(c > 0 for c in want_all[s:])                     # property of the construction, not a prediction
+        c2, _ = kernel.run_sampled(E, m, D, np.array(ckeys, dtype=np.uint64), len(ckeys))
+        assert [int(c) for c in c2] == want_all[s:]
+        out["constructed_keys_count"] = len(ckeys)
+        out["constructed_counts"] = [int(c) for c in c2]
+        out["constructed_nonzero_membership"] = int(sum(1 for c in want_all[s:] if c > 0))
+    record("W10-large-q-sampled-vs-membership", f"q={q},n={n},m={m},base=line", out)
 
 
 # =============================================================================== X: composition residuals (KX-5)
@@ -1569,3 +1606,676 @@ def test_trial_plan_dumps_is_independent_of_instance_builder_cache_state():
     a = mtp.dumps(mtp.build_plan(None, builder=_StubBuilder()))
     b = mtp.dumps(mtp.build_plan(None, builder=_StubBuilder()))
     assert a == b
+
+
+# =============================================================================== FX: TASK-20261106-4c4831 fixes
+# Each test below closes a finding of TASK-20261105-165da2 (F-1, N-1 to N-5). They run on scratch experiment roots
+# in temporary directories and on stub suites; none computes a contract cell or asserts a predicted value.
+import subprocess  # noqa: E402
+import types  # noqa: E402
+
+STUB_OK = "def test_one(): pass\ndef test_two(): pass\ndef test_three(): pass\n"
+STUB_EXTRA_SKIP = STUB_OK + "import pytest\ndef test_four(): pytest.skip('extra')\n"
+STUB_FEWER = "def test_one(): pass\ndef test_two(): pass\n"
+STUB_XPASS = "import pytest\n@pytest.mark.xfail\ndef test_x(): pass\ndef test_two(): pass\ndef test_three(): pass\n"
+STUB_XFAIL = "import pytest\n@pytest.mark.xfail\ndef test_x(): assert 0\ndef test_two(): pass\ndef test_three(): pass\n"
+STUB_FAIL = "def test_one(): pass\ndef test_two(): pass\ndef test_three(): assert 0\n"
+
+
+def _scratch(tmp_path, monkeypatch, *, status="approved", approved_by="coord", authorized=True, frozen=True,
+             stub=STUB_OK, lock=None, patch=True):
+    """A scratch experiment root: specification, five-field lock, plan, stub suite. With patch=True the launcher's
+    module paths point at it. The real selftest-receipts/ and runs/ are never touched."""
+    d = tmp_path / "exp"
+    (d / "stub").mkdir(parents=True)
+    spec = d / "specification.yaml"
+    spec.write_text(f"experiment:\n  status: {status}\n  approved_by: {approved_by}\n"
+                    f"  execution_authorized: {str(authorized).lower()}\n  frozen: {str(frozen).lower()}\n")
+    stub_file = d / "stub" / "test_stub.py"
+    stub_file.write_text(stub)
+    plan = d / "plan.json"
+    plan.write_text(json.dumps({"cells": [{"cell_id": "A-fake", "arm": "A"}, {"cell_id": "A-fake2", "arm": "A"},
+                                          {"cell_id": "B1-fake", "arm": "B1"}]}))
+    ns = types.SimpleNamespace(dir=d, spec=spec, stub=stub_file, plan=plan, lock=d / "approval.lock",
+                               runs=d / "runs", receipts=d / "selftest-receipts")
+    ns.write_lock = lambda **over: ns.lock.write_text(json.dumps(
+        {"approved_by": approved_by, "specification_sha256": launcher.sha256_file(str(spec)),
+         "code_sha256": launcher.code_sha256(), "trial_plan_sha256": launcher.sha256_file(str(plan)),
+         "test_file_sha256": launcher.sha256_file(str(stub_file)), **over}))
+    if lock is not False:
+        ns.write_lock()
+    if patch:
+        for name, val in (("SPEC_PATH", str(spec)), ("LOCK_PATH", str(ns.lock)), ("RUNS_DIR", str(ns.runs)),
+                          ("RECEIPTS_DIR", str(ns.receipts)), ("TEST_FILE", str(stub_file)),
+                          ("EXPECTED_KAT_ITEMS", 3), ("DESIGNED_SKIPS", {})):
+            monkeypatch.setattr(launcher, name, val, raising=False)
+    return ns
+
+
+def _cli_cell(ns, cell_id="B1-fake", run_id="RUN-x", receipt=None):
+    argv = ["cell", "--cell-id", cell_id, "--plan", str(ns.plan), f"--run-id={run_id}"]
+    if receipt:
+        argv += ["--selftest-receipt", str(receipt)]
+    return launcher.main(argv)
+
+
+def _spy_run_cell(monkeypatch):
+    """Replace run_cell and spec_from_plan_cell: records that a cell would have run, computes nothing."""
+    calls = []
+    monkeypatch.setattr(launcher, "spec_from_plan_cell", lambda cell: [{"arm": cell["arm"], "cell_id": cell["cell_id"]}])
+
+    def fake(spec, outdir, kat, **kw):
+        calls.append(spec["cell_id"])
+        return {"status": "completed", "validity": {"status": "valid"}}
+    monkeypatch.setattr(launcher, "run_cell", fake)
+    return calls
+
+
+# ---- FX-2 (F-1 a): the lock binds tests/test_kat.py
+def test_fx2_lock_binds_the_test_file(tmp_path, monkeypatch, capsys):
+    ns = _scratch(tmp_path, monkeypatch)
+    assert launcher.check_approval(str(ns.spec), str(ns.lock), str(ns.plan)) == (True, [])
+    ns.write_lock(test_file_sha256=None)
+    ok, reasons = launcher.check_approval(str(ns.spec), str(ns.lock), str(ns.plan))
+    assert not ok and any("test_file_sha256" in r for r in reasons)
+    lock = json.loads(ns.lock.read_text())
+    del lock["test_file_sha256"]
+    ns.lock.write_text(json.dumps(lock))
+    assert not launcher.check_approval(str(ns.spec), str(ns.lock), str(ns.plan))[0]
+    ns.write_lock()
+    assert launcher.check_approval(str(ns.spec), str(ns.lock), str(ns.plan))[0]
+    ns.stub.write_text("def test_placeholder(): pass\n")                  # replaced after the lock was written (S14)
+    ok, reasons = launcher.check_approval(str(ns.spec), str(ns.lock), str(ns.plan))
+    assert not ok and any("test_file_sha256" in r for r in reasons)
+    spy = _spy_run_cell(monkeypatch)
+    rc = _cli_cell(ns)
+    assert rc == launcher.EXIT_REFUSED and spy == [] and not ns.runs.exists()
+    assert "test_file_sha256" in capsys.readouterr().err
+    assert launcher.CODE_FILES == ["fqn.py", "curves.py", "semaev.py", "counters.py", "kernel.c", "launcher.py",
+                                   "make_trial_plan.py"]
+
+
+# ---- FX-3 (F-1 b): the self-test is isolated from repository configuration
+def test_fx3_hostile_repository_tree_still_collects_every_item(tmp_path):
+    root = tmp_path / "repo"
+    code = root / "experiments" / "EXP-MONO-1a1be2" / "code"
+    (code / "tests").mkdir(parents=True)
+    (root / "pyproject.toml").write_text("[tool.pytest.ini_options]\naddopts = '-k no_such_name'\n")
+    (root / "conftest.py").write_text("def pytest_collection_modifyitems(items): del items[1:]\n")
+    tf = code / "tests" / "test_stub.py"
+    tf.write_text(STUB_OK)
+    res = launcher.run_selftest_suite(str(tmp_path / "out"), str(tf), str(code), expected_items=3, designed=[])
+    assert res["passed"], res["reasons"]
+    assert res["collected"] == 3 and res["parsed"]["tests"] == 3
+    assert os.path.realpath(res["rootdir"]) == os.path.realpath(code)
+
+
+def test_fx3_pytest_addopts_in_the_parent_environment_does_not_deselect(tmp_path, monkeypatch):
+    monkeypatch.setenv("PYTEST_ADDOPTS", "-k no_such_name")
+    monkeypatch.setenv("PYTEST_PLUGINS", "no_such_plugin_module")
+    monkeypatch.setenv("PYTHONPATH", str(tmp_path / "elsewhere"))
+    d = tmp_path / "c"
+    d.mkdir()
+    tf = d / "test_stub.py"
+    tf.write_text(STUB_OK)
+    res = launcher.run_selftest_suite(str(tmp_path / "out"), str(tf), str(d), expected_items=3, designed=[])
+    assert res["passed"], res["reasons"]
+    env = launcher.selftest_environment(str(d))
+    assert env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] == "1" and env["PYTHONDONTWRITEBYTECODE"] == "1"
+    assert "PYTEST_ADDOPTS" not in env and "PYTEST_PLUGINS" not in env and "PYTHONPATH" not in env
+    monkeypatch.setenv("PYTHONPATH", os.pathsep.join([str(tmp_path / "elsewhere"), str(d)]))
+    assert launcher.selftest_environment(str(d))["PYTHONPATH"] == str(d)
+
+
+# ---- FX-4 (F-1 c): "pass in full" is checked
+@pytest.mark.parametrize("stub,designed,why", [
+    (STUB_EXTRA_SKIP, [], "skipped"), (STUB_FEWER, [], "expected 3"), (STUB_XFAIL, [], "xfail"),
+    (STUB_XPASS, [], "xpassed"), (STUB_FAIL, [], "failures"), (STUB_OK, ["test_stub.py::test_one"], "skipped node ids"),
+    (STUB_EXTRA_SKIP, ["test_stub.py::test_other"], "skipped node ids")],
+    ids=["extra_skip", "one_fewer", "xfail", "xpass", "failure", "designed_skip_missing", "wrong_skip"])
+def test_fx4_pass_in_full_refuses_extra_skip_fewer_items_xfail_failure_or_missing_designed_skip(
+        tmp_path, stub, designed, why):
+    d = tmp_path / "c"
+    d.mkdir()
+    tf = d / "test_stub.py"
+    tf.write_text(stub)
+    res = launcher.run_selftest_suite(str(tmp_path / "out"), str(tf), str(d), expected_items=3, designed=designed)
+    assert not res["passed"] and any(why in r for r in res["reasons"]), res["reasons"]
+
+
+def test_fx4_designed_skip_as_a_function_of_status_and_node_id_form(tmp_path):
+    assert launcher.designed_skips("review_required") == [] and launcher.designed_skips(None) == []
+    assert launcher.designed_skips("approved") == [
+        "tests/test_kat.py::test_launcher_refuses_contract_cell_while_specification_not_approved"]
+    # the exact designed skip passes; the node id form is the one parse_junit produces for tests/test_kat.py
+    d = tmp_path / "code"
+    (d / "tests").mkdir(parents=True)
+    tf = d / "tests" / "test_kat.py"
+    tf.write_text("import pytest\ndef test_a(): pass\ndef test_b(): pass\n"
+                  "def test_launcher_refuses_contract_cell_while_specification_not_approved(): pytest.skip('d')\n")
+    res = launcher.run_selftest_suite(str(tmp_path / "o"), str(tf), str(d), expected_items=3,
+                                      designed=launcher.designed_skips("approved"))
+    assert res["passed"], res["reasons"]
+    res2 = launcher.run_selftest_suite(str(tmp_path / "o2"), str(tf), str(d), expected_items=3, designed=[])
+    assert not res2["passed"]
+
+
+# ---- FX-5 (F-1 d): launcher-written, host-keyed receipts, refused on any mismatch
+def _make_receipt(ns):
+    rc, path, msgs = launcher.write_selftest_receipt()
+    assert rc == 0, msgs
+    return path
+
+
+def test_fx5_launcher_written_receipt_verifies_and_is_accepted_by_the_gate(tmp_path, monkeypatch):
+    ns = _scratch(tmp_path, monkeypatch)
+    path = _make_receipt(ns)
+    assert os.path.realpath(path).startswith(os.path.realpath(ns.receipts) + os.sep)
+    assert sorted(os.listdir(os.path.dirname(path))) == ["junit.xml", "receipt.json"]
+    rec = json.loads(open(path).read())
+    assert set(rec) == set(launcher.RECEIPT_FIELDS)
+    assert rec["lock_sha256"] == launcher.sha256_file(str(ns.lock)) and rec["counts"]["tests"] == 3
+    assert {"python_version", "numpy", "pytest", "compiler_path", "compiler_version_sha256", "compile_flags", "machine",
+            "node", "kernel_release", "cpu_model"} <= set(rec["env_key"])
+    ok, reasons, _, _ = launcher.verify_receipt(path)
+    assert ok, reasons
+    g = launcher.gate(str(ns.plan), path)
+    assert g.startup_selftest["mode"] == "receipt" and g.startup_selftest["receipt_sha256"] == launcher.sha256_file(path)
+
+
+def test_fx5_hand_written_receipt_is_refused_by_cell(tmp_path, monkeypatch, capsys):
+    ns = _scratch(tmp_path, monkeypatch)
+    spy = _spy_run_cell(monkeypatch)
+    monkeypatch.setattr(launcher, "run_selftest_suite", lambda *a, **k: pytest.fail("fell through to a full run"),
+                        raising=False)
+    hand = {"code_sha256": launcher.code_sha256(), "test_file_sha256": launcher.sha256_file(str(ns.stub)),
+            "result": "passed"}                                              # the 165da2 repro S12
+    for where in (tmp_path / "hand.json", ns.receipts / "r1" / "receipt.json"):
+        where.parent.mkdir(parents=True, exist_ok=True)
+        where.write_text(json.dumps(hand))
+        assert _cli_cell(ns, receipt=where) == launcher.EXIT_REFUSED
+    assert spy == [] and not ns.runs.exists()
+    assert "receipt" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("field,value", [
+    ("python_version", "3.0.0"), ("numpy", "0.0"), ("pytest", "0.0"), ("compiler_path", "/usr/bin/cc-other"),
+    ("compiler_version_sha256", "0" * 64), ("compile_flags", ["-O0"]), ("machine", "other"), ("node", "other-host"),
+    ("kernel_release", "0.0"), ("cpu_model", "other cpu")])
+def test_fx5_receipt_with_one_env_key_field_altered_is_refused(tmp_path, monkeypatch, field, value, capsys):
+    ns = _scratch(tmp_path, monkeypatch)
+    path = _make_receipt(ns)
+    rec = json.load(open(path))
+    rec["env_key"][field] = value
+    json.dump(rec, open(path, "w"))
+    spy = _spy_run_cell(monkeypatch)
+    monkeypatch.setattr(launcher, "run_selftest_suite", lambda *a, **k: pytest.fail("fell through to a full run"),
+                        raising=False)
+    assert _cli_cell(ns, receipt=path) == launcher.EXIT_REFUSED
+    assert spy == [] and not ns.runs.exists()
+    assert "env_key" in capsys.readouterr().err
+
+
+def test_fx5_receipt_outside_the_directory_or_with_edited_junit_or_fields_is_refused(tmp_path, monkeypatch):
+    ns = _scratch(tmp_path, monkeypatch)
+    path = _make_receipt(ns)
+    outside = tmp_path / "elsewhere"
+    shutil.copytree(os.path.dirname(path), outside)
+    ok, reasons, _, _ = launcher.verify_receipt(str(outside / "receipt.json"))
+    assert not ok and any("inside" in r for r in reasons)
+    link = tmp_path / "link"
+    link.symlink_to(os.path.dirname(path))
+    assert launcher.verify_receipt(str(link / "receipt.json"))[0]            # resolves inside: accepted
+    ok, reasons, _, _ = launcher.verify_receipt(str(ns.receipts / ".." / "elsewhere" / "receipt.json"))
+    assert not ok
+    junit = os.path.join(os.path.dirname(path), "junit.xml")
+    text = open(junit).read()
+    open(junit, "w").write(text.replace("test_one", "test_uno"))             # junit.xml edited
+    ok, reasons, _, _ = launcher.verify_receipt(path)
+    assert not ok and any("junit_sha256" in r for r in reasons)
+    open(junit, "w").write(text)
+    assert launcher.verify_receipt(path)[0]
+    good = json.load(open(path))
+    p2 = os.path.join(os.path.dirname(path), "receipt.json")
+    for field, value in (("code_sha256", "0" * 64), ("test_file_sha256", "0" * 64), ("lock_sha256", "0" * 64),
+                         ("junit_sha256", "0" * 64), ("pytest_version", "0.0"), ("rootdir", "/tmp"),
+                         ("skipped_node_ids", ["x"]), ("counts", {})):
+        json.dump({**good, field: value}, open(p2, "w"))
+        assert not launcher.verify_receipt(p2)[0], field
+    json.dump({**good, "extra": 1}, open(p2, "w"))
+    assert not launcher.verify_receipt(p2)[0]
+    json.dump(good, open(p2, "w"))
+    assert launcher.verify_receipt(p2)[0]
+
+
+def test_fx5_selftest_subcommand_refuses_before_approval_and_writes_nothing():
+    real_dir = launcher.RECEIPTS_DIR
+    before = os.path.exists(real_dir)
+    assert launcher.main(["selftest"]) == launcher.EXIT_REFUSED            # the specification is not approved
+    assert os.path.exists(real_dir) == before
+
+
+# ---- FX-6 (F-1 e): the package records the gate and the self-test
+def _fake_ident(F, E, seed="x"):
+    return {"q": F.q, "n": F.n, "g": list(F.g), "a": list(E.a), "b": list(E.b), "N": 10, "t2": 0, "B": 4,
+            "size_X": 2, "curve_seed": {"seed_string": seed, "seed_int": "1"}}
+
+
+def _fake_b1(cell_id="B1-fake", mismatch=0, ident=None):
+    F, E, _ = kat_curve(13, 2, "fx6")
+    ident = ident or _fake_ident(F, E)
+    spec = {"arm": "B1", "cell_id": cell_id, "n": 2, "m": 2, "q": 13, "curve_seed": "x", "tuple_seed": "t",
+            "instances": [{"q": 13, "curve_seed": "x", "identity": ident}]}
+    tally = dict.fromkeys(launcher.TALLY_KEYS, 0)
+    tally.update(tuples=5, gl_mismatch_generic=mismatch, chi_patterns={"++|split": 5})
+    raw = {"arm": "B1", "cell_id": cell_id, "instances": [{"q": 13, "n": 2, "sample": "primary", "tuple_seed": "t",
+                                                           "B": 4, "t2": 0, "size_X": 2, "tally": tally,
+                                                           "wall_seconds": 0.1}]}
+    summ = {"cell_id": cell_id, "instances": [{"q": 13, "sample": "primary", "tally": tally}]}
+    return spec, raw, summ
+
+
+def _fake_ident_fields():
+    F, E, _ = kat_curve(13, 2, "fx6")
+    return F, E
+
+
+def _stub_counters(monkeypatch):
+    monkeypatch.setattr(launcher.counters, "build_kernel", lambda *a, **k: "unused.so")
+    monkeypatch.setattr(launcher.counters, "Kernel", lambda path: object())
+
+
+def test_fx6_run_cell_without_a_gate_result_raises(tmp_path):
+    spec, raw, summ = _fake_b1()
+    with pytest.raises(PermissionError):
+        launcher.run_cell(spec, str(tmp_path / "p"), kat=False, kernel=object())
+    with pytest.raises(PermissionError):
+        launcher.run_cell(spec, str(tmp_path / "p"), kat=False, kernel=object(), gate=object())
+    assert not (tmp_path / "p").exists()
+
+
+@pytest.mark.parametrize("mode", ["ran", "receipt"])
+def test_fx6_contract_package_carries_gate_and_selftest_blocks_and_copies(tmp_path, monkeypatch, mode):
+    import yaml
+    ns = _scratch(tmp_path, monkeypatch)
+    path = _make_receipt(ns) if mode == "receipt" else None
+    g = launcher.gate(str(ns.plan), path)
+    spec, raw, summ = _fake_b1()
+    monkeypatch.setattr(launcher, "run_arm_b", lambda spec, kernel, derived, log, workers=1: (raw, summ, None))
+    out = tmp_path / "pkg"
+    launcher.run_cell(spec, str(out), kat=False, kernel=object(), gate=g, run_id="RUN-t")
+    man = yaml.safe_load((out / "manifest.yaml").read_text())
+    gb, sb = man["gate"], man["startup_selftest"]
+    assert gb == {"specification_sha256": launcher.sha256_file(str(ns.spec)), "lock_sha256": launcher.sha256_file(str(ns.lock)),
+                  "trial_plan_sha256": launcher.sha256_file(str(ns.plan)), "code_sha256": launcher.code_sha256(),
+                  "test_file_sha256": launcher.sha256_file(str(ns.stub)), "check_approval_passed": True}
+    assert set(sb) == {"mode", "receipt_sha256", "junit_sha256", "tests", "passed", "skipped_node_ids", "failures",
+                       "errors", "pytest_version", "rootdir", "inifile", "env_key"}
+    assert sb["mode"] == mode and sb["tests"] == 3 and sb["failures"] == sb["errors"] == 0
+    assert sb["junit_sha256"] == launcher.sha256_file(str(out / "selftest" / "junit.xml"))
+    if mode == "receipt":
+        assert sb["receipt_sha256"] == launcher.sha256_file(str(out / "selftest" / "receipt.json"))
+    else:
+        assert sb["receipt_sha256"] is None and not (out / "selftest" / "receipt.json").exists()
+
+
+# ---- FX-7 (N-1): the large-Q index KAT that kills the 32-bit truncation mutant (M5)
+@pytest.mark.parametrize("q,n", [(41, 6), (29, 7)])
+def test_large_q_kernel_point_index_matches_python_index_beyond_2_32(q, n, kernel):
+    F, E, _ = large_instance(q, n)
+    pts = _random_points(F, E, curves.make_rng(f"kat|index|{q}|{n}"), 300)
+    big = 0
+    for P in pts:
+        want = counters.target_index(F, P)
+        assert kernel.point_index(E, P) == want
+        big += want >= 2 ** 32
+    assert kernel.point_index(E, None) == counters.target_index(F, None) == 2 * F.Q
+    assert big >= 100                                    # vacuity guard: a property of the field size
+    record("N1-large-q-point-index", f"q={q},n={n}", {"points": len(pts), "index_ge_2_32": int(big)})
+
+
+@pytest.mark.parametrize("q,n", [(41, 6), (29, 7)])
+def test_large_q_sampled_counter_on_constructed_targets_matches_membership_method(q, n, kernel):
+    F, E, _ = large_instance(q, n)
+    D, X, t2 = large_base(q, n)
+    m, s = 2, 50
+    keys = constructed_target_keys(F, E, D, m, s, curves.make_rng(f"kat|constructed|m2|{q}|{n}"))
+    assert sum(1 for k in keys if k >= 2 ** 32) >= 10    # vacuity guards: properties of the construction
+    want = membership_counts(E, D, m, keys)
+    assert all(c > 0 for c in want)
+    counts, st = kernel.run_sampled(E, m, D, np.array(keys, dtype=np.uint64), len(keys))
+    assert [int(c) for c in counts] == want
+    assert st["multisets"] == math.comb(len(D) + m - 1, m)
+    record("N1-large-q-constructed-targets", f"q={q},n={n},m=2",
+           {"keys_ge_2_32": int(sum(1 for k in keys if k >= 2 ** 32)), "counts": [int(c) for c in counts],
+            "membership_counts": want})
+
+
+# ---- FX-8 (N-2): validity and the F2 family stop
+def _fake_conv_base(sum_obs=10, sum_exp=10, differ=0, with_ident=True):
+    base = {"B": 4, "t2": 0, "N": 9, "size_X": 2, "S_size": 1, "generic_targets": 6, "special_targets_O_and_E2": 1,
+            "recount": {"A": {"differ": differ, "compared": 9}, "M": {"differ": 0, "compared": 9},
+                        "X": {"differ": 0, "differ_second": 0, "compared": 9}, "S": {"differ": 0, "compared": 9}},
+            "conventions": {c: {"stats": {"all": {"targets": 9, "sum": 9, "sumsq": 9, "zeros": 3, "max": 2},
+                                          "generic": {"targets": 6, "sum": 6, "sumsq": 6, "zeros": 2, "max": 2}}}
+                            for c in ("A", "M", "S", "X")}, "wall_seconds": 0.1}
+    if with_ident:
+        base["identities"] = {"i_sum_M": {"observed": sum_obs, "expected": sum_exp}}
+    return base
+
+
+def _fake_a(cell_id="A-fake", f2_fail=False, recount_differ=0, ident=None):
+    F, E, _ = kat_curve(13, 2, "fx6")
+    spec = {"arm": "A", "cell_id": cell_id, "q": 13, "n": 2, "m": 2, "curve_seed": "x",
+            "identity": ident or _fake_ident(F, E), "base_seeds": {}}
+    raw = {"arm": "A", "cell_id": cell_id, "N": 9, "curve_generation": {},
+           "bases": {"line": _fake_conv_base(differ=recount_differ),
+                     "matched_random": _fake_conv_base(sum_obs=11 if f2_fail else 10)}}
+    return spec, raw, launcher._cell_summary_arm_a(raw["bases"], True)
+
+
+def _run_fake(tmp_path, monkeypatch, spec, raw, summ, name="pkg", kat=False, runs_parent=None):
+    ns = _scratch(tmp_path / ("s" + name), monkeypatch) if not kat else None
+    g = launcher.gate(str(ns.plan), None) if not kat else None
+    arm = spec["arm"]
+    fn = {"A": "run_arm_a", "B1": "run_arm_b", "B2": "run_arm_b", "C": "run_arm_c"}[arm]
+    monkeypatch.setattr(launcher, fn, lambda spec, kernel, derived, log, *a, **k: (raw, summ, None))
+    out = (runs_parent or tmp_path / "runs") / name
+    import yaml
+    launcher.run_cell(spec, str(out), kat=kat, kernel=object(), gate=g, run_id=name)
+    return yaml.safe_load((out / "manifest.yaml").read_text()), out
+
+
+def test_fx8_valid_baseline_and_status_field_is_kept_separate(tmp_path, monkeypatch):
+    spec, raw, summ = _fake_b1()
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ)
+    assert man["status"] == "completed" and man["validity"] == {"status": "valid", "reasons": [], "readings_withheld": []}
+
+
+def test_fx8_recount_differing_makes_the_cell_void(tmp_path, monkeypatch):
+    spec, raw, summ = _fake_a(recount_differ=3)
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ)
+    assert man["status"] == "completed" and man["validity"]["status"] == "void"
+    assert any("R1 recount differs" in r for r in man["validity"]["reasons"])
+
+
+@pytest.mark.parametrize("key", ["gl_mismatch_generic", "gl_mismatch_nongeneric"])
+def test_fx8_group_law_mismatch_makes_the_cell_void(tmp_path, monkeypatch, key):
+    spec, raw, summ = _fake_b1()
+    raw["instances"][0]["tally"][key] = 1
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ)
+    assert man["validity"]["status"] == "void" and any(key in r for r in man["validity"]["reasons"])
+
+
+def test_fx8_raw_summary_disagreement_makes_the_cell_void(tmp_path, monkeypatch):
+    spec, raw, summ = _fake_b1()
+    orig = launcher._write_file
+
+    def corrupt(path, text):
+        if path.endswith("summary.json"):
+            text = text.replace('"tuples": 5', '"tuples": 6')
+        orig(path, text)
+    monkeypatch.setattr(launcher, "_write_file", corrupt, raising=False)
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ)
+    assert man["validity"]["status"] == "void"
+    assert any("summary.json differs" in r for r in man["validity"]["reasons"])
+
+
+def test_fx8_raw_summary_agreement_reads_the_files_on_disk(tmp_path, monkeypatch):
+    spec, raw, summ = _fake_b1()
+    man, out = _run_fake(tmp_path, monkeypatch, spec, raw, summ)
+    assert launcher.raw_summary_agreement(str(out), spec, True) == []
+    (out / "summary.json").write_text(json.dumps({"cell_id": "B1-fake", "instances": []}))
+    assert launcher.raw_summary_agreement(str(out), spec, True)
+    (out / "summary.json").unlink()
+    assert launcher.raw_summary_agreement(str(out), spec, True)
+
+
+def test_fx8_identity_completeness_invalid_and_curve_rule_void(tmp_path, monkeypatch):
+    F, E, _ = kat_curve(13, 2, "fx6")
+    ident = _fake_ident(F, E)
+    del ident["size_X"]
+    spec, raw, summ = _fake_b1(ident=ident)
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ, name="inv")
+    assert man["validity"]["status"] == "invalid" and any("size_X" in r for r in man["validity"]["reasons"])
+    ident = _fake_ident(F, E)
+    ident["curve_seed"] = {"seed_string": "", "seed_int": "1"}
+    spec, raw, summ = _fake_b1(ident=ident)
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ, name="inv2")
+    assert man["validity"]["status"] == "invalid" and any("seed" in r for r in man["validity"]["reasons"])
+    F13 = fqn.FQ(13, 2)
+    sing = _fake_ident(F13, E)
+    sing.update(a=[10, 0], b=[2, 0])                      # in F_13: 4a^3 + 27b^2 = 0, singular (n = 2 coefficients)
+    spec, raw, summ = _fake_b1(ident=sing)
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ, name="sing")
+    assert man["validity"]["status"] == "void" and any("singular" in r for r in man["validity"]["reasons"])
+    jfq = _fake_ident(F13, E)
+    jfq.update(a=[1, 0], b=[1, 0])                        # constant coefficients: j lies in F_13 (n = 2)
+    spec, raw, summ = _fake_b1(ident=jfq)
+    man, _ = _run_fake(tmp_path, monkeypatch, spec, raw, summ, name="jfq")
+    assert man["validity"]["status"] == "void" and any("j in F_q" in r for r in man["validity"]["reasons"])
+
+
+def test_fx8_failed_execution_is_void_and_keeps_its_execution_status(tmp_path, monkeypatch):
+    spec, raw, summ = _fake_b1()
+    ns = _scratch(tmp_path, monkeypatch)
+    g = launcher.gate(str(ns.plan), None)
+
+    def boom(*a, **k):
+        raise RuntimeError("fabricated infrastructure failure")
+    monkeypatch.setattr(launcher, "run_arm_b", boom)
+    import yaml
+    out = tmp_path / "failed"
+    launcher.run_cell(spec, str(out), kat=False, kernel=object(), gate=g)
+    man = yaml.safe_load((out / "manifest.yaml").read_text())
+    assert man["status"] == "failed" and man["validity"]["status"] == "void"
+
+
+def test_fx8_f2_failure_writes_the_sentinel_and_the_next_arm_a_cell_is_refused(tmp_path, monkeypatch, capsys):
+    ns = _scratch(tmp_path, monkeypatch)
+    _stub_counters(monkeypatch)
+    spec, raw, summ = _fake_a(cell_id="A-fake", f2_fail=True)
+    monkeypatch.setattr(launcher, "run_arm_a", lambda spec, kernel, derived, log: (raw, summ, None))
+    monkeypatch.setattr(launcher, "spec_from_plan_cell", lambda cell: [spec if cell["arm"] == "A" else _fake_b1()[0]])
+    assert _cli_cell(ns, cell_id="A-fake", run_id="RUN-a1") == 0          # execution status completed; validity void
+    sentinel = ns.runs / "STOP-F2.json"
+    assert sentinel.exists()
+    stop = json.loads(sentinel.read_text())
+    assert stop["cell_id"] == "A-fake" and stop["identity"] == "i_sum_M" and stop["utc"].endswith("Z")
+    import yaml
+    man = yaml.safe_load((ns.runs / "RUN-a1" / "manifest.yaml").read_text())
+    assert man["validity"]["status"] == "void" and any("F2" in r for r in man["validity"]["reasons"])
+    capsys.readouterr()
+    # the next arm-A cell is refused; an arm-B cell is not
+    ran = []
+    monkeypatch.setattr(launcher, "run_cell", lambda spec, outdir, kat, **k: ran.append(spec["cell_id"]) or
+                        {"status": "completed", "validity": {"status": "valid"}})
+    assert _cli_cell(ns, cell_id="A-fake2", run_id="RUN-a2") == launcher.EXIT_REFUSED
+    assert "F2 family stop" in capsys.readouterr().err and ran == []
+    assert _cli_cell(ns, cell_id="B1-fake", run_id="RUN-b1") == 0 and ran == ["B1-fake"]
+    # a second sentinel write never overwrites the first
+    launcher.write_stop_f2(str(ns.runs), "A-other", "i_sum_M", "matched_random")
+    assert json.loads(sentinel.read_text())["cell_id"] == "A-fake"
+
+
+def test_fx8_kat_mode_never_writes_a_sentinel(tmp_path, monkeypatch):
+    spec, raw, summ = _fake_a(f2_fail=True)
+    monkeypatch.setattr(launcher, "run_arm_a", lambda spec, kernel, derived, log: (raw, summ, None))
+    runs = tmp_path / "runs"
+    launcher.run_cell(spec, str(runs / "k"), kat=True, kernel=object())
+    assert not (runs / "STOP-F2.json").exists()
+    import yaml
+    assert "validity" not in yaml.safe_load((runs / "k" / "manifest.yaml").read_text())
+
+
+def test_fx8_sentinel_is_not_written_for_a_passing_identity(tmp_path, monkeypatch):
+    spec, raw, summ = _fake_a()
+    man, out = _run_fake(tmp_path, monkeypatch, spec, raw, summ)
+    assert man["validity"]["status"] == "valid" and not (out.parent / "STOP-F2.json").exists()
+
+
+# ---- FX-9 (N-3) and FX-10 (N-4): arm-C lambda from the counted total; derived keys withheld in KAT mode
+class _FakeKernel:
+    def __init__(self, cf):
+        self.cf = cf
+
+    def run_sampled(self, E, m, pts, keys, nsampled):
+        return np.arange(keys.size, dtype=np.uint32), {"multisets": 100, "cancellation_free": self.cf, "m_S": 4}
+
+
+def _fake_armc(monkeypatch, counted):
+    F, E, _ = kat_curve(13, 2, "fx9")
+    D, X, t2 = E.factor_base()
+    monkeypatch.setattr(counters, "s_set_indices", lambda kernel, E, D, m: np.array([0, 2], dtype=np.int64))
+    monkeypatch.setattr(counters, "sample_targets", lambda kernel, E, s, rng, ex: (np.array([10, 20, 30], dtype=np.uint64), 7))
+    r = counters.arm_c_cell(_FakeKernel(counted), E, D, 2, 3, None, 1000)
+    return r, len(D), t2
+
+
+def test_fx9_lambda_follows_the_counted_cancellation_free_total(monkeypatch):
+    F, E, _ = kat_curve(13, 2, "fx9")
+    D, X, t2 = E.factor_base()
+    formula = counters.ncf_coefficient(len(D), t2, 2)
+    r, B, t2 = _fake_armc(monkeypatch, formula + 7)
+    assert r["lambda"] == Fraction(formula + 7 - 4, 1000 - 2)
+    assert r["N_cf_formula"] == formula and r["ncf_counted_equals_formula"] is False
+    r2, _, _ = _fake_armc(monkeypatch, formula)
+    assert r2["lambda"] == Fraction(formula - 4, 998) and r2["ncf_counted_equals_formula"] is True
+
+
+from fractions import Fraction  # noqa: E402
+
+
+def _fake_c(counted_equals):
+    F, E, _ = kat_curve(13, 2, "fx6")
+    ident = _fake_ident(F, E)
+    spec = {"arm": "C", "cell_id": "C-fake", "q": 13, "n": 2, "m": 2, "s": 8, "curve_seed": "x", "identity": ident,
+            "target_seed": "kat|targets|fx", "base_seeds": {}}
+    r = {"sampled_counts": np.array([0, 0, 1, 2, 0, 1, 0, 3]), "S_counts": np.array([5, 7]), "t2": 0, "S_size": 2,
+         "draws": 64, "multisets": 100, "cancellation_free": 80, "m_S": 4,
+         "N_cf_formula": 80 if counted_equals else 81, "lambda": Fraction(76, 90)}
+    entry = launcher.arm_c_entry(r, 10, True, 0.1, "kat|targets|fx", None)
+    raw = {"arm": "C", "cell_id": "C-fake", "N": 100, "N_method": "bsgs", "curve_generation": {}, "bases": {"line": entry}}
+    cdf = {"cell_id": "C-fake", **launcher.arm_c_flat(entry, True)}
+    summ = launcher._summary_arm_c("C-fake", 8, 10, 0, 100, raw["bases"], True)
+    return spec, raw, summ, cdf
+
+
+def test_fx9_ncf_mismatch_sets_the_flag_the_reason_and_withholds_p6(tmp_path, monkeypatch):
+    for equal in (True, False):
+        spec, raw, summ, cdf = _fake_c(equal)
+        assert raw["bases"]["line"]["ncf_counted_equals_formula"] is equal
+        ns = _scratch(tmp_path / f"s{equal}", monkeypatch)
+        g = launcher.gate(str(ns.plan), None)
+        monkeypatch.setattr(launcher, "run_arm_c", lambda spec, kernel, derived, log: (raw, summ, cdf))
+        import yaml
+        out = tmp_path / f"c{equal}"
+        launcher.run_cell(spec, str(out), kat=False, kernel=object(), gate=g)
+        v = yaml.safe_load((out / "manifest.yaml").read_text())["validity"]
+        if equal:
+            assert v == {"status": "valid", "reasons": [], "readings_withheld": []}
+        else:
+            assert "P2(vi) mismatch; P6 reading withheld (F7 first)" in v["reasons"] and v["readings_withheld"] == ["P6"]
+
+
+def test_fx10_kat_mode_arm_c_package_omits_the_derived_keys(capsys, kernel):
+    rc = launcher.main(["--kat", "kat", "--arm", "C", "--q", "13", "--n", "2", "--curve-seed", "kat|fx10", "--s", "10"])
+    assert rc == 0
+    d = json.loads(capsys.readouterr().out.strip().splitlines()[-1])["kat_dir"]
+    try:
+        keys = ("lambda", "lambda_exact", "N_cf_formula", "ncf_counted_equals_formula")
+        raw = json.load(open(os.path.join(d, "raw-result.json")))
+        cdf = json.load(open(os.path.join(d, "results", "KAT-C-n2-q13.cdf.json")))
+        summ = json.load(open(os.path.join(d, "summary.json")))
+        for role, e in raw["bases"].items():
+            assert not any(k in e for k in keys)
+        assert not any(k in cdf for k in keys) and not any(k in cdf.get("matched_random", {}) for k in keys)
+        assert all(not any(k in b for k in keys) for b in summ["bases"].values())
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+    r = {"sampled_counts": np.array([0, 1]), "S_counts": np.array([1]), "t2": 0, "S_size": 1, "draws": 4,
+         "multisets": 9, "cancellation_free": 8, "m_S": 1, "N_cf_formula": 8, "lambda": Fraction(1, 2)}
+    assert all(k in launcher.arm_c_entry(r, 3, True, 0.0) for k in keys)
+    assert not any(k in launcher.arm_c_entry(r, 3, False, 0.0) for k in keys)
+
+
+# ---- FX-11 (N-5): gate and record hardening, one test per item
+@pytest.mark.parametrize("kw,needle", [({"authorized": False}, "execution_authorized"), ({"frozen": False}, "frozen")])
+def test_fx11_1_gate_requires_execution_authorized_and_frozen(tmp_path, monkeypatch, kw, needle):
+    ns = _scratch(tmp_path, monkeypatch, **kw)                  # the S15 repro: approved yet not authorized / frozen
+    ok, reasons = launcher.check_approval(str(ns.spec), str(ns.lock), str(ns.plan))
+    assert not ok and any(needle in r for r in reasons)
+
+
+def test_fx11_1_lock_approved_by_must_equal_the_specifications(tmp_path, monkeypatch):
+    ns = _scratch(tmp_path, monkeypatch)
+    ns.write_lock(approved_by="someone-else")
+    ok, reasons = launcher.check_approval(str(ns.spec), str(ns.lock), str(ns.plan))
+    assert not ok and any("approved_by differs" in r for r in reasons)
+
+
+@pytest.mark.parametrize("run_id", ["../x", "/abs/path", "a/b", "", ".hidden", "-x", "x" * 129, "a b", "..", "x\n"])
+def test_fx11_2_run_id_is_sanitised_and_confined_to_runs(tmp_path, monkeypatch, run_id, capsys):
+    ns = _scratch(tmp_path, monkeypatch)
+    spy = _spy_run_cell(monkeypatch)
+    with pytest.raises(ValueError):
+        launcher.resolve_run_dir(run_id, str(ns.runs))
+    assert _cli_cell(ns, run_id=run_id) == launcher.EXIT_REFUSED and spy == [] and not ns.runs.exists()
+    assert launcher.resolve_run_dir("RUN-ok_1.2", str(ns.runs)) == os.path.join(str(ns.runs), "RUN-ok_1.2")
+
+
+def test_fx11_3_cdf_json_carries_target_and_base_seeds(capsys, kernel):
+    rc = launcher.main(["--kat", "kat", "--arm", "C", "--q", "13", "--n", "2", "--curve-seed", "kat|fx11", "--s", "10"])
+    assert rc == 0
+    d = json.loads(capsys.readouterr().out.strip().splitlines()[-1])["kat_dir"]
+    try:
+        cdf = json.load(open(os.path.join(d, "results", "KAT-C-n2-q13.cdf.json")))
+        ts = "kat|targets|KAT-C-n2-q13"
+        assert cdf["target_seed"] == {"string": ts, "int": curves.seed_int(ts)}
+        assert cdf["base_seed"] == {"string": None, "int": None}               # the line base is not seeded
+        bs = "kat|base|KAT-C-n2-q13|random|0"
+        assert cdf["matched_random"]["base_seed"] == {"string": bs, "int": curves.seed_int(bs)}
+        assert cdf["matched_random"]["target_seed"] == {"string": ts, "int": curves.seed_int(ts)}
+    finally:
+        shutil.rmtree(d, ignore_errors=True)
+
+
+def test_fx11_4_peak_rss_is_recorded_for_self_and_children(tmp_path):
+    import yaml
+    spec, raw, summ = _fake_b1()
+    d = tmp_path / "k"
+    spec = dict(spec, instances=[{"q": 13, "curve_seed": "kat|rss"}], tuples=10, group_law_subsample_fraction=0.1,
+                max_tuples_per_instance=10)
+    man = launcher.run_cell(spec, str(d), kat=True, kernel=object())
+    on_disk = yaml.safe_load((d / "manifest.yaml").read_text())
+    for src in (man, on_disk):
+        assert {"peak_rss_kb_self", "peak_rss_kb_children", "peak_rss_kb_total_upper"} <= set(src)
+
+
+def test_fx11_5_stray_python_file_in_code_dir_refuses_the_launcher(tmp_path):
+    code = tmp_path / "code"
+    (code / "tests").mkdir(parents=True)
+    shutil.copy(os.path.join(CODE, "launcher.py"), code / "launcher.py")
+    (code / "numpy.py").write_text("raise SystemExit(0)\n")
+    assert launcher.stray_python_files(str(code)) == ["numpy.py"]
+    r = subprocess.run([sys.executable, str(code / "launcher.py"), "environment", "--out", str(tmp_path / "e.json")],
+                       capture_output=True, text=True, env=dict(os.environ, PYTHONDONTWRITEBYTECODE="1"))
+    assert r.returncode == launcher.EXIT_REFUSED and "numpy.py" in r.stderr and not (tmp_path / "e.json").exists()
+    (code / "numpy.py").unlink()
+    (code / "tests" / "conftest.py").write_text("")
+    (code / "tests" / "__init__.py").write_text("")
+    (code / "yaml.py").write_text("")
+    assert launcher.stray_python_files(str(code)) == ["tests/__init__.py", "tests/conftest.py", "yaml.py"]
+    assert launcher.stray_python_files(CODE) == []                     # the real code directory is clean
+
+
+# ---- FX-13: the start-up suite's expected size is the collected count
+def test_expected_kat_items_equals_the_collected_count_and_the_designed_skip_is_a_collected_node():
+    argv = [sys.executable, "-m", "pytest", "--collect-only", "-q", "-p", "no:cacheprovider", "--noconftest", "-c",
+            os.devnull, "--rootdir", CODE, os.path.join(CODE, "tests", "test_kat.py")]
+    r = subprocess.run(argv, capture_output=True, text=True, cwd=CODE,
+                       env=launcher.selftest_environment(CODE))
+    ids = [ln for ln in r.stdout.splitlines() if "::" in ln]
+    assert len(ids) == launcher.EXPECTED_KAT_ITEMS, (len(ids), launcher.EXPECTED_KAT_ITEMS)
+    assert launcher.SKIP_NODE_REFUSAL in ids
+    record("FX13-collected", "tests/test_kat.py", {"collected": len(ids), "EXPECTED_KAT_ITEMS": launcher.EXPECTED_KAT_ITEMS})

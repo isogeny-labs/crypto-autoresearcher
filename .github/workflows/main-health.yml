@@ -29,6 +29,7 @@ permissions:
 
 jobs:
   scope:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}scope"
     if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -59,6 +60,7 @@ jobs:
           fi
 
   absolute-sweep:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}absolute-sweep"
     needs: scope
     if: ${{ needs.scope.outputs.run_sweep == 'true' }}
     # The complete dispatch-queue census took 16m20s on the first hosted run;

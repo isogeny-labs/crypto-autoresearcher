@@ -102,6 +102,30 @@ class ScopeTests(unittest.TestCase):
                 self.assertEqual(scope.changed_paths(chosen), ["src/feature.py"])
                 self.assertEqual(scope.resolve_base({"merge_group": {"base_sha": current_base}}, "merge_group"),
                                  (current_base, False))
+                # Post-merge (pull_request_target closed): HEAD must be this
+                # PR's merge commit, whose second parent is the PR head
+                # (SHF-20261106-a114e7, CIX-3).
+                merge = git("rev-parse", "HEAD")
+                feature = git("rev-parse", "feature")
+                closed = {"action": "closed", "pull_request": {
+                    "merged": True, "merge_commit_sha": merge, "head": {"sha": feature}}}
+                self.assertEqual(scope.resolve_base(closed, "pull_request_target"),
+                                 (current_base, False))
+                git("checkout", "-qb", "other", current_base)
+                (repo / "src/other.py").write_text("other = True\n")
+                git("add", ".")
+                git("commit", "-qm", "other")
+                git("checkout", "-q", "main")
+                git("merge", "--no-ff", "-m", "second merge", "other")
+                with self.assertRaisesRegex(ValueError, "not this PR's merge commit"):
+                    scope.resolve_base(closed, "pull_request_target")
+                without_merge_sha = {"action": "closed", "pull_request": {
+                    "merged": True, "head": {"sha": feature}}}
+                with self.assertRaisesRegex(ValueError, "is not this PR's head"):
+                    scope.resolve_base(without_merge_sha, "pull_request_target")
+                self.assertEqual(scope.resolve_base(
+                    {"action": "closed", "pull_request": {"merged": False}}, "pull_request_target"),
+                    (None, True))
             finally:
                 os.chdir(old_cwd)
 
