@@ -1,484 +1,515 @@
 {
-  "schema": "experiment.protocol/v1",
-  "protocol_id": "MEAS-20261106-degree3-module-rss-rerun",
-  "version": 2,
-  "created": "2026-11-06",
-  "repository": "crypto-autoresearcher",
-  "study_dir": "docs/reports/2026-11-06-degree-three-module-rss-rerun",
-  "authors": [
-    "Claude Code session (formal lane)"
-  ],
-  "links": {
-    "problem": "problems/formal-workspace-build-exceeds-16gb.md",
-    "prior": "docs/reports/2026-10-29-degree-three-module-rss/ (retrospective, unfrozen; container run OOM-killed at 13.52 GB anon by a 13.36 GiB memcg)",
-    "workflow": ".github/workflows/formal-module-rss.yml",
-    "note": "Frozen before any data of this rerun. Replaces the 2026-10-29 retrospective record's role for the claims below; that record stays as it is."
+ "schema": "experiment.protocol/v1",
+ "protocol_id": "MEAS-20261106-degree3-module-rss-rerun",
+ "version": 3,
+ "created": "2026-11-06",
+ "repository": "crypto-autoresearcher",
+ "study_dir": "docs/reports/2026-11-06-degree-three-module-rss-rerun",
+ "authors": [
+  "Claude Code session (formal lane)"
+ ],
+ "links": {
+  "problem": "problems/formal-workspace-build-exceeds-16gb.md",
+  "prior": "docs/reports/2026-10-29-degree-three-module-rss/ (retrospective, unfrozen; container run OOM-killed at 13.52 GB anon by a 13.36 GiB memcg)",
+  "workflow": ".github/workflows/formal-module-rss.yml",
+  "note": "Frozen before any data of this rerun. Replaces the 2026-10-29 retrospective record's role for the claims below; that record stays as it is."
+ },
+ "question": "On a GitHub-hosted ubuntu-latest runner, what is the full peak anonymous memory of elaborating CryptoResearch.Semaev.BooleanParityDegreeThreeRankCertificate at the current pins, does LEAN_NUM_THREADS=1 lower it beyond the A/A spread, and how much margin does the runner leave?",
+ "claims": [
+  {
+   "id": "C1",
+   "text": "The peak RssAnon + VmSwap of the lean process elaborating the module with default threads on the hosted runner, measured by 0.5 s sampling, in two A/A runs.",
+   "class": "exact_computation",
+   "decided_by": [
+    "C-peak"
+   ]
   },
-  "question": "On a GitHub-hosted ubuntu-latest runner, what is the full peak anonymous memory of elaborating CryptoResearch.Semaev.BooleanParityDegreeThreeRankCertificate at the current pins, does LEAN_NUM_THREADS=1 lower it beyond the A/A spread, and how much margin does the runner leave?",
-  "claims": [
-    {
-      "id": "C1",
-      "text": "The peak RssAnon of the lean process elaborating the module with default threads on the hosted runner, measured by 0.5 s sampling, in two A/A runs.",
-      "class": "exact_computation",
-      "decided_by": [
-        "C-peak"
-      ]
-    },
-    {
-      "id": "C2",
-      "text": "LEAN_NUM_THREADS=1 lowers that peak by more than max(A/A spread, 256 MiB).",
-      "class": "comparative",
-      "decided_by": [
-        "C-threads"
-      ],
-      "if_supported": "LEAN_NUM_THREADS=1 is a memory mitigation on this runner, by the measured amount only",
-      "if_not_supported": "thread count does not move the peak beyond noise; it is not a fix"
-    },
-    {
-      "id": "C3",
-      "text": "Runner margin = MemTotal + SwapTotal - max default peak; under 1 GiB counts as fragile.",
-      "class": "heuristic_estimate",
-      "decided_by": [
-        "C-peak"
-      ]
-    }
-  ],
-  "hypotheses": [
-    {
-      "id": "H1",
-      "statement": "The module's peak anonymous memory is above 13.5 GB and close to the hosted runner's ~16 GB.",
-      "mechanism": "maxHeartbeats 0 and kernel reduction of a large finite rank certificate keep a growing heap in one elaboration task.",
-      "predictions": [
-        {
-          "id": "P1",
-          "metric": "peak_lean_rss_anon_kb",
-          "direction": "higher",
-          "minimum_effect": "above 13,500,000 kB in both default arms",
-          "provenance": {
-            "written_at": "2026-11-06",
-            "data_seen": [
-              {
-                "path": "docs/reports/2026-10-29-degree-three-module-rss/threads1.anon.tsv",
-                "measured": "13.52 GB anon at the container OOM kill, LEAN_NUM_THREADS=1, older pins"
-              }
-            ],
-            "sample_status": "out_of_sample"
-          },
-          "role": "decisive"
-        },
-        {
-          "id": "P2",
-          "metric": "peak_lean_rss_anon_kb",
-          "direction": "equal_within",
-          "minimum_effect": "threads1 within max(A/A, 256 MiB) of default-a",
-          "provenance": {
-            "written_at": "2026-11-06",
-            "data_seen": [
-              {
-                "path": "docs/reports/2026-10-29-degree-three-module-rss/README.md",
-                "measured": "8 OS threads and one growing heap under LEAN_NUM_THREADS=1"
-              }
-            ],
-            "sample_status": "out_of_sample"
-          },
-          "role": "decisive"
-        }
-      ]
-    }
-  ],
-  "arms": [
-    {
-      "id": "default-a",
-      "role": "reference",
-      "description": "lake env lean on the module, default Lean threads, first in order",
-      "instrument": {
-        "repo": "crypto-autoresearcher",
-        "commit": null,
-        "build": [
-          [
-            "lake",
-            "env",
-            "lean",
-            "CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean"
-          ]
-        ],
-        "binary_sha256": null,
-        "flags": {},
-        "env": {},
-        "threads": 4
-      },
-      "parameters": {
-        "LEAN_NUM_THREADS": "unset"
-      }
-    },
-    {
-      "id": "threads1",
-      "role": "candidate",
-      "description": "same command with LEAN_NUM_THREADS=1, second in order",
-      "instrument": {
-        "repo": "crypto-autoresearcher",
-        "commit": null,
-        "build": [
-          [
-            "lake",
-            "env",
-            "lean",
-            "CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean"
-          ]
-        ],
-        "binary_sha256": null,
-        "flags": {},
-        "env": {
-          "LEAN_NUM_THREADS": "1"
-        },
-        "threads": 1
-      },
-      "parameters": {
-        "LEAN_NUM_THREADS": "1"
-      }
-    },
-    {
-      "id": "default-b",
-      "role": "control_aa",
-      "description": "repeat of default-a, third in order: the A/A noise floor",
-      "instrument": {
-        "repo": "crypto-autoresearcher",
-        "commit": null,
-        "build": [
-          [
-            "lake",
-            "env",
-            "lean",
-            "CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean"
-          ]
-        ],
-        "binary_sha256": null,
-        "flags": {},
-        "env": {},
-        "threads": 4
-      },
-      "parameters": {
-        "LEAN_NUM_THREADS": "unset"
-      },
-      "same_instrument_as": "default-a"
-    }
-  ],
-  "controls": {
-    "aa": {
-      "present": true,
-      "comparison": "C-aa",
-      "not_applicable_reason": null
-    },
-    "positive": {
-      "present": false,
-      "arm": null,
-      "expected_detection": null,
-      "not_applicable_reason": "the sampler is checked on every arm: a run with no lean process observed (peak 0) is invalid in the frozen analysis; and the 2026-10-29 container run is an independent positive observation (13.52 GB, kernel OOM record)"
-    },
-    "negative": {
-      "present": false,
-      "arm": null,
-      "null_population": null,
-      "not_applicable_reason": "no null population; a deterministic elaboration of one module"
-    }
+  {
+   "id": "C2",
+   "text": "LEAN_NUM_THREADS=1 lowers that peak by more than max(A/A spread, 256 MiB).",
+   "class": "comparative",
+   "decided_by": [
+    "C-threads"
+   ],
+   "if_supported": "LEAN_NUM_THREADS=1 is a memory mitigation on this runner, by the measured amount only",
+   "if_not_supported": "thread count does not move the peak beyond noise; it is not a fix"
   },
-  "variable_ledger": {
-    "independent": [
-      {
-        "name": "LEAN_NUM_THREADS",
-        "levels": [
-          "unset",
-          "1"
-        ]
-      }
-    ],
-    "factors": [
-      {
-        "name": "module_source",
-        "treatment": "fixed",
-        "value": "sha256 e9db58305eb32c33bf7d6aef26f028a6791f5816dcfa53a4b3b2b95b2c0751e9",
-        "how": "committed file; recorded per run in host.json"
-      },
-      {
-        "name": "toolchain",
-        "treatment": "fixed",
-        "value": "formal/lean-toolchain and lake-manifest.json at the PR head (Lean v4.35.0, Mathlib cfc55fc5 at writing)",
-        "how": "pins; lean --version recorded"
-      },
-      {
-        "name": "dependencies",
-        "treatment": "fixed",
-        "value": "BooleanParitySemanticRankCertificate and its closure built before the arms",
-        "how": "lake build step, not measured"
-      },
-      {
-        "name": "host",
-        "treatment": "measured",
-        "how": "one runner for all three arms; MemTotal, SwapTotal, nproc, cgroup memory.max, image recorded in host.json"
-      },
-      {
-        "name": "page_cache_and_order",
-        "treatment": "measured",
-        "how": "fixed order default-a, threads1, default-b; default-b repeats default-a after the others, so order effects show in C-aa"
-      }
-    ],
-    "comparisons": [
-      {
-        "id": "C-threads",
-        "arms": [
-          "default-a",
-          "threads1"
-        ],
-        "differs_in": [
-          "LEAN_NUM_THREADS"
-        ],
-        "design": "one_factor"
-      },
-      {
-        "id": "C-aa",
-        "arms": [
-          "default-a",
-          "default-b"
-        ],
-        "differs_in": [],
-        "design": "aa"
-      },
-      {
-        "id": "C-peak",
-        "arms": [
-          "default-a",
-          "default-b"
-        ],
-        "differs_in": [],
-        "design": "absolute",
-        "threshold": "peak_lean_rss_anon_kb reported as measured; P1 holds if both > 13,500,000 kB"
-      }
-    ],
-    "aa_not_applicable": null,
-    "crosses_map": false
-  },
-  "randomization": {
-    "arm_order": "fixed",
-    "arm_order_reason": "memory peak of a deterministic elaboration has no warm-up cost to balance; the A/A arm runs last so any order effect shows in C-aa",
-    "seed_derivation": {
-      "method": "harness_drawn",
-      "seeds": [],
-      "nonce": null,
-      "note": "Lean elaboration is deterministic; there is no seed"
-    },
-    "instance_sampling": {
-      "rule": "one module",
-      "independent_of_arm": true
-    },
-    "blinding": {
-      "analysis_labels_masked": false,
-      "how": "not masked: the frozen script computes every verdict mechanically",
-      "unmasked_at": null
-    }
-  },
-  "sample_size": {
-    "instances": 1,
-    "replicates": 1,
-    "warmups": 0,
-    "power": {
-      "method": "other",
-      "alpha": 0.05,
-      "tests_in_family": 1,
-      "correction": "none",
-      "rank_test_n": null,
-      "min_attainable_two_sided_p": null,
-      "passes": true,
-      "note": "no significance test; C2 compares against the A/A spread with a 256 MiB floor, fixed here before data"
-    },
-    "preflight_runtime": {
-      "fixed_seconds": 900,
-      "per_sample_seconds": 700,
-      "threads": 4,
-      "estimated_total_seconds": 3000,
-      "measured_on": "hosted job logs 2026-10-28: module 579-671 s; workspace setup ~10 min"
-    }
-  },
-  "metrics": {
-    "primary": [
-      {
-        "id": "peak_lean_rss_anon_kb",
-        "name": "peak anonymous RSS of lean",
-        "unit": "kB",
-        "kind": "counted",
-        "definition": "max over 0.5 s samples of /proc/<lean>/status RssAnon",
-        "source": "<arm>.summary.json peak_lean_rss_anon_kb",
-        "aggregation": "max",
-        "resolution": "1 kB at 0.5 s sampling (a spike shorter than 0.5 s can be missed)",
-        "uncertainty": "range"
-      }
-    ],
-    "secondary": [
-      {
-        "id": "peak_lean_vm_hwm_kb",
-        "name": "lean VmHWM",
-        "unit": "kB",
-        "kind": "counted",
-        "definition": "max VmHWM (includes file-backed pages)",
-        "source": "<arm>.summary.json",
-        "aggregation": "max",
-        "resolution": "1 kB",
-        "uncertainty": "none_exact"
-      },
-      {
-        "id": "peak_lean_vm_swap_kb",
-        "name": "lean VmSwap",
-        "unit": "kB",
-        "kind": "counted",
-        "definition": "max VmSwap",
-        "source": "<arm>.summary.json",
-        "aggregation": "max",
-        "resolution": "1 kB",
-        "uncertainty": "none_exact"
-      },
-      {
-        "id": "wall_s",
-        "name": "elaboration wall time",
-        "unit": "s",
-        "kind": "timed",
-        "definition": "process start to exit",
-        "source": "<arm>.summary.json wall_s",
-        "aggregation": "per_row",
-        "resolution": "0.5 s",
-        "uncertainty": "none_exact"
-      }
-    ]
-  },
-  "measurement": {
-    "isolation_required": "none",
-    "warmups": 0,
-    "order": "sequential",
-    "clock": "counted",
-    "counters": [],
-    "record": [
-      "MemTotal_kb",
-      "SwapTotal_kb",
-      "nproc",
-      "cgroup_memory_max",
-      "image_version",
-      "lean_version",
-      "module_sha256",
-      "commit"
-    ],
-    "timed_primary_justification": null
-  },
-  "execution": {
-    "backend": "manual",
-    "queue": "github-actions ubuntu-latest",
-    "placement": {
-      "instance_type": "GitHub-hosted ubuntu-latest",
-      "cpus": 4,
-      "spot": false
-    },
-    "measurement_class": "measurement",
-    "timeout_seconds": 7200,
-    "checkpoint": {
-      "policy": "none",
-      "interval_seconds": null,
-      "grace_seconds": null,
-      "restore_validation": "none",
-      "after_restore": {
-        "wall_time": "invalid",
-        "counted_units": "valid"
-      }
-    },
-    "retries": {
-      "infrastructure_only": true,
-      "max_attempts": 2
-    }
-  },
-  "stopping_rules": [
-    {
-      "rule": "one job: three arms in fixed order, then stop",
-      "kind": "fixed_n",
-      "preregistered": true
-    },
-    {
-      "rule": "a job that dies before the first arm starts (checkout, install, cache, dependency build, runner loss) is re-run once under v2 (amendment A1); a job that reaches an arm is never re-run for its result",
-      "kind": "invalidation",
-      "preregistered": true
-    }
-  ],
-  "invalidation_rules": [
-    "an arm with exit != 0, a watchdog kill, or no lean process observed is invalid; its peak is a lower bound only",
-    "a change to the module, the pins or the analysis script after freeze voids the run"
-  ],
-  "decision_rule": {
-    "text": "C1: report both default peaks (valid arms only). C2 supported if default-a minus threads1 exceeds max(|default-a - default-b|, 256 MiB), all three arms valid; else within_control_distribution; invalid_measurement if any arm is invalid. C3: margin = MemTotal + SwapTotal - max default peak, fragile below 1 GiB.",
-    "comparison_ids": [
-      "C-peak",
-      "C-threads"
-    ],
-    "threshold": "C2: difference > max(A/A spread, 262144 kB); C3: margin < 1048576 kB is fragile",
-    "statistic": "peak RssAnon difference",
-    "interval": "A/A spread as the noise floor",
-    "multiple_comparison_correction": "none",
-    "effect_size_measure": "kB difference",
-    "verdict_vocabulary": [
-      "supported_within_scope",
-      "within_control_distribution",
-      "invalid_measurement",
-      "inconclusive"
-    ]
-  },
-  "analysis_plan": {
-    "script": {
-      "path": "analysis.py",
-      "sha256": "4bfd334a67bc2ab4c073d1425c9da4c8c665b24edc281d690d0703b49b869c71"
-    },
-    "inputs": [
-      "host.json",
-      "default-a.summary.json",
-      "threads1.summary.json",
-      "default-b.summary.json"
-    ],
-    "outputs": [
-      "analysis.json"
-    ],
-    "blinded": false,
-    "frozen_before_data": true
-  },
-  "reporting": {
-    "export_schema": "experiment.export/v1",
-    "review_schema": "experiment.review/v1",
-    "graphs": [
-      "RssAnon over time per arm"
-    ],
-    "report_dir": "."
-  },
-  "inadmissible": [
-    "changing the arms, order, thresholds or analysis after seeing data",
-    "re-running a job that reached an arm to get a different number",
-    "reading a hosted-runner peak as the container's, or the reverse",
-    "reading wall time as a performance claim"
-  ],
-  "literature": [],
-  "amendments": [
-    {
-      "id": "A1",
-      "filed": "2026-11-06",
-      "filed_before_affected_data": true,
-      "reason": "v1 (frozen 2026-11-06T00:04:54Z at 0608edeb, protocol_sha256 08392f8a...) produced no data. Run 42134422799 was cancelled during setup by an unrelated push (cancel-in-progress). Run 42134558504, its one allowed pre-arm rerun, failed in the workflow's pre-arm check: jsonschema was not installed. No arm started, no lean process ran, and no artifact was uploaded.",
-      "changes": [
-        "workflow installs jsonschema with the package extras",
-        "arms 2-3 and the analysis run only if the host-facts step succeeded (was if: always(), which ran them with no setup)",
-        "the pre-arm rerun allowance is reset to one for v2; v1's two pre-arm failures are recorded here and in the report",
-        "no push to the measuring PR branch while a run is in progress (the pull_request paths filter is evaluated on the whole PR diff, so a push restarts and cancels the run); results go in a PR stacked on that branch"
-      ],
-      "supersedes_fields": [
-        "stopping_rules"
-      ]
-    }
-  ],
-  "freeze": {
-    "status": "frozen",
-    "protocol_sha256": "d3e6b677dc5c53e42fb278cb75365b9814c0e853bee3d7da9c041c00f5ed8198",
-    "commit": "fb78bec23f0150b56057633fa310a42a8eb8a846",
-    "frozen_at": "2026-11-06T00:33:59Z",
-    "filed_before_affected_data": true
+  {
+   "id": "C3",
+   "text": "Runner margin = MemTotal + SwapTotal - max default peak; under 1 GiB counts as fragile.",
+   "class": "heuristic_estimate",
+   "decided_by": [
+    "C-peak"
+   ]
   }
+ ],
+ "hypotheses": [
+  {
+   "id": "H1",
+   "statement": "The module's anonymous footprint (resident + swap) exceeds the runner's RAM; the gate fits only through swap, with a small margin.",
+   "mechanism": "maxHeartbeats 0 and kernel reduction of a large finite rank certificate keep a growing heap in one elaboration task.",
+   "predictions": [
+    {
+     "id": "P1",
+     "metric": "peak_lean_anon_plus_swap_kb",
+     "direction": "higher",
+     "minimum_effect": "above 15,789,592 kB (the v2 lower bound) in both default arms",
+     "provenance": {
+      "written_at": "2026-11-06",
+      "data_seen": [
+       {
+        "path": "docs/reports/2026-11-06-degree-three-module-rss-rerun/data/",
+        "measured": "v2: anon+swap reached 15.06-15.23 GiB at watchdog kills, still rising"
+       }
+      ],
+      "sample_status": "out_of_sample"
+     },
+     "role": "decisive"
+    },
+    {
+     "id": "P2",
+     "metric": "peak_lean_anon_plus_swap_kb",
+     "direction": "equal_within",
+     "minimum_effect": "threads1 within max(A/A, 256 MiB) of default-a",
+     "provenance": {
+      "written_at": "2026-11-06",
+      "data_seen": [
+       {
+        "path": "docs/reports/2026-10-29-degree-three-module-rss/README.md",
+        "measured": "8 OS threads and one growing heap under LEAN_NUM_THREADS=1"
+       }
+      ],
+      "sample_status": "out_of_sample"
+     },
+     "role": "decisive"
+    }
+   ]
+  }
+ ],
+ "arms": [
+  {
+   "id": "default-a",
+   "role": "reference",
+   "description": "lake env lean on the module, default Lean threads, first in order",
+   "instrument": {
+    "repo": "crypto-autoresearcher",
+    "commit": null,
+    "build": [
+     [
+      "lake",
+      "env",
+      "lean",
+      "CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean"
+     ]
+    ],
+    "binary_sha256": null,
+    "flags": {},
+    "env": {},
+    "threads": 4
+   },
+   "parameters": {
+    "LEAN_NUM_THREADS": "unset"
+   }
+  },
+  {
+   "id": "threads1",
+   "role": "candidate",
+   "description": "same command with LEAN_NUM_THREADS=1, second in order",
+   "instrument": {
+    "repo": "crypto-autoresearcher",
+    "commit": null,
+    "build": [
+     [
+      "lake",
+      "env",
+      "lean",
+      "CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean"
+     ]
+    ],
+    "binary_sha256": null,
+    "flags": {},
+    "env": {
+     "LEAN_NUM_THREADS": "1"
+    },
+    "threads": 1
+   },
+   "parameters": {
+    "LEAN_NUM_THREADS": "1"
+   }
+  },
+  {
+   "id": "default-b",
+   "role": "control_aa",
+   "description": "repeat of default-a, third in order: the A/A noise floor",
+   "instrument": {
+    "repo": "crypto-autoresearcher",
+    "commit": null,
+    "build": [
+     [
+      "lake",
+      "env",
+      "lean",
+      "CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean"
+     ]
+    ],
+    "binary_sha256": null,
+    "flags": {},
+    "env": {},
+    "threads": 4
+   },
+   "parameters": {
+    "LEAN_NUM_THREADS": "unset"
+   },
+   "same_instrument_as": "default-a"
+  }
+ ],
+ "controls": {
+  "aa": {
+   "present": true,
+   "comparison": "C-aa",
+   "not_applicable_reason": null
+  },
+  "positive": {
+   "present": false,
+   "arm": null,
+   "expected_detection": null,
+   "not_applicable_reason": "the sampler is checked on every arm: a run with no lean process observed (peak 0) is invalid in the frozen analysis; and the 2026-10-29 container run is an independent positive observation (13.52 GB, kernel OOM record)"
+  },
+  "negative": {
+   "present": false,
+   "arm": null,
+   "null_population": null,
+   "not_applicable_reason": "no null population; a deterministic elaboration of one module"
+  }
+ },
+ "variable_ledger": {
+  "independent": [
+   {
+    "name": "LEAN_NUM_THREADS",
+    "levels": [
+     "unset",
+     "1"
+    ]
+   }
+  ],
+  "factors": [
+   {
+    "name": "module_source",
+    "treatment": "fixed",
+    "value": "sha256 e9db58305eb32c33bf7d6aef26f028a6791f5816dcfa53a4b3b2b95b2c0751e9",
+    "how": "committed file; recorded per run in host.json"
+   },
+   {
+    "name": "toolchain",
+    "treatment": "fixed",
+    "value": "formal/lean-toolchain and lake-manifest.json at the PR head (Lean v4.35.0, Mathlib cfc55fc5 at writing)",
+    "how": "pins; lean --version recorded"
+   },
+   {
+    "name": "dependencies",
+    "treatment": "fixed",
+    "value": "BooleanParitySemanticRankCertificate and its closure built before the arms",
+    "how": "lake build step, not measured"
+   },
+   {
+    "name": "host",
+    "treatment": "measured",
+    "how": "one runner for all three arms; MemTotal, SwapTotal, nproc, cgroup memory.max, image recorded in host.json"
+   },
+   {
+    "name": "page_cache_and_order",
+    "treatment": "measured",
+    "how": "fixed order default-a, threads1, default-b; default-b repeats default-a after the others, so order effects show in C-aa"
+   }
+  ],
+  "comparisons": [
+   {
+    "id": "C-threads",
+    "arms": [
+     "default-a",
+     "threads1"
+    ],
+    "differs_in": [
+     "LEAN_NUM_THREADS"
+    ],
+    "design": "one_factor"
+   },
+   {
+    "id": "C-aa",
+    "arms": [
+     "default-a",
+     "default-b"
+    ],
+    "differs_in": [],
+    "design": "aa"
+   },
+   {
+    "id": "C-peak",
+    "arms": [
+     "default-a",
+     "default-b"
+    ],
+    "differs_in": [],
+    "design": "absolute",
+    "threshold": "peak_lean_anon_plus_swap_kb reported as measured; P1 holds if both > 15,789,592 kB"
+   }
+  ],
+  "aa_not_applicable": null,
+  "crosses_map": false
+ },
+ "randomization": {
+  "arm_order": "fixed",
+  "arm_order_reason": "memory peak of a deterministic elaboration has no warm-up cost to balance; the A/A arm runs last so any order effect shows in C-aa",
+  "seed_derivation": {
+   "method": "harness_drawn",
+   "seeds": [],
+   "nonce": null,
+   "note": "Lean elaboration is deterministic; there is no seed"
+  },
+  "instance_sampling": {
+   "rule": "one module",
+   "independent_of_arm": true
+  },
+  "blinding": {
+   "analysis_labels_masked": false,
+   "how": "not masked: the frozen script computes every verdict mechanically",
+   "unmasked_at": null
+  }
+ },
+ "sample_size": {
+  "instances": 1,
+  "replicates": 1,
+  "warmups": 0,
+  "power": {
+   "method": "other",
+   "alpha": 0.05,
+   "tests_in_family": 1,
+   "correction": "none",
+   "rank_test_n": null,
+   "min_attainable_two_sided_p": null,
+   "passes": true,
+   "note": "no significance test; C2 compares against the A/A spread with a 256 MiB floor, fixed here before data"
+  },
+  "preflight_runtime": {
+   "fixed_seconds": 900,
+   "per_sample_seconds": 700,
+   "threads": 4,
+   "estimated_total_seconds": 3000,
+   "measured_on": "hosted job logs 2026-10-28: module 579-671 s; workspace setup ~10 min"
+  }
+ },
+ "metrics": {
+  "primary": [
+   {
+    "id": "peak_lean_anon_plus_swap_kb",
+    "name": "peak anonymous footprint of lean (resident + swapped)",
+    "unit": "kB",
+    "kind": "counted",
+    "definition": "max over 0.5 s samples of /proc/<lean>/status RssAnon + VmSwap",
+    "source": "<arm>.summary.json peak_lean_anon_plus_swap_kb",
+    "aggregation": "max",
+    "resolution": "1 kB at 0.5 s sampling (a spike shorter than 0.5 s can be missed)",
+    "uncertainty": "range"
+   }
+  ],
+  "secondary": [
+   {
+    "id": "peak_lean_rss_anon_kb",
+    "name": "peak resident anonymous RSS of lean",
+    "unit": "kB",
+    "kind": "counted",
+    "definition": "max over 0.5 s samples of RssAnon",
+    "source": "<arm>.summary.json",
+    "aggregation": "max",
+    "resolution": "1 kB",
+    "uncertainty": "none_exact"
+   },
+   {
+    "id": "peak_lean_vm_hwm_kb",
+    "name": "lean VmHWM",
+    "unit": "kB",
+    "kind": "counted",
+    "definition": "max VmHWM (includes file-backed pages)",
+    "source": "<arm>.summary.json",
+    "aggregation": "max",
+    "resolution": "1 kB",
+    "uncertainty": "none_exact"
+   },
+   {
+    "id": "peak_lean_vm_swap_kb",
+    "name": "lean VmSwap",
+    "unit": "kB",
+    "kind": "counted",
+    "definition": "max VmSwap",
+    "source": "<arm>.summary.json",
+    "aggregation": "max",
+    "resolution": "1 kB",
+    "uncertainty": "none_exact"
+   },
+   {
+    "id": "wall_s",
+    "name": "elaboration wall time",
+    "unit": "s",
+    "kind": "timed",
+    "definition": "process start to exit",
+    "source": "<arm>.summary.json wall_s",
+    "aggregation": "per_row",
+    "resolution": "0.5 s",
+    "uncertainty": "none_exact"
+   }
+  ]
+ },
+ "measurement": {
+  "isolation_required": "none",
+  "warmups": 0,
+  "order": "sequential",
+  "clock": "counted",
+  "counters": [],
+  "record": [
+   "MemTotal_kb",
+   "SwapTotal_kb",
+   "nproc",
+   "cgroup_memory_max",
+   "image_version",
+   "lean_version",
+   "module_sha256",
+   "commit",
+   "min_headroom_kb (MemAvailable + SwapFree)"
+  ],
+  "timed_primary_justification": null
+ },
+ "execution": {
+  "backend": "manual",
+  "queue": "github-actions ubuntu-latest",
+  "placement": {
+   "instance_type": "GitHub-hosted ubuntu-latest",
+   "cpus": 4,
+   "spot": false
+  },
+  "measurement_class": "measurement",
+  "timeout_seconds": 7200,
+  "checkpoint": {
+   "policy": "none",
+   "interval_seconds": null,
+   "grace_seconds": null,
+   "restore_validation": "none",
+   "after_restore": {
+    "wall_time": "invalid",
+    "counted_units": "valid"
+   }
+  },
+  "retries": {
+   "infrastructure_only": true,
+   "max_attempts": 2
+  }
+ },
+ "stopping_rules": [
+  {
+   "rule": "one job: three arms in fixed order, then stop",
+   "kind": "fixed_n",
+   "preregistered": true
+  },
+  {
+   "rule": "a job that dies before the first arm starts (checkout, install, cache, dependency build, runner loss) is re-run once under v3 (amendment A2); a job that reaches an arm is never re-run for its result",
+   "kind": "invalidation",
+   "preregistered": true
+  }
+ ],
+ "invalidation_rules": [
+  "an arm with exit != 0, a watchdog kill, or no lean process observed is invalid; its peak is a lower bound only",
+  "a change to the module, the pins or the analysis script after freeze voids the run"
+ ],
+ "decision_rule": {
+  "text": "On peak_lean_anon_plus_swap_kb. C1: report both default peaks (valid arms only). C2 supported if default-a minus threads1 exceeds max(|default-a - default-b|, 256 MiB), all three arms valid; else within_control_distribution; invalid_measurement if any arm is invalid. C3: margin = MemTotal + SwapTotal - max default peak, fragile below 1 GiB.",
+  "comparison_ids": [
+   "C-peak",
+   "C-threads"
+  ],
+  "threshold": "C2: difference > max(A/A spread, 262144 kB); C3: margin < 1048576 kB is fragile",
+  "statistic": "peak RssAnon difference",
+  "interval": "A/A spread as the noise floor",
+  "multiple_comparison_correction": "none",
+  "effect_size_measure": "kB difference",
+  "verdict_vocabulary": [
+   "supported_within_scope",
+   "within_control_distribution",
+   "invalid_measurement",
+   "inconclusive"
+  ]
+ },
+ "analysis_plan": {
+  "script": {
+   "path": "analysis.py",
+   "sha256": "70c6cb32c0acfeb401087a9457348a2599725530b913849fcf46893e42bd18f4"
+  },
+  "inputs": [
+   "host.json",
+   "default-a.summary.json",
+   "threads1.summary.json",
+   "default-b.summary.json",
+   "dmesg-oom.txt"
+  ],
+  "outputs": [
+   "analysis.json"
+  ],
+  "blinded": false,
+  "frozen_before_data": true
+ },
+ "reporting": {
+  "export_schema": "experiment.export/v1",
+  "review_schema": "experiment.review/v1",
+  "graphs": [
+   "RssAnon over time per arm"
+  ],
+  "report_dir": "."
+ },
+ "inadmissible": [
+  "changing the arms, order, thresholds or analysis after seeing data",
+  "re-running a job that reached an arm to get a different number",
+  "reading a hosted-runner peak as the container's, or the reverse",
+  "reading wall time as a performance claim"
+ ],
+ "literature": [],
+ "amendments": [
+  {
+   "id": "A1",
+   "filed": "2026-11-06",
+   "filed_before_affected_data": true,
+   "reason": "v1 (frozen 2026-11-06T00:04:54Z at 0608edeb, protocol_sha256 08392f8a...) produced no data. Run 42134422799 was cancelled during setup by an unrelated push (cancel-in-progress). Run 42134558504, its one allowed pre-arm rerun, failed in the workflow's pre-arm check: jsonschema was not installed. No arm started, no lean process ran, and no artifact was uploaded.",
+   "changes": [
+    "workflow installs jsonschema with the package extras",
+    "arms 2-3 and the analysis run only if the host-facts step succeeded (was if: always(), which ran them with no setup)",
+    "the pre-arm rerun allowance is reset to one for v2; v1's two pre-arm failures are recorded here and in the report",
+    "no push to the measuring PR branch while a run is in progress (the pull_request paths filter is evaluated on the whole PR diff, so a push restarts and cancels the run); results go in a PR stacked on that branch"
+   ],
+   "supersedes_fields": [
+    "stopping_rules"
+   ]
+  },
+  {
+   "id": "A2",
+   "filed": "2026-11-06",
+   "filed_before_affected_data": true,
+   "reason": "The v2 run (42137803829) produced no valid arm. Its watchdog keyed on MemAvailable, which ignores swap, so it killed lean at 352-440 s while the runner's 3 GiB swapfile still had room, before the 579-671 s the CI build needs. The v2 data were seen before this amendment: it is filed before any v3 data, and the metric change below is motivated by what v2 showed. The v2 verdicts stand as reported in README.md.",
+   "changes": [
+    "measure.py watchdog fires on MemAvailable + SwapFree < 300 MB (was MemAvailable alone); it also records per-sample RssAnon + VmSwap, min headroom, and killed_externally for a SIGKILL it did not send",
+    "primary metric becomes peak_lean_anon_plus_swap_kb (RssAnon + VmSwap per sample); peak_lean_rss_anon_kb becomes secondary. Under swap, RssAnon alone is capped by RAM and understates the footprint",
+    "analysis.py rewritten for that metric (C1, C2 and C3 rules otherwise unchanged; C3 also reports min headroom)",
+    "the workflow saves the kernel OOM log (sudo dmesg) to dmesg-oom.txt after the arms",
+    "the pre-arm rerun allowance is reset to one for v3"
+   ],
+   "supersedes_fields": [
+    "metrics",
+    "analysis_plan",
+    "decision_rule"
+   ]
+  }
+ ],
+ "freeze": {
+  "status": "draft",
+  "protocol_sha256": null,
+  "commit": null,
+  "frozen_at": null,
+  "filed_before_affected_data": null
+ }
 }
