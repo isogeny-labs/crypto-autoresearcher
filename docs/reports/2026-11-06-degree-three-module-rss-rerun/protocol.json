@@ -1,7 +1,7 @@
 {
   "schema": "experiment.protocol/v1",
   "protocol_id": "MEAS-20261106-degree3-module-rss-rerun",
-  "version": 2,
+  "version": 3,
   "created": "2026-11-06",
   "repository": "crypto-autoresearcher",
   "study_dir": "docs/reports/2026-11-06-degree-three-module-rss-rerun",
@@ -18,7 +18,7 @@
   "claims": [
     {
       "id": "C1",
-      "text": "The peak RssAnon of the lean process elaborating the module with default threads on the hosted runner, measured by 0.5 s sampling, in two A/A runs.",
+      "text": "The peak RssAnon + VmSwap of the lean process elaborating the module with default threads on the hosted runner, measured by 0.5 s sampling, in two A/A runs.",
       "class": "exact_computation",
       "decided_by": [
         "C-peak"
@@ -46,20 +46,20 @@
   "hypotheses": [
     {
       "id": "H1",
-      "statement": "The module's peak anonymous memory is above 13.5 GB and close to the hosted runner's ~16 GB.",
+      "statement": "The module's anonymous footprint (resident + swap) exceeds the runner's RAM; the gate fits only through swap, with a small margin.",
       "mechanism": "maxHeartbeats 0 and kernel reduction of a large finite rank certificate keep a growing heap in one elaboration task.",
       "predictions": [
         {
           "id": "P1",
-          "metric": "peak_lean_rss_anon_kb",
+          "metric": "peak_lean_anon_plus_swap_kb",
           "direction": "higher",
-          "minimum_effect": "above 13,500,000 kB in both default arms",
+          "minimum_effect": "above 15,789,592 kB (the v2 lower bound) in both default arms",
           "provenance": {
             "written_at": "2026-11-06",
             "data_seen": [
               {
-                "path": "docs/reports/2026-10-29-degree-three-module-rss/threads1.anon.tsv",
-                "measured": "13.52 GB anon at the container OOM kill, LEAN_NUM_THREADS=1, older pins"
+                "path": "docs/reports/2026-11-06-degree-three-module-rss-rerun/data/",
+                "measured": "v2: anon+swap reached 15.06-15.23 GiB at watchdog kills, still rising"
               }
             ],
             "sample_status": "out_of_sample"
@@ -68,7 +68,7 @@
         },
         {
           "id": "P2",
-          "metric": "peak_lean_rss_anon_kb",
+          "metric": "peak_lean_anon_plus_swap_kb",
           "direction": "equal_within",
           "minimum_effect": "threads1 within max(A/A, 256 MiB) of default-a",
           "provenance": {
@@ -251,7 +251,7 @@
         ],
         "differs_in": [],
         "design": "absolute",
-        "threshold": "peak_lean_rss_anon_kb reported as measured; P1 holds if both > 13,500,000 kB"
+        "threshold": "peak_lean_anon_plus_swap_kb reported as measured; P1 holds if both > 15,789,592 kB"
       }
     ],
     "aa_not_applicable": null,
@@ -301,18 +301,29 @@
   "metrics": {
     "primary": [
       {
-        "id": "peak_lean_rss_anon_kb",
-        "name": "peak anonymous RSS of lean",
+        "id": "peak_lean_anon_plus_swap_kb",
+        "name": "peak anonymous footprint of lean (resident + swapped)",
         "unit": "kB",
         "kind": "counted",
-        "definition": "max over 0.5 s samples of /proc/<lean>/status RssAnon",
-        "source": "<arm>.summary.json peak_lean_rss_anon_kb",
+        "definition": "max over 0.5 s samples of /proc/<lean>/status RssAnon + VmSwap",
+        "source": "<arm>.summary.json peak_lean_anon_plus_swap_kb",
         "aggregation": "max",
         "resolution": "1 kB at 0.5 s sampling (a spike shorter than 0.5 s can be missed)",
         "uncertainty": "range"
       }
     ],
     "secondary": [
+      {
+        "id": "peak_lean_rss_anon_kb",
+        "name": "peak resident anonymous RSS of lean",
+        "unit": "kB",
+        "kind": "counted",
+        "definition": "max over 0.5 s samples of RssAnon",
+        "source": "<arm>.summary.json",
+        "aggregation": "max",
+        "resolution": "1 kB",
+        "uncertainty": "none_exact"
+      },
       {
         "id": "peak_lean_vm_hwm_kb",
         "name": "lean VmHWM",
@@ -362,7 +373,8 @@
       "image_version",
       "lean_version",
       "module_sha256",
-      "commit"
+      "commit",
+      "min_headroom_kb (MemAvailable + SwapFree)"
     ],
     "timed_primary_justification": null
   },
@@ -398,7 +410,7 @@
       "preregistered": true
     },
     {
-      "rule": "a job that dies before the first arm starts (checkout, install, cache, dependency build, runner loss) is re-run once under v2 (amendment A1); a job that reaches an arm is never re-run for its result",
+      "rule": "a job that dies before the first arm starts (checkout, install, cache, dependency build, runner loss) is re-run once under v3 (amendment A2); a job that reaches an arm is never re-run for its result",
       "kind": "invalidation",
       "preregistered": true
     }
@@ -408,7 +420,7 @@
     "a change to the module, the pins or the analysis script after freeze voids the run"
   ],
   "decision_rule": {
-    "text": "C1: report both default peaks (valid arms only). C2 supported if default-a minus threads1 exceeds max(|default-a - default-b|, 256 MiB), all three arms valid; else within_control_distribution; invalid_measurement if any arm is invalid. C3: margin = MemTotal + SwapTotal - max default peak, fragile below 1 GiB.",
+    "text": "On peak_lean_anon_plus_swap_kb. C1: report both default peaks (valid arms only). C2 supported if default-a minus threads1 exceeds max(|default-a - default-b|, 256 MiB), all three arms valid; else within_control_distribution; invalid_measurement if any arm is invalid. C3: margin = MemTotal + SwapTotal - max default peak, fragile below 1 GiB.",
     "comparison_ids": [
       "C-peak",
       "C-threads"
@@ -428,13 +440,14 @@
   "analysis_plan": {
     "script": {
       "path": "analysis.py",
-      "sha256": "4bfd334a67bc2ab4c073d1425c9da4c8c665b24edc281d690d0703b49b869c71"
+      "sha256": "70c6cb32c0acfeb401087a9457348a2599725530b913849fcf46893e42bd18f4"
     },
     "inputs": [
       "host.json",
       "default-a.summary.json",
       "threads1.summary.json",
-      "default-b.summary.json"
+      "default-b.summary.json",
+      "dmesg-oom.txt"
     ],
     "outputs": [
       "analysis.json"
@@ -472,13 +485,31 @@
       "supersedes_fields": [
         "stopping_rules"
       ]
+    },
+    {
+      "id": "A2",
+      "filed": "2026-11-06",
+      "filed_before_affected_data": true,
+      "reason": "The v2 run (42137803829) produced no valid arm. Its watchdog keyed on MemAvailable, which ignores swap, so it killed lean at 352-440 s while the runner's 3 GiB swapfile still had room, before the 579-671 s the CI build needs. The v2 data were seen before this amendment: it is filed before any v3 data, and the metric change below is motivated by what v2 showed. The v2 verdicts stand as reported in README.md.",
+      "changes": [
+        "measure.py watchdog fires on MemAvailable + SwapFree < 300 MB (was MemAvailable alone); it also records per-sample RssAnon + VmSwap, min headroom, and killed_externally for a SIGKILL it did not send",
+        "primary metric becomes peak_lean_anon_plus_swap_kb (RssAnon + VmSwap per sample); peak_lean_rss_anon_kb becomes secondary. Under swap, RssAnon alone is capped by RAM and understates the footprint",
+        "analysis.py rewritten for that metric (C1, C2 and C3 rules otherwise unchanged; C3 also reports min headroom)",
+        "the workflow saves the kernel OOM log (sudo dmesg) to dmesg-oom.txt after the arms",
+        "the pre-arm rerun allowance is reset to one for v3"
+      ],
+      "supersedes_fields": [
+        "metrics",
+        "analysis_plan",
+        "decision_rule"
+      ]
     }
   ],
   "freeze": {
     "status": "frozen",
-    "protocol_sha256": "d3e6b677dc5c53e42fb278cb75365b9814c0e853bee3d7da9c041c00f5ed8198",
-    "commit": "fb78bec23f0150b56057633fa310a42a8eb8a846",
-    "frozen_at": "2026-11-06T00:33:59Z",
+    "protocol_sha256": "55ccbe3c0eca19d8e20b0fc1675de35303eed0c414d2460cf5a7570767d1498c",
+    "commit": "ce4662b54d02049b31ffa61e1ec75e960f492f56",
+    "frozen_at": "2026-11-06T04:18:53Z",
     "filed_before_affected_data": true
   }
 }
