@@ -196,7 +196,7 @@ def cert_task(task):
         if idx is None:
             return {"info": {"status": "not_emitted", "reason": "no GB element outside W_D found", "flag": True}}
         c = certs.make_ann_cert(cl, nv, eqs, gp[idx], idx, task["cert_meta"], task["Z"],
-                                max_bytes=task.get("ann_max_bytes", 512 << 20))
+                                form=task.get("ann_form", "auto"), max_bytes=task.get("ann_max_bytes", 512 << 20))
         if "not_emitted" in c:
             return {"info": {"status": "not_emitted", "reason": c["not_emitted"], "form": c.get("form")}}
         info = certs.write_cert(prefix + ".ann.json.gz", c)
@@ -214,11 +214,12 @@ def cert_task(task):
 
 
 def emit_certificate(run_dir, cfile, costfile, key, cell_id, kind, D, nv, eqs, Z, gens, meta, expected_dim,
-                     isolate=True, ann_max_bytes=512 << 20, wall_cap=WDAG_WALL_CAP_S):
+                     isolate=True, ann_max_bytes=512 << 20, wall_cap=WDAG_WALL_CAP_S, ann_form="auto"):
     """Run the certificate child and append a certificate record (M-8 status vocabulary:
     pending_checker | not_emitted). Never alters any closure record."""
     task = {"nv": nv, "D": D, "eqs": eqs, "Z": Z, "gens": gens, "kind": kind, "cert_meta": meta,
             "expected_final_dim": expected_dim, "run_dir": run_dir, "ann_max_bytes": ann_max_bytes,
+            "ann_form": ann_form,
             "max_json_bytes": WDAG_MAX_JSON_BYTES,
             "cert_prefix": os.path.join(run_dir, "certificates", safe(key) + f".D{D}")}
     st, payload, m9 = run_isolated(cert_task, task, wall_cap if kind == "wdag" else 7200, isolate=isolate)
@@ -574,7 +575,7 @@ def evaluate_closures(a, cell, key, arm, nv, eqs, Z, meta, cfile, costfile, wall
                       nv=nv, eqs=eqs, Z=Z, gens=gb["gens"], meta=meta, expected_dim=rec["final_dim"],
                       isolate=not a.no_isolate)
             if not dec["contained"] and dec["type"] in ("L", "G"):
-                emit_certificate(kind="ann", ann_max_bytes=a.ann_max_bytes, **ck)
+                emit_certificate(kind="ann", ann_max_bytes=a.ann_max_bytes, ann_form=a.ann_form, **ck)
             elif dec["contained"] and want_certs:
                 pol = wdag_policy(a, N)
                 if pol == "now":
@@ -721,7 +722,9 @@ def derived_instance(a, cell, sh, src, key, arm, wall_cap, ifile, cfile, costfil
     rec["meta"] = base_meta(cell, sh, src)
     append_gz_jsonl(ifile, rec)
     results["instances"].append({"key": key, "z": None if Z is None else len(Z)})
-    evaluate_closures(a, cell, key, arm, nv, eqs_used, Z, rec["meta"], cfile, costfile, wall_cap, results,
+    # certificates of nulls / PC-TRI / re-encodings carry an EMPTY instance block: the source EQS4 parameters
+    # do not describe these systems (an independent checker re-derives the descent from `instance`)
+    evaluate_closures(a, cell, key, arm, nv, eqs_used, Z, {}, cfile, costfile, wall_cap, results,
                       want_certs=(arm == "EQS4-AA" and a.aa_certs), sysref=sysref, null_route=null_route)
 
 
@@ -782,6 +785,8 @@ def parse(argv=None):
     p.add_argument("--always-ann", action="store_true", help="also emit ann certificates for non-decisive arms (AA)")
     p.add_argument("--generator-mode", default="adapted", choices=["adapted", "raw"])
     p.add_argument("--cert-degree", type=int, default=4, help="closure degree D at which certificates are emitted")
+    p.add_argument("--ann-form", default="auto", choices=["auto", "dual", "primal"],
+                   help="ann-v1 form (auto: primal when codim > dim, else dual)")
     p.add_argument("--wdag", default="auto", choices=["auto", "always", "never"])
     p.add_argument("--wall-cap", type=float, default=None, help="override per-instance-per-D wall cap (tests)")
     p.add_argument("--remaining-seconds", type=float, default=None)

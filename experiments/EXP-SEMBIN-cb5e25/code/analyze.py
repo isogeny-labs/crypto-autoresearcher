@@ -82,16 +82,43 @@ DECISIVE = ("EQS4", "EQS4-U")
 CARRYING_CELLS = ("m3n09", "m3n10", "m3n11", "m3n12", "m3n13", "m3n14", "m4n08", "m4n09")
 
 
+def _verdict_status(m8, rec_key, rec_D, inst, v):
+    """Map an independent-checker verdict onto the M-8 status. A verdict is a dict
+    {"verdict": "accept"|"reject", "system_sha256": hex, "D": int, "dag_minimal_D": int (optional)}
+    keyed by the certificate's cert_sha256. It counts only if its system_sha256 equals the instance's
+    M-10 hash (instances.jsonl.gz `system_sha256` of the record key) and its D equals the closure
+    degree of the certificate record (a wdag valid at D is valid at every larger D, so D must be pinned;
+    dag_minimal_D, when given, must not exceed D). A bare string verdict is NOT sufficient."""
+    if not isinstance(v, dict):
+        return "pending_checker", "verdict is not pinned (needs system_sha256 and D)"
+    word = v.get("verdict")
+    if word not in ("accept", "reject"):
+        return "pending_checker", "verdict word missing"
+    if v.get("system_sha256") != (inst.get(rec_key) or {}).get("system_sha256"):
+        return "pending_checker", "verdict system_sha256 differs from the instance M-10 hash"
+    if v.get("D") != rec_D:
+        return "pending_checker", f"verdict D {v.get('D')} differs from the certificate record D {rec_D}"
+    if v.get("dag_minimal_D") is not None and v["dag_minimal_D"] > rec_D:
+        return "pending_checker", "dag_minimal_D exceeds the record D"
+    return ("accepted" if word == "accept" else "rejected"), None
+
+
 def cert_records(run_dir, verdicts=None):
     """Latest certificate record per (key, cert_kind), with the M-8 status mapped through the
-    independent checker's verdicts {cert_sha256: accept|reject} when supplied."""
+    independent checker's pinned verdicts when supplied."""
+    inst = {d["key"]: d for d in read_gz_jsonl(os.path.join(run_dir, "instances.jsonl.gz")) if "N" in d}
     latest = {}
     for d in read_gz_jsonl(os.path.join(run_dir, "closures.jsonl.gz")):
         if d.get("kind") != "certificate":
             continue
         m8 = dict(d["M8"])
         if verdicts and m8.get("cert_sha256") in verdicts and m8.get("status") in ("pending_checker", "accepted", "rejected"):
-            m8["status"] = "accepted" if verdicts[m8["cert_sha256"]] in ("accept", "accepted", True) else "rejected"
+            st, why = _verdict_status(m8, d["key"], d["D"], inst, verdicts[m8["cert_sha256"]])
+            m8["status"] = st
+            if why:
+                m8["verdict_problem"] = why
+            if isinstance(verdicts[m8["cert_sha256"]], dict):
+                m8["dag_minimal_D"] = verdicts[m8["cert_sha256"]].get("dag_minimal_D")
         assert m8["status"] in M8_VOCAB, m8["status"]
         latest[(d["key"], d["cert_kind"])] = {**d, "M8": m8}
     return latest
@@ -287,7 +314,7 @@ def main():
     ap.add_argument("--run-dir", required=True)
     ap.add_argument("--out-dir", default=None)
     ap.add_argument("--checker-verdicts", default=None,
-                    help="JSON {cert_sha256: accept|reject} from the independent checker")
+                    help='JSON {cert_sha256: {"verdict": "accept"|"reject", "system_sha256": hex, "D": int, "dag_minimal_D": int?}}')
     a = ap.parse_args()
     verdicts = json.load(open(a.checker_verdicts)) if a.checker_verdicts else None
     controls, summary = analyze(a.run_dir, verdicts)

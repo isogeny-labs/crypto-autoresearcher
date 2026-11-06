@@ -757,10 +757,17 @@ def test_analyze_uncertified_and_fmain_gate_and_p3(tmp_path):
     assert c["z1_verified"] == 3 and c["z1_and_M1_false"] == 2 and not c["threshold_3_of_5_met"]
     assert [x["key"] for x in summ["containment_N_ge_27"]] == ["m3n40/EQS4/r0"]
     # checker verdicts move statuses: accepted / rejected
-    _, s2 = analyze.analyze(rd, {"h0": "accept"})
+    pin = lambda w, h="ab", D=4: {"verdict": w, "system_sha256": h, "D": D}
+    _, s0 = analyze.analyze(rd, {"h0": "accept"})            # bare string: not pinned, stays pending
+    assert {u["key"]: u["ann_status"] for u in s0["non_containment_uncertified"]}["m3n10/EQS4/r0"] == "pending_checker"
+    _, sb = analyze.analyze(rd, {"h0": pin("accept", h="WRONG")})   # wrong system hash
+    assert {u["key"]: u["ann_status"] for u in sb["non_containment_uncertified"]}["m3n10/EQS4/r0"] == "pending_checker"
+    _, sd = analyze.analyze(rd, {"h0": pin("accept", D=3)})         # wrong D
+    assert {u["key"]: u["ann_status"] for u in sd["non_containment_uncertified"]}["m3n10/EQS4/r0"] == "pending_checker"
+    _, s2 = analyze.analyze(rd, {"h0": pin("accept")})
     assert [u["key"] for u in s2["non_containment_uncertified"]] == ["m3n10/EQS4/r2"]
     assert [u["key"] for u in s2["non_containment_certified"]] == ["m3n10/EQS4/r0"]
-    _, s3 = analyze.analyze(rd, {"h0": "reject"})
+    _, s3 = analyze.analyze(rd, {"h0": pin("reject")})
     assert {u["key"]: u["ann_status"] for u in s3["non_containment_uncertified"]}["m3n10/EQS4/r0"] == "rejected"
     assert set(x["status"] for x in s3["M8"]) <= set(analyze.M8_VOCAB)
 
@@ -776,3 +783,53 @@ def test_analyze_end_to_end_reports_m6_and_calibration(tmp_path):
     assert all(x["d_F_eq"] == 2 for x in summ["M6_vs_2_and_D_solve_vs_2_and_3"])
     assert summ["F-MAIN_gate"]["gate"] in ("no_block_from_certificates", "incomplete_censored")
     assert summ["F-MAIN_gate"]["uncertified_non_containments"] == []
+
+
+def test_ann_form_option_and_formats_keys(tmp_path):
+    """--ann-form forces dual / primal; emitted certificates carry exactly the documented keys."""
+    allowed = {"schema", "D", "nv", "neq", "system_sha256", "form", "g", "g_gb_index", "Z", "instance",
+               "L_hex", "basis_hex"}
+    for form in ("dual", "primal"):
+        rd = str(tmp_path / form)
+        os.makedirs(rd)
+        st = RUN.run_trial(_args(rd, "m3n06", "EQS4", 0, "--cert-degree", "3", "--wdag", "never", "--ann-form", form))
+        assert st["status"] == "completed"
+        rec = [c for c in read_gz(os.path.join(rd, "closures.jsonl.gz")) if c.get("cert_kind") == "ann"][0]
+        cert = json.loads(gzip.open(os.path.join(rd, rec["M8"]["path"])).read())
+        assert cert["form"] == form and set(cert) <= allowed and ("L_hex" in cert) == (form == "dual")
+        assert cert["neq"] == len(json.loads(gzip.open(os.path.join(
+            rd, [d for d in read_gz(os.path.join(rd, "instances.jsonl.gz"))][0]["system_file"]["path"])).read())["eqs"])
+        import hashlib
+        assert hashlib.sha256(certs.cert_bytes(cert)).hexdigest() == rec["M8"]["cert_sha256"]
+        assert all(h and h == h.lower() and not h.startswith("0x") for h in cert.get("L_hex", cert.get("basis_hex")))
+        # g is the reduced GB element at g_gb_index (ordering: degree asc, then mask desc)
+        inst = mk_instance("m3n06", 0)[2]
+        gp = enumz.gb_polys(enumz.groebner_from_Z(inst["Z"], inst["nv"]))
+        assert certs.poly_to_json(gp[cert["g_gb_index"]]) == cert["g"]
+
+
+def test_gb_listing_order_documented():
+    gb = enumz.groebner_from_Z([0b0011, 0b0101, 0b1001, 0b0110], 4)
+    keys = [(bin(m).count("1"), -m) for m, _ in gb["gens"]]
+    assert keys == sorted(keys)
+
+
+def test_raw_hash_serialisation_includes_zero_generators():
+    nv, eqs = 3, [[1], [], [3, 0]]
+    data = json.loads(DS.canonical_bytes(nv, eqs))
+    assert data["neq"] == 3 and data["eqs"][1] == [] and data["schema"] == "sembin-sys-v1"
+    cell, sh, inst = mk_instance("m3n06", 0)
+    assert DS.system_sha256(inst["nv"], inst["raw_eqs"]) == RUN.instance_record(
+        "k", cell, sh, inst, inst["raw_eqs"], inst["raw_eqs"], {})["raw_system_sha256"]
+
+
+def test_non_eqs_certificates_have_empty_instance_block(tmp_path):
+    rd = str(tmp_path / "run")
+    os.makedirs(rd)
+    st = RUN.run_trial(_args(rd, "m3n07", "NULL-PROF", 1, "--cert-degree", "4", "--always-ann", "--wdag", "never"))
+    assert st["status"] == "completed"
+    recs = [c for c in read_gz(os.path.join(rd, "closures.jsonl.gz")) if c.get("cert_kind") == "ann"]
+    if not recs:
+        pytest.skip("this null is contained at D=4")
+    cert = json.loads(gzip.open(os.path.join(rd, recs[0]["M8"]["path"])).read())
+    assert cert["instance"] == {}

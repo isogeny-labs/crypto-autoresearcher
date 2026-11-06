@@ -57,8 +57,12 @@ for points `P_i` of the curve with `x(P_i)` in `v_i + V` and `R = sum P_i`.
 Chain enumeration of `Z` (one valid method; brute force over `F_2^N` is another
 and is acceptable for small `N`): iterate `X_1 in v_1 + V`, `X_2 in v_2 + V`;
 the `U_1` with `S_3(X_1,X_2,U_1) = 0` are the roots in `F_{2^n}` of the
-quadratic `(X_1+X_2)^2 U^2 + X_1 X_2 U + (X_1 X_2)^2 + B` (if the leading
-coefficient is 0 it degenerates to degree 1 or 0); continue with
+quadratic `(X_1+X_2)^2 U^2 + X_1 X_2 U + (X_1 X_2)^2 + B`. Degenerate cases:
+if `X_1 = X_2` the leading coefficient vanishes and the equation is linear
+(or, if also `X_1 X_2 = 0`, the constant `B != 0`, with no root); if the
+middle coefficient `X_1 X_2` vanishes while the leading one does not (for
+instance `X_1 = 0`, which occurs in EQS2 where `0 in V`), the equation is the
+pure square `(X_1+X_2)^2 U^2 = B` with the single root `U = sqrt(B)/(X_1+X_2)`; continue with
 `X_i in v_i + V` and the roots `U_{i-1}` of `S_3(U_{i-2}, X_i, U_{i-1}) = 0`;
 at the last link take the roots `X_m` of `S_3(U_{m-2}, X_m, x_R) = 0` that lie
 in `v_m + V` (i.e. `(X_m xor v_m) < 2^k`). Each tuple gives one `s`.
@@ -167,11 +171,14 @@ Checks (a)-(e); the certificate is accepted iff all hold:
 * (d) `g` vanishes at every point of `Z`, where `Z` is enumerated by the
   checker's own code from the serialised system (brute force over `F_2^nv`
   where feasible) or from the instance parameters by the chain method of
-  section 1; the two enumerations must agree when both are run. Optionally
-  (stronger): `g` equals the reduced GB element of `I(Z)` whose leading
-  monomial is the grevlex-largest monomial of `g`.
-* (e) The bytes of the serialised system hash to `system_sha256` (and `nv`
-  matches).
+  section 1; the two enumerations must agree when both are run. MANDATORY
+  (not optional): `g` equals the reduced GB element of `I(Z)` whose leading
+  monomial is the grevlex-largest monomial of `g` (the checker computes the
+  reduced GB of its own `Z`; the leading monomial of `g` must be a minimal
+  generator of the leading ideal, and the tail of `g` must consist of standard
+  monomials only, with the unique coefficients that make `g` vanish on `Z`).
+* (e) The bytes of the serialised system hash to `system_sha256`, AND the
+  system's `nv` and `neq` equal the certificate's `nv` and `neq`.
 
 Soundness: (a)+(b) give `W_D` contained in `U` (induction on the fixpoint
 chain); (c) gives `g` not in `W_D`; (d) gives `g` in `I(Z)`.
@@ -266,3 +273,69 @@ A non-containment (Type-L or Type-G) whose `ann` status is not `accepted` is
 reported as `non_containment_uncertified`; it is neither a counterexample nor
 contained, and the analysis reports the F-MAIN gate as `incomplete_censored`
 with detail `certificate_pending`.
+
+## 8. Clarifications (round 3)
+
+1. **`raw_system_sha256`.** It is the section 2 hash (`sembin-sys-v1`, same
+   canonical text) of the RAW descended system: `neq = M = (m-1)*n`, the
+   equations in the order `l*n + a` (link `l`, coordinate `a`), a zero
+   coordinate polynomial written as the empty list `[]` (so `neq` counts it),
+   monomials as in section 2. `system_sha256` hashes the adapted system whose
+   `neq` is the rank. For `generator_mode = raw` the two coincide.
+2. **Certificate keys.** ann-v1 REQUIRED: `schema, D, nv, neq, system_sha256,
+   form, g` and exactly one of `L_hex` (dual) / `basis_hex` (primal) matching
+   `form`. OPTIONAL (informational, never trusted): `g_gb_index, Z, instance`.
+   wdag-v1 REQUIRED: `schema, D, nv, neq, system_sha256, nodes, outputs,
+   targets`; OPTIONAL: `Z, instance, levels`. A checker rejects a certificate
+   with any other key, a wrong `schema`, a `form` that does not match the
+   present vector key, or both vector keys present. The producer writes only
+   the keys listed here.
+3. **`g_gb_index`.** The 0-based position of `g` in the reduced GB listed by
+   increasing leading monomial in grevlex: degree ascending and, inside a
+   degree, ascending grevlex, i.e. DEscending bitmask. Informational only;
+   (d) does not use it.
+4. **`instance` / `Z`.** `instance` is a JSON object (the parameters of
+   section 1 for EQS4 / EQS4-U / EQS2 instances; for nulls, PC-TRI and
+   re-encodings (EQS4-AA) it is the EMPTY object `{}`, because their systems
+   are not the Weil descent of any parameter set; `instance` must then be
+   absent or empty and `Z` is verified by brute force from the system). `Z` is a list of hex integers.
+5. **Hex fields.** Lowercase hex without prefix; the zero value is `"0"`;
+   leading zeros are not written (a checker may accept them); the empty string
+   is invalid; a value must be `< 2^C` with `C` the number of columns of
+   `COL(D, nv)`. `L_hex` empty is syntactically valid but can never satisfy
+   (c), so it is rejected; the producer never emits it (it needs `g` outside
+   `W_D`, hence a nonzero annihilator).
+6. **`D` and `COL(D,nv)`.** `D >= 2` (this run uses `2 <= D <= 6`). For
+   `D > nv` the columns are simply all `2^nv` monomials (there are none of
+   degree above `nv`) and nothing else changes. The claim of an ann
+   certificate is about `W_D` at exactly this `D`.
+7. **wdag details.** Nodes not reachable from `outputs` are allowed (the
+   checker verifies them and may report them); the producer emits none.
+   `targets` need not be the reduced GB for (a)-(e); (f) is what makes them a
+   Groebner basis of `I(Z)`; the producer emits the reduced GB. A row `[mu,k]`
+   with `f_k` the zero polynomial is invalid (`deg f_k = -1`; it can add
+   nothing); the producer never emits one (adapted systems have no zero
+   generator). `levels` is the number of eliminations in the fixpoint replay
+   (informational).
+8. **`cert_sha256`.** The sha256 (hex) of the canonical JSON text of the whole
+   certificate object: keys sorted, separators `,` and `:`, UTF-8, no trailing
+   newline. It equals the sha256 of the uncompressed content of the stored
+   `.json.gz` (`content_sha256`).
+9. **Degree pinning for wdag.** A wdag valid at `D` is valid at every `D' >= D`
+   (the rows and mutant steps allowed at `D` are allowed at `D'`), so `D` in a
+   verdict is meaningless unless pinned. The independent checker's verdict
+   must therefore state the `D` it verified and may add `dag_minimal_D` (the
+   least `D'` for which the same DAG passes (a)-(d)). The analysis counts a
+   containment certificate only for the closure degree of the record it
+   belongs to (4), and requires `dag_minimal_D <= D`.
+10. **Verdict file (used by `analyze.py --checker-verdicts`).** A JSON file
+    stored beside the run (suggested `runs/<RUN-ID>/checker-verdicts.json`)
+    mapping `cert_sha256` to
+    `{"verdict": "accept"|"reject", "system_sha256": <hex>, "D": <int>,
+    "dag_minimal_D": <int, optional>}`. The key-to-instance mapping is
+    `cert_sha256 -> certificate record in closures.jsonl.gz -> key ->
+    instances.jsonl.gz record`. A verdict makes M-8 `accepted` or `rejected`
+    only if `system_sha256` equals the instance's M-10 `system_sha256` and
+    `D` equals the closure degree of the certificate record; otherwise the
+    status stays `pending_checker` and the analysis records the
+    `verdict_problem`. A bare string verdict is not sufficient.
