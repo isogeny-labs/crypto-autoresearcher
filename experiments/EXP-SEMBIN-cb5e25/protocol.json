@@ -48,13 +48,13 @@
     },
     {
       "id": "CL-assumption1-exact-dF",
-      "text": "On instances with d_F^eq = 3, whether W_3 contains the Groebner basis, which Assumption 1 with the exact d_F predicts.",
+      "text": "Descriptive only (design revision 2, DER-9): every EQS4 and EQS2 instance with m >= 3 has a degree-1 element in the span of its last-link coordinates, so d_F^eq <= 2 and the original premise (instances with d_F^eq = 3) is empty. The report is M-6 (expected 2 everywhere) with D_solve against 2 and against 3. It decides nothing and cannot contribute to the counterexample or corroboration claims.",
       "class": "exact_computation",
       "decided_by": [
         "C-DF-EXACT"
       ],
-      "if_supported": "Report per instance as a separate claim. It does not touch the O((nm)^{4w}) reading.",
-      "if_not_supported": "Report per instance as a separate claim."
+      "if_supported": "Report the table of M-6 and of D_solve against 2 and 3 as a separate descriptive claim. It does not touch the O((nm)^{4w}) reading. A value of M-6 other than 2 is a builder or d_F-module defect to investigate first.",
+      "if_not_supported": "Report the table as a separate descriptive claim."
     },
     {
       "id": "CL-shift-effect",
@@ -129,7 +129,7 @@
           "id": "P-3",
           "metric": "M-1",
           "direction": "lower",
-          "minimum_effect": "NULL-PROF not contained on >= 4 of 5 uniqueness-verified seeds per completed cell with N >= 18 (prior 0.90)",
+          "minimum_effect": "Among NULL-PROF seeds verified to have a single solution (brute force, N <= 26), M-1 false on >= 80% pooled over completed cells with N in 18..26, per-cell counts reported (prior 0.90; design revision 2 re-worded the original per-cell 4-of-5 form, which could not be met arithmetically)",
           "provenance": {
             "written_at": "2026-11-06",
             "first_recorded_in": "ledger/hypotheses/H-SEMBIN-e5b2db.yaml",
@@ -193,9 +193,9 @@
         },
         {
           "id": "P-7",
-          "metric": "M-1",
-          "direction": "equal_within",
-          "minimum_effect": "On instances with d_F^eq = 3, every one has the basis inside W_3 (prior 0.40 that this holds everywhere)",
+          "metric": "M-6",
+          "direction": "lower",
+          "minimum_effect": "d_F^eq <= 2 on every EQS4 and EQS2 instance with m >= 3 (DER-9: the last-link coordinates span a degree-1 element). Design revision 2 replaced the original prediction about d_F^eq = 3 instances, whose premise is empty. A derivation, not a prior.",
           "provenance": {
             "written_at": "2026-11-06",
             "first_recorded_in": "ledger/hypotheses/H-SEMBIN-e5b2db.yaml",
@@ -208,7 +208,7 @@
             "sample_status": "out_of_sample",
             "decisive_scope": null
           },
-          "role": "decisive"
+          "role": "calibration"
         }
       ]
     }
@@ -238,7 +238,7 @@
     {
       "id": "EQS4-U",
       "role": "candidate",
-      "description": "EQS4 conditioned on |Z| = 1: the first of attempts a=0..31 with a unique F_2 solution. Same instance as EQS4 when a=0 is unique. not_available if no attempt is unique. Supplies Type-L certificates.",
+      "description": "EQS4 conditioned on |Z| = 1: the first of attempts a=0..31 with a unique F_2 solution. Attempt a=0 is the EQS4 stream (same instance as EQS4 when unique); attempt a>=1 uses arm EQS4-U, instance cell_id/a<a>. not_available if no attempt is unique. An attempt that cannot be planted counts as non-unique. Supplies Type-L certificates.",
       "instrument": {
         "repo": "crypto-autoresearcher",
         "commit": null,
@@ -254,7 +254,7 @@
     {
       "id": "EQS2",
       "role": "baseline",
-      "description": "Matched unshifted system (all v_i = 0, Definition 4 with chained EQS1). Same curve, field, V and order as EQS4 at (cell,r). Planted from its own substream. Read by the general DER-3 criterion because |Z| >= 2 is typical (S_3 symmetric in X_1, X_2).",
+      "description": "Matched unshifted system (all v_i = 0, Definition 4 with chained EQS1). Same curve, field, V and order as EQS4 at (cell,r). Planted from its own substream, not_available (not a result) when no valid decomposition exists within 20000 tries. Read by the general DER-3 criterion because |Z| >= 2 is typical (S_3 symmetric in X_1, X_2).",
       "instrument": {
         "repo": "crypto-autoresearcher",
         "commit": null,
@@ -267,7 +267,7 @@
     {
       "id": "NULL-PROF",
       "role": "control_negative",
-      "description": "Random multilinear planted system matching the EQS4 instance's N, M and exact per-equation per-degree monomial counts (cubic links plus quadratic last link). Constants set so a uniform s is a solution. |Z| brute-forced where N <= 24.",
+      "description": "Random multilinear planted system matching the EQS4 instance's N, M and exact per-equation per-degree monomial counts (cubic links plus quadratic last link). Constants set so a uniform s is a solution. |Z| brute-forced where N <= 26, affine-subspace search from the W_4 linear forms otherwise (M-1 undetermined_Z_unknown when more than 16 variables stay free). Declared mismatch: its span has no degree-1 element, while every EQS4 span has one (DER-9).",
       "instrument": {
         "repo": "crypto-autoresearcher",
         "commit": null,
@@ -306,7 +306,7 @@
     {
       "id": "EQS4-AA",
       "role": "control_aa",
-      "description": "The EQS4 instance re-encoded by a random invertible affine change of variables and a random invertible equation recombination. Exact metrics must be identical.",
+      "description": "The EQS4 instance re-encoded by a random invertible affine change of variables and a random invertible equation recombination of the raw generators; the closure runs on the adapted generators (DC-9) of both. Exact metrics M-1, M-2, M-3, M-4 (iteration 0 included), M-5 and M-7 at every D must be identical (DER-8(c)).",
       "instrument": {
         "repo": "crypto-autoresearcher",
         "commit": null,
@@ -332,7 +332,7 @@
     {
       "id": "EQS4-NOFE",
       "role": "baseline",
-      "description": "The same descended generators in the full ring without S_fe, N <= 20. Linear forms in W_D, whether 1 is in W_D, and d_F^eq (DER-7). Descriptive only.",
+      "description": "The same descended generators (the same adapted generators as EQS4-FULLFE) in the full ring without S_fe, N <= 20. Linear forms in W_D, whether 1 is in W_D, and d_F^eq (DER-7). Descriptive only.",
       "instrument": {
         "repo": "crypto-autoresearcher",
         "commit": null,
@@ -362,7 +362,7 @@
         "description": "Random multilinear Boolean systems with a planted solution, profile-matched to each EQS4 instance",
         "generator": "code/nulls.py NULL-PROF: uniform supports with per-equation per-degree monomial counts copied from the EQS4 instance, coefficients 1 on support, constants set by a uniform planted s, from the arm seed substream",
         "n": 5,
-        "why_n": "5 seeds per cell (3 at T2, 1 at T3) show the instrument says 'not contained' for the right reason (uniqueness verified by brute force where N <= 24). The criterion needs >= 3 of 5 in one cell with N >= 18. Semi-regular cubic series give D_reg >= 5 at these N, so a large effect is expected.",
+        "why_n": "5 seeds per cell (3 at T2, 1 at T3) show the instrument says 'not contained' for the right reason (uniqueness verified by brute force where N <= 26, so discrimination can be established only in cells with N in 18..26). The criterion needs >= 3 of 5 (|Z| = 1 verified and M-1 false) in one cell with N >= 18. Semi-regular cubic series give D_reg >= 5 at these N, so a large effect is expected.",
         "matched_on": [
           "N",
           "M",
@@ -479,8 +479,8 @@
       {
         "name": "generator_representative",
         "treatment": "fixed",
-        "value": "reduced multilinear",
-        "how": "one reduction routine"
+        "value": "reduced multilinear, closure on the adapted span basis (DC-9)",
+        "how": "one reduction routine and one adaptation routine; the raw hash is recorded as well"
       },
       {
         "name": "monomial_and_variable_order",
@@ -612,7 +612,7 @@
         ],
         "design": "aa",
         "reason": null,
-        "threshold": "exact equality of M-1, M-2, M-3, M-4. Noise floor 0."
+        "threshold": "exact equality of M-1, M-2, M-3, M-4 (iteration 0 included), M-5 and M-7 at every D, on the adapted generators (DER-8(c)). Noise floor 0."
       },
       {
         "id": "C-FE-EQ",
@@ -648,7 +648,7 @@
         ],
         "differs_in": [],
         "design": "absolute",
-        "threshold": "on instances with d_F^eq = 3, the Groebner basis is in W_3",
+        "threshold": "descriptive only (design revision 2): M-6 equals 2 on every EQS4 and EQS2 instance (DER-9), with D_solve reported against 2 and 3. No containment threshold, decides nothing.",
         "reason": null
       },
       {
@@ -687,10 +687,10 @@
     "arm_order_reason": "Within each cell, arms rotate by seed (EQS4, EQS2, NULL-PROF, NULL-SHUF, PC-TRI, then EQS4-AA, EQS4-U, FE arms) so that no arm runs all first. Metrics are exact, so order cannot move them. It matters only for M-9.",
     "seed_derivation": {
       "method": "protocol_hash_sha256",
-      "note": "seed = first 8 bytes of sha256(protocol_sha256 \\n arm \\n instance \\n replicate), big-endian, with instance = cell_id (or cell_id/a<attempt> for EQS4-U attempts) and replicate = r. The curve and coset shifts use arm = 'SHARED' so matched arms share them. Each row records both its arm seed and its SHARED seed."
+      "note": "seed = first 8 bytes of sha256(protocol_sha256 \\n arm \\n instance \\n replicate), big-endian, with instance = cell_id and replicate = r. EQS4-U attempt a=0 is the EQS4 stream (arm EQS4, instance cell_id); attempt a>=1 uses arm EQS4-U with instance cell_id/a<a>. The curve and coset shifts use arm = 'SHARED' so matched arms share them. The substreams are HashRng sha256 counter-mode generators (block i = sha256(seed8 || label || i)), independent of any numpy or Python random version. Each row records both its arm seed and its SHARED seed."
     },
     "instance_sampling": {
-      "rule": "Per (cell, r): curve and shifts from the SHARED substream; planted points P_i uniform in Fb_i from the arm substream, with redraws on R = O or x(R) = 0 counted. Z is enumerated algebraically. No selection on any closure outcome. EQS4-U selects on |Z| = 1 only.",
+      "rule": "Per (cell, r): curve and shifts from the SHARED substream, redrawn deterministically (counted) until every coset holds a curve point and a valid decomposition exists (feasibility only); planted points P_i uniform in Fb_i from the arm substream, with redraws on a partial sum O, R = O or x(R) = 0 counted. EQS2 or EQS4 with no valid decomposition is not_available (not a result). Z is enumerated algebraically. No selection on any closure outcome. EQS4-U selects on |Z| = 1 only.",
       "independent_of_arm": true
     },
     "blinding": {
@@ -716,8 +716,8 @@
       "fixed_seconds": 300,
       "per_sample_seconds": null,
       "threads": 1,
-      "estimated_total_seconds": 22400,
-      "measured_on": "MODELED, not measured on this instrument: RUN-CERTBIN-a3fc60 cell-summary.json W_4+extraction median 0.373 s (max 3.305 s, n=2100) at nv=20 (C4=6196), scaled by (C4/6196)^3. Per-instance medians: N=24 3.4 s, N=28 22 s, N=32 112 s, N=40 1660 s. Tails of about 9x the median are expected. SR-3 uses this run's measured timings instead."
+      "estimated_total_seconds": 26400,
+      "measured_on": "MODELED, not measured on this instrument: RUN-CERTBIN-a3fc60 cell-summary.json W_4+extraction median 0.373 s (max 3.305 s, n=2100) at nv=20 (C4=6196), scaled by (C4/6196)^3. Per-instance medians: N=24 3.4 s, N=28 22 s, N=32 112 s, N=40 1660 s. Base 22400 s (T0 300, T1 4000, T3 13300, T2 4800) plus design revision 2 additions: wdag certificates N<=20 400 s and N 21..26 1600 s (scaled from one measured 126 s at N=25), null brute force to N<=26 1400 s (unmeasured bound), certificate contingency 600 s. With the 1200 s reporting reserve 27600 s against the 43200 s cap. An N=40 probe on synthetic systems took 151 s and 3.1 GB, not used for gating. Tails of about 9x the median are expected. SR-3 uses this run's measured timings instead."
     }
   },
   "metrics": {
@@ -891,7 +891,7 @@
   },
   "stopping_rules": [
     {
-      "rule": "SR-1: fixtures F-1..F-8 run first. Any failure stops the run before any target instance.",
+      "rule": "SR-1: fixtures F-1..F-8 run first. Any failure stops the run before any target instance. A not_covered verdict (for example F-6 without Sage) counts as a failure. F-5 against the producer-side checker is labelled not independent until the Validator checker exists.",
       "kind": "invalidation",
       "preregistered": true
     },
@@ -911,7 +911,7 @@
       "preregistered": true
     },
     {
-      "rule": "SR-5: any EQS4-AA discrepancy, or a C-FE-EQ disagreement, stops the run as invalid.",
+      "rule": "SR-5: any EQS4-AA discrepancy in M-1, M-2, M-3, M-4 (iteration 0 included), M-5 or M-7 at any D on the adapted generators, a C-FE-EQ disagreement, or a failure of the F-4 raw-against-adapted check of W_D for D >= 3, stops the run as invalid.",
       "kind": "invalidation",
       "preregistered": true
     },
@@ -933,19 +933,19 @@
   ],
   "invalidation_rules": [
     "IR-1: a descent check mismatch (generator against field-side S_3 at s and at 64 random points) invalidates the instance and suspends its cell",
-    "IR-2: Z enumeration disagreeing with brute force (targets N<=20, nulls N<=24) invalidates the instance",
+    "IR-2: Z enumeration disagreeing with brute force (targets N<=20, nulls N<=26) invalidates the instance",
     "IR-3: a planted s that fails a generator, a v_i inside V, or coincident cosets invalidates the instance",
-    "IR-4: a non-containment certificate rejected by the independent checker voids that M-1=false reading",
+    "IR-4: IR-4a a non-containment certificate rejected by the independent checker voids that M-1=false reading; IR-4b a certificate that is not emitted (size, wall or memory guard) or not yet checked leaves it unconfirmed. Either way the instance is reported as non_containment_uncertified, is never a counterexample and never a contained instance, and blocks the corroboration verdict until repaired or recorded as an impediment",
     "IR-5: a dirty tree without per-file sha256 of the code that ran voids run provenance"
   ],
   "decision_rule": {
-    "text": "Report controls first: fixtures, C-PC, C-AA-ENC, C-FE-EQ, then C-NULL. If any validity gate fails, the run is invalid. Otherwise CL-counterexample holds iff C-EQS4-ABS has >= 1 certified Type-L or Type-G M-1=false instance. CL-corroboration holds iff C-EQS4-ABS has every decisive instance contained and C-NULL shows NULL-PROF M-1=false on >= 3 of 5 uniqueness-verified seeds in >= 1 completed cell with N >= 18. Otherwise the outcome is inconclusive.",
+    "text": "Report controls first: fixtures, C-PC, C-AA-ENC, C-FE-EQ, then C-NULL. If any validity gate fails, the run is invalid. Otherwise CL-counterexample holds iff C-EQS4-ABS has >= 1 certified Type-L or Type-G M-1=false instance. CL-corroboration holds iff C-EQS4-ABS has every decisive instance contained and C-NULL shows NULL-PROF M-1=false on >= 3 of the 5 seeds of >= 1 completed cell with N >= 18, each counted seed having a verified single solution (|Z| = 1 by brute force for N <= 26) and M-1 false; only cells with N in 18..26 can carry this. An uncertified non-containment (IR-4) is not contained and blocks corroboration (verdict incomplete_censored, detail certificate_pending). Otherwise the outcome is inconclusive. What corroboration means is the operational form (degree 4 suffices), not Assumption 1 with the exact d_F = 2 (DER-5, DER-9).",
     "comparison_ids": [
       "C-EQS4-ABS",
       "C-NULL",
       "C-PC"
     ],
-    "threshold": "one certified non-containment (CL-counterexample); zero non-containments plus null discrimination of >= 3/5 in a cell with N >= 18 (CL-corroboration)",
+    "threshold": "one certified non-containment (CL-counterexample); zero non-containments, certified or not, plus null discrimination of >= 3/5 (|Z| = 1 verified and M-1 false) in a cell with N in 18..26 (CL-corroboration)",
     "statistic": "Per-instance exact M-1 and M-3. Counts of contained and not-contained per arm per cell.",
     "interval": "None for exact per-instance values. For pooled all-contained counts, the Clopper-Pearson 95% upper bound on the per-instance non-containment rate.",
     "multiple_comparison_correction": "none",
@@ -996,7 +996,10 @@
     "Stating any cost, speedup or deployed-curve consequence from any outcome",
     "Using plain M_D non-containment as a counterexample (only W_D counts)",
     "Treating a structurally forced C-FE-EQ agreement as evidence",
-    "Reading the trivial violation under the '>=' reading (DER-5) as this experiment's evidence"
+    "Reading the trivial violation under the '>=' reading, or under the equality reading with d_F^eq = 2 (DER-5, DER-9), as this experiment's evidence",
+    "Reporting a non-containment without an accepted certificate as a counterexample, or as a contained instance (it is non_containment_uncertified)",
+    "Reading a null with undetermined_Z_unknown as 'not contained for the right reason'",
+    "Reporting containment at N >= 27 as certified (it is engine-decided; wdag is not attempted there)"
   ],
   "literature": [
     {

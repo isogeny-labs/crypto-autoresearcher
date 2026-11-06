@@ -3,6 +3,12 @@
 # 2015/984 Theorem 1 at p = 2: Proposition 5 AND Assumption 1, read as
 # "every EQS4 instance is solved within degree 4". Tested by
 # EXP-SEMBIN-cb5e25. Designed 2026-11-06 under GOAL-SEMBIN-fcb7a2.
+# Draft revision 2, 2026-11-06 (status still specified, never approved, nothing
+# run): P-3 re-worded, P-5 note, P-7 added as a calibration prediction,
+# falsification_conditions fixture list and uncertified-non-containment rule,
+# one assumption and two interpretation limits added (degree-1 element of the
+# last link, DER-9; operational form). The changes and their reasons are in
+# experiments/EXP-SEMBIN-cb5e25/specification.yaml, design_revision.
 hypothesis:
   id: H-SEMBIN-e5b2db
   question_id: RQ-SEMBIN-9e8f82
@@ -101,7 +107,18 @@ hypothesis:
       Planted R is distributed as a sum of uniform factor-base points, not as a
       uniform R conditioned on being decomposable. The two differ by a weight
       equal to the number of decompositions. This is declared and not
-      corrected.
+      corrected. The sampled (curve, shifts) are additionally conditioned on
+      the existence of a valid planted decomposition (a deterministic,
+      counted redraw that never looks at a closure outcome), which matters
+      only at the smallest cells.
+    - >-
+      Every EQS4 and EQS2 instance with m >= 3 has a degree-1 element in the
+      span of its last-link coordinates (DER-9: Tr(U_{m-2}) + Tr(X_m) +
+      Tr(x_R^{-2} B)). It removes one Boolean variable and gives d_F^eq <= 2
+      under the equality reading. It does not by itself decide containment. The
+      closure runs on the degree-adapted generators of the span (DC-9), and
+      W_D is the same as for the raw generators for every D >= 3 (DER-8), so
+      the decisive W_4 quantity does not depend on that convention.
 
   heuristic_assumptions:
     - id: HEUR-SEMBIN-e5b2db-1
@@ -304,12 +321,17 @@ hypothesis:
         the lead's "degree rises at l = 7, m = 3" on unsatisfiable unshifted
         draws)
     - id: P-3
-      metric: M-1 on NULL-PROF with |Z| = 1 verified, cells N >= 18
+      metric: M-1 on NULL-PROF with |Z| = 1 verified, cells with N in 18..26
       direction: lower
       minimum_effect: >-
-        At least 4 of 5 seeds not contained at W_4 in each such cell (prior
-        0.90; semi-regular cubic series gives D_reg >= 5 at N = M = 12 and 7 at
-        N = M = 20)
+        Among seeds verified to have a single solution, at least 80% not
+        contained at W_4, pooled over the completed cells, with per-cell counts
+        reported (prior 0.90; semi-regular cubic series gives D_reg >= 5 at
+        N = M = 12 and 7 at N = M = 20). Revision 2 re-worded the earlier
+        "at least 4 of 5 seeds in each cell", which required 4 of 5 seeds to be
+        uniqueness-verified and so could not be met when random planted systems
+        with M near N are rarely unique (about 0.4 at M = N, modelled). The
+        prior concerned non-containment given uniqueness and is unchanged.
     - id: P-4
       metric: D_solve on PC-TRI
       direction: lower
@@ -317,7 +339,16 @@ hypothesis:
     - id: P-5
       metric: d_F under the equality reading, true side, S_fe inside
       direction: lower
-      minimum_effect: d_F^eq <= 4 on every instance (DER-4); its exact value 2, 3 or 4 is reported, not predicted
+      minimum_effect: d_F^eq <= 4 on every instance (DER-4); its exact value is reported, not predicted (expected 2, see P-7)
+    - id: P-7
+      metric: d_F under the equality reading (M-6), EQS4 and EQS2
+      direction: lower
+      minimum_effect: >-
+        d_F^eq <= 2 on every instance with m >= 3 (DER-9, a derivation: the
+        last-link coordinates span a degree-1 element). A calibration of the
+        builder and the d_F module, not a test of the statement. It replaces an
+        earlier draft prediction about instances with d_F^eq = 3, whose premise
+        is empty.
     - id: P-6
       metric: D_solve, EQS4 against matched EQS2 (C-SHIFT)
       direction: equal_within
@@ -364,8 +395,8 @@ hypothesis:
     - id: O-2
       reading: >-
         All contained, null discriminates: every decisive EQS4 and EQS4-U
-        instance contained, and NULL-PROF not contained on >= 3 of 5
-        uniqueness-verified seeds in >= 1 cell with N >= 18. Falsifies the
+        instance contained, and NULL-PROF not contained on >= 3 of the 5 seeds
+        (each with |Z| = 1 verified) of >= 1 cell with N in 18..26. Falsifies the
         statement at tested scope. This corroborates the conjunction only
         inside the grid and is breakthrough-adjacent (IDEA-20261006-8f4f02
         interpretation_limits).
@@ -393,13 +424,19 @@ hypothesis:
   falsification_conditions:
     - >-
       O-2: with every validity gate of EXP-SEMBIN-cb5e25 passed (fixtures
-      F-1..F-6, C-PC, C-AA-ENC, the descent and Z checks), every decisive EQS4
+      F-1..F-8, C-PC, C-AA-ENC, the descent and Z checks), every decisive EQS4
       and EQS4-U instance has M-1 true, and C-NULL discriminates as stated in
-      O-2. Scope: the cells actually completed.
+      O-2 (at least 3 of 5 seeds with |Z| = 1 verified and M-1 false in one
+      completed cell, which only cells with N in 18..26 can supply). Scope: the
+      cells actually completed.
     - >-
       A certificate that the independent checker rejects does not count
-      toward O-1. If every candidate counterexample is rejected, the outcome
-      is read from the remaining instances.
+      toward O-1. A non-containment whose certificate is rejected, not emitted
+      (size, wall or memory guard) or not yet checked is non_containment_uncertified:
+      it is neither a counterexample nor a contained instance, and it blocks
+      O-2 until it is repaired (a certificate re-issued and accepted, or the
+      defect identified and recorded in a superseding record) or recorded as
+      an impediment. The outcome is then read from the repaired record.
 
   interpretation_limits:
     - >-
@@ -423,6 +460,20 @@ hypothesis:
       review-breakthrough at max (AGENTS.md core rule 12), which is
       undegradable. If that tier cannot be served, the corroboration stays
       un-promoted and the goal records an impediment.
+    - >-
+      What the all-contained outcome corroborates is the operational form,
+      that degree 4 suffices, which is the form the cost bound O((nm)^{4w})
+      uses through Proposition 5's d_F <= 4. It does not corroborate Assumption
+      1 with the exact equality-reading d_F, which is 2 at every instance
+      (DER-9) and is then violated on inspection by the cubic input rows under
+      the reading of "appears in the computation" adopted here (DER-5). A
+      counterexample, in contrast, refutes Assumption 1 under every reading,
+      because d_F <= 4.
+    - >-
+      Containment at N >= 27 is engine-decided: no wdag certificate is
+      attempted there (memory), and it is cross-checked only by the controls
+      that run on the same engine. Null discrimination can be established only
+      in cells with N in 18..26, where the solution set of a null is known.
     - >-
       Transfer to larger n, to m >= 5, or to Nagao's asymptotic regime
       (k = C0, m ~ n/C0) is NOT assumed. A D_solve series over n is a
