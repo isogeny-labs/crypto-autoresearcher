@@ -1,0 +1,312 @@
+
+===== heads
+crypto 3a7a0f98af47f24cabfa7779c267695e00faf3dd
+car be57d6c66b7a206e20bee4cc2a545b6ebab618a5
+
+===== P1/P-N1/P-N2: LLL note withdrawals and table (tex lines)
+27:on deployed ECDSA curves: a ``curve-specific'' failure for secp256k1
+34:path, for a reason we have not isolated. Both fixes (scaling, and a
+40:$k_{\text{bits}} = 384$). We withdraw the curve-specificity claim and every conclusion
+54:following claims of the earlier version are \textbf{withdrawn}:
+56:\item that secp256k1's LLL failure is ``a curve-specific arithmetic
+60:\item that LLL-convergence benchmarks are curve-specific and that
+64:      the curve-specificity claim.
+74:\texttt{f64} path: ``catastrophic cancellation'', in which
+90:The sentence is withdrawn; the measured result (scaled \texttt{f64}
+178:(3 of 3). We have not isolated where the scaled \texttt{f64} path
+195:Curve & Gram--Schmidt & $k_{\text{bits}}$ & Recovered / distinct & Runs \\
+197:secp192k1        & scaled \texttt{f64}  & 144 & 2 / 2 & 3 / 3 \\
+198:secp224k1        & scaled \texttt{f64}  & 168 & 2 / 2 & 3 / 3 \\
+199:secp256k1        & scaled \texttt{f64}  & 192 & 3 / 3 & 6 / 6 \\
+200:P-256            & scaled \texttt{f64}  & 192 & 3 / 3 & 6 / 6 \\
+202:P-384            & scaled \texttt{f64}  & 288 & 3 / 3 & 4 / 4 \\
+203:brainpoolP384r1  & scaled \texttt{f64}  & 288 & 3 / 3 & 4 / 4 \\
+204:P-521            & scaled \texttt{f64}  & 384 & 0 / 3 & 0 / 4 \\
+205:P-521            & 2048-bit fixed point & 384 & 3 / 3 & 3 / 3 \\
+228:No curve-specific LLL behaviour remains at these parameters. The
+233:reason we have not isolated, while 2048-bit fixed point succeeds. An HNP
+papers/lll-degeneracy-note/lll_degeneracy_note.tex last: 5dea90bce 2026-10-28T15:24:35+00:00
+papers/lll-degeneracy-note/lll_degeneracy_note.pdf last: 805650454 2026-10-28T16:19:40+00:00
+LLL PDF mentions PPN-2 footnote: 1
+
+===== PPN-2: analysis note section 10 correction
+260:> **Correction (2026-10-28, sheriff case SHF-20261028-0f3f64, PPN-2).**
+263:> 1. **§10.2 root cause withdrawn.** The "catastrophic cancellation"
+280:>    crate to num-bigint **0.4.8** (`cargo tree -i num-bigint@0.4.8`; 0.5.1
+281:>    is also locked, for another dependency). In the 0.4.8 source,
+293:> 3. **§10.1 numbers.** `f64::MAX = (2^53 − 1)·2^971 ≈ 2^1024`, not `2^1023`.
+294:>    `n(secp256k1) − n(P-256) ≈ 2^224.0`, not `~2^192`. The overflow
+296:>    P-256's `n^4` is below it, by a factor of about `1 − 2^-30`.
+302:overflow bug: `secp256k1.n ≈ 2^256`, so `n^4 ≈ 2^1024 > f64::MAX
+303:≈ 2^1023` [corrected 2026-10-28: `≈ 2^1024`].  The GS norm computation produced `Inf → NaN`,
+305:its `n` is smaller by `~2^192` [corrected 2026-10-28: `~2^224`], putting `P-256.n^4` just under
+311:### 10.2 Failure B → Catastrophic cancellation (resolved 2026-05-22) [root cause withdrawn 2026-10-28; see the correction at the top of §10]
+315:*[Withdrawn: unsupported. With the locked num-bigint 0.4.8 conversion, the
+1485:name = "num-bigint"
+1486-version = "0.4.8"
+--
+1497:name = "num-bigint"
+1498-version = "0.5.1"
+    let nbits = abs.bits() as u32;
+
+    if nbits + scale_shift <= 1020 {
+        // Safe direct path: convert to f64 then apply the scale.
+        let v = abs.to_f64().unwrap_or(0.0);
+        // 2^scale_shift is exactly representable in f64 for scale_shift < 1024.
+        sign * v / f64::powi(2.0, scale_shift as i32)
+    } else {
+        // abs >= 2^(1020 - scale_shift), so direct to_f64() would overflow.
+        // Shift abs right to bring it to ~2^1020 bits, then adjust exponent.
+        let extra_shift = nbits.saturating_sub(1020);
+        let shifted = &abs >> extra_shift as usize;
+        let v = shifted.to_f64().unwrap_or(0.0);
+
+===== P3/P4/P5/P-N4: structural-completeness tex
+74:The theorem is argued by case analysis over seven structural blocks
+77:standing assumptions: Tate's
+82:The empirical checks are bounded: the structural conditions are
+148:ECC'') into a structural statement argued by case analysis over seven
+372:$p \not\equiv 0 \pmod \ell$ (both scripts skip $r = 0$, which drops one
+376:rows also in \texttt{exp\_zprime\_l\_residue.py}) there are 24\,476
+380:ordinary, and none has $\ell \mid \#E^t$.  The hypothesis classes that
+394:$(\ell, p, \#E)$ only, so these are 336 and 249 distinct
+395:$(\ell, p, \#E)$ checks respectively (for $\ell \in \{3,5,7\}$: 292 and,
+444:all 330 primes $p \equiv 1 \pmod{6}$ with $7 \le p \le 5000$ (of the 669 primes
+--- distinct-check counts in the cited recount/ outputs (expect none):
+none
+structural_completeness.tex last: 5dea90bce 2026-10-28T15:24:35+00:00
+structural_completeness.pdf last: 805650454 2026-10-28T16:19:40+00:00
+abstract.txt last: b615f0019 2026-10-17T05:39:29+00:00
+README.md last: b615f0019 2026-10-17T05:39:29+00:00
+recount/README.md last: b615f0019 2026-10-17T05:39:29+00:00
+87:Section 8, not yet independently reviewed; nothing in it is machine-checked). (Correction, 202610-28, sheriff case SHF-20261028-0f3f64, PPN-4: this sentence used to call the statement
+309:stack) over all 330 primes p ≡ 1 (mod 6) with 7 ≤ p ≤ 5000 (of the 669 primes p ≤ 5000;
+823:3305
+
+===== PPN-3 residual: abstract.txt companion-artefact lines vs paper
+56:  - 13 PARI/GP scripts (~3000 lines) with committed baseline
+58:  - 1 Rust integration test (~390 lines) running the full audit on
+All scripts are PARI/GP 2.17+ scripts in
+\nolinkurl{secp256k1_cm_audit/}. Twelve of the sixteen have a committed
+expected output (\texttt{<name>\_output.expected.txt}; for
+\texttt{vfcg\_experiment.gp} it is \texttt{vfcg\_output.expected.txt}).
+The other four have none. No automated check compares the expected
+outputs with fresh runs, and no runtime is recorded.
+In addition, a Rust integration test
+(\texttt{tests/curve\_audit.rs}, 568 lines at the same commit) runs the audit
+via \texttt{cargo test} on every \texttt{CurveParams} constant
+tests/curve_audit.rs at 06346136e: 568 lines (2026-09-24)
+tests/curve_audit.rs at f24aeef4d: 568 lines (2026-09-19)
+tests/curve_audit.rs at 085b28aec: 568 lines (2026-09-12)
+tests/curve_audit.rs at 2d43d398c: 584 lines (2026-09-07)
+
+===== P-N5: recount README provenance and regenerated output
+~~the four scripts are unchanged since `8b6b8c8ba`~~ Three of the four cited
+scripts (`exp_zprime_l_residue.py`, `exp_zprime2_generalized_lemma.py`,
+`thread12_cm73_sweep.gp`) are unchanged since `8b6b8c8ba`. The fourth,
+`exp_zdoubleprime_lemma_extended.py`, was edited in `11aa00591` (the commit
+that added this directory) to stop printing the stale `16562` total, after its
+2026-10-16 output had been captured; that output therefore came from the
+`8b6b8c8ba` version. It was regenerated on 2026-10-17 with the current script
+(Python 3.13.16, `python3 -I -B exp_zdoubleprime_lemma_extended.py`, exit 0,
+3.4 s, at `b59187e55`); the only change is line 63, which now reads
+`(Exp Z''): 1,802 instances.` instead of `Grand total: 16562 + 1,802 = 18,364
+instances.` (Correction 2026-10-17, sheriff case SHF-20261017-e4d7f6, finding
+P-N5.)
+  Enhanced Lemma verified numerically for ell in {3,5,7} (Exp Z')
+  and now for ell in {11,13} (Exp Z''): 1,802 instances.
+
+/home/user/crypto/papers/structural-completeness/recount/count.txt:0
+/home/user/crypto/papers/structural-completeness/recount/exp_zdoubleprime_lemma_extended.txt:0
+/home/user/crypto/papers/structural-completeness/recount/exp_zprime2_generalized_lemma.txt:0
+/home/user/crypto/papers/structural-completeness/recount/exp_zprime_l_residue.txt:0
+/home/user/crypto/papers/structural-completeness/recount/thread12_cm73_sweep.txt:0
+
+===== P-N6/PPN-4: Markdown twin and intro sentence
+32:The theorem is argued by case analysis over seven structural blocks
+33:(§4; proof sketches in §8, not yet independently reviewed) under
+44:2026-10-17, sheriff case SHF-20261017-e4d7f6 P-N6: "proven" became "argued
+45:(proof sketches in §8)", and a stale paragraph calling the proof
+46:"unconditional", conditional only on no sub-exponential algorithm being
+110:ECC") into a structural statement argued by case analysis over seven
+111:blocks (proof sketches in §8, not yet independently reviewed; nothing
+112:in it is machine-checked). *(Correction, 2026-10-28, sheriff case
+114:"rigorously decomposable, mechanically verifiable".)*
+667:families*.  It is not a proof of ECDLP's unconditional hardness.
+The value lies in the \emph{completeness} of the closure~--- the
+theorem turns a folklore claim (``ECDLP is hard for prime-field
+ECC'') into a structural statement argued by case analysis over seven
+blocks (proof sketches in Section~\ref{sec:theorem}, not yet
+independently reviewed; nothing in it is machine-checked).
+(Correction, 2026-10-28, \texttt{sheriff} case
+\texttt{SHF-20261028-0f3f64}, PPN-4: this sentence used to call the
+statement ``rigorously decomposable, mechanically verifiable''.)
+142:\item Prove a structural-completeness theorem.
+310:\begin{proof}
+344:\begin{proof}
+486:\begin{proof}
+558:\begin{proof}
+604:\begin{proof}
+745:\begin{proof}
+875:\begin{proof}
+
+===== P6: semaev paper cites its run
+863:\nolinkurl{experiments/EXP-SMON-e5cbe6/code/verify.py} with its arithmetic in
+864:\nolinkurl{experiments/EXP-SMON-e5cbe6/code/semaev_cover.py}, frozen by
+865:\nolinkurl{experiments/EXP-SMON-e5cbe6/specification.yaml} and
+866:\nolinkurl{experiments/EXP-SMON-e5cbe6/contract.md}. The run is
+867:\nolinkurl{experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/}: its
+experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/command.txt
+experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/environment.json
+experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/manifest.yaml
+experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/raw-result.json
+experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/stderr.log
+experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/stdout.log
+
+===== PPN-1: conductor-gap banner
+# Conductor-gap CM pairs: crater vs floor curves with a certified large gap
+
+**Status: constructed, Sage-verified, measured (five ecbench sessions,
+2026-10-10). Result: no implemented method shows a reproducible conductor
+effect, pending the rho re-test at ℓ = 8209 under a fresh measurement
+seed; see §5.**
+
+*Correction (2026-10-28, sheriff case SHF-20261028-0f3f64, PPN-1): this
+banner used to read "no implemented method sees the gap", the conclusion
+§5 withdrew on 2026-10-17 (SHF-20261017-e4d7f6, L-N2). It now carries the
+same qualification as §5.*
+
+===== PPN-7: commit-pinned generic.rs citations
+README.md:96:  `src/cryptanalysis/ecbench/generic.rs`, line 309 at commit 57fa35852,
+PROTOCOL.md:64:`src/cryptanalysis/ecbench/generic.rs`, line 309 at commit 57fa35852, line
+lean/README.md:19:`src/cryptanalysis/ecbench/generic.rs`, line 309 at commit 57fa35852, line
+lean/GenericInvariance.lean:17:`src/cryptanalysis/ecbench/generic.rs`, line 309 at commit 57fa35852, line
+57fa35852:309 ->             let h = mix(g.key(&pos));
+11aa00591:275 ->             let h = mix(g.key(&pos));
+HEAD: 363:            let h = mix(g.key(&pos));
+
+===== P-N7: tree-split wording
+- **The gap −1 cells are exactly the five non-degenerate subfield cells.** Six `frob` cells
+  have `g` dividing `t^7 − 1`, and five of them are at gap −1: `ℓ = 4` for both seeds and
+  `ℓ = 6` for seed 20261012 (`|T2|` = 29, 28, 70, 29, 35). The sixth subfield cell, `a = 0`,
+  seed 20261012, `ℓ = 4`, is degenerate: `|F| = 2`, `|T2| = 1`, gap 0. (Corrected
+  2026-10-17, sheriff case SHF-20261017-e4d7f6, finding P-N7: this bullet used to begin
+  ~~"They are exactly the gap −1 cells"~~, which the sixth, gap-0 cell contradicts. Checked
+  against `runs/registered/cells.jsonl` `v_info.g` and `runs/registered/readout.txt`.)
+Gaps and slopes are derived from the recorded `D_s` by the registered rule (ALIVE needs gap ≤ −2 at top ℓ in every series and lower-median slope ≤ 0.15). #strike[The five `frob` cells at −1 are exactly those whose `g` divides `t^7 − 1`.] Six `frob` cells have a `g` dividing `t^7 − 1` (g = 23, 29, 127), so `V ⊂ GF(2^7)` — subfield leakage, identified post hoc (`lean/TreeSplit/Leak
+
+===== E1/E1-R: audit.rs never_finalised and records_bound
+993:pub const NEVER_FINALISED: &str = "never_finalised";
+1008:pub fn never_finalised(session: &Session) -> bool {
+1009:    session.status == "running"
+1412:    let killed = allow_interrupted && never_finalised(&session);
+1897:        records_bound: Some(
+1898:            !killed && session.records_sha256.is_some() && rec_sha == session.records_sha256,
+2101:    fn a_killed_session_is_interrupted_only_when_interruptions_are_allowed() {
+2133:    fn a_killed_session_with_progress_counters_is_still_never_finalised() {
+2164:    fn a_finalised_interrupted_session_is_records_bound() {
+2191:    fn a_killed_session_keeps_every_record_check() {
+
+===== E2/PPN-6: ecbench.yml triggers and enumeration
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # The weekly lane the header and the schedule-gated steps describe
+  # (sheriff SHF-20261028-0f3f64, PPN-6): Sunday 05:37 UTC, off the hour.
+  # A scheduled event selects every scope (ci-scope.mjs).
+  schedule:
+    - cron: "37 5 * * 0"
+23:# lives: a directory whose session.json has schema `ecbench.session/v1`,
+111:    if: always() && !cancelled() && !github.event.pull_request.draft && (needs.scope.result != 'success' || needs.scope.outputs.ecbench_replay != 'false')
+187:    if: always() && !cancelled() && !github.event.pull_request.draft && (needs.scope.result != 'success' || needs.scope.outputs.ecbench_replay != 'false')
+240:          mapfile -t candidates < <(git ls-tree -r --name-only HEAD | sed -n 's#/session\.json$##p')
+246:            if jq -e '.schema == "ecbench.session/v1"' "$d/session.json" > /dev/null; then
+341:        if: (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+359:        if: (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+378:        if: always() && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+384:        if: (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+396:        if: (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+466:        if: always() && (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+548:        if: (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+551:        if: (github.event_name == 'workflow_dispatch' || github.event_name == 'schedule')
+575:    if: ${{ !github.event.pull_request.draft && (github.event_name == 'pull_request' || github.event_name == 'merge_group') && needs.scope.outputs.ecbench_replay != 'false' }}
+610:          mapfile -t candidates < <(git ls-tree -r --name-only HEAD | sed -n 's#/session\.json$##p')
+616:            if jq -e '.schema == "ecbench.session/v1"' "$d/session.json" > /dev/null; then
+
+===== PPN-6 residual: ci-scope rules vs .artifacts.json
+    result.ecbench_replay ||= root
+      || /^research\/factor_base_shape_leads_20261018\//.test(file) && !prose.test(file)
+      || /^docs\/(ecbench|bounds)\//.test(file) && !prose.test(file)
+      || /^research\/(ecbench_[^/]+|ghs_curve_comparison_20261009)\//.test(file) && (!prose.test(file) || file.includes('/sessions/'))
+      || /^research\/notes\/ecc2k130\/(cold_compact_orbit_ic_20261003|full_rank_compact_orbit_ic_20261003)\//.test(file) && (!prose.test(file) || file.includes('/sessions/'))
+      // ecbench.yml audits every committed session by schema, wherever it
+      // lives (research/, taskq/deploy/, ...), so its files select the audit
+      // anywhere in the tree (sheriff SHF-20261028-0f3f64, PPN-6). Large
+      // sessions commit their records gzip-compressed.
+      || /(^|\/)(session\.json|(ecbench_)?records\.jsonl(\.gz)?)$/.test(file);
+ci-scope.mjs never mentions .artifacts.json
+631:def cmd_check(cfg: Config, args) -> int:
+650:    out = git(cfg.root, "diff", "--raw", "--no-abbrev", "-z", "--no-renames", "--diff-filter=AM", base, head)
+
+===== PPN-5: audit script reads records_bound
+    # Read the receipt before deleting it. records_bound is false when no
+    # whole-file records hash binds records.jsonl (audit.rs AuditReport).
+    bound=$(jq -r "if (.records_bound | type) == \"boolean\" then .records_bound else \"missing\" end" "$out.json" 2> /dev/null || echo unreadable)
+    case "$bound" in
+      true) ;;
+      false)
+        why=$(jq -r ".interruption // \"none\"" "$out.json")
+        printf "%s\t%s\n" "$1" "$why" >> "$unbound" ;;
+      *) printf "%s\n    verify receipt records_bound is %s\n" "$1" "$bound" >> "$failed" ;;
+    esac
+unbound_count=$(wc -l < "$unbound")
+bound_count=$((audited - unbound_count))
+if [[ "$unbound_count" -gt 0 ]]; then
+  report=$(mktemp)
+  {
+    echo "shard $shard: $unbound_count accepted ecbench sessions are unbound prefixes, not integrity-passed (records_bound=false: no records hash binds records.jsonl; cite only as an interrupted, unbound prefix of the plan):"
+    sort "$unbound" | while IFS=$'\t' read -r dir why; do
+      echo "- $dir (interruption: $why)"
+    done
+  } > "$report"
+  echo "::warning::$unbound_count ecbench sessions are unbound prefixes (records_bound=false), not integrity-passed" >&2
+  cat "$report"
+  if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+    { echo; cat "$report"; echo; } >> "$GITHUB_STEP_SUMMARY"
+  fi
+  rm -f "$report"
+fi
+rm -f "$unbound"
+summary="shard $shard: $bound_count of $index committed ecbench sessions pass integrity (--replay 0 --allow-interrupted); $unbound_count accepted as unbound prefixes (records_bound=false), not integrity-passed; $incomplete_count hash-pinned scratch sessions remain incomplete; $defective_count hash-pinned defective sessions fail exactly as pinned, not integrity-passed"
+echo "$summary"
+
+===== SES-1: the two records and any correction
+## Verified execution
+    procedurally flawless, triple-independently-verified execution whose
+c169376202 2026-08-11
+corrections naming SES-1 or 'verified execution':
+none
+
+===== New-claim scan: Cheon sentence and its source
+226:inputs beats rho from 24 bits up, but only for the DLP with auxiliary inputs
+11:| 24 | 10115563 | 3382 | 0.504 | plain BSGS, d baby steps (old `cheon_attack.rs`) | 3 | 3/3 | 5,451 | 1.714 | 99.7 | 1.301 | accounting |
+12:| 24 | 10115563 | 3382 | 0.504 | Cheon p−1, BSGS, naive scalar mults | 3 | 3/3 | 4,711 | 1.481 | 86.1 | 1.125 | advance (DLPwAI floor, not ECDLP) |
+13:| 24 | 10115563 | 3382 | 0.504 | Cheon p−1, BSGS, fixed-base comb | 3 | 3/3 | 1,176 | 0.370 | 21.5 | 0.281 | engineering |
+14:| 24 | 10115563 | 3382 | 0.504 | Cheon p−1, kangaroo, fixed-base comb | 3 | 3/3 | 3,502 | 1.101 | 64.0 | 0.836 | engineering (memory) |
+16:| 28 | 139078669 | 12756 | 0.504 | plain BSGS, d baby steps (old `cheon_attack.rs`) | 3 | 3/3 | 20,018 | 1.697 | 191.7 | 2.715 | accounting |
+17:| 28 | 139078669 | 12756 | 0.504 | Cheon p−1, BSGS, naive scalar mults | 3 | 3/3 | 13,468 | 1.142 | 129.0 | 1.827 | advance (DLPwAI floor, not ECDLP) |
+18:| 28 | 139078669 | 12756 | 0.504 | Cheon p−1, BSGS, fixed-base comb | 3 | 3/3 | 2,551 | 0.216 | 24.4 | 0.346 | engineering |
+19:| 28 | 139078669 | 12756 | 0.504 | Cheon p−1, kangaroo, fixed-base comb | 3 | 3/3 | 8,988 | 0.762 | 86.1 | 1.219 | engineering (memory) |
+47:| 24 | 13886707 | 319 | 0.351 | Cheon p+1, BSGS, fixed-base comb | 3 | 3/3 | 37,408 | 10.038 | 179.3 | 7.032 | advance (DLPwAI floor, not ECDLP) |
+49:| 28 | 221851573 | 574 | 0.331 | Cheon p+1, BSGS, fixed-base comb | 3 | 3/3 | 79,688 | 5.350 | 128.2 | 3.683 | advance (DLPwAI floor, not ECDLP) |
+treatise prog_prime.tex added since 2026-10-28: 74c2bffa4 
+
+===== New-claim scan: 'verified executions' in papers
+/home/user/crypto/papers/ecdlp-index-calculus-program/sections/rootfinding.tex:237:$[0.919,1.038]$; 1{,}088/1{,}088 verified executions)
+/home/user/crypto/papers/ecdlp-index-calculus-treatise/sections/prog_rootfinding.tex:237:$[0.919,1.038]$; 1{,}088/1{,}088 verified executions)
+247:| 2026-10-14 | [`20261014-rootfinding-lanes-coverage`](20261014-rootfinding-lanes-coverage/) | 4/8/16 synchronized serial/batch prime relation collection; B40–64 train/holdout; B48 fixed-stride coverage against exact uniform subgroup occupancy, matched r
