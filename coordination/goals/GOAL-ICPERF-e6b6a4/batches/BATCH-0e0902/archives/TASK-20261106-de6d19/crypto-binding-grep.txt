@@ -1,0 +1,16 @@
+# F4 crypto origin/main d0e3c30044dd9aa084b20a5a86b3e0d2a3452f3c
+## grep 130164868
+## grep 2fa09e84
+## grep launch_eks
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-1.md:48:> pinned commit. `launch_eks.sh` re-checks the four launcher scripts against the same pin file before any AWS call.
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-1.md:59:  in `launch_eks.sh`.
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md:1017:      - **`binds`** (path + sha256): `specification.yaml`, `trial-plan.json`, the read-only `inputs/` copies of `protocol.json`
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md:1023:        - Each `argv` is `implementation/launch_eks.sh <bound request>`. It runs `taskq/deploy/eks-karpenter/remote/launch-remo
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md:1028:    - `implementation/launch_eks.sh` and `implementation/check_job.py`: thin wrappers, with no study logic. Analysis stays in t
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md:1045:    - *New code is the same.* Both routes need the same two thin wrappers, `launch_eks.sh` and `check_job.py`. Option (i) adds 
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md:1073:    - `launch_eks.sh` exits 0 only when the launcher has returned, `job-exit.json` and `SHA256SUMS` are downloaded, and the job
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md:1088:- **Trial argv.** Each `argv` runs the bound wrapper `implementation/launch_eks.sh`, which calls `launch-remote` on the frozen 
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md:1112:  - The runbook layout is specified, using `launch_eks.sh` and `check_job.py` wrappers.
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/implementation/launch_eks.sh:5:# usage: launch_eks.sh [--dry-run] --protocol PROTOCOL.json
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/implementation/launch_eks.sh:51:usage() { echo "usage: launch_eks.sh [--dry-run] --protocol P --experiment-id E --hypothesis-id H --task-id T --
+origin/main:research/ic_c1_deferred_guard_fp28_20261106/protocol.json:1323:        "S01-probe checks the four launcher scripts under taskq/deploy/eks-karpenter/remote against implementation/remote-pin
