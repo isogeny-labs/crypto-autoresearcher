@@ -46,7 +46,11 @@ next_action:
     track (reference only, never ranked against the algebraic track; docs/ic/SWEEPER.md), so a gain here improves the reference
     baseline, not a counted algebraic IC row. Pending: crypto research/prime_ic_program_20261029/DECISIONS.md R1 (Option C,
     delegated, confirmed when its PR merges) makes these pipelines a counted generic-decomposition track, so a verified gain
-    would count there, labelled generic, never as algebraic progress.'
+    would count there, labelled generic, never as algebraic progress. C3 (trim the unidentified fixed overhead; rank 3 in DEC-20261106-1d23b6)
+    is closed at fp28 on ea8e9ef7 without a run by DEC-20261106-378f4e: a per-phase decomposition of the v6 counted records (incumbent,
+    w = 0, 128 runs, one session) gives oracle_setup 54.0 % of S and relations 46.0 %; the mechanism-reachable share (restart
+    additions, restart offset draws, jump table and initial point) is at most 0.92 % of S, under the 3 % bar stated before the test,
+    and the set-up is N(N+1) pair additions with no scalar multiplication (crypto-autoresearcher coordination/design/TASK-20261106-04e50f/c3-decomp/).'
   discriminates: A second-host replay that reproduces the 20-bit holdout keeps 0.818 [0.773, 0.866] (w = 0) as the new prime-field
     pair-table (generic-track under DECISIONS.md R1) baseline at 20 bits and lets the leaderboard section follow; a failed
     replay demotes it. A prefetchable or compact table with a paired relation-phase ratio whose interval is below 1 across
@@ -143,6 +147,8 @@ ledger_refs:
 - DEC-20261029-5eb8e6
 - DEC-20261030-04fe6d
 - DEC-20261106-859e56
+- DEC-20261106-1d23b6
+- DEC-20261106-378f4e
 known_results:
 - KR-RHO-cb1c58
 - KR-IC-9e610d
