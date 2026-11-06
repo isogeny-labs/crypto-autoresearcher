@@ -26,6 +26,7 @@ import gzip
 import hashlib
 import itertools
 import json
+import math
 import random
 import re
 import sys
@@ -38,6 +39,9 @@ SYS_SCHEMA = "sembin-sys-v1"
 ANN_SCHEMA = "sembin-ann-v1"
 WDAG_SCHEMA = "sembin-wdag-v1"
 MAX_NV = 62                      # monomials are int64 bitmasks
+MAX_COLS = 4_000_000             # refuse to build COL(D, nv) beyond this many columns
+MAX_GB_MONOMIALS = 3_000_000     # monomials scanned for the reduced-GB comparison
+MAX_CHAIN_PAIRS_LOG2 = 26        # chain enumerator budget: 2^((m-1)k) (X_1..X_{m-1}) combinations
 
 
 class Malformed(Exception):
@@ -463,6 +467,8 @@ def _fs3(F: GF, x1, x2, x3, B):
 
 
 INSTANCE_KEYS = ("n", "field_poly", "A", "B", "m", "k", "v", "x_R")
+INSTANCE_OPT = ("num_points_E",)
+NPE_MAX_N = 18                      # verify num_points_E (O(2^n)) only up to this n
 
 
 def validate_instance(inst) -> dict:
@@ -472,6 +478,11 @@ def validate_instance(inst) -> dict:
     for key in INSTANCE_KEYS:
         if key not in inst:
             raise Malformed(f"instance lacks {key!r}")
+    extra = set(inst) - set(INSTANCE_KEYS) - set(INSTANCE_OPT)
+    if extra:
+        raise Malformed(f"instance has undocumented key(s) {sorted(extra)}")
+    if "num_points_E" in inst and not is_int(inst["num_points_E"]):
+        raise Malformed("instance.num_points_E is not an integer")
     n, fp, A, B, m, k, v, xR = (inst[x] for x in INSTANCE_KEYS)
     for name, val in (("n", n), ("field_poly", fp), ("A", A), ("B", B), ("m", m), ("k", k), ("x_R", xR)):
         if not is_int(val):
@@ -480,11 +491,26 @@ def validate_instance(inst) -> dict:
         raise Malformed("instance.v must be a list of m integers")
     if not (3 <= m <= 8) or not (2 <= n <= 60) or not (1 <= k < n):
         raise Malformed("instance: need 3 <= m <= 8 and 1 <= k < n")
+    if instance_nv({"m": m, "k": k, "n": n}) > MAX_NV:
+        raise Malformed("instance: N = m*k + (m-2)*n exceeds the checker's 62-variable limit")
     if A not in (0, 1) or not (2 <= B < (1 << n)) or not (1 <= xR < (1 << n)):
         raise Malformed("instance: need A in {0,1}, B in [2,2^n), x_R in [1,2^n)")
     if any(not (0 <= x < (1 << n)) for x in v):
         raise Malformed("instance.v out of field range")
-    return {"n": n, "field_poly": fp, "A": A, "B": B, "m": m, "k": k, "v": list(v), "x_R": xR}
+    return {"n": n, "field_poly": fp, "A": A, "B": B, "m": m, "k": k, "v": list(v), "x_R": xR,
+            "num_points_E": inst.get("num_points_E")}
+
+
+def count_points(F: GF, A: int, B: int) -> int:
+    """#E(F_{2^n}) for y^2 + x y = x^3 + A x^2 + B (B != 0), including the point at infinity.
+    x = 0: y^2 = B has exactly one root.  x != 0: put y = x w, w^2 + w = x + A + B x^-2,
+    which has 2 solutions iff the right side is in the image of w -> w^2 + w."""
+    cnt = 2                                    # infinity and (0, sqrt B)
+    for x in range(1, 1 << F.n):
+        gam = x ^ A ^ F.mul(B, F.inv(F.sq(x)))
+        if F.solve_wsq(gam) is not None:
+            cnt += 2
+    return cnt
 
 
 def shifts_ok(inst) -> (bool, str):
@@ -596,6 +622,9 @@ class ColSpace:
 
     def __init__(self, D: int, nv: int):
         self.D, self.nv = D, nv
+        total = sum(math.comb(nv, d) for d in range(0, min(D, nv) + 1))
+        if total > MAX_COLS:
+            raise Malformed(f"B_{{<=D}} has {total} monomials (> checker limit {MAX_COLS})")
         parts = [monomials_of_degree(nv, d) for d in range(min(D, nv), -1, -1)]
         self.masks = np.concatenate(parts)
         self.C = int(self.masks.size)
@@ -749,6 +778,8 @@ def chain_Z(inst) -> list:
     """Algebraic chain enumeration of Z from the instance parameters (section 1)."""
     F = GF(inst["n"], inst["field_poly"])
     n, k, m, v, B, xR = inst["n"], inst["k"], inst["m"], inst["v"], inst["B"], inst["x_R"]
+    if (m - 1) * k > MAX_CHAIN_PAIRS_LOG2:
+        raise Malformed(f"chain enumeration needs 2^{(m - 1) * k} tuples (> 2^{MAX_CHAIN_PAIRS_LOG2})")
     cos = [[v[i] ^ x for x in range(1 << k)] for i in range(m)]
     found = []
 
@@ -811,6 +842,8 @@ def reduced_gb_elements(pts_list, nv: int, lms):
     result = {lm: None for lm in lms}
     if not lms:
         return result
+    if sum(math.comb(nv, d) for d in range(0, max(lm.bit_count() for lm in lms) + 1)) > MAX_GB_MONOMIALS:
+        raise Malformed("reduced-GB comparison would scan more monomials than the checker limit")
     pts = np.array(pts_list, dtype=np.int64)
     varev = _ev_ints(pts, nv)
     full = (1 << pts.size) - 1
@@ -1034,6 +1067,13 @@ def check_instance_block(rep: Report, ctx: Ctx, cert):
         ctx.descent_ok = False
         return
     ctx.instance = inst
+    if inst["num_points_E"] is not None:
+        if inst["n"] <= NPE_MAX_N:
+            cnt = count_points(GF(inst["n"], inst["field_poly"]), inst["A"], inst["B"])
+            rep.check("instance_num_points_E", cnt == inst["num_points_E"],
+                      {"claimed": inst["num_points_E"], "recomputed": cnt})
+        else:
+            rep.warnings.append(f"num_points_E not verified (n={inst['n']} > {NPE_MAX_N})")
     if opts.skip_descent:
         rep.weakened.append("raw Weil descent not re-derived (--skip-descent)")
         return
@@ -1225,11 +1265,8 @@ def check_ann(rep: Report, ctx: Ctx, cert):
         rep.check("a_macaulay_rows_in_U", ok_a, {"rows_checked": nrows, "violation": why})
         ok_b, det = dual_check_b(Lam, cs, nv)
         rep.check("b_closure", ok_b, det)
-        if len(vals):
-            lam_g = int(Lam[:, gcols].sum(axis=1).astype(np.int64).__and__(1).any())
-        else:
-            lam_g = 0
-        rep.check("c_g_not_in_U", bool(lam_g), {"|L|": len(vals)})
+        lam_g = bool(len(vals)) and bool((Lam[:, gcols].astype(np.int64).sum(axis=1) & 1).any())
+        rep.check("c_g_not_in_U", lam_g, {"|L|": len(vals)})
     else:
         ech = Echelon()
         for x in vals:
@@ -1359,6 +1396,15 @@ def check_wdag(rep: Report, ctx: Ctx, cert):
             polys[i] = p
         if viol["a"]:
             break
+    if not viol["a"]:
+        reach, stack = set(outputs), list(set(outputs))
+        while stack:
+            for (_j, c) in P[stack.pop()][1]:
+                if c not in reach:
+                    reach.add(c)
+                    stack.append(c)
+        rep.info["nodes_total"] = len(P)
+        rep.info["nodes_unreachable_from_outputs"] = len(P) - len(reach)
     names = {"a": "a_child_order", "b": "b_row_degree", "c": "c_child_degree", "d": "d_node_degree"}
     for key in "abcd":
         rep.check(names[key], viol[key] is None, {"first_violation": viol[key], "nodes": len(P)})
@@ -1390,18 +1436,29 @@ def check_wdag(rep: Report, ctx: Ctx, cert):
                   {"|Z|": len(Zl), "standard_monomials": nstd if nstd <= len(Zl) else f">{len(Zl)}",
                    "targets_not_vanishing_on_Z": van_bad, "zero_targets": zero_target})
         if f_ok:
-            red = reduced_gb_elements(Zl, nv, set(lms))
-            nonred = [mask_to_mono(lm) for lm, el in red.items() if el is None]
-            exact = all(red[max(tg.tolist(), key=gkey)] == set(tg.tolist()) for tg in targets)
-            rep.info["targets_are_reduced_gb"] = bool(exact)
-            if not exact:
-                rep.warnings.append("targets form a Groebner basis of I(Z) but are not the reduced GB")
+            try:
+                red = reduced_gb_elements(Zl, nv, set(lms))
+                exact = all(red[max(tg.tolist(), key=gkey)] == set(tg.tolist()) for tg in targets)
+                rep.info["targets_are_reduced_gb"] = bool(exact)
+                if not exact:
+                    rep.warnings.append("targets form a Groebner basis of I(Z) but are not the reduced GB")
+            except Malformed as e:
+                rep.info["targets_are_reduced_gb"] = None
+                rep.warnings.append(f"reduced-GB comparison skipped: {e}")
     check_instances_record(rep, ctx, Zl)
 
 
 # ---------------------------------------------------------------------------
 # 7. orchestration
 # ---------------------------------------------------------------------------
+
+REQUIRED = {
+    ANN_SCHEMA: ("e_system_hash", "system_file_canonical", "Z_enumeration", "a_macaulay_rows_in_U",
+                 "b_closure", "c_g_not_in_U", "d_g_vanishes_on_Z", "d_g_is_reduced_gb_element"),
+    WDAG_SCHEMA: ("g_system_hash", "system_file_canonical", "Z_enumeration", "a_child_order", "b_row_degree",
+                  "c_child_degree", "d_node_degree", "e_outputs_equal_targets", "f_groebner_basis"),
+}
+
 
 def run_check(system_bytes: bytes, cert_bytes: bytes, opts: Options = None) -> dict:
     """pure function used by the CLI and the tests -> verdict dict"""
@@ -1432,6 +1489,9 @@ def run_check(system_bytes: bytes, cert_bytes: bytes, opts: Options = None) -> d
             check_wdag(rep, ctx, cert)
         else:
             raise Malformed(f"unknown certificate schema {schema!r}")
+        missing = [c for c in REQUIRED[schema] if c not in rep.checks]
+        if missing:
+            raise RuntimeError(f"internal error: mandatory checks not run: {missing}")
         out["verdict"] = "accept" if rep.all_ok() else "reject"
         if ctx.Z is not None:
             out["Z_size"] = len(ctx.Z)
@@ -1468,6 +1528,7 @@ def main(argv=None) -> int:
     ap.add_argument("--allow-nonreduced-g", action="store_true")
     ap.add_argument("--allow-extra-keys", action="store_true")
     ap.add_argument("--lenient-canonical", action="store_true")
+    ap.add_argument("--out", help="also write the JSON verdict to this file (the 'verdict file' keyed by cert_sha256)")
     a = ap.parse_args(argv)
     try:
         sb, _ = read_maybe_gz(a.system)
@@ -1480,7 +1541,11 @@ def main(argv=None) -> int:
                    instances=a.instances, skip_descent=a.skip_descent, allow_nonreduced_g=a.allow_nonreduced_g,
                    allow_extra_keys=a.allow_extra_keys, lenient_canonical=a.lenient_canonical)
     res = run_check(sb, cb, opts)
-    print(json.dumps(res, indent=2, sort_keys=True))
+    text = json.dumps(res, indent=2, sort_keys=True)
+    if a.out:
+        with open(a.out, "w") as f:
+            f.write(text + "\n")
+    print(text)
     return {"accept": 0, "reject": 1}.get(res["verdict"], 3)
 
 
