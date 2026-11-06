@@ -1,0 +1,481 @@
+# DEC-20261106-c897df: Coordinator ruling on dispatch gate DG-1 of
+# DEC-20261106-e7576f (EXP-SEMBIN-cb5e25, GOAL-SEMBIN-fcb7a2). RULING: DG-1 is
+# NOT satisfied. Dispatch stays blocked. The approval stands and does not
+# expire. The sibling-repository half of the collision search, as relayed, is
+# accepted as partial progress and recorded. This decision launches nothing,
+# edits no approved byte, lowers no other dispatch condition, and moves no
+# hypothesis or experiment status.
+coordinator_decision:
+  id: DEC-20261106-c897df
+  id_provenance: >-
+    Pre-allocated by the top-level session and reserved in
+    DEC-20261106-e7576f (related_records.reserved_not_written). The Coordinator
+    minted no id.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent, no shell, working tree on claude/sembin-true-dF-search
+    (equal to main per the top-level session). Read in full:
+    ledger/decisions/DEC-20261106-e7576f.yaml (DG-0 to DG-7, DL-1 to DL-9,
+    gate_ruling_collision_search) and experiments/EXP-SEMBIN-cb5e25/collision-search.json.
+    Read in part: AGENTS.md "Knowledge retrieval", docs/agent-contract-extended.md
+    "Knowledge retrieval policy", runbook.yaml step ids and timeouts (S01 to S09),
+    the card header, run.py lines 327 to 336 (the .started marker). NOT READ:
+    experiments/EXP-SEMBIN-cb5e25/collision-search.addendum-20261106.json was
+    NOT readable when drafting began; after the first draft the top-level
+    session staged it in the working tree (sha256 reported by the top-level
+    session as 7a0a901a0106727ff161e12e1c4f300815a580c58969229d4b276b24109bfe33,
+    not computed by the Coordinator) and the Coordinator then READ IT IN FULL
+    (76 lines). It agrees with the relayed FACTS paragraph on every point the
+    ruling uses (commit b354dfef..., seven study directories covering eight
+    studies, no hit for Nagao, EQS4, disjoint, shifted, Groebner basis, linear
+    forms, v_i, research-kb half "NOT MET", dg1_status "PARTIALLY MET" and an
+    explicit request that the Coordinator rule). Two items in the file go beyond
+    the relay and are used below: it states it was read AFTER protocol.json was
+    frozen (2026-11-06T08:36:56Z) and after the approval, so it is not an input
+    to any frozen prediction or criterion; and its limits say only the top level
+    of each study was read (first 900 to 1100 characters of each
+    RESULTS/README/PROTOCOL, keyword searches over the markdown) and the
+    per-draw records under runs/ and the run reports were not opened. Its
+    "coset" line says 4 files use the word for a specialised/guessed variable,
+    "a 7-dimensional subspace or coset of summands", which is slightly wider
+    than the relay's "only as the value of one specialised variable"; neither
+    is Nagao's coset-shifted factor bases, but the "coset of summands" files
+    have not been read by the Coordinator and the Coordinator does not resolve
+    that nuance. Everything else about the environment (disk, memory, blob store
+    round trip, claims, the 2 h command limit) remains the top-level session's
+    relayed statement, unverified.
+  goal_id: GOAL-SEMBIN-fcb7a2
+  decision: pause
+  decision_scope: >-
+    "pause" is used only for dispatch of EXP-SEMBIN-cb5e25 under DEC-20261106-e7576f
+    DG-1. It does not pause GOAL-SEMBIN-fcb7a2 (goals are never paused;
+    BATCH-cbb416 keeps current_batch_id and the operative next action), does
+    not withdraw or supersede the approval, and changes no status. It is a
+    ruling that a named hard dispatch condition is unmet.
+  experiment_id: EXP-SEMBIN-cb5e25
+  context: >-
+    DG-1 of DEC-20261106-e7576f required the research-kb half of the
+    observation-collision search, "with research-kb, the local kb/ index and the
+    sibling repository available", and ended: "If the knowledge base remains
+    unavailable, dispatch remains blocked; the approval does not expire and the
+    blocker is recorded as an impediment on the goal." The top-level session
+    now reports (relayed, unverified by the Coordinator): the sibling repository
+    isogeny-labs/crypto was read at commit b354dfefa868fcc7e663dbc5f07bc4fbf370d585
+    (blobless sparse clone); its eight research/dreg_closure_* studies measure
+    the degree-4 MutantXL closure refutation degree of UNSATISFIABLE chained S_3
+    systems with a common subspace, plus hybrid variants and one satisfiable
+    control that cannot be refuted by construction; keyword searches over their
+    markdown for Nagao, EQS4, disjoint, shifted, Groebner basis, linear forms
+    and v_i found nothing, and "coset" occurs only as a specialised-variable
+    value. The research-kb half was NOT done: scripts/research-kb has no
+    executable, catalog.sqlite and sources.toml are absent, the crypto-kb MCP
+    server timed out, and a catalog cannot be built inside the container's
+    writable disk allowance (a full clone of the sibling repository is about 9.6
+    GB and filled it). The addendum was committed on
+    claude/sembin-dg1-addendum, not yet on main.
+
+  ruling:
+    dg1: not_satisfied
+    text: >-
+      DG-1 is not satisfied. The DG-1 text defines the unavailable-knowledge-base
+      case in advance and prescribes the consequence: dispatch remains blocked
+      and the blocker is recorded as an impediment on the goal. The facts match
+      that case. The sibling-repository half is done (as relayed) and is
+      credited as progress; the research-kb half, the half that reaches the
+      published literature and the lead atlas, is not done and cannot be done in
+      this environment.
+    chosen_option: (b)
+    option_a_rejected_because:
+      - >-
+        It would be a waiver of a condition I wrote, on the strength of a fact
+        the condition anticipated by name. Nothing new has been learned that
+        bears on the reasons DG-1 was made a hard gate. I did say in
+        DEC-20261106-e7576f that the cost of a collision is duplicate compute and
+        not validity. That was the argument for approving with a gate rather
+        than holding approval. It was not an argument that the gate may be
+        waived when its cost shows up. Reading the same argument as a waiver
+        license after the fact would make DG-1 decorative.
+      - >-
+        The cost of duplicate compute is larger than it was when the gate was
+        written, not smaller. The pass is modelled at 26,400 to 27,600 s (7.3
+        to 7.7 h) of wall time, with a handoff ceiling of 50,400 s and a claim
+        ttl of 750 minutes, on a 4-core 15 GB container. A collision found
+        after that spend costs a working day of one host and the one pass-1
+        slot of a run-count budget (maximum_runs 3, DL-4).
+      - >-
+        The sibling-repository search does not cover what research-kb covers.
+        The dreg_closure_* studies are the one internal hit the hypothesis leans
+        on and, as relayed, they measure a different arm (UNSAT refutation, no
+        shifts, no Nagao structure). They contain no published-literature
+        evidence. Whether the first-fall-degree literature (for example work in
+        the Kosters-Yeo, Petit-Kosters-Messeng and Huang-Petit-Shinohara-Takagi
+        line, named from memory only, marked provenance recalled and not a
+        citation) already reports measured solving degrees or containment on
+        Nagao-type systems with coset shifts is exactly what only the knowledge
+        layer can answer. A collision there could reframe how O-1 and O-2
+        are read, which is more than duplicate compute. "No hit in the searched
+        repositories" remains the only statement the record supports.
+      - >-
+        Blocking here does not park the contract on an unowned absence, which
+        was my objection to holding approval. DG-1 has an owner, an
+        unblocking condition and a defined consequence (below). The same
+        environmental fix (a host with the sibling research-kb checkouts, more
+        disk and no 2 h command limit) also removes the compute and launch
+        hazards in the launch ruling below, so the block costs little extra
+        calendar time over what the run needs anyway.
+    addendum_own_request: >-
+      The addendum's dg1_status asks the Coordinator to rule whether DG-1 is
+      satisfied "with the knowledge-base half stated as unavailable". Ruling:
+      no. DG-1 says in terms that an unavailable knowledge base leaves dispatch
+      blocked; stating the unavailability is what the addendum does, and it is
+      the right thing to have stated, but stating it does not satisfy the
+      condition. The addendum is accepted as the sibling half, honestly labelled
+      PARTIALLY MET by its author.
+    credit_given: >-
+      The sibling-repository addendum, read in full, is accepted as the sibling
+      half of the DG-1 query list. It is a negative result for the searched
+      pinned commit and sparse, top-of-study scope only. Its disclosure that it
+      was read after the freeze, and that it moves no frozen criterion, is
+      accepted and means it cannot have shaped the predictions (a point in its
+      favour for the integrity of the contract). It is not evidence of novelty, and nothing
+      in any record may cite it as such (DEC-20261106-e7576f what_this_does_not_permit
+      still binds). Whether a sparse, blobless checkout reached all of
+      research/dreg_closure_* and their non-markdown outputs is for the
+      addendum's own limits section; the keyword searches covered markdown only.
+    status_of_approval: >-
+      DEC-20261106-e7576f stands unmodified: approved, frozen, execution_authorized.
+      Approval is not dispatch. No approved byte is touched.
+
+  impediment_to_record_on_goal:
+    owner: top-level session (records it in the next committed GOAL-SEMBIN-fcb7a2 checkpoint, via the ledger archive that carries this decision)
+    text: >-
+      EXP-SEMBIN-cb5e25 dispatch is blocked on DG-1 of DEC-20261106-e7576f:
+      the research-kb half of the observation-collision search is not done
+      because no reachable research-kb with a built catalog exists in the
+      session environment. The sibling-repository half is done
+      (collision-search.addendum-20261106.json on claude/sembin-dg1-addendum).
+      The operative next action of the goal is unchanged (BATCH-cbb416). This is
+      an access gap, not a mathematical result, and does not touch the
+      hypothesis.
+    what_is_needed: >-
+      A reachable research-kb with a built, current catalog: the research-kb
+      executable (the one scripts/research-kb resolves), catalog.sqlite and
+      sources.toml built from the sibling research-kb checkouts, or the
+      crypto-kb MCP server answering within its timeout. The build must index
+      the sibling repository's records and the literature layer. A catalog that
+      cannot cover the lead atlas as of at least 2026-10-30 (127 changed paths
+      were unaccounted for) does not close DL-1.
+    who_can_supply: >-
+      The lab or repository owner who controls the sibling research-kb
+      infrastructure and the shared research-kb MCP server (the user, or whoever
+      administers isogeny-labs/crypto research-kb and the crypto-kb service), or
+      a session on a host with those checkouts and enough disk to build the
+      catalog. Not the Coordinator, and not a session in the current
+      9.6 GB-allowance container.
+
+  dg1_closing_procedure:
+    performed_by: a session with a working research-kb (any agent), read by the Coordinator
+    steps:
+      - >-
+        Run the queries named in the specification's observation_collision_search
+        (measured solving degree, closure degree or Groebner-basis containment on
+        Nagao EQS4 with coset shifts or disjoint-coset factor bases) through
+        research-kb and the local kb/ index. Follow the retrieval policy: 4 to 6
+        results per query, exact identifiers where known, two passages per
+        source, report contradictions, do not treat scores as evidence, record
+        receipts.
+      - >-
+        Append a second dated, additive addendum beside collision-search.json
+        (a new file; collision-search.json and the existing addendum are bound
+        or committed and are not edited), with queries, hits, who read them, the
+        catalog build identity and its last-ingest date, and a statement of what
+        the catalog does not cover.
+      - >-
+        Commit it through its own ledger archive, merged to main with an open PR
+        (AGENTS.md archive rules). The Coordinator reads the addendum itself
+        (not a relay) and writes a short follow-on decision that either marks DG-1
+        satisfied or, if a hit is a replication, an existing counterexample or a
+        corroboration that reframes the contract, supersedes DEC-20261106-e7576f
+        and returns the experiment to review_required by an additive record.
+    also_required_now: >-
+      The first addendum (claude/sembin-dg1-addendum) is to be merged to main
+      through its own ledger archive so the sibling half is durable. The
+      Coordinator has now read the staged copy (session_provenance). The
+      archive must reproduce the file exactly; if its sha256 is not
+      7a0a901a0106727ff161e12e1c4f300815a580c58969229d4b276b24109bfe33 the
+      Coordinator has read different bytes and reads again. A record that exists
+      only on an unmerged branch is unpublished.
+
+  what_would_withdraw_the_approval:
+    - >-
+      A research-kb hit, at any evidence level, that reports a measured
+      degree-4 closure or solving-degree result on satisfiable Nagao or
+      coset-shifted EQS4 systems that either replicates this contract's quantity
+      (then reframe cheaply) or contradicts or corroborates Proposition 5 and
+      Assumption 1 at tested cells in a way that changes the ranking of this run.
+      Action: superseding decision, EXP-SEMBIN-cb5e25 back to review_required,
+      never an edit of DEC-20261106-e7576f.
+    - >-
+      Discovery that the sparse sibling checkout missed the studies' non-markdown
+      outputs or other directories that bear on the question. Action: Coordinator
+      rules again; DG-1 stays unsatisfied meanwhile.
+    - >-
+      Any change to an approved byte (specification, protocol, trial plan,
+      runbook, handoff, queue, card, code) from the hashes in
+      DEC-20261106-e7576f approved_bytes. Action: stop, additive correction.
+    - >-
+      A DG-0 regression: the lint, the card lint or execution_state ceasing to
+      be ready on the post-approval bytes.
+    - >-
+      Not withdrawal grounds: the relayed observation that the sibling closure
+      on UNSAT m=3 systems rises above degree 4 at subspace dimension 7. That is
+      context about a different arm and is not a prediction for the stretch cell
+      (3, 19, 7); it does not change the contract and must not be used to
+      pre-judge the outcome in either direction.
+
+  other_conditions:
+    statement: >-
+      No other condition is lowered. DG-0 (met per the relay), DG-2, DG-3, DG-4,
+      DG-5, DG-6 and DG-7 stand verbatim. The facts relayed for DG-3 (blob store
+      round trip passing, boto3 installed, 40 bytes, match true) and DG-4 (no live
+      claim on BATCH-cbb416 or BATCH-501c2f, nothing running) are noted as
+      reported, not verified by the Coordinator, and must be re-checked at
+      launch because they are state, not findings. DG-3 includes S01's disk
+      assertion (at least 6,442,450,944 bytes free on the volume holding
+      experiments/EXP-SEMBIN-cb5e25). A container that reports a 9.6 GB writable
+      allowance and already hit it once leaves little margin for 587 trials,
+      their systems and certificates; S01 will measure free space but not the
+      run's growth, and I note it as a risk below.
+
+  launch_ruling:
+    run_in_this_session: no
+    reasons:
+      - >-
+        Duration against the runner. Pass 1 is modelled at about 26,400 to
+        27,600 s. The command runner stops background commands at 2 hours.
+        run.py writes tpath.started before each trial and refuses to start a
+        trial whose .started marker exists (run.py lines 330 to 336). A trial
+        killed mid-way therefore cannot be rerun inside pass 1. Only a separately
+        approved pass 2 (its own plan, runbook, session id, shared run
+        directory and approval, counting as run 2 of maximum_runs 3, DL-4 and
+        RUL-9) can retry it, and an infrastructure kill at that point is an
+        SR-7 case, not a result. A harness limit that fires after about 2 h would
+        interrupt a trial in a high-probability way (about 3.7 times the limit
+        is the modelled duration), and would burn one of three runs for
+        nothing.
+      - >-
+        Detaching is necessary but not sufficient. setsid nohup protects against
+        the runner's time limit and SIGHUP from the session, but not against the
+        container being recycled when the session ends, a disk fill, the OOM
+        killer (the resident watchdog is 10 GiB on a 15 GB host with about 5 GB
+        margin), or a lost host. None of those is visible from inside this
+        session, and each leaves the same .started marker. A detached
+        process in an environment whose lifetime is shorter than the run is still
+        a mid-trial kill with extra steps. The Coordinator cannot establish the
+        container lifetime.
+      - >-
+        The same environment cannot build the research-kb catalog (disk), so DG-1
+        stays unmet here regardless of the launch question. The two blockers are
+        resolved by the same fix: a different host.
+      - >-
+        The resume-checkpoint gate (DG-2) and the checkpoint hook refuse
+        nohup/background launchers until RESUME.md is complete and pushed, and
+        any change after the push makes the hook retry an expired token. That is
+        the designed path, but it means a detached launch in this session is
+        assembled from several steps that each must hold with no shell to the
+        Coordinator and no one watching for hours.
+    if_launched_elsewhere_conditions_exact:
+      - >-
+        The environment satisfies DG-0 to DG-7 as written, with DG-1 closed by a
+        committed follow-on decision (a decision record that marks DG-1 satisfied,
+        written by the Coordinator after reading the research-kb addendum). No
+        launch before that record is merged to main.
+      - >-
+        Fully detached launch of the runbook session: setsid nohup, stdin from
+        /dev/null, stdout and stderr to a log file on the run volume, a pid file,
+        in its own process group, started by the command the card names for
+        step 2 (the S07 trials step, executor reads only the last line). Not a
+        background command of the harness. The launching shell must return
+        immediately and the run must not depend on the launching session
+        remaining alive.
+      - >-
+        Environment lifetime. The host must be one the operator confirms will
+        stay up for at least 14 h (the 50,400 s handoff ceiling) with no command
+        runner or session timer that kills descendants of a detached process. The
+        confirmation is recorded in the dispatch note. If the operator cannot
+        state this, do not launch.
+      - >-
+        Capacity. At least 20 GiB free on the run volume (the figure DG-3 already
+        gives for a file:// store), not the bare 6 GiB S01 minimum, and a blob
+        store reachable throughout. Memory as DG-3 (MemAvailable at least 11 GiB).
+        A 9.6 GB allowance is not acceptable for this pass.
+      - >-
+        A short detached canary first: a harmless detached process written
+        outside experiments/EXP-SEMBIN-cb5e25 that must still be alive after the
+        launching command has returned and after at least 10 minutes with the
+        session idle. If the canary dies, the host is not acceptable. The canary
+        writes nothing under the experiment directory and must not create any
+        .started marker.
+      - >-
+        DG-2 checkpoint pushed by hand immediately before launch, and re-pushed
+        by hand after launch (the pid, log path and collection command recorded
+        in RESUME.md). A liveness check of the supervisor (claim renewal under the
+        750-minute ttl) is the operator's responsibility during the run.
+      - >-
+        No restart of a partly run session. An interrupted session is terminal for
+        the trials it interrupted: write down which trials carry .started with no
+        finished record, treat them as infrastructure signal, and do not edit or
+        delete a marker to make run.py rerun (that would be editing approved run
+        state). Recovery is a separately approved pass 2 only.
+      - >-
+        DG-5 and DG-7 hold exactly as written. No interpretation of contained-side
+        data before the nonce-sampled scratch replay is archived.
+    detached_required: >-
+      Yes, for any launch of this run, anywhere. A non-detached or harness-bounded
+      launch is not permitted, because a harness time limit can kill a trial
+      mid-way and the .started marker makes that unrecoverable inside pass 1.
+      Detached is required and is not sufficient; the lifetime and capacity
+      conditions above also bind.
+    recommendation: >-
+      Do not launch in this session. Do not attempt a partial or reduced pass 1
+      here to fit the time limit: that would be a different protocol and needs
+      its own approval and a protocol_amendment. Do not edit the runbook, the
+      trial plan or the SR-8 budget to make the run fit the environment.
+
+  risks_noted_not_waived:
+    - id: RK-1
+      text: >-
+        Disk. The allowance was exhausted by a 9.6 GB clone once already. The run
+        writes up to 587 trial records, systems, certificates and fixtures
+        (opaque in size to the Coordinator, which has not seen a size estimate in
+        the declared inputs). S01 checks free space at start only. A disk-full
+        event mid-trial is infrastructure signal with the .started consequence.
+        The 20 GiB requirement above is the mitigation, not a guarantee.
+    - id: RK-2
+      text: >-
+        Timing is a model (DL-7). Measured host timings for the revision 2
+        additions are absent. The 43,200 s S07 timeout against a 26,400 to 27,600
+        s model leaves 56 to 63 percent headroom, which is adequate if the model
+        is right and unknown if it is not. An S07 timeout at 43,200 s is a
+        timeout, not a negative result, and leaves .started markers.
+    - id: RK-3
+      text: >-
+        The first addendum was read by the Coordinator from the staged working
+        tree, uncommitted and not yet on main, so it is not yet durable. Its
+        own limits say only the top level of each sibling study was read and the
+        runs/ records were not opened; the sibling half is therefore a shallow
+        negative. The "coset of summands" wording (session_provenance) was not
+        traced to its files. Both belong in the follow-on reading when
+        research-kb is available, not as new blockers on their own.
+    - id: RK-4
+      text: >-
+        The lead atlas rows were last reviewed 2026-10-30 with 127 changed paths
+        since (DL-1). They remain an unreviewed gap until research-kb is
+        reachable.
+
+  target_ids:
+    - EXP-SEMBIN-cb5e25
+    - GOAL-SEMBIN-fcb7a2
+    - BATCH-501c2f
+    - TASK-20261106-9da2e3
+  related_records:
+    prior_decisions: [DEC-20261106-e7576f, DEC-20261106-36e212]
+    unchanged: [DEC-20261106-e7576f]
+    first_addendum_branch: claude/sembin-dg1-addendum
+    first_addendum_path: experiments/EXP-SEMBIN-cb5e25/collision-search.addendum-20261106.json
+    collision_search: experiments/EXP-SEMBIN-cb5e25/collision-search.json
+
+  status_transitions: []
+
+  rationale:
+    - >-
+      DG-1 prescribes its own outcome for an unavailable knowledge base: dispatch
+      stays blocked, the approval does not expire, the impediment is recorded on
+      the goal. The facts are that case. Satisfying it would waive a gate I wrote
+      for a reason it anticipated.
+    - >-
+      The sibling-repository half is real progress and is credited as a bounded
+      negative result for what was searched. It does not cover the published
+      literature or the unreviewed lead-atlas paths, which is what the missing
+      half is for.
+    - >-
+      A 7.3 to 7.7 h pass with an unrecoverable .started marker makes duplicate
+      or misdirected compute expensive. The environment that cannot serve
+      research-kb is also unsuitable to run the pass, so the two blockers close
+      together on a different host.
+    - >-
+      A detached launch is required for any launch and is not sufficient. The run
+      is not recommended in this session.
+  evidence_refs:
+    - ledger/decisions/DEC-20261106-e7576f.yaml
+    - experiments/EXP-SEMBIN-cb5e25/collision-search.json
+    - experiments/EXP-SEMBIN-cb5e25/runbook.yaml
+    - experiments/EXP-SEMBIN-cb5e25/code/run.py
+    - experiments/EXP-SEMBIN-cb5e25/task-cards/CARD-EXP-SEMBIN-cb5e25-01.yaml
+    - AGENTS.md
+    - docs/agent-contract-extended.md
+  limitations:
+    - >-
+      The Coordinator ran no command and verified no environment fact. Every
+      statement about the sibling repository, disk, memory, the blob-store round
+      trip, claims, and the 2 h command limit is the top-level session's, relayed.
+    - >-
+      The first addendum was read in full from the staged working tree, but its
+      sha256 was not computed by the Coordinator (the value cited is the
+      top-level session's) and its cited sibling files were not opened.
+    - >-
+      The Kosters-Yeo, Petit and Huang et al. line named above is recalled from
+      memory and is a pointer to what to look for, not a citation or a claim that
+      such results exist.
+    - >-
+      The model figures (26,400 to 27,600 s) are DL-7's model and not measured.
+  next_actions:
+    - id: NA-1
+      rank: 1
+      owner: top-level session
+      text: >-
+        Record the DG-1 impediment (impediment_to_record_on_goal.text) in the
+        committed GOAL-SEMBIN-fcb7a2 checkpoint via the ledger archive that
+        carries this decision, with the goal's one next action unchanged. Merge
+        claude/sembin-dg1-addendum to main through its own ledger archive. Both
+        archives pushed to a branch with an open PR and auto-merge. Verify the
+        addendum's sha256 is unchanged at commit. Do not launch.
+    - id: NA-2
+      rank: 2
+      owner: user or research-kb administrator, with the top-level session
+      text: >-
+        Supply a reachable research-kb with a built catalog (what_is_needed), or a
+        host that has the sibling research-kb checkouts and the disk to build it,
+        and which also meets the launch conditions (lifetime of at least 14 h,
+        at least 20 GiB free, MemAvailable at least 11 GiB, detached launch
+        allowed). Run dg1_closing_procedure there.
+    - id: NA-3
+      rank: 3
+      owner: coordinator
+      text: >-
+        On receipt of the research-kb addendum on main, read it directly and write
+        the follow-on decision: DG-1 satisfied, or a superseding decision that
+        withdraws the approval. If DG-1 is marked satisfied, state that DG-2 to
+        DG-7 and the launch conditions above are what remain.
+    - id: NA-4
+      rank: 4
+      owner: top-level session
+      text: >-
+        Meanwhile continue the goal's operative next action on BATCH-cbb416 (not
+        this experiment). If the operator wishes to proceed without research-kb,
+        that is a user instruction to be handed to the Coordinator as a request
+        to amend DG-1 with stated reasons, in a superseding decision; it is not a
+        waiver the session may apply itself.
+  opened_tasks: []
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      A dispatch-gate ruling. No evidence record, no support or reject_scoped
+      decision and no durable research claim; nothing to promote.
+  visual_record: >-
+    Not an evidence-review decision and produces no run. No graph source or
+    rendering changes.
+  official_effect_until_committed_pushed_reviewable: none
