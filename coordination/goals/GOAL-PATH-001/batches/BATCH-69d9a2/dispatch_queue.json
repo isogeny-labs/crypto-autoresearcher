@@ -64,7 +64,9 @@
   }
  ],
  "tasks_state_revisions": [
-  {"at": "2026-11-06T04:13:16Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-0c8aee", "from_state": "queued", "to_state": "completed", "reason": "Ledger archive committed alone at 7337c8d2b55a (parent c3270969a1f4) with exactly the fifteen expected paths after LA-1 to LA-10. Zero runs.", "paths_or_records_added": []}
+  {"at": "2026-11-06T04:13:16Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-0c8aee", "from_state": "queued", "to_state": "completed", "reason": "Ledger archive committed alone at 7337c8d2b55a (parent c3270969a1f4) with exactly the fifteen expected paths after LA-1 to LA-10. Zero runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T06:03:35Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-4c4831", "from_state": "queued", "to_state": "completed", "reason": "Executor session completed FX-1..FX-15; FX-16 stopped per its budget rule (scope finding SF-1, not an FX-1 finding); released at 6cae473836 with nine non-empty digests. Zero experiment runs.", "paths_or_records_added": []},
+  {"at": "2026-11-06T06:03:35Z", "by": "top-level session (coordinator-portfolio-4y7t3o)", "task_id": "TASK-20261106-5c1258", "from_state": "queued", "to_state": "completed", "reason": "Snapshot archive committed alone at 9a0b5955146a (parent 82885e8a6efd) with exactly the ten expected paths after SA-1 to SA-5; start-up suite passed in full on a byte-identical extract. Zero runs.", "paths_or_records_added": []}
  ],
  "tasks": [
   {
@@ -239,7 +241,7 @@
    "id": "TASK-20261106-4c4831",
    "title": "Executor (executor-implementation): fix F-1 and N-1 to N-5 with tests that fail on the old code, run the DEV-1 m = 3 large-q substitute cell; zero contract cells, zero runs",
    "role": "executor",
-   "state": "queued",
+   "state": "completed",
    "priority": 90,
    "review_required": false,
    "review_required_note": "FALSE. An instrument; it changes no claim. TASK-20261106-7c2b01 re-reviews it before approval.",
@@ -320,7 +322,7 @@
    "id": "TASK-20261106-5c1258",
    "title": "Snapshot archive of the EXP-MONO-1a1be2 fixes (TASK-20261106-4c4831), alone among commit tasks; re-binds code_sha256 for the approval lock v2",
    "role": "coordinator",
-   "state": "queued",
+   "state": "completed",
    "priority": 89,
    "review_required": false,
    "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
@@ -348,9 +350,20 @@
      "experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json"
     ],
     "expected_paths_note": "This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.",
-    "commit_sha": null,
-    "parent_sha": null,
-    "path_sha256": {}
+    "commit_sha": "9a0b5955146a6a87584774f8018da3559df86275",
+    "parent_sha": "82885e8a6efd1e084620d6932ab80b0ac7413c82",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/archives/TASK-20261106-5c1258/snapshot-receipt.json": "52f178cb80133df195406829b45dee58a84637089db4e12e586bd1553477c332",
+     "experiments/EXP-MONO-1a1be2/code/README.md": "99c86e2b9413b13022e4ee3c0c6b6367648271ffc8152616e0856c94135755bf",
+     "experiments/EXP-MONO-1a1be2/code/counters.py": "f085e26ef7efaeb1f6727a102738c03d472b9f62e8ce4e020f5a35bafba024e1",
+     "experiments/EXP-MONO-1a1be2/code/launcher.py": "41afc2cc0db2e091559da97ad0b16aaf6d8d86121a53b6eff2303f298befb1c7",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat.py": "c34b8fe0c94faedad8e35a8135a639aa09bfa6b13f1aac2f26d4cc899df2539a",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py": "79894702c2ee086aa33522233c7933281b4d217abab9dd39163e8f9503ed06b5",
+     "experiments/EXP-MONO-1a1be2/implementation/environment-4c4831.json": "f32249db924116044388ed07e30abbb110e7729cbc794e93c1adb4e5d53429be",
+     "experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md": "8ef65becb7ea1ffdef91e314abe19ad81aad2cccc232af3d719d3f328525b282",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json": "b8b0336f5ffc23d44e2789aff12fcac89c6cb456d24a8af46b01faf9b4eb98a4",
+     "experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json": "ccb3f55c4ab380eaa54746b9b38d2606b3f0f395ced323d8bb33b081deec71c8"
+    }
    },
    "handoff_record": "ledger/handoffs/TASK-20261106-5c1258.yaml",
    "handoff": {
