@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: one published exceptional row to fixed-model certificate
+
+The [single-row adapter](../../implementation/source_fixed_unit.py) accepts a published cohort binder, canonical curve/T indices and one retained exceptional candidate row. It verifies the independent transversal ordinal and matrix, checks the actual source curve-to-quartic map including its rational inverse charts, constructs the conjugate forms and source-fixed algebra, and invokes the separate algebra and character-genus replay. It compares the independently derived geometric rank, branch count and component genus with the retained row. The result includes the full source-fixed model and check record so a later supervised writer can retain exact bytes.
+
+Two focused software tests pass on the published q5/n3 class-zero, T-zero, identity-ordinal row: its rank is one, branch count four and connected genus one. A wrong matrix and a wrong genus are rejected. This checks one source-bound fixture; it does not process a sealed production unit or qualify the checker runtime across 8,178 class/T units.
+
+Next connect this adapter to the supervised checker or analysis stage with a frozen selection and retention policy, deadline accounting, write-once artifacts and C5 independent review strata. Generic complement rows need their separate exact disjoint-support treatment. EXP-PEXT-bf8f96 remains `review_required` and unfrozen; no scientific cohort trial ran.

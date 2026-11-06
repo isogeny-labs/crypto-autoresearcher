@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: prospective C3 sealed-reduction A/A
+
+The future analyze stage now reads all four complete, independently checked cohorts twice. The second pass visits stages, cohorts, sealed chunks, units and exceptional rows in reverse. Both passes reconstruct curves by the published class/T identities, and the C3 comparison requires exact equality of the canonical curve rows, cohort counts, coverage and minima. It writes a source-RUN- and plan-bound `c3-order-aa.json` once; the checker performs both reads again and compares the exact artifact bytes. A changed minimum or incomplete canonical class coverage is refused.
+
+Eight focused reducer, campaign, analysis and C3 artifact tests pass. A sealed two-unit F27 software fixture gives identical canonical and reverse reductions; changed minima, repeat writes and symlinked artifacts are rejected. The tests do not exercise full cohorts. The prospective control covers sealed-data reduction order. Reversing the candidate generator's representative enumeration remains a separate part of C3, and doubling the full reduction needs qualification against the 3,600-second analyze watchdog before approval. The result is labeled `candidate_generation_order_pending` until that obligation is met.
+
+Certified descent, remaining controls, final C5 blind custody, H1 q13, final analysis/export, trial plan, runtime route and runbook also remain. `EXP-PEXT-bf8f96` stays `review_required` and unfrozen; no scientific cohort trial or cloud job was launched.

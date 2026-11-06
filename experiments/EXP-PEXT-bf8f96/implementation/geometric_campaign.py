@@ -20,6 +20,35 @@ EXPECTED = {"q5-n3": (5, 3), "q7-n3": (7, 3),
             "q11-n3": (11, 3), "q3-n5": (3, 5)}
 
 
+def c1_odd_order_control(curves):
+    """Check the no-nonzero-rational-2-torsion arm on complete curve rows."""
+    counts = {name: 0 for name in EXPECTED}
+    for curve in curves:
+        name = curve.get("cohort")
+        targets = curve.get("T_count")
+        if name not in counts or type(targets) is not int or targets not in (1, 2, 4):
+            raise ValueError("C1 curve cohort or rational 2-torsion count invalid")
+        units = curve.get("units")
+        if not isinstance(units, list) or len(units) != targets:
+            raise ValueError("C1 curve lacks complete T units")
+        if targets != 1:
+            continue
+        unit = units[0]
+        minimum = unit.get("geometric_minimum") if isinstance(unit, dict) else None
+        if (not isinstance(unit, dict) or unit.get("T_index") != 0
+                or type(minimum) is not int or minimum < 0
+                or curve.get("xline_geometric_minimum") != minimum
+                or curve.get("all_maps_geometric_minimum") != minimum
+                or curve.get("strict_geometric_minimum_drop") is not False):
+            raise ValueError("C1 odd-order curve has a nonzero T or unequal minima")
+        counts[name] += 1
+    total = sum(counts.values())
+    return {"schema": "pext.control-c1-odd-order/v1",
+            "status": "checked" if total else "not_exercised",
+            "odd_order_curves_by_cohort": counts,
+            "odd_order_curves_total": total}
+
+
 def _record(path):
     path = Path(path)
     if path.is_symlink() or not path.is_file():
@@ -61,9 +90,10 @@ def aggregate_cohorts(curves, cohorts):
         "classes", "T_blocks", "structures", "exceptional", "generic",
         "branch_type_mismatch_count", "geometric_spectrum_violation_count",
         "curves_with_strict_geometric_minimum_drop")}
+    c1 = c1_odd_order_control(curves)
     return {"schema": "pext.geometric-campaign/v1",
             "status": "complete_checked_geometric_counts; controls_and_descent_pending",
-            "cohorts": cohorts, "totals": counts,
+            "cohorts": cohorts, "totals": counts, "control_c1": c1,
             "p3_geometric_drop_by_cohort": {name: cohorts[name][
                 "curves_with_strict_geometric_minimum_drop"] for name in EXPECTED},
             "type2_by_cubic_cohort": {name: {key: cohorts[name][key]
@@ -73,8 +103,10 @@ def aggregate_cohorts(curves, cohorts):
                 for name in EXPECTED if EXPECTED[name][1] == 3}}
 
 
-def reduce_campaign(trial_plan, stage_dirs):
+def reduce_campaign(trial_plan, stage_dirs, *, read_order="canonical"):
     """Require exact candidate-stage checks, then reduce every planned curve/T."""
+    if read_order not in ("canonical", "reverse"):
+        raise ValueError("unknown geometric campaign read order")
     sys.path.insert(0, str(ROOT / "tools"))
     from experiment_execution import load_plan, run_root, sha256, trial_state
     trial_plan = Path(trial_plan)
@@ -88,7 +120,11 @@ def reduce_campaign(trial_plan, stage_dirs):
     if not isinstance(stage_dirs, dict) or set(stage_dirs) != set(COHORTS):
         raise ValueError("geometric campaign requires exactly three census stages")
     curves, cohorts = [], {}
-    for stage, names in COHORTS.items():
+    stage_names = list(COHORTS)
+    if read_order == "reverse":
+        stage_names.reverse()
+    for stage in stage_names:
+        names = COHORTS[stage]
         validate_shape(plan, stage)
         if trial_state(ROOT, plan, trials[stage], plan_sha256) != "output_validated":
             raise ValueError("candidate stage lacks validated supervisor receipt")
@@ -119,7 +155,9 @@ def reduce_campaign(trial_plan, stage_dirs):
                 or len(stage_record["cohorts"]) != len(names)
                 or len(check["cohorts"]) != len(names)):
             raise ValueError("candidate stage and checker identity mismatch")
-        for index, cohort in enumerate(names):
+        indices = range(len(names)-1, -1, -1) if read_order == "reverse" else range(len(names))
+        for index in indices:
+            cohort = names[index]
             binder = CandidateBinder(cohort, plan_path=join_path(cohort))
             if (binder.plan["field"]["prime"], binder.plan["field"]["degree"]) != EXPECTED[cohort]:
                 raise ValueError("published cohort field differs from frozen campaign")
@@ -133,7 +171,8 @@ def reduce_campaign(trial_plan, stage_dirs):
                     or produced.get("chunk_count") != checked.get("chunk_count")):
                 raise ValueError("candidate cohort differs from checked stage")
             curve_rows, metrics = reduce_cohort(cohort_dir, binder,
-                                                 stage_record["binary_sha256"])
+                                                 stage_record["binary_sha256"],
+                                                 read_order=read_order)
             if (metrics["classes"] != len(binder.plan["classes"])
                     or metrics["T_blocks"] != sum(
                         len(row["targets"]) for row in binder.plan["classes"])
@@ -141,4 +180,6 @@ def reduce_campaign(trial_plan, stage_dirs):
                 raise ValueError("geometric reduction differs from published cohort")
             cohorts[cohort] = metrics
             curves.extend(curve_rows)
+    order = {name: index for index, name in enumerate(EXPECTED)}
+    curves.sort(key=lambda row: (order[row["cohort"]], row["class_index"]))
     return curves, aggregate_cohorts(curves, cohorts)

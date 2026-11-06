@@ -17,6 +17,7 @@ permissions:
   contents: read
 jobs:
   protocol:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}protocol"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -35,6 +36,7 @@ jobs:
           name: boolean-protocol-smoke
           path: /tmp/groebner-smoke
   m5gb-bridge:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}m5gb-bridge"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -51,6 +53,7 @@ jobs:
           M5GB_BINARY: /tmp/m5gb-bridge
         run: python -m unittest groebner_compare.test_research.SolverTrials.test_upstream_m5gb_basis -v
   julia-adapter:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}julia-adapter"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -74,6 +77,7 @@ jobs:
           name: julia-adapter-environment
           path: .ci-julia/*toml
   polybori-adapter:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}polybori-adapter"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 15

@@ -11,6 +11,8 @@ report is labelled derived.
 One record per run, schema `bench.record/v1`, at
 `<records_dir>/<YYYYMMDD>T<HHMM>Z-<slug>.json` (default `benchmarks/records/`;
 `.benchrec.json` at the repository root overrides the layout).
+`living_paths` may name evolving catalogs for configuration compatibility;
+a changed checkout still requires exact original archive bytes for a closed run.
 
     benchrec.py init --slug SLUG --problem PROBLEM [--curve UID] [--entry DIR]
     benchrec.py run RECORD -- COMMAND...          run a launcher under the record
@@ -41,6 +43,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 import zlib
 from pathlib import Path
@@ -56,6 +59,7 @@ DEFAULT_CONFIG = {
     "entry_re": r"^\d{8}-[A-Za-z0-9_.-]+$",
     "bucket": BUCKET,
     "store_prefix": STORE_PREFIX,
+    "living_paths": [],
 }
 OPEN_LIST = ".benchrec/open.jsonl"
 
@@ -354,6 +358,54 @@ def s3_exists(uri: str) -> bool:
     return p.returncode == 0
 
 
+def archived_raw_matches(root: Path, cfg: dict, raw: dict, *, remote: bool) -> bool:
+    """Verify the original immutable bytes, never the newer checkout version.
+
+    Only the configured canonical content-addressed URI qualifies. A local
+    cache is untrusted until both length and digest match; otherwise an online
+    caller must HEAD the recorded size and GET/hash the bounded object. This
+    does not alter the source path, record, upload flag, or any scientific field.
+    """
+    digest, size = raw.get("sha256"), raw.get("bytes")
+    if (not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)
+            or not isinstance(size, int) or isinstance(size, bool) or size < 0
+            or raw.get("s3_uri") != store_uri(cfg, digest)):
+        return False
+    cache = root / ".benchrec" / "raw-archive-cache" / digest
+    try:
+        if cache.exists():
+            cache_ok = (not cache.is_symlink()
+                        and cache.resolve().is_relative_to(root.resolve())
+                        and cache.is_file() and cache.stat().st_size == size
+                        and sha256_file(cache) == digest)
+            if not cache_ok or not remote:
+                return cache_ok
+        if not remote:
+            return False
+        bucket, key = raw["s3_uri"][5:].split("/", 1)
+        head = subprocess.run(
+            ["aws", "s3api", "head-object", "--bucket", bucket, "--key", key,
+             "--query", "ContentLength", "--output", "text"],
+            capture_output=True, env=aws_env(), timeout=180,
+        )
+        if head.returncode or int(head.stdout.strip()) != size:
+            return False
+        with tempfile.TemporaryDirectory(prefix="benchrec-archive-") as temp:
+            path = Path(temp) / "raw"
+            # One extra byte detects an oversized object if it changes after
+            # HEAD; the original exact size/hash still decide acceptance.
+            args = ["aws", "s3api", "get-object", "--bucket", bucket, "--key", key]
+            if size:
+                args += ["--range", f"bytes=0-{size}"]
+            result = subprocess.run(
+                [*args, str(path)], capture_output=True, env=aws_env(), timeout=180,
+            )
+            return (result.returncode == 0 and path.is_file()
+                    and path.stat().st_size == size and sha256_file(path) == digest)
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return False
+
+
 def cmd_upload(a, root: Path, cfg: dict) -> int:
     path, rec = load_record(root, a.record)
     if not aws_available():
@@ -371,6 +423,12 @@ def cmd_upload(a, root: Path, cfg: dict) -> int:
             rc = 1
             continue
         if sha256_file(src) != r["sha256"]:
+            if (rec["status"] in ("measured", "invalid", "censored")
+                    and archived_raw_matches(root, cfg, r, remote=True)
+                    and s3_exists(r["s3_uri"])):
+                print(f"benchrec: {r['path']}: original archive bytes verified; "
+                      "checkout differs, no upload performed")
+                continue
             print(f"benchrec: {r['path']} changed since it was recorded", file=sys.stderr)
             rc = 1
             continue
@@ -407,7 +465,10 @@ def cmd_close(a, root: Path, cfg: dict) -> int:
         rec["summary"] = a.summary
     rec["status"] = a.status
     rec["closed_utc"] = utcnow().isoformat()
-    errors = record_errors(root, cfg, rec, rel(root, path), require_closed=True)
+    # The record is still open on disk. Its temporary closing status must
+    # not unlock the fallback reserved for already-closed historical records.
+    errors = record_errors(root, cfg, rec, rel(root, path), require_closed=True,
+                           allow_archived_raw=False)
     if errors:
         rec["status"] = "open"
         rec["closed_utc"] = None
@@ -425,7 +486,8 @@ def cmd_close(a, root: Path, cfg: dict) -> int:
 # ---------------------------------------------------------------------- checks
 
 def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed: bool,
-                  verify_s3: bool = False, manifests: dict | None = None) -> list[str]:
+                  verify_s3: bool = False, manifests: dict | None = None,
+                  allow_archived_raw: bool = True) -> list[str]:
     e: list[str] = []
     for k in ("schema", "id", "slug", "problem", "repo", "created_utc", "status", "commit",
               "branch", "host", "entries", "commands", "raw", "metrics", "reports"):
@@ -484,7 +546,14 @@ def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed
         local = root / r.get("path", "")
         if local.is_file():
             if sha256_file(local) != r.get("sha256"):
-                e.append(f"{name}: raw {r['path']} differs from its recorded sha256")
+                if (allow_archived_raw
+                        and rec["status"] in ("measured", "invalid", "censored")
+                        and archived_raw_matches(root, cfg, r, remote=verify_s3)):
+                    source = "S3 archive" if verify_s3 else "local archive cache"
+                    print(f"benchrec: {name}: original raw bytes verified from {source} "
+                          f"for {r['path']}; differing checkout bytes are not validated here")
+                else:
+                    e.append(f"{name}: raw {r['path']} differs from its recorded sha256")
         else:
             covered = manifests is not None and manifests.get(r.get("path")) == r.get("sha256")
             if not covered and not r.get("uploaded"):

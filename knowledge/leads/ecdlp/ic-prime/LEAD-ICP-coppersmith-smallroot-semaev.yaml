@@ -84,6 +84,19 @@ evidence:
 - repo: crypto
   path: research/prime_s5_small_root_leads_20261028/README.md
   note: "direct S_4/S_5 oracle (crypto #2846, merged; section 7c in #2863, open): S_4 and S_5 measured full-box Newton polytopes and fully dense over F_p; the same reach bound caps any x-variable convex (p, f)^t lattice at delta 1/21.8 (S_4) and 1/70.8 (S_5) against targets 1/4 and 1/5 (5.5x and 14.2x short); S_4 lattice reach measured B < 2 at l = 1, 2 (32-48 bits); e-form unequal bounds, non-convex and multi-ideal lattices stay open"
+- repo: crypto
+  path: research/prime_eform_reach_20261029/README.md
+  note: >-
+    crypto #2900, merged 2026-10-30, derived (analysis, not a measurement): Theorem K, W_i * E(M)
+    <= sum of mu_i over convex M, gives sum_i delta_i W_i <= 1 for every bound direction, so
+    unequal bounds cannot beat 1/min W_i (1/2 for S_3), the value the numerical region search
+    only approached. For specializations with full Newton-polytope extents (the generic
+    e-form of S_3/S_4/S_5) the symmetric e-form asymptotes 1/6, 1/24, 1/80 (m = 2, 3, 4) are
+    optimal among (p, f)^t lattices on convex monomial sets. NOT unconditional: it fails at
+    exceptional specializations (z = 0 and a few curve-dependent z) where the proved ceiling is
+    1/5, 1/22, 1/72, and a review counterexample there reaches 7/41 = 0.1707 > 1/6 for S_3
+    at z = 0. Not covered: multi-target ideals, non-convex monomial sets. Lean covers the
+    counting lemma and the instances, not the fibre, layer-cake or Newton steps.
 ledger_refs:
 - IDEA-20260904-39336c
 - IDEA-20260903-81a943

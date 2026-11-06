@@ -1,0 +1,71 @@
+{
+  "schema": "review-report-data/v1",
+  "experiment_id": "EXP-ICPERF-283a70",
+  "hypothesis_id": "H-ICPERF-5adc9b",
+  "decision_id": "DEC-20261105-6e2616",
+  "evidence_id": "EV-ICPERF-84ff45",
+  "review_plan_id": "REVIEW-ICPERF-283a70-20261105",
+  "decision": "support",
+  "evidence_strength": "preliminary",
+  "claim_tier": "toy",
+  "proof_status": "derivation",
+  "provenance": {
+    "recorded": "experiments/EXP-ICPERF-283a70/runs/<RUN>/raw-result.json (read by the Coordinator)",
+    "blind_rederived": "experiments/EXP-ICPERF-283a70/review/TASK-20261105-6d9502/blind-rederivation.yaml",
+    "preregistered": "primary: EXP-ICPERF-b2f2d0/specification.yaml, fixed 2026-10-17 (out of sample); controls: EXP-ICPERF-283a70/specification.yaml pass conditions (in-sample calibration PRED-CONTROLS)"
+  },
+  "units_note": "Integers from one deterministic execution per arm (n = 64 draws per arm, one seed 20261017). No uncertainty: exact integers, zero A/A noise floor by construction. Draws are synthetic sampler outputs, not probe counts of any table.",
+  "integer_points": [
+    {"run_id": "RUN-ICPERF-f21eb1", "arm": "primary", "shifts": [13, 17, 5], "support_min": 1, "quantity": "sample_sum", "recorded": 2943, "blind_rederived": 2943, "preregistered": 2943, "match": true},
+    {"run_id": "RUN-ICPERF-f21eb1", "arm": "primary", "shifts": [13, 17, 5], "support_min": 1, "quantity": "sum_squares", "recorded": 289567, "blind_rederived": 289567, "preregistered": 289567, "match": true},
+    {"run_id": "RUN-ICPERF-f21eb1", "arm": "primary", "shifts": [13, 17, 5], "support_min": 1, "quantity": "median", "recorded": 28, "blind_rederived": 28, "preregistered": 28, "match": true, "order_stats_32_33": [28, 28]},
+    {"run_id": "RUN-ICPERF-0ef41e", "arm": "CTL-1", "shifts": [1, 2, 14], "support_min": 1, "quantity": "sample_sum", "recorded": 2938, "blind_rederived": 2938, "preregistered": 2938, "match": true},
+    {"run_id": "RUN-ICPERF-0ef41e", "arm": "CTL-1", "shifts": [1, 2, 14], "support_min": 1, "quantity": "sum_squares", "recorded": 290138, "blind_rederived": 290138, "preregistered": 290138, "match": true},
+    {"run_id": "RUN-ICPERF-0ef41e", "arm": "CTL-1", "shifts": [1, 2, 14], "support_min": 1, "quantity": "median", "recorded": 29, "blind_rederived": 29, "preregistered": 29, "match": true, "order_stats_32_33": [29, 29]},
+    {"run_id": "RUN-ICPERF-74e9a2", "arm": "CTL-2", "shifts": [13, 17, 5], "support_min": 0, "quantity": "sample_sum", "recorded": 2879, "blind_rederived": 2879, "preregistered": 2879, "match": true},
+    {"run_id": "RUN-ICPERF-74e9a2", "arm": "CTL-2", "shifts": [13, 17, 5], "support_min": 0, "quantity": "sum_squares", "recorded": 283745, "blind_rederived": 283745, "preregistered": 283745, "match": true},
+    {"run_id": "RUN-ICPERF-74e9a2", "arm": "CTL-2", "shifts": [13, 17, 5], "support_min": 0, "quantity": "median", "recorded": 27, "blind_rederived": 27, "preregistered": 27, "match": true, "order_stats_32_33": [27, 27]}
+  ],
+  "exact_match": [
+    {"run_id": "RUN-ICPERF-f21eb1", "arm": "primary", "exact_match": true, "required": true},
+    {"run_id": "RUN-ICPERF-0ef41e", "arm": "CTL-1", "exact_match": false, "required": false},
+    {"run_id": "RUN-ICPERF-74e9a2", "arm": "CTL-2", "exact_match": false, "required": false}
+  ],
+  "band_limits": {
+    "cv_sq": {"low": "81/100", "high": "121/100", "low_decimal": 0.81, "high_decimal": 1.21, "equivalent_cv_band": [0.9, 1.1]},
+    "median_ratio": {"low": "3/5", "high": "4/5", "low_decimal": 0.6, "high_decimal": 0.8},
+    "status": "descriptive only, non-discriminating"
+  },
+  "band_points": [
+    {"run_id": "RUN-ICPERF-f21eb1", "arm": "primary", "cv_sq_recorded": "9871039/8661249", "cv_sq_blind": "9871039/8661249", "cv_sq_decimal": 1.13968, "cv_decimal": 1.06756, "median_ratio_recorded": "1792/2943", "median_ratio_blind": "1792/2943", "median_ratio_decimal": 0.60890, "cv_in_band": true, "median_ratio_in_band": true},
+    {"run_id": "RUN-ICPERF-0ef41e", "arm": "CTL-1", "cv_sq_recorded": "9936988/8631844", "cv_sq_blind": "2484247/2157961", "cv_sq_decimal": 1.15120, "cv_decimal": 1.07294, "median_ratio_recorded": "1856/2938", "median_ratio_blind": "928/1469", "median_ratio_decimal": 0.63172, "cv_in_band": true, "median_ratio_in_band": true, "note": "blind fractions are the reduced forms of the recorded fractions"},
+    {"run_id": "RUN-ICPERF-74e9a2", "arm": "CTL-2", "cv_sq_recorded": "9871039/8288641", "cv_sq_blind": "9871039/8288641", "cv_sq_decimal": 1.19091, "cv_decimal": 1.09129, "median_ratio_recorded": "1728/2879", "median_ratio_blind": "1728/2879", "median_ratio_decimal": 0.60021, "cv_in_band": true, "median_ratio_in_band": true, "note": "passes the median band by 0.0002"}
+  ],
+  "audit": {"audit_id": "AUD-20261105T164530Z-b85ca9", "verdict": "clean", "replayed": 3, "matched": 3, "mismatch": 0, "recorded_interpreter": "CPython 3.11.17", "replay_interpreter": "CPython 3.13.18", "parity_check_ran": false},
+  "graph_spec": {
+    "file": "graph.svg",
+    "panel_a": {
+      "title": "Exact integers per arm: recorded vs blind re-derived vs preregistered",
+      "layout": "three small sub-panels (sample_sum, sum_squares, median), x = arm (primary RUN-ICPERF-f21eb1, CTL-1 RUN-ICPERF-0ef41e, CTL-2 RUN-ICPERF-74e9a2)",
+      "y": "integer value (count; sum of squares in count^2)",
+      "series": [
+        {"name": "recorded (raw-result.json)", "marker": "filled circle"},
+        {"name": "blind re-derived (TASK-20261105-6d9502)", "marker": "open square, slightly offset"},
+        {"name": "preregistered / control pass condition", "marker": "x"}
+      ],
+      "reference": "horizontal dashed line at the primary preregistered value (2943, 289567, 28) in each sub-panel, labelled 'pass value'",
+      "annotations": ["exact_match: primary true, CTL-1 false, CTL-2 false"],
+      "caption_must_state": "n = 64 draws per arm, one seed, one execution per arm; exact integers, no error bars"
+    },
+    "panel_b": {
+      "title": "Band fractions per arm against band limits (descriptive only)",
+      "layout": "two sub-panels: CV^2 with shaded band [0.81, 1.21]; median/mean with shaded band [0.6, 0.8]",
+      "x": "arm",
+      "y": "exact fraction as decimal (dimensionless)",
+      "series": [{"name": "recorded fraction", "marker": "filled circle, colour by exact_match (true green, false red)"}],
+      "caption_must_state": "all three arms, including both wrong samplers, lie inside both bands: the bands do not discriminate; only the exact integers decide"
+    }
+  },
+  "earlier_run_reports": ["experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.pdf"],
+  "canonical_graphs_checked": {"paths": ["knowledge/frontiers/ecdlp/README.md", "knowledge/frontiers/ecdlp/generic-rho/", "knowledge/frontiers/ecdlp/index-calculus/"], "changed": false, "reason": "No frontier row or graph cites this experiment, its runs, H-ICPERF-5adc9b or IDEA-20261015-b41f68; a toy instrument pass moves no frontier."}
+}

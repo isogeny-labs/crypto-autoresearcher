@@ -212,6 +212,9 @@ ICPERF_RUNS = {
 }
 
 
+ICPERF_PLANTED_PRICE_TRIAL = "ctl-neg-perturbed-price"
+
+
 def icperf_trials(ref, since):
     """Export only ICPERF rows whose committed raw output and receipt agree."""
     all_rows = []
@@ -270,19 +273,31 @@ def icperf_trials(ref, since):
         source = f"{raw_path} + {receipt_path}@{ref}"
         emit(f"icperf.{exp_id}.validated_trials", 1, date=day, problem="icperf", unit="trial records",
              kind="event", label=f"{exp_id} validated completed trial {trial_id}", source=source)
+        # Stage-0 values are computed by a seeded program from assumed or
+        # planted inputs. None is a measured latency or a table-probe count,
+        # so no unit may read as one (DEC-20261105-8a9984 NA-2; sheriff case
+        # SHF-20261106-a114e7, ICR-1).
         if exp_id == "EXP-ICPERF-283a70":
-            fields = (("n_targets", "target samples"), ("sample_sum", "probe-count sum"),
-                      ("median", "probes per target"))
+            fields = (("n_targets", "synthetic xorshift samples (count)"),
+                      ("sample_sum", "synthetic xorshift draw-count sum (not table probes)"),
+                      ("median", "draws (synthetic, not table probes)"))
+            qualifier = "synthetic xorshift sample, not table probes"
         else:
-            fields = (("states", "model states"), ("c_probe_ns", "nanoseconds per probe"),
-                      ("c_state_ns", "nanoseconds per state"), ("c_step_ns", "nanoseconds per step"),
-                      ("price_ratio_num", "dimensionless ratio numerator"),
-                      ("price_ratio_den", "dimensionless ratio denominator"))
+            # NEG-1 (ctl-neg-perturbed-price) plants a perturbed price; every
+            # other trial uses the assumed cost-model constants.
+            kind = "planted input" if trial_id == ICPERF_PLANTED_PRICE_TRIAL else "assumed input"
+            fields = (("states", "model states"),
+                      ("c_probe_ns", f"{kind}: nanoseconds per probe (cost-model constant, not measured)"),
+                      ("c_state_ns", f"{kind}: nanoseconds per state (cost-model constant, not measured)"),
+                      ("c_step_ns", f"{kind}: nanoseconds per step (cost-model constant, not measured)"),
+                      ("price_ratio_num", "dimensionless ratio numerator (computed from assumed inputs)"),
+                      ("price_ratio_den", "dimensionless ratio denominator (computed from assumed inputs)"))
+            qualifier = f"{kind}s, not a measurement"
         for field, unit in fields:
             value = raw.get(field)
             if type(value) in (int, float) and math.isfinite(value):
                 emit(f"icperf.{exp_id}.{trial_id}.{field}", value, date=day, problem="icperf", unit=unit,
-                     better="neutral", label=f"{exp_id} {trial_id}: {field}", source=source)
+                     better="neutral", label=f"{exp_id} {trial_id}: {field} ({qualifier})", source=source)
 
 
 def prym_census(ref):
@@ -767,6 +782,64 @@ def prime_field_cancellation_solver_panel(ref,since):
             emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Cold supplied-row solver including cancellation/lifting/checks; shared projection separate; no unit weights',**common)
 
 
+def prime_field_sparse_functional_panel(ref,since):
+    """A9 factorial functional control: immutable supplied rows, component units only."""
+    date='2026-11-05'
+    if date<since:return
+    path='research/prime_field_a9_execution_20261105/runs/a9-sparse-functionals-6be915/analysis.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);cells=data['cells']
+        expected={(f'p{p}-i{i}',schedule,b,scope,arm) for p in (8191,65537) for i in (0,1) for schedule in ('window','hash0','hash1','hash2') for b in (0,8,16,24,32,48,64,96,128) for scope in ('relations','anchors') for arm in ('dense_joint','dense_cancel','sparse_joint','sparse_cancel')}
+        if data['panel_complete']is not True or len(cells)!=1152 or data['physical_processes']!=1 or data['solver_calls_verified']!=1152:return
+        if {(c['cell_id'],c['schedule'],c['prefix'],c['scope'],c['arm']) for c in cells}!=expected:return
+        for c in cells:
+            if c['verified']is not True or c['status']!='verified':return
+            for k in ('identified_targets','matrix_columns','matrix_rank','matrix_nullity','fr_add','fr_sub','fr_mul','fr_inv','certificate_lift_sub','verified_original_certificates'):
+                if type(c[k])is not int or c[k]<0:return
+            if c['matrix_rank']+c['matrix_nullity']!=c['matrix_columns'] or c['identified_targets']>8 or c['verified_original_certificates']!=c['identified_targets']:return
+        pairs={}
+        for c in cells:pairs.setdefault(c['instance_id'],[]).append(c)
+        if len(pairs)!=288 or any(len(v)!=4 or len({r['identified_targets'] for r in v})!=1 for v in pairs.values()):return
+    except (KeyError,TypeError,ValueError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a9'
+    emit(prefix+'.solver_calls',1152,unit='solver calls',label='Four cold modes per 288 fixed dependent systems; one process',**common)
+    for c in cells:
+        for k,unit in (('identified_targets','targets'),('fr_add','Fr additions'),('fr_sub','Fr subtractions'),('fr_mul','Fr multiplications'),('fr_inv','Fr inversions'),('certificate_lift_sub','Fr subtractions')):
+            emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Cold supplied-row solver including cancellation/lifting/checks; shared projection separate; no unit weights',**common)
+
+
+def prime_field_json_functional_panel(ref,since):
+    """A9 factorial functional control: immutable supplied rows, component units only."""
+    date='2026-11-05'
+    if date<since:return
+    path='research/prime_field_a9_json_control_20261105/runs/a9-json-control-4e271c/analysis.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);cells=data['cells']
+        expected={(f'p{p}-i{i}',schedule,b,scope,arm) for p in (8191,65537) for i in (0,1) for schedule in ('window','hash0','hash1','hash2') for b in (0,8,16,24,32,48,64,96,128) for scope in ('relations','anchors') for arm in ('dense_joint','dense_cancel','sparse_joint','sparse_cancel')}
+        if data['panel_complete']is not True or len(cells)!=1152 or data['physical_processes']!=1 or data['solver_calls_verified']!=1152:return
+        if {(c['cell_id'],c['schedule'],c['prefix'],c['scope'],c['arm']) for c in cells}!=expected:return
+        for c in cells:
+            if c['verified']is not True or c['status']!='verified':return
+            for k in ('identified_targets','matrix_columns','matrix_rank','matrix_nullity','fr_add','fr_sub','fr_mul','fr_inv','certificate_lift_sub','verified_original_certificates'):
+                if type(c[k])is not int or c[k]<0:return
+            if c['matrix_rank']+c['matrix_nullity']!=c['matrix_columns'] or c['identified_targets']>8 or c['verified_original_certificates']!=c['identified_targets']:return
+        account=data['campaign_accounting']
+        if account['physical_attempts']!=2 or account['prior_observed_unverified_solver_calls']!=4 or account['cumulative_observed_producer_calls']!=1156:return
+        pairs={}
+        for c in cells:pairs.setdefault(c['instance_id'],[]).append(c)
+        if len(pairs)!=288 or any(len(v)!=4 or len({r['identified_targets'] for r in v})!=1 for v in pairs.values()):return
+    except (KeyError,TypeError,ValueError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}');prefix='prym.prime_field.a9json'
+    emit(prefix+'.solver_calls',1152,unit='solver calls',label='Four cold modes per 288 fixed dependent systems; one process',**common)
+    emit(prefix+'.failed_prefix.producer_calls',4,unit='solver calls',label='Retained observed/unverified failed-prefix work charged separately',**common)
+    emit(prefix+'.cumulative_producer_calls',1156,unit='solver calls',label='1152successfulpanel calls plus4retainedfailed-prefix calls;2physicalattempts',**common)
+    for c in cells:
+        for k,unit in (('identified_targets','targets'),('fr_add','Fr additions'),('fr_sub','Fr subtractions'),('fr_mul','Fr multiplications'),('fr_inv','Fr inversions'),('certificate_lift_sub','Fr subtractions')):
+            emit(prefix+'.'+c['cell_id']+'.'+c['schedule']+'.budget'+str(c['prefix'])+'.'+c['scope']+'.'+c['arm']+'.'+k,c[k],unit=unit,label='Cold supplied-row solver including cancellation/lifting/checks; shared projection separate; no unit weights',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -937,6 +1010,8 @@ def main():
     prime_field_fresh_source_panel(a.ref, a.since)
     prime_field_source_budget_panel(a.ref, a.since)
     prime_field_cancellation_solver_panel(a.ref, a.since)
+    prime_field_sparse_functional_panel(a.ref, a.since)
+    prime_field_json_functional_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 

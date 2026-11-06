@@ -158,9 +158,33 @@ class ProgressMetricsTests(unittest.TestCase):
         self.assertEqual(len(trial_events), 9)
         metrics = {r["metric"]: r for r in rows}
         sample = metrics["icperf.EXP-ICPERF-283a70.geometric-probe-sample.sample_sum"]
-        self.assertEqual((sample["value"], sample["unit"]), (2943, "probe-count sum"))
+        self.assertEqual((sample["value"], sample["unit"]),
+                         (2943, "synthetic xorshift draw-count sum (not table probes)"))
         modeled = metrics["icperf.EXP-ICPERF-284bc4.price-ratio-identity.c_probe_ns"]
-        self.assertEqual((modeled["value"], modeled["unit"]), (370, "nanoseconds per probe"))
+        self.assertEqual((modeled["value"], modeled["unit"]),
+                         (370, "assumed input: nanoseconds per probe (cost-model constant, not measured)"))
+        planted = metrics["icperf.EXP-ICPERF-284bc4.ctl-neg-perturbed-price.c_probe_ns"]
+        self.assertTrue(planted["unit"].startswith("planted input: "))
+
+    def test_no_icperf_stage0_row_carries_a_bare_probe_or_latency_unit(self):
+        """SHF-20261106-a114e7 ICR-1, DEC-20261105-8a9984 NA-2: assumed and
+        planted constants and synthetic draws never read as measured
+        nanoseconds per probe or probes per target."""
+        self.add_icperf_fixture()
+        rows = [r for r in self.capture(pm.icperf_trials, "HEAD", "2026-10-01")
+                if not r["metric"].endswith("validated_trials")]
+        self.assertTrue(rows)
+        for row in rows:
+            unit = row["unit"].lower()
+            if "nanosecond" in unit or "latency" in unit:
+                self.assertRegex(unit, r"^(assumed|planted) input: .*not measured", row["metric"])
+                self.assertRegex(row["label"].lower(), r"(assumed|planted) inputs", row["metric"])
+            if "probe" in unit and "nanosecond" not in unit:
+                self.assertIn("not table probes", unit, row["metric"])
+                self.assertIn("synthetic", unit, row["metric"])
+            self.assertNotIn("probes per target", unit, row["metric"])
+            self.assertNotEqual(unit, "probe-count sum", row["metric"])
+            self.assertEqual(row["better"], "neutral", row["metric"])
 
     def test_icperf_cohort_is_not_partially_exported_after_receipt_mismatch(self):
         self.add_icperf_fixture()

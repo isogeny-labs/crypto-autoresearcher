@@ -289,6 +289,66 @@ def _instant(value: Any, field: str) -> datetime:
     return moment
 
 
+TRIAL_INPUT_FACTS = ("parameters", "seed", "curve_id")
+RUN_LEVEL_FACTS = ("id", "run_id", "experiment_id", "task_id", "trial_id", "approved_by",
+                   "hypothesis_id", *TRIAL_INPUT_FACTS)
+INPUT_FACTS = ("trial_plan", "plan_sha256", "trial_id", "specification",
+               "specification_sha256", *TRIAL_INPUT_FACTS)
+_VERSION_TOKEN = re.compile(r"\d+\.\d+\S*")
+
+
+def _unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    """raw-result.json with a repeated key contradicts itself; json.loads would
+    keep the last value (attack_claimed true, then false; SHF-20261106-a114e7 G11)."""
+    seen: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in seen:
+            raise EnvelopeRefused(f"raw-result.json repeats the key {key!r}")
+        seen[key] = value
+    return seen
+
+
+def _refuse_case_variants(block: dict[str, Any], facts: tuple[str, ...], where: str) -> None:
+    """A key that differs from a checked one only in case (inputs.Seed) would
+    escape the check and still read as that fact (SHF-20261106-a114e7 G17)."""
+    folded = {fact.casefold(): fact for fact in facts}
+    for key in block:
+        if isinstance(key, str) and key not in facts and key.casefold() in folded:
+            raise EnvelopeRefused(f"driver manifest {where}{key} is a case variant of the "
+                                  f"checked field {where}{folded[key.casefold()]}; write it "
+                                  "with that exact name")
+
+
+def _check_trial_inputs(block: dict[str, Any], trial: dict[str, Any], where: str) -> None:
+    """seed, parameters and curve_id in a driver block against the frozen trial.
+
+    parameters are compared as a whole, type-strictly: an extra or a missing
+    key is a contradiction, not a derived extra (SHF-20261106-a114e7 G4/G5).
+    A driver that computes derived values records them under another key (for
+    example inputs.derived). When the trial declares no such input the driver
+    has no source for one: a stated seed or curve_id, or a non-empty
+    parameters mapping, is refused (G7); an empty parameters mapping states
+    nothing and is kept.
+    """
+    for key in TRIAL_INPUT_FACTS:
+        if key not in block:
+            continue
+        if key in trial:
+            if not _same(block[key], trial[key]):
+                extra = ""
+                if (key == "parameters" and isinstance(block[key], dict)
+                        and isinstance(trial[key], dict)):
+                    surplus = sorted(map(str, block[key].keys() - trial[key].keys()))
+                    missing = sorted(map(str, trial[key].keys() - block[key].keys()))
+                    extra = "".join((f"; keys outside the plan {surplus}" if surplus else "",
+                                     f"; plan keys missing {missing}" if missing else ""))
+                raise EnvelopeRefused(f"driver manifest {where}{key}={block[key]!r} contradicts "
+                                      f"the frozen trial's {trial[key]!r}{extra}")
+        elif not (key == "parameters" and block[key] == {}):
+            raise EnvelopeRefused(f"driver manifest {where}{key}={block[key]!r} has no source: "
+                                  f"the frozen trial declares no {key}")
+
+
 LAUNCH_ENVIRONMENT_FACTS = ("commit", "source_sha256", "specification_sha256",
                             "runtime_lock", "runtime_lock_sha256")
 
@@ -327,6 +387,16 @@ def _check_driver_facts(body: dict[str, Any], plan: dict[str, Any], plan_relativ
     _agree(body, "approved_by", plan["approved_by"], "run.")
     if isinstance(plan.get("hypothesis_id"), str) and plan["hypothesis_id"].strip():
         _agree(body, "hypothesis_id", plan["hypothesis_id"], "run.")
+    elif "hypothesis_id" in body:
+        # The plan names no hypothesis: a driver-stated one has no source and
+        # would bind the run to a hypothesis nobody approved (SHF-20261106-a114e7 G6).
+        raise EnvelopeRefused(f"driver manifest run.hypothesis_id={body['hypothesis_id']!r} "
+                              "has no source: the frozen plan names no hypothesis")
+    _refuse_case_variants(body, RUN_LEVEL_FACTS, "run.")
+    # Run-level (and legacy flat-shape) seed, parameters and curve_id state the
+    # same trial inputs as run.inputs, so they are checked the same way
+    # (SHF-20261106-a114e7 LGX-2, G1-G3).
+    _check_trial_inputs(body, trial, "run.")
     code = body.get("code", {})
     _agree(code, "commit", authority["commit"], "run.code.", "the launch authority")
     for field, launched in (("command", argv), ("check_command", checker)):
@@ -357,7 +427,10 @@ def _check_driver_facts(body: dict[str, Any], plan: dict[str, Any], plan_relativ
             and _same_interpreter(argv[0])):
         # Same interpreter: the driver's Python must at least name its version.
         version = environment["python"].split()[0] if environment["python"].split() else ""
-        if version not in str(driver_environment["python"]):
+        # The first version token must BE that version: a substring test let
+        # "3.13.189" or "not 3.13.18" through (SHF-20261106-a114e7 G9).
+        stated = _VERSION_TOKEN.search(str(driver_environment["python"]))
+        if not version or stated is None or stated.group(0) != version:
             raise EnvelopeRefused(f"driver manifest run.environment.python="
                                   f"{driver_environment['python']!r} contradicts the "
                                   f"launched interpreter's Python {version}")
@@ -365,9 +438,11 @@ def _check_driver_facts(body: dict[str, Any], plan: dict[str, Any], plan_relativ
     _agree(inputs, "trial_plan", plan_relative, "run.inputs.")
     _agree(inputs, "plan_sha256", plan_hash, "run.inputs.", "the frozen plan file")
     _agree(inputs, "trial_id", trial["id"], "run.inputs.", "the frozen trial")
-    for key in ("parameters", "seed", "curve_id"):
-        if key in trial:
-            _agree(inputs, key, trial[key], "run.inputs.", "the frozen trial")
+    _refuse_case_variants(inputs, INPUT_FACTS, "run.inputs.")
+    _check_trial_inputs(inputs, trial, "run.inputs.")
+    for key in ("specification", "specification_sha256"):
+        if key in plan:
+            _agree(inputs, key, plan[key], "run.inputs.")
     timing = body.get("timing", {})
     start, finish = datetime.fromisoformat(started), datetime.fromisoformat(driver_finished)
     wall = (finish - start).total_seconds()
@@ -379,6 +454,11 @@ def _check_driver_facts(body: dict[str, Any], plan: dict[str, Any], plan_relativ
                 raise EnvelopeRefused(f"driver manifest run.timing.{key}={timing[key]!r} "
                                       f"contradicts the supervisor's driver interval "
                                       f"{started} .. {driver_finished}")
+    if "started_at" in timing and "finished_at" in timing and (
+            _instant(timing["started_at"], "run.timing.started_at")
+            > _instant(timing["finished_at"], "run.timing.finished_at")):
+        raise EnvelopeRefused(f"driver manifest run.timing.started_at={timing['started_at']!r} "
+                              f"is after run.timing.finished_at={timing['finished_at']!r}")
     if "wall_seconds" in timing:
         seconds = timing["wall_seconds"]
         if (isinstance(seconds, bool) or not isinstance(seconds, (int, float))
@@ -483,7 +563,8 @@ def complete_manifest(directory: Path, plan: dict[str, Any], plan_relative: str,
     raw = None
     if raw_path.is_file():
         try:
-            raw = json.loads(raw_path.read_text(encoding="utf-8"))
+            raw = json.loads(raw_path.read_text(encoding="utf-8"),
+                             object_pairs_hook=_unique_json_object)
         except (UnicodeDecodeError, json.JSONDecodeError):
             raw = None
     environment = read_json(safe_path(directory, "environment.json"))
@@ -669,9 +750,66 @@ def committed(root: Path, path: Path) -> None:
         raise ExecutionError(f"uncommitted or changed input: {relative}")
 
 
+def committed_queue(root: Path, path: Path) -> None:
+    """Verify a queue's Git blob or its committed managed-artifact binding."""
+    relative = path.relative_to(root.resolve()).as_posix()
+    path = safe_path(root, relative)
+    tracked = subprocess.run(
+        ["git", "-C", str(root), "ls-tree", "HEAD", "--", relative],
+        capture_output=True, check=False)
+    if tracked.returncode:
+        raise ExecutionError(f"cannot inspect committed queue: {relative}")
+    if tracked.stdout:
+        if tracked.stdout.split(maxsplit=2)[:2] not in ([b"100644", b"blob"], [b"100755", b"blob"]):
+            raise ExecutionError(f"committed queue is not a regular file: {relative}")
+        # A changed tracked file must never fall back to a matching manifest.
+        committed(root, path)
+        return
+    manifest_relative = str(PurePosixPath(relative).parent / ".artifacts.json")
+    manifest = safe_path(root, manifest_relative)
+    manifest_entry = subprocess.run(
+        ["git", "-C", str(root), "ls-tree", "HEAD", "--", manifest_relative],
+        capture_output=True, check=False)
+    if (manifest_entry.returncode or manifest_entry.stdout.split(maxsplit=2)[:2]
+            not in ([b"100644", b"blob"], [b"100755", b"blob"])):
+        raise ExecutionError(f"queue manifest is not a committed regular file: {manifest_relative}")
+    result = subprocess.run(
+        ["git", "-C", str(root), "show", f"HEAD:{manifest_relative}"],
+        capture_output=True, check=False)
+    if result.returncode or not manifest.is_file() or result.stdout != manifest.read_bytes():
+        raise ExecutionError(f"uncommitted or changed queue manifest: {manifest_relative}")
+
+    def unique_object(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError(f"duplicate manifest key: {key}")
+            value[key] = item
+        return value
+
+    try:
+        binding = json.loads(result.stdout, object_pairs_hook=unique_object)
+        if (not isinstance(binding, dict) or set(binding) != {"schema", "files"}
+                or binding["schema"] != "artifacts.manifest/v1"
+                or not isinstance(binding["files"], dict)):
+            raise ValueError("invalid manifest schema")
+        entry = binding["files"].get(path.name)
+        if (not isinstance(entry, dict) or set(entry) != {"sha256", "bytes"}
+                or not isinstance(entry["sha256"], str)
+                or not SHA256.fullmatch(entry["sha256"])
+                or type(entry["bytes"]) is not int or entry["bytes"] < 0):
+            raise ValueError("invalid queue entry")
+        content = path.read_bytes()
+        if len(content) != entry["bytes"] or hashlib.sha256(content).hexdigest() != entry["sha256"]:
+            raise ValueError("queue digest or size mismatch")
+    except (ValueError, OSError) as error:
+        raise ExecutionError(f"invalid managed queue binding: {relative}: {error}") from error
+
+
 def authorize(root: Path, path: Path, plan: dict[str, Any], owner: str, epoch: int) -> dict[str, Any]:
     """Re-render the existing dispatcher, including its archive and claims gates."""
-    for relative in (plan["specification"], plan["queue"], *plan["source_sha256"]):
+    committed_queue(root, safe_path(root, plan["queue"]))
+    for relative in (plan["specification"], *plan["source_sha256"]):
         file = safe_path(root, relative)
         committed(root, file)
         if relative in plan["source_sha256"] and sha256(file) != plan["source_sha256"][relative]:
@@ -925,7 +1063,12 @@ def execute_trial(root: Path, path: Path, plan: dict[str, Any], trial: dict[str,
     write_once(directory / "environment.json", {"python": sys.version, "platform": sys.platform,
                "source_sha256": plan["source_sha256"], "specification_sha256": plan["specification_sha256"],
                "commit": authority["commit"], "runtime_lock": plan.get("runtime_lock"),
-               "runtime_lock_sha256": plan.get("runtime_lock_sha256")})  # never dump credential-bearing environment variables
+               "runtime_lock_sha256": plan.get("runtime_lock_sha256"),
+               # authorize() refused the launch unless every source_sha256 file
+               # was byte-equal to HEAD (tracked, unmodified) and to its digest.
+               # A per-unit clean-source flag, which check_run_source_provenance
+               # accepts with source_sha256 (SHF-20261106-a114e7, ICV-2).
+               "sources_committed": True})  # never dump credential-bearing environment variables
     status, returncode, check_returncode = "infrastructure_error", None, None
     detail = None
     completion = None

@@ -1,0 +1,291 @@
+# Pre-approval FIX card for EXP-MONO-1a1be2 (review_required; NOT approved). It closes the
+# TASK-20261105-165da2 findings F-1 and N-1 to N-5, and runs the DEV-1 substitute cell
+# (owner direction, DEC-20261106-843cf7). Every fix comes with a test that fails on the
+# 72f51766a6 code, or for a KAT, a scratch mutant it kills. No contract cell is computed and
+# no predicted value is asserted. Zero runs.
+handoff:
+  id: TASK-20261106-4c4831
+  from: coordinator
+  to: executor
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-69d9a2
+  authorized_by: DEC-20261106-843cf7
+  objective: >-
+    Fix the EXP-MONO-1a1be2 instrument at its 72f51766a6 bytes:
+    (1) bind and harden the start-up known-answer gate (F-1);
+    (2) add a non-vacuous large-Q target-index KAT that kills the 32-bit truncation mutant
+        (N-1);
+    (3) write launcher-side validity, and enforce the F2 family stop (N-2);
+    (4) take arm-C lambda from the counted cancellation-free total (N-3);
+    (5) withhold derived keys in KAT mode (N-4);
+    (6) harden the gate and records (N-5);
+    (7) run the DEV-1 substitute cell at m = 3 over a large-q degree-2 field (FX-16).
+    The trial plan stays byte-identical.
+  uncertainty_reduced: >-
+    Readiness blockers B1 and B8: whether the instrument can refuse every cell that violates
+    stopping rule 1 or an invalidation rule, and whether its start-up suite can fail on the
+    large-Q arm-C path. Nothing about the mathematics.
+  inputs:
+    - ledger/handoffs/TASK-20261106-4c4831.yaml
+    - ledger/decisions/DEC-20261106-843cf7.yaml
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+    - experiments/EXP-MONO-1a1be2/specification.yaml
+    - experiments/EXP-MONO-1a1be2/code/fqn.py
+    - experiments/EXP-MONO-1a1be2/code/curves.py
+    - experiments/EXP-MONO-1a1be2/code/semaev.py
+    - experiments/EXP-MONO-1a1be2/code/counters.py
+    - experiments/EXP-MONO-1a1be2/code/kernel.c
+    - experiments/EXP-MONO-1a1be2/code/launcher.py
+    - experiments/EXP-MONO-1a1be2/code/make_trial_plan.py
+    - experiments/EXP-MONO-1a1be2/code/throughput_calibration.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat.py
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-report-ac5ad6.md
+    - experiments/EXP-MONO-1a1be2/implementation/trial-plan.preview-ac5ad6.json
+    - agents/executor.md
+  inputs_note: >-
+    Your context is: the 165da2 report sections "Findings in detail" and CR-3 (it is the
+    defect list you are fixing, and you may read it in full); the decision's
+    code_review_composition, dev1_decision, approval_lock_binding_v2 and
+    specification_additions_for_v2; and the specification's stopping_rules and
+    invalidation_rules. Do not read other files under coordination/goals/GOAL-PATH-001/review/.
+  constraints:
+    - >-
+      FX-1 Write only the declared artifact paths. These files stay byte-identical: fqn.py,
+      curves.py, semaev.py, kernel.c, make_trial_plan.py, throughput_calibration.py, the
+      specification, and every existing implementation/ file. If a fix appears to need any of
+      them, or a new KAT exposes a defect in one, stop. Record it as scope finding SF-n in
+      fix-report-4c4831.md, and return without the fix. A fresh Coordinator act (spare
+      DEC-20261106-720ace) decides. The counting loops in counters.py are not changed; the
+      lambda line (FX-9) and key gating are the only counters.py edits. Do not touch
+      src/, ledger/ or other experiments.
+    - >-
+      FX-2 F-1 (a): the lock is bound to the test file. check_approval requires a fifth lock
+      field, test_file_sha256, and compares it with sha256(code/tests/test_kat.py). A lock
+      missing it, or mismatching it, refuses (exit 3) with no runs/ entry. CODE_FILES and the
+      code_sha256 definition are unchanged (seven files, same order). Test: replacing
+      test_kat.py after the lock is written is refused. This must fail on the old code, where
+      the 165da2 repro S14 gives check_approval -> (True, []).
+    - >-
+      FX-3 F-1 (b): the self-test runs isolated from repository configuration. Its
+      subprocess is sys.executable -m pytest -q -p no:cacheprovider --noconftest -c
+      os.devnull --rootdir <code dir> --junitxml <tmp>/junit.xml <code>/tests/test_kat.py,
+      run with cwd <code dir>. Its environment sets PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 and
+      PYTHONDONTWRITEBYTECODE=1, and removes PYTEST_ADDOPTS, PYTEST_PLUGINS and any
+      PYTHONPATH entry outside <code dir>. Tests, each failing on the old code:
+      - the 165da2 hostile tree (root pyproject.toml with [tool.pytest.ini_options] and a
+        conftest.py that deletes items) still collects EXPECTED_KAT_ITEMS;
+      - PYTEST_ADDOPTS="-k no_such_name" in the parent environment still collects the full
+        suite.
+    - >-
+      FX-4 F-1 (c): "pass in full" is checked. launcher.py defines EXPECTED_KAT_ITEMS (the
+      collected count of test_kat.py) and DESIGNED_SKIPS (node ids skipped by design, as a
+      function of specification status: empty before approval, exactly
+      test_launcher_refuses_contract_cell_while_specification_not_approved after). The
+      self-test passes only if all of these hold:
+      - the exit code is 0;
+      - junit tests equals EXPECTED_KAT_ITEMS;
+      - failures and errors are 0;
+      - there is no xfail or xpass;
+      - the skipped node ids equal DESIGNED_SKIPS for the current status.
+      Internals may take the expected values as parameters for testing; the CLI uses only
+      the constants. Tests, failing on the old code: a stub suite with one extra skip
+      refuses, and a stub suite with one item fewer refuses.
+    - >-
+      FX-5 F-1 (d): receipts are written by the launcher, keyed to the host, and refused on
+      any mismatch.
+      - A new subcommand, launcher.py selftest, runs check_approval and then the FX-3/FX-4
+        suite. It writes receipt.json and junit.xml into
+        experiments/EXP-MONO-1a1be2/selftest-receipts/<receipt_id>/.
+      - receipt.json holds: code_sha256, test_file_sha256, the lock sha256 and the junit
+        sha256; counts, skipped node ids and pytest version; the rootdir and inifile as
+        pytest reports them; started and finished UTC.
+      - It also holds an env_key with: sys.version, numpy version, the pytest version,
+        compiler path, sha256 of its --version output, compile flags, platform.machine,
+        platform.node, kernel release, and the CPU model string.
+      - cell --selftest-receipt <path> accepts only a path that resolves inside that
+        directory and whose every field equals a recomputation on this host. That includes
+        the env_key, the junit sha256 against the junit.xml beside it, and FX-4 applied to
+        that junit.
+      - A receipt that fails any check REFUSES the cell (exit 3). It never falls through to
+        a full run.
+      - Without --selftest-receipt, the cell runs the suite itself.
+      Tests, failing on the old code:
+      - the 165da2 hand-written receipt (repro S12);
+      - a launcher-written receipt with one env_key field altered;
+      - a receipt outside the directory;
+      - a receipt whose junit.xml was edited.
+      All four refuse. Tests use a scratch experiment root, never the real
+      selftest-receipts/.
+    - >-
+      FX-6 F-1 (e): the package records the gate and the self-test. Every contract-mode
+      manifest.yaml carries two blocks:
+      - gate: specification_sha256, lock_sha256, trial_plan_sha256, code_sha256,
+        test_file_sha256, check_approval passed;
+      - startup_selftest: mode (ran or receipt), receipt_sha256 or null, junit_sha256,
+        tests, passed, skipped node ids, failures, errors, pytest_version, rootdir, inifile,
+        env_key.
+      Copies of junit.xml (and of receipt.json in receipt mode) go into the package under
+      selftest/. run_cell with kat=False refuses (raises) unless it is given the gate
+      result object that the gate function returns. Tests, failing on the old code: a
+      library call to run_cell(kat=False) without a gate raises; a contract-mode package
+      built with stubbed counters (as 165da2 CR-2 stubbed them; no contract curve built, no
+      fibre analysed) carries both blocks and the copies.
+    - >-
+      FX-7 N-1 (owner direction): the large-Q index KAT, which must kill M5. Use the KAT
+      fields (41, 6) and (29, 7), and the KAT curves kat|large|q|n.
+      - Check kernel.point_index against counters.target_index on at least 300 random points
+        per field, plus O. As a vacuity guard, assert that at least 100 points per field
+        have an index of at least 2^32.
+      - Run run_sampled at m = 2 on 50 targets drawn as sums of two base points, against the
+        membership method. As vacuity guards, assert that at least 10 target keys are at
+        least 2^32, and that the naive count is nonzero on every constructed target. Both
+        are properties of the construction, not predictions.
+      - Make W10 non-vacuous at every n >= 3 and every m it runs: at least half of its 50
+        targets are drawn as sums of m base points.
+      These items run in test_kat.py, so the start-up suite guards the executing host.
+      Record their added wall time. In a scratch extract outside the repository, apply the
+      165da2 M5 edit (kernel.c p_idx, two lines, CR-3 table). At least one new item must
+      fail, and mutant-check-4c4831.json records the edit, the failing node ids and the
+      counts. The committed kernel.c stays unchanged.
+    - >-
+      FX-8 N-2 (owner direction): validity and the F2 stop. In contract mode, manifest.yaml
+      carries validity: {status: valid | void | invalid, reasons: [...]}, computed from:
+      - the R1 recount (differ -> void);
+      - gl_mismatch_generic or gl_mismatch_nongeneric > 0 (void);
+      - identity-field completeness (invalid);
+      - raw/summary agreement, with the launcher re-reading what it wrote (void);
+      - the curve selection rule (void).
+      manifest.status keeps the execution status (completed or failed_infrastructure) as a
+      separate field.
+      F2 family stop: when an arm-A contract cell fails a CTL-null all-target identity, as
+      the specification defines F2, the launcher writes runs/STOP-F2.json (cell id,
+      identity name, UTC) and marks the cell void. cmd_cell then refuses every arm-A cell
+      (exit 3, "F2 family stop") while the sentinel exists. KAT mode writes no sentinel.
+      Tests on fabricated inputs, each failing on the old code: recount differ -> void;
+      group-law mismatch -> void; a raw/summary disagreement -> void; a fabricated
+      identity failure writes the sentinel, and the next arm-A cell is refused while an
+      arm-B cell is not.
+    - >-
+      FX-9 N-3: arm-C lambda is computed from counts. arm_c_cell sets lambda =
+      Fraction(cancellation_free_counted - m_S, N - |S|). It keeps N_cf_formula and adds
+      ncf_counted_equals_formula per base. When the flag is false, the validity block adds
+      the reason "P2(vi) mismatch; P6 reading withheld (F7 first)" and readings_withheld:
+      [P6]. Tests on fabricated counts: lambda follows the counted value, and a mismatch
+      sets the flag and the reason. On the old code, lambda follows the formula.
+    - >-
+      FX-10 N-4: arm_c_entry writes lambda, lambda_exact, N_cf_formula and
+      ncf_counted_equals_formula only when derived is true. Test: a KAT-mode arm-C package
+      omits all four keys (fails on the old code).
+    - >-
+      FX-11 N-5 (owner direction): gate and record hardening, with one test per item, each
+      failing on the old code.
+      - (1) check_approval also requires execution_authorized true, frozen true and the
+        lock's approved_by equal to the specification's (the S15 repro refuses).
+      - (2) --run-id must match ^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$, and the resolved
+        package path must lie inside runs/; ../x and absolute paths refuse.
+      - (3) cdf.json adds target_seed and base_seed (string and int) per base.
+      - (4) Peak RSS records RUSAGE_SELF and RUSAGE_CHILDREN separately, and their sum as
+        peak_rss_kb_total_upper; the test checks that the keys exist, not their values.
+      - (5) The launcher refuses to start when code/ holds a .py file outside the expected
+        set (the seven CODE_FILES' .py, throughput_calibration.py, tests/test_kat.py,
+        tests/test_kat_extended.py and any tests/__init__.py or conftest.py present at
+        72f51766a6). Test: a stray numpy.py in a scratch code/ refuses.
+    - >-
+      FX-12 N-6: no change. Seed derivation and make_trial_plan.py are untouched
+      (DEC-20261106-843cf7 L-2).
+    - >-
+      FX-13 Regression. The full test_kat.py suite passes, including every 165da2 baseline
+      item and the PR-2707 tests, and EXPECTED_KAT_ITEMS equals the collected count. Report
+      both. Regenerate the trial plan with make_trial_plan.py into a temporary path outside
+      the repository, and record its sha256. It must equal
+      9ccbe61445fba836ec44bdea6e55255220a4d08e8d09c9198e5bd28696d8fb4a; any difference
+      stops the task and is reported. No new preview file is committed.
+      For every new test, fix-report-4c4831.md gives the finding it closes and its outcome
+      against the 72f51766a6 code (failed as required). That outcome comes from running the
+      new tests against old launcher.py and counters.py in a scratch extract; for KATs, the
+      mutant kill is the evidence instead.
+    - >-
+      FX-14 IM-2 and IM-3 bind. No contract cell is computed, and no T_A, T_M, T_S, T_X,
+      coverage, kappa_rel, lambda, split frequency or residual is computed on any contract
+      cell. No KAT asserts a predicted value or a cross-convention identity. Every scratch
+      file stays outside the repository. Unit, KAT, mutant and selftest-subcommand
+      invocations against scratch roots are not runs. If a hook refuses an invocation as a
+      run launch, follow its instruction (scripts/checkpoint.sh init, fill
+      .resume/RESUME.md) before retrying; .resume/ is session state, not an artifact.
+    - >-
+      FX-15 No commit, no push. No KAT output, timing, residual or prediction value appears
+      in any message. Never select, configure or contact Amazon Bedrock.
+    - >-
+      FX-16 DEV-1 (owner direction): the m = 3 large-q substitute cell. It lives in a new
+      file, code/tests/test_kat_extended.py. That file is not part of the start-up suite,
+      not in CODE_FILES and not run by cells; its sha256 is recorded in the report.
+      - The field is F_{q''^2}, with q'' the least prime greater than 10,000. The test
+        computes q'' by trial division and asserts that (q'', 2) is disjoint from every
+        arm-A, arm-B and arm-C contract pair. 10,007 is expected by the rule.
+      - The curve is generated by the KAT curve rule under seed "kat|large|<q''>|2|m3"; the
+        line base is used.
+      - The E2 sampled counter runs at m = 3 on s = 50 sampled targets. It is compared with
+        an independent membership method in Python field arithmetic (a pair-sum table of
+        point indices, for example a sorted numpy int64 array with searchsorted), which
+        must not call the kernel.
+      - Vacuity guard: the membership count is nonzero on at least 25 of the 50 targets.
+        This is a property of the field size, not a prediction.
+      Budget for this cell: 14,400 s wall and 16 GB. Before the full run, measure on a
+      stated partial fraction and record the projection. If the projection exceeds the
+      budget, stop and report (scope finding), and never shrink the cell silently. Record
+      in kat-log-4c4831.json: q'', B, the multiset count, the 50 per-target count pairs,
+      wall time and peak RSS. These are KAT-field values only.
+  deliverables:
+    - "code/launcher.py: FX-2 to FX-6, FX-8 (validity, F2 sentinel), FX-10, FX-11; EXPECTED_KAT_ITEMS and DESIGNED_SKIPS"
+    - "code/counters.py: FX-9 lambda line and flag only"
+    - "code/tests/test_kat.py: every new test of FX-2 to FX-11 plus all existing tests"
+    - "code/tests/test_kat_extended.py: FX-16 substitute cell (not in the start-up suite)"
+    - "code/README.md: gate, selftest subcommand and receipts, validity block, STOP-F2, lambda source, test_kat_extended.py"
+    - "implementation/fix-report-4c4831.md: per FX item the change, its tests, the old-code outcome, the new-code outcome; pass count; plan sha256; FX-16 projection and outcome; scope findings; sha256 of test_kat_extended.py"
+    - "implementation/kat-log-4c4831.json: raw outputs of the new KATs and the FX-16 cell (KAT fields only; under 64 KiB)"
+    - "implementation/environment-4c4831.json: interpreter, libraries, pytest, compiler and flags, host, cores"
+    - "implementation/mutant-check-4c4831.json: the M5 edit, failing new node ids and counts; the old-code runs of the new gate and validity tests (node id -> outcome)"
+  artifact_paths:
+    - experiments/EXP-MONO-1a1be2/code/launcher.py
+    - experiments/EXP-MONO-1a1be2/code/counters.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat.py
+    - experiments/EXP-MONO-1a1be2/code/tests/test_kat_extended.py
+    - experiments/EXP-MONO-1a1be2/code/README.md
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md
+    - experiments/EXP-MONO-1a1be2/implementation/kat-log-4c4831.json
+    - experiments/EXP-MONO-1a1be2/implementation/environment-4c4831.json
+    - experiments/EXP-MONO-1a1be2/implementation/mutant-check-4c4831.json
+  write_scope:
+    - experiments/EXP-MONO-1a1be2/code
+    - experiments/EXP-MONO-1a1be2/implementation
+  archived_by: TASK-20261106-5c1258
+  inference:
+    policy: executor-implementation
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default.
+    fallback_allowed: true
+    fallback_note: Backend or model substitution only, recorded as fallback_used. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    independence_note: Must not be the session of the re-reviewer TASK-20261106-7c2b01 or of the reviewer TASK-20261105-165da2.
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 36000
+    memory_gb: 16
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: XP-1, text: "archived_by TASK-20261106-5c1258 is bound."}
+    - {id: XP-2, text: "TASK-20261106-0c8aee is completed and verified, its commit is pushed, lane BATCH-69d9a2 is open, and lane BATCH-8517aa is closed."}
+    - {id: XP-3, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json TASK-20261106-4c4831 --as <addr> --ttl-minutes 720 --publish. Release with --outcome completed and --artifact <path>=<sha256> once per written artifact; confirm nine non-empty digests (plus any FX-1 scope-finding path, which stops the snapshot)."}
+  completion_gate:
+    - All nine artifact paths exist; nothing outside them is modified, and every FX-1 file is byte-identical to 72f51766a6.
+    - The full test_kat.py suite passes, and EXPECTED_KAT_ITEMS equals the collected count; every new test is shown failing on the 72f51766a6 code, or, for a KAT, killing its mutant (M5 killed by FX-7).
+    - The FX-16 substitute cell ran in full within its budget and matched the membership method, with the vacuity guard met; or the task stopped with a reported projection.
+    - The regenerated plan sha256 equals 9ccbe614...fb4a.
+    - No contract cell computed; no KAT asserts a predicted value; zero experiment runs.
+  return_format: The artifact paths with sha256, the KAT pass count and EXPECTED_KAT_ITEMS, the plan sha256 comparison, the M5 outcome (killed or not), the FX-16 outcome (passed, failed or stopped), and any scope finding. No KAT output, timing or residual values in the message.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. An instrument; it changes no claim. TASK-20261106-7c2b01 re-reviews it before approval.
+  runs_launched: 0

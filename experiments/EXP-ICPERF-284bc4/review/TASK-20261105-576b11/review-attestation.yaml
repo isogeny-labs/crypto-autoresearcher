@@ -1,0 +1,105 @@
+# Vocabulary-corrected review attestation for TASK-20261105-576b11 (joint
+# J1-validity, REVIEW-ICPERF-284bc4-20261105). Written at the Coordinator's
+# request because tools/check_review_independence.py accepts only
+# breaks|holds|inconclusive. validation-report.yaml stays as written. This
+# block is identical to the review_attestation there, except for the two
+# verdict fields and the added supersedes_vocabulary_of and limitations.
+review_attestation:
+  task_id: TASK-20261105-576b11
+  role: validator
+  review_plan: REVIEW-ICPERF-284bc4-20261105
+  joints_owned: [J1-validity]
+  sources_read:
+    - CLAUDE.md (auto-loaded)
+    - docs/agent-runtime-core.md
+    - agents/validator.md
+    - AGENTS.md (heading list; section "Review architecture", lines 329-341)
+    - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml
+    - experiments/EXP-ICPERF-284bc4/specification.yaml
+    - experiments/EXP-ICPERF-284bc4/runbook.yaml
+    - experiments/EXP-ICPERF-284bc4/runbook-lint.txt
+    - experiments/EXP-ICPERF-284bc4/trial-plan.json
+    - experiments/EXP-ICPERF-284bc4/implementation/run.py
+    - experiments/EXP-ICPERF-284bc4/implementation/check.py
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-8e3acd/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md}
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-2d715d/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-2c627f/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-779d41/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-30596e/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md} (by script)
+    - experiments/EXP-ICPERF-284bc4/runs/RUN-ICPERF-850008/{manifest.yaml,execution-receipt.json,raw-result.json,environment.json,launch.json,command.txt,RESULTS.md}
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/journal.jsonl
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/outputs/S01-probe-python/attempt-1/environment.json
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/steps/S02-trials.attempt-1.{claim-fetch.stderr,claim.stdout,claim-committed.stdout,claim-branch.stdout,claim-commit.stdout,release.stdout,supervisor.stdout}
+    - experiments/EXP-ICPERF-284bc4/runbook-sessions/RBS-ICPERF-8cdc92/** (hashed by script against journal digests)
+    - experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c/audit.json
+    - experiments/EXP-ICPERF-284bc4/audits/AUD-20261105T164527Z-d5036c/replay/<6 runs>/raw-result.json (by script)
+    - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/{data.json,report.typ,graph.svg,report.pdf}
+    - experiments/EXP-ICPERF-e467a5/specification.yaml (sha256 only)
+    - tools/runbook.py (lines 184-192, 214-240, 353-391, 1087-1135, 1202-1255, 1998-2043, 2044-2110, 2111-2220, 2220-2465, 2780-2888)
+    - tools/validate_ledger.py (lines 727-752, 1360-1372; check_run executed)
+    - tools/experiment_execution.py (lines 995-1010)
+    - tools/allocate_id.py (lines 1-40, argparse lines)
+    - tools/progress_metrics.py (lines 195-225)
+    - ledger/decisions/DEC-20261029-ca33b3.yaml (rg-matched lines)
+    - ledger/decisions/DEC-20261029-9bc3ff.yaml (lines 1-6, 90-184; key list)
+    - ledger/decisions/DEC-20261029-22e05b.yaml (lines 1-6, 52-87; key list)
+    - ledger/decisions/DEC-20261029-5554ee.yaml (lines 1-6, 89-188; key list)
+    - ledger/hypotheses/H-ICPERF-2f52d1.yaml (rg-matched lines 17-25, 46, 134-138)
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-38f344/claims/TASK-20261029-65798b.1.release.json
+    - pcc/ledger.jsonl (one rg-matched line, truncated)
+    - "rg occurrence counts only (content not read): ledger/decisions/DEC-20261029-316bfb.yaml, ledger/decisions/DEC-20261029-3bfa78.yaml, ledger/handoffs/TASK-20261029-65798b.yaml, ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml, ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/{BATCH-38f344,TASK-20261029-225ed8,TASK-20261029-0a9023}.yaml"
+    - "git metadata: commits 5200f03900, 9d13fcfde5, af94114e9c, 1a0afc68c2 (PR #2776 merge message), f7eb8ae292, 1e5baa38e6 (diff --stat only)"
+  read_sibling_reports: false
+  sibling_exposure_disclosure: >-
+    While confirming the snapshot, git diff --stat f7eb8ae292 showed the path
+    and line count (82) of experiments/EXP-ICPERF-284bc4/review/TASK-20261105-b543c3/blind-rederivation.yaml,
+    added by 1e5baa38e6 during this review. Its content was not opened. No
+    file under experiments/EXP-ICPERF-284bc4/review/ other than
+    review-plan.yaml, and nothing under experiments/EXP-ICPERF-283a70/review/,
+    was read.
+  blind_from_respected: null
+  joint_verdicts:
+    - {joint: J1-validity, verdict: holds}
+  verdict: holds
+  supersedes_vocabulary_of: validation-report.yaml
+  limitations:
+    - >-
+      L1. AUD-20261105T164527Z-d5036c stays flagged as recorded. In the tool's
+      own terms it gives no clean replay (matched 0 of 6). The flag is a
+      pointer-coverage defect: 39 of 66 rows are absent from both files, and
+      the 27 rows present in both are all exactly equal. The replay assurance
+      rests on this task's row-by-row classification and on 18 scratch
+      replays, neither of which is a durable audit record.
+    - >-
+      L2. The audit's interpreter-parity check (DEC-20261029-5554ee) did not
+      run for this session. _recorded_python reads
+      /run/environment/python_version, and these manifests record version and
+      python. So "environment_drift: []" in audit.json, and "No environment
+      drift" in the review plan's audit_note, are false negatives. Actual
+      drift was CPython 3.11.17 recorded, 3.13.18 replayed, and it changed no
+      value.
+    - >-
+      L3. A replay of the same run.py is an A/A repetition. It cannot detect a
+      wrong-but-consistent implementation. The disjoint-code recomputation
+      from the spec's formulas agrees, but those formulas were written with
+      run.py in view. Independence from the statement belongs to the blind
+      re-derivation, which this task did not read.
+    - >-
+      L4. There is one deterministic execution, with independent_instances 1
+      and no seeds, by design.
+    - >-
+      L5. Resource records are timing only (under 0.05 s per run). Peak memory
+      is not recorded.
+    - >-
+      L6. The PR #2776 body could not be read: GitHub API access to the
+      repository is not enabled for this session. The merge commit message
+      1a0afc68c2 contains no v1 run id, and the in-repository v2 record set
+      was searched in full.
+    - >-
+      L7. The recorded 3.11.17 build (ephemeral uv path, runtime_lock null)
+      cannot be reconstructed, so parity was tested at 3.11.18, the nearest
+      available patch.
+    - >-
+      L8. HEAD moved to 1e5baa38e6 during review, and git diff --stat exposed
+      the path of a sibling report (content not read). The inputs were
+      confirmed byte-identical to f7eb8ae292.

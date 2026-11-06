@@ -165,19 +165,32 @@ sees the bytes that get published. Completion only adds missing keys; a driver
 value is never changed. Every driver value with a
 publish-time source is checked against it type-strictly (`1.0`, `true` and `"1"`
 are not `1`), on complete envelopes too, and a contradiction is refused:
-run/experiment/task/trial/hypothesis ids and `approved_by` (plan and trial);
+run/experiment/task/trial/hypothesis ids and `approved_by` (plan and trial;
+a `hypothesis_id` when the plan names none is refused);
 `code.commit` (launch authority); `code.command` and `code.check_command` (the
 launched argv, as its JSON array, the array itself or shell-quoted);
 the launch binding in `environment.json` (`commit`, source and specification
 hashes, runtime lock; `environment.python` only when the driver ran under the
-supervisor's interpreter, and only that it names that version; never
-`platform`); `inputs.trial_plan`, `plan_sha256`,
-`trial_id`, `seed`, `parameters`, `curve_id` (plan and trial); `timing`
-(started/finished inside the supervisor's driver interval, wall seconds at
+supervisor's interpreter, and only that its first version token is exactly
+that version; never `platform`); `inputs.trial_plan`, `plan_sha256`,
+`trial_id`, `specification`, `specification_sha256` (plan and trial);
+`seed`, `parameters` and `curve_id` both in `inputs` and at run level (or
+top level in the legacy flat shape), against the trial; `timing`
+(started/finished inside the supervisor's driver interval, `started_at` not
+after `finished_at`, wall seconds at
 most its duration, 1 s slack for truncated clocks; a time without a zone
 cannot be checked and is refused); `result.metrics` against `run.metrics`; and
-`attack_claimed` against `raw-result.json`. A driver manifest with a duplicate
-key is refused (SHF-20261028-0f3f64, LGN-2 and LGN-5). `command.txt` must equal
+`attack_claimed` against `raw-result.json`. `parameters` are compared as a
+whole: a key outside the plan or a missing plan key is a contradiction, so a
+driver records derived values under another key (for example
+`inputs.derived`). A `seed`, `curve_id` or non-empty `parameters` when the
+trial declares none has no source and is refused. A key that differs from a
+checked one only in case (`inputs.Seed`) is refused. A driver manifest or
+`raw-result.json` with a duplicate key is refused (SHF-20261028-0f3f64, LGN-2
+and LGN-5; SHF-20261106-a114e7, LGX-2). Driver keys with no publish-time
+source stay the driver's own and are not checked: its `status`, its
+certificate, other `inputs` and `environment` keys, and an unparseable
+`raw-result.json` (the checker's job). `command.txt` must equal
 the launched argv, or completion is refused.
 
 Each added key's source is recorded in `run.envelope_completion.sources`

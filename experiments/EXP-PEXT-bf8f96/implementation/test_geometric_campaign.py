@@ -10,11 +10,17 @@ class CampaignAggregationTests(unittest.TestCase):
     def fixture(self):
         curves, metrics = [], {}
         for name in EXPECTED:
-            curve = {"cohort": name, "class_index": 0, "T_count": 2,
+            targets = 1 if name == "q7-n3" else 2
+            curve = {"cohort": name, "class_index": 0, "T_count": targets,
+                     "units": [{"T_index": t, "geometric_minimum":
+                                1 if name == "q5-n3" and t == 1 else 2}
+                               for t in range(targets)],
+                     "xline_geometric_minimum": 2,
+                     "all_maps_geometric_minimum": 1 if name == "q5-n3" else 2,
                      "strict_geometric_minimum_drop": name == "q5-n3",
                      "branch_type_mismatch_count": 0,
                      "geometric_spectrum_violation_count": 0}
-            row = {"classes": 1, "T_blocks": 2, "structures": 20,
+            row = {"classes": 1, "T_blocks": targets, "structures": 20,
                    "exceptional": 4, "generic": 16,
                    "curves_with_strict_geometric_minimum_drop": int(
                        curve["strict_geometric_minimum_drop"]),
@@ -35,6 +41,7 @@ class CampaignAggregationTests(unittest.TestCase):
         result = aggregate_cohorts(curves, metrics)
         self.assertEqual(result["totals"]["classes"], 4)
         self.assertEqual(result["p3_geometric_drop_by_cohort"]["q5-n3"], 1)
+        self.assertEqual(result["control_c1"]["odd_order_curves_by_cohort"]["q7-n3"], 1)
         self.assertEqual(set(result["type2_by_cubic_cohort"]),
                          {"q5-n3", "q7-n3", "q11-n3"})
         with self.assertRaisesRegex(ValueError, "coverage incomplete"):
@@ -47,6 +54,14 @@ class CampaignAggregationTests(unittest.TestCase):
         corrupted = copy.deepcopy(curves)
         corrupted[1]["hyperelliptic_predicate_true_count"] = 0
         with self.assertRaisesRegex(ValueError, "Type2 cohort total"):
+            aggregate_cohorts(corrupted, metrics)
+        corrupted = copy.deepcopy(curves)
+        corrupted[1]["all_maps_geometric_minimum"] = 1
+        with self.assertRaisesRegex(ValueError, "C1 odd-order"):
+            aggregate_cohorts(corrupted, metrics)
+        corrupted = copy.deepcopy(curves)
+        corrupted[1]["units"].append({"T_index": 1, "geometric_minimum": 1})
+        with self.assertRaisesRegex(ValueError, "C1 curve lacks complete"):
             aggregate_cohorts(corrupted, metrics)
 
 

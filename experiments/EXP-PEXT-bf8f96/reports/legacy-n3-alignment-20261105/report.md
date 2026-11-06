@@ -1,0 +1,7 @@
+# EXP-PEXT-bf8f96: C0 historical identity alignment
+
+The [n3 alignment checker](../../implementation/legacy_n3_alignment.py) replays the pinned historical field-builder search in separate Python arithmetic. For q5/n3 and q7/n3, the complete modulus, primitive encoding and logarithm table equal the new compact inputs. Every historical `role=class` curve model equals the new representative at the same ordinal: 252 of 252 for q5 and 690 of 690 for q7. The historical fixture and builder source hashes are pinned in the checker; the [certificate](../../inputs/classes-20261102/legacy-n3-alignment.json) binds both fixture hashes, new input hashes, field hashes and ordered-model hashes. Exact readback recomputes the entire certificate. Three focused tests pass, including fixture and model-order mutation rejection.
+
+The existing [q3/n5 bijection](../../implementation/legacy_class_bijection.py) was replayed again against the published historical fixture and compact input. It checks a literal field/model isomorphism for all 488 historical classes and returns `valid: true` with `matched_classes: 488`.
+
+This completes the input-identity prerequisite for C0's three frozen full cohorts. The later regression trial must still compare every new T=O cover-output row with its historical fixture after applying these identities. This check took no scientific cohort data and launched no cloud job. `EXP-PEXT-bf8f96` remains `review_required` and unfrozen.

@@ -1,0 +1,13 @@
+digraph G {
+ graph [rankdir=TB,bgcolor="white",pad=0.2,nodesep=0.3,ranksep=0.35];
+ node [shape=box,style="rounded,filled",fillcolor="#e5f1e9",color="#3b6d4a",fontname="DejaVu Sans",fontsize=11,margin="0.15,0.12"];
+ edge [color="#586a7e",arrowsize=0.7];
+ prime [label="Prime growing bound\nWritten proof + scoped review"];
+ binary [label="Binary raw-chain upper bound\nLean theorem + scoped reviews"];
+ code [label="Committed code and pinned CI evidence\n120 targets; five LFD receipts match source"];
+ draft [label="Focused manuscript draft\nExact encodings, hypotheses and proof coverage",fillcolor="#eaf0fc",color="#48658c"];
+ novel [label="Still needed: exact prior-art/novelty comparison",fillcolor="#fff0d9",color="#ad7b2e"];
+ final [label="Final manuscript review and archival release\nSubmission readiness not yet established",fillcolor="#fff0d9",color="#ad7b2e"];
+ {rank=same;prime;binary;}
+ prime -> code; binary -> code; code -> draft; draft -> novel -> final;
+}

@@ -1,0 +1,52 @@
+test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) ... 
+  test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) (status='measured') ... FAIL
+  test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) (status='invalid') ... FAIL
+  test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) (status='censored') ... FAIL
+test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) ... FAIL
+
+======================================================================
+FAIL: test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) (status='measured')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-integration-resume-20261106-0338/crypto-autoresearcher/open-close-fix/tools/test_benchrec.py", line 415, in test_closing_open_record_cannot_use_archive_fallback
+    self.assertEqual(r.returncode, 1, r.stdout + r.stderr)
+AssertionError: 0 != 1 : benchrec: benchmarks/records/20261106T0407Z-open-close.json: original raw bytes verified from local archive cache for raw.txt; differing checkout bytes are not validated here
+closed benchmarks/records/20261106T0407Z-open-close.json (measured); progress report regenerated in benchmarks/progress/
+
+
+======================================================================
+FAIL: test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) (status='invalid')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-integration-resume-20261106-0338/crypto-autoresearcher/open-close-fix/tools/test_benchrec.py", line 416, in test_closing_open_record_cannot_use_archive_fallback
+    self.assertIn("differs from its recorded sha256", r.stderr)
+AssertionError: 'differs from its recorded sha256' not found in 'benchrec: benchmarks/records/20261106T0407Z-open-close.json is already measured\n'
+
+======================================================================
+FAIL: test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback) (status='censored')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-integration-resume-20261106-0338/crypto-autoresearcher/open-close-fix/tools/test_benchrec.py", line 416, in test_closing_open_record_cannot_use_archive_fallback
+    self.assertIn("differs from its recorded sha256", r.stderr)
+AssertionError: 'differs from its recorded sha256' not found in 'benchrec: benchmarks/records/20261106T0407Z-open-close.json is already measured\n'
+
+======================================================================
+FAIL: test_closing_open_record_cannot_use_archive_fallback (open_close_regression.BenchrecTest.test_closing_open_record_cannot_use_archive_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/pr-integration-resume-20261106-0338/crypto-autoresearcher/open-close-fix/tools/test_benchrec.py", line 423, in test_closing_open_record_cannot_use_archive_fallback
+    self.br("close", rec, "--status", "measured", "--summary", "synthetic control",
+  File "/tmp/pr-integration-resume-20261106-0338/crypto-autoresearcher/open-close-fix/tools/test_benchrec.py", line 40, in br
+    return sh(sys.executable, str(TOOL), *args, cwd=self.root, check=check, env=self.env)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/pr-integration-resume-20261106-0338/crypto-autoresearcher/open-close-fix/tools/test_benchrec.py", line 19, in sh
+    raise AssertionError(f"{' '.join(map(str, args))}\n{p.stdout}\n{p.stderr}")
+AssertionError: /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3 /tmp/pr-integration-resume-20261106-0203/crypto-autoresearcher/combined/tools/benchrec.py close benchmarks/records/20261106T0407Z-open-close.json --status measured --summary synthetic control --report /tmp/tmp__ups4t0/report.pdf
+
+benchrec: benchmarks/records/20261106T0407Z-open-close.json is already measured
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.900s
+
+FAILED (failures=4)

@@ -15,6 +15,7 @@ defaults:
     working-directory: research-kb
 jobs:
   python-and-container:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}python-and-container"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && (github.event_name != 'pull_request' || !github.event.pull_request.draft) }}
     runs-on: ubuntu-latest
     steps:
@@ -31,6 +32,7 @@ jobs:
       - run: docker build -t research-kb:ci .
       - run: docker run --rm research-kb:ci --help
   lean-export:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}lean-export"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && (github.event_name != 'pull_request' || !github.event.pull_request.draft) }}
     runs-on: ubuntu-latest
     steps:
@@ -46,6 +48,7 @@ jobs:
       - run: python -m pip install -e '.[dev,index,pdf]'
       - run: pytest tests/test_lean_audit.py -q
   terraform:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}terraform"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && (github.event_name != 'pull_request' || !github.event.pull_request.draft) }}
     runs-on: ubuntu-latest
     steps:

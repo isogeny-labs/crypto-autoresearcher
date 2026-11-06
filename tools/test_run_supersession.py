@@ -976,6 +976,103 @@ class TierOfRunTests(unittest.TestCase):
                              for e in ctx.errors), ctx.errors)
 
 
+class ExperimentSupersessionEnvelopeTests(unittest.TestCase):
+    """Exercise the committed-registry assertion with both archived envelopes."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.original = self.root / "experiments/EXP-SUP-001/runs/RUN-SUP-001/manifest.yaml"
+        self.current = self.root / "experiments/EXP-SUP-001/supersessions/RUN-SUP-001/manifest_v2.yaml"
+        self.original.parent.mkdir(parents=True)
+        self.current.parent.mkdir(parents=True)
+        self.original.write_text("run: {id: RUN-SUP-001}\n")
+        self.entry = {"run_id": "RUN-SUP-001",
+                      "superseded_path": str(self.original),
+                      "superseding_path": str(self.current),
+                      "superseded_sha256": sha256_of(self.original)}
+        self.prior_path = self.original.relative_to(self.root).as_posix()
+
+    def document(self, *, outer=False, nested=False):
+        doc = {"run": {"id": "RUN-SUP-001"}}
+        if outer:
+            doc["supersession"] = {"supersedes_path": self.prior_path,
+                                    "supersedes_sha256": self.entry["superseded_sha256"]}
+        if nested:
+            doc["run"]["supersedes"] = {"path": self.prior_path,
+                                         "sha256": self.entry["superseded_sha256"]}
+        return doc
+
+    def write_document(self, doc):
+        self.current.write_text(yaml.safe_dump(doc))
+        self.entry["superseding_sha256"] = sha256_of(self.current)
+
+    def check_binding(self):
+        check = CommittedRegistryTests(
+            "test_superseding_record_declares_the_supersession_from_its_own_side")
+        with patch.object(sys.modules[__name__], "REPO", self.root), \
+                patch.object(vl, "load_run_supersessions",
+                             return_value={str(self.original): self.entry}):
+            check.test_superseding_record_declares_the_supersession_from_its_own_side()
+
+    def test_outer_binding(self):
+        self.write_document(self.document(outer=True))
+        self.check_binding()
+
+    def test_nested_binding(self):
+        self.write_document(self.document(nested=True))
+        self.check_binding()
+
+    def test_agreeing_dual_bindings(self):
+        self.write_document(self.document(outer=True, nested=True))
+        self.check_binding()
+
+    def test_missing_binding_fails(self):
+        self.write_document(self.document())
+        with self.assertRaises(AssertionError):
+            self.check_binding()
+
+    def test_wrong_path_or_hash_fails_for_each_envelope(self):
+        for outer in (True, False):
+            for bad_path in (True, False):
+                with self.subTest(outer=outer, bad_path=bad_path):
+                    doc = self.document(outer=outer, nested=not outer)
+                    binding = doc["supersession"] if outer else doc["run"]["supersedes"]
+                    key = ("supersedes_path" if outer else "path") if bad_path else ("supersedes_sha256" if outer else "sha256")
+                    binding[key] = "experiments/EXP-OTHER/runs/RUN-SUP-001/manifest.yaml" if bad_path else "0" * 64
+                    self.write_document(doc)
+                    with self.assertRaises(AssertionError):
+                        self.check_binding()
+
+    def test_contradictory_dual_bindings_fail(self):
+        for outer_wrong in (True, False):
+            with self.subTest(outer_wrong=outer_wrong):
+                doc = self.document(outer=True, nested=True)
+                binding = doc["supersession"] if outer_wrong else doc["run"]["supersedes"]
+                binding["supersedes_sha256" if outer_wrong else "sha256"] = "0" * 64
+                self.write_document(doc)
+                with self.assertRaises(AssertionError):
+                    self.check_binding()
+
+    def test_wrong_run_identity_fails(self):
+        doc = self.document(nested=True)
+        doc["run"]["id"] = "RUN-OTHER"
+        self.write_document(doc)
+        with self.assertRaises(AssertionError):
+            self.check_binding()
+
+    def test_original_and_superseding_hashes_remain_mandatory(self):
+        self.write_document(self.document(nested=True))
+        self.original.write_text("run: {id: RUN-SUP-001} # changed\n")
+        with self.assertRaises(AssertionError):
+            self.check_binding()
+        self.original.write_text("run: {id: RUN-SUP-001}\n")
+        self.current.write_text(self.current.read_text() + "# changed\n")
+        with self.assertRaises(AssertionError):
+            self.check_binding()
+
+
 class CommittedRegistryTests(unittest.TestCase):
     """The registry as committed must be true of the repository right now."""
 
@@ -1109,12 +1206,26 @@ class CommittedRegistryTests(unittest.TestCase):
                 self.assertEqual(sha256_of(registry_original),
                                  entry["superseded_sha256"],
                                  str(registry_original))
-                declared = doc.get("supersession") or {}
-                self.assertEqual(
-                    (repo_root / declared.get("supersedes_path", "")).resolve(),
-                    registry_original, str(current))
-                self.assertEqual(declared.get("supersedes_sha256"),
-                                 entry["superseded_sha256"], str(current))
+                # Location does not determine the reverse-binding envelope.
+                # Historical records here use either the experiment-level
+                # supersession block or run.supersedes{path,sha256}, already
+                # supported for run-local records below. Check every declared
+                # envelope, so contradictory dual bindings still fail.
+                bindings = []
+                if "supersession" in doc:
+                    declared = doc["supersession"] or {}
+                    bindings.append((declared.get("supersedes_path", ""),
+                                     declared.get("supersedes_sha256")))
+                if "supersedes" in doc["run"]:
+                    declared = doc["run"]["supersedes"] or {}
+                    bindings.append((declared.get("path", ""),
+                                     declared.get("sha256")))
+                self.assertTrue(bindings, str(current))
+                for prior_path, prior_sha256 in bindings:
+                    self.assertEqual((repo_root / prior_path).resolve(),
+                                     registry_original, str(current))
+                    self.assertEqual(prior_sha256,
+                                     entry["superseded_sha256"], str(current))
                 continue
             # SNFS schema completions were archived under coordination/design
             # and bind their flat producer manifests from run.supersedes.

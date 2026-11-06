@@ -517,6 +517,14 @@ For manuscripts, follow [the paper contract](docs/agent-contract-extended.md#pap
 
 ## Knowledge retrieval
 
+The shared `research-kb` MCP server is the canonical cross-repository
+retrieval layer (lab contract §11). Use it for the triggers below; the local
+`kb/` server remains this repository's derived index, and the policy applies to
+both. Canonical procedure: `crypto:.agents/skills/research-kb/SKILL.md` (commit
+`bc10008055`); local pointer skill `research-kb`. The receipt audit is
+`scripts/kb_usage_report.py` (locked; `docs/shared-code.lock.json`) and
+`.github/workflows/kb-usage-report.yml` runs it weekly, report-only.
+
 Before claims about prior work or literature, follow [the retrieval policy](docs/agent-contract-extended.md#knowledge-retrieval). Its provenance, scope, and contradiction checks are binding.
 
 ## Curve identity and measured bounds
