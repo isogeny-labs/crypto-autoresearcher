@@ -28,16 +28,29 @@ next_action:
     at 32 bits only, a regression at 24 bits, and 28 bits undecidable, with no 28-bit successor (DEC-20261029-5eb8e6 (B)).
     At 32 bits the filter cut target_PDP by 25.9 % but that phase is 29 % of the solve wall, and target_query (56 %) is untouched
     (descriptive phase sums), so further work on the probe side is bounded by the PDP share. Still open on this item: software
-    prefetch, or a compact lane layout. Its implementation is on crypto main as the opt-in `layout=lines` oracle option (cache-line
+    prefetch; the compact lane layout is closed at its tested scope (below). Its implementation is on crypto main as the opt-in `layout=lines` oracle option (cache-line
     pair index plus prefetched line guard; PR #3116, commit afb671d56c, 2026-11-01), so the hashtable_prefetch patch.diff is
-    superseded and must not be re-ported. Its fp20 tournament (crypto research/ic_line_layout_tournament_20261031) is blocked at
-    the EKS L2 isolation gate on the GitHub-launcher route: both v1 sessions exited 42, and the single v2 qualification failed,
-    which stopped v2; v3 (PROTOCOL-V3.md) is frozen but undispatched (crypto problems/ic-line-layout-eks-failure-cause.md). The
-    next step is to dispatch v3 once that route passes L2, or under a v3 amendment that moves it to the agent-submitted isolab-eks route. Scope note: under the owner criterion of 2026-10-24 these pair-table pipelines are the prime-table
+    superseded and must not be re-ported. Its tournament (crypto research/ic_line_layout_tournament_20261031) left fp20 after
+    the L2 isolation gate refused the fp20 solves (DEC-20261106-662e33) and ran as v6 at fp28 on c8a.2xlarge (L2, isolab-eks):
+    the frozen verdict is `invalid_measurement` (session s1 failed the A/A gate, aa_ci95 [0.99687, 0.99992] excludes 1),
+    and it is not an improvement. In the two valid sessions s2 and s3 (two host epochs) the candidate is about 12 % slower
+    in wall time, total ratio about 1.122 (1.1216 [1.1183, 1.1249] and 1.1225 [1.1193, 1.1258]), at equal counted cost
+    (candidate/incumbent ops ratio 1.000 at w = 0, 0.1 and 1); IC/rho-neg counted S 23.00 / 22.87 / 22.28 at w = 0 / 0.1 / 1
+    is the distance remaining. H-layout is recorded as weaken (not rejected; empirical_only; validator VAL-20261106-9ce3e6
+    passed with caveats), and the item is closed for fp28 on c8a.2xlarge (executable ea8e9ef7, prime-abscissa:size=407,
+    targets=walk, two fp28 curves) by DEC-20261106-859e56 (crypto PR #3555). It reopens only under its own coordinator decision,
+    a new frozen protocol and fresh seeds, never pooled with v6, for (1) a changed candidate whose loss a local fp28 counted-parity
+    profile diagnoses and that shows a lower native lookup cost than the incumbent before any L2 wall session, (2) an implementation
+    defect found in the ea8e9ef7 build, (3) a regime with a written reason why the fp28 sign would flip (a bigger size alone
+    is not one), or (4) a change of the incumbent lookup structure on main. Scope note: under the owner criterion of 2026-10-24 these pair-table pipelines are the prime-table
     track (reference only, never ranked against the algebraic track; docs/ic/SWEEPER.md), so a gain here improves the reference
     baseline, not a counted algebraic IC row. Pending: crypto research/prime_ic_program_20261029/DECISIONS.md R1 (Option C,
     delegated, confirmed when its PR merges) makes these pipelines a counted generic-decomposition track, so a verified gain
-    would count there, labelled generic, never as algebraic progress.'
+    would count there, labelled generic, never as algebraic progress. C3 (trim the unidentified fixed overhead; rank 3 in DEC-20261106-1d23b6)
+    is closed at fp28 on ea8e9ef7 without a run by DEC-20261106-378f4e: a per-phase decomposition of the v6 counted records (incumbent,
+    w = 0, 128 runs, one session) gives oracle_setup 54.0 % of S and relations 46.0 %; the mechanism-reachable share (restart
+    additions, restart offset draws, jump table and initial point) is at most 0.92 % of S, under the 3 % bar stated before the test,
+    and the set-up is N(N+1) pair additions with no scalar multiplication (crypto-autoresearcher coordination/design/TASK-20261106-04e50f/c3-decomp/).'
   discriminates: A second-host replay that reproduces the 20-bit holdout keeps 0.818 [0.773, 0.866] (w = 0) as the new prime-field
     pair-table (generic-track under DECISIONS.md R1) baseline at 20 bits and lets the leaderboard section follow; a failed
     replay demotes it. A prefetchable or compact table with a paired relation-phase ratio whose interval is below 1 across
@@ -119,6 +132,10 @@ evidence:
 - repo: crypto
   path: research/ic_packed_filter_20261029/cards/REVIEW-P32.md
   note: support scoped to VERDICT-P32 (D) 1; strength preliminary; CORR A (1.0500 -> 1.0501) and CORR B (c2_identity_facts)
+- repo: crypto
+  path: research/ic_line_layout_tournament_20261031/reports/v6
+  note: 'layout=lines v6 at fp28 on c8a.2xlarge (PR #3555): invalid_measurement (s1 A/A gate), not an improvement; s2
+    and s3 total wall about 1.122 at counted ratio 1.000; validator VAL-20261106-9ce3e6; closed at scope by DEC-20261106-859e56'
 ledger_refs:
 - H-ICPERF-a2284c
 - EV-ICPERF-92c130
@@ -129,6 +146,9 @@ ledger_refs:
 - GOAL-ICPERF-e6b6a4
 - DEC-20261029-5eb8e6
 - DEC-20261030-04fe6d
+- DEC-20261106-859e56
+- DEC-20261106-1d23b6
+- DEC-20261106-378f4e
 known_results:
 - KR-RHO-cb1c58
 - KR-IC-9e610d

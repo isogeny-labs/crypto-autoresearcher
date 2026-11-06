@@ -160,6 +160,19 @@ commit and parent, exact changed paths, record IDs, and SHA-256 values. The
 dispatcher verifies those facts from Git; a working-tree-only artifact remains
 incomplete evidence.
 
+## New run supersessions
+
+Every entry a change adds to `tools/run_supersession_registry.yaml` names its
+authority: a `decision_id` (a `DEC-` or `CORR-` record) or a `validator_review`
+file that exists. When the superseded run's `execution-receipt.json` records a
+status other than success (for example `invalid_output`), the superseding
+manifest may not read as completed and must state that status in
+`run.status`, `run.receipt_status` or `run.status_note`.
+`tools/check_merge_hygiene.py --base` enforces both on new entries only;
+entries already on main keep their rulings (sheriff case SHF-20261106-a114e7,
+LGX-6). Schema validity and hash pinning alone do not check that a superseding
+manifest is faithful.
+
 ## Historical manifests with unrecovered execution provenance
 
 An archived run that omitted its executing revision cannot be made reproducible

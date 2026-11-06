@@ -1,0 +1,410 @@
+# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 2). Compiled by the experiment director. NOT AUTHORIZED.
+# NOT APPROVED. Runs only after a committed decision names this file's sha256 (runbook_sha256) and the owner gives the EKS spend go-ahead.
+# The digests of specification.yaml and trial-plan.json bound below are those of stand-ins (see NOTES.md) until the committed ones are bound.
+schema: crypto.autoresearch.runbook.v1
+experiment_id: EXP-ICPERF-127dbd
+session_id: RBS-ICPERF-e2a5c2
+title: Launch the two frozen C1 requests on EKS once each, check each download, and run the frozen analyze-c1.sh gates
+purpose: Executes protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 2 (protocol_sha256 9844f78d..., which carries AMENDMENT-1; the version 1
+  hash was 43b1ca91...). S1 and S2 are each submitted once through launch-remote by implementation/launch_eks.sh under the trial supervisor, which
+  downloads the job prefix. check_job.py checks transport and identity of each download. The frozen analyze-c1.sh then evaluates the integrity,
+  control and parity gates of both sessions. Observations only; no scientific outcome is asserted.
+executor_tier: mechanical
+approval:
+  mode: decision_record
+binds:
+- path: experiments/EXP-ICPERF-127dbd/specification.yaml
+  sha256: 50172e2a2a0a4e47fff95d7f363afd67b291899bb8f89d0c5f36a0024c99942b
+- path: experiments/EXP-ICPERF-127dbd/trial-plan.json
+  sha256: b8de54a14b3e32bf7ce12946ce9ee113a1e498f73906a20ee76fb26ca133e1c3
+- path: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  sha256: c2f38c4284bf4268e385ebdd42dabf5094b5fffdba27edbe969fb46b506295c8
+- path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  sha256: d2af59dd9f62d46f28c0287a475becfe468e8e0a17eabe5f96681e2abf09e8ad
+- path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  sha256: 688ec9a004648933231302935704d9307cfc441aaa231fc6efb25205a302cf34
+- path: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  sha256: 683cc67d136ab6a2e5f1f3fbc7f6ae20ba981194f4781418340d883620b6c779
+- path: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  sha256: d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1
+- path: experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+  sha256: 66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc
+- path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  sha256: 130164868a21d1b1ee4ff66ba89ea0c4fdfee2e20decc6451abd2ab10ef6d41f
+- path: experiments/EXP-ICPERF-127dbd/implementation/check_job.py
+  sha256: d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d
+- path: experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+  sha256: 3d1826e47215b06de1114c9ce34b70faa536fd7dac1cf43af869be87e1da695b
+- path: experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256
+  sha256: 7b7531895ea935bf996fb983d837c57fe5a14439e93bb38917d9ee5a7468ee0f
+spec_bindings:
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/runbook/session_id
+  equals: RBS-ICPERF-e2a5c2
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/approved_by
+  equals: DEC-20261106-c69de4
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /protocol_id
+  equals: IC-C1-DEFERRED-GUARD-FP28-20261106
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /version
+  equals: 2
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /freeze/status
+  equals: frozen
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /freeze/protocol_sha256
+  equals: 9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /extensions/c1_amendment_1/file_sha256
+  equals: 0dac23b1a0cd5128700f8b1ee136698c891f8ffbc36a8cef6b54a3cf0a09ef15
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /extensions/c1_amendment_1/prior_freeze/protocol_sha256
+  equals: 43b1ca918c034433f3584f37db439613d11a618c0eec13d3d7831a1fa96d092f
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /execution/timeout_seconds
+  equals: 3600
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /extensions/requests/launch~1request-s1.json
+  equals: 683cc67d136ab6a2e5f1f3fbc7f6ae20ba981194f4781418340d883620b6c779
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /extensions/requests/launch~1request-s2.json
+  equals: d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /extensions/specs/spec-c1-s1.json
+  equals: d2af59dd9f62d46f28c0287a475becfe468e8e0a17eabe5f96681e2abf09e8ad
+- file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  pointer: /extensions/specs/spec-c1-s2.json
+  equals: 688ec9a004648933231302935704d9307cfc441aaa231fc6efb25205a302cf34
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  pointer: /job/job_name
+  equals: ic-c1-dg-s1-20261106
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  pointer: /job/seconds
+  equals: 3600
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  pointer: /job/instance_type
+  equals: c8a.2xlarge
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  pointer: /job/build/image_uri
+  equals: 104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  pointer: /job/build/source_revision
+  equals: ea8e9ef71c3c82027dd9e01535302725519c3fca
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  pointer: /job/build/ecbench_sha256
+  equals: 73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  pointer: /provenance/source_revision
+  equals: ea8e9ef71c3c82027dd9e01535302725519c3fca
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  pointer: /measurement/rounds
+  equals: 8
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  pointer: /measurement/warmup
+  equals: 1
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  pointer: /measurement/order
+  equals: alternate_measured
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  pointer: /measurement/isolation_required
+  equals: L2
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  pointer: /measurement/timeout_seconds
+  equals: 600
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  pointer: /workloads/targets_per_curve
+  equals: 60
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  pointer: /job/job_name
+  equals: ic-c1-dg-s2-20261106
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  pointer: /job/seconds
+  equals: 3600
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  pointer: /job/instance_type
+  equals: c8a.2xlarge
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  pointer: /job/build/image_uri
+  equals: 104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  pointer: /job/build/source_revision
+  equals: ea8e9ef71c3c82027dd9e01535302725519c3fca
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  pointer: /job/build/ecbench_sha256
+  equals: 73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01
+- file: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  pointer: /provenance/source_revision
+  equals: ea8e9ef71c3c82027dd9e01535302725519c3fca
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  pointer: /measurement/rounds
+  equals: 8
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  pointer: /measurement/warmup
+  equals: 1
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  pointer: /measurement/order
+  equals: alternate_measured
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  pointer: /measurement/isolation_required
+  equals: L2
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  pointer: /measurement/timeout_seconds
+  equals: 600
+- file: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  pointer: /workloads/targets_per_curve
+  equals: 60
+environment:
+  programs:
+  - aws
+  - bash
+  - git
+  - jq
+  - python3
+  - sha256sum
+  env:
+    AWS_REGION: us-east-2
+    AWS_DEFAULT_REGION: us-east-2
+    ISOLAB_BUCKET: isolab-results-104186811093-us-east-2
+    ISOLAB_CODEBUILD_PROJECT: isolab-experiment-launcher
+    CRYPTO_CHECKOUT: /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/v6/repo
+steps:
+- id: S01-probe
+  kind: command
+  purpose: probe
+  title: Check the aws CLI version, the caller identity, the pinned ecbench, the bound requests and the launcher scripts before any spend
+  explain: Runs the bound probe_s01.sh once. In order it checks the first token of aws --version against aws-cli/1.46.2 (the CLI whose memory
+    use was measured), prints aws sts get-caller-identity, checks the sha256 of the local pinned ecbench, recomputes the sha256 of request-s1.json
+    and request-s2.json against protocol.json extensions.requests, checks the four launcher scripts against remote-pins.sha256, and prints the
+    crypto checkout HEAD. It exits nonzero at the first mismatch, which stops the session before any launch. The step requires Account 104186811093
+    in its output; no AWS write call is made.
+  argv:
+  - bash
+  - experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+  - --protocol
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - --inputs
+  - experiments/EXP-ICPERF-127dbd/inputs
+  - --ecbench
+  - /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/v6/bin-pinned/ecbench
+  - --request
+  - request-s1.json
+  - --request
+  - request-s2.json
+  - --aws-cli
+  - aws-cli/1.46.2
+  timeout_seconds: 120
+  validity:
+    exit_code: 0
+    stdout_matches: '"Account":\s*"104186811093"'
+  on_failure:
+  - when:
+      timed_out: true
+    class: infrastructure_error
+    action: stop
+  tell_on_failure: The probe stopped. Report its stderr log path and its last stdout line. Start no launch. Do not rerun or reopen this runbook
+    session; wait for a Coordinator decision. If stderr names an AWS CLI MISMATCH, re-measure under the recorded procedure; do not edit the runbook.
+- id: S02-trials
+  kind: trials
+  title: Submit request S1 then request S2 once each and check each download
+  explain: Trial T1 runs launch_eks.sh on request-s1.json and trial T2 on request-s2.json under the trial supervisor, each followed by check_job.py.
+    T2 starts only if T1 is output_validated. Controls is empty because the C1 controls (incumbent-aa, rho-neg-aa, pc-fb2x) are arms inside each
+    ecbench job, not plan trials; their gates are evaluated by the frozen analyze-c1.sh in step S03-verify. No step retries a launch. The declared
+    artifacts are the files under 1 MiB; records.jsonl and plan.json of each session are bound through job/artifacts/SHA256SUMS and job_files
+    in raw-result.json.
+  plan: experiments/EXP-ICPERF-127dbd/trial-plan.json
+  engine: supervisor
+  claim:
+    ttl_minutes: 165
+  timeout_seconds: 9600
+  validity:
+    files:
+    - path: raw-result.json
+      json: true
+      assertions:
+      - pointer: /schema
+        equals: c1.launch.raw-result/v1
+      - pointer: /attack_claimed
+        equals: false
+      - pointer: /experiment_id
+        equals: EXP-ICPERF-127dbd
+      - pointer: /hypothesis_id
+        equals: H-ICPERF-4cb536
+      - pointer: /task_id
+        equals: TASK-20261106-4b7018
+      - pointer: /approved_by
+        equals: DEC-20261106-c69de4
+      - pointer: /trial_id
+        equals: '{trial_id}'
+      - pointer: /run_id
+        equals: '{run_id}'
+      - pointer: /submitted
+        equals: true
+      - pointer: /outcome_class
+        equals: job_completed
+      - pointer: /launch_remote_exit
+        in:
+        - 0
+        - 26
+      - pointer: /codebuild_status
+        in:
+        - SUCCEEDED
+        - FAILED
+      - pointer: /retried
+        equals: false
+      - pointer: /job_exit_json_present
+        equals: 'yes'
+      - pointer: /sha256sums_present
+        equals: 'yes'
+      - pointer: /job_exit_code
+        in:
+        - '0'
+        - '42'
+        - '43'
+      - pointer: /results_uri
+        matches: ^s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s[12]-20261106/[0-9a-f-]{36}/$
+  by_trial:
+    T1:
+      files:
+      - path: raw-result.json
+        json: true
+        assertions:
+        - pointer: /job_name
+          equals: ic-c1-dg-s1-20261106
+        - pointer: /request_sha256
+          equals: 683cc67d136ab6a2e5f1f3fbc7f6ae20ba981194f4781418340d883620b6c779
+    T2:
+      files:
+      - path: raw-result.json
+        json: true
+        assertions:
+        - pointer: /job_name
+          equals: ic-c1-dg-s2-20261106
+        - pointer: /request_sha256
+          equals: d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1
+  controls: []
+  replay:
+    mode: exempt
+    exempt_reason: re-executing a trial relaunches a paid EKS job; the study replay is ecbench verify --replay-all inside analyze-c1.sh (step
+      S03-verify, protocol section 7.3 step 1)
+  on_invalid: stop
+  on_failure:
+  - when:
+      timed_out: true
+    class: infrastructure_error
+    action: stop
+  - when:
+      validity: false
+    class: invalid_measurement
+    action: stop
+  tell_on_failure: The launch step stopped. Report the printed status line, the run directory names under experiments/EXP-ICPERF-127dbd/runs,
+    and the outcome_class in each raw-result.json that exists. Do not rerun or reopen this runbook session; wait for a Coordinator decision. Do
+    not run launch_eks.sh again and do not start any other launch. Do not open records.jsonl.
+- id: S03-verify
+  kind: command
+  purpose: verification
+  title: Run the frozen analyze-c1.sh on the two downloaded sessions
+  explain: Runs analyze-c1.sh once on session 1 and session 2 with the pinned ecbench; the validity assertions cover only the integrity, control
+    and parity gate fields of verdict.json, never a claim outcome.
+  argv:
+  - bash
+  - experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+  - /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/v6/bin-pinned/ecbench
+  - '{out}/analysis'
+  - experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+  - experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/session
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/session
+  timeout_seconds: 5400
+  validity:
+    exit_code: 0
+    outputs:
+    - path: '{out}/analysis/verdict.json'
+      json: true
+      assertions:
+      - pointer: /schema
+        equals: ic.c1.analysis/v1
+      - pointer: /protocol_id
+        equals: IC-C1-DEFERRED-GUARD-FP28-20261106
+      - pointer: /ecbench_sha256
+        equals: 73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01
+      - pointer: /sessions/0/detail/integrity/verify_exit_0
+        equals: true
+      - pointer: /sessions/0/detail/integrity/audit_ok
+        equals: true
+      - pointer: /sessions/0/detail/integrity/records_count_matches_spec
+        equals: true
+      - pointer: /sessions/0/detail/integrity/planned_eq_written_eq_spec_count
+        equals: true
+      - pointer: /sessions/0/detail/integrity/all_verified_no_invalid_outcomes
+        equals: true
+      - pointer: /sessions/0/detail/integrity/l2_gate_invalid_outcomes_empty_if_present
+        equals: true
+      - pointer: /sessions/0/detail/integrity/session_spec_equals_frozen
+        equals: true
+      - pointer: /sessions/0/detail/integrity/input_spec_equals_frozen_if_present
+        equals: true
+      - pointer: /sessions/0/detail/integrity/build_equals_pin
+        equals: true
+      - pointer: /sessions/0/detail/controls/twin_incumbent_aa
+        equals: true
+      - pointer: /sessions/0/detail/controls/twin_rho_neg_aa
+        equals: true
+      - pointer: /sessions/0/detail/controls/pc_fb2x
+        equals: true
+      - pointer: /sessions/0/detail/controls/primary_comparison_valid
+        equals: true
+      - pointer: /sessions/0/parity/srenew-eager-n407__srenew-deferred-n407/ok
+        equals: true
+      - pointer: /sessions/0/parity/srenew-eager-n304__candidate/ok
+        equals: true
+      - pointer: /sessions/1/detail/integrity/verify_exit_0
+        equals: true
+      - pointer: /sessions/1/detail/integrity/audit_ok
+        equals: true
+      - pointer: /sessions/1/detail/integrity/records_count_matches_spec
+        equals: true
+      - pointer: /sessions/1/detail/integrity/planned_eq_written_eq_spec_count
+        equals: true
+      - pointer: /sessions/1/detail/integrity/all_verified_no_invalid_outcomes
+        equals: true
+      - pointer: /sessions/1/detail/integrity/l2_gate_invalid_outcomes_empty_if_present
+        equals: true
+      - pointer: /sessions/1/detail/integrity/session_spec_equals_frozen
+        equals: true
+      - pointer: /sessions/1/detail/integrity/input_spec_equals_frozen_if_present
+        equals: true
+      - pointer: /sessions/1/detail/integrity/build_equals_pin
+        equals: true
+      - pointer: /sessions/1/detail/controls/twin_incumbent_aa
+        equals: true
+      - pointer: /sessions/1/detail/controls/twin_rho_neg_aa
+        equals: true
+      - pointer: /sessions/1/detail/controls/pc_fb2x
+        equals: true
+      - pointer: /sessions/1/detail/controls/primary_comparison_valid
+        equals: true
+      - pointer: /sessions/1/parity/srenew-eager-n407__srenew-deferred-n407/ok
+        equals: true
+      - pointer: /sessions/1/parity/srenew-eager-n304__candidate/ok
+        equals: true
+  on_failure:
+  - when:
+      timed_out: true
+    class: infrastructure_error
+    action: stop
+  tell_on_failure: The verification step stopped. Report the printed status line and the path of the step output directory. Do not rerun or reopen
+    this runbook session; wait for a Coordinator decision. Do not run analyze-c1.sh again by hand.
+metrics:
+- name: launch_remote_exit
+  unit: exit_status
+  label: measured
+  step: S02-trials
+  file: raw-result.json
+  pointer: /launch_remote_exit
+  aggregate:
+  - count
+  - max
+report:
+  graph_metric: launch_remote_exit

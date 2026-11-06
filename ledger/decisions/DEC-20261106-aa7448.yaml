@@ -1,0 +1,98 @@
+# DEC-20261106-aa7448: Compile-mode rulings for EXP-ICPERF-127dbd and the lane BATCH-0e0902
+coordinator_decision:
+  id: DEC-20261106-aa7448
+  id_provenance: 'Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (re-checked by the Executor before writing: OK, well-formed and free across the union). The
+    Coordinator had no shell and minted no identifier.'
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  relates_to: DEC-20261106-1d23b6
+  subject: Compile-mode rulings for the EXP-ICPERF-127dbd runbook, wrappers, AMENDMENT-1 and the lane BATCH-0e0902 (C1 route
+    A at fp28); nothing approved, nothing run
+  context: Compile-mode rulings on the EXP-ICPERF-127dbd runbook and cards (director NOTES.md), protocol IC-C1-DEFERRED-GUARD-FP28-20261106,
+    v1 frozen 43b1ca91..., v2 frozen 9844f78d... (AMENDMENT-1 0dac23b1..., crypto PR 3559)
+  decision: revise
+  target_ids:
+  - EXP-ICPERF-127dbd
+  - H-ICPERF-4cb536
+  rationale:
+  - Wrapper output does not meet the supervisor contract; fix inside unfrozen launch_eks.sh/check_job.py, bringing them into
+    line with frozen section 18 (no amendment).
+  - 'Single route: runbook supervisor plus kind:runbook yaml card; the markdown cards are withdrawn.'
+  - depends_on [T1] governs within a session and is consistent with sections 9 and 10; cross-session S2 is a Coordinator decision.
+  - The frozen S01 HEAD check cannot be met (the buildspec is absent at ea8e9ef7); replacing it with the remote pins needs a
+    pre-data procedural amendment. The local ecbench check is restored in S01.
+  - timed_out stays infrastructure_error; a reopen cannot relaunch (write-once run dirs, duplicate guard, frozen section 9).
+  - Step timeout 9600 and TTL 165 corrected; account, region, bucket and project corroborated by the v6 receipts; S2 gate =
+    HB(S1) accepted.
+  - 'Addendum A1: AMENDMENT-1 revise (R1 every bound request must be present; R2 full hashes; R3 no edit to frozen PROTOCOL.md;
+    R4 archived validate and hash-reproduction receipts), then file it as the v2 re-freeze.'
+  - 'Addendum A2(a): records.jsonl and other SHA256SUMS-listed files of 1 MiB or more stay undeclared (compaction and evaluate_unit
+    mismatch; no shared-tool edits); they stay bound by receipt -> SHA256SUMS/job_files, are re-verified at the snapshot archive
+    and by the validator, and are stored through artifact_store after S03.'
+  - 'Addendum A2(b): launch-remote exits 26 for any non-SUCCEEDED build, TIMED_OUT included; the wrapper must classify deadline_hit
+    first whatever was downloaded (frozen section 9) and accept only the (0,SUCCEEDED,0) and (26,<v6 status>,42|43) pairings;
+    then launch_remote_exit in [0,26] plus a codebuild_status assertion.'
+  - 'Addendum A2(c): memory_mb raised to 4096 (RLIMIT_AS covers the aws CLI transfer threads; a crash after submission loses
+    a launched job); offline prlimit smoke test required.'
+  - 'Addendum B1: AMENDMENT-1 rev 2 (58f45fe9...) signed off subject to one wording fix (section 1 cites 3(a), not 3(b)) and
+    the filed-status header; then file it, run receipts 1-4 and freeze v2.'
+  - 'Addendum B2: infrastructure_candidate is kept when nothing was downloaded and no deadline was hit (it is in the frozen
+    outcome_class set; exit 5; the director classifies).'
+  - 'Addendum B3: the awscli 1.46.2 loopback measurement (peak 1,429 MiB; 512 MiB fails) holds only for that CLI; re-measure
+    on the executing binary and pin its aws --version token in probe_s01.sh, stopping before spend on a mismatch.'
+  - 'Addendum C1: PATH by relay prefix plus a stated aws --version line; no runbook overlay (the S01 pin binds the version).'
+  - 'Addendum C2: the seven declared files stand; job/launcher/build.json joins the queue, handoff and archive coverage only.'
+  - 'Addendum C3: the checkpoint order as the card''s first stop_when is accepted; the relay states the DEC commit sha, the
+    quoted owner go-ahead, the checkpoint gate exit 0 and the aws version line.'
+  - 'Addendum C4: the queue is dispatch_queue.json (CI validates only that name; section 18''s queue.json is descriptive, not
+    a decision quantity); no amendment.'
+  - 'This decision opens lane BATCH-0e0902 for GOAL-ICPERF-e6b6a4, subject to the goal max_concurrent 3 cap checked with goal_lanes.py
+    lanes; the lane authorizes no run. Precondition (Addendum D): the separate closing decision has closed BATCH-38f344 and
+    the listing shows 2 open lanes; BATCH-8f7bd6 and BATCH-ac3c38 stay open.'
+  bound_values:
+    runbook_sha256: d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93
+    protocol_v2_sha256: 9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166
+    protocol_v1_sha256: 43b1ca918c034433f3584f37db439613d11a618c0eec13d3d7831a1fa96d092f
+    amendment_1_sha256: 0dac23b1a0cd5128700f8b1ee136698c891f8ffbc36a8cef6b54a3cf0a09ef15
+    crypto_merge_commit: b699fe95a32c3c22d85ee1c84693cfcd9f77b3b7
+    closure_decision: DEC-20261106-c4601c
+    reserved_approval_decision: DEC-20261106-c69de4 (not written; only at approvable true)
+  evidence_refs:
+  - scratchpad/next-candidate/director/NOTES.md
+  - scratchpad/next-candidate/director/runbook.yaml
+  - scratchpad/next-candidate/PREFREEZE-CHECKS.md (Part 6 and addendum)
+  - research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md sections 9, 10, 18, 21
+  - car/tools/experiment_execution.py L187-192, L428-589, L597-649, L906-1004
+  - car/docs/runbook-execution.md L120-138
+  - scratchpad/v6/run/receipts-s3/{build-start,build,start-request,result}.json
+  - scratchpad/next-candidate/PREFREEZE-CHECKS.md Part 7 (launch_eks.sh 13d4e73c..., check_job.py d60564dd..., probe_s01.sh
+    c79f91bd...)
+  - scratchpad/next-candidate/AMENDMENT-1-DRAFT.md (c745bc0a...)
+  - scratchpad/next-candidate/amendment/protocol-v2-candidate.json (ba61679b...)
+  - scratchpad/v6/repo/taskq/deploy/eks-karpenter/remote/launch-remote L30-58
+  - car/tools/artifact_store.py L1-60
+  - scratchpad/next-candidate/PREFREEZE-CHECKS.md Part 8 (launch_eks.sh 13016486..., probe_s01.sh a36bff5c..., check_job.py
+    d60564dd...)
+  - scratchpad/next-candidate/AMENDMENT-1-DRAFT.md rev 2 (58f45fe9...); amendment/protocol-v2-candidate.json (147ac9c3...);
+    amendment/receipts.txt
+  - scratchpad/v6/run/gate-line-s3.txt (cbc3e905...; v6 counted build 6f759bb0... status FAILED, pod exit 42)
+  - scratchpad/next-candidate/checks/p13/memory-smoke.txt
+  - scratchpad/next-candidate/director/v2/NOTES.md (runbook 0ba9d409..., card 52fe6177..., queue-check.txt a55f408b...)
+  - car/tools/experiment_preapproval.py L200-353; car/tools/goal_lanes.py L525-572
+  limitations:
+  - The Part 7 results, the v2 validate result and the v1 hash reproduction are Executor-reported; the Coordinator did not re-run
+    them (R4 archives them).
+  - The memory ceiling and the 26/FAILED pairing are untested against the real aws CLI and a real build until the A2(b)/(c)
+    tests and the first launch.
+  - The account and AWS names are corroborated by v6 receipts, not verified by sts in this session; S01 fails closed.
+  - The session-scratch paths make the runbook session-specific.
+  next_actions:
+  - 'Main session: fill and re-bind the packet drafts in the C5 order, commit and push the hypothesis, canonical draft spec,
+    lint receipt and this decision, check lanes and open lane BATCH-0e0902, then run experiment_preapproval.py; DEC-20261106-c69de4
+    is written only at approvable: true, and no run starts before it is committed and the owner gives the EKS go-ahead.'
+  knowledge_promotion:
+    promoted: []
+    not_warranted: procedural compile ruling; no evidence and no durable claim

@@ -25,6 +25,7 @@ permissions:
 
 jobs:
   software-benchmark:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}software-benchmark"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 10

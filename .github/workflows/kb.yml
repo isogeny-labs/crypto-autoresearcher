@@ -46,6 +46,7 @@ concurrency:
 
 jobs:
   kb:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}kb"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     timeout-minutes: 20
     runs-on: ubuntu-latest
