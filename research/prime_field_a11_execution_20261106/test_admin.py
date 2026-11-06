@@ -51,7 +51,10 @@ def test_tiny_streamed_driver_and_full_export_roundtrip(tmp_path,monkeypatch):
  execution=dict(returncode=0,timeout=False,exception=None,source_unchanged_after=True,observed_git_head=common.git('rev-parse','HEAD'),source_commit=common.git('rev-parse','HEAD'),protocol_sha256=common.load(protocolpath)['freeze']['protocol_sha256'],owner='software-control-only',started_at='2026-11-06T00:00:00+00:00',finished_at='2026-11-06T00:00:01+00:00',diagnostic_wall_seconds=1.0,cpu_user_seconds=0.0,cpu_sys_seconds=0.0,max_rss_bytes=0,software_control=True,synthetic_resource_placeholders=True)
  common.write_once(run/'host.json',host);common.write_once(run/'execution.json',execution)
  monkeypatch.setattr(analyze,'INPUTS',inputpath);monkeypatch.setattr(sys,'argv',['analyze','--run',str(run),'--protocol',str(protocolpath)])
+ (run/'.gitignore').write_text('/software-local-only.json\n')
  analyze.main();metrics=common.load(run/'metrics.json');assert metrics['panel_complete'] and metrics['verified_systems']==rules['systems']
  assert len(metrics['rows'])==72 and not metrics['partial_work_unknown']
  export=common.load(run/'export.json');assert len(export['runs'])==144
+ assert all(v.get('path')!='.gitignore' for v in export['files'])
+ (run/'.gitignore').write_text('/software-local-only.json\n/export.json\n')
  assert common.tools().lint_export(export,common.load(protocolpath),run,True)==[]
