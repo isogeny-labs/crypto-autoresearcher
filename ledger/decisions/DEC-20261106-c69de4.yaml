@@ -1,0 +1,199 @@
+# DEC-20261106-c69de4: Coordinator approval of EXP-ICPERF-127dbd (C1 route A at fp28, protocol
+# IC-C1-DEFERRED-GUARD-FP28-20261106 version 2), after the preapproval probe reported approvable
+# true with no blockers at source_ref origin/claude/c1-preapproval-packet-20261106. It names the
+# approval-time bytes. It launches no run and authorizes no EKS spend: execution also requires
+# the owner's explicit EKS go-ahead, which has NOT been given.
+coordinator_decision:
+  id: DEC-20261106-c69de4
+  id_provenance: >-
+    Reserved for this approval at compile time and named in the packet, the trial plan, the
+    queue and the handoffs. Allocated by the top-level session with tools/allocate_id.py and
+    confirmed with --check. The Coordinator minted no id.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent, no shell. The top-level session ran the probe, validate_ledger,
+    validate_queue and the lints, and computed every hash below; the Coordinator read their
+    outputs (packet/preapproval-run3-pushed.json, validate-ledger-step7.txt, validate-queue.txt,
+    lanes-after-open.txt) and the preview bytes it drafted.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: approve
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  runbook_path: experiments/EXP-ICPERF-127dbd/runbook.yaml
+  runbook_sha256: d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93
+  runbook_session_id: RBS-ICPERF-e2a5c2
+  context: >-
+    The C1 study was selected by DEC-20261106-1d23b6 (route A). Its protocol was frozen as
+    version 1 in crypto PR #3558 and re-frozen as version 2 after the pre-data procedural
+    AMENDMENT-1 (crypto PR #3559). The compile rulings are DEC-20261106-aa7448 (RULINGS-COMPILE
+    items 1-7 and Addenda A-D). Lane BATCH-38f344 was closed by DEC-20261106-c4601c, and lane
+    BATCH-0e0902 was opened under DEC-20261106-aa7448. All of this is on branch
+    claude/c1-preapproval-packet-20261106, crypto-autoresearcher PR #3086.
+
+  protocol_binding:
+    protocol_id: IC-C1-DEFERRED-GUARD-FP28-20261106
+    v1:
+      protocol_sha256: 43b1ca918c034433f3584f37db439613d11a618c0eec13d3d7831a1fa96d092f
+      freeze_commit: 339292abed16c2474e404e25f3b72d31b58bd9d8
+      crypto_pr: 3558
+    v2:
+      protocol_sha256: 9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166
+      freeze_commit: 4c44ad2ab582f0cd38b9fcf0dd0dd49df2800dd6
+      frozen_at: '2026-11-06T11:03:41Z'
+      crypto_pr: 3559
+      crypto_merge_commit: b699fe95a32c3c22d85ee1c84693cfcd9f77b3b7
+    amendment:
+      id: C1-AMENDMENT-1
+      sha256: 0dac23b1a0cd5128700f8b1ee136698c891f8ffbc36a8cef6b54a3cf0a09ef15
+      filed_before_affected_data: true
+      changes_decision_quantities: false
+    in_repo_copy:
+      path: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+      sha256: c2f38c4284bf4268e385ebdd42dabf5094b5fffdba27edbe969fb46b506295c8
+
+  approvability:
+    probe_command: python3 tools/experiment_preapproval.py --packet scratchpad/next-candidate/packet/packet.json
+    source_ref: origin/claude/c1-preapproval-packet-20261106
+    result: approvable true, blockers []
+    report: scratchpad/next-candidate/packet/preapproval-run3-pushed.json (to be archived with this decision, see approval_archive)
+    prospective_sha256:
+      specification: 50172e2a2a0a4e47fff95d7f363afd67b291899bb8f89d0c5f36a0024c99942b
+      trial_plan: b8de54a14b3e32bf7ce12946ce9ee113a1e498f73906a20ee76fb26ca133e1c3
+      queue: d882d91a16253ffc9187eac2d5a214d235f4fe70439f0c64ed6d1ff6f5c2397e
+      handoff: 5a8f732fe4c0a5874bbd0337b9d80f863cd92c9fab7ec569764475733e1898d9
+    lint_receipt:
+      path: experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+      sha256: 3de73d7d93102240209555e00cc8cc7d739ba0af9c39c08b101e24570a26907b
+    lane:
+      batch_id: BATCH-0e0902
+      open_lanes_at_probe: [BATCH-0e0902, BATCH-8f7bd6, BATCH-ac3c38]
+      cap: 3 (ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml campaign_budget.max_concurrent)
+      basis: lanes-after-open.txt (goal_lanes.py lanes, ref scan included); BATCH-38f344 closed by DEC-20261106-c4601c
+    ledger_and_queue:
+      validate_ledger: 13504 errors, equal to the sparse-checkout baseline; no new error from the packet records (validate-ledger-step7.txt)
+      validate_queue: structural OK and GitRepositoryVerifier OK (validate-queue.txt)
+
+  approved_bytes:
+    note: >-
+      The approval archive must reproduce every sha256 below. If any differs, the archive stops
+      and nothing in this decision takes effect.
+    specification:
+      path: experiments/EXP-ICPERF-127dbd/specification.yaml
+      sha256: 50172e2a2a0a4e47fff95d7f363afd67b291899bb8f89d0c5f36a0024c99942b
+      source: >-
+        Byte copy of packet/preview/experiments/EXP-ICPERF-127dbd/specification.yaml. Compared
+        with the committed review_required bytes, only line 2 (comment), status, frozen,
+        approved_by and execution_authorized differ.
+    trial_plan:
+      path: experiments/EXP-ICPERF-127dbd/trial-plan.json
+      sha256: b8de54a14b3e32bf7ce12946ce9ee113a1e498f73906a20ee76fb26ca133e1c3
+      change_at_approval: none (the committed bytes must already have this sha256)
+    runbook:
+      path: experiments/EXP-ICPERF-127dbd/runbook.yaml
+      sha256: d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93
+      change_at_approval: >-
+        None. The runbook binds the approved specification bytes. After the approved
+        specification is committed, python3 tools/runbook.py lint on the repository tree must
+        print LINT OK with this sha256. Any other result: stop; nothing here takes effect.
+    queue:
+      path: coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+      sha256: d882d91a16253ffc9187eac2d5a214d235f4fe70439f0c64ed6d1ff6f5c2397e
+    executor_handoff:
+      path: ledger/handoffs/TASK-20261106-4b7018.yaml
+      sha256: 5a8f732fe4c0a5874bbd0337b9d80f863cd92c9fab7ec569764475733e1898d9
+    archive_handoff:
+      path: ledger/handoffs/TASK-20261106-dccfdc.yaml
+      source: byte copy of packet/preview/ledger/handoffs/TASK-20261106-dccfdc.yaml; record its sha256 in the receipt
+
+  budget_gate:
+    rule: >-
+      Protocol section 10. Before each launch L: actual_spend + HB(L) + HB(every first-attempt
+      job not yet launched) <= USD 5.00, HB(job) = USD 0.93108 at the 3,600 s deadline.
+      actual_spend from billing, else the job's HB, never an estimate.
+    S1: "0 + 0.93108 + 0.93108 = 1.86216 <= 5.00"
+    S2: "0.93108 + 0.93108 + 0 = 1.86216 <= 5.00 (S1's actual billed spend replaces its 0.93108 if available)"
+    ceiling_usd: 5.00
+    worst_case_committed_usd: 3.72
+
+  execution_conditions:
+    owner_gate: >-
+      Execution ADDITIONALLY requires the owner's explicit EKS go-ahead (protocol section 11;
+      DEC-20261106-1d23b6 owner_gate). It has NOT been given. This approval is not that
+      go-ahead, and no agent message can stand in for it.
+    before_relay:
+      - The approval archive below is committed, pushed and merged to main.
+      - "python3 tools/newest_experiments.py --experiment EXP-ICPERF-127dbd --json reports execution_state: ready."
+      - "python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml prints LINT OK with runbook sha256 d31f7178...; task_card.py lint of CARD-EXP-ICPERF-127dbd-1.yaml prints CARD OK with the same runbook_sha256."
+      - "scripts/checkpoint.sh init, push and gate exit 0 (CLAUDE.md resume checkpoints)."
+      - "The relay states the four facts of RULINGS-COMPILE C3: this decision's commit sha on origin/main, the owner go-ahead quoted with timestamp, the gate exit line, the aws --version line (aws-cli/1.46.2)."
+    never:
+      - relaunch, rerun or reopen RBS-ICPERF-e2a5c2 on any failure without a new Coordinator decision
+      - launch the -r2 requests in this session
+
+  status_transitions:
+    - {record: EXP-ICPERF-127dbd, from: review_required, to: approved, by: specification.yaml byte swap in the approval archive}
+    - {record: H-ICPERF-4cb536, from: proposed, to: approved, by: "additive status edit in the approval archive (status approved; approved_by_decision DEC-20261106-c69de4)"}
+  status_transitions_note: >-
+    Approval asserts nothing about the hypothesis. If validate_ledger refuses the proposed ->
+    approved edge, drop the hypothesis edit only, record the refusal in the receipt, and return
+    it; the experiment approval stands. No evidence exists. GOAL-ICPERF-e6b6a4 stays active.
+
+  approval_archive:
+    task_id: TASK-20261106-788595
+    kind: ledger
+    runs: alone; zero runs
+    base: merge origin/main into claude/c1-preapproval-packet-20261106 first (merge, never rebase); record base_commit_checked
+    commit_order:
+      - "Commit 1, the decision: ledger/decisions/DEC-20261106-c69de4.yaml, the hypothesis status edit of ledger/hypotheses/H-ICPERF-4cb536.yaml, and the probe report copied to coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/<TASK>/preapproval-report.json."
+      - "Commit 2, the approved-form specification: experiments/EXP-ICPERF-127dbd/specification.yaml replaced by the preview bytes (sha256 50172e2a...). Then lint the runbook on the repository tree (LINT OK, d31f7178...), and stop if not."
+      - "Commit 3, the queue ALONE: coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json (sha256 d882d91a...). Render it with tools/research_dispatch.py <queue> --ready-only."
+      - "Commit 4, the handoffs and the receipt: ledger/handoffs/TASK-20261106-4b7018.yaml (sha256 5a8f732f...), ledger/handoffs/TASK-20261106-dccfdc.yaml, the approval-archive handoff, and the ledger receipt with commit_sha null inside the commit."
+    staging: stage named paths one by one; git add -A, git add . and directory adds are forbidden
+    push: >-
+      Push the four commits in ONE push, so PR #3086's auto-merge cannot land a partial state
+      (approval without approved spec, or queue without handoffs). If PR #3086 merged before
+      this push, open a new ready-for-review PR against main from a branch based on the merge,
+      name every record id, and enable auto-merge (gh pr merge <n> --auto --merge).
+    verify: tools/validate_ledger.py (no new error over baseline), tools/check_merge_hygiene.py, and the post-commit verifier accepting the receipt
+
+  target_ids:
+    - EXP-ICPERF-127dbd
+    - H-ICPERF-4cb536
+    - TASK-20261106-4b7018
+    - TASK-20261106-dccfdc
+    - BATCH-0e0902
+    - GOAL-ICPERF-e6b6a4
+  related_records:
+    prior_decisions: [DEC-20261106-1d23b6, DEC-20261106-aa7448, DEC-20261106-c4601c]
+    rulings: scratchpad/next-candidate/RULINGS-COMPILE.md (items 1-7, Addenda A-D)
+  rationale:
+    - "Runnable: the preapproval probe reports approvable true with no blockers for the exact prospective specification, trial plan, queue and executor handoff, at a pushed origin ref, with committed source and input hashes, complete supervisor and archive coverage, a runbook route with a committed LINT OK receipt, and a lawful lane."
+    - "Capacity: three open lanes equal the cap of 3 after DEC-20261106-c4601c closed the finished BATCH-38f344; the queue serializes its two tasks (max_concurrent 1); C1 executes on EKS, so the local headroom basis of the cap is not strained."
+    - "Protocol: version 2 is frozen and merged (b699fe95); AMENDMENT-1 is procedural, filed before any affected data, and changes no N, seed, arm, weight, threshold, margin, decision mapping, budget or deadline."
+    - "Complete contract: controls (two exact A/A twins, positive control pc-fb2x, negative control declared not applicable with reason, equal-N parity check), primary metrics m-s-w0/w01/w1, two pre-registered sessions, distinct success and falsification criteria, distinct decision impacts, stopping and invalidation rules, and a hard USD 5.00 cloud cap with the section 10 gate lines."
+    - "Validity is decided inside the runbook and the verdict outside it: no runbook assertion names U_w, L_w or a claim outcome; the verdict is read from verdict.json at evidence review after the independent validator."
+    - "Scope: constant-factor engineering at fp28, selected by DEC-20261106-1d23b6 under the owner's 2026-10-15 success criterion (any measured improvement over the IC baseline counts); no asymptotic, wall-time or rho-beating claim; distance to rho is reported as distance remaining."
+  evidence_refs:
+    - scratchpad/next-candidate/packet/preapproval-run3-pushed.json
+    - scratchpad/next-candidate/packet/packet.json
+    - scratchpad/next-candidate/packet/validate-ledger-step7.txt
+    - scratchpad/next-candidate/packet/validate-ledger-baseline.txt
+    - scratchpad/next-candidate/packet/validate-queue.txt
+    - scratchpad/next-candidate/packet/lanes-after-open.txt
+    - scratchpad/next-candidate/packet/preview/experiments/EXP-ICPERF-127dbd/specification.yaml
+    - scratchpad/next-candidate/RULINGS-COMPILE.md
+    - research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md sections 8, 9, 10, 11, 18 (crypto)
+  limitations:
+    - "Every hash and tool result above was computed by the top-level session; the Coordinator has no shell and verified none by recomputation. The approval archive's reproduction of each sha256 is the check."
+    - "The runbook binds the session-scratch ecbench path (/tmp/claude-0/.../scratchpad/v6/bin-pinned/ecbench). A different executing session must recompile and needs a new approval."
+    - "The aws CLI memory ceiling and the 26/FAILED launcher pairing are confirmed only by the first real launch; S01 and the supervisor fail closed before or at it."
+    - "BATCH-ac3c38's state is unverified (RULINGS-COMPILE D3); the cap is met counting it as open."
+  next_actions:
+    - "Main session: allocate the approval-archive TASK id, fill it into packet/preview/ledger/handoffs/TASK-FILL-approval-archive.yaml and this record, and run the approval archive in the commit order above with one push; then confirm execution_state ready, lint runbook and card, and HOLD for the owner's explicit EKS go-ahead before any relay of TASK-20261106-4b7018."
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "approval of a contract; no evidence exists and no claim is decided"

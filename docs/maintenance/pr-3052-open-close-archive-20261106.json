@@ -1,0 +1,94 @@
+{
+  "schema": "pr-maintenance/v1",
+  "standing": "unverified",
+  "parent": "e2d55c1855ddb8253a1e2f36977a3c49cfe33214",
+  "source_before_sha256": "db1e8d52b3b62c7098c5d6322f7bb12d9ff08f9b29e696a3c093a570381fba26",
+  "reproduction": {
+    "scope": "Synthetic infrastructure fixture only; no real record/source edit, scientific run or AWS/S3 operation.",
+    "published_source_head": "e2d55c1855ddb8253a1e2f36977a3c49cfe33214",
+    "source_sha256": "db1e8d52b3b62c7098c5d6322f7bb12d9ff08f9b29e696a3c093a570381fba26",
+    "before_status": "open",
+    "after_status": "measured",
+    "close_exit": 0,
+    "stdout": "benchrec: benchmarks/records/20261106T0406Z-open-close-control.json: original raw bytes verified from local archive cache for raw.txt; differing checkout bytes are not validated here\nclosed benchmarks/records/20261106T0406Z-open-close-control.json (measured); progress report regenerated in benchmarks/progress/\n",
+    "stderr": "",
+    "source_record_was_open": true,
+    "current_raw_differs": true,
+    "original_cache_present": true,
+    "closed_on_disk_by_command": true
+  },
+  "structural_proof": {
+    "tools/benchrec.py": {
+      "old_functions_including_nested": 63,
+      "unchanged": 61,
+      "changed": [
+        "cmd_close",
+        "record_errors"
+      ],
+      "added": []
+    },
+    "tools/test_benchrec.py": {
+      "old_functions_including_nested": 37,
+      "unchanged": 37,
+      "changed": [],
+      "added": [
+        "test_closing_open_record_cannot_use_archive_fallback"
+      ]
+    }
+  },
+  "new_behavior": "cmd_close explicitly refuses the already-closed-only archive fallback during open->closed transition; all original strict archive checks unchanged for already-closed records.",
+  "validation": {
+    "focused_unit_tests": 29,
+    "old28tests_unchanged": true,
+    "canonical_parity_files": 19,
+    "existing_records_gate": 6,
+    "progress": "current; unchanged",
+    "new_regression_rejects_old_source": true,
+    "real_S3_or_scientific_operation": false
+  },
+  "source_after": {
+    "tools/benchrec.py": {
+      "bytes": 55140,
+      "sha256": "f6d5d773120ebb2c2a60028ed41ac6e019c8c1dd26c51873ae6746f806bdaee7"
+    },
+    "tools/test_benchrec.py": {
+      "bytes": 25539,
+      "sha256": "1c38bb17690482b0fa41dbf26832875bc3e780bbad7a0cc5309cb38b68f62ed2"
+    },
+    "docs/benchmark-records.md": {
+      "bytes": 9243,
+      "sha256": "ddbc196d4b5d4c260a161dc931b64dacb5457648b1daf440a55dfb487c26e5cd"
+    },
+    "docs/shared-code.lock.json": {
+      "bytes": 6065,
+      "sha256": "e8b1af4d26765b8d5f2dfadb4f0283a1d399883bae192690952c43100b5d7581"
+    },
+    "structural-proof.json": {
+      "bytes": 376,
+      "sha256": "db58557c807b88358960a2ef07999213cc3c40aa304fa0008a1183a94f2d28e4"
+    },
+    "unit-tests.log": {
+      "bytes": 4398,
+      "sha256": "21c644a79b535386028db8bbb6080bb60590e4104ea2b29243d871b87a27feea"
+    },
+    "old-source-regression.log": {
+      "bytes": 4812,
+      "sha256": "5a761fcd80780b811df2beb25aaade9e12bb9b70c1c5ed6671bff41e18095557"
+    },
+    "existing-six-records.log": {
+      "bytes": 51,
+      "sha256": "3a590831708db87c76d8a33702a38bb752647f8f37fbd25736d2c60832fb40ad"
+    },
+    "parity-19.log": {
+      "bytes": 54,
+      "sha256": "e6bd3c892b5926dd80669c4360feef4bb7760cd7ada29d7d58ae152560f66d68"
+    }
+  },
+  "preservation": {
+    "entire_parent_journal_prefix": true,
+    "all_other_parent_tree_objects_exact": true,
+    "old_records_progress_scientific_inputs_PCC_ledger_unchanged": true,
+    "all_previous_failure_receipts_retained": true
+  },
+  "limits": "Fresh all-new-head gate/size/artifacts/all checks/statuses/reviews/budget<=30/CLEAN before expected-head MERGE. No consumer sync until actual owner merge; no real online custody/admission claim."
+}

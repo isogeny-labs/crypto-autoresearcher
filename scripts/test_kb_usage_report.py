@@ -76,6 +76,13 @@ class UsageReportTest(unittest.TestCase):
         self.assertEqual(row["queries"], ["Semaev degree"])
         self.assertEqual(row["unavailable"], 1)
 
+    def test_exact_duplicate_headings_count_once(self):
+        path = self.root / "docs" / "session-logs" / "2026-11-05.md"
+        path.write_text(LOG + "\n" + LOG)
+        row = kb.audit_root(self.root, None)
+        self.assertEqual(row["entries"], 3)
+        self.assertEqual(row["duplicates"], 2)
+
     def test_since_filters_old_entries(self):
         row = kb.audit_root(self.root, "2026-11-05")
         self.assertEqual(row["entries"], 2)

@@ -1,0 +1,185 @@
+{
+ "section": "oracle_setup breakdown, incumbent walk, 128 measured records, 16 targets",
+ "fields": {
+  "adds": {
+   "mean": 166056.0,
+   "ci95": [
+    166056.0,
+    166056.0
+   ],
+   "min": 166056,
+   "max": 166056
+  },
+  "doubles": {
+   "mean": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "min": 0,
+   "max": 0
+  },
+  "scalar_mults": {
+   "mean": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "min": 0,
+   "max": 0
+  },
+  "gae": {
+   "mean": 166056.0,
+   "ci95": [
+    166056.0,
+    166056.0
+   ],
+   "min": 166056.0,
+   "max": 166056.0
+  },
+  "lookups(x_index reads)": {
+   "mean": 407.0,
+   "ci95": [
+    407.0,
+    407.0
+   ],
+   "min": 407,
+   "max": 407
+  },
+  "table_insert_attempts": {
+   "mean": 165649.0,
+   "ci95": [
+    165649.0,
+    165649.0
+   ],
+   "min": 165649,
+   "max": 165649
+  },
+  "index_point_negations(oracle_setup phase)": {
+   "mean": 0.0,
+   "ci95": [
+    0.0,
+    0.0
+   ],
+   "min": 0,
+   "max": 0
+  },
+  "wall_ns": {
+   "mean": 6049025.046875,
+   "ci95": [
+    6037432.314257813,
+    6060875.953515625
+   ],
+   "min": 5924106,
+   "max": 6153257
+  }
+ },
+ "factor_base_phase_counters_for_reference": {
+  "counted:base_index_builds": 1,
+  "index_inserts": 1221,
+  "index_point_negations": 407,
+  "index_sort_word_ops": 4070,
+  "adds": 0,
+  "doubles": 0,
+  "scalar_mults": 0
+ },
+ "table_entries": "NOT in records (no field carries PairTable.entries); only insert attempts (inserts tried, identity sums excluded)",
+ "identities_skipped": 407.0,
+ "N_times_Nplus1": 166056,
+ "modeled_alternatives": {
+  "assumptions": "MODELED, formulas only, not measured. L=28-bit scalar, 1 GAE per add or double. Hypothetical: N=407 independent scalar mults of ONE fixed base (or N joint aP+bQ). The measured oracle_setup has 0 scalar mults and is N(N+1)=166,056 additions of factor-base points, so these rows are not alternatives to what it builds; they are the cost the stated premise would have.",
+  "measured_oracle_setup_gae": 166056.0,
+  "rows": [
+   {
+    "method": "textbook double-and-add (one fixed base)",
+    "precompute": 0,
+    "per_mult": 41.0,
+    "N_mults": 16687.0,
+    "total_per_run": 16687.0
+   },
+   {
+    "method": "fixed-base comb w=4 (h=7)",
+    "precompute": 32,
+    "per_mult": 12.5625,
+    "N_mults": 5112.9375,
+    "total_per_run": 5144.9375
+   },
+   {
+    "method": "fixed-base comb w=5 (h=6)",
+    "precompute": 50,
+    "per_mult": 10.8125,
+    "N_mults": 4400.6875,
+    "total_per_run": 4450.6875
+   },
+   {
+    "method": "fixed-base comb w=6 (h=5)",
+    "precompute": 82,
+    "per_mult": 8.921875,
+    "N_mults": 3631.203125,
+    "total_per_run": 3713.203125
+   },
+   {
+    "method": "fixed-base comb w=7 (h=4)",
+    "precompute": 144,
+    "per_mult": 6.96875,
+    "N_mults": 2836.28125,
+    "total_per_run": 2980.28125
+   },
+   {
+    "method": "fixed-base comb w=8 (h=4)",
+    "precompute": 275,
+    "per_mult": 6.984375,
+    "N_mults": 2842.640625,
+    "total_per_run": 3117.640625
+   },
+   {
+    "method": "fixed-base windowed, no doublings, w=4 (h=7 tables)",
+    "precompute": 122,
+    "per_mult": 5.5625,
+    "N_mults": 2263.9375,
+    "total_per_run": 2385.9375
+   },
+   {
+    "method": "fixed-base windowed, no doublings, w=5 (h=6 tables)",
+    "precompute": 205,
+    "per_mult": 4.8125,
+    "N_mults": 1958.6875,
+    "total_per_run": 2163.6875
+   },
+   {
+    "method": "fixed-base windowed, no doublings, w=6 (h=5 tables)",
+    "precompute": 334,
+    "per_mult": 3.921875,
+    "N_mults": 1596.203125,
+    "total_per_run": 1930.203125
+   },
+   {
+    "method": "fixed-base windowed, no doublings, w=7 (h=4 tables)",
+    "precompute": 525,
+    "per_mult": 2.96875,
+    "N_mults": 1208.28125,
+    "total_per_run": 1733.28125
+   },
+   {
+    "method": "fixed-base windowed, no doublings, w=8 (h=4 tables)",
+    "precompute": 1040,
+    "per_mult": 2.984375,
+    "N_mults": 1214.640625,
+    "total_per_run": 2254.640625
+   },
+   {
+    "method": "Shamir joint aP+bQ (a,b both 28-bit), P+Q precomputed",
+    "precompute": 1,
+    "per_mult": 48.0,
+    "N_mults": 19536.0,
+    "total_per_run": 19537.0
+   }
+  ]
+ },
+ "textbook_cost_per_mult_L28": {
+  "doublings": 27,
+  "avg_adds": 14.0,
+  "total": 41.0
+ },
+ "implied_per_scalar_mult_cost_from_counters": "undefined: scalar_mults=0 in oracle_setup; 166,056 adds / 407 = 408 adds per base point (N+1) is the only ratio"
+}

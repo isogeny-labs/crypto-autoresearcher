@@ -104,7 +104,10 @@ rules that make it executable without judgment:
   replayed (`exempt` with a reason, reported as `not_covered`). A `fields`
   compare item may declare `tolerance: {rel_tol, abs_tol}` for its pointers
   (see "Replay tolerance and interpreter parity"). Split exact pointers and
-  toleranced pointers into separate items.
+  toleranced pointers into separate items. A compare item may name
+  `trials: [ids]` to apply only to those trials, so a step whose trials write
+  different outputs lists each trial's own pointers (DEC-20261105-6e2616
+  NA-1(b)).
 - **`metrics`** name a step, file, pointer, unit, `measured|derived` label and
   aggregates. The tool computes them over valid non-control units and lists
   the excluded ones.
@@ -198,6 +201,15 @@ digest the executor cannot change, and compares the declared fields.
   its fabricated units.
 - **What the audit records.** The nonce, the seed, every replay and
   comparison, and the miss probability for fabrication rates of 1% to 50%.
+- **What a compared pointer can be.** `equal`, `within_tolerance`, `mismatch`,
+  or `not_applicable` when the pointer is absent from both the recorded and
+  the replayed output (a pointer this trial does not write). A pointer present
+  on one side only is a `mismatch`, and a replay for which no compared pointer
+  applies reproduced nothing and is a `mismatch` too (SHF-20261106-a114e7,
+  ICV-1; RBS-ICPERF-8cdc92 flagged 39 absent-on-both rows as mismatches).
+- **A step with nothing to replay.** A trials step with no valid unit is
+  listed in `not_covered` ("no valid unit to replay"); the audit never reads
+  as having screened it (SHF-20261106-a114e7, LGX-8; RBS-ICPERF-c4a91e).
 - **Every journal the session path has had.** The audit lists each distinct
   `journal.jsonl` blob at the session path in `git log --all --full-history`,
   plus the working-tree journal. A blob that is a byte prefix of another is the
@@ -228,6 +240,15 @@ Under exact comparison that is indistinguishable from a fabricated value.
   `math.isclose`. Integers, strings, booleans, nulls, key sets, list lengths
   and list order stay exact, and an int on one side with a float on the other
   is a mismatch. DEC-20261029-5554ee suggests `rel_tol: 1e-9, abs_tol: 1e-12`.
+- **The maximum tolerance** is that ruling: `rel_tol <= 1e-9` and
+  `abs_tol <= 1e-12` (`TOLERANCE_MAX` in `tools/runbook.py`). Lint refuses a
+  runbook that declares more, and `audit --float-tolerance` refuses more;
+  neither clamps. An unbounded tolerance let a doubled value (`rel_tol=0.5`),
+  a 1000x change (`rel_tol=1`) or a sign flip (`abs_tol=1e9`) replay as
+  `matched_within_tolerance` and audit clean (SHF-20261106-a114e7, LGX-3). A
+  replay that needs a wider bound is a mismatch, and the fix is a better
+  comparison (exact integers, `math.fsum`, a pinned interpreter), not a looser
+  one.
 - **An audit-time tolerance** for a runbook frozen without one:
   `audit --float-tolerance rel_tol=1e-9,abs_tol=1e-12`. It applies to every
   `fields` pointer that has no declared tolerance. It is recorded in
@@ -238,14 +259,27 @@ Under exact comparison that is indistinguishable from a fabricated value.
   Each compared pointer records its `result`, the tolerance and its source,
   the number of differing float leaves, and the largest absolute and relative
   difference. `replay_results` counts the three outcomes. Only `mismatch` is a
-  finding. Because `matched: false` no longer always means a mismatch, the
+  finding. An audit with no finding whose replays include any
+  `matched_within_tolerance` has `verdict: clean_within_tolerance`, never
+  `clean`, and `tolerance_notes` names each such unit with its bound and the
+  bound's source (`runbook` or `audit_option`), so a toleranced screen is never
+  read as an exact one. The CLI exits 0 for `clean` and
+  `clean_within_tolerance`, 1 for `flagged`. Because `matched: false` no longer always means a mismatch, the
   audit schema is `crypto.autoresearch.runbook_audit.v2`. Committed v1 audits
   stay as they are.
 - **Interpreter parity.** Each replay records the interpreter its `argv[0]`
   runs (`sys.version`, executable, version), and `audit_interpreter` records
-  the auditing process. When the unit's `manifest.yaml` has
-  `/run/environment/python_version` and it differs, the replay carries an
-  `environment_drift` note naming both versions, collected in the top-level
+  the auditing process. The recorded interpreter is read from the first of
+  `RECORDED_PYTHON_SOURCES` (`tools/runbook.py`) that states a version:
+  `manifest.yaml` `/run/environment/python_version`, `/run/environment/python`,
+  `/run/environment/driver_python_version`, `/run/environment/version` (only
+  beside `implementation: CPython`), then `environment.json` `/python_version`
+  and `/python` (a full `sys.version` string gives its leading version). YAML
+  values are read as their source text, so an unquoted `python_version: 3.10`
+  is `3.10`, not the float `3.1`. Each replay records `interpreter_parity`
+  (`match`, `mismatch`, or `unknown` with a note naming what was searched;
+  DEC-20261105-6e2616 NA-1(a)). When the versions differ, the replay carries an
+  `environment_drift` note naming both, collected in the top-level
   `environment_drift`. The note sits beside the result and never replaces it.
 - **A pinned interpreter.** When the runbook pins `environment.python` and the
   audit interpreter's major.minor differs, the unit is reported `not_covered`
@@ -254,6 +288,12 @@ Under exact comparison that is indistinguishable from a fabricated value.
   derived floats, pin `environment.python` to the producing major.minor,
   split compare into exact and toleranced items, and accumulate floats with
   `math.fsum` in new drivers.
+- **Compare what a reading rests on.** A `fields` replay sees only the
+  pointers it lists. RBS-PFDR-bb0d26 compared three counts and five decision
+  fields, so a reseal that moved a per-cell statistic audited clean
+  (SHF-20261106-a114e7, PFX-3). When a record cites per-cell values, list
+  them (for example `/cells`), compare the jobs file keyed by cell, or record
+  a canonical digest of the job set in `raw-result.json` and compare that.
 
 ## Lean in experiments
 

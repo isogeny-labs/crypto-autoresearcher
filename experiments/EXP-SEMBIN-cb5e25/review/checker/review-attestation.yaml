@@ -1,0 +1,25 @@
+# Attestation of TASK-20261106-028825 (independent certificate checker author),
+# transcribed by the top-level session from the author's final report.
+review_attestation:
+  task_id: TASK-20261106-028825
+  role: independent certificate-checker author for EXP-SEMBIN-cb5e25
+  joints_owned: []
+  sources_read:
+    - AGENTS.md (section headings; Review architecture; Resume checkpoints in S3 before every run)
+    - docs/agent-runtime-core.md (first 60 lines)
+    - experiments/EXP-SEMBIN-cb5e25/specification.yaml (objective, declared conventions and derivations, instance_specification, parameter_grid, metrics, certificates)
+    - experiments/EXP-SEMBIN-cb5e25/formats.md (full; re-read after section 7 was added mid-task)
+    - blind sample directories m3n05 and m3n06 (systems, wdag certificates, instances.jsonl.gz, closures.jsonl.gz, cost.jsonl, trials/*.json)
+    - git status --short and git diff of formats.md only
+  not_read:
+    - experiments/EXP-SEMBIN-cb5e25/code/** (any file)
+    - any git log or commit message
+    - experiments/EXP-SEMBIN-cb5e25/review/ other than checker/
+  read_sibling_reports: false
+  blind_from_respected: true
+  honesty_notes:
+    - trials/*.json provenance blocks list producer source file names and sha256 only; no code content was opened.
+    - git status listed modified code/ file names; none was diffed or opened.
+    - The checker and its reference test builders share one author: independence is from the producer's code, not between the two.
+    - Long bit-flip sweeps ran under the documented CHECKPOINT_SKIP opt-out (checker unit sweeps, not experiment trials).
+  verdict: derived
