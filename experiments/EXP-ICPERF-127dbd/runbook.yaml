@@ -1,9 +1,9 @@
-# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 2). Compiled by the experiment director. NOT AUTHORIZED.
-# NOT APPROVED. Runs only after a committed decision names this file's sha256 (runbook_sha256) and the owner gives the EKS spend go-ahead.
-# The digests of specification.yaml and trial-plan.json bound below are those of stand-ins (see NOTES.md) until the committed ones are bound.
+# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 2), session RBS-ICPERF-de8978, recompiled after the stopped session RBS-ICPERF-e2a5c2. Compiled by the experiment director. NOT AUTHORIZED.
+# NOT APPROVED. Runs only after a committed decision (DEC-20261106-ecf261) names this file's sha256 (runbook_sha256) and the owner gives the EKS spend go-ahead.
+# The specification.yaml digest bound below is that of the preview specification that approval archive TASK-20261106-de6d19 swaps in; the trial-plan.json digest is that of the committed plan.
 schema: crypto.autoresearch.runbook.v1
 experiment_id: EXP-ICPERF-127dbd
-session_id: RBS-ICPERF-e2a5c2
+session_id: RBS-ICPERF-de8978
 title: Launch the two frozen C1 requests on EKS once each, check each download, and run the frozen analyze-c1.sh gates
 purpose: Executes protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 2 (protocol_sha256 9844f78d..., which carries AMENDMENT-1; the version 1
   hash was 43b1ca91...). S1 and S2 are each submitted once through launch-remote by implementation/launch_eks.sh under the trial supervisor, which
@@ -14,9 +14,9 @@ approval:
   mode: decision_record
 binds:
 - path: experiments/EXP-ICPERF-127dbd/specification.yaml
-  sha256: 50172e2a2a0a4e47fff95d7f363afd67b291899bb8f89d0c5f36a0024c99942b
+  sha256: 1f9e2092fbd4ef96770955101cb3161ad26a45de0ef782c7bf63a05a631cd21a
 - path: experiments/EXP-ICPERF-127dbd/trial-plan.json
-  sha256: b8de54a14b3e32bf7ce12946ce9ee113a1e498f73906a20ee76fb26ca133e1c3
+  sha256: b6626655b3c83dd8c8526ee722572ac1f7d3e6848ba3708c6e70e34acf5b8270
 - path: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
   sha256: c2f38c4284bf4268e385ebdd42dabf5094b5fffdba27edbe969fb46b506295c8
 - path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
@@ -30,7 +30,7 @@ binds:
 - path: experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
   sha256: 66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc
 - path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
-  sha256: 130164868a21d1b1ee4ff66ba89ea0c4fdfee2e20decc6451abd2ab10ef6d41f
+  sha256: 0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0
 - path: experiments/EXP-ICPERF-127dbd/implementation/check_job.py
   sha256: d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d
 - path: experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
@@ -40,10 +40,10 @@ binds:
 spec_bindings:
 - file: experiments/EXP-ICPERF-127dbd/specification.yaml
   pointer: /experiment/runbook/session_id
-  equals: RBS-ICPERF-e2a5c2
+  equals: RBS-ICPERF-de8978
 - file: experiments/EXP-ICPERF-127dbd/specification.yaml
   pointer: /experiment/approved_by
-  equals: DEC-20261106-c69de4
+  equals: DEC-20261106-ecf261
 - file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
   pointer: /protocol_id
   equals: IC-C1-DEFERRED-GUARD-FP28-20261106
@@ -232,9 +232,9 @@ steps:
       - pointer: /hypothesis_id
         equals: H-ICPERF-4cb536
       - pointer: /task_id
-        equals: TASK-20261106-4b7018
+        equals: TASK-20261106-724d14
       - pointer: /approved_by
-        equals: DEC-20261106-c69de4
+        equals: DEC-20261106-ecf261
       - pointer: /trial_id
         equals: '{trial_id}'
       - pointer: /run_id
@@ -314,8 +314,8 @@ steps:
   - '{out}/analysis'
   - experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
   - experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
-  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/job/artifacts/session
-  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-6f784c/job/artifacts/session
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/artifacts/session
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-5ffa79/job/artifacts/session
   timeout_seconds: 5400
   validity:
     exit_code: 0
