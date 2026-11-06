@@ -48,5 +48,5 @@
     }
   ],
   "schema": "classical.ecdlp.exact-export-adapter-plan/v1",
-  "stored_representation_policy": "After native checker, use execution-receipt.json artifact_storage plus unchanged tools/artifact_store.py read_json/open_artifact for logical payloads; verify logical content SHA before extracting metadata. Export.files and analysis.outputs pin ACTUAL existing stored representation path/bytes/SHA (raw/.gz/.blob.json or native manifest metadata), and retain native receipt binding of logical content and wire digest. Never recreate/overwrite sealed raw members, private-publish or invent scalar/process facts. If required stored bytes cannot be read/verified, retain precise export/check finding, not synthetic values."
+  "stored_representation_policy": "Read metadata BEFORE publication through unchangedAPI, OR AFTERpublication select exactnative execution-receipt.artifact_storage entry/path/digest: hash stored gzip bytes, stdlibgzip decompress, hash rawlogicalcontent against nativecontentSHA, then JSONparse. Do not use ambiguous logicalresolve when .gz and.gz.blob.json bothpresent. Exportpinsactualstoredwire/pointerrepresentation andnative logical/wire binding/fullGETproof. No sealedmutation/privatepublisher/symlink or fabricated rowfacts; missingstoredbytes stays exactexportfinding."
 }
