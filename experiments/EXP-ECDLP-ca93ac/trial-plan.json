@@ -1,0 +1,89 @@
+{
+  "approved_by": "DEC-20261106-60eb47",
+  "experiment_id": "EXP-ECDLP-ca93ac",
+  "frozen": true,
+  "input_sha256": {
+    "/workspace/classical-ecdlp-validation-ready/experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-52de64/execution/candidate/result/raw/decoder-cells.jsonl": "26a9140433a31015c1dfbd608d4f6b92dfcb9cab367434158dce5d6a283f678d",
+    "/workspace/classical-ecdlp-validation-ready/experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-52de64/execution/candidate/result/raw/traces.jsonl": "7906898e9eb0f7f3a7b407f5a301250ee3c4822ac61beabe1198be1147b62110",
+    "/workspace/classical-ecdlp-validation-ready/experiments/EXP-ECDLP-356403/runs/RUN-ECDLP-52de64/shared/input.json": "864bfc966174a55fb854e69251669852e9ea20c2beaf52b74c49e1a0d66dae60",
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json": "4c3fc7d06f396065335d60fdae224358f7197a1a94b80935cd852c78c935c811",
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-contract-v2.json": "fffa948acc7b062b06453fb8ebb211b003fe5d7c2cedcbe389b988e9bb18a0e6",
+    "experiments/EXP-ECDLP-ca93ac/analysis/export-adapter.json": "dabab39ad1ab64ee19d36c263880153e5b89b2e988d3f8f1b168c51e42acea20"
+  },
+  "protocol_hashes": {
+    "experiments/EXP-ECDLP-ca93ac/protocol.json": "8b6b5794d4f5dc12474e31eed93edc03624389ce31b0c386617df4af9c2d396f"
+  },
+  "queue": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/dispatch_queue.json",
+  "schema": "crypto.autoresearch.trial_plan.v1",
+  "source_sha256": {
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json": "4c3fc7d06f396065335d60fdae224358f7197a1a94b80935cd852c78c935c811",
+    "harness/classical_ecdlp_public_reference_audit_v2/driver.py": "99a6a535dda612a762d4b56c3fed8749321ddc849f2200b19474ba1d79010849",
+    "harness/classical_ecdlp_public_reference_audit_v2/solver.py": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+    "harness/classical_ecdlp_public_reference_audit_v2/verify.py": "a1cf6bdcb243caf5f4564f47b1dc86e2e7ea9dd3b368ab0da14dc019f8a5c667",
+    "tools/artifact_store.py": "8518bbbd385b077f6bf5344503ebe9c0feb8f0b3bb119e8e8a7deea8f461be59",
+    "tools/experiment_protocol.py": "0f46a2b856bb1df2d155c4a676b46c6118d82c45cf8e5cc0492315aeb45c84e4"
+  },
+  "specification": "experiments/EXP-ECDLP-ca93ac/specification.yaml",
+  "specification_sha256": "6ea8e5075836e8ff5bac471baa37ccfe2e0b7434207fd577cacbc4e850b408da",
+  "stop_on_invalid_output": true,
+  "task_id": "TASK-20261106-fb15fa",
+  "trials": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "harness/classical_ecdlp_public_reference_audit_v2/driver.py",
+        "--repo-root",
+        "/tmp/classical-ecdlp-validation-20261106",
+        "--out",
+        "{run_dir}",
+        "--input-manifest",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+        "--time-limit",
+        "1200"
+      ],
+      "artifacts": [
+        "certificates-A.json",
+        "certificates-B.json",
+        "certificate-seal.json",
+        "worker-processes.json",
+        "runtime-guard.json",
+        "manifest.yaml",
+        "raw-result.json",
+        "reference-verification.json",
+        "candidate-audit.json",
+        "verification-summary.json"
+      ],
+      "check_argv": [
+        "python3",
+        "-B",
+        "harness/classical_ecdlp_public_reference_audit_v2/verify.py",
+        "--repo-root",
+        "/tmp/classical-ecdlp-validation-20261106",
+        "--out",
+        "{run_dir}",
+        "--input-manifest",
+        "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json"
+      ],
+      "id": "complete-public-reference-r52",
+      "memory_mb": 4096,
+      "parameters": {
+        "attack_class": "discrete_log",
+        "domains": 48,
+        "execution_scope": "new_reference_certificate_search_only",
+        "operation_cost_metrics": false,
+        "passes": [
+          "A",
+          "B"
+        ],
+        "public_targets": 1536,
+        "raw_manifest": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+        "target_curves": 24,
+        "wall_valid": false
+      },
+      "run_id": "RUN-ECDLP-fc6e86",
+      "watchdog_reason": "Single fresh bounded exact certificate search and independent verifier; both read original monotonic shared runtime-guard, cumulative wall1200/CPU1800, noresume/retry.",
+      "watchdog_seconds": 1200
+    }
+  ]
+}
