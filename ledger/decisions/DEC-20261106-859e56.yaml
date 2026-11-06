@@ -1,0 +1,154 @@
+# DEC-20261106-859e56: Coordinator evidence review of the IC layout=lines v6 tournament (fp28, c8a.2xlarge, as amended by V6-AMENDMENT-1): frozen verdict invalid_measurement, not an improvement; H-layout weaken; the line-layout lead item closed at the tested scope. Final after validator VAL-20261106-9ce3e6 passed with caveats.
+coordinator_decision:
+  id: DEC-20261106-859e56
+  id_provenance: Allocated by the top-level session with tools/allocate_id.py --next coordinator_decision --date 20261106
+    and confirmed free with --check. The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  source: isogeny-labs/crypto research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md (sha256 7556377eab6d9c50b1c83e9549f572c056f5f1850feb364d47f4a29990eeceaa at commit c1300fbdb; transcribed
+    from its section 16, sections 16.1-16.8 and the 16.8 YAML block; crypto PR 3555, branch claude/ic-line-layout-v6-final-20261106,
+    commit c1300fbdb). Section 16 was filed provisional pending the independent validator. VAL-20261106-9ce3e6 passed it
+    with caveats and confirmed every item of section 16.6(1), so this record states section 16 as final. No number changed.
+  subject: 'IC-LINE-LAYOUT-E2E-FP28-V6-20261106 outcome: C-wall invalid_measurement (s1 failed the frozen A/A gate), not
+    an improvement; H-layout weaken (not rejected); the layout=lines item of LEAD-ICP-prime-ic-constant-engineering closed
+    at fp28 on c8a.2xlarge
+
+    '
+  context: 'IC-LINE-LAYOUT-E2E-FP28-V6-20261106 as amended by V6-AMENDMENT-1 (merged in crypto PR 3531; canonical protocol_sha256
+    2aedaaf8..., prior freeze 12415faa... reproducible with amendments=[]). Three L2 wall sessions on c8a.2xlarge: s1 and
+    s2 on host epoch H1 (ip-10-84-67-216), s3 on host epoch H2 (ip-10-84-75-83). analyze-v6.sh (sha256 23e614ad...) was
+    run twice with ecbench 73362eed... (executable ea8e9ef7); the counted companion (ic-line-v6-counted-20261106, job-exit
+    42, accepted by the frozen counted rule) passed acceptance. This record follows DEC-20261106-662e33 (redesign and freeze
+    approval, Revisions 0-4.1). The independent validator VAL-20261106-9ce3e6 (verdict passed, with caveats) recomputed
+    every headline figure independently (maximum relative difference 4.7e-16 against a stated 1e-9 tolerance), replayed
+    512/512 measured runs identically in each of the four sessions, confirmed counted parity at ops and record level, re-derived
+    every per-session gate and verdict from the frozen rule text, and confirmed the host-epoch reading and the s1 determinism
+    check.
+
+    Frozen verdict: C-wall invalid_measurement, the V6-AMENDMENT-1 section 3 combination of the per-session verdicts s1
+    invalid_measurement, s2 inconclusive, s3 inconclusive. s1 failed gate aa_inside_0_9_1_1 (aa_ci95 [0.99687, 0.99992]
+    excludes 1, by 8.2e-5); s2 and s3 failed only total_and_corrected_ci_below_1. The host-epoch condition holds and could
+    only downgrade a combined supported_within_scope, so it does not apply. The verdict is reported verbatim: it is not
+    inconclusive, not within_control_distribution, and not a regression or rejection label.
+
+    '
+  decision: weaken
+  target_ids:
+  - IC-LINE-LAYOUT-E2E-FP28-V6-20261106
+  - IC-LINE-LAYOUT-E2E-FP28-V6-20261106/H-layout
+  - LEAD-ICP-prime-ic-constant-engineering
+  hypothesis_status:
+    H-layout: 'weakened. P-wall not supported; P-parity held; H-layout is not rejected. H-layout has no ledger H-* record;
+      it exists only in protocol-v6.json, which is not edited. Its status is recorded here, in the crypto decision file and
+      in the results report. No ledger hypothesis status changes.
+
+      '
+  refutation_basis:
+    proof_status: empirical_only
+    why_not_stronger: A wall-time claim admits no counterexample certificate, and no derivation note explains why cache-line
+      buckets cost more than the incumbent hashbrown index here.
+    why_not_reject_scoped: The frozen mapping routes a valid session with intervals wholly above 1 to inconclusive (PROTOCOL-V6
+      section 6, adopted in decision section 13.3(a)) and the combination to invalid_measurement. Rejecting on intervals
+      above 1 would apply a decision rule that was never registered, after the outcome, without a protocol_amendment.
+    archived_before_decision: Both verdict.json files, the per-session comparison files, the counted band and the validator
+      report under research/ic_line_layout_tournament_20261031/reports/v6/, in crypto PR 3555 (commit c1300fbdb), before
+      this record.
+  rationale:
+  - The frozen verdict is invalid_measurement and is reported verbatim. Nothing is relabelled. The validator re-derived
+    the same per-session gates and the same combined verdict.
+  - 'Descriptively, in s2 (H1) and s3 (H2), the two sessions that passed every validity gate, layout=lines was about 12 %
+    slower at exactly equal counted GAE: total wall 1.1216 [1.1183, 1.1249] and 1.1225 [1.1193, 1.1258]; corrected 1.1220
+    [1.1178, 1.1262] and 1.1237 [1.1200, 1.1275]; A/A 0.99964 [0.99729, 1.00199] and 0.99893 [0.99722, 1.00064]. Reported
+    under PROTOCOL-V6 section 6 and decision section 13.3(a) as inconclusive with the direction stated.'
+  - s1 (1.1214 [1.1183, 1.1246]) is invalid_measurement and carries no weight in the weaken; its agreement with s2 and s3
+    is noted, not counted.
+  - 'Counted cost is equal: candidate/incumbent ops ratio 1.000 [1.0, 1.0] in every wall session and in the counted companion
+    at w = 0, 0.1 and 1; record-level parity 0/144 mismatching cells in each session.'
+  - Distance remaining to the matched rho.negation reference, incumbent counted S over rho-neg counted S (two curves pooled,
+    128 pairs), 23.00 [20.15, 26.24] / 22.87 [20.01, 26.14] / 22.28 [19.35, 25.66] at w = 0 / 0.1 / 1. The section 5a band
+    ranks rho-neg ahead of both IC arms at every weight on both curves, and leaves candidate vs incumbent unresolved (they
+    are equal). This is distance remaining, not a gate. Rho wall time is not reported.
+  - Positive control detected in every session (pc-fb2x total wall 1.380-1.393, CI lower bound above 1.34; ops S 2.396).
+    Its corrected_ratio 0.579 is a per-GAE wall ratio, not a speed-up, and no gate reads it.
+  - weaken, not reject_scoped, on a declared empirical_only basis (refutation_basis above). weaken is a credence decision
+    and changes no verdict.
+  - Lead item closed at the scope below. No v7, rerun or extra session is approved to turn invalid_measurement into a cleaner
+    label. The effect points the wrong way and is far outside the A/A noise (the validator computes 52-80 A/A half-widths;
+    decision section 16.4 states about 40, an understatement that changes nothing), so a rerun could at best certify a
+    slowdown, which is no improvement under the success criterion. The closure is a roadmap decision, not a hypothesis
+    transition to rejected, and frees budget for exponent-targeting work.
+  - 'Reopening conditions, each requiring its own coordinator decision, a new frozen protocol and fresh seeds, never pooled
+    with v6: (1) a changed candidate with a diagnosed cause, where a local fp28 counted-parity profile locates the loss (bucket-scan
+    length, probes per lookup, cache and TLB misses, instructions per lookup, or the batched-lane prefetch path) and the
+    revised implementation shows a lower native lookup cost than the incumbent before any L2 wall session; (2) an implementation
+    defect in the ea8e9ef7 build (for example a slow-path guard fallback or an enabled debug or bounds-check path), reopened
+    as a correction on a new binary; (3) a regime where the premise is materially stronger, with a written reason why the
+    fp28 sign would flip (a much larger pair table, the stride-renew source if it becomes the merged incumbent, or a different
+    host class; a bigger size alone is not a reason, since the fp28 table already exceeds L2); (4) the incumbent lookup
+    structure changes on main.'
+  - The packed-table result (mitm-prime-blocked, corrected 0.93 at 28 bits) is a separate component result and is unaffected.
+  - 'Section 16.5 rulings stand: report, graphs and PDF required; no benchmarks/ entry or README row, no leaderboard component
+    section, and no VALIDATION.json, because no row is proposed and the result is not an improvement.'
+  scope: ea8e9ef7 executable (ecbench 73362eed...); mitm:negation_folded=1,layout=lines vs mitm:negation_folded=1; prime-abscissa:size=407,
+    targets=walk, max_trials 26479085, incremental-gauss; two fresh public fp28 curves icv1-fp28-tm10425-13a2119a and icv1-fp28-t15757-68bdca4a,
+    8 targets; L2 isolation on two c8a.2xlarge host epochs (three sessions). No transfer is claimed to other sizes, the stride-renew
+    target source, other incumbents, other microarchitectures or later commits.
+  evidence_refs:
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/DECISION-V6-REDESIGN-20261106.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/validation/VALIDATION-REPORT.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/validation/validation.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/validation/recompute.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/validation/verdict-rederived.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/validation/descriptive.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/V6-RESULTS.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/analysis-a/verdict.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/analysis-b/verdict.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/analysis-a/session-{1,2}-{candidate,control-comparison,positive}.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/analysis-b/session-{1,2}-{candidate,control-comparison,positive}.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/analysis-a/counted-band.txt
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/analysis-a/counted-compare-rho-neg__incumbent-w{0,0.1,1}.json
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/reports/v6/ANALYSIS-SHA256SUMS
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6-AMENDMENT-1.md
+  - isogeny-labs/crypto:research/ic_line_layout_tournament_20261031/protocol-v6.json
+  - VAL-20261106-9ce3e6
+  - DEC-20261106-662e33
+  limitations:
+  - The weaken rests on empirical_only evidence from two valid sessions on two host epochs; no mechanism explains the slowdown.
+    The validator's descriptive phase split (about 44 % of the extra wall in oracle_setup, about 55 % in relations) is a
+    pointer for reopening condition (1), not evidence of a cause.
+  - Host epochs are instances, not necessarily distinct physical machines; the scope says host epochs, nothing finer.
+  - The counted session's wall block of counted-compare-incumbent__candidate-w0.1.json was exposed to the Coordinator after
+    every verdict had been written; it is unused and unreported.
+  - The analysis outputs were written to scratch paths, not the frozen reports/v6/analysis-{a,b}; the validator confirmed
+    the copies byte-identical (26/26 non-empty files).
+  - 'Validator caveats: the four sessions'' raw records.jsonl are anchored to the S3 originals by sha256 (s1 bc60833b...,
+    s2 ab4be90e..., s3 9aa25936..., counted 1a7f3faa...), not committed to the repository; the replay uses the producer''s
+    pinned binary, so it certifies determinism and record binding, while the metric recomputation is independent; image-to-binary
+    extraction, the s3 pre-launch node check, the budget gate line and the qualification minimum-solve condition are executor-attested,
+    not redone; the counted job''s CodeBuild launcher reports FAILED while its job-exit 42 is accepted by the frozen rule.'
+  - 'Section 16.5 items not seen in the v6 checkout read for this record: the analysis transcripts (analysis-step-G.out,
+    analysis-step-H.out) beside reports/v6/, and bench.record/v1 records under benchmarks/records/. The report is named
+    reports/v6/V6-RESULTS.md and .pdf rather than the REPORT.md and REPORT.pdf named in section 16.5. None of these changes
+    a verdict; they are completeness items for PR 3555.'
+  - The A/A gate lesson of decision section 16.7 (a 95 % contains-1 gate fails about 14 % of three-session studies under
+    a true null) applies to future protocols only, not to v6.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: weaken on empirical_only evidence under a combined invalid_measurement verdict; neither support nor reject_scoped
+      on replicated or strong evidence, so no KN-FIND. The closure goes to the lead atlas (LEAD-ICP-prime-ic-constant-engineering)
+      instead.
+  next_actions:
+  - 'Main session: ledger archive, alone, of this record, the DEC-20261106-662e33 Revision 4 and 4.1 mirror and the LEAD-ICP-prime-ic-constant-engineering
+    update; post-commit verifier; push; open or refresh the crypto-autoresearcher PR against main, ready for review, with
+    auto-merge enabled.'
+  - 'Main session: on crypto PR 3555, confirm the section 16.5 completeness items listed in limitations (analysis transcripts,
+    bench.record/v1 records with s1 closed invalid, pcc claims, report naming), and add a status line to section 16 that
+    it is final per VAL-20261106-9ce3e6 and this record, no number changed.'
+  - 'Main session: if a GOAL-* record carries this tournament (GOAL-ICPERF-e6b6a4 is the lead''s goal), checkpoint it with
+    exactly one next action: the Coordinator''s next-improvement selection decision.'
+  - 'Coordinator: choose the next improvement in a separate decision, from the lead atlas and the approved XP-20261029 backlog,
+    giving exponent-targeting mechanisms priority over constant-factor items.'
+  - 'Main session: append the 2026-11-06 session-log entry.'
