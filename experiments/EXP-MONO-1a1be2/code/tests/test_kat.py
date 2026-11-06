@@ -1,7 +1,8 @@
 """Known-answer tests for the EXP-MONO-1a1be2 toolchain (TASK-20261029-a97206).
 
 Rules these tests follow (card constraints IM-2, IM-3, IM-4, IM-5):
-  * Cells are KAT cells disjoint from every contract cell: F_Q with q in {5, 13} at degree n <= 3, and
+  * Cells are KAT cells disjoint from every contract cell: F_Q with q in {5, 13} at degree n <= 7, F_Q with
+    q = q'_n (the least prime above the arm-C q_n) at n = 2..7 (DEC-20261105-f0b7c7 F-1, IM-3 widened), and
     prime fields (n = 1) with q not a contract (q, n) pair. No contract cell is computed.
   * Every counter test compares the optimised (kernel) counter with a naive enumeration written directly
     from the definition on the same cell. No test asserts an identity between different conventions, a
@@ -52,7 +53,7 @@ def _write_log():
     path = os.environ.get("KAT_LOG_PATH")
     if path:
         with open(path, "w") as fh:
-            json.dump({"task": "TASK-20261029-a97206", "note": "raw KAT outputs as text; KAT cells are disjoint from "
+            json.dump({"task": "TASK-20261029-a97206 (extended by TASK-20261105-ac5ad6)", "note": "raw KAT outputs as text; KAT cells are disjoint from "
                        "every contract cell; no contract cell computed; nothing here is a run",
                        "entries": LOG}, fh, indent=1)
             fh.write("\n")
@@ -425,6 +426,7 @@ SEMAEV_FIELDS = [(13, 2), (5, 3), (13, 3), (101, 1), (1009, 1)]
 
 
 SEMAEV_CASES = [(q, n, L) for (q, n) in SEMAEV_FIELDS for L in (2, 3, 4, 5) if not ((q, n) == (13, 3) and L >= 4)]
+SEMAEV_CASES += [(5, 4, 4), (13, 4, 4), (5, 5, 5)]          # KX-3: S_{n+1} defining property at k = n
 
 
 @pytest.mark.parametrize("q,n,tuple_len", SEMAEV_CASES)
@@ -615,6 +617,8 @@ def naive_S_and_masks(E, D, m, N):
 
 EXH_CELLS = [  # (q, n, m): KAT cells only
     (13, 2, 2), (13, 2, 3), (5, 2, 4), (5, 3, 2), (5, 3, 3), (13, 3, 2), (13, 3, 3), (7, 1, 4), (11, 1, 3), (7, 1, 5),
+    # KX-3 widening (TASK-20261105-ac5ad6): (5,4,m=2..4), (13,4,m=2), (5,5,m=2..5)
+    (5, 4, 2), (5, 4, 3), (5, 4, 4), (13, 4, 2), (5, 5, 2), (5, 5, 3), (5, 5, 4), (5, 5, 5),
 ]
 
 
@@ -675,7 +679,7 @@ def test_exhaustive_counters_match_naive_enumeration(q, n, m, base_kind, kernel)
     # raw output (no cross-convention quantity is recorded)
     raw = {c: {"hist_all": res["conventions"][c]["hist_all"], "hist_gen": res["conventions"][c]["hist_gen"]}
            for c in ("A", "M", "S", "X")}
-    if (q, n) in [(5, 2), (5, 3), (13, 2), (13, 3)]:
+    if (q, n) in [(5, 2), (5, 3), (13, 2), (13, 3), (5, 4), (13, 4), (5, 5)]:
         record("E1-exhaustive-vs-naive", f"q={q},n={n},m={m},base={base_kind}",
                {"B": len(base), "t2": res["t2"], "N": N, "size_X": len(lifts), "S_size": res["S_size"],
                 "generic_targets": res["generic_targets"], "raw_histograms": raw, "recount": res["recount"]})
@@ -710,7 +714,8 @@ def test_ncf_coefficient_function_matches_series_expansion():
 
 
 # =============================================================================== A: arm C counter vs naive
-ARMC_CELLS = [(13, 2, 2), (13, 2, 3), (5, 2, 4), (5, 3, 3), (13, 3, 2), (101, 1, 2), (103, 1, 2)]
+ARMC_CELLS = [(13, 2, 2), (13, 2, 3), (5, 2, 4), (5, 3, 3), (13, 3, 2), (101, 1, 2), (103, 1, 2),
+              (5, 6, 6), (5, 7, 7)]          # KX-3 widening: E2 at (5,6,m=6) and (5,7,m=7), line and random bases
 
 
 @pytest.mark.parametrize("q,n,m", ARMC_CELLS)
@@ -1093,3 +1098,474 @@ def test_analyse_fibre_fast_path_agrees_with_detailed_path(q, n, tuple_len):
         b = semaev.analyse_fibre(F, E, xs, detail=False)
         for k in ("degree", "full_degree", "squarefree", "chis", "split_completely", "zero_poly"):
             assert a[k] == b[k]
+
+
+# =============================================================================== W: widened cells (TASK-20261105-ac5ad6)
+# DEC-20261105-f0b7c7 F-1 (IM-3 widened): q in {5, 13} at n = 4..7; q'_n = least prime above the arm-C q_n at
+# degree n = 2..7. Naive against optimised only; no cross-convention identity, residual or predicted value is
+# asserted or recorded anywhere below.
+import functools  # noqa: E402
+from bisect import bisect_right  # noqa: E402
+
+WIDE_FIELDS = [(q, n) for q in (5, 13) for n in (4, 5, 6, 7)]
+
+
+def _is_prime_trial(p):
+    return p > 1 and all(p % d for d in range(2, math.isqrt(p) + 1))
+
+
+def _least_prime_above_trial(k):
+    p = k + 1
+    while not _is_prime_trial(p):
+        p += 1
+    return p
+
+
+# q'_n by independent trial division from the arm-C q_n of the trial-plan rule
+LARGE_FIELDS = [(_least_prime_above_trial(mtp.q_rule(n)), n) for n in range(2, 8)]
+Q_PRIME_EXPECTED = {2: 32779, 3: 1033, 4: 193, 5: 71, 6: 41, 7: 29}
+
+
+def test_widened_kat_fields_disjoint_from_every_contract_pair():
+    """The check is itself a test (KX-2): every widened KAT (q, n) pair is disjoint from every arm-A, arm-B and
+    arm-C contract pair, and q'_n is the least prime above the arm-C q_n."""
+    arm_a = mtp.contract_cells_qn()
+    arm_c = {(mtp.q_rule(n), n) for n in mtp.ARM_C_NS}
+    assert arm_c == launcher.arm_c_pairs() and launcher.contract_pairs() == arm_a | arm_c
+    assert len(arm_c) == 6
+    for q, n in WIDE_FIELDS + LARGE_FIELDS + ALL_FIELDS:
+        assert (q, n) not in arm_a and (q, n) not in arm_c, (q, n)
+        assert (q, n) not in launcher.contract_pairs()
+    assert {n: q for q, n in LARGE_FIELDS} == Q_PRIME_EXPECTED
+    for n in range(2, 8):
+        qn, qp = mtp.q_rule(n), dict((nn, q) for q, nn in LARGE_FIELDS)[n]
+        assert qp > qn and _is_prime_trial(qp) and not any(_is_prime_trial(k) for k in range(qn + 1, qp))
+        assert fqn.next_prime_above(qn) == qp
+    rows = [{"q": q, "n": n, "Q": q ** n} for q, n in WIDE_FIELDS + LARGE_FIELDS]
+    record("W0-disjointness", "widened KAT fields", {"arm_a_b_pairs": sorted(arm_a), "arm_c_pairs": sorted(arm_c),
+                                                     "widened_kat_fields": rows})
+
+
+@functools.lru_cache(maxsize=None)
+def large_instance(q, n):
+    F = FQ(q, n)
+    E, info = curves.generate_curve(F, f"kat|large|{q}|{n}")
+    return F, E, info
+
+
+@functools.lru_cache(maxsize=None)
+def large_base(q, n):
+    F, E, _ = large_instance(q, n)
+    return E.factor_base()
+
+
+def _legendre_int(c, q):
+    r = pow(c % q, (q - 1) // 2, q)
+    return 0 if r == 0 else (1 if r == 1 else -1)
+
+
+def _check_field_axioms(F, els):
+    """Axioms, Frobenius = q-th power, norm-method inverse = Fermat inverse, sqrt, and chi two independent
+    ways (Euler's criterion in F_Q, and chi_q of the norm as an integer Legendre symbol)."""
+    q, Q = F.q, F.Q
+    minus_one = F.neg(F.one)
+    for a, b, c in zip(els, els[1:], els[2:]):
+        assert F.mul(a, F.mul(b, c)) == F.mul(F.mul(a, b), c)
+        assert F.mul(a, F.add(b, c)) == F.add(F.mul(a, b), F.mul(a, c))
+        assert F.mul(a, b) == F.mul(b, a)
+        assert F.add(a, F.neg(a)) == F.zero and F.sub(a, b) == F.add(a, F.neg(b))
+        assert F.frobenius(a) == F.pow(a, q)
+        if not F.is_zero(a):
+            ia = F.inv(a)
+            assert ia == F.inv_fermat(a) and F.mul(a, ia) == F.one
+            euler = F.pow(a, (Q - 1) // 2)
+            assert euler in (F.one, minus_one)
+            e_chi = 1 if euler == F.one else -1
+            nrm = F.norm(a)
+            assert F.is_scalar(nrm)
+            assert _legendre_int(nrm[0], q) == e_chi == F.chi(a)
+            r = F.sqrt(F.mul(a, a))
+            assert r is not None and F.mul(r, r) == F.mul(a, a)
+            if e_chi == 1:
+                s = F.sqrt(a)
+                assert s is not None and F.mul(s, s) == a
+            else:
+                assert F.sqrt(a) is None
+    assert F.chi(F.zero) == 0
+
+
+@pytest.mark.parametrize("q,n", WIDE_FIELDS)
+def test_wide_least_irreducible_matches_definition(q, n):
+    got = fqn.least_irreducible(q, n)
+    assert got == brute_least_irreducible(q, n)
+    record("W1-least-irreducible", f"q={q},n={n}", {"g": got})
+
+
+@pytest.mark.parametrize("q,n", WIDE_FIELDS)
+def test_wide_field_axioms_and_kernel_ops(q, n, kernel):
+    F, E, _ = kat_curve(q, n, "wfield")
+    rng = rng_for(f"wfield{q}{n}")
+    els = [F.random_element(rng) for _ in range(400)]
+    _check_field_axioms(F, els)
+    for a, b in zip(els[::2], els[1::2]):
+        assert kernel.mul(E, a, b) == F.mul(a, b)
+        if not F.is_zero(a):
+            assert kernel.inv(E, a) == F.inv(a)
+            assert kernel.inv(E, a, ref=True) == F.inv(a)
+    F2 = FQ2(F)
+    assert F.chi(F2.d) == -1
+    record("W2-field-and-kernel-ops", f"q={q},n={n}", {"elements": len(els), "g": F.g})
+
+
+@pytest.mark.parametrize("q,n", LARGE_FIELDS)
+def test_large_q_field_axioms_inverses_chi_10k(q, n):
+    F, E, _ = large_instance(q, n)
+    rng = rng_for(f"lfield{q}{n}")
+    els = [F.random_element(rng) for _ in range(10_000)]
+    _check_field_axioms(F, els)
+    record("W3-large-q-field", f"q={q},n={n}", {"elements": len(els), "g": F.g, "Q": F.Q})
+
+
+@pytest.mark.parametrize("q,n", LARGE_FIELDS)
+def test_large_q_kernel_ops_match_python(q, n, kernel):
+    F, E, _ = large_instance(q, n)
+    rng = rng_for(f"lkfield{q}{n}")
+    pairs = 500
+    for _ in range(pairs):
+        a, b = F.random_element(rng), F.random_element(rng)
+        assert kernel.mul(E, a, b) == F.mul(a, b)
+        if not F.is_zero(a):
+            assert kernel.inv(E, a) == F.inv(a)
+            assert kernel.inv(E, a, ref=True) == F.inv(a)
+    xs = rng.integers(0, q, size=(300, n))
+    assert kernel.chi_batch(E, xs).tolist() == [F.chi(E.f(tuple(int(v) for v in row))) for row in xs]
+    record("W4-large-q-kernel-ops", f"q={q},n={n}", {"pairs": pairs, "chi_x_tuples": 300})
+
+
+def _check_curve_rules(F, q, n, tag):
+    zero, one = F.zero, F.one
+    assert Curve(F, zero, one).j_in_Fq()
+    assert Curve(F, one, zero).j_in_Fq()
+    assert Curve(F, F.neg(F.from_int(3)), F.from_int(2)).is_singular()
+    for i in range(20):
+        E, info = curves.generate_curve(F, f"kat|{tag}|sel|{q}|{n}|{i}")
+        assert not E.is_singular() and not E.j_in_Fq()
+        assert F.pow(E.j_invariant(), q) != E.j_invariant()
+
+
+@pytest.mark.parametrize("q,n", WIDE_FIELDS)
+def test_wide_curve_rules(q, n):
+    _check_curve_rules(fld(q, n), q, n, "w")
+
+
+@pytest.mark.parametrize("q,n", LARGE_FIELDS)
+def test_large_q_curve_rules(q, n):
+    _check_curve_rules(large_instance(q, n)[0], q, n, "l")
+
+
+def kernel_chi_sum_count(kernel, E):
+    """N = Q + 1 + sum_x chi(f(x)) with chi evaluated by the compiled batch routine over every x of F_Q."""
+    F = E.F
+    total, chunk = 0, 1 << 20
+    for start in range(0, F.Q, chunk):
+        c = np.arange(start, min(F.Q, start + chunk), dtype=np.int64)
+        xs = np.empty((c.size, F.n), dtype=np.uint32)
+        for i in range(F.n):
+            xs[:, i] = c % F.q
+            c //= F.q
+        total += int(kernel.chi_batch(E, xs).astype(np.int64).sum())
+    return F.Q + 1 + total
+
+
+def _check_group_law(F, E, N, tag):
+    rng = rng_for(f"{tag}{F.q}{F.n}")
+    pts = []
+    while len(pts) < 10:
+        P = E.lift(F.random_element(rng))
+        if P is not None:
+            pts.append(P)
+    for P in pts:
+        assert E.on_curve(P) and E.add(P, E.neg(P)) is None and E.add(P, None) == P
+    for P, R, S in zip(pts, pts[1:], pts[2:]):
+        assert E.on_curve(E.add(P, R)) and E.add(P, R) == E.add(R, P)
+        assert E.add(E.add(P, R), S) == E.add(P, E.add(R, S))
+        assert E.mul(5, P) == E.add(E.add(E.add(E.add(P, P), P), P), P)
+    for P in pts[:5]:
+        assert E.mul(N, P) is None                         # Lagrange: N P = O
+
+
+@pytest.mark.parametrize("q,n", WIDE_FIELDS)
+def test_wide_group_law_and_point_count_three_ways(q, n, kernel):
+    """Group law (associativity on random triples, N P = O) and the point count: compiled exhaustive = BSGS =
+    kernel character sum for every Q < 2^27 (all wide fields); plus the definition-level square table and the
+    Python character sum where Q <= 10^6."""
+    F, E, _ = kat_curve(q, n, "wcount")
+    assert F.Q < 2 ** 27
+    N_exh = kernel.count_points(E)
+    N_bsgs, used = E.count_points_bsgs()
+    N_chi_kernel = kernel_chi_sum_count(kernel, E)
+    assert N_exh == N_bsgs == N_chi_kernel
+    assert abs(N_exh - (F.Q + 1)) <= 2 * math.isqrt(F.Q) + 2
+    if F.Q <= 10 ** 6:
+        assert E.count_points_naive() == N_exh == E.count_points_chi()
+    Nk, mask = kernel.valid_mask(E)
+    assert Nk == N_exh and int(np.count_nonzero(mask & 1)) == N_exh
+    _check_group_law(F, E, N_exh, "wgrp")
+    record("W5-wide-point-count-group-law", f"q={q},n={n}",
+           {"a": E.a, "b": E.b, "N_exhaustive": N_exh, "N_bsgs": N_bsgs, "N_kernel_chi_sum": N_chi_kernel,
+            "bsgs_point_pairs": used, "definition_level_checked": F.Q <= 10 ** 6})
+
+
+@pytest.mark.parametrize("q,n", [(5, 4), (13, 4), (5, 5), (13, 5), (5, 6), (5, 7)])
+def test_wide_factor_base_from_definition(q, n):
+    """D, X, t2 from the definition (Q <= 10^6): all (x, y) with x in F_q and y^2 = f(x), by a table of squares
+    built by direct multiplication of every element of F_Q."""
+    F, E, _ = kat_curve(q, n, "wfb")
+    assert F.Q <= 10 ** 6
+    square_roots = {}
+    for y in F.elements():
+        square_roots.setdefault(F.mul(y, y), []).append(y)
+    line = [(F.from_int(xv), y) for xv in range(q) for y in square_roots.get(E.f(F.from_int(xv)), [])]
+    D, X, t2 = E.factor_base()
+    assert sorted(D) == sorted(line) and len(D) == len(line)
+    assert t2 == sum(1 for P in line if F.is_zero(P[1]))
+    assert sorted(X) == sorted({P[0] for P in line})
+    roots = sorted((x for x in F.elements() if F.is_zero(E.f(x))), key=F.to_code)
+    assert E.two_torsion_roots() == roots
+    assert len(D) == t2 + 2 * (len(X) - t2)
+    record("W6-wide-factor-base", f"q={q},n={n}", {"B": len(D), "t2": t2, "size_X": len(X)})
+
+
+@pytest.mark.parametrize("q,n,tuple_len", [(5, 4, 4), (13, 4, 4), (5, 5, 5)])
+def test_wide_semaev_roots_agree_with_group_law_signed_sums(q, n, tuple_len):
+    """Roots of S_{n+1}(x_1..x_n, T) against the group-law signed sums at k = n (over F_{5^4} and F_{5^5}; the
+    F_{13^4} cell is added at no cost and is not required)."""
+    F, E, _ = kat_curve(q, n, "sem2")
+    rng = rng_for(f"wsemgl{q}{n}{tuple_len}")
+    F2 = FQ2(F)
+    k = agree = 0
+    while k < 100:
+        xs = [F.random_element(rng) for _ in range(tuple_len)]
+        if any(F.is_zero(E.f(x)) for x in xs):
+            continue
+        res = semaev.analyse_fibre(F, E, xs)
+        roots_gl, ninf = semaev.roots_via_group_law(F, E, xs, F2)
+        if res["squarefree"] and res["full_degree"]:
+            assert res["roots_Fq"] == roots_gl
+            assert res["split_completely"] == res["split_check_xq"]
+            agree += 1
+        k += 1
+    record("W7-wide-semaev-roots-vs-group-law", f"q={q},n={n},tuple_len={tuple_len}",
+           {"tuples": k, "generic_compared": agree})
+
+
+@pytest.mark.parametrize("q,n", LARGE_FIELDS)
+def test_large_q_curve_count_hasse_group_order_and_twist(q, n):
+    """BSGS N inside the Hasse interval, N P = O on 5 random points, N + N_twist = 2Q + 2."""
+    F, E, _ = large_instance(q, n)
+    N, used = E.count_points_bsgs()
+    assert F.Q >= 2 ** 27                                   # BSGS regime of the specification
+    assert abs(N - (F.Q + 1)) <= 2 * math.isqrt(F.Q) + 1
+    rng = rng_for(f"lgrp{q}{n}")
+    k = 0
+    while k < 5:
+        P = E.lift(F.random_element(rng))
+        if P is not None:
+            assert E.mul(N, P) is None
+            k += 1
+    N_tw, used_tw = E.twist().count_points_bsgs()
+    assert N + N_tw == 2 * F.Q + 2
+    _check_group_law(F, E, N, "lgrp2")
+    record("W8-large-q-count", f"q={q},n={n}", {"N": N, "N_twist": N_tw, "bsgs_pairs": [used, used_tw], "Q": F.Q})
+
+
+@pytest.mark.parametrize("q,n", LARGE_FIELDS)
+def test_large_q_factor_base_symmetric_on_curve_and_t2_from_roots_in_Fq(q, n):
+    F, E, _ = large_instance(q, n)
+    D, X, t2 = large_base(q, n)
+    S = set(D)
+    assert len(S) == len(D)
+    assert all(E.on_curve(P) for P in D) and {E.neg(P) for P in D} == S
+    assert all(F.is_scalar(P[0]) for P in D)
+    # t2 = number of roots of f in F_q, by integer arithmetic mod q (independent of F_Q field code):
+    # x in F_q is a root of x^3 + a x + b iff the t^0 part x^3 + a0 x + b0 is 0 and a_i x + b_i = 0 for i >= 1.
+    roots = [x for x in range(q)
+             if (x ** 3 + E.a[0] * x + E.b[0]) % q == 0 and all((E.a[i] * x + E.b[i]) % q == 0 for i in range(1, n))]
+    assert t2 == len(roots)
+    assert sorted(P[0][0] for P in D if F.is_zero(P[1])) == roots
+    assert len(D) == t2 + 2 * (len(X) - t2)
+    record("W9-large-q-factor-base", f"q={q},n={n}", {"B": len(D), "t2": t2, "size_X": len(X)})
+
+
+def membership_counts(E, D, m, keys):
+    """Independent count of m-multisets of D summing to each target key. Each m-multiset is uniquely a
+    (m-1)-multiset M together with its largest-index element d; so count the pairs (M, d), M over the
+    (m-1)-multisets of indices <= d, whose remainder R - d lies in the sums of M. D is code-sorted."""
+    F = E.F
+    B = len(D)
+    sums: dict = {}
+
+    def rec(prev, acc, remaining):
+        if remaining == 0:
+            sums.setdefault(acc, []).append(prev)
+            return
+        for i in range(prev, B):
+            rec(i, E.add(acc, D[i]), remaining - 1)
+
+    rec(0, None, m - 1)
+    for lst in sums.values():
+        lst.sort()
+    out = []
+    for key in keys:
+        x = F.from_code(int(key) >> 1)
+        y = F.sqrt(E.f(x))
+        ys = sorted([y, F.neg(y)], key=F.to_code)
+        R = (x, ys[int(key) & 1])
+        assert counters.target_index(F, R) == int(key)
+        cnt = 0
+        for d in range(B):
+            lst = sums.get(E.add(R, E.neg(D[d])))
+            if lst:
+                cnt += bisect_right(lst, d)
+        out.append(cnt)
+    return out
+
+
+# (n = 2, m = 3) has C(B+2, 3) ~ 6e12 multisets with B ~ 32780: not runnable in the task budget (recorded as
+# scope note DEV-1 in kat-report-ac5ad6.md); n = 2 is checked at m = 2 only.
+LARGE_E2_CELLS = [(q, n, m) for q, n in LARGE_FIELDS for m in (2, 3) if not (n == 2 and m == 3)]
+
+
+@pytest.mark.parametrize("q,n,m", LARGE_E2_CELLS)
+def test_large_q_sampled_counter_against_membership_method(q, n, m, kernel):
+    F, E, _ = large_instance(q, n)
+    D, X, t2 = large_base(q, n)
+    N = E.count_points_bsgs()[0]
+    s = 50
+    tr = curves.make_rng(f"kat|targets|large|{q}|{n}|{m}")
+    r = counters.arm_c_cell(kernel, E, D, m, s, tr, N)
+    keys = [int(k) for k in r["keys"]]
+    assert len(keys) == s == len(set(k >> 1 for k in keys))
+    for k in keys:
+        assert F.chi(E.f(F.from_code(k >> 1))) == 1
+    want = membership_counts(E, D, m, keys)
+    assert [int(c) for c in r["sampled_counts"]] == want
+    assert r["multisets"] == math.comb(len(D) + m - 1, m)
+    record("W10-large-q-sampled-vs-membership", f"q={q},n={n},m={m},base=line",
+           {"B": len(D), "N": N, "s": s, "sampled_counts": [int(c) for c in r["sampled_counts"]],
+            "membership_counts": want})
+
+
+# =============================================================================== X: composition residuals (KX-5)
+def _series_csym(size_X, B, t2, m):
+    """[z^m] (1+z)^(|X|-1) (1-z)^(-(B-t2)/2-1) by truncated power-series arithmetic only: multiply by (1+z)
+    |X|-1 times and by 1/(1-z) (a prefix sum) (B-t2)/2 + 1 times."""
+    poly = [1] + [0] * m
+    for _ in range(size_X - 1):
+        new = poly[:]
+        for i in range(m):
+            new[i + 1] += poly[i]
+        poly = new
+    for _ in range((B - t2) // 2 + 1):
+        acc, new = 0, []
+        for c in poly:
+            acc += c
+            new.append(acc)
+        poly = new
+    return poly[m]
+
+
+def test_csym_coefficient_against_independent_series_expansion():
+    for size_X, B, t2 in [(1, 0, 0), (1, 1, 1), (2, 3, 1), (3, 4, 0), (4, 8, 2), (7, 10, 2), (9, 16, 0), (12, 21, 3),
+                          (30, 40, 0)]:
+        for m in range(0, 7):
+            assert counters.csym_coefficient(size_X, B, t2, m) == _series_csym(size_X, B, t2, m)
+    assert counters.csym_coefficient(1, 0, 0, 5) == 1                     # (1+z)^0 (1-z)^-1: all coefficients 1
+    assert counters.csym_coefficient(5, 6, 0, 0) == 1
+    with pytest.raises(ValueError):
+        counters.csym_coefficient(3, 5, 0, 2)                            # B - t2 odd
+    with pytest.raises(ValueError):
+        counters.csym_coefficient(0, 2, 0, 2)
+
+
+def _fake_arrays():
+    # targets 0..8; valid: 0,1,2,3,5,6,7,8 (target 4 is not on the curve); special (O or E[2], mask value 3): 1 and 7
+    mask = np.array([1, 3, 1, 1, 0, 1, 1, 3, 1], dtype=np.uint8)
+    h_s = np.array([4, 2, 0, 3, 9, 1, 0, 6, 5], dtype=np.uint32)
+    h_a2 = np.array([4, 2, 1, 3, 0, 1, 0, 4, 5], dtype=np.uint32)
+    h_m = np.array([0, 3, 2, 0, 8, 1, 0, 1, 1], dtype=np.uint32)
+    h_x = np.array([0, 1, 2, 1, 8, 0, 0, 1, 1], dtype=np.uint32)
+    return mask, h_s, h_a2, h_m, h_x
+
+
+def test_composition_residuals_on_fabricated_inputs_only():
+    mask, h_s, h_a2, h_m, h_x = _fake_arrays()
+    # (vii) only the special targets {1, 7} are compared: h_s = (2, 6) against h_a2 = (2, 4): one differs
+    assert counters.residual_special_targets(h_s, h_a2, mask) == {"differ": 1, "compared": 2}
+    # target 2 differs (0 vs 1) but is not special: it is not counted
+    # (viii) valid non-special targets {0, 2, 3, 5, 6, 8}: h_m != h_x only at 3 (0 vs 1) and 5 (1 vs 0)
+    assert counters.residual_n2_tm_vs_tx(h_m, h_x, mask) == {"differ": 2, "compared": 6}
+    # (ix) valid targets with h_m >= 1: 1, 2, 5, 7, 8 (target 4 is invalid and excluded): observed 5
+    out = counters.symmetric_coverage_ceiling(h_m, mask, N=8, B=4, t2=0, size_X=3, m=2)
+    assert out["observed"] == 5 and out["N"] == 8
+    assert out["C_sym"] == _series_csym(3, 4, 0, 2)
+    assert out["bound_min_N_C_sym"] == min(8, out["C_sym"]) and out["margin"] == out["bound_min_N_C_sym"] - 5
+    # the min(N, .) branch and a negative margin (an excess) are reported, not hidden
+    big = counters.symmetric_coverage_ceiling(h_m, mask, N=3, B=40, t2=0, size_X=21, m=2)
+    assert big["bound_min_N_C_sym"] == 3 and big["margin"] == -2
+
+
+@pytest.mark.parametrize("m", [2, 3])
+def test_exhaustive_cell_carries_the_three_residual_fields_without_recording_values(m, kernel):
+    """Only the presence of the fields is asserted; no residual value at a KAT cell is asserted or recorded."""
+    F, E, _ = kat_curve(13, 2, "resid")
+    N, vmask = kernel.valid_mask(E)
+    D, X, t2 = E.factor_base()
+    res = counters.exhaustive_cell(kernel, E, D, counters.x_lifts(F, D), m, N, vmask, recount=False)
+    ident = res["identities"]
+    assert "vii_TS_vs_TA_weighted_2j_special" in ident and "ix_symmetric_coverage_ceiling" in ident
+    assert ("viii_n2_TM_eq_TX_off_2torsion" in ident) == (m == 2)
+    assert {"differ", "compared"} <= set(ident["vii_TS_vs_TA_weighted_2j_special"])
+    assert ident["ix_symmetric_coverage_ceiling"]["C_sym"] == counters.csym_coefficient(len(X), len(D), t2, m)
+    assert ident["ix_symmetric_coverage_ceiling"]["N"] == N
+    record("X1-residual-fields-present", f"q=13,n=2,m={m}", {"fields": sorted(k for k in ident if k[:3] in ("vii", "vii_", "ix_") or k.startswith(("vii", "viii", "ix")))})
+
+
+def test_launcher_summary_names_residuals_when_derived_and_withholds_them_in_kat_mode():
+    ident = {"vii_TS_vs_TA_weighted_2j_special": {"differ": 0, "compared": 3},
+             "viii_n2_TM_eq_TX_off_2torsion": {"differ": 0, "compared": 5},
+             "ix_symmetric_coverage_ceiling": {"observed": 1, "C_sym": 2, "N": 9, "bound_min_N_C_sym": 2, "margin": 1},
+             "i_sum_A": {"observed": 1, "expected": 1}}
+    fake = {"line": {"B": 4, "t2": 0, "N": 9, "size_X": 2, "S_size": 1, "generic_targets": 6,
+                     "special_targets_O_and_E2": 1, "identities": ident, "recount": {},
+                     "conventions": {c: {"stats": {"all": {"targets": 9, "sum": 9, "sumsq": 9, "zeros": 3, "max": 2},
+                                                   "generic": {"targets": 6, "sum": 6, "sumsq": 6, "zeros": 2, "max": 2}}}
+                                     for c in ("A", "M", "S", "X")}}}
+    d = launcher._cell_summary_arm_a(fake, True)["line"]
+    assert set(d["composition_residuals"]) == {"vii_TS_vs_TA_weighted_2j_special", "viii_n2_TM_eq_TX_off_2torsion",
+                                              "ix_symmetric_coverage_ceiling"}
+    assert "composition_residuals" not in launcher._cell_summary_arm_a(fake, False)["line"]
+
+
+# =============================================================================== L: launcher KAT refusal of arm-C pairs (KX-6)
+@pytest.mark.parametrize("n", [2, 3, 4, 5, 6, 7])
+@pytest.mark.parametrize("arm", ["A", "B1", "C"])
+def test_launcher_kat_refuses_every_arm_c_pair(n, arm, capsys):
+    q = mtp.q_rule(n)
+    assert launcher.main(["--kat", "kat", "--arm", arm, "--q", str(q), "--n", str(n), "--curve-seed", "x"]) \
+        == launcher.EXIT_REFUSED
+    assert "REFUSED" in capsys.readouterr().err
+
+
+def test_launcher_kat_accepts_widened_fields_beyond_the_refusal_list():
+    assert (5, 4) not in launcher.contract_pairs() and (13, 7) not in launcher.contract_pairs()
+    assert all(pair not in launcher.contract_pairs() for pair in LARGE_FIELDS)
+
+
+# =============================================================================== T: plan determinism (KX-8)
+def test_trial_plan_dumps_is_independent_of_instance_builder_cache_state():
+    """build_plan twice with fresh stub builders gives byte-identical text (the full regeneration against the
+    committed preview is compared by the task, see kat-report-ac5ad6)."""
+    a = mtp.dumps(mtp.build_plan(None, builder=_StubBuilder()))
+    b = mtp.dumps(mtp.build_plan(None, builder=_StubBuilder()))
+    assert a == b

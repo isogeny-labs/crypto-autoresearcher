@@ -1,9 +1,13 @@
-# EXP-MONO-1a1be2 toolchain (TASK-20261029-a97206)
+# EXP-MONO-1a1be2 toolchain (TASK-20261029-a97206; extended by TASK-20261105-ac5ad6)
 
 Proof-of-concept implementation of the instrument for the draft contract
 `experiments/EXP-MONO-1a1be2/specification.yaml` (status `review_required`, not approved). Zero experiment
 runs exist. No contract cell has been computed; known-answer tests (KATs) use cells disjoint from the
 contract. Nothing here asserts a predicted value.
+
+TASK-20261105-ac5ad6 (DEC-20261105-f0b7c7 F-1, F-2) widened the instrument before approval: KATs at n = 4..7 and at
+large q, the composition residuals P2(vii) to (ix), the arm-C KAT refusal, and a timing-only throughput harness. Zero
+runs; no contract cell computed; the specification is untouched.
 
 ## Module map
 
@@ -13,8 +17,9 @@ contract. Nothing here asserts a predicted value.
 | `curves.py` | Seed rule (SHA-256, first 16 bytes big-endian, `numpy.random.Generator(PCG64)`), `generate_curve` with the singular and j-in-F_q rejections, generic group law (`WCurve`, works over `FQ` and `FQ2`), `Curve` (factor base D, X, t2, lifts, 2-torsion roots), point counting by three independent routes (definition-level square table, quadratic-character sum, baby-step giant-step on the Hasse interval with the quadratic twist) and `count_points` (exhaustive below 2^27, BSGS above). |
 | `semaev.py` | Numeric S_{n+1}(x_1..x_n, T) by the resultant recursion (interpolating the resultant of S_3 and the previous polynomial, formal degrees kept), `analyse_fibre` (degree, squarefreeness, chi(f(x_i)), ddf, complete split), `roots_via_group_law` (x of signed sums of lifts over F_{Q^2}). |
 | `kernel.c` | Compiled inner loops: F_Q arithmetic (n <= 7), affine point addition, exhaustive point count with valid-target mask, ordered / multiset / x-multiset (canonical sign patterns) enumerations, S-set marking and collection, the target-sampled arm-C counter (open-addressing hash of target indices), quadratic-character batch, histogram statistics and comparisons. Built at run time; no binary is committed. |
-| `counters.py` | ctypes wrapper `Kernel`; matched random and half-size twin bases; `exhaustive_cell` (T_A, T_M, T_S, T_X over all N targets, P2 residuals, independent recount); `arm_c_cell` (target-sampled counter, exact lambda); Poisson statistics (`poisson_summary`); `ncf_coefficient`. |
-| `launcher.py` | Per-cell runner and gates (see below). |
+| `counters.py` | ctypes wrapper `Kernel`; matched random and half-size twin bases; `exhaustive_cell` (T_A, T_M, T_S, T_X over all N targets, P2 residuals, independent recount); `arm_c_cell` (target-sampled counter, exact lambda); Poisson statistics (`poisson_summary`); `ncf_coefficient`. Composition residuals (KX-5): `csym_coefficient`, `residual_special_targets` (P2(vii)), `residual_n2_tm_vs_tx` (P2(viii)), `symmetric_coverage_ceiling` (P2(ix)); `exhaustive_cell` carries them as identities `vii_TS_vs_TA_weighted_2j_special`, `viii_n2_TM_eq_TX_off_2torsion` (m = 2 only) and `ix_symmetric_coverage_ceiling`, and `launcher` lists them under `composition_residuals` in a derived summary. In KAT mode all identities are withheld. |
+| `launcher.py` | Per-cell runner and gates (see below). `arm_c_pairs()` and `contract_pairs()` give the arm-C and the full set of contract (q, n) pairs a KAT cell must avoid. |
+| `throughput_calibration.py` | Timing-only calibration (KX-7), never calls `launcher cell`/`run_cell`: B1 analysis at the proxies (257,2), (43,3), (29,4), (13,5), the arm-A proxy (103,4) with all three bases and recount, the arm-C proxy (q'_2,2); each in a child process, results discarded unread, outputs in a temporary directory deleted unread; writes wall/CPU time, peak RSS, workers, host and MODELED per-class projections. |
 | `make_trial_plan.py` | Deterministic trial-plan generator (cells, curves, seeds, `q_rule`, `sample_size_rule`, identity fields). |
 | `tests/test_kat.py` | The KAT suite. |
 
@@ -37,6 +42,17 @@ python3 experiments/EXP-MONO-1a1be2/code/launcher.py --kat kat --arm A --q 13 --
 python3 experiments/EXP-MONO-1a1be2/code/launcher.py cell --cell-id ID --plan PLAN --run-id RUN-ID       # contract cell, gated
 ```
 
+## KAT cells (widened by DEC-20261105-f0b7c7)
+
+* q in {5, 13} at n = 2..3 (original) and n = 4..7 (widened); prime fields as before;
+* q'_n = least prime above the arm-C q_n, n = 2..7: (32779,2), (1033,3), (193,4), (71,5), (41,6), (29,7);
+* every pair is checked disjoint from the arm-A, arm-B and arm-C contract pairs (`test_widened_kat_fields_disjoint_from_every_contract_pair`);
+* tests compare optimised code with naive enumeration of the same definition; no cross-convention identity, residual value, ratio, split frequency or predicted value is asserted or recorded. Not runnable in budget: the large-q E2 check at (q'_2, 2, m = 3) (about 6e12 multisets), recorded as DEV-1 in `implementation/kat-report-ac5ad6.md`.
+
+```sh
+python3 experiments/EXP-MONO-1a1be2/code/throughput_calibration.py --out PATH     # timing only, not a run
+```
+
 Requirements: Python 3.11+, numpy, PyYAML (launcher), pytest, gcc. Without `PYTHONDONTWRITEBYTECODE` and
 `-p no:cacheprovider` pytest writes `__pycache__` and `.pytest_cache`, which are not artifacts.
 
@@ -49,7 +65,7 @@ Requirements: Python 3.11+, numpy, PyYAML (launcher), pytest, gcc. Without `PYTH
   implementation choice (the specification names the lock but not its content).
 * After the gate the full KAT suite runs as a start-up self-test and must pass (`--selftest-receipt` lets a
   later session bind a pass to identical code and test hashes instead of re-running it).
-* `kat` requires the explicit global `--kat` flag, refuses every (q, n) that is an arm-A/arm-B contract cell,
+* `kat` requires the explicit global `--kat` flag, refuses every (q, n) that is an arm-A/arm-B or arm-C contract cell (arm-C pairs by the `q_rule`, KX-6),
   writes under a fresh temporary directory (never `runs/`), and withholds derived statistics and cross-convention
   residuals.
 * Run directories are never overwritten. `--timeout-seconds` is a watchdog (a cell over it is `failed`,
