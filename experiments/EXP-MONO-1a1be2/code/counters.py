@@ -306,6 +306,42 @@ def ncf_coefficient(B: int, t2: int, m: int) -> int:
     return mulp(powp(pair, (B - t2) // 2), powp(tors, t2))[m]
 
 
+# ----------------------------------------------------------------------------- composition residuals (KX-5)
+def csym_coefficient(size_X: int, B: int, t2: int, m: int) -> int:
+    """C_sym = [z^m] (1+z)^(|X|-1) (1-z)^(-(B-t2)/2-1), from the base's own |X|, B and t2
+    (DEC-20261105-f0b7c7 predictions_to_freeze, P2(ix)). Exact integer arithmetic:
+    sum_i C(|X|-1, i) C(m-i+k-1, m-i) with k = (B-t2)/2 + 1."""
+    if (B - t2) % 2:
+        raise ValueError("B - t2 must be even")
+    if size_X < 1 or m < 0:
+        raise ValueError("|X| >= 1 and m >= 0 required")
+    k = (B - t2) // 2 + 1
+    return sum(math.comb(size_X - 1, i) * math.comb(m - i + k - 1, m - i) for i in range(0, min(m, size_X - 1) + 1))
+
+
+def residual_special_targets(h_s, h_a2, mask) -> dict:
+    """P2(vii): the iii comparison (T_S against the 2^j-weighted ordered tuples) on exactly the targets that
+    iii skips, the valid targets with mask bit 1 set (O and E[2]). Returns {"differ", "compared"}."""
+    idx = np.nonzero(((mask & 3) == 3))[0]
+    return {"differ": int(np.count_nonzero(h_s[idx] != h_a2[idx])), "compared": int(idx.size)}
+
+
+def residual_n2_tm_vs_tx(h_m, h_x, mask) -> dict:
+    """P2(viii): over the valid targets with 2R != O (valid, mask bit 1 clear), the number with T_M != T_X.
+    Returns {"differ", "compared"}; the caller applies it at m = 2 only."""
+    idx = np.nonzero(((mask & 3) == 1))[0]
+    return {"differ": int(np.count_nonzero(h_m[idx] != h_x[idx])), "compared": int(idx.size)}
+
+
+def symmetric_coverage_ceiling(h_m, mask, N: int, B: int, t2: int, size_X: int, m: int) -> dict:
+    """P2(ix): the observed number of valid targets with T_M >= 1, C_sym from this base's own B, t2, |X|, and
+    the bound min(N, C_sym) with its margin (bound - observed; negative means an excess)."""
+    obs = int(np.count_nonzero((h_m > 0) & ((mask & 1) == 1)))
+    c_sym = csym_coefficient(size_X, B, t2, m)
+    bound = min(N, c_sym)
+    return {"observed": obs, "C_sym": c_sym, "N": N, "bound_min_N_C_sym": bound, "margin": bound - obs}
+
+
 # ----------------------------------------------------------------------------- bases
 def _sorted_points(F: FQ, pts):
     return sorted(pts, key=lambda P: (F.to_code(P[0]), F.to_code(P[1])))
@@ -444,6 +480,9 @@ def exhaustive_cell(kernel: Kernel, E: Curve, D, X_lifts, m: int, N: int, valid_
     TX, TMre, st = kernel.run_hist(E, K_XM, m, X_lifts, need2=True)
     ident["iv_TM_vs_xmultiset_recount"] = kernel.cmp(TM, TMre, mask)
     ident["iv_TX_not_above_TM"] = kernel.cmp(TX, TM, mask)
+    if m == 2:
+        ident["viii_n2_TM_eq_TX_off_2torsion"] = residual_n2_tm_vs_tx(TM, TX, mask)
+    ident["ix_symmetric_coverage_ceiling"] = symmetric_coverage_ceiling(TM, mask, N, B, t2, len(X_lifts), m)
     record("X", TX, st["leaves"])
     if recount:
         h, h2, _ = kernel.run_hist(E, K_XM, m, list(reversed(X_lifts)), need2=True, ref=True)
@@ -459,6 +498,7 @@ def exhaustive_cell(kernel: Kernel, E: Curve, D, X_lifts, m: int, N: int, valid_
     record("S", TS, st["leaves"])
     ident["i_sum_S"] = {"observed": kernel.hist_sum(TS, mask), "expected": (B + t2) ** m}
     ident["iii_TS_vs_TA_weighted_2j"] = kernel.cmp(TS, TA2, mask, skip=2)
+    ident["vii_TS_vs_TA_weighted_2j_special"] = residual_special_targets(TS, TA2, mask)
     recount_check("S", K_ORD, Dprime, TS)
     if keep:
         arrays["S"], arrays["A2"] = TS, TA2
