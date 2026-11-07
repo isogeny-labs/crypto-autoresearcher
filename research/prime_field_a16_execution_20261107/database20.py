@@ -130,21 +130,25 @@ def main():
             f, col = prep['cell']['fixture'], data['collection'] if data else None
             base_path = path if data else prelude_path
             key = hashlib.sha256(code(dict(schema='target-effort-mathematical-base/v1',curve_uid=uid,
-                fixture_uid=f['uid'],atoms=f['factor_base'],projection=prep['projection'],known=prep['known'])).encode()).hexdigest()
+                fixture_uid=f['uid'],atoms=f['factor_base'])).encode()).hexdigest()
             cid = eid+':'+name+':'+base
             cell_ids[base] = cid
             canonical=con.execute('SELECT base_sha256,curve_uid,native_atoms,projected_columns FROM bases WHERE fixture_uid=?',(f['uid'],)).fetchone()
             reused=canonical is not None
             if canonical:
-                if canonical!=(key,uid,len(f['factor_base']),len(prep['basis'])):
+                if canonical[1:3]!=(uid,len(f['factor_base'])):
                     raise ValueError('canonical mathematical base identity collision')
+                # Reuse mathematical atoms, never the other program's paid knowledge/cost.
+                key=canonical[0]
             else:
                 con.execute('INSERT INTO bases VALUES (?,?,?,?,?,?,?)',(key,uid,f['uid'],len(f['factor_base']),
                     len(prep['basis']),'target-effort-mathematical-base/v1:'+family,source(base_path,'owned_horizon_base_source')))
                 new_bases+=1
             con.execute('INSERT INTO paid_base_cells VALUES (?,?,?,?,?)',(cid,eid,base,key,source(base_path,'owned_horizon_base_source')))
             con.execute('INSERT INTO target_effort_programs VALUES (?,?,?,?,?)',(cid,base,program['horizon'],int(reused),
-                code(dict(program=base,base_family=family,target_horizon=program['horizon'],separately_paid=True))))
+                code(dict(program=base,base_family=family,target_horizon=program['horizon'],separately_paid=True,
+                    program_projected_columns=len(prep['basis']),canonical_first_context_projected_columns=canonical[3] if canonical else len(prep['basis']),
+                    knowledge_and_cost_source=str(prelude_path.resolve().relative_to(ROOT))))))
             con.execute('INSERT INTO mixed_base_preludes VALUES (?,?,?)',(cid,source(prelude_path,'owned_horizon_prelude'),code(prep)))
             for j, scalar in prep['known']:
                 con.execute('INSERT INTO paid_base_labels VALUES (?,?,?,?)',(cid,j,str(scalar),
@@ -190,10 +194,24 @@ def main():
                 raise ValueError('information output/check alignment')
             con.execute('INSERT INTO mixed_base_information VALUES (?,?,?,?,?)',
                 (eid,item['hybrid_case_id'],item['norm_case_id'],code(item),code(check) if check else None))
-    con.execute('INSERT INTO metadata VALUES (?,?)',('parent_v19_metadata',code(metadata)))
+    # All inherited historical metadata stays byte-for-byte in the backup.
+    # Store only the three values this version overwrites, plus an immutable
+    # parent reference, instead of recursively copying every prior snapshot.
+    overwritten=('schema','builder_sha256','schema_sha256')
+    parent_metadata=dict(schema='prime-field-parent-metadata-reference/v1',parent_sha256=parent_hash,
+        metadata_sha256=hashlib.sha256(code(metadata).encode()).hexdigest(),metadata_rows=len(metadata),
+        overwritten_values={k:v for k,v in metadata if k in overwritten},other_values_inherited_unchanged=True)
+    metadata_reference=code(parent_metadata)
+    con.execute('INSERT INTO metadata VALUES (?,?)',('parent_v19_metadata',metadata_reference))
     schema_hash = hashlib.sha256(code(con.execute('SELECT name,sql FROM sqlite_master WHERE sql IS NOT NULL ORDER BY name').fetchall()).encode()).hexdigest()
     for key,value in [('schema','prime-field-database/v20'),('builder_sha256',digest(__file__)),('schema_sha256',schema_hash)]:
         con.execute('UPDATE metadata SET value=? WHERE key=?',(code(value),key))
+    reconstructed=dict(con.execute('SELECT key,value FROM metadata'))
+    reconstructed.pop('parent_v19_metadata')
+    reconstructed.update(parent_metadata['overwritten_values'])
+    if reconstructed!=dict(metadata):raise ValueError('historical metadata reconstruction failed')
+    metadata_reconstruction_sha256=hashlib.sha256(code(sorted(reconstructed.items())).encode()).hexdigest()
+    if metadata_reconstruction_sha256!=parent_metadata['metadata_sha256']:raise ValueError('parent metadata digest reconstruction failed')
     preserved = {name:con.execute('SELECT COUNT(*) FROM '+name).fetchone()[0] >= count and
         con.execute('SELECT 1 FROM (SELECT * FROM parent_snapshot.'+name+' EXCEPT SELECT * FROM main.'+name+') LIMIT 1').fetchone() is None
         for name,count in before.items()}
@@ -212,7 +230,9 @@ def main():
     with gzip.open(archive,'rb') as stream:
         for chunk in iter(lambda:stream.read(1048576),b''): decoded.update(chunk); size += len(chunk)
     if decoded.hexdigest() != digest(args.out) or size != args.out.stat().st_size: raise ValueError('database gzip roundtrip')
-    write_once(args.out.parent/'validation.json',dict(parent_sha256=parent_hash,parent_unchanged=True,
+    write_once(args.out.parent/'validation.json',dict(parent_sha256=parent_hash,parent_unchanged=True,metadata_reference_schema=parent_metadata['schema'],
+        historical_metadata_reconstructs_exactly=True,parent_metadata_sha256=metadata_reconstruction_sha256,
+        metadata_reference_bytes=len(metadata_reference.encode()),parent_full_metadata_bytes=len(code(metadata).encode()),
         historical_tables_preserved=preserved,foreign_keys=True,integrity=True,new_curves=new_curves,new_bases=new_bases,
         new_public_targets=new_targets,new_program_contexts=con_contexts,table_counts=counts,database_sha256=digest(args.out),database_bytes=size,
         archive_sha256=digest(archive),archive_bytes=archive.stat().st_size,gzip_roundtrip=True))
