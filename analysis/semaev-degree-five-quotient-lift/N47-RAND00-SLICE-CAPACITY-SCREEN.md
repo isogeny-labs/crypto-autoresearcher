@@ -40,6 +40,16 @@ removes about 10,600 unit representatives, so rebasing can change the border.
 Removing x_0 preserves every original representative but retains all 126,387
 border monomials and therefore misses the 64 GiB target.
 
+For the frozen x_47 route, a separate read-only scan of the selected D4 rows
+found exactly 50,621 literal unit coordinates, all reverse-safe under the
+selective rebase's rule. The remaining 10,575 coordinates require projected
+elimination; its bitset payload is 259,901,552 bytes. This agrees with the
+earlier count of 10,575 original representatives containing x_47. The
+replayable source and result are `n47_projected_unit_layout.py` and
+`n47-rand00-projected-unit-layout-001.json`. The 8 GiB rebase cap remains an
+admission limit, not a measured peak-memory guarantee. The scan does not
+prove projected rank or determine the rebased border.
+
 The next admissible computation is an exact projection and rebase for one of
 x_45–x_47, followed by independent checking of the sliced D4 map and a fresh
 border profile. Only then can a bounded sliced D5 attempt be placed. The
