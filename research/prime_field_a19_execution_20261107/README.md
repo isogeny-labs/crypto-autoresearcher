@@ -27,7 +27,7 @@ remaining old-base and requested-target system, and lifts unit certificates to
 original native rows. Each case has an independently executed full native joint
 control: twelve cases, 24 actual batch calls/export rows, twelve separately paid
 information diagnostics, four curves and 32 independently selected public targets.
-These are dependent algorithm views, not 24 new target panels.
+These are dependent algorithm views, not 24 new target panels. [pcc:unverified]
 
 Preparation and marked software controls:
 

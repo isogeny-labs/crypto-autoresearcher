@@ -18,7 +18,7 @@ all sixteen native slots as auxiliary coordinates. Legitimate public prerequisit
 or source/constructor coincidences remain explicit own known equations; there
 is no redraw to force an unknown. Every candidate/rejection/hash/root/subgroup
 and stored point payload has its own counters. The public known16 control pays
-the existing public-label constructor independently and never reveals pool logs.
+the existing public-label constructor independently and never reveals pool logs. [pcc:unverified]
 
 The three programs independently execute the A15 batched pair floor, actual
 scalar and NumPy batch endpoint engines, AP0 sources, natural queries, full
@@ -48,7 +48,7 @@ substitution, then solves old-base plus requested-target coordinates. Named
 target unit membership, negative residuals, original native weights and public
 scalar equations are checked against a separately executed full native joint
 solver. Deficient old-base rank is compatible with target recovery. No query
-is skipped on that basis in an unknown-base arm.
+is skipped on that basis in an unknown-base arm. [pcc:unverified]
 
 Costs are separate Fp/Fr primitives, hash/root/pow/subgroup/sign/alias operations,
 logical work and explicit payload/NumPy array bytes. Construction, collection,
