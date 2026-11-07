@@ -62,3 +62,11 @@ independent replay once the new binary, controls, and target have run and
 premise then transfers to the checked 47-variable affine slice because
 Proposition 2.5b gives a bijection of zero sets. A checked D5 quotient map
 is still the separate degree-six lower-bound gate.
+
+The post-run receipt checker now independently derives the target argv from
+the named record before accepting any receipt. It checks the degree-47
+modulus by the prime-degree Rabin criterion, confirms the target is nonzero,
+and verifies that all 24 factor-base elements are in the field and linearly
+independent. This tightens the link from a future exact `0\n` output to the
+named Boolean system. It changes neither the frozen V2 plan nor the counter
+source or its one-attempt authorization.

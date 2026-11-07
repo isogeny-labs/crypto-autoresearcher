@@ -19,6 +19,64 @@ def require_equal(actual, expected, label):
         raise ValueError('%s mismatch' % label)
 
 
+def polynomial_rem(a, modulus):
+    while a and a.bit_length() >= modulus.bit_length():
+        a ^= modulus << (a.bit_length() - modulus.bit_length())
+    return a
+
+
+def frobenius_x(n, modulus):
+    value = 2
+    for _ in range(n):
+        square = sum(1 << (2 * j) for j in range(value.bit_length())
+                     if value >> j & 1)
+        value = polynomial_rem(square, modulus)
+    return value
+
+
+def basis_rank(values):
+    pivots = {}
+    for value in values:
+        while value:
+            high = value.bit_length() - 1
+            if high in pivots:
+                value ^= pivots[high]
+            else:
+                pivots[high] = value
+                break
+    return len(pivots)
+
+
+def check_named_target(plan):
+    record = plan['record']
+    n = record['n']
+    modulus = int(record['modulus_hex'], 16)
+    basis = [int(value, 16) for value in record['V_basis_hex']]
+    if (record['name'] != 'fresh-n47-rand-00' or n != 47 or
+            record['a2'] != 0 or record['k'] != len(basis) or
+            record['k'] != 24):
+        raise ValueError('named target dimensions mismatch')
+    if (modulus != ((1 << 47) | (1 << 5) | 1) or
+            frobenius_x(n, modulus) != 2 or
+            not modulus & 1 or bin(modulus).count('1') % 2 != 1):
+        raise ValueError('named modulus irreducibility check failed')
+    if (int(record['z_hex'], 16) == 0 or
+            any(value >= (1 << n) or value == 0 for value in basis) or
+            basis_rank(basis) != len(basis) or
+            any(int(record[key], 16) >= (1 << n)
+                for key in ('z_hex', 'a6_hex'))):
+        raise ValueError('named field element or factor basis invalid')
+    expected = [plan['build_argv'][-1], str(n), record['modulus_hex'],
+                record['z_hex'], record['a6_hex'], str(len(basis))]
+    expected.extend(record['V_basis_hex'])
+    require_equal(plan['target_argv'], expected, 'named target argv')
+    wrapper = ['/usr/bin/timeout', str(plan['limits']['target_timeout_seconds']),
+               '/usr/bin/prlimit', '--as=%d' % plan['limits']['address_space_bytes'],
+               '--']
+    require_equal(plan['target_launch_argv'], wrapper + expected,
+                  'named target launch argv')
+
+
 def verified_stream(stage, stream, root):
     rel = Path(stage[stream + '_path'])
     if rel.is_absolute() or '..' in rel.parts:
@@ -52,6 +110,7 @@ def verify(plan_path, receipt_path, repository, result_root):
                   'original input system SHA-256')
     require_equal(json.loads((repository / plan['named_plan_path']).read_text())['record'],
                   plan['record'], 'named instance record')
+    check_named_target(plan)
     binary = Path(plan['build_argv'][-1])
     require_equal(sha256(binary), receipt['binary_sha256'], 'binary SHA-256')
     build = receipt['build']

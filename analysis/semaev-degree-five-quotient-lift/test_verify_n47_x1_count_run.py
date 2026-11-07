@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from verify_n47_x1_count_run import verify
+from verify_n47_x1_count_run import check_named_target, verify
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
@@ -90,6 +90,27 @@ class CountReceiptTests(unittest.TestCase):
         self.write_receipt()
         with self.assertRaisesRegex(ValueError, 'control count mismatch'):
             self.check()
+
+    def test_target_command_must_match_named_record(self):
+        self.plan['target_argv'][-1] = '1'
+        self.plan['target_launch_argv'][-1] = '1'
+        self.plan_path.write_text(json.dumps(self.plan))
+        self.receipt['plan_sha256'] = digest(self.plan_path.read_bytes())
+        self.receipt['target']['argv'] = self.plan['target_launch_argv']
+        self.write_receipt()
+        with self.assertRaisesRegex(ValueError, 'named target argv mismatch'):
+            self.check()
+
+    def test_named_field_and_basis_preconditions(self):
+        check_named_target(self.plan)
+        changed = json.loads(json.dumps(self.plan))
+        changed['record']['modulus_hex'] = '800000000023'
+        with self.assertRaisesRegex(ValueError, 'irreducibility'):
+            check_named_target(changed)
+        changed = json.loads(json.dumps(self.plan))
+        changed['record']['V_basis_hex'][-1] = changed['record']['V_basis_hex'][0]
+        with self.assertRaisesRegex(ValueError, 'factor basis'):
+            check_named_target(changed)
 
 
 if __name__ == '__main__':
