@@ -1,0 +1,115 @@
+{
+  "budget": {
+    "cpus": 2,
+    "marginal_provider_usd": 0,
+    "maximum_parent_attempts": 0,
+    "maximum_runs": 0,
+    "maximum_scientific_runs": 0,
+    "maximum_wall_seconds": 900,
+    "memory_gb": 4,
+    "new_cloud_jobs": 0,
+    "new_vms": 0
+  },
+  "cli": {
+    "checker": [
+      "python3",
+      "-B",
+      "harness/classical_ecdlp_public_reference_audit_v2/verify.py",
+      "--repo-root",
+      "ROOT",
+      "--out",
+      "{run_dir}",
+      "--input-manifest",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json"
+    ],
+    "driver": [
+      "python3",
+      "-B",
+      "harness/classical_ecdlp_public_reference_audit_v2/driver.py",
+      "--repo-root",
+      "ROOT",
+      "--out",
+      "{run_dir}",
+      "--input-manifest",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+      "--time-limit",
+      "1200"
+    ]
+  },
+  "controls": "Both A/B passes eachbuildtables andknown k0,1,r-1,floor(r/2) controls onall48domains, reusetables on24targetdomains; externalF17/y0 andoffcurve/noncanonical/badorder controls, independentmutations. No scientific/unit/fixture/control execution beforeactual experiment approval; AST/compile/staticdiff allowed only.",
+  "fixes": {
+    "F1": "An explicit RECOVERED cell/word with no usable scalar claim MUST remain in everycell context and explicit claimed/incomplete/undefined inventory; never silently drop if events is empty. Preserve actual absent/null fields, originalstatus, identities and rawline/byteoffset/SHA.",
+    "F2": "Before normalization require type(a) isint andtype(b)isint and1<=a,b<r. Noncanonical orzero residues become explicit undefined/invalid domain claim, never valid after implicitmod reduction. Checkprimekcanonical andboth original/transformed equations; retain exact discrepancy.",
+    "G1": "Shared cumulativeCPU1800s accounting/ledger spans driver, bothsequential children, independentchecker/audit. Carry actualprior phase CPU into checker without reset, monitor/reject missing/stale/malformed/negative ledger; boundremaining child/checker allowance and stop/reap on cumulativecap. Resource data is operational bookkeeping only, no performance metric. Originalwallstop staysshared1200s; record implementation/enforcement limits honestly.",
+    "G2": "Strict fulltrace/cell/word statuscensus including unclaimed/negative/undefined statuses and missingoptionalstatus markers. Everycell retainscompactcontext, originalline andbyteoffset andrawSHA, curve/target/trace/arm joins plus actual provided optional transformationIDs. Validate provided IDs whenpresent; recordabsent honestly. Derive separately labelled bindingdigest from actuala,b,G,Q/domain/trace identity ifno transformID, neverinventprovidedID. Retain actualfield andword multiplicities and disagreements. Stream fullpayloads; no selective omitnegative/unclaimed cells.",
+    "G3": "Rely on unchanged native supervisor process-group kill/claim/watchdog for hard outerguard; producer/checker also enforceoriginal shared monotonicstop around phases and BEFORE finalserialization/writes/seals. Reap actualchildren, preserve partialfailures/cleanupgrace honestly, no deadline reset.",
+    "G4": "Checker compares actualinput-manifest andcurrent sourcefile hashes to certificate-seal metadata and actualpublished/source-bound provenance; validates originalpublicinputsha, allcertificatepayloadshashes/bytes, exact originalcurve order and targetID order (notjustsets), duplicates/canonicalranges andeverypublicequation. No trusting producerverified flags."
+  },
+  "full_payload_policy": "candidate-audit JSON maygrow about10MiB ormore; preserve fullrequiredcontext/status data, no truncation tofitGit. Native supervisorcompacts AFTER checker andbinds logicalcontentSHA/wire representation. Literal artifacts.py policy: JSONnotDATA_EXT, anynoncode>1MiB andlistedDATA_EXT/.part>64KiB storednormally. No privatepublisher/symlink, no postsealrawrewrite ordata omission.",
+  "input_manifest": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json",
+  "input_scope": "Exact R52 public input/traces/decoder-cells; public1536/48domains/24targetcurves; no third37 archive or newcohort/nonce.",
+  "materialization_output": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization-v2.json",
+  "mathematical_kernel": "Preserve existing affineHACBSGS and independentJacobian mathematical kernels; source differences are validation, inventory/custody and operational resource controls. No originalfile overwrite/import shortcut.",
+  "maximum_scientific_runs": 0,
+  "new_source_files": [
+    "harness/classical_ecdlp_public_reference_audit_v2/solver.py",
+    "harness/classical_ecdlp_public_reference_audit_v2/driver.py",
+    "harness/classical_ecdlp_public_reference_audit_v2/verify.py"
+  ],
+  "old_source_immutable": {
+    "commit": "da0c590a872102f5c91d37d37a96753054065954",
+    "directory": "harness/classical_ecdlp_public_reference_audit/",
+    "review_memory_compliance": "unverified",
+    "review_task": "TASK-20261106-2ff273",
+    "review_wall_cap_seconds": 300,
+    "review_wall_seconds": 305.13559222221375,
+    "verdict": {
+      "J1": "breaks"
+    },
+    "wall_cap": "UNMET; unwaived"
+  },
+  "producer_task": "TASK-20261106-cb4a99",
+  "required_materialization_fields": [
+    "Actualzero-run sourceclaim owner/epoch andpublicationCBCcommit",
+    "Newthree sourceSHA256/bytes plusoldthreeunchangedchecksums",
+    "PerF1/F2/G1-G4 actualsource locations/diff/acceptance or remaininggap",
+    "ActualAST/compile commands/status only, no codeimports/solver/control/unit run",
+    "Exactsource/public/rawmanifest/CLI/output ABI anddraftprotocol/spec/plan/exportmapping/prespectivepreapprovalbindings"
+  ],
+  "review_gate": {
+    "approval_archive": "TASK-20261106-9ec665",
+    "archive_dependencies": [
+      "TASK-20261106-cb4a99",
+      "TASK-20261106-a2cc4a"
+    ],
+    "artifacts": [
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/report.md",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/checks.json",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/diagram.svg",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/report.pdf",
+      "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-review-v2/visual-inspection.json"
+    ],
+    "budget_basis": "Prospective newV2Delta/largerdiff after old305.14sover300; oldtaskcapUNMETneverreset.",
+    "independent_from_implementer": true,
+    "maximum_wall_seconds": 600,
+    "old_review_not_reused_as_pass": true,
+    "source_publication_required": "ExactactualCBCcommit+source hashes providedexternally beforeDelta dispatch; no fakeformalarchive completion.",
+    "task": "TASK-20261106-a2cc4a"
+  },
+  "schema": "classical.ecdlp.public-reference-source-v2-contract/v1",
+  "scientific_admission": "CB is source/protocolpreparation only, review_requiredfalse because no empiricalclaim/promotion; independentDelta remainsmandatory source-readiness dependency. Future actualscientificexecutorfb15fa review_requiredtrue andnormal result-snapshot/review/ledger. OnlyCoordinator mayissueDEC60 afteracceptableDelta+actualpreapprovalapprovabletrue/exactpublishedfrozenpacket/archive/nativeREADY. Same unapprovedEXPca93ac, stillmax1newEXPtoday; no scientificlaunch here.",
+  "source_only": true,
+  "source_only_authority": "ledger/decisions/DEC-20261106-204e78.yaml",
+  "success_outputs": [
+    "certificates-A.json",
+    "certificates-B.json",
+    "certificate-seal.json",
+    "worker-processes.json",
+    "runtime-guard.json",
+    "manifest.yaml",
+    "raw-result.json",
+    "reference-verification.json",
+    "candidate-audit.json",
+    "verification-summary.json"
+  ]
+}

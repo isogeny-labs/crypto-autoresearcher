@@ -1,0 +1,314 @@
+{
+  "controls": {
+    "active_outer_cases": 6,
+    "actual_active_adopted_waits": 12,
+    "actual_parent_or_race_adopted_waits": 12,
+    "additional_structural_refusals": 7,
+    "all15_bounds_controls_as_expected": true,
+    "all18_lifecycle_controls_as_expected": true,
+    "bounded_children": 7,
+    "honest_incomplete_export": 1,
+    "lifecycle_controls": 18,
+    "parent_fault_or_install_race_cases": 12,
+    "same_path_joint_refusals": 29
+  },
+  "counterexample": {
+    "actual_native_status": "infrastructure_error",
+    "evidence": "raw/custody-exit-counterexample.json",
+    "false_completion_accepted": true,
+    "forged_child_process_sha256": {
+      "baseline": "c0d66d0ee8b1a64bb0595c8921553c4b07a9a3f8940b06d32df8240c7204aeed",
+      "candidate": "372641ba0c86a9ff2583852e2c4fafced9a6190e3169b3a565c1bc659bc1b6f9"
+    },
+    "forged_child_waits": {
+      "baseline": {
+        "returncode": 0,
+        "wait_returned": true
+      },
+      "candidate": {
+        "returncode": 0,
+        "wait_returned": true
+      }
+    },
+    "helper": "helpers/custody_exit_attack.py",
+    "helper_sha256": "08bdd4cf18f59a746ecb036c19823cefbd111e64e36a43121e4c92e13bf3ed1e",
+    "mutation": "Transplant this reviewer prior valid raw output for the exact same disclosed public/plan, align summary provenance, change only child process returncode/operational_complete/termination_ack and dependent local seals/registry/typed export; original child stderr/launch facts and trusted root-custody bytes retained.",
+    "name": "fixed-custody-child-exit-reseal",
+    "next_fix": "In load_custody, require each current process file SHA equals its held-fixed closure.process_sha256 and require its termination_ack/returncode/operational state agree with held-fixed driver_reported_wait before deriving completion; retain closure/observation checks. Add this exact falsecomplete replay plus untouched complete/incomplete positives as regression controls. No fix implemented in this review.",
+    "observed_checker": {
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"status\": \"pass\", \"operational_status\": \"complete\", \"physical_processes\": 2, \"fixture_only\": true, \"scientific_validity\": \"not_assessed\", \"performance_qualified\": false}\n"
+    },
+    "root_cause": {
+      "caller": "check.py:13 loads custody; check.py:31 uses trusted launch observation; check.py:32 checks child termination_ack only against child returncode; check.py:49-51 derives completion only from child returncode/resource_stop",
+      "reader": "observer.py:140-142 reads current closures[arm].process_path but verifies only launch record with verify(pr,r); it does not compare stored closure process SHA or driver_reported_wait",
+      "trust_boundary": "Trusted root FILE held fixed; no replacement of root/source/OS boundary or sameUID attack was required.",
+      "writer": "harness/classical_ecdlp_controlled_followup_v5/observer.py:123 retains closures[arm].process_sha256 and .driver_reported_wait"
+    },
+    "same_path_positive": "Original untouched static check exits0/operational_status incomplete; actual candidate+baseline child exits1, finalized observer FILE/root closures held fixed.",
+    "trusted_fields": {
+      "closures.baseline.driver_reported_wait": {
+        "returncode": 1,
+        "wait_returned": true
+      },
+      "closures.baseline.process_sha256": "dff76de54abf4a8061d02ab3fda8d7b456610ccbe7681f9351ee2bbc5d752124",
+      "closures.candidate.driver_reported_wait": {
+        "returncode": 1,
+        "wait_returned": true
+      },
+      "closures.candidate.process_sha256": "8c22bd5d4428cfea3fc1a4f99bde49cca0607e6c319b47a58caeff91d81f16b8"
+    },
+    "trusted_root_custody_sha256": "efb11414c453134309d42e601e032bb0460746da5674f29ff90865e9cefc3f5c"
+  },
+  "coverage": {
+    "BSGS_scalars": [
+      7,
+      7
+    ],
+    "decoder_statuses": {
+      "CAPPED_ERASURES": 4,
+      "EMPTY_INTERVAL": 2,
+      "RECOVERED": 15,
+      "REJECTED_FINAL_VERIFICATION": 1,
+      "UNDEFINED": 2
+    },
+    "eight_arms": [
+      "circuit1.a1",
+      "circuit1.a2",
+      "circuit1.a3",
+      "circuit1.a5",
+      "circuit2.a1",
+      "circuit2.a2",
+      "circuit2.a3",
+      "circuit2.a5"
+    ],
+    "fixed_counts": {
+      "cells": 24,
+      "intents": 20,
+      "setups": 16,
+      "singles": 16,
+      "traces": 20
+    },
+    "job_kinds": {
+      "calibration-trace": 24576,
+      "confirmation-trace": 12288,
+      "single": 345600
+    },
+    "no_cohort_build_public_called": true,
+    "pcc_standing": "unverified",
+    "repository_exec_paths": [
+      "harness/classical_ecdlp_controlled_followup/cohort.py",
+      "harness/classical_ecdlp_controlled_followup/constructor.py",
+      "harness/classical_ecdlp_controlled_followup/curve.py",
+      "harness/classical_ecdlp_controlled_followup/engine.py",
+      "harness/classical_ecdlp_controlled_followup_v5/check.py",
+      "harness/classical_ecdlp_controlled_followup_v5/cohort_adapter.py",
+      "harness/classical_ecdlp_controlled_followup_v5/driver.py",
+      "harness/classical_ecdlp_controlled_followup_v5/export.py",
+      "harness/classical_ecdlp_controlled_followup_v5/lifecycle.py",
+      "harness/classical_ecdlp_controlled_followup_v5/observer.py",
+      "harness/classical_ecdlp_controlled_followup_v5/public_verify.py",
+      "harness/classical_ecdlp_controlled_followup_v5/source_closure.py",
+      "orchestration/__init__.py",
+      "orchestration/fast_yaml.py",
+      "tools/artifact_store.py",
+      "tools/experiment_execution.py",
+      "tools/experiment_protocol.py",
+      "tools/fast_yaml.py",
+      "tools/sparse_checkout.py",
+      "tools/validate_ledger.py"
+    ],
+    "scientific_runs": 0,
+    "six_cells": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "static48": {
+      "cells": 73728,
+      "intents": 36864,
+      "setups": 216,
+      "singles": 345600,
+      "traces": 36864
+    },
+    "static_derivation": {
+      "cells": 73728,
+      "intents": 36864,
+      "setups": 216,
+      "singles": 345600,
+      "traces": 36864
+    },
+    "static_jobs": 382464
+  },
+  "fresh_entropy_draws": 0,
+  "future_qualifications": [
+    "Actual allocated admitted production scientific run",
+    "Full-cost and primitive counter replay",
+    "Isolated clocks/performance comparison",
+    "Actual aggregate RSS and retained-byte bounds for a full48cohort",
+    "CI-signed PCC standing or trusted execution-proof backend"
+  ],
+  "joints": [
+    {
+      "evidence": [
+        "raw/preflight.json",
+        "raw/independent-closure.json",
+        "raw/queue-reconciliation.json",
+        "raw/joint-controls.json",
+        "raw/import-guard.stdout.log",
+        "raw/final-source-capture.json"
+      ],
+      "id": "J-source-authority",
+      "limits": "Historical Git commit membership/full remote GET are root-supplied evidence, locally cross-checked; no worker remote assertion. Entire trusted-root replacement/sameUID/history authentication is outside the local boundary.",
+      "scope": "Exact source/publication identities and actual OS PID/parent/start/argv/input provenance at declared source/fixedtoy scope. Native execute_trial uses synthetic explicit fixture authority; actual scientific production admission remains unexecuted.",
+      "verdict": "holds"
+    },
+    {
+      "evidence": [
+        "raw/coverage.json",
+        "raw/joint-events.jsonl",
+        "raw/bounds-controls.json"
+      ],
+      "id": "J-public-workload",
+      "limits": "No scientific48cohort, mathematical change, full-cost primitive counter replay, isolated-clock qualification or production cohort fit claim.",
+      "scope": "Original static48 schedule and actual fixed F11/F23 public two-child workload; same-path scalar0/scalar8 and prepared[0,0]/valid2G reseals refused; fixed candidate public-only/BSGS-before-diagnostics source ordering.",
+      "verdict": "holds"
+    },
+    {
+      "evidence": [
+        "raw/lifecycle-controls.json",
+        "raw/bounds-controls.json",
+        "raw/custody-exit-counterexample.json"
+      ],
+      "id": "J-custody-lifecycle",
+      "limits": "Original native execute_trial receipt refuses the actual failed driver (infrastructure_error); static replay success is the concrete break, not a claim of failed-science native admission.",
+      "scope": "Lifecycle cleanup holds in18bounded controls, but static final-custody checker accepts resealed false child completion against its held-fixed authentic failure closure.",
+      "verdict": "breaks"
+    }
+  ],
+  "model_verified": false,
+  "native_independence": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/workspace/classical-ecdlp-validation-ready/tools/check_review_independence.py",
+      "--plan",
+      "/workspace/classical-ecdlp-validation-ready/coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/review-plan.json",
+      "--expected-plan-sha256",
+      "7603d65f28b31d42fa6f4d249c62542d7e786f2ce61f750f11445f6369df4ed7",
+      "--reports",
+      "/workspace/classical-ecdlp-endpoint-reuse/production-repair-20261104-review/TASK-20261104-448845/proposed/coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/reviews/TASK-20261104-448845/read-attestation.yaml"
+    ],
+    "attestation_after_sha256": "baadec15d4e31bdfbaa607af233fdb69669a618ffe0e71850fd25adffbff41bb",
+    "env": {
+      "LC_ALL": "C.UTF-8",
+      "PATH": "/bin:/usr/bin",
+      "PYTHONDONTWRITEBYTECODE": "1"
+    },
+    "external_literal_plan_pin": "7603d65f28b31d42fa6f4d249c62542d7e786f2ce61f750f11445f6369df4ed7",
+    "final_attestation_sha256": "baadec15d4e31bdfbaa607af233fdb69669a618ffe0e71850fd25adffbff41bb",
+    "finished_at": "2026-11-04T19:37:03.274710+00:00",
+    "native_checker_sha256": "4931a4534e7e04e0e62b6145375ef11ef7b47a641da92d9269734936c5d1208c",
+    "pcc_standing": "unverified",
+    "returncode": 0,
+    "scope": "Declaration consistency only; no signature, actual model identity, truthful reading or execution proof.",
+    "started_at": "2026-11-04T19:37:03.185395+00:00",
+    "stderr": "",
+    "stdout": "PASS: 1 report(s), every joint owned and attested, blindness respected, controls declared\n"
+  },
+  "new_EXP": 0,
+  "new_IDEA": 0,
+  "official_status_changed": false,
+  "pcc_standing": "unverified",
+  "procedure_deviations": [
+    "Initial orientation displays occurred before persisted read instrumentation; some tool output was truncated. Their exact session transcript is external to this capsule. No retrospective orientation timestamps or full semantic read of every captured byte are claimed.",
+    "Before target imports/tests, the preflight helper actually read/hash-captured95 frozen payloads and59 runtime files. Its small text/source snapshots are retained. Large historical delivery payloads were hashed without duplicating them.",
+    "One reviewer helper initially omitted the old engine directory from sys.path: native execute_trial had already returned output_validated, then static cohort import failed. The failed helper/command/stdout/stderr and positive tree remain preserved; the corrected static pass ran in joint_controls.py with an explicit path.",
+    "Two exploratory metadata inline attempts failed (root proof tar treated as JSON; Path+string concatenation). A later queue-helper first assertion treated50 added digest keys as one dictionary delta; its exact failed version/command/error are retained. The final comparison groups only those50 authorized additions and the2 states/2 commit fields.",
+    "No final source or native code/schema/gate was edited. Source release/Git history/cloud/network/storage custody remain root-owned; this worker cross-checked current stored bytes/computed Git blob OIDs and root-provided immutable publication evidence without making independent remote or historical Git requests.",
+    "The counterexample deliberately retains an isolated attacked tree with altered child records. Its actual native receipt remains infrastructure_error. It is evidence of a static checker reconciliation break, not an official run, scientific draw or production-admission success.",
+    "Initial Typst compile failed with expected-semicolon error; exact source/error retained. A subsequently viewed title-layout draft was preserved before a final title separation; all3finalpages were viewed again. No final read-attestation or source bytes changed."
+  ],
+  "requested_policy": "review-adversarial",
+  "requested_reasoning_effort": "xhigh",
+  "review_plan": {
+    "external_literal_sha256": "7603d65f28b31d42fa6f4d249c62542d7e786f2ce61f750f11445f6369df4ed7",
+    "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/review-plan.json",
+    "pin_origin": "Root-published external declaration at4d87590ba7c6f4af83839b43de9ad5285f80291e; not derived from this report."
+  },
+  "schema": "classical.ecdlp.independent-source-review/v1",
+  "scientific_runs": 0,
+  "serving_model": null,
+  "session": "/root/production_source_review_v5",
+  "source_integrity": {
+    "archived_queue_reconciled_to_authorized_deltas": true,
+    "current_archive_stored_bindings": 50,
+    "exact_runtime_keys": 59,
+    "fixed_math_and_original_host_unchanged": true,
+    "frozen_logical_and_stored_identities": 95,
+    "frozen_mismatches": [],
+    "independent_ast_python_files": 44,
+    "logical_metadata_bytes": 4603748351,
+    "logical_metadata_files": 9801,
+    "pool_chunk_hashes": 19419,
+    "pool_hash_scope": "All pool compressed SHA, gzip CRC, tar SHA and unique chunk SHA verified; all file references and length sums checked; only selected file SHA reconstructed, no full logical4.6GB hydration or replay. Root prior full reconstruction remains separate cited evidence.",
+    "production_authority_source_equal_to_prior_freeze": true,
+    "runtime59_before_after_unchanged": true,
+    "selected_restored_members": [
+      {
+        "bytes": 10876,
+        "path": "work/development-01/stderr.log",
+        "sha256": "77905a8cff3717648a9883f06ab3b2eb9673b4fc0d297592056ed4d45032d764"
+      },
+      {
+        "bytes": 10191,
+        "path": "work/integration/integration_suite.py",
+        "sha256": "a3dbda7165c585f1f678e967632cedde38b8479256ccb9a88c5730232a5a1811"
+      },
+      {
+        "bytes": 5835,
+        "path": "work/integration/active_lifecycle_six.py",
+        "sha256": "b533b9e61a9fa718a7d73c725de8e642ce0acf8c79eaeb8ceb7bc98aa3f195db"
+      }
+    ],
+    "source_archive_R1": "b30d953efeda8ca3dd2946ea2ef9bb22f220b38c",
+    "source_archive_R2": "09f362f544ea9ca079e3a18ac8dc9d1c81b6c01e",
+    "source_delivery": {
+      "bytes": 431983729,
+      "duplicated_into_review": false,
+      "path": "harness/classical_ecdlp_controlled_followup_v5/delivery.json",
+      "sha256": "d2c10e4ed32740d4173bbc00dd87e4ef9a4b97291e8d8f77cc94703d0965950d"
+    },
+    "source_publication_commit": "cfb10b89cdef32257e681cf915b9b80c5c7b1cc7"
+  },
+  "task_id": "TASK-20261104-448845",
+  "visual_record": {
+    "all3final_pages_actually_viewed": true,
+    "canonical_graph_change": "No mathematical/scientific graph changed; original counts/source pins and historical d9 diagram remain unchanged. This report adds a software custody flow diagram only.",
+    "capture_record": "raw/pdf-capture-record.json",
+    "final_pdf_sha256": "b069d89348bd20f569fb84322b917300728bd0e03106fde0dd5a0dcc7c27dd16",
+    "visual_inspection": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-e9f035/reviews/TASK-20261104-448845/visual-inspection.json"
+  }
+}
