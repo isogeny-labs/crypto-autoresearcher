@@ -1,0 +1,490 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "<run>/execution.json",
+      "<run>/raw/<table>/*.json[.gz]",
+      "<run>/raw/<table>/*.jsonl[.gz]"
+    ],
+    "outputs": [
+      "<run>/metrics.json",
+      "<run>/analysis.json[.gz]",
+      "<run>/export.json[.gz]"
+    ],
+    "script": {
+      "path": "analyze15.py",
+      "sha256": "ce4dbcbd029799988fae30f8f734246b70bc6f47111c4931b41752d412c88ef4"
+    }
+  },
+  "arms": [
+    {
+      "description": "Unchanged A14 four-scalar-add ordered pair builder, own sign/query setup and complete retained query replay.",
+      "id": "scalar",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a15_execution_20261107/driver15.py"
+          ]
+        ],
+        "commit": "67da5003cbd767e14a00a466654a69e0dba3531a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_retained_rows": 4096,
+        "methods": [
+          "scalar",
+          "batched"
+        ],
+        "new_target_solver_calls": 0,
+        "ordered_pairs_per_method": 51968,
+        "queries_per_method": 8960,
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "tables": 16
+      },
+      "role": "reference"
+    },
+    {
+      "description": "One bounded actual product-tree inverse per base, shared signed slopes and output negations, identical native descriptors/order, own sign/query setup and complete retained query replay.",
+      "id": "batched",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a15_execution_20261107/driver15.py"
+          ]
+        ],
+        "commit": "67da5003cbd767e14a00a466654a69e0dba3531a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_retained_rows": 4096,
+        "methods": [
+          "scalar",
+          "batched"
+        ],
+        "new_target_solver_calls": 0,
+        "ordered_pairs_per_method": 51968,
+        "queries_per_method": 8960,
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "tables": 16
+      },
+      "role": "candidate"
+    }
+  ],
+  "authors": [
+    "Root implementer; delegated administrative Coordinator exact-source assessment before release; configured model unverified"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "C-pair-builder"
+      ],
+      "id": "A15-pair-component",
+      "text": "Finite retained-input exact pair/query/native-row equivalence and actual separate Fp/allocation construction vectors. Existing technique, conditioned reuse, no new targets/solvers, calibrated runtime or whole-attack claim."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Deterministic tiny scalar repetition and canonical JSON roundtrip controls; no repeated timing inference.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Duplicate sign classes, zero/order-two/invalid/native-mismatch inputs, native admission refusal, corrupted point/sign/native descriptor/count/allocation/commitment, injected mid-phase and checker rejection retain outputs and refuse completion.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Marked p<=211 point/orientation/alias/odd-batch/full-triple/hit/miss controls and independent closed-form arithmetic/allocation schedules; both methods execute every retained native query.",
+      "present": false
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "C-pair-builder"
+    ],
+    "effect_size_measure": "No population or performance effect inferred.",
+    "interval": "none_exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "Exact ordered pair/native/query commitments and actual Fp/explicit allocation vectors.",
+    "text": "Report each cold construction setup, pair stages and query replay separately. Candidate arithmetic executes; no estimated subtraction from old trace. Retain adverse/zero/incomparable vectors. Exact table parity conditions reuse of old downstream outcomes but is not a new solver execution or new target recovery.",
+    "threshold": "No favorable outcome required; exact completion/controls only. Incomplete costs and unsigned producer assertions do not establish complete attack or trusted execution standing.",
+    "verdict_vocabulary": [
+      "completed_within_scope",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": null,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "concurrent_compute_processes": 1,
+      "isolated_clock_claim": false,
+      "memory_bytes": 2147483648,
+      "shared_managed_host": true
+    },
+    "queue": null,
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "extensions": {
+    "checkpoint_semantics": "All table writers close and gzip roundtrip before four paused canonical curve checkpoints; no restart or restored clock.",
+    "cloud_policy": "Oneexistingworker/thread2GiB21600CPU/wall oneattempt,no new paidcapacity.",
+    "conditioned_reuse": true,
+    "counter_scope": "Exact field-element vector operations plus scalar EC API calls; explicit allocation/conversion/padding/table counters. Inversion/pow internals and Python/NumPy/checker/OS/hash/IO unexpanded, no complete calibration.",
+    "model_verified": false,
+    "new_target_solver_calls": 0,
+    "official_status_transition": false,
+    "prior_technique": "Production _accel/tails/harvest signed denominator reuse/product-tree inversion and executed A12 query batching, see literature.md; no novelty.",
+    "proof_status": "Producer-local checks only, no trusted signed scientific/replay/execution proof. New measured citations need typed artifact-pinned PCC claims and unverified standing until signed review."
+  },
+  "freeze": {
+    "commit": null,
+    "filed_before_affected_data": null,
+    "frozen_at": null,
+    "protocol_sha256": null,
+    "status": "draft"
+  },
+  "inadmissible": [
+    "Native builder/query execution before exact published closure, prospective frozen protocol,current actual canonical S3, explicit root release and normal admission.",
+    "New target/curve draws, new solvers, favorable selection, retry, enlarged gates/new paid capacity or result-conditioned batch schedule.",
+    "Calling established signed-sum batching novel, explicit allocation traffic peak RSS, fewer inversions calibrated runtime/full-cost gain, or retained target/query views independent recoveries."
+  ],
+  "invalidation_rules": [
+    "Exact source/input/interpreter/NumPy/admission/lease/deadline mutation or missing output/check/checkpoint forbids complete-panel status.",
+    "Any ordered pair/native sign/bucket/query/miss/row or independently derived arithmetic/allocation schedule mismatch is retained and stops this attempt.",
+    "Native preconditions refuse duplicate sign classes/identity/order-two/same-x; no masked zero denominator can silently emit a point.",
+    "Outputs and paid phase prefixes precede checker invocation. A checker failure keeps producer outputs unverified; missing rows remain unknown.",
+    "Every builder pays own index/sign/input/formula/allocation/table construction and actual query engines; no cross-base/future sharing. Query replay is a correctness control, not an independently selected target experiment."
+  ],
+  "links": {
+    "design": "design.md",
+    "literature": "literature.md",
+    "prior": "../prime_field_a14_execution_20261106/next-leads.md"
+  },
+  "literature": [
+    {
+      "claim": "Established signed arithmetic and actual product-tree schedule, scalar pair construction gap only.",
+      "provenance": "internal",
+      "ref": "literature.md; production _accel.py/tails.py/harvest.py; A12 batch_query.py; A14 query_index.py/check_query.py",
+      "verified_by": "Root primary code review2026-11-07"
+    },
+    {
+      "claim": "Rough cost-model warning; no calibration of this finite component.",
+      "provenance": "retrieved",
+      "ref": "https://people.maths.ox.ac.uk/petit/files/16PKC_primeECDLP.pdf \u00a73.2,p8",
+      "verified_by": "Retained primary PDF reread2026-11-07 SHAa53030a6cde720c354aebfb65b1eb01e07766ce2d26e543d77f2516c0a49ef5b"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [
+      "Actual scalar and vector Fp add/sub/mul/inv and EC API calls, setup signs/indices/table insertions, product-tree padding/root inverse/formulas/output negatives.",
+      "Explicit pair/query NumPy allocation elements/bytes/copies/conversions, retained row/group checks and engine replays. No estimated EC calls for vector formulas; scalar and candidate actual work separate.",
+      "Immediate disjoint phase completion/failure prefixes; complete native records before checker; separate checker/oracle CPU, inclusive child/supervisor CPU/RSS; shared-host wall_valid=false."
+    ],
+    "isolation_required": "none",
+    "order": "sequential",
+    "record": [
+      "Pinned interpreter/NumPy/source/input identities and all16 public snapshots with prior Git/CAS provenance.",
+      "All pair/native descriptor output events, retained query/native row/hit/miss outputs and separate plain full-triple/counter checker receipts.",
+      "Closed-table lossless gzip/hash/byte receipts, four closed-curve actual canonical S3 checkpoints, one consumed attempt/no retry; all partial failures retained."
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Actual cold construction build_fp_add; field/array counters do not calibrate complete cost.",
+        "id": "build_fp_add",
+        "kind": "exact",
+        "name": "build fp add",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual cold construction build_fp_sub; field/array counters do not calibrate complete cost.",
+        "id": "build_fp_sub",
+        "kind": "exact",
+        "name": "build fp sub",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual cold construction build_fp_mul; field/array counters do not calibrate complete cost.",
+        "id": "build_fp_mul",
+        "kind": "exact",
+        "name": "build fp mul",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual cold construction build_fp_inv; field/array counters do not calibrate complete cost.",
+        "id": "build_fp_inv",
+        "kind": "exact",
+        "name": "build fp inv",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "ordered_pairs in this one retained table/method; query slots dependent and new target solver calls zero.",
+        "id": "ordered_pairs",
+        "kind": "exact",
+        "name": "ordered pairs",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "queries in this one retained table/method; query slots dependent and new target solver calls zero.",
+        "id": "queries",
+        "kind": "exact",
+        "name": "queries",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "verified_queries in this one retained table/method; query slots dependent and new target solver calls zero.",
+        "id": "verified_queries",
+        "kind": "exact",
+        "name": "verified queries",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "pair_array_bytes in this one retained table/method; query slots dependent and new target solver calls zero.",
+        "id": "pair_array_bytes",
+        "kind": "exact",
+        "name": "pair array bytes",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "bytes"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "new_target_solver_calls in this one retained table/method; query slots dependent and new target solver calls zero.",
+        "id": "new_target_solver_calls",
+        "kind": "exact",
+        "name": "new target solver calls",
+        "resolution": "1",
+        "source": "metrics.json rows and bound outputs/checks",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "PRIME-FIELD-A15-BATCHED-PAIRS-20261107",
+  "question": "On all 16 retained A14 geometries and all 8960 retained queries, does an executed shared-denominator/sign-reusing/batched pair builder preserve exact ordered pair, bucket, query and native-row semantics, and what separate actual construction vectors does it incur?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Input order p262139-i0/i1,p524287-i0/i1; each norm,hybrid,known32,known48. Scalar then batched cold per table. Query order AP0/hash0/AP1/hash1/AP2/hash2 sources, natural8, extra cache points. Both signed endpoint query engines execute per endpoint. No clocks compared.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Public exact finite descriptive observations; no secret logs generated.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "Every retained A14 program geometry and query without selection, pinned Git/CAS provenance, no new curve/target generation or outcome-conditioned exclusion. Geometric32/48 labels include actual native aliases."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "16 paired deterministic component instances; no new public-target draw.",
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Per-table actual scalar/batched cold pair arithmetic vectors",
+      "Setup/pair/query costs and explicit array traffic, with retained query parity/census",
+      "Failed/missing components retained; no new targets or solvers"
+    ],
+    "report_dir": "reports/<fresh-run>/",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 16,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "min_attainable_two_sided_p": null,
+      "note": "16 conditioned retained tables,32 actual builds,17920 actual QueryIndex endpoint replays,35840 scalar/batch endpoint engine calls; no new target solvers or independent draws. Exact finite census, no p-value/population inference.",
+      "passes": true,
+      "rank_test_n": null,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 21600,
+      "fixed_seconds": null,
+      "measured_on": "21600seconds is a protective local machine watchdog; no new cloud submission or billing forecast.",
+      "per_sample_seconds": null,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "All16retainedtables,bothactualbuilders,all8960queries/method;32builds17920queries35840endpointenginecalls,zero new target solvers. No early favorable stop."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Native<=48,geometric<=48,pairs<=8192,retainedrows<=4096,p<2^32,finite non-order-two distinct sign classes. Complete input/point/native/sign/counter/commitment parity and custody; retain all partial failures, no redraw."
+    },
+    {
+      "kind": "budget",
+      "preregistered": true,
+      "rule": "One existing worker/thread,2GiB,21600CPU/wall seconds,fresh absolute deadline,one attempt,no retries/new paid capacity."
+    }
+  ],
+  "study_dir": "research/prime_field_a15_execution_20261107",
+  "variable_ledger": {
+    "aa_not_applicable": "Marked deterministic tiny controls; no timing inference.",
+    "comparisons": [
+      {
+        "arms": [
+          "scalar",
+          "batched"
+        ],
+        "design": "one_factor",
+        "differs_in": [
+          "pair_builder"
+        ],
+        "id": "C-pair-builder",
+        "threshold": "Exact pair/native/query semantics and separately retained construction vectors; no scalar weighting, favorable result or calibrated gain required."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Committed transcript pins original pairs and complete native row/query/miss and signed-point commitments before affected work.",
+        "name": "retained_geometry_and_queries",
+        "treatment": "fixed",
+        "value": "All 16 retained program geometries and8960 endpoints"
+      }
+    ],
+    "independent": [
+      {
+        "levels": [
+          "scalar",
+          "batched"
+        ],
+        "name": "pair_builder"
+      }
+    ]
+  },
+  "version": 1
+}
