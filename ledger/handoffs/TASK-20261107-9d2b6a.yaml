@@ -99,11 +99,16 @@ handoff:
     binding_mode: content_at_commit
     executed_by: the shell-holding top-level session in the coordinator role, after the reviewer returns and before the approval decision
     record_ids: [EXP-ICPERF-127dbd, H-ICPERF-4cb536, DEC-20261107-e41c08]
+    custody_note: >-
+      Per DEC-20261107-6b0f3d ruling 3: this task is not a research_dispatch queue entry. Its
+      custody is a coordinator-written receipt, dispatcher_verified false, at the declared receipt
+      path, which hashes the review files. The approval archive of DEC-20261107-7802ec binds them
+      through the dispatcher. Do not run research_dispatch verification on this receipt.
     rules: >-
-      Merge origin/main first (never rebase). Stage only the review files by name. Run
+      Merge origin/main first (never rebase). Stage only the review files and the receipt by name. Run
       validate_ledger.py and check_merge_hygiene.py. One isolated commit, on a new branch from
-      origin/main. Verify the receipt with tools/research_dispatch.py. Push, then open a
-      ready-for-review PR with auto-merge. On a dispatcher refusal, return to the Coordinator.
+      origin/main. Push, then open a ready-for-review PR with auto-merge after validate_ledger
+      passes. On a refusal, return to the Coordinator.
   inference:
     policy: review-adversarial
     reasoning_effort: null
@@ -115,7 +120,7 @@ handoff:
   budget:
     maximum_runs: 0
   dispatch_preconditions:
-  - {id: DP-1, text: "The correction PR (DEC-20261107-e41c08 rulings 2 and 3, holding archive c5a0f4 as C2) has merged to main. The reviewer is given that main merge commit and 0ea4ca81d0, and the three script sha256 values above match at both (ruling 4)."}
+  - {id: DP-1, text: "The correction PR (DEC-20261107-e41c08 ruling 2) has merged, and the c5a0f4 custody receipt (DEC-20261107-6b0f3d ruling 1) is on main. The reviewer is given that main commit and 0ea4ca81d0, and the three script sha256 values above match at both (DEC-20261107-6b0f3d ruling 3)."}
   - {id: DP-2, text: "DEC-20261107-e41c08 and this handoff are on main."}
   completion_gate:
   - "REPORT.md answers (a) to (d), each with a verdict and either a reproducing fixture or a stated argument."

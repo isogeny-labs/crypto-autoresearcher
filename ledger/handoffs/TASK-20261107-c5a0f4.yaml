@@ -175,8 +175,14 @@ handoff:
       binds every declared byte at the archive's own commit instead.
     executed_by: the shell-holding top-level session in the coordinator role, after the director returns and before the red-team review
     record_ids: [H-ICPERF-4cb536, EXP-ICPERF-127dbd, DEC-20261107-b74e2c, DEC-20261107-3e9d71, DEC-20261107-e41c08]
+    custody_note: >-
+      Superseded by DEC-20261107-6b0f3d ruling 1. This task cannot be a research_dispatch queue
+      entry, because experiment-director is not a dispatcher role and the task has no source. Its
+      custody is a coordinator-written receipt, dispatcher_verified false, that hashes the bytes at
+      main commit 0ea4ca81d0. The dispatcher-verified archive of these bytes is the approval archive
+      of DEC-20261107-7802ec. The text in `rules` below is retained as history and is not executed.
     rules: >-
-      This is commit C2 of DEC-20261107-e41c08 ruling 3, on claude/c1-approval-correction-20261107
+      (Superseded; see custody_note.) This is commit C2 of DEC-20261107-e41c08 ruling 3, on claude/c1-approval-correction-20261107
       (from origin/main 0ea4ca81d0, the PR #3132 merge). The archive commit adds only the snapshot
       receipt and this handoff's archive fields, by name. specification.yaml and trial-plan.json are
       NOT staged, so the tree keeps the director's bytes. The receipt records:
