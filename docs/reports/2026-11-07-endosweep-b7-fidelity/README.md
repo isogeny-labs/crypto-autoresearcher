@@ -17,6 +17,8 @@ The top-level review outcome is **inconclusive for the named-curve interpretatio
 
 ## Specific corrections and next checks
 
+The linked [problem record](../../../problems/endosweep-batch7-primality-and-curve-bridge.md) tracks the exact proof and custody exit criteria.
+
 1. `formal/targets/endosweep-dk-exact-batch7-discriminants.yaml` notes call the odd-exponent product a “squarefree part” in an unconditional list. The generated Lean header and target `claim` field correctly make squarefreeness conditional. Add a new corrected target/version and fresh receipt rather than silently changing the frozen target.
 2. Bind the actual `std-curves` input bytes and enforce the declared revision and clean tree in `research/endosweep_dk_exact_20261016/build_dk_exact.py`. Rerun its focused source tests after that code change; historical records remain immutable.
 3. Retain or independently regenerate checkable certificates for the two large factors, then assess the curve trace and endomorphism bridge separately. A new proof must bind these inputs to the named curve rather than only reprove the integer equalities.
