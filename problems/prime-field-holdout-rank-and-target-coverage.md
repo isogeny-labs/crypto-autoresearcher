@@ -368,3 +368,15 @@ construction/natural/extra certificate attribution and complete costs. No new
 execution allowance or official scientific transition follows from this note.
 [PCC-20261107-0645d8](../pcc/claims/PCC-20261107-0645d8.json), producer-unverified.
 [pcc:unverified]
+
+A18 fixed-known48/full24 transfer completed four fresh20/21-bit curves with29 of
+32 public targets identified by both programs and3 retained nonrecoveries. Its
+first-certificate split is8 construction/9 new natural/12 extra. On one curve,
+initial target rank4 identifies0 individual targets; after natural rows rank7
+identifies7. This preserves a concrete functional-versus-full-rank distinction
+without claiming old norm-base rank gain or a scaling law. The next ranked
+comparison is fixedoldnorm32 versusunknown16 andpaidknown16 controls, with all
+auxiliary+targetcolumns canceled beforeDelta and all collection/elimination/
+lifting/sign/storage costs retained. It is not an A18 retry or horizon extension.
+[PCC-20261107-f778b2](../pcc/claims/PCC-20261107-f778b2.json), producer-unverified.
+[pcc:unverified]
