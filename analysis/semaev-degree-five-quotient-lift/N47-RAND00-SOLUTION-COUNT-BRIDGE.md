@@ -76,7 +76,13 @@ bind the invoked binary hash to its source; the separate published runtime
 provenance record supplies that link. It does not prove an independent
 rebuild or a second count. A bounded counter that enumerates `x1 in V` and solves
 the resulting quadratic in `x2`, rather than grouping by `x1+x2`, would give
-an independent computational check of zero.
+an independent computational check of zero. That route is now frozen but
+unlaunched: the existing `s3count2.c` source, exact named inputs, two GF(8)
+controls, one attempt, finite resource and USD limits, and custody checker
+are bound in `n47-rand00-x1-count-plan-001.json` and the frozen
+`n47-rand00-x1-count-protocol-001.json`. Its source-level completeness
+argument is in `N47-RAND00-X1-COUNT-AUDIT.md`. No independent n47 output is
+promoted before the controls and target complete and the run checker accepts.
 
 If an independent checker accepts a D5 quotient with nonzero image of one
 for this same named system, and the zero-solution premise is independently
