@@ -143,10 +143,11 @@ handoff:
   - experiments/EXP-ICPERF-127dbd/design/c5a0f4/evidence/
   - experiments/EXP-ICPERF-127dbd/design/c5a0f4/handoff-previews/
   - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-c5a0f4/snapshot-receipt.json
-  - "isogeny-labs/crypto: research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md"
-  - "isogeny-labs/crypto: research/ic_c1_deferred_guard_fp28_20261106/protocol.json"
-  - "isogeny-labs/crypto: research/ic_c1_deferred_guard_fp28_20261106/amendment-2-receipts.txt"
   artifact_paths_note: >-
+    Correction under DEC-20261107-e41c08: the three isogeny-labs/crypto files are not paths in this
+    tree, so they are bound in the snapshot receipt by repository, commit ff781aa8b7 (crypto PR
+    #3613), path and sha256: research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md,
+    protocol.json and amendment-2-receipts.txt.
     The directory entries are fixture and evidence trees. The archive stages their files by name,
     never as a directory add. The handoff and card previews have the canonical paths
     ledger/handoffs/TASK-... and task-cards/... only after approval. Files of 1 MiB or more go to
@@ -167,15 +168,32 @@ handoff:
   archived_by: TASK-20261107-c5a0f4
   archive:
     kind: snapshot
-    binding_mode: commit
+    binding_mode: content_at_commit
+    binding_mode_note: >-
+      Changed from commit by DEC-20261107-e41c08. The package reached commit ccf1699ed0 (PR #3132)
+      before this archive ran, so no single commit can change the whole package. content_at_commit
+      binds every declared byte at the archive's own commit instead.
     executed_by: the shell-holding top-level session in the coordinator role, after the director returns and before the red-team review
-    record_ids: [H-ICPERF-4cb536, EXP-ICPERF-127dbd, DEC-20261107-b74e2c, DEC-20261107-3e9d71]
+    record_ids: [H-ICPERF-4cb536, EXP-ICPERF-127dbd, DEC-20261107-b74e2c, DEC-20261107-3e9d71, DEC-20261107-e41c08]
+    custody_note: >-
+      Superseded by DEC-20261107-6b0f3d ruling 1. This task cannot be a research_dispatch queue
+      entry, because experiment-director is not a dispatcher role and the task has no source. Its
+      custody is a coordinator-written receipt, dispatcher_verified false, that hashes the bytes at
+      main commit 0ea4ca81d0. The dispatcher-verified archive of these bytes is the approval archive
+      of DEC-20261107-7802ec. The text in `rules` below is retained as history and is not executed.
     rules: >-
-      Merge origin/main first (never rebase). Stage only the existing artifact_paths files by name.
-      Run validate_ledger.py and check_merge_hygiene.py. One isolated commit. Verify the receipt with
-      tools/research_dispatch.py. Push, then open or refresh a ready-for-review PR with auto-merge. If
-      the dispatcher cannot verify a receipt for this task, return to the Coordinator. Do not work
-      around it.
+      (Superseded; see custody_note.) This is commit C2 of DEC-20261107-e41c08 ruling 3, on claude/c1-approval-correction-20261107
+      (from origin/main 0ea4ca81d0, the PR #3132 merge). The archive commit adds only the snapshot
+      receipt and this handoff's archive fields, by name. specification.yaml and trial-plan.json are
+      NOT staged, so the tree keeps the director's bytes. The receipt records:
+        - the sha256 of every existing artifact_paths file at that commit;
+        - 0ea4ca81d0 as the landing commit;
+        - PD-2 and PD-3;
+        - the three crypto files, by commit ff781aa8b7;
+        - the interim-custody hashes of DEC-20261107-3e9d71.
+      Run validate_ledger.py and check_merge_hygiene.py. Verify the receipt with
+      tools/research_dispatch.py, then push. If the dispatcher cannot verify the receipt, return to the
+      Coordinator. Do not work around it.
   inference:
     policy: director-runbook
     reasoning_effort: null
