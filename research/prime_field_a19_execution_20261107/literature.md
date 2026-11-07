@@ -42,4 +42,3 @@ The evidence gap is a complete finite implementation with true unknown auxiliary
 coordinates, exact cancelled information and own paid known-helper control on
 fresh fixtures. Completing that gap would be an observation within the fixed
 scope, not an asymptotic or generic-curve advantage claim.
-

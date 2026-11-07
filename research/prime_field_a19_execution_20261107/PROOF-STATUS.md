@@ -17,4 +17,3 @@ normal runtime admission do not establish independently signed scientific,
 execution, replay or performance proof. No self-signature or official hypothesis
 transition is supplied. A later measurement claim must remain producer-unverified
 and not covered absent the appropriate trusted independent proof. [pcc:unverified]
-

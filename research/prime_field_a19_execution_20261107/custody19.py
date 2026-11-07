@@ -79,4 +79,3 @@ def bindings(commit):
             group[name]=actual
         groups.append(group)
     return groups
-

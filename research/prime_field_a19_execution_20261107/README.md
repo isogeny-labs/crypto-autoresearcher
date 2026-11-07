@@ -46,4 +46,3 @@ All A16/A17/A18 releases stay consumed. The design grants no execution allowance
 
 Read [design](design.md), [literature](literature.md) and [proof status](PROOF-STATUS.md).
 No novelty, weighted runtime or whole-attack advantage is claimed.
-

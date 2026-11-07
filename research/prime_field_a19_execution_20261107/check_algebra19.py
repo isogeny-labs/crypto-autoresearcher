@@ -117,4 +117,3 @@ def information(reference,case,prepared,actual):
     if actual['target_marginal_delta']!=verified['full']['total']['delta']-verified['source']['total']['delta']:raise ValueError('target marginal information')
     known_checks.phase_counts(actual)
     return dict(checked=True,old_kernel=N,views=verified,producer_output_sha256=commitment(actual))
-

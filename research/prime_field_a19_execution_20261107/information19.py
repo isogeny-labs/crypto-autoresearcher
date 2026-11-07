@@ -92,4 +92,3 @@ def measure(reference,case,prepared,meter):
     return dict(schema='prime-field-auxiliary-cancelled-information/v1',projection=projected,reference=reference,views=result,
         target_marginal_delta=result['full']['total']['delta']-result['source']['total']['delta'],
         phases=phases,counters=solver.counters(phases))
-

@@ -9,4 +9,3 @@ from deps18 import collection16,partial_solver,check_partial,known_checks,public
 from deps16 import pair_build,check_pairs,TargetCache,native_case
 from shared import check_solver
 import custody18 as prior
-

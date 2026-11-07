@@ -29,4 +29,3 @@ def check(prepared,collected,rules,recipe,cache,actual):
     if actual['ownership_contract']!=expected or len(actual['requests'])!=rules['targets']*rules['target_queries_per_point']:raise ValueError('branch owner/full census')
     if len(cache.records)>rules['maximum_target_cache_points']:raise ValueError('owned cache size')
     return checker.branch(prepared['cell'],collected,rules,recipe,actual,cache,checker.GroupOracle(prepared['cell']['fixture'],collected['target_generation']['targets']))
-

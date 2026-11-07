@@ -66,4 +66,3 @@ def solve(case,prepared,meter):
     return dict(arm='aux_cancel_joint',system=system.summary(),outside=outside.summary(),
         cancellations=cancellations,recoveries=records,old_columns=old,auxiliary_columns=aux,
         phases=phases,counters=solver.counters(phases))
-

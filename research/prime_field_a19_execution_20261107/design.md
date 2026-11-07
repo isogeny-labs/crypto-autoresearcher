@@ -64,4 +64,3 @@ or an operational cap/failure with remaining cases unknown. No favorable outcome
 is required and no pool, curve, target or horizon can expand after outcomes.
 The prospective protocol/source assessment and normal release/admission retain
 native48/joint64/pairs8192/rows4096/labels8192/cache64 and original resource bounds.
-

@@ -72,4 +72,3 @@ def check(original,rules,actual):
     counts=known_checks.phase_counts(actual)
     if counts.get('pool_sha256_calls')!=len(trace) or counts.get('pool_candidate_records')!=len(trace):raise ValueError('pool candidate cost census')
     return dict(checked=True,scalar_labels_generated=False,points=len(points),candidates=len(trace))
-
