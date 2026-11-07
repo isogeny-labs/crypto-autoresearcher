@@ -212,7 +212,8 @@ also verifies the monomial universe, quotient rank, generators and image of
 one while reading certificate rows on demand by default (whole-file mapping
 is optional). It passes
 small retained-certificate and tamper tests, including agreement at degree
-five on a retained n=6 affine-sliced map. Its time and memory use on an
+five on a retained n=6 affine-sliced map and acceptance of the retained full
+n=6 D5 map in its `--full-original` mode. Its time and memory use on an
 actual frontier-size D5 map have not yet been measured, so it is a candidate
 verifier for a separately frozen D5 protocol, not an accepted D5 result. The
 source-derived size screen for the n47 slice is

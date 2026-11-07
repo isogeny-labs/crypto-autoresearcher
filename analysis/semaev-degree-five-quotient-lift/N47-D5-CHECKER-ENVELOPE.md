@@ -8,6 +8,14 @@ mapping. Both modes keep an elimination pivot pair for each independent image
 of a degree-at-most-four monomial. This is a source-derived size screen,
 **not** a measured peak-memory or runtime result.
 
+The CLI now has two explicit scopes. `--variable` checks an affine-sliced
+certificate in 47 variables; `--full-original` independently descends the
+named original system in 48 variables, the format produced by the frozen
+`n47-rand00-d5-local-002` attempt. The full mode accepts the retained n6 D5
+map and rejects a slice-only mask. At the illustrative quotient dimension
+61,196, an original-system D5 map has 1,925,357 columns and occupies
+14,755,936,080 bytes (13.743 GiB); its actual D5 dimension is unknown.
+
 For 47 variables and degree five there are exactly
 
 ```

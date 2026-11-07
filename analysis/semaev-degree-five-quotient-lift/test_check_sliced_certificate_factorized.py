@@ -14,6 +14,7 @@ import unittest
 
 from check_sliced_certificate_factorized import (MappedCertificate,
                                                   PreadCertificate,
+                                                  full_system,
                                                   check_map_factorized)
 from check_quotient_closure_factorized import check_closure_factorized
 from check_trace_slice_certificate import check_map, read_certificate, trace_slice
@@ -171,6 +172,46 @@ class FactorizedCertificateTests(unittest.TestCase):
                              original['low_kernel_dimension'])
             self.assertEqual(streamed['low_kernel_dimension'],
                              original['low_kernel_dimension'])
+
+    def test_cli_full_original_retained_degree_five(self):
+        root = Path(__file__).resolve().parent
+        source = root / 'validation/cascade-20261029-v2/0/degree5.bin'
+        record = {'n': 6, 'modulus_hex': '43', 'a2': 0, 'a6_hex': '3',
+                  'z_hex': '2', 'V_basis_hex': ['1', '2', '4'], 'k': 3}
+        digest = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+        with tempfile.TemporaryDirectory() as tmp:
+            plan = Path(tmp) / 'plan.json'
+            plan.write_text(json.dumps({'record': record}, sort_keys=True))
+            command = [sys.executable,
+                       str(root / 'check_sliced_certificate_factorized.py'),
+                       str(source), '--plan', str(plan),
+                       '--expect-plan-sha256', digest(plan),
+                       '--expect-descent-source-sha256',
+                       digest(root.parent / 'semaev-m2-last-fall-degree/verify/cert_check.py'),
+                       '--expect-closure-source-sha256',
+                       digest(root / 'check_quotient_closure_factorized.py'),
+                       '--full-original', '--expect-certificate-sha256',
+                       digest(source)]
+            accepted = subprocess.run(command, capture_output=True, text=True)
+            self.assertEqual(accepted.returncode, 0, accepted.stderr)
+            result = json.loads(accepted.stdout)
+            self.assertEqual(result['status'], 'valid_full_nonmembership')
+            self.assertEqual((result['variables'], result['degree'],
+                              result['codimension_lower_bound']), (6, 5, 3))
+            rejected = subprocess.run(command + ['--affine-combination-mask',
+                                                  '0x24'],
+                                      capture_output=True, text=True)
+            self.assertNotEqual(rejected.returncode, 0)
+            self.assertIn('only valid for a slice', rejected.stderr)
+
+    def test_frozen_n47_full_system_has_original_dimensions(self):
+        root = Path(__file__).resolve().parent
+        plan = json.loads((root / 'n47-rand00-d5-local-plan-002.json').read_text())
+        n, polys = full_system(plan['record'],
+                               root.parent /
+                               'semaev-m2-last-fall-degree/verify/cert_check.py')
+        self.assertEqual((n, len(polys)), (48, 47))
+        self.assertLessEqual(max(bin(m).count('1') for p in polys for m in p), 2)
 
     def test_sparse_large_certificate_opens_under_address_cap(self):
         # Sparse rows keep this fixture small on disk while its logical row

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Independently check a sliced Semaev quotient map with mapped rows.
+"""Independently check a full or sliced Semaev quotient map by rows.
 
 This is a complete alternative to the frozen D4 checker, intended for a
 future D5 certificate. It derives the named equations using the independent
@@ -9,6 +9,7 @@ The original D4 checker and its frozen source hash are left untouched.
 
 import argparse
 from functools import reduce
+import importlib.util
 import json
 from math import comb
 import mmap
@@ -178,15 +179,31 @@ def check_map_factorized(certificate, polys):
                                else 'mapped_rows_factorized_closure')}
 
 
+def full_system(record, descent_source):
+    """Rebuild the original Boolean equations from the pinned descent code."""
+    spec = importlib.util.spec_from_file_location('semaev_independent_descent',
+                                                  descent_source)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    basis = [int(value, 16) for value in record['V_basis_hex']]
+    if record['k'] != len(basis):
+        raise ValueError('factor-base dimension mismatch')
+    return module.descend(record['n'], int(record['modulus_hex'], 16),
+                          record['a2'], int(record['a6_hex'], 16),
+                          int(record['z_hex'], 16), basis)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('certificate', type=Path)
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--expect-plan-sha256', required=True)
     parser.add_argument('--expect-descent-source-sha256', required=True)
-    parser.add_argument('--expect-slice-source-sha256', required=True)
+    parser.add_argument('--expect-slice-source-sha256')
     parser.add_argument('--expect-closure-source-sha256', required=True)
-    parser.add_argument('--variable', type=int, required=True)
+    scope = parser.add_mutually_exclusive_group(required=True)
+    scope.add_argument('--variable', type=int)
+    scope.add_argument('--full-original', action='store_true')
     parser.add_argument('--affine-combination-mask', type=lambda s: int(s, 0))
     parser.add_argument('--expect-certificate-sha256', required=True)
     parser.add_argument('--row-access', choices=('mapped', 'pread'),
@@ -202,31 +219,45 @@ def main():
         closure_source = source_dir / 'check_quotient_closure_factorized.py'
         if sha256(descent_source) != args.expect_descent_source_sha256:
             raise ValueError('independent descent source digest mismatch')
-        if sha256(slice_source) != args.expect_slice_source_sha256:
+        if args.variable is not None and args.expect_slice_source_sha256 is None:
+            raise ValueError('slice source digest required')
+        if (args.expect_slice_source_sha256 is not None and
+                sha256(slice_source) != args.expect_slice_source_sha256):
             raise ValueError('slice source digest mismatch')
         if sha256(closure_source) != args.expect_closure_source_sha256:
             raise ValueError('closure source digest mismatch')
         if sha256(args.certificate) != args.expect_certificate_sha256:
             raise ValueError('certificate digest mismatch')
         plan = json.loads(args.plan.read_text())
-        n, polys, affine = trace_slice(plan['record'], args.variable,
-                                        args.affine_combination_mask)
+        if args.full_original:
+            if args.affine_combination_mask is not None:
+                raise ValueError('affine mask is only valid for a slice')
+            n, polys = full_system(plan['record'], descent_source)
+        else:
+            n, polys, affine = trace_slice(plan['record'], args.variable,
+                                            args.affine_combination_mask)
         reader = (PreadCertificate if args.row_access == 'pread'
                   else MappedCertificate)
         with reader(args.certificate) as certificate:
             if certificate.n != n:
-                raise ValueError('certificate has wrong sliced variable count')
+                raise ValueError('certificate has wrong variable count')
             result = check_map_factorized(certificate, polys)
         if sha256(args.certificate) != args.expect_certificate_sha256:
             raise ValueError('certificate changed during verification')
-        result['eliminated_variable'] = args.variable
-        result['substitution_terms'] = affine
-        result['affine_combination_mask'] = (hex(args.affine_combination_mask)
-                                             if args.affine_combination_mask is not None
-                                             else 'trace')
+        if args.full_original:
+            result['status'] = 'valid_full_nonmembership'
+            result['scope'] = 'full_original'
+        else:
+            result['scope'] = 'affine_slice'
+            result['eliminated_variable'] = args.variable
+            result['substitution_terms'] = affine
+            result['affine_combination_mask'] = (hex(args.affine_combination_mask)
+                                                 if args.affine_combination_mask is not None
+                                                 else 'trace')
         result['plan_sha256'] = args.expect_plan_sha256
         result['descent_source_sha256'] = args.expect_descent_source_sha256
-        result['slice_source_sha256'] = args.expect_slice_source_sha256
+        if args.expect_slice_source_sha256 is not None:
+            result['slice_source_sha256'] = args.expect_slice_source_sha256
         result['closure_source_sha256'] = args.expect_closure_source_sha256
         result['certificate_sha256'] = args.expect_certificate_sha256
     except (OSError, KeyError, TypeError, ValueError, IndexError) as error:
