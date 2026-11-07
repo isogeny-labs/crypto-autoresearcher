@@ -57,12 +57,14 @@ independent of the queued sliced direct-W4 rank calculation:
 This is a proof of the algorithmic invariant and a provenance chain,
 **not an independent primal rank certificate**. It relies on the native
 source/binary and execution receipts faithfully describing the D3 and D4
-computations, and on the recorded affine-slice construction. The queued
-direct-W4 calculation tests the critical equality through a different
-algorithm and independently reconstructed equations: its target rank is
-226437 in the 272052-column sliced universe. Until that reverse check
-finishes, describe seed equality as source-audited conditional evidence,
-not as a checker-certified fact. Even if equality is established, a
+computations, and on the recorded affine-slice construction. The separate
+[direct-W4 calculation](reports/n51-direct-w4-rank-terminal-20261105/report.md)
+tested the critical equality through a different algorithm and
+independently reconstructed equations: its observed rank was 226437 in
+the 272052-column sliced universe, matching the checked kernel dimension.
+This establishes seed equality on that slice under the audited direct
+algorithm, while a separately checked primal rank proof object remains
+unavailable. Even with equality established, a
 `projection_kills_one` producer status needs its own checked D5 derivation
 before claiming `1 in W5`.
 

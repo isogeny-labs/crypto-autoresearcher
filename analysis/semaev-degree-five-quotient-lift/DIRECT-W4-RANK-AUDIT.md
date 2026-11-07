@@ -1,8 +1,9 @@
 # Why the queued direct n51 calculation targets the exact W4 rank
 
 This is a source-level audit of the
-[direct Boolean closure algorithm](../semaev-m2-last-fall-degree/code/lfdclose2.c),
-not a completed n51 rank result. The
+[direct Boolean closure algorithm](../semaev-m2-last-fall-degree/code/lfdclose2.c).
+The terminal n51 calculation and its hashed receipts are in the
+[rank report](reports/n51-direct-w4-rank-terminal-20261105/report.md). The
 fixed sliced input has 51 variables and 51 quadratic generators, with
 15,189 term masks checked term by term against the independent generator
 export. Its degree-at-most-four monomial universe has 272,052 columns.
@@ -46,9 +47,14 @@ constant in W4 would contradict the accepted quotient certificate and
 require input or implementation diagnosis.
 
 The first pretrial build failed because its default include path lacked
-M4RI; zero rank trials ran. The
-[amended protocol](n51-poly01-direct-w4-rank-protocol-002.json)
-reuses the prior SHA-pinned runtime binary under the same cumulative
-budget. It remains queued until the active n51 degree-five attempt is
-terminal. No direct
-rank or LFD-six claim is asserted here.
+M4RI; zero rank trials ran at that stage. The
+[amended protocol](n51-poly01-direct-w4-rank-protocol-002.json) reused the
+prior SHA-pinned runtime binary under the same cumulative budget. Its
+single direct trial exited zero after 6,636.46 seconds and reported rank
+226,437, `W4_one 0`, and three fixed-point iterations. The finish hashes
+match the archived streams and the input hash matches the independently
+reconstructed equations. Consequently the direct algorithm's computed W4
+dimension equals the accepted quotient kernel dimension. This checks
+seed equality on the sliced polynomial-01 instance under the source
+invariant above; it neither checks the original polynomial-00 seed nor
+supplies an LFD-six certificate.
