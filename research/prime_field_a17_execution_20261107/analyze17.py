@@ -216,7 +216,7 @@ def main():
         for arm in (cell['program'],'joint_on_'+cell['program']):
             counted={k:cell[k] for k in COLS if type(cell.get(k))is int and k in metric_ids}
             if cell['verified']:counted.update({'fr_'+op:cell['solver_counters'][arm].get('Fr.field_'+op,0) for op in ('add','sub','mul','inv')})
-            export['runs'].append(t.run_row(run_id='A17-'+str(len(export['runs'])),arm=arm,instance_id=str(cell['case_id']),seed=0,replicate=0,warmup=False,
+            export['runs'].append(t.run_row(run_id='A17-'+str(len(export['runs'])),arm=arm,instance_id=str(cell['case_id']//2),seed=0,replicate=0,warmup=False,
                 status='succeeded' if cell['verified'] else 'timeout' if execution['timeout'] else 'interrupted',
                 measurements=dict(counted=counted,counters={},wall_seconds=None,wall_valid=False,cpu_user_seconds=None,cpu_sys_seconds=None,max_rss_bytes=None),
                 isolation=dict(tier=None,contended=None,blockers=['sharedhost']),verification=dict(status='verified' if cell['verified'] else 'not_run',verifier='producer group/constructor/causal/native/cost checks; no signed independent standing'),

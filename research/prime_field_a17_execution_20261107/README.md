@@ -34,7 +34,7 @@ pilot or calibrated saving is claimed. [pcc:unverified]
 
 The admitted controller, bounded supervisor, prospective protocol/release builder
 and complete/partial cost exporter are implemented. The full software suite
-now has 24 passing checks (`validation/full-software-controls.txt`). The extra
+now has 26 passing checks (`validation/full-software-controls.v2.txt`). The extra
 controller fixtures explicitly mock generation/base/prelude/storage receipts
 for metadata I/O while using real fixed p211 three-atom constructor/query/
 causal/native algebra/row-consequence components; they are not admissible native
@@ -45,3 +45,11 @@ through these preparation APIs. A16's two consumed releases authorize no third
 attempt; this distinct successor needs its own complete prospective contract
 and normal admission. No construction saving, calibrated speedup or novelty is
 asserted by these source components. [pcc:unverified]
+
+The first exact-source assessment found and retained a prospective export-grid
+blocker before any native execution. The corrected exporter declares four
+shared curve instances across all four execution arms, while retaining eight
+native program cases and sixteen rows. Actual complete and all-missing software
+exports now pass schema, paired identity, seed-table and file lint; the original
+disjoint case identifiers fail the negative control. Earlier preview and
+assessment are preserved; the corrected source needs additive reassessment.

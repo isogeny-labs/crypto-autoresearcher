@@ -139,4 +139,32 @@ def test_protocol_preview_is_schema_valid_and_distinguishes_actual_engines():
     assert not t.schema_errors(p,'experiment.protocol/v1') and not t.lint_protocol(p,custody17.HERE)
     assert len(p['randomization']['seed_derivation']['seeds'])==16
     assert p['arms'][0]['parameters']['batch_solver_calls']==12 and p['arms'][0]['parameters']['online_engine_executions']==4
-    assert p['freeze']['status']=='draft' and p['sample_size']['instances']==8
+    assert p['freeze']['status']=='draft' and p['sample_size']['instances']==4
+
+
+@pytest.mark.parametrize('complete',[True,False])
+def test_actual_software_export_schema_grid_seeds_and_file_lint(tmp_path,software_archive,monkeypatch,complete):
+    import shutil,sys
+    source,rules,execution=software_archive;run=tmp_path/'software-run'
+    if complete:shutil.copytree(source,run)
+    else:run.mkdir();execution=dict(execution,returncode=1)
+    protocol=prepare17.make_protocol('0'*40);path=tmp_path/'software-only.protocol.json';write(path,protocol)
+    t=custody17.tools();t.freeze(path,'0'*40,True);protocol=json.loads(path.read_text())
+    interpreter=protocol['arms'][0]['instrument']['binary_sha256']
+    execution=dict(execution,source_commit='0'*40,observed_git_head='0'*40,protocol_sha256=protocol['freeze']['protocol_sha256'],started_at='2026-11-07T00:00:00+00:00',finished_at='2026-11-07T00:00:01+00:00',owner='explicit-software-fixture')
+    write(run/'execution.json',execution)
+    host=dict(cpu_model='explicit software fixture',logical_cpus=1,memory_bytes=2147483648,kernel='software',hypervisor=None,isolation_tier_max=None,git_dirty=True,executable_sha256=interpreter)
+    write(run/'host.json',host);inputs=tmp_path/'software-only.inputs.json';write(inputs,rules)
+    monkeypatch.setattr(analyze17,'INPUTS',inputs)
+    monkeypatch.setattr(sys,'argv',['analyze17','--run',str(run),'--protocol',str(path)])
+    analyze17.main();export=json.loads((run/'export.json').read_text())
+    assert len(export['runs'])==16 and not t.schema_errors(export,'experiment.export/v1')
+    assert not t.lint_export(export,protocol,run,True)
+    identities=[{v['instance_id'] for v in export['runs'] if v['arm']==arm} for arm in custody17.ARMS]
+    assert all(v=={'0','1','2','3'} for v in identities)
+    assert all(v['seed']==0 for v in export['runs'])
+    wrong=deepcopy(export)
+    for v in wrong['runs']:
+        v['instance_id']=str(2*int(v['instance_id'])+(v['arm'] in ('full','joint_on_full')))
+    assert any('instance' in error or 'seed' in error for error in t.lint_export(wrong,protocol,run,True))
+    if not complete:assert all(v['status']=='interrupted' for v in export['runs'])
