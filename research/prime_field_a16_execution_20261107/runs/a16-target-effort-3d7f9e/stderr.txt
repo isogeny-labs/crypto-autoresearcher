@@ -1,0 +1,17 @@
+fatal: packfile .git/objects/pack/pack-50b19313aec68da4bd06fdec2bb1cd5be2c8c515.pack cannot be mapped, check sys.vm.max_map_count and/or RLIMIT_DATA: Cannot allocate memory
+Traceback (most recent call last):
+  File "/workspace/crypto-autoresearcher/research/prime_field_a16_execution_20261107/driver16.py", line 193, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/workspace/crypto-autoresearcher/research/prime_field_a16_execution_20261107/driver16.py", line 27, in main
+    admission=admit(ROOT,args.protocol,args.inputs,SOURCES,PARAMETERS,args.release)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/crypto-autoresearcher/src/crypto_autoresearcher/index_calculus/execution_gate.py", line 50, in admit
+    original = subprocess.check_output(['git', 'show', commit+':'+relative], cwd=repo)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['git', 'show', 'c94b39d74e40f86fbd27efaf9faf90ce863a5aeb:scripts/checkpoint.sh']' returned non-zero exit status 128.
