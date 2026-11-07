@@ -12,7 +12,12 @@ COLS=['case_id','cell_id','method','verified','identified_targets','identified_m
 
 def summarize(run,rules,execution):
     raw=run/'raw';rows=[];errors=[];started=completed=failed=0;physical=Counter();phases=[];loads=[];checkpoints=[]
-    def optional(path):return load(path)if path.exists()else None
+    def optional(path):
+        if not path.exists():return None
+        try:return load(path)
+        except Exception as error:
+            errors.append(dict(path=str(path),error_type=type(error).__name__,error=str(error),paid_prefix_retained=True))
+            return None
     admission=optional(raw/'admission.json');start=optional(run/'checkpoint-admitted-start.json');child=optional(run/'child.json')
     startup=bool(admission and start and child and admission.get('returncode')==0 and start.get('returncode')==0 and
         admission.get('command')==['bash','scripts/checkpoint.sh','gate']and start.get('command')==['bash','scripts/checkpoint.sh','push']and

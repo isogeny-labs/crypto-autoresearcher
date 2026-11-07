@@ -146,3 +146,15 @@ def test_truncated_paid_prefix_and_admission_refusal(tmp_path,monkeypatch):
     monkeypatch.setattr(driver21,'admit',refuse)
     with pytest.raises(ValueError,match='admission refusal'):driver21.main()
     assert not(tmp_path/'new-raw').exists()
+
+
+def test_truncated_result_preserves_paid_prefix_and_unknown_rows(tmp_path):
+    raw=tmp_path/'raw';raw.mkdir()
+    event=dict(kind='batch_solver_failed',execution_arm='direct_formal',case_id=0,phases=[dict(counters=dict(paid_prefix=11))])
+    (raw/'software.events.jsonl').write_text(json.dumps(event)+'\n')
+    (raw/'software.direct_formal.json').write_text('{explicit software truncated result')
+    rules=dict(cases=[dict(cell_id='software')])
+    value=analyze21.summarize(tmp_path,rules,dict(returncode=1))
+    assert not value['panel_complete']and value['physical_counters']['paid_prefix']==11
+    assert len(value['rows'])==3 and not any(v['verified']for v in value['rows'])
+    assert any(v['path'].endswith('software.direct_formal.json')and v['error_type']=='JSONDecodeError'for v in value['errors'])
