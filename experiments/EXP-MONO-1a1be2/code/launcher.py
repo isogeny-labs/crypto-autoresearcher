@@ -24,61 +24,174 @@ Two entry points:
 
 Nothing here is a run until a cell is executed through `cell`. Library functions (run_cell) are used by the
 tests on KAT cells only.
+
+Executed-code integrity (TASK-20261106-2b7223, HX-2): the launcher refuses (exit 3) at import, in gate() and in the
+selftest subcommand when code/ holds any entry outside CODE_TREE_ALLOWLIST; it never writes bytecode and redirects
+every __pycache__ lookup to a fresh empty directory outside code/; third-party modules are imported before code/ is
+placed on sys.path; the self-test subprocess runs with -B -P -X pycache_prefix=<fresh dir> in a fresh cwd.
 """
 from __future__ import annotations
 
-import argparse
-import dataclasses
-import datetime
-import hashlib
-import itertools
-import json
-import math
+# --------------------------------------------------------------------------------------------------------------
+# Bootstrap (HX-2). Nothing below the first scan may be shadowed by something planted in code/: the scan uses only
+# `os`/`sys`/`stat`, which are loaded before this file runs, and it runs before any other import.
 import os
-import platform
-import re
-import resource
-import shutil
-import subprocess
 import sys
-import tempfile
-import time
-import traceback
-import xml.etree.ElementTree as ET
-from fractions import Fraction
+
+sys.dont_write_bytecode = True
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 EXIT_REFUSED = 3
 EXIT_SELFTEST = 4
+EXIT_F2_SENTINEL = 5
 
-# FX-11 (5): code/ may hold only these .py files (relative paths, '/' separated). A stray numpy.py or yaml.py in
-# code/ would shadow a library on `sys.path.insert(0, HERE)` while being hashed by nothing, so the check runs
-# BEFORE any import that sys.path could redirect. No conftest.py and no tests/__init__.py existed at 72f51766a6.
-EXPECTED_PY_FILES = ("fqn.py", "curves.py", "semaev.py", "counters.py", "launcher.py", "make_trial_plan.py",
-                     "throughput_calibration.py", "tests/test_kat.py", "tests/test_kat_extended.py")
+# HX-2 (a): every file under code/ at the fix commit, relative to code/, '/' separated, sorted. code/ may hold
+# nothing else at any depth: no __pycache__, .pyc, .pyo, .so, hidden file, symlink or directory. A directory is
+# allowed only as the parent of an allow-listed file ("tests"). The sha256 of this tuple is recorded in every
+# contract manifest (code_tree.allowlist_sha256) and is bound by code_sha256 because it lives in this file.
+CODE_TREE_ALLOWLIST = (
+    "README.md",
+    "counters.py",
+    "curves.py",
+    "fqn.py",
+    "kernel.c",
+    "launcher.py",
+    "make_trial_plan.py",
+    "semaev.py",
+    "tests/test_kat.py",
+    "tests/test_kat_extended.py",
+    "throughput_calibration.py",
+)
+# Test hook (HX-2): a module constant, deliberately not an environment variable. A test may flip it in a scratch
+# copy of this file or monkeypatch it to show what the allow-list prevents; production never changes it, and any
+# change alters code_sha256.
+ALLOWLIST_CHECK_ENABLED = True
 
 
-def stray_python_files(code_dir: str) -> list:
-    """Relative paths of every .py file under code_dir that is not in EXPECTED_PY_FILES (sorted)."""
-    found = []
-    for root, dirs, files in os.walk(code_dir):
-        dirs[:] = [d for d in dirs if d != "__pycache__"]
-        for f in files:
-            if f.endswith(".py"):
-                rel = os.path.relpath(os.path.join(root, f), code_dir).replace(os.sep, "/")
-                if rel not in EXPECTED_PY_FILES:
-                    found.append(rel)
-    return sorted(found)
+def scan_code_tree(code_dir: str, allowlist=None) -> dict:
+    """lstat-based scan of code_dir against the allow-list (never follows a link). Returns
+    {"ok", "extra": [{"path", "kind"}], "not_regular": [{"path", "kind"}], "missing": [path], "entries": n}."""
+    import stat as _st
+    allowlist = CODE_TREE_ALLOWLIST if allowlist is None else tuple(allowlist)
+    allowed_files = set(allowlist)
+    allowed_dirs = {a.rsplit("/", 1)[0] for a in allowlist if "/" in a}
+    extra, not_regular, seen_regular, n = [], [], set(), 0
+
+    def walk(rel_dir: str) -> None:
+        nonlocal n
+        full = os.path.join(code_dir, rel_dir) if rel_dir else code_dir
+        with os.scandir(full) as it:
+            names = sorted(e.name for e in it)
+        for name in names:
+            rel = f"{rel_dir}/{name}" if rel_dir else name
+            n += 1
+            mode = os.lstat(os.path.join(code_dir, rel)).st_mode
+            if _st.S_ISLNK(mode):
+                (not_regular if (rel in allowed_files or rel in allowed_dirs) else extra).append(
+                    {"path": rel, "kind": "symlink"})
+            elif _st.S_ISDIR(mode):
+                if rel in allowed_dirs:
+                    walk(rel)
+                elif rel in allowed_files:
+                    not_regular.append({"path": rel, "kind": "directory"})
+                else:
+                    extra.append({"path": rel, "kind": "directory"})
+            elif _st.S_ISREG(mode):
+                if rel in allowed_files:
+                    seen_regular.add(rel)
+                else:
+                    extra.append({"path": rel, "kind": "file"})
+            else:
+                (not_regular if rel in allowed_files else extra).append({"path": rel, "kind": "special file"})
+
+    walk("")
+    missing = sorted(allowed_files - seen_regular - {x["path"] for x in not_regular})
+    return {"ok": not (extra or not_regular or missing), "extra": extra, "not_regular": not_regular,
+            "missing": missing, "entries": n}
 
 
-_STRAY = stray_python_files(HERE)
-if _STRAY:
-    print("REFUSED: code/ holds .py files outside the expected set: " + ", ".join(_STRAY), file=sys.stderr)
+def scan_problems(scan: dict) -> list:
+    out = [f"code/ entry outside CODE_TREE_ALLOWLIST: {e['path']} ({e['kind']})" for e in scan["extra"]]
+    out += [f"code/ allow-listed path is not a regular file: {e['path']} ({e['kind']})" for e in scan["not_regular"]]
+    out += [f"code/ allow-listed file missing: {p}" for p in scan["missing"]]
+    return out
+
+
+def allowlist_sha256(allowlist=None) -> str:
+    import hashlib as _h
+    return _h.sha256(("\n".join(CODE_TREE_ALLOWLIST if allowlist is None else allowlist) + "\n").encode()).hexdigest()
+
+
+def _bootstrap_refuse(lines: list) -> None:
+    for ln in lines:
+        print("REFUSED: " + ln, file=sys.stderr)
     sys.exit(EXIT_REFUSED)
 
-sys.path.insert(0, HERE)
 
+_IMPORT_SCAN = scan_code_tree(HERE)
+if ALLOWLIST_CHECK_ENABLED and not _IMPORT_SCAN["ok"]:
+    _bootstrap_refuse(scan_problems(_IMPORT_SCAN))
+
+if __name__ == "__main__":
+    # `python code/launcher.py` puts code/ first on sys.path; drop it so stdlib and third-party imports cannot resolve there.
+    sys.path[:] = [p for p in sys.path if os.path.abspath(p or os.getcwd()) != HERE]
+
+import argparse  # noqa: E402
+import atexit  # noqa: E402
+import dataclasses  # noqa: E402
+import datetime  # noqa: E402
+import hashlib  # noqa: E402
+import itertools  # noqa: E402
+import json  # noqa: E402
+import math  # noqa: E402
+import platform  # noqa: E402
+import re  # noqa: E402
+import resource  # noqa: E402
+import shutil  # noqa: E402
+import subprocess  # noqa: E402
+import tempfile  # noqa: E402
+import time  # noqa: E402
+import traceback  # noqa: E402
+import xml.etree.ElementTree as ET  # noqa: E402
+from fractions import Fraction  # noqa: E402
+
+
+def _inside(path: str, root: str) -> bool:
+    p, r = os.path.realpath(path), os.path.realpath(root)
+    return p == r or p.startswith(r + os.sep)
+
+
+# HX-2 (b): bytecode is never written, and a cached file is never read from code/: sys.pycache_prefix redirects every
+# __pycache__ lookup to a fresh empty directory outside code/. Set before any non-stdlib import and before HERE
+# is placed on sys.path.
+_PYC_PREFIX = tempfile.mkdtemp(prefix="mono1a1be2-pycache-")
+if _inside(_PYC_PREFIX, HERE):
+    _bootstrap_refuse([f"temporary directory {_PYC_PREFIX} lies inside code/"])
+atexit.register(shutil.rmtree, _PYC_PREFIX, True)
+sys.pycache_prefix = _PYC_PREFIX
+
+# HX-2 (c): third-party modules are imported BEFORE HERE is on sys.path, so code/ cannot shadow them.
 import numpy as np  # noqa: E402
+import pytest  # noqa: E402
+import yaml  # noqa: E402
+
+THIRD_PARTY = ("numpy", "yaml", "pytest")
+
+
+def module_origins(code_dir: str | None = None) -> dict:
+    """{module: __file__} for the third-party modules, and the list of those that lie inside code_dir."""
+    code_dir = code_dir or HERE
+    origins = {name: getattr(sys.modules.get(name), "__file__", None) for name in THIRD_PARTY}
+    bad = [n for n, f in origins.items() if f is None or _inside(f, code_dir)]
+    return {"origins": {n: (os.path.realpath(f) if f else None) for n, f in origins.items()}, "bad": bad}
+
+
+_ORIGINS = module_origins(HERE)
+if ALLOWLIST_CHECK_ENABLED and _ORIGINS["bad"]:
+    _bootstrap_refuse([f"third-party module {n} resolves inside code/ or has no file: {_ORIGINS['origins'][n]}"
+                       for n in _ORIGINS["bad"]])
+
+sys.path.insert(0, HERE)
 
 import counters  # noqa: E402
 import curves  # noqa: E402
@@ -101,7 +214,7 @@ RUN_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 # tests/test_kat.py (a test checks it against a fresh collection). DESIGNED_SKIPS maps the specification status
 # to the node ids that are skipped by design: none before approval; after approval, the one refusal test that
 # needs a not-yet-approved specification.
-EXPECTED_KAT_ITEMS = 379
+EXPECTED_KAT_ITEMS = 438
 SKIP_NODE_REFUSAL = "tests/test_kat.py::test_launcher_refuses_contract_cell_while_specification_not_approved"
 DESIGNED_SKIPS = {"approved": (SKIP_NODE_REFUSAL,)}
 
@@ -143,6 +256,89 @@ def _sha_or_none(path: str):
 
 def code_file_hashes() -> dict:
     return {name: sha256_file(os.path.join(HERE, name)) for name in CODE_FILES}
+
+
+# ----------------------------------------------------------------------------- code-tree integrity (HX-2, V2-6)
+def stray_python_files(code_dir: str) -> list:
+    """Relative paths of every .py entry under code_dir outside CODE_TREE_ALLOWLIST (sorted). Kept for the FX-11 (5)
+    test; the allow-list scan (scan_code_tree) is the real check and covers every kind of entry."""
+    return sorted(e["path"] for e in scan_code_tree(code_dir)["extra"] if e["path"].endswith(".py"))
+
+
+def allowlist_file_hashes(code_dir: str) -> dict:
+    """sha256 of every allow-listed file under code_dir (None where it cannot be read as a regular file)."""
+    return {rel: _sha_or_none(os.path.join(code_dir, *rel.split("/"))) for rel in CODE_TREE_ALLOWLIST}
+
+
+def code_tree_state(code_dir: str) -> dict:
+    """The pre-gate evidence of V2-6: scan, allow-list digest, file hashes and third-party module origins."""
+    scan = scan_code_tree(code_dir)
+    mo = module_origins(code_dir)
+    return {"code_dir": os.path.abspath(code_dir), "allowlist_sha256": allowlist_sha256(), "pre_gate_scan": scan,
+            "file_sha256_at_gate": allowlist_file_hashes(code_dir), "module_origins": mo["origins"],
+            "module_origins_inside_code": mo["bad"]}
+
+
+def code_tree_refusals(state: dict) -> list:
+    out = scan_problems(state["pre_gate_scan"])
+    out += [f"third-party module {n} resolves inside code/ or has no file" for n in state["module_origins_inside_code"]]
+    return out
+
+
+def code_tree_block(state: dict) -> dict:
+    """The manifest code_tree block of a finished cell: a post-cell scan and re-hash against the gate state."""
+    cd = state["code_dir"]
+    post = scan_code_tree(cd)
+    after = allowlist_file_hashes(cd)
+    before = state["file_sha256_at_gate"]
+    diff = sorted(k for k in set(before) | set(after) if before.get(k) != after.get(k))
+    mo = module_origins(cd)
+    return {"allowlist_sha256": state["allowlist_sha256"], "pre_gate_scan": state["pre_gate_scan"],
+            "post_cell_scan": post, "file_sha256_at_gate": before, "file_sha256_after_cell": after,
+            "rehash_differences": diff, "module_origins": mo["origins"],
+            "module_origins_inside_code": mo["bad"], "code_dir": cd}
+
+
+def code_tree_problems(block) -> list:
+    """Invalid-reasons from a manifest code_tree block (V2-6 a, b, c). A missing block is itself a problem."""
+    if not isinstance(block, dict):
+        return ["V2-6: manifest carries no code_tree block"]
+    out = []
+    for key in ("pre_gate_scan", "post_cell_scan"):
+        sc = block.get(key)
+        if not isinstance(sc, dict) or sc.get("ok") is not True:
+            out.append(f"V2-6: code_tree {key} is missing or found entries outside CODE_TREE_ALLOWLIST: "
+                       + "; ".join(scan_problems(sc)) if isinstance(sc, dict) else f"V2-6: code_tree {key} missing")
+    if block.get("allowlist_sha256") != allowlist_sha256():
+        out.append("V2-6: code_tree allowlist_sha256 differs from CODE_TREE_ALLOWLIST")
+    if block.get("rehash_differences"):
+        out.append(f"V2-6: allow-listed file(s) changed during the cell: {block['rehash_differences']}")
+    if block.get("file_sha256_at_gate") != block.get("file_sha256_after_cell"):
+        out.append("V2-6: allow-listed file hashes differ between the gate and the end of the cell")
+    if block.get("module_origins_inside_code"):
+        out.append(f"V2-6: third-party module(s) resolved inside code/: {block['module_origins_inside_code']}")
+    return out
+
+
+# ----------------------------------------------------------------------------- state directories (HX-7)
+def experiment_dir() -> str:
+    """The experiment directory: where the specification lives."""
+    return os.path.dirname(os.path.abspath(SPEC_PATH))
+
+
+def real_dir_problem(path: str, parent: str | None = None):
+    """None if `path` does not exist or is a real directory (not a link) whose realpath lies inside `parent`
+    (default: its own parent directory); otherwise the reason."""
+    if not os.path.lexists(path):
+        return None
+    if os.path.islink(path):
+        return f"{path} is a symlink"
+    if not os.path.isdir(path):
+        return f"{path} is not a directory"
+    parent = parent or os.path.dirname(os.path.abspath(path))
+    if not os.path.realpath(path).startswith(os.path.realpath(parent) + os.sep):
+        return f"{path} does not resolve inside {parent}"
+    return None
 
 
 def check_approval(spec_path: str | None = None, lock_path: str | None = None, plan_path: str | None = None,
@@ -235,26 +431,27 @@ def env_key() -> dict:
 
 
 def selftest_environment(code_dir: str) -> dict:
-    """FX-3: the self-test subprocess environment. Plugin autoload off, no bytecode, PYTEST_ADDOPTS and
-    PYTEST_PLUGINS removed, and PYTHONPATH reduced to the entries inside the code directory."""
+    """FX-3 and HX-2: the self-test subprocess environment. Plugin autoload off, no bytecode written, no pycache
+    prefix from the host, PYTEST_ADDOPTS and PYTEST_PLUGINS removed, and PYTHONPATH removed altogether (an entry
+    inside code/ would put it ahead of site-packages)."""
     env = dict(os.environ)
     env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
     env["PYTHONDONTWRITEBYTECODE"] = "1"
-    env.pop("PYTEST_ADDOPTS", None)
-    env.pop("PYTEST_PLUGINS", None)
-    root = os.path.realpath(code_dir)
-    keep = [p for p in env.get("PYTHONPATH", "").split(os.pathsep)
-            if p and (os.path.realpath(p) == root or os.path.realpath(p).startswith(root + os.sep))]
-    if keep:
-        env["PYTHONPATH"] = os.pathsep.join(keep)
-    else:
-        env.pop("PYTHONPATH", None)
+    for k in ("PYTEST_ADDOPTS", "PYTEST_PLUGINS", "PYTHONPATH", "PYTHONPYCACHEPREFIX", "PYTHONSAFEPATH", "PYTHONHOME"):
+        env.pop(k, None)
     return env
 
 
-def _suite_argv(code_dir: str, extra: list) -> list:
-    return [sys.executable, "-m", "pytest"] + extra + ["-p", "no:cacheprovider", "--noconftest", "-c", os.devnull,
-                                                         "--rootdir", code_dir]
+# The interpreter flags of the self-test (HX-2 d): -B (no bytecode), -P (no script or cwd directory on sys.path) and
+# -X pycache_prefix=<fresh empty directory>. pytest runs through this one-line wrapper so that the pytest module's
+# resolved __file__ is printed by the very invocation that runs (and collects) the suite.
+PYTEST_WRAPPER = ("import sys, pytest; print('PYTEST_FILE=' + str(pytest.__file__), flush=True); "
+                  "sys.exit(pytest.main(sys.argv[1:]))")
+
+
+def _suite_argv(code_dir: str, extra: list, pyc_dir: str) -> list:
+    return [sys.executable, "-B", "-P", "-X", f"pycache_prefix={pyc_dir}", "-c", PYTEST_WRAPPER] + extra + \
+        ["-p", "no:cacheprovider", "--noconftest", "-c", os.devnull, "--rootdir", code_dir]
 
 
 def parse_junit(path: str, code_dir: str | None = None) -> dict:
@@ -308,24 +505,42 @@ def evaluate_suite(junit_path: str, expected_items: int, designed: list, rc: int
 def run_selftest_suite(out_dir: str, test_file: str | None = None, code_dir: str | None = None,
                        expected_items: int | None = None, designed: list | None = None,
                        spec_path: str | None = None) -> dict:
-    """FX-3 and FX-4: run the suite isolated from repository configuration; write junit.xml into out_dir.
-    Returns {passed, reasons, parsed, junit_path, rc, stdout_tail, rootdir, inifile, collected, pytest_version,
-    started_utc, finished_utc}."""
-    test_file = test_file or TEST_FILE
-    code_dir = code_dir or HERE
+    """FX-3, FX-4 and HX-2 (d): run the suite isolated from repository configuration; write junit.xml into out_dir.
+    The subprocess runs with -B -P -X pycache_prefix=<fresh empty dir> and cwd = a fresh temporary directory, both
+    outside code/. Returns {passed, reasons, parsed, junit_path, rc, stdout_tail, rootdir, inifile, collected,
+    pytest_version, pytest_file, started_utc, finished_utc}."""
+    test_file = os.path.abspath(test_file or TEST_FILE)
+    code_dir = os.path.abspath(code_dir or HERE)
     expected_items = EXPECTED_KAT_ITEMS if expected_items is None else expected_items
     if designed is None:
         designed = designed_skips(spec_status(spec_path))
+    out_dir = os.path.abspath(out_dir)
     os.makedirs(out_dir, exist_ok=True)
     junit = os.path.join(out_dir, "junit.xml")
+    blank = {"passed": False, "parsed": {}, "junit_path": junit, "rc": None, "stdout_tail": "", "rootdir": None,
+             "inifile": None, "collected": None, "pytest_version": None, "pytest_file": None, "started_utc": None,
+             "finished_utc": None}
+    if not hasattr(sys.flags, "safe_path"):
+        return {**blank, "reasons": ["host Python lacks the -P interpreter flag (needs 3.11 or later); the self-test "
+                                     "will not fall back to a path that includes code/"]}
     env = selftest_environment(code_dir)
-    started = _utc_now()
-    r = subprocess.run(_suite_argv(code_dir, ["-q"]) + ["--junitxml", junit, test_file],
-                       capture_output=True, text=True, env=env, cwd=code_dir)
-    finished = _utc_now()
-    c = subprocess.run(_suite_argv(code_dir, ["--collect-only"]) + [test_file],
-                       capture_output=True, text=True, env=env, cwd=code_dir)
+    pyc_dir = tempfile.mkdtemp(prefix="mono1a1be2-selftest-pyc-")
+    cwd = tempfile.mkdtemp(prefix="mono1a1be2-selftest-cwd-")
+    try:
+        for d in (pyc_dir, cwd):
+            if _inside(d, code_dir):
+                return {**blank, "reasons": [f"self-test temporary directory {d} lies inside code/"]}
+        started = _utc_now()
+        r = subprocess.run(_suite_argv(code_dir, ["-q"], pyc_dir) + ["--junitxml", junit, test_file],
+                           capture_output=True, text=True, env=env, cwd=cwd)
+        finished = _utc_now()
+        c = subprocess.run(_suite_argv(code_dir, ["--collect-only"], pyc_dir) + [test_file],
+                           capture_output=True, text=True, env=env, cwd=cwd)
+    finally:
+        shutil.rmtree(pyc_dir, ignore_errors=True)
+        shutil.rmtree(cwd, ignore_errors=True)
     hdr = c.stdout
+    pyfile = (re.search(r"^PYTEST_FILE=(.*)$", hdr, re.M) or [None, None])[1]
     rootdir = (re.search(r"^rootdir: (.*)$", hdr, re.M) or [None, None])[1]
     inifile = (re.search(r"^configfile: (.*)$", hdr, re.M) or [None, None])[1]
     collected = re.search(r"collected (\d+) items?", hdr)
@@ -338,14 +553,40 @@ def run_selftest_suite(out_dir: str, test_file: str | None = None, code_dir: str
     if collected != expected_items:
         ok = False
         reasons.append(f"collection reports {collected} items, expected {expected_items}")
+    if not pyfile:
+        ok = False
+        reasons.append("the self-test did not report where pytest was imported from")
+    elif _inside(pyfile, code_dir):
+        ok = False
+        reasons.append(f"pytest was imported from inside code/: {pyfile}")
     return {"passed": ok, "reasons": reasons, "parsed": parsed, "junit_path": junit, "rc": r.returncode,
             "stdout_tail": (r.stdout + r.stderr)[-3000:], "rootdir": rootdir, "inifile": inifile,
-            "collected": collected, "pytest_version": pv, "started_utc": started, "finished_utc": finished}
+            "collected": collected, "pytest_version": pv, "pytest_file": pyfile, "started_utc": started,
+            "finished_utc": finished}
 
 
 RECEIPT_FIELDS = ("receipt_version", "code_sha256", "test_file_sha256", "lock_sha256", "junit_sha256", "counts",
-                  "skipped_node_ids", "pytest_version", "rootdir", "inifile", "started_utc", "finished_utc", "env_key",
-                  "expected_items", "designed_skips")
+                  "skipped_node_ids", "pytest_version", "pytest_file", "rootdir", "inifile", "started_utc",
+                  "finished_utc", "env_key", "expected_items", "designed_skips")
+
+_RECEIPT_SEQ = itertools.count()
+
+
+def new_receipt_dir(receipts_root: str, code_sha: str) -> tuple:
+    """HX-9: exclusive create of <receipts_root>/<UTC stamp>-<code8>-<pid>-<seq>. The suffix is unique within and across
+    processes (pid, then a per-process counter), and os.mkdir never overwrites; a clash is retried with the next
+    counter value. Returns (receipt_id, directory)."""
+    os.makedirs(receipts_root, exist_ok=True)
+    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    for _ in range(1000):
+        rid = f"{stamp}-{code_sha[:8]}-{os.getpid()}-{next(_RECEIPT_SEQ)}"
+        rdir = os.path.join(receipts_root, rid)
+        try:
+            os.mkdir(rdir)
+        except FileExistsError:
+            continue
+        return rid, rdir
+    raise RuntimeError("could not create a unique receipt directory")
 
 
 def write_selftest_receipt(receipts_root: str | None = None, spec_path: str | None = None,
@@ -359,15 +600,19 @@ def write_selftest_receipt(receipts_root: str | None = None, spec_path: str | No
     lock_path = lock_path or LOCK_PATH
     test_file = test_file or TEST_FILE
     code_dir = code_dir or HERE
+    if ALLOWLIST_CHECK_ENABLED:
+        probs = code_tree_refusals(code_tree_state(code_dir))
+        if probs:
+            return EXIT_REFUSED, None, ["REFUSED: selftest not startable:"] + ["  - " + r for r in probs]
+    bad_dir = real_dir_problem(receipts_root, os.path.dirname(os.path.abspath(spec_path)))
+    if bad_dir:
+        return EXIT_REFUSED, None, ["REFUSED: selftest not startable:", "  - " + bad_dir]
     ok, reasons = check_approval(spec_path, lock_path, None, test_file)
     if not ok:
         return EXIT_REFUSED, None, ["REFUSED: selftest not startable:"] + ["  - " + r for r in reasons]
     expected_items = EXPECTED_KAT_ITEMS if expected_items is None else expected_items
     designed = designed_skips(spec_status(spec_path)) if designed is None else designed
-    stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    rid = f"{stamp}-{code_sha256()[:8]}"
-    rdir = os.path.join(receipts_root, rid)
-    os.makedirs(rdir)                                   # never overwrites an existing receipt directory
+    rid, rdir = new_receipt_dir(receipts_root, code_sha256())
     res = run_selftest_suite(rdir, test_file, code_dir, expected_items, designed, spec_path)
     if not res["passed"]:
         return EXIT_SELFTEST, None, ["REFUSED: start-up known-answer suite did not pass in full:"] + \
@@ -378,6 +623,7 @@ def write_selftest_receipt(receipts_root: str | None = None, spec_path: str | No
            "counts": {"tests": p["tests"], "passed": p["passed"], "failures": p["failures"],
                       "errors": p["errors"], "skipped": len(p["skipped_ids"]), "xfail": p["xfail"]},
            "skipped_node_ids": p["skipped_ids"], "pytest_version": res["pytest_version"],
+           "pytest_file": res["pytest_file"],
            "rootdir": res["rootdir"], "inifile": res["inifile"], "started_utc": res["started_utc"],
            "finished_utc": res["finished_utc"], "env_key": env_key(), "expected_items": expected_items,
            "designed_skips": sorted(designed)}
@@ -435,12 +681,16 @@ def verify_receipt(path: str, receipts_root: str | None = None, spec_path: str |
                                 "errors": j["errors"], "skipped": len(j["skipped_ids"]), "xfail": j["xfail"]}
               or rec["skipped_node_ids"] != j["skipped_ids"]):
         bad.append("receipt counts or skipped node ids differ from the junit.xml beside it")
-    try:
-        import pytest
-        if rec["pytest_version"] != pytest.__version__:
-            bad.append("receipt pytest_version differs from this host")
-    except Exception:  # noqa: BLE001
-        bad.append("pytest not importable")
+    if rec["pytest_version"] != pytest.__version__:
+        bad.append("receipt pytest_version differs from this host")
+    pf = rec["pytest_file"]
+    if not isinstance(pf, str) or not pf:
+        bad.append("receipt pytest_file is missing")
+    else:
+        if _inside(pf, code_dir):
+            bad.append("receipt pytest_file lies inside code/")
+        if os.path.realpath(pf) != os.path.realpath(pytest.__file__):
+            bad.append("receipt pytest_file differs from the pytest this launcher imported")
     if not isinstance(rec["rootdir"], str) or os.path.realpath(rec["rootdir"]) != os.path.realpath(code_dir):
         bad.append("receipt rootdir is not the code directory")
     if not isinstance(rec["inifile"], str) or os.path.realpath(os.path.join(rec["rootdir"] or "", rec["inifile"])) \
@@ -467,7 +717,8 @@ _GATE_TOKEN = object()
 
 @dataclasses.dataclass(frozen=True)
 class GateResult:
-    """What gate() returns. run_cell(kat=False) refuses unless given one."""
+    """What gate() returns. run_cell(kat=False) refuses unless given one. The trailing fields default to None so a
+    GateResult built by hand is still a GateResult, but compute_validity then finds nothing it can re-check (HX-7)."""
     specification_sha256: str
     lock_sha256: str
     trial_plan_sha256: str
@@ -477,22 +728,59 @@ class GateResult:
     startup_selftest: dict
     selftest_files: dict
     _token: object = dataclasses.field(default=None, repr=False, compare=False)
+    paths: dict | None = dataclasses.field(default=None, compare=False)
+    code_tree: dict | None = dataclasses.field(default=None, compare=False)
+    cell_id: str | None = None
+
+
+def plan_cell(plan_path: str, cell_id: str):
+    with open(plan_path) as fh:
+        plan = json.load(fh)
+    return next((c for c in plan.get("cells", []) if c.get("cell_id") == cell_id), None)
+
+
+def f2_sentinel_path(runs_dir: str | None = None) -> str:
+    return os.path.join(runs_dir or RUNS_DIR, STOP_F2_NAME)
+
+
+def f2_sentinel_present(runs_dir: str | None = None) -> bool:
+    """HX-5 (c): lexists, so a broken symlink, a directory or any entry of that name counts."""
+    return os.path.lexists(f2_sentinel_path(runs_dir))
 
 
 def gate(plan_path: str, receipt_path: str | None = None, *, spec_path: str | None = None,
          lock_path: str | None = None, test_file: str | None = None, expected_items: int | None = None,
          designed: list | None = None, receipts_root: str | None = None, code_dir: str | None = None,
-         scratch_dir: str | None = None) -> GateResult:
-    """check_approval, then the start-up self-test (run here, or an accepted receipt). Raises GateRefused with
-    the exit code on any failure; a receipt that fails a check refuses (it never falls through to a run)."""
+         scratch_dir: str | None = None, cell_id: str | None = None, runs_dir: str | None = None) -> GateResult:
+    """Code-tree scan (HX-2), check_approval, the F2 family stop for an arm-A cell (HX-5 a), then the start-up
+    self-test (run here, or an accepted receipt). Raises GateRefused with the exit code on any failure; a receipt that
+    fails a check refuses (it never falls through to a run)."""
     spec_path = spec_path or SPEC_PATH
     lock_path = lock_path or LOCK_PATH
     test_file = test_file or TEST_FILE
     code_dir = code_dir or HERE
+    runs_dir = runs_dir or RUNS_DIR
     expected_items = EXPECTED_KAT_ITEMS if expected_items is None else expected_items
+    tree = code_tree_state(code_dir)
+    if ALLOWLIST_CHECK_ENABLED:
+        probs = code_tree_refusals(tree)
+        if probs:
+            raise GateRefused(probs, EXIT_REFUSED)
+    exp = os.path.dirname(os.path.abspath(spec_path))
+    for d in (runs_dir, receipts_root or RECEIPTS_DIR):
+        bad_dir = real_dir_problem(d, exp)
+        if bad_dir:
+            raise GateRefused([bad_dir], EXIT_REFUSED)
     ok, reasons = check_approval(spec_path, lock_path, plan_path, test_file)
     if not ok:
         raise GateRefused(reasons, EXIT_REFUSED)
+    if cell_id is not None:
+        cell = plan_cell(plan_path, cell_id)
+        if cell is None:
+            raise GateRefused([f"cell {cell_id} not in the plan"], EXIT_REFUSED)
+        if cell.get("arm") == "A" and f2_sentinel_present(runs_dir):
+            raise GateRefused([f"F2 family stop: {f2_sentinel_path(runs_dir)} exists; every arm-A cell is void until "
+                               "the counter is repaired under a new implementation commit"], EXIT_REFUSED)
     designed = designed_skips(spec_status(spec_path)) if designed is None else designed
     if receipt_path:
         rok, rr, rec, junit = verify_receipt(receipt_path, receipts_root, spec_path, lock_path, test_file,
@@ -503,8 +791,8 @@ def gate(plan_path: str, receipt_path: str | None = None, *, spec_path: str | No
         st = {"mode": "receipt", "receipt_sha256": sha256_file(os.path.realpath(receipt_path)),
               "junit_sha256": sha256_file(junit), "tests": p["tests"], "passed": p["passed"],
               "skipped_node_ids": p["skipped_ids"], "failures": p["failures"], "errors": p["errors"],
-              "pytest_version": rec["pytest_version"], "rootdir": rec["rootdir"], "inifile": rec["inifile"],
-              "env_key": rec["env_key"]}
+              "pytest_version": rec["pytest_version"], "pytest_file": rec["pytest_file"], "rootdir": rec["rootdir"],
+              "inifile": rec["inifile"], "env_key": rec["env_key"]}
         files = {"junit.xml": junit, "receipt.json": os.path.realpath(receipt_path)}
     else:
         sdir = tempfile.mkdtemp(prefix="mono1a1be2-selftest-", dir=scratch_dir)
@@ -516,18 +804,32 @@ def gate(plan_path: str, receipt_path: str | None = None, *, spec_path: str | No
         st = {"mode": "ran", "receipt_sha256": None, "junit_sha256": sha256_file(res["junit_path"]),
               "tests": p["tests"], "passed": p["passed"], "skipped_node_ids": p["skipped_ids"],
               "failures": p["failures"], "errors": p["errors"], "pytest_version": res["pytest_version"],
-              "rootdir": res["rootdir"], "inifile": res["inifile"], "env_key": env_key()}
+              "pytest_file": res["pytest_file"], "rootdir": res["rootdir"], "inifile": res["inifile"],
+              "env_key": env_key()}
         files = {"junit.xml": res["junit_path"]}
+    # the self-test ran for minutes: the tree is scanned and hashed again before the gate is handed out, and the
+    # hashes recorded as "at the gate" are these
+    tree1 = code_tree_state(code_dir)
+    if ALLOWLIST_CHECK_ENABLED:
+        probs = code_tree_refusals(tree1)
+        if probs:
+            raise GateRefused(probs, EXIT_REFUSED)
+    if tree1["file_sha256_at_gate"] != tree["file_sha256_at_gate"]:
+        raise GateRefused(["an allow-listed file changed while the start-up self-test ran"], EXIT_REFUSED)
+    tree = tree1
     return GateResult(specification_sha256=sha256_file(spec_path), lock_sha256=sha256_file(lock_path),
                       trial_plan_sha256=sha256_file(plan_path), code_sha256=code_sha256(),
                       test_file_sha256=sha256_file(test_file), check_approval_passed=True,
-                      startup_selftest=st, selftest_files=files, _token=_GATE_TOKEN)
+                      startup_selftest=st, selftest_files=files, _token=_GATE_TOKEN,
+                      paths={"specification": os.path.abspath(spec_path), "lock": os.path.abspath(lock_path),
+                             "plan": os.path.abspath(plan_path), "test_file": os.path.abspath(test_file),
+                             "code_dir": os.path.abspath(code_dir), "runs_dir": os.path.abspath(runs_dir)},
+                      code_tree=tree, cell_id=cell_id)
 
 
 def _require_gate(g) -> None:
     if not isinstance(g, GateResult) or g._token is not _GATE_TOKEN or not g.check_approval_passed:
         raise PermissionError("run_cell(kat=False) requires the GateResult returned by launcher.gate()")
-
 
 
 # ----------------------------------------------------------------------------- environment record
@@ -565,6 +867,7 @@ def environment_record() -> dict:
                  "cpu_count": os.cpu_count()},
         "git": git_state(),
         "code_sha256": code_sha256(), "code_file_sha256": code_file_hashes(),
+        "module_origins": module_origins()["origins"], "allowlist_sha256": allowlist_sha256(),
         "random_sources": ["numpy PCG64 seeded per the specification seed rules (curves, bases, tuples, targets)",
                            "random.Random(20261029) choosing points in baby-step giant-step (does not affect N)",
                            "random.Random(20261029) in Cantor-Zassenhaus root splitting (does not affect the root set)"],
@@ -707,7 +1010,7 @@ def run_arm_c(spec: dict, kernel, derived: bool, log):
     if "matched_random" in spec.get("base_seeds", {}):
         bases["matched_random"] = counters.matched_random_base(
             E, B, t2, curves.make_rng(spec["base_seeds"]["matched_random"]))
-    cdf = {"cell_id": spec["cell_id"], "n": n, "q": q, "curve_id": spec["curve_index"],
+    cdf = {"cell_id": spec["cell_id"], "n": n, "q": q, "m": m, "curve_id": spec["curve_index"],
            "seed": spec["curve_seed"], "B": B, "t2": t2, "N": N, "s": s}
     raw_bases = {}
     for role, pts in bases.items():
@@ -804,6 +1107,21 @@ def _block(tuples, i, j):
     return [[list(x) for x in t] for t in tuples[i:j]]
 
 
+_CELL_CHILD_RSS_KB: list = []          # HX-8: RUSAGE_SELF peaks self-reported by the cell's own worker processes
+
+
+def _analyse_block_rss(args):
+    """Worker: the tallies of a block, and this worker's own peak RSS (kB) read in the worker itself."""
+    t = _analyse_block(args)
+    return t, int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)
+
+
+def _collect_worker_rss(results):
+    for t, rss in results:
+        _CELL_CHILD_RSS_KB.append(rss)
+        yield t
+
+
 def _analyse_all(F, E, tuples, gl_mask, workers: int):
     """Analyse every x-tuple (a list of tuples of field elements, or an (T, n, n) integer array) in blocks of
     2000, in order; tallies are sums, so the result does not depend on the number of workers."""
@@ -814,7 +1132,7 @@ def _analyse_all(F, E, tuples, gl_mask, workers: int):
     if workers > 1:
         import multiprocessing as mp
         with mp.Pool(workers) as pool:
-            return _sum_tallies(pool.imap(_analyse_block, jobs))
+            return _sum_tallies(_collect_worker_rss(pool.imap(_analyse_block_rss, jobs)))
     return _sum_tallies(_analyse_block(j) for j in jobs)
 
 
@@ -968,37 +1286,125 @@ def raw_summary_agreement(outdir: str, spec: dict, derived: bool) -> list:
         try:
             with open(os.path.join(outdir, "results", spec["cell_id"] + ".cdf.json")) as fh:
                 cdf = json.load(fh)
-            for role, entry in raw["bases"].items():
-                flat = _norm(arm_c_flat(entry, derived))
+            line = raw["bases"]["line"]
+            # NF-2: every top-level key is compared with raw-result.json or the plan cell.
+            top = {"cell_id": raw["cell_id"], "n": spec["n"], "q": spec["q"], "m": spec["m"],
+                   "curve_id": spec["curve_index"], "seed": spec["curve_seed"], "B": line["B"], "t2": line["t2"],
+                   "N": raw["N"], "s": spec["s"]}
+            flats = {role: _norm(arm_c_flat(entry, derived)) for role, entry in raw["bases"].items()}
+            expected_keys = set(top) | set(flats["line"]) | {r for r in flats if r != "line"}
+            for k, v in top.items():
+                if k not in cdf:
+                    probs.append(f"cdf.json top-level key {k!r} is missing")
+                elif cdf[k] != _norm(v):
+                    probs.append(f"cdf.json top-level key {k!r} differs from raw-result.json or the plan cell")
+            for k in sorted(set(cdf) - expected_keys):
+                probs.append(f"cdf.json carries an unexpected top-level key {k!r}")
+            for role, flat in flats.items():
                 got = cdf if role == "line" else cdf.get(role, {})
                 for k, v in flat.items():
                     if got.get(k) != v:
                         probs.append(f"cdf.json key {k!r} ({role}) differs from raw-result.json")
+                if role != "line":
+                    for k in sorted(set(got) - set(flat)):
+                        probs.append(f"cdf.json carries an unexpected key {k!r} ({role})")
         except Exception as e:  # noqa: BLE001
             probs.append(f"cdf.json unreadable: {e}")
     return probs
 
 
-def compute_validity(spec: dict, outdir: str, status: str, failure_class, derived: bool, raw) -> dict:
+RECOUNT_CONVENTIONS = ("A", "M", "S", "X")          # HX-4: the R1 recount conventions expected of every arm-A base
+MEMORY_LIMIT_KB = 16 * 2 ** 20                       # specification budget: 16 GB
+
+
+def _is_count(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool) and v >= 0
+
+
+def recount_problems(role: str, rec) -> list:
+    """HX-4: void reasons for the recount of one base: absent, or any expected convention missing, empty or
+    non-numeric, or differing."""
+    if not isinstance(rec, dict) or not rec:
+        return [f"R1 recount absent for base {role}"]
+    out = []
+    for name in RECOUNT_CONVENTIONS:
+        v = rec.get(name)
+        need = ("differ", "compared") + (("differ_second",) if name == "X" else ())
+        if not isinstance(v, dict) or not v or not all(_is_count(v.get(k)) for k in need):
+            out.append(f"R1 recount missing, empty or non-numeric for base {role}, convention {name}")
+        elif v["differ"] or v.get("differ_second", 0):
+            out.append(f"R1 recount differs for base {role}, convention {name}")
+    for name, v in rec.items():
+        if name not in RECOUNT_CONVENTIONS and isinstance(v, dict) and (v.get("differ") or v.get("differ_second")):
+            out.append(f"R1 recount differs for base {role}, convention {name}")
+    return out
+
+
+def gate_and_selftest_problems(manifest: dict, g=None) -> list:
+    """HX-7 (NF-6): invalid-reasons unless (i) the manifest gate block equals values recomputed now from the on-disk
+    lock, specification, plan, code and test file, and (ii) the startup_selftest block shows a full pass for this
+    host (collected EXPECTED_KAT_ITEMS, zero failures and errors, skipped ids equal DESIGNED_SKIPS for the status)."""
+    out = []
+    gb, sb = manifest.get("gate"), manifest.get("startup_selftest")
+    paths = (g.paths if isinstance(g, GateResult) else None) or {}
+    spec_path = paths.get("specification") or SPEC_PATH
+    lock_path = paths.get("lock") or LOCK_PATH
+    test_file = paths.get("test_file") or TEST_FILE
+    plan_path = paths.get("plan")
+    if not isinstance(gb, dict):
+        out.append("V2-1: manifest carries no gate block")
+    else:
+        want = {"specification_sha256": _sha_or_none(spec_path), "lock_sha256": _sha_or_none(lock_path),
+                "trial_plan_sha256": _sha_or_none(plan_path) if plan_path else None, "code_sha256": code_sha256(),
+                "test_file_sha256": _sha_or_none(test_file), "check_approval_passed": True}
+        for k, v in want.items():
+            if v is None or gb.get(k) != v:
+                out.append(f"V2-1: gate block {k} differs from the value recomputed from the files on disk"
+                           + (" (no plan path recorded)" if k == "trial_plan_sha256" and not plan_path else ""))
+    if not isinstance(sb, dict):
+        out.append("V2-1: manifest carries no startup_selftest block")
+    else:
+        designed = None
+        try:
+            designed = designed_skips(spec_status(spec_path))
+        except Exception as e:  # noqa: BLE001
+            out.append(f"V2-1: specification unreadable for the designed skips: {e}")
+        if sb.get("mode") not in ("ran", "receipt"):
+            out.append("V2-1: startup_selftest mode is neither 'ran' nor 'receipt'")
+        if sb.get("tests") != EXPECTED_KAT_ITEMS:
+            out.append(f"V2-1: startup_selftest collected {sb.get('tests')} items, expected {EXPECTED_KAT_ITEMS}")
+        if sb.get("failures") != 0 or sb.get("errors") != 0:
+            out.append(f"V2-1: startup_selftest failures {sb.get('failures')}, errors {sb.get('errors')}")
+        if designed is not None and sorted(sb.get("skipped_node_ids") or []) != sorted(designed):
+            out.append("V2-1: startup_selftest skipped node ids differ from DESIGNED_SKIPS for the status")
+        if not isinstance(sb.get("pytest_file"), str) or _inside(sb["pytest_file"], paths.get("code_dir") or HERE):
+            out.append("V2-6: startup_selftest pytest_file is missing or lies inside code/")
+    return out
+
+
+def compute_validity(spec: dict, outdir: str, status: str, failure_class, derived: bool, raw,
+                     manifest: dict | None = None, gate=None) -> dict:
     """FX-8: validity {status valid|void|invalid, reasons, readings_withheld} from the R1 recount, the group-law
     mismatch counts, identity-field completeness, raw/summary agreement (re-read from disk), the curve
-    selection rule and, for arm C, the P2(vi) equality flag. invalid outranks void outranks valid."""
+    selection rule and, for arm C, the P2(vi) equality flag. invalid outranks void outranks valid. With a manifest
+    (contract mode) it also applies V2-1 (HX-7), V2-6 (HX-2 e) and the memory budget (HX-8)."""
     invalid, void, withheld, notes = [], [], [], []
     if status != "completed":
         void.append(f"execution {status} ({failure_class}); a failed cell is void, never evidence")
     i2, v2 = identity_and_curve_problems(spec)
     invalid += i2
     void += v2
+    if manifest is not None:
+        invalid += gate_and_selftest_problems(manifest, gate)
+        invalid += code_tree_problems(manifest.get("code_tree"))
+        used = manifest.get("peak_rss_kb_budget_check") or {}
+        if used.get("within_limit") is False:
+            void.append(f"memory budget exceeded: {used.get('value_kb')} kB against {used.get('limit_kb')} kB")
     if status == "completed" and raw is not None:
         arm = spec["arm"]
         if arm == "A":
             for role, r in raw["bases"].items():
-                rec = r.get("recount") or {}
-                if not rec:
-                    void.append(f"R1 recount absent for base {role}")
-                for name, v in rec.items():
-                    if v.get("differ", 0) or v.get("differ_second", 0):
-                        void.append(f"R1 recount differs for base {role}, convention {name}")
+                void += recount_problems(role, r.get("recount"))
         elif arm in ("B1", "B2"):
             for inst in raw["instances"]:
                 t = inst["tally"]
@@ -1019,16 +1425,63 @@ def compute_validity(spec: dict, outdir: str, status: str, failure_class, derive
     return {"status": st, "reasons": reasons, "readings_withheld": withheld}
 
 
-def write_stop_f2(runs_dir: str, cell_id: str, identity: str, role: str) -> str:
-    """Write runs/STOP-F2.json (exclusive create: an existing sentinel is never overwritten)."""
+F2_SENTINEL_WRITER = "launcher.write_stop_f2"
+F2_SENTINEL_KEYS = ("cell_id", "run_id", "identity", "role", "utc", "family_runs_at_stop", "family_void", "writer")
+
+
+def arm_a_runs_in(runs_dir: str) -> list:
+    """Run ids of the arm-A contract packages already in runs_dir (those whose manifest.yaml says arm A, not kat)."""
+    out = []
+    try:
+        names = sorted(os.listdir(runs_dir))
+    except OSError:
+        return out
+    for name in names:
+        mp = os.path.join(runs_dir, name, "manifest.yaml")
+        if name == STOP_F2_NAME or not os.path.isfile(mp):
+            continue
+        try:
+            with open(mp) as fh:
+                man = yaml.safe_load(fh) or {}
+        except Exception:  # noqa: BLE001
+            out.append(name)                   # unreadable: listed, so the analysis looks at it
+            continue
+        if man.get("arm") == "A" and not man.get("kat"):
+            out.append(name)
+    return out
+
+
+def sentinel_problem(path: str):
+    """None if `path` is a regular-file sentinel written by write_stop_f2 (HX-5 d); otherwise the reason."""
+    try:
+        mode = os.lstat(path).st_mode
+    except OSError as e:
+        return f"cannot stat {path}: {e}"
+    import stat as _st
+    if not _st.S_ISREG(mode):
+        return f"{path} is not a regular file"
+    try:
+        with open(path) as fh:
+            rec = json.load(fh)
+    except Exception as e:  # noqa: BLE001
+        return f"{path} is not a readable JSON sentinel: {e}"
+    if not isinstance(rec, dict) or set(rec) != set(F2_SENTINEL_KEYS) or rec.get("writer") != F2_SENTINEL_WRITER \
+            or rec.get("family_void") is not True:
+        return f"{path} is not a sentinel written by the launcher"
+    return None
+
+
+def write_stop_f2(runs_dir: str, cell_id: str, identity: str, role: str, run_id: str | None = None) -> str:
+    """Write runs/STOP-F2.json (exclusive create: an existing entry is never overwritten, and FileExistsError is not
+    swallowed). Records family_runs_at_stop (arm-A packages already in runs/) and family_void: true (V2-5): earlier
+    manifests are never rewritten, the analysis applies the sentinel."""
     os.makedirs(runs_dir, exist_ok=True)
     path = os.path.join(runs_dir, STOP_F2_NAME)
-    try:
-        with open(path, "x") as fh:
-            json.dump({"cell_id": cell_id, "identity": identity, "role": role, "utc": _utc_now()}, fh, sort_keys=True)
-            fh.write("\n")
-    except FileExistsError:
-        pass
+    rec = {"cell_id": cell_id, "run_id": run_id, "identity": identity, "role": role, "utc": _utc_now(),
+           "family_runs_at_stop": arm_a_runs_in(runs_dir), "family_void": True, "writer": F2_SENTINEL_WRITER}
+    with open(path, "x") as fh:
+        json.dump(rec, fh, sort_keys=True)
+        fh.write("\n")
     return path
 
 
@@ -1036,10 +1489,14 @@ def run_cell(spec: dict, outdir: str, kat: bool, workers: int = 1, kernel=None, 
              run_id: str | None = None, timeout_seconds: float | None = None, memory_gb: float | None = None,
              gate: GateResult | None = None) -> dict:
     """Execute one cell spec and write the run package into outdir. Returns the manifest dict. A contract-mode
-    call (kat=False) must be given the GateResult that gate() returns (FX-6); it carries the gate and
-    startup_selftest blocks, a validity block (FX-8) and, on an arm-A F2 failure, writes runs/STOP-F2.json."""
+    call (kat=False) must be given the GateResult that gate() returns (FX-6); it carries the gate, startup_selftest and
+    code_tree blocks, a validity block (FX-8, V2-1, V2-6) and, on an arm-A F2 failure, writes runs/STOP-F2.json."""
     if not kat:
         _require_gate(gate)
+        if spec["arm"] == "A" and f2_sentinel_present(os.path.dirname(os.path.abspath(outdir))):
+            raise GateRefused([f"F2 family stop: {f2_sentinel_path(os.path.dirname(os.path.abspath(outdir)))} exists; "
+                               "every arm-A cell is void until the counter is repaired under a new implementation "
+                               "commit"], EXIT_REFUSED)
     os.makedirs(outdir, exist_ok=True)
     msgs, errs = [], []
     log = lambda s: msgs.append(s)  # noqa: E731
@@ -1047,11 +1504,15 @@ def run_cell(spec: dict, outdir: str, kat: bool, workers: int = 1, kernel=None, 
     t_start = time.time()
     status, reason = "completed", None
     raw = summary = cdf = None
+    _CELL_CHILD_RSS_KB.clear()
+    children_pre_cell = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
     try:
         _install_limits(timeout_seconds, memory_gb)
         if kernel is None:
             tmp = tempfile.mkdtemp(prefix="mono1a1be2-kernel-")
             kernel = counters.Kernel(counters.build_kernel(tmp))
+        # HX-8: the self-test and the compiler are children reaped before the cell begins; record them here
+        children_pre_cell = resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
         derived = not kat
         arm = spec["arm"]
         if arm == "A":
@@ -1078,6 +1539,8 @@ def run_cell(spec: dict, outdir: str, kat: bool, workers: int = 1, kernel=None, 
             shutil.rmtree(tmp, ignore_errors=True)
     env = environment_record()
     rs, rc_ = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss, resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss
+    cell_children = max(_CELL_CHILD_RSS_KB) if _CELL_CHILD_RSS_KB else None
+    limit_kb = int(memory_gb * 2 ** 20) if memory_gb else MEMORY_LIMIT_KB
     manifest = {
         "experiment_id": EXP_ID, "run_id": run_id, "cell_id": spec["cell_id"], "arm": spec["arm"],
         "kat": kat, "status": status, "failure_class": reason,
@@ -1087,8 +1550,17 @@ def run_cell(spec: dict, outdir: str, kat: bool, workers: int = 1, kernel=None, 
         "code_sha256": env["code_sha256"], "code_file_sha256": env["code_file_sha256"],
         "git": env["git"], "environment_file": "environment.json", "command_file": "command.txt",
         "started_unix": t_start, "wall_seconds": time.time() - t_start,
+        # memory (HX-8): self; children reaped before the cell began (self-test, compiler); the cell's own workers
         "peak_rss_kb_measured": rs,
-        "peak_rss_kb_self": rs, "peak_rss_kb_children": rc_, "peak_rss_kb_total_upper": rs + rc_,
+        "peak_rss_kb_self": rs,
+        "peak_rss_kb_children_pre_cell": children_pre_cell,
+        "peak_rss_kb_cell_children": cell_children,
+        "peak_rss_kb_cell_children_reason": ("cell spawns no child process" if cell_children is None else
+                                              "max over the workers' own getrusage(RUSAGE_SELF) reports"),
+        "peak_rss_kb_children": rc_, "peak_rss_kb_total_upper": rs + rc_,
+        "peak_rss_kb_budget_check": {"value_kb": rs + (cell_children or 0), "limit_kb": limit_kb,
+                                     "within_limit": rs + (cell_children or 0) <= limit_kb,
+                                     "reads": "peak_rss_kb_self + peak_rss_kb_cell_children"},
         "certificate": {"kind": "none", "note": "measurement run; no discrete-log or relation claim"},
         "derived_statistics_withheld": kat,
     }
@@ -1107,24 +1579,39 @@ def run_cell(spec: dict, outdir: str, kat: bool, workers: int = 1, kernel=None, 
         manifest["gate"] = {k: getattr(gate, k) for k in ("specification_sha256", "lock_sha256", "trial_plan_sha256",
                                                           "code_sha256", "test_file_sha256", "check_approval_passed")}
         manifest["startup_selftest"] = dict(gate.startup_selftest)
+        # V2-6: the post-cell scan and re-hash, taken after the cell has finished
+        manifest["code_tree"] = code_tree_block(gate.code_tree) if gate.code_tree else None
         sdir = os.path.join(outdir, "selftest")
         os.makedirs(sdir, exist_ok=True)
         for name, src in gate.selftest_files.items():
             shutil.copyfile(src, os.path.join(sdir, name))
-        validity = compute_validity(spec, outdir, status, reason, True, raw)
+        validity = compute_validity(spec, outdir, status, reason, True, raw, manifest, gate)
         if spec["arm"] == "A" and status == "completed" and raw is not None:
             f2 = f2_failures(raw)
             if f2:
                 role, ident, kind = f2[0]
+                note = f"F2: CTL-null all-target identity {ident} {kind} on base {role}"
                 if kind == "differs":
-                    path = write_stop_f2(os.path.dirname(os.path.abspath(outdir)), spec["cell_id"], ident, role)
-                    manifest["f2_family_stop"] = {"sentinel": path, "identity": ident, "role": role}
-                validity["reasons"].append(f"F2: CTL-null all-target identity {ident} {kind} on base {role}"
-                                           + ("; arm-A family stopped (runs/STOP-F2.json)" if kind == "differs" else ""))
+                    runs_dir = os.path.dirname(os.path.abspath(outdir))
+                    try:
+                        path = write_stop_f2(runs_dir, spec["cell_id"], ident, role, run_id)
+                        manifest["f2_family_stop"] = {"sentinel": path, "identity": ident, "role": role}
+                        note += "; arm-A family stopped (runs/STOP-F2.json)"
+                    except FileExistsError:
+                        path = f2_sentinel_path(runs_dir)
+                        why = sentinel_problem(path)
+                        if why is None:
+                            manifest["f2_family_stop"] = {"sentinel": path, "identity": ident, "role": role,
+                                                          "sentinel_already_existed": True, "this_cell_failure": kind}
+                            note += "; the family stop was already recorded (runs/STOP-F2.json left untouched)"
+                        else:
+                            manifest["f2_sentinel_invalid"] = why
+                            note += f"; runs/STOP-F2.json exists but is not a launcher-written sentinel ({why})"
+                            validity["status"] = "invalid"
+                validity["reasons"].append(note)
                 if validity["status"] == "valid":
                     validity["status"] = "void"
         manifest["validity"] = validity
-    import yaml
     w("manifest.yaml", yaml.safe_dump(json.loads(json.dumps(manifest, default=str)), sort_keys=True))
     return manifest
 
@@ -1163,10 +1650,17 @@ def spec_from_plan_cell(cell: dict) -> list[dict]:
 
 # ----------------------------------------------------------------------------- CLI
 def resolve_run_dir(run_id: str, runs_dir: str | None = None) -> str:
-    """FX-11 (2): the run directory for run_id, which must match RUN_ID_RE and resolve inside runs/."""
+    """FX-11 (2), HX-5 (d), HX-7: the run directory for run_id. The id must match RUN_ID_RE, must not equal the F2
+    sentinel's name or start with "STOP-" (any case), and must resolve inside runs/, which itself must be a real
+    directory inside the experiment directory (never a link)."""
     runs_dir = runs_dir or RUNS_DIR
     if not isinstance(run_id, str) or not RUN_ID_RE.fullmatch(run_id):
         raise ValueError(f"run id {run_id!r} does not match {RUN_ID_RE.pattern}")
+    if run_id.lower() == STOP_F2_NAME.lower() or run_id.upper().startswith("STOP-"):
+        raise ValueError(f"run id {run_id!r} is reserved (STOP-*): it could act as a family-stop sentinel")
+    bad = real_dir_problem(runs_dir, experiment_dir())
+    if bad:
+        raise ValueError(f"runs/ is not usable: {bad}")
     out = os.path.join(runs_dir, run_id)
     root = os.path.realpath(runs_dir)
     if not os.path.realpath(out).startswith(root + os.sep):
@@ -1192,9 +1686,7 @@ def cmd_cell(args) -> int:
     ok, reasons = check_approval(plan_path=args.plan)
     if not ok:
         return _refuse(reasons)
-    with open(args.plan) as fh:
-        plan = json.load(fh)
-    cell = next((c for c in plan["cells"] if c["cell_id"] == args.cell_id), None)
+    cell = plan_cell(args.plan, args.cell_id)
     if cell is None:
         print(f"REFUSED: cell {args.cell_id} not in the plan", file=sys.stderr)
         return EXIT_REFUSED
@@ -1203,15 +1695,11 @@ def cmd_cell(args) -> int:
     except ValueError as e:
         print(f"REFUSED: {e}", file=sys.stderr)
         return EXIT_REFUSED
-    if cell["arm"] == "A" and os.path.exists(os.path.join(RUNS_DIR, STOP_F2_NAME)):
-        print(f"REFUSED: F2 family stop: {os.path.join(RUNS_DIR, STOP_F2_NAME)} exists; every arm-A cell is void "
-              "until the counter is repaired under a new implementation commit", file=sys.stderr)
-        return EXIT_REFUSED
-    if os.path.exists(outdir):
+    if os.path.lexists(outdir):
         print(f"REFUSED: run directory {outdir} exists (run records are immutable; use a new run id)", file=sys.stderr)
         return EXIT_REFUSED
     try:
-        g = gate(args.plan, args.selftest_receipt)
+        g = gate(args.plan, args.selftest_receipt, cell_id=args.cell_id)     # code tree, approval, F2, self-test
     except GateRefused as e:
         print("REFUSED: " + "; ".join(e.reasons[:1]), file=sys.stderr)
         for r in e.reasons[1:]:
@@ -1222,10 +1710,16 @@ def cmd_cell(args) -> int:
     try:
         man = run_cell(spec, outdir, kat=False, workers=args.workers, command=command, run_id=args.run_id,
                        timeout_seconds=args.timeout_seconds, memory_gb=args.memory_gb, gate=g)
+    except GateRefused as e:
+        print("REFUSED: " + "; ".join(e.reasons), file=sys.stderr)
+        return e.exit_code
     finally:
         if g.startup_selftest["mode"] == "ran":
             shutil.rmtree(os.path.dirname(g.selftest_files["junit.xml"]), ignore_errors=True)
     print(json.dumps({"run_dir": outdir, "status": man["status"], "validity": man["validity"]["status"]}))
+    if man.get("f2_sentinel_invalid"):
+        print("ERROR: runs/STOP-F2.json is not a launcher-written sentinel: " + man["f2_sentinel_invalid"], file=sys.stderr)
+        return EXIT_F2_SENTINEL
     return 0 if man["status"] == "completed" else 1
 
 
