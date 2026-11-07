@@ -1,7 +1,7 @@
 # EXP-ICPERF-127dbd: C1 route A at fp28, protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 3.
-# Canonical draft, specification revision 2 text for the re-session RBS-ICPERF-616277 on launcher v3c (never approved: the c5a0f4 preview was not approved), written under TASK-20261107-d07e94,
-# DEC-20261107-a83c51 (controls K-1 to K-7) and DEC-20261107-b74e2c. Stays review_required and candidate-only (DEC-20261107-e41c08, PD-3).
-# The approved form is design/d07e94/approval-preview/specification.yaml (sha256 5136eadd...), which an approval archive swaps in. No run, outcome or conclusion is in this file.
+# Canonical draft, specification revision 2 text for the re-session RBS-ICPERF-616277 on launcher v3d (never approved: neither the c5a0f4 preview nor the d07e94 preview on v3c was approved), written under TASK-20261107-5f7d2b,
+# DEC-20261107-a83c51 (controls K-1 to K-7), DEC-20261107-c3e91a (R-1 to R-3: K-7 transport pins, credential source, /bin/bash -p argv) and DEC-20261107-b74e2c. Stays review_required and candidate-only (DEC-20261107-e41c08, PD-3).
+# The approved form is design/5f7d2b/approval-preview/specification.yaml (sha256 de94c9ef...), which an approval archive swaps in. No run, outcome or conclusion is in this file.
 experiment:
   id: EXP-ICPERF-127dbd
   hypothesis_id: H-ICPERF-4cb536
@@ -24,7 +24,7 @@ experiment:
     5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7), which already ran once, by a read-only reconciliation
     that launches nothing, and check its transport and identity with check_job.py. Then launch the
     frozen request launch/request-s2.json once on EKS Spot c8a.2xlarge through launch-remote under
-    launch_eks.sh v3c, download its job prefix with the C1-AMENDMENT-2 locator as hardened by DEC-20261107-a83c51 (controls K-1 to K-7), and check it with
+    launch_eks.sh v3d, download its job prefix with the C1-AMENDMENT-2 locator as hardened by DEC-20261107-a83c51 (controls K-1 to K-7) and DEC-20261107-c3e91a (R-1 to R-3), and check it with
     check_job.py. Then run the frozen analyze-c1.sh on both sessions, and record the integrity,
     control and parity gates as runbook validity. The C1-primary verdict is not decided inside the
     runbook. It is read from verdict.json in the evidence review, after the independent validator.
@@ -92,7 +92,7 @@ experiment:
       remote_pins: experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256
     locator_controls:
       decision: DEC-20261107-a83c51
-      launcher_version: v3c
+      launcher_version: v3d
       review: TASK-20261107-9d2b6a (RT-20261107-9d2b6a)
       summary: >-
         K-1 one locator rule for every outcome (a non-empty result.json results_uri is accepted only if it equals the located
@@ -100,7 +100,10 @@ experiment:
         downloaded files equal it by size and single-part MD5, T1 receipt pins); K-3 the runbook validity below; K-4 job-exit.json exit_code is a JSON
         number spelled 0, 42 or 43; K-5 every post-submission crash writes raw-result.json (submitted true, class other) and exits 5;
         K-6 receipt launcher id, canonical pod uid, restartCount 0; K-7 env -i re-exec with an allowlist, no AWS_ENDPOINT_URL*, no aws-cli alias/endpoint_url/
-        credential_process entry, CDPATH-safe locator path, --out inside the step output directory and never under runs/.
+        credential_process/ca_bundle/role_arn/source_profile/credential_source/web_identity_token_file/sso_session/sso_start_url entry, CDPATH-safe locator path,
+        --out inside the step output directory and never under runs/; v3d (DEC-20261107-c3e91a): HTTPS_PROXY/https_proxy pinned to a loopback http URL, NO_PROXY/no_proxy to a
+        charset, AWS_CA_BUNDLE only with a proxy and only /root/.ccr/ca-bundle.crt (regular, non-empty, no symlink; its sha256 recorded in env_hygiene), credentials only from
+        AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY with AWS_EC2_METADATA_DISABLED=true and PYTHONNOUSERSITE=1, and every bash step started as /bin/bash -p.
       s2_raw_result_facts:
         download_exit: '0'
         objects_match: true

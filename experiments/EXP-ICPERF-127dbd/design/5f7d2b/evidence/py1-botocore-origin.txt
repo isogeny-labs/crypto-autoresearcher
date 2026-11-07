@@ -1,0 +1,12 @@
+# PY-1 resolution (local, no AWS call, aws executable not run): where the first aws on the relay PATH (PATH=/tmp/claude-0/awsvenv/bin:$PATH, handoff f14df8 constraint) imports botocore from. 2026-11-07T06:52:06Z
+-- first line of /tmp/claude-0/awsvenv/bin/aws: #!/tmp/claude-0/awsvenv/bin/python3
+-- pyvenv.cfg: home = /usr/bin;include-system-site-packages = false;version = 3.13.16;executable = /usr/bin/python3.13;command = /usr/bin/python3 -m venv /tmp/claude-0/awsvenv;
+awscli 1.46.2 /tmp/claude-0/awsvenv/lib/python3.13/site-packages/awscli/__init__.py
+botocore (vendored as awscli.botocore) /tmp/claude-0/awsvenv/lib/python3.13/site-packages/awscli/botocore/__init__.py
+ENABLE_USER_SITE False
+user site dir /root/.local/lib/python3.13/site-packages on sys.path: False
+sys.path ['', '/usr/lib/python313.zip', '/usr/lib/python3.13', '/usr/lib/python3.13/lib-dynload', '/tmp/claude-0/awsvenv/lib/python3.13/site-packages']
+botocore origin is under the user site: False
+-- a standalone 'import botocore' from this venv python: ModuleNotFoundError: No module named 'botocore'
+-- user site content matching boto|awscli|s3transfer: []
+RESOLUTION: botocore is imported from the venv (awscli.botocore under /tmp/claude-0/awsvenv/lib/python3.13/site-packages), not from the user site; the user site is not on this interpreter's sys.path. The PY-1 omission condition is not met: PYTHONNOUSERSITE=1 is applied (redundant for this venv aws, closes the user-site vector for any aws whose interpreter has the user site enabled). No omission residual is taken.

@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Mutation check of the C1 locator, reconciler and launch wrapper (TASK-20261107-d07e94 E-4).
+# v3d (TASK-20261107-5f7d2b V-7): one mutant per new check of the K-7 prologue (R-1 T-2 to T-6, R-3 CR-1, CR-2, CF-1, PY-1), in each of the two scripts.
 # For each mutation of tests/mutate.py (one check of K-1, K-2, K-4, K-5, K-6 or K-7 removed), it builds a mutated copy of the three
 # scripts and runs the whole of tests/rt_regression.sh against it. A mutation is CAUGHT when at least one case differs from its
 # expected outcome, SURVIVED when none does. It also runs the unmutated scripts as the baseline (must show 0 differing cases).
@@ -14,8 +15,9 @@ one() { # one NAME OUT : build the mutant, run the suite, write one result line 
   if [[ $n == BASELINE ]]; then mkdir -p "$d/impl"; cp "$IMPL"/{launch_eks.sh,locate_results.sh,reconcile_run.sh} "$d/impl/"; edit="none"
   else edit=$(python3 -I "$TESTS/mutate.py" apply "$n" "$IMPL" "$d/impl" 2>&1) || { printf '%s\tERROR\t-\t-\t%s\n' "$n" "$edit" > "$d/result.tsv"; return; }; fi
   for f in "$d"/impl/*.sh; do bash -n "$f" || { printf '%s\tERROR\t-\t-\tmutant does not parse: %s\n' "$n" "$f" > "$d/result.tsv"; return; }; done
-  bash "$TESTS/rt_regression.sh" "$d/out" "$d/impl" v3c > "$d/suite.log" 2>&1
+  bash "$TESTS/rt_regression.sh" "$d/out" "$d/impl" v3d > "$d/suite.log" 2>&1
   nd=$?
+  rm -rf "$d/out/cases" "$d/out/ca-fixtures" "$d/out/attacker" "$d/out/legacy-impl"   # the machine has little free disk: keep only the tables and logs of a finished mutant run
   failing=$(awk -F'\t' 'NR > 1 && $7 == "FAIL" {print $1}' "$d/out/rt-results.tsv" 2>/dev/null | head -12 | tr '\n' ' ')
   verdict=CAUGHT; [[ $nd -eq 0 ]] && verdict=SURVIVED
   [[ $n == BASELINE ]] && { verdict=BASELINE-CLEAN; [[ $nd -eq 0 ]] || verdict=BASELINE-DIRTY; }
