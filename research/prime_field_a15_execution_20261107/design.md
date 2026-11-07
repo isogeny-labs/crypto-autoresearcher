@@ -72,7 +72,8 @@ producer output and unknown remaining work. Close table writers, losslessly gzip
 journals with encoded/decoded hashes, then pause for a real canonical S3 checkpoint
 after each curve. No restore/retry; restored wall clocks never become valid.
 Analysis preserves missing rows for all planned methods and verifies output/check
-commitments and full phase conservation before complete status. Raw records are
+commitments and full phase conservation before complete status. [pcc:unverified]
+Raw records are
 pushed before any report rendering. Publish every outcome with report/graphs/
 inspected PDF, exporter, append-only database and closed benchmark/progress in
 the same PR, plus truthful artifact-pinned PCC standing and official S3 custody.
