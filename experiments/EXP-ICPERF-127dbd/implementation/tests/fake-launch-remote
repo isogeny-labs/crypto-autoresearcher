@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# Offline stand-in for taskq/deploy/eks-karpenter/remote/launch-remote, used only by test_locator.sh. It "runs the job":
+# it copies the case's launcher receipt files into $ISOLAB_CLIENT_OUTPUT and the case's S3 objects into $FAKE_S3_ROOT,
+# then exits with the case's launcher exit code. It calls no AWS service.
+set -eu
+out=${ISOLAB_CLIENT_OUTPUT:?}
+mkdir -p "$out"
+cp "$1" "$out/request.json"
+cp "$FAKE_CASE_DIR/launcher/build.json" "$out/build.json"
+cp "$FAKE_CASE_DIR/launcher/result.json" "$out/result.json"
+cp -r "$FAKE_CASE_DIR/s3/." "$FAKE_S3_ROOT/"
+echo "Launcher: fake"
+exit "$(cat "$FAKE_CASE_DIR/launch_rc")"
