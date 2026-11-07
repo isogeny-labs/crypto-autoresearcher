@@ -254,6 +254,12 @@ def certified_integer_equations(polys, modulus, bounds):
     Preconditions: each input polynomial vanishes modulo `modulus` at the
     desired root and 0 <= root_i < bounds_i. This does not prove independence.
     """
+    if not isinstance(modulus, int) or isinstance(modulus, bool) or modulus <= 0:
+        raise ValueError('positive integer modulus required')
+    if any(not isinstance(B, int) or isinstance(B, bool) or B <= 0 for B in bounds):
+        raise ValueError('positive integer bounds required')
+    if any(len(bounds) != len(f.gens) or any(co.is_Integer is not True for co in f.coeffs()) for f in polys):
+        raise ValueError('one bound per variable and integer coefficients required')
     accepted=[]; certificates=[]
     for f in polys:
         bound=sum(abs(co)*s.prod((B-1)**e for B,e in zip(bounds,mon)) for mon,co in f.terms())
@@ -269,3 +275,25 @@ def equation_dimension(polys, variables):
     gb=s.groebner([f.as_expr() for f in polys],*variables,domain=s.QQ)
     if any(g.as_expr()==1 for g in gb.polys): return 'inconsistent'
     return 'zero_dimensional' if gb.is_zero_dimensional else 'positive_dimensional'
+
+
+def membership_circuit(E, length, values, x, endpoints=None):
+    """Evaluate a shared homogeneous chain without expanding polynomials.
+
+    Each selected endpoint has its own membership bit. Once a rational map
+    reaches a pole, all later endpoints are excluded. No speed claim follows.
+    """
+    if not isinstance(length, int) or length < 0:
+        raise ValueError('nonnegative chain length required')
+    selected = set(range(length+1) if endpoints is None else endpoints)
+    if any(not isinstance(i, int) or i < 0 or i > length for i in selected):
+        raise ValueError('endpoint outside chain')
+    p=E.p; values={v % p for v in values}; N=x % p; D=1; live=True; out={}
+    for level in range(length+1):
+        live = live and D != 0
+        if level in selected:
+            out[level] = live and any((N-v*D) % p == 0 for v in values)
+        if level < length:
+            N,D=(N*N+E.A*N*D+E.B*D*D) % p, N*D % p
+            E=TwoIsogeny(E).target
+    return out

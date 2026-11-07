@@ -16,7 +16,8 @@ not yet supply the integrated solver comparisons proposed in directions
 
 Seven software tests pass in the linked round, but a subsequent coverage audit
 found the #69 window produced no internal relation rows. Its row loop was
-vacuous; a nonempty relation fixture is required before that coverage is claimed. Exact invariant norms and their
+vacuous. Round 2 closes that coverage gap with nonempty full-subgroup controls
+at both endpoints; digit-window usefulness remains untested. Exact invariant norms and their
 target compression are serialized; dual compositions and membership identities
 are checked on finite fixtures. Univariate LLL works as a positive control;
 multivariate Semaev root recovery is unestablished. The rational 2-isogeny fixture
@@ -28,7 +29,7 @@ performance experiment, independent review or official status transition exists.
 
 - 58: exact lifted/invariant model-set agreement followed by a frozen solver comparison.
 - 69: digit solver integration, endpoint conductor certificates and global rank accounting.
-- 71: nonexpanded circuit implementation with truthful counted operations.
+- 71: truthful operation counts for the now-implemented nonexpanded evaluator.
 - 56: joint shifts producing enough certified integer equations for root extraction,
   validated against exhaustive tiny roots and retaining all failures.
 - 87: fixed-base controls replayed through actual mitm stages with first-rejection logs
@@ -52,3 +53,7 @@ ideal and revise the shift construction. Recheck after each component lands.
 Unresolved. This record preserves concrete next obligations and does not itself
 resolve them. The earlier joint-smallroot problem remains separately scoped at
 [joint-smallroot reach](joint-smallroot-reach-baseline-and-oracle-unverified.md).
+
+Round 2 also connects fixed-base controls to both actual scalar and TailTable
+collectors; their nonempty canonical outputs agree and satisfy the exhaustive
+plant oracle. Per-screen rejection traces remain open.

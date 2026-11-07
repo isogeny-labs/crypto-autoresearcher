@@ -5,6 +5,15 @@ crypto-autoresearcher PR #3095: **58, 69, 71, 56, 87**. Seven deterministic
 software checks pass. The next research work is specified per direction below;
 these prototypes do not complete the proposed scaling or performance panels.
 
+## Continuation status
+
+[Round 2](ROUND2.md) strengthens the seven checks: nonvacuous normalized rows at
+both isogeny endpoints, a nonexpanded shared membership evaluator, validated
+certificate inputs, and integration with the actual scalar/TailTable collectors.
+The original sections and PDF below record round 1; the new nonempty subgroup
+control closes its row-coverage gap without making a digit-window yield claim.
+The PDF is now stored by content hash; hydrate it using the command in ROUND2.md.
+
 ## What was constructed
 
 ### 58: invariant-coordinate elimination
