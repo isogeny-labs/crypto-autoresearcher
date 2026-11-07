@@ -87,6 +87,7 @@ def test_exact_prospective_grid_exclusions_budget_and_admission(tmp_path,monkeyp
     assert not t.schema_errors(p,'experiment.protocol/v1')and not t.lint_protocol(p,custody22.HERE)
     assert len(p['arms'])==9 and len(list(t.seeds_table(p)))==36
     rules=custody22.expected_rules();assert len(rules['excluded_curves'])==48 and [v['p']for v in rules['fields']]==[1048573,2097143]
+    assert [v['bits']for v in rules['fields']]==[20,21]
     assert len(custody22.BUDGET_INPUTS)==29
     monkeypatch.setattr(sys,'argv',['driver22','--inputs',str(tmp_path/'i'),'--protocol',str(tmp_path/'p'),'--release',str(tmp_path/'r'),'--out',str(tmp_path/'new-raw')])
     def refuse(*args):raise ValueError('marked admission refusal')
@@ -94,3 +95,15 @@ def test_exact_prospective_grid_exclusions_budget_and_admission(tmp_path,monkeyp
     monkeypatch.setattr(driver22,'admit',refuse);monkeypatch.setattr(driver22.core,'generate',forbidden)
     with pytest.raises(ValueError,match='admission refusal'):driver22.main()
     assert not(tmp_path/'new-raw').exists()
+
+
+@pytest.mark.parametrize('change',['missing_bits','boolean_bits','wrong_bits'])
+def test_field_configuration_shape_only_refuses_missing_native_metadata(change):
+    # This reads declared integers only: no primality, field selection,
+    # curve generation, point arithmetic or native-field pilot is called.
+    fields=deepcopy(custody22.expected_rules()['fields'])
+    custody22.validate_field_metadata(fields)
+    if change=='missing_bits':del fields[0]['bits']
+    elif change=='boolean_bits':fields[0]['bits']=True
+    else:fields[0]['bits']=21
+    with pytest.raises(ValueError,match='explicit field bits'):custody22.validate_field_metadata(fields)
