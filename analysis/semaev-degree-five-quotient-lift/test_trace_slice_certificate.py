@@ -4,6 +4,7 @@ import hashlib
 import json
 from math import comb
 from pathlib import Path
+import random
 import struct
 import sys
 import tempfile
@@ -12,6 +13,7 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_trace_slice_certificate import (check_map, read_certificate,
                                            substitute, trace_slice)
+from check_quotient_closure_factorized import check_closure_factorized
 from check_affine_relation import verify as verify_affine_relation
 from check_affine_w3 import analyze as analyze_affine_w3
 from slice_trace_certificate import project
@@ -135,6 +137,47 @@ class TraceSliceCertificateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'C2'):
             check_map(2, 2, 2, masks, rows, [set()])
 
+    def test_factorized_closure_matches_exhaustive_kernel(self):
+        # For a small universe, enumerate every low-degree relation rather
+        # than using the checker's elimination algorithm as the oracle.
+        masks = tuple(m for m in range(8) if bin(m).count('1') <= 2)
+        column = {m: i for i, m in enumerate(masks)}
+        low = [i for i, m in enumerate(masks) if bin(m).count('1') <= 1]
+        rng = random.Random(0xC205)
+        for _ in range(128):
+            rows = [rng.randrange(4) for m in masks]
+            rows[column[0]], rows[column[1]] = 1, 2
+            expected = True
+            for relation in range(1 << len(low)):
+                if not relation:
+                    continue
+                image = 0
+                for j, index in enumerate(low):
+                    if relation >> j & 1:
+                        image ^= rows[index]
+                if image:
+                    continue
+                for variable in range(3):
+                    product = 0
+                    for j, index in enumerate(low):
+                        if relation >> j & 1:
+                            product ^= rows[column[masks[index] | (1 << variable)]]
+                    if product:
+                        expected = False
+                        break
+                if not expected:
+                    break
+            if expected:
+                self.assertEqual(check_map(3, 2, 2, masks, rows, [])['status'],
+                                 'valid_affine_slice_nonmembership')
+                self.assertEqual(check_closure_factorized(3, 2, masks, rows),
+                                 check_map(3, 2, 2, masks, rows, [])['low_kernel_dimension'])
+            else:
+                with self.assertRaisesRegex(ValueError, 'C2'):
+                    check_map(3, 2, 2, masks, rows, [])
+                with self.assertRaisesRegex(ValueError, 'C2'):
+                    check_closure_factorized(3, 2, masks, rows)
+
     def test_named_odd_instance_has_independent_trace_identity(self):
         records = json.loads((Path(__file__).resolve().parents[1] /
                               'semaev-m2-last-fall-degree/results/instances.json').read_text())
@@ -164,6 +207,8 @@ class TraceSliceCertificateTests(unittest.TestCase):
             self.assertEqual((cert_n, degree, codim), (n, 4, 1))
             result = check_map(n, degree, codim, masks, rows, polys)
             self.assertEqual(result['status'], 'valid_affine_slice_nonmembership')
+            self.assertEqual(check_closure_factorized(n, degree, masks, rows),
+                             result['low_kernel_dimension'])
 
     def test_retained_nontrace_affine_certificate_projects_and_checks(self):
         root = Path(__file__).resolve().parent
@@ -188,6 +233,8 @@ class TraceSliceCertificateTests(unittest.TestCase):
             self.assertEqual((cert_n, degree, codim), (5, 4, 3))
             result = check_map(n, degree, codim, masks, rows, polys)
             self.assertEqual(result['status'], 'valid_affine_slice_nonmembership')
+            self.assertEqual(check_closure_factorized(n, degree, masks, rows),
+                             result['low_kernel_dimension'])
 
     def test_frontier_candidate_selection_uses_actual_trace(self):
         root = Path(__file__).resolve().parent
