@@ -27,6 +27,8 @@ fundamental (D_K or D_K/4 squarefree with the right residue).
 """
 from __future__ import annotations
 
+import glob
+import hashlib
 import json
 import math
 import subprocess
@@ -89,8 +91,12 @@ def load_curves(std: str, ark: str):
     from harness.endosweep.corpus import load_std_curves
     from harness.endosweep.curvesweep import _key
     from harness.endosweep.targets import verify
+    inputs = verify_std_curves_checkout(std)
+    std_curves = load_std_curves(std)
+    if verify_std_curves_checkout(std) != inputs:
+        raise ValueError("std-curves inputs changed while being read")
     out, seen = [], set()
-    for T, _, raw in load_std_curves(std) + load_std_curves(ark):
+    for T, _, raw in std_curves + load_std_curves(ark):
         if T is None or T.ext_degree != 1:
             continue
         verify(T)
@@ -105,6 +111,32 @@ def load_curves(std: str, ark: str):
             seen.add(T.dup_key)
         out.append(T)
     return out
+
+
+def verify_std_curves_checkout(std: str) -> dict[str, str]:
+    """Require exactly the pinned category/curves.json bytes consumed by the corpus loader."""
+    root = Path(std).resolve()
+
+    def git(*args: str) -> bytes:
+        return subprocess.run(["git", "-C", str(root), *args], check=True,
+                              capture_output=True).stdout
+
+    top = Path(git("rev-parse", "--show-toplevel").decode().strip()).resolve()
+    head = git("rev-parse", "HEAD").decode().strip()
+    if top != root or head != STD_CURVES_COMMIT:
+        raise ValueError(f"std-curves checkout must be repository root at {STD_CURVES_COMMIT}")
+    tracked = {p for p in git("ls-tree", "-r", "--name-only", "-z", "HEAD").decode().split("\0")
+               if p.count("/") == 1 and p.endswith("/curves.json")}
+    consumed = {str(Path(p).relative_to(root)) for p in glob.glob(str(root / "*" / "curves.json"))}
+    if not tracked or consumed != tracked:
+        raise ValueError("std-curves curve-file set differs from pinned commit")
+    hashes = {}
+    for path in sorted(tracked):
+        actual = (root / path).read_bytes()
+        if actual != git("show", f"HEAD:{path}"):
+            raise ValueError(f"std-curves input differs from pinned commit: {path}")
+        hashes[path] = hashlib.sha256(actual).hexdigest()
+    return hashes
 
 
 def certified_curves(paths) -> dict[str, str]:
@@ -200,6 +232,7 @@ def build(std: str, ark: str, out_dir: Path = HERE, earlier: dict[str, str] | No
                     "4q - t^2 the factoring driver completed",
         "std_curves_commit": STD_CURVES_COMMIT,
         "std_curves_checkout_head": _git_head(std),
+        "std_curves_inputs_sha256": verify_std_curves_checkout(std),
         "excluded_already_certified": excluded,
         "primality": "PARI isprime on every factor (proof)",
         "curves": rows,
