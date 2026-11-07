@@ -1,0 +1,206 @@
+# REVIEW-SEMBIN-79a02d-20261106 — claim-changing review plan for the CURRENT
+# record of EXP-SEMBIN-79a02d, frozen before any reviewer runs. Written because
+# the only prior review (REVIEW-SEMBIN-79a02d-20261006, DEC-20261006-db4d5a)
+# ruled the experiment invalid while RESULTS.md was absent; RESULTS.md was
+# committed on 2026-10-10 with the label O-DFF-ANOMALY and no later decision
+# refers to it. Nothing here changes a status or adopts a result.
+review_plan:
+  review_id: REVIEW-SEMBIN-79a02d-20261106
+  goal_id: GOAL-SEMBIN-5078bc
+  batch_id: BATCH-9d649f
+  experiment_id: EXP-SEMBIN-79a02d
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  decision_id: DEC-20261106-4e173e
+  status: frozen_pending_preconditions
+
+  claim_under_review: >-
+    As the producer states it in experiments/EXP-SEMBIN-79a02d/RESULTS.md: the
+    frozen precedence of stage0/definitions.md §5 yields exactly one label,
+    O-DFF-ANOMALY (H-SEMBIN-8e8bef), because d_ff_ic < 4 on every valid primary
+    instance — 34 of 34 report d_ff_ic = 2 at n in {12, 15} — while the null arm
+    reports > 4; SOLV4 is true with d_solv = 4 on every Semaev-derived instance;
+    C3 holds (rank < nrows at every measured D >= 4 cell); and Stage 3 is
+    O-IMPEDIMENT for lack of an engine. The producer also states that without
+    condition 6 the remaining measured conditions would have met the frozen
+    O-SEPARATED clause, and that the label ordering is an executor
+    operationalization awaiting Coordinator ratification.
+
+  coordinator_prior: >-
+    Written before any reviewer runs. I expect the label to be applied as the
+    frozen rule says (a mechanical result), and I expect the substantive finding
+    to be a convention mismatch, not a mathematical anomaly: d_ff_ic = 2 is
+    predicted by the producer's own Stage-0 derivation for the combination
+    Tr(z^-2 S3(u, x3, z)), where no quadratic part survives, so a degree-<=1
+    polynomial lies in M2. I expect J3 to find that this measures a different
+    object from Semaev §4.5 (which takes all three arguments of S3 variable),
+    and that the ESCALATE label is therefore correct as a flag and incomplete as
+    an interpretation. I expect J2 to find no integrity defect (the dual ranks
+    agree and the E1/E2 enumerations agree wherever both apply). I expect J4 to
+    confirm SOLV4 and the kf-b contrary observation as recorded. I expect J5 to
+    confirm C3 at the measured cells while noting that the null arm sits exactly
+    on the IDEA band, which limits the band's discriminating power. I do not
+    expect a refutation of C1-C4 from this package; Stage 3 never ran.
+
+  joints:
+  - joint: >-
+      J1 — Label application and precedence. That aggregate_census.py applies the
+      frozen stage0/definitions.md §5 precedence to the 82-instance census
+      without reordering, that the 34/34 d_ff_ic < 4 count is the count the
+      census supports, and that O-SEPARATED would indeed have fired absent
+      condition 6.
+    assigned_to: TASK-20261106-dbfe7c
+    attack_plan: >-
+      Rebuild the label from stage0/definitions.md §5 and stage2/census.json
+      alone, condition by condition, and compare with RESULTS.md's table. Count
+      primary instances yourself (planted + uniform-z + anchors at both n) and
+      check 34/34. Then mutate the census in three ways and re-run the frozen
+      aggregator: (a) set one primary d_ff_ic to 4 and confirm the anomaly label
+      drops; (b) mark one Stage-2 instance incomplete and confirm O-IMPEDIMENT
+      outranks the anomaly; (c) introduce a dual-rank disagreement and confirm
+      O-ARTIFACT outranks it. A label that does not move with its own frozen
+      inputs is not mechanical.
+    breaking_artifact: >-
+      A label whose trigger count differs from the census, a precedence order in
+      the code that differs from §5, or a label that survives a mutated census
+      that violates its condition.
+
+  - joint: >-
+      J2 — Census integrity. That the 82/82 instances, 533 dual cells, zero
+      dual-rank disagreements, zero E1/E2 disagreements and zero soundness
+      failures are true of the committed run outputs, with no pooling and with
+      RUN-SEMBIN-004d51 excluded as failed_implementation rather than counted.
+    assigned_to: TASK-20261106-bc1823
+    attack_plan: >-
+      Recompute, from the five run directories and not from census.json: the
+      instance count per family/substratum; E1 and E2 agreement wherever both
+      apply (noting the kf-b n=15 skip); the dual GF(2) rank agreement; and the
+      soundness certificate on a sample of SAT instances with an independent
+      NumPy evaluation. Check that planted and uniform-z are never pooled in any
+      reported statistic. Compare every recomputed number with census.json's
+      summary rows. Try to find one cell where a disagreeing dual rank was
+      averaged or a failed instance was counted.
+    breaking_artifact: >-
+      One disagreeing dual rank used in a reported number, one pooled stratum, a
+      failed/invalid instance counted as valid, or a soundness certificate that
+      fails under independent evaluation.
+
+  - joint: >-
+      J3 — The d_ff_ic definition and the degree-2 result. That `ic_first_fall_fast`
+      in stage0/definitions.md §1 is the object Semaev §4.5's statement concerns,
+      that the implementation computes the definition, and that d_ff_ic = 2 is a
+      consequence of the descended S3 structure rather than a defect of the
+      metric or the systems.
+    assigned_to: TASK-20261106-96d666
+    attack_plan: >-
+      Read definitions.md §1-§2 and the producer's Stage-0 derivation. Build the
+      combination Tr(z^-2 S3(u, x3, z)) for the n=12 planted seed-0 instance and
+      check directly whether its (affine) part at the relevant degree is
+      non-quadratic, i.e. whether a degree-<=1 polynomial lies in M2. Then
+      evaluate the SAME metric on the object Semaev §4.5 names (S3 with all three
+      arguments variable) and on a random Semaev system at the same n; a metric
+      that returns 2 for those too is not measuring first fall. Decide whether
+      d_ff_ic = 2 is (i) the true first fall of the descended system, (ii) a
+      convention difference from §4.5, or (iii) an implementation artifact, and
+      name which.
+    breaking_artifact: >-
+      A demonstration that the implementation's d_ff_ic is not the definition, or
+      that a system the definition puts at 4 is reported at 2, or a proof that
+      the descended combination does have a quadratic part (which would make the
+      degree-2 derivation wrong).
+
+  - joint: >-
+      J4 — SOLV4 and the C2 consistency reading. That the iterated W_4 closure is
+      computed as definitions.md §2 states, that 1 in W_4 on the SAT primary
+      instances is correct while the null arm fails on all 16, and that the
+      recorded kf-b contrary observation (SOLV4 true where the source predicted
+      false) is handled under the frozen §3 reading rather than waved through.
+    assigned_to: TASK-20261106-3eeed0
+    attack_plan: >-
+      Independently recompute the W_4 closure for one planted n=12, one
+      uniform-z n=12 unsat and one kf-b n=12 instance: track each round's added
+      basis vectors, confirm the fixed point (3 rounds at n=12, 4 at n=15), and
+      check that no element of degree < 4 entered W without a certificate.
+      Verify the C2 consistency conditions on the kf-b instances specifically,
+      since there SOLV4 true is contrary to the source idea's kf-b prediction.
+      Check the §3 reading actually licenses calling kf-b consistent rather than
+      C2-false.
+    breaking_artifact: >-
+      A closure that does not reach its claimed fixed point, a 1 in W with |V| > 0,
+      a codimension below r_V, or a kf-b instance that should trigger O-C2-FALSE
+      under the frozen consistency reading.
+
+  - joint: >-
+      J5 — C3, the rank-versus-nrows target, and the null band. That rank < nrows
+      holds at every measured (n, D >= 4) cell, that the deficit values are right,
+      that the EXP-DREG-001 anchor is reproduced at n=12 D=5, and that reading the
+      Stage-0 comparison target as nrows (not pred[D]) is what EXP-DREG-001
+      itself supports.
+    assigned_to: TASK-20261106-d74b3f
+    attack_plan: >-
+      With an independent linear-algebra implementation over GF(2), reproduce
+      nrows, ncols, rank and the deficit for n=12 D=4 planted and null, and for
+      the n=12 D=5 anchor. Compare with 3912/3802/110/32 and 3912/3834/78/0. Read
+      EXP-DREG-001 analysis.md:122-126 and the instrument at h012c:316-319 and
+      decide whether the Stage-0 target (nrows) is a fair reading. Then test the
+      IDEA band statement: null sits exactly on nrows - rank = n_q + C(n_q,2);
+      report whether that makes the band non-discriminating for these cells.
+    breaking_artifact: >-
+      rank = nrows at any measured D >= 4 cell (which would be O-C3-FALSE), an
+      anchor mismatch against EXP-DREG-001, or a deficit that does not follow
+      from the recomputed ranks.
+
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: null
+
+  proves_too_much:
+    objects:
+    - >-
+      The object Semaev §4.5 names: S3 with all three arguments variable, at the
+      same n and field, for which the producer's own statement implies a
+      degree-4 first fall. The d_ff_ic metric must NOT return 2 there.
+    - >-
+      A synthetic census identical to stage2/census.json except that every
+      primary d_ff_ic is 4 and Stage 2 is complete. The frozen pipeline must
+      emit O-SEPARATED, never O-DFF-ANOMALY.
+    failure_signature: >-
+      An argument or implementation that returns d_ff_ic = 2 for the §4.5 object,
+      or that emits O-DFF-ANOMALY on the d_ff_ic = 4 synthetic census, has proved
+      too much: it is measuring its own convention, not the systems.
+    assigned_to: TASK-20261106-7bbc46
+
+  blind_rederivation:
+    required: true
+    quantity: >-
+      d_ff_ic — the least D at which the frozen definition in
+      stage0/definitions.md §1 places a nonzero degree-<=D element in the
+      relevant module — for the n = 12, planted family, seed 0, Conway modulus,
+      m = t = 3, k = 4 instance.
+    parameters: 'n=12; family=planted; seed=0; m=t=3; k=4; B=alpha; A=1; Conway modulus'
+    blind_from:
+    - experiments/EXP-SEMBIN-79a02d/implementation/
+    - experiments/EXP-SEMBIN-79a02d/RESULTS.md
+    - experiments/EXP-SEMBIN-79a02d/stage2/census.json
+    - coordination/goals/GOAL-SEMBIN-5078bc/design/
+    assigned_to: TASK-20261106-96d666
+
+  preconditions:
+  - >-
+    The snapshot archive TASK-20261005-6c1c10 (owner by DEC-20261005-3d5aea B1)
+    must hold a verified receipt before any reviewer is dispatched. It is
+    currently written_not_dispatched and coordination/goals/GOAL-SEMBIN-5078bc/archives/TASK-20261005-6c1c10/
+    does not exist, even though the run and stage artifacts are tracked at
+    origin/main. Durability of the bytes is not the same as the binder receipt.
+  - Reviewers run in independent sessions under review-adversarial (xhigh), and none originated the run.
+  - This plan is frozen first; any departure is recorded in procedure_deviations.
+  - 'Stage 3 never ran: O-IMPEDIMENT is an infrastructure result and never negative evidence for C1.'
+
+  scope_boundary: >-
+    This round reviews the 2026-10-10 record at its stated toy scope (n in {12,
+    15}, m = t = 3, B = alpha, A = 1, Conway modulus). It does not test transfer
+    to cryptographic scale, does not reopen EXP-SEMBIN-7e1371, and does not
+    promote any claim.
+
+  procedure_deviations: []
