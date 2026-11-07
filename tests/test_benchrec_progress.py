@@ -1,6 +1,8 @@
 """The progress graphic must distinguish missing comparisons from missing data."""
 
 import json
+import re
+import zlib
 from pathlib import Path
 
 from tools import benchrec
@@ -33,6 +35,7 @@ def test_zero_gain_is_a_valid_comparison_point():
 def test_svg_reserves_space_for_a_long_series_key():
     progress = {
         "repo": "fixture", "headline_unit": "count", "records": {"measured": 53},
+        "units": {"count": {"meaning": "fixture count"}}, "note": "fixture",
         "series": [
             {"problem": "many", "metric": f"metric-{i}", "unit": "count", "points": [
                 {"date": "2026-11-01", "record": f"r-{i}", "value": 1, "n": 1,
@@ -48,3 +51,18 @@ def test_svg_reserves_space_for_a_long_series_key():
     assert 'y="962" font-weight="bold">Series in unit ratio' in graphic
     assert 'height="' in graphic
     assert '<text x="650" y="924">' in graphic
+
+    for series in progress["series"]:
+        series.update(first=1, latest=1, latest_derived={"improvement_vs_first_percent": 0.0})
+    pdf = benchrec.render_pdf(progress)
+    streams = [zlib.decompress(m.group(1)) for m in
+               re.finditer(rb"stream\n(.*?)\nendstream", pdf, re.S)]
+    keys = []
+    for stream in streams:
+        for match in re.finditer(rb"([0-9.]+) ([0-9.]+) Td \(many \xb7 metric-(\d+)\) Tj ET", stream):
+            x, baseline, index = float(match.group(1)), float(match.group(2)), int(match.group(3))
+            if x not in (60, 318):  # The table repeats the names at x=48.
+                continue
+            assert 48 <= baseline <= 744
+            keys.append(index)
+    assert sorted(keys) == list(range(52))
