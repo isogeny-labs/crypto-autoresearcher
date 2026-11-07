@@ -10,7 +10,7 @@ from verify_n47_x1_count_run import verify
 
 
 REPOSITORY = Path(__file__).resolve().parents[2]
-PLAN = REPOSITORY / 'analysis/semaev-degree-five-quotient-lift/n47-rand00-x1-count-plan-001.json'
+PLAN = REPOSITORY / 'analysis/semaev-degree-five-quotient-lift/n47-rand00-x1-count-plan-002.json'
 
 
 def digest(data):
