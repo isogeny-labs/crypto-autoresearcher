@@ -1202,6 +1202,8 @@ def prime_field_target_effort_admission_failure(ref, since):
     if raw is None:return
     try:
         d=json.loads(raw)
+        census=('physical_attempts','planned_systems','planned_solver_calls','unknown_systems','verified_systems','verified_solver_calls','verified_information_audits','observed_certified_systems','observed_completed_solver_calls','observed_failed_solver_calls')
+        if any(type(d[k])is not int or d[k]<0 for k in census):return
         if (d['schema']!='prime-field-a16-metrics/v1' or d['panel_complete'] is not False or d['physical_attempts']!=1 or
             d['planned_systems']!=1260 or d['planned_solver_calls']!=2520 or d['unknown_systems']!=1260 or d['partial_work_unknown']is not True or
             any(d[k]!=0 for k in ('verified_systems','verified_solver_calls','verified_information_audits','observed_certified_systems','observed_completed_solver_calls','observed_failed_solver_calls')) or
@@ -1215,6 +1217,115 @@ def prime_field_target_effort_admission_failure(ref, since):
     for key in ('physical_attempts','verified_systems','unknown_systems','observed_completed_solver_calls','verified_information_audits'):
         emit('prym.prime_field.a16.admission_failure.'+key,d[key],unit='objects',date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}',
             label='One failed Git admission attempt, zero native data; unknown planned cases do not measure mathematical recovery')
+
+
+def prime_field_target_effort_panel(ref, since):
+    """Committed A16 owned-horizon observations; no future setup or rank inflation."""
+    date = '2026-11-07'
+    if date < since:
+        return
+    path = 'research/prime_field_a16_execution_20261107/runs/a16-target-effort-c4b950/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a16-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['planned_systems'] != 1260 or data['planned_solver_calls'] != 2520 or
+            data['verified_systems'] != 1260 or data['verified_solver_calls'] != 2520 or
+            data['verified_information_audits'] != 576 or data['unknown_systems'] != 0 or data['partial_work_unknown'] is not False):
+            return
+        columns = data['columns']
+        rows = [dict(zip(columns, value, strict=True)) for value in data['rows']]
+        if len(set(columns)) != len(columns) or len(rows) != 1260 or {v['case_id'] for v in rows} != set(range(1260)):
+            return
+        ids = {f'p{p}-i{i}' for p in (262139, 524287) for i in (0, 1)}
+        programs={'norm8':('norm',8),'hybrid8':('hybrid',8),'known32_8':('known32',8),'known48_8':('known48',8),'known48_24':('known48',24)}
+        expected={(cid,pid,base,horizon,kind+str(seed),128,policy,budget,scope)
+            for cid in ids for pid,(base,horizon) in programs.items() if pid in ('norm8','hybrid8')
+            for seed in range(3) for kind in ('ap','hash') for policy in ('walk','hash_offset','general')
+            for budget in (1,2,4,8) for scope in ('relations','anchors')}
+        expected|={(cid,pid,base,horizon,'known',0,policy,budget,'supplied')
+            for cid in ids for pid,(base,horizon) in programs.items() if pid.startswith('known')
+            for policy in ('walk','hash_offset','general') for budget in ([24] if horizon==24 else [1,2,4,8])}
+        keys=('cell_id','program','base_arm','target_horizon','source_schedule','source_prefix','target_policy','target_prefix','scope')
+        if {tuple(v[k] for k in keys) for v in rows} != expected:
+            return
+        fields = ('base_columns','native_columns','supplied_columns','source_rank','native_source_rank','outside_rank',
+            'delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows')
+        for v in rows:
+            if v['verified'] is not True or v['certificate_checked'] is not True or any(type(v[k])is not int for k in ('case_id','target_horizon','source_prefix','target_prefix')) or any(type(v[k]) is not int or v[k] < 0 for k in fields):
+                return
+            width = 32 if v['base_arm'] in ('norm','known32') else 48
+            if (v['native_columns'] != width or v['base_columns']+v['supplied_columns'] != width or
+                v['native_source_rank'] != v['source_rank']+v['supplied_columns'] or
+                v['native_source_rank'] > min(width,v['source_rows']) or v['source_rank']+v['delta'] != v['after_cancellation_rank'] or
+                v['after_cancellation_rank'] > v['base_columns'] or v['outside_rank'] > min(8,v['target_rows']) or
+                v['identified_targets'] > 8 or v['identified_mask'] > 255 or v['identified_mask'].bit_count() != v['identified_targets'] or
+                v['decomposition_rows']+v['knowledge_rows'] != v['target_rows'] or v['scope']=='relations' and v['knowledge_rows'] != 0):
+                return
+            if v['base_arm'].startswith('known') and (v['base_columns'],v['source_rank'],v['delta'],v['source_rows']) != (0,0,0,width):
+                return
+        if any(len({v['base_columns'] for v in rows if v['cell_id']==cid and v['base_arm'] in ('norm','hybrid')}) != 1 for cid in ids):
+            return
+        physical, engines = data['physical_counters'], data['query_engine_totals']
+        if any(type(v) is not int or v < 0 for group in physical.values() for v in group.values()):
+            return
+        if data['observed_completed_solver_calls']!=2520 or data['observed_failed_solver_calls']!=0 or data['observed_certified_systems']!=1260:
+            return
+        for pid,size in [('hybrid8',16),('known32_8',32),('known48_8',48),('known48_24',48)]:
+            if physical['public_base.'+pid+'.known_base_construction'].get('public_base_certificates_verified')!=4*size:
+                return
+        for pid in ('norm8','hybrid8'):
+            geometric=physical[pid+'.norm_prelude']['geometry_classes_stored']
+            if not 128<=geometric<=(128 if pid=='norm8' else 192):return
+            if physical[pid+'.source_construction'].get('signed_point_queries')!=2*128*6*geometric:return
+            if physical[pid+'.native_collection'].get('signed_point_queries')!=2*8*geometric:return
+        for pid,size in [('known32_8',32),('known48_8',48),('known48_24',48)]:
+            if physical.get(pid+'.source_construction',{}).get('signed_point_queries',0)!=0:return
+            if physical[pid+'.native_collection'].get('signed_point_queries')!=4*2*8*size:return
+            if physical[pid+'.native_collection'].get('pair_table_insertions')!=4*2*size*(size-1):return
+            if physical[pid+'.native_collection'].get('pair_array_allocated_bytes',0)<=0:return
+        for engine in ('scalar','batch'):
+            if any(type(v) is not int or v < 0 for v in engines[engine].values()):
+                return
+            namespace = 'query_'+engine+'.'
+            names = {k[len(namespace):] for group in physical.values() for k in group if k.startswith(namespace)}
+            if names != set(engines[engine]) or any(sum(group.get(namespace+k,0) for group in physical.values()) != v for k,v in engines[engine].items()):
+                return
+        if engines['scalar'].get('Fp.group_add') != sum(v.get('signed_point_queries',0) for v in physical.values()):
+            return
+        checkpoints = data['closed_curve_checkpoints']
+        if len(checkpoints) != 4 or {v['cell_id'] for v in checkpoints} != ids or any(
+            v['valid'] is not True or v['receipt']['returncode'] != 0 or v['receipt']['closed_curve'] != v['cell_id'] for v in checkpoints):
+            return
+        for ordinal,value in enumerate(checkpoints,1):
+            receipt=value['receipt']
+            if receipt['command']!=['bash','scripts/checkpoint.sh','push'] or receipt['completed_curves']!=ordinal or receipt['checked_cases']!=ordinal*315:return
+        for base in programs:
+            for method in ('partial_joint','sparse_joint'):
+                if any(type(v) is not int or v < 0 for v in data['observed_arm_counters'][base+'.'+method].values()):
+                    return
+    except (KeyError,TypeError,ValueError,AttributeError):
+        return
+    common = dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a16'
+    for key in ('verified_systems','verified_solver_calls','verified_information_audits','unknown_systems'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Actual finite producer census; dependent cases and separate diagnostics, unverified standing',**common)
+    for group,counts in physical.items():
+        for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv',
+            'signed_point_queries','pair_table_insertions','public_base_certificates_verified','pair_array_allocated_bytes','query_array_allocated_bytes'):
+            if key in counts:
+                emit(prefix+'.physical.'+group+'.'+key,counts[key],unit='bytes' if key.endswith('_bytes') else 'calls',
+                    label='Physical component once; diagnostic overhead, both engine controls and conditional references remain separate',**common)
+    for v in rows:
+        name = prefix+'.'+v['cell_id']+'.'+v['program']+'.h'+str(v['target_horizon'])+'.'+v['source_schedule']+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('identified_mask','bit mask'),('base_columns','old unknown columns'),
+            ('supplied_columns','supplied units'),('source_rank','old-coordinate rank'),('native_source_rank','native supplied-plus-collected rank'),
+            ('delta','within-case rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Dependent producer observation; supplied logs are not learned rank, no cross-base Delta comparison',**common)
+
+
 
 
 def prime_field_batched_pair_panel(ref, since):
@@ -1474,6 +1585,7 @@ def main():
     prime_field_mixed_known_helper_panel(a.ref, a.since)
     prime_field_batched_pair_panel(a.ref, a.since)
     prime_field_target_effort_admission_failure(a.ref, a.since)
+    prime_field_target_effort_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 

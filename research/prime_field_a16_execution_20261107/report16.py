@@ -82,10 +82,16 @@ def main():
                 mask_rows.append([cid,policy,hex(before),hex(after),hex(gained),hex(lost)])
                 mask_data.append(dict(cell_id=cid,policy=policy,h8=before,h24=after,gained=gained,lost=lost))
             else:mask_rows.append([cid,policy,'unknown','unknown','unknown','unknown'])
+    unions=[]
+    for cid in cids:
+        mask=0
+        for row in cells:
+            if row['verified'] and row['cell_id']==cid and row['program']=='known48_8' and row['target_prefix']==8:mask|=row['identified_mask']
+        unions.append(dict(cell_id=cid,policy_union_mask=mask,identified=mask.bit_count()))
     comparisons=data['matched_comparisons'];comp_counts={key:sum(v[key] for v in comparisons) for key in
         ('candidate_dominates_arithmetic','reference_dominates_arithmetic','candidate_dominates_retained','reference_dominates_retained')}
     write_once(a.out/'observations.json',dict(schema='prime-field-a16-report-observations/v1',raw_commit=a.raw_commit,claim=a.claim,
-        outcome_sums=summaries,graph_points=observations,illustrative_cold_vectors=cost_data,known48_named_mask_pairs=mask_data,dependent_comparison_counts=comp_counts,
+        outcome_sums=summaries,graph_points=observations,illustrative_cold_vectors=cost_data,known48_named_mask_pairs=mask_data,known48_h8_policy_union=unions,dependent_comparison_counts=comp_counts,
         graph_scope='Recorded verified rows only. Norm/hybrid sum six source schedules times two scopes; others one case per policy/curve. No confidence intervals or population inference.',
         canonical_graphs='Checked existing A14/A15 historical graphs; immutable different scopes unchanged. A16 fresh observations receive a new graph, no official hypothesis transition.'))
     runid=a.run.name;foot=text(runid+' | '+a.claim+' | producer checks: unverified')
@@ -101,6 +107,7 @@ def main():
     document+=text(('Diagram: the attempt stopped in admission before native generation; no comparable mathematical measurements exist. ' if metrics['verified_systems']==0 else '')+'Prospective graph scope: recorded identified/requested dependent slots at target prefix8 for norm8/hybrid8/known32_8/known48_8 and24 for known48_24. Each bar covers the listed fixed curve and policy. No statistical uncertainty was estimated for this finite dependent census.')+'\n\n'
     document+='== Known48 horizon8 versus horizon24\n'+table(['curve','policy','h8 mask','h24 mask','gained mask','lost mask'],mask_rows)
     document+=text('Derived masks: gained=h24 AND complement(h8); lost=h8 AND complement(h24). Bit j denotes the same independently selected public target index j on that curve. Different full-horizon constructor portfolios can expose different paid affine knowledge, so a longer horizon is not assumed to preserve every shorter-horizon recovery.')+'\n\n'
+    document+=text('Additional recorded-mask arithmetic: the union of horizon8 known48 masks across all three policies identifies '+str(sum(v['identified'] for v in unions))+' of32 distinct public targets. This union pays for multiple policy constructors/queries/solvers; it is not a free single-policy result. No adaptive fallback or portfolio cost saving was executed or priced by this experiment.')+'\n\n'
     document+='#pagebreak()\n= Included cold components\n#set text(size:7.6pt)\n'+table(['curve','program','Fp mul','Fp inv','Fr mul','pair bytes','query bytes'],cost_rows)+'#set text(size:9pt)\n'
     document+=text('Illustration only: policy general; AP0/anchors/source128 for norm/hybrid, known/supplied/source0 for known programs; own target horizon8 or24. Each row is one nonadditive cold view with partial_joint and the batch endpoint engine. Values are primitive operations and explicit allocation traffic, not weighted runtime or peak memory. Every other policy/schedule/scope/prefix and the actual full joint solver remain in analysis.json. Pair and query allocation bytes are separate traffic dimensions.')+'\n\n'
     document+=text('Full cold inclusion covers owned base/prelude/index, public target generation, selected source construction/recipe and target recipe derivation, own full-horizon P/Q planning and tables, unique used queries, assembly, solver, lifting and public checks. Single-engine references remove only the other actually executed endpoint-engine replay. Information diagnostics and independent checker/oracle work are separately retained physical costs. Generation/order/norm selection, hashing/pow internals, Python/NumPy hidden temporaries, OS/I/O/storage are not fully calibrated.')+'\n\n'

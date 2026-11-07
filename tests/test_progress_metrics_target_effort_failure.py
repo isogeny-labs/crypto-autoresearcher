@@ -20,7 +20,7 @@ def test_actual_committed_failure_and_corruptions(tmp_path,monkeypatch):
     first=commit(actual);observed=read(first)
     assert len(observed)==5 and all(v['better']=='neutral' and v['source']==PATH+'@'+first for v in observed)
     path.write_text('{}');assert read(first)==observed
-    mutations=[lambda v:v.update(panel_complete=True),lambda v:v.update(unknown_systems=0),lambda v:v.update(observed_completed_solver_calls=1),
+    mutations=[lambda v:v.update(physical_attempts=True),lambda v:v.update(observed_completed_solver_calls=False),lambda v:v.update(panel_complete=True),lambda v:v.update(unknown_systems=0),lambda v:v.update(observed_completed_solver_calls=1),
         lambda v:v.update(verified_systems=1),lambda v:v['physical_counters'].update({'invented':{'Fp.field_mul':1}}),
         lambda v:v['rows'].pop(),lambda v:v['rows'][0].__setitem__(v['columns'].index('identified_mask'),0),
         lambda v:v['closed_curve_checkpoints'][0].update(valid=True),lambda v:v['query_engine_totals']['scalar'].update({'Fp.group_add':1})]
