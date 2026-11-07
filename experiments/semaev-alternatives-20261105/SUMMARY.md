@@ -2,7 +2,7 @@
 
 Registered 2026-11-05 in isogeny-labs/crypto-autoresearcher#3028; results landed in #3033 and this follow-up. Each row links to `results/SA-NN/REPORT.md`. Corrections to the campaign report are in `ERRATA.md`.
 
-**Bottom line.** No direction reported a usable success. Eight directions were killed against their frozen criteria. The other ten are open: an INCONCLUSIVE verdict is not a kill, and each open direction has a round-2 pre-registration in `prereg/round2/` (SA-17 is still running). The lattice wall at reach 1/6, 1/24, 1/80 (arity 2, 3, 4) was reproduced from five independent directions (SA-01, 04, 06, 08, 18) and holds for every presentation tested: x-coordinates, Vieta coordinates, the Riemann–Roch norm system, special j-invariants and 2-torsion symmetrisation. Both new structural handles from the report (the Vieta conic and the Γ₀(p) binary-form view) are closed.
+**Bottom line.** No direction reported a usable success. Nine directions were killed against their frozen criteria. The other nine are open: an INCONCLUSIVE verdict is not a kill, and each open direction has a round-2 pre-registration in `prereg/round2/`. The lattice wall at reach 1/6, 1/24, 1/80 (arity 2, 3, 4) was reproduced from five independent directions (SA-01, 04, 06, 08, 18) and holds for every presentation tested: x-coordinates, Vieta coordinates, the Riemann–Roch norm system, special j-invariants and 2-torsion symmetrisation. Both new structural handles from the report (the Vieta conic and the Γ₀(p) binary-form view) are closed.
 
 | ID | Direction | Verdict | Deciding number |
 |---|---|---|---|
@@ -22,8 +22,10 @@ Registered 2026-11-05 in isogeny-labs/crypto-autoresearcher#3028; results landed
 | SA-14 | Yokoyama for towers | INCONCLUSIVE (open; round 2 SA-14b) | Macaulay degree 2t+4 proved; F4 degree 4–5 at t ≤ 9 |
 | SA-15 | m = 4 instance set | INCONCLUSIVE, adoption (open; round 2 SA-15b) | 400/400 planted instances verified and hashed |
 | SA-16 | Positive-control calibration | KILL (solver prediction) | `L3` and raw bivariate Coppersmith fail the controls |
-| SA-17 | Function-field mirror | see `results/SA-17/REPORT.md` | — |
+| SA-17 | Function-field mirror | KILL | FF reach 1/9 (m = 2) and 1/50 (m = 3) vs 1/m needed; F_p gap 0.001 ± 0.003 |
 | SA-18 | Determinant-method oracle | KILL | provable reach rises toward 1/6, never above |
+
+**The deepest finding (SA-17).** The lattice wall is not caused by archimedean carries. In the function-field twin F_q[t]/(π), where lattice reduction is exact and there are no carries, the same lattices hit the same thresholds (1/9 at m = 2, 1/50 at m = 3). The bottleneck is the degree budget of S_{m+1} as a polynomial in x_R. A future lattice proposal has to lower that budget with a different relation polynomial or coordinates, not avoid carries.
 
 **Open threads the executors named.**
 - An exact-arithmetic, lattice-reduced branch-and-bound (SA-07) must beat brute force at m = 3, B = 16 before integer programming is reconsidered.
