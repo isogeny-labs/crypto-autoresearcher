@@ -64,3 +64,15 @@ been performed. Before any bounded run, publish the exact source, command,
 input hashes, resource and dollar ceilings, and deadline, then verify live
 budget headroom. Keep its result separate from the already frozen V3 D5
 attempt and preserve all failures and receipts.
+
+`verify_solution_factor_result.py` is a separate, source-independent
+readback checker for either verdict. It parses the original quotient map
+and generator binary itself, rechecks the six listed roots, and either
+streams every map row for the positive verdict or checks the explicit
+kernel polynomial and its nonzero evaluation for the negative verdict.
+It verifies the saved pair, count, generator and seed hashes against the
+frozen plan and result. Its acceptance of a count stdout containing `6`
+assumes the separately pinned exhaustive counter's successful run and
+receipt; the reviewer must inspect that receipt as well. The small-map
+positive, negative and mutated-witness controls pass, but no full-size
+readback has occurred.
