@@ -1,0 +1,10 @@
+# Observation for the residual-risk section (local bash only, no aws): does a bash started with BASH_ENV in its environment run the file before its first line?
+$ env -i HOME=$HOME BASH_ENV=<file that echoes BASH_ENV_PAYLOAD_RAN> /bin/bash  -c 'echo started'
+BASH_ENV_PAYLOAD_RAN
+started
+$ env -i HOME=$HOME BASH_ENV=<file that echoes BASH_ENV_PAYLOAD_RAN> /bin/bash -p -c 'echo started'
+started
+$ env -i HOME=$HOME BASH_ENV=<file that echoes BASH_ENV_PAYLOAD_RAN> /bin/bash --noprofile --norc -c 'echo started'
+BASH_ENV_PAYLOAD_RAN
+started
+bash version: 5.2.21(1)-release

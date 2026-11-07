@@ -1,0 +1,67 @@
+{
+ "schema": "decision-report-figure-data.v1",
+ "decision_id": "DEC-20261107-f46a40",
+ "composing_task_id": "TASK-20261107-5b2b59",
+ "experiment_id": "EXP-MONO-1a1be2",
+ "no_new_computation": "Every value is copied by key from the named source, or is a sum of copied values whose derivation is written beside it. figures.py derives nothing but layout and label text. No KAT value, lemma value, formula or prior is copied here; only timings of the infrastructure stop, caps, budgets and queue structure.",
+ "sources": {
+  "decision": {"path": "ledger/decisions/DEC-20261107-f46a40.yaml", "sha256": "b22077dfe07c631411b5a4ad8da47014334cdaa76e6483d560d8cbe77f9be99f"},
+  "predecessor": {"path": "ledger/decisions/DEC-20261106-24d2a2.yaml", "sha256": "7b74bc1d310905ac1ff2a9a0a0a30dcc647fb67d91073eb2a8a7c1658ca1db88"},
+  "grant_decision": {"path": "ledger/decisions/DEC-20261106-475620.yaml", "sha256": "d161625377de5731e12972e549476d4576d1314c6fe19fcb5c81ba5dd325ea56"},
+  "dev1_report": {"path": "experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md", "sha256": "f36ebcc045c91c2013d5bf71d5666daa5712bff780769bb9641c6febf5ced196"},
+  "dev1_kat_log": {"path": "experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json", "sha256": "6349fe1a85269dfcda3c7ec3a6b4d96c2e1912d101fd14fe8180b78981754e45"},
+  "queue_342e48": {"path": "coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json", "sha256": "77d16d0b2494f9bdad5775c1821f7af2c4cfed3a293aa8f694a8536b75e490d2"},
+  "queue_c077fd": {"path": "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json", "sha256": "d6c8efc6cdb696f4f73ad8d792b9251881f16594323636c8c23f8aa67dfc436e"},
+  "card_5b2b59": {"path": "ledger/handoffs/TASK-20261107-5b2b59.yaml", "sha256": "8e8b2123adfde33f31f3520d010ee433ea27938dcd1175d625e6aa8e37fe965a"},
+  "card_88b2fc": {"path": "ledger/handoffs/TASK-20261107-88b2fc.yaml", "sha256": "35d595f8a63c69c71a9c40858b7c79b633aa39395059236a9846d08c6d593191"},
+  "card_af7359": {"path": "ledger/handoffs/TASK-20261107-af7359.yaml", "sha256": "6cb28755fa83a8ed304273e24fed2b0b6ed37c2f5cb2f0e90fb7e97a010cecda"},
+  "card_d279a7": {"path": "ledger/handoffs/TASK-20261107-d279a7.yaml", "sha256": "94af074436e54f960eb0ce5986cc5ce7b736a1821c6f1ef8447053bcfbb82412"},
+  "card_bc7a76": {"path": "ledger/handoffs/TASK-20261107-bc7a76.yaml", "sha256": "1251478e5c317b88299b32e0a06af965ed7b5231374cac78eb9124f79caf3a21"}
+ },
+ "figure_1_dev1_allowance": {
+  "kind": "budget bound, not a measurement",
+  "axis": "cumulative DEV-1 wall, hours (seconds / 3,600)",
+  "segments": [
+   {"id": "attempt_1", "label": "attempt 1 (96fee7), about 2.5 h, approximate", "value_s": 8820, "approx": true, "kind": "derived", "derivation": "kill-detection time about 01:32Z minus task start about 23:05Z (2 h 27 min); the decision reads it as about 2.5 h", "source": "dev1_report; predecessor", "key": "dev1_report Outcome paragraph (task budget sentence); predecessor dev1_rerun_decision.allowance_reading (a); decision bc7a76_caps.cumulative_cap_basis"},
+   {"id": "attempt_2", "label": "attempt 2 budget (bc7a76)", "value_s": 43200, "kind": "parameter", "source": "card_bc7a76; decision", "key": "card_bc7a76 budget.per_attempt_wall_clock_seconds; decision bc7a76_caps.cumulative_cap_basis"},
+   {"id": "attempt_3", "label": "attempt 3 budget (bc7a76), only after a C5 restart", "value_s": 43200, "kind": "parameter", "hatched": true, "source": "card_bc7a76; decision", "key": "card_bc7a76 budget.per_attempt_wall_clock_seconds and constraints LD-9; decision owner_answer.reading"}
+  ],
+  "per_attempt_limit_s": {"value": 42600, "kind": "parameter", "derivation": "1,200 s projection plus 41,400 s watchdog; the remaining 600 s of each 43,200 s budget is set-up", "source": "card_bc7a76", "key": "budget.budget_note"},
+  "cumulative_cap_this_card_s": {"value": 86400, "kind": "parameter", "source": "decision", "key": "bc7a76_caps.cumulative_cap_seconds_this_card"},
+  "maximum_attempts": {"value": 2, "source": "decision", "key": "bc7a76_caps.maximum_attempts"},
+  "ld9_remaining_needed_s": {"value": 42600, "source": "decision", "key": "bc7a76_caps.ld9_check_reads_as"},
+  "cumulative_ends_s": {"value": [8820, 52020, 95220], "kind": "derived", "derivation": "running sums of the three segments (about 2.5 h, about 14.4 h, about 26.4 h); the decision states about 26.4 h", "source": "decision", "key": "bc7a76_caps.cumulative_cap_basis"},
+  "grant_band_s": {"low": 36000, "high": 43200, "kind": "parameter", "derivation": "about 10 h to 12 h times 3,600 s", "source": "grant_decision", "key": "owner_direction.text_as_relayed"},
+  "oq1_a_marker_s": {"value": 93600, "label": "about 26 h, OQ-1 (A)", "kind": "parameter", "derivation": "26 h times 3,600 s; the option text says about 26 h", "source": "decision", "key": "owner_answer.option_text_as_shown"},
+  "lower_cap_set_by_owner": {"value": "none", "source": "decision", "key": "owner_answer.lower_cap_set_by_owner"}
+ },
+ "figure_2_release_gates": {
+  "as_at": "the decision (2026-11-07); later states are not drawn",
+  "edge_label": "instrument, not evidence",
+  "row_1": [
+   {"id": "TASK-20261107-7db1de", "label": "7db1de", "state": "running", "note": "hardening re-review", "source": "decision", "key": "context; release_status.why_not_queued_now"},
+   {"id": "TASK-20261107-971edf", "label": "971edf", "state": "queued", "note": "snapshot of 7db1de", "badge": "B8-H", "source": "decision; queue_c077fd", "key": "updated_blockers B8; tasks[971edf]"},
+   {"id": "TASK-20261107-88b2fc", "label": "88b2fc", "state": "queued", "note": "ledger archive of this act", "source": "decision; queue_342e48", "key": "batch_choice.tasks; tasks[88b2fc]"},
+   {"id": "DEC-20261107-40200d", "label": "DEC-20261107-40200d", "state": "not yet written", "note": "RR-9 disposition,\nthen the bc7a76 revision", "source": "decision", "key": "release_status.split_of_release.DEC-20261107-40200d"},
+   {"id": "TASK-20261107-bc7a76", "label": "bc7a76", "state": "blocked", "note": "DEV-1 re-attempt", "badges": ["G-4", "G-5", "G-6", "G-7"], "source": "decision; queue_c077fd", "key": "release_status.bc7a76_state_now; gates_bc7a76_must_pass_before_any_launch"}
+  ],
+  "row_2": [
+   {"id": "TASK-20261107-eebc5b", "label": "eebc5b", "state": "queued", "note": "snapshot of bc7a76", "source": "queue_c077fd", "key": "tasks[eebc5b]"},
+   {"id": "af7359 revision", "label": "af7359 revision", "state": "not yet written", "note": "eebc5b: passed\n(mechanical, DVP-2)", "source": "decision; card_af7359", "key": "dev1_verification.state_and_release; dispatch_preconditions DVP-2"},
+   {"id": "TASK-20261107-af7359", "label": "af7359", "state": "blocked", "note": "B8-D DEV-1 verification", "source": "queue_342e48", "key": "tasks[af7359]"},
+   {"id": "TASK-20261107-d279a7", "label": "d279a7", "state": "queued", "note": "snapshot of af7359", "badge": "B8-D", "source": "queue_342e48; card_d279a7", "key": "tasks[d279a7]; objective"},
+   {"id": "approval act", "label": "approval act", "state": "not yet written", "note": "SC-1 to SC-5", "source": "decision", "key": "release_status.ordering_rules_kept"}
+  ],
+  "side_branches": [
+   {"from": "TASK-20261107-971edf", "text": "B8-H fail or code change -> 40200d as a fresh act", "source": "decision", "key": "release_status.split_of_release.DEC-20261107-40200d (Otherwise ...)"},
+   {"from": "TASK-20261107-bc7a76", "text": "both attempts C5 -> (B), with owner parameters (856d9b)", "source": "decision", "key": "bc7a76_caps.fallback_on_retries_exhausted"}
+  ],
+  "gates": [
+   {"id": "G-4", "short": "bytes re-verified per attempt", "source": "decision", "key": "gates_bc7a76_must_pass_before_any_launch G-4"},
+   {"id": "G-5", "short": "RESUME filled and pushed", "source": "decision", "key": "gates_bc7a76_must_pass_before_any_launch G-5"},
+   {"id": "G-6", "short": "host otherwise idle", "source": "decision", "key": "gates_bc7a76_must_pass_before_any_launch G-6"},
+   {"id": "G-7", "short": "setsid nohup launch", "source": "decision", "key": "gates_bc7a76_must_pass_before_any_launch G-7"}
+  ],
+  "lanes": {"BATCH-c077fd": ["TASK-20261107-7db1de", "TASK-20261107-971edf", "TASK-20261107-bc7a76", "TASK-20261107-eebc5b"], "BATCH-342e48": ["TASK-20261107-88b2fc", "TASK-20261107-af7359", "TASK-20261107-d279a7"], "source": "queue_c077fd; queue_342e48", "key": "tasks[].id"}
+ }
+}

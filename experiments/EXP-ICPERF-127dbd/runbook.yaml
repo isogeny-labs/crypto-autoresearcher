@@ -1,23 +1,24 @@
-# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 3), session RBS-ICPERF-616277, recompiled after the stopped session RBS-ICPERF-de8978. Compiled by the experiment director under TASK-20261107-c5a0f4. NOT AUTHORIZED.
-# NOT APPROVED. Runs only after a committed decision (reserved id DEC-20261107-7802ec) names this file's sha256 (runbook_sha256), after an independent red-team review of the locator joint, and with the owner notice and EKS spend go-ahead of protocol section 11.
-# The specification.yaml and trial-plan.json digests bound below are those of the preview bytes that the approval archive swaps in. T1 (S1) is not a trial of this session: RUN-ICPERF-8b0d47 is consumed and S02-reconcile-t1 is a read-only transfer under that run id.
+# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 3), session RBS-ICPERF-616277, recompiled for launcher v3c after the stopped session RBS-ICPERF-de8978 and the red-team review RT-20261107-9d2b6a (ruling DEC-20261107-a83c51). Compiled by the experiment director under TASK-20261107-d07e94. NOT AUTHORIZED.
+# NOT APPROVED. Runs only after a committed decision (reserved id DEC-20261107-7802ec) names this file's sha256 (runbook_sha256), after the independent red-team reconfirmation of the v3c bytes (DEC-20261107-a83c51 reconfirmation), and with the owner notice and EKS spend go-ahead of protocol section 11.
+# BOUND PREVIEW DIGESTS (PD-3): the specification.yaml and trial-plan.json digests bound below are those of the PREVIEW approved forms in experiments/EXP-ICPERF-127dbd/design/d07e94/approval-preview/ (specification.yaml 5136eaddce2c449690d4cc5a29facb6fd6c22977e04cda6b6459fbcc1e86d723, trial-plan.json 7be33749a33d2829577a187ca115bdba5ea6ef35fa59fadf7482fee39b0e64b6). An approval archive swaps them in at the canonical paths. The canonical drafts stay review_required, so `tools/runbook.py lint` of this file in the unmodified tree reports exactly the bind mismatches of those two files and the spec_bindings that read the approved form (approved_by, and any later restated value of a swapped file); nothing else.
+# T1 (S1) is not a trial of this session: RUN-ICPERF-8b0d47 is consumed and S02-reconcile-t1 is a read-only transfer under that run id, pinned to the launcher's 02:14:21Z receipt (K-2).
 schema: crypto.autoresearch.runbook.v1
 experiment_id: EXP-ICPERF-127dbd
 session_id: RBS-ICPERF-616277
 title: Bring in the output of the S1 job by a read-only reconciliation, launch the frozen S2 request once, check each download, and run the frozen analyze-c1.sh gates
 purpose: Executes protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 3 (protocol_sha256 4b7bf35f..., which carries C1-AMENDMENT-1 and C1-AMENDMENT-2; the version
   2 hash was 9844f78d..., the version 1 hash 43b1ca91...). S1 already ran once as RUN-ICPERF-8b0d47; its output is brought in by implementation/reconcile_run.sh,
-  which launches nothing and reads only the check_job.py set. S2 is submitted once through launch-remote by implementation/launch_eks.sh v3b under the trial supervisor,
-  which locates and downloads the job prefix with implementation/locate_results.sh. check_job.py checks transport and identity of each download. The frozen analyze-c1.sh
+  which launches nothing and reads only the check_job.py set. S2 is submitted once through launch-remote by implementation/launch_eks.sh v3c under the trial supervisor,
+  which locates and downloads the job prefix with implementation/locate_results.sh under the controls K-1 to K-7 of DEC-20261107-a83c51. check_job.py checks transport and identity of each download. The frozen analyze-c1.sh
   then evaluates the integrity, control and parity gates of both sessions. Observations only; no scientific outcome is asserted.
 executor_tier: mechanical
 approval:
   mode: decision_record
 binds:
 - path: experiments/EXP-ICPERF-127dbd/specification.yaml
-  sha256: 097462e3137770d6d1e69ba4e23ae7213a7dca0db3ccfcd1a347638abeb408e5
+  sha256: 5136eaddce2c449690d4cc5a29facb6fd6c22977e04cda6b6459fbcc1e86d723
 - path: experiments/EXP-ICPERF-127dbd/trial-plan.json
-  sha256: 3f564ea2ad00f25aa0efd1c35ccbf164f8f7ef542c7b64a5dd209860796117f8
+  sha256: 7be33749a33d2829577a187ca115bdba5ea6ef35fa59fadf7482fee39b0e64b6
 - path: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
   sha256: 561b6a75247a52d7a99f0c636fcef42eb038fc1e7844d78f002c55d8767ca05d
 - path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
@@ -31,11 +32,11 @@ binds:
 - path: experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
   sha256: 66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc
 - path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
-  sha256: f93e8858923765c390fb7bcb01ea04c2373325815f08cbaf7df24b584e521da8
+  sha256: a61c55da15b149d00ee7e644c41d79ad8df4ae82f3c59dfca157ea9679fc9e76
 - path: experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh
-  sha256: efcc29832806d604913c00afb6e92a2052cb784479cfc65dda42491655326c5e
+  sha256: 668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b
 - path: experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
-  sha256: eac18f21de151b55b543e7ebdf51aeda71a23061ae2f8f5449a5064af569bb93
+  sha256: a294b7dbc77b33ae4103dfa907a5effba03fe0e2c1837f3f51a44a5897055c16
 - path: experiments/EXP-ICPERF-127dbd/implementation/check_job.py
   sha256: d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d
 - path: experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
@@ -63,6 +64,27 @@ spec_bindings:
 - file: experiments/EXP-ICPERF-127dbd/specification.yaml
   pointer: /experiment/inputs/s1_reconciliation/job_uid
   equals: 8a20d036-efc2-45d2-ada6-6442b93c5a52
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/inputs/s1_reconciliation/receipt_pins/status_json_sha256
+  equals: a2642563d10a8f80661cef79a759b892d44fad49057a409ae03a1bee3a960ae0
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/inputs/s1_reconciliation/receipt_pins/objects_json_sha256
+  equals: 783ea0e3ec77daf52d3ff815cb096295a3db76fe05b5cc9b1884c001126504d7
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/inputs/s1_reconciliation/receipt_pins/not_after
+  equals: '2026-11-07T02:14:41Z'
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/inputs/locator_controls/s2_raw_result_facts/download_exit
+  equals: '0'
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/inputs/locator_controls/s2_raw_result_facts/objects_match
+  equals: true
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/inputs/locator_controls/s2_raw_result_facts/results_locator
+  equals: receipt_status_pod_uid
+- file: experiments/EXP-ICPERF-127dbd/specification.yaml
+  pointer: /experiment/inputs/locator_controls/s2_raw_result_facts/results_uri_pattern
+  equals: '^s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s2-20261106/[0-9a-f-]{36}/$'
 - file: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
   pointer: /protocol_id
   equals: IC-C1-DEFERRED-GUARD-FP28-20261106
@@ -234,10 +256,11 @@ steps:
   purpose: verification
   title: Bring in the output of the S1 job under RUN-ICPERF-8b0d47 by a read-only reconciliation that launches nothing
   explain: Runs the bound reconcile_run.sh once. It checks that the committed launcher result of RUN-ICPERF-8b0d47 has sha256 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7,
-    locates the S1 results prefix with locate_results.sh from the launcher receipt status.json (Job uid, job name, exactly one pod, only launcher/ and that pod prefix
-    under the job listing), copies that prefix read-only into the step output directory, checks that job-exit.json names the located pod, the job ic-c1-dg-s1-20261106
+    locates the S1 results prefix with locate_results.sh from the launcher receipt status.json (Job uid, job name, launcher id, exactly one pod with restartCount 0, only launcher/ and that pod prefix
+    under the job listing), requires the receipt status.json and objects.json to have the pinned sha256 values and every S3 LastModified to be at or before the pinned time, requires a listing of the pod prefix to equal the
+    launcher's objects.json as (Key, Size, ETag), copies that prefix read-only into the step output directory, requires the copied files to equal objects.json (size, and MD5 for single-part ETags; no extra or missing file), checks that job-exit.json names the located pod, the job ic-c1-dg-s1-20261106
     and the container exit code, runs the bound check_job.py on the copy, checks that SHA256SUMS lists run-summary.json at the empty-file sha256, and writes reconcile-result.json.
-    Its only AWS calls are aws s3 cp from S3 and aws s3 ls. It submits no job, starts no build and writes nothing to S3 or under runs/RUN-ICPERF-8b0d47. records.jsonl
+    Its only AWS calls are aws s3 cp from S3, aws s3 ls and aws s3api list-objects-v2 (all reads); the script re-executes itself under env -i with an allowlist and refuses any AWS_ENDPOINT_URL variable and any aws-cli alias, endpoint_url or credential_process entry. It submits no job, starts no build and writes nothing to S3 or under runs/RUN-ICPERF-8b0d47. records.jsonl
     is hashed and its newlines are counted, never parsed.
   argv:
   - bash
@@ -256,6 +279,14 @@ steps:
   - T1
   - --out
   - '{out}'
+  - --out-root
+  - '{session_dir}/outputs/S02-reconcile-t1'
+  - --pin-status-sha256
+  - a2642563d10a8f80661cef79a759b892d44fad49057a409ae03a1bee3a960ae0
+  - --pin-objects-sha256
+  - 783ea0e3ec77daf52d3ff815cb096295a3db76fe05b5cc9b1884c001126504d7
+  - --pin-not-after
+  - '2026-11-07T02:14:41Z'
   timeout_seconds: 1800
   validity:
     exit_code: 0
@@ -315,6 +346,16 @@ steps:
         equals: pass
       - pointer: /run_summary_outcome
         equals: pass
+      - pointer: /objects_match
+        equals: true
+      - pointer: /receipt_pins_outcome
+        equals: pass
+      - pointer: /receipt_status_json_sha256
+        equals: a2642563d10a8f80661cef79a759b892d44fad49057a409ae03a1bee3a960ae0
+      - pointer: /receipt_objects_json_sha256
+        equals: 783ea0e3ec77daf52d3ff815cb096295a3db76fe05b5cc9b1884c001126504d7
+      - pointer: /env_hygiene
+        matches: ^ok aws=/\S+/aws version=aws-cli/1\.46\.2 
       - pointer: /reconcile_exit
         equals: 0
       - pointer: /reconcile_pass
@@ -329,9 +370,9 @@ steps:
     session.json or run-summary.json from the copy.
 - id: S03-trial-s2
   kind: trials
-  title: Submit request S2 once under launch_eks.sh v3b and check the download
-  explain: Trial T2 runs launch_eks.sh v3b on request-s2.json as RUN-ICPERF-efb7ef under the trial supervisor, followed by check_job.py. The wrapper locates the job
-    results with locate_results.sh and records results_locator, job_uid and pod_uid in raw-result.json. This step runs only if S02-reconcile-t1 passed. Controls is
+  title: Submit request S2 once under launch_eks.sh v3c and check the download
+  explain: Trial T2 runs launch_eks.sh v3c on request-s2.json as RUN-ICPERF-efb7ef under the trial supervisor, followed by check_job.py. The wrapper locates the job
+    results with locate_results.sh and records results_locator, job_uid, pod_uid, download_exit and objects_match in raw-result.json (the downloaded files equal the launcher's objects.json; K-3 asserts download_exit '0', objects_match true, results_locator receipt_status_pod_uid and, for T2, a results_uri under the s2 job prefix). This step runs only if S02-reconcile-t1 passed. Controls is
     empty because the C1 controls (incumbent-aa, rho-neg-aa, pc-fb2x) are arms inside each ecbench job, not plan trials; their gates are evaluated by the frozen analyze-c1.sh
     in step S04-verify. No step retries a launch. The declared artifacts are the files under 1 MiB; records.jsonl and plan.json of the session are bound through job/artifacts/SHA256SUMS
     and job_files in raw-result.json.
@@ -384,12 +425,16 @@ steps:
         - '0'
         - '42'
         - '43'
-      - pointer: /results_uri
-        matches: ^s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s[12]-20261106/[0-9a-f-]{36}/$
+      - pointer: /download_exit
+        equals: '0'
+      - pointer: /objects_match
+        equals: true
+      - pointer: /objects_check
+        equals: 'true'
+      - pointer: /locate_exit
+        equals: '0'
       - pointer: /results_locator
-        in:
-        - launcher_result
-        - receipt_status_pod_uid
+        equals: receipt_status_pod_uid
       - pointer: /job_uid
         matches: ^[0-9a-f-]{36}$
       - pointer: /pod_uid
@@ -404,6 +449,8 @@ steps:
           equals: ic-c1-dg-s2-20261106
         - pointer: /request_sha256
           equals: d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1
+        - pointer: /results_uri
+          matches: ^s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s2-20261106/[0-9a-f-]{36}/$
   controls: []
   replay:
     mode: exempt

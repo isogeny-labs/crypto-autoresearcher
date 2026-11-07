@@ -189,3 +189,57 @@ hash while preserving inherited historical bytes, avoiding a92,500,585-byte
 recursive snapshot copy. FK/integrity/gzip pass as producer checks.
 [PCC-20261107-d1bac1](../../pcc/claims/PCC-20261107-d1bac1.json), unverified.
 [pcc:unverified]
+
+## v21: causal target certification and query scheduling
+
+The additive [v21 snapshot](../prime_field_a17_execution_20261107/database/v21-certified-query/validation.json)
+preserves all 98 parent nonmetadata tables/rows and exact parent bytes. It adds
+four curves, four mathematical known48 bases, eight separately paid full24
+program contexts, 32 targets, eight cases and sixteen algorithm outputs (four
+online engines plus twelve batch calls). Both programs identify all 32 targets;
+the candidate records 46 distinct point queries versus 768 for full reference,
+with full construction paid. Twenty-seven first certificates come from paid
+construction/Registry information and five from extra query prefixes. This
+finite producer observation does not establish scaling or calibrated cost.
+[PCC-20261107-0645d8](../../pcc/claims/PCC-20261107-0645d8.json). [pcc:unverified]
+
+New tables retain 1536 schedule slots, 32 causal prefix certificates and four
+native row-consequence bundles. Canonical base identity deduplicates the paired
+builds while keeping both construction/cost records. A 518-byte reference
+reconstructs exact parent metadata without recursively copying it. Parent
+preservation, foreign keys, integrity and gzip roundtrip pass; global history
+contains 38 curves, 66 bases and 23 executions. [pcc:unverified]
+
+## v22: fixed-construction transfer and prefix attribution
+
+The [v22 snapshot](../prime_field_a18_execution_20261107/database/v22-certified-transfer/validation.json)
+preserves all 103 parent nonmetadata tables/rows and exact parent bytes, with a
+518-byte reconstructible metadata reference. It adds four 20/21-bit curves,
+four mathematical known48 bases, eight independently paid contexts, 32 targets,
+eight cases and sixteen algorithm outputs. Both programs identify 29 targets;
+three nonrecoveries remain. Construction/natural/extra first certificates are
+8/9/12, and per-prefix independent rank/membership diagnostics remain with the
+raw query checks. [PCC-20261107-f778b2](../../pcc/claims/PCC-20261107-f778b2.json),
+producer-unverified. [pcc:unverified]
+
+Foreign keys, integrity, parent preservation and lossless gzip pass as producer
+checks. Global history contains 42 curves, 70 bases and 24 executions. Auxiliary
+pool information has not been inferred from these fully known bases; the next
+ranked norm32/unknown16 comparison must cancel auxiliary and target columns
+before scoring old-base information. [pcc:unverified]
+
+### v23: original norm bases with auxiliary cancellation
+
+[A19](../prime_field_a19_execution_20261107/RESULTS.md) appends four new curves,
+four original norm32 bases, twelve independently paid program contexts,128
+auxiliary point overlays and32 public targets. Auxiliary slots are outside
+points, not added learned factor-base dimensions. Complete auxiliary-and-target
+cancellation, own K attribution, source/full information, native target weights
+and both solver outputs are retained. [pcc:unverified]
+
+[v23 validation](../prime_field_a19_execution_20261107/database/v23-unknown-pool/validation.json)
+preserves all103 parent nonmetadata tables/rows and reconstructible exact
+metadata, with unchanged v22 parent bytes, foreign keys, integrity and gzip
+roundtrip. History contains46 curves,74 mathematical bases and25 executions.
+Source builder database23.py and artifact manifests bind the bytes; local
+checks/custody confer no independently signed scientific standing. [pcc:unverified]

@@ -179,6 +179,16 @@ research_goal:
     docs/concurrent-goal-lanes.md treats as current. Every earlier note and *_before_* key is
     unchanged. latest_verified_commit is not changed here. The file stays flat. The
     authoritative lane list is tools/goal_lanes.py lanes GOAL-PATH-001.
+  current_batch_id_2026_11_07_342e48: BATCH-342e48
+  dispatch_queue_path_2026_11_07_342e48: coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json
+  current_batch_note_2026_11_07_342e48: >-
+    Lane BATCH-342e48 was opened under DEC-20261107-f46a40 and is staged by
+    TASK-20261107-88b2fc. That act edits this head by insertion only, so current_batch_id and
+    dispatch_queue_path above are NOT moved. BATCH-c077fd stays open beside it, because the DEV-1
+    re-attempt (bc7a76) and its snapshot (eebc5b) remain there. The two keys just above name the
+    lane opened most recently. Every earlier note and key is unchanged. latest_verified_commit
+    is not changed here. The file stays flat. The authoritative lane list is
+    tools/goal_lanes.py lanes GOAL-PATH-001.
   latest_verified_commit: 67c2e5bf27c3b014e25829554130199d7918ae2b
   latest_verified_commit_note: >-
     REBOUND 2026-08-02 by CORR-20260802-7787de. The prior value
@@ -557,6 +567,18 @@ research_goal:
         the DEV-1 re-attempt under a detached supervisor (bc7a76, blocked on owner question
         OQ-1) and its snapshot (eebc5b). Zero runs; nothing approved. Not the authoritative lane
         list; read tools/goal_lanes.py lanes.
+    - batch_id: BATCH-342e48
+      opened_at: '2026-11-07'
+      opening_decision_id: DEC-20261107-f46a40
+      dispatch_queue_path: coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json
+      checkpoint: Not yet written. The approval act for EXP-MONO-1a1be2, or a fresh composing act, writes it.
+      question_ids: [RQ-MONO-001]
+      note: >-
+        Added additively by TASK-20261107-5b2b59 (archived by TASK-20261107-88b2fc). It holds the
+        record of the owner's answer (A) to OQ-1 and its ledger archive (88b2fc). It also holds
+        the B8-D DEV-1 verification (af7359, blocked until eebc5b records DEV-1 passed) and its
+        snapshot (d279a7). Zero runs; nothing approved. Not the authoritative lane list; read
+        tools/goal_lanes.py lanes.
   open_batches_note_2026_10_29: >-
     BATCH-7ca353 is checkpointed in batch_checkpoints (DEC-20261029-71d757) and its
     lane is closed by TASK-20261029-37675c LA-12. Its open_batches item above is
@@ -652,6 +674,23 @@ research_goal:
         approval act gets approvable true from experiment_preapproval.py
       recheck: when the owner answers OQ-1, or when TASK-20261107-971edf or TASK-20261107-eebc5b completes
       asserts_nothing_about: H-MONO-23d347, IDEA-20261023-f15270, the kernel or any lemma; an infrastructure stop and an unrun contract are neither evidence nor a failure
+    - id: IMP-PATH-20261107-2
+      raised: '2026-11-07'
+      narrows: IMP-PATH-20261107-1 (the owner answered OQ-1 with (A), recorded by DEC-20261107-f46a40; up to two attempts here, fallback (B))
+      condition: >-
+        EXP-MONO-1a1be2 is still not approvable. The DEV-1 m = 3 cell has not run. Its re-attempt
+        TASK-20261107-bc7a76 has the owner's allowance but stays blocked. Its card requires the
+        releasing act to disposition every 7db1de RR-9 route, and 7db1de is still running.
+        B8-H is pending, and the B8-D verification (af7359) is written but blocked.
+        protocol.json, the runbook and the preapproval packet do not exist (B1, B2, B4-B6 and
+        B8).
+      what_is_blocked: TASK-20261107-bc7a76 (the DEV-1 re-attempt), and through it approval and execution of EXP-MONO-1a1be2
+      clears_when: >-
+        971edf verifies with B8-H passed; DEC-20261107-40200d dispositions the RR-9 routes and
+        moves bc7a76 to queued; eebc5b verifies with DEV-1 passed; d279a7 archives an af7359 B8-D
+        pass; and the approval act gets approvable true from experiment_preapproval.py
+      recheck: when TASK-20261107-971edf, TASK-20261107-eebc5b or TASK-20261107-d279a7 completes
+      asserts_nothing_about: H-MONO-23d347, IDEA-20261023-f15270, the kernel or any lemma; an owner resource grant, an infrastructure stop and an unrun contract are neither evidence nor a failure
   next_action_2026_10_23: >-
     Additive (lane BATCH-7ca353; decision DEC-20261023-19c53b). It rewrites
     nothing above and neither restates nor supersedes next_action. Ranked
@@ -699,6 +738,19 @@ research_goal:
     lane BATCH-a8825c; relay OQ-1 to the owner verbatim and dispatch TASK-20261107-7db1de,
     then 971edf alone. bc7a76 stays blocked until a committed act records the owner's
     answer (IMP-PATH-20261107-1).
+  next_action_2026_11_07_342e48: >-
+    Additive (lane BATCH-342e48; decision DEC-20261107-f46a40); rewrites nothing above. One next
+    action for the top-level session: commit the BATCH-342e48 queue alone, open its lane, and
+    push a resume checkpoint. When 7db1de releases, run 971edf alone, render the decision report,
+    and run TASK-20261107-88b2fc alone with a ready PR and auto-merge. Then have
+    DEC-20261107-40200d written. bc7a76 stays blocked until that act dispositions the RR-9
+    routes and its revision is committed (IMP-PATH-20261107-2).
+  owner_answer_2026_11_07_342e48: >-
+    OQ-1 of DEC-20261106-24d2a2, answered by the owner in the session at about
+    2026-11-07T02:20Z with "(A) Re-run here (Recommended)": up to two attempts under the detached
+    supervisor, at most about 26 h of DEV-1 wall in all, and fallback (B) if both are lost to
+    restarts. No lower cap was set. Recorded by DEC-20261107-f46a40, which holds the full text
+    and scope. (B) still needs owner parameters before use. A resource grant, not an approval.
   owner: coordinator
   created_at: '2026-07-24T21:30:00-07:00'
   updated_at: '2026-08-28'

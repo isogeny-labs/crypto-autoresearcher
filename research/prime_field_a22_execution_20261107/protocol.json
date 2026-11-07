@@ -1,0 +1,1363 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "<run>/execution.json",
+      "<run>/raw/*.json[.gz]",
+      "<run>/raw/*.jsonl[.gz]"
+    ],
+    "outputs": [
+      "<run>/metrics.json",
+      "<run>/analysis.json[.gz]",
+      "<run>/export.json[.gz]"
+    ],
+    "script": {
+      "path": "analyze22.py",
+      "sha256": "27c57acfabaed91558dd6090669f7a017bf03035b871e061c9d54d0f843432ab"
+    }
+  },
+  "arms": [
+    {
+      "description": "Auxiliary-first cancellation, then old-base/requested-target elimination and native certificate lifting. Unchanged norm32, independently owned prerequisites/AP0 source128/pair index and complete GENERAL8 target program.",
+      "id": "norm32",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Independent native sparse_joint solve on exactly the own final rows. Unchanged norm32, independently owned prerequisites/AP0 source128/pair index and complete GENERAL8 target program.",
+      "id": "joint_on_norm32",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "control_positive"
+    },
+    {
+      "description": "Auxiliary-first cancellation, then old-base/requested-target elimination and native certificate lifting. Same original norm32 plus16 first-success coordinate-hash rational subgroup points; no supplied scalar labels. All draws/roots/subgroup/sign/rejections paid. Legitimate own constructor coincidences retained.",
+      "id": "unknown16",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Independent native sparse_joint solve on exactly the own final rows. Same original norm32 plus16 first-success coordinate-hash rational subgroup points; no supplied scalar labels. All draws/roots/subgroup/sign/rejections paid. Legitimate own constructor coincidences retained.",
+      "id": "joint_on_unknown16",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "control_positive"
+    },
+    {
+      "description": "Auxiliary-first cancellation, then old-base/requested-target elimination and native certificate lifting. Sixteen distinct non-old sign classes from paid signed old-native pairs; one exact homogeneous definition per point, no numeric scalar labels, rejected collision traces/costs retained but no equations harvested. Independent own direct pair construction, no borrowed pair table.",
+      "id": "formalpair16",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Independent native sparse_joint solve on exactly the own final rows. Sixteen distinct non-old sign classes from paid signed old-native pairs; one exact homogeneous definition per point, no numeric scalar labels, rejected collision traces/costs retained but no equations harvested. Independent own direct pair construction, no borrowed pair table.",
+      "id": "joint_on_formalpair16",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "control_positive"
+    },
+    {
+      "description": "Actually cold corrected A21 direct formal-coordinate substitution on the SAME own formal native case, with paid mapping, signed expansion/common-unit substitution, target membership, original-definition/common-unit native lifting and original/public checks. No checker expansion/pivots/scalars/certificates or numeric auxiliary labels.",
+      "id": "direct_on_formalpair16",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Auxiliary-first cancellation, then old-base/requested-target elimination and native certificate lifting. Same original norm32 plus separately paid public known16 helper constructor/cache; different points from unknown pool, not an isolated estimate of knowing identical logs.",
+      "id": "known16",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Independent native sparse_joint solve on exactly the own final rows. Same original norm32 plus separately paid public known16 helper constructor/cache; different points from unknown pool, not an isolated estimate of knowing identical logs.",
+      "id": "joint_on_known16",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a22_execution_20261107/driver22.py"
+          ]
+        ],
+        "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "auxiliary_slots": 16,
+        "batch_solver_calls": 36,
+        "case_systems": 16,
+        "curves": 4,
+        "definition_order": "after_common_units_before_collection",
+        "direct_formal_solver_calls": 4,
+        "execution_arms": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "expanded_semantic_oracles": 4,
+        "export_execution_rows": 36,
+        "field_bits": [
+          20,
+          21
+        ],
+        "fields": [
+          1048573,
+          2097143
+        ],
+        "formal_auxiliaries": 16,
+        "information_diagnostics": 16,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 64,
+        "new_field_transfer": true,
+        "old_norm_slots": 32,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "rejected_collision_equations_used": false,
+        "source_schedule": "ap0",
+        "sources": 128,
+        "target_horizon": 8,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "control_positive"
+    }
+  ],
+  "authors": [
+    "Root implementer and administrative exact-source Coordinator; configured model identity unverified"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "C-collector-transfer",
+        "C-formal-algebra-transfer"
+      ],
+      "id": "A22-fresh-cancelled-information-and-formal-algebra",
+      "text": "Finite old-base Delta after all auxiliary/target cancellation; own K contribution, source/full marginal, direct/cross gain and requested-target unit membership. No predetermined positive yield, calibrated cost winner, new generic method, exponent or whole-attack claim. Fresh20/21-bit transfer, including four actually executed direct formal solver calls; no population/scaling or calibrated winner inferred."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Deterministic marked p<=211 controls and independent public group/query/dense/certificate checks; no clock inference.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Reject wrong canonical signs/definitions/old aliases/duplicate points/rejected-collision knowledge, multiplicity loss and corrupt native/expanded weights; preserve nonrecoveries, coordinated cost edits, failed paid prefixes and native admission refusal. Refuse missing/corrupted direct producer/checker/event bindings, malformed optional JSON and native admission failure; preserve paid prefixes.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Marked p<=211 formal-pool/native/expanded controls plus carried A19 controls: definition-only zeroDelta under explicit distinct/non-old invariant, legitimate informativeK, signed multiplicities up to six old occurrences, all four tiny cold programs, actual complete/all-missing36row exports and full-joint controls on all16native cases. No native pilot. Additional marked p<=211 repeated-archive tests execute direct substitution on all four tiny formal cases, retain actual36row/all-unknown exports and nonadditive cold-view acquisition binding. A21 signed/common-unit/native lift controls are inherited unchanged.",
+      "present": false
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "C-collector-transfer",
+      "C-formal-algebra-transfer"
+    ],
+    "effect_size_measure": "No population or performance effect inferred.",
+    "interval": "none_exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "Exact old-base corrected Delta and old-kernel action; actual requested-target unit membership; separate paid counter vectors.",
+    "text": "For source-only and complete own rows, cancel auxiliary AND target columns. Total Delta=rank([[M,0],[B,U]])-rank(U)-rank(M). K consists of own non-collected source units/anchors and accepted formal definition rows plus target Registry pure-P base matches; K contribution is separately cancelled Delta(M,K), and collected increment is Delta(M,K+B)-Delta(M,K). Source/full K differ only by actually available own target P labels; target marginal is complete minus source Delta. Direct gain uses U=0 rows; cross gain is corrected Delta minus direct gain. Known16 labels are supplied information. Report positive/zero/adverse outcomes and all costs; do not infer a weighted winner. Accepted formal definitions alone must have identity auxiliary block/zero old-base Delta. Actual own public coincidences remain K and need not have zero Delta. A separate signed expanded-old coefficient/public-point/dense semantic oracle must agree with native target unit membership and cancelled old-base ranks; preserve repeated coefficients and cancellations. This oracle is checker work, not another producer target solver. Every formal case also has actual direct21/check21 execution on exactly its own native rows and preparation; require full target mask/scalar/native/public parity. Record all same-case direct/aux/native phase vectors, including tradeoffs; acquisition belongs once in each nonadditive alternative cold view.",
+    "threshold": "No favorable outcome required; exact completion/controls only. Incomplete costs and unsigned producer assertions do not establish complete attack or trusted execution standing.",
+    "verdict_vocabulary": [
+      "completed_within_scope",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": null,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "concurrent_compute_processes": 1,
+      "isolated_clock_claim": false,
+      "memory_bytes": 2147483648,
+      "shared_managed_host": true
+    },
+    "queue": null,
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "extensions": {
+    "costs": "Component vectors; physical dual engines and conditional single-engine views. Native joint, independent checkers, information diagnostics and curve/norm fixture generation separate. Diagnostic baseline floor projection separately in journal. Hash/pow/Python/NumPy/OS/IO/calibration partly unexpanded, no complete-S assertion. Formal pool uses own direct point additions before native pair-index build; no baseline table or abstract free reuse. All candidate costs/definition assembly/lifting retained. Expanded oracle is independently paid checker work. Each program owns acquisition once physically; alternative direct formal cold view replaces only target algebra. Nonadditive alternative views are not double physical acquisition. All original setup/sign/candidate/query/lifting costs remain, diagnostics and controls separately paid.",
+    "direct_algorithm": "Unchanged corrected A21 direct21/check21, all203 inherited source hashes preserved. No checker rows/scalars/pivots/certificates or numericformal labels input to producer.",
+    "formal_dictionary": "Accepted16 distinct non-old signclasses/one formal definition each; identity outside block aloneDelta0. No rejected-collision harvesting or numeric-label cache injection. Real constructor coincidences retained/attributed. Independent signed old-coefficient/public-point/dense expansion oracle and native controls.",
+    "grid": "Four curves x nine actual algebra arms=36exportrows;16cases/16information diagnostics,4applicableexpanded checks and4directchecks. Formal has three cold algorithms on same input; other programs two. Dependent views, not36 independent target panels.",
+    "information": "Common prerequisite substitution only in information projection; all own extra units/anchors remain K rows. U includes16aux slots plus8actual target columns, using actual rank. Source and full views with separate own K.",
+    "literature": "literature.md: A1/A2 cancellation precedents, A16 helper floors, A18 rank4/zero named units, organization residual collector and Nov1 byte-pricing correction. Existing generic cancellation/large-prime technique, no novelty claim.",
+    "model_verified": false,
+    "official_status_transition": false,
+    "ownership": "All auxiliary/prelude builds before targets; complete own AP0source128/GENERAL8 with both endpoint engines, no query suppression. Shared mathematical fixtures do not lend private construction caches.",
+    "proof_status": "Producer checks/hash/Git/S3/admin readiness are not independently signed scientific/execution/replay proof."
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "1700014209f91a752b0f72f3ea12234b13d0a6f25d0109a4f7c13583340cdeda",
+    "commit": "d0cdb8b801b013348545831da90e217cdfa4268a",
+    "frozen_at": "2026-11-07T06:56:00Z",
+    "filed_before_affected_data": true
+  },
+  "inadmissible": [
+    "Native pilot before exact prospective source approval/publication/freeze/release/normal gate.",
+    "Raw augmented rank or extra unknown columns reported as original-base information; cancelling only targets while auxiliary columns remain; private helper anchors in common M.",
+    "Treating separate unknown/known point sets as same-point knowledge causality, supplied labels as discovered logarithms, known target recovery as permission to skip unknown-base queries, or array bytes as operations.",
+    "Weighted runtime/whole-attack/exponent/novelty or trusted independent proof claim from these finite producer observations."
+  ],
+  "invalidation_rules": [
+    "Missing exact published source/input/prospective protocol/current canonicalS3/root release/normal admission/lease/consumed marker or resource deadline prevents native execution.",
+    "Old projection changed by helper knowledge, missing norm source floor, borrowed caches/labels, generated unknown-pool/target logs, auxiliary/target confusion, skipped complete queries, uncharged construction or aliases manufacturing triples invalidates a case.",
+    "Independent pool/root/subgroup, group/constructor/pair/query/native assembly/target membership/cancellation/dense rank/kernel and counter payload checks must agree. Missing/failed cases remain unknown, not mathematical negatives."
+  ],
+  "links": {
+    "design": "design.md",
+    "literature": "literature.md",
+    "prior": "../prime_field_a21_execution_20261107/next-leads.md"
+  },
+  "literature": [
+    {
+      "claim": "Public signed-pair definitions are existing generic linear relations, not numeric helper logs. Compare actual successful-work and information after ALL outside cancellation, with no rejected-collision subsidy or novelty claim.",
+      "provenance": "internal",
+      "ref": "literature.md; A19 next-leads and retained organization sources; native A19 information/cost controls",
+      "verified_by": "Root primary source read2026-11-07 before implementation"
+    },
+    {
+      "claim": "A21 conditioned component has identical26/32target masks, actual primitive/lifting tradeoffs, not a fresh transfer. This fixed new panel tests the transfer boundary without changing base/source/horizon or claiming novelty/scaling/weighted advantage.",
+      "provenance": "internal",
+      "ref": "literature.md; A21 next-leads/results/PCC-ea7120 and source4035a93fb750b5c06919b82a2359ef4e909034ba",
+      "verified_by": "Root primary code/result read2026-11-07 before implementation"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [
+      "Actual Fp/Fr add/sub/mul/inv; pool hashes/message bytes/root pow calls/subgroup/sign/alias/rejections, helper/base/prelude/source/constructor work; both query engines and actual A15 batched pair floor.",
+      "Own pair/query arrays, source/natural/all derived query costs, matrix assembly, auxiliary cancellation/old-target elimination/unit membership/native lifting/public checks. Own information diagnostic and native joint controls separately paid. Logical payload/array bytes are not RSS or operations.",
+      "Formal old-point public subgroup/sign setup, direct candidate point adds/hashes/rejections/definition storage, all own full native pair builds, formal definition assembly and native lifts; independent expanded-old public/dense oracle CPU separately retained.",
+      "Four actual direct-formal producer calls: mapping/signed expansion/common-unit substitution/elimination/unit membership/original-definition/common-unit native lift and original/public checks. Retain separate logical scans/unit shortcuts and parsing/interpreter boundaries."
+    ],
+    "isolation_required": "none",
+    "order": "sequential",
+    "record": [
+      "Exact source/input/interpreter/NumPy hashes, clean pre-output Git observation, unchanged protected bytes; no invented signed execution attestation.",
+      "Producer outputs before checker receipts, every draw and failed paid phase/journal prefix, all original native target and cancellation certificates. Independent dense U/stacked ranks and old-kernel syndromes.",
+      "Actual PID-bound admitted-start S3 checkpoint before generation and four closed-writer curve checkpoints. Original deadline/cumulative reservation, one worker/thread2GiB/one consumed attempt, no retry/new capacity.",
+      "Four accepted formal dictionaries/one definition per distinct non-old class; no numeric labels in P caches. Source ordering is common supplied units, formal definitions, own cache/source/anchors, then target rows. Rejected equations never enter producer knowledge, even when baseline pair geometry could expose them.",
+      "Each acquisition executes once physically per program. Its aux/native/direct solver cold views each include that same own acquisition as nonadditive alternative views, never summed as additional executions or borrowed from another program."
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Number of named requested target unit functionals determined.",
+        "id": "identified_targets",
+        "kind": "exact",
+        "name": "identified targets",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Named target mask; auxiliary pivots never count as targets.",
+        "id": "identified_mask",
+        "kind": "exact",
+        "name": "identified mask",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Original norm32 plus0or16 auxiliary slots, aliases retained.",
+        "id": "native_columns",
+        "kind": "exact",
+        "name": "native columns",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Unchanged original projected norm unknowns.",
+        "id": "old_columns",
+        "kind": "exact",
+        "name": "old columns",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "0or16 native auxiliary slots, not learned rank.",
+        "id": "auxiliary_slots",
+        "kind": "exact",
+        "name": "auxiliary slots",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual own native source rows including declared units/anchors.",
+        "id": "source_rows",
+        "kind": "exact",
+        "name": "source rows",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "All own decomposition and Registry rows under complete GENERAL8.",
+        "id": "target_rows",
+        "kind": "exact",
+        "name": "target rows",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Old-base Delta after cancelling auxiliary and target U in source-only rows.",
+        "id": "source_delta",
+        "kind": "exact",
+        "name": "source delta",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Old-base Delta from complete own rows after cancelling all U.",
+        "id": "full_delta",
+        "kind": "exact",
+        "name": "full delta",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Complete own K information after cancellation, separately supplied constructor contribution.",
+        "id": "supplied_K_delta",
+        "kind": "exact",
+        "name": "supplied K delta",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Complete Delta minus own K Delta.",
+        "id": "collected_after_K",
+        "kind": "exact",
+        "name": "collected after K",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Complete Delta minus source-only Delta.",
+        "id": "target_marginal_delta",
+        "kind": "exact",
+        "name": "target marginal delta",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Rank gain from own rows whose U is already zero.",
+        "id": "direct_base_gain",
+        "kind": "exact",
+        "name": "direct base gain",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Additional Delta requiring cross-row outside cancellation.",
+        "id": "cross_row_gain",
+        "kind": "exact",
+        "name": "cross row gain",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Rank of pure norm source floor M.",
+        "id": "reference_rank",
+        "kind": "exact",
+        "name": "reference rank",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Final old-base rank after all U cancellation.",
+        "id": "base_rank_after",
+        "kind": "exact",
+        "name": "base rank after",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual rank(U), not count of unknown columns.",
+        "id": "outside_rank",
+        "kind": "exact",
+        "name": "outside rank",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Own distinct cached natural/derived target points.",
+        "id": "geometric_queries",
+        "kind": "exact",
+        "name": "geometric queries",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual algorithm Fr add including native lifting/public checks; pow internals unexpanded.",
+        "id": "fr_add",
+        "kind": "exact",
+        "name": "fr add",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual algorithm Fr sub including native lifting/public checks; pow internals unexpanded.",
+        "id": "fr_sub",
+        "kind": "exact",
+        "name": "fr sub",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual algorithm Fr mul including native lifting/public checks; pow internals unexpanded.",
+        "id": "fr_mul",
+        "kind": "exact",
+        "name": "fr mul",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual algorithm Fr inv including native lifting/public checks; pow internals unexpanded.",
+        "id": "fr_inv",
+        "kind": "exact",
+        "name": "fr inv",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned component vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual native source rows with accepted formal_definition provenance; zero in other programs.",
+        "id": "formal_definition_rows",
+        "kind": "exact",
+        "name": "formal definition rows",
+        "resolution": "1",
+        "source": "metrics.json rows and bound expanded-check.json",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Independent expanded old-native-plus-target rank, applicable only to formal arm; native joint rank differs by auxiliary count.",
+        "id": "expanded_old_joint_rank",
+        "kind": "exact",
+        "name": "expanded old joint rank",
+        "resolution": "1",
+        "source": "metrics.json rows and bound expanded-check.json",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Independent accepted definition-only old-base Delta control, conditional on one definition per distinct non-old auxiliary; null in other arms.",
+        "id": "definition_only_delta",
+        "kind": "exact",
+        "name": "definition only delta",
+        "resolution": "1",
+        "source": "metrics.json rows and bound expanded-check.json",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "PRIME-FIELD-A22-LARGER-FORMAL-TRANSFER-20261107",
+  "question": "On four fresh20/21-bit curves, how do unchanged norm32/unknown16/formalpair16/known16 collectors compare in old-base information after auxiliary AND target cancellation and independent target recovery, at separate paid construction and algebra costs? Does actual direct formal substitution agree with auxiliary/native controls on every new formal case?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Per fixed curve: norm32,unknown16,formalpair16,known16 independently cold acquisition; all four auxiliary/prelude builds precede eight independent public target draws. Each case runs actual auxiliary-first then native joint; formal additionally runs actual direct substitution last, before information/expanded checking. No known-target suppression or borrowed caches; same formal case/prerequisite map for its three actual algebra methods.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Public exact finite descriptive observations; no secret logs generated.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "New domain, ALL48 prior (p,b) exclusions, first eligible a2 curves: two each in F1048573/F2097143. Same first-success formal/unknown/public-known recipes, norm32/prerequisite64/AP0source128/GENERAL8/eight public targets/all64 slots and candidate/row/width/cache caps. No redraw, favorable selection, prefix/horizon/base expansion or target/pool scalar logs. Actual field/generation public checks only after normal admission."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Four fresh curves/32 public targets,16 dependent native cases and36 actual solver calls/export rows. Nine algorithm arms on four instances; only formal has direct as third solver.",
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Original-base reference/final ranks, total/direct/cross Delta and own-K/collected attribution; source/full marginal.",
+      "Named independent target masks with deficient original-base rank where observed; actual cancellation/native controls.",
+      "Separate pool/helper/prelude/source/pair/query/constructor/elimination/lifting/check/storage dimensions; no weighted winner. Failures/unknowns retained.",
+      "Formal dictionary definitions, source/full own K contributions, expanded-old/native rank bridge and named target masks; failed/rejected candidate costs retained.",
+      "Four fresh formal cases: direct/auxiliary/native exact target masks and phase vectors, with separate per-program acquisition and direct nonadditive cold costs."
+    ],
+    "report_dir": "reports/<fresh-run>/",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 4,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "min_attainable_two_sided_p": null,
+      "note": "Exact four-curve fresh20/21-bit census;16cases36actualcalls. No fitted scaling law or population significance.",
+      "passes": true,
+      "rank_test_n": null,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 21600,
+      "fixed_seconds": null,
+      "measured_on": "21600seconds is a protective local machine watchdog; no new cloud submission or billing forecast.",
+      "per_sample_seconds": null,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Four fresh20/21-bit curves/32 independent public targets,4own cold programs=16cases;2actualsolvers per case plus4directformal calls=36calls/exportrows,16information diagnostics+4applicableexpanded+4directchecks. No redraw/horizon/base/source-prefix expansion."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Native48/joint64/pairs8192/rows4096/labels8192/cache64. First-success pool16/max10000candidates.128curve/field/target candidates,10000base/scalar candidates. Retain failure/unknown paid prefixes, no expanded caps."
+    },
+    {
+      "kind": "budget",
+      "preregistered": true,
+      "rule": "One existing worker/thread2GiB,one attempt,no retry/newcapacity. Original deadline2026-11-07T07:46:38.570520+00:00. Conservative remaining21600seconds deduct elapsed original one-worker window plus all pinned A16/A17/A18/A19/A20/A21 native and measured postprocessing CPU. No reset/reopened prior release."
+    }
+  ],
+  "study_dir": "research/prime_field_a22_execution_20261107",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic marked p<=211 controls and independent public group/query/dense/certificate checks; no clock inference.",
+    "comparisons": [
+      {
+        "arms": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "design": "one_factor",
+        "differs_in": [
+          "auxiliary_program"
+        ],
+        "id": "C-collector-transfer",
+        "threshold": "Cancelled old-base information and requested target units, with all own program construction costs and nonrecoveries retained."
+      },
+      {
+        "arms": [
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16"
+        ],
+        "design": "one_factor",
+        "differs_in": [
+          "algorithm_execution"
+        ],
+        "id": "C-formal-algebra-transfer",
+        "threshold": "Same formal native input, identical requested outcomes and original/public certificates; separate actual phase vectors, no weighted winner."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Common prerequisite walk64; old unknown order frozen before helpers. Auxiliary points never become learned old-base columns.",
+        "name": "old_base",
+        "treatment": "fixed",
+        "value": "original norm32/projection/order"
+      },
+      {
+        "how": "Full own queries without recovery-based suppression; own P/Q constructor caches only. Matched identities, independently paid work.",
+        "name": "source_and_targets",
+        "treatment": "fixed",
+        "value": "AP0source128, GENERAL8,8public targets"
+      },
+      {
+        "how": "No helper units, source anchors, target rows or constructor labels in M. Each arm must contain the floor in its actual norm-only source-query rows.",
+        "name": "information_reference",
+        "treatment": "fixed",
+        "value": "M=pure norm-only source rows"
+      },
+      {
+        "how": "Both scalar and batch engines execute. Conditional single-engine views remove measured replay only. Diagnostics/native controls/checkers retained separately; no byte-as-operation weighting.",
+        "name": "cost_scope",
+        "treatment": "fixed",
+        "value": "separate Fp/Fr/logical/byte dimensions"
+      },
+      {
+        "how": "Reject old/previous sign classes; retain every rejected draw/cost but harvest no collision equations. Accepted definitions enter own source K after common units and before all collected rows. Definition-only auxiliary block is identity, giving zero old-base Delta conditional on this boundary; other own K may legitimately be informative.",
+        "name": "formal_definition_boundary",
+        "treatment": "fixed",
+        "value": "One definition per distinct non-old auxiliary sign class"
+      }
+    ],
+    "independent": [
+      {
+        "levels": [
+          "norm32",
+          "unknown16",
+          "formalpair16",
+          "known16"
+        ],
+        "name": "auxiliary_program"
+      },
+      {
+        "levels": [
+          "norm32",
+          "joint_on_norm32",
+          "unknown16",
+          "joint_on_unknown16",
+          "formalpair16",
+          "joint_on_formalpair16",
+          "direct_on_formalpair16",
+          "known16",
+          "joint_on_known16"
+        ],
+        "name": "algorithm_execution"
+      }
+    ]
+  },
+  "version": 2
+}
