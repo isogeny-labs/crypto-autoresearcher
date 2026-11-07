@@ -1,0 +1,478 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "certificates-A.json",
+      "certificates-B.json",
+      "certificate-seal.json",
+      "worker-processes.json",
+      "runtime-guard.json",
+      "manifest.yaml",
+      "raw-result.json",
+      "reference-verification.json",
+      "candidate-audit.json",
+      "verification-summary.json",
+      "Exact frozen R52 input/traces/cells"
+    ],
+    "outputs": [
+      "reference-verification.json",
+      "candidate-audit.json",
+      "verification-summary.json",
+      "experiments/EXP-ECDLP-ca93ac/export.json",
+      "experiments/EXP-ECDLP-ca93ac/reports/run-RUN-ECDLP-fc6e86/observations.json"
+    ],
+    "script": {
+      "path": "harness/classical_ecdlp_public_reference_audit_v2/verify.py",
+      "sha256": "a1cf6bdcb243caf5f4564f47b1dc86e2e7ea9dd3b368ab0da14dc019f8a5c667"
+    }
+  },
+  "arms": [
+    {
+      "description": "Actual fresh public-only solver subprocess A on complete fixed public bundle; controls nested, not independent arms.",
+      "id": "reference-A",
+      "instrument": {
+        "binary_sha256": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+        "build": [],
+        "commit": "59fdb82778ffaf1b134f3b8bd1e1a4f71b5920ee",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "finite_certificate_search": "true",
+          "operation_cost_metrics": "excluded",
+          "wall_valid": "false"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "domains": 48,
+        "pass": "A",
+        "public_targets": 1536,
+        "target_curves": 24
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Actual fresh empty-cache solver subprocess B, same complete bundle and controls. Equality checks reproducibility, not a timing floor.",
+      "id": "reference-B",
+      "instrument": {
+        "binary_sha256": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+        "build": [],
+        "commit": "59fdb82778ffaf1b134f3b8bd1e1a4f71b5920ee",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "finite_certificate_search": "true",
+          "operation_cost_metrics": "excluded",
+          "wall_valid": "false"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "domains": 48,
+        "pass": "B",
+        "public_targets": 1536,
+        "target_curves": 24
+      },
+      "role": "control_aa",
+      "same_instrument_as": "reference-A"
+    }
+  ],
+  "authors": [
+    "Coordinator /root/coordinator_next_validation_20261106"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "C-absolute"
+      ],
+      "id": "C-cert",
+      "text": "Classify complete public1536 canonical scalar certificates and their original elliptic-curve equations using independent arithmetic."
+    },
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "C-absolute"
+      ],
+      "id": "C-prefix",
+      "text": "Classify every retained RECOVERED field in the exact frozen R52 traces/cells against sealed reference truth, original/transformed equations and joins."
+    },
+    {
+      "class": "out_of_scope",
+      "decided_by": [],
+      "id": "C-scope",
+      "text": "Post hoc finite correctness only; no fresh population probability, performance/cost/S/GAE/rho/exponent/novelty/security extrapolation or completion of the failed old candidate protocol."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": "C-aa",
+      "not_applicable_reason": null,
+      "present": true
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "No separately sampled null-arm process or null-population probability claim. Fixed off-curve/canonical-input negatives, bad domain and scalar-plus-one mutations are actual nested gates in source/checker; retain each outcome. No extra independent arm is fabricated.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "No separate positive-control arm/process: known k=0,1,r-1,floor(r/2) controls run through identical BSGS path on ALL48 domains inside EACH actual A/B process, tables reused for24 target domains. All controls must pass; absence of a standalone arm is excused, not absence of actual controls.",
+      "present": false
+    }
+  },
+  "created": "2026-11-06",
+  "decision_rule": {
+    "comparison_ids": [
+      "C-absolute"
+    ],
+    "effect_size_measure": "Not applicable: no performance/statistical effect claim.",
+    "interval": "Not applicable: exact finite census, no sampling distribution.",
+    "multiple_comparison_correction": "none",
+    "statistic": "Finite witness/equation/control/mismatch inventories only.",
+    "text": "Complete exact public-reference and retained-prefix classification observations only if all declared coverage/canonicality/control/independent-reference-equation/custody gates pass; candidate-invalid/undefined claims remain classified observations, not automatic reference failure; else preserve precise invalid/incomplete scope. Finishing reference is a component result even if archived candidate coverage is incomplete.",
+    "threshold": "Exact full public1536 target inventory and all retained R52 claims classified; no desired number of candidate successes.",
+    "verdict_vocabulary": [
+      "complete_finite_correctness",
+      "invalid_output",
+      "operationally_incomplete",
+      "inconclusive"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": null,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "already_allocated_sandbox": true,
+      "cpus_max": 2,
+      "memory_bytes_max": 4294967296,
+      "new_cloud_jobs": 0,
+      "new_vms": 0,
+      "workers": 1
+    },
+    "queue": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/dispatch_queue.json",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 1200
+  },
+  "extensions": {
+    "reference_certificate_search": {
+      "cost_comparison": "Explicitly deferred to separate isolated packet; new local search admits no performance metrics.",
+      "deadline_utc": "2026-11-06T17:30:00Z",
+      "domains": 48,
+      "export_adapter": {
+        "path": "experiments/EXP-ECDLP-ca93ac/analysis/export-adapter.json",
+        "sha256": "dabab39ad1ab64ee19d36c263880153e5b89b2e988d3f8f1b168c51e42acea20"
+      },
+      "export_plan": "Existing tools/experiment_protocol.py from-rows/direct schema export from real worker-processes and verification fields; no research rerun. Mark wall_validfalse, operation counters empty, exact certificate metadata only.",
+      "export_unit": "Two actual solver process rows A/B, instance0,replicate0, deterministic-no-rng; controls and posthoc independent checker/audit nested analysis, not extra arm rows.",
+      "hypothesis_component": "H-ECDLP-6674c9",
+      "latest_launch_utc": "2026-11-06T17:10:00Z",
+      "logical_child_rows": [
+        {
+          "arm": "reference-A",
+          "certificate_file": "certificates-A.json",
+          "instance_id": "0",
+          "logical_export_run_id": "RUN-ECDLP-20342e",
+          "replicate": 0,
+          "seed": "deterministic-no-rng",
+          "worker_label": "A"
+        },
+        {
+          "arm": "reference-B",
+          "certificate_file": "certificates-B.json",
+          "instance_id": "0",
+          "logical_export_run_id": "RUN-ECDLP-679be8",
+          "replicate": 0,
+          "seed": "deterministic-no-rng",
+          "worker_label": "B"
+        }
+      ],
+      "native_parent_trials": 1,
+      "negative_controls": "Exact fixed source gates, no separate logical arm fabricated.",
+      "parent_experiment_preserved": "EXP-ECDLP-356403",
+      "physical_solver_processes": 2,
+      "positive_controls_nested_per_pass": 192,
+      "posthoc": true,
+      "public_certificates_per_pass": 1536,
+      "public_cohort_sha256": "864bfc966174a55fb854e69251669852e9ea20c2beaf52b74c49e1a0d66dae60",
+      "raw_scope": "Only R52 input/traces/decoder-cells; third37 archive context only.",
+      "same_group_conversion_scope": "x=a*b^-1*k is existing within-group public rescaling checked via BOTH original/transformed equations; no new curve/problem/family transfer claim, consistent with parent crosses_mapfalse.",
+      "target_curves": 24,
+      "targets_per_curve": 64
+    }
+  },
+  "freeze": {
+    "commit": "59fdb82778ffaf1b134f3b8bd1e1a4f71b5920ee",
+    "filed_before_affected_data": true,
+    "frozen_at": "2026-11-06T16:58:12.584513+00:00",
+    "protocol_sha256": "8b6b5794d4f5dc12474e31eed93edc03624389ce31b0c386617df4af9c2d396f",
+    "status": "frozen"
+  },
+  "inadmissible": [
+    "Any fourth/relabelled old candidate parent or olddeadline/source59/nonce/cohort reset.",
+    "Changing1536 targets, control set, raw member identity, analysis or source after outcomes without prospective additive amendment.",
+    "Treating3072 A/B certificates or dependent raw fields as independent curves/population observations.",
+    "Cost counters/clocks/throughput/S/GAE/rho/novelty/exponent/security or full oldpipeline completion claim.",
+    "Setting attack_claimed:false to deny actual finite discrete_log certificates; verified:true requires own direct equation plus independent checker success."
+  ],
+  "literature": [
+    {
+      "claim": "Prime-field nonsingular affine group law including identity/inverse/double branches, read before design.",
+      "provenance": "retrieved",
+      "ref": "https://www.secg.org/sec1-v2.pdf §2.2.1; local fresh48-20261105-witness-primary-sources/sec1-v2.txt442-494",
+      "verified_by": "/root/coordinator_next_validation_20261106"
+    },
+    {
+      "claim": "Group/domain assumptions and independent arithmetic cross-check; F.1 final y typo checked against §3/SEC1.",
+      "provenance": "retrieved",
+      "ref": "https://www.rfc-editor.org/rfc/rfc6090 §3 andF.1; local rfc6090.txt350-416/1770-1808",
+      "verified_by": "/root/coordinator_next_validation_20261106"
+    },
+    {
+      "claim": "Established complete baby/giant decomposition; no algorithm novelty.",
+      "provenance": "retrieved",
+      "ref": "https://cacr.uwaterloo.ca/hac/about/chap3.pdf §3.6.2 Algorithm3.56; local host-reference-cost-audit-20261030/root-literature/hac-chapter3.txt990-1040",
+      "verified_by": "/root/coordinator_next_validation_20261106"
+    },
+    {
+      "claim": "Old parentcaps/states, exact input/raw identity, posthoc scope, reference independence and isolated cost comparison deferred.",
+      "provenance": "internal",
+      "ref": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/DESIGN.md",
+      "verified_by": "/root/coordinator_next_validation_20261106"
+    }
+  ],
+  "measurement": {
+    "clock": "none",
+    "counters": [],
+    "isolation_required": "none",
+    "order": "sequential",
+    "record": [
+      "source hashes",
+      "input/raw digests",
+      "Python/dependency versions",
+      "cpu model",
+      "kernel",
+      "cgroup memory/CPU limits",
+      "native process ownership/termination",
+      "operational deadline/CPU/RSS bookkeeping with wall_valid=false"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Every one of1536 original target IDs per pass has exactly one canonical scalar in[0,r), independently satisfying[k]G=Q; errors/missing remain explicit.",
+        "id": "canonical_public_certificates",
+        "kind": "exact",
+        "name": "Complete independently checked public certificate inventory",
+        "resolution": "one certificate",
+        "source": "certificates-A.json/certificates-B.json plus reference-verification.json",
+        "uncertainty": "none_exact",
+        "unit": "certificate"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "FreshA/B canonical scalar inventories agree for all targets; all48 domain and nested known-scalar/negative/mutation controls checked.",
+        "id": "aa_integrity",
+        "kind": "exact",
+        "name": "Canonical A/A equality and actual controls",
+        "resolution": "one mismatched object",
+        "source": "certificate-seal.json and reference-verification.json",
+        "uncertainty": "none_exact",
+        "unit": "Boolean and exact mismatch inventory"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Strict parse and joins classify every retained RECOVERED field original/transformed/public equation and reference agreement; preserve dependent multiplicities, undefined/missing/invalid cases.",
+        "id": "retained_recovery_classification",
+        "kind": "exact",
+        "name": "Complete frozen R52 claimed equation classification",
+        "resolution": "one explicit field/equation",
+        "source": "candidate-audit.json and verification-summary.json",
+        "uncertainty": "none_exact",
+        "unit": "claimed field"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "EXP-ECDLP-ca93ac",
+  "question": "Independently obtain and verify all1536 scalar certificates on the fixed public R52 cohort, confirm fresh-process A/A equality and classify every retained frozen R52 RECOVERED equation after reference seal.",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Deterministic exact computation on an already frozen cohort; A then B then independent checks/seal then posthoc prefix audit. No timing/order advantage is measured.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Explicitly posthoc known-output finite audit; solver API remains public-only, prefix inaccessible until both reference outputs seal; no analyst-blind inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One fixed cohort bundle;48 domains nested,24 target curves with64 targets each. No newly sampled instances."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Administrative export cell marker only; algorithm consumes no fresh RNG. Original public nonce remains literal input.",
+      "seeds": [
+        "deterministic-no-rng"
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Exact workload/coverage/control inventory and posthoc dependency diagram; no cost/clock or asymptotic graph."
+    ],
+    "report_dir": "experiments/EXP-ECDLP-ca93ac/reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "min_attainable_two_sided_p": null,
+      "note": "Finite exact census of1536 public targets and every retained recovery; no statistical hypothesis test or sampling CI. Two actual solver processes are A/A on same bundle, not3072 independent targets.",
+      "passes": true,
+      "rank_test_n": null,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 1200,
+      "fixed_seconds": null,
+      "measured_on": "UNMEASURED conservative planning allocation equal the frozen shared watchdog; source finitebound m<=255, not a timed call or performance estimate; no preapproval scientific/fixture run.",
+      "per_sample_seconds": null,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Exactly1536 targets per freshA/B pass, all48 domain/control groups, then all exact frozen R52 RECOVERED claims. No additional cohort, nonce, solver tuning, easier-case replacement or old candidate attempt."
+    },
+    {
+      "kind": "budget",
+      "preregistered": true,
+      "rule": "ONE new parent trial, zero retries/resumes; total driver+checker wall1200s via shared original monotonic runtime-guard; CPU1800s, memory4GiB,2CPU,1worker. No launch after17:10UTC06Nov; absolute stop17:30UTC06Nov. Whole reporting/export/admin separately600s, no scientific re-execution. Claim expiry/cancel/resource stop reaps descendants and preserves partials."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Source/input hash, domain/control/A/A/reference-equation/parser/join/authority failure stops with exact witness and partial artifacts, never silent repair/rerun."
+    }
+  ],
+  "study_dir": "experiments/EXP-ECDLP-ca93ac",
+  "variable_ledger": {
+    "aa_not_applicable": null,
+    "comparisons": [
+      {
+        "arms": [
+          "reference-A",
+          "reference-B"
+        ],
+        "design": "absolute",
+        "differs_in": [],
+        "id": "C-absolute",
+        "threshold": "Exact complete inventories, canonical scalars, independent public equations, control gates and frozen raw coverage; every mismatch retained."
+      },
+      {
+        "arms": [
+          "reference-A",
+          "reference-B"
+        ],
+        "design": "aa",
+        "differs_in": [
+          "process_pass"
+        ],
+        "id": "C-aa"
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Immutable R52 input;48 domains/24 target-bearing domains/64targets each, unchanged nonce and order.",
+        "name": "public_cohort",
+        "treatment": "fixed",
+        "value": "SHA864bfc966174a55fb854e69251669852e9ea20c2beaf52b74c49e1a0d66dae60"
+      },
+      {
+        "how": "Same pinned solver bytes and environment; independent checker has separate source/arithmetic.",
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "59fdb82778ffaf1b134f3b8bd1e1a4f71b5920ee"
+      },
+      {
+        "how": "Fresh sequential processes, empty tables/caches each pass;48 control tables reused for24 target domains within each pass.",
+        "name": "process_pass",
+        "treatment": "crossed",
+        "value": [
+          "freshA",
+          "freshB"
+        ]
+      },
+      {
+        "how": "Only exact R52 input/traces/cells3-file manifest; third-parent37raw is context only.",
+        "name": "raw_prefix",
+        "treatment": "fixed",
+        "value": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/input-manifest.json"
+      },
+      {
+        "how": "Prior retained witness outcomes exposed; no confirmatory probability or masked-analysis claim.",
+        "name": "outcome_exposure",
+        "treatment": "fixed",
+        "value": "posthoc"
+      },
+      {
+        "how": "Host/source/environment/resource facts retained as operational bookkeeping; no clock/cost metric.",
+        "name": "host",
+        "treatment": "measured"
+      }
+    ],
+    "independent": [
+      {
+        "levels": [
+          "fixed HAC3.56 public reference witness search"
+        ],
+        "name": "method"
+      }
+    ],
+    "transfer_obligations": [
+      {
+        "conditions": "Canonical nonzero a,b; verify both [k]P=Qprime and [x]G=Q; exact same curve/target/trace/cell joins. No asymptotic/population transfer.",
+        "map": "x=a*b^-1*k modr"
+      }
+    ]
+  },
+  "version": 1
+}

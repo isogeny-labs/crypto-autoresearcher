@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 172, in <module>
+    p=argparse.ArgumentParser();p.add_argument('--serve',action='store_true');p.add_argument('--repo-root',required=True);p.add_argument('--out',required=True);p.add_argument('--plan',required=True);p.add_argument('--trial',required=True);p.add_argument('--config',required=True);p.add_argument('--fd',type=int,required=True);p.add_argument('--driver-fd',type=int,required=True);p.add_argument('--fixture-fault');a=p.parse_args();serve(a)
+                                                                                                                                                                                                                                                                                                                                                                                                                                              ^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 119, in serve
+    req=_message(sock,timeout=quiet_timeout if set(observed)-set(closed) else 5);op=req['op']
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 68, in _message
+    _remaining(sock,deadline);b=sock.recv(1);d.need(b,'observer IPC closed');data+=b;d.need(len(data)<=1<<20,'observer IPC framing')
+                                ^^^^^^^^^^^^
+TimeoutError: timed out

@@ -1,0 +1,662 @@
+{
+  "PCC": {
+    "review_claim": {
+      "claim": {
+        "bytes": 1919,
+        "path": "pcc/claims/PCC-20261105-e41830.json",
+        "sha256": "80a292473ab02bf1817d58375ba49f745584b91b4897b7b17bde2268e97a8a14"
+      },
+      "claim_id": "PCC-20261105-e41830",
+      "literal_ledger": {
+        "bytes": 6388,
+        "path": "pcc/ledger.jsonl",
+        "sha256": "a8a5f3d19baa1df02d02bb12dadd362c67b7e0d4fd50bf3cc25331fe8beb6704"
+      },
+      "standing": "unverified",
+      "standing_returncode": 2
+    },
+    "standing": "unverified; native statement claims cannot be verified"
+  },
+  "canonical_scientific_graphs": "Unchanged because no mathematical/hypothesis/goal-family claim or acceptance state is promoted.",
+  "decision_id": "DEC-20261105-c4c30c",
+  "editables": {
+    "builder_python": {
+      "sha256": "2ea2bb27f4c0c83412d6a7d3d225c03778ad642830d06de65887e4781a67a013",
+      "text": "import ast,copy,datetime,json,subprocess,time\nfrom pathlib import Path\nimport typst\nfrom operations import *\nE='experiments/EXP-ECDLP-356403';C4=E+'/reports/review-'+DEC;OUT=R/C4;OUT.mkdir(parents=True,exist_ok=True);c=read(RD+'/checks.json');sv=read(RD+'/source-review.json');assert c['joint_verdict']=='holds' and sv['other57_exact'] and sv['load_custody_AST_equal'];old=c['native_results']['OLD'];new=c['native_results']['NEW'];pins=read('fb-result-pins.json',W)\n# Fixed observed witness plus immutable source law; no further control executes.\nobs={'schema':'classical.ecdlp.interstage-technical-composition/v1','decision_id':DEC,'source_publication_commit':'964579a78b488fcfe8040837f5af138b5cd0be3c','technical_component_accepted':True,'scientific_status_change':False,'knowledge_promotion':'not_applicable: technical implementation acceptance only','scope':'Finite bounded closed-arm observer receive; matched disclosed F11/F23 native witness plus existing accepted open-stage/framing scope, no full48 result or cost/advantage claim.','source59':read('source59-before.json',W),'source_review':sv,'rounds':{'TASK-20261105-85442c':{'verdict':'INCONCLUSIVE','literal_plan_sha256':'0e0064440b785e2be8bc9c869f4917557b88471e70d0e4e370499edb7e8ae31f','unchanged_unwaived':True},T:{'verdict':'holds','literal_plan_sha256':'54da6b02e0443fcb23b023d551a2cdaff13c0e74e9828d7cdb1100185711868d','final_actual_attestation':pin(RD+'/read-attestation.yaml'),'native_independence_returncode':0,'OLD':{'plain_T_seconds':old['measured_plain_T_lower_bound_seconds'],'status':old['native_receipt']['status'],'returncode':1,'checker_returncode':None},'NEW':{'plain_T_seconds':new['measured_plain_T_lower_bound_seconds'],'status':new['native_receipt']['status'],'returncode':0,'checker_returncode':0},'helper_sha256':'db9270224503d55edecdeeb8f480be94ffdbb094636d84fba46fe5072593a6c6','calls':2,'probe':1,'retries':0,'budget':c['budget']}},'procedural_deviations_unwaived':['Original firstRUN infrastructure_error and original max1 historical cap unchanged; no retry authorized here.','Original854 helper/instrument failures and INCONCLUSIVE joint remain unchanged.','Source38archive776.926s exceeded600; wrongfirstreceipt retained, correctR1a9dc01a/directR22dfa8dbf/native20bindings unchanged.','Repairdesign875.159s exceeded600; firstreport363.623s exceeded360.','Implementation355.074s below600 andzero controls; fb458.468s below600, pair271.508s below420.'],'PCC':{'review_claim':pins,'standing':'unverified; native statement claims cannot be verified'},'canonical_scientific_graphs':'Unchanged because no mathematical/hypothesis/goal-family claim or acceptance state is promoted.','next_action':'Prospective SAME EXP recovery amendment/nativepreapproval after actual finalad archive, no newcohort/nonce/scientificgate.'}\nsvg='''<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"900\" height=\"270\"><rect width=\"900\" height=\"270\" fill=\"#f7f9fc\"/><g font-family=\"DejaVu Sans,sans-serif\" fill=\"#18283e\"><text x=\"25\" y=\"35\" font-size=\"23\" font-weight=\"bold\">Matched fixed interstage gap: same helper, two native calls</text><text x=\"25\" y=\"82\" font-size=\"18\">OLD \u00b7 10.050172 s plain T</text><rect x=\"25\" y=\"100\" width=\"405\" height=\"55\" rx=\"7\" fill=\"#f1dddd\"/><text x=\"40\" y=\"134\" font-size=\"18\">Actual 5 s idle timeout \u00b7 driver1 / checker absent</text><text x=\"465\" y=\"82\" font-size=\"18\">NEW \u00b7 10.050117 s plain T</text><rect x=\"465\" y=\"100\" width=\"410\" height=\"55\" rx=\"7\" fill=\"#dceee4\"/><text x=\"480\" y=\"134\" font-size=\"18\">Observer alive \u00b7 native driver0 / checker0</text><text x=\"25\" y=\"195\" font-size=\"17\">Stage30 s \u00b7 grace2 s \u00b7 outer120 s \u00b7 no ptrace \u00b7 actual OS waits</text><text x=\"25\" y=\"229\" font-size=\"15\">Fixed F11/F23 operational witness only. Source57 other keys and load_custody AST unchanged.</text></g></svg>''';(OUT/'diagram.svg').write_text(svg)\nmd=f'''# Accept scoped bounded interstage observer component\\n\\nDEC-20261105-c4c30c accepts only the operational interstage receive component at source964579a78b488fcfe8040837f5af138b5cd0be3c. The matched fixed OLD/NEW witness used identical helperdb927... and two native calls: OLD plain-T10.050172389s, actual5s idle timeout/native infrastructure_error driver1/checker absent; NEW plain-T10.050116758s, observer alive, native output_validated driver0/checker0, closures and actual OS waits. Stage30/grace2/outer120 and one nonEC instrumentation probe; no retry/science.\\n\\n![Matched operational witness](diagram.svg)\\n\\nStatic law: NEW uses the validated finite quiet_timeout for closed-arm receive, instead of OLD5s; fixture allowance30+2+5=37s. _message retains one absolute monotonic frame deadline,1MiB cap and no per-byte resets. Source changes only observer.py986cda118dc688460bc6490a58db7b496e8541530461ef38f447622a630f231a and manifest32b047ce243568f47c64e36c19366bfc5dac28c30b111370650f5c2438af357c; other57keys and load_custody AST3ef529dfc7d6469a8d3bd6b9d6afb448a0132f0a28f0e39cf1c60b643c13815c remain exact. The existing accepted open-stage/framing components are inherited at their original scope, without rerunning their controls.\\n\\nEach review uses its own literal plan: first8540e006444... INCONCLUSIVE, newfb54da6b02... holds with finalactual attestation and root native independence0. No old result is relabeled. fb whole458.468168510s<600 and pair271.507730738s<420. Implementation355.074s<600/zero controls. Source38archive776.926>600, design875.159>600 and firstreport363.623>360 remain UNMET/unwaived; wrongfirst38receipt retained and correctdeclaredR1a9dc01a/R22dfa8dbf/native20bindings remain authoritative.\\n\\nThe first full48 attempt remains infrastructure_error and carries no paired candidate/BGS measurement. Original max1/no-retry history remains preserved. This technical acceptance establishes no mathematical, novelty, asymptotic, performance or hypothesis/goal-status promotion. Knowledge promotion is not applicable. All PCC results remain UNVERIFIED. Canonical scientific graphs remain unchanged for that reason. Next is a prospective same-EXP/same-public-cohort recovery amendment under native admission and original05:53UTC cap; no scientific launch is approved here.\\n''';(OUT/'report.md').write_text(md)\ntyp='''#set page(paper: \"a4\", margin: 17mm)\n#set text(font: \"DejaVu Sans\", size: 9pt)\n#set par(leading: .5em)\n#text(size: 18pt, weight: \"bold\")[Bounded interstage observer accepted]\n#linebreak()\nDEC-20261105-c4c30c \u00b7 Technical component only\n\nThe unchanged fixed F11/F23 control now supplies the missing matched interstage gap witness. Identical helper bytes were used for both cases. OLD held the direct driver in plain kernel T for10.050172389s and showed the actual5-second idle receive failure, native driver1/checker absent. NEW held for10.050116758s, kept its observer alive and completed native driver0/checker0, full closure and actual OS waits.\n\n#image(\"diagram.svg\", width: 100%)\n\nStage30s/grace2s/outer120s; exactly2 native calls,1 nonEC instrumentation probe,0 retries and0 science. Whole458.468s of600 and pair271.508s of420. Native final independence0 against literal54da6b02 plan with actualattestation; prior854uses its own0e006444 plan and remains INCONCLUSIVE.\n\nNEW uses the existing finite frozen stage-derived allowance for closed-arm receive (fixture30+2+5=37s). One absolute monotonic frame deadline,1MiB frame cap and no per-byte resets remain. Only observer.py and its manifest entry changed; all other57source keys and accepted load_custody AST remain exact. Source publication:964579a78b488fcfe8040837f5af138b5cd0be3c. Prior open-stage/framing acceptance is inherited only within its original scope; no controls were rerun here.\n\nImplementation355.074s<600 withzero controls. Source38archive776.926s>600, repairdesign875.159s>600 and firstreport363.623s>360 remain UNMET/unwaived. The wrong first38receipt is retained as a procedural deviation; correct declaredR1a9dc01a/directR22dfa8dbf/native20bindings remain authoritative. Prior854helperfailures are retained; no old result or cap is reset.\n\nThe first full48 attempt stays infrastructure_error, without paired solver measurements. Original max1/no-retry history remains preserved. This acceptance promotes no mathematical, novelty, asymptotic, performance or hypothesis/goal status. Knowledge promotion is not applicable. Scientific graphs remain unchanged. All PCC claims remain UNVERIFIED. Prospective same-EXP recovery/native admission is a separate next step under original05:53UTC cap; no scientific run is approved here.\n''';typ=typ.replace('<',' less than ').replace('>',' greater than ');(W/'C4-report.typ').write_text(typ);(OUT/'report.typ').write_text(typ);typst.compile(str(OUT/'report.typ'),output=str(OUT/'report.pdf'));(OUT/'report.typ').unlink();obs['editables']={'typst':{'text':typ,'sha256':sha(typ.encode())},'builder_python':{'text':Path(__file__).read_text(),'sha256':sha(Path(__file__).read_bytes())}};write(C4+'/observations.json',obs)\ndec={'coordinator_decision':{'id':DEC,'decided_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'decided_by':'coordinator','decision':'approve','context':'Scoped technical acceptance of bounded closed-arm/interstage observer receive at964579source; no scientific/hypothesis/math promotion. [pcc:unverified]','target_ids':['EXP-ECDLP-356403',T,'TASK-20261105-58f55b','TASK-20261105-38eecf',FINAL],'rationale':['Actual matched fixedOLD/NEW10s plainT witness with samehelper: OLD actual5s idle failure, NEW nativechecker0/closure/all OS waits, one nonECinstrumentprobe andtwo nativecalls.','Only observer986cda/source-manifest32b047 change;57other keys and acceptedload_custodyAST remain exact; absolute finite framedreceive law persists.','Existing acceptedopen-stage/framing controls inherited only at prior scope, not rerun.'],'evidence_refs':[RD+'/checks.json',RD+'/source-review.json',RD+'/read-attestation.yaml',C4+'/observations.json',pins['claim']['path']],'knowledge_promotion':{'promoted':[],'not_warranted':'Not applicable: technical component acceptance, no mathematical result or scientific/hypothesis/goal-status change.'},'limitations':obs['procedural_deviations_unwaived']+['Original854INCONCLUSIVE remains unchanged; each round ownliteralplan, no retcon.','PCCunverified; no unsigned/signedverification or mathematical/performance claim.','No recovery execution authorized by this record; prospective sameEXP amendment/admission required.'],'next_actions':['Archive finalad alone with actualsource/report/PCC/storage/ledger/rootoperations binding.','Then sameEXP frozenpublic/jobhash recovery draft, actualnativepreapproval/standingapprovalarchive/ready/claim/checkpoint/publicRUNskill; original05:53cap remains.'],'technical_acceptance':{'source_publication':'964579a78b488fcfe8040837f5af138b5cd0be3c','exact_observer_sha256':obs['source59']['harness/classical_ecdlp_controlled_followup_v5/observer.py'],'exact_manifest_sha256':obs['source59']['harness/classical_ecdlp_controlled_followup_v5/source-manifest.json'],'only_interstage_component':True},'canonical_scientific_graphs_unchanged':obs['canonical_scientific_graphs'],'scientific_status_transition':False}};write('ledger/decisions/'+DEC+'.yaml',dec)\nargv=[PY,'-B','tools/pcc/pcc.py','claim','new','--kind','statement','--statement','Scoped C4 technical acceptance of source964579 bounded closed-arm receive based on actual matched fixedOLD/NEW10s witness and static finite law;57keys/load_custodyAST unchanged. Prior854INCONCLUSIVE/budget misses unwaived, no scientific/math/performance promotion or retry approval.','--scope','DEC-c4c30c technicalcomponentonly; allPCCUNVERIFIED','--session','/root/observer_source_metadata_resumed','--model','gpt-6','--proof','attestation:ledger/decisions/'+DEC+'.yaml','--proof','attestation:'+C4+'/observations.json'];claimpath=command('composition-result-claim',argv).strip();claim=read(claimpath);command('composition-standing',[PY,'-B','tools/pcc/pcc.py','standing',claim['id']],allow=(2,));write('composition-pins.json',{'claim':pin(claimpath),'claim_id':claim['id'],'standing':'unverified','standing_returncode':2,'ledger':pin('pcc/ledger.jsonl')},W);command('PCC-ledger-chain',[PY,'-B','tools/pcc/pcc.py','ledger','verify','--base','origin/main']);subprocess.run(['pdftoppm','-scale-to','1400','-png',str(OUT/'report.pdf'),str(W/'C4-view')],check=True)\nprint(json.dumps({'C4_pdf':pin(C4+'/report.pdf'),'composition_claim':claimpath,'views':[str(p) for p in sorted(W.glob('C4-view-*.png'))]}))\n"
+    },
+    "typst": {
+      "sha256": "44ec526db7f710826be9a7bd634280456fe179067333933fe5833bd4ebeda113",
+      "text": "#set page(paper: \"a4\", margin: 17mm)\n#set text(font: \"DejaVu Sans\", size: 9pt)\n#set par(leading: .5em)\n#text(size: 18pt, weight: \"bold\")[Bounded interstage observer accepted]\n#linebreak()\nDEC-20261105-c4c30c \u00b7 Technical component only\n\nThe unchanged fixed F11/F23 control now supplies the missing matched interstage gap witness. Identical helper bytes were used for both cases. OLD held the direct driver in plain kernel T for10.050172389s and showed the actual5-second idle receive failure, native driver1/checker absent. NEW held for10.050116758s, kept its observer alive and completed native driver0/checker0, full closure and actual OS waits.\n\n#image(\"diagram.svg\", width: 100%)\n\nStage30s/grace2s/outer120s; exactly2 native calls,1 nonEC instrumentation probe,0 retries and0 science. Whole458.468s of600 and pair271.508s of420. Native final independence0 against literal54da6b02 plan with actualattestation; prior854uses its own0e006444 plan and remains INCONCLUSIVE.\n\nNEW uses the existing finite frozen stage-derived allowance for closed-arm receive (fixture30+2+5=37s). One absolute monotonic frame deadline,1MiB frame cap and no per-byte resets remain. Only observer.py and its manifest entry changed; all other57source keys and accepted load_custody AST remain exact. Source publication:964579a78b488fcfe8040837f5af138b5cd0be3c. Prior open-stage/framing acceptance is inherited only within its original scope; no controls were rerun here.\n\nImplementation355.074s less than 600 withzero controls. Source38archive776.926s greater than 600, repairdesign875.159s greater than 600 and firstreport363.623s greater than 360 remain UNMET/unwaived. The wrong first38receipt is retained as a procedural deviation; correct declaredR1a9dc01a/directR22dfa8dbf/native20bindings remain authoritative. Prior854helperfailures are retained; no old result or cap is reset.\n\nThe first full48 attempt stays infrastructure_error, without paired solver measurements. Original max1/no-retry history remains preserved. This acceptance promotes no mathematical, novelty, asymptotic, performance or hypothesis/goal status. Knowledge promotion is not applicable. Scientific graphs remain unchanged. All PCC claims remain UNVERIFIED. Prospective same-EXP recovery/native admission is a separate next step under original05:53UTC cap; no scientific run is approved here.\n"
+    }
+  },
+  "knowledge_promotion": "not_applicable: technical implementation acceptance only",
+  "next_action": "Prospective SAME EXP recovery amendment/nativepreapproval after actual finalad archive, no newcohort/nonce/scientificgate.",
+  "procedural_deviations_unwaived": [
+    "Original firstRUN infrastructure_error and original max1 historical cap unchanged; no retry authorized here.",
+    "Original854 helper/instrument failures and INCONCLUSIVE joint remain unchanged.",
+    "Source38archive776.926s exceeded600; wrongfirstreceipt retained, correctR1a9dc01a/directR22dfa8dbf/native20bindings unchanged.",
+    "Repairdesign875.159s exceeded600; firstreport363.623s exceeded360.",
+    "Implementation355.074s below600 andzero controls; fb458.468s below600, pair271.508s below420."
+  ],
+  "rounds": {
+    "TASK-20261105-85442c": {
+      "literal_plan_sha256": "0e0064440b785e2be8bc9c869f4917557b88471e70d0e4e370499edb7e8ae31f",
+      "unchanged_unwaived": true,
+      "verdict": "INCONCLUSIVE"
+    },
+    "TASK-20261105-fb2770": {
+      "NEW": {
+        "checker_returncode": 0,
+        "plain_T_seconds": 10.050116758000513,
+        "returncode": 0,
+        "status": "output_validated"
+      },
+      "OLD": {
+        "checker_returncode": null,
+        "plain_T_seconds": 10.050172388997453,
+        "returncode": 1,
+        "status": "infrastructure_error"
+      },
+      "budget": {
+        "NEW_end_elapsed_seconds": 271.5077307379979,
+        "OLD_end_elapsed_seconds": 234.43289103799907,
+        "capsule_ready_elapsed_seconds": 458.4681685100004,
+        "focused_controls_budget_met": true,
+        "focused_shared_limit_seconds": 420,
+        "global_cap_utc": "2026-11-05T05:53:00Z",
+        "helper_freeze_elapsed_seconds": 206.08358390600188,
+        "instrument_probe_end_elapsed_seconds": 206.12981921499886,
+        "native_original_deadlines": {
+          "NEW": 44314.33034058,
+          "OLD": 44282.911281787
+        },
+        "nativeouter_seconds_both": 120,
+        "no_clock_reset": true,
+        "original_dispatch_monotonic": 43942.861707589,
+        "pair_end_elapsed_seconds": 271.5077307379979,
+        "whole_budget_met_at_capsule": true,
+        "whole_limit_seconds": 600
+      },
+      "calls": 2,
+      "final_actual_attestation": {
+        "bytes": 9434,
+        "path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-9576ee/interstage-recovery-a33086/gap-followup-897d9c/reviews/TASK-20261105-fb2770/read-attestation.yaml",
+        "sha256": "2a8d3f375405d10c3d4231e363b91c602be5e289dee52bda5910022d99741ce9"
+      },
+      "helper_sha256": "db9270224503d55edecdeeb8f480be94ffdbb094636d84fba46fe5072593a6c6",
+      "literal_plan_sha256": "54da6b02e0443fcb23b023d551a2cdaff13c0e74e9828d7cdb1100185711868d",
+      "native_independence_returncode": 0,
+      "probe": 1,
+      "retries": 0,
+      "verdict": "holds"
+    }
+  },
+  "schema": "classical.ecdlp.interstage-technical-composition/v1",
+  "scientific_status_change": false,
+  "scope": "Finite bounded closed-arm observer receive; matched disclosed F11/F23 native witness plus existing accepted open-stage/framing scope, no full48 result or cost/advantage claim.",
+  "source59": {
+    "harness/classical_ecdlp_controlled_followup/cohort.py": "cd5896f63f52351d499104ea14e36ddf66a4bd586efaba8e651ebce2053a8ff3",
+    "harness/classical_ecdlp_controlled_followup/constructor.py": "31e58db07649df4e61ec2cbcaa1969789bc2c7f229c21f8555daaaaad8fdc451",
+    "harness/classical_ecdlp_controlled_followup/curve.py": "6ce0b50fcc78287de7091c36383b5ccefb5dbe208ba3d1ab1c80b1ddbc326400",
+    "harness/classical_ecdlp_controlled_followup/engine.py": "22da83d6494ea66c520b0e58eaa4b54e621c822d8f0275deda8822c7179915fb",
+    "harness/classical_ecdlp_controlled_followup/host/reference.py": "ee58b639fecbed063e74d6e825ca5a6d0e19dc79816c3713092defc8dcfa3ce2",
+    "harness/classical_ecdlp_controlled_followup/host/verify.py": "244bcbd4ff7621d046165d9fa23402cd39db1e4cf17656f9841c38d2ddab4da3",
+    "harness/classical_ecdlp_controlled_followup_v5/baseline.py": "7f3cf005eb5328d69caf4ce439fb7efb0b52c6fc28154f489bf25616ade7ac11",
+    "harness/classical_ecdlp_controlled_followup_v5/candidate.py": "e2ba270fff6def3d9279557a2eee42ba2a322b10374c877d73a9ef9f5fa18343",
+    "harness/classical_ecdlp_controlled_followup_v5/check.py": "6be8e0f1168676085626e108a5af9483ed694dd794f4e31513eb7e9696e3aa3a",
+    "harness/classical_ecdlp_controlled_followup_v5/cohort_adapter.py": "e714ce816a24bf3da776419546eafa8953e10b5e3aee0a7811c717efe7da89b5",
+    "harness/classical_ecdlp_controlled_followup_v5/driver.py": "37ef30a9fe9ff13977bece322b3aff3dbdf9d0e5f98ce9dad296bb875bb50368",
+    "harness/classical_ecdlp_controlled_followup_v5/export.py": "d3d67170a847b942b50281ed5f73e995c4b506885871db1206d991e2b3f10cac",
+    "harness/classical_ecdlp_controlled_followup_v5/fixtures.json": "eeb6c118187fc244c0bf8b7ad2689022f9cd2ba42b2598c048db51a1f6f3182e",
+    "harness/classical_ecdlp_controlled_followup_v5/format-contract.json": "1ed8a10cded0dd8e1230868ae5e1f53edef9cc02d91be758f4bf9f235c949ac9",
+    "harness/classical_ecdlp_controlled_followup_v5/interface.json": "0611ac0c7e7cda40e845c9376e88ab390e47ff7bf7695e1ec2e03f1a1c41c5ac",
+    "harness/classical_ecdlp_controlled_followup_v5/lifecycle.py": "4e38ff307019f14b2947a714bfdc25d5b065928c71eaec2271432ef193556ad0",
+    "harness/classical_ecdlp_controlled_followup_v5/observer.py": "986cda118dc688460bc6490a58db7b496e8541530461ef38f447622a630f231a",
+    "harness/classical_ecdlp_controlled_followup_v5/public_verify.py": "e683d5147b043563b75e0579ff098b2c5673033b785e478e9b0cec82f0d9136f",
+    "harness/classical_ecdlp_controlled_followup_v5/resource-envelope.json": "74eb31bdd30c1fdc8eae36ef09deb891a8687371d1fda58d335aebde6cc8d98f",
+    "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": "32b047ce243568f47c64e36c19366bfc5dac28c30b111370650f5c2438af357c",
+    "harness/classical_ecdlp_controlled_followup_v5/source_closure.py": "7e1e8e507894e6f0e45b3cc0e0c24ed6a160fc124e2537df8efcb776a1d92676",
+    "harness/classical_ecdlp_controlled_followup_v5/test_contracts.py": "907c90d9f866c6afa123d32dd15ff61210145b8cd4524b87142f44f4e99bd181",
+    "orchestration/__init__.py": "bdf396101583fe102cf004c8a260b70b08bdff7357ffc46d8cda303677009ea0",
+    "orchestration/adapter/__init__.py": "5f34a826594f3a037dc4e2f7499d6bad7050fe0ee696647185312ac13bbf7097",
+    "orchestration/adapter/batch.py": "5fc4223049719bdd95a843cc079abbed32f599407919a82405b8b9070d488496",
+    "orchestration/adapter/config.py": "a87fe66ae5ab7de9233c5a90ce5e5013a8b0dc04160c8e9cd30fdbe5518c0c18",
+    "orchestration/adapter/manifest.py": "fe658b7419e5335355812998bb0fe03e62ed53e51cfe01faeda6ed33da67de6e",
+    "orchestration/adapter/prompt_cache.py": "4f870c4acb16b6c711bd31ecd1140d123e8e0e99c195da1993a3565100a44987",
+    "orchestration/adapter/resolver.py": "13ceaa3caa50740ddbdeed28d19b8326314432c5bdd95a344dcace20aa5d3afc",
+    "orchestration/adapter/transport.py": "0e6945180ca2ec459cb262bafcb627111d218697b9cd3c53a3766b19eb2a85c0",
+    "orchestration/fast_yaml.py": "3b3a7e289ae5543e3711e6350f6a1e1a5583aa0d908213fbde6422944b0b48ec",
+    "orchestration/model-bindings.yaml": "707c5c15218d1701bac1cd71907e3914b6e0f6d422e35d3f9226e0322ab77dee",
+    "orchestration/model-policies.yaml": "a5a86d0e2be07f3c4e0ee67cfacad1cf667228046e832f24fb4e480ec0dc7a92",
+    "orchestration/research-priority.yaml": "e9314d694f9a55fc7a0d1b2a6a85682c5bc98dc4fee43ed72899fe65a899c429",
+    "orchestration/research_budget.py": "968689b2535b3603f9d8dcf62e94e058ac0c09c0f77857cd45134562e31e3b17",
+    "orchestration/roles.yaml": "9f76d2efe59ad187a3cbe85f0bc7586d57359671947ef522018087b836a596cf",
+    "schemas/experiment-export.v1.json": "108f0ae9c1be3ed141bca3c22216eba049f2c76677f11013109a4740f19bd757",
+    "schemas/experiment-protocol.v1.json": "a9b948f2be323f862b98301eb7a5aa147ecc29db35041737f0aa3dfd03ad2443",
+    "schemas/experiment-review.v1.json": "afdf927fb6ecbcbf8c4bc31569144a6ab4aad024cebab3e8f76a7f10c9829ad3",
+    "tools/allocate_id.py": "695588bd065c107faa80d1cdcf37dc9094647165fb2193e815b3b6743cac8896",
+    "tools/artifact_store.py": "8518bbbd385b077f6bf5344503ebe9c0feb8f0b3bb119e8e8a7deea8f461be59",
+    "tools/build_frontier_map.py": "e3b45c90e7bb2b36342c329a472b7472a0299c324d075fe6e0ac9369c75dcd3f",
+    "tools/check_review_independence.py": "4931a4534e7e04e0e62b6145375ef11ef7b47a641da92d9269734936c5d1208c",
+    "tools/ecc_priority.py": "0299b4360f77bbfd2e00ad68684e57be28b8a5268aa10fd11173c6fcd2491ea8",
+    "tools/experiment_execution.py": "28fc161e2a61f848ae961b478feb42c9827b23a3a0168a61b7a009ab1f1d020b",
+    "tools/experiment_preapproval.py": "bb107157579aef065242e3d595d77f4a21a6aa0e2da1c80ca4648a026c82aba5",
+    "tools/experiment_protocol.py": "0f46a2b856bb1df2d155c4a676b46c6118d82c45cf8e5cc0492315aeb45c84e4",
+    "tools/fast_yaml.py": "88ffdc90ff09f5537a38443cb67eb8fcebe7a6a1b47ed9d2026fceac693e8ef9",
+    "tools/goal_lanes.py": "a58a3470beac4d1947958b593f0a27e1ec81e1d61d81f6655da1e1fb2c8516fb",
+    "tools/newest_experiments.py": "45335fe0714e7c467f7eb787297f933ad3970f739be1698a76287c8055a6e5bf",
+    "tools/research_dispatch.py": "5919013342391e9b9ec30811c0f4c458e78030915c1afd8b799340b14fadb437",
+    "tools/review_phase_seals.py": "849453c6ff57d9401063e58b503600d99f85e02c3a7bd78d7b16defc90e49e83",
+    "tools/run_supersession_registry.yaml": "338e269517a4b62ca882b5c3d2d563713714304c62affcd288e0994fb1c460ad",
+    "tools/schema_supersession_registry.yaml": "357a58d078ac47cf948ded6362593a43750b30ac4aa50fa8d4a39928faf62c84",
+    "tools/sparse_checkout.py": "f34929e16c5f6c038a5f5b8b440b780ccf3854fbc56070a072dd0dc8a58258ab",
+    "tools/task_recovery.py": "a87f47b5158709fbcbda850c3125b38626f45fee9116c71cec2ac6e653b9e4cd",
+    "tools/validate_dispatch_reference.py": "f27eb7eea2dfa867106bc175aee8aca503127eaf7905ce0eb7adab8868a8256f",
+    "tools/validate_ledger.py": "358fbbfbaa60f2de7b4ee3b8d02507f2640bb4ca41dd6f79856fbe29756fe1cc",
+    "tools/validate_ledger_baseline.txt": "5dcfb52016dc59e2f921140604a3727ef509beab9c8e2455676311d85e05bd80"
+  },
+  "source_publication_commit": "964579a78b488fcfe8040837f5af138b5cd0be3c",
+  "source_review": {
+    "changed_keys": [
+      "harness/classical_ecdlp_controlled_followup_v5/observer.py",
+      "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json"
+    ],
+    "exact59_before_after": {
+      "NEW": {
+        "harness/classical_ecdlp_controlled_followup/cohort.py": {
+          "bytes": 7920,
+          "sha256": "cd5896f63f52351d499104ea14e36ddf66a4bd586efaba8e651ebce2053a8ff3"
+        },
+        "harness/classical_ecdlp_controlled_followup/constructor.py": {
+          "bytes": 8500,
+          "sha256": "31e58db07649df4e61ec2cbcaa1969789bc2c7f229c21f8555daaaaad8fdc451"
+        },
+        "harness/classical_ecdlp_controlled_followup/curve.py": {
+          "bytes": 7810,
+          "sha256": "6ce0b50fcc78287de7091c36383b5ccefb5dbe208ba3d1ab1c80b1ddbc326400"
+        },
+        "harness/classical_ecdlp_controlled_followup/engine.py": {
+          "bytes": 27976,
+          "sha256": "22da83d6494ea66c520b0e58eaa4b54e621c822d8f0275deda8822c7179915fb"
+        },
+        "harness/classical_ecdlp_controlled_followup/host/reference.py": {
+          "bytes": 9439,
+          "sha256": "ee58b639fecbed063e74d6e825ca5a6d0e19dc79816c3713092defc8dcfa3ce2"
+        },
+        "harness/classical_ecdlp_controlled_followup/host/verify.py": {
+          "bytes": 40836,
+          "sha256": "244bcbd4ff7621d046165d9fa23402cd39db1e4cf17656f9841c38d2ddab4da3"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/baseline.py": {
+          "bytes": 8662,
+          "sha256": "7f3cf005eb5328d69caf4ce439fb7efb0b52c6fc28154f489bf25616ade7ac11"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/candidate.py": {
+          "bytes": 1754,
+          "sha256": "e2ba270fff6def3d9279557a2eee42ba2a322b10374c877d73a9ef9f5fa18343"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/check.py": {
+          "bytes": 10145,
+          "sha256": "6be8e0f1168676085626e108a5af9483ed694dd794f4e31513eb7e9696e3aa3a"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/cohort_adapter.py": {
+          "bytes": 9324,
+          "sha256": "e714ce816a24bf3da776419546eafa8953e10b5e3aee0a7811c717efe7da89b5"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/driver.py": {
+          "bytes": 27872,
+          "sha256": "37ef30a9fe9ff13977bece322b3aff3dbdf9d0e5f98ce9dad296bb875bb50368"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/export.py": {
+          "bytes": 5841,
+          "sha256": "d3d67170a847b942b50281ed5f73e995c4b506885871db1206d991e2b3f10cac"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/fixtures.json": {
+          "bytes": 20862,
+          "sha256": "eeb6c118187fc244c0bf8b7ad2689022f9cd2ba42b2598c048db51a1f6f3182e"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/format-contract.json": {
+          "bytes": 1753,
+          "sha256": "1ed8a10cded0dd8e1230868ae5e1f53edef9cc02d91be758f4bf9f235c949ac9"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/interface.json": {
+          "bytes": 5697,
+          "sha256": "0611ac0c7e7cda40e845c9376e88ab390e47ff7bf7695e1ec2e03f1a1c41c5ac"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/lifecycle.py": {
+          "bytes": 2519,
+          "sha256": "4e38ff307019f14b2947a714bfdc25d5b065928c71eaec2271432ef193556ad0"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/observer.py": {
+          "bytes": 16842,
+          "sha256": "986cda118dc688460bc6490a58db7b496e8541530461ef38f447622a630f231a"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/public_verify.py": {
+          "bytes": 3786,
+          "sha256": "e683d5147b043563b75e0579ff098b2c5673033b785e478e9b0cec82f0d9136f"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/resource-envelope.json": {
+          "bytes": 5815,
+          "sha256": "74eb31bdd30c1fdc8eae36ef09deb891a8687371d1fda58d335aebde6cc8d98f"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": {
+          "bytes": 2264,
+          "sha256": "32b047ce243568f47c64e36c19366bfc5dac28c30b111370650f5c2438af357c"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/source_closure.py": {
+          "bytes": 4375,
+          "sha256": "7e1e8e507894e6f0e45b3cc0e0c24ed6a160fc124e2537df8efcb776a1d92676"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/test_contracts.py": {
+          "bytes": 26306,
+          "sha256": "907c90d9f866c6afa123d32dd15ff61210145b8cd4524b87142f44f4e99bd181"
+        },
+        "orchestration/__init__.py": {
+          "bytes": 258,
+          "sha256": "bdf396101583fe102cf004c8a260b70b08bdff7357ffc46d8cda303677009ea0"
+        },
+        "orchestration/adapter/__init__.py": {
+          "bytes": 2396,
+          "sha256": "5f34a826594f3a037dc4e2f7499d6bad7050fe0ee696647185312ac13bbf7097"
+        },
+        "orchestration/adapter/batch.py": {
+          "bytes": 49584,
+          "sha256": "5fc4223049719bdd95a843cc079abbed32f599407919a82405b8b9070d488496"
+        },
+        "orchestration/adapter/config.py": {
+          "bytes": 26135,
+          "sha256": "a87fe66ae5ab7de9233c5a90ce5e5013a8b0dc04160c8e9cd30fdbe5518c0c18"
+        },
+        "orchestration/adapter/manifest.py": {
+          "bytes": 7368,
+          "sha256": "fe658b7419e5335355812998bb0fe03e62ed53e51cfe01faeda6ed33da67de6e"
+        },
+        "orchestration/adapter/prompt_cache.py": {
+          "bytes": 11509,
+          "sha256": "4f870c4acb16b6c711bd31ecd1140d123e8e0e99c195da1993a3565100a44987"
+        },
+        "orchestration/adapter/resolver.py": {
+          "bytes": 16794,
+          "sha256": "13ceaa3caa50740ddbdeed28d19b8326314432c5bdd95a344dcace20aa5d3afc"
+        },
+        "orchestration/adapter/transport.py": {
+          "bytes": 21814,
+          "sha256": "0e6945180ca2ec459cb262bafcb627111d218697b9cd3c53a3766b19eb2a85c0"
+        },
+        "orchestration/fast_yaml.py": {
+          "bytes": 1750,
+          "sha256": "3b3a7e289ae5543e3711e6350f6a1e1a5583aa0d908213fbde6422944b0b48ec"
+        },
+        "orchestration/model-bindings.yaml": {
+          "bytes": 55646,
+          "sha256": "707c5c15218d1701bac1cd71907e3914b6e0f6d422e35d3f9226e0322ab77dee"
+        },
+        "orchestration/model-policies.yaml": {
+          "bytes": 24365,
+          "sha256": "a5a86d0e2be07f3c4e0ee67cfacad1cf667228046e832f24fb4e480ec0dc7a92"
+        },
+        "orchestration/research-priority.yaml": {
+          "bytes": 14464,
+          "sha256": "e9314d694f9a55fc7a0d1b2a6a85682c5bc98dc4fee43ed72899fe65a899c429"
+        },
+        "orchestration/research_budget.py": {
+          "bytes": 5757,
+          "sha256": "968689b2535b3603f9d8dcf62e94e058ac0c09c0f77857cd45134562e31e3b17"
+        },
+        "orchestration/roles.yaml": {
+          "bytes": 21117,
+          "sha256": "9f76d2efe59ad187a3cbe85f0bc7586d57359671947ef522018087b836a596cf"
+        },
+        "schemas/experiment-export.v1.json": {
+          "bytes": 11875,
+          "sha256": "108f0ae9c1be3ed141bca3c22216eba049f2c76677f11013109a4740f19bd757"
+        },
+        "schemas/experiment-protocol.v1.json": {
+          "bytes": 37583,
+          "sha256": "a9b948f2be323f862b98301eb7a5aa147ecc29db35041737f0aa3dfd03ad2443"
+        },
+        "schemas/experiment-review.v1.json": {
+          "bytes": 5251,
+          "sha256": "afdf927fb6ecbcbf8c4bc31569144a6ab4aad024cebab3e8f76a7f10c9829ad3"
+        },
+        "tools/allocate_id.py": {
+          "bytes": 24815,
+          "sha256": "695588bd065c107faa80d1cdcf37dc9094647165fb2193e815b3b6743cac8896"
+        },
+        "tools/artifact_store.py": {
+          "bytes": 20765,
+          "sha256": "8518bbbd385b077f6bf5344503ebe9c0feb8f0b3bb119e8e8a7deea8f461be59"
+        },
+        "tools/build_frontier_map.py": {
+          "bytes": 16072,
+          "sha256": "e3b45c90e7bb2b36342c329a472b7472a0299c324d075fe6e0ac9369c75dcd3f"
+        },
+        "tools/check_review_independence.py": {
+          "bytes": 75907,
+          "sha256": "4931a4534e7e04e0e62b6145375ef11ef7b47a641da92d9269734936c5d1208c"
+        },
+        "tools/ecc_priority.py": {
+          "bytes": 33628,
+          "sha256": "0299b4360f77bbfd2e00ad68684e57be28b8a5268aa10fd11173c6fcd2491ea8"
+        },
+        "tools/experiment_execution.py": {
+          "bytes": 57618,
+          "sha256": "28fc161e2a61f848ae961b478feb42c9827b23a3a0168a61b7a009ab1f1d020b"
+        },
+        "tools/experiment_preapproval.py": {
+          "bytes": 21744,
+          "sha256": "bb107157579aef065242e3d595d77f4a21a6aa0e2da1c80ca4648a026c82aba5"
+        },
+        "tools/experiment_protocol.py": {
+          "bytes": 64811,
+          "sha256": "0f46a2b856bb1df2d155c4a676b46c6118d82c45cf8e5cc0492315aeb45c84e4"
+        },
+        "tools/fast_yaml.py": {
+          "bytes": 655,
+          "sha256": "88ffdc90ff09f5537a38443cb67eb8fcebe7a6a1b47ed9d2026fceac693e8ef9"
+        },
+        "tools/goal_lanes.py": {
+          "bytes": 38488,
+          "sha256": "a58a3470beac4d1947958b593f0a27e1ec81e1d61d81f6655da1e1fb2c8516fb"
+        },
+        "tools/newest_experiments.py": {
+          "bytes": 20662,
+          "sha256": "45335fe0714e7c467f7eb787297f933ad3970f739be1698a76287c8055a6e5bf"
+        },
+        "tools/research_dispatch.py": {
+          "bytes": 105554,
+          "sha256": "5919013342391e9b9ec30811c0f4c458e78030915c1afd8b799340b14fadb437"
+        },
+        "tools/review_phase_seals.py": {
+          "bytes": 11774,
+          "sha256": "849453c6ff57d9401063e58b503600d99f85e02c3a7bd78d7b16defc90e49e83"
+        },
+        "tools/run_supersession_registry.yaml": {
+          "bytes": 330106,
+          "sha256": "338e269517a4b62ca882b5c3d2d563713714304c62affcd288e0994fb1c460ad"
+        },
+        "tools/schema_supersession_registry.yaml": {
+          "bytes": 151965,
+          "sha256": "357a58d078ac47cf948ded6362593a43750b30ac4aa50fa8d4a39928faf62c84"
+        },
+        "tools/sparse_checkout.py": {
+          "bytes": 22386,
+          "sha256": "f34929e16c5f6c038a5f5b8b440b780ccf3854fbc56070a072dd0dc8a58258ab"
+        },
+        "tools/task_recovery.py": {
+          "bytes": 13707,
+          "sha256": "a87f47b5158709fbcbda850c3125b38626f45fee9116c71cec2ac6e653b9e4cd"
+        },
+        "tools/validate_dispatch_reference.py": {
+          "bytes": 13501,
+          "sha256": "f27eb7eea2dfa867106bc175aee8aca503127eaf7905ce0eb7adab8868a8256f"
+        },
+        "tools/validate_ledger.py": {
+          "bytes": 197002,
+          "sha256": "358fbbfbaa60f2de7b4ee3b8d02507f2640bb4ca41dd6f79856fbe29756fe1cc"
+        },
+        "tools/validate_ledger_baseline.txt": {
+          "bytes": 129125,
+          "sha256": "5dcfb52016dc59e2f921140604a3727ef509beab9c8e2455676311d85e05bd80"
+        }
+      },
+      "OLD": {
+        "harness/classical_ecdlp_controlled_followup/cohort.py": {
+          "bytes": 7920,
+          "sha256": "cd5896f63f52351d499104ea14e36ddf66a4bd586efaba8e651ebce2053a8ff3"
+        },
+        "harness/classical_ecdlp_controlled_followup/constructor.py": {
+          "bytes": 8500,
+          "sha256": "31e58db07649df4e61ec2cbcaa1969789bc2c7f229c21f8555daaaaad8fdc451"
+        },
+        "harness/classical_ecdlp_controlled_followup/curve.py": {
+          "bytes": 7810,
+          "sha256": "6ce0b50fcc78287de7091c36383b5ccefb5dbe208ba3d1ab1c80b1ddbc326400"
+        },
+        "harness/classical_ecdlp_controlled_followup/engine.py": {
+          "bytes": 27976,
+          "sha256": "22da83d6494ea66c520b0e58eaa4b54e621c822d8f0275deda8822c7179915fb"
+        },
+        "harness/classical_ecdlp_controlled_followup/host/reference.py": {
+          "bytes": 9439,
+          "sha256": "ee58b639fecbed063e74d6e825ca5a6d0e19dc79816c3713092defc8dcfa3ce2"
+        },
+        "harness/classical_ecdlp_controlled_followup/host/verify.py": {
+          "bytes": 40836,
+          "sha256": "244bcbd4ff7621d046165d9fa23402cd39db1e4cf17656f9841c38d2ddab4da3"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/baseline.py": {
+          "bytes": 8662,
+          "sha256": "7f3cf005eb5328d69caf4ce439fb7efb0b52c6fc28154f489bf25616ade7ac11"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/candidate.py": {
+          "bytes": 1754,
+          "sha256": "e2ba270fff6def3d9279557a2eee42ba2a322b10374c877d73a9ef9f5fa18343"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/check.py": {
+          "bytes": 10145,
+          "sha256": "6be8e0f1168676085626e108a5af9483ed694dd794f4e31513eb7e9696e3aa3a"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/cohort_adapter.py": {
+          "bytes": 9324,
+          "sha256": "e714ce816a24bf3da776419546eafa8953e10b5e3aee0a7811c717efe7da89b5"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/driver.py": {
+          "bytes": 27872,
+          "sha256": "37ef30a9fe9ff13977bece322b3aff3dbdf9d0e5f98ce9dad296bb875bb50368"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/export.py": {
+          "bytes": 5841,
+          "sha256": "d3d67170a847b942b50281ed5f73e995c4b506885871db1206d991e2b3f10cac"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/fixtures.json": {
+          "bytes": 20862,
+          "sha256": "eeb6c118187fc244c0bf8b7ad2689022f9cd2ba42b2598c048db51a1f6f3182e"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/format-contract.json": {
+          "bytes": 1753,
+          "sha256": "1ed8a10cded0dd8e1230868ae5e1f53edef9cc02d91be758f4bf9f235c949ac9"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/interface.json": {
+          "bytes": 5697,
+          "sha256": "0611ac0c7e7cda40e845c9376e88ab390e47ff7bf7695e1ec2e03f1a1c41c5ac"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/lifecycle.py": {
+          "bytes": 2519,
+          "sha256": "4e38ff307019f14b2947a714bfdc25d5b065928c71eaec2271432ef193556ad0"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/observer.py": {
+          "bytes": 16878,
+          "sha256": "0be5edae8ba590af5bfe1085e0cf64e02b18a0599a5a265c1eb480e8b18309ed"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/public_verify.py": {
+          "bytes": 3786,
+          "sha256": "e683d5147b043563b75e0579ff098b2c5673033b785e478e9b0cec82f0d9136f"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/resource-envelope.json": {
+          "bytes": 5815,
+          "sha256": "74eb31bdd30c1fdc8eae36ef09deb891a8687371d1fda58d335aebde6cc8d98f"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/source-manifest.json": {
+          "bytes": 2264,
+          "sha256": "8c4566e41662781372c8bc2e10ccd295887303fa19eccd217f05bdf71312dcee"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/source_closure.py": {
+          "bytes": 4375,
+          "sha256": "7e1e8e507894e6f0e45b3cc0e0c24ed6a160fc124e2537df8efcb776a1d92676"
+        },
+        "harness/classical_ecdlp_controlled_followup_v5/test_contracts.py": {
+          "bytes": 26306,
+          "sha256": "907c90d9f866c6afa123d32dd15ff61210145b8cd4524b87142f44f4e99bd181"
+        },
+        "orchestration/__init__.py": {
+          "bytes": 258,
+          "sha256": "bdf396101583fe102cf004c8a260b70b08bdff7357ffc46d8cda303677009ea0"
+        },
+        "orchestration/adapter/__init__.py": {
+          "bytes": 2396,
+          "sha256": "5f34a826594f3a037dc4e2f7499d6bad7050fe0ee696647185312ac13bbf7097"
+        },
+        "orchestration/adapter/batch.py": {
+          "bytes": 49584,
+          "sha256": "5fc4223049719bdd95a843cc079abbed32f599407919a82405b8b9070d488496"
+        },
+        "orchestration/adapter/config.py": {
+          "bytes": 26135,
+          "sha256": "a87fe66ae5ab7de9233c5a90ce5e5013a8b0dc04160c8e9cd30fdbe5518c0c18"
+        },
+        "orchestration/adapter/manifest.py": {
+          "bytes": 7368,
+          "sha256": "fe658b7419e5335355812998bb0fe03e62ed53e51cfe01faeda6ed33da67de6e"
+        },
+        "orchestration/adapter/prompt_cache.py": {
+          "bytes": 11509,
+          "sha256": "4f870c4acb16b6c711bd31ecd1140d123e8e0e99c195da1993a3565100a44987"
+        },
+        "orchestration/adapter/resolver.py": {
+          "bytes": 16794,
+          "sha256": "13ceaa3caa50740ddbdeed28d19b8326314432c5bdd95a344dcace20aa5d3afc"
+        },
+        "orchestration/adapter/transport.py": {
+          "bytes": 21814,
+          "sha256": "0e6945180ca2ec459cb262bafcb627111d218697b9cd3c53a3766b19eb2a85c0"
+        },
+        "orchestration/fast_yaml.py": {
+          "bytes": 1750,
+          "sha256": "3b3a7e289ae5543e3711e6350f6a1e1a5583aa0d908213fbde6422944b0b48ec"
+        },
+        "orchestration/model-bindings.yaml": {
+          "bytes": 55646,
+          "sha256": "707c5c15218d1701bac1cd71907e3914b6e0f6d422e35d3f9226e0322ab77dee"
+        },
+        "orchestration/model-policies.yaml": {
+          "bytes": 24365,
+          "sha256": "a5a86d0e2be07f3c4e0ee67cfacad1cf667228046e832f24fb4e480ec0dc7a92"
+        },
+        "orchestration/research-priority.yaml": {
+          "bytes": 14464,
+          "sha256": "e9314d694f9a55fc7a0d1b2a6a85682c5bc98dc4fee43ed72899fe65a899c429"
+        },
+        "orchestration/research_budget.py": {
+          "bytes": 5757,
+          "sha256": "968689b2535b3603f9d8dcf62e94e058ac0c09c0f77857cd45134562e31e3b17"
+        },
+        "orchestration/roles.yaml": {
+          "bytes": 21117,
+          "sha256": "9f76d2efe59ad187a3cbe85f0bc7586d57359671947ef522018087b836a596cf"
+        },
+        "schemas/experiment-export.v1.json": {
+          "bytes": 11875,
+          "sha256": "108f0ae9c1be3ed141bca3c22216eba049f2c76677f11013109a4740f19bd757"
+        },
+        "schemas/experiment-protocol.v1.json": {
+          "bytes": 37583,
+          "sha256": "a9b948f2be323f862b98301eb7a5aa147ecc29db35041737f0aa3dfd03ad2443"
+        },
+        "schemas/experiment-review.v1.json": {
+          "bytes": 5251,
+          "sha256": "afdf927fb6ecbcbf8c4bc31569144a6ab4aad024cebab3e8f76a7f10c9829ad3"
+        },
+        "tools/allocate_id.py": {
+          "bytes": 24815,
+          "sha256": "695588bd065c107faa80d1cdcf37dc9094647165fb2193e815b3b6743cac8896"
+        },
+        "tools/artifact_store.py": {
+          "bytes": 20765,
+          "sha256": "8518bbbd385b077f6bf5344503ebe9c0feb8f0b3bb119e8e8a7deea8f461be59"
+        },
+        "tools/build_frontier_map.py": {
+          "bytes": 16072,
+          "sha256": "e3b45c90e7bb2b36342c329a472b7472a0299c324d075fe6e0ac9369c75dcd3f"
+        },
+        "tools/check_review_independence.py": {
+          "bytes": 75907,
+          "sha256": "4931a4534e7e04e0e62b6145375ef11ef7b47a641da92d9269734936c5d1208c"
+        },
+        "tools/ecc_priority.py": {
+          "bytes": 33628,
+          "sha256": "0299b4360f77bbfd2e00ad68684e57be28b8a5268aa10fd11173c6fcd2491ea8"
+        },
+        "tools/experiment_execution.py": {
+          "bytes": 57618,
+          "sha256": "28fc161e2a61f848ae961b478feb42c9827b23a3a0168a61b7a009ab1f1d020b"
+        },
+        "tools/experiment_preapproval.py": {
+          "bytes": 21744,
+          "sha256": "bb107157579aef065242e3d595d77f4a21a6aa0e2da1c80ca4648a026c82aba5"
+        },
+        "tools/experiment_protocol.py": {
+          "bytes": 64811,
+          "sha256": "0f46a2b856bb1df2d155c4a676b46c6118d82c45cf8e5cc0492315aeb45c84e4"
+        },
+        "tools/fast_yaml.py": {
+          "bytes": 655,
+          "sha256": "88ffdc90ff09f5537a38443cb67eb8fcebe7a6a1b47ed9d2026fceac693e8ef9"
+        },
+        "tools/goal_lanes.py": {
+          "bytes": 38488,
+          "sha256": "a58a3470beac4d1947958b593f0a27e1ec81e1d61d81f6655da1e1fb2c8516fb"
+        },
+        "tools/newest_experiments.py": {
+          "bytes": 20662,
+          "sha256": "45335fe0714e7c467f7eb787297f933ad3970f739be1698a76287c8055a6e5bf"
+        },
+        "tools/research_dispatch.py": {
+          "bytes": 105554,
+          "sha256": "5919013342391e9b9ec30811c0f4c458e78030915c1afd8b799340b14fadb437"
+        },
+        "tools/review_phase_seals.py": {
+          "bytes": 11774,
+          "sha256": "849453c6ff57d9401063e58b503600d99f85e02c3a7bd78d7b16defc90e49e83"
+        },
+        "tools/run_supersession_registry.yaml": {
+          "bytes": 330106,
+          "sha256": "338e269517a4b62ca882b5c3d2d563713714304c62affcd288e0994fb1c460ad"
+        },
+        "tools/schema_supersession_registry.yaml": {
+          "bytes": 151965,
+          "sha256": "357a58d078ac47cf948ded6362593a43750b30ac4aa50fa8d4a39928faf62c84"
+        },
+        "tools/sparse_checkout.py": {
+          "bytes": 22386,
+          "sha256": "f34929e16c5f6c038a5f5b8b440b780ccf3854fbc56070a072dd0dc8a58258ab"
+        },
+        "tools/task_recovery.py": {
+          "bytes": 13707,
+          "sha256": "a87f47b5158709fbcbda850c3125b38626f45fee9116c71cec2ac6e653b9e4cd"
+        },
+        "tools/validate_dispatch_reference.py": {
+          "bytes": 13501,
+          "sha256": "f27eb7eea2dfa867106bc175aee8aca503127eaf7905ce0eb7adab8868a8256f"
+        },
+        "tools/validate_ledger.py": {
+          "bytes": 197002,
+          "sha256": "358fbbfbaa60f2de7b4ee3b8d02507f2640bb4ca41dd6f79856fbe29756fe1cc"
+        },
+        "tools/validate_ledger_baseline.txt": {
+          "bytes": 129125,
+          "sha256": "5dcfb52016dc59e2f921140604a3727ef509beab9c8e2455676311d85e05bd80"
+        }
+      }
+    },
+    "framing_static_review": "serve NEW uses quiet_timeout unconditionally, OLD uses5s when observed==closed. _quiet_timeout merges validated finite frozen limits, seconds+terminate_grace_seconds+5: fixture30+2+5=37s. _message obtains one monotonic deadline before send/read, all send/receive steps and final decode compare the same deadline; 1MiB frame cap, no reset-per-byte or infinite allowance.",
+    "generator_marker_source_order": "driver.launch_arm writes process.json after original proc.wait, calls CUSTODY.closed (reply only after observer verifies process identity/wait and OS absence), then writes generator seal.json. inotify CLOSE_WRITE is after the closed reply.",
+    "joint_scope": "J-interstage-gap-followup only; joint verdict holds at disclosed fixed F11/F23 controls",
+    "live_new_source59_exact": true,
+    "load_custody_AST_equal": true,
+    "load_custody_AST_sha256": "3ef529dfc7d6469a8d3bd6b9d6afb448a0132f0a28f0e39cf1c60b643c13815c",
+    "manifest_leaf_differences": [
+      "/sources/observer.py/bytes",
+      "/sources/observer.py/sha256"
+    ],
+    "other57_exact": true,
+    "pcc": "unverified",
+    "prior854": "inconclusive unchanged/unwaived",
+    "source_publications": {
+      "NEW": "964579a78b488fcfe8040837f5af138b5cd0be3c",
+      "OLD": "af8a54211bcd6f0503c3d58d159289bff6a023ce"
+    },
+    "task_id": "TASK-20261105-fb2770"
+  },
+  "technical_component_accepted": true
+}

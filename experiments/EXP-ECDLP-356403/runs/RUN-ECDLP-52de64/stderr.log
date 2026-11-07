@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 286, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 282, in main
+    try:r=production(a.repo_root,a.out,a.trial_plan,a.trial_id,a.config)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 253, in production
+    CUSTODY.finish();CUSTODY=None
+    ^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 95, in finish
+    d=_d();reply=_message(self.sock,{'op':'finish'});d.need(reply.get('finalized') is True,'observer finalization failed');rc=self.proc.wait(timeout=5);d.need(rc==0,'observer nonzero finalization');self.finished=True
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/observer.py", line 68, in _message
+    _remaining(sock,deadline);b=sock.recv(1);d.need(b,'observer IPC closed');data+=b;d.need(len(data)<=1<<20,'observer IPC framing')
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/classical-ecdlp-validation-ready/harness/classical_ecdlp_controlled_followup_v5/driver.py", line 16, in need
+    if not v:raise ValueError(m)
+             ^^^^^^^^^^^^^^^^^^^
+ValueError: observer IPC closed

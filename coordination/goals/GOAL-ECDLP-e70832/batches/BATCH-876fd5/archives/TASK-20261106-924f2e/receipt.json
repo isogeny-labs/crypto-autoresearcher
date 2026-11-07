@@ -1,0 +1,87 @@
+{
+  "bindings": {
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-017e8b.1.release.json": {
+      "payload_bytes": 2817,
+      "payload_sha256": "432301ae849b04cad17f134c04bdb9b3ae05bdb0ec313b1bdcda84f0a986bcfd",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/claims/TASK-20261106-017e8b.1.release.json",
+      "stored_sha256": "432301ae849b04cad17f134c04bdb9b3ae05bdb0ec313b1bdcda84f0a986bcfd"
+    },
+    "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization.json": {
+      "payload_bytes": 5610,
+      "payload_sha256": "80994fb80369ae06287a875fa5a58f9325da74ebd7942a8e3960ca802bc7ce82",
+      "stored_path": "coordination/goals/GOAL-ECDLP-e70832/batches/BATCH-876fd5/source-materialization.json",
+      "stored_sha256": "80994fb80369ae06287a875fa5a58f9325da74ebd7942a8e3960ca802bc7ce82"
+    },
+    "harness/classical_ecdlp_public_reference_audit/driver.py": {
+      "payload_bytes": 9276,
+      "payload_sha256": "e0d7e4c2690f707a26edf0552e25c59327fe9b5637ee7d512c6dafdc06438124",
+      "stored_path": "harness/classical_ecdlp_public_reference_audit/driver.py",
+      "stored_sha256": "e0d7e4c2690f707a26edf0552e25c59327fe9b5637ee7d512c6dafdc06438124"
+    },
+    "harness/classical_ecdlp_public_reference_audit/solver.py": {
+      "payload_bytes": 9158,
+      "payload_sha256": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031",
+      "stored_path": "harness/classical_ecdlp_public_reference_audit/solver.py",
+      "stored_sha256": "d462b17ffb10772852d6024a92be71eb768b27d3d4b619cd582c868f88953031"
+    },
+    "harness/classical_ecdlp_public_reference_audit/verify.py": {
+      "payload_bytes": 20485,
+      "payload_sha256": "a19cfc02c5f95726466eb6fdef9506eb569b04e6a0ffdeb1d322bf9ff4049c8d",
+      "stored_path": "harness/classical_ecdlp_public_reference_audit/verify.py",
+      "stored_sha256": "a19cfc02c5f95726466eb6fdef9506eb569b04e6a0ffdeb1d322bf9ff4049c8d"
+    }
+  },
+  "finished_at": "2026-11-06T16:25:07.773022+00:00",
+  "generated_paths_skipped": [],
+  "method": "Actual immutable Git blobs and hydrated payload size/SHA. Receipt self-digest is bound externally after its actual commit. No scientific execution.",
+  "publication_receipts": [],
+  "review_plan": {
+    "blindness": {
+      "lifted_for": [],
+      "mutual": false
+    },
+    "claim_under_review": "Source implementation fits finite public-reference witness-search contract; no empirical result claim.",
+    "coordinator_prior": "Established BSGS and independently checked public equations should fit these tiny fixed domains; source review may expose omissions.",
+    "joints": [
+      {
+        "assigned_to": "TASK-20261106-2ff273",
+        "attack_plan": "Static review all branches including identity,y0,inverse,scalar canonical range; verify complete baby/giant coverage and no candidate imports/truthlabels; audit checker independence and RECOVERED normalization joins.",
+        "breaking_artifact": "Exact source location/input shape and missing branch or dependency counterexample.",
+        "id": "J1",
+        "joint": "Source arithmetic/coverage/domain/control and source independence fit the frozen specification."
+      }
+    ],
+    "proves_too_much": {
+      "assigned_to": "TASK-20261106-2ff273",
+      "failure_signature": "Static source review finds any code path that would accept a known-false scalar/off-curve/noncanonical/mutated/incomplete fixture, report success without actually performing the appropriate equation/domain/inventory checks, or share producer arithmetic while claiming independence. Record exact source path/line/reason under SAME J1; do not execute these controls or invent a run/result.",
+      "objects": [
+        "Static known-false scalar fixture on E/F17:y^2=x^3+2x+2, G=(5,1), r=19, Q=2G=(6,3): k=1 cannot satisfy[k]G=Q; canonical k=r+2 must reject even though its reduction would satisfy the equation.",
+        "Off-curve fixture (0,0) on E/F17:y^2=x^3+2x+2 must fail domain validation; identity base and noncanonical point coordinates must reject.",
+        "For any valid nonzero prime-order G and verified[k]G=Q, [(k+1)modr]G cannot equal the same Q; source must not accept every mutated scalar.",
+        "A/B certificate inventory with one omitted target, duplicated ID, changed curve/point or modified canonical scalar must not pass the complete1536/canonical-equality/custody gates.",
+        "A verifier importing producer/solver arithmetic or merely trusting producer verified/public_checks booleans does not constitute the declared independent checker."
+      ]
+    }
+  },
+  "review_plan_clarification": {
+    "coordinator": "/root/coordinator_next_validation_20261106",
+    "delta": "Add explicit known-false static objects and failure signature required by unchanged native checker; no new joint, no prior/verdict change, no scientific/source execution or scope weakening. Embed top-level review_plan in already-owned source archive924 receipt before publication; root externally pins actual receipt SHA.",
+    "kind": "prospective_control_clarification_before_source_reviewer_dispatch",
+    "original_handoff_path": "ledger/handoffs/TASK-20261106-2ff273.yaml",
+    "original_handoff_sha256": "8f6d2ec26e58acb46df4dd9b6134cbab041724781a01e1781cf626095fdb7e7c",
+    "original_review_plan_canonical_sha256": "9c92ac4f9f7f4027b5cc9aa789f1930e9e15b6070db48add76767dbd8bab19f6",
+    "unchanged": [
+      "coordinator_prior",
+      "joints including sole J1 owner/statement/attack_plan",
+      "blindness",
+      "claim_under_review"
+    ]
+  },
+  "schema": "exact-density.root-snapshot-receipt/v1",
+  "source_snapshot_commit": "da0c590a872102f5c91d37d37a96753054065954",
+  "source_task_ids": [
+    "TASK-20261106-ddc97d"
+  ],
+  "started_at": "2026-11-06T16:25:07.720805+00:00",
+  "task_id": "TASK-20261106-924f2e"
+}
