@@ -114,6 +114,9 @@ def main():
     document+='== Dependent comparison views\n'+table(['predicate','count'],list(comp_counts.items()))
     document+=text('Counts above describe existing dependent candidate/reference/endpoint-engine views and their unweighted vector/mask predicates; they are not extra experiments or solver calls. Arithmetic predicates include eight Fp/Fr dimensions and pair/query allocation traffic; retained predicates include all recorded dimensions. Exact named masks and all vectors are in analysis.json.')+'\n\n'
     document+=text('Retained analyzer errors: '+json.dumps(data['errors'],ensure_ascii=False)[:3000])+'\n\n'
+    if 'continuation'in execution['protocol']:
+        b=load(HERE/'root-release.continuation.json')['infrastructure_continuation']
+        document+=text('Bounded infrastructure continuation: prior zero-data Git admission failure remains runs/a16-target-effort-3d7f9e and its four-page report. Prior CPU '+str(b['prior_cpu_seconds'])+' seconds is charged against21600; original deadline '+b['original_deadline']+' and2GiB unchanged, exactly one additional attempt, no third attempt or new paid capacity. Both protocol versions and outcomes remain published.')+'\n\n'
     document+=text('Scientific standing: '+a.claim+' remains producer-unverified until trusted independent signed review/replay. Sources: literature.md; A14 mixed-base native certificates; A15 actual batch pair implementation; pinned source/input closure and prospective protocol. This report describes observations and labelled arithmetic, and changes no official research status. [pcc:unverified]')
     (a.out/'report.typ').write_text(document)
     typst.compile(str(a.out/'report.typ'),output=str(a.out/'report.pdf'))

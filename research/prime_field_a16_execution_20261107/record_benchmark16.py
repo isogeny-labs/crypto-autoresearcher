@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
-from custody16 import ROOT, HERE, load
+from custody16 import ROOT, HERE, load, digest
 
 
 def main():
@@ -30,10 +30,14 @@ def main():
     value = load(path)
     if value['status'] != 'open': raise ValueError('cannot resume a closed benchmark record')
     value.update(commit=execution['observed_git_head'],commit_dirty=host['git_dirty'])
+    native_protocol=Path(execution['argv'][execution['argv'].index('--protocol')+1]);native_release=Path(execution['argv'][execution['argv'].index('--release')+1])
+    release=load(native_release)
+    if digest(native_release)!=execution['release_sha256']:raise ValueError('actual release identity differs')
+    launcher='launch_continuation16.py' if 'infrastructure_continuation'in release else 'supervise16.py'
     value['commands'] = [dict(argv=['env',
         'PYTHONPATH=/workspace/crypto-autoresearcher/src:/workspace/crypto-autoresearcher',
-        'OMP_NUM_THREADS=1','OPENBLAS_NUM_THREADS=1',sys.executable,'-B',str(HERE.relative_to(ROOT)/'supervise16.py'),
-        '--protocol',str(HERE.relative_to(ROOT)/'protocol.json'),'--release',str(HERE.relative_to(ROOT)/'root-release.json'),
+        'OMP_NUM_THREADS=1','OPENBLAS_NUM_THREADS=1',sys.executable,'-B',str(HERE.relative_to(ROOT)/launcher),
+        '--protocol',str(native_protocol.resolve().relative_to(ROOT)),'--release',str(native_release.resolve().relative_to(ROOT)),
         '--out',str(run.relative_to(ROOT)),'--owner',execution['owner']],cwd='.',exit=execution['returncode'],
         started_utc=execution['started_at'],wall_s=execution['diagnostic_wall_seconds'])]
     value['extensions'] = dict(benchmark_wrapper_executed=False,record_registered_after_raw_publication=True,
@@ -43,7 +47,7 @@ def main():
         planned_information_diagnostics=576,verified_systems=metrics['verified_systems'],
         verified_solver_calls=metrics['verified_solver_calls'],verified_information_diagnostics=metrics['verified_information_audits'],
         partial_work_unknown=metrics['partial_work_unknown'],absolute_deadline=execution['absolute_deadline'],
-        effective_watchdog_seconds=execution['effective_watchdog_seconds'],numpy_runtime=host['numpy_runtime'],
+        effective_watchdog_seconds=execution['effective_watchdog_seconds'],numpy_runtime=host['numpy_runtime'],infrastructure_continuation=release.get('infrastructure_continuation'),release_sha256=execution['release_sha256'],
         wall_valid=False,S=None,matched_reference=None,
         scope='Finite fresh five-program construction/collection/native target/algebra panel with independent cold8/24target horizons, common actual batchpairs and separately paid duplicate48base construction. Partial/native joint controls, separate old-coordinate outside-cancellation diagnostics, physical and conditional cold vectors. Supplied logs not learned rank; reused target slots dependent; no calibrated complete-cost/runtime/whole-attack claim. Producer unverified.')
     path.write_text(json.dumps(value,indent=2,sort_keys=True)+'\n')
