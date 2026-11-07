@@ -191,6 +191,20 @@ $N$ variables. A certificate can be checked without knowing how it was found.
 `verify/cert_check.py` does this with its own descent of $S_3$, and
 `results/verification.md` lists the instances whose certificates it accepted.
 
+**Remark 1.5a** (why a scalar closure certificate cannot refute an
+unsatisfiable system). Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
+$\pi:B_{\le d}\to\mathbb F_2$ satisfies Proposition 1.5 with
+$\pi(1)=1$. Put $c_i=\pi(x_i)$. For any $u\in B_{\le d-1}$, condition (ii)
+gives $\pi(x_i u)=c_i\pi(u)$: if $\pi(u)=0$ apply (ii) to $u$, and if
+$\pi(u)=1$ apply it to $u+1$. Induction on monomial degree now gives
+$\pi(m)=m(c)$ for every monomial of degree at most $d$. Thus (i) says
+$f(c)=0$ for every generator: $c$ is a Boolean solution. Conversely,
+evaluation at any Boolean solution is such a scalar map. For an unsatisfiable
+instance, a degree-$d$ nonmembership certificate with nonzero image of $1$
+therefore needs a quotient codomain of dimension at least two. A scalar
+functional that merely annihilates $W_d(F)$ need not satisfy the closure
+condition and is not, by itself, a Proposition 1.5 certificate.
+
 **Lemma 1.6** (lifting a checked kernel). **Proved.** Let
 $d\ge\max_{f\in F}\deg f$, and let $U\subseteq B_{\le d}$ contain $F$ and be
 closed under multiplication by each variable on $U\cap B_{\le d-1}$.
