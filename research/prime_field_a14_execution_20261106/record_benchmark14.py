@@ -10,6 +10,7 @@ from custody14 import ROOT, HERE, load
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('run','report'): parser.add_argument('--'+name,type=Path,required=True)
+    parser.add_argument('--resume-record', type=Path)
     args = parser.parse_args()
     run, report = args.run.resolve(), args.report.resolve()
     execution, host, metrics = [load(path) for path in (run/'execution.json',run/'host.json',run/'metrics.json')]
@@ -21,10 +22,12 @@ def main():
     targets = sum(len(load(run/'raw'/(cell['id']+'.targets.json'))['generation']['targets']) for cell in generated['cells'])
     def bench(*argv):
         return subprocess.check_output([sys.executable,'tools/benchrec.py',*map(str,argv)],cwd=ROOT,text=True).strip()
-    record = bench('init','--slug','prime-field-mixed-known-helpers','--problem',
-        'kernel:prime-field-mixed-known-helpers','--entry',str(run.relative_to(ROOT))).splitlines()[0]
+    record = (str(args.resume_record) if args.resume_record else
+        bench('init','--slug','prime-field-mixed-known-helpers','--problem',
+        'kernel:prime-field-mixed-known-helpers','--entry',str(run.relative_to(ROOT))).splitlines()[0])
     path = ROOT/record
     value = load(path)
+    if value['status'] != 'open': raise ValueError('cannot resume a closed benchmark record')
     value.update(commit=execution['observed_git_head'],commit_dirty=host['git_dirty'])
     value['commands'] = [dict(argv=['env',
         'PYTHONPATH=/workspace/crypto-autoresearcher/src:/workspace/crypto-autoresearcher',
@@ -44,7 +47,7 @@ def main():
         scope='Finite four-program construction/collection/native target/algebra panel. Partial/native joint controls, separate old-coordinate outside-cancellation diagnostics, physical and conditional cold vectors. Supplied logs not learned rank; reused target slots dependent; no calibrated complete-cost/runtime/whole-attack claim. Producer unverified.')
     path.write_text(json.dumps(value,indent=2,sort_keys=True)+'\n')
     raw = sorted([*(run/'raw').glob('*.gz'),*run.glob('*.json.gz')])
-    bench('raw',record,*[str(p.relative_to(ROOT)) for p in raw])
+    bench('add-raw',record,*[str(p.relative_to(ROOT)) for p in raw])
     physical = metrics['physical_counters']
     source_queries = sum(v.get('signed_point_queries',0) for key,v in physical.items() if key.endswith('.source_construction'))
     target_queries = sum(v.get('signed_point_queries',0) for v in physical.values())-source_queries
