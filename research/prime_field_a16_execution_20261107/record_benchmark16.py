@@ -11,13 +11,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ('run','report'): parser.add_argument('--'+name,type=Path,required=True)
     parser.add_argument('--resume-record', type=Path)
+    parser.add_argument('--remote-receipt',type=Path,default=HERE/'validation/official-s3-final.json')
     args = parser.parse_args()
     run, report = args.run.resolve(), args.report.resolve()
     execution, host, metrics = [load(path) for path in (run/'execution.json',run/'host.json',run/'metrics.json')]
     if not load(report/'inspection.json')['passed']: raise ValueError('inspect every report page first')
-    remote = load(HERE/'validation/official-s3-final.json')
+    remote = load(args.remote_receipt)
     if remote['broker_returncode'] != 0 or remote['tool']['returncode'] != 0: raise ValueError('official remote verification required')
-    generated = load(run/'raw/generated.json')
+    generated = load(run/'raw/generated.json') if (run/'raw/generated.json').is_file() else dict(cells=[])
     curves = len(generated['cells'])
     targets = sum(len(load(run/'raw'/(cell['id']+'.targets.json'))['generation']['targets']) for cell in generated['cells'])
     def bench(*argv):
@@ -46,7 +47,7 @@ def main():
         wall_valid=False,S=None,matched_reference=None,
         scope='Finite fresh five-program construction/collection/native target/algebra panel with independent cold8/24target horizons, common actual batchpairs and separately paid duplicate48base construction. Partial/native joint controls, separate old-coordinate outside-cancellation diagnostics, physical and conditional cold vectors. Supplied logs not learned rank; reused target slots dependent; no calibrated complete-cost/runtime/whole-attack claim. Producer unverified.')
     path.write_text(json.dumps(value,indent=2,sort_keys=True)+'\n')
-    raw = sorted([*(run/'raw').glob('*.gz'),*run.glob('*.json.gz')])
+    raw = sorted([*(run/'raw').glob('*.gz'),*run.glob('*.json.gz'),run/'execution.json',run/'stderr.txt',run/'metrics.json'])
     bench('add-raw',record,*[str(p.relative_to(ROOT)) for p in raw])
     physical = metrics['physical_counters']
     source_queries = sum(v.get('signed_point_queries',0) for key,v in physical.items() if key.endswith('.source_construction'))
@@ -58,7 +59,7 @@ def main():
     for base in ('norm8','hybrid8','known32_8','known48_8','known48_24'):
         for method in ('partial_joint','sparse_joint'):
             for op in ('add','sub','mul','inv'):
-                values.append((base+'_'+method+'_fr_'+op,metrics['observed_arm_counters'][base+'.'+method].get('Fr.field_'+op,0),'fmul' if op=='mul' else 'count'))
+                values.append((base+'_'+method+'_fr_'+op,metrics['observed_arm_counters'].get(base+'.'+method,{}).get('Fr.field_'+op,0),'fmul' if op=='mul' else 'count'))
     for engine in ('scalar','batch'):
         for op in ('add','sub','mul','inv'):
             values.append(('query_'+engine+'_fp_'+op,metrics['query_engine_totals'][engine].get('Fp.field_'+op,0),'fmul' if op=='mul' else 'count'))
