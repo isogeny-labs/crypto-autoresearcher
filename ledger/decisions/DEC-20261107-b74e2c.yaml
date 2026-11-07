@@ -1,0 +1,284 @@
+# DEC-20261107-b74e2c: Coordinator ruling on the second stop of runbook session RBS-ICPERF-de8978
+# (EXP-ICPERF-127dbd, C1 route A at fp28). T1 (S1) was launched once and its job ran to its own exit 42.
+# The launch wrapper v3a could not find the results, because the pinned launcher never names them for a failed Job.
+# The stop is an implementation_error in our wrapper. It is not host loss and not evidence. It approves no launch and no new bytes.
+coordinator_decision:
+  id: DEC-20261107-b74e2c
+  id_provenance: >-
+    Chosen by the Coordinator subagent, which has no shell, as an unused 6-hex token (no match for
+    "b74e2c" under ledger/ or coordination/ in the clone). It is NOT allocator-confirmed. Before
+    committing, the top-level session runs `python3 tools/allocate_id.py --check DEC-20261107-b74e2c`.
+    If that fails, it allocates with `--next coordinator_decision --date 20261107`, renames this file
+    and replaces the id everywhere in it and in goal.yaml next_action. No other change is permitted.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It wrote this file and the next_action of
+    ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml, and nothing else. In the clone (branch
+    claude/c1-launch-20261106 at 4166fb89d2, origin/main 944a2ba5a9) it read:
+    experiments/EXP-ICPERF-127dbd/{runbook.yaml, implementation/launch_eks.sh (v3a),
+    implementation/check_job.py, runs/RUN-ICPERF-8b0d47/{raw-result.json, execution-receipt.json,
+    job/launcher/result.json}, runbook-sessions/RBS-ICPERF-de8978/steps/S02-trials.attempt-2.{supervisor,release}.{stdout,stderr}};
+    ledger/decisions/DEC-20261106-3a91f7.yaml and DEC-20261106-ecf261.yaml (rulings 2, 3, 6);
+    ledger/handoffs/TASK-20261106-724d14.yaml and TASK-20261106-d5ec1e.yaml; AGENTS.md (Core rules,
+    Approval is bounded by execution, Review architecture, Cloud budgets); tools/runbook.py
+    (FAILURE_CLASSES, REOPENABLE, run, _supervise exit-code map, FAILURE_FROM_RECEIPT, evaluate_unit);
+    tools/experiment_execution.py (trial_state, coverage); the study PROTOCOL.md sections 7.3, 9, 10, 11
+    and 18 at scratchpad/v6/repo/research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md; the pinned
+    launcher scratchpad/v6/repo/taskq/deploy/eks-karpenter/remote/run-request (lines 55-79) and
+    remote/diagnose-failed-run (lines 1-60); run-ecbench lines 116-119; and, as untrusted downloaded
+    data, scratchpad/dl-8b0d47-receipt/launcher/47cf1e4f-10a7-4ee3-862d-9e9700e122e3/status.json. It ran
+    no tool, computed no hash, opened no records.jsonl, audit or run log, and read no arm statistic.
+    Every S3 fact below that is not in a committed file is an unverified assertion of the top-level
+    session (no pcc claim id exists for it).
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: revise
+  decision_scope: >-
+    Classifies the stop, rules that no -r2 is triggered, and requires a protocol_amendment, a wrapper
+    v3b, a read-only reconciliation of T1 and a NEW runbook session before S2. It approves no
+    specification, plan, runbook, card, handoff, queue or wrapper bytes, no launch, no reopen and no
+    new session. Those come from a later Coordinator approval decision on committed bytes.
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  runbook_session_id: RBS-ICPERF-de8978
+  session_runbook: {path: experiments/EXP-ICPERF-127dbd/runbook.yaml, sha256: b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b}
+  context: >-
+    Reopened under DEC-20261106-3a91f7. S02-trials attempt 2 claimed TASK-20261106-724d14 epoch 2
+    (7da9049467), and the supervisor ran T1 RUN-ICPERF-8b0d47 once. launch_eks.sh v3a submitted the
+    frozen request-s1.json (683cc67d...) at 01:56:56Z. launch-remote exited 26, CodeBuild FAILED. The
+    launcher result.json says state failed, exit_code 23, job_uid 8a20d036-efc2-45d2-ada6-6442b93c5a52,
+    pod_uid "", results_uri "". The wrapper downloaded nothing, wrote outcome_class
+    infrastructure_candidate and exited 5 at 02:14:41Z. The supervisor receipt is status
+    infrastructure_error, returncode 5. Coverage then showed T1 needs_reconciliation and T2
+    waiting_on_dependencies, so the supervisor exited 3, and runbook.py mapped that to
+    implementation_error. The claim was released as failed (6f81fb38db), and the run record was
+    committed as 4166fb89d2. Journal tip e30e817b... (14 entries), VERIFY OK as reported. Report
+    reports/run-20261107T0214Z. Session receipt SR-20261107-64b997 (outcome impeded) is untracked.
+
+  # ---------------------------------------------------------------- ruling 1
+  stop_classification:
+    session: RBS-ICPERF-de8978
+    class: implementation_error
+    subclass: >-
+      Results-locator defect in our launch wrapper launch_eks.sh v3a, section 3 (lines 235-264).
+      It is deterministic for the expected exit 42, so it is not a transient.
+    basis:
+      - "Pinned launcher, remote/run-request (pinned in remote-pins.sha256). Line 68 `[[ \"$state\" == succeeded ]] || exit 23` exits before line 71 sets pod_uid and line 73 sets raw_uri. Line 71 also selects only a pod whose container exitCode == 0. So for ANY failed Job, including a container exit 42, result.json carries pod_uid \"\" and results_uri \"\" by construction. T1's result.json shows exactly that shape (state failed, exit_code 23). The upstream remote/diagnose-failed-run exists for precisely this receipt shape (`.state==\"failed\" and .exit_code==23 and .pod_uid==\"\" and .results_uri==\"\"`, classification l2_isolation_gate, exit 42)."
+      - "launch_eks.sh v3a section 3 takes results_uri only from result.json .results_uri and downloads only when it is non-empty (lines 238-243). Its 42/43 accept branch (line 262) needs job_exit_code from a downloaded job-exit.json. With the pinned launcher that branch is unreachable for every 42/43 exit. The v3a review (DEC-20261106-ecf261 v3a_review) did not test it against a real failed-Job receipt. This is a defect in our bytes, not in the route."
+      - "Not infrastructure. Protocol section 18 lists the named infrastructure classes as Spot interruption, provisioning or image-pull failure, and a launcher error before the job starts. None occurred. Launcher status.json (untrusted copy) shows pod 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7 on ip-10-84-65-2 with imageID isolab/tasks@sha256:3c4ad8bf... (the pin), started 01:58:36Z, terminated with exitCode 42 at 02:14:20Z, and restartCount 0. The Job is Failed with BackoffLimitExceeded at 02:14:22Z, which is the Job controller's response to a non-zero container exit."
+      - "Not a deadline hit (section 9 deadline rule). The container ran about 944 s of the 3,600 s `seconds`. CodeBuild status is FAILED, not TIMED_OUT. The launcher state is `failed`, not a deadline or timeout state. v3a's own class logic did not select deadline_hit."
+      - "The receipt's status infrastructure_error is the supervisor's mechanical mapping of wrapper exit 5. It stays as written (AGENTS.md rule 4). This decision is the classification of record."
+    rulings:
+      - "Not evidence (AGENTS.md rule 5). Nothing about the arms has been read or decided. H-ICPERF-4cb536 is unchanged. No negative result exists."
+      - "Terminal for this session. tools/runbook.py REOPENABLE = (infrastructure_error, resource_exhaustion), so run() returns final on this implementation_error. Card CARD-EXP-ICPERF-127dbd-2 says do not reopen. DEC-20261106-3a91f7 repeat_allowance does not cover a stop after the supervisor started. RBS-ICPERF-de8978 is NOT reopened, and the class is not relabelled to make it reopenable."
+      - "Section 9 item 3 applies. S1 shows a launcher defect that would equally affect S2: request-s2.json uses the same pinned launcher, and its job is also expected to exit 42 (section 9, 'Exit codes'). So the director's stop stands, and 'the fix needs a protocol_amendment' (ruling 4)."
+
+  # ---------------------------------------------------------------- ruling 2
+  r2_ruling:
+    triggered: false
+    basis: >-
+      Section 9 'Host loss' reruns as -r2 only (a) a job that writes no job-exit.json, or (b) a
+      non-zero exit other than 42 or 43 that the director classifies as infrastructure before any
+      record is opened. T1's job wrote job-exit.json under its pod-uid prefix with exit_code 42,
+      job_name ic-c1-dg-s1-20261106 and pod_uid 5885ba61... (asserted by the top-level session, and
+      consistent with the launcher's status.json). 42 is the expected exit ('Exit codes'), and
+      check_job.py ACCEPTED_EXIT = (0, 42, 43). Neither (a) nor (b) holds. The failure is in our
+      download step, not in the job.
+    consequences:
+      - "S1-r2 stays unconsumed and unbound. Launching request-s1-r2.json now would spend a paid job without cause. It would also create a second S1 dataset from which one could choose, and it would break 'S1, once' (section 9 item 2)."
+      - "If the reconciliation (ruling 3) finds T1's prefix unrecoverable, for example missing objects or a SHA256SUMS mismatch, that is NOT an automatic -r2, because a job-exit.json was written. It returns here first."
+
+  # ---------------------------------------------------------------- ruling 3
+  t1_reconciliation_ruling:
+    action: >-
+      Bring T1's own output in by a read-only reconciliation under its existing run id
+      RUN-ICPERF-8b0d47. There is no relaunch, no new run id for T1 and no -r2.
+    why_no_new_run_id: >-
+      RUN-ICPERF-8b0d47 is consumed: its run directory and receipt exist (DEC-20261106-3a91f7 run_id_ruling
+      basis). The data at the pod-uid prefix is that run's output. Registering it under a new run id
+      would redispatch a consumed registration and detach the data from its launch receipt. The
+      reconciliation launches nothing, so it is not a run. It is a transfer bound to RUN-ICPERF-8b0d47.
+    immutability: >-
+      Nothing is written into experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/. Its receipt
+      (infrastructure_error), raw-result.json and manifest.yaml stay as they are. The reconciled copy
+      lives in the new runbook session's reconciliation step output directory ({out} of that step).
+      That directory's reconcile-result.json names run_id RUN-ICPERF-8b0d47, trial_id T1, job_uid and
+      pod_uid. If tools/validate_ledger.py requires a run-level superseding manifest, the director adds it
+      through the run_supersession_registry.yaml pattern (manifest_v2.yaml), never by editing manifest.yaml.
+    how: >-
+      A bound read-only script (proposed implementation/reconcile_run.sh) that contains no
+      launch-remote, CodeBuild or S3 write call. It uses the same locator code as v3b (ruling 4). It
+      runs as a `command` step, purpose verification, in the new runbook session, before the S2 launch
+      step. The out-of-band files in scratchpad/dl-8b0d47-receipt/ are untrusted and are not inputs.
+      Everything is re-derived from S3 inside the step.
+    required_checks:
+      - "R-1 Start from the committed launcher receipt runs/RUN-ICPERF-8b0d47/job/launcher/result.json, and require its sha256 to equal the receipt binding 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7. Read job_uid and receipt_uri from it."
+      - "R-2 Download the launcher receipt prefix (receipt_uri) read-only. status.json .job.uid must equal job_uid, and .job.job_name must equal ic-c1-dg-s1-20261106. Exactly one pod must exist. Its uid is the located pod_uid, and its terminated exitCode is recorded."
+      - "R-3 List s3://$ISOLAB_BUCKET/runs/ic-c1-dg-s1-20261106/ (and the launcher's objects.json). The listing must hold only launcher/ and the single located pod-uid prefix. Any other pod prefix stops the step. The wrapper's own duplicate check proved this prefix held 0 objects before the 01:56:56Z submission."
+      - "R-4 `aws s3 cp --recursive` the pod-uid prefix read-only into {out}/artifacts/. Record the download exit code and the full object list with sizes."
+      - "R-5 job-exit.json .pod_uid must equal the located pod_uid, .job_name must equal the request's, and .exit_code must equal the status.json container exitCode and be in {0, 42, 43}."
+      - "R-6 Run the bound, unchanged check_job.py on {out}/artifacts with --request inputs/request-s1.json and --launcher-result runs/RUN-ICPERF-8b0d47/job/launcher/result.json. It must print CHECK_JOB_OK. Record its stdout verbatim."
+      - "R-7 Write {out}/reconcile-result.json (job_uid, pod_uid, results_uri, download_exit, the sha256 of SHA256SUMS, job_exit_code, check_job_exit, and the R-2/R-3/R-5 outcomes). The step's validity asserts these fields. Any failure stops the session and returns here."
+    reading_limits: >-
+      Protocol section 9 item 2: before S2, only the check_job.py set is read. The step hashes and
+      line-counts records.jsonl and does not parse it. audit.stderr, run.stderr, run-summary.json,
+      l2-gate.json contents and session.json are not opened before S2. Audit, replay and A/A checks run
+      only in the post-S2 analyze-c1.sh step.
+    large_files: >-
+      records.jsonl (91,783,489 bytes, as asserted) goes to the artifact store when it is archived
+      (AGENTS.md 'Data files live in the artifact store'; SA-4 pattern), bound by its SHA256SUMS digest.
+
+  # ---------------------------------------------------------------- ruling 4
+  fix_before_t2_ruling:
+    required: true
+    basis: >-
+      Under v3a, S2 would follow the same path: launcher exit 23, an empty results_uri, wrapper exit 5,
+      and a second stopped session. That is a known defect, and section 9 item 3 sends its fix through a
+      protocol_amendment. Running S2 knowingly on v3a is refused.
+    protocol_amendment: >-
+      C1-AMENDMENT-2, a versioned protocol_amendment record filed and frozen before any S2 byte exists
+      and before any S1 record beyond the check_job.py set is opened. It follows the C1-AMENDMENT-1
+      procedure: protocol.json extensions.c1_amendment_2, a new protocol_sha256,
+      `experiment_protocol.py validate` and `freeze --filed-before-affected-data`. Content: (i) the
+      section 18 route locates a job's results from result.json .results_uri, or, when that is empty,
+      from the launcher receipt's status.json pod uid bound to job_uid (ruling 3 R-2 to R-5); (ii) S1
+      is RUN-ICPERF-8b0d47's job (pod 5885ba61...), brought in by reconciliation and not rerun; (iii) a
+      disclosure of procedure deviation PD-1. It changes no N, seed, curve, target, arm, weight,
+      threshold, margin, accounting rule, decision mapping, request, instance, deadline, budget line or
+      cap. No success criterion changes.
+    wrapper_v3b:
+      change: >-
+        Section 3 only. Factor a locator (proposed implementation/locate_results.sh) that both v3b and
+        reconcile_run.sh use. Rule: a non-empty result.json .results_uri is used as is. Otherwise the
+        locator applies R-2, R-3 and R-5 against the receipt prefix. raw-result.json gains
+        results_locator (launcher_result | receipt_status_pod_uid), job_uid and pod_uid. The class
+        logic, the 42/43 accept branch, sections 1, 1b, 1c and 2 (duplicate checks), the manifests and
+        the exit codes stay byte-identical.
+      review_and_tests:
+        - "T-1 Offline fixtures, with no AWS call. Positive: T1's real receipt shape (state failed, exit_code 23, empty pod_uid) with a job-exit 42 fixture must yield job_completed. A succeeded-Job receipt with a non-empty results_uri must behave exactly as in v3a. Negatives, each of which must NOT yield job_completed: 0 pods, 2 pods, status job.uid != job_uid, an extra pod prefix under runs/<job>/, job-exit pod_uid or job_name mismatch, container exitCode != job-exit exit_code, a missing receipt."
+        - "T-2 bash -n; --dry-run; the archived diff -u from v3a to v3b with a hunk list showing that only section 3 changed (the F2/F7 precedent of DEC-20261106-ecf261)."
+        - "T-3 An independent red-team pass (role red-team, not the author) on the locator joint. Can it bind a foreign or stale prefix? Can it report job_completed without this pod's job-exit.json? Is reconcile_run.sh structurally unable to submit? The report is archived before approval."
+        - "T-4 The new runbook binds v3b, locate_results.sh, reconcile_run.sh and the unchanged check_job.py. `runbook.py lint` and `task_card.py lint` are OK. `experiment_preapproval.py --packet` reports approvable: true. After the approval archive, `newest_experiments.py --experiment EXP-ICPERF-127dbd --json` reports execution_state ready."
+    new_session: >-
+      A new runbook session id with a recompiled runbook, a new specification revision (spec_bindings
+      session_id and approved_by), a new trial plan, a new executor handoff and card, a new snapshot
+      handoff, and a Coordinator approval decision naming runbook_sha256. Steps: S01 probe; S02
+      reconcile T1 (ruling 3); S03 trial S2 on v3b, run only if S02 passed; S04 the frozen analyze-c1.sh
+      on the reconciled S1 session dir and the S2 session dir. The lane is the same, BATCH-0e0902, with
+      max_concurrent 1.
+    s2_run_id: >-
+      A fresh allocator-confirmed run id for S2. RUN-ICPERF-5ffa79 has no directory and no receipt, so
+      it is not consumed. But it is bound to plan b6626655..., to TASK-20261106-724d14 artifact_paths
+      and to TASK-20261106-d5ec1e read_scope, and in that plan it depends on a T1 that can never become
+      output_validated. Running it under another plan and task would mix two archives. It is retired as
+      'registered, never executed, no data'.
+    owner_gate: >-
+      The 2026-11-06T22:05Z '/ic-autolab go' still covers S2. Protocol section 11 defines the go-ahead
+      per launch (S1, S2 and any -r2 under USD 5.00), and v3b changes no request, instance, deadline,
+      budget line or cap. Before the relay, the owner must be TOLD four things: T1 ran once and stopped
+      on a wrapper defect, its spend is at most USD 0.93108, C1-AMENDMENT-2 is filed, and S2 will run
+      on v3b. This is notice, not a new consent. A withdrawal, limit or qualification by the owner
+      governs.
+    budget_gate: >-
+      Section 10. actual_spend(S1) is taken at HB USD 0.93108 until a billing or cost record exists,
+      never estimated. S2 line: 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00. A conditional S2-r2 line
+      would be 2.79324 <= 5.00. The reconciliation's S3 GETs are read-only, and no launch is counted
+      for them.
+
+  # ---------------------------------------------------------------- ruling 5
+  run_summary_ruling:
+    file: runs/ic-c1-dg-s1-20261106/5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7/run-summary.json (0 bytes, asserted)
+    ruling:
+      - "It is the job's own output and is transported as is. It is never regenerated, edited, padded or dropped (AGENTS.md rules 4 and 9). run-ecbench lines 116-119 redirect `ecbench run` stdout into it. Earlier artifact sets on this route list it at the empty-file digest e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, for example eks-karpenter/validation/pr2342-premerge-20261021/artifact-SHA256SUMS and validation/ic-size-sweep-20261026/n24/SHA256SUMS. So a 0-byte file is the expected shape, not a defect."
+      - "The SHA256SUMS check in check_job.py decides. Listed at e3b0c442... means pass. Unlisted, or listed with any other digest, means sums FAIL. Then the reconciliation stops and returns here, and the file is never deleted to make the check pass. This Coordinator did not read T1's SHA256SUMS."
+      - "It is not an input to analyze-c1.sh (no reference) or to any gate, and it carries no evidence. No anomaly record is needed unless SHA256SUMS disagrees."
+
+  # ---------------------------------------------------------------- ruling 6
+  archive_ruling:
+    snapshot: >-
+      TASK-20261106-d5ec1e runs next and ALONE, now that RBS-ICPERF-de8978 is terminal (its SP-2 holds).
+      SA-3 for RUN-ICPERF-8b0d47: job/artifacts/ is absent because nothing was downloaded. It is
+      recorded as 'absent: not downloaded (DEC-20261107-b74e2c)'. That is not a stop, and nothing is
+      created. The T1 job/artifacts/* paths and every RUN-ICPERF-5ffa79 path are recorded as missing.
+      The reconciled copy is NEVER staged into runs/RUN-ICPERF-8b0d47/.
+    expected_refusal: >-
+      Of TASK-20261106-724d14's 36 artifact paths, many will not exist. This is the partial-output shape
+      that tools/research_dispatch.py refused for TASK-20261106-dccfdc (DEC-20261106-ecf261 ruling 6).
+      Before any push, validate on a scratch commit that is never pushed. If REFUSED with the same
+      DispatchError, d5ec1e stays queued and impeded on the same condition as IMP-C1-dccfdc-partial-output.
+      The run-record commit 4166fb89d2 and the journal then reach main through this branch's PR as
+      interim custody, and the next approval archive receipt records the sha256 of every existing
+      RUN-ICPERF-8b0d47 file and every RBS-ICPERF-de8978 file, as ruling 6 did for e2a5c2. That outcome
+      comes back to the Coordinator for the impediment record. If ACCEPTED, the snapshot is committed as
+      declared.
+    order: >-
+      First the snapshot (or its scratch refusal). Then the session receipt SR-20261107-64b997 (named
+      path only). Then this decision plus the goal.yaml checkpoint as one ledger commit. Each is pushed
+      on claude/c1-launch-20261106 with a ready-for-review PR to main and auto-merge enabled.
+
+  # ---------------------------------------------------------------- deviations
+  procedure_deviations:
+    - id: PD-1
+      what: >-
+        Before S2, the top-level session made out-of-band read-only S3 reads of the T1 prefix, outside
+        the runbook. It read audit.stderr ('audit OK: 10800 records, 10800 verified, 9600 replays
+        reproduced, 0 problems') and the tail of run.stderr ('10800 records: {"verified": 10800}').
+        Section 9 item 2 (revision 6) says that audit and replay are not read before S2.
+      impact: >-
+        Integrity counts only. No arm statistic, ratio, parity field, compare output or records.jsonl
+        content was read. S2's request bytes are frozen, and its counts are deterministic given the
+        seeds. Section 9 item 3 runs S2 whatever S1's outcome. So no choice can be selected on what was
+        read. These reads are not evidence. The S04 analyze-c1.sh step re-derives the audit.
+      carried_to: >-
+        The C1-AMENDMENT-2 disclosure and the evidence review's review_plan blindness joint.
+      never_again: >-
+        No further pre-S2 reads outside the check_job.py set, by anyone.
+
+  status_transitions: []
+  unchanged_records:
+    - {record: RBS-ICPERF-de8978, state: "stopped (implementation_error), terminal; not reopenable, not reopened"}
+    - {record: RUN-ICPERF-8b0d47, state: "consumed; receipt infrastructure_error (as written); data to be reconciled under this id (ruling 3)"}
+    - {record: RUN-ICPERF-5ffa79, state: "registered, never executed, no data; retired; S2 gets a fresh run id"}
+    - {record: TASK-20261106-724d14, state: "claim epoch 2 released as failed (6f81fb38db); not re-dispatched"}
+    - {record: TASK-20261106-d5ec1e, state: "queued; runs alone next (ruling 6)"}
+    - {record: EXP-ICPERF-127dbd, state: "approved (DEC-20261106-ecf261); re-approval needed for the new session"}
+    - {record: H-ICPERF-4cb536, state: unchanged}
+    - {record: GOAL-ICPERF-e6b6a4, state: "active; next_action checkpointed"}
+  target_ids: [EXP-ICPERF-127dbd, H-ICPERF-4cb536, TASK-20261106-724d14, TASK-20261106-d5ec1e, BATCH-0e0902, GOAL-ICPERF-e6b6a4]
+  related_records:
+    prior_decisions: [DEC-20261106-c69de4, DEC-20261106-ecf261, DEC-20261106-3a91f7]
+    sessions: {terminal: RBS-ICPERF-de8978, receipt: SR-20261107-64b997}
+    runs: {consumed: [RUN-ICPERF-8b0d47], retired_unexecuted: [RUN-ICPERF-5ffa79]}
+    commits: {claim_epoch_2: 7da9049467, release_failed: 6f81fb38db, run_record: 4166fb89d2, base: 944a2ba5a9}
+    cloud: {job: ic-c1-dg-s1-20261106, job_uid: 8a20d036-efc2-45d2-ada6-6442b93c5a52, pod_uid: 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7, launcher_build: 47cf1e4f-10a7-4ee3-862d-9e9700e122e3}
+  rationale:
+    - "Validity before interpretation: 2 planned units, 0 valid. T1 is needs_reconciliation, and T2 never ran. The run set is incomplete, so it is not evidence (rule 5)."
+    - "The failure is ours and it is deterministic. The pinned launcher never names results for a failed Job, and the expected exit 42 always fails the Job. Calling it infrastructure would make it reopenable and would repeat it on S2."
+    - "The smallest lawful path to S1's data is a read-only transfer bound to the consumed run id. A relaunch or -r2 would spend money and create a second S1 from which one could choose."
+    - "Section 9 item 3 pre-registers that a launcher defect affecting both sessions is fixed by a protocol_amendment. Following it keeps the fix pre-data for S2."
+    - "Scope: constant-factor counted engineering at fp28 (DEC-20261106-c69de4). No asymptotic, wall-time or rho-beating claim is made."
+  evidence_refs:
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/raw-result.json (sha256 278a27d4..., per receipt)
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/execution-receipt.json
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json (sha256 7c3d9954..., per receipt)
+    - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/steps/S02-trials.attempt-2.supervisor.stdout
+    - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-de8978/journal.jsonl (tip e30e817b..., reported)
+    - experiments/EXP-ICPERF-127dbd/reports/run-20261107T0214Z/
+    - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh (v3a, 0fcdd67e..., lines 235-264)
+    - experiments/EXP-ICPERF-127dbd/implementation/check_job.py (ACCEPTED_EXIT)
+    - isogeny-labs/crypto research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md sections 9 (lines 399-402, 417, 419-421, 432), 10, 11, 18
+    - isogeny-labs/crypto taskq/deploy/eks-karpenter/remote/run-request lines 68-73 (pinned)
+    - isogeny-labs/crypto taskq/deploy/eks-karpenter/remote/diagnose-failed-run lines 33-39
+    - tools/runbook.py (REOPENABLE; _supervise exit-code map)
+  limitations:
+    - "No shell. The Coordinator did not run git, aws, verify, the allocator or the dispatcher. The S3 listing, job-exit.json, run-summary size and audit text are unverified assertions of the top-level session. status.json was read only as untrusted data. Ruling 3 re-derives all of them inside a bound step."
+    - "The pinned run-request was read from the scratchpad v6 checkout (CRYPTO_CHECKOUT). That it is byte-identical to the pinned digest rests on S01-probe and v3a step 1b passing in this session, as reported."
+    - "Why v6's counted exit-42 job yielded downloadable results under the same launcher was not established. v3b must not depend on it."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session, text: "Confirm the id with the allocator. Run snapshot TASK-20261106-d5ec1e alone under ruling 6 (scratch-validate first). Commit SR-20261107-64b997, then this decision and the goal.yaml checkpoint (named paths only). Push claude/c1-launch-20261106, open a ready-for-review PR to main naming DEC-20261107-b74e2c, and enable auto-merge. Tell the owner the four notice facts of ruling 4 owner_gate. Then the Coordinator writes the experiment-director handoff for C1-AMENDMENT-2, v3b, the locator, reconcile_run.sh and the new runbook session (rulings 3 and 4). No launch until a new approval decision."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "A stop classification and a revision ruling. No evidence exists, and no claim is decided."
