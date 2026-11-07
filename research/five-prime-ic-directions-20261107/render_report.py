@@ -14,6 +14,8 @@ for a,b in [((1.8,3.1),(1.8,2.6)),((7.5,3.1),(7.5,2.6)),((1.8,1.6),(3.7,.95)),((
  ax.annotate('',xy=b,xytext=a,arrowprops=dict(arrowstyle='->',color='#386381',lw=1.5))
 fig.text(.5,.015,'Construction dependencies; arrows do not assert measured performance or completed pipeline integration.',ha='center',fontsize=9)
 fig.tight_layout(rect=[0,.04,1,1]);fig.savefig(D/'pipeline.svg');plt.close(fig)
+svg = D/'pipeline.svg'
+svg.write_text('\n'.join(line.rstrip() for line in svg.read_text().splitlines())+'\n')
 source='''#set page(paper: "a4", margin: 18mm)
 #set text(size: 10pt)
 #set heading(numbering: "1.")
