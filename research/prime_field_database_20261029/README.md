@@ -227,3 +227,19 @@ checks. Global history contains 42 curves, 70 bases and 24 executions. Auxiliary
 pool information has not been inferred from these fully known bases; the next
 ranked norm32/unknown16 comparison must cancel auxiliary and target columns
 before scoring old-base information. [pcc:unverified]
+
+### v23: original norm bases with auxiliary cancellation
+
+[A19](../prime_field_a19_execution_20261107/RESULTS.md) appends four new curves,
+four original norm32 bases, twelve independently paid program contexts,128
+auxiliary point overlays and32 public targets. Auxiliary slots are outside
+points, not added learned factor-base dimensions. Complete auxiliary-and-target
+cancellation, own K attribution, source/full information, native target weights
+and both solver outputs are retained. [pcc:unverified]
+
+[v23 validation](../prime_field_a19_execution_20261107/database/v23-unknown-pool/validation.json)
+preserves all103 parent nonmetadata tables/rows and reconstructible exact
+metadata, with unchanged v22 parent bytes, foreign keys, integrity and gzip
+roundtrip. History contains46 curves,74 mathematical bases and25 executions.
+Source builder database23.py and artifact manifests bind the bytes; local
+checks/custody confer no independently signed scientific standing. [pcc:unverified]

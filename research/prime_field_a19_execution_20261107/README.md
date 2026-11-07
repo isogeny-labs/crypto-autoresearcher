@@ -1,7 +1,11 @@
 # Fixed norm32 with an unknown16 auxiliary pool
 
-Prospective implementation of the first-ranked [A18 follow-up](../prime_field_a18_execution_20261107/next-leads.md).
-No native scientific execution has run. This branch implements a finite comparison
+Completed implementation of the first-ranked [A18 follow-up](../prime_field_a18_execution_20261107/next-leads.md).
+One bounded native attempt completed; [results](RESULTS.md) record target totals
+11/32 norm,22/32 unknown16 and30/32 paidknown16, with cancelled original-base
+information and all nonrecoveries retained. [pcc:unverified]
+
+This branch implements a finite comparison
 of unchanged norm32, norm32 plus unknown16, and norm32 plus independently paid
 known16. The requested target API is separate from the auxiliary pool API.
 
@@ -36,13 +40,13 @@ Preparation and marked software controls:
 /workspace/factor-base-venv/bin/python research/prime_field_a19_execution_20261107/prepare19.py protocol --source-commit <published-source> --draft-preview --out <fresh-preview>
 ```
 
-Scientific execution additionally requires exact-source administrative assessment,
+The consumed scientific execution required exact-source administrative assessment,
 prospective frozen protocol publication, current actual canonical S3 checkpoint,
 explicit bounded root release and the normal admitted supervisor. The inherited
 original deadline is 2026-11-07T07:46:38.570520+00:00. One existing worker/thread,
 2 GiB, original cumulative ceiling, all prior measured native/postprocessing CPU
 plus elapsed window reservation, one attempt and no retry/new capacity remain.
-All A16/A17/A18 releases stay consumed. The design grants no execution allowance.
+All A16/A17/A18/A19 releases stay consumed. The design grants no further execution allowance.
 
 Read [design](design.md), [literature](literature.md) and [proof status](PROOF-STATUS.md).
 No novelty, weighted runtime or whole-attack advantage is claimed.

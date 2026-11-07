@@ -380,3 +380,16 @@ auxiliary+targetcolumns canceled beforeDelta and all collection/elimination/
 lifting/sign/storage costs retained. It is not an A18 retry or horizon extension.
 [PCC-20261107-f778b2](../pcc/claims/PCC-20261107-f778b2.json), producer-unverified.
 [pcc:unverified]
+
+2026-11-07 A19: the fixed old norm32/unknown16/paidknown16 comparison completed
+12cases24calls on4fresh18/19bitcurves. Targets11/22/30of32; complete corrected
+old-base Delta sums14/52/67 across separate kernels. Per-curve unknown Delta
+8/14/12/18 after cancelling auxiliary AND target U, with ownKDelta0. One arm
+adds18base directions yet identifies the same5targets as norm; another
+identifies1target at oldrank19/31. All nonrecoveries and separate cost vectors
+are retained in [A19](../research/prime_field_a19_execution_20261107/RESULTS.md).
+This measures a bounded auxiliary-set contribution, not complete weighted
+successful-work scaling or a new generic method. The next discriminator is
+a paid formal-pair16 dictionary under explicit distinct/non-old/one-definition
+rules, with no rejected-collision harvesting and a signed old-coefficient
+oracle; no execution allowance follows from ranking. [pcc:unverified]
