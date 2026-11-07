@@ -1,0 +1,67 @@
+# Mutation sensitivity of tests/test_locator.sh: each mutation breaks one safeguard in a scratch copy; the safeguard's negative case must then fail (0 failing checks would mean an untested safeguard).
+mutation no-pod-count (locate_results.sh): 4 failing checks
+    FAIL  N2-2pods-wrapper-v3b | exit status
+    FAIL  N2-2pods-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N2-2pods-reconcile | exit status
+    FAIL  N2-2pods-reconcile | reconcile_pass
+mutation no-container-count (locate_results.sh): 4 failing checks
+    FAIL  N17-two-container-statuses-wrapper-v3b | exit status
+    FAIL  N17-two-container-statuses-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N17-two-container-statuses-reconcile | exit status
+    FAIL  N17-two-container-statuses-reconcile | reconcile_pass
+mutation no-container-terminated (locate_results.sh): 0 failing checks
+mutation no-job-uid-check (locate_results.sh): 4 failing checks
+    FAIL  N3-status-job-uid-wrapper-v3b | exit status
+    FAIL  N3-status-job-uid-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N3-status-job-uid-reconcile | exit status
+    FAIL  N3-status-job-uid-reconcile | reconcile_pass
+mutation no-status-job-name-check (locate_results.sh): 4 failing checks
+    FAIL  N11-status-job-name-wrapper-v3b | exit status
+    FAIL  N11-status-job-name-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N11-status-job-name-reconcile | exit status
+    FAIL  N11-status-job-name-reconcile | reconcile_pass
+mutation no-status-state-check (locate_results.sh): 4 failing checks
+    FAIL  N12-status-job-not-failed-wrapper-v3b | exit status
+    FAIL  N12-status-job-not-failed-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N12-status-job-not-failed-reconcile | exit status
+    FAIL  N12-status-job-not-failed-reconcile | reconcile_pass
+mutation no-listing-check (locate_results.sh): 4 failing checks
+    FAIL  N4-extra-pod-prefix-wrapper-v3b | exit status
+    FAIL  N4-extra-pod-prefix-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N4-extra-pod-prefix-reconcile | exit status
+    FAIL  N4-extra-pod-prefix-reconcile | reconcile_pass
+mutation no-result-job-name-check (locate_results.sh): 2 failing checks
+    FAIL  N10-result-job-name-wrapper-v3b | exit status
+    FAIL  N10-result-job-name-wrapper-v3b | outcome_class (not job_completed)
+mutation no-verify-pod-uid (locate_results.sh): 4 failing checks
+    FAIL  N5-jobexit-pod-uid-wrapper-v3b | exit status
+    FAIL  N5-jobexit-pod-uid-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N5-jobexit-pod-uid-reconcile | exit status
+    FAIL  N5-jobexit-pod-uid-reconcile | reconcile_pass
+mutation no-verify-job-name (locate_results.sh): 3 failing checks
+    FAIL  N6-jobexit-job-name-wrapper-v3b | exit status
+    FAIL  N6-jobexit-job-name-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N6-jobexit-job-name-reconcile | exit status
+mutation no-verify-exit-equal (locate_results.sh): 4 failing checks
+    FAIL  N7-container-exit-ne-jobexit-wrapper-v3b | exit status
+    FAIL  N7-container-exit-ne-jobexit-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N7-container-exit-ne-jobexit-reconcile | exit status
+    FAIL  N7-container-exit-ne-jobexit-reconcile | reconcile_pass
+mutation no-veto (launch_eks.sh): 6 failing checks
+    FAIL  N5-jobexit-pod-uid-wrapper-v3b | exit status
+    FAIL  N5-jobexit-pod-uid-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N6-jobexit-job-name-wrapper-v3b | exit status
+    FAIL  N6-jobexit-job-name-wrapper-v3b | outcome_class (not job_completed)
+    FAIL  N7-container-exit-ne-jobexit-wrapper-v3b | exit status
+    FAIL  N7-container-exit-ne-jobexit-wrapper-v3b | outcome_class (not job_completed)
+mutation no-run-summary-rule (reconcile_run.sh): 3 failing checks
+    FAIL  N13-run-summary-unlisted-reconcile | exit status
+    FAIL  N14-run-summary-other-digest-reconcile | exit status
+    FAIL  N14-run-summary-other-digest-reconcile | reconcile_pass
+mutation no-sha-pin (reconcile_run.sh): 2 failing checks
+    FAIL  R1-wrong-receipt-sha256-reconcile | exit status
+    FAIL  R1-wrong-receipt-sha256-reconcile | reconcile_pass
+mutation no-empty-sums-rule (reconcile_run.sh): 0 failing checks
+mutation no-check-job (reconcile_run.sh): 2 failing checks
+    FAIL  N19-file-hash-mismatch-reconcile | a listed file differs from SHA256SUMS (check_job.py sums FAIL): exit status
+    FAIL  N19-file-hash-mismatch-reconcile | reconcile_pass
