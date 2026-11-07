@@ -1,19 +1,7 @@
-# Prospective proof status
+# Proof and execution status
 
-No A20 native experiment has executed. Marked p<=211 controls include actual
-tiny four-program geometry/algebra and expanded-old public/dense checks,
-definition-only zero information, legitimate positive K and preservation of
-six old occurrences. A scripted-hash fixture tests alias rejection/knowledge
-plumbing explicitly; a separate unmocked recipe control checks real SHA256.
-The archive fixture repeats one tiny mathematical fixture under four IDs with
-mocked generation/gate/S3 metadata. Those are not native replicates or custody.
+The A20 native panel completed16 cases and32 actual solver calls,16 information diagnostics and four applicable expanded formal-coordinate checks. Producer observations remain unverified/not-covered under [PCC-20261107-4b25d1](../../pcc/claims/PCC-20261107-4b25d1.json). Local tests, native/public/dense checks and administrative readiness do not establish trusted independent scientific/execution/replay proof. [pcc:unverified]
 
-Future native completeness requires accepted-definition/public-point identity,
-signed expansion, native/dense/kernel/target-unit/endpoint/cost checks and exact
-prospective source/publication/freeze/release/normal admission. These are
-requirements, not current verified scientific standing. [pcc:unverified]
+Seventeen marked software controls use p<=211 or explicit synthetic matrices. Four archive IDs repeat one tiny mathematical fixture; generation/gate/S3 metadata is explicitly mocked. They check software and archive plumbing, never independent native replication. Actual native S3 checkpoints and remote raw verification have separate receipts.
 
-Hashes, software tests, Git/S3 custody, administrative readiness and producer
-checks do not establish trusted independent scientific/execution/replay or
-performance proof. No self-signature, official status promotion, novelty,
-weighted runtime, regularity, new symmetry or exponent claim is supplied.
+No self-signature or official hypothesis/goal status transition is supplied. Original frozen records and all nonrecoveries are preserved.
