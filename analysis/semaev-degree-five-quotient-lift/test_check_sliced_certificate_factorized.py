@@ -91,6 +91,8 @@ class FactorizedCertificateTests(unittest.TestCase):
                        digest(root.parent / 'semaev-m2-last-fall-degree/verify/cert_check.py'),
                        '--expect-slice-source-sha256',
                        digest(root / 'check_trace_slice_certificate.py'),
+                       '--expect-closure-source-sha256',
+                       digest(root / 'check_quotient_closure_factorized.py'),
                        '--variable', '3', '--affine-combination-mask', '0x24',
                        '--expect-certificate-sha256', digest(output)]
             accepted = subprocess.run(command, capture_output=True, text=True)
@@ -100,6 +102,12 @@ class FactorizedCertificateTests(unittest.TestCase):
             rejected = subprocess.run(command, capture_output=True, text=True)
             self.assertNotEqual(rejected.returncode, 0)
             self.assertIn('certificate digest mismatch', rejected.stderr)
+            command[-1] = digest(output)
+            closure_hash_index = command.index('--expect-closure-source-sha256') + 1
+            command[closure_hash_index] = '0' * 64
+            rejected = subprocess.run(command, capture_output=True, text=True)
+            self.assertNotEqual(rejected.returncode, 0)
+            self.assertIn('closure source digest mismatch', rejected.stderr)
 
     def test_retained_degree_five_map_agrees_with_pinned_checker(self):
         root = Path(__file__).resolve().parent

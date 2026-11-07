@@ -213,7 +213,9 @@ one while keeping certificate rows in a read-only file mapping. It passes
 small retained-certificate and tamper tests, including agreement at degree
 five on a retained n=6 affine-sliced map. Its time and memory use on an
 actual frontier-size D5 map have not yet been measured, so it is a candidate
-verifier for a separately frozen D5 protocol, not an accepted D5 result.
+verifier for a separately frozen D5 protocol, not an accepted D5 result. The
+source-derived size screen for the n47 slice is
+`../semaev-degree-five-quotient-lift/N47-D5-CHECKER-ENVELOPE.md`.
 
 **Remark 1.5a** (why a scalar closure certificate cannot refute an
 unsatisfiable system). Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose

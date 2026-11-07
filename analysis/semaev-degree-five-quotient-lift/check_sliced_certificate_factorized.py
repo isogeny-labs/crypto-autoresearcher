@@ -122,6 +122,7 @@ def main():
     parser.add_argument('--expect-plan-sha256', required=True)
     parser.add_argument('--expect-descent-source-sha256', required=True)
     parser.add_argument('--expect-slice-source-sha256', required=True)
+    parser.add_argument('--expect-closure-source-sha256', required=True)
     parser.add_argument('--variable', type=int, required=True)
     parser.add_argument('--affine-combination-mask', type=lambda s: int(s, 0))
     parser.add_argument('--expect-certificate-sha256', required=True)
@@ -133,10 +134,13 @@ def main():
         descent_source = (source_dir.parent /
                           'semaev-m2-last-fall-degree/verify/cert_check.py')
         slice_source = source_dir / 'check_trace_slice_certificate.py'
+        closure_source = source_dir / 'check_quotient_closure_factorized.py'
         if sha256(descent_source) != args.expect_descent_source_sha256:
             raise ValueError('independent descent source digest mismatch')
         if sha256(slice_source) != args.expect_slice_source_sha256:
             raise ValueError('slice source digest mismatch')
+        if sha256(closure_source) != args.expect_closure_source_sha256:
+            raise ValueError('closure source digest mismatch')
         if sha256(args.certificate) != args.expect_certificate_sha256:
             raise ValueError('certificate digest mismatch')
         plan = json.loads(args.plan.read_text())
@@ -154,6 +158,7 @@ def main():
         result['plan_sha256'] = args.expect_plan_sha256
         result['descent_source_sha256'] = args.expect_descent_source_sha256
         result['slice_source_sha256'] = args.expect_slice_source_sha256
+        result['closure_source_sha256'] = args.expect_closure_source_sha256
         result['certificate_sha256'] = args.expect_certificate_sha256
     except (OSError, KeyError, TypeError, ValueError, IndexError) as error:
         parser.exit(1, 'INVALID: %s\n' % error)
