@@ -31,9 +31,15 @@ an allocation envelope for the pivot values, not a total RSS estimate.
 | 158,848 | 34,357,727,904 | 31.998 | 5.875 |
 
 The D5 codimension is **unknown**; it need not be bounded by the D4
-codimension because degree-five monomials enlarge the domain. A 16-GiB
-address-space limit cannot even map the file when `q > 79,360`, and at that
-threshold the mapping alone nearly fills the limit. Even at `q=61,196`,
+codimension because degree-five monomials enlarge the domain.
+For a genuinely unsatisfiable instance, Proposition 1.10 of the theorem
+dossier also rules out a degree-five nonmembership quotient with fewer
+than five coordinates. This is a mathematical floor, not an estimate of
+the actual n47 quotient size.
+
+A 16-GiB address-space limit cannot even map the file when `q > 79,360`,
+and at that threshold the mapping alone nearly fills the limit. Even at
+`q=61,196`,
 the remaining address space does not by itself prove that Python's other
 objects and pivot values fit. A future D5 checker protocol must read the
 actual header, compute the exact file size, reserve room for all allocations,

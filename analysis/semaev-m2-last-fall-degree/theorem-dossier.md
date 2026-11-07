@@ -367,6 +367,46 @@ $\phi(x_i u_m)$, and its `closure round` loop applies the $T_i$ on
 $A\cap Q$. The source and retained-result audit is
 `../semaev-degree-five-quotient-lift/N47-D4-EXACT-LIFT-AUDIT.md`.
 
+**Proposition 1.10** (dimension floor for an unsatisfiable dual
+certificate). **Proved.** Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
+the Boolean zero set of $F$ is empty. If an onto map
+$\pi:B_{\le d}\to Z$ satisfies Proposition 1.5(i-ii) and
+$\pi(1)\ne0$, then $\dim Z\ge d$. In particular, if
+$1\notin W_d(F)$, the exact quotient $B_{\le d}/W_d(F)$ has dimension
+at least $d$.
+
+*Proof.* Put $S_r=\pi(B_{\le r})$ for $0\le r\le d$, and let
+$q=\dim Z$. We have $\dim S_0=1$ and $S_d=Z$. If
+$S_{r+1}=S_r$ for some $r\le d-2$, every degree-$(r+2)$ monomial
+can be written $x_i m$ with $\deg m=r+1$. Choose
+$v\in B_{\le r}$ with $\pi(v)=\pi(m)$. Then
+$m+v\in\ker\pi\cap B_{\le d-1}$, so the closure condition gives
+$\pi(x_i m)=\pi(x_i v)\in S_{r+1}=S_r$. Repeating this
+argument shows $S_d=S_r=Z$. Thus the filtration grows strictly at
+every step before reaching $Z$, and $S_{q-1}=Z$ whenever $q\le d$.
+
+Suppose $q\le d-1$. Then $S_{d-2}=Z$. The closure condition makes
+$T_i(\pi(u))=\pi(x_i u)$ a well-defined linear map on
+$Z=S_{d-1}$. On the spanning set $S_{d-2}=Z$, the Boolean identities
+$x_i^2=x_i$ and $x_ix_j=x_jx_i$ give
+$T_i^2=T_i$ and $T_iT_j=T_jT_i$. These commuting idempotents have a
+joint eigenspace decomposition indexed by Boolean assignments $c$:
+the orthogonal projectors $\prod_i T_i^{c_i}(I+T_i)^{1-c_i}$ sum
+to the identity.
+The vector $\pi(1)$ generates $Z$ under the $T_i$, because every
+monomial image is obtained by successive actions. For each $f\in F$,
+$T_f\pi(1)=\pi(f)=0$; commutativity and cyclicity imply $T_f=0$
+on all of $Z$. Any nonzero joint eigenspace therefore has
+$f(c)=0$ for every $f\in F$, a Boolean solution, contradiction.
+Hence $q\ge d$. The quotient-map consequence follows from the
+converse direction of Proposition 1.5. $\square$
+
+The small exhaustive control in
+`../semaev-degree-five-quotient-lift/test_check_sliced_certificate_factorized.py`
+enumerates all 36 onto two-dimensional closed maps on two Boolean
+variables at degree three and finds a Boolean evaluation in each case.
+It checks the edge case $q<d$ independently of the proof.
+
 ---
 
 ## 2. Structure of the $m=2$ system

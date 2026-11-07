@@ -2,6 +2,7 @@
 """Independent small exact tests of the mapped-row quotient checker."""
 
 import hashlib
+import itertools
 import json
 from pathlib import Path
 import struct
@@ -11,11 +12,31 @@ import tempfile
 import unittest
 
 from check_sliced_certificate_factorized import MappedCertificate, check_map_factorized
+from check_quotient_closure_factorized import check_closure_factorized
 from check_trace_slice_certificate import check_map, read_certificate, trace_slice
 from slice_trace_certificate import project
 
 
 class FactorizedCertificateTests(unittest.TestCase):
+    def test_small_quotient_floor_has_boolean_evaluation(self):
+        # Proposition 1.10's q<d case in the smallest nontrivial ring.
+        masks = (0, 1, 2, 3)
+        evaluations = [tuple(int(m & point == m) for m in masks)
+                       for point in range(4)]
+        accepted = 0
+        for rows in itertools.product(range(4), repeat=4):
+            if rows[0] == 0 or len(set(rows) - {0}) < 2:
+                continue
+            try:
+                check_closure_factorized(2, 3, masks, rows)
+            except ValueError:
+                continue
+            functionals = [tuple(bin(a & row).count('1') % 2 for row in rows)
+                           for a in range(4)]
+            self.assertTrue(any(e in functionals for e in evaluations))
+            accepted += 1
+        self.assertEqual(accepted, 36)
+
     @staticmethod
     def write_map(path, rows):
         with path.open('wb') as stream:
