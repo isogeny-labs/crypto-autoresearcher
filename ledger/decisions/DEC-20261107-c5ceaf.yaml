@@ -1,0 +1,87 @@
+# DEC-20261107-c5ceaf: Coordinator ruling on runbook session RBS-XEDN-a7cd25 (EXP-XEDN-0c0182),
+# flagged by the audit-runs sweep (AUD-20261106T051427Z-6b4683, receipt SR-20261106-210194).
+# Ruling: quarantine. The journal forked at attempt 4, and merge 85a3fa6d98 kept one fork's bytes with no
+# custody record. No unit is valid, and check.py never ran. Approves no run. Changes no status.
+coordinator_decision:
+  id: DEC-20261107-c5ceaf
+  id_provenance: >-
+    Allocated by the top-level session with `python3 tools/allocate_id.py --next coordinator_decision
+    --date 20261107`, which also confirmed it with `--check`. The Coordinator subagent has no shell and
+    ran neither command.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent (policy coordinator-orchestration-code, effort high, claude-opus-5-5) in /coordinate
+    mode on branch claude/coordinate-audit-rulings-20261107, from origin/main 41bfaed260. It has no shell. It
+    wrote this file only. It read on-main records directly. It read the sweep audit and reader review from
+    the scratchpad extraction, which the top-level session states is byte-for-byte `git show
+    origin/claude/audit-runs-lgx7-20261106:<path>`. The Coordinator did not hash-verify that extraction. It
+    ran no trial, audit, replay or reader script.
+  goal_id: null
+  question_id: RQ-XEDN-3bfe2e
+  hypothesis_id: H-XEDN-5befd8
+  experiment_id: EXP-XEDN-0c0182
+  runbook_session: RBS-XEDN-a7cd25
+  decision: revise
+  ruling: quarantine
+  context: >-
+    The audit-runs sweep flagged RBS-XEDN-a7cd25. The deterministic verdict is flagged, with 0 replayed
+    units and miss probability 1.0 at every rate. The Opus-tier reader review is also flagged, with escalate
+    true. An earlier audit (AUD-20261027T214121Z-f680a6) covered the shared 18-entry prefix. Its
+    deterministic result was clean, but its reader flagged and escalated it over C4 automation missing from
+    the runbook and a conflict between the reopen rule and the frozen 'stop without retry' text. No
+    Coordinator ruling followed that escalation. RQ-XEDN-3bfe2e has no goal record (DEC-20261016-6a041f
+    capacity_check), so goal_id is null.
+  decision_scope: >-
+    A ruling on runbook session RBS-XEDN-a7cd25 as a source of results, covering both of its journal chains,
+    the run directories RUN-XEDN-132272 and RUN-XEDN-f4d646 as each chain wrote them, their receipts, step
+    logs, manifest_v2 files and the derived report reports/run-20261026T2106Z. It approves no run, no
+    successor, no reopen and no dispatch. It edits no existing record, no queue and no supersession
+    registry, and makes no status transition.
+  facts_reported:
+    - "Verified with git by the top-level session (not by the Coordinator): main's journal is blob 3085ea22 (24 entries, 4 attempts). Attempts 1 to 3 end in infrastructure_error, with reopens at seq 6, 12 and 18. Attempt 4 ends in implementation_error, then stopped. Merge 85a3fa6d98 ('Merge approved harness-plan records onto current main', 2026-10-31) has first parent d83777bd6c, which carries blob 3085ea22 (chain B), and second parent 8c265ebea2, which carries blob d45487a4 (chain A). The merge result kept chain B. Chain A's journal survives only in history, and no superseding or custody record exists. Both chains share owner runbook-ece267 and the same first entry time, and both wrote attempt 4 from the same 18-entry state."
+    - "Read on main by the Coordinator: the journal's reopen entries (lines 7, 13 and 19) carry reason 'previous stop was infrastructure_error'. Units at lines 21 and 22 read invalid_output / invalid_measurement. Line 23 reads 'supervisor exit 3 (trials remain or need reconciliation)', class implementation_error. These strings are producer prose and are unverified."
+    - "Reader report (AUD-20261106T051427Z-6b4683 audit-review.yaml, journal_chains_examination; unverified by the Coordinator): seq 0 to 17 are byte-identical in both chains. Both seq 18 entries have prev 89f65770. Chain A ran 2026-10-26T21:05:45 to 21:06:05Z (commit fc38e671, branch codex/run-harness-20261026, claim epoch 3, tip 45eff20e). Chain B ran 2026-10-30T16:04:02 to 16:06:24Z (commit 944e9fe0, claim epoch 4, which records that it supersedes epoch 3, released). tools/runbook.py @91a53e8dc2 reopens only from infrastructure_error or resource_exhaustion. Chain A's terminal class, implementation_error, is not reopenable, and chain B could reopen only because its worktree journal ended at seq 17."
+    - "Reader report (unverified): the merge kept chain B's bytes at 16 paths where chain A had committed write-once records. These are the journal, six attempt-4 step logs, both execution-receipt.json files, launch.json, environment.json and command.txt for both runs, and RUN-XEDN-132272/raw-result.json, which differs only in elapsed_seconds. No run_supersession_registry entry covers chain A's receipts."
+    - "Reader report (unverified): in both chains the supervisor refused both trials while completing the manifest envelope, before check.py ('run.result.certificate.kind must be one of discrete_log|decomposition|none'). check_returncode is null and the check logs are empty, so C5 never ran. Both execution-receipt.json files read returncode 0, status invalid_output, published false."
+    - "Reader findings (unverified): F-SPEC-1, no runbook counterpart for C1 to C4, the P3 Legendre table or the p=353 clause of P2. F-SPEC-2, the runbook's exit_code 3 rule is matched against the supervisor's exit code, not run.py's. F-SPEC-3, maximum_runs 2 and 'no third run without amendment' have no runbook counterpart, and run.py was executed twice per run id with experiments/EXP-XEDN-0c0182/amendments/ empty. F-SPEC-4, the specification does not define point-level sign eligibility or the P5 base (w0, z0)."
+    - "Reader recomputation (unverified; scripts under the AUD-20261106T051427Z-6b4683 directory on the audit branch, not read by the Coordinator): its first-principles values agree field by field with both units' raw-result.json, and it reports p=353 minus-eligible 42 under the quadratic-character reading and 12 under the t-representative reading. The reader labels these values recomputations on checker-unvalidated outputs and says they are not evidence about H-XEDN-5befd8."
+    - "Read on main by the Coordinator: TASK-20261016-3833ab (the executor task of DEC-20261016-6a041f) is in state queued in analysis/xedni-cheon/20261016-faithful-eligibility/dispatch_queue.json."
+  rulings:
+    - "R1 (ruling quarantine). RBS-XEDN-a7cd25 is quarantined as a whole. This covers chain B (blob 3085ea22 on main, tip 7852f392) and chain A (blob d45487a4 at fc38e671, reachable from main through 85a3fa6d98's second parent 8c265ebea2, tip 45eff20e). It covers every unit, receipt, step log, manifest_v2 and run directory either chain wrote, in both chains' bytes. Quarantined material is kept and is not evidence about H-XEDN-5befd8, IDEA-20261016-633cb1, H1 or any other record. No evidence review, validation gate, synthesis, roadmap ranking or knowledge entry may cite it as a measurement. The session id is never reopened, under any failure class."
+    - "R2 (custody of chain A). This decision is the custody record that merge 85a3fa6d98 lacked. Chain A's authoritative bytes are those at commit fc38e67127513cb15635b053d70fc4069b6a1cce, and for the journal path the blob is d45487a4bfb5c47301c3b282fe87df1fa77fe898. Neither chain is the authoritative attempt 4, and both are quarantined. This decision does not restore chain A's files to the tree. It does not supersede chain B's files, and it creates no run_supersession_registry entry."
+    - "R3 (not replay, not clear). Replay is impossible because no unit is valid and the audit had zero replay power. A clear ruling is excluded by the fork, by the overwrite at merge, and by C5 never having run."
+    - "R4 (escalation to an independent validator not ordered). The units fail validity mechanically: the supervisor refused them before check.py in both chains. No validator review can make unchecked outputs checker-valid. The reader's agreement with the raw fields is a screen on unvalidated outputs and carries no weight toward any status. The open items the reader escalated (custody of chain A, maximum_runs, rerun route) are Coordinator rulings and are made here."
+    - "R5 (maximum_runs / 'no third run'). run.py was executed for each run id in both chains without an amendment. Neither execution produced a checker-validated run. Any further execution of EXP-XEDN-0c0182 needs a versioned protocol_amendment, fresh run ids, a new session id and a new Coordinator approval, as the specification's own stopping rule requires. DEC-20261016-6a041f authorizes no further execution of RUN-XEDN-132272, RUN-XEDN-f4d646 or RBS-XEDN-a7cd25. TASK-20261016-3833ab must not be dispatched against this session. Changing its queue state is a separate native queue act, not done here."
+    - "R6 (failure classes). Attempts 1 to 3 (claim push refused, supervisor refusal of an uncommitted claim input, and cannot-lock-ref, per the earlier reader) are infrastructure signal. Attempt 4 in both chains is a driver/supervisor interface failure: run.py's manifest cannot be completed into a run envelope. That is implementation signal. Neither is evidence for or against H-XEDN-5befd8. The earlier finding XEDN-REOPEN-TEXT-CONFLICT is moot for this session under R1. A successor runbook must make its tell_on_failure text and the reopen rule agree."
+    - "R7 (post-observation disclosure). The reader has seen the census values under both eligibility readings, so F-SPEC-4 can no longer be resolved blind. Any amendment that fixes the meaning of point-level eligibility or the P5 base (w0, z0) must say it was written after those values were seen. The p=353 clause and P5 that it decides then count as post hoc for prediction-provenance purposes (docs/confound-control.md). No success criterion may change without that versioned amendment."
+  status_transitions: []
+  target_ids: [RBS-XEDN-a7cd25, EXP-XEDN-0c0182, H-XEDN-5befd8, RQ-XEDN-3bfe2e, RUN-XEDN-132272, RUN-XEDN-f4d646, TASK-20261016-3833ab]
+  related_records:
+    prior_decisions: [DEC-20261016-6a041f]
+    audits: [AUD-20261027T214121Z-f680a6, AUD-20261106T051427Z-6b4683]
+    session_receipt: SR-20261106-210194
+    merge_commit: 85a3fa6d98
+    sibling_ruling: DEC-20261107-efb0d0
+  rationale:
+    - "Two executions each appended their own attempt 4 to one write-once journal, and a merge silently kept one of them. Under docs/pcc.md, that history is treated as untrustworthy until custody is recorded. Quarantine plus the R2 custody pin keeps both chains without choosing between them."
+    - "No unit is valid, check.py never ran and replay power is zero. Replay, clear and escalation would all review results the session never produced."
+    - "The defects are in the protocol and the harness (driver manifest, missing control counterparts, misbound exit rule, maximum_runs). Only a versioned amendment and a new session can fix them. The census is cheap, so a successor costs little."
+  evidence_refs:
+    - "origin/claude/audit-runs-lgx7-20261106@82130dbe78:experiments/EXP-XEDN-0c0182/audits/AUD-20261106T051427Z-6b4683/audit.json (not on main)"
+    - "origin/claude/audit-runs-lgx7-20261106@dd66f5c7cc:experiments/EXP-XEDN-0c0182/audits/AUD-20261106T051427Z-6b4683/audit-review.yaml (not on main; attempt_4_validity, journal_chains_examination, specification_fidelity.findings, verdict_reason)"
+    - experiments/EXP-XEDN-0c0182/audits/AUD-20261027T214121Z-f680a6/audit-review.yaml (findings XEDN-C4-MISSING, XEDN-REOPEN-TEXT-CONFLICT)
+    - experiments/EXP-XEDN-0c0182/runbook-sessions/RBS-XEDN-a7cd25/journal.jsonl (seq 6, 12, 18 reopens; seq 20-23)
+    - ledger/decisions/DEC-20261016-6a041f.yaml
+    - analysis/xedni-cheon/20261016-faithful-eligibility/dispatch_queue.json (TASK-20261016-3833ab state)
+  limitations:
+    - "No shell. The commit parents, blob ids and path differences are as the top-level session and the sweep reader reported them. The Coordinator opened neither chain A's bytes nor the run directories."
+    - "The audit material is not on main. It was read from a scratchpad extraction whose byte identity the top-level session asserts and the Coordinator did not check. The reader's scripts and outputs were not extracted or read."
+    - "The reader review is a screen, not a validation_report. Its recomputed census values are not evidence. This ruling says nothing about H-XEDN-5befd8, the frozen p = 3 mod 4 primes, or any larger prime."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: "experiment-director (design-experiment, dispatched by the Coordinator)", text: "After this decision is committed and on main, design a versioned protocol_amendment for EXP-XEDN-0c0182. Fix run.py's manifest so the supervisor can complete the envelope (certificate.kind none) and check.py runs. Add runbook counterparts for C1 to C4, the P3 Legendre table, the p=353 clause and maximum_runs. Bind the exit-3 rule to run.py's receipt. Define point-level eligibility and the P5 base with the R7 post-observation disclosure. Add the plan's hypothesis_id. Use fresh run ids and a new session id. Zero runs. Return uncommitted previews for red-team review and a Coordinator approval decision before any /run."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "Session-custody ruling on a runbook session with zero valid units. An audit is not evidence, and no durable research claim results."
