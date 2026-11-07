@@ -954,3 +954,1906 @@ The hypothesis *"Low-degree polynomials correlate non-trivially with the discret
 *   **Metric:** Generate 10,000 candidate $R$. Measure: (a) % passing exact fibre test (dim 0), (b) % of those passing disjoint panel filter, (c) Nullspace survival rate over 20 random quadratic twists.
 *   **Go/No-Go:** Proceed to $m=4$ / larger $p$ only if (a) $> 10\%$, (b) $> 1\%$, (c) $> 90\%$.
 
+## Direction 34
+
+### Construction and repository audit
+- Freeze commits of `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher`. Locate IDEA-20260807-efc8de, IDEA-20260815-bc26a3, and LEAD-EXO-methodology-instruments; extract the **actual three signal generators**, prior results, rejected variants, screening thresholds, and configurations. Repository contents are not available here; do not assume the families’ definitions.
+- Inventory every ECDLP mechanism screen, including abandoned implementations. Map each to its input stage, claimed detectable signal, acceptance threshold, and smallest previously tested effect. Deduplicate equivalent tests while retaining configuration history.
+
+### Exact replay algorithm
+For each screen \(S\), family \(F\), curve size, and injection strength \(\alpha\):
+1. Generate a matched null instance and positive instance using identical curve parameters, factor-base size, budgets, and coupled randomness.
+2. Invoke the recovered generator \(F(\alpha)\) at its documented pipeline boundary. Record injected witnesses and labels separately; prohibit screen access to them.
+3. Run the **unchanged production pipeline**, including preprocessing, filtering, relation collection, rank tests, and stopping rules—not merely the final statistic.
+4. Independently verify that the signal survives to the intended detection boundary. For genuine elliptic-curve relations, check  
+   \[
+   aQ+bP+\sum_i c_iR_i=\mathcal O
+   \]
+   directly. Label artificial algebraic surrogates explicitly; never count them as genuine relations.
+5. Report detection probability, false-negative rate, false-positive rate, confidence intervals, and cost per detected positive.
+
+Use \(\alpha=0\), a strong positive, and a logarithmic dose ladder around each screen’s historical threshold. Define detection before replay; distinguish “statistically detected” from “produces useful relations.”
+
+### Cost model
+Measure field/group operations, relation yield, matrix dimensions/nonzeros/rank, peak memory, and wall time. Separate injection/oracle construction cost from screening cost. A detectable synthetic signal does **not** establish an ECDLP speedup; charge all non-oracular construction costs before comparing against Pollard rho’s \(O(\sqrt{\ell})\) group operations.
+
+### Falsification
+The methodological claim fails for a screen if validated strong positives remain undetected, or sensitivity appears only after threshold retuning that inflates null acceptance. Invalid witnesses, label leakage, or unmatched distributions invalidate the experiment rather than indicting the screen.
+
+### First experiment
+Replay the cheapest archived screen against all three recovered families: 100 strong-positive and 100 matched-null seeds per family. Publish immutable manifests, stagewise signal-retention checks, confusion matrices, and every failure trace before expanding the sweep.
+
+## Direction 35
+
+1. **Audit prior work before claiming novelty.** Inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for `LEAD-EXO-miller-pairing-cocycle`, Weil reciprocity, Miller functions, carry terms, and character extraction. Record commit/file references, tested identities, charged costs, and negative results. Repository contents were not provided here; this review remains a prerequisite.
+
+2. **Exact construction.** Choose \(E/\mathbb F_p\), \(P\) of prime order \(N\), with \(\gcd(N,p-1)=1\). Let
+   \[
+   \operatorname{div}(f_m)=m[P]-[mP]-(m-1)[O],
+   \qquad d=N^{-1}\pmod{p-1}.
+   \]
+   For an auxiliary \(T\), define
+   \[
+   F(Q)=\frac{f_N(Q+T)}{f_N(T)},\qquad U(Q)=F(Q)^d.
+   \]
+   Use only evaluations with disjoint supports and nonzero finite values; switch shifts for exceptions.
+
+   **K1:** Verify Miller’s cocycle identity
+   \[
+   f_{a+b}=f_af_b\,g_{aP,bP}
+   \]
+   up to normalization, where \(\operatorname{div}(g_{A,B})=[A]+[B]-[A+B]-[O]\). Independently verify Weil reciprocity on disjoint supports.
+
+   **K2:** Reciprocity predicts, for \(Q=kP\),
+   \[
+   U(Q)=r_kC^{kd},\quad
+   r_k=\frac{f_k(-T)}{f_k(P-T)},\quad C=F(P).
+   \]
+   Thus \(c=1\). Check this identity exhaustively on tiny curves.
+
+3. **Recovery algorithm and cost model.** Given only \(P,Q\), compute \(U(Q)\); attempt recovery using any proposed recurrence, elimination, or compression of \(r_k\). Treat computing \(r_k\) from the unknown \(k\) as the central obstacle—not free advice. Charge preprocessing, storage, group operations, field arithmetic, Miller evaluations, exceptional-point handling, and any multiplicative discrete logarithms. Report total and amortized costs separately. Measure \(\operatorname{ord}(C)\), since the multiplicative component may distinguish few indices.
+
+4. **Falsification.** Reject the identities if exact-arithmetic checks fail after normalization/support checks. Reject the cryptanalytic lead if recovery requires known-\(k\) Miller chains, exhaustive carry tables, or total work scaling at least as \(\sqrt N\). Identity verification alone is not an attack.
+
+5. **First experiment.** Implement Sage checks on several \(N\approx2^{10}\) prime-order curves; enumerate admissible \(k,T\), verify both identities, and test whether \(r_k\) has any independently computable low-complexity structure.
+
+## Direction 36
+
+**Hypothesis.** Coordinate-based models predict a balanced scalar-log bit on unseen points more efficiently than generic discrete-log recovery; planted leakage and random relabelling distinguish genuine signal from pipeline artifacts.
+
+**Phase 0 — prior-work audit.** Inspect `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` for `ec_hardness_predictor`, `LEAD-EXO-ml-learned-models`, coordinate classifiers, leakage controls, and failed runs. Record commit, construction, splits, seeds, compute, and outcome in a deduplication table. Repository contents are unavailable here; this audit is a prerequisite, not a completed review.
+
+**Phase 1 — exact construction and controls.**
+- Select curves \(E/\mathbb F_p\) with prime-order group \(q\), spanning \(q\approx2^{12},2^{16},2^{20},2^{24}\). Publish parameters.
+- Sample \(k\) uniformly from \(1,\ldots,q-1\); form \(P=[k]G=(X,Y)\). Label \(b(k)=\mathbf1[k>q/2]\), exactly balanced.
+- **Real task:** predict \(b\) from fixed-width coordinate bits, normalized coordinates, and separately preregistered algebraic features.
+- **Positive control:** append \(h(P)=k\in\mathbb F_q\), normalized by \(q\). This is a deliberately planted additive homomorphic coordinate; a threshold recovers the label. A prime-order group has no nontrivial homomorphism to a single binary bit.
+- **Null:** replace points with independent random injective identifiers of matching length; retain labels and sample counts. Expose no group-operation oracle.
+
+Split by unordered pairs \(\{P,-P\}\), preventing signed-pair overlap. Shuffle generation order; exclude scalar indices and timing metadata.
+
+**Phase 2 — learning and cost.** Compare logistic regression, boosted trees, and small MLPs at matched sample budgets. Track generation time, group operations, feature extraction, training FLOPs, memory, inference, and amortization across queries. Compare with exhaustive lookup and generic BSGS/Pollard-rho costs. Count label acquisition; free labelled logs are not a cryptanalytic speedup.
+
+**Phase 3 — falsification and index-calculus relevance.** Require positive-control success, null chance performance, corrected significance across configurations, and replication across generators, curves, and held-out sizes. Failure to scale beyond toy groups falsifies extrapolation. Bit prediction alone is not index calculus: require a subsequent demonstrated improvement in relation yield or total log-solving cost.
+
+**First experiment.** At \(q\approx2^{16}\), run all three arms with identical splits across ten seeds; investigate nothing further until controls pass.
+
+## Direction 37
+
+### Construction
+
+Implement coherent, fixed-schedule **batched divsteps** for inversion modulo an odd prime \(p\), with \(n=\lceil\log_2p\rceil\). Initialize \((\delta,f,g)=(1,p,x)\). Each divstep uses
+\[
+(\delta',f',g')=
+\begin{cases}
+(1-\delta,g,(g-f)/2),&\delta>0,\ g\text{ odd},\\
+(1+\delta,f,(g+(g\bmod2)f)/2),&\text{otherwise}.
+\end{cases}
+\]
+
+For blocks of \(b\) steps, reversibly derive the integer transition matrix \(M\) from \(\delta\) and the low \(b+1\) bits of \(f,g\); apply
+\[
+(f',g')^T=2^{-b}M(f,g)^T
+\]
+once to full-width registers. Track coefficients \(a,c\) satisfying \(f\equiv ax,\ g\equiv cx\pmod p\), applying \(2^{-b}M\bmod p\). At termination, return \(fa\bmod p\) when \(f=\pm1\). Define \(0^{-1}=0\), using a coherent zero flag.
+
+Use a published termination bound **verified for this exact recurrence**, never input-dependent stopping. Retain sufficient signed width; explicitly reverse block histories and ancillas. Integrate the inverter into the existing narrow-apply, in-place-multiplication, and quotient phases.
+
+### Prior-work gate
+
+Repository contents are unavailable here. Before implementation, inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for divstep, safegcd, jump-GCD, cswap, inversion, ipmul, and quotient experiments. Record commit, construction, tested domain, costs, and failure mode; distinguish genuinely new batching from previously rejected variants.
+
+### Cost model
+
+Compare identical clean reversible interfaces and arithmetic backends. Report logical qubits, Toffoli count/depth, Clifford operations, and qubit–Toffoli-depth product, both per inversion and end-to-end.
+
+Charge for matrix synthesis, **quantum-variable** coefficient multiplication, modular halving, sign handling, quotient bookkeeping, history storage, and uncomputation. Sweep \(b\in\{1,2,4,8,16,32\}\); do not treat matrix entries as classical constants.
+
+### Falsification
+
+Reject if any input violates correctness or ancilla cleanup; if low-bit prediction fails; or if no batching choice improves the baseline resource frontier after integration. Savings confined to a Fiat–Shamir-selected subset do not qualify.
+
+### First experiment
+
+For every odd prime \(p<256\), exhaustively test all \(x\in[0,p-1]\), including zero, against classical inversion. Check each block against scalar divsteps, then reverse the complete computation. Collect exact reversible-gate counts before attempting cryptographic-size synthesis.
+
+## Direction 38
+
+### Construction and replication gate
+- Obtain **EV-ECDLP-f6b3f5**, **EV-ECDLP-31e91c**, `fixture_gate_v2`, and **LEAD-RHO-advice-table-variants** from `isogeny-labs/crypto` and `crypto-autoresearcher`. Review linked experiments, failed controls, selection rules, and accounting conventions; produce an overlap matrix before coding. Repository contents are unavailable here, so prior findings remain unverified.
+- Freeze the original definitions of \(T\), \(T_{\rm sel}\), “support,” and “basin.” Independently implement the recorded walk and advice construction, without importing experimental code. Replicate \(T_{\rm sel}/T=0.65,0.75\); include full-support and uniformly subsampled, matched-size controls.
+- Use an elliptic curve over a prime field with a verified prime-order subgroup \(r\approx2^{30}\), not an asserted prime-order subgroup of order exactly \(2^{30}\). Sample \(Q=xP\) uniformly. Track walk states as \(R=aP+bQ\); recover \(x=(a-a')(b'-b)^{-1}\bmod r\) from usable collisions.
+- Freeze advice before held-out targets. Charge every target-dependent construction step online; exclude any use of known \(x\) outside verification.
+
+### Repair `fixture_gate_v2`
+For small exhaustive instances, compare instrumented basin assignments against an independently written reference enumerator. Assert deterministic transitions, correct entry/merge attribution, complete state accounting, correct cycle handling, and no instrumentation-induced transition changes. Include deliberately corrupted fixtures that **must fail**. Separate logical correctness from measured basin enrichment; repair acceptance must not depend on observing speedup.
+
+### Cost model
+Report offline group operations \(C_{\rm off}\), online operations \(C_{\rm on}\), advice bytes, lookups, wall time, and success probability. For \(K\) targets, compare
+\[
+C_{\rm amort}=C_{\rm off}/K+\mathbb E[C_{\rm on}]
+\]
+against identically optimized rho and matched-memory controls. Include failed walks, restarts, and table construction. Report break-even \(K\), not merely online acceleration.
+
+### Falsification
+Reject the claimed mechanism if basin enrichment disappears on held-out targets/seeds, matched-size random support performs equivalently, instrumentation changes trajectories, or gains vanish under complete accounting. A constant-factor improvement does not establish index-calculus scaling.
+
+### First experiment
+After exhaustive fixture validation, run 256 paired targets at \(r\approx2^{30}\), sharing targets across baseline, full support, both selected supports, and random-support controls. Pre-register stopping rules and paired confidence intervals for operation counts; use independent selection/evaluation seeds. Scale only after correctness and an accounting-complete benefit survive replication.
+
+## Direction 39
+
+### Construction
+- First audit `isogeny-labs/crypto`, its cryptanalysis work, and `crypto-autoresearcher` for best-of-candidate, indegree, batching, cycle-escape, and DP-replay experiments. Record commits, parameters, negative results, and reproducibility; repository access is required before claiming novelty.
+- Target P-256’s prime-order subgroup, with \(Q=dG\). Track \(P=aG+bQ\).
+- Define one globally shared, deterministic transition. Set \(j=h_0(P)\bmod m\), with precomputed \(R_j=u_jG+v_jQ\). Form \(C_\pm=P\pm R_j\), score both using an independently seeded point hash, and choose the lower score. Update coefficients with the corresponding sign; specify deterministic tie-breaking.
+- Implement in `gpu/nist`, preserving the shipping kernel’s coordinate representation where practical. For affine updates, both candidates share denominator \(x(R_j)-x(P)\): batch these denominators across \(W=16,24,32\) walks/thread using the kernel’s own inversion routine. Handle exceptional additions explicitly.
+- Detect short fruitless cycles locally and **restart** affected walks with fresh coefficient pairs. Never introduce history-dependent successor choices: these can destroy coalescence. Measure detector overhead and discarded work.
+
+### Cost model
+Measure
+\[
+T_{\rm useful}=T_{\rm step}\times E[\text{aggregate steps to recover }d].
+\]
+Include two candidate constructions, scoring, coefficient updates, batch inversion, register pressure/spills, occupancy, DP handling, and restart losses. A batch of \(W\) nonzero denominators costs approximately one inversion plus \(3(W-1)\) multiplications, excluding candidate arithmetic.
+
+Report paired candidate throughput **and accepted transitions/second**. Model collision work as \(c\sqrt n\), estimating \(c\) experimentally; increased indegree is not automatically beneficial. This is a rho improvement, not an index-calculus algorithm.
+
+### Falsification
+Reject if:
+- end-to-end collision time does not improve over shipping at matched resources;
+- gains disappear after DP traffic, cycle handling, or spills;
+- score correlations create excessive cycles, biased coverage, or DP starvation;
+- DP replay gains fail on fresh walks.
+
+Predeclare confidence intervals and a practically meaningful speedup threshold.
+
+### First experiment
+Run an instrumented A/B sweep on P-256 using identical starts, tables, DP predicate, and paired seeds: shipping versus best-of-\(\pm R\), across all three \(W\) values. Replay the existing DP corpus for regression and throughput—not proof of collision improvement. Estimate steps-to-collision separately on tractable prime-order test curves, then validate fresh P-256 transition/DP statistics.
+
+## Direction 40
+
+**Construction.** First audit `isogeny-labs/crypto` and `crypto-autoresearcher` for tag-tracing, paired affine addition, batch inversion, DP replay, and point-halving experiments. Record commit IDs, parameters, negative results, and reusable code; repository contents are unavailable here, so novelty remains unverified.
+
+Use a nonsingular short-Weierstrass curve over a 64-bit prime, with a verified large prime-order subgroup. Implement in `rho_walk_leads`:
+- Plain \(r=16\) adding walk: \(P\leftarrow P+R_{h(P)}\), with canonical-coordinate hashing and coefficient tracking \(P=aG+bQ\).
+- Speculative paired walk: predict the next bucket from a cheap tag; calculate two additions sharing one inversion, then validate the prediction. A mismatch commits only the first addition. Never substitute an unchecked tag transition for the canonical walk.
+
+For \(P=(x,y)\), first addend \((u,v)\), define
+\[
+d=u-x,\quad n=v-y,\quad A=n^2-(x+u)d^2,\quad
+B=n(xd^2-A)-yd^3.
+\]
+The intermediate point is \((A/d^2,B/d^3)\). For predicted second addend \((w,z)\), set \(e=wd^2-A,\ f=zd^3-B\). One inverse of \(de\) recovers both \(d^{-1}\) and the second slope \(f/(de)\). Handle zero denominators explicitly.
+
+**Cost model.** Batch inversions across \(W=8,16,\ldots,1024\) walks. Measure complete ns/committed logical step, including hashing, prediction, coefficient updates, batching, exceptional cases, and DP bookkeeping. If prediction accuracy is \(q\), each pair attempt commits \(1+q\) steps; compare its measured cost against \((1+q)\) plain steps. Report field-operation counts and cache effects.
+
+**Correctness and falsification.** Require bit-exact agreement with plain trajectories and replayable DP collisions. Reject if prediction accuracy fails the measured break-even threshold, end-to-end speedup disappears, or steps/collision increase beyond statistical uncertainty.
+
+**First experiment.** Freeze curve, seeds, and DP density; sweep batch widths with plain, measured predictor, random predictor, and oracle predictor. The oracle isolates the maximum possible pairing benefit before investing in tag design.
+
+**Binary follow-up.** Separately benchmark subgroup-correct point halving on sect113r1, charging quadratic solving, root selection, coefficient updates, and replay. Do not conflate cheaper rho steps with index-calculus progress.
+
+## Direction 41
+
+### Construction / approval gate
+Treat **H-AUXIN-6db354** as a conditional protocol approval, not a validated speedup. Repository contents were not supplied; reviewing the named artifacts and prior experiments is a prerequisite.
+
+1. Inspect `isogeny-labs/crypto` cryptanalysis records and `crypto-autoresearcher` for RUN-AUXIN-fd1edc, IDEA-20260930-68326c, and prior Cheon/auxiliary-input tests. Record commit hashes, configurations, negative results, and duplicate hypotheses.
+2. Normalize census and roster into typed records: curve, prime subgroup order \(\ell\), generator \(P\), target \(Q=[x]P\), auxiliary-point provenance, exponent, instance count, acquisition cost, and reuse permissions.
+3. For each branch \(r\mid(\ell-1)\), admit a target only when an authenticated auxiliary point \(A=[x^r]P\) is available for the **same scalar and generator**. Ordinary scalar multiples \([r]Q\) do not qualify. Quarantine unsupported branches.
+4. Join on these compatibility fields, deduplicate targets and auxiliary assets, and enforce roster multiplicity and reuse constraints. Never extrapolate a tested auxiliary source into unlimited supply.
+
+### Algorithm and cost model
+For each admitted target, run the corresponding Cheon auxiliary-input attack; use Pollard rho otherwise.
+
+Model branch cost as
+\[
+C_r=c_1\sqrt{\ell/r}+c_2\sqrt r+C_{\rm acquire}+C_{\rm verify},
+\]
+with constants, memory, and preprocessing measured separately. Compare against a measured rho baseline under identical hardware and parallelism.
+
+Define the supply-capped branch quantity
+\[
+E(r)=\sum_{t\in S_r}\max(0,C_{\rho,t}-C_{r,t}),
+\]
+where feasible allocations \(S_r\) obey demand, inventory, and reuse limits. Select allocations jointly across branches to prevent double-counting targets or shared assets. Report field-operation costs, wall time, memory, and uncertainty—not just asymptotic savings.
+
+### Falsification
+Reject deployment applicability if provenance cannot establish same-secret auxiliary input, compatible supply is zero, acquisition erases savings, or measured total cost fails to beat rho. This tests an auxiliary-input opportunity, **not** generic prime-field ECDLP index calculus.
+
+### First experiment
+Freeze both artifacts and produce the capped compatibility join. Then benchmark its highest-predicted-savings branch on reproducible toy prime-order groups, including incompatible-scalar and ordinary-multiple negative controls. Publish the complete allocation ledger and benchmark results before approving larger runs.
+
+## Direction 42
+
+**Construction and provenance.** First locate EXP-AUXIN-25a29a and LEAD-RHO-cheon-toy-reproduction in `isogeny-labs/crypto`, the cryptanalysis materials, and `crypto-autoresearcher`. Record commit hashes, parameters, previous outcomes, and unresolved failures; inspect implementations rather than relying on summaries. Repository contents are unavailable here, so prior results remain unverified.
+
+Use the experiment’s exact prime-field curve, point \(P\) of prime order \(r\), and \(d=65536\). Require \(2^{55}\le r<2^{56}\), \(d\mid r-1\), and certified point order. For uniformly sampled nonzero \(x\), provide \(Q=[x]P\) and auxiliary point \(A=[x^d\bmod r]P\). Explicitly distinguish this auxiliary-input attack from ordinary ECDLP.
+
+**Exact recovery algorithm.** Let \(g\) generate \(\mathbb F_r^\*\), \(m=(r-1)/d\), and \(h=g^d\bmod r\).
+
+1. Recover \(i\in[0,m)\) satisfying \(A=[h^i]P\) using multiplicative-action BSGS: store \([h^j]P\), \(0\le j<B=\lceil\sqrt m\rceil\); probe \([h^{-kB}]A\). A match yields \(i=j+kB\bmod m\).
+2. Set \(R=[g^i]P\), \(z=g^m\bmod r\). Apply the same procedure with order \(d\) to solve \(Q=[z^t]R\).
+3. Return \(x=g^{i+mt}\bmod r\); certify \([x]P=Q\) and \([x^d]P=A\).
+
+**Cost model and reporting.** Report both stages separately: table entries, probes, scalar multiplications, underlying additions/doublings, elapsed time, peak RSS, and certificate checks. Expected scale is \(O(\sqrt{r/d}+\sqrt d)\) **scalar multiplications**, not additions. Benchmark Pollard rho on the identical subgroup and hardware; report measured and projected rho costs separately. Include distinguished-point density, storage, communication, and walk overhead. Report gains \(T_\rho/T_{\rm aux}\) and fractions \(1-T_{\rm aux}/T_\rho\), likewise for memory. Separate auxiliary-input generation from attack cost.
+
+**Falsification.** Reject correctness on any failed certificate; reject practical advantage if full-cost runtime does not beat rho. Missing auxiliary-input justification invalidates any ordinary-ECDLP claim.
+
+**First experiment.** Freeze one manifest and seed; run both stages at 56 bits, certify recovery, then run matched rho before expanding to multiple seeds.
+
+## Direction 43
+
+### Construction
+Implement **TABLE_PHASE_POPC** as an exact alternative encoding of the existing phase/sigma lookup—not a new walk.
+
+For the control’s \(N\)-entry phase table \(T\), with \(q\)-bit outputs, construct:
+\[
+P_{k,j}=\sum_{r=0}^{31}\left((T[32j+r]\gg k)\&1\right)2^r,
+\]
+padding the final word with zeros. For bucket \(b\), recover:
+\[
+T[b]=\sum_{k=0}^{q-1}2^k\,\operatorname{popc}
+\left(P_{k,b\gg5}\ \&\ (1_u\ll(b\&31))\right).
+\]
+Preserve bucket extraction, point arithmetic, sigma interpretation, distinguished-point predicate, and reporting exactly. Use read-only cached planes initially; test shared-memory placement only as a subsequent variant.
+
+### Prior-work gate
+Repository contents are unavailable here, so prior review remains mandatory, not claimed completed. Before implementation, inspect `isogeny-labs/crypto` cryptanalysis materials and `crypto-autoresearcher` for `TABLE_PHASE_POPC`, phase encodings, bit planes, POPC, sigma-table benchmarks, and `LEAD-RHO-ecc2k130-gpu-fpga-throughput`. Record commit IDs, tested configurations, failures, and the precise conditions/units behind **15.88 B/s**. Skip already-falsified configurations unless identifying a changed assumption.
+
+This is a rho-throughput experiment, **not evidence of prime-field ECDLP index-calculus progress**.
+
+### Cost model
+Control: measure actual lookup loads, cache misses, dependency latency, registers, and occupancy.
+
+Candidate: \(q\) plane-word loads, \(q\) POPCs, masks/shifts, and output assembly per lookup; storage \(4q\lceil N/32\rceil\) bytes. Compare against the control’s *actual* representation, not an assumed unpacked table. Estimate total speedup from measured lookup fraction \(f\):
+\[
+S=[(1-f)+fS_{\rm lookup}^{-1}]^{-1}.
+\]
+Include initialization and reporting in end-to-end results.
+
+### Falsification
+Reject for any reconstructed-table mismatch, divergent walk state, or failed **300-report re-walk gate**. Reject the throughput hypothesis if paired full-walk runs show no statistically credible improvement over the contemporaneous control; historical 15.88 B/s alone is insufficient.
+
+### First experiment
+On one RTX PRO 6000, exhaustively validate table reconstruction, then alternate control/candidate runs using identical seeds and identical sorted DP corpora. Fix clocks, compiler, launch parameters, and reporting. Re-walk all 300 reports; collect wall-clock throughput, lookup-sector traffic, POPC utilization, registers, and occupancy across repeated paired runs.
+
+## Direction 44
+
+### Construction and prior-work gate
+- Review `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher` for `LEAD-RHO-ecc2k130-iteration-function`, table-v3, fused sigma-table, `SIGMA_SIGN=2`, and previous timing/correctness reports. Record commits, rejected variants, iteration definitions, and hardware. **Repository access is unavailable here; this review remains a prerequisite, not a completed claim.**
+- Freeze the existing group, partition function, table generation, distinguished-point predicate, and collision solver. Compare **A:** fused sigma-table control; **B:** table-v3 walk kernel. Test all three configurations: sigma, `SIGMA_SIGN=2`, and table-v3, explicitly recording which implementation/configuration combinations exist.
+- Maintain \(X=aP+bQ\). Each transition must update the point and coefficients consistently, including canonicalization/sign handling. Do not introduce a new walk while measuring the kernel change.
+
+### Measurement protocol
+For each valid comparison, run five paired blocks with order **AB, BA, AB, BA, AB**. Match starting states, tables, seeds, walk budgets, and distinguished-point settings within each pair. Pin workers; fix compiler flags, clocks, thread count, and memory placement; exclude warm-up and compilation.
+- Bracket the campaign with matched **A/A** measurements; reject timing results if control drift exceeds a predeclared 2%.
+- **Planted-log gate:** choose random \(x\), set \(Q=xP\), and require recovered logs to satisfy \(x'P=Q\).
+- **Re-walk gate:** replay collision-producing walks and independently check checkpoint states, coefficient invariants, and the final collision equation. Require bit-identical A/B traces only where transition semantics are intended to match.
+
+### Cost model
+Measure completed logical transitions per second \(R\), transitions per successful solve \(I\), and non-walk overhead \(H\):
+\[
+T_{\rm solve}=I/R+H.
+\]
+Report failed/degenerate collisions, retries, table construction, distinguished-point traffic, memory, and energy separately. Estimate paired solve-time ratios with uncertainty; five timing pairs alone do not establish unchanged collision efficiency. This tests rho engineering, not an index-calculus breakthrough.
+
+### Falsification
+Reject correctness on any invariant, replay, or planted-log failure. Reject the performance lead if throughput gains disappear after drift correction, are offset by increased \(I\) or overhead, or remain statistically unresolved.
+
+### First experiment
+Run the correctness gates on a tractable prime-field instance, then the five paired target-hardware kernel blocks. Advance only surviving variants to independently seeded end-to-end solves.
+
+## Direction 45
+
+**EXP-GRUMPY-eb8675 — certified exhaustive ladder**
+
+**Construction.** Work in the additive surrogate \(G=\mathbb Z/\ell\mathbb Z\), with \(P=1\), target \(Q=xP\), and \(\ell_k=\operatorname{nextprime}(2^k)\), \(k=10,\ldots,20\). Freeze each candidate’s deterministic, target-independent coefficient schedule \(S=((a_i,b_i))\), representing stored points \(a_iP+b_iQ\). Preserve insertion order, stopping rules, and duplicate-handling policy.
+
+For every pair \(i<j\) with \(b_i\ne b_j\), the collision covers exactly
+\[
+x=(a_i-a_j)(b_j-b_i)^{-1}\pmod\ell.
+\]
+Maintain an exact bitmap of covered targets and record coverage after every insertion. Equal coefficient pairs are uninformative; equal \(b\), unequal \(a\) pairs cover nothing.
+
+Run **negation as a separate arm**: additionally cover solutions of
+\[
+(a_i+a_j)+(b_i+b_j)x=0.
+\]
+Handle zero denominators explicitly; do not credit universal, uninformative identities as solved targets.
+
+**Controls and independent certification.** Include sequential baby-step/giant-step: babies \(iP\), \(0\le i<m\); giants \(Q-jmP\), \(0\le j<\lceil\ell/m\rceil\), with \(m=\lceil\sqrt\ell\rceil\). Independently simulate every \(x\in\mathbb Z/\ell\mathbb Z\), storing actual residues and detecting collisions. Verify that each collision yields a valid recovered \(x\), and compare first-solution insertion against the bitmap prediction. Adaptive schedules require per-target execution; a single fixed covered-set certificate cannot certify them.
+
+**Cost model.** Report group additions, initializations, stored points, lookups, canonicalizations, peak bytes, and empirical stopping-time distribution over all targets. Charge negation/canonicalization explicitly. Separate pair-enumeration and certification overhead from attack cost. Report mean, median, worst case, and fixed-budget success against identical-memory controls.
+
+**Falsification.** Any bitmap/simulator discrepancy invalidates certification. Reject a claimed improvement if it disappears after duplicate accounting, equal-memory comparison, or negation costs. Surrogate improvement alone does not establish an ECDLP index-calculus advance.
+
+**First experiment and evidence.** Start at \(\ell=\operatorname{nextprime}(2^{10})\): certify controls, then frozen candidate schedules, before extending the ladder. File source, schedule hashes, manifests, coverage bitmaps, mismatch logs, and cost tables under `EXP-GRUMPY-eb8675`, cross-referenced to `EXP-GRUMPY-cd7b82` Stage 1.
+
+Repository contents are unavailable here: first inventory prior experiments in both named repositories, linking duplicates and negative results before claiming novelty.
+
+## Direction 46
+
+**EXP-LHW-9adf78: measure the full price of residue filtering**
+
+1. **Recover definitions and prior results.** Search `isogeny-labs/crypto`, cryptanalysis materials, and `crypto-autoresearcher` for `EXP-LHW-9adf78`, `H-LHW-371a91`, `LEAD-RHO-lhw-modular-filter-price`, and `W(m,w)`. Record commit hashes, tested parameters, negative results, and unresolved assumptions. Repository contents are unavailable here; do not treat the construction below as their verified definition.
+
+2. **Exact construction.** Provisionally define
+   \[
+   W(m,w)=\{a\in[0,2^m):\operatorname{popcount}(a)=w\}.
+   \]
+   Replace this with the repository definition before execution. For \(M=2^k-1\) and \(2^k+1\), count
+   \[
+   B_r=\#\{a\in W(m,w):a\bmod M=r\}
+   \]
+   using dynamic programming over bit position, weight, and residue. Exploit \(2^k\equiv1\) or \(-1\pmod M\), but charge all preprocessing. Implement bucket sampling with counted DP transitions. Integrate it into the existing relation generator without assuming that the unknown discrete logarithm’s residue is available.
+
+3. **Cost model.** Record preprocessing, memory, bucket draws, rejected candidates, residue guesses, group operations, relation yield, and linear algebra. Report
+   \[
+   T_{\rm total}=T_{\rm setup}+T_{\rm guesses}+T_{\rm generation}
+   +T_{\rm relations}+T_{\rm LA}.
+   \]
+   Measure effective work per independent usable relation, not merely bucket shrinkage. Compare complete-solve cost against both the unfiltered pipeline and matched Pollard rho. Explicitly distinguish integer residues modulo \(M\) from scalar arithmetic modulo the subgroup order \(n\).
+
+4. **Proof obligation / falsification.** Derive the joint distribution of bucket choice, target compatibility, and relation success. Every conditioning step must specify an implementable sampler and its cost. Falsify the proposed gain if it requires an unavailable target-residue oracle, loses correctness through reduction modulo \(n\), or has residue-search/sampling costs that cancel its relation-yield improvement. Any asymptotic claim must survive charging preprocessing and unsuccessful guesses.
+
+5. **First experiment.** Exhaustively enumerate \(W(24,8)\) for \(M\in\{31,33,127,129\}\); verify DP counts and sampler frequencies. On a small prime-field curve with a known prime-order subgroup, exhaust all target scalars and compare oracle-assisted, honestly guessed, and unfiltered variants. Publish operation counts, failure rates, and reproducible seeds.
+
+## Direction 47
+
+### Construction
+- First retrieve **EXP-LHW-b49bc6 Stage 1**, **LEAD-RHO-lhw-polymem-collision-walks**, and related tests from `isogeny-labs/crypto` and `crypto-autoresearcher`. These repositories are unavailable here, so prior results and E1/E2 definitions remain unverified. Extract commit IDs, frozen \(w\)-values, jump construction, hash-to-jump mapping, seeds, scoring formulas, and claim TTL; stop if these cannot be recovered.
+- Reproduce the frozen ladder for \(m\in\{20,24\}\), without parameter retuning. Let \(D_{m,w}\) be its admissible jump-label domain and \(J:D_{m,w}\to E(\mathbb F_p)\) its original jump map.
+- Enumerate **hash-realisable** labels only. Establish reachability from the selector’s specification; finite sampling cannot certify it. Stream canonical point encodings into an exact multiplicity table:
+  \[
+  c(P)=|\{d\in D_{m,w}:J(d)=P\}|.
+  \]
+  Preserve selector probabilities separately if labels are nonuniform.
+- Checkpoint enumeration cursor, multiplicities, completed blocks, configuration digest, RNG state, and checksums. Restart by loading the latest committed checkpoint; never count a block twice.
+- Run the original collision walk with checkpointed position, coefficient state, step count, collision records, and RNG state. Renew claims before expiry and terminate cleanly before the TTL safety margin.
+
+### Cost model
+For each cell, report enumeration time, group additions, hashing, peak RAM, checkpoint bytes, I/O time, restart overhead, and walk steps. Compute support size, multiplicity histogram, and jump collision probability \(\sum_P q(P)^2\). Do not equate this one-step statistic with full-walk collision probability. Score **E1 versus E2 using their recovered definitions**, including preprocessing and checkpoint costs.
+
+### Falsification
+Reject the claimed advantage if exact counts contradict its assumed sumset size or multiplicities; E2 loses to E1 after equal-budget accounting; benefits disappear across held-out seeds; or resumable runs produce different counts or trajectories from uninterrupted runs.
+
+### First experiment
+Use the smallest frozen \(m=20\) cell. Run uninterrupted and deliberately interrupted/resumed copies with identical seeds and total work. Require identical final tables and trajectories. Then compare E1/E2 predictions with observed collision statistics across preregistered independent seeds before advancing to \(m=24\).
+
+## Direction 48
+
+1. **Recover and freeze the incumbents.** Repository contents are unavailable here; do not treat either method as previously verified. In `isogeny-labs/crypto` and `crypto-autoresearcher`, locate `IDEA-20260930-79abd9`, `LEAD-RHO-lhw-preprocessing-frontier`, and related negative results. Record commit hashes, both row definitions, the meaning of \(m\), advice-reuse assumptions, and whether “BL” means Bernstein–Lange. Reproduce their smallest published test before extending it. The construction below assumes \(m\) is the scalar bit length; revise if the records disagree.
+
+2. **Exact construction.** Use a prime-order subgroup \(\langle P\rangle\) of an elliptic curve over a prime field, with \(n>2^{40}\). Targets satisfy \(Q=xP\), \(0\le x<2^m\), for \(m\in\{32,40\}\).
+   - **Split-advice baseline:** partition bit positions into balanced sets \(I,J\). Precompute \(P_i=2^iP\). For each weight allocation \(a+b\le w\), store
+     \[
+     A_a=\{(\sum_{i\in S}P_i,S):S\subseteq I,\ |S|=a\}.
+     \]
+     Enumerate \(T\subseteq J\), \(|T|=b\), and look up \(Q-\sum_{j\in T}P_j\). Verify recovered scalars.
+   - **Weight-restricted BL incumbent:** reproduce the repository’s actual advice generation, walk, and lookup rules, restricting scalar support only where justified by that construction. Do not relabel ordinary meet-in-the-middle as BL.
+
+3. **Price both rows.** Count additions, doublings, negations, inversions, table probes, bytes, and peak RAM separately. Report group-operation totals using an explicit conversion convention, plus unconverted counts. Include advice construction, failures, verification, and expected online cost. Report amortized cost \(C_{\rm pre}/K+C_{\rm online}\) for \(K=1,10^2,10^4\). Compare with memory-matched low-weight search and unrestricted Pollard rho. For uniform scalars, charge the actual covered probability; planted success is not general ECDLP progress.
+
+4. **Falsification.** Reject any claimed advantage erased by preprocessing, memory matching, missed weight allocations, or honest coverage accounting. Reject independence or walk-mixing assumptions contradicted by measurements.
+
+5. **First experiment.** At both \(m\), plant 100 independently sampled exact-weight-six logs; freeze advice before sampling targets. Sweep feasible advice budgets, measure both rows, then repeat with uniform scalars as a coverage control. Publish seeds, operation counters, and break-even \(K\).
+
+## Direction 49
+
+### Construction and prior-work audit
+- Check out and record commit hashes for `isogeny-labs/crypto`, its cryptanalysis work, and `crypto-autoresearcher`. Search for `H-ECDLP-ff38dc`, `LEAD-RHO-matched-rho-calibration`, `ecbench`, negation walks, replay certificates, and “section 5a.” Build a ledger of tested configurations, failures, counters, and unresolved discrepancies before introducing changes. Repository contents are not available here; this review remains a required execution step.
+- Freeze three implementations: plain Pollard ρ; negation-quotient ρ with canonical representatives and explicit fruitless-cycle handling; negation BSGS.
+- For BSGS, store canonical representatives of \(jP\), \(0\le j\le m\). Probe \(Q-(2i+1)mP\); a signed match yields \(k=(2i+1)m\pm j\bmod r\). Choose \(m\approx\sqrt r/2\), verify every recovered logarithm, and handle endpoint coverage explicitly.
+
+### Experimental design and certificates
+For every integer subgroup size \(\lceil\log_2r\rceil=32,\ldots,48\), run each algorithm on **24 independently seeded instances**, balanced across at least four prime-field curves. Share curve/target instances across algorithms; distinguish field size from subgroup order.
+
+Archive curve parameters, subgroup-order evidence, generators, seed derivation, targets, walk rules, restart policy, counters, environment, and recovered-log verification. Supply deterministic replay and an independently implemented verifier. Apply section 5a’s actual band only after retrieving its definition.
+
+### Cost model and fit
+Count additions, doublings, field operations, canonicalizations, hash probes, memory, restarts, and elapsed time separately; publish raw and weighted totals.
+
+Set \(N=\sqrt r\). Define
+\[
+R_A(N)=\frac{\text{measured mean work for }A}
+{\text{matched finite-size reference expectation for }A}.
+\]
+Freeze reference expectations before medium-size measurements, including stopping rules and restart overhead. Fit \(R_A(N)=1+c_A/N^{\beta_A}\), with curve-clustered uncertainty and held-out sizes. Compare against a free-asymptote model; do not force convergence to one.
+
+### Falsification
+Reject the proposed sealing claim if held-out intervals breach section 5a’s band, replay fails, negation-cycle overhead remains unexplained, curve effects dominate uncertainty, or the free-asymptote model materially outperforms the prescribed fit. Add runs when 24 cannot resolve the band.
+
+### First experiment
+At 32 bits, execute 24 matched instances per algorithm, replay all certificates, and independently validate counters and BSGS boundary coverage before launching larger sizes.
+
+## Direction 50
+
+### Construction
+
+- Reproduce `EXP-CERTBIN-b4d29c` at \(n=131\). First inspect both repositories for its implementation, parameters, prior results, Design C, Bailey sigma, and `IDEA-20261015-2d8e5a`; record commit hashes and distinguish tested results from proposals. These artifacts are not available in this conversation.
+- Treat this as a **binary-field Koblitz rho cost experiment**, not prime-field index calculus. Any transfer to the latter requires separate evidence.
+- On the recorded prime-order subgroup, implement matched walkers using identical arithmetic, partitions, seeds, and distinguished-point (DP) density:
+  1. **C:** canonicalise under \(P\mapsto\pm\tau^jP\) after every step.
+  2. **Sigma:** reproduce Bailey’s actual transition rule, normalising only at DPs.
+  3. **Polynomial-key variant:** reproduce the cited rotation-invariant key exactly. If unspecified, test the explicitly labelled fallback
+     \[
+     K(P)=\prod_{j=0}^{130}(T-x(P)^{2^j})\in\mathbf F_2[T].
+     \]
+     This identifies Frobenius orbits of \(x\), hence point orbits modulo sign. Handle infinity separately.
+- Maintain \(P=aG+bQ\). Applying \(\pm\tau^j\) must multiply both coefficients by \(\pm\lambda^j\bmod r\). Verify reconstructed states and recovered logarithms.
+- Test whether each transition actually respects the proposed orbit equivalence; an invariant endpoint key alone does **not** establish quotient-walk speedup.
+
+### Cost model
+
+Use Callgrind `Ir` as the primary deterministic proxy, reporting
+\[
+C_{\rm step}=\frac{Ir_{\rm walk}}{N_{\rm steps}\,Ir_{\rm field\ multiply}}.
+\]
+Measure squaring, multiplication, inversion, canonicalisation, key construction, coefficient updates, DP tests, and table operations separately. Also report wall time, memory, effective orbit size, fruitless cycles, and total cost per successful solve. DP-only normalisation contributes approximately \(p_{\rm DP}C_{\rm norm}\), but collision efficiency must be measured independently.
+
+### Falsification
+
+Reject an advantage if canonicalisation overhead exceeds measured collision savings; quotient transitions fail; short cycles erase gains; keys merge inequivalent orbits; or coefficient bookkeeping produces invalid collisions.
+
+### First experiment
+
+Run a fixed-seed, million-step microbenchmark at \(n=131\), with representative DP densities and instrumentation checks disabled during timing. Then validate collision behaviour on tractable smaller instances before extrapolating full-solve costs.
+
+## Direction 51
+
+**Target and prior-work check.** Treat H-EWALK-29cb90 as unverified. The repositories are not available here, so no prior-test review can be claimed. Before implementation, search both repos for `H-EWALK-29cb90`, `LEAD-RHO-non-automorphism-equivalence`, canonicalisation, quotient walks, invariant encodings, and preprocessing; record tested constructions, cost conventions, and counterexamples.
+
+**Exact construction.** First specify the action of \(H\); cardinality alone does not define canonicalisation. For the concrete translation action, choose ordinary \(E/\mathbb F_p\), \(N=\#E(\mathbb F_p)\), and rational \(H\le E(\mathbb F_p)\) with \(h>6\), \(h\mid N\), and \(h\approx N^{1/3}\). Construct
+\[
+C(P)=\min_{\rm lex}\{\operatorname{enc}(P+T):T\in H\}.
+\]
+Exhaustively verify \(C(P)=C(Q)\iff P-Q\in H\).
+
+Test three implementations: orbit enumeration; a precomputed dictionary \(P\mapsto C(P)\); and the quotient-isogeny encoding \(\operatorname{enc}(\phi(P))\), where \(\ker\phi=H\). The last is a complete orbit invariant, not necessarily a representative on \(E\); determine whether the proposed walk accepts it and supports transitions without costly lifting. Ordinary-curve automorphism bounds do not themselves constrain translation actions.
+
+**Cost model.** Report group additions/doublings, field operations, bit operations, memory, preprocessing, and amortised online cost separately. Fix \(T\), the number of walk steps, and charge
+\[
+C_{\rm total}=C_{\rm setup}+T C_{\rm step}.
+\]
+State allowed advice, lookup costs, and encoding access. A universal group-operation-only lower bound is false with unrestricted preprocessing: the dictionary uses zero online group operations.
+
+**Falsification criteria.** Distinguish refuting the literal claim from improving cryptanalysis. An asymptotic canonicaliser family with \(o(\log h)\) online group operations refutes the literal bound. A useful attack additionally needs charged speedup exceeding one against an equally optimised rho baseline, including setup, transition generation, collision handling, and logarithm recovery. Small-instance timings cannot prove an asymptotic bound.
+
+**First experiment.** Exhaustively enumerate several small ordinary prime-field curves with eligible \(h\); build the dictionary and quotient invariant, verify every fibre, and run identical collision walks under both encodings. Publish operation counts and amortisation break-even points before pursuing a lower-bound proof.
+
+## Direction 52
+
+### Construction
+- **Repository gate:** inspect `isogeny-labs/crypto`, `cryptanalysis`, and `crypto-autoresearcher` for negation/Frobenius quotient walks, fruitless-cycle mitigation, GPU benchmarks, and production distinguished-point (DP) settings. Record commit IDs, tested hypotheses, and outcomes before proposing variants. Repository contents were not supplied here; prior-test coverage remains unverified.
+- Reproduce ecc-challenges PR #56 against its parent commit using the **actual campaign curve, subgroup, jump table, and production DP density** \(\theta\).
+- Maintain \(X=aP+bQ\). Canonicalize the negation class using a deterministic encoding:
+  \[
+  C(X)=\min(\operatorname{enc}(X),\operatorname{enc}(-X)).
+  \]
+  Whenever canonicalization negates \(X\), replace \((a,b)\) by \((-a,-b)\bmod n\). Derive jump selection and DP predicates from the canonical encoding.
+- Instrument repeated states, short cycles, escape attempts, endpoint duplicates, coefficient consistency, and usable collisions. Test the existing escape rule against deterministic, domain-separated alternate jumps that preserve coefficient tracking.
+
+### Cost model
+For subgroup order \(n\), an ideal negation quotient reduces expected collision work from approximately \(\sqrt{\pi n/2}\) to \(\sqrt{\pi n/4}\).
+
+Measure
+\[
+S\approx\sqrt2\,
+\frac{c_{\rm base}}{c_{\rm quotient}}\,
+\frac{1-w_{\rm quotient}}{1-w_{\rm base}},
+\]
+where \(c\) includes canonicalization, GPU divergence, DP handling, and communication; \(w\) is the measured fraction of updates wasted on traps or duplicates. Validate this approximation with end-to-end collision experiments. Expected DP spacing is \(1/\theta\); short high-density tests cannot substitute for production-density runs.
+
+### Falsification
+Reject deployment if coefficient invariants fail, traps produce unresolved tails, DP bias materially reduces usable collision yield, or measured wall-clock improvement is absent with confidence intervals. Specifically, overhead and wasted work exceeding the ideal \(\sqrt2\) advantage falsify the practical benefit.
+
+### First experiment
+Run matched baseline/quotient CUDA batches on the campaign curve, identical hardware and production \(\theta\), until each arm produces at least \(10^4\) DP arrivals. Report throughput, trap incidence, walk-length tails, and DP-server load; independently verify sampled trajectories on CPU.
+
+### Frobenius extension
+Separately prototype binary-field Koblitz curves: quotient by \(\{\pm\tau^i\}_{i=0}^{m-1}\), tracking coefficients through the subgroup eigenvalue of \(\tau\). Test canonicalization cost against the additional ideal \(\sqrt m\) gain. **This is not a prime-field improvement:** prime-field Frobenius acts trivially on rational points.
+
+## Direction 53
+
+### Construction and prior-work gate
+- Audit `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher` for `gpu-match`, `ecbench.gae`, and `LEAD-RHO-prime-gpu-rho`: record commits, tested hypotheses, kernels, parameters, negative results, and unresolved telemetry issues. Repository contents are unavailable here; do not claim novelty until this audit is complete.
+- Freeze the existing `gpu-match` semantics. CPU and GPU receive identical seeded records, table occupancy, duplicate frequency, and hit/miss distributions; compare canonicalized outputs bit-for-bit.
+- Connect matching to distinguished-point Pollard rho: records contain endpoint, walk identifier, and coefficients \(a,b\), with endpoint \(aG+bQ\). Equal endpoints yield
+  \[
+  k=(a_1-a_2)(b_2-b_1)^{-1}\pmod n,
+  \]
+  when the denominator is nonzero; verify \(kG=Q\). This advances the rho implementation, not index calculus.
+
+### Qualified measurement
+On one CUDA host, pin CPU threads and NUMA placement; record GPU model, driver, clocks, power, temperatures, throttling, and ECC status. Preallocate buffers and separate cold-start from steady-state measurements.
+
+Run randomized, interleaved CPU/GPU pairs plus CPU/CPU and GPU/GPU A/A controls, at least 30 repeats per workload. Measure wall-clock latency, kernel time, transfers, actual DRAM bytes, cache behavior, occupancy, and matching correctness. Collect intrusive profiler traces separately and quantify profiler overhead.
+
+### Cost model
+For \(R\) distinguished-point records:
+\[
+T_{\rm total}=T_{\rm walk}+T_{\rm pack}+T_{\rm transfer}
++T_{\rm match}+T_{\rm verify}.
+\]
+Estimate \(T_{\rm match}\ge\max(B_{\rm actual}/BW_{\rm sustained},I/P_{\rm sustained})\); include allocation, synchronization, and amortization explicitly. With distinguished-point probability \(\theta\), expect \(R\approx\theta W\), where rho requires \(W=O(\sqrt n)\) group operations. Report end-to-end speedup, not kernel-only acceleration.
+
+### Falsification
+Reject the acceleration claim if correctness differs, A/A variation explains the gain, transfers eliminate it, or measured traffic contradicts the proposed bottleneck. Reject cryptanalytic extrapolation if matching improvements do not materially reduce total rho cost.
+
+### First experiment
+Replay identical 1-million-record workloads across cache-resident and DRAM-resident table sizes. Require reproducible end-to-end improvement before integration into `ecbench.gae`. Then run matched toy-curve solves and increasing-budget P-256 walks with planted endpoint collisions; label these separately—short P-256 walks are not reduced-order DLP solves.
+
+## Direction 54
+
+### Construction
+1. **Audit prerequisite:** inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for FAM-1, digit-presented \(S_3\), and both cited leads. Record commit hashes, constructions, tested parameters, negative results, and timings. Repository contents are unavailable here; prior coverage remains unverified.
+2. Reuse the audited FAM-1 factor base \(\mathcal F\) and its exact membership polynomial \(M_{\mathcal F}(x)\). Do not modify the family to improve results.
+3. For random targets \(R=[a]P+[b]Q\), solve
+   \[
+   S_3(x_1,x_2,x(R))=0,\qquad
+   x_i=\sum_{j=0}^{k-1}B^jd_{ij}\pmod p,
+   \]
+   with \(d_{ij}\in D_{ij}\), encoded by \(\prod_{u\in D_{ij}}(d_{ij}-u)=0\). Use the previously tested digit solver and box-selection rule; rotate boxes independently of FAM-1 membership. Deduplicate representations and outputs.
+4. **Only after solving**, filter candidates by \(M_{\mathcal F}(x_1)=M_{\mathcal F}(x_2)=0\). Lift coordinates and verify signs satisfying \(P_1+P_2=R\). Reject non-liftable, exceptional, and duplicate relations. This is seed generation followed by filtering—not a joint FAM-constrained solver.
+
+### Cost model
+Compare against audited pure FAM-1 relation generation using identical curves, factor bases, targets, hardware, and verification.
+
+Measure
+\[
+C_{\rm rel}=
+\frac{T_{\rm setup}/N+T_{\rm digit}+T_{\rm filter}+T_{\rm lift}}
+{\text{new verified relations per target}}.
+\]
+Report peak memory, failures, digit-box coverage, solver degree, and unique relation yield. Include all unsuccessful solves.
+
+For context, if candidates were independent uniform field elements, double membership would occur with probability approximately \((|\mathcal F|/p)^2\). Measure actual enrichment; do not assume independence. Estimate downstream matrix cost and rank growth to distinguish useful relations from redundant output.
+
+### Falsification
+Reject the direction if filtering enrichment cannot repay digit-solving overhead; if improvements disappear after deduplication or setup accounting; or if cost-per-independent-relation scaling is worse than pure FAM-1. Toy-size wins alone do not establish asymptotic improvement.
+
+### First experiment
+Run a bounded 24-bit pilot: three curve instances, 100 shared random targets each, fixed resource limits, pure FAM-1 versus digit-seeded filtering, plus uniform-coordinate controls. Freeze parameters before extending to 28/32 bits. Report paired timings and bootstrap confidence intervals; treat zero-yield runs as failures, not missing data.
+
+## Direction 55
+
+### Construction
+1. Audit `EXP-ECTD-0cf008`, FAM-1 implementations, and both named leads in `isogeny-labs/crypto` and `crypto-autoresearcher`. Extract curve parameters, crater/floor paths, relation definitions, timings, and previously rejected variants. Repository contents are unavailable here; novelty and prior results remain unverified.
+2. Fix \(E/\mathbb F_p\), prime-order subgroup \(G=\langle P\rangle\) of order \(r\), target \(Q\), and the existing FAM-1 base \(B\). From the recorded volcano, select candidate curves \(E_i\) reached by explicit isogenies \(\phi_i\) of degree coprime to \(r\). Transport \(P,Q,B\), retaining every base element’s original subgroup label.
+3. Run two distinct arms:
+   - **Literal transport:** use \(B_i=\phi_i(B)\) and transport the relation predicate exactly.
+   - **Geometry-adapted transport:** retain \(B_i\), but apply the target curve’s native FAM-1 geometric relation-search procedure. Count only identities verified in \(G_i\); deduplicate coefficient rows and measure rank.
+
+**Critical invariant:** literal transport preserves every subgroup relation because \(\phi_i|_G\) is an isomorphism. Any gain must come from cheaper discovery, representation, or verification—not more underlying relations. If rebuilding the base is necessary, report that separately, not as transported-base evidence.
+
+### Cost model
+Define
+\[
+\kappa_{\rm rel}=\frac{\text{independent usable relations}}{\text{total measured work}}.
+\]
+Charge curve selection, isogeny construction, transport, preprocessing, failed searches, verification, and deduplication. Report cold-start and explicitly amortized results separately. Estimate full DLP cost, including sparse linear algebra and individual-log recovery; report memory and wall-clock alongside operation counts.
+
+### Falsification
+Reject if literal transport changes exhaustive relation counts, if apparent gains disappear after duplicate/rank filtering, or if net \(\kappa_{\rm rel}\) fails to beat same-curve FAM-1 after transport costs. Reject a broader speedup claim if relation savings are outweighed by linear-algebra or recovery costs.
+
+### First experiment
+On one exhaustively tractable prime-field instance from `EXP-ECTD-0cf008`, compare the source, one crater curve, and one floor curve using identical base sizes, relation arities, and paired seeds. Exhaustively verify literal-transport invariance, then benchmark geometry-adapted discovery under equal total budgets. Select the target on training seeds and confirm on held-out seeds; scale only after a reproducible net gain.
+
+## Direction 56
+
+### Construction
+1. **Audit before implementation:** inspect `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher` for FAM-1 definitions, `LEAD-ICP-coppersmith-smallroot-semaev`, lattice configurations, and negative results. Record commit hashes and reproduce the closest baseline. Repository contents are not available here; novelty remains unverified.
+2. Use the **actual FAM-1 parameterization**, not an invented surrogate. If its x-coordinate is \(\phi(t)=a(t)/b(t)\), define
+   \[
+   F_R(\mathbf t)=\operatorname{num}f_{m+1}
+   (\phi(t_1),\ldots,\phi(t_m),x(R))\pmod p,
+   \]
+   for \(m=3,4\), where \(f_{m+1}\) is the Semaev summation polynomial. Restrict \(0\le t_i<B\); reject poles, invalid lifts, and duplicate points. Verify every candidate by signed elliptic-curve addition. If FAM-1 requires additional membership constraints, retain them explicitly.
+3. Build modular-small-root lattices from shifts
+   \[
+   p^{k-j}\mathbf t^{\mathbf e}F_R^j,\qquad 0\le j\le k,
+   \]
+   with bounded total shift degree. Scale monomials by \(B^{|\mathbf e|}\), apply LLL/BKZ, and attempt elimination of short-vector polynomials. Sweep predetermined degree, multiplicity, and reduction-budget grids. Treat multivariate root recovery as heuristic.
+4. Read Ryan’s 2025 bound precisely; identify which assumptions FAM-1 might evade. Low-degree parameterization alone is not evidence.
+
+### Cost model
+Measure preprocessing, lattice dimension/coefficient bits, reduction time, elimination time, failures, and verified relations per CPU-hour. Compare against exhaustive search and optimized meet-in-the-middle using identical factor bases. For effective signed-base size \(N\) and subgroup order \(n\), use \(N^m/(m!n)\) only as a heuristic expected representation count. Include target retries, relation-matrix rank, and eventual linear-algebra cost.
+
+### Falsification
+Reject the tested configuration if apparent gains disappear after full accounting, occur only on planted instances, fail to scale, or yield insufficient independent relations. Finite negative results do not exclude every lattice construction.
+
+### First experiment
+At 16-bit primes, exhaustively catalogue roots for random targets and both \(m\), then benchmark lattice recovery against that ground truth. Include planted FAM-1 roots, standard univariate Coppersmith positive controls, and degree/support-matched random-polynomial controls. Advance to 24–32 bits only after reproducible wins.
+
+## Direction 57
+
+### Construction
+Work on an ordinary curve \(E_0/\mathbb F_p\) with prime-order subgroup \(G=\langle P\rangle\), odd order \(r\), and target \(Q\).
+
+1. Select a rational \(2\)-isogeny chain
+   \[
+   E_0\xrightarrow{\psi_1}E_1\rightarrow\cdots\rightarrow E_L.
+   \]
+   Let \(\Phi_i:E_i\to E_0\) be the reversed dual chain. Its restriction to the order-\(r\) subgroup is invertible.
+2. On each \(E_i\), choose a small coordinate set \(S_i\) and signed representatives
+   \[
+   B_i=\{R\in E_i(\mathbb F_p)[r]:x(R)\in S_i\}/\{\pm1\}.
+   \]
+   Transport them to \(E_0\); deduplicate \(\bigcup_i\Phi_i(B_i)\). These images—not separate curve-local logarithms—define the factor-base unknowns.
+3. For random \(T=aP+bQ\), seek
+   \[
+   T=\sum_{j=1}^{m}\epsilon_j\Phi_{i_j}(R_j),\qquad R_j\in B_{i_j}.
+   \]
+   Encode this using \(E_0\)’s \(f_{m+1}\) Semaev polynomial, with transported coordinates supplied by bounded-degree isogeny graph equations. Retain intermediate variables rather than expanding degree-\(2^i\) rational maps. Exclude poles, enforce rationality and subgroup membership, recover signs, and verify every relation by group arithmetic.
+4. Solve the resulting sparse linear system modulo \(r\).
+
+### Prior-work audit
+Repository contents are unavailable here; no prior-test review is claimed. Before implementation, inspect **isogeny-labs/crypto cryptanalysis** and **crypto-autoresearcher** for `LEAD-ICP-pkm-tower-algebraic-oracle`, volcano census records, transported-base experiments, and elimination benchmarks. Record tested parameters and failures; distinguish this proposal from merely relabeling one transported factor base.
+
+### Cost model
+Let \(N\) be the deduplicated base size. Measure
+\[
+C=C_{\rm setup}+A C_{\rm solve}+C_{\rm LA},
+\]
+where \(A\) is attempts needed for sufficient independent relations. Track solver memory, intermediate-variable count, solving degree, successful relations/second, and matrix rank. Generic decomposition probability is approximately \(N^m/(m!r)\), with sign conventions accounted for consistently. Thus any advantage must come from cheaper structured solving, not additional representations alone.
+
+### Falsification
+Reject practical advantage if transport causes degree/memory explosion, conductor depth provides no reproducible solving benefit, or equal-\(N\) single-curve baselines outperform the tower end-to-end.
+
+### First experiment
+On the census instances labelled **8209/131101**, verify conductor interpretation and rational edges. Sweep \(L=0,1,2,3\), initially \(m=3\), holding \(N\) fixed. Compare identical targets against direct transported-base and single-curve controls; report setup-inclusive cost per independent relation.
+
+## Direction 58
+
+**Construction.** Work over \(\mathbb F_p\), \(p>3\), with:
+- \(E_0:y^2=x^3+b\), \(p\equiv1\pmod3\), automorphism \(\phi(x,y)=(\zeta_3x,y)\), invariant \(u=x^3\);
+- \(E_{1728}:y^2=x^3+ax\), \(p\equiv1\pmod4\), automorphism \(\phi(x,y)=(-x,iy)\), invariant \(u=x^2\).
+
+Use a prime-order subgroup stable under \(\phi\); determine \(\lambda\) with \(\phi(P)=[\lambda]P\). Define a factor base by bounded binary-digit presentations \(u=\sum_{j=0}^{t-1}2^jd_j\), \(d_j(d_j-1)=0\), retaining liftable subgroup points and storing orbit representatives.
+
+For target \(R\), seek \(m=2,3\) orbit representatives and automorphism labels satisfying \(\sum_i\phi^{e_i}(P_i)=R\), allowing signs. Construct the elimination ideal
+\[
+\left\langle f_{m+1}(x_1,\ldots,x_m,x_R),\ u_i-x_i^k\right\rangle
+\cap\mathbb F_p[u_1,\ldots,u_m],
+\]
+with \(k=3,2\). Add digit constraints. Precompute symbolic templates where feasible; solve specialized systems and verify every candidate on the curve. Record automorphism labels as coefficients \(\pm\lambda^{e_i}\) in relations. Elimination may increase degree: variable reduction alone is not evidence.
+
+**Prior-work audit.** Repository contents are unavailable here; no review is claimed. Before experimentation, inspect both named repositories for the two referenced leads, digit encodings, Semaev elimination, special-\(j\) experiments, and negative results. Produce a tested-versus-new checklist with commit/run identifiers.
+
+**Cost model.** Compare conventional \(x\)-digits, invariant digits, and generic-\(j\) controls using both encodings. Match field size, subgroup-order size, cofactor, and *realized factor-base cardinality*; require identical subgroup order only where available. Measure template cost, equation size, first-fall degree, solving degree, peak memory, branch/lift overhead, verified relations/second, and projected collection-plus-linear-algebra cost.
+
+**Falsification.** Reject the advantage if lower first-fall degree does not yield lower amortized total cost, if elimination/branching erases savings, or if equivalent generic-\(j\) encodings explain the improvement.
+
+**First experiment.** Over 20–24-bit primes, benchmark \(m=2\), then \(3\), across several curves and 100 fixed-seed targets per configuration. Independently enumerate decompositions to verify completeness and identify spurious solutions.
+
+## Direction 59
+
+### Construction
+Repository contents are unavailable here; first audit the cited leads and both repositories for prior Miller normalizations, FAM-1 implementations, negative results, and benchmarks. Record commit IDs and reuse the existing FAM-1 decomposition predicate unchanged.
+
+Let \(E/\mathbb F_p\) contain a prime-order subgroup \(\langle P\rangle\) of order \(r\). Fix auxiliary points \(T_1,\ldots,T_t\). Define
+\[
+U_j(R)=f_{r,R}(T_j),
+\]
+using normalized Miller functions with divisor \(r[R]-r[O]\). Reject poles and zeros. Compute features from canonical field encodings: selected bits, multiplicative characters, and cross-evaluation ratios. Freeze feature choices before testing.
+
+Verify the normalization-dependent cocycle identity
+\[
+U_j(A)U_j(B)/U_j(A+B)=g_{A,B}(T_j)^r.
+\]
+Do not assume pairing nondegeneracy or discrete-log leakage.
+
+Generate training points \(R=kP\), recording both selected bits of \(k\) and whether the existing FAM-1 search finds a valid decomposition within fixed budget \(B\). Train:
+1. a log-bit predictor, testing the proposed mechanism;
+2. a decomposition-success predictor, testing operational usefulness.
+
+At deployment, score \(R=aP+bQ\) using **point-derived features only**, never its unknown logarithm. Search only accepted points.
+
+### Cost model
+Measure feature cost \(C_U\), baseline search cost \(C_F\), acceptance fraction \(\alpha\), baseline success probability \(s\), and accepted-point success probability \(s_A\). Compare
+\[
+\frac{C_U+\alpha C_F}{\alpha s_A}
+\quad\text{against}\quad
+\frac{C_F}{s}.
+\]
+Include preprocessing, amortized training, rejected-point generation, and independent-relation rank—not merely raw decomposition counts.
+
+### Falsification
+Reject practical utility if held-out total cost per independent relation does not improve. Reject the proposed leakage mechanism if log-bit prediction matches permutation controls. Also reject gains caused by scalar-encoding leakage, curve-specific overfitting, unequal search budgets, or changed factor bases. With \(\gcd(r,p-1)=1\), the rational-field Tate quotient is trivial; cocycle structure alone supplies no transfer.
+
+### First experiment
+On three small ordinary prime-field curves with nontrivial baseline FAM-1 yield, collect \(10^4\) training and \(10^4\) untouched test points each. Start with \(t=1\), a shallow classifier, and acceptance thresholds fixed on validation data. Compare against random thinning and equally costly coordinate-only filters; report bootstrap confidence intervals for end-to-end speedup.
+
+## Direction 60
+
+### Construction
+1. **Audit before implementation.** Repository access is unavailable here; do not assume prior results. Inspect both repos for the two named leads, cover equations, explicit maps, Mumford-arithmetic tests, weak-class restrictions, failed smoothness experiments, and timings. Record commit hashes and distinguish reproduced results from conjectures.
+2. Set \(K=\mathbb F_{p^6}\). Instantiate a catalog genus-3 curve \(C/K\) with an explicit separable map \(f:C\to E_K\) of degree \(\delta\). Verify the induced homomorphism
+   \[
+   T=\operatorname{Tr}_{K/\mathbb F_p}\circ f_*:J_C(K)\to E(\mathbb F_p).
+   \]
+   Evaluate \(T\) on reduced Mumford divisors by mapping support points, including multiplicities and pole corrections, then tracing.
+3. Transfer each verified JV relation \(\sum_i n_iD_i=0\) to \(\sum_i n_iT(D_i)=0\). Canonicalize projected factor-base elements and measure collisions and relation rank. **Smoothness must occur upstairs:** projection alone does not create a useful small factor base.
+4. For \(Q=xP\) in a prime-order subgroup of order \(r\), target relations must also connect to \(Q\). Since
+   \[
+   T(f^*(Q-O))=[6\delta]Q,
+   \]
+   require \(r\nmid6\delta\). Randomize lifted target divisors using the JV machinery; measure their smoothness separately from ordinary weak-class relations.
+
+### Cost model
+Let \(B'\) be the number of distinct projected unknowns, \(s\) relation success probability, \(c\) trial cost, and \(w\) average row weight. Estimate
+\[
+C_{\rm total}=C_{\rm setup}+\Theta(B'c/s)+C_{\rm transfer}
++\widetilde O(wB'^2)+C_{\rm target}.
+\]
+Charge extension-field arithmetic, divisor reduction, support-field evaluation, six-term traces, memory, and rejected relations explicitly. Compare against \(\Theta(\sqrt r)\) Pollard-rho work using measured operation costs.
+
+### Falsification
+Reject if the catalog lacks the required map; transfer is trivial on the target subgroup; projected equations lack sufficient rank; target lifts lose weak-class smoothness; or extrapolated total work exceeds rho. Easier relation collection alone is insufficient.
+
+### First experiment
+Choose the smallest catalog instance with feasible exhaustive checking. Verify transfer homomorphism and \(T\circ f^*=[6\delta]\); collect \(10^4\) ordinary and target-lift trials. Measure both smoothness rates, projected collisions, sparse rank modulo \(r\), and timings; attempt one complete toy DLP.
+
+## Direction 61
+
+### Construction and audit
+- First inspect `LEAD-TRF-odd-char-descent-smith-quartic`, `LEAD-ICP-coincidence-harvest-structured-base`, and FAM-1 implementations/results in `isogeny-labs/crypto`, `cryptanalysis`, and `crypto-autoresearcher`. Record tested parameters, negative results, and relation-cost baselines. **These repositories are not available here; this review remains a prerequisite, not a completed claim.**
+- Extract Smith’s exact hypotheses and maps from Propositions 2/4. An elliptic curve cannot be isogenous to a genus-3 Jacobian: require an explicit embedding \(\iota:\langle P\rangle\hookrightarrow A(\mathbb F_p)\) into the source abelian variety and an isogeny \(\phi:A\to J(C)\), where \(C\) is a smooth plane quartic.
+- For subgroup order \(r\), verify injectivity on the target subgroup, preferably via \(r\nmid\deg\phi\). Let \(\Psi=\phi\circ\iota\). Transport the **actual** FAM-1 base \(B=\{B_i\}_{i=1}^{M}\) as divisor classes \(\widehat B_i=\Psi(B_i)\), not as presumed quartic points.
+
+### Algorithm
+For \(Q=xP\), sample known \(a,b\) and seek
+\[
+a\Psi(P)+b\Psi(Q)=\sum_{j=1}^{k}\epsilon_j\widehat B_{i_j}.
+\]
+Build a quartic-specific decomposition solver using divisor arithmetic and Riemann–Roch membership tests; use line/conic intersections only when their induced divisor-class identities are proved. Pull every relation back to the original subgroup and verify it before sparse linear algebra. Benchmark against the unchanged FAM-1 solver using identical targets, base size, and relation length.
+
+### Cost model
+Measure
+\[
+T=T_{\rm construction}+T_{\rm transport}
+ +R\,c_{\rm attempt}/s+T_{\rm LA}+T_{\rm recovery},
+\]
+with success probability \(s\), rank-sufficient relation count \(R\), memory, and amortization stated separately. Compare against original-model FAM-1 and generic square-root attacks. Transport alone preserves decomposition existence; improvement must come from cheaper search or exploitable quartic structure.
+
+### Falsification
+Stop if hypotheses fail, subgroup transport is not injective, or useful quartic decompositions require an uncontrolled enlarged base. Reject the acceleration hypothesis if matched benchmarks show no improving relation-yield-per-cost trend, or rank deficiency eliminates apparent gains.
+
+### First experiment
+Choose one small admissible odd-characteristic instance permitting exhaustive checks. Certify maps and subgroup transport; transport FAM-1; compare exhaustive short-decomposition sets and measured solver costs on both models before scaling.
+
+## Direction 62
+
+### Construction
+1. **Repository audit gate:** The repositories are not available in this conversation, so prior experiments and FAM-1’s precise definition remain unverified. Before implementation, inspect both repositories’ FAM-1 code, experiment logs, and the two named leads. Record tested parameterizations, negative results, and resource assumptions; do not claim novelty until this comparison is complete.
+2. Let \(E/\mathbb F_p\) contain a prime-order subgroup of order \(n\), with \(Q=xP\). Fix factor base \(\mathcal B=\{B_1,\ldots,B_b\}\) using the audited FAM-1 construction. Enumerate its parameter domain \(U\), \(|U|=N\).
+3. Reversibly implement the **actual FAM-1 relation predicate**:
+   \[
+   u\mapsto(a_u,c_u,\mathbf e_u),\qquad
+   a_uP+c_uQ=\sum_i e_{u,i}B_i.
+   \]
+   Mark only valid, fully verified decompositions. Include decomposition finding—not merely verification—in the oracle cost. Uncompute workspace after phase marking.
+4. Use amplitude amplification to harvest relations, measuring accepted parameters. Collect enough independent rows to find \(\boldsymbol\lambda^\top E=0\), with \(\boldsymbol\lambda^\top\mathbf c\ne0\), then recover
+   \[
+   x=-\frac{\boldsymbol\lambda^\top\mathbf a}
+            {\boldsymbol\lambda^\top\mathbf c}\pmod n.
+   \]
+   Account explicitly for duplicate suppression and failed-rank batches.
+
+### Cost model
+Define \(S\) as one classical subgroup scalar multiplication. Report separately quantum queries, logical gates/depth, qubits, and classical \(S\)-cost; any combined \(S\)-equivalent total requires an explicit conversion assumption.
+
+For \(R\) required distinct relations and remaining marked counts \(M_j\), estimate
+\[
+Q_{\rm search}\approx\sum_{j=0}^{R-1}\frac{\pi}{4}\sqrt{N/M_j}.
+\]
+Charge oracle arithmetic, coherent factor-base access, exclusion bookkeeping, verification, preprocessing, and sparse linear algebra. Assume no free QRAM. Compare with classical FAM-1 and Pollard rho under matched resource conventions.
+
+### Falsification
+Reject the advantage if reversible decomposition dominates search savings; usable relations are too rare or rank-deficient; memory/access costs erase savings; or optimized end-to-end scaling fails to improve the relevant classical baseline.
+
+### First experiment
+On several small prime-field curves, exhaustively enumerate the audited FAM-1 domain. Measure acceptance density, collisions, row rank, and classical predicate cost. Compile one reversible oracle and estimate its resources. Extrapolate only after these measurements; a quantum device is unnecessary initially.
+
+## Direction 63
+
+### Construction / algorithm
+1. **Audit before coding:** inspect EXP-ECTD-0cf008, LEAD-EXO-ml-learned-models, and FAM-1 relation-generation code in both repositories; inventory prior predictors, negative results, feature definitions, and timing conventions. Repository contents are unavailable here, so prior coverage and the meaning of logged \(\kappa_{\rm rel}\) remain unverified.
+2. Retain the existing FAM-1 seed-to-candidate map and relation verifier unchanged. Build examples \((E,Q,s,x,y,t)\): curve, target, seed, cheap pre-search features, independently verified relation-success indicator, and measured generation/verification time. Include failed seeds and crater/floor metadata.
+3. Resolve an identification issue: **\((E,Q)\) alone cannot rank seeds for the same target.** Train \(f(E,Q,s,x)\) to estimate success probability and expected evaluation cost. Treat logged \(\kappa_{\rm rel}\) as an auxiliary target only after confirming its definition.
+4. Start with gradient-boosted trees. Permit only features computable before candidate evaluation; exclude known target scalars, post-search statistics, and crater/floor labels unavailable in deployment.
+5. Generate seed batches, score them, and evaluate candidates in descending predicted success-per-cost order. Reserve 10% of evaluations for uniform exploration. Verify and deduplicate every relation.
+
+### Cost model
+For \(R\) usable, independent relations, measure
+\[
+T_{\rm ML}=T_{\rm data}+T_{\rm train}
++M(c_{\rm feature}+c_{\rm score})+Kc_{\rm evaluate}+T_{\rm LA},
+\]
+where \(M\) seeds are scored and \(K\) evaluated. Compare with uniform sampling through the **same** generator, verifier, and linear-algebra pipeline. Report cold-start and amortized costs separately. Count duplicate/dependent relations, memory, and feature extraction—not merely classifier accuracy. Explicitly calculate the number of future targets required to recover training cost.
+
+### Falsification
+Reject practical usefulness if gains disappear with curve-family/target-grouped splits, depend on unavailable labels, or fail to reduce held-out wall-clock time at equal relation rank and solve success. Reject a scaling claim if gains vanish as field size increases.
+
+### First experiment
+On audited EXP-ECTD-0cf008 data, use curve-grouped training/validation/test splits and a prospective, untouched seed pool. Compare uniform sampling, a cheap handcrafted ranking, and learned ranking under identical budgets across crater/floor strata. Pre-register a ≥20% end-to-end speedup threshold, paired confidence intervals, and replication on unseen larger-field curves before expanding the search.
+
+## Direction 64
+
+### Construction
+Treat FAM-1 as the existing seeded relation generator; preserve its factor base, acceptance predicate, and relation encoding.
+
+1. Generate \(r\) valid FAM-1 seed increments \(D_i\), each carrying its exact algebraic label. Define the baseline walk
+   \[
+   X_{t+1}=X_t+D_{h(X_t)},\qquad h:E(\mathbb F_p)\to\{1,\ldots,r\}.
+   \]
+   Accumulate labels exactly; never treat a tag collision as a relation.
+2. Implement tag-tracing blocks of length \(b\): a cheap coordinate-derived tag predicts partition choices, while cached aggregate increments defer full point additions. Tags are **not** assumed homomorphic. Reconstruct and verify every predicted partition choice before accepting a block; replay from its starting point after any mismatch.
+3. Apply the unchanged FAM-1 acceptance test to verified candidates. If intermediate candidates must be inspected, charge their reconstruction explicitly. Deduplicate relations and measure their incremental rank.
+4. Compare uniform partitioning with deliberately concentrated partitioning, holding seed sets and restart policy fixed. Measure empirical successor frequencies, collision rates, cycle lengths, and useful-relation yield. Partition imbalance alone is not evidence of beneficial in-degree concentration.
+
+### Prior-work audit
+The repositories are not available in this conversation, so prior results cannot be claimed reviewed. Before implementation, inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for FAM-1, both named LEAD directions, tag tracing, caching, and failed concentration experiments. Record commit IDs, configurations, negative results, and which mechanisms this experiment actually changes.
+
+### Cost model
+Primary metric:
+\[
+C_{\rm useful}=
+\frac{\text{setup+tagging+table lookup+EC arithmetic+verification+replay+deduplication time}}
+{\text{new independent accepted relations}}.
+\]
+Also report memory, field operations, prediction accuracy, block survival probability, and total projected relation-collection plus linear-algebra cost. Compare against optimized untraced FAM-1 and conventional rho; faster collisions alone do not establish index-calculus progress.
+
+### Falsification
+Reject the direction if replay or intermediate inspection eliminates arithmetic savings; concentration mostly produces cycles or dependent relations; gains disappear after setup/memory accounting; or speedup deteriorates across increasing field sizes.
+
+### First experiment
+On three toy prime-field curves permitting independent correctness checks, run paired-seed trials for baseline, tracing-only, concentration-only, and combined variants. Sweep \(r\in\{8,16,32\}\), \(b\in\{2,4,8\}\). Require identical verified walk semantics and report confidence intervals for cost per independent relation before scaling.
+
+## Direction 65
+
+### Construction
+- **Repository prerequisite:** I cannot access the named repositories here. Before implementation, inspect both leads, the exact FAM-1 constructor, prior negative results, and existing κ_rel accounting; record commit hashes. Do not substitute a new family for repository-defined FAM-1.
+- Wrap the existing FAM-1 transition \(T_\theta\). At each canonicalized walk state \(X\), derive \(B\in\{1,2,4,8\}\) admissible parameter seeds deterministically:
+  \[
+  \theta_j=\mathrm{SeedToFAM1}(H(\text{run salt},X,j)).
+  \]
+  Compute every candidate \(Y_j=T_{\theta_j}(X)\), including its coefficient/representation update.
+- Construct a **frozen indegree-sketch scorer** from an independent pilot set: sample states, enumerate their candidates, and count candidate endpoints in hash buckets. Score \(Y_j\) by its bucket count; select the highest score, breaking ties by \(j\). Freeze scoring before production so the transition remains deterministic.
+- Preserve the existing structured-base coincidence harvester and relation verification. Reject trivial relations and count only independent, verified relations.
+- Controls: original FAM-1; random selection among the same \(B\) candidates; best-of-\(B\) with shuffled sketch scores. These separate selection benefit from extra sampling and sketch artifacts.
+
+### Cost model
+Report repository-defined κ_rel unchanged, plus
+\[
+C_{\rm rel}=
+\frac{C_{\rm pilot}+C_{\rm candidate\ evaluations}+C_{\rm scoring}
++C_{\rm harvesting}+C_{\rm verification}}
+{\#\text{ independent verified relations}}.
+\]
+Include rejected candidates, hash operations, memory, wall-clock time, and amortization assumptions. Report both transition-count and full-cost κ_rel ratios; fewer selected steps alone is not improvement. Separately measure cycle lengths, walk merging, and relation-rank yield.
+
+### Falsification
+Reject the direction if full-cost κ_rel fails to improve over baseline with paired confidence intervals; gains vanish under independent pilot/production salts; shuffled scoring performs equally well; or increased collisions predominantly produce short cycles, duplicate relations, or rank deficiency. Indegree concentration is not evidence of useful relation yield by itself.
+
+### First experiment
+At 24 bits, run 30 paired salts with identical curves, bases, starting states, and total budgets across all controls and \(B\) values. Sweep pilot expenditure over 1%, 5%, and 10% of baseline budget. Predeclare full-cost κ_rel as primary. Advance only surviving configurations to held-out 28- and 32-bit instances, without retuning.
+
+## Direction 66
+
+### Construction
+1. **Repository gate:** Before implementation, inspect `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` for `EXP-GRUMPY-eb8675`, both named parent leads, and FAM-1. Record commit IDs, seed enumeration, relation predicate, timings, and negative results. These repositories are not accessible here; prior-test coverage remains unverified.
+2. Freeze the existing FAM-1 generator as a deterministic function
+   \[
+   G(E,\mathcal B,s)\rightarrow\{\text{verified relation},\bot\},
+   \]
+   including its original factor base, seed domain, and acceptance rules. Change only scheduling.
+3. Implement the referenced exhaustive ladder **exactly as recovered**, storing every seed’s outcome, relation fingerprint, runtime, and pre-evaluation features. Features must be available before relation generation: seed coordinates, ladder position, and existing FAM-1 structural descriptors.
+4. On training instances, use a fixed-capacity, uniformly sampled reservoir of these records to fit a deterministic success-probability estimate \(\hat p(s)\) and cost estimate \(\hat c(s)\). Compile a complete permutation of the seed domain ordered by \(\hat p(s)/\hat c(s)\), with seeded tie-breaking. Never discard seeds.
+5. Evaluate this frozen schedule on unseen instances against uniform random permutations and the unmodified exhaustive ladder. Deduplicate and algebraically verify all relations.
+
+### Cost model
+For a target of \(R\) usable relations, measure
+\[
+T_R=T_{\rm offline}/A+T_{\rm features}+T_{\rm scheduling}
++\sum_{i\leq N_R}T_G(s_i)+T_{\rm verification},
+\]
+where \(A\) is the explicitly justified number of instances sharing the compiled schedule. Report cold-start \(A=1\), plausible amortization, peak RAM, stored bytes, field operations, and wall time. Also measure matrix rank and eventual solve cost: more duplicate or dependent relations do not count as progress.
+
+### Falsification
+Reject the practical hypothesis if held-out end-to-end speedup disappears after compilation/storage costs, confidence intervals include parity, or improvement requires same-instance outcome leakage. Reject transferability if gains vanish across curves or field sizes. Exhaustive completion visits the same seeds; any gain must concern time-to-target, not total relation yield.
+
+### First experiment
+Choose the smallest archived FAM-1 regime permitting full enumeration and a nontrivial relation yield. Split independent instances into training, validation, and untouched test sets. Compare paired time-to-\(R\) curves across at least 30 test instances; report bootstrap confidence intervals and cold-start break-even.
+
+## Direction 67
+
+### Construction
+Repository contents are unavailable here; prior results and FAM-1’s exact implementation remain unverified. First inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for `LEAD-RHO-lhw-*`, `LEAD-RHO-lhw-preprocessing-frontier`, `LEAD-ICP-coincidence-harvest-structured-base`, and FAM-1. Extract code, parameters, negative results, and preprocessing accounting; reproduce the closest baseline before claiming novelty.
+
+Use the existing FAM-1 implementation unchanged except for its seed-exponent sampler. For \(E/\mathbb F_p\), subgroup generator \(P\) of prime order \(n\), and \(L=\lceil\log_2 n\rceil\), sample uniformly from
+\[
+S_h=\{e:1\le e<n,\ \operatorname{HW}(e)=h\}.
+\]
+Implement by uniformly selecting \(h\) distinct positions among \(L\) bits and rejecting integers \(\ge n\). Deduplicate exponents. Sweep \(h\in\{2,3,4,6,8\}\), plus uniform seeds and bit-length-matched controls.
+
+Feed \(e\) into the original FAM-1 seed interface, retaining its factor base, smoothness criterion, and relation verification. Do not substitute a new meaning for “FAM-1.” Record seed-point construction costs separately; optionally reuse precomputed \([2^i]P\). Count verified, linearly independent relations—not merely smooth candidates.
+
+### Cost model
+For each sampler measure
+\[
+T_{\rm solve}=T_{\rm pre}+N_{\rm trials}t_{\rm trial}
++T_{\rm rank}+T_{\rm LA}+T_{\rm descent}.
+\]
+Include seed generation, rejection, deduplication, point arithmetic, smoothness testing, memory, and failed trials. Estimate usable yield \(q_{\rm ind}\); report time per independent relation and finite-pool exhaustion. Price preprocessing both cold-start and amortized across explicitly stated numbers of targets sharing the curve and factor base. Plot the time–memory–reuse Pareto frontier.
+
+### Falsification
+Reject the direction if any apparent smoothness advantage disappears under matched controls, produces dependent relations, vanishes across curves, or cannot repay preprocessing before exhausting \(S_h\). Faster sparse scalar multiplication alone is not evidence of higher smoothness. Treat small-field gains as provisional unless scaling supports them.
+
+### First experiment
+On three reproducible, tractable prime-field instances, freeze FAM-1 parameters and compare every sampler using up to \(10^5\) distinct seeds each, capped by pool size. Randomize execution order; publish confidence intervals for smoothness and independent-relation yield, alongside cold-start wall time. Advance only variants improving total projected solve cost.
+
+## Direction 68
+
+### Construction and prior-work gate
+- Review `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` records for **FAM-1**, **H-EWALK-29cb90**, and both named parent leads. Extract the actual seed map, equivalence definition, bound assumptions, failed experiments, and measured costs into a comparison table with commit references. Repository contents are unavailable here; do not assume these definitions or claim novelty before this review.
+- Let \(S\) be the documented FAM-1 seed space and \(R(s)\) its relation-search output. For prime curve order \(N\), choose small subgroups \(H\le(\mathbb Z/N)^\*\), initially of orders \(2,4,8,16\) where available.
+- Specify and verify a seed action \(T_h\), satisfying \(T_aT_b=T_{ab}\). Multiplication \(s\mapsto hs\bmod N\) is permissible only if it preserves valid FAM-1 seeds.
+- Define \(c(s)=\min_{h\in H}\operatorname{encode}(T_hs)\). Establish exactly how relations transport between orbit members, including coefficient changes. Seed equivalence alone is insufficient: prove it preserves the relation event, or quantify its failure.
+- Implement exhaustive canonicalisation first; optimise only after correctness. Sample distinct canonical representatives, preserving the intended orbit distribution. Account for stabilisers and nonuniform orbit sizes.
+
+### Cost model
+Measure seed generation, canonicalisation, relation testing, duplicate detection, memory, and linear algebra separately. Use
+\[
+\kappa_{\rm rel}=
+\frac{\text{independent usable relations per second, quotient}}
+{\text{independent usable relations per second, baseline}}.
+\]
+Also report total time to a fixed relation-matrix rank. An \(h\)-fold reduction in seed count is **not** an \(h\)-fold speedup: relation multiplicity, canonicalisation, and sampling overhead must enter the estimate. Substitute measured quantities into H-EWALK-29cb90 only after checking every assumption.
+
+### Falsification
+Reject the proposed equivalence if transport fails. Reject practical benefit if quotienting removes distinct useful relations, biases sampling adversely, or gives \(\kappa_{\rm rel}\le1\) within uncertainty. Reject extrapolation if predicted gain disappears with increasing field size.
+
+### First experiment
+On the smallest nontrivial, exhaustively enumerable FAM-1 instance, enumerate seeds and \(H\)-orbits; record stabilisers, relation outcomes, transported coefficients, and matrix rank. Compare baseline versus quotient under equal wall-clock budgets and repeated runs, before attempting larger fields.
+
+## Direction 69
+
+**Scope.** The named leads, EXP-ECTD-0cf008, and repositories are unavailable here; prior-test coverage remains unverified. Before implementation, inspect their code, logs, and negative results for digit encodings, solving-degree measurements, transported-factor overlap, and rank accounting.
+
+**Construction.**
+1. Select ordinary \(E_0/\mathbb F_p\), a prime-order subgroup \(G_0=\langle P\rangle\) of order \(r\), and target \(Q\). Choose a small volcano prime \(\ell\ne r\); construct rational isogeny paths from crater to floor. Record each composite \(\psi_v:E_0\to E_v\), degree \(D_v\), and dual.
+2. At every selected level define digit factor bases
+   \[
+   B_v=\{R\in G_v:x(R)=c_v+\sum_{j\in J_v}2^jd_j,\ d_j\in\{0,1\}\}.
+   \]
+   Require canonical integer coordinates below \(p\). Enumerate candidates, lift square roots, and test subgroup membership. Tune \(|J_v|\) for comparable base sizes.
+3. For random \(T=aP+bQ\), solve
+   \[
+   R_1+\cdots+R_m=\psi_v(T),\quad R_i\in B_v,
+   \]
+   using digit-augmented summation-polynomial systems. Saturate denominators, validate every solution by group arithmetic, and record exceptional-case exclusions.
+4. Normalize factors into \(G_0\) using
+   \[
+   N_v(R)=[D_v^{-1}\bmod r]\widehat\psi_v(R).
+   \]
+   Then \(\sum_iN_v(R_i)=aP+bQ\). Deduplicate normalized factors globally. “Transport charge” means explicitly counting each new column, normalization operation, and dependent row—not treating transported relations as free information.
+
+**Cost model.** Measure total digit-base enumeration, isogeny construction, polynomial solving, normalization, storage, and sparse linear algebra. Report solving degree, peak memory, validated relations/second, distinct normalized columns, and incremental rank over \(\mathbb F_r\). Estimate completion cost from rank growth and matrix dimensions; compare against single-level digit bases, identical-budget multibase sampling without isogenies, and Pollard rho.
+
+**Falsification.** Reject the advantage if matched-budget trials show no lower projected end-to-end cost: solving degree does not improve, transport produces mostly duplicate/dependent rows, or extra columns and linear algebra erase relation-generation gains. Any asymptotic claim requires scaling evidence.
+
+**First experiment.** After auditing prior artifacts, use several small ordinary prime-field curves with verified rational crater-to-floor paths. Hold \(m\), total base size, hardware, and solver budget fixed; compare crater-only, floor-only, and combined-level collection. Measure rank gained per CPU-second and projected completion cost before attempting larger fields.
+
+## Direction 70
+
+**Prior-work gate.** Repository contents are unavailable here; novelty is unverified. Before implementation, inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for both named leads, volcano censuses, adjoint-witness experiments, negative results, and parameter logs. Record tested constructions and reject equivalent variants.
+
+**Exact construction.**
+1. Choose an ordinary \(E/\mathbb F_p\), prime-order subgroup \(G\) of order \(r\), and small volcano prime \(\ell\ne p,r\). Census a bounded rational \(\ell\)-isogeny neighborhood; select a rooted spanning tree.
+2. For each vertex \(v\), define \(\tau_v:E_v\to E\) by composing dual tree isogenies. Select factor-base points in the \(r\)-torsion subgroup, deliberately including edge-matched pairs \(B_u=\phi(B_v)\).
+3. For each tree edge \(\phi:E_v\to E_u\),
+   \[
+   \tau_u(B_u)=[\ell]\tau_v(B_v).
+   \]
+   Thus \(e_{u,B_u}-\ell e_{v,B_v}\) is an explicit integer relation. Form their lattice \(L_0\); verify every generator by group arithmetic. Do not assume non-tree edges satisfy this identity.
+4. Define \(F(a)=\sum a_{v,B}\tau_v(B)\). Reduce coefficient vectors modulo \(L_0\), then enumerate bounded-weight quotient representatives. Hash \(F(a)\); collisions yield relations \(a-b\) outside the known lattice. Add columns \(P,Q\), where \(Q=[x]P\), and collect enough independent relations modulo \(r\) to recover \(x\).
+5. Compare ordinary enumeration against HNF quotient reduction and LLL/BKZ-assisted enumeration under identical memory budgets.
+
+**Cost model.** Measure census/isogeny costs, factor-base size \(M\), lattice preprocessing, coefficient growth, group operations, memory, and independent—not total—relations. With \(N\) approximately uniform evaluated representatives, expect roughly \(N^2/(2r)\) collisions. Volcano relations alone cannot improve this birthday exponent; any benefit must improve usable-relation throughput or solve cost.
+
+**Falsification.** Reject if gains disappear after deduplicating transported points; relations add no rank beyond \(L_0\); reduction overhead exceeds savings; or matched controls show no reproducible end-to-end improvement.
+
+**First experiment.** Use several ordinary curves with 28–36-bit subgroup orders and nontrivial \(2\)- or \(3\)-volcano neighborhoods. Compare matched-point, random-point, and single-curve controls with equal effective column counts. Plot independent relations per second and total recovery time, charging preprocessing fully.
+
+## Direction 71
+
+### Construction
+Let \(E_0/\mathbb F_p\) contain a prime-order subgroup \(H_0=\langle G\rangle\) of order \(r\). Build a chain of small-degree isogenies \(\phi_i:E_{i-1}\to E_i\), with degrees coprime to \(r\), and set \(T_i=\phi_i\circ\cdots\circ\phi_1\).
+
+Choose a common structured set \(S\subset\mathbb F_p\), \(|S|=B\). Define
+\[
+\mathcal B_i=\{P\in H_0:x(T_i(P))\in S\},\qquad
+\mathcal B=\bigcup_{i=0}^{k}\mathcal B_i.
+\]
+Deduplicate transported points; use consistent sign conventions.
+
+Write \(x(T_i(P))=N_i(x(P))/D_i(x(P))\). For
+\(F_S(Z)=\prod_{s\in S}(Z-s)\), membership is
+\[
+M_i(X)=D_i(X)^B F_S(N_i(X)/D_i(X))=0,
+\]
+excluding poles. Union membership is \(\prod_iM_i(X)=0\).
+
+Seek relations \(aG+bQ=\sum_{j=1}^{m}P_j\), with each \(P_j\in\mathcal B\). Compare explicit curve-label enumeration against product-polynomial membership. Compile shared \(F_S\) coefficients, quotient/remainder computations, and Graeffe stages where algebraically reusable. Identical coefficients at different inputs **do not automatically imply reusable intermediate values**.
+
+### Prior-work gate
+Repository contents are unavailable here. Before implementation, inspect both named repositories for the two cited leads, isogeny-transport experiments, negative results, and benchmark code. Record commit-linked overlap and distinguish genuinely new optimizations from previously rejected ones.
+
+### Cost model
+Measure
+\[
+C_{\rm total}=C_{\rm setup}+R\,C_{\rm relation}+C_{\rm linear\ algebra},
+\]
+where \(R\) is the relations required by the **expanded** factor base. Track effective union size, overlap, relation yield, solver degree, monomial count, peak memory, and matrix sparsity. Include isogeny evaluation and factor-coordinate recovery. Naively, \(\deg M_i\) grows like \(B\deg T_i\).
+
+Baseline against single-curve constructions at both equal factor-base size and equal memory—not merely equal \(B\).
+
+### Falsification
+Reject if sharing provides no amortized savings, transported bases overlap excessively, degree growth overwhelms yield, or increased matrix dimension eliminates relation-generation gains.
+
+### First experiment
+On small prime fields with enumerable subgroups, test chains of lengths \(0,1,2,4\) using degree-\(2\) or degree-\(3\) isogenies. Compare independent membership circuits, shared compilation, and union circuits. Exhaustively verify membership and relations; measure end-to-end time across increasing field sizes before extrapolating.
+
+## Direction 72
+
+**Hypothesis.** Special-\(j\) automorphism folding reduces relation-solving cost after 2-isogeny transport—not merely relation counts. Repository access is unavailable here; prior-work review remains a prerequisite, not a completed claim.
+
+**Prior-work gate.** In `isogeny-labs/crypto` and `crypto-autoresearcher`, locate both named leads and their experiments. Extract curves, factor bases, polynomial generators, saturation rules, term orders, rank measurements, failures, and seeds. Reproduce the closest baseline before adding this variant.
+
+**Exact construction.**
+- Choose primes \(p\equiv1\pmod{12}\), excluding bad characteristics. Use \(E_0:y^2=x^3+1\) and \(E_{1728}:y^2=x^3-x\); enumerate their rational order-two kernels \(K\) and construct Vélu maps \(\phi:E\to E'=E/K\).
+- Explicitly test descent: an automorphism \(\alpha\) induces \(\alpha'\) with \(\phi\alpha=\alpha'\phi\) exactly when \(\alpha(K)=K\). The order-three \(j=0\) symmetry permutes the three kernels; the order-four \(j=1728\) symmetry fixes one. These provide negative and positive controls.
+- Build three-point summation-polynomial systems \(f_3(x_1,x_2,x_3)=0\), with identical factor-base constraints across comparisons. Transport using equations \(u_i=\phi_x(x_i)\), clear denominators, and saturate away poles. Retain lift variables initially; separately measure elimination cost.
+- Compare ordinary systems, source-folded systems, transported systems, and transported systems folded only by verified descended automorphisms. For non-descending symmetry, test a correspondence across the three quotient curves, explicitly charging branch overhead.
+- Verify every recovered relation by elliptic-curve group arithmetic; record sign/lift ambiguities and multiplicities.
+
+**Cost model.** Measure relation yield per trial, distinct relations, Macaulay rows/columns/rank/nullity at each degree, degree of regularity, nonzeros, field operations, wall time, and peak memory. Include transport, saturation, elimination, unfolding, and final sparse linear algebra. Compare estimated total work per solved logarithm, not rank alone.
+
+**Falsification.** Reject the advantage if folding loses valid relations, rank reductions merely reflect fewer variables/equations, or transport and branch overhead erase any solving gain across increasing sizes.
+
+**First experiment.** At \(p=1009\), enumerate all six kernels; symbolically verify descent, then compute matched degree-by-degree Macaulay profiles for three-point systems using fixed-seed, automorphism-stable factor bases. Repeat across seeds before scaling.
+
+## Direction 73
+
+**Hypothesis.** Searching an ordinary \(\mathbb F_p\)-isogeny class yields curves with better FAM-1 relation geometry, enough to repay search, isogeny evaluation, and linear algebra. The simulation lemma predicts no intrinsic advantage when transported factor bases are allowed; any observed gain must identify a restricted representation or implementation advantage.
+
+**Repository gate.** The repositories are unavailable here, so prior experiments cannot be verified. Before implementation, inspect both named repositories for the two cited leads, the exact FAM-1 definition, negative results, parameters, and timings. Record commit/file references; reuse their predicate and baseline rather than silently redefining FAM-1.
+
+**Construction.**
+1. Choose an ordinary curve \(E/\mathbb F_p\), prime-order subgroup \(G=\langle P\rangle\) of order \(r\), and \(Q=zP\).
+2. Sample bounded class-group walks using invertible ideals of small split-prime norm, with explicit orientation and \(\mathbb F_p\)-rational isogenies. Require every degree coprime to \(r\). Record composite \(\phi:E\to E'\), degree \(d\), construction time, and evaluation cost.
+3. On each \(E'\), construct its native FAM-1 factor base \(B'\subseteq\phi(G)\) under identical size and construction budgets. Score using held-out relation throughput, not geometry alone.
+4. Control: pull \(B'\) back as \(B=[d^{-1}]\hat\phi(B')\). Compare native-source, native-destination, and transported-source bases with matched relation-generation code.
+5. Collect relations \(\sum c_iB'_i=a\phi(P)+b\phi(Q)\); solve the resulting sparse system, including the unknown \(z\), modulo \(r\). Verify \(Q=zP\).
+
+**Cost model.**
+\[
+T=T_{\rm search}+T_{\rm maps}+T_{\rm bases}+T_{\rm relations}+T_{\rm LA}.
+\]
+Measure wall time, field operations, peak memory, relation independence, and matrix fill-in. Charge all rejected candidates. Report single-target and explicitly amortized multi-target costs; compare against source-only FAM-1 and Pollard rho.
+
+**Falsification.** Reject the practical advantage if held-out end-to-end gains disappear after overhead, degree growth, or rank deficiency. Equality with transported controls supports simulation; it does not establish an asymptotic theorem. Reject an asymptotic claim if improvement remains constant-factor.
+
+**First experiment.** At \(r\approx2^{20}\), test 30 independent ordinary instances, 32 bounded walks each, fixed factor-base size, and preregistered budgets. Exhaustively recover ground-truth logs to audit every relation. Select curves on training samples; evaluate relation throughput and complete solves on fresh samples.
+
+## Direction 74
+
+### Construction
+1. **Audit before implementation:** inspect `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` for `LEAD-STR-special-j-ic-semaev`, `LEAD-ICP-coincidence-harvest-structured-base`, FAM-1 definitions, negative results, and automorphism-based bases. Record commit hashes, tested parameters, and failure modes. Repository contents were not provided here; novelty remains unverified.
+2. Construct ordinary curves \(E_s/\mathbb F_p\) with \(j=0\) or \(1728\), respectively requiring \(p\equiv1\pmod3\) or \(p\equiv1\pmod4\) for rational extra automorphisms. Find generic-\(j\) curves **over the same field with exactly the same group order**, retaining a large prime subgroup of order \(r\). Verify subgroup stability under the automorphisms.
+3. Freeze the audited FAM-1 family, decomposition length, and solver settings. Select seed points through its existing geometry, then close their union under the special curve’s automorphism group. Measure whether this union preserves FAM-1’s exploitable structure; do not assume it does.
+4. Use one factor-base column per automorphism orbit. Compute and verify each automorphism’s subgroup scalar \(\lambda_\phi\); translate \(P=\phi(R)\) into coefficient \(\lambda_\phi\) on representative \(R\). Generate FAM-1/Semaev relations and deduplicate symmetry-equivalent equations. Relative to an existing \(\{\pm1\}\) quotient, extra orbit expansion is at most \(3\) or \(2\), not \(6\) or \(4\).
+
+### Cost model
+Define
+\[
+\kappa_{\rm rel}=
+\frac{\text{verified relations increasing matrix rank}}
+{\text{core-seconds collecting and validating relations}}.
+\]
+Also report attempts, decomposition probability, polynomial-system size, solving time, orbit overhead, rank saturation, memory, and sparse-linear-algebra cost. Estimate total attack cost, including setup and individual logarithms.
+
+Compare special-\(j\) orbit FAM-1 against generic-\(j\) FAM-1 **both at equal expanded base cardinality and at equal column count**; include special-\(j\) without extra automorphisms.
+
+### Falsification
+Reject the mechanism if gains disappear after orbit deduplication, yield dependent relations, require disproportionately harder polynomial systems, or fail to reduce projected total cost. An uncharged enlargement of the factor base is not evidence of improvement.
+
+### First experiment
+After the audit, benchmark several matched-order pairs at approximately 24–32-bit fields, with identical FAM-1 settings and multiple independent seeds. Collect through rank saturation. Bootstrap paired runtime differences; proceed to larger fields only if useful-relation throughput improves reproducibly without worse matrix cost.
+
+## Direction 75
+
+**Hypothesis.** Within a JV weak-class instance over \(\mathbb F_{p^6}\), selecting an isomorphic model before constructing the coordinate-defined factor base reduces relation-generation cost enough to repay selection overhead. This is initially an extension-field experiment—not an attack on prime-field ECDLP without a separate reduction.
+
+**Prior-work gate.** Repository contents were not provided, so their tested results cannot be verified here. Before implementation, inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for both lead IDs, JV implementations, model-selection experiments, negative results, and timing logs. Record commits and distinguish new factor-base choices from previously tested coordinate changes.
+
+**Construction.**
+1. Reproduce one toy weak-class instance and its existing JV sieve unchanged, including subgroup, relation arity, factor-base rule, and linear algebra.
+2. For characteristic \(p>3\), enumerate admissible short-Weierstrass scalings
+   \[
+   E_u:y'^2=x'^3+(a/u^4)x'+b/u^6,\qquad
+   (x,y)=(u^2x',u^3y').
+   \]
+   Include the original model; deduplicate identical induced factor bases.
+3. For the baseline’s fixed subspace \(V\subset\mathbb F_{p^6}\), construct
+   \(B_u=\{P'\in E_u:x(P')\in V\}\).
+   Map relations back to the original subgroup. Reject models violating the JV weak-class prerequisites.
+4. Pilot each candidate with identical budgets and target distributions. Rank by **verified, rank-increasing relations per second**, accounting for factor-base size. Validate the winner on fresh targets.
+5. Control: transport the original factor base through each isomorphism instead of rebuilding it. This isolates coordinate-arithmetic gains from genuinely different relation sets.
+
+**Cost model.**
+\[
+T_{\rm total}=T_{\rm selection}+T_{\rm setup}
++\frac{R_{\rm required}}{\rho_{\rm independent}}+T_{\rm LA}+T_{\rm descent}.
+\]
+Measure sieve work, elimination time, relation verification, memory, matrix dimensions/density, and descent success. Report amortization over one versus many logarithms; include unsuccessful candidates in selection cost.
+
+**Falsification.** Reject the direction if held-out end-to-end savings disappear after selection overhead, arise solely from smaller factor bases, reproduce the transported-base control, or reflect weak-class invalidation. No prime-field claim survives without a demonstrated bridge.
+
+**First experiment.** On one reproducible toy instance, compare 32 admissible models plus both controls across five seeds; advance only if held-out total runtime improves with uncertainty bounds excluding parity.
+
+## Direction 76
+
+**Construction.** Work with an ordinary \(E/\mathbb F_p\), a prime-order subgroup \(\langle P\rangle\) of order \(\ell\), and an explicitly oriented endomorphism order \(\mathcal O\). Restrict to invertible ideal classes represented by rationally computable isogenies of degree coprime to \(\ell\). Class groups act on oriented curves—not automatically on a fixed ECDLP group.
+
+Define
+\[
+\operatorname{div}(f_{m,R})=m[R]-[mR]-(m-1)[O],
+\qquad U_m(R;D)=f_{m,R}(D),
+\]
+for a fixed degree-zero divisor \(D\) with disjoint support. Compute using Miller recursion, testing small \(m\) and \(m=\ell\).
+
+For \(\phi:E\to E'\), transport \(R\mapsto\phi R\), \(D\mapsto\phi_*D\). The function-norm identity predicts
+\[
+U_m(\phi R;\phi_*D)
+=\prod_{T\in\ker\phi}f_{m,R}(\tau_TD),
+\]
+with translations taken over geometric kernel points. This is a baseline identity, **not** a class-group bridge.
+
+Test whether the product closes efficiently:
+\[
+U_m(\phi R;\phi_*D)=c_{\phi,D}\,U_m(R;D)^{a_\phi},
+\]
+or closes on a bounded-dimensional vector of translated evaluations. Require coefficients independent of \(R\), compatible with class-group relations, and computable without ECDLP. Then test whether the resulting invariant actually distinguishes \(R=[k]P\) and yields recoverable information about \(k\).
+
+**Prior-work audit.** Repository contents are unavailable here; no novelty or completed-review claim is justified. Before implementation, inspect both named repositories for the two lead IDs, Miller transfer defects, norm identities, orientation assumptions, and failed covariance tests. Record exact files, commits, and eliminated hypotheses.
+
+**Cost model.** Miller evaluation costs \(O(\log m)\) extension-field operations per evaluation. Direct degree-\(d\) kernel products cost \(O(d\log m)\), plus isogeny, orientation, and extension-field overhead. Track invariant dimension, class-relation collection, linear algebra, and extraction costs. Demand an end-to-end advantage over \(O(\sqrt\ell)\) generic attacks.
+
+**Falsification.** Reject scalar covariance if held-out points violate it; reject bounded closure if dimension grows with accumulated kernel size. Reject the bridge if outputs collapse to known pairing behavior, require unknown discrete logs, or lose all \(k\)-dependence.
+
+**First experiment.** On small ordinary curves with nontrivial class groups, enumerate subgroup points and several low-degree ideal isogenies. Fit exponents using exhaustive toy-field logarithms, validate on held-out points, and test class-relation loops. Treat fitting solely as diagnosis—not an algorithmic ingredient.
+
+## Direction 77
+
+### Construction and prerequisite audit
+- First inspect both repositories for `LEAD-TRF-odd-char-descent-smith-quartic` and `LEAD-STR-special-j-ic-semaev`, including failed experiments, scripts, and timing logs. Repository access is unavailable here; prior results must not be presumed.
+- **Dimension gate:** an elliptic curve cannot be isogenous to a genus-3 Jacobian. Identify Smith’s actual three-dimensional input and every field-extension requirement. In particular, base-changing \(E/\mathbb F_p\) to \(\mathbb F_{p^3}\) does not create a generic Weil-restriction instance.
+
+### Exact experiment
+For odd \(p>3\), test
+\[
+E_0:y^2=x^3+b,\qquad E_{1728}:y^2=x^3+ax,
+\]
+with nonsingular parameters, alongside ordinary generic-\(j\) controls matched by field size and subgroup size.
+
+If compatible with the audited Smith implementation:
+1. Form \(A=E^3\) with its product polarization.
+2. Enumerate the **135 geometric maximal isotropic subgroups** \(K\subset A[2]\); retain Frobenius-stable ones.
+3. Construct the principally polarized quotient \(A/K\). Reject decomposable quotients; distinguish hyperelliptic Jacobians from smooth plane-quartic Jacobians.
+4. For each quartic \(C\), explicitly verify the quotient map and transport
+   \[
+   P\mapsto\phi(P,O,O),\quad Q\mapsto\phi(Q,O,O).
+   \]
+   Verify preservation of an odd prime-order subgroup.
+5. Measure quartic sparsity, coefficient arithmetic, rational automorphisms, divisor reduction, and Diem-style relation collection. Compare identical implementations and factor-base policies across curve classes.
+
+If Smith requires different input, implement that input explicitly rather than silently substituting this construction.
+
+### Cost model
+Record
+\[
+T=T_{\rm construction}+N_{\rm trials}c_{\rm trial}
+ +T_{\rm filtering}+T_{\rm linear\ algebra}+T_{\rm descent},
+\]
+plus memory and success probability. Measure relation rank **modulo the target subgroup order**, not merely relation count. Compare against Pollard rho, including special-\(j\) automorphism speedups. Generic genus-3 index-calculus estimates around \(\widetilde O(p^{4/3})\) already lose to \(\widetilde O(\sqrt{\ell})\) when \(\ell\asymp p\); demand a quantified structural improvement.
+
+### Falsification and first run
+Falsify if the construction fails, special-\(j\) yields only constant-factor simplifications, relations lack rank, or complete projected cost exceeds rho.
+
+**First run:** enumerate all 135 kernels over several small primes, recording quotient type, map correctness, and quartic sparsity before implementing relation collection.
+
+## Direction 78
+
+### Construction and prior-work gate
+First inspect `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher` for FAM-1, `H-PAIR-62e9cc`, `LEAD-ICP-extension-field-embedding`, `LEAD-TRF-pairing-target-field-recost`, and `LEAD-ICP-coincidence-harvest-structured-base`. Extract constructions, parameters, measurements, and closure reasons; these repositories were not available here, so no review is claimed.
+
+Reproduce FAM-1’s relation equation before assigning costs. For a prime-order subgroup \(\langle P\rangle\subset E(\mathbb F_p)\) of order \(r\), distinguish:
+
+1. **Extension-field coordinates:** factor-base points or relation generation use \(\mathbb F_{p^k}\), but equations  
+   \[
+   a_i+b_ix+\sum_j c_{ij}\log_P(B_j)=0\pmod r
+   \]
+   still require linear algebra over \(\mathbb F_r\). Verify every \(B_j\in\langle P\rangle\); otherwise these logarithms are undefined.
+2. **Multiplicative-target reduction:** construct an explicit efficiently computable homomorphism into \(\mathbb F_{p^k}^{*}\), nontrivial on \(P\), yielding \(h(Q)=h(P)^x\). For a pairing construction, provide the auxiliary torsion point and prove nondegeneracy. Require \(r\mid p^k-1\); merely extending coordinates supplies no reduction.
+
+### Cost model
+Measure
+\[
+T=T_{\rm setup}+T_{\rm relations}+T_{\rm filtering}
+ +T_{\rm LA}+T_{\rm descent}.
+\]
+For \(N\) filtered unknowns and average row weight \(w\), budget sparse Wiedemann/Lanczos at approximately \(O(N^2w)\) coefficient-field operations, explicitly pricing modular arithmetic, memory traffic, and parallelism.
+
+Apply exTNFS **only** to a justified multiplicative-target DLP. Reuse `H-PAIR-62e9cc` calibration only after matching characteristic, extension degree, tower representation, subgroup size, and special polynomial structure. Separate reusable precomputation from per-target descent. Compare total and amortized costs against Pollard rho and existing FAM-1 estimates.
+
+### Falsification
+Reject if the embedding is absent or degenerate; relations introduce unavailable logarithms; rank deficiencies prevent recovery; extension-field arithmetic was incorrectly charged as the LA coefficient field; or calibrated total cost exceeds the baseline.
+
+### First experiment
+On a toy curve with known \(x\), reproduce one complete FAM-1 recovery. Record relation yield, matrix dimensions, rank, coefficient modulus, memory, and timings. If a multiplicative reduction exists, independently solve its target DLP and compare measured cost with the tower calibration before extrapolating.
+
+## Direction 79
+
+### Construction
+- **Repository review prerequisite:** I cannot access the named repositories here. Before implementation, extract prior Teske-trapdoor, FAM-1, Semaev-tail, and structured-base experiments into a deduplication table: construction, parameters, negative results, and unresolved hypotheses. Reuse their exact FAM-1 definition; do not interpret this plan as a completed review.
+- Choose ordinary curves \(E/\mathbb F_p\), initially \(p\approx2^{20},2^{24},2^{28}\), with large prime subgroup order \(r\). Generate equal-budget collections of rational low-degree isogeny walks \(\phi:E\to E'\), with degrees coprime to \(r\).
+- On each \(E'\), construct the prescribed FAM-1 factor base \(F=\{P_i\}\), size \(B\), using identical parameter-selection budgets. Controls: random bases, interval-\(x\) bases, and FAM-1 on the original curve.
+- For random \(R=a\phi(P)+b\phi(Q)\), enumerate factor-base \(x_1\); solve
+  \[
+  f_3(x_1,x_2,x(R))=0
+  \]
+  for \(x_2\). Require \(x_2\) in the base, lift points, and verify signs and the group equation. Record relations
+  \[
+  aP+bQ=\sum_i c_iP_i'
+  \]
+  in target-curve coordinates, then solve the sparse system modulo \(r\).
+- Select promising targets using training relations only; evaluate on fresh relations and fresh DLP instances. Retain the isogeny as the proposed trapdoor.
+
+### Cost model
+Measure
+\[
+C_{\rm total}=C_{\rm search}+C_\phi+N_{\rm trials}C_{\rm trial}
++C_{\rm filtering}+C_{\rm LA}.
+\]
+Include failed walks, factor-base construction, rank deficiency, memory, and map evaluation. Report single-instance and explicitly amortized costs. The enumerative decomposition kernel costs \(O(B)\) field operations per trial; measured success probability \(s\) gives approximately \(B/s\) work per usable relation. Compare complete recovery against optimized Pollard rho, not just relation yield.
+
+### Falsification
+Reject if held-out gains disappear; FAM-1 fails to outperform matched controls; heavy tails reflect duplicates or low-rank relations; or search/setup costs erase end-to-end savings. A secret isogeny alone provides no hardness gap: an efficient known isogeny transports the DLP.
+
+### First experiment
+At \(p\approx2^{20}\), test 256 walks, three base sizes, and fixed training/validation budgets. Measure decomposition-rate tails, distinct-relation rank, and total recovery time before scaling.
+
+## Direction 80
+
+### Construction
+- **Repository-review prerequisite:** inspect `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher` for both named leads, FAM-1 definitions, implementations, and negative results. Record commit hashes and reproduce baselines before claiming novelty. Those repositories were not accessible here; this plan does not claim that review occurred.
+- Use the **descended \(n=2\) control**: \(E/\mathbb F_p\), quadratic twist \(E^d\), and
+  \[
+  A=\operatorname{Res}_{\mathbb F_{p^2}/\mathbb F_p}(E_{\mathbb F_{p^2}}).
+  \]
+  Here \(A\) is \(\mathbb F_p\)-isogenous to \(E\times E^d\), not a generic simple abelian surface.
+- Initially choose \(E\) with full rational 2-torsion. Glue \(E\) and \(E^d\) along a nondegenerate anti-isometry of their 2-torsion to construct a \((2,2)\)-isogeny \(\psi:E\times E^d\to J(C)\). Verify smoothness, maps, and Frobenius polynomial.
+- Transfer an odd-prime-order challenge \(Q=[s]P\) using \(R\mapsto\psi(R,0)\); verify order preservation.
+- Unless repository FAM-1 specifies otherwise, test this explicit one-parameter family: choose \(P_0\in C(\mathbb F_p)\), set \(D(t)=[P_t-P_0]\), and retain points whose \(x(P_t)\) lies in a predetermined set \(S\). Store generalized Mumford coordinates.
+- For randomized \(T=[a]\psi(P,0)+[b]\psi(Q,0)\), solve
+  \[
+  T=D(t_1)+D(t_2)
+  \]
+  using Mumford addition equations, elimination, and rational-root filtering. Collect relations; solve modulo the subgroup order.
+
+### Cost model
+For \(B\approx |S|\), record factor-base generation, elimination, root finding, membership tests, relation yield, memory, and sparse linear algebra. The generic-surface heuristic gives yield \(B^2/p^2\); **measure rather than assume it**, because targets lie in an elliptic subvariety. Include twist-component cancellation constraints. Compare total cost with Pollard rho, \(\widetilde O(\sqrt r)\).
+
+### Falsification
+Reject if decomposition multiplicities remain bounded and yield is generic or worse; twist cancellation destroys usable rank; elimination dominates; or measured scaling offers no advantage over rho. This falsifies the tested construction, not every FAM-1 variant.
+
+### First experiment
+At several 16–24-bit primes, exhaustively enumerate decompositions for small \(S\). Compare random Jacobian targets against transferred elliptic-subgroup targets, measuring yield, collisions, rank, and runtime before larger searches.
+
+## Direction 81
+
+### Construction
+
+1. **Audit prerequisite:** I cannot access the named repositories here. Before implementation, inventory prior coordinate-statistic, digit-character, λ, PGL₂-stability, FAM-1, and structured-base experiments; record commit IDs, parameters, negative results, and reusable code. Treat novelty as unverified until this comparison is complete.
+2. Freeze the repository’s exact FAM-1 seed generator and membership predicate \(M(s)\). Use exhaustive evaluation on small instances to obtain ground-truth labels; do not redefine membership using coordinate statistics.
+3. For each seed’s candidate points \(P_i\), normalize \(x_i=x(P_i)\in\{0,\ldots,p-1\}\). Define
+   \[
+   d_{B,j}(x)=\lfloor B^j x/p\rfloor\bmod B,\qquad
+   \chi_{B,j,k}(x)=e^{2\pi i k d_{B,j}(x)/B}.
+   \]
+   Start with \(B\in\{2,4,16\}\), \(j\in\{1,2,3\}\), and \(1\le k<B\).
+4. Form features from empirical character means and selected pairwise correlations. Repeat after 16 fixed, publicly seeded Möbius maps \(g(x)=(ax+b)/(cx+d)\); handle poles explicitly. These are coordinate encodings, not assumed elliptic-curve automorphisms.
+5. Fit a regularized linear score \(S_\lambda=\lambda^\top f(s)\). Accept seeds above threshold \(\tau\); run exact membership only on accepted seeds. Measure stability across held-out maps—not invariance under all PGL₂, whose transitivity can erase coordinate information.
+
+### Cost model
+
+Let positive prevalence be \(\pi\), true-positive rate \(r\), false-positive rate \(q\), exact-test cost \(C_M\), and feature cost \(C_F\). Accepted fraction is
+\[
+a=\pi r+(1-\pi)q.
+\]
+Cost per retained true member is \((C_F+aC_M)/(\pi r)\), versus \(C_M/\pi\) without filtering. Include seed generation, inversions, training amortization, and downstream relation yield; classification alone does not establish an ECDLP speedup.
+
+### Falsification
+
+Reject if held-out savings vanish, useful-relation recall falls, performance disappears under matched sampling controls, or gains fail across curves, primes, or held-out maps. Compare against cheaper coordinate summaries and shuffled-label controls.
+
+### First experiment
+
+Use three small prime-field curves with exhaustively labeled seed pools. Split by seed lineage, train on two curves, test once on the third. Report confidence intervals for false-positive/negative rates, wall-clock cost per useful relation, and transform stability.
+
+## Direction 82
+
+### Construction
+1. **Audit before implementation:** locate FAM-1, `LEAD-EXO-four-list-ktree-join`, and `LEAD-ICP-coincidence-harvest-structured-base` in both repositories. Extract exact seed maps, O2 agreement-kernel definitions, previous negative results, and measured costs. Repository contents are unavailable here; this plan does not claim that review is complete.
+2. On \(E/\mathbb F_p\), use subgroup order \(n\). Represent each FAM-1 seed as \((R_s,\mathbf c_s)\), where \(\mathbf c_s\) is its verified factor-base decomposition. Preserve any known \(G,Q\) coefficients.
+3. Generate four disjoint seed lists of size \(N\). Seek
+   \[
+   R_a+R_b+R_c+R_d=T,
+   \]
+   yielding a verified relation after subtracting \(T\)’s symbolic representation.
+4. Apply the audited O2 kernel to generate restricted pair lists \(P_{12}\) and \(P_{34}\). Store exact pair sums and provenance. Bucket left sums \(X\) and right complements \(T-Y\) using the same \(b\)-bit label; compare full points within matching buckets.
+5. **Critical constraint:** coordinate truncation is not a group homomorphism. Any Wagner-style speedup requires a demonstrated, inexpensive seed-space agreement rule—not merely hashing elliptic-curve sums.
+
+### Cost model
+Let \(A(N)\) be pair-generation work and \(M_L,M_R\) retained pair counts. Define
+\[
+W=2^b\sum_z p_L(z)p_R(z).
+\]
+Expected bucket comparisons are \(C=M_LM_RW/2^b\). Measure conditional exact-match probability \(\rho\); expected verified relations are \(C\rho\).
+
+Total cost includes seed generation, \(A(N)\), point arithmetic, sorting, comparisons, memory traffic, and downstream relation-rank contribution. Count dependent relations separately. Compare against unrestricted four-list meet-in-the-middle, matched random-seed filtering, and previously tested repository methods at equal memory.
+
+### Falsification
+Reject the direction if:
+- implementing the kernel still enumerates \(\Theta(N^2)\) pairs without compensating relation yield;
+- bucket agreement provides no exact-match enrichment beyond matched controls;
+- heavy buckets, repeated seeds, or dependent relations erase savings;
+- measured scaling fails to beat the best audited baseline.
+
+### First experiment
+After reproducing the repository kernel, run a preregistered sweep on small prime-field curves with exhaustively checkable subgroup sizes. Vary \(N,b\), kernel thresholds, and independent seed batches. Record pair-generation work, \(W\), maximum bucket occupancy, \(\rho\), relation independence, and cost per usable relation. Exhaustive enumeration must quantify kernel recall and missed solutions.
+
+## Direction 83
+
+### Construction
+1. **Repository audit first:** inspect `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher` for global-lift-height, FAM-1, and structured-base experiments. Record commit, parameters, failed assumptions, and measured costs; distinguish reproductions from new tests. Repository contents are unavailable here, so prior results are not presumed reviewed.
+2. Fix \(E/\mathbb F_p\), prime-order subgroup \(\langle P\rangle\), and target \(Q\). Construct nonsingular elliptic surfaces
+   \[
+   \mathcal E:y^2=x^3+A(t)x+B(t),\qquad \deg A\le4\chi,\ \deg B\le6\chi,
+   \]
+   with fibre \(\mathcal E_{t_0}=E\). Freeze each surface **before** selecting target points.
+3. Define \(T_{\rm section}(d,\chi,p;R)\) as the measured cost of finding a section specializing to \(R\). Search
+   \[
+   x=U/W^2,\quad y=V/W^3,\quad
+   V^2=U^3+AUW^4+BW^6,
+   \]
+   with \(\deg W\le d,\deg U\le2(d+\chi),\deg V\le3(d+\chi)\), normalized coprime coordinates and \(W(t_0)\ne0\). Impose specialization to randomly labelled \(R=aP+bQ\). Use coefficient elimination/Gröbner solving; count failures and timeouts.
+4. Feed successful sections into the repository’s frozen FAM-1 relation extractor. Specify its algebraic identity and factor-base acceptance test explicitly before testing. Accept only verified relations
+   \[
+   aP+bQ=\sum_i c_iF_i.
+   \]
+   Merely lifting \(R\), or obtaining relations solely among known scalar multiples, is not progress.
+
+### Cost model
+For factor-base size \(m\), measure
+\[
+C_{\rm total}=C_{\rm surface}+C_{\rm precompute}
++\frac{m+s}{\rho}(T_{\rm section}+C_{\rm extract}+C_{\rm verify})
++C_{\rm linear\ algebra},
+\]
+where \(\rho\) counts **independent, useful relations per attempted target**, including lift failures. Report memory, preprocessing amortization, rank, and comparison with identical FAM-1 without sections and generic square-root attacks.
+
+### Falsification
+Reject the tested regime if lift solving approaches generic DLP cost; sections cover only a biased, unusable subset; extraction gives no end-to-end gain; or relations are dependent/tautological. Target-dependent surface construction must be charged, not hidden as preprocessing.
+
+### First experiment
+Use subgroup primes of approximately 20, 24, and 28 bits, \(\chi=1\), and \(d=0,1,2\). Test 100 random targets per frozen surface, with matched time budgets and baseline extraction. Measure lift probability, runtime tails, relation yield, and rank before scaling.
+
+## Direction 84
+
+**Construction and audit gate.** First inspect `LEAD-EXO-hashed-factor-base-tensor-ecdl`, `LEAD-ICP-coincidence-harvest-structured-base`, FAM-1 definitions, and experiment logs in `isogeny-labs/crypto` and `crypto-autoresearcher`. These repositories were not accessible here; no prior-results review is claimed. Record previously tested constructions, failures, and the exact Akshima/Bochum contraction bound. Proceed only if its tensor representation, coefficient domain, and contraction assumptions apply—not merely its headline exponent.
+
+1. **Exact counting instance.** For \(E/\mathbb F_p\), select factor-base abscissae
+   \[
+   X_B=\{x:\exists y\in\mathbb F_p,\ (x,y)\in E,\ h_s(x)<\tau\}.
+   \]
+   Set \(\tau\) for expected size \(B\); retain both point signs. Instantiate the repository’s *actual* FAM-1 Semaev system for target \(R\), with \(x_i\in X_B\). Do not invent a replacement FAM-1 definition. Add canonical ordering to remove permutation duplicates. Include a deterministic finite-field/group-law verification circuit checking that signed points sum to \(R\), eliminating resultant artifacts and exceptional-case errors.
+
+2. **Tensor algorithm.** Compile arithmetic, hash membership, and verification into bounded-arity constraints. Represent each constraint by its Boolean indicator tensor; contract over all variable indices using exact integer arithmetic. Require unique auxiliary witnesses per accepted decomposition so the scalar equals the decomposition count. Recover relations by conditioning variables and repeating contractions; separately measure this extraction overhead. Compare optimized elimination orders with brute-force and meet-in-the-middle baselines.
+
+**Cost model.** Measure
+\[
+T_{\rm total}=T_{\rm base}+T_{\rm compile}+T_{\rm contract}+T_{\rm extract}+T_{\rm linear\ algebra}.
+\]
+Report peak memory, tensor entries processed, integer bit complexity, and empirical exponent versus \(\log_2p\). Charge hash-circuit complexity and base-generation costs explicitly. Estimate relation supply using the measured count distribution, not just its mean. Counting alone is not an ECDLP speedup.
+
+**Falsification.** Reject the direction if the audit invalidates theorem applicability; counts disagree with exhaustive enumeration; contraction width or hash constraints erase the predicted advantage; extraction costs dominate; or insufficient independent relations negate end-to-end gains.
+
+**First experiment.** On several 16–24-bit prime-field curves, use FAM-1’s smallest supported arity and three base densities. For 100 targets per setting, compare exhaustive counts against tensor counts, then benchmark relation extraction and width scaling using identical instances and preprocessing budgets.
+
+## Direction 85
+
+### Construction
+1. **Audit prerequisite:** inspect `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` for FAM-1, invertible-hint-subset, and structured-base coincidence experiments. Extract exact parameterizations, failed variants, datasets, and costs; repository contents are unavailable here, so prior results are not assumed.
+2. Let \(G\) generate a prime-order subgroup of size \(n\) over \(\mathbb F_p\). Write the actual FAM-1 family as \(P(\theta)\), with graph label \(\ell(\theta)=\log_G P(\theta)\in\mathbb F_n\). Generate ground-truth labels **only for small experimental instances**.
+3. Enumerate cheap hint maps \(H\) and predicates defining subsets \(S\), requiring \(H|_S\) to have an explicit efficient inverse—not a lookup table or discrete-log oracle. Specify how hints become elements of \(\mathbb F_n^r\); do not conflate coordinate and scalar fields.
+4. Fit total-degree-\(d\) polynomials \(f\) predicting \(\ell(\theta)\) from \(H(\theta)\). Measure
+\[
+\rho=\Pr[\theta\in S],\qquad
+A(d)=\Pr[f(H(\theta))=\ell(\theta)\mid\theta\in S].
+\]
+Freeze subset selection and fitting before testing. Exclude families whose construction already reveals their logs.
+5. Feed verified predictions into the existing FAM-1 relation-generation pipeline; test whether they increase **independent usable relations**, not merely labeled points.
+
+### Cost model
+With \(r\) hint coordinates, \(M=\binom{r+d}{d}\) coefficients. Report training labels, fitting time, storage, hint inversion, evaluation, and verification separately. Dense fitting is roughly \(O(NM^2+M^3)\) field operations.
+
+Expected online cost per correct prediction:
+\[
+\frac{C_{\rm family}+C_H+C_f}{\rho A(d)}+C_{\rm verify}.
+\]
+Then charge relation construction, filtering, rank losses, and sparse linear algebra. Training-label acquisition must remain in the full attack cost.
+
+### Falsification
+Reject if agreement vanishes on untouched tests; depends on hidden log leakage; requires exponential subset search; yields dependent/unusable relations; or total amortized work fails to beat relevant baselines. High \(A(d)\) alone is insufficient if \(\rho\) collapses.
+
+### First experiment
+Use three increasing toy subgroup sizes and the audited FAM-1 construction. Exhaustively label each, then split by parameter blocks into training/validation/test. Scan small \(d\) and a preregistered hint library. Compare against shuffled-label, random-subset, and constant-predictor controls; repeat on fresh curves and generators. Advance only reproducible held-out gains with favorable density and end-to-end relation throughput.
+
+## Direction 86
+
+**Construction.** Treat FAM-1 as the existing seed-to-point map \(F:S\to E(\mathbb F_p)\); preserve its actual seed distribution and admissibility constraints. Work in a prime-order subgroup of order \(r\), with target \(Q=xP\). Fix disjoint coordinate-projection panels \(\pi_1,\ldots,\pi_k\) on the **seed representation**, and define lossy states \(L_i(s)=\pi_i(s)\).
+
+For scalars \(a\), seek a cheap probabilistic propagator
+\[
+T_{a,i}(L_i(s))\rightsquigarrow L_i(s_a),
+\qquad F(s_a)=[a]F(s).
+\]
+The output may be a bounded candidate list or an explicitly sampled distribution. Count failure to find an admissible \(s_a\); do not condition it away. Test successive doubling first, then addition chains. Determine whether any rigidity theorem excludes only exact deterministic propagation, or also this probabilistic/list-valued interface.
+
+Use propagated states to nominate structured-base coincidences for relation harvesting. Every nomination must be lifted to full points and verified. Lossy-state collisions alone are not relations.
+
+**Cost model.** Measure setup, propagation, candidate-list growth, lift/verification, memory, relation yield, and linear algebra. If each nomination costs \(C\) and produces a verified independent relation with probability \(\rho\), charge at least \(C/\rho\) per relation. Include seed search, rejected lifts, duplicate relations, and preprocessing. Estimate total discrete-log cost and compare with both the unchanged relation-harvesting pipeline and generic \(O(\sqrt r)\) attacks. Reduced projection entropy is not itself a speedup.
+
+**Falsification.**
+- Propagation predicts no better than a seed-distribution-matched baseline.
+- Candidate lists or lifting costs erase the filtering advantage.
+- Accuracy collapses under repeated scalar steps.
+- Verified relations lack independence or sufficient yield.
+- The applicable rigidity theorem already forbids the proposed probabilistic interface under its actual assumptions.
+
+**First experiment.** On several small prime-field curves, enumerate FAM-1 seeds and admissible doubling lifts. For equal-sized disjoint panels, measure \(H(L_i(s_2)\mid L_i(s))\), top-\(K\) prediction accuracy, lift multiplicity, and end-to-end cost on held-out seeds and curves. Compare against shuffled labels, marginal sampling, and direct doubling.
+
+**Prior-work gate.** Repository contents were not supplied, so no review is claimed. Before implementation, inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for both named leads, FAM-1 definitions, rigidity proofs, tested panels, and negative results; record exact files/commits and reject duplicate experiments.
+
+## Direction 87
+
+**Objective.** Measure false negatives in FAM-1 screening—not claim an ECDLP speedup from artificially enriched data.
+
+**Repository gate.** Before implementation, audit `isogeny-labs/crypto` and `crypto-autoresearcher`: locate FAM-1’s actual equations, factor-base construction, screening stages, prior planted controls, and negative results. Produce a commit-linked experiment ledger; reuse existing controls. Repository contents were not provided here, so this plan does not claim that review is complete.
+
+**Construction.** Let \(E/\mathbb F_p\), factor base \(B\), target \(T\), and relation arity \(k\) match the audited configuration. Denote the independently evaluated FAM-1 geometric conditions by \(G\). Build three positive-control families:
+
+1. **Unconditioned algebraic plants.** Sample \(P_1,\ldots,P_{k-1}\in B\); set \(P_k=T-\sum_{i<k}P_i\). Retain only \(P_k\in B\) and \(G(P_1,\ldots,P_k)\). Record all rejection rates; never silently enlarge \(B\).
+2. **Structured coincidence plants.** Enumerate disjoint tuple pools, hash their group sums, and join complementary sums totaling \(T\). Retain independently verified \(G\)-valid relations. Stratify by repeated coordinates, orbit membership, and sum multiplicity where these are relevant to the audited geometry.
+3. **Geometric stress plants.** From verified relations, enumerate only transformations proven to preserve both the relation and FAM-1 admissibility. Oversample strata near implemented screening thresholds and exceptional geometric loci. Count independent seeds separately from transformed descendants.
+
+Validate positives using curve arithmetic and direct geometric equations—not the screening implementation. Inject blinded records at each compatible pipeline boundary. Add matched invalid controls to detect indiscriminate acceptance. Log each record’s first rejection stage.
+
+**Cost model.** Family 1 costs approximately \(1/(\Pr[P_k\in B]\Pr[G\mid P_k\in B])\) trials per retained plant. Meet-in-the-middle enumeration costs \(O(|B|^{\lceil k/2\rceil})\) group operations and comparable worst-case storage. Report planting, oracle, and screening costs separately; include symmetry-induced effective sample-size loss.
+
+**Falsification.** The instrumentation fails if independent verification rejects plants, injection changes pipeline behavior, or claimed coverage excludes legitimate FAM-1 strata. A claimed false-negative rate below 1% is unsupported unless its confidence bound establishes that threshold.
+
+**First experiment.** Exhaustively enumerate a tractable toy-field instance, establish ground truth, then blindly inject 300 independent positives per family plus matched negatives. Compare stagewise rejection rates with exhaustive truth before scaling.
+
+## Direction 88
+
+### Construction
+1. **Repository audit gate:** I cannot access the named repositories here. Before implementation, inventory their FAM-1 definitions, smoothness predicates, structured-base experiments, negative results, and quantum-resource estimates; record commit hashes and identify what this variant changes.
+2. Let \(E/\mathbb F_p\) contain a prime-order subgroup \(\langle P\rangle\) of order \(n\), with target \(Q\). Freeze a factor base \(\mathcal B=\{B_1,\ldots,B_B\}\) and the repository’s exact FAM-1 parameter domain \(\Theta\).
+3. Implement a reversible oracle computing the existing FAM-1 candidate \(R_\theta=a_\theta P+b_\theta Q\), then deciding whether it admits the prescribed bounded-weight decomposition
+   \[
+   R_\theta=\sum_i c_{\theta,i}B_i.
+   \]
+   Mark successful parameters, copy out the relation, and uncompute workspace. “Smoothness” means this group decomposition—not smoothness of an integer coordinate.
+4. Charge the **entire decomposition procedure** to the oracle. If FAM-1 instead outputs witnesses directly, include their parameter-space size; do not assume a free existential smoothness oracle.
+5. Use amplitude amplification to collect distinct relations, then classical sparse elimination modulo \(n\). Seek a row combination eliminating factor-base coefficients and yielding \(AP+BQ=0\), \(B\ne0\); return \(-A/B\bmod n\).
+
+### Cost model
+Measure fresh-relation probability \(\rho_j\) after \(j\) accepted relations. For \(R\) relations sufficient for elimination,
+\[
+T_Q\approx\sum_{j=0}^{R-1}\frac{C_{\mathrm{oracle}}}{\sqrt{\rho_j}}
++C_{\mathrm{readout}}+C_{\mathrm{LA}}.
+\]
+Report logical qubits, Toffoli count/depth, memory-access assumptions, classical storage, and rank yield. Oracle cost includes arithmetic, membership, decomposition, duplicate rejection, and uncomputation. Quantum search and LA costs are **additive**, not multiplied. Compare with classical FAM-1 and Shor under identical fault-tolerance assumptions.
+
+### Falsification
+Reject the proposed advantage if decomposition dominates the quadratic search saving; valid parameters concentrate into duplicate/dependent relations; reversible memory costs erase gains; or optimized total resources fail to beat classical FAM-1. Treat Shor competitiveness separately.
+
+### First experiment
+On several toy curves over 20–32-bit prime fields, exhaustively enumerate a bounded FAM-1 domain. Measure success density, multiplicities, decomposition runtime, and relation rank. Compile the dominant predicate into a reversible circuit and extrapolate only from measured gate counts. Stop before larger searches if oracle costs already eliminate the advantage.
+
+## Direction 89
+
+### Construction
+- Reuse the repository’s exact FAM-1 family, relation verifier, and seed-table representation. **Repository contents are unavailable here; prior-test overlap must be checked before claiming novelty.**
+- For \(E/\mathbb F_p\), work in a prime-order subgroup \(\langle P\rangle\) of order \(n\), targeting \(Q=xP\). Preserve coefficient provenance for every stored point and harvested relation.
+- Operationally define \(T\) as the baseline walk-step budget and \(T_{\rm sel}\in\{0.65T,0.75T\}\) as a **single batch-reselection checkpoint**.
+- Start with the unchanged FAM-1 seed table of size \(M\). During exploration, retain verified FAM-1 relations and candidate seeds derived from them. Admit a candidate only when its required coefficients/logarithms are actually known; an unsolved relation does not supply free advice.
+- At the checkpoint, select \(M\) seeds from the original-plus-grown pool. Rank candidates by estimated **distinct, useful verified relations per charged evaluation**, using exploration statistics with duplicate and occupancy penalties. Freeze the table for the remaining budget.
+- Use exact group equality and the original relation verifier, never advice-label coincidence alone.
+
+### Cost model
+Measure
+\[
+C=C_{\rm seed}+C_{\rm walk}+C_{\rm verify}+C_{\rm select}
+ +C_{\rm update}+C_{\rm linear\ algebra}.
+\]
+Report field-operation equivalents, wall time, peak memory, distinct-relation yield, rank gain, and end-to-end successful solves. Charge all candidate construction, failed verification, scoring, sorting, and table rebuilding. Report amortized results separately, explicitly stating how many targets share preprocessing.
+
+### Prior-test review
+Search both named repositories for FAM-1, advice-table variants, coincidence harvesting, adaptive reseeding, and negative results. Record commit, configuration, seed provenance, charged costs, and outcome. Determine whether this experiment differs in checkpoint timing, candidate generation, selection rule, or accounting.
+
+### Falsification
+Reject the direction if apparent gains disappear after preprocessing/reselection costs; increased collisions do not increase independent useful relations; growth requires unknown logarithms; or selected seeds overfit exploration and fail on held-out runs. A small-instance gain alone does not establish asymptotic improvement.
+
+### First experiment
+Run paired random seeds at three feasible subgroup sizes with identical memory and total budgets: fixed table, random batch reselection, and scored reselection at both checkpoints. Use at least 30 pairs per size. Advance only if scored reselection lowers total solve cost with confidence intervals excluding no improvement and shows no worsening size trend.
+
+## Direction 90
+
+### Construction
+- **Repository audit first:** repository contents are unavailable here; prior testing cannot be verified. Before coding, inspect `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher` for both named leads, FAM-1 implementations, benchmarks, and negative results. Record commit IDs, duplicate mechanisms, and unresolved assumptions.
+- Use the existing FAM-1 seed-to-candidate map \(F(s)\) and relation predicate unchanged. Specify its actual seed domain; do not assume seeds are subgroup scalars.
+- For an odd cyclic seed domain \(\mathbb Z_m\), partition seeds using a cheap reproducible tag \(j=h(s)\bmod r\), then walk
+  \[
+  s_{i+1}=2^{-1}(s_i+c_j)\pmod m,
+  \]
+  with fixed offsets \(c_j\). Maintain the exact affine trace \(s_i=A_i s_0+B_i\pmod m\). For other seed domains, require a proven domain-preserving analogue before proceeding.
+- Evaluate \(F(s_i)\) normally initially. Separately implement incremental evaluation **only if the actual FAM-1 formulas imply an exact recurrence**. Seed halving does not imply cheap elliptic-curve halving.
+- Deduplicate candidates and validate relations identically to baseline; use independent restarts to expose short cycles.
+
+### Cost model
+Measure
+\[
+T_{\rm useful}=
+\frac{T_{\rm tags}+T_{\rm seed}+T_F+T_{\rm predicate}+T_{\rm dedup}+T_{\rm restart}}
+{\#\text{distinct accepted relations}}.
+\]
+Report ns/step, ns/distinct candidate, relation yield, memory, and relation-matrix rank growth. Compare with sequential and pseudorandom plain FAM-1 enumeration under identical arithmetic, threading, and validation. Charge deferred trace materialization and batch operations fully.
+
+A cheaper seed transition matters only if it reduces total candidate-generation cost without losing useful relation yield.
+
+### Falsification
+Reject the direction if:
+- No exact, cheaper FAM-1 evaluation recurrence exists and seed arithmetic is negligible.
+- Walk collisions, bias, or cycles erase transition savings.
+- Accepted relations are disproportionately dependent.
+- End-to-end time per useful relation fails to beat enumeration across multiple instances and seeds.
+
+### First experiment
+On a small prime-field instance where relation collection is measurable, run paired baseline/tagged-halving benchmarks with identical candidate budgets and at least ten restarts. Profile components separately; first test the unchanged evaluator to isolate traversal effects, then test any proven incremental evaluator. Publish traces and confidence intervals, including negative results.
+
+## Direction 91
+
+### Construction
+1. **Audit before implementation:** inspect `isogeny-labs/crypto` and `crypto-autoresearcher` for FAM-1, Cheon applicability, and structured-base coincidence experiments. Record exact relation formats, costs, negative results, and commit IDs. These repositories are not available here; prior coverage cannot yet be verified.
+2. Work in a prime-order subgroup \(G=\langle P\rangle\) of order \(q\) on \(E(\mathbb F_p)\), with \(Q=[x]P\). Choose \(d>1\) dividing \(q-1\).
+3. Instrument FAM-1 to output relations
+   \[
+   [a_i]P+[b_i]Q+\sum_j[c_{ij}]R_j=O,
+   \]
+   including the complete construction provenance of every \(R_j\).
+4. Seek known coefficients satisfying
+   \[
+   [x^d]P=[u]P+[v]Q+\sum_j[w_j]R_j.
+   \]
+   Require a derivation from FAM-1’s actual defining equations—not merely a fit at the sampled secret. Attempt sparse elimination on those equations; record every nonlinear operation, scalar disclosure, and assumed oracle.
+5. If extraction succeeds, feed the auxiliary point to Cheon’s algorithm. If all available points arise solely through known-scalar linear combinations of \(P,Q\), establish the obstruction: their formal coefficients remain affine in \(x\), so generic generation of \(x^dP\) requires additional information.
+
+### Cost model
+Measure
+\[
+T_{\rm total}=T_{\rm relations}+T_{\rm elimination}+T_{\rm extraction}
++\widetilde O(\sqrt{q/d}+\sqrt d).
+\]
+Include failed relation searches, field operations, memory, preprocessing, and amortization assumptions. Compare against optimized Pollard rho, \(\Theta(\sqrt q)\), and direct DLP recovery from the same relations. Audit whether deployed subgroup orders admit useful divisors \(d\).
+
+### Falsification
+Reject the proposed advantage if extraction requires knowing \(x\), an unavailable multiplication oracle, or work comparable to rho; if relations yield only affine closure; or if auxiliary extraction is no cheaper than recovering \(x\) directly. Toy correctness alone does not establish asymptotic improvement.
+
+### First experiment
+Choose toy curves with 24–32-bit prime subgroup orders and several useful divisors \(d\mid(q-1)\). For 100 random secrets per setting, isolate a **blind extractor** receiving only public inputs and FAM-1 outputs. A separate verifier checks its output against \([x^d]P\). Log correctness, provenance, total cost, and scaling; include affine-only and random-relation controls.
+
+## Direction 92
+
+### Construction
+1. **Audit before implementation.** Search both repositories for `FAM-1`, `LEAD-RHO-ecc2k130-iteration-function`, and `LEAD-ICP-coincidence-harvest-structured-base`; extract the actual seed decoder, v3 transition table, prior negative results, and counting conventions. Repository contents are unavailable here, so novelty and compatibility remain unverified.
+2. Let the implemented FAM-1 decoder be \(D:S\to E^k\), with a documented relation predicate \(R(D(s))\). On a binary toy curve defined over \(\mathbb F_2\), construct a seed map \(\sigma\) satisfying
+   \[
+   D(\sigma s)=\pi^{\times k}D(s),\qquad \pi(x,y)=(x^2,y^2).
+   \]
+   Derive this from the decoder equations; do not assume squaring parameters suffices. Include coefficient transformations if the family is not defined over \(\mathbb F_2\).
+3. Adapt the **actual v3 table walk** to valid FAM-1 seed transformations. Each table entry must specify its seed update, decoded-point effect, inverse when available, and cost. Reject updates requiring expensive inversion of \(D\).
+4. Canonicalize seeds under valid \(\sigma\)-orbits; use distinguished points to find merges. Harvest only merges yielding independently checkable, nonduplicate relations over the chosen factor base—not merely equal seeds or Frobenius conjugates.
+
+### Cost model
+Measure total seed operations, field operations, decoding, canonicalization, storage, and communication. Primary metric:
+\[
+\frac{\text{total measured work}}{\text{rank increase of the relation matrix}}.
+\]
+Report orbit sizes, walk-cycle statistics, relation yield, and linear-algebra cost. Compare against identical FAM-1 harvesting without quotienting and the original table walk. A collision speedup alone is not an index-calculus improvement.
+
+### Falsification
+Reject if equivariance or closure fails; canonicalization erases orbit savings; quotienting creates short cycles; harvested relations are algebraically redundant; or end-to-end cost fails to improve.
+
+For \(E/\mathbb F_p\), coordinate \(p\)-Frobenius is identity on rational points. Prime-field transfer therefore requires a separately demonstrated nontrivial endomorphism or seed symmetry; binary success alone does not support it.
+
+### First experiment
+On a small binary instance permitting exhaustive enumeration, verify equivariance and orbit structure, then run matched-budget baseline/quotient ablations with identical seeds. Compare **independent relations per field operation**, including all overhead, before attempting prime-field transfer.
+
+## Direction 93
+
+### Construction
+Treat the existing FAM-1 implementation as a deterministic map \(F(s)=(R_s,a_s,b_s)\), with \(R_s=[a_s]P+[b_s]Q\). Preserve its exact definition; do not introduce a replacement family.
+
+1. **Prior-work audit:** Inspect `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` for both named leads, FAM-1 definitions, schedules, collision filters, and negative results. Record commit IDs and distinguish genuinely untested changes. Repository contents are unavailable here, so this review remains a prerequisite.
+2. For prime-order subgroups of order \(\ell\), use nested seed domains \(S_k=\{0,\ldots,2^k-1\}\subset\mathbb Z/\ell\), \(k=10,\ldots,20\), with \(\ell>2^{20}\).
+3. On independent training instances, exhaustively enumerate FAM-1 outputs. Build a reservoir of output classes, multiplicities, seed features, and marginal coverage gains. Canonicalize \(R\sim-R\), adjusting coefficients accordingly.
+4. Compile a deterministic seed ordering using only inexpensive, preregistered seed features. Rank feature buckets by training-estimated new canonical points per evaluation; interleave buckets greedily. No held-out group outputs may influence compilation.
+5. On fresh instances, execute the compiled ordering, storing every canonical output and coefficient pair. A matching pair yields
+\[
+x=-(a-a')(b-b')^{-1}\pmod\ell
+\]
+when \(b\ne b'\); verify \([x]P=Q\).
+
+### Cost model
+Report compilation time, training evaluations, online group operations, feature overhead, hash-table probes, peak bytes, and verified-log success. Give both cold-start cost and explicitly amortized cost across instances.
+
+Primary statistic: distinct canonical outputs versus **total charged work**. Secondary statistics: coverage-curve area, useful-collision yield, and time-to-log. Compare natural order, uniform random permutations without replacement, uniform sampling with replacement, and existing grumpy schedules.
+
+Exhaustive endpoint coverage must match: ordering alone cannot change it.
+
+### Falsification
+Reject the direction if gains disappear on independent instances, require near-exhaustive instance-specific preprocessing, fail against uniform permutations, or vanish after charging compilation and memory. Improved coverage without increased useful-collision yield is insufficient evidence of cryptanalytic benefit.
+
+### First experiment
+At \(k=10,\ldots,16\), train on 16 instances and test on 32 fresh instances per subgroup size. Sweep prefixes \(1/64,\ldots,1\); bootstrap paired coverage and cost differences. Advance to \(2^{20}\) only after reproducible end-to-end improvement.
+
+## Direction 94
+
+**Construction.** Preserve FAM-1’s seed map and structured factor base \(\mathcal B=\{B_i\}\). Express each candidate relation as
+\[
+[a(z)]P+[b(z)]Q=\sum_i[c_i(z)]B_i,
+\]
+where \(Q=[d]P\), \(B_i=[\beta_i]P\), and \(P\) has prime order \(n\). Use integer lifts of coefficients. Generate FAM-1 seeds from weight-\(w\), \(L\)-bit integers, enumerating fixed-weight supports without replacement.
+
+For \(M=2^r-1\) and \(2^r+1\), reduce these integers by folding \(r\)-bit blocks. A valid relation satisfies
+\[
+a+bd-\sum_i c_i\beta_i=kn.
+\]
+Test modular compatibility **including the wrap term \(kn\bmod M\)**. Guess only residues unavailable from public data; price every guess and every admissible wrap class. If wrap classes exhaust all residues, declare the filter vacuous. Never assume reduction modulo \(M\) is a homomorphism from the order-\(n\) group.
+
+**Prior-work gate.** Repository contents are unavailable here, so no prior experiments have been reviewed. Before implementation, inspect `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` for both named leads, `EXP-LHW-9adf78`, FAM-1 definitions, negative results, and seed distributions; record exact commits and distinguish genuine variants from repeats.
+
+**Cost model.** Measure seed-generation, modular-filter, group-operation, relation-verification, memory, and sparse-linear-algebra costs. Report
+\[
+C_{\rm useful}=
+\frac{C_{\rm enumeration}+C_{\rm guesses}+C_{\rm filtering}
++C_{\rm verification}+C_{\rm linear\ algebra}}
+{\text{independent useful relations}}.
+\]
+Charge residue hypotheses, wrap enumeration, repeated seeds, correlations, and parameter tuning. Compare against unfiltered FAM-1, structured-base coincidence harvesting, and generic rho on identical instances. Oracle residue knowledge is diagnostic only, never a deployable speedup.
+
+**Falsification.** Reject if correct wrap accounting removes selectivity; unknown-residue search cancels savings; genuine-relation recall falls enough to erase gains; relation rank stagnates; or measured gains are explained solely by cheap seed generation rather than reduced total attack cost.
+
+**First experiment.** On small prime-order curves allowing exhaustive ground truth, compare unfiltered, oracle-residue, and fully charged guessed-residue runs using identical seed streams. Sweep \(w,r\), and Mersenne/Fermat moduli. Record true/false survival, wrap coverage, independent relations per second, and total solution time. Continue only if charged gains persist across increasing group sizes.
+
+## Direction 95
+
+### Construction
+- **Repository gate:** Before implementation, inspect EXP-LHW-b49bc6, its parent leads, and FAM-1 definitions in both repositories. Record tested parameters, failures, collision conventions, and checkpoint formats. Repository contents are unavailable here; this plan does not claim that review occurred.
+- Freeze the existing FAM-1 factor base \(B=(P_1,\dots,P_m)\subset E(\mathbb F_p)\). A seed is a weight-\(w\) subset \(S\subset[m]\), with \(\phi(S)=\sum_{i\in S}P_i\).
+- Walk on seeds: hash the canonical encoding of \(S\) to choose \(i\in S\), \(j\notin S\); set \(S'=(S\setminus\{i\})\cup\{j\}\), updating \(\phi(S')=\phi(S)-P_i+P_j\). Use independently salted walks and restart upon repeated seeds.
+- Store checkpointed mappings \(\phi(S)\mapsto S\). Distinct seeds with equal images yield the verified relation \(\mathbf1_S-\mathbf1_T\). Cancel overlaps and deduplicate up to sign.
+- **Do not assume rho coalescence:** equal images need not produce equal successors because transitions depend on seeds. Distinguished-point endpoints alone cannot detect arbitrary intermediate image collisions.
+
+### Cost model
+Let \(N=\binom mw\), \(q=|E(\mathbb F_p)|\), and \(\pi_x=\Pr[\phi(S)=x]\) for uniform seeds. Define \(Q_{\rm eff}=1/\sum_x\pi_x^2\).
+
+Each step costs two group additions plus hashing/storage. Independent samples give approximately \(\binom t2/Q_{\rm eff}\) image coincidences, **before subtracting identical-seed coincidences**. Measure walk autocorrelation and distinct-seed coverage rather than assuming independent sampling.
+
+For small exhaustive instances, checkpoint support size and multiplicities; compute \(\sum_x\binom{n_x}{2}\), the exact distinct-seed collision count. Report useful relations and incremental rank per group operation, memory byte, and wall-clock second. Include target descent costs: internal relations alone do not solve ECDLP.
+
+### Falsification
+Reject the lead if apparent gains disappear after removing repeated seeds, correlated samples, trivial/duplicate relations, or rank redundancy; if matched-memory independent sampling wins; or if relation collection plus descent cannot improve the generic square-root baseline.
+
+### First experiment
+Re-run Stage 1 on one exhaustively enumerable FAM-1 instance. Compare jump walks against uniform weight-\(w\) sampling at identical operation and memory budgets. Checkpoint coverage, exact collision counts, relation rank, and restart statistics across 20 salts; then repeat at the next larger instance.
+
+## Direction 96
+
+### Construction and prior-work audit
+Before running experiments, inspect `isogeny-labs/crypto`, cryptanalysis notes, and `crypto-autoresearcher` for FAM-1, `LEAD-RHO-matched-rho-calibration`, and `LEAD-ICP-coincidence-harvest-structured-base`. Record commit hashes, exact relation predicates, factor-base construction, failed variants, and existing benchmarks. Repository contents are unavailable here; this plan does not claim that review is complete.
+
+Freeze the canonical FAM-1 implementation and structured-base parameters from that audit. Do not introduce another relation-generation heuristic.
+
+For prime-field curves with prime-order subgroups of **32, 36, 40, 44, and 48 order bits**, sample independent targets \(Q=xP\). Compare:
+1. FAM-1, including structured-base setup, coincidence harvesting, relation verification, linear algebra, and target recovery.
+2. A tuned Pollard-rho solver using the same arithmetic backend, hardware, threading, and equivalent engineering effort.
+
+Use identical instances and paired seeds where meaningful. Validate every recovered scalar independently. If FAM-1 amortizes preprocessing, report both single-target and explicitly specified batch-target results.
+
+### Cost model
+Define \(N=\operatorname{ord}(P)\), not field size. Measure total cycles, wall time, peak memory, group operations, field operations, and failed/redundant relations.
+
+For \(k\) targets, use
+\[
+T_F(N,k)=T_{\rm setup}+T_{\rm relations}+T_{\rm LA}
++\sum_{i=1}^{k}T_{{\rm descent},i},
+\qquad
+R_k(N)=\frac{T_F(N,k)}{\sum_{i=1}^{k}T_{\rho,i}}.
+\]
+Also report relation-generation cost separately; do not equate relations produced with discrete logarithms solved.
+
+Fit the prespecified hypothesis \(R_k(N)=1+c/N^\beta\), with \(c,\beta>0\), using instance-level bootstrap intervals. Compare against constant-ratio and unconstrained power-law alternatives. Report rho’s observed coefficient relative to \(\sqrt N\); account explicitly for negation and parallel collision handling.
+
+### Falsification
+Reject the calibration model if held-out sizes contradict its prediction intervals, \(\beta\) is unidentifiable or nonpositive, or alternatives predict materially better. Treat incomplete solves, omitted preprocessing, unmatched rho optimizations, and memory exhaustion as failures—not speedups. A fit approaching one is **not** evidence of asymptotic improvement over rho.
+
+### First experiment
+At 32 bits, run 30 independent instances, ten targets each, with separately reported cold-start and amortized costs. Establish correctness, complete cost accounting, and paired uncertainty before extending to larger sizes.
+
+## Direction 97
+
+### Construction
+- First inspect `isogeny-labs/crypto` cryptanalysis and `crypto-autoresearcher` for `FAM-1`, `EXP-CERTBIN-b4d29c`, design C, Bailey, and both cited leads. Extract exact canonicalisation rules, prior benchmarks, rejected variants, and certificate checks into a provenance table. **Repository contents are unavailable here; prior results must be verified, not assumed.**
+- Implement a native benchmark exposing the existing design-C and Bailey canonicalisers behind identical interfaces: `canon(seed) → (representative, witness)`. Use precisely the FAM-1 equivalence relation established by the repository—not a newly assumed symmetry.
+- Require independent witness verification, idempotence, and equivalent seeds mapping to the same representative. Require cross-implementation equality where the specification defines a unique representative.
+
+### Cost model
+Measure release builds with identical compiler flags, field representation, CPU affinity, and input corpus. Exclude parsing, allocation, and corpus generation from timed regions; report those separately.
+
+For algorithm \(A\), define
+\[
+E_A^{Ir}=\frac{Ir_A-Ir_{\rm harness}}{Ir_{\rm fieldmul}},
+\qquad
+E_A^{cycles}=\frac{cycles_A-cycles_{\rm harness}}
+{cycles_{\rm fieldmul}}.
+\]
+Benchmark field multiplication in both dependency-chain and independent-throughput modes. Callgrind instruction ratios are **instruction-equivalent costs**, not automatically cycle-equivalent costs. Also count multiplications, squarings, inversions, branches, and memory accesses.
+
+Separate canonicalisation frequency explicitly:
+\[
+C_{\rm step}=C_{\rm walk}+qC_{\rm canon}+C_{\rm bookkeeping}.
+\]
+For seed-only canonicalisation, \(q=1/L\), where \(L\) is average walk length; for per-step canonicalisation, \(q=1\). Include witness construction and checking at their actual frequencies.
+
+For coincidence harvesting, report total native cost per **accepted, nonduplicate relation**, including rejection and deduplication—not merely cost per seed.
+
+### Falsification
+Reject correctness upon any invalid witness, inconsistent representative, or lost required seed coverage. Reject the performance hypothesis if design C’s cycle advantage disappears on held-out seeds, or canonicalisation overhead exceeds measured downstream savings. Cheaper canonicalisation alone does not establish an ECDLP improvement.
+
+### First experiment
+At one repository-standard prime and FAM-1 parameter set, benchmark both implementations on \(2^{16}\) reproducibly generated seeds plus adversarial boundary cases. Collect paired Callgrind counts and repeated native timings, publish confidence intervals and mismatch logs, then replay identical seeds through the existing relation-harvesting pipeline to test end-to-end cost per accepted relation.
+
+## Direction 98
+
+### Construction
+Repository contents and definitions of FAM-1/H-EWALK-29cb90 were not provided; prior-test coverage and novelty remain unverified.
+
+1. Extract the exact FAM-1 map \(F:S\to G\), where \(G=\langle P\rangle\) has prime order \(N\) over \(\mathbb F_p\). Audit both repositories for seed symmetries, scalar-orbit canonicalization, invariant searches, and rejected quotient walks.
+2. Choose small subgroups \(H\le(\mathbb Z/N)^\times\), initially of orders \(3,4,6,8\) when divisibility permits. Require an explicit seed action
+   \[
+   F(T_h(s))=[h]F(s).
+   \]
+   Establish closure, action laws, orbit sizes, and transformation costs. Scalar multiplication alone does **not** establish a cheap seed action.
+3. Build the expensive correctness oracle
+   \[
+   c(s)=\min_{h\in H}\operatorname{encode}([h]F(s)),
+   \]
+   retaining the minimizing multiplier. Search for a cheaper canonicalizer using FAM-1 parameter permutations, rational expressions, or elimination invariants. An invariant alone is insufficient: its fibers must distinguish \(H\)-orbits, or false matches must be charged.
+4. Run a quotient walk retaining \(X=[a]P+[b]Q\) and its canonicalizing multiplier. For a verified collision \(X_i=[h]X_j\), solve
+   \[
+   x=(ha_j-a_i)(b_i-hb_j)^{-1}\pmod N.
+   \]
+   Reject zero denominators. Test mixing and short cycles explicitly.
+
+### Cost model
+For a full-group, well-mixing quotient walk, model
+\[
+W_H\approx(C_{\rm step}+C_{\rm can})\sqrt{N/|H|}+C_{\rm lift}.
+\]
+Compare with measured baseline rho, including existing automorphism quotients. For restricted FAM-1 walks, **measure** reachable states and collision entropy; do not substitute seed count for \(N\).
+
+For index-calculus relevance, separately measure useful relations per second, duplicate relations, and matrix rank. Rho acceleration alone is not an index-calculus improvement.
+
+### Falsification
+Reject if closure fails; canonicalization costs exceed the square-root gain; invariant fibers are excessively larger than orbits; quotient walks develop trapping cycles; or apparent relation savings vanish after deduplication and rank testing.
+
+### First experiment
+On several toy curves with \(N\approx2^{24}\)–\(2^{32}\), implement the actual FAM-1 action and exhaustive canonicalization oracle. Compare baseline and quotient walks over 100 independent trials, recording wall time, orbit sizes, collision validity, and cycle frequency. First require a reproducible net gain before optimizing invariants.
+
+## Direction 99
+
+### Construction
+1. **Audit prior work before implementation.** In `isogeny-labs/crypto`, cryptanalysis, and `crypto-autoresearcher`, locate `LEAD-RHO-pool-class-quotient`, `LEAD-ICP-coincidence-harvest-structured-base`, and FAM-1 campaign artifacts. Extract curve parameters, subgroup order, seed distributions, walk functions, trap definitions, and measured baselines. Repository contents are unavailable here; prior results remain unverified.
+2. **Apply the Frobenius feasibility gate.** For \(E/\mathbb F_p\), every \(P\in E(\mathbb F_p)\) satisfies \(\pi_p(P)=P\): Frobenius supplies **no additional quotient**. A Koblitz Frobenius walk requires a suitable extension-field setting, changing the campaign. Permit it only as a separately labeled control, never as a prime-field speedup.
+3. **Implement the valid prime-field quotient.** For odd-order subgroup points \(R=aP+bQ\), canonically represent \(\{R,-R\}\), choosing the smaller encoded point and negating \((a,b)\) whenever required. Partition using the canonical encoding; add a precomputed \(u_iP+v_iQ\), update coefficients, and canonicalize again. Handle infinity explicitly.
+4. Deduplicate seed classes globally; record duplicate-class frequency separately from walk collisions. Use identical distinguished-point criteria and storage budgets across runs. On collision, solve
+\[
+(b-b')x=a'-a\pmod n,
+\]
+rejecting zero denominators and verifying \(xP=Q\). Instrument short cycles; evaluate deterministic escape rules separately.
+
+### Cost model
+Measure additions, canonicalizations, hashes, network bytes, distinguished-point storage, and wall-clock time. Ideal negation quotient reduces rho collision work from approximately \(\sqrt{\pi n/2}\) to \(\sqrt{\pi n/4}\); overhead, correlations, and traps may erase that \(\sqrt2\) benefit. Seed deduplication saves redundant starts, not necessarily collision work. Report useful collisions per core-second and full recovery cost. This is a rho optimization, **not an index-calculus breakthrough** absent demonstrated relation-generation savings.
+
+### Falsification
+Reject the Frobenius claim immediately for rational prime-field points. Reject the practical quotient benefit if matched-budget trials show no statistically supported throughput improvement, or trap mitigation consumes the gain. Reject structured-seed harvesting if improvements disappear against uniformly sampled, class-deduplicated seeds.
+
+### First experiment
+On tractable subgroups matching the campaign’s field and curve structure, run paired ordinary-rho, negation-quotient, and quotient-plus-escape trials across at least 100 independent targets. Log cycle lengths, repeated classes, recoveries, and component timings; estimate variance before scaling to campaign parameters.
+
+## Direction 100
+
+### Construction and repository gate
+- Audit `isogeny-labs/crypto`, cryptanalysis materials, and `crypto-autoresearcher` for FAM-1, structured-base coincidence harvesting, GPU matching, and interleaved rho experiments. Record commits, exact predicates, failed variants, timings, and controls. **These repositories are not accessible here; novelty and compatibility remain unverified.**
+- Freeze the existing FAM-1 predicate before optimization. The following is an explicit candidate realization, not an assertion about its existing definition.
+- On \(E/\mathbb F_p\), work in a prime-order subgroup of order \(n\), with \(Q=xP\). Choose a deterministic factor base \(B=\{B_i\}_{i=1}^m\) using the audited structured-base rule.
+- Sample \(T_t=a_tP+b_tQ\). Enumerate \(S_{tij}=T_t+B_i+B_j\), \(i\le j\). Match against a GPU-resident table of complete, canonical factor-base point encodings. Each verified match \(S_{tij}=B_k\) yields
+  \[
+  a_t+b_tx+\ell_i+\ell_j-\ell_k=0\pmod n,
+  \]
+  where \(\ell_i=\log_P B_i\).
+- CUDA tiles reuse \(T_t+B_i\); batch-normalize projective points, hash, and verify full-point equality. CPU independently verifies hits and assembles sparse equations. Solve only after measuring rank; verify recovered \(x\).
+
+### Cost model
+Let \(q\) be measured match probability per candidate; the uniform baseline is \(q\approx m/n\). Collecting \(R\) relations costs approximately \(R/q\) candidates. At \(R=\Theta(m)\), this is \(\Theta(n)\), **not an asymptotic improvement over rho**.
+
+Measure total time:
+\[
+T=T_{\rm setup}+C/G+T_{\rm transfer}+T_{\rm verification}+T_{\rm linear\ algebra},
+\]
+with \(C\) actual candidates and \(G\) sustained candidate throughput. Include rank deficiency, memory, energy, and failed batches.
+
+### Falsification
+Reject advantage if structured bases provide no reproducible yield/rank improvement, GPU gains disappear end-to-end, or matched-budget rho wins. Reject this implementation immediately if it does not preserve the audited FAM-1 predicate.
+
+### First experiment
+Run randomized, interleaved CPU-FAM/GPU-FAM/CPU-rho/GPU-rho trials, including GPU A/A controls. Start with 24–40-bit prime-order toy curves, then advance a matched prime-field ladder toward P-256; smaller fields are not P-256 itself. Use identical instances, seeds, budgets, and correctness checks. Report confidence intervals for verified independent relations/second and time-to-solution before scaling.
+
