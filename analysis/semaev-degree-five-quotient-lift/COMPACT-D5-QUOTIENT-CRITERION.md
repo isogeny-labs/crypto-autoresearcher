@@ -55,3 +55,11 @@ exported with seed, provisional-map, rank, and source bindings and checked
 independently under the three conditions above. The frozen D5 attempt and
 its output contract are unchanged; a compact-output producer/checker would
 need its own frozen protocol and budget admission.
+
+`compact_quotient_reference.py` implements the three checks for at most ten
+variables and rechecks the seed closure. Its retained n6 test extracts `h`
+from an existing D5 map, independently descends the n6 generators, checks the
+compact criterion, and verifies that
+`h*phi` reproduces every full-map monomial image; a synthetic two-point
+quotient exercises recursive high-monomial rewriting. This is a correctness
+oracle for a future bounded frontier checker, not a checker for n47 files.
