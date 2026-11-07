@@ -17,7 +17,7 @@ COLS=['case_id','cell_id','program','verified','certificate_checked','native_col
 
 
 def summarize(run,rules,execution):
-    raw=run/'raw';errors=[];physical=defaultdict(Counter);observed=defaultdict(Counter)
+    raw=run/'raw';errors=[];physical=defaultdict(Counter);observed=defaultdict(Counter);checked_engines={e:Counter()for e in costs.ENGINES}
     def read(p):
         try:return optional(p)
         except Exception as error:errors.append(dict(path=str(p),error_type=type(error).__name__,error=str(error)));return None
@@ -106,6 +106,15 @@ def summarize(run,rules,execution):
             pair_cost_binding(c,chk['collection']['verification']['pair_construction'])
             if val['complete']['case_id']!=case_id or val['complete']['descriptor']!=descriptor:raise ValueError('case descriptor binding')
             source=c['arms']['ap0']
+            # Counter/phase conservation alone cannot validate either endpoint
+            # engine. Reconcile the independently reconstructed record totals
+            # against the exact namespaces removed by select_engine.
+            for counter_groups,receipt in (([c['collection_counters'],source['counters']],chk['collection']['verification']['query_engines']),
+                ([val['cache']['counters']],chk['cache']['verification']['query_engines'])):
+                actual=sum((Counter(v)for v in counter_groups),Counter())
+                engines=costs.engine_arithmetic(actual)
+                if any(Counter(engines[e])!=Counter(receipt['engine_totals'][e])for e in costs.ENGINES):raise ValueError('physical endpoint engines differ from independent receipts')
+                for e in costs.ENGINES:checked_engines[e].update(receipt['engine_totals'][e])
             phases=[v for name in ('prelude','recipe','construction','cache','assembly','information')for v in val[name]['phases']]
             phases+=c['collection_phases']+source['phases']
             if program!='norm32':phases+=val['base']['phases']
@@ -123,9 +132,11 @@ def summarize(run,rules,execution):
         cells.append(row)
     complete=bool(execution.get('returncode')==0 and execution.get('timeout')is False and execution.get('exception')is None and execution.get('source_unchanged_after')is True and
         all(v['verified']for v in cells)and (started,finished,failed)==(24,24,0)and not errors)
+    engines={e:dict(sum((Counter(costs.engine_arithmetic(v)[e])for v in physical.values()),Counter()))for e in costs.ENGINES}
+    if complete and any(Counter(engines[e])!=checked_engines[e]for e in costs.ENGINES):raise ValueError('physical aggregate endpoint engines differ from independent receipts')
     return dict(panel_complete=complete,cells=cells,cold_views=cold,physical_counters={k:dict(v)for k,v in physical.items()},observed_algorithm_counters={k:dict(v)for k,v in observed.items()},
         observed_batch_starts=started,observed_completed_batch_calls=finished,observed_failed_batch_calls=failed,closed_checkpoints=checkpoints,errors=errors,
-        generation=generated if generation_valid else None,partial_work_unknown=not complete)
+        query_engine_totals=engines,checked_query_engine_totals={e:dict(v)for e,v in checked_engines.items()},generation=generated if generation_valid else None,partial_work_unknown=not complete)
 
 
 def main():

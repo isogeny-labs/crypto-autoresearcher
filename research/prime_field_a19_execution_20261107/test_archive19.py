@@ -104,6 +104,26 @@ def test_actual_archive_census_costs_and_bound_corruption(software_archive,tmp_p
     with pytest.raises(ValueError):analyze19.summarize(copied,rules,execution)
 
 
+def test_coordinated_counter_phase_journal_edit_cannot_change_checked_engine_cost(software_archive,tmp_path):
+    source,rules,execution=software_archive;run=tmp_path/'coordinated';shutil.copytree(source,run)
+    prefix=run/'raw/p211-i0.unknown16.'
+    path=Path(str(prefix)+'cache.json');cache=json.loads(path.read_text())
+    key='query_batch.Fp.field_mul';phase=next(v for v in cache['phases']if v['counters'].get(key,0)>0)
+    before=commitment(phase);phase['counters'][key]-=1;cache['counters'][key]-=1;write(path,cache)
+    proof_path=Path(str(prefix)+'cache-check.json');proof=json.loads(proof_path.read_text())
+    # Rebind producer payload hash, preserving the independent engine-record
+    # arithmetic schedule and actual point/digest records.
+    proof['verification']['producer_output_sha256']=commitment(cache);write(proof_path,proof)
+    journal=Path(str(prefix)+'events.jsonl');events=[json.loads(v)for v in journal.read_text().splitlines()]
+    changed=0
+    for event in events:
+        if event.get('kind')=='affine_phase'and commitment(event['phase'])==before:
+            event['phase']=deepcopy(phase);changed+=1
+    assert changed==1
+    journal.write_text(''.join(json.dumps(v)+'\n'for v in events))
+    with pytest.raises(ValueError,match='endpoint engines differ'):analyze19.summarize(run,rules,execution)
+
+
 @pytest.mark.parametrize('complete',[True,False])
 def test_actual_export_shared_instances_and_all_unknowns(software_archive,tmp_path,monkeypatch,complete):
     source,rules,execution=software_archive;run=tmp_path/'run'
