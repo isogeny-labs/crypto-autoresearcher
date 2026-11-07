@@ -74,6 +74,15 @@ candidate left in `formal/` would mark every later task in that workspace
 
 `LeanWorker` checks a repository-local workspace, scans Lean files for `sorry`, `admit`, custom `axiom`, and `unsafe`, runs `lake build`, then runs `lake env lean AxiomAudit.lean`.
 
+For direct `formal verify`, the target's declared `source` must be a regular
+repository-local file. The receipt records its SHA-256, checks that its bytes
+stay fixed while Lean runs, and rejects a later receipt readback if that source
+changes or disappears. This binds the verified theorem to the exact research
+text named by its target; it does not establish that the theorem faithfully
+expresses the source claim or that an experiment in the source actually ran.
+Older receipts without a declared-source digest need a fresh verification
+before they can satisfy this readback check.
+
 A successful result sets `needs_semantic_review=true`. `verification_outcome_from_formal_result` therefore reports a mechanically successful proof as `INCONCLUSIVE` until a separate reviewer confirms semantic fidelity. The reviewer must compare the Lean proposition with the original `claim` and reject vacuous statements, weakened quantifiers, hidden assumptions, or claims proved only from impossible premises.
 
 ### Hypothesis deltas, proof maps and errata
