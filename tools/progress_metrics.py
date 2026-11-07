@@ -1088,6 +1088,110 @@ def prime_field_paid_known_base_panel(ref, since):
                  label='Dependent within-base producer observation; known labels supplied, no rank/Delta comparison across bases', **common)
 
 
+def prime_field_mixed_known_helper_panel(ref, since):
+    """Committed A14 observations; supplied information stays on old coordinates."""
+    date = '2026-11-06'
+    if date < since:
+        return
+    path = 'research/prime_field_a14_execution_20261106/runs/a14-mixed-known-helpers-4bbcf6/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a14-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['planned_systems'] != 1248 or data['planned_solver_calls'] != 2496 or
+            data['verified_systems'] != 1248 or data['verified_solver_calls'] != 2496 or
+            data['verified_information_audits'] != 576 or data['unknown_systems'] != 0 or data['partial_work_unknown'] is not False):
+            return
+        columns = data['columns']
+        rows = [dict(zip(columns, value, strict=True)) for value in data['rows']]
+        if len(set(columns)) != len(columns) or len(rows) != 1248 or {v['case_id'] for v in rows} != set(range(1248)):
+            return
+        ids = {f'p{p}-i{i}' for p in (262139, 524287) for i in (0, 1)}
+        expected = {(cid, base, kind+str(seed), 128, policy, budget, scope)
+            for cid in ids for base in ('norm','hybrid') for seed in range(3) for kind in ('ap','hash')
+            for policy in ('walk','hash_offset','general') for budget in (1,2,4,8) for scope in ('relations','anchors')}
+        expected |= {(cid, base, 'known', 0, policy, budget, 'supplied') for cid in ids for base in ('known32','known48')
+            for policy in ('walk','hash_offset','general') for budget in (1,2,4,8)}
+        keys = ('cell_id','base_arm','source_schedule','source_prefix','target_policy','target_prefix','scope')
+        if {tuple(v[k] for k in keys) for v in rows} != expected:
+            return
+        fields = ('base_columns','native_columns','supplied_columns','source_rank','native_source_rank','outside_rank',
+            'delta','after_cancellation_rank','identified_targets','identified_mask','source_rows','target_rows','decomposition_rows','knowledge_rows')
+        for v in rows:
+            if v['verified'] is not True or any(type(v[k]) is not int or v[k] < 0 for k in fields):
+                return
+            width = 32 if v['base_arm'] in ('norm','known32') else 48
+            if (v['native_columns'] != width or v['base_columns']+v['supplied_columns'] != width or
+                v['native_source_rank'] != v['source_rank']+v['supplied_columns'] or
+                v['native_source_rank'] > min(width,v['source_rows']) or v['source_rank']+v['delta'] != v['after_cancellation_rank'] or
+                v['after_cancellation_rank'] > v['base_columns'] or v['outside_rank'] > min(8,v['target_rows']) or
+                v['identified_targets'] > 8 or v['identified_mask'] > 255 or v['identified_mask'].bit_count() != v['identified_targets'] or
+                v['decomposition_rows']+v['knowledge_rows'] != v['target_rows'] or v['scope']=='relations' and v['knowledge_rows'] != 0):
+                return
+            if v['base_arm'].startswith('known') and (v['base_columns'],v['source_rank'],v['delta'],v['source_rows']) != (0,0,0,width):
+                return
+        if any(len({v['base_columns'] for v in rows if v['cell_id']==cid and v['base_arm'] in ('norm','hybrid')}) != 1 for cid in ids):
+            return
+        physical, engines = data['physical_counters'], data['query_engine_totals']
+        if any(type(v) is not int or v < 0 for group in physical.values() for v in group.values()):
+            return
+        for size in (16,32,48):
+            if physical['public_base'+str(size)+'.known_base_construction'].get('public_base_certificates_verified') != 4*size:
+                return
+        for base in ('norm','hybrid'):
+            geometric = physical[base+'.norm_prelude']['geometry_classes_stored']
+            if not 128 <= geometric <= (128 if base=='norm' else 192):
+                return
+            if physical[base+'.source_construction'].get('signed_point_queries') != 2*128*6*geometric:
+                return
+            if physical[base+'.native_collection'].get('signed_point_queries') != 2*8*geometric:
+                return
+        for base,size in [('known32',32),('known48',48)]:
+            if physical.get(base+'.source_construction',{}).get('signed_point_queries',0) != 0:
+                return
+            if physical[base+'.native_collection'].get('signed_point_queries') != 4*2*8*size:
+                return
+            if physical[base+'.native_collection'].get('pair_table_insertions') != 4*2*size*(size-1):
+                return
+        for engine in ('scalar','batch'):
+            if any(type(v) is not int or v < 0 for v in engines[engine].values()):
+                return
+            namespace = 'query_'+engine+'.'
+            names = {k[len(namespace):] for group in physical.values() for k in group if k.startswith(namespace)}
+            if names != set(engines[engine]) or any(sum(group.get(namespace+k,0) for group in physical.values()) != v for k,v in engines[engine].items()):
+                return
+        if engines['scalar'].get('Fp.group_add') != sum(v.get('signed_point_queries',0) for v in physical.values()):
+            return
+        checkpoints = data['closed_curve_checkpoints']
+        if len(checkpoints) != 4 or {v['cell_id'] for v in checkpoints} != ids or any(
+            v['valid'] is not True or v['receipt']['returncode'] != 0 or v['receipt']['closed_curve'] != v['cell_id'] for v in checkpoints):
+            return
+        for base in ('norm','hybrid','known32','known48'):
+            for method in ('partial_joint','sparse_joint'):
+                if any(type(v) is not int or v < 0 for v in data['observed_arm_counters'][base+'.'+method].values()):
+                    return
+    except (KeyError,TypeError,ValueError,AttributeError):
+        return
+    common = dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a14'
+    for key in ('verified_systems','verified_solver_calls','verified_information_audits','unknown_systems'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Actual finite producer census; dependent cases and separate diagnostics, unverified standing',**common)
+    for group,counts in physical.items():
+        for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fr.field_add','Fr.field_sub','Fr.field_mul','Fr.field_inv',
+            'signed_point_queries','pair_table_insertions','public_base_certificates_verified'):
+            if key in counts:
+                emit(prefix+'.physical.'+group+'.'+key,counts[key],unit='calls',
+                    label='Physical component once; diagnostic overhead, both engine controls and conditional references remain separate',**common)
+    for v in rows:
+        name = prefix+'.'+v['cell_id']+'.'+v['base_arm']+'.'+v['source_schedule']+'.'+v['target_policy']+'.target'+str(v['target_prefix'])+'.'+v['scope']
+        for key,unit in [('identified_targets','target slots'),('identified_mask','bit mask'),('base_columns','old unknown columns'),
+            ('supplied_columns','supplied units'),('source_rank','old-coordinate rank'),('native_source_rank','native supplied-plus-collected rank'),
+            ('delta','within-case rank'),('target_rows','equations'),('knowledge_rows','equations')]:
+            emit(name+'.'+key,v[key],unit=unit,label='Dependent producer observation; supplied logs are not learned rank, no cross-base Delta comparison',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -1264,6 +1368,7 @@ def main():
     prime_field_affine_holdout_panel(a.ref, a.since)
     prime_field_batched_holdout_panel(a.ref, a.since)
     prime_field_paid_known_base_panel(a.ref, a.since)
+    prime_field_mixed_known_helper_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 

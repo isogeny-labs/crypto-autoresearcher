@@ -293,3 +293,35 @@ outside pools, full triple-atlas amortization and original Prym/Dickson leads
 remain distinct alternatives. Future source/protocol/cost review must precede
 execution. Status remains investigating; no official hypothesis/goal state
 changes or old records are rewritten.
+
+
+## A14 paid helpers and original-coordinate information, 2026-11-06
+
+[A14](../research/prime_field_a14_execution_20261106/RESULTS.md) completed the
+four-program norm32/hybrid32+16/known32/known48 panel. At general-policy budget8
+anchors, norm and hybrid identify33/192 and185/192dependent slots respectively;
+source-free known32/48 identify19/32 and25/32public points. The same32points are
+reused across six norm/hybrid source schedules. Old-coordinate union Delta4..26
+comes after cancelling U; supplied old-coordinate increments are0, collected
+increments4..22 and target-cancellation increments0..8. No new unknown count or
+paid labels are called learned rank. Producer unverified under
+[PCC-20261106-35c953](../pcc/claims/PCC-20261106-35c953.json). [pcc:unverified]
+
+Natural target recovery can precede full old-base rank: hybrid case552 identifies
+four targets from initial natural queries while old source/after-cancellation
+rank remains30/31. Nonetheless target identities are nonmonotone across paid
+programs: one AP1/general/budget2/anchors context has hybrid mask94 vs norm128.
+Own hybrid retains all old source directions here, but constructor equalities
+and target equations differ. All paired/independent producer checks agree on
+the actual rows; no common-cost or universal monotonicity claim follows.
+[pcc:unverified]
+
+The [next-lead ranking](../research/prime_field_a14_execution_20261106/next-leads.md)
+puts an actually executed signed-pair batch/symmetry baseline before further
+coverage/budget comparisons. Existing production batch/paired-sign techniques
+must be reused and measured; this is not a novelty premise. Later known48
+effort controls and unknown outside pools retain their original requirements:
+charge all actual work, cancel auxiliary unknowns before Delta, keep target
+identities and original-row certificates, preserve negative/partial outcomes.
+Full calibrated costs and trusted independent scientific standing remain open.
+Status remains investigating; no old record or hypothesis/goal state changes.

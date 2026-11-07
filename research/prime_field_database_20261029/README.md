@@ -135,3 +135,18 @@ normal checkpoint payload limits list it while the official artifact store
 carries its bytes. See [A13 results](../prime_field_a13_execution_20261106/RESULTS.md)
 for exact target masks, different dependent denominators, separate cold/physical
 costs and unverified PCC standing. [pcc:unverified]
+
+
+The additive [v17 mixed-helper snapshot](../prime_field_a14_execution_20261106/database/v17-mixed-known-helpers/validation.json)
+preserves v16 bytes and all88non-metadata historical tables/rows, archives parent
+metadata and adds4curves,16bases,32shared public targets,1,248cases,2,496native
+solver certificates,576separate information diagnostics and12independent paid
+base-construction records. History contains30curves/46bases/19physical execution
+records, including prior failures. Foreign keys/integrity and streamed gzip
+roundtrip passed locally. Its53,055,424-byte archive is in the official artifact
+store; checkpoint payload limits list the oversized archive rather than copy it.
+See [A14 results](../prime_field_a14_execution_20261106/RESULTS.md) for original-
+coordinate information, target recovery before full base rank, differing target
+masks and separately charged costs. These are producer assertions, unverified
+under PCC-20261106-35c953; no calibrated complete-cost or official scientific
+transition follows. [pcc:unverified]
