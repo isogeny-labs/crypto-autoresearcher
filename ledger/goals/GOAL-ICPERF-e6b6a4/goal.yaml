@@ -357,11 +357,13 @@ research_goal:
     C1: S1 ran once (T1 RUN-ICPERF-8b0d47, job exit 42), but wrapper v3a could not locate the
     results, so RBS-ICPERF-de8978 is terminal as an implementation_error. That is not evidence, and
     no -r2 is triggered (DEC-20261107-b74e2c). The snapshot d5ec1e is impeded
-    (IMP-C1-d5ec1e-partial-output, DEC-20261107-3e9d71). Next: once PR #3127 merges, dispatch
-    TASK-20261107-c5a0f4 to the experiment-director (C1-AMENDMENT-2, v3b with a shared locator,
-    read-only T1 reconciliation, a new session with a fresh S2 run id). Archive its previews alone,
-    then dispatch the red-team task, then a Coordinator approval. No launch before that approval.
-    Other ICPERF lanes continue as separately ranked.
+    (IMP-C1-d5ec1e-partial-output, DEC-20261107-3e9d71). The design task TASK-20261107-c5a0f4 has
+    returned. PR #3132 auto-merged an unratified approval state to main (0ea4ca81d0, PD-3). That state
+    is reset to review_required by DEC-20261107-e41c08. Next: land the correction PR (C1 ledger,
+    C2 archive c5a0f4, C3 correction). Then dispatch the red-team task TASK-20261107-9d2b6a in its
+    own session, archive its report alone, then write the approval decision DEC-20261107-7802ec only
+    if DEC-20261107-e41c08 ruling 5 holds. No launch before that approval. Other ICPERF lanes
+    continue as separately ranked.
   next_action_recorded_at: '2026-11-07'
 
   owner: coordinator

@@ -239,6 +239,11 @@ def cmd_harbor_run(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_capability(args):
+    from .capability_campaign import main
+    return main(args.rest)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m orchestration.eval",
@@ -253,6 +258,10 @@ def build_parser() -> argparse.ArgumentParser:
         p.add_argument("--split", choices=["dev", "held_out", "all"],
                        default=default_split,
                        help="tune against dev; spend held_out sparingly")
+
+    p_capability = sub.add_parser("capability", help="end-to-end domain capability campaigns", add_help=False)
+    p_capability.add_argument("rest", nargs=argparse.REMAINDER)
+    p_capability.set_defaults(func=cmd_capability)
 
     p_list = sub.add_parser("list", help="show the tasks in a suite")
     common(p_list)

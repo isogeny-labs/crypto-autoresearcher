@@ -1,0 +1,153 @@
+# DEC-20261107-e41c08: after design task TASK-20261107-c5a0f4 returned, this decision assigns the
+# independent red-team review TASK-20261107-9d2b6a and sets how c5a0f4 is archived. It also corrects
+# the unratified approval state that PR #3132 landed on main (PD-3).
+# It approves nothing. DEC-20261107-7802ec stays reserved and is not written.
+coordinator_decision:
+  id: DEC-20261107-e41c08
+  id_provenance: >-
+    Chosen by the Coordinator subagent, which has no shell, as an unused 6-hex token. `allocate_id.py
+    --check` reports it 'taken' only because of this file itself, which the session has accepted
+    before. This record was amended before its first commit, after PR #3132 merged. No committed
+    version of it exists.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It wrote this file and ledger/handoffs/TASK-20261107-9d2b6a.yaml,
+    and edited the following:
+      - ledger/handoffs/TASK-20261107-c5a0f4.yaml (the archive block and artifact_paths only);
+      - goal.yaml next_action;
+      - experiments/EXP-ICPERF-127dbd/specification.yaml (header lines 2-3; status, approved_by and
+        execution_authorized);
+      - experiments/EXP-ICPERF-127dbd/trial-plan.json (approval_required, approved_by,
+        candidate_only, and a specification_sha256 placeholder).
+    It read design/c5a0f4/FINDINGS.md (sections 1-4 and the blockers), runbook.yaml (header and
+    binds), tools/experiment_execution.py load_plan (lines 98-157) and tools/research_dispatch.py
+    (archive binding modes). Merge and PR facts are as the top-level session reported them.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: revise
+  decision_scope: >-
+    The review assignment, the archive mode and order, and a correction of record state. No bytes
+    approved, no launch.
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  facts_reported:
+    - "PR #3132 merged at 03:21:16Z, two minutes after it was opened, as main commit 0ea4ca81d0. The request to disable auto-merge was refused because the PR had already merged."
+    - "On main, specification.yaml reads status approved, approved_by DEC-20261107-7802ec, execution_authorized true and frozen true. trial-plan.json reads approved_by DEC-20261107-7802ec. ledger/decisions/DEC-20261107-7802ec.yaml does not exist. Card lint and the preapproval packet fail. No run has been launched."
+    - "The bytes on main: v3b f93e8858..., locate_results.sh efcc2983..., reconcile_run.sh eac18f21..., spec 097462e3..., plan 3f564ea2..., runbook 488ae3ac..., card -3. Crypto PR #3613 (ff781aa8b7) holds C1-AMENDMENT-2. The top-level session re-ran the fixtures: 113 pass, 0 fail, 4 skipped. The director reported 117 pass, 0 fail."
+
+  procedure_deviations:
+    - id: PD-2
+      what: >-
+        The c5a0f4 package reached ccf1699ed0 without its archive receipt (handoff D-8 and the
+        one-isolated-commit rule were not met). The archive receipt names the author of ccf1699ed0.
+    - id: PD-3
+      what: >-
+        PR #3132 auto-merged to main (0ea4ca81d0). That put an official approval state on main
+        (specification status approved, execution_authorized true, plan approved_by) whose approver,
+        DEC-20261107-7802ec, does not exist. It was an official transition from an uncommitted
+        decision, and it was forbidden.
+      cause: >-
+        The director wrote the approved forms at the canonical paths (B-CANONICAL-SPEC-STATE). The
+        Coordinator's handoff c5a0f4 allowed that by declaring the canonical paths. Auto-merge then
+        landed the PR before any hold could take effect. The Coordinator's handoff design is a cause.
+      impact: >-
+        None on execution. No run was launched. Card lint and the preapproval probe refused the state.
+        RBS-ICPERF-616277 cannot run, because the runbook needs a committed decision that names its
+        sha256. It is a record-integrity defect, not evidence.
+      never_again: >-
+        A design handoff that produces approved forms declares them as previews outside the canonical
+        specification and plan paths. A PR that carries an approved form is not given auto-merge
+        until its approval decision is in the same PR.
+
+  rulings:
+    - id: 1
+      text: >-
+        Assign TASK-20261107-9d2b6a (role red-team, independent session, zero runs, zero AWS calls).
+        It covers questions (a) to (c) and B-FILED-BEFORE-AFFECTED-DATA as (d).
+    - id: 2
+      title: correction of record state (PD-3)
+      text: >-
+        In the canonical files:
+          - specification.yaml goes back to status review_required, frozen true, approved_by null and
+            execution_authorized false. frozen stays true: the bytes are the frozen design, and
+            experiment_execution.load_plan candidate readiness requires an unapproved, frozen,
+            review_required specification.
+          - trial-plan.json becomes the candidate form: approval_required true, approved_by null,
+            candidate_only true, and specification_sha256 set to the sha256 of the corrected
+            specification.yaml.
+        The approved forms are preserved byte-exact from 0ea4ca81d0 as
+        experiments/EXP-ICPERF-127dbd/design/approval-preview/specification.yaml (097462e3...) and
+        trial-plan.json (3f564ea2...). The runbook header already states that its bound digests are
+        the preview bytes the approval archive swaps in. So runbook.yaml (488ae3ac...), its binds and
+        spec_bindings, card -3 and runbook-lint.txt are NOT changed. The approval archive for
+        DEC-20261107-7802ec swaps the two previews back into the canonical paths, and refreshes the
+        preapproval packet then. Until that swap, runbook.py lint reports the two bind mismatches.
+        That is expected and blocks any relay.
+    - id: 3
+      title: commit order on claude/c1-approval-correction-20261107 (one PR)
+      text: >-
+        Three commits, in this order:
+          - C1 (ledger): this decision, TASK-20261107-9d2b6a, the TASK-20261107-c5a0f4 edit and goal.yaml.
+          - C2 (archive c5a0f4, alone): only its snapshot receipt and the archive fields. Its tree
+            still holds the director's bytes, as at 0ea4ca81d0, so content_at_commit binds what the
+            director produced. The receipt names 0ea4ca81d0 as the commit where the package landed,
+            and records PD-2 and PD-3.
+          - C3 (correction): specification.yaml, trial-plan.json and the two approval-preview files.
+        Do not stage specification.yaml or trial-plan.json in C1 or C2. Enable auto-merge only after
+        all three are pushed and validate_ledger passes on C3. A dispatcher refusal of C2 comes back
+        here.
+    - id: 4
+      title: which commit the archive and the dispatch name
+      text: >-
+        The c5a0f4 archive does not name 0ea4ca81d0 as its commit_sha. That commit carries no receipt.
+        archive.commit_sha is C2, and parent_sha is C1. The receipt cites 0ea4ca81d0 as the landing
+        commit. The 9d2b6a dispatch waits until the correction PR has merged. It names the main merge
+        commit of that PR (which contains C2), and 0ea4ca81d0 as the first main commit holding the
+        reviewed bytes. The three script sha256 values must match at both commits. 9d2b6a archives
+        on a new branch from origin/main through its own ready-for-review PR.
+    - id: 5
+      text: >-
+        DEC-20261107-7802ec is not written or committed until all of these hold:
+          - 9d2b6a's report is archived with no 'blocks approval' finding open;
+          - B-CANONICAL-SPEC-STATE (resolved by ruling 2 except for the swap), B-IN-PLACE-REPLACEMENT,
+            B-S1-COPY-CUSTODY and B-PARTIAL-OUTPUT-RESIDUAL are each ruled;
+          - experiment_preapproval reports approvable: true;
+          - after the approval archive, newest_experiments reports execution_state ready.
+        A 'blocks approval' or 'fix before S2' finding goes back to the experiment-director as a new
+        task.
+    - id: 6
+      text: >-
+        The fixture counts differ (113 against 117). The 9d2b6a archive receipt records a full re-run
+        with the checkout argument, which must give 117 pass, 0 fail. Any other count returns here.
+    - id: 7
+      text: "Crypto PR #3613 may merge. Filing the amendment before S2 data is lawful, subject to the answer to (d)."
+  status_transitions: []
+  record_corrections:
+    - {path: experiments/EXP-ICPERF-127dbd/specification.yaml, from: "approved / DEC-20261107-7802ec / execution_authorized true", to: "review_required / null / false (frozen true)", basis: PD-3}
+    - {path: experiments/EXP-ICPERF-127dbd/trial-plan.json, from: "approved_by DEC-20261107-7802ec", to: "candidate_only true, approval_required true, approved_by null", basis: PD-3}
+  target_ids: [TASK-20261107-9d2b6a, TASK-20261107-c5a0f4, EXP-ICPERF-127dbd, GOAL-ICPERF-e6b6a4, BATCH-0e0902]
+  related_records:
+    prior_decisions: [DEC-20261107-b74e2c, DEC-20261107-3e9d71]
+    prs: {car_merged: 3132, crypto: 3613}
+    commits: {pr3132_merge: 0ea4ca81d0, package: ccf1699ed0}
+    reserved_not_written: DEC-20261107-7802ec
+  rationale:
+    - "Approval state on main must follow a committed decision. Restoring the draft state and keeping the approved bytes as previews is the smallest correction, and it keeps every hash binding of the runbook and card intact."
+    - "The archive binds what the producer produced, before the correction. The correction is its own visible commit."
+    - "The locator decides which bytes become S1 evidence. So an adversary other than the author must attack it before approval (sabotage is assumed)."
+  evidence_refs:
+    - experiments/EXP-ICPERF-127dbd/runbook.yaml (header lines 1-3; binds lines 17-20)
+    - tools/experiment_execution.py (load_plan, lines 113-152)
+    - tools/research_dispatch.py (ARCHIVE_BINDING_MODES; archive verification)
+    - experiments/EXP-ICPERF-127dbd/design/c5a0f4/FINDINGS.md (blockers)
+  limitations:
+    - "No shell. The Coordinator could not compute the corrected specification's sha256, so trial-plan.json carries the placeholder DRAFT_SPEC_SHA256_TO_FILL until the top-level session fills it."
+    - "Whether validate_ledger accepts a review_required specification for an experiment that already holds RUN-ICPERF-8b0d47 and RUN-ICPERF-c7f69e is untested. A refusal comes back here."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session, text: "Make commits C1, C2 and C3 as ruling 3 says, push, run validate_ledger, then enable auto-merge on the one PR. After it merges, dispatch TASK-20261107-9d2b6a with the commits of ruling 4. Archive its report alone, then return for DEC-20261107-7802ec."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "A review assignment, an archive ruling and a correction of record state. No evidence exists."
