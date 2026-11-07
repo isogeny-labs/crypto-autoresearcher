@@ -6,7 +6,7 @@ import json
 from deps15 import core, Oracle
 from shared import batch_check
 from pairbuild15 import build
-from check15 import canonical,commitment,check_pairs,check_query
+from check15 import canonical,commitment,check_pairs,check_query,query_arithmetic
 
 
 def append(stream,value):
@@ -41,6 +41,7 @@ def execute(snapshot,rules,out,capability=None,checker=check_query,pair_checker=
                     ordered_pairs=len(index.pairs),counters=meter.counters(),phases=meter.phases)
                 append(outputs,built)
                 pair_check=timed(lambda:pair_checker(f,g,method,index.pairs,meter.phases,snapshot.get('prior_ordered_pairs_sha256')))
+                pair_check['producer_output_sha256']=commitment(built)
                 append(checks,dict(kind='pair_check',method=method,**pair_check))
                 if reference_digest is None:reference_digest=built['pairs_sha256']
                 elif reference_digest!=built['pairs_sha256']:raise ValueError('scalar/candidate pair digest')
@@ -63,8 +64,12 @@ def execute(snapshot,rules,out,capability=None,checker=check_query,pair_checker=
                         geometric_fixture=dict(f,factor_base=[dict(point=q) for q in g['points']])
                         value['engine_count_check']=batch_check.records(dict(fixture=geometric_fixture),
                             [index.engines.records[-1]],[query['point']],start=qi)
+                        value['query_arithmetic']=query_arithmetic(f,result,value['engine_count_check']['engine_totals'])
+                        if any(output['phase']['counters'].get(key,0)!=count for key,count in value['query_arithmetic'].items()):
+                            raise ValueError('independent complete query Fp schedule')
                         return value
                     checked=timed(check)
+                    checked['producer_output_sha256']=commitment(output)
                     append(checks,dict(kind='query_check',method=method,query_index=qi,**checked))
                     row_total+=len(result['rows'])
                 summary=dict(method=method,build=built,pair_check=pair_check,

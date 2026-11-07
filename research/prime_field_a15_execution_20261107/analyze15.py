@@ -7,6 +7,18 @@ from custody15 import HERE,ROOT,INPUTS,load,digest,write_once,tools,PARAMETERS
 from check15 import commitment
 from deps15 import core
 
+CURVES=('p262139-i0','p262139-i1','p524287-i0','p524287-i1')
+
+
+def checkpoint_status(receipts):
+    if not set(receipts)<=set(CURVES):raise ValueError('unexpected checkpoint curve')
+    for i,cid in enumerate(CURVES):
+        if cid not in receipts:continue
+        value=receipts[cid]
+        if value['closed_curve']!=cid or value['completed_tables']!=4*(i+1) or value['command']!=['bash','scripts/checkpoint.sh','push']:
+            raise ValueError('closed-curve checkpoint identity/ordinal mismatch')
+    return len(receipts)==4 and all(value['returncode']==0 for value in receipts.values())
+
 
 def lines(path):
     path=Path(path)
@@ -37,8 +49,15 @@ def summarize(raw,rules):
                 check=checks.get(('pair_check',method,None))
                 if check:
                     value=check['verification']
+                    if check.get('producer_output_sha256')!=commitment(output):raise ValueError('construction cost/output checker binding')
                     if not value['checked'] or value['pairs_sha256']!=output['pairs_sha256'] or output['pairs_sha256']!=snapshot['prior_ordered_pairs_sha256']:
                         raise ValueError('construction checker binding')
+                    phase_counts=Counter()
+                    for phase in output['phases']:phase_counts.update(phase['counters'])
+                    if phase_counts!=Counter(output['counters']) or phase_counts!=Counter(value['construction_counters']):
+                        raise ValueError('construction phase/independent counter disagreement')
+                    if any(output['counters'].get(k,0)!=v for k,v in value['construction_arithmetic'].items()):
+                        raise ValueError('construction independent Fp schedule disagrees')
                     s['pair_verified']=True;s['pair_stage_counters']=value['pair_stage_counters']
             elif kind=='query':
                 qi=output['query_index']
@@ -49,10 +68,16 @@ def summarize(raw,rules):
                 if check:
                     expected=snapshot['queries'][qi]
                     value=check['verification']
+                    if check.get('producer_output_sha256')!=commitment(output):raise ValueError('query cost/output checker binding')
                     if not value['checked'] or value['record_sha256']!=commitment(output['record']) or value['record_sha256']!=expected['expected_record_sha256']:
                         raise ValueError('query checker/retained commitment binding')
                     if output['engine_record']['points_sha256']!=expected['expected_signed_points_sha256']:
                         raise ValueError('signed query commitment')
+                    if any(output['phase']['counters'].get(k,0)!=v for k,v in value['query_arithmetic'].items()):
+                        raise ValueError('query independent Fp schedule disagrees')
+                    if any(Counter(output['engine_record']['engines'][engine]['counters'])!=Counter(counts)
+                            for engine,counts in value['engine_count_check']['engine_totals'].items()):
+                        raise ValueError('query independently checked engine counters disagree')
                     s['verified_queries']+=1
             elif kind=='method_complete':
                 if output['queries']!=s['queries'] or output['query_counters']!=dict(s['query_counters']) or output['rows']!=s['rows']:
@@ -76,9 +101,10 @@ def main():
     args=parser.parse_args();rules=load(INPUTS);protocol=load(args.protocol)
     execution,host=load(args.run/'execution.json'),load(args.run/'host.json')
     rows,physical,errors=summarize(args.run/'raw',rules)
-    checkpoints=[load(args.run/('checkpoint-'+cid+'.json')) for cid in
-        ('p262139-i0','p262139-i1','p524287-i0','p524287-i1') if (args.run/('checkpoint-'+cid+'.json')).exists()]
-    complete=all(row['verified'] for row in rows) and len(checkpoints)==4 and all(c['returncode']==0 for c in checkpoints) and execution['returncode']==0 and execution['source_unchanged_after']
+    checkpoint_receipts={cid:load(args.run/('checkpoint-'+cid+'.json')) for cid in CURVES if (args.run/('checkpoint-'+cid+'.json')).exists()}
+    checkpoints_complete=checkpoint_status(checkpoint_receipts)
+    checkpoints=list(checkpoint_receipts.values())
+    complete=all(row['verified'] for row in rows) and checkpoints_complete and execution['returncode']==0 and execution['source_unchanged_after']
     metrics=dict(schema='prime-field-a15-metrics/v1',panel_complete=complete,physical_attempts=1,
         conditioned_input_reuse=True,new_target_solver_calls=0,independent_new_target_draws=0,
         verified_builds=sum(row['verified'] for row in rows),verified_query_calls=sum(row['verified_queries'] for row in rows),

@@ -10,11 +10,13 @@ Preparation of the next bounded component comparison. Native A15 executions: 0.
 - [Producer-before-checker custody](execute15.py)
 - [Bounded admitted driver](driver15.py), [supervisor](supervise15.py), [prospective protocol/release](prepare15.py)
 - [Fixed output analysis/export](analyze15.py)
-- [Tiny software control receipt](validation/complete-software-controls-20261107T0028Z.txt)
+- [Tiny software control receipt](validation/corrected-cost-custody-controls.txt)
 
-Eight tiny software tests pass, including 35 field/geometry parity subcases;
+Ten tiny software tests pass, including 35 field/geometry parity subcases;
 these are software checks, not native scientific data or trusted signed evidence.
 The complete prospective contract is assessed after exact source publication,
 then frozen before root release/current checkpoint/normal admission. All A14
 raw records, closed benchmark and report remain immutable on PR3113; this new
 branch isolates the next implementation.
+
+The original source assessment is blocked and retained. See [the prospective cost-binding correction](cost-binding-correction.md); corrected source awaits additive exact-byte assessment.
