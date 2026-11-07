@@ -1,0 +1,420 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "analysis/semaev-degree-five-quotient-lift/n47-rand00-x1-count-plan-001.json",
+      "Original input.sys and named-plan hashes",
+      "Three stage stdout/stderr files and receipt"
+    ],
+    "outputs": [
+      "Custody-checked exact control and target counts with failure status."
+    ],
+    "script": {
+      "path": "analysis/semaev-degree-five-quotient-lift/verify_n47_x1_count_run.py",
+      "sha256": "5c0cc7b282b72c638d405c076d25819718df0ca12f05c915c586e9d23f7ba2a5"
+    }
+  },
+  "arms": [
+    {
+      "description": "Exhaustive four-pair GF(8) control with exactly two solutions.",
+      "id": "positive-n3",
+      "instrument": {
+        "binary_sha256": null,
+        "build": [
+          [
+            "/usr/bin/gcc",
+            "-O3",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-mpclmul",
+            "-msse4.1",
+            "analysis/semaev-m2-last-fall-degree/code/s3count2.c",
+            "-o",
+            "/home/ec2-user/fall-degree-data-20261029/n47-rand00-x1-count-local-001/count_x1"
+          ]
+        ],
+        "commit": "60f3dc246ec8bde876a2845d1325249fa408895c",
+        "env": {},
+        "flags": {
+          "compiler": "gcc -O3 -std=c11 -Wall -Wextra -mpclmul -msse4.1",
+          "source_sha256": "fc8010f395a18b88b0739abfac3e4b6349be5c6be96ce5070e20f60364d98217"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "a6_hex": "1",
+        "basis_hex": [
+          "1"
+        ],
+        "expected_count": 2,
+        "k": 1,
+        "modulus_hex": "b",
+        "n": 3,
+        "z_hex": "1"
+      },
+      "role": "control_positive"
+    },
+    {
+      "description": "Same four-pair GF(8) control with a6=X and no solution.",
+      "id": "negative-n3",
+      "instrument": {
+        "binary_sha256": null,
+        "build": [
+          [
+            "/usr/bin/gcc",
+            "-O3",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-mpclmul",
+            "-msse4.1",
+            "analysis/semaev-m2-last-fall-degree/code/s3count2.c",
+            "-o",
+            "/home/ec2-user/fall-degree-data-20261029/n47-rand00-x1-count-local-001/count_x1"
+          ]
+        ],
+        "commit": "60f3dc246ec8bde876a2845d1325249fa408895c",
+        "env": {},
+        "flags": {
+          "compiler": "gcc -O3 -std=c11 -Wall -Wextra -mpclmul -msse4.1",
+          "source_sha256": "fc8010f395a18b88b0739abfac3e4b6349be5c6be96ce5070e20f60364d98217"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "a6_hex": "2",
+        "basis_hex": [
+          "1"
+        ],
+        "expected_count": 0,
+        "k": 1,
+        "modulus_hex": "b",
+        "n": 3,
+        "z_hex": "1"
+      },
+      "role": "control_negative"
+    },
+    {
+      "description": "Independent x1 enumeration and quadratic-in-x2 root count on the fixed n47 random00 input.",
+      "id": "target-n47",
+      "instrument": {
+        "binary_sha256": null,
+        "build": [
+          [
+            "/usr/bin/gcc",
+            "-O3",
+            "-std=c11",
+            "-Wall",
+            "-Wextra",
+            "-mpclmul",
+            "-msse4.1",
+            "analysis/semaev-m2-last-fall-degree/code/s3count2.c",
+            "-o",
+            "/home/ec2-user/fall-degree-data-20261029/n47-rand00-x1-count-local-001/count_x1"
+          ]
+        ],
+        "commit": "60f3dc246ec8bde876a2845d1325249fa408895c",
+        "env": {},
+        "flags": {
+          "compiler": "gcc -O3 -std=c11 -Wall -Wextra -mpclmul -msse4.1",
+          "source_sha256": "fc8010f395a18b88b0739abfac3e4b6349be5c6be96ce5070e20f60364d98217"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "expected_count": 0,
+        "input_sys_sha256": "b8ee56830e9b7f064c4cfe17579b512dd3f7b01e62fd0575b6632a37f2ec936c",
+        "named_plan_sha256": "554486c20b6de56a4e53b57484ba8008783815358e21f854be7835b9d905a24a"
+      },
+      "role": "candidate"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized independent count preparation"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "independent-count"
+      ],
+      "id": "C1",
+      "text": "The named n47 random00 system has exactly zero ordered pairs in V x V only if the independent x1 counter exits zero, its positive and negative controls pass, and the frozen custody checker accepts the complete run."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic count, no timing or population comparison.",
+      "present": false
+    },
+    "negative": {
+      "arm": "negative-n3",
+      "not_applicable_reason": null,
+      "null_population": {
+        "description": "One fixed four-pair GF(8) control with no S3 root.",
+        "generator": "Use the same n=3 field, V={0,1}, z=1, and change only a6 from 1 to X.",
+        "matched_on": [
+          "field modulus",
+          "factor base",
+          "target z",
+          "instrument and build"
+        ],
+        "n": 1,
+        "why_n": "Exact exhaustive algebraic fixture, no population estimate."
+      },
+      "present": true
+    },
+    "positive": {
+      "arm": "positive-n3",
+      "expected_detection": "Exactly two ordered pairs.",
+      "not_applicable_reason": null,
+      "present": true
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "independent-count"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "exact integer count",
+    "text": "Accept an independent zero count only when source, plan, binary and output custody pass and positive=2, negative=0, target=0 with all exits zero.",
+    "threshold": "positive 2, negative 0, target 0, and checker accepted_zero_count",
+    "verdict_vocabulary": [
+      "accepted_zero_count",
+      "nonzero_count",
+      "invalid",
+      "unknown"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "checkpoint_detail": "One build, two tiny controls, one target count, no checkpoint and no retry; preserve all failures.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 4294967296,
+      "pod_memory_bytes": 8589934592
+    },
+    "queue": "local-n47-independent-count",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 7500
+  },
+  "freeze": {
+    "commit": null,
+    "filed_before_affected_data": false,
+    "frozen_at": null,
+    "protocol_sha256": null,
+    "status": "draft"
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Inferring LFD at least six from a zero count alone.",
+    "Using a partial or timed-out enumeration as an exact count.",
+    "Retrying under a new name without a new frozen protocol and budget.",
+    "Calling the x1-based and sum-based implementations independent source if code paths are shared beyond the field arithmetic specification."
+  ],
+  "invalidation_rules": [
+    "Any source, plan, input, binary, command or output hash mismatch invalidates the run.",
+    "Failed positive or negative control prevents target submission and any zero-count claim.",
+    "A timeout, OOM, interruption or incomplete output is unknown, not zero.",
+    "A count without independent run-custody verification does not establish the zero-solution premise."
+  ],
+  "links": {
+    "named_plan_sha256": "554486c20b6de56a4e53b57484ba8008783815358e21f854be7835b9d905a24a",
+    "original_count_stdout_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "plan": "analysis/semaev-degree-five-quotient-lift/n47-rand00-x1-count-plan-001.json",
+    "plan_sha256": "51d0353abaf9f096c78323050f5bb4ed83f820b597354c756eec2012c60239fb",
+    "source_sha256": "fc8010f395a18b88b0739abfac3e4b6349be5c6be96ce5070e20f60364d98217"
+  },
+  "literature": [
+    {
+      "claim": "The binary S3 equation and Boolean-system interpretation fix the exact ordered-pair count.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md",
+      "verified_by": "Codex 2026-11-07"
+    },
+    {
+      "claim": "The retained sum-based counter reported zero; the x1-based route is an independent computational replay.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-degree-five-quotient-lift/N47-RAND00-SOLUTION-COUNT-BRIDGE.md",
+      "verified_by": "Codex 2026-11-07"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256",
+      "exit_code",
+      "stdout_sha256",
+      "stderr_sha256",
+      "rusage",
+      "charged_cost"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Number of ordered pairs (x1,x2) in the named V x V satisfying S3(x1,x2,z)=0, from one complete x1 enumeration.",
+        "id": "ordered_pair_count",
+        "kind": "exact",
+        "name": "exact ordered-pair count",
+        "resolution": "1",
+        "source": "target stdout exact integer",
+        "uncertainty": "none_exact",
+        "unit": "ordered pairs"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Positive GF(8) count 2 and negative GF(8) count 0.",
+        "id": "control_counts",
+        "kind": "exact",
+        "name": "exact control counts",
+        "resolution": "1",
+        "source": "control stdout exact integers",
+        "uncertainty": "none_exact",
+        "unit": "ordered pairs"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N47-RAND00-X1-COUNT-LOCAL-20261107-V1",
+  "question": "Does the independently implemented x1-enumeration counter reproduce the exact zero ordered-pair count for the named n47 random00 system after positive and negative controls?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Controls must pass before the expensive named target; no timing comparison.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact named counts and known controls; no population inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "No random sample: one fixed named target and two predetermined algebraic controls."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named n47 seed; no new random draw.",
+      "seeds": [
+        9494361161180666839
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Exact proof-dependency and count-control table."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 3,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "One fixed target and two exhaustive four-pair software controls; no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 7500,
+      "fixed_seconds": 300,
+      "measured_on": "Hard build, control and target timeout ceilings; no comparative timing inference.",
+      "per_sample_seconds": 2400,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Run one build, positive and negative controls once each, then one n47 target count only if both controls pass. Stop on success, refusal, timeout, OOM, budget gate or original deadline; no retry."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact count, no timing comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "positive-n3",
+          "negative-n3",
+          "target-n47"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "input"
+        ],
+        "id": "independent-count",
+        "threshold": "2, 0, 0 respectively with custody acceptance"
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "All arms use the same source commit, flags, built binary and one thread.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Two predetermined four-pair GF(8) controls and one fixed named n47 record.",
+        "name": "input",
+        "treatment": "crossed"
+      },
+      {
+        "how": "Existing Spot host; CPU, kernel, co-tenants, cost and interruption recorded; no timing claim.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Controls precede target to avoid an expensive invalid run.",
+        "name": "order",
+        "treatment": "fixed"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}
