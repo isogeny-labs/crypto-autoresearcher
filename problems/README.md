@@ -185,3 +185,5 @@ Coordinator decision and evidence.
 | [PEXT degree-two census needs coefficient-aware launcher](pext-degree2-squareclass-census-launcher.md) | open | EXP-PEXT-bf8f96: actual curve/twist/T identity, connectedness and descent-aware full census remain unimplemented | Complete projective quotient and square-class checks, full cohorts, lawful lane/runtime and exact-byte preapproval |
 
 - [ECDLP lead atlas source and validation gap](ecdlp-lead-atlas-unmerged-evidence.md) — crypto study files now match merged main, while source CI, full replay, the open ecc-challenges PR and four-repository validation remain pending.
+
+| [Five prime-field IC extraction and integration](five-prime-ic-extraction-and-integration.md) | investigating | Directions 58/69/71/56/87: checked components; solver, circuit, conductor and screening integration remain |
