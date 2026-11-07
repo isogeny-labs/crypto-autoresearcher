@@ -1299,6 +1299,80 @@ def prime_field_unknown_pool_cancellation_panel(ref, since):
             if k in counts:emit(prefix+'.physical.'+group+'.'+k,counts[k],unit='bytes'if k.endswith('_bytes')else'calls',label='Separate actual primitive/array vector; information diagnostics charged separately, no weighted cost',**common)
 
 
+def prime_field_direct_formal_algebra_panel(ref, since):
+    """Conditioned same-input producer counters; no extra information or holdout."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/metrics.json';raw=show(ref,path)
+    if raw is None:return
+    try:
+        data=json.loads(raw);run=path.rsplit('/',1)[0];execution=json.loads(show(ref,run+'/execution.json'));analysis=json.loads(show(ref,run+'/analysis.json'))
+        ints=('physical_attempts','planned_systems','planned_batch_calls','verified_systems','unknown_systems','observed_batch_starts','observed_completed_batch_calls','observed_failed_batch_calls')
+        if any(type(data[k])is not int for k in ints):return
+        if (data['schema']!='prime-field-a21-metrics/v1' or data['panel_complete']is not True or
+            tuple(data[k]for k in ints)!=(1,12,12,12,0,12,12,0)or analysis['schema']!='prime-field-a21-analysis/v1' or
+            analysis['metrics_sha256']!=hashlib.sha256(raw.encode()).hexdigest()or analysis['physical_counters']!=data['physical_counters']or
+            (analysis['new_curves'],analysis['new_targets'])!=(0,0)):return
+        if (execution['returncode']!=0 or execution['timeout']is not False or execution['exception']is not None or execution['source_unchanged_after']is not True or
+            execution['source_commit']!=data['source_commit']or execution['protocol_sha256']!=data['protocol_sha256']):return
+        columns=data['columns'];rows=[dict(zip(columns,v,strict=True))for v in data['rows']]
+        ids=['p'+str(p)+'-i'+str(i)for p in (262139,524287)for i in (0,1)];methods=('direct_formal','aux_cancel_joint','sparse_joint')
+        if len(columns)!=len(set(columns))or len(rows)!=12 or {(v['case_id'],v['cell_id'],v['method'])for v in rows}!={(i,c,m)for i,c in enumerate(ids)for m in methods}:return
+        fields=('identified_targets','identified_mask','system_columns','system_rank',*[f+'_'+op for f in ('fp','fr')for op in ('add','sub','mul','inv')])
+        physical={};all_phases=[];outcomes={};ranks={}
+        for v in rows:
+            if v['verified']is not True or type(v['case_id'])is not int or any(type(v[k])is not int or v[k]<0 for k in fields):return
+            if v['identified_mask']>255 or v['identified_targets']!=v['identified_mask'].bit_count()or v['system_rank']>v['system_columns']or v['system_columns']>64:return
+            prefix=run+'/raw/'+v['cell_id']+'.'+v['method'];result=json.loads(show(ref,prefix+'.json'));proof=json.loads(show(ref,prefix+'-check.json'))['verification']
+            complete=json.loads(show(ref,run+'/raw/'+v['cell_id']+'.complete.json'));d=complete['descriptor'];producer=d['producer']
+            if (complete['complete']is not True or complete['case_id']!=v['case_id']or complete['actual_solver_calls']!=3 or
+                complete['all_methods_agree']is not True or complete['historical_outcomes_agree']is not True or d['cell_id']!=v['cell_id']):return
+            input_data={k:show(ref,b['path'])for k,b in producer.items()}
+            if any(input_data[k]is None or hashlib.sha256(input_data[k].encode()).hexdigest()!=b['sha256']for k,b in producer.items()):return
+            case,prep=json.loads(input_data['case']),json.loads(input_data['prepared'])
+            digest=lambda x:hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),allow_nan=False).encode()).hexdigest()
+            if (proof['checked']is not True or proof['producer_output_sha256']!=digest(result)or proof['input_case_sha256']!=digest(case)or
+                proof['prepared_sha256']!=digest(prep)or case['width']!=48 or case['target_count']!=8 or prep['norm_size']!=32 or len(prep['formal_definitions'])!=16):return
+            if len(result['recoveries'])!=8 or proof['identified']!=v['identified_targets']or result['arm']!=v['method']:return
+            mask=0
+            for t,rec in enumerate(result['recoveries']):
+                if rec['target_index']!=t or type(rec['identifiable'])is not bool:return
+                if rec['identifiable']:mask|=1<<t
+            if mask!=v['identified_mask']or result['system']['columns']!=v['system_columns']or result['system']['rank']!=v['system_rank']:return
+            native_rank=proof['joint_rank']if v['method']=='sparse_joint'else proof['native_joint_rank']
+            if v['method']=='direct_formal' and (proof['direct_rank']!=v['system_rank']or native_rank!=v['system_rank']+len(prep['known'])+16):return
+            expected_width=56 if v['method']=='sparse_joint'else prep['projection']['U']+8
+            if v['system_columns']!=expected_width:return
+            ranks.setdefault(v['cell_id'],set()).add(native_rank)
+            outcomes.setdefault(v['cell_id'],set()).add(tuple((r['identifiable'],r['scalar'])for r in result['recoveries']))
+            total={}
+            for phase in result['phases']:
+                if phase['status']!='complete' or any(type(x)is not int or x<0 for x in phase['counters'].values()):return
+                for k,x in phase['counters'].items():total[k]=total.get(k,0)+x
+                all_phases.append(dict(cell_id=v['cell_id'],method=v['method'],**phase))
+            if {k:x for k,x in total.items()if x}!={k:x for k,x in result['counters'].items()if x}:return
+            for field in ('Fp','Fr'):
+                for op in ('add','sub','mul','inv'):
+                    if v[field.lower()+'_'+op]!=result['counters'].get(field+'.field_'+op,0):return
+            for k,x in total.items():physical[k]=physical.get(k,0)+x
+        if any(len(v)!=1 for v in outcomes.values())or any(len(v)!=1 for v in ranks.values()):return
+        if all_phases!=analysis['phases']or {k:x for k,x in physical.items()if x}!={k:x for k,x in data['physical_counters'].items()if x}:return
+        for i,cid in enumerate(ids,1):
+            cp=json.loads(show(ref,run+'/checkpoint-'+cid+'.json'))
+            if (cp['returncode']!=0 or cp['command']!=['bash','scripts/checkpoint.sh','push']or cp['closed_curve']!=cid or
+                (cp['completed_curves'],cp['checked_cases'],cp['checked_batch_solver_calls'],cp['completed_online_engines'])!=(i,i,3*i,0)or
+                's3://setec-astronomy-artifacts/checkpoints/'not in cp['stdout']):return
+    except(KeyError,ValueError,TypeError,AttributeError):return
+    common=dict(date=date,problem='prime-field-factor-bases',better='neutral',source=path+'@'+ref);prefix='prym.prime_field.a21'
+    for k in ('verified_systems','unknown_systems','observed_completed_batch_calls'):
+        emit(prefix+'.'+k,data[k],unit='objects',label='Four conditioned saved cases/12actual calls; no new curves or target holdouts, producer-unverified',**common)
+    for row in rows:
+        for k in fields:emit(prefix+'.'+row['cell_id']+'.'+row['method']+'.'+k,row[k],unit='bit mask'if k=='identified_mask'else'calls'if k.startswith(('fp_','fr_'))else'objects',label='Actual same-input component vector; ranks not information gains, no calibrated cost',**common)
+    for phase in all_phases:
+        for k in ('Fr.field_mul','Fr.field_inv','Fp.field_mul'):
+            emit(prefix+'.'+phase['cell_id']+'.'+phase['method']+'.phase.'+phase['phase']+'.'+k,phase['counters'].get(k,0),unit='calls',label='Paid mapping/expansion/elimination/target/native-lift/check phase, unweighted partial vector',**common)
+
+
 def prime_field_formal_pair_dictionary_panel(ref, since):
     """Committed A20 original-base information; auxiliary rank is not base gain."""
     date='2026-11-07'
@@ -1935,6 +2009,7 @@ def main():
     prime_field_certified_query_transfer_panel(a.ref, a.since)
     prime_field_unknown_pool_cancellation_panel(a.ref, a.since)
     prime_field_formal_pair_dictionary_panel(a.ref, a.since)
+    prime_field_direct_formal_algebra_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 

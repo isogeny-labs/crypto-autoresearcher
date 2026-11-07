@@ -29,7 +29,7 @@ def main():
     for j,method in enumerate(ARMS):
         values=[next(v for v in rows if v['cell_id']==cid and v['method']==method)for cid in ids]
         for ax,key in zip(axes,('fr_mul','fr_inv'),strict=True):
-            ax.bar([i+(j-1)*.24 for i in range(4)],[v.get(key,0)if v['verified']else 0 for v in values],width=.23,color=colors[j],label=method)
+            ax.bar([i+(j-1)*.24 for i in range(4)],[v.get(key,0)if v['verified']else float('nan') for v in values],width=.23,color=colors[j],label=method)
             ax.set_xticks(range(4),[v.removeprefix('p').replace('-i',' / ')for v in ids],rotation=15);ax.set_ylabel('Actual '+key+' calls');ax.set_title('Conditioned component; n=4 cases')
     axes[0].legend(fontsize=7);fig.tight_layout();fig.savefig(a.out/'conditioned-algebra.svg');plt.close(fig)
     categories={
