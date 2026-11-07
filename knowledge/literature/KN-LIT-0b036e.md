@@ -15,7 +15,7 @@ tags: [matrix-multiplication, omega, linear-algebra, groebner, f4, characteristi
 confidence: reported
 citation_verified: read
 added: "2026-10-27"
-superseded_by: null
+superseded_by: KN-LIT-58d42d
 ---
 
 ## Contribution (as reported)
