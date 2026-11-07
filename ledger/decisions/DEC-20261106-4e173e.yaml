@@ -1,0 +1,156 @@
+# DEC-20261106-4e173e: the review basis of EXP-SEMBIN-79a02d changed after the
+# only review; freeze a claim-changing review plan for the current record, ratify
+# the label precedence as an operational selector, and dispatch no reviewer yet.
+coordinator_decision:
+  id: DEC-20261106-4e173e
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (well-formed, 0 occurrences across 48,211 paths).
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  archive_task: TASK-20261106-6629ed
+  session_provenance: >-
+    Coordinator session in an OpenCode runtime, branch coord/portfolio-20261106. Requested
+    role policy coordinator-orchestration-code; the runtime resolved no adapter model id,
+    so none is asserted. Read RESULTS.md, stage2/census.json, stage0/definitions.md §1-§5,
+    the specification success/falsification criteria, DEC-20261006-db4d5a,
+    DEC-20261011-712e40 and the git history of RESULTS.md.
+  subject: >-
+    Record that RESULTS.md was committed four days after the only review which had
+    declared it absent, freeze the review plan for the current record, and ratify the
+    frozen label precedence as an operational selector.
+  goal_id: GOAL-SEMBIN-5078bc
+  decision: revise
+  target_ids:
+  - EXP-SEMBIN-79a02d
+  - REVIEW-SEMBIN-79a02d-20261106
+  - DEC-20261006-db4d5a
+  - DEC-20261011-712e40
+  - TASK-20261005-6c1c10
+
+  finding:
+    statement: >-
+      The only claim-changing review of EXP-SEMBIN-79a02d (REVIEW-SEMBIN-79a02d-20261006,
+      decided in DEC-20261006-db4d5a on 2026-10-06) ruled the experiment invalid and its
+      rationale names the absence of RESULTS.md as a decisive defect. experiments/EXP-SEMBIN-79a02d/RESULTS.md
+      was committed on 2026-10-10 by commit 0d62fe4924 ("Stage 2 census aggregate and
+      RESULTS.md"), with the frozen label O-DFF-ANOMALY and an explicit ESCALATE per SR-7.
+      No decision after 2026-10-06 refers to EXP-SEMBIN-79a02d except
+      DEC-20261011-712e40, whose next action still asks for the snapshot archive and then
+      a review plan. The current record has therefore never been reviewed.
+    not_asserted: >-
+      This decision does not decide whether the label is right, whether d_ff_ic = 2 is a
+      convention artifact, or whether the result supports or weakens anything. It records
+      the basis change and opens the review.
+    git_evidence:
+      results_md_commit: 0d62fe4924
+      results_md_committed_at: '2026-10-10T19:19:05Z'
+      review_decision: DEC-20261006-db4d5a (2026-10-06T15:06:07Z)
+      later_decision_referring_to_experiment: DEC-20261011-712e40 (2026-10-12)
+
+  review_plan:
+    path: coordination/goals/GOAL-SEMBIN-5078bc/review-plans/REVIEW-SEMBIN-79a02d-20261106.yaml
+    sha256: bd6309f105d67d5eb1a6b8376d17326253b4ed4644bc708336700247b6b4c098
+    review_id: REVIEW-SEMBIN-79a02d-20261106
+    frozen: true
+    joints:
+    - id: J1
+      topic: label application and precedence
+      assigned_to: TASK-20261106-dbfe7c
+    - id: J2
+      topic: census integrity
+      assigned_to: TASK-20261106-bc1823
+    - id: J3
+      topic: d_ff_ic definition and the degree-2 anomaly
+      assigned_to: TASK-20261106-96d666
+    - id: J4
+      topic: SOLV4, the W_4 closure and C2
+      assigned_to: TASK-20261106-3eeed0
+    - id: J5
+      topic: C3 rank vs nrows and the null band
+      assigned_to: TASK-20261106-d74b3f
+    proves_too_much_assigned_to: TASK-20261106-7bbc46
+    blind_rederivation_assigned_to: TASK-20261106-96d666
+    coordinator_prior_recorded: true
+
+  precedence_ratification:
+    question: >-
+      RESULTS.md flags the ordering in stage0/definitions.md §5 as an executor
+      operationalization awaiting Coordinator ratification, because the hypothesis text
+      does not order the labels.
+    ruling: >-
+      RATIFIED as an operational selector only: when several conditions hold, §5 fixes
+      which single label RESULTS.md reports. It is not ratified as a scientific ranking,
+      does not order the hypothesis's claims, and does not license ignoring a
+      lower-precedence condition that holds. A lower-precedence condition that fires must
+      still be reported, which RESULTS.md does for the O-SEPARATED clause and the kf-b
+      contrary observation.
+    effect: >-
+      The label O-DFF-ANOMALY is the correct reported label under the frozen rule. This
+      says nothing about whether the anomaly is a finding, a convention artifact or a
+      defect; that is J3's question.
+
+  status_effect: >-
+    None: EXP-SEMBIN-79a02d stays as DEC-20261006-db4d5a left it (invalid) and
+    H-SEMBIN-8e8bef stays approved. This decision freezes a review plan and ratifies a
+    reporting convention; it promotes nothing and rejects nothing.
+
+  preconditions:
+    archive: >-
+      TASK-20261005-6c1c10 (snapshot archive, owner by DEC-20261005-3d5aea B1) is
+      written_not_dispatched and its receipt path does not exist. Reviewers are not
+      dispatched until that receipt is verified; durability of the tracked bytes does not
+      substitute for the binder receipt.
+    independence: reviewers run in independent sessions under review-adversarial (xhigh); none originated the run.
+    stage3: O-IMPEDIMENT is an infrastructure result and never negative evidence for C1.
+
+  rationale:
+  - 'A review whose stated basis has changed is not a review of the current record. The gap is documentary and was not recorded by anyone between 2026-10-10 and today.'
+  - 'Freezing the plan before any reviewer runs is what makes the round readable: the prior is recorded, each load-bearing joint has exactly one owner, and the proves-too-much control is named in advance.'
+  - 'The precedence ruling is separable from the science: the producer asked for a reporting-convention ratification, which can be given without endorsing the anomaly.'
+  - 'Dispatching reviewers before the snapshot receipt would repeat the very defect this decision is about — acting on a record whose binding had not been verified.'
+
+  limitations:
+  - 'This decision reads the record; it does not recompute the census or any rank.'
+  - 'The review plan assigns joints to allocated TASK ids that are not yet written as handoffs or dispatched; their allocation and dispatch are next actions, not facts.'
+  - 'Stage 3 remains unrun, so nothing here bears on C1.'
+
+  evidence_refs:
+  - experiments/EXP-SEMBIN-79a02d/RESULTS.md
+  - experiments/EXP-SEMBIN-79a02d/stage2/census.json
+  - experiments/EXP-SEMBIN-79a02d/stage0/definitions.md
+  - experiments/EXP-SEMBIN-79a02d/specification.yaml
+  - experiments/EXP-SEMBIN-79a02d/stage3/impediment.json
+  - ledger/decisions/DEC-20261006-db4d5a.yaml
+  - ledger/decisions/DEC-20261011-712e40.yaml
+  - ledger/handoffs/TASK-20261005-6c1c10.yaml
+  - coordination/goals/GOAL-SEMBIN-5078bc/review-plans/REVIEW-SEMBIN-79a02d-20261106.yaml
+
+  next_actions:
+  - id: NA-1
+    rank: 1
+    owner: top-level session
+    text: >-
+      Archive this decision and the frozen review plan; commit, push, open PR, enable
+      auto-merge.
+  - id: NA-2
+    rank: 2
+    owner: dispatcher, then coordinator
+    text: >-
+      Discharge the snapshot archive TASK-20261005-6c1c10 and verify its receipt; only
+      then write the six reviewer handoffs and dispatch them from independent sessions.
+  - id: NA-3
+    rank: 3
+    owner: coordinator, after all reports
+    text: >-
+      Compose the verdicts, run tools/check_review_independence.py, record any
+      procedure_deviations, and write the evidence decision. Do not infer a status change
+      from the review alone.
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: No evidence record is created; this is a review-basis correction and a frozen plan.
+
+  conclusions: []
