@@ -9,7 +9,7 @@ without independent signed standing. [pcc:unverified]
 
 [Results and costs](RESULTS.md), [raw run](runs/a17-certified-query-178e0d/metrics.json),
 [analysis](runs/a17-certified-query-178e0d/analysis.json),
-[report](reports/a17-certified-query-178e0d/report.pdf),
+[report](reports/a17-certified-query-178e0d-v2/report.pdf),
 [additive database v21](database/v21-certified-query/validation.json),
 [proof standing](PROOF-STATUS.md), [next ranked lead](next-leads.md).
 

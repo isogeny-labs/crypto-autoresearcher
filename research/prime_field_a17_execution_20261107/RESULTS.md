@@ -52,8 +52,10 @@ All 26 marked software controls pass. Three committed-exporter regression tests
 pass, including 23 A17 corruption variants and working-tree leakage rejection;
 304 new neutral metrics read committed bytes only. The lossless S3 raw archive
 contains all 206 original run files with checked SHA256/byte roundtrips.
-The [initial three-page report](reports/a17-certified-query-178e0d/report.pdf)
-was rendered and every page visually checked. No producer check, Git/S3 hash or
+The [final three-page report](reports/a17-certified-query-178e0d-v2/report.pdf)
+adds the first-certificate attribution from the same published raw records.
+Every page of both the original and final reports was visually checked; the
+original report remains unchanged. No producer check, Git/S3 hash or
 administrative approval establishes independently signed scientific, execution
 or replay proof. [pcc:unverified]
 
