@@ -42,8 +42,8 @@ code, model, sample counts or limits.
 
 ```sh
 autoresearch eval capability run \
-  --spec examples/capability-campaign/qualification.json \
-  --protocol examples/capability-campaign/protocol-v2.json \
+  --spec examples/capability-campaign/qualification-v3.json \
+  --protocol examples/capability-campaign/protocol-v3.json \
   --model gpt-6-astra --effort xhigh --max-sessions 15 \
   --out /tmp/capability-live
 ```
@@ -85,9 +85,10 @@ pass for that instance to pass. The displayed 95% Wilson intervals are marginal
 per matrix cell. Paired arm comparisons report exact discordance tests and
 Bonferroni-adjusted p-values but never declare superiority automatically.
 
-The native driver bounds local actor address space, CPU affinity, per-file output
+The native driver bounds local actor address space, CPU affinity, per-file storage
 bytes, prompt bytes and trial wall time; it launches serial sessions without
-campaign retries. A byte cap is not a remote token cap. Subscription dollar
+campaign retries. The separate output-byte limit rejects oversized returned logs or answers; it
+does not cap Codex internal database size. A byte cap is not a remote token cap. Subscription dollar
 billing and remote inference resource usage are unavailable and remain null.
 No dollar ceiling or equal compute budget is implied. EKS/cloud execution needs
 the separate owner budget and publication checks.

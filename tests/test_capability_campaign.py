@@ -130,3 +130,14 @@ print(json.dumps({'type':'turn.completed','usage':{'input_tokens':12,'output_tok
     assert result['artifact']=={'answer':42}
     assert result['usage']['output_tokens']==5
     assert result['cost_usd'] is None
+
+def test_output_limit_is_separate_from_native_storage(spec,tmp_path,monkeypatch):
+    import sys,subprocess
+    script=tmp_path/'fake_codex.py'
+    script.write_text("import sys\nsys.stdin.read()\nprint('x'*20000)\n")
+    original=subprocess.Popen
+    monkeypatch.setattr(actors.subprocess,'Popen',lambda cmd,**kw: original([sys.executable,str(script)],**kw))
+    budget={**spec['budget'],'max_output_bytes':1024,'max_actor_file_bytes':1048576}
+    result=actors.codex('execute',{}, {},seconds=5,model='fake',effort='xhigh',budget=budget)
+    assert result['status']=='budget_exhausted'
+    assert len(json.dumps(result['trace']))<2000

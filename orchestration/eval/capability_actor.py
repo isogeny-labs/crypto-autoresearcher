@@ -112,7 +112,8 @@ def codex(stage, public, previous, *, seconds, model, effort, budget):
         def limits():
             memory = budget['memory_mb'] * 1024 * 1024
             resource.setrlimit(resource.RLIMIT_AS, (memory, memory))
-            resource.setrlimit(resource.RLIMIT_FSIZE, (budget['max_output_bytes'], budget['max_output_bytes']))
+            file_limit=budget.get('max_actor_file_bytes',budget['max_output_bytes'])
+            resource.setrlimit(resource.RLIMIT_FSIZE, (file_limit,file_limit))
             cpu = max(1, math.ceil(seconds))
             resource.setrlimit(resource.RLIMIT_CPU, (cpu, cpu))
             if hasattr(os, 'sched_getaffinity'):
@@ -130,7 +131,10 @@ def codex(stage, public, previous, *, seconds, model, effort, budget):
                 proc.communicate()
                 status = 'budget_exhausted'
             output.seek(0); errors.seek(0)
-            stdout, stderr = output.read(), errors.read()
+            cap=budget['max_output_bytes']
+            stdout, stderr = output.read(cap), errors.read(cap)
+            if any(p.exists() and p.stat().st_size>cap for p in (root/'stdout',root/'stderr',final)):
+                status='budget_exhausted'
             if proc.returncode in (-signal.SIGXFSZ, -signal.SIGXCPU):
                 status = 'budget_exhausted'
         events = []

@@ -56,6 +56,10 @@ def validate(spec):
     if not isinstance(budget,dict): raise ValueError('budget must be an object')
     for key in ('wall_seconds', 'memory_mb', 'max_sessions_per_trial', 'max_output_bytes', 'max_request_bytes'):
         positive(budget.get(key), f'budget.{key}', integer=True)
+    if 'max_actor_file_bytes' in budget:
+        positive(budget['max_actor_file_bytes'],'budget.max_actor_file_bytes',integer=True)
+        if budget['max_actor_file_bytes'] < budget['max_output_bytes']:
+            raise ValueError('actor file limit must accommodate output limit')
     required = max({'single': 1, 'planned': 2, 'reviewed': 4}[a] for a in spec['arms'])
     if budget['max_sessions_per_trial'] < required:
         raise ValueError('max_sessions_per_trial is below the selected stage count')
