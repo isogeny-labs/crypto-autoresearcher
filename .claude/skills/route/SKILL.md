@@ -9,6 +9,10 @@ description: >-
 
 # Choose a workflow
 
+For a request to do or continue research through one entry point, invoke
+`.claude/skills/autoresearch/SKILL.md`. This skill remains the read-only lookup
+for questions about which workflow or tool to use.
+
 Read `docs/skill-routing.md` and `docs/skill-catalog.json`. Use `python3 tools/skill_catalog.py list` for the exact catalog; use `route --intent inspect --topic endo` to inspect a declared intent/topic pair. This selector performs no execution.
 
 1. Preserve the user's named repo, goal, experiment, tool, artifact, and stopping point.

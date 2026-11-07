@@ -21,10 +21,11 @@ Public **coordination** entry point. The session drives the Coordinator role
 and `plugins/crypto-autoresearcher-harness/skills/crypto-autoresearcher-harness/references/lifecycle.md`.
 Do not copy or weaken `AGENTS.md`.
 
-This is **not** `/run`. Do not launch scientific trials, implement experiment
-code, or treat a Ready executor card as something this skill executes. When the
-ranked next action is a scientific run, record it and stop, or tell the user to
-invoke `/run`. The retired names `coordinate-research-goal`,
+Do not launch scientific trials, implement experiment code, or treat a Ready
+executor card as something this skill executes. When the ranked next action is
+a scientific run, record it and return to the caller. Under a full-cycle
+`autoresearch` request, that caller invokes `run` automatically; a direct
+coordination-only request stops with the exact `run` invocation. The retired names `coordinate-research-goal`,
 `launch-research-harness`, and `crypto-autoresearcher-harness` are not this
 skill; do not recreate those adapter paths.
 
