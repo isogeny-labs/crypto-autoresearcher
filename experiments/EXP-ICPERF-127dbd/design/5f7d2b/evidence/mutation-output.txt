@@ -1,0 +1,90 @@
+mutation	verdict	differing	failing_cases(first 12)	edit
+BASELINE	BASELINE-CLEAN	0 differing case(s)	none	none
+K1-uri	CAUGHT	2 differing case(s)	A02b-ruleA-cross-job-with-receipt A03b-ruleA-other-bucket-with-receipt 	K1-uri (K-1) edited locate_results.sh: 1 match(es), one each
+K1-poduid	CAUGHT	1 differing case(s)	A01d-ruleA-uri-located-poduid-differs 	K1-poduid (K-1) edited locate_results.sh: 1 match(es), one each
+K1-class	CAUGHT	4 differing case(s)	A01b-ruleA-sibling-prefix-with-receipt A01d-ruleA-uri-located-poduid-differs A02b-ruleA-cross-job-with-receipt A03b-ruleA-other-bucket-with-receipt 	K1-class (K-1) edited launch_eks.sh: 1 match(es), one each
+K2-nonempty	SUBSUMED(by K2-nonempty-and-entries)	0 differing case(s)	none	K2-nonempty (K-2) edited locate_results.sh: 1 match(es), one each
+K2-nexttoken	CAUGHT	2 differing case(s)	A09d-objects-json-truncated A09d2-objects-json-next-token-only 	K2-nexttoken (K-2) edited locate_results.sh: 1 match(es), one each
+K2-keys	CAUGHT	1 differing case(s)	A09e-objects-json-key-outside 	K2-keys (K-2) edited locate_results.sh: 1 match(es), one each
+K2-entries	CAUGHT	2 differing case(s)	A09j-objects-json-no-pod-entries A09f-objects-json-missing-etag 	K2-entries (K-2) edited locate_results.sh: 1 match(es), one each
+K2-listing	CAUGHT	6 differing case(s)	A09a-added-object A09b-replaced-object A09g-objects-json-extra-entry A09i-multipart-size-changed A10-toctou-after-listing B14b-partial-unlisted-lost 	K2-listing (K-2) edited locate_results.sh: 1 match(es), one each
+K2-objects	CAUGHT	1 differing case(s)	A10b-toctou-after-pod-listing 	K2-objects (K-2) edited locate_results.sh: 1 match(es), one each
+K2-nonempty-and-entries	CAUGHT	3 differing case(s)	A09c2-objects-json-empty-array A09j-objects-json-no-pod-entries A09f-objects-json-missing-etag 	K2-nonempty-and-entries (K-2) edited locate_results.sh: 2 match(es), one each
+K2-pin-status	CAUGHT	1 differing case(s)	A13a-pin-status-wrong 	K2-pin-status (K-2) edited locate_results.sh: 1 match(es), one each
+K2-pin-objects	CAUGHT	1 differing case(s)	A13b-pin-objects-wrong 	K2-pin-objects (K-2) edited locate_results.sh: 1 match(es), one each
+K2-pin-lastmodified	CAUGHT	1 differing case(s)	A13c-receipt-object-too-new 	K2-pin-lastmodified (K-2) edited locate_results.sh: 1 match(es), one each
+K2-pin-podlm	CAUGHT	1 differing case(s)	A13d-pod-object-too-new 	K2-pin-podlm (K-2) edited locate_results.sh: 1 match(es), one each
+K2-wrapper-objects	CAUGHT	2 differing case(s)	A10b-toctou-after-pod-listing K5-newline-file-name 	K2-wrapper-objects (K-2) edited launch_eks.sh: 1 match(es), one each
+K2-wrapper-dl	CAUGHT	1 differing case(s)	B14c-partial-nothing-lost 	K2-wrapper-dl (K-2) edited launch_eks.sh: 1 match(es), one each
+K4-type	SUBSUMED(by K4-verify)	0 differing case(s)	none	K4-type (K-4) edited locate_results.sh: 1 match(es), one each
+K4-raw	CAUGHT	2 differing case(s)	B11b-exit-exponent K4-e-exponent 	K4-raw (K-4) edited locate_results.sh: 1 match(es), one each
+K4-wrapper	CAUGHT	13 differing case(s)	B05-exit-string-42 B06-exit-true B09-exit-42.5 B10-exit-42.0 B11b-exit-exponent B11c-exit-negative-zero K4-a-string-0 K4-b-string-42 K4-c-true K4-d-float-42.0 K4-e-exponent K4-f-float-0.0 	K4-wrapper (K-4) edited launch_eks.sh: 1 match(es), one each
+K4-verify	CAUGHT	5 differing case(s)	B10-exit-42.0 B11b-exit-exponent K4-d-float-42.0 K4-e-exponent K4-f-float-0.0 	K4-verify (K-4) edited locate_results.sh: 2 match(es), one each
+K5-trap	CAUGHT	1 differing case(s)	K5b-record-write-fails 	K5-trap (K-5) edited launch_eks.sh: 1 match(es), one each
+K6-receipt-uuid	CAUGHT	1 differing case(s)	A06f-receipt-id-all-dashes 	K6-receipt-uuid (K-6) edited locate_results.sh: 1 match(es), one each
+K6-launcher-id	CAUGHT	1 differing case(s)	A06e-receipt-second-launcher-id 	K6-launcher-id (K-6) edited locate_results.sh: 1 match(es), one each
+K6-poduid	CAUGHT	5 differing case(s)	A07a-poduid-dotdot A07b-poduid-slash A07c-poduid-35 A07d-poduid-upper A07e-poduid-trailing-newline 	K6-poduid (K-6) edited locate_results.sh: 1 match(es), one each
+K6-restart	CAUGHT	3 differing case(s)	A08-restart-count A08b-restart-count-only A08c-laststate-only 	K6-restart (K-6) edited locate_results.sh: 1 match(es), one each
+K7-out-runs	CAUGHT	1 differing case(s)	C04c-out-runs-inside-out-root 	K7-out-runs (K-7) edited reconcile_run.sh: 1 match(es), one each
+K7-out-root	CAUGHT	1 differing case(s)	C04b-out-outside-out-root 	K7-out-root (K-7) edited reconcile_run.sh: 1 match(es), one each
+K7-endpoint	CAUGHT	2 differing case(s)	C06-AWS_ENDPOINT_URL C06-AWS_ENDPOINT_URL_S3 	K7-endpoint (K-7) edited reconcile_run.sh: 1 match(es), one each
+K7-version	CAUGHT	46 differing case(s)	A00-control-T1-shape A09e-objects-json-key-outside A09h-multipart-etag-size-only A10b-toctou-after-pod-listing A13a-pin-status-wrong A13b-pin-objects-wrong A13c-receipt-object-too-new A13d-pod-object-too-new A13e-receipt-lastmodified-missing B16a-jobexit-other-pod B16b-jobexit-other-job B16c-jobexit-ne-container 	K7-version (K-7) edited reconcile_run.sh: 1 match(es), one each
+K7-config	CAUGHT	11 differing case(s)	C07-config-alias C07-config-credential_process C07-config-endpoint_url C07-config-plugins D11-config-ca_bundle D11-config-role_arn D11-config-source_profile D11-config-credential_source D11-config-web_identity_token_file D11-config-sso_session D11-config-sso_start_url 	K7-config (K-7) edited reconcile_run.sh: 1 match(es), one each
+K7-allowlist	CAUGHT	1 differing case(s)	C09b-phase-marker-spoof-pythonpath 	K7-allowlist (K-7) edited reconcile_run.sh: 1 match(es), one each
+K7-launch-config	CAUGHT	8 differing case(s)	C07w-config-credential_process-wrapper D11-config-ca_bundle-w D11-config-role_arn-w D11-config-source_profile-w D11-config-credential_source-w D11-config-web_identity_token_file-w D11-config-sso_session-w D11-config-sso_start_url-w 	K7-launch-config (K-7) edited launch_eks.sh: 1 match(es), one each
+V3d-const-preset-R	CAUGHT	3 differing case(s)	D13-metadata-preset-false D13b-pythonnousersite-preset-0 D13e-metadata-empty-preset 	V3d-const-preset-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-const-value-R	CAUGHT	3 differing case(s)	D14-phase2-direct-no-constants D14b-phase2-direct-metadata-false D14c-phase2-direct-pythonnousersite-0 	V3d-const-value-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cred-id-R	CAUGHT	3 differing case(s)	D12-cred-id-missing D12b-cred-id-empty D12e-cred-both-missing 	V3d-cred-id-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cred-secret-R	CAUGHT	2 differing case(s)	D12c-cred-secret-missing D12d-cred-secret-empty 	V3d-cred-secret-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-proxy-pair-R	CAUGHT	1 differing case(s)	D02-proxy-pair-mismatch 	V3d-proxy-pair-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-proxy-shape-R	CAUGHT	8 differing case(s)	D03-proxy-userinfo D03b-proxy-non-loopback-host D03c-proxy-path D03d-proxy-newline D03e-proxy-https-scheme D03f-proxy-lower-bad D03g-proxy-empty D03h-proxy-no-port 	V3d-proxy-shape-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-noproxy-pair-R	CAUGHT	1 differing case(s)	D04b-noproxy-pair-mismatch 	V3d-noproxy-pair-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-noproxy-shape-R	CAUGHT	4 differing case(s)	D04c-noproxy-whitespace D04d-noproxy-forbidden-char D04e-noproxy-lower-bad D04f-noproxy-newline 	V3d-noproxy-shape-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-ca-needs-proxy-R	CAUGHT	3 differing case(s)	D09-ca-without-proxy-allowed-file D09b-ca-without-proxy-real-name D09c-ca-with-no-proxy-only 	V3d-ca-needs-proxy-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-ca-entry-R	CAUGHT	2 differing case(s)	D07-ca-other-path D07b-ca-other-path-real-bundle-name 	V3d-ca-entry-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-ca-realpath-R	CAUGHT	3 differing case(s)	D08-ca-allowed-is-symlink D08b-ca-allowed-symlinked-parent D08c-ca-allowed-missing 	V3d-ca-realpath-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-ca-file-R	CAUGHT	2 differing case(s)	D08d-ca-allowed-empty D08e-ca-allowed-directory 	V3d-ca-file-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-ca-sha-R	CAUGHT	1 differing case(s)	D10-ca-sha256-fails 	V3d-ca-sha-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cfg-ca_bundle-R	CAUGHT	1 differing case(s)	D11-config-ca_bundle 	V3d-cfg-ca_bundle-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cfg-role_arn-R	CAUGHT	1 differing case(s)	D11-config-role_arn 	V3d-cfg-role_arn-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cfg-source_profile-R	CAUGHT	1 differing case(s)	D11-config-source_profile 	V3d-cfg-source_profile-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cfg-credential_source-R	CAUGHT	1 differing case(s)	D11-config-credential_source 	V3d-cfg-credential_source-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cfg-web_identity_token_file-R	CAUGHT	1 differing case(s)	D11-config-web_identity_token_file 	V3d-cfg-web_identity_token_file-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cfg-sso_session-R	CAUGHT	1 differing case(s)	D11-config-sso_session 	V3d-cfg-sso_session-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-cfg-sso_start_url-R	CAUGHT	1 differing case(s)	D11-config-sso_start_url 	V3d-cfg-sso_start_url-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-status-R	CAUGHT	8 differing case(s)	D01-proxy-loopback-ip-ok D01b-proxy-localhost-slash-ok D01c-proxy-lower-only-ok D01d-proxy-upper-only-ok D04-noproxy-ok D04g-noproxy-empty-ok D06-ca-allowed-ok D06b-ca-allowed-ok-lower-proxy-only 	V3d-status-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-transport-pass-R	CAUGHT	34 differing case(s)	D01-proxy-loopback-ip-ok D01b-proxy-localhost-slash-ok D01c-proxy-lower-only-ok D01d-proxy-upper-only-ok D02-proxy-pair-mismatch D03-proxy-userinfo D03b-proxy-non-loopback-host D03c-proxy-path D03d-proxy-newline D03e-proxy-https-scheme D03f-proxy-lower-bad D03g-proxy-empty 	V3d-transport-pass-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-transport-allowlist-R	CAUGHT	34 differing case(s)	D01-proxy-loopback-ip-ok D01b-proxy-localhost-slash-ok D01c-proxy-lower-only-ok D01d-proxy-upper-only-ok D02-proxy-pair-mismatch D03-proxy-userinfo D03b-proxy-non-loopback-host D03c-proxy-path D03d-proxy-newline D03e-proxy-https-scheme D03f-proxy-lower-bad D03g-proxy-empty 	V3d-transport-allowlist-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-const-metadata-R	CAUGHT	8 differing case(s)	C09b-phase-marker-spoof-pythonpath C10-credentials-by-name D13-metadata-preset-false D13e-metadata-empty-preset D14-phase2-direct-no-constants D14b-phase2-direct-metadata-false D14c-phase2-direct-pythonnousersite-0 D14d-constants-reach-aws 	V3d-const-metadata-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-const-pyuser-R	CAUGHT	7 differing case(s)	C09b-phase-marker-spoof-pythonpath D05-transport-dropped D13b-pythonnousersite-preset-0 D14b-phase2-direct-metadata-false D14c-phase2-direct-pythonnousersite-0 D14d-constants-reach-aws D15-pth-user-site-does-not-run 	V3d-const-pyuser-R (K-7/v3d) edited reconcile_run.sh: 1 match(es), one each
+V3d-const-preset-L	CAUGHT	3 differing case(s)	D13-metadata-preset-false-w D13b-pythonnousersite-preset-0-w D13e-metadata-empty-preset-w 	V3d-const-preset-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-const-value-L	CAUGHT	3 differing case(s)	D14-phase2-direct-no-constants-w D14b-phase2-direct-metadata-false-w D14c-phase2-direct-pythonnousersite-0-w 	V3d-const-value-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cred-id-L	CAUGHT	3 differing case(s)	D12-cred-id-missing-w D12b-cred-id-empty-w D12e-cred-both-missing-w 	V3d-cred-id-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cred-secret-L	CAUGHT	2 differing case(s)	D12c-cred-secret-missing-w D12d-cred-secret-empty-w 	V3d-cred-secret-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-proxy-pair-L	CAUGHT	1 differing case(s)	D02-proxy-pair-mismatch-w 	V3d-proxy-pair-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-proxy-shape-L	CAUGHT	8 differing case(s)	D03-proxy-userinfo-w D03b-proxy-non-loopback-host-w D03c-proxy-path-w D03d-proxy-newline-w D03e-proxy-https-scheme-w D03f-proxy-lower-bad-w D03g-proxy-empty-w D03h-proxy-no-port-w 	V3d-proxy-shape-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-noproxy-pair-L	CAUGHT	1 differing case(s)	D04b-noproxy-pair-mismatch-w 	V3d-noproxy-pair-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-noproxy-shape-L	CAUGHT	4 differing case(s)	D04c-noproxy-whitespace-w D04d-noproxy-forbidden-char-w D04e-noproxy-lower-bad-w D04f-noproxy-newline-w 	V3d-noproxy-shape-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-ca-needs-proxy-L	CAUGHT	3 differing case(s)	D09-ca-without-proxy-allowed-file-w D09b-ca-without-proxy-real-name-w D09c-ca-with-no-proxy-only-w 	V3d-ca-needs-proxy-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-ca-entry-L	CAUGHT	2 differing case(s)	D07-ca-other-path-w D07b-ca-other-path-real-bundle-name-w 	V3d-ca-entry-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-ca-realpath-L	CAUGHT	3 differing case(s)	D08-ca-allowed-is-symlink-w D08b-ca-allowed-symlinked-parent-w D08c-ca-allowed-missing-w 	V3d-ca-realpath-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-ca-file-L	CAUGHT	2 differing case(s)	D08d-ca-allowed-empty-w D08e-ca-allowed-directory-w 	V3d-ca-file-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-ca-sha-L	CAUGHT	1 differing case(s)	D10-ca-sha256-fails-w 	V3d-ca-sha-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cfg-ca_bundle-L	CAUGHT	1 differing case(s)	D11-config-ca_bundle-w 	V3d-cfg-ca_bundle-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cfg-role_arn-L	CAUGHT	1 differing case(s)	D11-config-role_arn-w 	V3d-cfg-role_arn-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cfg-source_profile-L	CAUGHT	1 differing case(s)	D11-config-source_profile-w 	V3d-cfg-source_profile-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cfg-credential_source-L	CAUGHT	1 differing case(s)	D11-config-credential_source-w 	V3d-cfg-credential_source-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cfg-web_identity_token_file-L	CAUGHT	1 differing case(s)	D11-config-web_identity_token_file-w 	V3d-cfg-web_identity_token_file-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cfg-sso_session-L	CAUGHT	1 differing case(s)	D11-config-sso_session-w 	V3d-cfg-sso_session-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-cfg-sso_start_url-L	CAUGHT	1 differing case(s)	D11-config-sso_start_url-w 	V3d-cfg-sso_start_url-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-status-L	CAUGHT	8 differing case(s)	D01-proxy-loopback-ip-ok-w D01b-proxy-localhost-slash-ok-w D01c-proxy-lower-only-ok-w D01d-proxy-upper-only-ok-w D04-noproxy-ok-w D04g-noproxy-empty-ok-w D06-ca-allowed-ok-w D06b-ca-allowed-ok-lower-proxy-only-w 	V3d-status-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-transport-pass-L	CAUGHT	34 differing case(s)	D01-proxy-loopback-ip-ok-w D01b-proxy-localhost-slash-ok-w D01c-proxy-lower-only-ok-w D01d-proxy-upper-only-ok-w D02-proxy-pair-mismatch-w D03-proxy-userinfo-w D03b-proxy-non-loopback-host-w D03c-proxy-path-w D03d-proxy-newline-w D03e-proxy-https-scheme-w D03f-proxy-lower-bad-w D03g-proxy-empty-w 	V3d-transport-pass-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-transport-allowlist-L	CAUGHT	34 differing case(s)	D01-proxy-loopback-ip-ok-w D01b-proxy-localhost-slash-ok-w D01c-proxy-lower-only-ok-w D01d-proxy-upper-only-ok-w D02-proxy-pair-mismatch-w D03-proxy-userinfo-w D03b-proxy-non-loopback-host-w D03c-proxy-path-w D03d-proxy-newline-w D03e-proxy-https-scheme-w D03f-proxy-lower-bad-w D03g-proxy-empty-w 	V3d-transport-allowlist-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-const-metadata-L	CAUGHT	6 differing case(s)	D13-metadata-preset-false-w D13e-metadata-empty-preset-w D14-phase2-direct-no-constants-w D14b-phase2-direct-metadata-false-w D14c-phase2-direct-pythonnousersite-0-w D14d-constants-reach-aws-w 	V3d-const-metadata-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+V3d-const-pyuser-L	CAUGHT	6 differing case(s)	D05-transport-dropped-w D13b-pythonnousersite-preset-0-w D14b-phase2-direct-metadata-false-w D14c-phase2-direct-pythonnousersite-0-w D14d-constants-reach-aws-w D15-pth-user-site-does-not-run-w 	V3d-const-pyuser-L (K-7/v3d) edited launch_eks.sh: 1 match(es), one each
+== mutations: 82; caught 80; subsumed 2; survived or errored 0; baseline dirty 0
+mutation_check exit 0
+
+real	62m59.559s
+user	154m36.902s
+sys	42m27.265s

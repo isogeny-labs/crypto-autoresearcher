@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mutation helper of tests/mutation_check.sh (TASK-20261107-d07e94 E-4).
+"""Mutation helper of tests/mutation_check.sh (TASK-20261107-d07e94 E-4; extended by TASK-20261107-5f7d2b V-7).
 
 usage: python3 -I mutate.py list
        python3 -I mutate.py apply NAME SRC_IMPL_DIR DEST_IMPL_DIR
@@ -59,6 +59,22 @@ MUTATIONS = {
     "K7-allowlist":        ("K-7", R, ("re", r'\[\[ -z \$k7_extra \]\] \|\| \{', "[[ -z $k7_extra ]] || { :; } || {")),
     "K7-launch-config":    ("K-7", LAUNCH, ("re", r"for k7_e in \$k7_cfg; do", "for k7_e in ; do")),
 }
+
+
+# ---- v3d (TASK-20261107-5f7d2b): one mutant per new check of the K-7 prologue, in each of the two scripts that carry it (suffix -R reconcile_run.sh, -L launch_eks.sh)
+V3D_TAGS = ["const-preset", "const-value", "cred-id", "cred-secret", "proxy-pair", "proxy-shape", "noproxy-pair", "noproxy-shape",
+            "ca-needs-proxy", "ca-entry", "ca-realpath", "ca-file", "ca-sha"]
+V3D_CFG = ["ca_bundle", "role_arn", "source_profile", "credential_source", "web_identity_token_file", "sso_session", "sso_start_url"]
+for _suffix, _file in (("R", R), ("L", LAUNCH)):
+    for _tag in V3D_TAGS:
+        MUTATIONS[f"V3d-{_tag}-{_suffix}"] = ("K-7/v3d", _file, drop_or("K7-" + _tag))
+    for _nm in V3D_CFG:   # one entry name removed from K7_CFG_NAMES
+        MUTATIONS[f"V3d-cfg-{_nm}-{_suffix}"] = ("K-7/v3d", _file, ("re", r"(K7_CFG_NAMES=\([^)\n]*?) " + _nm + r"(?=[ )])", r"\1"))
+    MUTATIONS[f"V3d-status-{_suffix}"] = ("K-7/v3d", _file, ("re", r' transport=\[\$\{k7_t# \}\] proxy=\$k7_px no_proxy=\$k7_np ca_bundle=\$k7_ca ca_bundle_sha256=\$k7_casha"', '"'))
+    MUTATIONS[f"V3d-transport-pass-{_suffix}"] = ("K-7/v3d", _file, ("re", r'"\$\{K7_CRED_VARS\[@\]\}" "\$\{K7_TRANSPORT_VARS\[@\]\}"; do', '"${K7_CRED_VARS[@]}"; do'))
+    MUTATIONS[f"V3d-transport-allowlist-{_suffix}"] = ("K-7/v3d", _file, ("re", r'\$\{K7_CRED_VARS\[\*\]\} \$\{K7_TRANSPORT_VARS\[\*\]\} "', '${K7_CRED_VARS[*]} "'))
+    MUTATIONS[f"V3d-const-metadata-{_suffix}"] = ("K-7/v3d", _file, ("re", r"K7_CONSTS=\(AWS_EC2_METADATA_DISABLED=true PYTHONNOUSERSITE=1\)", "K7_CONSTS=(PYTHONNOUSERSITE=1)"))
+    MUTATIONS[f"V3d-const-pyuser-{_suffix}"] = ("K-7/v3d", _file, ("re", r"K7_CONSTS=\(AWS_EC2_METADATA_DISABLED=true PYTHONNOUSERSITE=1\)", "K7_CONSTS=(AWS_EC2_METADATA_DISABLED=true)"))
 
 
 def apply(name, src, dest):

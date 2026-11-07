@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Permanent regression suite for the C1 results locator, launch wrapper and reconciler (EXP-ICPERF-127dbd).
 # TASK-20261107-d07e94 E-4. Offline only.
+# TASK-20261107-5f7d2b (v3d): section (d) adds the cases D01 to D16 (K-7 transport pins, credential source, configuration names, constants, the /bin/bash -p argv) for
+# reconcile_run.sh (id) and launch_eks.sh (id-w). Every run of a script under test carries literal dummy credentials (RT_CREDS_DEFAULT). Section (d) is skipped in legacy mode.
+# MODE v3d (the default) is the current-bytes mode; its internal label stays v3c, which mutation_check.sh of v3c passed and which is still accepted.
 #
 # PORTED FROM the red-team harness of TASK-20261107-9d2b6a: experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/fixtures/rt_harness.sh,
 # sha256 980abbd1cc35498bf65c2dc4f17677b3dd79805e3db679a5b50a19a9f13a9547 (its isobin-wrap/aws helper, sha256 bbaf62de63ae62214d7fa015c40d46a60d8e636ee82698dfb7285c5ce2d1a127,
@@ -27,7 +30,8 @@ WT=$(cd "$EXP/../.." && pwd)
 RCPT=$TESTS/fixtures/receipt
 REQ1=$EXP/inputs/request-s1.json; REQ2=$EXP/inputs/request-s2.json; PROTO=$EXP/inputs/protocol.json
 OUT=${1:?usage: rt_regression.sh OUTDIR [IMPL_DIR [MODE [CASE_REGEX]]]}
-IMPL=${2:-$IMPL_OWN}; MODE=${3:-v3c}; ONLY=${4:-.}
+IMPL=${2:-$IMPL_OWN}; MODE=${3:-v3d}; ONLY=${4:-.}
+[[ $MODE == v3d ]] && MODE=v3c   # the internal label of the current-bytes mode stays v3c (mutation_check.sh passes either)
 mkdir -p "$OUT"; OUT=$(cd "$OUT" && pwd)
 CHECKJOB=$IMPL_OWN/check_job.py
 RUNBOOK=$EXP/runbook.yaml
@@ -156,8 +160,9 @@ mk_case_a() {
 mk_bin() {
   local d=$1 root=$2 log=$3 kind=${4:-plain}; shift 4 2>/dev/null || shift $#
   mkdir -p "$d"; rm -f "$d/aws"
-  if [[ $kind == wrap ]]; then cp "$TESTS/fixtures/isobin-wrap/aws" "$d/aws"; chmod +x "$d/aws"; else ln -s "$TESTS/fake-aws" "$d/aws"; fi
+  if [[ $kind == wrap ]]; then cp "$TESTS/fixtures/isobin-wrap/aws" "$d/aws"; chmod +x "$d/aws"; else ln -s "$(realpath --relative-to="$d" "$TESTS/fake-aws")" "$d/aws"; fi   # relative link (no absolute link into the scratchpad)
   { printf 'FAKE_AWS_LOG=%q\nFAKE_S3_ROOT=%q\nRT_FAKE_AWS=%q\n' "$log" "$root" "$TESTS/fake-aws"; printf '%s\n' "$@"; } > "$d/fake-aws.conf"
+  [[ -n ${RT_SHA_FAIL:-} ]] && { printf '#!/bin/sh\nexit 1\n' > "$d/sha256sum"; chmod +x "$d/sha256sum"; }   # v3d fault injection: a failing sha256sum in the trusted aws directory (case D10)
 }
 
 # run_wrapper ID REQ [wrap] [envprefix...] : launch_eks.sh (copies) against the fake aws + fake-launch-remote, with trial T2 of the real plan
@@ -165,7 +170,7 @@ run_wrapper() {
   local id=$1 req=$2 kind=${3:-plain}; shift 3 2>/dev/null || shift $#
   local fx="$OUT/cases/$id/fx" w="$OUT/cases/$id/wrap"
   rm -rf "$w"; mkdir -p "$w/impl" "$w/checkout/taskq/deploy/eks-karpenter/remote" "$w/rec" "$w/s3root" "$w/state" "$w/home"
-  cp "$IMPL/launch_eks.sh" "$IMPL/locate_results.sh" "$w/impl/"; chmod +x "$w/impl/"*.sh
+  cp "${RT_XIMPL:-$IMPL}/launch_eks.sh" "$IMPL/locate_results.sh" "$w/impl/"; chmod +x "$w/impl/"*.sh
   local r="$w/checkout/taskq/deploy/eks-karpenter/remote" f
   cp "$TESTS/fake-launch-remote" "$r/launch-remote"
   printf 'FAKE_CASE_DIR=%q\nFAKE_S3_ROOT=%q\n' "$fx" "$w/s3root" > "$r/fake-launch-remote.conf"
@@ -180,9 +185,9 @@ run_wrapper() {
   mk_bin "$w/bin" "$w/s3root" "$w/aws.log" "$kind" "RT_STATE=$w/state" "${RT_CONF[@]}"
   [[ -n ${RT_PRE_REC:-} ]] && eval "$RT_PRE_REC"   # test hook: prepare the record directory (K5b makes manifest.yaml a directory)
   W_RC=0
-  env PATH="$w/bin:/usr/bin:/bin" HOME="${RT_HOME:-$w/home}" TMPDIR="$w" AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 \
+  env "${RT_CREDS[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="${RT_HOME:-$w/home}" TMPDIR="$w" AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 \
     ISOLAB_BUCKET="$BUCKET" ISOLAB_CODEBUILD_PROJECT=isolab-experiment-launcher CRYPTO_CHECKOUT="$w/checkout" "$@" \
-    bash "$w/impl/launch_eks.sh" --protocol "$PROTO" --experiment-id EXP-ICPERF-127dbd --hypothesis-id H-ICPERF-4cb536 \
+    "${RT_BASH[@]}" "$w/impl/launch_eks.sh" --protocol "$PROTO" --experiment-id EXP-ICPERF-127dbd --hypothesis-id H-ICPERF-4cb536 \
     --task-id TASK-20261107-f14df8 --approved-by DEC-20261107-7802ec --trial-id T2 --run-id RUN-ICPERF-efb7ef --out "$w/rec/job" --record-dir "$w/rec" "$req" \
     > "$w/stdout" 2> "$w/stderr" || W_RC=$?
   W_CLASS=$(jq -r '.outcome_class // "absent"' "$w/rec/raw-result.json" 2>/dev/null || echo absent)
@@ -224,18 +229,23 @@ run_reconcile() {
   local -a newargs=(--out-root "${RC_OUTROOT:-$w}" --pin-status-sha256 "$ps" --pin-objects-sha256 "$po" --pin-not-after "$RC_PIN_NA")
   [[ $MODE == legacy ]] && newargs=()
   R_RC=0
-  env PATH="$w/bin:/usr/bin:/bin" HOME="${RT_HOME:-$w/home}" TMPDIR="$w" AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 ISOLAB_BUCKET="${RC_BUCKET:-$BUCKET}" "$@" \
-    bash "$IMPL/reconcile_run.sh" --launcher-result "$fx/launcher/result.json" --launcher-result-sha256 "$sha" --request "${RC_REQ:-$REQ1}" \
+  env "${RT_CREDS[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="${RT_HOME:-$w/home}" TMPDIR="$w" AWS_REGION=us-east-2 AWS_DEFAULT_REGION=us-east-2 ISOLAB_BUCKET="${RC_BUCKET:-$BUCKET}" "$@" \
+    "${RT_BASH[@]}" "${RT_XIMPL:-$IMPL}/reconcile_run.sh" --launcher-result "$fx/launcher/result.json" --launcher-result-sha256 "$sha" --request "${RC_REQ:-$REQ1}" \
     --check-job "$CHECKJOB" --run-id RUN-ICPERF-8b0d47 --trial-id T1 --out "$outarg" "${newargs[@]}" > "$w/stdout" 2> "$w/stderr" || R_RC=$?
   R_DIR=$w
   R_PASS=$(jq -r '.reconcile_pass | tostring' "$w/$RC_OUTSUB/reconcile-result.json" 2>/dev/null || echo absent)
   R_OM=$(jq -r '.objects_match | tostring' "$w/$RC_OUTSUB/reconcile-result.json" 2>/dev/null || echo absent)
   R_LRC=$(grep -o 'locate_results exit [0-9]*' "$w/stdout" | head -1 | sed 's/locate_results exit //'); R_LRC=${R_LRC:-none}
   R_WRITES=$(grep -c -E 'REFUSED|^aws s3 cp [^ ]+ s3://|^aws (s3 (rm|mv|sync)|s3api (put|delete|copy)|codebuild)' "$w/aws.log" "$w/stderr" 2>/dev/null | awk -F: '{s+=$2} END {print s+0}')
-  R_CALLS=$(grep -v -E '^aws --version$|^ENVNAMES ' "$w/aws.log" | grep -c . || true)
+  R_CALLS=$(grep -v -E '^aws --version$|^ENVNAMES |^ENVOTHER ' "$w/aws.log" | grep -c . || true)
 }
 RT_CONF=()
-rc_reset() { RC_PIN_STATUS=""; RC_PIN_OBJECTS=""; RC_PIN_NA=$PIN_NA; RC_JOB=$JOB1; RC_OUTSUB=out; RC_OUTROOT=""; RC_OUTARG=""; RC_BUCKET=""; RC_REQ=""; RT_CONF=(); RT_HOME=""; }
+# v3d CR-1: every run of a script under test carries literal dummy credentials (the scripts refuse to start without them). They are
+# fake strings, never a real credential; a case that needs a different set (missing, empty, extra) changes RT_CREDS before the run.
+RT_CREDS_DEFAULT=(AWS_ACCESS_KEY_ID=AKIDFAKEFAKEFAKEFAKE AWS_SECRET_ACCESS_KEY=fakesecretfakesecretfakesecret0000)
+RT_CREDS=("${RT_CREDS_DEFAULT[@]}")
+RT_SHA_FAIL=""; RT_BASH=(bash); RT_XIMPL=""   # v3d: how the script is started (the argv cases use /bin/bash -p) and an alternative implementation directory
+rc_reset() { RT_CREDS=("${RT_CREDS_DEFAULT[@]}"); RT_SHA_FAIL=""; RT_BASH=(bash); RT_XIMPL=""; RC_PIN_STATUS=""; RC_PIN_OBJECTS=""; RC_PIN_NA=$PIN_NA; RC_JOB=$JOB1; RC_OUTSUB=out; RC_OUTROOT=""; RC_OUTARG=""; RC_BUCKET=""; RC_REQ=""; RT_CONF=(); RT_HOME=""; }
 # prune ID : keep logs and records, drop bulky synthetic trees, keep a sha256 listing of what was dropped
 prune() {
   local c="$OUT/cases/$1"
@@ -777,7 +787,7 @@ if want_case $id; then
   mk_bin "$w/bin" "$w/s3root" "$w/aws.log" plain
   rcd="$OUT/cases/$id/fx/s3/runs/$JOB1/launcher/$LID"
   newargs=(--out-root "$w" --pin-status-sha256 "$(sha256sum "$rcd/status.json" | cut -d ' ' -f1)" --pin-objects-sha256 "$(sha256sum "$rcd/objects.json" | cut -d ' ' -f1)" --pin-not-after "$PIN_NA"); [[ $MODE == legacy ]] && newargs=()
-  ( cd "$REPO" && env PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" CDPATH="$CDA" RT_MARK="$OUT/cases/$id/mark.txt" \
+  ( cd "$REPO" && env "${RT_CREDS[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" CDPATH="$CDA" RT_MARK="$OUT/cases/$id/mark.txt" \
     bash "$rel/reconcile_run.sh" --launcher-result "$OUT/cases/$id/fx/launcher/result.json" \
     --launcher-result-sha256 "$(sha256sum "$OUT/cases/$id/fx/launcher/result.json" | cut -d ' ' -f1)" --request "experiments/EXP-ICPERF-127dbd/inputs/request-s1.json" \
     --check-job "$rel/check_job.py" --run-id RUN-ICPERF-8b0d47 --trial-id T1 --out "$w/out" "${newargs[@]}" > "$w/stdout" 2> "$w/stderr" ); R_RC=$?; R_DIR=$w
@@ -795,7 +805,7 @@ if want_case $id; then
   w="$OUT/cases/$id/rec"; mkdir -p "$w/s3root" "$w/home" "$w/out"; cp -a "$OUT/cases/$id/fx/s3/." "$w/s3root/"; : > "$w/aws.log"; mk_bin "$w/bin" "$w/s3root" "$w/aws.log" plain
   rcd="$OUT/cases/$id/fx/s3/runs/$JOB1/launcher/$LID"
   newargs=(--out-root "$w" --pin-status-sha256 "$(sha256sum "$rcd/status.json" | cut -d ' ' -f1)" --pin-objects-sha256 "$(sha256sum "$rcd/objects.json" | cut -d ' ' -f1)" --pin-not-after "$PIN_NA"); [[ $MODE == legacy ]] && newargs=()
-  ( cd "$REPO" && env PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" CDPATH=. \
+  ( cd "$REPO" && env "${RT_CREDS[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" CDPATH=. \
     bash "$rel/reconcile_run.sh" --launcher-result "$OUT/cases/$id/fx/launcher/result.json" \
     --launcher-result-sha256 "$(sha256sum "$OUT/cases/$id/fx/launcher/result.json" | cut -d ' ' -f1)" --request "experiments/EXP-ICPERF-127dbd/inputs/request-s1.json" \
     --check-job "$rel/check_job.py" --run-id RUN-ICPERF-8b0d47 --trial-id T1 --out "$w/out" "${newargs[@]}" > "$w/stdout" 2> "$w/stderr" ); R_RC=$?
@@ -875,7 +885,7 @@ if want_case $id; then
   newcase $id; rc_reset; run_reconcile $id; rc_reset   # first make the bin, then replace aws by a fake that reports another version
   w="$OUT/cases/$id/rec"; rm -f "$w/bin/aws"; printf '#!/usr/bin/env bash\n[[ ${1:-} == --version ]] && echo "aws-cli/2.15.0 Python/3.11 Linux/6" && exit 0\nexit 97\n' > "$w/bin/aws"; chmod +x "$w/bin/aws"
   rcd="$OUT/cases/$id/fx/s3/runs/$JOB1/launcher/$LID"
-  R_RC=0; env PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" bash "$IMPL/reconcile_run.sh" --launcher-result "$OUT/cases/$id/fx/launcher/result.json" \
+  R_RC=0; env "${RT_CREDS[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" bash "$IMPL/reconcile_run.sh" --launcher-result "$OUT/cases/$id/fx/launcher/result.json" \
     --launcher-result-sha256 "$(sha256sum "$OUT/cases/$id/fx/launcher/result.json" | cut -d ' ' -f1)" --request "$REQ1" --check-job "$CHECKJOB" --run-id RUN-ICPERF-8b0d47 --trial-id T1 \
     --out "$w/out2" --out-root "$w" --pin-status-sha256 "$(sha256sum "$rcd/status.json" | cut -d ' ' -f1)" --pin-objects-sha256 "$(sha256sum "$rcd/objects.json" | cut -d ' ' -f1)" --pin-not-after "$PIN_NA" > "$w/stdout2" 2> "$w/stderr2" || R_RC=$?
   row $id c "K-7: refused (exit 2) an aws that is not the pinned aws-cli/1.46.2" "reconcile rc=$R_RC; $(grep -o "reports '[^']*'" "$w/stderr2" | head -1)" "$([[ $R_RC == 2 ]] && echo refused || echo NOTE-accepted)" refused refused
@@ -890,8 +900,9 @@ if want_case $id; then
 fi
 id=C09b-phase-marker-spoof-pythonpath   # the same spoof with a variable that no other check names: only the allowlist refuses it
 if want_case $id; then
-  newcase $id; rc_reset; run_reconcile $id "" plain C1_ENV_PHASE=2 PYTHONPATH=/nonexistent-pythonpath; rc_reset
-  row $id c "K-7: refused (exit 2): PYTHONPATH is outside the allowlist" "reconcile rc=$R_RC aws_calls=$R_CALLS; $(grep -o 'allowlist are set:[ A-Z_]*' "$R_DIR/stderr" | head -1)" "$([[ $R_RC == 2 && ! -f $R_DIR/out/reconcile-result.json ]] && echo refused || echo NOTE-accepted)" refused NOTE-accepted
+  # v3d: the spoof carries the two constants a phase-2 start needs (otherwise the v3d constant check would refuse it first and hide the allowlist check)
+  newcase $id; rc_reset; run_reconcile $id "" plain C1_ENV_PHASE=2 AWS_EC2_METADATA_DISABLED=true PYTHONNOUSERSITE=1 PYTHONPATH=/nonexistent-pythonpath; rc_reset
+  row $id c "K-7: refused (exit 2): PYTHONPATH is outside the allowlist" "reconcile rc=$R_RC aws_calls=$R_CALLS; $(grep -o 'allowlist are set:[ A-Z_]*' "$R_DIR/stderr" | head -1)" "$([[ $R_RC == 2 && ! -f $R_DIR/out/reconcile-result.json && $(grep -c 'allowlist are set: PYTHONPATH' "$R_DIR/stderr") == 1 ]] && echo refused || echo NOTE-accepted)" refused NOTE-accepted
   prune $id
 fi
 id=C09w-phase-marker-spoof-wrapper   # the same spoof against launch_eks.sh, whose `here` line (section 1b, unchanged) uses a bare `cd`
@@ -914,8 +925,8 @@ if want_case $id; then
   newcase $id; rc_reset; RT_CONF=(FAKE_LOG_ENVNAMES=1)
   run_reconcile $id "" plain AWS_ACCESS_KEY_ID=AKIAFAKEFAKEFAKE AWS_SECRET_ACCESS_KEY=fakefakefake AWS_SESSION_TOKEN=fakefakefake AWS_PROFILE=hostile AWS_CONFIG_FILE=/nonexistent PYTHONPATH=/nonexistent; rc_reset
   names=$(grep '^ENVNAMES' "$R_DIR/aws.log" | sed -n 2p | sed 's/^ENVNAMES //; s/PATHDIRS=.*//')
-  row $id c "K-7: the aws process sees the three credential names and the region, and neither AWS_PROFILE, AWS_CONFIG_FILE nor PYTHONPATH" "reconcile rc=$R_RC pass=$R_PASS; names seen by aws: $names" \
-    "$([[ $names == 'AWS_ACCESS_KEY_ID AWS_DEFAULT_REGION AWS_REGION AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN ' && $R_PASS == true ]] && echo holds || echo differs)" holds holds
+  row $id c "K-7: the aws process sees the three credential names, the region and the AWS_EC2_METADATA_DISABLED constant, and neither AWS_PROFILE, AWS_CONFIG_FILE nor PYTHONPATH" "reconcile rc=$R_RC pass=$R_PASS; names seen by aws: $names" \
+    "$([[ $names == 'AWS_ACCESS_KEY_ID AWS_DEFAULT_REGION AWS_EC2_METADATA_DISABLED AWS_REGION AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN ' && $R_PASS == true ]] && echo holds || echo differs)" holds holds
   prune $id
 fi
 # C11 the executor's python and helper commands come from the clean PATH: a python3 shim ahead of the case aws directory is not run
@@ -927,7 +938,7 @@ if want_case $id; then
   : > "$OUT/cases/$id/mark.txt"; rc_reset
   # PATH = shim2 : case bin : /usr/bin : /bin  (the case bin still holds the first aws that is found? no: shim2 holds no aws, so the aws directory is the case bin)
   w="$OUT/cases/$id/rec"; rcd="$OUT/cases/$id/fx/s3/runs/$JOB1/launcher/$LID"; rm -rf "$w/out"; mkdir -p "$w/out"
-  R_RC=0; env PATH="$ATT/shim2:$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" RT_MARK="$OUT/cases/$id/mark.txt" \
+  R_RC=0; env "${RT_CREDS[@]}" PATH="$ATT/shim2:$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" RT_MARK="$OUT/cases/$id/mark.txt" \
     bash "$IMPL/reconcile_run.sh" --launcher-result "$OUT/cases/$id/fx/launcher/result.json" --launcher-result-sha256 "$(sha256sum "$OUT/cases/$id/fx/launcher/result.json" | cut -d ' ' -f1)" \
     --request "$REQ1" --check-job "$CHECKJOB" --run-id RUN-ICPERF-8b0d47 --trial-id T1 --out "$w/out" --out-root "$w" \
     --pin-status-sha256 "$(sha256sum "$rcd/status.json" | cut -d ' ' -f1)" --pin-objects-sha256 "$(sha256sum "$rcd/objects.json" | cut -d ' ' -f1)" --pin-not-after "$PIN_NA" > "$w/stdout" 2> "$w/stderr" || R_RC=$?
@@ -936,6 +947,226 @@ if want_case $id; then
     "$([[ $(grep -c RT-PAYLOAD "$OUT/cases/$id/mark.txt") -gt 0 ]] && echo BREAK-env || { [[ $R_PASS == true ]] && echo holds || echo differs; })" holds BREAK-env
   prune $id
 fi
+# ================================================================ (d) v3d: transport pins, credential source, configuration names, constants, argv
+# TASK-20261107-5f7d2b (DEC-20261107-c3e91a R-1 to R-3). Every case runs reconcile_run.sh (id) and mirrors launch_eks.sh (id-w) where the check exists in both.
+# The refusal cases fix the exit status (2), zero aws calls, no output file, and the text of the refusing check on stderr, so that removing one check
+# cannot hide behind a neighbouring one (the mutation cases of tests/mutate.py rely on it). The values never printed: dummy credentials, a proxy password.
+# This section is skipped in legacy mode: the v3b scripts have no such prologue.
+if [[ $MODE != legacy ]]; then
+CAD="$OUT/ca-fixtures"; rm -rf "$CAD"; mkdir -p "$CAD/realdir" "$CAD/dirfile.crt"
+printf -- '-----BEGIN CERTIFICATE-----\nRT-dummy-bundle-not-a-certificate\n-----END CERTIFICATE-----\n' > "$CAD/ok.crt"
+cp "$CAD/ok.crt" "$CAD/realdir/ca.crt"; : > "$CAD/empty.crt"
+ln -s ok.crt "$CAD/link-to-ok.crt"; ln -s realdir "$CAD/linkdir"          # relative links only
+CA_SHA=$(sha256sum "$CAD/ok.crt" | cut -d ' ' -f1)
+PX=http://127.0.0.1:1                                                      # a dead loopback port: no case ever connects to it
+D_LEAK=(-e AKIDFAKEFAKE -e fakesecretfake -e supersecretpw)
+mk_ca_impl() { # mk_ca_impl DIR ALLOWED_PATH : copies of the three scripts whose K7_CA_BUNDLE_ALLOWED holds ALLOWED_PATH (a test-only copy: one constant line differs)
+  mkdir -p "$1"; cp "$IMPL/launch_eks.sh" "$IMPL/locate_results.sh" "$IMPL/reconcile_run.sh" "$1/"; chmod +x "$1"/*.sh
+  local f
+  for f in launch_eks.sh reconcile_run.sh; do
+    python3 -I -c 'import sys, pathlib
+p = pathlib.Path(sys.argv[1]); t = p.read_text(); o = "K7_CA_BUNDLE_ALLOWED=(/root/.ccr/ca-bundle.crt)"
+assert t.count(o) == 1, "constant line not found exactly once"
+p.write_text(t.replace(o, "K7_CA_BUNDLE_ALLOWED=(" + sys.argv[2] + ")"))' "$1/$f" "$2" || return 1
+    [[ $(diff "$IMPL/$f" "$1/$f" | grep -c '^[<>]') == 2 ]] || { echo "mk_ca_impl: $f differs in more than the one constant line" >&2; return 1; }
+  done
+}
+# dcase TGT BASEID WANT SETUP [ENV...]
+#   TGT r = reconcile_run.sh (id BASEID), w = launch_eks.sh (id BASEID-w); WANT = refused:<text on stderr> | ok:<text in the k7_env_hygiene line>
+#   SETUP is shell evaluated after the case directory exists (it may set RT_HOME, RT_CREDS, RT_XIMPL, RT_BASH, RT_CONF); ENV... are extra NAME=value for the run
+dcase() {
+  local t=$1 base=$2 want=$3 setup=$4; shift 4
+  local id=$base; [[ $t == w ]] && id=$base-w
+  want_case "$id" || return 0
+  newcase "$id"; rc_reset
+  [[ -n $setup ]] && eval "$setup"
+  local rc calls dir pass k7 leak err1 obs js
+  if [[ $t == r ]]; then
+    run_reconcile "$id" "" plain "$@"; rc=$R_RC; calls=$R_CALLS; dir=$R_DIR; pass=$R_PASS
+    js=$(jq -r '.env_hygiene // "absent"' "$dir/out/reconcile-result.json" 2>/dev/null || echo absent)
+  else
+    run_wrapper "$id" "$REQ1" plain "$@"; rc=$W_RC; dir=$W_DIR; pass=$([[ $W_CLASS == job_completed ]] && echo true || echo false); js=n/a
+    calls=$(grep -v -E '^aws --version$|^ENVNAMES |^ENVOTHER ' "$dir/aws.log" 2>/dev/null | grep -c . || true)
+  fi
+  k7=$(grep -m1 '^k7_env_hygiene=' "$dir/stdout" 2>/dev/null || true); k7=${k7#k7_env_hygiene=}
+  leak=$(cat "$dir/stdout" "$dir/stderr" 2>/dev/null | grep -c -F "${D_LEAK[@]}" || true)
+  err1=$(head -n 1 "$dir/stderr" 2>/dev/null | cut -c1-110)
+  local refused_ok=no passes_ok=no
+  if [[ $rc == 2 && $calls == 0 && $leak == 0 && ${want%%:*} == refused ]] && grep -q -F -- "${want#*:}" "$dir/stderr"; then
+    if [[ $t == r ]]; then [[ ! -f $dir/out/reconcile-result.json ]] && refused_ok=yes; else [[ $W_RAW == absent && ! -e $dir/rec/job ]] && refused_ok=yes; fi
+  fi
+  if [[ $rc == 0 && $pass == true && $leak == 0 && ${want%%:*} == ok && $k7 == *"${want#*:}"* ]]; then
+    if [[ $t == r ]]; then [[ $js == "$k7" ]] && passes_ok=yes; else passes_ok=yes; fi
+  fi
+  if [[ $refused_ok == yes ]]; then obs=refused; elif [[ $passes_ok == yes ]]; then obs=passes
+  elif [[ ${want%%:*} == refused && $rc == 0 && $pass == true ]]; then obs=NOTE-accepted; else obs=differs; fi
+  row "$id" d "${want%%:*} [${want#*:}] on $([[ $t == r ]] && echo reconcile_run.sh || echo launch_eks.sh) (exit 2, zero aws calls, no output file, no secret printed)" \
+    "rc=$rc aws_calls=$calls leaks=$leak pass=$pass; stderr1=[$err1]; k7=[${k7#ok aws=*/aws version=aws-cli/1.46.2 }]" "$obs" "$([[ ${want%%:*} == ok ]] && echo passes || echo refused)" "n/a-v3b-has-no-v3d-prologue"
+  rc_reset; prune "$id"; rm -rf "$OUT/cases/$id/ximpl"
+}
+dboth() { dcase r "$@"; dcase w "$@"; }
+RTOK="transport=[HTTPS_PROXY https_proxy] proxy=$PX no_proxy=none ca_bundle=none ca_bundle_sha256=none"
+
+# ---- R-1 T-1 to T-3: the proxy pair and the no-proxy pair
+dboth D01-proxy-loopback-ip-ok "ok:$RTOK" "" HTTPS_PROXY=$PX https_proxy=$PX
+dboth D01b-proxy-localhost-slash-ok "ok:transport=[HTTPS_PROXY https_proxy] proxy=http://localhost:8080/ no_proxy=none ca_bundle=none" "" HTTPS_PROXY=http://localhost:8080/ https_proxy=http://localhost:8080/
+dboth D01c-proxy-lower-only-ok "ok:transport=[https_proxy] proxy=$PX no_proxy=none" "" https_proxy=$PX
+dboth D01d-proxy-upper-only-ok "ok:transport=[HTTPS_PROXY] proxy=$PX no_proxy=none" "" HTTPS_PROXY=$PX
+dboth D02-proxy-pair-mismatch "refused:HTTPS_PROXY and https_proxy differ" "" HTTPS_PROXY=$PX https_proxy=http://127.0.0.1:2
+dboth D03-proxy-userinfo "refused:HTTPS_PROXY does not match the loopback proxy pin" "" HTTPS_PROXY=http://user:supersecretpw@127.0.0.1:1
+dboth D03b-proxy-non-loopback-host "refused:HTTPS_PROXY does not match the loopback proxy pin" "" HTTPS_PROXY=http://10.0.0.1:1
+dboth D03c-proxy-path "refused:HTTPS_PROXY does not match the loopback proxy pin" "" HTTPS_PROXY=http://127.0.0.1:1/x
+dboth D03d-proxy-newline "refused:HTTPS_PROXY does not match the loopback proxy pin" "" "HTTPS_PROXY=$PX"$'\n'
+dboth D03e-proxy-https-scheme "refused:HTTPS_PROXY does not match the loopback proxy pin" "" HTTPS_PROXY=https://127.0.0.1:1
+dboth D03f-proxy-lower-bad "refused:https_proxy does not match the loopback proxy pin" "" https_proxy=http://user:supersecretpw@127.0.0.1:1
+dboth D03g-proxy-empty "refused:HTTPS_PROXY does not match the loopback proxy pin" "" HTTPS_PROXY=
+dboth D03h-proxy-no-port "refused:HTTPS_PROXY does not match the loopback proxy pin" "" HTTPS_PROXY=http://127.0.0.1
+dboth D04-noproxy-ok "ok:transport=[NO_PROXY no_proxy] proxy=none no_proxy=localhost,127.0.0.1,*.example.com:443 ca_bundle=none" "" "NO_PROXY=localhost,127.0.0.1,*.example.com:443" "no_proxy=localhost,127.0.0.1,*.example.com:443"
+dboth D04b-noproxy-pair-mismatch "refused:NO_PROXY and no_proxy differ" "" NO_PROXY=localhost no_proxy=127.0.0.1
+dboth D04c-noproxy-whitespace "refused:NO_PROXY does not match" "" "NO_PROXY=localhost 127.0.0.1"
+dboth D04d-noproxy-forbidden-char "refused:NO_PROXY does not match" "" 'NO_PROXY=localhost;touch'
+dboth D04e-noproxy-lower-bad "refused:no_proxy does not match" "" 'no_proxy=a$(b)'
+dboth D04f-noproxy-newline "refused:NO_PROXY does not match" "" "NO_PROXY=localhost"$'\n'"x"
+dboth D04g-noproxy-empty-ok "ok:transport=[NO_PROXY] proxy=none no_proxy= ca_bundle=none" "" NO_PROXY=
+# ---- T-1: HTTP_PROXY, http_proxy, ALL_PROXY, all_proxy, REQUESTS_CA_BUNDLE, SSL_CERT_FILE, SSL_CERT_DIR and CURL_CA_BUNDLE stay dropped; the aws process sees only what is passed
+for t in r w; do
+  id=D05-transport-dropped; [[ $t == w ]] && id=$id-w
+  want_case $id || continue
+  newcase $id; rc_reset; RT_CONF=(FAKE_LOG_ENVNAMES=1)
+  if [[ $t == r ]]; then run_reconcile $id "" plain HTTPS_PROXY=$PX NO_PROXY=localhost HTTP_PROXY=http://127.0.0.1:2 http_proxy=http://127.0.0.1:2 ALL_PROXY=http://127.0.0.1:2 all_proxy=http://127.0.0.1:2 \
+      REQUESTS_CA_BUNDLE=/nonexistent SSL_CERT_FILE=/nonexistent SSL_CERT_DIR=/nonexistent CURL_CA_BUNDLE=/nonexistent; rc=$R_RC; ok=$([[ $R_PASS == true ]] && echo yes || echo no); dir=$R_DIR
+  else run_wrapper $id "$REQ1" plain HTTPS_PROXY=$PX NO_PROXY=localhost HTTP_PROXY=http://127.0.0.1:2 http_proxy=http://127.0.0.1:2 ALL_PROXY=http://127.0.0.1:2 all_proxy=http://127.0.0.1:2 \
+      REQUESTS_CA_BUNDLE=/nonexistent SSL_CERT_FILE=/nonexistent SSL_CERT_DIR=/nonexistent CURL_CA_BUNDLE=/nonexistent; rc=$W_RC; ok=$([[ $W_CLASS == job_completed ]] && echo yes || echo no); dir=$W_DIR; fi
+  other=$(grep '^ENVOTHER' "$dir/aws.log" | tail -n 1 | sed 's/^ENVOTHER //')
+  row $id d "T-1: the aws process sees HTTPS_PROXY, NO_PROXY and PYTHONNOUSERSITE only; the other six proxy or CA names are dropped; the run passes" "rc=$rc; ENVOTHER seen by aws: [$other]" \
+    "$([[ $ok == yes && $rc == 0 && $other == 'HTTPS_PROXY NO_PROXY PYTHONNOUSERSITE ' ]] && echo passes || echo differs)" passes "n/a-v3b-has-no-v3d-prologue"
+  rc_reset; prune $id
+done
+
+# ---- R-1 T-4 and T-5 (the CA bundle). The constant K7_CA_BUNDLE_ALLOWED is /root/.ccr/ca-bundle.crt in the scripts; cases that need an allowed file the suite
+# can create use a test-only copy whose one constant line holds a path under this run's ca-fixtures directory (mk_ca_impl asserts that nothing else differs).
+dboth D06-ca-allowed-ok "ok:transport=[HTTPS_PROXY https_proxy AWS_CA_BUNDLE] proxy=$PX no_proxy=none ca_bundle=$CAD/ok.crt ca_bundle_sha256=$CA_SHA" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/ok.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' HTTPS_PROXY=$PX https_proxy=$PX AWS_CA_BUNDLE="$CAD/ok.crt"
+dboth D06b-ca-allowed-ok-lower-proxy-only "ok:transport=[https_proxy AWS_CA_BUNDLE] proxy=$PX no_proxy=none ca_bundle=$CAD/ok.crt ca_bundle_sha256=$CA_SHA" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/ok.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' https_proxy=$PX AWS_CA_BUNDLE="$CAD/ok.crt"
+dboth D07-ca-other-path "refused:AWS_CA_BUNDLE is not an entry of K7_CA_BUNDLE_ALLOWED" "" HTTPS_PROXY=$PX AWS_CA_BUNDLE="$CAD/ok.crt"
+dboth D07b-ca-other-path-real-bundle-name "refused:AWS_CA_BUNDLE is not an entry of K7_CA_BUNDLE_ALLOWED" "" HTTPS_PROXY=$PX AWS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+dboth D08-ca-allowed-is-symlink "refused:AWS_CA_BUNDLE is missing or its realpath differs" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/link-to-ok.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' HTTPS_PROXY=$PX AWS_CA_BUNDLE="$CAD/link-to-ok.crt"
+dboth D08b-ca-allowed-symlinked-parent "refused:AWS_CA_BUNDLE is missing or its realpath differs" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/linkdir/ca.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' HTTPS_PROXY=$PX AWS_CA_BUNDLE="$CAD/linkdir/ca.crt"
+dboth D08c-ca-allowed-missing "refused:AWS_CA_BUNDLE is missing or its realpath differs" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/nonexistent.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' HTTPS_PROXY=$PX AWS_CA_BUNDLE="$CAD/nonexistent.crt"
+dboth D08d-ca-allowed-empty "refused:AWS_CA_BUNDLE is not a non-empty regular file" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/empty.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' HTTPS_PROXY=$PX AWS_CA_BUNDLE="$CAD/empty.crt"
+dboth D08e-ca-allowed-directory "refused:AWS_CA_BUNDLE is not a non-empty regular file" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/dirfile.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' HTTPS_PROXY=$PX AWS_CA_BUNDLE="$CAD/dirfile.crt"
+dboth D09-ca-without-proxy-allowed-file "refused:AWS_CA_BUNDLE is allowed only when HTTPS_PROXY or https_proxy is set" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/ok.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' AWS_CA_BUNDLE="$CAD/ok.crt"
+dboth D09b-ca-without-proxy-real-name "refused:AWS_CA_BUNDLE is allowed only when HTTPS_PROXY or https_proxy is set" "" AWS_CA_BUNDLE=/root/.ccr/ca-bundle.crt
+dboth D09c-ca-with-no-proxy-only "refused:AWS_CA_BUNDLE is allowed only when HTTPS_PROXY or https_proxy is set" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/ok.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"' NO_PROXY=localhost AWS_CA_BUNDLE="$CAD/ok.crt"
+# the sha256 of the bundle cannot be computed (a failing sha256sum in the trusted aws directory is the fault injection)
+dboth D10-ca-sha256-fails "refused:the sha256 of AWS_CA_BUNDLE could not be computed" 'mk_ca_impl "$OUT/cases/$id/ximpl" "$CAD/ok.crt" && RT_XIMPL="$OUT/cases/$id/ximpl"; RT_SHA_FAIL=1' HTTPS_PROXY=$PX AWS_CA_BUNDLE="$CAD/ok.crt"
+
+# ---- R-3 CF-1: the added configuration entry names are refused; the entry name is printed, never its value
+for nm in ca_bundle role_arn source_profile credential_source web_identity_token_file sso_session sso_start_url; do
+  for t in r w; do
+    id=D11-config-$nm; [[ $t == w ]] && id=$id-w
+    want_case $id || continue
+    newcase $id; rc_reset; hm="$OUT/cases/$id/home"; mkdir -p "$hm/.aws"
+    printf '[default]\nregion = us-east-2\n%s = rt-not-a-secret-value-%s\n' "$nm" "$nm" > "$hm/.aws/config"
+    RT_HOME=$hm
+    if [[ $t == r ]]; then run_reconcile $id; rc=$R_RC; dir=$R_DIR; calls=$R_CALLS; okf=$([[ ! -f $R_DIR/out/reconcile-result.json ]] && echo yes || echo no)
+    else run_wrapper $id "$REQ1"; rc=$W_RC; dir=$W_DIR; calls=$(grep -v -E '^aws --version$|^ENVNAMES |^ENVOTHER ' "$dir/aws.log" | grep -c . || true); okf=$([[ $W_RAW == absent && ! -e $W_DIR/rec/job ]] && echo yes || echo no); fi
+    named=$(grep -c -F "aws-cli configuration entry: $nm@config" "$dir/stderr" || true); valprinted=$(cat "$dir/stdout" "$dir/stderr" | grep -c -F "rt-not-a-secret-value" || true)
+    row $id d "CF-1: $nm in ~/.aws/config is refused (exit 2, zero aws calls); the entry name is printed, never its value" "rc=$rc aws_calls=$calls entry_named=$named value_printed=$valprinted outputs_absent=$okf" \
+      "$([[ $rc == 2 && $calls == 0 && $named == 1 && $valprinted == 0 && $okf == yes ]] && echo refused || { [[ $rc == 0 ]] && echo NOTE-accepted || echo differs; })" refused "n/a-v3b-has-no-v3d-prologue"
+    rc_reset; prune $id
+  done
+done
+# the container's real shape (a [default] s3 block with payload_signing_enabled) stays admitted
+for t in r w; do
+  id=D11b-config-container-shape-ok; [[ $t == w ]] && id=$id-w
+  want_case $id || continue
+  newcase $id; rc_reset; hm="$OUT/cases/$id/home"; mkdir -p "$hm/.aws"; printf '[default]\ns3 =\n  payload_signing_enabled = true\n' > "$hm/.aws/config"; RT_HOME=$hm
+  if [[ $t == r ]]; then run_reconcile $id; ok=$([[ $R_RC == 0 && $R_PASS == true ]] && echo yes || echo no); rc=$R_RC; else run_wrapper $id "$REQ1"; ok=$([[ $W_RC == 0 && $W_CLASS == job_completed ]] && echo yes || echo no); rc=$W_RC; fi
+  row $id d "the container's [default] s3 payload_signing_enabled block is admitted (K7_CFG_ALLOWED stays empty and the block names none of the refused entries)" "rc=$rc" "$([[ $ok == yes ]] && echo passes || echo differs)" passes "n/a-v3b-has-no-v3d-prologue"
+  rc_reset; prune $id
+done
+
+# ---- R-3 CR-1: the credential source is the environment
+SECRET_ONLY=(AWS_SECRET_ACCESS_KEY=fakesecretfakesecretfakesecret0000); ID_ONLY=(AWS_ACCESS_KEY_ID=AKIDFAKEFAKEFAKEFAKE)
+dboth D12-cred-id-missing "refused:AWS_ACCESS_KEY_ID is not set or is empty" 'RT_CREDS=("${SECRET_ONLY[@]}")'
+dboth D12b-cred-id-empty "refused:AWS_ACCESS_KEY_ID is not set or is empty" 'RT_CREDS=(AWS_ACCESS_KEY_ID= "${SECRET_ONLY[@]}")'
+dboth D12c-cred-secret-missing "refused:AWS_SECRET_ACCESS_KEY is not set or is empty" 'RT_CREDS=("${ID_ONLY[@]}")'
+dboth D12d-cred-secret-empty "refused:AWS_SECRET_ACCESS_KEY is not set or is empty" 'RT_CREDS=("${ID_ONLY[@]}" AWS_SECRET_ACCESS_KEY=)'
+dboth D12e-cred-both-missing "refused:AWS_ACCESS_KEY_ID is not set or is empty" 'RT_CREDS=()'
+dboth D12f-cred-session-token-optional-ok "ok:aws=" "" AWS_SESSION_TOKEN=fakesessiontokenfakefake
+# ---- R-3 CR-2 and PY-1: the constants. A preset of another value is refused in phase 1; phase 2 admits each constant only with its value.
+dboth D13-metadata-preset-false "refused:AWS_EC2_METADATA_DISABLED is set to a value other than its constant true" "" AWS_EC2_METADATA_DISABLED=false
+dboth D13b-pythonnousersite-preset-0 "refused:PYTHONNOUSERSITE is set to a value other than its constant 1" "" PYTHONNOUSERSITE=0
+dboth D13c-metadata-preset-true-ok "ok:aws=" "" AWS_EC2_METADATA_DISABLED=true
+dboth D13d-pythonnousersite-preset-1-ok "ok:aws=" "" PYTHONNOUSERSITE=1
+dboth D13e-metadata-empty-preset "refused:AWS_EC2_METADATA_DISABLED is set to a value other than its constant true" "" AWS_EC2_METADATA_DISABLED=
+dboth D14-phase2-direct-no-constants "refused:AWS_EC2_METADATA_DISABLED is not set to its constant true" "" C1_ENV_PHASE=2
+dboth D14b-phase2-direct-metadata-false "refused:AWS_EC2_METADATA_DISABLED is not set to its constant true" "" C1_ENV_PHASE=2 AWS_EC2_METADATA_DISABLED=false PYTHONNOUSERSITE=1
+dboth D14c-phase2-direct-pythonnousersite-0 "refused:PYTHONNOUSERSITE is not set to its constant 1" "" C1_ENV_PHASE=2 AWS_EC2_METADATA_DISABLED=true PYTHONNOUSERSITE=0
+# the constants cross the exec: the aws process sees AWS_EC2_METADATA_DISABLED (name; the value is pinned by phase 2) and PYTHONNOUSERSITE
+for t in r w; do
+  id=D14d-constants-reach-aws; [[ $t == w ]] && id=$id-w
+  want_case $id || continue
+  newcase $id; rc_reset; RT_CONF=(FAKE_LOG_ENVNAMES=1)
+  if [[ $t == r ]]; then run_reconcile $id; dir=$R_DIR; ok=$([[ $R_PASS == true ]] && echo yes || echo no); else run_wrapper $id "$REQ1"; dir=$W_DIR; ok=$([[ $W_CLASS == job_completed ]] && echo yes || echo no); fi
+  names=$(grep '^ENVNAMES' "$dir/aws.log" | tail -n 1 | sed 's/^ENVNAMES //; s/PATHDIRS=.*//'); other=$(grep '^ENVOTHER' "$dir/aws.log" | tail -n 1 | sed 's/^ENVOTHER //')
+  row $id d "CR-2 and PY-1: the aws process sees AWS_EC2_METADATA_DISABLED and PYTHONNOUSERSITE" "names=[$names] other=[$other]" \
+    "$([[ $ok == yes && $names == *AWS_EC2_METADATA_DISABLED* && $other == 'PYTHONNOUSERSITE ' ]] && echo passes || echo differs)" passes "n/a-v3b-has-no-v3d-prologue"
+  rc_reset; prune $id
+done
+# PY-1 end to end: a .pth file under $HOME/.local/lib/python3.*/site-packages that writes a marker does not run inside the aws process (the isobin-wrap aws starts python3 there)
+for t in r w; do
+  id=D15-pth-user-site-does-not-run; [[ $t == w ]] && id=$id-w
+  want_case $id || continue
+  newcase $id; rc_reset; hm="$OUT/cases/$id/home"; mark="$OUT/cases/$id/pth-mark.txt"; : > "$mark"
+  usp=$(env -i HOME="$hm" PATH=/usr/bin:/bin python3 -c 'import site; print(site.getusersitepackages())'); mkdir -p "$usp"
+  printf 'import os; open(%s, "a").write("pth ran in pid %%d\\n" %% os.getpid())\n' "'$mark'" > "$usp/rt_probe.pth"
+  env -i HOME="$hm" PATH=/usr/bin:/bin python3 -c pass; control=$(grep -c 'pth ran' "$mark" || true); : > "$mark"      # positive control: without PYTHONNOUSERSITE the .pth runs
+  RT_HOME=$hm; RT_CONF=(RT_MODE=pyprobe)
+  if [[ $t == r ]]; then run_reconcile $id "" wrap; ok=$([[ $R_RC == 0 && $R_PASS == true ]] && echo yes || echo no); rc=$R_RC; else run_wrapper $id "$REQ1" wrap; ok=$([[ $W_RC == 0 && $W_CLASS == job_completed ]] && echo yes || echo no); rc=$W_RC; fi
+  ran=$(grep -c 'pth ran' "$mark" || true)
+  row $id d "PY-1: a .pth under the user site runs in a python3 without PYTHONNOUSERSITE (control=$control) and does not run in the aws process (runs=$ran)" "control_runs=$control pth_runs_in_aws=$ran rc=$rc" \
+    "$([[ $control -ge 1 && $ran == 0 && $ok == yes ]] && echo holds || { [[ $ran -gt 0 ]] && echo BREAK-env || echo differs; })" holds "n/a-v3b-has-no-v3d-prologue"
+  rc_reset; prune $id
+done
+
+# ---- R-2: the argv. Under `/bin/bash -p <script>` the startup vectors run nothing before line 1 (marker absent); the same vectors under plain `bash <script>`
+# are recorded as the pre-v3d control. Vectors: BASH_ENV, ENV, an exported BASH_FUNC_aws%%, an exported BASH_FUNC_set%% (shadows the builtin of line 1 at once),
+# and SHELLOPTS=xtrace with a PS4 command substitution. The payload only appends a line to a marker file.
+cat > "$ATT/mark.sh" <<'PAY'
+echo "RT-MARK via ${RT_VECTOR:-?} pid $$" >> "${RT_MARK:?}"
+PAY
+for form in p plain; do
+  for vec in BASH_ENV ENV BASH_FUNC_aws BASH_FUNC_set SHELLOPTS_PS4; do
+    for t in r w; do
+      id=D16-argv-bash-p-$vec; [[ $form == plain ]] && id=D16c-control-plain-bash-$vec; [[ $t == w ]] && id=$id-w
+      want_case $id || continue
+      newcase $id; rc_reset; m="$OUT/cases/$id/mark.txt"; : > "$m"
+      [[ $form == p ]] && RT_BASH=(/bin/bash -p)
+      case $vec in
+        BASH_ENV) ev=(BASH_ENV="$ATT/mark.sh" RT_VECTOR=BASH_ENV RT_MARK="$m") ;;
+        ENV) ev=(ENV="$ATT/mark.sh" RT_VECTOR=ENV RT_MARK="$m") ;;
+        BASH_FUNC_aws) ev=("BASH_FUNC_aws%%=() { echo RT-MARK via function-aws >> $m; command aws \"\$@\"; }") ;;
+        BASH_FUNC_set) ev=("BASH_FUNC_set%%=() { echo RT-MARK via function-set >> $m; builtin set \"\$@\"; }") ;;
+        SHELLOPTS_PS4) ev=(SHELLOPTS=xtrace "PS4=\$(echo RT-MARK via PS4 >> $m)+ ") ;;
+      esac
+      if [[ $t == r ]]; then run_reconcile $id "" plain "${ev[@]}"; ok=$([[ $R_RC == 0 && $R_PASS == true ]] && echo yes || echo no); rc=$R_RC; else run_wrapper $id "$REQ1" plain "${ev[@]}"; ok=$([[ $W_RC == 0 && $W_CLASS == job_completed ]] && echo yes || echo no); rc=$W_RC; fi
+      marks=$(grep -c RT-MARK "$m" || true)
+      if [[ $form == p ]]; then
+        row $id d "R-2 A-1: under /bin/bash -p the vector $vec runs no payload before line 1 (marker absent) and the run passes" "form=/bin/bash -p vector=$vec marker_lines=$marks rc=$rc run_ok=$ok" \
+          "$([[ $marks == 0 && $ok == yes ]] && echo holds || { [[ $marks -gt 0 ]] && echo BREAK-env || echo differs; })" holds "n/a-v3b-has-no-v3d-prologue"
+      else
+        # control: the observation under the plain bash of the v3c argv. A vector that fires is recorded as payload-ran-before-line-1; the others as marker-absent.
+        case $vec in BASH_ENV|BASH_FUNC_set) wantc=payload-ran-before-line-1 ;; *) wantc=marker-absent ;; esac   # ENV is not read by a non-interactive bash, BASH_FUNC_aws is never called before the prologue unsets it, and this bash 5.2.21 does not import PS4 from the environment (the SHELLOPTS_PS4 vector is inert here; -p is then not discriminating for it)
+        row $id d "pre-v3d control: under plain bash the vector $vec gives: $wantc" "form=bash vector=$vec marker_lines=$marks rc=$rc run_ok=$ok" \
+          "$([[ $marks -gt 0 ]] && echo payload-ran-before-line-1 || echo marker-absent)" "$wantc" "n/a-v3b-has-no-v3d-prologue"
+      fi
+      rc_reset; prune $id
+    done
+  done
+done
+fi
+
 # C05 static scan of the reconcile-path scripts
 if want_case C05-static-scan; then
   {

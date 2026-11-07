@@ -1,0 +1,36 @@
+# grep for job-submission, build-start and S3-write tokens (case-insensitive) in the two scripts that must be read-only
+$ grep -n -i -E 'launch-remote|codebuild|start-build|batch-get-builds|put-object|delete-object|s3 (rm|mv|sync|mb|rb|presign)|s3api (put|delete|copy)' reconcile_run.sh
+41:# CRYPTO_CHECKOUT (and ISOLAB_CODEBUILD_PROJECT in launch_eks.sh), the credential variables named in K7_CRED_VARS (never printed), the
+exit=0
+$ grep -n -i -E 'launch-remote|codebuild|start-build|batch-get-builds|put-object|delete-object|s3 (rm|mv|sync|mb|rb|presign)|s3api (put|delete|copy)' locate_results.sh
+exit=1
+
+# every aws invocation outside comments
+== locate_results.sh
+54:  aws s3 cp "$1" "$2" "${@:3}" --only-show-errors
+58:  aws s3 ls "$1"
+62:  aws s3api list-objects-v2 --bucket "$1" --prefix "$2" --output json
+== reconcile_run.sh
+150:  aws s3 cp "$1" "$2" "${@:3}" --only-show-errors
+== launch_eks.sh
+224:  echo "  aws s3 ls s3://$ISOLAB_BUCKET/runs/$job/                       # read: refuse (exit 3) if anything is listed"
+225:  echo "  aws s3 ls s3://$ISOLAB_BUCKET/$key                              # read: refuse (exit 3) if it exists"
+226:  echo "  aws codebuild list-builds-for-project --project-name $ISOLAB_CODEBUILD_PROJECT --sort-order DESCENDING   # read"
+227:  echo "  aws codebuild batch-get-builds --ids <first 100>               # read: refuse (exit 3) if one carries ISOLAB_REQUEST_KEY=$key"
+229:  echo "  aws s3 cp <results_uri from $client_out/result.json> $out/artifacts --recursive   # read-only download"
+306:listing=$(aws s3 ls "s3://$ISOLAB_BUCKET/runs/$job/" 2>/dev/null); rc=$?
+309:[[ $rc != 0 && $rc != 1 ]] && refuse 4 duplicate_check_failed "duplicate check failed (aws s3 ls exit $rc)"
+311:aws s3 ls "s3://$ISOLAB_BUCKET/$key" >/dev/null 2>&1; rc=$?
+314:[[ $rc != 1 ]] && refuse 4 duplicate_check_failed "duplicate check failed (aws s3 ls exit $rc)"
+318:ids_raw=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --no-paginate --query 'ids[]' --output text); rc=$?
+326:  hit=$(aws codebuild batch-get-builds --ids $ids --query "builds[?environment.environmentVariables[?name=='ISOLAB_REQUEST_KEY' && value=='$key']].id" --output text); rc=$?
+389:  aws s3 cp "$results_uri" "$out/artifacts/" --recursive --only-show-errors || dl_rc=$?
+
+# the prologue (v3d) adds no aws call other than `<dir>/aws --version`; the new lines call realpath, sha256sum and cut (local):
+40:  k7_aws=$(builtin type -P aws 2>/dev/null) || { echo "k7: refused: no aws executable on PATH" >&2; exit 2; }
+42:  [[ $k7_aws == /*/aws && $k7_dir != *[[:space:]:]* ]] || { echo "k7: refused: the aws on PATH is not an absolute path to a file named aws" >&2; exit 2; }
+77:  [[ $(realpath -e -- "$AWS_CA_BUNDLE" 2>/dev/null) == "$AWS_CA_BUNDLE" ]] || { echo "k7: refused: AWS_CA_BUNDLE is missing or its realpath differs (no symlink may be on the path)" >&2; exit 2; } #
+79:  k7_casha=$(sha256sum -- "$AWS_CA_BUNDLE" 2>/dev/null | cut -d ' ' -f1 || true)
+85:[[ $(builtin type -P aws 2>/dev/null) == "$k7_first/aws" ]] || { echo "k7: refused: aws does not resolve to $k7_first/aws" >&2; exit 2; }
+87:[[ ${k7_v%% *} == "$K7_PIN_AWS_CLI" ]] || { echo "k7: refused: aws reports '${k7_v%% *}', not the pinned $K7_PIN_AWS_CLI" >&2; exit 2; }
+105:K7_STATUS="ok aws=$k7_first/aws version=${k7_v%% *} dropped=[${C1_ENV_DROPPED# }] config_entries=[${k7_cfg# }] transport=[${k7_t# }] proxy=$k7_px no_proxy=$k7_np ca_bundle=$k7_ca ca_bundle_sha256=
