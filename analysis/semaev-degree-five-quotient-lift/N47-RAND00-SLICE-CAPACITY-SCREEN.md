@@ -74,6 +74,16 @@ border profile. Only then can a bounded sliced D5 attempt be placed. The
 original system has zero solutions; if a separate checker accepts a D5 map
 with nonzero image of one, Proposition 1.2 yields LFD at least six.
 
+The frozen projection command requires its destination directory to exist:
+`slice_trace_certificate.py` opens `degree4-projected.bin.partial` with exclusive
+creation and does not create parent directories. After every prelaunch gate has
+passed, verify that the planned output root is absent, create that root once,
+and then invoke the committed projection command. Retain the root and any
+partial file on failure; the one-attempt rule forbids a silent retry. This
+preparation does not change the frozen command or protocol. The reused native
+selective-rebase binary has the planned SHA-256 and passed the existing small
+reverse-unsafe-unit, missing-unit, and wrong-hash controls without a rebuild.
+
 Replay the screen from the retained D4 file with
 
 ```
