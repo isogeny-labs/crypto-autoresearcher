@@ -66,7 +66,39 @@ degree-five quotient map that, together with its named solution count,
 already establishes the sought degree-six lower bound. The n47 D5 producer
 and independent zero-count replay remain the direct path.
 
-This is a read-only screen of tracked artifacts, not a new closure run. The
+## Local high-memory n47 polynomial-subspace D5 maps
+
+The tracked-file screen above did not include three retained local results in
+`/home/ec2-user/fall-degree-data-20261029/frontier-highmem-001/`. I checked
+their D5 headers, SHA-256 digests, recorded count output, and independent
+`check5.stdout.txt` terminal line on 2026-11-07. All have 48 Boolean
+variables, degree five, 1,925,357 columns, and a two-dimensional quotient.
+
+| Named run | D5 SHA-256 | Count output | Checker terminal result |
+| --- | --- | ---: | --- |
+| `fresh-n47-poly-01-D5-cascade01-highmem01` | `89e859e7397ee2c3ab3745c8c112e7c4d79f6e32a4f6e7400ed5642c7b07a781` | 2 | `VALID: 1 not in W_5`, codimension at least 2 |
+| `fresh-n47-poly-02-D5-cascade01-highmem01` | `c15ab4eb2cfb6dd3080ca28f784abded2c0c44d4da135e91335f0e0ab6c4f3d3` | 2 | `VALID: 1 not in W_5`, codimension at least 2 |
+| `fresh-n47-poly-04-D5-cascade01-highmem01` | `bdf5052f2a135f9276531523eef4153b4147236171235ed59453aa36b220cab8` | 2 | `VALID: 1 not in W_5`, codimension at least 2 |
+
+These are additional checked nonmembership results, not three degree-six
+lower bounds. Their certified codimension lower bound equals the recorded
+exact solution count, so Proposition 1.4's strict-inequality bridge does
+not apply. This inspection reuses the retained run receipts and checker
+outputs; it does not claim a fresh independent count replay or a new D5 run.
+
+The local `native-lift-historical-001` directory also contains two named n35
+degree-five maps omitted from the tracked-file screen. `Q35a-D5-lift01` has
+SHA-256 `a3ffa75b43e8e6a5ceffa44c4e26fa37e435bb80b00ff506f5627a8d371fff89`,
+checker-accepted codimension at least six, and recorded count six.
+`Q35b-D5-lift01` has SHA-256
+`ae57630b8ffb2c5d282ca1c17ab1467e24c44891c915fcf7ee52e7236ea26691`,
+checker-accepted codimension at least two, and recorded count two. Both are
+36-variable degree-five maps with 443,704 columns. Again, each certified
+codimension lower bound equals its recorded count; neither supplies the
+strict gap needed for an LFD-at-least-six claim.
+
+The original screen above was a read-only screen of tracked artifacts, not a
+new closure run. The
 maps' headers and hashes do not substitute for independently checking each
 map; the accepted n=6 dimension-three map was rerun through
 `verify/cert_check.py` with its named parameters.
