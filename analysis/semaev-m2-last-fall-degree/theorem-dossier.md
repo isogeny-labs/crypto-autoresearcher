@@ -277,6 +277,46 @@ $C_{d+1}(U)$ lies in its kernel, its codimension is at least $s$.
 Finally, all generators vanish on $S$, and their allowed closure steps
 still vanish there, so $W_d(F)\subseteq I(S)$. $\square$
 
+**Proposition 1.8** (exactness of pivot-marked direct closure). **Proved.**
+Assume $d\ge\max_{f\in F}\deg f$. Order the monomials of $B_{\le d}$ by
+decreasing degree, and let $M_e$ be
+the span of all Boolean products $mf$ with $f\in F$ and
+$\deg m+\deg f\le e$. Begin with $A=M_d$. Pre-mark the leading columns
+of an echelon basis of $M_{d-1}$. Repeatedly choose every unmarked
+leading column in the degree-at-most-$(d-1)$ part of an echelon basis of
+$A$, mark it, multiply its basis row by every variable, adjoin the
+products to $A$, and re-echelonize. Batching and arbitrary row operations
+that preserve row space do not affect the conclusion. If this process
+terminates with no unmarked low-degree leading column, then $A=W_d(F)$.
+If it stops early because $1\in A$, then $1\in W_d(F)$.
+
+*Proof.* Every row of $M_d$ is in $W_d(F)$, and each newly adjoined row is
+a variable multiple of a row already in $A\cap B_{\le d-1}$. Hence
+$A\subseteq W_d(F)$ throughout. A leading column of a row space remains
+a leading column when the row space grows: its old witness with all earlier
+coordinates zero remains in the larger space. Thus a marked column cannot
+disappear. For each marked low-degree pivot $p$, retain a row $r_p$ with
+leading column $p$. If $p$ was pre-marked, take $r_p\in M_{d-1}$, so
+$x_i r_p\in M_d\subseteq A$ for every variable $x_i$. Otherwise its
+products were adjoined, so $x_i r_p\in A$ at termination.
+
+Let $s_p$ be the final echelon row with low-degree pivot $p$. The difference
+$s_p+r_p$ is in $A$ and has leading column strictly after $p$. Since both
+rows have degree at most $d-1$, it is a combination of final low-degree
+echelon rows with pivots after $p$. Descending induction on the marked
+low-degree pivots now gives $x_i s_p\in A$ for every $i$: it holds for
+$r_p$, and the products of all later rows are in $A$ by induction. Every
+element of $A\cap B_{\le d-1}$ is a combination of these rows, so $A$ is
+closed under all allowed variable multiplications. It contains $F$;
+minimality of $W_d(F)$ gives $W_d(F)\subseteq A$. The early-stop claim
+follows from the invariant $A\subseteq W_d(F)$. $\square$
+
+`code/lfdclose2.c` implements this pivot-marked algorithm. Its `mult`
+array marks leading columns, rather than immutable row identities; the
+descending-induction argument is what justifies that choice. The source
+audit and retained n47 D3 rank are recorded in
+`../semaev-degree-five-quotient-lift/N47-D3-EXACT-CLOSURE-AUDIT.md`.
+
 ---
 
 ## 2. Structure of the $m=2$ system
