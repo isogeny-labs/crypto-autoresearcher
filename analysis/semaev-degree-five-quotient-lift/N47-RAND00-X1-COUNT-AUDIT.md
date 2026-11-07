@@ -3,8 +3,10 @@
 The frozen independent replay uses the existing `s3count2.c` source with
 SHA-256 `fc8010f395a18b88b0739abfac3e4b6349be5c6be96ce5070e20f60364d98217`.
 Its named input is the 24-dimensional random-00 factor space in
-`n47-rand00-x1-count-plan-001.json`. The protocol's canonical SHA-256 is
-`2c90501ab8618772a1bb37137b4520f773dd3ee00cb2191223dc95f6a21485b8`.
+`n47-rand00-x1-count-plan-002.json`. The current V2 protocol's canonical
+SHA-256 is `4909ab182777db75727f274af9fbda8f7082a938a22a6a74aedef136ed051732`.
+V2 superseded the unlaunched V1 protocol before any new data while retaining
+its single attempt, output root, USD 5 reservation, and absolute deadline.
 This note audits the algorithm before its one allowed run; it records no new
 n47 count.
 
@@ -39,13 +41,18 @@ on nonzero branch coefficients; the exponent `2^n-2` is the inverse
 exponent in the independently verified irreducible field. The count fits a
 signed 64-bit integer because at most `2^48` ordered pairs exist.
 
-The two fixed GF(8) controls can be checked directly from the formula:
+The original two fixed GF(8) controls can be checked directly from the formula:
 with `V={0,1}` and `z=1`, the polynomial without `a6` has value one at
 `(0,1)` and `(1,0)`, and value zero at `(0,0)` and `(1,1)`. Hence `a6=1`
-gives count two and `a6=X` gives count zero. The frozen run stops before
-the n47 target if either control fails. These controls exercise the
-branching and field arithmetic, but they do not replace complete n47
-execution and custody checks.
+gives count two and `a6=X` gives count zero. These cases reach the
+square-root and linear branches, but neither reaches `A*B!=0`.
+
+V2 therefore adds a four-pair-space control with `V={0,1,X,1+X}` and
+`a6=X`. Direct field arithmetic gives exactly four ordered solutions:
+`(1,1+X)`, `(X,X)`, `(1+X,1)`, and `(1+X,1+X)`. The last three have
+`A*B!=0` and test the Artin–Schreier branch. The frozen run stops before
+the n47 target if any of the three controls fails. They do not replace
+complete n47 execution and custody checks.
 
 This route enumerates `x1` and solves a quadratic in `x2`. The retained
 `count_by_sum` result enumerated `x1+x2` and solved two successive
