@@ -162,3 +162,30 @@ foreign-key/integrity/gzip checks and additions for16table comparisons32builds
 historical totals remain30curves46bases, now20execution records including prior
 failures. The compressed snapshot is object-backed in its committed manifest.
 Producer evidence remains unverified under PCC-20261107-c57282. [pcc:unverified]
+
+
+## v19: retained A16 admission failure
+
+The additive [v19 snapshot](../prime_field_a16_execution_20261107/database/v19-admission-failure/validation.json)
+retains one failed Git admission attempt and all95prior nonmetadata table rows;
+parent bytes, foreign keys, integrity and gzip roundtrip pass as producer checks.
+It adds zero curves, mathematical bases, targets or program contexts and three
+empty target-effort schema tables. All1260planned scientific systems remain
+unknown; prior rank/target coverage is unchanged. The immutable original failure
+precedes any separately assessed bounded infrastructure continuation.
+[PCC-20261107-aaefc7](../../pcc/claims/PCC-20261107-aaefc7.json), unverified.
+[pcc:unverified]
+
+
+## v20: fresh target effort with independent horizons
+
+The additive [v20 snapshot](../prime_field_a16_execution_20261107/database/v20-target-effort/validation.json)
+preserves all98parent nonmetadata tables/rows and parent bytes. It adds4curves,
+16mathematicalbases,20paid programcontexts and32publictargets, with1260cases,
+2520solveroutputs and180branches. Known48_h8/h24 construction contexts share
+canonical mathematical identities but keep separate paid provenance/costs.
+Its518-byte parent metadata reference reconstructs the prior complete metadata
+hash while preserving inherited historical bytes, avoiding a92,500,585-byte
+recursive snapshot copy. FK/integrity/gzip pass as producer checks.
+[PCC-20261107-d1bac1](../../pcc/claims/PCC-20261107-d1bac1.json), unverified.
+[pcc:unverified]
