@@ -1,9 +1,13 @@
 # A16 independent target-effort portfolios
 
-Implementation in progress; native A16 executions:0. No protocol, source-ready
-assessment or execution release exists yet. The full admitted driver/analyzer and prospective contract are implemented;
-exact-source publication/assessment, freeze, current S3 and root release remain
-before native work.
+The first supervised attempt stopped in Git admission under2GiB, before any
+curve/target generation or solver. Its release is consumed; all1260planned
+systems remain unknown. [Observed outcome and bounded next step](RESULTS.md),
+[typed proof standing](PROOF-STATUS.md), [runtime obstruction](../../problems/prime-field-git-pack-admission.md).
+Exact native source and original frozen protocol remain immutable. A separate
+prospective infrastructure amendment retains originaldeadline/cumulativeCPU/
+2GiB and requires its own bounded assessment/release/normal admission.
+[pcc:unverified]
 
 - [Source and primary-literature review](literature.md)
 - [Fixed public input rules and28prior exclusions](inputs.json)
