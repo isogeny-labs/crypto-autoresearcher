@@ -92,7 +92,18 @@ def codex(stage, public, previous, *, seconds, model, effort, budget):
                    '-c', 'features.shell_tool=false', '-c', 'features.multi_agent=false',
                    '-c', 'features.enable_mcp_apps=false',
                    '--output-schema', str(schema), '--output-last-message', str(final), '-']
-        env = {**os.environ, 'OMP_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1'}
+        # Native sessions must not share the desktop's databases or log files.
+        # Copy only the existing login into a private temporary home; never record it.
+        actor_home=root/'codex-home'
+        actor_home.mkdir(mode=0o700)
+        saved_home=Path(os.environ.get('CODEX_HOME',str(Path.home()/'.codex')))
+        saved_auth=saved_home/'auth.json'
+        if saved_auth.is_file():
+            auth=actor_home/'auth.json'
+            descriptor=os.open(auth,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
+            with os.fdopen(descriptor,'wb') as f: f.write(saved_auth.read_bytes())
+        env = {**os.environ, 'CODEX_HOME':str(actor_home),
+               'OMP_NUM_THREADS': '1', 'OPENBLAS_NUM_THREADS': '1'}
         request = prompt(stage, public, previous)
         if len(request.encode()) > budget['max_request_bytes']:
             return {'status': 'budget_exhausted', 'claim_success': False, 'artifact': None,

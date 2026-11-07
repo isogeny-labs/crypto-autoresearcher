@@ -22,7 +22,7 @@ autoresearch eval capability replay /tmp/capability-positive
 autoresearch eval capability replay /tmp/capability-negative
 ```
 
-The dependency-light entry point is equivalent:
+The module entry point (with the same installed dependencies) is equivalent:
 `python -m orchestration.eval.capability_campaign ...`.
 Use a fresh output directory each time. Existing directories are never overwritten
 or resumed automatically. Interrupted directories retain completed stage records;
@@ -30,7 +30,10 @@ no capability claim should use an unsealed partial bundle.
 
 The live transport uses `codex login status` and the existing login; it does not
 require an API-key environment variable. Never put credentials in a campaign.
-Native Codex must support `exec --ignore-user-config --ephemeral --output-schema`.
+Each actor uses a fresh private temporary Codex home, containing only a copy of
+the existing file-backed login, deleted when the session ends. Desktop databases
+and configuration are not shared. Keyring-only logins are not supported by this
+transport. Native Codex must support `exec --ignore-user-config --ephemeral --output-schema`.
 A live run additionally requires a prospectively frozen `experiment.protocol/v1`
 whose links bind the campaign digest and evaluator source hashes. The shipped
 qualification protocol is a specific development panel, not a reusable permission
@@ -40,7 +43,7 @@ code, model, sample counts or limits.
 ```sh
 autoresearch eval capability run \
   --spec examples/capability-campaign/qualification.json \
-  --protocol examples/capability-campaign/protocol.json \
+  --protocol examples/capability-campaign/protocol-v2.json \
   --model gpt-6-astra --effort xhigh --max-sessions 15 \
   --out /tmp/capability-live
 ```
