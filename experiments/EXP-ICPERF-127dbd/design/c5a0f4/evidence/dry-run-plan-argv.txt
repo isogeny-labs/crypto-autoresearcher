@@ -1,0 +1,17 @@
+# dry-run of the plan's T2 argv (run dir replaced by a scratch dir); fake aws on PATH logs any call
+$ experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh --dry-run --protocol experiments/EXP-ICPERF-127dbd/inputs/protocol.json --experiment-id EXP-ICPERF-127dbd --hypothesis-id H-ICPERF-4cb536 --task-id TASK-20261107-f14df8 --approved-by DEC-20261107-7802ec --trial-id T2 --run-id RUN-ICPERF-efb7ef --out /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/c5a0f4-evidence/dryrun-plan/run/job --record-dir /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/c5a0f4-evidence/dryrun-plan/run experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+experiment_id=EXP-ICPERF-127dbd hypothesis_id=H-ICPERF-4cb536 task_id=TASK-20261107-f14df8 approved_by=DEC-20261107-7802ec trial_id=T2 run_id=RUN-ICPERF-efb7ef
+request_sha256=d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1 job_name=ic-c1-dg-s2-20261106
+region=us-east-2 bucket=isolab-results-104186811093-us-east-2 codebuild_project=isolab-experiment-launcher remote=/tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/v6/repo/taskq/deploy/eks-karpenter/remote
+remote scripts match 4 pinned sha256 values
+validated_request_sha256=e4eb66c191311966cf4884c2ef845a2927af362f2847097b5791c0729f572c1a request_key=inputs/requests/e4eb66c191311966cf4884c2ef845a2927af362f2847097b5791c0729f572c1a.json
+DRY RUN: no AWS call is made. Commands that a real run executes, in order:
+  aws s3 ls s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s2-20261106/                       # read: refuse (exit 3) if anything is listed
+  aws s3 ls s3://isolab-results-104186811093-us-east-2/inputs/requests/e4eb66c191311966cf4884c2ef845a2927af362f2847097b5791c0729f572c1a.json                              # read: refuse (exit 3) if it exists
+  aws codebuild list-builds-for-project --project-name isolab-experiment-launcher --sort-order DESCENDING   # read
+  aws codebuild batch-get-builds --ids <first 100>               # read: refuse (exit 3) if one carries ISOLAB_REQUEST_KEY=inputs/requests/e4eb66c191311966cf4884c2ef845a2927af362f2847097b5791c0729f572c1a.json
+  env ISOLAB_CLIENT_OUTPUT=/tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/c5a0f4-evidence/dryrun-plan/run/job/launcher /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/v6/repo/taskq/deploy/eks-karpenter/remote/launch-remote experiments/EXP-ICPERF-127dbd/inputs/request-s2.json > /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/c5a0f4-evidence/dryrun-plan/run/job/launch.log 2>&1                       # the one submission (writes S3 and starts CodeBuild); never retried
+  aws s3 cp <results_uri from /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/c5a0f4-evidence/dryrun-plan/run/job/launcher/result.json> /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/c5a0f4-evidence/dryrun-plan/run/job/artifacts --recursive   # read-only download
+  then raw-result.json and manifest.yaml are written under /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/c5a0f4-evidence/dryrun-plan/run
+exit=0
+fake-aws log lines (calls made): 0

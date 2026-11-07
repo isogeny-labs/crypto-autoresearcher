@@ -1,0 +1,67 @@
+--- /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/car/experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/launch_eks.v3a.sh	2026-11-07 02:47:20.048209197 +0000
++++ /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/car/experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh	2026-11-07 02:47:20.060815217 +0000
+@@ -232,11 +232,29 @@
+ finished=$(date -u +%FT%TZ)
+ echo "launch-remote exit $launch_rc (no retry)"
+ 
+-# 3. Whatever the launcher returned, fetch the job's own results if its receipt names them (read-only).
++# 3. Whatever the launcher returned, fetch the job's own results (read-only). v3b (C1-AMENDMENT-2): the results are located by
++# locate_results.sh. A non-empty result.json .results_uri is used as is. Otherwise (the pinned launcher leaves it empty for any
++# failed Job) the launcher receipt's status.json pod uid, bound to the Job uid, names the one results prefix. After the download
++# the pod's job-exit.json must equal that pod, this job and the container exit code, or the outcome is never job_completed.
+ res="$client_out/result.json"
+ results_uri=""; state=""; build_status=""
+-[[ -s $res ]] && results_uri=$(jq -r '.results_uri // empty' "$res") && state=$(jq -r '.state // empty' "$res")
++results_locator=none; job_uid=""; pod_uid=""; located_ok=yes
++[[ -s $res ]] && state=$(jq -r '.state // empty' "$res")
+ [[ -s $client_out/build.json ]] && build_status=$(jq -r '.builds[0].buildStatus // empty' "$client_out/build.json")
++if [[ -s $res ]]; then
++  set +e
++  "$here/locate_results.sh" locate --launcher-result "$res" --job "$job" --bucket "$ISOLAB_BUCKET" \
++    --workdir "$out/locator" --out "$out/locator/locator.json"
++  loc_rc=$?
++  set -e
++  echo "locate_results exit $loc_rc"
++  if [[ $loc_rc == 0 ]]; then
++    results_uri=$(jq -r .results_uri "$out/locator/locator.json")
++    results_locator=$(jq -r .results_locator "$out/locator/locator.json")
++    job_uid=$(jq -r '.job_uid // ""' "$out/locator/locator.json")
++    pod_uid=$(jq -r '.pod_uid // ""' "$out/locator/locator.json")
++  fi
++fi
+ dl_rc="not_attempted"
+ if [[ -n $results_uri ]]; then
+   set +e; aws s3 cp "$results_uri" "$out/artifacts/" --recursive --only-show-errors; dl_rc=$?; set -e
+@@ -244,6 +262,14 @@
+ have_exit=no; have_sums=no; job_exit_code=""
+ [[ -s $out/artifacts/job-exit.json ]] && have_exit=yes && job_exit_code=$(jq -r '.exit_code // empty' "$out/artifacts/job-exit.json")
+ [[ -s $out/artifacts/SHA256SUMS ]] && have_sums=yes
++if [[ $results_locator == receipt_status_pod_uid && $have_exit == yes ]]; then
++  set +e
++  "$here/locate_results.sh" verify --locator "$out/locator/locator.json" --artifacts "$out/artifacts"
++  verify_rc=$?
++  set -e
++  echo "locate_results verify exit $verify_rc"
++  [[ $verify_rc == 0 ]] || located_ok=no
++fi
+ 
+ # Outcome class. Deadline first, whatever was downloaded (PROTOCOL section 9: a session that ends at its deadline is
+ # infrastructure whether or not it wrote a job-exit.json). launch-remote exits 26 for ANY terminal CodeBuild status other
+@@ -262,12 +288,16 @@
+ elif [[ $launch_rc == 26 && $build_status == "$V6_COUNTED_CODEBUILD_STATUS" && ( $job_exit_code == 42 || $job_exit_code == 43 ) ]]; then
+   class=job_completed
+ fi
++# v3b: a located pod whose job-exit.json does not match the receipt is never job_completed.
++[[ $located_ok == yes || $class != job_completed ]] || class=other
+ 
+ write_records "$(jq -n --arg class "$class" --arg started "$started" --arg finished "$finished" \
+   --argjson launch_rc "$launch_rc" --arg uri "$results_uri" --arg state "$state" --arg bstatus "$build_status" --arg dl "$dl_rc" \
+   --arg have_exit "$have_exit" --arg have_sums "$have_sums" --arg jec "$job_exit_code" \
++  --arg locator "$results_locator" --arg juid "$job_uid" --arg puid "$pod_uid" \
+   '{submitted:true, outcome_class:$class, launch_remote_exit:$launch_rc, launcher_state:$state, codebuild_status:$bstatus,
+-    results_uri:$uri, download_exit:$dl, job_exit_json_present:$have_exit, sha256sums_present:$have_sums,
++    results_uri:$uri, results_locator:$locator, job_uid:$juid, pod_uid:$puid, download_exit:$dl,
++    job_exit_json_present:$have_exit, sha256sums_present:$have_sums,
+     job_exit_code:$jec, started_at:$started, finished_at:$finished}')"
+ echo "outcome_class=$class job_exit_code=${job_exit_code:-none} record_dir=$rec"
+ [[ $class == job_completed ]] && exit 0
