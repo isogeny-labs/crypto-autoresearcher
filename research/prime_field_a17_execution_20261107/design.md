@@ -19,6 +19,7 @@ certificate. After an executed slot, insert every returned row and test every
 still-unresolved coordinate. Retain all empty/missed/cached/skipped requests,
 failed prefixes and nonrecoveries. Native joint control checks the exact final
 candidate pool; the independently cold full-query program checks final outcomes.
+[pcc:unverified]
 
 The candidate pays online update, membership, lifting and certificate checks.
 No query saving or complete-cost advantage is assumed; no construction saving
