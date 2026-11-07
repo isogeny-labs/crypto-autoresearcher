@@ -4,6 +4,7 @@
 import hashlib
 import itertools
 import json
+from math import comb
 from pathlib import Path
 import struct
 import subprocess
@@ -11,7 +12,9 @@ import sys
 import tempfile
 import unittest
 
-from check_sliced_certificate_factorized import MappedCertificate, check_map_factorized
+from check_sliced_certificate_factorized import (MappedCertificate,
+                                                  PreadCertificate,
+                                                  check_map_factorized)
 from check_quotient_closure_factorized import check_closure_factorized
 from check_trace_slice_certificate import check_map, read_certificate, trace_slice
 from slice_trace_certificate import project
@@ -58,18 +61,21 @@ class FactorizedCertificateTests(unittest.TestCase):
             for rows, polys, expected_error in cases:
                 with self.subTest(rows=rows, polys=polys):
                     self.write_map(path, rows)
-                    with MappedCertificate(path) as certificate:
-                        if expected_error is None:
-                            result = check_map_factorized(certificate, polys)
-                            self.assertEqual(result['codimension_lower_bound'], 2)
-                        else:
-                            with self.assertRaisesRegex(ValueError, expected_error):
-                                check_map_factorized(certificate, polys)
+                    for reader in (MappedCertificate, PreadCertificate):
+                        with self.subTest(reader=reader.__name__):
+                            with reader(path) as certificate:
+                                if expected_error is None:
+                                    result = check_map_factorized(certificate, polys)
+                                    self.assertEqual(result['codimension_lower_bound'], 2)
+                                else:
+                                    with self.assertRaisesRegex(ValueError, expected_error):
+                                        check_map_factorized(certificate, polys)
             self.write_map(path, [3, 2, 0, 0])
             with path.open('ab') as stream:
                 stream.write(b'!')
-            with self.assertRaisesRegex(ValueError, 'length'):
-                MappedCertificate(path)
+            for reader in (MappedCertificate, PreadCertificate):
+                with self.assertRaisesRegex(ValueError, 'length'):
+                    reader(path)
 
     def test_retained_n6_slice_agrees_with_pinned_checker(self):
         root = Path(__file__).resolve().parent
@@ -85,8 +91,12 @@ class FactorizedCertificateTests(unittest.TestCase):
             project(source, output, 3, source_hash)
             with MappedCertificate(output) as certificate:
                 result = check_map_factorized(certificate, polys)
+            with PreadCertificate(output) as certificate:
+                streamed = check_map_factorized(certificate, polys)
             self.assertEqual(result['status'], 'valid_affine_slice_nonmembership')
             self.assertEqual(result['codimension_lower_bound'], 3)
+            self.assertEqual(streamed['low_kernel_dimension'],
+                             result['low_kernel_dimension'])
             cert_n, degree, codim, masks, rows = read_certificate(output)
             original = check_map(cert_n, degree, codim, masks, rows, polys)
             self.assertEqual(result['low_kernel_dimension'],
@@ -119,6 +129,13 @@ class FactorizedCertificateTests(unittest.TestCase):
             accepted = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(accepted.returncode, 0, accepted.stderr)
             self.assertEqual(json.loads(accepted.stdout)['codimension_lower_bound'], 3)
+            self.assertEqual(json.loads(accepted.stdout)['checker_method'],
+                             'pread_rows_factorized_closure')
+            mapped = subprocess.run(command + ['--row-access', 'mapped'],
+                                    capture_output=True, text=True)
+            self.assertEqual(mapped.returncode, 0, mapped.stderr)
+            self.assertEqual(json.loads(mapped.stdout)['checker_method'],
+                             'mapped_rows_factorized_closure')
             command[-1] = '0' * 64
             rejected = subprocess.run(command, capture_output=True, text=True)
             self.assertNotEqual(rejected.returncode, 0)
@@ -144,12 +161,50 @@ class FactorizedCertificateTests(unittest.TestCase):
             project(source, output, 3, source_hash)
             with MappedCertificate(output) as certificate:
                 result = check_map_factorized(certificate, polys)
+            with PreadCertificate(output) as certificate:
+                streamed = check_map_factorized(certificate, polys)
             cert_n, degree, codim, masks, rows = read_certificate(output)
             original = check_map(cert_n, degree, codim, masks, rows, polys)
             self.assertEqual((n, degree, codim), (5, 5, 3))
             self.assertEqual(result['low_kernel_dimension'], 28)
             self.assertEqual(result['low_kernel_dimension'],
                              original['low_kernel_dimension'])
+            self.assertEqual(streamed['low_kernel_dimension'],
+                             original['low_kernel_dimension'])
+
+    def test_sparse_large_certificate_opens_under_address_cap(self):
+        # Sparse rows keep this fixture small on disk while its logical row
+        # payload exceeds the child's address-space limit.
+        n, degree, codim = 30, 5, 20_000
+        columns = sum(comb(n, d) for d in range(degree + 1))
+        row_bytes = 8 * ((codim + 63) // 64)
+        file_bytes = 32 + 8 * columns + row_bytes * columns
+        self.assertGreater(file_bytes, 256 << 20)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / 'sparse.bin'
+            with path.open('wb') as stream:
+                stream.write(struct.pack('<4q', n, degree, columns, codim))
+                for d in range(degree + 1):
+                    for indices in itertools.combinations(range(n), d):
+                        stream.write(struct.pack('<Q', sum(1 << i for i in indices)))
+                stream.truncate(file_bytes)
+            child = '''
+import resource, sys
+from check_sliced_certificate_factorized import MappedCertificate, PreadCertificate
+resource.setrlimit(resource.RLIMIT_AS, (256 << 20, 256 << 20))
+with PreadCertificate(sys.argv[1]) as cert:
+    assert (cert.n, cert.degree, cert.codim) == (30, 5, 20000)
+    assert cert.rows[0] == cert.rows[len(cert.rows) - 1] == 0
+try:
+    MappedCertificate(sys.argv[1])
+except OSError:
+    pass
+else:
+    raise AssertionError('whole-file mapping bypassed the address cap')
+'''
+            result = subprocess.run([sys.executable, '-c', child, str(path)],
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
 
 
 if __name__ == '__main__':

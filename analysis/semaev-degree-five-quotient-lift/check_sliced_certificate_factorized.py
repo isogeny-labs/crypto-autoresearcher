@@ -12,6 +12,7 @@ from functools import reduce
 import json
 from math import comb
 import mmap
+import os
 import operator
 from pathlib import Path
 import struct
@@ -74,6 +75,66 @@ class MappedCertificate:
         self.close()
 
 
+class PreadCertificate:
+    """Read certificate rows on demand without mapping the row payload."""
+
+    def __init__(self, path):
+        self.fd = os.open(path, os.O_RDONLY)
+        try:
+            size = os.fstat(self.fd).st_size
+            header = os.pread(self.fd, 32, 0)
+            if len(header) != 32:
+                raise ValueError('truncated certificate')
+            self.n, self.degree, self.columns, self.codim = struct.unpack('<4q', header)
+            if not (1 <= self.n <= 62 and 2 <= self.degree <= self.n and
+                    1 <= self.codim <= self.columns and
+                    self.columns == sum(comb(self.n, d)
+                                        for d in range(self.degree + 1))):
+                raise ValueError('invalid certificate dimensions')
+            self.row_bytes = 8 * ((self.codim + 63) // 64)
+            self.row_start = 32 + 8 * self.columns
+            if size != self.row_start + self.columns * self.row_bytes:
+                raise ValueError('invalid certificate file length')
+            mask_bytes = os.pread(self.fd, 8 * self.columns, 32)
+            if len(mask_bytes) != 8 * self.columns:
+                raise ValueError('truncated monomial universe')
+            self.masks = struct.unpack('<%dQ' % self.columns, mask_bytes)
+            if (len(set(self.masks)) != self.columns or
+                    any(m >= (1 << self.n) or bin(m).count('1') > self.degree
+                        for m in self.masks)):
+                raise ValueError('invalid monomial universe')
+            self.rows = self.Rows(self)
+        except BaseException:
+            os.close(self.fd)
+            raise
+
+    class Rows:
+        def __init__(self, certificate):
+            self.certificate = certificate
+
+        def __len__(self):
+            return self.certificate.columns
+
+        def __getitem__(self, index):
+            c = self.certificate
+            if not 0 <= index < c.columns:
+                raise IndexError(index)
+            data = os.pread(c.fd, c.row_bytes,
+                            c.row_start + index * c.row_bytes)
+            if len(data) != c.row_bytes:
+                raise ValueError('truncated certificate row')
+            return int.from_bytes(data, 'little')
+
+    def close(self):
+        os.close(self.fd)
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        self.close()
+
+
 def check_map_factorized(certificate, polys):
     n, degree, codim = (certificate.n, certificate.degree,
                         certificate.codim)
@@ -112,7 +173,9 @@ def check_map_factorized(certificate, polys):
             'variables': n, 'codimension_lower_bound': codim,
             'generators': len(polys),
             'low_kernel_dimension': kernel_dimension,
-            'checker_method': 'mapped_rows_factorized_closure'}
+            'checker_method': ('pread_rows_factorized_closure'
+                               if isinstance(certificate, PreadCertificate)
+                               else 'mapped_rows_factorized_closure')}
 
 
 def main():
@@ -126,6 +189,8 @@ def main():
     parser.add_argument('--variable', type=int, required=True)
     parser.add_argument('--affine-combination-mask', type=lambda s: int(s, 0))
     parser.add_argument('--expect-certificate-sha256', required=True)
+    parser.add_argument('--row-access', choices=('mapped', 'pread'),
+                        default='pread')
     args = parser.parse_args()
     try:
         if sha256(args.plan) != args.expect_plan_sha256:
@@ -146,10 +211,14 @@ def main():
         plan = json.loads(args.plan.read_text())
         n, polys, affine = trace_slice(plan['record'], args.variable,
                                         args.affine_combination_mask)
-        with MappedCertificate(args.certificate) as certificate:
+        reader = (PreadCertificate if args.row_access == 'pread'
+                  else MappedCertificate)
+        with reader(args.certificate) as certificate:
             if certificate.n != n:
                 raise ValueError('certificate has wrong sliced variable count')
             result = check_map_factorized(certificate, polys)
+        if sha256(args.certificate) != args.expect_certificate_sha256:
+            raise ValueError('certificate changed during verification')
         result['eliminated_variable'] = args.variable
         result['substitution_terms'] = affine
         result['affine_combination_mask'] = (hex(args.affine_combination_mask)
