@@ -1,0 +1,126 @@
+{
+  "schema": "experiment.review/v1",
+  "review_id": "REV-20261107T013132Z-e0935f",
+  "created": "2026-11-07T01:31:32Z",
+  "export": {
+    "path": "../export.json",
+    "sha256": "4d96630a4a42240f49a71b450a728a510fa0cdbbc4b5ff9f37d05ff694bd7cd4",
+    "export_id": "A15-a15-batched-pairs-06ab77"
+  },
+  "protocol_sha256": "eb7408ec34408f588e3279696faeebf961ab663380bcf74ab4a82cbe2a891f26",
+  "reviewer": {
+    "runtime": "codex",
+    "model": "gpt-6",
+    "session": "01a15a04-608c-71b0-8696-f29207b444ec",
+    "role": "validator",
+    "independence": {
+      "same_session_as_producer": false,
+      "same_host_class": null,
+      "shares_code_with_producer": true,
+      "declared_conflicts": [
+        "The common experiment_protocol.py schema/hash tool was used for scaffolding; independent_recompute.py imports no producer module."
+      ]
+    }
+  },
+  "checks": [
+    {
+      "id": "hashes",
+      "kind": "hashes",
+      "result": "pass",
+      "detail": "94 files and every artifact hash recomputed from disk"
+    },
+    {
+      "id": "adherence",
+      "kind": "protocol_adherence",
+      "result": "pass",
+      "detail": "export binds the frozen protocol; arms, seeds, row counts and isolation agree"
+    },
+    {
+      "id": "controls",
+      "kind": "controls",
+      "result": "pass",
+      "detail": "The protocol declares no A/A arm because it makes no timing inference. Independent finite controls found 1,901 scalar hit queries, 7,059 misses, 2,240 relation rows, and rejected a changed sign in nonce-derived table p524287-i1.norm query 716. Producer mutation tests are not treated as an independent replay."
+    },
+    {
+      "id": "recompute",
+      "kind": "recompute",
+      "result": "pass",
+      "detail": "Independent script SHA-256 2d1edd9e4febf86d7644ee477498bc908c6bd5cb7612235b9fcf9726446dd02a produced output SHA-256 64dfbe8b1101abb02adfc7d1b77dd5e78bb30740307a2dcae1cbe0a4f3a02cf7: 16 tables, 32 builds, 17,920 query records, 17,968 checks, 2,240 sound relation rows, and exhaustive relation-set equality against 1,424,384 independently enumerated signed triples. All 64 physical counter fields sum from raw phase events to metrics.json."
+    },
+    {
+      "id": "statistics",
+      "kind": "statistics",
+      "result": "pass",
+      "detail": "The frozen decision rule is an exact finite census with no p-value, interval beyond none_exact, multiplicity correction, or population effect. All phase wall_valid flags were false, so no wall-clock performance comparison is accepted."
+    },
+    {
+      "id": "scope",
+      "kind": "scope",
+      "result": "pass",
+      "detail": "Only 16 conditioned retained tables, two construction methods, 32 actual builds, and 17,920 retained query calls are covered. The export records zero new-target solver calls and no whole-attack or fresh-target conclusion."
+    },
+    {
+      "id": "blinding",
+      "kind": "blinding",
+      "result": "pass",
+      "detail": "The protocol and export both declare analysis.blinded=false; the decision rule makes no timed comparative or population inference. This check establishes declaration consistency, not resistance to all observer bias."
+    },
+    {
+      "id": "static-replay",
+      "kind": "replay",
+      "result": "not_covered",
+      "detail": "No new execution was submitted: the frozen protocol permits one physical attempt and no retry. The nonce 51c186646fe2347a240150f010034e38 selected table p524287-i1.norm query 705 (a miss); the fixed cyclic next hit at query 716 has one row checked with an independent group law. Full static enumeration covers every retained query, but is not a second execution."
+    },
+    {
+      "id": "source-provenance",
+      "kind": "provenance",
+      "result": "fail",
+      "detail": "The export itself records source.dirty=true and analysis.resources.model_verified=false. Frozen protocol commit 67da5003 precedes first data and source commit 8effd1cd precedes first data, but the exact uncommitted execution diff and signed standing are not established by the export."
+    },
+    {
+      "id": "counted-validity",
+      "kind": "measurement_validity",
+      "result": "pass",
+      "detail": "32/32 planned cells completed in one physical attempt, with 17,920/17,920 verified query calls. Every observed phase has wall_valid=false; only counted vectors and exact rows are assessed. No interrupted, resumed, or not_completed rows were reported."
+    }
+  ],
+  "replay": {
+    "performed": false,
+    "method": null,
+    "units_sampled": 0,
+    "nonce": "51c186646fe2347a240150f010034e38",
+    "identical": 0,
+    "mismatched": 0,
+    "miss_probability": null
+  },
+  "observations": [
+    "The frozen protocol hash eb7408ec34408f588e3279696faeebf961ab663380bcf74ab4a82cbe2a891f26 and export hash 4d96630a4a42240f49a71b450a728a510fa0cdbbc4b5ff9f37d05ff694bd7cd4 bind the reviewed input. All 94 export file hashes passed after 48 content-addressed raw objects (44,347,571 bytes) were retrieved and independently checked.",
+    "Raw outputs contain 32 method builds and 17,920 query records across 16 retained tables. Each query record hashes to its input commitment, the scalar and batched records match at every query, and all 17,920 query checks report checked=true.",
+    "Independent short-Weierstrass enumeration of 1,424,384 distinct-index signed triples gives exactly the raw relation set for each retained query. It checks all 2,240 reported rows, including coefficients, and observes 1,901 hit queries and 7,059 misses per method.",
+    "Raw affine-phase counters aggregate exactly to all 64 physical_counters fields in metrics.json. The counted values remain producer-instrumented; the review did not independently instrument the execution process.",
+    "The export reports source.dirty=true, producer_unverified=true, and model_verified=false. No second execution was run under the original one-attempt/no-retry protocol."
+  ],
+  "judgments": [
+    {
+      "claim_id": "A15-pair-component",
+      "verdict": "inconclusive",
+      "basis": "Finite retained-query relation soundness, completeness and scalar/batched parity are independently reproduced from raw bytes, and counted rows match. The claim also includes actual construction-vector execution standing, which the dirty source and unverified producer/model do not establish independently. No timing or new-target inference is made.",
+      "effect_size": null,
+      "scope": "16 conditioned retained tables; 32 builds; 17,920 query calls; zero new target solver calls."
+    }
+  ],
+  "open_questions": [
+    "What uncommitted source or environment state caused export.source.dirty=true, and can an exact execution-source diff be authenticated?",
+    "Can a separately frozen, clean-source validation repeat the counted construction vectors with independent instrumentation or signed standing, without altering this one-attempt historical run?",
+    "Can native and query negative controls be independently replayed under a new bounded protocol if their behavior is cited beyond this finite raw-row census?"
+  ],
+  "recommendation": {
+    "action": "respecify",
+    "reason": "Preserve this finite row-level corroboration and its immutable export. A new frozen clean-source protocol with authenticated execution standing is required before promoting the full actual-construction-vector claim; do not rerun the original one-attempt session."
+  },
+  "asserts_nothing_about": [
+    "official research status",
+    "hypothesis status",
+    "the correctness of the design"
+  ]
+}

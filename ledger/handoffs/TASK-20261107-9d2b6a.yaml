@@ -1,0 +1,134 @@
+# TASK-20261107-9d2b6a: independent red-team review of the C1 results locator (EXP-ICPERF-127dbd), under
+# DEC-20261107-b74e2c T-3, TASK-20261107-c5a0f4 follow_on and DEC-20261107-e41c08. Zero runs, zero AWS calls.
+# It judges the bytes. It approves nothing.
+handoff:
+  id: TASK-20261107-9d2b6a
+  from: coordinator
+  to: red-team
+  role: red-team
+  recorded_at: '2026-11-07'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Attack the committed locator joint and report, per question, either a concrete break (an
+    input, the observed output, and a fixture that reproduces it) or an argument why none exists.
+    Questions:
+    (a) Can locate_results.sh, as used by launch_eks.sh v3b or by reconcile_run.sh, bind a foreign,
+        stale or attacker-placed results prefix, or another job's or another attempt's pod?
+    (b) Can v3b write outcome_class job_completed, or exit 0, without having downloaded this pod's
+        own job-exit.json with an accepted exit code?
+    (c) Can reconcile_run.sh submit anything (launch-remote, CodeBuild, kubectl, an
+        isolab-eks-mcp write) or write to S3 or any AWS service, including through an environment
+        variable, PATH, a sourced file or a fixture hook?
+    (d) B-FILED-BEFORE-AFFECTED-DATA: is `filed_before_affected_data: true` in the protocol v3
+        freeze truthful? S1's job output existed in S3 before C1-AMENDMENT-2 was filed. PD-1 read
+        integrity counts only. State what 'affected data' means under the freeze semantics of
+        experiment_protocol.py and docs/experiment-protocol.md, and whether the flag holds, holds
+        only with the AMENDMENT-2 disclosure, or must be qualified.
+  uncertainty_reduced: >-
+    Whether the S1 reconciliation and the S2 launch can admit the wrong bytes, or spend, through the
+    new locator. That is the load-bearing joint before approval DEC-20261107-7802ec.
+  inputs:
+  - ledger/decisions/DEC-20261107-b74e2c.yaml (rulings 1, 3, 4 and PD-1)
+  - ledger/handoffs/TASK-20261107-c5a0f4.yaml (D-1 to D-7)
+  - "experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh (sha256 efcc29832806d604913c00afb6e92a2052cb784479cfc65dda42491655326c5e)"
+  - "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh (v3b, sha256 f93e8858923765c390fb7bcb01ea04c2373325815f08cbaf7df24b584e521da8)"
+  - "experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh (sha256 eac18f21de151b55b543e7ebdf51aeda71a23061ae2f8f5449a5064af569bb93)"
+  - experiments/EXP-ICPERF-127dbd/implementation/tests/ (test_locator.sh 2530c5e4..., fake-aws, fake-launch-remote, fixtures/ including launch_eks.v3a.sh 0fcdd67e...)
+  - experiments/EXP-ICPERF-127dbd/implementation/check_job.py (d60564dd..., unchanged)
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml (488ae3ac...; the S02 and S03 steps only)
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json (561b6a75...; freeze and extensions.c1_amendment_2 only)
+  - "isogeny-labs/crypto PR #3613 (ff781aa8b7): research/ic_c1_deferred_guard_fp28_20261106/{AMENDMENT-2.md, amendment-2-receipts.txt}"
+  - "isogeny-labs/crypto: taskq/deploy/eks-karpenter/remote/run-request (pinned; lines 55-79)"
+  inputs_note: >-
+    Your context is the three scripts, the tests and the questions. Do not read the director's
+    FINDINGS.md or the evidence/ tree before writing your own answers to (a) to (c). The answers
+    must come from the code, not from the producer's account. You may read them afterwards and say
+    where you disagree.
+  constraints:
+  - >-
+    RT-1 Independence: the reviewer is not the experiment-director session that wrote
+    TASK-20261107-c5a0f4 and did not author or edit any input. It runs in its own session.
+  - >-
+    RT-2 Zero AWS calls of any kind, read-only included. Zero launches. Never run launch_eks.sh or
+    reconcile_run.sh against real AWS. Run them only under tests/fake-aws and fake-launch-remote
+    with a PATH that holds no real aws binary, and prove that in the report (`command -v aws`
+    output). Nothing under the S1 pod-uid prefix is read, real or copied.
+  - >-
+    RT-3 Do not edit any input. Write adversarial fixtures and scripts only under the review
+    directory. A break is reported with its reproducing fixture. It is never patched.
+  - >-
+    RT-4 Read no records.jsonl, audit, replay, run log, arm statistic or ratio.
+  - >-
+    RT-5 Attack at least the following:
+      - (a) a pre-existing or late second pod prefix under runs/<job>/; a pod prefix that matches a
+        prefix of another uid; a receipt_uri pointing outside runs/<job>/launcher/; a status.json
+        whose job.uid or job_name differs; a pod uid containing path characters; a pod that
+        restarted (restartCount > 0); results_uri non-empty but foreign (the branch-(a) trust);
+        a TOCTOU between the listing and the download;
+      - (b) a job-exit.json missing, empty, non-integer, boolean, or 42 as a string; a job-exit from
+        another pod; launch_rc and CodeBuild pairings outside the two accepted ones; a partial
+        download with a nonzero download exit; set -e / pipefail gaps and jq `// empty` defaults;
+      - (c) every external command and env var reachable from reconcile_run.sh and the sourced
+        locator: ISOLAB_* overrides, PATH, CRYPTO_CHECKOUT, and sourcing side effects.
+  - >-
+    RT-6 Do not stage, commit or push. Archive TASK-20261107-9d2b6a commits the review directory.
+  deliverables:
+  - "REPORT.md at the path below. It gives, per question (a) to (d): verdict (break | no break found | conditional), the exact input, the observed output, the reproducing fixture path, and the severity (blocks approval | fix before S2 | note)."
+  - "Adversarial fixtures and the outputs of every command run, under evidence/, with SHA256SUMS."
+  - "A section 'where I disagree with FINDINGS.md', written after (a) to (d)."
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/REPORT.md
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/evidence/
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-9d2b6a/snapshot-receipt.json
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-9d2b6a
+  read_scope:
+  - experiments/EXP-ICPERF-127dbd/implementation
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - tools/experiment_protocol.py
+  - docs/experiment-protocol.md
+  archived_by: TASK-20261107-9d2b6a
+  archive:
+    kind: snapshot
+    binding_mode: content_at_commit
+    executed_by: the shell-holding top-level session in the coordinator role, after the reviewer returns and before the approval decision
+    record_ids: [EXP-ICPERF-127dbd, H-ICPERF-4cb536, DEC-20261107-e41c08]
+    custody_note: >-
+      Per DEC-20261107-6b0f3d ruling 3: this task is not a research_dispatch queue entry. Its
+      custody is a coordinator-written receipt, dispatcher_verified false, at the declared receipt
+      path, which hashes the review files. The approval archive of DEC-20261107-7802ec binds them
+      through the dispatcher. Do not run research_dispatch verification on this receipt.
+    rules: >-
+      Merge origin/main first (never rebase). Stage only the review files and the receipt by name. Run
+      validate_ledger.py and check_merge_hygiene.py. One isolated commit, on a new branch from
+      origin/main. Push, then open a ready-for-review PR with auto-merge after validate_ledger
+      passes. On a refusal, return to the Coordinator.
+  inference:
+    policy: review-adversarial
+    reasoning_effort: null
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only.
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  dispatch_preconditions:
+  - {id: DP-1, text: "The correction PR (DEC-20261107-e41c08 ruling 2) has merged, and the c5a0f4 custody receipt (DEC-20261107-6b0f3d ruling 1) is on main. The reviewer is given that main commit and 0ea4ca81d0, and the three script sha256 values above match at both (DEC-20261107-6b0f3d ruling 3)."}
+  - {id: DP-2, text: "DEC-20261107-e41c08 and this handoff are on main."}
+  completion_gate:
+  - "REPORT.md answers (a) to (d), each with a verdict and either a reproducing fixture or a stated argument."
+  - "Evidence shows zero AWS calls (the fake-aws log and `command -v aws`) and no edit to any input (sha256 of the three scripts re-checked at the end)."
+  - "No commit, push, launch or AWS call by the reviewer. Zero runs."
+  return_format: >-
+    REPORT.md path, the four verdicts with severities, and SHA256SUMS. No statement about C1
+    outcomes.
+  review_required: false
+  review_required_note: This is the review. The Coordinator composes it into DEC-20261107-7802ec.
+  runs_launched: 0

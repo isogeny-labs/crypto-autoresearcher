@@ -293,3 +293,65 @@ outside pools, full triple-atlas amortization and original Prym/Dickson leads
 remain distinct alternatives. Future source/protocol/cost review must precede
 execution. Status remains investigating; no official hypothesis/goal state
 changes or old records are rewritten.
+
+
+## A14 paid helpers and original-coordinate information, 2026-11-06
+
+[A14](../research/prime_field_a14_execution_20261106/RESULTS.md) completed the
+four-program norm32/hybrid32+16/known32/known48 panel. At general-policy budget8
+anchors, norm and hybrid identify33/192 and185/192dependent slots respectively;
+source-free known32/48 identify19/32 and25/32public points. The same32points are
+reused across six norm/hybrid source schedules. Old-coordinate union Delta4..26
+comes after cancelling U; supplied old-coordinate increments are0, collected
+increments4..22 and target-cancellation increments0..8. No new unknown count or
+paid labels are called learned rank. Producer unverified under
+[PCC-20261106-35c953](../pcc/claims/PCC-20261106-35c953.json). [pcc:unverified]
+
+Natural target recovery can precede full old-base rank: hybrid case552 identifies
+four targets from initial natural queries while old source/after-cancellation
+rank remains30/31. Nonetheless target identities are nonmonotone across paid
+programs: one AP1/general/budget2/anchors context has hybrid mask94 vs norm128.
+Own hybrid retains all old source directions here, but constructor equalities
+and target equations differ. All paired/independent producer checks agree on
+the actual rows; no common-cost or universal monotonicity claim follows.
+[pcc:unverified]
+
+The [next-lead ranking](../research/prime_field_a14_execution_20261106/next-leads.md)
+puts an actually executed signed-pair batch/symmetry baseline before further
+coverage/budget comparisons. Existing production batch/paired-sign techniques
+must be reused and measured; this is not a novelty premise. Later known48
+effort controls and unknown outside pools retain their original requirements:
+charge all actual work, cancel auxiliary unknowns before Delta, keep target
+identities and original-row certificates, preserve negative/partial outcomes.
+Full calibrated costs and trusted independent scientific standing remain open.
+Status remains investigating; no old record or hypothesis/goal state changes.
+
+## 2026-11-07 A15: executed common pair-construction baseline
+
+[A15 results](../research/prime_field_a15_execution_20261107/RESULTS.md) retain
+32 actual cold pair builds and17920 old query replays on all16 A14 geometries.
+Exact ordered native pairs and query/native-row/miss/counter checks pass;
+new target solvers/targets/curves remain zero. Cold field vectors and added
+explicit array traffic are separate. This supplies an actual shared-denominator/
+sign-reuse/batch baseline for every future comparator; it does not remeasure old
+coverage, settle full costs or resolve the target-coverage obstruction. Evidence
+is producer-unverified PCC-20261107-c57282. Next technical controls are fresh
+known48 target effort with independent horizon8/24 portfolios and matched
+hybrid/source-free costs, or unknown16 outside-pool old-coordinate information
+with all auxiliary and target columns cancelled. No new trial is approved by
+this note; retain prospective freeze/admission and all current finite gates.
+[pcc:unverified]
+
+
+A16's fresh4curve/32publictarget continuation completed1260dependent systems
+and2520actualpairedsolvercalls, plus576separate matched old-coordinate
+outside-cancellation diagnostics. Known48_h24 recovers96/96dependentpolicy
+slots versus90/96at independently coldh8; h8policyunion alreadycovers all32
+distinctpoints, with extrapolated/adaptive portfolio costs unmeasured.
+There are89norm/hybrid dependentprefix8cases with identified targets and a
+remaining original base kernel; case23has source_rank19,after24of32columns,
+mask0x2a(3targets), withnative/publiccertificates locally checked. This updates
+finite target coverage without closing larger-field, calibrated-cost or
+independent-replay gaps. [Results](../research/prime_field_a16_execution_20261107/RESULTS.continuation.md),
+[PCC-20261107-d1bac1](../pcc/claims/PCC-20261107-d1bac1.json), unverified.
+[pcc:unverified]

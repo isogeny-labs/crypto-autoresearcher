@@ -17,6 +17,7 @@ from typing import Any, Protocol, Sequence
 
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from orchestration.research_task import from_task as research_from_task
 from orchestration.research_budget import enforce_research_budget, agent_wall_limit
 
 SCHEMA = "crypto.autoresearch.dispatch_queue.v1"
@@ -688,6 +689,10 @@ def validate_handoff(task: dict[str, Any], location: str) -> None:
     handoff = task.get("handoff")
     if not isinstance(handoff, dict):
         raise DispatchError(f"{location}.handoff must be an object")
+    try:
+        research_from_task(task)
+    except ValueError as exc:
+        raise DispatchError(f"{location}: {exc}") from exc
     validate_inference(handoff, task.get("role"), f"{location}.handoff")
     for field in ("objective", "uncertainty_reduced"):
         require_text(handoff, field, f"{location}.handoff")

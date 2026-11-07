@@ -1,7 +1,7 @@
 {
   "schema": "experiment.protocol/v1",
   "protocol_id": "IC-C1-DEFERRED-GUARD-FP28-20261106",
-  "version": 2,
+  "version": 3,
   "created": "2026-11-06",
   "repository": "crypto",
   "study_dir": "research/ic_c1_deferred_guard_fp28_20261106",
@@ -34,7 +34,8 @@
     "prefreeze_checks": "research/ic_c1_deferred_guard_fp28_20261106/prefreeze-checks.md",
     "prs": null,
     "amendments": [
-      "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-1.md"
+      "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-1.md",
+      "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md"
     ]
   },
   "question": "On fresh fp28 curves, does prime-abscissa:size=304 + mitm:negation_folded=1 + targets=stride-renew-deferred-guard have lower counted cost S than the walk incumbent (size=407, targets=walk) at every weight w in {0, 0.1, 1} of the section 5a band, on the ea8e9ef7 executable?",
@@ -1328,13 +1329,30 @@
       "supersedes_fields": [
         "PROTOCOL.md section 18, step S01-probe: 'confirms the crypto checkout HEAD is the pinned source'"
       ]
+    },
+    {
+      "id": "C1-AMENDMENT-2",
+      "filed": "2026-11-07",
+      "filed_before_affected_data": true,
+      "reason": "PROTOCOL.md section 9 item 3 requires a protocol_amendment when S1 shows a launcher defect that would equally affect S2. S1 (job ic-c1-dg-s1-20261106, Job uid 8a20d036-efc2-45d2-ada6-6442b93c5a52, pod 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7) ran once and its container exited 42, the expected exit. The pinned launcher taskq/deploy/eks-karpenter/remote/run-request (sha256 c4f75c585ca6c689bdbe3fa4840459df5347696db8901a3e23296239d21e6819) exits at line 68 before it sets pod_uid and results_uri, so for any failed Job its result.json carries pod_uid and results_uri empty (the S1 result.json, sha256 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7, has exactly that shape). launch_eks.sh v3a (sha256 0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0) downloaded only a non-empty results_uri, so it downloaded nothing and exited 5; its 42/43 accept branch was unreachable. S2 uses the same launcher and also exits 42. Filed before any S2 byte exists and before any S1 record beyond the check_job.py set was read; the S1 job output exists and an integrity-count read of it (PD-1, audit and run.stderr counts only) is disclosed in AMENDMENT-2.md section 4.",
+      "changes": [
+        "A job's results are located by implementation/locate_results.sh. A non-empty result.json results_uri is used as is. Otherwise the launcher receipt's status.json is read at receipt_uri: job.uid must equal result.json job_uid, job.job_name must equal the request's job name, exactly one pod must exist (its uid is pod_uid, its terminated exitCode is recorded), and the listing of s3://BUCKET/runs/JOB/ must hold only launcher/ and the pod_uid/ prefix. After the download, job-exit.json pod_uid, job_name and exit_code must equal the located pod, the job name and the status exit code, or the outcome is never job_completed. raw-result.json records results_locator (launcher_result or receipt_status_pod_uid), job_uid and pod_uid. Sections 1, 1b, 1c and 2, the class logic, the 42/43 accept branch, the manifests and the exit codes of launch_eks.sh are unchanged.",
+        "S1 is RUN-ICPERF-8b0d47's job (pod 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7), brought in by a read-only reconciliation (implementation/reconcile_run.sh) under that run id and not rerun: the committed launcher result.json at sha256 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7, the same locator, a download of the pod prefix into the reconciliation step's output directory, the unchanged check_job.py printing CHECK_JOB_OK, and reconcile-result.json. run-summary.json is transported as is: SHA256SUMS must list it at the empty-file sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855. Nothing is written under runs/RUN-ICPERF-8b0d47/.",
+        "The new runbook session runs S01-probe, S02-reconcile-t1, S03-trial-s2 (S2 once on the frozen request-s2.json, only if the reconciliation passed) and S04-verify (the frozen analyze-c1.sh on the reconciled S1 session directory and the S2 session directory), with a fresh run id for S2. The -r2 requests are not bound. The section 10 gate line is 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00, with actual_spend(S1) taken at HB USD 0.93108 until a billing or cost record exists.",
+        "Disclosure of procedure deviation PD-1 (DEC-20261107-b74e2c): before S2 the top-level session read audit.stderr and the tail of run.stderr of the S1 prefix out of band; integrity counts only, no arm statistic, ratio, parity field, compare output or records.jsonl content. No further pre-S2 read outside the check_job.py set is permitted.",
+        "No N, seed, curve, target, arm, weight, threshold, margin, accounting rule, decision mapping, request, instance, deadline, budget line, cap or success criterion changes. PROTOCOL.md is not edited."
+      ],
+      "supersedes_fields": [
+        "PROTOCOL.md section 18, execution route (revision 6 ruling): the layout S01-probe, S02-trials (T1 then T2), S03-verify, for the re-session; extensions.execution_route.steps is superseded for the re-session and not edited",
+        "PROTOCOL.md section 18, S02-trials: 'launch_eks.sh ... downloads the job prefix' (the source of the download is specified by this amendment)"
+      ]
     }
   ],
   "freeze": {
     "status": "frozen",
-    "protocol_sha256": "9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166",
-    "commit": "4c44ad2ab582f0cd38b9fcf0dd0dd49df2800dd6",
-    "frozen_at": "2026-11-06T11:03:41Z",
+    "protocol_sha256": "4b7bf35f34c0ddf5c0e4bee95e1791e6f5d2bc2fb68d4836db9db53d33e9b9cc",
+    "commit": "151779ab979469baaa168e1e88a4097227219084",
+    "frozen_at": "2026-11-07T02:54:43Z",
     "filed_before_affected_data": true
   },
   "extensions": {
@@ -1423,6 +1441,16 @@
         "commit": "339292abed16c2474e404e25f3b72d31b58bd9d8",
         "frozen_at": "2026-11-06T10:11:25Z",
         "reproducible_as": "experiment_protocol.py hash on this document with version set to 1, amendments set to [], links.amendments removed and extensions.c1_amendment_1 removed (verified to give the prior protocol_sha256)"
+      }
+    },
+    "c1_amendment_2": {
+      "file": "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md",
+      "file_sha256": "8fdc60321fb3f3f3741c2a21f65d50f42d563ed065663528d786ca4056393b19",
+      "prior_freeze": {
+        "protocol_sha256": "9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166",
+        "commit": "4c44ad2ab582f0cd38b9fcf0dd0dd49df2800dd6",
+        "frozen_at": "2026-11-06T11:03:41Z",
+        "reproducible_as": "experiment_protocol.py hash on this document with version set to 2, amendments reduced to the first entry (C1-AMENDMENT-1), links.amendments reduced to its first entry and extensions.c1_amendment_2 removed (checked to give the prior protocol_sha256)"
       }
     }
   }

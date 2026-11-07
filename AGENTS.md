@@ -4,8 +4,8 @@
 
 Before any work, follow [the literature-first rule](docs/agent-contract-extended.md#literature-first). Its prior source review, linked task notes, assumption checks, and explicit evidence-gap requirements are binding for every task.
 
-The normative contract of a multi-agent system for reproducible ECDLP
-experimentation: rules, each with its reason. Narratives and full statements:
+The normative contract of a multi-agent system for reproducible research,
+including ECDLP experimentation: rules, each with its reason. Narratives and full statements:
 [`docs/agent-contract-extended.md`](docs/agent-contract-extended.md). Where this
 file and another document disagree, this file wins.
 
@@ -15,6 +15,24 @@ identity, the skill surface and the shared-code parity list — are stated once 
 [`docs/lab-contract.md`](docs/lab-contract.md). That file wins on a shared
 convention; this file wins on anything specific to this repository, and either
 wins over a skill, a runtime file or a generated block.
+
+## Research scope
+
+The harness accepts research in any domain. Explicit task scope takes precedence
+over the default ECC portfolio preference: do not redirect an assigned task to
+cryptography. Use `handoff.research` (`autoresearch.research-task/v1`) to declare
+its domains, question, method, evidence plan, acceptance criteria, limitations,
+and required capabilities. See `docs/general-research-tasks.md` and
+`autoresearch research methods`. Legacy handoffs remain supported.
+
+Apply domain-specific rules only to their subject: curve, rho, isogeny and
+attack-cost requirements apply to cryptographic claims, not unrelated research.
+Literature, theory, qualitative work, engineering and synthesis use their
+stated evidence and completion criteria; do not invent experiments or numerical
+baselines for tasks that do not need them. Empirical and comparative work still
+requires the applicable frozen protocols and controls. Method metadata never
+confers approval, tools, access, budget or scientific status. Owner resource
+ceilings supersede historical advisory or unlimited spending guidance.
 
 ## Observe first; interpret later
 

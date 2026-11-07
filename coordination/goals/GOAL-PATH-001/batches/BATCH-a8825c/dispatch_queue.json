@@ -83,6 +83,51 @@
   "to_state": "completed",
   "reason": "Ledger archive committed alone at 6c54f43511b4 (parent b06d505b7fff, the merge of origin/main cd8c7a41c5) with exactly the seventeen expected paths after OC-1 to OC-6; report.pdf in the artifact store. Zero runs.",
   "paths_or_records_added": []
+ },
+ {
+  "at": "2026-11-07T02:04:31Z",
+  "by": "top-level session (coordinator-portfolio-4y7t3o)",
+  "task_id": "TASK-20261106-2b7223",
+  "from_state": "queued",
+  "to_state": "completed",
+  "reason": "Executor completed HX-1 to HX-10; released at c7340f8f65 with seven non-empty digests and no HX-1 scope finding; start-up suite passed in full, re-run independently. Zero runs.",
+  "paths_or_records_added": []
+ },
+ {
+  "at": "2026-11-07T02:04:31Z",
+  "by": "top-level session (coordinator-portfolio-4y7t3o)",
+  "task_id": "TASK-20261106-96fee7",
+  "from_state": "queued",
+  "to_state": "completed",
+  "reason": "Executor released at c1ba901dfd with four non-empty digests. DEV-1 outcome stopped_infrastructure (harness background-task timeout cap, not the cell watchdog); not restarted, not shrunk. Zero runs.",
+  "paths_or_records_added": []
+ },
+ {
+  "at": "2026-11-07T02:04:31Z",
+  "by": "top-level session (coordinator-portfolio-4y7t3o)",
+  "task_id": "TASK-20261106-dfd0ed",
+  "from_state": "queued",
+  "to_state": "completed",
+  "reason": "Snapshot archive committed alone at 5f6c0924502a (parent c54aa1e858b5) with exactly the twelve expected paths after SA-1 to SA-6. DEV-1 outcome not passed: per SA-9 the queue stops before TASK-20261106-941825 for a fresh act (spare DEC-20261106-24d2a2). Zero runs.",
+  "paths_or_records_added": []
+ },
+ {
+  "at": "2026-11-07T02:52:25Z",
+  "by": "top-level session (coordinator-portfolio-4y7t3o)",
+  "task_id": "TASK-20261106-941825",
+  "from_state": "queued",
+  "to_state": "cancelled",
+  "reason": "Never dispatched (dfd0ed SA-9). Superseded by TASK-20261107-7db1de under DEC-20261106-24d2a2; its RR-5 moves to the DEV-1 verification task the releasing act writes. Zero runs.",
+  "paths_or_records_added": []
+ },
+ {
+  "at": "2026-11-07T02:52:25Z",
+  "by": "top-level session (coordinator-portfolio-4y7t3o)",
+  "task_id": "TASK-20261106-afbe9b",
+  "from_state": "queued",
+  "to_state": "cancelled",
+  "reason": "Its source TASK-20261106-941825 is cancelled. Superseded by TASK-20261107-971edf under DEC-20261106-24d2a2. Zero runs.",
+  "paths_or_records_added": []
  }
  ],
  "tasks": [
@@ -267,7 +312,7 @@
    "id": "TASK-20261106-2b7223",
    "title": "Executor (executor-implementation): close N-5 item 5, NF-1 to NF-7 and the receipt clash in launcher.py with tests that fail on the 9a0b5955 code; M6 killed; zero contract cells, zero runs",
    "role": "executor",
-   "state": "queued",
+   "state": "completed",
    "priority": 90,
    "review_required": false,
    "review_required_note": "FALSE. An instrument; it changes no claim. TASK-20261106-941825 re-reviews it before approval.",
@@ -349,7 +394,7 @@
    "id": "TASK-20261106-96fee7",
    "title": "Executor (executor-implementation): run the unchanged DEV-1 FX-16 cell (F_{10007^2}, m = 3, s = 50) on the 2b7223 bytes, 43,200 s and 16 GB, KAT mode, non-contract; zero runs",
    "role": "executor",
-   "state": "queued",
+   "state": "completed",
    "priority": 89,
    "review_required": false,
    "review_required_note": "FALSE. An instrument KAT; it changes no claim. TASK-20261106-941825 re-reviews it before approval.",
@@ -421,7 +466,7 @@
    "id": "TASK-20261106-dfd0ed",
    "title": "Snapshot archive of the second EXP-MONO-1a1be2 fix round (2b7223) and the DEV-1 cell record (96fee7), one commit, alone among commit tasks; re-binds code_sha256",
    "role": "coordinator",
-   "state": "queued",
+   "state": "completed",
    "priority": 88,
    "review_required": false,
    "review_required_note": "FALSE. An archive stages and verifies. It judges nothing.",
@@ -451,9 +496,22 @@
      "experiments/EXP-MONO-1a1be2/implementation/mutant-check-2b7223.json"
     ],
     "expected_paths_note": "This card's artifact_paths together with those of its two source tasks. If the dispatcher's computed set differs, stop and report.",
-    "commit_sha": null,
-    "parent_sha": null,
-    "path_sha256": {}
+    "commit_sha": "5f6c0924502a804271cc100937bf706021985ed6",
+    "parent_sha": "c54aa1e858b5c3fdb9cf6a89d57202846c0d6e86",
+    "path_sha256": {
+     "coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-dfd0ed/snapshot-receipt.json": "6de123ec4da548002aa15f9d747edec9062ccbe269ced59bd654770dc1d6f0d7",
+     "experiments/EXP-MONO-1a1be2/code/README.md": "44fc3004180b9769ed320b8736a660deac323b449afb1623ca9dd95b2f458aab",
+     "experiments/EXP-MONO-1a1be2/code/launcher.py": "a7dcb7de6c07c2f870c1696e5c021b6af8abec67308bdb430683533189adc2be",
+     "experiments/EXP-MONO-1a1be2/code/tests/test_kat.py": "6da794c6d53bf6d4b39f079994e4d09d5245e358594bc1de819b11ffb05e5a66",
+     "experiments/EXP-MONO-1a1be2/implementation/dev1-junit-96fee7.xml": "2d6030866a7522d787be358f8e1fedff74066a5a5a73ab38e694cf5a8176dfc6",
+     "experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json": "6349fe1a85269dfcda3c7ec3a6b4d96c2e1912d101fd14fe8180b78981754e45",
+     "experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md": "f36ebcc045c91c2013d5bf71d5666daa5712bff780769bb9641c6febf5ced196",
+     "experiments/EXP-MONO-1a1be2/implementation/environment-2b7223.json": "416b1847cf6ac7a44f92036c02811797ec38fad93943575a3abeb50d4e5f40b5",
+     "experiments/EXP-MONO-1a1be2/implementation/environment-96fee7.json": "71abb9e53f95d1fc2dbb3f6ff8d0b5aa0470d256afe531575c3f3be90b8dbbb3",
+     "experiments/EXP-MONO-1a1be2/implementation/fix-report-2b7223.md": "bab73cabd0c7e6b1ae91ff4e22d8796ffb1dbdcc3e2542ae92fcfb62cc641240",
+     "experiments/EXP-MONO-1a1be2/implementation/kat-log-2b7223.json": "3f0ba330907d3eb289d962006fd6ddeccdb21f430025e77042237e221583845d",
+     "experiments/EXP-MONO-1a1be2/implementation/mutant-check-2b7223.json": "c5b05c287e3490b8f8efaa02453a5a1cdac4e3c471bc0835f877712acdce4527"
+    }
    },
    "handoff_record": "ledger/handoffs/TASK-20261106-dfd0ed.yaml",
    "handoff": {
