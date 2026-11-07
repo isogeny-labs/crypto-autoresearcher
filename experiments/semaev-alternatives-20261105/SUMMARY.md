@@ -43,3 +43,4 @@ Pre-registrations in `prereg/round2/`; results in `results/SA-NNb/`.
 | ID | Direction | Verdict | Deciding number |
 |---|---|---|---|
 | SA-15b | Every solver on the frozen m = 4 set | KILL | pair table 100/100 at 1.2e4 and 8.6e5 adds (2^40, 2^56); every non-generic solver 0; Vieta lattice margin −138/−190 bits |
+| SA-13b | Lattice-query lower bound, round 2 | INCONCLUSIVE (open) | volume inequality now proved (C = 2.86, worst measured 0.79); Ω(p^{7/9}) complete for per-target non-adaptive queries; mod p² proof has two named gaps; square-restricted enumeration exponent 1.016 [1.011, 1.023] |
