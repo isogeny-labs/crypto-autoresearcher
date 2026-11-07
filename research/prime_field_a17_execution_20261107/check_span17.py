@@ -10,7 +10,7 @@ import check_online17
 def signature(row):return tuple(row['vector']+row['outside']),row['rhs']
 
 
-def check(full,suppress,fixture):
+def check(full,suppress,fixture,event=lambda value:None):
     a,b=full['case'],suppress['case'];w,nt,r=b['width'],b['target_count'],b['modulus']
     if any(a[k]!=b[k] for k in ('width','target_count','modulus','source','targets')):raise ValueError('same mathematical native system required')
     if len(b['source'])!=w or any(v!=[int(i==j) for i in range(w)] for j,(v,rhs) in enumerate(b['source'])):
@@ -41,10 +41,13 @@ def check(full,suppress,fixture):
         else:
             if key not in candidate:raise ValueError('queried/registry reference row absent from candidate')
             weights={w+candidate[key]:1};kind='actual_candidate_row'
+        witness=dict(reference_target_row=index,kind=kind,native_weights=[[j,v] for j,v in sorted(weights.items())])
+        event(dict(kind='row_consequence_proposed',witness=witness))
         vector=[sum(weight*rows[j][k] for j,weight in weights.items())%r for k in range(w+nt)]
         value=sum(weight*values[j] for j,weight in weights.items())%r
         if vector!=row['vector']+row['outside'] or value!=row['rhs']:raise ValueError('reference row is not a candidate consequence')
-        proof.append(dict(reference_target_row=index,kind=kind,native_weights=[[j,v] for j,v in sorted(weights.items())]))
+        proof.append(witness)
+        event(dict(kind='row_consequence_checked',reference_target_row=index,witness_sha256=commitment(witness)))
     return dict(checked=True,namespace='independent_row_consequence_diagnostic',not_target_solver=True,
         full_target_rows=len(a['target']),candidate_target_rows=len(b['target']),omitted_reference_rows=omitted,
         reference_case_sha256=commitment(a),candidate_case_sha256=commitment(b),witnesses=proof,

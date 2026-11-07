@@ -4,6 +4,10 @@ import subprocess
 from deps17 import HERE,ROOT,custody16
 
 INPUTS=HERE/'inputs.json';NATIVE=HERE
+PRIOR=ROOT/'research/prime_field_a16_execution_20261107'
+BUDGET_INPUTS=[PRIOR/'root-release.json',PRIOR/'runs/a16-target-effort-3d7f9e/execution.json',
+    PRIOR/'runs/a16-target-effort-c4b950/execution.json',PRIOR/'validation/native-report-postprocess-resource.json',
+    PRIOR/'validation/database-v20-postprocess-resource.json']
 PROGRAMS=['suppress','full'];ARMS=['suppress','full','joint_on_suppress','joint_on_full']
 PARAMETERS=dict(curves=4,targets=8,programs=PROGRAMS,execution_arms=ARMS,case_systems=8,
     online_engine_executions=4,batch_solver_calls=12,joint_controls=8,export_execution_rows=16,
@@ -57,7 +61,7 @@ def executions(rules):
 def bindings(commit):
     rules=load(INPUTS);validate_rules(rules)
     inputs=[INPUTS,ROOT/'research/prime_field_a16_execution_20261107/protocol.continuation.json',
-        *[ROOT/v['path'] for v in rules['exclusion_sources']]]
+        *[ROOT/v['path'] for v in rules['exclusion_sources']],*BUDGET_INPUTS]
     groups=[]
     for paths in (SOURCES,inputs):
         group={}

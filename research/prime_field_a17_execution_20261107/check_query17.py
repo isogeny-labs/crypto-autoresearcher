@@ -167,6 +167,8 @@ def check(prepared,collected,cloud,cache,result,events,rules,arm,oracle,capabili
             if rec['target_index']!=t:raise ValueError('online target order')
             check_solver.member(rec,[int(j==t) for j in range(nt)],rows,values,online['system'],r)
     cache_proof=old_check.target_cache(prepared,collected,cache,oracle)
+    cache_verified=dict(owner=cache.descriptor(),records=cache.records,engine_records=cache.engines.records[cache.engine_start:],
+        engine_start=cache.engine_start,phases=cache.meter.phases,counters=cache.meter.counters())
     return dict(checked=True,owner=owner,skipped_slots=skipped,executed_extra_slots=23*nt-skipped,
         own_prefix_certificates=len(certified),independent_prefix_scans=scans,dense_rank_evaluations=dense_rank_evaluations,
-        geometric_queries=len(cache.records),cache=cache_proof,producer_output_sha256=commitment(result))
+        geometric_queries=len(cache.records),cache=cache_proof,cache_output_sha256=commitment(cache_verified),producer_output_sha256=commitment(result))

@@ -32,8 +32,15 @@ chosen three-atom scalar fixture exercises this boundary; it is software-only
 and does not supply target scalar labels to the native program. No native48
 pilot or calibrated saving is claimed. [pcc:unverified]
 
-The full admitted controller, prospective exact-source contract, aggregate
-cost/export and native report/database path remain to be completed. Do not execute native curves/targets
+The admitted controller, bounded supervisor, prospective protocol/release builder
+and complete/partial cost exporter are implemented. The full software suite
+now has 24 passing checks (`validation/full-software-controls.txt`). The extra
+controller fixtures explicitly mock generation/base/prelude/storage receipts
+for metadata I/O while using real fixed p211 three-atom constructor/query/
+causal/native algebra/row-consequence components; they are not admissible native
+archives. Cost or journal alterations, missing/failed work, admission refusal,
+resource expansion and inherited Git configuration are tested. The native
+report/database path follows actual execution; no native run has occurred. Do not execute native curves/targets
 through these preparation APIs. A16's two consumed releases authorize no third
 attempt; this distinct successor needs its own complete prospective contract
 and normal admission. No construction saving, calibrated speedup or novelty is
