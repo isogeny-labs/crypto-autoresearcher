@@ -1,0 +1,105 @@
+{
+  "stage": "revise",
+  "public": {
+    "question": "Compute count and sum of value for each group A and B, including negative values.",
+    "rows": [
+      {
+        "group": "A",
+        "value": 27
+      },
+      {
+        "group": "A",
+        "value": -6
+      },
+      {
+        "group": "B",
+        "value": -17
+      },
+      {
+        "group": "B",
+        "value": -7
+      },
+      {
+        "group": "B",
+        "value": 4
+      },
+      {
+        "group": "A",
+        "value": -19
+      },
+      {
+        "group": "A",
+        "value": 10
+      },
+      {
+        "group": "A",
+        "value": -19
+      },
+      {
+        "group": "B",
+        "value": -11
+      },
+      {
+        "group": "B",
+        "value": 14
+      },
+      {
+        "group": "A",
+        "value": -11
+      },
+      {
+        "group": "B",
+        "value": 1
+      },
+      {
+        "group": "B",
+        "value": -13
+      },
+      {
+        "group": "B",
+        "value": -7
+      },
+      {
+        "group": "B",
+        "value": 9
+      },
+      {
+        "group": "A",
+        "value": 24
+      }
+    ],
+    "answer_shape": {
+      "A": {
+        "count": "integer",
+        "sum": "integer"
+      },
+      "B": {
+        "count": "integer",
+        "sum": "integer"
+      }
+    }
+  },
+  "previous": {
+    "plan": {
+      "steps": [
+        "Separate all rows into groups A and B, preserving negative values and duplicate rows.",
+        "Compute each group's row count and sum of signed values.",
+        "Verify every row was included exactly once and return the results in the requested answer shape."
+      ]
+    },
+    "answer": {
+      "A": {
+        "count": 7,
+        "sum": 6
+      },
+      "B": {
+        "count": 9,
+        "sum": -27
+      }
+    },
+    "review": {
+      "approved": true,
+      "feedback": "Independently verified all 16 rows, including negative values and duplicates: A has count 7 and sum 6; B has count 9 and sum -27. The submitted answer is correct."
+    }
+  }
+}
