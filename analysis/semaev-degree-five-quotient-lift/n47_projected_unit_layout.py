@@ -44,9 +44,19 @@ def profile(path, expected_sha256, variable):
         if len(retained) != expected_columns:
             raise ValueError('wrong projected monomial count')
 
+        original_representatives = [None] * q
+        for i in range(columns):
+            start = row_start + i * width
+            value = int.from_bytes(data[start:start + width], 'little')
+            if value and value & (value - 1) == 0:
+                original_representatives[value.bit_length() - 1] = i
+        if any(i is None for i in original_representatives):
+            raise ValueError('original map lacks unit representatives')
+
         seen = 0
         safe = 0
         literal = 0
+        safe_representatives = [None] * q
         for i in reversed(retained):
             start = row_start + i * width
             value = int.from_bytes(data[start:start + width], 'little')
@@ -56,7 +66,12 @@ def profile(path, expected_sha256, variable):
                 literal |= value
                 if not seen & value:
                     safe |= value
+                    safe_representatives[value.bit_length() - 1] = i
             seen |= value
+        original_retained = [j for j, i in enumerate(original_representatives)
+                             if not masks[i] & (1 << variable)]
+        retained_original_safe = all(safe_representatives[j] == original_representatives[j]
+                                     for j in original_retained)
     missing = q - bin(safe).count('1')
     return {'schema': 'semaev.projected-unit-layout/v1',
             'source_sha256': expected_sha256, 'eliminated_variable': variable,
@@ -65,6 +80,8 @@ def profile(path, expected_sha256, variable):
             'codimension_claimed': q,
             'literal_unit_coordinates': bin(literal).count('1'),
             'reverse_safe_unit_coordinates': q - missing,
+            'original_unit_representatives_retained': len(original_retained),
+            'retained_original_representatives_are_safe': retained_original_safe,
             'coordinates_requiring_projected_elimination': missing,
             'projected_bitset_payload_bytes': expected_columns * 8 * ((missing + 63) // 64),
             'scope': 'Read-only layout of an existing D4 map. Does not establish projected rank, checker acceptance, actual rebased border, or D5 nonmembership.'}

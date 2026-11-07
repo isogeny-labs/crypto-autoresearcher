@@ -45,10 +45,23 @@ found exactly 50,621 literal unit coordinates, all reverse-safe under the
 selective rebase's rule. The remaining 10,575 coordinates require projected
 elimination; its bitset payload is 259,901,552 bytes. This agrees with the
 earlier count of 10,575 original representatives containing x_47. The
-replayable source and result are `n47_projected_unit_layout.py` and
-`n47-rand00-projected-unit-layout-001.json`. The 8 GiB rebase cap remains an
+replayable source and strengthened result are `n47_projected_unit_layout.py`
+and `n47-rand00-projected-unit-layout-002.json`; V1 remains retained. V2
+checks that every one of the 50,621 original unit representatives omitting
+x_47 is exactly the reverse-safe representative for its coordinate. The
+8 GiB rebase cap remains an
 admission limit, not a measured peak-memory guarantee. The scan does not
 prove projected rank or determine the rebased border.
+
+The selective rebase source retains every reverse-safe unit representative.
+Consequently, all 86,343 original border monomials that omit x_47 still have
+their degree-four faces among the retained representatives. **86,343 is a
+lower bound on the actual rebased border** for this exact selective method,
+not merely a heuristic estimate. Since the 64 GiB source envelope permits at
+most 103,156 border coordinates, the 10,575 replacement representatives may
+create at most **16,813** additional border coordinates for that envelope to
+admit the D5 worker. The independent D4 checker and actual border profile are
+still required before using the result as a seed or launch decision.
 
 The next admissible computation is an exact projection and rebase for one of
 x_45–x_47, followed by independent checking of the sliced D4 map and a fresh
