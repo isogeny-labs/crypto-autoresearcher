@@ -21,7 +21,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
-from .. import role_registry, task_context
+from .. import role_registry, task_context, research_task
 from ..adapter import config as config_module
 from ..adapter import manifest as manifest_module
 from ..adapter import resolver as resolver_module
@@ -121,6 +121,7 @@ def _context_paths(task: dict[str, Any]) -> list[str]:
 def task_brief(task: dict[str, Any], scope: TaskScope, tool_names: list[str]) -> str:
     """The task envelope, including the limits the tools will actually enforce."""
     handoff = task["handoff"]
+    research = research_task.from_task(task)
     budget = handoff.get("budget") or {}
     role = str(task.get("role") or "")
 
@@ -144,6 +145,7 @@ def task_brief(task: dict[str, Any], scope: TaskScope, tool_names: list[str]) ->
     return "\n\n".join([
         f"TASK {scope.task_id} — role: {role}",
         block("Objective", handoff.get("objective")),
+        *([research_task.render(research)] if research is not None else []),
         block("Uncertainty to reduce", handoff.get("uncertainty_reduced")),
         block("Inputs", handoff.get("inputs")),
         block("Explicit context files (read these first)", _context_paths(task)),

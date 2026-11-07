@@ -1,0 +1,107 @@
+{
+  "stage": "review",
+  "public": {
+    "question": "Classify each claim from this synthetic source register: supported if only positive evidence, contradicted if only negative evidence, unresolved if conflicting or absent. Cite all source IDs for each claim. Do not infer beyond this register.",
+    "claims": [
+      "claim-0",
+      "claim-1",
+      "claim-2",
+      "claim-3"
+    ],
+    "sources": [
+      {
+        "id": "source-0",
+        "claim": "claim-0",
+        "supports": true
+      },
+      {
+        "id": "source-1",
+        "claim": "claim-1",
+        "supports": false
+      },
+      {
+        "id": "source-2",
+        "claim": "claim-2",
+        "supports": false
+      },
+      {
+        "id": "source-3",
+        "claim": "claim-3",
+        "supports": true
+      },
+      {
+        "id": "source-4",
+        "claim": "claim-3",
+        "supports": false
+      }
+    ],
+    "answer_shape": {
+      "supported": [
+        {
+          "claim": "claim-ID",
+          "sources": [
+            "source-ID"
+          ]
+        }
+      ],
+      "contradicted": [
+        {
+          "claim": "claim-ID",
+          "sources": [
+            "source-ID"
+          ]
+        }
+      ],
+      "unresolved": [
+        {
+          "claim": "claim-ID",
+          "sources": [
+            "source-ID"
+          ]
+        }
+      ]
+    }
+  },
+  "previous": {
+    "plan": {
+      "steps": [
+        "Read the complete inputs.",
+        "Compute the requested output.",
+        "Check all cases."
+      ]
+    },
+    "answer": {
+      "supported": [
+        {
+          "claim": "claim-0",
+          "sources": [
+            "source-0"
+          ]
+        }
+      ],
+      "contradicted": [
+        {
+          "claim": "claim-1",
+          "sources": [
+            "source-1"
+          ]
+        },
+        {
+          "claim": "claim-2",
+          "sources": [
+            "source-2"
+          ]
+        }
+      ],
+      "unresolved": [
+        {
+          "claim": "claim-3",
+          "sources": [
+            "source-3",
+            "source-4"
+          ]
+        }
+      ]
+    }
+  }
+}

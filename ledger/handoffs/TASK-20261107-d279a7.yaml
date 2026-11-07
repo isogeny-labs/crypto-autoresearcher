@@ -1,0 +1,103 @@
+# SNAPSHOT ARCHIVE of the B8-D DEV-1 verification (TASK-20261107-af7359), ALONE among commit tasks.
+# The approval act names this commit as "the DEV-1 verification snapshot commit (B8-D)"
+# (DEC-20261106-24d2a2 SC-5). Executed by the shell-holding top-level session in the coordinator
+# role. It judges nothing. Zero runs.
+handoff:
+  id: TASK-20261107-d279a7
+  from: coordinator
+  to: coordinator
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-342e48
+  authorized_by: DEC-20261107-f46a40 dev1_verification
+  objective: >-
+    After SA-1 to SA-5, commit and bind exactly the three expected paths in ONE isolated snapshot
+    commit. Verify, push, and refresh the ready-for-review PR. Runs alone among commit tasks.
+  uncertainty_reduced: >-
+    None about the mathematics. It makes the B8-D verification durable before the approval act,
+    or a fresh act, reads it.
+  inputs:
+    - ledger/handoffs/TASK-20261107-af7359.yaml
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-eebc5b/snapshot-receipt.json
+  constraints:
+    - SA-1 Merge origin/main, and never rebase. Record base_commit_checked and merge_outcome. A conflict inside a record stops the archive.
+    - >-
+      SA-2 The two af7359 files equal their release digests, review_attestation.yaml parses, and
+      its commit reviewed equals the eebc5b commit_sha in the BATCH-c077fd queue. git status shows
+      no other changed or untracked path under coordination/goals/GOAL-PATH-001/review/ or
+      experiments/EXP-MONO-1a1be2/, ignored files included. Artifact-store hydrations equal to
+      their tracked .artifacts.json manifests are recorded, and are not counted as strays.
+      Otherwise stop and report to a fresh act (spare DEC-20261107-856d9b).
+    - >-
+      SA-3 Run python3 tools/check_review_independence.py --batch
+      coordination/goals/GOAL-PATH-001/batches/BATCH-342e48 and record its output. Record from the
+      attestation, as written and without interpretation:
+      - the B8-D verdict;
+      - the finding counts by severity;
+      - the DV-3 result and target count;
+      - the DV-4 result.
+    - >-
+      SA-4 Stage the three paths one by one; content_at_commit. The commit message names
+      TASK-20261107-d279a7, TASK-20261107-af7359, TASK-20261107-bc7a76 and EXP-MONO-1a1be2. It
+      states the B8-D verdict word and the finding counts only, that nothing is approved, and that
+      there are zero runs. It gives no KAT value, timing, lemma value or formula.
+    - >-
+      SA-5 Verify with tools/research_dispatch.py, push, and refresh the PR with auto-merge.
+      Release with --artifact <path>=<sha256> for the receipt. Never amend, rebase or force-push.
+      Zero runs.
+      If the B8-D verdict is not passed, still archive it, so that the record is preserved. A
+      fresh act then decides (spare DEC-20261107-856d9b), and B1 is not cleared.
+      If it is passed, B8 clears together with the 971edf B8-H pass. The approval act declared by
+      DEC-20261106-475620 then becomes the next act, with SC-1 to SC-5. It names the eebc5b, 971edf
+      and d279a7 commits.
+  deliverables:
+    - >-
+      coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7/snapshot-receipt.json,
+      holding commit_sha (null inside the commit), parent_sha, base_commit_checked, merge_outcome,
+      binding_mode, path_sha256 and record_ids; the SA-2 and SA-3 outcomes; and the validator,
+      hygiene and dispatcher outcomes.
+    - One isolated commit, a pushed branch and a refreshed PR.
+  artifact_paths:
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7/snapshot-receipt.json
+  write_scope:
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7
+  archived_by: TASK-20261107-d279a7
+  archive:
+    kind: snapshot
+    binding_mode: content_at_commit
+    source_task_ids: [TASK-20261107-af7359]
+    record_ids: [EXP-MONO-1a1be2, BATCH-342e48, TASK-20261107-af7359, TASK-20261107-d279a7, TASK-20261107-bc7a76]
+    expected_paths:
+      - coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-d279a7/snapshot-receipt.json
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/dev1_verification.md
+      - coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/review_attestation.yaml
+    expected_paths_note: This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default (high).
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 1
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: RP-1, text: "archived_by is bound (SELF)."}
+    - {id: RP-2, text: "TASK-20261107-af7359 has a completed release with two non-empty digests."}
+    - {id: RP-3, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json TASK-20261107-d279a7 --as <addr> --ttl-minutes 45 --publish."}
+    - {id: RP-4, text: "No other commit task is live, and no DEV-1 attempt is live."}
+  completion_gate:
+    - origin/main merged (never rebased), with base_commit_checked and merge_outcome recorded.
+    - The SA-2 and SA-3 outcomes are in the receipt.
+    - One commit binds exactly the three expected paths, and the receipt verifies under tools/research_dispatch.py.
+    - The branch is pushed, and the ready-for-review PR names TASK-20261107-af7359.
+    - The release carries a non-empty digest. Zero runs.
+  return_format: The snapshot receipt, the B8-D verdict word and finding counts, the independence-check output, the PR reference and the release digest.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. An archive stages and verifies. It judges nothing.
+  runs_launched: 0

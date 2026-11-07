@@ -11,6 +11,8 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'src'))
 from crypto_autoresearcher.index_calculus.curve import Curve as RepoCurve
 from crypto_autoresearcher.index_calculus.factor_base import FactorBase
+from crypto_autoresearcher.index_calculus.decompose import decompose_all
+from crypto_autoresearcher.index_calculus.tails import TailTable
 
 
 class ConstructionTests(unittest.TestCase):
@@ -54,12 +56,13 @@ class ConstructionTests(unittest.TestCase):
             self.assertEqual(phi.forward(E.add(P,Q)),F.add(phi.forward(P),phi.forward(Q)))
         r,G,H=E.subgroup(); H1=[phi.forward(P) for P in H]
         for P,Q in zip(H,H1): self.assertEqual(phi.normalize(Q,r),P)
-        # Digit set 0..15; preserve signs and globally deduplicate columns.
-        bases=[[P for P in HH if P and P[0]<16] for HH in (H,H1)]
+        # Full-subgroup normalization control; no digit-window yield claim.
+        bases=[[P for P in HH if P] for HH in (H,H1)]
         transported=[bases[0],[phi.normalize(P,r) for P in bases[1]]]
         columns=sorted(set(transported[0]+transported[1])); index={P:i for i,P in enumerate(columns)}
         rows=[]; logs={P:j for j,P in enumerate(H)}
         for local,curve,normalize in [(bases[0],E,lambda P:P),(bases[1],F,lambda P:phi.normalize(P,r))]:
+            local_rows=[]
             for P,Q in product(local,repeat=2):
                 T=curve.add(P,Q)
                 if T not in local: continue
@@ -67,6 +70,9 @@ class ConstructionTests(unittest.TestCase):
                 for sign,Z in [(1,P),(1,Q),(-1,T)]: row[index[normalize(Z)]]+=sign
                 self.assertEqual(sum(v*logs[P] for P,v in zip(columns,row))%r,0)
                 rows.append(row)
+                local_rows.append(row)
+            self.assertGreater(len(local_rows),0)
+            self.assertGreater(rank_mod(local_rows,r),0)
         self.assertLessEqual(rank_mod(rows,r),max(0,len(columns)-1))
         # Validate rank code independently on dependent and independent matrices.
         self.assertEqual(rank_mod([[1,2],[2,4]],13),1)
@@ -76,6 +82,10 @@ class ConstructionTests(unittest.TestCase):
         E=Curve(101,3,2); values=[0,1,2,3]; stages=membership_chain(E,3,values)
         X=s.Symbol('X')
         for x in range(101):
+            bits=membership_circuit(E,3,values,x)
+            self.assertEqual(membership_circuit(E,3,values,x,[1,3]),{i:bits[i] for i in (1,3)})
+            for i,stage in enumerate(stages):
+                self.assertEqual(bits[i],factored_member(stage,x,101))
             q=x; current=E
             for stage in stages:
                 direct=q is not None and q in values
@@ -153,6 +163,8 @@ class ConstructionTests(unittest.TestCase):
         self.assertEqual(equation_dimension([s.Poly(x*y,x,y)],(x,y)),'positive_dimensional')
         self.assertEqual(equation_dimension([s.Poly(1,x,y)],(x,y)),'inconsistent')
         self.assertEqual(equation_dimension([],(x,y)),'insufficient_equations')
+        for modulus,bounds,polys in [(0,[8,8],fs),(101,[8],fs),(101,[-1,8],fs),(101,[8,8],[s.Poly(x/2,x,y)])]:
+            with self.assertRaises(ValueError): certified_integer_equations(polys,modulus,bounds)
 
     def test_87_complement_controls_actual_families(self):
         RE=RepoCurve(101,2,3); E=Curve(101,0,2,3)
@@ -166,6 +178,18 @@ class ConstructionTests(unittest.TestCase):
                 oracle=[ts for ts in product(signed,repeat=arity) if self.partial(E,ts)==T]
                 self.assertEqual(set(plants),set(oracle))
                 self.assertTrue(plants)
+                # Collector reachability excludes some cancelling tuples.
+                # Compare the two actual collectors and audit every returned row.
+                scalar=decompose_all(RE,fb,T,arity,accelerate=False)
+                table=TailTable(RE,fb,2,accelerate=False)
+                mitm=decompose_all(RE,fb,T,arity,accelerate=False,table=table)
+                self.assertEqual(scalar,mitm)
+                self.assertTrue(mitm)
+                plant_multisets={tuple(sorted(ts)) for ts in plants}
+                for row in mitm:
+                    points=tuple(fb.points[i] if sign>0 else E.neg(fb.points[i]) for i,sign in row)
+                    self.assertIn(tuple(sorted(points)),plant_multisets)
+                    self.assertTrue(verify_relation(E,base,T,points))
                 for ts in plants: self.assertTrue(verify_relation(E,base,T,ts))
                 wrong=next(P for P in E.points() if P!=T)
                 self.assertFalse(verify_relation(E,base,wrong,plants[0]))

@@ -1,0 +1,735 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "<run>/execution.json",
+      "<run>/raw/*.json[.gz]",
+      "<run>/raw/*.jsonl[.gz]"
+    ],
+    "outputs": [
+      "<run>/metrics.json",
+      "<run>/analysis.json[.gz]",
+      "<run>/export.json[.gz]"
+    ],
+    "script": {
+      "path": "analyze17.py",
+      "sha256": "6ccd0eae0adc5faaa42a6f1fdee27d40ae884cad13b2dd7ba874cf758beb0438"
+    }
+  },
+  "arms": [
+    {
+      "description": "Four own known48/full24 constructions. Persistent eight-target row space, known substitution, unresolved membership and native/public certification before skipping later coordinates. Mandatory eight natural queries always paid.",
+      "id": "suppress",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a17_execution_20261107/driver17.py"
+          ]
+        ],
+        "commit": "d85942ad06b8b8559f03fdc3663019cfbe15f1f0",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "batch_solver_calls": 12,
+        "case_systems": 8,
+        "curves": 4,
+        "execution_arms": [
+          "suppress",
+          "full",
+          "joint_on_suppress",
+          "joint_on_full"
+        ],
+        "export_execution_rows": 16,
+        "formal_endpoints_per_program": 192,
+        "joint_controls": 8,
+        "mandatory_natural_queries": 8,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 192,
+        "online_engine_executions": 4,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "suppress",
+          "full"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "source_queries": 0,
+        "supplied_known_base": 48,
+        "target_horizon": 24,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Four independently cold known48/full24 constructions, all round-robin query slots, then actual partial_joint batch solve. Same public base/target/recipe identities, separately owned paid execution.",
+      "id": "full",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a17_execution_20261107/driver17.py"
+          ]
+        ],
+        "commit": "d85942ad06b8b8559f03fdc3663019cfbe15f1f0",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "batch_solver_calls": 12,
+        "case_systems": 8,
+        "curves": 4,
+        "execution_arms": [
+          "suppress",
+          "full",
+          "joint_on_suppress",
+          "joint_on_full"
+        ],
+        "export_execution_rows": 16,
+        "formal_endpoints_per_program": 192,
+        "joint_controls": 8,
+        "mandatory_natural_queries": 8,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 192,
+        "online_engine_executions": 4,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "suppress",
+          "full"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "source_queries": 0,
+        "supplied_known_base": 48,
+        "target_horizon": 24,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Four actual native sparse_joint controls on exactly the candidate final pools; no borrowed full-reference rows.",
+      "id": "joint_on_suppress",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a17_execution_20261107/driver17.py"
+          ]
+        ],
+        "commit": "d85942ad06b8b8559f03fdc3663019cfbe15f1f0",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "batch_solver_calls": 12,
+        "case_systems": 8,
+        "curves": 4,
+        "execution_arms": [
+          "suppress",
+          "full",
+          "joint_on_suppress",
+          "joint_on_full"
+        ],
+        "export_execution_rows": 16,
+        "formal_endpoints_per_program": 192,
+        "joint_controls": 8,
+        "mandatory_natural_queries": 8,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 192,
+        "online_engine_executions": 4,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "suppress",
+          "full"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "source_queries": 0,
+        "supplied_known_base": 48,
+        "target_horizon": 24,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "control_positive"
+    },
+    {
+      "description": "Four actual native sparse_joint controls on exactly the full-reference final pools.",
+      "id": "joint_on_full",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a17_execution_20261107/driver17.py"
+          ]
+        ],
+        "commit": "d85942ad06b8b8559f03fdc3663019cfbe15f1f0",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "batch_solver_calls": 12,
+        "case_systems": 8,
+        "curves": 4,
+        "execution_arms": [
+          "suppress",
+          "full",
+          "joint_on_suppress",
+          "joint_on_full"
+        ],
+        "export_execution_rows": 16,
+        "formal_endpoints_per_program": 192,
+        "joint_controls": 8,
+        "mandatory_natural_queries": 8,
+        "maximum_affine_labels": 8192,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_pair_entries": 8192,
+        "maximum_rows": 4096,
+        "maximum_target_cache_points": 192,
+        "online_engine_executions": 4,
+        "pair_constructor": "a15_batched",
+        "programs": [
+          "suppress",
+          "full"
+        ],
+        "query_engines": [
+          "scalar",
+          "batch"
+        ],
+        "source_queries": 0,
+        "supplied_known_base": 48,
+        "target_horizon": 24,
+        "target_policy": "general",
+        "targets": 8
+      },
+      "role": "control_positive"
+    }
+  ],
+  "authors": [
+    "Root implementer and delegated administrative exact-source Coordinator; configured model identity unverified"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "C-query-suppression"
+      ],
+      "id": "A17-certified-query-suppression",
+      "text": "Fresh finite named target outcomes, actual causally certified skips, row consequences, and separate paid primitive/array vectors. No predetermined saving, complete-cost/runtime advantage, novelty or transfer to unknown-base settings."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Marked p<=211 deterministic repeats and independent exact group/constructor/matrix/counter checks; no clock inference.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Future/borrowed/reordered or failed public certificates, missing known units/rows, altered assembly/scheduling costs even with coordinated hash edits, wrong policy/cache/owner/caps and failed paid prefixes rejected. Metadata controls do not execute native mathematics.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Seventeen marked p211 component checks with three known atoms include a real query producing a native/public certificate before later skips, and omitted reference rows reconstructed from the actual candidate. No fullwidth48 toy replay or native pilot.",
+      "present": false
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "C-query-suppression"
+    ],
+    "effect_size_measure": "No population or performance effect inferred.",
+    "interval": "none_exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "Exact named masks, causally permitted skips, native row containment and separate included costs.",
+    "text": "Compare own complete cold suppress versus full vectors for each curve. Every omitted reference row must follow from candidate rows, all supplied units and earlier certified target proofs. Record adverse/equal/incomparable vectors as observed. Online update/membership/lifting/public checks are charged; full reference batch scheduling differs. Neither skipped slots nor equal formal endpoints imply avoided physical query cost.",
+    "threshold": "No favorable outcome required; exact completion/controls only. Incomplete costs and unsigned producer assertions do not establish complete attack or trusted execution standing.",
+    "verdict_vocabulary": [
+      "completed_within_scope",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": null,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "concurrent_compute_processes": 1,
+      "isolated_clock_claim": false,
+      "memory_bytes": 2147483648,
+      "shared_managed_host": true
+    },
+    "queue": null,
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "extensions": {
+    "checkpoint_semantics": "Actual admitted-start/PIDs before generation and four closed-curve lossless gzip/hash checkpoints; no restore/restart.",
+    "cloud_policy": "Original deadline and conservative remaining-window reservation, one existing worker/thread2GiB/one attempt/no retry/new capacity.",
+    "cost_limits": "Separate physical/conditional vectors and logical costs, nonadditive cold views. Curve generation/order/norm fixture, independent checkers/row diagnostic, hash/pow internals/Python/NumPy/OS/IO remain separately retained or partly unexpanded. No calibrated runtime/attack-cost assertion.",
+    "grid": "Four curves x two owned programs = eight cases; candidate four online engines, full four partial_joint batch calls and eight own-pool sparse_joint controls. Sixteen algorithm export rows, not sixteen batch solver calls.",
+    "literature": "literature.md: prior source-free known target recovery, online row membership, full-horizon constructors; A15 independent retained-row review leaves construction-vector/authenticated execution open. No novelty claim.",
+    "model_verified": false,
+    "official_status_transition": false,
+    "ownership": "Both public48 base builds before targets; own complete GENERAL24 setup/192 endpoints/Registry, independent caches and natural8 queries. Candidate first; fixed round-robin extras; no future work subsidy.",
+    "proof_status": "Producer checks/hash/Git/S3/admin readiness are not signed independent scientific/execution/replay proof.",
+    "safe_boundary": "All base units supplied. Omitted-row native proof uses actual candidate rows plus earlier target certificate and known units; no unknown-base generalization."
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "95d737f3eef7a405bac3214a072071737f86a393b5f7f863229c9777aca6c5be",
+    "commit": "d85942ad06b8b8559f03fdc3663019cfbe15f1f0",
+    "frozen_at": "2026-11-07T03:32:41Z",
+    "filed_before_affected_data": true
+  },
+  "inadmissible": [
+    "Native curve/target generation before exact published runnable source/input/protocol/current canonicalS3/root release/normal admission.",
+    "Borrowing future or reference rows, suppressing unsupplied-base information, changing schedule/caps/targets after outcomes, or retrying a consumed release.",
+    "Calling duplicate mathematical base constructions independent bases, repeated32 target outcomes independent draws, skipped slots physical queries saved, array traffic RSS, primitive vectors calibrated runtime/complete attack cost or novelty."
+  ],
+  "invalidation_rules": [
+    "Missing exact published closure, prospective freeze, root release, normal real admission, lease/consumed marker, original deadline/resource bound or actual start/closed checkpoints prevents complete-panel status.",
+    "Any future/reference/checker/other-arm knowledge used for an online skip, certificate published before native/public checks, omitted mandatory natural or Registry rows, unknown native units, or constructor/query ownership/cost failure invalidates that case.",
+    "Independent constructor/group/pair/query/counter/native matrix checks and full-payload commitments must agree. Candidate and full native joint controls must match own primary targets; independent row consequences must explain all reference rows.",
+    "Phase conservation/journal bytes/checkpoint ordinals/PIDs and actual online/batch census must match. Unchecked payloads are unverified and missing cases remain unknown."
+  ],
+  "links": {
+    "design": "design.md",
+    "literature": "literature.md",
+    "prior": "../prime_field_a16_execution_20261107/next-leads.md"
+  },
+  "literature": [
+    {
+      "claim": "Restrict suppression to fully known base and retain full construction/online proof costs; source custody and independent signed execution remain distinct.",
+      "provenance": "internal",
+      "ref": "literature.md; A16 full24/known48 results; A15 independent review; inherited native and target membership sources",
+      "verified_by": "Root primary source review2026-11-07 before implementation"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [
+      "Separate actual Fp/Fr add/sub/mul/inv, EC APIs and explicit pair/query NumPy allocation bytes; all own base/prelude/recipe/index/natural/full24 construction/cache/assembly/scheduling/primary algebra components.",
+      "Actual physical endpoint engines, cache lookups/hits/geometric queries, certified/skipped/executed slots, online inserts/scans/lifts/checks, full batch and both-pool native joint controls."
+    ],
+    "isolation_required": "none",
+    "order": "sequential",
+    "record": [
+      "Exact source/input/interpreter/NumPy identities, pre-output Git status and exact tracked/staged diffs, protected hashes before/after; no model identity or signed execution attestation invented.",
+      "Producer outputs before checker receipts, immutable prefix certificates and paid failed phases; complete row-consequence proposals/checks after both programs, never candidate inputs.",
+      "Actual PID-bound admitted-start canonical S3 before generation and four closed-writer curve checkpoints. One consumed release, one attempt, original deadline and conservative cumulative reservation; clocks invalid."
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Number of the eight named public targets determined in this case.",
+        "id": "identified_targets",
+        "kind": "exact",
+        "name": "identified targets",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Bit mask of named target indices, dependent across paired program/control views.",
+        "id": "identified_mask",
+        "kind": "exact",
+        "name": "identified mask",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Native base width including aliases; fixed48.",
+        "id": "native_columns",
+        "kind": "exact",
+        "name": "native columns",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Paid supplied-known native unit equations; fixed48, not learned information.",
+        "id": "supplied_columns",
+        "kind": "exact",
+        "name": "supplied columns",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Remaining unknown base coordinates after complete supplied substitution; zero.",
+        "id": "base_columns",
+        "kind": "exact",
+        "name": "base columns",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual retained native target rows in this own pool.",
+        "id": "target_rows",
+        "kind": "exact",
+        "name": "target rows",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual supplied native unit rows.",
+        "id": "source_rows",
+        "kind": "exact",
+        "name": "source rows",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Own distinct natural and derived cached points, not logical slots.",
+        "id": "geometric_queries",
+        "kind": "exact",
+        "name": "geometric queries",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Extra logical slots omitted only after earlier own verified certification.",
+        "id": "skipped_slots",
+        "kind": "exact",
+        "name": "skipped slots",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual extra requests including cache hits.",
+        "id": "executed_extra_slots",
+        "kind": "exact",
+        "name": "executed extra slots",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Targets with original-native/public prefix certificates.",
+        "id": "certified_targets",
+        "kind": "exact",
+        "name": "certified targets",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "All192 paid affine endpoints, including natural slots.",
+        "id": "formal_endpoints",
+        "kind": "exact",
+        "name": "formal endpoints",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Full-reference native rows explained from candidate rows and earlier certificates; postpair diagnostic.",
+        "id": "omitted_reference_rows",
+        "kind": "exact",
+        "name": "omitted reference rows",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual primary or native-control Fr add including native lifting/checks; pow internals unexpanded.",
+        "id": "fr_add",
+        "kind": "exact",
+        "name": "fr add",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual primary or native-control Fr sub including native lifting/checks; pow internals unexpanded.",
+        "id": "fr_sub",
+        "kind": "exact",
+        "name": "fr sub",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual primary or native-control Fr mul including native lifting/checks; pow internals unexpanded.",
+        "id": "fr_mul",
+        "kind": "exact",
+        "name": "fr mul",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual primary or native-control Fr inv including native lifting/checks; pow internals unexpanded.",
+        "id": "fr_inv",
+        "kind": "exact",
+        "name": "fr inv",
+        "resolution": "1",
+        "source": "metrics.json rows and analysis.json owned cold vectors",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "PRIME-FIELD-A17-CERTIFIED-QUERY-SUPPRESSION-20261107",
+  "question": "On four fresh curves and 32 fresh public targets, can certified known48 target coordinates suppress later GENERAL24 queries while retaining full-query information, and what separate construction/query/online algebra costs result?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Both independently paid public bases precede fresh target draw. Per curve suppress first, then full; each pays own pair/natural collection and complete GENERAL24 constructor/Registry before extra slots. Query round-robin step1..23 then target0..7. Candidate checks all unresolved coordinates after initial Registry, mandatory natural rows, and each executed extra slot. Full partial batch and native joint controls after each own pool. Postpair row-consequence diagnostic never feeds candidate.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Public exact finite descriptive observations; no secret logs generated.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "New domain, 32 pinned coefficient exclusions, first eligible a2 curves: two each F262139/F524287. Eight public canonical-y target hashes per curve after both base builds; no generated target scalar, redraw or outcome-dependent selection. Same mathematical known48 base built twice; duplicate construction is not a fresh mathematical base or independent target draw."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Eight dependent case systems, four online primary engines and twelve actual batch calls, sixteen export execution rows; only four curves/32 public targets.",
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Matched named target masks, actual geometric queries versus certified logical skips.",
+      "Separate own full construction, query, assembly and primary algebra vectors; no weighted winner.",
+      "Causal prefix certificates and every full-reference row consequence; failures/unknown cases retained."
+    ],
+    "report_dir": "reports/<fresh-run>/",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 4,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "min_attainable_two_sided_p": null,
+      "note": "Exact finite eight-case census: four matched curves/32 targets; four online engines plus twelve batch solver calls yield sixteen execution rows. No population or p-value inference.",
+      "passes": true,
+      "rank_test_n": null,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 21600,
+      "fixed_seconds": null,
+      "measured_on": "21600seconds is a protective local machine watchdog; no new cloud submission or billing forecast.",
+      "per_sample_seconds": null,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Four fresh curves/32 targets, eight dependent native cases, four online primary engines plus twelve actual batch calls, sixteen export execution rows. No favorable early dataset stop or redraw."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Native48/joint64/pairs8192/rows4096/labels8192. GENERAL-only derived cache maximum192, complete24 construction and allRegistry.128 curve/field/target candidates,10000 base/scalar candidates. Retain paid prefixes and unknown remaining cases; no truncation or expanded caps."
+    },
+    {
+      "kind": "budget",
+      "preregistered": true,
+      "rule": "One existing worker/thread,2GiB,one attempt,no automatic retry/new capacity. Original deadline2026-11-07T07:46:38.570520+00:00. At release deduct elapsed original window reservation plus all four pinned prior native/postprocess measured CPU records from21600. This is a distinct fresh scientific query-scheduling study, not a third A16 attempt or reset allowance."
+    }
+  ],
+  "study_dir": "research/prime_field_a17_execution_20261107",
+  "variable_ledger": {
+    "aa_not_applicable": "Marked p<=211 deterministic repeats and independent exact group/constructor/matrix/counter checks; no clock inference.",
+    "comparisons": [
+      {
+        "arms": [
+          "suppress",
+          "full",
+          "joint_on_suppress",
+          "joint_on_full"
+        ],
+        "design": "factorial",
+        "differs_in": [
+          "query_program",
+          "algorithm_execution"
+        ],
+        "id": "C-query-suppression",
+        "threshold": "Exact target masks and full-reference row consequence witnesses, actual geometric queries versus skipped logical slots, separate eight Fp/Fr primitives and pair/query array bytes. Native joint controls compare own pools. No weighted winner or runtime inference."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Separate paid base/prelude/pair/index/natural queries, full P/Q planning/tables, all192 affine endpoints and complete Registry before extra queries; no construction saving.",
+        "name": "construction",
+        "treatment": "fixed",
+        "value": "Both own known48 and complete GENERAL24"
+      },
+      {
+        "how": "Retain all identity/base/same/cross-target equalities and natural rows. Skip only after own causal membership, original-native lift/check and public point check; unknown-base extension inadmissible.",
+        "name": "safe_stopping_boundary",
+        "treatment": "fixed",
+        "value": "All 48 native supplied units"
+      },
+      {
+        "how": "Both endpoint engines physically execute. Single-engine views remove only other measured replay. Shared targets charged once per nonadditive cold view; controls/checkers separately retained.",
+        "name": "cost_scope",
+        "treatment": "fixed",
+        "value": "Own complete cold physical and conditional vectors"
+      }
+    ],
+    "independent": [
+      {
+        "levels": [
+          "suppress",
+          "full"
+        ],
+        "name": "query_program"
+      },
+      {
+        "levels": [
+          "suppress",
+          "full",
+          "joint_on_suppress",
+          "joint_on_full"
+        ],
+        "name": "algorithm_execution"
+      }
+    ]
+  },
+  "version": 2
+}

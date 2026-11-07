@@ -1,0 +1,195 @@
+# B8-D DEV-1 VERIFICATION of the EXP-MONO-1a1be2 DEV-1 re-attempt record (TASK-20261107-bc7a76),
+# read on the TASK-20261107-eebc5b snapshot commit. It carries TASK-20261106-941825 RR-5 verbatim
+# (DV-0), with the bc7a76 file names substituted, and adds checks that are specific to bc7a76.
+# Validator, review-adversarial, fresh independent session. An instrument review, not a
+# claim-changing round, so it has no review_plan. Zero experiment runs. The cell and the full
+# kernel pass are never re-run.
+# STATE: BLOCKED until the eebc5b receipt records DEV-1 outcome passed (DVP-2).
+handoff:
+  id: TASK-20261107-af7359
+  from: coordinator
+  to: validator
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-342e48
+  authorized_by: DEC-20261107-f46a40 dev1_verification (assigned by DEC-20261106-24d2a2 OQ-1 on_each_answer.A and b8_split.B8-D)
+  objective: >-
+    On the verified eebc5b commit, confirm that the DEV-1 record of TASK-20261107-bc7a76 shows the
+    FX-16 cell (F_{10007^2}, m = 3, n = 2, s = 50, line base) run in full and unmodified on the
+    5d5a607d bytes, with outcome passed. Then compute, without the kernel, the membership counts
+    of at least 10 logged targets on the full line base, by a method you write, and compare them
+    with the logged kernel counts. Check that the record follows the bc7a76 card and the caps of
+    DEC-20261107-f46a40. Give a terminal B8-D verdict.
+  uncertainty_reduced: >-
+    Whether blocker B8-D clears: whether the compiled kernel's depth-3 multiset enumeration at
+    n = 2 agrees with an independent method on sampled targets with nonzero counts, as recorded
+    by a run that executed only the bound bytes. Nothing about the mathematics.
+  inputs:
+    - ledger/handoffs/TASK-20261107-af7359.yaml
+    - ledger/handoffs/TASK-20261107-bc7a76.yaml
+    - ledger/handoffs/TASK-20261106-96fee7.yaml
+    - ledger/handoffs/TASK-20261106-941825.yaml
+    - ledger/decisions/DEC-20261107-f46a40.yaml
+    - ledger/decisions/DEC-20261107-40200d.yaml
+    - ledger/decisions/DEC-20261106-24d2a2.yaml
+    - ledger/decisions/DEC-20261106-475620.yaml
+    - experiments/EXP-MONO-1a1be2/code/
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-supervisor-bc7a76.sh
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-attempts-bc7a76.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-heartbeat-bc7a76.jsonl
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-bc7a76.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-junit-bc7a76.xml
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-report-bc7a76.md
+    - experiments/EXP-MONO-1a1be2/implementation/environment-bc7a76.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-eebc5b/snapshot-receipt.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-58546f/ledger-receipt.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-dfd0ed/snapshot-receipt.json
+    - agents/validator.md
+  inputs_note: >-
+    Your context consists of the following:
+    - DEC-20261107-f46a40 owner_answer, bc7a76_caps and dev1_verification;
+    - DEC-20261107-40200d's RR-9 dispositions, as the launcher rules bc7a76 ran under;
+    - DEC-20261106-24d2a2 dev1_rerun_decision and b8_split;
+    - DEC-20261106-475620 dev1_decision_v2;
+    - the bc7a76 card (LD-1 to LD-12), the 96fee7 card's DX-2, DX-3, DX-6 and DX-7, and RR-5 of
+      the 941825 card;
+    - the seven bc7a76 artifacts, the eebc5b receipt, and the code.
+    Treat the executor's report and logs as claims to check, not as evidence. Do not read any
+    file under coordination/goals/GOAL-PATH-001/review/, any attestation, or any producer
+    session. Do not read 7db1de's report: B8-H and B8-D are separate reads of the evidence.
+  constraints:
+    - >-
+      DV-0 RR-5 of TASK-20261106-941825, VERBATIM. Apply it under the substitution table of
+      DV-0a. Text as committed:
+      "RR-5 DEV-1. Read dev1-report-96fee7.md, dev1-kat-log-96fee7.json and the junit, and
+      confirm all of the following:
+      - the outcome is passed;
+      - the recorded per-file hashes and code_sha256 equal the dfd0ed committed bytes;
+      - test_kat_extended.py is unmodified (79894702...06b5);
+      - q'' = 10,007, m = 3, n = 2, s = 50, and the line base was used;
+      - 50 pairs are recorded and all are equal, the guard holds, and the multiset count equals
+        C(B + 2, 3);
+      - the projection was measured first and the cell finished within the watchdog;
+      - .resume was pushed per the report.
+      Then, independently and without calling the kernel, compute the membership counts on
+      the FULL line base for at least 10 of the 50 logged targets, your own random choice from
+      a stated seed, with a method you write (a pair-sum table, about 500 s per the 4c4831
+      measurement). Compare them with the logged kernel counts. Optionally repeat the 7c2b01
+      sub-base check on the final bytes. Do not re-run the full kernel pass."
+    - >-
+      DV-0a Substitution table. This is the only change to RR-5:
+      - dev1-report-96fee7.md becomes dev1-report-bc7a76.md;
+      - dev1-kat-log-96fee7.json becomes dev1-kat-log-bc7a76.json;
+      - "the junit" becomes dev1-junit-bc7a76.xml;
+      - "the projection was measured first" applies to every attempt in
+        dev1-attempts-bc7a76.json;
+      - "the cell finished within the watchdog" applies to the final attempt, whose outcome is
+        recorded.
+      "The dfd0ed committed bytes" means the 58546f input_pins_TASK-20261107-bc7a76_frozen and
+      code_sha256 5d5a607d59741b699065c02066d56a2883a34b44431da56c7bfd439b1f731464.
+    - >-
+      DV-1 Binding. The seven bc7a76 artifacts in your checkout equal the path_sha256 of the
+      eebc5b archive block in the BATCH-c077fd queue, and the eebc5b receipt verifies. HEAD's
+      code/ equals the dfd0ed bytes. If any differs, stop. Report it as a finding with verdict
+      not_reviewable, never as a DEV-1 outcome.
+    - >-
+      DV-2 The record against the card. Confirm each of the following from
+      dev1-attempts-bc7a76.json, the heartbeat file and the report:
+      - at most 2 attempts were run (f46a40 bc7a76_caps);
+      - a second attempt follows only a C5 classification of the first, and started with at
+        least 42,600 s left of the 86,400 s cap;
+      - each attempt has exactly one LD-8 class;
+      - each attempt's before-record is timestamped before its projection;
+      - each attempt has a fresh copy and a fresh state directory, and no exit.json or partial
+        output of an earlier attempt is reused (no stale attempt id);
+      - the final attempt's state.json, heartbeat lines and exit.json form one consistent
+        attempt: the same attempt id and boot_id, no restart evidence, and heartbeat elapsed
+        times that cover the cell's wall without a gap longer than 1,800 s, or the gap recorded
+        as C7;
+      - the supervisor's sha256 in the report equals the committed dev1-supervisor-bc7a76.sh;
+      - the launch record shows setsid nohup and no harness background task;
+      - a RESUME push is recorded before every launch;
+      - the cumulative DEV-1 wall ledger includes attempt 1 and stays within the cap.
+      Read the committed supervisor script in full, and confirm that it does what LD-4 (a) to (e)
+      and the 40200d dispositions say. Report each item as holds or does not hold, with the key
+      read.
+    - >-
+      DV-3 Membership cross-check (the B8-D core). State the seed and the method before you
+      compute. Write the method yourself, from the specification and the test file's statement of
+      the line base and targets; do not import counters.py or kernel.c, and do not call either.
+      Compute at least 10 targets on the FULL line base, and report each as agree or disagree. A
+      single disagreement is a blocking finding. Record the targets' indices in the report; put
+      no counts in any message.
+    - >-
+      DV-4 SC-3 arithmetic. Recompute from the kat-log keys: C(B + 2, 3), and the measured
+      multisets/s of the full kernel pass (the multiset count divided by the kernel wall time).
+      Confirm that the value the log states follows from its inputs. Report agree or disagree. Do
+      not interpret the rate.
+    - >-
+      DV-5 Zero cells. Never run test_kat_extended.py's cell item, the full kernel pass, or any
+      contract cell. Scratch files stay outside the repository. Any single command you expect to
+      exceed 6,000 s is launched detached (setsid nohup), never as a harness background task. A
+      container restart that kills one of your commands is infrastructure: re-run it and record
+      it. Write only the declared paths, and do not commit. Put no KAT count, timing or
+      prediction value in any message. Never Bedrock.
+  deliverables:
+    - >-
+      dev1_verification.md. It holds:
+      - for DV-0 to DV-5, the commands, the outcome and the keys read;
+      - an RR-5 table with one row per RR-5 bullet, each holds or does not hold, with evidence;
+      - a DV-2 table;
+      - the DV-3 seed, method, target indices, and agree or disagree per target;
+      - the DV-4 result;
+      - findings, each with a severity and a reproduction. A blocking finding is one that could
+        let a killed, partial, substituted or re-run cell pass as passed, or that is a
+        membership disagreement. Everything else is non-blocking.
+      - a terminal B8-D verdict: passed only if every RR-5 bullet holds, DV-1 and DV-2 hold, every
+        DV-3 target agrees, and no blocking finding exists.
+    - >-
+      review_attestation.yaml, holding task_id; sources_read in order, with extent; the eebc5b
+      commit reviewed; findings summary; dv3 seed, target count and result; dv4 result;
+      verdict_b8d; inference fields (requested policy, resolved model, fallback_used,
+      independent_session and its basis); procedure_deviations; runs_launched 0.
+  artifact_paths:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/dev1_verification.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359/review_attestation.yaml
+  write_scope:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261107-af7359
+  archived_by: TASK-20261107-d279a7
+  inference:
+    policy: review-adversarial
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default; never below the review floor.
+    fallback_allowed: true
+    fallback_note: Backend or model substitution only, recorded as fallback_used. Never a cheaper policy, never degraded, never Bedrock.
+    degraded_allowed: false
+    independent_session_required: true
+    independence_note: >-
+      A fresh session. It must not be the session of any of: TASK-20261106-2b7223,
+      TASK-20261106-96fee7, TASK-20261106-4c4831, TASK-20261105-ac5ad6, TASK-20261029-a97206, the
+      PR 2707 author, the reviewers TASK-20261105-165da2, TASK-20261106-7c2b01 and
+      TASK-20261107-7db1de, the composing sessions TASK-20261107-0932f4 and TASK-20261107-5b2b59,
+      or the TASK-20261107-bc7a76 executor (bc7a76 independence_note).
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 21600
+    memory_gb: 16
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: DVP-1, text: "archived_by TASK-20261107-d279a7 is bound."}
+    - {id: DVP-2, text: "RELEASE, mechanical. This task is blocked. The top-level session moves it to queued by a BATCH-342e48 tasks_state_revisions entry ONLY when the committed and verified eebc5b receipt records three things: DEV-1 outcome passed, SA-3 equal, and SA-5 with no disagreement. DEC-20261107-f46a40 dev1_verification.state_and_release pre-authorizes that transition. Any other eebc5b record leaves it blocked for a fresh act (spare DEC-20261107-856d9b). A message never releases it."}
+    - {id: DVP-3, text: "DEC-20261107-40200d is committed and verified, and released bc7a76 without superseding it. If 40200d superseded bc7a76, this card is void and 40200d cancels it by revision."}
+    - {id: DVP-4, text: "A checkout at or descending from the eebc5b commit, holding the experiment tree and the BATCH-c077fd archives, read-only. Scratch extracts are used for every computation."}
+    - {id: DVP-5, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json TASK-20261107-af7359 --as <addr> --ttl-minutes 420 --publish. Release with two --artifact <path>=<sha256> digests."}
+    - {id: DVP-6, text: "Fresh validator session per independence_note; the resolved model id contains no 'bedrock'. No DEV-1 attempt is live and no commit task is live."}
+  completion_gate:
+    - dev1_verification.md addresses DV-0 to DV-5, each with its commands and outcome, and gives a terminal B8-D verdict.
+    - Every RR-5 bullet is answered as holds or does not hold, with the evidence.
+    - The DV-3 membership counts were computed by the reviewer, without the kernel, on at least 10 logged targets from a stated seed, on the full line base.
+    - review_attestation.yaml parses and names the eebc5b commit reviewed.
+    - Zero experiment cells, no full kernel pass, and nothing written outside write_scope.
+  return_format: The two artifact paths with sha256, the B8-D verdict, the RR-5 rows held and not held, DV-2 holds or not, the DV-3 result (agree or disagree, and the target count; no values), the DV-4 result, findings by severity, and the commit reviewed.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. This IS the independent verification of the DEV-1 instrument record; it changes no claim.
+  runs_launched: 0
