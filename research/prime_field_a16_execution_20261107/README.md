@@ -1,12 +1,19 @@
 # A16 independent target-effort portfolios
 
-The first supervised attempt stopped in Git admission under2GiB, before any
-curve/target generation or solver. Its release is consumed; all1260planned
-systems remain unknown. [Observed outcome and bounded next step](RESULTS.md),
-[typed proof standing](PROOF-STATUS.md), [runtime obstruction](../../problems/prime-field-git-pack-admission.md).
-Exact native source and original frozen protocol remain immutable. A separate
-prospective infrastructure amendment retains originaldeadline/cumulativeCPU/
-2GiB and requires its own bounded assessment/release/normal admission.
+The fresh target-effort continuation completed 1,260 checked systems, 2,520
+actual paired target-solver calls and 576 separate information diagnostics on
+four curves and 32 public targets. [Observed results and costs](RESULTS.continuation.md),
+[final inspected report](reports/a16-target-effort-c4b950-v2/report.pdf),
+[database v20](database/v20-target-effort/validation.json), [proof standing](PROOF-STATUS.md).
+[PCC-20261107-d1bac1](../../pcc/claims/PCC-20261107-d1bac1.json), producer-unverified.
+[pcc:unverified]
+
+The [first admission failure](RESULTS.md) and its original protocol/release stay
+immutable. The separately assessed continuation kept the original deadline,
+2 GiB and cumulative charges; both releases are consumed, no third A16 attempt.
+Horizon 24 recovers 96/96 policy-specific slots versus horizon 8's 90/96, while
+horizon 8's three-policy union already covers the same 32 distinct targets.
+Those extra policies are paid work; no adaptive portfolio cost was measured.
 [pcc:unverified]
 
 - [Source and primary-literature review](literature.md)

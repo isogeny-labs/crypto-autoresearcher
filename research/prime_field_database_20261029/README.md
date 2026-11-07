@@ -175,3 +175,17 @@ unknown; prior rank/target coverage is unchanged. The immutable original failure
 precedes any separately assessed bounded infrastructure continuation.
 [PCC-20261107-aaefc7](../../pcc/claims/PCC-20261107-aaefc7.json), unverified.
 [pcc:unverified]
+
+
+## v20: fresh target effort with independent horizons
+
+The additive [v20 snapshot](../prime_field_a16_execution_20261107/database/v20-target-effort/validation.json)
+preserves all98parent nonmetadata tables/rows and parent bytes. It adds4curves,
+16mathematicalbases,20paid programcontexts and32publictargets, with1260cases,
+2520solveroutputs and180branches. Known48_h8/h24 construction contexts share
+canonical mathematical identities but keep separate paid provenance/costs.
+Its518-byte parent metadata reference reconstructs the prior complete metadata
+hash while preserving inherited historical bytes, avoiding a92,500,585-byte
+recursive snapshot copy. FK/integrity/gzip pass as producer checks.
+[PCC-20261107-d1bac1](../../pcc/claims/PCC-20261107-d1bac1.json), unverified.
+[pcc:unverified]

@@ -341,3 +341,17 @@ hybrid/source-free costs, or unknown16 outside-pool old-coordinate information
 with all auxiliary and target columns cancelled. No new trial is approved by
 this note; retain prospective freeze/admission and all current finite gates.
 [pcc:unverified]
+
+
+A16's fresh4curve/32publictarget continuation completed1260dependent systems
+and2520actualpairedsolvercalls, plus576separate matched old-coordinate
+outside-cancellation diagnostics. Known48_h24 recovers96/96dependentpolicy
+slots versus90/96at independently coldh8; h8policyunion alreadycovers all32
+distinctpoints, with extrapolated/adaptive portfolio costs unmeasured.
+There are89norm/hybrid dependentprefix8cases with identified targets and a
+remaining original base kernel; case23has source_rank19,after24of32columns,
+mask0x2a(3targets), withnative/publiccertificates locally checked. This updates
+finite target coverage without closing larger-field, calibrated-cost or
+independent-replay gaps. [Results](../research/prime_field_a16_execution_20261107/RESULTS.continuation.md),
+[PCC-20261107-d1bac1](../pcc/claims/PCC-20261107-d1bac1.json), unverified.
+[pcc:unverified]

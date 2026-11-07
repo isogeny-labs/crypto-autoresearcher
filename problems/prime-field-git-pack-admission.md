@@ -28,3 +28,14 @@ stated Git configuration and real PID-bound start/closed-curve checkpoints,
 with all outcomes and remaining unknown scientific cells retained. Current
 software evidence alone does not meet that criterion. Broader Git/runtime
 correctness or scientific target-effort performance remains outside this record.
+
+
+The bounded A16 continuationc4b950 completed normal admission under2GiB with
+32m/128m Git windows, actual PID-bound S3 start and all4closedcurve checkpoints,
+then all1260systems/2520pairedsolvercalls/576diagnostics. The tested runtime
+exit criterion is met at this local producer scope; the original failure,
+protocol, release and resource charges remain immutable. No thirdA16attempt,
+broader Git correctness, scientific promotion or full-cost claim follows.
+[Observed outcome](../research/prime_field_a16_execution_20261107/RESULTS.continuation.md),
+[PCC-20261107-d1bac1](../pcc/claims/PCC-20261107-d1bac1.json), unverified.
+[pcc:unverified]
