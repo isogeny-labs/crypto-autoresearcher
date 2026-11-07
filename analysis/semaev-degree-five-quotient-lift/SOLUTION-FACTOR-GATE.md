@@ -37,3 +37,23 @@ This is an optional preflight for a future bounded producer attempt. The
 current retained count gives six but does not list the six assignments, and
 no factorization check has been run. In particular, neither the successful
 slice W4 rank nor the original D4 quotient check supplies this gate.
+
+The source-only preparation now includes `enumerate_original_pairs.c`, a
+copy of the published exhaustive sum counter that emits each ordered pair
+instead of only incrementing its count. The emitter prints two lowercase
+hexadecimal field elements per stdout line and the total on stderr. For
+this fixed polynomial basis, each element is directly its 26-bit Boolean
+coordinate mask. `check_original_solution_factorization.py` requires a
+hash-pinned six-line list, a separately hash-pinned count stdout containing
+`6`, the accepted D4 seed, and the already independently checked generator
+binary. It checks all 51 equations at every listed point, finds a unit-row
+basis of the quotient map, and compares the induced evaluation functionals
+against every D4 monomial image. It refuses a map without all unit rows;
+the pinned blocked-lift source requires unit-surjectivity of its seed.
+The checker uses Python 3.10 or newer for integer `bit_count`.
+
+No emitter build, root enumeration, or full-size factorization check has
+been performed. Before any bounded run, publish the exact source, command,
+input hashes, resource and dollar ceilings, and deadline, then verify live
+budget headroom. Keep its result separate from the already frozen V3 D5
+attempt and preserve all failures and receipts.
