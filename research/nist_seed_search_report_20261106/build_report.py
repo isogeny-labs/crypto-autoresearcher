@@ -1,4 +1,5 @@
 from pathlib import Path
+from fit_catalog import load_catalog
 import argparse, tempfile, platform, zlib
 from reportlab import rl_config
 rl_config.invariant = 1
@@ -345,6 +346,59 @@ add('Historical investigation source snapshot: '+manifest['source_snapshot_commi
 add('Mattsson publication commit: '+manifest['mattsson_commit'],'CodeX')
 add('Final assessment: historical selection criterion UNRESOLVED.','H2X')
 
+# Complete retained fit catalog. This renders existing records only.
+fit_catalog=load_catalog(B)
+(O/'retained-fit-catalog.json').write_text(json.dumps(fit_catalog,indent=2)+'\n')
+page('Appendix E. Complete retained-fit catalog','16 pairs / 19 table instances / no new search')
+add('This appendix reproduces every fitting pair in the archived ALL-FITS.json, in its original order. It validates only the nineteen recorded table applications on their existing 21-row signatures. It performs no feature generation, threshold tuning, pair enumeration or predicate search.')
+add('<b>Counts:</b> 16 signature pairs, 19 pair-specific truth tables, two distinct Boolean functions, 21 normalized signatures, and 54 named predicate aliases. There are 69 alias references across the pair slots because a signature is reused in several pairs. These are counts of representations, not counts of independent historical explanations.')
+h('Normalization and truth-table encoding')
+add('A raw predicate is a named feature followed by >= threshold or = value. An alias marked NOT(raw) is complemented to obtain the normalized signature bit. All truth tables below apply to normalized A and B, not automatically to the raw predicates. Aliases are equivalent only on these 21 observations (possibly after complementation); no universal mathematical equivalence is asserted.')
+add('For inputs ordered 00,01,10,11, output 1 means published and output 0 means omitted. The integer mask encodes output bit 2*A+B. Only masks 1 and 9 occur in the retained fits.')
+table(['Mask / function','00','01','10','11','Applications'],[['1 / NOR','1','0','0','0','13'],['9 / XNOR','1','0','0','1','6']],[140,50,50,50,50,WIDTH-340])
+add('F03, F04 and F16 have no cohort row in cell 11. NOR and XNOR therefore classify this cohort identically for those pairs while disagreeing on an unobserved input. This accounts for 19 table instances across 16 pairs. No claim of out-of-sample robustness follows from the archived use of the word robust.')
+h('Feature meanings and historical support')
+add('full_order is the full Frobenius matrix order; x_order quotients by global sign; projective_order is the order in PGL. Factor-degree and factor-count aliases refer to the derived division-polynomial profile. Known/unknown cost and rank features distinguish whether the splitting degree is supplied. A budget through L sums the recorded cost metric at tested primes <= L. character is the retained Kronecker/quadratic character, not the raw value modulo the prime. Rank refers to the correct candidate position, not a measured original runtime.')
+add('<b>No pair below has verified historical use.</b> The features can be connected to point-counting mathematics, but no recovered NIST/ANSI caller, threshold policy, run log or held-out historical decision authenticates these fitted selection rules. Twelve pairs explicitly name level 199; F16 uses a cumulative budget through 293, which also includes 199.')
+add('The exact retained fit JSON, selected signature masks and their extraction provenance are embedded and included in the reproducible build inputs. The source archive digest is '+fit_catalog['source_provenance']['archive_sha256']+'.','SmallX')
+
+page('Appendix E. Pair and table index','All retained fits, unranked')
+def feature_label(alias):
+ return alias['name']+' '+('>=' if alias['operation']=='ge' else '=')+' '+str(alias['value'])
+def normalized_label(alias):
+ value=feature_label(alias)
+ return 'NOT ('+value+')' if alias['negated_to_signature'] else value
+index=[]
+for f in fit_catalog['pairs']:
+ index.append([f['id'],str(f['a_id'])+' / '+str(f['b_id']),', '.join(t['id']+':'+str(t['mask']) for t in f['truth_tables']),str(len(f['a_aliases']))+' / '+str(len(f['b_aliases'])),'Unverified'])
+table(['Pair','Signature IDs A/B','Table IDs:mask','Aliases A/B','Historical use'],index,[40,110,135,80,WIDTH-365])
+add('Pair numbers preserve source order; they are not a ranking by plausibility. Every complete table and every alias is printed on the following sixteen pages. A repeated signature ID refers to the same normalized 21-row bit vector, not a new independent measurement.')
+add('The representative cap rule C199<=32 and D199<=2048 in Chapter 11 is an interpretable description of a retained cohort split. Threshold aliases and other features can realize the same observed split. The truth tables below preserve the archived signature orientation rather than silently substituting a representative formula.')
+
+for f in fit_catalog['pairs']:
+ page('Appendix E. '+f['id']+' - retained fitting pair','Complete aliases and pair-specific truth tables')
+ add('Normalized signatures: A='+str(f['a_id'])+', B='+str(f['b_id'])+'. Every retained table assigns all 10 publications output 1 and all 11 omissions output 0 on the archived cohort.','SmallX')
+ add('<b>Representative A:</b> '+html.escape(normalized_label(f['a_aliases'][0])),'SmallX')
+ add('<b>Representative B:</b> '+html.escape(normalized_label(f['b_aliases'][0])),'SmallX')
+ headings=['A B','Published','Omitted']+[t['id']+' / mask '+str(t['mask']) for t in f['truth_tables']]
+ values=[]
+ for i,cell in enumerate(f['bins']):
+  label=cell['inputs']+(' (unobserved)' if cell['published']+cell['omitted']==0 else '')
+  values.append([label,str(cell['published']),str(cell['omitted'])]+[str(t['outputs'][i]) for t in f['truth_tables']])
+ cols=[100,70,70]+[(WIDTH-240)/len(f['truth_tables'])]*len(f['truth_tables'])
+ table(headings,values,cols)
+ for t in f['truth_tables']:
+  add(t['id']+': '+t['expression']+'; outputs [00,01,10,11] = '+','.join(map(str,t['outputs']))+'.','SmallX')
+ h('All aliases (not independent fits)')
+ aliases=[]
+ for side in ('a','b'):
+  for alias in f[side+'_aliases']:
+   aliases.append([side.upper(),alias['name'],('>=' if alias['operation']=='ge' else '=')+' '+str(alias['value']),'NOT(raw)' if alias['negated_to_signature'] else 'raw'])
+ table(['Bit','Named feature','Predicate','Normalized bit'],aliases,[28,WIDTH-194,76,90])
+ h('Historical support and interpretation')
+ add(html.escape(f['historical_support']),'SmallX')
+ add('Evidence status: exact retained cohort fit; aliases are observational; historical criterion UNRESOLVED. No additional search was performed for this appendix.','SmallX')
+
 class ReportDoc(SimpleDocTemplate):
  def afterFlowable(self,f):
   if hasattr(f,'_section'):
@@ -370,16 +424,19 @@ with zipfile.ZipFile(zbuf,'w',zipfile.ZIP_DEFLATED) as z:
  put('cohort.json',(O/'cohort.json').read_bytes())
  put('final-pass-verification.json',json.dumps(final,indent=2))
  put('mattsson-comparison.json',json.dumps(matt,indent=2))
+ for name in inputs['retained_fit_inputs']:put('inputs/'+name,(B/'inputs'/name).read_bytes())
+ put('retained-fit-catalog.json',(O/'retained-fit-catalog.json').read_bytes())
 w=PdfWriter();w.clone_document_from_reader(PdfReader(str(raw)))
 w.add_attachment('source-manifest.json',(O/'source-manifest.json').read_bytes())
 w.add_attachment('cohort.json',(O/'cohort.json').read_bytes())
 w.add_attachment('source-report-bundle.zip',zbuf.getvalue())
+w.add_attachment('retained-fit-catalog.json',(O/'retained-fit-catalog.json').read_bytes())
 with OUT.open('wb') as f:w.write(f)
 r=PdfReader(str(OUT));text='\n'.join(x.extract_text() or '' for x in r.pages)
 assert len(r.pages)>20 and 'Historical criterion' in text and 'UNRESOLVED' in text
 assert all(c['seed_hex'] in text for c in cohort)
-assert len(r.attachments)==3
-v={'pages':len(r.pages),'sources':len(sources),'cohort_rows':len(cohort),'omitted':11,'published':10,'attachments':list(r.attachments),'all_seeds_present':True,'pdf_sha256':hashlib.sha256(OUT.read_bytes()).hexdigest(),'pdf_bytes':OUT.stat().st_size,'output':'output/pdf/nist-seed-selection-search-comprehensive-report.pdf','new_scientific_trials':0}
+assert len(r.attachments)==4
+v={'pages':len(r.pages),'sources':len(sources),'cohort_rows':len(cohort),'omitted':11,'published':10,'attachments':list(r.attachments),'all_seeds_present':True,'pdf_sha256':hashlib.sha256(OUT.read_bytes()).hexdigest(),'pdf_bytes':OUT.stat().st_size,'output':'output/pdf/nist-seed-selection-search-comprehensive-report.pdf','new_scientific_trials':0,'retained_fit_pairs':16,'truth_table_instances':19,'distinct_truth_masks':[1,9],'unique_predicate_aliases':54,'new_predicate_search':False}
 (O/'validation.json').write_text(json.dumps(v,indent=2)+'\n')
 print(json.dumps(v,indent=2))
 _source_tmp.cleanup()

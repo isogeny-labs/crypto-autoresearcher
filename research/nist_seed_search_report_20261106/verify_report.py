@@ -16,8 +16,8 @@ parser.add_argument('--pdf', type=Path, default=B / 'output/pdf/nist-seed-select
 parser.add_argument('--output', type=Path)
 args = parser.parse_args()
 r = PdfReader(str(args.pdf))
-assert len(r.pages) == 43
-assert set(r.attachments) == {'source-manifest.json', 'cohort.json', 'source-report-bundle.zip'}
+assert len(r.pages) == 61
+assert set(r.attachments) == {'source-manifest.json', 'cohort.json', 'source-report-bundle.zip', 'retained-fit-catalog.json'}
 manifest = json.loads(r.attachments['source-manifest.json'][0])
 assert manifest == json.loads((B / 'source-manifest.json').read_text())
 cohort = json.loads(r.attachments['cohort.json'][0])
@@ -28,6 +28,12 @@ with zipfile.ZipFile(io.BytesIO(r.attachments['source-report-bundle.zip'][0])) a
         assert hashlib.sha256(z.read(source['path'])).hexdigest() == source['sha256']
     assert json.loads(z.read('cohort.json')) == cohort
     assert json.loads(z.read('source-manifest.json')) == manifest
+from fit_catalog import load_catalog
+catalog = load_catalog(B)
+assert json.loads(r.attachments['retained-fit-catalog.json'][0]) == catalog
+with zipfile.ZipFile(io.BytesIO(r.attachments['source-report-bundle.zip'][0])) as z:
+    for name, digest in json.loads((B / 'inputs/build-inputs.json').read_text())['retained_fit_inputs'].items():
+        assert hashlib.sha256(z.read('inputs/' + name)).hexdigest() == digest
 text = '\n'.join(page.extract_text() or '' for page in r.pages)
 flat = re.sub(r'\s+', '', text)
 for row in cohort:
@@ -37,6 +43,17 @@ for row in cohort:
 assert 'Historical criterion: UNRESOLVED' in text
 assert 'C199 <= 32 and D199 <= 2048' in text
 assert 'ramified' in text and 'post-observation' in text
+appendix = '\n'.join(p.extract_text() or '' for p in r.pages[43:])
+appendix_flat = re.sub(r'\s+', '', appendix)
+for pair in catalog['pairs']:
+    assert pair['id'] in appendix
+    assert not pair['historical_use_verified']
+    for table in pair['truth_tables']:
+        assert table['id'] in appendix
+    for alias in pair['a_aliases'] + pair['b_aliases']:
+        assert alias['name'] in appendix_flat
+assert catalog['pair_count'] == 16 and catalog['truth_table_instances'] == 19
+assert catalog['unique_alias_count'] == 54 and not catalog['new_search_performed']
 assert '\u25a0' not in text and '\ufffd' not in text
 with pdfplumber.open(args.pdf) as pdf:
     for number, page in enumerate(pdf.pages, 1):
@@ -47,7 +64,8 @@ result = {
     'cohort_rows': len(cohort), 'all_exact_uids_and_parameters_present': True,
     'embedded_evidence_hashes': 'PASS', 'page_boundaries': 'PASS',
     'historical_criterion': 'UNRESOLVED', 'prime_199_fit_discussion_present': True,
-    'new_scientific_trials': 0, 'pdf_sha256': hashlib.sha256(args.pdf.read_bytes()).hexdigest(),
+    'retained_pairs_verified': 16, 'table_instances_verified': 19, 'unique_aliases_present': 54,
+    'new_predicate_search': False, 'new_scientific_trials': 0, 'pdf_sha256': hashlib.sha256(args.pdf.read_bytes()).hexdigest(),
 }
 if args.output:
     args.output.write_text(json.dumps(result, indent=2) + '\n')
