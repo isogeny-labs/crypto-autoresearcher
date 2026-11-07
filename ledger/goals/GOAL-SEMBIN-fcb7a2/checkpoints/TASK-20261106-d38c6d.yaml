@@ -1,0 +1,47 @@
+# WRITE-ONCE. Corrections create a new checkpoint file.
+# Session checkpoint for GOAL-SEMBIN-fcb7a2 after the approval of EXP-SEMBIN-cb5e25
+# (DEC-20261106-e7576f, PR #3090): records the dispatch impediment ruled in
+# DEC-20261106-c897df. Keyed by archive task TASK-20261106-d38c6d. No trial ran;
+# no status moved; the approval is not withdrawn.
+batch_checkpoint:
+  batch_id: BATCH-501c2f
+  goal_id: GOAL-SEMBIN-fcb7a2
+  recorded_at: '2026-11-06'
+  mode: impediment
+  branch: claude/sembin-true-dF-search
+  prior_checkpoint: ledger/goals/GOAL-SEMBIN-fcb7a2/checkpoints/BATCH-501c2f.yaml
+  decision_ids: [DEC-20261106-e7576f, DEC-20261106-c897df]
+  experiment_state: >-
+    EXP-SEMBIN-cb5e25 is approved and newest_experiments reports execution_state ready
+    (587 trials remaining, 0 validated). Dispatch is blocked.
+  impediment:
+    id: IMP-SEMBIN-501C2F-DG1
+    condition: DG-1 of DEC-20261106-e7576f (observation-collision search, research-kb half)
+    ruling: >-
+      DEC-20261106-c897df option (b), DG-1 is not satisfied; dispatch stays blocked.
+    what_is_missing: >-
+      A reachable research-kb with a built, current catalog (executable, catalog.sqlite,
+      sources.toml, or the crypto-kb MCP server answering within its timeout). The
+      sibling-repository half was done: addendum
+      experiments/EXP-SEMBIN-cb5e25/collision-search.addendum-20261106.json (sha256
+      7a0a901a0106727ff161e12e1c4f300815a580c58969229d4b276b24109bfe33) found no collision, a
+      shallow negative result that is not evidence of novelty.
+    why_not_solvable_here: >-
+      The catalog cannot be built in this container (about 9.6 GB writable allowance; a first
+      clone of the sibling repository filled it and was removed).
+    also_blocking_launch_in_this_session: >-
+      A mid-trial kill leaves a .started marker that run.py refuses to rerun, and only a
+      separately approved pass 2 can retry it. The run is modelled at about 7.3 to 7.7 hours;
+      the command runner stops background commands at 2 hours. Launch conditions for any
+      other host are in DEC-20261106-c897df (detached launch, 14 h uptime, 20 GiB free,
+      canary, checkpoint before and after).
+  next_action:
+    role: user or research-kb administrator, then coordinator
+    text: >-
+      Supply a reachable research-kb with a built catalog, or a host meeting the launch
+      conditions of DEC-20261106-c897df. A session there runs the specification's collision
+      queries and commits a second dated addendum through its own ledger archive; the
+      Coordinator reads it directly and writes the follow-on decision that either marks DG-1
+      satisfied or supersedes the approval. If the operator prefers to proceed without
+      research-kb, that is a user instruction to the Coordinator for a superseding decision
+      that amends DG-1 with stated reasons; the session does not waive it.
