@@ -76,9 +76,15 @@ coverage is not claimed. Original failed test-wiring receipt is retained; the
 corrected fixture actually executes public-target verification before the
 strict phase-order check. No native trial or hidden pilot occurred.
 
-The complete admitted driver, source/input closure, prospective protocol,
-output/check/cost binding analysis/export and tiny refusal/failure controls
-remain to be implemented. Publish exact runnable bytes, obtain additive
+The complete admitted driver,144-source closure, prospective protocol and
+output/check/cost binding analysis/export are now implemented. Controller
+software checks cover actual admission refusal before output/generation, fixed
+protocol metadata, missing artifacts, full cost hash/phase binding and an actual
+p211 norm-program partial dataset with explicitly mocked I/O admission metadata.
+The partial fixture preserves48 checked cases/96 actual toy calls while all other
+programs remain unknown; its records stay in temporary software-control paths.
+This is not native execution or actual checkpoint evidence. Publish exact
+runnable bytes, obtain additive
 administrative assessment, freeze before affected data, push actual canonical
 S3, issue root release and use normal admission/lease/deadline. Raw records
 must be committed/pushed before report rendering; retain every failed prefix

@@ -1,8 +1,9 @@
 # A16 independent target-effort portfolios
 
 Implementation in progress; native A16 executions:0. No protocol, source-ready
-assessment or execution release exists yet. The complete driver/analyzer/
-prospective contract must be built before native work.
+assessment or execution release exists yet. The full admitted driver/analyzer and prospective contract are implemented;
+exact-source publication/assessment, freeze, current S3 and root release remain
+before native work.
 
 - [Source and primary-literature review](literature.md)
 - [Fixed public input rules and28prior exclusions](inputs.json)
@@ -20,3 +21,5 @@ The original control receipt is retained: its test called the strict fixture
 verifier without first adding the actual public-target verification phase.
 The corrected control executes and meters that phase before checking.
 These are software checks, not native scientific trials or independent proof.
+
+The full controller adds [exact closure](custody16.py), [admitted driver](driver16.py), [supervisor](supervise16.py), [protocol/release lifecycle](prepare16.py), [bound analysis/export](analyze16.py) and [paused checkpoints](streams16.py). Partial-program software controls preserve checked earlier programs and paid counter prefixes when later programs are missing. Mocked I/O admission/checkpoint metadata is restricted to temporary marked p211 fixtures; it is not a native run or actual S3 evidence.

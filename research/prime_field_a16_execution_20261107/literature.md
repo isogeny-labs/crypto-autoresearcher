@@ -49,3 +49,8 @@ and retained primary literature are explicit retrieval limits. No corpus-wide
 absence, fresh paper retrieval, novelty or independent scientific replay is
 claimed. Fresh coefficients/targets are held-out public synthetic inputs, not
 a theorem of uniform independent decomposition or independent isogeny classes.
+
+Additional primary source check: A12 source_collection.generate explicitly
+rejects anomalous order r==p before selecting a curve; this is inherited by
+A16 through the pinned source closure. No anomalous-curve result is being
+introduced as ordinary target-effort evidence.
