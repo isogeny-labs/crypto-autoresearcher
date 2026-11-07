@@ -13,6 +13,7 @@ import unittest
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from check_trace_slice_certificate import (check_map, read_certificate,
                                            substitute, trace_slice)
+from check_quotient_closure_factorized import check_closure_factorized
 from check_affine_relation import verify as verify_affine_relation
 from check_affine_w3 import analyze as analyze_affine_w3
 from slice_trace_certificate import project
@@ -169,9 +170,13 @@ class TraceSliceCertificateTests(unittest.TestCase):
             if expected:
                 self.assertEqual(check_map(3, 2, 2, masks, rows, [])['status'],
                                  'valid_affine_slice_nonmembership')
+                self.assertEqual(check_closure_factorized(3, 2, masks, rows),
+                                 check_map(3, 2, 2, masks, rows, [])['low_kernel_dimension'])
             else:
                 with self.assertRaisesRegex(ValueError, 'C2'):
                     check_map(3, 2, 2, masks, rows, [])
+                with self.assertRaisesRegex(ValueError, 'C2'):
+                    check_closure_factorized(3, 2, masks, rows)
 
     def test_named_odd_instance_has_independent_trace_identity(self):
         records = json.loads((Path(__file__).resolve().parents[1] /
@@ -202,6 +207,8 @@ class TraceSliceCertificateTests(unittest.TestCase):
             self.assertEqual((cert_n, degree, codim), (n, 4, 1))
             result = check_map(n, degree, codim, masks, rows, polys)
             self.assertEqual(result['status'], 'valid_affine_slice_nonmembership')
+            self.assertEqual(check_closure_factorized(n, degree, masks, rows),
+                             result['low_kernel_dimension'])
 
     def test_retained_nontrace_affine_certificate_projects_and_checks(self):
         root = Path(__file__).resolve().parent
@@ -226,6 +233,8 @@ class TraceSliceCertificateTests(unittest.TestCase):
             self.assertEqual((cert_n, degree, codim), (5, 4, 3))
             result = check_map(n, degree, codim, masks, rows, polys)
             self.assertEqual(result['status'], 'valid_affine_slice_nonmembership')
+            self.assertEqual(check_closure_factorized(n, degree, masks, rows),
+                             result['low_kernel_dimension'])
 
     def test_frontier_candidate_selection_uses_actual_trace(self):
         root = Path(__file__).resolve().parent

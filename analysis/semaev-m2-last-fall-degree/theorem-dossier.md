@@ -203,7 +203,10 @@ original columns, so a nonzero second remainder is precisely a witness that
 $\ker A\not\subseteq\ker B_i$. Conversely, if all second remainders vanish,
 every relation among the $A(m)$ has zero image under $B_i$, which defines
 $T_i$. This changes the verification representation, not the certificate
-criterion or its mathematical conclusion.
+criterion or its mathematical conclusion. The small exact implementation is
+`../semaev-degree-five-quotient-lift/check_quotient_closure_factorized.py`.
+It is separate from the source-hash-pinned checker in the frozen n47 sliced
+D4 protocol; it is not yet a complete or frontier-qualified D5 checker.
 
 **Remark 1.5a** (why a scalar closure certificate cannot refute an
 unsatisfiable system). Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose

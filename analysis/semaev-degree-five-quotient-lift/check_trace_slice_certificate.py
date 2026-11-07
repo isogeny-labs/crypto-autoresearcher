@@ -6,6 +6,7 @@ restricted using its trace identity. A checked map proves nonmembership for
 the sliced system; Proposition 2.5b transfers it to the original system.
 """
 import argparse
+from array import array
 import hashlib
 import json
 from math import comb
@@ -158,36 +159,37 @@ def check_map(n, degree, codim, masks, rows, polys):
     if rows[columns[0]] == 0:
         raise ValueError('C3: constant has zero image')
     low = [i for i, m in enumerate(masks) if bin(m).count('1') < degree]
-    low_rank = None
+    qmask = (1 << codim) - 1
+    pivots = {}
+    kernel = []
+    for j, index in enumerate(low):
+        value = rows[index] | (1 << (codim + j))
+        while value & qmask:
+            bit = (value & qmask).bit_length() - 1
+            if bit in pivots:
+                value ^= pivots[bit]
+            else:
+                pivots[bit] = value
+                break
+        else:
+            kernel.append(value >> codim)
+    basis = []
+    for value in kernel:
+        indices = array('I')
+        while value:
+            bit = value & -value
+            indices.append(bit.bit_length() - 1)
+            value ^= bit
+        basis.append(indices)
     for variable in range(n):
         bit = 1 << variable
-        # Let A send each low-degree monomial to its quotient row, and B send
-        # it to the row of its product with this variable. Closure is exactly
-        # ker(A) <= ker(B). Eliminate paired (A,B) columns: a zero A-remainder
-        # must have a zero B-remainder. This avoids materializing a basis of
-        # the potentially enormous low-degree kernel.
-        paired_pivots = {}
-        for index in low:
-            image = rows[index]
-            product = rows[columns[masks[index] | bit]]
-            while image:
-                high = image.bit_length() - 1
-                pivot = paired_pivots.get(high)
-                if pivot is None:
-                    paired_pivots[high] = (image, product)
-                    break
-                image ^= pivot[0]
-                product ^= pivot[1]
-            else:
-                if product:
-                    raise ValueError('C2: multiplication fails at variable %d' % variable)
-        if low_rank is None:
-            low_rank = len(paired_pivots)
-        elif low_rank != len(paired_pivots):
-            raise ValueError('C2: inconsistent low-degree rank')
+        products = [rows[columns[masks[index] | bit]] for index in low]
+        for indices in basis:
+            if reduce(operator.xor, (products[j] for j in indices), 0):
+                raise ValueError('C2: multiplication fails at variable %d' % variable)
     return {'status': 'valid_affine_slice_nonmembership', 'degree': degree,
             'variables': n, 'codimension_lower_bound': codim,
-            'generators': len(polys), 'low_kernel_dimension': len(low) - low_rank}
+            'generators': len(polys), 'low_kernel_dimension': len(kernel)}
 
 
 def main():
