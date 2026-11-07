@@ -12,7 +12,7 @@ from programs16 import PROGRAMS
 
 def text(value):return '#text('+json.dumps(str(value),ensure_ascii=False)+')'
 def table(headers,rows):
-    cells=[text(v) for row in [headers,*rows] for v in row]
+    cells=[text(v)[1:] for row in [headers,*rows] for v in row]
     return '#table(columns:'+str(len(headers))+',inset:4pt,stroke:0.3pt,align:left,'+','.join(cells)+')\n'
 
 
