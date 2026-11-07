@@ -25,13 +25,13 @@ a hash it cannot is an assertion by the session that recorded it.
 | — present but carrying no `.sha256` | 8 |
 | — sought and never retrieved | 1 |
 | Seed bibliography entries | 10 |
-| Literature entries (`KN-LIT-*`) | 8134 |
-| — with a resolvable external identifier | 2520 |
+| Literature entries (`KN-LIT-*`) | 8138 |
+| — with a resolvable external identifier | 2524 |
 | — with no identifier recorded | 5614 |
 
-Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1344, doi 183, eprint 837, isbn 1, url 155. Every identifier an entry carries is kept in `sources.json`.
+Primary identifier kinds — one per entry, chosen in eprint > arXiv > DOI > ISBN > URL order, so an entry carrying both an ePrint number and a URL counts once, under ePrint: arxiv 1346, doi 184, eprint 837, isbn 1, url 156. Every identifier an entry carries is kept in `sources.json`.
 
-`citation_verified` distribution: `False` 23, `True` 10, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full-pdf-mechanical-traversal-and-scoped-reading` 1, `full_text` 5, `full_text_supplied` 2, `metadata` 3, `partial` 6, `read` 7554, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 524.
+`citation_verified` distribution: `False` 23, `True` 10, `abstract` 2, `abstract and bibliographic data fetched from eprint.iacr.org (landing page) and link.springer.com (chapter page) on 2026-10-10; PDF not retrieved (eprint.iacr.org/2013/582.pdf returned HTTP 403; HAL hal-01213666 has no file; no PDF on either author's publication page)` 1, `abstract fetched from eprint.iacr.org on 2026-10-10; body figures taken from the Journal of Cryptology HTML full text at link.springer.com (doi 10.1007/s00145-018-9280-5) and its table pages /tables/8, /tables/9, /tables/10 via the fetch tool on 2026-10-10; no PDF retrieved (eprint PDF HTTP 403, HAL hal-01534101 blocked by a bot check)` 1, `body_read_from_user_provided_text` 1, `full-pdf-mechanical-traversal-and-scoped-reading` 1, `full_text` 5, `full_text_supplied` 2, `metadata` 3, `partial` 6, `read` 7556, `secondary_only` 1, `transcription_of_full_text_at_recorded_sha256` 2, `web` 524.
 
 ## 1. Frozen source packages
 
@@ -246,7 +246,7 @@ records that some fetch failed, and says nothing about the file that is here.
 
 ## 5. Literature citations with a resolvable identifier
 
-2520 of 8134 `KN-LIT-*` entries carry an
+2524 of 8138 `KN-LIT-*` entries carry an
 eprint, arXiv, DOI, ISBN or URL identifier.
 
 | ID | Title | Year | Identifier | Verified |
@@ -1976,6 +1976,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-587 | Adaptively Secure Distributed PRFs from LWE? | 2018 | `eprint:2018/927` | read |
 | KN-LIT-588 | AN UNEXPECTED TRACE RELATION OF CM POINTS | 2018 | `arxiv:1806.11337` | read |
 | KN-LIT-589 | ANTICYCLOTOMIC p-ADIC L-FUNCTIONS FOR ELLIPTIC CURVES AT SOME ADDITIVE REDUCTION PRIMES | 2018 | `arxiv:1801.01619` | read |
+| KN-LIT-58d42d | Matrix multiplication exponent bounds in openai/math family 107, with follow-ups: omega <= 9/4 now reported over every field | 2026 | `url:github.com/openai/math/blob/main/lean/docs/107.md` | read |
 | KN-LIT-590 | Cache-Attacks on the ARM TrustZone implementations of AES-256 and AES-256-GCM via GPU-based analysis | 2018 | `eprint:2018/621` | read |
 | KN-LIT-591 | CODIMENSION TWO CYCLES IN IWASAWA THEORY AND ELLIPTIC CURVES WITH SUPERSINGULAR REDUCTION | 2018 | `arxiv:1806.07214` | read |
 | KN-LIT-592 | Computing the endomorphism ring of an ordinary abelian surface over a finite field | 2018 | `arxiv:1810.12270` | read |
@@ -2632,6 +2633,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-a85246 | Multi-instance security degradation of code-based KEMs | 2026 | `eprint:2026/517` | web |
 | KN-LIT-aa3372 | A complete quantum circuit to solve the information set decoding problem | 2021 | `doi:10.1109/qce52317.2021.00056` | web |
 | KN-LIT-aa5c47 | Lynxer（NGCC 公钥第一轮候选 · 数字签名 14） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
+| KN-LIT-ac18f4 | Matrix Multiplication from Polynomial Packings: A Constructive and Elementary Proof of omega <= 9/4 (integers / characteristic 0) | 2026 | `arxiv:2610.28627` | abstract |
 | KN-LIT-ace115 | Acceleration of Classic McEliece post-quantum cryptosystem with cache processing | 2023 | `doi:10.1109/mm.2023.3304425` | web |
 | KN-LIT-ae78e5 | Can we Beat the Square Root Bound for ECDLP over F_{p^2} via Representations? | 2019 | `eprint:2019/800` | web |
 | KN-LIT-ae8a1e | A modular analysis of the Fujisaki-Okamoto transformation | 2017 | `eprint:2017/604` | web |
@@ -2703,6 +2705,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-d2f917 | NIST / X9.62 curve seeds explained: drand48 output after srand48(timestamp) (Anthropic Frontier Red Team; Valsorda), 2026-10-16 | 2026 | `url:www.anthropic.com/research/ecdsa-curve-origins` | web |
 | KN-LIT-d32323 | VDOO: Vinegar-Diagonal-Oil-Oil（NGCC 公钥第一轮候选 · 数字签名 33） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
 | KN-LIT-d3ec68 | Preimage Attacks on 3-Pass HAVAL and Step-Reduced MD5 | 2008 | `eprint:2008/183` | read |
+| KN-LIT-d4aa5d | matrix-multiplication-all-fields: Lean extension of openai/math's omega <= 9/4 proof to every field (Navot) | 2026 | `doi:10.5281/zenodo.23219128` | read |
 | KN-LIT-d4f467 | Embedded Elliptic Curves and Embedded Families for SNARK-Friendly Elliptic Curves | 2024 | `eprint:2024/1737` | read |
 | KN-LIT-d5b1a7 | Fast hardware architecture with efficient matrix computations for the key generation of Classic McEliece | 2025 | `doi:10.1109/tcsi.2025.3528119` | web |
 | KN-LIT-d5baac | Post-quantum WireGuard | 2021 | `eprint:2020/379` | web |
@@ -2735,6 +2738,7 @@ eprint, arXiv, DOI, ISBN or URL identifier.
 | KN-LIT-eb8749 | A Subexponential Time Algorithm for Elliptic Curve Discrete Logarithm (Bochum/MPI-SP, v0.2) | 2026 | `url:github.com/bochum-crypto/subexponential-ecdl/tree/1ee44e562b1b9a50ea339f3b8f81112b5a24b96f` | partial |
 | KN-LIT-ebd657 | Decomposition formula of the Jacobian group of plane curve (Draft) | 2013 | `eprint:2013/548` | read |
 | KN-LIT-edd7ba | Point compression for the trace zero subgroup over a small degree extension field (read at source) | 2014 | `arxiv:1403.0126` | read |
+| KN-LIT-eef882 | Multiplying matrices via polynomials: exposition and barriers (omega_F <= 9/4 over every field; operational barrier) | 2026 | `arxiv:2610.30054` | abstract |
 | KN-LIT-ef2183 | DKEM (Ding Key Encapsulation)（NGCC 公钥第一轮候选 · 密钥封装 13） | 2026 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | web |
 | KN-LIT-ef4327 | Concrete time/memory trade-offs in generalised Stern's ISD algorithm | 2023 | `eprint:2023/1940` | web |
 | KN-LIT-f0a590 | A Forgery Attack against Frobenius-UOV | 2026 | `eprint:2026/1927` | web |
@@ -8446,4 +8450,5 @@ corpus may hold a true duplicate. Resolving it is a `/curate-knowledge` job.
 | `eprint:2026/366` | KN-LIT-7667, KN-LIT-7c2620 |
 | `eprint:2026/500` | KN-LIT-1642, KN-LIT-3f24a6 |
 | `url:cdn.openai.com/pdf/ten-proofs-oai.pdf` | KN-LIT-7637, KN-LIT-7640 |
+| `url:github.com/openai/math/blob/main/lean/docs/107.md` | KN-LIT-0b036e, KN-LIT-58d42d |
 | `url:www.niccs.org.cn/symmbzyjy/tzgg/pc/content/2100859557292625920/content_2100859557292625920.html` | KN-LIT-01e321, KN-LIT-05cb38, KN-LIT-0b3daf, KN-LIT-0c48c5, KN-LIT-0fbe5a, KN-LIT-1052da, KN-LIT-14f643, KN-LIT-157b8d, KN-LIT-159c94, KN-LIT-160d90, KN-LIT-17365e, KN-LIT-1ae42f, KN-LIT-1ec508, KN-LIT-1fe0a3, KN-LIT-203541, KN-LIT-21a721, KN-LIT-21e785, KN-LIT-22d637, KN-LIT-260be0, KN-LIT-2d4a82, KN-LIT-2e9580, KN-LIT-2f3594, KN-LIT-31b4d3, KN-LIT-3343fb, KN-LIT-34c541, KN-LIT-37740f, KN-LIT-422e66, KN-LIT-431c26, KN-LIT-4667d8, KN-LIT-46d3fd, KN-LIT-4775e4, KN-LIT-4a191f, KN-LIT-4c0e6f, KN-LIT-4e5e30, KN-LIT-4f0d26, KN-LIT-4f3b64, KN-LIT-4f8438, KN-LIT-51b067, KN-LIT-568f2b, KN-LIT-570977, KN-LIT-5a60d5, KN-LIT-5b03eb, KN-LIT-5c1ec3, KN-LIT-5e5a42, KN-LIT-5f055e, KN-LIT-622e9f, KN-LIT-629f98, KN-LIT-691007, KN-LIT-6c5181, KN-LIT-6f1b30, KN-LIT-7394dd, KN-LIT-7d718a, KN-LIT-7de4b4, KN-LIT-83343e, KN-LIT-869b18, KN-LIT-8d4e62, KN-LIT-8fcf1b, KN-LIT-976f78, KN-LIT-99d262, KN-LIT-9e78f8, KN-LIT-a2bc76, KN-LIT-a36af1, KN-LIT-a66c5e, KN-LIT-aa5c47, KN-LIT-aebbc8, KN-LIT-b1e761, KN-LIT-b98c5d, KN-LIT-bb26a5, KN-LIT-bc233d, KN-LIT-bc49ed, KN-LIT-bdb229, KN-LIT-c143e7, KN-LIT-ca757d, KN-LIT-caaa79, KN-LIT-ce5629, KN-LIT-d32323, KN-LIT-d69c87, KN-LIT-d734f8, KN-LIT-dc311b, KN-LIT-e1e9a9, KN-LIT-ef2183, KN-LIT-f2de44, KN-LIT-f5ca08, KN-LIT-fda207, KN-LIT-ffe97d |
