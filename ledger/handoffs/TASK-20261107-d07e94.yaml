@@ -1,0 +1,168 @@
+# TASK-20261107-d07e94: design handoff to the experiment-director. Implement controls K-1 to K-7 of
+# DEC-20261107-a83c51 in the C1 locator (v3c), and recompile the re-session RBS-ICPERF-616277 on those
+# bytes. Zero runs, zero launches, zero AWS calls. Previews only. It approves nothing.
+handoff:
+  id: TASK-20261107-d07e94
+  from: coordinator
+  to: experiment-director
+  role: experiment-director
+  recorded_at: '2026-11-07'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Implement DEC-20261107-a83c51 K-1 to K-7 in locate_results.sh, reconcile_run.sh and
+    launch_eks.sh (v3c). Make the 9d2b6a harness a permanent regression suite. Then regenerate,
+    against the new bytes, the canonical drafts and approval previews of the specification and the
+    trial plan, the runbook for RBS-ICPERF-616277, a new card CARD-EXP-ICPERF-127dbd-4, the
+    executor and snapshot handoff previews, and the preapproval packet. Return them uncommitted.
+  uncertainty_reduced: >-
+    None about the mathematics. It closes the planted-prefix, snapshot-binding, partial-download and
+    environment breaks found by TASK-20261107-9d2b6a before S2 spends.
+  inputs:
+  - ledger/decisions/DEC-20261107-a83c51.yaml
+  - ledger/decisions/DEC-20261107-e41c08.yaml (rulings 2 and 5; PD-3)
+  - ledger/decisions/DEC-20261107-6b0f3d.yaml
+  - ledger/handoffs/TASK-20261107-c5a0f4.yaml (D-1 to D-7, which still bind unless overridden here)
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/ (REPORT.md and evidence/, including fixtures/rt_harness.sh and rt-run/rt-results.tsv)
+  - experiments/EXP-ICPERF-127dbd/implementation/ (v3b f93e8858..., locate_results.sh efcc2983..., reconcile_run.sh eac18f21..., tests/, check_job.py d60564dd...)
+  - experiments/EXP-ICPERF-127dbd/design/c5a0f4/ (FINDINGS.md, handoff-previews/)
+  - experiments/EXP-ICPERF-127dbd/design/approval-preview/ (specification.yaml 097462e3..., trial-plan.json 3f564ea2...)
+  - experiments/EXP-ICPERF-127dbd/{specification.yaml, trial-plan.json} (the canonical review_required drafts)
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml (488ae3ac...)
+  - experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-3.yaml
+  inputs_note: >-
+    Your context is DEC-20261107-a83c51 controls_ruling and REPORT.md sections (a) to (d) and
+    'Required controls'. The c5a0f4 constraints D-1 to D-7 still apply except as changed below.
+  constraints:
+  - >-
+    E-1 Zero runs, zero launches, zero AWS calls of any kind (D-1's receipt copy is not repeated).
+    Use the D-1 receipt copies under implementation/tests/fixtures/receipt/ and
+    implementation/tests/fake-aws only. Nothing under any pod-uid prefix is read.
+  - >-
+    E-2 Scope of change. launch_eks.sh v3c may change only three things:
+      - a new environment prologue (K-7);
+      - section 3 (K-1, K-2, K-4 and K-6);
+      - the post-submission parse and exit handling (K-5).
+    Sections 1, 1b, 1c and 2, the submission command, the 42/43 accept pairing and the manifests stay
+    byte-identical to v3b. locate_results.sh and reconcile_run.sh may be rewritten. check_job.py,
+    analyze-c1.sh, probe_s01.sh, remote-pins.sha256, the requests and the specs do not change.
+    Archive the diffs v3b→v3c and v3a→v3c with a hunk list.
+  - >-
+    E-3 K-2 for T1 pins the receipt hashes status.json a2642563d10a8f80661cef79a759b892d44fad49057a409ae03a1bee3a960ae0
+    and objects.json 783ea0e3ec77daf52d3ff815cb096295a3db76fe05b5cc9b1884c001126504d7, and requires each
+    LastModified to be at or before 2026-11-07T02:14:41Z. These values reach reconcile through the
+    runbook S02 argv or the specification, never as defaults inside the script.
+  - >-
+    E-4 Regression. Port fixtures/rt_harness.sh into implementation/tests/ (credit the 9d2b6a source
+    and its sha256), re-targeted at v3c. The expected results:
+      - every 9d2b6a 'break' row is refused, and every 'holds' row stays refused;
+      - A00 and the T1 shape pass;
+      - new cases for K-4 to K-7 pass (strict types, each crash path writing raw-result.json with
+        exit 5, restartCount, launcher-id mismatch, BASH_ENV, BASH_FUNC_aws, a PATH shim, CDPATH, an
+        AWS_ENDPOINT_URL variable, an aws alias, and a symlinked --out);
+      - test_locator.sh passes in full, with the checkout argument and no skips.
+    Record a table of case, expected and observed, listing A01, A02, A09a, A09b, A10, B14a and B14b
+    individually. Add mutation cases for K-1, K-2, K-4 and K-6: removing each check must make at least
+    one case fail.
+  - >-
+    E-5 Records (PD-3 'never_again'):
+      - The canonical specification.yaml and trial-plan.json stay review_required and candidate-only
+        (approved_by null, execution_authorized false, candidate_only true), with their hashes updated
+        for the new source bytes.
+      - The approved forms go ONLY to experiments/EXP-ICPERF-127dbd/design/d07e94/approval-preview/.
+      - runbook.yaml binds those preview digests and says so in its header.
+      - Keep the session id RBS-ICPERF-616277, the S2 run id RUN-ICPERF-efb7ef, the handoff ids
+        TASK-20261107-f14df8 and TASK-20261107-04d969, and the reserved DEC-20261107-7802ec. All of
+        them are still unused.
+      - Write the card as a new CARD-EXP-ICPERF-127dbd-4. Card -3 is left as is, retired and never
+        relayed.
+      - The S03 validity of K-3 is in the runbook.
+  - >-
+    E-6 Write a 'residual risk' section in FINDINGS for DEC-20261107-7802ec. It covers K-8 (no
+    read-only IAM identity), the aws-cli configuration surface that was not exercised, and multipart
+    ETags. Also copy there the text of the filed_before_affected_data qualification from
+    DEC-20261107-a83c51, verbatim.
+  - >-
+    E-7 Do not stage, commit or push. Do not edit any ledger record, queue, journal or run directory,
+    and do not edit the 9d2b6a review tree. Return the previews.
+  deliverables:
+  - "Preview files at every artifact_paths entry, plus SHA256SUMS over them."
+  - "design/d07e94/FINDINGS.md. It holds:"
+  - "  - the hashes, ids and diffs;"
+  - "  - the E-4 table and the mutation results;"
+  - "  - runbook.py lint, task_card.py lint, and experiment_preapproval.py --packet against the preview queue;"
+  - "  - the E-6 residual-risk section;"
+  - "  - every open blocker by name."
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/tests/
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+  - experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml
+  - experiments/EXP-ICPERF-127dbd/design/d07e94/
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-d07e94/snapshot-receipt.json
+  artifact_paths_note: >-
+    The directory entries are trees whose files are staged by name. design/d07e94/ holds FINDINGS.md,
+    SHA256SUMS, evidence/, approval-preview/ and handoff-previews/ (the queue preview included).
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/implementation
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+  - experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml
+  - experiments/EXP-ICPERF-127dbd/design/d07e94
+  read_scope:
+  - experiments/EXP-ICPERF-127dbd
+  - tools
+  archived_by: TASK-20261107-d07e94
+  archive:
+    kind: snapshot
+    binding_mode: content_at_commit
+    custody_note: >-
+      Per DEC-20261107-6b0f3d: not a research_dispatch queue entry. Custody is a coordinator-written
+      receipt, dispatcher_verified false, hashing every artifact_paths file at the commit that lands
+      them. The approval archive of DEC-20261107-7802ec binds them through the dispatcher.
+    executed_by: the shell-holding top-level session in the coordinator role, after the director returns
+    record_ids: [EXP-ICPERF-127dbd, H-ICPERF-4cb536, DEC-20261107-a83c51]
+    rules: >-
+      Branch from origin/main and merge it (never rebase). Before staging, confirm that no canonical
+      file reads status approved, execution_authorized true or a non-null approved_by (PD-3). Stage
+      the artifact_paths files by name. Run validate_ledger.py and check_merge_hygiene.py, then make
+      the commit. Write and commit the custody receipt. Open a ready-for-review PR. Enable auto-merge
+      only after validate_ledger passes. On any refusal, return to the Coordinator.
+  inference:
+    policy: director-runbook
+    reasoning_effort: null
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  dispatch_preconditions:
+  - {id: DP-1, text: "PR #3140 (the 9d2b6a archive) has merged to main."}
+  - {id: DP-2, text: "DEC-20261107-a83c51 and this handoff are on main."}
+  completion_gate:
+  - "K-1 to K-7 are implemented, and E-2's diff scope holds (the hunk lists are archived)."
+  - "E-4 regression: every 9d2b6a break is refused; A00 and the T1 shape pass; the K-4 to K-7 cases pass; the mutation cases fail as expected; test_locator.sh passes in full with 0 skips."
+  - "The canonical spec and plan are review_required or candidate. The approved forms exist only under design/d07e94/approval-preview/."
+  - "runbook.py lint is OK against the preview digests, or reports only the expected canonical-draft bind mismatches. task_card.py lint fails only on the missing approval. The packet result is recorded."
+  - "No commit, push, launch or AWS call. Zero runs."
+  return_format: >-
+    FINDINGS.md path, SHA256SUMS, the new script and runbook hashes, the E-4 table, and the blocker
+    list. No C1 outcome.
+  follow_on: >-
+    After custody, the Coordinator assigns an independent red-team confirmation task on the v3c
+    bytes (DEC-20261107-a83c51 reconfirmation). Only after that can DEC-20261107-7802ec name a
+    runbook_sha256.
+  review_required: true
+  review_required_note: "Independent red-team confirmation (follow_on) before approval."
+  runs_launched: 0
