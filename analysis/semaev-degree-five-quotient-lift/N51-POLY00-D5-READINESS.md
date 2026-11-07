@@ -66,9 +66,15 @@ reproduces its native admission printout exactly:
 56,287,272,208 bytes. This checks the formula against one real producer
 admission, not the poly00 memory peak or future feasibility.
 
-The current n51 polynomial-01 direct-W4 rank trial owns the frontier
-high-memory slot. This note does not authorize a concurrent poly00 D5
-trial or change any existing deadline, reservation or retry ceiling.
+The n51 polynomial-01 direct-W4 rank trial has finished with rank 226,437,
+matching the accepted slice kernel dimension under the audited direct
+algorithm. This does not prove exactness of the original polynomial-00
+seed. No polynomial-00 D5 attempt has launched. The published V3 protocol
+extends the deadline for its single first attempt to 2026-11-10 23:30 UTC;
+the shared daily budget readback currently exceeds its USD 200 ceiling, so
+the producer remains queued. See `SOLUTION-FACTOR-GATE.md` for an optional
+solution-based preflight that would exclude a killed constant in the lift,
+without itself proving the desired seventh quotient direction.
 
 The original queued protocol required that *other* instance's rank to
 equal its D4 seed dimension. That is a cost-selection heuristic, not a
