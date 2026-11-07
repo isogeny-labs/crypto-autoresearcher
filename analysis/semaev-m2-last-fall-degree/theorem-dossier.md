@@ -209,7 +209,8 @@ It is separate from the source-hash-pinned checker in the frozen n47 sliced
 D4 protocol. The alternative complete checker
 `../semaev-degree-five-quotient-lift/check_sliced_certificate_factorized.py`
 also verifies the monomial universe, quotient rank, generators and image of
-one while keeping certificate rows in a read-only file mapping. It passes
+one while reading certificate rows on demand by default (whole-file mapping
+is optional). It passes
 small retained-certificate and tamper tests, including agreement at degree
 five on a retained n=6 affine-sliced map. Its time and memory use on an
 actual frontier-size D5 map have not yet been measured, so it is a candidate
@@ -366,6 +367,14 @@ map is $\phi$, its initial `seed variable` loop spans the
 $\phi(x_i u_m)$, and its `closure round` loop applies the $T_i$ on
 $A\cap Q$. The source and retained-result audit is
 `../semaev-degree-five-quotient-lift/N47-D4-EXACT-LIFT-AUDIT.md`.
+
+The same provisional map admits a smaller *independent nonmembership*
+certificate: verify a linear quotient on its working coordinates against
+all initial seed relations and the low-coordinate closure condition, without
+exporting an image for every degree-five monomial. This only requires a
+checked seed inclusion, not an exact seed. The criterion and proof are in
+`../semaev-degree-five-quotient-lift/COMPACT-D5-QUOTIENT-CRITERION.md`;
+no compact n47 certificate has been produced or checked.
 
 **Proposition 1.10** (dimension floor for an unsatisfiable dual
 certificate). **Proved.** Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
