@@ -1,0 +1,283 @@
+{
+  "audit_interpreter": {
+    "executable": "/usr/local/bin/python3",
+    "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+  },
+  "audited_at": "2026-11-06T04:17:00.553356Z",
+  "auditor": "sheriff-reader-pfdr/claude-opus-5-5 (attempt 2; attempt 1 killed by the session's 1 h background limit)",
+  "challenge_seed": "f2bc9a4d3992d505658b4455b6cb6dae2f5fa061da13941895bda3ea014d10d7",
+  "detection_power": {
+    "miss_probability": {
+      "0.01": 0.960596,
+      "0.05": 0.814506,
+      "0.1": 0.6561,
+      "0.25": 0.316406,
+      "0.5": 0.0625
+    },
+    "replayed_units": 4
+  },
+  "environment_drift": [
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.15",
+      "replay_python_version": "3.13.18",
+      "step_id": "S01-trials",
+      "trial_id": "census-toy-main"
+    },
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.15",
+      "replay_python_version": "3.13.18",
+      "step_id": "S01-trials",
+      "trial_id": "selftest"
+    },
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.15",
+      "replay_python_version": "3.13.18",
+      "step_id": "S01-trials",
+      "trial_id": "analyze-main"
+    },
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.15",
+      "replay_python_version": "3.13.18",
+      "step_id": "S01-trials",
+      "trial_id": "analyze-final"
+    }
+  ],
+  "experiment_id": "EXP-PFDR-bb0d26",
+  "findings": [
+    "replay S01-trials/analyze-main: raw-result.json/summary: recorded {\"calibration\": {\"mean\": -0.26757013662385903, \"n\": 44, \"pass\": true, \"sd\": 0.97, replay {\"calibration\": {\"mean\": -0.26757013662383594, \"n\": 44, \"pass\": true, \"sd\": 0.97",
+    "replay S01-trials/analyze-final: raw-result.json/summary: recorded {\"calibration\": {\"mean\": -0.26757013662385903, \"n\": 44, \"pass\": true, \"sd\": 0.97, replay {\"calibration\": {\"mean\": -0.26757013662383594, \"n\": 44, \"pass\": true, \"sd\": 0.97"
+  ],
+  "float_tolerance": null,
+  "interpreter_parity": {
+    "match": 0,
+    "mismatch": 4,
+    "unknown": 0
+  },
+  "journal_chains": [
+    {
+      "blob": "6f5281171d5220267aa8c5a837a43ed4072bcdc0",
+      "entries": 18,
+      "first_commit": "e85a8dbe1a4ba35f05a9a0b4ca007d04ed9e4ea7",
+      "first_commit_time": "2026-10-24T01:28:20+00:00",
+      "first_entry_time": "2026-10-22T12:17:43.195279Z",
+      "owner": "executor-mechanical-exp-pfdr-bb0d26"
+    }
+  ],
+  "journal_entries": 18,
+  "journal_tip": "47f92d815113fa07878922f3ed9d45ddd7a6adbfbcf0920994e22af9efaa009f",
+  "lean": [],
+  "nonce": "e7c7baac19775c56a7a54ce8f536c9cf",
+  "not_covered": [],
+  "notes": [],
+  "replay_interpreters": [
+    {
+      "executable": "/usr/local/bin/python3",
+      "program": "python3",
+      "python_version": "3.13.18",
+      "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+    }
+  ],
+  "replay_results": {
+    "matched": 2,
+    "matched_within_tolerance": 0,
+    "mismatch": 2
+  },
+  "replays": [
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-bb0d26/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-attempt2/replay/RUN-PFDR-4d8c71",
+        "--run-id",
+        "RUN-PFDR-4d8c71",
+        "--trial-id",
+        "census-toy-main",
+        "--plan",
+        "experiments/EXP-PFDR-bb0d26/trial-plan.json"
+      ],
+      "compared": [
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/summary",
+          "result": "equal"
+        }
+      ],
+      "detail": "reproduced",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.15",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.15",
+        "recorded_source": "manifest.yaml#/run/environment/python_version",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": true,
+      "population": 5,
+      "result": "matched",
+      "run_id": "RUN-PFDR-4d8c71",
+      "step_id": "S01-trials",
+      "trial_id": "census-toy-main"
+    },
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-bb0d26/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-attempt2/replay/RUN-PFDR-e44a19",
+        "--run-id",
+        "RUN-PFDR-e44a19",
+        "--trial-id",
+        "selftest",
+        "--plan",
+        "experiments/EXP-PFDR-bb0d26/trial-plan.json"
+      ],
+      "compared": [
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/summary",
+          "result": "equal"
+        }
+      ],
+      "detail": "reproduced",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.15",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.15",
+        "recorded_source": "manifest.yaml#/run/environment/python_version",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": true,
+      "population": 5,
+      "result": "matched",
+      "run_id": "RUN-PFDR-e44a19",
+      "step_id": "S01-trials",
+      "trial_id": "selftest"
+    },
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-bb0d26/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-attempt2/replay/RUN-PFDR-243425",
+        "--run-id",
+        "RUN-PFDR-243425",
+        "--trial-id",
+        "analyze-main",
+        "--plan",
+        "experiments/EXP-PFDR-bb0d26/trial-plan.json"
+      ],
+      "compared": [
+        {
+          "equal": false,
+          "file": "raw-result.json",
+          "float_leaves_differing": 2,
+          "max_abs_diff": 4.463096558993129e-14,
+          "max_rel_diff": 8.630499353769848e-14,
+          "pointer": "/summary",
+          "result": "mismatch"
+        }
+      ],
+      "detail": "raw-result.json/summary: recorded {\"calibration\": {\"mean\": -0.26757013662385903, \"n\": 44, \"pass\": true, \"sd\": 0.97, replay {\"calibration\": {\"mean\": -0.26757013662383594, \"n\": 44, \"pass\": true, \"sd\": 0.97",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.15",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.15",
+        "recorded_source": "manifest.yaml#/run/environment/python_version",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": false,
+      "population": 5,
+      "result": "mismatch",
+      "run_id": "RUN-PFDR-243425",
+      "step_id": "S01-trials",
+      "trial_id": "analyze-main"
+    },
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-bb0d26/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/audit-bb0d26-attempt2/replay/RUN-PFDR-089edc",
+        "--run-id",
+        "RUN-PFDR-089edc",
+        "--trial-id",
+        "analyze-final",
+        "--plan",
+        "experiments/EXP-PFDR-bb0d26/trial-plan.json"
+      ],
+      "compared": [
+        {
+          "equal": false,
+          "file": "raw-result.json",
+          "float_leaves_differing": 2,
+          "max_abs_diff": 4.463096558993129e-14,
+          "max_rel_diff": 8.630499353769848e-14,
+          "pointer": "/summary",
+          "result": "mismatch"
+        }
+      ],
+      "detail": "raw-result.json/summary: recorded {\"calibration\": {\"mean\": -0.26757013662385903, \"n\": 44, \"pass\": true, \"sd\": 0.97, replay {\"calibration\": {\"mean\": -0.26757013662383594, \"n\": 44, \"pass\": true, \"sd\": 0.97",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.15",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.15",
+        "recorded_source": "manifest.yaml#/run/environment/python_version",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": false,
+      "population": 5,
+      "result": "mismatch",
+      "run_id": "RUN-PFDR-089edc",
+      "step_id": "S01-trials",
+      "trial_id": "analyze-final"
+    }
+  ],
+  "runbook_sha256": "a2d3e9e44fd47d51688a38c415be64744888714bf0d7d72c8522bcc75da5980f",
+  "schema": "crypto.autoresearch.runbook_audit.v2",
+  "scope": "integrity and replay screening of one runbook session; never a validation_report, never evidence about the hypothesis, never an execution proof",
+  "session_dir": "experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26",
+  "tool_sha256": "8de36933d52efe04c503c1711a85b4e3ea715738db9f3de356372130a743d7ae",
+  "verdict": "flagged"
+}

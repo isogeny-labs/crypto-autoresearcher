@@ -1,0 +1,736 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: >-
+  B5/B6/B7 cryptanalysis#1077 (5a6c233ea, "IC n=83: counted producer and section 5a 0/0.1/1 GAE band for the
+  stacked row"): the band cells and their gap to matched rho, the run receipts behind them, the records that
+  quote them, and the rank-finder (994e0ccb8) port status
+joint_tag: CAX
+reader:
+  role: validator (sheriff B9 reader for joint CAX)
+  model: claude-opus-5-5
+  independence: >-
+    Did not produce anything under audit (no commit in cryptanalysis, crypto or this case's producer paths).
+    Judged from raw run stdout, records and my own scripts only. Commit messages were displayed by git show/log
+    and are not used as evidence. PR descriptions were not read. Prior-case texts were read only for WHAT was
+    claimed (findings.yaml ranges listed below), after the blind re-derivation was done.
+target:
+  cryptanalysis:
+    path: /home/user/cryptanalysis
+    head: 5bdfb496df469caa14c492bac29c77ced7d44804
+    head_tree: f327bb4d4ceb17fec122bf4c1b5547ca237c6ad9
+    at_origin_main: true
+    dirty_paths: 0
+    audited_commits:
+      pr_1077: 5a6c233ea161dbaf80c8232945092a98ecf4a744 (squash merge, parent 228f0bae6)
+      rank_finder_row: 994e0ccb8b9ac46494b89b07745e751e9365ee6a (#1013)
+      later_change_to_band_records: 08375ddb5 (2026-11-04, "the field-ops producer replaces the n=83 row")
+      protocol_freeze: 765061e1b02f7cc1b176fb4b671c43ad69a355ab (not on main; on origin/claude/n83-opcounts-run and origin/claude/ic-group-op-counts)
+      run_head: 1a6067f63dcb27a7d6ab6394704e842d394dec3c
+      analysis_v2: ad1fbc64d9644697bbfe705480ec962ae4595bc2 (not on main)
+  crypto:
+    path: /home/user/crypto
+    head: 3a7a0f98af47f24cabfa7779c267695e00faf3dd
+    head_tree: cb3a43d52a41659b999a0fb9b39e353767acc6c1
+    dirty_paths: 0
+    used_for: AGENTS.md section 5a (lines 1094-1131), the statement of the band
+  crypto-autoresearcher:
+    head: db4592579a8ce6bbd620686a7298ff16e5eb63f6
+    note: >-
+      The brief names da442739db. HEAD is da442739db plus one commit (db4592579a, "sheriff SHF-20261106-a114e7: work in
+      progress") that only adds this case's files. da442739db is an ancestor. git status shows pcc/ledger.jsonl (hook,
+      ignored) and case-directory paths written by other readers. Their names were displayed and their contents were
+      not opened.
+
+sources_read:
+  crypto-autoresearcher:
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - .claude/skills/sheriff/SKILL.md
+    - docs/sheriff.md (lines 1-102 and 278-462; heading list)
+    - AGENTS.md (329-341 "Review architecture", 528-541 "Curve identity and measured bounds"; heading grep)
+    - "agents/validator.md (1-75, 101-137, 155-183) and docs/agent-runtime-core.md (8-31), read after the checks and before writing this file"
+    - research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml (format template only; lines 1-80 and the key list)
+    - research/sheriff/SHF-20261028-0f3f64/findings.yaml (lines 965-1052, CAN-1..CAN-5 texts, read for what was claimed only)
+    - research/sheriff/SHF-20261016-3caa6f/findings.yaml (lines 333-416, R1, K1-K4 and X2 texts, for what was claimed only)
+    - research/sheriff/SHF-20261017-e4d7f6/findings.yaml (lines 390-428, R1-R and K-N1..K-N4 texts; grep lines 58-68 displayed prior verdict one-liners)
+  crypto_at_3a7a0f98a:
+    - AGENTS.md (lines 1060-1160, sections 4-7 including 5a)
+  cryptanalysis_at_5bdfb496d:
+    - "experiments/koblitz-n83-opcounts-20261023/run_github_39882571652/panel/runs/*.stdout.txt (all 62, decoded by my own script)"
+    - experiments/koblitz-n83-opcounts-20261023/PROTOCOL.md (all 119 lines; read AFTER the blind derivation)
+    - experiments/koblitz-n83-opcounts-20261023/band.py (all 231 lines; read AFTER the blind derivation, never executed)
+    - experiments/koblitz-n83-opcounts-20261023/run_github_39882571652/panel/band.md, analysis_v2/band-v2.md (diffed), analyze-stdout.txt, analysis_v2/analyze_v2-stdout.txt (diffed)
+    - experiments/koblitz-n83-opcounts-20261023/ANALYSIS_V2.md (all), README.md (lines 1-35 and 104-232, plus grep), ARTIFACT.json, SHA256SUMS (head, and sha256sum -c), .artifacts.json and .gitignore (both dirs)
+    - experiments/koblitz-n83-opcounts-20261023/run_github_39882571652/panel/counts.json (compared with my own units, not used as input), runner_start.json (keys), runner-stdout.jsonl (head)
+    - experiments/koblitz-n83-opcounts-20261023/figures/band_gap_39882571652.tex (coordinates)
+    - "experiments/koblitz-n83-stacked-20261016/run_github_38862448935/panel/runs/*.stdout.txt (192 decoded; archived twin) and README.md:398-404"
+    - "experiments/koblitz-n83-replay-20261017/run_github_39007026856/panel/runs/*.stdout.txt (6 decoded) and host-class.json"
+    - docs/ic/BASELINES.md (diffs 5a6c233ea^..5a6c233ea and 5a6c233ea..origin/main; lines 470-494, 777-808; grep)
+    - "docs/ic/baselines.json (open[5], other_records[13], [20], baselines[4], corrections, ratchet_history, as_of, conventions.setup; n=83 section_5a_band fields)"
+    - "docs/ic/BASELINES.pdf (pdftotext grep only; last commit date)"
+    - "experiments/fb-archive/README.md:78-100; index.csv (extracted from git object to scratch; it is outside the sparse cone); tracked file list"
+    - "git show --stat 5a6c233ea / 994e0ccb8 / 08375ddb5 / 5569ba6e3 and later workflow commits; git log on the band paths 5a6c233ea..origin/main; git merge-base/ancestry and branch checks; git grep for op_counts/GAE in the rank-finder and field-ops experiments"
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read; its name appeared in a directory listing)
+  - research/sheriff/SHF-20261106-a114e7/readers/* (not read; the directory name appeared in git status)
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than cryptanalysis/ (not read; the names scripts/readers/lean/fidelity.out and lean/ appeared in git status / ls)"
+  - research/sheriff/SHF-20261106-a114e7/sweep.md, sweep.json, checks/ (not read)
+  - "prior cases' readers/*.yaml, scripts/ and REPORT.md (not read; the CAN texts name prior script output paths, which I did not open)"
+  - PR descriptions (not read)
+  - "For the blind re-derivation: PROTOCOL.md, band.py, band.md, counts.json, analyze_v2.py, opcounts.py, README, BASELINES.md and baselines.json were not read until it was done. The target numbers 0.01138/29.00/115.5 and 0.01141/43.93/175.0 were known from the task text."
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: CAX-K1-bind
+    command: "git -C /home/user/cryptanalysis rev-parse HEAD origin/main HEAD^{tree}; git status --short; same for crypto and crypto-autoresearcher"
+    output: inline (target block)
+    result: pass. cryptanalysis is at origin/main 5bdfb496d with a clean tree, and crypto is at 3a7a0f98a with a clean tree.
+  - id: CAX-K2-raw-decode-and-payload-hash
+    command: "python3 -I scripts/readers/cryptanalysis/decode_runs.py <run>/panel/runs decoded_runs.json; python3 -I check_counts_input.py <run>/panel/runs <run>/panel/counts.json decoded_runs.json"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/check_counts_input.out
+    result: >-
+      pass. All 62 stdout files decode: kS and kP (1 each, rank block K1, seed 101) and cS, cP and rT (20 each, points
+      s000-s019, IC seed 7, rho seed 870000+i). Every run has returncode 0 and no issues. raw_result_sha256 equals the
+      sha256 of the base64 payload in 62/62 files.
+  - id: CAX-K3-archive-hashes
+    command: "cd <run> && sha256sum -c SHA256SUMS; git show 5a6c233ea:<run>/panel/runs.jsonl | sha256sum; same for README.pdf"
+    output: inline
+    result: >-
+      pass, with one file off-disk. 149/150 files match SHA256SUMS. panel/runs.jsonl is no longer on disk: 5569ba6e3
+      (2026-10-24) moved it and README.pdf to the artifact store. Each pointer's sha256 (13829d0d..., 57b54fee...) and
+      byte count equals the bytes committed at 5a6c233ea and the SHA256SUMS entry. The store copies themselves were
+      not read. Hashes are integrity evidence, not execution proofs.
+  - id: CAX-K4-band-input-equals-raw
+    command: same script as K2
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/check_counts_input.out
+    result: >-
+      pass. The producer's band input counts.json (and counts-v2.json, byte-identical) equals my own units built from
+      raw phases for all 20 points of S, P and rT, with 0 mismatches.
+  - id: CAX-K5-twin-identity
+    command: "python3 -I twin_identity.py decoded_runs.json decoded_twin.json (fields of PROTOCOL.md:56-66)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/twin_identity.out
+    result: >-
+      pass. 62/62 rows are identical to archived run 38862448935 on every listed field. kS and kP (twin serials 42
+      and 43) match on every attempt's probes, rank_relations_blake3, rank probes, root calls, attempts, relations,
+      failures, rank, scalar and index digest. cS and cP match on relation, x-codes, intermediates, probes, root calls,
+      relation checks, skipped states, scalar and index digest. rT matches on scalar and every
+      charges_setup_and_solve entry. The archive also holds a second rank draw per rank arm (kS s001 1,014,229,294
+      rank probes, 1.377% more than s000; kP s001 1,467,833,052), which the band does not use.
+  - id: CAX-K6-answers-independently-verified
+    command: "python3 -I verify_answers.py decoded_runs.json (my own GF(2^83) arithmetic; Koblitz trace by Lucas recurrence)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/verify_answers.out
+    result: >-
+      pass. f = x^83+x^7+x^4+x^2+1 is irreducible (Rabin test). The curve is y^2+xy = x^3+x^2+1 with t_83 =
+      6151469093347, so #E = 9671406556910881928556062, equal to the ICV1 curve id. l = 8569786107849059 is prime
+      (Miller-Rabin, 40 bases), l*h = #E, G is on the curve and [l]G = O. [k]G = Q holds for all 62 recovered scalars
+      (every arm and point), and [k+1]G != Q for all 62, so the checker can fail. One scalar per point across arms.
+  - id: CAX-K7-band-recompute-digit-by-digit
+    command: "python3 -I protocol_band.py decoded_runs.json protocol_band.json (my implementation of PROTOCOL.md:71-100 from raw phases)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.out
+    result: >-
+      pass. Every cell matches every place it is quoted, at the printed precision. Places checked: band.md and
+      band-v2.md (means, costs, gaps, 95% intervals at both rho bounds, Frobenius sensitivity), BASELINES.md:795-796
+      and 798-802, baselines.json open[5], README:173-198 (including S/P 0.9973 / 0.6600 / 0.6599 and "about 88x" =
+      1/0.0113811 = 87.87), and the coordinates and error bars in figures/band_gap_39882571652.tex. Unrounded values
+      (b=0): S/rT 0.0113811 [0.00876673, 0.0155193], 28.9955 [22.3270, 39.5431], 115.503 [88.9389, 157.519]; P/rT
+      0.0114118 [0.00879032, 0.0155611], 43.9319 [33.8324, 59.9193], 175.019 [134.784, 238.710]. The prior case's
+      quoted 0.01138 / 29.00 / 115.5 and 0.01141 / 43.93 / 175.0 are correct.
+  - id: CAX-K8-rho-scalar-mul-bound
+    command: same script (b in {0, 104})
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.out
+    result: "pass. Claim: 'at 104 GAE every cell moves by < 0.1%'. The largest move is 0.041% (P at w=0: 0.0114118 -> 0.0114071)."
+  - id: CAX-K9-order-and-crossover
+    command: same script (crossover_w)
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.json
+    result: >-
+      pass. The order of S and rT, and of P and rT, flips inside the band. IC is cheaper only at w below
+      w* = 0.0028551 GAE (S) and 0.0018804 (P) per unpriced native operation (0.0028563 / 0.0018812 at b=104). So
+      IC beats matched rho only if a root solve, probe or canonicalization costs under about 1/350 (S) or 1/530 (P)
+      of a group addition. At every w >= 0.0029 rho is cheaper. No published cell shows IC cheaper at w >= 0.1.
+  - id: CAX-K10-kind-map-sensitivity
+    command: "python3 -I blind_band.py decoded_runs.json blind_band.json; protocol_band.py (models literal, protocol+frob_as_group)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.out
+    result: >-
+      pass for the ruling; the magnitudes are model-dependent. The protocol does not charge field-kind counters
+      (field_mul/sqr/inv/half_trace; PROTOCOL.md:91-93; band.py:60-61). For S these are 7.20e9 operations, against
+      the 3.09e9 that are charged. Charging every non-group counter at w gives S/rT 0.0113811 / 96.43 / 384.2 and P/rT
+      0.0114118 / 146.4 / 583.3, with crossover 0.00085 (S) and 0.00056 (P). Pricing Frobenius as group operations
+      makes rT cheaper at every weight (reproduces the producer's 56.08 / 70.99 / 115.5 and 84.00 / 106.8 / 175.0).
+      Dropping endomorphisms or s3_root_solves moves the w>=0.1 cells by at most 5%. 'Unresolved' holds under every
+      variant.
+  - id: CAX-K11-counter-internal-consistency
+    command: "python3 -I counter_consistency.py decoded_runs.json"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/counter_consistency.out
+    result: >-
+      pass as consistency, which is not fidelity. In 42 IC runs the counters agree with the producer's independent
+      non-counter fields: target probes = targets.root_index_probes, root_calls = s3_root_solves, flat target
+      op_counts = phases.targets, rank_probes_total and rank_root_calls_total = rank_stage counters, verified_columns =
+      600 LA scalar muls, rank_relations = relation_lifts. Inserts follow the fold pattern: logical+600 for S, and
+      2*logical for P, which does not fold. e2e equals the sum of phases except the diagnostic after-target digest.
+      Whether each counter counts the operation it names was not checked (see not_covered).
+  - id: CAX-K12-preregistration-chronology
+    command: "git log/merge-base: 3fa629a09 -> 765061e1 -> 1a6067f6; started_unix_ms of rT runs; git diff 765061e1 origin/main -- PROTOCOL.md band.py PINS.sha256"
+    output: inline
+    result: >-
+      pass, scoped. PROTOCOL.md was frozen at 765061e1 (2026-10-23T01:11:19Z), an ancestor of the run head 1a6067f6.
+      The first run (kS) started at about 01:23:55Z, inferred as the first rT start 01:40:13.8Z minus serials 1-4 wall
+      time of 978.1 s. The last rT started at 01:56:41Z. PROTOCOL.md, band.py and PINS.sha256 are unchanged from
+      765061e1 to origin/main. The acceptance analyzer analyze_v2 (ad1fbc64, 02:59:00Z) postdates the data. It is
+      stricter-only and gives a byte-identical band (CAN-4). 765061e1 and ad1fbc64 are not on main (squash merge);
+      the chronology is provable only from the two remote branches.
+  - id: CAX-K13-changes-since-1077
+    command: "git log/diff 5a6c233ea..origin/main -- experiments/koblitz-n83-opcounts-20261023 .github/workflows/n83-opcounts.yml docs/ic/"
+    output: inline
+    result: >-
+      No counter, band, protocol or analysis byte changed. In the experiment directory, only 5569ba6e3 changed
+      anything (runs.jsonl and README.pdf moved to the store, hash-equal) plus 10 workflow-only commits. In docs/ic,
+      08375ddb5 (2026-11-04) replaced the n=83 baseline row with the field-ops producer. It changed one band
+      sentence (BASELINES.md:804, "Still open: the current field-ops row (and the former rank-finder row) needs the
+      counters ported"), which is accurate, and added no band wording that overclaims. It left baselines.json
+      open[5] byte-unchanged (still "the current rank-finder row") and did not re-render BASELINES.pdf (last
+      5a6c233ea). See CAX-1.
+  - id: CAX-K14-rank-finder-port-status
+    command: "git ls-tree experiments/ | grep -iE 'opcount|count|band|rankfinder|fieldops'; git log 5a6c233ea..origin/main | grep -iE 'op-?count|counted|5a|GAE|rank.?finder'; git branch -r | grep ...; git grep -iE 'op_counts|op-counts|GAE|section 5a' origin/main -- the rankfinder and fieldops experiments; baselines.json section_5a_band fields"
+    output: inline
+    result: >-
+      Not ported. The only counted experiment is koblitz-n83-opcounts-20261023, which counts the stacked producer.
+      No commit on main since 5a6c233ea mentions counts, the band or the rank finder. No remote branch
+      (claude/ic-group-op-counts, n83-opcounts-run, n83-rankfinder, n83-fieldops) carries a counted rank-finder or
+      field-ops producer. The rank-finder row (other_records[20], since 2026-11-04) has section_5a_band "Not
+      computable from this run ... the IC / rho gap (3.924) has no band", and its README:707 says the same. The
+      current baseline, the field-ops row (baselines[4], koblitz-n83-fieldops-20261104), has "Not computable ... (4.096)
+      has no band", and its README:269 agrees. So no n=83 row after the stacked one has a section 5a band. A bounded
+      search proves no absence elsewhere.
+  - id: CAX-K15-stacked-row-record
+    command: "python3 read of baselines.json other_records[13] and corrections/as_of; BASELINES.md:470-494"
+    output: inline
+    result: >-
+      fail (CAN-1 persists). The stacked row's own section_5a_band still reads "Not computable from this run ... the
+      IC / rho gap (94.4) has no band". Its gap statistic and uncharged_phases.measurement_status ("The section 5a
+      band stays uncomputable (open)") and BASELINES.md:473-476 and 488-492 say the same. corrections[] still ends
+      at 2026-10-17. as_of moved to 2026-11-04, but only through the field-ops update.
+  - id: CAX-K16-proves-too-much
+    command: "python3 -I proves_too_much.py <run>/panel/runs <scratch> <run>/panel/band.md docs/ic/BASELINES.md"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/proves_too_much.out
+    result: pass (see proves_too_much_control)
+  - id: CAX-K17-prior-numeric-rechecks
+    command: "python3 -I prior_checks.py decoded_runs.json decoded_twin.json protocol_band.json; misc one-liner (rT RSS)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/prior_checks.out
+    result: pass. Each CAN-2/3/5 fact reproduces from raw data (see prior_finding_verdicts).
+  - id: CAX-K18-replay-K1-other-host
+    command: "decode_runs.py on koblitz-n83-replay-20261017/run_github_39007026856/panel/runs; compare rank fields with twin serials 42/43"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/decoded_replay.json (summary inline)
+    result: >-
+      pass. The replay ran in the order kS, kP, kP, kS on INTEL(R) XEON(R) PLATINUM 8573C, another host class.
+      All four rank processes equal archived K1 on rank probes, relation blake3, root calls, rank and scalar. The
+      in-process base construction took base_load 427.52 ms.
+  - id: CAX-K19-fb-archive-own-check
+    command: "python3 -I fbarchive_check.py / fbarchive_pointers.py / gz_osbyte.py (my own code; index.csv extracted with git show)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/fbarchive_check.out
+    result: >-
+      pass, scoped. The index has 2,685 rows: 2,676 git-stored and 9 git-chunks. All 2,652 tracked .json.gz/.json.xz
+      files under bases/ are indexed (0 unindexed), and the 2,652 present git rows match on bytes and file_sha256. 24
+      git rows are store-only; their .artifacts.json pointers equal the index rows (content not read). The 9 chunked
+      rows were not checked. OS byte 9 is 3 in 2,565 and 255 in 86 on-disk .json.gz files (17 store-only).
+  - id: CAX-K20-not-run
+    command: see not_covered
+    output: none
+    result: not_covered (listed below with the commands that would cover them)
+
+blind_rederivation:
+  quantity: >-
+    Gap of each IC arm to the matched rho, cost(arm) / cost(rT), at w = 0, 0.1 and 1 GAE per unpriced native
+    operation, and whether the order holds across the band
+  statement_used: "crypto:AGENTS.md section 5a (lines 1094-1131) and the raw per-run stdout of run 39882571652, nothing else"
+  method: >-
+    blind_band.py decodes the base64 payloads and uses the producer's own kind labels in the records. It prices IC as
+    ec_add+ec_double, plus w times every native, native_grouping, field and endomorphism counter. Composite and
+    trivial group ops are not charged, because their adds and doubles are already counted. Rho is group_additions
+    plus w*(canonicalizations + partition_hashes + table inserts/queries + failed collisions). Means are over runs,
+    S = cost/sqrt(l). Per-arm e2e counters are used for kS and kP (one run each) and cS and cP (20 each).
+  result: >-
+    At w=0, kS/rT = 0.0113806 and kP/rT = 0.0114112. Both round to the quoted 0.01138 / 0.01141. At w=0.1 and 1 my
+    literal reading gives 96.45 / 384.3 (kS) and 146.4 / 583.3 (kP), about 3.33x the quoted 29.00 / 115.5 and
+    43.93 / 175.0. The ruling is the same in both readings: IC is cheaper at w=0 and dearer at 0.1 and 1, so the
+    pair is unresolved.
+  disagreement_and_resolution: >-
+    Section 5a alone is underspecified at two points that move the w>0 cells by 3.3x without changing the ruling.
+    (a) Are field operations 'native operations' to be charged, or constituents of the root solves and group
+    operations? (b) What is one solved target of the S arm: the kS process, or kS's rank stage plus cS's cold work?
+    Leaving the field-kind counters uncharged reproduces 29.00 / 115.5 (kS e2e 29.0012 / 115.525). But kP's 43.94
+    then misses the quoted 43.93, so (b) mattered too. Both points are fixed by the frozen PROTOCOL.md (71-93):
+    field ops are 'reported, not priced', and S = E2E(kS, cS) = kS rank stage + cS setup/LA/online. I read that
+    protocol only after this derivation. My implementation of the protocol text from raw phases (protocol_band.py)
+    reproduces every published cell. That second step is a reimplementation, not a blind one: I had read band.py
+    first, and took its bootstrap seed (20261023) and order-statistic indexing so the interval digits are
+    comparable. The point estimates depend only on the protocol text.
+  outputs:
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.py
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.out
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.json
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.py
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.out
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.json
+
+proves_too_much_control:
+  - id: PTM-1 raw counter perturbation in a scratch copy
+    input: >-
+      A copy of the 124 raw stdout/stderr files in the session scratchpad. In 00024.stdout.txt (cS s007) the base64
+      payload was re-encoded with phases.targets.root_index_probes and end_to_end.root_index_probes each +50,000,000.
+    expected: >-
+      My payload-hash check flags exactly that file. S/rT does not move at w=0, because probes are unpriced. At w=0.1
+      and 1 it moves by exactly w*5e7/20/cost_rT(w). P does not move.
+    observed: >-
+      raw_result_sha256 61 match, 1 mismatch. S/rT is 0.0113811 at w=0 (unchanged), 28.99550 -> 29.01892 at w=0.1 and
+      115.50259 -> 115.59593 at w=1, both equal to the prediction to 1e-9. P is unchanged.
+    result: pass
+  - id: PTM-2 known-false conclusion must be refused
+    input: "the conclusion 'S is cheaper than rT at every weight of the band' on the real data"
+    expected: refused (unresolved)
+    observed: >-
+      unresolved. Positive control: after scaling every IC unpriced counter by 1e-3 in a copy, the same rule ranks S
+      cheaper at every weight (4.10e5 / 3.19e6 against rT 1.07e7 / 2.68e7). The instrument can see an IC win when
+      the data contain one.
+    result: pass
+  - id: PTM-3 no published cell shows IC beating rho at w >= 0.1
+    input: every S and P gap row in band.md (4 rows incl. sensitivity) and BASELINES.md:795-796
+    observed: >-
+      None below 1; the smallest at w>=0.1 is 29.0. The only cell of this run that would show IC below rho at w=0.1
+      is not published: the cached-log cold arm alone, cS without the rank stage, at 0.747 [0.573, 1.023]. It
+      appears only if the rank stage is dropped, which the protocol's E2E unit forbids. No quoted 0.747 / 0.7470 was
+      found in BASELINES.md, baselines.json or the experiment's .md files.
+    result: pass
+  - id: PTM-4 answer checker can fail
+    input: "[k+1]G against Q for all 62 rows"
+    observed: rejected 62/62
+    result: pass
+
+prior_finding_verdicts:
+  - id: CAN-1
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: not_fixed
+    why: >-
+      other_records[13] (stacked producer) still has section_5a_band "Not computable from this run ... the IC / rho
+      gap (94.4) has no band". Its gap_cold_ic_over_rho.statistic still says the band is not computable, and
+      uncharged_phases.measurement_status still says it "stays uncomputable (open)". BASELINES.md:473-476 and 488-492
+      say the same. corrections[] still ends 2026-10-17 with no entry for the band. as_of changed (2026-10-21 ->
+      2026-11-04), but only through 08375ddb5's field-ops update. The band exists only in open[5] and BASELINES.md:777-808.
+    evidence:
+      - "cryptanalysis:docs/ic/baselines.json other_records[13]"
+      - "cryptanalysis:docs/ic/BASELINES.md:473-476"
+      - "cryptanalysis:docs/ic/BASELINES.md:488-492"
+  - id: CAN-2
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: not_fixed
+    why: >-
+      Reconfirmed from raw data. ec_frobenius ("base construction") is 0 in every phase of all 42 IC records, and
+      base_source is retained_header (the base is loaded). The S and P units take cS/cP's cached-table LA, not the rank
+      process's solve: kS and kP's linear_algebra phase has 179,700 la_mulmods outside the unit. Adding it moves S/rT
+      at w=1 from 115.50259 to 115.50930. Pricing all of X = 427.524 ms as group additions adds at most 2.43e6 GAE at
+      a 175.95 ns step (2.27e6 at this run's own 188.2 ns/walk step), giving a w=0 S gap of at most 0.285 (0.267).
+      The ruling survives, and the w>=0.1 gaps are lower bounds. Since #1077 the README band section, PROTOCOL.md,
+      open[5] and the BASELINES band bullet are unchanged apart from the 'Still open' sentence. None of them names
+      either omission or labels the IC costs as lower bounds.
+    evidence:
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/prior_checks.out"
+      - "cryptanalysis:experiments/koblitz-n83-opcounts-20261023/PROTOCOL.md:73-77"
+  - id: CAN-3
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: not_fixed
+    why: >-
+      Found blind before reading CAN-3, then reconfirmed. The rank stage is 97.44% of S's unpriced work and comes
+      from one rank process (seed 101), constant in every bootstrap resample. S/P at w=0 is 0.997317, a
+      272-group-op difference between single rank draws (kS rank stage 55,318 vs kP 55,590). The archived second
+      seed has +1.377% kS rank probes, which would put S/rT at 29.38 / 117.05, inside the reported intervals. The
+      bootstrap upper bound at w=0.1 is 39.54 (seed 20261023, 10k draws), 39.30 (seed 1) and 39.00 (40k draws), so
+      it is Monte-Carlo-dependent at the third digit. Nothing in the band records changed. "S is cheaper than P at
+      every weight" stands unqualified (BASELINES.md:798, README:189, open[5]).
+    evidence:
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/prior_checks.out"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/twin_identity.out"
+  - id: CAN-4
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: not_fixed
+    why: >-
+      ANALYSIS_V2.md, ARTIFACT.json and README.md are byte-unchanged since 5a6c233ea; only README.pdf moved to the
+      store. None states the times: protocol 01:11:19Z, data about 01:24-01:57Z, v2 02:59:00Z. 765061e1 and ad1fbc64
+      are still off main and reachable only via origin/claude/n83-opcounts-run and origin/claude/ic-group-op-counts.
+      There is no forking-path effect, since v2 is stricter-only and its band is byte-identical.
+    evidence:
+      - "cryptanalysis:experiments/koblitz-n83-opcounts-20261023/ANALYSIS_V2.md:1-36"
+      - "cryptanalysis:experiments/koblitz-n83-opcounts-20261023/run_github_39882571652/ARTIFACT.json"
+  - id: CAN-5
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: not_fixed
+    why: >-
+      Reconfirmed. Peak RSS is 1.876 GB for kS and cS and 5.81 GB for kP and cP (root tables of 1 GiB / 4 GiB slots,
+      29,878,182 entries). rT is 18.4-56.7 MB (median 18.6 MB) with mean 138,876 table entries (6.8 MB payload lower
+      bound). The IC is about 100x worse on memory against median rT RSS, or 33x against its maximum. No memory line
+      sits beside the band in any record.
+    evidence:
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/prior_checks.out"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/misc.out"
+  - id: R1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      For the stacked n=83 row, the preregistered K1 replay (run 39007026856, Intel Xeon 8573C) exists. My own
+      comparison shows all four rank processes, run in the order kS, kP, kP, kS, equal to archived K1, and
+      construction time X was measured. other_records[13].replication records it. The residue is structural: main is
+      squash-merged, so preregistration remains provable only from branch refs. The later n=83 rows (rank-finder,
+      field-ops) are again single-host-class; that is outside R1's target.
+    evidence:
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/decoded_replay.json"
+      - "cryptanalysis:docs/ic/baselines.json other_records[13].replication"
+  - id: K1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      other_records[13].headline_scope labels the figures wall time, one host class, CPU-only, with the
+      operation-count ratio 1.4773 beside them. I recomputed 1.47730 as summed kP / kS rank probes over both archived
+      seeds.
+    evidence:
+      - "cryptanalysis:docs/ic/baselines.json other_records[13].headline_scope"
+  - id: K2
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: partially_fixed
+    why: >-
+      The uncharged phase is disclosed and measured (uncharged_phases, X = 427.524 ms), and counted group operations
+      are now emitted, with the band reported in open[5] and BASELINES.md:777-808. But the row the finding is about
+      still tells its reader the band does not exist (CAN-1), and the band unit itself does not charge factor-base
+      construction (CAN-2).
+    evidence:
+      - "cryptanalysis:docs/ic/baselines.json other_records[13]"
+      - "cryptanalysis:docs/ic/BASELINES.md:777-808"
+  - id: K3
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      s_ic_setup is 9.6673 = 8.79486 + 0.87245 = s_ic_cold 9.68045 - s_ic_online 0.013137 (my arithmetic), and
+      conventions.setup states one meaning.
+    evidence:
+      - "cryptanalysis:docs/ic/baselines.json other_records[13].s_ic_setup_derivation"
+      - "cryptanalysis:docs/ic/baselines.json conventions.setup"
+  - id: K4
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "ratchet_history[9] holds within-run cold_gap [305.8238, 94.4168] and online_gap [0.13304, 0.13912]; the cross-run figures are in cross_run_context_*."
+    evidence:
+      - "cryptanalysis:docs/ic/baselines.json ratchet_history[9]"
+  - id: X2
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      My own check, not fbarchive.py, finds 0 unindexed tracked archives (2,652 tracked under bases/). Present git
+      rows match bytes and sha256, and the 24 store-only rows' pointers match the index. The README records the three
+      files as indexed through the append-only route. fbarchive.py verify itself was not run, and 9 chunked rows
+      were not checked.
+    evidence:
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/fbarchive_check.out"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/fbarchive_pointers.out"
+      - "cryptanalysis:experiments/fb-archive/README.md:78-94"
+  - id: R1-R
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "Same evidence as R1: the K1 rank block was replayed on another host class with identical rank-stage work, and X was timed in the same job."
+    evidence:
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/decoded_replay.json"
+  - id: K-N1
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: partially_fixed
+    why: >-
+      Counted group operations are emitted and the band reported, but for the stacked row only (#1077). X is
+      measured, and conventions.setup now names the omissions. The current n=83 baseline (field-ops, baselines[4])
+      and the rank-finder row (other_records[20]) still have no band. No counted port exists on main or on any
+      related branch (CAX-K14).
+    evidence:
+      - "cryptanalysis:docs/ic/baselines.json baselines[4].section_5a_band"
+      - "cryptanalysis:docs/ic/baselines.json other_records[20].section_5a_band"
+      - "cryptanalysis:docs/ic/BASELINES.md:804"
+  - id: K-N2
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "The standard cold_gap and online_gap fields hold within-run deltas uniformly (entries 9-21), and the cross-run figures are in cross_run_context_*."
+    evidence:
+      - "cryptanalysis:docs/ic/baselines.json ratchet_history"
+  - id: K-N3
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: >-
+      The fb-archive README sentence was corrected: OS byte 3 does not mark another writer, and the files are
+      byte-identical to compress() apart from that byte. My on-disk recount supports it: 2,565 files carry 3 and 86
+      carry 255, with 17 store-only. The dated 2,568/2,664 cannot be reproduced exactly, because rows were added and
+      17 files moved off-disk since.
+    evidence:
+      - "cryptanalysis:experiments/fb-archive/README.md:78-94"
+      - "research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/gz_osbyte.out"
+  - id: K-N4
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: >-
+      8.7949 (8.79486) is in the row's derivation. BASELINES.md:454 calls 2.2837 per-probe wall time, not host speed.
+      The stacked README:401-403 now gives 1.358, with its conditions, in place of 'about 1.3'.
+    evidence:
+      - "cryptanalysis:docs/ic/BASELINES.md:437-440"
+      - "cryptanalysis:docs/ic/BASELINES.md:454"
+      - "cryptanalysis:experiments/koblitz-n83-stacked-20261016/README.md:401-403"
+
+findings:
+  - id: CAX-1
+    beat: B8
+    severity: minor
+    claim_ids: [CAX-C13]
+    what: >-
+      After 08375ddb5 (2026-11-04) replaced the n=83 baseline row with the field-ops producer, the band records
+      disagree about which row is current. BASELINES.md:804 says "the current field-ops row (and the former
+      rank-finder row) needs the counters ported". baselines.json open[5], byte-unchanged since #1077, still says
+      "the current rank-finder row needs the counters ported to its derivation", although BASELINES.md says to
+      "update both files in the same change". BASELINES.pdf was last rendered at 5a6c233ea (2026-10-22): it still
+      prints "Still open: the current rank-finder row" and has no field-ops row, so the committed PDF predates the
+      last change to the baseline it renders. The experiment README:18 and 216-221 also present the rank-finder as
+      the current baseline, but that is a dated status (2026-10-23).
+    evidence:
+      - cryptanalysis:docs/ic/BASELINES.md:804
+      - cryptanalysis:docs/ic/baselines.json open[5]
+      - cryptanalysis:docs/ic/baselines.json baselines[4]
+      - cryptanalysis:docs/ic/BASELINES.pdf (last commit 5a6c233ea; pdftotext line 2888)
+      - cryptanalysis:experiments/koblitz-n83-opcounts-20261023/README.md:18
+    fix: >-
+      Bring open[5] in line with BASELINES.md:804 (field-ops is current, rank-finder former, neither has a band),
+      re-render BASELINES.pdf, and add a dated note to the experiment README's 'What is left'.
+  - id: CAX-2
+    beat: B5
+    severity: minor
+    claim_ids: [CAX-C2, CAX-C3, CAX-C5]
+    what: >-
+      Section 5a requires listing "every unpriced counter for every arm ... with its count". The band entries (band.md,
+      README band table, BASELINES.md:777-808, open[5]) give only the summed "mean unpriced native ops". Per-counter
+      counts exist only in the machine-readable counts.json and in a partial README paragraph (kS rank stage, local).
+      The field-kind counters that the frozen kind map does not price, as "inside a priced kind", appear in no band
+      entry. For S they are 7.20e9 operations, against the 3.09e9 that are priced. The reader is therefore not shown
+      that charging them at w moves S/rT to 96.43 / 384.2 and P/rT to 146.4 / 583.3, and the crossover from w* =
+      0.0029 to 0.00085 (S). The ruling (unresolved) is unchanged under every variant I tried.
+    evidence:
+      - cryptanalysis:experiments/koblitz-n83-opcounts-20261023/PROTOCOL.md:91-93
+      - cryptanalysis:experiments/koblitz-n83-opcounts-20261023/band.py:53-71
+      - cryptanalysis:experiments/koblitz-n83-opcounts-20261023/run_github_39882571652/panel/band.md:6-10
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.out
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.out
+    fix: >-
+      Beside the band, add a per-arm table of every counter (priced, unpriced, reported-not-priced) with its mean
+      count. Add a one-line sensitivity with the field-kind counters charged at w, and state the crossover weights
+      (S 0.00286, P 0.00188).
+  - id: CAX-3
+    beat: B7
+    severity: minor
+    claim_ids: [CAX-C12]
+    what: >-
+      README.md:158-159 says "A second run reproduced every output byte for byte", and ARTIFACT.json says the v2
+      outputs were "reproduced byte for byte by a second run". No output, hash or log of that second run is
+      committed, so the statement cites nothing.
+    evidence:
+      - cryptanalysis:experiments/koblitz-n83-opcounts-20261023/README.md:158-159
+      - cryptanalysis:experiments/koblitz-n83-opcounts-20261023/run_github_39882571652/ARTIFACT.json
+    fix: Commit the second run's output hashes (or its stdout), or drop the sentence.
+
+claims:
+  - id: CAX-C1
+    text: >-
+      "verdict counts_identical (complete_frozen_panel, all_runs_valid, identical_to_archived_run against run
+      38862448935, one_scalar_per_point all pass)"
+    location: "cryptanalysis:docs/ic/baselines.json open[5]; cryptanalysis:docs/ic/BASELINES.md:786-789; cryptanalysis:experiments/koblitz-n83-opcounts-20261023/README.md:161-168"
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      The archived receipts are internally consistent. There are 62 rows in frozen order (arms, points and seeds as
+      in PROTOCOL.md:46-50), all with rc 0 and no issues. Each is identical to the archived twin on every
+      protocol-listed field (my own comparison). There is one scalar per point, and all 62 scalars verified as
+      [k]G = Q by my own arithmetic. This is not an execution proof: nothing was re-executed, and the GitHub
+      run/artifact metadata could not be queried.
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C2
+    text: "S = kS + cS 0.01138 [0.008767, 0.01552] at w=0, 29.00 [22.33, 39.54] at w=0.1, 115.5 [88.94, 157.5] at w=1"
+    location: "cryptanalysis:docs/ic/BASELINES.md:795; baselines.json open[5]; README.md:182; panel/band.md:14"
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      These are exact recomputations under PROTOCOL.md's kind map, where field ops are reported but not priced
+      (CAX-2). The rank stage comes from one draw at seed 101, and the intervals exclude rank-seed variance and are
+      Monte-Carlo-stable to about 3 significant figures (CAN-3). Factor-base construction and the rank process's LA
+      solve are uncharged, so the w>=0.1 gaps are lower bounds (CAN-2). Unit: GAE per solved target.
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: pass, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C3
+    text: "P = kP + cP 0.01141 [0.00879, 0.01556], 43.93 [33.83, 59.92], 175.0 [134.8, 238.7]"
+    location: "cryptanalysis:docs/ic/BASELINES.md:796; baselines.json open[5]; README.md:183; panel/band.md:15"
+    suggested_verdict: upheld_scoped
+    scoped_to: "Same scope as CAX-C2. My recompute gives 0.0114118 / 43.9319 / 175.019."
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: pass, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C4
+    text: "rho scalar multiplications at 0 GAE (at 104 GAE every cell moves by < 0.1%)"
+    location: "cryptanalysis:docs/ic/BASELINES.md:790-791; baselines.json open[5]; README.md:176-178"
+    suggested_verdict: upheld
+    scoped_to: "The largest move is 0.041%."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: pass, B8: pass}
+  - id: CAX-C5
+    text: "S vs rT and P vs rT are unresolved (the order flips inside the band: IC cheaper at w = 0, dearer at 0.1 and 1)"
+    location: "cryptanalysis:docs/ic/BASELINES.md:798-800; baselines.json open[5]; README.md:191-193; panel/band.md:20-21"
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      Upheld on the archived receipts; no execution proof exists (B2 not_covered). Holds under every kind-map variant I tried. The crossover is at w* = 0.0029 GAE (S) and 0.0019 (P), so IC
+      matches rho only if its native operations cost about 1/350 to 1/530 of a group addition. This is the only band
+      in the n=83 lineage, and it applies to the stacked producer.
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: pass, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C6
+    text: "Pairs: S is cheaper than P at every weight"
+    location: "cryptanalysis:docs/ic/BASELINES.md:798; baselines.json open[5]; README.md:189-190; panel/band.md:19"
+    suggested_verdict: overclaimed
+    scoped_to: >-
+      S is cheaper than P at w = 0.1 and 1 (S/P 0.6600 and 0.6599). At w = 0, S/P = 0.9973 is a 272-group-op
+      difference between single rank draws (seed 101). The 20-point bootstrap holds the rank stage fixed, so its
+      interval [0.997316, 0.997317] carries no rank-seed uncertainty. At w = 0 the evidence does not order the arms.
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: pass, B6: fail, B7: pass, B8: pass}
+  - id: CAX-C7
+    text: "Sensitivity, Frobenius applications at 1 GAE as group operations: rT cheaper than S and P at every weight (S / rT 56.08, 70.99, 115.5; P / rT 84.00, 106.8, 175.0)"
+    location: "cryptanalysis:docs/ic/BASELINES.md:800-802; baselines.json open[5]; README.md:195-198; panel/band.md:23-45"
+    suggested_verdict: upheld_scoped
+    scoped_to: "Upheld on the archived receipts; no execution proof exists (B2 not_covered). My recompute gives 56.0820 / 70.9944 / 115.503 and 83.9986 / 106.841 / 175.019."
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: pass, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C8
+    text: "it is accounting, and no row's figure changes / This is accounting of an existing producer, not an improvement, and no baseline row changes"
+    location: "cryptanalysis:docs/ic/BASELINES.md:803-804; README.md:203-204; baselines.json open[5]"
+    suggested_verdict: upheld
+    scoped_to: >-
+      #1077 changed one baselines.json string (open[5]) and the BASELINES.md band bullet and header sentence. No row
+      number changed. It is accounting by class: same code and outputs as the twin, with counters added.
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: pass, B8: pass}
+  - id: CAX-C9
+    text: "The distance remaining to rho for the stacked row is thus a factor of about 29 at w = 0.1 and 116 at w = 1, carried by the rank stage's ~3.1e9 native operations ... against ~1.0e5 group operations"
+    location: cryptanalysis:experiments/koblitz-n83-opcounts-20261023/README.md:200-204
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      29 and 116 are lower bounds (CAN-2). The rank stage alone has 3.014e9 unpriced operations, 97.4% of S's
+      3.093e9; '~3.1e9' is S's total, not the rank stage's.
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: pass, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C10
+    text: "Frozen 2026-10-23, before any run of this protocol / PROTOCOL.md frozen at 765061e1"
+    location: "cryptanalysis:experiments/koblitz-n83-opcounts-20261023/PROTOCOL.md:3-5; BASELINES.md:782; ARTIFACT.json protocol"
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      765061e1 (01:11:19Z) is an ancestor of the run head and precedes the first run (about 01:24Z). PROTOCOL.md and
+      band.py are unchanged since. This is provable only from the unmerged branch refs (squash merge). The
+      acceptance analyzer v2 postdates the data (CAN-4).
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C11
+    text: "v2's band equals v1's"
+    location: "cryptanalysis:docs/ic/BASELINES.md:789; README.md:170-171"
+    suggested_verdict: upheld
+    scoped_to: "band.md and band-v2.md are byte-identical (diff), as are counts.json and counts-v2.json (cmp)."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: CAX-C12
+    text: "A second run reproduced every output byte for byte"
+    location: "cryptanalysis:experiments/koblitz-n83-opcounts-20261023/README.md:158-159; ARTIFACT.json v2_analysis"
+    suggested_verdict: unsupported
+    scoped_to: "No artifact of the second run is committed (CAX-3)."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: fail}
+  - id: CAX-C13
+    text: "Still open: the current rank-finder row needs the counters ported to its derivation and its own run (open[5]); BASELINES.md since 08375ddb5: the current field-ops row (and the former rank-finder row) needs the counters ported"
+    location: "cryptanalysis:docs/ic/baselines.json open[5]; cryptanalysis:docs/ic/BASELINES.md:804"
+    suggested_verdict: overclaimed
+    scoped_to: >-
+      The port is still open: no counted rank-finder or field-ops producer exists on main or on any related branch,
+      and both rows say 'Not computable'. The BASELINES.md wording is accurate. open[5] (and BASELINES.pdf) still
+      call the rank-finder row current, which has been false since 2026-11-04 (CAX-1).
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: pass, B8: fail}
+  - id: CAX-C14
+    text: "The band covers the stacked row (in other_records) only"
+    location: "cryptanalysis:docs/ic/BASELINES.md:802-803; README.md:17-18"
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      True as a scope statement. The stacked row's own record still says it has no band, so a reader of the row does
+      not find it (CAN-1, not_fixed).
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: pass, B6: n/a, B7: pass, B8: pass}
+  - id: CAX-C15
+    text: "the frozen stacked source 83b58988... plus exact counter edits"
+    location: "cryptanalysis:docs/ic/BASELINES.md:779-780; baselines.json open[5]"
+    suggested_verdict: upheld_scoped
+    scoped_to: >-
+      'Exact' in the sense that counting does not change the computation: every non-clock output equals the
+      uncounted archived twin (62/62). Whether each counter counts the operation it names was checked only for
+      internal consistency (CAX-K11). The derivation and the feature tests were not run.
+    beats: {B2: not_covered, B3: n/a, B4: pass, B5: pass, B6: n/a, B7: pass, B8: pass}
+
+not_covered:
+  - what: Counted-producer tests (counted_scalar_mul_matches_the_library, counting_leaves_relations_and_probes_unchanged, the 15 crate tests with and without the feature)
+    command: "cargo test --manifest-path experiments/koblitz-n83-opcounts-20261023/online/Cargo.toml --features op-counts (and without), after make_counted_source.py regenerates the derived source"
+    why: The session policy forbids executing cryptanalysis code.
+  - what: Counter fidelity, i.e. a line-by-line review that each counter in make_counted_source.py's edits increments exactly at the operation it names
+    command: "read experiments/koblitz-n83-opcounts-20261023/make_counted_source.py (779 lines) against the derived source"
+    why: Not done in this joint. Only internal consistency (CAX-K11) and identity to the uncounted twin (CAX-K5) were checked.
+  - what: The producer's own analyzers and regressions
+    command: "python3 experiments/koblitz-n83-opcounts-20261023/analyze_v2.py --receipt-dir <copy of panel>; python3 -m unittest discover -s experiments/koblitz-n83-opcounts-20261023 -p test_analyze_v2.py -v; sha256sum -c experiments/koblitz-n83-opcounts-20261023/ANALYSIS_V2.sha256"
+    why: Their code is not executed here. My own reimplementation (protocol_band.py) reproduces every output cell instead.
+  - what: GitHub run and artifact metadata for run 39882571652 / artifact 12472682483 (head_sha, conclusion, zip digest)
+    command: "gh api repos/aburan28/cryptanalysis/actions/runs/39882571652; gh api repos/aburan28/cryptanalysis/actions/artifacts/12472682483"
+    why: The session's GitHub access was refused (HTTP 403).
+  - what: Bytes of store-only files (panel/runs.jsonl, README.pdf, 24 fb-archive bases)
+    command: "tools/artifacts fetch (or the store's pull) for experiments/koblitz-n83-opcounts-20261023 and experiments/fb-archive, then sha256sum"
+    why: Off-disk. Only the pointer hashes were compared.
+  - what: fb-archive verify and refs check, and the 9 git-chunks rows
+    command: "python3 experiments/fb-archive/fbarchive.py verify; python3 experiments/fb-archive/refs.py check"
+    why: These are cryptanalysis code and were not run, per the brief. My own presence and hash check covers the git rows only.
+  - what: Execution proof of any run
+    command: none exists (docs/execution-proof-chain.md milestones open)
+    why: Replays and hashes are not execution proofs.
+
+limitations:
+  - >-
+    The band is a convention, not a bound. Its w=1 end prices one S3 root solve (about 1 half-trace plus 8-11 field
+    multiplications by the counters) at 1 GAE, so even w=1 need not upper-bound the IC's real cost. No ECBND1h
+    measured bound exists for any cell, so none of this can enter the crypto-autoresearcher ledger as a cost claim.
+  - >-
+    Everything is for the stacked producer, the lineage's earlier row. The current n=83 baseline (field-ops) has no
+    band, and nothing here transfers to it: closure and the index and rank rewrites changed the dominant rank-stage
+    work.
+  - The rank stage is a single draw (n=1 per rank arm). The second archived draw is uncounted.
+  - "toy scale: l is about 2^52.9 (n=83 field degree), one Koblitz curve, 20 points"
+
+artifact_paths:
+  - research/sheriff/SHF-20261106-a114e7/readers/cryptanalysis.yaml
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/decode_runs.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/decoded_runs.json
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/decoded_twin.json
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/decoded_replay.json
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/blind_band.json
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/protocol_band.json
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/check_counts_input.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/check_counts_input.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/twin_identity.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/twin_identity.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/verify_answers.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/verify_answers.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/counter_consistency.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/counter_consistency.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/proves_too_much.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/proves_too_much.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/prior_checks.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/prior_checks.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/misc.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/fbarchive_check.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/fbarchive_check.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/fbarchive_pointers.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/fbarchive_pointers.out
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/gz_osbyte.py
+  - research/sheriff/SHF-20261106-a114e7/scripts/readers/cryptanalysis/gz_osbyte.out
+
+review_attestation:
+  joints_owned: ["CAX: B5/B6/B7 cryptanalysis#1077 band, receipts, gap to matched rho, rank-finder port status"]
+  sources_read: see sources_read above (complete; file names seen in listings but not opened are listed under blind_from)
+  read_sibling_reports: false
+  verdict_on_joint: >-
+    holds, narrowed. Every band cell reproduces from raw counters and every answer verifies independently. The
+    ruling (S and P vs rT unresolved, crossover near w = 0.003) is robust. Open: one overclaim at w=0 (S cheaper than
+    P), stale records (CAN-1, CAX-1), uncharged phases (CAN-2), interval scope (CAN-3), unstated chronology (CAN-4),
+    memory (CAN-5), the field-op listing (CAX-2) and one unsupported reproducibility sentence (CAX-3). There is no
+    counted port for the rank-finder or field-ops rows.

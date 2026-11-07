@@ -1,0 +1,120 @@
+{
+  "audit_interpreter": {
+    "executable": "/usr/local/bin/python3",
+    "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+  },
+  "audited_at": "2026-11-06T03:05:37.938913Z",
+  "auditor": "sheriff-reader-pfdr/claude-opus-5-5 (proves-too-much control, tampered journal byte)",
+  "challenge_seed": "a92d18bd0e3c4adaef7b1be90e42d26796dfb73c9454002090ce905fb893a8de",
+  "detection_power": {
+    "miss_probability": {
+      "0.01": 0.99,
+      "0.05": 0.95,
+      "0.1": 0.9,
+      "0.25": 0.75,
+      "0.5": 0.5
+    },
+    "replayed_units": 1
+  },
+  "environment_drift": [
+    {
+      "kind": "interpreter_version",
+      "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+      "recorded_python_version": "3.11.15",
+      "replay_python_version": "3.13.18",
+      "step_id": "S01-trials",
+      "trial_id": "selftest"
+    }
+  ],
+  "experiment_id": "EXP-PFDR-bb0d26",
+  "findings": [
+    "journal entry 13: content does not match its hash (edited after writing)"
+  ],
+  "float_tolerance": null,
+  "interpreter_parity": {
+    "match": 0,
+    "mismatch": 1,
+    "unknown": 0
+  },
+  "journal_chains": [
+    {
+      "blob": "0034f8ed619f08ee9d97559004f291127807a34d",
+      "entries": 18,
+      "first_commit": "working tree",
+      "first_commit_time": null,
+      "first_entry_time": "2026-10-22T12:17:43.195279Z",
+      "owner": "executor-mechanical-exp-pfdr-bb0d26"
+    }
+  ],
+  "journal_entries": 18,
+  "journal_tip": "47f92d815113fa07878922f3ed9d45ddd7a6adbfbcf0920994e22af9efaa009f",
+  "lean": [],
+  "nonce": "952a9d0cebe3a422d3987953efa1527e",
+  "not_covered": [],
+  "notes": [],
+  "replay_interpreters": [
+    {
+      "executable": "/usr/local/bin/python3",
+      "program": "python3",
+      "python_version": "3.13.18",
+      "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+    }
+  ],
+  "replay_results": {
+    "matched": 1,
+    "matched_within_tolerance": 0,
+    "mismatch": 0
+  },
+  "replays": [
+    {
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-bb0d26/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "audit-ptm1/replay/RUN-PFDR-e44a19",
+        "--run-id",
+        "RUN-PFDR-e44a19",
+        "--trial-id",
+        "selftest",
+        "--plan",
+        "experiments/EXP-PFDR-bb0d26/trial-plan.json"
+      ],
+      "compared": [
+        {
+          "equal": true,
+          "file": "raw-result.json",
+          "pointer": "/summary",
+          "result": "equal"
+        }
+      ],
+      "detail": "reproduced",
+      "environment_drift": {
+        "kind": "interpreter_version",
+        "note": "recorded under python 3.11.15, replayed under 3.13.18; reported beside the replay result, never in place of it",
+        "recorded_python_version": "3.11.15",
+        "replay_python_version": "3.13.18"
+      },
+      "interpreter": {
+        "executable": "/usr/local/bin/python3",
+        "interpreter_parity": "mismatch",
+        "python_version": "3.13.18",
+        "recorded_python_version": "3.11.15",
+        "recorded_source": "manifest.yaml#/run/environment/python_version",
+        "version": "3.13.18 (main, Oct 26 2026, 14:08:19) [Clang 23.1.3 ]"
+      },
+      "matched": true,
+      "population": 5,
+      "result": "matched",
+      "run_id": "RUN-PFDR-e44a19",
+      "step_id": "S01-trials",
+      "trial_id": "selftest"
+    }
+  ],
+  "runbook_sha256": "a2d3e9e44fd47d51688a38c415be64744888714bf0d7d72c8522bcc75da5980f",
+  "schema": "crypto.autoresearch.runbook_audit.v2",
+  "scope": "integrity and replay screening of one runbook session; never a validation_report, never evidence about the hypothesis, never an execution proof",
+  "session_dir": "experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26",
+  "tool_sha256": "8de36933d52efe04c503c1711a85b4e3ea715738db9f3de356372130a743d7ae",
+  "verdict": "flagged"
+}
