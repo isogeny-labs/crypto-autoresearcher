@@ -23,7 +23,7 @@ The blind reviewer derived the identities independently and exhaustively checked
 
 == Scope and next bridge
 
-This packet proves field identities. The target does not establish the complete product-tree recursion, NumPy uint64 refinement, curve-point validity, operation counts, timing, or authentication of A15 execution rows. The source review holds for the local formula and emission order and rejects a widened run-parity interpretation. The precommitted Markdown plan omits the final `e` of the Lean SHA-256; `review-summary.md` preserves the correction and the structured-independence-check limitation. No official hypothesis or evidence status is changed by this technical packet.
+This packet validates the scoped field identities and inspected local source correspondence. The target does not establish the complete product-tree recursion, NumPy uint64 refinement, curve-point validity, operation counts, timing, or authentication of A15 execution rows. The source review rejects a widened run-parity interpretation. The precommitted Markdown plan omits the final `e` of the Lean SHA-256; `review-summary.md` preserves the correction. The structured independence consistency check passed on a post-review transcription of that plan and reviewer-authored attestations, with the timing limitation stated there. No official hypothesis or evidence status is changed by this technical packet.
 
 == Sources and custody
 
