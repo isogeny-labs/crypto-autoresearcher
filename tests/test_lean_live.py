@@ -1,5 +1,6 @@
 """Real Lean controls. Run in CI with the pinned toolchain, never a fake runner."""
 import json
+import hashlib
 from pathlib import Path
 import shutil
 
@@ -89,11 +90,69 @@ def test_verify_cli_needs_no_generator_and_preserves_receipt(workspace):
     assert data['verification']['status'] == 'machine_verified'
     assert data['semantic_review']['status'] == 'pending'
     assert data['provenance']['theorem_sha256']
+    assert data['provenance']['declared_source_sha256'] == hashlib.sha256(
+        (workspace / 'formal/CryptoResearch/Smoke.lean').read_bytes()).hexdigest()
     assert 'CryptoResearch/Smoke.lean' in data['provenance']['workspace_inputs']
     assert 'AxiomAudit.lean' in data['provenance']['workspace_inputs']
     before = artifact.read_bytes()
     assert main(args) == 2
     assert artifact.read_bytes() == before
+
+
+def test_verify_cli_binds_research_source_outside_lean_workspace(workspace, monkeypatch):
+    """An edited claim note cannot inherit a green proof receipt."""
+    from orchestration.formal import cli
+    from orchestration.formal.receipts import receipt_errors
+
+    source = workspace / 'claim.md'
+    source.write_text('Adding zero preserves a natural number.\n')
+    spec = workspace / 'task.json'
+    spec.write_text(json.dumps(dict(schema='crypto.autoresearch.formal_task.v1',
+        **task().__dict__, source='claim.md')))
+    args = ['--repo-root', str(workspace), 'verify', '--task-file', str(spec),
+            '--artifact-out', str(workspace / 'receipt.json')]
+    assert main(args) == 0
+    receipt = json.loads((workspace / 'receipt.json').read_text())
+    assert receipt['provenance']['declared_source_sha256'] == hashlib.sha256(source.read_bytes()).hexdigest()
+    assert receipt_errors(receipt, repo=workspace, spec=spec, task=task()) == []
+    forged = json.loads(json.dumps(receipt))
+    forged['provenance'].pop('declared_source_sha256')
+    assert 'declared source hash' in receipt_errors(forged, repo=workspace, spec=spec, task=task())
+
+    source.write_text('An unrelated, changed claim.\n')
+    assert 'declared source hash' in receipt_errors(receipt, repo=workspace, spec=spec, task=task())
+
+    source.write_text('Adding zero preserves a natural number.\n')
+    original = cli.LeanWorker.verify
+
+    def verify_then_change(self, formal_task):
+        result = original(self, formal_task)
+        assert result.machine_verified
+        source.write_text('Changed while Lean ran.\n')
+        return result
+
+    monkeypatch.setattr(cli.LeanWorker, 'verify', verify_then_change)
+    args[-1] = str(workspace / 'second-receipt.json')
+    assert main(args) == 3
+    second = json.loads((workspace / 'second-receipt.json').read_text())
+    assert second['verification'] is None
+    assert 'inputs changed' in second['infrastructure_failure']
+
+
+def test_verify_cli_rejects_escaping_or_missing_research_source(workspace):
+    spec = workspace / 'task.json'
+    args = ['--repo-root', str(workspace), 'verify', '--task-file', str(spec),
+            '--artifact-out', str(workspace / 'receipt.json')]
+    for source in ('../outside.md', '/tmp/outside.md', 'missing.md'):
+        spec.write_text(json.dumps(dict(schema='crypto.autoresearch.formal_task.v1',
+            **task().__dict__, source=source)))
+        assert main(args) == 2
+        assert not (workspace / 'receipt.json').exists()
+    (workspace / 'real.md').write_text('A claim.\n')
+    (workspace / 'linked.md').symlink_to('real.md')
+    spec.write_text(json.dumps(dict(schema='crypto.autoresearch.formal_task.v1',
+        **task().__dict__, source='linked.md')))
+    assert main(args) == 2
 
 
 @pytest.mark.parametrize('change', ['mutate', 'create', 'delete'])
