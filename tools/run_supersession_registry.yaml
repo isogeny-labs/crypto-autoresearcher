@@ -2986,3 +2986,16 @@ records:
   notes: No rerun, repair or result promotion. New manifest outside sealed run transcribes
     actual native failure and binds existing compressed bundle; original run bytes
     remain immutable.
+- run_id: RUN-ICPERF-c7f69e
+  superseded_path: experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/manifest.yaml
+  superseded_sha256: ef8f29d3fb63262156f613136ddfdfa9e2fd360acbaecd7d61139a3581b1e8ea
+  superseding_path: experiments/EXP-ICPERF-127dbd/corrections/RUN-ICPERF-c7f69e-manifest-v3.yaml
+  superseding_sha256: 6c362768049f0838365146b992d00cddfed5eb3a69660bad74702016f567683b
+  registered: '2026-11-06'
+  supersession_kind: additive_schema_completion
+  decision_id: DEC-20261106-ecf261
+  defect: The launch wrapper (launch_eks.sh sha256 130164868a...) wrote a flat manifest without status, code,
+    environment, inputs, timing, resources and certificate fields; the run schema rejects it.
+  notes: No rerun. The run refused before submission (exit 4, nothing submitted, USD 0). manifest_v2.yaml
+    transcribes raw-result.json, launch.json, execution-receipt.json and environment.json and states the
+    receipt status infrastructure_error; the original run bytes, sealed by RBS-ICPERF-e2a5c2's journal, are unchanged.

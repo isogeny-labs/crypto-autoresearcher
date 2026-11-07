@@ -1,0 +1,249 @@
+# Sweep-tier reading review of one runbook session. A screen: never a validation_report,
+# never evidence about H-ICPERF-5adc9b, never an execution proof, never a review gate.
+audit_review:
+  audit_id: AUD-20261106T042103Z-b4f221
+  session_dir: experiments/EXP-ICPERF-283a70/runbook-sessions/RBS-ICPERF-67df7d
+  journal_tip: c97b6c9d4a64ccbaaf9afbd35c733efba13d22ee6efc26cf56b961dcdb4df7cf
+  auditor_model: claude-sonnet-5-5
+  reviewed_on: '2026-11-06'
+  independence: >-
+    I did not produce this run (executor-run-20261030-01a179ee did). Read: AGENTS.md,
+    .claude/skills/audit-runs/SKILL.md, .claude/agents/validator-sweep.md, audit.json,
+    specification.yaml, runbook.yaml, trial-plan.json, the session journal (final
+    session_finished entry), S01 environment.json, the three run directories' raw-result.json
+    and manifest.yaml, and the audit replay directories. run.py was read AFTER the blind
+    scripts below were written and run. The earlier audit AUD-20261105T164530Z-b85ca9 was
+    read only (its audit.json for replay population and tool digest); it is untouched.
+  deterministic_audit_recap:
+    verdict: clean
+    findings: []
+    journal_tip_matches_session_finished_entry: true
+    sha256_of_bound_files_recomputed_by_me:
+      specification.yaml: 491106dfa655848f726f60962f31716dda30e3418f10e3ac95238d6aeac95973
+      trial-plan.json: e8344b194d0278fb523fe804a0d8d536705279d9f866674afbd05737311759a9
+      implementation/run.py: 53965863abfea9c7cf326bc8d24546eb4889654f9c4dc5e2344b662000bf9a38
+      implementation/check.py: 3168dc51a5074ed4b688889043e996db0e03576b17c178b0106c2b608708ad7f
+      runbook.yaml: 2d5aa752d5f2b2fce495b9a836d8637bb6ffed0b00ff3b97c5a8f63396149840
+      all_equal_to_runbook_binds_and_audit_runbook_sha256: true
+    replayed_units: 3
+    units_in_session: 3
+    replay_results: {matched: 3, matched_within_tolerance: 0, mismatch: 0}
+
+  # ---------------------------------------------------------------- check 1
+  specification_fidelity:
+    summary: >-
+      Every arm, control, primary/secondary/decisive metric, replay pointer, stopping rule and
+      required artifact in the specification has a runbook counterpart. No missing item. Three
+      notes below are not findings: they are places where the runbook is weaker than, or only
+      indirectly equal to, the specification's wording.
+    items:
+      - spec_item: "primary arm: shifts (13,17,5), support {1,..}, seed 20261017, p_den 50, n 64"
+        runbook_counterpart: >-
+          spec_bindings pin /experiment/inputs/{seed,p_den,n_targets,shifts,support_min};
+          S02-trials by_trial.geometric-probe-sample asserts /shifts, /support_min, and the
+          common block asserts /seed, /p_den, /n_targets, /preregistered.
+        status: implemented
+      - spec_item: "CTL-1 negative control: shifts (1,2,14), support {1,..}; expects 2938, 290138, 29, no median split, exact_match false"
+        runbook_counterpart: >-
+          by_trial.ctl-neg-wrong-triple asserts shifts, support_min, sample_sum 2938,
+          sum_squares 290138, median 29, median_split false, exact_match false; listed in
+          S02 controls; spec_bindings pin the control inputs.
+        status: implemented
+      - spec_item: "CTL-2 negative control: support {0,..}; expects 2879, 283745, 27, no median split, exact_match false"
+        runbook_counterpart: >-
+          by_trial.ctl-neg-support-zero asserts shifts (13,17,5), support_min 0, 2879, 283745,
+          27, median_split false, exact_match false; listed in S02 controls.
+        status: implemented
+      - spec_item: "DESC-1 (cv band, descriptive): cv_sq_num 9871039, cv_sq_den 8661249, cv_in_band boolean"
+        runbook_counterpart: >-
+          by_trial.geometric-probe-sample asserts /cv_sq_num and /cv_sq_den equal those values;
+          common block asserts /cv_in_band type boolean; metrics[cv_in_band] fraction_true.
+        status: implemented
+      - spec_item: "DESC-2 (median/mean band, descriptive): median_ratio_num 1792, median_ratio_den 2943, boolean flag"
+        runbook_counterpart: >-
+          by_trial.geometric-probe-sample asserts /median_ratio_num 1792 and /median_ratio_den
+          2943; common block asserts /median_ratio_in_band boolean; metrics[median_ratio_in_band].
+        status: implemented
+      - spec_item: "primary metrics sample_sum, sum_squares, median, cv_in_band, median_ratio_in_band; decisive exact_match; secondary elapsed_seconds"
+        runbook_counterpart: >-
+          runbook metrics[] has all seven entries with the right pointers (sample_sum,
+          sum_squares, median min/max; the flags and exact_match fraction_true;
+          elapsed_seconds max).
+        status: implemented
+      - spec_item: "success criterion: 2943, 289567, 28, cv_in_band true, median_ratio_in_band true"
+        runbook_counterpart: >-
+          Integers and exact_match true asserted on the primary unit. The two band flags are
+          asserted only as booleans (not equals true). The specification's decisive_test says
+          this is intended: given the three integers the flags are true by arithmetic.
+        status: implemented_indirectly
+        note: >-
+          I checked that arithmetic: 9871039/8661249 = 1.1397 lies in [0.81, 1.21] and
+          1792/2943 = 0.6089 lies in [0.6, 0.8]; run.py's flags and my script's flags are both
+          true. The runbook itself would not catch a unit with an in-spec integer set and a
+          false flag, but no such unit can exist (flags are a function of the integers).
+      - spec_item: "falsification: integers differ, or a flag is false, with a complete raw-result.json"
+        runbook_counterpart: >-
+          Any differing integer makes the unit invalid on the by_trial assertions; S02
+          on_invalid: stop. A false flag with correct integers cannot occur (see above).
+        status: implemented
+      - spec_item: "stopping rule: three preregistered trials, one run each, no other seed"
+        runbook_counterpart: >-
+          trial-plan.json has exactly three trials with one run_id each; spec budget
+          maximum_runs 3; journal shows attempt 1 only and units total 3.
+        status: implemented
+      - spec_item: "invalidation: crash/timeout/median split of the primary sample; manifest refused"
+        runbook_counterpart: >-
+          watchdog_seconds 60 equals wall_clock_seconds_per_run; run.py raises on a primary
+          median split and the runbook asserts median_split false; manifest.yaml fields are
+          asserted in the common block.
+        status: implemented
+        note: >-
+          S02 on_failure allows retry (max_attempts 2) on timeout while the specification says
+          one run each; budget enforcement is advisory. No retry occurred (attempt-1 only).
+      - spec_item: "replay: mode fields, the 11 listed pointers, never /interpreter or /elapsed_seconds"
+        runbook_counterpart: >-
+          S02 replay mode fields, sample 3, compare list identical to spec compared_pointers
+          (same 11 pointers, same order); the audit's compared[] lists exactly those 11.
+        status: implemented
+      - spec_item: "interpreter recorded per unit and per session (S01)"
+        runbook_counterpart: >-
+          S01-probe-python writes environment.json (python version, implementation,
+          executable); raw-result.json /interpreter/{implementation,version} asserted as strings.
+        status: implemented
+      - spec_item: "cv_band [0.9,1.1] and median_ratio_band [0.6,0.8] as inputs"
+        runbook_counterpart: >-
+          spec_bindings pin both. run.py applies them as exact squared/rational bands
+          (81/100..121/100, 3/5..4/5) hard-coded, not read from the specification; the values
+          agree (0.9^2 = 0.81, 1.1^2 = 1.21).
+        status: implemented_with_note
+    missing_items: []
+
+  # ---------------------------------------------------------------- check 2
+  blind_rederivation:
+    metric: >-
+      sample_sum, sum_squares and median (the specification's decisive exact_match triple), with
+      the two descriptive band flags and the exact rational inputs, for all three trials.
+    blind_from: >-
+      specification.yaml /experiment/sampler (recurrence, step-then-test, support, continuation,
+      seed never tested, median = 32nd smallest equal to 33rd) and /experiment/inputs only. Not
+      from run.py, check.py, the report or the runbook.
+    script: /tmp/claude-0/-home-user-crypto-autoresearcher/cf97ad04-254b-5f2a-bd80-b1131332709c/scratchpad/blind_rederive.py
+    second_implementation: >-
+      /tmp/claude-0/-home-user-crypto-autoresearcher/cf97ad04-254b-5f2a-bd80-b1131332709c/scratchpad/x32.c
+      (C, uint32_t arithmetic, compiled with gcc; shares no code and no arithmetic model with
+      the Python producer).
+    interpreters_run: ["CPython 3.11.18", "CPython 3.12.3", "CPython 3.13.18", "C/gcc uint32"]
+    session_summary_values: {sample_sum: 2943, sum_squares: 289567, median: 28, exact_match_fraction_true: 1.0, cv_in_band_fraction_true: 1.0, median_ratio_in_band_fraction_true: 1.0}
+    rederived_values:
+      geometric-probe-sample: {sample_sum: 2943, sum_squares: 289567, median: 28, median_split: false, exact_match: true, cv_sq: "9871039/8661249", median_ratio: "1792/2943", cv_in_band: true, median_ratio_in_band: true}
+      ctl-neg-wrong-triple: {sample_sum: 2938, sum_squares: 290138, median: 29, median_split: false, exact_match: false, cv_sq: "2484247/2157961", median_ratio: "928/1469", cv_in_band: true, median_ratio_in_band: true}
+      ctl-neg-support-zero: {sample_sum: 2879, sum_squares: 283745, median: 27, median_split: false, exact_match: false, cv_sq: "9871039/8288641", median_ratio: "1728/2879", cv_in_band: true, median_ratio_in_band: true}
+    comparison: >-
+      Every field equals the recorded raw-result.json (3.11.17) and the audit replay
+      raw-result.json (3.13.18) for all three units, in all three Python versions I ran and in
+      the C program (C checked sums, sum of squares and both central order statistics). Zero
+      differences. The control calibration integers (2938/290138/29 and 2879/283745/27) and
+      the preregistered 2943/289567/28 are therefore reproduced from the specification's
+      sampler text, not only from the producer's code.
+    caveat: >-
+      This confirms the specification text and the code define the same sampler and that the
+      recorded numbers are what it computes. It cannot say the specified sampler is a faithful
+      geometric draw (that is not the claim: the exact-match prediction was set from the
+      recurrence). The control integers were computed at design time from the same model
+      (PRED-CONTROLS is in_sample in the specification); my reproduction removes dependence on
+      run.py but not on the specification's definition.
+
+  # ---------------------------------------------------------------- check 3
+  certificate_checks:
+    applicable: false
+    reason: >-
+      No certificate in this session: every manifest has result.certificate.kind none and
+      attack_claimed false. There is no [k]P = Q, relation or decomposition to verify.
+    two_replayed_units: >-
+      Substituted check: for geometric-probe-sample and ctl-neg-support-zero (both replayed) I
+      re-derived the full output triple independently (Python 3.11/3.12/3.13 and C), as in
+      check 2.
+    two_unreplayed_units: >-
+      Not possible as the task states it. All three units of the session were replayed
+      (audit population 3, replayed 3, units.total 3), so there is no unreplayed unit.
+      Instead I applied the same independent re-derivation to the third replayed unit
+      (ctl-neg-wrong-triple); it also matches.
+    library_or_code_shared_with_producer: none (own Python, own C)
+
+  # ---------------------------------------------------------------- check 4
+  lean_statement_fidelity:
+    obligations: []
+    result: >-
+      Not applicable: audit.json lean is [] and the session summary lists lean_obligations [].
+      The runbook has no Lean step. No semantic_review state to report.
+
+  # ---------------------------------------------------------------- check 5
+  environment_drift_assessment:
+    drift: >-
+      All three replays ran under CPython 3.13.18; the units were recorded under 3.11.17
+      (interpreter_parity: match 0, mismatch 3, unknown 0). Reported beside the result, not a
+      finding, as the audit states.
+    could_it_matter_here: >-
+      No, for the compared fields. They are 11 integers and booleans from exact integer
+      arithmetic (shifts, masks, xor, modulus, sum, sorted order, Python big-int products and
+      Fraction-free cross-multiplied comparisons). Between 3.11 and 3.13 the semantics of
+      these operations are unchanged; no float, hash ordering, random module or locale enters
+      them (PYTHONHASHSEED is fixed to 0 in any case). Floats occur only in elapsed_seconds,
+      which the replay does not compare. I tested this rather than assuming it: my independent
+      script gives identical results under 3.11.18, 3.12.3 and 3.13.18, and the C program
+      agrees. The specification (replay.interpreter, variable_ledger.interpreter) also
+      anticipates it and credits no effect.
+    what_it_does_change: >-
+      The replay is evidence of cross-version reproducibility, which is stronger than a
+      same-interpreter replay for this computation. It does not verify that the recorded
+      environment (3.11.17, executable path under /home/ec2-user/.cache/uv/...) is the
+      interpreter that actually produced the recorded outputs; that is an unattested
+      self-report by the producer (see not_covered).
+  detection_power_assessment:
+    stated: >-
+      detection_power reports replayed_units 3 and miss probabilities 0.970299 (1 percent),
+      0.857375 (5 percent), 0.729 (10 percent), 0.421875 (25 percent), 0.125 (50 percent). These
+      are the figures (1-q)^3, i.e. they treat the three replays as independent draws from a
+      large population.
+    what_the_sample_can_say: >-
+      The session's population is exactly three S02 units (RUN-ICPERF-f21eb1, 0ef41e,
+      74e9a2) and all three distinct units were replayed: the replay of the trials' compared
+      fields is a census of S02, not a sample. The quoted miss probabilities therefore do not
+      describe residual risk for the compared fields of these three units; against those
+      fields they are an overstatement of the miss chance. The same holds for the earlier
+      audit AUD-20261105T164530Z-b85ca9 (population 3, replayed 3; I did not edit it).
+    what_the_sample_cannot_say: >-
+      It says nothing about anything not compared: /interpreter, /elapsed_seconds, the
+      manifest/execution-receipt/launch/environment files, stdout/stderr logs, RESULTS.md
+      content, the commit and dirty-tree state recorded at launch, or step S01 (a probe, not a
+      trial, not replayed). Replay uses the same run.py as the producer, so it catches
+      fabrication and nondeterminism, not a shared bug; my blind re-derivation is what covers
+      a wrong reading of the specification. Replay is not an execution proof. If this session
+      had more units, the miss probabilities above would be the relevant bound and unsampled
+      units could not be called honest; for this session there are no unsampled trial units.
+
+  not_covered:
+    copied_from_audit_json: []
+    added_by_reader:
+      - "No execution proof: execution_proofs verified 0, chain 'incomplete: docs/execution-proof-chain.md milestones are open'. Replay bounds fabrication; it proves nothing about the computation."
+      - "Not compared by replay: /interpreter, /elapsed_seconds, manifest.yaml, execution-receipt.json, launch.json, environment.json, stdout/stderr and check logs, RESULTS.md. elapsed_seconds is a single unreplicable clock reading on an unrecorded host and is not interpreted."
+      - "S01-probe-python is not replayed. The recorded interpreter (CPython 3.11.17, /home/ec2-user/.cache/uv/builds-v0/.tmpCSnzVI/bin/python3) is a producer self-report; I could not and did not verify that host or binary. Immaterial to the integer outputs (shown interpreter independent) but unverified."
+      - "Launch-time facts (commit 980ff5f0..., claim identity, dirty-tree state) were verified by the deterministic audit's chain check only as far as that tool does; I did not re-derive them from git."
+      - "The specification's design-time statement that 6635 of 21207 non-degenerate wrong triples pass both bands (DESC-1) and the claim that (1,2,14) was chosen from a design-time scan were not reproduced; they do not feed any success or falsification criterion."
+      - "Whether the xorshift32 sampler is a faithful stand-in for geometric probe counts at n=83, or any host-latency, speedup or attack statement. The specification itself limits scope to a toy instrument."
+      - "The preregistered integers were read from version 1's invalid_output run by later readers (specification prediction_provenance data_seen) while PRED-PRIMARY is tagged out_of_sample; I reproduced the integers from the recurrence text but cannot independently attest the ordering of events. Specification-level provenance, not a session finding."
+      - "No Lean obligations, no certificates, no hypothesis, experiment or goal status assessed or changed."
+
+  verdict: clean
+  escalate: true
+  escalate_reason: >-
+    Not a defect. The contract sets escalate: true whenever the session will be cited by an
+    evidence review, and this session already is: ledger/evidence/EV-ICPERF-84ff45.yaml and
+    ledger/decisions/DEC-20261105-6e2616.yaml cite RBS-ICPERF-67df7d and the earlier audit
+    AUD-20261105T164530Z-b85ca9. The Coordinator or Opus-tier validator should receive this
+    review beside the audit. No finding is raised by any of the five checks.
+  scope_statement: >-
+    A sweep screen of one runbook session. Not a validation_report, not evidence about
+    H-ICPERF-5adc9b, not an execution proof, not a substitute for the formal lane's review.
+    Unsampled units are not asserted honest; here there are none, and every statement above
+    is bounded by what was compared.

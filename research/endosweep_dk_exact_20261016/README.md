@@ -228,6 +228,12 @@ python3 -m pytest -q tests/test_endosweep_dk_exact.py
 
 `STD_CURVES_CHECKOUT` is J08nY/std-curves at commit
 `77fe6e3585ca2c2225b59d7df24b7c775437276f`.
+The current builder checks that revision and compares every consumed
+`<category>/curves.json` byte string with the corresponding Git object before
+and after loading. It rejects modified, missing, or extra curve files and
+records their SHA-256 hashes in new `dk_exact.json` output. This input check
+applies to future regenerations; it does not retroactively authenticate the
+historical run or supply its missing primality certificates.
 
 ## Lean verification
 

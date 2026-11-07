@@ -1,0 +1,114 @@
+# DEC-20261106-e3de25: Coordinator approval of
+# AMD-EXP-PEXT-0b2c75-20261106-hypothesis-and-inputs under the standing user
+# authorization. It declares the plan hypothesis and the driver's trial inputs
+# before that contract's first launch. No run id is consumed. It launches no run.
+coordinator_decision:
+  id: DEC-20261106-e3de25
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (well-formed, 0 occurrences across 48,211 paths).
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  archive_task: TASK-20261106-6d8ce3
+  session_provenance: >-
+    Coordinator session in an OpenCode runtime, branch coord/portfolio-20261106. Requested
+    role policy coordinator-orchestration-code; the runtime resolved no adapter model id,
+    so none is asserted. Read the plan, run.py's manifest writer and constants, the
+    handoff, the queue and DEC-20261031-dcfdee, and applied the fact classes the
+    supervisor enforced on EXP-PEXT-212d5c on 2026-11-06.
+  subject: >-
+    Declare hypothesis_id H-PEXT-ad0073 and the per-trial seed, curve_id and parameter
+    mapping in the frozen plan of EXP-PEXT-0b2c75 before its first launch.
+  goal_id: GOAL-PEXT-4a1d6b
+  decision: revise
+  target_ids:
+  - EXP-PEXT-0b2c75
+  - TASK-20261031-73799d
+  - GOAL-PEXT-4a1d6b
+  - AMD-EXP-PEXT-0b2c75-20261106-hypothesis-and-inputs
+
+  authorization: >-
+    Standing user authorization, AGENTS.md "Standing user authorization" ("All is
+    approved. Ideas/experiments should be always approved", user, 2026-09-06), applied to
+    a protocol amendment of an already-approved contract. No new contract is created and
+    the approved-unrun count does not grow.
+
+  context: >-
+    EXP-PEXT-0b2c75 was approved by DEC-20261031-dcfdee and has never run. Its plan
+    carries no hypothesis_id, seed, curve_id or parameters, while its driver writes all
+    four. The same supervisor checks that refused EXP-PEXT-212d5c three times on
+    2026-11-06 would refuse this contract's first launch. Because nothing has run, the
+    repair consumes no run id and creates no refused-run record.
+
+  amendment:
+    path: experiments/EXP-PEXT-0b2c75/amendments/AMD-EXP-PEXT-0b2c75-20261106-hypothesis-and-inputs.yaml
+    sha256: a2e3bac334a20b4ad79e39253aba3464ac96435381c0f3d6bc0e4025604796f2
+    kind: prospective_plan_hypothesis_and_trial_input_binding
+    scientific_protocol_unchanged: true
+    declared:
+      hypothesis_id: H-PEXT-ad0073
+      seed: 20261101
+      curve_id: null
+      parameters: '{trial_id, stage, inputs_from, plan, rustc_flags, threads, negative_count}'
+
+  rebinding:
+    trial_plan_sha256:
+      from: deb61b0cc1a41a327e3c2fa7dc190c49619df6986be995af4c7ffd8192bab1da
+      to: 085bf4f3d98cecd5484e0318f64dc22675b846d4ab0b7c8f0fa0ca8b1441b37c
+    dispatch_queue_sha256:
+      from: d47f7e12519021817512aa4c77dc5ac7c753b426755cc3ae4393d19e8864dd47
+      to: a663e63ebb2feba46ed183e2a7469512226051eabae630611a1c93c97a74b67c
+    executor_handoff_sha256:
+      from: 8f14dadf6bb3833e3b97f8fb0a5767b70c5f2fb1880e3dce32f907e70779f2bb
+      to: 08a5e3a6293fefeabc1ae16b3703f8eb5c398183fecc8999ca865e5369f66cc6
+
+  admission_after_amendment:
+    dispatcher: 'ready: 1 task — TASK-20261031-73799d, claim=null'
+    experiment_execution_status: 'remaining 6, planned 1, needs_reconciliation 0'
+    newest_experiments: execution_state ready
+    scientific_trials_launched: 0
+
+  rationale:
+  - 'The contract is approved, runnable and idle; declaring four facts it already fixes removes a known certain refusal at zero scientific cost.'
+  - 'Because no trial ever ran, this repair consumes no run id and creates no refusal record, unlike the EXP-PEXT-212d5c sequence.'
+  - 'The values were read from the driver itself (HYPOTHESIS_ID, NEG_SEED, THREADS, RUSTC_FLAGS, NEG_COUNT), so the plan and driver agree by construction rather than by guess.'
+  - 'DEC-20261031-dcfdee requires this lane to run alone after or apart from the census; this packet does not change that ordering and launches nothing.'
+
+  limitations:
+  - 'No manifest exists to replay, so the first launch is the first full proof of these bindings.'
+  - 'The contract remains unrun and is not evidence about H-PEXT-ad0073.'
+
+  evidence_refs:
+  - experiments/EXP-PEXT-0b2c75/trial-plan.json
+  - experiments/EXP-PEXT-0b2c75/implementation/run.py (manifest writer and constants)
+  - experiments/EXP-PEXT-0b2c75/amendments/AMD-EXP-PEXT-0b2c75-20261106-hypothesis-and-inputs.yaml
+  - ledger/handoffs/TASK-20261031-73799d.yaml
+  - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-a4886a/dispatch_queue.json
+  - ledger/decisions/DEC-20261031-dcfdee.yaml
+
+  next_actions:
+  - id: NA-1
+    rank: 1
+    owner: top-level session
+    text: >-
+      Archive this decision and the amendment with the amended plan, handoff and queue,
+      reproducing the hashes above; commit, push, open PR, enable auto-merge.
+  - id: NA-2
+    rank: 2
+    owner: executor session (separate /run), only after or apart from the 212d5c census
+    text: >-
+      Claim lane BATCH-a4886a and invoke /run EXP-PEXT-0b2c75 under TASK-20261031-73799d
+      on plan 085bf4f3..., route openai:gpt-5.6-terra; then its archive
+      TASK-20261031-4fa3ea and /review-evidence with the blind recount.
+  - id: NA-3
+    rank: 3
+    owner: coordinator, after the runs
+    text: Snapshot-archive the run records before interpretation.
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: No evidence record or durable claim exists; this is an amendment.
+
+  conclusions: []
