@@ -1987,3 +1987,14 @@ class ReadyOnlyRenderTests(unittest.TestCase):
     def test_ready_only_with_empty_plan(self) -> None:
         self.assertEqual(dispatch.ready_only({"dispatches": [], "deferred": []}),
                          "ready: 0 task(s); deferred: 0\n")
+
+
+class GeneralResearchContractTests(unittest.TestCase):
+    def test_dispatch_accepts_custom_domain_and_rejects_incomplete_contract(self):
+        card = task('TASK-general', 1)
+        path = Path(__file__).resolve().parents[1] / 'examples/research-tasks/custom.json'
+        card['handoff']['research'] = json.loads(path.read_text())
+        dispatch.validate_handoff(card, 'task')
+        del card['handoff']['research']['evidence_plan']['verification']
+        with self.assertRaisesRegex(dispatch.DispatchError, 'evidence_plan.verification'):
+            dispatch.validate_handoff(card, 'task')

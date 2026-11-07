@@ -1,0 +1,81 @@
+{
+  "status": "completed",
+  "claim_success": true,
+  "artifact": {
+    "steps": [
+      "Group source records by each listed claim, retaining every source ID and its evidence polarity, including empty groups.",
+      "Apply the specified rules: positive evidence only means supported; negative evidence only means contradicted; conflicting or absent evidence means unresolved.",
+      "Build the requested answer shape, verifying that every claim appears exactly once with all matching source IDs and no conclusions beyond the register."
+    ]
+  },
+  "usage": {
+    "input_tokens": 14742,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 261,
+    "reasoning_output_tokens": 157
+  },
+  "cost_usd": null,
+  "wall_seconds": 10.492601970996475,
+  "model": "gpt-6-astra",
+  "reasoning_effort": "xhigh",
+  "trace": [
+    {
+      "type": "thread.started",
+      "thread_id": "01a1b3f9-5f42-7020-8980-74f560274f94"
+    },
+    {
+      "type": "turn.started"
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_0",
+        "type": "agent_message",
+        "text": "{\"claim_success\":true,\"artifact_json\":\"{\\\"steps\\\":[\\\"Group source records by each listed claim, retaining every source ID and its evidence polarity, including empty groups.\\\",\\\"Apply the specified rules: positive evidence only means supported; negative evidence only means contradicted; conflicting or absent evidence means unresolved.\\\",\\\"Build the requested answer shape, verifying that every claim appears exactly once with all matching source IDs and no conclusions beyond the register.\\\"]}\"}"
+      }
+    },
+    {
+      "type": "turn.completed",
+      "usage": {
+        "input_tokens": 14742,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 261,
+        "reasoning_output_tokens": 157
+      }
+    }
+  ],
+  "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"/tmp\" (codex_home: AbsolutePathBuf(\"/tmp/capability-actor-odpvf886/codex-home\"))\n",
+  "returncode": 0,
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "read-only",
+    "--json",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"xhigh\"",
+    "-c",
+    "project_doc_max_bytes=0",
+    "-c",
+    "web_search=\"disabled\"",
+    "-c",
+    "features.shell_tool=false",
+    "-c",
+    "features.multi_agent=false",
+    "-c",
+    "features.enable_mcp_apps=false",
+    "--output-schema",
+    "/tmp/capability-actor-odpvf886/response-schema.json",
+    "--output-last-message",
+    "/tmp/capability-actor-odpvf886/response.json",
+    "-"
+  ],
+  "tool_violations": 0
+}
