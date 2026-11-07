@@ -209,3 +209,21 @@ builds while keeping both construction/cost records. A 518-byte reference
 reconstructs exact parent metadata without recursively copying it. Parent
 preservation, foreign keys, integrity and gzip roundtrip pass; global history
 contains 38 curves, 66 bases and 23 executions. [pcc:unverified]
+
+## v22: fixed-construction transfer and prefix attribution
+
+The [v22 snapshot](../prime_field_a18_execution_20261107/database/v22-certified-transfer/validation.json)
+preserves all 103 parent nonmetadata tables/rows and exact parent bytes, with a
+518-byte reconstructible metadata reference. It adds four 20/21-bit curves,
+four mathematical known48 bases, eight independently paid contexts, 32 targets,
+eight cases and sixteen algorithm outputs. Both programs identify 29 targets;
+three nonrecoveries remain. Construction/natural/extra first certificates are
+8/9/12, and per-prefix independent rank/membership diagnostics remain with the
+raw query checks. [PCC-20261107-f778b2](../../pcc/claims/PCC-20261107-f778b2.json),
+producer-unverified. [pcc:unverified]
+
+Foreign keys, integrity, parent preservation and lossless gzip pass as producer
+checks. Global history contains 42 curves, 70 bases and 24 executions. Auxiliary
+pool information has not been inferred from these fully known bases; the next
+ranked norm32/unknown16 comparison must cancel auxiliary and target columns
+before scoring old-base information. [pcc:unverified]
