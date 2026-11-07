@@ -48,9 +48,9 @@ def test_committed_native_snapshot_and_coordinated_corruptions(tmp_path,monkeypa
         lambda v:v[EXEC].update(source_unchanged_after=False),lambda v:v[EXEC].update(source_commit='0'*40),
         lambda v:v[RUN+'/checkpoint-p1048573-i0.json'].update(checked_batch_solver_calls=3),
         lambda v:v[prefix+'information-check.json']['verification']['views']['full']['total'].update(delta=99),
-        lambda v:v[prefix+'aux_cancel_joint-check.json']['verification'].update(identified=0),
+        lambda v:v[prefix+'aux_cancel_joint-check.json']['verification'].update(identified=99),
         lambda v:v[prefix+'case-check.json']['verification'].update(prepared_sha256='0'*64),
-        lambda v:v[prefix+'aux_cancel_joint.json']['recoveries'][0].update(identifiable=False),
+        lambda v:v[prefix+'aux_cancel_joint.json']['recoveries'][0].update(identifiable=not v[prefix+'aux_cancel_joint.json']['recoveries'][0]['identifiable']),
         lambda v:v[ANALYSIS]['checked_query_engine_totals']['scalar'].update({'Fp.group_add':0}),
         lambda v:v[METRICS]['physical_counters']['p2097143-i0.unknown16.native_collection'].update({'Fp.field_mul':-1})]
     formal=RUN+'/raw/p1048573-i0.formalpair16.expanded-check.json'
