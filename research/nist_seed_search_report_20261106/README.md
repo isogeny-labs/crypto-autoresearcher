@@ -47,3 +47,7 @@ pdftoppm -scale-to 1100 -png output.pdf /tmp/nist-report-page
 All 43 original pages were visually reviewed. After deterministic packaging, all 43 rendered page images are compared with that reviewed version; the validation receipt records the outcome. The sources and the report retain failures, censored results, exploratory fits, and the difference between configured-software observations and proven historical use.
 
 The frozen source bundle deliberately preserves earlier archival status statements. The main narrative resolves the recovered November 1997 draft, the P-224/P-256 conductor distinction, and the later class-number certificate results; opening synopses in the catalog are explicitly historical and potentially superseded.
+
+## PR artifact policy
+
+The repository's normal artifact policy routes data files over 64 KiB to object storage. For the explicitly requested in-PR deliverable, PR #3129 uses the documented `large-file-ok` exception for the PDF (544,017 bytes) and frozen source ZIP (266,724 bytes). Keep that label while these two files are intentionally tracked. The artifact workflow reports them as warnings; no workflow code or global size policy is changed.
