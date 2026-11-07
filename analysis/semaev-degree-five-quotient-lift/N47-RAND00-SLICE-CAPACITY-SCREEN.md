@@ -20,8 +20,10 @@ The independently replayable witness is
 `b8ee56830e9b7f064c4cfe17579b512dd3f7b01e62fd0575b6632a37f2ec936c`.
 Thus the affine equation belongs to `span F`, and Proposition 2.5b in the
 theorem dossier applies directly to a slice by any variable it contains.
-The checker accepted the 24-generator witness; changing its constant term
-caused an explicit XOR-mismatch rejection.
+The checker reconstructed all 47 generators (14,443 terms) from the pinned
+named-instance record using the independent descent source and matched every
+equation to the retained `input.sys`. It then accepted the 24-generator
+witness; changing its constant term caused an explicit XOR-mismatch rejection.
 
 The deterministic screen in `n47-rand00-slice-capacity-screen-001.json` counts
 126,387 D5 border monomials for the original unit-representative set. For the
@@ -63,5 +65,7 @@ Check the primal witness independently with
 ```
 /usr/bin/python3 analysis/semaev-degree-five-quotient-lift/check_n47_affine_witness.py \
   /home/ec2-user/fall-degree-data-20261029/frontier-highmem-001/fresh-n47-rand-00-D5-cascade01-highmem01/attempt-001/input.sys \
-  analysis/semaev-degree-five-quotient-lift/n47-rand00-affine-witness-001.json
+  analysis/semaev-degree-five-quotient-lift/n47-rand00-affine-witness-001.json \
+  analysis/semaev-degree-five-quotient-lift/n47-rand00-d5-local-plan-002.json \
+  analysis/semaev-m2-last-fall-degree/verify/cert_check.py
 ```
