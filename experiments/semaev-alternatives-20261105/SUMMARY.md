@@ -35,3 +35,11 @@ Registered 2026-11-05 in isogeny-labs/crypto-autoresearcher#3028; results landed
 - The non-CM curve y² = x³ + 7 was not run for Heegner relations (SA-09).
 
 **Scope.** Toy-scale runs on a shared 4-core host; executors were Sonnet, with six resumed by Opus after a usage limit. Nothing here is a claim about a deployed curve, and no lead disposition was changed; each REPORT.md ends with a suggested lead-atlas update for separate review.
+
+## Round 2
+
+Pre-registrations in `prereg/round2/`; results in `results/SA-NNb/`.
+
+| ID | Direction | Verdict | Deciding number |
+|---|---|---|---|
+| SA-15b | Every solver on the frozen m = 4 set | KILL | pair table 100/100 at 1.2e4 and 8.6e5 adds (2^40, 2^56); every non-generic solver 0; Vieta lattice margin −138/−190 bits |
