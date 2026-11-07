@@ -33,6 +33,15 @@ def run(plan_path, protocol_path, source_revision):
     for path, expected in plan['hashes'].items():
         if sha(path) != expected:
             raise RuntimeError('pinned source or input changed: ' + path)
+    historical = json.loads(Path(plan['historical_result']).read_text())
+    if (historical['parameters']['record'] != plan['record'] or
+            historical['exact_solutions'] != 0 or
+            historical['artifacts']['degree4.bin']['sha256'] != plan['hashes'][plan['seed_path']] or
+            not any(stage.get('degree') == 4 and
+                    stage.get('certified_codimension') == 61196 and
+                    stage.get('certificate_sha256') == plan['hashes'][plan['seed_path']]
+                    for stage in historical['stages'])):
+        raise RuntimeError('historical D4 result does not bind fixed named input and seed')
     seed = Path(plan['seed_path'])
     with seed.open('rb') as stream:
         header = stream.read(32)
