@@ -4,6 +4,7 @@ import hashlib
 import json
 from math import comb
 from pathlib import Path
+import random
 import struct
 import sys
 import tempfile
@@ -134,6 +135,43 @@ class TraceSliceCertificateTests(unittest.TestCase):
             check_map(2, 2, 2, masks, rows, [{0}])
         with self.assertRaisesRegex(ValueError, 'C2'):
             check_map(2, 2, 2, masks, rows, [set()])
+
+    def test_factorized_closure_matches_exhaustive_kernel(self):
+        # For a small universe, enumerate every low-degree relation rather
+        # than using the checker's elimination algorithm as the oracle.
+        masks = tuple(m for m in range(8) if bin(m).count('1') <= 2)
+        column = {m: i for i, m in enumerate(masks)}
+        low = [i for i, m in enumerate(masks) if bin(m).count('1') <= 1]
+        rng = random.Random(0xC205)
+        for _ in range(128):
+            rows = [rng.randrange(4) for m in masks]
+            rows[column[0]], rows[column[1]] = 1, 2
+            expected = True
+            for relation in range(1 << len(low)):
+                if not relation:
+                    continue
+                image = 0
+                for j, index in enumerate(low):
+                    if relation >> j & 1:
+                        image ^= rows[index]
+                if image:
+                    continue
+                for variable in range(3):
+                    product = 0
+                    for j, index in enumerate(low):
+                        if relation >> j & 1:
+                            product ^= rows[column[masks[index] | (1 << variable)]]
+                    if product:
+                        expected = False
+                        break
+                if not expected:
+                    break
+            if expected:
+                self.assertEqual(check_map(3, 2, 2, masks, rows, [])['status'],
+                                 'valid_affine_slice_nonmembership')
+            else:
+                with self.assertRaisesRegex(ValueError, 'C2'):
+                    check_map(3, 2, 2, masks, rows, [])
 
     def test_named_odd_instance_has_independent_trace_identity(self):
         records = json.loads((Path(__file__).resolve().parents[1] /

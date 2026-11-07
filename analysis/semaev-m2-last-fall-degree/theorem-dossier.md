@@ -191,6 +191,20 @@ $N$ variables. A certificate can be checked without knowing how it was found.
 `verify/cert_check.py` does this with its own descent of $S_3$, and
 `results/verification.md` lists the instances whose certificates it accepted.
 
+**Equivalent factorization check.** Write $A=\pi|_{B_{\le d-1}}$ and, for
+each variable $x_i$, let $B_i(g)=\pi(x_i g)$ on $B_{\le d-1}$. Condition (ii)
+is exactly $\ker A\subseteq\ker B_i$. Equivalently, there is a unique linear
+map $T_i:\operatorname{im}A\to Z$ with $B_i=T_i A$. To check this without
+storing a basis of $\ker A$, eliminate the paired columns
+$(A(m),B_i(m))$ for low-degree monomials $m$: when a column reduces to zero
+in its first component, its second component must also reduce to zero.
+Indeed, the same elimination operations express a relation among the
+original columns, so a nonzero second remainder is precisely a witness that
+$\ker A\not\subseteq\ker B_i$. Conversely, if all second remainders vanish,
+every relation among the $A(m)$ has zero image under $B_i$, which defines
+$T_i$. This changes the verification representation, not the certificate
+criterion or its mathematical conclusion.
+
 **Remark 1.5a** (why a scalar closure certificate cannot refute an
 unsatisfiable system). Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
 $\pi:B_{\le d}\to\mathbb F_2$ satisfies Proposition 1.5 with
