@@ -1,0 +1,23 @@
+# PD-3 check: canonical files (specification.yaml, trial-plan.json) must not read approved / execution_authorized true / non-null approved_by
+== experiments/EXP-ICPERF-127dbd/specification.yaml
+15:  status: review_required
+17:  approved_by: null
+18:  execution_authorized: false
+-- historic approved_by entries of other decisions inside the canonical spec (not the experiment's own approval):
+419:        approved_by: DEC-20261106-ecf261
+423:        approved_by: DEC-20261106-c69de4
+== experiments/EXP-ICPERF-127dbd/trial-plan.json
+2:  "approval_required": true,
+3:  "approved_by": null,
+4:  "candidate_only": true,
+== approval-preview (the approved forms, previews only)
+-- experiments/EXP-ICPERF-127dbd/design/5f7d2b/approval-preview/specification.yaml
+14:  status: approved
+16:  approved_by: DEC-20261107-7802ec
+17:  execution_authorized: true
+418:        approved_by: DEC-20261106-ecf261
+422:        approved_by: DEC-20261106-c69de4
+-- experiments/EXP-ICPERF-127dbd/design/5f7d2b/approval-preview/trial-plan.json
+2:  "approved_by": "DEC-20261107-7802ec",
+== any other file in the tree reading DEC-20261107-7802ec as approved_by outside design/5f7d2b: 
+(none)

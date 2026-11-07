@@ -1,0 +1,123 @@
+--- /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/dir-5f7d2b/experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/reconcile_run.v3c.sh	2026-11-07 06:25:03.538617498 +0000
++++ /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/dir-5f7d2b/experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh	2026-11-07 06:31:22.666943804 +0000
+@@ -35,20 +35,29 @@
+ set -euo pipefail
+ set +x
+ 
+-# ---- K-7 environment prologue (v3c; DEC-20261107-a83c51 K-7). It is not study logic. ----
+-# Phase 1 drops every inherited shell function, refuses an AWS_ENDPOINT_URL* variable, and re-executes this script under `env -i`
+-# with an explicit allowlist: HOME, TMPDIR, AWS_REGION, AWS_DEFAULT_REGION, ISOLAB_BUCKET, CRYPTO_CHECKOUT
+-# (and ISOLAB_CODEBUILD_PROJECT in launch_eks.sh), the credential variables named in K7_CRED_VARS (never printed), and a PATH of
+-# exactly <directory of the first aws on the caller's PATH>:/usr/bin:/bin. env -i clears BASH_ENV, ENV, CDPATH, PYTHONPATH, the
++# ---- K-7 environment prologue (v3d; DEC-20261107-a83c51 K-7; DEC-20261107-c3e91a R-1 to R-3). It is not study logic. ----
++# Phase 1 drops every inherited shell function, refuses an AWS_ENDPOINT_URL* variable and a preset constant of another value, and
++# re-executes this script under `env -i` with an explicit allowlist: HOME, TMPDIR, AWS_REGION, AWS_DEFAULT_REGION, ISOLAB_BUCKET,
++# CRYPTO_CHECKOUT (and ISOLAB_CODEBUILD_PROJECT in launch_eks.sh), the credential variables named in K7_CRED_VARS (never printed), the
++# transport variables named in K7_TRANSPORT_VARS when they are set (R-1 T-1), the constants of K7_CONSTS (R-3 CR-2 and PY-1), and a PATH
++# of exactly <directory of the first aws on the caller's PATH>:/usr/bin:/bin. env -i clears BASH_ENV, ENV, CDPATH, PYTHONPATH, the
+ # AWS_CONFIG_FILE family and every BASH_FUNC_* export. Phase 2 (C1_ENV_PHASE=2) refuses to start unless the environment is exactly
+-# that allowlist, no function is defined, aws reports the pinned version, and the aws-cli configuration files hold no
+-# credential_process, endpoint_url, plugin or alias entry (entry names are printed, values never). Two things no script can
+-# prevent are residual risks: code that BASH_ENV runs in the caller's bash before the first line here, and the choice of the
+-# directory that holds aws.
++# that allowlist, the constants hold their values, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set and non-empty (CR-1), the proxy,
++# no-proxy and CA-bundle values match their pins (T-2 to T-4), no function is defined, aws reports the pinned version, and the aws-cli
++# configuration files hold none of the entries named in K7_CFG_NAMES (entry names are printed, values never). BASH_ENV, ENV, imported
++# functions and SHELLOPTS act in the first bash before line 1 of this script; the argv of the runbook and of the trial plan closes them
++# with `/bin/bash -p` (R-2 A-1), and the refusals below stay as defence in depth (A-3). Not prevented by any script: the choice of the
++# directory that holds aws, and a swap of the CA-bundle file between the sha256 below and the CLI's own read (declared TOCTOU residual).
+ K7_PIN_AWS_CLI=aws-cli/1.46.2
+ K7_CRED_VARS=(AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN)
+ K7_CFG_ALLOWED=()   # aws-cli configuration entry names the executor identity is allowed to use; none is allowed
++K7_CFG_NAMES=(credential_process endpoint_url cli_legacy_plugin_path ca_bundle role_arn source_profile credential_source web_identity_token_file sso_session sso_start_url)
+ K7_PASS_VARS=(HOME TMPDIR AWS_REGION AWS_DEFAULT_REGION ISOLAB_BUCKET CRYPTO_CHECKOUT)
++K7_TRANSPORT_VARS=(HTTPS_PROXY https_proxy NO_PROXY no_proxy AWS_CA_BUNDLE)
++K7_CA_BUNDLE_ALLOWED=(/root/.ccr/ca-bundle.crt)
++K7_CONSTS=(AWS_EC2_METADATA_DISABLED=true PYTHONNOUSERSITE=1)
++K7_PROXY_RE='^http://(127\.0\.0\.1|localhost):[0-9]{1,5}/?$'
++K7_NOPROXY_RE='^[A-Za-z0-9.,:*/_-]*$'
+ if [[ ${C1_ENV_PHASE:-} != 2 ]]; then
+   k7_fns=""
+   while IFS= read -r k7_l; do
+@@ -61,22 +70,53 @@
+   for k7_n in $(builtin compgen -e); do
+     [[ $k7_n == AWS_ENDPOINT_URL* ]] && { echo "k7: refused: $k7_n is set; no AWS_ENDPOINT_URL* variable is allowed" >&2; exit 2; }
+   done
++  for k7_c in "${K7_CONSTS[@]}"; do
++    k7_n=${k7_c%%=*}
++    [[ ! -v $k7_n || ${!k7_n} == "${k7_c#*=}" ]] || { echo "k7: refused: $k7_n is set to a value other than its constant ${k7_c#*=}" >&2; exit 2; } # [K7-const-preset]
++  done
+   k7_aws=$(builtin type -P aws 2>/dev/null) || { echo "k7: refused: no aws executable on PATH" >&2; exit 2; }
+   k7_dir=${k7_aws%/*}
+   [[ $k7_aws == /*/aws && $k7_dir != *[[:space:]:]* ]] || { echo "k7: refused: the aws on PATH is not an absolute path to a file named aws" >&2; exit 2; }
+   k7_kv=()
+-  for k7_n in "${K7_PASS_VARS[@]}" "${K7_CRED_VARS[@]}"; do
++  for k7_n in "${K7_PASS_VARS[@]}" "${K7_CRED_VARS[@]}" "${K7_TRANSPORT_VARS[@]}"; do
+     [[ -v $k7_n ]] && k7_kv+=("$k7_n=${!k7_n}")
+   done
+   [[ -x /usr/bin/env && -n ${BASH:-} ]] || { echo "k7: refused: /usr/bin/env or \$BASH is unavailable" >&2; exit 2; }
+-  exec /usr/bin/env -i "${k7_kv[@]}" "PATH=$k7_dir:/usr/bin:/bin" C1_ENV_PHASE=2 "C1_ENV_DROPPED=$(printf '%s%s' "$k7_hits" "$k7_fns" | tr -c 'A-Za-z0-9_ ' '?')" "$BASH" "$0" "$@"
++  exec /usr/bin/env -i "${k7_kv[@]}" "${K7_CONSTS[@]}" "PATH=$k7_dir:/usr/bin:/bin" C1_ENV_PHASE=2 "C1_ENV_DROPPED=$(printf '%s%s' "$k7_hits" "$k7_fns" | tr -c 'A-Za-z0-9_ ' '?')" "$BASH" "$0" "$@"
+ fi
+-k7_ok=" PATH C1_ENV_PHASE C1_ENV_DROPPED PWD OLDPWD SHLVL _ ${K7_PASS_VARS[*]} ${K7_CRED_VARS[*]} "
++k7_ok=" PATH C1_ENV_PHASE C1_ENV_DROPPED PWD OLDPWD SHLVL _ ${K7_PASS_VARS[*]} ${K7_CRED_VARS[*]} ${K7_TRANSPORT_VARS[*]} "
++for k7_c in "${K7_CONSTS[@]}"; do k7_ok+="${k7_c%%=*} "; done
+ k7_extra=""
+ for k7_n in $(builtin compgen -e); do [[ $k7_ok == *" $k7_n "* ]] || k7_extra+=" $k7_n"; done
+ [[ -z $k7_extra ]] || { echo "k7: refused: variables outside the allowlist are set:$k7_extra" >&2; exit 2; }
+ [[ -z $(builtin declare -F) ]] || { echo "k7: refused: shell functions are defined" >&2; exit 2; }
+ [[ -v BASH_ENV || -v ENV || -v CDPATH ]] && { echo "k7: refused: BASH_ENV, ENV or CDPATH is set" >&2; exit 2; }
++for k7_c in "${K7_CONSTS[@]}"; do
++  k7_n=${k7_c%%=*}
++  [[ -v $k7_n && ${!k7_n} == "${k7_c#*=}" ]] || { echo "k7: refused: $k7_n is not set to its constant ${k7_c#*=}" >&2; exit 2; } # [K7-const-value]
++done
++[[ -n ${AWS_ACCESS_KEY_ID:-} ]] || { echo "k7: refused: AWS_ACCESS_KEY_ID is not set or is empty (credentials come only from the environment)" >&2; exit 2; } # [K7-cred-id]
++[[ -n ${AWS_SECRET_ACCESS_KEY:-} ]] || { echo "k7: refused: AWS_SECRET_ACCESS_KEY is not set or is empty (credentials come only from the environment)" >&2; exit 2; } # [K7-cred-secret]
++[[ ! -v HTTPS_PROXY || ! -v https_proxy || $HTTPS_PROXY == "$https_proxy" ]] || { echo "k7: refused: HTTPS_PROXY and https_proxy differ" >&2; exit 2; } # [K7-proxy-pair]
++for k7_n in HTTPS_PROXY https_proxy; do
++  [[ ! -v $k7_n || ${!k7_n} =~ $K7_PROXY_RE ]] || { echo "k7: refused: $k7_n does not match the loopback proxy pin $K7_PROXY_RE (value not printed)" >&2; exit 2; } # [K7-proxy-shape]
++done
++[[ ! -v NO_PROXY || ! -v no_proxy || $NO_PROXY == "$no_proxy" ]] || { echo "k7: refused: NO_PROXY and no_proxy differ" >&2; exit 2; } # [K7-noproxy-pair]
++for k7_n in NO_PROXY no_proxy; do
++  [[ ! -v $k7_n || ${!k7_n} =~ $K7_NOPROXY_RE ]] || { echo "k7: refused: $k7_n does not match $K7_NOPROXY_RE (value not printed)" >&2; exit 2; } # [K7-noproxy-shape]
++done
++k7_ca=none; k7_casha=none
++if [[ -v AWS_CA_BUNDLE ]]; then
++  [[ -v HTTPS_PROXY || -v https_proxy ]] || { echo "k7: refused: AWS_CA_BUNDLE is allowed only when HTTPS_PROXY or https_proxy is set" >&2; exit 2; } # [K7-ca-needs-proxy]
++  k7_hit=""
++  for k7_a in "${K7_CA_BUNDLE_ALLOWED[@]}"; do [[ $AWS_CA_BUNDLE == "$k7_a" ]] && k7_hit=1; done
++  [[ -n $k7_hit ]] || { echo "k7: refused: AWS_CA_BUNDLE is not an entry of K7_CA_BUNDLE_ALLOWED (value not printed)" >&2; exit 2; } # [K7-ca-entry]
++  [[ $(realpath -e -- "$AWS_CA_BUNDLE" 2>/dev/null) == "$AWS_CA_BUNDLE" ]] || { echo "k7: refused: AWS_CA_BUNDLE is missing or its realpath differs (no symlink may be on the path)" >&2; exit 2; } # [K7-ca-realpath]
++  [[ -f $AWS_CA_BUNDLE && -s $AWS_CA_BUNDLE ]] || { echo "k7: refused: AWS_CA_BUNDLE is not a non-empty regular file" >&2; exit 2; } # [K7-ca-file]
++  k7_casha=$(sha256sum -- "$AWS_CA_BUNDLE" 2>/dev/null | cut -d ' ' -f1 || true)
++  [[ $k7_casha =~ ^[0-9a-f]{64}$ ]] || { echo "k7: refused: the sha256 of AWS_CA_BUNDLE could not be computed" >&2; exit 2; } # [K7-ca-sha]
++  k7_ca=$AWS_CA_BUNDLE
++fi
+ k7_first=${PATH%%:*}
+ [[ $PATH == "$k7_first:/usr/bin:/bin" && $k7_first == /* ]] || { echo "k7: refused: PATH is not <absolute dir>:/usr/bin:/bin" >&2; exit 2; }
+ [[ $(builtin type -P aws 2>/dev/null) == "$k7_first/aws" ]] || { echo "k7: refused: aws does not resolve to $k7_first/aws" >&2; exit 2; }
+@@ -86,7 +126,7 @@
+ k7_cfg=""
+ for k7_f in "$HOME/.aws/config" "$HOME/.aws/credentials"; do
+   [[ -f $k7_f ]] || continue
+-  for k7_k in credential_process endpoint_url cli_legacy_plugin_path; do
++  for k7_k in "${K7_CFG_NAMES[@]}"; do
+     grep -q -i -E "^[[:space:]]*$k7_k[[:space:]]*=" "$k7_f" && k7_cfg+=" $k7_k@${k7_f##*/}"
+   done
+   grep -q -i -E '^[[:space:]]*\[plugins\]' "$k7_f" && k7_cfg+=" plugins@${k7_f##*/}"
+@@ -95,9 +135,13 @@
+ for k7_e in $k7_cfg; do
+   [[ " ${K7_CFG_ALLOWED[*]:-} " == *" $k7_e "* ]] || { echo "k7: refused: aws-cli configuration entry:$k7_cfg (names only; values are never printed)" >&2; exit 2; }
+ done
+-K7_STATUS="ok aws=$k7_first/aws version=${k7_v%% *} dropped=[${C1_ENV_DROPPED# }] config_entries=[${k7_cfg# }]"
++k7_t=""
++for k7_n in "${K7_TRANSPORT_VARS[@]}"; do [[ -v $k7_n ]] && k7_t+=" $k7_n"; done
++k7_px=none; [[ -v HTTPS_PROXY ]] && k7_px=$HTTPS_PROXY; [[ -v https_proxy ]] && k7_px=$https_proxy
++k7_np=none; [[ -v NO_PROXY ]] && k7_np=$NO_PROXY; [[ -v no_proxy ]] && k7_np=$no_proxy
++K7_STATUS="ok aws=$k7_first/aws version=${k7_v%% *} dropped=[${C1_ENV_DROPPED# }] config_entries=[${k7_cfg# }] transport=[${k7_t# }] proxy=$k7_px no_proxy=$k7_np ca_bundle=$k7_ca ca_bundle_sha256=$k7_casha"
+ echo "k7_env_hygiene=$K7_STATUS"
+-unset k7_ok k7_extra k7_n k7_first k7_v k7_f k7_k k7_e
++unset k7_ok k7_extra k7_n k7_first k7_v k7_f k7_k k7_e k7_c k7_a k7_hit k7_t k7_px k7_np k7_ca k7_casha
+ # ---- end of the K-7 prologue ----
+ 
+ EMPTY_SHA256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
