@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# Offline stand-in for the aws CLI, used only by test_locator.sh. It serves s3://BUCKET/KEY from $FAKE_S3_ROOT/KEY,
+# logs every call to $FAKE_AWS_LOG, and refuses (exit 99) any copy whose destination is an S3 URI.
+# Supported: s3 cp SRC DST [--recursive] [--only-show-errors], s3 ls URI, codebuild list-builds-for-project (prints nothing).
+set -u
+echo "aws $*" >> "${FAKE_AWS_LOG:?}"
+root=${FAKE_S3_ROOT:?}
+case "${1:-} ${2:-}" in
+"s3 cp")
+  src=${3:-}; dst=${4:-}; recursive=0
+  for a in "$@"; do [[ $a == --recursive ]] && recursive=1; done
+  if [[ $dst == s3://* ]]; then echo "FAKE-AWS: S3 WRITE REFUSED ($src -> $dst)" >&2; exit 99; fi
+  [[ $src == s3://* ]] || { echo "FAKE-AWS: local source unsupported" >&2; exit 98; }
+  key=${src#s3://}; key=${key#*/}
+  path="$root/$key"
+  if [[ $recursive == 1 ]]; then
+    [[ -d $path ]] || exit 1
+    mkdir -p "$dst"; cp -r "$path"/. "$dst"
+  else
+    [[ -f $path ]] || { echo "fatal error: An error occurred (404) when calling the HeadObject operation: Key \"$key\" does not exist" >&2; exit 1; }
+    cp "$path" "$dst"
+  fi
+  exit 0 ;;
+"s3 ls")
+  uri=${3:-}; key=${uri#s3://}; key=${key#*/}
+  path="$root/$key"
+  if [[ $key == */ || -z $key ]]; then
+    [[ -d $path ]] || exit 1
+    n=0
+    for entry in "$path"/*; do
+      [[ -e $entry ]] || continue
+      n=$((n + 1))
+      if [[ -d $entry ]]; then printf '                           PRE %s/\n' "$(basename "$entry")"
+      else printf '2026-11-07 02:14:21 %10d %s\n' "$(stat -c %s "$entry")" "$(basename "$entry")"; fi
+    done
+    [[ $n -gt 0 ]] || exit 1
+    exit 0
+  fi
+  [[ -f $path ]] || exit 1
+  printf '2026-11-07 02:14:21 %10d %s\n' "$(stat -c %s "$path")" "$(basename "$path")"
+  exit 0 ;;
+"codebuild list-builds-for-project") exit 0 ;;
+*) echo "FAKE-AWS: unsupported call: $*" >&2; exit 97 ;;
+esac
