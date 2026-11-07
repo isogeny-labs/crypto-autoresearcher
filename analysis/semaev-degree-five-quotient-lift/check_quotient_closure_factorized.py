@@ -7,16 +7,19 @@ the monomial universe, surjectivity, generators, and image of one.
 """
 
 
-def check_closure_factorized(n, degree, masks, rows):
+def check_closure_factorized(n, degree, masks, rows, columns=None):
     """Return dim(ker A) if ker A is contained in every ker B_i.
 
     A sends a low-degree monomial m to its quotient image. B_i sends m to
     the image of x_i*m. Paired elimination tests whether B_i factors through
     A, without storing a basis of ker A.
     """
-    if len(masks) != len(rows) or len(set(masks)) != len(masks):
+    if len(masks) != len(rows):
         raise ValueError('invalid row or monomial count')
-    columns = {m: i for i, m in enumerate(masks)}
+    if columns is None:
+        if len(set(masks)) != len(masks):
+            raise ValueError('repeated monomial')
+        columns = {m: i for i, m in enumerate(masks)}
     low = [i for i, m in enumerate(masks) if bin(m).count('1') < degree]
     low_rank = None
     for variable in range(n):

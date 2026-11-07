@@ -206,7 +206,14 @@ $T_i$. This changes the verification representation, not the certificate
 criterion or its mathematical conclusion. The small exact implementation is
 `../semaev-degree-five-quotient-lift/check_quotient_closure_factorized.py`.
 It is separate from the source-hash-pinned checker in the frozen n47 sliced
-D4 protocol; it is not yet a complete or frontier-qualified D5 checker.
+D4 protocol. The alternative complete checker
+`../semaev-degree-five-quotient-lift/check_sliced_certificate_factorized.py`
+also verifies the monomial universe, quotient rank, generators and image of
+one while keeping certificate rows in a read-only file mapping. It passes
+small retained-certificate and tamper tests, including agreement at degree
+five on a retained n=6 affine-sliced map. Its time and memory use on an
+actual frontier-size D5 map have not yet been measured, so it is a candidate
+verifier for a separately frozen D5 protocol, not an accepted D5 result.
 
 **Remark 1.5a** (why a scalar closure certificate cannot refute an
 unsatisfiable system). Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
