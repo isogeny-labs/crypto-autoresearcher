@@ -11,7 +11,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 from orchestration import fast_yaml
-from . import role_registry
+from . import role_registry, research_task
 
 RUNTIME_CORE = "docs/agent-runtime-core.md"
 
@@ -108,6 +108,11 @@ def prepare_task(task: dict[str, Any], *, repo_root: Path,
         raise ValueError("task names no role")
     roles_doc = roles_doc if roles_doc is not None else role_registry.load_roles()
     role = role_registry.role_spec(roles_doc, result.get("role"))
+    research = research_task.from_task(result)
+    if research is not None:
+        missing = set(research["required_capabilities"]) - set(role["capabilities"])
+        if missing:
+            raise ValueError(f"research requires capabilities not guaranteed by role {result['role']}: {sorted(missing)}")
     explicit_context = paths(_field(result, "context_paths"), "context_paths")
     context = explicit_context + _input_paths(result, repo_root)
     if result.get("_source_path"):
@@ -140,10 +145,14 @@ def prepare_task(task: dict[str, Any], *, repo_root: Path,
 
 def context_manifest(task: dict[str, Any]) -> dict[str, Any]:
     """Small, serializable execution metadata; never a research conclusion."""
-    return {
+    manifest = {
         "task_id": task.get("id"),
         "context_paths": task["context_paths"],
         "read_scope": task["read_scope"],
         "read_scope_source": "derived" if task["_read_scope_derived"] else "declared",
         "write_scope": task["write_scope"],
     }
+    research = research_task.from_task(task)
+    if research is not None:
+        manifest["research"] = research
+    return manifest

@@ -1,0 +1,90 @@
+# DEC-20261107-6b0f3d: research_dispatch cannot verify the c5a0f4 archive. This decision supersedes
+# DEC-20261107-e41c08 rulings 3 and 4 (commit order and the archive commit). It sets interim custody
+# for c5a0f4 and 9d2b6a, and lets the spec/plan correction land first. It approves nothing.
+coordinator_decision:
+  id: DEC-20261107-6b0f3d
+  id_provenance: >-
+    Chosen by the Coordinator subagent (no shell) as an unused 6-hex token. No match under ledger/,
+    coordination/ or experiments/. Run `python3 tools/allocate_id.py --check DEC-20261107-6b0f3d`.
+    If that fails, use --next, then rename and replace the id here and in the two handoffs.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It wrote this file and edited the archive text of
+    ledger/handoffs/TASK-20261107-c5a0f4.yaml and TASK-20261107-9d2b6a.yaml. It read
+    tools/research_dispatch.py: ROLES (lines 48-55), require_text_list, the archive and source
+    assignment checks (lines 955-1040) and the coordinator snapshot check (line 384). Queue facts
+    are as the top-level session reported them.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: revise
+  supersedes: {record: DEC-20261107-e41c08, rulings: [3, 4]}
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  facts_reported:
+    - "C1 is committed as e6e7fd2913 on claude/c1-approval-correction-20261107 and is not pushed. C2 and C3 are not made."
+    - "research_dispatch verifies archives only through queue task entries. The canonical BATCH-0e0902 queue holds 4b7018, dccfdc, 724d14 and d5ec1e. TASK-20261107-c5a0f4 appears only in the preview queue."
+  findings:
+    - "A dispatcher archive cannot be built for c5a0f4. Its role, experiment-director, is not in research_dispatch ROLES, so it cannot be a queue task. An archive task must name a non-empty list of source_task_ids, each a non-archive queue task it depends on (lines 981-991). A self-archiving design task therefore has no legal queue shape. The same holds for TASK-20261107-9d2b6a, which has no source and no queue entry. Both handoffs were the Coordinator's design error. The precedent fits: design bytes reach dispatcher custody in the approval archive, as TASK-20261106-de6d19 did for DEC-20261106-ecf261."
+  rulings:
+    - id: 1
+      title: (a) no queue entry for c5a0f4
+      text: >-
+        c5a0f4 gets no entry in the canonical BATCH-0e0902 queue or in any new queue. Its custody is
+        interim until the approval archive of DEC-20261107-7802ec, which binds its bytes through the
+        dispatcher. The custody record is a coordinator-written receipt at the declared path
+        coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-c5a0f4/snapshot-receipt.json.
+        It records:
+          - the sha256 of every existing c5a0f4 artifact_paths file as it is in main commit
+            0ea4ca81d0 (`git show 0ea4ca81d0:<path> | sha256sum`; `tools/artifact_store.py hash` for
+            any stored file);
+          - the three crypto files at ff781aa8b7;
+          - PD-2, PD-3 and this decision;
+          - dispatcher_verified false.
+        The receipt is committed alone, by name, through the normal PR. The canonical queue, the
+        runbook, the card and the trial plan do not change for this, so no hash refresh is needed now.
+        The preview queue (8dbfbae8...) and the preapproval packet are regenerated anyway when
+        DEC-20261107-7802ec is written (B-QUEUE-ENTRY). At that point the approval archive's
+        path_sha256 must cover the c5a0f4 bytes and must equal this receipt's hashes for every path
+        that has not changed since. Any difference returns to the Coordinator.
+    - id: 2
+      title: (b) the correction lands first
+      text: >-
+        Yes. C3 (specification.yaml and trial-plan.json reset, plus the two approval-preview copies)
+        is committed now on top of e6e7fd2913 and pushed with C1 in one ready-for-review PR. Enable
+        auto-merge after validate_ledger passes. The custody receipt no longer depends on the commit
+        order, because it hashes the bytes at 0ea4ca81d0 and not in its own tree. It may ride in the
+        same PR as a third commit or follow in its own PR. Either way it is committed before the
+        9d2b6a dispatch. A C2 based on e6e7fd2913 is not needed.
+    - id: 3
+      title: red-team review custody and dispatch
+      text: >-
+        TASK-20261107-9d2b6a gets the same interim custody. Its report directory reaches main through its
+        own ready-for-review PR, together with a coordinator-written receipt at its declared receipt
+        path (dispatcher_verified false). The 7802ec approval archive binds it. Dispatch 9d2b6a after
+        the correction PR has merged and the c5a0f4 receipt is on main. Name that main commit and
+        0ea4ca81d0. The three script sha256 values must match at both.
+    - id: 4
+      text: >-
+        Unchanged from DEC-20261107-e41c08: rulings 1, 2, 5, 6 and 7, PD-2 and PD-3. No queue entry,
+        no dispatch_exception and no edit to the canonical queue is authorized here.
+  status_transitions: []
+  target_ids: [TASK-20261107-c5a0f4, TASK-20261107-9d2b6a, EXP-ICPERF-127dbd, BATCH-0e0902, GOAL-ICPERF-e6b6a4]
+  related_records:
+    prior_decisions: [DEC-20261107-e41c08, DEC-20261106-ecf261]
+    commits: {c1: e6e7fd2913, pr3132_merge: 0ea4ca81d0, crypto_amendment: ff781aa8b7}
+  rationale:
+    - "Remove the unratified approval from main first. That correction is independent of archive custody."
+    - "Custody that the dispatcher cannot verify is stated as such and given a verifiable successor, the approval archive. It is never forced into a queue shape that misdescribes the work."
+  evidence_refs:
+    - tools/research_dispatch.py (ROLES; lines 955-1040)
+    - ledger/decisions/DEC-20261107-e41c08.yaml
+  limitations:
+    - "No shell. Whether validate_ledger accepts the c5a0f4 and 9d2b6a archive blocks as amended (free text only) is untested. A refusal returns here."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session, text: "Commit this decision and the two handoff edits. Then commit C3. Push, open a ready-for-review PR, and enable auto-merge after validate_ledger passes. Commit the c5a0f4 custody receipt. After merge, dispatch TASK-20261107-9d2b6a."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "Archive custody and commit-order ruling. No evidence exists."
