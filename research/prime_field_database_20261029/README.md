@@ -189,3 +189,23 @@ hash while preserving inherited historical bytes, avoiding a92,500,585-byte
 recursive snapshot copy. FK/integrity/gzip pass as producer checks.
 [PCC-20261107-d1bac1](../../pcc/claims/PCC-20261107-d1bac1.json), unverified.
 [pcc:unverified]
+
+## v21: causal target certification and query scheduling
+
+The additive [v21 snapshot](../prime_field_a17_execution_20261107/database/v21-certified-query/validation.json)
+preserves all 98 parent nonmetadata tables/rows and exact parent bytes. It adds
+four curves, four mathematical known48 bases, eight separately paid full24
+program contexts, 32 targets, eight cases and sixteen algorithm outputs (four
+online engines plus twelve batch calls). Both programs identify all 32 targets;
+the candidate records 46 distinct point queries versus 768 for full reference,
+with full construction paid. Twenty-seven first certificates come from paid
+construction/Registry information and five from extra query prefixes. This
+finite producer observation does not establish scaling or calibrated cost.
+[PCC-20261107-0645d8](../../pcc/claims/PCC-20261107-0645d8.json). [pcc:unverified]
+
+New tables retain 1536 schedule slots, 32 causal prefix certificates and four
+native row-consequence bundles. Canonical base identity deduplicates the paired
+builds while keeping both construction/cost records. A 518-byte reference
+reconstructs exact parent metadata without recursively copying it. Parent
+preservation, foreign keys, integrity and gzip roundtrip pass; global history
+contains 38 curves, 66 bases and 23 executions. [pcc:unverified]
