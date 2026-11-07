@@ -317,6 +317,56 @@ descending-induction argument is what justifies that choice. The source
 audit and retained n47 D3 rank are recorded in
 `../semaev-degree-five-quotient-lift/N47-D3-EXACT-CLOSURE-AUDIT.md`.
 
+**Proposition 1.9** (exactness of a completed quotient lift). **Proved.**
+Let $U\subseteq B_{\le d}$ be the kernel of an onto map
+$\beta:B_{\le d}\to Q$, and suppose each coordinate of $Q$ has a monomial
+representative $b_q$ with $\beta(b_q)=e_q$. Among degree-$(d+1)$ monomials,
+retain as *standard* those with no degree-$d$ divisor other than such
+unit representatives. For each other high monomial $t=xm$, choose a
+non-representative divisor $m$ and recursively rewrite
+$t$ as $\sum_q\beta(m)_q\,xb_q$, using an acyclic order. This defines an
+onto linear map
+$\phi:B_{\le d+1}\to P=\mathbb F_2^{H}\oplus Q$, where $H$ is the
+standard high-monomial set, $\phi|_{B_{\le d}}=\beta$, and the selected
+standard monomials and $b_q$ map to the basis of $P$.
+
+Let $u_m=m+\sum_q\beta(m)_q b_q$ for every low monomial $m$. Start a
+relation space $A\subseteq P$ with all $\phi(x_i u_m)$; then repeatedly
+adjoin $T_i(v)=\phi(x_i\sum_q v_q b_q)$ for every variable $x_i$ and a
+basis of $A\cap Q$ until the rank stabilizes. If this process completes,
+then
+
+$$\phi^{-1}(A)=C_{d+1}(U).$$
+
+Consequently, if $U=W_d(F)$, a completed quotient export
+$B_{\le d+1}\to P/A$ has kernel exactly $W_{d+1}(F)$.
+
+*Proof.* The $u_m$ span $U$. Each low monomial is congruent modulo $U$ to
+its $b_q$ expression. Each selected high rewrite differs from the original
+monomial by $x_i u_m\in C_{d+1}(U)$. Acyclic substitution therefore shows
+that every polynomial is congruent modulo $C_{d+1}(U)$ to its standard
+representative in $P$. In particular, $\ker\phi\subseteq C_{d+1}(U)$.
+
+Put $C=C_{d+1}(U)$. The initial relation space lies in $\phi(C)$. If
+$v\in\phi(C)\cap Q$, take $c\in C$ with $\phi(c)=v$. Its low representative
+$\sum_q v_q b_q$ differs from $c$ by an element of $\ker\phi\subseteq C$,
+so that representative belongs to $C$; hence $T_i(v)\in\phi(C)$. Thus
+the completed $A$ lies in $\phi(C)$.
+
+Conversely, $K=\phi^{-1}(A)$ contains $U$. For $g\in K\cap B_{\le d}$,
+put $v=\beta(g)\in A\cap Q$. The difference
+$g+\sum_q v_q b_q$ lies in $U$, so $\phi(x_i g)$ differs from $T_i(v)$
+by an initial relation in $A$. Therefore $x_i g\in K$ for every $i$;
+minimality gives $C\subseteq K$. Since $A\subseteq\phi(C)$ and
+$\ker\phi\subseteq C$, the reverse inclusion $K\subseteq C$ follows.
+The final claim is Lemma 1.6. $\square$
+
+The n47 batched-lift source implements this construction: its provisional
+map is $\phi$, its initial `seed variable` loop spans the
+$\phi(x_i u_m)$, and its `closure round` loop applies the $T_i$ on
+$A\cap Q$. The source and retained-result audit is
+`../semaev-degree-five-quotient-lift/N47-D4-EXACT-LIFT-AUDIT.md`.
+
 ---
 
 ## 2. Structure of the $m=2$ system
