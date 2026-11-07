@@ -1,0 +1,86 @@
+..FF.....                                                                [100%]
+=================================== FAILURES ===================================
+__________ test_direct_custody_corruption_refused_or_unknown[output] ___________
+
+transfer_archive = (PosixPath('/tmp/pytest-of-agent/pytest-65/a22-marked-repeat0/run'), {'software_control': True, 'domain': 'a20-archive...'base_size': 3}], 'a': 1, ...}, {'returncode': 0, 'timeout': False, 'exception': None, 'source_unchanged_after': True})
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-65/test_direct_custody_corruption1')
+change = 'output'
+
+    @pytest.mark.parametrize('change',['input','output','cost','missing','call_census'])
+    def test_direct_custody_corruption_refused_or_unknown(transfer_archive,tmp_path,change):
+        original,rules,execution=transfer_archive;run=tmp_path/'changed';shutil.copytree(original,run);prefix=run/'raw/p211-i0.formalpair16.'
+        if change=='missing':
+            Path(str(prefix)+'direct_formal.json').unlink();data=analyze22.summarize(run,rules,execution)
+            assert not data['panel_complete']and not data['cells'][2]['verified'];return
+        path=Path(str(prefix)+('direct_formal-check.json'if change=='input'else'complete.json'if change=='call_census'else'direct_formal.json'))
+        value=json.loads(path.read_text())
+        if change=='input':value['verification']['prepared_sha256']='0'*64
+        elif change=='call_census':value['solver_calls']=2
+        elif change=='output':value['recoveries'][0]['identifiable']=not value['recoveries'][0]['identifiable']
+        else:value['counters']['Fr.field_mul']=value['counters'].get('Fr.field_mul',0)+1
+        write(path,value)
+        if change in ('output','cost'):
+>           data=analyze22.summarize(run,rules,execution);assert not data['panel_complete']and not data['cells'][2]['verified']
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a22_execution_20261107/test_transfer22.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+research/prime_field_a22_execution_20261107/analyze22.py:70: in summarize
+    direct_ok=program!='formalpair16'or bound(val['direct_formal'],chk['direct_formal'])
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'arm': 'direct_formal', 'system': {'rows': 17, 'columns': 4, 'rank': 4, 'nullity': 0, ...}, 'recoveries': [{'target_i...t_index': 1, 'identifiable': True, 'value': 54, 'row_weights': [53, 0, 5, 96, 0, 0, ...], ...}], 'old_columns': 2, ...}
+check = {'verification': {'checked': True, 'input_case_sha256': '47701917b77b742808106068eed87c14429ca6344b7c4581ce0943d895234...9be1db015e512f092', 'producer_output_sha256': '8e5443c0845e806dd57ded0252eb2855491a90dfb19db1991533403d2702894e', ...}}
+
+    def bound(value,check):
+        if value is None or check is None or not check.get('verification',{}).get('checked'):return False
+        if check['verification'].get('producer_output_sha256')!=commitment(value):
+>           raise ValueError('full producer output/cost checker commitment differs')
+E           ValueError: full producer output/cost checker commitment differs
+
+research/prime_field_a16_execution_20261107/analyze16.py:24: ValueError
+___________ test_direct_custody_corruption_refused_or_unknown[cost] ____________
+
+transfer_archive = (PosixPath('/tmp/pytest-of-agent/pytest-65/a22-marked-repeat0/run'), {'software_control': True, 'domain': 'a20-archive...'base_size': 3}], 'a': 1, ...}, {'returncode': 0, 'timeout': False, 'exception': None, 'source_unchanged_after': True})
+tmp_path = PosixPath('/tmp/pytest-of-agent/pytest-65/test_direct_custody_corruption2')
+change = 'cost'
+
+    @pytest.mark.parametrize('change',['input','output','cost','missing','call_census'])
+    def test_direct_custody_corruption_refused_or_unknown(transfer_archive,tmp_path,change):
+        original,rules,execution=transfer_archive;run=tmp_path/'changed';shutil.copytree(original,run);prefix=run/'raw/p211-i0.formalpair16.'
+        if change=='missing':
+            Path(str(prefix)+'direct_formal.json').unlink();data=analyze22.summarize(run,rules,execution)
+            assert not data['panel_complete']and not data['cells'][2]['verified'];return
+        path=Path(str(prefix)+('direct_formal-check.json'if change=='input'else'complete.json'if change=='call_census'else'direct_formal.json'))
+        value=json.loads(path.read_text())
+        if change=='input':value['verification']['prepared_sha256']='0'*64
+        elif change=='call_census':value['solver_calls']=2
+        elif change=='output':value['recoveries'][0]['identifiable']=not value['recoveries'][0]['identifiable']
+        else:value['counters']['Fr.field_mul']=value['counters'].get('Fr.field_mul',0)+1
+        write(path,value)
+        if change in ('output','cost'):
+>           data=analyze22.summarize(run,rules,execution);assert not data['panel_complete']and not data['cells'][2]['verified']
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a22_execution_20261107/test_transfer22.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+research/prime_field_a22_execution_20261107/analyze22.py:70: in summarize
+    direct_ok=program!='formalpair16'or bound(val['direct_formal'],chk['direct_formal'])
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+value = {'arm': 'direct_formal', 'system': {'rows': 17, 'columns': 4, 'rank': 4, 'nullity': 0, ...}, 'recoveries': [{'target_i...t_index': 1, 'identifiable': True, 'value': 54, 'row_weights': [53, 0, 5, 96, 0, 0, ...], ...}], 'old_columns': 2, ...}
+check = {'verification': {'checked': True, 'input_case_sha256': '47701917b77b742808106068eed87c14429ca6344b7c4581ce0943d895234...9be1db015e512f092', 'producer_output_sha256': '8e5443c0845e806dd57ded0252eb2855491a90dfb19db1991533403d2702894e', ...}}
+
+    def bound(value,check):
+        if value is None or check is None or not check.get('verification',{}).get('checked'):return False
+        if check['verification'].get('producer_output_sha256')!=commitment(value):
+>           raise ValueError('full producer output/cost checker commitment differs')
+E           ValueError: full producer output/cost checker commitment differs
+
+research/prime_field_a16_execution_20261107/analyze16.py:24: ValueError
+=========================== short test summary info ============================
+FAILED research/prime_field_a22_execution_20261107/test_transfer22.py::test_direct_custody_corruption_refused_or_unknown[output]
+FAILED research/prime_field_a22_execution_20261107/test_transfer22.py::test_direct_custody_corruption_refused_or_unknown[cost]
+2 failed, 7 passed in 6.36s
