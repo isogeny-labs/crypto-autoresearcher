@@ -44,7 +44,7 @@ def main():
         for offset,method,color in [(-.18,'scalar','#24739d'),(.18,'batched','#b45b28')]:
             values=[indexed[ident,method]['build']['counters'].get(key,0) if indexed[ident,method]['build'] else float('nan') for ident in ids]
             ax.bar([i+offset for i in range(len(ids))],values,width=.35,label=method,color=color)
-        ax.set_xticks(range(len(ids)),[x.split('.')[1]+' '+x.split('.')[0][-2:] for x in ids],rotation=70,fontsize=5)
+        ax.set_xticks(range(len(ids)),[x.replace('p262139-','18b-').replace('p524287-','19b-') for x in ids],rotation=70,fontsize=5)
         ax.set_title(title);ax.set_ylabel('allocated bytes (traffic, not peak RSS)');ax.legend(fontsize=6);ax.spines[['top','right']].set_visible(False)
     fig.tight_layout();fig.savefig(args.out/'explicit-array-traffic.svg');plt.close(fig)
     totals={method:Counter() for method in methods};pair_totals={method:Counter() for method in methods};query_totals={method:Counter() for method in methods}
@@ -100,13 +100,13 @@ CENSUS_TABLE)
 Each producer table/query and paid counter prefix flushes before its separate checker. Checker receipts bind the complete producer payload, phase conservation and independently checked arithmetic/allocation schedules. Four closed-curve canonical S3 receipts bind exact curve identity and cumulative table counts. Failures remain unverified with unknown remaining work.
 
 Raw publication: RAW_COMMIT. Scientific source: SCI_SOURCE.
-Shared-host wall time is diagnostic only; wall_valid=false. Child CPU user/sys: CPU_U / CPU_S seconds. Peak RSS: RSS bytes. Inclusive process resources include checker and custody work; they are not a calibrated attack bound.
+Shared-host wall time is diagnostic only; wall_valid=false. Child CPU user/sys: CPU_U / CPU_S seconds. Peak RSS: RSS_BYTES bytes. Inclusive process resources include checker and custody work; they are not a calibrated attack bound.
 
 No target recoveries or solver outcomes are newly claimed from this component. Exact pair/query parity conditions reuse of old outcomes. No novelty, population inference, complete-cost or runtime gain follows from these primitive vectors. Literature/source review is retained in the study; scalar/batch production code predates this comparison.
 '''
     replacements={'COMPLETE':str(m['panel_complete']),'BUILDS':str(m['verified_builds']),'QUERIES':str(m['verified_query_calls']),
         'BUILD_TABLE':table(values),'QUERY_TABLE':table(query_values),'CENSUS_TABLE':table(census),'RAW_COMMIT':args.raw_commit[:12],
-        'SCI_SOURCE':e['source_commit'][:12],'CPU_U':str(e['cpu_user_seconds']),'CPU_S':str(e['cpu_sys_seconds']),'RSS':str(e['max_rss_bytes'])}
+        'SCI_SOURCE':e['source_commit'][:12],'CPU_U':str(e['cpu_user_seconds']),'CPU_S':str(e['cpu_sys_seconds']),'RSS_BYTES':str(e['max_rss_bytes'])}
     for key,value in replacements.items():text=text.replace(key,value)
     (args.out/'report.typ').write_text(text)
     typst.compile(str(args.out/'report.typ'),output=str(args.out/'report.pdf'))
