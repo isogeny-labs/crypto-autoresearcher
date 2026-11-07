@@ -336,15 +336,16 @@ research_goal:
       asserts_nothing_about: >-
         H-ICPERF-4cb536 or C1.
   next_action: >-
-    C1: RBS-ICPERF-de8978 stopped at USD 0 on a GitHub 500 during the claim push, before
-    launch (DEC-20261106-3a91f7). It is reopened, not replaced. Once DEC-20261106-3a91f7 is on
-    origin/main, after claim TASK-20261106-724d14 epoch 1 expires (2026-11-07T01:54:40Z), and
-    when its before_relay conditions hold, re-relay CARD-EXP-ICPERF-127dbd-2 unchanged to
-    executor-mechanical with the five relay facts. Its step 2 reopens the session (S02
-    attempt 2, claim epoch 2, T1 RUN-ICPERF-8b0d47 then T2 RUN-ICPERF-5ffa79). Record
-    tools/token_usage.py, then run snapshot TASK-20261106-d5ec1e alone before any review.
-    Other ICPERF lanes continue as separately ranked.
-  next_action_recorded_at: '2026-11-06'
+    C1: the reopened RBS-ICPERF-de8978 launched S1 once (T1 RUN-ICPERF-8b0d47, at most USD 0.93108).
+    The job exited 42, but launch_eks.sh v3a could not locate its results, so the session is
+    terminal as an implementation_error. That is not evidence and not host loss, and no -r2 is
+    triggered (DEC-20261107-b74e2c). Next: run snapshot TASK-20261106-d5ec1e alone (scratch-validate
+    first; DEC-20261107-b74e2c ruling 6), then commit and merge the decision. After that the
+    Coordinator hands the experiment-director C1-AMENDMENT-2, wrapper v3b with a shared results
+    locator, a read-only reconciliation of T1 under RUN-ICPERF-8b0d47, and a new runbook session
+    with a fresh S2 run id, for a new approval. No launch before that approval. Other ICPERF
+    lanes continue as separately ranked.
+  next_action_recorded_at: '2026-11-07'
 
   owner: coordinator
   created_at: '2026-09-13'
