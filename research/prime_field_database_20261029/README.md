@@ -150,3 +150,15 @@ coordinate information, target recovery before full base rank, differing target
 masks and separately charged costs. These are producer assertions, unverified
 under PCC-20261106-35c953; no calibrated complete-cost or official scientific
 transition follows. [pcc:unverified]
+
+## v18: retained signed-pair component comparison
+
+[A15](../prime_field_a15_execution_20261107/RESULTS.md) appends the actual
+scalar/batched pair-construction comparison, referencing original A14 base
+identities. [v18 validation](../prime_field_a15_execution_20261107/database/v18-batched-pairs/validation.json)
+records unchanged v17 bytes, all91 historical non-metadata tables/rows preserved,
+foreign-key/integrity/gzip checks and additions for16table comparisons32builds
+17920query replays. No new curves/bases/targets/target solvers are counted;
+historical totals remain30curves46bases, now20execution records including prior
+failures. The compressed snapshot is object-backed in its committed manifest.
+Producer evidence remains unverified under PCC-20261107-c57282. [pcc:unverified]

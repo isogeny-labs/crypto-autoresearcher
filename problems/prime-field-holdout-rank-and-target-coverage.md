@@ -325,3 +325,19 @@ charge all actual work, cancel auxiliary unknowns before Delta, keep target
 identities and original-row certificates, preserve negative/partial outcomes.
 Full calibrated costs and trusted independent scientific standing remain open.
 Status remains investigating; no old record or hypothesis/goal state changes.
+
+## 2026-11-07 A15: executed common pair-construction baseline
+
+[A15 results](../research/prime_field_a15_execution_20261107/RESULTS.md) retain
+32 actual cold pair builds and17920 old query replays on all16 A14 geometries.
+Exact ordered native pairs and query/native-row/miss/counter checks pass;
+new target solvers/targets/curves remain zero. Cold field vectors and added
+explicit array traffic are separate. This supplies an actual shared-denominator/
+sign-reuse/batch baseline for every future comparator; it does not remeasure old
+coverage, settle full costs or resolve the target-coverage obstruction. Evidence
+is producer-unverified PCC-20261107-c57282. Next technical controls are fresh
+known48 target effort with independent horizon8/24 portfolios and matched
+hybrid/source-free costs, or unknown16 outside-pool old-coordinate information
+with all auxiliary and target columns cancelled. No new trial is approved by
+this note; retain prospective freeze/admission and all current finite gates.
+[pcc:unverified]

@@ -1192,6 +1192,84 @@ def prime_field_mixed_known_helper_panel(ref, since):
             emit(name+'.'+key,v[key],unit=unit,label='Dependent producer observation; supplied logs are not learned rank, no cross-base Delta comparison',**common)
 
 
+def prime_field_batched_pair_panel(ref, since):
+    """Committed A15 component vectors; retained queries never become new targets."""
+    from collections import Counter
+    date = '2026-11-07'
+    if date < since:
+        return
+    path = 'research/prime_field_a15_execution_20261107/runs/a15-batched-pairs-06ab77/metrics.json'
+    raw = show(ref, path)
+    if raw is None:
+        return
+    try:
+        data = json.loads(raw)
+        if (data['schema'] != 'prime-field-a15-metrics/v1' or data['panel_complete'] is not True or
+            data['physical_attempts'] != 1 or data['conditioned_input_reuse'] is not True or
+            data['new_target_solver_calls'] != 0 or data['independent_new_target_draws'] != 0 or
+            data['verified_builds'] != 32 or data['verified_query_calls'] != 17920 or
+            data['partial_work_unknown'] is not False or data['errors']):
+            return
+        curves = [f'p{p}-i{i}' for p in (262139,524287) for i in (0,1)]
+        tables = {cid+'.'+base for cid in curves for base in ('norm','hybrid','known32','known48')}
+        rows = data['rows']
+        if len(rows) != 32 or {(r['table'],r['method']) for r in rows} != {(t,m) for t in tables for m in ('scalar','batched')}:
+            return
+        checkpoints = data['checkpoints']
+        if len(checkpoints) != 4 or {c['closed_curve'] for c in checkpoints} != set(curves) or any(
+            c['returncode'] != 0 or c['completed_tables'] != 4*(curves.index(c['closed_curve'])+1) or
+            c['command'] != ['bash','scripts/checkpoint.sh','push'] for c in checkpoints):
+            return
+        total = Counter()
+        for row in rows:
+            b = row['build']
+            expected_queries = 944 if row['table'].split('.')[1] in ('norm','hybrid') else 176
+            if (row['verified'] is not True or row['pair_verified'] is not True or row['method_complete'] is not True or
+                row['queries'] != expected_queries or row['verified_queries'] != expected_queries or
+                b['method'] != row['method'] or not re.fullmatch('[0-9a-f]{64}',b['pairs_sha256'])):
+                return
+            groups = [b['counters'],row['query_counters'],row['observed_phase_counters'],row['pair_stage_counters']]
+            if any(type(value) is not int or value < 0 for group in groups for value in group.values()):
+                return
+            phases = Counter()
+            for phase in b['phases']:
+                if phase['status'] != 'complete' or phase['wall_valid'] is not False:
+                    return
+                phases.update(phase['counters'])
+            if phases != Counter(b['counters']) or Counter(b['counters'])+Counter(row['query_counters']) != Counter(row['observed_phase_counters']):
+                return
+            n = b['counters']['pair_input_points_validated']
+            width = 32 if row['table'].split('.')[1] in ('norm','known32') else 48
+            if n != width or b['ordered_pairs'] != 2*n*(n-1) or b['counters']['pair_table_insertions'] != b['ordered_pairs']:
+                return
+            expected_group = b['ordered_pairs'] if row['method']=='scalar' else 0
+            expected_inv = b['ordered_pairs'] if row['method']=='scalar' else 1
+            if b['counters'].get('Fp.group_add',0) != expected_group or b['counters'].get('Fp.field_inv',0) != expected_inv:
+                return
+            total.update(row['observed_phase_counters'])
+        if total != Counter(data['physical_counters']):
+            return
+        for ident in tables:
+            paired = [row for row in rows if row['table']==ident]
+            if len({row['build']['pairs_sha256'] for row in paired}) != 1 or paired[0]['query_counters'] != paired[1]['query_counters']:
+                return
+    except (KeyError,TypeError,ValueError,AttributeError):
+        return
+    common = dict(date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}')
+    prefix = 'prym.prime_field.a15'
+    for key in ('verified_builds','verified_query_calls','new_target_solver_calls','independent_new_target_draws'):
+        emit(prefix+'.'+key,data[key],unit='objects',label='Actual component census; retained inputs, no new target recovery, producer unverified',**common)
+    for row in rows:
+        name = prefix+'.'+row['table']+'.'+row['method']
+        for group,counts in [('construction',row['build']['counters']),('pair_stages',row['pair_stage_counters']),('query_replay',row['query_counters'])]:
+            for key in ('Fp.field_add','Fp.field_sub','Fp.field_mul','Fp.field_inv','Fp.group_add','pair_table_insertions',
+                        'pair_array_allocated_bytes','pair_array_allocations','signed_point_queries'):
+                emit(name+'.'+group+'.'+key,counts.get(key,0),unit='bytes' if key.endswith('_bytes') else 'calls',
+                    label='Separate actual component vector; array traffic is not RSS, no calibrated runtime/full-cost claim',**common)
+        for key in ('queries','verified_queries','rows'):
+            emit(name+'.'+key,row[key],unit='objects',label='Retained component query/native-row checks, not target solver calls or new targets',**common)
+
+
 def degree_five_continuation(ref, since):
     """Latest committed high-memory snapshot per day, including capped inputs.
 
@@ -1369,6 +1447,7 @@ def main():
     prime_field_batched_holdout_panel(a.ref, a.since)
     prime_field_paid_known_base_panel(a.ref, a.since)
     prime_field_mixed_known_helper_panel(a.ref, a.since)
+    prime_field_batched_pair_panel(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 
