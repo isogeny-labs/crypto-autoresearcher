@@ -11,6 +11,8 @@ report is labelled derived.
 One record per run, schema `bench.record/v1`, at
 `<records_dir>/<YYYYMMDD>T<HHMM>Z-<slug>.json` (default `benchmarks/records/`;
 `.benchrec.json` at the repository root overrides the layout).
+`living_paths` may name evolving catalogs for configuration compatibility;
+a changed checkout still requires exact original archive bytes for a closed run.
 
     benchrec.py init --slug SLUG --problem PROBLEM [--curve UID] [--entry DIR]
     benchrec.py run RECORD -- COMMAND...          run a launcher under the record
@@ -41,6 +43,7 @@ import shutil
 import socket
 import subprocess
 import sys
+import tempfile
 import time
 import zlib
 from pathlib import Path
@@ -56,6 +59,7 @@ DEFAULT_CONFIG = {
     "entry_re": r"^\d{8}-[A-Za-z0-9_.-]+$",
     "bucket": BUCKET,
     "store_prefix": STORE_PREFIX,
+    "living_paths": [],
 }
 OPEN_LIST = ".benchrec/open.jsonl"
 
@@ -354,6 +358,54 @@ def s3_exists(uri: str) -> bool:
     return p.returncode == 0
 
 
+def archived_raw_matches(root: Path, cfg: dict, raw: dict, *, remote: bool) -> bool:
+    """Verify the original immutable bytes, never the newer checkout version.
+
+    Only the configured canonical content-addressed URI qualifies. A local
+    cache is untrusted until both length and digest match; otherwise an online
+    caller must HEAD the recorded size and GET/hash the bounded object. This
+    does not alter the source path, record, upload flag, or any scientific field.
+    """
+    digest, size = raw.get("sha256"), raw.get("bytes")
+    if (not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest)
+            or not isinstance(size, int) or isinstance(size, bool) or size < 0
+            or raw.get("s3_uri") != store_uri(cfg, digest)):
+        return False
+    cache = root / ".benchrec" / "raw-archive-cache" / digest
+    try:
+        if cache.exists():
+            cache_ok = (not cache.is_symlink()
+                        and cache.resolve().is_relative_to(root.resolve())
+                        and cache.is_file() and cache.stat().st_size == size
+                        and sha256_file(cache) == digest)
+            if not cache_ok or not remote:
+                return cache_ok
+        if not remote:
+            return False
+        bucket, key = raw["s3_uri"][5:].split("/", 1)
+        head = subprocess.run(
+            ["aws", "s3api", "head-object", "--bucket", bucket, "--key", key,
+             "--query", "ContentLength", "--output", "text"],
+            capture_output=True, env=aws_env(), timeout=180,
+        )
+        if head.returncode or int(head.stdout.strip()) != size:
+            return False
+        with tempfile.TemporaryDirectory(prefix="benchrec-archive-") as temp:
+            path = Path(temp) / "raw"
+            # One extra byte detects an oversized object if it changes after
+            # HEAD; the original exact size/hash still decide acceptance.
+            args = ["aws", "s3api", "get-object", "--bucket", bucket, "--key", key]
+            if size:
+                args += ["--range", f"bytes=0-{size}"]
+            result = subprocess.run(
+                [*args, str(path)], capture_output=True, env=aws_env(), timeout=180,
+            )
+            return (result.returncode == 0 and path.is_file()
+                    and path.stat().st_size == size and sha256_file(path) == digest)
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return False
+
+
 def cmd_upload(a, root: Path, cfg: dict) -> int:
     path, rec = load_record(root, a.record)
     if not aws_available():
@@ -371,6 +423,12 @@ def cmd_upload(a, root: Path, cfg: dict) -> int:
             rc = 1
             continue
         if sha256_file(src) != r["sha256"]:
+            if (rec["status"] in ("measured", "invalid", "censored")
+                    and archived_raw_matches(root, cfg, r, remote=True)
+                    and s3_exists(r["s3_uri"])):
+                print(f"benchrec: {r['path']}: original archive bytes verified; "
+                      "checkout differs, no upload performed")
+                continue
             print(f"benchrec: {r['path']} changed since it was recorded", file=sys.stderr)
             rc = 1
             continue
@@ -407,7 +465,10 @@ def cmd_close(a, root: Path, cfg: dict) -> int:
         rec["summary"] = a.summary
     rec["status"] = a.status
     rec["closed_utc"] = utcnow().isoformat()
-    errors = record_errors(root, cfg, rec, rel(root, path), require_closed=True)
+    # The record is still open on disk. Its temporary closing status must
+    # not unlock the fallback reserved for already-closed historical records.
+    errors = record_errors(root, cfg, rec, rel(root, path), require_closed=True,
+                           allow_archived_raw=False)
     if errors:
         rec["status"] = "open"
         rec["closed_utc"] = None
@@ -425,7 +486,8 @@ def cmd_close(a, root: Path, cfg: dict) -> int:
 # ---------------------------------------------------------------------- checks
 
 def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed: bool,
-                  verify_s3: bool = False, manifests: dict | None = None) -> list[str]:
+                  verify_s3: bool = False, manifests: dict | None = None,
+                  allow_archived_raw: bool = True) -> list[str]:
     e: list[str] = []
     for k in ("schema", "id", "slug", "problem", "repo", "created_utc", "status", "commit",
               "branch", "host", "entries", "commands", "raw", "metrics", "reports"):
@@ -484,7 +546,14 @@ def record_errors(root: Path, cfg: dict, rec: dict, name: str, *, require_closed
         local = root / r.get("path", "")
         if local.is_file():
             if sha256_file(local) != r.get("sha256"):
-                e.append(f"{name}: raw {r['path']} differs from its recorded sha256")
+                if (allow_archived_raw
+                        and rec["status"] in ("measured", "invalid", "censored")
+                        and archived_raw_matches(root, cfg, r, remote=verify_s3)):
+                    source = "S3 archive" if verify_s3 else "local archive cache"
+                    print(f"benchrec: {name}: original raw bytes verified from {source} "
+                          f"for {r['path']}; differing checkout bytes are not validated here")
+                else:
+                    e.append(f"{name}: raw {r['path']} differs from its recorded sha256")
         else:
             covered = manifests is not None and manifests.get(r.get("path")) == r.get("sha256")
             if not covered and not r.get("uploaded"):
@@ -809,15 +878,17 @@ def _esc(s: str) -> str:
 
 
 def chart_panels(prog: dict) -> list[dict]:
-    """Panels: headline 'gain vs first' for every headline series, 'distance to
-    reference' where references exist, then one panel per other unit."""
+    """Show only panels with comparable observations in their own units."""
     panels = []
     head = [s for s in prog["series"] if s["unit"] == prog["headline_unit"]]
-    if head:
+    if any(p["derived"].get("improvement_vs_first_percent") is not None
+           for s in head for p in s["points"]):
         panels.append({"title": f"Cumulative gain vs first record, unit {prog['headline_unit']} (derived, %)",
                        "ylabel": "% better than first", "series": head,
                        "y": lambda p: p["derived"].get("improvement_vs_first_percent"), "log": False})
-    refd = [s for s in prog["series"] if any(p["derived"].get("value_over_reference") for p in s["points"])]
+    refd = [s for s in prog["series"] if any(
+        (v := p["derived"].get("value_over_reference")) is not None and v > 0
+        for p in s["points"])]
     if refd:
         panels.append({"title": "Distance remaining: value / reference (1.0 = parity; derived)",
                        "ylabel": "value / reference", "series": refd,
@@ -827,9 +898,12 @@ def chart_panels(prog: dict) -> list[dict]:
         if s["unit"] != prog["headline_unit"]:
             by_unit.setdefault(s["unit"], []).append(s)
     for u in sorted(by_unit):
-        panels.append({"title": f"Series in unit {u}: gain vs first record (derived, %)",
-                       "ylabel": "% better than first", "series": by_unit[u],
-                       "y": lambda p: p["derived"].get("improvement_vs_first_percent"), "log": False})
+        series = by_unit[u]
+        if any(p["derived"].get("improvement_vs_first_percent") is not None
+               for s in series for p in s["points"]):
+            panels.append({"title": f"Series in unit {u}: gain vs first record (derived, %)",
+                           "ylabel": "% better than first", "series": series,
+                           "y": lambda p: p["derived"].get("improvement_vs_first_percent"), "log": False})
     return panels
 
 
@@ -867,22 +941,28 @@ def render_svg(prog: dict) -> str:
     import math
     W, PH, M = 900, 260, 60
     panels = chart_panels(prog)
-    H = 70 + max(1, len(panels)) * (PH + 50)
+    # The legend can be taller than the plot when many metrics are recorded.
+    # Reserve its full height before positioning the next panel.
+    spans = [max(PH + 50, 62 + 16 * (len(p["series"]) - 1)) for p in panels]
+    H = 70 + (sum(spans) if spans else PH + 50)
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="Helvetica, Arial, sans-serif" font-size="12">',
          f'<rect width="{W}" height="{H}" fill="white"/>',
          f'<text x="{M}" y="30" font-size="18" font-weight="bold">Benchmark progress: {_esc(prog["repo"])}</text>',
          f'<text x="{M}" y="50" fill="#555">Values from bench.record/v1 records; percentages and ratios derived, same unit within a series. '
          f'Records: {", ".join(f"{k} {v}" for k, v in prog["records"].items())}.</text>']
     if not panels:
-        o.append(f'<text x="{M}" y="100">No measured records yet.</text>')
-    for i, panel in enumerate(panels):
-        top = 70 + i * (PH + 50)
+        message = ("No comparable observations within a metric yet; see PROGRESS.md for measured values."
+                   if prog["records"].get("measured", 0) else "No measured records yet.")
+        o.append(f'<text x="{M}" y="100">{_esc(message)}</text>')
+    top = 70
+    for panel, span in zip(panels, spans):
         geom = panel_geometry(panel)
         o.append(f'<text x="{M}" y="{top + 14}" font-weight="bold">{_esc(panel["title"])}</text>')
         gx0, gy0, gw, gh = M, top + 24, W - 2 * M - 220, PH - 40
         o.append(f'<rect x="{gx0}" y="{gy0}" width="{gw}" height="{gh}" fill="none" stroke="#999"/>')
         if geom is None:
             o.append(f'<text x="{gx0 + 10}" y="{gy0 + 20}" fill="#555">no points</text>')
+            top += span
             continue
         x0, x1, y0, y1 = geom
 
@@ -925,6 +1005,7 @@ def render_svg(prog: dict) -> str:
             lx, ly = gx0 + gw + 16, gy0 + 14 + j * 16
             o.append(f'<rect x="{lx}" y="{ly - 9}" width="10" height="10" fill="{col}"/>')
             o.append(f'<text x="{lx + 14}" y="{ly}">{_esc((s["problem"] + " · " + s["metric"])[:34])}</text>')
+        top += span
     o.append("</svg>")
     return "\n".join(o) + "\n"
 
@@ -1029,7 +1110,9 @@ def render_pdf(prog: dict) -> bytes:
     y += 24
     panels = chart_panels(prog)
     if not panels:
-        pdf.text(M, y, "No measured records yet.", 11)
+        message = ("No comparable observations within a metric yet; measured values are tabulated below."
+                   if prog["records"].get("measured", 0) else "No measured records yet.")
+        pdf.text(M, y, message, 11)
     PH = 200
     for panel in panels:
         if y + PH + 40 > H - M:
@@ -1037,7 +1120,7 @@ def render_pdf(prog: dict) -> bytes:
             y = 60
         pdf.text(M, y, panel["title"], 11, bold=True)
         y += 10
-        gx0, gy0, gw, gh = M + 40, y, W - 2 * M - 200, PH - 40
+        gx0, gy0, gw, gh = M + 40, y, W - 2 * M - 40, PH - 40
         pdf.rect(gx0, gy0, gw, gh, stroke="#999999")
         geom = panel_geometry(panel)
         if geom is None:
@@ -1073,13 +1156,37 @@ def render_pdf(prog: dict) -> bytes:
             pdf.polyline(pts, col)
             for px, py in pts:
                 pdf.dot(px, py, 2.5, col)
-            lx, ly = gx0 + gw + 12, gy0 + 12 + j * 12
-            pdf.rect(lx, ly - 7, 8, 8, stroke=None, fill=col)
-            pdf.text(lx + 12, ly, (s["problem"] + " · " + s["metric"])[:30], 7)
-        y += PH
-    # Table page(s)
-    pdf.new_page()
-    y = 60
+        y = gy0 + gh + 26
+        pdf.text(M, y, "Series key", 9, bold=True)
+        y += 14
+        next_series = 0
+        while next_series < len(panel["series"]):
+            available_rows = int((H - M - y) // 12)
+            if available_rows < 1:
+                pdf.new_page()
+                y = 60
+                pdf.text(M, y, panel["title"] + " (series key continued)", 9, bold=True)
+                y += 18
+                continue
+            rows = min(available_rows, (len(panel["series"]) - next_series + 1) // 2)
+            for col in range(2):
+                for row in range(rows):
+                    j = next_series + col * rows + row
+                    if j >= len(panel["series"]):
+                        break
+                    s = panel["series"][j]
+                    lx, ly = M + col * (W - 2 * M) / 2, y + row * 12
+                    pdf.rect(lx, ly - 7, 8, 8, stroke=None, fill=PALETTE[j % len(PALETTE)])
+                    pdf.text(lx + 12, ly, (s["problem"] + " · " + s["metric"])[:30], 7)
+            next_series += 2 * rows
+            y += rows * 12 + 18
+    # Keep the table on the first page when there was no comparison chart;
+    # otherwise give the chart and table their own pages.
+    if panels:
+        pdf.new_page()
+        y = 60
+    else:
+        y += 24
     pdf.text(M, y, "Series summary", 14, bold=True)
     y += 18
     cols = [(M, "problem · metric"), (M + 230, "unit"), (M + 270, "first"), (M + 330, "latest"),
@@ -1098,7 +1205,7 @@ def render_pdf(prog: dict) -> bytes:
                 (fmt(d.get("improvement_vs_first_percent")) + "%") if d.get("improvement_vs_first_percent") is not None else "–",
                 fmt(d.get("value_over_reference")), str(len(s["points"]))]
         for (x, _), v in zip(cols, vals):
-            pdf.text(x, y, v, 8)
+            pdf.text(x, y, v.replace("–", "-"), 8)
         y += 12
     y += 16
     for line in _wrap(prog["note"], 110):

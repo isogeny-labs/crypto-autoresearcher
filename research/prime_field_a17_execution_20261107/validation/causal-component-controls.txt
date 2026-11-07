@@ -1,0 +1,159 @@
+..............FF                                                         [100%]
+=================================== FAILURES ===================================
+___________ test_both_actual_tiny_programs_have_causal_prefix_proofs ___________
+
+toy = ({'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}, {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...},...{'target_index': 1, 'counter': 1, 'x': 201, 'y': None, ...}, {'target_index': 1, 'counter': 2, 'x': 50, 'y': 3, ...}]})
+
+    def test_both_actual_tiny_programs_have_causal_prefix_proofs(toy):
+        for arm in ('suppress','full'):
+            prep,col,recipe,r=fresh(toy,arm);result,cloud,cache,events=completed(prep,col,recipe,r,arm)
+            _,oracle=checks16.collection(prep,r,col)
+>           proof=check_query17.check(prep,col,cloud,cache,result,events,r,arm,oracle)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a17_execution_20261107/test_causal17.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+prepared = {'program_id': 'known48_24', 'target_horizon': 24, 'cell': {'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r...ction': {'orders': {}, 'ap': {}, 'trace': []}, 'phases': [], 'counters': {}, 'complete': True, 'arm_owner': 'suppress'}
+collected = {'program_id': 'known48_24', 'target_horizon': 24, 'complete': True, 'projection': None, 'selection': {'orders': {}, '..._sha256': 'eda20918a118a8cad43da4e0fdfd5abc8dc3b0e6ca7a20702ff04df6644ccc69', 'equal': True}], 'arm_owner': 'suppress'}
+cloud = {'owner': {'arm': 'suppress', 'fixture_sha256': 'e34bc03faef577315dc10dc05ae1de8cdf3ef215fd168f72e778106cb9f63e02', 't... 0, 'index': 2, 'step': 3, 'alpha': 66, ...}, {'target_index': 1, 'index': 2, 'step': 3, 'alpha': 182, ...}, ...], ...}
+cache = <ownership17.OwnedCache object at 0x7f56dc638800>
+result = {'owner': {'arm': 'suppress', 'fixture_sha256': 'e34bc03faef577315dc10dc05ae1de8cdf3ef215fd168f72e778106cb9f63e02', 't..._index': 0, 'index': 0, 'step': 1, 'alpha': 0, ...}, {'target_index': 1, 'index': 0, 'step': 1, 'alpha': 0, ...}], ...}
+events = [{'kind': 'full_preconstruction_start', 'owner': {'arm': 'suppress', 'fixture_sha256': 'e34bc03faef577315dc10dc05ae1de...olicy': 'general'}, 'record': {'point': [0, 90], 'scalar': 1, 'basis': 'P', 'origin': 'initial_paid_cache', ...}}, ...]
+rules = {'software_control': True, 'domain': 'a17-preconstruction-software/v1', 'fields': [{'p': 211, 'base_size': 5}], 'a': 1, ...}
+arm = 'suppress', oracle = <check_query.Oracle object at 0x7f56dc638e30>
+capability = None
+
+    def check(prepared,collected,cloud,cache,result,events,rules,arm,oracle,capability=None):
+        f=prepared['cell']['fixture'];owner=asdict(contract(prepared['cell'],collected,rules,cloud['recipe'],arm,capability))
+        if result['owner']!=owner or cache.descriptor()!=owner or result['construction_sha256']!=commitment(cloud) or not result['complete']:
+            raise ValueError('query construction/owner binding')
+        nt=rules['targets'];w=len(f['factor_base']);r=f['r']
+        known=list(prepared['known'])
+        if prepared['basis'] or [j for j,k in known]!=list(range(w)):raise ValueError('all known units required for query suppression')
+        prefix=dict(width=w,target_count=nt,modulus=r,source=[([int(i==j) for i in range(w)],k) for j,k in known],target=[],
+            targets=deepcopy(collected['target_generation']['targets']),source_origins=[dict(kind='supplied_native_unit',native_index=j) for j in range(w)])
+        for key in prefix:
+            if key!='target' and result['case'][key]!=prefix[key]:raise ValueError('native initial system identity')
+        queue=registry_rows(cloud);queue_at=0;certified={};proposals={};schedule=[];requests=[]
+        natural=0;extra=0;pending=None;created=None;seen={tuple(v['point']):i for i,v in enumerate(collected['natural_records'])}
+        observed_online_phases=[];identify=[];scan=0;needed='complete_paid_construction' if arm=='suppress' else None
+        observed_assembly=[];observed_scheduling=[]
+        certified_before=set();native_phase=False;public_phase=False;completed=False;started=False;construction_complete=False
+        scans=0;dense_rank_evaluations=0
+        for event in events:
+            kind=event['kind']
+            if kind=='full_preconstruction_complete':
+                if construction_complete or event['owner']!=owner or event['point_slots']!=24*nt:raise ValueError('full paid preconstruction marker')
+                construction_complete=True
+            elif kind=='affine_phase' and event['context'].get('kind') in ('query_matrix_assembly','query_scheduling'):
+                if event['context'].get('arm_owner')!=arm:raise ValueError('borrowed query phase')
+                (observed_assembly if event['context']['kind']=='query_matrix_assembly' else observed_scheduling).append(event['phase'])
+            elif kind=='online_start':
+                if arm!='suppress' or started or not construction_complete or event['owner']!=owner:raise ValueError('online ownership/start order')
+                if event['known_case_sha256']!=commitment(prefix):raise ValueError('initial online native case')
+                started=True
+            elif kind=='affine_phase' and event['context'].get('kind')=='online_target_membership':
+                if arm!='suppress' or event['context']['owner']!=owner:raise ValueError('borrowed online phase')
+                phase=event['phase'];observed_online_phases.append(phase)
+                match=re.fullmatch(r'online_identify_(\d+)_(\d+)',phase['phase'])
+                if match:
+                    if int(match[1])!=scan:raise ValueError('membership scan serial')
+                    identify.append(int(match[2]))
+                if phase['phase'].startswith('online_original_certificate_'):
+                    native_phase=phase['status']=='complete' and phase['counters'].get('original_row_certificates_verified')==1
+                if phase['phase'].startswith('online_public_certificate_'):
+                    public_phase=phase['status']=='complete' and phase['counters'].get('public_target_certificates_verified')==1
+            elif kind in ('online_native_row','full_native_row'):
+                expected_kind='online_native_row' if arm=='suppress' else 'full_native_row'
+                if kind!=expected_kind or event['owner']!=owner or event['index']!=len(prefix['target']) or queue_at>=len(queue) or event['row']!=queue[queue_at]:
+                    raise ValueError('unavailable/future or changed native row')
+                prefix['target'].append(deepcopy(event['row']));queue_at+=1
+            elif kind=='online_certificate_proposed':
+                if arm!='suppress' or needed is None or queue_at!=len(queue):raise ValueError('certificate before available rows/scan')
+                cert=event['certificate'];cid=event['certificate_id']
+                if cid in proposals or cid!=commitment(cert) or cert['case_sha256']!=commitment(prefix) or cert['rows_at_certificate']!=len(prefix['target']):
+>                   raise ValueError('proposed prefix certificate binding')
+E                   ValueError: proposed prefix certificate binding
+
+research/prime_field_a17_execution_20261107/check_query17.py:80: ValueError
+______________ test_actual_extra_query_and_skip_causal_tampering _______________
+
+toy = ({'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}, {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...},...{'target_index': 1, 'counter': 1, 'x': 201, 'y': None, ...}, {'target_index': 1, 'counter': 2, 'x': 50, 'y': 3, ...}]})
+
+    def test_actual_extra_query_and_skip_causal_tampering(toy):
+        prep,col,recipe,r,_=special_fixture(toy,'suppress');result,cloud,cache,events=completed(prep,col,recipe,r,'suppress')
+        _,oracle=checks16.collection(prep,r,col)
+>       proof=check_query17.check(prep,col,cloud,cache,result,events,r,'suppress',oracle)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a17_execution_20261107/test_causal17.py:21: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+prepared = {'program_id': 'known48_24', 'target_horizon': 24, 'cell': {'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r...ction': {'orders': {}, 'ap': {}, 'trace': []}, 'phases': [], 'counters': {}, 'complete': True, 'arm_owner': 'suppress'}
+collected = {'program_id': 'known48_24', 'target_horizon': 24, 'complete': True, 'projection': None, 'selection': {'orders': {}, '..._sha256': '833908df749b1b3609112dad1deb440e8baa0fdfe1be57cf8ab973516e2ec174', 'equal': True}], 'arm_owner': 'suppress'}
+cloud = {'owner': {'arm': 'suppress', 'fixture_sha256': '92d88bb423ee8d4789c638a29d545dde886e904704a1740c4255962a1becb4a9', 't...x': 0, 'index': 4, 'step': 5, 'alpha': 0, ...}, {'target_index': 0, 'index': 5, 'step': 6, 'alpha': 0, ...}, ...], ...}
+cache = <ownership17.OwnedCache object at 0x7f56cd5b3d70>
+result = {'owner': {'arm': 'suppress', 'fixture_sha256': '92d88bb423ee8d4789c638a29d545dde886e904704a1740c4255962a1becb4a9', 't...x': 0, 'index': 4, 'step': 5, 'alpha': 0, ...}, {'target_index': 0, 'index': 5, 'step': 6, 'alpha': 0, ...}, ...], ...}
+events = [{'kind': 'full_preconstruction_start', 'owner': {'arm': 'suppress', 'fixture_sha256': '92d88bb423ee8d4789c638a29d545d...'beta': [0], 'origin': {'kind': 'scalar_basis', 'basis': 'P', 'scalar': 1, 'origin': 'initial_paid_cache'}, ...}}, ...]
+rules = {'software_control': True, 'domain': 'a17-preconstruction-software/v1', 'fields': [{'p': 211, 'base_size': 5}], 'a': 1, ...}
+arm = 'suppress', oracle = <check_query.Oracle object at 0x7f56dc627e00>
+capability = None
+
+    def check(prepared,collected,cloud,cache,result,events,rules,arm,oracle,capability=None):
+        f=prepared['cell']['fixture'];owner=asdict(contract(prepared['cell'],collected,rules,cloud['recipe'],arm,capability))
+        if result['owner']!=owner or cache.descriptor()!=owner or result['construction_sha256']!=commitment(cloud) or not result['complete']:
+            raise ValueError('query construction/owner binding')
+        nt=rules['targets'];w=len(f['factor_base']);r=f['r']
+        known=list(prepared['known'])
+        if prepared['basis'] or [j for j,k in known]!=list(range(w)):raise ValueError('all known units required for query suppression')
+        prefix=dict(width=w,target_count=nt,modulus=r,source=[([int(i==j) for i in range(w)],k) for j,k in known],target=[],
+            targets=deepcopy(collected['target_generation']['targets']),source_origins=[dict(kind='supplied_native_unit',native_index=j) for j in range(w)])
+        for key in prefix:
+            if key!='target' and result['case'][key]!=prefix[key]:raise ValueError('native initial system identity')
+        queue=registry_rows(cloud);queue_at=0;certified={};proposals={};schedule=[];requests=[]
+        natural=0;extra=0;pending=None;created=None;seen={tuple(v['point']):i for i,v in enumerate(collected['natural_records'])}
+        observed_online_phases=[];identify=[];scan=0;needed='complete_paid_construction' if arm=='suppress' else None
+        observed_assembly=[];observed_scheduling=[]
+        certified_before=set();native_phase=False;public_phase=False;completed=False;started=False;construction_complete=False
+        scans=0;dense_rank_evaluations=0
+        for event in events:
+            kind=event['kind']
+            if kind=='full_preconstruction_complete':
+                if construction_complete or event['owner']!=owner or event['point_slots']!=24*nt:raise ValueError('full paid preconstruction marker')
+                construction_complete=True
+            elif kind=='affine_phase' and event['context'].get('kind') in ('query_matrix_assembly','query_scheduling'):
+                if event['context'].get('arm_owner')!=arm:raise ValueError('borrowed query phase')
+                (observed_assembly if event['context']['kind']=='query_matrix_assembly' else observed_scheduling).append(event['phase'])
+            elif kind=='online_start':
+                if arm!='suppress' or started or not construction_complete or event['owner']!=owner:raise ValueError('online ownership/start order')
+                if event['known_case_sha256']!=commitment(prefix):raise ValueError('initial online native case')
+                started=True
+            elif kind=='affine_phase' and event['context'].get('kind')=='online_target_membership':
+                if arm!='suppress' or event['context']['owner']!=owner:raise ValueError('borrowed online phase')
+                phase=event['phase'];observed_online_phases.append(phase)
+                match=re.fullmatch(r'online_identify_(\d+)_(\d+)',phase['phase'])
+                if match:
+                    if int(match[1])!=scan:raise ValueError('membership scan serial')
+                    identify.append(int(match[2]))
+                if phase['phase'].startswith('online_original_certificate_'):
+                    native_phase=phase['status']=='complete' and phase['counters'].get('original_row_certificates_verified')==1
+                if phase['phase'].startswith('online_public_certificate_'):
+                    public_phase=phase['status']=='complete' and phase['counters'].get('public_target_certificates_verified')==1
+            elif kind in ('online_native_row','full_native_row'):
+                expected_kind='online_native_row' if arm=='suppress' else 'full_native_row'
+                if kind!=expected_kind or event['owner']!=owner or event['index']!=len(prefix['target']) or queue_at>=len(queue) or event['row']!=queue[queue_at]:
+                    raise ValueError('unavailable/future or changed native row')
+                prefix['target'].append(deepcopy(event['row']));queue_at+=1
+            elif kind=='online_certificate_proposed':
+                if arm!='suppress' or needed is None or queue_at!=len(queue):raise ValueError('certificate before available rows/scan')
+                cert=event['certificate'];cid=event['certificate_id']
+                if cid in proposals or cid!=commitment(cert) or cert['case_sha256']!=commitment(prefix) or cert['rows_at_certificate']!=len(prefix['target']):
+>                   raise ValueError('proposed prefix certificate binding')
+E                   ValueError: proposed prefix certificate binding
+
+research/prime_field_a17_execution_20261107/check_query17.py:80: ValueError
+=========================== short test summary info ============================
+FAILED research/prime_field_a17_execution_20261107/test_causal17.py::test_both_actual_tiny_programs_have_causal_prefix_proofs
+FAILED research/prime_field_a17_execution_20261107/test_causal17.py::test_actual_extra_query_and_skip_causal_tampering
+2 failed, 14 passed in 0.50s

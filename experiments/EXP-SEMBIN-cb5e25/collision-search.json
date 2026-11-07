@@ -1,0 +1,77 @@
+{
+ "schema": "sembin-collision-search-v1",
+ "date": "2026-11-06",
+ "experiment_id": "EXP-SEMBIN-cb5e25",
+ "performed_by": "top-level session (claude-sonnet-5-5), not an independent reviewer",
+ "satisfies_spec_item": "specification.yaml observation_collision_search (design audit before approval)",
+ "completeness": "PARTIAL. The in-repository half was performed. The research-kb executable (scripts/research-kb: 'no executable found'), the local kb/ index service and the sibling crypto repository (research/dreg_closure_*; not checked out here) were NOT available in this environment. A miss in what was searched is not evidence of absence; the approval decision must state whether it accepts a partial search.",
+ "searched": {
+  "lead_atlas_queries": [
+   "subexponential ECDLP algorithm",
+   "true first fall degree EQS4 Nagao Proposition 5 counterexample",
+   "coset shift Nagao EQS4 mutant closure degree 4 Groebner basis containment",
+   "disjoint coset factor base solving degree Nagao"
+  ],
+  "repo_greps": [
+   "EQS4 in experiments/*/specification.yaml, ledger/hypotheses, knowledge/findings, ledger/evidence",
+   "disjoint.coset in experiments/*/RESULTS.md and runs",
+   "dreg_closure in knowledge/leads, findings, frontiers",
+   "mutant closure in experiments/*/specification.yaml and knowledge/findings",
+   "coset shift in experiments/*/runs/*/RESULTS.md",
+   "tools/newest_experiments.py --goal GOAL-SEMBIN-fcb7a2: off_main_runs rows (0)"
+  ],
+  "not_searched": [
+   "scripts/research-kb (no executable)",
+   "kb/ derived index service",
+   "aburan28/crypto research/dreg_closure_*",
+   "cryptanalysis repository beyond AGENTS.md/CLAUDE.md (sparse)"
+  ]
+ },
+ "hits_read": [
+  {
+   "ref": "EXP-SEMBIN-22a1a2 / EV-SEMBIN-5e2b97",
+   "what": "stage-0 single shifted polynomial over F_8, labelled first-fall split",
+   "relation": "adjacent; its evidence is inconclusive: every label is shift-invariant, so it cannot discriminate. Not a closure-containment measurement.",
+   "collision": "no"
+  },
+  {
+   "ref": "EXP-SEMBIN-4fa22c",
+   "what": "approved, never run (epoch 5 released failed for executor liveness); measures fake d'_F on coset-shifted EQS4",
+   "relation": "by its own S-1 it cannot refute Proposition 5; different quantity",
+   "collision": "no"
+  },
+  {
+   "ref": "EXP-SEMBIN-d9767f, EXP-SEMBIN-24ec56",
+   "what": "approved: minimal refuting mutant-closure degree D_W of chained-S_3 descended UNSATISFIABLE decompositions, common V",
+   "relation": "adjacent instrument family; different arm (UNSAT refutation vs SAT Groebner-basis containment) and no coset shifts",
+   "collision": "no"
+  },
+  {
+   "ref": "EXP-CERTBIN-060020, KN-FIND-5a8d3e, KN-FIND-c3a917",
+   "what": "W_4 refutes all unsatisfiable subgroup-target S_3 descents at its first iteration (n=17,19, m=2)",
+   "relation": "same closure W_4 on a different question; the engine and format ancestry of this experiment",
+   "collision": "no"
+  },
+  {
+   "ref": "KN-FIND-936151, EV-SEMBIN-1ca3c8",
+   "what": "Nagao Lemma 4 false over F_2 under the equality reading; counterexample certificate",
+   "relation": "upstream; this experiment targets Prop. 5 AND Assumption 1 because Prop. 5 alone is untestable (derivations/koszul_padding_check)",
+   "collision": "no"
+  },
+  {
+   "ref": "LEAD-ICE-descent-closure-degree-at-scale",
+   "what": "does the MutantXL/F4 closure degree of descended S_3/S_4 chains stay at 4 as l and n grow; frozen C1 cell not yet run",
+   "relation": "chained S_3 common V, UNSAT refutation degree; not Nagao disjoint cosets",
+   "collision": "no"
+  },
+  {
+   "ref": "LEAD-ICE-first-fall-degree-assumptions",
+   "what": "the lead this experiment advances",
+   "relation": "its next_action concerns reading Kosters-Yeo and Hodges-Petit-Schlather; this experiment is orthogonal measurement",
+   "collision": "no"
+  }
+ ],
+ "result": "No prior measurement of the degree-4 mutant closure's containment of the Groebner basis on satisfiable Nagao disjoint-coset EQS4 systems was found in the searched repositories. No replication, existing counterexample or corroboration was found. The contract is not reframed by this search.",
+ "limits": "Partial (see completeness). The hits are mapped through the lead atlas, which records ledger items of this and the sibling repositories up to its last review (2026-10-30, 127 changed paths since).",
+ "next_if_kb_becomes_available": "Re-run the research-kb queries named in the specification before the first measurement and append the result here (this file is committed; append a dated addendum record, do not edit)."
+}

@@ -544,7 +544,8 @@ def _sha256_of(path: str) -> str | None:
         return None
 
 
-def check_parses(paths: list[str], *, report_stale: bool = True) -> list[str]:
+def check_parses(paths: list[str], *, report_stale: bool = True,
+                 unique_keys: bool = False) -> list[str]:
     """Every ledger/experiment/coordination record must actually load.
 
     Pre-existing failures are grandfathered by path. Anything else -- a file
@@ -556,6 +557,13 @@ def check_parses(paths: list[str], *, report_stale: bool = True) -> list[str]:
     that reported staleness would advise deleting baseline lines for files it
     never opened, and the baseline is append-forbidden precisely so that it can
     only ever shrink for real reasons.
+
+    `unique_keys` (PR scope only) also refuses a YAML record with a repeated
+    mapping key, where yaml keeps the last value silently: a run manifest with
+    certificate.kind discrete_log then none, or a decision with status
+    accepted then rejected, would otherwise pass check_run and load as its
+    last value (SHF-20261106-a114e7, LGX-1). Only the files a change adds or
+    edits are judged, so archived records keep their bytes and their rulings.
     """
     grandfathered = _baseline()
     retired = _retired_by_supersession()
@@ -573,6 +581,11 @@ def check_parses(paths: list[str], *, report_stale: bool = True) -> list[str]:
                 json.loads(text)
             else:
                 vl._safe_load(text)
+                if unique_keys and rel.endswith((".yaml", ".yml")):
+                    try:
+                        vl.load_yaml_unique_keys(text, rel)
+                    except ValueError as exc:
+                        bad.append(f"{rel}: {exc}; a record states each field once")
         except Exception as exc:
             first = str(exc).strip().splitlines()[0]
             if rel in grandfathered:
@@ -649,11 +662,25 @@ def check_new_run_manifests(paths: list[str]) -> list[str]:
             manifests.add(rel)
         elif rel in superseding:
             manifests.add(superseding[rel])
+        elif RUN_MANIFEST_V2_PATH.match(rel) and not os.path.isfile(
+                os.path.join(REPO, os.path.dirname(rel), "manifest.yaml")):
+            # The run's only envelope, schema-checked by validate_ledger's
+            # main() exactly like manifest.yaml (SHF-20261106-a114e7, LGX-5).
+            manifests.add(rel)
     bad = []
     for rel in sorted(manifests):
         full = os.path.join(REPO, rel)
         if not os.path.isfile(full):
             continue                   # deleted: check_run_immutability's job
+        try:
+            # check_run's loader keeps a repeated key's last value; the record a
+            # branch adds must not contradict itself (SHF-20261106-a114e7, LGX-1).
+            with open(full, encoding="utf-8") as handle:
+                vl.load_yaml_unique_keys(handle, rel)
+        except ValueError as exc:
+            bad.append(f"{rel}: {exc}; a run record states each field once")
+        except Exception:              # noqa: BLE001 -- unparseable: check_run reports it
+            pass
         ctx = vl.Ctx(set())
         vl.check_run(full, ctx, supersessions)
         for error in ctx.errors:
@@ -663,6 +690,77 @@ def check_new_run_manifests(paths: list[str]) -> list[str]:
                    "as-is: publish a schema-valid envelope (a failed run as "
                    "status failed_infrastructure), or a faithful superseding "
                    "manifest registered in tools/run_supersession_registry.yaml.")
+    return bad
+
+
+RUN_MANIFEST_V2_PATH = re.compile(r"^experiments/[^/]+/runs/[^/]+/manifest_v2\.yaml$")
+RUN_SUPERSESSION_AUTHORITY = re.compile(r"^(DEC|CORR)-\d{8}-[0-9a-f]{6}$")
+SUCCESSFUL_RECEIPT_STATUSES = {"output_validated", "completed", "completed_valid"}
+
+
+def check_new_run_supersessions(base: str) -> list[str]:
+    """Run-supersession entries this change adds must name their authority and
+    keep a refused or failed run's disposition (SHF-20261106-a114e7, LGX-6).
+
+    Every entry new against ``base`` names a ``decision_id`` (a DEC- or CORR-
+    record) or a ``validator_review`` file that exists. When the superseded
+    run's execution-receipt.json records a status other than success, the
+    superseding manifest may not read as completed and must state that status
+    (run.status, run.receipt_status or run.status_note). Entries already on
+    ``base`` keep their rulings.
+    """
+    registry = "tools/run_supersession_registry.yaml"
+    probe = _run("git", "rev-parse", "--verify", "--quiet", base + "^{commit}")
+    if probe.returncode != 0:
+        return [f"SKIPPED: no such ref {base!r}; run supersessions unchecked"]
+    merge_base = _run("git", "merge-base", "HEAD", base).stdout.strip()
+    old = _run("git", "show", f"{merge_base or base}:{registry}")
+    import yaml
+    try:
+        before = yaml.safe_load(old.stdout) if old.returncode == 0 else {}
+        with open(os.path.join(REPO, registry), encoding="utf-8") as handle:
+            after = yaml.safe_load(handle)
+    except (OSError, yaml.YAMLError):
+        return []                      # unparseable or absent: reported elsewhere
+    def key(entry):
+        return (entry.get("run_id"), entry.get("superseding_sha256"))
+    known = {key(e) for e in ((before or {}).get("records") or []) if isinstance(e, dict)}
+    bad = []
+    for entry in (after or {}).get("records") or []:
+        if not isinstance(entry, dict) or key(entry) in known:
+            continue
+        label = f"{registry}: {entry.get('run_id')}"
+        decision = str(entry.get("decision_id") or "").strip()
+        review = str(entry.get("validator_review") or "").strip()
+        if not RUN_SUPERSESSION_AUTHORITY.match(decision) and not (
+                review and os.path.isfile(os.path.join(REPO, review))):
+            bad.append(f"{label}: a new run supersession names no decision_id (DEC-/CORR-) "
+                       "and no existing validator_review; nothing but the schema and the "
+                       "hash pins would check the superseding manifest's fidelity")
+        superseded = str(entry.get("superseded_path") or "")
+        receipt_path = os.path.join(REPO, os.path.dirname(superseded), "execution-receipt.json")
+        try:
+            with open(receipt_path, encoding="utf-8") as handle:
+                receipt_status = json.load(handle).get("status")
+        except (OSError, ValueError, AttributeError):
+            continue
+        if not isinstance(receipt_status, str) or receipt_status in SUCCESSFUL_RECEIPT_STATUSES:
+            continue
+        try:
+            with open(os.path.join(REPO, str(entry.get("superseding_path") or "")),
+                      encoding="utf-8") as handle:
+                document = yaml.safe_load(handle)
+        except (OSError, yaml.YAMLError):
+            continue
+        run = document.get("run") if isinstance(document, dict) else None
+        run = run if isinstance(run, dict) else (document if isinstance(document, dict) else {})
+        status = str(run.get("status") or "")
+        stated = {status, str(run.get("receipt_status") or "")}
+        if status.startswith("completed") or (receipt_status not in stated and
+                                              receipt_status not in str(run.get("status_note") or "")):
+            bad.append(f"{label}: the run's execution receipt records status {receipt_status!r}, "
+                       f"and the superseding manifest says run.status {status!r} without "
+                       "stating it (run.status, run.receipt_status or run.status_note)")
     return bad
 
 
@@ -725,9 +823,11 @@ def check_collisions(base: str) -> list[str]:
 # already present on the comparison side may never be deleted or changed, the
 # journal may only be appended to, and every session the change touches must
 # still hash to its own journal (TASK-20261029-583a07).
-SESSION_FILE = re.compile(
-    r"^((?:experiments/[^/]+/|examples/(?:[^/]+/)*)runbook-sessions/[^/]+)/(.+)$")
-SESSION_ROOTS = ("experiments", "examples")
+# Any */runbook-sessions/<id>/ directory, wherever it is: a session written
+# (or copied) outside experiments/ and examples/ is held to the same rules
+# (SHF-20261106-a114e7, LGX-4). tools/runbook.py writes only under those two.
+SESSION_FILE = re.compile(r"^((?:[^/]+/)*runbook-sessions/[^/]+)/(.+)$")
+SESSION_ROOTS = (".",)
 
 # Historical mismatches already on main, each annotated by a correction record.
 # They still fail, but only when a change touches their session, and the
@@ -901,13 +1001,13 @@ class _Candidate:
         return None
 
 
-def _journal_findings(session: str, candidate: _Candidate, commits: str) -> list[str]:
-    """Every file the candidate journal records must hash to its digest."""
+def _journal_records(session: str, candidate: _Candidate, commits: str):
+    """(entries, recorded) from the candidate journal, or a failure message."""
     journal_path = f"{session}/journal.jsonl"
     data = candidate.read(journal_path)
     if data is None:
-        return [_session_failure(journal_path, f"the session has no journal on "
-                                 f"{candidate.label} ({commits})")]
+        return _session_failure(journal_path, f"the session has no journal on "
+                                f"{candidate.label} ({commits})")
     entries = []
     for number, line in enumerate(data.decode("utf-8", "replace").splitlines(), 1):
         if not line.strip():
@@ -915,8 +1015,8 @@ def _journal_findings(session: str, candidate: _Candidate, commits: str) -> list
         try:
             entries.append(json.loads(line))
         except ValueError as exc:
-            return [_session_failure(journal_path, f"line {number} does not "
-                                     f"parse ({exc}) on {candidate.label} ({commits})")]
+            return _session_failure(journal_path, f"line {number} does not "
+                                    f"parse ({exc}) on {candidate.label} ({commits})")
     recorded = _recorded_digests(entries)
     for entry in list(recorded):
         run_dir = entry[0].rsplit("/", 1)[0]
@@ -927,6 +1027,53 @@ def _journal_findings(session: str, candidate: _Candidate, commits: str) -> list
                 files = {}
             recorded += [(f"{run_dir}/{name}", digest, ())
                          for name, digest in sorted(files.items())]
+    return entries, recorded
+
+
+STEP_LOG = re.compile(r"^steps/([^/]+)\.attempt-(\d+)\.[^/]+$")
+
+
+def _unbound_added_files(session: str, added: list[str], candidate: _Candidate,
+                         commits: str) -> list[str]:
+    """Files added inside a session that already existed, which its journal
+    does not bind (SHF-20261106-a114e7, LGX-4). A sealed session gains files
+    only through tools/runbook.py appending to its journal: an output or log
+    it binds, the step logs of an attempt it records as started, or a store
+    pointer (.artifacts.json, <file>.blob.json) for a bound file."""
+    found = _journal_records(session, candidate, commits)
+    if isinstance(found, str):
+        return [found]
+    entries, recorded = found
+    bound = {path for path, _digest, alternatives in recorded for path in (path, *alternatives)}
+    attempts = {(e.get("step_id"), str(e.get("attempt"))) for e in entries
+                if e.get("type") in ("step_started", "step_finished", "step_interrupted")}
+    bad = []
+    for path in sorted(added):
+        inner = path[len(session) + 1:]
+        if path in bound or inner == "journal.jsonl":
+            continue
+        if path.endswith(".blob.json") and path[:-len(".blob.json")] in bound:
+            continue
+        if inner.endswith(".artifacts.json") or inner.endswith(".gitignore"):
+            directory = path.rsplit("/", 1)[0] + "/"
+            if any(b.startswith(directory) for b in bound):
+                continue
+        log = STEP_LOG.match(inner)
+        if log and (log.group(1), log.group(2)) in attempts:
+            continue
+        bad.append(_session_failure(path, f"added to an existing session on {candidate.label} "
+                                    f"({commits}) but bound by no journal entry; a sealed "
+                                    "session gains files only through tools/runbook.py"))
+    return bad
+
+
+def _journal_findings(session: str, candidate: _Candidate, commits: str) -> list[str]:
+    """Every file the candidate journal records must hash to its digest."""
+    journal_path = f"{session}/journal.jsonl"
+    found = _journal_records(session, candidate, commits)
+    if isinstance(found, str):
+        return [found]
+    _entries, recorded = found
     bad, seen = [], set()
     for path, expected, alternatives in recorded:
         if (path, expected) in seen:
@@ -978,13 +1125,17 @@ def check_session_files(base: str | None) -> list[str]:
     head_label = f"head {_short(head)}"
     bad: dict[str, str] = {}
     touched: set[str] = set()
+    added: dict[str, set[str]] = {}
     base_sha = ""
 
     def compare(before: dict[str, str], label: str, *, deletions: bool) -> None:
+        existing = {_session_of(path) for path in before}
         for path in set(before) | set(candidate_blobs):
             if before.get(path) != candidate_blobs.get(path) and \
                     (deletions or path in candidate_blobs):
                 touched.add(_session_of(path))
+                if path not in before and _session_of(path) in existing and deletions:
+                    added.setdefault(_session_of(path), set()).add(path)
         found = _preservation_findings(before, candidate_blobs, label, head_label,
                                        deletions=deletions)
         for path, message in found.items():
@@ -1005,9 +1156,17 @@ def check_session_files(base: str | None) -> list[str]:
         # candidate must not resolve to different bytes.
         compare({p: b for p, b in base_blobs.items() if p in candidate_blobs},
                 f"base {_short(base_sha)}", deletions=False)
-    for parent in _merge_parents():
+    parents = _merge_parents()
+    for parent in parents:
         compare(_session_blobs_at(parent), f"merge parent {_short(parent)}",
                 deletions=True)
+    if not base and not parents:
+        # --absolute on a non-merge HEAD (a squash merge or a direct push):
+        # judge it against its own parent, or nothing is compared at all
+        # (SHF-20261106-a114e7, LGX-4).
+        parent = _run("git", "rev-parse", "--verify", "--quiet", "HEAD^").stdout.strip()
+        if parent:
+            compare(_session_blobs_at(parent), f"parent {_short(parent)}", deletions=True)
 
     findings = [bad[p] for p in sorted(bad)]
     if touched:
@@ -1017,7 +1176,9 @@ def check_session_files(base: str | None) -> list[str]:
         for session in sorted(s for s in touched if s):
             if not any(p.startswith(session + "/") for p in candidate_blobs):
                 continue                   # wholly deleted: reported above
-            for message in _journal_findings(session, candidate, commits):
+            for message in [*_journal_findings(session, candidate, commits),
+                            *_unbound_added_files(session, sorted(added.get(session, ())),
+                                                  candidate, commits)]:
                 if message not in findings:
                     findings.append(message)
     if findings:
@@ -1083,13 +1244,16 @@ def main() -> int:
         ("symlinked goal paths", check_goal_symlinks(parse_paths)),
         ("unresolved conflict markers", check_markers(parse_paths)),
         ("unparseable records", check_parses(parse_paths,
-                                             report_stale=scoped is None)),
+                                             report_stale=scoped is None,
+                                             unique_keys=scoped is not None)),
         ("duplicate keys in routing registries", check_registry_duplicate_keys()),
     ]
     if scoped is not None and not trusted_prefix_problems:
         # PR-scoped only: records already on main keep their rulings.
         groups.append(("run manifests failing the run schema",
                        check_new_run_manifests(scoped)))
+        groups.append(("new run supersessions without authority or disposition",
+                       check_new_run_supersessions(args.base)))
     if not trusted_prefix_problems:
         groups.append(("runbook-session files changed, deleted or off-journal",
                        check_session_files(None if args.absolute else args.base)))

@@ -1,0 +1,69 @@
+# WRITE-ONCE goal checkpoint shard (tools/shard_goal.py layout). One checkpoint
+# per file. Never edit or reorder this file. A correction is a new record.
+# GOAL-PEXT-4a1d6b, BATCH-a4886a amendment checkpoint written with
+# DEC-20261106-e3de25. It prepares (does not launch) EXP-PEXT-0b2c75.
+batch_checkpoint:
+  batch_id: BATCH-a4886a
+  checkpoint_id: BATCH-a4886a-DEC-20261106-e3de25
+  goal_id: GOAL-PEXT-4a1d6b
+  kind: amendment_before_first_launch
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  decision_id: DEC-20261106-e3de25
+  decision_ids:
+  - DEC-20261106-e3de25
+  status: active
+  goal_status_after: active
+  question_ids:
+  - RQ-PEXT-7c3e91
+  records_opened:
+  - DEC-20261106-e3de25
+  - AMD-EXP-PEXT-0b2c75-20261106-hypothesis-and-inputs
+  completion_criteria_discharged: none
+  amendment:
+    path: experiments/EXP-PEXT-0b2c75/amendments/AMD-EXP-PEXT-0b2c75-20261106-hypothesis-and-inputs.yaml
+    sha256: a2e3bac334a20b4ad79e39253aba3464ac96435381c0f3d6bc0e4025604796f2
+    scientific_protocol_unchanged: true
+    declared:
+      hypothesis_id: H-PEXT-ad0073
+      seed: 20261101
+      curve_id: null
+      parameters: '{trial_id, stage, inputs_from, plan, rustc_flags, threads, negative_count}'
+    run_ids_consumed: 0
+    run_directories_created: 0
+  rebinding:
+    trial_plan_sha256:
+      from: deb61b0cc1a41a327e3c2fa7dc190c49619df6986be995af4c7ffd8192bab1da
+      to: 085bf4f3d98cecd5484e0318f64dc22675b846d4ab0b7c8f0fa0ca8b1441b37c
+    dispatch_queue_sha256:
+      from: d47f7e12519021817512aa4c77dc5ac7c753b426755cc3ae4393d19e8864dd47
+      to: a663e63ebb2feba46ed183e2a7469512226051eabae630611a1c93c97a74b67c
+    executor_handoff_sha256:
+      from: 8f14dadf6bb3833e3b97f8fb0a5767b70c5f2fb1880e3dce32f907e70779f2bb
+      to: 08a5e3a6293fefeabc1ae16b3703f8eb5c398183fecc8999ca865e5369f66cc6
+  admission_after_amendment:
+    dispatcher_ready_task: TASK-20261031-73799d
+    claim: null
+    experiment_execution_status: 'remaining 6, planned 1, needs_reconciliation 0'
+  constraints:
+  - 'DEC-20261031-dcfdee: run alone on the host after or apart from the EXP-PEXT-212d5c census'
+  hypotheses:
+    H-PEXT-ad0073: approved (pre-run, DEC-20261031-dcfdee); no result exists
+  impediments_changed: none
+  next_action: >-
+    Executor, only after or apart from the 212d5c census: claim lane BATCH-a4886a and run
+    TASK-20261031-73799d (/run EXP-PEXT-0b2c75) on plan 085bf4f3...; then archive
+    TASK-20261031-4fa3ea and /review-evidence with the blind recount. No scientific
+    execution from /coordinate.
+  scientific_trials_launched: 0
+  scientific_status_change: none
+  scope_preserved: >-
+    Only the mutable goal head, this new checkpoint shard, the amendment, the decision,
+    the plan, the handoff and the queue are written. No hypothesis, evidence, approval or
+    implementation changed.
+  inference:
+    requested_policy: coordinator-orchestration-code
+    reasoning_effort: high
+    resolved_backend: null
+    resolved_model_id: null
+    note: The OpenCode runtime did not resolve an adapter model for this session.

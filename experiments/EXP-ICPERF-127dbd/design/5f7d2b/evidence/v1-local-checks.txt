@@ -1,0 +1,34 @@
+# V-1 local checks (names and pass/fail only; no value is printed). 2026-11-07T06:28:08Z
+set     HTTPS_PROXY (empty=no)
+set     https_proxy (empty=no)
+set     NO_PROXY (empty=no)
+set     no_proxy (empty=no)
+set     AWS_CA_BUNDLE (empty=no)
+unset   HTTP_PROXY
+unset   http_proxy
+unset   ALL_PROXY
+unset   all_proxy
+set     REQUESTS_CA_BUNDLE (empty=no)
+set     SSL_CERT_FILE (empty=no)
+unset   SSL_CERT_DIR
+set     CURL_CA_BUNDLE (empty=no)
+set     AWS_ACCESS_KEY_ID (empty=no)
+set     AWS_SECRET_ACCESS_KEY (empty=no)
+unset   AWS_SESSION_TOKEN
+unset   AWS_EC2_METADATA_DISABLED
+unset   PYTHONNOUSERSITE
+T-2 pair byte-equal: pass
+T-2 shape HTTPS_PROXY: pass
+T-2 shape https_proxy: pass
+T-3 pair byte-equal: pass
+T-3 shape NO_PROXY: pass
+T-3 shape no_proxy: pass
+T-4 equals allowed entry: pass
+T-4 realpath -e same string: pass
+T-4 non-empty regular file: pass
+-- local read 2 (allowed): realpath -e /root/.ccr/ca-bundle.crt
+/root/.ccr/ca-bundle.crt
+f2e3619b6f6b3de595df54e3abf341f3f115470345ee4712e80e89a6c7b19127  /root/.ccr/ca-bundle.crt
+regular file size=187173 mode=644
+final component is not a symlink
+/root/.ccr is not a symlink

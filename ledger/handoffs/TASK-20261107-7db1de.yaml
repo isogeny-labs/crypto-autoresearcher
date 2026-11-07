@@ -1,0 +1,207 @@
+# Focused independent HARDENING RE-REVIEW of the second EXP-MONO-1a1be2 fix round at the
+# TASK-20261106-dfd0ed commit (blocker B8-H; DEC-20261106-24d2a2). Supersedes the never-dispatched
+# TASK-20261106-941825, minus its DEV-1 joint (RR-5), which moves to a later DEV-1 verification.
+# Validator, review-adversarial, fresh independent session. This is an instrument review, not a
+# claim-changing round, so it has no review_plan. Blindness is lifted on purpose for the 165da2
+# and 7c2b01 reports. Zero experiment runs.
+handoff:
+  id: TASK-20261107-7db1de
+  from: coordinator
+  to: validator
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-c077fd
+  authorized_by: DEC-20261106-24d2a2 (review_placement; supersedes TASK-20261106-941825)
+  supersedes: TASK-20261106-941825 (cancelled; never dispatched)
+  objective: >-
+    At the verified dfd0ed commit 5f6c0924502a804271cc100937bf706021985ed6, verify that every
+    hardening must-fix of DEC-20261106-475620 is closed: N-5 item 5, NF-1 to NF-7 and the
+    receipt clash, via HX-2 to HX-9. Verify that nothing the 165da2 and 7c2b01 reviews found
+    holding has regressed, and that the changed code adds no defect that would let an invalid
+    cell pass as valid or route an instrument defect into a scientific reading. Classify each
+    item as closed, not closed or new finding (blocking or non-blocking), with a reproduction for
+    each, and give a terminal B8-H verdict. Also check that the 96fee7 stop record is honest
+    (RR-5H), and red-team the bc7a76 launch design (RR-9, advisory).
+  uncertainty_reduced: >-
+    Whether blocker B8-H clears: whether the instrument the approval will bind executes only its
+    hashed bytes, records what it executed, and guards the large-Q arm-C path on the executing
+    host. Whether the DEV-1 re-attempt's launcher can misrecord a killed or restarted cell.
+    Nothing about the mathematics.
+  inputs:
+    - ledger/handoffs/TASK-20261107-7db1de.yaml
+    - ledger/decisions/DEC-20261106-24d2a2.yaml
+    - ledger/decisions/DEC-20261106-475620.yaml
+    - ledger/decisions/DEC-20261106-843cf7.yaml
+    - ledger/handoffs/TASK-20261106-2b7223.yaml
+    - ledger/handoffs/TASK-20261106-96fee7.yaml
+    - ledger/handoffs/TASK-20261107-bc7a76.yaml
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261105-165da2/code_review.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md
+    - experiments/EXP-MONO-1a1be2/specification.yaml
+    - experiments/EXP-MONO-1a1be2/code/
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-2b7223.md
+    - experiments/EXP-MONO-1a1be2/implementation/mutant-check-2b7223.json
+    - experiments/EXP-MONO-1a1be2/implementation/kat-log-2b7223.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-junit-96fee7.xml
+    - experiments/EXP-MONO-1a1be2/implementation/environment-96fee7.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-dfd0ed/snapshot-receipt.json
+    - agents/validator.md
+  inputs_note: >-
+    Your context consists of the following:
+    - from DEC-20261106-24d2a2: outcome_composition_96fee7, review_placement (including
+      b8_split), dev1_rerun_decision and approval_act_conditions_added;
+    - from DEC-20261106-475620: re_review_composition, V2-5, V2-6 and approval_records_v2_1;
+    - from DEC-20261106-843cf7: approval_lock_binding_v2 and specification_additions_for_v2;
+    - the 165da2 code_review.md and the 7c2b01 fix_review.md, read in full. Blindness is lifted
+      for these two because fix verification needs both defect lists and their repros, as
+      DEC-20261106-475620 batch.review explains;
+    - the 2b7223, 96fee7 and bc7a76 cards, and the code.
+    Treat the producers' reports and logs as claims to check, not as evidence. Do not read
+    either review_attestation.yaml, any other file under coordination/goals/GOAL-PATH-001/review/,
+    or any producer session.
+  constraints:
+    - >-
+      RR-1 Byte checks. The commit is clean. These files equal their 9a0b5955 hashes: fqn.py,
+      curves.py, semaev.py, counters.py, kernel.c, make_trial_plan.py, throughput_calibration.py,
+      tests/test_kat_extended.py and the specification. Recompute code_sha256, the test-file
+      hashes and the CODE_TREE_ALLOWLIST sha256, and compare them with the dfd0ed receipt.
+      Compute the allow-list sha256 both with and without a trailing newline, and say which
+      matches the dfd0ed receipt (8a242ebc...6445) and which matches fix-report-2b7223.md
+      (1832f855...11d1) (DEC-20261106-24d2a2 OBS-2). Confirm that the allow-list equals the
+      committed code/ tree. Regenerate the trial plan and confirm sha256 9ccbe614...fb4a.
+    - >-
+      RR-2 Executed-code integrity (N-5 item 5 and NF-1). Re-run the 7c2b01 repros N5-Y
+      (code/yaml.pyc), N5-P (code/pytest.pyc) and NF-1 (code/__pycache__/counters.cpython-<tag>.pyc
+      with matching mtime and size). Also RUN the pytest rewrite-cache variant
+      (tests/__pycache__/test_kat.cpython-<tag>-pytest-<ver>.pyc), which 7c2b01 checked only by
+      inspection. Each must refuse with no runs/ entry. Then build at least four attacks of your
+      own that are not the producer's tests. Examples:
+      - a package directory code/yaml/ with __init__.py;
+      - a .pth or zip-importable file in code/;
+      - a symlink replacing an allow-listed file;
+      - a planted bytecode file whose source mtime is forged;
+      - a module planted by a stubbed cell after the pre-gate scan, which the post-cell scan
+        must turn into validity invalid;
+      - a PYTHONPYCACHEPREFIX or PYTHONSAFEPATH override in the parent environment.
+      Each must refuse or invalidate. Confirm that a clean extract passes (positive control),
+      that the code_tree block and module_origins appear in a stubbed contract-mode package,
+      and that pytest's resolved __file__ lies outside code/.
+    - >-
+      RR-3 Mutants, each your own edit in a scratch extract, run under the full start-up suite.
+      - M6 (counters.arm_c_cell S_idx uint32 truncation, the 7c2b01 edit): it must now be
+        KILLED, and you report the failing items.
+      - M5 and M3 controls: both must still be killed.
+      Confirm the HX-6 vacuity guards are real by an independent recount: at (41, 6) and
+      (29, 7), find the S keys of at least 2^32 and their nonzero truth, on both bases. Report
+      the m_S values observed.
+    - >-
+      RR-4 NF-2, NF-3, NF-4, NF-6, NF-7 and the receipt clash. For each HX-3 to HX-9 item, run
+      its test against the 9a0b5955 code (it must fail) and against the dfd0ed code (it must
+      pass). Then re-run your predecessor's own attacks, which must now void, invalidate or
+      refuse as specified: cdf_top_N, cdf_top_s, recount_missing_convention, the F2 edges (a) to
+      (d), the forged GateResult, RID-runs-symlink and rss_children. Add at least one new attack
+      per item.
+    - >-
+      RR-5H The DEV-1 attempt-1 record, NOT DEV-1 closure. Read dev1-report-96fee7.md,
+      dev1-kat-log-96fee7.json, dev1-junit-96fee7.xml and environment-96fee7.json, and confirm
+      all of the following:
+      - the outcome is stopped_infrastructure;
+      - the junit is a labelled placeholder, and no per-target pair, guard count or full-pass
+        rate is presented as data;
+      - the before, after and repo hashes equal the dfd0ed committed bytes;
+      - test_kat_extended.py is unmodified (79894702...06b5);
+      - the projection was measured before the cell by the 96fee7 DX-3 sub-base method, and its
+        recorded modelled total follows from its recorded inputs. Recompute the arithmetic from
+        the kat-log keys; do not re-run anything;
+      - the cell was not shrunk and not restarted.
+      Report any discrepancy as a finding. The DEV-1 row of the must-fix table reads "not run
+      (open)" and does not count for B8-H.
+    - >-
+      RR-6 Regression.
+      - Baseline: the full test_kat.py suite on the committed bytes under
+        launcher.run_selftest_suite; record the counts.
+      - Do at least one self-test inside a FULL repository checkout (not sparse), read-only, and
+        confirm the collected count equals EXPECTED_KAT_ITEMS. If that checkout's code/ holds
+        stray ignored files, the gate must refuse. Report this; do not clean it.
+      - Re-run every 165da2 CR-1 scenario and the 7c2b01 RR-2 S, A and R tables. All must
+        refuse as before, and the P1 and P2 positive controls must pass.
+      - Spot-check CR-2 seeds, CR-4 residual withholding and the CR-5 KAT refusal on all 96
+        (pair, arm) combinations.
+    - >-
+      RR-7 New-code read. Read every line of the new launcher.py and the changed tests. Look for
+      defects that would let an invalid cell pass as valid, or misroute a defect into F7 or F8.
+      Examples:
+      - an allow-list that follows symlinks or is computed from the tree it checks;
+      - a post-cell scan whose result is not wired into validity;
+      - a pycache prefix set after a local import;
+      - a module_origins check that compares a path to itself;
+      - an F2 sentinel check reachable only by the CLI.
+    - >-
+      RR-8 Zero experiment cells. Every gate call uses a scratch experiment root with a
+      synthetic KAT-field plan. Scratch files stay outside the repository. Write only the
+      declared paths, and do not commit. Put no prediction value in any message. Never Bedrock.
+      Never run test_kat_extended.py's cell item (that is DEV-1). Any single command you expect
+      to exceed 6,000 s is launched detached (setsid nohup, as bc7a76 LD-5), never as a harness
+      background task at its cap (DEC-20261106-24d2a2 ENV-1). A container restart that kills a
+      review command is infrastructure: re-run that command and record it.
+    - >-
+      RR-9 Advisory red-team of the DEV-1 launch design. It is non-blocking for B8-H and goes to
+      the releasing act. Read LD-1 to LD-12 of ledger/handoffs/TASK-20261107-bc7a76.yaml. Report
+      every route you can construct by which a killed, restarted, partial, substituted or
+      re-run cell could be recorded as passed or as mismatch, or by which the executed command
+      or bytes could differ from the bound ones without a trace. Cover at least these:
+      - kill -9 of the supervisor while the cell lives;
+      - kill -9 of the cell while the supervisor lives;
+      - PID reuse after a restart;
+      - a container restart that leaves boot_id, the PID 1 start time or uptime unchanged;
+      - a wall-clock jump;
+      - a state directory on a path that does not survive a restart;
+      - a stale exit.json from an earlier attempt;
+      - junit present while the KAT log is absent.
+      You may exercise the classification on a toy stub command (sleep, exit codes) in scratch.
+      Never on the cell. Each route gets a severity (blocks release of bc7a76, or not) and a
+      concrete fix.
+  deliverables:
+    - "fix_review.md: per RR item, the commands, the outcome, and a table with one row per must-fix (N-5 item 5, NF-1 to NF-7, the receipt clash), plus a DEV-1 row reading not run (open) and the closed items of 7c2b01 (F-1, N-1 to N-4) as regression rows: closed or not closed, with the evidence. New findings carry a severity (blocking: could let an invalid cell pass, or misroute an instrument defect into a scientific reading; non-blocking: everything else) and a reproduction. RR-5H findings. An RR-9 section with routes, severities and fixes. Terminal verdict for B8-H: passed only if every hardening must-fix is closed and no new blocking finding exists."
+    - "review_attestation.yaml: task_id; ordered sources_read with extent; the commit reviewed; blindness lifted_for (both reports) and its rationale; findings summary; m6_killed_by_reviewer_run; rr5h result; rr9 route counts by severity; verdict_b8h; inference fields (requested policy, resolved model, fallback_used, independent_session and its basis); procedure_deviations; runs_launched 0"
+  artifact_paths:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/fix_review.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/review_attestation.yaml
+  write_scope:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de
+  archived_by: TASK-20261107-971edf
+  inference:
+    policy: review-adversarial
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default; never below the review floor.
+    fallback_allowed: true
+    fallback_note: Backend or model substitution only, recorded as fallback_used. Never a cheaper policy, never degraded, never Bedrock.
+    degraded_allowed: false
+    independent_session_required: true
+    independence_note: "A fresh session. It must not be the session of any of: TASK-20261106-2b7223, TASK-20261106-96fee7, TASK-20261106-4c4831, TASK-20261105-ac5ad6, TASK-20261029-a97206, the PR #2707 author, the reviewers TASK-20261105-165da2 and TASK-20261106-7c2b01, or this act's composing session TASK-20261107-0932f4. The TASK-20261107-bc7a76 executor must not be this session."
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 21600
+    memory_gb: 16
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: VP-1, text: "archived_by TASK-20261107-971edf is bound."}
+    - {id: VP-2, text: "TASK-20261107-58546f is completed and verified, its commit is pushed, lane BATCH-c077fd is open, and lane BATCH-a8825c is closed."}
+    - {id: VP-3, text: "A FULL (non-sparse) checkout at or descending from the dfd0ed commit, with a byte-identical experiment tree and root conftest.py and pyproject.toml, is available read-only for RR-6. Scratch extracts are used for every mutant and attack."}
+    - {id: VP-4, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json TASK-20261107-7db1de --as <addr> --ttl-minutes 420 --publish. Release with two --artifact <path>=<sha256> digests."}
+    - {id: VP-5, text: "Fresh validator session satisfying independence_note; the resolved model id contains no 'bedrock'."}
+    - {id: VP-6, text: "No DEV-1 attempt is live on the host (DEC-20261106-24d2a2 R-P4)."}
+  completion_gate:
+    - fix_review.md addresses RR-1 to RR-9, each with its commands and outcome. Its must-fix table covers every row named in deliverables, and it gives a terminal B8-H verdict.
+    - M6 is confirmed killed, and M5 and M3 still killed, by the reviewer's own mutant runs.
+    - The N5-Y, N5-P, NF-1 and rewrite-cache attacks were run by the reviewer, plus at least four of the reviewer's own.
+    - RR-5H recomputed the projection arithmetic from the recorded keys and stated agree or disagree.
+    - RR-9 covers every listed route, with a severity and a fix for each.
+    - review_attestation.yaml parses and names the commit reviewed.
+    - Zero experiment cells; nothing is written outside write_scope.
+  return_format: The two artifact paths with sha256, the B8-H verdict, the count of must-fix items closed and not closed, new findings by severity, whether M6 was killed, the RR-5H outcome (agree or disagree, no values), the RR-9 route counts by severity, and the commit reviewed.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. This IS the independent re-review of the instrument; it changes no claim.
+  runs_launched: 0

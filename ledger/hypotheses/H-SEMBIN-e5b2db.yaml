@@ -1,0 +1,505 @@
+# H-SEMBIN-e5b2db
+# Counterexample search against the refutable content of Nagao ePrint
+# 2015/984 Theorem 1 at p = 2: Proposition 5 AND Assumption 1, read as
+# "every EQS4 instance is solved within degree 4". Tested by
+# EXP-SEMBIN-cb5e25. Designed 2026-11-06 under GOAL-SEMBIN-fcb7a2.
+# Draft revision 2, 2026-11-06 (status still specified, never approved, nothing
+# run): P-3 re-worded, P-5 note, P-7 added as a calibration prediction,
+# falsification_conditions fixture list and uncertified-non-containment rule,
+# one assumption and two interpretation limits added (degree-1 element of the
+# last link, DER-9; operational form). The changes and their reasons are in
+# experiments/EXP-SEMBIN-cb5e25/specification.yaml, design_revision.
+hypothesis:
+  id: H-SEMBIN-e5b2db
+  question_id: RQ-SEMBIN-9e8f82
+  goal_id: GOAL-SEMBIN-fcb7a2
+  source_idea: IDEA-20261006-8f4f02
+  experiment_ids: [EXP-SEMBIN-cb5e25]
+  lead_atlas:
+    primary: knowledge/leads/ecdlp/ic-engine/LEAD-ICE-first-fall-degree-assumptions.yaml
+    related: knowledge/leads/ecdlp/ic-engine/LEAD-ICE-descent-closure-degree-at-scale.yaml
+  added: '2026-11-06'
+  status: approved
+  approved_by_decision: DEC-20261106-e7576f
+  status_note: >-
+    Moved specified -> approved by DEC-20261106-e7576f (2026-11-06) under the
+    standing user authorization, for EXP-SEMBIN-cb5e25 pass 1. Approval
+    asserts nothing about the hypothesis: no evidence exists, nothing has been
+    run, and the experiment is approved but not dispatched (the decision's
+    dispatch.gate DG-0 to DG-7 are unmet at writing, including the
+    research-kb half of the collision search, DL-1). Any result is scoped to
+    the cells actually completed and cannot speak to ECDLP in general or to a
+    subexponential algorithm; see the decision's
+    scoped_claim_this_experiment_can_support. Follows DEC-20261029-ca33b3 for
+    H-ICPERF-2f52d1.
+  proposed_by: coordinator
+
+  statement: >-
+    For Nagao EQS4(m, R) instances at p = 2 -- an ordinary binary curve
+    E: y^2 + xy = x^3 + A x^2 + B over F_{2^n}; a k-dimensional
+    polynomial-basis subspace V of F_{2^n}; pairwise-disjoint cosets
+    V_i = V + v_i with every v_i outside V; the chained S_3 system of
+    Definition 7 (S_3(X_1, X_2, U_1), ..., S_3(U_{m-2}, X_m, x(R))) Weil-descended
+    to F_2 as in Definition 8, together with the field equations S_fe; and R
+    planted as P_1 + ... + P_m with P_i drawn from Fb_i = {P : x(P) in V_i} --
+    at least one instance of the frozen grid of EXP-SEMBIN-cb5e25 has a
+    degree-4 mutant closure W_4(EQS4) that does NOT contain a
+    degree-compatible Groebner basis of its ideal. On an instance with a unique
+    F_2-solution s this means that some linear form X_j + s_j is not in W_4.
+    Such an instance is a counterexample to the conjunction of Proposition 5 as
+    printed and Assumption 1, that is, to the reading that every EQS4 instance
+    is solved by an F4-type computation that never exceeds degree 4. The
+    hypothesis is falsified, at the tested scope only, if W_4 contains the
+    Groebner basis on every decisive instance while the null object shows that
+    the instrument can return "not contained".
+
+  why_this_and_not_proposition_5: >-
+    Proposition 5 alone has no counterexample as printed.
+    experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.py (output
+    .out beside it) checks that for any two quadratics f_1, f_2 over F_2 the
+    multipliers g_1 = f_2 + 1 and g_2 = f_1 give max deg(g_i f_i) = 4 exactly
+    and sum g_i f_i = f_1, which is nonzero of degree 2. EQS4 contains the
+    field equations X_j^2 + X_j (Definition 8, paper_fulltext.md:709-713), so
+    Definition 5 (:398-410) gives d_F(EQS4) <= 4 under the printed ">=" and
+    under the equality reading of condition (1). This is the Koszul padding of
+    KN-FIND-936151 section 3. The refutable content of Theorem 1 at p = 2 is
+    therefore Assumption 1 (:416-417): every polynomial that appears in the F4
+    computation has degree <= d_F. Combined with d_F <= 4, it predicts that
+    every EQS4 instance is solved inside degree 4. This hypothesis tests that
+    prediction.
+
+  mechanism: >-
+    The degree-D mutant closure W_D is the least GF(2)-subspace of the
+    multilinear polynomials of degree <= D that contains every product t*f_i
+    with deg <= D (Boolean-reduced) and is closed under g -> X_j g whenever
+    deg g <= D - 1. It is exactly the set of polynomials that any degree-<= D
+    linear-algebra Groebner computation can produce, whether F4 with any
+    selection strategy, XL or MutantXL (derivations DER-1 and DER-2 of
+    EXP-SEMBIN-cb5e25). So if W_4 does not contain the Groebner basis, every
+    such computation must form a row of degree >= 5, and Assumption 1 with
+    d_F <= 4 fails at that instance. The mechanism by which the program
+    suspects a failure: the shifts v_i add lower-degree terms to the descended
+    S_3 coordinates without changing their top forms. The chained S_3
+    closure degree measured in the related lead rises at l = 7 for m = 3
+    (crypto: research/dreg_closure_m4l6_20261018/RESULTS.md, as summarised in
+    the lead row, which was not re-read here). Nagao's footnote 6 (:844),
+    "the situation is the same as the Semaev's case", is an omitted proof and
+    not an argument. The alternative mechanism is the one KN-FIND-5a8d3e and
+    KN-FIND-c3a917 measured on m = 2 unshifted descents: S_3's convolution
+    tensor yields degree-2 falls whose first mutant iteration fills B_{<=3}.
+    If that structure survives the shift and the chaining, W_4 contains the
+    linear basis everywhere at reachable scale.
+
+  assumptions:
+    - >-
+      The equality reading of condition (1) of Definition 5 is the one under
+      which the chain is non-trivial. Under the printed ">=" reading, d_F
+      collapses to 1 + (least degree of a nonzero ideal element), which is 2 on
+      every satisfiable planted instance (KN-FIND-936151 section 3). Assumption
+      1 would then demand degree <= 2 in a computation whose inputs have degree
+      3, and it is violated on inspection (DER-5 of EXP-SEMBIN-cb5e25). That
+      reading needs no compute and is recorded as a derivation. It is not this
+      hypothesis's evidence.
+    - >-
+      "Degree of the polynomial appears in the Groebner basis computation (by
+      F4)" is read as the total degree of every row formed, including the
+      monomial multiples built in symbolic preprocessing. Lemma 2's
+      O(N^{d_F w}) matrix-size estimate (:423-424) needs this reading.
+    - >-
+      The monomial order is degree-compatible (grevlex). DER-3 makes the
+      containment criterion independent of which degree-compatible order is
+      used.
+    - >-
+      The generators are the reduced multilinear representatives of the
+      descended coordinates (Definition 3 descends mod S_fe, :262; DC-4 of
+      EXP-SEMBIN-4fa22c). At m >= 3 the first m - 2 links are cubic, and the
+      last link S_3(U_{m-2}, X_m, x(R)) is quadratic after reduction, because
+      x(R) is a constant.
+    - >-
+      Planted R is distributed as a sum of uniform factor-base points, not as a
+      uniform R conditioned on being decomposable. The two differ by a weight
+      equal to the number of decompositions. This is declared and not
+      corrected. The sampled (curve, shifts) are additionally conditioned on
+      the existence of a valid planted decomposition (a deterministic,
+      counted redraw that never looks at a closure outcome), which matters
+      only at the smallest cells.
+    - >-
+      Every EQS4 and EQS2 instance with m >= 3 has a degree-1 element in the
+      span of its last-link coordinates (DER-9: Tr(U_{m-2}) + Tr(X_m) +
+      Tr(x_R^{-2} B)). It removes one Boolean variable and gives d_F^eq <= 2
+      under the equality reading. It does not by itself decide containment. The
+      closure runs on the degree-adapted generators of the span (DC-9), and
+      W_D is the same as for the raw generators for every D >= 3 (DER-8), so
+      the decisive W_4 quantity does not depend on that convention.
+
+  heuristic_assumptions:
+    - id: HEUR-SEMBIN-e5b2db-1
+      name: Nagao 2015/984 Assumption 1, specialised to EQS4 at p = 2
+      formal_statement: >-
+        For every m >= 3, n, k and pairwise-disjoint non-zero cosets V + v_i,
+        and every R for which EQS4(m, R) has an F_2-solution, every polynomial
+        formed in an F4 computation of a degree-compatible Groebner basis of
+        the ideal generated by EQS4(m, R) has total degree <= d_F(EQS4(m, R)).
+        Since d_F(EQS4) <= 4 by Koszul padding (DER-4), this implies the
+        operational form: GB(EQS4(m, R)) is contained in W_4(EQS4(m, R)),
+        equivalently (DER-3) I cap B_{<=4} = W_4 and the reduced GB has degree
+        <= 4.
+      random_model_justification: >-
+        None is offered by the source. Assumption 1 is stated without
+        justification (:412-417) and is attributed to [12], [11], [14]
+        (recalled pointers only, not read here). As stated for an arbitrary
+        system {f_1..f_M} together with Definition 5 as printed, it is false
+        for generic systems, because d_F <= 4 for every system that contains
+        two quadratics while the solving degree of random Boolean systems grows
+        with N. The NULL-PROF arm of EXP-SEMBIN-cb5e25 exhibits this at modest
+        N. All the content the assumption could have is EQS4-specific
+        structure.
+      supporting_results:
+        - >-
+          KN-FIND-5a8d3e and KN-FIND-c3a917 (internal): on m = 2 unshifted S_3
+          descents at n = 17 and 19, W_4 refutes every unsatisfiable instance
+          at its first iteration while plain M_4 often does not. These are
+          neighbouring evidence that S_3 descents sit far below the
+          semi-regular model. They are not evidence about EQS4: m = 2, no
+          shifts, unsatisfiable targets.
+        - >-
+          LEAD-ICE-descent-closure-degree-at-scale (internal row summarising
+          crypto-repo results not re-read here): chained S_3 refutation degree
+          3-4 through (m, l) = (4, 6) at N = 54, rising at l = 7 for m = 3.
+          Unsatisfiable draws, common V, no shifts.
+      validation_experiment_ids: [EXP-SEMBIN-cb5e25]
+      falsification_condition: >-
+        A single EQS4 instance whose W_4 does not contain the Groebner basis,
+        certified by a non-containment certificate (an annihilator family
+        Lambda of a closed superspace of W_4 with Lambda(g) != 0 for a basis
+        element g that vanishes on the enumerated solution set). An independent
+        checker must accept it. Timeouts, memory kills and crashes are never
+        this condition.
+
+  structural_ingredients:
+    - description: >-
+        Definitions 2-8, Assumption 1, Lemma 2, Propositions 2, 5, 6, Theorem
+        1, footnote 6 of Nagao, "Polynomial time ECDLP solver..." ePrint
+        2015/984, as frozen in the repository.
+      citation: inputs/NAGAO-2015-984/paper_fulltext.md
+      provenance: retrieved
+      verified_by: >-
+        coordinator subagent, 2026-11-06, read lines 130-410, 416-446, 652-760
+        and 828-844 of the frozen text
+      role: the claim chain under test, and the object definitions
+    - description: >-
+        Koszul padding: d_F <= 4 for any system containing two quadratics,
+        under both readings of condition (1).
+      citation: experiments/EXP-SEMBIN-cb5e25/derivations/koszul_padding_check.py
+      provenance: internal
+      verified_by: >-
+        coordinator subagent, 2026-11-06, read the script and its .out (deg
+        g1f1 4, deg g2f2 4, sum X1**2 + X1, deg 2, nonzero True)
+      role: shows Proposition 5 alone is untestable, which locates the refutable content in Assumption 1
+    - description: >-
+        The fake first fall degree does not bound the true one, and the
+        printed ">=" collapses d_F (section 3).
+      citation: knowledge/findings/KN-FIND-936151.md
+      provenance: internal
+      verified_by: coordinator subagent, 2026-11-06, read sections 1-6
+      role: reading discipline for condition (1), and the reason EXP-SEMBIN-4fa22c cannot refute
+    - description: >-
+        The W_D mutant closure, its distinction from plain M_D, and the
+        degree-disciplined certificate requirement (section 3).
+      citation: knowledge/findings/KN-FIND-5a8d3e.md
+      provenance: internal
+      verified_by: coordinator subagent, 2026-11-06, read in full
+      role: closure definition and certificate discipline
+    - description: >-
+        W_4 at n = 19, m = 2, and the transfer failure of the semi-regular
+        model to S_3 and its tensor neighbourhood.
+      citation: knowledge/findings/KN-FIND-c3a917.md
+      provenance: internal
+      verified_by: coordinator subagent, 2026-11-06, read in full
+      role: neighbouring prior, and the reason the null object is not the only nearby control
+
+  relation_to_existing_records:
+    H-SEMBIN-a7e721 / EXP-SEMBIN-4fa22c: >-
+      That contract measures the FAKE d'_F in the Boolean ring, and by its
+      S-1 it cannot refute Proposition 5. This hypothesis measures no fall
+      degree as its decisive quantity. It tests Assumption 1 through Groebner
+      basis containment in W_4, a solving-degree statement whose failure is a
+      counterexample certificate. The two share conventions (DC-3 shifts in
+      the instance, DC-4 reduced multilinear generators, the grevlex order) and
+      no result.
+    H-SEMBIN-ce9e29: >-
+      Stage-0 labels on a single S_3 over F_8. No chain, no Groebner basis, no
+      Assumption 1. Not a duplicate.
+    IDEA-20261006-8f4f02: >-
+      This hypothesis keeps the idea's matched pair (v = 0 EQS2 against v != 0
+      EQS4), its generic-random control and its breakthrough-adjacent
+      interpretation limit. It replaces the idea's first disjunct, "Def. 5
+      true FFD exceeds 4", which the padding derivation shows is impossible as
+      printed, with the decisive quantity that remains: whether the degree-4
+      closure contains the Groebner basis.
+    LEAD-ICE-descent-closure-degree-at-scale: >-
+      That row measures refutation degree of unsatisfiable chained S_3 with
+      one common V (EQS1/EQS2 type, Semaev parameterisation). This hypothesis
+      concerns Nagao's disjoint-coset EQS4 with satisfiable planted R,
+      Groebner-basis containment rather than refutation, and Nagao's fixed-k
+      regime (m = 4, k = 2) as well as m = 3. Its (3, 19, 7) stretch cell is
+      the shifted, satisfiable analogue of that row's C1 cell. It does not
+      execute that row's next action, which is unsatisfiable draws at degree 5
+      on >= 250 GB.
+
+  proof_search_map:
+    bottleneck: >-
+      Whether the shift-modified chained S_3 descent keeps a degree-<= 4
+      route to its Groebner basis. This is the step whose failure removes
+      Theorem 1's per-decomposition cost O((nm)^{4w}).
+    baseline_embedding:
+      parameter_slice: >-
+        m = 2, v = 0, unsatisfiable x(2E) targets at n = 19, l = 10: the
+        archived instances of RUN-CERTBIN-a3fc60 (EXP-CERTBIN-060020), on which
+        W_4 contains 1 and M_4 does not (400/400 and 0/400 respectively).
+      reproduction_check: >-
+        Fixture F-3 of EXP-SEMBIN-cb5e25 re-runs the first 10 archived
+        S3-PRIMARY instances through this contract's closure path. It must
+        reproduce "1 in W_4" and "1 not in M_4" on all 10 before any EQS4
+        instance counts.
+    observation_collision:
+      observable: >-
+        Per instance: the boolean "GB contained in W_4", the solving-degree
+        proxy D_solve, and the dims-by-degree series of W_D.
+      distinct_preimage_search: >-
+        The same "not contained" reading could come from a builder bug (wrong
+        descent or shift), a closure bug (missed mutant products, early
+        fixpoint), an unknown extra solution (multi-point Z), or a bounded
+        budget. Each has a separating check: the descent is evaluated against
+        field-side S_3 at random points; the PC-TRI control, the A/A
+        re-encoding and the engine/reference oracle; Z is enumerated
+        algebraically and brute-forced where N <= 20; censoring is never a
+        reading. A search for existing GB-containment or solving-degree
+        measurements on coset-shifted EQS4 is required before the first run
+        (EXP-SEMBIN-cb5e25 proof_search_map).
+    constructive_transforms: []
+    quantifier_order: >-
+      Assumption 1 (operational form) is FORALL m, n, k, shifts and
+      satisfiable R: GB(EQS4) is contained in W_4. A counterexample is EXISTS
+      one instance, which refutes the universal statement at that instance.
+      The opposite outcome is FORALL tested instances in the frozen grid. It
+      bounds nothing beyond the sampled cells and the sampling rule, and in
+      particular not n >= 20 or m >= 5.
+    method_ceiling:
+      strongest_certifiable_claim: >-
+        Instance-level: no degree-<= 4 linear-algebra Groebner computation
+        (F4 under any selection strategy, XL, MutantXL) produces the Groebner
+        basis of that EQS4 instance. Or, on the other side, such a computation
+        exists at every tested instance. Nothing about algorithms that leave
+        the linear-algebra closure model (SAT, exhaustive search,
+        hybrid guessing), about cost, or about any deployed curve.
+      nearby_object_control: >-
+        The matched EQS2 arm (same curve and V, v = 0); NULL-SHUF (the
+        instance's own monomial multiset shuffled across equations); NULL-PROF
+        (profile-matched random planted system).
+    proof_obligations:
+      - claim: DER-1, Boolean W_D equals full-ring W_D with S_fe inside, intersected with multilinear polynomials, for D >= 2
+        responsibility: correctness
+      - claim: DER-2, every degree-<= D F4-type run lies in W_D
+        responsibility: interface
+      - claim: DER-3, GB containment is equivalent to (I cap B_{<=D} = W_D and d_GB <= D), which reduces to N linear forms when |Z| = 1
+        responsibility: correctness
+      - claim: DER-6, PC-TRI is provably contained in W_3
+        responsibility: baseline
+      - claim: the solution set Z is complete, by algebraic enumeration cross-checked by brute force where N <= 20
+        responsibility: correctness
+      - claim: an independent checker accepts each non-containment certificate
+        responsibility: correctness
+      - claim: the scope statement names cells, sampling rule, closure and budget
+        responsibility: scope
+    not_applicable_reason: >-
+      constructive_transforms is empty because this is a counterexample
+      search on a fixed published construction and proposes no new object.
+
+  asymptotic_claim: null
+
+  predictions:
+    - id: P-1
+      metric: M-1 (GB contained in W_4) on EQS4 and EQS4-U instances at cells with k <= 6
+      direction: equal_within
+      minimum_effect: >-
+        All decisive instances contained (Coordinator prior 0.70, written
+        before any EQS4 data, from the lead's flat-4 closure through l <= 6)
+    - id: P-2
+      metric: M-1 at the stretch cell (m, n, k) = (3, 19, 7)
+      direction: different
+      minimum_effect: >-
+        At least one of the 5 EQS4 instances not contained (prior 0.45, from
+        the lead's "degree rises at l = 7, m = 3" on unsatisfiable unshifted
+        draws)
+    - id: P-3
+      metric: M-1 on NULL-PROF with |Z| = 1 verified, cells with N in 18..26
+      direction: lower
+      minimum_effect: >-
+        Among seeds verified to have a single solution, at least 80% not
+        contained at W_4, pooled over the completed cells, with per-cell counts
+        reported (prior 0.90; semi-regular cubic series gives D_reg >= 5 at
+        N = M = 12 and 7 at N = M = 20). Revision 2 re-worded the earlier
+        "at least 4 of 5 seeds in each cell", which required 4 of 5 seeds to be
+        uniqueness-verified and so could not be met when random planted systems
+        with M near N are rarely unique (about 0.4 at M = N, modelled). The
+        prior concerned non-containment given uniqueness and is unchanged.
+    - id: P-4
+      metric: D_solve on PC-TRI
+      direction: lower
+      minimum_effect: D_solve <= 3 on every instance (DER-6; probability 1 unless the instrument is wrong)
+    - id: P-5
+      metric: d_F under the equality reading, true side, S_fe inside
+      direction: lower
+      minimum_effect: d_F^eq <= 4 on every instance (DER-4); its exact value is reported, not predicted (expected 2, see P-7)
+    - id: P-7
+      metric: d_F under the equality reading (M-6), EQS4 and EQS2
+      direction: lower
+      minimum_effect: >-
+        d_F^eq <= 2 on every instance with m >= 3 (DER-9, a derivation: the
+        last-link coordinates span a degree-1 element). A calibration of the
+        builder and the d_F module, not a test of the statement. It replaces an
+        earlier draft prediction about instances with d_F^eq = 3, whose premise
+        is empty.
+    - id: P-6
+      metric: D_solve, EQS4 against matched EQS2 (C-SHIFT)
+      direction: equal_within
+      minimum_effect: >-
+        Equal D_solve on >= 80% of matched (cell, seed) pairs (prior 0.60,
+        reading footnote 6 literally). Descriptive. Not decisive for the
+        statement.
+
+  test_boundary:
+    instances:
+      - >-
+        m = 3, k = floor(n/3), n = 3..17 (N = n + 3k from 6 to 32), 5 seeds
+        per cell
+      - m = 4, k = 2 (Nagao's fixed-k regime), n = 8, 9, 10 (N = 24, 26, 28), 5 seeds per cell
+      - stretch (m, n, k) = (3, 19, 7), N = 40, 5 EQS4 seeds, budget permitting
+    parameters:
+      characteristic: 2
+      closure: W_D Boolean mutant closure, D = 2..D_max(N), D_max(N) = largest D in {4,5,6} with sum_{d<=D} C(N,d) <= 45000 (D = 4 always attempted)
+      monomial_order: grevlex (degree-compatible), variables X_1 bits, ..., X_m bits, then U bits
+      curves: random ordinary binary curves per (cell, seed), Koblitz B = 1 excluded
+      field_basis: polynomial basis modulo the fixed lowest-weight irreducible per n
+    implementation: >-
+      experiments/EXP-SEMBIN-cb5e25/code/ on the shared engine
+      src/crypto_autoresearcher/gf2/closure.py, cross-checked against
+      src/crypto_autoresearcher/gf2/reference.py and the archived CERTBIN
+      instances
+    budget:
+      wall_clock_seconds_total: 43200
+      peak_rss_gb: 10
+    outside_boundary: >-
+      p >= 3; m >= 5; n >= 20 except the single stretch cell; unsatisfiable
+      R; non-degree-compatible orders; any solver outside the linear-algebra
+      closure model; any deployed or standardised curve; and every asymptotic
+      statement.
+
+  distinguishable_outcomes:
+    - id: O-1
+      reading: >-
+        Counterexample: fixtures, PC-TRI and A/A valid, and >= 1 EQS4 or
+        EQS4-U instance not contained in W_4 (Type-L: a linear form X_j + s_j
+        missing, |Z| = 1; Type-G: |Z| > 1, d_GB <= 4, closure deficit), with a
+        checker-accepted certificate. Supports the statement at those
+        instances.
+    - id: O-2
+      reading: >-
+        All contained, null discriminates: every decisive EQS4 and EQS4-U
+        instance contained, and NULL-PROF not contained on >= 3 of the 5 seeds
+        (each with |Z| = 1 verified) of >= 1 cell with N in 18..26. Falsifies the
+        statement at tested scope. This corroborates the conjunction only
+        inside the grid and is breakthrough-adjacent (IDEA-20261006-8f4f02
+        interpretation_limits).
+    - id: O-3
+      reading: >-
+        All contained, null does not discriminate anywhere: inconclusive. The
+        instrument never said "no" for the right reason.
+    - id: O-4
+      reading: >-
+        Type-D only: the reduced GB of Z has degree > 4 on a multi-solution
+        instance. Assumption 1 as printed fails by geometry of Z alone, with
+        no closure content. Recorded as a separate claim. Neither supports nor
+        falsifies the statement.
+    - id: O-5
+      reading: >-
+        A fixture, PC-TRI or A/A check fails, the descent check fails, or Z
+        enumeration disagrees with brute force: the run is invalid. Not
+        evidence.
+    - id: O-6
+      reading: >-
+        Budget or memory censoring before a cell completes: incomplete for
+        that cell. A censored instance is never "not contained" (AGENTS.md
+        core rule 5).
+
+  falsification_conditions:
+    - >-
+      O-2: with every validity gate of EXP-SEMBIN-cb5e25 passed (fixtures
+      F-1..F-8, C-PC, C-AA-ENC, the descent and Z checks), every decisive EQS4
+      and EQS4-U instance has M-1 true, and C-NULL discriminates as stated in
+      O-2 (at least 3 of 5 seeds with |Z| = 1 verified and M-1 false in one
+      completed cell, which only cells with N in 18..26 can supply). Scope: the
+      cells actually completed.
+    - >-
+      A certificate that the independent checker rejects does not count
+      toward O-1. A non-containment whose certificate is rejected, not emitted
+      (size, wall or memory guard) or not yet checked is non_containment_uncertified:
+      it is neither a counterexample nor a contained instance, and it blocks
+      O-2 until it is repaired (a certificate re-issued and accepted, or the
+      defect identified and recorded in a superseding record) or recorded as
+      an impediment. The outcome is then read from the repaired record.
+
+  interpretation_limits:
+    - >-
+      A counterexample refutes "Proposition 5 AND Assumption 1" at that
+      instance only, effectively Assumption 1 there, since Proposition 5 holds
+      trivially. Theorem 1 is a conditional ("under the first fall degree
+      assumption", :828) and is not refuted as a conditional statement. What a
+      counterexample removes is the claim that its hypothesis holds for EQS4,
+      at that instance.
+    - >-
+      No outcome makes any statement about any deployed or standardised curve
+      (sect163k1, B-163, K-233 and the like), about ECDLP security in either
+      direction, or about cost. A W_4-contained instance shows that a
+      degree-4 linear-algebra route exists. It measures no complexity, and no
+      cost or speedup claim may be drawn without a separate claims/*.json
+      under the progress-fidelity gate.
+    - >-
+      The all-contained outcome (O-2) corroborates the conjunction only at
+      the tested cells and under the stated sampling rule. It is
+      breakthrough-adjacent, is flagged as such, and requires
+      review-breakthrough at max (AGENTS.md core rule 12), which is
+      undegradable. If that tier cannot be served, the corroboration stays
+      un-promoted and the goal records an impediment.
+    - >-
+      What the all-contained outcome corroborates is the operational form,
+      that degree 4 suffices, which is the form the cost bound O((nm)^{4w})
+      uses through Proposition 5's d_F <= 4. It does not corroborate Assumption
+      1 with the exact equality-reading d_F, which is 2 at every instance
+      (DER-9) and is then violated on inspection by the cubic input rows under
+      the reading of "appears in the computation" adopted here (DER-5). A
+      counterexample, in contrast, refutes Assumption 1 under every reading,
+      because d_F <= 4.
+    - >-
+      Containment at N >= 27 is engine-decided: no wdag certificate is
+      attempted there (memory), and it is cross-checked only by the controls
+      that run on the same engine. Null discrimination can be established only
+      in cells with N in 18..26, where the solution set of a null is known.
+    - >-
+      Transfer to larger n, to m >= 5, or to Nagao's asymptotic regime
+      (k = C0, m ~ n/C0) is NOT assumed. A D_solve series over n is a
+      confounded observation (n, k and N co-vary) and decides nothing.
+    - >-
+      Non-containment in W_4 rules out every degree-<= 4 linear-algebra
+      computation (DER-2). Containment shows only that one exists. It does not
+      show that a particular F4 implementation with a particular selection
+      strategy stays inside degree 4.
+    - >-
+      Everything is at characteristic 2, under the equality reading of
+      condition (1) for the d_F value reported, and under the ">="-reading
+      derivation DER-5 for the trivial violation. Odd characteristic
+      (Proposition 5's 3p + 1) is untouched.
+    - >-
+      A timeout, memory kill, crash or implementation failure is
+      infrastructure signal and never a negative mathematical result.

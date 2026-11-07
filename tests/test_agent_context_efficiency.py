@@ -203,3 +203,20 @@ def test_invalid_runtime_limits_fail_before_launch(tmp_path, limits):
     task = runner_module.load_task({"to": "executor", "id": "test"})
     with pytest.raises(ValueError, match="invalid retrieval limit"):
         runner_module.task_scope(task, repo_root=tmp_path, api_config={"retrieval_limits": limits})
+
+
+def test_research_contract_reaches_agent_brief_without_widening_scope():
+    import json
+    from orchestration import task_context
+    contract = json.loads((REPO / 'examples/research-tasks/literature.json').read_text())
+    task = task_context.prepare_task(task_context.load_task({'handoff': {
+        'id': 'TASK-literature', 'to': 'executor', 'research': contract,
+        'read_scope': ['inputs'], 'write_scope': ['outputs'],
+    }}), repo_root=REPO)
+    scope = TaskScope(repo_root=REPO, task_id='TASK-literature',
+                      read_scope=('inputs',), write_scope=('outputs',))
+    brief = runner_module.task_brief(task, scope, ['read_file'])
+    assert contract['question'] in brief
+    assert contract['evidence_plan']['source_provenance'] in brief
+    assert 'not execution approval' in brief
+    assert task['read_scope'] == ['inputs']

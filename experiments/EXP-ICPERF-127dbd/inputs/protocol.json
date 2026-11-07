@@ -1,0 +1,1457 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "IC-C1-DEFERRED-GUARD-FP28-20261106",
+  "version": 3,
+  "created": "2026-11-06",
+  "repository": "crypto",
+  "study_dir": "research/ic_c1_deferred_guard_fp28_20261106",
+  "authors": [
+    "coordinator",
+    "executor (pre-freeze checks)"
+  ],
+  "links": {
+    "goal_id": "GOAL-ICPERF-e6b6a4",
+    "lead": "LEAD-ICP-prime-ic-constant-engineering",
+    "decisions": [
+      "DEC-20261106-1d23b6",
+      "DEC-20261106-c69de4"
+    ],
+    "experiment_id": "EXP-ICPERF-127dbd",
+    "hypothesis_ids": [
+      "H-ICPERF-4cb536"
+    ],
+    "specs": [
+      "research/ic_c1_deferred_guard_fp28_20261106/spec-c1-s1.json",
+      "research/ic_c1_deferred_guard_fp28_20261106/spec-c1-s2.json"
+    ],
+    "requests": [
+      "research/ic_c1_deferred_guard_fp28_20261106/launch/request-s1.json",
+      "research/ic_c1_deferred_guard_fp28_20261106/launch/request-s2.json",
+      "research/ic_c1_deferred_guard_fp28_20261106/launch/request-s1-r2.json",
+      "research/ic_c1_deferred_guard_fp28_20261106/launch/request-s2-r2.json"
+    ],
+    "narrative": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+    "prefreeze_checks": "research/ic_c1_deferred_guard_fp28_20261106/prefreeze-checks.md",
+    "prs": null,
+    "amendments": [
+      "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-1.md",
+      "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md"
+    ]
+  },
+  "question": "On fresh fp28 curves, does prime-abscissa:size=304 + mitm:negation_folded=1 + targets=stride-renew-deferred-guard have lower counted cost S than the walk incumbent (size=407, targets=walk) at every weight w in {0, 0.1, 1} of the section 5a band, on the ea8e9ef7 executable?",
+  "claims": [
+    {
+      "id": "C1-primary",
+      "text": "On fresh fp28 curves, prime-abscissa:size=304 + mitm:negation_folded=1 + targets=stride-renew-deferred-guard has lower counted cost S than the walk incumbent (size=407, targets=walk) at every weight of the section 5a band (w = 0, 0.1, 1), within ic.pipeline, max_trials 26479085, linalg incremental-gauss, the pinned executable and accounting as emitted. A recipe-level, constant-factor, counted claim; not asymptotic, not wall time, not rho-beating.",
+      "class": "comparative",
+      "decided_by": [
+        "cmp-recipe"
+      ],
+      "if_supported": "scoped support within fp28, the four seeded curves and this recipe; a counted improvement of the prime-table reference baseline after replication across S1 and S2, subject to the independent validator",
+      "if_not_supported": "not supported within scope at the stated weights; close C1 route A at fp28 (weaken), or refuted at a common adverse weight; route B roadmap rule applies"
+    },
+    {
+      "id": "C1-guard",
+      "text": "Within stride-renew at equal N (407 and 304), the deferred guard has equal counted S at w = 0 (both intervals inside [0.995, 1.005]) and lower counted S at w = 0.1 and 1. A component result, not an improvement of the IC baseline under section 5a.",
+      "class": "comparative",
+      "decided_by": [
+        "cmp-guard-n407",
+        "cmp-guard-n304"
+      ],
+      "if_supported": "reported as a native-work component saving outside tables A-C",
+      "if_not_supported": "no component claim"
+    },
+    {
+      "id": "C-rho-gap",
+      "text": "Distance remaining of rho-neg to the incumbent and the candidate at each weight; an IC arm ranks against rho only where the order holds across the band.",
+      "class": "comparative",
+      "decided_by": [
+        "cmp-rho-incumbent",
+        "cmp-rho-candidate"
+      ],
+      "if_supported": "distance reported, not a gate",
+      "if_not_supported": "unresolved inside the band"
+    },
+    {
+      "id": "C-attribution",
+      "text": "No sentence attributes C1-primary to guard placement, target source or N beyond the descriptive factorial table.",
+      "class": "out_of_scope",
+      "decided_by": []
+    },
+    {
+      "id": "C-wall",
+      "text": "No wall-time claim: no wall field is read or reported.",
+      "class": "out_of_scope",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": "H-C1",
+      "statement": "On fresh fp28 curves, the candidate recipe (size 304, stride-renew-deferred-guard) has lower counted S than the walk incumbent (size 407) at every weight w in {0, 0.1, 1} of the section 5a band.",
+      "mechanism": "M(N,w,g) = N(N+1) + (1 + w k_g) T407 407/N + F + w G(N): a smaller N cuts the N(N+1) set-up, trials grow about as 1/N, and the deferred guard halves the per-trial native work (k_deferred = 1 against k_eager = 2) while leaving the target stream unchanged. Measured inputs: set-up N(N+1) exact, k_eager 2.0, F 0.19 S.",
+      "predictions": [
+        {
+          "id": "P-w0",
+          "metric": "m-s-w0",
+          "direction": "lower",
+          "minimum_effect": "U_0 < 1 in each session; projected ratio 0.915 (8.6 % lower); model output, not a claim",
+          "provenance": {
+            "written_at": "2026-11-06",
+            "first_recorded_in": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+            "data_seen": [
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031 (v6 counted session records.jsonl, sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b)",
+                "measured": "aggregate and per-phase counted figures on curves icv1-fp28-tm10425-13a2119a and icv1-fp28-t15757-68bdca4a at N 407 (set-up, trials, native counters); used to calibrate the N model; not a C1 test curve"
+              },
+              {
+                "path": "crypto:docs/ic/LEADERBOARD.md (prime-base holdout-P28 row)",
+                "measured": "counted ratios 0.929 / 0.974 / 1.193 at w 0 / 0.1 / 1 for eager N 288 against 407, on curve icv1-fp28-tm1499-56171ddc; other curve, other N"
+              },
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md (F4 smoke)",
+                "measured": "one non-study curve, one target: stride-renew S 21.066 against walk 16.289 under the incumbent N; risk statement only"
+              },
+              {
+                "path": "next-candidate/checks/dev/run1 and run2 (local development solves, non-study curves, L0)",
+                "measured": "counted figures for all ten arms; parity of the eager and deferred guard; the candidate/incumbent mean-GAE ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+              },
+              {
+                "path": "next-candidate/checks/dev/power1 and power2 (local design-size runs, non-study curves)",
+                "measured": "ecbench compare intervals at 24 workloads x 8 rounds, used for the power calculation only"
+              },
+              {
+                "path": "crypto:backlog/XP-20261029-srenew-deferred-guard/spec-P28.json (specs only)",
+                "measured": "curve seeds and arm shapes; no run exists; its curves are excluded from C1"
+              },
+              {
+                "path": "next-candidate/checks/dev/full-job (T = 12, 2,160 executions) and checks/dev/full60-job (spec checks/spec-dev-full-T60.json, T = 60, 10,800 executions); local L0, non-study curve seeds 2026110699501/502",
+                "measured": "runtime 0.177 and 0.1206 s per execution; verify --replay-all; at T = 60 analyze-c1.sh gave candidate/incumbent U_w 0.914 / 0.897 / 0.818 and L_w 0.886 / 0.869 / 0.786, with 0 parity failures; script exercise only; no C1 test curve"
+              }
+            ],
+            "sample_status": "out_of_sample",
+            "decisive_scope": "fresh fp28 prime_search curves of seeds 2026110628201/202 (S1) and 2026110628211/212 (S2); 60 public targets per curve"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P-w01",
+          "metric": "m-s-w01",
+          "direction": "lower",
+          "minimum_effect": "U_0.1 < 1 in each session; projected ratio 0.894",
+          "provenance": {
+            "written_at": "2026-11-06",
+            "first_recorded_in": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+            "data_seen": [
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031 (v6 counted session records.jsonl, sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b)",
+                "measured": "aggregate and per-phase counted figures on curves icv1-fp28-tm10425-13a2119a and icv1-fp28-t15757-68bdca4a at N 407 (set-up, trials, native counters); used to calibrate the N model; not a C1 test curve"
+              },
+              {
+                "path": "crypto:docs/ic/LEADERBOARD.md (prime-base holdout-P28 row)",
+                "measured": "counted ratios 0.929 / 0.974 / 1.193 at w 0 / 0.1 / 1 for eager N 288 against 407, on curve icv1-fp28-tm1499-56171ddc; other curve, other N"
+              },
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md (F4 smoke)",
+                "measured": "one non-study curve, one target: stride-renew S 21.066 against walk 16.289 under the incumbent N; risk statement only"
+              },
+              {
+                "path": "next-candidate/checks/dev/run1 and run2 (local development solves, non-study curves, L0)",
+                "measured": "counted figures for all ten arms; parity of the eager and deferred guard; the candidate/incumbent mean-GAE ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+              },
+              {
+                "path": "next-candidate/checks/dev/power1 and power2 (local design-size runs, non-study curves)",
+                "measured": "ecbench compare intervals at 24 workloads x 8 rounds, used for the power calculation only"
+              },
+              {
+                "path": "crypto:backlog/XP-20261029-srenew-deferred-guard/spec-P28.json (specs only)",
+                "measured": "curve seeds and arm shapes; no run exists; its curves are excluded from C1"
+              },
+              {
+                "path": "next-candidate/checks/dev/full-job (T = 12, 2,160 executions) and checks/dev/full60-job (spec checks/spec-dev-full-T60.json, T = 60, 10,800 executions); local L0, non-study curve seeds 2026110699501/502",
+                "measured": "runtime 0.177 and 0.1206 s per execution; verify --replay-all; at T = 60 analyze-c1.sh gave candidate/incumbent U_w 0.914 / 0.897 / 0.818 and L_w 0.886 / 0.869 / 0.786, with 0 parity failures; script exercise only; no C1 test curve"
+              }
+            ],
+            "sample_status": "out_of_sample",
+            "decisive_scope": "fresh fp28 prime_search curves of seeds 2026110628201/202 (S1) and 2026110628211/212 (S2); 60 public targets per curve"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P-w1",
+          "metric": "m-s-w1",
+          "direction": "lower",
+          "minimum_effect": "U_1 < 1 in each session; projected ratio 0.798",
+          "provenance": {
+            "written_at": "2026-11-06",
+            "first_recorded_in": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+            "data_seen": [
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031 (v6 counted session records.jsonl, sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b)",
+                "measured": "aggregate and per-phase counted figures on curves icv1-fp28-tm10425-13a2119a and icv1-fp28-t15757-68bdca4a at N 407 (set-up, trials, native counters); used to calibrate the N model; not a C1 test curve"
+              },
+              {
+                "path": "crypto:docs/ic/LEADERBOARD.md (prime-base holdout-P28 row)",
+                "measured": "counted ratios 0.929 / 0.974 / 1.193 at w 0 / 0.1 / 1 for eager N 288 against 407, on curve icv1-fp28-tm1499-56171ddc; other curve, other N"
+              },
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md (F4 smoke)",
+                "measured": "one non-study curve, one target: stride-renew S 21.066 against walk 16.289 under the incumbent N; risk statement only"
+              },
+              {
+                "path": "next-candidate/checks/dev/run1 and run2 (local development solves, non-study curves, L0)",
+                "measured": "counted figures for all ten arms; parity of the eager and deferred guard; the candidate/incumbent mean-GAE ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+              },
+              {
+                "path": "next-candidate/checks/dev/power1 and power2 (local design-size runs, non-study curves)",
+                "measured": "ecbench compare intervals at 24 workloads x 8 rounds, used for the power calculation only"
+              },
+              {
+                "path": "crypto:backlog/XP-20261029-srenew-deferred-guard/spec-P28.json (specs only)",
+                "measured": "curve seeds and arm shapes; no run exists; its curves are excluded from C1"
+              },
+              {
+                "path": "next-candidate/checks/dev/full-job (T = 12, 2,160 executions) and checks/dev/full60-job (spec checks/spec-dev-full-T60.json, T = 60, 10,800 executions); local L0, non-study curve seeds 2026110699501/502",
+                "measured": "runtime 0.177 and 0.1206 s per execution; verify --replay-all; at T = 60 analyze-c1.sh gave candidate/incumbent U_w 0.914 / 0.897 / 0.818 and L_w 0.886 / 0.869 / 0.786, with 0 parity failures; script exercise only; no C1 test curve"
+              }
+            ],
+            "sample_status": "out_of_sample",
+            "decisive_scope": "fresh fp28 prime_search curves of seeds 2026110628201/202 (S1) and 2026110628211/212 (S2); 60 public targets per curve"
+          },
+          "role": "decisive"
+        }
+      ]
+    },
+    {
+      "id": "H-C1-guard",
+      "statement": "Within stride-renew at equal N, the deferred guard has equal counted S at w = 0 and lower counted S at w = 0.1 and 1 than the eager guard.",
+      "mechanism": "the stream, rows and answer are those of stride-renew; the deferred guard probes only decomposing targets, so about one guard probe per trial is saved and about 40 to 90 non-decomposing repeats per run get an oracle lookup",
+      "predictions": [
+        {
+          "id": "P-g0",
+          "metric": "m-s-w0",
+          "direction": "equal_within",
+          "minimum_effect": "both 95 % intervals inside [0.995, 1.005]",
+          "provenance": {
+            "written_at": "2026-11-06",
+            "first_recorded_in": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+            "data_seen": [
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031 (v6 counted session records.jsonl, sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b)",
+                "measured": "aggregate and per-phase counted figures on curves icv1-fp28-tm10425-13a2119a and icv1-fp28-t15757-68bdca4a at N 407 (set-up, trials, native counters); used to calibrate the N model; not a C1 test curve"
+              },
+              {
+                "path": "crypto:docs/ic/LEADERBOARD.md (prime-base holdout-P28 row)",
+                "measured": "counted ratios 0.929 / 0.974 / 1.193 at w 0 / 0.1 / 1 for eager N 288 against 407, on curve icv1-fp28-tm1499-56171ddc; other curve, other N"
+              },
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md (F4 smoke)",
+                "measured": "one non-study curve, one target: stride-renew S 21.066 against walk 16.289 under the incumbent N; risk statement only"
+              },
+              {
+                "path": "next-candidate/checks/dev/run1 and run2 (local development solves, non-study curves, L0)",
+                "measured": "counted figures for all ten arms; parity of the eager and deferred guard; the candidate/incumbent mean-GAE ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+              },
+              {
+                "path": "next-candidate/checks/dev/power1 and power2 (local design-size runs, non-study curves)",
+                "measured": "ecbench compare intervals at 24 workloads x 8 rounds, used for the power calculation only"
+              },
+              {
+                "path": "crypto:backlog/XP-20261029-srenew-deferred-guard/spec-P28.json (specs only)",
+                "measured": "curve seeds and arm shapes; no run exists; its curves are excluded from C1"
+              },
+              {
+                "path": "next-candidate/checks/dev/full-job (T = 12, 2,160 executions) and checks/dev/full60-job (spec checks/spec-dev-full-T60.json, T = 60, 10,800 executions); local L0, non-study curve seeds 2026110699501/502",
+                "measured": "runtime 0.177 and 0.1206 s per execution; verify --replay-all; at T = 60 analyze-c1.sh gave candidate/incumbent U_w 0.914 / 0.897 / 0.818 and L_w 0.886 / 0.869 / 0.786, with 0 parity failures; script exercise only; no C1 test curve"
+              }
+            ],
+            "sample_status": "out_of_sample",
+            "decisive_scope": "fresh fp28 prime_search curves of seeds 2026110628201/202 (S1) and 2026110628211/212 (S2); 60 public targets per curve"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P-g01",
+          "metric": "m-s-w01",
+          "direction": "lower",
+          "minimum_effect": "U_0.1 < 1",
+          "provenance": {
+            "written_at": "2026-11-06",
+            "first_recorded_in": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+            "data_seen": [
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031 (v6 counted session records.jsonl, sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b)",
+                "measured": "aggregate and per-phase counted figures on curves icv1-fp28-tm10425-13a2119a and icv1-fp28-t15757-68bdca4a at N 407 (set-up, trials, native counters); used to calibrate the N model; not a C1 test curve"
+              },
+              {
+                "path": "crypto:docs/ic/LEADERBOARD.md (prime-base holdout-P28 row)",
+                "measured": "counted ratios 0.929 / 0.974 / 1.193 at w 0 / 0.1 / 1 for eager N 288 against 407, on curve icv1-fp28-tm1499-56171ddc; other curve, other N"
+              },
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md (F4 smoke)",
+                "measured": "one non-study curve, one target: stride-renew S 21.066 against walk 16.289 under the incumbent N; risk statement only"
+              },
+              {
+                "path": "next-candidate/checks/dev/run1 and run2 (local development solves, non-study curves, L0)",
+                "measured": "counted figures for all ten arms; parity of the eager and deferred guard; the candidate/incumbent mean-GAE ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+              },
+              {
+                "path": "next-candidate/checks/dev/power1 and power2 (local design-size runs, non-study curves)",
+                "measured": "ecbench compare intervals at 24 workloads x 8 rounds, used for the power calculation only"
+              },
+              {
+                "path": "crypto:backlog/XP-20261029-srenew-deferred-guard/spec-P28.json (specs only)",
+                "measured": "curve seeds and arm shapes; no run exists; its curves are excluded from C1"
+              },
+              {
+                "path": "next-candidate/checks/dev/full-job (T = 12, 2,160 executions) and checks/dev/full60-job (spec checks/spec-dev-full-T60.json, T = 60, 10,800 executions); local L0, non-study curve seeds 2026110699501/502",
+                "measured": "runtime 0.177 and 0.1206 s per execution; verify --replay-all; at T = 60 analyze-c1.sh gave candidate/incumbent U_w 0.914 / 0.897 / 0.818 and L_w 0.886 / 0.869 / 0.786, with 0 parity failures; script exercise only; no C1 test curve"
+              }
+            ],
+            "sample_status": "out_of_sample",
+            "decisive_scope": "fresh fp28 prime_search curves of seeds 2026110628201/202 (S1) and 2026110628211/212 (S2); 60 public targets per curve"
+          },
+          "role": "decisive"
+        },
+        {
+          "id": "P-g1",
+          "metric": "m-s-w1",
+          "direction": "lower",
+          "minimum_effect": "U_1 < 1",
+          "provenance": {
+            "written_at": "2026-11-06",
+            "first_recorded_in": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+            "data_seen": [
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031 (v6 counted session records.jsonl, sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b)",
+                "measured": "aggregate and per-phase counted figures on curves icv1-fp28-tm10425-13a2119a and icv1-fp28-t15757-68bdca4a at N 407 (set-up, trials, native counters); used to calibrate the N model; not a C1 test curve"
+              },
+              {
+                "path": "crypto:docs/ic/LEADERBOARD.md (prime-base holdout-P28 row)",
+                "measured": "counted ratios 0.929 / 0.974 / 1.193 at w 0 / 0.1 / 1 for eager N 288 against 407, on curve icv1-fp28-tm1499-56171ddc; other curve, other N"
+              },
+              {
+                "path": "crypto:research/ic_line_layout_tournament_20261031/prefreeze-checks-v6.md (F4 smoke)",
+                "measured": "one non-study curve, one target: stride-renew S 21.066 against walk 16.289 under the incumbent N; risk statement only"
+              },
+              {
+                "path": "next-candidate/checks/dev/run1 and run2 (local development solves, non-study curves, L0)",
+                "measured": "counted figures for all ten arms; parity of the eager and deferred guard; the candidate/incumbent mean-GAE ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+              },
+              {
+                "path": "next-candidate/checks/dev/power1 and power2 (local design-size runs, non-study curves)",
+                "measured": "ecbench compare intervals at 24 workloads x 8 rounds, used for the power calculation only"
+              },
+              {
+                "path": "crypto:backlog/XP-20261029-srenew-deferred-guard/spec-P28.json (specs only)",
+                "measured": "curve seeds and arm shapes; no run exists; its curves are excluded from C1"
+              },
+              {
+                "path": "next-candidate/checks/dev/full-job (T = 12, 2,160 executions) and checks/dev/full60-job (spec checks/spec-dev-full-T60.json, T = 60, 10,800 executions); local L0, non-study curve seeds 2026110699501/502",
+                "measured": "runtime 0.177 and 0.1206 s per execution; verify --replay-all; at T = 60 analyze-c1.sh gave candidate/incumbent U_w 0.914 / 0.897 / 0.818 and L_w 0.886 / 0.869 / 0.786, with 0 parity failures; script exercise only; no C1 test curve"
+              }
+            ],
+            "sample_status": "out_of_sample",
+            "decisive_scope": "fresh fp28 prime_search curves of seeds 2026110628201/202 (S1) and 2026110628211/212 (S2); 60 public targets per curve"
+          },
+          "role": "decisive"
+        }
+      ]
+    },
+    {
+      "id": "H-C1-control",
+      "statement": "The positive control pc-fb2x (size 814) has higher counted S than the incumbent at every weight.",
+      "mechanism": "set-up rises from 166,056 to 663,410 additions by construction",
+      "predictions": [
+        {
+          "id": "P-pc",
+          "metric": "m-s-w0",
+          "direction": "higher",
+          "minimum_effect": "ci95[0] > 1 at w = 0, 0.1 and 1",
+          "provenance": {
+            "written_at": "2026-11-06",
+            "first_recorded_in": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md",
+            "data_seen": [
+              {
+                "path": "next-candidate/checks/dev/run1 and run2 (local development solves, non-study curves, L0)",
+                "measured": "counted figures for all ten arms; parity of the eager and deferred guard; the candidate/incumbent mean-GAE ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+              },
+              {
+                "path": "next-candidate/checks/dev/full-job (T = 12, 2,160 executions) and checks/dev/full60-job (spec checks/spec-dev-full-T60.json, T = 60, 10,800 executions); local L0, non-study curve seeds 2026110699501/502",
+                "measured": "runtime 0.177 and 0.1206 s per execution; verify --replay-all; at T = 60 analyze-c1.sh gave candidate/incumbent U_w 0.914 / 0.897 / 0.818 and L_w 0.886 / 0.869 / 0.786, with 0 parity failures; script exercise only; no C1 test curve"
+              }
+            ],
+            "sample_status": "in_sample",
+            "decisive_scope": "detector check only"
+          },
+          "role": "calibration"
+        }
+      ]
+    }
+  ],
+  "arms": [
+    {
+      "id": "incumbent",
+      "role": "baseline",
+      "description": "walk incumbent: prime-abscissa size 407, mitm:negation_folded=1, targets=walk, eager guard",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=407",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "walk",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      }
+    },
+    {
+      "id": "candidate",
+      "role": "candidate",
+      "description": "the only C1-primary arm: size 304, targets=stride-renew-deferred-guard",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=304",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "stride-renew-deferred-guard",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "walk-eager-n304",
+      "role": "candidate",
+      "description": "descriptive: N effect under walk, eager guard",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=304",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "walk",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "srenew-eager-n407",
+      "role": "candidate",
+      "description": "descriptive: target-source effect at N 407; parity pair with srenew-deferred-n407",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=407",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "stride-renew",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "srenew-deferred-n407",
+      "role": "candidate",
+      "description": "C1-guard at N 407; parity pair with srenew-eager-n407",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=407",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "stride-renew-deferred-guard",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "srenew-eager-n304",
+      "role": "candidate",
+      "description": "C1-guard at N 304; parity pair with candidate; completes the 2x2",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=304",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "stride-renew",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "pc-fb2x",
+      "role": "control_positive",
+      "description": "positive control: size 814 raises the set-up from 166,056 to 663,410 additions by construction",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=814",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "walk",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "rho-neg",
+      "role": "reference",
+      "description": "matched rho.negation reference",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "rho.negation",
+        "cap_multiple": "64"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "rho-neg-aa",
+      "role": "control_aa",
+      "description": "rho.negation repeated under a second arm name: A/A twin of rho-neg",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "rho.negation",
+        "cap_multiple": "64"
+      },
+      "same_instrument_as": "incumbent"
+    },
+    {
+      "id": "incumbent-aa",
+      "role": "control_aa",
+      "description": "incumbent repeated under a second arm name: counted A/A twin of incumbent",
+      "instrument": {
+        "repo": "isogeny-labs/crypto",
+        "commit": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+        "build": null,
+        "binary_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01",
+        "flags": {},
+        "env": {
+          "RAYON_NUM_THREADS": "1",
+          "OMP_NUM_THREADS": "1"
+        },
+        "threads": 1,
+        "image_digest": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914"
+      },
+      "parameters": {
+        "method": "ic.pipeline",
+        "factor_base": "prime-abscissa:size=407",
+        "oracle": "mitm:negation_folded=1",
+        "max_trials": "26479085",
+        "targets": "walk",
+        "linalg": "incremental-gauss",
+        "solver": "",
+        "solver_budget_seconds": "0"
+      },
+      "same_instrument_as": "incumbent"
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": true,
+      "comparison": "cmp-aa-incumbent",
+      "not_applicable_reason": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "pc-fb2x",
+      "expected_detection": "incumbent->pc-fb2x ops.ratio_b_over_a > 1 and ops.ci95[0] > 1 at w = 0, 0.1 and 1 in each session",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "a counted cost comparison between two recipes on the same instances asserts nothing about a null population; the counted A/A twins check determinism and pipeline integrity (PROTOCOL section 5)"
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "recipe",
+        "levels": [
+          "walk/eager/N407",
+          "stride-renew/deferred/N304"
+        ]
+      },
+      {
+        "name": "guard_placement",
+        "levels": [
+          "eager",
+          "deferred"
+        ]
+      },
+      {
+        "name": "target_source",
+        "levels": [
+          "walk",
+          "stride-renew"
+        ]
+      },
+      {
+        "name": "factor_base_size",
+        "levels": [
+          304,
+          407,
+          814
+        ]
+      },
+      {
+        "name": "method_family",
+        "levels": [
+          "ic.pipeline",
+          "rho.negation"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "value": "ea8e9ef7 / ecbench 73362eed / pinned image",
+        "how": "PROTOCOL section 2"
+      },
+      {
+        "name": "oracle",
+        "treatment": "fixed",
+        "value": "mitm:negation_folded=1",
+        "how": "in every IC arm"
+      },
+      {
+        "name": "max_trials",
+        "treatment": "fixed",
+        "value": "26479085",
+        "how": "a cap, not binding; censored_pairs must be 0"
+      },
+      {
+        "name": "linalg_solver",
+        "treatment": "fixed",
+        "value": "incremental-gauss, solver empty",
+        "how": "plan defaults"
+      },
+      {
+        "name": "accounting",
+        "treatment": "fixed",
+        "value": "as emitted at ea8e9ef7",
+        "how": "no accounting change inside the study"
+      },
+      {
+        "name": "curves",
+        "treatment": "randomized",
+        "how": "seeded prime_search, 28 bits, four fixed seeds"
+      },
+      {
+        "name": "targets",
+        "treatment": "randomized",
+        "how": "60 public targets per curve from the frozen target seed"
+      },
+      {
+        "name": "algorithm_seed",
+        "treatment": "randomized",
+        "how": "derived by ecbench from (workload, round) only; shared across arms (P6)"
+      },
+      {
+        "name": "arm_label_and_position",
+        "treatment": "crossed",
+        "how": "measurement.order alternate_measured"
+      },
+      {
+        "name": "warmup",
+        "treatment": "fixed",
+        "value": 1,
+        "how": "one per workload, discarded"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "recorded; no effect on counts"
+      },
+      {
+        "name": "memory_layout_environment",
+        "treatment": "measured",
+        "how": "recorded; no effect on counts"
+      },
+      {
+        "name": "spot_preemption",
+        "treatment": "measured",
+        "how": "rerun rule, PROTOCOL section 9"
+      },
+      {
+        "name": "analyst",
+        "treatment": "fixed",
+        "value": "analyze-c1.sh",
+        "how": "frozen script, sha256 in analysis_plan"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "cmp-recipe",
+        "arms": [
+          "incumbent",
+          "candidate"
+        ],
+        "differs_in": [
+          "recipe"
+        ],
+        "design": "one_factor",
+        "reason": "The claim is recipe-level by DEC-20261106-1d23b6 c1_route_ruling.route_A. `recipe` bundles guard placement, target source and N. No sentence attributes the effect to a sub-factor (C-attribution is out_of_scope); attribution is descriptive, through cmp-factorial."
+      },
+      {
+        "id": "cmp-guard-n407",
+        "arms": [
+          "srenew-eager-n407",
+          "srenew-deferred-n407"
+        ],
+        "differs_in": [
+          "guard_placement"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "cmp-guard-n304",
+        "arms": [
+          "srenew-eager-n304",
+          "candidate"
+        ],
+        "differs_in": [
+          "guard_placement"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "cmp-factorial",
+        "arms": [
+          "incumbent",
+          "walk-eager-n304",
+          "srenew-eager-n407",
+          "srenew-deferred-n407",
+          "srenew-eager-n304",
+          "candidate"
+        ],
+        "differs_in": [
+          "guard_placement",
+          "target_source",
+          "factor_base_size"
+        ],
+        "design": "factorial",
+        "reason": "a partial factorial; the walk/deferred cells do not exist on ea8e9ef7 (route B); it is descriptive and decides no claim"
+      },
+      {
+        "id": "cmp-positive",
+        "arms": [
+          "incumbent",
+          "pc-fb2x"
+        ],
+        "differs_in": [
+          "factor_base_size"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "cmp-aa-incumbent",
+        "arms": [
+          "incumbent",
+          "incumbent-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "cmp-aa-rho",
+        "arms": [
+          "rho-neg",
+          "rho-neg-aa"
+        ],
+        "differs_in": [],
+        "design": "aa"
+      },
+      {
+        "id": "cmp-rho-incumbent",
+        "arms": [
+          "rho-neg",
+          "incumbent"
+        ],
+        "differs_in": [
+          "method_family"
+        ],
+        "design": "one_factor"
+      },
+      {
+        "id": "cmp-rho-candidate",
+        "arms": [
+          "rho-neg",
+          "candidate"
+        ],
+        "differs_in": [
+          "method_family"
+        ],
+        "design": "one_factor"
+      }
+    ],
+    "aa_not_applicable": null,
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "harness_drawn",
+      "seeds": [
+        2026110628201,
+        2026110628202,
+        2026110628203,
+        2026110628204,
+        2026110628211,
+        2026110628212,
+        2026110628213,
+        2026110628214
+      ],
+      "nonce": null,
+      "note": "ecbench 73362eed derives each curve from workloads.curves[].seed by prime_search, each target from target_seed, and each algorithm_seed from measurement.seed as a function of (workload, round) only (P6r: 1,080 seeds per session, shared by all 10 arms). The counted bootstrap resample seed is 20261002 (the ecbench default). Session S1 uses 2026110628201..204, S2 2026110628211..214."
+    },
+    "instance_sampling": {
+      "rule": "120 workloads = 2 seeded fp28 prime_search curves x 60 public targets from target_seed, fixed before any data; the same workloads for every arm",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Not masked. The metric is a deterministic count, so no analyst choice remains: analyze-c1.sh is frozen by sha256 before the data, and, before S2 writes job-exit.json, S1 is read only for transport and identity integrity (the check_job.py set, PROTOCOL section 9 step 2); audit, replay, invalid outcomes, A/A exactness, the pc-fb2x gate and parity run after S2 in the frozen analyze-c1.sh (runbook step S03). The blind control is the reviewer's re-derivation of the primary ratio (section 9 step 4).",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 120,
+    "replicates": 8,
+    "warmups": 1,
+    "power": {
+      "method": "other",
+      "alpha": 0.05,
+      "tests_in_family": 6,
+      "correction": "other",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": true,
+      "note": "Test-specific power of the paired, workload-clustered ratio, rerun at T = 60 targets per curve (120 workloads x 8 rounds, 10,800 executions per session). The experiment_protocol.py power command checks only rank-test p-value resolution (it passes at n = 960 trivially), so rank_test_n is null. The decision is an intersection-union test: all 3 weights x 2 sessions must reject at one-sided 0.025, so no multiplicity correction is applied (Berger, 1982); tests_in_family 6 with correction other for the checker. Variance inputs: two design-size local runs on non-study curves (24 workloads x 8 rounds, checks/dev/power1 and power2, ecbench compare incumbent->candidate at w = 0, 0.1, 1); U = hat + max(t half-width, bootstrap half-width); half-widths and sd scaled by true/observed ratio and by sqrt(24/120); sd from the t-CI (optimistic) and from the bootstrap CI/1.96 (conservative). Single-session power for a 3 % true effect (ratio 0.97) at w 0 / 0.1 / 1, conservative sd: power1 0.977 / 0.963 / 0.845; power2 0.951 / 0.944 / 0.838; optimistic sd: power1 0.999 / 0.997 / 0.942; power2 0.977 / 0.972 / 0.890. Minimum over both inputs, both sds and all weights: 0.838, so the rule (3 % power at least 0.8 at every weight) passes at T = 60 and the T = 72 fallback is not used. Both sessions must pass, so the joint two-session power at the minimum single-session value (0.838) is about 0.70 (0.838^2 = 0.702). At the projected effects (8.6 %, 10.6 %, 20.2 %) power is about 1.000. Approximate model (normal; the t quantile is kept at 23 degrees of freedom, which is conservative at 119); checks/p8r.py, p8r-out.txt."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 230,
+      "per_sample_seconds": 0.1206,
+      "threads": 1,
+      "estimated_total_seconds": 1533,
+      "measured_on": "local L0 non-study checks/dev/full60-job (spec checks/spec-dev-full-T60.json): 10,800 executions in 21 m 43 s = 0.1206 s per execution (PREFREEZE-CHECKS.md Part 3); estimate 230 + 10,800 x 0.1206 = 1,533 s; the 230 s fixed time is from the v6 qualification launch 04:37:46Z-04:41:32Z; a node up to 2.59x slower still finishes inside the 3,600 s deadline"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "m-s-w0",
+        "name": "S at w = 0",
+        "unit": "GAE per sqrt(r)",
+        "kind": "derived",
+        "definition": "charged GAE of one complete verified solve (factor base, oracle set-up, relations, linear algebra, verify) plus w times the priced uncharged native operations, divided by sqrt(r); total_gae / sqrt(r); IC arms: no uncharged operation priced. Byte counters are excluded.",
+        "formula": "total_gae / sqrt(r)",
+        "source": "records.jsonl cost.total_gae, phases[].native, the workload r, and ecbench compare --weight w ops",
+        "aggregation": "paired_ratio",
+        "resolution": "1 GAE (about 7e-5 S)",
+        "uncertainty": "paired_bootstrap_ci95"
+      },
+      {
+        "id": "m-s-w01",
+        "name": "S at w = 0.1",
+        "unit": "GAE per sqrt(r)",
+        "kind": "derived",
+        "definition": "charged GAE of one complete verified solve (factor base, oracle set-up, relations, linear algebra, verify) plus w times the priced uncharged native operations, divided by sqrt(r); (total_gae + 0.1 x sum of priced native counters) / sqrt(r); IC priced counters: sqrt_solves, lookups, row_ops, legendre_symbols, target_guard_probes; rho: canonicalisations. Byte counters are excluded.",
+        "formula": "(total_gae + 0.1 x sum of priced native counters) / sqrt(r)",
+        "source": "records.jsonl cost.total_gae, phases[].native, the workload r, and ecbench compare --weight w ops",
+        "aggregation": "paired_ratio",
+        "resolution": "1 GAE (about 7e-5 S)",
+        "uncertainty": "paired_bootstrap_ci95"
+      },
+      {
+        "id": "m-s-w1",
+        "name": "S at w = 1",
+        "unit": "GAE per sqrt(r)",
+        "kind": "derived",
+        "definition": "charged GAE of one complete verified solve (factor base, oracle set-up, relations, linear algebra, verify) plus w times the priced uncharged native operations, divided by sqrt(r); (total_gae + 1 x sum of priced native counters) / sqrt(r); same counters as w = 0.1. Byte counters are excluded.",
+        "formula": "(total_gae + 1 x sum of priced native counters) / sqrt(r)",
+        "source": "records.jsonl cost.total_gae, phases[].native, the workload r, and ecbench compare --weight w ops",
+        "aggregation": "paired_ratio",
+        "resolution": "1 GAE (about 7e-5 S)",
+        "uncertainty": "paired_bootstrap_ci95"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "m-total-gae",
+        "name": "total GAE",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "total GAE per verified solve",
+        "source": "records.jsonl cost.total_gae",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-sqrt-solves",
+        "name": "sqrt_solves",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "sqrt_solves per verified solve",
+        "source": "records.jsonl phases[].native.sqrt_solves",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-lookups",
+        "name": "lookups",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "lookups per verified solve",
+        "source": "records.jsonl phases[].native.lookups",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-row-ops",
+        "name": "row_ops",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "row_ops per verified solve",
+        "source": "records.jsonl phases[].native.row_ops",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-legendre-symbols",
+        "name": "legendre_symbols",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "legendre_symbols per verified solve",
+        "source": "records.jsonl phases[].native.legendre_symbols",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-target-guard-probes",
+        "name": "target_guard_probes",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "target_guard_probes per verified solve",
+        "source": "records.jsonl phases[].native.target_guard_probes",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-canonicalisations",
+        "name": "canonicalisations",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "canonicalisations per verified solve",
+        "source": "records.jsonl phases[].native.canonicalisations",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-trials",
+        "name": "trials",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "trials per verified solve",
+        "source": "records.jsonl counters.targets_tried",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-relations",
+        "name": "relations found",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "relations found per verified solve",
+        "source": "records.jsonl counters.relations_found",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-repeated-targets-skipped",
+        "name": "repeated targets skipped",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "repeated targets skipped per verified solve",
+        "source": "records.jsonl phases[relations].native.repeated_targets_skipped",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "m-parity",
+        "name": "equal-N parity of the guard placement",
+        "unit": "exact",
+        "kind": "exact",
+        "definition": "PROTOCOL section 5 rules 1 to 4 over all 1,080 pairs per parity comparison",
+        "source": "analyze-c1.sh parity check on records.jsonl",
+        "aggregation": "per_row",
+        "resolution": "exact",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "none",
+    "warmups": 1,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "sqrt_solves",
+      "lookups",
+      "row_ops",
+      "legendre_symbols",
+      "target_guard_probes",
+      "canonicalisations",
+      "trials",
+      "relations",
+      "repeated_targets_skipped",
+      "stride_steps",
+      "stride_renewals",
+      "stride_restarts",
+      "target_rng_draws"
+    ],
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "env_class_id",
+      "isolation.level",
+      "isolation.blockers",
+      "node_name",
+      "pod_uid",
+      "job_name",
+      "image_digest",
+      "threads"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "isolab-k8s",
+    "queue": "EKS isolab namespace, Karpenter Spot c8a.2xlarge",
+    "placement": {
+      "route": "taskq/deploy/eks-karpenter/remote/launch-remote",
+      "identity": "executor's existing AWS identity",
+      "checkpoint": "none",
+      "budget_note": "PROTOCOL section 10 rolling gate"
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 3600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 2
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "fixed design: S1 once; S2 once, whatever S1 shows; 10,800 executions each; no third session",
+      "kind": "fixed_n",
+      "preregistered": true
+    },
+    {
+      "rule": "the PROTOCOL section 10 rolling hard-bound gate: actual spend + HB(launch) + HB(every first-attempt job not yet launched) <= USD 5.00",
+      "kind": "budget",
+      "preregistered": true
+    },
+    {
+      "rule": "deadline: a session that reaches its 3,600 s job deadline is an infrastructure outcome; the request is not rerun, no result is read from it, and it returns to the Coordinator (PROTOCOL section 9, deadline-hit rule)",
+      "kind": "invalidation",
+      "preregistered": true
+    },
+    {
+      "rule": "an integrity or control gate failure (PROTOCOL section 7.3 steps 1 and 2), a parity failure, or an exit code outside 0, 42, 43 stops the session's verdict; it is never a negative result",
+      "kind": "invalidation",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "an integrity or control gate failure (replay, audit, record count, invalid outcomes, spec or build equality, A/A twin not exact, pc-fb2x gate) makes the session invalid_measurement and not evidence",
+    "equal-N parity failure (section 5 rules 1 to 4) makes the session implementation_defect: a fix is opened and no scientific verdict is issued",
+    "a timeout, crash or host loss is infrastructure signal, not an empirical observation; the rerun rule is PROTOCOL section 9; a rerun uses the frozen launch/request-sK-r2.json, identical to request-sK.json except job.job_name, as a new runbook session after a Coordinator decision"
+  ],
+  "decision_rule": {
+    "text": "Per session in order: integrity or control gate failure -> invalid_measurement; parity failure -> implementation_defect; U_w < 1 at every w in {0, 0.1, 1} -> pass; otherwise fail (fail_adverse at weights with L_w > 1). Overall: pass+pass supported_within_scope; fail+fail refuted_within_scope when a common weight is adverse in both, else not_supported_within_scope; pass+fail or fail+pass inconclusive; one valid and one invalid after the permitted rerun single_unreplicated (a pass gives analyzed, a fail gives weaken plus replication, never reject_scoped); implementation_defect in either session implementation_defect. PROTOCOL section 8.",
+    "comparison_ids": [
+      "cmp-recipe"
+    ],
+    "threshold": "U_w < 1 at each w in {0, 0.1, 1} in each of S1 and S2",
+    "statistic": "ratio of mean counted S, candidate/incumbent, paired by algorithm_seed over 120 workloads x 8 rounds (ecbench compare --weight w, ops.ratio_b_over_a)",
+    "interval": "95 % CI, linearised t over workload clusters and cluster bootstrap (4000 resamples, seed 20261002); U_w = max of the two upper bounds, L_w = min of the two lower bounds",
+    "multiple_comparison_correction": "other",
+    "effect_size_measure": "1 - ratio at each w, with its CI",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "refuted_within_scope",
+      "not_supported_within_scope",
+      "inconclusive",
+      "single_unreplicated",
+      "invalid_measurement",
+      "implementation_defect"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "analyze-c1.sh",
+      "sha256": "66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc"
+    },
+    "inputs": [
+      "session1/records.jsonl",
+      "session2/records.jsonl",
+      "spec-c1-s1.json",
+      "spec-c1-s2.json"
+    ],
+    "outputs": [
+      "verdict.json",
+      "reports/c1/s{1,2}/compare-*.json",
+      "reports/c1/s{1,2}/band.json",
+      "reports/c1/s{1,2}/phase-table.json",
+      "reports/c1/s{1,2}/native-supplement.jsonl"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "counted S per arm per weight with 95 % intervals",
+      "candidate/incumbent ratio per weight in S1 and S2"
+    ],
+    "report_dir": "reports/c1"
+  },
+  "inadmissible": [
+    "changing N, seeds, curves, targets, arms, weights, thresholds, margins or accounting after any C1 test-curve data",
+    "pricing table_insert_attempts or any other accounting edit inside the study",
+    "pooling with v6, holdout-P28, F4/F6, the local development runs or XP-20261029",
+    "a third session or any selective rerun",
+    "reading top-level mean_s as weighted S",
+    "using a guard-only or N-only ratio as C1-primary",
+    "attributing the recipe effect to a sub-factor",
+    "reading or reporting any wall field",
+    "treating a parity failure, timeout or crash as a negative result",
+    "reject_scoped on one unreplicated session"
+  ],
+  "literature": [
+    {
+      "ref": "crypto-autoresearcher:DEC-20261106-1d23b6",
+      "provenance": "internal",
+      "claim": "C1 selected for design; route A ruling; closes_when",
+      "verified_by": "read by the Coordinator"
+    },
+    {
+      "ref": "crypto:research/ic_line_layout_tournament_20261031/PROTOCOL-V6.md and reports/v6/validation",
+      "provenance": "internal",
+      "claim": "the v6 counted-session format and analysis this protocol reuses",
+      "verified_by": "read by the Coordinator"
+    },
+    {
+      "ref": "crypto:docs/ic/LEADERBOARD.md holdout-P28 row",
+      "provenance": "internal",
+      "claim": "eager N 288 against 407 ratios 0.929 / 0.974 / 1.193",
+      "verified_by": "read by the Coordinator"
+    },
+    {
+      "ref": "research/ic_c1_deferred_guard_fp28_20261106/prefreeze-checks.md (PREFREEZE-CHECKS.md)",
+      "provenance": "internal",
+      "claim": "pre-freeze checks P1-P14 and P1r, P5r, P6r, P8r, P9r, P10r-P10r5, R1 (PREFREEZE-CHECKS.md Parts 1-4)",
+      "verified_by": "Executor, 2026-11-06"
+    },
+    {
+      "ref": "crypto:AGENTS.md section 5a",
+      "provenance": "internal",
+      "claim": "the pricing band w in {0, 0.1, 1}",
+      "verified_by": "read by the Coordinator"
+    },
+    {
+      "ref": "Berger, R. L. (1982), Multivariate Hypothesis Testing: intersection-union tests, Technometrics",
+      "provenance": "recalled",
+      "claim": "an intersection-union test of several one-sided hypotheses needs no multiplicity correction because every component must reject",
+      "verified_by": null
+    }
+  ],
+  "amendments": [
+    {
+      "id": "C1-AMENDMENT-1",
+      "filed": "2026-11-06",
+      "filed_before_affected_data": true,
+      "reason": "PROTOCOL.md section 18 (revision 6) requires step S01-probe to confirm that the crypto checkout HEAD is the pinned source ea8e9ef71c3c82027dd9e01535302725519c3fca. That check cannot be met: the launcher scripts that run are the versions on main used by v6, which differ from the versions at ea8e9ef71c3c82027dd9e01535302725519c3fca: taskq/deploy/eks-karpenter/remote/launch-remote is 076ee44fac6ee5948d0836d9b8dccb53e8107eba02debd0f64e84d01a5166f45 there and de27df3830fb54589e5d030e416d2e6887f7d590bc03db2e50d7456449fc7362 on main; run-request is e9706cc618afed952d5d073866bb30f8b31302b1410f1d77a78784aac1fa2192 there and c4f75c585ca6c689bdbe3fa4840459df5347696db8901a3e23296239d21e6819 on main; current-run-request-buildspec.yml (35504896fd8e9eae15690bda0ddd11c2a453ec1c463b8cbeb3c1224f286f335e on main) does not exist at ea8e9ef71c3c82027dd9e01535302725519c3fca; validate-request is identical (dc6b59d32e937db5c049704102fe0d5ca0db7af9ac2bd8de67270bcafc230426). The build source is enforced elsewhere. Filed before any C1 session was launched or any C1 record read.",
+      "changes": [
+        "S01-probe checks the four launcher scripts under taskq/deploy/eks-karpenter/remote against implementation/remote-pins.sha256 (launch-remote de27df3830fb54589e5d030e416d2e6887f7d590bc03db2e50d7456449fc7362, validate-request dc6b59d32e937db5c049704102fe0d5ca0db7af9ac2bd8de67270bcafc230426, run-request c4f75c585ca6c689bdbe3fa4840459df5347696db8901a3e23296239d21e6819, current-run-request-buildspec.yml 35504896fd8e9eae15690bda0ddd11c2a453ec1c463b8cbeb3c1224f286f335e: the sha256 values the v6 launch card used), and launch_eks.sh re-checks them before every submission; S01 records the checkout HEAD but does not compare it with a pinned commit.",
+        "S01-probe recomputes the sha256 of every request the runbook binds, each of which must be present, against protocol.json extensions.requests; a bound request that is absent, or unknown to protocol.json, stops the session, and nothing is skipped because it is absent.",
+        "Build-source identity is unchanged in substance: it is enforced by the frozen requests' job.build (source_revision ea8e9ef71c3c82027dd9e01535302725519c3fca, image_uri 104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914, ecbench_sha256 73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01), restated in the runbook spec_bindings, and verified after each job by check_job.py (build-info.json source_revision and the launcher result.json build.image_uri).",
+        "No N, seed, curve, arm, weight, threshold, margin, accounting rule, decision mapping, budget or deadline changes. PROTOCOL.md is not edited."
+      ],
+      "supersedes_fields": [
+        "PROTOCOL.md section 18, step S01-probe: 'confirms the crypto checkout HEAD is the pinned source'"
+      ]
+    },
+    {
+      "id": "C1-AMENDMENT-2",
+      "filed": "2026-11-07",
+      "filed_before_affected_data": true,
+      "reason": "PROTOCOL.md section 9 item 3 requires a protocol_amendment when S1 shows a launcher defect that would equally affect S2. S1 (job ic-c1-dg-s1-20261106, Job uid 8a20d036-efc2-45d2-ada6-6442b93c5a52, pod 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7) ran once and its container exited 42, the expected exit. The pinned launcher taskq/deploy/eks-karpenter/remote/run-request (sha256 c4f75c585ca6c689bdbe3fa4840459df5347696db8901a3e23296239d21e6819) exits at line 68 before it sets pod_uid and results_uri, so for any failed Job its result.json carries pod_uid and results_uri empty (the S1 result.json, sha256 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7, has exactly that shape). launch_eks.sh v3a (sha256 0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0) downloaded only a non-empty results_uri, so it downloaded nothing and exited 5; its 42/43 accept branch was unreachable. S2 uses the same launcher and also exits 42. Filed before any S2 byte exists and before any S1 record beyond the check_job.py set was read; the S1 job output exists and an integrity-count read of it (PD-1, audit and run.stderr counts only) is disclosed in AMENDMENT-2.md section 4.",
+      "changes": [
+        "A job's results are located by implementation/locate_results.sh. A non-empty result.json results_uri is used as is. Otherwise the launcher receipt's status.json is read at receipt_uri: job.uid must equal result.json job_uid, job.job_name must equal the request's job name, exactly one pod must exist (its uid is pod_uid, its terminated exitCode is recorded), and the listing of s3://BUCKET/runs/JOB/ must hold only launcher/ and the pod_uid/ prefix. After the download, job-exit.json pod_uid, job_name and exit_code must equal the located pod, the job name and the status exit code, or the outcome is never job_completed. raw-result.json records results_locator (launcher_result or receipt_status_pod_uid), job_uid and pod_uid. Sections 1, 1b, 1c and 2, the class logic, the 42/43 accept branch, the manifests and the exit codes of launch_eks.sh are unchanged.",
+        "S1 is RUN-ICPERF-8b0d47's job (pod 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7), brought in by a read-only reconciliation (implementation/reconcile_run.sh) under that run id and not rerun: the committed launcher result.json at sha256 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7, the same locator, a download of the pod prefix into the reconciliation step's output directory, the unchanged check_job.py printing CHECK_JOB_OK, and reconcile-result.json. run-summary.json is transported as is: SHA256SUMS must list it at the empty-file sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855. Nothing is written under runs/RUN-ICPERF-8b0d47/.",
+        "The new runbook session runs S01-probe, S02-reconcile-t1, S03-trial-s2 (S2 once on the frozen request-s2.json, only if the reconciliation passed) and S04-verify (the frozen analyze-c1.sh on the reconciled S1 session directory and the S2 session directory), with a fresh run id for S2. The -r2 requests are not bound. The section 10 gate line is 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00, with actual_spend(S1) taken at HB USD 0.93108 until a billing or cost record exists.",
+        "Disclosure of procedure deviation PD-1 (DEC-20261107-b74e2c): before S2 the top-level session read audit.stderr and the tail of run.stderr of the S1 prefix out of band; integrity counts only, no arm statistic, ratio, parity field, compare output or records.jsonl content. No further pre-S2 read outside the check_job.py set is permitted.",
+        "No N, seed, curve, target, arm, weight, threshold, margin, accounting rule, decision mapping, request, instance, deadline, budget line, cap or success criterion changes. PROTOCOL.md is not edited."
+      ],
+      "supersedes_fields": [
+        "PROTOCOL.md section 18, execution route (revision 6 ruling): the layout S01-probe, S02-trials (T1 then T2), S03-verify, for the re-session; extensions.execution_route.steps is superseded for the re-session and not edited",
+        "PROTOCOL.md section 18, S02-trials: 'launch_eks.sh ... downloads the job prefix' (the source of the download is specified by this amendment)"
+      ]
+    }
+  ],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "4b7bf35f34c0ddf5c0e4bee95e1791e6f5d2bc2fb68d4836db9db53d33e9b9cc",
+    "commit": "151779ab979469baaa168e1e88a4097227219084",
+    "frozen_at": "2026-11-07T02:54:43Z",
+    "filed_before_affected_data": true
+  },
+  "extensions": {
+    "specs": {
+      "spec-c1-s1.json": "d2af59dd9f62d46f28c0287a475becfe468e8e0a17eabe5f96681e2abf09e8ad",
+      "spec-c1-s2.json": "688ec9a004648933231302935704d9307cfc441aaa231fc6efb25205a302cf34"
+    },
+    "spec_ids": {
+      "S1": "ECS1h3229b941623b",
+      "S2": "ECS1h1e755d9669a9"
+    },
+    "requests": {
+      "launch/request-s1.json": "683cc67d136ab6a2e5f1f3fbc7f6ae20ba981194f4781418340d883620b6c779",
+      "launch/request-s2.json": "d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1",
+      "launch/request-s1-r2.json": "fd9c9c8fd5e64a333a4f650c1e8ff34dc9309193f290240b39f47845652a3e44",
+      "launch/request-s2-r2.json": "816d85f0b37089c090cadce804d6ced760e9de255de39030deceaf2b84819050"
+    },
+    "execution_route": {
+      "kind": "runbook",
+      "repo": "crypto-autoresearcher",
+      "runbook": "experiments/EXP-ICPERF-127dbd/runbook.yaml",
+      "steps": [
+        "S01-probe",
+        "S02-trials",
+        "S03-verify"
+      ],
+      "controls": "[] (in-job arms; gates in analyze-c1.sh at S03)",
+      "replay": "exempt (no paid relaunch)",
+      "on_failure": "stop on every failure; -r2 is a new runbook session",
+      "fallback": "implementation, if lint refuses the layout, with no shared-tool edits"
+    },
+    "ecbench_spec_isolation": "L2 in the ecbench spec: required by the run-ecbench pre-check only; protocol measurement.isolation_required is none because no clock is a metric",
+    "role_map_spec_to_protocol": {
+      "incumbent": "baseline->baseline",
+      "candidate": "candidate->candidate",
+      "walk-eager-n304": "candidate->candidate",
+      "srenew-eager-n407": "candidate->candidate",
+      "srenew-deferred-n407": "candidate->candidate",
+      "srenew-eager-n304": "candidate->candidate",
+      "pc-fb2x": "candidate->control_positive",
+      "rho-neg": "reference->reference",
+      "rho-neg-aa": "control->control_aa",
+      "incumbent-aa": "control->control_aa"
+    },
+    "arm_order_in_spec": [
+      "incumbent",
+      "candidate",
+      "walk-eager-n304",
+      "srenew-eager-n407",
+      "srenew-deferred-n407",
+      "srenew-eager-n304",
+      "pc-fb2x",
+      "rho-neg",
+      "rho-neg-aa",
+      "incumbent-aa"
+    ],
+    "parity_rules": "PROTOCOL section 5 rules 1-4 over 1,080 pairs per comparison (warm-ups included)",
+    "c1_guard_decision_rule": "equivalence at w = 0: both 95 % CIs inside [0.995, 1.005]; superiority at w = 0.1 and 1: U_w < 1; both parity comparisons, both sessions",
+    "route_b_trigger": "C1-primary fails, C1-guard passes, and incumbent->srenew-eager-n407 has L_0 > 1 in both sessions: recommended to the owner, roadmap only, not a verdict",
+    "budget_gate": "PROTOCOL section 10; hard cap USD 5.00; HB(3600 s) = 0.43108 + 0.5 = USD 0.93108; first-attempt jobs S1 and S2 only (no holdback V); gate lines 1.86 (S1), 2.79 (S1-r2), 2.79 (S2), 3.72 (S2-r2); worst case committed USD 3.72; expected spend about USD 0.6-1.0",
+    "targets_per_curve": 60,
+    "executions_per_session": 10800,
+    "approval_decision": "DEC-20261106-c69de4",
+    "owner_gate": "DEC-20261106-1d23b6 owner_gate: cloud-spend go-ahead before any launch",
+    "closure_obligations": "PROTOCOL section 8",
+    "job_names": {
+      "S1": "ic-c1-dg-s1-20261106",
+      "S2": "ic-c1-dg-s2-20261106"
+    },
+    "export_note": "from-ecbench drops phases[].native; analyze-c1.sh writes reports/c1/s{1,2}/native-supplement.jsonl for the export",
+    "curve_slugs": {
+      "S1": [
+        "icv1-fp28-t10999-67500d78",
+        "icv1-fp28-tm6425-08e2435f"
+      ],
+      "S2": [
+        "icv1-fp28-t14969-7ca8e8a5",
+        "icv1-fp28-tm4717-89c926fe"
+      ]
+    },
+    "c1_amendment_1": {
+      "file": "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-1.md",
+      "file_sha256": "0dac23b1a0cd5128700f8b1ee136698c891f8ffbc36a8cef6b54a3cf0a09ef15",
+      "prior_freeze": {
+        "protocol_sha256": "43b1ca918c034433f3584f37db439613d11a618c0eec13d3d7831a1fa96d092f",
+        "commit": "339292abed16c2474e404e25f3b72d31b58bd9d8",
+        "frozen_at": "2026-11-06T10:11:25Z",
+        "reproducible_as": "experiment_protocol.py hash on this document with version set to 1, amendments set to [], links.amendments removed and extensions.c1_amendment_1 removed (verified to give the prior protocol_sha256)"
+      }
+    },
+    "c1_amendment_2": {
+      "file": "research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md",
+      "file_sha256": "8fdc60321fb3f3f3741c2a21f65d50f42d563ed065663528d786ca4056393b19",
+      "prior_freeze": {
+        "protocol_sha256": "9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166",
+        "commit": "4c44ad2ab582f0cd38b9fcf0dd0dd49df2800dd6",
+        "frozen_at": "2026-11-06T11:03:41Z",
+        "reproducible_as": "experiment_protocol.py hash on this document with version set to 2, amendments reduced to the first entry (C1-AMENDMENT-1), links.amendments reduced to its first entry and extensions.c1_amendment_2 removed (checked to give the prior protocol_sha256)"
+      }
+    }
+  }
+}

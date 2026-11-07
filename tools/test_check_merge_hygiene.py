@@ -642,3 +642,154 @@ class SessionFileTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SheriffA114e7Tests(unittest.TestCase):
+    """Sheriff case SHF-20261106-a114e7: LGX-1, LGX-4, LGX-5, LGX-6."""
+
+    SESSION = SessionFileTests.SESSION
+
+    # LGX-1 ---------------------------------------------------------------
+    def test_a_duplicate_key_in_a_touched_yaml_record_fails_in_pr_scope(self) -> None:
+        with _Repo() as r:
+            manifest = "experiments/EXP-D-001/runs/RUN-D-001/manifest.yaml"
+            r.write(manifest, "run:\n  result:\n    certificate:\n      kind: discrete_log\n"
+                              "      kind: none\n")
+            r.write("ledger/decisions/DEC-20261106-aaaaaa.yaml",
+                    "coordinator_decision:\n  status: accepted\n  status: rejected\n")
+            r.commit()
+            paths = [manifest, "ledger/decisions/DEC-20261106-aaaaaa.yaml"]
+            bad = mh.check_parses(paths, report_stale=False, unique_keys=True)
+            bad += [b for b in mh.check_new_run_manifests([manifest]) if "duplicate" in b]
+            self.assertEqual(len(bad), 2, bad)
+            self.assertTrue(all("duplicate YAML key" in b for b in bad), bad)
+            self.assertTrue(any(b.startswith(manifest) for b in bad), bad)
+            # Absolute sweeps keep archived bytes and rulings: no duplicate check.
+            self.assertEqual(mh.check_parses(paths, report_stale=False), [])
+
+    def test_main_refuses_a_branch_added_record_with_a_duplicate_key(self) -> None:
+        with _Repo() as r:
+            r.write("ledger/goals/README.md", "goals\n")
+            r.commit("base")
+            git(r.path, "branch", "-q", "base")
+            r.write("ledger/decisions/DEC-20261106-bbbbbb.yaml",
+                    "coordinator_decision:\n  status: accepted\n  status: rejected\n")
+            r.commit("branch")
+            with mock.patch.object(sys, "argv", ["check_merge_hygiene.py", "--base", "base"]):
+                self.assertEqual(mh.main(), 1)
+            with mock.patch.object(sys, "argv", ["check_merge_hygiene.py", "--absolute"]):
+                self.assertEqual(mh.main(), 0)
+
+    # LGX-5 ---------------------------------------------------------------
+    def test_a_manifest_v2_only_run_is_schema_checked(self) -> None:
+        with _Repo() as r:
+            run = NewRunManifestTests.RUN
+            for name in NewRunManifestTests.ARTIFACTS:
+                r.write(f"{run}/{name}", "{}\n")
+            r.write(f"{run}/manifest_v2.yaml", "run: {}\n")
+            r.commit()
+            bad = mh.check_new_run_manifests([f"{run}/manifest_v2.yaml"])
+            self.assertTrue(any(b.startswith(f"{run}/manifest_v2.yaml:") for b in bad), bad)
+            # With manifest.yaml present, the flat file is the run's record.
+            r.write(f"{run}/manifest.yaml", NewRunManifestTests().body())
+            r.commit()
+            self.assertEqual(mh.check_new_run_manifests([f"{run}/manifest_v2.yaml"]), [])
+
+    # LGX-6 ---------------------------------------------------------------
+    def registry(self, r, entries) -> None:
+        import yaml
+        r.write("tools/run_supersession_registry.yaml", yaml.safe_dump(
+            {"schema": "run-supersession-registry-v1", "records": entries}, sort_keys=False))
+
+    def entry(self, run_id="RUN-S-000001", **extra):
+        run = f"experiments/EXP-S-001/runs/{run_id}"
+        return {"run_id": run_id, "superseded_path": f"{run}/manifest.yaml",
+                "superseded_sha256": "a" * 64, "superseding_path": f"{run}/manifest_v2.yaml",
+                "superseding_sha256": "b" * 64, "registered": "2026-11-06",
+                "defect": "fixture", **extra}
+
+    def supersession_scene(self, r, status_in_v2: str, receipt_status: str = "invalid_output"):
+        run = "experiments/EXP-S-001/runs/RUN-S-000001"
+        r.write("README.md", "x\n")
+        self.registry(r, [])
+        r.commit("base")
+        git(r.path, "branch", "-q", "base")
+        r.write(f"{run}/execution-receipt.json", '{"status": "%s"}' % receipt_status)
+        r.write(f"{run}/manifest_v2.yaml", f"run:\n  status: {status_in_v2}\n")
+
+    def test_a_new_supersession_needs_a_decision_or_validator_review(self) -> None:
+        with _Repo() as r:
+            self.supersession_scene(r, "invalid_output")
+            self.registry(r, [self.entry()])
+            r.commit("branch")
+            bad = mh.check_new_run_supersessions("base")
+            self.assertTrue(any("names no decision_id" in b for b in bad), bad)
+            self.registry(r, [self.entry(decision_id="DEC-20261106-cccccc")])
+            r.commit("with decision")
+            self.assertEqual(mh.check_new_run_supersessions("base"), [])
+            r.write("docs/review.md", "validator review\n")
+            self.registry(r, [self.entry(validator_review="docs/review.md")])
+            r.commit("with review")
+            self.assertEqual(mh.check_new_run_supersessions("base"), [])
+
+    def test_a_superseding_manifest_keeps_a_failed_runs_disposition(self) -> None:
+        with _Repo() as r:
+            self.supersession_scene(r, "completed")
+            self.registry(r, [self.entry(decision_id="DEC-20261106-cccccc")])
+            r.commit("branch")
+            bad = mh.check_new_run_supersessions("base")
+            self.assertTrue(any("records status 'invalid_output'" in b for b in bad), bad)
+
+    def test_entries_already_on_the_base_keep_their_rulings(self) -> None:
+        with _Repo() as r:
+            r.write("README.md", "x\n")
+            self.registry(r, [self.entry()])
+            r.commit("base")
+            git(r.path, "branch", "-q", "base")
+            self.assertEqual(mh.check_new_run_supersessions("base"), [])
+
+    # LGX-4 ---------------------------------------------------------------
+    def test_an_unbound_file_added_to_a_sealed_session_fails(self) -> None:
+        with _Repo() as r:
+            tests = SessionFileTests()
+            tests.scene(r)
+            r.write(f"{self.SESSION}/outputs/S02-trials/attempt-1/extra.json", "{}\n")
+            r.commit("add an unrecorded file")
+            bad = "\n".join(mh.check_session_files("base"))
+            self.assertIn("bound by no journal entry", bad)
+
+    def test_step_logs_of_a_recorded_attempt_may_be_added(self) -> None:
+        import json
+        with _Repo() as r:
+            SessionFileTests().scene(r)
+            journal = Path(r.path, self.SESSION, "journal.jsonl")
+            journal.write_text(journal.read_text() + json.dumps(
+                {"seq": 2, "type": "step_started", "step_id": "S03-more", "attempt": 1}) + "\n")
+            r.write(f"{self.SESSION}/steps/S03-more.attempt-1.supervisor.stdout", "x\n")
+            r.commit("resume")
+            self.assertEqual(mh.check_session_files("base"), [])
+
+    def test_a_session_outside_experiments_and_examples_is_covered(self) -> None:
+        self.assertEqual(mh._session_of("research/x/runbook-sessions/RBS-X-1/journal.jsonl"),
+                         "research/x/runbook-sessions/RBS-X-1")
+        with _Repo() as r:
+            r.write("README.md", "x\n")
+            r.commit("base")
+            git(r.path, "branch", "-q", "base")
+            SessionFileTests().write_session(r, {"steps/a.stdout": "A\n"},
+                                             session="research/x/runbook-sessions/RBS-X-1")
+            r.commit("copy a session elsewhere")
+            git(r.path, "branch", "-q", "base2")
+            r.write("research/x/runbook-sessions/RBS-X-1/steps/a.stdout", "edited\n")
+            r.commit("edit it")
+            self.assertTrue(any("session file changed" in b for b in mh.check_session_files("base2")))
+
+    def test_absolute_mode_compares_a_non_merge_head_with_its_parent(self) -> None:
+        with _Repo() as r:
+            SessionFileTests().scene(r)
+            git(r.path, "checkout", "-q", "main")
+            r.write(f"{self.SESSION}/{SessionFileTests.STDOUT}", "squashed edit\n")
+            r.commit("a direct push / squash merge editing a session")
+            bad = "\n".join(mh.check_session_files(None))
+            self.assertIn("session file changed", bad)
+            self.assertIn("on parent", bad)

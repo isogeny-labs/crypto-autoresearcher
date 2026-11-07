@@ -1,0 +1,196 @@
+# TASK-20261107-5f7d2b: small design revision handoff to the experiment-director. Apply
+# DEC-20261107-c3e91a R-1 to R-3 to the C1 locator (v3c to v3d): the K-7 transport pins, the credential
+# source and the configuration scan in the two prologues, and /bin/bash -p in the runbook and trial-plan
+# argv. Then regenerate the previews. Zero runs, zero launches, zero AWS calls. It approves nothing.
+handoff:
+  id: TASK-20261107-5f7d2b
+  from: coordinator
+  to: experiment-director
+  role: experiment-director
+  recorded_at: '2026-11-07'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Revise launch_eks.sh and reconcile_run.sh from v3c to v3d, changing only their K-7 prologues as
+    DEC-20261107-c3e91a R-1 and R-3 rule. Change the runbook and trial-plan argv as R-2 rules. Extend the
+    regression and mutation suites to cover every new check. Then regenerate, against the v3d bytes, the
+    canonical drafts and approval previews of the specification and the trial plan, the runbook for
+    RBS-ICPERF-616277, a new card CARD-EXP-ICPERF-127dbd-5, the executor and snapshot handoff previews,
+    and the preapproval packet. Return them uncommitted.
+  uncertainty_reduced: >-
+    None about the mathematics. It lets S01 to S03 reach AWS through the platform proxy without
+    re-opening the endpoint attack. It closes the pre-line-1 shell vectors and pins the credential source
+    before the red team judges the final bytes.
+  inputs:
+  - ledger/decisions/DEC-20261107-c3e91a.yaml (rulings R-1 to R-4; your context)
+  - ledger/decisions/DEC-20261107-a83c51.yaml (K-7)
+  - ledger/handoffs/TASK-20261107-d07e94.yaml (E-1 to E-7 still bind unless changed here)
+  - experiments/EXP-ICPERF-127dbd/design/d07e94/ (your own v3c FINDINGS.md, evidence/, approval-preview/, handoff-previews/)
+  - "experiments/EXP-ICPERF-127dbd/implementation/ (v3c: launch_eks.sh a61c55da15b149d00ee7e644c41d79ad8df4ae82f3c59dfca157ea9679fc9e76, locate_results.sh 668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b, reconcile_run.sh a294b7dbc77b33ae4103dfa907a5effba03fe0e2c1837f3f51a44a5897055c16; tests/)"
+  - experiments/EXP-ICPERF-127dbd/{specification.yaml, trial-plan.json, runbook.yaml (36105be6...), task-cards/CARD-EXP-ICPERF-127dbd-4.yaml}
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-d07e94/snapshot-receipt.json
+  - tools/runbook.py and the trial supervisor (to confirm that an absolute argv[0] is admitted)
+  inputs_note: >-
+    Your context is DEC-20261107-c3e91a R-1 to R-4 and your own d07e94 tree. Do not re-open K-1 to K-6:
+    their bytes do not change in this task.
+  constraints:
+  - >-
+    V-1 Zero runs, zero launches, zero AWS calls of any kind, read-only included. No network call
+    through the proxy either. Two local reads are allowed. One is the names of the five transport
+    variables and the shape of their values: print pass or fail against the T-2, T-3 and T-4 pins,
+    never an AWS_* value. The other is `realpath -e /root/.ccr/ca-bundle.crt` and its sha256, recorded in
+    evidence/. Never write, move or replace anything under /root/.ccr.
+  - >-
+    V-2 Scope. In launch_eks.sh, only the K-7 prologue changes: the lines between `set +x` and
+    `dry=0;`, which are v3c hunk 1. Everything else stays byte-identical to v3c a61c55da..., including
+    E-2's v3b-identical regions. In reconcile_run.sh, only its K-7 prologue changes (from after its
+    `set +x` through `# ---- end of the K-7 prologue ----`). locate_results.sh stays byte-identical to
+    v3c 668a424b... check_job.py, analyze-c1.sh, probe_s01.sh, remote-pins.sha256, the requests, the specs
+    and protocol.json do not change. Archive the diffs v3c to v3d (both scripts) and v3b to v3d
+    (launch_eks.sh) with hunk lists. test_locator.sh asserts this scope.
+  - >-
+    V-3 Transport (R-1 T-1 to T-6, exactly as written there). Same bytes in both prologues: the names
+    pass only if set; upper and lower case are byte-equal when both are set; the proxy matches
+    ^http://(127\.0\.0\.1|localhost):[0-9]{1,5}/?$; the no-proxy value matches ^[A-Za-z0-9.,:*/_-]*$;
+    AWS_CA_BUNDLE only with a proxy set, equal to an entry of K7_CA_BUNDLE_ALLOWED=(/root/.ccr/ca-bundle.crt)
+    with `realpath -e` returning the same string, and a non-empty regular file; its sha256 is computed in
+    phase 2; the K7_STATUS suffix is transport=[..] proxy=.. no_proxy=.. ca_bundle=.. ca_bundle_sha256=..
+    after the unchanged prefix. Every refusal exits 2 before any AWS call.
+  - >-
+    V-4 Credentials, configuration and Python (R-3 CR-1, CR-2, CF-1, PY-1). Phase 2 refuses unless
+    AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set and non-empty. The exec adds the constants
+    AWS_EC2_METADATA_DISABLED=true and PYTHONNOUSERSITE=1, and phase 2 admits each only with that value.
+    K7_CFG_ALLOWED stays empty. The refused entry names add ca_bundle, role_arn, source_profile,
+    credential_source, web_identity_token_file, sso_session and sso_start_url. PY-1 resolution: check
+    locally where the first `aws` on PATH imports botocore from (no AWS call). If that is the user site,
+    omit PYTHONNOUSERSITE and record it as a residual. Either way, record the evidence. Tests that run the
+    scripts set literal dummy credential values (e.g. AKIDFAKE...), never real ones.
+  - >-
+    V-5 Argv (R-2 A-1 to A-4). Runbook S01-probe, S02-reconcile-t1 and S04-verify, and the T2 argv of
+    trial-plan.json (canonical draft and approval preview), begin `/bin/bash`, `-p`, then the script
+    path. environment.programs lists `/bin/bash`. If runbook.py lint or the trial supervisor refuses an
+    absolute argv[0], use `bash`, `-p`, record the refusal text, and state the PATH-resolved bash as a
+    residual (A-2). Correct the prologue comment that calls BASH_ENV an unavoidable residual (A-3). The
+    `python3 -I` check argv stays.
+  - >-
+    V-6 Regression. All existing 123 rt_regression.sh rows keep their v3c expected outcome; the legacy
+    replay is unchanged. test_locator.sh passes in full with the checkout argument and 0 skips. New cases,
+    each with its refusing exit status fixed as in the WANT_* tables:
+      - the proxy pair: allowed loopback form passes; upper/lower mismatch refused; userinfo, a non-loopback host, a path or a newline refused;
+      - NO_PROXY: mismatch refused; whitespace or a forbidden character refused;
+      - AWS_CA_BUNDLE: allowed path passes with its sha256 recorded; another path, a symlink to the allowed file, a symlinked parent, a missing file, an empty file, and AWS_CA_BUNDLE without a proxy, each refused;
+      - ca_bundle, role_arn, source_profile, credential_source, web_identity_token_file, sso_session and sso_start_url in ~/.aws/config, each refused;
+      - missing or empty AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY refused; AWS_EC2_METADATA_DISABLED or PYTHONNOUSERSITE preset to another value refused;
+      - a .pth file under $HOME/.local site-packages that writes a marker: it does not run inside aws (if PY-1 is applied);
+      - the argv form: under `/bin/bash -p <script>`, BASH_ENV, ENV, an exported BASH_FUNC_aws%% and SHELLOPTS=xtrace with a PS4 command substitution each run no payload before line 1 (marker absent); the same cases under plain `bash <script>` are recorded as the pre-v3d control.
+    Every case for launch_eks.sh is mirrored for reconcile_run.sh where the check exists in both.
+    Then the E-4 table of v3c, plus a table of the new cases.
+  - >-
+    V-7 Mutation. Add one mutant to tests/mutate.py for every new check in V-3 and V-4, each edit
+    matching exactly once. Re-run the full mutation_check.sh on frozen bytes (no edit while it runs).
+    Every mutant is CAUGHT, or SUBSUMED with its pair mutant CAUGHT. SURVIVED or ERRORED is a defect to
+    fix before return, not to disclose.
+  - >-
+    V-8 Records (E-5 as amended). The canonical specification.yaml and trial-plan.json stay
+    review_required and candidate-only. The approved forms go only to design/5f7d2b/approval-preview/.
+    runbook.yaml binds those preview digests and says so in its header. The card is a new
+    CARD-EXP-ICPERF-127dbd-5; card -4 is left as is, retired and never relayed. Keep RBS-ICPERF-616277,
+    RUN-ICPERF-efb7ef, TASK-20261107-f14df8, TASK-20261107-04d969 and the reserved DEC-20261107-7802ec,
+    all still unused. The executor handoff preview f14df8 names card -5 and launcher v3d. It adds R-1
+    T-7: the top-level session records the sha256 of /root/.ccr/ca-bundle.crt before the relay, and the
+    relay environment must satisfy T-2 to T-4 and CR-1. The relay statement names the red-team
+    reconfirmation TASK-20261107-a9406e.
+  - >-
+    V-9 Do not stage, commit or push. Do not edit any ledger record, queue, journal or run directory,
+    the 9d2b6a review tree, or the d07e94 design tree. Return the previews.
+  deliverables:
+  - "Preview files at every artifact_paths entry, plus design/5f7d2b/SHA256SUMS over them."
+  - "design/5f7d2b/FINDINGS.md. It holds:"
+  - "  - the v3d hashes, the v3c-to-v3d and v3b-to-v3d diffs with hunk lists, and the V-2 scope proof;"
+  - "  - the V-1 local checks (transport-name pass/fail, CA realpath and sha256) and the PY-1 resolution;"
+  - "  - the V-5 argv outcome (absolute or fallback) with the lint and supervisor evidence;"
+  - "  - the regression table (old rows and new cases) and the mutation table;"
+  - "  - runbook.py lint, task_card.py lint, and experiment_preapproval.py --packet against the preview queue;"
+  - "  - an updated residual-risk section and every open blocker by name (the d07e94 blockers still open, minus the four ruled by DEC-20261107-c3e91a)."
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/tests/
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+  - experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-5.yaml
+  - experiments/EXP-ICPERF-127dbd/design/5f7d2b/
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-5f7d2b/snapshot-receipt.json
+  artifact_paths_note: >-
+    The directory entries are trees whose files are staged by name. design/5f7d2b/ holds FINDINGS.md,
+    SHA256SUMS, evidence/, approval-preview/ and handoff-previews/ (the queue preview included).
+    locate_results.sh is deliberately absent: it must not change, and the receipt records its unchanged
+    sha256.
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/tests
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+  - experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-5.yaml
+  - experiments/EXP-ICPERF-127dbd/design/5f7d2b
+  read_scope:
+  - experiments/EXP-ICPERF-127dbd
+  - tools
+  - /root/.ccr/README.md and /root/.ccr/ca-bundle.crt (read and hash only)
+  archived_by: TASK-20261107-5f7d2b
+  archive:
+    kind: snapshot
+    binding_mode: content_at_commit
+    custody_note: >-
+      Per DEC-20261107-6b0f3d: not a research_dispatch queue entry. Custody is a coordinator-written
+      receipt, dispatcher_verified false, that hashes every artifact_paths file at the commit that lands
+      them. It also records locate_results.sh, unchanged, at 668a424b... The approval archive of
+      DEC-20261107-7802ec binds them through the dispatcher.
+    executed_by: the shell-holding top-level session in the coordinator role, after the director returns and before TASK-20261107-a9406e is dispatched
+    record_ids: [EXP-ICPERF-127dbd, H-ICPERF-4cb536, DEC-20261107-c3e91a]
+    rules: >-
+      Branch from origin/main and merge it (never rebase). Before staging, confirm that no canonical
+      file reads status approved, execution_authorized true or a non-null approved_by (PD-3), and that
+      locate_results.sh still hashes to 668a424b... Independently re-run test_locator.sh,
+      rt_regression.sh and the legacy replay under env -i with the fake aws only, and record the counts
+      in the receipt. Stage the artifact_paths files by name. Run validate_ledger.py and
+      check_merge_hygiene.py, then make the commit. Write and commit the custody receipt. Open a
+      ready-for-review PR. Enable auto-merge only after validate_ledger passes. On any refusal, return to
+      the Coordinator.
+  inference:
+    policy: director-runbook
+    reasoning_effort: null
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  dispatch_preconditions:
+  - {id: DP-1, text: "PR #3144 (the d07e94 v3c snapshot) has merged to main, and the three v3c sha256 values above match at that commit."}
+  - {id: DP-2, text: "DEC-20261107-c3e91a, this handoff, TASK-20261107-a9406e and the goal.yaml change are on main."}
+  completion_gate:
+  - "R-1 T-1 to T-6, R-2 A-1 to A-3 (or the A-2 fallback, recorded), and R-3 CR-1, CR-2, CF-1 and PY-1 (or its recorded omission) are implemented. V-2's scope holds, with locate_results.sh byte-identical to v3c and the hunk lists archived."
+  - "Regression: the 123 v3c rows keep their outcomes, the legacy replay is unchanged, every V-6 case passes, and test_locator.sh passes in full with 0 skips."
+  - "Mutation: every mutant, old and new, is CAUGHT or SUBSUMED with its pair CAUGHT; none survived or errored."
+  - "The canonical spec and plan are review_required or candidate. The approved forms exist only under design/5f7d2b/approval-preview/. Card -5 exists and card -4 is unchanged."
+  - "runbook.py lint is OK against the preview digests, or reports only the expected canonical-draft bind mismatches. task_card.py lint fails only on the missing approval. The packet result is recorded."
+  - "No commit, push, launch or AWS call, and no write under /root/.ccr. Zero runs."
+  return_format: >-
+    FINDINGS.md path, SHA256SUMS, the v3d script and runbook hashes, the V-5 argv outcome, the PY-1
+    resolution, the new-case and mutation tables, and the blocker list. No C1 outcome.
+  follow_on: >-
+    After the snapshot custody, the Coordinator dispatches the independent red-team reconfirmation
+    TASK-20261107-a9406e on these v3d bytes. Only after that can DEC-20261107-7802ec name a
+    runbook_sha256.
+  review_required: true
+  review_required_note: "Independent red-team reconfirmation TASK-20261107-a9406e before approval."
+  runs_launched: 0

@@ -167,6 +167,18 @@ research_goal:
         not authorize execution. Required first: repair TASK-20261029-f8b6eb, an
         approvable probe at origin/main, the archived approval decisions
         DEC-20261029-ca33b3 / DEC-20261029-0e40f3, and execution_state ready.
+      closed_at: '2026-11-06'
+      closing_decision_id: DEC-20261106-c4601c
+      checkpoint: ledger/goals/GOAL-ICPERF-e6b6a4/checkpoints/BATCH-38f344.yaml
+      closed_note: >-
+        Outcome archived: both executor tasks (TASK-20261029-65798b,
+        TASK-20261029-f370f1) were released completed on 2026-10-30 and the nine
+        run manifests are on main; EV-ICPERF-08f6f9 and EV-ICPERF-84ff45 were
+        decided by DEC-20261105-8a9984 and DEC-20261105-6e2616. The two snapshot
+        archive tasks TASK-20261029-fe381b and TASK-20261029-6b18a6 never ran and
+        are superseded by DEC-20261106-c4601c. The runbook audit-replay tooling
+        repair (DEC-20261105-6e2616 NA-1) is goal-level work and stays open.
+        Lane close record: coordination/goals/GOAL-ICPERF-e6b6a4/lanes/BATCH-38f344.closed.json.
   latest_verified_commit: null
   latest_verified_commit_note: >-
     Still null, and deliberately so rather than by omission. TASK-20260913-f8bdec's
@@ -307,15 +319,57 @@ research_goal:
         origin/main. The two approvals named in what_is_blocked are now
         recorded. Dispatch of TASK-20261029-65798b and TASK-20261029-f370f1
         still waits for this archive to merge and for execution_state ready.
+    - id: IMP-C1-dccfdc-partial-output
+      raised: '2026-11-06'
+      condition: >-
+        research_dispatch cannot archive partial output of a failed source. The snapshot
+        archive TASK-20261106-dccfdc of the stopped session RBS-ICPERF-e2a5c2 cannot complete:
+        its source TASK-20261106-4b7018 declares 36 artifact paths and 10 exist (F11,
+        DEC-20261106-ecf261 ruling 6).
+      what_is_blocked: >-
+        TASK-20261106-dccfdc. Not RBS-ICPERF-de8978: no new task depends on it.
+      clears_when: >-
+        a reviewed tooling change supports per-path void of never-produced paths, or a
+        Coordinator decision rules another lawful custody.
+      recheck: >-
+        At the RBS-ICPERF-de8978 evidence review (DEC-20261106-ecf261 NA-3).
+      asserts_nothing_about: >-
+        H-ICPERF-4cb536 or C1.
+    - id: IMP-C1-d5ec1e-partial-output
+      raised: '2026-11-07'
+      condition: >-
+        research_dispatch cannot archive partial output of a failed source. The snapshot
+        archive TASK-20261106-d5ec1e of the terminal session RBS-ICPERF-de8978 cannot complete:
+        its source TASK-20261106-724d14 declares 36 artifact paths and 14 exist. A scratch commit,
+        never pushed, was REFUSED with "completed archive task TASK-20261106-d5ec1e path_sha256 must
+        cover every archive and source artifact" (DEC-20261107-3e9d71).
+      what_is_blocked: >-
+        TASK-20261106-d5ec1e. Not TASK-20261107-c5a0f4 or the new C1 session: neither depends on it.
+        Interim custody is PR #3127, with hashes recorded by archive TASK-20261107-c5a0f4.
+      clears_when: >-
+        a reviewed tooling change supports per-path void of never-produced paths, or a
+        Coordinator decision rules another lawful custody.
+      recheck: >-
+        At the C1 evidence review, together with IMP-C1-dccfdc-partial-output.
+      asserts_nothing_about: >-
+        H-ICPERF-4cb536 or C1.
   next_action: >-
-    Verify TASK-20261019-6398fb's ledger archive and receipt for
-    EV-ICPERF-3f4a4e, both retrospective decisions and the review visual.
-    Then rank a fresh-ID prospective output-contract engineering handoff
-    against problems/icperf-prime63-m2-output-contract-mismatch.md; require
-    standard-supervisor no-science terminal fixtures and a new approvable
-    packet before any scientific rerun. Continue separately ranked ICPERF lanes.
-  next_action_recorded_at: '2026-10-19'
+    C1: S1 ran once (T1 RUN-ICPERF-8b0d47, job exit 42), but wrapper v3a could not locate the
+    results, so RBS-ICPERF-de8978 is terminal as an implementation_error. That is not evidence, and
+    no -r2 is triggered (DEC-20261107-b74e2c). The snapshot d5ec1e is impeded
+    (IMP-C1-d5ec1e-partial-output, DEC-20261107-3e9d71). The unratified approval state of PR #3132
+    was reset by DEC-20261107-e41c08. The red-team review TASK-20261107-9d2b6a (PR #3140) led
+    DEC-20261107-a83c51 to adopt controls K-1 to K-7. The director returned v3c
+    (TASK-20261107-d07e94, archived in PR #3144). DEC-20261107-c3e91a rules its K-7 blockers. The
+    proxy and CA variables pass under pins, every bash step starts as /bin/bash -p, and credentials
+    come only from the named environment variables. That changes bytes, so v3d comes first. Next:
+    once PR #3144 and the c3e91a ledger archive are on main, dispatch TASK-20261107-5f7d2b (v3d, zero
+    runs) to the experiment-director and write its custody receipt. Then dispatch the red-team
+    reconfirmation TASK-20261107-a9406e on the v3d bytes. Only then may DEC-20261107-7802ec be
+    written, carrying the filed_before_affected_data qualification. No launch before that approval.
+    Other ICPERF lanes continue as separately ranked.
+  next_action_recorded_at: '2026-11-07'
 
   owner: coordinator
   created_at: '2026-09-13'
-  updated_at: '2026-10-19'
+  updated_at: '2026-11-06'

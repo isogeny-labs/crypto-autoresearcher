@@ -1,0 +1,39 @@
+# grep for job-submission, build-start and S3-write tokens (case-insensitive) in the two scripts that must be read-only
+$ grep -n -i -E 'launch-remote|codebuild|start-build|batch-get-builds|put-object|delete-object|s3 (rm|mv|sync|mb|rb|presign)|s3api (put|delete|copy)' reconcile_run.sh
+41:# (and ISOLAB_CODEBUILD_PROJECT in launch_eks.sh), the credential variables named in K7_CRED_VARS (never printed), and a PATH of
+exit=0
+$ grep -n -i -E 'launch-remote|codebuild|start-build|batch-get-builds|put-object|delete-object|s3 (rm|mv|sync|mb|rb|presign)|s3api (put|delete|copy)' locate_results.sh
+exit=0
+
+# every aws invocation outside comments
+== locate_results.sh
+54:  aws s3 cp "$1" "$2" "${@:3}" --only-show-errors
+58:  aws s3 ls "$1"
+62:  aws s3api list-objects-v2 --bucket "$1" --prefix "$2" --output json
+== reconcile_run.sh
+106:  aws s3 cp "$1" "$2" "${@:3}" --only-show-errors
+== launch_eks.sh
+180:  echo "  aws s3 ls s3://$ISOLAB_BUCKET/runs/$job/                       # read: refuse (exit 3) if anything is listed"
+181:  echo "  aws s3 ls s3://$ISOLAB_BUCKET/$key                              # read: refuse (exit 3) if it exists"
+182:  echo "  aws codebuild list-builds-for-project --project-name $ISOLAB_CODEBUILD_PROJECT --sort-order DESCENDING   # read"
+183:  echo "  aws codebuild batch-get-builds --ids <first 100>               # read: refuse (exit 3) if one carries ISOLAB_REQUEST_KEY=$key"
+185:  echo "  aws s3 cp <results_uri from $client_out/result.json> $out/artifacts --recursive   # read-only download"
+262:listing=$(aws s3 ls "s3://$ISOLAB_BUCKET/runs/$job/" 2>/dev/null); rc=$?
+265:[[ $rc != 0 && $rc != 1 ]] && refuse 4 duplicate_check_failed "duplicate check failed (aws s3 ls exit $rc)"
+267:aws s3 ls "s3://$ISOLAB_BUCKET/$key" >/dev/null 2>&1; rc=$?
+270:[[ $rc != 1 ]] && refuse 4 duplicate_check_failed "duplicate check failed (aws s3 ls exit $rc)"
+274:ids_raw=$(aws codebuild list-builds-for-project --project-name "$ISOLAB_CODEBUILD_PROJECT" --sort-order DESCENDING --no-paginate --query 'ids[]' --output text); rc=$?
+282:  hit=$(aws codebuild batch-get-builds --ids $ids --query "builds[?environment.environmentVariables[?name=='ISOLAB_REQUEST_KEY' && value=='$key']].id" --output text);
+345:  aws s3 cp "$results_uri" "$out/artifacts/" --recursive --only-show-errors || dl_rc=$?
+
+# source / eval tokens
+/tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/dir-d07e94/experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh:52:s3_get() {
+/tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/dir-d07e94/experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh:104:s3_get() {
+/tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/dir-d07e94/experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh:238:           en
+exit=0
+
+# Reading of the output above: the only token match in reconcile_run.sh is the word CODEBUILD inside a comment (line 41); the three
+# source/eval matches are the word "source" inside comments (s3_get helpers and a header line), not a source or eval command.
+# Outside comments the only aws invocations of locate_results.sh and reconcile_run.sh are `aws s3 cp <S3> <local>` (the helper refuses a non-S3 source and an S3 destination),
+# `aws s3 ls <S3 prefix>` and `aws s3api list-objects-v2 --bucket B --prefix P --output json` (locate_results.sh only), plus the prologue's `<dir>/aws --version` (not an AWS call).
+# launch_eks.sh keeps the submission and duplicate-check calls of v3b (sections 1 to 2, byte-identical); its lines 180-185 are dry-run echo text.

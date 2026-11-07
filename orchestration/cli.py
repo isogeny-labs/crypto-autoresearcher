@@ -286,6 +286,10 @@ def cmd_adapter(args: argparse.Namespace) -> int:
     return _delegate("orchestration.adapter.cli", args.rest)
 
 
+def cmd_research(args: argparse.Namespace) -> int:
+    return _delegate("orchestration.research_task", args.rest)
+
+
 def cmd_agent(args: argparse.Namespace) -> int:
     return _delegate("orchestration.agent.cli", args.rest)
 
@@ -369,7 +373,7 @@ def cmd_backends(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="autoresearch",
-        description="Local entry point for the ECDLP autoresearch harness.",
+        description="Local entry point for the reproducible research harness.",
         epilog="Start with `autoresearch doctor`.")
     sub = parser.add_subparsers(dest="command", required=True)
 
@@ -400,6 +404,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_loop.set_defaults(func=cmd_loop)
 
     for name, handler, help_text in (
+            ("research", cmd_research, "describe and validate research in any domain"),
             ("adapter", cmd_adapter, "resolve policies, inspect backends"),
             ("agent", cmd_agent, "plan or run a single dispatched task"),
             ("eval", cmd_eval, "evaluation suites, baselines, comparisons"),

@@ -1,0 +1,101 @@
+{
+  "stage": "revise",
+  "public": {
+    "question": "Classify each claim from this synthetic source register: supported if only positive evidence, contradicted if only negative evidence, unresolved if conflicting or absent. Cite all source IDs for each claim. Do not infer beyond this register.",
+    "claims": [
+      "claim-0",
+      "claim-1",
+      "claim-2",
+      "claim-3"
+    ],
+    "sources": [
+      {
+        "id": "source-0",
+        "claim": "claim-1",
+        "supports": true
+      },
+      {
+        "id": "source-1",
+        "claim": "claim-1",
+        "supports": false
+      },
+      {
+        "id": "source-2",
+        "claim": "claim-3",
+        "supports": true
+      },
+      {
+        "id": "source-3",
+        "claim": "claim-3",
+        "supports": false
+      }
+    ],
+    "answer_shape": {
+      "supported": [
+        {
+          "claim": "claim-ID",
+          "sources": [
+            "source-ID"
+          ]
+        }
+      ],
+      "contradicted": [
+        {
+          "claim": "claim-ID",
+          "sources": [
+            "source-ID"
+          ]
+        }
+      ],
+      "unresolved": [
+        {
+          "claim": "claim-ID",
+          "sources": [
+            "source-ID"
+          ]
+        }
+      ]
+    }
+  },
+  "previous": {
+    "plan": {
+      "steps": [
+        "Group source records by each listed claim, retaining every source ID and its evidence polarity, including empty groups.",
+        "Apply the specified rules: positive evidence only means supported; negative evidence only means contradicted; conflicting or absent evidence means unresolved.",
+        "Build the requested answer shape, verifying that every claim appears exactly once with all matching source IDs and no conclusions beyond the register."
+      ]
+    },
+    "answer": {
+      "supported": [],
+      "contradicted": [],
+      "unresolved": [
+        {
+          "claim": "claim-0",
+          "sources": []
+        },
+        {
+          "claim": "claim-1",
+          "sources": [
+            "source-0",
+            "source-1"
+          ]
+        },
+        {
+          "claim": "claim-2",
+          "sources": []
+        },
+        {
+          "claim": "claim-3",
+          "sources": [
+            "source-2",
+            "source-3"
+          ]
+        }
+      ]
+    },
+    "review": {
+      "approved": true,
+      "feedback": "All classifications and citations are correct. Claims 0 and 2 have no evidence; claims 1 and 3 have conflicting evidence. All four are unresolved, and every matching source ID is cited."
+    }
+  }
+}

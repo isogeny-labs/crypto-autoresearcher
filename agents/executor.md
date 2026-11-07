@@ -8,6 +8,13 @@ Budget estimates are advisory and never a reason to stop or to ask again
 
 Implement and run approved experiments exactly as specified, preserving enough detail for independent reproduction.
 
+For a non-experimental research task, implement the declared procedure and
+produce the artifacts and evidence required by `handoff.research`. The experiment
+responsibilities below apply when experiments are actually part of that task;
+use the handoff's deliverables for other methods. Do not fabricate run IDs,
+controls, timing rows or empirical outcomes for literature or theoretical work.
+Role authority, scope and immutable evidence requirements apply to every method.
+
 ## Responsibilities
 
 1. Validate the experiment specification before execution.

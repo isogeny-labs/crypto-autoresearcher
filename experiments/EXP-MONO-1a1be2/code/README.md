@@ -1,9 +1,13 @@
-# EXP-MONO-1a1be2 toolchain (TASK-20261029-a97206)
+# EXP-MONO-1a1be2 toolchain (TASK-20261029-a97206; extended by TASK-20261105-ac5ad6, TASK-20261106-4c4831, TASK-20261106-2b7223)
 
 Proof-of-concept implementation of the instrument for the draft contract
 `experiments/EXP-MONO-1a1be2/specification.yaml` (status `review_required`, not approved). Zero experiment
 runs exist. No contract cell has been computed; known-answer tests (KATs) use cells disjoint from the
 contract. Nothing here asserts a predicted value.
+
+TASK-20261105-ac5ad6 (DEC-20261105-f0b7c7 F-1, F-2) widened the instrument before approval: KATs at n = 4..7 and at
+large q, the composition residuals P2(vii) to (ix), the arm-C KAT refusal, and a timing-only throughput harness. Zero
+runs; no contract cell computed; the specification is untouched.
 
 ## Module map
 
@@ -13,10 +17,12 @@ contract. Nothing here asserts a predicted value.
 | `curves.py` | Seed rule (SHA-256, first 16 bytes big-endian, `numpy.random.Generator(PCG64)`), `generate_curve` with the singular and j-in-F_q rejections, generic group law (`WCurve`, works over `FQ` and `FQ2`), `Curve` (factor base D, X, t2, lifts, 2-torsion roots), point counting by three independent routes (definition-level square table, quadratic-character sum, baby-step giant-step on the Hasse interval with the quadratic twist) and `count_points` (exhaustive below 2^27, BSGS above). |
 | `semaev.py` | Numeric S_{n+1}(x_1..x_n, T) by the resultant recursion (interpolating the resultant of S_3 and the previous polynomial, formal degrees kept), `analyse_fibre` (degree, squarefreeness, chi(f(x_i)), ddf, complete split), `roots_via_group_law` (x of signed sums of lifts over F_{Q^2}). |
 | `kernel.c` | Compiled inner loops: F_Q arithmetic (n <= 7), affine point addition, exhaustive point count with valid-target mask, ordered / multiset / x-multiset (canonical sign patterns) enumerations, S-set marking and collection, the target-sampled arm-C counter (open-addressing hash of target indices), quadratic-character batch, histogram statistics and comparisons. Built at run time; no binary is committed. |
-| `counters.py` | ctypes wrapper `Kernel`; matched random and half-size twin bases; `exhaustive_cell` (T_A, T_M, T_S, T_X over all N targets, P2 residuals, independent recount); `arm_c_cell` (target-sampled counter, exact lambda); Poisson statistics (`poisson_summary`); `ncf_coefficient`. |
-| `launcher.py` | Per-cell runner and gates (see below). |
+| `counters.py` | ctypes wrapper `Kernel`; matched random and half-size twin bases; `exhaustive_cell` (T_A, T_M, T_S, T_X over all N targets, P2 residuals, independent recount); `arm_c_cell` (target-sampled counter, exact lambda); Poisson statistics (`poisson_summary`); `ncf_coefficient`. Composition residuals (KX-5): `csym_coefficient`, `residual_special_targets` (P2(vii)), `residual_n2_tm_vs_tx` (P2(viii)), `symmetric_coverage_ceiling` (P2(ix)); `exhaustive_cell` carries them as identities `vii_TS_vs_TA_weighted_2j_special`, `viii_n2_TM_eq_TX_off_2torsion` (m = 2 only) and `ix_symmetric_coverage_ceiling`, and `launcher` lists them under `composition_residuals` in a derived summary. In KAT mode all identities are withheld. |
+| `launcher.py` | Per-cell runner and gates (see below). `arm_c_pairs()` and `contract_pairs()` give the arm-C and the full set of contract (q, n) pairs a KAT cell must avoid. |
+| `throughput_calibration.py` | Timing-only calibration (KX-7), never calls `launcher cell`/`run_cell`: B1 analysis at the proxies (257,2), (43,3), (29,4), (13,5), the arm-A proxy (103,4) with all three bases and recount, the arm-C proxy (q'_2,2); each in a child process, results discarded unread, outputs in a temporary directory deleted unread; writes wall/CPU time, peak RSS, workers, host and MODELED per-class projections. |
 | `make_trial_plan.py` | Deterministic trial-plan generator (cells, curves, seeds, `q_rule`, `sample_size_rule`, identity fields). |
-| `tests/test_kat.py` | The KAT suite. |
+| `tests/test_kat.py` | The KAT suite (the start-up self-test). |
+| `tests/test_kat_extended.py` | The m = 3 large-q substitute cell (FX-16); not part of the start-up suite. |
 
 Definitions (also in the `counters.py` docstring): T_A ordered point tuples, T_M point multisets, T_S ordered
 x-tuples with sign vectors (`sum eps_i L(x_i)`, L the lift with the smaller y code), T_X x-multisets for which
@@ -34,28 +40,135 @@ KAT_LOG_PATH=experiments/EXP-MONO-1a1be2/implementation/kat-log.json  <same comm
 python3 experiments/EXP-MONO-1a1be2/code/make_trial_plan.py [--out PATH] [--check]
 python3 experiments/EXP-MONO-1a1be2/code/launcher.py environment --out PATH
 python3 experiments/EXP-MONO-1a1be2/code/launcher.py --kat kat --arm A --q 13 --n 2 --curve-seed SEED   # KAT cell, temp dir
-python3 experiments/EXP-MONO-1a1be2/code/launcher.py cell --cell-id ID --plan PLAN --run-id RUN-ID       # contract cell, gated
+python3 experiments/EXP-MONO-1a1be2/code/launcher.py selftest                                             # after approval: writes selftest-receipts/<id>/
+python3 experiments/EXP-MONO-1a1be2/code/launcher.py cell --cell-id ID --plan PLAN --run-id RUN-ID [--selftest-receipt PATH]  # contract cell, gated
 ```
 
-Requirements: Python 3.11+, numpy, PyYAML (launcher), pytest, gcc. Without `PYTHONDONTWRITEBYTECODE` and
-`-p no:cacheprovider` pytest writes `__pycache__` and `.pytest_cache`, which are not artifacts.
+## KAT cells (widened by DEC-20261105-f0b7c7)
 
-## Launcher gates (IM-8)
+* q in {5, 13} at n = 2..3 (original) and n = 4..7 (widened); prime fields as before;
+* q'_n = least prime above the arm-C q_n, n = 2..7: (32779,2), (1033,3), (193,4), (71,5), (41,6), (29,7);
+* every pair is checked disjoint from the arm-A, arm-B and arm-C contract pairs (`test_widened_kat_fields_disjoint_from_every_contract_pair`);
+* tests compare optimised code with naive enumeration of the same definition; no cross-convention identity, residual value, ratio, split frequency or predicted value is asserted or recorded. Not runnable in budget: the large-q E2 check at (q'_2, 2, m = 3) (about 6e12 multisets), recorded as DEV-1 in `implementation/kat-report-ac5ad6.md`.
 
-* `cell` refuses unless `specification.yaml` has `experiment.status: approved` and a non-null `approved_by`,
-  and `experiments/EXP-MONO-1a1be2/approval.lock` exists. The lock is JSON with `approved_by`,
-  `specification_sha256`, `code_sha256` (digest over the seven code files, see `launcher.code_sha256`) and
-  `trial_plan_sha256`; all three hashes must match the files on disk and the plan passed. This lock format is an
-  implementation choice (the specification names the lock but not its content).
-* After the gate the full KAT suite runs as a start-up self-test and must pass (`--selftest-receipt` lets a
-  later session bind a pass to identical code and test hashes instead of re-running it).
-* `kat` requires the explicit global `--kat` flag, refuses every (q, n) that is an arm-A/arm-B contract cell,
+```sh
+python3 experiments/EXP-MONO-1a1be2/code/throughput_calibration.py --out PATH     # timing only, not a run
+```
+
+Requirements: Python 3.11+ (the self-test needs the `-P` interpreter flag; a host without it is refused, never worked
+around), numpy, PyYAML (launcher), pytest, gcc.
+
+### Keeping `code/` clean (HX-2)
+
+`code/` may hold exactly the files of `CODE_TREE_ALLOWLIST` (in `launcher.py`, sorted, relative to `code/`):
+`README.md`, `counters.py`, `curves.py`, `fqn.py`, `kernel.c`, `launcher.py`, `make_trial_plan.py`, `semaev.py`,
+`tests/test_kat.py`, `tests/test_kat_extended.py`, `throughput_calibration.py`. Anything else, at any depth, makes the
+launcher refuse (exit 3, no `runs/` entry, the reason names the entry): a `__pycache__/`, a `.pyc`/`.pyo`, a `.so`, a hidden
+file, an extra directory, a symlink, or an allow-listed path that is a link or not a regular file. The scan uses `lstat`
+and never follows links. It runs at import (before any other import), in `gate()` and in the `selftest` subcommand.
+
+How to keep it clean: never run a module under `code/` with Python's default flags. Use `PYTHONDONTWRITEBYTECODE=1` (or
+`-B`) and `-p no:cacheprovider` for every pytest, `compileall`, `python -c` and notebook invocation that can import `code/`,
+and run helper scripts with `-P` (or from another directory) so that `code/` is not placed on `sys.path`. If a stray
+appears, delete it and re-run; an approved cell cannot be started or kept valid with one present.
+
+Bytecode and path rules. At import the launcher sets `sys.dont_write_bytecode = True` and `sys.pycache_prefix` to a fresh
+empty temporary directory outside `code/`, so a cached file under `code/` is never read, even one planted after the scan. When run as a script it
+drops `code/` from `sys.path`; numpy, PyYAML and pytest are imported before `code/` is put on `sys.path`; the origin
+(`__file__`) of each is recorded and `code/` is refused if any lies inside it. The self-test subprocess runs
+`python -B -P -X pycache_prefix=<fresh empty dir> -c <wrapper>` with cwd a fresh temporary directory and `--rootdir <code>`; the
+wrapper prints the resolved `pytest.__file__` (recorded as `pytest_file` in the receipt and in `startup_selftest`; `code/` is
+refused if it lies inside). `PYTHONPATH`, `PYTHONPYCACHEPREFIX`, `PYTEST_ADDOPTS` and `PYTEST_PLUGINS` are removed from its environment.
+
+`code_tree` block (V2-6). Every contract `manifest.yaml` carries `code_tree`: `allowlist_sha256` (sha256 of the allow-list paths
+joined by newlines, with a trailing newline), `pre_gate_scan` and `post_cell_scan` (`ok`, `extra`, `not_regular`, `missing`),
+`file_sha256_at_gate` and `file_sha256_after_cell` (every allow-listed file), `rehash_differences`, `module_origins` and
+`module_origins_inside_code`. Any entry at the post-cell scan, any re-hash difference or a module origin inside `code/` sets
+`validity.status: invalid`. Residual scope: a file planted and removed again between the two scans is not seen.
+
+## Launcher gates (IM-8; hardened by TASK-20261106-4c4831)
+
+* `cell` refuses unless `specification.yaml` has `experiment.status: approved`, a non-null `approved_by`,
+  `execution_authorized: true` and `frozen: true`, and `experiments/EXP-MONO-1a1be2/approval.lock` exists. The lock is JSON
+  with five fields: `approved_by` (must equal the specification's), `specification_sha256`, `code_sha256` (digest over the
+  seven `CODE_FILES`, `launcher.code_sha256`, unchanged definition), `trial_plan_sha256` and `test_file_sha256` (sha256
+  of `code/tests/test_kat.py`). Every hash must match the files on disk and the plan passed; a lock missing any field
+  refuses (exit 3) with no `runs/` entry.
+* Start-up self-test (stopping rule 1). `launcher.py selftest` runs the code-tree scan, `check_approval`, then the suite as
+  `python -B -P -X pycache_prefix=<fresh dir> -c <wrapper> -q -p no:cacheprovider --noconftest -c /dev/null --rootdir <code> --junitxml <tmp>/junit.xml tests/test_kat.py`
+  in a fresh temporary cwd outside `code/`, with `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`, `PYTHONDONTWRITEBYTECODE=1` and
+  `PYTEST_ADDOPTS`/`PYTEST_PLUGINS`/`PYTHONPATH`/`PYTHONPYCACHEPREFIX` removed. "Pass in full" means: exit code 0, junit tests equal
+  `EXPECTED_KAT_ITEMS`, failures and errors 0, no xfail or xpass, no deselection, and skipped node ids equal `DESIGNED_SKIPS`
+  for the specification status (none before approval; exactly `test_launcher_refuses_contract_cell_while_specification_not_approved`
+  after). On a pass it writes `selftest-receipts/<receipt_id>/receipt.json` and `junit.xml`. Receipt ids are
+  `<UTC stamp>-<code8>-<pid>-<seq>`, created with an exclusive `mkdir` (HX-9), so two receipts within one second both succeed. The receipt holds code, test file, lock and
+  junit hashes, counts, skipped node ids, pytest version, the resolved pytest file, the rootdir and inifile pytest reports, start and finish UTC, and an
+  `env_key` (Python, numpy, pytest, compiler path, sha256 of `--version`, flags, machine, node, kernel release, CPU model).
+* `cell --selftest-receipt PATH` accepts only a `receipt.json` that resolves inside `selftest-receipts/` and whose every
+  recomputable field equals a recomputation on this host (including the env key, the junit hash against the `junit.xml` beside it
+  and the full-pass rule applied to that junit). Any failed check REFUSES the cell (exit 3); it never falls through to a run.
+  Without the flag the cell runs the suite itself.
+* `run_cell(kat=False)` raises unless given the `GateResult` that `launcher.gate()` returns. A contract package's `manifest.yaml`
+  carries `gate` (specification, lock, plan, code and test-file sha256, `check_approval_passed`), `startup_selftest` (mode `ran` or
+  `receipt`, receipt and junit sha256, counts, skipped node ids, pytest version, pytest file, rootdir, inifile, env key) and `code_tree`; copies of `junit.xml`
+  (and of `receipt.json` in receipt mode) are in `selftest/`.
+* Validity applies V2-1 itself (HX-7, NF-6). `compute_validity` sets `invalid` unless (i) the manifest `gate` block equals values
+  recomputed at write time from the on-disk lock, specification, plan, code and test file, and (ii) the `startup_selftest` block
+  shows a full pass for this host (tests equal `EXPECTED_KAT_ITEMS`, zero failures and errors, skipped ids equal `DESIGNED_SKIPS`
+  for the status, pytest file outside `code/`). A hand-built `GateResult` with fake hashes therefore yields `invalid`. The token still
+  stops accidental, not deliberate, bypass; the analysis applies V2-1 in any case. `runs/` and `selftest-receipts/` must be real
+  directories (not links) whose realpath lies inside the experiment directory, otherwise the launcher refuses.
+* Validity block. A contract `manifest.yaml` carries `validity: {status: valid|void|invalid, reasons, readings_withheld}`, computed
+  by the launcher from: the R1 recount (differ: void), `gl_mismatch_generic`/`gl_mismatch_nongeneric` > 0 (void), identity-field
+  completeness (q, n, g, a, b, N, t2, B, |X|, seed; missing: invalid), raw/summary agreement (the launcher re-reads what it wrote and
+  re-derives the summary and, for arm C, the cdf.json from `raw-result.json`; disagreement: void; every top-level `cdf.json` key is
+  compared: `cell_id`, `n`, `q`, `m`, `curve_id`, `seed`, `B`, `t2`, `N`, `s`, and the per-base keys including `target_seed` and
+  `base_seed`; a missing or unexpected key voids too), and the curve selection rule
+  (singular or j in F_q, re-derived from the recorded g, a, b: void). A failed execution is void. R1 (HX-4, NF-3) also voids when any
+  of the recount conventions A, M, S, X (`RECOUNT_CONVENTIONS`) is missing, empty or non-numeric for a base. `status` keeps the execution status
+  (`completed` or `failed`) as a separate field.
+* STOP-F2. When an arm-A contract cell fails the CTL-null all-target identity (here: `identities.i_sum_M`, observed sum of the T_M
+  histogram over valid targets against C(B+m-1, m), on the `matched_random` or `matched_random_reseeded_aa` base), the launcher
+  writes `runs/STOP-F2.json` (cell id, run id, identity name, role, UTC, `family_runs_at_stop` = run ids of the arm-A packages already in
+  `runs/`, `family_void: true`, `writer`; exclusive create, never overwritten) and marks the cell void;
+  `gate()` (hence `cell`, and `run_cell` too) then refuses every arm-A cell (exit 3, "F2 family stop") while any entry named
+  `STOP-F2.json` exists (`os.path.lexists`: a broken symlink or a directory counts). Arm B and arm C are not refused. KAT mode writes
+  no sentinel. Earlier manifests are never rewritten: V2-5 makes the analysis void every arm-A cell of the stopped family, whatever
+  its own manifest says. A run id may not equal `STOP-F2.json` or start with `STOP-` (any case). `write_stop_f2` does not swallow
+  `FileExistsError`: if the existing entry is not a regular-file sentinel written by the launcher, the cell is `invalid` (manifest
+  `f2_sentinel_invalid`) and `cell` exits 5; if it is a valid sentinel the cell is void, the sentinel is untouched and the cell's
+  own F2 failure is in its manifest (`f2_family_stop.sentinel_already_existed`). The check is structural: a hand-made file with the
+  launcher's keys is indistinguishable from the launcher's. Removing the sentinel needs a new implementation commit and a Coordinator decision (V2-4).
+* Arm-C lambda = (N_cf_counted - m_S)/(N - |S|), N_cf_counted the kernel's counted cancellation-free total. The P2(vi) closed form is
+  recorded as `N_cf_formula` with `ncf_counted_equals_formula` per cell and base; when false the validity block adds
+  "P2(vi) mismatch; P6 reading withheld (F7 first)" and `readings_withheld: [P6]`. In KAT mode `lambda`, `lambda_exact`,
+  `N_cf_formula` and `ncf_counted_equals_formula` are not written.
+* `--run-id` must match `^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$` and resolve inside `runs/`. `cdf.json` carries `target_seed` and
+  `base_seed` (string and integer) per base. Peak RSS is recorded as `peak_rss_kb_self`, `peak_rss_kb_children` and their sum
+  `peak_rss_kb_total_upper` (see "Memory keys" below). `cdf.json` also carries `m`. The launcher refuses to start (exit 3, before any
+  other import) when `code/` holds any entry outside `CODE_TREE_ALLOWLIST` (see "Keeping `code/` clean").
+* Memory keys (HX-8, NF-7). `peak_rss_kb_self`: this process (`getrusage(RUSAGE_SELF)`). `peak_rss_kb_children_pre_cell`: children
+  reaped before the cell began (the self-test, the compiler). `peak_rss_kb_cell_children`: the cell's own worker processes, each
+  reading its own `getrusage(RUSAGE_SELF)` (reported with every block it finishes; a forked worker starts from its parent's
+  resident set); `null` with `peak_rss_kb_cell_children_reason: "cell spawns no child process"` when there are none. The older
+  keys stay: `peak_rss_kb_measured` equals `peak_rss_kb_self`; `peak_rss_kb_children` is the maximum over every reaped child
+  (self-test and compiler included) and `peak_rss_kb_total_upper` is self plus that, an upper bound only. The 16 GB check
+  (`peak_rss_kb_budget_check`) reads self plus the cell figure; exceeding it voids the cell.
+* `kat` requires the explicit global `--kat` flag, refuses every (q, n) that is an arm-A/arm-B or arm-C contract cell (arm-C pairs by the `q_rule`, KX-6),
   writes under a fresh temporary directory (never `runs/`), and withholds derived statistics and cross-convention
   residuals.
 * Run directories are never overwritten. `--timeout-seconds` is a watchdog (a cell over it is `failed`,
   `resource_exhaustion`, void) and `--memory-gb` caps address space (default 16, the specification's cap).
 * A run package holds `manifest.yaml`, `command.txt`, `environment.json`, `stdout.log`, `stderr.log`,
-  `raw-result.json`, `summary.json` and, for arm C, `results/<cell_id>.cdf.json`.
+  `raw-result.json`, `summary.json`, `selftest/` and, for arm C, `results/<cell_id>.cdf.json`.
+
+## `tests/test_kat_extended.py` (FX-16, not part of the start-up suite)
+
+The m = 3 large-q substitute cell for DEV-1: F_{q''^2}, q'' = 10,007 (least prime above 10,000, by trial division, disjoint from every
+contract pair), curve seed `kat|large|10007|2|m3`, line base, `counters.arm_c_cell` at m = 3 on 50 sampled targets, against a
+membership method in Python field arithmetic (sorted int64 pair-sum index table, `searchsorted`; no kernel call). It is not in
+`CODE_FILES`, not collected by `test_kat.py`, never run by a cell. Run it by hand
+(`KAT_EXT_LOG_PATH=PATH python3 -m pytest -p no:cacheprovider tests/test_kat_extended.py`); budget 14,400 s and 16 GB.
 
 ## Implementation choices where the specification is silent
 

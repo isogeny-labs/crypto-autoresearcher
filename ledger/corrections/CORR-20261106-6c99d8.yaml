@@ -1,0 +1,51 @@
+# Additive correction to the 2026-11-06 run report of EXP-PEXT-212d5c.
+# The report says the lean trial was not launched; the supervisor did launch it
+# after the regression refusal because lean has no dependencies. This record
+# adds the fact and names the run directory. It changes no byte of the report,
+# no run record, no status and no decision.
+correction:
+  id: CORR-20261106-6c99d8
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next correction --date 20261106 and
+    confirmed free with --check (well-formed, 0 occurrences across 48,179 paths).
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  filed_with: DEC-20261106-f6b029 (the amendment that rebinds the two refused run ids)
+  type: report_omission_correction
+  supersedes: []
+  target_ids:
+    - EXP-PEXT-212d5c
+    - RUN-PEXT-4d23b9
+    - TASK-20261024-672126
+  corrects:
+    - experiments/EXP-PEXT-212d5c/reports/run-20261106T1940Z/report.md
+  corrections:
+    - label: lean trial was launched, not skipped
+      record_type: run_report
+      record_id: experiments/EXP-PEXT-212d5c/reports/run-20261106T1940Z/report.md
+      field: 'What ran, second bullet ("construct, char2, census, lean, analyze: not launched")'
+      prior_value: >-
+        construct, char2, census, lean, analyze: not launched (they depend on the
+        regression trial, or the supervisor stopped at the first refusal).
+      corrected_value: >-
+        construct, char2, census and analyze were not launched: they depend on
+        the regression trial, which was refused. The lean trial was launched,
+        because it has no dependency: RUN-PEXT-4d23b9, 19:38:58Z to 19:39:08Z,
+        supervisor status infrastructure_error, published false, detail
+        "failed_infrastructure: IndexError: list index out of range". Its Lean
+        build itself succeeded (lean-build.log: 3 jobs; axioms propext and
+        Quot.sound only); the crash is in run.py's axiom classification, not in
+        the Lean development.
+      evidence:
+        - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9/execution-receipt.json
+        - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9/lean-build.log
+        - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9/raw-result.json
+      reason: >-
+        Verified after the report was committed. The omission is factual, not an
+        interpretation; the run directory and the supervisor receipt are the
+        authority. No scientific claim is affected: the lean trial produced no
+        validated output and is not evidence about H-PEXT-d536a1.
+  verdict_on_report_values: >-
+    Unchanged. The four fixture results and six spectrum checks remain
+    driver-reported values from a refused envelope; none is validated.
+  asserts_nothing_about: genus floors, theorem fidelity, transfer or costs.

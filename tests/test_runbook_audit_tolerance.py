@@ -15,7 +15,9 @@ a declared or audit-time tolerance turns a float-only drift into
 matched_within_tolerance, never matched; a non-float difference is a mismatch
 under any tolerance; the replay interpreter is recorded and a version
 difference is an environment_drift note; a pinned interpreter that differs
-makes the unit not_covered.
+makes the unit not_covered. The recorded interpreter is read from the
+canonical places real manifests use (DEC-20261105-6e2616 NA-1), and a unit
+that records none is an explicit interpreter_parity: unknown note.
 """
 from __future__ import annotations
 
@@ -77,12 +79,26 @@ total = (functools.reduce(operator.add, xs, 0.0) if mode == "left_fold"
 label = os.environ.get("RUNBOOK_TEST_LABEL", "calibration")
 out = Path(args.run_dir)
 out.mkdir(parents=True, exist_ok=True)
+scale = float(os.environ.get("RUNBOOK_TEST_SCALE", "1"))
 (out / "raw-result.json").write_text(json.dumps({
     "schema": "example.float_drift.result.v1", "trial_id": args.trial_id, "seed": args.seed,
-    "n": len(xs), "mean": total / len(xs), "positive": sum(1 for x in xs if x > 0),
+    "n": len(xs), "mean": scale * total / len(xs), "positive": sum(1 for x in xs if x > 0),
     "label": label}, sort_keys=True) + "\\n")
 version = os.environ.get("RUNBOOK_TEST_PYTHON_VERSION") or platform.python_version()
-(out / "manifest.yaml").write_text(f"run:\\n  environment:\\n    python_version: {version}\\n")
+shape = os.environ.get("RUNBOOK_TEST_MANIFEST_SHAPE")
+if shape == "icperf":
+    # The shape of EXP-ICPERF-284bc4 / 283a70 run manifests: /run/environment
+    # names python and version, never python_version, and environment.json
+    # carries the full sys.version string.
+    (out / "manifest.yaml").write_text(json.dumps({"run": {"id": "RUN-FLT", "environment": {
+        "file": "environment.json", "implementation": "CPython", "version": version,
+        "executable": "/opt/py/bin/python3", "python": version}}}, indent=2) + "\\n")
+    (out / "environment.json").write_text(json.dumps({
+        "platform": "linux", "python": version + " (main, Oct 14 2026, 01:05:33) [Clang 23.1.3 ]"}) + "\\n")
+elif shape == "none":
+    (out / "manifest.yaml").write_text(json.dumps({"run": {"id": "RUN-FLT", "status": "completed"}}) + "\\n")
+else:
+    (out / "manifest.yaml").write_text(f"run:\\n  environment:\\n    python_version: {version}\\n")
 '''
 
 CHECK = '''#!/usr/bin/env python3
@@ -166,7 +182,8 @@ def record(root: Path, monkeypatch, **env: str) -> None:
 
 def audit(root: Path, monkeypatch, *, env: dict | None = None, **kwargs):
     with monkeypatch.context() as patch:
-        for key in ("RUNBOOK_TEST_SUM", "RUNBOOK_TEST_LABEL", "RUNBOOK_TEST_PYTHON_VERSION"):
+        for key in ("RUNBOOK_TEST_SUM", "RUNBOOK_TEST_LABEL", "RUNBOOK_TEST_PYTHON_VERSION",
+                    "RUNBOOK_TEST_MANIFEST_SHAPE", "RUNBOOK_TEST_SCALE"):
             patch.delenv(key, raising=False)
         for key, value in (env or {}).items():
             patch.setenv(key, value)
@@ -292,7 +309,7 @@ def test_float_drift_under_a_declared_tolerance_is_matched_within_tolerance(tmp_
     root = build(tmp_path, tolerance=TOLERANCE)
     record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold")
     report, written = audit(root, monkeypatch, env={"RUNBOOK_TEST_SUM": "compensated"})
-    assert report["verdict"] == "clean", report["findings"]
+    assert report["verdict"] == "clean_within_tolerance", report["findings"]
     assert written["replay_results"] == {"matched": 0, "matched_within_tolerance": 2, "mismatch": 0}
     for replay in report["replays"]:
         assert replay["result"] == "matched_within_tolerance" and replay["matched"] is False
@@ -317,7 +334,7 @@ def test_the_audit_time_tolerance_is_recorded_and_applies_to_a_frozen_runbook(tm
     record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold")
     report, written = audit(root, monkeypatch, env={"RUNBOOK_TEST_SUM": "compensated"},
                             float_tolerance="rel_tol=1e-9,abs_tol=1e-12")
-    assert report["verdict"] == "clean", report["findings"]
+    assert report["verdict"] == "clean_within_tolerance", report["findings"]
     assert written["float_tolerance"] == {"source": "audit_option", **TOLERANCE}
     assert all(r["result"] == "matched_within_tolerance" for r in report["replays"])
     assert mean_row(report["replays"][0])["tolerance"]["source"] == "audit_option"
@@ -403,6 +420,74 @@ def test_a_pinned_interpreter_that_differs_is_not_covered_and_not_replayed(tmp_p
     assert not (written["_target"] / "replay").exists()
 
 
+def _here() -> str:
+    return ".".join(str(n) for n in sys.version_info[:3])
+
+
+def test_icperf_shaped_manifests_record_the_interpreter_and_a_3_11_record_drifts(tmp_path, monkeypatch) -> None:
+    """DEC-20261105-6e2616 NA-1: the ICPERF manifests write
+    /run/environment/python, and the parity check must read it."""
+    root = build(tmp_path, tolerance=TOLERANCE)
+    record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold", RUNBOOK_TEST_PYTHON_VERSION="3.11.17",
+           RUNBOOK_TEST_MANIFEST_SHAPE="icperf")
+    report, written = audit(root, monkeypatch, env={"RUNBOOK_TEST_SUM": "compensated"})
+    for replay in report["replays"]:
+        assert replay["interpreter"]["recorded_python_version"] == "3.11.17"
+        assert replay["interpreter"]["recorded_source"] == "manifest.yaml#/run/environment/python"
+        assert replay["result"] == "matched_within_tolerance"
+    assert written["notes"] == []
+    if _here() != "3.11.17":
+        assert written["interpreter_parity"] == {"match": 0, "mismatch": 2, "unknown": 0}
+        assert len(written["environment_drift"]) == 2
+        assert {d["recorded_python_version"] for d in written["environment_drift"]} == {"3.11.17"}
+        assert {d["replay_python_version"] for d in written["environment_drift"]} == {_here()}
+
+
+def test_environment_json_is_read_when_the_manifest_has_no_interpreter(tmp_path) -> None:
+    run = tmp_path / "RUN-X"
+    run.mkdir()
+    (run / "manifest.yaml").write_text(json.dumps({"run": {"environment": {"file": "environment.json"}}}))
+    (run / "environment.json").write_text(json.dumps({"python": "3.11.17 (main, Oct 14 2026) [Clang 23.1.3 ]"}))
+    assert rb.recorded_interpreter(run) == {"python_version": "3.11.17", "source": "environment.json#/python"}
+    # python_version stays first; a non-CPython "version" is not an interpreter.
+    (run / "manifest.yaml").write_text(yaml.safe_dump({"run": {"environment": {
+        "python_version": "3.13.18", "python": "3.11.17"}}}))
+    assert rb.recorded_interpreter(run)["python_version"] == "3.13.18"
+    (run / "manifest.yaml").write_text(yaml.safe_dump({"run": {"environment": {
+        "implementation": "pari", "version": "2.15.4"}}}))
+    (run / "environment.json").unlink()
+    assert rb.recorded_interpreter(run)["python_version"] is None
+
+
+@pytest.mark.parametrize("run_id", ["RUN-ICPERF-8e3acd", "RUN-ICPERF-2c627f", "RUN-ICPERF-850008"])
+def test_the_committed_icperf_runs_record_cpython_3_11(run_id) -> None:
+    run = REPO / "experiments/EXP-ICPERF-284bc4/runs" / run_id
+    if not (run / "manifest.yaml").exists():
+        pytest.skip("the ICPERF run records are not in this checkout")
+    assert rb.recorded_interpreter(run)["python_version"] == "3.11.17"
+
+
+def test_no_recorded_interpreter_is_an_explicit_unknown_note(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path)
+    record(root, monkeypatch, RUNBOOK_TEST_MANIFEST_SHAPE="none")
+    report, written = audit(root, monkeypatch)
+    assert written["interpreter_parity"] == {"match": 0, "mismatch": 0, "unknown": 2}
+    assert len(written["notes"]) == 2
+    assert all("interpreter_parity: unknown" in n and "no recorded interpreter" in n for n in written["notes"])
+    assert all(r["interpreter"]["interpreter_parity"] == "unknown"
+               and r["interpreter"]["recorded_python_version"] is None for r in report["replays"])
+    # Unknown is a note beside the result, never a drift and never a finding.
+    assert written["environment_drift"] == [] and report["verdict"] == "clean"
+
+
+def test_matching_versions_report_parity_match(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path)
+    record(root, monkeypatch, RUNBOOK_TEST_MANIFEST_SHAPE="icperf")
+    _, written = audit(root, monkeypatch)
+    assert written["interpreter_parity"] == {"match": 2, "mismatch": 0, "unknown": 0}
+    assert written["environment_drift"] == [] and written["notes"] == []
+
+
 # ---------------------------------------------------------------------------
 # The real interpreters, when both are installed
 # ---------------------------------------------------------------------------
@@ -428,8 +513,110 @@ def test_the_real_3_11_versus_3_13_drift(tmp_path, monkeypatch) -> None:
     replayed = json.loads(next(written["_target"].rglob("raw-result.json")).read_text())["mean"]
     assert recorded == _drift_pair()[0] and replayed == _drift_pair()[1]
     assert 300 <= ulps(recorded, replayed) <= 500
-    assert report["verdict"] == "clean", report["findings"]
+    assert report["verdict"] == "clean_within_tolerance", report["findings"]
     assert all(r["result"] == "matched_within_tolerance" for r in report["replays"])
     assert {d["recorded_python_version"][:5] for d in report["environment_drift"]} == {"3.11."}
     # Without the tolerance the same pair is a mismatch.
     assert rb.compare_tolerant(recorded, replayed, None)["result"] == "mismatch"
+
+
+# ---------------------------------------------------------------------------
+# SHF-20261106-a114e7 LGX-3: the tolerance is bounded, and a toleranced
+# screen is never reported as an exact one
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("value", [{"rel_tol": 0.5}, {"rel_tol": 1}, {"rel_tol": 1e6},
+                                   {"abs_tol": 1e9}, {"abs_tol": 1e300}, {"rel_tol": 1.1e-9},
+                                   {"abs_tol": 2e-12}, "rel_tol=1", "abs_tol=1e9",
+                                   "rel_tol=1e-9,abs_tol=1e-6"])
+def test_a_tolerance_above_the_documented_maximum_is_refused(value) -> None:
+    with pytest.raises(rb.RunbookError, match="exceeds the maximum"):
+        rb.parse_tolerance(value)
+
+
+def test_the_documented_maximum_is_the_ruled_tolerance() -> None:
+    assert rb.TOLERANCE_MAX == TOLERANCE
+    assert rb.parse_tolerance(dict(rb.TOLERANCE_MAX)) == TOLERANCE
+    assert rb.parse_tolerance({"rel_tol": 0, "abs_tol": 0}) == {"rel_tol": 0.0, "abs_tol": 0.0}
+
+
+def test_why_the_cap_is_needed_a_1000x_change_is_within_rel_tol_1() -> None:
+    """At rel_tol=1 math.isclose accepts any same-sign pair; the cap is what
+    keeps such a tolerance out of a runbook and out of an audit."""
+    assert rb.compare_tolerant(0.25, 250.0, {"rel_tol": 1.0})["result"] == "within_tolerance"
+    assert rb.compare_tolerant(0.25, 250.0, rb.TOLERANCE_MAX)["result"] == "mismatch"
+    assert rb.compare_tolerant(0.25, -0.25, rb.TOLERANCE_MAX)["result"] == "mismatch"
+
+
+def test_lint_refuses_a_runbook_declaring_more_than_the_maximum(tmp_path) -> None:
+    for index, tolerance in enumerate(({"rel_tol": 1}, {"abs_tol": 1e9}, {"rel_tol": 0.5})):
+        root = build(tmp_path / str(index), tolerance=tolerance)
+        findings = rb.lint(rb.load_runbook(root, RUNBOOK))
+        assert any("tolerance" in f and "exceeds the maximum" in f for f in findings), findings
+
+
+def test_the_cli_refuses_a_float_tolerance_above_the_maximum(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path)
+    record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold")
+    env = {k: v for k, v in os.environ.items() if not k.startswith("RUNBOOK_TEST_")}
+    env["RUNBOOK_TEST_SCALE"] = "1000"
+    tool = [sys.executable, str(REPO / "tools/runbook.py"), "--repo", str(root), "audit", SESSION,
+            "--nonce", "ab", "--samples", "9"]
+    loose = subprocess.run([*tool, "--float-tolerance", "rel_tol=1"], capture_output=True,
+                           text=True, env=env)
+    assert loose.returncode != 0
+    assert "exceeds the maximum" in loose.stdout + loose.stderr
+    assert not list((root / BASE).glob("audits/*/audit.json")), "a refused tolerance writes no audit"
+    with pytest.raises(rb.RunbookError, match="exceeds the maximum"):
+        audit(root, monkeypatch, env={"RUNBOOK_TEST_SCALE": "1000"}, float_tolerance={"rel_tol": 1.0})
+
+
+def test_a_1000x_change_is_a_mismatch_under_the_maximum_tolerance(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path, tolerance=TOLERANCE)
+    record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold")
+    for scale in ("1000", "2", "-1"):
+        report, written = audit(root, monkeypatch,
+                                env={"RUNBOOK_TEST_SUM": "left_fold", "RUNBOOK_TEST_SCALE": scale})
+        assert report["verdict"] == "flagged", scale
+        assert written["replay_results"]["mismatch"] == 2
+        assert any("/mean" in f for f in report["findings"])
+
+
+def test_a_toleranced_screen_names_its_bound_and_never_reads_clean(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path, tolerance=TOLERANCE)
+    record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold")
+    report, written = audit(root, monkeypatch, env={"RUNBOOK_TEST_SUM": "compensated"})
+    assert report["verdict"] == "clean_within_tolerance"
+    assert len(written["tolerance_notes"]) == 2
+    assert all('"source": "runbook"' in note and "not an exact replay" in note
+               for note in written["tolerance_notes"])
+    exact, _ = audit(root, monkeypatch, env={"RUNBOOK_TEST_SUM": "left_fold"})
+    assert exact["verdict"] == "clean" and exact["tolerance_notes"] == []
+
+
+# ---------------------------------------------------------------------------
+# SHF-20261106-a114e7 LGX-8
+# ---------------------------------------------------------------------------
+
+def test_a_step_with_no_valid_unit_is_not_covered_never_silently_clean(tmp_path, monkeypatch) -> None:
+    root = build(tmp_path, tolerance=TOLERANCE)
+    record(root, monkeypatch, RUNBOOK_TEST_SUM="left_fold")
+    latest = rb.latest_units
+
+    def all_invalid(entries):
+        return {key: {**unit, "valid": False} for key, unit in latest(entries).items()}
+
+    monkeypatch.setattr(rb, "latest_units", all_invalid)
+    report, written = audit(root, monkeypatch)
+    assert report["replays"] == []
+    assert any(line.startswith("S01-mean: no valid unit to replay (2 recorded")
+               for line in written["not_covered"]), written["not_covered"]
+
+
+@pytest.mark.parametrize("text,version", [("3.10", "3.10"), ("3.11", "3.11"), ("'3.10'", "3.10"),
+                                          ("3.11.17", "3.11.17")])
+def test_an_unquoted_yaml_python_version_is_read_from_its_source_text(tmp_path, text, version) -> None:
+    (tmp_path / "manifest.yaml").write_text(f"run:\n  environment:\n    python_version: {text}\n")
+    found = rb.recorded_interpreter(tmp_path)
+    assert found == {"python_version": version, "source": "manifest.yaml#/run/environment/python_version"}
+

@@ -4,7 +4,7 @@
 - **Kind:** observed finite rank/target-coverage limitation; cause unknown
 - **Affected work:** [A4 results](../research/prime_field_a4_execution_20261030/RESULTS.md), [frozen protocol](../research/prime_field_a4_execution_20261030/protocol.json), and [A3 comparison](../research/prime_field_a3_execution_20261030/RESULTS.md)
 - **Next action owner:** prospective design Coordinator, then admitted Executor
-- **Last updated:** 2026-11-04
+- **Last updated:** 2026-11-06
 
 ## Problem
 
@@ -31,7 +31,7 @@ asymptotic scaling comparison.
   found [62]Q=-P, an elementary alternate explanation of its scalar1466.
   No early single or joint recovery occurred. See immutable run
   [a4-holdout-panel-c47bc8](../research/prime_field_a4_execution_20261030/runs/a4-holdout-panel-c47bc8/analysis.json),
-  scientific source d12aee8d6bec91cd225afe2d5b5ceec605129cd6.
+  scientific source d12aee8d6bec91cd225afe2d5b5ceec605129cd6. [pcc:unverified]
 - **Derived:** target-column cancellation adds one base dimension on two
   fixtures at prefix0; at prefix64 the corresponding base gains are0/0/1/0.
   Dense rank subtraction and carried target-unit certificates were checked.
@@ -145,7 +145,7 @@ rank by128. These are checked operational budgets, not weighted-cost speedups
 or exact untested source thresholds. Ten distinct targets are identified with
 base uncertainty across the finer grid. The old A6anchor case's source7192 is
 at index54, so A7does not credit it at16; the same target is identified through
-available rows at checked24, with its public-multiple explanation retained.
+available rows at checked24, with its public-multiple explanation retained. [pcc:unverified]
 
 The next controlled implementation comparison is cancellation-first target
 recovery versus the full joint solver on the same immutable rows, with lifted
@@ -166,3 +166,230 @@ as dense dot products including zero products. The next controlled test is
 sparse functional evaluation in **both** solvers on these immutable cases,
 retaining full kernels, certificate lifting/checks and separate phase vectors.
 This finite implementation result changes no official scientific status.
+
+## A9 sparse-functional control, 2026-11-05
+
+[Corrected A9](../research/prime_field_a9_json_control_20261105/RESULTS.md)
+completed 288 cases/four modes, with exact A8 dense replay and unchanged target
+outcomes/certificates. After sparse evaluation in both methods, Fr multiplications
+are 688,054 joint and 605,078 cancellation; candidate counts rise in two cases
+and subtractions rise in 50. The original JSON-key failure remains invalid with
+four retained/unverified outputs; cumulative accounting charges 1,156 calls/two
+attempts, including projection and whole failed-process resources.
+
+Next work is fresh AP-source versus optimized fixed-base hash-source holdouts,
+with symmetric kernel-free row-space recovery as a strong baseline prerequisite.
+Charge cold tables/prerequisite walks and retain setup/intermediate-point labels
+as explicit anchors/diagnostics. AP correlations may harm yield. These are proposed
+controls, not fresh native results or a campaign completion claim. Status remains
+investigating; complete-cost fresh transfer is unresolved.
+
+
+## A10 fresh source and kernel-free target control, 2026-11-06
+
+[A10](../research/prime_field_a10_execution_20261106/RESULTS.md) completed four
+fresh curves/32public targets,432dependent scope systems and864cold kernel-free
+joint/cancellation calls with identical outcomes. Source/control bytes and
+prospective protocol were pushed before generation; all witnesses, misses,
+negative residuals and original-row/public certificates are retained.
+
+Relation-only targets are recovered in24cases with base uncertainty remaining
+even after target cancellation (23cases contain a recovered target absent from
+the recorded constructor direct matches). A fresh example has rank6/14 and a
+two-original-row certificate; this does not rule out other public offset
+shortcuts. Natural target collection yields15equations covering11of32points.
+Across216matched source views, AP has more identified targets in10cases, hash
+in37, ties169. This is a finite observation with separate constructor/collection/
+algebra costs; no complete weighted or end-to-end improvement is inferred. [pcc:unverified]
+
+The [ranked next worklist](../research/prime_field_a10_execution_20261106/next-leads.md)
+compares paid consecutive versus randomized target offsets at matched query
+budgets on fresh holdouts, naming the production aP+bQ baseline and explicit
+affine-label/offset obligations. Broader curve coverage, calibrated costs and
+independent scientific review remain open. Status remains investigating.
+
+## A11 fresh affine-target coverage, 2026-11-06
+
+[A11](../research/prime_field_a11_execution_20261106/RESULTS.md) records four
+fresh curves/32public targets,1,152dependent systems/2,304cold solver calls.
+Both general-U methods return identical target identities/scalars. All three
+policies cover the32point panel at eight queried endpoints per target. Smaller
+budgets differ: at budget2,relations-scope target slots are275walk/311hashed/
+260general over48dependent source views; anchor-scope counts276/325/348 include
+explicit paid intermediate coincidences. Source prefixes64/128 and branches
+reuse points. These are unverified producer measurements under
+PCC-20261106-70a1b5 andPCC-20261106-648bb8, without signed replay/recomputation.
+[pcc:unverified]
+
+Outside-first again trades fewer inversions for more other Fr work; no weighted
+winner follows. Complete cold source/target constructor vectors, actual shared
+queries, general outside cancellation weights, original-row/public certificates,
+negative residuals and closed-curve S3 receipts are retained. The v14 database
+preserves prior rows and failures. The [new worklist](../research/prime_field_a11_execution_20261106/next-leads.md)
+selects the next bounded comparison. Broader transfer, calibrated costs and
+independent scientific standing remain unresolved. Status remains investigating;
+this continuation changes no official hypothesis/goal state. [pcc:unverified]
+
+## A12 larger fields and paid known-log baseline requirement, 2026-11-06
+
+[A12](../research/prime_field_a12_execution_20261106/RESULTS.md) retains base32
+and fixed source/query programs on four fresh18/19bit coefficient curves.
+All1,152systems/2,304solver calls completed, but source ranks are2..21of31.
+At budget8 relation-only repeated slots are3walk/0hash/7general across48views
+per policy; anchors give3/4/96. Both methods agree. Counts reuse32public points,
+not384fresh targets; this is finite transfer evidence rather than a universal
+rank obstruction. Measurement PCC-20261106-7a4122 remains unverified without
+signed replay/recomputation. [pcc:unverified]
+
+The [next discriminator](../research/prime_field_a12_execution_20261106/next-leads.md)
+is a completely paid public-known-log base control. Production factor_base.py
+already provides H017 small-multiple points and harvest.py knows their formal
+log relations, while the builder's separate Curve omits construction from
+E.ops. A strong comparison must meter real construction and all intermediates,
+allow the known-log deployment to omit useless relation-learning work, and
+compare exact named targets at cold costs. Independently hash-labelled points
+avoid confusing known knowledge with a short-interval sumset. Supplied base
+labels are explicit paid knowledge; ranks across different bases are not a
+fixed-base Delta gain. No such new experiment has run under this note.
+
+This linked requirement remains open until a prospectively frozen fresh matched
+control records construction, learning/query/algebra/lifting/public-check costs,
+including adverse target masks and all omitted-work boundaries. Outside-point
+pools remain the next base-preserving option, requiring cancellation of all
+auxiliary unknowns before crediting information. Status remains investigating;
+no old record, hypothesis or goal status is changed.
+
+
+## A13 paid known-base control executed, 2026-11-06
+
+[A13](../research/prime_field_a13_execution_20261106/RESULTS.md) executes the
+specific paid-known-log discriminator above on four fresh18/19bit curves and
+32public targets:624systems/1248actual algebra calls,zero unknown cases,
+matching within-system target identities/scalars. Known base32 is independently
+hash-labelled and constructed before targets; its source-free program pays
+all retained base/intermediate/sign/certificate/table/affine/direct-lift work.
+At budget8 it identifies16walk/22hash-offset/22general targets of32. Norm
+relation slots0/2/0 and anchor slots1/5/76 use24dependent source views with192
+maximum slots, reusing the same points. This is finite producer evidence under
+PCC-20261106-dcf58c, unverified without signed replay/recomputation.
+[pcc:unverified]
+
+The specific missing-control requirement is now populated by prospective raw
+records and per-arm construction/collection/assembly/algebra/lifting/public
+checks. It does not resolve calibrated costs or full-cost transfer. Public
+known labels are supplied knowledge; different base sets cannot be compared
+by rank/Delta. Exact target-mask containment and separate cold vectors expose
+remaining incomparable cases, including method-specific logical counts. The
+first parent import failure preceded admission/generation and is retained;
+one admitted scientific attempt completed. [pcc:unverified]
+
+The [ranked next discriminator](../research/prime_field_a13_execution_20261106/next-leads.md)
+keeps norm32 and adds a paid known16 helper pool against norm32 and source-free
+known32 on fresh holdouts. Reduce supplied helper logs into the RHS and measure
+Delta only on unchanged original norm unknowns, then exact target units/costs.
+A48-atom table needs explicit8192pair gating (4512actual signed pairs), distinct
+paid16/32constructor caches and no free future/full-base prefix state. Unknown
+outside pools, full triple-atlas amortization and original Prym/Dickson leads
+remain distinct alternatives. Future source/protocol/cost review must precede
+execution. Status remains investigating; no official hypothesis/goal state
+changes or old records are rewritten.
+
+
+## A14 paid helpers and original-coordinate information, 2026-11-06
+
+[A14](../research/prime_field_a14_execution_20261106/RESULTS.md) completed the
+four-program norm32/hybrid32+16/known32/known48 panel. At general-policy budget8
+anchors, norm and hybrid identify33/192 and185/192dependent slots respectively;
+source-free known32/48 identify19/32 and25/32public points. The same32points are
+reused across six norm/hybrid source schedules. Old-coordinate union Delta4..26
+comes after cancelling U; supplied old-coordinate increments are0, collected
+increments4..22 and target-cancellation increments0..8. No new unknown count or
+paid labels are called learned rank. Producer unverified under
+[PCC-20261106-35c953](../pcc/claims/PCC-20261106-35c953.json). [pcc:unverified]
+
+Natural target recovery can precede full old-base rank: hybrid case552 identifies
+four targets from initial natural queries while old source/after-cancellation
+rank remains30/31. Nonetheless target identities are nonmonotone across paid
+programs: one AP1/general/budget2/anchors context has hybrid mask94 vs norm128.
+Own hybrid retains all old source directions here, but constructor equalities
+and target equations differ. All paired/independent producer checks agree on
+the actual rows; no common-cost or universal monotonicity claim follows.
+[pcc:unverified]
+
+The [next-lead ranking](../research/prime_field_a14_execution_20261106/next-leads.md)
+puts an actually executed signed-pair batch/symmetry baseline before further
+coverage/budget comparisons. Existing production batch/paired-sign techniques
+must be reused and measured; this is not a novelty premise. Later known48
+effort controls and unknown outside pools retain their original requirements:
+charge all actual work, cancel auxiliary unknowns before Delta, keep target
+identities and original-row certificates, preserve negative/partial outcomes.
+Full calibrated costs and trusted independent scientific standing remain open.
+Status remains investigating; no old record or hypothesis/goal state changes.
+
+## 2026-11-07 A15: executed common pair-construction baseline
+
+[A15 results](../research/prime_field_a15_execution_20261107/RESULTS.md) retain
+32 actual cold pair builds and17920 old query replays on all16 A14 geometries.
+Exact ordered native pairs and query/native-row/miss/counter checks pass;
+new target solvers/targets/curves remain zero. Cold field vectors and added
+explicit array traffic are separate. This supplies an actual shared-denominator/
+sign-reuse/batch baseline for every future comparator; it does not remeasure old
+coverage, settle full costs or resolve the target-coverage obstruction. Evidence
+is producer-unverified PCC-20261107-c57282. Next technical controls are fresh
+known48 target effort with independent horizon8/24 portfolios and matched
+hybrid/source-free costs, or unknown16 outside-pool old-coordinate information
+with all auxiliary and target columns cancelled. No new trial is approved by
+this note; retain prospective freeze/admission and all current finite gates.
+[pcc:unverified]
+
+
+A16's fresh4curve/32publictarget continuation completed1260dependent systems
+and2520actualpairedsolvercalls, plus576separate matched old-coordinate
+outside-cancellation diagnostics. Known48_h24 recovers96/96dependentpolicy
+slots versus90/96at independently coldh8; h8policyunion alreadycovers all32
+distinctpoints, with extrapolated/adaptive portfolio costs unmeasured.
+There are89norm/hybrid dependentprefix8cases with identified targets and a
+remaining original base kernel; case23has source_rank19,after24of32columns,
+mask0x2a(3targets), withnative/publiccertificates locally checked. This updates
+finite target coverage without closing larger-field, calibrated-cost or
+independent-replay gaps. [Results](../research/prime_field_a16_execution_20261107/RESULTS.continuation.md),
+[PCC-20261107-d1bac1](../pcc/claims/PCC-20261107-d1bac1.json), unverified.
+[pcc:unverified]
+
+A17 adds four fresh 18/19-bit curves and 32 public targets with separately paid
+known48/full24 programs. Both recover all targets; candidate point queries total
+46 versus 768 under full querying, with all construction paid and all 274 omitted
+reference rows explained from candidate information. Twenty-seven targets are
+already certified by paid construction/Registry information; only five first
+certify after extra query rows. This measures one causal query boundary while
+leaving larger-field transfer and unknown-base recovery open. The next ranked
+step fixes base size/construction and tests fresh 20/21-bit fields with explicit
+construction/natural/extra certificate attribution and complete costs. No new
+execution allowance or official scientific transition follows from this note.
+[PCC-20261107-0645d8](../pcc/claims/PCC-20261107-0645d8.json), producer-unverified.
+[pcc:unverified]
+
+A18 fixed-known48/full24 transfer completed four fresh20/21-bit curves with29 of
+32 public targets identified by both programs and3 retained nonrecoveries. Its
+first-certificate split is8 construction/9 new natural/12 extra. On one curve,
+initial target rank4 identifies0 individual targets; after natural rows rank7
+identifies7. This preserves a concrete functional-versus-full-rank distinction
+without claiming old norm-base rank gain or a scaling law. The next ranked
+comparison is fixedoldnorm32 versusunknown16 andpaidknown16 controls, with all
+auxiliary+targetcolumns canceled beforeDelta and all collection/elimination/
+lifting/sign/storage costs retained. It is not an A18 retry or horizon extension.
+[PCC-20261107-f778b2](../pcc/claims/PCC-20261107-f778b2.json), producer-unverified.
+[pcc:unverified]
+
+2026-11-07 A19: the fixed old norm32/unknown16/paidknown16 comparison completed
+12cases24calls on4fresh18/19bitcurves. Targets11/22/30of32; complete corrected
+old-base Delta sums14/52/67 across separate kernels. Per-curve unknown Delta
+8/14/12/18 after cancelling auxiliary AND target U, with ownKDelta0. One arm
+adds18base directions yet identifies the same5targets as norm; another
+identifies1target at oldrank19/31. All nonrecoveries and separate cost vectors
+are retained in [A19](../research/prime_field_a19_execution_20261107/RESULTS.md).
+This measures a bounded auxiliary-set contribution, not complete weighted
+successful-work scaling or a new generic method. The next discriminator is
+a paid formal-pair16 dictionary under explicit distinct/non-old/one-definition
+rules, with no rejected-collision harvesting and a signed old-coefficient
+oracle; no execution allowance follows from ranking. [pcc:unverified]

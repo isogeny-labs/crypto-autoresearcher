@@ -1,10 +1,12 @@
 # Formal workspace build does not fit in 16 GB of RAM
 
-- **Status:** `investigating` (narrowed 2026-10-29: does not affect the CI gate)
-- **Kind:** resource limit. The module needs **more than 13.5 GB** of
-  anonymous memory (measured 2026-10-29). The cloud containers cap Bash
-  commands at a 13.36 GiB memory cgroup, so they cannot build it; the
-  `ubuntu-latest` gate runner can
+- **Status:** `resolved` (2026-11-06, exit criterion 1; limitations below)
+- **Kind:** resource limit. The module's peak anonymous footprint is
+  **15.23 GiB** (RssAnon + VmSwap, 15,974,696 kB; frozen protocol v3, hosted
+  runner, 2026-11-06). The `ubuntu-latest` gate runner (15.6 GiB RAM + 3 GiB
+  swap) builds it by swapping, with about 1.1–3.4 GiB to spare. The cloud
+  containers cap Bash commands at a 13.36 GiB memory cgroup with no swap, so
+  they cannot build it
 - **Affected work:** the `formal-workspace` proof gate
   (`tools/verify_formal_targets.py`, `.github/workflows/lean-verification.yml`,
   active as of 2026-10-28; it was disabled when this record was opened); every `autoresearch formal verify` run, which starts
@@ -12,7 +14,7 @@
   (`lean-verification` never built the Quotient target);
   [the 2026-10-23 rename report](../docs/reports/2026-10-23-translation-commutes-rename/report.md)
 - **Next action owner:** unassigned (formal lane maintainer)
-- **Last updated:** 2026-10-29
+- **Last updated:** 2026-11-06 (v3)
 
 ## Problem
 
@@ -51,9 +53,36 @@ established for the standard runner; why the two differ is unknown.
   `set_option maxHeartbeats 0` and checks a large finite rank certificate by
   kernel reduction. Peak elaboration memory grows with the certificate. Peak
   RSS was not measured.
-- **Missing capability:** the module's full peak memory (only a lower
-  bound, 13.5 GB, is measured), and a container with more than ~16 GB
-  available to commands.
+- **Missing capability:** a cloud container with more than ~16 GB, or with
+  swap, available to commands. The full peak is now measured (v3 below).
+- **Observed, 2026-11-06, hosted runner, frozen protocol v3**
+  ([report](../docs/reports/2026-11-06-degree-three-module-rss-rerun/README.md),
+  run 42161794163, `export-v3.json`). The v3 watchdog counts swap. All three
+  arms finished with exit 0: no watchdog kill, no kernel OOM, empty
+  `dmesg-oom.txt`. Peak RssAnon + VmSwap was 15,973,664 / 15,971,572 /
+  15,974,696 kB (default / `LEAN_NUM_THREADS=1` / default), with 1.25–1.99 GB
+  of it in swap. Elaboration took 485–525 s. The lowest MemAvailable +
+  SwapFree during a default arm was 1,117,936 kB. Frozen verdicts: C1
+  supported (15.23 GiB); C2 within_control_distribution, so one thread does
+  not help; C3 margin 3,537,668 kB, not fragile by the protocol's 1 GiB
+  threshold.
+- **Observed, 2026-11-06, hosted runner, frozen protocol v2**
+  ([report](../docs/reports/2026-11-06-degree-three-module-rss-rerun/README.md),
+  PR #3057, run 42137803829). Lean 4.35.0, Mathlib `cfc55fc5`, module sha256
+  unchanged. Three arms ran in order: default threads, `LEAN_NUM_THREADS=1`,
+  then default again. The measurement's own watchdog (MemAvailable < 300 MB,
+  which does not count swap) killed every arm at 352–440 s, before the 579–671 s
+  the CI build needs. So the frozen verdicts are inconclusive or
+  invalid_measurement. At the kills, lean held 14.05–14.46 GB resident and
+  2.23–2.79 GB in swap. The per-sample maximum of resident plus swap was
+  15.06 / 15.23 / 15.19 GiB, and in one arm SwapFree reached 324 kB. The
+  runner has MemTotal 15.6 GiB, a 3 GiB swapfile, and cgroup `memory.max` set
+  to `max`.
+- **Derived, 2026-11-06 (from lower bounds):** the hosted gate builds this
+  module only because the runner has swap. The module already uses about as
+  much anonymous memory as the runner has RAM, and it was still running when
+  killed. `LEAN_NUM_THREADS=1` showed no reduction (descriptive only; frozen
+  C2 is invalid_measurement).
 - **Observed, 2026-10-29, peak memory on the container**
   ([evidence](../docs/reports/2026-10-29-degree-three-module-rss/README.md)).
   `LEAN_NUM_THREADS=1 lake env lean` on the module at `main` `1896454c`,
@@ -126,10 +155,11 @@ established for the standard runner; why the two differ is unknown.
 
 ## What would unblock it
 
-- [ ] `lake build` of the committed `formal/` workspace exits 0 on the host
+- [x] `lake build` of the committed `formal/` workspace exits 0 on the host
   class the gate runs on (16 GB, or a declared larger runner), with peak RSS
-  recorded. The exit-0 half is met by the hosted runs of 2026-10-28 (two job
-  logs read on 2026-10-29); the peak-RSS half is not; or
+  recorded. Exit 0: the hosted runs of 2026-10-28 (job logs read on
+  2026-10-29). Peak recorded: 15.23 GiB anonymous for the heaviest module,
+  the frozen v3 measurement of 2026-11-06. Met; or
 - [ ] the gate builds the requested module and its closure (`lake build
   +Module`) and runs the axiom audit on a root restricted to built modules,
   and records which modules it did not build. That is a verifier change, and
@@ -141,18 +171,17 @@ per-target.
 
 ## Next discriminating step
 
-- **Action:** record the full peak of
-  `lake env lean CryptoResearch/Semaev/BooleanParityDegreeThreeRankCertificate.lean`
-  (`/usr/bin/time -v`) on the hosted runner, for example in a throwaway
-  workflow run, together with the runner's `MemTotal`, `SwapTotal` and cgroup
-  limit. That gives the gate's real margin. The container cannot measure it,
-  because its 13.36 GiB command cgroup kills the run first (2026-10-29).
+- **Action (done 2026-11-06):** the full peak was measured under frozen
+  protocol v3. Nothing more is needed unless a recheck trigger fires. To
+  re-measure, start `.github/workflows/formal-module-rss.yml` by hand
+  (`workflow_dispatch`) under a new frozen protocol version.
 - **Outcomes:** if the hosted peak is within about 1 GB of the runner's
   available memory, the gate is fragile. Then restructure the module (a
   smaller certificate per declaration, or `decide` split across lemmas) or
   declare a larger runner. Otherwise the gate is safe, and the containers stay
   unable to build the whole workspace. `-j` and `LEAN_NUM_THREADS=1` are both
-  ruled out as fixes (2026-10-29).
+  ruled out as fixes (2026-10-29; LEAN_NUM_THREADS=1 again showed no reduction
+  on 2026-11-06, descriptively).
 - **Recheck trigger:** any change to that module, to the toolchain pin, or to
   `lean-verification.yml` runner sizing.
 
@@ -182,3 +211,22 @@ per-target.
   heap against a 13.36 GiB cgroup cap. `LEAN_NUM_THREADS=1` is not a fix.
   Still `investigating`, now about the hosted margin and the true peak.
   Unresolved.
+- 2026-11-06: hosted-runner rerun under frozen protocol v2 (PR #3057, run
+  42137803829). Every arm was cut short by the measurement's own watchdog,
+  which ignored swap, so the frozen verdicts are inconclusive. Descriptively,
+  the module needs more than about 15.2 GiB of anonymous memory (resident
+  plus swap), and the gate runner gets through only by swapping. Still
+  `investigating`: the full peak and the margin are unmeasured. The next
+  step is either a v3 measurement or treating the gate as fragile now (owner's
+  call). Unresolved.
+- 2026-11-06 (v3): full peak measured under frozen protocol v3 with a
+  swap-aware watchdog (run 42161794163). All arms were valid: the peak is
+  15.23 GiB of RssAnon + VmSwap, `LEAN_NUM_THREADS=1` has no effect, and the
+  margin is 3.37 GiB by the protocol's formula, 1.07 GiB at the tightest
+  observed moment. Exit criterion 1 is met: **resolved**. Remaining
+  limitations: (1) the gate builds this module only with swap, so a runner
+  without the 3 GiB swapfile, or any growth of the module or its toolchain
+  past about 1 GiB, would OOM it; (2) the cloud containers (13.36 GiB memcg,
+  no swap) cannot build the whole workspace, so a `formalization_blocked`
+  from this module there says nothing about the target. Recheck on any
+  change to the module, the toolchain pin or the runner image's swap.

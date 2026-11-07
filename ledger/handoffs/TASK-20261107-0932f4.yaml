@@ -1,0 +1,99 @@
+# Fresh Coordinator act on the DEV-1 infrastructure stop of EXP-MONO-1a1be2 (DEC-20261106-24d2a2).
+# Coordinator subagent, no shell. Completed when written; the top-level session renders the
+# decision report this act specifies. Archived by TASK-20261107-58546f. Zero runs.
+handoff:
+  id: TASK-20261107-0932f4
+  from: coordinator
+  to: coordinator
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-c077fd
+  authorized_by: DEC-20261106-475620 dev1_decision_v2.outcomes.stopped_or_infrastructure and TASK-20261106-dfd0ed SA-9 (spare DEC-20261106-24d2a2)
+  objective: >-
+    Compose the TASK-20261106-96fee7 outcome (stopped_infrastructure at the harness background
+    cap). Decide whether and how the unchanged DEV-1 cell runs again on the bound bytes:
+    launcher, checkpointability, restart handling, retries, and whether the owner's grant
+    covers it. Decide where the re-review goes relative to DEV-1. Write the BATCH-a8825c
+    checkpoint, the BATCH-c077fd queue and its six handoffs, the additive goal-head update, and
+    DEC-20261106-24d2a2.
+  uncertainty_reduced: >-
+    How DEV-1 is retried without shrinking the cell or presuming the owner's allowance, and how
+    the hardening re-review proceeds meanwhile. Nothing about the mathematics.
+  inputs:
+    - ledger/decisions/DEC-20261106-475620.yaml
+    - ledger/handoffs/TASK-20261106-2b7223.yaml
+    - ledger/handoffs/TASK-20261106-96fee7.yaml
+    - ledger/handoffs/TASK-20261106-dfd0ed.yaml
+    - ledger/handoffs/TASK-20261106-941825.yaml
+    - ledger/handoffs/TASK-20261106-afbe9b.yaml
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/dispatch_queue.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-dfd0ed/snapshot-receipt.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/archives/TASK-20261106-779e02/ledger-receipt.json
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-report-96fee7.md
+    - experiments/EXP-MONO-1a1be2/implementation/dev1-kat-log-96fee7.json
+    - experiments/EXP-MONO-1a1be2/implementation/environment-96fee7.json
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-2b7223.md
+    - experiments/EXP-MONO-1a1be2/implementation/mutant-check-2b7223.json
+    - ledger/goals/GOAL-PATH-001.yaml
+  constraints:
+    - >-
+      No approval, no status change, and no edit of the committed specification or of any code/
+      file. The goal-head edit is insertions only, and every existing byte stays identical. The
+      BATCH-a8825c queue is changed only by tasks_state_revisions, which the top-level session
+      appends. Zero runs, no shell, no new identifier. No owner answer is presumed.
+  deliverables:
+    - ledger/decisions/DEC-20261106-24d2a2.yaml (owned by TASK-20261107-58546f)
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json (committed alone, never staged by an archive)
+    - the six BATCH-c077fd handoffs and the additive GOAL-PATH-001 update
+    - the decision-report specification (DEC visual_report), rendered by the top-level session into the report paths below, with the PDF in the artifact store
+  artifact_paths:
+    - ledger/goals/GOAL-PATH-001.yaml
+    - ledger/handoffs/TASK-20261107-0932f4.yaml
+    - ledger/handoffs/TASK-20261107-58546f.yaml
+    - ledger/handoffs/TASK-20261107-7db1de.yaml
+    - ledger/handoffs/TASK-20261107-971edf.yaml
+    - ledger/handoffs/TASK-20261107-bc7a76.yaml
+    - ledger/handoffs/TASK-20261107-eebc5b.yaml
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/report.typ
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/dev1-attempt-timeline.svg
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/queue-and-gates.svg
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/figures.py
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/figure-data.json
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/.artifacts.json
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2/.gitignore
+  artifact_paths_note: >-
+    The top-level session renders the report from DEC-20261106-24d2a2 visual_report before
+    58546f stages it. report.pdf goes to the artifact store (tools/artifacts/artifacts.py push),
+    and only .artifacts.json and the managed .gitignore are tracked. If the tool refuses, the
+    session states the refusal in report.typ and in the receipt, and 58546f drops those two
+    paths by a recorded deviation.
+  write_scope:
+    - ledger/goals/GOAL-PATH-001.yaml
+    - ledger/handoffs/TASK-20261107-0932f4.yaml
+    - ledger/handoffs/TASK-20261107-58546f.yaml
+    - ledger/handoffs/TASK-20261107-7db1de.yaml
+    - ledger/handoffs/TASK-20261107-971edf.yaml
+    - ledger/handoffs/TASK-20261107-bc7a76.yaml
+    - ledger/handoffs/TASK-20261107-eebc5b.yaml
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-24d2a2
+  archived_by: TASK-20261107-58546f
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 3600
+    memory_gb: 1
+    maximum_runs: 0
+  completion_gate:
+    - The decision, the queue, six handoffs and the goal-head update exist in the working tree.
+    - The decision composes the 96fee7 outcome after a validity check and gives a reason for each of the re-run, the bytes it binds, checkpointability, the launcher, restart handling, the retry bound, the allowance reading and owner question OQ-1, the re-review placement, the B8 split, the batch choice, knowledge_promotion, the visual-report specification and exactly one next action.
+    - Zero runs.
+  return_format: Decisions and reasons; files written; ids used and unused; queue table; the single next action; the owner question; what was not done.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. A composing and design act; it changes no claim.
+  runs_launched: 0

@@ -24,6 +24,7 @@ concurrency:
 
 jobs:
   parity:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}parity"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -57,6 +58,8 @@ jobs:
             /tools/pcc/pcc.py
             /tools/pcc/test_pcc.py
             /docs/SABOTAGE_RESISTANCE.md
+            /scripts/kb_usage_report.py
+            /scripts/test_kb_usage_report.py
       - name: Require complete parity inputs
         run: |
           python3 - <<'PY'

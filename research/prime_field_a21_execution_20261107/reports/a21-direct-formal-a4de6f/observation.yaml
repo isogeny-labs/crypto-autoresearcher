@@ -1,0 +1,150 @@
+{
+  "schema": "crypto.autoresearch.experiment_observation.v1",
+  "report_kind": "run_observations",
+  "question": "What actual algebra costs result from direct formal substitution on the same native cases?",
+  "scope": "All four immutable A20 formal cases; three cold methods; twelve dependent call views; no new curves or targets.",
+  "method": {
+    "description": "Metered signed expansion/common-unit substitution, native certificate lifting and public checks with actual auxiliary-first/native controls.",
+    "command": [
+      "/workspace/factor-base-venv/bin/python",
+      "-B",
+      "/workspace/crypto-autoresearcher/research/prime_field_a21_execution_20261107/driver21.py",
+      "--inputs",
+      "/workspace/crypto-autoresearcher/research/prime_field_a21_execution_20261107/inputs.json",
+      "--protocol",
+      "/workspace/crypto-autoresearcher/research/prime_field_a21_execution_20261107/protocol.json",
+      "--release",
+      "/workspace/crypto-autoresearcher/research/prime_field_a21_execution_20261107/root-release.json",
+      "--out",
+      "/workspace/crypto-autoresearcher/research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/raw"
+    ],
+    "parameters": {
+      "cases": 4,
+      "actual_calls": 12,
+      "targets_per_case": 8,
+      "new_curves": 0,
+      "new_targets": 0
+    },
+    "seeds": "Deterministic saved-input census; no new draws",
+    "sampling_unit": "conditioned curve case; eight shared public targets and three dependent method views",
+    "stopping_rule": "All four saved cases, one consumed original-budget attempt, no retries"
+  },
+  "runs": [
+    {
+      "experiment_id": null,
+      "run_id": "a21-direct-formal-a4de6f",
+      "native_status": "completed",
+      "evidence": [
+        {
+          "artifact": "research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/metrics.json",
+          "selector": "whole-file scope"
+        },
+        {
+          "artifact": "research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/analysis.json",
+          "selector": "/rows and /phases"
+        }
+      ]
+    }
+  ],
+  "observations": [
+    {
+      "id": "a21-target-parity",
+      "description": "Every method recovers the same requested target units",
+      "kind": "measured",
+      "value": {
+        "targets": 26,
+        "total": 32,
+        "masks": [
+          255,
+          253,
+          85,
+          251
+        ]
+      },
+      "unit": "requested targets",
+      "sample": {
+        "cases": 4,
+        "actual_calls": 12
+      },
+      "uncertainty": "Exact conditioned finite census; no fresh-holdout/population inference",
+      "evidence": [
+        {
+          "artifact": "research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/metrics.json",
+          "selector": "whole-file scope"
+        },
+        {
+          "artifact": "research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/analysis.json",
+          "selector": "/rows and /phases"
+        }
+      ]
+    },
+    {
+      "id": "a21-fr-vectors",
+      "description": "Actual Fr add/sub/mul/inv totals, direct/auxiliary/native",
+      "kind": "measured",
+      "value": [
+        [
+          6421,
+          47175,
+          50287,
+          54
+        ],
+        [
+          6731,
+          47346,
+          52123,
+          54
+        ],
+        [
+          3329,
+          66633,
+          67359,
+          49
+        ]
+      ],
+      "unit": "primitive calls",
+      "sample": {
+        "cases": 4,
+        "methods": 3
+      },
+      "uncertainty": "Exact producer counts; unweighted partial component scope",
+      "evidence": [
+        {
+          "artifact": "research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/metrics.json",
+          "selector": "whole-file scope"
+        },
+        {
+          "artifact": "research/prime_field_a21_execution_20261107/runs/a21-direct-formal-a4de6f/analysis.json",
+          "selector": "/rows and /phases"
+        }
+      ]
+    }
+  ],
+  "controls": [
+    {
+      "name": "actually cold auxiliary-first and full native joint",
+      "observation_ids": [
+        "a21-target-parity",
+        "a21-fr-vectors"
+      ],
+      "matching": "Same exact native case and public preparation per method",
+      "limitations": "Conditioned historical inputs; producer-unverified local checks"
+    }
+  ],
+  "patterns": [],
+  "limitations": [
+    "Different primitive dimensions trade; direct last-case additions/subtractions exceed auxiliary-first.",
+    "A20 acquisition remains historical prerequisite; no fresh target holdout or complete attack cost.",
+    "Initial malformed-result source blocker corrected prospectively; all records retained."
+  ],
+  "missing": [],
+  "next_checks": [
+    {
+      "question": "Does the measured component and formal-pool behavior transfer to fresh20/21-bit cases?",
+      "method": "Fixed four cold programs with unchanged collection limits and actual direct/auxiliary/native formal controls",
+      "control": "Same-case target and original/public certificate parity; separate construction costs",
+      "status": "proposed"
+    }
+  ],
+  "artifacts": []
+}

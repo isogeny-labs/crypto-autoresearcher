@@ -1,0 +1,81 @@
+{
+  "status": "completed",
+  "claim_success": true,
+  "artifact": {
+    "steps": [
+      "Separate all rows into groups A and B, preserving negative values and duplicate rows.",
+      "Compute each group's row count and sum of signed values.",
+      "Verify every row was included exactly once and return the results in the requested answer shape."
+    ]
+  },
+  "usage": {
+    "input_tokens": 14776,
+    "cached_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 205,
+    "reasoning_output_tokens": 128
+  },
+  "cost_usd": null,
+  "wall_seconds": 9.688266986006056,
+  "model": "gpt-6-astra",
+  "reasoning_effort": "xhigh",
+  "trace": [
+    {
+      "type": "thread.started",
+      "thread_id": "01a1b3f8-a63d-7f62-b83a-559c080df25a"
+    },
+    {
+      "type": "turn.started"
+    },
+    {
+      "type": "item.completed",
+      "item": {
+        "id": "item_0",
+        "type": "agent_message",
+        "text": "{\"claim_success\":true,\"artifact_json\":\"{\\\"steps\\\":[\\\"Separate all rows into groups A and B, preserving negative values and duplicate rows.\\\",\\\"Compute each group's row count and sum of signed values.\\\",\\\"Verify every row was included exactly once and return the results in the requested answer shape.\\\"]}\"}"
+      }
+    },
+    {
+      "type": "turn.completed",
+      "usage": {
+        "input_tokens": 14776,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 205,
+        "reasoning_output_tokens": 128
+      }
+    }
+  ],
+  "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Refusing to create helper binaries under temporary dir \"/tmp\" (codex_home: AbsolutePathBuf(\"/tmp/capability-actor-m6p6roc8/codex-home\"))\n",
+  "returncode": 0,
+  "command": [
+    "codex",
+    "exec",
+    "--ignore-user-config",
+    "--ephemeral",
+    "--skip-git-repo-check",
+    "--sandbox",
+    "read-only",
+    "--json",
+    "--model",
+    "gpt-6-astra",
+    "-c",
+    "model_reasoning_effort=\"xhigh\"",
+    "-c",
+    "project_doc_max_bytes=0",
+    "-c",
+    "web_search=\"disabled\"",
+    "-c",
+    "features.shell_tool=false",
+    "-c",
+    "features.multi_agent=false",
+    "-c",
+    "features.enable_mcp_apps=false",
+    "--output-schema",
+    "/tmp/capability-actor-m6p6roc8/response-schema.json",
+    "--output-last-message",
+    "/tmp/capability-actor-m6p6roc8/response.json",
+    "-"
+  ],
+  "tool_violations": 0
+}

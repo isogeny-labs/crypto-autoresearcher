@@ -1,0 +1,639 @@
+# DEC-20261106-ecf261: Coordinator ruling on the stop of runbook session RBS-ICPERF-e2a5c2
+# (EXP-ICPERF-127dbd, C1 route A at fp28) and approval of the recompiled session RBS-ICPERF-de8978.
+# Protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 2 is unchanged.
+coordinator_decision:
+  id: DEC-20261106-ecf261
+  id_provenance: >-
+    Reserved by the top-level session with tools/allocate_id.py and confirmed with --check at
+    2026-11-06T22:15Z (scratchpad/c1-fix/ids.txt, "failure classification + approval of new
+    session"), and re-checked at 22:32:11Z (F10). The Coordinator minted no id. The spare
+    DEC-20261106-dc04e7 is not used by this chain.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It wrote only this file. Rulings pass: it read
+    scratchpad/c1-fix/{FINDINGS.md, launch_eks.patch, launch_eks.sh, launch_eks.sh.orig, h.sh,
+    h2.sh, SHA256, ids.txt, WRAPPER-V3.md, launch_eks.v2-to-v3.patch}. In the clone, on branch
+    claude/c1-run-20261106 at b0d984b99, which has since merged to main through PR #3105 as
+    b7300d776b, it read experiments/EXP-ICPERF-127dbd/{inputs/protocol.json, runbook.yaml,
+    trial-plan.json, specification.yaml, task-cards/CARD-EXP-ICPERF-127dbd-1.yaml,
+    runs/RUN-ICPERF-c7f69e/{raw-result.json, stderr.log, execution-receipt.json},
+    runbook-sessions/RBS-ICPERF-e2a5c2/journal.jsonl}. It also read the BATCH-0e0902
+    dispatch_queue.json, ledger/handoffs/TASK-20261106-{4b7018,788595}.yaml,
+    DEC-20261106-c69de4, docs/runbook-execution.md, and these tool functions:
+    tools/runbook.py find_approval, tools/experiment_preapproval.py assess,
+    tools/research_dispatch.py and tools/experiment_execution.py. Finalization pass: it read
+    scratchpad/c1-fix/recompile-v3a/{SHA256SUMS, F7-diffs.txt (all 1048 lines), F8.txt},
+    packet/{packet.json, preapproval-report.json} and evidence/{F2-v3a.txt, F10.txt, F12.txt,
+    dccfdc-scratch-validate.txt}. It computed no hash and ran no tool. Every sha256 below is
+    transcribed from SHA256SUMS or from the reports named.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: approve
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  runbook_path: experiments/EXP-ICPERF-127dbd/runbook.yaml
+  runbook_sha256: b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b
+  runbook_session_id: RBS-ICPERF-de8978
+  prior_runbook_session:
+    session_id: RBS-ICPERF-e2a5c2
+    approved_by: DEC-20261106-c69de4
+    runbook_sha256: d31f7178cd2ef13941b478a02ef8146bf2ec82ec1c1f5c1c86154c9745c23c93
+    state: stopped, terminal, never reopened
+  context: >-
+    DEC-20261106-c69de4 approved EXP-ICPERF-127dbd at runbook d31f7178... as session
+    RBS-ICPERF-e2a5c2. The owner gave the explicit EKS go-ahead at 2026-11-06T22:05Z (owner
+    message "/ic-autolab go", replying to "Reply \"go\" to launch it"), as reported by the
+    top-level session. The session started at 22:08:22Z, and S01-probe passed. In S02-trials,
+    T1 (RUN-ICPERF-c7f69e) ran launch_eks.sh once. The wrapper refused with exit 4 in its
+    read-only duplicate check, so nothing was submitted. The supervisor exited 3, and the
+    session finished stopped at 22:08:45Z. T2 (RUN-ICPERF-6f784c) never ran. The records were
+    committed at b0d984b99 on claude/c1-run-20261106. That branch merged to main at 22:17Z
+    through PR #3105 as b7300d776b, with CI red (finalization_rulings FR-5). USD 0 was spent.
+    The re-session work continues on claude/c1-session2-20261106, whose head is d2db4c34f4.
+
+  # ---------------------------------------------------------------- ruling 1
+  stop_classification:
+    session: RBS-ICPERF-e2a5c2
+    class: implementation_error
+    subclass: wrapper defect before submission (launch_eks.sh duplicate check), no job, no spend
+    basis:
+      - "journal.jsonl seq 6 step_finished S02-trials: failure_class implementation_error, exit_code 3; seq 7 session_finished status stopped with the same class. Steps: S01-probe passed, S02-trials failed, S03-verify not_run."
+      - "RUN-ICPERF-c7f69e/raw-result.json: submitted false, outcome_class other, refusal duplicate_check_failed. stderr.log: InvalidInputException from BatchGetBuilds ('Invalid build ID provided'), then 'duplicate check failed (codebuild batch-get-builds)'."
+      - "Cause (FINDINGS.md, reproduced read-only by the top-level session, F3(a)): line 174 of launch_eks.sh 130164868... ran list-builds-for-project with --max-items 100 --output text. Under aws-cli 1.46.2 this appends the pagination token to the text output, so the 101st word, 'None', was passed to batch-get-builds as a build id. --dry-run makes no AWS call, so S01 and every dry run missed this path."
+      - "No submission: S3 runs/ic-c1-dg-s1-20261106/, runs/ic-c1-dg-s2-20261106/ and both -r2 prefixes hold 0 objects, and inputs/requests/21728056...dec.json does not exist (F5). The fixed duplicate check found no CodeBuild build carrying the S1 request key (F3(b))."
+    rulings:
+      - "The stop is terminal. Under docs/runbook-execution.md, a stop with any class other than infrastructure_error or resource_exhaustion is terminal. The fix also changes bound bytes, so the session could not be reopened under its runbook in any case. RBS-ICPERF-e2a5c2 is closed and is never reopened, resumed or rerun. Its journal and run files stay as written."
+      - "The trial receipt of RUN-ICPERF-c7f69e has status infrastructure_error. That is the supervisor's label for a nonzero driver exit, and it stands as written. It is not a protocol section 9 infrastructure outcome (timeout, crash or host loss of a launched job), because no C1 job existed. Nothing about the C1 sessions S1 and S2 was observed."
+      - "Not evidence. RUN-ICPERF-c7f69e is neither a C1 observation nor a negative result (AGENTS.md rule 5). RUN-ICPERF-6f784c was never created. Both ids are consumed and are never reused."
+      - "This was neither host loss nor a deadline hit. Neither protocol rerun rule is triggered, and no -r2 allowance is consumed (ruling 3)."
+      - "Budget: the stopped session contributes USD 0 to actual_spend. The rule is 'billing, else the job's HB', and no job was launched, so it assigns no hard bound."
+
+  # ---------------------------------------------------------------- ruling 2
+  wrapper_fix_ruling:
+    ruling: >-
+      accept_with_amendment. v2, the duplicate-check fix, is accepted. The bytes that run are
+      v3a: v2 plus the amended manifest of manifest_amendment_ruling.
+    bytes_that_run:
+      path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+      version: v3a
+      sha256: 0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0
+      not: 7dbe33eb56843daa47885e58df644371b86052c7c42e4f11bcf38c17bc9d386d (v3, rejected)
+      replaces_sha256: 130164868a21d1b1ee4ff66ba89ea0c4fdfee2e20decc6451abd2ab10ef6d41f
+      committed_in: d2db4c34f4 on claude/c1-session2-20261106 (recompile commit)
+    accepted_bytes:
+      path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+      version: v2 (duplicate-check fix; the base of v3a)
+      source: scratchpad/c1-fix/launch_eks.v2.sh
+      sha256: 2fa09e84e8f465135c2d6697544f27006e6c55d8388eb9a1882dab20a8caac6d
+      replaces_sha256: 130164868a21d1b1ee4ff66ba89ea0c4fdfee2e20decc6451abd2ab10ef6d41f
+      accepted_change: >-
+        Exactly the three changes FINDINGS.md proposes, all in step 2, the duplicate check.
+        (a) list-builds-for-project uses --no-paginate in place of --max-items 100 (fixed lines
+        174-176). (b) Only tokens matching ^<project>:[0-9a-f-]+$ are kept (line 177). (c) It
+        refuses 4 if the listing printed something but no build id survived (line 180). Nothing
+        else changes. These parts are byte-identical: step 1; step 1b, the remote-pin re-check
+        that C1-AMENDMENT-1 requires before every submission; step 1c; the S3 prefix and
+        request-object checks; the single launch; the download; and the outcome classes.
+        F7 confirms (a)-(c) in the HEAD-to-v3a diff of the duplicate-check hunk.
+    amendment:
+      defect_found: >-
+        scratchpad/c1-fix/launch_eks.patch is stale. It holds one hunk (@@ -171,7 +171,10 @@)
+        that adds lines 174-177 only. It lacks the line-180 refusal, which the fixed file (sha256
+        2fa09e84...), FINDINGS.md bullet 3 and the h.sh/h2.sh test blocks all contain.
+        Applying that patch to 130164868... does not produce the accepted bytes.
+      required: >-
+        Do not apply or archive that patch. The accepted bytes are the fixed file. The patches
+        archived in approval_archive C1 are regenerated with diff -u: orig to v2, orig to v3a,
+        and v2 to v3a.
+    review_notes:
+      - "Fail-closed is preserved. Every new failure path is exit 4, with nothing submitted. The S3 request-object check, inputs/requests/<digest>.json, remains the primary barrier against a second submission, and it does not depend on CodeBuild paging."
+      - "Coverage is unchanged: one page of at most 100 newest build ids, as before. FINDINGS reports the page-size equivalence; the Coordinator did not verify it independently. The positive control F3(d) shows the CodeBuild branch still detects duplicates: the newest existing build's key gives REFUSE 3."
+      - "Non-blocking: the --dry-run echo on line 117 did not show --max-items before the fix and does not show --no-paginate after it. It is cosmetic and left unchanged."
+      - "The wrapper runs only as the supervised trial argv. Never run the fixed or the original wrapper by hand without --dry-run. The fix tests use the extracted duplicate-check block, which contains no launch call."
+    manifest_amendment_ruling:
+      added: >-
+        2026-11-06, in an addendum from the top-level session. PR #3105 CI rejects the flat
+        manifest.yaml of RUN-ICPERF-c7f69e.
+      proposal: >-
+        Wrapper v3 (sha256 7dbe33eb56843daa47885e58df644371b86052c7c42e4f11bcf38c17bc9d386d;
+        scratchpad/c1-fix/WRAPPER-V3.md and launch_eks.v2-to-v3.patch). It keeps v2 and adds a
+        schema-complete JSON manifest on every path. Statuses: failed_implementation when not
+        submitted, completed_inconclusive when job_completed, failed_infrastructure otherwise.
+        It writes inputs.seed 0 and curve_id null as placeholders, and request identity in
+        inputs.parameters. code.command is compact jq JSON of $0 plus the arguments, and
+        code.commit comes from git rev-parse HEAD.
+      ruling: reject v3 as proposed; accept it as amended (v3a)
+      defect_in_v3: >-
+        The supervisor runs tools/experiment_execution.py complete_manifest only on driver exit
+        0 (job_completed), and complete_manifest first calls _check_driver_facts. That check
+        would refuse v3's manifest (EnvelopeRefused) after a paid job had completed, for two
+        reasons. (1) _check_trial_inputs (lines 322-349) refuses a stated inputs.seed or
+        inputs.curve_id, and any non-empty inputs.parameters, when the frozen trial declares
+        none; the C1 trials declare none. (2) code.command must equal the launched argv as
+        json.dumps (with ', ' separators), the list itself, or the shell-joined form (lines
+        402-413); jq -c output has no spaces. code.commit from git HEAD is also checked against
+        the launch authority commit (line 401), which holds only if HEAD has not moved. The
+        supervisor would mark the unit invalid. The duplicate check would then refuse to
+        relaunch the same request, and the protocol reserves -r2 for host loss, so S1 would be
+        lost. v3's tests ran only validate_ledger.check_run, never complete_manifest.
+        Separately, seed 0 is a stated value with no source (rule 9), even with a note.
+        check_run does not require a seed (RUN_REQUIRED_TOP is id, experiment_id, status,
+        code, environment, inputs, timing, result). F12(ii) confirms the refusal:
+        EnvelopeRefused on run.code.command.
+      v3a_required:
+        - "Exit-0 path (outcome_class job_completed): manifest.yaml is byte-identical to the v2 heredoc, the nested run with id, experiment_id, hypothesis_id, task_id, trial_id, approved_by, attack_claimed false and result.raw_result. The supervisor completes it from publish-time facts. Validity stays with check_job.py and S03-verify (analyze-c1.sh). The wrapper never writes a status on this path."
+        - "Every other path that writes records (refusals with exit 3 and 4, and exit 5) gets the schema-complete manifest. No supervisor completion runs on these paths. The manifest has no inputs.seed and no inputs.curve_id. inputs.parameters keeps job_name, request_sha256 and validated_request_sha256. code.commit comes from <record-dir>/environment.json .commit, and code.command is <record-dir>/command.txt verbatim."
+        - "Status mapping on those paths, accepted as a mechanical label. submitted false gives failed_implementation. submitted true without job_completed gives failed_infrastructure. valid is false. invalid_reason ends 'mechanical wrapper label; the Coordinator classifies the stop'. The label decides nothing."
+        - "raw-result.json, exit codes, outcome classes, the duplicate-check block, the single submission and the download are unchanged."
+        - "Known and unchanged: exit-2 refusals (usage, pin mismatch, unsupervised) write no records, as in v1 and v2."
+      v3a_review: >-
+        Accepted at 0fcdd67e.... F2-v3a: bash -n OK. The v2-to-v3a diff has three hunks, all
+        additions with no line removed (t0/s0 clock line; exit-0 guard and comment; else
+        branch). The duplicate-check block is byte-identical to v2 lines 163-189, so F3 carries
+        over. The exit-0 heredoc is IDENTICAL to v2. F12 results: (i) the v3a exit-0 manifest
+        passes complete_manifest and check_run cleanly. (iii) Exit 3 and exit 4 give
+        failed_implementation, and the deadline case gives failed_infrastructure; none
+        contains seed or curve_id; command equals command.txt; check_run is clean. Two
+        deviations from the letter are accepted, as non-exit-0 paths that complete_manifest
+        never checks. code.commit falls back to git rev-parse HEAD, then 'unknown', if
+        environment.json lacks .commit. code.dirty is false as in v3.
+
+    protocol_amendment_ruling:
+      needed: false
+      basis:
+        - "inputs/protocol.json (in-repo copy c2f38c42..., protocol_sha256 9844f78d...) binds no launch_eks.sh digest. Its only mention of the wrapper is C1-AMENDMENT-1 changes[0], 'launch_eks.sh re-checks them [the four remote pins] before every submission'. The fix leaves that check (step 1b) unchanged. F4 found no wrapper digest in the crypto study directory."
+        - "The fix changes no N, seed, curve, target, arm, weight, threshold, margin, accounting rule, decision mapping, request, budget line or deadline. It changes only a read-only refusal before submission and the manifest written on non-exit-0 paths, so no success criterion changes and no protocol_amendment record is needed on either side."
+        - "Only crypto-autoresearcher bytes bind the wrapper digest: the runbook binds and trial-plan.json source_sha256. Both are recompiled (ruling 5), which forces a new runbook sha256 and therefore this approval."
+
+  # ---------------------------------------------------------------- ruling 3
+  request_ruling:
+    new_session_uses:
+      T1: {request: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json, sha256: 683cc67d136ab6a2e5f1f3fbc7f6ae20ba981194f4781418340d883620b6c779, job_name: ic-c1-dg-s1-20261106}
+      T2: {request: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json, sha256: d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1, job_name: ic-c1-dg-s2-20261106}
+    basis:
+      - "The first-attempt requests were never submitted: there is no S3 object under either job prefix, no request object, and no CodeBuild build carrying the key. Launching them now is the first attempt of S1 and S2, not a rerun. The protocol's inadmissible list forbids a 'third session or selective rerun', but that list counts C1 sessions (ecbench jobs S1 and S2), and none has run. Runbook sessions are only execution containers."
+      - "The protocol reserves launch/request-sK-r2.json for a rerun after a timeout, crash or host loss of a launched job (invalidation_rules[2]). Using -r2 now would label a first attempt as a rerun and spend the only host-loss allowance on an event that is not host loss. It would also break the job_names S1/S2 mapping that check_job.py and the runbook results_uri pattern (ic-c1-dg-s[12]-20261106) assume."
+    r2_allowance:
+      status: available, unconsumed (S1-r2 and S2-r2 each at most once)
+      applies_when: >-
+        Only after a launched C1 job ends in a timeout, crash or host loss, as protocol section
+        9 defines it. A deadline hit is not rerun (protocol stopping rule 'deadline'). A defect
+        in a wrapper, the runbook or the supervisor, before or after submission, is not a -r2
+        trigger.
+      how: >-
+        Only as a new runbook session on the frozen request-sK-r2.json (fd9c9c8f... for S1,
+        816d85f0... for S2), after a new Coordinator decision. This decision authorizes no -r2
+        session. The protocol section 10 gate lines for -r2 stay at 2.79 (S1-r2) and 3.72
+        (S2-r2).
+      not_bound_here: The recompiled runbook does not bind the -r2 requests and must not.
+
+  owner_gate_ruling:
+    ruling: >-
+      The 2026-11-06T22:05Z go-ahead covers RBS-ICPERF-de8978. Protocol section 11 defines the
+      go-ahead per launch (S1, S2 and any -r2 under the USD 5.00 cap), not per runbook session.
+      The recompile changes no request, instance type, deadline, budget line or cap, and USD 0
+      has been spent.
+    conditions:
+      - "The relay quotes the owner message verbatim with its timestamp (relay fact 2). The Coordinator did not see the owner message and relies on the top-level session's report. This decision is not the go-ahead, and no agent message can stand in for it."
+      - "If the owner has since withdrawn, limited or qualified the go-ahead, that governs, and nothing is relayed."
+      - "Recommended, not a gate: in its next report, the top-level session tells the owner that the first session stopped before submission at USD 0, and why."
+
+  budget_gate:
+    rule: >-
+      Protocol section 10, unchanged. Before each launch L, require actual_spend + HB(L) +
+      HB(every first-attempt job not yet launched) <= USD 5.00, with HB(job) = USD 0.93108 at
+      the 3,600 s deadline. actual_spend comes from billing, else from the job's HB, never
+      from an estimate. RBS-ICPERF-e2a5c2 contributes 0.
+    S1: "0 + 0.93108 + 0.93108 = 1.86216 <= 5.00"
+    S2: "0.93108 + 0.93108 + 0 = 1.86216 <= 5.00 (S1's actual billed spend replaces its 0.93108 if available)"
+    ceiling_usd: 5.00
+    worst_case_committed_usd: 3.72
+    spent_to_date_usd: 0
+
+  # ---------------------------------------------------------------- ruling 4
+  new_ids:
+    runbook_session: RBS-ICPERF-de8978
+    T1_run: RUN-ICPERF-8b0d47
+    T2_run: RUN-ICPERF-5ffa79
+    executor_task: TASK-20261106-724d14
+    snapshot_archive_task: TASK-20261106-d5ec1e
+    approval_archive_task: TASK-20261106-de6d19
+    card: CARD-EXP-ICPERF-127dbd-2 (new file; CARD-EXP-ICPERF-127dbd-1 stays as written, historical)
+    provenance: >-
+      scratchpad/c1-fix/ids.txt, with --check OK at 22:15Z. F10 at 22:32:11Z found all seven
+      ids well-formed and free across the union, and found 0 refs holding RBS-ICPERF-de8978,
+      RUN-ICPERF-8b0d47 or RUN-ICPERF-5ffa79.
+    retired_ids: [RBS-ICPERF-e2a5c2, RUN-ICPERF-c7f69e, RUN-ICPERF-6f784c, TASK-20261106-4b7018]
+
+  # ---------------------------------------------------------------- ruling 5
+  recompile:
+    by: experiment-director (compile mode). The top-level session ran the tools and committed.
+    rule: >-
+      Each file changes only in its listed fields, and every other byte equals its predecessor
+      at b0d984b99. F7 (recompile-v3a/F7-diffs.txt, sha256 28dc36aa...) is the diff of each
+      file against its predecessor. finalization_rulings FR-1 to FR-3 rule on what F7 shows.
+    files:
+      - path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+        change: replaced by v3a (ruling 2)
+        sha256: 0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0
+      - path: experiments/EXP-ICPERF-127dbd/trial-plan.json
+        change:
+          - "approved_by: DEC-20261106-c69de4 -> DEC-20261106-ecf261"
+          - "task_id: TASK-20261106-4b7018 -> TASK-20261106-724d14"
+          - "trials[T1]: argv --task-id, --approved-by, --run-id RUN-ICPERF-8b0d47; run_id RUN-ICPERF-8b0d47"
+          - "trials[T2]: argv --task-id, --approved-by, --run-id RUN-ICPERF-5ffa79; run_id RUN-ICPERF-5ffa79"
+          - "source_sha256 launch_eks.sh -> 0fcdd67e...; specification_sha256 -> 1f9e2092..."
+        sha256: b6626655b3c83dd8c8526ee722572ac1f7d3e6848ba3708c6e70e34acf5b8270
+      - path: experiments/EXP-ICPERF-127dbd/specification.yaml (preview; approval_archive C2 swaps it in)
+        change:
+          - "header comment lines 2-3"
+          - "experiment.approved_by: DEC-20261106-ecf261"
+          - "experiment.runbook.session_id: RBS-ICPERF-de8978"
+          - "additive experiment.runbook.prior_sessions entry for RBS-ICPERF-e2a5c2"
+          - "required_artifacts: RUN-ICPERF-c7f69e -> RUN-ICPERF-8b0d47 and RUN-ICPERF-6f784c -> RUN-ICPERF-5ffa79 (8 paths)"
+        sha256: 1f9e2092fbd4ef96770955101cb3161ad26a45de0ef782c7bf63a05a631cd21a
+      - path: experiments/EXP-ICPERF-127dbd/runbook.yaml
+        change:
+          - "header comments lines 1-3"
+          - "session_id: RBS-ICPERF-de8978"
+          - "binds: specification.yaml 1f9e2092...; trial-plan.json b6626655...; implementation/launch_eks.sh 0fcdd67e..."
+          - "spec_bindings: session_id RBS-ICPERF-de8978; approved_by DEC-20261106-ecf261"
+          - "S02-trials validity: /task_id TASK-20261106-724d14; /approved_by DEC-20261106-ecf261"
+          - "S03-verify argv: runs/RUN-ICPERF-8b0d47/... and runs/RUN-ICPERF-5ffa79/job/artifacts/session"
+        sha256: b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b
+      - path: experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+        change: LINT OK receipt for b3676f85...
+        sha256: 9df553a0646b8b99140a73ec515e013e081093e12e7fa0a12eda015254fea8e2
+      - path: experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml (new)
+        change: >-
+          A copy of card -1 with these changes: card_id -2; runbook_sha256 b3676f85...; header
+          line 1 and stop_when[0] naming DEC-20261106-ecf261; stop_when step 5 naming
+          RBS-ICPERF-de8978. The notes are unchanged.
+        sha256: 5e5e332301f24371cfdde6b0a6ab5a3e1ac8fbf065d95f760606eda759dea363
+      - path: coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json (preview; approval_archive C3 commits it alone)
+        change:
+          - "TASK-20261106-4b7018: state queued -> failed (records its release, outcome failed)"
+          - "TASK-20261106-dccfdc: unchanged, queued, impeded (ruling 6); no dispatch_exception"
+          - "add TASK-20261106-724d14 and TASK-20261106-d5ec1e"
+          - "objective and one added note"
+        sha256: 1714aecaf279e83da99ea88aaf9c9319c19cfd9bb86c459fdfce43f582af9c2a
+      - path: ledger/handoffs/TASK-20261106-724d14.yaml (new)
+        sha256: ac1354a299b78c90458235da413a3c89ab2ac243d269066fe222c75c97d84168
+      - path: ledger/handoffs/TASK-20261106-d5ec1e.yaml (new)
+        sha256: 2a2255b3f4173c16e5f2529ec0c95f267815babeba8416aafb862b1195c8e0fa
+      - path: ledger/handoffs/TASK-20261106-de6d19.yaml (new)
+        change: >-
+          It mirrors TASK-20261106-788595, with authorized_by set to DEC-20261106-ecf261
+          approval_archive, and artifact_paths equal to the paths that
+          approval_archive.commit_order stages.
+        sha256_reviewed: 1d8925d98047962da7c4544946b9033374c66fd9783298be36179dbcb4ada33b (rejected as written; FR-3)
+    done: >-
+      Recompile commit d2db4c34f4b545a111117ccf694c97122783dc2c on claude/c1-session2-20261106,
+      pushed. It holds launch_eks.sh v3a, trial-plan.json, runbook.yaml, runbook-lint.txt, card
+      -2 and, as a historical record, CARD-EXP-ICPERF-127dbd-1 (sha256 f26419da..., as
+      reported, not edited). The specification, queue and three handoffs remain previews until
+      the approval archive.
+
+  # ---------------------------------------------------------------- ruling 6
+  rbs_e2a5c2_archive_ruling:
+    finding: >-
+      The queued snapshot archive of the stopped session, TASK-20261106-dccfdc, cannot complete
+      as declared. Its source, TASK-20261106-4b7018, declares 36 artifact paths, and only 10
+      exist. tools/research_dispatch.py requires a completed archive's path_sha256 to cover
+      every source artifact path, and void_source_artifacts voids a source's paths only as a
+      whole, and only if every one is absent.
+    confirmed_by: >-
+      F11 (evidence/dccfdc-scratch-validate.txt). Scratch commit e9c17b6925, never pushed:
+      REFUSED, DispatchError "completed archive task TASK-20261106-dccfdc path_sha256 must
+      cover every archive and source artifact".
+    ruling:
+      - "TASK-20261106-dccfdc stays queued and is recorded as impeded. That is an impediment, not a failure of anything. No dispatch_exception and no terminal_snapshot_authorizations are issued for it. It does not block RBS-ICPERF-de8978, because no new task depends on it."
+      - "Interim custody: the approval archive receipt (C4) records the sha256 of the ten existing RUN-ICPERF-c7f69e files and of every file under runbook-sessions/RBS-ICPERF-e2a5c2/, as at b0d984b99, together with the F6 VERIFY OK output. The receipt takes no archival ownership of TASK-20261106-4b7018. These bytes reached main through PR #3105 (b7300d776b)."
+      - "Impediment, recorded in the goal record in C4: id IMP-C1-dccfdc-partial-output. Condition: 'research_dispatch cannot archive partial output of a failed source'. what_is_blocked: TASK-20261106-dccfdc. clears_when: 'a reviewed tooling change supports per-path void of never-produced paths, or a Coordinator decision rules another lawful custody'. Recheck at the RBS-ICPERF-de8978 evidence review. It asserts nothing about H-ICPERF-4cb536 or C1."
+      - "The same limitation applies to TASK-20261106-d5ec1e if RBS-ICPERF-de8978 stops with partial output. In that case it returns here rather than being worked around."
+
+  # ---------------------------------------------------------------- ruling 7
+  run_supersession_authorization:
+    run_id: RUN-ICPERF-c7f69e
+    kind: additive_schema_completion
+    superseded: {path: experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/manifest.yaml, sha256: ef8f29d3fb63262156f613136ddfdfa9e2fd360acbaecd7d61139a3581b1e8ea, state: "sealed by the RBS-ICPERF-e2a5c2 journal, never edited"}
+    superseding:
+      path: experiments/EXP-ICPERF-127dbd/supersessions/RUN-ICPERF-c7f69e/manifest_v2.yaml
+      sha256: d0c6d60ce72bb8c07fe79e3f6df33e0a2e60a5548a6c1c10cf75e69f6905b6ec
+      not: 5298e33a... (unamended, with seed 0)
+    registry: tools/run_supersession_registry.yaml entry run_id RUN-ICPERF-c7f69e, decision_id DEC-20261106-ecf261
+    ruling: >-
+      Authorized as amended. inputs.seed, inputs.curve_id and the placeholder note are removed.
+      The record is accepted as a transcription of supervisor and wrapper facts: run.status
+      failed_implementation (as ruling 1 classifies), receipt_status infrastructure_error,
+      code.commit a721bc24 and code.command from the launch record, timing from launch.json
+      and execution-receipt.json, certificate kind none, valid false. It is not evidence, not a
+      rerun, and it repairs no result.
+    checks: >-
+      F12(iv): check_run, check_run_supersessions and check_new_run_supersessions against
+      origin/main report no error for d0c6d60c.
+    committed_in: >-
+      Commit 7cf956bd58 on claude/c1-session2-20261106, already pushed. It is not moved into
+      C1 (FR-4). It reaches main only in the same PR as C1, under FR-4's conditions, so the
+      registry's decision_id never lands on main without its decision.
+
+  # ---------------------------------------------------------------- checks
+  pre_finalization_check_results:
+    F1: "pass (reported; evidence/F1-F2.txt): orig and b0d984b99 launch_eks.sh both 130164868..."
+    F2: "pass (evidence/F1-F2.txt for v2 2fa09e84...; evidence/F2-v3a.txt 2026-11-06T22:44:30Z for v3a 0fcdd67e...: bash -n OK, 3 hunks, no line removed, duplicate-check block byte-identical, exit-0 heredoc IDENTICAL)"
+    F3: "pass (reported; evidence/fix-tests.log: (a) exit 4 InvalidInputException; (b) S1 exit 0 'submitting once'; (c) S2 exit 0, validated key e4eb66c1...; (d) REFUSE 3)"
+    F4: "pass (reported; evidence/crypto-binding-grep.txt: no launch_eks.sh digest in the crypto study directory)"
+    F5: "pass (reported; evidence/s3-readonly-checks.txt: four prefixes empty, S1 and S2 request objects absent)"
+    F6: "pass (reported; evidence/rbs-e2a5c2-verify.txt: VERIFY OK at b0d984b99)"
+    F7: "reviewed (recompile-v3a/F7-diffs.txt); FR-1 to FR-3"
+    F8: "pass with the expected exception (recompile-v3a/F8.txt, 2026-11-06T22:45:29Z). LINT OK b3676f85...; validate_queue structural and GitRepositoryVerifier accepted; open lanes BATCH-0e0902 and BATCH-8f7bd6 (2 of cap 3). CARD FAIL only because no committed decision yet names b3676f85... (expected before C1; the CARD OK gate moves to C2). validate_ledger: FR-6."
+    F9: "pass: blockers == [B1] only (approvability below)"
+    F10: "pass (evidence/F10.txt)"
+    F11: "pass, refused as expected (ruling 6)"
+    F12: "pass (evidence/F12.txt; (i) accepted, (ii) v3 REFUSED, (iii) statuses as mapped with no seed or curve_id, (iv) clean)"
+  probe_blocker_B1:
+    text: canonical experiment is already approved or not in a preapproval state
+    ruling: >-
+      This blocker is inherent to a re-session and is accepted by name, and only this one.
+      experiment_preapproval.py assess refuses any canonical experiment that is already
+      approved (status approved, approved_by DEC-20261106-c69de4) and continues through every
+      other check. c69de4's probe met the 'Runnable' condition of AGENTS.md "Approval is
+      bounded by execution" for this contract (approvable true, archived at
+      archives/TASK-20261106-788595/preapproval-report.json). For the re-session bytes, three
+      things meet it: F9 showing no other blocker, F8, and runtime admission after the archive
+      (newest_experiments execution_state ready). This is a declared procedural departure, not
+      a status regression. EXP-ICPERF-127dbd is never moved back to review_required to satisfy
+      the probe.
+
+  # ---------------------------------------------------------------- finalization rulings
+  finalization_rulings:
+    FR-1_f7_in_scope:
+      ruling: accept
+      text: >-
+        Every recompiled file changes only in its recompile.files fields: launch_eks.sh,
+        trial-plan.json, runbook.yaml, runbook-lint.txt, specification.yaml, card -2, the queue
+        entries, and handoffs 724d14 and d5ec1e. Handoff 724d14 carries the four relay facts in
+        constraint 1, the supervised-argv constraint, budget 2 / 4 GB / 9600 s, and the
+        completion gate naming RBS-ICPERF-de8978 under this decision. d5ec1e carries SA-1 to
+        SA-8, record_ids [H-ICPERF-4cb536, EXP-ICPERF-127dbd, DEC-20261106-ecf261], and
+        maximum_runs 0. Two byte-level departures are accepted. (a) The preview queue lost its
+        trailing newline, a JSON re-serialization with no field effect. validate_queue
+        accepted it, and the probe and approved_bytes bind 1714aeca..., so it is not restored.
+        (b) The header comments of runbook.yaml (lines 1-3), specification.yaml (lines 2-3)
+        and card -2 (line 1) are in the director's wording. They are accurate (session
+        RBS-ICPERF-de8978, decision DEC-20261106-ecf261, archive TASK-20261106-de6d19,
+        preview-specification binding) and are accepted.
+    FR-2_card_stop_when:
+      ruling: accept
+      text: >-
+        Card -2 stop_when[0] tests three relay facts (decision committed, owner go-ahead,
+        checkpoint gate 0). That is card -1's text with the decision id substituted, exactly
+        as recompile.files ordered. The fourth fact is enforced in three places. Handoff
+        724d14 constraint 1 makes 'the aws --version line ... beginning aws-cli/1.46.2' a stop
+        before step 1. relay_facts[4] requires the relay to state it. S01-probe checks the
+        first token of aws --version against aws-cli/1.46.2 mechanically (runbook.yaml lines
+        177 and 196) before any submission. The card is not recompiled for this, because
+        that would change 5e5e3323... and require a new card lint and probe for no
+        additional protection.
+    FR-3_approval_archive_handoff:
+      ruling: reject 1d8925d9... as written; regenerate before the archive
+      defects:
+        - "artifact_paths declares wrapper-fix/launch_eks.patch. That is the stale patch that ruling 2 forbids archiving."
+        - "artifact_paths lacks paths that approval_archive.commit_order C1 stages: wrapper-fix/WRAPPER-V3.md, wrapper-fix/launch_eks.orig-to-v2.patch, wrapper-fix/launch_eks.orig-to-v3a.patch, wrapper-fix/launch_eks.v2-to-v3a.patch, wrapper-fix/manifest-tests.log, wrapper-fix/F2-v3a.txt, recompile/F7-diffs.txt, recompile/F8.txt and ids-check.txt."
+        - "inputs name scratchpad/c1-fix/recompile/... rather than scratchpad/c1-fix/recompile-v3a/..., and omit the v3a evidence."
+        - "AA-2 has no check of the already-pushed supersession commit 7cf956bd58 (FR-4)."
+      required: >-
+        The top-level session, acting for the Coordinator, rewrites
+        ledger/handoffs/TASK-20261106-de6d19.yaml before step AA-1 with only these changes.
+        (1) artifact_paths equal approval_archive.staged_paths below, exactly. (2) inputs name
+        the recompile-v3a byte copies and the evidence files listed in C1. (3) AA-2 adds the
+        FR-4 checks. (4) AA-6 names claude/c1-session2-20261106 and a new ready-for-review PR
+        against main. Nothing else changes. Runbook, plan, queue, specification, card and
+        probe bind none of its bytes, so no other approved sha256 moves. The ledger receipt
+        records its new sha256 and the diff against 1d8925d9.... If any other change is
+        needed, stop and return here.
+    FR-4_supersession_placement:
+      ruling: >-
+        7cf956bd58 does not move into C1. Ruling 7 put the supersession in C1 so that the
+        registry's decision_id would never reach main without its decision. A commit on a
+        branch with no PR does not publish it on main, so that purpose holds if all three
+        conditions below hold.
+      conditions:
+        - "AA-2 checks: 7cf956bd58 is an ancestor of the pushed head. It changes exactly experiments/EXP-ICPERF-127dbd/supersessions/RUN-ICPERF-c7f69e/manifest_v2.yaml and the RUN-ICPERF-c7f69e entry of tools/run_supersession_registry.yaml. manifest_v2.yaml at the archive head has sha256 d0c6d60c..., and the registry's superseding_sha256 equals it."
+        - "The approval-archive PR is the first PR opened from claude/c1-session2-20261106. It carries 7cf956bd58, d2db4c34f4 and C1-C4 together. No PR from that branch is opened, and the branch is not merged to main, before the one push of C1-C4. If such a PR exists or has merged, stop and return here."
+        - "The ledger receipt records commit 7cf956bd58 and sha256 d0c6d60c... as the supersession's commit and bytes."
+    FR-5_pr_3105:
+      ruling: >-
+        PR #3105 merged at 22:17Z as b7300d776b with CI red. RUN-ICPERF-c7f69e's flat
+        manifest.yaml (ef8f29d3...) is on main and fails schema validation. That is merge
+        hygiene, not evidence. It is not repaired by editing: the additive supersession
+        (ruling 7) corrects it on main when the approval-archive PR merges. Recommended, not
+        a gate: the top-level session records in its session log why a red PR merged, and
+        whether the failing check is a required check.
+    FR-6_validate_ledger_baseline:
+      ruling: >-
+        The baseline is 13511 errors at the F8 base, not 13504. The top-level session reports
+        13511 before and after the recompile, and 13519 before the supersession. It was not
+        re-run after v3a. AA-5 is the gate: validate_ledger runs on the merged base before C1,
+        and again before the last commit, with no new error over the merged-base count.
+    FR-7_branch:
+      ruling: >-
+        source_ref and the push target are origin/claude/c1-session2-20261106 (head
+        d2db4c34f4b545a111117ccf694c97122783dc2c at the probe). claude/c1-run-20261106 has
+        merged through #3105 and is neither a source nor a push target. A new
+        ready-for-review PR against main is opened at the approval-archive push.
+
+  approvability:
+    probe_command: python3 tools/experiment_preapproval.py --packet scratchpad/c1-fix/packet/packet.json
+    packet: >-
+      approval_decision_id DEC-20261106-ecf261; previews are the recompile-v3a byte copies of
+      the specification, trial plan, queue and TASK-20261106-724d14 handoff; source_ref
+      origin/claude/c1-session2-20261106; lane_id BATCH-0e0902; execution_route runbook, lint
+      receipt runbook-lint.txt 9df553a0...
+    source_ref: origin/claude/c1-session2-20261106 (d2db4c34f4b545a111117ccf694c97122783dc2c)
+    result: "approvable false; blockers exactly ['canonical experiment is already approved or not in a preapproval state'] (B1, accepted by probe_blocker_B1)"
+    report: scratchpad/c1-fix/packet/preapproval-report.json, archived by approval_archive C1 as archives/TASK-20261106-de6d19/preapproval-report.json
+    prospective_sha256:
+      specification: 1f9e2092fbd4ef96770955101cb3161ad26a45de0ef782c7bf63a05a631cd21a
+      trial_plan: b6626655b3c83dd8c8526ee722572ac1f7d3e6848ba3708c6e70e34acf5b8270
+      queue: 1714aecaf279e83da99ea88aaf9c9319c19cfd9bb86c459fdfce43f582af9c2a
+      handoff: ac1354a299b78c90458235da413a3c89ab2ac243d269066fe222c75c97d84168
+    lint_receipt: {path: experiments/EXP-ICPERF-127dbd/runbook-lint.txt, sha256: 9df553a0646b8b99140a73ec515e013e081093e12e7fa0a12eda015254fea8e2}
+    card: {path: experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml, sha256: 5e5e332301f24371cfdde6b0a6ab5a3e1ac8fbf065d95f760606eda759dea363}
+    lane: {batch_id: BATCH-0e0902, cap: 3, open_lanes_at_probe: [BATCH-0e0902, BATCH-8f7bd6]}
+  approved_bytes:
+    note: The approval archive must reproduce every sha256 below. If any differs, the archive stops and nothing in this decision takes effect.
+    specification: {path: experiments/EXP-ICPERF-127dbd/specification.yaml, sha256: 1f9e2092fbd4ef96770955101cb3161ad26a45de0ef782c7bf63a05a631cd21a}
+    trial_plan: {path: experiments/EXP-ICPERF-127dbd/trial-plan.json, sha256: b6626655b3c83dd8c8526ee722572ac1f7d3e6848ba3708c6e70e34acf5b8270, change_at_approval: "none (committed in d2db4c34f4)"}
+    runbook: {path: experiments/EXP-ICPERF-127dbd/runbook.yaml, sha256: b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b, change_at_approval: "none; LINT OK on the repository tree after C2"}
+    lint_receipt: {path: experiments/EXP-ICPERF-127dbd/runbook-lint.txt, sha256: 9df553a0646b8b99140a73ec515e013e081093e12e7fa0a12eda015254fea8e2}
+    launcher: {path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh, sha256: 0fcdd67e22f6105c36883bf9ba7edb62e512e6ff135979e0b63084fb2c9b7dc0, version: v3a}
+    run_supersession: {path: experiments/EXP-ICPERF-127dbd/supersessions/RUN-ICPERF-c7f69e/manifest_v2.yaml, sha256: d0c6d60ce72bb8c07fe79e3f6df33e0a2e60a5548a6c1c10cf75e69f6905b6ec, commit: 7cf956bd58}
+    queue: {path: coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json, sha256: 1714aecaf279e83da99ea88aaf9c9319c19cfd9bb86c459fdfce43f582af9c2a}
+    executor_handoff: {path: ledger/handoffs/TASK-20261106-724d14.yaml, sha256: ac1354a299b78c90458235da413a3c89ab2ac243d269066fe222c75c97d84168}
+    snapshot_handoff: {path: ledger/handoffs/TASK-20261106-d5ec1e.yaml, sha256: 2a2255b3f4173c16e5f2529ec0c95f267815babeba8416aafb862b1195c8e0fa}
+    approval_archive_handoff: {path: ledger/handoffs/TASK-20261106-de6d19.yaml, sha256: "regenerated per FR-3; the new sha256 and its diff against 1d8925d9... are recorded in the ledger receipt"}
+    card: {path: experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml, sha256: 5e5e332301f24371cfdde6b0a6ab5a3e1ac8fbf065d95f760606eda759dea363}
+
+  # ---------------------------------------------------------------- execution conditions
+  approves_session: >-
+    Yes: this decision approves RBS-ICPERF-de8978 at runbook b3676f85..., and it takes effect
+    only when it is committed on origin/main through approval archive TASK-20261106-de6d19.
+    Committing it authorizes no EKS spend by itself. The relay additionally needs every
+    before_relay condition and all four relay_facts.
+  execution_conditions:
+    before_relay:
+      - "The approval archive TASK-20261106-de6d19 (FR-3 handoff) is committed, pushed in one push, and merged to main."
+      - "python3 tools/newest_experiments.py --experiment EXP-ICPERF-127dbd --json reports execution_state: ready."
+      - "On the repository tree, runbook.py lint prints LINT OK b3676f85f7700962619108a7a93ec8683213612fce3d211c00f85f09a245dd5b, and task_card.py lint of CARD-EXP-ICPERF-127dbd-2.yaml prints CARD OK with the same sha256."
+      - ".resume/RESUME.md is updated for RBS-ICPERF-de8978 (run ids, card -2, this decision), and scripts/checkpoint.sh init, push and gate exit 0."
+      - "After git fetch, no ref holds runbook-sessions/RBS-ICPERF-de8978/journal.jsonl or a run directory for RUN-ICPERF-8b0d47 or RUN-ICPERF-5ffa79."
+      - "The owner's go-ahead has not been withdrawn, limited or qualified (owner_gate_ruling)."
+    relay_facts:
+      - "1. DEC-20261106-ecf261's commit sha on origin/main."
+      - "2. The owner go-ahead, quoted verbatim with its timestamp ('/ic-autolab go', 2026-11-06T22:05Z, replying to 'Reply \"go\" to launch it')."
+      - "3. The scripts/checkpoint.sh gate exit line (status 0)."
+      - "4. The aws --version line of the binary on the relay PATH (PATH=/tmp/claude-0/awsvenv/bin:$PATH), beginning aws-cli/1.46.2."
+    relay: >-
+      The top-level session relays the text that python3 tools/task_card.py prompt
+      CARD-EXP-ICPERF-127dbd-2.yaml prints, verbatim, to executor-mechanical (model tiers). If
+      any relay fact is missing, the executor stops before step 1.
+    never:
+      - reopen, resume or rerun RBS-ICPERF-e2a5c2, or reuse any retired id
+      - relaunch, rerun or reopen RBS-ICPERF-de8978 on any failure without a new Coordinator decision
+      - launch a -r2 request in RBS-ICPERF-de8978
+      - run launch_eks.sh (original, v2 or v3a) outside the supervised trial argv, except with --dry-run
+      - run TASK-20261106-dccfdc under this decision
+      - open a PR from claude/c1-session2-20261106 before the one approval-archive push (FR-4)
+
+  status_transitions:
+    - {record: EXP-ICPERF-127dbd, from: "approved (approved_by DEC-20261106-c69de4, session RBS-ICPERF-e2a5c2)", to: "approved (approved_by DEC-20261106-ecf261, session RBS-ICPERF-de8978)", by: "specification byte swap, approval_archive C2"}
+    - {record: TASK-20261106-4b7018, from: "queued (claim released, outcome failed)", to: failed, by: "queue, approval_archive C3"}
+    - {record: TASK-20261106-724d14, from: none, to: queued, by: "approval_archive C3 and C4"}
+    - {record: TASK-20261106-d5ec1e, from: none, to: queued, by: "approval_archive C3 and C4"}
+    - {record: RUN-ICPERF-c7f69e, from: "flat manifest (schema-invalid)", to: "superseded additively by manifest_v2.yaml d0c6d60c... (status failed_implementation)", by: "commit 7cf956bd58, effective on main with the approval-archive PR (ruling 7, FR-4)"}
+  unchanged_records:
+    - {record: RBS-ICPERF-e2a5c2, state: "stopped, terminal (implementation_error); journal immutable"}
+    - {record: RUN-ICPERF-c7f69e, state: "sealed bytes unchanged; receipt infrastructure_error, published false, submitted false; not evidence"}
+    - {record: RUN-ICPERF-6f784c, state: "not_run, no directory; id retired"}
+    - {record: DEC-20261106-c69de4, state: "unchanged record. Its runbook authorization (d31f7178...) is spent and authorizes no further session. It remains the original approval of the contract and of H-ICPERF-4cb536."}
+    - {record: H-ICPERF-4cb536, state: "approved (approved_by_decision DEC-20261106-c69de4); approval asserts nothing about the hypothesis"}
+    - {record: TASK-20261106-dccfdc, state: "queued, impeded (ruling 6)"}
+    - {record: CARD-EXP-ICPERF-127dbd-1, state: "historical, not edited (committed as a record in d2db4c34f4)"}
+    - {record: GOAL-ICPERF-e6b6a4, state: "active; next_action checkpointed and one impediment added in C4"}
+    - {record: crypto protocol IC-C1-DEFERRED-GUARD-FP28-20261106 v2, state: "unchanged; no amendment"}
+
+  # ---------------------------------------------------------------- approval archive
+  approval_archive:
+    task_id: TASK-20261106-de6d19
+    kind: ledger
+    runs: alone; zero runs
+    branch: claude/c1-session2-20261106 (head d2db4c34f4, which already holds 7cf956bd58)
+    base: >-
+      Merge origin/main into claude/c1-session2-20261106 first (merge, never rebase). Record
+      base_commit_checked, merge_outcome and the validate_ledger count on the merged base
+      (FR-6).
+    pre_check: >-
+      This file contains no unfilled placeholder and no draft-state key.
+      ledger/handoffs/TASK-20261106-de6d19.yaml has been regenerated per FR-3. The FR-4
+      conditions hold. Otherwise stop.
+    commit_order:
+      - "C1, the decision and its basis. ledger/decisions/DEC-20261106-ecf261.yaml, plus these files under coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/: preapproval-report.json (packet/preapproval-report.json); wrapper-fix/FINDINGS.md (byte copy); wrapper-fix/WRAPPER-V3.md (byte copy, the rejected v3 proposal); wrapper-fix/launch_eks.orig-to-v2.patch, wrapper-fix/launch_eks.orig-to-v3a.patch and wrapper-fix/launch_eks.v2-to-v3a.patch (each diff -u, regenerated); wrapper-fix/F2-v3a.txt; wrapper-fix/fix-tests.log (F3); wrapper-fix/manifest-tests.log (F12, evidence/F12.txt); recompile/F7-diffs.txt; recompile/F8.txt; crypto-binding-grep.txt (F4); s3-readonly-checks.txt (F5); rbs-e2a5c2-verify.txt (F6); ids-check.txt (F10); dccfdc-scratch-validate.txt (F11). The supersession is not restaged (FR-4)."
+      - "C2, the specification ALONE: experiments/EXP-ICPERF-127dbd/specification.yaml replaced by the preview bytes (1f9e2092...). Then, on the repository tree, runbook lint must print LINT OK b3676f85... and card -2 lint must print CARD OK. Otherwise stop."
+      - "C3, the queue ALONE: dispatch_queue.json (1714aeca...). Render it with tools/research_dispatch.py <queue> --ready-only, and run validate_queue with GitRepositoryVerifier at HEAD. Both must pass."
+      - "C4, handoffs, goal checkpoint and receipt: ledger/handoffs/TASK-20261106-724d14.yaml, -d5ec1e.yaml and -de6d19.yaml (FR-3), and ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml. The goal edit replaces next_action, next_action_recorded_at and updated_at with next_actions[NA-2] below, and adds the ruling 6 impediment; nothing else is touched. Also the ledger receipt, with commit_sha null inside its own commit. The receipt records the ruling 6 interim custody hashes, the FR-4 supersession commit and sha256, the FR-3 handoff sha256 and diff, and every approved_bytes comparison."
+    staged_paths:
+      - ledger/decisions/DEC-20261106-ecf261.yaml
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/preapproval-report.json
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/FINDINGS.md
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/WRAPPER-V3.md
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/launch_eks.orig-to-v2.patch
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/launch_eks.orig-to-v3a.patch
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/launch_eks.v2-to-v3a.patch
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/F2-v3a.txt
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/fix-tests.log
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/manifest-tests.log
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/recompile/F7-diffs.txt
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/recompile/F8.txt
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/crypto-binding-grep.txt
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/s3-readonly-checks.txt
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/rbs-e2a5c2-verify.txt
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/ids-check.txt
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/dccfdc-scratch-validate.txt
+      - experiments/EXP-ICPERF-127dbd/specification.yaml
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+      - ledger/handoffs/TASK-20261106-724d14.yaml
+      - ledger/handoffs/TASK-20261106-d5ec1e.yaml
+      - ledger/handoffs/TASK-20261106-de6d19.yaml
+      - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml
+      - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/ledger-receipt.json
+    staging: Stage named paths one by one. git add -A, git add . and directory adds are forbidden.
+    push: >-
+      Push all four commits in ONE push to origin claude/c1-session2-20261106. Open a new
+      ready-for-review PR against main that names every record id and states that it carries
+      7cf956bd58 (RUN-ICPERF-c7f69e supersession), d2db4c34f4 (recompile) and C1-C4. Enable
+      auto-merge (gh pr merge <n> --auto --merge). Never amend, rebase or force-push. A
+      conflict inside a record stops the archive; it is resolved by a superseding record,
+      never by editing.
+    verify: tools/validate_ledger.py (no new error over the merged-base count, FR-6), tools/check_merge_hygiene.py, and the post-commit verifier accepting the receipt
+    after_merge: record newest_experiments execution_state; it must be ready
+
+  target_ids:
+    - EXP-ICPERF-127dbd
+    - RUN-ICPERF-c7f69e
+    - H-ICPERF-4cb536
+    - TASK-20261106-4b7018
+    - TASK-20261106-dccfdc
+    - TASK-20261106-724d14
+    - TASK-20261106-d5ec1e
+    - TASK-20261106-de6d19
+    - BATCH-0e0902
+    - GOAL-ICPERF-e6b6a4
+  related_records:
+    prior_decisions: [DEC-20261106-1d23b6, DEC-20261106-aa7448, DEC-20261106-c4601c, DEC-20261106-c69de4]
+    sessions: {stopped: RBS-ICPERF-e2a5c2, approved: RBS-ICPERF-de8978}
+    runs: {retired: [RUN-ICPERF-c7f69e, RUN-ICPERF-6f784c], new: [RUN-ICPERF-8b0d47, RUN-ICPERF-5ffa79]}
+    commits: {first_session_records: b0d984b99, pr_3105_merge: b7300d776b, supersession: 7cf956bd58, recompile: d2db4c34f4}
+  rationale:
+    - "Validity before interpretation. The stopped session had 2 planned units and 0 valid ones, and nothing was submitted. The cause is an implementation defect in our wrapper, which mishandled the aws-cli text output of a read-only call. It is not evidence, and it is not an infrastructure outcome of a C1 session (rule 5)."
+    - "Smallest lawful chain: one decision, one approval archive and one relay. No successor experiment, no protocol amendment and no second decision. A successor EXP id would contradict the protocol's binding to EXP-ICPERF-127dbd, and the fix touches no bound decision quantity."
+    - "Approval follows execution. Runbook preflight (find_approval) needs a committed approve decision naming the new runbook sha256, so the approval names only bytes that exist and were checked (F7, F8, F9, F12)."
+    - "v3a, not v3: the manifest fix must not put a paid, completed S1 job at risk of being refused by the supervisor. The exit-0 path therefore stays byte-identical to the bytes the supervisor already completes."
+    - "Capacity: same lane BATCH-0e0902, same cap of 3 (2 open), max_concurrent 1, no new lane."
+    - "First-attempt requests preserve the protocol's only host-loss rerun for its intended use and keep the job-name/attempt mapping exact."
+    - "Scope: constant-factor counted engineering at fp28, as in c69de4. No asymptotic, wall-time or rho-beating claim. The gap to rho is reported as the distance remaining."
+  evidence_refs:
+    - scratchpad/c1-fix/FINDINGS.md
+    - scratchpad/c1-fix/launch_eks.v2.sh (sha256 2fa09e84...)
+    - scratchpad/c1-fix/launch_eks.sh.orig (sha256 130164868...)
+    - scratchpad/c1-fix/recompile-v3a/ (SHA256SUMS, F7-diffs.txt 28dc36aa..., F8.txt 41b4df9d..., byte copies)
+    - scratchpad/c1-fix/packet/{packet.json, preapproval-report.json}
+    - scratchpad/c1-fix/evidence/{F1-F2.txt, F2-v3a.txt, fix-tests.log, crypto-binding-grep.txt, s3-readonly-checks.txt, rbs-e2a5c2-verify.txt, F10.txt, dccfdc-scratch-validate.txt, F12.txt}
+    - scratchpad/c1-fix/WRAPPER-V3.md and launch_eks.v2-to-v3.patch (v3 proposal; rejected as proposed)
+    - scratchpad/c1-fix/launch_eks.patch (stale; not archived)
+    - experiments/EXP-ICPERF-127dbd/supersessions/RUN-ICPERF-c7f69e/manifest_v2.yaml (d0c6d60c..., commit 7cf956bd58)
+    - tools/experiment_execution.py (_check_trial_inputs 322-349, _check_driver_facts 370-477, complete_manifest 513-675)
+    - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-e2a5c2/journal.jsonl (at b0d984b99)
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/{raw-result.json, stderr.log, execution-receipt.json} (at b0d984b99)
+    - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+    - docs/runbook-execution.md (Execution semantics, One session per runbook)
+    - tools/experiment_preapproval.py assess (lines 239-240)
+    - tools/research_dispatch.py (archive expected paths; _void_source_artifacts; verify_archive)
+  limitations:
+    - "No shell. The Coordinator computed no hash and ran no test. Every sha256 here is transcribed from the reports, and the archive's AA-2 reproduction is the check."
+    - "The fix was tested on the extracted duplicate-check block and the manifest paths on scratch records, not end to end. T1 itself is the first real exercise. Every failure path before submission is exit 4 with nothing submitted, which would stop RBS-ICPERF-de8978 at USD 0."
+    - "The ListBuildsForProject page-size equivalence (one page, at most 100 ids) rests on FINDINGS.md."
+    - "PROTOCOL.md prose was not read here. F4 is the check that it binds no wrapper digest."
+    - "validate_ledger was not re-run after v3a (FR-6). AA-5 is the gate."
+    - "The owner go-ahead was relayed by the top-level session. The Coordinator did not see it."
+    - "CARD-EXP-ICPERF-127dbd-1's sha256 f26419da... is as reported. The Coordinator did not compare it with the relayed card text of RBS-ICPERF-e2a5c2."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session (coordinator role), text: "Regenerate ledger/handoffs/TASK-20261106-de6d19.yaml per FR-3, then run approval archive TASK-20261106-de6d19 in commit order on claude/c1-session2-20261106, with one push, a new ready-for-review PR against main and auto-merge (FR-4 conditions). Stay with the PR until merged; after merge, confirm execution_state ready."}
+    - {id: NA-2, rank: 2, owner: top-level session, text: "C1: once TASK-20261106-de6d19 has merged and the before_relay conditions hold, relay CARD-EXP-ICPERF-127dbd-2 to executor-mechanical with the four relay facts (TASK-20261106-724d14, session RBS-ICPERF-de8978, T1 RUN-ICPERF-8b0d47 then T2 RUN-ICPERF-5ffa79). Record tools/token_usage.py, then run snapshot TASK-20261106-d5ec1e alone before any review. Other ICPERF lanes continue as separately ranked."}
+    - {id: NA-3, rank: 3, owner: coordinator, text: "After d5ec1e: check the validity of the run set, then run the evidence review under protocol section 8 with the independent validator. Clear or re-rule the dccfdc impediment there."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "An infrastructure/implementation classification and the approval of a re-session. No evidence exists, and no claim is decided."

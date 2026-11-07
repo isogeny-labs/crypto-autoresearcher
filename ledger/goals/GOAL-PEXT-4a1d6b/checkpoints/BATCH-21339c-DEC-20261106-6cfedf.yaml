@@ -1,0 +1,84 @@
+# WRITE-ONCE goal checkpoint shard (tools/shard_goal.py layout). One checkpoint
+# per file. Never edit or reorder this file. A correction is a new record.
+# GOAL-PEXT-4a1d6b, BATCH-21339c checkpoint written with DEC-20261106-6cfedf.
+# It declares the driver's trial inputs in the frozen plan and reassigns the two
+# run ids consumed by the epoch-5 refusals. It approves no contract and runs nothing.
+batch_checkpoint:
+  batch_id: BATCH-21339c
+  checkpoint_id: BATCH-21339c-DEC-20261106-6cfedf
+  goal_id: GOAL-PEXT-4a1d6b
+  kind: amendment_after_refused_launch
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  decision_id: DEC-20261106-6cfedf
+  decision_ids:
+  - DEC-20261106-6cfedf
+  status: active
+  goal_status_after: active
+  question_ids:
+  - RQ-PEXT-7c3e91
+  records_opened:
+  - DEC-20261106-6cfedf
+  - AMD-EXP-PEXT-212d5c-20261106-inputs-and-run-ids
+  completion_criteria_discharged: none
+  refused_runs:
+  - run_id: RUN-PEXT-87595f
+    trial: regression
+    status: invalid_output
+    reason: driver run.inputs.parameters/seed had no plan source
+    retained: true
+  - run_id: RUN-PEXT-946361
+    trial: lean
+    status: invalid_output
+    reason: same inputs refusal; lean stage also fails as recorded by DEC-20261106-f6b029
+    retained: true
+  amendment:
+    path: experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261106-inputs-and-run-ids.yaml
+    sha256: 0dbdf7658a89362248bea3e81c5cc9d3432635e1457c16621d09607296ec7626
+    scientific_protocol_unchanged: true
+    declared_per_trial:
+    - 'seed: 20261012'
+    - 'curve_id: null'
+    - 'parameters: {trial_id, stage, inputs_from, plan, rustc_flags, threads, strata_k, construct_q, char2_l}'
+    reassigned_run_ids:
+      regression: RUN-PEXT-63ca6a
+      lean: RUN-PEXT-2723eb
+  rebinding:
+    trial_plan_sha256:
+      from: 06b801b5c98b1e2476a97d37eded50e1dfc4b4a6a82bd99b10f623595c1747a7
+      to: 5572ee66a37407147099b82542b6f1a2252969986665a8b21bf141c8df2759b0
+    dispatch_queue_sha256:
+      from: cb7292e30d17464b51a6fcf31bcabbb455b544124dc3b6bc87e9c34930564463
+      to: facbea1f21d1b427b5a479925c2b5187b5d1e732580f2e30eab396b5b2909ef5
+    executor_handoff_sha256:
+      from: 1c1f9540e3b05e54a74f6fbc14cacb9470468e504a2bc9d0fa55bc1a9c27ae8c
+      to: 683ed086ef6ad47cb026374bfb0826625abe218506f055e0806c3dc5946e5978
+  preflight:
+    method: read-only replay of _check_driver_facts over both epoch-5 manifests with rebound ids
+    regression: PASS
+    lean: PASS
+    not_covered: construct, char2, census, analyze (no manifest yet)
+  admission_after_amendment:
+    dispatcher_ready_task: TASK-20261024-672126
+    claim: null
+    experiment_execution_status: 'remaining 6, planned 2, needs_reconciliation 0'
+  hypotheses:
+    H-PEXT-d536a1: approved (pre-run, DEC-20261024-992998); no result exists
+    H-PEXT-ad0073: approved (pre-run, DEC-20261031-dcfdee); no result exists
+  impediments_changed: none
+  next_action: >-
+    Executor: claim lane BATCH-21339c and run TASK-20261024-672126 (/run EXP-PEXT-212d5c)
+    on plan 5572ee66... and the verified route; census needs its ~20.5 h window. Then
+    lane BATCH-a4886a for EXP-PEXT-0b2c75. No scientific execution from /coordinate.
+  scientific_trials_launched: 0
+  scientific_status_change: none
+  scope_preserved: >-
+    Only the mutable goal head, this new checkpoint shard, the amendment, the decision,
+    the plan, the handoff and the queue are written. No hypothesis, evidence, approval,
+    run directory or prior amendment changed.
+  inference:
+    requested_policy: coordinator-orchestration-code
+    reasoning_effort: high
+    resolved_backend: null
+    resolved_model_id: null
+    note: The OpenCode runtime did not resolve an adapter model for this session.

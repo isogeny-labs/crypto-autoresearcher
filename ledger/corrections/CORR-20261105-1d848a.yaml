@@ -1,0 +1,138 @@
+# Additive correction carrying DEC-20261105-8a9984 rulings.labelling_ruling (a)-(c)
+# for EXP-ICPERF-284bc4 (stage-0 price-ratio identity instrument v2). Closes
+# DEC-20261105-8a9984 NA-1. The frozen runbook, run report and data.json are
+# not edited; this record changes no byte of them.
+correction:
+  id: CORR-20261105-1d848a
+  id_provenance: >-
+    Allocated by the top-level session with tools/allocate_id.py --next
+    correction --date 20261105, then confirmed well-formed and free with
+    --check. The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-05'
+  recorded_by: >-
+    coordinator (Coordinator subagent, claude-opus-5-5 as stated by the
+    top-level session; no shell), executing DEC-20261105-8a9984 NA-1. This
+    record changes no research status, joint verdict, evidence direction or
+    decision.
+  record_type: run
+  record_type_note: >-
+    "run" is the closest permitted token (candidate | claim | run;
+    templates/research-records.md "Correction"). The corrected artifacts are
+    the metric labels of runbook session RBS-ICPERF-8cdc92 (as declared in the
+    runbook and carried into its run report), plus two reading rules for
+    claims about that session. Closest-token precedent: CORR-20261102-7e3a91.
+  record_id: experiments/EXP-ICPERF-284bc4/runbook.yaml
+  experiment_id: EXP-ICPERF-284bc4
+  runbook_session: RBS-ICPERF-8cdc92
+  goal_id: GOAL-ICPERF-e6b6a4
+  also_corrects:
+  - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ
+  - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json
+  target_sha256:
+    experiments/EXP-ICPERF-284bc4/runbook.yaml: e5850bc6a3076225edb948c931884fb1439383e74109ef8e7a36af3dfbe1a62c
+    experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ: db07265c6366a7f4caccd4f53e217c797b0ef66af8c8c476348e003d9db1b81c
+    experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json: 41910e155aace7798c8c6d9850ed0af3a8b53fdb4283ee0a70489c6d9ad6edb1
+  target_sha256_note: >-
+    Digests supplied by the top-level session for the bytes at origin/main
+    1c5b597368; not recomputed by the Coordinator (no shell). Line numbers
+    below were read by the Coordinator from those files.
+  supersedes: []
+  ruling_source: DEC-20261105-8a9984 rulings.labelling_ruling
+  field: >-
+    (a) the `label` of five metrics: runbook.yaml metrics[0..4] (lines
+    513-554: price_ratio_num line 515, price_ratio_den line 524, ratios_agree
+    line 533, all_match_bsgs line 541, matches_preregistered line 549);
+    report.typ Metrics table label column (lines 41, 43, 44, 45, 46); data.json
+    summary.metrics.<name>.label (all_match_bsgs line 32,
+    matches_preregistered line 52, price_ratio_den line 62, price_ratio_num
+    line 73, ratios_agree line 84). (b) the reading of the frozen prices
+    370/2100/40 ns and of the value 925/4. (c) the producer scope phrasing
+    quoted in experiments/EXP-ICPERF-284bc4/review/review-plan.yaml
+    claim_under_review (line 28).
+  not_in_field: >-
+    elapsed_seconds is correctly labelled measured and is not corrected:
+    runbook.yaml line 557, report.typ line 42, data.json line 42. The `unit`
+    fields (count / fraction) are not corrected by this record.
+  prior_value:
+    a_runbook_metrics: >-
+      price_ratio_num, price_ratio_den, ratios_agree, all_match_bsgs and
+      matches_preregistered each carry `label: measured`.
+    a_report_typ: >-
+      Metrics table rows all_match_bsgs, matches_preregistered,
+      price_ratio_den, price_ratio_num, ratios_agree show label "measured"
+      (lines 41, 43-46), under the caption "Labels say whether a value was
+      measured or derived from measured values" (line 37).
+    a_data_json: >-
+      "label": "measured" for all_match_bsgs (line 32), matches_preregistered
+      (line 52), price_ratio_den (line 62), price_ratio_num (line 73) and
+      ratios_agree (line 84).
+    b_price_provenance: >-
+      Not stated in the specification or hypothesis. Both call the cells
+      "toy" and say the integers are "not the n=83 figure", without saying
+      where 370, 2100 and 40 ns come from.
+    c_producer_phrasing: >-
+      "Scoped as a stage-0 observation: no latency effect, no n=83 speedup,
+      no attack." (PR #2776, as quoted in review-plan.yaml claim_under_review)
+  corrected_value:
+    a_labels: >-
+      price_ratio_num, price_ratio_den, ratios_agree, all_match_bsgs and
+      matches_preregistered are computed from frozen inputs (derived, not
+      measured) wherever runbook.yaml, reports/run-20261030T1520Z (report.typ,
+      data.json) or a metrics export label them "measured". No measured value
+      enters them, so they are also not "derived from measured values" in the
+      sense of report.typ line 37. Only elapsed_seconds is measured.
+    a_metrics_export_note: >-
+      The same reading applies to tools/progress_metrics.py, whose ICPERF_RUNS
+      table (line 198) feeds the ICPERF trial export that presents c_probe_ns,
+      c_state_ns, c_step_ns and price_ratio_num/den as physical values with no
+      assumed or planted qualifier (including NEG-1's planted 371). The code
+      fix of that export is DEC-20261105-8a9984 NA-2, a separate tooling
+      handoff, and is not made or claimed by this record.
+    b_price_provenance: >-
+      370, 2100 and 40 ns are IDEA-20261015-7a3c9e's n=83 prices: c_probe and
+      c_state inferred, c_step assumed (IDEA-20261015-7a3c9e.yaml lines 77-81:
+      "370*2100/(2.1*1600) = 231 against the measured 235 ... two of the three
+      prices are inferred, not read"). So 925/4 = 231.25 is numerically that
+      idea's "231 vs measured 235" figure. This pass adds no information to
+      that comparison. The comparator 235x [61, 645] is unverified in the
+      ledger.
+    c_producer_phrasing: >-
+      Read as "makes no latency or n=83 statement". The record measures
+      neither latency nor anything at n=83 and closes nothing there; it is not
+      a negative finding on latency or on an n=83 speedup.
+  evidence_tier: >-
+    Documentary and code-reading basis, not a mathematical refutation: the
+    label text and line numbers of the three frozen files, the
+    IDEA-20261015-7a3c9e proposal text, and the red-team findings O1, O2 and
+    O7, adopted as binding by DEC-20261105-8a9984. No run, metric value or
+    statistic is changed. Recorded values stay as in the six raw-result.json
+    files (EV-ICPERF-08f6f9 O1-O3).
+  reason: >-
+    Red-team TASK-20261105-c44b03 found that computed integers carry the label
+    "measured" (O1), that the frozen prices' n=83 provenance is undisclosed,
+    which invites reading 925/4 as confirming 235x (O2), and that "no latency
+    effect, no n=83 speedup" can read as negative findings (O7).
+    EV-ICPERF-08f6f9 listed the first two under unresolved_confounds with a
+    correction record pending. DEC-20261105-8a9984 ruled the three readings
+    (labelling_ruling (a)-(c)) and ordered an additive correction with the
+    frozen files left unedited (NA-1).
+  evidence_artifacts:
+  - ledger/decisions/DEC-20261105-8a9984.yaml
+  - ledger/evidence/EV-ICPERF-08f6f9.yaml
+  - experiments/EXP-ICPERF-284bc4/review/TASK-20261105-c44b03/red-team-report.yaml
+  - experiments/EXP-ICPERF-284bc4/review/review-plan.yaml
+  - experiments/EXP-ICPERF-284bc4/runbook.yaml
+  - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/report.typ
+  - experiments/EXP-ICPERF-284bc4/reports/run-20261030T1520Z/data.json
+  - ledger/proposals/IDEA-20261015-7a3c9e.yaml
+  - tools/progress_metrics.py
+  effect_on_the_round: >-
+    None on any status, verdict or decision. H-ICPERF-2f52d1 stays supported
+    as scoped in DEC-20261105-8a9984; EXP-ICPERF-284bc4 stays analyzed;
+    EV-ICPERF-08f6f9 keeps direction supports and strength preliminary; the
+    J1/J2 verdicts and audit AUD-20261105T164527Z-d5036c (flagged) stand as
+    recorded. Any citation of the session's metrics reads them through this
+    record. GOAL-ICPERF-e6b6a4 stays active; its single next action is set
+    at the goal checkpoint after the ledger archive that carries this record.
+  closes: DEC-20261105-8a9984 NA-1
+  edits_target: false

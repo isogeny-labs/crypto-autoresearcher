@@ -1,0 +1,235 @@
+# LEDGER ARCHIVE, GOAL-PATH-001, BATCH-342e48. In ONE isolated commit, run ALONE, it stages
+# DEC-20261107-f46a40 and the TASK-20261107-5b2b59 artifacts: four handoffs, the additive
+# goal-head update and the decision report. It runs only after TASK-20261107-7db1de has released.
+# Executed by the shell-holding top-level session in the coordinator role. Zero runs. Approves
+# nothing.
+handoff:
+  id: TASK-20261107-88b2fc
+  from: coordinator
+  to: coordinator
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-342e48
+  authorized_by: DEC-20261107-f46a40 conditions OC-1 to OC-7 and NA-1
+  objective: >-
+    After checking OC-1 to OC-7 of DEC-20261107-f46a40, commit and bind exactly the fourteen
+    expected paths in ONE isolated ledger archive commit. Record each check in the receipt.
+    Verify, push, and open or refresh the ready-for-review PR with auto-merge. Runs ALONE.
+  uncertainty_reduced: >-
+    None about the mathematics. It makes the record of the owner's answer, the bc7a76 caps, the
+    B8-D task and the batch opening durable together, or none of them.
+  inputs:
+    - ledger/decisions/DEC-20261107-f46a40.yaml
+    - ledger/goals/GOAL-PATH-001.yaml
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-58546f/ledger-receipt.json
+    - ledger/handoffs/TASK-20261107-5b2b59.yaml
+    - ledger/handoffs/TASK-20261107-88b2fc.yaml
+    - ledger/handoffs/TASK-20261107-af7359.yaml
+    - ledger/handoffs/TASK-20261107-d279a7.yaml
+    - ledger/handoffs/TASK-20261107-bc7a76.yaml
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/
+    - tools/research_dispatch.py
+    - tools/validate_ledger.py
+    - tools/check_merge_hygiene.py
+    - tools/ecc_priority.py
+    - tools/autoresearch_focus.py
+    - tools/allocate_id.py
+    - tools/goal_lanes.py
+    - tools/artifacts/artifacts.py
+  constraints:
+    - >-
+      LA-1 The queue comes first, in its own commit:
+      coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json only. This step
+      may run while 7db1de is live, because it touches nothing 7db1de reads. Push it, and render
+      it with python3 tools/research_dispatch.py <queue> --ready-only. It must pass, with 88b2fc
+      ready and af7359 task_marked_blocked (OC-1). Record python3 tools/goal_lanes.py lanes
+      GOAL-PATH-001. Then run python3 tools/goal_lanes.py open-lane GOAL-PATH-001 BATCH-342e48
+      --queue <queue> --decision DEC-20261107-f46a40 --objective "EXP-MONO-1a1be2 owner answer
+      to OQ-1 recorded; DEV-1 verification (B8-D) written; zero runs" --as <addr> --publish. The
+      queue is never staged by an archive.
+      Right after the lane opens, run scripts/checkpoint.sh push so that the uncommitted records
+      of DEC-20261107-f46a40 are held in the resume store (f46a40 batch_choice.order (2)).
+    - >-
+      LA-2 Wait for 7db1de (OC-7). Every later step starts only after TASK-20261107-7db1de has a
+      completed release.
+      Then merge origin/main into the working branch, and never rebase. Record
+      base_commit_checked and merge_outcome. A conflict inside a record stops the archive.
+      Stop and report to a fresh act (DEC-20261107-40200d if it is still unwritten, otherwise
+      spare DEC-20261107-856d9b) if origin/main did any of these:
+      - changed ledger/goals/GOAL-PATH-001.yaml, other than through the merge of PR 3130;
+      - changed any file under experiments/EXP-MONO-1a1be2/, other than through the merge of PR
+        3130;
+      - added a record citing EXP-MONO-1a1be2 or H-MONO-23d347.
+      Also record which commit a640b9f1dd names, with git cat-file -t and git log -1. Record
+      whether it is the merge of PR 3130 or the 7db1de claim (f46a40 RF-3). Record it as found
+      and decide nothing on it.
+    - >-
+      LA-3 Goal-head check, mechanical (OC-3). Against the base, git diff -U0 of
+      ledger/goals/GOAL-PATH-001.yaml shows insertions only, with no deleted and no modified
+      line. The inserted content is exactly:
+      - new keys current_batch_id_2026_11_07_342e48, dispatch_queue_path_2026_11_07_342e48 and
+        current_batch_note_2026_11_07_342e48, after current_batch_note_2026_11_07_c077fd;
+      - one item in open_batches (BATCH-342e48), after the BATCH-c077fd item;
+      - one item in impediments (IMP-PATH-20261107-2), after IMP-PATH-20261107-1;
+      - new keys next_action_2026_11_07_342e48 (under 1,000 characters) and
+        owner_answer_2026_11_07_342e48, after next_action_2026_11_07_c077fd.
+      Check all of the following:
+      - current_batch_id is still BATCH-a8825c, and dispatch_queue_path is unchanged;
+      - "latest_verified_commit: 67c2e5bf27c3b014e25829554130199d7918ae2b" is unchanged;
+      - status is active;
+      - the file parses with yaml.safe_load.
+      Record the base sha256. Any other difference is a scope finding: stop and report, and never
+      hand-repair it in this archive. Do not run tools/shard_goal.py.
+    - >-
+      LA-4 Queue and card check.
+      - Each of the four handoffs parses with a non-empty objective, deliverables and
+        completion_gate.
+      - DEC-20261107-f46a40 parses with yaml.safe_load.
+      - The queue's embedded handoffs agree with the ledger cards on id, role, write_scope,
+        artifact_paths and archived_by.
+      - af7359's write scope is disjoint from every expected path of this archive and from the
+        write scopes of bc7a76 and 7db1de.
+      - Every archive block carries commit_sha null, parent_sha null and path_sha256 {}.
+      - af7359's state is blocked, and in the BATCH-c077fd queue bc7a76's state is still
+        blocked.
+    - >-
+      LA-5 Identifier check (OC-4). Run python3 tools/allocate_id.py --check on
+      DEC-20261107-f46a40, BATCH-342e48 and the four TASK-20261107 ids of this batch, then on
+      DEC-20261107-40200d and DEC-20261107-856d9b. Record each output. 40200d and 856d9b must
+      still be free.
+    - >-
+      LA-6 ECC and focus (OC-2). Run python3 tools/ecc_priority.py --classify on RQ-MONO-001 and
+      GOAL-PATH-001, then --budget-violations, then python3 tools/autoresearch_focus.py for
+      GOAL-PATH-001. Record all outputs verbatim. Stop if the work is not ECC or if there is a
+      budget violation. A schema refusal of autoresearch_focus.py on a dispatch_queue is recorded
+      and is not a stop, as in the 58546f receipt.
+    - >-
+      LA-7 Contract and bytes check (OC-5).
+      - experiments/EXP-MONO-1a1be2/specification.yaml has sha256
+        d81a85b36961647d6d6caccdf988d5650a7376fa581173f9761ab3ed594bc373 and is
+        review_required.
+      - Every code/ file equals the 58546f input_pins_TASK-20261107-bc7a76_frozen, and
+        launcher.code_sha256() equals
+        5d5a607d59741b699065c02066d56a2883a34b44431da56c7bfd439b1f731464.
+      - ledger/handoffs/TASK-20261107-bc7a76.yaml has sha256
+        1251478e5c317b88299b32e0a06af965ed7b5231374cac78eb9124f79caf3a21.
+      - There is no runs/ entry, no approval.lock, no selftest-receipts/, and no __pycache__ or
+        .pyc under code/ (git status --ignored --untracked-files=all).
+    - >-
+      LA-8 Decision report. Confirm the following:
+      - the five source files exist as DEC-20261107-f46a40 visual_report specifies, rendered
+        after 7db1de released;
+      - report.pdf was rendered and opened, and every page was inspected;
+      - tools/artifacts/artifacts.py push placed report.pdf in the artifact store, and
+        .artifacts.json names its sha256 and bytes;
+      - .gitignore carries the managed block;
+      - every figure-data.json value names its source.
+      If the push is refused, the refusal is stated in report.typ and in the receipt, and the
+      deviation is recorded with twelve expected paths.
+    - >-
+      LA-9 Stage exactly the fourteen expected paths, one by one. git add -A, git add . and
+      directory adds are forbidden, and report.pdf is never git-added. Run
+      tools/validate_ledger.py and tools/check_merge_hygiene.py before committing (OC-6). Record
+      pre-existing errors as pre-existing.
+    - >-
+      LA-10 binding_mode content_at_commit. The commit message names TASK-20261107-88b2fc and
+      every record_id literally. It states all of the following in words only, with no value,
+      timing or formula (PD-1):
+      - the owner answered OQ-1 with option A, to re-run DEV-1 here under a detached supervisor
+        with up to two attempts;
+      - TASK-20261107-bc7a76 stays blocked until DEC-20261107-40200d dispositions the RR-9
+        routes;
+      - nothing is approved, and EXP-MONO-1a1be2 stays review_required;
+      - there are zero runs.
+      Verify the receipt with tools/research_dispatch.py. Push. PR 3130 has merged, so open a
+      new PR against main, ready for review, naming every record id, or refresh the branch's
+      open PR if there is one. Enable auto-merge (gh pr merge <n> --auto --merge).
+    - >-
+      LA-11 In a later commit, fill this task's archive block in the BATCH-342e48 queue and
+      append its tasks_state_revisions entry (queued -> completed), with at, by, reason and
+      paths_or_records_added [].
+    - >-
+      LA-12 Release with --outcome completed and --artifact <path>=<sha256> for both artifact
+      paths. If any OC fails, stop before staging. Nothing in DEC-20261107-f46a40 then takes
+      effect, and a fresh act decides (DEC-20261107-40200d if it is still unwritten, otherwise
+      spare DEC-20261107-856d9b). Never amend, rebase or force-push.
+    - LA-13 Zero runs. No other commit task (971edf, or any task of either lane) is live, and no DEV-1 attempt is live.
+  deliverables:
+    - >-
+      coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc/ledger-receipt.json.
+      It holds:
+      - commit_sha (null inside the commit), parent_sha, base_commit_checked, merge_outcome,
+        binding_mode, path_sha256 and record_ids;
+      - the OC-1 to OC-7 outcomes;
+      - the LA-2 a640b9f1dd record, and the LA-3 and LA-5 to LA-8 outputs;
+      - the hygiene and dispatcher outcomes.
+    - One isolated commit, a pushed branch, a ready-for-review PR with auto-merge, and lane BATCH-342e48 open.
+  artifact_paths:
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc/ledger-receipt.json
+    - ledger/decisions/DEC-20261107-f46a40.yaml
+  write_scope:
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc
+    - ledger/decisions/DEC-20261107-f46a40.yaml
+  archived_by: TASK-20261107-88b2fc
+  archive:
+    kind: ledger
+    binding_mode: content_at_commit
+    source_task_ids: [TASK-20261107-5b2b59]
+    record_ids:
+      - DEC-20261107-f46a40
+      - GOAL-PATH-001
+      - BATCH-342e48
+      - BATCH-c077fd
+      - EXP-MONO-1a1be2
+      - TASK-20261107-5b2b59
+      - TASK-20261107-88b2fc
+      - TASK-20261107-af7359
+      - TASK-20261107-d279a7
+      - TASK-20261107-bc7a76
+    expected_paths:
+      - coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/archives/TASK-20261107-88b2fc/ledger-receipt.json
+      - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.artifacts.json
+      - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/.gitignore
+      - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/dev1-allowance.svg
+      - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figure-data.json
+      - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/figures.py
+      - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/release-gates.svg
+      - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/report.typ
+      - ledger/decisions/DEC-20261107-f46a40.yaml
+      - ledger/goals/GOAL-PATH-001.yaml
+      - ledger/handoffs/TASK-20261107-5b2b59.yaml
+      - ledger/handoffs/TASK-20261107-88b2fc.yaml
+      - ledger/handoffs/TASK-20261107-af7359.yaml
+      - ledger/handoffs/TASK-20261107-d279a7.yaml
+    expected_paths_note: This card's artifact_paths together with those of its source task. If the dispatcher's computed set differs, stop and report.
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    reasoning_effort_note: null means the policy default (high).
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 3600
+    memory_gb: 1
+    maximum_runs: 0
+  dispatch_preconditions:
+    - {id: LP-1, text: "archived_by is bound (SELF)."}
+    - {id: LP-2, text: "LA-1 is done: the queue is committed, pushed and renders clean, and lane BATCH-342e48 is open."}
+    - {id: LP-3, text: "TASK-20261107-7db1de has a completed release (OC-7). TASK-20261107-971edf is not live; by default it has already run (f46a40 batch_choice.order)."}
+    - {id: LP-4, text: "Claim after git fetch: python3 tools/goal_lanes.py claim coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json TASK-20261107-88b2fc --as <addr> --ttl-minutes 60 --publish."}
+    - {id: LP-5, text: "RUNS ALONE. No other task of BATCH-342e48 or BATCH-c077fd is live, and no DEV-1 attempt is live."}
+  completion_gate:
+    - origin/main merged (never rebased) after 7db1de released, with base_commit_checked and merge_outcome recorded.
+    - OC-1 to OC-7 hold and each is recorded in the receipt.
+    - One commit binds exactly the fourteen expected paths (twelve under the LA-8 deviation), and the receipt verifies under tools/research_dispatch.py.
+    - The branch is pushed, a ready-for-review PR with auto-merge names every record id, and lane BATCH-342e48 is open.
+    - The release carries two non-empty digests. Zero runs.
+  return_format: The ledger receipt, the PR reference, the lane record path, the LA-2 a640b9f1dd record, the LA-5 outputs, and the release digests.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. An archive stages and verifies. It judges nothing.
+  runs_launched: 0

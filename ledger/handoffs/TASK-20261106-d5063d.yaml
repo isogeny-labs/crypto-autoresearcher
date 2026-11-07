@@ -1,0 +1,91 @@
+# Re-review composition and second pre-approval fix round for EXP-MONO-1a1be2
+# (DEC-20261106-475620). Coordinator subagent, no shell. Completed when written; the top-level
+# session renders the decision report this act specifies. Archived by TASK-20261106-779e02.
+# Zero runs.
+handoff:
+  id: TASK-20261106-d5063d
+  from: coordinator
+  to: coordinator
+  goal_id: GOAL-PATH-001
+  batch_id: BATCH-a8825c
+  authorized_by: DEC-20261106-843cf7 batch.focus.inconclusive_decision (declared successor on a failed 7c2b01 re-review)
+  objective: >-
+    Compose the TASK-20261106-7c2b01 re-review. Disposition N-5 item 5, NF-1 (grade) and NF-2
+    to NF-7. Decide DEV-1 under the owner's relayed direction (the unchanged FX-16 cell with
+    about 10-12 h and 16 GB). Pin the further pre-data invalidation rules. Write the
+    BATCH-69d9a2 checkpoint, the BATCH-a8825c queue and its seven handoffs, the additive
+    goal-head update, and DEC-20261106-475620.
+  uncertainty_reduced: >-
+    Exactly what must still change in the EXP-MONO-1a1be2 instrument before approval, how
+    DEV-1 is closed, and how both are verified.
+  inputs:
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/fix_review.md
+    - coordination/goals/GOAL-PATH-001/review/TASK-20261106-7c2b01/review_attestation.yaml
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-69d9a2/dispatch_queue.json
+    - ledger/decisions/DEC-20261106-843cf7.yaml
+    - ledger/handoffs/TASK-20261106-4c4831.yaml
+    - ledger/handoffs/TASK-20261106-7c2b01.yaml
+    - experiments/EXP-MONO-1a1be2/implementation/fix-report-4c4831.md
+    - experiments/EXP-MONO-1a1be2/implementation/throughput-calibration.json
+    - ledger/goals/GOAL-PATH-001.yaml
+  constraints:
+    - No approval, no status change, and no edit of the committed specification. The goal-head edit is additive only, except the two pointer scalars, whose prior values are kept in *_before_* keys. Zero runs, no shell, no new identifier.
+  deliverables:
+    - ledger/decisions/DEC-20261106-475620.yaml (owned by TASK-20261106-779e02)
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/dispatch_queue.json (committed alone, never staged by an archive)
+    - the seven BATCH-a8825c handoffs and the additive GOAL-PATH-001 update
+    - the decision-report specification (DEC visual_report), rendered by the top-level session into the report paths below, with the PDF in the artifact store
+  artifact_paths:
+    - ledger/goals/GOAL-PATH-001.yaml
+    - ledger/handoffs/TASK-20261106-d5063d.yaml
+    - ledger/handoffs/TASK-20261106-779e02.yaml
+    - ledger/handoffs/TASK-20261106-2b7223.yaml
+    - ledger/handoffs/TASK-20261106-96fee7.yaml
+    - ledger/handoffs/TASK-20261106-dfd0ed.yaml
+    - ledger/handoffs/TASK-20261106-941825.yaml
+    - ledger/handoffs/TASK-20261106-afbe9b.yaml
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620/report.typ
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620/findings.svg
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620/mutation-kill.svg
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620/figures.py
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620/figure-data.json
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620/.artifacts.json
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620/.gitignore
+  artifact_paths_note: >-
+    The top-level session renders the report from DEC-20261106-475620 visual_report before
+    779e02 stages it. report.pdf goes to the artifact store (tools/artifacts/artifacts.py push),
+    and only its manifest .artifacts.json and the managed .gitignore are tracked. If the tool
+    refuses, the session states the refusal in report.typ and in the receipt, and 779e02's
+    expected paths drop .artifacts.json and .gitignore by a recorded deviation.
+  write_scope:
+    - ledger/goals/GOAL-PATH-001.yaml
+    - ledger/handoffs/TASK-20261106-d5063d.yaml
+    - ledger/handoffs/TASK-20261106-779e02.yaml
+    - ledger/handoffs/TASK-20261106-2b7223.yaml
+    - ledger/handoffs/TASK-20261106-96fee7.yaml
+    - ledger/handoffs/TASK-20261106-dfd0ed.yaml
+    - ledger/handoffs/TASK-20261106-941825.yaml
+    - ledger/handoffs/TASK-20261106-afbe9b.yaml
+    - experiments/EXP-MONO-1a1be2/reports/review-DEC-20261106-475620
+  archived_by: TASK-20261106-779e02
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 3600
+    memory_gb: 1
+    maximum_runs: 0
+  completion_gate:
+    - The decision, the queue, seven handoffs and the goal-head update exist in the working tree.
+    - The decision gives a reason for each of the following. It disposes of N-5 item 5, NF-1 (with its grade), NF-2 to NF-7 and the reviewer's observations. It decides DEV-1 with its budget and placement, and records the owner direction with its provenance. It records the SF-1 rate correction. It states the updated blockers, V2-5, V2-6, approval_records_v2_1, knowledge_promotion, the visual-report specification and exactly one next action.
+    - Zero runs.
+  return_format: Decisions and reasons; files written; ids used and unused; queue table; ordered steps for the top-level session and the single next action; what was not done.
+  review_plan: null
+  review_required: false
+  review_required_note: FALSE. A composing and design act; it changes no claim.
+  runs_launched: 0
