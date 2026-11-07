@@ -30,6 +30,18 @@ the 47-variable slice preserves its 61,196-dimensional codomain and
 surjectivity. This is the mathematical premise for the row-copy projection;
 an independent checker must still accept the actual projected/rebased bytes.
 
+The independently reconstructed 47-variable sliced system has 47 generators
+and 18,297 terms. Its quadratic coefficient matrix has rank 46, with the sole
+dependency mask `0x25d881e86ebe`; that combination is the zero polynomial
+after substitution. Thus the generator span has no further nonzero affine
+equation to slice, although a later-degree affine fall is not excluded. The
+exact rank screen and its input hash are in
+`validation/n47-rand00-sliced-affine-rank-001.json`, replayed by
+`screen_n47_sliced_affine_rank.py` from the checked 146,776-byte generator
+artifact. One of the 24 generators in the zero dependency could be removed
+without changing the degree-$d$ closure, but the frozen D4 plan retains all
+47 equations.
+
 The deterministic screen in `n47-rand00-slice-capacity-screen-001.json` counts
 126,387 D5 border monomials for the original unit-representative set. For the
 published blocked worker and `chunk_rows=4096`, a 47-variable sliced D4 seed
