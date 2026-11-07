@@ -4,6 +4,8 @@
 from pathlib import Path
 import hashlib
 from itertools import combinations
+import json
+from math import comb
 import struct
 import sys
 import tempfile
@@ -15,6 +17,18 @@ from extract_compact_quotient import extract, HEADER, MAGIC
 
 
 class CompactQuotientReferenceTests(unittest.TestCase):
+    def test_frozen_n47_plan_uses_original_48_variable_system(self):
+        root = Path(__file__).resolve().parent
+        plan = json.loads((root / 'n47-rand00-d5-local-plan-002.json').read_text())
+        variables = 2 * plan['record']['k']
+        self.assertEqual((plan['record']['n'], variables), (47, 48))
+        self.assertEqual(plan['seed_columns'], sum(comb(variables, i)
+                                                    for i in range(5)))
+        self.assertEqual(plan['next_degree_columns'], sum(comb(variables, i)
+                                                           for i in range(6)))
+        self.assertEqual((plan['seed_codimension'],
+                          plan['working_coordinates']), (61_196, 187_583))
+
     def test_retained_n6_d5_map_factors_through_compact_certificate(self):
         root = Path(__file__).resolve().parent / 'validation/cascade-20261029-v2/0'
         n, d, q, masks4, rows4 = read_certificate(root / 'degree4.bin')

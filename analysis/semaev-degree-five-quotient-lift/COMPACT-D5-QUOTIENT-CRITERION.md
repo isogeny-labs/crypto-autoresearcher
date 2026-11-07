@@ -39,21 +39,26 @@ is closed under every allowed degree-five multiplication. By the definition
 of `W_5`, `W_5(F) <= S`; condition 1 separates the constant. As `phi` is
 onto, `rank(h*phi)=rank(h)=r`, giving the codimension statement. QED.
 
-For the n47 affine slice, `B_<=5` has 1,729,648 monomials. The retained D4
-seed has `dim Q=61,196`, and its provisional lift has 187,583 coordinates.
-A row-major `h` matrix of rank `r` therefore needs about 9.23 times fewer
-row bytes than a full degree-five quotient map of the same rank. At
-`r=61,196`, the conceptual 32-byte-header plus padded-row format is
-1,436,135,480 bytes (1.338 GiB), versus 13,256,022,304 bytes for the full
-map. This comparison concerns certificate storage only; the checker still
-must derive or stream the seed rewrite and check all initial relations.
+For the **original 48-variable n47 system** in the frozen D5 plan,
+`B_<=5` has 1,925,357 monomials. Its accepted D4 seed has
+`dim Q=61,196`, and the plan records 187,583 provisional coordinates.
+A row-major `h` matrix of rank `r` therefore needs about 10.27 times fewer
+row bytes than a full degree-five quotient map of the same rank. At the
+illustrative value `r=61,196`, the conceptual 32-byte-header plus padded-row
+format is 1,436,135,480 bytes (1.338 GiB), versus 14,755,936,080 bytes
+(13.743 GiB) for the full map. This comparison concerns certificate storage
+only; the checker still must derive or stream the seed rewrite and check all
+initial relations. The 47-variable affine slice has 1,729,648 degree-at-most-
+five monomials, but its provisional size is **unknown** until the sliced D4
+map is produced and rebased. The slice's full-map size screen in
+`N47-D5-CHECKER-ENVELOPE.md` is separate from the original-system example.
 
 `extract_compact_quotient.py` now extracts those rows from an already
 produced full certificate without mapping the full file. Its write-once
 binary format has a 128-byte header: an eight-byte magic, seven unsigned
 64-bit dimensions, and the seed and full-certificate SHA-256 digests,
 followed by padded rows for standard high monomials and then the seed's unit
-representatives. At the illustrative n47 dimensions above, its actual
+representatives. At the illustrative original-system dimensions above, its actual
 format size would be 1,436,135,576 bytes. The extractor verifies both
 input hashes before and after extraction and checks seed triangularity;
 its output is still an **unchecked candidate**. A compact checker must
