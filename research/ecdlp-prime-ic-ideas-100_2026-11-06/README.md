@@ -613,6 +613,8 @@ The sweep was checked against the program's ECDLP lead atlas (`crypto-autoresear
 
 ## Critique
 
+_Scope note: the critique stage received the 100 plans as its input, not the repository contents; its caveats about repository access or truncation refer to that prompt. The repository and lead-atlas audit is in **Prior work** above and in `prior-work.md`._
+
 **No repository review is possible from the supplied text.** Prior results, artifact IDs, and novelty remain unverified; many plans are truncated. Below, “flaw” means the principal blocking issue—not necessarily a proof of impossibility. **Within each tier, order is descending expected research value**, not breakthrough probability.
 
 ### A — Worth resolving first
