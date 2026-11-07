@@ -1,0 +1,167 @@
+{
+  "schema": "isolab.eks.request/v1",
+  "job": {
+    "job_name": "ic-c1-dg-s2-20261106",
+    "instance_type": "c8a.2xlarge",
+    "seconds": 3600,
+    "spec": {
+      "schema": "ecbench.spec/v1",
+      "label": "IC-C1-DEFERRED-GUARD-FP28-20261106 S2: counted session, deferred repeat guard with N 304 against the walk incumbent at N 407, fp28",
+      "description": "research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md: counted-only session (no wall field is read); 10 arms in the protocol section 4.1 order.",
+      "workloads": {
+        "curves": [
+          {
+            "kind": "prime_search",
+            "bits": 28,
+            "seed": 2026110628211
+          },
+          {
+            "kind": "prime_search",
+            "bits": 28,
+            "seed": 2026110628212
+          }
+        ],
+        "targets_per_curve": 60,
+        "target_seed": 2026110628213,
+        "target_kind": "public"
+      },
+      "arms": [
+        {
+          "name": "incumbent",
+          "role": "baseline",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=407",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "walk"
+            }
+          }
+        },
+        {
+          "name": "candidate",
+          "role": "candidate",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=304",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "stride-renew-deferred-guard"
+            }
+          }
+        },
+        {
+          "name": "walk-eager-n304",
+          "role": "candidate",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=304",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "walk"
+            }
+          }
+        },
+        {
+          "name": "srenew-eager-n407",
+          "role": "candidate",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=407",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "stride-renew"
+            }
+          }
+        },
+        {
+          "name": "srenew-deferred-n407",
+          "role": "candidate",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=407",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "stride-renew-deferred-guard"
+            }
+          }
+        },
+        {
+          "name": "srenew-eager-n304",
+          "role": "candidate",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=304",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "stride-renew"
+            }
+          }
+        },
+        {
+          "name": "pc-fb2x",
+          "role": "candidate",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=814",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "walk"
+            }
+          }
+        },
+        {
+          "name": "rho-neg",
+          "role": "reference",
+          "method": {
+            "id": "rho.negation"
+          }
+        },
+        {
+          "name": "rho-neg-aa",
+          "role": "control",
+          "method": {
+            "id": "rho.negation"
+          }
+        },
+        {
+          "name": "incumbent-aa",
+          "role": "candidate",
+          "method": {
+            "id": "ic.pipeline",
+            "params": {
+              "factor_base": "prime-abscissa:size=407",
+              "oracle": "mitm:negation_folded=1",
+              "max_trials": "26479085",
+              "targets": "walk"
+            }
+          }
+        }
+      ],
+      "measurement": {
+        "rounds": 8,
+        "warmup": 1,
+        "order": "alternate_measured",
+        "seed": 2026110628214,
+        "isolation_required": "L2",
+        "timeout_seconds": 600
+      }
+    },
+    "build": {
+      "image_uri": "104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914",
+      "source_revision": "ea8e9ef71c3c82027dd9e01535302725519c3fca",
+      "ecbench_sha256": "73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01"
+    }
+  },
+  "provenance": {
+    "harness": "crypto IC-C1-DEFERRED-GUARD-FP28-20261106 session S2 (research/ic_c1_deferred_guard_fp28_20261106/protocol.json)",
+    "source_revision": "ea8e9ef71c3c82027dd9e01535302725519c3fca"
+  }
+}

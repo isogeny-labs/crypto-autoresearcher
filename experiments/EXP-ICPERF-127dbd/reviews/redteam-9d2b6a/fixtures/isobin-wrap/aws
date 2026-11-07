@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Red-team delegating wrapper (TASK-20261107-9d2b6a). NOT an aws client: every call is passed unchanged to the committed
+# offline fake tests/fake-aws by absolute path, which serves $FAKE_S3_ROOT and refuses S3 writes. After the fake returns,
+# it can simulate two things the fake cannot express:
+#   RT_MODE=partial  a recursive download that failed on one object: delete $RT_DROP from the destination and exit 1;
+#   RT_MODE=toctou   a third-party write into the fake bucket right after listing number $RT_TOCTOU_AT of runs/<job>/:
+#                    run $RT_TOCTOU_HOOK (a script that mutates $FAKE_S3_ROOT only).
+FAKE=$(cd "$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)/../../../../implementation/tests" && pwd)/fake-aws
+"$FAKE" "$@"; rc=$?
+case "${RT_MODE:-}" in
+partial)
+  if [[ "${1:-} ${2:-}" == "s3 cp" && " $* " == *" --recursive "* && $rc == 0 ]]; then
+    [[ -n ${RT_DROP:-} ]] && rm -f -- "${4%/}/$RT_DROP"
+    echo "RT-WRAP partial: dropped ${RT_DROP:-nothing} from ${4:-}, returning 1" >> "$FAKE_AWS_LOG"; exit 1
+  fi ;;
+toctou)
+  if [[ "${1:-} ${2:-}" == "s3 ls" && ${3:-} =~ ^s3://[^/]+/runs/[A-Za-z0-9-]+/$ ]]; then
+    n=$(( $(cat "$RT_STATE/ls_count" 2>/dev/null || echo 0) + 1 )); echo "$n" > "$RT_STATE/ls_count"
+    if [[ $n == "${RT_TOCTOU_AT:-0}" ]]; then echo "RT-WRAP toctou: hook after listing #$n of $3" >> "$FAKE_AWS_LOG"; bash "$RT_TOCTOU_HOOK"; fi
+  fi ;;
+esac
+exit $rc
