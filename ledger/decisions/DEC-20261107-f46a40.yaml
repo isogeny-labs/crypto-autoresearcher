@@ -1,0 +1,508 @@
+# FRESH COORDINATOR ACT that records the owner's answer to OQ-1 of DEC-20261106-24d2a2 (the DEV-1
+# allowance for EXP-MONO-1a1be2). This is the act that DEC-20261106-24d2a2 reserved as spare
+# DEC-20261107-f46a40, triggered by the first inconclusive_decision event, "the owner's answer to
+# OQ-1".
+# It records answer (A) and its scope, and states the bc7a76 attempt cap and cumulative cap. It
+# writes the B8-D DEV-1 verification task and its snapshot, and opens BATCH-342e48 for them and for
+# this act's ledger archive.
+# It does NOT move bc7a76 to queued. bc7a76 BP-2 also requires every 7db1de RR-9 route to be
+# dispositioned, and 7db1de is still running. That disposition and the queue revision go to
+# DEC-20261107-40200d, after 971edf verifies (release_status below).
+# It APPROVES NO EXPERIMENT and changes no hypothesis, idea or goal status. It launches zero runs.
+# It takes effect only when the ledger archive TASK-20261107-88b2fc verifies.
+# Written by a Coordinator subagent with no shell. The top-level session minted and checked every
+# id, and the --check results go in the 88b2fc receipt.
+coordinator_decision:
+  id: DEC-20261107-f46a40
+  task_id: TASK-20261107-5b2b59
+  archived_by: TASK-20261107-88b2fc
+  mode: owner-answer record, release conditions and B8-D task design (coordinate; no trials)
+  decided_by: coordinator
+  decided_at: '2026-11-07'
+  successor_of: >-
+    DEC-20261106-24d2a2 batch.focus.inconclusive_decision (first event: the owner's answer to
+    OQ-1), owner_questions OQ-1 on_each_answer.A, and next_actions
+    declared_successor_not_an_additional_next_action.
+  supersedes: >-
+    In part, never in content: DEC-20261106-24d2a2 owner_questions OQ-1 on_each_answer.A and its
+    declared successor. Both say that the act recording answer A also moves bc7a76 from blocked
+    to queued. That move is split off to DEC-20261107-40200d (split_of_release below). Nothing
+    else in DEC-20261106-24d2a2 changes. No ordering rule changes.
+  authorized_by: >-
+    Coordinator authority (agents/coordinator.md: reprioritize, decompose, open batches).
+    DEC-20261106-24d2a2 OQ-1 on_each_answer.A and reserved_ids_used_and_unused.unused. The owner's
+    answer (owner_answer below) is a grant of resources for the DEV-1 instrument check. It is not
+    an experiment approval. The standing user authorization (2026-09-06) is noted but NOT used,
+    because nothing is approvable (B1, B2, B4 to B6 and B8 are open).
+
+  trigger:
+    event: the owner's answer to OQ-1 (DEC-20261106-24d2a2 batch.focus.inconclusive_decision, first item)
+    prerequisite_archive: >-
+      DEC-20261106-24d2a2 archived by TASK-20261107-58546f at
+      2e22a1c0b1715a5ae3a6c26d9a5b44553d7faca7 (parent cae53c1122c0, sixteen paths, verified on
+      content), as the BATCH-c077fd queue archive block and tasks_state_revisions record. An
+      earlier attempt, f23d99db6f, was reverted at cae53c1122 because its message lacked two
+      record ids.
+
+  context: >-
+    DEC-20261106-24d2a2 is archived. As the top-level session reports, PR 3130 carries it and
+    merged at a640b9f1dd, so 58546f, the two BATCH-a8825c cancellations and the closure of lane
+    BATCH-a8825c (e864d30b46) are on main. 58546f is released (ac048e4c68). The hardening
+    re-review TASK-20261107-7db1de is running in a fresh validator session. It uses the main
+    checkout read-only as its full checkout, a deviation it records, because the disk cannot hold
+    a second full worktree. 971edf is queued behind it. bc7a76 is blocked, and eebc5b waits on
+    it. EXP-MONO-1a1be2 is a review_required draft, and H-MONO-23d347 is proposed. This act read
+    every record named in its task text. It ran no tool and computed no hash.
+
+  reported_facts:
+    status: >-
+      As reported by the top-level session on 2026-11-07. These are not verified by this act, and
+      they are not claims about the experiment.
+    items:
+      - id: RF-1
+        text: >-
+          At about 2026-11-07T02:20Z the top-level session sent OQ-1 to the owner word for word
+          through the session's question tool, with options (A) to (D) as written in
+          DEC-20261106-24d2a2.
+      - id: RF-2
+        text: >-
+          The container restarted a third time during this session. This adds to
+          DEC-20261106-24d2a2 ENV-2, which said "at least twice". No restart rate is recorded.
+      - id: RF-3
+        text: >-
+          Two reported facts give the same short sha, a640b9f1dd: the 7db1de claim, and the merge
+          of PR 3130. One of them is likely a copying slip. This changes nothing decided here.
+          88b2fc LA-2 records which commit each sha names (git cat-file -t and git log -1).
+
+  decision: revise
+
+  target_ids:
+    - EXP-MONO-1a1be2
+    - H-MONO-23d347
+    - RQ-MONO-001
+    - TASK-20261107-bc7a76
+    - BATCH-c077fd
+    - BATCH-342e48
+    - GOAL-PATH-001
+
+  # ------------------------------------------------------------ 1. the owner's answer
+  owner_answer:
+    question: OQ-1 of DEC-20261106-24d2a2 (text there, relayed verbatim; RF-1)
+    answered_at: about 2026-11-07T02:20Z
+    channel: the session's question tool, answered by the owner in the session
+    provenance: >-
+      The owner's own answer, given in the session, as the top-level session relays it to this
+      act. It is not an inference. This subagent did not see the exchange. It records the answer
+      as relayed and adds no owner text.
+    option_chosen: A
+    option_label_as_shown: "(A) Re-run here (Recommended)"
+    option_text_as_shown: >-
+      Re-run here under a detached supervisor, with up to 2 attempts if restarts interrupt it: at
+      most about 26 h of DEV-1 wall in all, or a lower cap you set. The Coordinator recommends
+      this, falling back to (B) if both attempts are lost to restarts.
+    lower_cap_set_by_owner: none
+    other_owner_notes: none
+    reading: >-
+      The owner authorizes DEV-1 to run again on this host, under the bc7a76 detached supervisor,
+      for at most two fresh attempts (attempts 2 and 3; attempt 1 was 96fee7). A second attempt is
+      allowed only after a container restart ends the first one (bc7a76 LD-8 C5). The whole of
+      DEV-1 is bounded at about 26 h of wall, attempt 1 included. If both attempts are lost to
+      restarts, the fallback is option (B), a restart-proof runner. The answer grants resources
+      and sets scope. It approves no experiment, protocol or run.
+    not_covered_by_the_answer:
+      - >-
+        Option (B) itself. The owner chose it as the fallback but set none of its parameters
+        (dollar ceiling, CPU and RAM, absolute deadline, retry allowance), and no runner is
+        configured (DEC-20261106-24d2a2 ENV-4). Using (B) needs those parameters from the owner
+        first.
+      - >-
+        Any stop other than restarts. A stop of type stopped_projection, watchdog, signalled,
+        unexplained_kill, crash, OOM or no_checkpoint_route is not "lost to restarts". It gets no
+        retry under bc7a76 LD-8 and LD-9, and it goes to a fresh act with no fallback presumed.
+      - Option (C), any code change, and any change to the cell. All stay excluded.
+    oq1_status: answered (A). Recorded here, and official when 88b2fc verifies.
+
+  # ------------------------------------------------------------ 2. caps for bc7a76
+  bc7a76_caps:
+    card: TASK-20261107-bc7a76 (unchanged; immutable; sha256 1251478e...3a21 per the 58546f receipt)
+    maximum_attempts: 2
+    maximum_attempts_basis: >-
+      The owner's "up to 2 attempts". This equals the card's own budget, so it raises and lowers
+      nothing.
+    cumulative_cap_seconds_this_card: 86400
+    cumulative_cap_basis: >-
+      bc7a76 LD-9 lets the releasing act set a cumulative cap but raise nothing. The cap is set
+      at the card's own budget: two attempts of 43,200 s each. Each attempt is a projection of at
+      most 1,200 s, the 41,400 s watchdog, and set-up. With attempt 1 (about 2.5 h, approximate,
+      per dev1-report-96fee7.md as DEC-20261106-24d2a2 allowance_reading (a) records it), DEV-1
+      in all is bounded at about 26.4 h. That is the figure OQ-1 (A) called "about 26 h":
+      2 x 42,600 s plus attempt 1 is about 26.2 h, and the rest is the 600 s set-up margin per
+      attempt in the card's budget.
+      No tighter number is set, because the owner set no lower cap. A cap below 86,400 s could
+      refuse the second authorized attempt by the LD-9 rule (at least 42,600 s left), after a
+      first attempt that a late restart had cut short.
+    ld9_check_reads_as: >-
+      Before attempt 3, at least 42,600 s of the 86,400 s must be left, counting every second the
+      card has spent on attempt 2: set-up, projection and cell.
+    claim_ttl_minutes: 1560 (bc7a76 BP-4, for an attempt cap of 2; unchanged)
+    fallback_on_retries_exhausted: >-
+      If both attempts end in C5, the outcome is stopped_infrastructure_retries_exhausted. The
+      fresh act (spare DEC-20261107-856d9b) takes up option (B), as the owner asked: it cancels
+      bc7a76, writes a superseding cloud card per DEC-20261106-24d2a2 OQ-1 on_each_answer.B, and
+      first asks the owner for that option's parameters (OQ-2 below can collect them early).
+
+  # ------------------------------------------------------------ 3. release status
+  release_status:
+    bc7a76_state_now: blocked (unchanged by this act)
+    why_not_queued_now: >-
+      bc7a76 BP-2, on an immutable card, lists five things that one committed and verified act
+      must do. This act can do four of them: record the answer as authorizing re-attempts here,
+      name the card, state the attempt cap and the cumulative cap, and append the revision. It
+      cannot do the fifth, "dispositions every 7db1de RR-9 route". 7db1de has not finished, so no
+      RR-9 route exists to disposition.
+      Writing a disposition rule in advance for findings nobody has seen would not be a
+      disposition, so this act does not write one. bc7a76's inputs_note also gives the executor
+      "the 7db1de RR-9 findings as dispositioned by the releasing act" as its only view of RR-9,
+      and BP-3 needs the 971edf B8-H verdict, which does not exist yet.
+      If the task moved to queued now, the dispatcher would list it as ready as soon as 971edf
+      completes, whatever the verdict, with BP-2 unmet.
+    superseding_card_needed: >-
+      No. Nothing on bc7a76 needs amending for answer (A). The answer fits within its budget, LD-9
+      and BP-4, and the caps are stated here. Only a launcher change asked for by an RR-9 route
+      graded "blocks release", or by B8-H, would call for a superseding card. In that case
+      DEC-20261107-40200d writes it under a new id, by BP-3.
+    split_of_release:
+      this_act: >-
+        Records the answer, its scope and the caps. It names bc7a76 and confirms that no card
+        amendment is needed for (A). It narrows impediment IMP-PATH-20261107-1 to
+        IMP-PATH-20261107-2.
+      DEC-20261107-40200d: >-
+        Written after 971edf verifies, and before bc7a76 is dispatched. It reads the 971edf
+        receipt and the committed 7db1de report, and then takes one of two paths.
+        If B8-H passed, no code/ change is requested and no RR-9 route needs a different
+        launcher, it meets BP-2 in full on its own: it cites this act for the answer, names
+        bc7a76, adopts the caps above, dispositions every RR-9 route, and, once its own ledger
+        archive verifies, has the top-level session append a BATCH-c077fd tasks_state_revisions
+        entry that moves TASK-20261107-bc7a76 from blocked to queued.
+        Otherwise it is the fresh composing act that DEC-20261106-24d2a2 inconclusive_decision
+        names: a B8-H failure, a requested code change, or a launcher change. It cancels or
+        supersedes bc7a76, eebc5b, af7359 and d279a7 as needed, by revisions and under new ids.
+        It reserves its own next spare.
+      why_40200d: >-
+        It is the next act at the 971edf boundary in every case, on the pass path and the fail
+        path alike. The top-level session lists it as the spare and reports it checks free.
+    gates_bc7a76_must_pass_before_any_launch:
+      note: Each is already required by DEC-20261106-24d2a2 or the bc7a76 card. None is added or relaxed.
+      items:
+        - {id: G-1, text: "TASK-20261107-971edf is completed and verified, and its receipt records the 7db1de B8-H verdict passed (bc7a76 BP-3; DEC-20261106-24d2a2 b8_split)."}
+        - {id: G-2, text: "No review finding requests a code/ change, and HEAD's code/ equals the dfd0ed bytes, code_sha256 5d5a607d59741b699065c02066d56a2883a34b44431da56c7bfd439b1f731464 (BP-3, LD-1; DEC-20261106-24d2a2 dev1_rerun_decision.binds_code_sha256)."}
+        - {id: G-3, text: "DEC-20261107-40200d is committed and verified, has dispositioned every RR-9 route, and leaves no route graded 'blocks release' unfixed. The BATCH-c077fd revision blocked -> queued for bc7a76 is committed (BP-2, BP-3)."}
+        - {id: G-4, text: "The bytes are re-verified for every attempt, and the before-record is written before the projection (LD-1; OBS-1)."}
+        - {id: G-5, text: ".resume/RESUME.md is filled and scripts/checkpoint.sh gate passes before every launch, and scripts/checkpoint.sh push succeeds. With no upload route, there is no launch (LD-6)."}
+        - {id: G-6, text: "The host is otherwise idle. 7db1de and 971edf have finished, and no other task of BATCH-c077fd or BATCH-342e48 is live (LD-11, BP-5; DEC-20261106-24d2a2 R-P4)."}
+        - {id: G-7, text: "The launch is setsid nohup from one short foreground command, never a harness background task (LD-5; ENV-1, CG-1)."}
+    ordering_rules_kept: >-
+      Every ordering rule of DEC-20261106-24d2a2 stands, and none is changed:
+      - 7db1de runs first and never in parallel with a DEV-1 attempt (R-P1, R-P4);
+      - 971edf runs alone among commit tasks;
+      - bc7a76 starts only after 971edf has verified with B8-H known and passed;
+      - eebc5b runs alone after bc7a76;
+      - the DEV-1 verification follows eebc5b;
+      - the approval act comes last, with SC-1 to SC-5.
+      The only change is the split of the release step itself, explained above.
+
+  # ------------------------------------------------------------ 4. B8-D verification
+  dev1_verification:
+    assigned_by: >-
+      DEC-20261106-24d2a2 OQ-1 on_each_answer.A ("It writes the DEV-1 verification task and its
+      snapshot (B8-D)") and b8_split.B8-D. This is that act, so it writes both.
+    task: TASK-20261107-af7359 (validator, review-adversarial, fresh independent session; zero runs)
+    snapshot: TASK-20261107-d279a7 (coordinator; snapshot alone among commit tasks)
+    content: >-
+      It carries TASK-20261106-941825 RR-5 verbatim, quoted on the card as DV-0. A substitution
+      table maps the 96fee7 file names to the bc7a76 ones, and nothing else changes. Added to it:
+      - checks of the bc7a76 record that 96fee7 did not have: attempts, the LD-8 class of each
+        attempt, the supervisor, the heartbeat and the cumulative cap;
+      - a check of the SC-3 full-pass rate arithmetic.
+      It reads the record on the eebc5b commit and never re-runs the cell or the full kernel
+      pass.
+    b8d_clears_when: >-
+      d279a7 archives an af7359 report with verdict passed. All of the following must hold, on
+      the eebc5b commit:
+      - the outcome is passed;
+      - the cell ran in full on the 5d5a607d bytes;
+      - the reviewer's own kernel-free membership counts agree with the logged counts on at least
+        10 logged targets.
+      This is unchanged from DEC-20261106-24d2a2 b8_split.B8-D.
+    state_and_release: >-
+      af7359 is written as blocked. The top-level session moves it from blocked to queued with a
+      BATCH-342e48 tasks_state_revisions entry, mechanically, as this act pre-authorizes. It does
+      so only when eebc5b's committed and verified receipt records all of these:
+      - DEV-1 outcome passed;
+      - SA-3 equal;
+      - SA-5 with no disagreement.
+      This is a test of recorded words and needs no judgement. Any other eebc5b record leaves
+      af7359 blocked, and the fresh act (spare DEC-20261107-856d9b) decides.
+    independence: >-
+      A fresh session. It is not the session of any task on the TASK-20261106-941825 list:
+      2b7223, 96fee7, 4c4831, ac5ad6, a97206, the PR 2707 author, 165da2 and 7c2b01. It is also
+      not the session of 0932f4, 5b2b59, the bc7a76 executor, or the 7db1de reviewer. B8-H and
+      B8-D divide one body of decisive evidence, so two reports from one session would not be two
+      independent reads.
+    sc5_mapping: >-
+      SC-5 of DEC-20261106-24d2a2 names "the DEV-1 verification snapshot commit (B8-D)". That is
+      the d279a7 commit.
+
+  # ------------------------------------------------------------ 5. records and queue
+  batch_choice:
+    chosen: BATCH-342e48 (new batch)
+    reason: >-
+      The BATCH-c077fd queue changes only by archive blocks and tasks_state_revisions, so it
+      cannot take new tasks. tasks_state_revisions is a log of state changes, not a way to add a
+      task. tools/research_dispatch.py also refuses a depends_on that names a task in another
+      queue. So the new tasks go in a new queue:
+      - the composing task of this act;
+      - its ledger archive;
+      - the B8-D verification;
+      - the verification's snapshot.
+      Their links to BATCH-c077fd tasks (971edf, eebc5b) are dispatch preconditions on the
+      cards, and af7359 is held blocked until eebc5b verifies with DEV-1 passed.
+      BATCH-c077fd stays open, because bc7a76 and eebc5b remain in it.
+    lanes: >-
+      Two lanes of GOAL-PATH-001 are open at once: BATCH-c077fd and BATCH-342e48. The campaign's
+      max_concurrent is 3. The cards keep the work strictly serial across both lanes: no commit
+      task runs beside another one, and no task of either lane runs beside 7db1de's use of the
+      main checkout or beside a live DEV-1 attempt. LD-7 check-ins and RESUME pushes are the
+      exception.
+    queue: coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json (committed alone, never staged by an archive)
+    tasks:
+      - TASK-20261107-5b2b59 (coordinator; this act; completed on writing; archived by 88b2fc)
+      - TASK-20261107-88b2fc (coordinator; ledger archive of this act, ALONE; after 7db1de releases)
+      - TASK-20261107-af7359 (validator, review-adversarial, fresh session; B8-D DEV-1 verification; BLOCKED until eebc5b verifies with DEV-1 passed; zero runs; archived by d279a7)
+      - TASK-20261107-d279a7 (coordinator; snapshot of af7359, alone among commit tasks)
+    max_concurrent: 1
+    order: >-
+      In this order:
+      (1) Commit the BATCH-342e48 queue alone, push it, render it with --ready-only, and open lane
+          BATCH-342e48. This touches only coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/
+          and the lane file, so it may run while 7db1de is live.
+      (2) Run scripts/checkpoint.sh push now, so that the uncommitted records of this act sit in
+          the resume store until 88b2fc commits them. Container restarts have happened three
+          times (RF-2).
+      (3) Let 7db1de finish. Run 971edf alone.
+      (4) Render this act's decision report, and run 88b2fc alone. Push, open or refresh the
+          ready-for-review PR, and enable auto-merge.
+      (5) Write DEC-20261107-40200d.
+      (6) On its pass path: its archive, then the bc7a76 revision, then bc7a76 on an idle host,
+          then eebc5b alone.
+      (7) On DEV-1 passed: the af7359 revision, then af7359, then d279a7 alone.
+      (8) The approval act, with SC-1 to SC-5.
+    why_88b2fc_waits_for_7db1de: >-
+      88b2fc merges origin/main, and it adds the report directory under
+      experiments/EXP-MONO-1a1be2/reports/. 7db1de is using the main checkout as its read-only
+      full checkout for RR-6, and its VP-3 needs a byte-identical experiment tree and root
+      config. A merge or new files there while it runs could change what it reviews, or show up
+      as strays in it. Step (2) covers durability in the meantime.
+
+  updated_blockers:
+    - {id: B1, status: "open (unchanged)", text: "The FX-16 m = 3 cell has not run. Its re-attempt now has the owner's allowance (A) and waits on B8-H and the RR-9 disposition.", clears_when: "B8-H passes, eebc5b verifies with DEV-1 outcome passed, and B8-D (af7359, archived by d279a7) confirms DEV-1"}
+    - {id: B8, status: "open (split into B8-H and B8-D, as in DEC-20261106-24d2a2)", text: "7db1de running (B8-H). B8-D is now a written task, af7359.", clears_when: "B8-H (971edf archives a 7db1de pass) and B8-D (d279a7 archives an af7359 pass)"}
+    - {id: B2-B7, status: "unchanged from DEC-20261106-24d2a2 updated_blockers", text: "Not restated.", clears_when: "as recorded there"}
+
+  goal_head_update:
+    file: ledger/goals/GOAL-PATH-001.yaml
+    mode: >-
+      Insertions only. Every existing byte stays identical. Each new key carries the suffix
+      _2026_11_07_342e48. current_batch_id and dispatch_queue_path are not moved, as in
+      DEC-20261106-24d2a2 PD-C. No batch is checkpointed, because BATCH-c077fd stays open.
+    inserted:
+      - after current_batch_note_2026_11_07_c077fd, the keys current_batch_id_2026_11_07_342e48, dispatch_queue_path_2026_11_07_342e48 and current_batch_note_2026_11_07_342e48
+      - one open_batches item (BATCH-342e48), after the BATCH-c077fd item
+      - one impediments item (IMP-PATH-20261107-2, narrowing IMP-PATH-20261107-1), after IMP-PATH-20261107-1
+      - after next_action_2026_11_07_c077fd, the keys next_action_2026_11_07_342e48 (under 1,000 characters) and owner_answer_2026_11_07_342e48
+
+  # ------------------------------------------------------------ 6. visual report
+  visual_report:
+    owed_by_this_act: true
+    reason: >-
+      This decision records an owner resource grant and changes the release structure of a run
+      gate. It has no evidence record and moves no status, so the report is small.
+    directory: experiments/EXP-MONO-1a1be2/reports/review-DEC-20261107-f46a40/
+    files_in_git:
+      - report.typ (source)
+      - dev1-allowance.svg
+      - release-gates.svg
+      - figures.py (draws both SVGs from figure-data.json)
+      - figure-data.json (under 16 KiB; every value names its source file and key, or this decision and its key)
+      - .artifacts.json (manifest written by tools/artifacts/artifacts.py push)
+      - .gitignore (managed block written by the same push)
+    pdf: >-
+      report.pdf is rendered from report.typ with both graphs embedded, and every page is
+      inspected. It goes to the artifact store through tools/artifacts/artifacts.py push, never
+      git add. If the tool refuses, report.typ and the 88b2fc receipt state the refusal, no PDF
+      is committed, and 88b2fc drops .artifacts.json and .gitignore by a recorded deviation, which
+      leaves twelve paths.
+    report_contents: >-
+      About two pages. State the decision: revise; nothing approved; OQ-1 answered (A); bc7a76
+      still blocked until DEC-20261107-40200d. State the claim tier: a resource grant and a gate
+      design, with no mathematics. Cite DEC-20261107-f46a40, DEC-20261106-24d2a2,
+      TASK-20261107-bc7a76, TASK-20261107-af7359 and EXP-MONO-1a1be2. Quote OQ-1 option (A) as it
+      was shown, and say that the owner set no lower cap. Keep these sections separate:
+      - Observation: the answer as relayed (RF-1), the third restart (RF-2), and 7db1de running.
+      - Comparison: the original grant of about 10-12 h against the (A) bound, and the caps of the
+        card.
+      - Inference: why bc7a76 stays blocked (BP-2 and RR-9), the split with 40200d, the B8-D task,
+        and the new batch.
+      - Limitation: the answer is relayed and not seen by this act; the restart rate is unknown;
+        (B) has no parameters; independence is per session only.
+      Say that no run exists, that DEV-1 is neither passed nor failed, and that no timing is
+      evidence about any prediction.
+    figure_1_dev1_allowance_svg: >-
+      One horizontal stacked bar in hours of cumulative DEV-1 wall:
+      - attempt 1, about 2.5 h, labelled approximate (dev1-report-96fee7.md, as
+        DEC-20261106-24d2a2 allowance_reading (a) gives it);
+      - the attempt 2 budget, 43,200 s;
+      - the attempt 3 budget, 43,200 s, hatched and labelled "only after a C5 restart".
+      Behind it, a shaded band for the original grant of 10-12 h (DEC-20261106-475620
+      owner_direction) and a marker for "about 26 h", OQ-1 (A). A caption says that this is a
+      budget bound, not a measurement.
+    figure_2_release_gates_svg: >-
+      A chain diagram, left to right:
+      - 7db1de (running), then 971edf [badge B8-H];
+      - 88b2fc (this act);
+      - DEC-20261107-40200d [RR-9 disposition, then the bc7a76 revision];
+      - bc7a76 [G-4 to G-7 as small badges], then eebc5b;
+      - the af7359 revision (eebc5b: passed), then af7359, then d279a7 [badge B8-D];
+      - the approval act.
+      A side branch from bc7a76 reads "both attempts C5 -> (B), with owner parameters (856d9b)",
+      and another, from 971edf, reads "B8-H fail or code change -> 40200d as a fresh act". Every
+      edge is labelled "instrument, not evidence".
+    canonical_graphs: >-
+      None changes, because no evidence record, status or knowledge entry moves. report.typ lists
+      the figures of review-DEC-20261106-24d2a2 as checked and left unchanged.
+    rendering: >-
+      The top-level session renders under research-visuals "Rendering", after 7db1de releases
+      (why_88b2fc_waits_for_7db1de). It inspects every page, pushes the PDF, and stages the seven
+      tracked files in 88b2fc.
+
+  rationale:
+    - R-1 The owner's answer is recorded as relayed, with its scope and the parts it does not cover, so that nothing beyond it is presumed. (B) still needs the owner's parameters, and a non-restart stop is not "lost to restarts".
+    - R-2 The caps are set to the card's own budget. That keeps the two attempts the owner authorized and raises nothing. A tighter number without an owner cap could refuse an authorized retry.
+    - R-3 bc7a76 stays blocked, because its immutable BP-2 asks one act to disposition RR-9 routes that do not exist yet. Moving it now would make it look ready to the dispatcher the moment 971edf completes, whatever B8-H says. The release is split off, and no card is amended.
+    - R-4 The B8-D verification is written now, as DEC-20261106-24d2a2 assigns it to this act. It is held blocked on a mechanical test of the eebc5b receipt, so a non-passed DEV-1 is never verified as if it had passed.
+    - R-5 The new batch is the only lawful home for the new tasks. Serial order across both lanes is kept by preconditions.
+    - R-6 No success criterion, prediction, tolerance, invalidation rule, decisive-evidence item or ordering rule changes.
+    - R-7 Nothing here moves H-MONO-23d347, supports a lemma, or speaks to any exponent.
+
+  scope_and_limitations:
+    - This act ran no tool and computed no hash. The commits, PR 3130, the merge sha, the claim sha and the restart count are as the top-level session and the committed receipts report them (RF-3 notes a sha that appears twice).
+    - The restart rate is unknown. Three restarts in one session make the chance that a single attempt of about 11.8 h survives uncertain and perhaps low. No probability is stated.
+    - The owner's answer reached this act as relayed text. Its provenance is the top-level session's report of the question tool exchange.
+    - The independence of 7db1de and af7359 is between sessions only, not between models. This is not a rule-12 round.
+    - L-2 (N-6) as stated in DEC-20261106-843cf7.
+    - Toy tier throughout. KN-OPEN-62c870 CS-D2 and CS-R7 bind every later citation.
+
+  evidence_refs:
+    - ledger/decisions/DEC-20261106-24d2a2.yaml (OQ-1, dev1_rerun_decision, review_placement.b8_split, batch, approval_act_conditions_added)
+    - ledger/handoffs/TASK-20261107-bc7a76.yaml (LD-9, budget, BP-2 to BP-5)
+    - ledger/handoffs/TASK-20261107-7db1de.yaml (RR-8, RR-9, VP-3)
+    - ledger/handoffs/TASK-20261107-971edf.yaml (SA-5)
+    - ledger/handoffs/TASK-20261107-eebc5b.yaml (SA-3, SA-5, SA-7)
+    - ledger/handoffs/TASK-20261107-58546f.yaml
+    - ledger/handoffs/TASK-20261106-941825.yaml (RR-5, quoted verbatim in af7359)
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json (tasks_state_revisions; archive blocks; bc7a76 state)
+    - coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-58546f/ledger-receipt.json (input pins; owner_answer_relayed)
+    - ledger/goals/GOAL-PATH-001.yaml
+    - tools/research_dispatch.py (depends_on must name a task in the same queue; read for batch_choice)
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      A record of an owner resource grant and the design of a release gate, not an evidence
+      review. No hypothesis is supported or rejected, and no KAT outcome exists.
+
+  goal_checkpoint:
+    goal_id: GOAL-PATH-001
+    lanes: [BATCH-c077fd, BATCH-342e48]
+    queue: coordination/goals/GOAL-PATH-001/batches/BATCH-342e48/dispatch_queue.json
+    completed_tasks: [TASK-20261107-5b2b59]
+    impediments: >-
+      IMP-PATH-20261107-2 narrows IMP-PATH-20261107-1: the owner's answer is recorded, and bc7a76
+      waits on B8-H and on the RR-9 disposition and revision of DEC-20261107-40200d. It asserts
+      nothing about H-MONO-23d347.
+    next_action: NA-1 (exactly one)
+    goal_status: active (unchanged)
+
+  next_actions:
+    - id: NA-1
+      role: coordinator (shell-holding top-level session; archive and dispatch; no status authority)
+      action: >-
+        (1) Commit the BATCH-342e48 queue alone, push it, render it with --ready-only, and open
+            lane BATCH-342e48. Then run scripts/checkpoint.sh push so that this act's
+            uncommitted records are held.
+        (2) When 7db1de releases, run 971edf alone. Then render this act's report and run
+            TASK-20261107-88b2fc alone (LA-1 to LA-13). Push, open or refresh the ready PR, and
+            enable auto-merge.
+        (3) Then have DEC-20261107-40200d written from the committed 971edf receipt. bc7a76 stays
+            blocked until that act's revision is committed.
+      declared_successor_not_an_additional_next_action: >-
+        DEC-20261107-40200d (release_status.split_of_release). After it, bc7a76 and eebc5b run as
+        DEC-20261106-24d2a2 orders them, then af7359 and d279a7, then the approval act with SC-1
+        to SC-5. Spare DEC-20261107-856d9b is held for a fresh act after any bc7a76, eebc5b or
+        af7359 outcome that does not pass, including (B) after retries are exhausted.
+
+  owner_questions:
+    - id: OQ-1
+      status: answered (A), about 2026-11-07T02:20Z; recorded by this act
+    - id: OQ-2
+      status: open, optional and non-blocking
+      to: owner (relayed verbatim by the top-level session; the answer is recorded by a committed Coordinator act, never by a message)
+      text: >-
+        You chose to re-run DEV-1 here, with a restart-proof runner as the fallback if both
+        attempts are lost to restarts. The container has now restarted three times in this
+        session. If you want the fallback to start without another wait, you can set its limits
+        now: a dollar ceiling, CPU and RAM, an absolute deadline and a retry allowance. If you
+        prefer to decide only if it is needed, no answer is required.
+      on_answer: >-
+        The parameters are recorded by the next committed act that reaches the (B) fallback
+        (spare DEC-20261107-856d9b), or by any earlier act that the top-level session calls for
+        to record them. Nothing proceeds on (B) before that record.
+      pd1_note: The question states no KAT value, lemma value, formula or prior.
+
+  conditions:
+    - {id: OC-1, text: "The BATCH-342e48 queue is committed alone and renders clean under tools/research_dispatch.py --ready-only (88b2fc ready; af7359 reported task_marked_blocked) before 88b2fc stages anything."}
+    - {id: OC-2, text: "tools/ecc_priority.py --classify reports ECC for RQ-MONO-001 and GOAL-PATH-001 with no budget violation. The tools/autoresearch_focus.py output is recorded as advisory."}
+    - {id: OC-3, text: "The GOAL-PATH-001 diff is insertions only: exactly the items in goal_head_update.inserted, with zero deleted or modified lines. current_batch_id is still BATCH-a8825c, and status is active."}
+    - {id: OC-4, text: "Every id this act uses checks free except for its own files. DEC-20261107-40200d and DEC-20261107-856d9b are still free."}
+    - {id: OC-5, text: "The specification is byte-identical to d81a85b3...c373. Every code/ path equals the 58546f input_pins_TASK-20261107-bc7a76_frozen, and launcher.code_sha256() equals 5d5a607d...1464. ledger/handoffs/TASK-20261107-bc7a76.yaml equals 1251478e...3a21. bc7a76 is still blocked in the BATCH-c077fd queue."}
+    - {id: OC-6, text: "validate_ledger.py and check_merge_hygiene.py report no new error attributable to a staged path."}
+    - {id: OC-7, text: "TASK-20261107-7db1de has released before 88b2fc merges origin/main or the report enters experiments/ (why_88b2fc_waits_for_7db1de)."}
+
+  reserved_ids_used_and_unused:
+    used: [DEC-20261107-f46a40, BATCH-342e48, TASK-20261107-5b2b59, TASK-20261107-88b2fc, TASK-20261107-af7359, TASK-20261107-d279a7]
+    designated:
+      - "DEC-20261107-40200d (the RR-9 disposition and bc7a76 release act, or the fresh act at the 971edf boundary)"
+    unused:
+      - "DEC-20261107-856d9b (spare for a fresh act after a bc7a76, eebc5b or af7359 outcome that does not pass)"
+    impediment_id: IMP-PATH-20261107-2 (goal-head local id, following the IMP-PATH pattern)
+    provenance: Minted and checked by the top-level session. This session minted and checked nothing.
+
+  procedure_deviations:
+    - {id: PD-A, text: "The release step that DEC-20261106-24d2a2 assigned to this act is split with DEC-20261107-40200d, because BP-2's RR-9 clause cannot be met before 7db1de completes. Recorded in supersedes and release_status."}
+    - {id: PD-B, text: "The goal-head pointer scalars are not moved (as in DEC-20261106-24d2a2 PD-C). The new lane is named in the _2026_11_07_342e48 keys."}
+
+  commit_and_pr_summary_line: >-
+    DEC-20261107-f46a40: the owner answered OQ-1 of EXP-MONO-1a1be2 with option A (re-run here
+    under a detached supervisor, up to two attempts, fallback to a restart-proof runner).
+    TASK-20261107-bc7a76 stays blocked until the RR-9 disposition. The DEV-1 verification
+    TASK-20261107-af7359 is written. BATCH-342e48 is opened. Nothing is approved; zero runs.
+
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only. Never Bedrock.
+    degraded_allowed: false
+    resolved_model_id_reported: claude-opus-5-5
+    model_verified: false
+    model_verified_reason: No adapter probe receipt exists for this session.
