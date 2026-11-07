@@ -87,6 +87,185 @@ class BenchrecTest(unittest.TestCase):
         self.assertNotEqual(r.returncode, 0)
         self.assertIn(rec2, (self.root / rec2).as_posix())
 
+    def test_metric_rejects_invalid_numeric_metadata_without_writing(self):
+        rec = self.br("init", "--slug", "numeric", "--problem", "p:q").stdout.strip()
+        path = self.root / rec
+        before = path.read_bytes()
+        for args in (["--value", "nan"], ["--value", "inf"],
+                     ["--reference", "nan"], ["--baseline", "inf"],
+                     ["--n", "0"], ["--n", "-1"],
+                     ["--spread-low", "1"], ["--spread-high", "2"],
+                     ["--spread-low", "3", "--spread-high", "2"],
+                     ["--spread-low", "nan", "--spread-high", "2"]):
+            with self.subTest(args=args):
+                r = self.br("metric", rec, "--name", "m", "--unit", "S",
+                            "--value", "1", *args, check=False)
+                self.assertNotEqual(r.returncode, 0, r.stdout + r.stderr)
+                self.assertEqual(path.read_bytes(), before)
+
+    def test_report_rejects_tampered_measurement_and_preserves_outputs(self):
+        rec = self.make_record()
+        path = self.root / rec
+        original = json.loads(path.read_text())
+        progress = self.root / "benchmarks/progress/progress.json"
+        before = progress.read_bytes()
+        for field, value in (("value", float("nan")), ("reference", True),
+                             ("reference", "50"), ("baseline", float("inf")),
+                             ("n", True), ("spread", [3, 2])):
+            with self.subTest(field=field, value=value):
+                body = json.loads(json.dumps(original))
+                body["metrics"][0][field] = value
+                path.write_text(json.dumps(body))
+                r = self.br("report", check=False)
+                self.assertNotEqual(r.returncode, 0)
+                self.assertNotIn("Traceback", r.stderr)
+                self.assertEqual(progress.read_bytes(), before)
+
+    def test_failed_command_cannot_close_as_measured(self):
+        rec = self.make_record()
+        path = self.root / rec
+        body = json.loads(path.read_text())
+        body["status"] = "open"
+        body["commands"][0]["exit"] = 1
+        path.write_text(json.dumps(body))
+        r = self.br("close", rec, "--status", "measured", check=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertEqual(json.loads(path.read_text())["status"], "open")
+        self.br("close", rec, "--status", "invalid", "--summary", "failed command")
+        prog = json.loads((self.root / "benchmarks/progress/progress.json").read_text())
+        self.assertEqual(prog["series"], [])
+
+    def test_direction_drift_rejected_before_progress_write(self):
+        self.make_record()
+        rec = self.make_record(slug="second", value=80)
+        path = self.root / rec
+        body = json.loads(path.read_text())
+        body["metrics"][0]["better"] = "neutral"
+        path.write_text(json.dumps(body))
+        progress = self.root / "benchmarks/progress/progress.json"
+        before = progress.read_bytes()
+        r = self.br("report", check=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("direction", r.stderr)
+        self.assertNotIn("Traceback", r.stderr)
+        self.assertEqual(progress.read_bytes(), before)
+
+    def test_pinned_exclusion_is_visible_and_does_not_waive_raw_integrity(self):
+        import hashlib
+        rec = self.make_record()
+        path = self.root / rec
+        body = json.loads(path.read_text())
+        body["commands"][0]["exit"] = None
+        path.write_text(json.dumps(body))
+        exclusions = {"schema": "bench.integrity-exclusions/v1", "records": {
+            rec: {"sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                  "reason": "Documentary command; execution exit not captured."}}}
+        exclusion_path = self.root / "benchmarks/integrity-exclusions.json"
+        exclusion_path.write_text(json.dumps(exclusions))
+        self.br("report")
+        prog = json.loads((self.root / "benchmarks/progress/progress.json").read_text())
+        self.assertEqual(prog["series"], [])
+        self.assertEqual(prog["records"]["measured"], 1)
+        self.assertEqual(prog["integrity_exclusions"][0]["record"], rec)
+        self.assertIn(rec, (self.root / "benchmarks/progress/PROGRESS.md").read_text())
+        self.br("check")
+        raw = self.root / body["raw"][0]["path"]
+        raw.write_text("corrupt")
+        self.assertNotEqual(self.br("check", check=False).returncode, 0)
+        body["summary"] = "changed after exclusion"
+        path.write_text(json.dumps(body))
+        r = self.br("report", check=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("exclusion", r.stderr)
+
+    def test_raw_byte_count_must_match_even_when_hash_matches(self):
+        rec = self.make_record()
+        path = self.root / rec
+        original = json.loads(path.read_text())
+        for size in (True, -1, original["raw"][0]["bytes"] + 1):
+            with self.subTest(size=size):
+                body = json.loads(json.dumps(original))
+                body["raw"][0]["bytes"] = size
+                path.write_text(json.dumps(body))
+                r = self.br("check", check=False)
+                self.assertNotEqual(r.returncode, 0)
+                self.assertIn("bytes", r.stdout + r.stderr)
+
+    def test_exclusions_fail_closed_on_bad_pin_reason_or_record_status(self):
+        import hashlib
+        rec = self.make_record()
+        path = self.root / rec
+        original = path.read_bytes()
+        manifest = self.root / "benchmarks/integrity-exclusions.json"
+        for status, digest, reason in (("measured", "0" * 64, "bad pin"),
+                                       ("measured", None, ""),
+                                       ("open", None, "cannot hide open run"),
+                                       ("censored", None, "cannot relabel status")):
+            with self.subTest(status=status, digest=digest, reason=reason):
+                body = json.loads(original)
+                body["status"] = status
+                path.write_text(json.dumps(body))
+                manifest.write_text(json.dumps({"schema": "bench.integrity-exclusions/v1", "records": {
+                    rec: {"sha256": digest or hashlib.sha256(path.read_bytes()).hexdigest(), "reason": reason}}}))
+                result = self.br("report", check=False)
+                self.assertNotEqual(result.returncode, 0)
+                self.assertIn("exclusion", result.stderr)
+
+    def test_missing_or_boolean_command_exit_rejected(self):
+        rec = self.make_record()
+        path = self.root / rec
+        original = json.loads(path.read_text())
+        for exit_code in (None, False, "0", 1):
+            with self.subTest(exit_code=exit_code):
+                body = json.loads(json.dumps(original))
+                body["commands"][0]["exit"] = exit_code
+                path.write_text(json.dumps(body))
+                self.assertNotEqual(self.br("report", check=False).returncode, 0)
+
+    def test_derived_overflow_cannot_publish_nonfinite_json(self):
+        rec = self.make_record(value=1e308, reference=1e308)
+        path = self.root / rec
+        body = json.loads(path.read_text())
+        body["metrics"][0]["reference"] = 1e-308
+        path.write_text(json.dumps(body))
+        progress = self.root / "benchmarks/progress/progress.json"
+        before = progress.read_bytes()
+        r = self.br("report", check=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("overflow", r.stderr)
+        self.assertNotIn("Traceback", r.stderr)
+        self.assertEqual(progress.read_bytes(), before)
+
+    def test_previous_gain_survives_zero_first_observation(self):
+        self.make_record(slug="zero", value=0)
+        self.make_record(slug="positive", value=100)
+        rec = self.make_record(slug="later", value=80)
+        # Avoid timestamp ties: record order is intentionally pinned here.
+        for i, path in enumerate(sorted((self.root / "benchmarks/records").glob("*.json"),
+                                        key=lambda p: {"zero": 0, "positive": 1, "later": 2}[json.loads(p.read_text())["slug"]])):
+            body = json.loads(path.read_text())
+            body["closed_utc"] = f"2026-11-07T00:00:0{i}+00:00"
+            path.write_text(json.dumps(body))
+        self.br("report")
+        prog = json.loads((self.root / "benchmarks/progress/progress.json").read_text())
+        point = next(s for s in prog["series"] if s["metric"] == "ir_per_op")["points"][-1]
+        self.assertEqual(point["record"], Path(rec).stem)
+        self.assertEqual(point["derived"]["improvement_vs_previous_percent"], 20)
+        self.assertNotIn("improvement_vs_first_percent", point["derived"])
+
+    def test_incompatible_close_leaves_record_open(self):
+        self.make_record()
+        rec = self.make_record(slug="second", value=80)
+        path = self.root / rec
+        body = json.loads(path.read_text())
+        body["status"] = "open"
+        body["metrics"][0]["better"] = "neutral"
+        path.write_text(json.dumps(body))
+        before = path.read_bytes()
+        r = self.br("close", rec, "--status", "measured", check=False)
+        self.assertNotEqual(r.returncode, 0)
+        self.assertEqual(path.read_bytes(), before)
+
     def test_store_backed_report_accepted_via_manifest(self):
         """A report kept in the artifact store (listed in a .artifacts.json, absent from the
         checkout) passes check; one that is neither on disk nor in a manifest fails."""
