@@ -1,0 +1,459 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "PRIME-TRANSFORM-SOFTWARE-20261105",
+  "version": 2,
+  "created": "2026-11-05",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "research/prime_sat_transform_integration_20261103",
+  "authors": [
+    "Coordinator"
+  ],
+  "links": {
+    "source_commit": "a1bbd189aa0b0a29fae122c7a111c32918aa89a3",
+    "snapshot_content_commit": "3a1e70adb8a70718797cb46438a74ce5fb2d4726",
+    "plan": "coordination/prime_sat_transform_source_20261105/downstream-validation-plan.md",
+    "native_snapshot": "coordination/prime_sat_transform_expected_exception_repair_20261105/snapshot-receipt.json sha256=3ec5818c69e937b5a6193954c755f436fd0be080b57358561e578fdbacef0ac7"
+  },
+  "question": "Do the fixed source/transport/certificate/failure/census controls hold for the published candidate under the preserved bounded software plan?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Fixed software controls return exact valid/rejected/censored/failure observations with complete retained receipts; correctness judgment requires independent review.",
+      "class": "exact_computation",
+      "decided_by": []
+    },
+    {
+      "id": "C2",
+      "text": "Performance, solving degree, general ECDLP speedup and completion of original106+6 comparison are outside this software validation.",
+      "class": "out_of_scope",
+      "decided_by": []
+    }
+  ],
+  "arms": [
+    {
+      "id": "original",
+      "role": "baseline",
+      "description": "Unchanged originals and supplied-witness controls",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "a1bbd189aa0b0a29fae122c7a111c32918aa89a3",
+        "build": [],
+        "binary_sha256": "0dc3a692fa85fcdb7f1a5877d2adf179809ac417a07ffde2373c832863800a15",
+        "flags": {
+          "seed": "0",
+          "refuter_mode": "baseline",
+          "strategy": "model_only"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "mode": "identity"
+      }
+    },
+    {
+      "id": "raw",
+      "role": "candidate",
+      "description": "Raw A0 transform control",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "a1bbd189aa0b0a29fae122c7a111c32918aa89a3",
+        "build": [],
+        "binary_sha256": "0dc3a692fa85fcdb7f1a5877d2adf179809ac417a07ffde2373c832863800a15",
+        "flags": {
+          "seed": "0",
+          "refuter_mode": "baseline",
+          "strategy": "model_only"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "mode": "k2_raw_A0"
+      }
+    },
+    {
+      "id": "addrow",
+      "role": "candidate",
+      "description": "Exact appended-row+A0 candidate",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "a1bbd189aa0b0a29fae122c7a111c32918aa89a3",
+        "build": [],
+        "binary_sha256": "0dc3a692fa85fcdb7f1a5877d2adf179809ac417a07ffde2373c832863800a15",
+        "flags": {
+          "seed": "0",
+          "refuter_mode": "baseline",
+          "strategy": "model_only"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "mode": "k2_addrow_A0"
+      }
+    },
+    {
+      "id": "positive",
+      "role": "control_positive",
+      "description": "Fixed known valid sentinels/witnesses",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "a1bbd189aa0b0a29fae122c7a111c32918aa89a3",
+        "build": [],
+        "binary_sha256": "0dc3a692fa85fcdb7f1a5877d2adf179809ac417a07ffde2373c832863800a15",
+        "flags": {
+          "seed": "0",
+          "refuter_mode": "baseline",
+          "strategy": "model_only"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {}
+    },
+    {
+      "id": "negative",
+      "role": "control_negative",
+      "description": "Fixed mutations, false completeness and injected failures",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "a1bbd189aa0b0a29fae122c7a111c32918aa89a3",
+        "build": [],
+        "binary_sha256": "0dc3a692fa85fcdb7f1a5877d2adf179809ac417a07ffde2373c832863800a15",
+        "flags": {
+          "seed": "0",
+          "refuter_mode": "baseline",
+          "strategy": "model_only"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {}
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "Deterministic exact validity checks; no timing/cost advantage inference. Repeated checkpoints and identity transport test invariance without a new native arm."
+    },
+    "positive": {
+      "present": true,
+      "arm": "positive",
+      "expected_detection": "Known witness/sentinel accepted at correct validation layer.",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "negative",
+      "null_population": {
+        "description": "One complete fixed negative-control suite; no statistical population claim.",
+        "generator": "Fixed row/model/certificate mutations and exception injections in preserved validation plan.",
+        "n": 1,
+        "why_n": "Every specified negative case belongs to this single suite, no subsampling.",
+        "matched_on": [
+          "original descriptor",
+          "source identity",
+          "checker path except mutated field"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [],
+    "factors": [
+      {
+        "name": "source",
+        "treatment": "fixed",
+        "value": "a1bbd189aa0b0a29fae122c7a111c32918aa89a3",
+        "how": "Input hashes and published snapshot"
+      },
+      {
+        "name": "fixtures",
+        "treatment": "fixed",
+        "value": "original135 descriptors plus12k2,8nilpotent,8guard,F1 and fixed mutation/failure/schema/native plan",
+        "how": "No fixture replacement"
+      },
+      {
+        "name": "seed",
+        "treatment": "fixed",
+        "value": 0,
+        "how": "Frozen explicit seed"
+      },
+      {
+        "name": "threads",
+        "treatment": "fixed",
+        "value": 1,
+        "how": "Environment plus native fixed options"
+      },
+      {
+        "name": "limits",
+        "treatment": "fixed",
+        "value": "600s,1CPU,2GiB,12instances/192calls,8censuses/64assignments",
+        "how": "Kernel and frozen counters"
+      },
+      {
+        "name": "host/co-tenants",
+        "treatment": "measured",
+        "how": "Record kernel/host/cgroup data; wall time is deadline/accounting only."
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "fixed-controls",
+        "arms": [
+          "original",
+          "raw",
+          "addrow",
+          "positive",
+          "negative"
+        ],
+        "differs_in": [],
+        "design": "absolute",
+        "threshold": "All required exact control assertions, preserving explicit incomplete/censored status."
+      }
+    ],
+    "aa_not_applicable": "Exact controls, no quantitative advantage claim.",
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Frozen deterministic control sequence; no runtime inference or tuning.",
+    "seed_derivation": {
+      "method": "explicit_list",
+      "seeds": [
+        0
+      ],
+      "nonce": null,
+      "note": "Existing plan seed0 preserved."
+    },
+    "instance_sampling": {
+      "rule": "All fixed descriptors and mutation cases; no random subsampling.",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Producer labels explicit; later reviewer source-aware with producer tests/results/reports hidden.",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 1,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": false,
+      "note": "One complete fixed suite per admitted attempt, no statistical hypothesis or power claim. Alpha is an unused schema field; no significance decision or adequate-power assertion."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": null,
+      "per_sample_seconds": null,
+      "threads": 1,
+      "estimated_total_seconds": 600,
+      "measured_on": "Not measured; external ceiling, no candidate preflight executed."
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "control_records",
+        "name": "Fixed control observations",
+        "unit": "control records",
+        "kind": "counted",
+        "definition": "Every attempted exact control with outcome and correct rejection layer; missing controls explicit.",
+        "source": "results.json records and immutable suite attempt receipts",
+        "aggregation": "per_row",
+        "resolution": "1 record",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "native_calls",
+        "name": "Native solve calls",
+        "unit": "solve_limited calls",
+        "kind": "counted",
+        "definition": "Every native attempt including censored/failed calls",
+        "source": "attempt receipt counters",
+        "aggregation": "sum",
+        "resolution": "1 call",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "control_records",
+      "native_instances",
+      "native_calls",
+      "census_assignments_visited",
+      "phase_counts"
+    ],
+    "record": [
+      "kernel_release",
+      "binary_sha256",
+      "source_sha256",
+      "cgroup_limits",
+      "threads",
+      "stop_reason"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "native-single-worker; event receipts retained but no execution restore",
+    "placement": {
+      "instance_type": "existing Spot host; no new allocation",
+      "cpus": 1,
+      "spot": true
+    },
+    "measurement_class": "throughput",
+    "timeout_seconds": 600,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "External600s from unit start includes imports; kernel memory/OOM or first fatal control failure ends attempt with preserved partial output.",
+      "kind": "budget",
+      "preregistered": true
+    },
+    {
+      "rule": "At most2producer+1independent attempts1800s aggregate; no automatic retry or replaced fixture.",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "Missing required controls or unsupported resource limits cannot yield complete software acceptance.",
+    "Censored repeated-chart cases remain censored; no complete model coverage inferred."
+  ],
+  "decision_rule": {
+    "text": "Independent review decides scoped software acceptance only when all applicable required controls and original checkers agree. Failure means repair within remaining attempt allowance; exhausted/incomplete scope retained explicitly.",
+    "comparison_ids": [
+      "fixed-controls"
+    ],
+    "threshold": "Exact fixed-control requirements; no statistical threshold.",
+    "statistic": "Per-control Boolean/status observations",
+    "interval": "not applicable",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "not applicable",
+    "verdict_vocabulary": [
+      "supported_within_scope",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "analysis_plan": {
+    "script": null,
+    "inputs": [
+      "results.json",
+      "attempt-receipt.json",
+      "stdout.log",
+      "stderr.log",
+      "systemd-state.json",
+      "artifact-manifest.json"
+    ],
+    "outputs": [
+      "experiment.export/v1 export.json",
+      "report.md",
+      "diagram.svg",
+      "report.pdf"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "Control coverage/status diagram with missing and censored controls; no timing speedup plot."
+    ],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "Treating source authoring as validation.",
+    "Changing fixed fixtures/limits after outcomes without preserved revision.",
+    "Excluding failures or normalizing more than known-zero census counters.",
+    "Replacing original106+6 comparison with software controls.",
+    "Claiming signed PCC standing from producer booleans."
+  ],
+  "literature": [
+    {
+      "ref": "coordination/prime_sat_transform_source_20261105/downstream-validation-plan.md",
+      "provenance": "internal",
+      "claim": "Frozen software controls/budgets and separate full comparison obligations",
+      "verified_by": "coordinator"
+    }
+  ],
+  "amendments": [
+    {
+      "id": "expected-exception-producer02",
+      "filed": "2026-11-07",
+      "filed_before_affected_data": true,
+      "reason": "Before slot2 data, bind published expected-exception repair of two negative controls; failed slot1 remains immutable. This draft is not frozen or admitted.",
+      "changes": [
+        "Bind repaired software_controls.py and its actual source snapshot; remaining source and baseline controls unchanged.",
+        "Use remaining producer slot2 with fresh native experiment/task/run identities and same original campaign reservation path; no reset or retry.",
+        "Retain all original fixed fixtures, controls, seed0, resource/counter limits, complete reporting and independent review."
+      ],
+      "supersedes_fields": [
+        "links.source_commit",
+        "links.snapshot_content_commit",
+        "links.native_snapshot",
+        "variable_ledger.factors.source"
+      ]
+    }
+  ],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "0e01e709860e16e33afeef3a7812de280ee8cd317be17ae476a3f4f2b043dd32",
+    "commit": "0e904dea7357826765175ad832e78429eda29e2d",
+    "frozen_at": "2026-11-07T19:59:23Z",
+    "filed_before_affected_data": true
+  }
+}
