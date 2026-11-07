@@ -1,0 +1,47 @@
+{
+  "schema": "prime-field-git-mapping-software-control/v1",
+  "software_only": true,
+  "native_mathematical_executions": 0,
+  "address_space_bytes": 2147483648,
+  "source": "c94b39d74e40f86fbd27efaf9faf90ce863a5aeb",
+  "largest_pack_bytes": 2611822952,
+  "config_proposed": {
+    "core.packedGitWindowSize": "32m",
+    "core.packedGitLimit": "128m"
+  },
+  "records": [
+    {
+      "label": "unchanged-default",
+      "command": [
+        "git",
+        "show",
+        "c94b39d74e40f86fbd27efaf9faf90ce863a5aeb:scripts/checkpoint.sh"
+      ],
+      "returncode": 128,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "fatal: packfile .git/objects/pack/pack-50b19313aec68da4bd06fdec2bb1cd5be2c8c515.pack cannot be mapped, check sys.vm.max_map_count and/or RLIMIT_DATA: Cannot allocate memory\n",
+      "matches_unlimited_reference": false,
+      "diagnostic_wall_seconds": 0.0027588560005824547
+    },
+    {
+      "label": "bounded-window",
+      "command": [
+        "git",
+        "-c",
+        "core.packedGitWindowSize=32m",
+        "-c",
+        "core.packedGitLimit=128m",
+        "show",
+        "c94b39d74e40f86fbd27efaf9faf90ce863a5aeb:scripts/checkpoint.sh"
+      ],
+      "returncode": 0,
+      "stdout_bytes": 23693,
+      "stdout_sha256": "a389d0e9f5c53baddad04a463810fd4ca29363b343b9eca08857259dd49aa01a",
+      "stderr": "",
+      "matches_unlimited_reference": true,
+      "diagnostic_wall_seconds": 0.0035493790019245353
+    }
+  ],
+  "meaning": "Exact same Git blob verification under unchanged2GiB. Git mapping window only; no gate/source/protocol/release changes or native generation. Future native continuation requires separately recorded bounded authority, no automatic retry of consumed release."
+}

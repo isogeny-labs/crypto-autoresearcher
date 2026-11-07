@@ -1,0 +1,69 @@
+case	question	sound_result	observed	verdict
+A00-control-T1-shape	a	job_completed rc0; reconcile pass	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0; check_job=CHECK_JOB_OK; reconcile rc=0 pass=true writes=0; control(object-list vs objects.json)=same	control
+A01-ruleA-sibling-prefix	a,b	not job_completed (two pod prefixes; not this pod)	rc=0 class=job_completed locator=launcher_result raw=present dl=0 s03_validity=true s3_write_attempts=0 uri=s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s2-20261106/0bbbbbbb-1111-2222-3333-555555555555/; check_job=CHECK_JOB_OK	BREAK
+A02-ruleA-cross-job	a,b	not job_completed (another job's prefix)	rc=0 class=job_completed locator=launcher_result raw=present dl=0 s03_validity=true s3_write_attempts=0 uri=s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s1-20261106/5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7/; check_job=CHECK_JOB_FAILED	BREAK-wrapper
+A03-ruleA-other-bucket	a,b	not job_completed (outside s3://BUCKET/runs/JOB/)	rc=0 class=job_completed locator=launcher_result raw=present dl=0 s03_validity=false s3_write_attempts=0 uri=s3://rt-9d2b6a-elsewhere/x/0bbbbbbb-1111-2222-3333-555555555555/; check_job=CHECK_JOB_OK	BREAK-wrapper
+A04-ruleA-verification-failed-genuine	a,b	not job_completed (launcher rejected the output)	rc=5 class=other locator=launcher_result raw=present dl=0 s03_validity=false s3_write_attempts=0; check_job=CHECK_JOB_OK	holds
+A05-uid-prefix-sibling	a	refused (listing holds a third entry)	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0; reconcile rc=4 pass=false	holds
+A06a-receipt-other-job	a	refused, locator exit 12	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 12	holds
+A06b-receipt-dotdot	a	refused, locator exit 12	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 12	holds
+A06c-receipt-other-bucket	a	refused, locator exit 12	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 12	holds
+A06d-receipt-deeper	a	refused, locator exit 12	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 12	holds
+A06e-receipt-second-launcher-id	a	note: located through a receipt id that is not result.json .launcher / build id	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0; result.launcher=47cf1e4f-10a7-4ee3-862d-9e9700e122e3	NOTE-accepted
+A06f-receipt-id-all-dashes	a	note: shape check is not a UUID check	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0	NOTE-accepted
+A07a-poduid-dotdot	a	refused, locator exit 15	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 15	holds
+A07b-poduid-slash	a	refused, locator exit 15	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 15	holds
+A07c-poduid-35	a	refused, locator exit 15	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 15	holds
+A07d-poduid-upper	a	refused, locator exit 15	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 15	holds
+A07e-poduid-trailing-newline	a	note: command substitution strips the newline	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0 pod=5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7	NOTE-accepted
+A12a-status-job-uid	a	refused (14/15)	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 14; reconcile rc=4 pass=false	holds
+A12b-status-job-name	a	refused (14/15)	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 14; reconcile rc=4 pass=false	holds
+A12c-two-pods	a	refused (14/15)	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 15; reconcile rc=4 pass=false	holds
+A12d-zero-pods	a	refused (14/15)	rc=5 class=infrastructure_candidate locator=none raw=present dl=not_attempted s03_validity=false s3_write_attempts=0 locate=locate_results exit 15; reconcile rc=4 pass=false	holds
+A08-restart-count	a	refuse or flag a restarted container	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0; reconcile rc=0 pass=true	NOTE-accepted
+A09a-added-object	a	refuse: bytes differ from the launcher's objects.json	reconcile rc=0 pass=true; control(object-list vs objects.json)=DIFFERS	BREAK
+A09b-replaced-object	a	refuse: bytes differ from the launcher's objects.json	reconcile rc=0 pass=true; control(object-list vs objects.json)=DIFFERS	BREAK
+A09c-objects-json-vacuous	a	R-3 objects.json half should fail on a document with no objects	reconcile rc=0 pass=true r3=pass	NOTE-vacuous
+A09d-objects-json-truncated	a	R-3 should not accept a truncated launcher listing	reconcile rc=0 pass=true	NOTE-truncated-accepted
+A10-toctou-after-listing	a	late prefix not bound; late bytes are not this job's output	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0; check_job=CHECK_JOB_OK; late.json=downloaded; other-prefix files downloaded=0; reconcile rc=0 pass=true	holds(prefix)/content-not-bound
+B01-jobexit-missing	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B02-jobexit-empty	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B03-jobexit-not-json	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=absent locator=absent raw=absent dl=absent s03_validity=false s3_write_attempts=0	NOTE-crash
+B04-jobexit-is-directory	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=2 class=absent locator=absent raw=absent dl=absent s03_validity=false s3_write_attempts=0	NOTE-crash
+B05-exit-string-42	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B06-exit-true	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B07-exit-false	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B08-exit-null	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B09-exit-42.5	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B10-exit-42.0	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B11-exit-array	b	not job_completed, not rc0; raw-result.json written; rc not 2/3/4 after a submission	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B16a-jobexit-other-pod	b	not job_completed; reconcile refused (7)	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0; reconcile rc=7 pass=false	holds
+B16b-jobexit-other-job	b	not job_completed; reconcile refused (7)	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0; reconcile rc=7 pass=false	holds
+B16c-jobexit-ne-container	b	not job_completed; reconcile refused (7)	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0; reconcile rc=7 pass=false	holds
+B12a-ruleA-exit-string-0	b	not job_completed (exit_code is not an integer)	rc=0 class=job_completed locator=launcher_result raw=present dl=0 s03_validity=true s3_write_attempts=0; check_job=CHECK_JOB_FAILED	BREAK-wrapper
+B12b-ruleA-exit-string-42	b	not job_completed (exit_code is not an integer)	rc=0 class=job_completed locator=launcher_result raw=present dl=0 s03_validity=true s3_write_attempts=0; check_job=CHECK_JOB_FAILED	BREAK-wrapper
+B13-pair-26-FAILED-42	b	class job_completed	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0	holds
+B13-pair-26-FAILED-43	b	class job_completed	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0	holds
+B13-pair-26-FAILED-0	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-0-SUCCEEDED-42	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-0-FAILED-42	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-26-SUCCEEDED-42	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-26-NONE-42	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-25-FAILED-42	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-1-FAILED-42	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-26-TIMED_OUT-42	b	class deadline_hit	rc=5 class=deadline_hit locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B13-pair-0-SUCCEEDED-0	b	class other	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=0 s03_validity=true s3_write_attempts=0	NOTE-odd-pairing-accepted
+B13-pair-26-STOPPED-42	b	class other	rc=5 class=other locator=receipt_status_pod_uid raw=present dl=0 s03_validity=false s3_write_attempts=0	holds
+B14a-partial-listed-lost	b	not job_completed when the download exit is nonzero	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=1 s03_validity=true s3_write_attempts=0; check_job=CHECK_JOB_FAILED; reconcile rc=6 pass=false	BREAK-wrapper-only
+B14b-partial-unlisted-lost	b	not job_completed when the download exit is nonzero	rc=0 class=job_completed locator=receipt_status_pod_uid raw=present dl=1 s03_validity=true s3_write_attempts=0; check_job=CHECK_JOB_OK; reconcile rc=6 pass=false	BREAK-wrapper+check_job
+B15a-result-not-json	b	not job_completed; a raw-result.json with submitted:true	rc=5 class=absent locator=absent raw=absent dl=absent s03_validity=false s3_write_attempts=0	NOTE-crash
+B15b-build-not-json	b	not job_completed; a raw-result.json with submitted:true	rc=5 class=absent locator=absent raw=absent dl=absent s03_validity=false s3_write_attempts=0	NOTE-crash
+B15c-result-array	b	not job_completed; a raw-result.json with submitted:true	rc=5 class=absent locator=absent raw=absent dl=absent s03_validity=false s3_write_attempts=0	NOTE-crash
+C01-BASH_ENV	c	reconcile issues only s3 cp (from S3) and s3 ls	vector=BASH_ENV payload_runs=1 write_or_submit_calls_reaching_aws=2 reconcile rc=0 pass=true	BREAK-env
+C01-EXPORTED_FUNCTION	c	reconcile issues only s3 cp (from S3) and s3 ls	vector=EXPORTED_FUNCTION payload_runs=2 write_or_submit_calls_reaching_aws=4 reconcile rc=0 pass=true	BREAK-env
+C01-PATH_SHIM	c	reconcile issues only s3 cp (from S3) and s3 ls	vector=PATH_SHIM payload_runs=1 write_or_submit_calls_reaching_aws=2 reconcile rc=0 pass=true	BREAK-env
+C02-CDPATH-relative-argv	c	reconcile issues only s3 cp (from S3) and s3 ls	vector=CDPATH(relative argv as in runbook S02) payload_runs=2 write_or_submit_calls_reaching_aws=4 reconcile rc=0 pass=true	BREAK-env
+C02b-CDPATH-dot	c	robustness: an exported CDPATH should not change the result	reconcile rc=4; No such file or directory	NOTE-fails-closed
+C03-ISOLAB_BUCKET-override	c	refused with zero AWS calls	reconcile rc=4 pass=false aws_calls=0	holds
+C04-out-symlink-into-runs	c	refuse an --out that resolves inside runs/	reconcile rc=0 files written under fakerepo/runs=18	NOTE-lexical-only
+C05-static-scan	c	no submit/write token in the bytes	2/2 scripts clean; details C05-static-scan.txt	holds

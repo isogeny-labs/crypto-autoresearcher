@@ -1,0 +1,31 @@
+# NOT AUTHORIZED. Relay only after (1) the Coordinator's approval DEC-20261107-7802ec (reserved id) is committed and names runbook_sha256 40b4b4bcbc69bc566621e977a83c7abb2621550389e45ff2b2cec68985e64a98,
+# (2) the independent red-team reconfirmation of the v3d bytes (TASK-20261107-a9406e; DEC-20261107-a83c51 reconfirmation, after the v3d snapshot of TASK-20261107-5f7d2b) is archived, (3) the owner has been told that S1 ran once and stopped on a wrapper defect, that its spend is at most USD 0.93108,
+# that C1-AMENDMENT-2 is filed and that S2 runs on v3d, and the owner's EKS spend go-ahead (protocol section 11) stands, (4) `scripts/checkpoint.sh init` has been filled for C1 and
+# `scripts/checkpoint.sh push` and `scripts/checkpoint.sh gate` have succeeded, and (5) the top-level session has recorded the sha256 of /root/.ccr/ca-bundle.crt (a local read, no network) in the relay notice (DEC-20261107-c3e91a R-1 T-7). The relay is the text `python3 tools/task_card.py prompt <this card>` prints.
+# Written by the experiment director under TASK-20261107-5f7d2b on the v3d bytes. Replaces CARD-EXP-ICPERF-127dbd-4, which bound runbook 36105be6... (launcher v3c) and is retired: it is never relayed.
+# CARD-EXP-ICPERF-127dbd-3 (launcher v3b) is retired too and is never relayed.
+# CARD-EXP-ICPERF-127dbd-2 (session RBS-ICPERF-de8978, stopped; not reopenable) stays retired.
+schema: crypto.autoresearch.mechanical-task-card.v1
+card_id: CARD-EXP-ICPERF-127dbd-5
+experiment_id: EXP-ICPERF-127dbd
+author_role: experiment-director
+executor_role: executor-mechanical
+kind: runbook
+runbook: experiments/EXP-ICPERF-127dbd/runbook.yaml
+runbook_sha256: 40b4b4bcbc69bc566621e977a83c7abb2621550389e45ff2b2cec68985e64a98
+bus_address: executor-mechanical-icperf-127dbd
+background: true
+write_scope:
+  - experiments/EXP-ICPERF-127dbd/runs/
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/
+  - experiments/EXP-ICPERF-127dbd/reports/
+stop_when:
+  - The relay message does not state that DEC-20261107-7802ec is committed, that the independent red-team reconfirmation TASK-20261107-a9406e of the v3d bytes is archived, that the owner has been told the S2 launch notice, that the owner has given the EKS spend go-ahead, that scripts/checkpoint.sh gate exited with status 0, and the sha256 of /root/.ccr/ca-bundle.crt that the top-level session recorded before the relay.
+  - The last line of step 1 does not begin with LINT OK.
+  - Step 2 exits with status 2.
+  - Step 2 exits with a status other than 0, 2 or 3.
+  - Step 3 does not print VERIFY OK.
+  - Step 5 shows a page 1 that lacks the text EXP-ICPERF-127dbd or the text RBS-ICPERF-616277.
+  - Any command in steps 1 to 8 would need an argument that this card does not give.
+  - A command would write a file outside the three write_scope paths.
+notes: Budget gate line of protocol section 10, recorded before the launch, in USD. S2 launch, 0.93108 (HB of S1, used as actual_spend until a billing record exists) + 0.93108 + 0 = 1.86216, at most 5.00, pass. This session launches S2 only, on launch_eks.sh v3d; S1 already ran as RUN-ICPERF-8b0d47 and S02-reconcile-t1 copies its output read-only, so the session never launches S1 and never writes under runs/RUN-ICPERF-8b0d47. If S02-reconcile-t1 stops the session, S2 is never launched. Step 2 exit status 3 is a recorded result; still run steps 3 to 8, then do not run step 2 again and do not reopen this runbook session; wait for a Coordinator decision.

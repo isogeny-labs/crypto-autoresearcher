@@ -1,0 +1,5 @@
+# S02-reconcile-t1 validity assertions of runbook.yaml, evaluated by tools/runbook.py evaluate_file_block on the reconcile-result.json of the synthetic control case A00 (scratch run; the real receipt pins cannot match a synthetic receipt)
+# expected: exactly two FAIL lines, the two receipt sha256 pins; every other assertion (objects_match, receipt_pins_outcome, env_hygiene pattern, r1..r6, run_summary, records newlines) passes
+FAIL /receipt_status_json_sha256 equals "a2642563d10a8f80661cef79a759b892d44fad49057a409ae03a1bee3a960ae0": observed "1f84406b3275d1e40d61b2b8c24b2f8c1697a0ece79f432f6557552596f875bc"
+FAIL /receipt_objects_json_sha256 equals "783ea0e3ec77daf52d3ff815cb096295a3db76fe05b5cc9b1884c001126504d7": observed "ddd13def87e9e20e1851ef81ecdc4e49102533d52a78333f0dd8c3c580b19426"
+checked 0 blocks; failures above

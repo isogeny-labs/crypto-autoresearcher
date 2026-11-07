@@ -1,0 +1,169 @@
+# TASK-20261107-a9406e: independent red-team reconfirmation of the C1 locator on the v3d bytes
+# (EXP-ICPERF-127dbd), under DEC-20261107-a83c51 'reconfirmation', TASK-20261107-d07e94 follow_on and
+# DEC-20261107-c3e91a R-5. Zero runs, zero AWS calls. It judges the final bytes. It approves nothing.
+handoff:
+  id: TASK-20261107-a9406e
+  from: coordinator
+  to: red-team
+  role: red-team
+  recorded_at: '2026-11-07'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Attack the v3d locator and environment joint, and report per question either a concrete break
+    (an input, the observed output, and a fixture that reproduces it) or an argument why none exists.
+    Questions:
+    (a) Is every 9d2b6a break still refused on v3d? That means A01, A02, A03, A09a, A09b, A10, B12a,
+        B12b, B14a and B14b, the crash paths B03, B04 and B15a to B15c, and C01, C02 and C04, each by your own
+        fixture as well as by the ported suite.
+    (b) Can you break K-1 (one locator rule) or K-2 (bytes bound to objects.json, the T1 receipt pins
+        and the LastModified pin)? Do K-4 (strict job exit), K-5 (post-submission crashes, exit 5 with
+        raw-result.json) and K-6 (receipt tightening) hold on the cases that name them?
+    (c) Does the mutation check hold when re-run by you? Is every check in tests/mutate.py load-bearing,
+        are the two SUBSUMED claims true, and is every new v3d check caught when removed?
+    (d) Can a caller-controlled environment, file or argv defeat K-7 as v3d implements it? That means the
+        prologue, the transport pins, the CA pin, the credential source, the configuration scan, and the
+        `/bin/bash -p` argv as tools/runbook.py and the trial supervisor actually execute it.
+  uncertainty_reduced: >-
+    Whether the bytes that S02 and S03 will run can admit the wrong bytes, a forged S3 response, a
+    different identity or a write. That is the last gate before DEC-20261107-7802ec may name a
+    runbook_sha256.
+  inputs:
+  - ledger/decisions/DEC-20261107-a83c51.yaml (controls_ruling K-1 to K-7)
+  - ledger/decisions/DEC-20261107-c3e91a.yaml (rulings R-1 to R-3: the pins you attack; review_prior)
+  - "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh, reconcile_run.sh (v3d; sha256 as in the TASK-20261107-5f7d2b snapshot receipt v3d_script_sha256) and locate_results.sh (v3c, unchanged, 668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b)"
+  - experiments/EXP-ICPERF-127dbd/implementation/tests/ (test_locator.sh, rt_regression.sh, mutation_check.sh, mutate.py, rt_validity.py, fake-aws, fake-launch-remote, fixtures/; hashes as in the 5f7d2b receipt)
+  - experiments/EXP-ICPERF-127dbd/implementation/check_job.py (d60564dd..., unchanged)
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml (environment, S01 to S04 argv and validity; hash as in the 5f7d2b receipt)
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json (T2 argv and check argv)
+  - tools/runbook.py (_subprocess_env, run_process, the lint) and the trial supervisor it calls
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/ (REPORT.md and evidence/rt-run/rt-results.tsv; the breaks to re-confirm)
+  - "isogeny-labs/crypto: taskq/deploy/eks-karpenter/remote/launch-remote (pinned by remote-pins.sha256)"
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-5f7d2b/snapshot-receipt.json
+  inputs_note: >-
+    Your context is the three scripts, the tests, the argv and environment of the runbook and plan,
+    runbook.py's process launch, the 9d2b6a report, and the questions. Do not read the director's
+    FINDINGS.md or evidence/ trees (design/d07e94/, design/5f7d2b/) before you have written your own
+    answers to (a) to (d). The answers must come from the code and your own runs, not from the producer's
+    account. You may read them afterwards and say where you disagree.
+  constraints:
+  - >-
+    RT-1 Independence. The reviewer is not the director session of TASK-20261107-d07e94 or
+    TASK-20261107-5f7d2b, not the archiver of either, and did not author or edit any input. It runs in its
+    own fresh session. If it is the 9d2b6a reviewer's session, it says so.
+  - >-
+    RT-2 Isolation. Zero AWS calls of any kind, read-only included, and zero launches. Never run
+    launch_eks.sh, reconcile_run.sh, probe_s01.sh or `tools/runbook.py run` against real AWS or a real
+    session. Run the scripts only under `env -i` with tests/fake-aws and fake-launch-remote, with a PATH
+    that holds no real aws. Prove it in the report with `command -v aws` and the fake-aws log. Every
+    credential value in the harness is a literal dummy. A proxy variable in a case points at a loopback
+    port with no listener, or at a local stub you write that logs and refuses; no traffic leaves the
+    container. You may call runbook.py's process-launch functions from a scratch Python harness on
+    scratch argv, and `tools/runbook.py lint`. Nothing under any pod-uid prefix is read, real or copied,
+    and scratchpad/dl-8b0d47-receipt/ is not opened.
+  - >-
+    RT-3 Do not edit any input. Write fixtures and scripts only under the review directory. Never write,
+    move, replace or chmod anything under /root/.ccr. An attack on the CA pin uses scratch paths, or a copy
+    of a script with K7_CA_BUNDLE_ALLOWED pointed at a scratch file, and says which. A break is reported
+    with its reproducing fixture. It is never patched.
+  - >-
+    RT-4 Read no records.jsonl, audit, replay, run log, arm statistic or ratio, and no runs/ or
+    runbook-sessions/ content.
+  - >-
+    RT-5 Confirm by your own runs:
+      - (a) rt_regression.sh on v3d (every row PASS) and its legacy replay (the 9d2b6a verdicts reproduce
+        on the v3b fixtures). test_locator.sh with the checkout argument (0 fail, 0 skip). And one fixture
+        per 9d2b6a break class written by you, not copied from the ported suite: a blind re-derivation of
+        the refusal.
+      - (b) the K-4 to K-7 case rows; and at least these attacks on K-1 and K-2: a results_uri equal to the
+        located prefix with a foreign pod_uid; a second pod prefix created between the receipt listing and
+        the pod listing; a same-size replacement of a multipart object after the pod listing (state
+        whether the S2 path refuses it or it remains the declared residual); a LastModified string format
+        the pin comparison mis-orders; and objects.json entries with duplicate keys.
+      - (c) mutation_check.sh, the full run, on frozen bytes (no edit while it runs), with the
+        CAUGHT/SUBSUMED/SURVIVED table. Build the K2-nonempty and K4-type pair mutants yourself and show the
+        pair is caught. Add at least one mutant of your own for each new v3d check (proxy pin, case-pair
+        equality, NO_PROXY pin, CA path pin, CA realpath, CA without a proxy, ca_bundle and the other added
+        configuration names, CR-1, CR-2, PY-1). A surviving mutant is a finding.
+      - (d) at least these attacks on K-7 and the argv:
+          - HTTPS_PROXY versus https_proxy precedence when they differ;
+          - a proxy value with userinfo, an IPv6 or 0.0.0.0 loopback spelling, a trailing newline, or percent-encoding;
+          - AWS_CA_BUNDLE as a symlink, as a hard link, or under a symlinked parent; a CA file swapped between the phase-2 hash and the CLI's read (TOCTOU; state whether it is a residual);
+          - config ca_bundle when AWS_CA_BUNDLE is unset; the `[services ...]` or `s3 =` sub-sections and indented keys; entries in ~/.aws/credentials;
+          - credentials missing or empty, so that the CLI falls back to files, the profile chain, a container endpoint or IMDS;
+          - a .pth file or usercustomize under $HOME/.local, and other HOME-relative startup files that the aws CLI or its Python reads;
+          - a shim (python3, bash, jq, sha256sum) in the trusted aws directory, which is the declared residual; confirm its reach;
+          - the C1_ENV_PHASE=2 spoof and C1_ENV_DROPPED injection;
+          - environment names that are not valid identifiers; BASH_FUNC_ names with odd suffixes;
+          - BASH_ENV, ENV, SHELLOPTS=xtrace with a PS4 command substitution, BASHOPTS, GLOBIGNORE and CDPATH, run through `/bin/bash -p` exactly as runbook.py run_process and the trial supervisor launch S01, S02, S04 and T2;
+          - whether runbook.py or the supervisor adds or keeps any variable on the way to argv;
+          - the `#!/usr/bin/env bash` of launch-remote and validate-request under the reduced PATH.
+  - >-
+    RT-6 Do not stage, commit or push. Archive TASK-20261107-a9406e commits the review directory.
+  deliverables:
+  - "REPORT.md at the path below. Per question (a) to (d) it gives a verdict (break | no break found | conditional), the exact input, the observed output, the reproducing fixture path, and the severity (blocks approval | fix before S2 | note)."
+  - "Tables: the 9d2b6a break classes with the ported-suite result and your own fixture's result; the mutation results (suite and your own mutants); and the RT-5 (d) attack list with a verdict per line."
+  - "Adversarial fixtures and the output of every command run, under evidence/, with SHA256SUMS."
+  - "A section 'residual risks I confirm or dispute', against DEC-20261107-c3e91a R-1 residual and the director's residual-risk list. Write it after (a) to (d)."
+  - "A section 'where I disagree with FINDINGS.md' (design/5f7d2b and design/d07e94), written after (a) to (d)."
+  - "Start and end sha256 of every input script, tests file, runbook.yaml and trial-plan.json, matched against the 5f7d2b receipt."
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-a9406e/REPORT.md
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-a9406e/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-a9406e/evidence/
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-a9406e/snapshot-receipt.json
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-a9406e
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-a9406e
+  read_scope:
+  - experiments/EXP-ICPERF-127dbd/implementation
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a
+  - experiments/EXP-ICPERF-127dbd/design/d07e94 and design/5f7d2b (only after the answers to (a) to (d) are written)
+  - tools/runbook.py and the trial supervisor
+  - the installed aws CLI and botocore source on this machine (read only, offline)
+  archived_by: TASK-20261107-a9406e
+  archive:
+    kind: snapshot
+    binding_mode: content_at_commit
+    executed_by: the shell-holding top-level session in the coordinator role, after the reviewer returns and before the Coordinator's ruling on it
+    record_ids: [EXP-ICPERF-127dbd, H-ICPERF-4cb536, DEC-20261107-c3e91a]
+    custody_note: >-
+      Per DEC-20261107-6b0f3d ruling 3: this task is not a research_dispatch queue entry. Its custody is
+      a coordinator-written receipt, dispatcher_verified false, at the declared receipt path, which
+      hashes the review files. The approval archive of DEC-20261107-7802ec binds them through the
+      dispatcher. Do not run research_dispatch verification on this receipt.
+    rules: >-
+      Merge origin/main first (never rebase). Stage only the review files and the receipt by name. Run
+      validate_ledger.py and check_merge_hygiene.py. One isolated commit, on a new branch from
+      origin/main. Push, then open a ready-for-review PR with auto-merge after validate_ledger passes.
+      Re-run the reviewer's mutation_check.sh command once, and record the result in the receipt. On a
+      refusal, return to the Coordinator.
+  inference:
+    policy: review-adversarial
+    reasoning_effort: null
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only.
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  dispatch_preconditions:
+  - {id: DP-1, text: "The TASK-20261107-5f7d2b snapshot and its custody receipt are on main. The reviewer is given that main commit, and the v3d sha256 values in the receipt match the files at that commit."}
+  - {id: DP-2, text: "DEC-20261107-c3e91a and this handoff are on main."}
+  - {id: DP-3, text: "The 5f7d2b return met its completion gate. If it took the R-2 A-2 fallback or omitted PY-1, the reviewer is told which, and attacks the fallback form."}
+  completion_gate:
+  - "REPORT.md answers (a) to (d), each with a verdict and either a reproducing fixture or a stated argument, and fills every RT-5 line."
+  - "The mutation check was re-run by the reviewer on frozen bytes, with the table archived, including the pair mutants and the reviewer's own mutants."
+  - "Evidence shows zero AWS calls (the fake-aws log and `command -v aws`), no write under /root/.ccr, and no edit to any input (start and end sha256 equal to the 5f7d2b receipt)."
+  - "No commit, push, launch or AWS call by the reviewer. Zero runs."
+  return_format: >-
+    REPORT.md path, the four verdicts with severities, the mutation summary, and SHA256SUMS. No
+    statement about C1 outcomes.
+  review_required: false
+  review_required_note: This is the review. The Coordinator composes it, then DEC-20261107-7802ec.
+  runs_launched: 0

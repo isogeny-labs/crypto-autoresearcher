@@ -1,0 +1,101 @@
+# DEC-20261107-a83c51: ruling on the red-team review TASK-20261107-9d2b6a of the C1 results locator.
+# The reviewer's three required controls and four of the five hardening items are adopted as
+# fix-before-S2. Design task TASK-20261107-d07e94 is assigned. The B-FILED-BEFORE-AFFECTED-DATA
+# qualification is fixed for DEC-20261107-7802ec. It approves nothing.
+coordinator_decision:
+  id: DEC-20261107-a83c51
+  id_provenance: >-
+    Chosen by the Coordinator subagent (no shell) as an unused 6-hex token. No match under ledger/,
+    coordination/ or experiments/. Run `python3 tools/allocate_id.py --check DEC-20261107-a83c51`.
+    If that fails, use --next, then rename and replace the id here, in TASK-20261107-d07e94 and in
+    goal.yaml.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It read
+    experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/REPORT.md (sections 0, a to d, the
+    disagreements, the controls and the deviations). It wrote this file and
+    ledger/handoffs/TASK-20261107-d07e94.yaml, and edited goal.yaml next_action. Archive facts
+    (PR #3140, commit 5823acc9c2, the hashes and the reproduction) are as the top-level session
+    reported them.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: revise
+  decision_scope: >-
+    Accepts the review as the locator joint's adversarial record. Rules the controls and assigns a
+    zero-run design task. It names no runbook_sha256 and approves no launch.
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+
+  review_acceptance:
+    record: TASK-20261107-9d2b6a
+    archive: {pr: 3140, commit: 5823acc9c2, report_sha256: 19305438..., sha256sums: 9b14c837..., reviewer_sha256sums: 0c5171ba..., dispatcher_verified: false}
+    accepted: true
+    archive_deviations:
+      - "AD-1: the top-level session transcribed REPORT.md from the reviewer's returned text, because the reviewer's runtime refused the write. Accepted on two grounds. First, the reviewer's own evidence tree and SHA256SUMS.reviewer are unchanged. Second, the top-level session reproduced every harness verdict independently (rt_harness.sh under env -i, fake aws only, 0 AWS_ variables). Condition: DEC-20261107-7802ec and the review_plan cite each verdict through evidence/rt-run/rt-results.tsv and its case directories, not through the REPORT.md prose alone."
+      - "AD-2: SHA256SUMS regenerated to cover REPORT.md, with the reviewer's original kept. Accepted."
+      - "AD-3: two absolute scratchpad symlinks were left out. Accepted, because they would dangle in the repository and are not evidence."
+    reviewer_deviations: "PD-RT-1 to PD-RT-4 are accepted as disclosed. The reads beyond the declared inputs tested named assumptions and opened no S1 data."
+    reproduction: "The reviewer re-ran test_locator.sh: 117 pass, 0 fail, 0 skip, with the checkout argument. That settles DEC-20261107-e41c08 ruling 6. The three script hashes are unchanged at f1c5a7faa3 and 0ea4ca81d0."
+
+  findings_classification:
+    - "No 'blocks approval' finding. Every break needs a third party to write to the results bucket after the job. Genuine pinned-launcher bytes never do that (A00, A04). But sabotage is assumed, the S1 prefix stayed writable for more than a day, and it was read out of band by a session with write-capable credentials (PD-1). So these breaks are within the threat model, and the runbook does not run on these bytes. The fixes are cheap. Accepting the risk in writing is refused."
+    - "(a) Break 1 (A01, A02, A03): rule (a) trusts an unauthenticated results_uri. Break 2 (A09a, A09b, A10): the bytes are not bound to the launcher's objects.json snapshot. Notes A06e, A06f, A07e, A08, A09c, A09d."
+    - "(b) Through rule (a): A01, B12a and B12b. The partial-download gap: B14a and B14b. Crash paths inherited from v3a: B03, B04, B15a to B15c."
+    - "(c) The bytes are clean. The environment is the gap: C01, C02 and C04. The aws-cli configuration surface was not exercised."
+    - "(d) filed_before_affected_data: true holds only in the scope AMENDMENT-2 discloses."
+
+  controls_ruling:
+    adopted_fix_before_s2:
+      - "K-1 One locator rule for every outcome. locate_results.sh always applies the receipt rule (status.json, listing, verify). A non-empty result.json .results_uri is accepted only if it equals the located s3://$ISOLAB_BUCKET/runs/<job>/<pod_uid>/ exactly. Otherwise the class is 'other', and the case is never job_completed. Closes A01, A02, A03 and B12 by way of rule (a)."
+      - "K-2 Bind the bytes to objects.json, in v3c and in reconcile. objects.json .objects must be a non-empty array and next_token must be null (A09c, A09d). Before the download, a read-only listing of the pod prefix must equal the objects.json entries for it as a set of (Key, Size, ETag). After the download, every local file's size, and its MD5 where the ETag is a single-part MD5, must equal objects.json, with no extra or missing file (A09a, A09b, A10). For T1 only, reconcile also pins the launcher receipt objects. status.json sha256 must be a2642563d10a8f80661cef79a759b892d44fad49057a409ae03a1bee3a960ae0 and objects.json must be 783ea0e3ec77daf52d3ff815cb096295a3db76fe05b5cc9b1884c001126504d7, the D-1 copies. Each S3 LastModified must be at or before 2026-11-07T02:14:41Z. That ties S1's bytes to the launcher's 02:14:21Z snapshot."
+      - "K-3 Runbook validity. On the S2 trial, raw-result.json must assert download_exit '0', objects_match true and results_locator equal to the receipt-verified value. by_trial T2 pins results_uri to ^s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s2-20261106/[0-9a-f-]{36}/$ (A02, B14). The S02 reconcile validity asserts the same objects_match and pin facts."
+      - "K-4 Strict job exit, under every rule. job_exit_code is taken only when job-exit.json .exit_code has jq type 'number' and is an integer in {0, 42, 43}. Strings, booleans and floats are rejected (B12a, B12b)."
+      - "K-5 Post-submission crash paths. Once launch-remote has run, every parse failure (result.json, build.json, status.json, objects.json, job-exit.json) still writes raw-result.json with submitted true and an 'other' class, and the script exits 5. Exit 2, 3 or 4 is never used after the submission line (B03, B04, B15a to B15c)."
+      - "K-6 Receipt tightening. The receipt_uri launcher id must equal result.json .launcher's build id and be a canonical UUID (A06e, A06f). The pod uid must match the UUID regex with no trailing whitespace (A07e). The pod's restartCount must be 0 with an empty lastState (A08)."
+      - "K-7 Environment hygiene, in reconcile_run.sh and launch_eks.sh v3c. Each script re-execs itself under env -i with an explicit allowlist: an absolute PATH whose aws is the pinned aws-cli/1.46.2 (verified by --version), HOME, TMPDIR, AWS_REGION, AWS_DEFAULT_REGION, ISOLAB_BUCKET, ISOLAB_CODEBUILD_PROJECT (v3c only), CRYPTO_CHECKOUT, and only the credential variables that the executor identity needs, enumerated by name and never printed. env -i clears BASH_ENV, ENV and BASH_FUNC_*, and the script refuses to start if any reappears. It refuses any AWS_ENDPOINT_URL* variable, and any alias, endpoint_url or credential_process entry in the aws config files beyond those the executor identity already uses (names recorded, values never printed). `here` is resolved with `CDPATH= cd -- \"$(dirname -- \"$(realpath -- \"${BASH_SOURCE[0]}\")\")\"`. --out must realpath inside the step's session output directory and never under runs/ (C01, C02, C04)."
+    recommended_not_required:
+      - "K-8 A read-only IAM identity for S02. It needs an owner-side IAM change outside this lane's authority. Without it, the write-safety of S02 rests on K-7 and on the absence of write tokens (C05). DEC-20261107-7802ec states that residual risk. If the owner provides such an identity, the director's next revision uses it."
+    regression: >-
+      The reviewer's harness cases become permanent regression fixtures under
+      implementation/tests/, re-targeted at v3c: all 69 rt-results rows plus new cases for K-4 to K-7.
+      Every 'break' row must flip to refused, and every 'holds' row must stay refused. A00 and the
+      genuine T1 shape must still pass. test_locator.sh must still pass in full. The case named in
+      9d2b6a's next_concrete_action (A01, A02, A09a, A09b, A10, B14a, B14b) are each listed
+      individually in FINDINGS.
+    reconfirmation: >-
+      After the director returns, an independent red-team confirmation (a new task, a session other
+      than the director's) re-runs the adapted harness and tries to break K-1, K-2 and K-7 before
+      any decision names a runbook_sha256.
+
+  filed_before_affected_data_ruling:
+    holds: "only in AMENDMENT-2's disclosed scope. It is literally false for S1, whose output existed from about 02:14:21Z, before the freeze at 02:54:43Z. It is true for S2."
+    remedy:
+      - "No edit to the frozen protocol (v3, 4b7bf35f...)."
+      - "DEC-20261107-7802ec and the evidence review_plan's blindness joint must both carry this text: 'For S1, filed_before_affected_data is qualified. Before the filing, S1's job-exit fields, the sizes of run-summary.json and records.jsonl, and the PD-1 audit and run.stderr counts had been read. No records.jsonl line, arm statistic, ratio, compare output or parity field had been read. The audit pass bit was already implied by the container exit 42 (run-ecbench exits 41 on an audit failure before 42). S1's bytes are bound to the launcher's 02:14:21Z objects.json by K-2.'"
+      - "K-2 is the binding the remedy requires."
+
+  status_transitions: []
+  target_ids: [TASK-20261107-9d2b6a, TASK-20261107-d07e94, EXP-ICPERF-127dbd, GOAL-ICPERF-e6b6a4, BATCH-0e0902]
+  related_records:
+    prior_decisions: [DEC-20261107-b74e2c, DEC-20261107-e41c08, DEC-20261107-6b0f3d]
+    reviews: {red_team: TASK-20261107-9d2b6a, pr: 3140}
+    reserved_not_written: DEC-20261107-7802ec
+  rationale:
+    - "The locator decides which bytes become S1 and S2 evidence. A self-consistent planted prefix that passes the wrapper, check_job.py and validity is exactly the sabotage the program assumes."
+    - "objects.json is the only snapshot of the prefix that the job did not write. Binding to it is what turns the AMENDMENT-2 disclosure into a checkable claim."
+    - "Every control is local and needs no spend. The design cost is small next to a paid S2 run on bytes known to admit a planted prefix."
+  evidence_refs:
+    - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/REPORT.md (sha256 19305438...)
+    - experiments/EXP-ICPERF-127dbd/reviews/redteam-9d2b6a/evidence/rt-run/rt-results.tsv
+    - experiments/EXP-ICPERF-127dbd/design/c5a0f4/FINDINGS.md (D-1 receipt hashes)
+  limitations:
+    - "No shell. The Coordinator did not re-run the harness. Its acceptance rests on the reviewer's evidence and the top-level session's reported reproduction."
+    - "The ETag-to-MD5 check applies only to single-part uploads. A multipart ETag is compared as a string with the listing."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session, text: "Check the ids. Commit this decision, TASK-20261107-d07e94 and goal.yaml (named paths only) on a branch from origin/main after #3140 merges. Use a ready-for-review PR with auto-merge after validate_ledger. Then dispatch TASK-20261107-d07e94 to the experiment-director. On return: write its custody receipt, then return for the red-team confirmation task."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "An engineering review ruling on a launch wrapper. No research evidence and no claim is decided."

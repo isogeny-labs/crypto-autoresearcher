@@ -9,7 +9,14 @@ canonical receipt with
 `python3 tools/migrate_autolab_archive.py --verify-only --no-harness-output
 --metadata-dir /tmp/autolab-migration-20260802-r1-verify`.
 
-A multi-agent orchestration framework for rigorous, reproducible ECDLP experimentation.
+A multi-agent orchestration framework for rigorous, reproducible research across
+domains, with an established ECDLP experiment toolchain.
+
+[General research tasks](docs/general-research-tasks.md) add typed methods and
+evidence plans to existing handoffs: literature, theoretical, computational,
+empirical, engineering, replication, synthesis, and custom methods. Start with
+`autoresearch research methods`; domain names are open-ended and multiple domains
+can be combined in one task.
 
 The project separates research into primary roles with separate authority:
 

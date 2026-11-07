@@ -1,0 +1,52 @@
+{
+ "schema": "crypto.autoresearch.archive_receipt.v1",
+ "kind": "snapshot",
+ "goal_id": "GOAL-PATH-001",
+ "batch_id": "BATCH-c077fd",
+ "task_id": "TASK-20261107-971edf",
+ "role": "coordinator",
+ "source_task_ids": [
+  "TASK-20261107-7db1de"
+ ],
+ "record_ids": [
+  "EXP-MONO-1a1be2",
+  "BATCH-c077fd",
+  "TASK-20261107-7db1de",
+  "TASK-20261107-971edf"
+ ],
+ "parent_sha": "34f8fc10cea2de60927b88a53fb392a1f39f7fb1",
+ "parent_sha_note": "After the 7db1de release afc91c6829, the 971edf claim c625577715 and the merge of origin/main 34f8fc10ce.",
+ "commit_sha": null,
+ "commit_sha_note": "Null by convention; filled in the queue archive block in a later commit.",
+ "base_commit_checked": "f1c5a7faa333e4affb6606779218146a693a528c",
+ "merge_outcome": "git merge origin/main (f1c5a7faa3) as 34f8fc10ce: no conflict, never rebased; origin/main changed nothing under experiments/EXP-MONO-1a1be2/ or any GOAL-PATH-001 path.",
+ "binding_mode": "content_at_commit",
+ "declared_paths": [
+  "coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/archives/TASK-20261107-971edf/snapshot-receipt.json",
+  "coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/fix_review.md",
+  "coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/review_attestation.yaml"
+ ],
+ "path_sha256": {
+  "coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/fix_review.md": "53566e50fd5726061b42a0b8e669f70af34e17f89b23f5f791b7a16442498415",
+  "coordination/goals/GOAL-PATH-001/review/TASK-20261107-7db1de/review_attestation.yaml": "fe3f6437a99fffed8d9eae695d04df3eb9842c4e29d6eb9d8116f4fa24387190"
+ },
+ "receipt_self_hash_excluded": true,
+ "sa2": "PASS. fix_review.md and review_attestation.yaml equal their release digests (True); the attestation parses; commit_reviewed = 5f6c0924502a804271cc100937bf706021985ed6. git status --ignored --untracked-files=all under coordination/goals/GOAL-PATH-001/review/ and experiments/EXP-MONO-1a1be2/ shows only the two 7db1de files plus four ignored reports/review-*/report.pdf hydrations, each equal to the sha256 in its tracked .artifacts.json (f0b7c7, 843cf7, 475620, 24d2a2): recorded, not strays. The uncommitted DEC-20261107-f46a40 records lie under ledger/, outside the SA-2 scope, and are not staged.",
+ "sa3_independence_verbatim": "no review_plan found; pass --plan or a --batch containing one\nrc=2",
+ "sa3_independence_note": "check_review_independence.py needs a review_plan; 7db1de has review_plan null by design (DEC-20261106-24d2a2: an instrument re-review, not a claim-changing round). Output recorded as written; not a stop condition under SA-3.",
+ "sa3_verdict_b8h": "passed",
+ "sa3_finding_counts": {
+  "must_fix_closed": 9,
+  "must_fix_not_closed": 0,
+  "new_blocking": 0,
+  "new_non_blocking": 4
+ },
+ "sa3_m6_killed_by_reviewer_run": true,
+ "sa3_rr5h": "agree",
+ "sa3_rr9_route_counts": {
+  "blocks_release": 5,
+  "does_not_block": 8
+ },
+ "sa5_note": "B8-H verdict passed. The review records four non-blocking findings whose cheap fixes would be in launcher.py; whether any is adopted (which would change code_sha256 and void the bc7a76 binding) is for DEC-20261107-40200d, as are the five RR-9 routes it marks as blocking release of bc7a76. Recorded as written.",
+ "runs_launched": 0
+}

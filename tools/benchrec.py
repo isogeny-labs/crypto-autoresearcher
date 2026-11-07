@@ -878,15 +878,17 @@ def _esc(s: str) -> str:
 
 
 def chart_panels(prog: dict) -> list[dict]:
-    """Panels: headline 'gain vs first' for every headline series, 'distance to
-    reference' where references exist, then one panel per other unit."""
+    """Show only panels with comparable observations in their own units."""
     panels = []
     head = [s for s in prog["series"] if s["unit"] == prog["headline_unit"]]
-    if head:
+    if any(p["derived"].get("improvement_vs_first_percent") is not None
+           for s in head for p in s["points"]):
         panels.append({"title": f"Cumulative gain vs first record, unit {prog['headline_unit']} (derived, %)",
                        "ylabel": "% better than first", "series": head,
                        "y": lambda p: p["derived"].get("improvement_vs_first_percent"), "log": False})
-    refd = [s for s in prog["series"] if any(p["derived"].get("value_over_reference") for p in s["points"])]
+    refd = [s for s in prog["series"] if any(
+        (v := p["derived"].get("value_over_reference")) is not None and v > 0
+        for p in s["points"])]
     if refd:
         panels.append({"title": "Distance remaining: value / reference (1.0 = parity; derived)",
                        "ylabel": "value / reference", "series": refd,
@@ -896,9 +898,12 @@ def chart_panels(prog: dict) -> list[dict]:
         if s["unit"] != prog["headline_unit"]:
             by_unit.setdefault(s["unit"], []).append(s)
     for u in sorted(by_unit):
-        panels.append({"title": f"Series in unit {u}: gain vs first record (derived, %)",
-                       "ylabel": "% better than first", "series": by_unit[u],
-                       "y": lambda p: p["derived"].get("improvement_vs_first_percent"), "log": False})
+        series = by_unit[u]
+        if any(p["derived"].get("improvement_vs_first_percent") is not None
+               for s in series for p in s["points"]):
+            panels.append({"title": f"Series in unit {u}: gain vs first record (derived, %)",
+                           "ylabel": "% better than first", "series": series,
+                           "y": lambda p: p["derived"].get("improvement_vs_first_percent"), "log": False})
     return panels
 
 
@@ -936,22 +941,28 @@ def render_svg(prog: dict) -> str:
     import math
     W, PH, M = 900, 260, 60
     panels = chart_panels(prog)
-    H = 70 + max(1, len(panels)) * (PH + 50)
+    # The legend can be taller than the plot when many metrics are recorded.
+    # Reserve its full height before positioning the next panel.
+    spans = [max(PH + 50, 62 + 16 * (len(p["series"]) - 1)) for p in panels]
+    H = 70 + (sum(spans) if spans else PH + 50)
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" font-family="Helvetica, Arial, sans-serif" font-size="12">',
          f'<rect width="{W}" height="{H}" fill="white"/>',
          f'<text x="{M}" y="30" font-size="18" font-weight="bold">Benchmark progress: {_esc(prog["repo"])}</text>',
          f'<text x="{M}" y="50" fill="#555">Values from bench.record/v1 records; percentages and ratios derived, same unit within a series. '
          f'Records: {", ".join(f"{k} {v}" for k, v in prog["records"].items())}.</text>']
     if not panels:
-        o.append(f'<text x="{M}" y="100">No measured records yet.</text>')
-    for i, panel in enumerate(panels):
-        top = 70 + i * (PH + 50)
+        message = ("No comparable observations within a metric yet; see PROGRESS.md for measured values."
+                   if prog["records"].get("measured", 0) else "No measured records yet.")
+        o.append(f'<text x="{M}" y="100">{_esc(message)}</text>')
+    top = 70
+    for panel, span in zip(panels, spans):
         geom = panel_geometry(panel)
         o.append(f'<text x="{M}" y="{top + 14}" font-weight="bold">{_esc(panel["title"])}</text>')
         gx0, gy0, gw, gh = M, top + 24, W - 2 * M - 220, PH - 40
         o.append(f'<rect x="{gx0}" y="{gy0}" width="{gw}" height="{gh}" fill="none" stroke="#999"/>')
         if geom is None:
             o.append(f'<text x="{gx0 + 10}" y="{gy0 + 20}" fill="#555">no points</text>')
+            top += span
             continue
         x0, x1, y0, y1 = geom
 
@@ -994,6 +1005,7 @@ def render_svg(prog: dict) -> str:
             lx, ly = gx0 + gw + 16, gy0 + 14 + j * 16
             o.append(f'<rect x="{lx}" y="{ly - 9}" width="10" height="10" fill="{col}"/>')
             o.append(f'<text x="{lx + 14}" y="{ly}">{_esc((s["problem"] + " · " + s["metric"])[:34])}</text>')
+        top += span
     o.append("</svg>")
     return "\n".join(o) + "\n"
 
@@ -1098,7 +1110,9 @@ def render_pdf(prog: dict) -> bytes:
     y += 24
     panels = chart_panels(prog)
     if not panels:
-        pdf.text(M, y, "No measured records yet.", 11)
+        message = ("No comparable observations within a metric yet; measured values are tabulated below."
+                   if prog["records"].get("measured", 0) else "No measured records yet.")
+        pdf.text(M, y, message, 11)
     PH = 200
     for panel in panels:
         if y + PH + 40 > H - M:
@@ -1106,7 +1120,7 @@ def render_pdf(prog: dict) -> bytes:
             y = 60
         pdf.text(M, y, panel["title"], 11, bold=True)
         y += 10
-        gx0, gy0, gw, gh = M + 40, y, W - 2 * M - 200, PH - 40
+        gx0, gy0, gw, gh = M + 40, y, W - 2 * M - 40, PH - 40
         pdf.rect(gx0, gy0, gw, gh, stroke="#999999")
         geom = panel_geometry(panel)
         if geom is None:
@@ -1142,13 +1156,37 @@ def render_pdf(prog: dict) -> bytes:
             pdf.polyline(pts, col)
             for px, py in pts:
                 pdf.dot(px, py, 2.5, col)
-            lx, ly = gx0 + gw + 12, gy0 + 12 + j * 12
-            pdf.rect(lx, ly - 7, 8, 8, stroke=None, fill=col)
-            pdf.text(lx + 12, ly, (s["problem"] + " · " + s["metric"])[:30], 7)
-        y += PH
-    # Table page(s)
-    pdf.new_page()
-    y = 60
+        y = gy0 + gh + 26
+        pdf.text(M, y, "Series key", 9, bold=True)
+        y += 14
+        next_series = 0
+        while next_series < len(panel["series"]):
+            available_rows = int((H - M - y) // 12)
+            if available_rows < 1:
+                pdf.new_page()
+                y = 60
+                pdf.text(M, y, panel["title"] + " (series key continued)", 9, bold=True)
+                y += 18
+                continue
+            rows = min(available_rows, (len(panel["series"]) - next_series + 1) // 2)
+            for col in range(2):
+                for row in range(rows):
+                    j = next_series + col * rows + row
+                    if j >= len(panel["series"]):
+                        break
+                    s = panel["series"][j]
+                    lx, ly = M + col * (W - 2 * M) / 2, y + row * 12
+                    pdf.rect(lx, ly - 7, 8, 8, stroke=None, fill=PALETTE[j % len(PALETTE)])
+                    pdf.text(lx + 12, ly, (s["problem"] + " · " + s["metric"])[:30], 7)
+            next_series += 2 * rows
+            y += rows * 12 + 18
+    # Keep the table on the first page when there was no comparison chart;
+    # otherwise give the chart and table their own pages.
+    if panels:
+        pdf.new_page()
+        y = 60
+    else:
+        y += 24
     pdf.text(M, y, "Series summary", 14, bold=True)
     y += 18
     cols = [(M, "problem · metric"), (M + 230, "unit"), (M + 270, "first"), (M + 330, "latest"),
@@ -1167,7 +1205,7 @@ def render_pdf(prog: dict) -> bytes:
                 (fmt(d.get("improvement_vs_first_percent")) + "%") if d.get("improvement_vs_first_percent") is not None else "–",
                 fmt(d.get("value_over_reference")), str(len(s["points"]))]
         for (x, _), v in zip(cols, vals):
-            pdf.text(x, y, v, 8)
+            pdf.text(x, y, v.replace("–", "-"), 8)
         y += 12
     y += 16
     for line in _wrap(prog["note"], 110):

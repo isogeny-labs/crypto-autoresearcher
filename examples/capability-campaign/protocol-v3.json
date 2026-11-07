@@ -1,0 +1,366 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "CAPABILITY-native-qualification-20261107",
+  "version": 3,
+  "created": "2026-11-07",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "examples/capability-campaign",
+  "authors": [
+    "Codex implementation qualification"
+  ],
+  "links": {
+    "capability_campaign_sha256": "5f0bbff881f0fbd84496a685730034ee7fd4a71d2b3b5f5434679868141265ae",
+    "spec": "qualification-v3.json",
+    "scope": "Development qualification, not held-out reliability or comparative superiority.",
+    "source_sha256": "5646a77b75c3c23d9be6867c09a20387e1927450dffa8bc0c4e5a34c7c33766e",
+    "previous_attempt": "records/native-qualification",
+    "transport_correction": "Separate 64 MiB per-file local actor storage ceiling from 1 MiB returned output acceptance limit; private actor home retained. Earlier attempts used 12 native sessions total; this final panel permits at most 15, within the combined 30-session ceiling.",
+    "previous_attempts": [
+      "records/native-qualification",
+      "records/native-qualification-v2"
+    ]
+  },
+  "question": "Can the bounded native campaign execute supplied-input analysis, synthesis and finite mathematics and independently grade its outputs?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Each submitted answer is checked exactly against an evaluator-held reference on the registered supplied-input instances.",
+      "class": "exact_computation",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [],
+  "arms": [
+    {
+      "id": "single",
+      "role": "baseline",
+      "description": "single orchestration with bounded native sessions",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "caccd00b47b4cd3c2648586bda222ef7166efa074b035e453d5f58dade615d19",
+        "flags": {
+          "model": "gpt-6-astra",
+          "reasoning_effort": "xhigh",
+          "tools": "disabled"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "stage_count": 1
+      }
+    },
+    {
+      "id": "reviewed",
+      "role": "candidate",
+      "description": "reviewed orchestration with bounded native sessions",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "caccd00b47b4cd3c2648586bda222ef7166efa074b035e453d5f58dade615d19",
+        "flags": {
+          "model": "gpt-6-astra",
+          "reasoning_effort": "xhigh",
+          "tools": "disabled"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "stage_count": 4
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "Integration qualification makes no superiority claim; no noise-floor claim."
+    },
+    "positive": {
+      "present": false,
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Separate software-control campaigns exercise independent exact answers through the same stage, grader and report path before inference."
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "Separate negative software-control campaign submits fabricated answers with success claims through the same grading path; those controls are not model evidence."
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "orchestration",
+        "levels": [
+          "single",
+          "reviewed"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "model",
+        "treatment": "fixed",
+        "value": "gpt-6-astra xhigh",
+        "how": "same explicit CLI model and effort for every stage; service revision not pinned"
+      },
+      {
+        "name": "inputs",
+        "treatment": "fixed",
+        "value": "5e91fb3b6059785cec3b416a8edf9e3cc9008f40b7fff499112a99a72e27574e",
+        "how": "matched generated inputs independent of arm"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "deterministic random permutation per instance and repeat"
+      },
+      {
+        "name": "sessions",
+        "treatment": "measured",
+        "how": "single consumes one; reviewed consumes four under same per-trial ceiling; resources are not equalized"
+      },
+      {
+        "name": "host_service",
+        "treatment": "measured",
+        "how": "CLI version, traces and wall durations recorded; remote provider state uncontrolled"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "case-verification",
+        "arms": [
+          "single",
+          "reviewed"
+        ],
+        "differs_in": [],
+        "design": "absolute",
+        "threshold": "Each final answer must exactly match the evaluator-held reference."
+      }
+    ],
+    "aa_not_applicable": "No comparative claim",
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "harness_drawn",
+      "seeds": [],
+      "nonce": null,
+      "note": "First 16 hex digits of SHA256(f\"20261107:dev:{task_id}:{instance}\"); arm permutation Random(seed+repeat). Public generator, references withheld from actors."
+    },
+    "instance_sampling": {
+      "rule": "One independently seeded instance of each of three named families at difficulty 1. This is a development smoke panel.",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Descriptive qualification only; exact graders do not use arm identity.",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 3,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 3,
+      "correction": "bonferroni",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": false,
+      "note": "One instance per family is insufficient for a reliability claim. No decisive comparative test."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 0,
+      "per_sample_seconds": 240,
+      "threads": 1,
+      "estimated_total_seconds": 720,
+      "measured_on": "Conservative timeout envelope: 6 trials times 120 seconds. This is a bound, not a timing measurement."
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "verified",
+        "name": "Exact verified answer",
+        "unit": "boolean as 0 or 1",
+        "kind": "exact",
+        "definition": "One iff final output passes evaluator-held deterministic reference and all stages completed",
+        "source": "trial/result.json verified",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "verified",
+      "false_success",
+      "stages_attempted",
+      "total_tokens"
+    ],
+    "record": [
+      "source_sha256",
+      "native_version",
+      "trace",
+      "wall_seconds",
+      "cost_usd"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "serial",
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 240,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "Exactly 6 trials, at most 15 sessions, concurrency 1, 120 seconds/trial, 4096 MiB address space, one local CPU. Internal native files capped at 64 MiB/file; prompt 128 KiB and returned answer/log acceptance 1 MiB. Prior attempts used 12 sessions; combined ceiling remains 30. No further qualification attempts. No new cloud compute; subscription dollar billing unavailable.",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "All failures stay in denominators; tool use invalidates a trial.",
+    "Missing usage and billing are null, never zero.",
+    "A completed process or reviewer approval alone cannot verify an answer."
+  ],
+  "decision_rule": {
+    "text": "Report exact answer verification on each development case. Never promote reliability from this development panel.",
+    "comparison_ids": [
+      "case-verification"
+    ],
+    "threshold": "Exact grader pass",
+    "statistic": "verified count by family and arm",
+    "interval": "Descriptive 95% Wilson intervals clustered by instance; small-sample uncertainty only.",
+    "multiple_comparison_correction": "bonferroni",
+    "effect_size_measure": "descriptive paired wins and losses only",
+    "verdict_vocabulary": [
+      "inconclusive",
+      "invalid_measurement",
+      "supported_within_scope"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "../../orchestration/eval/capability_report.py",
+      "sha256": "953e30bad626b85ce8fdc38819f83e29a812bcd6dc10c7e6bbfe50f707946ffe"
+    },
+    "inputs": [
+      "trial-*/result.json"
+    ],
+    "outputs": [
+      "report.json",
+      "report.md",
+      "graph.svg"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "Verified / attempted trials by family and arm; descriptive counts"
+    ],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "Claiming any-domain reliability from this supplied-input development panel",
+    "Treating software controls as live model successes",
+    "Claiming matched token spend or known dollar cost",
+    "Changing seeds or sample counts after seeing outputs"
+  ],
+  "literature": [
+    {
+      "ref": "https://www.anthropic.com/research/demystifying-evals-for-ai-agents",
+      "provenance": "retrieved",
+      "claim": "Evaluate model and scaffold together and verify outcome separately from transcript.",
+      "verified_by": "Source review 2026-11-07"
+    },
+    {
+      "ref": "https://learn.chatgpt.com/docs/non-interactive-mode",
+      "provenance": "retrieved",
+      "claim": "Native structured output and event-stream interface; actual CLI help checked on host.",
+      "verified_by": "CLI 0.163.0 and official documentation, 2026-11-07"
+    },
+    {
+      "ref": "../../docs/measuring-the-harness.md",
+      "provenance": "internal",
+      "claim": "Legacy evaluator measures narrower executor behavior; new bounded campaign explicitly measures stages.",
+      "verified_by": "Implementation source review 2026-11-07"
+    }
+  ],
+  "amendments": [
+    {
+      "id": "isolated-native-home",
+      "filed": "2026-11-07",
+      "filed_before_affected_data": true,
+      "reason": "Original native qualification hit SIGXFSZ before producing answers; desktop databases exceed the actor file-size ceiling. Preserve the original attempt and qualify the corrected isolated transport.",
+      "changes": [
+        "Use a private temporary CODEX_HOME with only file-backed saved login.",
+        "Bind corrected actor source hashes.",
+        "Allow one corrective six-trial panel; at most 30 sessions combined across the two attempts."
+      ]
+    },
+    {
+      "id": "native-storage-output-separation",
+      "filed": "2026-11-07",
+      "filed_before_affected_data": true,
+      "reason": "The second attempt still hit SIGXFSZ before any thread events. Internal native file initialization needs a separate storage limit from returned output.",
+      "changes": [
+        "Keep private actor homes and 1 MiB returned output acceptance.",
+        "Set a 64 MiB hard per-file limit for internal native storage and bounded parent log reads.",
+        "Final six-trial transport qualification; at most 27 sessions actually attempted across all three panels within the combined 30 ceiling."
+      ]
+    }
+  ],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "970ab098cad4b2a6e2d30ac5f06b3465c8ed8001c9ae3e6a9bd84d5fc4e95e4e",
+    "commit": "cae5661bea7ed468172bfab0fc97de36a8043d03",
+    "frozen_at": "2026-11-07T03:05:56Z",
+    "filed_before_affected_data": true
+  }
+}

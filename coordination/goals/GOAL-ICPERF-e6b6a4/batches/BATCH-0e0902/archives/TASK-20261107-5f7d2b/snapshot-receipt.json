@@ -1,0 +1,138 @@
+{
+  "schema": "coordinator.interim_custody_receipt/v1",
+  "task_id": "TASK-20261107-5f7d2b",
+  "kind": "snapshot",
+  "binding_mode": "content_at_commit",
+  "dispatcher_verified": false,
+  "dispatcher_note": "Interim custody per DEC-20261107-6b0f3d ruling 3. TASK-20261107-5f7d2b is not a research_dispatch queue entry. TASK-20261107-a9406e reviews the v3d bytes named here, and the DEC-20261107-7802ec approval archive binds these files through the dispatcher; its path_sha256 must equal these hashes for every path that is unchanged.",
+  "record_ids": [
+    "EXP-ICPERF-127dbd",
+    "H-ICPERF-4cb536",
+    "DEC-20261107-c3e91a"
+  ],
+  "base_commit": "6676756fc4b98526efd133ac8f3fe3756e85a954",
+  "director_start_commit": "d9a8ecd08b7a14b0ea07d5d9b075711c406f875b",
+  "superseded_script_sha256": {
+    "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh": "a61c55da15b149d00ee7e644c41d79ad8df4ae82f3c59dfca157ea9679fc9e76",
+    "experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh": "a294b7dbc77b33ae4103dfa907a5effba03fe0e2c1837f3f51a44a5897055c16"
+  },
+  "v3d_script_sha256": {
+    "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh": "05580b585f36da483656f6d88487e21a32ff2a7a42cc2021fef4c539096e9b38",
+    "experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh": "4664fa295b6f3b517f9e9bb3a8d7b8eb168e6af186b45cbaf463dc1d18786e31",
+    "experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh": "668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b"
+  },
+  "locate_results_unchanged_from_v3c": true,
+  "runbook_sha256": "40b4b4bcbc69bc566621e977a83c7abb2621550389e45ff2b2cec68985e64a98",
+  "card_sha256": {
+    "experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-5.yaml": "19f10cabad1120b06d0ac579f640d9af2c4ecaf3d164101d7d092ef4f31d3039"
+  },
+  "approval_preview_sha256": {
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/approval-preview/specification.yaml": "de94c9ef039937c4d1c9097bef753306d9617f8192d87a2dd52c53669acf95e7",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/approval-preview/trial-plan.json": "45f58da0b4e9307b4bc9dd73582d514c746d06b6864dde3a3dfdf4fe68cc890c"
+  },
+  "canonical_state": {
+    "specification.yaml": "review_required, approved_by null, execution_authorized false",
+    "trial-plan.json": "candidate_only true"
+  },
+  "argv_form": "/bin/bash -p <script> (R-2 A-2 fallback not taken)",
+  "py1": "applied (no omission)",
+  "archiver_reproduction": {
+    "isolation": "env -i; command -v aws was the fake; env | grep -c AWS_ was 0",
+    "test_locator": {
+      "pass": 156,
+      "fail": 0,
+      "skip": 0,
+      "checkout": "/home/user/crypto (second argument)"
+    },
+    "rt_regression": {
+      "rows": 259,
+      "differ": 0
+    },
+    "sha256sums": "77 lines, 0 failures",
+    "mutation_check": "not re-run by the archiver; director reports 82 mutants, 80 caught, 2 subsumed (pairs caught), 0 survived; a9406e must re-run it"
+  },
+  "archive_deviations": {
+    "AD-1": "evidence/rt-results.tsv (86,912 bytes) was moved to the write-once artifact store by artifacts.py push; its sha256 is unchanged and listed in path_sha256."
+  },
+  "specification_error_items": [
+    "T-6 env_hygiene custody is the k7_env_hygiene= stdout line, not raw-result.json",
+    "empty NO_PROXY recorded as no_proxy=",
+    "constants refused if preset to another value",
+    "CA test copies differ in one K7_CA_BUNDLE_ALLOWED line",
+    "environment.programs lists /bin/bash",
+    "descriptive wording edits",
+    "runbook CRYPTO_CHECKOUT/ecbench paths point into an earlier scratchpad (B-ENV-PATHS)"
+  ],
+  "path_sha256": {
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/FINDINGS.md": "04013523e5a4d56087fb9d6233c552343f0a968e5669dcc40b489f6508b4f728",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/SHA256SUMS": "88a2f9a64d8a909eedafd75752a5921cc163bfb02e7445ddf7f58f4ae7ffb7ce",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/approval-preview/specification.yaml": "de94c9ef039937c4d1c9097bef753306d9617f8192d87a2dd52c53669acf95e7",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/approval-preview/trial-plan.json": "45f58da0b4e9307b4bc9dd73582d514c746d06b6864dde3a3dfdf4fe68cc890c",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/.artifacts.json": "6cf6e4bd431d638e771dc4ea40ae289301fa953ef82f4564d85991f005213cd7",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/.gitignore": "7aa0df71e814797feb342fb78170c92502f08e0087c41975da7bdd60fff7ff5c",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/00-isolation.txt": "19675a0e29c7eceb221ab73d4868f6e03bb4fa9616e9345b090a05e4ce54b995",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/bash-n.txt": "a6f446c2dbab82a47d7ab5e36ad365969f7899c792a5174fd176b5370df465fc",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/card-lint-real-clone-and-approved-state-sim.txt": "b3909d59a3a936f7904a00da21c9c759a378d7629ed18709f2e7de573a38e215",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/card-prompt-simulated-approval.txt": "587d732ab3c58876c762fc3071d2ea5f90783e24a81c89f97790d1c52ac8a980",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/dry-run-plan-argv.txt": "802131a514a74855aafcf953bd037b2867d8155674e2a57bdd8f66e27db5f037",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/exit-statuses.txt": "1298a385ba06eadd51c0a2b807b5e81e8f5946a96936cf92a03161e954dafc89",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/frozen-hashes.txt": "014e2b693a4fb9d0fc678f288bfa114bb1b5c89283d19b156e27728a5c607d9e",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/git-status.txt": "8c89342e2c929a4db2377c26c3f90dcfac9bc29d83bdcfa4cc6c3e504ff5d821",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/grep-no-submit-no-s3-write.txt": "6bb54bca456b251323392c8e1a3ad7740cae910d50bf06167cd384017245bbb7",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/launch_eks.sh.v3c-to-v3d.diff": "fc7ffb6ca398cefb21c34615443ff6d5e46289874a1655d8dc05433c3547ad12",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/launch_eks.sh.v3c-to-v3d.hunks.txt": "d558ca35f0141edd151af0f9faf4552ad321ed46c81bdb9686772bf526baa2c0",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/launch_eks.v3a-to-v3d.diff": "c8e40776a7617be5ce310b45102d72769872777a38bbe56f4728d5b26ecdbb6a",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/launch_eks.v3a-to-v3d.hunks.txt": "e942eee4c77ed733fd3dcfb879ba42a7b6f7655ac75ce06c080195878127cf48",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/launch_eks.v3b-to-v3d.diff": "c235966720343b27d489d2f4593efa0a6a3e8519e9ffc355b96527990d053430",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/launch_eks.v3b-to-v3d.hunks.txt": "7db3870552837e155859649df6832f29ed1d64c4f1675fb5db777ee3875ee3d5",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/mutation-first-freeze-partial.tsv": "65803ae502e3cf61fdaac6915b3287e282876da6d6056424f9ed1ebbf847ea7c",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/mutation-list.tsv": "4129db25729bab72624a503ba535644e936998213fb18edb36374db603ad5f08",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/mutation-output.txt": "068ee007ed2c43e3709c4cb8d765612d4e653264ac2edea660d8765a3015945c",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/mutation-results.tsv": "2d5f1e47e2623c1480ee6090394235dd0a5a489195eee17925cd84d0f35fb1e4",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/pd3-check.txt": "6a14ac89464756555bab320ac0190504930bcf4244c0de22fe07963260786a1e",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/preapproval-output-real-clone.json": "5241f282774accf657b0e9ae4d5b6fb41e7f84787b4cbb6c4a360e90ed447bd2",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/preapproval-output-simulated-pushed.json": "38b09754ecb2dff97e9abbb7274f2bb47492aa4fc9ffc807ba96f144e292e763",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/preapproval-packet.json": "566917daaa594a963584a369a2e905f8d7b45882b39b2ce231f264d4d1da4270",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/preapproval-stderr-simulated.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/preapproval-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/py1-botocore-origin.txt": "1963167f8965ce40173165cdaaab03c108d88b2ad41a467f0bb8d6af8403a45b",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/reconcile_run.sh.v3c-to-v3d.diff": "a3ea5ee4c0e7afba6a902c3e6a8f87473c787c77d49b088830f2a3563f4af2a7",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/reconcile_run.sh.v3c-to-v3d.hunks.txt": "a3e8ba5703fcf7099af9b00abc610032427ea2cf61788dd3a6636a4385505d2c",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-C05-static-scan.txt": "754eef6cda4a424019e97421bb4fb519821dabc27f85672ccd1996523109e605",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-header.txt": "67bb72774e1643bc37b14d129e9f4b808de9a8fdc4d2a06aedc331a476cd6e6d",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-output-legacy.txt": "488b3acd7ee4efb4481969cc4779b547b12a13ce5e04ec6483d4bc21b068d258",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-output.txt": "a6124e4ddb95a5cdabb48285b48dfbb51213e14c7fc96097e875a17919f7e297",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-results-legacy-v3b.tsv": "b9b29647cbae38eaffc325a1aa173667c949ebd7309c8519f622c780bd06255c",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-results.tsv": "6b460b7d26513aa5354bbaae7719b1066c94eb98d665ef35228bf38b4e55a54d",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-summary-legacy.txt": "d88f36e1b50ad04151443ba0b5245657acf7d0409055856bfe86b7047386f367",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/rt-summary.txt": "629706f3fce0ef60d4c4160e69df9517ed62554b8ec4df8bced1ff8993f917a8",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/runbook-lint-real-clone-and-approved-state-sim.txt": "f049f0194f39a09e8d6e48d6f96fb9f54c3ab205dec11761ffbe202b4a73ca35",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/supervisor-load-plan.txt": "4f082701834273001650ceec34ad19a29253e39e956a9a4c06f1397cd0c8cf06",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/test_locator-RESULTS.txt": "9b6bbd12f9cda752175ba1aece1f59a282e55eb648adacca19ebcc59e0ce4e29",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/test_locator-output.txt": "9b6bbd12f9cda752175ba1aece1f59a282e55eb648adacca19ebcc59e0ce4e29",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/evidence/v1-local-checks.txt": "349dad8005f531811c4bce7c42ab7638f90008bb34b82d8d55c401f0fb8f304e",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/handoff-previews/TASK-20261107-04d969.yaml": "d3a790c13624f927f5bae1285ab70e4231c141b5f516d89b4e7ffec681d13412",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/handoff-previews/TASK-20261107-f14df8.yaml": "bad29976a5c7990808f6b88ca2c79d5161ae92ef93d8bc804380a34910bcd4fd",
+    "experiments/EXP-ICPERF-127dbd/design/5f7d2b/handoff-previews/dispatch_queue.json": "6ec416772237646208a31b15a42523fbb95e673f0fe16fa2b22569414286f654",
+    "experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh": "05580b585f36da483656f6d88487e21a32ff2a7a42cc2021fef4c539096e9b38",
+    "experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh": "4664fa295b6f3b517f9e9bb3a8d7b8eb168e6af186b45cbaf463dc1d18786e31",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/fake-aws": "9e5ec96871923fa7612fc9daf229f1b001cca7c7bfa0e2dadf9a41f33be9a745",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/isobin-wrap/aws": "ea2fd3f4ca389a75e4247b80a1fc71a58a8fc0271993e1377f8a244e9a5d5650",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/launch_eks.v3c.sh": "a61c55da15b149d00ee7e644c41d79ad8df4ae82f3c59dfca157ea9679fc9e76",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/locate_results.v3c.sh": "668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/reconcile_run.v3c.sh": "a294b7dbc77b33ae4103dfa907a5effba03fe0e2c1837f3f51a44a5897055c16",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/mutate.py": "6462e28b1f95443d87c52fe1bf797edaa916a19a1438d43edc23a57c47f2c795",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/mutation_check.sh": "7f2685e889cc78eb8087d20cb94d1d0a59eb48ce1f8195b3edee2d5c1be4f9de",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/rt_regression.sh": "7b24322f7a5615d1fac41133a17394f4aa72539d92c28b1eda381614ae59214a",
+    "experiments/EXP-ICPERF-127dbd/implementation/tests/test_locator.sh": "d5d3ef520b3ebdaddff40cd19a056da055e9a153d489a880ea89b3daec538794",
+    "experiments/EXP-ICPERF-127dbd/runbook-lint.txt": "70f9ffeb1ef5d38c649f2d1810991a3bf7cb1ef9baccd3f030c68b466886faf7",
+    "experiments/EXP-ICPERF-127dbd/runbook.yaml": "40b4b4bcbc69bc566621e977a83c7abb2621550389e45ff2b2cec68985e64a98",
+    "experiments/EXP-ICPERF-127dbd/specification.yaml": "d4b0d1aeec2441d78d59fd75795fb4ab533a8385539791f6b0f279a85c1b6023",
+    "experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-5.yaml": "19f10cabad1120b06d0ac579f640d9af2c4ecaf3d164101d7d092ef4f31d3039",
+    "experiments/EXP-ICPERF-127dbd/trial-plan.json": "53efb5682bc1a26a9f1089ef4ad8af66d4d46560e94eecbf31caa2ee9b388a12"
+  },
+  "symlinks": {},
+  "runs": 0,
+  "aws_calls": 0,
+  "commit_sha": null
+}
