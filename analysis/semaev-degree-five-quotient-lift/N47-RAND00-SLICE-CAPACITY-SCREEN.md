@@ -11,11 +11,17 @@ The SHA-256-pinned D4 quotient map has affine rank 48 among the constant and
 
 This is a quotient-kernel observation from the accepted D4 map, whose
 SHA-256 is `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`.
-The separate direct D4 fixed-point rank matches that map's kernel dimension
-under the audited source invariant (see `N47-RAND00-D5-CAPACITY.md`). A
-standalone primal membership derivation for this particular affine relation
-has not been emitted. Proposition 2.5b and Corollary 2.5c in the theorem
-dossier describe the transfer once the relation is established in W4.
+It also has a short **primal witness**: the XOR of original generators
+1, 2, 3, 4, 5, 7, 9, 10, 11, 13, 14, 19, 21, 22, 23, 24, 31, 35, 36,
+38, 39, 40, 42, and 45 (zero-based) equals the displayed affine relation.
+The independently replayable witness is
+`n47-rand00-affine-witness-001.json`, checked against the retained
+`input.sys` with SHA-256
+`b8ee56830e9b7f064c4cfe17579b512dd3f7b01e62fd0575b6632a37f2ec936c`.
+Thus the affine equation belongs to `span F`, and Proposition 2.5b in the
+theorem dossier applies directly to a slice by any variable it contains.
+The checker accepted the 24-generator witness; changing its constant term
+caused an explicit XOR-mismatch rejection.
 
 The deterministic screen in `n47-rand00-slice-capacity-screen-001.json` counts
 126,387 D5 border monomials for the original unit-representative set. For the
@@ -51,3 +57,11 @@ This screen reads an existing map and performs no new closure, D5 producer,
 or cloud submission. The 64 GiB numbers are source allocation envelopes,
 not measured peak memory. The prepared 96 GiB original-system local attempt
 remains a separate queued path under its own budget gate.
+
+Check the primal witness independently with
+
+```
+/usr/bin/python3 analysis/semaev-degree-five-quotient-lift/check_n47_affine_witness.py \
+  /home/ec2-user/fall-degree-data-20261029/frontier-highmem-001/fresh-n47-rand-00-D5-cascade01-highmem01/attempt-001/input.sys \
+  analysis/semaev-degree-five-quotient-lift/n47-rand00-affine-witness-001.json
+```
