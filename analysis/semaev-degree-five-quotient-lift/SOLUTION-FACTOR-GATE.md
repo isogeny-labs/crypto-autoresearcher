@@ -26,7 +26,14 @@ monomial as a 45,615-bit row. A check can select 45,615 monomials whose
 images form a basis of `Q`, solve the value of `lambda_s` on that basis
 from their evaluations, then stream through *all* 294,204 monomial rows.
 For every row `m`, compare `lambda_s(pi4(m))` with `m(s)`. This is a complete
-finite check of the factorization, not a sample. If the map exposes one
+finite check of the factorization, not a sample. A failed comparison now
+returns a small explicit kernel polynomial: if `pi4(m)` has quotient bits
+`J` and representative monomials `r_j` map to the unit vectors, then
+`u = m + sum_(j in J) r_j` lies in `ker(pi4)` but evaluates to one at the
+listed solution. The checker rechecks both properties before reporting
+the witness. This proves the accepted D4 kernel is not contained in the
+solution ideal; it does not prove any statement about `W4` itself.
+If the map exposes one
 unit-vector image for every quotient coordinate, those rows provide the
 basis directly; otherwise basis selection must use exact F2 elimination.
 Each claimed solution must also be checked against all 51 independently

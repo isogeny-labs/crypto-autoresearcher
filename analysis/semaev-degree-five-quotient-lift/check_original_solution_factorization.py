@@ -112,7 +112,22 @@ def check_factorization(seed_path, expected_sha, points, nvars):
             image = int.from_bytes(row, 'little')
             for point, functional in zip(points, functionals):
                 if ((image & functional).bit_count() & 1) != (mask & point == mask):
-                    raise ValueError('solution evaluation does not factor through D4 map')
+                    # pi4(mask + sum_{q in image} rep[q]) = 0.  The parity
+                    # mismatch makes this kernel polynomial nonzero at point.
+                    terms = {mask}
+                    bits = image
+                    while bits:
+                        bit = bits & -bits
+                        representative = reps[bit.bit_length() - 1]
+                        terms.symmetric_difference_update((representative,))
+                        bits ^= bit
+                    seed.contains(terms)
+                    if sum((m & point) == m for m in terms) & 1 != 1:
+                        raise RuntimeError('internal kernel witness evaluation failed')
+                    return {'columns': len(masks), 'codimension': seed.codimension,
+                            'checked_pairs': len(points), 'factorization': False,
+                            'witness_point_hex': format(point, 'x'),
+                            'kernel_witness_terms_hex': [format(m, 'x') for m in sorted(terms)]}
         return {'columns': len(masks), 'codimension': seed.codimension,
                 'checked_pairs': len(points), 'factorization': True}
     finally:

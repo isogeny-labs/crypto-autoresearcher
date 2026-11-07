@@ -100,17 +100,26 @@ def run(plan_path, protocol_path, source_revision):
                     '--seed', plan['seed_file']], None, plan['memory_bytes'],
                     plan['timeouts_seconds']['factor'], env)
             evidence = json.loads(verified)
-            if (not evidence['factorization'] or evidence['checked_pairs'] != 6 or
+            if (evidence['checked_pairs'] != 6 or
                     evidence['codimension'] != plan['seed_codimension'] or
                     evidence['columns'] != plan['seed_columns']):
                 raise RuntimeError('factor checker returned unexpected fields')
-            result.update(status='factorization_verified', factorization=True,
-                          factor_stdout_sha256=sha(output / 'factor.stdout.txt'))
+            if evidence['factorization'] is True:
+                result.update(status='factorization_verified', factorization=True,
+                              factor_stdout_sha256=sha(output / 'factor.stdout.txt'))
+            elif (evidence['factorization'] is False and
+                  evidence.get('kernel_witness_terms_hex') and
+                  evidence.get('witness_point_hex')):
+                result.update(status='seed_nonvanishing_witness', factorization=False,
+                              factor_stdout_sha256=sha(output / 'factor.stdout.txt'))
+            else:
+                raise RuntimeError('factor checker returned no accepted verdict')
         except Exception as error:
             result.update(status='failed', error=str(error))
         save(output / 'result.json', result)
         print(json.dumps(result, sort_keys=True), flush=True)
-        return 0 if result['status'] == 'factorization_verified' else 1
+        return 0 if result['status'] in ('factorization_verified',
+                                         'seed_nonvanishing_witness') else 1
     finally:
         for stream in reversed(locks):
             fcntl.flock(stream, fcntl.LOCK_UN)

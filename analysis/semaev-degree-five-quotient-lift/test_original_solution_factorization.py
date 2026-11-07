@@ -30,8 +30,11 @@ class FactorizationTest(unittest.TestCase):
             self.assertTrue(result['factorization'])
             rows[0] ^= 1
             digest = write()
-            with self.assertRaisesRegex(ValueError, 'does not factor'):
-                check_factorization(path, digest, points, 4)
+            negative = check_factorization(path, digest, points, 4)
+            self.assertFalse(negative['factorization'])
+            self.assertEqual(int(negative['witness_point_hex'], 16), points[0])
+            terms = [int(x, 16) for x in negative['kernel_witness_terms_hex']]
+            self.assertEqual(sum((m & points[0]) == m for m in terms) & 1, 1)
 
     def test_independent_generator_rejects_nonroot(self):
         with tempfile.TemporaryDirectory() as tmp:

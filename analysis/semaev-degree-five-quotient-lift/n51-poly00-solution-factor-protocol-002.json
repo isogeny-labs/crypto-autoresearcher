@@ -1,0 +1,379 @@
+{
+  "amendments": [
+    {
+      "id": "n51-poly00-factor-witness-002",
+      "filed": "2026-11-07",
+      "filed_before_affected_data": true,
+      "reason": "The unlaunched V1 treated a failed evaluation comparison as generic failure. Preserve the same first attempt and source/input/resource limits but emit the implied kernel polynomial as a checkable negative gate outcome.",
+      "changes": [
+        "Checker returns the explicit kernel relation and evaluation point on a mismatch.",
+        "Runner accepts a verified negative witness as terminal seed_nonvanishing_witness.",
+        "Use V2 output root; V1 remains frozen and unlaunched."
+      ],
+      "supersedes_fields": [
+        "analysis_plan.inputs",
+        "analysis_plan.script",
+        "arms",
+        "claims",
+        "decision_rule",
+        "links.plan",
+        "links.plan_sha256",
+        "metrics.primary",
+        "stopping_rules"
+      ]
+    }
+  ],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n51-poly00-solution-factor-plan-002.json SHA-256 1195d71f4680ab109bacfb281edf257f17ec6d9376ab2e9896f4037a4609f762",
+      "independently checked original-generator binary SHA-256 83042965fc5cdc78ffe76b79092b9daff1307161aba35476b031bb64caa9ac7b",
+      "accepted D4 map SHA-256 90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115",
+      "pinned emitter, counter, Python checker and runner hashes in plan"
+    ],
+    "outputs": [
+      "Write-once build, fresh count, emitted pair list, exact generator and factorization check, receipts and terminal result; preserve failures."
+    ],
+    "script": {
+      "path": "run_n51_poly00_solution_factor_gate.py",
+      "sha256": "b3953f9d1a17822bfe4b03410bdfb9b5bf19929da490a23e1627bcb786d27801"
+    }
+  },
+  "arms": [
+    {
+      "id": "factor-gate",
+      "role": "candidate",
+      "description": "Emit the fixed original ordered pairs and test their evaluation functionals against every D4 monomial image.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "58a637f27599b3cf33a7ad28fa51854472aa9915",
+        "binary_sha256": "eaaa308032c4aa063df5880c4c293cd458b4629d503fbc2c03ec163d71f7f790",
+        "build": [
+          [
+            "compile",
+            "pinned emitter C source with fixed flags on admitted host"
+          ]
+        ],
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {
+          "emitter_source_sha256": "8e87664d10447c0239e7e8c095a4bb4ebd00d5138dd4caa31065fa2a4a8b9e8e",
+          "checker_source_sha256": "ff37d3a47c9448145981ada20f4676b674443d282da3be190219bdb2312d6f4f",
+          "seed_sha256": "90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "degree": 4,
+        "original_variables": 52,
+        "expected_solutions": 6
+      }
+    },
+    {
+      "id": "exact-count",
+      "role": "reference",
+      "description": "Fresh exact count of the identical named original input; require six before factorization.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "414b0262e73501f64d3ed12b1685902f4b097838",
+        "binary_sha256": "dc5a10affb69abc0ed4cebc96e5d19560151944b3b091c66ccfafbb7c3631d56",
+        "build": [
+          [
+            "reuse",
+            "pinned count_by_sum binary"
+          ]
+        ],
+        "env": {
+          "OMP_NUM_THREADS": "1"
+        },
+        "flags": {
+          "record_seed": "8252374688181865515"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "input_dispatch": "All inputs are unchained m2."
+      }
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized data preparation"
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "class": "exact_computation",
+      "text": "All six counted Boolean solutions are roots of the 51 independently exported equations and evaluation at each factors through the accepted D4 quotient map. This proves U subset I(S), but not D5 codimension seven or LFD at least six.",
+      "decided_by": [
+        "acceptance"
+      ]
+    },
+    {
+      "id": "C2",
+      "class": "exact_computation",
+      "text": "If a checked quotient monomial row fails solution evaluation factorization, the emitted polynomial is in the accepted D4 seed kernel and evaluates to one at a verified solution. This proves U is not contained in I(S), without proving anything about W4.",
+      "decided_by": [
+        "acceptance"
+      ]
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "One fixed exact named-input check, no timing comparison."
+    },
+    "positive": {
+      "present": false,
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Synthetic valid-map control passes in the committed unit test; no planted frontier input."
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "Synthetic corrupted-map and nonroot controls are rejected in the committed unit test; no statistical null population."
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "acceptance"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "After fresh count six and verification of all six roots, report factorization_verified only if every D4 map row factors. A failed comparison is seed_nonvanishing_witness only if the emitted kernel polynomial is rechecked in the seed and evaluates to one at the listed solution. Any other outcome is failed or unknown. Neither positive nor negative gate alone proves LFD six.",
+    "threshold": "All fixed checks pass, or one exact checked kernel nonvanishing witness.",
+    "verdict_vocabulary": [
+      "factorization_verified",
+      "seed_nonvanishing_witness",
+      "failed"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 10,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "throughput",
+    "placement": {
+      "checkpoint_detail": "No checkpoint, restore or automatic retry. Use exclusive frontier locks. 4 GiB address-space cap and 4 GiB host reserve.",
+      "counter_memory_bytes": 1073741824,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 4294967296,
+      "pod_memory_bytes": 8589934592
+    },
+    "queue": "local-exclusive-memory-before-original-D5",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 6300
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "4bd603d07d57b6afef0f1346e269a2b6e2c674f1dc2c23cd4969372123136600",
+    "commit": "c1ba0448031c8640d4610254c9d32931d111951b",
+    "frozen_at": "2026-11-07T00:47:40Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Treating six individually valid points as a complete root list without a fresh exact count.",
+    "Treating a partial D4 map scan or missing unit basis as factorization.",
+    "Inferring D5 codimension seven or LFD at least six from this gate.",
+    "Retrying after timeout or bypassing budget, lock, deadline or published-revision gates."
+  ],
+  "invalidation_rules": [
+    "Any source, binary, seed, generator or checker hash mismatch prevents execution.",
+    "Fresh count other than six or fewer than six distinct valid pairs prevents factorization claim.",
+    "Any failed row comparison prevents factorization claim.",
+    "Resource, budget, deadline or lock refusal leaves the named gate unknown."
+  ],
+  "links": {
+    "plan": "n51-poly00-solution-factor-plan-002.json",
+    "plan_sha256": "1195d71f4680ab109bacfb281edf257f17ec6d9376ab2e9896f4037a4609f762",
+    "accepted_seed_sha256": "90878ee8bc6bda02957f25728380a9e677cd13b0f46c9eed1828349da796f115",
+    "independent_generators_sha256": "83042965fc5cdc78ffe76b79092b9daff1307161aba35476b031bb64caa9ac7b",
+    "launch_gate": "Published exact source and plan; exclusive frontier locks; fresh shared daily/monthly budget readback with USD 8 reservation; 4 GiB child cap and 4 GiB reserve; 1 GiB maximum output plus 2 GiB disk reserve; full 6300 seconds before 2026-11-09 23:30 UTC; one attempt and no retry."
+  },
+  "literature": [
+    {
+      "claim": "If every solution evaluation factors through the D4 quotient, its kernel lies in the vanishing ideal; the D5 lift cannot kill one and retains at least six quotient directions.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-degree-five-quotient-lift/SOLUTION-FACTOR-GATE.md and theorem-dossier.md Lemma 1.7",
+      "verified_by": "Codex 2026-11-07"
+    },
+    {
+      "claim": "A checked D5 quotient dimension greater than six is still necessary to infer LFD at least six for the satisfiable input.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md Proposition 1.4",
+      "verified_by": "Codex 2026-11-07"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "cpu_model",
+      "kernel_release",
+      "binary_sha256",
+      "source_commit",
+      "argv",
+      "input_sha256"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "factorization",
+        "name": "complete original D4 solution evaluation factorization",
+        "definition": "Boolean true after all rows factor; false only with a checked nonvanishing kernel witness after six valid roots and exact count six.",
+        "kind": "exact",
+        "unit": "Boolean",
+        "resolution": "1",
+        "source": "result.json factorization when status factorization_verified or seed_nonvanishing_witness",
+        "aggregation": "per_row",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "exact_solutions",
+        "name": "fresh exact original Boolean solution count",
+        "definition": "Fixed named input exhaustive count, expected six.",
+        "kind": "exact",
+        "unit": "solutions",
+        "resolution": "1",
+        "source": "count.stdout.txt",
+        "aggregation": "per_row",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N51-POLY00-SOLUTION-FACTOR-GATE-20261107-V2",
+  "question": "Do all six exact original polynomial00 solutions factor through the accepted D4 quotient map, proving its kernel vanishes on the solution set?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Exact named-input replay has no arm-dependent clock inference.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Exact inputs and prior campaign are visible; no population or timing inference.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "rule": "One fixed prior named n51 polynomial00 input; no population inference.",
+      "independent_of_arm": true
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Original named input seed reused; no redraw.",
+      "seeds": [
+        8252374688181865515
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Single named-input gate status with unknown explicit; no runtime graph."
+    ],
+    "report_dir": "reports",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "Exact named-input verification, no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 6300,
+      "fixed_seconds": 0,
+      "measured_on": "Sum of conservative build, count, pair-emission and full-map-check watchdogs; not a timing claim.",
+      "per_sample_seconds": 6300,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One fixed original n51 polynomial00 attempt; stop after factorization_verified, seed_nonvanishing_witness, resource refusal, timeout or any failure. No retry or restore."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Incomplete root list, failed generator, failed D4 row, source mismatch or count mismatch leaves seed vanishing unknown."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "Exact named-input check, no performance comparison.",
+    "comparisons": [
+      {
+        "id": "acceptance",
+        "arms": [
+          "factor-gate",
+          "exact-count"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "stage"
+        ],
+        "threshold": "All six roots and all D4 rows check exactly after fresh count six."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "name": "input",
+        "treatment": "fixed",
+        "how": "One named original n51 polynomial00 record with fixed field, basis, curve and seed."
+      },
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "how": "SHA-pinned emitter source, counter binary, Python checker, seed-map parser, generator export, D4 seed and runner."
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "Existing Spot host, one core, 4 GiB child cap plus 4 GiB reserve, USD 8 reservation and deadline."
+      },
+      {
+        "name": "stage",
+        "treatment": "crossed",
+        "how": "Compile, count, emit and factorization check run sequentially."
+      }
+    ],
+    "independent": []
+  },
+  "version": 2
+}
