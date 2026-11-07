@@ -1,55 +1,28 @@
-# A17 certified query suppression
+# A17: certified queries after full paid construction
 
-Implementation in progress; native A17 executions: **0**. No source-ready
-assessment, frozen protocol, execution release or attempt allowance exists.
-[Ranked scope and design](design.md), [primary source/evidence review](literature.md).
+The single native attempt completed: both arms recovered all 32 fresh public
+targets. The candidate issued 46 distinct point queries across four curves;
+the full reference issued 768. Both paid all known48/full24 construction.
+Construction/Registry information already certified 27 targets; five more were
+certified after extra query rows. These are producer observations, unverified
+without independent signed standing. [pcc:unverified]
 
-Implemented components:
+[Results and costs](RESULTS.md), [raw run](runs/a17-certified-query-178e0d/metrics.json),
+[analysis](runs/a17-certified-query-178e0d/analysis.json),
+[report](reports/a17-certified-query-178e0d/report.pdf),
+[additive database v21](database/v21-certified-query/validation.json),
+[proof standing](PROOF-STATUS.md), [next ranked lead](next-leads.md).
 
-- Full GENERAL horizon24 construction and Registry, without extra query calls.
-- Separate full/suppress arm contracts and a derived192point native cache cap.
-- Persistent eight-target row space, known-unit substitution and prefix-native/
-  public certificates that must complete before a coordinate permits skipping.
-- Independent plain prefix proof checks and integer/group full-workload checks.
+The [prospective design](design.md), [source review](literature.md), first
+blocked export-grid assessment and additive corrected-source approval remain
+as written. The exact corrected source binds 160 files and nine inputs.
+Twenty-six marked software checks cover actual fixed p211 three-atom
+construction/query/certificates, causal/counter corruption and failure
+retention. Explicit metadata-only I/O fixtures mock generation/base/prelude/S3;
+complete/all-missing actual unified exports pass schema/grid/seeds/file lint.
+They are not a native48 pilot or an admissible scientific archive.
 
-[Eleven software checks pass](validation/component-software-controls.v3.txt).
-They use marked p211 fixtures with three known atoms, not a native48 pilot.
-The split constructor matches the existing complete24point/label/Registry
-workload and all other construction counters; its new endpoint bookkeeping is
-inside a charged phase. Cross-target equations, proof padding, failed public
-certificates, missing units, future/other-arm proofs, size bounds and failed
-selection prefixes are checked. Original import/counter-phase/indentation test
-failure logs remain; no scientific run occurred for those corrections.
-[pcc:unverified]
-
-The query scheduler, causal replay and row-consequence diagnostics are now
-implemented. [Seventeen component checks pass](validation/complete-component-controls.v3.txt).
-They include an actual p211 query that produces a certificate before later
-queries are skipped, all full-reference rows reconstructed in the candidate's
-native affine span, future/borrowed/reordered proof rejection, independent
-assembly/scheduling counter models and failed paid query retention. A specially
-chosen three-atom scalar fixture exercises this boundary; it is software-only
-and does not supply target scalar labels to the native program. No native48
-pilot or calibrated saving is claimed. [pcc:unverified]
-
-The admitted controller, bounded supervisor, prospective protocol/release builder
-and complete/partial cost exporter are implemented. The full software suite
-now has 26 passing checks (`validation/full-software-controls.v2.txt`). The extra
-controller fixtures explicitly mock generation/base/prelude/storage receipts
-for metadata I/O while using real fixed p211 three-atom constructor/query/
-causal/native algebra/row-consequence components; they are not admissible native
-archives. Cost or journal alterations, missing/failed work, admission refusal,
-resource expansion and inherited Git configuration are tested. The native
-report/database path follows actual execution; no native run has occurred. Do not execute native curves/targets
-through these preparation APIs. A16's two consumed releases authorize no third
-attempt; this distinct successor needs its own complete prospective contract
-and normal admission. No construction saving, calibrated speedup or novelty is
-asserted by these source components. [pcc:unverified]
-
-The first exact-source assessment found and retained a prospective export-grid
-blocker before any native execution. The corrected exporter declares four
-shared curve instances across all four execution arms, while retaining eight
-native program cases and sixteen rows. Actual complete and all-missing software
-exports now pass schema, paired identity, seed-table and file lint; the original
-disjoint case identifiers fail the negative control. Earlier preview and
-assessment are preserved; the corrected source needs additive reassessment.
+The release is consumed. The original deadline and conservative cumulative
+reservation remained, with one existing worker/thread, 2 GiB and no automatic
+retry or new capacity. No construction saving, calibrated runtime/attack-cost
+advantage, unknown-base transfer or novelty is claimed. [pcc:unverified]
