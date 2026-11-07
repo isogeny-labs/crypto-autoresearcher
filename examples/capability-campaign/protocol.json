@@ -1,0 +1,337 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "CAPABILITY-native-qualification-20261107",
+  "version": 1,
+  "created": "2026-11-07",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "examples/capability-campaign",
+  "authors": [
+    "Codex implementation qualification"
+  ],
+  "links": {
+    "capability_campaign_sha256": "5e91fb3b6059785cec3b416a8edf9e3cc9008f40b7fff499112a99a72e27574e",
+    "spec": "qualification.json",
+    "scope": "Development qualification, not held-out reliability or comparative superiority.",
+    "source_sha256": "0fde0868972038422eeeef5f4495428529195292394d7e11e0f17431ade09633"
+  },
+  "question": "Can the bounded native campaign execute supplied-input analysis, synthesis and finite mathematics and independently grade its outputs?",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "Each submitted answer is checked exactly against an evaluator-held reference on the registered supplied-input instances.",
+      "class": "exact_computation",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [],
+  "arms": [
+    {
+      "id": "single",
+      "role": "baseline",
+      "description": "single orchestration with bounded native sessions",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "caccd00b47b4cd3c2648586bda222ef7166efa074b035e453d5f58dade615d19",
+        "flags": {
+          "model": "gpt-6-astra",
+          "reasoning_effort": "xhigh",
+          "tools": "disabled"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "stage_count": 1
+      }
+    },
+    {
+      "id": "reviewed",
+      "role": "candidate",
+      "description": "reviewed orchestration with bounded native sessions",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "caccd00b47b4cd3c2648586bda222ef7166efa074b035e453d5f58dade615d19",
+        "flags": {
+          "model": "gpt-6-astra",
+          "reasoning_effort": "xhigh",
+          "tools": "disabled"
+        },
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "threads": 1
+      },
+      "parameters": {
+        "stage_count": 4
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "Integration qualification makes no superiority claim; no noise-floor claim."
+    },
+    "positive": {
+      "present": false,
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Separate software-control campaigns exercise independent exact answers through the same stage, grader and report path before inference."
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "Separate negative software-control campaign submits fabricated answers with success claims through the same grading path; those controls are not model evidence."
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "orchestration",
+        "levels": [
+          "single",
+          "reviewed"
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "model",
+        "treatment": "fixed",
+        "value": "gpt-6-astra xhigh",
+        "how": "same explicit CLI model and effort for every stage; service revision not pinned"
+      },
+      {
+        "name": "inputs",
+        "treatment": "fixed",
+        "value": "5e91fb3b6059785cec3b416a8edf9e3cc9008f40b7fff499112a99a72e27574e",
+        "how": "matched generated inputs independent of arm"
+      },
+      {
+        "name": "arm_order",
+        "treatment": "randomized",
+        "how": "deterministic random permutation per instance and repeat"
+      },
+      {
+        "name": "sessions",
+        "treatment": "measured",
+        "how": "single consumes one; reviewed consumes four under same per-trial ceiling; resources are not equalized"
+      },
+      {
+        "name": "host_service",
+        "treatment": "measured",
+        "how": "CLI version, traces and wall durations recorded; remote provider state uncontrolled"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "case-verification",
+        "arms": [
+          "single",
+          "reviewed"
+        ],
+        "differs_in": [],
+        "design": "absolute",
+        "threshold": "Each final answer must exactly match the evaluator-held reference."
+      }
+    ],
+    "aa_not_applicable": "No comparative claim",
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "interleaved",
+    "arm_order_reason": null,
+    "seed_derivation": {
+      "method": "harness_drawn",
+      "seeds": [],
+      "nonce": null,
+      "note": "First 16 hex digits of SHA256(f\"20261107:dev:{task_id}:{instance}\"); arm permutation Random(seed+repeat). Public generator, references withheld from actors."
+    },
+    "instance_sampling": {
+      "rule": "One independently seeded instance of each of three named families at difficulty 1. This is a development smoke panel.",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Descriptive qualification only; exact graders do not use arm identity.",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 3,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 3,
+      "correction": "bonferroni",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": false,
+      "note": "One instance per family is insufficient for a reliability claim. No decisive comparative test."
+    },
+    "preflight_runtime": {
+      "fixed_seconds": 0,
+      "per_sample_seconds": 240,
+      "threads": 1,
+      "estimated_total_seconds": 720,
+      "measured_on": "Conservative timeout envelope: 6 trials times 120 seconds. This is a bound, not a timing measurement."
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "verified",
+        "name": "Exact verified answer",
+        "unit": "boolean as 0 or 1",
+        "kind": "exact",
+        "definition": "One iff final output passes evaluator-held deterministic reference and all stages completed",
+        "source": "trial/result.json verified",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "alternate",
+    "clock": "counted",
+    "counters": [
+      "verified",
+      "false_success",
+      "stages_attempted",
+      "total_tokens"
+    ],
+    "record": [
+      "source_sha256",
+      "native_version",
+      "trace",
+      "wall_seconds",
+      "cost_usd"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "serial",
+    "placement": {
+      "cpus": 1,
+      "spot": false
+    },
+    "measurement_class": "measurement",
+    "timeout_seconds": 240,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "Exactly 6 trials, at most 15 fresh native sessions, concurrency 1, no automatic campaign retry; per trial 120 seconds, local actor 4096 MiB address space and one allowed CPU. Existing ChatGPT subscription, dollar billing unavailable; no cloud compute submitted.",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "All failures stay in denominators; tool use invalidates a trial.",
+    "Missing usage and billing are null, never zero.",
+    "A completed process or reviewer approval alone cannot verify an answer."
+  ],
+  "decision_rule": {
+    "text": "Report exact answer verification on each development case. Never promote reliability from this development panel.",
+    "comparison_ids": [
+      "case-verification"
+    ],
+    "threshold": "Exact grader pass",
+    "statistic": "verified count by family and arm",
+    "interval": "Descriptive 95% Wilson intervals clustered by instance; small-sample uncertainty only.",
+    "multiple_comparison_correction": "bonferroni",
+    "effect_size_measure": "descriptive paired wins and losses only",
+    "verdict_vocabulary": [
+      "inconclusive",
+      "invalid_measurement",
+      "supported_within_scope"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "../../orchestration/eval/capability_report.py",
+      "sha256": "953e30bad626b85ce8fdc38819f83e29a812bcd6dc10c7e6bbfe50f707946ffe"
+    },
+    "inputs": [
+      "trial-*/result.json"
+    ],
+    "outputs": [
+      "report.json",
+      "report.md",
+      "graph.svg"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "Verified / attempted trials by family and arm; descriptive counts"
+    ],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "Claiming any-domain reliability from this supplied-input development panel",
+    "Treating software controls as live model successes",
+    "Claiming matched token spend or known dollar cost",
+    "Changing seeds or sample counts after seeing outputs"
+  ],
+  "literature": [
+    {
+      "ref": "https://www.anthropic.com/research/demystifying-evals-for-ai-agents",
+      "provenance": "retrieved",
+      "claim": "Evaluate model and scaffold together and verify outcome separately from transcript.",
+      "verified_by": "Source review 2026-11-07"
+    },
+    {
+      "ref": "https://learn.chatgpt.com/docs/non-interactive-mode",
+      "provenance": "retrieved",
+      "claim": "Native structured output and event-stream interface; actual CLI help checked on host.",
+      "verified_by": "CLI 0.163.0 and official documentation, 2026-11-07"
+    },
+    {
+      "ref": "../../docs/measuring-the-harness.md",
+      "provenance": "internal",
+      "claim": "Legacy evaluator measures narrower executor behavior; new bounded campaign explicitly measures stages.",
+      "verified_by": "Implementation source review 2026-11-07"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "ac6f51f07c0c8d6d8fec2af87ac245178c626e8ff46d62d99c5436e411914a99",
+    "commit": "2917ed01b713838fce9530ac0292322ccd632dc1",
+    "frozen_at": "2026-11-07T02:58:24Z",
+    "filed_before_affected_data": true
+  }
+}

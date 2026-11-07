@@ -95,3 +95,5 @@ scope and authority boundaries. Python's official
 [JSON documentation](https://docs.python.org/3/library/json.html) inform CLI
 subcommands and strict JSON serialization. This is a software extension, with no
 claim to introduce a new scientific method or to validate the fixture research.
+
+For verified outcomes and staged orchestration evaluation, see [capability campaigns](capability-campaigns.md).
