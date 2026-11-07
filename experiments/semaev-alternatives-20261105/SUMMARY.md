@@ -2,25 +2,25 @@
 
 Registered 2026-11-05 in isogeny-labs/crypto-autoresearcher#3028; results landed in #3033 and this follow-up. Each row links to `results/SA-NN/REPORT.md`. Corrections to the campaign report are in `ERRATA.md`.
 
-**Bottom line.** No direction reported a usable success. Eight directions were killed against their frozen criteria. The lattice wall at reach 1/6, 1/24, 1/80 (arity 2, 3, 4) was reproduced from five independent directions (SA-01, 04, 06, 08, 18) and holds for every presentation tested: x-coordinates, Vieta coordinates, the Riemann–Roch norm system, special j-invariants and 2-torsion symmetrisation. Both new structural handles from the report (the Vieta conic and the Γ₀(p) binary-form view) are closed.
+**Bottom line.** No direction reported a usable success. Eight directions were killed against their frozen criteria. The other ten are open: an INCONCLUSIVE verdict is not a kill, and each open direction has a round-2 pre-registration in `prereg/round2/` (SA-17 is still running). The lattice wall at reach 1/6, 1/24, 1/80 (arity 2, 3, 4) was reproduced from five independent directions (SA-01, 04, 06, 08, 18) and holds for every presentation tested: x-coordinates, Vieta coordinates, the Riemann–Roch norm system, special j-invariants and 2-torsion symmetrisation. Both new structural handles from the report (the Vieta conic and the Γ₀(p) binary-form view) are closed.
 
 | ID | Direction | Verdict | Deciding number |
 |---|---|---|---|
-| SA-01 | Lattice ceilings, six presentations | INCONCLUSIVE (leans kill) | best m = 3 reach 0.0306 vs success line 0.25; none beats single-polynomial reach |
+| SA-01 | Lattice ceilings, six presentations | INCONCLUSIVE (open; round 2 SA-01b) | best m = 3 reach 0.0306 vs success line 0.25; none beats single-polynomial reach |
 | SA-02 | Vieta-conic sieve | KILL | sieve exponent 1.04 [0.99, 1.08] at 64 bits; reach 1/6 |
 | SA-03 | Γ₀(p) binary-form census | KILL | structured/small ratio ∝ B^-10; enumeration exponent 1.81 [1.64, 1.96] |
 | SA-04 | Riemann–Roch norm presentation | KILL | reach equals S_{m+1}; F4 degree 5, 6, 7 at B = 4, 8, 16 (m = 3) |
-| SA-05 | Height-closed Kummer ladders | SUCCESS on the letter, no IC value (criterion flaw) | all 1,722 relations global; 0 of 140,000 random targets pass |
+| SA-05 | Height-closed Kummer ladders | SUCCESS on the letter; criterion flaw (open; round 2 SA-05b) | all 1,722 relations global; 0 of 140,000 random targets pass |
 | SA-06 | Special-j and torsion lattices | KILL | reach 1/80 at m = 4 in all six cells |
 | SA-07 | Mixed Z/F_p integer programming | KILL (off-the-shelf SCIP) | node exponents 7.6–10.0 at m = 3; 0/76 solved at B ≥ 32 |
-| SA-08 | Capacity / determinant ceiling | INCONCLUSIVE | determinant ceiling 1/6, 1/24 proved over all supports |
-| SA-09 | Heegner norm relations | INCONCLUSIVE (practically negative) | rank/points 0.238; extrapolates to ~0.07 |
+| SA-08 | Capacity / determinant ceiling | INCONCLUSIVE (open; round 2 SA-08b) | determinant ceiling 1/6, 1/24 proved over all supports |
+| SA-09 | Heegner norm relations | INCONCLUSIVE (open; round 2 SA-09b) | rank/points 0.238; extrapolates to ~0.07 |
 | SA-10 | Squarefree-part collisions | KILL | 1 pair up to 2^22; exponent 0.0 |
 | SA-11 | Cavity solving-degree predictor | KILL | 11/25 cells within ±1; tower slope 1.0 vs 0.233 |
-| SA-12 | Learned shift families (CPU search) | INCONCLUSIVE (scale-limited) | best certified reach 0.127 at n ≤ 150 |
-| SA-13 | Lattice-query lower bound | INCONCLUSIVE | restricted bound p^(7/9) per relation (one step sketched) |
-| SA-14 | Yokoyama for towers | INCONCLUSIVE | Macaulay degree 2t+4 proved; F4 degree 4–5 at t ≤ 9 |
-| SA-15 | m = 4 instance set | INCONCLUSIVE (adoption) | 400/400 planted instances verified and hashed |
+| SA-12 | Learned shift families (CPU search) | INCONCLUSIVE, scale-limited (open; round 2 SA-12b) | best certified reach 0.127 at n ≤ 150 |
+| SA-13 | Lattice-query lower bound | INCONCLUSIVE (open; round 2 SA-13b) | restricted bound p^(7/9) per relation (one step sketched) |
+| SA-14 | Yokoyama for towers | INCONCLUSIVE (open; round 2 SA-14b) | Macaulay degree 2t+4 proved; F4 degree 4–5 at t ≤ 9 |
+| SA-15 | m = 4 instance set | INCONCLUSIVE, adoption (open; round 2 SA-15b) | 400/400 planted instances verified and hashed |
 | SA-16 | Positive-control calibration | KILL (solver prediction) | `L3` and raw bivariate Coppersmith fail the controls |
 | SA-17 | Function-field mirror | see `results/SA-17/REPORT.md` | — |
 | SA-18 | Determinant-method oracle | KILL | provable reach rises toward 1/6, never above |
