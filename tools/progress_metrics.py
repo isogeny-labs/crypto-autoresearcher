@@ -1192,6 +1192,31 @@ def prime_field_mixed_known_helper_panel(ref, since):
             emit(name+'.'+key,v[key],unit=unit,label='Dependent producer observation; supplied logs are not learned rank, no cross-base Delta comparison',**common)
 
 
+
+def prime_field_target_effort_admission_failure(ref, since):
+    """Only committed zero-data admission failure telemetry; no recovery inference."""
+    date='2026-11-07'
+    if date<since:return
+    path='research/prime_field_a16_execution_20261107/runs/a16-target-effort-3d7f9e/metrics.json'
+    raw=show(ref,path)
+    if raw is None:return
+    try:
+        d=json.loads(raw)
+        if (d['schema']!='prime-field-a16-metrics/v1' or d['panel_complete'] is not False or d['physical_attempts']!=1 or
+            d['planned_systems']!=1260 or d['planned_solver_calls']!=2520 or d['unknown_systems']!=1260 or d['partial_work_unknown']is not True or
+            any(d[k]!=0 for k in ('verified_systems','verified_solver_calls','verified_information_audits','observed_certified_systems','observed_completed_solver_calls','observed_failed_solver_calls')) or
+            d['physical_counters'] or d['observed_arm_counters'] or any(d['query_engine_totals'][e] for e in ('scalar','batch'))):return
+        if len(set(d['columns']))!=len(d['columns']):return
+        rows=[dict(zip(d['columns'],v,strict=True)) for v in d['rows']]
+        if len(rows)!=1260 or {v['case_id'] for v in rows}!=set(range(1260)) or any(v['verified']is not False or v['certificate_checked']is not False or v['identified_mask']is not None for v in rows):return
+        cp=d['closed_curve_checkpoints']
+        if len(cp)!=4 or any(v['valid']is not False or v['receipt']is not None for v in cp):return
+    except (KeyError,TypeError,ValueError,AttributeError):return
+    for key in ('physical_attempts','verified_systems','unknown_systems','observed_completed_solver_calls','verified_information_audits'):
+        emit('prym.prime_field.a16.admission_failure.'+key,d[key],unit='objects',date=date,problem='prime-field-factor-bases',better='neutral',source=f'{path}@{ref}',
+            label='One failed Git admission attempt, zero native data; unknown planned cases do not measure mathematical recovery')
+
+
 def prime_field_batched_pair_panel(ref, since):
     """Committed A15 component vectors; retained queries never become new targets."""
     from collections import Counter
@@ -1448,6 +1473,7 @@ def main():
     prime_field_paid_known_base_panel(a.ref, a.since)
     prime_field_mixed_known_helper_panel(a.ref, a.since)
     prime_field_batched_pair_panel(a.ref, a.since)
+    prime_field_target_effort_admission_failure(a.ref, a.since)
     degree_five_continuation(a.ref, a.since)
     semaev_panel_snapshots(a.ref, a.since)
 
