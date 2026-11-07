@@ -169,16 +169,6 @@ research_goal:
     Pointer moved under DEC-20261106-475620, staged by TASK-20261106-779e02. The prior
     values are kept in the two keys above. Every earlier note and *_before_* key is
     unchanged. latest_verified_commit is not changed here. The file stays flat.
-  current_batch_id_2026_11_07_c077fd: BATCH-c077fd
-  dispatch_queue_path_2026_11_07_c077fd: coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json
-  current_batch_note_2026_11_07_c077fd: >-
-    Lane BATCH-c077fd was opened under DEC-20261106-24d2a2 and is staged by
-    TASK-20261107-58546f. That act edits this head by insertion only, so current_batch_id and
-    dispatch_queue_path above are NOT moved and still name BATCH-a8825c (DEC-20261106-24d2a2
-    PD-C). The two keys just above name the lane opened most recently, which
-    docs/concurrent-goal-lanes.md treats as current. Every earlier note and *_before_* key is
-    unchanged. latest_verified_commit is not changed here. The file stays flat. The
-    authoritative lane list is tools/goal_lanes.py lanes GOAL-PATH-001.
   latest_verified_commit: 67c2e5bf27c3b014e25829554130199d7918ae2b
   latest_verified_commit_note: >-
     REBOUND 2026-08-02 by CORR-20260802-7787de. The prior value
@@ -378,36 +368,6 @@ research_goal:
       Instrument work and an instrument re-review. Nothing approved, no status moved, no
       evidence record produced. It moves no exponent in either direction;
       KN-OPEN-62c870 CS-D2 and CS-R7 bind.
-  - batch_id: BATCH-a8825c
-    recorded_at: '2026-11-07'
-    recorded_by_decision: DEC-20261106-24d2a2
-    opened_by_decision: DEC-20261106-475620
-    dispatch_queue_path: coordination/goals/GOAL-PATH-001/batches/BATCH-a8825c/dispatch_queue.json
-    ledger_archive_task_id: TASK-20261106-779e02
-    ledger_commit: 6c54f43511b4c4e66a9e06a3343f24df4111cf26
-    snapshot_archives:
-      - {task_id: TASK-20261106-dfd0ed, commit: 5f6c0924502a804271cc100937bf706021985ed6, of: "TASK-20261106-2b7223 (HX-1 to HX-10) and TASK-20261106-96fee7 (DEV-1 attempt 1, stopped_infrastructure)"}
-    bindings_note: >-
-      The commits are as recorded in the queue's archive blocks and were reported verified on
-      content by the top-level session: 779e02 with 17 paths, dfd0ed with 12 paths, the latter
-      carried by PR #3123 with auto-merge, as reported. The authoring session, which holds no
-      shell, did not recompute them.
-    completed_tasks: [TASK-20261106-d5063d, TASK-20261106-779e02, TASK-20261106-2b7223, TASK-20261106-96fee7, TASK-20261106-dfd0ed]
-    cancelled_tasks: [TASK-20261106-941825, TASK-20261106-afbe9b]
-    outcome: pre_approval_fixes_completed_dev1_stopped_infrastructure
-    outcome_detail: >-
-      The second fix round completed with no scope finding. The start-up suite passed in full,
-      M6, M5 and M3 were killed per the producer, and the code is bound at code_sha256 5d5a607d
-      with the plan byte-identical. The DEV-1 cell, attempt 1, was stopped by the harness
-      background-task cap: an infrastructure stop, not a KAT outcome. By dfd0ed SA-9 the queue
-      stopped before the re-review. Composed by DEC-20261106-24d2a2, which cancels the unrun
-      941825 and afbe9b and opens BATCH-c077fd: the hardening re-review first, then the DEV-1
-      re-attempt under a detached supervisor, which waits on owner question OQ-1. Zero runs.
-    lane_closure: tools/goal_lanes.py close-lane GOAL-PATH-001 BATCH-a8825c --outcome archived, run by TASK-20261107-58546f LA-12 after its archive verifies and the two cancellations are committed
-    claim_boundary: >-
-      Instrument work and an infrastructure stop. Nothing approved, no status moved, no
-      evidence record produced. It moves no exponent in either direction;
-      KN-OPEN-62c870 CS-D2 and CS-R7 bind.
   child_goal_ids:
   - GOAL-FIND-001
   - GOAL-ECDLP-001
@@ -545,18 +505,6 @@ research_goal:
         DEV-1 cell under the owner's budget (96fee7), their joint snapshot (dfd0ed), a fresh
         focused re-review (941825) and its snapshot (afbe9b). Zero runs; nothing approved.
         Not the authoritative lane list; read tools/goal_lanes.py lanes.
-    - batch_id: BATCH-c077fd
-      opened_at: '2026-11-07'
-      opening_decision_id: DEC-20261106-24d2a2
-      dispatch_queue_path: coordination/goals/GOAL-PATH-001/batches/BATCH-c077fd/dispatch_queue.json
-      checkpoint: Not yet written. The approval act for EXP-MONO-1a1be2, or a fresh composing act, writes it.
-      question_ids: [RQ-MONO-001]
-      note: >-
-        Added additively by TASK-20261107-0932f4 (archived by TASK-20261107-58546f). It holds
-        the hardening re-review of the second fix round (7db1de) and its snapshot (971edf), then
-        the DEV-1 re-attempt under a detached supervisor (bc7a76, blocked on owner question
-        OQ-1) and its snapshot (eebc5b). Zero runs; nothing approved. Not the authoritative lane
-        list; read tools/goal_lanes.py lanes.
   open_batches_note_2026_10_29: >-
     BATCH-7ca353 is checkpointed in batch_checkpoints (DEC-20261029-71d757) and its
     lane is closed by TASK-20261029-37675c LA-12. Its open_batches item above is
@@ -573,11 +521,6 @@ research_goal:
     BATCH-69d9a2 is checkpointed in batch_checkpoints (DEC-20261106-475620), and its lane
     is closed by TASK-20261106-779e02 LA-12. Its open_batches item above is left as
     written; that checkpoint entry answers its "Not yet written" text.
-  open_batches_note_2026_11_07_c077fd: >-
-    BATCH-a8825c is checkpointed in batch_checkpoints (DEC-20261106-24d2a2). Its lane is closed
-    by TASK-20261107-58546f LA-12 after its two unrun tasks (941825, afbe9b) are cancelled. Its
-    open_batches item above is left as written; that checkpoint entry answers its "Not yet
-    written" text.
   impediments:
     - id: IMP-PATH-20261029-1
       raised: '2026-10-29'
@@ -636,22 +579,6 @@ research_goal:
         and the approval act gets approvable true from experiment_preapproval.py
       recheck: when TASK-20261106-dfd0ed or TASK-20261106-afbe9b completes
       asserts_nothing_about: H-MONO-23d347, IDEA-20261023-f15270 or any lemma; an unrun contract is neither evidence nor a failure
-    - id: IMP-PATH-20261107-1
-      raised: '2026-11-07'
-      narrows: IMP-PATH-20261106-2 (the 2b7223 fixes are snapshot-bound at dfd0ed; the unrun 941825 re-review is replaced by 7db1de)
-      condition: >-
-        EXP-MONO-1a1be2 is still not approvable. The DEV-1 m = 3 cell has not run: attempt 1
-        (96fee7) was stopped by the harness background-task cap, an infrastructure stop. Its
-        re-attempt TASK-20261107-bc7a76 waits on owner question OQ-1 about the allowance and the
-        host (DEC-20261106-24d2a2). The hardening re-review (B8-H) is pending. protocol.json,
-        the runbook and the preapproval packet do not exist (B1, B2, B4-B6 and B8).
-      what_is_blocked: TASK-20261107-bc7a76 (the DEV-1 re-attempt), and through it approval and execution of EXP-MONO-1a1be2
-      clears_when: >-
-        a committed act records the owner's answer to OQ-1 and releases or supersedes bc7a76;
-        971edf verifies with B8-H passed; eebc5b verifies with DEV-1 passed; B8-D passes; and the
-        approval act gets approvable true from experiment_preapproval.py
-      recheck: when the owner answers OQ-1, or when TASK-20261107-971edf or TASK-20261107-eebc5b completes
-      asserts_nothing_about: H-MONO-23d347, IDEA-20261023-f15270, the kernel or any lemma; an infrastructure stop and an unrun contract are neither evidence nor a failure
   next_action_2026_10_23: >-
     Additive (lane BATCH-7ca353; decision DEC-20261023-19c53b). It rewrites
     nothing above and neither restates nor supersedes next_action. Ranked
@@ -691,14 +618,6 @@ research_goal:
     TASK-20261106-779e02 alone and close lane BATCH-69d9a2; then dispatch
     TASK-20261106-2b7223 (executor). 96fee7, dfd0ed, 941825 and afbe9b follow in queue
     order, one at a time. Approval waits on them (IMP-PATH-20261106-2).
-  next_action_2026_11_07_c077fd: >-
-    Additive (lane BATCH-c077fd; decision DEC-20261106-24d2a2); rewrites nothing above.
-    One next action for the top-level session: commit the BATCH-c077fd queue alone and
-    open its lane; render the decision report (PDF to the artifact store); run
-    TASK-20261107-58546f alone, commit the two BATCH-a8825c cancellations alone and close
-    lane BATCH-a8825c; relay OQ-1 to the owner verbatim and dispatch TASK-20261107-7db1de,
-    then 971edf alone. bc7a76 stays blocked until a committed act records the owner's
-    answer (IMP-PATH-20261107-1).
   owner: coordinator
   created_at: '2026-07-24T21:30:00-07:00'
   updated_at: '2026-08-28'
