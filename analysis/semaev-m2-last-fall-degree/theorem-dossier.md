@@ -446,6 +446,20 @@ $x$, so its product with a low-degree member of $\ker\pi_G$ is annihilated
 by the checked closure condition. Also $\pi_F(1)=\pi_G(1)$. This describes
 a certificate transfer, not a completed reduced-instance computation.
 
+Conversely, a dual certificate for $F$ restricts to one for $G$ **with the
+same quotient dimension**. Let $\pi_F:B_{\le d}\to Z$ satisfy Proposition 1.5
+and set $\pi_G=\pi_F|_{B'_{\le d}}$. For every monomial $m$ containing $b_j$,
+$m+\rho(m)=y(m/b_j)$ in the Boolean ring. Its degree is at most $d$, and
+$y\in W_d(F)$, so the closure rule puts $m+\rho(m)$ in
+$W_d(F)\subseteq\ker\pi_F$. The equality is trivial for monomials omitting
+$b_j$; by linearity $\pi_F=\pi_G\circ\rho$. Since $\pi_F$ is onto, $\pi_G$
+is onto as well. It annihilates each generator $\rho(f)$ of $G$, because
+$\pi_G(\rho(f))=\pi_F(f)=0$. The low-degree kernel closure under the retained
+variables is inherited from $\pi_F$, and $\pi_G(1)=\pi_F(1)$. Thus a checked
+original degree-four map can be projected without losing codimension when an
+affine relation is in $W_4(F)$; checking the projected bytes independently
+remains necessary for a computational certificate claim.
+
 **Corollary 2.5c** (slicing from a later affine fall). **Proved.** Fix
 $d\ge2$. The equality and nonmembership transfer of Proposition 2.5b still
 hold if its affine polynomial $y$ belongs to $W_d(F)$ rather than to

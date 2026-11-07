@@ -24,6 +24,11 @@ The checker reconstructed all 47 generators (14,443 terms) from the pinned
 named-instance record using the independent descent source and matched every
 equation to the retained `input.sys`. It then accepted the 24-generator
 witness; changing its constant term caused an explicit XOR-mismatch rejection.
+The dossier now also proves the reverse dual-certificate transfer: because
+the relation lies in `span F`, restricting the accepted original D4 map to
+the 47-variable slice preserves its 61,196-dimensional codomain and
+surjectivity. This is the mathematical premise for the row-copy projection;
+an independent checker must still accept the actual projected/rebased bytes.
 
 The deterministic screen in `n47-rand00-slice-capacity-screen-001.json` counts
 126,387 D5 border monomials for the original unit-representative set. For the
