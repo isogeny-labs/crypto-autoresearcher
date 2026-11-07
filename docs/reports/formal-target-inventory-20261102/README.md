@@ -1,5 +1,46 @@
 # Frozen formal target machine-receipt inventory
 
+## Current target snapshot (2026-11-07)
+
+At `main` commit `23c5aeca09f8f512d90755193660c1b2aa509714`, the strict
+inventory rebuild found **122** tracked `formal/targets/*.yaml` targets, **122**
+present named Lean sources, and **122** matching named `machine_verified`
+receipts, with no unmatched claim IDs. The full [122-row inventory](matched-receipts-23c5aeca.json)
+records each frozen target and source hash, theorem name, receipt file and hash,
+and source run ID. Its SHA-256 is
+`1ab57bda23d6f1c764e16c443d552aa2db4439ac35f77f79be4a170ca45a4756`.
+
+The receipts come from successful hosted [Lean verification run 42260198392](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/42260198392)
+at `ba7a85965dab6eef75e24395cca9edb80b53d6cc`. Its formal workspace and
+kernel-controls jobs passed; its before/after dependency-pin files match at
+SHA-256 `2ae448d9f1491f633cd748b1b9a7cfdf1b038f647194dd2213dfc39b13c0187a`.
+The `formal/` Git tree at that run commit and at this inventory commit is the
+same object, `2d19c92d105492046124a4149d0e683536046a95`. The rebuild
+also compares each named source and target byte hash with the corresponding
+receipt, so this conclusion is limited to the named formal inputs and the
+recorded run. It does not assert that later workflow or verifier code outside
+`formal/` is identical.
+
+To reproduce from a checkout containing the pinned `main` commit:
+
+```sh
+gh run download 42260198392 -R isogeny-labs/crypto-autoresearcher \
+  -n formal-verification-receipts -D /tmp/formal-receipts-42260198392
+python3 docs/reports/formal-target-inventory-20261102/rebuild.py \
+  --revision 23c5aeca09f8f512d90755193660c1b2aa509714 \
+  --receipts 42260198392:/tmp/formal-receipts-42260198392 \
+  --output /tmp/matched-receipts-23c5aeca.json --require-complete
+sha256sum /tmp/matched-receipts-23c5aeca.json
+```
+
+This is receipt coverage and byte identity, not a fresh Lean build at the
+inventory commit or an independent authentication of the run. It does not
+review semantic correspondence to the research claims, implementation
+behavior, experiment measurements, or performance dashboards. Those require
+separate claim-level review and measurement evidence.
+
+## Earlier snapshot (2026-11-02)
+
 At crypto-autoresearcher `main` commit `685914319621828a458a19c1ce8693ca0174f7f5`, all **108** tracked `formal/targets/*.yaml` targets name source files present in that Git tree. Every target's exact YAML bytes and named Lean source bytes match one `machine_verified` receipt from the successful combined-tree hosted Lean run below. The full [108-row inventory](matched-receipts-68591431.json) records the source hash, target hash, matched receipt file, run ID, and receipt hash for each claim.
 
 | Hosted run | What it contributes | Pin comparison |
