@@ -37,7 +37,7 @@ def main():
         started_utc=execution['started_at'],wall_s=execution['diagnostic_wall_seconds'])]
     value['extensions'] = dict(benchmark_wrapper_executed=False,record_registered_after_raw_publication=True,
         native_receipt=str((run/'execution.json').relative_to(ROOT)),scientific_source_commit=execution['source_commit'],
-        physical_attempts=1,pre_launch_checkpoint_heading_refusals=0,pre_launch_refusal_generated_native_data=False,
+        physical_attempts=1,pre_launch_checkpoint_heading_refusals=1,pre_launch_refusal_stage="release builder before any native attempt",pre_launch_refusal_generated_native_data=False,
         observed_curves=curves,observed_targets=targets,planned_systems=1260,planned_solver_calls=2520,
         planned_information_diagnostics=576,verified_systems=metrics['verified_systems'],
         verified_solver_calls=metrics['verified_solver_calls'],verified_information_diagnostics=metrics['verified_information_audits'],

@@ -49,6 +49,14 @@ def main():
     axes[0].set_ylabel('identified / requested dependent target slots')
     handles,labels=axes[0].get_legend_handles_labels();fig.legend(handles,labels,loc='lower center',ncol=5,fontsize=7)
     fig.tight_layout(rect=(0,.12,1,1));fig.savefig(a.out/'target-recovery.svg');plt.close(fig)
+    if metrics['verified_systems']==0:
+        fig,ax=plt.subplots(figsize=(10,3.5));ax.set_axis_off()
+        nodes=[('Published source / frozen protocol',.04,.65,'#dceaf1'),('One supervisor attempt / 2 GiB',.37,.65,'#dceaf1'),('Git pack mapping failure in admission',.70,.65,'#f3d6ce'),('No native generation or target solvers',.37,.20,'#ececec')]
+        for label,x,y,color in nodes:ax.text(x,y,label,transform=ax.transAxes,fontsize=9,bbox=dict(boxstyle='round,pad=.6',facecolor=color),wrap=True)
+        for start,end in [((.29,.67),(.36,.67)),((.63,.67),(.69,.67)),((.84,.56),(.63,.30))]:
+            ax.annotate('',xy=end,xytext=start,xycoords='axes fraction',arrowprops=dict(arrowstyle='->'))
+        ax.text(.03,.03,a.run.name+'; no comparable mathematical observations, all planned systems unknown',transform=ax.transAxes,fontsize=8)
+        fig.tight_layout();fig.savefig(a.out/'target-recovery.svg');plt.close(fig)
     cost_rows=[];cost_data=[]
     for cid in cids:
         for program in PROGRAMS:
@@ -86,11 +94,11 @@ def main():
     document+=text('Observed panel complete: '+str(metrics['panel_complete'])+'. Verified systems '+str(metrics['verified_systems'])+'/'+str(metrics['planned_systems'])+
         '; actual completed solver calls '+str(metrics['observed_completed_solver_calls'])+'; failed solver calls '+str(metrics['observed_failed_solver_calls'])+
         '; verified information diagnostics '+str(metrics['verified_information_audits'])+'. Missing/unverified systems '+str(metrics['unknown_systems'])+'.')+'\n\n'
-    document+=text('Four prospective coefficient curves and 32 shared public target points; five dependent program views per curve. Every program uses actual batched signed-pair construction. Known48_8 and known48_24 have independently paid public base and full P/Q construction, tables, caches and registries. Their mathematical base identity is identical. The first eight symbolic recipes match; future setup knowledge is not shared.')+'\n\n'
+    document+=text('Four prospective coefficient curves and 32 shared public target points; five dependent program views per curve. The prospective programs use actual batched signed-pair construction; zero-native attempts execute none of these collectors. The intended known48_8 and known48_24 programs independently pay public base and full P/Q construction, tables, caches and registries when they execute. Their mathematical base identity is identical. The contract checks first-eight symbolic recipe equality and forbids sharing future setup knowledge; no such check is inferred when generation never starts.')+'\n\n'
     document+='== Recorded recovery at each program horizon\n'+table(['program','policy','checked cases','identified slots','requested slots'],summaries)
     document+=text('Numbers are sums of recorded masks: each requested slot denominator is 8 times checked cases. Norm/hybrid reuse each public target across six source schedules and two scopes; known programs use one case per policy/curve. These are dependent slots, not independent target draws. Unknown cases are excluded from ratios and retained in metrics/export.')+'\n\n'
     document+='#pagebreak()\n= Named targets and recovery scope\n#image("target-recovery.svg",width:100%)\n'
-    document+=text('Graph: recorded identified/requested dependent slots at target prefix8 for norm8/hybrid8/known32_8/known48_8 and24 for known48_24. Each bar covers the listed fixed curve and policy. No statistical uncertainty was estimated for this finite dependent census.')+'\n\n'
+    document+=text(('Diagram: the attempt stopped in admission before native generation; no comparable mathematical measurements exist. ' if metrics['verified_systems']==0 else '')+'Prospective graph scope: recorded identified/requested dependent slots at target prefix8 for norm8/hybrid8/known32_8/known48_8 and24 for known48_24. Each bar covers the listed fixed curve and policy. No statistical uncertainty was estimated for this finite dependent census.')+'\n\n'
     document+='== Known48 horizon8 versus horizon24\n'+table(['curve','policy','h8 mask','h24 mask','gained mask','lost mask'],mask_rows)
     document+=text('Derived masks: gained=h24 AND complement(h8); lost=h8 AND complement(h24). Bit j denotes the same independently selected public target index j on that curve. Different full-horizon constructor portfolios can expose different paid affine knowledge, so a longer horizon is not assumed to preserve every shorter-horizon recovery.')+'\n\n'
     document+='#pagebreak()\n= Included cold components\n#set text(size:7.6pt)\n'+table(['curve','program','Fp mul','Fp inv','Fr mul','pair bytes','query bytes'],cost_rows)+'#set text(size:9pt)\n'
@@ -100,9 +108,9 @@ def main():
     document+='#pagebreak()\n= Execution, checks and retained failures\n'
     resources=[['started UTC',execution['started_at']],['finished UTC',execution['finished_at']],['exit / timeout',str(execution['returncode'])+' / '+str(execution['timeout'])],['source unchanged',execution['source_unchanged_after']],['host',host['cpu_model']],['wall validity',False]]
     for key,value in execution.items():
-        if key in ('cpu_user_seconds','cpu_sys_seconds','max_rss_bytes','wall_seconds','exception'):resources.append([key,value])
+        if key in ('cpu_user_seconds','cpu_sys_seconds','supervisor_cpu_user_seconds','supervisor_cpu_sys_seconds','max_rss_bytes','diagnostic_wall_seconds','absolute_deadline','exception'):resources.append([key,value])
     document+=table(['record','observed value'],resources)
-    document+=text('One existing worker/thread,2GiB,21600 CPU/wall seconds, fresh deadline, one consumed attempt. Actual admission/start PID-bound S3 and closed-curve checkpoint receipts are retained. Producer checks cover independently reconstructed point/group relations, native sign aliases, actual pair arithmetic/allocation and query results, full constructor workloads, original-row and supplied-unit lifting, public targets and dense old-coordinate rank/kernel certificates. Full output/cost hashes bind receipts to journals. These local checks and custody receipts do not establish independently signed scientific replay.')+'\n\n'
+    document+=text('One existing worker/thread,2GiB,21600 CPU/wall seconds, fresh deadline, one consumed attempt. Admission/start PID-bound S3 and closed-curve receipts, when produced, are retained in raw records. This attempt has zero such successful receipts when it stops before admission. Planned producer checks cover independently reconstructed point/group relations, native sign aliases, actual pair arithmetic/allocation and query results, full constructor workloads, original-row and supplied-unit lifting, public targets and dense old-coordinate rank/kernel certificates. Full output/cost hashes bind receipts to journals. Check execution is determined by metrics and raw receipts; no mathematical checker execution is inferred for missing cases. Local checks and custody receipts do not establish independently signed scientific replay.')+'\n\n'
     document+='== Dependent comparison views\n'+table(['predicate','count'],list(comp_counts.items()))
     document+=text('Counts above describe existing dependent candidate/reference/endpoint-engine views and their unweighted vector/mask predicates; they are not extra experiments or solver calls. Arithmetic predicates include eight Fp/Fr dimensions and pair/query allocation traffic; retained predicates include all recorded dimensions. Exact named masks and all vectors are in analysis.json.')+'\n\n'
     document+=text('Retained analyzer errors: '+json.dumps(data['errors'],ensure_ascii=False)[:3000])+'\n\n'
