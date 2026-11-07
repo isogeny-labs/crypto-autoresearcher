@@ -87,7 +87,7 @@ class Online:
             prefix=commitment(self.case);certificate=dict(owner=self.owner,target_index=t,
                 rows_at_certificate=len(self.case['target']),case_sha256=prefix,origin=origin,recovery=deepcopy(rec))
             identifier=commitment(certificate)
-            self.event(dict(kind='online_certificate_proposed',certificate_id=identifier,certificate=certificate))
+            self.event(dict(kind='online_certificate_proposed',certificate_id=identifier,certificate=deepcopy(certificate)))
             records=[unresolved(j) for j in range(self.case['target_count'])];records[t]=rec
             self.meter.stage('online_original_certificate_'+str(scan)+'_'+str(t),lambda:solver.verify_original(self.case,records,self.meter))
             def public():
@@ -98,7 +98,7 @@ class Online:
             # Only this post-verification assignment can authorize a future skip.
             certificate['certificate_id']=identifier;certificate['native_verified']=True;certificate['public_verified']=True
             self.certificates[t]=deepcopy(certificate);new.append(identifier)
-            self.event(dict(kind='online_target_certified',certificate_id=identifier,certificate=certificate))
+            self.event(dict(kind='online_target_certified',certificate_id=identifier,certificate=deepcopy(certificate)))
         self.event(dict(kind='online_scan_complete',owner=self.owner,origin=origin,certified_targets=sorted(self.certificates),new_certificates=new))
         self.scanned_rows=len(self.case['target'])
         return new

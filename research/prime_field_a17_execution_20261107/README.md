@@ -22,9 +22,18 @@ selection prefixes are checked. Original import/counter-phase/indentation test
 failure logs remain; no scientific run occurred for those corrections.
 [pcc:unverified]
 
-The query scheduler, independent causal replay, full admitted controller,
-prospective exact-source contract, aggregate cost/export and native report/
-database path remain to be completed. Do not execute native curves/targets
+The query scheduler, causal replay and row-consequence diagnostics are now
+implemented. [Seventeen component checks pass](validation/complete-component-controls.v3.txt).
+They include an actual p211 query that produces a certificate before later
+queries are skipped, all full-reference rows reconstructed in the candidate's
+native affine span, future/borrowed/reordered proof rejection, independent
+assembly/scheduling counter models and failed paid query retention. A specially
+chosen three-atom scalar fixture exercises this boundary; it is software-only
+and does not supply target scalar labels to the native program. No native48
+pilot or calibrated saving is claimed. [pcc:unverified]
+
+The full admitted controller, prospective exact-source contract, aggregate
+cost/export and native report/database path remain to be completed. Do not execute native curves/targets
 through these preparation APIs. A16's two consumed releases authorize no third
 attempt; this distinct successor needs its own complete prospective contract
 and normal admission. No construction saving, calibrated speedup or novelty is
