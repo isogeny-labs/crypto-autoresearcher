@@ -12,6 +12,7 @@ Keep resolved and superseded records in the index.
 
 | Problem | Status | What it blocks | What would unblock it |
 | --- | --- | --- | --- |
+| [Endosweep batch 7 primality and named-curve bridge](endosweep-batch7-primality-and-curve-bridge.md) | open | An end-to-end theorem about brainpoolP512r1 from the recorded-integer discriminant certificate | Checkable prime certificates, named-curve trace/order facts, and the instantiated degree-to-norm bridge |
 | [Growing fixed-degree Semaev lower bounds](growing-boolean-semaev-lower-bound.md) | open | Parameter-uniform lower bounds in binary Boolean / prime digit encodings | Construct a closed separating kernel family or a degree-controlled reduction; finite ladders do not establish growth |
 | [Rho distinguished-point destination cutover is unverified](rho-dp-destination-cutover-unverified.md) | investigating | A current rho operations panel and a source-to-destination migration claim | Scoped source read access, writer freeze, source/destination integrity comparison, and fresh post-cutover readback |
 | [n50 polynomial03 D5 checkpoint volume at small chunks](semaev-n50-d5-checkpoint-volume.md) | investigating | The 4,096-row V1 worker can publish 3,100 seed-phase snapshots before a D5 result | Qualify the V2 checkpoint-free runner and obtain an independently accepted D5 result under fresh resource and cost admission |
