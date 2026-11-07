@@ -1,0 +1,34 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261107-b23fd5
+claim_id: PRIME-FIELD-A15-BATCHED-PAIR-ALGEBRA
+kind: formalize_claim
+source: research/prime_field_a15_execution_20261107/pairbuild15.py
+source_status: COMPUTED
+theorem_name: CryptoResearch.PrimeField.BatchedPairs.a15_algebraic_joints
+theorem_file: CryptoResearch/PrimeField/BatchedPairs.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  The theorem covers two local algebraic joints in A15: child inverses from
+  one product inverse, and four signed pair-formula outputs from two directly
+  evaluated slopes. Both statements are over an abstract field, with nonzero
+  product-tree inputs. The Python implementation separately checks nonempty
+  batches and zero denominators, and its p < 2^32 gate makes each uint64
+  product of reduced field elements fit in 64 bits. This theorem does not
+  prove the NumPy execution, metered operation counts, complete recursion of
+  the product tree, point-on-curve validation, or the retained experiment rows.
+  Code joints: batch_query.py:36-49 propagates a parent inverse to children;
+  pairbuild15.py:99-126 evaluates plus/minus slopes and negates output y values.
+claim: |
+  For nonzero field elements x,y, (x*y)^-1*y=x^-1 and
+  (x*y)^-1*x=y^-1. For the A15 affine candidate formulas with slope
+  (yk-yj)/(xk-xj), negating both input y values preserves candidate x and
+  negates candidate y; therefore the (-,+) output is the negation of the
+  (+,-) output and the (-,-) output is the negation of the (+,+) output.
+  These are formula identities, not a proof that an arbitrary input is a
+  valid elliptic-curve point or that a particular run executed this model.
+proof_map:
+  prerequisites:
+    - "A15's reduced field arithmetic is modeled as a field; the concrete uint64-to-field refinement remains open"
+    - "The product-tree child values are nonzero; this is checked as a software precondition, not established by this theorem"
+    - "The affine pair formula is interpreted only for distinct input x coordinates and valid curve points; those bridges remain outside the algebraic theorem"
