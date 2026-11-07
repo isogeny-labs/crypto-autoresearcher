@@ -12,16 +12,30 @@ and wrote exactly `0\n`. Its `count.argv.json` matches the command recorded in
 | terminal `result.json` | `0e9281892d213c5736f9be336571408c2399190b367980c32f80f6b611ca96f1` |
 | invoked `count_by_sum` binary | `b2d16d8a27b6133443671af1bcc297af225827af1bbd192aa1cb09a2644f6638` |
 | `count_by_sum.c` at recorded source commit `0fe0e3ac2cca6b6b00d0f9de64e1ea06a6d88cf3` | `bd36e7acc58b97d6fb7b29d494a14502e68e5cd069429eb54531da6b717ba78c` |
+| published `runtime-provenance.json` | `91050ba4ff9b361f98d80864e6a8e2635d552bba66f93c43dc9c0f969f4cb9e7` |
+| `runtime/publication.json` | `9fb461351ff833bbe8bef27460343db10d30c73759e3ddecd1fe5fb2663e23e2` |
+
+The published runtime provenance records this exact 21,408-byte counter
+binary and SHA-256, the frozen source revision
+`fdd9cb0b730b3f18ab64d745bd32aa57e4cd1103`, GCC 11.5.0, and the
+x86-64 host. The counter source at that frozen revision has the same SHA-256
+as the source listed above. `runtime/publication.json` pins the provenance
+file's hash and records the released source and binary archives. This
+recovers the binary/source **provenance record** missing from the attempt's
+own result; it is not an independent bit-for-bit rebuild.
 
 `check_n47_count_bridge.py` rechecks these file hashes, named parameters,
-count command, zero exit, exact `0\n` output, and the modulus criterion. Its
-small result is `n47-rand00-count-bridge-custody-001.json`. Replay with
+count command, zero exit, exact `0\n` output, modulus criterion, and the
+published runtime provenance link. Its V2 result is
+`n47-rand00-count-bridge-custody-002.json`; V1 remains retained. Replay with
 
 ```
 python3 analysis/semaev-degree-five-quotient-lift/check_n47_count_bridge.py \
   /home/ec2-user/fall-degree-data-20261029/frontier-highmem-001/fresh-n47-rand-00-D5-cascade01-highmem01/attempt-001 \
   /home/ec2-user/fall-degree-runtime-20261029/bin/count_by_sum \
-  analysis/semaev-m2-last-fall-degree/submission-20261029/count_by_sum.c
+  analysis/semaev-m2-last-fall-degree/submission-20261029/count_by_sum.c \
+  analysis/semaev-m2-last-fall-degree/submission-20261029/runtime/runtime-provenance.json \
+  analysis/semaev-m2-last-fall-degree/submission-20261029/runtime/publication.json
 ```
 
 The named modulus is `X^47+X^5+1`. The degree 47 is prime. Its constant and
@@ -58,9 +72,9 @@ after independent-basis enumeration has excluded zero.
 This is a source-level completeness audit of the retained count, with exact
 command and output custody. It is not a separate rerun or an independently
 verified unsatisfiability certificate. The inspected result does not itself
-bind the invoked binary hash to a build receipt for the listed source; that
-provenance should be recovered or re-established before a paper relies on
-this run alone. A second bounded counter that enumerates `x1 in V` and solves
+bind the invoked binary hash to its source; the separate published runtime
+provenance record supplies that link. It does not prove an independent
+rebuild or a second count. A bounded counter that enumerates `x1 in V` and solves
 the resulting quadratic in `x2`, rather than grouping by `x1+x2`, would give
 an independent computational check of zero.
 
