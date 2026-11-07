@@ -355,3 +355,16 @@ finite target coverage without closing larger-field, calibrated-cost or
 independent-replay gaps. [Results](../research/prime_field_a16_execution_20261107/RESULTS.continuation.md),
 [PCC-20261107-d1bac1](../pcc/claims/PCC-20261107-d1bac1.json), unverified.
 [pcc:unverified]
+
+A17 adds four fresh 18/19-bit curves and 32 public targets with separately paid
+known48/full24 programs. Both recover all targets; candidate point queries total
+46 versus 768 under full querying, with all construction paid and all 274 omitted
+reference rows explained from candidate information. Twenty-seven targets are
+already certified by paid construction/Registry information; only five first
+certify after extra query rows. This measures one causal query boundary while
+leaving larger-field transfer and unknown-base recovery open. The next ranked
+step fixes base size/construction and tests fresh 20/21-bit fields with explicit
+construction/natural/extra certificate attribution and complete costs. No new
+execution allowance or official scientific transition follows from this note.
+[PCC-20261107-0645d8](../pcc/claims/PCC-20261107-0645d8.json), producer-unverified.
+[pcc:unverified]

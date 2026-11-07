@@ -1,0 +1,127 @@
+......F...                                                               [100%]
+=================================== FAILURES ===================================
+__________ test_all24_points_and_registry_paid_before_any_extra_query __________
+
+toy = ({'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}, {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...},...{'target_index': 1, 'counter': 1, 'x': 201, 'y': None, ...}, {'target_index': 1, 'counter': 2, 'x': 50, 'y': 3, ...}]})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f65708a5250>
+
+    def test_all24_points_and_registry_paid_before_any_extra_query(toy,monkeypatch):
+        prep,col,recipe,r=fresh(toy,'suppress');events=[]
+        before=len(col.query_index.engines.records)
+        def no_query(*a,**k):raise AssertionError('preconstruction attempted an endpoint query')
+        monkeypatch.setattr(col.query_index,'query',no_query)
+        result=preconstruct17.build(prep['cell'],col,r,recipe,events.append,'suppress')
+        assert len(result['endpoints'])==48 and 'requests'not in result
+        assert len(col.query_index.engines.records)==before
+>       proof=check_construct17.check(prep['cell'],col,r,recipe,result,'suppress')
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+research/prime_field_a17_execution_20261107/test_preconstruct17.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+research/prime_field_a17_execution_20261107/check_construct17.py:23: in check
+    proof=checker.branch(cell,collected,rules,recipe,adapted,SimpleNamespace(records=points),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cell = {'id': 'p211-i0', 'fixture': {'p': 211, 'a': 1, 'b': 82, 'r': 233, ...}}
+collected = {'program_id': 'known48_24', 'target_horizon': 24, 'complete': True, 'projection': None, 'selection': {'orders': {}, '..._sha256': 'eda20918a118a8cad43da4e0fdfd5abc8dc3b0e6ca7a20702ff04df6644ccc69', 'equal': True}], 'arm_owner': 'suppress'}
+rules = {'software_control': True, 'domain': 'a17-preconstruction-software/v1', 'fields': [{'p': 211, 'base_size': 5}], 'a': 1, ...}
+recipe = [[{'alpha': 0, 'beta': 1}, {'alpha': 98, 'beta': 16}, {'alpha': 66, 'beta': 87}, {'alpha': 123, 'beta': 130}, {'alpha'..., {'alpha': 182, 'beta': 230}, {'alpha': 124, 'beta': 85}, {'alpha': 60, 'beta': 118}, {'alpha': 19, 'beta': 91}, ...]]
+actual = {'owner': {'arm': 'suppress', 'fixture_sha256': 'e34bc03faef577315dc10dc05ae1de8cdf3ef215fd168f72e778106cb9f63e02', 't... 0, 'index': 2, 'step': 3, 'alpha': 66, ...}, {'target_index': 1, 'index': 2, 'step': 3, 'alpha': 182, ...}, ...], ...}
+cache = namespace(records=[{'point': [51, 102]}, {'point': [50, 3]}, {'point': [54, 48]}, {'point': [52, 146]}, {'point': [45,...01, 63]}, {'point': [86, 103]}, {'point': [98, 34]}, {'point': [164, 119]}, {'point': [210, 162]}, {'point': [0, 90]}])
+oracle = <affine_check.GroupOracle object at 0x7f657cd6d6a0>
+
+    def branch(cell,collected,rules,recipe,actual,cache,oracle):
+        f=cell['fixture'];r=f['r'];nt=rules['targets'];n=len(f['factor_base']);context=actual['context'];arm=context['source_schedule'];prefix=context['source_prefix'];policy=context['target_policy']
+        if actual['recipe']!=recipe:raise ValueError('branch recipe copy')
+        initial={0}
+        for item in collected['arms'][arm]['knowledge']:
+            if item['prefix']<=prefix:initial.add(item['scalar']);initial.add(-item['scalar']%r)
+        expected_scalar={('P',s):1 for s in initial if s};expected_labels={};constructors={}
+        def label(a,b,step):
+            if a or any(b):key=label_key(a,b,r);expected_labels[key]=min(step,expected_labels.get(key,step))
+        for s in initial:
+            if s:label(s,[0]*nt,1)
+        for t in range(nt):b=[0]*nt;b[t]=1;label(0,b,1)
+        def discover(basis,s,step):
+            expected_scalar[basis,s]=step;b=[0]*nt
+            if basis=='P':a=s
+            else:a=0;b[int(basis[1:])]=s
+            label(a,b,step)
+        required=[]
+        if policy!='walk':required.append(('P',initial,[recipe[t][j]['alpha'] for j in range(1,rules['target_queries_per_point']) for t in range(nt)]))
+        if policy=='general':
+            for t in range(nt):
+                basis='Q'+str(t);known={0,1,r-1};required.append((basis,known,[recipe[t][j]['beta'] for j in range(1,rules['target_queries_per_point'])]));expected_scalar[basis,1]=1;expected_scalar[basis,r-1]=1
+        if set(actual['selections'])!={v[0] for v in required}:raise ValueError('constructor portfolio coverage')
+        for basis,known,work in required:
+            candidates,window=expected_selection(r,known,work);selection=actual['selections'][basis]
+            if selection['candidates']!=candidates or selection['window']!=window:raise ValueError('uncached EC-add constructor policy')
+            constructors[basis]=IntegerConstructor(r,known,window,lambda s,step,basis=basis:discover(basis,s,step))
+        expected_requests=[]
+        for j in range(rules['target_queries_per_point']):
+            for t in range(nt):
+                rec=recipe[t][j];a,b=rec['alpha'],rec['beta']
+                if j and policy!='walk':constructors['P'].mul(a,j+1)
+                if j and policy=='general':constructors['Q'+str(t)].mul(b,j+1)
+                beta=[0]*nt;beta[t]=b;label(a,beta,j+1);point=oracle.affine(a,beta)
+                expected_requests.append(dict(target_index=t,index=j,step=j+1,alpha=a,beta=b,point=None if point is None else list(point)))
+        if len(actual['requests'])!=len(expected_requests):raise ValueError('target request count')
+        for got,expected in zip(actual['requests'],expected_requests,strict=True):
+            if {k:v for k,v in got.items() if k!='query_id'}!=expected:raise ValueError('affine endpoint/offset availability')
+            if type(got['query_id'])is not int or not 0<=got['query_id']<len(cache.records) or cache.records[got['query_id']]['point']!=expected['point']:raise ValueError('query alias')
+        scalar={}
+        for event in actual['scalar_events']:
+            key=(event['basis'],event['scalar'])
+            if key in scalar:raise ValueError('duplicate scalar basis cache event')
+            scalar[key]=event['step'];beta=[0]*nt
+            if event['basis']=='P':a=event['scalar']
+            else:a=0;beta[int(event['basis'][1:])]=event['scalar']
+            point=oracle.affine(a,beta)
+            if event['point']!=(None if point is None else list(point)):raise ValueError('false symbolic scalar image')
+        if scalar!=expected_scalar:raise ValueError('future/omitted constructor scalar point')
+        seen={};buckets=defaultdict(dict);buckets[None][(0,*([0]*nt))]=1
+        for item in actual['labels']:
+            a=item['alpha'];beta=item['beta'];step=item['budget'];point=oracle.affine(a,beta)
+            if len(beta)!=nt or item['point']!=(None if point is None else list(point)):raise ValueError('affine point label equation')
+            key=label_key(a,beta,r);seen[key]=min(step,seen.get(key,step));key0=(a,*beta);buckets[point][key0]=min(step,buckets[point].get(key0,step))
+            if point is not None:
+                opposite=(point[0],-point[1]%f['p']);neg=tuple(-v%r for v in key0);buckets[opposite][neg]=min(step,buckets[opposite].get(neg,step))
+        if seen!=expected_labels:raise ValueError('affine label availability/completeness')
+        expected_equations={}
+        def equation(v,u,b,step):
+            key=canonical(v+u+[b],r)
+            if key is not None:expected_equations[key]=min(step,expected_equations.get(key,step))
+        for point,labels in buckets.items():
+            for (left,ls),(right,rs) in combinations(labels.items(),2):equation([0]*n,[(x-y)%r for x,y in zip(left[1:],right[1:],strict=True)],(right[0]-left[0])%r,max(ls,rs))
+        for j,atom in enumerate(f['factor_base']):
+            for values,step in buckets.get(tuple(atom['point']),{}).items():
+                v=[0]*n;v[j]=1;equation(v,[-x%r for x in values[1:]],values[0],step)
+        seen_equations={}
+        for row in actual['equations']:
+            if len(row['coefficients'])!=n or len(row['outside'])!=nt:raise ValueError('knowledge equation width')
+            key=canonical(row['coefficients']+row['outside']+[row['rhs']],r)
+            if key is None:raise ValueError('tautological retained knowledge row')
+            seen_equations[key]=min(row['budget'],seen_equations.get(key,row['budget']))
+            witness=row['witness']
+            if row['kind']=='base_match':
+                label0=witness['label'];sign=witness['sign'];j=witness['atom'];v=[0]*n;v[j]=1
+                expected=(v,[-sign*x%r for x in label0['beta']],sign*label0['alpha']%r)
+                if (row['coefficients'],row['outside'],row['rhs'])!=expected or label0['budget']>row['budget']:raise ValueError('base-match witness sign/offset')
+            elif row['kind']=='point_coincidence':
+                left=witness['left'];right=witness['right'];u=[(x-y)%r for x,y in zip(left['beta'],right['beta'],strict=True)];b=(right['alpha']-left['alpha'])%r
+                if row['coefficients']!=[0]*n or row['outside']!=u or row['rhs']!=b or left['point']!=right['point'] or max(left['budget'],right['budget'])>row['budget']:raise ValueError('point coincidence witness')
+            else:raise ValueError('unknown knowledge equation kind')
+        if seen_equations!=expected_equations:raise ValueError('knowledge equation completeness/availability')
+        if actual['counters'].get('scalar_uncached_ec_adds',0)!=sum(v.calls for v in constructors.values()) or actual['counters'].get('scalar_wrapper_add_calls',0)!=sum(v.api for v in constructors.values()):raise ValueError('physical constructor prediction')
+        counts=Counter()
+        for phase in actual['phases']:
+            if phase['status']!='complete':raise ValueError('partial affine branch')
+            counts.update(phase['counters'])
+>       if dict(counts)!=actual['counters']:raise ValueError('affine phase conservation')
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       ValueError: affine phase conservation
+
+research/prime_field_a12_execution_20261106/affine_check.py:183: ValueError
+=========================== short test summary info ============================
+FAILED research/prime_field_a17_execution_20261107/test_preconstruct17.py::test_all24_points_and_registry_paid_before_any_extra_query
+1 failed, 9 passed in 0.25s
