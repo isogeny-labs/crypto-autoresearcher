@@ -1,0 +1,180 @@
+# Additive labelling and wording correction for EXP-ICPERF-283a70,
+# EV-ICPERF-84ff45 and DEC-20261105-6e2616, filed on sheriff case
+# SHF-20261106-a114e7 findings ICR-3 and ICV-4 (mirroring
+# CORR-20261106-243c4d items (a) and (c)), ICR-6 (283a70 half) and an ICV-3
+# note. It annotates the frozen runbook.yaml, the run report (report.typ,
+# data.json), the review plan and the red-team report, and changes no byte of
+# any of them. It changes no status, value, verdict, strength or decision.
+correction:
+  id: CORR-20261106-50204c
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py
+    --next correction --date 20261106, then confirmed with --check
+    CORR-20261106-50204c ("OK: well-formed and free across the union", 48,138
+    identifier-bearing paths scanned), as reported by the top-level session.
+    The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent dispatched by top-level session
+    https://claude.ai/code/session_01TCbLH7HXJioSw2Bzx7P9p9; model
+    claude-opus-5-5 as stated by the top-level session; no shell. This session
+    produced none of the audited records (no commit on main carries its id).
+    The work was commissioned by session session_016SURwTvgaQmnMnhpa1SLXQ,
+    which produced many of the audited records, including EV-ICPERF-84ff45
+    (commit 714ebc4565), as verified in git by the top-level session (case
+    finding SES-INDEP).
+  decided_under: >-
+    DEC-20261106-beee1e (Coordinator integrity-remediation decision for the
+    ICPERF findings of SHF-20261106-a114e7), applying to EXP-ICPERF-283a70 the
+    readings DEC-20261105-8a9984 rulings.labelling_ruling (a) and (c) gave
+    EXP-ICPERF-284bc4 (carried by CORR-20261106-243c4d).
+  type: labelling_and_wording_correction
+  supersedes: []
+  case_ref:
+    case: SHF-20261106-a114e7
+    findings_file: research/sheriff/SHF-20261106-a114e7/findings.yaml
+    branch: claude/sheriff-reaudit-20261106
+    pr: '#3071 (unmerged)'
+    head_commit: ef52d97e641c17bbe5a6dd2c60a28b813fbbdacf
+    findings: [ICR-3, ICV-4, ICR-6, ICV-3]
+    read_from: >-
+      Byte copies made with git show by the top-level session in the session
+      scratchpad (case/findings_flat.txt, case/readers/icperf-interpretation.yaml);
+      the case files are not in this checkout.
+  target_ids:
+    - EXP-ICPERF-283a70
+    - EV-ICPERF-84ff45
+    - DEC-20261105-6e2616
+  corrects:
+    - experiments/EXP-ICPERF-283a70/runbook.yaml
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/data.json
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/red-team-report.yaml
+    - ledger/evidence/EV-ICPERF-84ff45.yaml
+    - ledger/decisions/DEC-20261105-6e2616.yaml
+  corrections:
+    - label: (a) computed, not measured (mirrors CORR-20261106-243c4d (a))
+      finding: SHF-20261106-a114e7 ICR-3 and ICV-4
+      record_type: experiment_metrics_labels
+      record_id: EXP-ICPERF-283a70
+      field: metric label of sample_sum, sum_squares, median, cv_in_band, median_ratio_in_band, exact_match
+      locations:
+        - experiments/EXP-ICPERF-283a70/runbook.yaml metrics block (label lines 315 sample_sum, 324 sum_squares, 333 median, 342 cv_in_band, 350 median_ratio_in_band, 358 exact_match)
+        - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ Metrics table (lines 38 cv_in_band, 40 exact_match, 41 median, 42 median_ratio_in_band, 43 sample_sum, 44 sum_squares), under the caption at line 34 ("Labels say whether a value was measured or derived from measured values")
+        - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/data.json metrics.<name>.label (lines 32 cv_in_band, 52 exact_match, 62 median, 73 median_ratio_in_band, 83 sample_sum, 94 sum_squares)
+        - any metrics export of these six values that labels them "measured"
+      prior_value: label measured
+      corrected_value: >-
+        computed: each of the six is computed by a deterministic seeded
+        program (run.py, xorshift32 from seed 20261017, p = 1/50, 64 draws)
+        from frozen inputs; none is measured, and no measured value enters
+        any of them, so they are also not "derived from measured values" in
+        the sense of the report caption. Only elapsed_seconds (runbook.yaml
+        line 366, report.typ line 39, data.json line 42) is measured, and its
+        label stands.
+      reason: >-
+        Same ground as DEC-20261105-8a9984 rulings.labelling_ruling (a) for
+        EXP-ICPERF-284bc4. EV-ICPERF-84ff45 lists the band-flag labels as an
+        unresolved confound (lines 161-165) and DEC-20261105-6e2616 notes them
+        in limitations (line 175), but no ruling or correction covered the 283a70
+        labels (case finding ICV-4: a coverage gap of the correction
+        programme, not an inaccuracy in CORR-20261106-243c4d).
+      not_in_field: >-
+        The `unit` fields (count / fraction) are not corrected here. The
+        report's omission of the controls' band flags is already tabulated in
+        EV-ICPERF-84ff45 O1-O3, O6 and band_table.
+    - label: (c) reading of the producer scope phrase (mirrors CORR-20261106-243c4d (c))
+      finding: SHF-20261106-a114e7 ICR-3
+      record_type: producer_claim_wording
+      record_id: EXP-ICPERF-283a70
+      field: producer scope phrase (PR #2776, as quoted in the review plan and the red-team report)
+      locations:
+        - experiments/EXP-ICPERF-283a70/review/review-plan.yaml claim_under_review, line 26 (verbatim as in prior_value)
+        - experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/red-team-report.yaml claim_under_review, lines 43-44 (same phrase, with "and" in place of the comma before "no attack")
+      prior_value: '"Stage-0 observation only: no latency effect, no attack"'
+      corrected_value: '"makes no latency or attack statement"'
+      reason: >-
+        The experiment measures no latency (the run report states "Host
+        latency is not an input", report.typ line 14), so it can neither find
+        nor exclude a latency effect. The identical 284bc4 phrase was ruled
+        to read "makes no latency or n=83 statement" (DEC-20261105-8a9984
+        rulings.labelling_ruling (c)); no ruling covered the 283a70 phrase.
+        This record itself makes no latency or attack statement and closes
+        nothing there. The PR #2776 body was not read here.
+    - label: ICR-6 (283a70 half) "out of sample" applied to a design-time computation
+      finding: SHF-20261106-a114e7 ICR-6
+      record_type: evidence_wording
+      record_id: EV-ICPERF-84ff45 / DEC-20261105-6e2616 / EXP-ICPERF-283a70
+      field: description of the preregistered integers
+      locations:
+        - ledger/evidence/EV-ICPERF-84ff45.yaml strength_justification, lines 52-56 ("out-of-sample integers met exactly", line 54)
+        - experiments/EXP-ICPERF-283a70/specification.yaml prediction_provenance PRED-PRIMARY, sample_status out_of_sample (line 211); source lines 195-199
+        - ledger/evidence/EV-ICPERF-84ff45.yaml confound_assessment CMP-PRIMARY, line 172 ("out-of-sample integers fixed 2026-10-17"; same wording, found while reading)
+        - ledger/decisions/DEC-20261105-6e2616.yaml rationale item 2, line 135 ("equal the out-of-sample preregistration"; same wording, found while reading)
+      prior_value: '"out-of-sample (preregistered) integers"'
+      corrected_value: >-
+        "design-time computed values reproduced (instrument validation)". The
+        integers were produced by executing the version-1 runner
+        (experiments/EXP-ICPERF-b2f2d0/implementation/run.py) in a design-time
+        directory (specification.yaml lines 195-199); for a deterministic
+        seeded program a later match reproduces that computation and is not
+        an out-of-sample prediction. The only independent evidence for the
+        values is the blind from-prose re-derivation (TASK-20261105-6d9502).
+      reason: Case finding ICR-6 and reader claims C2 and C13.
+      effect: >-
+        No verdict or strength change: EV-ICPERF-84ff45 strength is already
+        preliminary and DEC-20261105-6e2616 support stays as scoped.
+    - label: ICV-3 note -- raw-result.json stores aggregates only
+      finding: SHF-20261106-a114e7 ICV-3
+      record_type: run_output_scope
+      record_id: RUN-ICPERF-f21eb1 (and RUN-ICPERF-0ef41e, RUN-ICPERF-74e9a2)
+      field: persisted outputs
+      locations:
+        - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json (sample_sum line 30; no per-draw field)
+        - ledger/evidence/EV-ICPERF-84ff45.yaml boundaries, line 152 (already discloses that the 64 draws are not persisted)
+      prior_value: (no change; disclosure already present)
+      corrected_value: >-
+        No repair. raw-result.json stores aggregates only (sums, median, band
+        inputs and flags), not the 64 draws, so the headline integers cannot be
+        recomputed from raw rows; this is already disclosed in EV-ICPERF-84ff45
+        and DEC-20261105-6e2616 limitations (line 172). Any successor persists
+        per-draw (per-target) counts, as DEC-20261105-6e2616 NA-2 already
+        requires for stage 1.
+      reason: Case finding ICV-3 (the case regenerated the draws from the seed and the specification prose and found an exact match).
+  preservation:
+    scientific_quantity_changed: false
+    decision_changed: false
+    hypothesis_status_changed: false
+    experiment_status_changed: false
+    evidence_strength_changed: false
+    claim_ceiling_changed: false
+    specification_changed: false
+    frozen_files_edited: false
+    note: >-
+      Nothing changes: no status, value, verdict, strength or decision.
+      H-ICPERF-5adc9b stays supported as scoped in DEC-20261105-6e2616;
+      EXP-ICPERF-283a70 stays analyzed; EV-ICPERF-84ff45 keeps direction
+      supports and strength preliminary; GOAL-ICPERF-e6b6a4 stays active.
+  edits_target: false
+  evidence_artifacts:
+    - experiments/EXP-ICPERF-283a70/runbook.yaml (metrics block, lines 312-371)
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/report.typ (lines 14, 34-44)
+    - experiments/EXP-ICPERF-283a70/reports/run-20261030T1525Z/data.json (metrics labels, lines 29-99)
+    - experiments/EXP-ICPERF-283a70/review/review-plan.yaml (claim_under_review, lines 20-26)
+    - experiments/EXP-ICPERF-283a70/review/TASK-20261105-b3b41a/red-team-report.yaml (claim_under_review, lines 39-45)
+    - experiments/EXP-ICPERF-283a70/specification.yaml (lines 185-219)
+    - experiments/EXP-ICPERF-283a70/runs/RUN-ICPERF-f21eb1/raw-result.json
+    - ledger/evidence/EV-ICPERF-84ff45.yaml (strength_justification; boundaries; unresolved_confounds; confound_assessment)
+    - ledger/decisions/DEC-20261105-6e2616.yaml (rationale; limitations; next_actions NA-2)
+    - ledger/decisions/DEC-20261105-8a9984.yaml (rulings.labelling_ruling)
+    - ledger/corrections/CORR-20261106-243c4d.yaml (items (a) and (c), the model mirrored here)
+    - research/sheriff/SHF-20261106-a114e7/findings.yaml (ICR-3, ICR-6, ICV-3, ICV-4) and readers/icperf-interpretation.yaml (claims C2, C9, C13), branch claude/sheriff-reaudit-20261106 at ef52d97e64, read from scratchpad copies
+  limitations:
+    - No shell. Label lines and quotations were read by the Coordinator from the files in this checkout (branch claude/sheriff-a114e7-records from origin/main fd2697b3e8); no digest, checker or validator was run, and no target_sha256 is recorded because none was computed.
+    - The PR #2776 body was not read; the producer phrase is as quoted in the review plan and the red-team report.
+    - The independent regeneration of the 64 draws (ICV-3) is the case's and the review round's, not repeated here.
+    - The exporter relabel for these rows (tools/progress_metrics.py) is tooling ruled in DEC-20261106-beee1e (ICR-1), not made or claimed by this record.
+    - The case is unmerged (PR #3071) and was commissioned by the producing session (SES-INDEP); its findings are cited as the case's.
+  archived_by_note: Committed by the top-level session in the PR that adds this record.
