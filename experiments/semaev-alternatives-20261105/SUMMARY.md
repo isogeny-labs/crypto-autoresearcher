@@ -45,3 +45,4 @@ Pre-registrations in `prereg/round2/`; results in `results/SA-NNb/`.
 | SA-15b | Every solver on the frozen m = 4 set | KILL | pair table 100/100 at 1.2e4 and 8.6e5 adds (2^40, 2^56); every non-generic solver 0; Vieta lattice margin −138/−190 bits |
 | SA-13b | Lattice-query lower bound, round 2 | INCONCLUSIVE (open) | volume inequality now proved (C = 2.86, worst measured 0.79); Ω(p^{7/9}) complete for per-target non-adaptive queries; mod p² proof has two named gaps; square-restricted enumeration exponent 1.016 [1.011, 1.023] |
 | SA-05b | Kummer ladders, global floor subtracted | KILL | corrected ratio 0.836, 0.948, 0.900 at 2^32, 2^36, 2^40 (slope 0.008 [−0.011, 0.033]); random-target yield 0.98–1.01× generic |
+| SA-09b | Heegner relations, non-CM curve and second field | KILL (sensitivity flag: ratio not monotone after B = 130; 0.151 at B = 300) | 37a1 rank/points 0.134 at B = 500; descent hit rate equal to control (diff CI [−0.014, +0.023]) |
