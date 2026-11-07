@@ -35,6 +35,16 @@ holding two `q`-bit values. Its two bit-vector payloads therefore use at most
 monomial-mask, field-descent, and interpreter overhead. This expression is
 an allocation envelope for the pivot values, not a total RSS estimate.
 
+The closure checker now optionally caches the degree-at-most-four input-row
+images, which are otherwise read once for each variable. It enables this
+cache only when `C4 * (2*row_bytes + 128) <= 4 GiB`; otherwise it takes the
+unchanged streaming path. The conservative allowance covers Python integer
+storage and per-entry overhead, but is still not a measured RSS ceiling.
+At the illustrative `q=61,196`, the original 48-variable system has
+`C4=213,053`, so the allowance is 3,289,538,320 bytes and the cache would
+be admitted under its 4-GiB cap. This is a source-derived allocation screen,
+not a runtime benchmark.
+
 | q | Exact file bytes | File GiB | Paired-pivot bit payload GiB |
 | ---: | ---: | ---: | ---: |
 | 61,196 (the existing sliced D4 codimension, for scale only) | 13,256,022,304 | 12.346 | 0.872 |

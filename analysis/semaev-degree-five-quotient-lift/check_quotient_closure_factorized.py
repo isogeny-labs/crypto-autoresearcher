@@ -7,7 +7,8 @@ the monomial universe, surjectivity, generators, and image of one.
 """
 
 
-def check_closure_factorized(n, degree, masks, rows, columns=None):
+def check_closure_factorized(n, degree, masks, rows, columns=None,
+                             row_bytes=None, max_low_cache_bytes=0):
     """Return dim(ker A) if ker A is contained in every ker B_i.
 
     A sends a low-degree monomial m to its quotient image. B_i sends m to
@@ -21,12 +22,18 @@ def check_closure_factorized(n, degree, masks, rows, columns=None):
             raise ValueError('repeated monomial')
         columns = {m: i for i, m in enumerate(masks)}
     low = [i for i, m in enumerate(masks) if bin(m).count('1') < degree]
+    # The same first components are otherwise read once per variable. Keep
+    # them only when a conservative two-row-width-plus-object allowance fits
+    # the explicit cap; the uncached path is mathematically identical.
+    cache_low = (row_bytes is not None and max_low_cache_bytes > 0 and
+                 len(low) * (2 * row_bytes + 128) <= max_low_cache_bytes)
+    low_images = [rows[index] for index in low] if cache_low else None
     low_rank = None
     for variable in range(n):
         bit = 1 << variable
         pivots = {}
-        for index in low:
-            image = rows[index]
+        for position, index in enumerate(low):
+            image = low_images[position] if low_images is not None else rows[index]
             try:
                 product = rows[columns[masks[index] | bit]]
             except KeyError as error:

@@ -169,7 +169,9 @@ def check_map_factorized(certificate, polys):
     if rows[columns[0]] == 0:
         raise ValueError('C3: constant has zero image')
     kernel_dimension = check_closure_factorized(n, degree, masks, rows,
-                                                 columns=columns)
+                                                 columns=columns,
+                                                 row_bytes=certificate.row_bytes,
+                                                 max_low_cache_bytes=4 << 30)
     return {'status': 'valid_affine_slice_nonmembership', 'degree': degree,
             'variables': n, 'codimension_lower_bound': codim,
             'generators': len(polys),

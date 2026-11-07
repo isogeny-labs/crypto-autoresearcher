@@ -22,6 +22,32 @@ from slice_trace_certificate import project
 
 
 class FactorizedCertificateTests(unittest.TestCase):
+    def test_bounded_low_row_cache_preserves_closure_and_skips_re_reads(self):
+        class CountedRows:
+            def __init__(self, values):
+                self.values = values
+                self.reads = 0
+
+            def __len__(self):
+                return len(self.values)
+
+            def __getitem__(self, index):
+                self.reads += 1
+                return self.values[index]
+
+        masks = (0, 1, 2, 3)
+        plain = CountedRows((3, 2, 0, 0))
+        cached = CountedRows((3, 2, 0, 0))
+        self.assertEqual(check_closure_factorized(2, 2, masks, plain),
+                         check_closure_factorized(2, 2, masks, cached,
+                                                  row_bytes=8,
+                                                  max_low_cache_bytes=432))
+        self.assertLess(cached.reads, plain.reads)
+        refused = CountedRows((3, 2, 0, 0))
+        check_closure_factorized(2, 2, masks, refused, row_bytes=8,
+                                 max_low_cache_bytes=431)
+        self.assertEqual(refused.reads, plain.reads)
+
     def test_small_quotient_floor_has_boolean_evaluation(self):
         # Proposition 1.10's q<d case in the smallest nontrivial ring.
         masks = (0, 1, 2, 3)
