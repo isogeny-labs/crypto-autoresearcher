@@ -48,6 +48,18 @@ row bytes than a full degree-five quotient map of the same rank. At
 map. This comparison concerns certificate storage only; the checker still
 must derive or stream the seed rewrite and check all initial relations.
 
+`extract_compact_quotient.py` now extracts those rows from an already
+produced full certificate without mapping the full file. Its write-once
+binary format has a 128-byte header: an eight-byte magic, seven unsigned
+64-bit dimensions, and the seed and full-certificate SHA-256 digests,
+followed by padded rows for standard high monomials and then the seed's unit
+representatives. At the illustrative n47 dimensions above, its actual
+format size would be 1,436,135,576 bytes. The extractor verifies both
+input hashes before and after extraction and checks seed triangularity;
+its output is still an **unchecked candidate**. A compact checker must
+independently reconstruct the provisional map, bind the named generators,
+and perform the three checks above.
+
 The current producer computes a `projection` matrix from the provisional
 coordinates to the terminal quotient before multiplying it into every
 degree-five monomial row. That matrix is a candidate `h`, but it must be

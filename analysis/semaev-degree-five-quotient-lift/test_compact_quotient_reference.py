@@ -2,11 +2,16 @@
 """Exact retained-certificate tests for the compact quotient criterion."""
 
 from pathlib import Path
+import hashlib
+from itertools import combinations
+import struct
 import sys
+import tempfile
 import unittest
 
 from check_trace_slice_certificate import read_certificate
 from compact_quotient_reference import ProvisionalMap, check_compact
+from extract_compact_quotient import extract, HEADER, MAGIC
 
 
 class CompactQuotientReferenceTests(unittest.TestCase):
@@ -61,6 +66,52 @@ class CompactQuotientReferenceTests(unittest.TestCase):
         self.assertEqual(check_compact(provisional, [1, 2], [])['rank'], 2)
         with self.assertRaisesRegex(ValueError, 'generator not killed'):
             check_compact(provisional, [1, 2], [{0}])
+
+    def test_write_once_extraction_matches_retained_map(self):
+        root = Path(__file__).resolve().parent / 'validation/cascade-20261029-v2/0'
+        seed, full = root / 'degree4.bin', root / 'degree5.bin'
+        digest = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / 'compact.bin'
+            result = extract(seed, full, output, digest(seed), digest(full))
+            self.assertEqual(result['working_coordinates'], 3)
+            with output.open('rb') as stream:
+                header = HEADER.unpack(stream.read(HEADER.size))
+                self.assertEqual(header, (MAGIC, 6, 4, 5, 3, 0, 3, 3))
+                self.assertEqual(stream.read(32).hex(), digest(seed))
+                self.assertEqual(stream.read(32).hex(), digest(full))
+                self.assertEqual(struct.unpack('<3Q', stream.read()), (1, 2, 4))
+            with self.assertRaises(FileExistsError):
+                extract(seed, full, output, digest(seed), digest(full))
+
+    def test_extraction_keeps_standard_high_rows(self):
+        def write_identity(path, n, degree):
+            masks = sorted((sum(1 << i for i in part)
+                            for d in range(degree + 1)
+                            for part in combinations(range(n), d)),
+                           key=lambda m: (-bin(m).count('1'), m))
+            count = len(masks)
+            width = 8 * ((count + 63) // 64)
+            with path.open('wb') as stream:
+                stream.write(struct.pack('<4q', n, degree, count, count))
+                stream.write(struct.pack('<%dQ' % count, *masks))
+                for index in range(count):
+                    stream.write((1 << index).to_bytes(width, 'little'))
+            return hashlib.sha256(path.read_bytes()).hexdigest()
+
+        with tempfile.TemporaryDirectory() as tmp:
+            seed, full, output = (Path(tmp) / name
+                                  for name in ('seed.bin', 'full.bin', 'compact.bin'))
+            seed_hash = write_identity(seed, 4, 2)
+            full_hash = write_identity(full, 4, 3)
+            result = extract(seed, full, output, seed_hash, full_hash)
+            self.assertEqual((result['standard_high'], result['working_coordinates']),
+                             (4, 15))
+            with output.open('rb') as stream:
+                stream.seek(HEADER.size + 64)
+                rows = [int.from_bytes(stream.read(8), 'little')
+                        for _ in range(15)]
+            self.assertEqual(rows, [1 << i for i in range(15)])
 
 
 if __name__ == '__main__':
