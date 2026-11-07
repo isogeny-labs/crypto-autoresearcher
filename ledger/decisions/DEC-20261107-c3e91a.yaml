@@ -1,0 +1,198 @@
+# DEC-20261107-c3e91a: ruling on the K-7 blockers that the experiment-director's v3c return
+# (TASK-20261107-d07e94, archived in PR #3144) left open for the Coordinator. The transport variables
+# pass under pins, every bash step starts as /bin/bash -p, and credentials come only from the named
+# environment variables. These change bytes, so a small director revision (v3d, TASK-20261107-5f7d2b)
+# comes before the red-team reconfirmation (TASK-20261107-a9406e), which targets the v3d bytes.
+# It approves nothing, names no runbook_sha256 and cites no C1 outcome.
+coordinator_decision:
+  id: DEC-20261107-c3e91a
+  id_provenance: >-
+    Chosen by the Coordinator subagent (no shell, so tools/allocate_id.py could not be run) as an
+    unused random 6-hex token. Grep found no occurrence of c3e91a, 5f7d2b or a9406e anywhere in the
+    d07e94 worktree or under ledger/ of /home/user/crypto-autoresearcher; the searches of the
+    full checkout's coordination/ and experiments/ timed out and are not a check. Before committing, run
+    `python3 tools/allocate_id.py --check DEC-20261107-c3e91a`, `--check TASK-20261107-5f7d2b` and
+    `--check TASK-20261107-a9406e`. If one fails, take `--next`, then replace that id in this file,
+    in both handoffs and in goal.yaml.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It read d07e94 FINDINGS.md (sections 0 to 12), the d07e94
+    snapshot receipt, DEC-20261107-a83c51, TASK-20261107-d07e94, TASK-20261107-9d2b6a, goal.yaml
+    next_action, the K-7 prologue of launch_eks.sh (lines 31 to 96) and the K-7 constants of
+    reconcile_run.sh in the d07e94 worktree, runbook.yaml lines 195 to 370 and 472 to 489 (environment
+    and the S01, S02 and S04 argv; no outcome field values were evaluated), the T2 argv and check argv in
+    trial-plan.json, tools/runbook.py _subprocess_env and run_process and its argv[0] lint, the pinned
+    launch-remote, and /root/.ccr/README.md (the platform proxy description). It ran nothing and read
+    no records.jsonl, run log, arm statistic or ratio. Archive facts (PR #3144, commits 3e7232e2c9 and
+    f190f0bea6, the archiver's reproduction 137/0/0 and 123 rows with 0 differing, mutation check not
+    re-run) are as the top-level session reported them and as the receipt states.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: revise
+  decision_scope: >-
+    Rules B-K7-TRANSPORT-ENV, B-BASH-ENV-FIRST-SHELL, B-K7-CRED-NAMES and B-K7-CFG-ALLOWED. Assigns
+    one zero-run director revision (v3d) and writes the red-team reconfirmation handoff on the v3d bytes.
+    It names no runbook_sha256, approves no launch and does not approve S2. All other d07e94 blockers
+    (B-K8-READ-ONLY-IAM, B-AMENDMENT-2-WORDING, B-FILED-BEFORE-AFFECTED-DATA, B-CANONICAL-SPEC-STATE,
+    B-NOT-PUSHED, B-QUEUE-ENTRY, B-CARD-APPROVAL, B-IN-PLACE-REPLACEMENT, B-S1-COPY-CUSTODY,
+    B-OWNER-NOTICE, B-CRYPTO-PR, B-SESSION-LOG) stay open for DEC-20261107-7802ec or the top-level
+    session, unchanged by this record.
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+
+  return_acceptance:
+    record: TASK-20261107-d07e94
+    archive: {pr: 3144, branch: claude/c1-v3c-archive-20261107, commits: [3e7232e2c9, f190f0bea6], merged: false, receipt: coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-d07e94/snapshot-receipt.json, dispatcher_verified: false}
+    v3c_script_sha256:
+      launch_eks.sh: a61c55da15b149d00ee7e644c41d79ad8df4ae82f3c59dfca157ea9679fc9e76
+      locate_results.sh: 668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b
+      reconcile_run.sh: a294b7dbc77b33ae4103dfa907a5effba03fe0e2c1837f3f51a44a5897055c16
+    accepted_as: >-
+      The design record of v3c and the base that v3d revises. Not accepted as reviewed: the
+      independent reconfirmation has not happened, and the mutation check rests only on the
+      director's run (the archiver reproduced test_locator.sh 137/0/0 and rt_regression.sh 123 rows,
+      0 differing, and did not re-run mutation_check.sh). The resume from a killed session (FINDINGS
+      section 0) is accepted as disclosed: the partial diff and tarball are hashed, and every kept file
+      was re-tested in the resuming session.
+    director_choices_noted:
+      - "FINDINGS section 9 items 4 to 8 (--out-root, the pinned CLI, the S03 validity extras, no TTL change, the AMENDMENT-2 narrowing) are not ruled here. They go to DEC-20261107-7802ec with B-AMENDMENT-2-WORDING."
+
+  rulings:
+    - id: R-1
+      blocker: B-K7-TRANSPORT-ENV
+      ruling: pass through, under pins
+      text: >-
+        Executor sessions submit from the agent container (CLAUDE.md; AGENTS.md section 9a). Its only
+        egress is the platform's loopback proxy, which re-terminates TLS, so dropping the five names
+        makes S01 to S03 fail closed at their first network call. Running S02 'where no proxy is needed'
+        names no such executor. The variables pass, but they carry the same power as an
+        AWS_ENDPOINT_URL (which K-7 refuses): a proxy whose CA the aws CLI trusts can forge every S3
+        response. They are therefore pinned, not merely allowed:
+      pins:
+        - "T-1 Names. Pass HTTPS_PROXY, https_proxy, NO_PROXY, no_proxy and AWS_CA_BUNDLE, each only if set. HTTP_PROXY, http_proxy, ALL_PROXY, all_proxy, REQUESTS_CA_BUNDLE, SSL_CERT_FILE, SSL_CERT_DIR and CURL_CA_BUNDLE stay dropped, as now (the platform proxy serves HTTPS_PROXY only)."
+        - "T-2 Proxy. If both HTTPS_PROXY and https_proxy are set they must be byte-equal. The value must fully match ^http://(127\\.0\\.0\\.1|localhost):[0-9]{1,5}/?$ (loopback, no userinfo, no path or query). Anything else refuses with exit 2 before any AWS call. By construction the value holds no secret and is recorded verbatim."
+        - "T-3 No-proxy. If both NO_PROXY and no_proxy are set they must be byte-equal, and the value must fully match ^[A-Za-z0-9.,:*/_-]*$. NO_PROXY only lets a host bypass the proxy, which can lose availability but not integrity (a direct connection still verifies TLS against the pinned trust). It is recorded verbatim."
+        - "T-4 CA bundle. AWS_CA_BUNDLE is allowed only when a proxy variable is set. Its value must be byte-equal to an entry of a new constant K7_CA_BUNDLE_ALLOWED=(/root/.ccr/ca-bundle.crt), `realpath -e` of it must return the same string (no symlink anywhere on the path), and it must be a non-empty regular file. Phase 2 computes its sha256. A different path, a symlink or a missing file refuses with exit 2."
+        - "T-5 No configuration bypass. `ca_bundle` joins the refused aws-cli configuration entry names (see R-3), so the CLI cannot take a CA from ~/.aws/config when AWS_CA_BUNDLE is unset."
+        - "T-6 Recording. K7_STATUS keeps its current prefix (so the S02 env_hygiene regex ^ok aws=/\\S+/aws version=aws-cli/1\\.46\\.2 still matches) and appends transport=[names passed] proxy=<value|none> no_proxy=<value|none> ca_bundle=<path|none> ca_bundle_sha256=<hex|none>. It reaches reconcile-result.json and raw-result.json as env_hygiene does now."
+        - "T-7 Custody check of the CA. Before the relay, the top-level session records the sha256 of /root/.ccr/ca-bundle.crt (a local read, no network) in the relay notice. The evidence review compares it with ca_bundle_sha256 in every S02 and S03 env_hygiene. A mismatch makes that step's output invalid (a custody failure, not evidence). The executor handoff preview TASK-20261107-f14df8 states this."
+      residual: >-
+        The platform egress proxy re-terminates TLS and is trusted as the container runtime is
+        trusted. A producer that rewrites /root/.ccr/ca-bundle.crt between the T-7 hash and the run is
+        caught by T-6/T-7; one that swaps it between the phase-2 hash and the CLI's read is a declared
+        TOCTOU residual for DEC-20261107-7802ec, and the red team attacks it.
+    - id: R-2
+      blocker: B-BASH-ENV-FIRST-SHELL
+      ruling: adopt `/bin/bash -p` in the argv; reject `env -u BASH_ENV`
+      text: >-
+        tools/runbook.py runs every step with dict(os.environ) plus the runbook overlay
+        (_subprocess_env), and the T2 argv starts with the script path, whose `#!/usr/bin/env bash`
+        looks bash up on the caller's PATH. So BASH_ENV, an imported BASH_FUNC_* and SHELLOPTS=xtrace
+        with a PS4 command substitution all run in the first bash before line 1, and the bash itself is
+        PATH-resolved. `env -u BASH_ENV` closes only the first of these and adds an env lookup on PATH.
+        `bash -p` ignores BASH_ENV and ENV, imports no functions, and ignores SHELLOPTS, BASHOPTS, CDPATH
+        and GLOBIGNORE (d07e94 evidence/bash-env-observation.txt shows the BASH_ENV case). An absolute
+        /bin/bash removes the PATH lookup. Accepting the risk in writing is refused: the fix is argv-only
+        and costs nothing.
+      pins:
+        - "A-1 Every runbook command step whose argv[0] is bash (S01-probe, S02-reconcile-t1, S04-verify) and the T2 trial argv in trial-plan.json begin with `/bin/bash`, `-p`, then the script path. environment.programs lists `/bin/bash`."
+        - "A-2 Deterministic fallback. If `tools/runbook.py lint` or the trial supervisor refuses an absolute argv[0], use `bash`, `-p` instead, record the refusal text in FINDINGS, and state the PATH-resolved bash as a residual. No other variant is chosen silently."
+        - "A-3 The scripts' prologues keep their phase-2 refusals as defence in depth. The prologue comment that calls BASH_ENV an unavoidable residual is corrected to say the argv closes it."
+        - "A-4 The T2 check argv already uses `python3 -I` and reconcile_run.sh already calls `python3 -I` for check_job.py. Both stay."
+    - id: R-3
+      blocker: [B-K7-CRED-NAMES, B-K7-CFG-ALLOWED]
+      ruling: ratify both director choices, and tighten the credential source and the scanned names
+      text: >-
+        K7_CRED_VARS=(AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN) is ratified. The
+        container's identity uses environment keys (FINDINGS section 9 item 1, names only). AWS_PROFILE,
+        AWS_ROLE_ARN, AWS_WEB_IDENTITY_TOKEN_FILE and AWS_CONTAINER_CREDENTIALS_* are not added: each
+        moves the credential source to a file, a profile chain or a URL that the caller controls. The
+        names alone do not pin the source. With them unset the CLI falls back to the shared files, the
+        profile chain, a container endpoint or IMDS, which may be a different, write-capable identity.
+        K7_CFG_ALLOWED=() is ratified. The container's ~/.aws/config holds only a [default] s3 block with
+        payload_signing_enabled (names only), so refusing more names costs nothing there.
+      pins:
+        - "CR-1 Phase 2 refuses (exit 2, before any AWS call) unless AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are both set and non-empty. AWS_SESSION_TOKEN stays optional. Values are never printed."
+        - "CR-2 The env -i exec adds the constant AWS_EC2_METADATA_DISABLED=true, and phase 2 admits it only with that value."
+        - "CF-1 K7_CFG_ALLOWED stays empty. The refused entry names extend from credential_process, endpoint_url, cli_legacy_plugin_path, [plugins] and alias to also ca_bundle, role_arn, source_profile, credential_source, web_identity_token_file, sso_session and sso_start_url."
+        - "PY-1 The env -i exec adds the constant PYTHONNOUSERSITE=1, admitted by phase 2 only with that value. Reason: HOME is passed through, and the aws CLI is a Python program, so a .pth file or usercustomize under $HOME/.local runs code inside the aws process. Deterministic resolution: if the pinned aws 1.46.2 here imports botocore from the user site (checked locally, no AWS call), PY-1 is omitted and the director records it as a residual."
+        - "CR-3 If the executor identity at relay time does not use environment keys, the step fails closed before any AWS call. That is infrastructure signal and returns to the Coordinator. It is not a C1 result."
+    - id: R-4
+      question: does R-1 to R-3 need a director revision before the reconfirmation?
+      ruling: yes. One small director task (v3d, TASK-20261107-5f7d2b), then the red team on the v3d bytes
+      text: >-
+        R-1 and R-3 change both prologues. R-2 changes the runbook and trial-plan argv, so the plan
+        digest, the approval previews, the runbook sha256 and the card all change. Three alternatives
+        were rejected. The Coordinator may not write implementation code. The red team may not edit its
+        inputs (RT-3), and folding the changes into its task would make the reviewer an author. A red
+        team on v3c now would leave its verdict bound to bytes that will not run, and the prologue is the
+        joint it must attack, so a second delta review would follow. Sequential v3d then red team is
+        two dispatches before DEC-20261107-7802ec, the same count as before plus one small revision.
+        v3d is scoped to the two prologues, the tests, the argv and the regenerated previews.
+        locate_results.sh and the non-prologue parts of launch_eks.sh and reconcile_run.sh stay
+        byte-identical to v3c. The red team therefore re-confirms all of v3c's K-1 to K-6 behaviour plus
+        the changed prologue on one set of final bytes.
+      custody:
+        - "C-1 v3d is dispatched only after PR #3144 (v3c snapshot) has merged to main and the ledger archive of this decision, both handoffs and goal.yaml is on main. The v3d diff is against v3c at that main commit."
+        - "C-2 The v3d snapshot archive runs alone, before the red team, with its own coordinator-written receipt (dispatcher_verified false, DEC-20261107-6b0f3d ruling 3). The red team is given that main commit and the v3d sha256 values from the receipt, and checks them against the files at the start and the end."
+        - "C-3 The card becomes CARD-EXP-ICPERF-127dbd-5. Card -4 is retired, never relayed. RBS-ICPERF-616277, RUN-ICPERF-efb7ef, TASK-20261107-f14df8, TASK-20261107-04d969 and the reserved DEC-20261107-7802ec stay unused and unchanged."
+        - "C-4 After the red team returns, its review files go into their own snapshot archive. The Coordinator's ruling on it is a separate ledger archive. Only then may DEC-20261107-7802ec name a runbook_sha256."
+    - id: R-5
+      question: the red-team reconfirmation handoff
+      ruling: written as TASK-20261107-a9406e, targeting the v3d bytes named by the v3d receipt
+      text: >-
+        Same isolation as TASK-20261107-9d2b6a: env -i, the fake aws only, zero AWS calls of any kind,
+        no pod-uid prefix read, no edit of any input, and answers from the code before the producer's
+        FINDINGS are read. It must confirm, by its own runs: each 9d2b6a break refused on v3d; the
+        K-4 to K-7 cases; an independent re-run of the mutation check, with the two SUBSUMED claims
+        verified and own mutants of every new v3d check; and direct attacks on the K-7 prologue, the
+        transport pins, the credential source and the /bin/bash -p argv. Its review_prior is recorded
+        below before dispatch. It never writes under /root/.ccr.
+
+  review_prior:
+    recorded_before_dispatch: true
+    expectation: >-
+      I expect the 9d2b6a breaks and the K-1, K-2, K-4 and K-6 cases to stay refused on v3d, because
+      v3d leaves those bytes identical to v3c. I expect the mutation re-run to match the director's
+      30 caught and 2 subsumed. The most likely findings are in the prologue: the CA-file TOCTOU (R-1
+      residual), a shim placed in the trusted aws directory (d07e94 section 10), the aws-cli config
+      surface outside ~/.aws (system or packaged plugins), and the runbook or trial supervisor
+      re-introducing environment on the way to argv. A 'blocks approval' finding would overturn this
+      prior and is recorded as such.
+
+  status_transitions: []
+  target_ids: [TASK-20261107-d07e94, TASK-20261107-5f7d2b, TASK-20261107-a9406e, EXP-ICPERF-127dbd, GOAL-ICPERF-e6b6a4, BATCH-0e0902]
+  related_records:
+    prior_decisions: [DEC-20261107-a83c51, DEC-20261107-6b0f3d, DEC-20261107-e41c08, DEC-20261107-b74e2c]
+    handoffs_written: [TASK-20261107-5f7d2b, TASK-20261107-a9406e]
+    reserved_not_written: DEC-20261107-7802ec
+  rationale:
+    - "K-7 exists because sabotage is assumed. An allowlist that silently drops the only network path makes the run fail. One that admits proxy and CA variables unpinned re-opens the endpoint attack K-7 closed. Pins with recorded values satisfy both."
+    - "The BASH_ENV, SHELLOPTS/PS4 and imported-function vectors act before any script line, so only the argv can close them. The argv is director-owned and costs nothing to change."
+    - "Credential variable names do not pin the credential source. Requiring the environment keys and disabling IMDS does, at no cost in the executor container."
+    - "Fewest steps that keep custody sound: the red team must judge the bytes that will run, and only the director may produce them."
+  evidence_refs:
+    - experiments/EXP-ICPERF-127dbd/design/d07e94/FINDINGS.md (sha256 8c3737d9091eb7c8f33cab580c22f1474e6b9d30aa3dea1d61e1ed3c3002e661; sections 9, 10, 11)
+    - experiments/EXP-ICPERF-127dbd/design/d07e94/evidence/bash-env-observation.txt (sha256 e5c28a7ef52eb4168ba3a806521a6406d28f6159581536ee2017e44907c153af)
+    - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh (v3c a61c55da...; K-7 prologue lines 33 to 96)
+    - experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh (v3c a294b7db...; K7_* constants lines 48 to 51)
+    - experiments/EXP-ICPERF-127dbd/runbook.yaml (36105be6...; environment, S01, S02 and S04 argv)
+    - experiments/EXP-ICPERF-127dbd/trial-plan.json (4bc6e927...; T2 argv and check argv)
+    - tools/runbook.py (_subprocess_env, run_process, _lint_command argv[0] check)
+    - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-d07e94/snapshot-receipt.json
+    - ledger/decisions/DEC-20261107-a83c51.yaml (K-7, reconfirmation)
+  limitations:
+    - "No shell. The Coordinator did not run any test, the mutation check or allocate_id.py. The ids are unverified until --check passes."
+    - "The platform proxy facts come from /root/.ccr/README.md of this container. Whether the executor's container has the same proxy address and CA path is assumed. If not, T-2 or T-4 refuses before any AWS call, which is infrastructure signal."
+    - "aws-cli 1.46.2's precedence among AWS_CA_BUNDLE, config ca_bundle and the environment credentials is taken from botocore's documented order, not tested here. The red team checks it from the installed CLI's source, offline."
+    - "PR #3144 is not merged. Every custody statement about v3c holds only once it is on main."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session, text: "Run allocate_id.py --check on the three ids. Wait for PR #3144 to merge. Then, on a new branch from origin/main (merge, never rebase), commit this decision, ledger/handoffs/TASK-20261107-5f7d2b.yaml, ledger/handoffs/TASK-20261107-a9406e.yaml and the goal.yaml next_action change (named paths only). Run validate_ledger.py and check_merge_hygiene.py, push, open a ready-for-review PR naming DEC-20261107-c3e91a, TASK-20261107-5f7d2b and TASK-20261107-a9406e, and enable auto-merge."}
+    - {id: NA-2, rank: 2, owner: top-level session, text: "Once NA-1 is on main, dispatch TASK-20261107-5f7d2b (v3d) to the experiment-director. On return, run its snapshot archive alone and write its custody receipt with the v3d sha256 values."}
+    - {id: NA-3, rank: 3, owner: top-level session, text: "Once the v3d snapshot is on main, dispatch TASK-20261107-a9406e to a fresh red-team session with that commit and the receipt hashes. Then archive its review files alone and return to the Coordinator for the ruling. After that, DEC-20261107-7802ec."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "An engineering ruling on launcher environment hygiene. No research evidence is reviewed and no claim is decided."
