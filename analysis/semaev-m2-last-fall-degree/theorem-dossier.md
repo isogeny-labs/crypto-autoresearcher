@@ -885,8 +885,10 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
   and its [public readback receipt](../semaev-degree-five-quotient-lift/bounded-d4-archive-001/fresh-n51-poly-01-D5-cascade01-bounded-D4-001.publication.json)
   bind the count, checker, and certificate. Its separately studied
   51-variable affine slice is a different presentation and is not the
-  basis of this bound. The count has not had an independent second
-  enumeration.
+  basis of this bound. This record has $a_2=1$, but the displayed $S_3$
+  formula is independent of $a_2$; the pair counter and independent
+  descent therefore use the same $S_3$ equation. The count has not had
+  an independent second enumeration.
 
 R35a's closure, $\dim W_4\cap B_{\le d}=(0,1,105,3885,61425)$, is
 reproduced exactly by implementation B. The closure stalls in a regular way: it
