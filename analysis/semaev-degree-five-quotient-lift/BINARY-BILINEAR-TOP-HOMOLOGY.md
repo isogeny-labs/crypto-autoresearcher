@@ -262,6 +262,47 @@ The symmetric family has rank 1127, of which the 46 trace-coordinate
 cross terms already lie in the trace-lift span. Consequently the combined
 generated rank is constrained to the exact interval **3336 through 4417**.
 
+## A diagonal bound on the remaining overlap
+
+For odd `n`, full product span `P=K`, and nonzero `z`, the overlap between
+the 1081-dimensional independent-top symmetric family and the lifted
+linear families has a sharper upper bound. Put `K_0=ker Tr` and let
+`pi(t)=t+Tr(t)` be the projection from `K` to `K_0` along `F2*1`.
+The trace pairing restricted to `K_0` is nondegenerate because
+`Tr(1)=1`. A symmetric quadratic syzygy on the independent `K_0`
+top-equation coordinates can be written uniquely as a self-adjoint
+`F2`-linear map `L:K_0->K_0`; after applying `T` to its equation
+coefficients, its bilinear polynomial is
+
+    F_L(X,s) = L(pi(X*s/z)),       X,s in V.
+
+If this syzygy is also a variable lift of the displayed annihilator
+families, the absence of `aa` and `cc` terms and the injectivity proved
+above force it to have the form `X*A(s)+s*B(X)`, for linear
+`A,B:V->V^perp`. Since `F_L` is symmetric in `X,s`, the difference
+under swapping them is
+`X*(A+B)(s)+s*(A+B)(X)=0`. The same pairwise-ratio argument used in
+(1) gives `(A+B)(v)=rho*v` with `rho in P^perp`. Full product span
+forces `rho=0`, so `A=B`. Setting `s=X` now yields
+
+    L(pi(X^2/z)) = X*A(X)+X*A(X) = 0.
+
+Let `m=dim pi(V^[2]/z)`, where `V^[2]={v^2:v in V}`. Self-adjoint
+operators on the `(n-1)`-dimensional nondegenerate trace space that kill
+an `m`-dimensional subspace correspond to symmetric bilinear forms on
+its quotient. Their dimension is `(n-1-m)*(n-m)/2`. This is an upper bound
+on the overlap; additional product-factorization constraints may make
+the actual overlap smaller.
+
+For the named n47 input, `rank_projected_square_subspace.py` independently
+checks the field inverse, trace projection, basis squares and exact rank
+`m=24` from the frozen plan. Its machine-readable result is
+`validation/n47-rand00-projected-square-rank-001.json`, including the
+source and plan hashes. Thus the overlap has dimension **at most 253**,
+and the combined generated rank lies in the narrower interval
+**4164 through 4417**. This is a rigorous bound on a specified
+top-syzygy subspace, not a claim about the full D4 kernel.
+
 More generally, if an `m`-equation quadratic-top map has rank `r` and
 kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
 subspace of dimension
