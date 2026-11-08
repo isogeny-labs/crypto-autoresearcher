@@ -317,6 +317,15 @@ protocol are `n47-rand00-quadratic-overlap-plan-001.json` and
 `n47-rand00-quadratic-overlap-protocol-001.json`. No output from this
 frontier calculation has been used here.
 
+`test_quadratic_overlap_toys.py` checks the reduction against a separate
+direct construction of the entire quartic top-multiplier map on two tiny
+fields. At `(n,k)=(3,2)`, it finds overlap 1, generated rank 16 and full
+kernel 17; at `(5,3)`, it finds overlap 0, generated rank 49 and full
+kernel 60. Both generated ranks also match the independent direct
+generator-list rank mode. These controls exercise both zero and nonzero
+overlap and confirm that the reduced calculation does not silently label
+the generated subspace as the full kernel.
+
 More generally, if an `m`-equation quadratic-top map has rank `r` and
 kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
 subspace of dimension
