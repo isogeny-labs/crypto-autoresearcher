@@ -78,6 +78,13 @@ The replay also finds the 47 input equations independent. Therefore the
 94-dimensional top-form linear-multiplier syzygy space classified in
 `BINARY-BILINEAR-TOP-HOMOLOGY.md` yields 93 independent degree-at-most-two
 falls modulo those input equations: `M3_low - rank(F) = 140 - 47 = 93`.
+The single dependency has a structural representative. The trace relation
+is the affine Boolean polynomial `ell_0=L(c)+epsilon`, with nonzero linear
+part `L(c)=Tr(s)` on this named factor base. Boolean idempotence gives
+`ell_0*L(c)=(1+epsilon)*L(c)`, which is either zero or `ell_0` modulo the
+input span. Thus its linear-variable products have one relation modulo the
+inputs. Since the rank calculation loses exactly one dimension, this
+accounts for the entire loss from 94 top syzygies to 93 new low rows.
 Iterating the closure adds one further independent low-degree row, reaching
 141. These counts identify the exact degree-three mutation budget that a
 parameter-uniform lower-bound argument must account for; they do not say

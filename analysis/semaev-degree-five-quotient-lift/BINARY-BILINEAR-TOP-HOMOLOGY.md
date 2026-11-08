@@ -72,6 +72,55 @@ forms**. This does not bound the ranks of all `2^47-1` combinations or
 control relations between different forms; in particular it is not an
 n47 D5 closure result.
 
+## A parameter-uniform joint degree-one lower bound
+
+For every `n>=3`, nonzero `z in K`, and nonzero `k`-dimensional `V`, the
+degree-one-multiplier kernel of **all n quadratic coordinate top forms**
+has dimension at least
+
+    2*k + 2*(n-k) = 2*n.
+
+More precisely, it contains a direct sum of `2k` variable multiples of a
+single trace relation and two `n-k`-dimensional families indexed by
+`V^perp`. This is a theorem about top-form syzygies, not an LFD bound.
+
+**Proof.** Work in the invertible variables `(a,c=a+b)` and set
+`X=sum a_i*v_i`, `s=sum c_i*v_i`. The quadratic top form indexed by
+`gamma in K` is
+
+    q_gamma = Tr(T(gamma)*X*s/z),
+    T(gamma)=sqrt(gamma*z^2)+gamma*z^2.
+
+Indeed the quadratic part of `S3` is `(X*s)^2+z*X*s`, and moving the
+square through the trace gives this formula. `T` maps onto `K_0`: its
+image has trace zero, and its kernel is exactly `{0,z^(-2)}`, since
+`sqrt(y)+y=0` iff `y in F2`. Choose an `F2`-linear right inverse
+`R:K_0 -> K`.
+
+The coefficient-valued linear form `z^(-2)*ell(a,c)` gives a top syzygy
+for every homogeneous linear Boolean form `ell`; these `2k` vectors are
+independent. For `lambda in V^perp`, both `lambda*X` and `lambda*s` have
+trace zero coefficientwise. Therefore the linear multipliers
+`R(lambda*X)` and `R(lambda*s)` are defined. Their products with the top
+equations sum respectively to
+
+    Tr(lambda*X^2*s/z),   Tr(lambda*X*s^2/z).
+
+Frobenius squares `X^2` and `s^2` have Boolean degree one, so both
+expressions have degree at most two and their degree-three parts vanish.
+Thus both are degree-one top syzygies. Modulo the `2k` trace multiples,
+applying `T` to a linear combination gives
+`lambda_1*X+lambda_2*s`. The `a` and `c` variables are disjoint and `V`
+contains a nonzero element, so this polynomial vanishes only when
+`lambda_1=lambda_2=0`. Each `V^perp` family has dimension `n-k`, and the
+three families form the asserted direct sum. QED.
+
+This lower bound can be strict: it makes no assertion that other
+cross-equation syzygies are absent. When it is sharp, as on the named n47
+input below, the displayed trace and annihilator families classify the
+entire first joint layer. The remaining degree-two-and-higher multiplier
+layers are the obstacle to a growing binary LFD lower bound.
+
 ## Exact joint linear-multiplier syzygies on the named n47 input
 
 `joint_binary_top_syzygies.py` now computes the **whole** degree-one
@@ -106,6 +155,6 @@ This closes the **linear-multiplier top syzygy classification for this one
 input**. It does not classify degree-two or higher multipliers, the iterated
 bounded closure, or the ideal's solution count. The next proof calculation
 should lift these 94 syzygies through the lower-degree equation terms and
-test whether their falls generate all low-degree closure mutations before
-attempting a parameter-uniform invariant. A dimension match at degree one
-alone is not an LFD lower bound.
+test whether their falls generate all low-degree closure mutations. The
+uniform theorem above controls only the first joint layer; a dimension
+match at degree one alone is not an LFD lower bound.
