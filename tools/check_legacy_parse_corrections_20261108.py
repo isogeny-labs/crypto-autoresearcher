@@ -138,14 +138,20 @@ def main() -> None:
         original = source(path).encode()
         expected = repair(rid, original.decode()).encode()
         actual = (ROOT / replacement).read_bytes()
-        assert row["superseding_path"] == replacement
-        assert hashlib.sha256(original).hexdigest() == row["superseded_sha256"]
-        assert hashlib.sha256(actual).hexdigest() == row["superseding_sha256"]
-        assert actual == expected, f"syntax replay changed: {replacement}"
+        if row["superseding_path"] != replacement:
+            raise ValueError(f"wrong correction path for {path}")
+        if hashlib.sha256(original).hexdigest() != row["superseded_sha256"]:
+            raise ValueError(f"archived source hash changed: {path}")
+        if hashlib.sha256(actual).hexdigest() != row["superseding_sha256"]:
+            raise ValueError(f"parsed copy hash changed: {replacement}")
+        if actual != expected:
+            raise ValueError(f"syntax replay changed: {replacement}")
         doc = yaml.safe_load(actual)
         key = ("correction" if rid == CORR_ID else "hypothesis" if rid in H_IDS
                else "research_question")
-        assert doc[key]["id"] == rid
+        if not isinstance(doc, dict) or not isinstance(doc.get(key), dict) or (
+                doc[key].get("id") != rid):
+            raise ValueError(f"parsed copy does not retain the ID: {replacement}")
     print(f"replayed {len(H_IDS) + len(RQ_IDS) + 1} hash-bound corrections")
 
 
