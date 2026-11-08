@@ -60,3 +60,4 @@ Pre-registrations in `prereg/round3/`; results in `results/SA-NNc/` and `results
 | ID | Direction | Verdict | Deciding number |
 |---|---|---|---|
 | SA-09c | Heegner relations to B = 4000, rare-hit descent | KILL (flags: primary descent run is a nominal 2σ excess under a one-sample interval that did not replicate; the 43a1/53a1 ranks are class-group data identical to 37a1, not independent evidence) | 37a1 rank/points in [0.1236, 0.1396] for every B in [750, 4000]; pooled descent 112 hits vs 99.4 expected in 660,000 targets (p = 0.115) |
+| SA-19 | Lower the form-lattice degree budget | INCONCLUSIVE (open; frozen lines bracket the answer) | budget 8 in twisted-Edwards y (order-4 poles) vs 9 elsewhere, proved minimal among even degree-2 coordinates; measured reach 0.1246–0.1267 vs 0.112–0.114; m = 3 budget 46 vs 50 |
