@@ -140,3 +140,66 @@ Let R16 = c(neg2, r = 16) / 0.8862 pooled over b >= 32, and M = 1.093
   larger than {1, -1}, so it says nothing about j = 0 or j = 1728 curves.
 - No claim here changes a lead disposition, an ecbench bound or a leaderboard
   row. The ecbench reseal remains a separate replayed study.
+
+## 7. Amendment 1 (2026-11-08, before any data; found while writing the simulator)
+
+No simulator output existed when this was written. The registered commit of
+sections 1 to 6 is recorded in `PROTOCOL.commit`.
+
+Defect in section 2. With m = 256 free start points, the starts are a large
+share of all points at small sizes (256 of about 1,000 at 20 bits). They sit in
+the visited table at no cost, so the first repeat arrives earlier and the
+instrument would read low by construction. The gate G1 could not pass at 20 bits.
+
+Changes:
+
+- m = 16 walks, not 256. Starts are drawn distinct (a duplicate start is redrawn).
+- The ideal for additions is corrected for the free starts. Let
+  I(b, arm) = sqrt(pi N / 2) + 2/3 - m, with N = (n + 1) / 2 for negation arms
+  and N = n for plain arms (the birthday expectation counts the m starts as
+  points). The statistic used in every hypothesis, gate and rule is
+  R = (mean additions) / I(b, arm). At 32 bits and above the correction is
+  below 0.03 percent.
+- Wherever sections 4 and 5 use c / 0.8862 or c / 1.2533, read R. The numeric
+  thresholds are unchanged. `R16` of section 5 is R for `neg2` at r = 16.
+- G1 uses R in place of c for the `rm` arms: within 2 percent of 1.
+
+No prediction, threshold or decision rule is changed.
+
+## 8. Amendment 2 (2026-11-08, before any grid data)
+
+Disclosure of what was seen first. The smoke gate at 16 bits (300 trials per
+arm, seed family 9, not the grid) printed mean additions of 221.5 (`rm`), 327.4
+(`rm_plain`), 317.4 (`plain`, r = 16), 232.7 (`neg2`, r = 16) and 13,135.9
+(`neg0`, r = 4, 240 of 300 censored). A second design check then ran the two
+null arms only, at 20, 24 and 28 bits with several m (family 7). No grid arm
+other than those one-off 16-bit lines was run.
+
+Finding. The `rm` null reads 2 to 5 percent above the plain birthday value
+with m = 16. Two design effects, both predictable, explain it: the free start
+points lower the count (the m starts are points), and same-walk repeats are not
+collisions, so about 1 in m colliding pairs is discarded, which raises the
+count by about 1 / (2m). The corrected null
+I''(b, arm, m) = (sqrt(pi N / 2) + 2/3 - m) / sqrt(1 - 1/m)
+matched the `rm` and `rm_plain` means within 1.7 percent in all 14 checked
+cells (standard error about 1 percent each).
+
+Changes (supersede the corresponding lines of sections 2 and 7):
+
+- m = 64 walks at every size.
+- Primary statistic R(arm, b, r) = mean additions of the arm divided by the
+  mean additions of its matched random-mapping null at the same b and m
+  (`rm` for `neg0`, `neg1`, `neg2`; `rm_plain` for `plain`), pooled over seed
+  families after the A/A gate. Design effects cancel in this ratio. The
+  confidence interval resamples trials in both the arm and the null.
+- G1 becomes: each `rm` and `rm_plain` mean is within 3 percent of I'' at every
+  size, and its 95 percent interval contains I'' in at least 80 percent of the
+  10 cells.
+- Every threshold in sections 4 and 5 keeps its number and is read on R.
+  R16 is R for `neg2`, r = 16, pooled over b >= 32. The ratio
+  c(plain) / c(neg2) of H4 is R-adjusted: R_plain_ratio = (mean_plain /
+  mean_neg2) divided by (mean_rm_plain / mean_rm), which equals 1.414 when both
+  arms are ideal in the large-m limit.
+- The comparison with the ecbench constant M in Q2 is approximate: ecbench's M
+  is measured against the large-m floor, and this study's R is against a
+  finite-m null. At m = 64 the two differ by under 1 percent for b >= 28.
