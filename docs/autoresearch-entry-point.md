@@ -47,3 +47,14 @@ validation paths for the A11–A14 prime-field benchmark records. Their source
 roots were materialized before reporting this; the referenced files are absent
 from `origin/main`, and neither those records nor the gate was changed here.
 No benchmark ran during this task. These defects remain visible for CI/review.
+
+## Delivery follow-up, 2026-11-08
+
+Full CI on the first PR head passed the ledger, benchmark-record, harness,
+runtime, formal and other checks, but both artifact checks rejected the
+100,474-byte PDF. The opt-in artifact migration workflow stopped at its missing
+push-token check; the label was removed rather than relaxing storage policy.
+The renderer now joins a vector Graphviz page to the report and embeds one
+font face. The PDF is 47,838 bytes, within the existing Git policy. Extracted
+report prose matches the original, and the diagram was rendered and inspected.
+The report's scientific content, input pins and custody limitation are unchanged.
