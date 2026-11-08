@@ -188,3 +188,5 @@ Coordinator decision and evidence.
 - [ECDLP lead atlas source and validation gap](ecdlp-lead-atlas-unmerged-evidence.md) — crypto study files now match merged main, while source CI, full replay, the open ecc-challenges PR and four-repository validation remain pending.
 
 | [Five prime-field IC extraction and integration](five-prime-ic-extraction-and-integration.md) | investigating | Directions 58/69/71/56/87: checked components; solver, circuit, conductor and screening integration remain |
+
+| [Prime transform fixed suite and bounded custody](prime-transform-fixed-suite-timeout-custody.md) | open | Fixed-suite completion and scalar-prefix metadata preparation; latest full-ref custody exceeded4MiB before any phase | Exact12path failed snapshot, lossless compact ref-delta custody with independent static review, unchanged caps and separately admitted validation |
