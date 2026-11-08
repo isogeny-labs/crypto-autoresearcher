@@ -80,17 +80,60 @@ python3 docs/reports/2026-11-08-formal-target-inventory/audit.py \
 sha256sum /tmp/current-formal-inventory.json
 ```
 
-The report and `report.pdf` were rendered from `report.typ`; the single PDF
-page was visually inspected.
+The static-inventory `report.pdf` was rendered from `report.typ`; its single
+page was visually inspected. The hosted sweep audit below is a later evidence
+supplement recorded in this Markdown report and its JSON receipt.
 
 ![Current target provenance and open bridges](coverage.svg)
 
+## Hosted 125-target Lean sweep
+
+[GitHub Actions run 42423957020](https://github.com/isogeny-labs/crypto-autoresearcher/actions/runs/42423957020)
+completed its `formal workspace (lake build + axiom audit)` job successfully.
+Its `formal-verification-receipts` artifact (ID `13595234243`) contains 125
+per-target receipts and two dependency-pin receipts. The actual checkout named
+by those receipts was `8f63ad373ea30b7a74230e4a589d1a8807291c5f`.
+The workflow's pull-request head SHA is different, so the checkout SHA is the
+one used for this byte comparison.
+
+The [artifact-wide replay](audit_hosted_sweep.py) matched all 125 receipt
+files bijectively to the frozen specs. Every receipt reports
+`machine_verified`, a passing build and axiom audit, and no forbidden
+constructs. All 125 still mark semantic review `pending`. The replay matched
+spec, declared-source, and theorem SHA-256 values against Git objects at the
+actual checkout, then matched declared sources, theorem files, 106 main
+workspace inputs, six nested-workspace inputs, and ten verifier inputs to the
+pinned current `main` commit. It reconstructed the generated main root module
+from the pinned module list. The before/after dependency receipts agree and
+report clean installed revisions. The [audit result](hosted-sweep-audit.json)
+is `pass` (SHA-256
+`d1a595b9f3b7fa2213892f85c63fad9479033fcf878810812b3f6f3720ddd1f5`).
+
+To replay the receipt comparison from a checkout containing both pinned
+commits, download the named artifact from that run into an empty directory,
+then run:
+
+```sh
+python3 docs/reports/2026-11-08-formal-target-inventory/audit_hosted_sweep.py \
+  --repo . \
+  --inventory docs/reports/2026-11-08-formal-target-inventory/inventory.json \
+  --receipts /path/to/formal-verification-receipts \
+  --checkout 8f63ad373ea30b7a74230e4a589d1a8807291c5f \
+  --current 4239648a889fe97d976a99862d178ba50324dc6e \
+  --run-id 42423957020 --out /tmp/hosted-sweep-audit.json
+sha256sum /tmp/hosted-sweep-audit.json
+```
+
+The script checks receipt contents against Git inputs and the workflow's pin
+records; the completed hosted job is the execution evidence. This is not an
+independent kernel rerun or a semantic-fidelity judgment.
+
 ## Boundaries and next action
 
-No frozen spec or receipt was changed. Independently review theorem meaning
-and source/run linkage claim by claim. A full pinned Lean build and
-axiom audit are still needed for the 125-target current tree; the older
-87-target machine receipts cannot establish them.
+No frozen spec or receipt was changed. The hosted full-workspace build and
+axiom audit covers the same formal and verifier input bytes as the pinned
+current tree. Independently review theorem meaning and source/run linkage
+claim by claim; the 125 machine receipts all leave that review pending.
 
 The public performance dashboard and scientific graphs are unchanged because
 this is a formal-target provenance audit, not a new measurement or decision.
