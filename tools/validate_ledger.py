@@ -122,7 +122,7 @@ SCHEMA_SUPERSESSION_REQUIRED = ["kind", "superseded_path",
                                 "superseded_sha256", "superseding_path",
                                 "superseding_sha256", "defect", "registered"]
 SCHEMA_SUPERSESSION_KINDS = {
-    "ledger", "experiment", "knowledge", "goal_checkpoint"
+    "ledger", "legacy_correction", "experiment", "knowledge", "goal_checkpoint"
 }
 SCHEMA_SUPERSESSION_ROOT = "ledger/corrections/schema-supersessions/"
 SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
@@ -1838,7 +1838,10 @@ def load_run_supersessions(path: str | None = None) -> dict[str, dict]:
 def _schema_supersession_kind_for_path(relative: str) -> str | None:
     patterns = {
         "ledger": re.compile(
-            r"^ledger/(?:questions|proposals|hypotheses|evidence|decisions|handoffs)/[^/]+\.yaml$"),
+            r"^ledger/(?:(?:questions|proposals|hypotheses|evidence|decisions|handoffs)/"
+            r"[^/]+|(?:RQ|H|EV|DEC)-[^/]+)\.yaml$"),
+        "legacy_correction": re.compile(
+            r"^ledger/corrections/CORR-[^/]+\.yaml$"),
         "experiment": re.compile(r"^experiments/[^/]+/specification\.yaml$"),
         "knowledge": re.compile(
             r"^knowledge/(?:literature|techniques|findings|open-problems)/[^/]+\.md$"),
@@ -2001,6 +2004,25 @@ def check_schema_supersessions(ctx: Ctx,
                         f"(registry pins {expected[:8]}, found {actual[:8]}); "
                         "supersede it instead of editing it",
                         force=True)
+        if entry["kind"] == "legacy_correction":
+            replacement = entry["superseding_path"]
+            if not os.path.isfile(replacement):
+                continue
+            try:
+                with open(replacement, encoding="utf-8") as handle:
+                    doc = load_yaml_unique_keys(handle, replacement)
+            except (OSError, yaml.YAMLError, ValueError) as exc:
+                ctx.err(replacement,
+                        f"registered correction replacement is unparseable: "
+                        f"{exc}", force=True)
+                continue
+            body = doc.get("correction") if isinstance(doc, dict) else None
+            source_id = os.path.splitext(os.path.basename(
+                entry["superseded_path"]))[0]
+            if not isinstance(body, dict) or body.get("id") != source_id:
+                ctx.err(replacement,
+                        "registered correction replacement must retain the "
+                        "archived correction id", force=True)
 
 
 def check_schema_redirects(ctx: Ctx,
