@@ -87,6 +87,33 @@ or `q=187,584`; the corresponding paired-pivot row payload is at most
 53,958,113,088 bytes (50.252 GiB) of mapped-file virtual space and row
 payload. Other allocations and runtime remain unbounded by this arithmetic,
 so it does not by itself admit a 96-GiB checker attempt.
+Source audit of the native `--paired-closure` path sharpens this necessary
+screen. The `check_onto` rank fallback can hold at most `q+1` rows, but it
+returns and destroys that pivot table before closure begins. Generator checking
+and the C3 constant test each retain one row. During paired closure, at most
+`q` pivot pairs and the current image/product pair coexist: at most
+`(2q+2)*row_bytes` row payload bytes, not just `2q*row_bytes`. At the frozen
+producer's largest admissible file (`q=187,584`, `row_bytes=23,448`), this is
+8,796,986,160 bytes. The `q` pair objects themselves occupy `q *
+sizeof(std::pair<Row,Row>)` bytes; on the x86-64 build used here,
+`sizeof(Row)=24` and `sizeof(std::pair<Row,Row>)=48`, so their vector has
+9,004,032 bytes of element storage. The earlier onto table has at most
+4,398,493,080 bytes of row payload plus 4,502,016 bytes of `Row` objects.
+Neither table coexists with the other. The mapped certificate, paired rows,
+pair objects, and the `q`-byte onto unit marker therefore have a maximum
+explicit footprint of 53,967,351,600 bytes (50.261 GiB) at this endpoint,
+before the small generator/hash buffers, certificate lookup arrays, allocator
+metadata and fragmentation, runtime, or page-cache effects. The SHA-256
+routine streams through a 1-MiB buffer and does not load the file into a
+second in-memory copy.
+
+This is a source-level bound for the named capped candidate format, not a
+measured peak RSS, operating-system commitment guarantee, or permission to
+run the checker. In particular, the checker has no internal 96-GiB limit and
+the frozen D5 protocol budgets the producer, not a later independent checker
+attempt. A produced candidate still needs its exact header/file-size screen,
+its own finite checker protocol and live resource admission.
+
 For each variable, paired elimination applies the same row operations to
 `A(m)` and `B_i(m)=A(x_i m)` for every monomial of degree at most four. A
 zero reduced `A` row with nonzero reduced `B_i` is exactly a witness that
