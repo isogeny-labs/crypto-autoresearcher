@@ -1,17 +1,19 @@
 # Current-main formal target static audit — 2026-11-08
 
-**Result:** Static target integrity fails at crypto-autoresearcher main
-`4239648a889fe97d976a99862d178ba50324dc6e`: 125 target specs contain
-two duplicate `task_id` groups. The 125 claim IDs and theorem names are
-distinct. Every declared source and theorem file was readable from this exact
-Git commit. This audit does not run Lean or validate a scientific claim.
+**Result:** The 125 target specs at crypto-autoresearcher main
+`4239648a889fe97d976a99862d178ba50324dc6e` have distinct claim IDs
+and theorem names, and every declared source and theorem file was readable.
+Two task IDs each own two targets; archived handoffs and target receipts show
+that this is many-to-one producer provenance, not an established identity
+failure. This audit does not run Lean or validate a scientific claim.
 
 ## Sources and method
 
 The repository's [formal target contract](../../../formal/targets/README.md)
-states one file per frozen formal task and warns that committed specs are
-receipt-bound. The earlier [87-target inventory](../2026-10-25-formal-target-provenance/report.md)
-used distinct task, claim and theorem identifiers on its pinned tree. The
+formerly said one file per task; this PR clarifies that one producing task can
+own multiple frozen targets. The earlier [87-target inventory](../2026-10-25-formal-target-provenance/report.md)
+required unique task IDs on its pinned tree, an assumption the later corpus
+does not preserve. The
 current [semantic-fidelity problem](../../../problems/formal-target-semantic-fidelity-unreviewed.md)
 separates kernel acceptance from claim fidelity and execution provenance.
 These primary repository sources set the scope of this audit; no new
@@ -20,12 +22,13 @@ mathematical or novelty claim is made.
 The [replay script](audit.py) reads exact Git objects at the named main commit,
 parses each target YAML, requires its schema, reads its declared source and
 theorem file, hashes all three files, and records literal identifier
-collisions. It counts an exact `EXP-*` directory token in a spec or its
+claim/theorem identity collisions and shared producing tasks separately. It
+counts an exact `EXP-*` directory token in a spec or its
 declared source as a **syntactic pointer only**. It does not use the dirty
 working tree, run Lean, replay experiment rows, inspect theorem types or
 decide whether a claim is faithful. [The inventory](inventory.json) is
 108 KiB and has SHA-256
-`27cab7302451206d1204d4c4f92382519e1e156481782ea3bede59c399d73757`.
+`4c0d760ebf96caf06442091bfb3a63e27b3c65e591e97531ed3de6ffbb9577a5`.
 
 | Current-main static quantity | Count | Interpretation |
 | --- | ---: | --- |
@@ -42,7 +45,7 @@ Source labels are 67 `COMPUTED`, 29 `PROVED`, 19 `STATED`, seven
 `EXTERNAL_CLAIM_WITH_PRINTED_PROOF`, and one `not_verified`. These labels
 come from the target specs and are not independent review outcomes.
 
-## Identity collisions
+## Shared task ownership
 
 | Reused task ID | Target files |
 | --- | --- |
@@ -51,13 +54,21 @@ come from the target specs and are not independent review outcomes.
 
 The first pair was introduced in separate commits (`9e9e3054aa` on
 November 4 and `2ede864c11` on November 5); the second pair arrived together
-in `2ede864c11`. The archived 87-target builder explicitly requires unique
-task IDs and stopped on the current 125-target tree at that assertion. The
-new script emits an `integrity_fail` record rather than silently publishing
-a green count; `--require-clean` exits 1 on this exact main. A repeat run
-produced byte-identical JSON. As a positive control, the same script with
-`--require-clean` on the earlier `0b38ac1157f777cb4a77d35e53d7ed583c541eb4`
-tree exited 0 with 87 specs and no identifier collisions.
+in `2ede864c11`. The [proof-task archive](../../../analysis/rigorous-lfd-solving-20261105/archive.md)
+names `TASK-20261104-df29f3` as the archival owner and identifies its root
+binary Semaev module. The [dispatch queue](../../../analysis/rigorous-lfd-solving-20261105/dispatch_queue.json)
+and [normalization handoff](../../../analysis/rigorous-lfd-solving-20261105/normalization-handoff.json)
+assign `TASK-20261105-9e5cbb` the Boolean module containing both its target
+theorems. The two Boolean [CI target receipts](../2026-11-05-lfd-publication-readiness/ci-receipts/)
+name the same producer task separately. No task identity is fabricated.
+
+The archived 87-target builder stops on the current tree because it assumes
+one task per target. That assertion is not a valid current-corpus defect
+test. The corrected script reports the shared task IDs, while
+`--require-clean` exits 0 because claim and theorem identities are unique.
+A repeat run produced byte-identical JSON. The same strict mode also passed
+on the earlier `0b38ac1157f777cb4a77d35e53d7ed583c541eb4` tree with
+87 specs and no shared task IDs.
 
 Replay from a checkout containing the named Git commit with Python and
 PyYAML installed:
@@ -65,25 +76,21 @@ PyYAML installed:
 ```sh
 python3 docs/reports/2026-11-08-formal-target-inventory/audit.py \
   --commit 4239648a889fe97d976a99862d178ba50324dc6e \
-  --out /tmp/current-formal-inventory.json
+  --out /tmp/current-formal-inventory.json --require-clean
 sha256sum /tmp/current-formal-inventory.json
 ```
 
-The optional `--require-clean` flag must exit 1 on this commit. The report
-and `report.pdf` were rendered from `report.typ`; the single PDF page was
-visually inspected.
+The report and `report.pdf` were rendered from `report.typ`; the single PDF
+page was visually inspected.
 
 ![Current target provenance and open bridges](coverage.svg)
 
 ## Boundaries and next action
 
-No frozen spec was changed. A task-ID repair must first identify the actual
-owner task for each target and use a versioned correction that accounts for
-receipts bound to the original YAML bytes; inventing new task IDs or editing
-an old receipt would hide the provenance defect. Independently review theorem
-meaning and source/run linkage claim by claim. A full pinned Lean build and
+No frozen spec or receipt was changed. Independently review theorem meaning
+and source/run linkage claim by claim. A full pinned Lean build and
 axiom audit are still needed for the 125-target current tree; the older
 87-target machine receipts cannot establish them.
 
 The public performance dashboard and scientific graphs are unchanged because
-this is a formal-target identity audit, not a new measurement or decision.
+this is a formal-target provenance audit, not a new measurement or decision.

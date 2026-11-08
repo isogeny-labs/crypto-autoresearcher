@@ -54,19 +54,23 @@ def inventory(repo: Path, commit: str) -> dict:
             "source_is_run_artifact": "/runs/" in "/" + source + "/",
             "exact_experiment_ids_mentioned": mentioned,
         })
-    collisions = {}
+    groups_by_key = {}
     for key in ("task_id", "claim_id", "theorem_name"):
         groups = collections.defaultdict(list)
         for row in rows:
             groups[row[key]].append(row["spec"])
-        collisions[key] = {k: v for k, v in sorted(groups.items()) if len(v) > 1}
+        groups_by_key[key] = {k: v for k, v in sorted(groups.items()) if len(v) > 1}
+    # A task may own more than one target. Claim and theorem identities must
+    # still be unique; shared task IDs are reported as provenance groupings.
+    shared_tasks = groups_by_key["task_id"]
+    collisions = {key: groups_by_key[key] for key in ("claim_id", "theorem_name")}
     statuses = collections.Counter(row["source_status"] for row in rows)
     return {
         "schema": "crypto.validation.formal_target_static_audit/v1",
         "commit": commit,
         "formal_tree": git(repo, "rev-parse", f"{commit}:formal").decode().strip(),
         "scope": "Git object bytes, declared paths and syntactic pointers only; no Lean build, semantic fidelity, execution replay or experiment coverage inference",
-        "status": "integrity_fail" if any(collisions.values()) else "structurally_consistent",
+        "status": "identity_collision" if any(collisions.values()) else "structurally_consistent",
         "summary": {
             "specs": len(rows), "unique_theorem_files": len({r["theorem_file"] for r in rows}),
             "unique_sources": len({r["source"] for r in rows}),
@@ -77,6 +81,7 @@ def inventory(repo: Path, commit: str) -> dict:
             "source_statuses": dict(sorted(statuses.items())),
         },
         "collisions": collisions,
+        "shared_task_ids": shared_tasks,
         "targets": rows,
     }
 
@@ -90,7 +95,7 @@ def main() -> int:
     args = ap.parse_args()
     result = inventory(args.repo, args.commit)
     args.out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-    print(json.dumps({"status": result["status"], **result["summary"], "collisions": result["collisions"]}, sort_keys=True))
+    print(json.dumps({"status": result["status"], **result["summary"], "collisions": result["collisions"], "shared_task_ids": result["shared_task_ids"]}, sort_keys=True))
     return int(args.require_clean and result["status"] != "structurally_consistent")
 
 
