@@ -34,7 +34,7 @@ def main():
         record['n'], int(record['modulus_hex'], 16), record['a2'],
         int(record['a6_hex'], 16), int(record['z_hex'], 16),
         [int(v, 16) for v in record['V_basis_hex']])
-    if nvars != 52 or len(polys) != 51:
+    if nvars != 2 * record['k'] or len(polys) != record['n']:
         raise ValueError('unexpected original system dimensions')
     total = 0
     with args.out.open('xb') as out:
