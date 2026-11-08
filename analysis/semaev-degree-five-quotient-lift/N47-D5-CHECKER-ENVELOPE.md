@@ -70,6 +70,15 @@ certificates gave the same checker results in both modes. A future D5 checker
 protocol must read the actual header, compute the exact file and pivot sizes,
 reserve room for allocations and disk, and stop before verification if its
 finite cap cannot accommodate them.
+`inspect_n47_d5_candidate.py` now performs the header and file-length part
+against the hash-pinned frozen n47 plan. It reports both the native checker's
+one-pivot-table bit payload and the Python checker's paired-pivot payload.
+Its output is only a necessary size screen: it does not inspect quotient
+rows or monomial masks, bound the native reduction list, or authorize a
+checker run. The original-system generator input is committed as
+`validation/n47-rand00-original-generators-001.bin`; its export receipt
+records a term-by-term match with all three retained historical `input.sys`
+copies.
 The protocol must also bind the checker, closure helper, descent and slice
 source hashes, and the certificate hash. The CLI now verifies the plan,
 descent, slice, closure-helper, and certificate digests it consumes, and
