@@ -1,0 +1,65 @@
+# Independent static mathematical and custody-design review
+
+Disposition: mathematical derivations have no defect found under their stated hypotheses; custody design needs the explicit domain and equivalence qualifications below before it can serve as an implementation specification. This is one written source/derivation review, not executable replay, empirical validation, metadata admission, or scientific promotion. No candidate/oracle import, test, replay, unit, cloud action, native-state change, or runtime redesign was performed. The prior failed metadata attempt and original producer budget remain unchanged.
+
+## Exact reviewed inputs
+
+The following SHA-256 values were read and independently checked with file hashing:
+
+- `review-plan.json`: `636627de3ad60532536d7c322987dbcfb66ff4011d0f43eaee842e94f489dd13`
+- `specification.md`: `9dd856c3aab03b91259f26c7e0963043e3d6ca55cc1bf9e691edcddbebf96edc`
+- `proof-obligations.md`: `1a68f4fe26497b1d668405b4d02e0da3bedbf5d4254bf1865f144c583bc1023e`
+- `mathematical-note.md`: `c92b95376eaa76935ecb298ba64c2d745c46a3514cb96a538ed2f5f4ea976367`
+
+The four paths above are relative to `.resume/prime-scalar-compact-custody-design-20261108/`. The additional native source inspected was `research/prime_scalar_manifest_metadata_20261107/metadata_supervisor.py`, SHA-256 `0b5da687def7f61bf848ba106b5a3e728547b0f6c3b7fa116a3da17c75b87704`, particularly `fence`, `published`, `validate_authority`, `command`, and byte-accounting code. The prior derivation/refinement and external paper were not needed or consulted; attribution accuracy for that paper is therefore outside this review.
+
+## Mathematical checks
+
+The arbitrary-set telescoping identity is correct as an ordinary polynomial identity. At step r, extracting the coefficient of the selected variable from the already restricted multilinear polynomial gives exactly h_r. Substitution yields the stated difference, and summation telescopes. For nonzero f of degree D, every nonzero h_r has degree at most D-1; multiplication by its linear fixed-value equation has degree at most D. The constant case is handled correctly. The refutation is explicitly conditional on the fixed-value equations and does not assert a refutation of the original unfixed system.
+
+The indicator argument is valid over every field, including characteristic two. Multilinear evaluation injectivity follows by writing g=u+x_n v: evaluations at x_n=0 force u=0 inductively, and evaluations at x_n=1 then force v=0. Since 0 and 1 are distinct in a field, the induction applies. The indicated ordinary-ring Boolean-ideal certificate has product-degree bound D+|S| and nonzero multiplier-degree bound D+|S|-2. In the cited monomial formula the sum is understood for exponent e>=2; exponents zero and one require no reduction. This is a harmless implicit domain convention, not an incorrect identity. Expanded coefficient arithmetic and representation costs are correctly separated from degree.
+
+The hitting-set reduction is exact for canonical distinct nonempty supports with coefficient one: setting variables to zero deletes intersected monomials, and leaves every other monomial unchanged, so no surviving supports merge or cancel even in small characteristic. Therefore the residual is constant one exactly for hitting sets. This is a worst-case reduction for the stated representation; it establishes no hardness result for the particular fixed-chain search or restricted elliptic-curve encodings.
+
+The deletion-pass proof is correct. Constancy under a coarser restriction implies the same constancy under every finer restriction using the same assignment. Thus a failed deletion cannot turn successful after other variables are deleted. Every accepted nonzero constant must equal the initial c. Final single-deletion minimality implies inclusion minimality by that same upward-closure property. It does not imply minimum cardinality. The stated O(k(T+I)) bound is expressly for term/incidence visits with membership-array access, not total bit complexity; key construction, canonicalization, arithmetic, initialization and certificate reconstruction remain separate.
+
+The projection boundary is sound: an excluded subcube contains no full root because f=c!=0 there. Retaining the actual auxiliary literals preserves every full root, hence its existential projection. Removing those auxiliary literals can strengthen the exclusion unsoundly; the draft does not authorize that step. A projected-only initial restriction must independently meet the scalar predicate.
+
+## Custody findings requiring clarification
+
+1. **Exact ref-name domain is underspecified.** The specification assumes all named refs are UTF-8 strings, while its stated objective is retention of exact native names. A byte sequence that cannot decode under the selected encoding cannot be silently replaced, normalized, or omitted. Add an explicit fail-closed rule for any ref name outside the supported reversible encoding, or specify a reversible byte encoding. State how delimiters and canonical name ordering are interpreted. The correction need not expand the supported domain: refusal is consistent with the finite-budget design. A canonical map digest alone cannot repair an already lossy ref-list decode.
+
+2. **Monotonic ordering needs a shared clock domain.** Start/completion monotonic values can order readiness and reconciliations only within the same clock domain. Separate preparation directories and preserved observations make this premise material. Bind a common host/boot clock identity (or state and enforce that all eligible observations and readiness share it), and refuse comparisons across incompatible domains. Wall timestamps remain actual observations and must not be used to fabricate monotonic ordering. Also preserve the native 300-second freshness gate: “latest completed before readiness” by itself does not mean fresh. The native gate uses second-resolution UTC, so the design should retain both precise completion evidence and the exact supplied UTC serialization without changing its meaning.
+
+3. **Scope the tree-deduplication equivalence to parsed records at fixed external conditions.** Static inspection supports the set-of-records premise: `fence` reads local matching filenames first, then recursively enumerates the fixed claims path for each immutable commit, keys records by basename, rejects unequal bytes for any repeated name, chooses the maximum epoch, and validates the selected records. It does not inspect the containing commit's ancestry inside `fence`. Identical available claims trees therefore add identical paths/content and cannot hide a conflicting distinct tree; local records must still participate. However, `command` has deadlines, output limits and failure behavior, and `fence` checks wall time. Replacing repeated trees changes the command workload and timing; unconditional equality of all success/failure outcomes is not established. State equivalence of record-conflict/epoch decisions conditional on successful object reads, stable parser/configuration semantics, the same local records and relevant time predicates. Keep full publication ancestry checks in `published`. No runtime changes are required by this clarification.
+
+## Reconstruction, bounds and remaining obligations
+
+Under an exact initial map and deltas checked against actual observations, induction proves reconstruction: validated deletions remove exactly old names; additions introduce only absent names; changes replace only existing unequal values; all other mappings persist. A delete followed by re-add works across sequential records, while conflicting categories within one record are rejected. A moved ref with unchanged claims tree must still update its commit mapping. Every source commit remains in the full reconstructed map/table even when the native representative list is shorter. Missing chain links, target blobs or object availability must refuse admission rather than reconstruct partial evidence. A content hash is an identity binding under the stated assumption, not proof that the command observed the data.
+
+Absent and error states are correctly separated. Conflicting records in distinct trees must remain visible even at the same epoch; equal tree IDs cannot justify skipping a distinct tree, the local directory or fetched/worktree mandatory commits. Raw stdout/stderr preservation is a separate obligation from map reconstruction; distinct raw encodings can represent an equal map. The existing supervisor's truncated error prose is not an independent source from which missing original bytes can be reconstructed. A future compact observer must possess and retain the original bytes before claiming lossless custody.
+
+The accounting equation is valid as a partition of all encoded retained bytes, not a bound proven for an implementation. Its categories must be disjoint and exhaustive and must count JSON/reference overhead, all retained copies, earlier preparation evidence charged to this budget, and the reserved failure slice. If tree-table entries are already included in B_initial they cannot also be charged as unique entries without declaring conservative double counting. Fixed caps are 4 MiB for this allocation and 128 MiB overall; neither initial fit nor future successful preparation is promised. Arbitrary churn defeats any universal saving claim. Preflight plus a shared accounting/serialization lock is an appropriate proof obligation, but crash/partial-write behavior and sufficient bounded failure-receipt capacity still need concrete implementation review before an execution claim. No such implementation is reviewed here.
+
+The mathematical continuation is suitable for further written design under these hypotheses. The custody proposal is a conditional design with the three corrections above and unresolved implementation obligations; this review does not consume or authorize a metadata retry, modify producer limits, replace failed evidence, or promote a scientific status.
+
+## Correction addendum: exact v2 inputs
+
+Reviewed the three complete v2 documents against `review-addendum-plan.json`; all declared input hashes matched independently read file hashes:
+
+- `review-addendum-plan.json`: `0847381014f597b92abc20bd1ce110f471f2b208ed32571f985648b3eb9e135a`
+- `specification-v2.md`: `c32c6d9d74a1da2dece52999a1964a604aa447b7006784ab78bb11535f3dd20a`
+- `proof-obligations-v2.md`: `cbcdb7acebbfdd7b43dd38e811835f95bcaae89ce353be5a5e9950d6bad1df24`
+- `mathematical-note-v2.md`: `f44053562926e333f3fea5c142d1cf882dcfb8328208a47a7251382985bbfa4c`
+
+All paths in this addendum are relative to `.resume/prime-scalar-compact-custody-design-20261108/`. This addendum appends to the original critique; it does not revise the earlier input identities or assessment of those earlier bytes.
+
+Correction disposition:
+
+1. **Ref-name encoding qualification addressed at design scope.** Strict UTF-8 round-trip, rejection of unsupported or ambiguous framing, and ordering by encoded bytes now make the supported domain explicit. The appended correction qualifies the original broader phrasing. The concrete native delimiter/command encoding still belongs in a future implementation specification and review; it is not evidence of an implemented decoder.
+2. **Clock-domain and freshness qualification addressed.** The revised document requires a common host/boot and monotonic-clock identity, refuses incompatible-domain reuse, preserves precise completion evidence alongside the actual native UTC serialization, and retains the 300-second freshness condition at invocation.
+3. **Equivalence qualification addressed.** Read the original obligation 3 together with the explicit v2 scope correction: the preserved property is content/epoch/conflict decision equivalence conditional on successful available-object reads, the same local records, stable parser/configuration semantics and the same relevant time predicates. It is explicitly not runtime outcome equivalence. Command failures, output limits, deadlines and wall-time behavior remain separate. Publication ancestry checks are retained.
+
+The added Boolean evaluation induction is correct over an arbitrary field, including characteristic two, and the explicit e>=2 restriction resolves the monomial-formula domain convention. No new mathematical defect was found in the complete v2 note under the original assumptions.
+
+Final v2 disposition: the three requested design qualifications are addressed; no additional blocking static mathematical/specification defect was identified within this correction review. The earlier reconstruction, implementation, crash/write, exact accounting, raw-evidence availability and finite-cap obligations remain obligations, not discharged runtime properties. This disposition does not authorize execution, metadata retry, scientific promotion or any budget change. Review consisted only of document reads, exact file hashing and this appended written disposition; no replay or executable validation occurred.
