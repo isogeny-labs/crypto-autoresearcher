@@ -71,3 +71,41 @@ complex is exact below at least degree 22 for **each of these 47 basis
 forms**. This does not bound the ranks of all `2^47-1` combinations or
 control relations between different forms; in particular it is not an
 n47 D5 closure result.
+
+## Exact joint linear-multiplier syzygies on the named n47 input
+
+`joint_binary_top_syzygies.py` now computes the **whole** degree-one
+multiplier map for the same named input. Its domain consists of 47 top
+equations times each of 48 Boolean variables, so has dimension 2,256; its
+image in squarefree cubics has rank 2,162. The kernel therefore has
+dimension 94. The source independently reconstructs all 576 bilinear
+coefficients by four-point interpolation of the original S3 expression,
+checks the product-span rank 47 and the target's membership in that span,
+and verifies the predicted quadratic-equation rank 46.
+
+The kernel is **explicitly exhausted** at this degree. One trace relation
+between the 47 top equations gives 48 variable multiples. The annihilator
+`V^perp` has dimension 23 and supplies 23 `X1`-weighted and 23
+`X2`-weighted syzygies of Lemma 2.3 in the theorem dossier. To construct
+them, the script solves the linear map
+
+    T(gamma)=sqrt(gamma*z^2)+gamma*z^2
+
+for each coefficient of `lambda*X1` or `lambda*X2`. In the trace-dual
+identity, the top equation indexed by `gamma` is
+`Tr(T(gamma)*X1*s/z)`, where `s=X1+X2`. The weighted cubic tops reduce to
+`Tr(lambda*X1^2*s/z)` and
+`Tr(lambda*(X1^2*s+X1*s^2)/z)`, respectively; both have Boolean degree at
+most two, so their cubic parts vanish. The script checks each resulting
+vector against the complete 17,296-column cubic map and finds the 94
+exhibited vectors independent. Since this equals the computed kernel
+dimension, they span it. The exact input hash, ranks and control counts are
+in `validation/n47-rand00-joint-top-syzygies-001.json`.
+
+This closes the **linear-multiplier top syzygy classification for this one
+input**. It does not classify degree-two or higher multipliers, the iterated
+bounded closure, or the ideal's solution count. The next proof calculation
+should lift these 94 syzygies through the lower-degree equation terms and
+test whether their falls generate all low-degree closure mutations before
+attempting a parameter-uniform invariant. A dimension match at degree one
+alone is not an LFD lower bound.
