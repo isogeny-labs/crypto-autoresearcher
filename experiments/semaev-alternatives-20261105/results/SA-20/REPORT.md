@@ -27,3 +27,15 @@ Toy sizes; crossings by linear interpolation of 20-trial rates, no CIs; Edwards 
 
 ## Suggested lead-atlas update
 LEAD (lattice lens / Coppersmith ladder on Edwards S_3): ceiling unchanged, 1/6 (m=2) and 1/24 (m=3) by centroid, MILP fit (0.1657) and cuso; Edwards parity structure yields only a finite-depth gain (certified +0.016 at t=2 decaying to +0.0007 at t=12; planted +0.015-0.022 at t=2,3). Disposition: killed up to a constant; next_action none, optional planted check at t=5.
+
+## Supplementary: t >= 5 (coordinator-requested, frozen criteria unchanged; see DEVIATIONS 6)
+Planted fpylll recovery, m = 2, 64-bit p, 20 trials per delta, same protocol as above. Crossing = linear interpolation of the 50% level; 95% CIs from 4000 binomial bootstrap resamples of the per-delta counts (CI of the gap from independently permuted resamples). Raw: results/supp_*.log, results/plant.jsonl, results/supp_crossings.json.
+
+| t | certified Edw / Weier | Edwards counts (delta grid) | Weierstrass counts | crossing Edw [CI] | crossing Weier [CI] | gap [CI] |
+|---|---|---|---|---|---|---|
+| 5 | .1392 / .1362 | .14-.17: 19,20,20,20,9,2,4 | .14-.17: 20,20,12,1,1,0,0 | .1595 [.1583, .1615] | .1509 [.1492, .1521] | **.0086 [.0068, .0114]** |
+| 6 | .1431 / .1406 | .145-.175: 20,20,20,13,10,3,1 | .145,.15,.155,.16: 20,18,4,1 | .1650 [.1595, .1670] | .1529 [.1521, .1539] | **.0121 [.0065, .0144]** |
+
+Planted gap sequence at 64 bits: t=2 .022, t=3 .016, t=5 .0086, t=6 .0121 (certified gap .0156, .0078, .0025, .0025 for t=2,3,5,6... i.e. .0156, .0078, .0027, .0025).
+
+Does the KILL clause's planted half (crossings within 0.01 of Weierstrass at the same t) hold? Point estimates: **yes at t = 5 (0.0086 < 0.01), no at t = 6 (0.0121 > 0.01)**; both CIs straddle 0.01 (upper ends .0114 and .0144), so neither is established. The Edwards t=6 crossing is noisy (13/20 and 10/20 at adjacent deltas, the 50% level is on a flat part of the curve), and the t=5 -> 6 rise of the gap is within that noise. The decay of the gap seen from t=2 to 5 is not continued at t=6. Verdict stays INCONCLUSIVE; the planted half of KILL is borderline at t = 5, 6, with the certified gap (0.0025) already far below 0.01, so the residual planted gap looks like a practical LLL effect (half-dimension lattice, same relative slack) rather than a reach difference. Not done: 96-bit at t=5 (t=6 Weierstrass trials cost ~10 min per delta).
