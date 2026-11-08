@@ -48,7 +48,39 @@ dim W_3(F) = 5546,  codim(W_3(F) in B_<=3) = 12927,
 
 under the usual source-to-executable and retained-execution assumptions.
 The independently checked quotient alone proves only the codimension
-lower bound. A separate source audit or independent direct rank calculation
-is still needed before promoting the n47 D4 quotient kernel to exact $W_4$.
+lower bound. The D4 quotient kernel still needs its own exactness audit;
+the D3 computation below does not establish it.
+
+## Independent exact D3 replay, 2026-11-08
+
+`replay_binary_d3_closure.py` reconstructs the named Boolean equations from
+the frozen `n47-rand00-d5-local-plan-002.json` field parameters. It checks
+all 1,177 degree-at-most-two coefficients by Boolean interpolation of the
+original S3 expression, then matches every monomial of every row in the
+retained original-coordinate `input.sys`. The input SHA-256 is
+`b8ee56830e9b7f064c4cfe17579b512dd3f7b01e62fd0575b6632a37f2ec936c`,
+the same hash recorded above. It computes the Macaulay rank and the full
+iterated Boolean D3 closure in the invertible `(a,c=a+b)` coordinates using
+a separate Python integer-row echelon implementation. Every newly found
+degree-at-most-two row is multiplied by all 48 variables until the queue
+is empty; no degree-three row is multiplied above the cap.
+
+The independent replay gives `M3=2302`, `M3_low=140`, `W3=5546`,
+`W3_low=141`, `W3_contains_one=false`, and 18,473 D3 columns. It therefore
+reproduces the native full-closure dimensions, not just its accepted
+quotient. The result and plan/input hashes are recorded in
+`validation/n47-rand00-d3-independent-replay-001.json`. The two different
+implementations now support exact `dim W3=5546` without a source-to-native-
+executable equivalence premise. This is still a finite named-input result;
+it does not prove n47 D4/D5 exactness or LFD at least six.
+
+The replay also finds the 47 input equations independent. Therefore the
+94-dimensional top-form linear-multiplier syzygy space classified in
+`BINARY-BILINEAR-TOP-HOMOLOGY.md` yields 93 independent degree-at-most-two
+falls modulo those input equations: `M3_low - rank(F) = 140 - 47 = 93`.
+Iterating the closure adds one further independent low-degree row, reaching
+141. These counts identify the exact degree-three mutation budget that a
+parameter-uniform lower-bound argument must account for; they do not say
+that analogous counts hold for other inputs or at higher caps.
 For a positive D5 nonmembership certificate, Proposition 1.5 needs only
 the checked D4 inclusion and does not depend on this stronger exactness.
