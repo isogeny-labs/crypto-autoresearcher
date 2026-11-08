@@ -76,3 +76,4 @@ Pre-registrations in `prereg/round4/`. The metric is end-to-end solve time again
 | ID | Direction | Verdict | Deciding number (log2 of projected cost ÷ rho; 0 / 0.1 / 1 GAE) |
 |---|---|---|---|
 | SA-22 | Projected total cost at 64–256 bits | INCONCLUSIVE pending SA-21 validation (validated only against Table B, within 1.5–1.7× at 18–23 bits) | best arm, generic pair table: +22.0 / +22.1 / +22.5 at 128 bits, +43.3 / +43.4 / +43.9 at 256 bits; best non-generic (Edwards form lattice): +49.7 at 128, +97.3 at 256; every arm's excess grows with N |
+| SA-21 | Measured end-to-end solve time, 20–40 bits | INCONCLUSIVE by the letter (IC-pair statistically tied with rho at k = 20–24 under π = 1, where solves take < 3 ms); KILL in substance | α: rho 0.52 [0.47, 0.56], IC-pair 0.65 [0.64, 0.67], IC-lattice-W 0.86, IC-lattice-E 0.83; at k = 40 IC-pair is 57–147× rho; lattice arms 1.4e4–4.2e5× rho at 20–32 bits |
