@@ -191,8 +191,10 @@ requested, still use the experiment route and its record-specific PR title.
   renderer can be installed, archive the report source and graphs and state
   the blocker; never present an older PDF as current.
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-For a challenge-linked claim, read its pinned profile, rules and cost model from `handoff.research.extensions.challenge.source`. Check exact inputs, output predicate, success argument and complete cost. Curvesmash exploratory review remains advisory to the existing independent review and Coordinator process.
+Review every original claim against the frozen problem and hash-bound evidence in [the default research loop](../../../docs/challenge-research-loop.md). Record concrete findings and a judgment, or one bounded already-declared follow-up. Retain the original claim set. Infrastructure failures are repair outcomes, and acceptance still needs the existing promotion/closure gates.
 
-See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

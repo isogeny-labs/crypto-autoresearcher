@@ -53,8 +53,10 @@ paying.
    (`docs/session-receipts.md`). Read-only is still a cost; the receipt is
    how the program learns what a status wake costs.
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-For challenge status, list `autoresearch research challenges`, then report separately any linked goals, questions, experiments and review artifacts. Catalog `open` means a research objective; it is not a live leaderboard status or a statement that no progress exists.
+Use `autoresearch campaign next --goal <GOAL-ID>` to show the goal's problem/candidate/evidence/review phase and missing artifact, alongside ordinary status. [The default research loop](../../../docs/challenge-research-loop.md) advances from committed artifacts; distinguish a worker exit, an exploratory review judgment, and official scientific progress.
 
-See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

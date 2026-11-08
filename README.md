@@ -18,6 +18,15 @@ empirical, engineering, replication, synthesis, and custom methods. Start with
 `autoresearch research methods`; domain names are open-ended and multiple domains
 can be combined in one task.
 
+Research goals now follow [the Curvesmash-style research loop](docs/challenge-research-loop.md)
+by default: freeze a problem and its success criteria, propose a candidate,
+gather supporting evidence, review the original claims, then use the findings
+to choose the next attempt. `autoresearch campaign next --goal <GOAL-ID>` shows
+the current phase; campaign autopilot drives it through existing role workers.
+The loop maps supported frontier points, rejected attempts and unresolved gaps;
+`autoresearch campaign frontier --goal <GOAL-ID>` exposes that boundary record.
+This applies across research domains and does not require a numerical score.
+
 The project separates research into primary roles with separate authority:
 
 - **Coordinator** — owns priorities, experiment approval, state transitions, and synthesis.
@@ -184,11 +193,6 @@ directly: `autoresearch adapter|agent|eval ...`, or `python3 -m
 orchestration.{adapter,agent,eval}`.
 
 ## Choosing an inference backend
-
-Curvesmash's six tracks are also [open research objectives](docs/research-challenges.md):
-`autoresearch research challenges` lists them, `research challenge <track>` shows
-the protected problem and scoring contract, and `research template --challenge
-<track>` creates a task draft for the existing research lifecycle.
 
 For Curvesmash-style exploratory claim review, use the optional
 [`autoresearch verify` integration](docs/curvesmash-verification.md). It reuses

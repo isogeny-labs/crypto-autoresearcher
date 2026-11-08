@@ -21,8 +21,10 @@ Use `skill_catalog.py check` when maintaining the catalog, not before a scientif
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-Discover Curvesmash objectives with `autoresearch research challenges`; inspect `research challenge <track>` and use `research template --challenge <track>` for task preparation. Route by the requested lifecycle action; the challenges topic never turns discovery into execution.
+Research goals follow [the default research loop](../../../docs/challenge-research-loop.md). Use `autoresearch campaign next --goal <GOAL-ID>` to identify the current phase, then select the existing lifecycle skill. Preserve explicit run requests: do not insert the planner as a launch prerequisite.
 
-See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

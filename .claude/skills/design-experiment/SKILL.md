@@ -208,8 +208,10 @@ of a prediction. The contract must include:
   sets their noise floor; confounded and in-sample ones are reported, never
   decisive.
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-For a selected challenge, start with `autoresearch research template --challenge <track>` and fill the method, procedure and evidence plan. Carry `extensions.challenge` under `handoff.research` and bind its source paths into the experiment inputs. Preserve the exact distribution, total-work accounting, success threshold and scoring parameter.
+Bind the candidate, frozen problem, original claims and evidence plan from [the default research loop](../../../docs/challenge-research-loop.md) into the existing hypothesis, protocol and handoff. Declare initial and optional follow-up experiment ids before candidate intake; admit each normally. No experiments are required for a method whose evidence is an argument or sourced synthesis.
 
-See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

@@ -201,9 +201,10 @@ and 27 subtests passed across verification, CLI entrypoints, inference adapter,
 model tiers, progress fidelity, review independence and skill routing. This
 includes 15 bridge controls with the real pinned optional backend installed.
 
-## Research objectives
+## Driving research with the Curvesmash approach
 
-Use `autoresearch research challenges` to discover the same six targets as open
-research objectives, and `autoresearch research template --challenge <track>` to
-carry one into a research-task draft. [The challenge workflow](research-challenges.md)
-connects those definitions to coordination, ideation, design, execution and review.
+The [default goal research loop](challenge-research-loop.md) adopts immutable
+problems/candidates, supporting evidence, one bounded follow-up, review and
+findings-driven iteration for research in any domain. This verifier remains an
+optional review backend; the research loop does not restrict goals to the six
+Curvesmash tracks or automatically replace official scientific review.

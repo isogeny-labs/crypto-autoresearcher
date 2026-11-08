@@ -86,6 +86,18 @@ After the literature-first review above, explicit scientific execution goes
 directly to `run`: catalog checks and subject assessment are not launch
 prerequisites. This map adds no runtime role or authority.
 
+## Default research loop
+
+Owner, 2026-11-08: use the Curvesmash approach to drive every research goal:
+freeze the problem and success criteria, freeze a candidate, gather supporting
+evidence, review the original claims, and use the findings to choose the next
+attempt. Map the frontier under fixed conditions: supported points, challenged
+points, unresolved gaps and the next discriminating test. Follow [the default loop](docs/challenge-research-loop.md);
+`autoresearch campaign next --goal <GOAL-ID>` and campaign autopilot use its
+artifact-driven planner. Worker completion is never acceptance. Reuse existing
+roles, archives, spending limits and scientific transition gates. Explicit
+scientific execution still goes directly to `run`, without a new preflight.
+
 ## Roles
 
 | role | owns | policy |

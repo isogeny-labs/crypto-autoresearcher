@@ -1,4 +1,4 @@
-"""Research contracts and open challenge objectives for planning and runtimes.
+"""Domain-neutral research contracts shared by planning, dispatch and runtimes.
 
 Validation checks structure, never scientific adequacy or execution approval.
 No commands, imports, or network requests are derived from contract content.
@@ -109,14 +109,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("methods", help="list method families and required evidence plans")
-    sub.add_parser("challenges", help="list open Curvesmash research objectives (JSON)")
-    inspect = sub.add_parser("challenge", help="show a pinned challenge and its acceptance criteria")
-    inspect.add_argument("id")
     create = sub.add_parser("template", help="print an incomplete contract to fill in")
-    create.add_argument("--domain")
-    create.add_argument("--method", choices=METHODS)
-    create.add_argument("--question")
-    create.add_argument("--challenge", help="Curvesmash track or curvesmash/TRACK; defaults to theoretical")
+    create.add_argument("--domain", required=True)
+    create.add_argument("--method", choices=METHODS, required=True)
+    create.add_argument("--question", required=True)
     for command in ("validate", "brief"):
         check = sub.add_parser(command, help=f"{command} a contract or handoff (JSON/YAML)")
         check.add_argument("path", type=Path)
@@ -124,23 +120,10 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "methods":
             print(json.dumps(METHODS, indent=2))
-        elif args.command in {"challenges", "challenge"}:
-            from . import challenges
-            print(json.dumps(challenges.catalog() if args.command == "challenges"
-                             else challenges.get(args.id), indent=2))
         elif args.command == "template":
-            if args.challenge:
-                if args.domain or args.question:
-                    raise ValueError("--challenge supplies --domain and --question; do not override them")
-                from . import challenges
-                value = challenges.task_template(args.challenge, args.method or "theoretical")
-            else:
-                _text(args.domain, "domains")
-                _text(args.question, "question")
-                if not args.method:
-                    raise ValueError("--method is required without --challenge")
-                value = template(args.domain, args.method, args.question)
-            print(json.dumps(value, indent=2))
+            _text(args.domain, "domains")
+            _text(args.question, "question")
+            print(json.dumps(template(args.domain, args.method, args.question), indent=2))
         else:
             raw = args.path.read_text(encoding="utf-8")
             value = json.loads(raw) if args.path.suffix == ".json" else fast_yaml.safe_load(raw)

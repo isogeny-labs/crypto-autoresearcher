@@ -157,12 +157,11 @@ the focused catalog tests and `check`; inspect `drift` after new CLI sources lan
 Keep descriptions sufficient to trigger the skill without loading its body.
 Reuse lifecycle skills instead of duplicating them under a shorter alias.
 
-## Curvesmash research objectives across skills
+## Default research-goal loop
 
-All skills and host adapters point to [the challenge workflow](research-challenges.md).
-Use `autoresearch research challenges` for the open objectives, `research challenge
-<track>` for exact inputs, outputs, scoring and source hashes, and `research template
---challenge <track>` for an incomplete task draft. `skill_catalog.py route --intent
-coordinate --topic challenges` retains `coordinate`; explicit run requests retain
-`run`. Select a lifecycle action before a subject profile. Definitions alone do not
-create an approved campaign, a runnable experiment or an accepted result.
+Every research goal uses [the challenge research loop](challenge-research-loop.md):
+freeze the problem, propose a candidate, gather evidence, independently review
+it, then let the findings determine the next attempt. `autoresearch campaign next
+--goal <GOAL-ID>` selects the current phase without model calls. Autopilot uses
+this planner by default; all 32 skills and host adapters preserve the relevant
+problem, candidate and evidence pointers. Explicit run requests stay with `run`.

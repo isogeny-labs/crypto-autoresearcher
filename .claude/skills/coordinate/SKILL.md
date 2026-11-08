@@ -132,8 +132,10 @@ protocol is complete. Do not ask the user to pick or confirm each idea.
 - Recreate retired execution-skill adapters, or package this skill inside
   `plugins/crypto-autoresearcher-harness/skills/` (that package is `run` only).
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-When selecting challenge work, inspect `autoresearch research challenges` and `research challenge <track>`. Rank a concrete next question within the named track, reuse an existing matching goal/question, and bind the challenge id and source revision in the task. Follow the normal campaign and Coordinator workflow.
+For every goal, use `autoresearch campaign next --goal <GOAL-ID>` to select its next bounded phase. Freeze the problem, evaluate one immutable candidate, integrate review findings, and record a concrete next attempt or recheck. Follow [the default research loop](../../../docs/challenge-research-loop.md); reuse existing goal records and Coordinator/archival authority. A successful worker exit never advances or closes the goal.
 
-See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

@@ -170,8 +170,9 @@ does not require ledger repair or completion of a review cycle; it does include
 the branch the run records were pushed to. End with a session receipt
 (`python3 tools/session_receipt.py --skill run ...`, see `docs/session-receipts.md`).
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-For challenge-linked execution, retain the selected track and existing experiment/task scope. A catalog entry or generated task draft is not a launcher. Use the existing declared program and preserve its track metadata in outputs; do not initiate claim review or a submission from an experiment run.
+The default goal supervisor uses [the challenge research loop](../../../../docs/challenge-research-loop.md) to select existing admitted experiments for a frozen candidate. Execute that declared scope and preserve failures and evidence pointers. A successful execution is an observation, not review acceptance. Explicit run requests remain direct; do not add loop preparation, independent review or protocol authoring to this execution skill.
 
-See [the shared challenge workflow](../../../../docs/research-challenges.md).
+Preserve the candidate's frontier target, exact comparison conditions and boundary
+observations in the run evidence; scientific review determines what they support.

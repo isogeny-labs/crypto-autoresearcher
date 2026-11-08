@@ -10,5 +10,8 @@ Read `AGENTS.md` and the canonical workflow at
 Use `$run` for any launch of an existing scientific experiment; this adapter
 does not replace the repository's single public execution skill.
 
-For Curvesmash-linked work, the canonical skill also follows
-[the shared challenge workflow](../../../docs/research-challenges.md); preserve the selected track and source pins.
+For research goals, follow the canonical skill's [default challenge research loop](../../../docs/challenge-research-loop.md), retaining problem, attempt and review pointers.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

@@ -135,8 +135,10 @@ pulls in `main` and surfaces the new proposals as a PR:
   filing ideas: a conditional claim must stay conditional, with its validation
   route and exponents intact.
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-For challenge ideation, use `autoresearch research challenge <track>` as the target contract and bind the track id, source revision, allowed inputs, required answer and accounting model in the research question and handoff. Distinguish ordinary BLS DLOG, auxiliary powers and the two pairing directions.
+Generate a candidate against the frozen problem and original acceptance criteria in [the default research loop](../../../docs/challenge-research-loop.md). On successor attempts, carry the terminal review hash and state which specific finding the changed candidate addresses. Reuse the existing literature and lead-atlas checks; do not silently weaken the problem after rejection.
 
-See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

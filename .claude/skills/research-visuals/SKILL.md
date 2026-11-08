@@ -211,6 +211,10 @@ aws s3 cp s3://setec-astronomy-artifacts/reports/crypto-autoresearcher/<reposito
 aws s3 presign s3://setec-astronomy-artifacts/reports/crypto-autoresearcher/<repository path> --expires-in 604800 --region us-east-2
 ```
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.
+Research goals use [the default challenge research loop](../../../docs/challenge-research-loop.md). Preserve the frozen problem, candidate, evidence and review pointers relevant to this skill. Work within its existing role; findings guide the next attempt, and a worker completion alone is not scientific acceptance.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

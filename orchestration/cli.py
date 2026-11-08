@@ -404,7 +404,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_loop.set_defaults(func=cmd_loop)
 
     for name, handler, help_text in (
-            ("research", cmd_research, "discover challenges; describe and validate research tasks"),
+            ("research", cmd_research, "describe and validate research in any domain"),
             ("adapter", cmd_adapter, "resolve policies, inspect backends"),
             ("agent", cmd_agent, "plan or run a single dispatched task"),
             ("eval", cmd_eval, "evaluation suites, baselines, comparisons"),

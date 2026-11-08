@@ -144,8 +144,10 @@ PR (crypto) decide.
 - [ ] `validate` clean, `freeze` done, committed before the first data point
 - [ ] `export.json` written, `check-export --verify-files` clean, `flow` in the report
 
-## Curvesmash challenge context
+## Default challenge research loop
 
-For a challenge-linked protocol, bind the exact track and source hashes from `research challenge <track>`, including distribution, output predicate and scoring parameter. Declare the tested scale and every transfer assumption to the production target.
+Research goals use [the default challenge research loop](../../../docs/challenge-research-loop.md). Preserve the frozen problem, candidate, evidence and review pointers relevant to this skill. Work within its existing role; findings guide the next attempt, and a worker completion alone is not scientific acceptance.
 
-See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.
