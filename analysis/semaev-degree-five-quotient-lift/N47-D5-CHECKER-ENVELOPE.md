@@ -72,8 +72,22 @@ reserve room for allocations and disk, and stop before verification if its
 finite cap cannot accommodate them.
 `inspect_n47_d5_candidate.py` now performs the header and file-length part
 against the hash-pinned frozen n47 plan. It reports both the native checker's
-one-pivot-table bit payload and the Python checker's paired-pivot payload.
-Its output is only a necessary size screen: it does not inspect quotient
+one-pivot-table bit payload, the native paired-mode payload, and the Python
+checker's paired-pivot payload. The optional `--paired-closure` mode of
+`check_quotient_map_native.cpp` recomputes each variable's paired elimination
+without retaining the reduction transcript. Its bit-vector payload is at most
+`2*q*row_bytes`, while the certificate is mapped into virtual address space;
+runtime and total RSS remain
+unmeasured at n47. The n8 D5 positive fixture returned the same dimensions
+as the default native mode, and the retained C2-mutated fixture was refused.
+For each variable, paired elimination applies the same row operations to
+`A(m)` and `B_i(m)=A(x_i m)` for every monomial of degree at most four. A
+zero reduced `A` row with nonzero reduced `B_i` is exactly a witness that
+`ker(A)` is not contained in `ker(B_i)`; accepting every row for every
+variable proves the C2 closure condition. C0, C1, C3 and the two SHA-256
+checks remain on the preexisting native paths. The focused native tests now
+run both modes on small controls and the retained D5 positive/negative maps.
+The header screen's output is only a necessary size screen: it does not inspect quotient
 rows or monomial masks, bound the native reduction list, or authorize a
 checker run. The original-system generator input is committed as
 `validation/n47-rand00-original-generators-001.bin`; its export receipt

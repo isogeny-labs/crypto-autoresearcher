@@ -47,6 +47,7 @@ def inspect(certificate: Path, plan: dict) -> dict:
         'certificate_bytes': actual_bytes,
         'native_mapped_file_virtual_bytes': actual_bytes,
         'native_one_pivot_table_payload_upper_bytes': pivot_payload,
+        'native_paired_pivot_payload_upper_bytes': 2 * pivot_payload,
         'python_paired_pivot_payload_upper_bytes':
             2 * min(codimension, low_columns) * row_bytes,
         'caveat': ('These payloads exclude vector, index, reduction-list, '

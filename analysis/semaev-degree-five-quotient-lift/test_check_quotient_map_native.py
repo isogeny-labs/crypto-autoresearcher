@@ -47,11 +47,13 @@ class NativeCheckerTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):cls.build.cleanup()
 
-    def run_case(self,rows,polys,wrong_hash=False):
+    def run_case(self,rows,polys,wrong_hash=False,paired=False):
         with tempfile.TemporaryDirectory() as tmp:
             cert=Path(tmp)/'cert.bin';gens=Path(tmp)/'generators.bin'
             certificate(cert,rows);generators(gens,polys)
-            return subprocess.run([str(self.binary),str(cert),str(gens),'0'*64 if wrong_hash else sha(cert),sha(gens)],capture_output=True,text=True)
+            argv=[str(self.binary),str(cert),str(gens),'0'*64 if wrong_hash else sha(cert),sha(gens)]
+            if paired: argv.append('--paired-closure')
+            return subprocess.run(argv,capture_output=True,text=True)
 
     def test_valid_evaluation_map(self):
         proc=self.run_case([1]*7,[[0,1]])
@@ -110,6 +112,33 @@ class NativeCheckerTest(unittest.TestCase):
         proc=self.run_case([1]*7,[[0,1]],wrong_hash=True)
         self.assertNotEqual(proc.returncode,0)
         self.assertIn('SHA-256',proc.stderr)
+
+    def test_paired_closure_matches_default_and_refuses_c2(self):
+        for rows,polys,accepted in [([1]*7,[[0,1]],True),
+                                    ([0,1,1,1,1,1,1],[[1,2]],False)]:
+            default=self.run_case(rows,polys)
+            paired=self.run_case(rows,polys,paired=True)
+            self.assertEqual(paired.returncode,default.returncode)
+            if accepted:
+                self.assertEqual(json.loads(paired.stdout),json.loads(default.stdout))
+            else:
+                self.assertIn('C2',paired.stderr)
+
+    def test_paired_retained_d5_fixtures(self):
+        fixtures=ROOT/'validation'
+        gens=fixtures/'d5-checker-fixture-generators.bin'
+        for name,accepted in [('d5-checker-fixture.bin',True),
+                              ('d5-checker-c2-negative.bin',False)]:
+            cert=fixtures/name
+            argv=[str(self.binary),str(cert),str(gens),sha(cert),sha(gens)]
+            default=subprocess.run(argv,capture_output=True,text=True)
+            paired=subprocess.run(argv+['--paired-closure'],capture_output=True,text=True)
+            self.assertEqual(paired.returncode,default.returncode)
+            if accepted:
+                self.assertEqual(json.loads(paired.stdout),json.loads(default.stdout))
+                self.assertEqual(json.loads(paired.stdout)['degree'],5)
+            else:
+                self.assertIn('C2',paired.stderr)
 
 
 if __name__=='__main__':unittest.main()

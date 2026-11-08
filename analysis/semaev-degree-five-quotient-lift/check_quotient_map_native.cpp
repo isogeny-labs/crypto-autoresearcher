@@ -11,6 +11,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <utility>
 #include <vector>
 #include <fcntl.h>
 #include <sys/mman.h>
@@ -162,15 +163,50 @@ static U check_closure(const Certificate &c) {
     }
     return low-rank;
 }
+// Recompute a paired elimination for each variable. This avoids the
+// unbounded-by-q reduction transcript retained by check_closure, at the cost
+// of repeating elimination. The only row payload retained here is at most
+// two q-bit vectors per pivot.
+static U check_closure_paired(const Certificate &c) {
+    const U low=c.columns-c.low_start;
+    U first_rank=std::numeric_limits<U>::max();
+    for(U variable=0;variable<c.n;variable++) {
+        std::vector<std::pair<Row,Row>> piv(size_t(c.q));
+        U rank=0, x=U(1)<<variable;
+        for(U j=0;j<low;j++) {
+            Row image=c.copy(c.low_start+j);
+            U mask=c.mask(c.low_start+j)|x;
+            U index=c.column(mask); need(c.mask(index)==mask,"product monomial absent");
+            Row product=c.copy(index);
+            int bit;
+            while((bit=lead(image))>=0) {
+                auto &pivot=piv[size_t(bit)];
+                if(pivot.first.empty()) {
+                    pivot={std::move(image),std::move(product)};
+                    rank++;
+                    break;
+                }
+                xor_row(image,pivot.first);
+                xor_row(product,pivot.second);
+            }
+            if(bit<0) need(zero(product),"C2: multiplication does not preserve low kernel");
+        }
+        if(first_rank==std::numeric_limits<U>::max()) first_rank=rank;
+        else need(rank==first_rank,"C2: low rank changed across variables");
+        std::cerr<<"C2 paired variable "<<(variable+1)<<"/"<<c.n<<" ok\n";
+    }
+    return low-first_rank;
+}
 int main(int argc,char **argv) try {
-    need(argc==5,"usage: check_quotient_map_native CERT GENERATORS EXPECT_CERT_SHA256 EXPECT_GENERATORS_SHA256");
+    need(argc==5 || (argc==6 && std::string(argv[5])=="--paired-closure"),
+         "usage: check_quotient_map_native CERT GENERATORS EXPECT_CERT_SHA256 EXPECT_GENERATORS_SHA256 [--paired-closure]");
     std::string cert=argv[1],generators=argv[2];
     need(std::string(argv[3]).size()==64 && sha256(cert)==argv[3],"certificate SHA-256 mismatch");
     need(std::string(argv[4]).size()==64 && sha256(generators)==argv[4],"generator SHA-256 mismatch");
     Certificate c(cert);
     U onto=check_onto(c); U count=check_generators(c,generators);
     need(!zero(c.copy(c.columns-1)),"C3: constant has zero image");
-    U kernel=check_closure(c);
+    U kernel=argc==6 ? check_closure_paired(c) : check_closure(c);
     std::cout<<"{\"status\":\"valid_native_quotient_nonmembership\",\"degree\":"<<c.d
              <<",\"variables\":"<<c.n<<",\"codimension_lower_bound\":"<<onto
              <<",\"generators\":"<<count<<",\"low_kernel_dimension\":"<<kernel
