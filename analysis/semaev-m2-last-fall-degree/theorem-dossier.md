@@ -847,6 +847,19 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
 - P45a *(B count, cert)*: $n=45$, $k=23$, Semaev's default polynomial subspace
   $V=\langle1,t,\dots,t^{22}\rangle$. Here $f=t^{45}+t^4+t^3+t+1$
   (`20000000001b`), $a_2=0$, $a_6$=`17cadafccda0` and $z$=`13ffe62d3f4d`.
+- `fresh-n47-rand-00` *(retained count, cert; outside the original sample)*:
+  $n=47$, $k=24$, random $V$. The separate checker accepted the original
+  48-variable degree-four map with codimension at least 61,196 and nonzero
+  image of $1$ (map SHA-256
+  `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`,
+  checker transcript SHA-256
+  `058be3276433127923b07d3c41a4c4e81bc7a8c75d205f824e5abe4f9f86ab93`).
+  The retained exhaustive `count_by_sum` run returned zero; its named input,
+  binary/source provenance, output, and receipt were checked again in
+  `../semaev-degree-five-quotient-lift/n47-rand00-count-bridge-custody-002.json`.
+  Its algorithmic completeness argument is in
+  `../semaev-degree-five-quotient-lift/N47-RAND00-SOLUTION-COUNT-BRIDGE.md`.
+  The count has not yet had an independent rebuild or second enumeration.
 
 R35a's closure, $\dim W_4\cap B_{\le d}=(0,1,105,3885,61425)$, is
 reproduced exactly by implementation B. The closure stalls in a regular way: it
