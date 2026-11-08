@@ -1,0 +1,384 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n47-rand00-affine-restriction-d3-plan-001.json",
+      "validation/n47-rand00-original-generators-001.bin"
+    ],
+    "outputs": [
+      "Write-once receipt with exact JSON stdout, stderr, exit, hashes, rusage and cost."
+    ],
+    "script": {
+      "path": "screen_affine_restriction_d3.py",
+      "sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7"
+    }
+  },
+  "arms": [
+    {
+      "description": "Exact Boolean W3 closure for original coordinates 0,1,2,3 fixed to zero.",
+      "id": "restricted-d3",
+      "instrument": {
+        "binary_sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source at pinned SHA-256"
+          ]
+        ],
+        "commit": "2121f5e88462aa7f21d8b87c23cb1b7d5cebd059",
+        "env": {
+          "PYTHONHASHSEED": "0"
+        },
+        "flags": {
+          "max_columns": "20000",
+          "source_sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "fixed": "0=0,1=0,2=0,3=0",
+        "n": 47,
+        "original_variables": 48,
+        "restricted_variables": 44,
+        "w3_columns": 14235
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Contradictory generators whose W3 closure contains one.",
+      "id": "w3-positive",
+      "instrument": {
+        "binary_sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source at pinned SHA-256"
+          ]
+        ],
+        "commit": "2121f5e88462aa7f21d8b87c23cb1b7d5cebd059",
+        "env": {
+          "PYTHONHASHSEED": "0"
+        },
+        "flags": {
+          "fixture": "x and x+1",
+          "max_columns": "20000",
+          "source_sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "fixture": "x and x+1",
+        "variables": 2
+      },
+      "role": "control_positive"
+    },
+    {
+      "description": "Satisfiable generator whose W3 closure excludes one.",
+      "id": "w3-negative",
+      "instrument": {
+        "binary_sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source at pinned SHA-256"
+          ]
+        ],
+        "commit": "2121f5e88462aa7f21d8b87c23cb1b7d5cebd059",
+        "env": {
+          "PYTHONHASHSEED": "0"
+        },
+        "flags": {
+          "fixture": "x+y",
+          "max_columns": "20000",
+          "source_sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7"
+        },
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "fixture": "x+y",
+        "variables": 2
+      },
+      "role": "control_negative"
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized degree-six frontier"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "absolute-screen"
+      ],
+      "id": "C1",
+      "text": "The exact W3 rank and containment of one for the fixed 44-variable restriction; a positive containment rules out this restriction as a D5 nonmembership route, while noncontainment leaves D5 unknown."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic F2 closure; no timing or variance claim.",
+      "present": false
+    },
+    "negative": {
+      "arm": "w3-negative",
+      "not_applicable_reason": null,
+      "null_population": {
+        "description": "One fixed satisfiable two-variable fixture.",
+        "generator": "The single generator x+y over the Boolean ring.",
+        "matched_on": [
+          "same screen_w3 code path"
+        ],
+        "n": 1,
+        "why_n": "Exact algebraic parser and closure control, no population inference."
+      },
+      "present": true
+    },
+    "positive": {
+      "arm": "w3-positive",
+      "expected_detection": "one_in_w3=true",
+      "not_applicable_reason": null,
+      "present": true
+    }
+  },
+  "created": "2026-11-08",
+  "decision_rule": {
+    "comparison_ids": [
+      "absolute-screen"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "exact Boolean containment and F2 rank",
+    "text": "Accept one_in_w3 only after hash, controls, zero exit and exact dimension checks. True rules out this restriction for D5; false leaves D5 unknown.",
+    "threshold": "source/input/plan hashes match, 44 variables, 14235 W3 columns, exit0, complete JSON",
+    "verdict_vocabulary": [
+      "restricted_d3_refuted",
+      "d5_unknown",
+      "incomplete",
+      "mismatch",
+      "resource_refused"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 0,
+      "interval_seconds": 0,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "checkpoint_detail": "No checkpoint; retain one attempt and terminal output.",
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 4294967296,
+      "pod_memory_bytes": 0
+    },
+    "queue": "frozen-local-campaign",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 900
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "1665403d6b5d8639771999c9d5bb825813382527ea177f35bd9965db0e934cdf",
+    "commit": "7225e54312cd32c14bf1991b577a81f39ce784f9",
+    "frozen_at": "2026-11-08T02:32:19Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Inferring D5 nonmembership or LFD six from one not in W3.",
+    "Changing the four fixed bits after seeing output.",
+    "Treating a timeout, partial JSON or failed hash as a mathematical result.",
+    "Submitting before separate USD 0.10 authorization and fresh shared budget headroom."
+  ],
+  "invalidation_rules": [
+    "Any source, plan, input or test hash mismatch prevents execution.",
+    "Missing fresh shared budget headroom, separate authorization or an existing output root prevents execution.",
+    "Nonzero exit, timeout, incomplete JSON or failed controls makes the result inconclusive."
+  ],
+  "links": {
+    "input_sha256": "cde007051b43954b450da690fd78aae93106aaa352cf82a8b3f4fdbfd877acc7",
+    "plan": "n47-rand00-affine-restriction-d3-plan-001.json",
+    "plan_sha256": "c7d49ab23911d7b85ab06942899ee44c64bb2563ac0c0eee2af482094ab74444",
+    "source_commit": "2121f5e88462aa7f21d8b87c23cb1b7d5cebd059",
+    "source_sha256": "2bb10f925590cc3fdfe36778f02edc5de824d37b879e16276663547e576fead7"
+  },
+  "literature": [
+    {
+      "claim": "One-way affine restriction certificate transfer.",
+      "provenance": "internal",
+      "ref": "analysis/semaev-m2-last-fall-degree/theorem-dossier.md, Proposition 2.5e",
+      "verified_by": "Codex 2026-11-08"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "source_sha256",
+      "input_sha256",
+      "plan_sha256",
+      "argv",
+      "host",
+      "exit_code",
+      "rusage",
+      "budget_readback"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Exact row-space membership of constant one after iterative degree-at-most-three closure.",
+        "id": "one_in_w3",
+        "kind": "exact",
+        "name": "constant membership in W3",
+        "resolution": "exact",
+        "source": "stdout one_in_w3",
+        "uncertainty": "none_exact",
+        "unit": "Boolean"
+      }
+    ],
+    "secondary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Rank of the complete W3 closure row space in the degree-at-most-three monomial universe.",
+        "id": "w3_rank",
+        "kind": "exact",
+        "name": "W3 dimension",
+        "resolution": "1",
+        "source": "stdout w3_rank",
+        "uncertainty": "none_exact",
+        "unit": "F2 dimension"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N47-RAND00-AFFINE-RESTRICTION-D3-20261108-V1",
+  "question": "Does one preselected four-coordinate restriction of the named n47 random00 original Boolean system already contain one in W3?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "One exact deterministic calculation; no timed comparison.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Named input and exact algebraic target are public.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "One preselected restriction of the named n47 random00 input; no search or population claim."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Reuse original fixed input seed; no draw or adaptive choice.",
+      "seeds": [
+        9494361161180666839
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Single exact W3 rank and containment row, or failure flow."
+    ],
+    "report_dir": "reports/n47-rand00-affine-restriction-d3-001",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "One named exact rank; no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 900,
+      "fixed_seconds": 0,
+      "measured_on": "Watchdog ceiling, not measured runtime.",
+      "per_sample_seconds": 900,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One fixed n47 restriction attempt under 900-second watchdog, 4 GiB address-space cap, USD 0.10 reservation and no retry."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "No timed or population comparison.",
+    "comparisons": [
+      {
+        "arms": [
+          "restricted-d3",
+          "w3-positive",
+          "w3-negative"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "input"
+        ],
+        "id": "absolute-screen",
+        "threshold": "positive true, negative false, target 44 variables and 14235 columns with complete JSON"
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Pinned original generator hash and coordinates 0,1,2,3 fixed to zero.",
+        "name": "input",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Pinned Python source and exact integer-row elimination.",
+        "name": "instrument",
+        "treatment": "fixed"
+      },
+      {
+        "how": "One existing Spot host, 4 GiB address-space cap and one CPU; no performance claim.",
+        "name": "host",
+        "treatment": "measured"
+      },
+      {
+        "how": "Focused controls before one target run.",
+        "name": "order",
+        "treatment": "fixed"
+      },
+      {
+        "how": "Interrupted or missing output remains inconclusive; no retry.",
+        "name": "migration",
+        "treatment": "measured"
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}
