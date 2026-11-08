@@ -1,0 +1,99 @@
+{
+  "schema": "review_attestation/v1",
+  "review_task_id": "TASK-20261108-095e46",
+  "conductor_task": "T-1935",
+  "reviewer_role": "independent_blind_mathematics_reviewer",
+  "joints_owned": [
+    "J1"
+  ],
+  "verdict": "holds",
+  "verdict_scope": "Independent exact validity iff derivation and finite F5 controls only; producer fidelity unassessed.",
+  "sealed_at": "2026-11-08T04:19:10.643908+00:00",
+  "sources_read": [
+    {
+      "path": "/var/tmp/semaev-blind-input-20261108/blind-card.md",
+      "sha256": "16aea5ff762f1c4436da2321a3cd9f8942a166c3e858d50aad6535370744e800",
+      "origin": "pre_existing",
+      "purpose": "sole mathematical input"
+    }
+  ],
+  "self_created_files_read": [
+    {
+      "path": "/var/tmp/semaev-certificate-fidelity-20261108/reviews/TASK-20261108-095e46/controls.py",
+      "purpose": "execute own scratch control program and compute digest"
+    },
+    {
+      "path": "/var/tmp/semaev-certificate-fidelity-20261108/reviews/TASK-20261108-095e46/controls.json",
+      "purpose": "seal own control results with digest"
+    },
+    {
+      "path": "/var/tmp/semaev-certificate-fidelity-20261108/reviews/TASK-20261108-095e46/report.md",
+      "purpose": "seal own report with digest"
+    },
+    {
+      "path": "/var/tmp/semaev-certificate-fidelity-20261108/reviews/TASK-20261108-095e46/review_attestation.json",
+      "purpose": "seal own attestation with digest"
+    }
+  ],
+  "administrative_inputs": [
+    "Parent task assignment and CLI-only administrative instructions",
+    "Conductor CLI help output",
+    "T-1935 claim receipt",
+    "T-1935 task show status"
+  ],
+  "sibling_report_access": false,
+  "producer_source_access": false,
+  "producer_lean_access": false,
+  "producer_plan_access": false,
+  "producer_report_access": false,
+  "producer_receipts_access": false,
+  "git_history_access": false,
+  "prior_mathematical_conversation_access": false,
+  "external_mathematical_source_access": false,
+  "blind_compliance": {
+    "compliant": true,
+    "departures": [],
+    "statement": "Only the verified blind card was consulted as a pre-existing mathematical source. CLI metadata and task state were operational only. Scratch files were authored independently."
+  },
+  "mathematical_result": {
+    "span_iff": "x in V iff exists c : Fin b -> F, x = sum_j algebraMap(c_j) * basis_j",
+    "typed_iff": "accept iff all summands are affine with curve equation and x in V, and their group sum equals R",
+    "raw_iff": "accept iff every raw pair has a nonsingular affine lift, every x lies in V, and the group sum of the lifts equals R",
+    "empty_tuple": "accept iff R is the identity",
+    "empty_family": "V is {0}",
+    "identity_singleton": "reject even with identity target",
+    "raw_conversion_dependency": "For general Weierstrass equations, nonsingularity must be checked or supplied by a global smoothness hypothesis."
+  },
+  "checks": {
+    "command": "python3 /var/tmp/semaev-certificate-fidelity-20261108/reviews/TASK-20261108-095e46/controls.py",
+    "exit_code": 0,
+    "field": 5,
+    "curve": "y^2 = x^3+x+1",
+    "control_count": 72,
+    "accepted_count": 14,
+    "rejected_count": 58,
+    "mismatches": 0,
+    "heavy_builds": false,
+    "repository_changes": false
+  },
+  "artifacts": [
+    "report.md",
+    "controls.py",
+    "controls.json",
+    "review_attestation.json",
+    "SHA256SUMS.json"
+  ],
+  "conductor_state": {
+    "status": "claimed",
+    "verified_by": "conductor task show T-1935 -json",
+    "task_uuid": "f7166cb2-e699-4320-bf9a-3f1e7575fe05",
+    "attempt_id": "1fbf08e1-9244-4f6a-8aec-6fa076215516",
+    "lease_id": "355a0b91-8f40-44fb-a6b1-ae18f9def424",
+    "fencing_epoch": 1,
+    "claim_time": "2026-11-08T04:15:43.863214Z",
+    "lease_expiry_from_claim": "2026-11-08T04:25:43.863214Z",
+    "heartbeat_needed_during_review": false,
+    "done_transition_performed": false,
+    "reason": "Parent instructed to leave task claimed for parent archival after merge."
+  }
+}
