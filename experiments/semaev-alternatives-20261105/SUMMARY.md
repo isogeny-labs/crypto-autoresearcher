@@ -52,3 +52,11 @@ Pre-registrations in `prereg/round2/`; results in `results/SA-NNb/`.
 | SA-12b | Learned shift families at n ≤ 300 | KILL (noise flag: seed-to-seed search spread ≈ 0.007 exceeds the 0.002/0.005 thresholds; convex reference is a search lower bound, not an exact optimum) | full − convex by seed −0.0087, +0.0014, −0.0002; best reach 0.134 at n ≤ 300 |
 
 **Round 2 outcome.** Of the eight open directions, SA-05b, SA-14b and SA-15b are clean kills; SA-08b, SA-09b and SA-12b are kills that depend on a stated reading of the criterion or on noise, and are flagged; SA-01b and SA-13b remain open. For SA-01b the decisive next step is an automated Coppersmith certificate (`cuso`), whose install was blocked in this session; for SA-13b it is the two named proof steps for modulus p².
+
+## Round 3
+
+Pre-registrations in `prereg/round3/`; results in `results/SA-NNc/` and `results/SA-19/`.
+
+| ID | Direction | Verdict | Deciding number |
+|---|---|---|---|
+| SA-09c | Heegner relations to B = 4000, rare-hit descent | KILL (flags: primary descent run is a nominal 2σ excess under a one-sample interval that did not replicate; the 43a1/53a1 ranks are class-group data identical to 37a1, not independent evidence) | 37a1 rank/points in [0.1236, 0.1396] for every B in [750, 4000]; pooled descent 112 hits vs 99.4 expected in 660,000 targets (p = 0.115) |
