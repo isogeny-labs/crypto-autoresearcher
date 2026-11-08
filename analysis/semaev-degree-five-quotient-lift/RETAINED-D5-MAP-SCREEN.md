@@ -102,3 +102,36 @@ new closure run. The
 maps' headers and hashes do not substitute for independently checking each
 map; the accepted n=6 dimension-three map was rerun through
 `verify/cert_check.py` with its named parameters.
+
+## Mainline proof and candidate update (2026-11-08)
+
+The newer mainline report
+`reports/n33-branch-d4-screen-001/report.md` proves **exact LFD 5** for the
+fresh trace-zero n33 instance. Both fixed restrictions `a0=0` and `a0=1`
+have independently reproduced full D4 closure containing one, while the
+original D4 quotient certificate excludes one. The branch restriction lemma
+then gives `1 in W5` for the original input. Its frozen n33 D5 request is
+therefore not a degree-six candidate and must not be launched for that aim.
+This conclusion is specific to that n33 input; it does not classify n47.
+
+Mainline also contains `analysis/rigorous-lfd-solving-20261105/THEOREM.md`:
+an independently reviewed written proof of
+`4+floor(s/2) <= d_F <= sd_sigma(F) <= 2s+1` for the specified prime-field
+two-block digit presentation of one S3 equation. Its full-closure step uses
+injectivity of multiplication by the degree-four top form in a low-degree
+range, then bounds the Boolean zero set to exhibit an ideal consequence
+outside the closure. At `s=4` this gives a rigorous LFD lower bound of six
+for that **prime-field presentation**. It is not a characteristic-two result:
+`problems/remaining-binary-obligations.md` identifies the missing binary
+top-form/injectivity invariant and requires exact full-closure separators for
+an unbounded binary family. The review is mathematical prose, with no full
+Lean formalization of the prime theorem and no official scientific-status
+transition.
+
+For the present binary degree-six search, prioritize the named n47 random00
+input's independent exact count and full D5 quotient check under its frozen
+plans. The three checked n47 polynomial-subspace D5 maps above already have
+codimension lower bound two and recorded count two, so they cannot supply the
+strict-gap bridge as currently certified. A branch-D4 screen can rule out a
+candidate if **both** restrictions contain one, as at n33, but it is only an
+additional upper-bound route; it does not replace the n47 D5/count checks.
