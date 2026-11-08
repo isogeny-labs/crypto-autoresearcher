@@ -335,6 +335,18 @@ same primary claim. A separate full-kernel calculation is still needed;
 the n5 toy's 11-dimensional gap shows why generated rank alone is not
 enough.
 
+The source-only `rank_full_quadratic_top_map.py` now streams the complete
+degree-two-multiplier map into exact `F2` row elimination without storing
+the input matrix. It reconstructs the top equations from the named field
+record, checks their rank against the product-span formula, and is capped
+at 53,016 input coordinates and 194,580 quartic columns. The two toy
+controls compare its full-kernel dimensions 17 and 60 with a separately
+written direct quartic-map implementation. The n47 full-map run has not
+been launched or admitted; it requires its own frozen protocol and cost
+gate before its rank can be cited. Even a full top-kernel rank would not
+prove exact bounded W4 closure without lifting and checking the resulting
+lower-degree relations.
+
 More generally, if an `m`-equation quadratic-top map has rank `r` and
 kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
 subspace of dimension

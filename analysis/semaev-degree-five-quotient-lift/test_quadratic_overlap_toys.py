@@ -85,10 +85,12 @@ def main():
             generated = run_json("joint_binary_top_syzygies.py", plan,
                                  "--quadratic-generated")
             full = full_quadratic_kernel(n, modulus, basis, z)
+            full_streamed = run_json("rank_full_quadratic_top_map.py", plan)
             if (reduced["symmetric_linear_overlap_dimension"] != expected_overlap or
                     reduced["generated_quadratic_syzygy_rank"] != expected_generated or
                     generated["quadratic_generated"]["combined_generated_rank"] != expected_generated or
-                    full != expected_full):
+                    full != expected_full or
+                    full_streamed["full_top_kernel_dimension"] != expected_full):
                 raise AssertionError(f"toy n={n} disagrees across constructions")
             print(f"n={n}: overlap={expected_overlap}, generated={expected_generated}, "
                   f"full_kernel={expected_full}")
