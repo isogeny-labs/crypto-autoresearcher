@@ -204,6 +204,17 @@ members of the 1081-dimensional symmetric subspace. The next useful
 rank calculation should quotient out these 1081 known relations before
 seeking genuinely new quadratic syzygies and their degree-three lifts.
 
+The source-only `--quadratic-generated` mode in
+`joint_binary_top_syzygies.py` builds the variable multiples of the
+already classified linear syzygies and the symmetric family in the
+53,016-coordinate n47 quadratic-multiplier domain. It computes their
+individual and combined ranks, checks the symmetric rank against
+`r(r+1)/2+r*s`, and stops if the domain exceeds 60,000 coordinates.
+The flag has not yet been used for a frontier run; its result must be
+recorded under a frozen exact-computation protocol before it is used as
+instance evidence. The existing degree-one output is unchanged when the
+flag is absent.
+
 More generally, if an `m`-equation quadratic-top map has rank `r` and
 kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
 subspace of dimension
