@@ -303,6 +303,20 @@ and the combined generated rank lies in the narrower interval
 **4164 through 4417**. This is a rigorous bound on a specified
 top-syzygy subspace, not a claim about the full D4 kernel.
 
+The same proof gives a smaller exact overlap calculation. Any surviving
+intersection is represented by a map `A:V->V^perp` through
+`F_A(X,s)=X*A(s)+s*A(X)`. The symmetric side is represented by the
+self-adjoint maps `L` killing `pi(V^[2]/z)`, through
+`F_L(X,s)=L(pi(X*s/z))`. Both representations are injective when
+`P=K`. On the named input these have dimensions 552 and 253, so their
+overlap is exactly `552+253-rank({F_A} union {F_L})` in a space of
+47-bit values on 24-by-24 basis pairs. The source-only
+`rank_quadratic_overlap.py` implements this reduced row calculation,
+with checks of the prerequisite ranks. Its one-attempt plan and frozen
+protocol are `n47-rand00-quadratic-overlap-plan-001.json` and
+`n47-rand00-quadratic-overlap-protocol-001.json`. No output from this
+frontier calculation has been used here.
+
 More generally, if an `m`-equation quadratic-top map has rank `r` and
 kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
 subspace of dimension
