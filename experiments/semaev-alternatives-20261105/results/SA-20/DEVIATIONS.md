@@ -1,0 +1,5 @@
+1. SA-01's model.py assumes down-closed monomial sets and max-element supports, which cannot see the sparse/parity support of the Edwards polynomial. I wrote model2.py (exact support, per-coset lattices, no down-closure); validated against SA-01 on Weierstrass m=2 (t=2,3,4: 0.0996/0.1187/0.1294 vs 0.1000/0.1189/0.1294).
+2. Edwards m=2 t=16,20 MILP not completed (job killed after t=12, 367 s); fit uses t=2..12 for Edwards, SA-01's t up to 16 for Weierstrass.
+3. m=3 Edwards MILP: t=1..3 all four cosets; t=4 coset (0,0) only, 120 s limit (hit; 0.0250 is below Weierstrass 0.0258, so a non-optimal MILP incumbent, not a certified value). No m=3 fit made (4 points, last unreliable).
+4. Planted tests: shift set = MILP optimum at certified delta - 0.0005 (as SA-01); success = >=2 reduced polys vanishing exactly over Z at the root with nonzero resultant. Edwards delta grids had to be extended to 0.20 to find crossings. Seeds 7/8, 20 trials per delta. Crossings by linear interpolation (no bootstrap).
+5. cuso check used only the box polytope (not an extensive polytope search).
