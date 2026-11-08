@@ -20,3 +20,11 @@ Read `docs/skill-routing.md` and `docs/skill-catalog.json`. Use `python3 tools/s
 Use `skill_catalog.py check` when maintaining the catalog, not before a scientific run. A catalog entry is a navigation aid, never a mathematical or performance certificate.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Default challenge research loop
+
+Research goals follow [the default research loop](../../../docs/challenge-research-loop.md). Use `autoresearch campaign next --goal <GOAL-ID>` to identify the current phase, then select the existing lifecycle skill. Preserve explicit run requests: do not insert the planner as a launch prerequisite.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

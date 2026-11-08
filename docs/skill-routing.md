@@ -156,3 +156,12 @@ source/console interfaces, availability and execution/authority boundaries. Run
 the focused catalog tests and `check`; inspect `drift` after new CLI sources land.
 Keep descriptions sufficient to trigger the skill without loading its body.
 Reuse lifecycle skills instead of duplicating them under a shorter alias.
+
+## Default research-goal loop
+
+Every research goal uses [the challenge research loop](challenge-research-loop.md):
+freeze the problem, propose a candidate, gather evidence, independently review
+it, then let the findings determine the next attempt. `autoresearch campaign next
+--goal <GOAL-ID>` selects the current phase without model calls. Autopilot uses
+this planner by default; all 32 skills and host adapters preserve the relevant
+problem, candidate and evidence pointers. Explicit run requests stay with `run`.
