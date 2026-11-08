@@ -21,17 +21,22 @@ handoff:
   - research/prime_scalar_manifest_metadata_20261107/metadata_supervisor.py
   - research/prime_scalar_manifest_metadata_20261107/audit_manifest.py
   - research/prime_scalar_manifest_metadata_20261107/audit-contract.json
+  - coordination/prime_scalar_manifest_metadata_20261107/metadata-phase-approval.json
+  - ledger/decisions/DEC-20261108-fba007.yaml
   constraints:
-  - Source phase only admitted now; no imports/execution/enumeration/unitcreation.
-    Metadata task remainsblocked pending exact phaseapproval.
-  - Fresh blind sourceauthor reads public allowlist only, never builder/checks/oracle/extractor
-    implementations or producerresults.
-  - Preserve649cases23952futurecalls; no scientific allowance;2producer slots consumed/reservedindependent
-    untouched/full106+6fiveleads unchanged.
-  - Source4paths; metadata10paths with root supervisorcustody/PDF/reportinputs. Root
-    owns Git/queue/claims; no silentrenewal.
-  - Author complete supervisorimplementation; actual sharedaggregate1CPU512MiBswap0,parent70sworker60s
-    and native singleuse authority required before metadataapproval.
+  - Queued intermediate publication is not execution authority. Root MUST NOT invoke
+    readiness, claim, dispatch, create units or launch until the exact Coordinator
+    metadata-phase-approval.json is published and its actual hash/commit selected.
+    No automatic dispatch from queued state.
+  - 'After exact phase approval only: one builder phase and one audit phase conditional
+    on complete builder custody; each parent start consumes its attempt even before
+    reservation. No retries.'
+  - Original total140 seconds, two serial70-second phases, startup5/worker60/cleanup5,
+    aggregate1CPU512MiBswap0 unchanged. Same-PID root setup consumes original startup5.
+  - No candidate/oracle execution or scientific allowance. Preserve649cases23952futurecalls,
+    exhausted2producer slots, reserved independent slot, full106+6/fiveleads.
+  - Exact frozen four-source hashes and accepted independent static review remain
+    required. Root owns publication/native claims/report custody.
   deliverables: &id001
   - research/prime_scalar_manifest_metadata_20261107/public-output-layout.json
   - research/prime_scalar_manifest_metadata_20261107/manifest.json
@@ -62,13 +67,19 @@ handoff:
     cloud_jobs: 0
     automatic_retries: 0
     additional_cloud_spend_usd: 0
-    metadata_invocations: 0
+    metadata_invocations: 2
     metadata_phase_pending: true
+    metadata_phase_gate: Exact published phase approval required; pending true until
+      selected at launch, not an unconditional zero-invocation prohibition.
   completion_gate:
-  - Exact sourcecontract phase-specific requirements; no invented artifacts/outcomes.
-  - Source/static review and publication before metadata admission; no automaticexecution
-    on sourcecompletion.
-  return_format: Exact files/hashes, unvalidated source scope, no outcome records.
+  - Exact published phase approval, native claim, source release, live resource/authority
+    gates before any invocation.
+  - One builder and one conditional independent audit; preserve failure, partial bytes
+    and external terminal evidence. No retry.
+  - Snapshot unchanged; source remains source_only_unvalidated; metadata coverage
+    is not scientific validation.
+  return_format: Exact files/hashes and actual metadata/custody receipts, including
+    failure; no fabricated scientific results.
   inference:
     runtime: native_codex
     policy: executor-implementation
@@ -84,7 +95,8 @@ handoff:
       record: coordination/prime_scalar_manifest_metadata_20261107/inference-amendment.yaml
       approved_by: coordinator
       approved_at: '2026-11-07T23:44:12.726538+00:00'
-      status: Scoped source/static/custody only; metadataexecutionblocked
+      status: Degraded source/static/custody declaration preserved; bounded metadata
+        operations require separate exact phase approval; no scientific acceptance.
     reasoning_effort: high
     independent_session: false
   runtime_limits:
