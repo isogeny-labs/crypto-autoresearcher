@@ -4,7 +4,7 @@
 - **Kind:** observed resource limit; implementation gap in bounded-memory custody; unresolved repeated-stage cost
 - **Affected work:** [EXP-PNEXT-3064e5](../experiments/EXP-PNEXT-3064e5/specification.yaml), [native failed receipt](../experiments/EXP-PNEXT-3064e5/runs/RUN-PNEXT-8223e9/execution-receipt.json), TASK-20261107-c87fa6 and snapshot TASK-20261107-6011ae; downstream EXP-PNEXT-624f41 full106+6 comparison
 - **Next action owner:** Coordinator for failed custody and separately bounded source-only repair design; independent reviewer retains its original blinded scope
-- **Last updated:** 2026-11-07
+- **Last updated:** 2026-11-08
 
 ## Problem
 
@@ -95,3 +95,80 @@ producer attempts remain immutable. Related mechanisms are recorded in
 [native snapshot manifest resolution](native-snapshot-artifact-manifest-resolution.md);
 those records have different workloads and do not supply evidence of this repair.
 Unresolved.
+
+
+## 2026-11-08 refinement: bounded native-ref preparation custody
+
+The source-only streaming repair and shortest scalar-constant prefix construction,
+followed by an independently authored finite validation harness and metadata
+supervisor, have been published. These are completed source components; no new
+candidate execution is claimed. The immediate blocking gate is now **metadata
+preparation custody under the existing 4 MiB diagnostic cap**, before manifest
+materialization or its independent audit.
+
+### Actual evidence
+
+- [Metadata report](../research/prime_scalar_manifest_metadata_20261107/report.md)
+  and [root custody envelope](../research/prime_scalar_manifest_metadata_20261107/supervisor-receipts.json)
+  were published at `08887e0bf17eed3c155e8b5c454b23daf84e1968`.
+  The envelope SHA256 is
+  `d79211504a3dc98994f8a7276061719f32ea114779c7de3323ca6d21a24734fc`.
+- Root observed preparation handle95245 terminate with exit1 at01:01:11Z on
+  2026-11-08. A new full ref-mapping write exceeded the aggregate4MiB diagnostic
+  allocation; the attempted exception diagnostic write also refused the same cap.
+  Retained diagnostics total3,952,503bytes. The native readiness worker joined;
+  this was a preparation failure, not a systemd metadata-phase timeout.
+- No launch/config/parentargv, attempt marker, reservation or phase service was
+  created. Builder, auditor, candidate and oracle invocation counts were zero.
+  `manifest.json`, `builder-receipt.json` and `audit-receipt.json` remain absent.
+  The published seven metadata files are layout plus actual descriptive custody
+  and report artifacts; missing native outputs were not fabricated.
+- Initial resolved-interpreter readiness failed for missing yaml; its failure and
+  existing-venv dependency correction are retained. An earlier preparation refused
+  an inactive synthetic slice; its failure and narrow read-only absence-predicate
+  correction are retained. Neither correction began a metadata phase.
+
+### Diagnosis and uncertainty
+
+**Observed resource boundary:** the operational evidence allocation was exhausted
+by retained preparation/ref reconciliation material. **Source-derived mechanism:**
+full ref-to-tip mappings are content-addressed, but any unrelated tip movement
+changes a full mapping digest, even when the native claims subtree is unchanged.
+**Unmeasured:** exact contribution of unrelated tip churn versus fixed receipts to
+future preparation cost. No metadata-builder, auditor or candidate runtime result
+was obtained, and no mathematical obstruction is inferred.
+
+### Current gate-specific exit criteria
+
+- [ ] Publish the failed metadata release with its actual seven hashes and complete
+  the existing snapshot using an exact terminal amendment: four source files plus
+  seven metadata files plus the real snapshot receipt,12paths. Preserve failed
+  metadata disposition and the original missing-three inventory.
+- [ ] Design a compact lossless ref-custody representation: retain one initial full
+  ref mapping, actual fetch/observation receipts, then explicit added/deleted/changed
+  ref deltas and exact claims-tree equivalence classes. Reconstruction must recover
+  every observed mapping and its canonical digest; missing subtrees and failed
+  lookups must remain distinct. No relevant native ownership ref may be omitted.
+- [ ] Derive an explicit worst-case byte budget that includes two launches/configs,
+  every selected readback, failure receipts and report custody within the existing
+  4MiB diagnostic and128MiB aggregate caps. Refuse before losing failure-custody
+  space. Byte savings alone do not waive five-second startup or freshness checks.
+- [ ] Obtain an independent static review of that representation and its counted
+  integration into root preparation. Any later metadata attempt requires explicit
+  fresh native admission; this record supplies no retry or allowance reset.
+
+### Next discriminating construction
+
+Coordinator scopes a source/design-only compact ref-custody construction with exact
+reconstruction invariants and byte accounting, using retained observations as input
+without invoking candidate, oracle, builder, auditor or services. Compare a fixed
+initial map plus deltas with the retained full mappings by mathematical/structural
+reasoning first; any executable replay/control requires separately explicit scope.
+If reconstruction or worst-case accounting cannot be justified, revise that design
+while retaining the current cap. If justified and independently reviewed, prepare
+an exact bounded future metadata admission rather than resuming this failed task.
+
+This refinement preserves all original producer failures, the exhausted two-slot
+producer budget, reserved independent slot and full106+6/five-lead requirements.
+The present problem remains open. Source completion, metadata custody and future
+semantic validation are distinct gates.
