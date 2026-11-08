@@ -68,3 +68,11 @@ Pre-registrations in `prereg/round3/`; results in `results/SA-NNc/` and `results
 | SA-12c | Learned shifts, equal episodes, 8 seeds | KILL (resolves SA-12b's noise flag) | mean(full − convex reference) = −0.0058, 95% CI [−0.0095, −0.0022]; best full run equals the convex reference 0.13609 at n = 169 |
 
 **Round 3 outcome.** SA-08c and SA-12c resolved their parents' flags as clean kills. SA-01c (cuso: exactly 1/24 for all four m = 3 presentations) and SA-09c (Heegner ratio below 0.15 for every B in [750, 4000]) are kills with recorded caveats. Three directions remain open: SA-13c needs a model ruling (accepting factor-base success makes the Ω(p^{13/15}) level-2 bound a complete theorem); SA-19 found that twisted-Edwards y lowers the form-lattice budget from 9 to 8 (proved minimal among even degree-2 coordinates); SA-20 found the same coordinates leave the Coppersmith ceiling at 1/6 but give a finite-depth gain of 0.009–0.022 in planted reach. No experiment in any round moved an asymptotic exponent toward the 1/m existence threshold.
+
+## Round 4: total solve time
+
+Pre-registrations in `prereg/round4/`. The metric is end-to-end solve time against matched rho, priced in group-addition equivalents (GAE) at 0, 0.1 and 1 GAE per unpriced field operation.
+
+| ID | Direction | Verdict | Deciding number (log2 of projected cost ÷ rho; 0 / 0.1 / 1 GAE) |
+|---|---|---|---|
+| SA-22 | Projected total cost at 64–256 bits | INCONCLUSIVE pending SA-21 validation (validated only against Table B, within 1.5–1.7× at 18–23 bits) | best arm, generic pair table: +22.0 / +22.1 / +22.5 at 128 bits, +43.3 / +43.4 / +43.9 at 256 bits; best non-generic (Edwards form lattice): +49.7 at 128, +97.3 at 256; every arm's excess grows with N |
