@@ -564,6 +564,18 @@ $$1=\sum_\sigma\sum_i\lambda_i^\sigma\,e_\sigma f_i .$$
 Each $e_\sigma f_i$ is a sum of products $m\,f_i$ with $m$ a monomial in $c$
 of degree $\le k$, so it lies in $M_{k+2}$. $\square$
 
+The $k+2$ bound cannot be lowered merely from the displayed bilinear
+presentation. In $\mathbb F_2[a,b,c]/(a^2-a,b^2-b,c^2-c)$, take
+$g_0=1+ac$ and $g_1=1+(c+1)b$. At $c=0$, $g_0=1$; at $c=1$,
+$g_1=1$, so the system is unsatisfiable. Both generators and their sum have
+degree exactly two. Consequently $W_2(\{g_0,g_1\})$ is their two-dimensional
+span and does not contain $1$. Yet
+$(c+1)g_0+cg_1=1$, and the allowed degree-three multiplications put this
+identity in $W_3$. Its last fall degree is therefore exactly three, attaining
+$k+2$ for the single $c$ variable. This is a sharpness control for general
+bilinear systems, not a Semaev instance; improving the Semaev bound requires
+using its additional field structure.
+
 **Proposition 2.5a** (upper bound from affine constraints on the sum).
 **Proved.** Suppose the unsatisfiable $m=2$ system has $r$ affine-linear
 polynomials in $c=a+b$ in $\operatorname{span}F$ whose linear parts are
