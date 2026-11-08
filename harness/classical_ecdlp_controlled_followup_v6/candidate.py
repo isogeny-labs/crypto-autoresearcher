@@ -22,4 +22,3 @@ def run(repo,input_path,out,fixture_fault=None,part_bytes=None):
  return {'status':result['status'],'source':'same mathematical engine, bounded framed transport','wall_valid':False,'actual_repository_exec_paths':d.source_closure.EVENTS}
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--repo-root',required=True);p.add_argument('--input',required=True);p.add_argument('--out',required=True);p.add_argument('--fixture-fault');p.add_argument('--part-bytes',type=int);a=p.parse_args();r=run(a.repo_root,a.input,a.out,a.fixture_fault,a.part_bytes);print(json.dumps(r));raise SystemExit(0 if r['status']=='complete' else 1)
-

@@ -38,7 +38,7 @@ def native_binding(repo,out,plan_path,trial_id,config_path,driver_pid,live=True)
  d.need((out/'command.txt').read_text().strip()==json.dumps(launch['argv']),'custody native command')
  binding=trial['parameters']['config'];d.need(Path(binding['path']).resolve()==Path(config_path).resolve() and binding['sha256']==d.sha_file(config_path),'custody config binding')
  actual=d.source_map(d.snapshot(repo,repo));d.need(actual==cfg['source_sha256']==env['source_sha256'],'custody exact native/config/source')
- 
+
  if cfg['fixture_only'] is False:
   publication=cfg['source_publication_commit']
   for rel,h in actual.items():d.need(d.sha(d.git(repo,'show',publication+':'+rel))==h,'custody actual source publication: '+rel)

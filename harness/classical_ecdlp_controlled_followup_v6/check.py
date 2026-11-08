@@ -93,4 +93,3 @@ def main():
  else:out=root;protocol=a.protocol;export=a.export
  print(json.dumps(check(out,protocol,export,a.repo_root,a.contracts_root or a.repo_root,a.trusted_launch_sha256,a.native_custody)));return 0
 if __name__=='__main__':raise SystemExit(main())
-

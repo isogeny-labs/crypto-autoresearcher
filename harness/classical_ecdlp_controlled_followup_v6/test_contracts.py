@@ -268,4 +268,3 @@ if __name__=='__main__' and '--lifecycle-helper' in sys.argv:
  lifecycle_helper();raise SystemExit(0)
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--repo-root',required=True);p.add_argument('--contracts-root',required=True);p.add_argument('--control-root',required=True);ARGS=p.parse_args();before=d.snapshot(ARGS.repo_root,ARGS.contracts_root);start=d.now();r=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromTestCase(Contracts));Path(ARGS.control_root).mkdir(parents=True,exist_ok=True);d.write(Path(ARGS.control_root)/'checks.json',{'schema':'controlled-followup-v6.unit-checks/v1','started_at':start,'finished_at':d.now(),'source_before':before,'source_after':d.snapshot(ARGS.repo_root,ARGS.contracts_root),'events':EVENTS,'returncode':0 if r.wasSuccessful() else 1,'scientific_runs':0,'actual_vms':0,'fresh_entropy_draws':0},64<<20);raise SystemExit(0 if r.wasSuccessful() else 1)
-

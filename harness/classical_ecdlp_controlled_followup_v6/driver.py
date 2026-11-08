@@ -301,4 +301,3 @@ def main():
    if CUSTODY is not None:CUSTODY.abort()
  print(json.dumps(r));return 0 if r['status']=='complete' else 1
 if __name__=='__main__':raise SystemExit(main())
-

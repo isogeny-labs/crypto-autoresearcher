@@ -87,4 +87,3 @@ def run(repo,input_path,out,candidate,fixture_fault=None):
  return {'status':'complete','targets':len(rows),'observed':observed,'wall_valid':False,'actual_repository_exec_paths':d.source_closure.EVENTS}
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--repo-root',required=True);p.add_argument('--input',required=True);p.add_argument('--out',required=True);p.add_argument('--candidate',required=True);p.add_argument('--fixture-fault');a=p.parse_args();print(json.dumps(run(a.repo_root,a.input,a.out,a.candidate,a.fixture_fault)))
-
