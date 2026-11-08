@@ -217,6 +217,50 @@ and `experiment.protocol/v1` record are frozen in
 gate remains open. The existing degree-one output is unchanged when the
 flag is absent.
 
+The rank of the **linear-syzygy variable lifts** can in fact be obtained
+without the generated-rank run. Let `k>=2`, let
+`P=span_F2{v_i*v_j: 1<=i,j<=k}` in `K`, and put `delta=n-dim(P)`.
+For the explicit `2n`-dimensional degree-one family constructed above,
+the span of all its variable multiples in the degree-two-multiplier
+domain has exact dimension
+
+    binom(2k,2) + 4*k*(n-k) - 3*delta.                 (1)
+
+This is a formula for the displayed family, not for all degree-two
+syzygies. **Proof.** Modulo the trace-relation equation coordinate,
+apply `T` to the multiplier coefficients. The two `V^perp` families
+become the coefficient-valued linear forms `lambda*X` and `lambda*s`.
+Their variable multiples split by monomial type into `aa`, `ac` and
+`cc` blocks in the disjoint `(a,c)` coordinates. In the `aa` block, a
+putative dependence is specified by `lambda_i in V^perp` and has
+coefficient `lambda_i*v_j+lambda_j*v_i` on `a_i*a_j`. Because all
+`v_i` are nonzero field elements and `k>=2`, these coefficients all
+vanish exactly when `lambda_i=rho*v_i` for one `rho in K`. The condition
+`lambda_i in V^perp` for every `i` is equivalent to
+`Tr(rho*v_i*v_j)=0` for all `i,j`, or `rho in P^perp`. Thus the `aa`
+kernel has dimension `delta`; the `cc` block is identical.
+
+In the `ac` block, the two families contribute coefficients
+`eta_j*v_i+mu_i*v_j` on `a_i*c_j`, with `eta_j,mu_i in V^perp`.
+Vanishing for every `i,j` again forces
+`eta_j=rho*v_j` and `mu_i=rho*v_i` for one `rho in P^perp`; its kernel
+also has dimension `delta`. The nontrace families have domain
+dimension `4k(n-k)` and therefore image dimension
+`4k(n-k)-3delta`. The trace-relation family's variable multiples
+span exactly the independent trace coordinate tensored with all
+squarefree quadratics, of dimension `binom(2k,2)`. Adding this direct
+coordinate proves (1). QED.
+
+For the named n47 input, the independently checked product span has
+dimension 47, so `delta=0`. Formula (1) gives **3336** exactly:
+`binom(48,2)=1128` trace lifts plus `4*24*23=2208` annihilator lifts.
+The generated-rank run now needs to determine only how the symmetric
+family intersects this proved 3336-dimensional span; the full quadratic
+kernel remains a separate calculation.
+The symmetric family has rank 1127, of which the 46 trace-coordinate
+cross terms already lie in the trace-lift span. Consequently the combined
+generated rank is constrained to the exact interval **3336 through 4417**.
+
 More generally, if an `m`-equation quadratic-top map has rank `r` and
 kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
 subspace of dimension
