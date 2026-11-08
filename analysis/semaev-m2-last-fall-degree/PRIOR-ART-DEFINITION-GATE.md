@@ -34,7 +34,10 @@ polynomial for an ordinary curve and a rational point outside the
 2-torsion. Remark 4.12 explains why the first fall degree is usually 2
 when the coordinate equations have quadratic degree. This already covers
 the core m=2 first-fall phenomenon; the dossier's exact-presentation proof
-is not a priority novelty claim. Section 5 reports a completed n=45,
+is not a priority novelty claim. Corollary 4.11 fixes `z=x(P)` for a rational
+point outside 2-torsion, whereas the dossier's algebraic identity is stated
+for every nonzero `z`; this hypothesis difference should be stated without
+implying that the value 2 itself is new. Section 5 reports a completed n=45,
 m=t=2 computation on Semaev's default factor subspace with degree of
 regularity 5. It is an observed solver step degree, not a proof of LFD 5.
 The same section discusses a splitting system whose first fall degree is
@@ -67,3 +70,21 @@ The focused primary-source check here does not discharge the submission
 item to read HKY and Kousidis–Wiemers in full. Their complete proofs,
 definitions, experiment setup, and any later versions still need a full
 page-by-page novelty and citation audit before submission.
+
+## Method-transfer check for the degree-six proof
+
+HKY §§3–4 transfer a **univariate** polynomial to a fake Weil-descent
+system with cyclic Frobenius equations, construct a gcd by Euclidean
+division, and bound its last fall degree. Their §5.3 explicitly separates
+that setting from multivariate summation-polynomial systems. The n47
+factor-base restriction leaves two interacting variables before descent;
+the univariate remainder argument does not supply a D5 full-closure
+separator for it.
+
+Kousidis–Wiemers §§2–3 work in the associated graded square-zero algebra
+and use a top monomial to produce a first-fall syzygy. The argument
+certifies the existence of a low-degree fall, not the absence of later
+mutant rows. The n47 joint top-form computation and independent D3 replay
+in this repository extend that graded analysis to a complete **degree-one
+multiplier** syzygy layer and its actual D3 closure, but the D5 question
+still requires controlling all legal lower-degree products through cap 5.
