@@ -33,6 +33,15 @@ class Echelon:
     def dimensions(self):
         return len(self.rows), sum(p < self.low_columns for p in self.rows)
 
+    def contains(self, row):
+        while row:
+            pivot = row.bit_length() - 1
+            old = self.rows.get(pivot)
+            if old is None:
+                return False
+            row ^= old
+        return True
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -170,6 +179,64 @@ def main():
 
     m_dim, m_low = macaulay.dimensions()
     w_dim, w_low = closure.dimensions()
+    mutation = None
+    if n % 2:
+        # For odd n, H(t)=sum t^(4^i) is the half-trace with theta=1.
+        def half_trace(value):
+            out = 0
+            for _ in range((n+1)//2):
+                out ^= value
+                value = mul(mul(value, value), mul(value, value))
+            return out
+
+        if any((mul(half_trace(v), half_trace(v)) ^ half_trace(v))
+               != (v ^ trace(v)) for v in [0, 1, z, a6, *basis]):
+            raise ValueError("half-trace identity failed")
+
+        z_inverse = 1
+        exponent = (1 << n) - 2
+        power = z
+        while exponent:
+            if exponent & 1:
+                z_inverse = mul(z_inverse, power)
+            power = mul(power, power)
+            exponent >>= 1
+        alpha = mul(a6, mul(z_inverse, z_inverse))
+        alpha_trace = trace(alpha)
+
+        def q_s(a_mask, c_mask):
+            x = 0
+            s = 0
+            for j, v in enumerate(basis):
+                if a_mask & (1 << j): x ^= v
+                if c_mask & (1 << j): s ^= v
+            y = x ^ s
+            w = mul(mul(x, y), z_inverse) ^ half_trace(mul(s, s)) ^ half_trace(alpha)
+            return trace(mul(s, w)) ^ (alpha_trace & trace(w))
+
+        q_values = [q_s(0, 0)]
+        for variable in range(N):
+            q_values.append(q_s(1 << variable, 0) if variable < k
+                            else q_s(0, 1 << (variable-k)))
+        q_row = q_values[0]
+        for variable in range(N):
+            if q_values[variable+1] ^ q_values[0]:
+                q_row ^= 1 << index[1 << variable]
+        for i, j in itertools.combinations(range(N), 2):
+            a_mask = ((1 << i) if i < k else 0) | ((1 << j) if j < k else 0)
+            c_mask = ((1 << (i-k)) if i >= k else 0) | ((1 << (j-k)) if j >= k else 0)
+            coefficient = q_s(a_mask, c_mask) ^ q_values[i+1] ^ q_values[j+1] ^ q_values[0]
+            if coefficient:
+                q_row ^= 1 << index[(1 << i) | (1 << j)]
+        mutation = {
+            "q_s_support_size": bin(q_row).count("1"),
+            "q_s_in_m3": macaulay.contains(q_row),
+            "q_s_in_w3": closure.contains(q_row),
+        }
+        mutation["q_s_generates_extra_low_quotient"] = (
+            w_low - m_low == 1 and mutation["q_s_in_w3"]
+            and not mutation["q_s_in_m3"]
+        )
     print(json.dumps({
         "schema": "semaev.binary-d3-independent-replay/v1",
         "plan_sha256": hashlib.sha256(raw).hexdigest(),
@@ -188,6 +255,7 @@ def main():
         "new_low_dimension_from_iterated_closure": w_low - m_low,
         "w3_contains_one": 0 in closure.rows,
         "w3_low_rows_multiplied": multiplied_low_rows,
+        "explicit_mutation": mutation,
         "claim": "Exact independent D3 Boolean closure for the named input; no D4/D5 or LFD-six claim."
     }, indent=2, sort_keys=True))
 

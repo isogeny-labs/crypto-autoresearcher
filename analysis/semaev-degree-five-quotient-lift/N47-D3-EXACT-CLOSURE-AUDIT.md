@@ -89,5 +89,16 @@ Iterating the closure adds one further independent low-degree row, reaching
 141. These counts identify the exact degree-three mutation budget that a
 parameter-uniform lower-bound argument must account for; they do not say
 that analogous counts hold for other inputs or at higher caps.
+
+The independent replay now identifies that remaining coset explicitly.
+For odd $n=47$, it evaluates the half-trace $H$ and constructs
+$w=X_1X_2/z+H(s^2)+H(\alpha)$ and
+$q_s=\operatorname{Tr}(sw)+\operatorname{Tr}(\alpha)\operatorname{Tr}(w)$
+from Lemma 2.3(c). It checks the half-trace identity on the named field
+parameters and interpolates the 429-term Boolean polynomial $q_s$.
+Exact row reduction gives $q_s\notin M_3$ and $q_s\in W_3$.
+Since $\dim(W_3\cap B_{\le2})-\dim(M_3\cap B_{\le2})=1$,
+$q_s$ spans the entire extra low-degree quotient for this instance.
+The result is recorded as `explicit_mutation` in the replay JSON.
 For a positive D5 nonmembership certificate, Proposition 1.5 needs only
 the checked D4 inclusion and does not depend on this stronger exactness.
