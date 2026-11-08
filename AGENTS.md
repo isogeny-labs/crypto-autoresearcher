@@ -58,6 +58,11 @@ operational stops; scientific status and immutable records remain unchanged.
 
 ## Entry points
 
+- **`autoresearch`** (`.claude/skills/autoresearch/SKILL.md`, adapter under
+  `.agents/skills/`) is the single front door for research. It invokes the
+  canonical skills below and `design-experiment` as needed. Full-cycle requests
+  continue across their stage boundaries; explicit stage-only requests retain
+  their stopping point. This routing grants no new role or scientific authority.
 - **`run`** (`plugins/crypto-autoresearcher-harness/skills/run/SKILL.md`, same
   name on every host) is the only public execution skill: it runs existing
   experiment programs and reports outputs after the literature-first review

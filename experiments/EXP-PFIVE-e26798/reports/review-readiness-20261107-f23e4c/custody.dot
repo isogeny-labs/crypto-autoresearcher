@@ -1,0 +1,11 @@
+digraph custody {
+ graph [rankdir=TB, bgcolor="white", label="EXP-PFIVE-e26798 / RUN-PFIVE-e793f3\nRecorded review readiness, 2026-11-07", labelloc=t, fontname="Helvetica", fontsize=16];
+ node [shape=box, style="rounded,filled", fontname="Helvetica", fillcolor="#edf3f8", margin="0.2,0.14"];
+ producer [label="Producer: output_validated\nQuoted status; no replay this session"];
+ schema [label="Export schema/protocol: PASS\nCurrent structural check only"];
+ receipt [label="Execution receipt hash: MATCH\nCurrent SHA-256 check"];
+ archive [label="Native snapshot: INCOMPLETE\nRecorded native_snapshot_completed = false", fillcolor="#ffe1bd"];
+ review [label="Scientific review: NOT STARTED\nAwait verified archive", fillcolor="#eeeeee"];
+ producer -> schema -> receipt -> archive;
+ archive -> review [style=dashed, label="dependency cannot release"];
+}

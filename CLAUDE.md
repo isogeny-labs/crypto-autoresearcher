@@ -18,7 +18,8 @@ Claude Code; their full requirements and limits are stated there.
   Never hand-edit model or effort; use `tools/check_runtime_bindings.py --list`
   for provenance. The session defaults to `claude-opus-5-5`; `--model` or
   `adapter env --runtime claude_code --role <role>` overrides it.
-- Use `.claude/skills/`: only `run` executes trials; `coordinate` governs and
+- Use `.claude/skills/autoresearch/` as the research entry point; it invokes
+  the canonical lifecycle skills. Only `run` executes trials; `coordinate` governs and
   never runs them. Follow AGENTS.md, "Skill routing", for other skills. Each
   skill writes a session receipt.
 - `.mcp.json` starts the read-only `kb/` server. See the runtime guide for

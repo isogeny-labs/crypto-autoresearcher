@@ -12,6 +12,13 @@ canonical receipt with
 A multi-agent orchestration framework for rigorous, reproducible research across
 domains, with an established ECDLP experiment toolchain.
 
+Use [`/autoresearch`](.claude/skills/autoresearch/SKILL.md) as the single entry
+point: it calls `coordinate`, `design-experiment`, `run` and `review-evidence`
+when needed and continues full-cycle work through their handoffs. For a bounded
+task, use `/autoresearch run EXP-…`, `/autoresearch review EXP-…`, or
+`/autoresearch design only IDEA-…`. Existing direct skill commands still work.
+This is an agent skill, distinct from the `autoresearch` command-line tool.
+
 [General research tasks](docs/general-research-tasks.md) add typed methods and
 evidence plans to existing handoffs: literature, theoretical, computational,
 empirical, engineering, replication, synthesis, and custom methods. Start with
