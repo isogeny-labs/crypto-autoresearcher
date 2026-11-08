@@ -864,6 +864,17 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
   Its algorithmic completeness argument is in
   `../semaev-degree-five-quotient-lift/N47-RAND00-SOLUTION-COUNT-BRIDGE.md`.
   The count has not yet had an independent rebuild or second enumeration.
+- `fresh-n50-poly-03` *(retained count, cert; outside the original sample)*:
+  $n=50$, $k=25$, polynomial $V=\langle1,t,\dots,t^{24}\rangle$.
+  The separate checker accepted the original-system D4 map with codimension
+  at least 38,629 and nonzero image of $1$; the retained exhaustive count
+  returned zero. The degree-50 field polynomial, named input and command,
+  count source/binary provenance, checker output, map hash, and public
+  certificate readback are rechecked in
+  `../semaev-degree-five-quotient-lift/validation/n50-poly03-count-bridge-custody-001.json`.
+  Its source-level count argument is in
+  `../semaev-degree-five-quotient-lift/N50-POLY03-COUNT-BRIDGE.md`.
+  The count has not yet had an independent rebuild or second enumeration.
 
 R35a's closure, $\dim W_4\cap B_{\le d}=(0,1,105,3885,61425)$, is
 reproduced exactly by implementation B. The closure stalls in a regular way: it

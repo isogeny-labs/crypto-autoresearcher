@@ -19,6 +19,11 @@ D5 memory figure and USD 20 reservation are in
 For n50 polynomial-03, the separate checker accepted `1 not in W_4` with
 codimension at least 38,629, and the recorded count is zero. The D4 map has
 SHA-256 `6a25ce310435e564b5487975c17de90f2903a401e8721d95781cf7049f688719`;
+`validation/n50-poly03-count-bridge-custody-001.json` now independently
+checks the degree-50 field polynomial, named count command and output,
+source/binary provenance, D4 checker, and publication custody. It does not
+rerun the counter or rebuild its binary; the detailed argument is in
+`N50-POLY03-COUNT-BRIDGE.md`.
 `bounded-d4-archive-001/fresh-n50-poly-03-D5-cascade01-bounded-D4-001.publication.json`
 records public certificate readback. The 38,017,488,971-byte D5 figure is
 from `validation/n50-poly03-d5-4096-preflight-001/result.json`, whose SHA-256
