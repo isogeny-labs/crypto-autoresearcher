@@ -19,6 +19,28 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def declared_source_path(repo: Path, source: str) -> Path:
+    """Resolve the target's research source without accepting an escaping path.
+
+    A formal theorem may live under `formal/` while the claim it formalizes
+    lives elsewhere in the repository.  The latter is an input to verification,
+    so its bytes must be bound just like the Lean source.
+    """
+    relative = Path(source)
+    if relative.is_absolute() or not relative.parts or ".." in relative.parts:
+        raise ValueError("formal target source must be repository-relative")
+    root = repo.resolve()
+    path = root / relative
+    if root not in path.resolve().parents or not path.is_file():
+        raise ValueError("formal target source is missing or escapes the repository")
+    cursor = path
+    while cursor != root:
+        if cursor.is_symlink():
+            raise ValueError("formal target source may not traverse a symlink")
+        cursor = cursor.parent
+    return path
+
+
 def workspace_inputs(workspace: Path) -> dict[str, str]:
     """Bind all local Lean sources/configs, including imported helper files.
 
@@ -71,6 +93,12 @@ def receipt_errors(receipt: dict, *, repo: Path, spec: Path, task,
     verification = receipt.get('verification') or {}
     provenance = receipt.get('provenance') or {}
     workspace = (repo/task.workspace).resolve()
+    try:
+        from .targets import load_spec
+        source = declared_source_path(repo, str(load_spec(spec)["source"]))
+        source_hash_matches = provenance.get('declared_source_sha256') == sha256(source)
+    except (OSError, ValueError):
+        source_hash_matches = False
     checks = {
         'schema': receipt.get('schema') == 'crypto.autoresearch.formal_verification.v1',
         'task identity': receipt.get('task') == expected_task,
@@ -93,6 +121,7 @@ def receipt_errors(receipt: dict, *, repo: Path, spec: Path, task,
             r'axiom audit: [1-9][0-9]* theorem\(s\), all standard axioms only|^zero-axiom audit passed: \S+',
             str(receipt.get('audit_log', '')), re.MULTILINE)),
         'spec hash': provenance.get('task_spec_sha256') == sha256(spec),
+        'declared source hash': source_hash_matches,
         'theorem hash': provenance.get('theorem_sha256') == sha256(workspace/task.theorem_file),
         'toolchain hash': provenance.get('lean_toolchain_sha256') == sha256(workspace/'lean-toolchain'),
         'manifest hash': provenance.get('lake_manifest_sha256') == sha256(workspace/'lake-manifest.json'),

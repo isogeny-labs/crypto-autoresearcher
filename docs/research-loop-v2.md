@@ -836,3 +836,10 @@ The design borrows specific patterns rather than treating any one system as a co
 - **MemRouter** explores lightweight routing for memory admission, supporting eventual learned admission only after rule-based provenance gates exist: <https://arxiv.org/abs/2605.00356>.
 
 These works motivate architectural choices. They are not cryptanalytic evidence and do not weaken this repository’s verification requirements.
+
+## Implemented default goal loop (2026-11-08)
+
+The [challenge research loop](challenge-research-loop.md) now provides the default
+artifact-driven problem/candidate/evidence/review/iteration selector in campaign
+autopilot. It reuses existing workers, runner admission and Coordinator authority.
+The wider proposed routing and KB features above are not implied by this change.

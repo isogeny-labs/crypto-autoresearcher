@@ -275,5 +275,20 @@ class TestExplicitJointIdsDoNotWeakenTheCheck(unittest.TestCase):
         }))
 
 
+class TestConductorReviewTaskRefs(unittest.TestCase):
+    def test_real_conductor_refs_are_review_owners(self):
+        for ref in ("T-1", "T-1805", "T-1806"):
+            self.assertTrue(C._valid_task(ref), ref)
+            self.assertFalse(C._valid_task(ref, native=True), ref)
+
+    def test_malformed_conductor_refs_remain_invalid(self):
+        for ref in ("T-", "T-0", "T-01805", "T--1805", "T-1805x", "t-1805", " T-1805"):
+            self.assertFalse(C._valid_task(ref), ref)
+
+    def test_dated_native_task_contract_is_unchanged(self):
+        self.assertTrue(C._valid_task("TASK-20261108-abcdef", native=True))
+        self.assertFalse(C._valid_task("TASK-CONDUCTOR-1805", native=True))
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

@@ -1,0 +1,78 @@
+{
+  "schema": "prime-scalar-prefix.validation-design/v1",
+  "status": "design_locked_pending_harness_source_review_native_protocol_freeze_and_execution_admission",
+  "execution_authorized": false,
+  "candidate_execution_performed": 0,
+  "source_commit": "c091ee2b5cc9cfd8bee6489a0da44514d72d3aa8",
+  "source_release_commit": "d41a2462765f09a3e7fd27169a6fa83849b2a5ab",
+  "case_spec_sha256": "7f68929cedcf12965554d96eefe7b1aeddef82f0f1bb182e6e37113e16d5e9dc",
+  "claim_class": "exact_computation on enumerated cases only",
+  "claim": "Both extractor entrypoints match independently derived shortest scalar-constant witnesses and direct restriction residuals; malformed inputs reject without mutation; specified structural counters satisfy identities.",
+  "out_of_scope": [
+    "Universal correctness",
+    "Engine/chart/elliptic-curve integration",
+    "Speed or degree-of-regularity comparison",
+    "Streaming digest integrity",
+    "Independent campaign slot completion",
+    "Field certificate validity for composite modulus"
+  ],
+  "arms": {
+    "oracle": "Independent truth-table evaluation and subset finite-difference reconstruction; explicit depth scan, not candidate binary search/sweep.",
+    "baseline": "Published extract_reference",
+    "candidate": "Published extract_sweep",
+    "restriction": "Published restrict_reference compared with independent coefficient oracle"
+  },
+  "controls": {
+    "positive": "Named cancellation/last-variable/constant/tie witnesses and exhaustive nonzero originals",
+    "negative": "Exhaustive polynomial-valid/no-witness cases plus cancellation-to-zero and malformed inputs",
+    "aa": "Exact repeated calls on identical ordered input; require identical outputs and counters, no timing interpretation",
+    "permutation": "Ascending/descending insertion order: semantic outputs/residuals invariant; counters may differ and must be retained. List/tuple container realizations explicit.",
+    "interruption": "Not included; no synthetic hooks admitted. External timeout/OOM still must be preserved as incomplete."
+  },
+  "randomization": "Fixed family/case/realization/API/depth order; no stochastic estimates or performance claims. API order reference,sweep,restrictions ascending depth; insertion order ascending then descending; container list then tuple; repeat0then1.",
+  "blinding": "Independent oracle author receives public API/mathematical contract and frozen case spec, not candidate implementation, producer controls or measured results. Static source reviewer separate from existing reserved blinded software reviewer. Exact deterministic checker, no analyst-selected cases.",
+  "sample_size": {
+    "base_cases": 649,
+    "entry_calls": 23952,
+    "power": "Not applicable: exact census of prescribed finite domains plus fixed controls; no statistical generalization."
+  },
+  "resource_proposal": {
+    "invocations": 1,
+    "wall_seconds": 60,
+    "cpu": 1,
+    "memory_mib": 512,
+    "swap": 0,
+    "concurrency": 1,
+    "cloud": 0,
+    "retries": 0,
+    "scope": "Imports, generation, oracle, candidate calls, checks and artifact finalization inside external deadline; no warmup or probe."
+  },
+  "metrics": [
+    "Exact semantic match/mismatch count",
+    "Completed/expected entry calls by family",
+    "Malformed rejection type and input immutability",
+    "Identity-repeat equality and separate permutation counter differences",
+    "Counter invariant violations",
+    "Actual wall/resource use for custody only, not performance comparison"
+  ],
+  "stopping": "Stop on first mismatch, unexpected exception, input mutation, counter violation or control discrepancy; preserve case and prefix of actual rows. External timeout/OOM/signal stops sole invocation; incomplete, no retry. Source/hash drift before import aborts admission with zero calls.",
+  "decision": "Pass only if all23952entrycalls finish, all649basecases and all realizations are present, all controls pass, all identities/malformed expectations hold and artifact hashes validate. Any mismatch is fail; missing/incomplete or infrastructure failure is not pass.",
+  "analysis": "Use preregistered exact comparisons and counts; no threshold fitting, dropped cases, aggregate speedup or ranking from operation totals. Counter names overlap; never sum into CPU cost.",
+  "campaign_lineage": "Separate prospective standalone semantic validation. Original producer slots remain consumed2/2; independent slot3 untouched. Standing authorization permits design and source preparation, not execution through this packet. A new native experiment/run admission must explicitly authorize this one60sstandalone invocation and its separate budget; naming new IDs alone supplies no allowance.",
+  "next_route": [
+    "Source-only authoring admission for finite manifest generator, independent truth-table oracle, runner/checker, resource wrapper and report mapping; no imports/tests of candidate.",
+    "Independent static review and exact manifest materialization/hash from SPEC without candidate execution, if separately authorized; reject count/spec drift.",
+    "Create native specification and experiment.protocol/v1 with actual checked IDs/source/runtime hashes; native validate/freeze and exact Coordinator execution approval before sole invocation.",
+    "Publish source/protocol/manifest/command/resource controls and verify remote; actual native claim and runtime enforcement required."
+  ],
+  "mandatory_downstream": "All106+6/fiveleads, projected models/charts/witness/certificate costs remain unchanged; no scientific promotion.",
+  "oracle_spec_sha256": "90b6bf8585d98aa14ba9dc330f7b14ff2147975a59cc7b4a732617465126f893",
+  "variable_ledger": {
+    "source": "Fixed published extractor/interface SHA; harness/oracle hashes pending source authoring, mandatory before nativefreeze",
+    "inputs": "Fixed exhaustive domains,9controls,20global+4depthmalformed variants; no case adaptation",
+    "order": "Fixed/API/family/realization; permutation and container explicitly crossed",
+    "environment": "Exact interpreter hash/runtime env/thread/resource controls required before nativefreeze; actual host/kernel/resource use recorded",
+    "timing": "Not acceptance metric; no microbenchmark/warmup/probe",
+    "analyst": "Deterministic expected outputs and prewritten decisions; no posthoc thresholds"
+  }
+}

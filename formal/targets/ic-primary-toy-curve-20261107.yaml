@@ -1,0 +1,23 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: T-1863
+claim_id: IC-PRIMARY-N13-ENCODED-SCALARS-20261107
+kind: formalize_claim
+source: docs/reports/2026-11-07-ic-primary-toy-lean/source.md
+source_status: COMPUTED
+theorem_name: CryptoResearch.IC.PrimaryToyCurve.primary_archive_certificate
+theorem_file: CryptoResearch/IC/PrimaryToyCurve.lean
+workspace: formal
+claim: |
+  In the exact polynomial-basis bitmask arithmetic and affine binary-curve
+  formulas defined in CryptoResearch.IC.PrimaryToyCurve, modulus 8231 encodes
+  X^13 + X^5 + X^2 + X + 1. The recorded generator satisfies the encoded
+  curve equation and [2003]G is infinity. The frozen workload scalar/point
+  pairs are [1046]G=(2659,1282), [606]G=(6749,6034), and
+  [861]G=(4412,6211). Adjacent scalar and altered-coordinate controls fail.
+notes: |
+  The source note pins the cryptanalysis primary archive and three workload
+  files at commit 612427ea by SHA-256. The theorem is a finite encoded
+  computation certificate, not a proof of historic execution or timing,
+  generic field irreducibility, or a universal elliptic-curve group law.
+  Independent semantic review and the current-head hosted formal gate remain
+  required before treating the target as reviewed.
