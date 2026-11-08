@@ -1,9 +1,15 @@
 # Prior-art and definition gate for the binary Semaev paper
 
-Focused primary-source review, 2026-11-08. This note records the sections
-that constrain the current claims; it does **not** assert that every page of
-each paper has been read. The manuscript should use one explicit last-fall
-definition and cite the corresponding source.
+Primary-source review updated 2026-11-08. I read the complete 20-page
+IACR-hosted CRYPTO 2015 Huang–Kosters–Yeo paper through its PDF text and
+the complete 12-page arXiv v1 (1906.05594) Kousidis–Wiemers paper.
+The latter PDF has SHA-256
+3be43fee7f83354535b9f578b9c37b990259a1b9f733238c9602c404d4368864.
+The IACR PDF was available through the web reader, while direct scripted
+download returned HTTP 403, so no local PDF hash is claimed for it. This
+review covers those versions, not an unchecked later journal revision.
+The manuscript should use one explicit last-fall definition and cite the
+corresponding source.
 
 ## Last-fall definition and open problem
 
@@ -54,6 +60,9 @@ about `Dreg` versus first fall degree as parameters grow. It does not, in
 that section, formulate the same last-fall theorem as HKY §5.3. The
 manuscript should attribute those two questions accurately rather than
 saying both sources state one identical open problem.
+Its reference [10] labels Kosters–Yeo but prints arXiv:1505.02532, which
+actually belongs to Huang–Kosters–Yang–Yeo's zero-dimensional
+last-fall paper; use the correct Kosters–Yeo identifier 1503.08001.
 
 ## Claim rule for the present work
 
@@ -66,10 +75,16 @@ independent solution-count bridge where required. Do not convert an
 observed `Dreg` into an exact LFD value or a finite collection of lower
 bounds into asymptotic growth.
 
-The focused primary-source check here does not discharge the submission
-item to read HKY and Kousidis–Wiemers in full. Their complete proofs,
-definitions, experiment setup, and any later versions still need a full
-page-by-page novelty and citation audit before submission.
+The full-paper read confirms the methods' boundary: HKY §2.1 constructs
+the bounded closure by iterated reduced-basis multiplication, but its
+degree bound in §§3–4 uses univariate fake Weil descent and Euclidean
+remainders. Kousidis–Wiemers prove a first-fall upper bound by a
+nontrivial relation among top homogeneous forms; their Table 1 and §4
+report solver degrees, not a full-closure certificate. Neither full
+paper supplies an n47 degree-five nonmembership separator or an exact
+solution count for the named input. A final journal-version check and
+line-by-line chained-system comparison with Kosters–Yeo remain before
+submission.
 
 ## Method-transfer check for the degree-six proof
 
