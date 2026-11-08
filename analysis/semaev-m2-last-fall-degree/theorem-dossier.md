@@ -894,6 +894,14 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
   `../semaev-degree-five-quotient-lift/n47-rand00-count-bridge-custody-002.json`.
   Its algorithmic completeness argument is in
   `../semaev-degree-five-quotient-lift/N47-RAND00-SOLUTION-COUNT-BRIDGE.md`.
+  The [independent top-form calculation](../semaev-degree-five-quotient-lift/validation/n47-rand00-joint-top-syzygies-001.json)
+  records quadratic rank 46 out of 47 equations, so the
+  affine-combination space is one-dimensional; the
+  [checked affine witness](../semaev-degree-five-quotient-lift/n47-rand00-affine-witness-001.json)
+  has a nonzero linear part in $c=a+b$.
+  Thus $r=1$ in Proposition 2.5a. With the retained zero count, the
+  named input has the additional upper bound
+  $d_{\tilde F}\le24-1+2=25$, alongside its certified lower bound 5.
   The count has not yet had an independent rebuild or second enumeration.
 - `fresh-n50-poly-03` *(retained count, cert; outside the original sample)*:
   $n=50$, $k=25$, polynomial $V=\langle1,t,\dots,t^{24}\rangle$.
