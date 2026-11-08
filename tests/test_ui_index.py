@@ -504,6 +504,9 @@ def test_malformed_original_exposes_only_a_hash_bound_parsed_copy(tiny_repo):
     }))
     index = ResearchIndex(tiny_repo).build()
     index._deep_scan()
+    invalid = next(row for row in index.integrity["unparseable"]
+                   if row["path"] == "ledger/evidence/EV-ECDLP-001.yaml")
+    assert invalid["parsed_correction_path"] == replacement_rel
     payload = payloads.record_payload(index, "EV-ECDLP-001")
     assert payload["summary"]["path"] == "ledger/evidence/EV-ECDLP-001.yaml"
     assert payload["verified"] is False and payload["parse_error"]
@@ -516,11 +519,44 @@ def test_malformed_original_exposes_only_a_hash_bound_parsed_copy(tiny_repo):
     original.write_text(original.read_text() + "# changed\n")
     changed = payloads.record_payload(index, "EV-ECDLP-001")
     assert changed["readback_state"] == "raw_only" and changed["supersession"] is None
+    index._deep_scan()
+    invalid = next(row for row in index.integrity["unparseable"]
+                   if row["path"] == "ledger/evidence/EV-ECDLP-001.yaml")
+    assert "parsed_correction_path" not in invalid
     original.write_text(original.read_text().replace("# changed\n", ""))
     replacement.write_text(replacement.read_text() + "# changed\n")
     assert payloads.record_payload(index, "EV-ECDLP-001")["supersession"] is None
     replacement.unlink()
     assert payloads.record_payload(index, "EV-ECDLP-001")["supersession"] is None
+
+
+def test_archived_correction_is_linked_from_integrity(tiny_repo):
+    original_rel = "ledger/corrections/CORR-20260727-004.yaml"
+    original = tiny_repo / original_rel
+    original.parent.mkdir(parents=True, exist_ok=True)
+    original.write_text(
+        "correction:\n  id: CORR-20260727-004\n  text: [broken\n")
+    replacement_rel = ("ledger/corrections/schema-supersessions/20261108/"
+                       "ledger__corrections__CORR-20260727-004.v2.yaml")
+    replacement = tiny_repo / replacement_rel
+    replacement.parent.mkdir(parents=True, exist_ok=True)
+    replacement.write_text(
+        "correction:\n  id: CORR-20260727-004\n  text: repaired\n")
+    registry = tiny_repo / "tools/schema_supersession_registry.yaml"
+    registry.write_text(yaml.safe_dump({
+        "schema": "schema-supersession-registry-v1",
+        "records": [{
+            "superseded_path": original_rel,
+            "superseded_sha256": hashlib.sha256(original.read_bytes()).hexdigest(),
+            "superseding_path": replacement_rel,
+            "superseding_sha256": hashlib.sha256(replacement.read_bytes()).hexdigest(),
+        }],
+    }))
+    index = ResearchIndex(tiny_repo).build()
+    index._deep_scan()
+    invalid = next(row for row in index.integrity["unparseable"]
+                   if row["path"] == original_rel)
+    assert invalid["parsed_correction_path"] == replacement_rel
 
 
 def test_parseable_original_exposes_hash_bound_schema_copy(tiny_repo):
