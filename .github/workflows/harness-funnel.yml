@@ -1,0 +1,74 @@
+name: harness-funnel
+
+# Reports how work moves from proposal to evidence, and checks the
+# approved-but-unrun experiment WIP policy.  Operational signal only.
+# The checkout is blobless and sparse.  The funnel reads the ledger and
+# experiments/*/specification.yaml blobs, and lists experiments/*/runs/ entries
+# from git tree objects (git ls-tree), so no run blob is fetched.
+
+on:
+  pull_request:
+    paths:
+      - "ledger/**"
+      - "experiments/*/specification.yaml"
+      - "coordination/experiment_wip_policy.json"
+      - "tools/harness_funnel.py"
+      - "tools/experiment_wip.py"
+      - ".github/workflows/harness-funnel.yml"
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: harness-funnel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  funnel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /ledger/
+            /coordination/
+            /tools/
+            /schemas/
+            /experiments/*/specification.yaml
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet pyyaml pytest
+
+      - name: Funnel report (JSON artifact and headline)
+        run: |
+          mkdir -p funnel-out
+          python3 tools/harness_funnel.py --runs-source git --json > funnel-out/harness-funnel.json
+          python3 tools/harness_funnel.py --runs-source git > funnel-out/harness-funnel.txt
+          python3 tools/harness_funnel.py --runs-source git --check | tee funnel-out/headline.txt | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Experiment WIP report
+        run: python3 tools/experiment_wip.py --runs-source git --report | tee funnel-out/experiment-wip-report.txt
+
+      - name: Experiment WIP check (policy mode)
+        run: python3 tools/experiment_wip.py --runs-source git --check | tee funnel-out/experiment-wip-check.txt
+
+      - name: Unit tests for the two tools
+        run: python -m pytest -q tools/test_harness_funnel.py tools/test_experiment_wip.py
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: harness-funnel
+          path: funnel-out/
+          retention-days: 90

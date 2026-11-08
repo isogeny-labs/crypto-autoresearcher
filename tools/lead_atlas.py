@@ -16,6 +16,7 @@ happened since: "already done" becomes a computed answer, not a re-reading.
     python3 tools/lead_atlas.py --delta          # what changed since the last review
     python3 tools/lead_atlas.py --coverage       # ECC ledger records not mapped to a lead
     python3 tools/lead_atlas.py --pursuit        # every lead not disproven in scope
+    python3 tools/lead_atlas.py --genericity     # generic-oracle leads (bounded by sqrt(r))
     python3 tools/lead_atlas.py --render [--out PATH]   # ATLAS.md (derived)
     python3 tools/lead_atlas.py --stamp          # record a completed review (REVIEW_STATE.json)
 
@@ -25,6 +26,26 @@ cites the record that decided it. Saturation (no open lead without a decided
 next step, no unexamined lead, no unmapped record, no delta since review) is a
 reporting state, never a reason to stop a goal (AGENTS.md "Goals are never
 paused").
+
+Oracle class (owner ruling R1, crypto research/prime_ic_program_20261029/
+DECISIONS.md). Optional lead field `oracle_class` (one-line justification in
+`oracle_class_note`), required for families ic-prime and ic-binary:
+
+    generic        decomposition by enumeration, subtraction, table lookup,
+                   meet-in-the-middle, k-sum, residual or coincidence
+                   collection; it runs identically on a random base, so it is
+                   bounded by sqrt(r) (Shoup; Corrigan-Gibbs and Kogan) and can
+                   never beat rho: only constants improve
+    algebraic      the solver is given the factor-base membership constraint
+    structural     exploits curve structure (isogeny, CM, automorphism,
+                   torsion, special j)
+    transfer       moves the problem (covers, extension fields, pairings, lifts)
+    engineering    constant-factor implementation of an otherwise classified
+                   method
+    not_applicable none of the above (audits, references, accounting)
+
+A mixed lead is classified by the oracle that produces its relations. A
+generic-oracle lead never carries a vs_rho exponent claim.
 """
 from __future__ import annotations
 
@@ -69,6 +90,10 @@ DISPOSITIONS = CLOSED + OPEN
 # scale-exhausted mechanisms retain explicit revisit conditions. Only a lead
 # with a scoped obstruction is outside the pursuit queue.
 DISPROVEN = ("closed_obstructed",)
+ORACLE_CLASSES = ("generic", "algebraic", "structural", "transfer",
+                  "engineering", "not_applicable")
+# Families whose leads must carry oracle_class (ruling R1).
+ORACLE_REQUIRED_FAMILIES = ("ic-prime", "ic-binary")
 OBSTRUCTION_KINDS = {"theorem", "proof", "measured", "literature",
                      "cost_model"}
 LEAD_ID = re.compile(r"^LEAD-([A-Z]+)-[a-z0-9][a-z0-9-]{1,47}$")
@@ -208,6 +233,13 @@ def check_leads(rows: list[dict[str, Any]], *, strict_paths: bool = False
             err(f"file is under {os.path.dirname(p)}, family is {fam}")
         if os.path.splitext(os.path.basename(p))[0] != rid:
             err("file name must equal the id")
+        oc = r.get("oracle_class")
+        if oc is None or oc == "":
+            if fam in ORACLE_REQUIRED_FAMILIES:
+                err(f"missing required field 'oracle_class' for family "
+                    f"{fam} (one of {list(ORACLE_CLASSES)})")
+        elif oc not in ORACLE_CLASSES:
+            err(f"oracle_class '{oc}' not one of {list(ORACLE_CLASSES)}")
         disp = r.get("disposition")
         if disp not in DISPOSITIONS:
             err(f"disposition '{disp}' not one of {list(DISPOSITIONS)}")
@@ -524,6 +556,37 @@ def pursuit_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                                  str(r.get("id"))))
 
 
+def is_generic(row: dict[str, Any]) -> bool:
+    return row.get("oracle_class") == "generic"
+
+
+def generic_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Generic-oracle leads, open ones first, then by disposition and id."""
+    def key(r: dict[str, Any]) -> tuple[int, int, str]:
+        d = str(r.get("disposition"))
+        return (0 if d in OPEN else 1,
+                DISPOSITIONS.index(d) if d in DISPOSITIONS else 99,
+                str(r.get("id")))
+    return sorted((r for r in rows if is_generic(r)), key=key)
+
+
+def first_line(x: Any) -> str:
+    """First non-empty line of a possibly folded text field."""
+    for ln in str(x or "").splitlines():
+        if ln.strip():
+            return ln.strip()
+    return ""
+
+
+def genericity_entry(r: dict[str, Any]) -> dict[str, Any]:
+    return {"id": r["id"], "family": r.get("family"),
+            "title": _one_line(r.get("title")),
+            "disposition": r.get("disposition"),
+            "best_measured": first_line(r.get("best_measured")) or None,
+            "next_action": pursuit_action(r),
+            "oracle_class_note": _one_line(r.get("oracle_class_note"))}
+
+
 def saturation(rows: list[dict[str, Any]], cov: dict[str, Any],
                dl: dict[str, Any]) -> dict[str, Any]:
     t = tally(rows)
@@ -587,6 +650,14 @@ def brief() -> str:
     if cov["unmapped"]:
         lines.append(f"{len(cov['unmapped'])} ECDLP records have no lead: "
                      "`python3 tools/lead_atlas.py --coverage`.")
+    gen = generic_rows(rows)
+    if gen:
+        gen_open = sum(1 for r in gen if r.get("disposition") in OPEN)
+        lines.append(f"{len(gen)} leads carry a generic oracle (bounded by "
+                     "sqrt(r): Shoup, Corrigan-Gibbs\u2013Kogan); "
+                     f"{gen_open} of them are still open and can report "
+                     "constants, never a vs_rho exponent claim "
+                     "(`python3 tools/lead_atlas.py --genericity`).")
     lines.append("Before proposing an ECDLP idea: `python3 tools/lead_atlas.py "
                  "--match \"<idea>\"`; if a lead matches, advance its "
                  "next_action instead of filing a duplicate.")
@@ -658,13 +729,27 @@ def render(rows: list[dict[str, Any]]) -> str:
         out.append(f"| `{r['id']}` {_one(r.get('title'))} | "
                    f"{r['disposition']} | {_one(pursuit_action(r))} | "
                    f"{_one(r.get('best_measured')) or '—'} |")
+    gen = generic_rows(rows)
+    if gen:
+        out += ["", "## Generic-oracle leads", "",
+                "Bounded by sqrt(r) (Shoup; Corrigan-Gibbs and Kogan): never "
+                "an exponent claim against rho, constants only. Open ones "
+                "first.", "",
+                "| lead | disposition | best measured | next action or "
+                "revisit trigger |",
+                "|:--|:--|:--|:--|"]
+        for r in gen:
+            out.append(f"| `{r['id']}` {_one(r.get('title'))} | "
+                       f"{r['disposition']} | "
+                       f"{_one(first_line(r.get('best_measured'))) or '—'} | "
+                       f"{_one(pursuit_action(r))} |")
     for fam in FAMILIES:
         fr = [r for r in rows if r.get("family") == fam]
         if not fr:
             continue
         out += ["", f"## {fam}", "",
-                "| lead | disposition | obstruction or next step |",
-                "|:--|:--|:--|"]
+                "| lead | oracle | disposition | obstruction or next step |",
+                "|:--|:--|:--|:--|"]
         for r in sorted(fr, key=lambda r: (DISPOSITIONS.index(
                 r.get("disposition")) if r.get("disposition") in DISPOSITIONS
                 else 99, r["id"])):
@@ -674,6 +759,7 @@ def render(rows: list[dict[str, Any]]) -> str:
             else:
                 why = _one(pursuit_action(r))
             out.append(f"| `{r['id']}` {_one(r.get('title'))} | "
+                       f"{r.get('oracle_class') or '—'} | "
                        f"{r.get('disposition')} | {why} |")
     return "\n".join(out) + "\n"
 
@@ -735,6 +821,7 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--delta", action="store_true")
     g.add_argument("--coverage", action="store_true")
     g.add_argument("--pursuit", action="store_true")
+    g.add_argument("--genericity", action="store_true")
     g.add_argument("--render", action="store_true")
     g.add_argument("--stamp", metavar="REVIEWER")
     ap.add_argument("--out", metavar="PATH")
@@ -818,6 +905,20 @@ def main(argv: list[str] | None = None) -> int:
             for r in rows:
                 print(f"{r['id']:52s} {r['disposition']:20s} "
                       f"{pursuit_action(r)}")
+        return 0
+    if a.genericity:
+        gen = generic_rows(load_leads())
+        if a.json:
+            print(json.dumps([genericity_entry(r) for r in gen], indent=1))
+            return 0
+        n_open = sum(1 for r in gen if r.get("disposition") in OPEN)
+        print(f"{len(gen)} generic-oracle leads ({n_open} open); bounded by "
+              "sqrt(r), constants only, never a vs_rho exponent claim")
+        for r in gen:
+            e = genericity_entry(r)
+            print(f"{e['id']} [{e['disposition']}]")
+            print(f"  best_measured: {e['best_measured'] or '-'}")
+            print(f"  next: {e['next_action']}")
         return 0
     if a.render:
         text = render(load_leads())
