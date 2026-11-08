@@ -213,10 +213,10 @@ individual and combined ranks, checks the symmetric rank against
 The flag has not yet been used for a frontier run. Its named-input plan
 and `experiment.protocol/v1` record are frozen in
 `n47-rand00-quadratic-generated-plan-001.json` and
-`n47-rand00-quadratic-generated-protocol-002.json` (which supersedes the
-unrun V1 protocol with a pre-data linear-rank control); the cost admission
-gate remains open. The existing degree-one output is unchanged when the
-flag is absent.
+`n47-rand00-quadratic-generated-protocol-003.json` (which supersedes the
+unrun V1/V2 protocols with pre-data linear-rank and diagonal controls);
+the cost admission gate remains open. The existing degree-one output is
+unchanged when the flag is absent.
 
 The rank of the **linear-syzygy variable lifts** can in fact be obtained
 without the generated-rank run. Let `k>=2`, let
