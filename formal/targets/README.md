@@ -1,8 +1,14 @@
 # Formalization targets
 
-One file per frozen formal task, consumed by
+One file per frozen formal target, consumed by
 `autoresearch formal formalize --task-file <path>` and turned into a dispatch
-queue stanza by `tools/formal_task.py`.
+queue stanza by `tools/formal_task.py`. A producing task can own more than one
+target: `task_id` records that producer, while `claim_id` and `theorem_name`
+distinguish its target claims. For example, `TASK-20261105-9e5cbb` produced
+both the Boolean normalization repair and last-fall upper-bound targets; its
+handoff and separate target receipts are archived under
+`analysis/rigorous-lfd-solving-20261105/` and
+`docs/reports/2026-11-05-lfd-publication-readiness/`.
 
 A target is a **pointer plus a claim, not an approval**. Writing one here
 queues nothing and approves nothing; the Coordinator decides what runs, and a
