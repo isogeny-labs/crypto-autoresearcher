@@ -1,13 +1,35 @@
 # SA-22 REPORT: projected total solve time at 64-256 bits for every measured oracle
 
 ## Summary
-**INCONCLUSIVE pending SA-21** against the frozen criteria (both SUCCESS and KILL require the model validated against SA-21's 20-40 bit measurements, which did not exist when this ran). On the substitute check (Table B, below) the model passes. The deciding quantities point at KILL by a very wide margin; they do not depend on the validation.
+**FINAL (after SA-21 arrived): KILL** against the frozen criteria. Every oracle's projected cost exceeds rho at 128 and 256 bits under every pricing, and the model is validated against SA-21's measured 20-40 bit points (pair table blind; form lattices after a two-parameter correction, see 'Final validation against SA-21'). The first pass of this report (before SA-21 existed) was INCONCLUSIVE pending SA-21; the sections below it are kept, with the updated numbers in the final section.
 
 Deciding numbers (log2 of projected cost / rho, unpriced work at 0 / 0.1 / 1 GAE per field op):
 - **Best arm at 128 bits:** generic pair table, +21.96 / +22.05 / +22.50 (with Heegner discount 0.13: +21.96 / +22.05 / +22.50, differs by under 0.2). At **256 bits** +43.3 / +43.4 / +43.9. It exceeds rho under every pricing and the gap grows as N^(1/6) (fitted 0.1667 per bit of log2 N). Prediction part 2 holds.
 - **Best non-generic arm at 256 bits:** Edwards form lattice (delta = 1/8), +97.3 at lambda 0.1 (pair-table-free, all pricings within 0.5). The prediction's bound "at least 2^40" holds with margin 2^57. Every non-generic arm is above 2^97 at 256 bits and above 2^49 at 128 bits.
 - Every arm's excess exponent between 128 and 256 bits (log2 ratio per bit): form lattices 0.37-0.39, ladders 0.33-0.47, msolve 0.51-0.53, generic 0.167. All positive, so every ratio grows with N (the m=3 certified ladder has no admissible factor base, B < 4, below 36 bits).
 - Even with ALL B/2 factor-base relations free (Heegner discount pushed to 100%, far above the measured 13%) the target's own relation costs more than rho for every arm: generic pair table 2^1.2 x rho, form lattices 2^67 at 256 bits.
+
+
+## Final validation against SA-21 (supersedes the Table B check; script validate_sa21.py, project_corrected.py, validate_sa21.json, project_corrected.json)
+Measured: SA-21 results/{pair,lat,lat_rerun_E32,rho}.jsonl, means per size, converted to GAE with each run's own t_GAE. Model constants were frozen before looking (blind).
+
+| arm (sizes) | quantity | model / measured, blind | after correction |
+|---|---|---|---|
+| IC-pair (k = 20..40, 11 sizes) | counted adds (lambda 0) | 0.55-0.75 (measured is 1.3-1.8x model) | unchanged |
+| IC-pair | total wall in GAE (lambda 1) | 0.48-0.90 (measured 1.1-2.1x model) | unchanged |
+| IC-lattice-W (22..32) | wall in GAE | 0.06-0.11, **fails** (9-18x low) | 0.78-1.40 |
+| IC-lattice-E (20..32) | wall in GAE | 0.03-0.07, **fails** (14-33x low) | 0.72-1.46 |
+
+Pair arm passes the factor-3 test at every size, blind. The lattice arms failed blind for two reasons found in the data: the measured oracle costs 42 GAE per call (25-58), not the 11 GAE the LLL fit gave, and each relation needs about 3.2x (W) or 5.5x (E) more attempts than m!N/B^m because the planted-50% base holds only 3-40 points and recovery is below 1. The prereg's rule was followed: the model was corrected before projecting (oracle cost max(41.6 GAE, LLL fit); attempts multiplied by kappa = 3.17 W, 5.54 E, geometric means). Residuals after correction are within 0.72-1.46, so within the factor 3 at every size. The correction is fitted on the same points (two parameters, 13 points), so this is an in-sample validation. Also noted: SA-21's rho uses 1.3-2.4x the ideal sqrt(pi N/4) adds, i.e. the ratios to rho below are conservative against the IC arms by that factor; SA-21's measured alpha (rho 0.46-0.52, pair 0.65, lattices 0.83-0.86) agrees with the model exponents 1/2, 2/3 and about 0.8-0.9 over this range.
+
+Corrected projections, log2(cost / rho), identical for lambda 0, 0.1, 1 (lattice cost is the oracle): Weierstrass form lattice +56.0 at 128 bits, +105.8 at 256; Edwards form lattice +55.1 at 128, +103.1 at 256. Generic pair table unchanged: +22.0 to +22.5 at 128, +43.3 to +43.9 at 256. Other arms (ladders, m = 3, msolve) were not measured end to end by SA-21 and keep the uncorrected projections (best +109 at 256 bits); SA-21 reports its Coppersmith-E arm modelled at about 350x slower than form-lattice-E, which agrees in direction.
+
+## Final verdict reasoning
+- SUCCESS: no oracle is below rho at 256 bits at any pricing (smallest excess +43 bits, generic table).
+- KILL: every oracle exceeds rho at 128 and 256 bits under every pricing (smallest excess +22 / +43 bits, generic; non-generic at least +55 / +103 for the measured arms and +60 / +109 for the others), with the model validated against SA-21 within factor 3 at every size (pair blind; form lattices after the correction the prereg allows). The prediction holds: non-generic excess is far above 2^40 at 256 bits, and the generic pair table is the best IC arm and still exceeds rho.
+- Caveats: validation covers only the pair and form-lattice arms (ladders, m = 3, msolve are not end-to-end measured); the correction is in-sample; SA-21's pair arm is statistically tied with rho at k = 20..24 under pricing 1 (model predicts a ratio of about 1-2 there), which is a small-size effect and does not affect 128/256 bits since the excess grows as N^(1/6).
+
+## First-pass report follows (before SA-21)
 
 ## What was run (all in /home/user/semaev-runs/SA-22/)
 - `lll_bench.py` -> `lll_bench.json`: fpylll LLL (delta 0.99, 1 thread) on Coppersmith-shaped triangular lattices, dimension (2t+1)^2 = 25, 49, 81, 121 at 64/128/256-bit p. Fit sec = exp(-23.79) d^4.63 n^1.07 (max log residual 0.07). The 256-bit, d = 121 point timed out at 40 s and is excluded.
