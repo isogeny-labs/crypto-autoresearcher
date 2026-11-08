@@ -181,6 +181,39 @@ This gate qualifies those claims; it does not require descriptive observations
 to assert an advantage or invent a baseline comparison. Report the actual
 controls and reference specified by the study, and defer broader interpretation.
 
+## Admission throughput, vocabulary and oracle class
+
+Owner, 2026-11-08 (`docs/harness-funnel.md`). The scarce resource is a
+completed measurement, not a proposal: on 2026-11-08 the ledger held 1,661
+approved contracts, 1,187 of them with no run and no evidence.
+
+- **WIP cap and expiry.** `coordination/experiment_wip_policy.json` caps
+  approved contracts without a run at three per goal and expires one after 14
+  days without a run (`python3 tools/experiment_wip.py --report|--check|--expire`).
+  Expiry returns the contract to `draft` by a Coordinator decision and asserts
+  nothing about its hypothesis. A contract approved from this date names its
+  `first_measurement`: a command that finishes in under an hour and the null
+  object it is checked against.
+- **Vocabulary is enforced.** From this date a record's `status`, `direction`,
+  `strength`, `claim_tier` and `proof_status` take only the values in
+  `tools/ledger_vocabulary.py`, which reads the schema enums and the state lists
+  under "Research states"; older records are tallied as advisories
+  (`python3 tools/validate_ledger.py --vocabulary`).
+- **Supporting evidence names its positive control.** From this date an
+  evidence record with `direction: supports` at tier `medium` or `crypto` names
+  the positive control that shows its instrument sees the effect, or it does not
+  validate. An instrument whose reading equals its null has measured nothing.
+- **Oracle class.** Every `ic-prime` and `ic-binary` lead carries
+  `oracle_class` (`knowledge/leads/ecdlp/README.md`). A `generic` oracle
+  (enumeration, subtraction, table, meet-in-the-middle, k-sum, residual or
+  coincidence collection) is bounded by sqrt(r) (Shoup; Corrigan-Gibbs and
+  Kogan) and reports constants on the generic track, never an exponent or a
+  `vs_rho` claim; `python3 tools/lead_atlas.py --genericity` lists them.
+- **Exponent before constant.** A comparison across sizes leads with the
+  fitted exponent and its interval; a constant at one size is engineering.
+- **Suite polarity.** `evals/suites/discipline.yaml` holds affirmative and
+  negative tasks, so refusing everything is not a passing policy.
+
 ## Intermediate-cost and asymmetric-access hypotheses
 
 For assessments of hidden mathematical advantage, follow [the full rule](docs/agent-contract-extended.md#intermediate-cost-and-asymmetric-access-hypotheses). Its scope, cost, secrecy, portfolio, and uncertainty obligations are binding.
