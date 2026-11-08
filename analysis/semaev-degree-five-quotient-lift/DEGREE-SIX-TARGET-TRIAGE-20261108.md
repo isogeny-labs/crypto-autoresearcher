@@ -7,7 +7,7 @@ allocation profiles. It is not a new closure run or a degree-six bound.
 | --- | ---: | ---: | ---: | --- |
 | `fresh-n47-rand-00`, 48 variables | 0 | 61,196 | 86,599,881,493 bytes | Frozen one-shot local plan, USD 20 reserved, output root absent |
 | `fresh-n50-poly-03`, 50 variables | 0 | 38,629 | 38,017,488,971 bytes at 4096-row chunks | Frozen one-shot local plan, output root absent; finite USD reservation still a launch gate |
-| `fresh-n51-poly-01`, 51-variable affine slice | 0 | 45,615 | 55,355,297,148 bytes at 4096-row chunks | Prior cloud D5 attempt on the original presentation failed after seed checking, with no candidate object; old sliced local plan deadline expired |
+| `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
 
 For n47, the accepted original D4 map has SHA-256
 `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`.
@@ -34,11 +34,19 @@ and a 21,600-second producer timeout. It requires a finite charged/reserved
 local Spot allowance and fresh account-budget headroom before launch. No
 such additional dollar reservation is asserted here.
 
-For n51 polynomial-01, the D5 estimate is in
-`validation/n51-poly01-sliced-d5-envelope-001.json`. The prior cloud
-attempt on the original presentation has terminal evidence in
+For n51 polynomial-01, the original-system D4 map has SHA-256
+`c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`.
+Its zero count, checker acceptance, and original-system D5 estimate are in
+`reports/n51-poly01-d4-20261101/report.md`, with public readback recorded in
+`bounded-d4-archive-001/fresh-n51-poly-01-D5-cascade01-bounded-D4-001.publication.json`.
+The prior cloud D5 attempt has terminal evidence in
 `reports/n51-poly01-d5-stream-001/terminal-report.md`: it produced no D5
 candidate, and the pod's underlying failure reason was not retained.
+There is also a distinct 51-variable affine-slice D4 seed whose D5 profile
+is 55,355,297,148 bytes at 4096-row chunks
+(`validation/n51-poly01-sliced-d5-envelope-001.json`); its old local plan
+deadline has expired. A D5 bound on the slice does not by itself transfer
+to the original presentation's LFD, so the slice is not used in the table.
 
 The n50 polynomial-03 input is the smallest *source-estimated memory*
 candidate among these three, and it uses a polynomial factor base. That does

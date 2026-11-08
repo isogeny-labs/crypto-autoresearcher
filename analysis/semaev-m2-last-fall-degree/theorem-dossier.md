@@ -875,6 +875,18 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
   Its source-level count argument is in
   `../semaev-degree-five-quotient-lift/N50-POLY03-COUNT-BRIDGE.md`.
   The count has not yet had an independent rebuild or second enumeration.
+- `fresh-n51-poly-01` *(retained count, cert; outside the original sample)*:
+  $n=51$, $k=26$, polynomial $V=\langle1,t,\dots,t^{25}\rangle$.
+  The separate checker accepted the **52-variable original presentation**
+  D4 map with codimension at least 45,615; the retained exhaustive count
+  returned zero. The map has SHA-256
+  `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`.
+  The named [D4 report](../semaev-degree-five-quotient-lift/reports/n51-poly01-d4-20261101/report.md)
+  and its [public readback receipt](../semaev-degree-five-quotient-lift/bounded-d4-archive-001/fresh-n51-poly-01-D5-cascade01-bounded-D4-001.publication.json)
+  bind the count, checker, and certificate. Its separately studied
+  51-variable affine slice is a different presentation and is not the
+  basis of this bound. The count has not had an independent second
+  enumeration.
 
 R35a's closure, $\dim W_4\cap B_{\le d}=(0,1,105,3885,61425)$, is
 reproduced exactly by implementation B. The closure stalls in a regular way: it
