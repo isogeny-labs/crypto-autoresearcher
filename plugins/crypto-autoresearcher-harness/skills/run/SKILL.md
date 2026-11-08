@@ -169,3 +169,10 @@ named boundary, user stop, or when no selected work can execute. Reporting resul
 does not require ledger repair or completion of a review cycle; it does include
 the branch the run records were pushed to. End with a session receipt
 (`python3 tools/session_receipt.py --skill run ...`, see `docs/session-receipts.md`).
+
+## Default challenge research loop
+
+The default goal supervisor uses [the challenge research loop](../../../../docs/challenge-research-loop.md) to select existing admitted experiments for a frozen candidate. Execute that declared scope and preserve failures and evidence pointers. A successful execution is an observation, not review acceptance. Explicit run requests remain direct; do not add loop preparation, independent review or protocol authoring to this execution skill.
+
+Preserve the candidate's frontier target, exact comparison conditions and boundary
+observations in the run evidence; scientific review determines what they support.

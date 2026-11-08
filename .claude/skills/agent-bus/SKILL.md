@@ -120,3 +120,11 @@ When `ListAgents` shows a reachable peer — local sessions only; cloud sessions
 list none — `SendMessage` reaches it directly and instantly. Use it for a
 question to a session you can see right now. It leaves no record, so anything
 that should outlive the session goes on the bus as well.
+
+## Default challenge research loop
+
+Research goals use [the default challenge research loop](../../../docs/challenge-research-loop.md). Preserve the frozen problem, candidate, evidence and review pointers relevant to this skill. Work within its existing role; findings guide the next attempt, and a worker completion alone is not scientific acceptance.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

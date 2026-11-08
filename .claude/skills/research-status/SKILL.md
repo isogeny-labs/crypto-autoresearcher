@@ -52,3 +52,11 @@ paying.
    research-status --role <role> --outcome no_change --files-read <n>`
    (`docs/session-receipts.md`). Read-only is still a cost; the receipt is
    how the program learns what a status wake costs.
+
+## Default challenge research loop
+
+Use `autoresearch campaign next --goal <GOAL-ID>` to show the goal's problem/candidate/evidence/review phase and missing artifact, alongside ordinary status. [The default research loop](../../../docs/challenge-research-loop.md) advances from committed artifacts; distinguish a worker exit, an exploratory review judgment, and official scientific progress.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

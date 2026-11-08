@@ -20,3 +20,11 @@ Read `docs/curve-identities.md` and `tools/curve_identity.py`. For UI ingestion 
 6. Return exact IDs, sourced traits, unresolved values, and a focused diff or identity report. Never turn a metadata hash into a security or speedup badge.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Default challenge research loop
+
+Research goals use [the default challenge research loop](../../../docs/challenge-research-loop.md). Preserve the frozen problem, candidate, evidence and review pointers relevant to this skill. Work within its existing role; findings guide the next attempt, and a worker completion alone is not scientific acceptance.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

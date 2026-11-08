@@ -1,0 +1,7 @@
+# Deterministic early-prefix rejection count
+
+Use exactly the trace note's authenticated chart and complete necessary set T, with |T|<=4B-2, B=2^s. For any depth0<=d<=floor(log2p), all2^d LSB prefixes have at least one canonical field completion: the integer represented by the prefix itself is below2^d<=p. At most|T| prefixes contain an element of T, because each T element has only one depth-d prefix. Therefore at least max(0,2^d-(4B-2)) prefixes are empty of T and rejectable by the verified trie. This is a deterministic cardinality consequence, not a distribution assumption.
+
+Let k=ceil(log2p)=bitlength(p) for odd prime p, and suppose s+3<=k-1. Choose d=s+3. Among8B canonical-completable prefixes, at least8B-(4B-2)=4B+2 are certified empty. At least k-d>=1 slope bit remains unassigned, as do all auxiliary bits. Each empty-prefix proof rejects all canonical completions and all possible chart witnesses for those slope completions. Noncanonical Boolean completions are already outside the original chart domain; no claim that all2^(k-d) completions are canonical is needed.
+
+This establishes substantial early-prefix rejection for this necessary-set filter when the size condition holds, even though setup remains O(B)-scale and may match direct interval point enumeration. It is not an end-to-end speedup statement, complete model count, or degree-of-regularity estimate. All certificate construction/verification and trie costs remain charged.
