@@ -80,6 +80,13 @@ without retaining the reduction transcript. Its bit-vector payload is at most
 runtime and total RSS remain
 unmeasured at n47. The n8 D5 positive fixture returned the same dimensions
 as the default native mode, and the retained C2-mutated fixture was refused.
+The frozen producer caps the original-system map at 45,161,173,824 bytes.
+With `C5=1,925,357` columns, this allows at most 2,931 64-bit words per row,
+or `q=187,584`; the corresponding paired-pivot row payload is at most
+8,796,939,264 bytes. The file plus that payload totals at most
+53,958,113,088 bytes (50.252 GiB) of mapped-file virtual space and row
+payload. Other allocations and runtime remain unbounded by this arithmetic,
+so it does not by itself admit a 96-GiB checker attempt.
 For each variable, paired elimination applies the same row operations to
 `A(m)` and `B_i(m)=A(x_i m)` for every monomial of degree at most four. A
 zero reduced `A` row with nonzero reduced `B_i` is exactly a witness that
