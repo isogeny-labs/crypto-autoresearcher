@@ -1056,10 +1056,19 @@ class ResearchIndex:
             try:
                 fast_yaml.safe_load(path.read_text(encoding="utf-8", errors="replace"))
             except Exception as exc:                  # noqa: BLE001
-                found.append({
-                    "path": str(path.relative_to(self.repo)),
+                relative = str(path.relative_to(self.repo))
+                item = {
+                    "path": relative,
                     "error": str(exc).splitlines()[0][:200],
-                })
+                }
+                # The original remains unparseable. Show a separate correction
+                # only when both registry hashes and its parsed ID pass.
+                record = self.records.get(path.stem)
+                if record is not None and record.path == relative:
+                    correction = self.parsed_supersession(path.stem)
+                    if correction is not None:
+                        item["parsed_correction_path"] = correction["path"]
+                found.append(item)
         with self._lock:
             self.integrity["unparseable"] = found
             self.integrity["unparseable_state"] = "complete"
