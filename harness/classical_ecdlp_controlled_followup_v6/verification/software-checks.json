@@ -1,0 +1,63 @@
+{
+  "schema": "controlled-followup-v6.software-verification/v1",
+  "recorded_at": "2026-11-08T06:14:25.879878+00:00",
+  "tested_published_source_commit": "15265aecc57fb6e9967756930017baf48798b0a8",
+  "software_test_counts": {
+    "unit-published": 10,
+    "contracts-published": 13
+  },
+  "total_tests": 23,
+  "all_test_commands_returncode": 0,
+  "source_capture_keys": 69,
+  "source_capture_unchanged_and_matches_delivered_files": true,
+  "source_scope": "Disclosed fixed software controls and full static workload counting; no fresh cohort, field sampling or experiment.",
+  "scientific_runs": 0,
+  "fresh_entropy_draws": 0,
+  "new_vms": 0,
+  "archive": {
+    "uri": "s3://setec-astronomy-artifacts/store/sha256/76/769ad25cea756995ec71fa04a6c0217069e1d69c2e848d6a57e773d62abe0c98",
+    "sha256": "769ad25cea756995ec71fa04a6c0217069e1d69c2e848d6a57e773d62abe0c98",
+    "bytes": 736921066,
+    "full_get_verified": true,
+    "contents": "All three retained fixed-control directories and original/final/published command receipts, including failures intentionally exercised by controls."
+  },
+  "storage_commands": [
+    {
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/python",
+        "-B",
+        "tools/artifacts/artifacts.py",
+        "push",
+        "harness/classical_ecdlp_controlled_followup_v6/verification/software-controls.tar.gz"
+      ],
+      "returncode": 0,
+      "started_at": "2026-11-08T06:13:58.599687+00:00"
+    },
+    {
+      "argv": [
+        "/workspace/classical-ecdlp-endpoint-reuse/runtime-20261028/bin/aws",
+        "--region",
+        "us-east-2",
+        "--cli-connect-timeout",
+        "10",
+        "--cli-read-timeout",
+        "30",
+        "s3api",
+        "get-object",
+        "--bucket",
+        "setec-astronomy-artifacts",
+        "--key",
+        "store/sha256/76/769ad25cea756995ec71fa04a6c0217069e1d69c2e848d6a57e773d62abe0c98",
+        "--output",
+        "json",
+        "/tmp/ecd-prepare96-20261108/evidence-full-get.tar.gz"
+      ],
+      "returncode": 0
+    }
+  ],
+  "limitations": [
+    "Not an independent scientific review or native experiment admission.",
+    "No full-cost, clock, exponent or attack-advantage claim.",
+    "Protected main synchronization and operator budget access remain pending."
+  ]
+}
