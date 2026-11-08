@@ -20,3 +20,7 @@ Read `docs/curve-identities.md` and `tools/curve_identity.py`. For UI ingestion 
 6. Return exact IDs, sourced traits, unresolved values, and a focused diff or identity report. Never turn a metadata hash into a security or speedup badge.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

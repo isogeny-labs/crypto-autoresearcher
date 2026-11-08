@@ -207,3 +207,9 @@ of a prediction. The contract must include:
   predictions carry success or falsification criteria; an A/A comparison
   sets their noise floor; confounded and in-sample ones are reported, never
   decisive.
+
+## Curvesmash challenge context
+
+For a selected challenge, start with `autoresearch research template --challenge <track>` and fill the method, procedure and evidence plan. Carry `extensions.challenge` under `handoff.research` and bind its source paths into the experiment inputs. Preserve the exact distribution, total-work accounting, success threshold and scoring parameter.
+
+See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.

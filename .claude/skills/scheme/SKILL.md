@@ -15,3 +15,7 @@ Read `docs/scheme-construction-contract.md` and `templates/scheme-construction-c
 6. Return the obligation table and concrete construction-or-obstruction step. Use formal for a supplied proof target and review-evidence for independent scientific review; avoid manufacturing a secure scheme from a filled template.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

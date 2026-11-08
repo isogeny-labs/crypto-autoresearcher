@@ -14,3 +14,6 @@ Read `.claude/skills/coordinate/SKILL.md` from this checkout and follow it.
 Keep this a coordination task. Do not launch scientific trials; that is `$run`.
 The same coordinate skill is used by Codex and OpenCode, Claude Code, and the
 repository adapters.
+
+For Curvesmash-linked work, the canonical skill also follows
+[the shared challenge workflow](../../../docs/research-challenges.md); preserve the selected track and source pins.

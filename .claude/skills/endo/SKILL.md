@@ -15,3 +15,7 @@ Read `harness/endosweep/README.md`. Consult `harness/endosweep/targets.py`, `qua
 6. Return the formulas, implemented map/certificate paths, modeled and measured columns, and the next unresolved check. Route supplied-map transfers to transfer and actual existing trials to run.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

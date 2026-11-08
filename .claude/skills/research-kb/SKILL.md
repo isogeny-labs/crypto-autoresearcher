@@ -15,3 +15,7 @@ This repository's local `kb/` / `crypto-kb` server remains its derived index.
 Use the same triggers, source-ID receipt and score caveats as the canonical
 procedure; record the KB `source_id` and `repo:path` in the session log or task
 notes.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

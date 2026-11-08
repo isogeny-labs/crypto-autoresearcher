@@ -154,3 +154,7 @@ the verdict.
   scientific trial, or change research state.
 - A bounded search, a timeout or a zero-hit count proves no absence. An
   impediment is never negative evidence.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

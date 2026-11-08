@@ -185,6 +185,11 @@ orchestration.{adapter,agent,eval}`.
 
 ## Choosing an inference backend
 
+Curvesmash's six tracks are also [open research objectives](docs/research-challenges.md):
+`autoresearch research challenges` lists them, `research challenge <track>` shows
+the protected problem and scoring contract, and `research template --challenge
+<track>` creates a task draft for the existing research lifecycle.
+
 For Curvesmash-style exploratory claim review, use the optional
 [`autoresearch verify` integration](docs/curvesmash-verification.md). It reuses
 the registered challenge's pinned verifier, six protected target definitions,

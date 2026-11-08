@@ -62,3 +62,7 @@ The brief reports saturation when no lead is `open_unexamined`, every ECDLP
 record is mapped, and nothing changed since review. Report it as such. It is
 not a reason to stop a goal. The open next steps are still the work, and a
 new lead is the most valuable thing a session can add.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

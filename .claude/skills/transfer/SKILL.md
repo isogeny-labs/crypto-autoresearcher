@@ -75,3 +75,7 @@ cost table, controls, exploration boundary, and open obligations. Link artifacts
 by exact identity and revision. Keep the weakest unresolved obligation visible
 on composed paths. Apply the host's `research-visuals` requirements to substantive
 mathematical searches. Static skill creation is not a scientific finding.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

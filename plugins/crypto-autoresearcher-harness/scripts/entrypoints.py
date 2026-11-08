@@ -37,6 +37,10 @@ outputs, leave each experiment's run report (graph and PDF), and report results.
 Do not add an agent-led protocol/schema validation phase, preparation workflow,
 or review cycle. Built-in runner checks still apply.
 
+For Curvesmash-linked work, follow the canonical skill's challenge context and
+[the shared challenge workflow](../../../docs/research-challenges.md). Keep the selected
+track and existing experiment scope; a challenge draft is not a launcher.
+
 The same run skill is used by Codex and OpenCode, Claude Code, and the plugin.
 """
 

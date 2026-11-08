@@ -143,3 +143,9 @@ PR (crypto) decide.
 - [ ] stopping and decision rules and the analysis script frozen; inadmissible moves listed
 - [ ] `validate` clean, `freeze` done, committed before the first data point
 - [ ] `export.json` written, `check-export --verify-files` clean, `flow` in the report
+
+## Curvesmash challenge context
+
+For a challenge-linked protocol, bind the exact track and source hashes from `research challenge <track>`, including distribution, output predicate and scoring parameter. Declare the tested scale and every transfer assumption to the production target.
+
+See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.

@@ -16,3 +16,7 @@ Read `docs/bounds-and-frontiers.md` and the producing tool's measurement contrac
 6. Return the paired table, accounting boundary, sources, uncertainty and material limitations. Measured bounds require the existing producing harness; official frontier/claim changes remain with Coordinator review. Do not rerun or launch cloud work solely to assess supplied measurements.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

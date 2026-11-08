@@ -15,3 +15,7 @@ Read `harness/gpu/README.md` or `src/crypto_autoresearcher/gf2/gpu/README.md` fo
 6. Return the kernel diff, correctness evidence, bottleneck estimate and measured limits. An unavailable GPU is an infrastructure impediment, not negative algorithmic evidence.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

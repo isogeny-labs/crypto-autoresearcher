@@ -20,3 +20,7 @@ Read `groebner_compare/README.md`, `src/crypto_autoresearcher/gf2/README.md`, an
 6. Return exact input/adapter/certificate identities and a stage-specific diagnosis. Use bench for paired comparisons, gpu for kernel correctness, and run for existing trial execution.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

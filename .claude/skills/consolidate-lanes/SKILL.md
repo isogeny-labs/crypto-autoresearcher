@@ -111,3 +111,7 @@ traffic and `--unconsolidated` becomes the only thing keeping it honest.
   `tools/research_dispatch.py`, with a write scope, a budget, and a completion
   gate. A lane that needs work done is told that in those words.
 - **No ledger writes.** This skill changes no status and files no record.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

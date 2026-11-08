@@ -15,3 +15,7 @@ Read `ui/README.md`, `ui/payloads.py`, and the relevant reader module. Preserve 
 6. Return the changed behavior, preview/test evidence and missing data. Building a static output is not deployment; publish only within the user's requested scope.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

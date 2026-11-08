@@ -99,3 +99,7 @@ routing rule, and never enters the ledger as a `validation_report`.
   this screen. The screen is recorded, not substituted for that review.
 - A missing verifier, absent Lean or a replay-exempt step is `not_covered`. It
   is never a failure of the hypothesis, and never a pass.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

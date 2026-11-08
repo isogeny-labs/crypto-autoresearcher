@@ -264,3 +264,7 @@ Present, in this order:
   in scope, say so plainly and name what would need to happen first (e.g. no
   open `RQ-*` in scope, or `crypto-kb` has no index built) rather than
   inventing a plausible-sounding shortlist.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

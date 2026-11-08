@@ -169,3 +169,9 @@ named boundary, user stop, or when no selected work can execute. Reporting resul
 does not require ledger repair or completion of a review cycle; it does include
 the branch the run records were pushed to. End with a session receipt
 (`python3 tools/session_receipt.py --skill run ...`, see `docs/session-receipts.md`).
+
+## Curvesmash challenge context
+
+For challenge-linked execution, retain the selected track and existing experiment/task scope. A catalog entry or generated task draft is not a launcher. Use the existing declared program and preserve its track metadata in outputs; do not initiate claim review or a submission from an experiment run.
+
+See [the shared challenge workflow](../../../../docs/research-challenges.md).

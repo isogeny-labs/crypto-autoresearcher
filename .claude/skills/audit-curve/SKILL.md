@@ -387,3 +387,7 @@ may promote the result or change official research state. If the audit expands
 into a substantive search for new curves, isogenies, endomorphisms, or scalar
 rules, also follow `.claude/skills/research-visuals/SKILL.md` and produce its
 source-linked report, diagram, and PDF.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

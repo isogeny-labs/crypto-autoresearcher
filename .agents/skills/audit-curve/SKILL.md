@@ -9,3 +9,6 @@ Read `AGENTS.md` and the canonical workflow at
 `.claude/skills/audit-curve/SKILL.md` in this checkout, then follow it exactly.
 Use `$run` for any launch of an existing scientific experiment; this adapter
 does not replace the repository's single public execution skill.
+
+For Curvesmash-linked work, the canonical skill also follows
+[the shared challenge workflow](../../../docs/research-challenges.md); preserve the selected track and source pins.

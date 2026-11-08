@@ -287,3 +287,7 @@ graduate it into the ledger as an `RQ-META-*` campaign over the skill file
 instead of extending this prototype — that gets citation discipline,
 immutability, and Coordinator sign-off for free instead of reimplementing
 them here.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

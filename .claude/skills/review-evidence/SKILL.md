@@ -190,3 +190,9 @@ requested, still use the experiment route and its record-specific PR title.
 - A review without its decision report, graph and PDF is incomplete. If no
   renderer can be installed, archive the report source and graphs and state
   the blocker; never present an older PDF as current.
+
+## Curvesmash challenge context
+
+For a challenge-linked claim, read its pinned profile, rules and cost model from `handoff.research.extensions.challenge.source`. Check exact inputs, output predicate, success argument and complete cost. Curvesmash exploratory review remains advisory to the existing independent review and Coordinator process.
+
+See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.

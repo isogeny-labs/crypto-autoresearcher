@@ -6,3 +6,6 @@ description: "Build or maintain the crypto-autoresearcher dashboard, curve trait
 # ui
 
 Read `.claude/skills/ui/SKILL.md` from this checkout and follow it. Resolve references and assets relative to that canonical directory. Preserve its authority and execution boundaries; this adapter adds no runtime role.
+
+For Curvesmash-linked work, the canonical skill also follows
+[the shared challenge workflow](../../../docs/research-challenges.md); preserve the selected track and source pins.

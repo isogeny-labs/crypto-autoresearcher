@@ -16,3 +16,7 @@ Read `AGENTS.md` branch/archival rules and inspect the exact working branch, tar
 7. Return the PR link, exact delivered scope and current observed checks/review/merge state, including whether auto-merge is enabled. Do not send unrelated messages or make repository access changes.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

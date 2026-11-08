@@ -120,3 +120,7 @@ When `ListAgents` shows a reachable peer — local sessions only; cloud sessions
 list none — `SendMessage` reaches it directly and instantly. Use it for a
 question to a session you can see right now. It leaves no record, so anything
 that should outlive the session goes on the bus as well.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

@@ -131,3 +131,9 @@ protocol is complete. Do not ask the user to pick or confirm each idea.
   evidence.
 - Recreate retired execution-skill adapters, or package this skill inside
   `plugins/crypto-autoresearcher-harness/skills/` (that package is `run` only).
+
+## Curvesmash challenge context
+
+When selecting challenge work, inspect `autoresearch research challenges` and `research challenge <track>`. Rank a concrete next question within the named track, reuse an existing matching goal/question, and bind the challenge id and source revision in the task. Follow the normal campaign and Coordinator workflow.
+
+See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.

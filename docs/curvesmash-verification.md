@@ -200,3 +200,10 @@ Implementation validation on 2026-10-23 used CPython 3.12.14: 182 selected tests
 and 27 subtests passed across verification, CLI entrypoints, inference adapter,
 model tiers, progress fidelity, review independence and skill routing. This
 includes 15 bridge controls with the real pinned optional backend installed.
+
+## Research objectives
+
+Use `autoresearch research challenges` to discover the same six targets as open
+research objectives, and `autoresearch research template --challenge <track>` to
+carry one into a research-task draft. [The challenge workflow](research-challenges.md)
+connects those definitions to coordination, ideation, design, execution and review.

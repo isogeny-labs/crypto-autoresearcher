@@ -20,3 +20,9 @@ Read `docs/skill-routing.md` and `docs/skill-catalog.json`. Use `python3 tools/s
 Use `skill_catalog.py check` when maintaining the catalog, not before a scientific run. A catalog entry is a navigation aid, never a mathematical or performance certificate.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+Discover Curvesmash objectives with `autoresearch research challenges`; inspect `research challenge <track>` and use `research template --challenge <track>` for task preparation. Route by the requested lifecycle action; the challenges topic never turns discovery into execution.
+
+See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.

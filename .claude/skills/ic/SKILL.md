@@ -20,3 +20,7 @@ Read `src/crypto_autoresearcher/index_calculus/README.md` and the selected froze
 6. Return a stage table, certificate/receipt references, missing costs and the concrete implementation or design change. Use design-experiment for a new trial contract, solver for its algebra, bench for comparisons, and run for execution. Do not synthesize an autonomous production-target attack.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

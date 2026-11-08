@@ -156,3 +156,13 @@ source/console interfaces, availability and execution/authority boundaries. Run
 the focused catalog tests and `check`; inspect `drift` after new CLI sources land.
 Keep descriptions sufficient to trigger the skill without loading its body.
 Reuse lifecycle skills instead of duplicating them under a shorter alias.
+
+## Curvesmash research objectives across skills
+
+All skills and host adapters point to [the challenge workflow](research-challenges.md).
+Use `autoresearch research challenges` for the open objectives, `research challenge
+<track>` for exact inputs, outputs, scoring and source hashes, and `research template
+--challenge <track>` for an incomplete task draft. `skill_catalog.py route --intent
+coordinate --topic challenges` retains `coordinate`; explicit run requests retain
+`run`. Select a lifecycle action before a subject profile. Definitions alone do not
+create an approved campaign, a runnable experiment or an accepted result.

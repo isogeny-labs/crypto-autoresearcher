@@ -9,3 +9,6 @@ Read `AGENTS.md` and the canonical skill at
 `.claude/skills/research-visuals/SKILL.md` in this checkout, then follow that
 workflow. Keep `run` an execution skill: its per-experiment run report
 describes the outputs and adds no validation, review, or state transition.
+
+For Curvesmash-linked work, the canonical skill also follows
+[the shared challenge workflow](../../../docs/research-challenges.md); preserve the selected track and source pins.

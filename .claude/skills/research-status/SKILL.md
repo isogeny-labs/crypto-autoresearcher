@@ -52,3 +52,9 @@ paying.
    research-status --role <role> --outcome no_change --files-read <n>`
    (`docs/session-receipts.md`). Read-only is still a cost; the receipt is
    how the program learns what a status wake costs.
+
+## Curvesmash challenge context
+
+For challenge status, list `autoresearch research challenges`, then report separately any linked goals, questions, experiments and review artifacts. Catalog `open` means a research objective; it is not a live leaderboard status or a statement that no progress exists.
+
+See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.

@@ -97,3 +97,10 @@ subcommands and strict JSON serialization. This is a software extension, with no
 claim to introduce a new scientific method or to validate the fixture research.
 
 For verified outcomes and staged orchestration evaluation, see [capability campaigns](capability-campaigns.md).
+
+## Open challenge objectives
+
+The six Curvesmash objectives are available through `autoresearch research challenges`.
+Use `research challenge <track>` to inspect one and `research template --challenge
+<track>` to bind its protected problem and acceptance criteria into a task draft.
+See [the challenge workflow](research-challenges.md) for selection, design and review.

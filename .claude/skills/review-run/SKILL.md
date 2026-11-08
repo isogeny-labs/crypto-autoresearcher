@@ -100,3 +100,7 @@ the PR review (crypto) decide what follows and cite it.
 - Change a hypothesis, goal, leaderboard or benchmark row; it is one input
   the owning repository's gate cites.
 - Report a number it did not recompute or observe.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

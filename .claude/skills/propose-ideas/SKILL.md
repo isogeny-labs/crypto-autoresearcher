@@ -134,3 +134,9 @@ pulls in `main` and surfaces the new proposals as a PR:
 - Do not strip or soften `heuristic_assumptions` or `target_complexity` when
   filing ideas: a conditional claim must stay conditional, with its validation
   route and exponents intact.
+
+## Curvesmash challenge context
+
+For challenge ideation, use `autoresearch research challenge <track>` as the target contract and bind the track id, source revision, allowed inputs, required answer and accounting model in the research question and handoff. Distinguish ordinary BLS DLOG, auxiliary powers and the two pairing directions.
+
+See [the shared challenge workflow](../../../docs/research-challenges.md) for the lifecycle and evidence boundaries.

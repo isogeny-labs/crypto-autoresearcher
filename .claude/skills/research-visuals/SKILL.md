@@ -210,3 +210,7 @@ aws s3 ls s3://setec-astronomy-artifacts/reports/crypto-autoresearcher/<reposito
 aws s3 cp s3://setec-astronomy-artifacts/reports/crypto-autoresearcher/<repository path> . --region us-east-2
 aws s3 presign s3://setec-astronomy-artifacts/reports/crypto-autoresearcher/<repository path> --expires-in 604800 --region us-east-2
 ```
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.

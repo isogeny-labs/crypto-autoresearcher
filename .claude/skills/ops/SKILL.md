@@ -16,3 +16,7 @@ Read the selected runtime or resource runbook, not every infrastructure subsyste
 6. Return actual status, actions, identifiers, retained checkpoints and unresolved infrastructure needs. External autolab/local-macOS paths in runbooks are references, not installed binaries in this repo.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Curvesmash challenge context
+
+For work linked to a Curvesmash objective, use [the shared challenge workflow](../../../docs/research-challenges.md) and preserve the track id and pinned source references. Apply this skill only within its existing role and the user's named scope.
