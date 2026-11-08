@@ -36,6 +36,23 @@ def test_flat_goal_projection_is_hash_bound_and_read_only(tmp_path: Path) -> Non
     assert not (tmp_path / ".local").exists()
 
 
+def test_yaml_dates_and_timestamps_project_without_changing_sources(tmp_path: Path) -> None:
+    from datetime import date, datetime
+    from orchestration.campaign.projection import canonical_json
+    source = tmp_path / 'ledger/goals/GOAL-TEST-001.yaml'
+    _write(source, 'research_goal:\n  id: GOAL-TEST-001\n  status: active\n'
+                   '  added: 2026-11-08\n  updated: 2026-11-08T20:00:00Z\n')
+    before = source.read_bytes()
+    first = load_materialized_goal(tmp_path, 'GOAL-TEST-001')
+    assert isinstance(first.record['added'], date)
+    assert isinstance(first.record['updated'], datetime)
+    assert b'2026-11-08T20:00:00+00:00' in canonical_json(first.record)
+    assert first.projection_hash == load_materialized_goal(tmp_path, 'GOAL-TEST-001').projection_hash
+    assert source.read_bytes() == before
+    with pytest.raises(TypeError, match='unsupported projection value'):
+        canonical_json({'not_supported': object()})
+
+
 def test_random_suffix_flat_goal_projects_unchanged(tmp_path: Path) -> None:
     goal_id = "GOAL-ERANK-a1b2c3"
     _write(
