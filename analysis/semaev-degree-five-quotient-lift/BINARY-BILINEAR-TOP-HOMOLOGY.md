@@ -158,3 +158,48 @@ should lift these 94 syzygies through the lower-degree equation terms and
 test whether their falls generate all low-degree closure mutations. The
 uniform theorem above controls only the first joint layer; a dimension
 match at degree one alone is not an LFD lower bound.
+
+## Symmetric quadratic syzygies at the next layer
+
+There is a universal, explicitly harmless subspace of the joint
+degree-two-multiplier kernel. This reduces the part of that kernel that
+needs to be classified for a degree-four closure argument.
+
+Let `g_1,...,g_r` be Boolean equations of degree at most two whose
+homogeneous quadratic top forms `q_1,...,q_r` are independent in the
+square-zero associated graded algebra `A`. Write `g_i=q_i+ell_i` in the
+Boolean ring, where `deg ell_i <= 1`. The map
+
+    Phi_2 : A_2 tensor span(g_i) -> A_4,
+    (h_i)_i |-> sum_i h_i*q_i
+
+has a canonical `r*(r+1)/2`-dimensional subspace in its kernel. For each
+`i`, use the coefficient vector with `q_i` in position `i`; for each
+`i<j`, use `q_j` in position `i` and `q_i` in position `j`. These vectors
+are independent because the `q_i` are independent. Their images vanish:
+`q_i^2=0` in `A`, while `q_i*q_j+q_j*q_i=0` in characteristic two.
+
+**Their lower-degree lifts add nothing beyond the degree-three Macaulay
+space.** In the Boolean ring, where every element is idempotent,
+
+    q_i*g_i = (g_i+ell_i)*g_i = g_i+ell_i*g_i,
+    q_j*g_i+q_i*g_j = ell_j*g_i+ell_i*g_j.
+
+Every right-hand side belongs to `M_3(g_1,...,g_r)`: it is an input
+equation or a degree-at-most-one multiple of one. Thus the symmetric
+subspace produces no new low-degree fall when degree-two multipliers are
+admitted at cap four. This statement is parameter-uniform for Boolean
+quadratic systems; it does **not** classify the rest of `ker Phi_2` or
+make the degree-four closure exact.
+
+For the named n47 Semaev input, the independently checked quadratic-top
+rank is 46. Choosing 46 independent combinations gives a symmetric
+subspace of dimension `46*47/2 = 1081` inside the quadratic-multiplier
+kernel. The omitted 47th combination has zero quadratic top and is the
+affine trace equation. Its 1128 independent squarefree quadratic
+multipliers occupy the separate trace-equation coordinate, so the full
+47-equation top map has kernel dimension **at least 2209** before other
+syzygies are considered. Its multiples are lower-degree rows, not additional
+members of the 1081-dimensional symmetric subspace. The next useful
+rank calculation should quotient out these 1081 known relations before
+seeking genuinely new quadratic syzygies and their degree-three lifts.
