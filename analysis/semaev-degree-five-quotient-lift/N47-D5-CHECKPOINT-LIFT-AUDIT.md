@@ -16,6 +16,20 @@ The retained binary SHA-256 is
 matching the frozen plan. The source audit assumes that binary implements
 these committed sources; it is not an independent reproducible-build proof.
 
+The current source's admission expression can be recomputed from the frozen
+dimensions (`next_columns=1,925,357`, `old=213,053`, `nq=61,196`,
+`work=187,583`, `chunk=4,096`). It gives `stride=23,464`,
+`seedstride=7,672`, payload 62,509,841,968 bytes, and the source's
+`payload*135/100+64 MiB` envelope **84,455,395,520 bytes**. The frozen plan
+reserves 86,599,881,493 bytes, exceeding that source expression by
+2,144,485,973 bytes; both are below its 96-GiB child address-space cap
+(103,079,215,104 bytes). The source accepts that cap exactly. This
+arithmetic checks the current source and frozen plan for an immediate
+resource-argument refusal, but neither expression measures peak RSS or
+guarantees host admission. The runner removes `SEMAEV_CHECKPOINT_*` variables,
+so this attempt has no checkpoint writing or restoration despite the reused
+binary's optional capability.
+
 Proposition 1.9 in `../semaev-m2-last-fall-degree/theorem-dossier.md` gives
 the exactness criterion. The source implements its steps as follows:
 
