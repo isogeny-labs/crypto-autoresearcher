@@ -203,3 +203,22 @@ syzygies are considered. Its multiples are lower-degree rows, not additional
 members of the 1081-dimensional symmetric subspace. The next useful
 rank calculation should quotient out these 1081 known relations before
 seeking genuinely new quadratic syzygies and their degree-three lifts.
+
+More generally, if an `m`-equation quadratic-top map has rank `r` and
+kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
+subspace of dimension
+
+    s*binom(N,2) + r*(r+1)/2.
+
+To see the dimension without double counting, choose a basis of the
+equation space consisting of `r` independent quadratic tops and `s`
+zero-top equations. The latter contribute the direct coordinate space
+`ker(q) tensor A_2`, of dimension `s*binom(N,2)`. Project the symmetric
+syzygies to the `r` independent equation coordinates; their images are
+the independent diagonal and off-diagonal vectors above, of dimension
+`r*(r+1)/2`. The coordinate spaces intersect trivially after this
+projection. If each zero-top equation is actually linear, as the n47
+trace relation is, its quadratic multiples already lie in the
+degree-three closure. Thus all 2209 displayed n47 vectors have known
+lower-degree lifts; an additional kernel vector is necessary for any
+new degree-four mutation beyond those lifts.
