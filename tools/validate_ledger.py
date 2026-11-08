@@ -207,9 +207,9 @@ DUPLICATE_RUN_OWNERS = _load_duplicate_run_owners()
 
 ID_PATTERNS = {
     "goal": re.compile(rf"^GOAL-[A-Z0-9]+-{SUFFIX}$"),
-    "research_question": re.compile(rf"^RQ-[A-Z0-9]+-{SUFFIX}$"),
+    "research_question": re.compile(rf"^RQ-[A-Z]+-{SUFFIX}$"),
     "idea": re.compile(rf"^IDEA-\d{{8}}-{SUFFIX}$"),
-    "hypothesis": re.compile(rf"^H-[A-Z0-9]+-{SUFFIX}$"),
+    "hypothesis": re.compile(rf"^H-[A-Z]+-{SUFFIX}$"),
     "experiment": re.compile(rf"^EXP-[A-Z]+-{SUFFIX}$"),
     "evidence": re.compile(rf"^EV-[A-Z]+-{SUFFIX}$"),
     "coordinator_decision": re.compile(rf"^DEC-\d{{8}}-{SUFFIX}$"),
