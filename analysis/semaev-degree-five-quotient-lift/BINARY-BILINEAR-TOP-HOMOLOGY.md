@@ -326,6 +326,15 @@ generator-list rank mode. These controls exercise both zero and nonzero
 overlap and confirm that the reduced calculation does not silently label
 the generated subspace as the full kernel.
 
+The reduced n47 overlap attempt supersedes the unspent direct
+`--quadratic-generated` attempt as the next execution path: both compute
+the same generated rank, while the reduced plan has a smaller fixed
+resource reservation. Keep the earlier frozen plan and protocols as
+historical records, but do not launch both attempts merely to repeat the
+same primary claim. A separate full-kernel calculation is still needed;
+the n5 toy's 11-dimensional gap shows why generated rank alone is not
+enough.
+
 More generally, if an `m`-equation quadratic-top map has rank `r` and
 kernel dimension `s=m-r`, its degree-two-multiplier kernel has a canonical
 subspace of dimension
