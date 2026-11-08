@@ -8,9 +8,12 @@ certificate for the 134,513-dimensional $W_4$ row space. The D4 map's
 separate checker establishes the one-sided inclusion even without trusting
 this audit.
 
-The seed's exactness premise is supplied by Proposition 1.8 and
-`N47-D3-EXACT-CLOSURE-AUDIT.md`: the direct D3 fixed point has rank 5,546
-in 18,473 columns, leaving 12,927 quotient coordinates. The high-memory
+The seed's exactness premise is now independently reproduced in
+`N47-D3-EXACT-CLOSURE-AUDIT.md`: a separate Python derivation matches every
+row of the retained `input.sys` and computes the full D3 fixed point at rank
+5,546 in 18,473 columns, leaving 12,927 quotient coordinates. This removes
+the direct D3 producer's source-to-executable assumption from the seed
+exactness claim. The high-memory
 attempt rechecked that exact seed hash before invoking
 `quotient_lift_batched`.
 
@@ -61,8 +64,8 @@ The committed `highmem-plan.json` pins the source and binary hashes.
 The retained result records that binary's invocation and terminal status.
 The audit does not establish a bit-for-bit rebuild of the native binary or
 an independent derivation basis for every D4 relation. Subject to the
-source-to-binary and retained-execution assumptions, Propositions 1.8 and
-1.9 give the exact conclusion
+**D4 lift** source-to-binary and retained-execution assumptions, Proposition
+1.9 and the independently exact D3 seed give the conclusion
 
 ```
 dim W_4(F_original) = 213053 - 61196 = 151857.
@@ -73,6 +76,13 @@ where the sliced equality uses the checked affine witness and Proposition
 2.5b. The planned projected D4 map has not yet been produced or checked.
 These equalities should be treated as source-audited
 exactness, not as a separate primal-rank certificate.
+
+An independent two-sided D4 certificate would require a primal proof of at
+least 151,857 independent legal original-coordinate rows (or, equivalently,
+at least 47,549 independently derived relations in the 108,745-coordinate
+provisional quotient). The accepted 61,196-dimensional D4 quotient is the
+dual upper bound on `dim W4`; by itself it cannot supply that primal lower
+bound. This is the remaining D4 exactness gate after the D3 replay.
 
 This equality is useful if a later D5 quotient lift kills one: with an
 exact D4 seed, Lemma 1.6 identifies its full terminal closure with
