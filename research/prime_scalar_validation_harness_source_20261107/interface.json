@@ -1,0 +1,72 @@
+{
+  "schema": "prime-scalar.validation-harness-interface/v1",
+  "status": "source_only_unvalidated",
+  "task": "TASK-20261107-20d288",
+  "execution_authorized": false,
+  "modules": {
+    "oracle.py": "evaluate(polynomial, point, p, n); expectation(case): independent full Boolean truth tables, explicit depth/index scan, subset finite differences.",
+    "manifest_builder.py": "materialize(spec_path, destination, metadata_admission): separate metadata task only; writes exclusive typed manifest. Never imported by runtime.",
+    "checks.py": "Type-preserving snapshots/decoder; manifest shape/count/schedule checks; independently expected semantic and structural checks.",
+    "runner.py": "run(protocol, gate): future worker only, after external gated release. Loads pre-materialized bytes; hashes before candidate import; durable first-failure journal.",
+    "resource_wrapper.py": "Future sole launch surface; external native verifier and existing authorized cgroup v2 required. No automatic setup, privilege escalation, substitute controls or retry."
+  },
+  "typed_tree": {
+    "none": [
+      "none"
+    ],
+    "bool": [
+      "bool",
+      "JSON boolean"
+    ],
+    "int": [
+      "int",
+      "canonical decimal string"
+    ],
+    "float": [
+      "float",
+      "float.hex() string"
+    ],
+    "str": [
+      "str",
+      "string"
+    ],
+    "list": [
+      "list",
+      "ordered typed children"
+    ],
+    "tuple": [
+      "tuple",
+      "ordered typed children"
+    ],
+    "dict": [
+      "dict",
+      "ordered pairs of typed key/value nodes"
+    ]
+  },
+  "future_output_layouts": {
+    "extraction": "mapping_v1: exact keys status, method, depth, prefix, generator_index, constant, counters",
+    "restriction": "Explicit future binding chooses tuple_pair_v1 (residuals, counters) or mapping_v1 with exact residuals/counters keys. No auto-detection."
+  },
+  "interface_gap": "Published candidate interface does not pin returned Python container layout. Neither layout is claimed correct for the candidate. Freeze exact public output layout after independent clarification before runtime admission.",
+  "counts_prospective": {
+    "base_cases": 649,
+    "base_depth_queries": 1680,
+    "realizations_per_case": 8,
+    "valid_calls": 23824,
+    "malformed_calls": 128,
+    "total_calls": 23952
+  },
+  "future_files": [
+    "rows.jsonl",
+    "worker-terminal.json",
+    "supervisor-terminal.json"
+  ],
+  "outcomes": {
+    "pass": "Only complete fixed suite, worker zero exit, exact call/case/import counts, verified row digest, confirmed enforcement and termination.",
+    "fail": "First semantic/check mismatch, preserved with case/input/expected/actual and completed prefix.",
+    "incomplete": "Import/oracle/infrastructure failure, deadline, OOM, signal, uncertain enforcement/termination, incomplete journal or custody."
+  },
+  "trust_boundary": "Frozen launch pins independent native verifier SHA. Verifier must validate real authoritative native records and atomically consume one invocation, verify caller/delegation, enforce external parent envelope and prearm worker kill. This adapter is unresolved external integration; booleans supplied by a user-authored JSON file cannot substitute.",
+  "scope": "Finite standalone software semantics; all 106 coordinate + 6 coefficient comparisons, five leads, complete charts/projected models, witnesses, independent all-generator reconstruction and certificate checks/costs remain unchanged.",
+  "manifest_validation_scope": "Runtime checks the frozen manifest digest, canonical case representations, family/count totals, full call schedule, valid realization-to-case binding and malformed typed-tree round trips/arity. It does not independently rederive the exhaustive coefficient-code enumeration, every named control value or every malformed mutation value from the specification. A separately recorded prefreeze metadata audit of all those values/types is mandatory; runtime loads that reviewed immutable manifest without regenerating it."
+}

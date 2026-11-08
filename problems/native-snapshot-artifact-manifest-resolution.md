@@ -4,7 +4,7 @@
 - **Kind:** implementation gap in archival metadata integration
 - **Affected work:** [EXP-PFIVE-e26798](../experiments/EXP-PFIVE-e26798/protocol.json), raw snapshot TASK-20261029-d2ad88 in [BATCH-449a28](../coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-449a28/dispatch_queue.json)
 - **Next action owner:** Coordinator; implementation task not yet assigned
-- **Last updated:** 2026-10-29
+- **Last updated:** 2026-11-07
 
 ## Problem
 
@@ -39,3 +39,14 @@ These conditions establish transport/custody compatibility only. Independent sci
 ## Resolution and history
 
 2026-10-29: identified during publication planning for the five prime-field leads. Publish retained outputs normally and record a transport receipt; do not mark the native producer snapshot complete merely because the manifest was committed. The older interrupted trial has a separate missing native archival-ID binding and remains explicitly incomplete. Unresolved.
+
+2026-11-07: the unqualified evidence-review pass rechecked current source
+`9fcec1b89bb8ffcdd1b8760db4da58db1022ce98`. The retained execution receipt's
+SHA-256 matches the transport snapshot, and the export passes the current
+schema/protocol check without raw-file verification. The native snapshot still
+records `native_snapshot_completed: false`, and `_stored_path` still lacks
+manifest resolution. Dependent scientific review stopped before interpretation;
+the existing exit criteria and next action remain open. See the additive
+[readiness report](../experiments/EXP-PFIVE-e26798/reports/review-readiness-20261107-f23e4c/report.md)
+and [PDF](../experiments/EXP-PFIVE-e26798/reports/review-readiness-20261107-f23e4c/report.pdf).
+No scientific rerun or hypothesis transition was made.

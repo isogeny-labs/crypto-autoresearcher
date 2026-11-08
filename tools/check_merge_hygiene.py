@@ -1189,6 +1189,44 @@ def check_session_files(base: str | None) -> list[str]:
     return findings
 
 
+def check_challenge_records(base: str | None = None) -> list[str]:
+    """Frozen problems and attempt stages are write-once, including on merges."""
+    pattern = re.compile(r'^coordination/goals/GOAL-[^/]+/challenge/(?:problem\.json|attempts/[^/]+/.+\.json)$')
+
+    def blobs(ref=None):
+        command = (('git', 'ls-tree', '-r', '-z', ref, '--', 'coordination/goals')
+                   if ref else ('git', 'ls-files', '--stage', '-z', '--', 'coordination/goals'))
+        found = {}
+        for entry in _run(*command).stdout.split('\0'):
+            if '\t' not in entry:
+                continue
+            meta, path = entry.split('\t', 1)
+            fields = meta.split()
+            if pattern.fullmatch(path) and (ref or fields[2] == '0'):
+                found[path] = (fields[0], fields[2] if ref else fields[1])
+        return found
+
+    candidate = blobs()
+    refs = list(_merge_parents())
+    if base:
+        ancestor = _run('git', 'merge-base', 'HEAD', base).stdout.strip()
+        if not ancestor:
+            return ['Cannot establish challenge-record merge base']
+        refs.append(ancestor)
+    elif not refs:
+        parent = _run('git', 'rev-parse', '--verify', '--quiet', 'HEAD^').stdout.strip()
+        if parent:
+            refs.append(parent)
+    problems = {f'{path}: frozen challenge record changed or deleted; add a successor instead'
+                for ref in refs for path, blob in blobs(ref).items()
+                if candidate.get(path) != blob}
+    if base:
+        problems.update(f'{path}: conflicting challenge record already on base'
+                        for path, blob in blobs(base).items()
+                        if path in candidate and candidate[path] != blob)
+    return sorted(problems)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--base", metavar="REF",
@@ -1240,6 +1278,7 @@ def main() -> int:
                        if p != "ledger" and not p.startswith("ledger/")]
 
     groups = [
+        ("changed frozen challenge records", check_challenge_records(args.base)),
         ("invalid trusted goal prefixes", trusted_prefix_problems),
         ("symlinked goal paths", check_goal_symlinks(parse_paths)),
         ("unresolved conflict markers", check_markers(parse_paths)),

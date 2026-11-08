@@ -18,7 +18,8 @@ Claude Code; their full requirements and limits are stated there.
   Never hand-edit model or effort; use `tools/check_runtime_bindings.py --list`
   for provenance. The session defaults to `claude-opus-5-5`; `--model` or
   `adapter env --runtime claude_code --role <role>` overrides it.
-- Use `.claude/skills/`: only `run` executes trials; `coordinate` governs and
+- Use `.claude/skills/autoresearch/` as the research entry point; it invokes
+  the canonical lifecycle skills. Only `run` executes trials; `coordinate` governs and
   never runs them. Follow AGENTS.md, "Skill routing", for other skills. Each
   skill writes a session receipt.
 - `.mcp.json` starts the read-only `kb/` server. See the runtime guide for
@@ -31,3 +32,9 @@ Claude Code; their full requirements and limits are stated there.
 resume the effort from it alone. The hooks push it to S3 with the specs,
 leads and unpushed work, and refuse run launchers until that succeeds.
 AGENTS.md, "Resume checkpoints in S3 before every run".
+
+## Persistent scientific research loop
+
+Read and follow [AGENTS.md](AGENTS.md#persistent-scientific-research-loop).
+That section governs hypothesis testing, recovery from obstacles, continued
+iteration, checkpoints and evidence required before stopping in this runtime.

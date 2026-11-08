@@ -1,0 +1,45 @@
+# Streaming custody and certified prefix fallback
+
+Status: source-only unvalidated. No scientific run, candidate import, integrity-test execution, or additional producer slot. This report analyses retained RUN-PNEXT-8223e9 and proposes followups; it does not amend its outcome.
+
+## What the retained evidence adds
+
+The retained tree contains 2,613 JSON records totaling 2,287,230,861 bytes. Child c2760f5df315414f9f9cbffa864aee26 contains 2,016 records totaling 1,870,910,424 bytes. The root contains 474 records totaling 415,850,673 bytes. These are stat inventories of JSON files, not a complete archive-member accounting. Read-only analysis parsed only the final child and root records (7,097,774 bytes); cost-analysis.json binds their SHA-256 values and selected fields.
+
+The child final event is verification_returned, with transcript censored/native_limit, verification accepted=true and verified_complete=false. Its elapsed timestamp is 486,961,599,514 ns. The search.native_and_certificates phase returned after 484,373,623,791 ns; this includes callbacks and checkpoint writing, not isolated SAT time. Native counters report 1 solve call, 1,001 conflicts, 2,553 decisions, 2,005 invalid-model checks/refutations, 1,975 leaf fallbacks and 32 PC calls. No sealed child result or root-promoted completion was recorded. Root remains at 472 controls, 6 native instances, 12 calls and 32 census assignments: these are not final totals.
+
+## Immediate source patch
+
+Only launch.py:sha and trial-adapter.py:digest change. Both read binary chunks of 1 MiB and update SHA-256 incrementally. AST comparison removes only these function bodies and finds the remaining modules identical. Function names, callers, campaign admission, quotas, failure handling and archive formats remain unchanged. The versioned copies must equal production bytes at publication. Empty input hashes the empty stream; file/open/read failures propagate. Digest equivalence for an unchanged byte stream follows the documented concatenation property of hashlib.update. Concurrent modification was not snapshot-safe before and remains outside this property.
+
+The old helper allocates the entire file. The proposed digest loop uses O(chunk size) input-buffer space (a constant number of chunks may coexist during replacement). This is not a whole-process memory bound: recursive inventory, tar metadata, JSON and cumulative transcripts still consume memory. Static checks alone do not validate runtime behavior.
+
+The launcher packs raw/ into raw-artifacts.tar, then hashes both the raw files and that tar. The adapter packs the whole attempt, including the raw tree and nested tar, into attempt-files.tar. This source topology duplicates raw content in the outer archive. The preserved logical tar is 4,587,520,000 bytes, compressed to 127,211,514 bytes. No unmeasured runtime or exact non-JSON archive breakdown is inferred.
+
+## Structural logging proposal, preserving coverage
+
+Current AttemptReceipt._persist deep-copies and serializes complete state. Controls.check carries all earlier control records, and each engine proof calls _save with accumulated learned certificates and accounting. For L appended constant-size proof events, writing every cumulative prefix repeats a quadratic number of event bytes. Variable event sizes and compression prevent using that observation as a measured speedup.
+
+Proposed replacement: immutable sequence-numbered delta events with predecessor digests, content-addressed certificate payloads, bounded periodic state snapshots, and terminal references. Persist each required event at the same durability boundary; do not reduce checkpoint frequency or drop payloads. A replay adapter reconstructs the exact old logical transcript and counters for the unchanged scientific checker. Bound buffering independently of run length; charge event encoding, writes, hash checks, replay, certificate reconstruction and final checking.
+
+Required obligations: deterministic replay equals every corresponding logical checkpoint; no missing, duplicated, reordered or forked event can pass; atomic no-replace writes and fsync semantics survive interrupted writes; censored/failed states cannot become complete; all model/certificate data and exclusive counter scopes are preserved; missing referenced payloads fail closed. Preserve existing raw receipts. This broader implementation is not included in the two-function patch.
+
+## SAT construction: shorter certified prefix fallback
+
+Derived identity, not an observed speedup. Let f_1,...,f_s be the existing Boolean-coordinate polynomials over F_p. A full assignment a is invalid when f_j(a)=c != 0 for some j. Choose a prefix depth d such that restricting the first d variables of f_j to a makes it the constant c. Then the certificate vector with entry j equal to c^(-1) and all other entries zero satisfies sum_i q_i (f_i restricted to the prefix)=1. Consequently every extension of that prefix is invalid. The existing prefix-block clause and identity checker can represent this certificate without changing their schema.
+
+A guaranteed depth is the largest variable index in the syntactic support of f_j, plus one (depth zero for a nonzero constant). Choose the smallest such depth among violated generators. This support scan can be cached from public generators, while evaluation and certificate verification must still be charged. Cancellation can permit a shorter prefix, but finding it costs additional restriction work and is a separate option. At d=n this is exactly the current leaf fallback. At d<n the cylinder contains 2^(n-d) Boolean assignments; that is a logical coverage count, not a measured reduction in search time or valid-domain assignments.
+
+The current active-support PC refuter compresses polynomial-calculus columns; this proposal instead changes the fallback clause after the PC budget is exhausted. It keeps contiguous prefixes because the current checker rejects arbitrary-support clauses. It does not reorder projection variables or alter charts. On a valid model there is no violated generator and the fallback is inapplicable. If every violated generator uses the last variable, the support rule offers no strict improvement.
+
+Necessary controls before candidate execution: valid-model rejection control, high-index dependency control, zero polynomial and nonzero constant cases, cancellation cases, malformed inverse/prefix controls, and full projected-set equality across all three encodings. Freeze the same fixtures, native quotas, ordering and seeds. Charge support preprocessing, selection, restrictions, inverse, certificate checking, reconstruction, logging and all failed attempts. Test the clause change separately from logging changes; include an A/A replay. Keep all 106 coordinate and 6 coefficient cells and all five leads in downstream scope. No degree-of-regularity reduction follows from this clause construction alone.
+
+## Separate integrity validation plan, not executed
+
+After explicit bounded admission: extract only the two approved digest AST bodies into a namespace containing standard hashlib and pathlib, never import a launcher or candidate. Compare empty, short binary, 1MiB-1, 1MiB, 1MiB+1 and several-chunk files against one-shot hashlib on small data. Compare a streamed 64MiB deterministic file to an independently accumulated reference digest under a 32MiB address-space headroom target if the interpreter baseline permits; otherwise preregister an explicit process limit before running. Inject a mid-read exception and verify exact propagation and closure, check missing-file errors and a corrupted-file mismatch. Proposed maximum: 60 seconds, one CPU, 256MiB process memory, 128MiB temporary disk, one attempt, no cloud, no scientific calls. This plan is incomplete until precise platform memory enforcement and interpreter baseline are fixed; no authorization is inferred here.
+
+## Sources and scope
+
+Internal sources: attempt_receipt.py (_persist/checkpoint), software_controls.py (Controls.check/native_smoke), engine_counted.py (_fallback/_record_proof), bridge_counted.py (save), chart_solver.py (solve_chart), active_support_implementation/active_refute.py and prefix_adapter/adapter.py. Exact retained input hashes are in cost-analysis.json. This corrects the coarse description that the repeated stage simply had not returned: a child reached checked partial return before root sealing. Earlier reports remain immutable.
+
+Python 3.12 hashlib documentation states incremental-update concatenation semantics: https://docs.python.org/3.12/library/hashlib.html . Microsoft's user-propagator guide supplies the established conflict-explanation context: https://microsoft.github.io/z3guide/programming/Example%20Programs/User%20Propagator/ . No global novelty claim is made for shorter explanations. The prefix certificate identity above is derived directly for this implementation's schema. No canonical mathematical frontier graph changes: this is retained diagnostic evidence plus untested constructions.

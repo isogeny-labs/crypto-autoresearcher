@@ -207,3 +207,11 @@ of a prediction. The contract must include:
   predictions carry success or falsification criteria; an A/A comparison
   sets their noise floor; confounded and in-sample ones are reported, never
   decisive.
+
+## Default challenge research loop
+
+Bind the candidate, frozen problem, original claims and evidence plan from [the default research loop](../../../docs/challenge-research-loop.md) into the existing hypothesis, protocol and handoff. Declare initial and optional follow-up experiment ids before candidate intake; admit each normally. No experiments are required for a method whose evidence is an argument or sourced synthesis.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

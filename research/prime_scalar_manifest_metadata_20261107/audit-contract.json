@@ -1,0 +1,283 @@
+{
+  "schema": "prime-scalar.independent-metadata-source-contract/v1",
+  "status": "source_only_unvalidated",
+  "source_task": "TASK-20261107-57cb8a",
+  "metadata_task": "TASK-20261107-e7cdd2",
+  "source_claim": {
+    "publication_supplied_by_root": "abdae6e34d",
+    "owner": "executor-prime-scalar-metadata",
+    "epoch": 1,
+    "acquired_at": "2026-11-07T23:52:51Z",
+    "expires_at": "2026-11-08T00:22:51Z",
+    "independently_read": false,
+    "no_renewal": true
+  },
+  "execution_authorized": false,
+  "actual_source_activity": {
+    "implementation_imports": 0,
+    "source_execution": 0,
+    "case_enumeration": 0,
+    "tests": 0,
+    "unit_creation": 0,
+    "probes": 0,
+    "cloud_jobs": 0,
+    "package_installs": 0,
+    "mathematical_evaluations": 0,
+    "ast_parse": "Actual stdlib ast.parse of all three source files plus JSON parse of this contract; no authored module imported or executed. Supplied public interface text SHA256 values independently recomputed from exact embedded UTF8 strings."
+  },
+  "source_outputs": [
+    "research/prime_scalar_manifest_metadata_20261107/metadata_driver.py",
+    "research/prime_scalar_manifest_metadata_20261107/metadata_supervisor.py",
+    "research/prime_scalar_manifest_metadata_20261107/audit_manifest.py",
+    "research/prime_scalar_manifest_metadata_20261107/audit-contract.json"
+  ],
+  "actual_input_inventory": {
+    "files": [
+      {
+        "path": "ledger/handoffs/TASK-20261107-57cb8a.yaml",
+        "sha256": "b10a09076c7875b6aff81fffd3720ad5c8d7a7ef0279aeee95e5066bf200d51e",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "AGENTS.md",
+        "sha256": "1d51ede564b94fd52d54b4c835c17e74eb8830dd1f01c3cc6d9c739240c8c663",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "agents/coordinator.md",
+        "sha256": "410b3be4737a58dbf31c469b6b2d103740598e2b3c0a86610fa64af0b80128ad",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "coordination/prime_scalar_validation_harness_source_20261107/case-generation-spec.json",
+        "sha256": "7f68929cedcf12965554d96eefe7b1aeddef82f0f1bb182e6e37113e16d5e9dc",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "research/prime_scalar_validation_harness_source_20261107/interface.json",
+        "sha256": "4da38e5bbdd96b52e784781a8947f3d51554eaf5a2199f7d497f2ccb195c6dfb",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "coordination/prime_scalar_manifest_metadata_20261107/source-contract.json",
+        "sha256": "76beef908dc43f1145c5a8deaa0f029c48e8e11c71d39c168759e6de4e94bc6d",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "coordination/prime_scalar_manifest_metadata_20261107/audit-spec.md",
+        "sha256": "7f064d05730b8cec0827d191c4a7c8a84c305796e7556abf4720378a5b3a9224",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "coordination/prime_scalar_manifest_metadata_20261107/public-driver-interface.md",
+        "sha256": "977ac4a5c484c765ca30c28fbe66dc4e722818b9cba206d5fc8434834045edb1",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "coordination/prime_scalar_manifest_metadata_20261107/input-bindings.json",
+        "sha256": "d062b47068d1fbcbdc1cd46e416c29d7b1ef923e92998cb66276576116ea249b",
+        "read_kind": "actual_public_allowlist_read"
+      },
+      {
+        "path": "coordination/prime_scalar_manifest_metadata_20261107/inference-amendment.yaml",
+        "sha256": "56bbca1c3f88a450790cdf9e426edc3d827e5b656ebd8f7d10cef89980bea53a",
+        "read_kind": "actual_public_allowlist_read"
+      }
+    ],
+    "read_notes": [
+      "Initial batched public read was output-truncated; locked spec and coordinator contract were reread in full.",
+      "AGENTS linked documents were not opened because explicit closed public allowlist governs blind author.",
+      "Own output sources reread for source editing; no implementation outside own output scope read.",
+      "No memory or agent history was consulted."
+    ],
+    "additive_public_api": [
+      {
+        "kind": "explicitly_supplied_additive_clarification_not_original_frozen_input",
+        "sha256": "86ae9695c8b01cd648d3063f80ff6aa571515e4ac8b512a6fdcb3ff3909a843a",
+        "text": "# Public manifest wire-format clarification v1\n\nThis is a declarative public API description derived by Coordinator source inspection, without executing or importing the builder. It supplies no builder implementation to the independent author. The frozen case-generation specification remains the authority for all mathematical values, controls, malformed mutations and coverage; this document fixes their transport format only.\n\nSerialization: one UTF-8 JSON object, object keys sorted lexicographically at every level, compact separators comma and colon with no spaces, default JSON ASCII escaping, no NaN/Infinity, followed by exactly one newline. Arrays retain their specified order. Duplicate object keys are forbidden. The materializer uses exclusive binary creation, flush and fsync; its returned receipt describes the actual bytes, not an extra object embedded in the manifest.\n\nTop-level exact keys:\n- schema: literal \"prime-scalar.typed-manifest/v1\".\n- spec_sha256: literal \"7f68929cedcf12965554d96eefe7b1aeddef82f0f1bb182e6e37113e16d5e9dc\".\n- counts: object with exact keys base_cases,base_depth_queries,valid_entry_calls,malformed_entry_calls,total_entry_calls,oracle_full_evaluations. Values are nonnegative JSON integers (not booleans). The first five are649,1680,23824,128,23952. oracle_full_evaluations equals sum overcases len(generators)*(2^(n+1)-1); independently recompute, never trust the field.\n- cases: ordered array of649base case objects.\n- calls: ordered array of23952call objects. No separate malformed-cases array.\n\nExhaustive case objects have exactly id,family,p,n,assignment,generators. id is \"case-\" plus zero-padded minimum-width4decimal global base-case index, starting case-0000. These exhaustively generated cases occupy indices0through639. family is the locked family identifier; p,n,assignment are ordinary JSON integers. generators is a JSON array of polynomials, each polynomial an array of [mask,coefficient] integer pairs in ascending mask order; zero coefficients omitted; zero polynomial is[], empty generator list is[]. This case-level representation is NOT a typed tree.\n\nThe final nine control case objects preserve EVERY field from the corresponding locked spec controls object, except id becomes \"control-\" plus the spec's original id, and family is added as \"control\". No other fields are dropped or invented. Thus controls may have expected,scope,projected_bits_context_only,restriction_depth2_dictionary_deletes,expectation_provenance exactly where the spec does. Compare each control's exact keyset/values against its spec counterpart with these two substitutions; do not apply the exhaustive-case six-key restriction to controls. Controls are in spec order, after exhaustive cases. Their case-level generators remain the exact spec pair order.\n\nEvery call object has EXACT keys id,case_id,family,order,container,repeat,api,depth,malformed,arguments.\n- id is \"call-\" plus zero-padded minimum-width5decimal global call index, contiguous call-00000 through call-23951.\n- Valid calls: case_id references an existing base case, family equals its family; order is \"ascending\" or \"descending\"; container is \"list\" or \"tuple\"; repeat is integer0or1; api is \"extract_reference\",\"extract_sweep\" or \"restrict_reference\"; malformed is JSON false. depth is JSON null for extraction and an ordinary JSON integer0..n for restriction. arguments is a typed LIST containing p,n,assignment,generators, and an additional depth only for restriction.\n- Each valid case has the fixed order: ascending then descending mask insertion; list then tuple container; repeat0then1; extract_reference,extract_sweep,then restrict_reference depths0..n. Dictionary entries follow declared mask insertion order; the outer generators container has its declared list/tuple tag. All23824valid calls precede malformed calls.\n- Malformed call case_id is \"malformed-global-\" plus two-digit mutation index00..19, or \"malformed-depth-\" plus index00..03. These are NOT references into cases. family is respectively \"malformed-global\" or \"malformed-depth\"; order=\"ascending\",container=\"list\",repeat0or1,malformed=true. The label container remains \"list\" even when the malformed argument replaces the generators value with a dict or None.\n- Malformed order: global mutations in spec order, then depth mutations; within each mutation repeat0then1; global APIs reference,sweep,restriction, depth mutations restriction only. Each starts from the spec's registered malformed base, applies that one specified mutation and no other alteration. arguments is typed LIST of4or5arguments by API.\n- IMPORTANT depth asymmetry: on malformed restriction calls, the call.depth field is itself a TYPED scalar node (including [\"int\",\"0\"] for global mutations); on malformed extraction calls it is JSON null. It is not the ordinary JSON integer used by valid restriction calls. Check that typed depth agrees with the final typed argument. Preserve bool/float malformed depth tags.\n\nTyped tree emitted for arguments and malformed restriction depth:\n- None: [\"none\"] (one element).\n- Exact bool: [\"bool\",true] or [\"bool\",false].\n- Exact int: [\"int\",canonical decimal string], including negatives for malformed values. No bool/int collapse or numeric JSON payload.\n- Exact float: [\"float\",Python float.hex string] (for fixed spec values,2.0=\"0x1.0000000000000p+1\",1.0=\"0x1.0000000000000p+0\",0.0=\"0x0.0p+0\").\n- Exact list/tuple: [\"list\",array_of_typed_children] or [\"tuple\",array_of_typed_children].\n- Exact dict: [\"dict\",array_of_[typed_key,typed_value]_pairs], retaining insertion order. Empty dict is[\"dict\",[]].\nNo string typed node is emitted or accepted by this builder's typed-value interface; strings in manifest labels/spec-control annotations are ordinary JSON strings, outside typed arguments. The broader harness typed-tree description mentions a string tag, but this locked materializer never needs it; do not invent a string-argument case.\n\nMalformed replacement semantics are fixed by the spec: p/n/assignment value replacement; generators becomes empty dict for its symbolic empty-dict mutation, otherwise the specified value; generator0's list mutation becomes [[1,1]]; mask mutation gives a single dict entry with the exact typed mutated mask and coefficient1; coefficient mutation gives mask1 and the exact typed mutated coefficient. The bool-key case remains a bool typed key because it is the sole inserted key; no collision with an existing integer key is introduced. Do not normalize these cases into valid dictionaries.\n\nMaterialize return receipt exact keys: metadata_admission (the supplied nonempty reference),sha256(actual manifest payload),bytes(actual payload length),counts(the manifest counts object). This return value is not native authority and is not automatically written as a separate receipt file. The admitted driver/supervisor must preserve it with actual source/native/resource evidence.\n\nIndependent audit must use the frozen spec and declarative shape above, not this description as a substitute for exhaustive value/ordinal verification. No candidate or oracle invocation is needed for the metadata audit. This clarification changes no cases, counts, algorithms, budgets or permission boundaries.\n"
+      },
+      {
+        "kind": "explicitly_supplied_additive_clarification_not_original_frozen_input",
+        "sha256": "78e117e3c2a11e2cc230760c0ad5bd11309be65238b882ff1a82de52535b4d80",
+        "text": "# Public native authority interface clarification v1\n\nDeclarative interface derived by Coordinator read-only inspection of tools/goal_lanes.py and existing records, not by executing/importing it. Native formats below already exist. The proposed metadata-phase approval format below does NOT yet exist and requires reviewed source plus exact Coordinator publication before use.\n\n## Existing native paths and records\n\nRepository root: /home/ec2-user/crypto-prime-sat-ideas-20261029.\nQueue: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/dispatch_queue.json.\nClaims directory: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-a99822/claims/.\nClaim filename: TASK-ID.EPOCH.claim.json; release filename: TASK-ID.EPOCH.release.json. EPOCH is a positive integer. All claim/release records are write-once; no editing, renewal in place or overwriting.\nCurrent task identities: source TASK-20261107-57cb8a; metadata TASK-20261107-e7cdd2; snapshot TASK-20261107-969bcf. Source and metadata are different claims; source approval is not metadata execution authority. The initial DEC-20261107-7fec0c admits source only and leaves metadata blocked.\n\nNative claim schema string: crypto.autoresearch.task_claim.v1.\nFields emitted by native creation: schema,task_id,epoch,owner,session,branch,worktree,acquired_at,expires_at,write_scope,supersedes,forced,supersedes_lost_completion.\n- task_id and owner are strings; epoch exact positive integer; timestamps UTC ISO8601, native emitted form YYYY-MM-DDTHH:MM:SSZ; write_scope is path-string list.\n- session can be null; branch/worktree identify provenance. Supersedes values may be null or structured historical metadata; do not infer authority from them. forced is boolean, and supersedes_lost_completion may be null.\n- owner is a research actor label, NOT an OS username or cryptographic identity. Verify actual caller OS UID/worktree separately against the exact phase approval; do not compare UID to owner string.\n\nNative release schema string: crypto.autoresearch.task_release.v1.\nFields emitted: schema,task_id,epoch,owner,outcome,released_at,was_expired,note,artifact_sha256.\n- outcome is completed,failed or abandoned; note may be null; artifact_sha256 maps exact repository-relative artifact paths to SHA256hex. was_expired is a boolean recording native classification at release.\n- A completed release is evidence of task disposition, not proof of scientific correctness. For this source phase require exact four artifact bindings and published bytes, no expired source completion under this contract.\n\n## Native fencing semantics and stricter execution gate\n\nNative discovery can read local claim files and known Git refs; local copies take precedence because records are expected write-once. Highest observed epoch wins. At that epoch: missing claim with release is orphan_release; matching-owner release gives released; a release whose owner differs from the claim is foreign_release and does NOT release the valid holder. With no valid release, now>=expires_at is expired, otherwise live. Equality at expiry is not live. Native releases are allowed to record expired outcomes; this metadata execution gate requires an actually live metadata claim and timely source completion.\n\nSupervisor must parse these exact structures, fence task+epoch+owner, reject malformed/orphan/ambiguous histories, and never accept a lower epoch. For safety it may refuse any foreign-release ambiguity, but must not treat a foreign release as valid completion. Require no valid metadata release, current time before expires_at, and enough residual claim/phase deadline for planned bounded work. Recheck before reservation and gate release. Source release must match source claim owner/epoch and exact source SHA map, have outcome completed, was_expired=false and released_at<=source expires_at. Later source epochs invalidate a stale selected completion unless an explicit new disposition binds them.\n\nRoot supplies a fresh native readiness result obtained through tools/research_dispatch.py QUEUE --ready-only --claims local (or refs after authoritative reconciliation). This is a readiness observation, not standalone authorization. Native queue raw state may remain queued while actual claims/release overlay makes a dependency completed. Do not require raw source state==completed as the only acceptable evidence. Metadata must no longer be blocked under an explicitly approved guarded transition, then have actual live claim.\n\nDo not run --ready-only repeatedly inside a5sparent startup budget: root captures native readiness before launch; supervisor checks exact published authority and current local/known-ref fencing. No finite local scan proves absence of an unseen remote claim; root is responsible for fresh fetch/reconciliation before dispatch. If this freshness premise is unavailable, refuse launch. This is native cooperative ownership under trusted local operator/repository permissions, not hostile-same-UID isolation.\n\n## Authoritative Git binding and managed queue\n\nFor each relevant published DEC, claim, release, source artifact, static-review receipt and phase approval, bind exact40hex commit and repository-relative path. Read actual Git blob bytes at COMMIT:path, SHA256 them and compare with the trusted publication-bound expected digest. Verify commit exists, is ancestor of approved fetched upstream/current worktree ancestry, and root retained exact GitHub repository commit readback. Local dirty bytes or a caller-supplied arbitrary JSON are not publication evidence. Effective runtime source bytes must equal those published bytes; prevent path/symlink/digest-to-import substitution. Source maps must include driver,supervisor,auditor,audit-contract.\n\nThe dispatch queue is a managed artifact, not necessarily a direct Git blob. Its containing directory's .artifacts.json and .gitignore are committed; root uses native tools/artifacts/artifacts.py push/verify to hydrate/verify it. Never assume git show COMMIT:dispatch_queue.json works, never force-add the ignored queue, and do not pretend a local hash alone proves publication. Phase approval must bind exact hydrated queue SHA plus its published managed-artifact descriptor and native remote-verification receipt. Root performs actual managed storage verification before launch; supervisor checks current hydrated bytes against the bound digest and exact task scope/state. The claim/release JSON and source/DEC files are ordinary Git blobs.\n\nA Git commit or GitHub existence check alone does NOT establish that a record was approved by the Coordinator; the trusted operator must select the exact approved path/hash/commit in the launch binding. The supervisor checks that selected record and corresponding committed Coordinator DEC, not any document claiming approved_by=coordinator. This remains the repository's existing trusted-operator authority model; do not invent a signature verifier or assert malicious-writer protection.\n\n## Future metadata phase approval: newly defined, not native-existing\n\nReserve one exact public path for future reviewed publication:\ncoordination/prime_scalar_manifest_metadata_20261107/metadata-phase-approval.json.\nProposed schema name: prime-scalar.metadata-phase-approval/v1. This name/format is a new local contract the author may specify in audit-contract.json; it is NOT an existing goal_lanes or research_dispatch schema and no actual approval record exists yet. Require publication by root after Coordinator review; initial source DEC does not authorize it.\n\nMinimum explicit fields to define and validate in source: schema; phase identifier; execution scope metadata_only; exact metadata task/owner/epoch and source task; approved_by Coordinator and actual immutable approving decision reference; issued/expiry times; approved caller UID/repository/worktree; exact published source/spec/builder/interface/static-review bindings; source claim/release binding; guarded queue managed-publication binding; public mapping_v1 clarification binding; builder/audit single-use reservation paths and allowed fresh output paths; independent onebuilder+oneaudit limits; sharedslice/parent/worker names/nonce identity; exact interpreter/command/environment; byte limits; source-before-metadata dependency and no-candidate/no-oracle rule. Define precise types and canonical paths; no loose optional-field defaults granting permission.\n\nRoot launch provides an exact phase-approval path, SHA256 and published commit through the trusted approved invocation, plus exact approving DEC path/hash/commit. Author must implement validation of those values, not create a record itself or accept arbitrary boolean true. The author may define a strict runtime-binding schema for these launch inputs, but actual values remain unresolved until source/static review and Coordinator phase approval. Expose gaps explicitly; metadata remains blocked while any authority/resource field is unresolved.\n\nRoot must publish the actual metadata claim after readiness, then bind it in the trusted launch invocation; no need for a circular approval hash that contains the hash of its own future claim. Approval can fix allowed owner/task and claim policy, while launch binding fixes actual published epoch/claim bytes; supervisor must require agreement and freshness. Similarly do not require approval commit to contain its own hash: carry commit identities in the separate launch binding.\n\nAtomic local builder/audit reservations are a new metadata-supervisor custody format, not native claim files. Define them explicitly, with exact phaseapproval/source/spec/claim hashes and unit identities, and preserve exclusive durable creation. They do not replace the native metadata claim or create new campaign slots.\n\nThis public clarification permits parsing and source authoring only. It grants no metadata invocation, candidate/oracle import, native task mutation, source implementation access or expiry extension. Record exact supplied text and digest in audit-contract.json actual-input inventory as additive public API material, not as an original frozen input or an implementation read.\n"
+      }
+    ],
+    "supplied_message_interfaces": [
+  {
+    "name": "layout-short-message",
+    "text": "Coordinator confirms layout schema plus explicit exact keysets extraction=[status,method,depth,prefix,generator_index,constant,counters], restriction=[residuals,counters], key order irrelevant/no extras. source_hashes exactly locked spec3map. Provenance/status fields only clarificationrecord, not candidate returnlayout. Root creates under later metadata scope, exactbytes/hash phaseapproval. Forwarding custody-dir question to Coordinator.",
+    "kind": "actual_supplied_message_additive_public_interface",
+    "sha256": "724d72818814f3328b596522c9023a8d16f040fe0ff8b83a33ee45e04fe220a3"
+  },
+  {
+    "name": "custody-coordinator-message",
+    "text": "Coordinator clarification: permitted to IMPLEMENT prospective sameUID operational custody under /home/ec2-user/.local/state/prime-scalar-metadata/<unique-task-epoch-phase>/; do NOT create it in sourcephase. This is operational custody distinct from canonical artifact ownership. Future exact phaseapproval must enumerate exact directory/files (reservations/gates/terminal/logs), UID/modes and fresh-exclusive creation; no symlink traversal/overwrites/deleting consumed reservations. All outsidecustody+repositoryoutputs jointly count toward128MiBcap, manifest64MiB. Root later collects exact bytes/hashes/path identities and partial/missing states into allowed supervisor-receipts.json; persistent reservations remain to fence reuse. Actual operational writes require explicit laterphaseapproval, which already must bind exact paths; no new sourceartifact/path is needed.",
+    "kind": "actual_supplied_message_additive_public_interface",
+    "sha256": "a6450fd8033a104a1b8f327c67836141387a4c9c23e2959f4129e0f82d3fc582"
+  },
+  {
+    "name": "native-queue-and-readiness-coordinator-message",
+    "text": "Coordinator exact public queue/readiness clarification (read-only actual record checked): top-level schema='crypto.autoresearch.dispatch_queue.v1', tasks is ARRAY of task objects, not IDmap; goal_id='GOAL-PFDR-fd09e0', max_concurrent=1, objective string. Select unique task by task['id']; fields role,state,depends_on(list taskIDstrings),read_scope/write_scope/artifact_paths(list repo-relative pathstrings),handoff(object),archived_by(taskID ornull). Metadata e7cdd2 currently state='blocked', role='executor', depends_on=['TASK-20261107-57cb8a']; later exact approved transition must unblock, not supervisor silently doing so. Claims overlay can make sourcecompleted while rawqueue source remainsqueued. Check published queue SHA/scope against phaseapproval and sourcecompleted native release. Root readiness receipt exact wrapper keys: command(array argv),returncode(integer),stdout(string),stderr(string). No native schema/timestamp exists in wrapper; do NOT invent one or parse arbitrary substring as authority. Require success/expected nativecommand, retain fullstdout; root provides timestamp/fetch/publication binding separately in trusted launch record. Readiness observation does not replace live native claim or phaseapproval.",
+    "kind": "actual_supplied_message_additive_public_interface",
+    "sha256": "a46034765a39d85e720e90b7c876159570ed63d8b548392fd62e92a71779e62e"
+  },
+  {
+    "name": "static-review-embedded-custody-root-message",
+    "text": "Coordinator approves prospective outside operationcustody schema only; actual creation requires later exact phaseapproval. Exact /home/ec2-user/.local/state/prime-scalar-metadata/<unique-task-epoch-phase>/ and enumerated filenames/UID/mode must be bound; fresh exclusive, no symlinks/overwrite,128MiB aggregate includes ALLrepooutputs+outsidecustody, persistentreservations retained forever for no-retry. Root copies byte/hash-preserving into supervisor-receipts.json while originals persist. No fifthsourceartifact: independentstaticreview retained in staging and source release note hash; later phaseapproval can embed fullreviewtext/hash/reviewed4map, so support embeddedreview provenance rather than require nonexistent publishedreviewfile. Queue schema question forwarded.",
+    "kind": "actual_supplied_message_additive_public_interface",
+    "sha256": "53ba578cbc5f76833b6291e17e1ee3979ba08ac50734d52056f28a63c3711582"
+  }
+],
+    "excluded_reads": [
+      "manifest_builder.py implementation",
+      "checks.py implementation",
+      "oracle.py implementation",
+      "extractor.py implementation",
+      "producer results",
+      "other agent histories",
+      "native tools implementation"
+    ]
+  },
+  "public_layout_contract": {
+    "schema": "prime-scalar.public-output-layout/v1",
+    "extraction": "mapping_v1",
+    "restriction": "mapping_v1",
+    "extraction_keys": [
+      "status",
+      "method",
+      "depth",
+      "prefix",
+      "generator_index",
+      "constant",
+      "counters"
+    ],
+    "restriction_keys": [
+      "residuals",
+      "counters"
+    ],
+    "source_hashes": "exact three-path source_hashes map from locked case-generation spec",
+    "extra_fields": "Only clarification provenance/status; no extra candidate-return keys. Exact whole file is publication hash bound."
+  },
+  "independent_audit": {
+    "algorithm": "For each canonical exhaustive polynomial recover coefficient code sum coefficient[M]*p^M; mixed-radix inverse rank ordered polynomial codes and assignment within ordered family/p/n blocks; ordinal must equal physical case index. This proves no gap/duplicate/foreign exhaustive case without forward-generating Cartesian cases.",
+    "controls": "Every original control field/value compared with locked spec with only id prefix and family substitution.",
+    "calls": "Per-case prefix sums and divmod recover order/container/repeat/API/depth from call ordinal; exact recursive type-sensitive equality against independent typed arguments; no decoding typed dictionaries.",
+    "malformed": "All 20 global and 4 depth mutation values checked directly from spec, typed bool/int/float/None/list/dict distinctions preserved.",
+    "counts": {
+      "base_cases": 649,
+      "base_depth_queries": 1680,
+      "valid_entry_calls": 23824,
+      "malformed_entry_calls": 128,
+      "total_entry_calls": 23952,
+      "oracle_full_evaluations": "independently summed metadata arithmetic only"
+    },
+    "input_limits": {
+      "manifest_bytes": 67108864,
+      "duplicate_json_keys": "reject",
+      "nonfinite_numbers": "reject",
+      "serialization": "sorted compact ASCII-escaped JSON and exactly one newline"
+    },
+    "failure": "first exact JSON location and bounded expected/actual repr, completed coverage prefix; no rewrite/resume",
+    "receipt_digest": "SHA256 canonical audit result before receipt_digest and runtime authority are added; deterministic content core. Supervisor binds final full receipt bytes separately.",
+    "runtime_binding": "Auditor hashes exact bytes it parses against launch-bound frozen manifest and layout digests, and locked spec digest."
+  },
+  "new_local_runtime_contract": {
+    "trusted_operator_boundary": "CLI launch binding path plus SHA256 are selected by trusted root from actual Coordinator approval/publication. Same-UID hostile modification is outside native cooperative ownership; no signature authority invented.",
+    "launch_schema": "prime-scalar.metadata-launch/v1",
+    "launch_required_fields": [
+      "schema",
+      "phase",
+      "approval",
+      "decision",
+      "metadata_claim",
+      "epoch",
+      "fetched_commit",
+      "worktree_commit",
+      "known_refs",
+      "github_repository",
+      "github_readbacks",
+      "reconciled_at",
+      "readiness_at",
+      "readiness",
+      "queue_verification",
+      "manifest_sha256"
+    ],
+    "git_binding": "Exact object {path:canonical repository-relative string,commit:40 lowercase hex,sha256:64 lowercase hex}; actual git show blob checked, ancestor of fetched/worktree commits and exact root GitHub response.sha readback required; effective source bytes equal blob.",
+    "github_readbacks": "Map commit -> exact object repository,commit,verified_at,response; response is original GitHub commit JSON with matching sha. Root trusted observation, not independent remote API call by parent.",
+    "freshness": "Native known_refs are immutable 40hex commits including fetched and worktree; reconciled_at <= readiness_at <= now, at most 300 seconds old. Root responsible for actual fresh fetch/remote absence reconciliation.",
+    "approval_schema": "prime-scalar.metadata-phase-approval/v1",
+    "approval_path": "coordination/prime_scalar_manifest_metadata_20261107/metadata-phase-approval.json",
+    "approval_required_fields": [
+      "schema",
+      "phase_id",
+      "execution_scope",
+      "task_id",
+      "owner",
+      "source_task_id",
+      "approved_by",
+      "decision",
+      "issued_at",
+      "expires_at",
+      "caller_uid",
+      "repository",
+      "worktree",
+      "sources",
+      "inputs",
+      "source_claim",
+      "source_release",
+      "static_review",
+      "queue",
+      "layout",
+      "resources",
+      "phases",
+      "interpreter",
+      "environment",
+      "output_byte_limits",
+      "dependency",
+      "prohibitions"
+    ],
+    "approval_values": "All mandatory. source/task IDs and repository fixed in source. phase_id lowercase alphanumeric/hyphen max64; execution_scope metadata_only; approved_by coordinator; UTC timestamps exact YYYY-MM-DDTHH:MM:SSZ; UID/epoch exact integers; source keys exactly four outputs; inputs keys exactly spec,builder,interface,bindings,source_contract; each published Git binding. No unresolved field/default grants permission.",
+    "static_review": "Embedded exact text, sha256 UTF8, reviewed_sources exact four-path digest map, disposition accepted_for_metadata_admission. Published source release note must retain this digest. No fifth source artifact required.",
+    "queue": "Exact path and hydrated SHA, published containing .artifacts.json and .gitignore bindings, exact native remote-verification wrapper command/returncode/stdout/stderr. Supervisor validates local queue schema and unique metadata task state queued, role executor, source dependency, exact ten artifact/write paths. Raw source state need not be completed.",
+    "readiness": "Exact wrapper command/returncode/stdout/stderr. Command [approved interpreter,tools/research_dispatch.py,QUEUE,--ready-only,--claims,local]. Observation retained, never standalone authority; current native claim and approved guarded queue remain mandatory.",
+    "native_fencing": "Highest observed epoch across local claim directory and root reconciled known Git refs; any conflicting bytes/orphan highest release/foreign release ambiguity rejected. Selected source completion must be timely, completed, was_expired false, exact four artifact hashes. Metadata owner,epoch,worktree,write scope and publication digest agree, no release, enough time remains. Rechecked before reservation and gate release; source disposition and queue hashes also rechecked.",
+    "phases": "Exact builder,audit objects each with slice,parent_unit,worker_unit,custody_directory,custody_files,command,fresh_outputs. Names distinct between phases, service/slice suffix validated. Builder fresh outputs manifest.json and builder-receipt.json; audit fresh output audit-receipt.json. Audit binds exact manifest hash to builder receipt and worker-terminal digest.",
+    "interpreter": "Resolved non-symlink absolute interpreter path plus executable SHA256. Worker command exactly [interpreter,-I,-B,absolute metadata_driver.py,absolute worker-binding.json,{binding_sha256}]. Supervisor root launch command [interpreter,-I,-B,absolute metadata_supervisor.py,absolute trusted-launch.json,launch SHA256].",
+    "resources": {
+      "cpu_quota_percent": 100,
+      "memory_bytes": 536870912,
+      "swap_bytes": 0,
+      "parent_seconds": 70,
+      "worker_seconds": 60,
+      "startup_seconds": 5,
+      "cleanup_seconds": 5,
+      "parent_tasks": 16,
+      "worker_tasks": 1,
+      "shared_tasks": 17,
+      "concurrency": 1,
+      "builder_invocations": 1,
+      "audit_invocations": 1,
+      "retries": 0,
+      "candidate_calls": 0,
+      "oracle_calls": 0,
+      "manifest_bytes": 67108864,
+      "total_output_bytes": 134217728
+    },
+    "external_supervision": "Root must create approved dedicated shared slice and parent via existing usermanager. Aggregate slice plus parent/worker exact CPU quota/period equality100%,memory512MiB,swap0 read back from effective cgroup files. Parent70 and worker60 RuntimeMax, immediate SIGKILL and TimeoutStop0 prevent grace extension. ParentTasksMax16; workerTasksMax1; aggregate sliceTasksMax17. Even empty unowned descendant cgroups refuse admission. BindsTo+After prearm worker stop on parent termination, independent worker RuntimeMax persists. Actual parent start is read BEFORE authority workload under a conservative process-birth deadline; all subsequent startup uses the earlier absolute deadline. Default-fatal kernel ITIMER_REAL/SIGALRM covers startup, processing, and cleanup including final terminal serialization/write/fsync. Cleanup alarm is min(cleanup_start+5,parent_start+70); no Python signal handler performs further I/O. A fatal alarm can leave no terminal or a partial terminal; root must retain actual external unit signal/timeout and partial bytes. Final receipt records preterminal cleanup time, not a fabricated post-fsync timestamp.",
+    "gate": "Exclusive reservation before worker start. Complete fsynced release-gate.pending atomically hardlinked to release-gate.json, no overwrite, both retained. Nonce binds actual parent PID/start ticks/InvocationID/cgroup/deadline, worker PID/InvocationID/cgroup/deadline, task/owner/epoch, exact source/spec/approval/claim hashes and worker-binding digest.",
+    "byte_accounting": "Each of 12 custody path slots across two phases allocated at most1MiB and serialized length checked BEFORE exclusive write. Canonical output allocations plus12MiB must sum<=128MiB. Manifest bound64MiB by worker LimitFSIZE and reader cap. Builder/audit receipt allocations MUST each equal1MiB; driver checks serialized payload length before exclusive write. Workers have no other declared output writers. Supervisor inventories all declared present files and rejects unexpected custody files. Root-owned reporting output allocations are reserved in the same total and root must enforce these allocations before writing its outputs; no unlimited root write is authorized.",
+    "custody": "Exact persistent /home/ec2-user/.local/state/prime-scalar-metadata/TASK-20261107-e7cdd2-EPOCH-PHASE/; root prepares only parent base directory under later approval; supervisor exclusive mkdir0700 consumes uncertainty even before reservation, files0600, no symlinks/no overwrite/no deletion. Exact files reservation.json,worker-binding.json,release-gate.pending,release-gate.json,worker-terminal.json,supervisor-terminal.json. Root collects byte/hash/path/partial states to its canonical supervisor-receipts.json; operational files remain.",
+    "failure_custody": "No automatic retry. First gate/authority/resource error refuses. Unknown worker InvocationID never triggers stopping an unrelated unit. Root must reconcile actual unit state and retain outside-parent timeout/kill observations if parent cannot write. Partial manifest/output/custody files remain.",
+    "environment": "Exact PATH=/usr/bin:/bin; HOME=actual operator home; XDG_RUNTIME_DIR=/run/user/UID; DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/UID/bus; LANG=C.UTF-8; LC_ALL=C.UTF-8. Worker -I -B; no package/dependency installation."
+  },
+  "unresolved_before_execution": [
+    "No actual metadata phase approval exists in this source task.",
+    "No actual metadata claim, queue unblocking/managed publication, readiness or source release is invented.",
+    "Independent static review/disposition and publication of exact final four-source bytes remain root duties.",
+    "No actual systemd/cgroup resource enforcement, startup feasibility, metadata materialization or audit invocation has been tested.",
+    "Root must supply real resolved interpreter digest, approved units and slice with required effective delegation, exact root launch and fresh public GitHub/managed-artifact receipts.",
+    "All findings from independent static review must be disposed before metadata admission."
+  ],
+  "scientific_scope": "Metadata only; no candidate or oracle invocation; preserve 649 cases/23952 future calls, producer/independent slot accounting and all106+6/five-lead downstream scope.",
+  "inference": "Native actual model/tier/effort not authenticated; scoped degraded source/static/custody amendment applies."
+}

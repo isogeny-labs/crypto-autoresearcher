@@ -258,3 +258,11 @@ and the source must still be read.
 - The local `crypto-autoresearcher` `kb/` server remains that repository's
   derived index; the retrieval policy in `docs/agent-contract-extended.md`
   applies to both.
+
+## 12. Persistent scientific research (2026-11-08)
+
+For the shared research workflow, follow
+[Persistent scientific research loop](../AGENTS.md#persistent-scientific-research-loop).
+Repositories expose this behavior through their normative AGENTS.md; runtime
+instruction files point there. This rule supplements the existing challenge loop
+and preserves its immutable evidence, role authority, budgets and decision gates.

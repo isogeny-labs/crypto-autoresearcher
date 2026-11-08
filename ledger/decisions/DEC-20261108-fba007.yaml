@@ -1,0 +1,333 @@
+coordinator_decision:
+  id: DEC-20261108-fba007
+  date: '2026-11-08'
+  context: Conditional bounded metadata materialization and independent metadata audit
+    after completed source publication; no scientific execution.
+  decision: approve
+  target_ids:
+  - TASK-20261107-e7cdd2
+  - TASK-20261107-969bcf
+  rationale:
+  - Source and timely completed release published at29fa1682630eeacacd302eea754babc7d88d111c
+    and e209d53d4d02a9d73955e60ba767721b813560a8.
+  - Authorize exact preparatory layout and gated queue/handoff publication. Actual
+    invocation requires a subsequently completed and published metadata-phase-approval
+    with all actual bindings.
+  - Queued intermediate publication is not execution authority. Root MUST NOT invoke
+    readiness, claim, dispatch, create units or launch until the exact Coordinator
+    metadata-phase-approval.json is published and its actual hash/commit selected.
+    No automatic dispatch from queued state.
+  - Operational same-PID setup wrapper is explicitly additive to direct-Python root
+    launch description; no completed source file changes or expired claim reuse. Root
+    setup begins under parent caps, arms fatal original-process startup deadline,
+    configures/reads slice, then execs frozen supervisor; no additional seconds.
+  - 'Operational allocation: canonical+custody113MiB; wrapper/two setup configs3MiB;
+    two launch bindings2MiB; setup contract1MiB; root external status/journal4MiB;
+    runtime unit configuration1MiB; remaining4MiB reserved headroom. Total128MiB.
+    Root checks actual bytes before writes.'
+  evidence_refs:
+  - coordination/prime_scalar_manifest_metadata_20261107/source-contract.json
+  - research/prime_scalar_manifest_metadata_20261107/audit-contract.json
+  limitations:
+  - No claim or launch from this record alone. Actual approval must bind final queued
+    bytes, published layout, this decision, exact source/release/review/interpreter
+    and controls.
+  - Two serial70-second phases total140 seconds including setup; no retries/cloud/candidate/oracle;
+    original campaign unchanged.
+  next_actions:
+  - Publish exact reviewed conditional metadata records; preserve queue publication
+    window policy gate.
+  - Bind actual publication commits in phase approval, publish it, then native readiness/claim
+    and trusted phase launch.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Metadata preparation only; no scientific acceptance.
+  decided_by: coordinator
+  decided_at: '2026-11-08T00:29:19.407917+00:00'
+  operational_setup:
+    path: .resume/prime-scalar-manifest-metadata-20261107/phase-preparation/root-setup-wrapper.py
+    sha256: 0caa1bb1b6e948fede2036d86de97acb3453e48fef58a26c42ffa8d23ea7fc17
+    text: "\"\"\"Counted operational setup only; no metadata or candidate implementation.\n\
+      \nTrusted root supplies an exact config path/hash approved in the additive DEC.\n\
+      Same-UID hostile mutation is outside the native cooperative ownership model.\n\
+      No execution is authorized by possession of this source.\n\"\"\"\nimport os\n\
+      import signal\nimport time\n\nwith open('/proc/self/stat', encoding='ascii')\
+      \ as _stream:\n    _ticks = int(_stream.read().rsplit(')', 1)[1].split()[19])\n\
+      _hz = os.sysconf('SC_CLK_TCK')\n_boot_offset = time.clock_gettime(time.CLOCK_BOOTTIME)\
+      \ - time.monotonic()\n_deadline = _ticks / _hz - _boot_offset + 5.0 - 1.0 /\
+      \ _hz\nsignal.signal(signal.SIGALRM, signal.SIG_DFL)\nsignal.setitimer(signal.ITIMER_REAL,\
+      \ max(0.000001, _deadline - time.monotonic()))\n\nimport hashlib\nimport json\n\
+      from pathlib import Path\nimport re\nimport stat\nimport subprocess\nimport\
+      \ sys\n\nROOT = '/home/ec2-user/crypto-prime-sat-ideas-20261029'\nSUPERVISOR\
+      \ = ROOT + '/research/prime_scalar_manifest_metadata_20261107/metadata_supervisor.py'\n\
+      SUPERVISOR_SHA = '0b5da687def7f61bf848ba106b5a3e728547b0f6c3b7fa116a3da17c75b87704'\n\
+      INTERPRETER = '/home/ec2-user/.local/share/uv/python/cpython-3.12.8-linux-x86_64-gnu/bin/python3.12'\n\
+      INTERPRETER_SHA = '0dc3a692fa85fcdb7f1a5877d2adf179809ac417a07ffde2373c832863800a15'\n\
+      \n\ndef require(condition, message):\n    if not condition:\n        raise RuntimeError(message)\n\
+      \n\ndef regular(path, limit):\n    p = Path(path)\n    require(p.is_absolute()\
+      \ and str(p) == path and '..' not in p.parts, 'noncanonical path')\n    for\
+      \ part in (p, *p.parents):\n        require(not part.is_symlink(), 'symlink\
+      \ path')\n    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)\n\
+      \    with os.fdopen(fd, 'rb') as handle:\n        require(stat.S_ISREG(os.fstat(handle.fileno()).st_mode),\
+      \ 'nonregular input')\n        result = handle.read(limit + 1)\n    require(len(result)\
+      \ <= limit, 'input too large')\n    return result\n\n\ndef parse(payload):\n\
+      \    def pairs(rows):\n        result = {}\n        for key, value in rows:\n\
+      \            require(key not in result, 'duplicate JSON key')\n            result[key]\
+      \ = value\n        return result\n    def nonfinite(value):\n        raise RuntimeError('nonfinite\
+      \ JSON value')\n    return json.loads(payload, object_pairs_hook=pairs, parse_constant=nonfinite)\n\
+      \n\ndef command(argv, env):\n    remaining = _deadline - time.monotonic()\n\
+      \    require(remaining > 0, 'original startup budget exhausted')\n    try:\n\
+      \        r = subprocess.run(argv, env=env, cwd=ROOT, stdin=subprocess.DEVNULL,\n\
+      \                           stdout=subprocess.PIPE, stderr=subprocess.PIPE,\n\
+      \                           timeout=remaining, check=False)\n    except subprocess.TimeoutExpired\
+      \ as error:\n        raise RuntimeError('setup command timeout: ' + repr(argv)\
+      \ + '; stdout=' +\n                           repr(error.stdout)[:2048] + ';\
+      \ stderr=' + repr(error.stderr)[:2048]) from error\n    require(r.returncode\
+      \ == 0, 'setup command failed: ' + repr(argv) + ' rc=' + str(r.returncode)\n\
+      \            + ' stdout=' + repr(r.stdout)[:2048] + ' stderr=' + repr(r.stderr)[:2048])\n\
+      \    require(len(r.stdout) <= 65536 and len(r.stderr) <= 65536, 'setup output\
+      \ too large')\n    return r.stdout.decode()\n\n\ndef show(unit, env):\n    fields\
+      \ = 'Id,MainPID,InvocationID,Slice,ControlGroup,ActiveState,ExecMainStartTimestampMonotonic,CPUQuotaPerSecUSec,MemoryMax,MemorySwapMax,TasksMax,RuntimeMaxUSec,KillMode,KillSignal,SendSIGKILL,TimeoutStopUSec'\n\
+      \    output = command(['/usr/bin/systemctl', '--user', 'show', unit, '--property='\
+      \ + fields], env)\n    return dict(row.split('=', 1) for row in output.splitlines()\
+      \ if '=' in row)\n\n\ndef controls(group, tasks):\n    p = Path('/sys/fs/cgroup'\
+      \ + group)\n    quota, period = (p / 'cpu.max').read_text().split()\n    require(quota\
+      \ != 'max' and int(quota) == int(period) and int(quota) > 0, 'CPU cap mismatch')\n\
+      \    for name, value in [('memory.max', '536870912'), ('memory.swap.max', '0'),\
+      \ ('pids.max', str(tasks))]:\n        require((p / name).read_text().strip()\
+      \ == value, name + ' mismatch')\n\n\ndef main():\n    global _deadline\n   \
+      \ require(len(sys.argv) == 3 and re.fullmatch('[0-9a-f]{64}', sys.argv[2]),\
+      \ 'exact config path/hash required')\n    raw = regular(sys.argv[1], 1024 *\
+      \ 1024)\n    require(hashlib.sha256(raw).hexdigest() == sys.argv[2], 'setup\
+      \ config digest mismatch')\n    c = parse(raw)\n    require(type(c) is dict\
+      \ and set(c) == {'schema', 'phase', 'parent_unit', 'slice', 'uid', 'environment',\n\
+      \            'launch_path', 'launch_sha256', 'approval_sha256', 'wrapper_sha256'},\
+      \ 'setup config fields')\n    require(c['schema'] == 'prime-scalar.counted-root-setup/v1'\
+      \ and c['phase'] in ('builder', 'audit'), 'setup schema/phase')\n    require(type(c['uid'])\
+      \ is int and c['uid'] == os.getuid() == os.geteuid() == 1000, 'setup UID')\n\
+      \    prefix = 'prime_scalar_e7cdd2_e1_' + c['phase']\n    require(c['parent_unit']\
+      \ == prefix + '_parent.service' and c['slice'] == prefix + '.slice',\n     \
+      \       'exact approved unit/slice name')\n    expected_env = {'PATH': '/usr/bin:/bin',\
+      \ 'HOME': '/home/ec2-user', 'XDG_RUNTIME_DIR': '/run/user/1000',\n         \
+      \           'DBUS_SESSION_BUS_ADDRESS': 'unix:path=/run/user/1000/bus', 'LANG':\
+      \ 'C.UTF-8', 'LC_ALL': 'C.UTF-8'}\n    require(c['environment'] == expected_env,\
+      \ 'setup environment')\n    invocation = os.environ.get('INVOCATION_ID', '')\n\
+      \    require(re.fullmatch('[0-9a-f]{32}', invocation), 'missing parent InvocationID')\n\
+      \    env = dict(expected_env, INVOCATION_ID=invocation)\n    require(str(Path.cwd())\
+      \ == ROOT, 'setup working directory')\n    require(hashlib.sha256(regular(str(Path(__file__).absolute()),\
+      \ 1024 * 1024)).hexdigest()\n            == c['wrapper_sha256'], 'wrapper source\
+      \ digest')\n    launch_raw = regular(c['launch_path'], 1024 * 1024)\n    require(hashlib.sha256(launch_raw).hexdigest()\
+      \ == c['launch_sha256'], 'trusted launch digest')\n    launch = parse(launch_raw)\n\
+      \    require(launch['phase'] == c['phase'] and launch['approval']['sha256']\
+      \ == c['approval_sha256'], 'launch/approval mismatch')\n    parent = show(c['parent_unit'],\
+      \ env)\n    require(parent['MainPID'] == str(os.getpid()) and parent['InvocationID']\
+      \ == invocation\n            and parent['Id'] == c['parent_unit'] and parent['Slice']\
+      \ == c['slice']\n            and parent['ActiveState'] == 'active', 'parent\
+      \ identity')\n    start = int(parent['ExecMainStartTimestampMonotonic']) / 1000000\n\
+      \    require(start > 0, 'missing parent activation clock')\n    _deadline =\
+      \ min(_deadline, start + 5)\n    require(time.monotonic() < _deadline, 'parent\
+      \ startup exhausted')\n    signal.setitimer(signal.ITIMER_REAL, max(0.000001,\
+      \ _deadline - time.monotonic()))\n    for key, value in [('CPUQuotaPerSecUSec',\
+      \ '1s'), ('MemoryMax', '536870912'), ('MemorySwapMax', '0'),\n             \
+      \          ('TasksMax', '16'), ('RuntimeMaxUSec', '1min 10s'), ('KillMode',\
+      \ 'control-group'),\n                       ('SendSIGKILL', 'yes'), ('TimeoutStopUSec',\
+      \ '0')]:\n        require(parent.get(key) == value, 'parent property mismatch:\
+      \ ' + key)\n    require(parent['KillSignal'] in ('9', 'SIGKILL'), 'parent immediate\
+      \ kill')\n    actual_group = [row[3:] for row in Path('/proc/self/cgroup').read_text().splitlines()\
+      \ if row.startswith('0::')]\n    require(actual_group == [parent['ControlGroup']],\
+      \ 'parent cgroup identity')\n    controls(parent['ControlGroup'], 16)\n    shared\
+      \ = show(c['slice'], env)\n    require(shared['Id'] == c['slice'] and shared['ActiveState']\
+      \ == 'active', 'shared slice identity')\n    require(parent['ControlGroup']\
+      \ == shared['ControlGroup'] + '/' + c['parent_unit'], 'parent slice placement')\n\
+      \    group = Path('/sys/fs/cgroup' + shared['ControlGroup'])\n    def membership():\n\
+      \        require({p for p in group.rglob('*') if p.is_dir()} == {group / c['parent_unit']},\
+      \ 'unknown slice descendants')\n        pids = {int(pid) for p in group.rglob('cgroup.procs')\
+      \ for pid in p.read_text().split()}\n        require(pids == {os.getpid()},\
+      \ 'unknown setup processes')\n    membership()\n    command(['/usr/bin/systemctl',\
+      \ '--user', 'set-property', '--runtime', c['slice'],\n             'CPUQuota=100%',\
+      \ 'MemoryMax=536870912', 'MemorySwapMax=0', 'TasksMax=17'], env)\n    controls(shared['ControlGroup'],\
+      \ 17)\n    controls(parent['ControlGroup'], 16)\n    membership()\n    require(hashlib.sha256(regular(INTERPRETER,\
+      \ 64 * 1024 * 1024)).hexdigest() == INTERPRETER_SHA, 'interpreter digest')\n\
+      \    require(hashlib.sha256(regular(SUPERVISOR, 1024 * 1024)).hexdigest() ==\
+      \ SUPERVISOR_SHA, 'supervisor digest')\n    require(time.monotonic() < _deadline,\
+      \ 'no startup time remains for supervisor')\n    # Do not disarm the fatal timer.\
+      \ exec preserves PID/start ticks and ITIMER_REAL.\n    os.execve(INTERPRETER,\
+      \ [INTERPRETER, '-I', '-B', SUPERVISOR, c['launch_path'], c['launch_sha256']],\
+      \ env)\n\n\nif __name__ == '__main__':\n    try:\n        main()\n    except\
+      \ BaseException as error:\n        print(json.dumps({'schema': 'prime-scalar.root-setup-failure/v1',\
+      \ 'status': 'incomplete',\n                          'pid': os.getpid(), 'invocation_id':\
+      \ os.environ.get('INVOCATION_ID'),\n                          'error': type(error).__name__\
+      \ + ': ' + str(error)[:8192]}), flush=True)\n        raise\n"
+    setup_contract_sha256: 03cba023a151ec8f5f8921b3b04eaf58e4aae5a0ac9bcd2724c447f2a4218e14
+    setup_contract:
+      schema: prime-scalar.root-setup-source-contract/v1
+      status: source_only_not_execution_approved
+      owner: root operational preparation; separate from completed TASK-20261107-57cb8a
+      wrapper_path: .resume/prime-scalar-manifest-metadata-20261107/phase-preparation/root-setup-wrapper.py
+      wrapper_sha256: 0caa1bb1b6e948fede2036d86de97acb3453e48fef58a26c42ffa8d23ea7fc17
+      clock: same parent PID from systemd activation; original process birth+5 and
+        parent ExecMainStart+5 minimum, fatal ITIMER_REAL preserved across exec; parent
+        RuntimeMax70 starts before setup
+      phase_seconds: 70
+      phases: 2
+      total_seconds: 140
+      candidate_oracle_metadata_calls: 0
+      unit_creation: 0
+      validation: AST parsing only, no import/execution
+      trust: Trusted root chooses exact setup config and hash bound in additive DEC;
+        native cooperative ownership, not hostile same-UID isolation. Only exact approved
+        slice is modified after individual parent resource and identity checks. Source/input
+        paths remain unchanged during phase.
+      setup_subprocesses: finite remaining startup timeout; normal return means reaped;
+        on main SIGALRM systemd KillMode control-group immediate SIGKILL kills remaining
+        setup children. No persistent controller.
+      custody: Root external journal/unit status retained after any failure; timeout
+        may precede own failure receipt. No automatic retry of started phase. Wrapper/config
+        source and exact hashes must be embedded in DEC and final supervisor-receipts/report-inputs;
+        source/layout/claim budgets remain unchanged.
+      byte_accounting: Wrapper and setup config each <=1MiB; two phase configs plus
+        one wrapper allocated3MiB inside existing15MiB unused headroom, total max116MiB
+        of128MiB. Root records actual bytes/hashes. Systemd runtime control files
+        are setup state and enumerated in custody; no metadata outputs written by
+        wrapper.
+      remaining:
+      - independent static review
+      - Coordinator exact DEC and runtime path/command approval
+      - actual metadata claim and current launch binding
+      - conditional actual resource/readback support; no pre-approval unit probe
+      process_clock: BOOTTIME start ticks converted conservatively to monotonic using
+        measured boot offset and subtracting one tick; supervisor same PID conversion
+        after exec cannot grant a new startup interval
+    independent_review:
+      text: "# Independent counted root-setup wrapper static review\n\nDisposition:\
+        \ **SOURCE-STATIC-ONLY; final operational wrapper source accepted for Coordinator\
+        \ conditional consideration. No execution authorized.** No remaining concrete\
+        \ source blocker found within this bounded wrapper scope. Actual platform,\
+        \ authority, freshness and custody gates below remain mandatory. This review\
+        \ is separate from the completed four-source review and does not change those\
+        \ source hashes or its report.\n\nOnly source reading, hashing, JSON parsing\
+        \ and AST parsing were performed. The wrapper was not imported or executed.\
+        \ No systemd unit or slice was created or modified; no metadata generation,\
+        \ candidate/oracle call, native state mutation, Git operation, model probe\
+        \ or cloud work was performed. AST parsing succeeded for the final wrapper.\
+        \ No software-validation invocation was consumed.\n\n## Concrete finding and\
+        \ corrected final bytes\n\n**W1: initial process clock used incompatible time\
+        \ bases; corrected.** The initial wrapper SHA16826188a817e4b6acae2ab27da5b27ba41de3537640a406a52631964872ae0b\
+        \ used `/proc/self/stat` boot-time start ticks directly against `time.monotonic()`\
+        \ (old lines11\u201314). Written counterexample: after historical suspend\
+        \ interval S, an early blocking configuration read or first systemctl call\
+        \ could receive approximately5+S seconds before later parent readback tightened\
+        \ the deadline. This was a source counterexample, not an observed failure\
+        \ or an executed suspend test.\n\nFinal lines11\u201317 convert boot-time\
+        \ ticks with CLOCK_BOOTTIME minus monotonic, subtract one tick conservatively,\
+        \ and arm default-fatal SIGALRM before remaining imports/configuration reads.\
+        \ Actual parent ExecMainStart readback further takes the minimum with parent_start+5\
+        \ (124\u2013128). The correction matches the frozen supervisor's clock basis.\
+        \ No new five-second interval is granted on handoff. Interpreter bootstrap\
+        \ before user Python source executes remains an actual platform timing premise,\
+        \ not a measured result.\n\n## Reviewed boundaries\n\n- **Same PID and timer\
+        \ handoff:** lines151\u2013155 verify pinned interpreter/supervisor hashes,\
+        \ check residual deadline and use os.execve, not a subprocess supervisor.\
+        \ The environment preserves the actual INVOCATION_ID. PID, process-start ticks\
+        \ and ITIMER_REAL persist across exec; frozen supervisor derives its conservative\
+        \ deadline from that same process birth and the same service start. The wrapper\
+        \ does not disarm the alarm. A successful exec does not reset systemd RuntimeMax70.\n\
+        - **Initial individual caps before mutation:** lines120\u2013136 verify exact\
+        \ configured parent unit, actual MainPID=os.getpid, InvocationID, ActiveState,\
+        \ Slice, service-start clock, CPUQuotaPerSecUSec, MemoryMax, MemorySwapMax,\
+        \ TasksMax16, RuntimeMax70, control-group kill and SIGKILL/zero-stop properties.\
+        \ `/proc/self/cgroup` must match the service readback; effective parent cpu.max,\
+        \ memory.max, swap.max and pids.max are checked before the only set-property\
+        \ mutation. Setup's temporary subprocesses remain children within the already-capped\
+        \ parent cgroup. These are implemented checks; no actual effective control\
+        \ was measured here.\n- **Shared controls and membership:** lines137\u2013\
+        150 require exact parent placement in the named active slice, only the parent\
+        \ cgroup as descendant, and only the wrapper PID when subprocess calls have\
+        \ returned. The single set-property call uses an argv array and the exact\
+        \ phase slice. Effective shared quota/period1, memory536870912, swap0 and\
+        \ pids17, and parent caps, are reread afterward. Unknown descendants, including\
+        \ empty cgroups, fail. No worker is launched by the wrapper.\n- **Subprocess\
+        \ lifecycle:** lines64\u201377 use subprocess.run with the remaining original\
+        \ startup timeout; normal return and the TimeoutExpired handling return only\
+        \ after subprocess.run has waited/reaped its child. Commands are sequential.\
+        \ A default-fatal parent alarm may interrupt that cleanup, so termination\
+        \ of outstanding setup children depends on actual systemd KillMode=control-group\
+        \ and immediate SIGKILL. Root must preserve terminal/cgroup evidence of this\
+        \ path; source does not prove those children actually terminated on a particular\
+        \ host. Output is bounded for acceptance; oversized or failed commands raise,\
+        \ never become empty successful observations.\n- **Strict config and identity:**\
+        \ lines96\u2013119 require exact JSON keyset/schema, phase builder/audit,\
+        \ exact built-in integer UID1000 matching real/effective UID, fixed epoch1\
+        \ phase unit/slice names, exact environment, canonical non-symlink regular\
+        \ files, config SHA, wrapper SHA, launch SHA and matching phase/approval digest.\
+        \ The initial config is read nonblocking with a1MiB bound. Actual parent PID/InvocationID/cgroup\
+        \ then bind it to the running unit. Root's exact config/hash and additive\
+        \ DEC selection remain the trusted authority boundary; the wrapper is not\
+        \ a second native approval implementation. Native authority is subsequently\
+        \ checked by the unchanged frozen supervisor.\n- **Pinned transition and cooperative\
+        \ trust:** interpreter and supervisor paths/digests are literal constants.\
+        \ The final pathname exec assumes the declared trusted operator keeps source/input\
+        \ paths stable during the phase; this is the stated cooperative-ownership\
+        \ model, not hostile same-UID isolation. No builder/auditor/candidate/oracle\
+        \ import appears in the wrapper.\n- **Resource accounting:** the supplied\
+        \ prospective output allocations total101MiB; existing custody allocation12MiB\
+        \ plus wrapper1MiB and two setup-config allocations1MiB each gives116MiB,\
+        \ leaving12MiB below128MiB. Wrapper source is below1MiB and config reads enforce\
+        \ that bound. The wrapper writes no metadata artifact. Root still owns accounting\
+        \ for actual config/source/control-state/custody bytes, and must not count\
+        \ the same reserved capacity twice or treat journal storage as measured zero.\
+        \ The70-second phase and140-second two-phase total are unchanged; setup and\
+        \ later authority checks share the same startup5 allowance.\n- **Failure behavior:**\
+        \ caught exceptions print an incomplete failure record with PID/InvocationID/error\
+        \ then re-raise. A fatal alarm can prevent this output; no success or zero-attempt\
+        \ record may be inferred. Root external unit/journal custody must preserve\
+        \ the actual failure and any partial state. There is no retry loop or persistent\
+        \ controller in source.\n\n## Root-only prerequisites and unresolved actual\
+        \ gates\n\n**Freshness is not established by this wrapper.** The clarification\
+        \ requires rejecting pre-existing phase service/slice/custody state before\
+        \ activation. By the time wrapper runs, its parent and slice necessarily exist;\
+        \ the membership test cannot distinguish a freshly created empty slice from\
+        \ a reused old empty slice. Root must record fresh absence immediately before\
+        \ the exact authorized first launch and preserve the activation identities.\
+        \ Existing/ambiguous state stops submission; this source review supplies no\
+        \ freshness observation.\n\nCoordinator must explicitly bind final wrapper\
+        \ bytes, this full review, setup contract, both actual config paths/hashes,\
+        \ exact root ExecStart and resource/custody accounting in the additive decision.\
+        \ Initial launch must already have the frozen individual parent properties\
+        \ and exact phase slice; no uncounted prior slice setup is admitted. Root\
+        \ must supply the actual live metadata claim, final approval and launch binding.\
+        \ The INCOMPLETE approval read here is configuration context only and grants\
+        \ no authority.\n\nActual user-manager acceptance of slice activation and\
+        \ set-property --runtime; effective delegation and cgroup controls; exact\
+        \ systemd252 service property strings, including TimeoutStopUSec=0 and RuntimeMaxUSec=1min10s\
+        \ formatting; same-PID/timer behavior on the actual interpreter; setup-plus-authority\
+        \ feasibility inside5s; terminal state/cgroup cleanup after parent alarm;\
+        \ and complete outside-parent receipts remain unperformed gates. Existing\
+        \ supplied systemd help and init.scope KEY=VALUE observations establish neither\
+        \ mutation permission nor service enforcement. A failed first started phase\
+        \ consumes its allowed attempt and must be retained without automatic retry.\n\
+        \n## Exact final hashes and actual read inventory\n\n- `.resume/prime-scalar-manifest-metadata-20261107/phase-preparation/COUNTED-ROOT-SETUP-CLARIFICATION.md`:\
+        \ SHA256 `630f440c3bc8e4cf3796eb41d43dda1b6c00f7bc4a28b9b8c292e20610f7dabc`,\
+        \ 4391 bytes.\n- `.resume/prime-scalar-manifest-metadata-20261107/phase-preparation/root-setup-wrapper.py`:\
+        \ SHA256 `0caa1bb1b6e948fede2036d86de97acb3453e48fef58a26c42ffa8d23ea7fc17`,\
+        \ 9042 bytes.\n- `.resume/prime-scalar-manifest-metadata-20261107/phase-preparation/setup-contract.json`:\
+        \ SHA256 `03cba023a151ec8f5f8921b3b04eaf58e4aae5a0ac9bcd2724c447f2a4218e14`,\
+        \ 2374 bytes.\n- `.resume/prime-scalar-manifest-metadata-20261107/phase-preparation/phase-approval.INCOMPLETE.json`:\
+        \ SHA256 `a5f29955f44dc41203fa3e757eef6fd53fd88b05f5eaae1731abe502a34c8126`,\
+        \ 24192 bytes.\n\nThe initial wrapper/contract were also read before correction:\
+        \ wrapper SHA16826188a817e4b6acae2ab27da5b27ba41de3537640a406a52631964872ae0b;\
+        \ contract SHAcadd442a0a6a9cda6720bd6b1a216304cb554aeeac0a4aec35c3c76a5868922a.\
+        \ Final changed wrapper clock and contract were reread and rehashed, and final\
+        \ wrapper AST parsed. The first combined output was truncated; configuration\
+        \ fields and final corrected code/contract were reread. The incomplete approval\
+        \ JSON was opened in full, but only its unit names, interpreter, environment\
+        \ and resource/output configuration were used; its embedded prior review is\
+        \ the reviewer's own already-completed report, not new evidence of authority.\
+        \ Previously allowed platform receipt and frozen-supervisor review knowledge\
+        \ were carried from the preceding independent review; neither original report\
+        \ nor four frozen sources was edited. No implementation outside the wrapper\
+        \ was newly opened and no memory was consulted.\n\nFinal scope: SOURCE-STATIC-ONLY.\
+        \ Source acceptance is not native execution approval or a runtime result.\n"
+      sha256: a5a643b01eeee2eb9996717192f4241d2b2c04ba173118e3320b47209f6cd1bd
+      disposition: SOURCE-STATIC-ONLY accepted; no remaining concrete source blocker;
+        no runtime result

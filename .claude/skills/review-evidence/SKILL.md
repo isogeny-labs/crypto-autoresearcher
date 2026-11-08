@@ -190,3 +190,11 @@ requested, still use the experiment route and its record-specific PR title.
 - A review without its decision report, graph and PDF is incomplete. If no
   renderer can be installed, archive the report source and graphs and state
   the blocker; never present an older PDF as current.
+
+## Default challenge research loop
+
+Review every original claim against the frozen problem and hash-bound evidence in [the default research loop](../../../docs/challenge-research-loop.md). Record concrete findings and a judgment, or one bounded already-declared follow-up. Retain the original claim set. Infrastructure failures are repair outcomes, and acceptance still needs the existing promotion/closure gates.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.
