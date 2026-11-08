@@ -30,6 +30,22 @@ the 47-variable slice preserves its 61,196-dimensional codomain and
 surjectivity. This is the mathematical premise for the row-copy projection;
 an independent checker must still accept the actual projected/rebased bytes.
 
+The one-dimensional affine kernel is also an exact **upper bound on affine
+falls through degree four**, without assuming that the D4 quotient kernel is
+all of `W4`. The independent checker gives `W4(F) <= ker(pi4)`, while the
+primal witness puts the displayed affine relation `y` in `F <= W2(F)`.
+Since the checked map has no other affine kernel relation,
+`W_d(F) cap B_<=1 = span{y}` for every `2 <= d <= 4`. For the exact x_47
+slice, Proposition 2.5b identifies `W_d(G)` with `W_d(F) cap B'`; because
+`y` contains x_47 and `B'` does not, `W_d(G) cap B'_<=1 = {0}` through
+degree four. Thus no second exact affine slice is available from a fall at
+these degrees. An arbitrary affine restriction still has the one-way
+nonmembership transfer of Proposition 2.5e, but may close earlier.
+The committed read-only capacity screen was replayed against the retained
+D4 map under a 4-GiB address-space and 300-second limit; its full JSON
+matched `n47-rand00-slice-capacity-screen-001.json`, including affine rank
+48 and the sole relation above.
+
 The independently reconstructed 47-variable sliced system has 47 generators
 and 18,297 terms. Its quadratic coefficient matrix has rank 46, with the sole
 dependency mask `0x25d881e86ebe`; that combination is the zero polynomial
