@@ -35,6 +35,13 @@ def inspect(certificate: Path, plan: dict) -> dict:
         raise ValueError('certificate exceeds frozen producer size cap')
     low_columns = sum(comb(n, i) for i in range(degree))
     pivot_payload = codimension * row_bytes
+    # check_quotient_map_native.cpp on the pinned x86-64/libstdc++ build:
+    # paired closure retains at most q pivot pairs plus two current rows.
+    # check_onto's pivot table is destroyed before paired closure begins.
+    native_paired_rows = (2 * codimension + 2) * row_bytes
+    native_pair_objects = 48 * codimension  # sizeof(pair<vector<u64>, vector<u64>>)
+    native_paired_explicit = (actual_bytes + native_paired_rows +
+                              native_pair_objects + codimension)
     return {
         'schema': 'semaev.n47-d5-candidate-header-screen/v1',
         'status': 'header_and_size_only',
@@ -48,11 +55,19 @@ def inspect(certificate: Path, plan: dict) -> dict:
         'native_mapped_file_virtual_bytes': actual_bytes,
         'native_one_pivot_table_payload_upper_bytes': pivot_payload,
         'native_paired_pivot_payload_upper_bytes': 2 * pivot_payload,
+        'native_paired_live_rows_payload_upper_bytes': native_paired_rows,
+        'native_paired_pair_object_storage_bytes_x86_64': native_pair_objects,
+        'native_paired_explicit_bytes_x86_64': native_paired_explicit,
         'python_paired_pivot_payload_upper_bytes':
             2 * min(codimension, low_columns) * row_bytes,
-        'caveat': ('These payloads exclude vector, index, reduction-list, '
-                   'descent, interpreter, and runtime overhead. Passing this '
-                   'screen is not checker admission or a fall-degree result.'),
+        'caveat': ('The native paired explicit bound assumes 24-byte vector '
+                   'and 48-byte pair objects on the pinned x86-64/libstdc++ '
+                   'build. It excludes small buffers and lookup arrays, '
+                   'allocator metadata and fragmentation, runtime, and '
+                   'page-cache effects. Other payload fields exclude vector, '
+                   'index, reduction-list, descent, and interpreter overhead. '
+                   'Passing this screen is not checker admission or a '
+                   'fall-degree result.'),
     }
 
 

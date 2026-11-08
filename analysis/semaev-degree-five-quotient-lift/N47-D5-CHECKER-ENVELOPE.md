@@ -113,6 +113,11 @@ run the checker. In particular, the checker has no internal 96-GiB limit and
 the frozen D5 protocol budgets the producer, not a later independent checker
 attempt. A produced candidate still needs its exact header/file-size screen,
 its own finite checker protocol and live resource admission.
+`inspect_n47_d5_candidate.py` reports this combined x86-64 explicit bound
+from an actual candidate header as
+`native_paired_explicit_bytes_x86_64`, alongside the stage-specific row
+payloads. It rejects a file whose exact format length exceeds the frozen
+producer cap; the screen reads no quotient rows and never certifies C0-C3.
 
 For each variable, paired elimination applies the same row operations to
 `A(m)` and `B_i(m)=A(x_i m)` for every monomial of degree at most four. A
