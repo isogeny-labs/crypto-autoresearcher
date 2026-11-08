@@ -854,6 +854,10 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
   `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`,
   checker transcript SHA-256
   `058be3276433127923b07d3c41a4c4e81bc7a8c75d205f824e5abe4f9f86ab93`).
+  The [compressed certificate](https://github.com/isogeny-labs/crypto-autoresearcher/releases/download/semaev-closure-certificates-20261029/fresh-n47-rand-00-D5-cascade01-highmem01-D4.D4.cert.gz)
+  is a hosted release asset; its anonymous-download and decompression readback
+  is recorded in
+  `../semaev-degree-five-quotient-lift/highmem-archive/fresh-n47-rand-00-D5-cascade01-highmem01-D4.publication.json`.
   The retained exhaustive `count_by_sum` run returned zero; its named input,
   binary/source provenance, output, and receipt were checked again in
   `../semaev-degree-five-quotient-lift/n47-rand00-count-bridge-custody-002.json`.
