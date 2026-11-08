@@ -198,3 +198,20 @@ canonical lifecycle skills were read. They establish that worker completion is
 not campaign completion, evidence must precede transitions, failures are typed,
 and the existing role/archival/runner infrastructure owns authority. This is
 software orchestration, not evidence of judge accuracy or a research result.
+
+## Persistent iteration and stopping
+
+Apply [Persistent scientific research loop](../AGENTS.md#persistent-scientific-research-loop)
+at every stage. An infrastructure failure or rejected candidate requires diagnosis
+and an informed successor when useful authorized work remains. Before selecting
+`recheck`, investigate reasonable recovery paths and record the concrete blocker,
+evidence, alternatives tried, exact next action and condition that would resume it.
+A candidate rejection does not close the goal. Continue tractable work within
+the assigned goal and existing WIP/role rules while another dependency is blocked.
+
+Use the established checkpoint and append-only decision mechanisms. Keep the
+one-follow-up-per-attempt limit: a further scientific attempt is a new candidate
+addressing the terminal review, never an in-place rewrite or extra hidden batch.
+Resource ceilings, runner admission, explicit stage boundaries and official goal
+closure remain binding. These are agent behavior rules; this documentation change
+does not alter the planner's JSON schemas or scheduler implementation.
