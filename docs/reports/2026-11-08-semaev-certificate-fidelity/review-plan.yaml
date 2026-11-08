@@ -1,0 +1,116 @@
+review_plan:
+  status: prospective_before_reviewer_dispatch
+  source_commit: 6a0eb9665191e35690b4ff5ebd91c63561e09ec4
+  claim_id: THM-SEMAEV-FALL1-LEMMA-3
+  task_id: TASK-20260916-b55948
+  claim_under_review: >-
+    For a Weierstrass curve over a finite field, a declared finite F_q-spanning
+    family V, arbitrary finite tuple of affine curve points, and target R, the
+    predicate that every point is on the curve, every x-coordinate lies in V,
+    and the group sum equals R is total and decidable. The source also motivates
+    checking a producer's decomposition certificate independently of its script.
+  immutable_inputs:
+    claim_source: research/THM_SEMAEV_FALL1.md
+    claim_source_sha256: 11b61f4f4bdaed0c323ec852f19fc4c0a7ff3972715bfe637604fb675db7fee4
+    target: formal/targets/semaev-decomposition-certificate.yaml
+    target_sha256: 3a8dc16449c2615c85c93bc92a3137435f1a367fb97a18729e6da6304554d7e6
+    theorem: formal/CryptoResearch/Semaev/Certificate.lean
+    theorem_sha256: aa022e4829eefc2cbe9ac05cbeb39f81e9e3eaa8147e2e41e9d718f11976bd89
+    theorem_name: CryptoResearch.Semaev.decidable_validDecomposition
+    supplemental_raw_theorem: CryptoResearch.Semaev.validRawDecomposition_iff_curve_span_sum
+    lean_toolchain: leanprover/lean4:v4.35.0
+    mathlib_revision: cfc55fc58714a59dc06e6e79edc6d1d95140d3c2
+    lake_manifest_sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+    prior_report: docs/reports/2026-10-21-semaev-certificate/report.md
+    prior_report_sha256: d060ca4237190ef4b742b08797273da39e26eab39ed968bc6f0101a0ee18b68c
+  coordinator_prior:
+    recorded_before_reviewers: true
+    expectation: >-
+      The finite coefficient search and typed point-group equality probably
+      prove the scoped decidability statement. The bridge from serialized run
+      output to typed K coordinates is not part of the named theorem and may
+      limit the operational independence claim.
+    uncertainty: >-
+      Whether the current elaborated theorem type and raw-coordinate lemma
+      exactly match the source claim, whether source and verifier inputs remain
+      pinned under a fresh run, and whether exceptional cases are rejected.
+    preexisting_evidence: >-
+      The 2026-10-21 packet reports a passing exact-target build on an older
+      Lean 4.35.0-rc1 toolchain and leaves semantic review pending. The 2026-11-08
+      hosted sweep reports this target machine_verified; neither receipt alone
+      supplies an independent semantic verdict or authenticated execution.
+  joints:
+    - joint: J1 blind mathematical predicate and controls
+      assigned_to: TASK-20261108-095e46
+      attack_plan: >-
+        From blind-card.md alone, derive a finite decision procedure and the
+        exact iff statement. Work the small-field positive and known-false
+        cases; challenge empty tuple/basis, zero target, off-curve coordinates,
+        x outside the span, and a wrong group sum. No producer source, proof,
+        receipt, review plan, or sibling report may be read before sealing.
+      breaking_artifact: >-
+        A counterexample to the stated iff, a nonterminating search under the
+        declared finite assumptions, or a known-false case that the derived
+        predicate accepts.
+    - joint: J2 producer claim to elaborated theorem and data-model fidelity
+      assigned_to: TASK-20261108-f75797
+      attack_plan: >-
+        Compare quantifiers, finiteness, basis/span semantics, point-at-infinity
+        handling, Weierstrass equation, nonsingularity, group law, and the raw
+        coordinate bridge against the source claim and pinned Mathlib APIs.
+        Identify each unproved bridge to serialized run records or a native
+        verifier. Inspect the theorem type and proof text, but not J1/J3 reports.
+      breaking_artifact: >-
+        A missing hypothesis, circular conclusion, hard-coded fixture, type
+        mismatch, unchecked singular/off-curve input, or an operational
+        independence claim that requires an unproved parser or code bridge.
+    - joint: J3 current machine evidence, pins, and false-success controls
+      assigned_to: TASK-20261108-5ef48a
+      attack_plan: >-
+        Verify exact target and declaration identity, current source/verifier
+        input hashes, Lean and Mathlib pins, module coverage, axiom output,
+        and fail-closed controls for wrong name, changed source, unapproved
+        axiom, empty success evidence, and invalid raw coordinates. Distinguish
+        hosted receipt consistency from fresh authenticated execution. Do not
+        run a memory-heavy local build without exclusive coordination and
+        at least 16 GiB reserved for the host and other agents.
+      breaking_artifact: >-
+        Stale or fabricated success evidence, omitted named declaration,
+        unapproved axiom, source/pin drift, a false-success control accepted,
+        or unavailable fresh exact-target Lean verification.
+  blindness:
+    mutual: true
+    lifted_for: []
+    lift_only_after_all_reports_frozen: true
+    blind_task_input: blind-card.md
+    blind_task_forbidden:
+      - review-plan.yaml
+      - formal/CryptoResearch/Semaev/Certificate.lean
+      - docs/reports/2026-10-21-semaev-certificate/
+      - proof receipts and sibling reports
+  proves_too_much:
+    objects:
+      - off-curve raw coordinate (0,0) on y^2 = x^3 + x + 1 over F_5
+      - on-curve x-coordinate outside span of an empty basis
+      - correct summand but target equal to the group identity
+      - empty tuple with a nonzero target
+      - serialized coordinate bytes not covered by a K-times-K predicate
+    assigned_to: TASK-20261108-095e46
+    failure_signature: >-
+      The first four are rejected by the stated predicate. The fifth is an
+      explicit bridge gap unless a separately checked parser theorem is cited.
+  blind_rederivation:
+    required: true
+    quantity: finite span membership and curve-group certificate decision
+    parameters: >-
+      F = K = F_5, curve y^2 = x^3 + x + 1, empty and one-element declared
+      spanning families, tuples of length zero and one, and supplied affine
+      coordinate candidates in blind-card.md.
+    blind_from: blind-card.md
+    assigned_to: TASK-20261108-095e46
+    phased_release: true
+  publication_rule: >-
+    No scientific status changes from this plan. Keep machine, fidelity, and
+    review verdicts separate; compose only sealed independent reports, fresh
+    exact-target Lean evidence, and source-bound controls. Publish a diagram
+    and inspected PDF with the final technical packet. Archive failed checks.
