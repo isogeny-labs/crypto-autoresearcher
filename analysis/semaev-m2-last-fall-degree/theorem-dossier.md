@@ -901,6 +901,11 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
   is a hosted release asset; its anonymous-download and decompression readback
   is recorded in
   `../semaev-degree-five-quotient-lift/highmem-archive/fresh-n47-rand-00-D5-cascade01-highmem01-D4.publication.json`.
+  An independent exact $W_4$ closure replay has rank 151,857 in 213,053
+  columns, equal to the checked map's kernel dimension; hence its D4 seed
+  kernel is exactly $W_4(F)$ for this named input under the recorded
+  computation (see
+  `../semaev-degree-five-quotient-lift/N47-D4-EXACT-LIFT-AUDIT.md`).
   The retained exhaustive `count_by_sum` run returned zero; its named input,
   binary/source provenance, output, and receipt were checked again in
   `../semaev-degree-five-quotient-lift/n47-rand00-count-bridge-custody-002.json`.

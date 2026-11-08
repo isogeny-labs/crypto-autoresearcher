@@ -3,10 +3,9 @@
 Proposition 1.9 in the theorem dossier proves that a completed quotient lift
 from an exact degree-three seed presents exactly $C_4(W_3(F))=W_4(F)$.
 This note maps that construction to the retained n47 random00 attempt.
-It is a **source-and-execution audit**, not an independent primal rank
-certificate for the 134,513-dimensional $W_4$ row space. The D4 map's
-separate checker establishes the one-sided inclusion even without trusting
-this audit.
+The original lift account below is a source-and-execution audit. A later
+independent direct $W_4$ rank replay now supplies the missing two-sided
+dimension evidence; the D4 map's separate checker supplies containment.
 
 The seed's exactness premise is now independently reproduced in
 `N47-D3-EXACT-CLOSURE-AUDIT.md`: a separate Python derivation matches every
@@ -62,10 +61,10 @@ source correspondence on those fixtures, not at n47 scale.
 
 The committed `highmem-plan.json` pins the source and binary hashes.
 The retained result records that binary's invocation and terminal status.
-The audit does not establish a bit-for-bit rebuild of the native binary or
-an independent derivation basis for every D4 relation. Subject to the
-**D4 lift** source-to-binary and retained-execution assumptions, Proposition
-1.9 and the independently exact D3 seed give the conclusion
+The original lift audit does not establish a bit-for-bit rebuild of the
+native binary or an independent derivation basis for every D4 relation.
+Proposition 1.9 and the independently exact D3 seed gave the conditional
+dimension reading
 
 ```
 dim W_4(F_original) = 213053 - 61196 = 151857.
@@ -74,19 +73,28 @@ dim W_4(F_sliced)   = 195709 - 61196 = 134513.
 
 where the sliced equality uses the checked affine witness and Proposition
 2.5b. The planned projected D4 map has not yet been produced or checked.
-These equalities should be treated as source-audited
-exactness, not as a separate primal-rank certificate.
+Those dimensions are now supported independently. The frozen
+`rank-check/n47-rand00-plan-002.json` ran the unchanged independent
+`verify/indep_verify.py` on the same named record with `NOCOUNT=1` and a
+16-GiB child address-space cap. It reconstructed the S3 equations by field
+evaluation and Boolean interpolation, then built the degree-four Macaulay
+space and repeatedly multiplied every newly found degree-at-most-three
+pivot row until no such row remained. Its single completed output was
+`W4 dims [0, 1, 141, 6909, 151857] contains_one 0 rank 151857 cols 213053`
+in 12,535 seconds. The terminal `rank_match` receipt has SHA-256
+`9543233d947e9ede88776a7c2a8e10c53af0d27bb408c0429b4d3c8c28c5f502`;
+its pinned verifier, runner, request, D4 seed, accepted-checker transcript,
+stdout and stderr hashes all match the retained files. The run exited zero
+without timeout. Since the independently checked D4 map proves
+$W_4(F)\subseteq U_4=\ker\pi_4$ and
+$\dim U_4=213053-61196=151857$, the independently computed rank gives
+**$U_4=W_4(F)$** for this named original input. Proposition 2.5b then gives
+the displayed sliced dimension. This equality rests on the correctness and
+recorded execution of the independent rank program; it is not a compact
+primal row certificate and does not certify any degree-five claim.
 
-An independent two-sided D4 certificate would require a primal proof of at
-least 151,857 independent legal original-coordinate rows (or, equivalently,
-at least 47,549 independently derived relations in the 108,745-coordinate
-provisional quotient). The accepted 61,196-dimensional D4 quotient is the
-dual upper bound on `dim W4`; by itself it cannot supply that primal lower
-bound. This is the remaining D4 exactness gate after the D3 replay.
-
-This equality is useful if a later D5 quotient lift kills one: with an
-exact D4 seed, Lemma 1.6 identifies its full terminal closure with
-$W_5(F)$, provided the D5 lift itself completes and is source-audited or
-primal-certified. A positive independently checked D5 nonmembership map
-needs only the already certified D4 kernel inclusion and remains the direct
-route to the degree-six lower bound.
+The established seed equality is useful if a later D5 quotient lift kills
+one: Lemma 1.6 identifies a completed exact lift's terminal closure with
+$W_5(F)$, provided that D5 execution is source-audited or primal-certified.
+A positive independently checked D5 nonmembership map needs only the D4
+kernel inclusion and remains the direct route to the degree-six lower bound.

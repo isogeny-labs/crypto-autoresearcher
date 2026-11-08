@@ -25,6 +25,16 @@ condition, an independently computed exact dimension of $W_4(F)$ must
 equal the checked dimension of $U$. The degree-four quotient check alone
 cannot establish it.
 
+For the named n47 random-00 original system, that dimension check has now
+completed: an independent exact Boolean $W_4$ closure replay returned rank
+151,857 in 213,053 columns, matching the accepted D4 map's kernel dimension
+$213053-61196=151857$. Its pinned source and write-once result are audited
+in `N47-D4-EXACT-LIFT-AUDIT.md`. Thus $U=W_4(F)$ for this named input under
+the recorded independent computation. If its future D5 lift kills $1$ at a
+completed fixed point, the seed is no longer the unresolved premise; a
+checked degree-five derivation or sufficiently audited D5 execution remains
+necessary to turn that outcome into $1\in W_5(F)$.
+
 For the named n51 slice, $\dim B_{\le4}=272{,}052$ and the accepted map is
 onto a 45,615-dimensional quotient. Thus $\dim U=226{,}437$. An independent
 exact $W_4$ rank of 226,437 would settle seed equality on this slice;
