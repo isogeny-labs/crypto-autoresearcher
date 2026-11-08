@@ -711,6 +711,37 @@ $(Q+U)^\perp$, while its domain is $Q^\perp$, giving the equivalent
 dimension formula. Proposition 2.5a applies.
 $\square$
 
+**Proposition 2.5e** (one-way certificate transfer under arbitrary affine
+restriction). **Proved.** Let $\rho:B\to B'$ set any chosen Boolean variables
+to affine forms in the retained variables, and let $G=\rho(F)$. For every
+$d\ge2$, $\rho(W_d(F))\subseteq W_d(G)$. Thus a checked certificate
+$1\notin W_d(G)$ proves $1\notin W_d(F)$, even when the substituted affine
+equations are **not** consequences of $F$. If $F$ has no Boolean zero, this
+gives $d_{\tilde F}\ge d+1$. More generally, an onto quotient certificate
+$\pi_G$ for $G$ lifts to $\pi_G\circ\rho$ for $F$ with the same codimension
+lower bound; it yields the same last-fall-degree conclusion whenever that
+bound exceeds the exact solution count of $F$.
+
+*Proof.* Affine substitution does not increase Boolean degree and sends
+each generator of $F$ to a generator of $G$. It also sends an allowed
+product $x_i g$ to $\rho(x_i)\rho(g)$, where $\rho(x_i)$ is affine. The
+constant part is already in $W_d(G)$, and each variable part is obtained by
+an allowed closure step; applying this argument inductively proves the
+inclusion. Since $\rho(1)=1$, nonmembership transfers back to $F$. For the
+dual statement, $\rho$ is onto, so $\pi_G\circ\rho$ is onto and annihilates
+the original generators. If $g$ has degree below $d$ and lies in its kernel,
+then $\rho(g)$ has degree below $d$ and lies in $\ker\pi_G$; the affine
+expansion of $\rho(x_i)$ shows that $\pi_G(\rho(x_i g))=0$. The solution-count
+claims follow from Propositions 1.2 and 1.4. $\square$
+
+For the named n47 random00 target, this provides a possible
+smaller-certificate route: fix additional Boolean coordinates in a frozen
+subsystem, check its degree-five nonmembership, and lift that certificate to
+the original 48-variable system. The separate exact recount remains needed
+to confirm the historical zero; a restricted system can close earlier, so
+the proposition does not assert that such a certificate exists. The queued
+original-system D5 attempt remains the direct test.
+
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$
 (the linear parts of $\operatorname{Tr}X_1$ and $\operatorname{Tr}X_2$). Let

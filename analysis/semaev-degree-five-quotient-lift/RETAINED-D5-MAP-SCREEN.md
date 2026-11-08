@@ -135,3 +135,12 @@ codimension lower bound two and recorded count two, so they cannot supply the
 strict-gap bridge as currently certified. A branch-D4 screen can rule out a
 candidate if **both** restrictions contain one, as at n33, but it is only an
 additional upper-bound route; it does not replace the n47 D5/count checks.
+Proposition 2.5e in the theorem dossier gives another lower-bound route:
+a degree-five nonmembership certificate for *any* affine restriction of
+the n47 system lifts to the original system. Unlike the exact trace slice,
+this one-way transfer does not require the restriction to be a consequence
+of the original equations. Fixing four variables would reduce the
+degree-at-most-five monomial domain from 1,925,357 (48 variables) to
+1,235,994 (44 variables); whether such a restricted system retains
+degree-five nonmembership is unknown. The original exact-zero bridge
+still requires the queued independent recount.
