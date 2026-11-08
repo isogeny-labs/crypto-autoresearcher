@@ -78,8 +78,10 @@ The editable [evidence-boundary diagram](evidence-boundary.svg) shows the
 theorem's proved scope and the missing record bridge. Reviewer reports and
 attestations are archived in `reviews/` without altering their seals. J3's
 complete 192-file scratch packet is preserved as
-`reviews/TASK-20261108-5ef48a-full.tar.gz` (SHA-256
+`reviews/TASK-20261108-5ef48a-full.tar.gz` in the configured
+content-addressed store (SHA-256
 `1d80d063fe47d345725a27f48bfb186d288c629ac0c21badffaf059514d00396`);
-extract it with `tar -xzf` into a fresh directory before checking its
+hydrate it with `python3 tools/artifacts/artifacts.py pull` for that path,
+then extract it with `tar -xzf` into a fresh directory before checking its
 `seal.json`. The directly browsable J3 report, attestation, input audit, and
 receipt controls are copied beside the bundle, byte for byte.
