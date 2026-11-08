@@ -26,6 +26,8 @@ def inspect(certificate: Path, plan: dict) -> dict:
     expected_columns = sum(comb(n, i) for i in range(degree + 1))
     if columns != expected_columns or not 1 <= codimension <= columns:
         raise ValueError('invalid column count or codimension')
+    if codimension > plan['working_coordinates']:
+        raise ValueError('codimension exceeds frozen producer working coordinates')
     row_bytes = 8 * ((codimension + 63) // 64)
     expected_bytes = 32 + columns * (8 + row_bytes)
     actual_bytes = certificate.stat().st_size

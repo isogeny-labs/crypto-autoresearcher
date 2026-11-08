@@ -81,11 +81,13 @@ runtime and total RSS remain
 unmeasured at n47. The n8 D5 positive fixture returned the same dimensions
 as the default native mode, and the retained C2-mutated fixture was refused.
 The frozen producer caps the original-system map at 45,161,173,824 bytes.
-With `C5=1,925,357` columns, this allows at most 2,931 64-bit words per row,
-or `q=187,584`; the corresponding paired-pivot row payload is at most
-8,796,939,264 bytes. The file plus that payload totals at most
-53,958,113,088 bytes (50.252 GiB) of mapped-file virtual space and row
-payload. Other allocations and runtime remain unbounded by this arithmetic,
+With `C5=1,925,357` columns, the file cap permits at most 2,931 64-bit words
+per row, or `q=187,584`. The frozen producer has only 187,583 provisional
+working coordinates, so an emitted quotient has `q<=187,583`. At this actual
+endpoint the paired-pivot row payload is at most 8,796,892,368 bytes. The
+file plus that payload totals at most 53,958,066,192 bytes (50.252 GiB) of
+mapped-file virtual space and row payload. Other allocations and runtime
+remain unbounded by this arithmetic,
 so it does not by itself admit a 96-GiB checker attempt.
 Source audit of the native `--paired-closure` path sharpens this necessary
 screen. The `check_onto` rank fallback can hold at most `q+1` rows, but it
@@ -93,15 +95,16 @@ returns and destroys that pivot table before closure begins. Generator checking
 and the C3 constant test each retain one row. During paired closure, at most
 `q` pivot pairs and the current image/product pair coexist: at most
 `(2q+2)*row_bytes` row payload bytes, not just `2q*row_bytes`. At the frozen
-producer's largest admissible file (`q=187,584`, `row_bytes=23,448`), this is
-8,796,986,160 bytes. The `q` pair objects themselves occupy `q *
+producer's largest admissible quotient (`q=187,583`, `row_bytes=23,448`),
+this is
+8,796,939,264 bytes. The `q` pair objects themselves occupy `q *
 sizeof(std::pair<Row,Row>)` bytes; on the x86-64 build used here,
 `sizeof(Row)=24` and `sizeof(std::pair<Row,Row>)=48`, so their vector has
-9,004,032 bytes of element storage. The earlier onto table has at most
-4,398,493,080 bytes of row payload plus 4,502,016 bytes of `Row` objects.
+9,003,984 bytes of element storage. The earlier onto table has at most
+4,398,469,632 bytes of row payload plus 4,501,992 bytes of `Row` objects.
 Neither table coexists with the other. The mapped certificate, paired rows,
 pair objects, and the `q`-byte onto unit marker therefore have a maximum
-explicit footprint of 53,967,351,600 bytes (50.261 GiB) at this endpoint,
+explicit footprint of 53,967,304,655 bytes (50.261 GiB) at this endpoint,
 before the small generator/hash buffers, certificate lookup arrays, allocator
 metadata and fragmentation, runtime, or page-cache effects. The SHA-256
 routine streams through a 1-MiB buffer and does not load the file into a
@@ -117,7 +120,9 @@ its own finite checker protocol and live resource admission.
 from an actual candidate header as
 `native_paired_explicit_bytes_x86_64`, alongside the stage-specific row
 payloads. It rejects a file whose exact format length exceeds the frozen
-producer cap; the screen reads no quotient rows and never certifies C0-C3.
+producer cap or whose quotient dimension exceeds the frozen producer's
+working-coordinate count; the screen reads no quotient rows and never
+certifies C0-C3.
 
 For each variable, paired elimination applies the same row operations to
 `A(m)` and `B_i(m)=A(x_i m)` for every monomial of degree at most four. A
