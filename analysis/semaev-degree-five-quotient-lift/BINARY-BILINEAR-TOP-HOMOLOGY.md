@@ -210,9 +210,11 @@ already classified linear syzygies and the symmetric family in the
 53,016-coordinate n47 quadratic-multiplier domain. It computes their
 individual and combined ranks, checks the symmetric rank against
 `r(r+1)/2+r*s`, and stops if the domain exceeds 60,000 coordinates.
-The flag has not yet been used for a frontier run; its result must be
-recorded under a frozen exact-computation protocol before it is used as
-instance evidence. The existing degree-one output is unchanged when the
+The flag has not yet been used for a frontier run. Its named-input plan
+and `experiment.protocol/v1` record are frozen in
+`n47-rand00-quadratic-generated-plan-001.json` and
+`n47-rand00-quadratic-generated-protocol-001.json`; the cost admission
+gate remains open. The existing degree-one output is unchanged when the
 flag is absent.
 
 More generally, if an `m`-equation quadratic-top map has rank `r` and
