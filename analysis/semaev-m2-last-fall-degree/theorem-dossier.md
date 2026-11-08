@@ -475,6 +475,18 @@ because of the trace relation $\ell_0=\operatorname{Tr}(S/z^2)$. Removing it by
 Gaussian elimination still leaves falls in degree 3 (Lemma 2.3). Either way
 the first fall degree is bounded independently of $n$.
 
+**Prior-art boundary.** Kosters–Yeo, *Notes on summation polynomials*
+(arXiv:1503.08001, Corollary 4.11 and Remark 4.12), already derive a linear
+trace combination and first fall degree 2 for the ordinary-curve $S_3$
+Weil-descent setting. Kousidis–Wiemers, *On the first fall degree of summation
+polynomials* (2019, Remark 3.3), expressly cite that result for $m=2$.
+Accordingly, the value 2 itself must not be presented as a new discovery.
+The proof here fixes this dossier's exact Boolean presentation and supports
+the subsequent closure and LFD statements. The first-fall statement for the
+specific chained presentation must be compared separately with the splitting
+systems in Kosters–Yeo §5 and Huang–Kosters–Yeo §5.2 before any novelty
+claim. See `PRIOR-ART-DEFINITION-GATE.md` for source links and definitions.
+
 **Lemma 2.3** (explicit degree-3 falls). **Proved** for every $n$ and every $V$.
 
 Choose a basis $\theta_1=1,\theta_2,\dots,\theta_n$ of $K$, let $(\theta_i^{\ast})$
