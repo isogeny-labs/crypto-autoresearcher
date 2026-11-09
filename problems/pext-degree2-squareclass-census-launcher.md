@@ -800,3 +800,11 @@ trial plan; its checker recomputes every byte. The
 records five focused tests and the preview boundary. Next build certified
 descent/counterexample metadata and the final sealed blind C5 review; the
 contract remains `review_required` and unfrozen.
+
+## Exceptional descent classification and capacity, 2026-11-09
+
+The [design correction](../experiments/EXP-PEXT-bf8f96/reports/exceptional-descent-admission-20261109/report.md) identifies a false-negative hazard: the current sign solver searches one coherent relation-witness presentation. A miss cannot be used as a proof of inadmissibility. Under the exact Frobenius-stable multiquadratic premises, the extension of the odd cyclic field automorphism by a 2-group splits, so an order-n lift exists. The source now raises an instrument error on a miss and refuses a non-exhibiting result. Positive checked actions are unchanged.
+
+The single published exceptional fixed-model check is not joined to sealed unit bytes or extended to every exceptional row. q11/n3 has 5,322 units and 5.41 seconds per unit under its stage watchdog. Applying existing synthetic candidate counts to matching plan factor patterns gives an **81,749,543-row workload scenario** before [1,3] and [4]; it is not a cohort count or lower bound. A full fixed multiplication table for each row has no qualified time/storage fit.
+
+Next test: design and independently check a compact source-map, square-relation/component-genus and positive action certificate joined to each sealed exceptional row; reserve explicit fixed-model replay for blinded C5 units. Define complete status semantics and account for every unresolved lower-genus row before a minimum or final C5 stratum is emitted. Independently review the lift premise and solver completeness; qualify full-cohort CPU/RSS/storage against the unchanged finite ceilings. The original exit criteria remain.
