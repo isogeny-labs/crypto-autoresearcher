@@ -11,19 +11,19 @@ experiment:
   title: 'Recovery continuation of EXP-PFDR-ada71b: original frozen growth ladder with corrected launch provenance
     and five fresh stage attempts'
   experiment_class: heuristic-validation
-  status: review_required
+  status: approved
   frozen: true
-  approved_by: null
-  approval_decision: null
-  approved_at: null
-  approval_basis: AGENTS.md standing authorization, pending exact-byte preapproval
-  execution_authorized: false
-  status_note: Prospective new experiment; preserves original scientific cells, seeds, controls and thresholds.
-    Prior selftest counts as one validated historical attempt; prior invalid pilot counts as one failed historical
-    attempt. Approval pending exact-byte preapproval.
+  approved_by: DEC-20261109-6f42d4
+  approval_decision: DEC-20261109-6f42d4
+  approved_at: '2026-11-09'
+  approval_basis: AGENTS.md standing authorization and exact-byte preapproval report
+  execution_authorized: true
+  status_note: Approved prospective recovery of exactly five fresh trials; cumulative hard cap seven attempts including
+    the historical valid selftest and invalid pilot. Scientific parameters remain the frozen v2 values.
   execution_plan:
     protocol_hashes:
       experiments/EXP-PFDR-7c7c95/protocol.json: cd438789a1592f458fe4a4001d8e1a3d12afb2dc2c4a2fdb4d51f4ac75d24ec3
+      experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json: e6fd82d7612b01f0374591119cae5345f7cddecbe311479b9c08b17e4b683ffd
     trial_plan: experiments/EXP-PFDR-7c7c95/trial-plan.json
     queue: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/dispatch_queue.json
     executor_handoff: ledger/handoffs/TASK-20261109-2dc07f.yaml
@@ -76,6 +76,14 @@ experiment:
       path: experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/execution-receipt.json
       sha256: 63257611e2da5329746537dbfba17a4a71b5fd496c20ca7a8e3527efcd3a1572
       role: Prior invalid attempt counted, not used as scientific input
+    resource_guard_launcher:
+      path: experiments/EXP-PFDR-7c7c95/launch-recovery.sh
+      sha256: 15235b8e5115aeca07f919ee5ad89692db217176ea2ade8d7b4cfeaa0457140b
+      role: Committed whole-batch systemd execution command
+    resource_guard_probe:
+      path: coordination/recovery/20261109/pfdr-resource-guard-probe.json
+      sha256: 7e4d7cdb73853ad226a2f5faa5029950c563a273efc44de404355746582b05dc
+      role: Readback of actual cgroup memory, CPU and wall limits; no scientific trial
   inputs:
     implementation_sources:
       note: Versioned custody-recovery copy of original v2 scientific driver/checker/kernel/vendor. EXP output identity
@@ -449,21 +457,36 @@ experiment:
     maximum_memory_gb: 4
     wall_clock_seconds_per_run: 43200
     total_cpu_hours: 120
-    note: 'Hard prospective attempt ceiling: seven total across both experiments, two already consumed and five
-      fresh IDs. Four workers, 4 GiB, one trial at a time, five watchdogs sum to 108000 s (at most 120 CPU-hours).
-      Existing host only; zero incremental paid cloud authorization. Watchdogs are protection ceilings, not measured
-      costs.'
+    note: 'The whole five-stage supervisor run must use launch-recovery.sh under one verified systemd user scope:
+      MemoryMax=4G, CPUQuota=400%, RuntimeMaxSec=107970, TimeoutStopSec=30, KillSignal=SIGINT. Actual readback was
+      4294967296 bytes and 400000/100000 CPU quota. Runtime plus stop grace gives 108000 s total wall ceiling and
+      at most 120 quota core-hours; these are caps, not observed costs. Per-stage driver/checker watchdogs remain
+      separate. Existing host only; zero incremental paid cloud authorization. Five fresh IDs plus two historical
+      attempts; no retries.'
     historical_attempts: 2
     new_attempts: 5
     maximum_retries: 0
     max_concurrent_trials: 1
     incremental_cloud_usd: 0
+    enforcement_scope: The supervisor accepts only five declared fresh RUN IDs, has per-stage driver/checker watchdogs
+      and per-process RLIMIT_AS. The cross-experiment seven-attempt total is Coordinator accounting; no sixth fresh
+      ID or retry is approved.
+    outer_wall_deadline_seconds: 108000
+    cpu_affinity_cores: 4
+    memory_limit_kind: whole-batch systemd MemoryMax=4G plus supervisor per-process RLIMIT_AS
+    aggregate_memory_gib: 4
+    cpu_quota_percent: 400
+    scope_runtime_seconds: 107970
+    scope_stop_grace_seconds: 30
   stopping_rules:
   - A kernel call over 3600 s is failed_infrastructure for that job; its cell is invalid, never null.
   - census-rep runs only lines classified ALIVE by analyze-main; with none it records an empty result and stops.
   - Reuse the output-validated historical selftest by exact hash and receipt; never rerun it under this plan.
   - Stop after the five fresh trials; zero further retries. Any additional attempt needs a new versioned protocol
     and Coordinator approval.
+  - Stop before launch if the whole-batch systemd scope or fresh readback cannot establish MemoryMax=4G, CPUQuota=400%
+    and total 108000 s wall ceiling. Scope expiry, OOM or CPU cap stops the batch with infrastructure status and
+    no retry; preserve all attempted records.
   invalidation_rules:
   - selftest fails; the experiment is void as an instrument defect
   - check.py exits non-zero on a run; that run is invalid and every trial reading it is held
@@ -471,6 +494,8 @@ experiment:
   - a manifest code or trial-plan hash differs from the frozen trial plan
   - any byte of the specification, hypothesis, trial plan or implementation changed after approval without a versioned
     protocol_amendment
+  - Absent or mismatched whole-batch systemd resource scope makes this recovery execution inadmissible as scientific
+    evidence; preserve records as an infrastructure/custody failure.
   artifact_paths:
   - experiments/EXP-PFDR-7c7c95/specification.yaml
   - experiments/EXP-PFDR-7c7c95/trial-plan.json
@@ -482,6 +507,9 @@ experiment:
   - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json
   - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json
   - experiments/EXP-PFDR-7c7c95/protocol.json
+  - experiments/EXP-PFDR-7c7c95/launch-recovery.sh
+  - coordination/recovery/20261109/pfdr-resource-guard-probe.json
+  - experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json
   dependencies:
   - experiments/EXP-PFDR-2d36f9/implementation/ (v1 source the v2 implementation is derived from)
   - experiments/EXP-PFDR-2d36f9/runs/RUN-PFDR-73276d/analysis.json (R6 diagnosis only)
