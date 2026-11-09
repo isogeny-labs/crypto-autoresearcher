@@ -1,0 +1,124 @@
+idea:
+  id: IDEA-20261109-417535
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Rank-2 Drinfeld module over F_{q^n} as an elliptic-shaped positive control for the charged ladder-slope
+    estimator, with Scanlon linear algebra at exponent zero and the tau-trivial degeneration over F_q
+  class: control
+  claim: Let phi_T = theta + g tau + Delta tau^2 (Delta nonzero) be a rank-2 Drinfeld F_q[T]-module over
+    L = F_{q^n}, x in L, y = phi_a(x) with deg a < n. Because a -> phi_a(x) is F_q-linear in a, computing
+    the vectors v_i = phi_{T^i}(x), i < n, and solving the n x n system sum a_i v_i = y over F_q recovers
+    a mod ann(x) in O(n^omega) field operations plus O(n) applications of phi_T. Prediction one, the charged
+    ladder slope d log2(cost) / d log2(|L|) fitted over |L| from 2^20 to 2^60 lies in [-0.05, 0.10], against
+    a brute-force baseline slope of 1 in q^{deg a}. Prediction two, over L = F_q (n = 1) the whole module
+    action is the scalar a(theta + g + Delta) and the solve is one division. This is a control, no ECDLP
+    exponent moves.
+  mechanism: The object has elliptic shape, torsion phi[a] isomorphic to (A/a)^2, a determinant pairing
+    into a rank-1 twist, an ordinary-supersingular dichotomy and a Frobenius polynomial (Gekeler, recalled),
+    but its underlying group is the F_q-vector space L, so the discrete-log-type problem is linear algebra.
+    The estimator and the descent gate must report exponent 0 on it. The n = 1 degeneration is the exact
+    mirror of E(F_p) = ker(pi - 1), isomorphic to O_K/(pi - 1), where the Drinfeld division is replaced
+    by the ECDLP itself.
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260805-4d31bc
+    provenance: internal
+    claim: The ladder-slope estimator is the instrument this control calibrates.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index text, file not opened in this session
+  - ref: IDEA-20260801-003
+    provenance: internal
+    claim: Every sub-rho claim must pass a descent gate, the gate should pass trivially here.
+    verified_by: REPO BRIEF 2026-11-09 section 2 index text, file not opened in this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound applies to group-operation algorithms, the Drinfeld solve uses the F_q-linear
+      representation, not group operations.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text, file not opened in this session
+  assumptions:
+  - phi is given by its coefficients in L, and x is fixed, so the v_i are computable with 2 Frobenius
+    powers and 3 multiplications each.
+  - Cost is charged in F_q operations with the same convention as the filed rank-1 Carlitz control (drinfeld
+    wave record, id to be read from ledger/proposals).
+  predictions:
+  - metric: fitted ladder slope of log2 cost versus log2 size of L
+    direction: lower
+    minimum_effect: at most 0.10, baseline slope 1
+  - metric: solve cost at n equal 1 in field operations
+    direction: lower
+    minimum_effect: one inversion and one multiplication
+  minimal_test:
+    design: Sage or Rust, q in {2, 3, 5}, n in {20, 30, 40, 50, 60} / log2 q, random theta, g, Delta,
+      random x and a. Build the F_q matrix of the v_i, solve, verify phi_a(x) = y. Record wall time and
+      charged operations, fit the slope. Run the n = 1 arm separately.
+    controls:
+    - Brute force over a of degree below d for n up to 20, slope must be 1 in q^d.
+    - The filed rank-1 Carlitz control on the same hosts and the same charging convention.
+    required_metrics:
+    - charged field operations per solve
+    - fitted slope with 95 percent interval
+    - verification failures
+    - n equal 1 cost
+  falsification_conditions:
+  - The fitted slope exceeds 0.25, then the linear-algebra solve was implemented wrongly or the charging
+    convention is inconsistent.
+  - The estimator reports an exponent above 0.25 on this control, then the estimator is not calibrated
+    and its ECDLP readings are suspect.
+  - Timeouts are infrastructure, not evidence.
+  confounders:
+  - ann(x) may be a proper divisor of the Frobenius polynomial, making a determined only modulo ann(x),
+    report the rank of the system.
+  interpretation_limits:
+  - A slope near 0 says nothing about E/F_p. The module is G_a, the curve is not, see lead 1 of this wave.
+  heuristic_assumptions:
+  - id: H1
+    statement: Random (theta, g, Delta, x) give a system of rank n - O(1).
+    rigorous_support: Rank defect equals deg ann(x) deficit, which for a cyclic module is 0 for a generator.
+    validation_plan: Record rank for every instance in the sweep.
+  target_complexity:
+    time_exponent: 0 in the size of L for the control, ECDLP exponent 1/2 unchanged
+    memory_exponent: O(n^2) field elements for the matrix
+    best_known: Scanlon 2001, polynomial time, recalled, no repository row exists for it, cite KR-RHO-13bf67
+      for the ECDLP side
+    hidden_overhead: none claimed
+    tradeoff_note: Not a discrete-log tradeoff, a calibration object.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: The filed rank-1 Carlitz control dominates as a positive control of exponent 0, this record
+    adds elliptic shape (rank 2, pairing, torsion (A/a)^2) and the n = 1 degeneration.
+  sota_delta: Exponent delta 0 against the ECDLP best known. Delta for the program, a second positive
+    control whose shape matches the target.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-037e22
+    - KR-IC-b0fcda
+    - KR-IC-f5c584
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The row bounds group-operation algorithms, the control is solved outside that model by F_q-linearity.
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: Anomalous curves are the elliptic case with p-primary torsion, the only place the Drinfeld
+        mechanism has an elliptic twin.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 and wave index for Drinfeld, Carlitz, Scanlon, positive control
+      - drinfeld wave records list, rank-1 Carlitz control found, rank 2 absent
+      web: []
+      blocked:
+      - ledger/proposals not opened, the Carlitz record id must be read there
+    lead: LEAD-ICE-charged-toy-ic-exponent-vs-rho
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage or Rust, q in {2, 3, 5}, n in {20, 30, 40, 50, 60} / log2 q, random theta,
+        g, Delta, random x and a. Build the F_q matrix of the v_i, solve, verify phi_a(x) = y. Record
+        wall time and charged operations, fit the slope. Run the n = 1 arm separately.'
