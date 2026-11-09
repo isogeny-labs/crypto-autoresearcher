@@ -1,0 +1,152 @@
+idea:
+  id: IDEA-20261109-c7f6c1
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Trigonal summation polynomial Y_m in the mu_3-invariant coordinate y on j = 0 curves has per-variable
+    degree 3^{m-2} and relation-yield parity with x, so no cover E -> P^1 beats the x-coordinate
+  class: representation
+  claim: 'Let E: y^2 = x^3 + b over F_p, p = 1 mod 3, N = #E(F_p) prime. The map y: E -> P^1 has degree
+    3 and is invariant under mu_3 = {(x,y) -> (omega^i x, y)}. Claim A: the closure of {(y(P_1),...,y(P_m))
+    : P_1+...+P_m = O} is a symmetric hypersurface Y_m of degree exactly 3^{m-2} in each variable; Y_3
+    has multidegree (3,3,3). Claim B: for a symmetric interval I = -I of size B and F_I = {P : y(P) in
+    I}, |F_I| = B(1+o(1)), the roots of Y_3 in I^3 that lift to a relation in E(F_p) number B^3/(3N)(1+o(1))
+    (total roots are about B^3/p, the rest lifting to twist or mixed points), distinct relations modulo
+    mu_6 number B^3/(6N), and unknowns (mu_6-orbits in F_I) number B/6, so relations per unknown is B^2/N,
+    the same as for the x-interval base (E-roots B^3/(2N), unknowns B/2). Claim C: for any f: E -> P^1
+    of degree d whose symmetry group G_f is a subgroup of Aut(E,O), the summation hypersurface in f-coordinates
+    has per-variable degree d^{m-1}/|G_f| >= |G_f|^{m-2} >= 2^{m-2}, equality only for d = |G_f| = 2,
+    i.e. f = x up to a Mobius map. On a prime-order curve over F_p no rational torsion supplies translation
+    symmetries, so x is the unique degree-minimising cover and the three quotient coordinates of j = 0
+    (x, y, u = x^3; degrees 2^{m-2}, 3^{m-2}, 6^{m-2}) share one yield per unknown.'
+  mechanism: Over (c_1,...,c_{m-1}) each c_i has d preimages, giving d^{m-1} tuples; f(-(P_1+...+P_{m-1}))
+    takes one value per orbit of the diagonal G_f action, which preserves the relation because its elements
+    are group automorphisms. f invariant under G_f factors through E -> E/G_f, so d >= |G_f|, which gives
+    Claim C. For y the fibres are {(omega^i x, y)} and the diagonal mu_3 action gives 9/3 = 3 values of
+    y_3; the resultant of det[1, x_i, y_i] with x_i^3 = y_i^2 - b over the 27 lifts factors as the product
+    of Y_3(+-y_1, +-y_2, y_3), and the (3,3,3) factor is Y_3. Yield per unknown is the ordered-triple
+    count B^3/N divided by an orbit size that also divides the unknown count, so it cancels for every
+    quotient coordinate; this is the mechanism behind the parity filed for u = x^3 in wave 1, now stated
+    for the whole subgroup lattice of mu_6.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_m in x has degree 2^{m-2} per variable; Y_m is its analogue for the degree-3 quotient map
+      and is strictly larger.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-955fd6
+    provenance: internal
+    claim: Symmetrised summation polynomials use S_m symmetry and small-order torsion; on a prime-order
+      curve over F_p the torsion half is unavailable, and this record covers the automorphism half.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The j = 0 automorphism group is a constant factor in rho; the same group gives the quotient
+      coordinates here, also with no exponent change.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  assumptions:
+  - p = 1 mod 3 so that omega is in F_p and the mu_3 action is rational.
+  - Relation counts use a curve with N prime so mu_6 acts freely on nonzero points; invalid otherwise.
+  predictions:
+  - metric: per-variable degree of the (3,3,3) factor extracted from the 27-lift resultant
+    direction: different
+    minimum_effect: exactly 3 in each variable at every tested p and b
+  - metric: E-relation roots of Y_3 in I^3 divided by B^3/(3N), averaged over 20 symmetric intervals
+    direction: different
+    minimum_effect: within 0.8 and 1.25 for B^3/(3N) >= 50
+  - metric: relations per unknown for the y-base divided by the same ratio for the x-base at equal B
+    direction: different
+    minimum_effect: within 0.8 and 1.25
+  minimal_test:
+    design: 'For prime-order j = 0 toy curves at p ~ 2^10, 2^12, 2^14 (p = 1 mod 3) compute Y_3 two ways:
+      (i) enumerate E(F_p)^2, collect (y(P_1), y(P_2), y(-P_1-P_2)) and interpolate a symmetric polynomial
+      of degree <= 3 per variable; (ii) form the resultant of det[1, x_i, y_i] with x_i^3 - (y_i^2 - b)
+      over the three variables and factor it. Check (i) = (ii) up to scalar. For 20 random symmetric intervals
+      with B in [p^{0.4}, p^{0.6}] count roots of Y_3 in I^3 and of S_3 in J^3 for an x-interval J of
+      equal size, classify each root by exhaustive lifting (9 patterns for y, 4 for x) into E-relation,
+      twist or mixed, and compute relations per unknown for both bases.'
+    controls:
+    - Random polynomial of multidegree (3,3,3) on the same interval; its root count B^3/p is the no-structure
+      reference for total roots.
+    - b = 7 and two random b per prime to separate the secp256k1 constant from generic j = 0 behaviour.
+    required_metrics:
+    - per-variable degree and total degree of Y_3
+    - total and E-relation root counts of Y_3 and S_3 per interval
+    - distinct relations and unknown counts per base
+    - lift tests per relation for y and for x
+  falsification_conditions:
+  - The extracted factor has per-variable degree other than 3 at any tested p (Claim A fails).
+  - E-relation roots of Y_3 deviate from B^3/(3N) by a factor outside [0.8, 1.25] at B^3/(3N) >= 50 (Claim
+    B fails).
+  - Relations per unknown for the y-base exceed the x-base ratio by more than 1.25 (parity fails; this
+    would be the interesting outcome).
+  - A timeout is infrastructure, not a falsification and not support.
+  confounders:
+  - Values with y^2 - b = 0 have a single preimage (x = 0, 3-torsion) and are absent over F_p for prime
+    N; their count is reported.
+  - Non-symmetric intervals break mu_6-closure; only I = -I is used.
+  interpretation_limits:
+  - Parity at toy sizes plus the degree bound close the 'choose a better cover' route on prime-order curves
+    over F_p; they say nothing about torsion-translation symmetrisation over extension fields, which the
+    transfer-wave ascent control governs.
+  heuristic_assumptions:
+  - id: H1
+    statement: E-relation roots of Y_3 in a box are Poisson with mean B^3/(3N), i.e. the y-interval base
+      behaves as a random mu_6-closed set.
+    rigorous_support: The mean follows from the ordered-triple count |F_I|^3/N under equidistribution;
+      no theorem controls the box error below B > p^{2/3}.
+    validation_plan: Exhaustive enumeration at p <= 2^14 over 20 intervals per prime; compare mean and
+      variance to Poisson.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: unchanged
+    best_known: Pollard rho in Theta(N^{1/2}) (KR-RHO-13bf67); for decomposition the x-coordinate S_m
+      of KR-IC-5a43e5 with degree 2^{m-2}.
+    hidden_overhead: the y-base needs 9 lift patterns per root against 4, a constant
+    tradeoff_note: No tradeoff; the record shows motion in the Hurwitz space of covers of E cannot lower
+      the summation degree below the x-map.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5a43e5 dominates the x case; the wave-1 record on U_m in u = x^3 dominates the mu_6
+    case. Neither states the degree-3 member or the bound d^{m-1}/|G_f|.
+  sota_delta: 'Exponent delta 0. New statement: summation degree over any cover with automorphism symmetry
+    is d^{m-1}/|G_f| >= 2^{m-2}, attained only by x; Y_m exists with degree 3^{m-2} and equal yield per
+    unknown.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-8b9daa
+    - KR-IC-73db3f
+    - KR-IC-5931ee
+    - KR-RHO-0528e7
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-955fd6
+      provenance: internal
+      relation: adjacent
+      delta: The row symmetrises S_m by torsion translation and S_m symmetry; this record uses the automorphism
+        quotient maps of j = 0 as coordinates and bounds their degree.
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: adjacent
+      delta: The row is the case d = 2, G_f = {+-1}; the record proves it is the minimum over covers.
+    searched:
+      corpus_grep:
+      - brief wave-1 sweep records for u = x^3 Aut-quotient summation polynomials
+      - brief section 2 for y-coordinate, trigonal, Hurwitz, cover degree
+      web: []
+      blocked: []
+    lead: LEAD-ICE-descent-closure-degree-at-scale
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For prime-order j = 0 toy curves at p ~ 2^10, 2^12, 2^14 (p = 1 mod 3) compute
+        Y_3 two ways: (i) enumerate E(F_p)^2, collect (y(P_1), y(P_2), y(-P_1-P_2)) and interpolate a
+        symmetric polynomial of degree <= 3 per variable; (ii) form the resultant of det[1, x_i, y_i]
+        with x_i^3 - (y_i^2 - b) over the three variables and factor it. Check (i) = (ii) up to scalar.
+        For 20 random symmetric intervals wit'
