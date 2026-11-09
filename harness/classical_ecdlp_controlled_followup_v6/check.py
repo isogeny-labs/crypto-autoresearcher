@@ -84,6 +84,8 @@ def check(out,protocol_path,export_path,repo,contracts,trusted_launch_sha256=Non
   baseline=d.read(out/'baseline/result/bsgs.json');v=d.read(out/'baseline/result/verification.json')
   pv=d.module(d.HERE/'public_verify.py','v6_public_verify');pv.verify(x['public'],x['plan'],out/'candidate/result/raw',baseline)
   d.need(v['status']=='complete' and v['observed']==wanted and len(baseline['rows'])==sum(len(c['targets']) for c in x['public']['curves']) and all(r['public_equation_verified'] is True for r in baseline['rows']),'baseline verification incomplete')
+ import compare
+ compare.verify_outputs(out,b,base)
  return {'status':'pass','operational_status':'complete' if allcomplete else 'incomplete','physical_processes':2,'fixture_only':x['fixture_only'],'scientific_validity':'not_assessed','performance_qualified':False}
 def main():
  p=argparse.ArgumentParser();g=p.add_mutually_exclusive_group(required=True);g.add_argument('--trusted-launch-sha256');g.add_argument('--native-custody');p.add_argument('--out',required=True);p.add_argument('--protocol');p.add_argument('--export');p.add_argument('--repo-root',required=True);p.add_argument('--contracts-root');a=p.parse_args()

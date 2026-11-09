@@ -36,7 +36,24 @@ class Contracts(unittest.TestCase):
   self.assertEqual(checked['operational_status'],'complete')
   logical=framing.open_logical(out/'candidate/result/raw')
   for name,path in logical.items():self.assertEqual(d.sha_file(path),d.sha_file(self.out/'candidate/result/raw'/name),name)
+  for name,key in [('paired-domain-report.json','by_domain_and_cell'),('cost-coverage.json','vectors')]:
+   self.assertEqual(d.read(case/'export'/name)[key],d.read(self.root/'export'/name)[key])
   EVENTS.append({'kind':'actual_framed_toy_route','status':result['status'],'logical_files_equal':len(logical),'physical_solver_rows':len(bundle['runs']),'scientific_draws':0})
+ def test_01c_reports_and_resealed_summary_mutation(self):
+  report=self.root/'export/paired-domain-report.json';cost=d.read(self.root/'export/cost-coverage.json')
+  paired=d.read(report);self.assertEqual(paired['paired_targets'],2);self.assertEqual(len(paired['by_domain_and_cell']),12)
+  self.assertEqual(paired['decoder_cells_checked'],24);self.assertFalse(cost['full_cost_qualified']);self.assertIsNone(cost['speedup_ratio'])
+  self.assertTrue(cost['vectors']);self.assertTrue(all(v['coverage']=='reported_unreplayed' for v in cost['vectors']))
+  target=self.root/'export/export.json';old_report=report.read_bytes();old_export=target.read_bytes()
+  self.valid();paired['by_domain_and_cell'][0]['correct_recoveries']+=1;report.write_bytes(d.canonical(paired))
+  b=d.read(target)
+  for row in b['files']+b['analysis']['outputs']:
+   if row['path']==report.name:row.update(bytes=report.stat().st_size,sha256=d.sha_file(report))
+  target.write_bytes(d.canonical(b))
+  try:
+   with self.assertRaisesRegex(ValueError,'comparison derived report mismatch'):self.valid()
+  finally:report.write_bytes(old_report);target.write_bytes(old_export)
+  self.valid();EVENTS.append({'kind':'resealed_derived_report_rejection','known_false_recovery_count':True,'dependent_export_hashes_recomputed':True,'raw_solver_evidence_held_fixed':True,'refused':True})
  def test_02_unchanged_native_json_and_cli(self):
   sys.path.insert(0,str(Path(ARGS.contracts_root)/'tools'));native=d.module(Path(ARGS.contracts_root)/'tools/experiment_execution.py','unit_native')
   for arm in ('candidate','baseline'):
@@ -100,6 +117,8 @@ class Contracts(unittest.TestCase):
   case=self.root/'failed-children';case.mkdir();out=case/'execution';r=d.execute(ARGS.repo_root,ARGS.contracts_root,self.input,out,self.ctx,self.protocol,{'candidate':'nonzero','baseline':'nonzero'})
   self.assertEqual(r['status'],'incomplete');b,f=exp.make(self.protocol,out,ARGS.contracts_root,case/'export');self.assertEqual(f,[]);self.assertEqual([r['status'] for r in b['runs']],['infra_error','infra_error']);self.assertEqual(checker.check(out,self.protocol,case/'export/export.json',ARGS.repo_root,ARGS.contracts_root,r['trusted_launch_sha256'])['operational_status'],'incomplete')
   procs=[d.read(out/a/'process.json') for a in ('candidate','baseline')];self.assertTrue(all(r['returncode']!=0 and r['termination_ack']['wait_returned'] for r in procs));EVENTS.append({'kind':'actual_failed_children','pids':[r['pid'] for r in procs],'returncodes':[r['returncode'] for r in procs],'partial_markers_retained':True,'no_zero_filled_completion':True})
+  for name,key in [('paired-domain-report.json','paired_targets'),('cost-coverage.json','vectors')]:
+   report=d.read(case/'export'/name);self.assertEqual(report['status'],'incomplete');self.assertIsNone(report[key])
  def test_06_real_watchdog_escalation_and_byte_guard(self):
   for name,fault,limits in [('timeout','hang',{'seconds':0.3,'terminate_grace_seconds':0.2}),('escalation','ignore-term',{'seconds':2,'terminate_grace_seconds':0.1}),('filecap',None,{'file_bytes':128}),('treecap',None,{'tree_bytes':128}),('logcap','flood',{'log_bytes':1024})]:
    ctx=copy.deepcopy(self.ctx);ctx['limits'].update(limits);case=self.root/name;case.mkdir()

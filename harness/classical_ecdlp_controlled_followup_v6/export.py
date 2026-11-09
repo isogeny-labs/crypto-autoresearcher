@@ -3,6 +3,7 @@
 from pathlib import Path
 import argparse,copy,json,os,sys
 sys.path.insert(0,str(Path(__file__).resolve().parent));import driver as d
+import compare
 
 def ep_module(contracts):
  sys.path.insert(0,str(Path(contracts)/'tools'));return d.module(Path(contracts)/'tools/experiment_protocol.py','v6_experiment_protocol')
@@ -24,15 +25,19 @@ def make(protocol_path,out,contracts,destination):
  ep=ep_module(contracts);p=d.read(protocol_path);out=Path(out);dest=Path(destination);dest.mkdir(parents=True,exist_ok=False)
  b=ep.export_skeleton(p,os.path.relpath(protocol_path,dest),'local',p['protocol_id']+'.local-v5');records=[d.read(out/a/'process.json') for a in ('candidate','baseline')];pubs={r['source_publication_commit'] for r in records};d.need(len(pubs)==1,'source publication identities differ');pub=pubs.pop();b['source']={'repo':p['repository'],'commit':pub,'dirty':None}
  for a in b['arms']:a['commit']=pub
+ report_paths=[]
+ for name,obj in zip(compare.OUTPUTS,compare.reports(out)):
+  path=dest/name;d.write(path,obj);report_paths.append(path)
  paths={q.resolve() for q in out.rglob('*') if q.is_file()}
  for r in records:
   ip=Path(r['input']['path']);paths.add(ip)
   paths.update(ip.parent.glob('generation*.json'))
   if ip.parent.name=='shared':paths.update(q for q in ip.parent.rglob('*') if q.is_file())
- files=[entry(q,dest,'receipt' if q.name.endswith(('.json','.yaml')) else 'raw') for q in sorted(paths)];rows=[]
+ report_entries=[entry(q,dest,'analysis') for q in report_paths]
+ files=[entry(q,dest,'receipt' if q.name.endswith(('.json','.yaml')) else 'raw') for q in sorted(paths)]+report_entries;rows=[]
  for a,r in zip(('candidate','baseline'),records):
   rows.append(ep.run_row(run_id=r['run_id'],arm=a,instance_id='shared-public-bundle',replicate=0,seed='fixed00_no_entropy' if records[0]['fixture_only'] else None,status='succeeded' if r['operational_complete'] else 'infra_error',measurements={'counted':{'physical_invocations':1},'counters':{},'wall_valid':False},verification={'status':'no_claim' if r['operational_complete'] else 'error','verifier':'Separate local process registry and pinned independent host checks; no attack claim.'},exclusion={'excluded':False,'rule':None},artifacts=[f for f in files if '/'+a+'/' in f['path']],worker=str(r['pid']),backend_ref=a+'/'+str(r['pid'])))
- b['runs']=rows;b['flow']=ep.compute_flow(rows);b['files']=files;b['analysis']={'script':entry(HERE/'export.py',dest,'analysis'),'outputs':[entry(out/'baseline/result/analytical-reference.json',dest,'analysis')] if (out/'baseline/result/analytical-reference.json').is_file() else [],'blinded':False,'blinding_key_sha256':None,'unmasked_at':None};b['host']['path']=os.path.relpath(out/'registry.json',dest);b['host']['sha256']=d.sha((out/'registry.json').read_bytes());b['backend_record']={'registry':d.read(out/'registry.json'),'source_publication_commit':pub,'launch_context_commit':records[0]['launch_context_commit'],'native_matched_cost_qualified':False,'historical_records_unchanged':True};b['notes']=[{'kind':'observation','by':'v5-local-adapter','text':'Two actual local child processes, one shared input bundle. Candidate methods/six cells and analytic reference are linked artifacts, never cloned runs. BSGS solve phase precedes separately labeled streaming diagnostic oracle checks. No matched primitive/fullcost/RSS/clock/performance qualification.'}]
+ b['runs']=rows;b['flow']=ep.compute_flow(rows);b['files']=files;b['analysis']={'script':entry(HERE/'export.py',dest,'analysis'),'outputs':report_entries+([entry(out/'baseline/result/analytical-reference.json',dest,'analysis')] if (out/'baseline/result/analytical-reference.json').is_file() else []),'blinded':False,'blinding_key_sha256':None,'unmasked_at':None};b['host']['path']=os.path.relpath(out/'registry.json',dest);b['host']['sha256']=d.sha((out/'registry.json').read_bytes());b['backend_record']={'registry':d.read(out/'registry.json'),'source_publication_commit':pub,'launch_context_commit':records[0]['launch_context_commit'],'native_matched_cost_qualified':False,'historical_records_unchanged':True};b['notes']=[{'kind':'observation','by':'v5-local-adapter','text':'Two actual local child processes, one shared input bundle. Candidate methods/six cells and analytic reference are linked artifacts, never cloned runs. BSGS solve phase precedes separately labeled streaming diagnostic oracle checks. No matched primitive/fullcost/RSS/clock/performance qualification.'}]
  d.write(dest/'export.json',b);findings=ep.schema_errors(b,'experiment.export/v1')+ep.lint_export(b,p,dest,True);d.write(dest/'export.validation.json',{'findings':findings,'schema_compliant':not ep.schema_errors(b,'experiment.export/v1'),'fixture_only':records[0]['fixture_only']});return b,findings
 HERE=Path(__file__).resolve().parent
 if __name__=='__main__':
