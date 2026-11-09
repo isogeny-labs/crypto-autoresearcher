@@ -1,0 +1,79 @@
+idea:
+  id: IDEA-20261109-d95e35
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: adaptation
+  title: Genus-character decisional audit for conductor-nontrivial CSIDH relatives (CSURF, SCALLOP, PEARL-SCALLOP,
+    oriented actions)
+  attack_type: security_proof_gap_decisional
+  assumption_attacked: DDH-type assumption on class group actions of non-maximal or non-CSIDH orders
+  claim: Castryck-Sotakova-Vercauteren (recalled) compute a genus character chi_m of Cl(O) from m-torsion
+    for every odd prime m dividing disc(O), breaking decisional DH when E[m] is rational over a small
+    extension. CSIDH (disc -4p) is immune since m = p. Relatives with conductor f have disc f^2 * disc_K,
+    introducing new odd divisors. This record tabulates, per relative, the smallest k with E[m] ⊂ E(F_{p^k})
+    for each odd m | disc. Cleared against H-SSIQ-d724f2 (torsion-subgroup census) and H-ICINV-82ee6a
+    (Frobenius-order endomorphisms); no Lean lemma exists, needed statement genus_char_computable.
+  mechanism: 'For each relative: write O, disc(O), factor disc(O) into odd primes m; for each m compute
+    the order of Frobenius on E[m] from the characteristic polynomial (ordinary: pi; supersingular over
+    F_p: pi^2 = -p), giving the minimal k with E[m] ⊂ E(F_{p^k}); when k is small, compute chi_m via the
+    reduced Tate pairing on E[m] and compare with the Legendre-symbol genus character of the connecting
+    ideal''s norm. Decisional advantage is 1/2 whenever one chi_m is computable.'
+  quantities:
+    csidh_disc: '-4p, p ≡ 3 mod 4, odd divisors {p}: immune'
+    csurf_disc: '-p, p ≡ 7 mod 8, t = 1 prime divisor, odd class number: no genus structure'
+    scallop_disc: 'f^2 * disc_K with f large prime: chi_f needs E[f]'
+  cost_or_delta_needed: one relative with odd m | disc and k such that E[m] arithmetic costs below the
+    target security level
+  obstruction: SCALLOP-type constructions choose f prime for this reason; the expected outcome is a confirmation
+    of immunity; the recalled statement of CSV's 2-adic characters (4-/8-torsion cases) must be re-derived
+    before use.
+  kill_test: If every (relative, m) pair in the table has k with p^k-arithmetic above 2^40 bits of work,
+    the record closes as known immunity. If any has k ≤ 2, build the distinguisher and measure advantage
+    over 2^12 trials; advantage < 0.1 kills.
+  heuristic_vs_proved:
+    proved: none
+    heuristic: none
+    analogy: H-SSIQ-d724f2 subgroup census of GL_2 for the supersingular maximal order
+  lean:
+    covering_theorem: null
+    needed_statement: 'theorem genus_char_computable (O : Order K) (m : ℕ) (hm : m.Prime ∧ Odd m ∧ (m:ℤ)
+      ∣ discr O) : ∃ χ : ClassGroup O →* ℤˣ, ∀ a, χ a = tatePairingChar m (act a E₀)'
+  exp:
+    covering_experiment: null
+    nearest_surface: aburan28/ecbench
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no decisional-assumption records for commutative actions are quoted in the BRIEF
+    nearest_record:
+      id: H-ICINV-82ee6a
+      relation: analogous
+      note: ordinary Frobenius-order endomorphisms at toy scale; same disc(Z[pi]) object
+    searched:
+      corpus_grep:
+      - H-SSIQ-d724f2
+      - H-ICINV-82ee6a
+      - H-ICINV-6c7920
+      - H-ECDLP-f8101e
+      - H-ALISO-014
+      none_found_after:
+      - genus theory / DDH in BRIEF
+      - CSURF / SCALLOP in BRIEF
+      - EV-* and EXP-* ids in BRIEF
+    external_sources_recalled:
+    - Castryck-Sotakova-Vercauteren 2020
+    - CSURF
+    - SCALLOP
+    - PEARL-SCALLOP
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - csidh
+  - decisional
+  - genus-theory
+  - class-group-action
+  - proof-gap

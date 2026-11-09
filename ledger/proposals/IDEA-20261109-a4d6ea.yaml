@@ -1,0 +1,86 @@
+idea:
+  id: IDEA-20261109-a4d6ea
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: adaptation
+  title: Re-audit SQALE'd CSIDH quantum cost with a Biasse-Song class group and a Clapoti/PEGASIS-style
+    uniform action oracle
+  attack_type: parameter_audit_quantum_cost
+  assumption_attacked: CSIDH vectorization (hidden shift in Cl(Z[sqrt(-p)])) at p ~ 4096-5280 bits
+  claim: The published quantum cost model for SQALE'd CSIDH prices the Kuperberg oracle as an exponent-vector
+    action ([-m,m]^n, n ~ 130-400 primes) evaluated in superposition. With Cl(O) obtained in quantum polynomial
+    time (Biasse-Song) and an effective group action that evaluates [a]E for arbitrary a (Clapoti; PEGASIS
+    with 4-dimensional isogenies), the oracle is one 4-dim isogeny chain. This record measures whether
+    the T-count of that oracle falls below the exponent-vector oracle at 4096-bit p. Cleared against H-ALISO-012,
+    H-ALISO-013, H-ALISO-017; no Lean lemma exists, the needed statement is csidh_action_free_transitive
+    (see lean field). No break is claimed.
+  mechanism: '(1) Fix p from the SQALE table (recalled 4096 and 5280 bits). (2) Build a reversible cost
+    model for one effective-action evaluation: norm-equation/lattice step producing an equivalent ideal
+    of norm dividing a power-of-two-friendly integer, then a dimension-4 theta-coordinate isogeny chain
+    of length ~log2 p. (3) Compare with the recalled Bonnetain-Schrottenloher exponent-vector oracle (Velu/sqrt-Velu
+    steps plus Elligator rejection in superposition). (4) Feed both into the Kuperberg query count 2^{O(sqrt(log
+    N))} with N ~ sqrt(p) to obtain total gate counts.'
+  quantities:
+    p_bits:
+    - 4096
+    - 5280
+    class_group_order_bits_heuristic: ~0.5 * p_bits
+    oracle_isogeny_dimension: 4
+    kuperberg_queries_recalled_csidh512: 2^16 (Peikert) to 2^19 (Bonnetain-Schrottenloher), to be re-derived
+  cost_or_delta_needed: oracle gate count <= 2^-6 of exponent-vector oracle at 4096-bit p
+  obstruction: No reversible-circuit model for dimension-4 theta arithmetic exists; the Clapoti lattice
+    step's quantum reversibility and ancilla cost are unexamined; all literature costs here are recalled,
+    not re-derived.
+  kill_test: Produce a T-count estimate for one PEGASIS-style action at 4096-bit p. If it is at or above
+    the exponent-vector oracle estimate, the audit has no delta and the record closes.
+  heuristic_vs_proved:
+    proved: none
+    heuristic: class group order ~ sqrt(p); Kuperberg query count model
+    analogy: H-ALISO-012 aggregate-oracle costing applied to a different oracle
+  lean:
+    covering_theorem: null
+    module_nearest: crypto-lean SplitPrime.Obstruction (commit subject only; no theorem name in BRIEF)
+    needed_statement: 'theorem csidh_action_free_transitive (p) [Fact p.Prime] (hp : p % 4 = 3) : ∀ E₁
+      E₂ : SupersingularFp p, ∃! a : ClassGroup (ℤ[√-p]), act a E₁ = E₂'
+  exp:
+    covering_experiment: null
+    nearest_surface: aburan28/crypto-autoresearcher (shared pcc files)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no CSIDH frontier map; only the Kani/Hecke autolab packages H-ALISO-001..017
+    nearest_record:
+      id: H-ALISO-013
+      relation: analogous
+      note: quantum_cost_accounting_verify is the same accounting style on a Kani-type oracle
+    searched:
+      corpus_grep:
+      - H-ALISO-012
+      - H-ALISO-013
+      - H-ALISO-017
+      - H-SSIQ-d724f2
+      - H-WESO-516558
+      none_found_after:
+      - CSIDH in BRIEF hypothesis list
+      - Kuperberg / hidden shift in BRIEF
+      - EV-* records in BRIEF
+      - EXP-* ids in BRIEF
+    external_sources_recalled:
+    - Biasse-Song
+    - Page-Robert Clapoti
+    - PEGASIS 2025
+    - SQALE of CSIDH
+    - Bonnetain-Schrottenloher
+    - Peikert
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - csidh
+  - quantum
+  - kuperberg
+  - effective-group-action
+  - parameter-audit
