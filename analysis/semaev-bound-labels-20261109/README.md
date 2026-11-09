@@ -59,3 +59,19 @@ Results distinguish `checked`, `rejected_input_or_predicate` and `not_checked_ca
 Eight controls pass. They include a generator-annihilating map rejected for failing full kernel closure, an arbitrary quotient-coordinate basis, and CLI acceptance/refusal/non-overwrite checks. The initial test-file path failure and earlier seven-control source are retained. `direct-checker-final-validation/` preserves final acceptance, predicate rejection and capacity refusal artifacts. No scientific search or closure-engine execution occurred.
 
 The SAT extension note supplies a solution-count-sensitive theorem: with M>0 solutions and b=max(2,floor(log2(M+1))), dF<=max(dG,b)+2 and dG<=max(dF,b+1). Its generic counterexample to additive invariance has a degree-n input generator; it does not settle the all-quadratic Semaev case. The growing-family lower-bound goal remains open.
+
+## Structural capacity bridge
+
+`attach_capacity_bound.py` reruns the direct checker on a candidate and reconstructs an upper bound U on the number of ordered Boolean solutions. It accepts no supplied verdict, rank or solution count. If the checked quotient rank q is strictly greater than U, the dimension argument establishes LFD>=D+1 for the reconstructed system. A contradiction with the independently written upper bound suppresses the lower-bound label and records inconsistent evidence. Exact LFD and production dataset admission remain unset.
+
+```sh
+python3 attach_capacity_bound.py examples/software-control-candidate.json --output new-capacity-check.json --profile-limit 2
+```
+
+Default bounds use trace and the square-root membership test. With Q=2^k and delta indicating sqrt(z) in V, the universal capacity is at most 3Q-3+delta. Nonconstant restricted trace improves this to 2Q-3+delta when the trace constant is zero, or 2Q-2 when it is one. A complete optional scan of at most 256 subspace elements can sharpen the bound by counting eligible distinct-product pairs. The scan never checks affine-fibre consistency, so capacities remain upper bounds rather than exact counts. If the scan is disabled or too small, its pair count stays unknown; square membership is still checked by linear-span rank.
+
+Code and proof/audit hashes accompany CLI results. Capacity refusals, rejected inputs/predicates, internal consistency failures and inconclusive capacities remain separate from an established lower bound. Six fixed controls and actual CLI controls pass. **No positive scientific lower-bound fixture was exercised and no new LFD-labelled scientific row was produced.** The two-solution control correctly remains inconclusive because q equals U, rather than exceeding it.
+
+The accompanying averaging proof establishes that for every odd n>=3 some dimension-(n+1)/2 subspace containing1 has exactly two solutions at z=a6=1. It does not identify an efficient basis formula or prove that an arbitrary such subspace has two solutions. The existence theorem must never be used as a count certificate for an unverified input V. The target has order four; no claim for generic prime-order targets follows. Growing LFD remains an additional obligation.
+
+The separate reviewed `trace-active-unsat-family.md` establishes, for infinitely many odd n, an existential unsatisfiable subspace excluding1 with nonzero restricted trace. This removes the particular constant trace contradiction from the selected population. It does not exclude other degree-two refutations or establish growing degree. It has the same order-four target and nonconstructive basis-selection limitations.
