@@ -20,7 +20,8 @@ class FixtureBinder:
     plan_path = None
     plan = {"classes": [{"targets": [None, [1, 2]]}],
             "input_sha256": "1"*64, "manifest_sha256": "2"*64,
-            "order": "log-point-coset-transversal/v1"}
+            "order": "log-point-coset-transversal/v1",
+            "structures_per_T": 819}
 
     def __init__(self, field):
         self.field = field
@@ -94,6 +95,35 @@ class BatchDriverTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             run_batch(runner, directory, "q3-n3", "3"*64,
                       self.caps, 1024**3, 60, 60, 120)
+
+    def test_persistent_worker_two_unit_fixture(self):
+        directory = self.base / "worker-complete"
+        directory.mkdir()
+        runner = self.runner(directory)
+        result = run_batch(runner, directory, "q3-n3", "3"*64,
+                           self.caps, 1024**3, 60, 60, 120,
+                           use_worker=True)
+        self.assertEqual(result["unit_count"], 2)
+        worker_exit = json.loads((directory / "worker-exit.json").read_bytes())
+        self.assertEqual((worker_exit["status"], worker_exit["returncode"]),
+                         ("clean_exit", 0))
+        review = check_batch(directory, "q3-n3", self.binder,
+                             runner.binary_sha256, scope="software-fixture",
+                             full_geometry=True, type2=True)
+        self.assertEqual(review["exceptional"], 280)
+        self.assertEqual((directory / "worker.stderr.log").read_bytes(), b"")
+
+    def test_persistent_worker_failure_retains_unit_without_index(self):
+        directory = self.base / "worker-failed"
+        directory.mkdir()
+        runner = self.runner(directory)
+        caps = dict(self.caps, total_candidates=1)
+        with self.assertRaisesRegex(ValueError, "candidate unit failed: u000000"):
+            run_batch(runner, directory, "q3-n3", "3"*64,
+                      caps, 1024**3, 60, 60, 120, use_worker=True)
+        self.assertTrue((directory / "u000000/failure.json").is_file())
+        self.assertTrue((directory / "u000000/stderr.log").read_bytes())
+        self.assertFalse((directory / "units-index.json").exists())
 
     def test_failed_first_unit_retained_without_index(self):
         directory = self.base / "failed"

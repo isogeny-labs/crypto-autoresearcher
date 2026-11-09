@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import resource
+import select
 import signal
 import subprocess
 import sys
@@ -25,6 +26,7 @@ CAP_NAMES = ("field_elements", "structures", "image_entries", "rational_candidat
 MAX_MEMORY_BYTES = 4 * 1024**3
 MAX_CPU_SECONDS = 24 * 3600
 MAX_WALL_SECONDS = 86400
+MAX_WORKER_LINE = 256 * 1024 * 1024
 _ADMISSION_TOKEN = object()
 IMPLEMENTATION = "experiments/EXP-PEXT-bf8f96/implementation/"
 REQUIRED_SOURCES = {
@@ -129,6 +131,219 @@ class CandidateUnitArtifacts:
             raise ValueError("invalid candidate artifact scope")
         if scope == "approved-cohort" and admission_token is not _ADMISSION_TOKEN:
             raise ValueError("production runner requires live supervisor admission")
+        self.worker = None
+        self.worker_info = None
+
+    def start_worker(self, caps, memory_bytes, cpu_seconds, wall_seconds):
+        """Start one capped cohort worker after live supervisor admission."""
+        if self.binder is None or self.worker is not None:
+            raise ValueError("worker requires a fresh admitted cohort")
+        extra = checked_limits(caps, memory_bytes, cpu_seconds, wall_seconds)
+        if memory_bytes > 3 * 1024**3:
+            raise ValueError("production worker exceeds 3 GiB ceiling")
+        field = self.binder.plan["field"]
+        argv = [str(self.binary), "--worker", str(field["prime"]),
+                str(field["degree"]), *extra]
+        def limits():
+            resource.setrlimit(resource.RLIMIT_AS, (memory_bytes, memory_bytes))
+            resource.setrlimit(resource.RLIMIT_CPU, (cpu_seconds, cpu_seconds))
+        self.worker = subprocess.Popen(argv, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE, start_new_session=True,
+                                       preexec_fn=limits, bufsize=0)
+        try:
+            line = self._read_worker_line(min(wall_seconds, 60), 65536)
+            startup = json.loads(line)
+            structures = self.binder.plan["structures_per_T"]
+            if (startup.get("schema") != "pext.candidate-worker-start/v1"
+                    or startup.get("field") != field
+                    or startup.get("structures") != structures
+                    or startup.get("cocycle_entries") !=
+                    [structures] * ((field["degree"] - 1) // 2)
+                    or startup.get("rational_image_entries") != structures * (field["prime"] + 1)
+                    or startup.get("c3_reverse_build_checked") is not True):
+                raise ValueError("worker startup attestation mismatch")
+            self.worker_info = {"argv": argv, "startup": startup,
+                                "startup_line": line.decode(),
+                                "startup_sha256": sha256(line),
+                                "join_plan_sha256": self.binder.plan_sha256}
+        except BaseException as error:
+            stderr = self.stop_worker()
+            with (self.parent / "worker.stderr.log").open("xb") as stream:
+                stream.write(stderr + (str(error) + "\n").encode())
+                stream.flush(); os.fsync(stream.fileno())
+            write_once(self.parent / "worker-start-failure.json", {
+                "schema": "pext.candidate-worker-start-failure/v1",
+                "status": "startup_failed", "binary_sha256": self.binary_sha256,
+                "join_plan_sha256": self.binder.plan_sha256,
+                "argv": argv,
+                "stderr_sha256": file_sha256(self.parent / "worker.stderr.log")})
+            raise
+
+    def _read_worker_line(self, wall_seconds, maximum=MAX_WORKER_LINE):
+        deadline = time.monotonic() + wall_seconds
+        data = bytearray()
+        descriptor = self.worker.stdout.fileno()
+        while len(data) <= maximum:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise TimeoutError("candidate worker response deadline reached")
+            readable, _, _ = select.select([descriptor], [], [], min(remaining, 0.1))
+            if not readable:
+                continue
+            fragment = os.read(descriptor, min(65536, maximum + 1 - len(data)))
+            if not fragment:
+                raise ValueError("candidate worker exited before complete response")
+            data.extend(fragment)
+            if b"\n" in fragment:
+                if data[-1] != 10 or data.count(10) != 1:
+                    raise ValueError("candidate worker response framing")
+                return bytes(data)
+        raise ValueError("candidate worker response exceeds raw-byte cap")
+
+    def stop_worker(self):
+        process = self.worker
+        self.worker = None
+        self.worker_info = None
+        if process is None:
+            return b""
+        if process.poll() is None:
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+        process.wait()
+        stderr = process.stderr.read(1024 * 1024 + 1)
+        if len(stderr) > 1024 * 1024:
+            stderr = stderr[:1024 * 1024]
+        for stream in (process.stdin, process.stdout, process.stderr):
+            if stream is not None:
+                stream.close()
+        return stderr
+
+    def finish_worker(self, wall_seconds):
+        """Require a clean EOF exit before the cohort may seal its index."""
+        if self.worker is None or self.worker_info is None:
+            raise ValueError("candidate cohort worker absent at finish")
+        process = self.worker
+        info = self.worker_info
+        process.stdin.close()
+        try:
+            code = process.wait(timeout=wall_seconds)
+        except subprocess.TimeoutExpired:
+            stderr = self.stop_worker()
+            self._write_worker_exit("exit_timeout", None, stderr, info)
+            raise TimeoutError("candidate worker did not exit by stage deadline")
+        stderr = self.stop_worker()
+        status = "clean_exit" if code == 0 and not stderr else "exit_failure"
+        self._write_worker_exit(status, code, stderr, info)
+        if status != "clean_exit":
+            raise ValueError("candidate worker failed after final response")
+
+    def _write_worker_exit(self, status, code, stderr, info):
+        path = self.parent / "worker.stderr.log"
+        with path.open("xb") as stream:
+            stream.write(stderr); stream.flush(); os.fsync(stream.fileno())
+        write_once(self.parent / "worker-exit.json", {
+            "schema": "pext.candidate-worker-exit/v1", "status": status,
+            "returncode": code, "binary_sha256": self.binary_sha256,
+            "join_plan_sha256": info["join_plan_sha256"],
+            "startup_sha256": info["startup_sha256"],
+            "stderr_sha256": file_sha256(path)})
+
+    def abort_worker(self, reason):
+        """Retain a worker failure when the stage stops between units."""
+        if self.worker is None:
+            return
+        info = self.worker_info
+        stderr = self.stop_worker()
+        if info is not None:
+            self._write_worker_exit("aborted", None,
+                                    stderr + (reason + "\n").encode(), info)
+
+    def _worker_cpu_seconds(self):
+        # /proc stat isolates this process from unrelated host work.
+        fields = Path(f"/proc/{self.worker.pid}/stat").read_text().rsplit(")", 1)[1].split()
+        return (int(fields[11]) + int(fields[12])) / os.sysconf("SC_CLK_TCK")
+
+    def run_worker(self, name, form, field, structures, caps, memory_bytes,
+                   cpu_seconds, wall_seconds, binding):
+        """Retain the same write-once unit files for one worker request."""
+        if self.worker is None or self.worker_info is None or self.worker.poll() is not None:
+            raise ValueError("candidate cohort worker unavailable")
+        extra = checked_limits(caps, memory_bytes, cpu_seconds, wall_seconds)
+        if (binding != self.binder.bind(binding["class_index"], binding["T_index"])
+                or binding["quotient_form"] != form or binding["field"] != field
+                or binding["structures_per_T"] != structures):
+            raise ValueError("candidate worker binding mismatch")
+        request = ",".join(map(str, form)) + "\n"
+        directory = self.parent / name
+        directory.mkdir()
+        worker = {**self.worker_info, "request": request,
+                  "request_sha256": sha256(request.encode())}
+        metadata = {"schema": "pext.candidate-unit-input/v1", "scope": self.scope,
+                    "binary_sha256": self.binary_sha256, "argv": self.worker_info["argv"],
+                    "field": field, "form": form, "structures": structures,
+                    "caps": caps, "memory_bytes": memory_bytes,
+                    "cpu_seconds": cpu_seconds, "wall_seconds": wall_seconds,
+                    "binding": binding if self.scope == "approved-cohort" else None,
+                    "worker": worker}
+        write_once(directory / "input.json", metadata)
+        partial = directory / "unit.json.partial"
+        stderr_path = directory / "stderr.log"
+        started = time.monotonic()
+        status = "child_failed"
+        error = None
+        try:
+            cpu_before = self._worker_cpu_seconds()
+            self.worker.stdin.write(request.encode())
+            self.worker.stdin.flush()
+            raw = self._read_worker_line(wall_seconds)
+            with partial.open("xb") as stream:
+                stream.write(raw)
+                stream.flush(); os.fsync(stream.fileno())
+            cpu_used = self._worker_cpu_seconds() - cpu_before
+            if cpu_used > cpu_seconds:
+                raise TimeoutError("candidate unit CPU ceiling reached")
+            unit = json.loads(raw)
+            if (unit.get("schema") != "pext.checked-candidate-unit/v1"
+                    or unit.get("field") != field or unit.get("form") != form
+                    or unit.get("structures") != structures
+                    or unit.get("candidate_order_aa") !=
+                    "reverse-cocycle-build-representatives-buckets-and-roots/v1"):
+                raise ValueError("candidate worker response identity mismatch")
+            stderr_path.write_bytes(b"")
+            compressed = gzip.compress(raw, mtime=0)
+            with (directory / "unit.json.gz").open("xb") as stream:
+                stream.write(compressed); stream.flush(); os.fsync(stream.fileno())
+            partial.unlink()
+            receipt = {"schema": "pext.candidate-unit-artifact/v1",
+                       "status": "candidate_emitted", "scope": self.scope,
+                       "input_sha256": file_sha256(directory / "input.json"),
+                       "raw_sha256": sha256(raw), "compressed_sha256": sha256(compressed),
+                       "stderr_sha256": sha256(b""), "returncode": None,
+                       "worker_response_status": "line_received_checked",
+                       "wall_seconds": time.monotonic() - started,
+                       "worker_startup_sha256": worker["startup_sha256"],
+                       "worker_request_sha256": worker["request_sha256"]}
+            write_once(directory / "receipt.json", receipt)
+            return receipt
+        except BaseException as caught:
+            error = caught
+            status = "wall_timeout" if isinstance(caught, TimeoutError) else "child_failed"
+            child_stderr = self.stop_worker()
+            if not partial.exists():
+                partial.write_bytes(b"")
+            stderr = child_stderr
+            if isinstance(caught, Exception):
+                stderr += (str(caught) + "\n").encode()
+            stderr_path.write_bytes(stderr)
+            failure = {"schema": "pext.candidate-unit-artifact/v1", "status": status,
+                       "scope": self.scope, "input_sha256": file_sha256(directory / "input.json"),
+                       "partial_sha256": file_sha256(partial),
+                       "stderr_sha256": file_sha256(stderr_path),
+                       "returncode": None, "wall_seconds": time.monotonic() - started}
+            write_once(directory / "failure.json", failure)
+            return failure
 
     def run(self, name, form, field, structures, caps, memory_bytes, cpu_seconds,
             wall_seconds, binding=None):
