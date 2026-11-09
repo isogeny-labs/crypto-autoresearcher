@@ -1,0 +1,120 @@
+schema: crypto.autoresearch.experiment_observation.v1
+report_kind: run_observations
+question: What did the approved PFDR pilot execute and where did its validation stop?
+scope: One pilot attempt RUN-PFDR-54a452. Four dependent stages unstarted; no accepted
+  scientific inference.
+method:
+  description: Transcribe immutable execution receipt and driver manifest. Supplemental
+    sidecar to the published run report; no rerun.
+  command: bash experiments/EXP-PFDR-fa915a/launch-recovery.sh executor-pfdr-fa915a-20261109
+    1
+  parameters:
+    bits:
+    - 16
+    - 20
+    - 24
+    - 28
+    - 32
+    theta:
+    - 0.3
+    - 0.35
+    d:
+    - 1
+    - 2
+    - 3
+    pilot_curves_per_cell: 32
+    null_replicates: 20
+  seeds:
+  - namespace EXP-PFDR-ada71b; pilot seed block 12000000
+  sampling_unit: Single execution attempt; scientific pilot design contains curve/cell
+    jobs, not independent timing replicates.
+  stopping_rule: Supervisor rejected manifest command provenance; no dependent stage
+    ran and no retry occurred.
+runs:
+- experiment_id: EXP-PFDR-fa915a
+  run_id: RUN-PFDR-54a452
+  native_status: invalid_output
+  evidence:
+  - artifact: receipt
+    selector: /status and /detail
+observations:
+- id: driver-wall
+  description: Driver-recorded elapsed time
+  kind: measured
+  value: 142.175
+  unit: seconds
+  sample:
+    n: 1
+    unit: pilot execution attempt
+    dependence: Single attempt; no independent replicated timing estimate.
+  uncertainty: No uncertainty interval estimated for this single execution record.
+  evidence:
+  - artifact: manifest
+    selector: /run/timing/wall_seconds
+- id: driver-cpu
+  description: Driver-recorded CPU time
+  kind: measured
+  value: 561.59
+  unit: seconds
+  sample:
+    n: 1
+    unit: pilot execution attempt
+    dependence: Single attempt; no independent replicated timing estimate.
+  uncertainty: No uncertainty interval estimated for this single execution record.
+  evidence:
+  - artifact: manifest
+    selector: /run/resources/cpu_seconds
+- id: driver-exit
+  description: Driver process exit code
+  kind: measured
+  value: 0
+  unit: exit code
+  sample:
+    n: 1
+    unit: pilot execution attempt
+    dependence: Single attempt; no independent replicated timing estimate.
+  uncertainty: No uncertainty interval estimated for this single execution record.
+  evidence:
+  - artifact: receipt
+    selector: /returncode
+- id: supervisor-status
+  description: Supervisor-native output status
+  kind: measured
+  value: invalid_output
+  unit: status
+  sample:
+    n: 1
+    unit: pilot execution attempt
+    dependence: Single attempt; no independent replicated timing estimate.
+  uncertainty: No uncertainty interval estimated for this single execution record.
+  evidence:
+  - artifact: receipt
+    selector: /status
+controls: []
+patterns: []
+limitations:
+- Scientific checker was not invoked. Driver exit 0 is separate from supervisor invalid_output.
+- This sidecar supplements reports/run-20261109T2009Z without rewriting that published
+  report.
+- No accepted census, slope, or calibration result.
+missing: []
+next_checks:
+- question: Does exact launch-command provenance pass real parent/child interpreter
+    admission?
+  method: Prospective subprocess regression with mocked scientific methods and unpatched
+    supervisor admission.
+  control: Negative argv/command tampering cases and all five positive stage fixtures.
+  status: proposed
+artifacts:
+- id: receipt
+  path: experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/execution-receipt.json
+  commit: 99676cdadf99ea830f7d5e557aef1a0001e23d4d
+  sha256: a91c0b27c638e6a4085c930dbfa89b6d233845ca16e64a5fe1f7c1fec8fd5824
+- id: manifest
+  path: experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/manifest.yaml
+  commit: 99676cdadf99ea830f7d5e557aef1a0001e23d4d
+  sha256: 747db591b3b4e0d3069b6feacd8232eca6c05de2502f1ea847f48f0dc748050e
+- id: report
+  path: experiments/EXP-PFDR-fa915a/reports/run-20261109T2009Z/report.md
+  commit: 99676cdadf99ea830f7d5e557aef1a0001e23d4d
+  sha256: 428ebd4066a8dcd61ced68282d8ade28bef706fab4719ca407e10326ec8cab95
