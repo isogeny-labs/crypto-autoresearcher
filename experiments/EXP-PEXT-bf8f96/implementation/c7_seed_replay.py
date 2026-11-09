@@ -71,7 +71,7 @@ def replay(field_record, record):
             continue
         seen.add(tuple(form))
         selected.append({"draw": attempt, "form": form,
-                         "check": check_form(field, form)})
+                         "check": check_form(field, form, field_record)})
     expected = {"schema": "pext.c7-matched-random/v1", "seed": SEED,
                 "field_sha256": field_hash, "pattern": pattern,
                 "scalar_class": scalar_class, "draw_cap": DRAW_CAP,

@@ -10,6 +10,7 @@ import json
 from check_all_degree_collision_certificate import difference, polynomial_power
 from check_quotient_certificate import Field, square_relations, trim
 from generic_disjoint import exact_quotient, monic, squarefree, support_gcd
+from independent_component_geometry import assess as assess_independent_geometry
 from squareclass_relations import coefficient_bit
 
 
@@ -151,7 +152,7 @@ def weighted_relations(field, forms):
             "constant_nonsquare_relation": arithmetic_count < geometric_count}
 
 
-def check_form(field, form):
+def check_form(field, form, field_record):
     """Compare weighted-factor and direct-incidence control instruments."""
     squarefree(field, form)
     forms = [form]
@@ -163,6 +164,14 @@ def check_form(field, form):
     incidence = direct_incidence(field, forms)
     _need(all(weighted[key] == incidence[key] for key in weighted),
           "C7 weighted-factor/incidence discrepancy")
+    independent = assess_independent_geometry(field_record, forms)
+    _need((independent["geometric_rank"] == incidence["geometric_rank"]
+           and independent["arithmetic_rank"] == incidence["arithmetic_rank"]
+           and independent["branch_points"] == incidence["branch_points"]
+           and independent["geometric_component_genus"] == incidence["component_genus"]
+           and (independent["arithmetic_rank"] > independent["geometric_rank"])
+               == incidence["constant_nonsquare_relation"]),
+          "C7 independent character-geometry discrepancy")
     return {"pattern": list(factor_pattern(field, form)),
             "scalar_class": coefficient_bit(field, trim(form)[-1]),
             "rank_pair": [incidence["geometric_rank"], incidence["arithmetic_rank"]],
@@ -209,7 +218,8 @@ def sample_stratum(field_record, pattern, scalar_class, *, count=SAMPLES_PER_STR
             duplicate += 1
             continue
         seen.add(tuple(form))
-        selected.append({"draw": attempt, "form": form, "check": check_form(field, form)})
+        selected.append({"draw": attempt, "form": form,
+                         "check": check_form(field, form, field_record)})
     return {"schema": "pext.c7-matched-random/v1", "seed": SEED,
             "field_sha256": digest(field_record), "pattern": list(pattern),
             "scalar_class": scalar_class, "draw_cap": DRAW_CAP,

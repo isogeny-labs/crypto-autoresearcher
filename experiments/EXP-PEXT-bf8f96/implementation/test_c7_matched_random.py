@@ -14,6 +14,7 @@ from c7_matched_random import (check_form, direct_incidence, factor_pattern,
 from c7_seed_replay import replay
 from c7_seed_replay import _draw as independent_draw
 from c7_matched_random import _coefficient as producer_draw
+from independent_component_geometry import assess as assess_independent_geometry
 from squareclass_relations import coefficient_bit
 
 
@@ -37,7 +38,7 @@ class C7MatchedRandomTests(unittest.TestCase):
         for form, pattern in zip(FIXED_FORMS, PATTERNS):
             with self.subTest(pattern=pattern):
                 self.assertEqual(factor_pattern(self.field, form), tuple(pattern))
-                checked = check_form(self.field, form)
+                checked = check_form(self.field, form, self.field_record)
                 self.assertEqual(checked["pattern"], pattern)
                 self.assertEqual(checked["scalar_class"],
                                  coefficient_bit(self.field, trim(form)[-1]))
@@ -76,13 +77,21 @@ class C7MatchedRandomTests(unittest.TestCase):
             return result
         with patch("c7_matched_random.weighted_relations", side_effect=wrong):
             with self.assertRaisesRegex(ValueError, "weighted-factor/incidence discrepancy"):
-                check_form(self.field, form)
+                check_form(self.field, form, self.field_record)
+        def wrong_genus(record, forms):
+            result = assess_independent_geometry(record, forms)
+            result["geometric_component_genus"] += 1
+            return result
+        with patch("c7_matched_random.assess_independent_geometry",
+                   side_effect=wrong_genus):
+            with self.assertRaisesRegex(ValueError, "independent character-geometry discrepancy"):
+                check_form(self.field, form, self.field_record)
 
     def test_malformed_quartic_rejected(self):
         with self.assertRaises(ValueError):
             factor_pattern(self.field, [1, 0, 0, 0, 0])
         with self.assertRaises(ValueError):
-            check_form(self.field, [0, 0, 0, 0, 0])
+            check_form(self.field, [0, 0, 0, 0, 0], self.field_record)
 
     def test_independent_retained_seed_replay_and_tamper(self):
         # Both streams are held to a fixed existing software form; this test
