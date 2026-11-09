@@ -27,6 +27,100 @@ Returns (ok, n_verified_points, reasons).
 """
 import json
 import sys
+from functools import lru_cache
+from math import isqrt
+
+
+def _prime_for_protocol(p):
+    """Exact trial-division check for the protocol's bounded p < 2^31."""
+    if type(p) is not int or p < 2 or p >= 2 ** 31:
+        return False
+    if p % 2 == 0:
+        return p == 2
+    return all(p % d != 0 for d in range(3, isqrt(p) + 1, 2))
+
+
+def _trim(poly):
+    while poly and poly[-1] == 0:
+        poly.pop()
+    return poly
+
+
+def _poly_rem(a, b, p):
+    """Remainder of low-to-high coefficient polynomials over F_p."""
+    r = _trim(list(a))
+    divisor = _trim(list(b))
+    inv_lead = pow(divisor[-1], -1, p)
+    while len(r) >= len(divisor):
+        c = r[-1] * inv_lead % p
+        shift = len(r) - len(divisor)
+        for i, value in enumerate(divisor):
+            r[shift + i] = (r[shift + i] - c * value) % p
+        _trim(r)
+    return r
+
+
+def _poly_mul_mod(a, b, modulus, p):
+    product = [0] * (len(a) + len(b) - 1)
+    for i, ai in enumerate(a):
+        for j, bj in enumerate(b):
+            product[i + j] = (product[i + j] + ai * bj) % p
+    return _poly_rem(product, modulus, p)
+
+
+def _poly_pow_mod(base, exponent, modulus, p):
+    result = [1]
+    base = _poly_rem(base, modulus, p)
+    while exponent:
+        if exponent & 1:
+            result = _poly_mul_mod(result, base, modulus, p)
+        exponent >>= 1
+        if exponent:
+            base = _poly_mul_mod(base, base, modulus, p)
+    return result
+
+
+def _poly_gcd(a, b, p):
+    a, b = _trim(list(a)), _trim(list(b))
+    while b:
+        a, b = b, _poly_rem(a, b, p)
+    return a
+
+
+def _prime_divisors(n):
+    factors = []
+    d = 2
+    while d * d <= n:
+        if n % d == 0:
+            factors.append(d)
+            while n % d == 0:
+                n //= d
+        d += 1
+    if n > 1:
+        factors.append(n)
+    return factors
+
+
+@lru_cache(maxsize=64)
+def _field_is_valid(p, modulus):
+    """Rabin criterion for a monic modulus over a verified prime field.
+
+    See FLINT's independent description of the criterion:
+    https://flintlib.org/doc/gr_poly/gr_poly_is_irreducible.html
+    """
+    n = len(modulus) - 1
+    if not _prime_for_protocol(p) or not 1 <= n <= 16:
+        return False
+    x = [0, 1]
+    for factor in _prime_divisors(n):
+        power = _poly_pow_mod(x, p ** (n // factor), modulus, p)
+        difference = _poly_rem([((power[i] if i < len(power) else 0) -
+                                 (1 if i == 1 else 0)) % p
+                                for i in range(max(len(power), 2))], modulus, p)
+        if len(_poly_gcd(modulus, difference, p)) != 1:
+            return False
+    final = _poly_pow_mod(x, p ** n, modulus, p)
+    return final == _poly_rem(x, modulus, p)
 
 
 class FqP:
@@ -177,8 +271,10 @@ def _arm_family(arm):
 def verify(cert):
     reasons = []
     try:
-        p = int(cert["p"])
+        p = cert["p"]
         F = FqP(p, cert["modulus"])
+        if not _field_is_valid(p, tuple(F.M)):
+            raise ValueError("p is not an admitted prime or modulus is reducible")
         cv = cert["curve"]
         E = CurveP(F, cv["a2"], cv["a4"], cv["a6"])
         G = _pt(F, cert["G"])
