@@ -1,0 +1,156 @@
+idea:
+  id: IDEA-20261109-410419
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Universal vectorial extension over F_p: the chord slope is its 2-cocycle, the unique order-N
+    section defines a finite-field zeta c(P), and c is predicted to be a generic odd function with no
+    scalar content'
+  class: representation
+  claim: 'E/F_p of prime order N, p > 3, N != p. Model E^nat(F_p) as pairs (P,z) in E(F_p) x F_p with
+    (P,z)+(Q,w) = (P+Q, z+w+lambda(P,Q)), lambda the chord slope for P != +-Q, the tangent slope for P
+    = Q, and 0 when P = -Q or a summand is O. Claim A (theorem-level, checked numerically): this is an
+    abelian group of order pN with a unique subgroup of order N, so c(P) := -Lambda_N(P)/N mod p (Lambda_N
+    the slope sum along any addition chain for [N](P,0)) is well defined and satisfies c(P+Q) = c(P)+c(Q)+lambda(P,Q),
+    c(-P) = -c(P), c(pP) = Lambda_p(P), and Lambda_k(P) = (2y/k)(d psi_k/dx)/psi_k for odd k < N. Claim
+    B (prediction): writing c(P) = y(P) g(x(P)), the interpolation degree of g on the set X of (N-1)/2
+    x-values is at least |X|-2, and the hybrid sum max over (a,b) != (0,0) of |sum_k e_p(a c(kP)) e_N(bk)|
+    stays below 4 sqrt(N log(pN)). Then c(Q) = k c(P) + Lambda_k(P) is one F_p equation in two unknowns
+    and no exponent moves.'
+  mechanism: E^nat is the universal extension of E by G_a; its class spans Ext^1(E,G_a) = H^1(E,O_E),
+    dimension 1. The de Rham realization of the 1-motive [Z -> E, 1 -> P] is the canonical order-N lift
+    s(P) = (P,c(P)). Since gcd(p,N) = 1 the sequence 0 -> F_p -> E^nat(F_p) -> E(F_p) -> 0 splits uniquely,
+    s is a homomorphism carrying P and nothing else, and every F_p coordinate of s is a quasi-homomorphism
+    with the rational cocycle lambda. The chord slope to a fixed Q counted by IDEA-20261007-fd7c23 equals
+    c(P+Q)-c(P)-c(Q); P and -P-Q share one line through Q, so that map is 2-to-1 and N_s = n/2 + 1 for
+    odd group order, which forces the filed prediction n - N_s >= 4. E^nat -> E has no regular section,
+    so c is not an algebraic map; Claim B says it is not a hidden low-degree one either.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt N); this record moves no exponent.
+    verified_by: brief section 3 row; not opened this session, next agent opens knowledge/frontiers/ecdlp/generic-rho/KR-RHO-13bf67.yaml
+  - ref: IDEA-20261007-fd7c23
+    provenance: internal
+    claim: Counts the chord-slope image from a canonical Q; reread here as the E^nat cocycle, whose slope
+      map is exactly 2-to-1.
+    verified_by: quoted in brief section 5; next agent opens ledger/proposals/IDEA-20261007-fd7c23.yaml
+  - ref: Weierstrass zeta addition formula and sigma(nu) = psi_n sigma(u)^(n^2)
+    provenance: recalled
+    claim: Gives the slope cocycle with x = wp, y = wp'/2 and the psi_k identity.
+    verified_by: recalled only; the k = 3 check in the test fixes the sign
+  assumptions:
+  - N prime, N != p, p > 3, so N is invertible mod p and E(F_p) has no 2-torsion.
+  - The conventions at P = Q, P = -Q and O give a group law; the run checks associativity on random triples
+    and treats a failure as an invalid model, not as evidence about Claim B.
+  proof_search_map:
+    not_applicable_reason: finite-group statistics at toy sizes, no exponent claim
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: associativity failures over 10^5 random triples
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: T(g), number of vanishing leading interpolation coefficients of g
+    direction: lower
+    minimum_effect: at most 1 at every prime, matching the random odd control
+  - metric: H(c), hybrid-sum maximum divided by sqrt(N)
+    direction: lower
+    minimum_effect: below 4 sqrt(log(pN)) at every prime
+  - metric: N_s minus (n/2 + 1) for the chord-slope image to a canonical Q
+    direction: different
+    minimum_effect: exactly 0 on prime-order curves
+  minimal_test:
+    design: Prime-order toy curves with N in [2^12, 2^17] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      plus three j = 0 curves. Implement E^nat(F_p) in a standalone Rust or C script under research/cohomology_zeta_20261109.
+      Enumerate kP for all k, compute c(kP) by double-and-add in E^nat, verify c(pP) = Lambda_p(P) and
+      the psi_k identity for k = 3,5,7 at 100 random P (one global sign of lambda may be flipped once
+      if k = 3 demands it). T(g) uses Lagrange weights w(x) = 1/prod(x - x') and tests sum g(x) w(x) x^i
+      = 0 for i = 0,1,2. H(c) uses an FFT over k for 64 random a and all b.
+    controls:
+    - Random odd function y r(x), r uniform, for the T and H distributions.
+    - Planted y (x^3 + 1), where T must equal |X| - 4 exactly.
+    - Label control c replaced by k mod p, where H must spike, validating the FFT path.
+    required_metrics:
+    - associativity failures
+    - psi_k identity pass count and the sign used
+    - T(g) per prime
+    - H(c) per prime with its argmax (a,b)
+    - N_s and n
+  falsification_conditions:
+  - Claim A dies if the psi_k identity fails for both signs or c(pP) != Lambda_p(P) anywhere.
+  - Claim B dies if T(g) >= 3 or H(c) exceeds the bound at two or more primes while the controls behave;
+    c would then have to be re-examined as an algebraic predicate.
+  - An associativity failure is an invalid model, not evidence either way.
+  confounders:
+  - The sign convention of lambda, fixed once by the k = 3 check and frozen.
+  - Floating-point FFT error; keep N <= 2^17 and complex double.
+  interpretation_limits:
+  - A confirmed Claim B is a toy-size statistic and a barrier reading, not a degree theorem.
+  - The j = 0 arm fixes conventions for secp256k1 but proves nothing about it.
+  heuristic_assumptions:
+  - id: H1
+    statement: c behaves like a uniformly random odd function on E(F_p) for degree and hybrid sums.
+    rigorous_support: Only the absence of a regular section of E^nat -> E; Weil bounds do not apply because
+      c is not rational of low degree.
+    validation_plan: T and H against the random control at six or more primes, script and raw tables committed
+      under research/cohomology_zeta_20261109.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(N) only for the exhaustive toy enumeration
+    best_known: Pollard rho, Theta(N^{1/2}) group operations (KR-RHO-13bf67)
+    hidden_overhead: none claimed; no algorithm is proposed
+    tradeoff_note: c(Q) costs one scalar multiplication in E^nat, the same as computing Q.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading; no row states the E^nat splitting or the zeta
+    cocycle.
+  sota_delta: Exponent delta 0. Counted delta is a canonical F_p-valued de Rham coordinate of every point,
+    its cocycle, and two new null statistics.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-IC-5a43e5
+    - KR-IC-f5c584
+    - KR-RHO-53c89f
+    - KR-IC-cd159a
+    - KR-RHO-0528e7
+    nearest:
+    - ref: KR-IC-f5c584
+      provenance: internal
+      relation: adjacent
+      delta: There a group morphism E -> F_2 forces a linear equation after descent; here Hom(E(F_p),F_p)
+        = 0 and c is only a quasi-morphism, so no linear equation in the scalar can arise.
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: orthogonal
+      delta: No summation polynomial is formed; the cocycle is a slope, not S_3.
+    searched:
+      corpus_grep:
+      - brief section 2 for vectorial extension, zeta, chord slope, cocycle, de Rham
+      - wave-1 p-adic, port and sweep titles for Witt digit, torsion lift, exit map, slope image
+      web: []
+      blocked: []
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Prime-order toy curves with N in [2^12, 2^17] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        plus three j = 0 curves. Implement E^nat(F_p) in a standalone Rust or C script under research/cohomology_zeta_20261109.
+        Enumerate kP for all k, compute c(kP) by double-and-add in E^nat, verify c(pP) = Lambda_p(P) and
+        the psi_k identity for k = 3,5,7 at 100 random P (one global sign of lambda may be flipped o'
