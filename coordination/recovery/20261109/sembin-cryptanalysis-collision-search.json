@@ -1,0 +1,179 @@
+{
+  "schema": "sembin.partial-sibling-collision-search/v1",
+  "created_at_utc": "2026-11-09T18:44:32+00:00",
+  "status": "partial_source_lookup_only",
+  "question": "Do available committed cryptanalysis sources measure solving degree, closure degree, or Groebner-basis containment for SAT planted Nagao EQS4 over shifted or pairwise disjoint coset factor bases?",
+  "authority": {
+    "proposal": "EXP-SEMBIN-cb5e25",
+    "decision": "DEC-20261106-e7576f",
+    "gate": "DG-1",
+    "contract_commit": "f86863708298c1d664b8f904d399d486723e6711",
+    "collision_search_path": "experiments/EXP-SEMBIN-cb5e25/collision-search.json",
+    "collision_search_sha256": "1b3d863baeda65420771563116c39d34752ddb386d8c34ca80be7bd0cb2d2e50",
+    "decision_path": "ledger/decisions/DEC-20261106-e7576f.yaml",
+    "decision_sha256": "026394ca0a86fa2ee1593a5493c51d31998b6df2ed42624e1a7e23e296353f18"
+  },
+  "sibling": {
+    "repository_path": "/home/ec2-user/cryptanalysis",
+    "pinned_commit": "80868b829255312a5e41defb7d5b3a2d580ad90f",
+    "head_verified_at_read": true,
+    "worktree_clean_at_read": true
+  },
+  "method": {
+    "blob_command": "git show 80868b829255312a5e41defb7d5b3a2d580ad90f:<path>",
+    "discovery": "Pinned git ls-tree path discovery for SEMBIN, EQS4, Nagao, dreg, closure and coset terms; pinned git grep -l on committed .md, .rs and .py source for EQS4, disjoint-coset, coset-shift, mutant-closure and Nagao terms. The seven directly relevant blobs below were read. This is not a scan of all repository data or generated artifacts.",
+    "exact_read_scope": [
+      "suite/examples/assumption1_closure.rs",
+      "suite/src/cryptanalysis/affine_factor_base.rs",
+      "suite/src/cryptanalysis/affine_factor_base/tests.rs",
+      "suite/src/cryptanalysis/semaev_decomp/coset.rs",
+      "ecc2k130/runner/codegen/nagaoannihilator.py",
+      "ecc2k130/runner/codegen/nagaodecomp.py",
+      "ecc2k130/runner/codegen/nagaocompare.py"
+    ],
+    "regex_engine": "Python 3 re.search(pattern, line, re.IGNORECASE) over each UTF-8 decoded git blob, one-based line numbers; each matching line counted once per pattern.",
+    "regex_patterns": {
+      "exact_eqs4": "\\bEQS4\\b",
+      "disjoint_coset": "disjoint[\\s_-]?coset",
+      "coset_shift_or_shifted_coset": "coset[\\s_-]?shift|shifted[\\s_-]?coset",
+      "mutant_closure": "mutant[\\s_-]?closure",
+      "nagao": "\\bNagao\\b",
+      "solving_or_closure_degree": "solving[\\s_-]?degree|closure[\\s_-]?degree",
+      "groebner_basis_containment": "Gr[oö]ebner[\\s_-]?basis.{0,60}contain|contain.{0,60}Gr[oö]ebner[\\s_-]?basis"
+    },
+    "reproduction": "For each exact_read_scope path, git show the pinned blob, split into lines, and apply the stated Python regex engine. regex_line_hits in sources are the nonempty results; omitted keys mean zero matching lines for that file and pattern."
+  },
+  "sources": [
+    {
+      "path": "suite/examples/assumption1_closure.rs",
+      "bytes": 10132,
+      "sha256": "2be1897e4d843d06175f8ee59513f8d1ea59405c4e704d4901e4a6f8695b9ac6",
+      "regex_line_hits": {
+        "solving_or_closure_degree": [
+          42
+        ]
+      }
+    },
+    {
+      "path": "suite/src/cryptanalysis/affine_factor_base.rs",
+      "bytes": 46102,
+      "sha256": "b006c9fc054c0897396f6a3f9be212416ad21a1ecee44786f7f6fe69d38de2cf",
+      "regex_line_hits": {}
+    },
+    {
+      "path": "suite/src/cryptanalysis/affine_factor_base/tests.rs",
+      "bytes": 48326,
+      "sha256": "efb720928b045c57a2a03f26cc42c0e918939d3b218d096a3c2c1814d16e7dc0",
+      "regex_line_hits": {}
+    },
+    {
+      "path": "suite/src/cryptanalysis/semaev_decomp/coset.rs",
+      "bytes": 15064,
+      "sha256": "c37d626d68c4e9180fb2c9122c97065c1292e878983ccac36924ac2228a72c75",
+      "regex_line_hits": {}
+    },
+    {
+      "path": "ecc2k130/runner/codegen/nagaoannihilator.py",
+      "bytes": 17166,
+      "sha256": "7cf9d7f9fc6f2d7f9154e32a8dacd16429a50d9e2a745a84aa2335fb513b1b73",
+      "regex_line_hits": {
+        "nagao": [
+          1,
+          15,
+          347
+        ]
+      }
+    },
+    {
+      "path": "ecc2k130/runner/codegen/nagaodecomp.py",
+      "bytes": 11515,
+      "sha256": "bb51628284100957ec22a8da294204943a08358ee46713d6d254d721143fc446",
+      "regex_line_hits": {}
+    },
+    {
+      "path": "ecc2k130/runner/codegen/nagaocompare.py",
+      "bytes": 10080,
+      "sha256": "57b27ec7098196d07734568c2b2bc76a7532fd2ac753a835c2f8cd3104a7fa5a",
+      "regex_line_hits": {
+        "nagao": [
+          201,
+          224
+        ]
+      }
+    }
+  ],
+  "read_findings": [
+    {
+      "source": "suite/examples/assumption1_closure.rs",
+      "lines": [
+        1,
+        51
+      ],
+      "finding": "The header labels this degree-4 closure attempt a recorded dead end: m=2 verdicts track target decomposability under swap symmetry, so STALLS does not imply d_F4 at least 5. It explicitly says no d_F4, Assumption 1, or curve claim follows. This is not a measured target collision."
+    },
+    {
+      "source": "suite/src/cryptanalysis/affine_factor_base.rs",
+      "lines": [
+        1,
+        109,
+        454,
+        482
+      ],
+      "finding": "Implements one affine factor base V+c. build_affine_decomposition_system takes one shift argument and adds the same constant c to every summand. The m=3 S4PairsAndSolve route is an S4 quartic decomposition oracle; Algebraic and SAT routes use an S3 chain. Recorded toy performance is wall time/instructions and decomposition sets, not solving or closure degree or GB containment. No pairwise V_i=V+v_i shift vector is bound here."
+    },
+    {
+      "source": "suite/src/cryptanalysis/affine_factor_base/tests.rs",
+      "finding": "Differential tests compare decompositions or membership against enumeration on small affine bases. Their contains checks are set membership, not Groebner-basis subset W4."
+    },
+    {
+      "source": "suite/src/cryptanalysis/semaev_decomp/coset.rs",
+      "lines": [
+        1,
+        27
+      ],
+      "finding": "Pairs-and-solve S4 oracle intersects quartic roots with a single coset V+c by gcd with shifted additive polynomial. It reports witnesses/pair counts, not GB-in-W4 or SAT planted EQS4 degree."
+    },
+    {
+      "source": "ecc2k130/runner/codegen/nagaoannihilator.py",
+      "lines": [
+        1,
+        27
+      ],
+      "finding": "Toy Nagao/Riemann-Roch coefficient search explicitly excludes Semaev; checks three distinct roots and point verification, not EQS4 Groebner degree or disjoint cosets."
+    },
+    {
+      "source": "ecc2k130/runner/codegen/nagaodecomp.py",
+      "lines": [
+        1,
+        25,
+        55,
+        75
+      ],
+      "finding": "Restricted Riemann-Roch three-point chart; its documentation states neither frontend constructs a summation polynomial and m denotes field degree with three summands fixed."
+    },
+    {
+      "source": "ecc2k130/runner/codegen/nagaocompare.py",
+      "lines": [
+        1,
+        7,
+        195,
+        210
+      ],
+      "finding": "Projected solution comparison for the Nagao RR chart, with source hashes and correctness results; no target degree/containment measurement."
+    }
+  ],
+  "target_comparison": {
+    "target": [
+      "SAT-planted Nagao EQS4 formulation",
+      "pairwise disjoint shifted factor bases V_i=V+v_i",
+      "measured solving or closure degree or Groebner basis containment GB subset W4 on that formulation"
+    ],
+    "finding": "No record meeting all target elements was found in the seven pinned committed blobs read. The closure example is an explicit failed degree instrument; the affine and Nagao sources address different formulations or outcomes. This is a scoped source assessment, not a global absence claim."
+  },
+  "remaining_dependencies": [
+    "Research-kb service/catalog and local knowledge index were unavailable to this lookup; their DG-1 queries remain open.",
+    "Existing frozen SEMBIN collision-search requirements and Coordinator reading of a dated additive search addendum remain authoritative.",
+    "Any separate unsearched source outside the exact seven-file read scope may contain relevant material and is not ruled out."
+  ],
+  "decision_effect": "None. DG-1 is not satisfied by this partial lookup; no experiment approval, dispatch, status promotion, retry, or scientific trial follows."
+}
