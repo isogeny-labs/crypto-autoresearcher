@@ -13,6 +13,7 @@ from pathlib import Path
 from check_quotient_certificate import (Field, Curve, polynomial_mul,
                                         polynomial_remainder, square_relations,
                                         trim)
+from independent_source_map_check import verify as verify_source_map
 
 
 def need(condition, message):
@@ -370,6 +371,9 @@ def _check_source(f, forms, source):
         for j, value in enumerate(term):
             moved[j] = f.add(moved[j], value)
     need(moved == forms[0], "source moved form mismatch")
+    checked_map = verify_source_map(source_map, source_map["field"], model,
+                                    target, matrix)
+    need(checked_map["valid"] is True, "source coordinate map replay failed")
 
 
 def verify(record, field_record, forms):
