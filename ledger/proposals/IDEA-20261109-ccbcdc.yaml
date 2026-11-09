@@ -1,0 +1,137 @@
+idea:
+  id: IDEA-20261109-ccbcdc
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Two-point integer lifts of (P, Q) have forced rank at least 2, a dependent lift is the discrete
+    log, and the root number is the parity of the excess rank and k-blind
+  class: measurement
+  claim: 'Let E/F_p have prime order N > 16, Q = kP, and let the two-point lift E~ be the curve y^2 =
+    x^3 + a~ x + b~ over Q through the least-residue integer lifts P~ = (x_P, y_P), Q~ = (x_Q, y_Q), x_P
+    != x_Q. Prediction fixed before any run, toy p in [2^7, 2^10], 400 trials: (i) the Neron-Tate height-pairing
+    determinant R_2 of (P~, Q~) is positive in at least 99 percent of valid trials, so rank E~(Q) >= 2
+    and the functional equation sign w satisfies w = (-1)^{2 + excess}; (ii) the fraction of trials with
+    w = +1 lies in [0.44, 0.56]; (iii) the correlation of w with the low bit of k and with the indicator
+    k < N/2 is below 0.15 in absolute value; (iv) the representative-shift control y_Q -> y_Q + p changes
+    w in about half the trials while R_2 stays positive. Any trial with R_2 = 0 returns k = -a/b from
+    the dependence and is reported. This record moves no exponent.'
+  mechanism: 'A dependence a P~ + b Q~ = T with T torsion reduces mod p to (a + b k) P = T-bar in E(F_p);
+    #E~(Q)_tors <= 16 < N and reduction is injective on torsion prime to p, so T-bar = O and k = -a/b
+    mod N. Hence a dependent two-point lift solves the instance, and independence is the normal case:
+    the two canonical heights are about (1/2) log p + O(log Delta~) with no reason to satisfy a^2 h(P~)
+    = b^2 h(Q~) exactly. With two independent points the Mordell-Weil rank is at least 2, BSD predicts
+    ord_{s=1} L(E~, s) >= 2, and w = (-1)^{rank} only records the parity of the rank beyond 2, a quantity
+    that depends on the lift''s arithmetic and not on k. The descent wave filed the root number as a candidate
+    bit of k; this record states why the test must return null and adds the regulator as the quantity
+    whose vanishing would be the only k-signal.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails for ECDLP (xedni, JKSST). A dependent two-point lift would
+      be a rank-deficient lift in that sense; its rarity is the content of that row.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09; file not opened.
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic bound; exponent delta 0 here.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09.
+  assumptions:
+  - The lift is non-singular; a zero discriminant is an invalid trial, reported.
+  - P~ and Q~ are non-torsion on E~; torsion lifts are detected by canonical height below 1e-8 and reported
+    separately.
+  - Root numbers are computed from a fully factored conductor; p <= 2^10 keeps Delta~ below about 2^190.
+  predictions:
+  - metric: fraction of valid trials with R_2 > 1e-6
+    direction: higher
+    minimum_effect: at least 0.99
+  - metric: fraction of trials with w = +1
+    direction: different
+    minimum_effect: inside [0.44, 0.56] at n = 400
+  - metric: absolute correlation of w with low bit of k
+    direction: lower
+    minimum_effect: below 0.15
+  - metric: fraction of trials where the shift control flips w
+    direction: different
+    minimum_effect: inside [0.4, 0.6]
+  minimal_test:
+    design: For each of 8 prime-order toy curves at calibration primes p in [2^7, 2^10] draw 50 random
+      k, form E~ in PARI/GP by solving the two linear equations for (a~, b~) in Q, run ellminimalmodel,
+      ellheightmatrix on (P~, Q~) for R_2, ellrootno for w, and ellrank or Sage rank_bounds for a 2-descent
+      upper bound. Record k, its low bit, and k < N/2.
+    controls:
+    - One-point control: lift through P~ and a random integer point not on E; same statistics expected
+        for w.
+    - Representative-shift control: replace y_Q by y_Q + p and recompute w and R_2.
+    - Small-k arm: k in {2, 3, 1/2, -2} to observe whether R_2 ever vanishes for tiny ratios.
+    required_metrics:
+    - p, N, k, a~, b~, conductor, R_2, w
+    - 2-descent rank upper bound and the fraction certifying rank exactly 2
+    - correlations of w with the two k-bits, with binomial confidence intervals
+    - counts of invalid (singular), torsion, and dependent trials
+  falsification_conditions:
+  - R_2 = 0 in more than 1 percent of valid trials with k outside {+-1, +-2, +-1/2}.
+  - A w correlation with either k-bit above 0.15 in absolute value at n = 400.
+  - A trial certifying rank exactly 2 by descent with w = -1 (BSD parity violation; would indicate a computation
+    error first).
+  - A factoring timeout is infrastructure, not falsification.
+  confounders:
+  - Trials where x_P = x_Q (Q = -P) are excluded and counted.
+  - Height-pairing precision; R_2 is reported with PARI precision 38 digits and the determinant relative
+    to the product of heights.
+  interpretation_limits:
+  - A null here is a toy-size statement about integer lifts with coordinates below p; it quantifies the
+    compatible-lift barrier at the analytic-rank level and nothing more.
+  - BSD is used only as a prediction of L-vanishing; no L-value is computed because conductors reach p^18.
+  heuristic_assumptions:
+  - id: H1
+    statement: For random (P, Q) the canonical heights of P~ and Q~ never satisfy a^2 h(P~) = b^2 h(Q~)
+      with a + b k = 0 mod N, so R_2 > 0.
+    rigorous_support: The torsion argument is a theorem; the non-degeneracy of heights is not, and is
+      what the measurement tests.
+    validation_plan: The 400-trial regulator table with the small-k arm.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(1)
+    best_known: Pollard rho, KR-RHO-13bf67; descent costs 2^{140} to 2^{150} at 256 bits per the descent-wave
+      record
+    hidden_overhead: None; no algorithm is proposed.
+    tradeoff_note: Finding a dependent lift is at least as hard as the compatible-lift problem; the root
+      number is k-blind by the forced-rank argument.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-cd159a for the lifting obstruction; the descent-wave root-number and descent-cost
+    records for the family. Neither states the forced-rank mechanism or the regulator-equals-log equivalence.
+  sota_delta: 'Exponent difference 0. New statement: every two-point lift has rank at least 2 unless it
+    already contains the discrete log.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Xedni looks for rank-deficient lifts of many points. This record proves a two-point lift
+        is rank-deficient only when it encodes k and measures how often that happens at toy size (predicted
+        never).
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-2 descent records for root number, two-point lift, Selmer, heights
+      - REPO BRIEF section 2 for IDEA-20260805-4243e6 and lifting ideas
+      web: []
+      blocked:
+      - ids of the descent-wave root-number and descent-cost records were not in the brief; next agent
+        cites them from ledger/proposals
+    lead: LEAD-TRF-kernel-of-reduction-lemma
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each of 8 prime-order toy curves at calibration primes p in [2^7, 2^10]
+        draw 50 random k, form E~ in PARI/GP by solving the two linear equations for (a~, b~) in Q, run
+        ellminimalmodel, ellheightmatrix on (P~, Q~) for R_2, ellrootno for w, and ellrank or Sage rank_bounds
+        for a 2-descent upper bound. Record k, its low bit, and k < N/2.'

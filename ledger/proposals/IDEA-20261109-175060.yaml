@@ -1,0 +1,147 @@
+idea:
+  id: IDEA-20261109-175060
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Velu at Frobenius-minus-one forces a three-term recurrence on the power sums of x over E(F_p),
+    so every complete moment of the group is a function of (a, b, N, p_1) and none is a function of any
+    point
+  class: representation
+  claim: 'Let E be y^2 = f(x) = x^3 + a x + b over F_p with #E(F_p) = N odd, let X be the set of x-coordinates
+    of E(F_p) minus O, |X| = (N-1)/2, and p_j the sum of x^j over X in F_p. Prediction fixed before any
+    run: for every m with 1 <= m <= (p-5)/2, (4m+2) p_{m+1} + (4m-2) a p_{m-1} + 4(m-1) b p_{m-2} = 0
+    in F_p, and the same combination at m = (p-3)/2 equals 2. Hence p_2 through p_{(p-3)/2} are determined
+    by (a, b, N, p_1) in O(m) field operations, and on a = 0 curves p_j = 0 unless 3 divides j. The quadratic
+    twist obeys the same recurrence with p''_0 = (N''-1)/2 and p''_1 = -p_1. A proper restriction of X
+    (an x-interval, or a random subset of the same size) violates the recurrence at a positive fraction
+    of m. No exponent changes: the identity is a function of the curve, identical for every (P, Q), and
+    evaluating h_1 = prod (T - x) over X at one point still costs Theta(N).'
+  mechanism: 'pi - 1 is a separable isogeny with kernel E(F_p). Its codomain is E itself because (pi -
+    1)^* omega = -omega, so the Velu model for the kernel E(F_p) is E under the u = -1 isomorphism and
+    Velu''s t and w vanish. Velu gives x((pi-1)S) - x(S) = sum over x_T in X of [2 f''(x_T)/(x - x_T)
+    + 4 f(x_T)/(x - x_T)^2] = sum_{m>=1} A_m x^{-m} with A_m the stated combination of power sums (Taylor-expand
+    f and f'' about x). With S near O in the uniformiser t = x^{-1/2}, x^p = t^{-2p} and y^p = t^{-3p}(1
+    + O(t^{4p})), the chord slope (y^p + y)/(x^p - x) gives x((pi-1)S) - x(S) = 2 t^{p-3} + 3 t^{2p-4}
+    + ..., because pi S is O(t^p)-close to O. Matching x^{-m} = t^{2m} gives A_m = 0 for 2m < p - 3 and
+    A_{(p-3)/2} = 2. Hand check at p = 11, a = 3, b = 2, N = 13, X = {2,3,4,6,7,10}: residuals 0, 0, 0
+    at m = 1, 2, 3 and 2 at m = 4. This is the analytic object the group computes for free, and it is
+    exactly the structure a factor base destroys.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive Semaev index calculus over F_p cannot beat generic methods under stated statistical assumptions.
+      This record supplies an exact identity consistent with that row and claims no exponent.
+    verified_by: Mythos ideation 2026-11-09 read the row text in the REPO BRIEF section 3; the YAML file
+      was not opened.
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt p). Exponent delta here is 0.
+    verified_by: REPO BRIEF section 3 row text, 2026-11-09.
+  assumptions:
+  - N odd, so f has no F_p-root and no 2-torsion enters Velu's formula.
+  - p > 5 so that the window 1 <= m <= (p-5)/2 is nonempty.
+  - Power sums are taken over X once per x-value, not once per point.
+  predictions:
+  - metric: fraction of m in [1, (p-5)/2] with zero residual
+    direction: higher
+    minimum_effect: exactly 1.0 on every curve
+  - metric: residual at m = (p-3)/2
+    direction: different
+    minimum_effect: exactly 2 on every curve
+  - metric: fraction of m with nonzero residual for the interval control
+    direction: higher
+    minimum_effect: at least 0.9
+  - metric: fraction of m with nonzero residual for the random-subset control
+    direction: higher
+    minimum_effect: at least 0.9
+  minimal_test:
+    design: For 20 prime-order curves at calibration primes p <= 2^16 taken from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      (include at least 5 with a = 0 and 5 with t <= 3), enumerate X by the Legendre symbol of f, compute
+      p_j mod p for 0 <= j <= p by direct accumulation, and report the residual r_m for 1 <= m <= p -
+      1. Independently compute the Laurent coefficients of x((pi-1)S) - x(S) at O to order t^{2p} with
+      the formal addition law and compare with r_m beyond the window.
+    controls:
+    - Quadratic twist X' with p'_0 = (N'-1)/2 and p'_1 = -p_1.
+    - Interval restriction X intersect [0, p/4).
+    - Uniform random subset of F_p of size |X|.
+    - a = 0 arm checking p_j = 0 for 3 not dividing j.
+    required_metrics:
+    - p, N, t, a, b
+    - r_m for all m, with the first nonzero m
+    - r_{(p-3)/2}
+    - control residual fractions
+    - wall time of the recurrence versus direct enumeration
+  falsification_conditions:
+  - Any nonzero r_m with 1 <= m <= (p-5)/2 on a valid curve.
+  - r_{(p-3)/2} differs from 2 on a valid curve.
+  - The interval or random-subset control satisfies the recurrence at more than 10 percent of m.
+  - A curve with even N is an invalid run, not a falsification.
+  confounders:
+  - Counting points instead of x-values doubles p_j and halves nothing else; the residual becomes 4, not
+    2.
+  - Curves with t <= 3 have a window shorter than the degree of h_1; report them separately.
+  interpretation_limits:
+  - A confirmed recurrence is an exact fact about complete sums over E(F_p). It moves no exponent and
+    says nothing about any factor base.
+  - Evaluation of h_1 at a point remains Theta(N) in this record; a P-recursive evaluation is an open
+    question, not a claim.
+  heuristic_assumptions:
+  - id: H1
+    statement: The formal expansion argument is exact over F_p((t)) and the Velu identity holds as rational
+      functions, so the recurrence holds with no error term inside the window.
+    rigorous_support: Velu's formula and the inseparability of pi are theorems; the hand check at p =
+      11 agrees. The derivation has not been refereed.
+    validation_plan: Exhaustive residual table at 20 calibration primes with the independent Laurent-coefficient
+      comparison.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(p) for the toy enumeration only
+    best_known: Pollard rho in Theta(sqrt N) group operations per KR-RHO-13bf67
+    hidden_overhead: None. No algorithm is proposed.
+    tradeoff_note: Complete moments cost O(m); a point evaluation of h_1 still costs Theta(N). The identity
+      is translation invariant and point-free.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 on any exponent reading. No frontier row states this recurrence.
+  sota_delta: 'Exponent difference 0. New exact structure: all moments of x over E(F_p) up to degree (p-3)/2
+    are determined by (a, b, N, p_1).'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: That row prices prime-field Semaev index calculus. This record exhibits the complete-group
+        identity that restriction to a factor base destroys; it is consistent with the row and claims
+        no gain.
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: orthogonal
+      delta: Summation polynomials encode sums of points. This record sums powers of x over the whole
+        group and forms no S_m.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Velu, kernel polynomial, power sum, Frobenius minus one
+      - REPO BRIEF prior waves for h_1, psi_N factorisation, complete sums
+      web: []
+      blocked:
+      - crypto/RESEARCH_MESTRE_HOWE.md not opened; next agent checks for a Velu-at-Frobenius identity
+        there
+    lead: LEAD-ICE-power-sum-coordinates
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: For 20 prime-order curves at calibration primes p <= 2^16 taken from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        (include at least 5 with a = 0 and 5 with t <= 3), enumerate X by the Legendre symbol of f, compute
+        p_j mod p for 0 <= j <= p by direct accumulation, and report the residual r_m for 1 <= m <= p
+        - 1. Independently compute the Laurent coefficients of x((pi-1)S) - x(S) at O to order t^{2p}
+        wit'
