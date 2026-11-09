@@ -1,0 +1,28 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20260916-b55948
+claim_id: THM-SEMAEV-FALL1-LEMMA-3-RAW-COORDINATES
+kind: formalize_claim
+source: research/THM_SEMAEV_FALL1.md
+source_status: PROVED
+theorem_name: CryptoResearch.Semaev.validRawDecomposition_iff_curve_span_sum
+theorem_file: CryptoResearch/Semaev/Certificate.lean
+workspace: formal
+hypothesis_ids: []
+notes: |
+  This separately audits the existing raw-coordinate refinement of Lemma 3.
+  The source note states the certificate predicate and its decidability; the
+  raw-coordinate construction and earlier proof receipt are documented in
+  docs/reports/2026-10-21-semaev-certificate/report.md. The theorem concerns
+  a Lean tuple of field-element pairs and a Mathlib curve-group target. It
+  does not parse or authenticate a producer's serialized certificate record.
+  The pending serialized-record obligations are B1-B6 in
+  problems/semaev-certificate-serialized-record-bridge.md.
+claim: |
+  Let F be a finite field, K a field with decidable equality and an
+  F-algebra structure, W a nonsingular affine Weierstrass curve over K,
+  basis : Fin b -> K, xy : Fin m -> K x K, and R : W.Point. Let
+  validRawDecomposition check each pair against W's equation, check each
+  x-coordinate against the declared F-span, and check that the sum of the
+  reified curve points equals R. Then validRawDecomposition holds if and only
+  if every pair satisfies W.Equation and has x in the declared span, and
+  the sum of its reified points equals R.
