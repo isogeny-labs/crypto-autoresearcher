@@ -16,7 +16,7 @@ class C3OrderControlTests(unittest.TestCase):
                    "all_maps_geometric_minimum": index + 1,
                    "T_count": 1,
                    "units": [{"candidate_order_aa":
-                              "reverse-representatives-buckets-and-nonrational-roots/v1"}]}
+                              "reverse-cocycle-build-representatives-buckets-and-roots/v1"}]}
                   for index, name in enumerate(EXPECTED)]
         campaign = {"schema": "pext.geometric-campaign/v1",
                     "cohorts": {name: {"classes": 1, "T_blocks": 1}

@@ -43,7 +43,10 @@ fn run()->Result<(),String> {
     let checked=ctx.checked_exceptional_candidates(form,&images,&indices,
         parse_u64(&args[7])?,parse_u64(&args[8])?,parse_u64(&args[9])?)
         .map_err(str::to_string)?;
-    for index in &mut indices {index.reverse_representatives();}
+    for index in &mut indices {
+        ctx.rebuild_cocycle_index_reverse(index,max_structures).map_err(str::to_string)?;
+        index.reverse_representatives();
+    }
     images.reverse_buckets();
     let reversed=ctx.checked_exceptional_candidates_reversed_roots(form,&images,&indices,
         parse_u64(&args[7])?,parse_u64(&args[8])?,parse_u64(&args[9])?)
@@ -63,7 +66,7 @@ fn run()->Result<(),String> {
             geometry.geometric_rank,geometry.branch_points,geometry.geometric_genus))
     }).collect::<Result<Vec<String>,String>>()?;
     let intervals=numbers(checked.generic_intervals.iter().map(|(start,end)|format!("[{start},{end}]")));
-    println!("{{\"schema\":\"pext.checked-candidate-unit/v1\",\"structure_order\":\"left-pgl2-fq/v1\",\"candidate_order_aa\":\"reverse-representatives-buckets-and-nonrational-roots/v1\",\"field\":{},\"form\":{},\"factor_pattern\":{},\"infinity\":{},\"factors\":{},\"extension_modulus\":{},\"roots\":{},\"structures\":{},\"cocycle_entries\":{},\"rational_image_entries\":{},\"rational_count\":{},\"nonrational_count\":{},\"duplicate_count\":{},\"exceptional\":{},\"generic\":{},\"rows\":{},\"generic_intervals\":{}}}",
+    println!("{{\"schema\":\"pext.checked-candidate-unit/v1\",\"structure_order\":\"left-pgl2-fq/v1\",\"candidate_order_aa\":\"reverse-cocycle-build-representatives-buckets-and-roots/v1\",\"field\":{},\"form\":{},\"factor_pattern\":{},\"infinity\":{},\"factors\":{},\"extension_modulus\":{},\"roots\":{},\"structures\":{},\"cocycle_entries\":{},\"rational_image_entries\":{},\"rational_count\":{},\"nonrational_count\":{},\"duplicate_count\":{},\"exceptional\":{},\"generic\":{},\"rows\":{},\"generic_intervals\":{}}}",
         field,numbers(encoded.iter().map(ToString::to_string)),pattern,branch.factorization.infinity,
         factors,extension_modulus,roots,checked.structures,
         numbers(indices.iter().map(|index|index.len().to_string())),images.entries(),
