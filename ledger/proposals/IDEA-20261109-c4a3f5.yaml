@@ -1,0 +1,110 @@
+idea:
+  id: IDEA-20261109-c4a3f5
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: The x to 1/x involution of the ladder as a vector-free control, with its exact detection boundary
+  class: control
+  claim: 'Let $T = (0,0)$ on $v^2 = u^3 + Au^2 + u$; then $x(P+T) = 1/x(P)$, in projective form $\tau(X:Z)
+    = (Z:X)$. Let $\Phi_{x_1}(X_2,Z_2,X_3,Z_3) = (X_2'',Z_2'',X_3'',Z_3'')$ be the repository step: $A
+    = X_2+Z_2$, $B = X_2-Z_2$, $C = X_3+Z_3$, $D = X_3-Z_3$, $X_3'' = (DA+CB)^2$, $Z_3'' = x_1(DA-CB)^2$,
+    $X_2'' = A^2B^2$, $Z_2'' = E(A^2 + 121665E)$, $E = A^2-B^2$. C1 (step). $\Phi_{x_1}(Z_2,X_2,Z_3,X_3)
+    = \Phi_{x_1}(X_2,Z_2,X_3,Z_3)$ as four field elements, not only projectively. C2 (end to end). For
+    every clamped $k$ and every $u \neq 0$, $X25519(k,u) = X25519(k,u^{-1})$. C3 (trace). Run the ladder
+    on $u$ and on $u^{-1}$. After each bit, with prefix $j$, the slot holding the even multiple agrees
+    projectively, $X'' Z = Z'' X$, and the slot holding the odd multiple is reciprocal, $X'' X = Z'' Z$.
+    C4 (low order). The canonical low-order inputs are $0$, $1$, $-1$ and the two roots of $u^2 - su +
+    1$ with $(s-2)^2 = 4 \cdot 486664$; the two roots are mutual inverses. C5 (boundary). C1 to C3 still
+    pass when $a_{24}$ is replaced by any other constant, so they cannot detect a wrong curve constant;
+    they do fail when a product pairs a $\tau$-even with a $\tau$-even factor in place of $DA$ or $CB$.'
+  mechanism: 'In the coordinates $(A:B) = (X+Z : X-Z)$ the involution is $(A:B) \mapsto (A:-B)$. Applying
+    it to both ladder points fixes $A$ and $C$ and negates $B$ and $D$, hence negates $DA$ and $CB$, and
+    every output is a function of $(DA \pm CB)^2$, $A^2$, $B^2$; this is C1. It is also why the addition
+    costs 2M. The forms $X_2X_3 - Z_2Z_3$ and $X_3Z_2 - X_2Z_3$ span the $(-1)$-eigenspace of $\tau \otimes
+    \tau$ on bilinear forms, and in the diagonal basis that eigenspace is spanned by the two rank-one
+    products $D \cdot A$ and $C \cdot B$, against four products in the monomial basis. C2 holds because
+    a clamped $k$ is even, so $[k](P+T) = [k]P$; it holds on the twist too, since $x(P+T) = 1/x(P)$ for
+    every $B$. C3 holds because $j(P+T) = jP + (j \bmod 2)T$. C4 holds because the curve has cyclic 8-torsion,
+    $x(2R) = 1$ gives the palindromic quartic $x^4 - 4x^3 - (4A+2)x^2 - 4x + 1$, and $R + T = -3R$. C5
+    holds because every Montgomery curve has $T$ with the same action.'
+  novelty_status: unverified
+  citations:
+  - ref: aburan28/crypto src/ecc/x25519.rs ladder() and tests
+    provenance: internal
+    claim: Tests are RFC 7748 section 5.2 vectors; no symmetry test is visible in the excerpt.
+    verified_by: idea-generator session 2026-11-09 read the excerpt in BRIEF section 1; the test module
+      body is not shown there
+  - ref: Bernstein, Curve25519 new Diffie-Hellman speed records, 2006
+    provenance: recalled
+    claim: A^2 - 4 is a non-square and the ladder is valid on all inputs. Pointer only.
+    verified_by: null
+  assumptions:
+  - The scalar is clamped inside x25519(), so k is even.
+  - C3 needs access to the per-bit state; a test-only trace hook is assumed.
+  predictions:
+  - metric: violations of C1 over random states
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: violations of C2 over random k and u
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: product of the two order-8 u values minus 1 mod p
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: C2 violations with a24 set to 121666
+    direction: lower
+    minimum_effect: exactly 0, the stated blind spot
+  minimal_test:
+    design: Rust tests step_tau_invariant (C1, 10000 seeded states), reciprocal_input_same_output (C2,
+      10000 seeded pairs, u inverted with fe_inv), trace_parity_alternation (C3, 100 pairs, all 255 prefixes).
+      Sage script low_order_palindrome.sage solves the quartic, asserts the two rational roots multiply
+      to 1 and compares them with the circulated low-order list.
+    controls:
+    - Null object. Set a24 to 121666; C1 to C3 must still pass while the RFC vectors fail.
+    - Positive control. Replace CB by C times A; C1 must fail.
+    - Odd scalar control. Call ladder() with an unclamped odd k; C2 must fail, giving reciprocal outputs.
+    required_metrics:
+    - violations of C1, C2, C3
+    - outcome of each control
+    - the two order-8 u values and their product
+  falsification_conditions:
+  - Any C1, C2 or C3 violation on the unmodified ladder.
+  - The null object failing C1 to C3, or the positive control passing.
+  - The order-8 u values not being mutual inverses.
+  confounders:
+  - C2 uses fe_inv; a faulty inversion would show as a C2 violation. C1 uses no inversion and separates
+    the two.
+  - The digits of the circulated low-order list are recalled, not read; the script, not this record, is
+    the authority.
+  interpretation_limits:
+  - Passing C1 to C3 does not show the ladder is correct; it shows it is equivariant. RFC vectors remain
+    necessary.
+  - The symmetry yields no M or S saving beyond the RFC 7748 step.
+  heuristic_assumptions:
+  - id: H1
+    statement: Typical transcription errors in the step break tau-equivariance.
+    rigorous_support: None; C5 names a class that does not. The mutation controls measure it for two mutants
+      only.
+    validation_plan: Enumerate single-token mutants of the step and report the fraction C1 kills.
+  target_complexity:
+    time_exponent: not applicable, test oracle
+    memory_exponent: not applicable
+    best_known: fixed RFC 7748 test vectors
+    hidden_overhead: one inversion and one extra ladder per C2 sample
+    tradeoff_note: unlimited samples without vectors, known blind spot
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: RFC 7748 vectors dominate for constant errors; this control dominates them for input coverage.
+    Neither subsumes the other.
+  sota_delta: 0M and 0S. Adds a vector-free oracle over all u and all clamped k, and an exact statement
+    of what it cannot detect.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a test control for an implementation,
+      not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 ledger index, searched for involution, torsion
+    - BRIEF section 1 excerpt of x25519.rs
