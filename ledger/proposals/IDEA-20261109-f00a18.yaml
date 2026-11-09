@@ -1,0 +1,167 @@
+idea:
+  id: IDEA-20261109-f00a18
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Isogeny descent by phi = pi - 1 on the canonical CM lift over Q(sqrt(-3)): localisation at the
+    prime above p is the reduction map, Cassels'' local factors are 1, and the Kummer field is the ray
+    class field of conductor (pi - 1) of degree at least (N - 1)/6'
+  class: barrier
+  claim: 'Let E be y^2 = x^3 + b over F_p with p congruent to 1 mod 3, prime order N, Frobenius pi in
+    Z[omega], and let the lift be y^2 = x^3 + b over K = Q(sqrt(-3)) with phi = pi - 1, an endomorphism
+    of degree N defined over K. Claim (i): at the prime P = (pi), K_P = Q_p and the local Kummer image
+    E~(Q_p)/phi E~(Q_p) has order exactly N and is canonically the reduction E(F_p); the class of a global
+    point localises to its reduction. Claim (ii): at the conjugate prime the local image is 0, and the
+    Cassels local factor |coker phi|/|ker phi| equals 1 at both primes above p. Claim (iii): K(E~[phi])
+    contains the ray class field of conductor (pi - 1), whose degree over K is (N - 1)/6 when the class
+    number is 1, so any Kummer-theoretic description of a Selmer class costs at least (N - 1)/6 field
+    coordinates. Consequence: the only degree-N descent available on any lift of a j = 0 prime-order curve
+    reduces the ECDLP to the compatible-lift problem and costs exponent at least 1 against rho''s 1/2.
+    No break is claimed.'
+  mechanism: pi acts on the formal group E~_1(Q_p) through the embedding in which pi has valuation 1,
+    so pi - 1 is a unit there and bijective; on E(F_p) pi is the identity, so phi induces 0. The snake
+    lemma on 0 -> E~_1 -> E~(Q_p) -> E(F_p) -> 0 gives coker phi isomorphic to E(F_p) and ker phi isomorphic
+    to E(F_p) lifted by Hensel (E~[phi] is etale of order N with all geometric points in the eigenline
+    L_1). At the conjugate prime pi reduces to the dual Frobenius, acting as p on E(F_p), and p - 1 is
+    a unit mod N, so coker and ker vanish. The Weber function on E~[(pi-1)] generates the ray class field
+    by the main theorem of complex multiplication.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves share the discrete-log difficulty; phi is an isogeny of the lift and the descent
+      it defines changes no exponent.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails for ECDLP; this record locates the failure for isogeny
+      descent in the ray class field degree.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09
+  - ref: crypto/RESEARCH_SECP256K1_CM.md
+    provenance: internal
+    claim: Expected to contain the explicit pi = a + b omega and twist sign for secp256k1; not opened
+      in this session.
+    verified_by: path listed in REPO BRIEF section 1 only
+  assumptions:
+  - p is 1 mod 3, N is prime and not equal to p, so p splits in K and phi has degree N.
+  - The class number of K is 1, so the ray class group mod (pi - 1) is (O_K/(pi-1))^* modulo the six units.
+  proof_search_map:
+    not_applicable_reason: A localisation and cost statement with a toy verification, not an exponent-moving
+      algorithm.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: order of the local Kummer image at P = (pi)
+    direction: different
+    minimum_effect: equals N exactly on every toy instance
+  - metric: Cassels local factor at the two primes above p
+    direction: different
+    minimum_effect: equals 1 on every toy instance
+  - metric: degree of K(E~[phi]) over K
+    direction: higher
+    minimum_effect: at least (N - 1)/6 on every toy instance
+  minimal_test:
+    design: Enumerate p <= 200 with p = 1 mod 3 and b in F_p^* such that y^2 = x^3 + b has prime order
+      N in {7, 13, 19, 31, 37, 43}; first instances p = 13 with N = 7 and N = 19. Lift b to Z, compute
+      pi in Z[omega], the degree of K(E~[pi - 1]), the local images at both primes above p, Sel^phi and
+      the dual Selmer group (Magma SelmerGroup of the isogeny, or hand Kummer theory over K(E~[phi]) for
+      N = 7), and the reductions of generators of E~(K).
+    controls:
+    - For each instance compute the ell-Selmer local image at P for a prime ell not dividing N; the wave-2
+      shadow theorem predicts 0.
+    - Recompute pi from the point count and check Nm(pi - 1) = N.
+    required_metrics:
+    - p
+    - N
+    - b
+    - degree of K(E~[phi]) over K
+    - order of local image at (pi)
+    - order of local image at the conjugate prime
+    - Cassels local factor at (pi)
+    - dim_F_N Sel^phi
+    - dim_F_N dual Selmer
+    - rank of E~(K)
+  falsification_conditions:
+  - The local Kummer image at (pi) has order different from N on any valid instance.
+  - A Cassels local factor at a prime above p differs from 1.
+  - The degree of K(E~[phi]) over K is below (N - 1)/6 on any instance.
+  - A Selmer class is produced whose localisation at (pi) is labelled relative to the reduction of P without
+    a global point reducing to it.
+  - A Magma or Sage timeout is infrastructure, not a result.
+  confounders:
+  - Sel^phi can exceed the rank contribution through Sha[phi]; the record reports both dimensions and
+    does not interpret Sha[phi] as information about E(F_p).
+  - Instances with N = p are anomalous and excluded.
+  interpretation_limits:
+  - Toy N up to 43 says nothing about Selmer dimensions at 256 bits; only the three structural claims
+    transfer.
+  - No statement is made about non-CM lifts, which have no rational N-isogeny.
+  heuristic_assumptions:
+  - id: H1
+    statement: For N above the toy range, K(E~[phi]) still has degree at least (N - 1)/6 over K.
+    rigorous_support: Main theorem of complex multiplication for class number 1; recalled, not opened
+      in this session.
+    validation_plan: Compute the degree for every toy instance and compare with (N - 1)/6 times a divisor
+      of 6.
+  target_complexity:
+    time_exponent: at least N^1 (field degree (N - 1)/6, about 2^253 at 256 bits) against the best known
+      N^{1/2}; delta at least +1/2 in the wrong direction
+    memory_exponent: at least N^1 to hold one Kummer generator
+    best_known: Pollard rho in Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: Class group and unit computation of the ray class field, superpolynomial beyond the
+      degree itself.
+    tradeoff_note: No time-memory tradeoff is defined; the degree is a floor on both.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. The wave-2 record on charged descent cost
+    covers 2- and 3-isogeny descents; this record adds the degree-N isogeny route and its localisation.
+  sota_delta: Exponent difference at least +1/2 against N^{1/2}. New content is the identification of
+    the local image at (pi) with E(F_p), the unit local factors, and the ray class field floor.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-64659b
+    - KR-RHO-0528e7
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row states isogeny invariance of the ECDLP; this record uses an isogeny of the lift as
+        a descent and prices it.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: The row closes xedni lifting; this record closes isogeny-descent lifting on the CM curve
+        through the ray class field degree.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Selmer, descent, isogeny descent, ray class
+      - Wave 2 descent and torsion record titles in the prior-waves appendix
+      web: []
+      blocked: []
+    lead: LEAD-TRF-prime-field-isogeny-to-weak
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Enumerate p <= 200 with p = 1 mod 3 and b in F_p^* such that y^2 = x^3 + b
+        has prime order N in {7, 13, 19, 31, 37, 43}; first instances p = 13 with N = 7 and N = 19. Lift
+        b to Z, compute pi in Z[omega], the degree of K(E~[pi - 1]), the local images at both primes above
+        p, Sel^phi and the dual Selmer group (Magma SelmerGroup of the isogeny, or hand Kummer theory
+        over K(E~[phi]) for N = 7), and the'
