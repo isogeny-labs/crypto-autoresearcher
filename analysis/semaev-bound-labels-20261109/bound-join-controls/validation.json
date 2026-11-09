@@ -1,0 +1,73 @@
+{
+  "scope": "hand-specified producer-format software controls; not production records",
+  "unique_tests_passed": 23,
+  "test_invocations": [
+    {
+      "command": "/tmp/semaev-report-venv/bin/python -m unittest -v test_inspect_bounds.py test_no_wrap_inspection.py test_retained_weil_join.py",
+      "passed": 17,
+      "exit_code": 0
+    },
+    {
+      "command": "/tmp/semaev-report-venv/bin/python -m unittest -v test_retained_weil_join.py test_attach_capacity_bound.py",
+      "passed": 10,
+      "exit_code": 0,
+      "overlap_with_first": 4,
+      "note": "after strict Boolean metadata check added"
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "/tmp/semaev-report-venv/bin/python",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/inspect_bounds.py",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/normalized-r6-rebased.json",
+        "--output",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/r6-labels.json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/semaev-report-venv/bin/python",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/join_retained_weil.py",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/normalized-r1.json",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/retained-weil-r1.json",
+        "--output",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/joined-r1.json"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/tmp/semaev-report-venv/bin/python",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/join_retained_weil.py",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/normalized-r1.json",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/rejected-finite-selector.json",
+        "--output",
+        "/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/bound-join-controls/must-not-exist.json"
+      ],
+      "exit_code": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/join_retained_weil.py\", line 78, in <module>\n    if __name__=='__main__':main()\n                            ^^^^^^\n  File \"/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/join_retained_weil.py\", line 75, in main\n    spec,ih=read(a.normalized_input);raw,rh=read(a.retained_weil);result=join(spec,raw);result.update(input_file_sha256=ih,retained_file_sha256=rh,join_source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),inspector_source_sha256=hashlib.sha256(Path(__file__).with_name('inspect_bounds.py').read_bytes()).hexdigest())\n                                                                         ^^^^^^^^^^^^^^\n  File \"/home/ec2-user/crypto-lfd-unbounded-20261109/analysis/semaev-bound-labels-20261109/join_retained_weil.py\", line 53, in join\n    if codes!=expected:raise ValueError('finite selector is not this exact full vector-space parametrization')\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: finite selector is not this exact full vector-space parametrization\n"
+    }
+  ],
+  "source_sha256": {
+    "inspect_bounds.py": "2d8875a8eea77b753f1aa3005e8df22fbf0666909a2b7e09ae78ea6129329819",
+    "join_retained_weil.py": "c4f21cbd0b3f09feaa5369d48a6c17e86381fa2875b27cde8c016846b8ca2376",
+    "test_no_wrap_inspection.py": "a89d98e6b598e21ff38b426cacf254e42c01879871faa57a3f37e0569275d3ed",
+    "test_retained_weil_join.py": "3ec257c4bc9e03a5d73bd395a3494119b6c1542bd7b8f8daa3251e007faf85c1"
+  },
+  "preparation_failure": "initial edit used duplicated package prefix from package cwd and failed before edits; old7 tests passed, missing new test module failed. Corrected absolute paths, retained this failure record.",
+  "solver_executed": false,
+  "new_cloud_jobs": 0,
+  "dataset_records_admitted": 0,
+  "producer_format_source": {
+    "repo": "crypto",
+    "commit": "4be27eee881663c44318ed2d9debfad05d071538",
+    "path": "src/ml_dataset/solvers.rs",
+    "sha256": "8385f6cc41a67ac81324f40477e6cfcfcc0b12d1e0fa8430051dea04e734758a",
+    "function": "boolean_solve; retained weil-system.json",
+    "production_artifact_tested": false
+  }
+}
