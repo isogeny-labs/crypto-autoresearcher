@@ -172,3 +172,11 @@ protocol_amendment:
 ```
 
 An amendment must never retroactively alter raw run records.
+
+## Default goal scheduling
+
+The [challenge research loop](challenge-research-loop.md) drives goal scheduling:
+problem → candidate → evidence → independent review → findings → next attempt.
+It reuses this lifecycle for each bounded action; it does not replace approval,
+archive or official transition rules. The campaign autopilot and `campaign next`
+now consume the same artifact-driven planner.

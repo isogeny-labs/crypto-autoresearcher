@@ -37,6 +37,11 @@ outputs, leave each experiment's run report (graph and PDF), and report results.
 Do not add an agent-led protocol/schema validation phase, preparation workflow,
 or review cycle. Built-in runner checks still apply.
 
+For research goals, the canonical skill participates in the
+[default challenge research loop](../../../docs/challenge-research-loop.md).
+Keep execution scoped to existing admitted programs; loop preparation and
+scientific review remain separate lifecycle actions.
+
 The same run skill is used by Codex and OpenCode, Claude Code, and the plugin.
 """
 

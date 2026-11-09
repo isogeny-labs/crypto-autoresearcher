@@ -86,7 +86,10 @@ def select_admitted(repo: Path, *, selector: Callable[..., Action | None],
 
 def select_next(repo: Path, *, excluded: set[str] | None = None,
                 allowed_kinds: set[str] | None = None) -> Action | None:
-    """Use the existing ECC priority and coverage selectors, without inventing work."""
+    """Drive goal challenges by default; keep legacy worklists without goal records."""
+    from . import research_loop
+    if research_loop.goal_ids(repo):
+        return research_loop.select(repo, excluded=excluded or set(), allowed_kinds=allowed_kinds)
     from tools.ecc_priority import load_policy, open_ecc_ideas
     from tools.newest_experiments import newest_runnable
 

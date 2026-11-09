@@ -12,6 +12,7 @@ Keep resolved and superseded records in the index.
 
 | Problem | Status | What it blocks | What would unblock it |
 | --- | --- | --- | --- |
+| [Semaev certificate serialized-record bridge](semaev-certificate-serialized-record-bridge.md) | open | Extending the verified typed decomposition theorem to a producer's serialized certificate | Bind bytes, fields, curve, span, tuple, target and authenticated checker execution; repair verifier-input closure and prospective review independence |
 | [Endosweep batch 7 primality and named-curve bridge](endosweep-batch7-primality-and-curve-bridge.md) | open | An end-to-end theorem about brainpoolP512r1 from the recorded-integer discriminant certificate | Checkable prime certificates, named-curve trace/order facts, and the instantiated degree-to-norm bridge |
 | [Growing fixed-degree Semaev lower bounds](growing-boolean-semaev-lower-bound.md) | open | Parameter-uniform lower bounds in binary Boolean / prime digit encodings | Construct a closed separating kernel family or a degree-controlled reduction; finite ladders do not establish growth |
 | [Rho distinguished-point destination cutover is unverified](rho-dp-destination-cutover-unverified.md) | investigating | A current rho operations panel and a source-to-destination migration claim | Scoped source read access, writer freeze, source/destination integrity comparison, and fresh post-cutover readback |
@@ -187,3 +188,5 @@ Coordinator decision and evidence.
 - [ECDLP lead atlas source and validation gap](ecdlp-lead-atlas-unmerged-evidence.md) — crypto study files now match merged main, while source CI, full replay, the open ecc-challenges PR and four-repository validation remain pending.
 
 | [Five prime-field IC extraction and integration](five-prime-ic-extraction-and-integration.md) | investigating | Directions 58/69/71/56/87: checked components; solver, circuit, conductor and screening integration remain |
+
+| [Prime transform fixed suite and bounded custody](prime-transform-fixed-suite-timeout-custody.md) | open | Fixed-suite completion and scalar-prefix metadata preparation; latest full-ref custody exceeded4MiB before any phase | Exact12path failed snapshot, lossless compact ref-delta custody with independent static review, unchanged caps and separately admitted validation |

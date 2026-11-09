@@ -200,3 +200,11 @@ Implementation validation on 2026-10-23 used CPython 3.12.14: 182 selected tests
 and 27 subtests passed across verification, CLI entrypoints, inference adapter,
 model tiers, progress fidelity, review independence and skill routing. This
 includes 15 bridge controls with the real pinned optional backend installed.
+
+## Driving research with the Curvesmash approach
+
+The [default goal research loop](challenge-research-loop.md) adopts immutable
+problems/candidates, supporting evidence, one bounded follow-up, review and
+findings-driven iteration for research in any domain. This verifier remains an
+optional review backend; the research loop does not restrict goals to the six
+Curvesmash tracks or automatically replace official scientific review.
