@@ -1,8 +1,8 @@
 """Prospective full-cohort sealed-reduction A/A order control.
 
 Canonical and reversed reads of the same independently checked candidate
-artifacts must produce identical canonical curves, coverage and minima.
-Candidate-generation order remains a separate C3 obligation.
+artifacts must produce identical canonical curves, coverage and minima. Every
+source unit must carry its checked reversed-candidate-enumeration marker.
 """
 
 import hashlib
@@ -14,6 +14,7 @@ from geometric_campaign import EXPECTED
 
 
 ARTIFACT = "c3-order-aa.json"
+CANDIDATE_AA = "reverse-representatives-buckets-and-nonrational-roots/v1"
 
 
 def canonical_bytes(value):
@@ -33,16 +34,27 @@ def artifact_bytes(curves, campaign, reversed_curves, reversed_campaign,
             or set(source_runs) != {"n3core", "n3ext", "n5"}):
         raise ValueError("C3 plan or source RUN identity invalid")
     grouped = {name: [] for name in EXPECTED}
+    target_counts = {name: 0 for name in EXPECTED}
     for curve in curves:
         if not isinstance(curve, dict) or curve.get("cohort") not in grouped:
             raise ValueError("C3 curve cohort invalid")
         grouped[curve["cohort"]].append(curve.get("class_index"))
+        units = curve.get("units")
+        if (not isinstance(units, list) or len(units) != curve.get("T_count")
+                or any(not isinstance(unit, dict)
+                       or unit.get("candidate_order_aa") != CANDIDATE_AA
+                       for unit in units)):
+            raise ValueError("C3 candidate-order A/A missing from a curve/T unit")
+        target_counts[curve["cohort"]] += len(units)
     if any(indices != list(range(campaign["cohorts"][name]["classes"]))
            for name, indices in grouped.items()):
         raise ValueError("C3 canonical curve coverage incomplete")
+    if any(target_counts[name] != campaign["cohorts"][name]["T_blocks"]
+           for name in EXPECTED):
+        raise ValueError("C3 curve/T A/A coverage incomplete")
     record = {"schema": "pext.control-c3-sealed-order/v1",
-              "status": "sealed_reduction_order_equal; candidate_generation_order_pending",
-              "scope": "all four complete checked cohorts; same sealed source units",
+              "status": "sealed_reduction_equal; candidate_unit_order_aa_checked",
+              "scope": "all four complete checked cohorts; each unit has reverse candidate traversal",
               "plan_sha256": plan_sha256, "source_runs": source_runs,
               "curve_rows_sha256": hashlib.sha256(canonical_bytes(curves)).hexdigest(),
               "campaign_sha256": hashlib.sha256(canonical_bytes(campaign)).hexdigest(),

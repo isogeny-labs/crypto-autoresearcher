@@ -143,6 +143,7 @@ class IndependentCandidateChecker:
         count = self.transversal.count
         if (unit.get("schema") != "pext.checked-candidate-unit/v1"
                 or unit.get("structure_order") != "left-pgl2-fq/v1"
+                or unit.get("candidate_order_aa") != "reverse-representatives-buckets-and-nonrational-roots/v1"
                 or unit.get("field") != self.field_record
                 or unit.get("form") != expected_form
                 or unit.get("structures") != count):
