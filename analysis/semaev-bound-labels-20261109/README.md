@@ -136,3 +136,13 @@ The inspector now recognizes any independent basis of the full low-polynomial su
 This joins polynomial evidence, not whole dataset provenance: dataset_admission, point_domain_and_group_lifts_verified and producer_provenance_authenticated remain false. The control artifact is hand-specified in the actual producer format, not a claimed production record. Twenty-three distinct focused controls pass, including the existing capacity bridge; actual CLI acceptance and refusal receipts are in bound-join-controls/. The initial path error is retained in validation.json.
 
 The modular quotient note isolates the missing structure beyond no-wrap: corrected dyadic relations have quadratic quotient terms, and the exact quotient-variable system has variable-count-independent factor-two refutation transport. It supplies no growing lower bound and no unrestricted SAT LFD equivalence.
+
+
+## Modular degree-three feedback and exact selector scope
+
+The reviewed modular-degree-three-field-falls.md writes the odd half-diagonal system as ell=0 and G=xy+B(x,y)+epsilon=0, with B=J(s+Tr(s))^2 and s=x+y+1. Projection keeps J on its trace-zero domain, including subspaces not containing1. The field identities xG and yG have quadratic Boolean coordinates and are available at cap3. Scalar-output cubic cancellation is governed by explicit trace-orthogonality conditions; trace elimination can add further cancellations. These are mandatory consequences, not a completed W3 invariant or a growing bound.
+
+The separately reviewed finite-selector note proves the safe normalized Boolean bound LFD<=N+1 for exact nonlinear/repeated selector maps. It preserves code multiplicities and gives sufficient nonlinear transport hypotheses. It supplies no growing lower bound and does not replace finite factor bases with their span. No new dataset replay or scientific trial accompanied these proofs. See modular-feedback-report.md and modular-feedback.pdf for the frontier and evidence links.
+
+
+The Frobenius follow-up proves that simultaneously twisting xG produces no new coordinate span. Nonzero relative twists cannot cancel the entire field-valued cubic on a half-diagonal subspace. Scalar trace cancellation has an exact trilinear criterion; for coprime shifts it forces a specific inverse-power permutation to preserve the nonzero elements of V. This is a necessary condition before trace elimination, not a full closure certificate. See modular-frobenius-multiplier-obstruction.md and its review.

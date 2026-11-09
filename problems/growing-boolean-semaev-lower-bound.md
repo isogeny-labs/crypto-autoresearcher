@@ -179,3 +179,13 @@ Independent review accepts the leading-q selector-peeling proof LFD<=4 for every
 Polynomial division F=P Q+R shows that the no-wrap affine chains acquire the correction C_d(PQ). On the odd half diagonal, xy=J(x+y+1)^2+epsilon is exact on the trace slice, but J need not preserve polynomial degree. Exact quotient auxiliary definitions give W_D(R) subset W_D(G) and sigma(W_D(G)) subset W_(2D)(R), D>=2; padded refutation degrees differ by at most a factor two. A growing hard UNSAT family in this exact extension would suffice; none has been constructed. SAT target degree remains an extra obligation.
 
 The inspector now applies the proven bounded-family labels to exactly recognized basis changes. A separate retained Weil-system join checks the full selector domain, coordinate maps and literal equations before admitting polynomial labels; it does not admit whole dataset records. Twenty-three software controls and actual CLI accept/refuse artifacts are retained. No new scientific campaign or native build ran.
+
+
+### 2026-11-09: modular degree-three feedback and exact selector scope
+
+The reviewed modular-degree-three-field-falls.md writes the odd half-diagonal system as ell=0 and G=xy+B(x,y)+epsilon=0, with B=J(s+Tr(s))^2 and s=x+y+1. Projection keeps J on its trace-zero domain, including subspaces not containing1. The field identities xG and yG have quadratic Boolean coordinates and are available at cap3. Scalar-output cubic cancellation is governed by explicit trace-orthogonality conditions; trace elimination can add further cancellations. These are mandatory consequences, not a completed W3 invariant or a growing bound.
+
+The separately reviewed finite-selector note proves the safe normalized Boolean bound LFD<=N+1 for exact nonlinear/repeated selector maps. It preserves code multiplicities and gives sufficient nonlinear transport hypotheses. It supplies no growing lower bound and does not replace finite factor bases with their span. No new dataset replay or scientific trial accompanied these proofs. See modular-feedback-report.md and modular-feedback.pdf for the frontier and evidence links.
+
+
+The Frobenius follow-up proves that simultaneously twisting xG produces no new coordinate span. Nonzero relative twists cannot cancel the entire field-valued cubic on a half-diagonal subspace. Scalar trace cancellation has an exact trilinear criterion; for coprime shifts it forces a specific inverse-power permutation to preserve the nonzero elements of V. This is a necessary condition before trace elimination, not a full closure certificate. See modular-frobenius-multiplier-obstruction.md and its review.
