@@ -1,0 +1,57 @@
+idea:
+  id: IDEA-20261109-168de5
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: speculative
+  title: Step-truncation fault in ideal-to-isogeny translation places E_aux on a secret-path intermediate
+  attack_type: implementation_fault_key_recovery
+  assumption_attacked: That faulty signatures reveal nothing beyond the (public) Kani representation;
+    i.e., that the only secret-bearing step is ideal arithmetic whose outputs are never emitted.
+  claim: 'A fault truncating the push-forward of the auxiliary ideal along the secret path E_0 -> E_pk
+    at step t yields an output curve E''_aux that is (2^e - q)-isogenous to the secret intermediate E_t
+    rather than to E_pk, and the emitted torsion images pin that isogeny by Kani (2^e > 2^e - q). Repeating
+    at each step recovers the secret path. Extends the auxiliary-construction arms H-ALISO-014/015/016/017
+    into a fault model. Speculative: unverified that a truncated push-forward yields a well-formed output.
+    No Lean coverage; missing statement recorded.'
+  mechanism: 'Toy signer with explicit E_0 -> E_pk chain of k steps. Inject truncation at step t; record
+    the emitted (E''_aux, images). Test membership: is E''_aux at degree (2^e - q) from E_t? (decidable
+    at toy scale by class enumeration). If yes for all t, recover the path by iterating: from known E_{t-1},
+    test each neighbour for the (2^e - q)-relation with E''_aux. Cost per step about (l+1) isogeny-existence
+    checks, each via the emitted images.'
+  quantitative: k faults with step-position control; per-step work O(l) Kani checks in dimension 2 at
+    degree 2^e.
+  cleared:
+    checked:
+    - 'H-ALISO-014: p1243 auxiliary discriminant search'
+    - 'H-ALISO-015: p1243 auxiliary four-line descent'
+    - 'H-ALISO-016: p1243 auxiliary geometric principalization (the translation step faulted here)'
+    - 'H-ALISO-017: p1243 auxiliary lattice Kani'
+    disproven: none in the brief
+    lean: no Lean coverage; would need "a (2^e,2^e)-isogeny with kernel {(phi_chl(P), phi_aux(P))} has
+      E_pk as a codomain factor iff deg phi_aux = 2^e - deg phi_rsp with the given images" (Kani well-formedness
+      as a decidable output check)
+    exp: none; nearest surface is aburan28/cryptanalysis (p1243 auxiliary packages)
+  kill_test: If faulty E'_aux never lies at degree (2^e - q) from any E_t, or if the signer's output check
+    (Kani well-formedness) suppresses all faulty outputs, mark refuted.
+  cost: toy implementation plus fault harness; days.
+  distinguish: 'Key recovery via fault. Distinct from the proof-gap records: honest signatures are unaffected.'
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-ALISO-014
+      - H-ALISO-015
+      - H-ALISO-016
+      - H-ALISO-017
+    none_found_after:
+    - 'brief grep: fault / glitch / truncation'
+    - 'brief grep: push-forward / translation'
+    - 'brief grep: intermediate curve leakage'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  nearest_record:
+    id: H-ALISO-016
+    relation: extends
