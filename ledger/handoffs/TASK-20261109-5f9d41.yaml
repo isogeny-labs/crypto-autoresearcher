@@ -1,0 +1,146 @@
+handoff:
+  id: TASK-20261109-5f9d41
+  from: coordinator
+  to: executor
+  role: executor
+  recorded_at: '2026-11-09'
+  kind: executor_run
+  goal_id: GOAL-PFDR-fd09e0
+  batch_id: BATCH-839760
+  experiment_id: EXP-PFDR-fa915a
+  hypothesis_id: H-PFDR-ed7ccf
+  approved_by: DEC-20261109-a743fd
+  execution:
+    mode: experiments
+    kind: run
+    experiment_id: EXP-PFDR-fa915a
+    trial_plan: experiments/EXP-PFDR-fa915a/trial-plan.json
+    trial_plan_sha256: 73cc480d6400c7e9caa18fc0b9a674344ee389d614b6865c1f6451516b665617
+    approved_by: DEC-20261109-a743fd
+  objective: Execute exactly five fresh stages (one corrected pilot then four dependent stages) with the frozen
+    v2 scientific settings, after a complete new approval. Three historical attempts count toward the cumulative
+    eight-attempt ceiling.
+  uncertainty_reduced: Whether the repaired (v2) break-even growth ladder yields valid per-line slopes and passing
+    preregistered controls on fresh curves.
+  inputs:
+  - experiments/EXP-PFDR-fa915a/specification.yaml
+  - experiments/EXP-PFDR-fa915a/trial-plan.json
+  - experiments/EXP-PFDR-fa915a/implementation/
+  - ledger/handoffs/TASK-20261109-5f9d41.yaml
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json
+  - experiments/EXP-PFDR-fa915a/launch-recovery.sh
+  - coordination/recovery/20261109/pfdr-resource-guard-probe.json
+  - experiments/EXP-PFDR-fa915a/protocol.json
+  - experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json
+  - ledger/decisions/DEC-20261109-efb6f9.yaml
+  constraints:
+  - No scientific parameter, seed, control or threshold changes.
+  - At most five fresh run IDs; zero further retries; 4 workers, 4 GiB, one trial at a time; existing host only.
+  - No cloud build, instance, paid inference or Bedrock.
+  - Launch only with the committed experiments/EXP-PFDR-fa915a/launch-recovery.sh under one whole-batch systemd
+    user scope; fresh readback must confirm MemoryMax=4G, CPUQuota=400%, RuntimeMaxSec=107570, TimeoutStopSec=30
+    and KillSignal=SIGINT.
+  - Stop with infrastructure status on 107600 s aggregate wall limit or aggregate 4 GiB memory ceiling; record every
+    attempt, no retry.
+  - The original output-validated selftest is a hash-bound input only; both historical invalid pilots and the failed
+    derivative are excluded from design/scientific inputs.
+  - The new corrected pilot must pass complete_manifest and check.py before any dependent stage reads its design.json;
+    failure holds all dependents and consumes the attempt.
+  - Three historical attempts plus at most five fresh IDs, zero further retries; historical CPU usage is unknown.
+    New whole-batch scope has RuntimeMaxSec=107570 and 30-second grace, total 107600 seconds and at most 119.556
+    quota core-hours.
+  deliverables:
+  - experiments/EXP-PFDR-fa915a/runs/<RUN-ID>/ for five declared IDs
+  artifact_paths:
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/check.stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/check.stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/command.txt
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/design.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/environment.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/execution-receipt.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/launch.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/manifest.yaml
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/pilot-jobs.jsonl
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/raw-result.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-54a452/stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/analysis.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/check.stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/check.stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/command.txt
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/environment.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/execution-receipt.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/flags.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/launch.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/manifest.yaml
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/raw-result.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-60a419/stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/analysis-main.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/check.stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/check.stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/command.txt
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/environment.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/execution-receipt.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/flags.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/launch.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/manifest.yaml
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/raw-result.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-a11b81/stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/check.stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/check.stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/command.txt
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/environment.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/execution-receipt.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/launch.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/manifest.yaml
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/raw-result.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/rep-jobs.jsonl
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-969309/stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/check.stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/check.stdout.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/command.txt
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/environment.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/execution-receipt.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/launch.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/main-jobs.jsonl
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/manifest.yaml
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/raw-result.json
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/stderr.log
+  - experiments/EXP-PFDR-fa915a/runs/RUN-PFDR-6a7446/stdout.log
+  write_scope:
+  - experiments/EXP-PFDR-fa915a/runs/
+  archived_by: TASK-20261109-f2ecc7
+  depends_on: []
+  inference:
+    policy: executor-implementation
+    reasoning_effort: null
+    fallback_allowed: true
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 5
+    cumulative_maximum_runs: 7
+    historical_attempts: 2
+    maximum_retries: 0
+    memory_gb: 4
+    workers: 4
+    max_concurrent_trials: 1
+    wall_clock_seconds: 108000
+    cpu_hours_ceiling: 120
+    incremental_cloud_usd: 0
+    memory_limit_kind: aggregate_systemd_MemoryMax
+    outer_wall_deadline_seconds: 108000
+    scope_runtime_seconds: 107970
+    scope_stop_grace_seconds: 30
+    cpu_quota_percent: 400
+  completion_gate:
+  - Every fresh run ID has its declared artifact set and supervisor receipt, including failed attempts.
+  - Checker and provenance envelope pass for valid outputs; invalid outputs remain immutable.
+  - No sixth new attempt or retry; original two attempts remain counted.
+  return_format: five run IDs, receipts, checks and host resource/cost account
+  record: ledger/handoffs/TASK-20261109-5f9d41.yaml

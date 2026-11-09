@@ -1,0 +1,55 @@
+{
+  "kind": "software-only manifest admission validation",
+  "recorded_at": "2026-11-09T19:43:22.806521+00:00",
+  "scientific_trials": 0,
+  "scientific_commands_mocked": [
+    "cmd_build",
+    "cmd_pilot",
+    "cmd_census",
+    "cmd_analyze"
+  ],
+  "command": [
+    "uv",
+    "run",
+    "--no-project",
+    "--python",
+    "3.12",
+    "--with",
+    "pyyaml",
+    "--with",
+    "jsonschema",
+    "python",
+    "experiments/EXP-PFDR-fa915a/implementation/test_manifest.py"
+  ],
+  "snapshot": {
+    "specification.yaml": "24a62226f9916cf1935b93be4461845403e3fff9a7b0d110560046dd1310eb39",
+    "trial-plan.json": "73cc480d6400c7e9caa18fc0b9a674344ee389d614b6865c1f6451516b665617",
+    "protocol.json": "edc4b13f36b12cfde1497e850c40dea60e4d5ef0bb486932452874b25eaee355",
+    "implementation/run.py": "bf586c0f6affb4329fb046df1e4110374695d78c20180e30e8a73424ef6a80f0",
+    "implementation/test_manifest.py": "43476c350665e835757bc95660296ff6eaba8fdcb8db9f8ccf9947f33356764d",
+    "launch-recovery.sh": "3dd7a870d4475473ca93e9e0c578b2a0e75b08866385478faee7ff02d781afad"
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "outcome": "failed_test_assertion",
+      "passed_test_methods": 3,
+      "failed_test_methods": 1,
+      "failure": "Test incorrectly compared protocol file-byte SHA against canonical protocol digest; contract field uses canonical JSON excluding freeze metadata.",
+      "assertion_file_sha256": "a05f1df0e880cb18458f218f9b193ccc225a18c5adf57295aa3cd8f439fa0ad1",
+      "expected_canonical_sha256": "02afbfe43451af8cb501711ff82cea8b51f51c74b776229874339bc9a38a4170",
+      "correction": "Test uses repository experiment_protocol.protocol_hash; prospective protocol criteria not relaxed."
+    },
+    {
+      "attempt": 2,
+      "outcome": "passed",
+      "passed_test_methods": 4,
+      "generated_stage_envelopes": 5,
+      "negative_pilot_bindings": 6,
+      "log": "attempt-2.log",
+      "log_sha256": "edf8649a3788027d44bbd81a89a89e8b9ff4b7364c9eec968c3ec323e1c5a35a"
+    }
+  ],
+  "scope": "Actual unapproved draft plan and specification; validates manifest generation, admission, source identity and protocol hash semantics. Mock scientific outputs are not research evidence or checker-validated data. Final approval preview requires exact-byte revalidation.",
+  "warning": "Existing validate_ledger.py ResourceWarning for unclosed duplicate_run_ids.yaml; tests passed."
+}
