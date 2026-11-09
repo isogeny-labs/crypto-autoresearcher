@@ -1,0 +1,135 @@
+idea:
+  id: IDEA-20261109-e064f5
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Flattening-rank drop locus of the x_R-specialised S_4 tensor has at most 20 points, so no algebraically
+    defined special-target set of degree below sqrt N can be reached by randomisation, with a test against
+    the IDEA-20260723-006 exceptional target set
+  class: barrier
+  claim: 'For m = 3 let C(x_R) in (F_p^5)^{tensor 3} be the coefficient tensor of S_4(x_1, x_2, x_3; x_R)
+    (degree 4 in each x_i) and r(x_R) the rank of its 5 x 25 flattening (all three agree by symmetry),
+    generically 5. (T1) The 5 x 5 minors are polynomials of degree at most 20 in x_R, so the drop set
+    D(E) = {x_R : r(x_R) < 5} has at most 20 elements unless it is all of F_p. (T2) Randomising Q'' =
+    Q + rP onto any target set Z costs N/|Z| expected trials, so a special-target speedup needs |Z| >
+    sqrt N even if those targets decompose for free; an algebraically defined Z of degree d has |Z| <=
+    d by the degree-yes-size bound, so d must exceed sqrt N. Predictions: |D(E)| <= 20 on every curve;
+    D(E) is not equal to the IDEA-20260723-006 exceptional set on at least one of four curves; targets
+    in D(E) show no decomposition-rate excess beyond Poisson noise over the small-x base. Exponent delta:
+    0.'
+  mechanism: Flattening rank is a lower bound on tensor rank and on sum-of-products presentations of the
+    specialised Semaev polynomial, so rank drops are exactly the targets where the decomposition polynomial
+    is structurally simpler. Bounding the drop locus by minor degrees converts "special targets" into
+    a bounded set, and the randomisation count converts a bounded set into zero exponent gain.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_m has degree 2^{m-2} in each variable; the 5 x 5 x 5 format and the degree-20 minor bound
+      follow from this row.
+    verified_by: REPO BRIEF section 3 frontier map; file not opened.
+  - ref: IDEA-20260723-006
+    provenance: internal
+    claim: The target-sectioned Semaev Newton polytope is the full box outside an O(m)-sized exceptional
+      target set; its definition is read from that record by the next agent and used as the comparison
+      set.
+    verified_by: REPO BRIEF section 2 ledger excerpt; record not opened.
+  assumptions:
+  - S_4 is formed as Res_X(S_3(x_1, x_2, X), S_3(X, x_3, x_R)) and its coefficient list is checked against
+    the known degree pattern before ranks are taken.
+  - The exceptional set of IDEA-20260723-006 is reconstructed from the record's stated definition, not
+    recalled.
+  predictions:
+  - metric: size of D(E) per curve
+    direction: lower
+    minimum_effect: at most 20 on all four curves
+  - metric: symmetric difference between D(E) and the IDEA-20260723-006 set, per curve
+    direction: higher
+    minimum_effect: nonempty on at least one curve
+  - metric: decomposition rate of targets in D(E) over the small-x base minus the generic rate, in units
+      of the Poisson standard deviation
+    direction: different
+    minimum_effect: within 3 standard deviations
+  minimal_test:
+    design: Four prime-order curves with p in [2^10, 2^13] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+      including one j = 0 curve. For every x_R in F_p form C(x_R), compute r(x_R) by Gaussian elimination
+      mod p, collect D(E). Reconstruct the IDEA-20260723-006 set and compare. For targets in D(E) and
+      for 200 random targets, count arity-3 decompositions over the base x < p^{1/4} by enumeration.
+    controls:
+    - Random tensor of the same format with coefficients that are random polynomials of degree 4 in x_R: its
+        drop set size calibrates the generic value against the degree-20 bound.
+    - Repeat on the quadratic twist to check that D(E) depends only on the curve equation.
+    required_metrics:
+    - p, curve, |D(E)|, list of D(E)
+    - size of the IDEA-20260723-006 set and the symmetric difference
+    - decomposition counts for D(E) targets and random targets
+    - drop-set size of the random-tensor control
+  falsification_conditions:
+  - A curve with |D(E)| > 20 (T1 or the coefficient computation is wrong).
+  - D(E) equal to the IDEA-20260723-006 set on all four curves, which would merge the two notions and
+    reduce this record to a corollary.
+  - Decomposition-rate excess on D(E) beyond 3 standard deviations on two curves (interesting; still bounded
+    by T2).
+  confounders:
+  - Rank over F_p versus over the closure: a drop over F_{p^2} only is not counted; recorded separately
+      if seen.
+  - Targets x_R that are not x-coordinates of F_p-points still define C(x_R); they are included in D(E)
+    but flagged.
+  interpretation_limits:
+  - T2 is an expected-trial count; it does not bound algorithms that avoid randomisation by exploiting
+    a structure across targets, which lead 1 of this wave prices separately.
+  - Results are at toy p; the bound |D(E)| <= 20 is a theorem independent of p.
+  heuristic_assumptions:
+  - id: H1
+    statement: The 5 x 5 minors are not identically zero in x_R for any Weierstrass curve.
+    rigorous_support: Generic rank 5 at one random x_R implies it; verified per curve in the run.
+    validation_plan: Report r(x_R) at ten random x_R per curve before the full scan.
+  target_complexity:
+    time_exponent: No attack; any special-target route is bounded by N/|Z| >= N/20 trials, above sqrt
+      N.
+    memory_exponent: not applicable
+    best_known: Pollard rho, Theta(sqrt N) group operations (KR-RHO-13bf67).
+    hidden_overhead: none
+    tradeoff_note: not applicable
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. The wave-2 flattening-floor record states
+    the floor for sum-of-products presentations but not the drop locus or the randomisation bound.
+  sota_delta: Exponent delta 0. Closes the special-target door with a bounded locus and decides whether
+    tensor-rank and Newton-polytope exceptional sets coincide.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-5931ee
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    nearest:
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: adjacent
+      delta: The row fixes degrees of summation polynomials; this record studies the rank stratification
+        of their target specialisations.
+    - ref: KR-IC-955fd6
+      provenance: internal
+      relation: orthogonal
+      delta: Symmetrisation shrinks systems by torsion; here no symmetry is used and the object is a per-target
+        rank.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for exceptional target, Newton polytope, tensor rank
+      - Wave 1 wildcards and Wave 2 complexity for flattening and Waring rank
+      web: []
+      blocked:
+      - no tool access; IDEA-20260723-006 body not opened
+    lead: LEAD-EXO-holant-decomposition-count-network
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Four prime-order curves with p in [2^10, 2^13] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+        including one j = 0 curve. For every x_R in F_p form C(x_R), compute r(x_R) by Gaussian elimination
+        mod p, collect D(E). Reconstruct the IDEA-20260723-006 set and compare. For targets in D(E) and
+        for 200 random targets, count arity-3 decompositions over the base x < p^{1/4} by enumeration.'
