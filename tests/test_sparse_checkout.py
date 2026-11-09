@@ -196,10 +196,41 @@ def test_blobless_clone_downloads_only_the_profile(origin: Path, tmp_path: Path)
     info = sc.clone(f"file://{origin}", repo, branch=None, profile="harness",
                     experiments=[LEGACY], paths=[])
     assert info["partial_clone_filter"] == "blob:none"
+    assert info["shallow"]
+    assert len(_git(repo, "log", "--oneline").splitlines()) == 1
     assert f"experiments/{LEGACY}/runs/RUN-ECDLP-222222/manifest.yaml" in _on_disk(repo)
     assert "inputs/refs/other/blob.bin" not in _on_disk(repo)
     missing = _git(repo, "rev-list", "--objects", "--all", "--missing=print")
-    assert sum(1 for line in missing.splitlines() if line.startswith("?")) >= 4
+    assert any(line.startswith("?") for line in missing.splitlines())
+
+
+def test_code_clone_omits_archives_and_refuses_campaign_execution(origin: Path, tmp_path: Path):
+    from orchestration.campaign import autopilot
+    repo = tmp_path / 'code'
+    info = sc.clone(f'file://{origin}', repo, branch='main', profile='code', experiments=[], paths=[])
+    assert info['profile'] == 'code' and info['shallow']
+    disk = _on_disk(repo)
+    assert 'tools/x.py' in disk and 'README.md' in disk
+    assert not any(p.startswith(('experiments/', 'research/', 'inputs/')) for p in disk)
+    with pytest.raises(ValueError, match='omits research state'):
+        autopilot.select_next(repo)
+    with pytest.raises(sc.SparseError, match='harness profile'):
+        sc.apply(repo, 'code', experiments=[LEGACY])
+
+
+def test_full_history_is_opt_in(origin: Path, tmp_path: Path):
+    info = sc.clone(f'file://{origin}', tmp_path / 'history', branch=None,
+                    profile='code', experiments=[], paths=[], depth=None)
+    assert not info['shallow']
+    assert len(_git(tmp_path / 'history', 'log', '--oneline').splitlines()) == 4
+
+
+def test_invalid_clone_depth_does_not_create_a_checkout(origin: Path, tmp_path: Path):
+    dest = tmp_path / 'invalid'
+    with pytest.raises(sc.SparseError, match='positive integer'):
+        sc.clone(f'file://{origin}', dest, branch=None, profile='code',
+                 experiments=[], paths=[], depth=0)
+    assert not dest.exists()
 
 
 def test_deepen_fetches_history_without_blobs(origin: Path, tmp_path: Path):

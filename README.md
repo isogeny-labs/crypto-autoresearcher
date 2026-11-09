@@ -167,10 +167,19 @@ Only the Coordinator may change the official status of a hypothesis. The Idea Ge
 ## Running it locally
 
 ```sh
-git clone <this repo> && cd crypto-autoresearcher
+# Small code checkout; fetch research archives only when needed.
+curl -fsSL https://raw.githubusercontent.com/isogeny-labs/crypto-autoresearcher/main/tools/sparse_checkout.py -o /tmp/autoresearch-clone.py
+python3 /tmp/autoresearch-clone.py clone https://github.com/isogeny-labs/crypto-autoresearcher.git crypto-autoresearcher --profile code
+cd crypto-autoresearcher
 make install          # editable install + all dependencies
 make doctor           # what is missing, before anything costs money
 ```
+
+The code checkout keeps implementation, skills, tests and docs. Before research
+execution, use `python3 tools/sparse_checkout.py apply harness` and materialize the
+selected goal/experiment; whole-ledger coordination needs the full checkout or
+migrated archive manifests. [Clone/storage guidance](docs/sparse-checkout.md)
+explains the profiles and historical-data costs.
 
 `doctor` checks the Python version, dependencies, configuration, credentials
 per backend, role-binding drift, and suite health, then prints the specific

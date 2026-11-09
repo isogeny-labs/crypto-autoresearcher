@@ -15,7 +15,7 @@ those receipts to decide what is still planned -- plus whatever
     python3 tools/sparse_checkout.py add --experiment EXP-ID     # widen the current profile
     python3 tools/sparse_checkout.py patterns harness             # print the rules, change nothing
     python3 tools/sparse_checkout.py disable                      # back to a full checkout
-    python3 tools/sparse_checkout.py clone URL DIR [--branch B]   # blobless clone + harness profile
+    python3 tools/sparse_checkout.py clone URL DIR --profile code [--branch B] # shallow, blobless, small
     python3 tools/sparse_checkout.py deepen                       # unshallow: commits and trees, no blobs
 
 Excluding a path hides it from the filesystem, not from git: it stays in HEAD
@@ -48,6 +48,17 @@ REPO = Path(__file__).resolve().parents[1]
 STATE = "# sparse_checkout.py"
 
 PROFILES: dict[str, dict] = {
+    "code": {
+        "summary": "implementation and documentation without research archives; not for scientific execution",
+        "include": (
+            "/*", "!/*/", "/tools/", "/orchestration/", "/harness/", "/src/",
+            "/tests/", "/config/", "/agents/", "/.agents/", "/.claude/",
+            "/.codex/", "/.opencode/", "/.cursor/", "/.artifacts/", "/.github/",
+            "/plugins/", "/scripts/", "/docs/", "/schemas/", "/templates/",
+            "/ui/", "/cairn/", "/cli/", "/groebner_compare/", "/kb/", "/formal/",
+        ),
+        "exclude": (),
+    },
     "harness": {
         "summary": "everything except run archives, reference bundles and cold research outputs",
         # Each entry is excluded wholesale; a named experiment or path re-includes
@@ -275,15 +286,19 @@ def render(repo: Path, profile: str, experiments: list[str] = (),
     """The full sparse-checkout rule file for a profile and its additions."""
     if profile not in PROFILES:
         raise SparseError(f"unknown profile {profile!r}; known: {', '.join(PROFILES)}")
+    if profile == "code" and (experiments or paths):
+        raise SparseError("Use the harness profile before adding research experiments or paths")
     for exp in experiments:
         if not EXP_ID.match(exp):
             raise SparseError(f"not an experiment id: {exp!r}")
     lines = [f"{STATE} profile={profile}"]
     lines += [f"{STATE} experiment={e}" for e in experiments]
     lines += [f"{STATE} path={p}" for p in paths]
-    lines += ["/*", *(f"!{rule}" for rule in PROFILES[profile]["exclude"])]
-    lines.append("# trial-plan coverage hashes these receipts")
-    lines += [f"/experiments/{e}/runs/" for e in plan_experiments(repo)]
+    lines += [*PROFILES[profile].get("include", ("/*",)),
+              *(f"!{rule}" for rule in PROFILES[profile]["exclude"])]
+    if profile != "code":
+        lines.append("# trial-plan coverage hashes these receipts")
+        lines += [f"/experiments/{e}/runs/" for e in plan_experiments(repo)]
     if experiments:
         lines.append("# named experiments, whole, and the inputs their records name")
     for exp in experiments:
@@ -379,12 +394,19 @@ def deepen(repo: Path) -> tuple[bool, str]:
 
 
 def clone(url: str, directory: Path, *, branch: str | None, profile: str,
-          experiments: list[str], paths: list[str]) -> dict:
+          experiments: list[str], paths: list[str], depth: int | None = 1) -> dict:
     """Blobless clone, then the profile: only materialized files are downloaded."""
-    cmd = ["git", "clone", "--filter=blob:none", "--no-checkout"]
+    if depth is not None and (type(depth) is not int or depth < 1):
+        raise SparseError("clone depth must be a positive integer")
+    # Validate the profile/additions before creating a destination checkout.
+    if profile not in PROFILES or profile == "code" and (experiments or paths):
+        raise SparseError("Use a valid profile; code checkouts cannot add research paths")
+    cmd = ["git", "clone", "--filter=blob:none", "--no-checkout", "--single-branch", "--no-tags"]
+    if depth is not None:
+        cmd += ["--depth", str(depth)]
     if branch:
         cmd += ["--branch", branch]
-    subprocess.run([*cmd, url, str(directory)], check=True)
+    subprocess.run([*cmd, "--", url, str(directory)], check=True)
     repo = directory.resolve()
     git(repo, "sparse-checkout", "set", "--no-cone", "--stdin",
         stdin="\n".join(render(repo, profile)) + "\n")
@@ -448,6 +470,9 @@ def main(argv: list[str] | None = None) -> int:
     p_clone.add_argument("directory", type=Path)
     p_clone.add_argument("--branch")
     p_clone.add_argument("--profile", default="harness", choices=sorted(PROFILES))
+    history = p_clone.add_mutually_exclusive_group()
+    history.add_argument("--depth", type=int, default=1, help="initial history depth (default: 1)")
+    history.add_argument("--full-history", action="store_true", help="fetch complete history of the selected branch")
     additions(p_clone)
     sub.add_parser("deepen", help="unshallow with commits and trees only")
     args = parser.parse_args(argv)
@@ -457,7 +482,8 @@ def main(argv: list[str] | None = None) -> int:
             if args.goal:
                 raise SparseError("--goal needs the specifications; clone first, then `add --goal`")
             info = clone(args.url, args.directory, branch=args.branch, profile=args.profile,
-                         experiments=args.experiment, paths=args.path)
+                         experiments=args.experiment, paths=args.path,
+                         depth=None if args.full_history else args.depth)
         except (SparseError, subprocess.CalledProcessError) as error:
             print(f"sparse_checkout: {error}", file=sys.stderr)
             return 2

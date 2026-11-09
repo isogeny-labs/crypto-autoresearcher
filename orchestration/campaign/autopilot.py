@@ -87,6 +87,10 @@ def select_admitted(repo: Path, *, selector: Callable[..., Action | None],
 def select_next(repo: Path, *, excluded: set[str] | None = None,
                 allowed_kinds: set[str] | None = None) -> Action | None:
     """Drive goal challenges by default; keep legacy worklists without goal records."""
+    from tools.sparse_checkout import read_state
+    if (read_state(repo) or {}).get("profile") == "code":
+        raise ValueError("The code checkout omits research state; apply the harness profile "
+                         "and materialize the selected goal before running the campaign")
     from . import research_loop
     if research_loop.goal_ids(repo):
         return research_loop.select(repo, excluded=excluded or set(), allowed_kinds=allowed_kinds)
