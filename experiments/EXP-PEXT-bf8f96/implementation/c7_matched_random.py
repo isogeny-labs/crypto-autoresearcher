@@ -15,6 +15,7 @@ from squareclass_relations import coefficient_bit
 
 SEED = 20261102
 DRAW_CAP = 4096
+COEFFICIENT_BLOCK_CAP = 4096
 SAMPLES_PER_STRATUM = 16
 PATTERNS = ((1, 1, 1, 1), (1, 1, 2), (1, 3), (2, 2), (4,))
 
@@ -61,15 +62,15 @@ def factor_pattern(field, form):
 
 def _coefficient(field, label, attempt, position):
     """Unbiased SHA256 counter-stream draw in the polynomial basis."""
-    block = 0
-    while True:
+    limit = (1 << 32) // field.size * field.size
+    _need(limit > 0, "C7 field exceeds counter word range")
+    for block in range(COEFFICIENT_BLOCK_CAP):
         data = canonical(["pext-c7-sha256-counter/v1", SEED, label,
                           attempt, position, block])
         value = int.from_bytes(hashlib.sha256(data).digest()[:4], "little")
-        limit = (1 << 32) // field.size * field.size
         if value < limit:
             return value % field.size
-        block += 1
+    raise ValueError("C7 coefficient rejection block cap exhausted")
 
 
 def _rank(vectors):

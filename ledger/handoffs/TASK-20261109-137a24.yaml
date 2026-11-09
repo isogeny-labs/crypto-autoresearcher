@@ -1,0 +1,55 @@
+handoff:
+  id: TASK-20261109-137a24
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-09'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Add independent source-only seed and rejection-accounting replay for retained C7 control records.
+  uncertainty_reduced: A second draw stream reconstructs every attempted coefficient and exact selected record; both streams now have finite per-coefficient SHA block caps.
+  inputs: &artifacts
+  - experiments/EXP-PEXT-bf8f96/implementation/c7_matched_random.py
+  - experiments/EXP-PEXT-bf8f96/implementation/c7_seed_replay.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_c7_matched_random.py
+  - experiments/EXP-PEXT-bf8f96/reports/c7-matched-random-source-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - experiments/EXP-PEXT-bf8f96/protocol.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261109-137a24.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-b108b7.yaml
+  constraints:
+  - No randomized C7 control, scientific trial, benchmark, cloud job, protocol approval or freeze.
+  - Preserve P1-P4, C0-C7, H1 q13 and six-run, 4 GB, 24 CPU-hour, 24-hour, zero-cloud-dollar, no-retry ceilings.
+  - Shared factor and rank instruments mean this is independent draw/accounting replay, not independent geometry review.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-137a24/receipt.json
+  artifact_paths: *artifacts
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/c7_matched_random.py
+  - experiments/EXP-PEXT-bf8f96/implementation/c7_seed_replay.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_c7_matched_random.py
+  - experiments/EXP-PEXT-bf8f96/reports/c7-matched-random-source-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - experiments/EXP-PEXT-bf8f96/protocol.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261109-137a24.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-b108b7.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-137a24/receipt.json
+  archived_by: TASK-20261109-137a24
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 4
+    maximum_runs: 0
+  completion_gate:
+  - Retained C7 fixed-form record replays exactly through separate seed/accounting code and tampering is rejected.
+  - Per-coefficient SHA blocks have a finite cap in producer, replay and draft contract.
+  - Native snapshot archive verifies and PR is published; run custody and full-stage qualification remain open.
+  state: queued
+  return_format: Archive and publication receipt with source-only scope.

@@ -11,6 +11,9 @@ from check_all_degree_collision_certificate import FIXED_FORMS, PATTERNS
 from check_quotient_certificate import Field, trim
 from c7_matched_random import (check_form, direct_incidence, factor_pattern,
                                sample_stratum, weighted_relations)
+from c7_seed_replay import replay
+from c7_seed_replay import _draw as independent_draw
+from c7_matched_random import _coefficient as producer_draw
 from squareclass_relations import coefficient_bit
 
 
@@ -80,6 +83,35 @@ class C7MatchedRandomTests(unittest.TestCase):
             factor_pattern(self.field, [1, 0, 0, 0, 0])
         with self.assertRaises(ValueError):
             check_form(self.field, [0, 0, 0, 0, 0])
+
+    def test_independent_retained_seed_replay_and_tamper(self):
+        # Both streams are held to a fixed existing software form; this test
+        # does not take a randomized control sample before admission.
+        form = FIXED_FORMS[4]
+        scalar = coefficient_bit(self.field, trim(form)[-1])
+        fixed = lambda field, label, attempt, position: form[position]
+        with patch("c7_matched_random._coefficient", side_effect=fixed):
+            record = sample_stratum(self.field_record, [4], scalar, count=1)
+        with patch("c7_seed_replay._draw", side_effect=fixed):
+            checked = replay(self.field_record, record)
+            self.assertTrue(checked["valid"])
+            self.assertEqual(checked["selected"], 1)
+            for key, changed in (("seed", 0), ("attempted", 2),
+                                 ("scalar_flips", 1)):
+                tampered = dict(record)
+                tampered[key] = changed
+                with self.assertRaisesRegex(ValueError, "retained record differs"):
+                    replay(self.field_record, tampered)
+            tampered = json.loads(json.dumps(record))
+            tampered["selected"][0]["form"][0] ^= 1
+            with self.assertRaisesRegex(ValueError, "retained record differs"):
+                replay(self.field_record, tampered)
+
+    def test_counter_word_parity_without_control_sampling(self):
+        label = ["fixed-prng-fixture", [4], 0]
+        for attempt, position in ((0, 0), (1, 4), (4095, 2)):
+            self.assertEqual(independent_draw(self.field, label, attempt, position),
+                             producer_draw(self.field, label, attempt, position))
 
 
 if __name__ == "__main__":
