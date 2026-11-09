@@ -1,0 +1,159 @@
+idea:
+  id: IDEA-20261109-a4e1f8
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Digit-box factor bases over F_p carry no special-prime signal: matched pseudo-Mersenne versus
+    generic primes on j = 0 prime-order toy curves, scored from one exhaustive log table'
+  class: factor_base
+  claim: 'Toy instances only, predictions fixed before any run. For k in {20, 22, 24} take p1 = 2^k -
+    c with the smallest c making p1 prime and p1 = 1 mod 3 (the shape of secp256k1''s p = 2^256 - 2^32
+    - 977), and p2 a prime of the same bit length with 2^k - p2 > 2^(k-2) and p2 = 1 mod 3. On each prime
+    take y^2 = x^3 + b of prime order N for the two smallest admissible b. Digit box D = {x = c_0 + c_1
+    2^(k/2) with 0 <= c_0, c_1 < 2^s and x < p}, s chosen so |D| = 2^(2s) is the power of two nearest
+    p^(1/2); F = {P with x(P) in D}, B = |F|. From one exhaustive log table per curve compute C_3(F) =
+    #{(P,Q) in F^2 with P+Q in F}, the fraction phi_3 of targets with an arity-3 decomposition, the additive
+    energy E(log F) in Z/N, and the spectral norm max over xi != 0 of |hat f(xi)| / sqrt(B). Prediction:
+    for each metric the z-score of the p1 minus p2 difference, normalised by the random-symmetric-set
+    control variance, is below 3 in at least 5 of 6 pairs, and the sign of the difference is not constant
+    over the 6 pairs. No exponent changes.'
+  mechanism: The indicator of a digit box is a product of two Dirichlet kernels in the additive characters
+    of Z/p, Fourier-concentrated for every prime p; the binary form of p is not used anywhere in that
+    statement. The special form 2^k - c with small c enters only in reduction of products modulo p, an
+    implementation cost outside the frame. The map x -> P transports additive structure of F_p into E(F_p)
+    only through exponential sums over the curve, bounded by Weil uniformly in p. So relation supply,
+    internal supply, and the spectrum of the log set of a box base cannot depend on p's form, and the
+    wave-1 sweep lead that motivated the box by secp256k1's prime should measure null. The record retires
+    that motivation cheaply and reuses the wave-1 synthesis log-table instrument.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Coordinate-defined and algebraic factor bases over F_p are proven not to beat generic methods
+      under stated assumptions; a digit box is another coordinate-defined base.
+    verified_by: brief section 3 row text; the next agent must open knowledge/frontiers/ecdlp/index-calculus/KR-IC-5931ee.yaml
+  - ref: KR-IC-73db3f
+    provenance: internal
+    claim: Binary factor bases are subspaces chosen for small product spaces; the digit box is the F_p
+      object with a product shape, and this record tests whether the modulus form matters to it.
+    verified_by: brief section 3 row text; file not opened this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt N); the exponent delta here is 0.
+    verified_by: brief section 3 row text; file not opened this session
+  assumptions:
+  - A prime-order j = 0 curve exists at each listed prime for some b below 200; otherwise the next b is
+    taken and reported.
+  - The exhaustive log-table instrument of the wave-1 synthesis record on spectra and decomposition-count
+    histograms is reused unchanged; its script path is taken from that record's minimal_test.
+  proof_search_map:
+    not_applicable_reason: Null-control measurement at p <= 2^24; no exponent claim.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: z-score of C_3(F) difference, p1 minus p2, at matched B
+    direction: lower
+    minimum_effect: below 3 in at least 5 of 6 prime pairs
+  - metric: z-score of spectral-norm difference, p1 minus p2
+    direction: lower
+    minimum_effect: below 3 in at least 5 of 6 prime pairs
+  - metric: count of pairs sharing one sign of the C_3 difference
+    direction: lower
+    minimum_effect: at most 5 of 6
+  minimal_test:
+    design: For each of the 6 (p1, p2, b) pairs enumerate E(F_p) once, store log(P) for every P, build
+      F, and compute C_3, phi_3, E(log F) and the spectral norm with one FFT of length N. Repeat for the
+      x-interval base {x < |D|} and for 20 random symmetric point sets of size B on the same curve; the
+      random sets supply the variance used in every z-score. No subsampling.
+    controls:
+    - x-interval base of the same size B on the same curve.
+    - 20 random symmetric point sets of size B per curve for variance.
+    - Discriminant, N primality and p mod 3 recomputed inside the run.
+    required_metrics:
+    - p1, p2, b, N, s, exact |D| and B for each pair
+    - C_3, phi_3, E(log F), spectral norm for box, interval, random sets
+    - z-score per metric per pair and the sign pattern over pairs
+  falsification_conditions:
+  - Any metric shows z >= 3 with constant sign in at least 4 of 6 pairs.
+  - The box spectral norm exceeds the interval spectral norm by a factor of 2 or more on the p1 side only,
+    in at least 4 of 6 pairs.
+  - Fewer than 4 valid pairs is an invalid run, not evidence.
+  - A timeout is infrastructure, not falsification and not support.
+  confounders:
+  - N differs between p1 and p2; every count is compared as a ratio to its expectation (B^3 / N for C_3)
+    before taking z-scores.
+  - The cut x < p removes a slice of D near 2^k on p1 only, so |D| differs slightly between the two sides;
+    exact |D| is reported.
+  - At k <= 24 the box has only two digits; a 256-bit box has eight.
+  interpretation_limits:
+  - A null at k <= 24 removes the special-prime motivation; it does not prove the null at 256 bits and
+    says nothing about rho.
+  - A positive deviation must be replicated at k = 26 with fresh b before any reading beyond measurement
+    noise.
+  heuristic_assumptions:
+  - id: H1
+    statement: The variance of C_3, phi_3, E and the spectral norm over random symmetric sets of size
+      B is the correct null variance for a coordinate-defined base of the same size.
+    rigorous_support: Mean counts are exact and base-independent (IDEA-20260805-a25f11, recalled from
+      the brief); no theorem opened here fixes variance.
+    validation_plan: Report the empirical variance from the 20 random sets per curve and the ratio of
+      box and interval deviations to it.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: N for the toy exhaustive table only; no algorithm proposed
+    best_known: Pollard rho in Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: None claimed.
+    tradeoff_note: A measurement; it defines no time-memory tradeoff.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 for any exponent reading, delta 0. KR-IC-5931ee for any claim that a coordinate
+    base beats generic methods. Neither row states whether the modulus form affects box-base statistics.
+  sota_delta: Exponent delta 0. The counted delta is a predicted null that retires the special-prime motivation
+    of the wave-1 digit-box lead.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-73db3f
+    - KR-IC-9e610d
+    - KR-IC-5a43e5
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: adjacent
+      delta: Binary subspace choice minimises product dimension; this record asks whether the F_p box
+        statistics depend on the prime's form.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: Proves coordinate bases over F_p do not beat generic methods; it does not compare primes
+        of different binary shape.
+    searched:
+      corpus_grep:
+      - wave-1 index for digit box, special prime, pseudo-Mersenne
+      - ledger excerpts for 2^32 - 977, Dirichlet kernel, interval base
+      web: []
+      blocked: []
+    lead: LEAD-ICB-cofactor-projected-ladder-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each of the 6 (p1, p2, b) pairs enumerate E(F_p) once, store log(P) for
+        every P, build F, and compute C_3, phi_3, E(log F) and the spectral norm with one FFT of length
+        N. Repeat for the x-interval base {x < |D|} and for 20 random symmetric point sets of size B on
+        the same curve; the random sets supply the variance used in every z-score. No subsampling.'
