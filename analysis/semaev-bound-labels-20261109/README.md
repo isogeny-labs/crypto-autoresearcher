@@ -41,3 +41,21 @@ Hard defaults are 10,000 unknown bits, 10,000 equations and a conservative envel
 Seven encoder controls pass. `examples/` preserves an actual CLI emission with a hand-specified rank-two quotient for the two solutions of a tiny fixed system. All 24 encoded equations independently evaluate to zero. This is a software control, outside the scientific production panel. It is not a new unboundedness measurement. A learned model could propose partial multiplication actions or quotient columns; each proposed certificate would still need direct kernel-closure verification and an independent UNSAT, solution-count or missing-consequence bridge before contributing an LFD label. Failed search at one quotient dimension and timeouts do not imply an upper bound.
 
 The source-only transfer note adds a restriction-indicator lower-bound lemma and describes the normal form as one quadratic definitional bit after trace elimination. Its additive degree comparison concerns UNSAT refutation degree, not arbitrary SAT last fall degree. The infinite-family construction remains open.
+
+## Direct candidate verification
+
+`check_candidate.py` consumes only the original normalized input, D, q and quotient columns C. It does not accept the encoder's T/R matrices as closure evidence. Run:
+
+```sh
+python3 check_candidate.py examples/software-control-candidate.json --output new-direct-check.json
+```
+
+The candidate schema is `semaev.closed-kernel-candidate/v1`; columns are q-bit integers in degree-then-numeric-mask monomial order. The checker validates the input, independently reconstructs S3 by evaluations using separate carryless arithmetic, and derives a basis of the entire degree-(D-1) kernel. Every variable product of each kernel relation is checked, alongside rank, generator annihilation and C(1)!=0. The shared inspector is used for input-promise validation, not for the checked coefficient rows; this is implementation separation, not a claim of wholly independent provenance.
+
+Limits are N<=16 variables, at most 512 monomials, q<=64, 256 KiB wire input and two million explicitly scoped vector steps, with conservative preflight rejection. The checker is intended for bounded candidate development; existing large historical binary certificates retain their separate verifier. This CLI does not replay those certificates or establish an original dataset join.
+
+Results distinguish `checked`, `rejected_input_or_predicate` and `not_checked_capacity`. Refusals exit 2 and retain no lower-bound conclusion. A capacity stop is not solver infeasibility. Successful results establish a closed containing kernel, nonmembership of 1 and a codimension lower bound, not equality with the exact closure. Exact LFD and LFD lower-bound fields remain null because no UNSAT/count/missing-consequence bridge is supplied.
+
+Eight controls pass. They include a generator-annihilating map rejected for failing full kernel closure, an arbitrary quotient-coordinate basis, and CLI acceptance/refusal/non-overwrite checks. The initial test-file path failure and earlier seven-control source are retained. `direct-checker-final-validation/` preserves final acceptance, predicate rejection and capacity refusal artifacts. No scientific search or closure-engine execution occurred.
+
+The SAT extension note supplies a solution-count-sensitive theorem: with M>0 solutions and b=max(2,floor(log2(M+1))), dF<=max(dG,b)+2 and dG<=max(dF,b+1). Its generic counterexample to additive invariance has a degree-n input generator; it does not settle the all-quadratic Semaev case. The growing-family lower-bound goal remains open.

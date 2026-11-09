@@ -128,3 +128,9 @@ The independently reviewed restriction-indicator argument shows d_ref(restrictio
 After trace elimination the exact alternate Semaev model is one quadratic Boolean definitional extension; UNSAT refutation degrees differ by at most two. This is a tighter reduction target, not SAT LFD invariance or an infinite-family construction.
 
 `analysis/semaev-bound-labels-20261109/encode_certificate.py` emits an exact fixed-D/fixed-rank GF2 feasibility system for closed-kernel certificates, with all eligible multiplication constraints and a right inverse. Seven software controls and an emitted 24-equation hand-specified rank-two example pass. No solver search occurred. Independent checking and a separate UNSAT/count/missing-consequence bridge remain required for every proposed LFD lower bound. The growing-family obligation remains open.
+
+### 2026-11-09: direct checking and count-sensitive SAT transfer
+
+The bounded direct checker in `analysis/semaev-bound-labels-20261109/check_candidate.py` reconstructs coordinate rows by separate evaluation interpolation and checks the full low-degree kernel, not solver-supplied multiplication actions. Eight fixed software controls pass; no new scientific certificate or bridge is claimed.
+
+The SAT one-bit note derives dF<=max(dG,b(M))+2 and dG<=max(dF,b(M)+1), where b(M)=max(2,floor(log2(M+1))). Thus bounded-solution-count families transfer LFD boundedness/unboundedness. A generic counterexample to additive invariance uses an input monomial of growing degree and does not answer the quadratic Semaev question. The target now has two separate requirements: a low-solution-count Semaev family and growing full-closure certificates, or a more specialized quadratic elimination theorem.
