@@ -125,3 +125,14 @@ The reviewed `no-wrap-uniform-cap-four.md` settles the no-wrap family's boundedn
 `no-wrap-first-fall-two.md` gives an original-row telescoping witness proving FFD2 for every r>=1 under the explicitly defined literal nonzero-fall and operational new-consequence conventions. The claim is presentation-qualified and is not a syzygy-definition equivalence. The family consequently has a bounded first/last gap.
 
 The uniform theorem also gives a conservative dense incremental closure algorithm bound O(N^12) binary operations and O(N^8) stored bits, N=2(r+1), in the stated indexed-bit model plus input conversion. This is not an instruction count, timing measurement, or a claim that generic closure is necessary to find the already explicit solutions.
+
+
+## Executable no-wrap labels and exact retained-system join
+
+The inspector now recognizes any independent basis of the full low-polynomial subspace by checking support below bit k, rank k, n>4(k-1), k>=2 and z=a6=1. It reports exact LFD2 for r1..5, exact3 for r6, and interval3..4 for larger recognized members. FFD2 is valid because it reconstructs literal polynomial-coordinate output rows; arbitrary output-row mixing is not covered. The theorem is applied to reconstructed inputs, not inferred from a finite point list.
+
+`python3 join_retained_weil.py NORMALIZED.json WEIL-SYSTEM.json --output NEW.json` additionally checks the retained Rust m2 selector format: original ordered selector codes, both coordinate maps, modulus terms, target, dimensions, and every literal equation row. Only exact equality admits the polynomial bound labels. Unknown formats, finite lists masquerading as spans, affine offsets, repeated selectors and equation/map changes fail. Inputs are capped at1MiB and the producer's six-selector-bit limit; outputs cannot overwrite files.
+
+This joins polynomial evidence, not whole dataset provenance: dataset_admission, point_domain_and_group_lifts_verified and producer_provenance_authenticated remain false. The control artifact is hand-specified in the actual producer format, not a claimed production record. Twenty-three distinct focused controls pass, including the existing capacity bridge; actual CLI acceptance and refusal receipts are in bound-join-controls/. The initial path error is retained in validation.json.
+
+The modular quotient note isolates the missing structure beyond no-wrap: corrected dyadic relations have quadratic quotient terms, and the exact quotient-variable system has variable-count-independent factor-two refutation transport. It supplies no growing lower bound and no unrestricted SAT LFD equivalence.

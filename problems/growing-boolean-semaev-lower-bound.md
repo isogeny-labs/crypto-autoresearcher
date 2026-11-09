@@ -172,3 +172,10 @@ The frozen r1..12 W2 campaign completed all cells with independent DAG/closure c
 ### 2026-11-09: no-wrap route has uniformly bounded degree
 
 Independent review accepts the leading-q selector-peeling proof LFD<=4 for every no-wrap member (n>4r,z=a6=1). Combining restriction lower3 gives3<=LFD<=4 for allr>=6. The exactr6 degree is3, proved symbolically before a frozen cap3 computation and confirmed by full DAG/closure replay (rank468, affine13). A presentation-qualified telescoping witness proves FFD2 for allr>=1. This resolves boundedness for this explicit subfamily; it cannot witness unboundedness. The next growing-family construction must use field modular reduction or a different permitted factor-base structure. Ordinary ambient extensions and disjoint products already fail to amplify degree. Both bounded local attempts are complete; no automatic rerun.
+
+
+### 2026-11-09: modular correction and guarded original-polynomial labels
+
+Polynomial division F=P Q+R shows that the no-wrap affine chains acquire the correction C_d(PQ). On the odd half diagonal, xy=J(x+y+1)^2+epsilon is exact on the trace slice, but J need not preserve polynomial degree. Exact quotient auxiliary definitions give W_D(R) subset W_D(G) and sigma(W_D(G)) subset W_(2D)(R), D>=2; padded refutation degrees differ by at most a factor two. A growing hard UNSAT family in this exact extension would suffice; none has been constructed. SAT target degree remains an extra obligation.
+
+The inspector now applies the proven bounded-family labels to exactly recognized basis changes. A separate retained Weil-system join checks the full selector domain, coordinate maps and literal equations before admitting polynomial labels; it does not admit whole dataset records. Twenty-three software controls and actual CLI accept/refuse artifacts are retained. No new scientific campaign or native build ran.

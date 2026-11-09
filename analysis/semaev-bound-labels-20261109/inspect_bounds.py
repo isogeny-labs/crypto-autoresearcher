@@ -7,6 +7,8 @@ from pathlib import Path
 
 THEOREM_SOURCES = {'docs/reports/2026-11-09-fixed-m2-lfd-upper-time/general-m2-time-bound.md': 'de7f146614dd27be7b60bd5228cce4e07dc5a0f2d4796c5b7873a90f59ed2719', 'docs/reports/2026-11-09-fixed-m2-lfd-upper-time/general-m2-bound-audit.md': '69a16b6ba57ca3b10d0b23333ec11f819bafc393ff96795dc8ff67e5ca6f8360', 'docs/reports/2026-11-09-fixed-m2-lfd-upper-time/subfield-sat-time.md': '4a059e5f068facd350c62aa411c011962cd2b067ecb4f6dd7ff41c898648dc75', 'docs/reports/2026-11-09-fixed-m2-fibre-ffd/fibre-refinement.md': '98962a0b18744abdd7a17d9922617421b99145fb21a1a9ea4839b715c261c052', 'docs/reports/2026-11-09-fixed-m2-fibre-ffd/trace-refinement-audit.md': '28c9d6bdc8bd19be80761c61c912208c95866769b7ff53d08b15e5b910740a9d', 'docs/reports/2026-11-09-fixed-m2-fibre-ffd/ffd-qualified-statement.md': '2f9eced92202f3c65dc6f1a9b42cf68d45616eb9c7a5b16f6d52f429f21a2f6d', 'docs/reports/2026-11-09-fixed-m2-fibre-ffd/corrections.md': '6607dca77ea1b4464745cf72793f1d8cd4a71ceaa1435056abac463d2168da78'}
 
+THEOREM_SOURCES.update({'analysis/semaev-bound-labels-20261109/no-wrap-uniform-cap-four.md': '144eedcca37a00a9ecd61a4ddff3ffcfff922cfadf73cb528d9f09c0c27a4604', 'analysis/semaev-bound-labels-20261109/no-wrap-uniform-cap-four-review.md': '07f60e886d4c179b587d31368e858466b0c4088d678b280272e15178886cb3d0', 'analysis/semaev-bound-labels-20261109/no-wrap-first-fall-two.md': 'ea4ddebb034b1224ba8516ce598f020aaf0962d0fe94b75f06712a85f0c8565f', 'analysis/semaev-bound-labels-20261109/no-wrap-first-fall-two-review.md': '50fd49f7e4da019c0aff73214d7e35ee988163baa973219003b3d06fd20be9e6', 'analysis/semaev-bound-labels-20261109/no-wrap-r6-exact-degree-three.md': '756d20b1ffd65f995e287bcc89a63b2a39fd60955a2dfffd7faea1fbd0d9c917', 'analysis/semaev-bound-labels-20261109/no-wrap-r6-exact-degree-three-review.md': '8ce8560b060192f0fe1ee88b4d1836e44b168375bbbc5737680bca6d194ad342', 'analysis/semaev-bound-labels-20261109/no-wrap-fixed-obstruction-transfer.md': 'a3b5b61af1a8e458ffc3c43cd07bae94e329cdeaeea4ac47656bf72d933755b6', 'analysis/semaev-bound-labels-20261109/no-wrap-basis-recognition-and-label-transfer.md': '8800aa358fb219cb84353bd816584e37f1c4e71753d653aa83b75ddc0fd24e6c', 'analysis/semaev-bound-labels-20261109/no-wrap-basis-recognition-review.md': 'd7dac2560b41786f8bc3543cb25eb7e2e007bb9c24dac0c5d8b1cc02288ab505', 'analysis/semaev-bound-labels-20261109/no-wrap-cap-two-through-five.md': '13a6d2ef927d687930456c053e444ebdaa499b6a430a538fc837735f99e7a903', 'analysis/semaev-bound-labels-20261109/no-wrap-cap-two-through-five-review.md': '4b6cb9f10941f7ef29ebbdf1c4ff43aba21085114b8abfd3f25f79bc221a20ef'})
+
 SCHEMA = 'semaev.normalized-binary-m2-input/v1'
 
 def digest(x):
@@ -124,6 +126,21 @@ def inspect(spec, product_limit=0):
     trace_values = [f.trace(v) for v in basis]
     trace_active = any(trace_values)
     candidates = [{'bound': k+3, 'theorem': 'arbitrary-subspace-all-instance'}]
+    # Rank was checked above: containment in this k-dimensional space is equality.
+    nowrap = k >= 2 and z == 1 and a6 == 1 and f.n > 4*(k-1) and all(v < (1 << k) for v in basis)
+    nowrap_profile = {'recognized': nowrap, 'polynomial_degree': k-1 if nowrap else None,
+                      'literal_power_basis': basis == [1 << i for i in range(k)],
+                      'output_rows': 'literal polynomial-coordinate rows; zero rows retained',
+                      'domain': 'full F2 vector space, not a finite point list'}
+    lower, exact = None, None
+    if nowrap:
+        candidates.append({'bound': 2 if k-1 <= 5 else 4,
+                           'theorem': 'no-wrap-small-degree-two' if k-1 <= 5 else 'no-wrap-uniform-cap-four'})
+        lower = 2 if k-1 <= 5 else 3
+        exact = 2 if k-1 <= 5 else (3 if k-1 == 6 else None)
+        if exact is not None:
+            candidates.append({'bound': exact, 'theorem': 'no-wrap-exact-small-degree'})
+
     if trace_active:
         candidates.append({'bound': k+2, 'theorem': 'nonconstant-trace-selector'})
     elif trace_constant:
@@ -159,6 +176,10 @@ def inspect(spec, product_limit=0):
            'all_nonzero_rows_genuinely_quadratic': all_quadratic, 'full_row_rank': pr, 'quadratic_row_rank': qr,
            'exact_value': 2 if all_quadratic and pr > qr else None,
            'status': 'qualified_degree_two_witness' if all_quadratic and pr > qr else 'not_established'}
+    if nowrap:
+        ffd.update(exact_value=2, status='no-wrap-original-row-witness',
+                   witness='sum of all positive polynomial-coordinate rows; GL input-basis transport',
+                   presentation_invariant=False)
     return {'schema': 'semaev.written-bound-inspection/v1', 'input_sha256': digest(spec),
             'equation_binding_sha256': digest(binding), 'equation_binding': binding,
             'system_scope': 'parameter-reconstructed-full-vector-space',
@@ -168,7 +189,8 @@ def inspect(spec, product_limit=0):
             'trace_on_basis': trace_values, 'trace_constant': trace_constant,
             'quadratic_subfield_basis': subfield, 'product_profile': product,
             'written_lfd_upper_bound': min(c['bound'] for c in candidates), 'applicable_bounds': candidates,
-            'exact_lfd': None, 'lfd_lower_bound': None, 'ffd': ffd,
+            'exact_lfd': exact, 'lfd_lower_bound': lower, 'ffd': ffd,
+            'no_wrap_family': nowrap_profile, 'written_solution_count': 2 if nowrap else None,
             'theorem_source_sha256': THEOREM_SOURCES,
             'proof_status': 'application of independently reviewed written arguments; not formal-kernel certification',
             'solver_executed': False, 'native_instruction_count': None}
