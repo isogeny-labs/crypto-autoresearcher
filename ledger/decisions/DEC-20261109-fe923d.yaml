@@ -1,0 +1,49 @@
+coordinator_decision:
+  id: DEC-20261109-fe923d
+  id_provenance: Allocated with tools/allocate_id.py --next coordinator_decision --date 20261109 and confirmed free
+    with --check.
+  recorded_at: '2026-11-09'
+  decided_at: '2026-11-09'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: Native Codex Coordinator subagent gpt-6-sol high; adapter resolve --role coordinator --backend
+    openai-gpt6 returned matching model and policy, model_verified false; no external inference call or doctor probe.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  mode: coordinate
+  kind: recovery_scheduling
+  context: RUN-PFDR-a4895b is output_validated; RUN-PFDR-4fa30b is invalid_output after launch/manifest commit divergence,
+    with its receipt and report preserved. The executor claim for BATCH-3a63a4 was released failed, no live claim
+    exists, and the failed run report and release were committed.
+  decision: design
+  decision_label: supersede failed PFDR execution lane and prepare bounded five-stage recovery
+  target_ids:
+  - GOAL-PFDR-fd09e0
+  - EXP-PFDR-ada71b
+  - EXP-PFDR-7c7c95
+  - BATCH-3a63a4
+  - BATCH-b6a00a
+  rationale:
+  - The original six-attempt allowance has two consumed attempts and cannot cover the five remaining stages.
+  - Keep the frozen scientific cells, controls, seed namespace, thresholds and analysis; only repair launch custody
+    in a versioned source copy.
+  - Close the failed old lane before opening the new one so the goal max_concurrent 5 is respected.
+  attempt_accounting:
+    historical_valid: 1
+    historical_invalid: 1
+    new_proposed: 5
+    cumulative_ceiling: 7
+    new_retries: 0
+  status_transitions: []
+  next_actions:
+  - Publish draft recovery source, protocol, review_required specification, queue and lane receipts; run exact-byte
+    experiment preapproval before any approval.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Scheduling and provenance repair contain no scientific result.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261109-fe923d.yaml
+  - coordination/goals/GOAL-PFDR-fd09e0/lanes/BATCH-3a63a4.closed.json
+  - coordination/goals/GOAL-PFDR-fd09e0/lanes/BATCH-b6a00a.lane.json

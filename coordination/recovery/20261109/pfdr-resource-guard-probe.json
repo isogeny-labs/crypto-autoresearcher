@@ -1,0 +1,40 @@
+{
+  "schema": "research-resource-guard-probe/v1",
+  "date": "2026-11-09",
+  "experiment_id": "EXP-PFDR-7c7c95",
+  "kind": "runtime-configuration-check",
+  "scientific_trials": 0,
+  "command_prefix": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--unit=pfdr-resource-probe-readback-20261109",
+    "-p",
+    "MemoryMax=4G",
+    "-p",
+    "CPUQuota=400%",
+    "-p",
+    "RuntimeMaxSec=107970",
+    "-p",
+    "TimeoutStopSec=30",
+    "-p",
+    "KillSignal=SIGINT"
+  ],
+  "observed": {
+    "memory.max": "4294967296",
+    "cpu.max": "400000 100000",
+    "RuntimeMaxUSec": "1d 5h 59min 30s",
+    "TimeoutStopUSec": "30s",
+    "KillSignal": "2"
+  },
+  "probe_exit_code": 0,
+  "limits": {
+    "memory_bytes": 4294967296,
+    "cpu_quota_cores": 4,
+    "runtime_before_stop_seconds": 107970,
+    "stop_grace_seconds": 30,
+    "total_wall_ceiling_seconds": 108000,
+    "cpu_hours_quota_bound": 120
+  },
+  "limitation": "Configuration readback with a benign diagnostic process, not an OOM or 30-hour timeout stress test. Verify the actual run scope readback after launch. All descendants must remain in that scope."
+}

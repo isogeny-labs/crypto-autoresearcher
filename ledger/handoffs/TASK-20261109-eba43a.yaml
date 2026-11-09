@@ -1,0 +1,55 @@
+handoff:
+  id: TASK-20261109-eba43a
+  from: coordinator
+  to: validator
+  role: validator
+  recorded_at: '2026-11-09'
+  kind: independent_validation
+  goal_id: GOAL-PFDR-fd09e0
+  batch_id: BATCH-b6a00a
+  experiment_id: EXP-PFDR-7c7c95
+  hypothesis_id: H-PFDR-ed7ccf
+  approved_by: DEC-20261109-6f42d4
+  objective: Independently validate provenance, complete five-stage trial coverage, frozen controls, original selftest
+    custody and measured outputs before any scientific decision.
+  uncertainty_reduced: Whether the recovered run supplies admissible evidence for the frozen growth-ladder reading.
+  inputs:
+  - experiments/EXP-PFDR-7c7c95/specification.yaml
+  - experiments/EXP-PFDR-7c7c95/trial-plan.json
+  - experiments/EXP-PFDR-7c7c95/protocol.json
+  - experiments/EXP-PFDR-7c7c95/runs/
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json
+  - experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/execution-receipt.json
+  - experiments/EXP-PFDR-7c7c95/launch-recovery.sh
+  - coordination/recovery/20261109/pfdr-resource-guard-probe.json
+  - experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json
+  constraints:
+  - Independent session from the producer and Coordinator design session.
+  - Preserve invalid and missing attempts; never infer a scientific reading from a green checker alone.
+  - No trial launches or source edits.
+  deliverables:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/report.md
+  artifact_paths:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/report.md
+  write_scope:
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/
+  archived_by: TASK-20261109-fdb637
+  depends_on:
+  - TASK-20261109-2dc07f
+  - TASK-20261109-f2ecc7
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+    wall_clock_seconds: 14400
+    memory_gb: 4
+  completion_gate:
+  - Report checks exact source/plan/receipt hashes, all controls, every trial outcome and claim scope.
+  return_format: independent validation report and findings
+  record: ledger/handoffs/TASK-20261109-eba43a.yaml
