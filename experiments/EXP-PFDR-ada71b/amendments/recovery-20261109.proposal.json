@@ -1,0 +1,101 @@
+{
+  "record_type": "protocol_amendment_proposal",
+  "status": "draft_not_approved",
+  "execution_authorized": false,
+  "date": "2026-11-09",
+  "experiment_id": "EXP-PFDR-ada71b",
+  "goal_id": "GOAL-PFDR-fd09e0",
+  "base_revision": "dadfb1b2a5b6e8e6045f8547d26ec2b40d4ff81a",
+  "parent_approval": "DEC-20261101-cb3277",
+  "observed_defect": {
+    "invalid_run": "RUN-PFDR-4fa30b",
+    "status": "invalid_output",
+    "launch_authority_commit": "715df5e6018a7e85b7849d708df9372ed1fa7838",
+    "manifest_commit": "a8a4f7b0854c6a013670761a1d078552cd7b47bb",
+    "cause": "Driver reads live HEAD at manifest emission; HEAD advanced by archiving the preceding selftest. Supervisor requires launch authority commit. The exact commit diff contains only the selftest archive."
+  },
+  "preserved_inputs_sha256": {
+    "experiments/EXP-PFDR-ada71b/specification.yaml": "51753c34e903fd15e4f98410dc5297c97af66c8b9e14130b33156179441a6cb0",
+    "experiments/EXP-PFDR-ada71b/trial-plan.json": "6750eea39119604434ae6277dc0fc8f3bc899fe6c4062e3bed32698b3cdd9d7a",
+    "experiments/EXP-PFDR-ada71b/implementation/run.py": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+    "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json": "1dd805dd6307ec6d01d9c1307f10198380cd5bd18221a56702695fa8a8fb0799",
+    "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json": "f232c7568555e751fde0b1fdf052d132298eb3c32e223e645edfa64e788f42a5",
+    "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/execution-receipt.json": "63257611e2da5329746537dbfba17a4a71b5fd496c20ca7a8e3527efcd3a1572"
+  },
+  "proposed_change": {
+    "implementation": "Versioned copy experiments/EXP-PFDR-ada71b/implementation/run_recovery_20261109.py binds manifest code.commit to validated launch.json authority before scientific work; observed HEAD remains separate provenance. Original driver and checker bytes preserved.",
+    "scientific_change": "None: original cells, controls, seeds, sample sizing, analysis thresholds and failure rules remain fixed.",
+    "selftest_reuse": "RUN-PFDR-a4895b remains output_validated under original plan; bind its input bytes and prior receipt, do not insert it as a trial in the new plan.",
+    "invalid_pilot": "Preserve original output and invalid status; never feed its design into new census. One new pilot attempt with original frozen seeds is proposed.",
+    "new_trials": [
+      "pilot",
+      "census-main",
+      "analyze-main",
+      "census-rep",
+      "analyze-final"
+    ],
+    "new_run_ids": "Must be allocated and checked; none allocated by this draft."
+  },
+  "attempt_accounting": {
+    "original_maximum": 6,
+    "prior_valid_attempts": 1,
+    "prior_invalid_attempts": 1,
+    "remaining_under_original_cap": 4,
+    "proposed_new_attempts": 5,
+    "proposed_total_maximum": 7,
+    "additional_pilot_retries": 1,
+    "further_retries": 0,
+    "approval_required": "Prospective bounded amendment explicitly authorizing total7; original6 does not authorize5newattempts."
+  },
+  "resource_proposal": {
+    "execution_location": "local existing host only; cloud launches not authorized by this proposal",
+    "workers": 4,
+    "memory_gib": 4,
+    "max_concurrent_trials": 1,
+    "trial_watchdog_seconds": {
+      "pilot": 14400,
+      "census-main": 43200,
+      "analyze-main": 3600,
+      "census-rep": 43200,
+      "analyze-final": 3600
+    },
+    "sum_new_trial_watchdog_seconds": 108000,
+    "upper_cpu_hours_at_four_workers": 120,
+    "incremental_paid_cloud_budget_usd": 0,
+    "note": "Watchdog upper bounds, not measured costs. Check host headroom before admission. No cloud build, instance, or paid inference authorization is conferred."
+  },
+  "required_before_approval": [
+    "Verify current lane/queue ownership and all remote run histories; no duplicate producer.",
+    "Read original protocol/prior-art references and preserve exact scientific conditions.",
+    "Versioned wrapper and focused failure/success tests pass; source committed and published.",
+    "Lawful explicit native Coordinator binding and actual runtime provenance recorded; no fabricated Anthropic attribution.",
+    "Prospective new spec/plan/protocol/queue/handoff/approval bytes and all archive paths present.",
+    "Experiment preapproval returns approvable:true for exact prospective bytes.",
+    "Coordinator decision explicitly grants one additional pilot attempt and total cap7."
+  ],
+  "required_before_execution": [
+    "Approval package committed and pushed; named selector returns ready.",
+    "Original selftest hashes and receipt independently rechecked as input reuse.",
+    "Fresh ownership claim, resource headroom, checkpoint gate, plan source/input hashes.",
+    "Only five fresh run directories; no writes to either old run."
+  ],
+  "provenance": {
+    "role": "Coordinator read-only diagnosis and draft design",
+    "runtime": "native Codex collaboration subagent",
+    "actual_model_id": "gpt-6-astra (parent read exact session metadata; inherited model, medium effort)",
+    "default_adapter_binding": "anthropic:claude-opus-5-5 (not used or claimed)",
+    "official_status_changes": false,
+    "approval_route": "Fresh Coordinator gpt-6-sol/high session under existing openai-gpt6 binding; this draft grants no approval."
+  },
+  "candidate_source_sha256": {
+    "experiments/EXP-PFDR-ada71b/implementation/run_recovery_20261109.py": "979ad0912bb6a9e67a3976ad4a8b11879dffac3e4c5ffd5b18b54120498da3b1"
+  },
+  "candidate_validation_reported_by_parent": {
+    "focused_tests_passed": 4,
+    "scientific_runs": 0,
+    "verification": "Parent report; this worker did not rerun tests."
+  },
+  "candidate_test_sha256": {
+    "experiments/EXP-PFDR-ada71b/implementation/test_recovery_provenance_20261109.py": "225f6a1b7e5545ec2b50e68cfe2c319955763ba6e1f9ca9a2a7bd4b900f26bc1"
+  }
+}

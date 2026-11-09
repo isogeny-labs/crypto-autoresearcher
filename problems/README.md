@@ -12,6 +12,7 @@ Keep resolved and superseded records in the index.
 
 | Problem | Status | What it blocks | What would unblock it |
 | --- | --- | --- | --- |
+| [PFDR launch authority provenance](pfdr-launch-authority-provenance.md) | investigating | Resuming the bounded PFDR pilot and census after an archival-commit mismatch | Approved versioned provenance fix, seven-attempt recovery cap and verified execution |
 | [Semaev certificate serialized-record bridge](semaev-certificate-serialized-record-bridge.md) | open | Extending the verified typed decomposition theorem to a producer's serialized certificate | Bind bytes, fields, curve, span, tuple, target and authenticated checker execution; repair verifier-input closure and prospective review independence |
 | [Endosweep batch 7 primality and named-curve bridge](endosweep-batch7-primality-and-curve-bridge.md) | open | An end-to-end theorem about brainpoolP512r1 from the recorded-integer discriminant certificate | Checkable prime certificates, named-curve trace/order facts, and the instantiated degree-to-norm bridge |
 | [Growing fixed-degree Semaev lower bounds](growing-boolean-semaev-lower-bound.md) | open | Parameter-uniform lower bounds in binary Boolean / prime digit encodings | Construct a closed separating kernel family or a degree-controlled reduction; finite ladders do not establish growth |
