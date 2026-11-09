@@ -1,0 +1,266 @@
+{
+  "schema": "crypto.autoresearch.trial_plan.v1",
+  "experiment_id": "EXP-PFDR-fa915a",
+  "specification": "experiments/EXP-PFDR-fa915a/specification.yaml",
+  "specification_sha256": "1d302c757d12c71a949e64f5add0ba5e886944463363f2e7f0bc1a23e1522533",
+  "queue": "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-839760/dispatch_queue.json",
+  "task_id": "TASK-20261109-5f9d41",
+  "maximum_runs": 5,
+  "defaults": {
+    "null_reps": 20,
+    "pilot_curves": 32,
+    "target_coincidences": 2500,
+    "n_min": 10,
+    "n_max": 4000,
+    "workers": 4,
+    "maximum_memory_gb": 4,
+    "kernel_timeout_seconds": 3600,
+    "bootstrap_replicates": 2000,
+    "seed_blocks": {
+      "pilot": 12000000,
+      "main": 12100000,
+      "replication": 12200000,
+      "selftest": 12900000
+    },
+    "sizing_margin": 1.5
+  },
+  "source_sha256": {
+    "experiments/EXP-PFDR-fa915a/implementation/run.py": "bf586c0f6affb4329fb046df1e4110374695d78c20180e30e8a73424ef6a80f0",
+    "experiments/EXP-PFDR-fa915a/implementation/check.py": "064db8505c9531cc05aeab025b48e6022027a818fe38b33508b2ec0d0c2e62f1",
+    "experiments/EXP-PFDR-fa915a/implementation/paircount.c": "0d8e943fabbbeefa3e7796f833957c17f12a09ca056dc11974002f2745fac696",
+    "experiments/EXP-PFDR-fa915a/implementation/vendor/curve.py": "fcca2beb699b4785c25820df1d949b757be7a273efd2f4f015625d7aa13c67fa",
+    "experiments/EXP-PFDR-fa915a/implementation/test_manifest.py": "0d95c242cb0ce59dbcf1658d549a83bdfbbeda472d9c0e394108db70326fc9b1",
+    "experiments/EXP-PFDR-fa915a/launch-recovery.sh": "3dd7a870d4475473ca93e9e0c578b2a0e75b08866385478faee7ff02d781afad",
+    "experiments/EXP-PFDR-7c7c95/implementation/vendor/curve.py": "fcca2beb699b4785c25820df1d949b757be7a273efd2f4f015625d7aa13c67fa",
+    "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json": "1dd805dd6307ec6d01d9c1307f10198380cd5bd18221a56702695fa8a8fb0799",
+    "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json": "f232c7568555e751fde0b1fdf052d132298eb3c32e223e645edfa64e788f42a5",
+    "coordination/recovery/20261109/pfdr-resource-guard-probe.json": "7e4d7cdb73853ad226a2f5faa5029950c563a273efc44de404355746582b05dc"
+  },
+  "input_sha256": {
+    "experiments/EXP-PFDR-7c7c95/implementation/vendor/curve.py": "fcca2beb699b4785c25820df1d949b757be7a273efd2f4f015625d7aa13c67fa",
+    "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json": "1dd805dd6307ec6d01d9c1307f10198380cd5bd18221a56702695fa8a8fb0799",
+    "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json": "f232c7568555e751fde0b1fdf052d132298eb3c32e223e645edfa64e788f42a5",
+    "coordination/recovery/20261109/pfdr-resource-guard-probe.json": "7e4d7cdb73853ad226a2f5faa5029950c563a273efc44de404355746582b05dc",
+    "experiments/EXP-PFDR-fa915a/implementation/vendor/curve.py": "fcca2beb699b4785c25820df1d949b757be7a273efd2f4f015625d7aa13c67fa"
+  },
+  "trials": [
+    {
+      "id": "pilot",
+      "stage": "pilot",
+      "run_id": "RUN-PFDR-54a452",
+      "depends_on": [],
+      "note": "Fresh corrected pilot using the original frozen pilot seed block and sampling; its design.json is the only admissible design source for this new plan. Both historical invalid pilots remain excluded.",
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "{run_dir}",
+        "--run-id",
+        "RUN-PFDR-54a452",
+        "--trial-id",
+        "pilot",
+        "--plan",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json"
+      ],
+      "check_argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/check.py",
+        "{run_dir}",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json",
+        "pilot"
+      ],
+      "artifacts": [
+        "manifest.yaml",
+        "raw-result.json",
+        "design.json",
+        "pilot-jobs.jsonl"
+      ],
+      "memory_mb": 4096,
+      "watchdog_seconds": 14400,
+      "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value."
+    },
+    {
+      "id": "census-main",
+      "stage": "census",
+      "block": "main",
+      "run_id": "RUN-PFDR-6a7446",
+      "depends_on": [
+        "pilot"
+      ],
+      "inputs_from": {
+        "design": "RUN-PFDR-54a452/design.json"
+      },
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "{run_dir}",
+        "--run-id",
+        "RUN-PFDR-6a7446",
+        "--trial-id",
+        "census-main",
+        "--plan",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json"
+      ],
+      "check_argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/check.py",
+        "{run_dir}",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json",
+        "census-main"
+      ],
+      "artifacts": [
+        "manifest.yaml",
+        "raw-result.json",
+        "main-jobs.jsonl"
+      ],
+      "memory_mb": 4096,
+      "watchdog_seconds": 43200,
+      "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value."
+    },
+    {
+      "id": "analyze-main",
+      "stage": "analyze",
+      "run_id": "RUN-PFDR-a11b81",
+      "depends_on": [
+        "census-main"
+      ],
+      "note": "O-PENDING-REPLICATION legitimate here",
+      "inputs_from": {
+        "design": "RUN-PFDR-54a452/design.json",
+        "main": "RUN-PFDR-6a7446/main-jobs.jsonl",
+        "selftest": "../../EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json"
+      },
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "{run_dir}",
+        "--run-id",
+        "RUN-PFDR-a11b81",
+        "--trial-id",
+        "analyze-main",
+        "--plan",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json"
+      ],
+      "check_argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/check.py",
+        "{run_dir}",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json",
+        "analyze-main"
+      ],
+      "artifacts": [
+        "manifest.yaml",
+        "raw-result.json",
+        "analysis-main.json",
+        "flags.json"
+      ],
+      "output": "analysis-main.json",
+      "memory_mb": 2048,
+      "watchdog_seconds": 3600,
+      "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value."
+    },
+    {
+      "id": "census-rep",
+      "stage": "census",
+      "block": "rep",
+      "run_id": "RUN-PFDR-969309",
+      "depends_on": [
+        "analyze-main"
+      ],
+      "note": "ALIVE lines only; empty result recorded when none",
+      "inputs_from": {
+        "design": "RUN-PFDR-54a452/design.json",
+        "flags": "RUN-PFDR-a11b81/flags.json"
+      },
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "{run_dir}",
+        "--run-id",
+        "RUN-PFDR-969309",
+        "--trial-id",
+        "census-rep",
+        "--plan",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json"
+      ],
+      "check_argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/check.py",
+        "{run_dir}",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json",
+        "census-rep"
+      ],
+      "artifacts": [
+        "manifest.yaml",
+        "raw-result.json",
+        "rep-jobs.jsonl"
+      ],
+      "allow_empty_artifacts": [
+        "rep-jobs.jsonl"
+      ],
+      "memory_mb": 4096,
+      "watchdog_seconds": 43200,
+      "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value."
+    },
+    {
+      "id": "analyze-final",
+      "stage": "analyze",
+      "run_id": "RUN-PFDR-60a419",
+      "depends_on": [
+        "census-rep",
+        "analyze-main"
+      ],
+      "note": "writes analysis.json (decisive)",
+      "inputs_from": {
+        "design": "RUN-PFDR-54a452/design.json",
+        "main": "RUN-PFDR-6a7446/main-jobs.jsonl",
+        "rep": "RUN-PFDR-969309/rep-jobs.jsonl",
+        "selftest": "../../EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json"
+      },
+      "argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/run.py",
+        "trial",
+        "--run-dir",
+        "{run_dir}",
+        "--run-id",
+        "RUN-PFDR-60a419",
+        "--trial-id",
+        "analyze-final",
+        "--plan",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json"
+      ],
+      "check_argv": [
+        "python3",
+        "experiments/EXP-PFDR-fa915a/implementation/check.py",
+        "{run_dir}",
+        "experiments/EXP-PFDR-fa915a/trial-plan.json",
+        "analyze-final"
+      ],
+      "artifacts": [
+        "manifest.yaml",
+        "raw-result.json",
+        "analysis.json",
+        "flags.json"
+      ],
+      "output": "analysis.json",
+      "memory_mb": 2048,
+      "watchdog_seconds": 3600,
+      "watchdog_reason": "Machine protection only; expiry is failed_infrastructure for the unfinished trial, never a metric value."
+    }
+  ],
+  "frozen": true,
+  "approved_by": "DEC-20261109-a743fd",
+  "cumulative_maximum_runs": 8,
+  "historical_attempts": 3,
+  "maximum_retries": 0,
+  "max_concurrent_trials": 1,
+  "hypothesis_id": "H-PFDR-ed7ccf"
+}

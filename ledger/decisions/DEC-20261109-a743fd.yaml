@@ -1,0 +1,136 @@
+coordinator_decision:
+  id: DEC-20261109-a743fd
+  id_provenance: Allocated with tools/allocate_id.py --next coordinator_decision --date 20261109 and checked free
+    before writing.
+  recorded_at: '2026-11-09'
+  decided_at: '2026-11-09'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: Native Codex Coordinator subagent gpt-6-sol high; adapter resolve --role coordinator --backend
+    openai-gpt6 matched policy/model, model_verified false; no external API inference or doctor probe claimed.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  mode: design-experiment
+  kind: approval
+  context: DEC-20261109-efb6f9 denied derivative-input eligibility for invalid pilot RUN-PFDR-1e5d2b and held the
+    four dependent stages under EXP-PFDR-7c7c95. Scheduling DEC-20261109-8a76ae closed its failed lane and opened
+    disjoint BATCH-839760 for a prospective corrected pilot plus four stages. The complete new protocol preserves
+    the original scientific cells, controls, seeds, sample sizing, metrics and thresholds. The exact proposed final
+    packet passed experiment_preapproval.py with approvable true and zero blockers.
+  decision: approve
+  target_ids:
+  - EXP-PFDR-fa915a
+  - H-PFDR-ed7ccf
+  - GOAL-PFDR-fd09e0
+  - BATCH-839760
+  - TASK-20261109-5f9d41
+  - TASK-20261109-c7861a
+  - TASK-20261109-66c47c
+  - TASK-20261109-c1c372
+  approval:
+    recorded: true
+    standing_authorization: AGENTS.md standing user authorization, 2026-09-06; only a complete, approvable prospective
+      protocol receives Coordinator approval.
+    experiment_id: EXP-PFDR-fa915a
+    predecessor_experiment_ids:
+    - EXP-PFDR-ada71b
+    - EXP-PFDR-7c7c95
+    specification: experiments/EXP-PFDR-fa915a/specification.yaml
+    specification_sha256: 1d302c757d12c71a949e64f5add0ba5e886944463363f2e7f0bc1a23e1522533
+    trial_plan: experiments/EXP-PFDR-fa915a/trial-plan.json
+    trial_plan_sha256: 498e1c39572d1623d7af5d160723919333a64892603619eed344fa85b9298014
+    queue: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-839760/dispatch_queue.json
+    queue_sha256: 275fceec6f560dd22f39f474a224c9054fd47ab8c646f110ac338553160bac0a
+    executor_handoff: ledger/handoffs/TASK-20261109-5f9d41.yaml
+    executor_handoff_sha256: 8d0303c0ab81ea9c4590496b3261887d5cda93b394e6e790e9fbed9cf7e4fcb3
+    protocol: experiments/EXP-PFDR-fa915a/protocol.json
+    protocol_sha256: 02afbfe43451af8cb501711ff82cea8b51f51c74b776229874339bc9a38a4170
+    protocol_file_sha256: edc4b13f36b12cfde1497e850c40dea60e4d5ef0bb486932452874b25eaee355
+    launcher: experiments/EXP-PFDR-fa915a/launch-recovery.sh
+    launcher_sha256: 3dd7a870d4475473ca93e9e0c578b2a0e75b08866385478faee7ff02d781afad
+    preapproval_packet: coordination/design/EXP-PFDR-fa915a-prospective-20261109/preapproval-packet.json
+    preapproval_packet_sha256: 812be732ae0021e62652e7b898766f7426fe242127c31dda750c346e933b4924
+    preapproval_report: coordination/design/EXP-PFDR-fa915a-prospective-20261109/preapproval-report-v2.json
+    preapproval_report_sha256: 25eb1215fd0cd395dfa53b856670f5a706774f55ca4d6008586dfbc9ece8f1d5
+    preapproval_approvable: true
+    preapproval_blockers: []
+    source_ref: origin/codex/pfdr-prospective-pilot-20261109
+    source_ref_commit_at_probe: ed338cc72c30bd912b23f59a087bff16fcb04c3d
+    approved_runs_new: 5
+    attempts_historical_valid: 1
+    attempts_historical_invalid: 2
+    cumulative_attempt_ceiling: 8
+    further_retries_after_new_plan: 0
+    execution_route: implementation
+    runbook_compile: 'Fresh native director-runbook gpt-6-sol/high compile attempt used operator-supplied unprobed
+      binding. It produced no runbook or task card and no lint receipt: runbook supervisor engine invokes experiment_execution.py
+      directly, bypassing required whole-batch launcher; current executor write_scope excludes runbook session directory.
+      See blocker report. Executor-implementation route remains.'
+    director_compile_blocker: coordination/design/EXP-PFDR-fa915a-prospective-20261109/director-compile/blocker.md
+    director_compile_blocker_sha256: 52ae1bbbc4a875ec99764eedb5d4564561e6c86c2a1ce80ad2aade418cff4bea
+    scope: One fresh corrected pilot and four dependent stages on the original 16–32-bit, theta 0.30/0.35, d 1–3,
+      h=2 design. Original RNG namespace EXP-PFDR-ada71b and seed blocks pilot 12000000/main 12100000/rep 12200000/selftest
+      12900000 remain fixed. Original selftest is reused by hash and receipt. Both invalid pilot designs and the
+      failed derivative are excluded.
+    resource_limits: Existing host only; one systemd user scope for five stages with MemoryMax=4G aggregate, CPUQuota=400%,
+      RuntimeMaxSec=107570, TimeoutStopSec=30, KillSignal=SIGINT; 107600-second new-scope wall ceiling including
+      grace and at most 119.556 new-scope quota core-hours. Supervisor also applies per-process RLIMIT_AS and driver/checker
+      watchdogs. Four workers, one trial at a time, zero new paid cloud allocation. Three historical receipt wall
+      spans are recorded; historical CPU is unknown, so no cumulative CPU hard-cap claim is made.
+    enforcement_scope:
+      runner_gates: Plan binds exactly five new RUN IDs. Committed launcher encloses the whole supervisor in the
+        stated systemd user scope; fresh actual scope readback is mandatory at launch. Historical probe demonstrates
+        capability only.
+      coordinator_accounting: Eight total attempts means one historical valid selftest, two historical invalid pilots,
+        and at most one fresh corrected pilot plus four dependent stages. No extra retry or sixth new ID is authorized.
+      historical_receipt_wall_seconds:
+      - 1.937072
+      - 178.590461
+      - 139.25858
+      historical_cpu_usage: unknown; no inferred hard bound
+    asserts_nothing_about: H-PFDR-ed7ccf, growth-rate reading or goal completion.
+    launch_verified_input_hashes: Every input_sha256 path is also present with the same digest in source_sha256,
+      because supervisor authorize() rehashes source_sha256 on each launch. This includes original selftest JSON/receipt,
+      predecessor vendor path and historical resource probe; the old probe is capability history only, not fresh
+      107570-second scope readback.
+  rationale:
+  - The three historical attempts are immutable and counted. DEC-20261109-efb6f9 prevents reuse of the failed pilot
+    derivative; a new output-validated pilot is the only design source for the new dependent stages.
+  - The original six scientific lines, controls, sample counts, seed blocks, analysis and stopping thresholds remain
+    frozen. The changes repair prospective manifest identity/source custody and authorize exactly one more pilot
+    with four dependent stages.
+  - The new driver source, checker, C kernel and vendored curve are hash-bound; all six protocol arms bind the actual
+    new driver SHA. The parent reported four focused zero-science tests passing, including five generated stage
+    envelopes through real complete_manifest and six pilot rejection mutations; no scientific run occurred.
+  - Exact-byte preapproval returned approvable true and zero blockers for the final proposed spec, plan, queue and
+    handoff.
+  - The v2 exact-byte packet additionally binds every declared input_sha256 path in source_sha256 so the supervisor
+    rehashes these dependencies at launch; an earlier approvable diagnostic was superseded before approval to close
+    this custody gap.
+  status_transitions:
+  - record: EXP-PFDR-fa915a
+    note: review_required -> approved, frozen, execution_authorized only after exact approval archive and publication
+  next_actions:
+  - Parent archives the exact approved preview bytes and this decision with receipt, pushes and verifies remote
+    revision, and requires newest_experiments.py --experiment EXP-PFDR-fa915a --json execution_state ready.
+  - Only /run may execute the approved five-stage plan after fresh claim, checkpoint, GitHub source/input verification,
+    Python 3.12, new systemd scope readback and no duplicate live job. Archive every outcome, then independent Validator
+    review under the frozen review plan before a scientific decision.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Prospective approval and software custody tests are not scientific evidence.
+  limitations:
+  - No scientific trial was launched during this approval.
+  - The historical invalid pilot retains invalid_output and its derivative-input gate remains failed.
+  - The operator-supplied director and Coordinator bindings were not model-verified by a backend probe.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261109-a743fd.yaml
+  - experiments/EXP-PFDR-fa915a/specification.yaml
+  - experiments/EXP-PFDR-fa915a/trial-plan.json
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-839760/dispatch_queue.json
+  - ledger/handoffs/TASK-20261109-5f9d41.yaml
+  - experiments/EXP-PFDR-fa915a/protocol.json
+  - experiments/EXP-PFDR-fa915a/launch-recovery.sh
+  official_effect_until_committed_pushed_reviewable: none
