@@ -83,3 +83,14 @@ The separate reviewed `trace-active-unsat-family.md` establishes, for infinitely
 The reviewed degree-two family theorem now proves LFD>=3 for every qualifying two-solution subspace containing1, and for infinitely many nonexceptional trace-active UNSAT subspaces. The exact nonexceptional degree-two quotient has dimension (N²-3N+6)/2. Growth of this dimension at fixed D=2 is not growth of LFD.
 
 For a verified two-point input, LFD>D is equivalent to a known affine ideal generator missing from W_D, and to exact closure codimension exceeding2. A quantitative density estimate states the exceptional-set bound that would suffice for growing lower bounds. That bound on the low-degree-easy set has not been proved. The remaining next degree is D=3.
+
+
+## SAT export and supplied-model verification
+
+`certificate_sat.py encode request.json --output-dir new-bundle` reconstructs the bounded GF2 encoding and exports deterministic DIMACS, a variable mapping, and a hash manifest. `certificate_sat.py check-model request.json model.txt --profile-limit 4 --output new-result.json` checks a complete supplied SAT assignment against every reconstructed CNF clause and GF2 equation, then extracts C and runs the independent closed-kernel and capacity checks. No solver is launched. Bare UNSAT/UNKNOWN reports are unverified and produce no LFD bound.
+
+The additional hard limits are 200,000 CNF variables, 500,000 clauses, a 32 MiB preflight serialization envelope, and an 8 MiB model. The earlier encoder and direct-checker limits still apply. A direct-checker capacity refusal does not admit a certificate. Exact LFD and production dataset admission remain unset by this interface.
+
+Five software controls pass. `sat-control/receipt.json` records actual CLI export and verification of a hand-derived F8 model: 1,770 variables, 5,610 clauses, independently checked serialized clauses, and a checked lower bound of three. This reuses the fixed exact-degree-three control; it is not a new search result.
+
+The reviewed degree-three notes reduce the two-point family to a unique-zero branch H with h <= LFD(F) <= h+1. They give an exact saturated W3 fixed-point obligation. An explicit non-Semaev family has the same W2 dimension profile yet exact LFD3 for every size, ruling out dimension-profile-only extrapolation to growing degree. A field-specific obstruction is still required.

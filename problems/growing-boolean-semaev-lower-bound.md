@@ -148,3 +148,10 @@ A separate reviewed conditioning argument also supplies infinitely many odd-degr
 The reviewed degree-two classification proves LFD>=3 for every qualifying two-solution containing1 subspace, and for infinitely many nonexceptional trace-active UNSAT subspaces. Product-span nondegeneracy is automatic on the odd diagonal. A symplectic count bounds the rank-one exceptional family below the available UNSAT population for r>=7 along the positive-trace subsequence. Exact nonexceptional codimension at D=2 is (N²-3N+6)/2, not a growing-degree result.
 
 The explicit F8 control now exercises a positive bridge: rank5 atD2 exceeds capacity4, and cap3 multiplier identities derive its complete affine ideal, giving exactLFD3. No search was run. For the verified two-point family, growing LFD is exactly growing derivation cap of a named affine ideal generator; the density note states a sufficient exceptional-set counting bound, which remains unproved for increasingD.
+
+
+### 2026-11-09: degree-three reduction and executable SAT export
+
+Reviewed branch reduction gives h<=LFD(F)<=h+1 for the unique-zero system H=(uv)^2+uv+u+v^2. The full W3 criterion iterates all degree-two consequences and their variable products to stability. A non-Semaev family with the identical W2 dimension profile and exact LFD3 demonstrates why that profile alone cannot force growth. A tensor-specific invariant or growing obstruction remains missing.
+
+The bounded DIMACS exporter and supplied-model checker pass five controls and an actual 1770-variable/5610-clause hand-witness replay through CNF, GF2, direct kernel, and capacity checks. The replay establishes lower bound3 for the existing F8 control. No solver search, production dataset admission, or growing lower-bound theorem is claimed.
