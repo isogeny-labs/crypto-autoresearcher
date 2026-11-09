@@ -90,6 +90,11 @@ def verify(cert):
     if E.mul(n, G) is not None: reasons.append("[n]G != O")
     if E.mul(k, G) != R: reasons.append("R != [k]G")
     arm = cert["arm"]
+    m = int(cert["m"])
+    if len(cert["points"]) != m:
+        reasons.append(f"expected {m} points, got {len(cert['points'])}")
+    if len(cert["signs"]) != m:
+        reasons.append(f"expected {m} signs, got {len(cert['signs'])}")
     pts = []
     for i, (xy, eps) in enumerate(zip(cert["points"], cert["signs"])):
         P = (tuple(xy[0]), tuple(xy[1]))
@@ -109,8 +114,6 @@ def verify(cert):
     S = None
     for P in pts: S = E.add(S, P)
     if S != R: reasons.append("sum of signed points != R")
-    m = int(cert["m"])
-    if len(pts) != m: reasons.append(f"expected {m} points, got {len(pts)}")
     ok = not reasons
     return ok, (len(pts) if ok else 0), reasons
 

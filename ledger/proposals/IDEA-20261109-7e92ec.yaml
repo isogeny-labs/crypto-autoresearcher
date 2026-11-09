@@ -1,0 +1,110 @@
+idea:
+  id: IDEA-20261109-7e92ec
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: Constant-time Ed25519 variable-base scalar multiplication by the X25519 ladder, Okamoto-Sakurai
+    v-recovery, and one exception-free Montgomery-to-extended-Edwards chart
+  class: algorithm
+  claim: On Curve25519 (B=1, A=486662) with Edwards25519 (a=-1, d=-121665/121666, cofactor 8), the composite
+    "Edwards affine P -> Montgomery affine (u_1,v_1) -> RFC 7748 ladder -> v-recovery -> extended Edwards"
+    computes [k]P for every k in [0, 8l) and every P in E(F_p) with no secret-dependent branch, at 1I
+    + 6M + 1c (input) + 255(5M + 4S + 1c) (ladder) + 10M + 1S + 1c (recovery) + 6M + 2S + 2c (chart),
+    i.e. 1I + 1297M + 1023S + 259c, against the repository's double-and-add at about 2028M + 1012S + 634c
+    with a branch on every scalar bit. The three inputs on which the recovery formula divides by zero
+    are exactly P = (0,-1), [k]P = O, and [k]P = -P; each is closed by a constant-time select, so the
+    map is total on E(F_p).
+  mechanism: 'Input: u_1 = (1+y)/(1-y), v_1 = c u_1 / x with c = 9^{-1} x_B v_B mod p (c^2 = -486664),
+    one shared inversion of (1-y)x. Ladder: the repository''s loop; after the final swap (X_2:Z_2) = [k]P
+    and (X_3:Z_3) = [k+1]P. Recovery (Costello-Smith eq. 10 with B = 1): v_2 = ((u_1 u_2 + 1)(u_1 + u_2
+    + 2A) - 2A - (u_1 - u_2)^2 u_3) / (2 v_1). Projective sequence: t_1 = u_1 Z_2; t_2 = u_1 X_2; s_1
+    = (X_2 + t_1)(Z_2 + t_2); s_2 = (X_2 - t_1)^2; z_23 = Z_2 Z_3; N = s_1 Z_3 + (2A t_2) z_23 - s_2 X_3;
+    lambda = 2 v_1 z_23; (U:V:W) = (lambda X_2 : N : lambda Z_2). Count 10M + 1S + 1c. Chart to extended
+    Edwards: q = U^2 + A U W + W^2, m = V W, X = c m (U+W), Y = (U-W) q, Z = (U+W) q, T = c m (U-W); 6M
+    + 2S + 2c; x = X/Z = c v/(u^2 + A u + 1) = c u / v and T Z = X Y hold identically. q = 0 needs u^2
+    + A u + 1 = 0 and U+W = 0 needs u = -1; both require non-residues (A^2 - 4 and A - 2), so the chart
+    is total on M(F_p) minus the identity. Exceptional closure by selects: W = 0 -> (0:1:1:0); Z_2 = 0
+    -> (0:1:1:0); Z_3 = 0 -> -P; v_1 = 0 -> (0:(-1)^k:1:0). Symmetry used: the Kummer quotient (the ladder)
+    plus one v-coordinate restores the fibre; the Edwards->Montgomery u-line map (Z+Y : Z-Y) is total,
+    so the only non-total pieces are the recovery and the final chart, both enumerated.'
+  novelty_status: unverified
+  citations:
+  - ref: RFC 7748 section 4.1 and section 5
+    provenance: recalled
+    claim: Birational map constants and the ladder step.
+    verified_by: null
+  - ref: Okamoto-Sakurai, CHES 2001, y-recovery on Montgomery form
+    provenance: recalled
+    claim: Recovery of the second coordinate from the ladder pair.
+    verified_by: null
+  - ref: Costello-Smith, Montgomery curves and their arithmetic, 2017, Prop. 3
+    provenance: recalled
+    claim: Affine recovery formula used above.
+    verified_by: null
+  - ref: src/ecc/ed25519.rs
+    provenance: internal
+    claim: scalar_mul is double-and-add with a branch on each scalar bit.
+    verified_by: brief excerpt read in this session
+  assumptions:
+  - c is a square root of -486664 mod p; the script asserts c^2.
+  - A^2 - 4 and A - 2 are non-residues mod p; the script asserts both.
+  - fe_inv and BigUint limb arithmetic are not constant time; the claim is branch-freedom at the formula
+    level only.
+  predictions:
+  - metric: agreement with EdPoint::scalar_mul over 1000 random (k,P) and all 8 small-order P
+    direction: equal
+    minimum_effect: exact equality after to_affine
+  - metric: field multiplications per scalar multiplication (counting wrapper)
+    direction: lower
+    minimum_effect: at least 30 percent fewer M+S than scalar_mul
+  minimal_test:
+    design: 'tests/cross_model.rs: wrap fe_mul/fe_sq/fe_inv with counters; for k in {random mod 8l, clamped,
+      0, 1, l-1, 8l-1} and P in {base, random, the 8 small-order points} compute [k]P by scalar_mul and
+      by ladder_recover_extended; compare affine coordinates; assert the three select cases fire exactly
+      when predicted.'
+    controls:
+    - The repository scalar_mul as the reference on the prime-order subgroup.
+    - 'A null object: the same pipeline with lambda replaced by 1 must fail on random P, proving the comparison
+      is live.'
+    required_metrics:
+    - M count
+    - S count
+    - c count
+    - number of mismatches
+    - which select case fired per input
+  falsification_conditions:
+  - Any mismatch on a non-exceptional input.
+  - A fourth zero-divisor input outside the enumerated three.
+  - Measured M+S not below the double-and-add count.
+  confounders:
+  - The repository ladder uses fe_mul for squares; counts must be taken with fe_sq substituted or reported
+    as 9M + 1c per step.
+  interpretation_limits:
+  - Branch-free formula does not make BigUint arithmetic constant time.
+  - No ECDLP statement; this is an implementation-correctness and cost record.
+  heuristic_assumptions:
+  - id: H1
+    statement: The RFC ladder returns (X_2:Z_2),(X_3:Z_3) with difference P for all inputs used.
+    rigorous_support: Bernstein 2006 Theorem 2.1 and Bernstein-Lange 2017 (recalled).
+    validation_plan: Exhaustive test over the 8 small-order points and the three exceptional scalars.
+  target_complexity:
+    time_exponent: not applicable (no asymptotic claim)
+    memory_exponent: O(1) field elements
+    best_known: extended-coordinate double-and-add 3M+4S per doubling, 8M+1c per addition
+    hidden_overhead: one inversion at input, one at encode
+    tradeoff_note: trades about 7 percent more S for 36 percent fewer M and constant-time scalar access
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: None in the ledger; the BRIEF ledger index has no record of ladder recovery or of a Montgomery-to-extended
+    chart for this curve.
+  sota_delta: Same asymptotics as the literature; for the repository, 1297M + 1023S versus 2028M + 1012S
+    and removal of the per-bit branch.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: curve25519 explicit-formula campaign, not an ECDLP mechanism
+    none_found_after:
+    - BRIEF section 2 ledger index searched for ladder, recovery, Okamoto, extended, chart
+    - BRIEF section 1 code read for any existing conversion routine (none)
