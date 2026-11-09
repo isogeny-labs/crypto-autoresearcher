@@ -143,6 +143,7 @@ def check_batch(run_dir, cohort, binder, binary_sha256, *, scope="approved-cohor
                            "compressed_sha256": review["compressed_sha256"],
                            "raw_sha256": review["raw_sha256"],
                            "independent": independent,
+                           "generic_descent": review["generic_descent"],
                            "geometry_ordinals": review["geometry_ordinals"],
                            "generic_ordinals": review["generic_ordinals"],
                            "type2_counts": type2_counts}

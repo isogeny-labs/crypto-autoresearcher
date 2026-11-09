@@ -168,12 +168,18 @@ def verify_artifact(directory, checker, expected_form, expected_binary_sha256,
     geometry, generic = selected_ordinals(unit, full_geometry)
     independent = checker.verify(unit, expected_form,
                                  geometry_ordinals=geometry, generic_ordinals=generic)
+    generic_descent = None
+    if scope == "approved-cohort":
+        from generic_interval_descent import certify_from_checked_review
+        generic_descent = certify_from_checked_review(
+            unit, expected_binding, checker, independent, digest(raw))
     return {"schema": "pext.independent-unit-review/v1", "valid": True,
             "scope": scope, "input_sha256": digest(input_bytes),
             "receipt_sha256": digest(receipt_bytes),
             "compressed_sha256": digest(compressed), "raw_sha256": digest(raw),
             "binary_sha256": expected_binary_sha256,
             "binding": expected_binding, "independent": independent,
+            "generic_descent": generic_descent,
             "geometry_ordinals": geometry, "generic_ordinals": generic}
 
 
