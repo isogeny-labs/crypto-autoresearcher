@@ -1,0 +1,9 @@
+# J3 additive chronology correction 1
+
+This correction applies to the sealed provisional J3 packet in the parent directory. The original `report.md`, `review_attestation.yaml`, and `SHA256SUMS` are unchanged; `sha256sum -c SHA256SUMS` passed on 2026-11-09 after the discrepancy was identified.
+
+The attestation's `sealed_at_utc: 2026-11-09T17:58:08Z` is incorrect as a seal timestamp. At 17:58:08 UTC, the GitHub API observation found run 42665763089 in progress in `Machine-check every discharged formal target`, with no formal-verification-receipts artifact. The local filesystem shows `report.md` created at **17:58:56.553339116 UTC**, `review_attestation.yaml` at **17:58:56.562983326 UTC**, and the original `SHA256SUMS` at **17:58:56.563722691 UTC** (last modified at **17:58:56.565042223 UTC**). The original packet was thus sealed at approximately **17:58:56 UTC**, after the 17:58:08 status observation. Exact wall-clock seal time is not independently recorded beyond these filesystem timestamps.
+
+A separate GitHub run-status query at **17:59:01 UTC** occurred **after** the original packet was written and hashed. It still reported the same run in progress at the same target-checking step. It is a post-seal corroborating observation, not an input to the original seal. The packet's `as of 17:58:08 UTC` wording correctly describes its last pre-seal hosted status observation; it must not be read as its creation or seal time.
+
+**Verdict effect:** None. The J3 machine-evidence verdict remains **provisional/inconclusive**. No named-target hosted receipt or `formal-verification-receipts` archive was available at the original seal; no fresh run conclusion is inferred by this chronology correction. Continue only with existing run 42665763089 when it completes. No sibling reports were read and no build was run for this correction.
