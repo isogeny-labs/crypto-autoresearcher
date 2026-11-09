@@ -3,6 +3,7 @@
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import tempfile
 import unittest
 
@@ -71,6 +72,21 @@ class CountReceiptTests(unittest.TestCase):
 
     def test_complete_receipt_is_accepted(self):
         self.assertEqual(self.check()['status'], 'accepted_zero_count')
+
+    def test_published_copy_uses_copied_binary_and_checks_outputs(self):
+        published = self.root / 'published'
+        published.mkdir()
+        for source in self.root.iterdir():
+            if source.is_file() and source.name not in ('input.sys', 'plan.json'):
+                shutil.copy2(source, published / source.name)
+        (self.root / 'count_x1').unlink()
+        result = verify(self.plan_path, published / 'receipt.json', REPOSITORY,
+                        published, published_copy=True)
+        self.assertEqual(result['status'], 'accepted_zero_count')
+        (published / 'target.out').write_bytes(b'1\n')
+        with self.assertRaisesRegex(ValueError, 'stdout SHA-256 mismatch'):
+            verify(self.plan_path, published / 'receipt.json', REPOSITORY,
+                   published, published_copy=True)
 
     def test_changed_target_count_is_rejected_even_with_new_hash(self):
         (self.root / 'target.out').write_bytes(b'1\n')
