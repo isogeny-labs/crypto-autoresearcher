@@ -1,0 +1,123 @@
+schema: crypto.autoresearch.pfdr_four_stage_outline/v1
+recorded_at: '2026-11-09'
+status: prospective_design_only
+authority: DEC-20261109-6e0798
+goal_id: GOAL-PFDR-fd09e0
+hypothesis_id: H-PFDR-ed7ccf
+source_experiment: EXP-PFDR-7c7c95
+source_invalid_run: RUN-PFDR-1e5d2b
+meaning: Requirements for a new four-stage contract if the independent pilot-input validator passes. This file approves no trial and changes no frozen record.
+
+admission_gate:
+  independent_report: coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/report.json
+  independently_derived_design: coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/derived-design.json
+  required_result: The fresh native Validator's archived report must explicitly pass the custody, complete 960-row grid, source identity, independent sizing/plant/gamma derivation, and derivative-input eligibility checks. It must report protocol instrument SHA drift and any limited or absent replay. A missing, failed or incomplete report blocks this outline.
+  no_relabel: RUN-PFDR-1e5d2b remains invalid_output with checker exit null; the derivative is calibration input only, not a valid pilot result or hypothesis evidence.
+
+study_attempts:
+  historical_valid_selftest: RUN-PFDR-a4895b
+  historical_invalid_pilots:
+    - RUN-PFDR-4fa30b
+    - RUN-PFDR-1e5d2b
+  consumed_before_continuation: 3
+  prospective_new_attempts_max: 4
+  cumulative_hard_ceiling: 7
+  retries: 0
+  concurrency: 1
+  old_unlaunched_ids: The four IDs in EXP-PFDR-7c7c95/trial-plan.json have no receipts; leave them unattempted and allocate four distinct fresh IDs under the new plan to avoid cross-plan identity ambiguity.
+
+new_contract:
+  experiment_id: Allocate a new EXP-PFDR ID only after the independent admission gate passes; keep this file ID-free and unapproved.
+  predecessor_links:
+    - EXP-PFDR-ada71b (frozen original scientific design and output-validated selftest)
+    - EXP-PFDR-7c7c95 (approved failed recovery with invalid pilot; no downstream stage)
+  preservation: Keep bits 16/20/24/28/32, theta 0.30/0.35, d 1/2/3, 20 null replicates, 32 pilot curves already observed, margin 1.5, target 2500, n range 10..4000, seed namespace EXP-PFDR-ada71b and blocks pilot 12000000/main 12100000/rep 12200000/selftest 12900000, all plant/control/analysis thresholds and bootstrap 2000 unchanged. Future stages must not observe pilot metrics as a hypothesis outcome.
+  required_files:
+    - new experiments/<EXP-ID>/specification.yaml with explicit invalid-pilot lineage and derivative-input role
+    - new experiments/<EXP-ID>/protocol.json or versioned protocol amendment frozen prospectively before any future data
+    - new experiments/<EXP-ID>/trial-plan.json with exactly four stage trials, new run IDs and source/input SHA maps
+    - new experiments/<EXP-ID>/inputs/derived-design.json copied byte-for-byte from the validated independent derivation, with source report and source raw JSONL hashes in the specification
+    - new versioned driver/checker/implementation closure and bounded launcher, each hash-bound
+    - new queue, task handoff, independent Validator successor, preapproval packet/report and Coordinator approval decision
+  derivative_input_path: experiments/<EXP-ID>/inputs/derived-design.json
+  derivative_inputs_from_value: ../inputs/derived-design.json
+  derivative_hash_binding: Put this exact file in input_sha256 and also in source_sha256 as a non-code launch dependency, because tools/experiment_execution.py authorize checks source_sha256 at launch but does not itself rehash input_sha256. Verify its committed bytes again before the first stage. Bind the independent report SHA and original raw JSONL SHA in the specification/plan.
+  selftest_input_path: experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json
+  selftest_inputs_from_value: ../../EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json
+  selftest_hashes: Retain the exact validated selftest and receipt hashes from the prior plan; this is input reuse and no new attempt.
+  stages:
+    - id: census-main
+      stage: census
+      block: main
+      depends_on: []
+      inputs_from: {design: ../inputs/derived-design.json}
+      outputs: [manifest.yaml, raw-result.json, main-jobs.jsonl]
+      driver_watchdog_seconds: 43200
+    - id: analyze-main
+      stage: analyze
+      depends_on: [census-main]
+      inputs_from: {design: ../inputs/derived-design.json, main: <NEW-CENSUS-MAIN-RUN-ID>/main-jobs.jsonl, selftest: ../../EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json}
+      outputs: [manifest.yaml, raw-result.json, analysis-main.json, flags.json]
+      driver_watchdog_seconds: 3600
+    - id: census-rep
+      stage: census
+      block: rep
+      depends_on: [analyze-main]
+      inputs_from: {design: ../inputs/derived-design.json, flags: <NEW-ANALYZE-MAIN-RUN-ID>/flags.json}
+      outputs: [manifest.yaml, raw-result.json, rep-jobs.jsonl]
+      allow_empty_artifacts: [rep-jobs.jsonl]
+      driver_watchdog_seconds: 43200
+    - id: analyze-final
+      stage: analyze
+      depends_on: [census-rep, analyze-main]
+      inputs_from: {design: ../inputs/derived-design.json, main: <NEW-CENSUS-MAIN-RUN-ID>/main-jobs.jsonl, rep: <NEW-CENSUS-REP-RUN-ID>/rep-jobs.jsonl, selftest: ../../EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json}
+      outputs: [manifest.yaml, raw-result.json, analysis.json, flags.json]
+      driver_watchdog_seconds: 3600
+  outcome_rule: Preserve O-SUB-BE/O-ALIVE/O-MIXED/O-INVALID and all original controls; analyze-main may record O-PENDING-REPLICATION. No scientific decision until all needed run records, export limitations and independent evidence review are archived.
+
+manifest_envelope_contract:
+  supervisor_source: tools/experiment_execution.py complete_manifest and _check_driver_facts
+  root_plan_fields:
+    experiment_id: Must equal the new EXP ID written by the driver as run.experiment_id and in raw-result.json.
+    hypothesis_id: H-PFDR-ed7ccf must be present and nonblank to source driver run.hypothesis_id. The missing field caused the failed pilot.
+    task_id: Must equal driver run.task_id and the new executor handoff.
+    approved_by: Must be the later actual Coordinator approval decision ID and match driver run.approved_by if the driver states it.
+    specification: New experiment specification path; bind its SHA-256 in specification_sha256 and run.inputs when stated.
+    source_sha256: Exact final driver, checker, paircount.c, vendored curve.py, launcher and derivative input hashes. Recompute after all identity edits; no placeholder hash or old driver hash.
+    input_sha256: Exact derivative input, independent report, old selftest and receipt, and any other read dependency.
+  per_trial_fields:
+    id: Must equal driver run.trial_id and run.inputs.trial_id; exactly four ordered stage IDs.
+    run_id: Must equal driver run.id (and run.run_id if present), argv --run-id and fresh run directory.
+    stage_and_block: Must agree with the driver's actual branch and block; add no pilot trial.
+    inputs_from: Exact path strings consumed by run.py and check.py, including the new derivative and predecessor run artifacts.
+    seed_curve_parameters: The driver must omit run-level and run.inputs seed and curve_id when there is no single trial-wide seed or curve, and omit nonempty parameters unless the frozen trial declares the identical whole mapping. Prefer recording stage, inputs_from and plan path as run.inputs.derived or another clearly non-claiming provenance field. The prior driver wrote null seed/curve_id and an undeclared parameters map; all three are refused.
+  launch_and_capture_fields:
+    run_code_commit: Exactly launch.json authority.commit, not observed HEAD at completion; keep observed HEAD separately.
+    run_code_command: Actual argv JSON, array or shell-quoted form accepted by the supervisor, including the same-interpreter normalization. run.code.check_command, if present, must match checker argv; command.txt must match launched argv JSON.
+    run_code_hashes: code.trial_plan_sha256 must equal new plan bytes; normalize code.code_sha256 keys relative to the implementation directory and compare their .py/.c digests with source_sha256. These maps differ in scope because the driver code map walks .py/.c files while the plan source map also binds the launcher and derivative input. The supervisor does not prove every extra driver hash; test and audit them separately.
+    run_environment: Any emitted commit/source_sha256/specification_sha256/runtime_lock/runtime_lock_sha256 must equal environment.json. If run.environment.python is stated under the same interpreter, it must name the exact supervisor Python version.
+    run_inputs: If stated, trial_plan must equal the new plan path, plan_sha256 its exact SHA, trial_id the stage; specification/specification_sha256 and any seed/curve_id/parameters must equal the frozen plan/trial. Avoid aliases differing only by case.
+    run_timing: Driver timestamps must lie within the supervisor driver interval with one-second slack; wall_seconds must be finite, nonnegative and no greater than supervisor wall plus one second.
+    run_result: raw_result must be raw-result.json; run.result.metrics must equal run.metrics if both appear; any attack_claimed value must match raw-result.json and a true claim needs a driver certificate. No pilot or downstream scientific reading is established by envelope completion alone.
+    additional_completion: Supervisor may fill absent id/task/approval/command/environment/inputs/result/artifacts from named sources but never overwrite a contradictory emitted value. Zero-science fixture must call complete_manifest on each stage with the prospective exact plan, authority/environment/argv and mutate each checked identity, input, source and time field to confirm rejection. The checker must then pass on actual output before any run is output_validated.
+
+protocol_instrument_correction:
+  frozen_drift: All six arms of EXP-PFDR-7c7c95/protocol-resource-v2.json name run_py_sha256 567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3; the executed driver was 96ba0604bdfba65eb1afa3840084ec8fa69fc3dcef47e02c73c0e29374e0a0f7. Preserve this historical discrepancy in the new protocol lineage and Validator scope.
+  prospective_fields:
+    arms: Keep the original six arm IDs/roles. For each arm, set instrument.flags.run_py_sha256 to the exact new versioned driver bytes, paircount_c_sha256 to exact C bytes, and any vendor/checker hashes in the source closure. Retain same_instrument_as links only when build/source/thread facts are equal across arms.
+    analysis_plan: Set analysis_plan.script.sha256 to the exact new analysis driver bytes and bind the same program through the plan. Hash all source files after final metadata changes, not before.
+    binary_identity: Never reuse or invent a compiled binary SHA. If the instrument is built at run time, declare binary_sha256 null prospectively and record the observed binary SHA/flags/commit per attempted run and export; state source identity as the pre-run binding.
+    commit_identity: A null prospective instrument.commit is honest when the final launch-authority commit is not yet known; bind the exact launch commit in launch/environment/receipt and export after publication. Do not claim frozen protocol strict adherence for the failed pilot.
+    pre_registration: Freeze this corrected protocol before future census data; it is not retroactive to either invalid pilot. Preserve the original sampling, controls, metrics, analysis and stopping rules; amend only custody, input lineage, four-stage continuation and cumulative cap accounting.
+
+resource_and_dispatch:
+  resource_caps: Existing host only, one stage at a time, four workers/CPU quota 400%, aggregate MemoryMax 4 GiB, per-process supervisor RLIMIT_AS, no paid cloud allocation. Count the pilot's consumed time/CPU toward study accounting.
+  new_outer_scope: A conservative whole-batch ceiling of at most 93600 seconds total including 30-second stop grace (RuntimeMaxSec at most 93570) is within the original 108000-second recovery ceiling after the 139-second failed pilot, while the four driver watchdogs sum to 93600 seconds. This is an upper bound, not a duration estimate; checker watchdogs are separate and may be cut off by the outer cap.
+  stop: No retry, no extra stage if timeout/OOM/invalid output. Preserve every receipt. Abort before launch if cgroup readback, source/input hashes, fresh claim, checkpoint, GitHub publication or named selector readiness fails.
+  gate_order:
+    - Independently validated derivative and report published and SHA-bound.
+    - New EXP ID, four fresh RUN IDs and a lawful new batch/queue allocated; current frozen queue remains held.
+    - Full new specification, versioned/frozen protocol, source implementation, exact plan, launcher, handoff, independent review successor and approval packet drafted without scientific execution.
+    - Exact prospective final bytes pass experiment_preapproval.py approvable true; Coordinator records a new approval. No status inference from this outline.
+    - Parent archives exact paths, pushes PR, verifies remote revision and named selector execution_state ready.
+    - Fresh ownership claim, checkpoint, no duplicate live run, resource scope readback and runtime Python 3.12 verified, then /run may launch only the approved four-stage plan.
