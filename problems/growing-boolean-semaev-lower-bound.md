@@ -189,3 +189,12 @@ The separately reviewed finite-selector note proves the safe normalized Boolean 
 
 
 The Frobenius follow-up proves that simultaneously twisting xG produces no new coordinate span. Nonzero relative twists cannot cancel the entire field-valued cubic on a half-diagonal subspace. Scalar trace cancellation has an exact trilinear criterion; for coprime shifts it forces a specific inverse-power permutation to preserve the nonzero elements of V. This is a necessary condition before trace elimination, not a full closure certificate. See modular-frobenius-multiplier-obstruction.md and its review.
+
+
+### 2026-11-09: exact trace-slice feedback and finite-selector CLI
+
+The trace-slice note replaces x,y by independent x in V and t in W=V intersect kerTr. Its exact affine-multiplier conditions characterize the complete first quadratic feedback step. The epsilon multiplier space (VW)^perp has dimension at most one, with an exact rank-one trace-form characterization. Full iterative stability remains open. The inverse-Gold note supplies an F8 counterexample to blanket exclusion of inverse-power invariant subspaces, an exact subspace-polynomial divisibility criterion, and the inverse-cube necessary condition c2*c0^2=c1^3. None is a growing LFD lower bound.
+
+`python3 join_finite_selector.py PARAMETERS.json WEIL-SYSTEM.json --output NEW.json` checks the exact cyclic sorted-code producer format, including repeated/nonlinear selectors and zero selector bits. Parameters use schema semaev.finite-selector-parameters/v1 with n,modulus,a6,z. It independently reconstructs maps and every original S3 row by field evaluation and Mobius inversion, then labels only LFD<=N+1. No solution count, exact LFD, FFD or whole-dataset admission is inferred. Wire limits are1MiB, n3..64 and selector bits0..6 per summand.
+
+Seven new symbolic software controls and four existing retained-join controls pass. The accepted artifact in finite-selector-controls is a hand-constructed software fixture, not a production record. The saved CLI46 audit was inspected: its m2 cases are enumeration/PKM/double-large-prime; F4/F5 cases are m3. It therefore does not provide a production m2 Weil artifact for this join. No new scientific trial, solver run, native build or cloud job occurred.
