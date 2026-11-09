@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+from unittest import mock
 
 from candidate_binding import CandidateBinder
 from candidate_stage import join_path
@@ -68,6 +69,15 @@ class SourceRadicalBindingTests(unittest.TestCase):
         result = certify_bound(binder, 0, 0, 0, [1, 0, 0, 1], forms)
         self.assertEqual(result["source_map"]["join_plan_sha256"], binder.plan_sha256)
         self.assertEqual(result["source_map"]["structure_ordinal"], 0)
+
+    def test_non_exhibiting_solver_cannot_certify_inadmissibility(self):
+        row = self.joined["rows"][0]
+        with mock.patch("source_radical_binding.candidate_lift", return_value={
+                "schema": "pext.radical-frobenius/v1",
+                "status": "no_order_n_lift_for_coherent_relation_algebra"}):
+            with self.assertRaisesRegex(ValueError, "source radical action absent"):
+                certify(self.joined["field"], row["model"], row["target"],
+                        row["matrix"], row["conjugates"])
 
 
 if __name__ == "__main__":

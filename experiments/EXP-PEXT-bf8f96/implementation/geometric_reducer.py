@@ -12,6 +12,7 @@ from pathlib import Path
 from candidate_batch import expected_units, read_chunk, verify_complete_index
 from candidate_binding import CandidateBinder
 from independent_check import read_bounded_gzip
+from prospective_unit_descent import summarize as summarize_prospective_descent
 
 
 GENERIC_ORDER = "left-pgl2-fq/v1"
@@ -386,6 +387,8 @@ def reduce_cohort(cohort_dir, binder, binary_sha256, *, read_order="canonical"):
                     or review["independent"].get("structures") != result["structures"]
                     or review.get("geometry_ordinals") != [item[0] for item in unit["rows"]]):
                 raise ValueError("geometric counts differ from independent review")
+            result["prospective_descent"] = summarize_prospective_descent(
+                raw, binding, review)
             result["T_index"] = row["T_index"]
             result["unit_name"] = name
             result["candidate_unit_sha256"] = review["raw_sha256"]

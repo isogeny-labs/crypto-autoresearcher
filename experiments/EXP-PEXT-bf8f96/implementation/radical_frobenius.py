@@ -141,11 +141,12 @@ def candidate_lift(field, forms):
                   and all(parity(mask & signs) == sign
                           for mask, sign in equations)]
     if not candidates:
-        return {"schema": "pext.radical-frobenius/v1",
-                "status": "no_order_n_lift_for_coherent_relation_algebra",
-                "geometric_rank": relation["geometric_rank"],
-                "arithmetic_rank": relation["arithmetic_rank"],
-                "basis_masks": basis, "relation_equations": len(equations)}
+        # A failed search over this witness presentation is not an
+        # inadmissibility certificate. The Frobenius-stable multiquadratic
+        # extension has 2-power kernel over an odd-order cyclic quotient, so
+        # an order-n lift exists. Refuse the instrument rather than emit a
+        # scientific negative status.
+        raise ValueError("order-n radical sign solver found no lift; instrument inconsistent")
     signs = candidates[0]
     return {"schema": "pext.radical-frobenius/v1",
             "status": "order_n_radical_lift_checked; source_map_and_model_pending",

@@ -185,7 +185,9 @@ class GeometricReducerTests(unittest.TestCase):
             from independent_candidate_unit import IndependentCandidateChecker
             from generic_interval_descent import certify_from_checked_review
             checker = IndependentCandidateChecker(field)
-            independent = checker.verify(unit, binding["quotient_form"])
+            independent = checker.verify(
+                unit, binding["quotient_form"],
+                geometry_ordinals=[row[0] for row in unit["rows"]])
             generic_descent = certify_from_checked_review(
                 unit, binding, checker, independent, hashlib.sha256(raw).hexdigest())
             reviews.append({"name": name, "class_index": 0,
@@ -220,6 +222,10 @@ class GeometricReducerTests(unittest.TestCase):
                                          read_order="reverse")
             self.assertEqual(forward, backward)
             self.assertEqual(len(forward[0][0]["units"]), 2)
+            self.assertEqual(forward[0][0]["units"][0]["prospective_descent"]
+                             ["covered_count"], 819)
+            self.assertEqual(forward[0][0]["units"][0]["prospective_descent"]
+                             ["descent_status"], "unresolved")
 
 
 if __name__ == "__main__":
