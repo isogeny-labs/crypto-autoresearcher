@@ -305,6 +305,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
             "lean_version": lean_version,
             "workspace_inputs": local_inputs,
             "verifier_inputs": software_inputs,
+            "verifier_closure": "formal-yaml-v2",
             **hashes,
         },
     }

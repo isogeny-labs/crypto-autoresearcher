@@ -67,19 +67,53 @@ def workspace_inputs(workspace: Path) -> dict[str, str]:
 
 def verifier_inputs() -> dict[str, str]:
     directory = Path(__file__).resolve().parent
-    return {f'orchestration/formal/{p.name}': sha256(p)
-            for p in sorted(directory.glob('*.py'))}
+    inputs = {f'orchestration/formal/{p.name}': sha256(p)
+              for p in sorted(directory.glob('*.py'))}
+    inputs['orchestration/fast_yaml.py'] = sha256(directory.parent/'fast_yaml.py')
+    inputs.update(yaml_runtime_inputs())
+    return dict(sorted(inputs.items()))
 
 
-def archived_verifier_inputs(repo: Path, revision: str) -> dict[str, str]:
+def yaml_runtime_inputs() -> dict[str, str]:
+    """Bind the installed parser bytes used to interpret a target spec.
+
+    PyYAML can select its compiled loader, so both Python and extension modules
+    are inputs. The path prefix records the package version without depending
+    on a machine-specific site-packages directory.
+    """
+    import yaml
+    root = Path(yaml.__file__).resolve().parent
+    if not (root/'__init__.py').is_file():
+        raise ValueError('PyYAML package source is unavailable for verification')
+    inputs = {}
+    for path in sorted(root.rglob('*')):
+        if path.is_symlink():
+            raise ValueError('PyYAML package source contains a symlink')
+        if path.is_file() and path.suffix in {'.py', '.so', '.pyd', '.dll', '.dylib'}:
+            relative = path.relative_to(root).as_posix()
+            inputs[f'runtime/PyYAML/{yaml.__version__}/{relative}'] = sha256(path)
+    if not inputs:
+        raise ValueError('PyYAML package source is empty')
+    return inputs
+
+
+def archived_verifier_inputs(repo: Path, revision: str, *,
+                             yaml_closure: bool = False) -> dict[str, str]:
     """An explicitly selected archived verifier, never an implicit trust upgrade."""
     import subprocess
     if not re.fullmatch(r'[0-9a-f]{40}', revision):
         raise ValueError('archived verifier requires an exact reviewed Git revision')
+    source_paths = ['orchestration/formal']
+    if yaml_closure:
+        source_paths.append('orchestration/fast_yaml.py')
     paths = subprocess.check_output(['git', 'ls-tree', '-r', '--name-only', revision,
-                                     'orchestration/formal'], cwd=repo, text=True).splitlines()
-    return {p: hashlib.sha256(subprocess.check_output(['git', 'show', f'{revision}:{p}'], cwd=repo)).hexdigest()
-            for p in paths if Path(p).parent.as_posix() == 'orchestration/formal' and p.endswith('.py')}
+                                     *source_paths], cwd=repo, text=True).splitlines()
+    inputs = {p: hashlib.sha256(subprocess.check_output(['git', 'show', f'{revision}:{p}'], cwd=repo)).hexdigest()
+              for p in paths if (Path(p).parent.as_posix() == 'orchestration/formal' and p.endswith('.py'))
+              or (yaml_closure and p == 'orchestration/fast_yaml.py')}
+    if yaml_closure:
+        inputs.update(yaml_runtime_inputs())
+    return dict(sorted(inputs.items()))
 
 
 def receipt_errors(receipt: dict, *, repo: Path, spec: Path, task,
@@ -92,6 +126,7 @@ def receipt_errors(receipt: dict, *, repo: Path, spec: Path, task,
     expected_task = json.loads(json.dumps(asdict(task)))
     verification = receipt.get('verification') or {}
     provenance = receipt.get('provenance') or {}
+    closure = provenance.get('verifier_closure')
     workspace = (repo/task.workspace).resolve()
     try:
         from .targets import load_spec
@@ -126,8 +161,12 @@ def receipt_errors(receipt: dict, *, repo: Path, spec: Path, task,
         'toolchain hash': provenance.get('lean_toolchain_sha256') == sha256(workspace/'lean-toolchain'),
         'manifest hash': provenance.get('lake_manifest_sha256') == sha256(workspace/'lake-manifest.json'),
         'local source inputs': provenance.get('workspace_inputs') == workspace_inputs(workspace),
+        'verifier closure': closure == 'formal-yaml-v2' if not verifier_revision
+            else closure in (None, 'formal-yaml-v2'),
         'verifier inputs': provenance.get('verifier_inputs') == (
-            archived_verifier_inputs(repo, verifier_revision) if verifier_revision else verifier_inputs()),
+            archived_verifier_inputs(repo, verifier_revision,
+                                     yaml_closure=closure == 'formal-yaml-v2')
+            if verifier_revision else verifier_inputs()),
     }
     if verifier_revision:
         checks['archived verifier revision'] = provenance.get('source_commit') == verifier_revision
