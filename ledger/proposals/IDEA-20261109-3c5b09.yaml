@@ -1,0 +1,133 @@
+idea:
+  id: IDEA-20261109-3c5b09
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Interpolation degree of the scalar graph {(x(P), x(kP))} equals k*^2 for k* below N^{1/4} and
+    the generic bound otherwise
+  class: representation
+  claim: 'For E/F_p of odd prime order N let Gamma_k be the set of (N - 1)/2 points (x(P), x(kP)) in F_p^2
+    and D_k the least total degree of a nonzero C in F_p[X, Y] vanishing on Gamma_k. Let k* be the least
+    absolute residue among +-k^{+-1} (and +-(k lambda^j)^{+-1}, j = 0, 1, 2, when j(E) = 0 with lambda
+    the GLV scalar). Then (i) D_k <= min(k*^2, d_gen) with d_gen the least d such that (d+1)(d+2)/2 >
+    (N-1)/2; (ii) D_k >= min(k*^2, (N-1)/(2 k*^2)); hence D_k = k*^2 whenever k*^4 <= (N-1)/2. Prediction
+    for k* above that range: D_k = d_gen with probability at least 1 - 2/p, the same as for a random symmetric
+    relabelling. Consequence: algebraic structure of the discrete-log graph is visible by interpolation
+    only for k* <= N^{1/4}, the exhaustive-search range, and static-key samples (P_i, k P_i) identify
+    k by curve fitting only when k* <= (2m)^{1/4}. Exponent delta 0.'
+  mechanism: 'The scalar polynomial C_{k''}(X, Y) = Y psi_{k''}(X)^2 - phi_{k''}(X) has total degree k''^2
+    (deg phi_{k''} = k''^2, deg psi_{k''}^2 = k''^2 - 1 in x) and vanishes on Gamma_k for k'' = +-k; the
+    reflected curve handles +-k^{-1}, and x(lambda P) = omega x(P) gives the twisted versions. C_{k''}
+    is irreducible as the graph of a rational function. Bezout in P^2: a curve of degree d not containing
+    C_{k*} meets it in at most d k*^2 points, so (N-1)/2 <= d k*^2. The generic upper bound is linear
+    algebra on monomials. The rank of the evaluation matrix at degree d decides D_k exactly.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt p); this record proposes no algorithm and keeps exponent delta
+      0.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09.
+  - ref: KR-IC-081a58
+    provenance: internal
+    claim: Oracle-assisted static DH beats generic methods only with auxiliary inputs; plain static-key
+      samples do not supply them.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09.
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: Automorphisms give a constant; here they shrink k* through the twelve mu_6-twisted representatives.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09.
+  assumptions:
+  - N is an odd prime so x(P) determines P up to sign and Gamma_k has exactly (N - 1)/2 points.
+  - The exact-rank computation is over F_p with no modular reduction shortcuts.
+  predictions:
+  - metric: D_k minus k*^2 over all k with k*^4 <= (N-1)/2
+    direction: lower
+    minimum_effect: exactly zero for every such k
+  - metric: fraction of random k with D_k below d_gen
+    direction: lower
+    minimum_effect: at most 3/p plus binomial noise, matching the random relabelling control
+  minimal_test:
+    design: Take three prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with N between
+      2^12 and 2^14 (one with j = 0). Enumerate E(F_p) once. For k in {2,3,4,5,7,2 lambda, 3 lambda} and
+      200 uniform k, build the evaluation matrix of monomials of degree <= d at Gamma_k and find the least
+      d with a nontrivial kernel. Record D_k, k*, d_gen.
+    controls:
+    - Random symmetric relabelling of the second coordinate with the same point count.
+    - k = lambda on the j = 0 curve must give D_k = 1 (Y = omega X).
+    - Small k must return D_k = k^2 exactly, serving as a correctness check of the pipeline.
+    required_metrics:
+    - p, N, j, lambda
+    - k, k*, D_k, d_gen per instance
+    - control D values
+    - matrix rank at d_gen - 1 and d_gen
+  falsification_conditions:
+  - Some k with k*^4 <= (N-1)/2 has D_k different from k*^2.
+  - More than 10 percent of random k have D_k <= d_gen - 2 while the random control does not.
+  - Any k has D_k below min(k*^2, (N-1)/(2 k*^2)), which would contradict Bezout and indicates a bug or
+    a new correspondence.
+  confounders:
+  - Rank deficiency from accidental coincidences at degree d_gen - 1 occurs with probability about 1/p
+    in both arms.
+  - For even k the x-only form of psi_k^2 must be used; conventions with a 2y factor change nothing in
+    x but can be mis-coded.
+  interpretation_limits:
+  - A confirmed prediction says the graph is algebraically generic beyond k* = N^{1/4}; it does not bound
+    non-algebraic statistics of the graph.
+  - Toy sizes only; d_gen scales as sqrt N and the matrix as N^2 entries.
+  heuristic_assumptions:
+  - id: H1
+    statement: For k* above (N/2)^{1/4} the point set Gamma_k imposes independent conditions on curves
+      of degree below d_gen, as a random point set does.
+    rigorous_support: Bezout gives only the weaker lower bound (N-1)/(2 k*^2); no theorem opened in this
+      session closes the gap.
+    validation_plan: Exact rank computation on 200 random k at three curves against the relabelling control.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: N^2 field elements for the toy matrix only
+    best_known: Pollard rho, Theta(p^{1/2}) group operations, KR-RHO-13bf67; for static keys with auxiliary
+      powers, Cheon.
+    hidden_overhead: None claimed; no algorithm is proposed.
+    tradeoff_note: Fitting a degree-d curve needs about d^2/2 samples and only detects k* <= sqrt d, so
+      samples never beat exhaustive small-k search.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates the exponent. The wildcards-wave lead on Strassen degree bounds
+    for EDS is about straight-line programs, not about the interpolation degree of the graph.
+  sota_delta: Exponent delta 0. New content is an exact value of D_k for small k* with a Bezout proof
+    and a pre-registered genericity test above N^{1/4}.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-IC-081a58
+    - KR-RHO-0528e7
+    - KR-IC-5a43e5
+    - KR-RHO-46c2c6
+    nearest:
+    - ref: KR-IC-081a58
+      provenance: internal
+      relation: adjacent
+      delta: The row concerns static DH with auxiliary inputs over extension fields; this record shows
+        plain static-key samples over F_p carry no low-degree algebraic handle.
+    - ref: KR-IC-5a43e5
+      provenance: internal
+      relation: orthogonal
+      delta: Summation polynomials encode sums; C_k encodes one scalar multiple and is used here only
+        to bound interpolation.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for interpolation, division polynomial, static, Cheon
+      - Wave 1 wildcards leads for EDS and Strassen
+      web: []
+      blocked: []
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Take three prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        with N between 2^12 and 2^14 (one with j = 0). Enumerate E(F_p) once. For k in {2,3,4,5,7,2 lambda,
+        3 lambda} and 200 uniform k, build the evaluation matrix of monomials of degree <= d at Gamma_k
+        and find the least d with a nontrivial kernel. Record D_k, k*, d_gen.'
