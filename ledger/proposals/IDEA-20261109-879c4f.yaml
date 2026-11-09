@@ -1,0 +1,139 @@
+idea:
+  id: IDEA-20261109-879c4f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Heegner-point reductions are discrete-log pairs computed by L-values (Gross-Kohnen-Zagier); their
+    reach is ratios of integers bounded by |D|^{1/2+o(1)}, so covering a uniform k costs at least sqrt(N)
+  class: barrier
+  claim: 'Let E~/Q have analytic rank 1 (test curve 37a1) and let y_D in E~(Q) be the trace of the Heegner
+    point of discriminant D. By GKZ, y_D = c(D) y_0 + torsion with c(D) the D-th coefficient of a weight
+    3/2 form and c(D)^2 proportional to L''(E~,1) L(E~,chi_D,1) sqrt(|D|). For any prime p of good reduction
+    and prime N dividing #E~(F_p), the reductions satisfy DL(bar y_{D2} : bar y_{D1}) = c(D2)/c(D1) mod
+    N whenever both are nonzero mod N. Prediction A: this identity holds in 100 percent of tested (D1,
+    D2, p). Prediction B: the number of distinct DL classes obtained from all Heegner discriminants |D|
+    <= X is at most X^{1+o(1)}, so hitting a uniform k mod N needs X of order N, while one Heegner point
+    of discriminant D costs at least h(D) of order |D|^{1/2} operations. No exponent change is claimed.'
+  mechanism: An L-function knows a discrete logarithm when two points are global multiples of one generator
+    with coefficients given by Fourier coefficients. Reduction mod p is a homomorphism, so the global
+    coefficient ratio is the finite-field DL. The barrier is that the coefficients are small relative
+    to N and the points are special; for a target Q unrelated to E~(Q) nothing is computed.
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails for ECDLP; this record is a positive special case (known
+      global points) with bounded reach.
+    verified_by: frontier map excerpt in REPO BRIEF 2026-11-09 section 3
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic Omega(sqrt(N)); the covering cost here matches it.
+    verified_by: frontier map excerpt in REPO BRIEF 2026-11-09 section 3
+  - ref: GKZ-1987
+    provenance: recalled
+    claim: Gross-Kohnen-Zagier, Heegner points and derivatives of L-series II; Heegner points of varying
+      discriminant are proportional with half-integral-weight coefficients.
+    verified_by: memory; the test verifies the identity numerically
+  assumptions:
+  - 37a1 has rank 1 and generator (0, 0) (recalled; the test recomputes).
+  - Heegner hypothesis for D relative to level 37 is checked by Sage.
+  proof_search_map:
+    not_applicable_reason: Numerical verification of a recalled theorem and a coverage count; no exponent-moving
+      algorithm is proposed.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: fraction of (D1, D2, p) with DL equal to c(D2)/c(D1) mod N
+    direction: higher
+    minimum_effect: equals 1 on all tested triples
+  - metric: distinct DL classes from |D| <= X divided by X
+    direction: lower
+    minimum_effect: at most 4 for X in {10^3, 10^4}
+  - metric: max |c(D)| over |D| <= X divided by X^{1/2}
+    direction: lower
+    minimum_effect: bounded by 10 for X <= 10^4
+  minimal_test:
+    design: 'In Sage under crypto/sage, for E = 37a1 compute y_D via E.heegner_point(D) and its rational
+      trace for all Heegner discriminants |D| <= 10^4, express y_D = c(D) * (0,0) + torsion, and record
+      c(D). For 20 primes p in [2^16, 2^20] with #E(F_p) having a prime factor N > 2^12, reduce the points,
+      compute DLs in the N-part by exhaustive enumeration (ground truth only), and compare with c(D2)/c(D1)
+      mod N. Count distinct DL classes per X.'
+    controls:
+    - 'Random-point control: replace y_{D2} by a random multiple m y_0; the predicted DL is m, confirming
+      the DL oracle.'
+    - 'Rank-0 control: repeat on y^2 = x^3 + 7 (LMFDB rank to be looked up); if rank 0 there are no Heegner
+      points to reduce and the record applies vacuously to secp256k1''s own lift.'
+    required_metrics:
+    - list of (D, c(D))
+    - agreement count
+    - distinct DL classes per X
+    - max |c(D)| / X^{1/2}
+    - cost in Sage seconds per Heegner point versus |D|
+  falsification_conditions:
+  - Any triple with DL not equal to c(D2)/c(D1) mod N (recalled theorem wrong).
+  - Distinct DL classes from |D| <= X exceed X^{1.2} at X = 10^4.
+  - Heegner-point cost growing slower than |D|^{0.4} would weaken the covering barrier.
+  confounders:
+  - Torsion in E~(Q) shifts reductions by small known points; subtract before DL.
+  - c(D) = 0 mod N gives undefined ratios; exclude and count.
+  interpretation_limits:
+  - Applies only to targets that are reductions of global points; a uniform Q is not.
+  - Exponent delta 0 by construction.
+  heuristic_assumptions:
+  - id: H1
+    statement: '|c(D)| is at most |D|^{1/2 + o(1)} (convexity bound on L(E~, chi_D, 1)).'
+    rigorous_support: Convexity bound for twisted L-values, recalled.
+    validation_plan: Measure max |c(D)| / X^{1/2} on the computed list.
+  target_complexity:
+    time_exponent: N^{1/2} to cover a uniform k; unchanged
+    memory_exponent: O(X) list of coefficients
+    best_known: Pollard rho, Theta(sqrt(N)) (KR-RHO-13bf67)
+    hidden_overhead: Heegner point computation of discriminant D costs at least h(D).
+    tradeoff_note: Precomputing all |D| <= X gives DLs only on an X^{1+o(1)}-element set.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-cd159a dominates any lifting reading; the positive special case with bounded reach
+    is not stated there.
+  sota_delta: 'Exponent delta 0. Delta in content: an explicit analytic object that computes a DL between
+    two specific points, with its reach quantified.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-RHO-53c89f
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Row forecloses lifting to characteristic zero to find rank deficiency; here the global points
+        are given and the DL is a known coefficient ratio, which exposes the reach barrier.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Heegner, Gross-Zagier, analytic rank
+      - REPO BRIEF section 3 for lift, xedni, canonical lift
+      web: []
+      blocked: []
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: In Sage under crypto/sage, for E = 37a1 compute y_D via E.heegner_point(D)
+        and its rational trace for all Heegner discriminants |D| <= 10^4, express y_D = c(D) * (0,0) +
+        torsion, and record c(D). For 20 primes p in [2^16, 2^20] with #E(F_p) having a prime factor N
+        > 2^12, reduce the points, compute DLs in the N-part by exhaustive enumeration (ground truth only),
+        and compare with c(D2)/c(D1) mod N.'
