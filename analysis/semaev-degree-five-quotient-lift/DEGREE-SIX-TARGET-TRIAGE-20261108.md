@@ -5,15 +5,17 @@ allocation profiles. It is not a new closure run or a degree-six bound.
 
 | Original system | Recorded exact count | Checked D4 quotient dimension | D5 source-derived envelope | Current D5 state |
 | --- | ---: | ---: | ---: | --- |
-| `fresh-n47-rand-00`, 48 variables | 0 | 61,196 | 86,599,881,493 bytes | Frozen one-shot local plan, USD 20 reserved, output root absent |
+| `fresh-n47-rand-00`, 48 variables | 0, independently repeated | 61,196 | 86,599,881,493 bytes | Frozen one-shot local plan, USD 20 reserved, output root absent |
 | `fresh-n50-poly-03`, 50 variables | 0 | 38,629 | 38,017,488,971 bytes at 4096-row chunks | Frozen one-shot local plan, output root absent; finite USD reservation still a launch gate |
 | `fresh-n51-poly-01`, 52-variable original system | 0 | 45,615 | 64,677,063,002 bytes at 60000-row chunks | Prior cloud D5 attempt failed after seed checking, with no candidate object |
 
 For n47, the accepted original D4 map has SHA-256
 `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`.
-Its retained zero count has source/binary custody but no independent second
-enumeration; `n47-rand00-x1-count-plan-002.json` freezes that replay. The
-D5 memory figure and USD 20 reservation are in
+Its retained zero count now has an independently rebuilt and checked
+second enumeration, published in `N47-X1-COUNT-RESULT-20261109.md`
+(receipt SHA-256
+`3a45f84b50c4aeefcc6e1e75d341d60a24c551b25238efb170dbc3425ab0f778`).
+The D5 memory figure and USD 20 reservation are in
 `n47-rand00-d5-local-plan-002.json`.
 
 For n50 polynomial-03, the separate checker accepted `1 not in W_4` with
