@@ -1,0 +1,120 @@
+idea:
+  id: IDEA-20261109-b75c00
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: The Edwards y-line ladder is the RFC 7748 ladder conjugated by a Hadamard; doubling factors through
+    w = y^2; counts are equal
+  class: mechanism
+  claim: 'Hand derivation, nothing executed. $p=2^{255}-19$, $A=486662$, $a_{24}=121665$, $d=-121665/121666=-a_{24}/(a_{24}+1)$,
+    $a=-1$. (C1) Map. For Edwards $y=Y/Z$ and Montgomery $u=X_M/Z_M$, $u=(1+y)/(1-y)$ is $(X_M:Z_M)=(Z+Y:Z-Y)$,
+    inverse $(Y:Z)=(X_M-Z_M:X_M+Z_M)$. It is a bijection of $\mathbb{P}^1(\mathbb{F}_p)$ with no exceptional
+    point: $y=1$ goes to $u=\infty$, $y=-1$ to $u=0$. (C2) Ladder step on $(Y_2:Z_2)$, $(Y_3:Z_3)$ with
+    affine difference $u_1$: $ZZ=Z_2^2$, $YY=Y_2^2$, $E=ZZ-YY$, $P=Y_3Z_2$, $Q=Z_3Y_2$, $X_d=ZZ\cdot YY$,
+    $Z_d=E(ZZ+a_{24}E)$, $Y_2''=X_d-Z_d$, $Z_2''=X_d+Z_d$, $X_s=(P+Q)^2$, $Z_s=u_1(P-Q)^2$, $Y_3''=X_s-Z_s$,
+    $Z_3''=X_s+Z_s$. Cost 5M+4S+1c+8a, identical to the BRIEF''s ladder. Start $(Y_2:Z_2)=(1:1)$, $(Y_3:Z_3)=(u_1-1:u_1+1)$,
+    or $(y_1:1)$ with $u_1=(1+y_1)/(1-y_1)$. Output $u=(Z_2+Y_2)/(Z_2-Y_2)$ or $y=Y_2/Z_2$, one inversion
+    either way. (C3) Doubling factors as two degree-2 maps: $w=y^2$, then $y(2P)=(1-2w-dw^2)/(dw^2-2dw-1)$,
+    equivalently $u(2P)=-(d+1)w/((dw+1)(w-1))$. With $w=BB/AA$ this equals $AA\cdot BB/(E(AA+a_{24}E))$
+    of RFC 7748. (C4) Differential addition on the y-line is free of $d$: $(y_P^2+y_Q^2)(y_{P+Q}+y_{P-Q})=2y_Py_Q(1+y_{P+Q}y_{P-Q})$,
+    i.e. $y_{P+Q}=(2y_Py_Q-y_{P-Q}(y_P^2+y_Q^2))/((y_P^2+y_Q^2)-2y_{P-Q}y_Py_Q)$. (C5) Negative part:
+    no M or S is saved. With a projective difference $(1+y_1:1-y_1)$, $X_s=(1-y_1)(P+Q)^2$ and $Z_s=(1+y_1)(P-Q)^2$,
+    the step is 6M+4S+1c and the entry inversion disappears; that wins only if one inversion costs more
+    than 255M.'
+  mechanism: 'RFC 7748 forms $A=X_2+Z_2$, $B=X_2-Z_2$, $C=X_3+Z_3$, $D=X_3-Z_3$. Under C1 these are $2Z_2$,
+    $2Y_2$, $2Z_3$, $2Y_3$, so the sums and differences the ladder computes on entry are the Edwards coordinates;
+    the Hadamard moves from the input side to the output side and the eight additions are conserved. Every
+    output is scaled by the same factor 16. The symmetry is the involution $y\mapsto-y$ (translation by
+    the point $(0,-1)$ of order 2) on the Kummer line: $w=y^2$ is its quotient, and $w=(x''-A-2)/(x''-A+2)$
+    with $x''=u+1/u+A$ the x-coordinate of the 2-isogenous curve $y^2=x(x-(A+2))(x-(A-2))$. So the $2S$
+    then $2M+1c$ split of xDBL is isogeny then dual isogeny. C4 was checked by expanding the unified law
+    with $x_i^2=(y_i^2-1)/(1+dy_i^2)$: both sides reduce to $(y_1^2+y_2^2)(1+d)(1+dy_1^2y_2^2)$.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/x25519.rs excerpt
+    provenance: internal
+    claim: The ladder step uses 10 fe_mul calls (5M+4S+1c) and 8 additions, and swaps with a branch on
+      the scalar bit.
+    verified_by: this session, by reading the excerpt in the BRIEF
+  - ref: RFC 7748 section 5
+    provenance: recalled
+    claim: The ladder step and a24 = 121665. Pointer only.
+    verified_by: null
+  - ref: Castryck, Galbraith, Farashahi 2008, mixed Edwards-Montgomery representation
+    provenance: recalled
+    claim: y-only Edwards arithmetic related to Montgomery x-only. Pointer only.
+    verified_by: null
+  assumptions:
+  - a = -1, B = 1, A = 486662, d = -a24/(a24+1).
+  - The difference point has y not equal to 1, as for any encodable X25519 input.
+  predictions:
+  - metric: byte mismatches against x25519 on the RFC 7748 section 5.2 vectors
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: fe_mul calls per ladder step, YZ form minus XZ form
+    direction: different
+    minimum_effect: exactly 0, so no saving
+  - metric: symbolic residual of C3 and C4
+    direction: lower
+    minimum_effect: identically 0
+  minimal_test:
+    design: '(1) Proposed scripts/check_yz_ladder_25519.sage: assert C3 as an identity in Q(w) after substituting
+      d = -a24/(a24+1); assert C4 in the function field of the curve squared; assert C2 equals the RFC
+      step under C1 with scale factor 16. (2) Proposed test ladder_yz_matches_xz in src/ecc/x25519.rs:
+      implement C2, run the RFC 7748 single-shot vectors and the 1 and 1000 iteration vectors, and compare
+      bytes with the existing ladder. (3) Feed an Ed25519 public key y through C2 and compare with EdPoint::scalar_mul
+      followed by encoding.'
+    controls:
+    - Existing ladder as reference.
+    - 'Planted bug: replace d by -d in C3 (the untwisted curve); the symbolic check must fail.'
+    - Low-order inputs u = 0 and u = 1, which must reproduce the all-zero output behaviour.
+    required_metrics:
+    - byte mismatch count
+    - fe_mul and addition counts per step for both forms
+    - symbolic residuals
+  falsification_conditions:
+  - Any byte mismatch on an RFC 7748 vector.
+  - C3 or C4 is not an identity.
+  - The YZ step needs a different number of multiplications than the XZ step.
+  - A timeout is infrastructure, not evidence.
+  confounders:
+  - Edwards y of a point on the twist is not a curve point; the ladder still runs on the line, exactly
+    as X25519 does.
+  - The 6M variant trades an inversion for 255M; the crossover depends on fe_inv.
+  interpretation_limits:
+  - An equivalence with equal counts, not a speedup.
+  - The branchy swap in the current ladder is untouched by this record.
+  - No ECDLP statement is made.
+  heuristic_assumptions:
+  - id: H1
+    statement: fe_inv costs fewer than 255 fe_mul in the BigUint helpers, so the 5M step with one entry
+      inversion beats the 6M step.
+    rigorous_support: none; fe_inv was not opened
+    validation_plan: count the multiplications inside fe_inv, or time both variants
+  target_complexity:
+    time_exponent: not an exponent claim; 5M+4S+1c per scalar bit, unchanged
+    memory_exponent: four field elements of ladder state, unchanged
+    best_known: RFC 7748 ladder at 5M+4S+1c per bit
+    hidden_overhead: none; one final inversion as now
+    tradeoff_note: the Edwards to Montgomery map costs zero multiplications inside the ladder
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: 'RFC 7748 on count (equal). Not dominated on interface: it accepts and returns Edwards
+    y without a separate map.'
+  sota_delta: 0M, 0S, 0c, 0a per step against the BRIEF's ladder; removes the map inversion when the input
+    is an Edwards y and the 6M step is used.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; an equivalence of ladder coordinates,
+      not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 ledger index searched for y-line, w-coordinate or 2-isogeny ladder records
+    - BRIEF section 1 x25519.rs excerpt
+    searched:
+      corpus_grep: []
+      web: []
+      blocked:
+      - full ledger and kb search were not available in this session

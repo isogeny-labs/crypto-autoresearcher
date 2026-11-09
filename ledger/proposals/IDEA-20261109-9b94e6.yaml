@@ -1,0 +1,118 @@
+idea:
+  id: IDEA-20261109-9b94e6
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Jacobian arithmetic on the Weierstrass model of Curve25519 as a counted, incomplete control arm
+  class: control
+  claim: 'Hand count, nothing executed. Montgomery $v^2=u^3+Au^2+u$, $A=486662$, $B=1$, $p=2^{255}-19$.
+    The linear map $x=u+A/3$, $y=v$ gives $W: y^2=x^3+a_Wx+b_W$ with $a_W=1-A^2/3$, $b_W=(2A^3-9A)/27$;
+    it has no exceptional point and sends infinity to infinity. $a_W\neq-3$ since $A^2\neq12$. Jacobian
+    coordinates $x=X/Z^2$, $y=Y/Z^3$. (C1) Doubling: $XX=X_1^2$, $YY=Y_1^2$, $YYYY=YY^2$, $ZZ=Z_1^2$,
+    $S=2((X_1+YY)^2-XX-YYYY)$, $M=3XX+a_W\,ZZ^2$, $T=M^2-2S$, $X_3=T$, $Y_3=M(S-T)-8\,YYYY$, $Z_3=(Y_1+Z_1)^2-YY-ZZ$.
+    Cost 1M+8S+1c. (C2) Mixed addition, $Z_2=1$: $Z_1Z_1=Z_1^2$, $U_2=X_2\,Z_1Z_1$, $S_2=Y_2Z_1\,Z_1Z_1$,
+    $H=U_2-X_1$, $HH=H^2$, $I=4HH$, $J=HI$, $r=2(S_2-Y_1)$, $V=X_1I$, $X_3=r^2-J-2V$, $Y_3=r(V-X_3)-2Y_1J$,
+    $Z_3=(Z_1+H)^2-Z_1Z_1-HH$. Cost 7M+4S. The full addition with $U_1=X_1Z_2^2$, $S_1=Y_1Z_2^3$ costs
+    11M+5S. (C3) Exceptions. C1 is valid for every input, including infinity and the 2-torsion point $(A/3,0)$.
+    C2 and the full addition return $(0,0,0)$ when $P_1=P_2$ and a wrong point when either input is infinity;
+    $P_1=-P_2$ correctly gives $Z_3=0$. The law is not unified and not complete. (C4) Per bit of binary
+    double-and-add with mixed additions: 4.5M+10S+1c, against 7M+4S for factored-T extended Edwards and
+    8M+4S+0.5c for the BRIEF''s code. At S = M that is 14.5 against 11 and 12. (C5) Whether an $\mathbb{F}_p$-isomorphic
+    model has $a=-3$ is the question whether $-3/a_W$ is a fourth power mod $p$; this is left as a measurement,
+    not asserted.'
+  mechanism: 'C1 and C2 are the chord and tangent law with $\lambda=M/Z_3$, $Z_3=2Y_1Z_1$ for doubling
+    and $\lambda=r/Z_3$, $Z_3=2Z_1H$ for mixed addition; squarings replace products via $(a+b)^2-a^2-b^2=2ab$.
+    The scaling symmetry is the weighted action $(\lambda^2X,\lambda^3Y,\lambda Z)$, which is what removes
+    inversions. The chord law has no analogue of the non-square $d$: the slope denominator $x_2-x_1$ vanishes
+    on the diagonal, so the diagonal and the identity need separate formulas, and a constant-time implementation
+    must compute both branches and select. The arm is useful as a control because its ratio to the Edwards
+    arm is predicted in advance from the counts.'
+  novelty_status: unverified
+  citations:
+  - ref: IDEA-20260807-e6d79e
+    provenance: internal
+    claim: Montgomery to short Weierstrass map with a = (3 - A^2)/(3B^2) and b = (2A^3 - 9A)/(27B^3);
+      agrees with the map used here at B = 1.
+    verified_by: this session, from the summary line quoted in the BRIEF only
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt
+    provenance: internal
+    claim: The extended Edwards baseline and its call counts.
+    verified_by: this session, by reading the excerpt in the BRIEF
+  - ref: Bernstein and Lange, Explicit-Formulas Database, Jacobian dbl-2007-bl and madd-2007-bl
+    provenance: recalled
+    claim: The formula shapes and the counts 1M+8S and 7M+4S. Pointer only.
+    verified_by: null
+  assumptions:
+  - B = 1, A = 486662, char p is not 2 or 3.
+  - Multiplication by a_W is a full multiplication (generic 255-bit constant).
+  - Test points come from Montgomery (u, v) pairs, so no Edwards map sign is involved.
+  predictions:
+  - metric: ratio of M plus S per bit, Jacobian arm over factored-T Edwards arm, S = M
+    direction: higher
+    minimum_effect: at least 1.25, with 14.5/11 expected
+  - metric: outputs equal to (0,0,0) when C2 is called with P1 = P2
+    direction: higher
+    minimum_effect: all such calls
+  - metric: mismatches against the Edwards arm on non-exceptional inputs
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: 'Proposed scripts/check_jacobian_w25519.sage: assert the curve identity for x = u + A/3; assert
+      C1 and C2 equal the affine chord and tangent law symbolically; evaluate the quartic residue symbol
+      of -3/a_W mod p and report it. Proposed Rust test in src/ecc: map Montgomery points to W, run double-and-add
+      with C1 and C2 using an explicit branch for the exceptions, map back, compare u with the x25519
+      ladder on the RFC 7748 vectors; count fe_mul and fe_sq.'
+    controls:
+    - The x25519 ladder and EdPoint as two independent references.
+    - Exceptional inputs P1 = P2, P1 = O, P2 = O, and the 2-torsion point, each run deliberately.
+    - The same scalar set for every arm.
+    required_metrics:
+    - fe_mul and fe_sq per doubling and per addition
+    - number of exceptional-branch executions
+    - mismatch count
+    - quartic residue symbol of -3/a_W
+  falsification_conditions:
+  - C1 fails on any input, or C2 succeeds on the diagonal.
+  - The measured ratio at S = M is below 1.25.
+  - The Weierstrass identity for a_W and b_W fails.
+  - A timeout is infrastructure, not evidence.
+  confounders:
+  - A fourth-power -3/a_W would allow an a = -3 doubling and move the ratio.
+  - Chudnovsky or co-Z variants change the split between doubling and addition.
+  - The exception branch is data dependent; counts must include it.
+  interpretation_limits:
+  - A control arm; no claim that Jacobian arithmetic is useful on this curve.
+  - Hand counts, not a sealed measured bound; wall time is not reported.
+  - No ECDLP statement is made.
+  heuristic_assumptions:
+  - id: H1
+    statement: Average Hamming weight one half for the scalars, so one addition per two doublings.
+    rigorous_support: holds for uniform scalars; clamped scalars fix three low bits and one high bit
+    validation_plan: report the measured addition and doubling counts beside the ratio
+  target_complexity:
+    time_exponent: not an exponent claim; 4.5M+10S+1c per scalar bit
+    memory_exponent: three field elements per point
+    best_known: factored-T extended Edwards at 7M+4S per bit, complete
+    hidden_overhead: exception handling for the diagonal and the identity
+    tradeoff_note: fewest M per doubling, most S, and no completeness
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: low
+  dominated_by: Extended Edwards coordinates in count and completeness. Filed as a control with a predicted
+    ratio, not as a candidate.
+  sota_delta: Plus 3.5 multiplication-equivalents per bit at S = M against factored-T extended Edwards
+    (14.5 against 11), and loss of completeness on the diagonal and the identity.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; an arithmetic control arm, not an ECDLP
+      mechanism.
+    none_found_after:
+    - BRIEF section 2 ledger index searched for Jacobian or Chudnovsky arithmetic records
+    - IDEA-20260807-e6d79e summary line, which files the map but no addition law
+    searched:
+      corpus_grep: []
+      web: []
+      blocked:
+      - full ledger and kb search were not available in this session
