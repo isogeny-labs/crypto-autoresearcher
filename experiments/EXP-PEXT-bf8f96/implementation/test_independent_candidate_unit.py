@@ -36,7 +36,11 @@ class IndependentCandidateUnitTests(unittest.TestCase):
         self.assertEqual([row["exceptional"] for row in reports], [279, 1])
         self.assertEqual([row["generic_intervals"] for row in reports], [109, 1])
         self.assertEqual([row["geometry_checked"] for row in reports], [279, 1])
+        self.assertEqual([row["arithmetic_checked"] for row in reports], [279, 1])
         self.assertEqual([row["generic_checked"] for row in reports], [1, 1])
+        self.assertEqual([len(unit["exceptional_squareclasses"]) for unit in self.units],
+                         [279, 1])
+        self.assertEqual(self.units[0]["exceptional_squareclasses"].count([1, False]), 1)
 
     def test_mutations_are_refused(self):
         unit = self.units[0]
@@ -57,6 +61,29 @@ class IndependentCandidateUnitTests(unittest.TestCase):
         wrong_genus["rows"][0][4] += 1
         with self.assertRaisesRegex(ValueError, "sampled candidate geometry mismatch"):
             self.checker.verify(wrong_genus, self.forms[0], geometry_ordinals=sample)
+        missing_squareclass = copy.deepcopy(unit)
+        missing_squareclass["exceptional_squareclasses"].pop()
+        with self.assertRaisesRegex(ValueError, "square-class vector"):
+            self.checker.verify(missing_squareclass, self.forms[0])
+        rank_one = next(index for index, entry in
+                        enumerate(unit["exceptional_squareclasses"]) if entry[0] == 1)
+        wrong_arithmetic = copy.deepcopy(unit)
+        wrong_arithmetic["exceptional_squareclasses"][rank_one] = [2, True]
+        with self.assertRaisesRegex(ValueError, "arithmetic square classes mismatch"):
+            self.checker.verify(wrong_arithmetic, self.forms[0],
+                                geometry_ordinals=[unit["rows"][rank_one][0]])
+        wrong_constant = copy.deepcopy(unit)
+        wrong_constant["exceptional_squareclasses"][0][1] = True
+        with self.assertRaisesRegex(ValueError, "square-class vector"):
+            self.checker.verify(wrong_constant, self.forms[0])
+        reordered = copy.deepcopy(unit)
+        rank_three = next(index for index, entry in
+                          enumerate(unit["exceptional_squareclasses"]) if entry[0] == 3)
+        reordered["exceptional_squareclasses"][rank_one], reordered["exceptional_squareclasses"][rank_three] = (
+            reordered["exceptional_squareclasses"][rank_three],
+            reordered["exceptional_squareclasses"][rank_one])
+        with self.assertRaisesRegex(ValueError, "square-class vector"):
+            self.checker.verify(reordered, self.forms[0])
         missing_aa = copy.deepcopy(unit)
         missing_aa.pop("candidate_order_aa")
         with self.assertRaisesRegex(ValueError, "candidate identity"):

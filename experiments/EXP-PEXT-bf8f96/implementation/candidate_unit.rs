@@ -78,21 +78,30 @@ impl CandidateEngine {
         self.images.reverse_buckets();
         for index in &mut self.indices {index.reverse_representatives();}
         if checked!=reversed? {return Err("C3 reversed candidate enumeration differs".into());}
+        let mut squareclasses=Vec::with_capacity(checked.exceptional.len());
         let rows=checked.exceptional.iter().map(|(ordinal,geometry)| {
             let matrix=ctx.structure_matrix(&self.indices[0],*ordinal).map_err(str::to_string)?;
+            let moved=ctx.transform_form(form,matrix).map_err(str::to_string)?;
+            let orbit=ctx.conjugate_forms(moved).map_err(str::to_string)?;
+            let classes=ctx.square_classes(&orbit).map_err(str::to_string)?;
+            if classes.geometric_rank!=geometry.geometric_rank {
+                return Err("exceptional arithmetic/geometric rank mismatch".into());
+            }
+            squareclasses.push(format!("[{},{}]",classes.arithmetic_rank,
+                classes.contains_nonsquare_constant));
             Ok(format!("[{},[{},{},{},{}],{},{},{}]",ordinal,
                 ctx.encoding()[matrix[0] as usize],ctx.encoding()[matrix[1] as usize],
                 ctx.encoding()[matrix[2] as usize],ctx.encoding()[matrix[3] as usize],
                 geometry.geometric_rank,geometry.branch_points,geometry.geometric_genus))
         }).collect::<Result<Vec<String>,String>>()?;
         let intervals=numbers(checked.generic_intervals.iter().map(|(start,end)|format!("[{start},{end}]")));
-        Ok(format!("{{\"schema\":\"pext.checked-candidate-unit/v1\",\"structure_order\":\"left-pgl2-fq/v1\",\"candidate_order_aa\":\"reverse-cocycle-build-representatives-buckets-and-roots/v1\",\"field\":{},\"form\":{},\"factor_pattern\":{},\"infinity\":{},\"factors\":{},\"extension_modulus\":{},\"roots\":{},\"structures\":{},\"cocycle_entries\":{},\"rational_image_entries\":{},\"rational_count\":{},\"nonrational_count\":{},\"duplicate_count\":{},\"exceptional\":{},\"generic\":{},\"rows\":{},\"generic_intervals\":{}}}",
+        Ok(format!("{{\"schema\":\"pext.checked-candidate-unit/v1\",\"structure_order\":\"left-pgl2-fq/v1\",\"candidate_order_aa\":\"reverse-cocycle-build-representatives-buckets-and-roots/v1\",\"field\":{},\"form\":{},\"factor_pattern\":{},\"infinity\":{},\"factors\":{},\"extension_modulus\":{},\"roots\":{},\"structures\":{},\"cocycle_entries\":{},\"rational_image_entries\":{},\"rational_count\":{},\"nonrational_count\":{},\"duplicate_count\":{},\"exceptional\":{},\"generic\":{},\"rows\":{},\"exceptional_squareclasses\":{},\"generic_intervals\":{}}}",
             field_json(ctx),numbers(encoded.iter().map(ToString::to_string)),pattern,branch.factorization.infinity,
             factors,extension_modulus,roots,checked.structures,
             numbers(self.indices.iter().map(|index|index.len().to_string())),self.images.entries(),
             checked.rational_count,checked.nonrational_count,checked.duplicate_count,
             checked.exceptional.len(),checked.structures-checked.exceptional.len() as u64,
-            numbers(rows),intervals))
+            numbers(rows),numbers(squareclasses),intervals))
     }
 }
 fn limits(args:&[String])->Result<[u64;6],String> {
