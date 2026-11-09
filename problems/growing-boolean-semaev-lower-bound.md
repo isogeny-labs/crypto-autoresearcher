@@ -120,3 +120,11 @@ A hand-worked actual F16 Semaev example shows PQ FFD and small exact LFD changin
 The source-only packet `analysis/semaev-bound-labels-20261109/` reconstructs normalized m=2 Boolean coordinate inputs and annotates applicable written upper bounds with exact input/equation/theorem-source hashes. It leaves exact LFD and lower-bound fields unknown. Five fixed software controls pass; the independent algebra checker passes 34 checks after a preserved Python portability failure. There were no new scientific draws or closure runs.
 
 The inside-subfield note derives G(x,r)=x²+x(r²+r+c)+zr² and exact affine/quadratic maps between solution sets. At caps D>=2 the forward simulation preserves D and the reverse simulation costs at most 2D. This does not transfer a constant satisfiable LFD bound: arbitrary output degree must be preserved in max(C,deg f). A family of full-closure lower-bound certificates surviving these identities remains missing. No unboundedness theorem is claimed.
+
+### 2026-11-09: lower-bound transfer and executable finite feasibility encoding
+
+The independently reviewed restriction-indicator argument shows d_ref(restriction)<=max(d_LFD(original),codimension,2). A hard restriction transfers its degree only when it exceeds the indicator cost. R35a's degree5 cannot transfer through its codimension34 restriction of the full-field system.
+
+After trace elimination the exact alternate Semaev model is one quadratic Boolean definitional extension; UNSAT refutation degrees differ by at most two. This is a tighter reduction target, not SAT LFD invariance or an infinite-family construction.
+
+`analysis/semaev-bound-labels-20261109/encode_certificate.py` emits an exact fixed-D/fixed-rank GF2 feasibility system for closed-kernel certificates, with all eligible multiplication constraints and a right inverse. Seven software controls and an emitted 24-equation hand-specified rank-two example pass. No solver search occurred. Independent checking and a separate UNSAT/count/missing-consequence bridge remain required for every proposed LFD lower bound. The growing-family obligation remains open.

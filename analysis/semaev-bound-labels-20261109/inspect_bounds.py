@@ -38,7 +38,7 @@ class Field:
     def __init__(self, n, modulus):
         if type(n) is not int or not 3 <= n <= 64:
             raise ValueError('n must be an integer in [3,64]')
-        if type(modulus) is not int or modulus.bit_length() != n + 1 or not modulus & 1:
+        if type(modulus) is not int or modulus <= 0 or modulus.bit_length() != n + 1 or not modulus & 1:
             raise ValueError('monic odd degree-n modulus required')
         self.n, self.modulus = n, modulus
         # Rabin irreducibility test over F2, with all prime divisors of n.
@@ -161,6 +161,9 @@ def inspect(spec, product_limit=0):
            'status': 'qualified_degree_two_witness' if all_quadratic and pr > qr else 'not_established'}
     return {'schema': 'semaev.written-bound-inspection/v1', 'input_sha256': digest(spec),
             'equation_binding_sha256': digest(binding), 'equation_binding': binding,
+            'system_scope': 'parameter-reconstructed-full-vector-space',
+            'dataset_admission': False, 'original_dataset_equations_match': 'not_checked',
+            'theorem_sources_runtime_verified': False,
             'n': f.n, 'k': k, 'm': 2, 'target_has_rational_lift': rational,
             'trace_on_basis': trace_values, 'trace_constant': trace_constant,
             'quadratic_subfield_basis': subfield, 'product_profile': product,
