@@ -74,3 +74,8 @@ design, execution and review procedures without asking the user to switch skills
 
 Direct invocations of the helper skills remain supported. The `autoresearch`
 CLI is a separate executable; this skill does not claim a new CLI subcommand.
+
+For full-cycle goals, use [the default frontier research loop](../../../docs/challenge-research-loop.md):
+`autoresearch campaign next --goal <GOAL-ID>` selects the current artifact-driven
+phase, and `campaign frontier` exposes reviewed points, gaps and the next test.
+Preserve explicit stage-only requests.
