@@ -14,7 +14,7 @@ from geometric_campaign import EXPECTED
 
 
 ARTIFACT = "c3-order-aa.json"
-CANDIDATE_AA = "reverse-representatives-buckets-and-nonrational-roots/v1"
+CANDIDATE_AA = "reverse-cocycle-build-representatives-buckets-and-roots/v1"
 
 
 def canonical_bytes(value):

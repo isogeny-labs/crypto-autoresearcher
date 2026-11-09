@@ -60,7 +60,7 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures,
             or not isinstance(unit, dict)
             or unit.get("schema") != "pext.checked-candidate-unit/v1"
             or unit.get("structure_order") != GENERIC_ORDER
-            or unit.get("candidate_order_aa") != "reverse-representatives-buckets-and-nonrational-roots/v1"
+            or unit.get("candidate_order_aa") != "reverse-cocycle-build-representatives-buckets-and-roots/v1"
             or unit.get("structures") != expected_structures
             or type(expected_structures) is not int or expected_structures < 1):
         raise ValueError("geometric unit identity or structure count")
