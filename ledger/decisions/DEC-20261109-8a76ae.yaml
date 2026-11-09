@@ -1,0 +1,75 @@
+coordinator_decision:
+  id: DEC-20261109-8a76ae
+  id_provenance: Allocated with tools/allocate_id.py --next coordinator_decision --date 20261109 and checked free
+    before writing.
+  recorded_at: '2026-11-09'
+  decided_at: '2026-11-09'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: Native Codex Coordinator subagent gpt-6-sol high; adapter resolve --role coordinator --backend
+    openai-gpt6 returned matching policy/model, model_verified false; no API inference or doctor probe claimed.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  mode: coordinate
+  kind: prospective_recovery_scheduling
+  context: EXP-PFDR-7c7c95 pilot RUN-PFDR-1e5d2b ended invalid_output; independent Validator denied derivative-input
+    eligibility in DEC-20261109-efb6f9. The BATCH-b6a00a executor claim epoch 1 was released failed with the immutable
+    receipt. Four dependent stages remain unrun; no live claim authorizes them. This decision closes that held lane
+    and opens a disjoint design lane only.
+  decision: design
+  decision_label: prepare a new corrected-pilot contract without current execution authorization
+  target_ids:
+  - GOAL-PFDR-fd09e0
+  - EXP-PFDR-7c7c95
+  - EXP-PFDR-fa915a
+  - BATCH-b6a00a
+  - BATCH-839760
+  rationale:
+  - 'The existing approval fixes seven cumulative attempts and zero further retries. Three attempts are consumed:
+    one output-validated historical selftest and two immutable invalid pilots. The failed derivative cannot feed
+    a dependent stage.'
+  - Standing user authorization permits a new complete prospective protocol, but neither this scheduling decision
+    nor the new lane approves an eighth attempt.
+  - The proposed corrected pilot and four dependent stages preserve the original scientific cells, controls, seeds,
+    metrics and decision thresholds; they need fresh identities, corrected manifest/source custody and exact-byte
+    preapproval.
+  - The old executor claim is released failed, the new experiment runs directory and batch directory are disjoint,
+    and no scientific run is authorized by opening the new lane.
+  attempt_accounting:
+    historical_valid: 1
+    historical_invalid: 2
+    consumed: 3
+    proposed_new: 5
+    prospective_cumulative_ceiling: 8
+    further_retries_after_proposal: 0
+    currently_authorized_new_attempts: 0
+  resource_proposal:
+    execution_location: existing host only
+    new_paid_cloud_usd: 0
+    maximum_workers: 4
+    aggregate_memory_gib: 4
+    cpu_quota_percent: 400
+    max_concurrent_trials: 1
+    whole_scope_wall_seconds_including_grace: 107600
+    scope_runtime_seconds: 107570
+    scope_stop_grace_seconds: 30
+    historical_receipt_wall_seconds:
+    - 1.937072
+    - 178.590461
+    - 139.25858
+    historical_cpu_usage: unknown; no cumulative CPU hard-cap claim from receipt spans
+  status_transitions: []
+  next_actions:
+  - Complete the new protocol/specification/plan/launcher, source and pilot manifest regression without scientific
+    execution; retain all frozen predecessor bytes and invalid receipts.
+  - Run exact-byte experiment_preapproval.py on the proposed final packet. Record separate Coordinator approval
+    only if approvable true, archive/publish exact bytes and require named selector ready before any dispatch.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Scheduling and software custody repair contain no scientific result.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261109-8a76ae.yaml
+  - coordination/goals/GOAL-PFDR-fd09e0/lanes/BATCH-b6a00a.closed.json
+  - coordination/goals/GOAL-PFDR-fd09e0/lanes/BATCH-839760.lane.json
