@@ -155,3 +155,14 @@ The trace-slice note replaces x,y by independent x in V and t in W=V intersect k
 `python3 join_finite_selector.py PARAMETERS.json WEIL-SYSTEM.json --output NEW.json` checks the exact cyclic sorted-code producer format, including repeated/nonlinear selectors and zero selector bits. Parameters use schema semaev.finite-selector-parameters/v1 with n,modulus,a6,z. It independently reconstructs maps and every original S3 row by field evaluation and Mobius inversion, then labels only LFD<=N+1. No solution count, exact LFD, FFD or whole-dataset admission is inferred. Wire limits are1MiB, n3..64 and selector bits0..6 per summand.
 
 Seven new symbolic software controls and four existing retained-join controls pass. The accepted artifact in finite-selector-controls is a hand-constructed software fixture, not a production record. The saved CLI46 audit was inspected: its m2 cases are enumeration/PKM/double-large-prime; F4/F5 cases are m3. It therefore does not provide a production m2 Weil artifact for this join. No new scientific trial, solver run, native build or cloud job occurred.
+
+
+## Saturated closure cost bounds and the next quadratic forms
+
+The generic strict-closure note proves a total feedback algorithm bound. Let M count degree<=D monomials and L count degree<=D-1 monomials; immutable degree-first echelon insertion processes each eligible pivot once. For R inputs, at most R+NL insertion attempts and (R+NL)M whole-row XORs suffice, including every later degree fall. Dense coefficient storage is at most M² bits, with indexing/metadata/provenance and other costs separately stated. Full Boolean cap N+1 gives M=L=2^N.
+
+The finite-selector CLI now emits these exact combinatorial maxima in closure_algorithm_cost_bound after the original equation join passes. They describe the named hypothetical closure algorithm, not an executed native backend. Native instructions and wall time remain null; training_cost_eligible is false. Eight selector controls and four existing join controls pass. A new CLI output in operation-bound-controls preserves the previous control output unchanged.
+
+The trace-feedback note calculates the complete first-step polynomials, including linked quadratic blocks and affine tails. A mandatory ax multiplier produces a pure-x term detected by Tr(a*x³), so the rectangular-plus-affine class cannot be invariant. This does not assert W3 differs from W2. The next obligation is stability of a larger linked-block space under all further cubic cancellations. No growing LFD bound is claimed.
+
+No native build or new scientific/cloud run occurred. The native source remains4be27eee881663c44318ed2d9debfad05d071538; its saved owned-authentic-validation authorization is approved:false. Existing native telemetry policy still marks training_cost_eligible:false. The theorem-derived algorithm envelope does not override either condition.

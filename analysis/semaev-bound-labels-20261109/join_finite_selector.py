@@ -81,9 +81,31 @@ def check(parameters, artifact):
     expected = coordinate_rows(anf(values, nv), n)
     if polys(artifact['equations'], n, nv) != expected:
         raise ValueError('literal equation mismatch')
+    # A bound for the specified dense queue algorithm, not observed solver work.
+    dimension = 1 << nv
+    attempts = n + nv*dimension
+    closure_cost = {
+        'algorithm': 'immutable-degree-ordered-dense-boolean-closure/v1',
+        'status': 'theorem_derived_upper_bound_not_executed',
+        'degree_cap': nv+1, 'input_rows': n,
+        'monomial_columns': dimension, 'eligible_pivot_bound': dimension,
+        'candidate_insertion_bound': attempts,
+        'whole_row_xor_bound': attempts*dimension,
+        'coefficient_bit_xor_bound': attempts*dimension*dimension,
+        'variable_product_column_visit_bound': nv*dimension*dimension,
+        'dense_basis_coefficient_storage_bits_bound': dimension*dimension,
+        'arithmetic_model': 'unit indexed bit access; coefficient XORs counted separately',
+        'excluded_costs': ['input parsing and validation', 'field and ANF reconstruction',
+                           'monomial indexing', 'queue and pivot metadata',
+                           'solution extraction', 'proof provenance', 'I/O'],
+        'native_instruction_count': None, 'wall_time_bound_seconds': None,
+        'training_cost_eligible': False,
+        'theorem': 'generic-strict-closure-operation-bound.md',
+    }
     return {
         'schema': 'semaev.finite-selector-bound-join/v1',
         'parameters_sha256': digest(parameters), 'retained_artifact_sha256_canonical': digest(artifact),
+        'closure_algorithm_cost_bound': closure_cost,
         'n_vars': nv, 'selector_table_entries': len(codes), 'distinct_selector_values': len(distinct),
         'last_fall_degree': {'lower_bound': None, 'upper_bound': nv+1, 'exact': None,
                              'reason': 'finite_boolean_ring_full_cap'},
@@ -106,7 +128,8 @@ def main():
     result.update(parameters_file_sha256=ph, retained_file_sha256=ah)
     result['source_hashes'] = {name: hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
                               for name in ['join_finite_selector.py', 'join_retained_weil.py', 'inspect_bounds.py',
-                                           'finite-selector-bounds-and-transfer.md', 'finite-selector-bounds-review.md']}
+                                           'finite-selector-bounds-and-transfer.md', 'finite-selector-bounds-review.md',
+                                           'generic-strict-closure-operation-bound.md', 'generic-strict-closure-operation-review.md']}
     with args.output.open('x') as out:
         json.dump(result, out, sort_keys=True, indent=2); out.write('\n')
 

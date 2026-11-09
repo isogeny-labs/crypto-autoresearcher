@@ -35,6 +35,16 @@ class Tests(unittest.TestCase):
         self.assertEqual(r['last_fall_degree']['upper_bound'],5)
         self.assertEqual(r['distinct_selector_values'],3)
         self.assertIsNone(r['solution_count']);self.assertFalse(r['dataset_admission'])
+    def test_cost_envelope_is_theoretical_and_scoped(self):
+        s,a=fixture();r=check(s,a);c=r['closure_algorithm_cost_bound']
+        self.assertEqual(c['degree_cap'],5)
+        self.assertEqual(c['candidate_insertion_bound'],67)
+        self.assertEqual(c['whole_row_xor_bound'],1072)
+        self.assertEqual(c['coefficient_bit_xor_bound'],17152)
+        self.assertEqual(c['dense_basis_coefficient_storage_bits_bound'],256)
+        self.assertFalse(c['training_cost_eligible'])
+        self.assertIsNone(c['native_instruction_count'])
+        self.assertIn('solution extraction',c['excluded_costs'])
     def test_single_constant(self):
         s,a=fixture(('1',));r=check(s,a)
         self.assertEqual(r['n_vars'],0);self.assertEqual(r['last_fall_degree']['upper_bound'],1)
