@@ -57,6 +57,10 @@ class IndependentCandidateUnitTests(unittest.TestCase):
         wrong_genus["rows"][0][4] += 1
         with self.assertRaisesRegex(ValueError, "sampled candidate geometry mismatch"):
             self.checker.verify(wrong_genus, self.forms[0], geometry_ordinals=sample)
+        missing_aa = copy.deepcopy(unit)
+        missing_aa.pop("candidate_order_aa")
+        with self.assertRaisesRegex(ValueError, "candidate identity"):
+            self.checker.verify(missing_aa, self.forms[0])
         with self.assertRaisesRegex(ValueError, "external form binding"):
             self.checker.verify(unit, self.forms[1])
 

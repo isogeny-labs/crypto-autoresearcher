@@ -60,6 +60,7 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures,
             or not isinstance(unit, dict)
             or unit.get("schema") != "pext.checked-candidate-unit/v1"
             or unit.get("structure_order") != GENERIC_ORDER
+            or unit.get("candidate_order_aa") != "reverse-cocycle-build-representatives-buckets-and-roots/v1"
             or unit.get("structures") != expected_structures
             or type(expected_structures) is not int or expected_structures < 1):
         raise ValueError("geometric unit identity or structure count")
@@ -115,6 +116,7 @@ def unit_summary(unit, *, n, target_count, t_index, expected_structures,
     violations = None if allowed is None else sum(row[4] not in allowed for row in rows) + (
         generic if generic_genus not in allowed else 0)
     return {"factor_pattern": pattern, "expected_factor_pattern": wanted_pattern,
+            "candidate_order_aa": unit["candidate_order_aa"],
             "branch_type_mismatch_count": int(pattern != wanted_pattern),
             "geometric_spectrum_violation_count": violations,
             "spectrum": sorted(set(genera)), "geometric_minimum": min(genera),
