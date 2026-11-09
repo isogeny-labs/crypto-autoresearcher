@@ -1,0 +1,20 @@
+from pathlib import Path
+import hashlib,json,subprocess,tarfile
+root=Path('/tmp/ecd-develop-20261109');repo=root/'repository'
+dest=repo/'harness/classical_ecdlp_controlled_followup_v6/verification/comparison-20261109';dest.mkdir(exist_ok=False)
+archive=dest/'software-controls.tar.gz'
+names=['comparison-tests','comparison-tests-02','v6-tests','v6-tests-02','contract-tests','contract-tests-02']
+for name in names:
+ rec=json.loads((root/(name+'.json')).read_text());assert rec['wait_returned'] is True
+for name in ['comparison-tests-02','v6-tests-02','contract-tests-02']:
+ assert json.loads((root/(name+'.json')).read_text())['returncode']==0
+with tarfile.open(archive,'w:gz',compresslevel=6) as tar:
+ for name in ['controls-01','controls-02','references']:
+  tar.add(root/name,arcname=name)
+ for name in names:
+  for suffix in ['.json','.stdout.txt','.stderr.txt']:tar.add(root/(name+suffix),arcname='receipts/'+name+suffix)
+meta={'source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=repo,text=True).strip(),
+      'bytes':archive.stat().st_size,'sha256':hashlib.file_digest(archive.open('rb'),'sha256').hexdigest(),
+      'archive':str(archive),'all_attempt_receipts':{n:json.loads((root/(n+'.json')).read_text()) for n in names}}
+(root/'package-metadata.json').write_text(json.dumps(meta,indent=2)+'\n')
+print(json.dumps({k:v for k,v in meta.items() if k!='all_attempt_receipts'}))
