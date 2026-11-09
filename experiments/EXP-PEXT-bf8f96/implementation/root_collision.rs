@@ -1,5 +1,6 @@
 // Exact K-projective maps sending beta to alpha in a symbolic extension.
 
+#[derive(Debug,PartialEq,Eq)]
 pub struct ExceptionalCandidateSummary {
     pub rational_count: usize,
     pub nonrational_count: usize,
@@ -93,11 +94,28 @@ impl Context {
         image_index:&RationalImageIndex,cocycle_indices:&[CocycleIndex],
         maximum_rational_candidates:u64,maximum_nonrational_maps:u64,
         maximum_total_candidates:u64)->Result<ExceptionalCandidateSummary,&'static str> {
+        self.checked_exceptional_candidates_ordered(form,image_index,cocycle_indices,
+            maximum_rational_candidates,maximum_nonrational_maps,
+            maximum_total_candidates,false)
+    }
+    pub fn checked_exceptional_candidates_reversed_roots(&self,form:[u32;5],
+        image_index:&RationalImageIndex,cocycle_indices:&[CocycleIndex],
+        maximum_rational_candidates:u64,maximum_nonrational_maps:u64,
+        maximum_total_candidates:u64)->Result<ExceptionalCandidateSummary,&'static str> {
+        self.checked_exceptional_candidates_ordered(form,image_index,cocycle_indices,
+            maximum_rational_candidates,maximum_nonrational_maps,
+            maximum_total_candidates,true)
+    }
+    fn checked_exceptional_candidates_ordered(&self,form:[u32;5],
+        image_index:&RationalImageIndex,cocycle_indices:&[CocycleIndex],
+        maximum_rational_candidates:u64,maximum_nonrational_maps:u64,
+        maximum_total_candidates:u64,reverse_roots:bool)
+        ->Result<ExceptionalCandidateSummary,&'static str> {
         let first=cocycle_indices.first().ok_or("missing first cocycle index")?;
         let rational=self.rational_root_collision_ordinals(form,image_index,cocycle_indices,
             maximum_rational_candidates)?;
-        let nonrational=self.nonrational_root_collision_ordinals(form,cocycle_indices,
-            maximum_nonrational_maps)?;
+        let nonrational=self.nonrational_root_collision_ordinals_ordered(form,cocycle_indices,
+            maximum_nonrational_maps,reverse_roots)?;
         let mut ordinals=rational.clone();ordinals.extend_from_slice(&nonrational);
         ordinals.sort_unstable();ordinals.dedup();
         if ordinals.len() as u64>maximum_total_candidates {
@@ -135,6 +153,12 @@ impl Context {
     /// The caller must also union the complete K-rational-root contribution.
     pub fn nonrational_root_collision_ordinals(&self,form:[u32;5],
         cocycle_indices:&[CocycleIndex],maximum_maps:u64)->Result<Vec<u64>,&'static str> {
+        self.nonrational_root_collision_ordinals_ordered(form,cocycle_indices,
+            maximum_maps,false)
+    }
+    fn nonrational_root_collision_ordinals_ordered(&self,form:[u32;5],
+        cocycle_indices:&[CocycleIndex],maximum_maps:u64,reverse_roots:bool)
+        ->Result<Vec<u64>,&'static str> {
         let expected_powers=(self.field.n-1)/2;
         if cocycle_indices.len()!=expected_powers as usize
             || cocycle_indices.iter().enumerate().any(|(i,index)|index.power!=i as u32+1
@@ -158,9 +182,13 @@ impl Context {
         let mut count=0u64;
         let mut ordinals=Vec::new();
         for (power,index) in cocycle_indices.iter().enumerate() {
-            for (a,&alpha) in roots.finite_roots.iter().enumerate() {
+            for position_a in 0..roots.finite_roots.len() {
+                let a=if reverse_roots {roots.finite_roots.len()-1-position_a} else {position_a};
+                let alpha=roots.finite_roots[a];
                 if degrees[a]==1 {continue;}
-                for (g,&gamma) in roots.finite_roots.iter().enumerate() {
+                for position_g in 0..roots.finite_roots.len() {
+                    let g=if reverse_roots {roots.finite_roots.len()-1-position_g} else {position_g};
+                    let gamma=roots.finite_roots[g];
                     if degrees[a]!=degrees[g] {continue;}
                     let beta=extension.frobenius(gamma,power as u32+1)?;
                     let bound=if degrees[a]==2 {q+1} else {1};

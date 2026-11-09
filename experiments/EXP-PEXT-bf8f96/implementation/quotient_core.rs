@@ -72,6 +72,8 @@ mod implementation {
     impl CocycleIndex {
         pub fn len(&self)->usize {self.entries.len()}
         pub fn power(&self)->u32 {self.power}
+        /// Change candidate enumeration without changing canonical ordinals.
+        pub fn reverse_representatives(&mut self) {self.nonrational_reps.reverse();}
     }
     pub struct RationalImageIndex {
         prime:u32,
@@ -83,6 +85,10 @@ mod implementation {
     impl RationalImageIndex {
         pub fn entries(&self)->u64 {self.entries}
         pub fn roots(&self)->usize {self.by_root.len()}
+        /// Reverse each fixed-root candidate stream in place.
+        pub fn reverse_buckets(&mut self) {
+            for bucket in &mut self.by_root {bucket.reverse();}
+        }
     }
 
     impl Context {
