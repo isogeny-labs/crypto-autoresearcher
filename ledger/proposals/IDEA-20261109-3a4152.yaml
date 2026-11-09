@@ -1,0 +1,147 @@
+idea:
+  id: IDEA-20261109-3a4152
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Etale-algebra trace form of S_3 over F_p, three x-coordinates are a relation iff Tr_A(c q(x_1)
+    q(x_2) q(x_3)) = 0, which makes arity-2 point decomposition a 3SUM into the trace-zero locus of A^*
+    with computable logs
+  class: representation
+  claim: 'Let E be y^2 = x^3 + a x + b over F_p, p > 3, prime order. S_3 is symmetric of degree 2 in each
+    variable, hence a symmetric trilinear form T on W = Sym^2(F_p^2) at the Veronese vectors (1, x_i,
+    x_i^2); C(w) = T(w,w,w) is the ternary cubic of the wave-2 complexity record (j = 0 claimed for all
+    (a,b)). For a = 0, C = 3 w_0 w_2^2 - 6 w_1^2 w_2 - 12 b w_0^2 w_1 is multiplied by zeta under diag(1,
+    zeta, zeta^2) and the three coordinate points lie on C, so an order-3 automorphism with a fixed point
+    exists and j(C) = 0. Claim 1 (identity). A smooth j = 0 cubic has a unique length-3 Waring decomposition;
+    descending its inflection triangle gives an etale F_p-algebra A of degree 3, an F_p-linear map W ->
+    A, c in A^*/(A^*)^3, and S_3(x_1,x_2,x_3) = Tr_{A/F_p}(c q(x_1) q(x_2) q(x_3)) with q(x) the image
+    of (1, x, x^2). Claim 2 (type of A for a = 0). Rescaling C to w_0 w_2^2 + w_1^2 w_2 + w_0^2 w_1 needs
+    b^{1/3}, and the cyclic cubic has Waring triangle {w_0 + omega^i w_1 + omega^{2i} w_2}, so A = F_p^3
+    iff p = 1 mod 3 and b is a cube, A = F_{p^3} iff p = 1 mod 3 and b is not a cube, A = F_p x F_{p^2}
+    iff p = 2 mod 3. For secp256k1 the type is decided by the cubic residuacity of 7. Claim 3 (reduction).
+    Write q(x_i) = g^{L_i} in A^*; then P_1 + P_2 = +-P_3 iff L_1 + L_2 + L_3 lies in Z = {L : Tr(c g^L)
+    = 0}, a density-1/p subset of a group of order about p^2 (split case: 2-D 3SUM into the graph of the
+    Zech logarithm). Claim 4 (honest cost). No solver of this 3SUM below B^2 is known; a charged hash
+    solver on (A, log) coordinates costs at least point-addition enumeration.'
+  mechanism: 'The Veronese conic Gamma = {(1:x:x^2)} breaks the GL_3 symmetry of C, so the decomposition
+    is a statement about S_3, not about E. The missing lemma that would move an exponent is: 3SUM into
+    a Kummer-type trace-zero locus with summands on the image q(Gamma) admits a B^{2-delta} algorithm.
+    The object computed this month is the triple (A, q, c) and the type table.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_3 defines the relation; this record rewrites it, it does not replace it.
+    verified_by: Mythos brief section 3, row KR-IC-5a43e5
+  - ref: KR-IC-955fd6
+    provenance: internal
+    claim: Symmetrised polynomials use torsion; the trace form needs no torsion and exists on prime-order
+      curves.
+    verified_by: Mythos brief section 3, row KR-IC-955fd6
+  - ref: KR-RHO-5b1c0a
+    provenance: internal
+    claim: Representation techniques over F_{p^2} cost p^{1.314}; exponent delta here is 0.
+    verified_by: Mythos brief section 3, row KR-RHO-5b1c0a
+  - ref: 'wave-2 complexity record: ternary cubic attached to S_3 has j = 0'
+    provenance: internal
+    claim: Supplies the j = 0 and Waring-rank-3 premise; checked here for a = 0 only.
+    verified_by: Mythos brief, Wave 2 complexity records list
+  - ref: uniqueness of the length-3 Waring decomposition of a Fermat-type cubic
+    provenance: recalled
+    claim: VSP(C,3) is a point for smooth j = 0 ternary cubics.
+    verified_by: not verified in this session; recompute at toy p
+  assumptions:
+  - p > 3 and 4a^3 + 27b^2 nonzero; the test recomputes both.
+  - The chosen toy primes satisfy p = 1 mod 3 for the split and F_{p^3} arms.
+  predictions:
+  - metric: identity residual S_3 - Tr(c q q q) over 10^3 random triples per curve, 100 curves
+    direction: zero
+    minimum_effect: exactly 0 on every triple
+  - metric: agreement of the computed type of A with the cubic-residue rule, a = 0 curves
+    direction: higher
+    minimum_effect: 100 of 100 curves
+  - metric: charged ratio cost(trace-3SUM hash solver) / cost(addition enumeration), m = 2, B in 2^8..2^12
+    direction: higher
+    minimum_effect: at least 1.0 at every B
+  minimal_test:
+    design: Sage or PARI at p <= 2^30 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md. Build C from S_3,
+      verify j(C) = 0, locate the Waring triangle via the Hesse pencil (C and its Hessian), descend to
+      (A, q, c), verify the identity, then compute logs in A^* (ca_indexcalc for F_p, pari for F_{p^2},
+      F_{p^3}) and run a hash-based 3SUM-into-Z solver against point-addition enumeration, counting F_p
+      multiplications.
+    controls:
+    - Random symmetric trilinear form of the same shape with j(C') not 0; no length-3 decomposition should
+      exist.
+    - Randomly relabelled logs with the same Z; solver cost must be unchanged.
+    - Zero discriminant or p = 3 is an invalid run.
+    required_metrics:
+    - j(C)
+    - type of A and the cubic character of b
+    - identity residual count
+    - F_p multiplications for both solvers
+    - number of relations found by both solvers
+  falsification_conditions:
+  - The identity fails on a smooth curve (then the wave-2 j = 0 claim is false for that curve).
+  - The type of A disagrees with the cubic-residue rule on an a = 0 curve.
+  - A solver on (A, log) coordinates with fitted exponent below 1.8 in B appears (this would be the positive
+    outcome).
+  confounders:
+  - Fixed points of the diagonal action lying on C were checked only for a = 0; general a needs the computed
+    Waring triangle.
+  - c is defined up to cubes; the type table is insensitive to this, the log reduction is not.
+  interpretation_limits:
+  - A verified identity is a representation statement; no ECDLP exponent changes.
+  - The log coordinates presuppose an F_p-side DLP at 256 bits (F_{p^3} costs about 10^3 to 10^4 core-years).
+  heuristic_assumptions:
+  - id: H1
+    statement: The Waring triangle is unique, so A is well defined.
+    rigorous_support: Classical for smooth Fermat-type cubics (recalled).
+    validation_plan: Enumerate all length-3 decompositions via the Hesse pencil at toy p.
+  - id: H2
+    statement: 3SUM into the trace-zero locus has no B^{2-delta} solver.
+    rigorous_support: Conditional 3SUM hardness for integers; nothing for this variant.
+    validation_plan: Report charged baselines; file the lemma as open.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged; arity-2 relation search stays B^2 in both coordinate systems
+    memory_exponent: B for the base hash, B^2 if pair products are stored
+    best_known: Pollard rho, Theta(N^{1/2}) group operations (KR-RHO-13bf67)
+    hidden_overhead: Logs in A^* at 256 bits, cheap for F_p, a 768-bit field for F_{p^3}
+    tradeoff_note: No time-memory tradeoff is claimed.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: 'Exponent delta 0. Representational delta: first explicit three-product form of S_3 over
+    F_p; answers the wave-1 ''rank 2 implies multiplicative k-sum'' lead with rank 3 and a trace.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-8b9daa
+    - KR-IC-5931ee
+    - KR-RHO-5b1c0a
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-955fd6
+      provenance: internal
+      relation: adjacent
+      delta: Symmetrisation by torsion versus a torsion-free Veronese/Fermat descent.
+    - ref: KR-RHO-5b1c0a
+      provenance: internal
+      relation: orthogonal
+      delta: Subset-sum representations over F_{p^2} versus an algebra trace identity.
+    searched:
+      corpus_grep:
+      - brief section 2 and waves 1-2 for Waring, Fermat, Hesse, Zech, trace form
+      web: []
+      blocked: []
+    lead: LEAD-ICE-quadratised-chain-representation
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage or PARI at p <= 2^30 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md. Build
+        C from S_3, verify j(C) = 0, locate the Waring triangle via the Hesse pencil (C and its Hessian),
+        descend to (A, q, c), verify the identity, then compute logs in A^* (ca_indexcalc for F_p, pari
+        for F_{p^2}, F_{p^3}) and run a hash-based 3SUM-into-Z solver against point-addition enumeration,
+        counting F_p multiplications.'
