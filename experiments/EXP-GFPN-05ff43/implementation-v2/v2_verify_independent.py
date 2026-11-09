@@ -32,14 +32,21 @@ import sys
 class FqP:
     def __init__(self, p, modulus):
         self.p = int(p)
-        self.M = [int(c) % self.p for c in modulus]
+        if self.p < 2 or not isinstance(modulus, list) or len(modulus) < 2 or any(
+            type(c) is not int or not 0 <= c < self.p for c in modulus
+        ):
+            raise ValueError("modulus must have canonical field coefficients")
+        self.M = modulus
         if self.M[-1] != 1:
             raise ValueError("modulus not monic")
         self.n = len(self.M) - 1
 
     def norm(self, a):
-        a = [int(x) % self.p for x in a]
-        return tuple(a + [0] * (self.n - len(a)))
+        if not isinstance(a, list) or len(a) != self.n or any(
+            type(x) is not int or not 0 <= x < self.p for x in a
+        ):
+            raise ValueError("field element must be a canonical n-tuple")
+        return tuple(a)
 
     def add(self, a, b):
         return tuple((x + y) % self.p for x, y in zip(a, b))
@@ -151,6 +158,8 @@ def _legendre(a, p):
 
 
 def _pt(F, xy):
+    if not isinstance(xy, list) or len(xy) != 2:
+        raise ValueError("point must be a coordinate pair")
     return (F.norm(xy[0]), F.norm(xy[1]))
 
 
@@ -180,7 +189,13 @@ def verify(cert):
         arm = str(cert["arm"])
         fb = cert["factor_base"]
         fbk = fb["kind"]
-    except (KeyError, TypeError, ValueError) as e:
+        if type(cert["n"]) is not int or cert["n"] != F.n:
+            raise ValueError("recorded field degree does not match modulus")
+        for xy in cert["points"]:
+            _pt(F, xy)
+        if fb.get("lam") is not None:
+            F.norm(fb["lam"])
+    except (KeyError, TypeError, ValueError, IndexError) as e:
         return False, 0, ["certificate missing or malformed field: %r" % (e,)]
     if not cert.get("known_scalar"):
         reasons.append("known_scalar not true")

@@ -11,7 +11,7 @@ import v2_verify_independent
 
 
 CERT = {
-    "p": 4111, "modulus": [4109, 0, 0, 0, 0, 1], "arm": "torsion_S3_norm",
+    "p": 4111, "n": 5, "modulus": [4109, 0, 0, 0, 0, 1], "arm": "torsion_S3_norm",
     "m": 3, "known_scalar": True, "relation_mod_T": False,
     "curve": {"a2": [2, 0, 0, 0, 0], "a4": [0, 63, 0, 0, 0],
               "a6": [0, 0, 0, 0, 0]},
@@ -39,6 +39,31 @@ class V2CertificateCardinalityTests(unittest.TestCase):
         self.assertFalse(ok)
         self.assertEqual(count, 0)
         self.assertIn("expected 3 points and signs, got 4 / 3", reasons)
+
+    def test_noncanonical_coordinate_rejected(self):
+        for change in ("out_of_range", "extra_coefficient"):
+            with self.subTest(change=change):
+                cert = copy.deepcopy(CERT)
+                if change == "out_of_range":
+                    cert["points"][0][0][0] += cert["p"]
+                else:
+                    cert["points"][0][0].append(0)
+                ok, count, reasons = v2_verify_independent.verify(cert)
+                self.assertFalse(ok)
+                self.assertEqual(count, 0)
+                self.assertTrue(any("canonical n-tuple" in reason for reason in reasons))
+
+    def test_noncanonical_curve_and_modulus_rejected(self):
+        for key in ("curve", "modulus"):
+            with self.subTest(key=key):
+                cert = copy.deepcopy(CERT)
+                if key == "curve":
+                    cert["curve"]["a4"][1] += cert["p"]
+                else:
+                    cert["modulus"][0] += cert["p"]
+                ok, count, _ = v2_verify_independent.verify(cert)
+                self.assertFalse(ok)
+                self.assertEqual(count, 0)
 
 
 if __name__ == "__main__":
