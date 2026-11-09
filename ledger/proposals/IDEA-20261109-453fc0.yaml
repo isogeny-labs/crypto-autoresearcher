@@ -1,0 +1,106 @@
+idea:
+  id: IDEA-20261109-453fc0
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-5038da
+  title: Montgomery ladder with a two-element select of the doubling input in place of the four-element
+    conditional swap, no output placement
+  class: algorithm
+  claim: 'Keep the ladder state as the doubled point (X_D:Z_D), the sum point (X_S:Z_S), and the previous
+    bit b'', initialised (1:0), (u:1), b'' = 0. For t = 254 down to 0 with s = b_t xor b'', then b'' <-
+    b_t: A = X_D + Z_D, B = X_D - Z_D, C = X_S + Z_S, D = X_S - Z_S, A_s = A + s*(C - A), B_s = B + s*(D
+    - B), AA = A_s^2, BB = B_s^2, E = AA - BB, X_D'' = AA*BB, Z_D'' = E*(AA + 121665*E), DA = D*A, CB
+    = C*B, X_S'' = (DA + CB)^2, Z_S'' = u*(DA - CB)^2. Output (X_D:Z_D) if b_0 = 0 else (X_S:Z_S); for
+    clamped scalars b_0 = 0 and no final select is needed. Per bit 5M + 4S + 1c + 8a plus two single-element
+    constant-time selects, versus RFC 7748''s 5M + 4S + 1c + 8a plus a four-element conditional swap.
+    With masked selects x xor (m and (x xor y)) this is 6 word operations per limb instead of 8, a 25
+    percent reduction of secret-dependent data movement; M, S and c counts are unchanged. The multiset
+    of points held at every step equals the RFC ladder''s, so the exceptional inputs are identical: u
+    = 0 gives the (0:0) state, (X:0) with X nonzero is the point at infinity and is a fixed point of doubling,
+    and every other u in F_p is handled.'
+  mechanism: 'Ladder invariant: {R_0, R_1} = {kP, (k+1)P} = {D, S}, with R_0 = D iff b'' = 0. The next
+    sum is always R_0 + R_1 = D + S with difference +-P_1, and the differential addition is symmetric
+    in its two inputs: exchanging (A, B) with (C, D) maps DA + CB to CB + DA and (DA - CB)^2 to (CB -
+    DA)^2, so no selection is needed for the sum. The next doubled point is 2R_{b_t}, and R_{b_t} = D
+    iff b_t = b''; hence the doubling input is select(b_t xor b'', D, S), two field elements. Because
+    the state is stored as (doubled, sum) rather than (R_0, R_1), the outputs need no bit-dependent placement;
+    the ordering information lives in b'' and is consumed by the next xor, exactly as RFC 7748''s swap-accumulator
+    but acting on inputs only. The select is written as a field expression A + s*(C - A) with s in {0,
+    1} to show the bit enters only as a multiplier; the constant-time realisation on fixed-width limbs
+    is the masked xor form.'
+  novelty_status: unverified
+  citations:
+  - ref: src/ecc/x25519.rs ladder (BRIEF excerpt)
+    provenance: internal
+    claim: Current code swaps four BigUint values behind a secret-dependent if; 255 iterations, 10 fe_mul
+      each.
+    verified_by: this session, read from the BRIEF excerpt
+  - ref: RFC 7748 section 5, cswap formulation
+    provenance: recalled
+    claim: Pointer only; baseline cswap of (x_2, x_3) and (z_2, z_3) by swap xor k_t.
+    verified_by: none; recalled pointer, not support
+  assumptions:
+  - Bits are processed from 254 down to 0; unclamped scalars need the final select.
+  - The constant-time property is algorithmic; BigUint has value-dependent limb counts and cannot carry
+    a timing claim.
+  predictions:
+  - metric: mismatch count against the RFC ladder on 10^4 random clamped and unclamped scalars and all
+      low-order u
+    direction: different
+    minimum_effect: exactly 0
+  - metric: secret-dependent field elements moved per bit
+    direction: lower
+    minimum_effect: from 4 to 2
+  - metric: fe_mul + fe_sq + constant-multiply count per scalar
+    direction: different
+    minimum_effect: unchanged at 2550
+  minimal_test:
+    design: Implement ladder_select next to ladder in x25519.rs. Assert equality on the RFC 7748 section
+      5.2 vectors, the 1 and 1000 iteration vectors, 10^4 random clamped scalars, 10^3 random unclamped
+      255-bit scalars, and u in {0, 1, p-1, both order-8 values}. Count field calls with a wrapper and
+      confirm the count is scalar-independent.
+    controls:
+    - The RFC ladder itself, same inputs.
+    - 'Negative control: a deliberately wrong select polarity (s replaced by 1 - s) must fail the random-scalar
+      test, proving the test has power.'
+    required_metrics:
+    - mismatch count
+    - field-call count min and max over scalars
+    - number of selected elements per bit
+  falsification_conditions:
+  - Any mismatch with the RFC ladder on any tested input.
+  - The negative-control polarity flip passing the test.
+  - 'Crash or timeout: infrastructure only.'
+  confounders:
+  - The final select for unclamped scalars must not be forgotten; it is the only place the last bit acts.
+  - Word-operation savings depend on the limb representation and are not visible with BigUint.
+  interpretation_limits:
+  - No change in M, S or c; the gain is in masked data movement and in the simplicity of the constant-time
+    argument.
+  - No ECDLP relevance.
+  heuristic_assumptions:
+  - id: H1
+    statement: Masked select costs 3 word operations per limb and cswap 4.
+    rigorous_support: Operation count of the standard xor-and-xor forms.
+    validation_plan: Count instructions in the fixed-radix layer once implemented.
+  target_complexity:
+    time_exponent: not an ECDLP claim
+    memory_exponent: O(1); one fewer bit of bookkeeping than cswap plus placement
+    best_known: 5M + 4S + 1c + 8a plus one cswap of four elements per bit
+    hidden_overhead: one final two-element select for unclamped scalars
+    tradeoff_note: none in field operations
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: RFC 7748 on field-operation count (equal). Not dominated on secret- dependent data movement
+    (2 elements vs 4) or on the absence of output placement.
+  sota_delta: Field operations unchanged. Secret-dependent elements moved per bit 4 to 2; masked word
+    operations per limb per bit 8 to 6. Removes the repository's secret-dependent branch.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - 'BRIEF section 2 ledger records: no record describes the ladder cswap or a select variant.'
+    - 'BRIEF section 1 code: x25519.rs uses std::mem::swap under an if.'
