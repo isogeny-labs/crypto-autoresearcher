@@ -66,7 +66,8 @@ def expected_artifacts(stage):
             names.extend((prefix + "chunks/" + name,
                           prefix + "chunks/" + name.replace(".tar", ".receipt.json")))
         names.extend((prefix + "units-index.json", prefix + "candidate-reviews.jsonl",
-                      prefix + "candidate-check.json"))
+                      prefix + "candidate-check.json", prefix + "worker-exit.json",
+                      prefix + "worker.stderr.log"))
         if plan["field"]["degree"] == 3:
             names.extend((prefix + "type2-rows.jsonl", prefix + "type2-check.json"))
     if len(names) != len(set(names)):

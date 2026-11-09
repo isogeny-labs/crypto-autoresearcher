@@ -1,0 +1,70 @@
+handoff:
+  id: TASK-20261109-2f2641
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-09'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Reuse field-level candidate indices across all canonical curve/T units
+    while retaining C3 and write-once custody.
+  uncertainty_reduced: Repeated per-unit index construction is avoidable; worker startup,
+    requests and clean exit can be bound to existing per-unit and chunk evidence.
+  inputs: &id001
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit_artifact.py
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_census_driver.py
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/independent_check.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_unit_artifact.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_census_driver.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_stage.py
+  - experiments/EXP-PEXT-bf8f96/reports/field-candidate-worker-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - ledger/handoffs/TASK-20261109-2f2641.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-e5014f.yaml
+  constraints:
+  - No scientific cohort trial, benchmark, protocol approval or freeze, hypothesis
+    transition or new experiment.
+  - Preserve full P1-P4, C0-C7, H1 q13 and six-run, 4 GB, 24 CPU-hour, 24-hour, zero-cloud-dollar,
+    no-retry ceilings.
+  - Full-cohort CPU/RSS/storage and checker reserve require qualification before approval.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-2f2641/receipt.json
+  artifact_paths: *id001
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit_artifact.py
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_census_driver.py
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py
+  - experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/independent_check.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_unit_artifact.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_census_driver.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_candidate_stage.py
+  - experiments/EXP-PEXT-bf8f96/reports/field-candidate-worker-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - ledger/handoffs/TASK-20261109-2f2641.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-e5014f.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-2f2641/receipt.json
+  archived_by: TASK-20261109-2f2641
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 4
+    maximum_runs: 0
+  completion_gate:
+  - One admitted worker per cohort reuses index construction and retains per-unit
+    C3 equality.
+  - Independent checker validates each worker-bound unit, final clean exit, exact
+    chunk and index coverage.
+  - Fixed F27 parity and failure retention tests plus native archive pass; PR is published.
+  - Full-cohort runtime/memory/storage qualification remains before approval.
+  state: queued
+  return_format: Exact archive/publication receipt and field-worker scope.
