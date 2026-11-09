@@ -1,0 +1,56 @@
+idea:
+  id: IDEA-20261109-7f54ff
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: adaptation
+  title: Torsion-ratio margin audit for schemes revealing N-torsion images with N^2 < deg
+  record_kind: parameter_audit
+  claim: 'Any scheme that publishes images of E[N] under an isogeny of known degree d and argues safety
+    only from N^2 < d is exposed to guess-then-Kani: enumerate a degree-g prefix psi, then recover the
+    degree d/g remainder once N^2 > d/g. Heuristic classical security of the ratio is log2(d/N^2) + log2(T_Kani)
+    bits with no memory barrier and full parallelism. The record proposes tabulating this margin for every
+    post-SIDH parameter set that relies on it. Clears H-SSIQ-dfee7e (window divisor counts give the prefix
+    enumeration size, not the margin) and H-ALISO-009 (generic cost probe). No Lean coverage.'
+  mechanism: 'For each candidate prefix psi of degree g with codomain E1, push the known N-torsion images
+    through: phi = phi'' o psi gives phi''(psi(P)) = phi(P). Run Robert''s dimension-8 recovery on phi''
+    with torsion N and degree d/g. The correct prefix is identified by the unique split codomain. Enumeration
+    size is the number of degree-g isogenies from E0 (about g for prime power g), which equals the divisor-window
+    count of H-SSIQ-dfee7e when g ranges over admissible divisors.'
+  assumptions_marked:
+    proved: dimension-8 recovery whenever N^2 > deg (Robert, as recalled from the literature)
+    heuristic: T_Kani in dimension 8 at p of 1000-1300 bits is in the 2^25 to 2^35 range
+    analogy_only: none
+  falsification_test: Build a table (scheme, p, d, N, log2(d/N^2), estimated T_Kani) for POKE-style and
+    QFESTA/FESTA-component parameters as recalled. Audit passes (lead dies) if every row has log2(d/N^2)
+    >= lambda + log2(T_Kani) with a stated T_Kani; audit fails (lead lives) if any row's margin is below
+    the claimed level.
+  cost_estimate:
+    attack: 2^{log2(d/N^2)} parallel Kani tests
+    audit: one afternoon of parameter extraction plus a toy dimension-8 timing at p ~ 2^60
+  cleared:
+    checked:
+    - H-SSIQ-dfee7e
+    - H-ALISO-009
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need: given phi = phi'' o psi and images of E[N] under phi, images
+      of psi(E)[N] under phi'' are computable from psi in poly(log N) field operations'
+    exp: none in the BRIEF; nearest surface is autolab package p1486_hecke_support_cost_probe (H-ALISO-009)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map is quoted in the BRIEF.
+    searched:
+      corpus_grep:
+      - H-SSIQ-dfee7e
+      - H-ALISO-009
+      - H-ALISO-013
+    none_found_after:
+    - 'BRIEF query: torsion ratio OR N^2 < d OR unbalanced torsion'
+    - 'BRIEF query: guess prefix + Kani'
+    - 'BRIEF query: POKE OR QFESTA parameter'
+    nearest_record: H-SSIQ-dfee7e
+    relation: uses_as_subroutine
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
