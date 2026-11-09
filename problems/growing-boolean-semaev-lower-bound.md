@@ -155,3 +155,10 @@ The explicit F8 control now exercises a positive bridge: rank5 atD2 exceeds capa
 Reviewed branch reduction gives h<=LFD(F)<=h+1 for the unique-zero system H=(uv)^2+uv+u+v^2. The full W3 criterion iterates all degree-two consequences and their variable products to stability. A non-Semaev family with the identical W2 dimension profile and exact LFD3 demonstrates why that profile alone cannot force growth. A tensor-specific invariant or growing obstruction remains missing.
 
 The bounded DIMACS exporter and supplied-model checker pass five controls and an actual 1770-variable/5610-clause hand-witness replay through CNF, GF2, direct kernel, and capacity checks. The replay establishes lower bound3 for the existing F8 control. No solver search, production dataset admission, or growing lower-bound theorem is claimed.
+
+
+### 2026-11-09: explicit no-reduction family and amplification obstructions
+
+V=span(1,t,...,t^r), n>4r and z=a6=1 gives an explicit infinite exactly-two-point family, by a highest-polynomial-degree argument. Its r=1,2 members have cap-two derivations of the affine ideal; the odd-diagonal lower3 theorem does not apply. General dyadic coefficient saturation remains unresolved.
+
+Reviewed transport gives cap max(sD,c) for degree-s substitutions with generator-image cap c. Field towers preserving V retain late closure; disjoint SAT products take maximum LFD, so neither amplifies degree. Field-trace dual separators give a concrete upper-bound route, while turning their degree into a lower bound requires an unproved normalization of arbitrary full-closure derivations. These negative routes and exact remaining obligations are retained in the proof packet.

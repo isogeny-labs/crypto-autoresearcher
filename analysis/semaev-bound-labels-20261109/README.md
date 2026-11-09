@@ -94,3 +94,12 @@ The additional hard limits are 200,000 CNF variables, 500,000 clauses, a 32 MiB 
 Five software controls pass. `sat-control/receipt.json` records actual CLI export and verification of a hand-derived F8 model: 1,770 variables, 5,610 clauses, independently checked serialized clauses, and a checked lower bound of three. This reuses the fixed exact-degree-three control; it is not a new search result.
 
 The reviewed degree-three notes reduce the two-point family to a unique-zero branch H with h <= LFD(F) <= h+1. They give an exact saturated W3 fixed-point obligation. An explicit non-Semaev family has the same W2 dimension profile yet exact LFD3 for every size, ruling out dimension-profile-only extrapolation to growing degree. A field-specific obstruction is still required.
+
+
+## Explicit polynomial family and transport limits
+
+`polynomial-subspace-candidate.md` constructs V=span(1,t,...,t^r) in any degree-n field with n>4r, z=a6=1. The unique highest-degree term rules out two nonconstant polynomial coordinates; constant substitution gives exactly (0,1),(1,0). This is an explicit infinite bounded-count family, but the odd-diagonal lower bounds do not apply. Symbolic coefficient derivations give LFD<=2 for r=1,2. A uniform all-r cap and a growing lower bound remain separate open alternatives.
+
+The field-pencil note gives explicit trace-dual equations. Degree-c dual separators on all coordinate-one slices imply branch LFD<=c+3. Their absence does not prove a full-closure lower bound without a normalization theorem. The transport note proves degree-controlled substitution and explains why unchanged field towers and disjoint products cannot amplify degree. Each note has an independent written review.
+
+`publication-validation.json` preserves the local global benchmark-gate failure caused by missing historical artifacts in this sparse checkout. No historical benchmark records were changed. Focused SAT controls passed; hosted checks are tracked separately on the PR.
