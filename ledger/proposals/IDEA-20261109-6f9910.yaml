@@ -1,0 +1,108 @@
+idea:
+  id: IDEA-20261109-6f9910
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: 'Projective-Niels readdition cache (Y-X, Y+X, 2dT, 2Z) for Edwards25519 extended addition: 8M,
+    no constant multiply, no per-call inversion'
+  class: representation
+  claim: 'Curve E: -x^2 + y^2 = 1 + d x^2 y^2 over F_p, p = 2^255 - 19, d = -121665/121666; extended point
+    (X:Y:Z:T), Z != 0, x = X/Z, y = Y/Z, T = XY/Z (invariant ZT = XY). Precompute once k = 2d = -121665/60833
+    mod p and, for a point P_2 added more than once, the cache N_2 = (n_1, n_2, n_3, n_4) = (Y_2 - X_2,
+    Y_2 + X_2, k T_2, 2 Z_2) at 1c + 3a. For any P_1 = (X_1:Y_1:Z_1:T_1) compute A = (Y_1 - X_1) n_1,
+    B = (Y_1 + X_1) n_2, C = T_1 n_3, D = Z_1 n_4, E = B - A, F = D - C, G = D + C, H = B + A, X_3 = E
+    F, Y_3 = G H, T_3 = E H, Z_3 = F G. Then (X_3:Y_3:Z_3:T_3) = P_1 + P_2 with Z_3 T_3 = X_3 Y_3 and
+    Z_3 != 0 for every pair of F_p-rational inputs, including (0:1:1:0), (0:-1:1:0) and the order-4 and
+    order-8 points. Cost 8M + 6a, 0c, 0I. For affine P_2 (Z_2 = 1, as every decoded point in the repository
+    is) the cache is (y_2 - x_2, y_2 + x_2, k x_2 y_2), D = Z_1 + Z_1, cost 7M + 7a (6M + 7a without T_3).
+    The repository EdPoint::add costs 11M plus one field inversion per call: ed25519_d() calls fe_inv
+    on every call, C is three fe_mul, D is two. Prediction: byte-identical RFC 8032 section 7.1 outputs
+    with per-call counters mul = 8 (7 affine), sq = 0, inv = 0.'
+  mechanism: 'E = 2(X_1 Y_2 + Y_1 X_2), H = 2(Y_1 Y_2 + X_1 X_2), F = 2(Z_1 Z_2 - d T_1 T_2), G = 2(Z_1
+    Z_2 + d T_1 T_2), so X_3/Z_3 = E/G and Y_3/Z_3 = H/F are the affine twisted Edwards law for a = -1
+    and T_3 Z_3 = EHFG = X_3 Y_3. Completeness: F = 0 or G = 0 forces eps = d x_1 x_2 y_1 y_2 in {1, -1};
+    with alpha = sqrt(-1) one gets (alpha x_1 + eps y_1)^2 = d x_1^2 y_1^2 (alpha x_2 + y_2)^2, and if
+    alpha x_2 + y_2 = 0 the same identity with -alpha, so d would be a square; d is a non-square (test
+    asserts d^((p-1)/2) = -1), hence Z_3 != 0 always. Symmetry: the basis change (X, Y) -> (Y - X, Y +
+    X) diagonalises the two bilinear forms Y_1 Y_2 + X_1 X_2 and X_1 Y_2 + Y_1 X_2 that a = -1 weights
+    equally; the cache stores the second operand in that basis with the constant and the factor 2 folded
+    in, so no constant multiply survives. Negation acts on the cache as N(-P_2) = (n_2, n_1, -n_3, n_4),
+    a swap and one negation. Branch-free; no scalar bit is read inside the formula. Field-level constant
+    time is a property of fe_* (BigUint today), not of the law.'
+  novelty_status: unverified
+  citations:
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards curves revisited, sec 3.1
+    provenance: recalled
+    claim: Unified addition in extended coordinates with a = -1 costs 8M + 1D.
+    verified_by: null
+  - ref: Bernstein, Birkner, Joye, Lange, Peters 2008, Twisted Edwards curves, Thm 3.3
+    provenance: recalled
+    claim: Addition law complete when a is a square and d a non-square.
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs EdPoint::add
+    provenance: internal
+    claim: Baseline recomputes d by fe_inv per call and uses 11 multiplications.
+    verified_by: this session read the quoted excerpt
+  assumptions:
+  - a = -1 is a square (p = 1 mod 4) and d is a non-square; both asserted by the test.
+  - Inputs satisfy Z != 0 and ZT = XY; from_affine and every output preserve this.
+  - k = 2d is computed once with a single inversion at module initialisation.
+  predictions:
+  - metric: fe_mul calls per EdPoint::add
+    direction: lower
+    minimum_effect: 11 to 8 (projective cache) or 7 (affine cache)
+  - metric: fe_inv calls per EdPoint::add
+    direction: lower
+    minimum_effect: 1 to 0
+  - metric: RFC 8032 vector mismatches
+    direction: equal
+    minimum_effect: 0 mismatches
+  minimal_test:
+    design: Wrap fe_mul, fe_sq, fe_add, fe_sub, fe_inv in counting shims. Run RFC 8032 7.1 vectors through
+      signing and verification with the new add; compare bytes. Add all 64 pairs of E[8](F_p) and all
+      pairs (t, mB), t in E[8], m in 1..8, asserting Z_3 != 0, Z_3 T_3 = X_3 Y_3, -X_3^2 + Y_3^2 = Z_3^2
+      + d T_3^2, and equality with the affine law.
+    controls:
+    - Old add and new add on identical inputs agree projectively (X_3 Z_old = X_old Z_3 etc.).
+    - Legendre symbol of d is -1 and of -1 is +1, recomputed in the test.
+    required_metrics:
+    - mul count per add
+    - inv count per add
+    - number of torsion pairs with Z_3 = 0 (must be 0)
+    - RFC 8032 mismatches
+  falsification_conditions:
+  - Any rational pair gives Z_3 = 0 or breaks Z_3 T_3 = X_3 Y_3.
+  - Counter reads more than 8 fe_mul or any fe_inv inside the addition.
+  - Any RFC 8032 vector mismatch.
+  confounders:
+  - If fe_sq is fe_mul internally, counters must distinguish them by call site.
+  - The BigUint reduction in fe_mul may mask the cost difference in wall time; count calls, not time.
+  interpretation_limits:
+  - This is an operation-count and completeness claim for one implementation; it asserts nothing about
+    ECDLP hardness or about constant-time behaviour of BigUint.
+  heuristic_assumptions:
+  - id: H1
+    statement: Projective-cached readdition is exact and complete on Edwards25519.
+    rigorous_support: Algebraic identities above plus BBJLP Thm 3.3 specialised with alpha = sqrt(-1).
+    validation_plan: Exhaustive torsion pairs plus 1000 random pairs against the affine law in Sage (scripts/ed25519_niels_check.sage).
+  target_complexity:
+    time_exponent: not an exponent claim; per-addition cost 8M + 6a
+    memory_exponent: 4 field elements per cached point
+    best_known: 8M + 1D (HCD 2008) for uncached, 8M for cached readdition
+    hidden_overhead: one-time 1c + 3a per cached point
+    tradeoff_note: cache pays off after one reuse; the constant k is amortised globally
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: HCD 2008 sec 3.1 for the uncached count; curve25519-dalek's ProjectiveNielsPoint for the
+    cache shape (recalled). Neither is in the repository; the delta is implementation.
+  sota_delta: 'Against the repository: 11M + 1I per add to 8M + 0c + 0I (7M affine). Against HCD 2008:
+    1c fewer per readdition, same completeness.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 ledger excerpt scanned for Niels, readdition, extended, HCD
+    - BRIEF section 1 repository excerpts read in full
