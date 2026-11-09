@@ -142,3 +142,9 @@ A reviewed averaging argument establishes: for every odd n>=3, some dimension-(n
 `attach_capacity_bound.py` connects a freshly checked quotient map to independently reconstructed structural solution capacities: q>U implies LFD>=D+1. Six software controls pass; q=U remains inconclusive. No positive scientific lower-bound fixture was exercised, and production dataset admission remains false. The next mathematical obligation is simultaneous bounded solution count and a growing full-closure obstruction.
 
 A separate reviewed conditioning argument also supplies infinitely many odd-degree UNSAT subspaces with nonzero restricted trace and 1 outside V. Positive Frobenius traces occur at infinitely many odd extensions, making the conditioned expected solution count below two. This excludes the single immediate constant-trace contradiction, not all low-degree refutations. No new LFD lower bound follows from this existence statement alone.
+
+### 2026-11-09: infinite constant lower bounds and a checked positive fixture
+
+The reviewed degree-two classification proves LFD>=3 for every qualifying two-solution containing1 subspace, and for infinitely many nonexceptional trace-active UNSAT subspaces. Product-span nondegeneracy is automatic on the odd diagonal. A symplectic count bounds the rank-one exceptional family below the available UNSAT population for r>=7 along the positive-trace subsequence. Exact nonexceptional codimension at D=2 is (N²-3N+6)/2, not a growing-degree result.
+
+The explicit F8 control now exercises a positive bridge: rank5 atD2 exceeds capacity4, and cap3 multiplier identities derive its complete affine ideal, giving exactLFD3. No search was run. For the verified two-point family, growing LFD is exactly growing derivation cap of a named affine ideal generator; the density note states a sufficient exceptional-set counting bound, which remains unproved for increasingD.
