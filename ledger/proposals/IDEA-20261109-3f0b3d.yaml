@@ -1,0 +1,155 @@
+idea:
+  id: IDEA-20261109-3f0b3d
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Spectral norm of the small-x factor base in the character group of E(F_p): three pre-registered
+    regimes and the low-frequency energy any known-DL target-set yield boost requires'
+  class: representation
+  claim: 'Let E/F_p have prime order N, generator P, F_beta the set of points with 0 <= x < p^beta, B
+    = |F_beta|. Put v(k) = 1 if kP lies in F_beta, hat v(b) = sum_k v(k) e(bk/N), and C(p,beta) = max
+    over b != 0 of |hat v(b)|/sqrt(B). Theorems: sqrt((N-B)/(N-1)) <= C <= 3 sqrt(p)(1+ln p)/sqrt(B).
+    Three regimes for the slope alpha of log C against log p: random, alpha = 0 with C about sqrt(2 ln
+    N) (hat v is real since F is symmetric); arithmetic progression, alpha = beta/2, realised by the control
+    of multiples kP with 0 < k < B; Weil ceiling, alpha = (1-beta)/2. Prediction 1: for beta in (1/4,
+    1/3, 1/2) and 8 primes per beta in [2^16, 2^28], F_beta is in the random regime, alpha within 0.03
+    of 0 and C/sqrt(2 ln N) inside [0.7, 1.3]. Prediction 2: the low-frequency energy E_L = sum over 0
+    < |b| <= N/L of |hat v(b)|^2 at L = B is within a factor 1.3 of its random value 2NB/L, so target
+    sets of the form aP with 0 < a < L gain no relation yield over uniform targets. This supersedes the
+    four incompatible alpha values of IDEA-20260805-c4f675 by fixing normalisation, taking the maximum
+    over every b, and adding both calibrating controls.'
+  mechanism: hat v(b) = sum over Q in F of chi_b(Q) = (1/p) sum_a hat 1_I(a) F(a,b) with F the hybrid
+    matrix of the companion record; the Weil bound 3 sqrt(p) and the Wiener norm p(1+ln p) of an interval
+    give the upper bound, Parseval the lower bound. For a known-DL target set T, the excess sum over R
+    in T of r_m(R) minus |T| B^m/N equals (1/N) sum over b != 0 of hat v(b)^m conj(hat 1_T(b)); for T
+    an arithmetic progression of length L the weight sits on |b| <= N/L, so the gain is governed by E_L.
+    Uniform targets gain exactly nothing (IDEA-20260805-a25f11), so this is the only additive-combinatorial
+    lever on relation supply. The same number is the dual of equidistribution of the discrete logs of
+    F_beta mod N, a Burgess-type question for the rank-2 trace function x -> sum of chi_b over points
+    above x, a theorem only for beta > 1/2 with no amplification step below because translation on E does
+    not preserve x-intervals. The run enumerates x(kP) for k < N (at most 2^28 group operations), forms
+    v, and performs one Bluestein FFT of length N per (p, beta).
+  novelty_status: adaptation
+  citations:
+  - ref: IDEA-20260805-c4f675
+    provenance: internal
+    claim: Records C(p) for the small-x factor base with four incompatible growth exponents; this record
+      fixes the instrument.
+    verified_by: brief section 2 excerpt only; next agent opens ledger/proposals/IDEA-20260805-c4f675.yaml
+      and copies its exact definition into the sanity check.
+  - ref: IDEA-20260805-a25f11
+    provenance: internal
+    claim: Mean decomposition count over uniform targets is C(2B+m-1,m)/N for every factor base; the lever
+      here is non-uniform known-DL targets.
+    verified_by: brief section 2 excerpt only.
+  - ref: IDEA-20260727-006
+    provenance: internal
+    claim: Defines exponents for a Fourier-accessible interval factor base; if its exponent (A) is C(p,beta),
+      cite it as the definition and keep only the regimes and controls here.
+    verified_by: brief section 2 excerpt only; next agent opens ledger/proposals/IDEA-20260727-006.yaml.
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Small-x factor bases over F_p do not beat generic methods under statistical assumptions; this
+      record measures one such assumption.
+    verified_by: brief section 3 row text.
+  assumptions:
+  - N prime, N != p; toy discrete logs come from full enumeration, which is instrumentation, not the method.
+  - The factor base is the x-interval [0, p^beta), symmetric under negation.
+  predictions:
+  - metric: slope alpha of log C(p,beta) against log p for F_beta, each beta
+    direction: different
+    minimum_effect: within 0.03 of 0 with 95 percent CI
+  - metric: C(p,beta) divided by sqrt(2 ln N)
+    direction: different
+    minimum_effect: inside [0.7, 1.3] at every prime
+  - metric: E_L divided by 2NB/L at L = B
+    direction: different
+    minimum_effect: inside [0.77, 1.3] at every prime
+  - metric: slope alpha for the arithmetic-progression control
+    direction: higher
+    minimum_effect: within 0.03 of beta/2
+  minimal_test:
+    design: For each beta and 8 prime-order curves (selected with the crypto ic executable), enumerate
+      the multiples, build v, FFT, record C, argmax b, and E_L for L equal to B and to B^2, then fit alpha
+      by least squares. Run the same pipeline on both controls and on the c4f675 definition.
+    controls:
+    - Random subset of E(F_p) of size B, expected alpha 0.
+    - Multiples kP with 0 < k < B, expected alpha beta/2.
+    - Parseval check that the sum of |hat v(b)|^2 over b equals N B.
+    - Weil ceiling check on C at every prime.
+    required_metrics:
+    - p, N, beta, B
+    - C and argmax b
+    - alpha with CI, per family
+    - E_L over 2NB/L for both L
+    - control values and both identity checks
+  falsification_conditions:
+  - Alpha for F_beta at least 0.05 with CI excluding 0 for any beta <= 1/2 means the discrete logs of
+    small-x points are Fourier-biased; the null fails and target-set boosting is live.
+  - E_L above twice 2NB/L at L = B for a majority of primes at some beta gives the same conclusion from
+    the yield side.
+  - Control slope outside beta/2 plus or minus 0.03, or a failed Parseval check, is an invalid run.
+  confounders:
+  - At beta = 1/2 and small p the factor 1 - B/N is not negligible; the fit uses the exact variance B(1
+    - B/N).
+  - The maximum of a length-N real spectrum has extreme-value spread near 0.5 in C; eight primes per beta
+    is the minimum.
+  interpretation_limits:
+  - A confirmed random regime is a toy measurement up to 2^28 and a theorem only above beta 1/2.
+  - Only arithmetic-progression target sets are covered; other known-DL target sets have other hat 1_T.
+  heuristic_assumptions:
+  - id: H1
+    statement: The discrete logs of x-interval points equidistribute mod N in the Fourier sense for beta
+      < 1/2.
+    rigorous_support: Theorem for beta > 1/2 by completion against the hybrid bound; open below.
+    validation_plan: The sweep above with the two controls.
+  target_complexity:
+    time_exponent: N^(1/2) unchanged under the null; a confirmed alpha > 0 would be priced for arithmetic-progression-target
+      index calculus in a successor record
+    memory_exponent: N bits for v at toy size only
+    best_known: Pollard rho, Theta(N^(1/2)) (KR-RHO-13bf67)
+    hidden_overhead: none claimed
+    tradeoff_note: none; this is a discriminating measurement
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-RHO-13bf67 for any exponent reading, delta 0. IDEA-20260805-c4f675 measured the same
+    statistic with an unsettled normalisation.
+  sota_delta: 'Exponent delta 0. Counted delta: one consistent alpha per beta with controls, replacing
+    four incompatible values, and the first measurement of the low-frequency energy that any known-DL
+    target-set boost needs.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-73db3f
+    - KR-RHO-13bf67
+    - KR-RHO-ea34b8
+    - KR-RHO-46c2c6
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: That row states the cost conclusion under statistical assumptions; this record measures the
+        Fourier assumption and adds the target-set lever.
+    - ref: KR-RHO-46c2c6
+      provenance: internal
+      relation: orthogonal
+      delta: Batch speedups there reuse distinguished points; target-set boosting here is a relation-supply
+        effect in index calculus.
+    searched:
+      corpus_grep:
+      - brief section 2 for H-PSEUDO, C(p), interval factor base, Fourier, equidistribution
+      - brief section 3 for small x-coordinate factor base, prime field
+      web: []
+      blocked:
+      - no tool access; bodies of IDEA-20260727-006 and IDEA-20260805-c4f675 unread
+    lead: LEAD-EXO-dl-character-sum-pseudorandom
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: For each beta and 8 prime-order curves (selected with the crypto ic executable),
+        enumerate the multiples, build v, FFT, record C, argmax b, and E_L for L equal to B and to B^2,
+        then fit alpha by least squares. Run the same pipeline on both controls and on the c4f675 definition.'
