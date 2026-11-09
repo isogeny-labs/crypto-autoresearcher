@@ -1,0 +1,139 @@
+idea:
+  id: IDEA-20261109-b8d3b0
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Additive energy and Sidon statistics of the x-coordinate set of the first L multiples below
+    sqrt(p): the Weil-blind window L < p and an exhaustive measurement at p up to 2^22'
+  class: barrier
+  claim: 'Barrier (theorem) and measurement (prediction fixed in advance). Let X_L = {x(kP) for 1 <= k
+    <= L} in F_p with L = p^theta, and let E(X_L) be the number of quadruples in [1,L]^4 with x(aP) +
+    x(bP) = x(cP) + x(dP). Theorem part: E(X_L) is at most L^4/p + L times the square of max over a not
+    0 of |sum_{k<=L} e_p(a x(kP))|, and the only available bound on that sum, completion through the hybrid
+    sums with |S(a,xi)| at most 2 sqrt(p) + O(1), gives at most C sqrt(p) log p; so E(X_L) is at most
+    L^4/p + C^2 p L log^2 p, which exceeds the random reference 2L^2 - L + L^4/p for every L below p.
+    Hence no analysis that relies on the F_p-additive structure, or randomness, of x-coordinates of consecutive
+    multiples is certifiable or refutable by exponential sums below L = p, and the structural kill of
+    wave 1 covers only L above 3 sqrt(p). Measurement part: on 3 prime-order curves with p at most 2^22
+    and 10 generators each, the nontrivial energy E(X_L) - (2L^2 - L) lies in 0.5 to 2 times L^4/p for
+    theta in {0.3, 0.4, 0.5}, and for theta = 0.2 the fraction of generators with X_L Sidon matches exp(-L^4/(2p))
+    within binomial error. No exponent change is claimed.'
+  mechanism: 'E(X_L) = p^{-1} sum over a of |S_L(a)|^4 where S_L(a) is the sum of e_p(a x(kP)) over k
+    at most L. Parseval fixes the second moment at pL, so the fourth moment is controlled only through
+    the sup of |S_L(a)|, and completion to the full group yields sqrt(p) log p, which is the size of a
+    single Weil term and cannot see a set of L elements when L is below p. The Balog-Szemeredi-Gowers
+    and Freiman theorems convert an energy of L^3/K into a K^{-O(1)}-dense piece of X_L with small doubling,
+    i.e. an interval-like set of x-coordinates of consecutive multiples; wave 1 excluded such pieces for
+    L above 3 sqrt(p) by degree arguments. Below sqrt(p) the statement has no proof in either direction,
+    which is the window this measurement fills. Families whose analyses are affected: sieves over multiples,
+    short-window fingerprints and public-scalar bases (IDEA-20260731-015), all of which assume X_L is
+    additively random or structured.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-898783
+    provenance: internal
+    claim: The interval instance {kP with k at most L} is the kangaroo object; kangaroo uses group structure,
+      not F_p-additive structure of x.
+    verified_by: brief section 3 row text (file not opened in this session)
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound; exponent delta 0 here.
+    verified_by: brief section 3 row text (file not opened in this session)
+  - ref: IDEA-20260731-015
+    provenance: internal
+    claim: Public-scalar factor bases are sets of known multiples whose x-coordinate structure this record
+      measures.
+    verified_by: brief section 2 index line (file not opened in this session)
+  assumptions:
+  - L is below N/2 so the x-coordinates of kP are distinct.
+  - Toy curves have prime order and are not j = 0 or j = 1728.
+  predictions:
+  - metric: nontrivial energy divided by L^4/p at theta 0.3 to 0.5
+    direction: within
+    minimum_effect: between 0.5 and 2 for at least 8 of 10 generators per curve
+  - metric: fraction of Sidon X_L at theta 0.2 versus exp(-L^4/(2p))
+    direction: within
+    minimum_effect: inside the two-sided binomial 95 percent interval
+  - metric: nontrivial energy of the interval control divided by L^3
+    direction: higher
+    minimum_effect: at least 0.5
+  minimal_test:
+    design: For 3 prime-order curves with p at most 2^22 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      and 10 random generators P each, compute X_L for L = floor(p^theta), count coincidences of pair
+      sums with a hash table (at most 2^22 pairs), subtract trivial quadruples, and compare with L^4/p.
+      Run 20 random L-subsets of F_p per (curve, theta) and the interval [1, L] as positive control.
+    controls:
+    - Random L-subsets of F_p, 20 seeds.
+    - Interval control with energy near 2L^3/3.
+    - Generators chosen by recorded seeds, not by coordinate.
+    required_metrics:
+    - L and theta
+    - E(X_L) and nontrivial energy
+    - L^4/p reference and random control mean and standard deviation
+    - Sidon indicator per generator at theta 0.2
+    - interval control energy
+  falsification_conditions:
+  - Nontrivial energy above 5 L^4/p at theta at least 0.3 for 7 of 10 generators on all 3 curves indicates
+    structure and kills the random reading.
+  - Nontrivial energy below 0.2 L^4/p in the same pattern indicates anti-structure and also kills the
+    random reading.
+  - Interval control not detected makes the run invalid.
+  - Timeouts are infrastructure, not evidence.
+  confounders:
+  - At theta = 0.2 the expected count L^4/p is below 1; only the Sidon fraction is informative there.
+  - Coincidences involving x(kP) = x((N-k)P) are excluded by L < N/2.
+  interpretation_limits:
+  - The theorem part is about certification, not about truth; the measurement part is a toy-size heuristic
+    reading.
+  - No statement about Pollard-type methods is made or implied.
+  heuristic_assumptions:
+  - id: H1
+    statement: X_L behaves like a random L-subset of F_p for additive energy when L is below sqrt(p).
+    rigorous_support: None; the Weil route is trivial for L below p.
+    validation_plan: Exhaustive measurement as in the minimal test.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(L^2) hash table at toy size
+    best_known: Pollard rho, Theta(N^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: None; no algorithm is proposed.
+    tradeoff_note: Barrier plus measurement; no tradeoff defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: Exponent delta 0. States the exact window (L below p) in which the additive structure of
+    x-coordinates of multiples is beyond character sums and supplies the first exhaustive energy and Sidon
+    numbers there.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-898783
+    - KR-RHO-ea34b8
+    - KR-RHO-13bf67
+    - KR-IC-5931ee
+    - KR-RHO-cd86f5
+    nearest:
+    - ref: KR-RHO-898783
+      provenance: internal
+      relation: adjacent
+      delta: 'Same set of multiples, different structure: kangaroo exploits the group interval; this record
+        measures F_p-additive energy of the x-coordinates and proposes no walk.'
+    - ref: KR-RHO-ea34b8
+      provenance: internal
+      relation: orthogonal
+      delta: Precomputed tables store distinguished multiples; no additive statistic of x-coordinates
+        is involved.
+    searched:
+      corpus_grep:
+      - brief for additive energy, Sidon, sumset, x-coordinates of multiples
+      - wave-1 barriers leads Sumset growth of X_L and Short-window fingerprints
+      web: []
+      blocked: []
+    lead: LEAD-EXO-dl-character-sum-pseudorandom
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: For 3 prime-order curves with p at most 2^22 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        and 10 random generators P each, compute X_L for L = floor(p^theta), count coincidences of pair
+        sums with a hash table (at most 2^22 pairs), subtract trivial quadruples, and compare with L^4/p.
+        Run 20 random L-subsets of F_p per (curve, theta) and the interval [1, L] as positive control.'

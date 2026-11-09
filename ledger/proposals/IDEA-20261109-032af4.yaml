@@ -1,0 +1,145 @@
+idea:
+  id: IDEA-20261109-032af4
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Conductor barrier for Kummer-pattern factor bases over F_p: r quadratic-residue conditions on
+    x give a discrete-log spectrum at most (4rd+2) sqrt(p), so size and relation supply are certified
+    only above sqrt(p), with a toy spectrum and relation-count measurement'
+  class: barrier
+  claim: 'Barrier (theorem modulo a constant check). Let E/F_p have prime order N, let g_1..g_r in F_p[x]
+    have degree at most d, let chi be the Legendre symbol and let F = {P with chi(g_i(x(P))) = eps_i for
+    all i}. Let T(xi) be the sum over P in F of e_N(xi log P). Then |F| = N/2^r + O((4rd+2) sqrt(p)) and
+    |T(xi)| is at most (4rd+2) sqrt(p) for xi not 0. The mu_B base x^B = 1 is the case of the full character
+    group trivial on mu_B and satisfies |T(xi)| at most 6 sqrt(p). Consequence: whenever |F| is at most
+    sqrt(p), neither the size of F nor any relation-supply statement about F is certified by character
+    sums, the same wall as for intervals and for degree-d algebraic predicates, with Kummer complexity
+    r replacing degree. Families ruled out from rigor: every power-residue-pattern base at beta below
+    1/2. Heuristic reading, to be measured: such bases are spectrally random. Measurement prediction at
+    p near 2^20 with bases of size near 2^8 built as an interval, as mu_B with B dividing p-1 and 3 not
+    dividing B, and as an r = 12 Legendre pattern with g_i = x + c_i: the ratio of max |T(xi)| over xi
+    not 0 to sqrt(|F|) lies within 0.7 to 1.5 times the random-subset mean, and the relation count C_3(F)
+    lies within 3 standard deviations of the Poisson value |F|^3/N. No exponent change is claimed.'
+  mechanism: Expand 1_F = 2^{-r} times the product over i of (1 + eps_i chi(g_i(x))). Each of the 2^r
+    - 1 nonconstant terms is a mixed sum over E(F_p) of a multiplicative character of the rational function
+    G_S = product of g_i over i in S composed with x, which is ramified at most at 2rd points, times the
+    Lang-torsor character P -> e_N(xi log P), which is an unramified rank-one sheaf on E. For xi not 0
+    the tensor product is geometrically nontrivial, so Weil's theorem for curves (Bombieri's mixed-sum
+    form, recalled) bounds each term by a constant times sqrt(p); the constant (4rd+2) is a safe bookkeeping
+    value to be checked. Weighting 2^{-r} and summing gives the stated bound for all r at once, so increasing
+    r shrinks the base without shrinking the error. On the algebraic side the predicate is encoded by
+    z_i^2 = g_i(x), which adds (N/B)^m geometric solutions per target, at least B^{m-1} for every beta
+    at most 1/2, so a solver that visits geometric solutions never beats enumeration on this base.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Algebraic factor bases over F_p work only at small parameters; this record gives the sheaf-level
+      reason for a new family.
+    verified_by: brief section 3 row text (file not opened in this session)
+  - ref: KR-IC-49c882
+    provenance: internal
+    claim: Quasi-subfield predicates need an existence result; Kummer patterns exist trivially but are
+      flat only above sqrt(p).
+    verified_by: brief section 3 row text (file not opened in this session)
+  - ref: IDEA-20260801-021
+    provenance: internal
+    claim: A degree-d algebraic predicate cuts at most 3d points; this record extends the barrier from
+      degree to Kummer complexity.
+    verified_by: brief section 2 index line (file not opened in this session)
+  assumptions:
+  - Toy curves have prime order and are not j = 0 or j = 1728.
+  - For the mu_B arm, B divides p - 1 and 3 does not divide B.
+  predictions:
+  - metric: spectral ratio max |T| over sqrt(|F|) relative to random mean
+    direction: within
+    minimum_effect: between 0.7 and 1.5 for all three structured bases
+  - metric: z-score of C_3(F) against |F|^3/N Poisson
+    direction: within
+    minimum_effect: absolute value at most 3
+  - metric: max |T(xi)| compared with (4rd+2) sqrt(p)
+    direction: lower
+    minimum_effect: strictly below on every curve and base (theorem check)
+  minimal_test:
+    design: Choose 3 prime-order curves with p near 2^20 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      such that p - 1 has a divisor B near 2^8 with 3 not dividing B. Build the exhaustive log table,
+      the three structured bases of size near 2^8 and 20 random subsets. Compute T(xi) for all xi by FFT
+      over Z/N, C_3(F) by sorting A + A against A. Report spectral ratios, C_3 z-scores and the theorem
+      check.
+    controls:
+    - Random subsets of E(F_p) of the same size, 20 seeds.
+    - Planted progression base as positive control for the spectrum.
+    - Interval base as the known reference arm.
+    required_metrics:
+    - size of each base and its deviation from N/2^r or B
+    - max |T(xi)| over xi not 0
+    - random mean and standard deviation of the spectral ratio
+    - C_3(F) and its Poisson z-score
+    - theorem check flag per base
+  falsification_conditions:
+  - A structured base with spectral ratio above 3 times random on all 3 curves kills the heuristic reading
+    and opens a structure lead.
+  - Any |T(xi)| above (4rd+2) sqrt(p) means the constant or the code is wrong; the run is invalid until
+    resolved.
+  - A published bound certifying |F| for 2^r above sqrt(N) would falsify the barrier clause about sqrt(p).
+  confounders:
+  - Legendre patterns with correlated c_i (for example an arithmetic progression) can lower the effective
+    r; choose c_i uniformly.
+  - On j = 0 curves 3 dividing B forces lambda-closure and a 3-fold spectral symmetry (wave-1 known);
+    excluded by construction.
+  interpretation_limits:
+  - The theorem bounds a spectrum; it does not price a solver.
+  - A random-level spectrum at 2^20 is a heuristic indication only.
+  heuristic_assumptions:
+  - id: H1
+    statement: Kummer-pattern bases of size below sqrt(p) have random-level spectrum and Poisson relation
+      counts.
+    rigorous_support: None below sqrt(p); the theorem is vacuous there by design.
+    validation_plan: Exhaustive toy measurement as in the minimal test.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(N) toy table only
+    best_known: Pollard rho, Theta(N^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: None; no algorithm is proposed.
+    tradeoff_note: Barrier statement plus a measurement; no tradeoff defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: 'Exponent delta 0. New barrier family: Kummer complexity replaces algebraic degree, covering
+    mu_B and Legendre-pattern bases in one bound.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-49c882
+    - KR-IC-73db3f
+    - KR-IC-5a43e5
+    - KR-IC-f5c584
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: The row records that algebraic bases work only at small parameters; this record states the
+        sqrt(p) flatness wall for character-defined bases that are not low-degree algebraic.
+    - ref: KR-IC-73db3f
+      provenance: internal
+      relation: orthogonal
+      delta: Vector-space factor bases are a binary-field construction with no prime-field analogue; Kummer
+        patterns are the prime-field knob.
+    searched:
+      corpus_grep:
+      - brief for Legendre, quadratic residue, Kummer, power residue, mu_B
+      - wave-1 relations records on mu_B and the Fourier certification barrier
+      web: []
+      blocked: []
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Choose 3 prime-order curves with p near 2^20 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        such that p - 1 has a divisor B near 2^8 with 3 not dividing B. Build the exhaustive log table,
+        the three structured bases of size near 2^8 and 20 random subsets. Compute T(xi) for all xi by
+        FFT over Z/N, C_3(F) by sorting A + A against A. Report spectral ratios, C_3 z-scores and the
+        theorem check.'
