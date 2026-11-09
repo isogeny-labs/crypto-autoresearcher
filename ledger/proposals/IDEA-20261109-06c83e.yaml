@@ -1,0 +1,160 @@
+idea:
+  id: IDEA-20261109-06c83e
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Dilate-union factor base F_s = union of [j^{-1}]F for j <= s has s^m the candidates on the same
+    B unknowns; charged decomposition cost per relation is predicted to match a plain interval base of
+    size sB
+  class: factor_base
+  claim: 'Let E/F_p be a prime-order toy curve, F = {P with x(P) < L}, B = |F|, and F_s the union over
+    j = 1..s of [j^{-1}]F. Because log([j^{-1}]P) = j^{-1} log P, every relation over F_s is linear in
+    the B logarithms of F. Prediction A (kill clause): at arity m = 3 the charged field operations per
+    collected relation using F_s, membership included, are at least 0.8 times those using a plain interval
+    base of size sB under the same enumeration decomposer, for s in {2,4,8} and p in {2^18, 2^22}. Prediction
+    B: the fraction of random targets with at least one decomposition over F_s is within 20 percent of
+    the same fraction for the plain base of size sB. Prediction C: the relation matrix over F_s on B unknowns
+    has full rank once 1.1 B relations are collected. No exponent change is claimed.'
+  mechanism: Membership of R in F_s costs x(jR) for j <= s, about s point additions, against one comparison
+    for an interval. Relations are R = sum of [j_i^{-1}] P_i, equivalently [J]R = sum of [J/j_i] P_i with
+    J the product of the j_i, so coefficients are small integer products and no new unknown appears. The
+    mean number of decompositions is a combinatorial identity in the base size and is independent of the
+    base, so the s^m mean gain is forced; the only open quantity is whether decomposition over a union
+    of s degree-j^2 preimages of an interval is cheaper than over an interval of the same size. The algebraic
+    route inflates Semaev degrees by (J/j_i)^2 and is worse; enumeration is identical; so the claim is
+    that the saving is confined to linear algebra, B^omega against (sB)^omega, which is never the bottleneck
+    over prime fields.
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-b0fcda
+    provenance: internal
+    claim: Frobenius-invariant bases save a factor n in systems and n^2 in linear algebra because the
+      base is closed under the map. An interval is never closed under [j], so only the linear-algebra
+      half of that gain can transfer here.
+    verified_by: ideation session 2026-11-09 read the row as quoted in the repo brief frontier map; filer
+      to open knowledge/frontiers/ecdlp/index-calculus/KR-IC-b0fcda.yaml
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt N). Exponent delta of this record is 0.
+    verified_by: ideation session 2026-11-09 read the row as quoted in the repo brief frontier map
+  - ref: IDEA-20260805-a25f11
+    provenance: recalled
+    claim: Mean decomposition count of a random target is exactly C(2B+m-1, m)/N, independent of the base.
+      Used to move the prediction from means to decomposable fractions and costs.
+    verified_by: ledger index excerpt in the repo brief; filer to open ledger/proposals/IDEA-20260805-a25f11.yaml
+  assumptions:
+  - Curve order N is prime so every [j] with j <= s is a bijection and j^{-1} mod N exists.
+  - Overlaps between [j^{-1}]F and [k^{-1}]F are of order s^2 B^2 / N and are counted, not assumed away.
+  proof_search_map:
+    not_applicable_reason: Charged measurement at toy sizes with a closed-form null; no exponent claim
+      is made.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: ratio of charged ops per relation, F_s over plain base of size sB
+    direction: higher
+    minimum_effect: at least 0.8 at s = 8 on both primes
+  - metric: decomposable-target fraction, F_s against plain base of size sB
+    direction: different
+    minimum_effect: relative difference at most 0.2
+  - metric: rank deficit of the F_s relation matrix at 1.1 B rows
+    direction: lower
+    minimum_effect: deficit 0 on at least 9 of 10 seeds
+  minimal_test:
+    design: 'Take prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md at p near 2^18 and 2^22,
+      L chosen so that B is about N^{0.23} and the plain base of size 8B gives roughly 0.7 decompositions
+      per target at m = 3. Decompose 2000 random targets by enumeration over pairs with membership of
+      the third point, counting field multiplications for membership and arithmetic. Run four arms per
+      seed: F_s for s in 2,4,8 and plain intervals of size sB. Solve the F_s matrix mod N and verify recovered
+      logs against an enumerated log table.'
+    controls:
+    - Plain interval base of size sB, same decomposer, same targets.
+    - Random symmetric base of size sB chosen by seeded hash, the null object of IDEA-20260731-011.
+    - s = 1 arm as the shared baseline.
+    required_metrics:
+    - B, s, p, N
+    - charged field multiplications per relation, each arm
+    - decomposable-target fraction, each arm
+    - matrix rank at 1.1 B rows and recovered-log verification count
+    - measured overlap count among the dilates
+  falsification_conditions:
+  - Ops-per-relation ratio below 0.5 at s = 8 on both primes falsifies the no-discount claim and escalates
+    the lead.
+  - Decomposable fraction differing by more than 0.5 relative between F_s and the plain base indicates
+    dilation structure and falsifies prediction B.
+  - Rank deficit above 0.05 B on most seeds falsifies prediction C.
+  - A timeout or an arm that fails verification is infrastructure, not evidence.
+  confounders:
+  - Membership cost of F_s scales with s and must be charged; dropping it fakes a discount.
+  - Enumeration order can bias early-stopping; count all decompositions per target.
+  interpretation_limits:
+  - Results at p <= 2^22 and m = 3 say nothing about Groebner-based decomposition at larger arity.
+  - A confirmed no-discount closes dilate unions for prime-field Semaev under enumeration only.
+  heuristic_assumptions:
+  - id: H1
+    statement: Decomposition statistics over F_s match those of a random symmetric set of the same size
+      beyond the forced mean.
+    rigorous_support: Mean count is exact; variance and cost have no theorem.
+    validation_plan: The three-arm comparison above at two primes and three values of s.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged; relation stage under enumeration is m! N / s
+    memory_exponent: B logarithms plus the s dilate tables
+    best_known: Pollard rho at Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: membership costs s point additions per test
+    tradeoff_note: Any saving is confined to linear algebra, B^omega against (sB)^omega, which does not
+      move the exponent over F_p.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-b0fcda for the linear-algebra half of the effect; IDEA-20260727-003 floor for the
+    relation stage. Neither states the dilate-union object.
+  sota_delta: Exponent delta 0. Measured delta is the ops-per-relation ratio and the decomposable fraction
+    against a size-matched interval base.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-b0fcda
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-f3da82
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-RHO-46c2c6
+    nearest:
+    - ref: KR-IC-b0fcda
+      provenance: internal
+      relation: adjacent
+      delta: Frobenius-invariant bases are closed orbits; dilates of an interval are not closed, so only
+        the unknown-count effect survives.
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: Naive prime-field Semaev cannot beat generic methods; this record tests whether a non-algebraic
+        base enlargement changes the per-relation charge, not the exponent.
+    searched:
+      corpus_grep:
+      - repo brief ledger index for dilate, scalar multiple base, phi-orbit union
+      - wave-1 index for half-arity claw, additive energy, mu_B
+      web: []
+      blocked: []
+    lead: LEAD-ICE-decomposition-probability-audit
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Take prime-order curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md at p
+        near 2^18 and 2^22, L chosen so that B is about N^{0.23} and the plain base of size 8B gives roughly
+        0.7 decompositions per target at m = 3. Decompose 2000 random targets by enumeration over pairs
+        with membership of the third point, counting field multiplications for membership and arithmetic.
+        Run four arms per seed: F_s for'
