@@ -1,0 +1,150 @@
+idea:
+  id: IDEA-20261109-09943a
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: How far p-adic log linearity extends, exact along the reduction fibre and zero steps in the discrete-log
+    direction, measured on three lift rules with anomalous and random controls
+  class: representation
+  claim: 'Toy curves over F_p with prime N, p not dividing N, lifted to Z/p^2. For a lift rule L among
+    the naive integer lift, the Teichmueller-coordinate lift (x lifted to its Teichmueller representative,
+    y by Hensel) and the torsion section s, define on k in Z/N the digit D_L(k) = t([N] L(kP)) / p mod
+    p, and d_1(k) = (x(s(kP)) - x(kP)) / p mod p. Prediction A (null): D_naive, D_Teich and d_1 behave
+    as random functions of k, with vanishing second difference D(k+2) - 2 D(k+1) + D(k) for a fraction
+    of k in [0, 10/p], a longest arithmetic-progression window J_max at most 3 over 10^4 start points,
+    and k_hat = D(Q)/D(P) equal to k with frequency at most 10/p; D_s is identically 0 because [N] s =
+    O. Prediction B (fibre linearity): for fixed P and R in E~_1 outside E~_2, D(P~ + R) - D(P~) = N t(R)/p
+    mod p for 100 percent of R. Prediction C (positive control): on an anomalous toy curve with a non-canonical
+    lift, D(k) = k D(1) for 100 percent of k. The ball of linearity of the p-adic elliptic logarithm in
+    the discrete-log variable is therefore predicted to have radius 0; a failure of A is the measurement
+    that would refute the zero-information reading of the torsion-section record filed in the same PR.'
+  mechanism: 'lambda = psi o [N] / N is a homomorphism E~(Q_p) to Q_p with kernel the torsion, and the
+    torsion section is the only homomorphic lift of E(F_p), so lambda kills it. Any other lift rule L
+    is a non-homomorphic section, so L(kP) - [k] L(P) is an element of E~_1 depending on kP through the
+    rule, and D_L(k) is its first digit: linear in the fibre coordinate, structureless in k. When N =
+    p, [p] maps E~_1 into E~_2, the fibre term vanishes mod p^2 and D becomes k-linear, which is the trace-one
+    attack. To precision p^2 the formal logarithm equals t, so no series is evaluated.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: The trace-one attack is the positive control; this record applies its statistic as a null on
+      p not dividing N.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Omega(sqrt N) generic bound; nothing here changes the exponent.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: IDEA-20260805-cc4c2c
+    provenance: internal
+    claim: CTRL-ANOMALOUS-TRACE1 at bits=20 exists as a ledger control; this record reuses it as prediction
+      C.
+    verified_by: brief section 2 index entry; file not opened in this session
+  assumptions:
+  - Each toy curve has prime N coprime to p and a trace different from 1; the anomalous control has N
+    = p and is lifted with a_4 = p so that it is not the canonical lift.
+  - Points on E~_1 are handled projectively; t = -X/Y.
+  - SHA-256(k) mod p is an adequate random-function reference at these sizes.
+  predictions:
+  - metric: fraction of k with vanishing second difference, for D_naive, D_Teich and d_1
+    direction: different
+    minimum_effect: within [0, 10/p] on every curve
+  - metric: J_max over 10^4 start points
+    direction: lower
+    minimum_effect: at most 3
+  - metric: frequency of k_hat = k
+    direction: lower
+    minimum_effect: at most 10/p
+  - metric: fibre-linearity rate, prediction B
+    direction: higher
+    minimum_effect: 1.0
+  - metric: anomalous-control linearity rate, prediction C
+    direction: higher
+    minimum_effect: 1.0
+  minimal_test:
+    design: 'Three primes of about 2^20, 2^24, 2^28 from docs/ECDLP_CALIBRATION_PRIMES.md (read it first;
+      add primes p = 1 mod 3 if absent). Per prime one curve y^2 = x^3 + b and one curve with a_4 nonzero,
+      each with prime N. Sample 10^4 random k, compute D_naive, D_Teich, d_1 with Z/p^2 arithmetic, and
+      the five metrics. Anomalous control: p = 3 a^2 - 3 a + 1 prime near 2^28, the sextic twist with
+      N = p, lift a_4 = p. Random control: SHA-256(k) mod p through the same statistics. Fibre control:
+      10^3 random R per point.'
+    controls:
+    - Anomalous curve with non-canonical lift must give second-difference-zero fraction 1.0 and J_max
+      = p - 1.
+    - SHA-256(k) mod p must give the same statistics as the null arms within sampling error.
+    - The torsion-section arm must report D_s identically 0 on every k.
+    required_metrics:
+    - second-difference-zero fraction per arm
+    - J_max per arm
+    - k_hat match frequency per arm
+    - fibre-linearity rate
+    - control rates and seeds
+  falsification_conditions:
+  - Prediction A is falsified if the second-difference-zero fraction exceeds 100/p on two primes with
+    two seeds, or J_max is at least 8, or the k_hat match frequency exceeds 100/p.
+  - Prediction B or C failing on a valid run voids the run; it indicates wrong lift arithmetic.
+  - A timeout is infrastructure, not falsification.
+  confounders:
+  - A canonical lift used by mistake in the anomalous arm gives D identically 0 and a false negative on
+    prediction C; check a_4 = p is applied.
+  - Windows that cross k = N wrap; exclude them from J_max.
+  interpretation_limits:
+  - A confirmed radius 0 is a toy-size statement about three lift rules; it does not prove no non-homomorphic
+    structure exists.
+  - A confirmed radius 0 moves no exponent and is not evidence for any attack.
+  heuristic_assumptions:
+  - id: H1
+    statement: The first digit of L(kP) - [k] L(P) is pseudo-uniform in k for the naive and Teichmueller
+      rules.
+    rigorous_support: None; the only theorem is that lambda kills the homomorphic lift.
+    validation_plan: The statistics above at three primes and two seeds, compared with the SHA-256 reference.
+  target_complexity:
+    time_exponent: N^(1/2) unchanged, delta 0
+    memory_exponent: O(1) beyond the sampled digits
+    best_known: Pollard rho at Theta(sqrt N), KR-RHO-13bf67
+    hidden_overhead: None claimed; the measurement costs about 400 group operations mod p^2 per sample.
+    tradeoff_note: No discrete-logarithm tradeoff is defined by this measurement.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-RHO-53c89f dominates the anomalous arm; KR-RHO-13bf67 dominates any exponent reading.
+    Neither row states the radius-0 null on p not dividing N.
+  sota_delta: 'Exponent 0. Counted delta: the first recorded measurement of the k-linearity radius of
+    the p-adic elliptic log on computable lifts, with the fibre direction shown exactly linear and the
+    DL direction at chance.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-IC-cd159a
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row is the attack on trace one; this record measures the same digit where the row says
+        the attack does not apply.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: orthogonal
+      delta: The row concerns rank-deficient global lifts; no global lift is formed here.
+    searched:
+      corpus_grep:
+      - brief section 2 for linearity, p-adic log, anomalous, CTRL-ANOMALOUS-TRACE1
+      - brief section 1b for research/ecdlp_autolab as a likely home for the harness
+      web: []
+      blocked:
+      - research/ecdlp_autolab contents are not quoted; the next agent must check for an existing Z/p^2
+        curve arithmetic before writing one.
+    lead: LEAD-TRF-padic-canonical-section
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Three primes of about 2^20, 2^24, 2^28 from docs/ECDLP_CALIBRATION_PRIMES.md
+        (read it first; add primes p = 1 mod 3 if absent). Per prime one curve y^2 = x^3 + b and one curve
+        with a_4 nonzero, each with prime N. Sample 10^4 random k, compute D_naive, D_Teich, d_1 with
+        Z/p^2 arithmetic, and the five metrics. Anomalous control: p = 3 a^2 - 3 a + 1 prime near 2^28,
+        the sextic twist with N = p, lift '

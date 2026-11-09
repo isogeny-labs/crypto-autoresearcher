@@ -1,0 +1,160 @@
+idea:
+  id: IDEA-20261109-6bd180
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Trace-one attack on j = 0 anomalous toy curves fails on exactly the canonical lift and succeeds
+    linearly in the deformation coordinate, with a same-prime non-anomalous negative arm
+  class: representation
+  claim: 'Let p = 3 a^2 - 3 a + 1 be prime, E the sextic twist y^2 = x^3 + b over F_p with p points (it
+    exists because 2a - b'' = 1 is one of the six traces), and for c in {0, ..., p-1} let E~_c be y^2
+    = x^3 + p c x + b over Z_p; E~_0 is the canonical lift since it has CM by Z[omega]. Lift points by
+    keeping the integer x and Hensel-lifting y to Z/p^2, and set D_c(P) = t([p] P~) / p mod p. (i) D_0(P)
+    = 0 for every P: on the canonical lift the attack fails for every point and every point-lift, because
+    E~_0(Q_p) contains a p-torsion Z/p mapping onto E(F_p). (ii) For every c nonzero, D_c(P) is nonzero
+    for all P other than O and D_c(kP) = k D_c(P), so k is read from two p-adic digits. (iii) D_c(P) =
+    c D_1(P) mod p: the extension class is F_p-linear in the Kodaira-Spencer coordinate c (Serre- Tate).
+    (iv) On the same prime, the non-anomalous twists with order N give D''(P) = t([N] P~) / p mod p nonzero
+    but lift-dependent, with k_hat = k at frequency about 1/p. Arm B: class-number-one anomalous curves,
+    p = (1 + |D| y^2)/4 for D in {-11, -19, -43, -67, -163}, where the lift with integer j = j_D and the
+    matching twist fails and j_D + p c with c nonzero succeeds. Statement for secp256k1: the trace is
+    about 1.27 times 2^128, not 1, so no deformation class works; the precision p^2 (512-bit) that would
+    suffice is never the bottleneck.'
+  mechanism: The map P to [p] P~ mod E~_2 is a homomorphism E(F_p) = Z/p to E~_1/E~_2 = F_p because [p]
+    E~_1 lies in E~_2; it is zero or an isomorphism. It is zero exactly when the connected-etale sequence
+    of E~[p] splits mod p^2, that is for the canonical lift, where the etale quotient is constant because
+    the unit root is 1 mod p (trace one), giving Q_p-rational p-torsion over every F_p-point. The lifts
+    E~_c form a torsor under H^1(E, T_E) = F_p with E~_c - E~_0 = c times the Kodaira-Spencer class of
+    d/dA, and Serre-Tate identifies the torsor with the first-order part of G_m-hat, so the extension
+    class, hence D_c, is linear in c. For N different from p the same construction gives a valuation-1
+    element varying with the lift, which is arm (iv).
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: The trace-one attack is the row; this record is its special case at j = 0 with the failing
+      lift classified.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Canonical lift for ECDLP is a forecloses phrase; here the canonical lift is where the only
+      p-adic attack dies.
+    verified_by: brief section 3 row text; file not opened in this session
+  - ref: IDEA-20260805-cc4c2c
+    provenance: internal
+    claim: A verified anomalous certificate control at bits=20 exists; this record extends it to a lift-classification
+      control.
+    verified_by: brief section 2 index entry; file not opened in this session
+  - ref: Smart 1999 remark on canonical lifts; Serre-Tate deformation theory
+    provenance: recalled
+    claim: The attack fails on the canonical lift; the deformation space is a formal torus. Confirm against
+      KN-LIT before approval.
+    verified_by: not verified in this session
+  assumptions:
+  - a is chosen so that p = 3 a^2 - 3 a + 1 is prime between 2^24 and 2^30; p = 1 mod 3 follows.
+  - The anomalous twist is found by testing [p] P = O on a random point for each class of b in F_p^x modulo
+    sixth powers.
+  - Z/p^2 arithmetic is projective; t = -X/Y.
+  predictions:
+  - metric: fraction of P with D_0(P) = 0
+    direction: higher
+    minimum_effect: 1.0
+  - metric: fraction of (c nonzero, P, k) with D_c(P) nonzero and D_c(kP) = k D_c(P)
+    direction: higher
+    minimum_effect: 1.0
+  - metric: fraction of (c, P) with D_c(P) = c D_1(P) mod p
+    direction: higher
+    minimum_effect: 1.0
+  - metric: k_hat match frequency on the non-anomalous twists
+    direction: lower
+    minimum_effect: at most 10/p
+  - metric: arm B failure set over c
+    direction: different
+    minimum_effect: exactly the single class c = 0
+  minimal_test:
+    design: Search a in [2^12, 2^15] for prime p; find the anomalous twist; for c in {0, 1, 2, random,
+      p-1} and 10^3 random (P, k) compute D_c with Z/p^2 arithmetic; run arm (iv) on the other five twists
+      with their N; run arm B for two D values with y chosen so p is prime near 2^28, lifting by the integer
+      j_D and by j_D + p c. About 50 group operations per D value.
+    controls:
+    - Standard positive control, a random anomalous curve with j not 0 or 1728 and the naive integer coefficient
+      lift must succeed on all points except with probability about 1/p.
+    - Sanity, [p] P = O on E(F_p) for the chosen twist and [N] P = O on the others.
+    - A canonical-lift arm run with precision p^3 must still give t([p] P~) in p^2 Z_p, ruling out a precision
+      artefact.
+    required_metrics:
+    - D_0 zero rate
+    - success rate per c
+    - linearity-in-c rate
+    - k_hat match rate on non-anomalous twists
+    - arm B failure classes
+  falsification_conditions:
+  - Any valid sample with D_0(P) nonzero, or any c nonzero with D_c(P) = 0 for some P other than O.
+  - Prediction (iii) failing while (i) and (ii) hold kills only the Serre-Tate linearity reading, which
+    is then recorded as such.
+  - A non-anomalous twist with k_hat match rate above 100/p on two seeds would contradict the gate of
+    lead 1 and must be escalated.
+  confounders:
+  - Choosing a twist with p points but lifting a different twist's b silently changes the curve; verify
+    the reduction of E~_c mod p is E.
+  - In arm B, the wrong quadratic twist of the integer-j lift reduces to the twist of E, not E; check
+    the trace of the reduction.
+  interpretation_limits:
+  - Results are about trace-one toy curves and a 1/p-measure failure set; they move no exponent and do
+    not transfer to p not dividing N by construction.
+  heuristic_assumptions:
+  - id: H1
+    statement: The family c maps bijectively onto deformation classes mod p^2 and the attack homomorphism
+      is linear in c.
+    rigorous_support: Serre-Tate theory and the Kodaira-Spencer computation sketched in the mechanism;
+      not written out in this session.
+    validation_plan: Prediction (iii) over all c at p near 2^24, full enumeration of c for one small prime
+      near 2^12.
+  target_complexity:
+    time_exponent: polynomial in log p for trace one only; N^(1/2) unchanged otherwise, delta 0
+    memory_exponent: O(log p)
+    best_known: Trace-one attack (KR-RHO-53c89f) on anomalous curves; Pollard rho (KR-RHO-13bf67) elsewhere
+    hidden_overhead: None; two p-adic digits suffice.
+    tradeoff_note: Not a tradeoff; a classification of which lifts the known attack fails on.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f dominates the attack itself; this record only fixes the exact failing lift
+    and the same-prime negative.
+  sota_delta: 'Exponent 0. Counted delta: the failing set of lifts is exactly one deformation class, success
+    is linear in the deformation coordinate, and on the same prime the non-anomalous twists sit at chance.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: special_case
+      delta: The row states the attack; this record is its j = 0 special case with the canonical-lift
+        failure made exact and linear in c.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row says isogeny walks cannot reach anomalous curves; this record works inside one anomalous
+        curve and varies the lift, not the curve.
+    searched:
+      corpus_grep:
+      - brief section 2 for anomalous, trace one, canonical lift, Serre-Tate, CTRL-ANOMALOUS-TRACE1
+      - brief section 1 file list for RESEARCH_MESTRE_HOWE.md and RESEARCH_SECP256K1_CM.md
+      web: []
+      blocked:
+      - RESEARCH_MESTRE_HOWE.md is listed but not quoted; the next agent must check whether it already
+        computes canonical lifts or Serre-Tate parameters before duplicating.
+    lead: LEAD-TRF-anomalous-padic-lift
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Search a in [2^12, 2^15] for prime p; find the anomalous twist; for c in {0,
+        1, 2, random, p-1} and 10^3 random (P, k) compute D_c with Z/p^2 arithmetic; run arm (iv) on the
+        other five twists with their N; run arm B for two D values with y chosen so p is prime near 2^28,
+        lifting by the integer j_D and by j_D + p c. About 50 group operations per D value.'
