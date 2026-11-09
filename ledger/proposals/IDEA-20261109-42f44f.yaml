@@ -1,0 +1,159 @@
+idea:
+  id: IDEA-20261109-42f44f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Chained x-doubling presentation of the auxiliary-curve torsion predicate against chained squaring
+    and the flat binomial: does the deployable factor base inherit the F4 degree wall of the mu_B system'
+  class: representation
+  claim: 'Toy instance, m = 3, S_4, predictions fixed before any run. Take a prime p near 2^16 with 64
+    dividing p-1 and a prime-order E/F_p, and an E_aux/F_p whose 2-primary rational torsion is cyclic
+    of order at least 64. For k in {3,4,5,6} and B = 2^k form five systems in the unknowns x_1, x_2, x_3
+    with x_R fixed: (A) S_4 plus x_i^B - 1; (B) S_4 plus the squaring chain x_{i,j+1} - x_{i,j}^2, x_{i,k}
+    - 1; (C) S_4 plus the doubling chain x_{i,j+1} D(x_{i,j}) - U(x_{i,j}) for j below k-1 and the 2-torsion
+    cubic in x_{i,k-1}, with U = x^4 - 2a x^2 - 8b x + a^2 and D = 4(x^3 + a x + b) on E_aux; (D) S_4
+    plus the flat kernel polynomial of the 2^k-torsion x-values; (E) S_4 plus a random fully split polynomial
+    of the same degree as in (D). Predictions: (P1) F_p solution counts agree between A and B and between
+    C and D for every k and target; (P2) wall time of C over B is at most 8 at every k; (P3) D''s maximal
+    F4 step degree at k = 6 is at least C''s; (P4) D and E differ in time by at most a factor 2 at every
+    k.'
+  mechanism: Wave-1's F4 leads rely on the membership equation being the two-term binomial x^B - 1. The
+    torsion predicate of the deployable base has a dense kernel polynomial of degree about B/2, useless
+    to F4 beyond tiny B, but the same predicate is the composition of log_2 B x-doubling maps, each a
+    degree-4 relation between consecutive chain variables, closed by the cubic that says [2^{k-1}]P' has
+    order 2. Chaining trades degree for variables exactly as the squaring chain does for mu_B, so comparing
+    the two chains at matched k isolates the cost of elliptic versus multiplicative structure inside F4.
+    Arm E tests whether F4 cares about the arithmetic origin of a split predicate at all.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Solving degree, last fall degree and degree of regularity are distinct; the record reports
+      the maximal step degree reached, not a regularity estimate.
+    verified_by: REPO BRIEF section 3 row text
+  - ref: KR-IC-0d2021
+    provenance: internal
+    claim: Modern F4 refinements exist; the comparison is between presentations under one fixed F4, not
+      a solver benchmark.
+    verified_by: REPO BRIEF section 3 row text
+  - ref: IDEA-20260731-014
+    provenance: internal
+    claim: Groebner cost of one fixed Semaev membership system varies across presentations; this record
+      adds two chains and a flat kernel polynomial to that comparison.
+    verified_by: REPO BRIEF section 2 ledger index excerpt
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_4 is the summation polynomial of degree 4 in each variable used in every arm.
+    verified_by: REPO BRIEF section 3 row text
+  assumptions:
+  - 'E_aux has exactly one rational 2-torsion point and 64 divides #E_aux(F_p), so the 2-primary part
+    is cyclic of order at least 64.'
+  - A single F4 implementation with one monomial order (grevlex, chain variables after x_i) is used for
+    all arms; its name and version are recorded from RESEARCH_GROEBNER_F4.md or groebner_compare.
+  predictions:
+  - metric: solution-count mismatches, A vs B and C vs D
+    direction: equal
+    minimum_effect: exactly 0 over 4 values of k and 10 targets each
+  - metric: wall-time ratio C over B
+    direction: higher
+    minimum_effect: at most 8 at every k
+  - metric: maximal F4 step degree, D minus C at k = 6
+    direction: higher
+    minimum_effect: at least 0
+  - metric: wall-time ratio D over E
+    direction: equal
+    minimum_effect: inside [0.5, 2] at every k
+  minimal_test:
+    design: One Sage or Magma driver in crypto-autoresearcher/groebner_compare (read it first for the
+      harness and metric names). Fix p, E, E_aux, ten random targets x_R from random self-reduction, seed
+      recorded. For each k and arm build the system, run F4 to a Groebner basis, record maximal step degree,
+      largest matrix dimensions, wall time, and the number of F_p solutions by triangular decomposition.
+      Each arm runs under the same memory ceiling; a ceiling hit is reported as infrastructure for that
+      arm and k.
+    controls:
+    - Arm E, random split polynomial of the degree of arm D.
+    - Arm A, the wave-1 flat binomial, as the reference presentation.
+    - Solution counts cross-checked by brute force over the base.
+    required_metrics:
+    - p, N, a, b, a_aux, b_aux, 2-primary torsion certificate of E_aux
+    - per arm and k, maximal step degree, matrix rows and columns, wall time
+    - per arm and k, F_p solution count and brute-force count
+    - ratios C/B and D/E with their spread over the ten targets
+  falsification_conditions:
+  - Any solution-count mismatch between A and B or between C and D.
+  - C over B above 32 at any k kills inheritance of the F4 leads.
+  - D over E outside [0.25, 4] at any k means arithmetic origin matters and H1 fails.
+  - Memory ceiling on all arms at k = 6 is an invalid run for that k, not evidence.
+  confounders:
+  - Chain variables inflate the variable count by 3k; the comparison is between chains of equal length,
+    so this cancels in C over B but not against the flat arms.
+  - Monomial order choice; one order is fixed for all arms and stated.
+  interpretation_limits:
+  - Results at p near 2^16 and k up to 6 describe presentation cost ratios, not exponents; nothing here
+    moves the relation-stage floor.
+  - Arm C's relevance is conditional on wave-1's F4 leads surviving their own tests; if they die, this
+    record is moot.
+  heuristic_assumptions:
+  - id: H1
+    statement: F4 cost on S_4 plus a fully split degree-D predicate depends on D and density, not on whether
+      the roots are torsion, roots of unity or random.
+    rigorous_support: None; Macaulay dimensions depend only on degrees.
+    validation_plan: Arm D against arm E, prediction P4.
+  - id: H2
+    statement: The doubling chain behaves like the squaring chain inside F4 up to a constant from degree
+      4 versus degree 2 steps.
+    rigorous_support: None; degree-4 steps may raise the step degree.
+    validation_plan: Arm C against arm B, prediction P2.
+  target_complexity:
+    time_exponent: Unchanged; the membership system's F4 cost exponent in B is the open quantity of wave-1's
+      e_k lead and this record measures only presentation ratios (delta 0)
+    memory_exponent: F4 matrix size, reported, not claimed
+    best_known: Pollard rho at Theta(N^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: 3 log_2 B extra variables per chained arm; F4 memory ceiling at k = 6.
+    tradeoff_note: Presentation choice is a constant-factor and feasibility question.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 on exponent. Wave-1 record "Three presentations of one zero-dimensional
+    prime-field membership system" on the flat and chained S_3 arms for mu_B; this record adds the ladder
+    chain and the kernel-polynomial flat arm.
+  sota_delta: Exponent delta 0. Decides whether the only deployable prime-field algebraic base keeps or
+    loses the F4 route of wave-1 at a constant factor at most 8.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-fbdb61
+    - KR-IC-0d2021
+    - KR-IC-5a43e5
+    - KR-IC-f3da82
+    - KR-IC-5931ee
+    - KR-IC-f5c584
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-fbdb61
+      provenance: internal
+      relation: adjacent
+      delta: The row relates solving-degree invariants of Weil-descended systems; here there is no descent
+        and the varied object is the presentation of a prime-field predicate.
+    - ref: KR-IC-f3da82
+      provenance: internal
+      relation: orthogonal
+      delta: Trace replay amortises across similar systems; this record compares single-system presentations
+        and replays nothing.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-1 index for chained, presentation, doubling chain, kernel polynomial
+      - REPO BRIEF section 2 for IDEA-20260731-014 and F4 presentation comparisons
+      web: []
+      blocked:
+      - groebner_compare contents not quoted in the brief; harness names must be read by the next agent
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: One Sage or Magma driver in crypto-autoresearcher/groebner_compare (read it
+        first for the harness and metric names). Fix p, E, E_aux, ten random targets x_R from random self-reduction,
+        seed recorded. For each k and arm build the system, run F4 to a Groebner basis, record maximal
+        step degree, largest matrix dimensions, wall time, and the number of F_p solutions by triangular
+        decomposition. Each arm'
