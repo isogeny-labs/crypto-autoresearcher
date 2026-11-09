@@ -1,0 +1,59 @@
+idea:
+  id: IDEA-20261109-931d32
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: composition
+  novelty_status: adaptation
+  lane: isogeny
+  angle: invariants and auxiliary structures on supersingular curves
+  title: Bound on how much classically computable pairing characters can shrink Kuperberg's sieve
+  attack_type: parameter_audit
+  claim: Each bit of the secret class modulo Cl(O)^2 obtained from pairing characters removes one bit
+    from the hidden-shift group, but Kuperberg's cost 2^{O(sqrt(log h))} changes only from sqrt(log h)
+    to sqrt(log h - t); for t <= 10 the saving is below one bit of security at every deployed h. Cleared
+    against H-ALISO-012 (quantum aggregate oracle probe), H-ALISO-013 (quantum cost accounting verify),
+    H-ICINV-82ee6a (cheap order features), and consistent with the rejected_scoped closure H-ICINV-6c7920.
+    No Lean lemma constrains it; the missing statement is kuperberg_cost_monotone.
+  mechanism: Plug h -> h / 2^t for t in 1..10 into the H-ALISO-013 cost-accounting model with the same
+    qubit and query conventions; report the delta in log2 cost per parameter set.
+  objects:
+    group: Cl(O) for each deployed orientation
+    invariant: pairing-computable genus characters (t bits)
+    target: quantum cost tables assuming the full group
+  cost_model:
+    classical_precompute: O(log p) per character
+    quantum_saving: at most sqrt(log h) - sqrt(log h - t) in the exponent
+  falsification: If any parameter set shows a saving of one bit or more in the H-ALISO-013 model for t
+    = omega(D) - 1, the audit flags it; otherwise close as audited clean.
+  cleared:
+    checked:
+    - H-ALISO-012
+    - H-ALISO-013
+    - H-ICINV-82ee6a
+    disproven: H-ICINV-6c7920 (rejected_scoped)
+  lean:
+    coverage: none
+    needed_statement: 'kuperberg_cost_monotone : cost(h / 2^t) >= cost(h) * 2^{-c t / sqrt(log h)}'
+  experiment:
+    exp_id: none
+    nearest_surface: autolab package p1486_quantum_cost_accounting_verify (H-ALISO-013)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no frontier map
+    searched:
+      corpus_grep:
+      - H-ALISO-012
+      - H-ALISO-013
+      - H-ICINV-82ee6a
+      - H-ICINV-6c7920
+    none_found_after:
+    - 'BRIEF grep: "Kuperberg"'
+    - 'BRIEF grep: "hidden shift"'
+    - 'BRIEF grep: "aggregate oracle"'
+    - 'BRIEF grep: "quantum cost"'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  risks: Negative-result audit; it does not propose a break and is only useful as a closed entry in the
+    cost tables.
