@@ -1,0 +1,151 @@
+idea:
+  id: IDEA-20261109-e2592b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Coleman integral of x dx/y between torsion-section lifts equals -2 times the difference of E^nat(Z_p)
+    torsion coordinates: the crystalline Abel-Jacobi value of a point in O(log N) ring operations versus
+    Theta(p) by Kedlaya'
+  class: representation
+  claim: 'Etilde/Z_p a lift of an ordinary prime-order E/F_p, Phat, Qhat in Etilde(Z_p)[N] the torsion-section
+    lifts at precision p^n, n <= 6, eta = x dx/y. Define c_nat(Phat) := -Lambda_N(Phat)/N in Z/p^n, the
+    slope sum of any addition chain in the E^nat(Z/p^n) chart with lambda(R,-R) = 0. Claim A: int_{Qhat}^{Phat}
+    eta = -2 (c_nat(Phat) - c_nat(Qhat)) in Z/p^{n-2} for all pairs, and int_{Qhat}^{Phat} dx/y = 0. Claim
+    B: c_nat costs O(n log N) operations in Z/p^n while the Coleman side costs Theta(p n) (Frobenius matrix
+    plus evaluation of the Monsky-Washnitzer primitives), so the measured time ratio grows linearly in
+    p. Consequence: the crystalline Abel-Jacobi coordinate of P is computed fastest by the group law because
+    it is the group law; it is a quasi-homomorphism with cocycle -2 lambda, c_nat(k Phat) = k c_nat(Phat)
+    + Lambda_k(Phat), and carries no scalar information.'
+  mechanism: eta is of the second kind and tau_P^* eta - eta = d(-2 lambda(P, .)) is an algebraic identity
+    (the zeta addition theorem with x = wp, y = wp'/2). Coleman primitives respect algebraic exactness
+    and are unique up to a constant on a connected curve, so F_eta(P+Q) = F_eta(P) + F_eta(Q) - 2 lambda(P,Q)
+    once F_eta has no constant term in t = -x/y at O. F_eta is odd, hence N F_eta(Phat) = 2 Lambda_{N-1}(Phat).
+    The same algebra defines the order-N section of E^nat(Z/p^n), whose reduction mod p is the finite-field
+    zeta of the sibling record. The crystalline realization of [Z -> E, 1 -> P] relative to Frobenius-fixed
+    (torsion) lifts is this pair of integrals; the first vanishes and the second is c_nat.
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting approaches fail; this record lifts torsion points only to identify an invariant, claiming
+      no attack.
+    verified_by: brief section 3 row; next agent opens knowledge/frontiers/ecdlp/index-calculus/KR-IC-cd159a.yaml
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic bound; delta 0.
+    verified_by: brief section 3 row; not opened this session
+  - ref: Balakrishnan-Bradshaw-Kedlaya, explicit Coleman integration (recalled), implemented in Sage for
+      p-adic hyperelliptic curves
+    provenance: recalled
+    claim: Coleman integrals between arbitrary good-reduction points via Frobenius plus tiny integrals.
+    verified_by: recalled; the test calls the Sage method directly
+  assumptions:
+  - Sage's coleman_integrals_on_basis accepts the odd-degree model over Qp(p, n+4) and points outside
+    the disc of O.
+  - Torsion-section lifts are available from the wave-1 code; its path must be read from that record.
+  proof_search_map:
+    not_applicable_reason: an identity and a cost-slope measurement at toy p, no exponent claim
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: agreement digits between the eta integral and -2 times the c_nat difference
+    direction: higher
+    minimum_effect: at least n - 2 on 50 random pairs at each prime
+  - metric: p-adic valuation of the dx/y integral between torsion lifts
+    direction: higher
+    minimum_effect: at least n - 1
+  - metric: slope of log(T_Coleman / T_nat) against log p
+    direction: higher
+    minimum_effect: 1.0 plus or minus 0.2
+  minimal_test:
+    design: Six prime-order curves with 10^3 < p < 10^4 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+      n = 6. Compute torsion lifts with the wave-1 code; compute c_nat in E^nat(Z/p^n) in plain Python;
+      compute Coleman integrals with Sage's p-adic hyperelliptic class on y^2 = x^3 + a x + b. Fix the
+      sign of lambda once by the four-point cocycle check on naive non-torsion lifts, int_{A+B'}^{A+B}
+      eta - int_{B'}^{B} eta = -2 (lambda(A,B) - lambda(A,B')). Record wall times of both sides per point.
+      Script under research/cohomology_zeta_20261109.
+    controls:
+    - The dx/y integral between torsion lifts must vanish (wave-1 result reproduced).
+    - Naive lifts of the same points must violate Claim A by the log of the lift noise, showing the test
+      is specific to torsion lifts.
+    - The cocycle check on four naive points, fixing and freezing the sign.
+    required_metrics:
+    - agreement digits per pair
+    - valuation of the dx/y integral
+    - T_Coleman and T_nat per prime
+    - sign used
+  falsification_conditions:
+  - Disagreement beyond two lost digits on any torsion pair after the single sign normalization kills
+    Claim A.
+  - A time ratio not growing with p kills Claim B as stated.
+  - Sage failing on the model is infrastructure, not evidence.
+  confounders:
+  - Precision loss in Coleman integrals near the disc of O; keep points away from it.
+  - Sage internal normalization of the basis differentials; compare the eta integral only.
+  interpretation_limits:
+  - Confirmation identifies a crystalline invariant with a group-law quantity; it makes no claim about
+    k.
+  - Toy p only; the identity itself is size-free.
+  heuristic_assumptions:
+  - id: H1
+    statement: Coleman primitives of second-kind differentials are unique up to a constant and respect
+      the algebraic addition identity.
+    rigorous_support: Coleman's theory on curves, recalled.
+    validation_plan: the cocycle check on naive lifts and the 50-pair agreement at six primes.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(p n) on the Coleman side, O(n) on the E^nat side
+    best_known: Pollard rho, Theta(N^{1/2}) (KR-RHO-13bf67); Kedlaya Theta(p) and Harvey p^{1/2} for Frobenius
+      matrices
+    hidden_overhead: none; no algorithm proposed
+    tradeoff_note: the invariant costs the same as the point when computed through the group, and far
+      more when computed cohomologically.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 for any exponent reading; KR-IC-cd159a for any lifting reading.
+  sota_delta: Exponent delta 0. Counted delta is an identification of the crystalline Abel-Jacobi value
+    of a point with an O(log N) group computation and a measured p-fold cost asymmetry.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: lifting is used to name an invariant, not to find rank drops.
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: orthogonal
+      delta: no transfer is attempted; N != p throughout.
+    searched:
+      corpus_grep:
+      - brief section 2 for Coleman, Kedlaya, Monsky-Washnitzer, p-adic log, Teichmuller
+      - wave-1 p-adic titles for torsion-section lift, additivity radius, log linearity
+      web: []
+      blocked: []
+    lead: LEAD-EXO-padic-jet-canonical-lift
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Six prime-order curves with 10^3 < p < 10^4 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+        n = 6. Compute torsion lifts with the wave-1 code; compute c_nat in E^nat(Z/p^n) in plain Python;
+        compute Coleman integrals with Sage''s p-adic hyperelliptic class on y^2 = x^3 + a x + b. Fix
+        the sign of lambda once by the four-point cocycle check on naive non-torsion lifts, int_{A+B''}^{A+B}
+        eta - int_{B''}^{B}'

@@ -1,0 +1,148 @@
+idea:
+  id: IDEA-20261109-16e2d3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Second Witt digit of the torsion-section lift against the finite-field zeta: one affine fit
+    decides whether the crystalline and de Rham coordinates of a point are the same object'
+  class: representation
+  claim: 'E/F_p ordinary of prime order N != p, Etilde/Z_p any Weierstrass lift, Phat in Etilde(Z/p^2)
+    the unique lift of P of order N (the wave-1 torsion-section lift). Put x_1(P) := (x(Phat) - x(P)^p)/p
+    mod p, the second Witt coordinate of x(Phat), and let c be the E^nat zeta of the sibling record. Claim:
+    there exist alpha in F_p and h in L(nO), n <= 200, with x_1(P) = alpha y(P) c(P) + h(P) for every
+    affine P. Prediction: alpha != 0 for every lift and n <= 20. If alpha = 0 then x_1 is a regular function
+    of degree <= n and the wave-1 Witt-digit factor base is an algebraic predicate of that degree. If
+    no solution exists for n <= 200 while the planted control fits, the chart identification is wrong
+    and the record is invalid. In every outcome no exponent moves.'
+  mechanism: The Greenberg transform Gr_2(Etilde) is a commutative extension of E by G_a over F_p, kernel
+    Etilde_1(Z/p^2) = F_p via t/p, F_p-points Etilde(Z/p^2). Ext^1(E,G_a) = H^1(E,O_E) is one-dimensional
+    and spanned by the class of E^nat, so Gr_2 is split or isomorphic to E^nat after scaling G_a by alpha.
+    Both torsors are trivial over the affine curve E - O, so an isomorphism of extensions reads (P,w)
+    -> (P, alpha w + f(P)) with f regular on E - O, and the unique order-N sections correspond. The Greenberg
+    chart x_1 is affine in the torsor coordinate with slope 2y (the invariant vector field moves x at
+    rate 2y), which yields the fitted form. Buium's description of the mod-p first jet space of an abelian
+    scheme as the Hasse-Witt twist of the universal vectorial extension (recalled, must be checked) predicts
+    alpha != 0 exactly for ordinary E.
+  novelty_status: speculative
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails for ECDLP; this record lifts only to Z/p^2 and claims
+      no attack.
+    verified_by: brief section 3 row; next agent opens knowledge/frontiers/ecdlp/index-calculus/KR-IC-cd159a.yaml
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic bound; exponent delta here is 0.
+    verified_by: brief section 3 row; not opened this session
+  - ref: Buium, differential characters of abelian varieties over p-adic fields (1995), recalled
+    provenance: recalled
+    claim: mod-p jet space extension class is the Hasse-Witt image of the vectorial class.
+    verified_by: not checked; reading obligation listed in H1
+  assumptions:
+  - The wave-1 torsion-lift code exists and exposes x(Phat) mod p^2; its path must be read from the wave-1
+    record.
+  - The L(nO) basis x^i, y x^i is used for h; alpha multiplies y c, which is a function of x only.
+  proof_search_map:
+    not_applicable_reason: a linear-algebra identity test at toy sizes, no exponent claim
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: alpha for each of three lifts at each prime
+    direction: different
+    minimum_effect: nonzero in all cases
+  - metric: n_min, smallest pole order admitting a fit
+    direction: lower
+    minimum_effect: at most 20, and constant across primes for a fixed lift type
+  - metric: residual of the fitted identity on all N-1 affine points
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: For eight prime-order curves with N in [2^12, 2^16] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+      three lifts each (naive integer (a,b); canonical j = 0 lift y^2 = x^3 + [b] with Teichmuller b;
+      perturbed (a + p a', b + p b')). Compute x_1 and c for all P. For n in 10,20,...,200 solve x_1 =
+      alpha y c + sum_i h_i phi_i over the basis of L(nO) on 2n + 40 random points and verify on all points.
+      Report (alpha, n_min) per lift and prime. Sage or plain Python under research/cohomology_zeta_20261109.
+    controls:
+    - c replaced by a random odd function, no fit for n <= 200, which shows the test has power.
+    - x_1 replaced by the Witt digit of a naive non-torsion lift, no fit expected.
+    - Planted x_1 := y c + x^5 must return alpha = 1 and n_min = 5.
+    required_metrics:
+    - alpha per lift and prime
+    - n_min per lift and prime
+    - verification residual
+    - control outcomes
+  falsification_conditions:
+  - No fit for n <= 200 on a lift while the planted control fits (model wrong, record invalid).
+  - alpha = 0 on any lift (Greenberg splits; the Witt digit is algebraic of degree n_min).
+  - n_min growing with p for a fixed lift type (the transition is not a bounded-degree algebraic map).
+  confounders:
+  - Choice of Teichmuller versus integer representative in the Witt digit; only the Teichmuller-based
+    x_1 is canonical.
+  - Lifts of a, b to Z/p^2 differ between arms by design; report them.
+  interpretation_limits:
+  - A confirmed fit identifies two coordinates; it does not make either informative about k.
+  - alpha = 0 would be a structural surprise but still gives only a low-degree algebraic predicate.
+  heuristic_assumptions:
+  - id: H1
+    statement: Gr_2(Etilde) is non-split for ordinary E and any lift, so alpha != 0.
+    rigorous_support: recalled Buium statement, unverified this session.
+    validation_plan: The fit itself at eight primes and three lifts, plus a reading note on Buium 1995
+      committed next to the script.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(N) toy enumeration
+    best_known: Pollard rho, Theta(N^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: none; no algorithm proposed
+    tradeoff_note: both coordinates cost one scalar multiplication per point.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading; KR-IC-cd159a for any lifting reading.
+  sota_delta: Exponent delta 0. Counted delta is a decided relation between the crystalline (Witt) and
+    de Rham (E^nat) coordinates of a point.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-IC-f5c584
+    - KR-RHO-755e35
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: xedni lifts to Q and needs rank drops; this lifts to Z/p^2 and tests an identity between
+        two canonical coordinates.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: generic bound untouched; delta 0 by construction.
+    searched:
+      corpus_grep:
+      - brief section 2 and wave-1 p-adic titles for Witt digit, torsion-section lift, Greenberg, jet
+        space
+      - wave-1 sweep title scheme-degree barrier for algebraic factor bases
+      web: []
+      blocked: []
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For eight prime-order curves with N in [2^12, 2^16] from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+        three lifts each (naive integer (a,b); canonical j = 0 lift y^2 = x^3 + [b] with Teichmuller b;
+        perturbed (a + p a'', b + p b'')). Compute x_1 and c for all P. For n in 10,20,...,200 solve x_1
+        = alpha y c + sum_i h_i phi_i over the basis of L(nO) on 2n + 40 random points and verify on all
+        points. Report'
