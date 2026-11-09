@@ -1,0 +1,49 @@
+idea:
+  id: IDEA-20261109-f0934a
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: tooling
+  novelty_status: adaptation
+  title: Formalize the TV mixing bound for non-backtracking walks from a spectral hypothesis
+  claim: Every walk-based cost model in this lane (spine hitting, KLPT control sampler, Grover seed search)
+    assumes that a non-backtracking walk of length k >= (1 + eps) log_ell p in the (ell+1)-regular graph
+    on n ~ p/12 vertices is within ell^(-eps k) of uniform in total variation. The derivation from the
+    spectral bound |lambda| <= 2 sqrt(ell) is elementary and should be a CryptoLean theorem with the spectral
+    bound as hypothesis. Cleared against H-WESO-516558 and H-ECDLP-3550b8; the brief shows no Lean theorem
+    covering it.
+  mechanism: 'State: for a connected (ell+1)-regular graph on n vertices whose non-trivial adjacency eigenvalues
+    satisfy |lambda| <= 2 sqrt(ell), the non-backtracking walk of length k from any vertex has TV distance
+    from uniform at most C n (2 / sqrt(ell))^k ... with explicit C via the Ihara-Bass / Hashimoto operator
+    or via the simple-walk bound plus the non-backtracking correction. Deligne/Pizer (the spectral bound
+    itself) is taken as hypothesis, not proved.'
+  security_delta: None; converts a shared heuristic into a conditional theorem and pins the constant that
+    Leads 1, 7, 8 use.
+  kill_test: If the formal statement cannot be closed in Lean within the existing SplitPrime.Obstruction
+    infrastructure, fall back to an empirical TV table at p in [2^20, 2^30] to fix C and file as measurement.
+  cleared:
+    checked:
+    - H-WESO-516558
+    - H-ECDLP-3550b8
+    disproven: none in the brief
+    lean: no Lean coverage; would need the TV bound stated above with explicit C under the spectral hypothesis
+    exp: none; nearest surface is aburan28/crypto-lean (commit 8187529, SplitPrime.Obstruction)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map in the brief
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-ECDLP-3550b8
+      - H-ALISO-008
+    none_found_after:
+    - 'BRIEF grep: ''Ramanujan'' OR ''spectral'' OR ''mixing'''
+    - 'BRIEF grep: ''non-backtracking'' outside H-WESO-516558'
+    - 'BRIEF grep: Lean theorem names (none present)'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  marks:
+    proved: nothing yet; target is a conditional theorem
+    heuristic: the spectral hypothesis is imported, not formalized
+    analogy: H-ECDLP-3550b8 basin analysis is the ECDLP-side counterpart
