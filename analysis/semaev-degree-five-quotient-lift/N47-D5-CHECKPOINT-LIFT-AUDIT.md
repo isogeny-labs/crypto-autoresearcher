@@ -51,9 +51,10 @@ audit in `N47-D4-EXACT-LIFT-AUDIT.md`; it is stronger than the independent
 checker result, which only proves `W_4(F)` is contained in the seed kernel.
 
 The producer can return `projection_kills_one`, fail, time out, or write an
-unchecked candidate. None proves `1 not in W_5(F)`. A positive degree-six
-lower bound requires the independent D5 checker to accept a nonzero image of
-one and the independent exact zero count to accept the same named instance.
+unchecked candidate. None proves `1 not in W_5(F)`. The independent exact
+zero count for this named instance is now accepted and published in
+`N47-X1-COUNT-RESULT-20261109.md`. A positive degree-six lower bound still
+requires the independent D5 checker to accept a nonzero image of one.
 The checker establishes the lower bound even if the stronger source-level
 exactness premise is later withdrawn. The queued runner's one-attempt budget
 and publication gates are unchanged by this audit.
