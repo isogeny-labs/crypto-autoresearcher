@@ -1,0 +1,153 @@
+idea:
+  id: IDEA-20261109-e512b8
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Dyadic-subcube dispersion of prime-field point-decomposition solution counts: Poisson flatness
+    at every prefix depth and the enumeration floor it imposes on branching solvers'
+  class: barrier
+  claim: 'Setting: toy prime-order curve, p about 2^24, interval base I = {x < 2^12} (beta = 1/2), arity
+    m = 3, target x_R uniform. Let X_R be the set of (x1, x2, x3) in I^3 with x1 < x2 < x3 and S_4(x1,
+    x2, x3, x_R) = 0. For depth j in 1..5 partition the fundamental domain into subcubes C by the top
+    j bits of each coordinate (strictly increasing prefixes only), with n_C the number of solutions in
+    C and K_j the number of subcubes. Claim: the dispersion index D_j = Var_C(n_C)/Mean_C(n_C) satisfies
+    |D_j - 1| <= 3 sqrt(2/K_j) + 0.05 whenever Mean_C >= 4, for at least 45 of 50 targets, agreeing with
+    a Poisson null and with a random polynomial of the same multidegree: no bit prefix of the encoding
+    carries solution-count signal. Reading: a branching solver cannot prune above the depth where Mean_C
+    is about 1 and must refute about |I|^{m-1}/polylog subcubes, the enumeration floor, so the wave-1
+    SMT scaling exponent c_m should equal (m-1) beta. Certified regime: for |C| at least 2^{O(m)} p^{(m+1)/2}
+    (log p)^m flatness is a theorem via the Weil bound; the test regime is below it and is therefore measured,
+    not proved. Exponent delta 0.'
+  mechanism: The fibre X_R is an affine piece of a variety of dimension m-1, and the nonzero Fourier coefficients
+    of its F_p-point indicator are bounded by 2^{O(m)} p^{(m-1)/2} (Weil, as used by the wave-1 hybrid-sum
+    record). Fourier box counting then gives n_C = |C| |X_R| / p^m plus an error of that size times log^m
+    p, which certifies flatness above the stated scale. Below it the Poisson-process behaviour of X_R
+    in the box is exactly what a prefix-guided solver would have to violate to beat enumeration. The Koblitz
+    lane's prefix-saturation statistic in cryptanalysis (N41, N131) exploits Frobenius linearity to create
+    affine prefix structure; over F_p no linear structure exists, and this record tests that absence directly.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5765d2
+    provenance: internal
+    claim: SAT and XOR reasoning speed binary PDP by constants, exponent unchanged.
+    verified_by: brief section 3 row text, session 2026-11-09
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound; this record changes no exponent.
+    verified_by: brief section 3 row text, session 2026-11-09
+  - ref: crypto/RESEARCH_SAT_SEMAEV.md
+    provenance: internal
+    claim: Expected to hold the CNF encoding of S_m decomposition; the next agent reads it for the bit-vector
+      variable order so subcubes match solver prefixes.
+    verified_by: path listed in brief section 1; file not opened
+  - ref: cryptanalysis commit "Measure triple-sum affine prefix saturation on N41 and N131"
+    provenance: internal
+    claim: A prefix statistic exists in the Koblitz lane; ported here to F_p.
+    verified_by: commit title in brief section 1; experiment directory not opened
+  assumptions:
+  - S_4 has degree 4 in each variable, so the univariate solve per pair is a quartic root finding.
+  - The curve has prime order and p is about 2^24 so the log table for the positive control fits.
+  predictions:
+  - metric: max over depths with Mean_C >= 4 of (|D_j - 1| - 3 sqrt(2/K_j))
+    direction: lower
+    minimum_effect: at most 0.05 for at least 45 of 50 targets
+  - metric: same statistic for the random-polynomial control
+    direction: different
+    minimum_effect: within 0.05 of the S_4 value
+  - metric: same statistic for the log-aligned positive control
+    direction: higher
+    minimum_effect: at least 1.0 at some depth with Mean_C >= 4
+  minimal_test:
+    design: For each of 50 targets enumerate X_R by solving the quartic S_4(x1, x2, T, x_R) for every
+      pair x1 < x2 in I (about 2^23 univariate solves) and keeping roots T in I above x2. Compute n_C,
+      K_j, Mean_C, D_j for j = 1..5 and the Kolmogorov distance of {n_C} to Poisson(Mean_C). Repeat with
+      a random polynomial of multidegree (4,4,4) in place of S_4, with a simulated Poisson field of matched
+      means, and with the positive control.
+    controls:
+    - Random polynomial of the same multidegree (null with the same box).
+    - Simulated Poisson counts with matched means (instrument noise).
+    - Positive control with planted structure, subcubes defined by prefixes of the discrete logs of the
+      three points (log-aligned partition from the N-entry log table), where the linear log relation must
+      produce dispersion well above 1.
+    required_metrics:
+    - p
+    - N
+    - size of I
+    - size of X_R per target
+    - K_j, Mean_C, D_j per depth and target
+    - Kolmogorov distance to Poisson per depth
+    - the same for both null controls and the positive control
+  falsification_conditions:
+  - 'D_j >= 1.5 with Mean_C >= 4 and K_j >= 500 for at least 10 of 50 targets while the random-polynomial
+    control stays within 0.1 of 1: an exploitable prefix bias exists and the barrier is dead.'
+  - 'The log-aligned positive control fails to reach D_j >= 2 at any depth with Mean_C >= 4: the instrument
+    is blind; invalid run, neither support nor falsification.'
+  - A timeout is infrastructure, not evidence.
+  confounders:
+  - Permutation symmetry of S_4 is removed by the fundamental domain x1 < x2 < x3.
+  - Roots corresponding to twist points are included; they are what a solver sees.
+  - At depth 5 the per-coordinate prefix leaves 2^7 values; boundary effects are reported, not corrected.
+  interpretation_limits:
+  - Measured at p about 2^24, beta = 1/2, m = 3; the Weil-certified scale is not reached.
+  - Speaks to prefix-guided branching only; Groebner solvers and learnt clauses that are not prefix-local
+    are outside scope.
+  heuristic_assumptions:
+  - id: H1
+    statement: Below the Weil-certified scale, X_R behaves as a Poisson point process in the box with
+      respect to dyadic subcubes.
+    rigorous_support: The certified statement above p^{(m+1)/2} polylog only.
+    validation_plan: This test at every depth with Mean_C >= 4.
+  - id: H2
+    statement: A branching solver's pruning power is bounded by prefix-conditional solution-count signal.
+    rigorous_support: None; CDCL may learn non-prefix clauses.
+    validation_plan: Compare the wave-1 QF_BV scaling exponent c_m, when measured, with (m-1) beta on
+      the same base.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged, delta 0
+    memory_exponent: O(N) log table for the positive control at toy size only
+    best_known: Pollard rho (KR-RHO-13bf67); SAT/XOR on PDP does not change the exponent (KR-IC-5765d2)
+    hidden_overhead: None; a barrier record.
+    tradeoff_note: No discrete-log tradeoff is defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5765d2 for the solver family's exponent; no row states a prefix-flatness mechanism
+    or measures dispersion by depth.
+  sota_delta: Exponent delta 0. Supplies the mechanism behind the expected c_m = (m-1) beta and a positive
+    control that proves the statistic can see structure when it exists.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5765d2
+    - KR-IC-5931ee
+    - KR-IC-e847d1
+    - KR-IC-fbdb61
+    - KR-IC-73db3f
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: Reports SAT and XOR constant-factor gains on binary PDP; this record predicts why prime-field
+        branching gets no exponent.
+    - ref: KR-IC-e847d1
+      provenance: internal
+      relation: orthogonal
+      delta: Crossbred mixes Macaulay with enumeration; this floor prices the enumeration component on
+        F_p boxes.
+    searched:
+      corpus_grep:
+      - brief section 2 for prefix, subcube, SAT, SMT, dispersion, Poisson
+      - wave-1 index for SMT scaling, SAT on mu_B, Fourier certification
+      web: []
+      blocked: []
+    lead: LEAD-ICB-cofactor-projected-ladder-base
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each of 50 targets enumerate X_R by solving the quartic S_4(x1, x2, T,
+        x_R) for every pair x1 < x2 in I (about 2^23 univariate solves) and keeping roots T in I above
+        x2. Compute n_C, K_j, Mean_C, D_j for j = 1..5 and the Kolmogorov distance of {n_C} to Poisson(Mean_C).
+        Repeat with a random polynomial of multidegree (4,4,4) in place of S_4, with a simulated Poisson
+        field of matched means, and w'
