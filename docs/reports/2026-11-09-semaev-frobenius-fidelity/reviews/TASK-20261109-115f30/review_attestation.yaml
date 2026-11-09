@@ -1,0 +1,38 @@
+review_attestation:
+  task_id: TASK-20261109-115f30
+  joints_owned:
+    - J3 hosted machine evidence and false-success controls
+  verdict: holds
+  additive_to:
+    - /var/tmp/semaev-frobenius-j3-output/report.md
+    - /var/tmp/semaev-frobenius-j3-output/review_attestation.yaml
+    - /var/tmp/semaev-frobenius-j3-output/correction-1/correction.md
+  read_sibling_reports: false
+  blind_from_respected: true
+  sources_read:
+    - /var/tmp/semaev-frobenius-fidelity-20261109/docs/reports/2026-11-09-semaev-frobenius-fidelity/review-plan.yaml
+    - research/THM_SEMAEV_FALL1.md at Git commit 36ee18fa3d0e6d527e1b36e3e2a09180c5fcf055 and 3abcd77ef51d63a79fcf02fcfd172d7d283babc3
+    - formal/targets/semaev-frobenius-collapse.yaml at Git commit 36ee18fa3d0e6d527e1b36e3e2a09180c5fcf055 and 3abcd77ef51d63a79fcf02fcfd172d7d283babc3
+    - formal/CryptoResearch/Semaev/FrobeniusCollapse.lean at Git commit 36ee18fa3d0e6d527e1b36e3e2a09180c5fcf055 and 3abcd77ef51d63a79fcf02fcfd172d7d283babc3
+    - formal/lean-toolchain at Git commit 3abcd77ef51d63a79fcf02fcfd172d7d283babc3
+    - formal/lake-manifest.json at Git commit 3abcd77ef51d63a79fcf02fcfd172d7d283babc3
+    - orchestration/formal/*.py at Git commit 3abcd77ef51d63a79fcf02fcfd172d7d283babc3
+    - tools/check_lean_dependency_pins.py at Git commit 3abcd77ef51d63a79fcf02fcfd172d7d283babc3
+    - tools/verify_formal_targets.py at Git commit d25ed16abcaaa942857e5e3a6d72637aaf8aa5c5
+    - .github/workflows/lean-verification.yml at Git commit d25ed16abcaaa942857e5e3a6d72637aaf8aa5c5
+    - https://api.github.com/repos/isogeny-labs/crypto-autoresearcher/actions/runs/42665763089
+    - https://api.github.com/repos/isogeny-labs/crypto-autoresearcher/actions/runs/42665763089/artifacts
+    - /var/tmp/semaev-frobenius-j3-output/final/artifact/formal-verification-receipts.zip
+    - /var/tmp/semaev-frobenius-j3-output/final/artifact/extracted/semaev-frobenius-collapse.json
+    - /var/tmp/semaev-frobenius-j3-output/final/artifact/extracted/dependency-pins-before.json
+    - /var/tmp/semaev-frobenius-j3-output/final/artifact/extracted/dependency-pins-after.json
+  controls:
+    wrong_declaration: rejected_result_identity
+    changed_theorem_hash: rejected_theorem_hash
+    missing_named_audit: rejected_named_audit_log
+    synthetic_success_logs: accepted_by_consistency_checker_not_authenticated
+  limits:
+    - Machine evidence is for the exact named declaration and archived merge-tree inputs; semantic fidelity and downstream interpretation are assigned to other joints.
+    - GitHub Actions and the pinned Lean/Lake toolchain are trusted; dependency binary integrity and an independent kernel recheck were not performed.
+    - A self-consistent fabricated JSON can pass receipt consistency; hosted artifact and run provenance are essential.
+    - No local heavy Lean build or new cloud job was performed.
