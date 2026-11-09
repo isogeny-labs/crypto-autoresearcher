@@ -57,6 +57,10 @@ class ProspectiveManifestAdmission(unittest.TestCase):
         self.assertEqual(self.plan["maximum_retries"], 0)
         self.assertEqual([t["id"] for t in self.plan["trials"]],
                          ["pilot", "census-main", "analyze-main", "census-rep", "analyze-final"])
+        # authorize() rehashes source_sha256 at every launch. Input metadata
+        # alone would not enforce these immutable external dependencies.
+        for path, expected in self.plan["input_sha256"].items():
+            self.assertEqual(self.plan["source_sha256"].get(path), expected, path)
         for path, expected in self.plan["source_sha256"].items():
             with self.subTest(source=path):
                 self.assertEqual(digest(ROOT / path), expected)
