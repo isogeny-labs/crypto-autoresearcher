@@ -180,3 +180,14 @@ The parallel proof note shows every half-diagonal first-feedback space has at le
 
 
 The single independent set-span software cross-check failed before validation: Python3.12 raised MemoryError importing pathlib under the fixed128MiB address-space limit. The fixture was not read and no closure computed. No retry or limit increase occurred. Source, logs and failure receipt are preserved in exact-lfd-controls/independent-attempt/. The reference LFD4 output therefore has source review but no successful independent-method computational confirmation.
+
+
+## Independently checked all-cap certificates
+
+The exact-LFD CLI now accepts --certificate-output NEW-CERTIFICATE.json. A complete run emits every cap's basis with a derivation for each row: eligible literal input or prior-row variable product, followed by XORs of prior rows. The certificate binds the exact input equations. Trace storage is budgeted and capped at200000 entries; exhaustion emits neither a partial certificate nor an exact label. The result binds the separately written certificate by SHA256.
+
+`python3 verify_boolean_lfd_certificate.py CERTIFICATE.json --operation-limit 1000000 --output NEW-RESULT.json` uses no producer imports. It recomputes every derivation, validates degree-first independent pivots, checks all input containment and all eligible basis-variable products, and independently computes zero assignments and evaluation ranks. Every cap is required. Invalid proofs fail; budget exhaustion returns verified:false and exact_lfd:null. Wire input is capped at16MiB and N<=12. This verifies the supplied normalized mathematical system; its linkage to original curve/group data remains a separate exact join.
+
+Thirty-five software controls pass, including altered rows, forward references, missing caps, unsaturated bases, invalid domains, budget exhaustion and an actual two-CLI certificate/hash roundtrip. The new hand-fixture certificate independently verifies LFD4 and four code solutions with68441 verifier accounting units. The earlier set-span cross-check failure remains unchanged; this is a new proof-carrying implementation, not a retry of that script or a production scientific sample.
+
+The parallel proof eliminates epsilon exactly, obtaining an original trace-slice linear pencil in x for each t. A degree-c polynomial dual separator in t gives a direct original cap c+2 refutation. Explicit linear conditions characterize affine t-only separators and hence this particular cap-three refutation construction. Their solvability for an infinite family remains open, and their failure would not exclude arbitrary W3 refutations.

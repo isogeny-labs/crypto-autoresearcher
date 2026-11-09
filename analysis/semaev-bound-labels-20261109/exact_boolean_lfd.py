@@ -10,10 +10,27 @@ MAX_VARIABLES = 12
 MAX_EQUATIONS = 4096
 MAX_TERMS = 65536
 MAX_OPERATION_LIMIT = 100_000_000
+MAX_TRACE_ENTRIES = 200_000
 
 
 class BudgetExhausted(Exception):
     pass
+
+
+class TraceExhausted(BudgetExhausted):
+    pass
+
+
+class _Trace:
+    def __init__(self, budget):
+        self.budget = budget
+        self.entries = 0
+
+    def reserve(self, count):
+        if count > MAX_TRACE_ENTRIES - self.entries:
+            raise TraceExhausted()
+        self.budget.charge('certificate_storage', count)
+        self.entries += count
 
 
 class _Budget:
@@ -34,7 +51,8 @@ def _weight(mask):
     return bin(mask).count('1')
 
 
-def _insert(vector, basis, width, budget, category):
+def _insert(vector, basis, width, budget, category, reductions=None,
+            pivot_ids=None, trace=None):
     """Immutable forward echelon insertion; least bit is first column."""
     while vector:
         budget.charge('pivot_work', max(1, width))
@@ -45,11 +63,14 @@ def _insert(vector, basis, width, budget, category):
             basis[pivot] = vector
             return pivot, vector
         budget.charge(category, max(1, width))
+        if trace is not None:
+            trace.reserve(1)
+            reductions.append(pivot_ids[pivot])
         vector ^= previous
     return None
 
 
-def _closure(n_vars, equations, cap, monomials, degrees, budget):
+def _closure(n_vars, equations, cap, monomials, degrees, budget, trace=None):
     width = len(monomials)
     positions = {}
     for i, mask in enumerate(monomials):
@@ -59,19 +80,42 @@ def _closure(n_vars, equations, cap, monomials, degrees, budget):
     queue = deque()
     insertions = 0
     product_insertions = 0
+    records = []
+    pivot_ids = {}
 
-    def insert(vector):
+    def insert(vector, source):
         nonlocal insertions
         budget.charge('insertion_attempt')
         insertions += 1
-        added = _insert(vector, basis, width, budget, 'closure_row_xor_bits')
+        reductions = [] if trace is not None else None
+        added = _insert(vector, basis, width, budget, 'closure_row_xor_bits',
+                        reductions, pivot_ids, trace)
         if added is not None:
             pivot, row = added
+            row_id = None
+            if trace is not None:
+                trace.reserve(3 + len(source))
+                masks = []
+                remaining = row
+                while remaining:
+                    budget.charge('certificate_row_extract', width)
+                    bit = remaining & -remaining
+                    trace.reserve(1)
+                    masks.append(monomials[bit.bit_length() - 1])
+                    remaining ^= bit
+                budget.charge('certificate_row_sort',
+                              len(masks) * max(1, len(masks).bit_length()) *
+                              max(1, n_vars))
+                masks.sort()
+                row_id = len(records)
+                records.append({'row': masks, 'source': source,
+                                'reductions': reductions})
+                pivot_ids[pivot] = row_id
             if degrees[monomials[pivot]] < cap:
                 budget.charge('queue_work')
-                queue.append(row)
+                queue.append((row, row_id))
 
-    for equation in equations:
+    for input_index, equation in enumerate(equations):
         budget.charge('input_row_scan')
         eligible = True
         for mask in equation:
@@ -83,10 +127,10 @@ def _closure(n_vars, equations, cap, monomials, degrees, budget):
             for mask in equation:
                 budget.charge('input_vector_bits', width)
                 vector ^= 1 << positions[mask]
-            insert(vector)
+            insert(vector, {'input': input_index} if trace is not None else None)
     while queue:
         budget.charge('queue_work')
-        row = queue.popleft()
+        row, parent_id = queue.popleft()
         for variable in range(n_vars):
             budget.charge('product_start')
             product = 0
@@ -100,9 +144,10 @@ def _closure(n_vars, equations, cap, monomials, degrees, budget):
                 budget.charge('product_vector_xor_bits', width)
                 product ^= 1 << target
                 remaining ^= bit
-            insert(product)
+            insert(product, {'parent': parent_id, 'variable': variable}
+                   if trace is not None else None)
             product_insertions += 1
-    return len(basis), insertions, product_insertions
+    return len(basis), insertions, product_insertions, records
 
 
 def _evaluation_rank(monomials, solutions, n_vars, budget):
@@ -120,7 +165,7 @@ def _evaluation_rank(monomials, solutions, n_vars, budget):
     return len(basis)
 
 
-def analyze(n_vars, equations, operation_limit):
+def analyze(n_vars, equations, operation_limit, include_certificate=False):
     """Return complete exact LFD or budget_exhausted with exact_lfd=None.
 
     Every cap 0..N+1 is independently saturated. Its ideal intersection has
@@ -128,6 +173,8 @@ def analyze(n_vars, equations, operation_limit):
     Exact LFD is one plus the largest cap missing an ideal consequence, or 0.
     Invalid schemas raise ValueError; no partial result is an exact label.
     """
+    if type(include_certificate) is not bool:
+        raise ValueError('include_certificate must be Boolean')
     if type(n_vars) is not int or not 0 <= n_vars <= MAX_VARIABLES:
         raise ValueError('n_vars must be an integer in [0, 12]')
     if (type(operation_limit) is not int or
@@ -162,7 +209,17 @@ def analyze(n_vars, equations, operation_limit):
               'accounting_model': 'charged-bit-vector-arithmetic-v1',
               'claim_scope': 'computed_reference_result',
               'independently_checked_certificate': False}
+    trace = _Trace(budget) if include_certificate else None
+    certificate = None
+    if include_certificate:
+        result['certificate'] = None
     try:
+        if trace is not None:
+            trace.reserve(4 + len(equations) + total_terms)
+            certificate = {'schema': 'strict-boolean-lfd-certificate/v1',
+                           'n_vars': n_vars,
+                           'equations': [list(row) for row in equations],
+                           'caps': []}
         degrees = []
         for mask in range(bound):
             budget.charge('monomial_generation', max(1, n_vars))
@@ -194,8 +251,8 @@ def analyze(n_vars, equations, operation_limit):
                     if degrees[mask] == degree:
                         budget.charge('cap_column_store', max(1, n_vars))
                         monomials.append(mask)
-            rank, insertions, products = _closure(
-                n_vars, equations, cap, monomials, degrees, budget)
+            rank, insertions, products, records = _closure(
+                n_vars, equations, cap, monomials, degrees, budget, trace)
             evaluation_rank = _evaluation_rank(
                 monomials, solutions, n_vars, budget)
             ideal_dimension = len(monomials) - evaluation_rank
@@ -209,14 +266,25 @@ def analyze(n_vars, equations, operation_limit):
                 'missing_ideal_consequence': missing,
                 'insertion_attempts': insertions,
                 'product_insertions': products})
+            if trace is not None:
+                trace.reserve(2)
+                certificate['caps'].append({'cap': cap, 'basis': records})
             if missing:
                 last_missing = cap
         if result['caps'][-1]['missing_ideal_consequence']:
             raise RuntimeError('full Boolean cap failed to recover ideal')
         result['exact_lfd'] = last_missing + 1
         result['status'] = 'complete'
+        if trace is not None:
+            result['certificate'] = certificate
+    except TraceExhausted:
+        result['exhaustion_reason'] = 'trace_entry_limit'
     except BudgetExhausted:
-        pass
+        if trace is not None:
+            result['exhaustion_reason'] = 'operation_limit'
+    if trace is not None:
+        result['trace_entries_charged'] = trace.entries
+        result['trace_entry_limit'] = MAX_TRACE_ENTRIES
     result['operations_used'] = budget.used
     result['operation_counters'] = dict(sorted(budget.counts.items()))
     return result

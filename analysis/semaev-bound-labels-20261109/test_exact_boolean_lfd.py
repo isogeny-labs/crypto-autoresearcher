@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 from exact_boolean_lfd import analyze
 
 
@@ -68,6 +69,67 @@ class ExactBooleanLfdTests(unittest.TestCase):
         for limit in (0, True, 100_000_001):
             with self.assertRaises(ValueError):
                 analyze(1, [], limit)
+
+
+    def test_certificate_provenance_and_determinism(self):
+        equations = [[3, 1], [3]]
+        result = analyze(3, equations, 1_000_000, include_certificate=True)
+        self.assertEqual(result['status'], 'complete')
+        cert = result['certificate']
+        self.assertEqual(cert['schema'], 'strict-boolean-lfd-certificate/v1')
+        self.assertEqual(cert['equations'], equations)
+        self.assertEqual(len(cert['caps']), 5)
+        saw_product = False
+        for cap in cert['caps']:
+            previous = []
+            pivots = set()
+            for index, item in enumerate(cap['basis']):
+                source = item['source']
+                if 'input' in source:
+                    row = set(equations[source['input']])
+                else:
+                    saw_product = True
+                    self.assertLess(source['parent'], index)
+                    parent = previous[source['parent']]
+                    self.assertTrue(all(bin(m).count('1') < cap['cap']
+                                        for m in parent))
+                    row = set()
+                    for m in parent:
+                        term = m | (1 << source['variable'])
+                        row.symmetric_difference_update({term})
+                for prior in item['reductions']:
+                    self.assertLess(prior, index)
+                    row.symmetric_difference_update(previous[prior])
+                self.assertEqual(item['row'], sorted(row))
+                self.assertTrue(row)
+                pivot = min(row, key=lambda m: (-bin(m).count('1'), m))
+                self.assertNotIn(pivot, pivots)
+                pivots.add(pivot)
+                previous.append(row)
+        self.assertTrue(saw_product)
+        second = analyze(3, equations, 1_000_000, include_certificate=True)
+        self.assertEqual(cert, second['certificate'])
+        plain = analyze(3, equations, 1_000_000)
+        self.assertNotIn('certificate', plain)
+        self.assertEqual(result['exact_lfd'], plain['exact_lfd'])
+        self.assertGreater(result['operations_used'], plain['operations_used'])
+        self.assertFalse(result['independently_checked_certificate'])
+
+    def test_certificate_exhaustion_emits_no_partial_trace(self):
+        result = analyze(2, [[3]], 1, include_certificate=True)
+        self.assertIsNone(result['certificate'])
+        self.assertIsNone(result['exact_lfd'])
+        self.assertEqual(result['status'], 'budget_exhausted')
+        with patch('exact_boolean_lfd.MAX_TRACE_ENTRIES', 8):
+            result = analyze(3, [[3, 1], [3]], 1_000_000,
+                             include_certificate=True)
+        self.assertEqual(result['exhaustion_reason'], 'trace_entry_limit')
+        self.assertEqual(result['status'], 'budget_exhausted')
+        self.assertIsNone(result['certificate'])
+        self.assertIsNone(result['exact_lfd'])
+        self.assertLessEqual(result['trace_entries_charged'], 8)
+        with self.assertRaises(ValueError):
+            analyze(1, [], 100, include_certificate=1)
 
 
 if __name__ == '__main__':
