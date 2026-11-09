@@ -254,8 +254,9 @@ def verify(cert):
         if eps not in (1, -1):
             reasons.append("bad sign %r" % (eps,))
         signed.append(P if eps == 1 else E.neg(P))
-    if len(pts) != m or len(cert["signs"]) != m:
-        reasons.append("expected %d points and signs, got %d / %d" % (m, len(pts), len(cert["signs"])))
+    if len(cert["points"]) != m or len(cert["signs"]) != m:
+        reasons.append("expected %d points and signs, got %d / %d" %
+                       (m, len(cert["points"]), len(cert["signs"])))
     S = None
     for P in signed:
         S = E.add(S, P)

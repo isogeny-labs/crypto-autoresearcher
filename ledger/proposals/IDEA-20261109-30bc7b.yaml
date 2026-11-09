@@ -1,0 +1,103 @@
+idea:
+  id: IDEA-20261109-30bc7b
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: Operation-counting harness with scalar-independence check, first target the X25519 ladder step
+    at exactly 5M + 4S + 1c + 8a
+  class: tooling
+  claim: 'A feature-gated counter inside the field helpers certifies the operation count of a scalar multiplication
+    instead of trusting the record prose. First target: the RFC 7748 ladder step with Z_1 = 1, written
+    A = X_2 + Z_2, AA = A^2, B = X_2 - Z_2, BB = B^2, E = AA - BB, C = X_3 + Z_3, D = X_3 - Z_3, DA =
+    D A, CB = C B, X_3'' = (DA + CB)^2, Z_3'' = u (DA - CB)^2, X_2'' = AA BB, Z_2'' = E (AA + a_{24} E),
+    a_{24} = 121665, counts exactly M = 5, S = 4, c = 1, a = 8 per step; one X25519 costs 1275M + 1020S
+    + 255c + 2040a + 1I + 256 cswap. The current src/ecc/x25519.rs ladder squares with fe_mul(&a,&a) and
+    multiplies a_{24} with fe_mul, so it counts 10M + 8a per step and 2550M per scalar multiplication
+    with a secret-dependent branch on the swap. Pass threshold: counted vector equals the claimed vector
+    exactly, and the op-kind traces for two clamped scalars (all zero bytes, all 0xff bytes) are identical
+    in length and sequence.'
+  mechanism: fe_mul, fe_sq, fe_add, fe_sub, fe_inv, a new fe_mul_const (used for a_{24}, 2d, sqrt(-1))
+    and a new mask-based cswap increment thread-local counters under cfg(feature = "opcount") and append
+    an op-kind byte to a trace. opcount::reset() and opcount::take() bracket a call. Claims live in a
+    table src/ecc/opcount_claims.rs keyed by method name with fields {M, S, c, a, I, cswap}; a test per
+    method asserts equality. ecbench --method x25519-vb --json reports {ops, claimed, verdict, ns_per_scalarmult};
+    verdict is pass only on exact equality of the op vector, never on wall time. The ladder uses the x-only
+    Kummer symmetry P ~ -P, so the law is complete for every u in F_p, twist included, and u = 0; Z_2'
+    = 0 yields the all-zero output because fe_inv(0) = 0 under Fermat inversion, matching RFC 7748.
+  novelty_status: unverified
+  citations:
+  - ref: RFC 7748 section 5, X25519 ladder and clamping
+    provenance: recalled
+    claim: The ladder step formulas and the 5M + 4S + 1c count are the standard baseline; this record
+      adds the certification, not the formula.
+    verified_by: null
+  - ref: src/ecc/x25519.rs
+    provenance: internal
+    claim: Current ladder uses fe_mul for the four squarings and for a_{24}, and branches on s == 1 for
+      the swap.
+    verified_by: formula-engineer session 2026-11-09 read BRIEF section 1 excerpt
+  - ref: src/ecc/curve25519.rs
+    provenance: internal
+    claim: fe_sq exists and is already used by ed25519.rs, so S is distinguishable from M.
+    verified_by: formula-engineer session 2026-11-09 read BRIEF section 1 excerpt
+  assumptions:
+  - Constant multiplication is any multiplication by a compile-time field constant; it is reported as
+    c regardless of operand size.
+  - BigUint field ops are not constant-time; the trace equality certifies control flow only, not timing.
+  predictions:
+  - metric: per-step op vector for the rewritten ladder
+    direction: equal
+    minimum_effect: exactly {M:5, S:4, c:1, a:8}
+  - metric: op-trace equality across the two reference scalars
+    direction: equal
+    minimum_effect: identical traces of length 255 steps plus 256 cswaps plus 1 I
+  - metric: M count per X25519 relative to current code
+    direction: lower
+    minimum_effect: 2550 to 1275 with 1020 S and 255 c appearing
+  minimal_test:
+    design: cargo test --features opcount ecc::opcount runs the claims table against x25519, then ecbench
+      --method x25519-vb --iters 1000 --json prints the verdict; the RFC 7748 vectors in the existing
+      test module must still pass after the rewrite.
+    controls:
+    - Run the counter on the unmodified ladder first and assert it reports M = 10 per step, proving the
+      counter sees squarings done through fe_mul as M.
+    - A deliberately miscounted claim (M = 6) must produce verdict fail, proving the comparison is not
+      vacuous.
+    required_metrics:
+    - M, S, c, a, I, cswap per scalar multiplication
+    - trace length and first index of divergence between the two scalars
+    - RFC 7748 vector pass count
+  falsification_conditions:
+  - Counted vector differs from {5,4,1,8} per step after the rewrite.
+  - Traces for the two reference scalars differ.
+  - Any RFC 7748 section 5.2 vector fails after the rewrite.
+  confounders:
+  - A field op implemented by calling another counted op double counts; fe_sq must not call fe_mul internally
+    under the counter.
+  interpretation_limits:
+  - This certifies a count, not timing and not an ECDLP property.
+  heuristic_assumptions:
+  - id: H1
+    statement: The claims table is the only source of truth for a count stated in a record.
+    rigorous_support: Counting is exact by construction once ops are instrumented.
+    validation_plan: Planted wrong claim yields fail.
+  target_complexity:
+    time_exponent: not applicable, group operation count only
+    memory_exponent: O(1)
+    best_known: 5M + 4S + 1c + 8a per ladder step
+    hidden_overhead: trace storage of about 10 KB per scalar multiplication
+    tradeoff_note: none
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: RFC 7748 dominates the formula; nothing in the ledger dominates the certification harness.
+  sota_delta: 'Repository delta: 10M to 5M + 4S + 1c per step, branch to cswap, with an executable certificate.
+    Literature delta: zero.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 formula-verification campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 ledger index scanned for ladder, opcount, cswap, a24
+    - BRIEF section 1 repository excerpts read for existing counters
