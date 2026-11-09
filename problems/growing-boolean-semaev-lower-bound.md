@@ -167,3 +167,8 @@ Reviewed transport gives cap max(sD,c) for degree-s substitutions with generator
 ### 2026-11-09: first explicit no-wrap obstruction, certified and symbolic
 
 The frozen r1..12 W2 campaign completed all cells with independent DAG/closure checks. Cap2 derives the affine ideal for r1..5; r6..12 certify lower3. At r6 a polynomial-gcd argument independently proves rank71, affine dimension5 and stable reduced quadratic space dimension11. Selector lifting gives upper4. Restriction with the independently known two-point ideal gives lower3 for every r>=6,n>4r, including a constant-codimension35 certificate pullback construction. This disproves the proposed universal cap2 for this explicit family; it does not prove unboundedness. The next discriminating obligation is full W3 at r6 (degree3 versus4), then a growing-cap family. Original campaign allowance consumed; no automatic repeat.
+
+
+### 2026-11-09: no-wrap route has uniformly bounded degree
+
+Independent review accepts the leading-q selector-peeling proof LFD<=4 for every no-wrap member (n>4r,z=a6=1). Combining restriction lower3 gives3<=LFD<=4 for allr>=6. The exactr6 degree is3, proved symbolically before a frozen cap3 computation and confirmed by full DAG/closure replay (rank468, affine13). A presentation-qualified telescoping witness proves FFD2 for allr>=1. This resolves boundedness for this explicit subfamily; it cannot witness unboundedness. The next growing-family construction must use field modular reduction or a different permitted factor-base structure. Ordinary ambient extensions and disjoint products already fail to amplify degree. Both bounded local attempts are complete; no automatic rerun.

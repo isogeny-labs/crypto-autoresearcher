@@ -114,3 +114,14 @@ The r6 result is now explained by a symbolic polynomial-gcd proof: after five af
 Restriction and the exact two-point ideal extend the lower bound to every r>=6 and every irreducible field polynomial of degree n>4r. This is an explicit infinite constant lower bound3, not a growing bound. Pulling back the seed's closed space yields an explicit certificate construction of constant codimension35. Next: saturated degree3 closure at r6, then a construction whose required cap grows.
 
 Replay a saved certificate without rerunning the campaign: `python3 no-wrap-w2/replay.py no-wrap-w2/attempt-1/r6-certificate.json NEW-RESULT.json` (Python3.10+, assertions enabled). The output must match the retained result; output paths are exclusive. The original attempt must not be repeated under its consumed one-attempt allowance.
+
+
+## Uniform boundedness theorem for the no-wrap family
+
+The reviewed `no-wrap-uniform-cap-four.md` settles the no-wrap family's boundedness: LFD<=4 for every r, for z=a6=1 and V=span(1,t,...,t^r) with n>4r. Descending highest q-coordinates uses two selector levels and stays at cap4 without accumulating degree. Thus3<=LFD<=4 for every r>=6. This family cannot supply the requested unboundedness construction; modular-reduction families remain outside the theorem.
+
+`no-wrap-r6-exact-degree-three.md` proves exact LFD3 at r6 by two irreducible-cubic trace functionals, before the degree-three computation. The single frozen cap3 attempt subsequently confirmed full affine-ideal derivability: rank468, eligible dimension104, affine dimension13, no missing forms. Controls, full DAG replay and independent targeted replay pass. Protocol/export/source/receipts/plots are in `no-wrap-w3/`; its one-attempt allowance is consumed.
+
+`no-wrap-first-fall-two.md` gives an original-row telescoping witness proving FFD2 for every r>=1 under the explicitly defined literal nonzero-fall and operational new-consequence conventions. The claim is presentation-qualified and is not a syzygy-definition equivalence. The family consequently has a bounded first/last gap.
+
+The uniform theorem also gives a conservative dense incremental closure algorithm bound O(N^12) binary operations and O(N^8) stored bits, N=2(r+1), in the stated indexed-bit model plus input conversion. This is not an instruction count, timing measurement, or a claim that generic closure is necessary to find the already explicit solutions.
