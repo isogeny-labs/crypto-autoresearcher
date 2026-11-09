@@ -6,6 +6,7 @@ solver path): F_q = F_p[z]/(z^5 - cmod) as 5-tuples, affine group law on
 y^2 = x^3 + a2 x^2 + a4 x + a6, scalar multiplication by double-and-add.
 
 A certificate (JSON) is accepted iff
+  * the recorded odd-characteristic cubic is nonsingular;
   * the curve, field, base point G, scalar k and target R are as recorded and R = [k]G
     (known-scalar target), G has the recorded prime order n ([n]G = O);
   * each of the m listed factor-base points lies on the curve and satisfies the
@@ -47,6 +48,21 @@ class FqP:
 class CurveP:
     def __init__(self, F, a2, a4, a6):
         self.F, self.a2, self.a4, self.a6 = F, tuple(a2), tuple(a4), tuple(a6)
+
+    def is_nonsingular(self):
+        # For odd characteristic, y^2 = x^3 + a*x^2 + b*x + c is smooth
+        # exactly when the cubic discriminant is nonzero.
+        F = self.F
+        a, b, c = self.a2, self.a4, self.a6
+        a2, b2 = F.mul(a, a), F.mul(b, b)
+        a3, b3, c2 = F.mul(a2, a), F.mul(b2, b), F.mul(c, c)
+        terms = (F.mul(a2, b2), F.scal(-4, b3),
+                 F.scal(-4, F.mul(a3, c)), F.scal(-27, c2),
+                 F.scal(18, F.mul(F.mul(a, b), c)))
+        disc = F.zero()
+        for term in terms:
+            disc = F.add(disc, term)
+        return F.p % 2 == 1 and not F.is_zero(disc)
     def f(self, x):
         F = self.F
         return F.add(F.add(F.mul(F.add(F.mul(F.add(x, self.a2), x), self.a4), x), self.a6), F.zero())
@@ -82,6 +98,8 @@ def verify(cert):
     F = FqP(p, cmod)
     cv = cert["curve"]
     E = CurveP(F, cv["a2"], cv["a4"], cv["a6"])
+    if not E.is_nonsingular():
+        return False, 0, ["singular curve"]
     G = (tuple(cert["G"][0]), tuple(cert["G"][1]))
     R = (tuple(cert["R"][0]), tuple(cert["R"][1]))
     k = int(cert["k"]); n = int(cert["subgroup_order"])

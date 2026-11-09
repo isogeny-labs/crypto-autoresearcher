@@ -7,6 +7,7 @@ no msolve, no v2_* module). F_q = F_p[z]/(M) for the monic modulus M recorded in
 y^2 = x^3 + a2 x^2 + a4 x + a6; double-and-add scalar multiplication.
 
 A v2 certificate is ACCEPTED iff every check below passes:
+  curve          odd-characteristic cubic discriminant is nonzero;
   known scalar   G and R on the curve, [n]G = O, R = [k]G (docs/claims-and-verification.md);
   points         exactly m points, each on the curve, signs in {+1, -1};
   factor base    per the certificate's factor_base.kind:
@@ -204,6 +205,21 @@ class CurveP:
         self.F = F
         self.a2, self.a4, self.a6 = F.norm(a2), F.norm(a4), F.norm(a6)
 
+    def is_nonsingular(self):
+        # The recorded short Weierstrass form has a group law only when the
+        # cubic discriminant is nonzero in odd characteristic.
+        F = self.F
+        a, b, c = self.a2, self.a4, self.a6
+        a2, b2 = F.mul(a, a), F.mul(b, b)
+        a3, b3, c2 = F.mul(a2, a), F.mul(b2, b), F.mul(c, c)
+        terms = (F.mul(a2, b2), F.scal(-4, b3),
+                 F.scal(-4, F.mul(a3, c)), F.scal(-27, c2),
+                 F.scal(18, F.mul(F.mul(a, b), c)))
+        disc = F.zero()
+        for term in terms:
+            disc = F.add(disc, term)
+        return F.p % 2 == 1 and not F.is_zero(disc)
+
     def f(self, x):
         F = self.F
         return F.add(F.mul(F.add(F.mul(F.add(x, self.a2), x), self.a4), x), self.a6)
@@ -277,6 +293,8 @@ def verify(cert):
             raise ValueError("p is not an admitted prime or modulus is reducible")
         cv = cert["curve"]
         E = CurveP(F, cv["a2"], cv["a4"], cv["a6"])
+        if not E.is_nonsingular():
+            raise ValueError("singular curve")
         G = _pt(F, cert["G"])
         R = _pt(F, cert["R"])
         k = int(cert["k"])
