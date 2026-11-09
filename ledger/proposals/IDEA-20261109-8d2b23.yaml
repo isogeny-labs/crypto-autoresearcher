@@ -1,0 +1,145 @@
+idea:
+  id: IDEA-20261109-8d2b23
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Multiplicative-character spectrum M(chi,b) of the discrete-log graph, the classical observable
+    behind Kuperberg's labels for ECDLP read as a hidden shift over Z_{N-1}, exhaustive at p <= 2^12
+  class: barrier
+  claim: 'Predictions fixed before any run. On a prime-order toy curve with generator P_0, gamma a generator
+    of Z_N^*, chi_j(gamma^t) = e(jt/(N-1)), define M(chi_j,b) = sum_{t=0}^{N-2} chi_j(gamma^t) e_p(b x(gamma^t
+    P_0)) for all j in Z_{N-1}, b in F_p. Exact: M = 0 for every odd j (chi_j(-1) = -1); on j = 0 curves
+    with p = 1 mod 3, |M(chi,b)| = |M(chi,omega b)|. Statistical, at 2^11 <= p <= 2^12 (all j,b) and p
+    near 2^14 (all j, 2^8 random b): with K = (N-1)(p-1)/2, max over even j != 0, b != 0 of |M|/sqrt(N-1)
+    is at most sqrt(ln K) + 2 (about 6 at p = 2^12) and within a factor 1.3 of the same maximum on a random
+    symmetric relabelling; for every l | N-1 with l <= 64 and every bit position i, |corr(chi_l(a), bit_i(x(aP_0)))|
+    <= 4/sqrt(N-1). A confirmed prediction says no classical readout of any Kuperberg label exists at
+    these sizes below the random level.'
+  mechanism: 'With Q = kP_0 and k = gamma^s, G(t) = x(gamma^t Q) = F(t+s) for F(t) = x(gamma^t P_0): ECDLP
+    is a hidden shift on the cyclic group Z_{N-1}, and Kuperberg''s coset qubits carry the phases omega_{N-1}^{js}
+    = chi_j(k), the power-residue characters of the logarithm (secp256k1: N-1 = 2^6 3 149 631 q57 q68
+    q108, recalled, re-verify). The only classical handle on such a label is a correlation between chi_j
+    and a statistic of the representation; expanding any statistic of x in F_p-characters e_p(bx), the
+    complete table is M(chi_j,b). No algebraic-geometry bound applies because a -> aP_0 is not algebraic
+    in a; the chi = 1 row is Weil (3 sqrt p) and the rest is measurement. The negation identity x(-aP_0)
+    = x(aP_0) forces odd characters to vanish exactly, the spectral form of the sqrt 2 negation gain (KR-RHO-fb88e6);
+    the GLV identity x(lambda a P_0) = omega x(aP_0) gives the omega-invariance (KR-RHO-0528e7). The exponent
+    lever sits in the companion estimator record: reading chi(k) costs (N/|M|)^2 scalar multiplications,
+    below sqrt N only if |M| >= N^{3/4} on a generating set of characters. This extends the wave-1 barriers
+    record ''Exhaustive hybrid-sum matrix of the discrete-log graph'' from additive to multiplicative
+    characters of k.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-fb88e6
+    provenance: internal
+    claim: Negation map gives sqrt 2; here it is exact vanishing of odd characters.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row; file not opened
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: Automorphism orbits give sqrt 6 on j = 0; here the omega-invariance of |M|.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row; file not opened
+  - ref: Kuperberg 2005, SIAM J. Comput. 35(1), dihedral HSP in 2^{O(sqrt log N)}
+    provenance: recalled
+    claim: Coset-state labels are characters of the shift group; this record measures their classical
+      trace.
+    verified_by: not verified this session
+  assumptions:
+  - N prime, N - 1 even; t ranges over nonzero multiples so x(O) never appears.
+  - Bluestein FFTs in double precision; Parseval checked to 1e-6 relative.
+  predictions:
+  - metric: max over odd j, all b, of |M(chi_j,b)|/(N-1)
+    direction: lower
+    minimum_effect: below 1e-6 (exact zero)
+  - metric: max over even j != 0, b != 0 of |M|/sqrt(N-1), curve over control
+    direction: different
+    minimum_effect: ratio inside [0.77, 1.3] on at least 4 of 5 curves
+  - metric: max over l | N-1, l <= 64, bit i, of |corr(chi_l, bit_i(x))|
+    direction: lower
+    minimum_effect: at most 4/sqrt(N-1)
+  minimal_test:
+    design: Five prime-order curves 2^11 <= p <= 2^12 and two near 2^14 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+      or by point counting. Enumerate x(gamma^t P_0), build the (N-1) x p 0/1 matrix A[t][v], apply a
+      2-D DFT (Bluestein on both axes) to obtain M for all (j,b); near 2^14 restrict b to 2^8 random values
+      plus 1..64. Compute the three statistics and the chi = 1 row. Repeat with x replaced by a random
+      symmetric relabelling. On one j = 0 curve with p = 1 mod 3 check the omega-invariance. Deliver as
+      cryptanalysis/experiments/qshadow-mult-spectrum-<date> with input, receipt and replay, or a numpy
+      script beside crypto/sage.
+    controls:
+    - Random symmetric relabelling through identical code.
+    - chi = 1 row against the Weil bound 3 sqrt p as a pipeline check.
+    - Exact zero of odd characters as a correctness gate.
+    required_metrics:
+    - N, p, gamma, curve coefficients
+    - max odd |M|; max even |M|/sqrt(N-1) with argmax (j,b); control maxima
+    - correlation table for l | N-1, l <= 64
+    - chi = 1 row maximum over b
+    - Parseval residual
+  falsification_conditions:
+  - Curve-to-control ratio of the even maximum >= 2 on at least 3 of 5 curves.
+  - Any even nontrivial (chi,b) with |M| >= N^{3/4} recurring on at least 3 curves.
+  - A correlation above 10/sqrt(N-1) for the same l on at least 3 curves.
+  - A nonzero odd character marks a bug, hence an invalid run.
+  confounders:
+  - On j = 0 curves the omega-symmetry cuts independent frequencies by 3; the control lacks it.
+  - Toy N - 1 is highly composite, giving many low-order characters; the ln K factor prices the multiple
+    comparison.
+  - A post-selected argmax b is reported but not used as evidence.
+  interpretation_limits:
+  - p <= 2^14 only; flatness here does not prove flatness at 2^256.
+  - A non-flat entry is structure only if it survives the control and the two exact identities.
+  heuristic_assumptions:
+  - id: H1
+    statement: The even nontrivial spectrum behaves as a sum of N - 1 random unit phases.
+    rigorous_support: None beyond the chi = 1 row (Weil, 3 sqrt p).
+    validation_plan: The run itself, gated by Parseval and the two exact identities.
+  target_complexity:
+    time_exponent: 1/2 unchanged, delta 0; a classical label readout would cost N^{2(1 - log_N |M|)},
+      equal to N at the predicted |M| about sqrt N.
+    memory_exponent: O(1) beyond the toy spectrum table
+    best_known: Pollard rho, Theta(sqrt N), KR-RHO-13bf67
+    hidden_overhead: None; a measurement.
+    tradeoff_note: None defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading; KR-RHO-fb88e6 and KR-RHO-0528e7 for the two exact
+    identities. No row states the multiplicative spectrum.
+  sota_delta: 'Exponent delta 0. Measured delta: the first multiplicative-character table of the discrete-log
+    graph, with two exact identities as gates.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-fb88e6
+    - KR-RHO-0528e7
+    - KR-RHO-53c89f
+    - KR-RHO-5b1c0a
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-fb88e6
+      provenance: internal
+      relation: adjacent
+      delta: Negation as a sqrt 2 walk gain versus negation as exact vanishing of odd characters.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The generic bound; the spectrum is a representation statistic outside that model.
+    searched:
+      corpus_grep:
+      - 'REPO BRIEF section 2 for: character, Legendre, hidden shift, Kuperberg, hard-core, power residue'
+      - wave-1 barriers 'Exhaustive hybrid-sum matrix' and port 'Pohlig-Hellman on the scalar torsor'
+        titles
+      web: []
+      blocked:
+      - The port-wave record id is not in the brief; next agent resolves it in ledger/proposals before
+        filing.
+    lead: LEAD-EXO-holant-decomposition-count-network
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Five prime-order curves 2^11 <= p <= 2^12 and two near 2^14 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        or by point counting. Enumerate x(gamma^t P_0), build the (N-1) x p 0/1 matrix A[t][v], apply
+        a 2-D DFT (Bluestein on both axes) to obtain M for all (j,b); near 2^14 restrict b to 2^8 random
+        values plus 1..64. Compute the three statistics and the chi = 1 row. Repeat with x replaced by
+        a random '
