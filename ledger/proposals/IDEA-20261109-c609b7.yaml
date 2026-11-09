@@ -1,0 +1,138 @@
+idea:
+  id: IDEA-20261109-c609b7
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Algebraic-immunity and interpolation-degree profile of the ECDLP map on toy prime-order curves
+    against random-function controls
+  class: barrier
+  claim: 'Let E/F_p be prime-order with generator P, p <= 2^16 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+    X = x(E(F_p)) the (N-1)/2 x-values, and f(x) = min(k, N-k) for x = x(kP). Prediction fixed before
+    any run. (A) F_p side: the interpolating polynomial of f on X has degree exactly |X| - 1 and at least
+    |X|(1 - 2/p) nonzero coefficients, on every tested curve. (B) F_2 side: with n = ceil(log2 p) and
+    b_j the j-th bit of f as a partial Boolean function on X, the algebraic immunity AI_X(b_j) (least
+    degree of a nonzero annihilator of the 1-set or of the 0-set within X) equals d*(n), the least d with
+    C(n, <= d) > |X_1|, for every j and every tested curve, as it does for a random partial function on
+    X. A deficit of 2 or more would hand the bit-blasted SAT lane a free low-degree constraint; the prediction
+    is that none exists. No exponent changes.'
+  mechanism: A degree-d annihilator g with g(x) = 0 whenever bit_j(k) = 1 is a degree-d polynomial relation
+    between the bits of x(Q) and one bit of the secret, exactly the kind of auxiliary equation that lowers
+    degree in Courtois-Meier algebraic attacks and would shrink the CNF of the Stage-26 CaDiCaL pipeline.
+    Lange-Winterhof and Kiltz-Winterhof (recalled) bound the F_p interpolation degree from below on large
+    sets; no published bound exists for Boolean annihilators of ECDLP bits, so the record measures both
+    and compares to counting values.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt(p)); a low-degree bit relation would be a non-generic object,
+      which is why its absence is worth fixing.
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: KR-IC-f5c584
+    provenance: internal
+    claim: On binary curves the trace morphism yields a linear equation after descent; over F_p no morphism
+      to F_2 exists, so any low-degree bit relation would have to be non-structural.
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: Lange-Winterhof-2005-interpolation
+    provenance: recalled
+    claim: Polynomials interpolating the EC discrete logarithm on large sets have degree at least a constant
+      fraction of the set size.
+    verified_by: not verified in this session; the next agent must locate the paper before citing a constant
+  assumptions:
+  - N prime and odd, so x determines k up to sign and |X| = (N-1)/2.
+  - Annihilators are computed in F_2[x_1..x_n]/(x_i^2 - x_i) restricted to X; points outside X are don't-cares.
+  proof_search_map:
+    not_applicable_reason: A degree profile at toy sizes; no exponent claim.
+    bottleneck: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: interpolation degree of f on X minus (|X| - 1)
+    direction: different
+    minimum_effect: exactly 0 on every tested curve
+  - metric: d*(n) minus AI_X(b_j), maximised over bits j
+    direction: lower
+    minimum_effect: at most 1 on every tested curve
+  - metric: same quantity for the random partial-function control
+    direction: lower
+    minimum_effect: at most 1
+  minimal_test:
+    design: 'Enumerate all multiples of P once (one log table per curve). F_p side: Lagrange interpolation
+      of f on X via Newton divided differences, record degree and weight. F_2 side: for each bit j build
+      the 0/1 matrix of monomials of degree <= d on X_1 and on X_0, increase d until the kernel is nonzero,
+      report AI and compare with d*(n). Curves: four prime-order calibration curves with n in {12, 14,
+      16}, p = 1 mod 3 and p = 2 mod 3 both represented. Run time is linear algebra over F_2 on at most
+      2^15 rows by C(16, <= 7) columns.'
+    controls:
+    - Random partial Boolean function on the same X, same bit count.
+    - Random function X -> F_p for the interpolation arm.
+    - 'A structured positive control: the function x -> x mod 2^j bits of x itself, which has low algebraic
+      immunity, to show the detector fires when structure exists.'
+    required_metrics:
+    - interpolation degree and weight per curve
+    - AI_X(b_j) per bit and curve with d*(n)
+    - control values for all three controls
+  falsification_conditions:
+  - AI_X(b_j) at most d*(n) - 2 for any bit on any tested curve.
+  - Interpolation degree below |X| - 1 on more than one tested curve.
+  - Positive control failing to show reduced immunity invalidates the run.
+  confounders:
+  - The sign ambiguity x(kP) = x((N-k)P) is handled by f = min(k, N-k); a different canonical choice may
+    change bit statistics and must be stated.
+  - Small n makes d*(n) coarse; the deficit threshold of 2 absorbs that.
+  interpretation_limits:
+  - Counting-bound immunity at n <= 16 is evidence about a barrier, not a theorem; a deficit would be
+    a new object, not an algorithm.
+  heuristic_assumptions:
+  - id: H1
+    statement: ECDLP bit functions behave like random partial Boolean functions for algebraic immunity.
+    rigorous_support: None beyond exponential-sum flatness of x(kP) over k-intervals (barriers-wave hybrid-sum
+      record); no theorem on annihilators.
+    validation_plan: The minimal test measures it against the random control at n <= 16.
+  target_complexity:
+    time_exponent: 1/2 unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: none claimed
+    tradeoff_note: Fixes a barrier for the bit-level SAT lane; delta 0.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading; KR-IC-5765d2 covers SAT on binary PDP but
+    states no algebraic immunity of DL bits.
+  sota_delta: 'Exponent delta 0. New numbers: interpolation degree, weight and algebraic immunity of ECDLP
+    bits at n <= 16 against controls.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-IC-f5c584
+    - KR-IC-5765d2
+    - KR-IC-889857
+    - KR-RHO-5b1c0a
+    nearest:
+    - ref: KR-IC-5765d2
+      provenance: internal
+      relation: adjacent
+      delta: SAT solvers on binary PDP; this record asks whether prime-field DL bits admit low-degree
+        annihilators that SAT could exploit.
+    - ref: KR-IC-f5c584
+      provenance: internal
+      relation: orthogonal
+      delta: The binary trace equation is structural; no analogue exists over F_p and the record tests
+        for a non-structural one.
+    searched:
+      corpus_grep:
+      - brief section 2 for interpolation, annihilator, immunity, bit predictor
+      - wave-1 sweep and barriers leads for learned predictor and hybrid sum
+      web: []
+      blocked: []
+    lead: LEAD-EXO-lange-winterhof-interpolation
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Enumerate all multiples of P once (one log table per curve). F_p side: Lagrange
+        interpolation of f on X via Newton divided differences, record degree and weight. F_2 side: for
+        each bit j build the 0/1 matrix of monomials of degree <= d on X_1 and on X_0, increase d until
+        the kernel is nonzero, report AI and compare with d*(n). Curves: four prime-order calibration
+        curves with n in {12, 14, 16}, p ='

@@ -1,0 +1,146 @@
+idea:
+  id: IDEA-20261109-9067a2
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Polynomial-calculus refutation degree of non-decomposing targets in the mu_B Semaev system is
+    the generic-unit floor that prices the relation stage at enumeration
+  class: barrier
+  claim: 'Fix m = 3, a toy prime p from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with B | p-1, B in {4,
+    8, 16} (32 if feasible), and the system Sigma(x_R) = {S_4(x_1,x_2,x_3; x_R), x_i^B - 1}. For a target
+    x_R with no solution in mu_B^3 (the common case: a random target decomposes with probability about
+    B^3/(6N)), define D_PC(x_R) as the least D such that 1 lies in the row space of the degree-D Macaulay
+    matrix of the generators. Prediction fixed before any run: the median D_PC over UNSAT targets equals,
+    within 1, the median D_PC of a random polynomial of the same multidegree that is a unit on mu_B^3,
+    and both grow as c(B-1) with c >= 2 across B. Hence any Groebner or Macaulay solver on Sigma pays
+    at least C(D_PC + 3, 3) >= B^3 columns per refutation and the joint-solve exponent of the relations
+    wave is pinned at e = m. No exponent changes.'
+  mechanism: By Clegg-Edmonds-Impagliazzo (recalled) the Groebner degree under any degree-compatible order
+    equals the polynomial-calculus degree, and for an unsatisfiable system that is the degree of a certificate
+    1 = g f + sum_i h_i (x_i^B - 1). In the quotient ring A = F_p[x]/(x_i^B-1) the unit f = S_4(.; x_R)
+    has an inverse g whose multidegree is generically full, so the certificate degree is of order (m-1)(B-1)
+    unless S_4 has refutation structure that a random unit lacks. Since N/B^3 refutations are charged
+    per relation, the refutation degree, not the solving degree on the rare SAT target, is what the relation
+    stage pays.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Solving degree, last fall degree and degree of regularity are distinct invariants; refutation
+      degree is a fourth, measured here.
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive Semaev index calculus over F_p cannot beat generic methods under statistical assumptions;
+      this record isolates one cost.
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: IDEA-20260801-002
+    provenance: internal
+    claim: Graded pivot-degree Hilbert functions by exact echelonisation of the Macaulay matrix; the same
+      linear algebra computes D_PC.
+    verified_by: brief section 2 index line, 2026-11-09
+  assumptions:
+  - B | p-1 so mu_B is F_p-rational and SAT/UNSAT is decided by B^3 evaluations before any solver runs.
+  - Degree is total degree of the unreduced polynomial, so the axiom lines x^alpha (x_i^B - 1) are charged
+    at degree |alpha| + B.
+  proof_search_map:
+    not_applicable_reason: A degree measurement on toy systems; no exponent claim.
+    bottleneck: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: median D_PC(UNSAT) minus median D_PC(random unit) at each B
+    direction: different
+    minimum_effect: absolute value at most 1
+  - metric: slope c in median D_PC approx c(B-1), fitted over B in {4, 8, 16}
+    direction: higher
+    minimum_effect: at least 2
+  - metric: C(D_PC + 3, 3) divided by B^3 at B = 16
+    direction: higher
+    minimum_effect: at least 1
+  minimal_test:
+    design: For each B, draw 200 random x_R, classify by enumeration over mu_B^3, and for each UNSAT target
+      compute D_PC by incremental degree-D Macaulay echelonisation over F_p (monomials with exponents
+      below B plus the axiom lines) until 1 is reached; reuse the exact echelon code path of IDEA-20260801-002
+      if present. Repeat for 200 random polynomials of the same multidegree conditioned to be units on
+      mu_B^3. Report the SAT targets separately with the degree at which a lex basis appears. The next
+      agent reads RESEARCH_FFD_PROOF_COMPLEXITY.md to confirm whether its measured degrees were on SAT
+      or UNSAT instances.
+    controls:
+    - Random unit polynomials of identical multidegree, same B and p.
+    - m = 2 (S_3 in two variables) where D_PC can be checked by hand against the inverse of a 3 x 3 matrix
+      function on mu_B^2.
+    - Two primes per B to separate p-dependence from B-dependence.
+    required_metrics:
+    - D_PC distribution over UNSAT targets per B and p
+    - D_PC distribution over random units per B and p
+    - fitted slope c with confidence interval
+    - column count C(D_PC + 3, 3) against B^3
+  falsification_conditions:
+  - Median D_PC(UNSAT) at least 2 below the random-unit median at B >= 8.
+  - Fitted slope c at most 1.5 across B in {4, 8, 16}.
+  - A solver timeout is infrastructure, not evidence; D_PC is defined by exact linear algebra, not by
+    F4 wall-clock.
+  confounders:
+  - Targets with x_R in the exceptional set of the specialised tensor may have atypical degree; report
+    them separately.
+  - At small B the degree is dominated by deg S_4 = 4 per variable; the slope must be read from B >= 8.
+  interpretation_limits:
+  - A pinned refutation degree bounds Macaulay-style solvers on this presentation; it says nothing about
+    enumeration or about bases that are not algebraic.
+  - The column count is a floor for one solver family, not a cost model.
+  heuristic_assumptions:
+  - id: H1
+    statement: The inverse of S_4(.; x_R) as a function on mu_B^3 has generic multidegree, so refutations
+      need degree of order 2(B-1).
+    rigorous_support: Holds for a random unit by dimension counting; unproven for S_4.
+    validation_plan: The minimal test measures it directly against the random-unit control.
+  target_complexity:
+    time_exponent: 1/2 unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: none claimed
+    tradeoff_note: If the prediction holds, the relations-wave joint-solve exponent e_k is pinned at m
+      for Macaulay solvers on mu_B bases; delta 0.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-IC-5931ee dominates the headline; no row measures refutation degree on prime-field
+    summation systems.
+  sota_delta: 'Exponent delta 0. New number: the refutation-degree slope c for prime-field Semaev systems
+    against a generic unit.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-fbdb61
+    - KR-IC-0d2021
+    - KR-IC-5931ee
+    - KR-IC-889857
+    - KR-IC-5765d2
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-fbdb61
+      provenance: internal
+      relation: adjacent
+      delta: The row lists solving, last-fall and regularity degrees for Weil descent systems; refutation
+        degree over F_p is not among them.
+    - ref: KR-IC-889857
+      provenance: internal
+      relation: adjacent
+      delta: First-fall assumptions concern SAT-side solving; this record measures the UNSAT side that
+        the relation stage actually pays.
+    searched:
+      corpus_grep:
+      - brief section 2 for refutation, polynomial calculus, Hilbert function
+      - wave-1 wildcards leads for Polynomial-Calculus refutation degree
+      web: []
+      blocked: []
+    lead: LEAD-ICP-digit-presentation-solving-degree
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each B, draw 200 random x_R, classify by enumeration over mu_B^3, and
+        for each UNSAT target compute D_PC by incremental degree-D Macaulay echelonisation over F_p (monomials
+        with exponents below B plus the axiom lines) until 1 is reached; reuse the exact echelon code
+        path of IDEA-20260801-002 if present. Repeat for 200 random polynomials of the same multidegree
+        conditioned to be units on mu_B^3'
