@@ -1,0 +1,127 @@
+idea:
+  id: IDEA-20261109-dc7411
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Gowers U^3 norm of the multiplicative-orbit sequences t -> e_p(b x(gamma^t P)) and t -> chi_2(x(gamma^t
+    P)) over Z_{(N-1)/2}, the quadratic-structure lever of classical hidden-shift algorithms, exact at
+    p <= 2^17 against random and planted-quadratic controls
+  class: barrier
+  claim: 'Let E/F_p have prime order N, P a generator, gamma a generator of Z_N^*, M = (N-1)/2 (x(-R)
+    = x(R) forces the quotient by -1). Put f_b(t) = e_p(b x(gamma^t P)) for eight fixed nonzero b and
+    f_chi(t) = chi_2(x(gamma^t P)) (0 when x = 0). Define U3(f) = M^{-1} sum_h sum_psi |FT(Delta_h f)(psi)|^4
+    with Delta_h f(t) = f(t+h) conj f(t) and FT normalised by M^{-1}. Prediction, fixed before any run:
+    at every calibration prime 2^12 <= p <= 2^17, M * U3(f) lies inside the 99 percent band of 200 random
+    unimodular sequences of length M (centre about 3) for all nine f. In particular U3(f) < M^{-1/2}.
+    ECDLP as a hidden shift (F(t) = x(gamma^t P), G(t) = F(t+s), s = log_gamma k mod M) is classically
+    polynomial when F is a quadratic phase up to the shift; U3 is the exact obstruction level for that
+    class. No exponent change is claimed.'
+  mechanism: 'Kuperberg needs only injectivity of the hiding function. Classical hidden-shift algorithms
+    need structure: a homomorphic F gives a DLP in the image, a Fourier-sparse F gives a large U^2 norm
+    (already determined by the spectrum M(chi,b) of the wave-2 quantum-classical record and not re-measured
+    here), and a quadratic phase F(t) = e(q(t)/M) gives G(t) conj F(t) = e((2st + s^2)/M), so two samples
+    recover s. The Gowers inverse U^3 theorem makes U3 the quantitative obstruction for the quadratic
+    class. A correlation rho with some quadratic phase costs about rho^{-2} samples to exploit, and the
+    exact U3 computation detects rho >= M^{-1/8}, i.e. exactly the regime where a shadow would cost at
+    most M^{1/4}.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic floor Omega(sqrt N); this record is a representation-level statistic with exponent
+      delta 0.
+    verified_by: Mythos ideation 2026-11-09 read the row in the REPO BRIEF frontier map; row file not
+      opened.
+  - ref: Gowers 2001; Green-Tao inverse U^3 (recalled)
+    provenance: recalled
+    claim: Large U^3 norm implies correlation with a quadratic (nil)phase.
+    verified_by: recalled from literature, not opened in this session.
+  assumptions:
+  - Curves are prime-order toy curves from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with N prime, so Z_N^*
+    is cyclic.
+  - The shift group is Z_M, M = (N-1)/2, so x-coordinates are injective on the orbit.
+  predictions:
+  - metric: M * U3(f_b), maximum over the eight b and all primes
+    direction: lower
+    minimum_effect: inside the random 99 percent band, below 6
+  - metric: M * U3(f_chi)
+    direction: lower
+    minimum_effect: below 6
+  - metric: M * U3 of planted controls with rho in {M^{-1/8}, 2 M^{-1/8}, 4 M^{-1/8}}
+    direction: higher
+    minimum_effect: planted rho = 4 M^{-1/8} exceeds the band at every prime
+  minimal_test:
+    design: For each prime enumerate x(gamma^t P) for t in Z_M once. For each f compute Delta_h f for
+      every h, one FFT per h, and sum fourth powers; cost O(M^2 log M), about 10^11 flops at p = 2^17.
+      Draw 200 random unimodular sequences for the band. Plant quadratic phases by replacing a fraction
+      rho of a random sequence by e(q(t)/M) with random quadratic q.
+    controls:
+    - 200 random unimodular sequences of length M per prime.
+    - Planted quadratic phase at three correlation levels.
+    - Exact quadratic phase (rho = 1) must return U3 = 1.
+    required_metrics:
+    - M, p, N, gamma
+    - M * U3 for each f_b and f_chi
+    - band quantiles 0.5, 99.5 of the random ensemble
+    - M * U3 of each planted control
+  falsification_conditions:
+  - Any f_b or f_chi has M * U3 above the 99.5 percent random quantile at two or more primes.
+  - Planted rho = 4 M^{-1/8} is not detected, which invalidates the instrument rather than the claim.
+  - Exact quadratic phase does not return U3 = 1 (implementation error, invalid run).
+  confounders:
+  - Points with x = 0 are set to 0 in f_chi and their count is reported.
+  - The U^2 contribution at h = 0 equals 1 and is included in the random band by construction.
+  interpretation_limits:
+  - A confirmed flat U3 excludes quadratic-phase shadows of cost at most M^{1/4}; it is silent on correlations
+    between N^{-1/4} and M^{-1/8}.
+  - Toy primes only; no extrapolation to 2^256 is claimed.
+  heuristic_assumptions:
+  - id: H1
+    statement: The orbit sequences behave like random unimodular sequences at the U^3 level.
+    rigorous_support: None. Weil-type bounds control degree-bounded sums only, not multiplicative orbits.
+    validation_plan: The exact computation above at six primes is the validation.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: O(M) for one orbit table
+    best_known: Pollard rho, Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: None claimed; the record is a measurement.
+    tradeoff_note: No time-memory tradeoff is defined.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: 'Exponent delta 0. New observable: the U^3 norm of the discrete-log orbit sequence, not
+    derivable from the already-filed spectrum M(chi,b), which determines only U^2.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-0528e7
+    - KR-RHO-fb88e6
+    - KR-RHO-46c2c6
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: The generic bound is representation-blind; U3 is a representation statistic.
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: orthogonal
+      delta: Automorphism orbits quotient the shift group by mu_6; this record works on Z_M and reports
+        the mu_6 shifts separately.
+    searched:
+      corpus_grep:
+      - 'REPO BRIEF wave-2 quantum-classical records: multiplicative-character spectrum, label readout,
+        label propagation'
+      - REPO BRIEF torsion-wave lead Elliptic Lagrange resolvents
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each prime enumerate x(gamma^t P) for t in Z_M once. For each f compute
+        Delta_h f for every h, one FFT per h, and sum fourth powers; cost O(M^2 log M), about 10^11 flops
+        at p = 2^17. Draw 200 random unimodular sequences for the band. Plant quadratic phases by replacing
+        a fraction rho of a random sequence by e(q(t)/M) with random quadratic q.'
