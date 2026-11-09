@@ -1,0 +1,244 @@
+{
+  "attempt_accounting": {
+    "bounded_replay_invocations": 1,
+    "new_cloud_usd": 0,
+    "new_scientific_trial_attempts": 0
+  },
+  "bounded_replay": {
+    "eligible_rows": 384,
+    "independent_components": [
+      "null x sampling and quadratic-residue lift",
+      "affine point addition",
+      "unordered pair coincidence count"
+    ],
+    "limits": {
+      "command_file": "command.txt",
+      "cpu_affinity_core": 0,
+      "invocations": 1,
+      "note": "The timeout, taskset and prlimit command completed successfully. CPU consumption and peak RSS were not sampled; the process limits were hard guards, not measured usage.",
+      "observed_cpu_seconds": null,
+      "observed_exit_code": 0,
+      "observed_peak_rss_bytes": null,
+      "observed_wall_seconds_from_tool": 0.397596085,
+      "rlimit_address_space_bytes": 2147483648,
+      "rlimit_cpu_seconds": 300,
+      "schema": "crypto.autoresearch.pfdr_replay_resource_record/v1",
+      "scientific_trial_attempts": 0,
+      "timeout_seconds": 300
+    },
+    "nonce_record": {
+      "bytes": 358,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/replay/nonce.json",
+      "sha256": "a2ede7ed974d07b17f4f85c6a64673a08c2f67827d681da548896e18fa2374e1"
+    },
+    "null_replicates_per_row": 1,
+    "replay_record": {
+      "bytes": 2144,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/replay/replay-results.json",
+      "sha256": "2620de89f00d8e63e6f71d66cceed02b840197b48ac363f9f5599e47a982b138"
+    },
+    "results": [
+      {
+        "count_equal": true,
+        "curve_equal": true,
+        "pairs_equal": true,
+        "recounted": 2,
+        "reported": 2,
+        "row_key": "b16-t0.30-d1-c23"
+      },
+      {
+        "count_equal": true,
+        "curve_equal": true,
+        "pairs_equal": true,
+        "recounted": 6,
+        "reported": 6,
+        "row_key": "b16-t0.35-d2-c7"
+      }
+    ],
+    "scope_note": "Two nonce-selected 16-bit rows, one null replicate each; this does not validate all 960 rows or repair provenance.",
+    "selected_rows": 2,
+    "selection_record": {
+      "bytes": 633,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/replay/selection.json",
+      "sha256": "6ede6206c261f94aad3ca605986d86f650bde7b8b60b5c1d2d58f19248299824"
+    },
+    "shared_components": [
+      "pinned vendored curve generator and its seeded curve stream",
+      "Python SHA-256 and random.Random seed mapping"
+    ],
+    "status": "sample_passed"
+  },
+  "custody": {
+    "checks_passed": [
+      "All 11 receipt-listed artifact SHA-256 values match local files and archive commit d751c23c6065a832cbbc0356a0b334094a0cbe6e; actual byte counts are recorded in recompute-result.json. The execution receipt itself was separately hashed.",
+      "Launch authority, plan hash, specification hash, environment source map and source blobs at authority commit 95ff8c4f46738b620eb1ce2f01a4bb987c894268 match.",
+      "Authority is ancestor of archive, and archive is ancestor of published validation-plan commit 6c82434636.",
+      "Official receipt remains invalid_output with null checker return code."
+    ],
+    "failed_checks": [
+      {
+        "detail": "manifest.yaml names H-PFDR-ed7ccf, while trial-plan.json has no hypothesis_id binding; original supervisor receipt detail identifies this as its invalid_output reason.",
+        "id": "manifest_hypothesis_unbound_by_frozen_plan"
+      },
+      {
+        "detail": "Six frozen protocol-resource-v2.json arms bind run.py SHA-256 567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3, while executed plan/environment source SHA-256 is 96ba0604bdfba65eb1afa3840084ec8fa69fc3dcef47e02c73c0e29374e0a0f7.",
+        "id": "protocol_arm_instrument_sha_drift"
+      }
+    ],
+    "raw_result_invalid_reason": null,
+    "raw_result_note": "A null invalid_reason in raw-result.json and a later producer-side CHECK OK pilot do not change the original invalid_output receipt or constitute independent output validation.",
+    "source_comparison": {
+      "added_functions": [
+        "_launch_commit"
+      ],
+      "common_function_ast_changes": [
+        "_rng",
+        "cmd_trial"
+      ],
+      "executed_sha256": "96ba0604bdfba65eb1afa3840084ec8fa69fc3dcef47e02c73c0e29374e0a0f7",
+      "predecessor_sha256": "567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3",
+      "textual_changes": "Added recovery comments; specification path changed; EXP label changed to EXP-PFDR-7c7c95 while SEED_NAMESPACE remains EXP-PFDR-ada71b and _rng uses it; _launch_commit validates launch run/trial/plan/authority; cmd_trial records authority commit and observed HEAD separately. Other common function ASTs match."
+    },
+    "status": "failed_provenance"
+  },
+  "decision_gate": {
+    "derivative_input_eligible": false,
+    "new_scientific_stage_authorized": false,
+    "reason": "Original invalid_output envelope and frozen arm instrument SHA mismatch remain; the independent arithmetic and tiny replay do not change the frozen provenance gate.",
+    "result": "fail"
+  },
+  "diagnostic_failure": {
+    "effect": "No missing required custody or derivation check after the unguarded read-only recompute.",
+    "reason": "Git show could not mmap a large pack under 2 GiB RLIMIT_AS; the metadata/arithmetic recompute was rerun without the replay guard. The scientific replay itself ran once under the hard guard.",
+    "step": "first guarded recompute invocation, before replay"
+  },
+  "evidence_files": [
+    {
+      "bytes": 17806,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/recompute.py",
+      "sha256": "7b26e1cde8438b3f137c060aed290bbd390d5cda3de94c8cb55ef19dbccefd6e"
+    },
+    {
+      "bytes": 10092,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/recompute-result.json",
+      "sha256": "d24c7fc75e73258154f5269deeb8bb58082be93a3a779ab098287f3a3972b7cf"
+    },
+    {
+      "bytes": 5506,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/replay/replay.py",
+      "sha256": "6a9aaab430b87eefc088ea9b5e6d9b5b7c4682032e20cdb6f3c76028353ec8f9"
+    },
+    {
+      "bytes": 240,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/replay/command.txt",
+      "sha256": "74c92901344438465b02ac87d569e424234c464af309d5f8933db1473a263501"
+    },
+    {
+      "bytes": 92,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/replay/stdout.log",
+      "sha256": "bb0d1d33dda5b519be4deed84a08277be9c0840bbe7910005805cf68cba39de3"
+    },
+    {
+      "bytes": 607,
+      "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/replay/resource-guard.json",
+      "sha256": "96e9b170c30980a0c24e9a6b5c411373a579d4140446c5bd7cc4107810a0f9af"
+    }
+  ],
+  "independent_derivation": {
+    "Lbar": {
+      "16": 15.665624399521196,
+      "20": 19.542414109681896,
+      "24": 23.617343169627173,
+      "28": 27.529863453346398,
+      "32": 31.62211945919798
+    },
+    "byte_difference_note": "The producer JSON lacks the final newline added by the independent canonical serialization; parsed JSON content is exactly equal.",
+    "byte_equal_to_producer": false,
+    "cells": 30,
+    "comparison_tolerance": {
+      "absolute": 1e-12,
+      "relative": 1e-10
+    },
+    "content_equal_to_producer": true,
+    "derived_design_written": false,
+    "fieldwise_mismatches": [],
+    "independent_canonical_sha256": "0f24e5493396f8a5e0782f08ab47e3a9df88157403c52c4eb37237af2c4b8349",
+    "planned_curves_sum": 20151,
+    "plant_configurations": 40,
+    "status": "arithmetic_passed_provenance_blocked",
+    "withheld_reason": "The frozen plan requires full derivation and provenance pass. Two provenance checks failed."
+  },
+  "published_plan": {
+    "bytes": 8249,
+    "path": "coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-pilot-validation-plan.yaml",
+    "sha256": "deabe1a96157764cbcfd727f0277668f7ebd830337dd73de6c8085167266c320"
+  },
+  "raw_grid": {
+    "actual_order_is_lexicographic": false,
+    "duplicate_keys": 0,
+    "expected_and_unique_keys": 960,
+    "independent_trial_division_prime_defects": 0,
+    "missing_keys": 0,
+    "order_note": "Rows appear in completion order; sorted key coverage and actual order were checked separately.",
+    "paired_d_null_vector_defects": 0,
+    "point_order_scope": "N_prime and Hasse values are consistent; p and N are prime by independent trial division for 160 unique curves. The reported four point-multiplication checks per curve were not independently regenerated across the full grid, so this is not a full independent point-order proof.",
+    "row_field_defects": 0,
+    "rows": 960,
+    "shared_curve_identity_defects": 0,
+    "singular_curve_defects": 0,
+    "status": "passed",
+    "unexpected_keys": 0,
+    "unique_curves": 160
+  },
+  "recorded_at_utc": "2026-11-09T18:24:41.736800+00:00",
+  "review_basis": {
+    "literature_note": "This review tests file custody, predefined arithmetic and two toy replays; it makes no novelty or scientific interpretation claim. The frozen local sources and predecessor implementation were the relevant primary records. External literature was not used for this limited validation.",
+    "sources_checked": [
+      "experiments/EXP-PFDR-7c7c95/specification.yaml",
+      "experiments/EXP-PFDR-7c7c95/trial-plan.json",
+      "experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json",
+      "experiments/EXP-PFDR-7c7c95/implementation/run.py",
+      "experiments/EXP-PFDR-7c7c95/implementation/paircount.c",
+      "experiments/EXP-PFDR-7c7c95/implementation/vendor/curve.py",
+      "experiments/EXP-PFDR-ada71b/implementation/run.py",
+      "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json",
+      "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/launch.json",
+      "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/environment.json",
+      "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/manifest.yaml",
+      "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/raw-result.json",
+      "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/pilot-jobs.jsonl",
+      "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/design.json"
+    ]
+  },
+  "role": "validator",
+  "schema": "crypto.autoresearch.pfdr_independent_validation_report/v1",
+  "source": {
+    "experiment_id": "EXP-PFDR-7c7c95",
+    "original_checker_returncode": null,
+    "original_receipt_status": "invalid_output",
+    "producer_design": {
+      "bytes": 208673,
+      "path": "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/design.json",
+      "sha256": "bb37f3a743b069f5c15d77234d241899b98d39e578d4eeee700161d8af6f852b"
+    },
+    "raw_jsonl": {
+      "bytes": 454354,
+      "path": "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/pilot-jobs.jsonl",
+      "sha256": "651b9d7de59efce886749f986621acb1b3f9c3d42ed5d762c540472eed83571c"
+    },
+    "run_id": "RUN-PFDR-1e5d2b",
+    "scientific_status": "no conclusion",
+    "source_receipt": {
+      "bytes": 1898,
+      "path": "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json",
+      "sha256": "3b3e3f7056fda01e440b05c69d776ca836ee1db394ea847c33283c80ed421b90"
+    },
+    "trial_id": "pilot"
+  },
+  "unperformed_checks": [
+    "Full independent regeneration and point-order proof of all 160 curves",
+    "Replay of other 958 rows or additional null replicates",
+    "Any main/census arm, statistical analysis, hypothesis reading, runtime or cost comparison",
+    "Complete experiment.export/v1 validation against the six-arm frozen protocol"
+  ]
+}
