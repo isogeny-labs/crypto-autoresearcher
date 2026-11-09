@@ -1,0 +1,145 @@
+idea:
+  id: IDEA-20261109-d448ce
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Phantom points: a nonzero Sha[2] class of a rank-zero curve localises to a nonzero point of
+    E(F_p)/2 at a positive Chebotarev density of good primes, and that point has no global label'
+  class: measurement
+  claim: 'Let E~ over Q have rank 0 and Sha(E~/Q)[2] nonzero, for instance the curve 571a1 with analytic
+    Sha of order 4, to be re-verified in LMFDB. For each nonzero sigma in Sha[2] there is a constant delta(sigma)
+    in the open interval (0, 1), computable as a Chebotarev proportion in the Galois group of the field
+    cut out by sigma, such that among good primes p with E~(F_p) of even order the localisation of sigma
+    in E~(Q_p)/2 = E(F_p)/2 is nonzero with density delta(sigma). Each such localisation is a point of
+    E(F_p)/2 not in the image of E~(Q) = torsion. Prediction fixed before any run: the measured proportion
+    over primes p < 10^5 lies within 0.03 of a value in {1/4, 1/3, 1/2, 2/3, 3/4}. No ECDLP exponent changes.'
+  mechanism: sigma is unramified at good p, so its restriction to the decomposition group is determined
+    by sigma(Frob_p) modulo (Frob_p - 1)E~[2]; this is nonzero exactly when Frob_p avoids a proper union
+    of cosets in Gal(L_sigma/Q), with L_sigma of degree dividing 24 over Q. The local class lies in the
+    Kummer image because sigma is everywhere locally trivial as a torsor, so it is a point of E(F_p)/2.
+    Since E~(Q) is torsion, no global point reduces to a representative, so the point has no discrete
+    log relative to any globally defined point.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting routes fail; this record exhibits the one local object a global lift supplies beyond
+      reductions of rational points and shows it carries no label.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound; exponent delta here is 0.
+    verified_by: REPO BRIEF section 3 row text, Mythos run 2026-11-09
+  assumptions:
+  - The chosen curve has rank 0 and Sha[2] of order 4; both are rechecked with mwrank and the analytic
+    Sha in Sage before any prime is processed.
+  - The 2-covering quartics and the covering map to E~ are computed from mwrank second descent and the
+    classical syzygy formulas.
+  proof_search_map:
+    not_applicable_reason: A density measurement on one curve family at toy primes.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: proportion of eligible primes with nonzero localisation of a fixed Sha[2] class
+    direction: higher
+    minimum_effect: at least 0.2 and at most 0.8 after 1000 eligible primes
+  - metric: distance of the proportion from the nearest value in the predicted set
+    direction: lower
+    minimum_effect: at most 0.03
+  minimal_test:
+    design: Run mwrank second descent on the curve, keep the two or three quartics that are everywhere
+      locally soluble but have no rational point. For each good prime p < 10^5 with even group order,
+      find an F_p-point on the quartic, lift it to Q_p by Hensel, map through the covering map, and reduce
+      to E(F_p)/2 using the 2-torsion structure of E(F_p). Record zero or nonzero. Compute the predicted
+      Chebotarev proportion from the Galois group of the quartic's splitting field over Q(E~[2]).
+    controls:
+    - Apply the same pipeline to a quartic that does have a rational point; its localisation must equal
+      the reduction of that point for every p.
+    - Apply it to a random quartic with the same invariants that is not locally soluble at some prime,
+      which must fail the local test there.
+    required_metrics:
+    - curve label
+    - rank and analytic Sha order
+    - number of quartics without rational points
+    - number of eligible primes
+    - proportion with nonzero localisation per quartic
+    - predicted Chebotarev proportion per quartic
+  falsification_conditions:
+  - The measured proportion is below 0.05 or above 0.95 for every quartic, or differs from the Chebotarev
+    prediction by more than 0.03 after 1000 primes.
+  - The control quartic with a rational point ever localises to a class different from the reduction of
+    that point.
+  - A failure to find F_p-points on a locally soluble quartic for more than 1 percent of eligible primes
+    is an implementation defect, not a result.
+  confounders:
+  - Primes where E(F_p)[2] is not cyclic make E(F_p)/2 two-dimensional; the count then records a vector
+    and the record reports the two cases separately.
+  - The analytic Sha order is conjectural; the mwrank certificate of no rational point is heuristic up
+    to the search bound and is reported as such.
+  interpretation_limits:
+  - This is a statement about what a global obstruction supplies locally; it defines no algorithm and
+    no exponent.
+  - Sha[2] of a rank-zero curve is used for computability; the ECDLP setting needs Sha[N] for N of 256
+    bits, where no example is known.
+  heuristic_assumptions:
+  - id: H1
+    statement: The density of nonzero localisation is the Chebotarev proportion of the cocycle's splitting
+      field.
+    rigorous_support: Chebotarev density theorem applied to the finite extension cut out by the cocycle,
+      recalled.
+    validation_plan: Compare measured proportions with the computed group-theoretic values on at least
+      two curves.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged; delta 0
+    memory_exponent: unchanged
+    best_known: Pollard rho in Theta(N^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: None; measurement only.
+    tradeoff_note: Not applicable.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-13bf67 for any exponent reading; KR-IC-cd159a for lifting routes generally. Neither
+    states the local-density behaviour of Sha classes at good primes.
+  sota_delta: Exponent delta 0. Counted delta is the measured density of phantom points, a quantity no
+    record in the brief reports.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-IC-9e610d
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: The row closes xedni lifting by probability of rank deficiency; this record measures a different
+        lifted object, the localisation of a Sha class.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for Sha, visibility, localisation, Chebotarev
+      - Wave 2 descent records on root number and shadow theorem
+      web: []
+      blocked: []
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Run mwrank second descent on the curve, keep the two or three quartics that
+        are everywhere locally soluble but have no rational point. For each good prime p < 10^5 with even
+        group order, find an F_p-point on the quartic, lift it to Q_p by Hensel, map through the covering
+        map, and reduce to E(F_p)/2 using the 2-torsion structure of E(F_p). Record zero or nonzero. Compute
+        the predicted Chebotarev pr'
