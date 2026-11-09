@@ -110,15 +110,56 @@ def verify_artifact(directory, checker, expected_form, expected_binary_sha256,
     argv = input_record.get("argv")
     wanted = [str(checker.field.p), str(checker.field.n),
               ",".join(map(str, expected_form)), *(str(caps[key]) for key in CAP_NAMES)]
-    if (not isinstance(argv, list) or len(argv) != 10 or not isinstance(argv[0], str)
-            or not argv[0] or argv[1:] != wanted):
+    worker = input_record.get("worker")
+    if isinstance(worker, dict):
+        expected_argv = [None, "--worker", str(checker.field.p), str(checker.field.n),
+                         *(str(caps[key]) for key in CAP_NAMES)]
+        request = wanted[2] + "\n"
+        startup = worker.get("startup") if isinstance(worker, dict) else None
+        startup_line = worker.get("startup_line") if isinstance(worker, dict) else None
+        startup_bytes = startup_line.encode() if isinstance(startup_line, str) else None
+        if (not isinstance(argv, list) or len(argv) != 10
+                or not isinstance(argv[0], str) or not argv[0]
+                or argv[1:] != expected_argv[1:]
+                or not isinstance(worker, dict)
+                or worker.get("argv") != argv
+                or (scope == "approved-cohort" and
+                    worker.get("join_plan_sha256") != expected_binding["join_plan_sha256"])
+                or not isinstance(worker.get("join_plan_sha256"), str)
+                or len(worker["join_plan_sha256"]) != 64
+                or worker.get("request") != request
+                or worker.get("request_sha256") != digest(request.encode())
+                or startup_bytes is None
+                or not startup_bytes.endswith(b"\n")
+                or startup_bytes.count(b"\n") != 1
+                or checked_json(startup_bytes, "worker startup") != startup
+                or worker.get("startup_sha256") != digest(startup_bytes)
+                or startup.get("schema") != "pext.candidate-worker-start/v1"
+                or startup.get("field") != checker.field_record
+                or startup.get("structures") != checker.transversal.count
+                or startup.get("cocycle_entries") !=
+                [checker.transversal.count] * ((checker.field.n-1)//2)
+                or startup.get("rational_image_entries") !=
+                checker.transversal.count * (checker.field.p+1)
+                or startup.get("c3_reverse_build_checked") is not True
+                or input_record["memory_bytes"] > 3 * 1024**3):
+            raise ValueError("candidate worker custody differs from bound input")
+    elif (not isinstance(argv, list) or len(argv) != 10
+          or not isinstance(argv[0], str) or not argv[0] or argv[1:] != wanted
+          or worker is not None):
         raise ValueError("candidate command differs from bound input")
     if (receipt.get("schema") != "pext.candidate-unit-artifact/v1"
             or receipt.get("status") != "candidate_emitted"
-            or receipt.get("scope") != scope or receipt.get("returncode") != 0
+            or receipt.get("scope") != scope
+            or receipt.get("returncode") != (None if worker is not None else 0)
+            or (worker is not None and
+                receipt.get("worker_response_status") != "line_received_checked")
             or receipt.get("input_sha256") != digest(input_bytes)
             or receipt.get("compressed_sha256") != digest(compressed)
-            or receipt.get("stderr_sha256") != digest(stderr)):
+            or receipt.get("stderr_sha256") != digest(stderr)
+            or (worker is not None and
+                (receipt.get("worker_startup_sha256") != worker["startup_sha256"]
+                 or receipt.get("worker_request_sha256") != worker["request_sha256"]))):
         raise ValueError("candidate artifact receipt or digest mismatch")
     raw = read_bounded_gzip(compressed)
     if receipt.get("raw_sha256") != digest(raw):
