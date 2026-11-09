@@ -135,7 +135,8 @@ def run_suite(suite: Suite, *, config: config_module.Config | None = None,
 
 def write_results(summary: report_module.RunSummary, trials: list[TrialResult],
                   out_dir: str | Path, *, suite_path: str | None = None,
-                  config: config_module.Config | None = None) -> dict[str, Path]:
+                  config: config_module.Config | None = None,
+                  seed_offset: int | None = None) -> dict[str, Path]:
     """Eval results are immutable records, like everything else here.
 
     They are evidence about the harness and its backends. They are NOT
@@ -148,6 +149,10 @@ def write_results(summary: report_module.RunSummary, trials: list[TrialResult],
     for name, payload in (
             ("summary.json", {**summary.to_dict(),
                               "suite_path": suite_path,
+                              # Fixtures are generated from this; two records are
+                              # paired trial-for-trial only when it matches
+                              # (orchestration.eval.duel).
+                              "seed_offset": seed_offset,
                               "config_digest": config.digest if config else None,
                               # Without this a score cannot be attributed to a
                               # version of the thing being tuned.

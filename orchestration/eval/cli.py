@@ -112,7 +112,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     if args.out:
         for label, path in runner_module.write_results(
                 summary, trials, args.out, suite_path=str(args.suite),
-                config=cfg).items():
+                config=cfg, seed_offset=args.seed_offset).items():
             print(f"# {label}: {path}", file=sys.stderr)
     passes, total, _ = summary.rate()
     return 0 if passes == total else 1
@@ -159,7 +159,8 @@ def cmd_compare(args: argparse.Namespace) -> int:
         if args.out:
             runner_module.write_results(summary, trials,
                                         Path(args.out) / backend,
-                                        suite_path=str(args.suite), config=cfg)
+                                        suite_path=str(args.suite), config=cfg,
+                                        seed_offset=args.seed_offset)
 
     left, right = summaries[0][0], summaries[1][0]
     comparisons = [report_module.compare(left, right, kind)
@@ -173,6 +174,26 @@ def cmd_compare(args: argparse.Namespace) -> int:
             raise FileExistsError(f"{path} already exists; eval records are immutable")
         path.write_text(json.dumps(comparisons, indent=2) + "\n", encoding="utf-8")
         print(f"# comparison: {path}", file=sys.stderr)
+    return 0
+
+
+def cmd_rate(args: argparse.Namespace) -> int:
+    from . import duel as duel_module
+    labels = dict(item.split("=", 1) for item in (args.label or []))
+    trials = []
+    for record in args.records:
+        trials.extend(duel_module.load_record(record, labels.get(record)))
+    battle_set = duel_module.build_battles(trials, assume_seed=args.assume_seed)
+    result = duel_module.rate(battle_set, replicates=args.replicates,
+                              seed=args.seed, cost=args.cost, stat=args.stat)
+    print(duel_module.render(result))
+    if args.out:
+        path = Path(args.out)
+        if path.exists():
+            raise FileExistsError(f"{path} already exists; eval records are immutable")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+        print(f"# ratings: {path}", file=sys.stderr)
     return 0
 
 
@@ -300,6 +321,21 @@ def build_parser() -> argparse.ArgumentParser:
     p_compare.add_argument("--seed-offset", type=int, default=0)
     p_compare.add_argument("--quiet", action="store_true")
     p_compare.set_defaults(func=cmd_compare)
+
+    p_rate = sub.add_parser(
+        "rate", help="Bradley-Terry ratings from existing records (offline, no cost)")
+    p_rate.add_argument("records", nargs="+",
+                        help="evals/results/<name> directories from run/compare --out")
+    p_rate.add_argument("--label", action="append", metavar="DIR=NAME",
+                        help="contestant name for a record (default: its backend)")
+    p_rate.add_argument("--assume-seed", type=int,
+                        help="seed offset for records written before it was recorded")
+    p_rate.add_argument("--replicates", type=int, default=1000)
+    p_rate.add_argument("--seed", type=int, default=0, help="bootstrap RNG seed")
+    p_rate.add_argument("--cost", choices=["tokens", "wall"], default="tokens")
+    p_rate.add_argument("--stat", choices=["median", "mean"], default="median")
+    p_rate.add_argument("--out", help="immutable JSON record of the ratings")
+    p_rate.set_defaults(func=cmd_rate)
 
     p_probe = sub.add_parser(
         "harbor-probe",
