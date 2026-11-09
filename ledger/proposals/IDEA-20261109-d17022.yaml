@@ -1,0 +1,63 @@
+idea:
+  id: IDEA-20261109-d17022
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: adaptation
+  lane: isogeny
+  angle: invariants and auxiliary structures on supersingular curves
+  title: Aut-weighted total-variation audit of commitment-walk endpoints against the Ramanujan bound
+  attack_type: security_proof_gap
+  claim: The HVZK argument for SQIsign-type identification needs the commitment curve distribution mu_k
+    (non-backtracking 2-isogeny walk of length k from E_0) to be within 2^{-lambda} of the stationary
+    measure mu_inf proportional to 1/|Aut(E)|. The cheap invariant |Aut(E)| in {2,4,6} read from j in
+    {0,1728} and short-cycle counts are sufficient statistics for a distinguisher if k is below the bound
+    k >= (log_2 p / 2 + lambda) / log_2(3 / (2 sqrt 2)). Cleared against H-WESO-516558 (the H-S endpoint
+    sampler on norm-2 left ideals), H-ALISO-008 (Hecke Krylov spectral probe), H-ALISO-009 (Hecke support
+    cost). No Lean lemma constrains it; the missing statement is nonbacktracking_walk_tv_bound.
+  mechanism: Reuse the H-WESO-516558 sampler at its two largest tested primes; for each k compute the
+    empirical TV distance to mu_inf on the vertex set weighted by 1/|Aut|; fit the decay rate; extrapolate
+    to spec p ~ 2^254 and compare with spec walk lengths.
+  objects:
+    graph: supersingular 2-isogeny graph, Ramanujan second eigenvalue 2 sqrt 2
+    invariant: '|Aut(E)| via j in {0,1728}; short-cycle indicator'
+    target: zero-knowledge simulator indistinguishability
+  cost_model:
+    sampler: O(k) 2-isogeny steps per sample
+    distinguisher_samples: about TV^{-2}
+    security_delta_if_true: HVZK proof invalid for the spec k, no key recovery
+  falsification: If the fitted decay matches the Ramanujan rate and spec k exceeds the derived threshold
+    by at least 20 percent at every parameter set, the lead closes as an audited-clean record.
+  cleared:
+    checked:
+    - H-WESO-516558
+    - H-ALISO-008
+    - H-ALISO-009
+    disproven: none in the brief
+  lean:
+    coverage: none
+    needed_statement: 'nonbacktracking_walk_tv_bound : TV(mu_k, mu_inf) <= (2 sqrt 2 / 3)^k * sqrt(#V)
+      on the Aut-weighted supersingular 2-isogeny graph'
+  experiment:
+    exp_id: none
+    nearest_surface: sampler behind H-WESO-516558 (repo path not quoted in brief)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no frontier map
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-ALISO-008
+      - H-ALISO-009
+      - H-ECDLP-3550b8
+    none_found_after:
+    - 'BRIEF grep: "expander"'
+    - 'BRIEF grep: "mixing"'
+    - 'BRIEF grep: "Aut"'
+    - 'BRIEF grep: "zero-knowledge"'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  risks: Heuristic extrapolation from toy primes; the spectral bound itself is proved in the literature
+    but not in the brief's Lean corpus.
