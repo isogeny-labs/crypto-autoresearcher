@@ -40,7 +40,7 @@ class CheckedCandidateUnitTests(unittest.TestCase):
         self.assertEqual([result["exceptional"] for result in results], [279, 1])
         self.assertEqual([result["generic_intervals"] for result in results], [109, 1])
         self.assertTrue(all(unit["candidate_order_aa"] ==
-                            "reverse-representatives-buckets-and-nonrational-roots/v1"
+                            "reverse-cocycle-build-representatives-buckets-and-roots/v1"
                             for unit in self.units))
         missing_aa = copy.deepcopy(self.units[1])
         missing_aa.pop("candidate_order_aa")
