@@ -1,0 +1,129 @@
+# TASK-20261107-f14df8: prospective executor handoff for EXP-ICPERF-127dbd, runbook session RBS-ICPERF-616277 (preview; canonical path ledger/handoffs/TASK-20261107-f14df8.yaml after approval).
+# Approves nothing. It takes effect only with DEC-20261107-7802ec committed on origin/main, the independent red-team review archived, the owner notice and the owner's EKS go-ahead.
+# Written by the experiment director under TASK-20261107-c5a0f4. The session RBS-ICPERF-de8978 stopped on a wrapper defect (DEC-20261107-b74e2c).
+handoff:
+  id: TASK-20261107-f14df8
+  from: coordinator
+  to: executor
+  role: executor
+  recorded_at: '2026-11-07'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: Run the runbook experiments/EXP-ICPERF-127dbd/runbook.yaml as session RBS-ICPERF-616277 through tools/runbook.py (the /run route),
+    from the relay of card task-cards/CARD-EXP-ICPERF-127dbd-3.yaml. S01-probe, then S02-reconcile-t1 (a read-only reconciliation of the S1 job
+    under the consumed run id RUN-ICPERF-8b0d47, no launch), then S03-trial-s2 (T2 = S2 as RUN-ICPERF-efb7ef, launched once on launch_eks.sh v3b,
+    only if S02-reconcile-t1 passed), then S04-verify. Leave the observation files in the run and session directories. Do not interpret them and
+    do not edit any frozen byte.
+  uncertainty_reduced: Whether the two pre-registered C1 sessions give valid, replay-certified counted observations of the frozen C1 decision
+    rule at fp28. S1 ran before this session (RUN-ICPERF-8b0d47) and is brought in here without a relaunch.
+  inputs:
+  - ledger/hypotheses/H-ICPERF-4cb536.yaml
+  - ledger/decisions/DEC-20261107-7802ec.yaml
+  - ledger/decisions/DEC-20261107-b74e2c.yaml
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+  - experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+  - experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/check_job.py
+  - experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json
+  inputs_note: The runbook, the card and the trial plan are the worker's context. The protocol, specs and requests are bound bytes the runbook
+    checks; the executor does not read them for content.
+  constraints:
+  - 'The relay must state, with evidence, before any command: DEC-20261107-7802ec committed on origin/main (commit sha); the independent red-team
+    review of the locator joint archived (TASK-20261107-c5a0f4 follow_on); the owner has been told that S1 ran once and stopped on a wrapper defect,
+    that its spend is at most USD 0.93108, that C1-AMENDMENT-2 is filed and that S2 runs on v3b (notice, not a new consent); the owner''s explicit
+    EKS go-ahead (quoted, with timestamp, unless withdrawn or qualified); scripts/checkpoint.sh gate exit 0 (the line); and the aws --version
+    line of the binary on the relay PATH, beginning aws-cli/1.46.2. Any missing item: stop before step 1.'
+  - The relay starts with PATH=/tmp/claude-0/awsvenv/bin:$PATH. The runbook carries no PATH overlay. Do not install or substitute another aws
+    binary.
+  - 'Protocol section 10 budget gate line, checked before the S2 launch: S2 0.93108 (HB of S1, used as actual_spend until a billing record exists)
+    + 0.93108 + 0 = 1.86216 <= 5.00. A line above 5.00: stop.'
+  - S2 launches once. Do not rerun, relaunch, reopen or resume this runbook session on any failure; wait for a Coordinator decision. The -r2 requests
+    are not part of this session. If S02-reconcile-t1 does not pass, the session stops and S2 is never launched.
+  - Do not edit specification.yaml, the trial plan, the runbook, the card, the inputs, the implementation or the hypothesis. Do not declare additional
+    artifacts. Write nothing under experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/.
+  - 'Before S2 read nothing beyond what the runbook steps read: no records.jsonl content, audit, replay, run log, l2-gate content, compare output
+    or arm statistic of the S1 copy.'
+  - A crash, timeout, deadline hit, host loss or refused manifest is an infrastructure or instrument outcome, not a scientific result. Do not
+    read verdict.json for a conclusion and do not report U_w, L_w or any ratio as a finding.
+  - Do not stage or commit anything. The snapshot archive is TASK-20261107-04d969 and runs alone after this task.
+  - launch_eks.sh and reconcile_run.sh run only as the supervised trial argv or the runbook step argv of tools/runbook.py run. Never run either
+    by hand, except launch_eks.sh with --dry-run.
+  deliverables:
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-616277/outputs/S02-reconcile-t1/attempt-1/reconcile-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-616277/journal.jsonl
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/launch.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/execution-receipt.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/command.txt
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/environment.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/check.stdout.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/check.stderr.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/raw-result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/manifest.yaml
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/request.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/launch.log
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/launcher/result.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/job-exit.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/launcher/build.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/session/records.jsonl
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/session/plan.json
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/locator/locator.json
+  artifact_paths_note: 'Only files that this session can produce for its one trial: the eight supervisor-generated files, the seven per-trial
+    files declared in the trial plan, and the undeclared build.json, records.jsonl, plan.json and locator.json (locator.json is written whenever
+    the launcher result exists). No path of RUN-ICPERF-8b0d47 or of the retired RUN-ICPERF-5ffa79 is listed (IMP-C1-d5ec1e-partial-output). The
+    reconciled S1 copy lives under the session output directory and is not an artifact path of this task. records.jsonl and plan.json are bound
+    through SHA256SUMS, not through the runbook.'
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/runs
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions
+  - experiments/EXP-ICPERF-127dbd/reports
+  archived_by: TASK-20261107-04d969
+  inference:
+    degraded_allowed: false
+    fallback_allowed: false
+    independent_session_required: false
+    policy: executor-mechanical
+    reasoning_effort: null
+    delivery: interactive
+  budget:
+    maximum_runs: 1
+    memory_gb: 4
+    wall_clock_seconds: 12420
+  completion_gate:
+  - python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml prints LINT OK with the runbook sha256 the card names.
+  - tools/runbook.py run executes session RBS-ICPERF-616277 under DEC-20261107-7802ec, and no other session.
+  - S02-reconcile-t1 wrote reconcile-result.json with reconcile_pass true, or the session journal records why not.
+  - The trial T2 holds its seven declared files, and its receipt is output_validated, or the session journal records why not.
+  - The manifest.yaml passes tools/validate_ledger.py check_run and carries attack_claimed false.
+  - S04-verify ran on both sessions, or the journal records the step that stopped the session.
+  - The specification, trial plan, runbook, card, inputs and implementation bytes are unchanged, S2 was launched at most once, and nothing was
+    written under runs/RUN-ICPERF-8b0d47/.
+  return_format: Session directory, run directory, the tool-written summary and the session receipt. No verdict, ratio, speedup, wall-time or
+    rho-beating statement.
+  execution:
+    approved_by: DEC-20261107-7802ec
+    experiment_id: EXP-ICPERF-127dbd
+    kind: run
+    mode: experiments
+    trial_plan: experiments/EXP-ICPERF-127dbd/trial-plan.json
+    trial_plan_sha256: 3f564ea2ad00f25aa0efd1c35ccbf164f8f7ef542c7b64a5dd209860796117f8
+  review_required: false
+  runs_launched: 0

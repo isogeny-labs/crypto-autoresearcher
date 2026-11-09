@@ -23,6 +23,14 @@ is hashed, because the hash stays valid once the file is committed and provably
 fails if the file is later edited. That keeps the ordinary
 write-a-module-then-run-it workflow legal while making it auditable.
 
+A run launched by tools/experiment_execution.py is also PINNED BY ITS PLAN
+when run.environment.source_sha256 is a non-empty mapping of sha256 digests and
+run.environment.sources_committed is true: the supervisor refused the launch
+unless every bound source was tracked, unmodified at the launch commit and
+equal to its digest. That covers the files the frozen plan binds, not every
+module the driver imported, so it is reported separately ("plan-pinned")
+(sheriff case SHF-20261106-a114e7, ICV-2; units launched after that change).
+
 THIS TOOL IS ADVISORY BY DEFAULT AND SAYS SO. Every run predating the fix is
 unpinned, and retroactively erroring on them would convert one campaign's debt
 into every campaign's red build -- the coupling `check_merge_hygiene.py` and
@@ -62,6 +70,16 @@ def _paths_added_since(commit: str) -> set[str] | None:
     return {p for p in proc.stdout.splitlines() if p}
 
 
+def plan_pinned(environment) -> bool:
+    """Supervisor launch binding: hashed plan sources checked committed."""
+    if not isinstance(environment, dict) or environment.get("sources_committed") is not True:
+        return False
+    files = environment.get("source_sha256")
+    return (isinstance(files, dict) and bool(files)
+            and all(isinstance(k, str) and isinstance(v, str) and len(v) == 64
+                    and all(c in "0123456789abcdef" for c in v) for k, v in files.items()))
+
+
 def audit(experiment: str | None, since: str | None) -> tuple[list, list, list]:
     pattern = os.path.join(REPO, "experiments",
                            experiment or "*", "runs", "*", "manifest.yaml")
@@ -86,6 +104,9 @@ def audit(experiment: str | None, since: str | None) -> tuple[list, list, list]:
         if source.get("all_pinned"):
             pinned.append((run_id, source.get("file_count", 0),
                            bool(source.get("all_clean"))))
+        elif plan_pinned(body.get("environment")):
+            files = body["environment"]["source_sha256"]
+            pinned.append((run_id, len(files), "plan"))
         else:
             unpinned.append((run_id, rel, bool((body.get("code") or {}).get("dirty"))))
     return pinned, unpinned, unreadable
@@ -109,9 +130,11 @@ def main() -> int:
 
     print(f"{len(pinned)} pinned, {len(unpinned)} unpinned, "
           f"{len(unreadable)} unreadable, of {total} run manifest(s) in scope")
-    clean = sum(1 for _, _, c in pinned if c)
+    clean = sum(1 for _, _, c in pinned if c is True)
+    by_plan = sum(1 for _, _, c in pinned if c == "plan")
     if pinned:
-        print(f"  of the pinned, {clean} also ran from a fully clean tree")
+        print(f"  of the pinned, {clean} also ran from a fully clean tree; {by_plan} are "
+              "plan-pinned (the plan's bound sources only, committed at launch)")
     for rel, why in unreadable:
         print(f"  UNREADABLE {rel}: {why}")
     if unpinned:

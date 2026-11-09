@@ -1,0 +1,229 @@
+# TASK-20261107-c5a0f4: design handoff to the experiment-director for the C1 S2 re-session (EXP-ICPERF-127dbd),
+# under DEC-20261107-b74e2c rulings 3 and 4 and DEC-20261107-3e9d71. Zero runs, zero launches, no AWS write.
+# It produces preview bytes for a later Coordinator approval decision. It approves nothing.
+handoff:
+  id: TASK-20261107-c5a0f4
+  from: coordinator
+  to: experiment-director
+  role: experiment-director
+  recorded_at: '2026-11-07'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: >-
+    Write, test and return as uncommitted previews:
+    (1) C1-AMENDMENT-2;
+    (2) launch_eks.sh v3b, whose section-3 results locator lives in a new locate_results.sh;
+    (3) reconcile_run.sh, a read-only T1 reconciliation that uses the same locator, and its runbook
+        command step;
+    (4) a recompiled runbook for a NEW session id. Its steps are S01 probe, S02 reconcile T1,
+        S03 trial S2 under a fresh run id, and S04 the frozen analyze-c1.sh.
+    Write every file named in artifact_paths. The design must be approvable at
+    tools/experiment_preapproval.py.
+  uncertainty_reduced: >-
+    None about the mathematics. It removes the deterministic results-locator defect (DEC-20261107-b74e2c
+    ruling 1), so that S1's existing output can be admitted and S2 can be launched once without
+    repeating the defect.
+  inputs:
+  - ledger/decisions/DEC-20261107-b74e2c.yaml
+  - ledger/decisions/DEC-20261107-3e9d71.yaml
+  - ledger/decisions/DEC-20261106-ecf261.yaml
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/check_job.py
+  - experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256
+  - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json
+  - "isogeny-labs/crypto: research/ic_c1_deferred_guard_fp28_20261106/{PROTOCOL.md, AMENDMENT-1.md, protocol.json, amendment-1-receipts.txt}"
+  - "isogeny-labs/crypto: taskq/deploy/eks-karpenter/remote/{run-request, diagnose-failed-run, test-diagnose-failed-run.sh}"
+  inputs_note: >-
+    Your context is DEC-20261107-b74e2c rulings 3 and 4, plus the v3a wrapper and check_job.py. The
+    protocol is read for sections 9, 10, 11 and 18 only. run-request lines 55-79 show why the launcher
+    leaves results_uri empty for any failed Job. The other inputs are bound bytes to be carried over
+    unchanged.
+  constraints:
+  - >-
+    D-1 Zero runs and zero launches. Never run launch_eks.sh (v3a or v3b) except with --dry-run.
+    Never call launch-remote, CodeBuild or any S3/AWS write. The only AWS calls allowed are
+    read-only `aws s3 cp` of the three launcher receipt objects status.json, result.json and
+    objects.json under
+    s3://isolab-results-104186811093-us-east-2/runs/ic-c1-dg-s1-20261106/launcher/47cf1e4f-10a7-4ee3-862d-9e9700e122e3/,
+    each into a new empty directory, with its sha256 recorded. Use them as fixture shape. Never read
+    anything under the pod-uid prefix 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7/ (DEC-20261107-b74e2c PD-1).
+    Do not use scratchpad/dl-8b0d47-receipt/.
+  - >-
+    D-2 Before S2, read nothing beyond the check_job.py set: no records.jsonl content, audit,
+    replay, run log, l2-gate content, compare output or arm statistic.
+  - >-
+    D-3 v3b changes launch_eks.sh section 3 only. Sections 1, 1b, 1c and 2, the class logic
+    including the 42/43 accept branch, the manifests and the exit codes stay byte-identical to v3a
+    (0fcdd67e...). Locator rule:
+    (a) a non-empty result.json .results_uri is used as is;
+    (b) otherwise, read the receipt at .receipt_uri. status.json .job.uid must equal result.json
+        job_uid, and .job.job_name must equal the job name. Exactly one pod is allowed. Its uid is
+        pod_uid, and its terminated exitCode is recorded;
+    (c) the listing of runs/<job>/ must hold only launcher/ and that pod prefix;
+    (d) after download, job-exit.json .pod_uid, .job_name and .exit_code must equal the located
+        pod, the job name and the status exitCode.
+    raw-result.json gains results_locator (launcher_result | receipt_status_pod_uid), job_uid and
+    pod_uid. The new runbook's validity keeps the results_uri pattern.
+  - >-
+    D-4 reconcile_run.sh contains no launch-remote, CodeBuild or S3-write path. A grep in the
+    fixture test proves it. It implements DEC-20261107-b74e2c ruling 3 R-1 to R-7: it starts from
+    runs/RUN-ICPERF-8b0d47/job/launcher/result.json at sha256
+    7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7; it runs the unchanged
+    check_job.py; it writes {out}/reconcile-result.json naming run_id RUN-ICPERF-8b0d47 and trial_id
+    T1. It writes nothing under runs/RUN-ICPERF-8b0d47/. run-summary.json is transported as is
+    (ruling 5).
+  - >-
+    D-5 Offline fixtures (no AWS call), archived with their outputs. Positive cases:
+      - T1's real receipt shape (state failed, exit_code 23, empty pod_uid and results_uri) with a
+        synthetic job-exit 42 gives job_completed;
+      - a succeeded-Job receipt with a non-empty results_uri gives the same outcome as v3a.
+    Negative cases, each of which must NOT give job_completed or a reconcile pass:
+      - 0 pods; 2 pods;
+      - status job.uid != job_uid;
+      - an extra pod prefix under runs/<job>/;
+      - job-exit pod_uid mismatch; job_name mismatch;
+      - container exitCode != job-exit exit_code;
+      - missing receipt; empty SHA256SUMS;
+      - run-summary.json unlisted, or listed at a digest other than e3b0c442....
+    Also archive: bash -n of every script, --dry-run of v3b, and diff -u from v3a to v3b with a hunk
+    list.
+  - >-
+    D-6 C1-AMENDMENT-2 follows the C1-AMENDMENT-1 procedure in isogeny-labs/crypto:
+      - AMENDMENT-2.md;
+      - protocol.json extensions.c1_amendment_2 with prior_freeze;
+      - `experiment_protocol.py validate` with 0 findings, then `freeze --filed-before-affected-data`;
+      - a byte-identical copy of protocol.json at inputs/protocol.json.
+    Its content is DEC-20261107-b74e2c ruling 4 (i) to (iii). It changes no N, seed, curve, target,
+    arm, weight, threshold, margin, accounting rule, decision mapping, request, instance, deadline,
+    budget line or cap, and it says so. The crypto-repo change goes through its own Conductor task
+    and its own ready-for-review PR.
+  - >-
+    D-7 The new session:
+      - Use a new allocator-confirmed session id and a fresh allocator-confirmed run id for S2.
+        RUN-ICPERF-5ffa79 is retired and never reused.
+      - T1 is not a trial in the new plan.
+      - S03 runs only if S02 passed (on_failure stop). No step retries a launch. The -r2 requests
+        are not bound.
+      - S04 runs analyze-c1.sh on {S02 out}/artifacts/session and on the S2 run's
+        job/artifacts/session.
+      - Keep the section 10 gate line in the card: S2 0.93108 + 0.93108 + 0 = 1.86216 <= 5.00.
+      - New executor and snapshot handoffs are previews whose declared artifact paths cover only
+        files that the session can produce, so that the d5ec1e partial-output refusal cannot recur
+        (IMP-C1-d5ec1e-partial-output).
+  - >-
+    D-8 Do not stage, commit or push anything in this repository. Do not edit any ledger record,
+    queue, the RBS-ICPERF-de8978 journal or its step files, or anything under runs/. Return the
+    previews. Archive TASK-20261107-c5a0f4 commits them alone.
+  deliverables:
+  - "Preview files at every artifact_paths entry, plus SHA256SUMS of all of them."
+  - "FINDINGS.md under the scratch evidence dir. It gives: the D-5 fixture results (case, expected, observed); the bash -n, --dry-run and diff outputs; the protocol validate and freeze outputs; runbook.py lint and task_card.py lint; experiment_preapproval.py --packet output; the D-1 receipt sha256 values; and every open blocker by name."
+  - "A list of the new session id, the S2 run id, the new card and handoff ids, and the new protocol_sha256."
+  artifact_paths:
+  - experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/tests/test_locator.sh
+  - experiments/EXP-ICPERF-127dbd/implementation/tests/fixtures/
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+  - experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-3.yaml
+  - experiments/EXP-ICPERF-127dbd/design/c5a0f4/FINDINGS.md
+  - experiments/EXP-ICPERF-127dbd/design/c5a0f4/SHA256SUMS
+  - experiments/EXP-ICPERF-127dbd/design/c5a0f4/evidence/
+  - experiments/EXP-ICPERF-127dbd/design/c5a0f4/handoff-previews/
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-c5a0f4/snapshot-receipt.json
+  artifact_paths_note: >-
+    Correction under DEC-20261107-e41c08: the three isogeny-labs/crypto files are not paths in this
+    tree, so they are bound in the snapshot receipt by repository, commit ff781aa8b7 (crypto PR
+    #3613), path and sha256: research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md,
+    protocol.json and amendment-2-receipts.txt.
+    The directory entries are fixture and evidence trees. The archive stages their files by name,
+    never as a directory add. The handoff and card previews have the canonical paths
+    ledger/handoffs/TASK-... and task-cards/... only after approval. Files of 1 MiB or more go to
+    tools/artifact_store.py.
+  write_scope:
+  - experiments/EXP-ICPERF-127dbd/implementation
+  - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - experiments/EXP-ICPERF-127dbd/trial-plan.json
+  - experiments/EXP-ICPERF-127dbd/runbook.yaml
+  - experiments/EXP-ICPERF-127dbd/runbook-lint.txt
+  - experiments/EXP-ICPERF-127dbd/task-cards
+  - experiments/EXP-ICPERF-127dbd/design/c5a0f4
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261107-c5a0f4
+  read_scope:
+  - experiments/EXP-ICPERF-127dbd
+  - tools
+  archived_by: TASK-20261107-c5a0f4
+  archive:
+    kind: snapshot
+    binding_mode: content_at_commit
+    binding_mode_note: >-
+      Changed from commit by DEC-20261107-e41c08. The package reached commit ccf1699ed0 (PR #3132)
+      before this archive ran, so no single commit can change the whole package. content_at_commit
+      binds every declared byte at the archive's own commit instead.
+    executed_by: the shell-holding top-level session in the coordinator role, after the director returns and before the red-team review
+    record_ids: [H-ICPERF-4cb536, EXP-ICPERF-127dbd, DEC-20261107-b74e2c, DEC-20261107-3e9d71, DEC-20261107-e41c08]
+    custody_note: >-
+      Superseded by DEC-20261107-6b0f3d ruling 1. This task cannot be a research_dispatch queue
+      entry, because experiment-director is not a dispatcher role and the task has no source. Its
+      custody is a coordinator-written receipt, dispatcher_verified false, that hashes the bytes at
+      main commit 0ea4ca81d0. The dispatcher-verified archive of these bytes is the approval archive
+      of DEC-20261107-7802ec. The text in `rules` below is retained as history and is not executed.
+    rules: >-
+      (Superseded; see custody_note.) This is commit C2 of DEC-20261107-e41c08 ruling 3, on claude/c1-approval-correction-20261107
+      (from origin/main 0ea4ca81d0, the PR #3132 merge). The archive commit adds only the snapshot
+      receipt and this handoff's archive fields, by name. specification.yaml and trial-plan.json are
+      NOT staged, so the tree keeps the director's bytes. The receipt records:
+        - the sha256 of every existing artifact_paths file at that commit;
+        - 0ea4ca81d0 as the landing commit;
+        - PD-2 and PD-3;
+        - the three crypto files, by commit ff781aa8b7;
+        - the interim-custody hashes of DEC-20261107-3e9d71.
+      Run validate_ledger.py and check_merge_hygiene.py. Verify the receipt with
+      tools/research_dispatch.py, then push. If the dispatcher cannot verify the receipt, return to the
+      Coordinator. Do not work around it.
+  inference:
+    policy: director-runbook
+    reasoning_effort: null
+    fallback_allowed: true
+    fallback_note: Runtime inheritance under the Claude Code harness. Backend or model substitution only.
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  dispatch_preconditions:
+  - {id: DP-1, text: "DEC-20261107-b74e2c is on origin/main (PR #3127 merged), and DEC-20261107-3e9d71 is committed and pushed."}
+  - {id: DP-2, text: "No other task writes inside write_scope. Run conductor check on these paths first."}
+  completion_gate:
+  - Every artifact_paths preview exists, and SHA256SUMS covers them.
+  - "D-5: every fixture case gives its expected result, and the outputs are archived."
+  - "bash -n passes for all scripts. --dry-run of v3b makes no AWS call. The v3a-to-v3b diff touches section 3 only."
+  - "reconcile_run.sh has no launch-remote, codebuild or s3-write token (grep output archived)."
+  - "C1-AMENDMENT-2 passes validate with 0 findings and is frozen with --filed-before-affected-data. inputs/protocol.json is byte-identical to the crypto copy."
+  - "runbook.py lint prints LINT OK. task_card.py lint passes, or fails only because no approval DEC names the runbook yet. experiment_preapproval.py --packet reports approvable: true, or names its blockers."
+  - "No commit, push, launch or AWS write by the director. Zero runs."
+  return_format: >-
+    FINDINGS.md path, SHA256SUMS, the new ids and protocol_sha256, and the blocker list. No verdict,
+    ratio or S1 content.
+  follow_on: >-
+    After the archive, the Coordinator dispatches an independent red-team task (role red-team, not
+    this director) on the committed locator and reconcile bytes. Its questions are: can the locator
+    bind a foreign or stale prefix; can v3b report job_completed without this pod's job-exit.json; can
+    reconcile_run.sh submit anything. Only then can a Coordinator approval decision name the new
+    runbook_sha256.
+  review_required: true
+  review_required_note: "Independent red-team review of the locator joint (follow_on), before approval."
+  runs_launched: 0

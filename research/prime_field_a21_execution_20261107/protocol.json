@@ -1,0 +1,543 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "<run>/execution.json",
+      "<run>/raw/*.json[.gz]",
+      "<run>/raw/*.jsonl[.gz]"
+    ],
+    "outputs": [
+      "<run>/metrics.json",
+      "<run>/analysis.json[.gz]",
+      "<run>/export.json[.gz]"
+    ],
+    "script": {
+      "path": "analyze21.py",
+      "sha256": "7d28a36658ebb944081a4ec94b316b94b3a6a7e14ea5bab93bb239ba1a532477"
+    }
+  },
+  "arms": [
+    {
+      "description": "Cold direct signed formal-coordinate expansion and common-unit substitution, projected unit recovery, original-definition/common-unit certificate lifting and original/public checks.",
+      "id": "direct_formal",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a21_execution_20261107/driver21.py"
+          ]
+        ],
+        "commit": "4035a93fb750b5c06919b82a2359ef4e909034ba",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "batch_solver_calls": 12,
+        "cold_algebra": true,
+        "conditioned_cases": 4,
+        "execution_arms": [
+          "direct_formal",
+          "aux_cancel_joint",
+          "sparse_joint"
+        ],
+        "formal_auxiliaries": 16,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_rows": 4096,
+        "new_curve_holdouts": false,
+        "numeric_formal_labels": false,
+        "old_native_slots": 32,
+        "public_targets_per_case": 8,
+        "recollection": false
+      },
+      "role": "candidate"
+    },
+    {
+      "description": "Actually rerun current auxiliary-first solver on the same public native case and preparation, with original/public checks.",
+      "id": "aux_cancel_joint",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a21_execution_20261107/driver21.py"
+          ]
+        ],
+        "commit": "4035a93fb750b5c06919b82a2359ef4e909034ba",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "batch_solver_calls": 12,
+        "cold_algebra": true,
+        "conditioned_cases": 4,
+        "execution_arms": [
+          "direct_formal",
+          "aux_cancel_joint",
+          "sparse_joint"
+        ],
+        "formal_auxiliaries": 16,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_rows": 4096,
+        "new_curve_holdouts": false,
+        "numeric_formal_labels": false,
+        "old_native_slots": 32,
+        "public_targets_per_case": 8,
+        "recollection": false
+      },
+      "role": "reference"
+    },
+    {
+      "description": "Actually rerun current strongest native sparse joint floor on the same public native case, with original/public checks.",
+      "id": "sparse_joint",
+      "instrument": {
+        "binary_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+        "build": [
+          [
+            "/workspace/factor-base-venv/bin/python",
+            "-B",
+            "research/prime_field_a21_execution_20261107/driver21.py"
+          ]
+        ],
+        "commit": "4035a93fb750b5c06919b82a2359ef4e909034ba",
+        "env": {
+          "OMP_NUM_THREADS": "1",
+          "OPENBLAS_NUM_THREADS": "1"
+        },
+        "flags": {},
+        "repo": "crypto-autoresearcher",
+        "threads": 1
+      },
+      "parameters": {
+        "batch_solver_calls": 12,
+        "cold_algebra": true,
+        "conditioned_cases": 4,
+        "execution_arms": [
+          "direct_formal",
+          "aux_cancel_joint",
+          "sparse_joint"
+        ],
+        "formal_auxiliaries": 16,
+        "maximum_joint_width": 64,
+        "maximum_native_width": 48,
+        "maximum_rows": 4096,
+        "new_curve_holdouts": false,
+        "numeric_formal_labels": false,
+        "old_native_slots": 32,
+        "public_targets_per_case": 8,
+        "recollection": false
+      },
+      "role": "control_positive"
+    }
+  ],
+  "authors": [
+    "Root implementer and administrative exact-source Coordinator; configured model identity unverified"
+  ],
+  "claims": [
+    {
+      "class": "exact_computation",
+      "decided_by": [
+        "C-direct-formal"
+      ],
+      "id": "A21-conditioned-producer-algebra",
+      "text": "Finite conditioned same-input target masks and separate actual primitive/logical vectors. No fresh target/curve holdout, rank-information gain, novelty, clock, weighted or full-attack advantage inferred."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "comparison": null,
+      "not_applicable_reason": "Deterministic same-input arithmetic; no timing inference. Marked p<=211 and synthetic signed/known/native lift controls; no native pilot.",
+      "present": false
+    },
+    "negative": {
+      "arm": null,
+      "not_applicable_reason": "Refuse changed definitions/signs/common numeric auxiliary labels/projection maps/native weights/counter bindings; admission refuses native execution before release. Partial failed prefixes, malformed result JSON, and all-missing twelve-row export controls retained.",
+      "null_population": null,
+      "present": false
+    },
+    "positive": {
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "Actual auxiliary-first and full native joint solvers run cold on ALL four conditioned cases, including every negative target. Independent plain expanded projection/dense/native/public checker; actual small software cases with positive and unresolved targets.",
+      "present": false
+    }
+  },
+  "created": "2026-11-07",
+  "decision_rule": {
+    "comparison_ids": [
+      "C-direct-formal"
+    ],
+    "effect_size_measure": "No population or performance effect inferred.",
+    "interval": "none_exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "Same-input target masks plus separate actual primitive vectors and phase attribution.",
+    "text": "Compare all three actually cold producer algorithms on all four cases. Charge direct mapping, signed expansion/common-unit substitution, elimination, membership, original definition/common-unit certificate lifting and public verification. Preserve all negative target outcomes. Do not reuse checker expansion or recovered scalars. No weighted/runtime/new-information or whole-attack result inferred.",
+    "threshold": "Any semantic disagreement fails the component; cost vectors may improve, worsen or trade dimensions.",
+    "verdict_vocabulary": [
+      "completed_within_scope",
+      "invalid_measurement",
+      "inconclusive"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": null,
+      "interval_seconds": null,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "concurrent_compute_processes": 1,
+      "isolated_clock_claim": false,
+      "memory_bytes": 2147483648,
+      "shared_managed_host": true
+    },
+    "queue": null,
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 21600
+  },
+  "extensions": {
+    "costs": "Included algebra and public checks only; A20 acquisition is fixed historical prerequisite, separately retained in A20. Actual parsing bytes/CPU retained outside primitive cost; no isolated wall inference.",
+    "grid": "Four conditioned cases x3actual cold methods=12rows; no new curves/targets/collection.",
+    "model_verified": false,
+    "official_status_transition": false,
+    "ownership": "One consumed release/exclusive lease, no retry/newcapacity/originaldeadline unchanged.",
+    "proof_status": "Producer-unverified/not-covered absent trusted independent proof."
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "0acb96a2ca08904192285dd7637d33b8d906f4489e486fd73695d246b90a2e34",
+    "commit": "4035a93fb750b5c06919b82a2359ef4e909034ba",
+    "frozen_at": "2026-11-07T06:28:29Z",
+    "filed_before_affected_data": true
+  },
+  "inadmissible": [
+    "Unapproved native pilot, widened fields/horizon, favorable case selection or reused consumed release.",
+    "Uncharged direct mapping/lifting, checker result as producer input, source/target collection ignored in a full-attack claim, numeric formal labels or auxiliary pivots counted as targets.",
+    "Population/fresh-holdout/novelty/scaling/runtime/weighted/whole-attack or independently signed proof claim from these conditioned producer counters."
+  ],
+  "invalidation_rules": [
+    "Exact source publication, prospective freeze, actual current canonical S3 checkpoint, explicit bounded root release and normal admission/lease/consumed marker required.",
+    "No historical checker expansion, cancellation, pivot, recovered scalar or certificate input to any producer. Formal coordinates never numeric auxiliary labels.",
+    "All target memberships and original/public certificates, signed expansion/multiplicity/common-unit projection and cost payload bindings must agree. Missing/failed calls unknown, not mathematical negatives."
+  ],
+  "links": {
+    "design": "design.md",
+    "literature": "literature.md",
+    "prior": "../prime_field_a20_execution_20261107/next-leads.md"
+  },
+  "literature": [
+    {
+      "claim": "Coordinate substitution and native certificate lifting are existing linear algebra. Checker expansion was unmetered producer work; this tests the actual implementation boundary, without novelty or transfer claims.",
+      "provenance": "internal",
+      "ref": "literature.md; A20 next-leads/results, check_formal20 and inherited native algebra primary sources",
+      "verified_by": "Root source read2026-11-07 before implementation"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [
+      "Actual Fp/Fr add/sub/mul/inv including original/public checks. Logical mapping/component/native/target/weight scans, unit shortcuts, emitted coefficients and definition-row elisions retained separately. No operation/byte weighting."
+    ],
+    "isolation_required": "none",
+    "order": "sequential",
+    "record": [
+      "Exact inherited and new source/producer/checker input hashes; pre-output Git/protected source and actual process provenance.",
+      "Own public input parse bytes/CPU separately retained per method; actual mapping, expansion, substitution, elimination, membership and native-lift phase counters.",
+      "Producer output before independent checker receipt; actual start/complete/failure census, closed case checkpoints, every partial paid prefix and unresolved target.",
+      "Original one-worker/thread2GiB cumulative elapsed+all measured CPU reservation/deadline; one consumed attempt/no retry/new capacity."
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "aggregation": "per_row",
+        "definition": "Requested target unit count, not auxiliary pivots.",
+        "id": "identified_targets",
+        "kind": "exact",
+        "name": "identified targets",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Requested target-index bit mask; all eight remain.",
+        "id": "identified_mask",
+        "kind": "exact",
+        "name": "identified mask",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual algorithm matrix width; different native/projected widths are not different learned information.",
+        "id": "system_columns",
+        "kind": "exact",
+        "name": "system columns",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual algorithm system rank; not directly compared as old-base gain.",
+        "id": "system_rank",
+        "kind": "exact",
+        "name": "system rank",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FP add primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fp_add",
+        "kind": "exact",
+        "name": "fp add",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FP sub primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fp_sub",
+        "kind": "exact",
+        "name": "fp sub",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FP mul primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fp_mul",
+        "kind": "exact",
+        "name": "fp mul",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FP inv primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fp_inv",
+        "kind": "exact",
+        "name": "fp inv",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FR add primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fr_add",
+        "kind": "exact",
+        "name": "fr add",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FR sub primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fr_sub",
+        "kind": "exact",
+        "name": "fr sub",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FR mul primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fr_mul",
+        "kind": "exact",
+        "name": "fr mul",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      },
+      {
+        "aggregation": "per_row",
+        "definition": "Actual FR inv primitive calls, including certificate/public checks; unweighted partial component vector.",
+        "id": "fr_inv",
+        "kind": "exact",
+        "name": "fr inv",
+        "resolution": "1",
+        "source": "metrics.json rows, native result phases and bound checker receipts",
+        "uncertainty": "none_exact",
+        "unit": "objects"
+      }
+    ],
+    "secondary": []
+  },
+  "protocol_id": "PRIME-FIELD-A21-DIRECT-FORMAL-SUBSTITUTION-20261107",
+  "question": "On all four immutable A20 formal native cases, how do actual direct formal substitution, auxiliary-first cancellation and full native joint costs compare including mapping, expansion, common-unit substitution, target membership, native lifting and public checks?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "Per fixed case order: direct_formal, aux_cancel_joint, sparse_joint. Each parses its own public case/preparation and rebuilds cold. Historical outputs loaded checker-only after all actual producers finish.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Public exact finite descriptive observations; no secret logs generated.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "ALL four A20 formal cases in original order, conditioned on previous observation. No resampling, new target draw, favorable subset, recollection or claim of independence from A20."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Deterministic four existing cases x three actual method calls. Twelve dependent export rows; no new random replicates.",
+      "seeds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "graphs": [
+      "Per-case same target masks and actual Fr/Fp vectors for three algorithms, with projection/elimination/native-lift phase attribution. Include every failure and unresolved target."
+    ],
+    "report_dir": "reports/<fresh-run>/",
+    "review_schema": "experiment.review/v1"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 4,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "min_attainable_two_sided_p": null,
+      "note": "Exact conditioned four-case census,12actual calls; no new holdout/population inference.",
+      "passes": true,
+      "rank_test_n": null,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 21600,
+      "fixed_seconds": null,
+      "measured_on": "21600seconds is a protective local machine watchdog; no new cloud submission or billing forecast.",
+      "per_sample_seconds": null,
+      "threads": 1
+    },
+    "replicates": 1,
+    "warmups": 0
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "Exactly four immutable conditioned A20 formal cases x three actual cold producer calls=12 calls and12 export rows. No recollection, new targets, redraw, favorable subset, retry or horizon expansion."
+    },
+    {
+      "kind": "invalidation",
+      "preregistered": true,
+      "rule": "Native48/joint64/rows4096, old norm32/formal16/eight targets unchanged. Source/input/certificate/dense/public/cost binding disagreement fails; preserve all paid prefixes and unknown cells."
+    },
+    {
+      "kind": "budget",
+      "preregistered": true,
+      "rule": "One existing worker/thread2GiB/one consumed attempt. Original2026-11-07T07:46:38.570520UTC deadline and21600seconds cumulative reserve deduct elapsed original window plus ALL pinned native and measured postprocessing CPU through A20. No deadline reset/new capacity."
+    }
+  ],
+  "study_dir": "research/prime_field_a21_execution_20261107",
+  "variable_ledger": {
+    "aa_not_applicable": "Deterministic same-input arithmetic; no timing inference. Marked p<=211 and synthetic signed/known/native lift controls; no native pilot.",
+    "comparisons": [
+      {
+        "arms": [
+          "direct_formal",
+          "aux_cancel_joint",
+          "sparse_joint"
+        ],
+        "design": "one_factor",
+        "differs_in": [
+          "algorithm_execution"
+        ],
+        "id": "C-direct-formal",
+        "threshold": "Identical requested target outcomes and original/public certificates; report all actual primitive dimensions and failures without weighted winner."
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "how": "Exact case/preparation hashes; all rows, definitions, original projection and targets unchanged. No checker rows/scalars/certificates input to producer.",
+        "name": "native_inputs",
+        "treatment": "fixed",
+        "value": "All four immutable A20 formal cases"
+      },
+      {
+        "how": "Actual cold mapping/expansion/substitution/elimination/target/native-lift costs; existing unit shortcuts retained. A20 acquisition is shared historical prerequisite, not recollected or free full-attack evidence.",
+        "name": "cost_scope",
+        "treatment": "fixed",
+        "value": "Included algebra plus original/public checking"
+      }
+    ],
+    "independent": [
+      {
+        "levels": [
+          "direct_formal",
+          "aux_cancel_joint",
+          "sparse_joint"
+        ],
+        "name": "algorithm_execution"
+      }
+    ]
+  },
+  "version": 2
+}

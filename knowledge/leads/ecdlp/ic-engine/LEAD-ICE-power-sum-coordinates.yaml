@@ -1,0 +1,39 @@
+id: LEAD-ICE-power-sum-coordinates
+family: ic-engine
+title: >-
+  Odd power-sum coordinates for binary summation polynomials (slot-separable descent)
+mechanism: >-
+  In characteristic 2 with x_i in an F_2-subspace V, p_k = sum_i x_i^k is a sum of per-slot
+  terms of degree wt(k) in each slot's bits, with no cross-slot products. If p_1^j S_{m+1}
+  lay in F[p_1, p_3, p_5, ..., x_R], the descended system would split into a few field unknowns
+  and slot-separable sum equations.
+disposition: closed_obstructed
+obstruction:
+  kind: measured
+  statement: >-
+    Exact linear algebra over GF(2^13) and GF(2^17), three (b, x_R) draws each: S_3 is
+    expressible with j = 1, which is the pair-table (two-list) oracle, a generic method; p_1^j S_4
+    is not in the span of odd-power-sum products for any j <= 8 on all six draws, while S_4 is in
+    the elementary-symmetric span and degree-12 positive controls in three variables are found.
+    Scope: denominators restricted to powers of p_1, m = 3, the six draws.
+  revisit_when: >-
+    A proof or computation that p_1^j S_4 enters the span for some j > 8, or a denominator other
+    than p_1 (for example a product of p_1 and p_3) that keeps the system slot-separable.
+best_measured: null
+evidence:
+- repo: crypto
+  path: research/representation_leads_20261109/results/powersum.jsonl
+  note: min_j null at m = 3 on 6/6 draws; j = 1 at m = 2; controls pass
+- repo: crypto
+  path: research/representation_leads_20261109/derive/src/powersum.rs
+  note: the exact span test and its controls
+ledger_refs: []
+known_results:
+- KR-IC-5a43e5
+forecloses:
+- power sum coordinates for Semaev polynomials
+- slot-separable summation polynomial descent
+- Newton identities in characteristic 2 for point decomposition
+areas:
+- KIC
+last_reviewed: '2026-11-09'

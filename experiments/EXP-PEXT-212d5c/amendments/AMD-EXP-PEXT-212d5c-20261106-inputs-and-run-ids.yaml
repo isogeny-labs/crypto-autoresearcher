@@ -1,0 +1,127 @@
+amendment:
+  id: AMD-EXP-PEXT-212d5c-20261106-inputs-and-run-ids
+  experiment_id: EXP-PEXT-212d5c
+  goal_id: GOAL-PEXT-4a1d6b
+  recorded_at: '2026-11-06'
+  kind: prospective_trial_input_binding_and_run_id_reassignment
+  decision_id: DEC-20261106-6cfedf
+  original_approval: DEC-20261024-992998
+  prior_rebindings:
+  - AMD-EXP-PEXT-212d5c-20261026-source-binding (DEC-20261026-8a6d90), retained
+  - AMD-EXP-PEXT-212d5c-20261031-command-recording (DEC-20261031-e3ee70), retained
+  - AMD-EXP-PEXT-212d5c-20261106-hypothesis-and-lean-parse (DEC-20261106-f6b029), retained
+  status: prepared_pending_archive_and_publication
+  reason: >-
+    The third supervised launch (epoch 5, plan 06b801b5...) reached the driver and
+    was refused by _check_trial_inputs (SHF-20261106-a114e7 G4/G5/G7): the driver
+    records run.inputs.parameters as a non-empty mapping and run.inputs.seed, but
+    the frozen trial declares neither parameters nor seed nor curve_id, so those
+    driver values have no source. The refusal is administrative: the parameters
+    are exactly the frozen defaults (seed 20261012, threads 4, strata_k 24,
+    construct_q [3,5,7], char2_l [1,2,3]) plus the trial's own id, stage,
+    inputs_from and argv plan path; no value changes. The regression and lean
+    run directories RUN-PEXT-87595f and RUN-PEXT-946361 are retained as immutable
+    refused-run records and their ids are consumed.
+  refused_run_records:
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-87595f
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-946361
+  changes:
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: each of the six trials gains seed, curve_id and parameters
+    from: absent in every trial
+    to: >-
+      seed: 20261012; curve_id: null; parameters: {trial_id: <trial id>,
+      stage: <trial stage>, inputs_from: <the trial's mapping or {}>,
+      plan: experiments/EXP-PEXT-212d5c/trial-plan.json,
+      rustc_flags: [--edition, '2021', -O], threads: 4, strata_k: 24,
+      construct_q: [3, 5, 7], char2_l: [1, 2, 3]}
+    effect: >-
+      Gives the driver's own recorded inputs a plan source. Every value is a
+      value the frozen plan already fixes in defaults or in the trial; nothing
+      about the computation changes.
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: trials[regression].run_id and its --run-id argv element
+    from: RUN-PEXT-87595f
+    to: RUN-PEXT-63ca6a
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: trials[lean].run_id and its --run-id argv element
+    from: RUN-PEXT-946361
+    to: RUN-PEXT-2723eb
+  - path: experiments/EXP-PEXT-212d5c/trial-plan.json
+    field: trials[analyze].inputs_from.regression and .lean
+    from: {regression: RUN-PEXT-87595f, lean: RUN-PEXT-946361}
+    to: {regression: RUN-PEXT-63ca6a, lean: RUN-PEXT-2723eb}
+  hash_rebinding:
+    trial_plan_sha256:
+      from: 06b801b5c98b1e2476a97d37eded50e1dfc4b4a6a82bd99b10f623595c1747a7
+      to: 5572ee66a37407147099b82542b6f1a2252969986665a8b21bf141c8df2759b0
+    dispatch_queue_sha256:
+      path: coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json
+      from: cb7292e30d17464b51a6fcf31bcabbb455b544124dc3b6bc87e9c34930564463
+      to: facbea1f21d1b427b5a479925c2b5187b5d1e732580f2e30eab396b5b2909ef5
+    executor_handoff_sha256:
+      path: ledger/handoffs/TASK-20261024-672126.yaml
+      from: 1c1f9540e3b05e54a74f6fbc14cacb9470468e504a2bc9d0fa55bc1a9c27ae8c
+      to: 683ed086ef6ad47cb026374bfb0826625abe218506f055e0806c3dc5946e5978
+    rebound_in:
+    - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json (trial_plan_sha256; handoff objective and execution binding; artifact_paths and archive record_ids of the two reassigned trials)
+    - ledger/handoffs/TASK-20261024-672126.yaml (trial_plan_sha256; objective and artifact_paths run ids of the two reassigned trials)
+  run_id_reassignment:
+    reason: >-
+      Both prior run directories are retained as immutable refused-run records;
+      a run id is never reused and a run directory is never overwritten.
+    retained_refused_runs:
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-87595f
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-946361
+    earlier_refused_runs_still_retained:
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-fccfb9
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-af1b2a
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-5d190f
+    - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-4d23b9
+    specification_note: >-
+      specification.yaml is hash-pinned and unchanged; its narrative and trial
+      table still name the original run ids. The executed ids are those of the
+      frozen trial plan above; load_plan compares the specification by hash only.
+  verification_scope:
+    method: >-
+      Read-only replay of tools/experiment_execution.py _check_driver_facts over
+      the two recorded refused manifests, with run id and run-dir/command strings
+      rebound to the new ids and the amended plan in memory.
+    regression_result: PASS, no driver-fact refusal
+    lean_result: PASS, no driver-fact refusal
+    caveat: >-
+      The replay exercises the supervisor's fact comparison, not a launch. It
+      also cannot cover construct, char2, census and analyze, which have never
+      written a manifest; their input facts are generated from the same plan
+      fields by construction and the driver writes them the same way.
+    first_full_proof: the next supervised launch
+  approval_semantics: >-
+    Retains DEC-20261024-992998 as the scientific protocol approval and all
+    earlier rebindings. This additive decision prospectively supersedes only the
+    execution-binding values named above (per-trial input declarations, two run
+    ids, plan/queue/handoff hashes). It does not rewrite those immutable records
+    and does not assert a fresh experiment approval. No new contract; the
+    approved-unrun count does not grow.
+  preserved:
+  - specification and hypothesis bytes
+  - all implementation source bytes (run.py already repaired by DEC-20261106-f6b029 and unchanged here)
+  - fourteen source paths and four input paths
+  - six trial ids, argv, check_argv, dependency order and the four unreassigned run ids
+  - seeds, sample sizes, controls, metrics, thresholds, stopping and invalidation rules
+  - original lane BATCH-21339c, executor task TASK-20261024-672126 and archive ownership TASK-20261024-5ab5b8
+  - all six earlier refused run directories, none edited
+  scientific_protocol_unchanged: true
+  run_state: >-
+    No trial launched by this amendment. The runs tree holds six refused-run
+    directories; none is evidence about H-PEXT-d536a1.
+  outstanding_not_resolved:
+  - The whole-ledger validation CI debt (pre-existing errors in unrelated paths) is NOT resolved.
+  - The census remains a ~20.5 h trial and needs its watchdog window.
+  activation_gate: >-
+    Publish and verify through a Coordinator ledger archive task; until then this
+    is a prepared packet and confers no new dispatch authority. Then a separate
+    Executor claims the lane and invokes /run EXP-PEXT-212d5c under
+    TASK-20261024-672126.
+  asserts_nothing_about: >-
+    genus floors, full theorem fidelity, transfer, novelty, attack costs or
+    deployed curves.

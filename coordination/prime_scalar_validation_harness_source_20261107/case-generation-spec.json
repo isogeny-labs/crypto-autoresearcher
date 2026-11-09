@@ -1,0 +1,404 @@
+{
+  "schema": "prime-scalar-prefix.case-generation-spec/v1",
+  "status": "design_locked_not_execution_admitted",
+  "source_hashes": {
+    "research/prime_sat_scalar_prefix_source_20261107/extractor.py": "adecd892151bc50723063bef1122960ebace951e527ff0a4a62e347c4b8a8631",
+    "research/prime_sat_scalar_prefix_source_20261107/interface.json": "7f958ad6f49eb8b152cd737ce84215fe3e05935492a1bd239436fef04d4ed9f6",
+    "research/prime_sat_scalar_prefix_source_20261107/validation-plan.md": "04a1b542d9726db85366e4abe5739b75ceb79b5ed78a994ea33c2bc94b3ffd3d"
+  },
+  "polynomial_encoding": "Ordered list of(mask,coefficient) pairs; empty list is zero. Materialize exact built-in dicts with stated insertion order. Integer cases encoded with types preserved.",
+  "families": [
+    {
+      "id": "single",
+      "p": [
+        2,
+        3
+      ],
+      "n": [
+        0,
+        1,
+        2
+      ],
+      "generator_count": 1,
+      "enumeration": "For p ascending,n ascending, enumerate integer coefficient-code k from0 to p^(2^n)-1; base-p digit at mask M is coefficient of monomial M. Omit zero coefficients; assignments ascending0..2^n-1.",
+      "base_cases": 419,
+      "all_depth_queries": 1221
+    },
+    {
+      "id": "ordered-pair",
+      "p": [
+        2,
+        3
+      ],
+      "n": [
+        0,
+        1
+      ],
+      "generator_count": 2,
+      "enumeration": "Same coefficient-code encoding; ordered code tuples lexicographic, including equal and zero polynomials; assignments ascending.",
+      "base_cases": 207,
+      "all_depth_queries": 401
+    },
+    {
+      "id": "empty-list",
+      "p": [
+        2,
+        3
+      ],
+      "n": [
+        0,
+        1,
+        2
+      ],
+      "generator_count": 0,
+      "enumeration": "All assignments ascending; no other zero-list cases added because singles/pairs already include zeros.",
+      "base_cases": 14,
+      "all_depth_queries": 34
+    }
+  ],
+  "controls": [
+    {
+      "id": "cancellation",
+      "p": 3,
+      "n": 2,
+      "assignment": 1,
+      "generators": [
+        [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "last-variable",
+      "p": 2,
+      "n": 3,
+      "assignment": 4,
+      "generators": [
+        [
+          [
+            4,
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        3,
+        4,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "family-limit",
+      "p": 3,
+      "n": 1,
+      "assignment": 0,
+      "generators": [
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "auxiliary-boundary",
+      "p": 2,
+      "n": 2,
+      "assignment": 2,
+      "generators": [
+        [
+          [
+            2,
+            1
+          ]
+        ]
+      ],
+      "expected": [
+        2,
+        2,
+        0,
+        1
+      ],
+      "projected_bits_context_only": 1
+    },
+    {
+      "id": "batch-trap",
+      "p": 3,
+      "n": 2,
+      "assignment": 1,
+      "generators": [
+        [
+          [
+            0,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        2,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "composite-premise",
+      "p": 4,
+      "n": 0,
+      "assignment": 0,
+      "generators": [
+        [
+          [
+            0,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        0,
+        0,
+        0,
+        2
+      ],
+      "scope": "Structural ring arithmetic only; no field inverse or certificate claim."
+    },
+    {
+      "id": "cancelled-key-revival",
+      "p": 3,
+      "n": 2,
+      "assignment": 3,
+      "generators": [
+        [
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ]
+      ],
+      "expected": null
+    },
+    {
+      "id": "multiple-touched-tie",
+      "p": 3,
+      "n": 1,
+      "assignment": 1,
+      "generators": [
+        [
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          [
+            1,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        1,
+        1,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "insertion-sensitive-deletion",
+      "p": 3,
+      "n": 2,
+      "assignment": 3,
+      "generators": [
+        [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ]
+      ],
+      "expected": [
+        2,
+        3,
+        0,
+        1
+      ],
+      "restriction_depth2_dictionary_deletes": {
+        "ascending": 0,
+        "descending": 1
+      },
+      "expectation_provenance": "Manual coefficient paths1,2,1 versus2,0,1; not candidate execution."
+    }
+  ],
+  "control_base_cases": 9,
+  "control_depth_queries": 24,
+  "base_cases": 649,
+  "base_depth_queries": 1680,
+  "realizations": {
+    "insertion_orders": [
+      "ascending mask",
+      "descending mask"
+    ],
+    "containers": [
+      "list",
+      "tuple"
+    ],
+    "repetitions": 2,
+    "count_per_case": 8,
+    "retain_duplicates": "Even identical order/empty cases retained under distinct realization IDs."
+  },
+  "valid_entry_calls": 23824,
+  "valid_entry_calls_formula": "8*(2*649+1680)",
+  "malformed_base": {
+    "p": 2,
+    "n": 1,
+    "assignment": 0,
+    "generators": [
+      [
+        [
+          1,
+          1
+        ]
+      ]
+    ],
+    "depth": 0
+  },
+  "malformed_global_mutations": [
+    {
+      "field": "p",
+      "value": true
+    },
+    {
+      "field": "p",
+      "value": 1
+    },
+    {
+      "field": "p",
+      "value": -2
+    },
+    {
+      "field": "p",
+      "value": 2.0
+    },
+    {
+      "field": "n",
+      "value": true
+    },
+    {
+      "field": "n",
+      "value": -1
+    },
+    {
+      "field": "n",
+      "value": 1.0
+    },
+    {
+      "field": "assignment",
+      "value": false
+    },
+    {
+      "field": "assignment",
+      "value": -1
+    },
+    {
+      "field": "assignment",
+      "value": 2
+    },
+    {
+      "field": "assignment",
+      "value": 0.0
+    },
+    {
+      "field": "generators",
+      "typed_value": "empty built-in dict"
+    },
+    {
+      "field": "generators",
+      "value": null
+    },
+    {
+      "field": "generator0",
+      "typed_value": "built-in list of term pairs"
+    },
+    {
+      "field": "mask",
+      "value": true
+    },
+    {
+      "field": "mask",
+      "value": -1
+    },
+    {
+      "field": "mask",
+      "value": 2
+    },
+    {
+      "field": "coefficient",
+      "value": true
+    },
+    {
+      "field": "coefficient",
+      "value": 0
+    },
+    {
+      "field": "coefficient",
+      "value": 2
+    }
+  ],
+  "malformed_depth_mutations": [
+    true,
+    -1,
+    2,
+    0.0
+  ],
+  "malformed_call_rule": "Each20global mutations through all3entrypoints; each4depth mutations through restrict_reference only;2identical repetitions each. Expect ValueError exactly; snapshot unchanged including types/order.",
+  "malformed_entry_calls": 128,
+  "total_candidate_entry_calls": 23952,
+  "candidate_imports_per_invocation": 1,
+  "synthetic_interruptions": 0,
+  "seeds": "None; full deterministic finite enumeration; no RNG."
+}

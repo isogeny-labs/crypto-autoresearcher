@@ -983,6 +983,11 @@ See `docs/`, `templates/`, and `docs/inference-backends.md` for the full semanti
 
 ## Knowledge retrieval policy
 
+The shared `research-kb` MCP server is the canonical cross-repository
+retrieval layer (lab contract §11); the local `kb/` index below remains this
+repository's derived store. The policy applies to both, and the canonical
+procedure is `crypto:.agents/skills/research-kb/SKILL.md`.
+
 `kb/` builds a derived retrieval index over the corpus and exposes it to
 Claude Code, Codex, and OpenCode through one read-only MCP server. The index is
 derived: object storage and this repository's records remain the source of

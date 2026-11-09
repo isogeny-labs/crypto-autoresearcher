@@ -134,3 +134,11 @@ pulls in `main` and surfaces the new proposals as a PR:
 - Do not strip or soften `heuristic_assumptions` or `target_complexity` when
   filing ideas: a conditional claim must stay conditional, with its validation
   route and exponents intact.
+
+## Default challenge research loop
+
+Generate a candidate against the frozen problem and original acceptance criteria in [the default research loop](../../../docs/challenge-research-loop.md). On successor attempts, carry the terminal review hash and state which specific finding the changed candidate addresses. Reuse the existing literature and lead-atlas checks; do not silently weaken the problem after rejection.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

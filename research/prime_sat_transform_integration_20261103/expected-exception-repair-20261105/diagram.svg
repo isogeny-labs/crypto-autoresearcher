@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="330" viewBox="0 0 900 330">
+<title>Expected-exception control flow, unvalidated source</title>
+<desc>Mutation invokes verifier. Expected exact exception type and message are checked before acceptance. Normal return or mismatch fails; unrelated exceptions propagate. Existing no-message callers keep their behavior.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#334155"/></marker></defs>
+<rect width="900" height="330" fill="white"/>
+<g font-family="sans-serif" font-size="16" text-anchor="middle" fill="#172033">
+<text x="450" y="27" font-size="20" font-weight="bold">Exact exception checks — UNVALIDATED source</text>
+<g fill="#eef2ff" stroke="#64748b"><rect x="20" y="65" width="175" height="65" rx="8"/><rect x="245" y="65" width="190" height="65" rx="8"/><rect x="490" y="65" width="200" height="65" rx="8"/><rect x="745" y="65" width="135" height="65" rx="8"/></g>
+<text x="107" y="92">Same mutation</text><text x="107" y="115">inputs</text>
+<text x="340" y="92">Invoke adapter</text><text x="340" y="115">verifier</text>
+<text x="590" y="92">Exact type AND</text><text x="590" y="115">exact message?</text>
+<text x="812" y="92">Record</text><text x="812" y="115">accepted</text>
+<g stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"><path d="M195,97 H243"/><path d="M435,97 H488"/><path d="M690,97 H743"/><path d="M590,130 V185"/><path d="M340,130 V185"/></g>
+<text x="715" y="81" font-size="13">yes</text>
+<text x="608" y="163" font-size="13">no</text>
+<g fill="#fff1f2" stroke="#be123c"><rect x="230" y="187" width="220" height="61" rx="8"/><rect x="480" y="187" width="220" height="61" rx="8"/></g>
+<text x="340" y="211">Normal return: fail</text><text x="340" y="234">Other exception: propagate</text>
+<text x="590" y="211">Record failed control</text><text x="590" y="234">and raise</text>
+<text x="450" y="281">Expected ValueError: multiplier identity or projection cylinder message</text>
+<text x="450" y="308" font-size="14">Positive control unchanged · No-message callers unchanged · Zero candidate execution</text>
+</g></svg>

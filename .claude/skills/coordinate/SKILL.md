@@ -21,10 +21,11 @@ Public **coordination** entry point. The session drives the Coordinator role
 and `plugins/crypto-autoresearcher-harness/skills/crypto-autoresearcher-harness/references/lifecycle.md`.
 Do not copy or weaken `AGENTS.md`.
 
-This is **not** `/run`. Do not launch scientific trials, implement experiment
-code, or treat a Ready executor card as something this skill executes. When the
-ranked next action is a scientific run, record it and stop, or tell the user to
-invoke `/run`. The retired names `coordinate-research-goal`,
+Do not launch scientific trials, implement experiment code, or treat a Ready
+executor card as something this skill executes. When the ranked next action is
+a scientific run, record it and return to the caller. Under a full-cycle
+`autoresearch` request, that caller invokes `run` automatically; a direct
+coordination-only request stops with the exact `run` invocation. The retired names `coordinate-research-goal`,
 `launch-research-harness`, and `crypto-autoresearcher-harness` are not this
 skill; do not recreate those adapter paths.
 
@@ -131,3 +132,11 @@ protocol is complete. Do not ask the user to pick or confirm each idea.
   evidence.
 - Recreate retired execution-skill adapters, or package this skill inside
   `plugins/crypto-autoresearcher-harness/skills/` (that package is `run` only).
+
+## Default challenge research loop
+
+For every goal, use `autoresearch campaign next --goal <GOAL-ID>` to select its next bounded phase. Freeze the problem, evaluate one immutable candidate, integrate review findings, and record a concrete next attempt or recheck. Follow [the default research loop](../../../docs/challenge-research-loop.md); reuse existing goal records and Coordinator/archival authority. A successful worker exit never advances or closes the goal.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

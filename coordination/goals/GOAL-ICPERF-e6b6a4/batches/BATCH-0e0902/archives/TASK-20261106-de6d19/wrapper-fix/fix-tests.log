@@ -1,0 +1,27 @@
+# F3 fix tests 2026-11-06T22:31:28Z; aws-cli/1.46.2 Python/3.13.16 Linux/6.18.44-fc-v242 botocore/1.43.62
+original block lines 163-185 of launch_eks.sh.orig; fixed block lines 163-189 of launch_eks.sh (sha256 2fa09e84e8f465135c2d6697544f27006e6c55d8388eb9a1882dab20a8caac6d); fixed CodeBuild branch lines 176-189
+grep for launch call in tested blocks: 0 matches
+## (a) original block, S1 job and key (reproduction; expect exit 4)
+stdout:
+REFUSE 4 duplicate_check_failed: duplicate check failed (codebuild batch-get-builds)
+stderr:
+
+An error occurred (InvalidInputException) when calling the BatchGetBuilds operation: Invalid build ID provided
+exit 4
+## (b) fixed block, S1 (expect exit 0)
+stdout:
+no existing prefix, request object or build for ic-c1-dg-s1-20261106: submitting once
+stderr:
+exit 0
+## (c) fixed block, S2 key inputs/requests/e4eb66c191311966cf4884c2ef845a2927af362f2847097b5791c0729f572c1a.json (expect exit 0)
+stdout:
+no existing prefix, request object or build for ic-c1-dg-s2-20261106: submitting once
+stderr:
+exit 0
+## (d) fixed CodeBuild branch, newest existing build key (positive control; expect REFUSE 3)
+stdout:
+REFUSE 3 duplicate: DUPLICATE: CodeBuild build(s) already carry inputs/requests/0be570bd4b0aade2abb6789075878c56bc1ab0d109f197c2b48cfc98abaa134d.json: isolab-experiment-launcher:14fa001a-db95-41e8-b1bc-4aa3f31f84af
+stderr:
+exit 3
+## extracted-block diff check (b): test body minus 3 header lines equals fixed lines 163-189
+IDENTICAL

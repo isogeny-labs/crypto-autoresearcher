@@ -1,0 +1,147 @@
+idea:
+  id: IDEA-20261109-fcf651
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Isotrivial j = 0 surfaces y^2 = x^3 + b(t): every discrete log between specialised sections
+    is the reduction mod (pi - 1) of a small-norm element of Z[omega], and the section rank is read from
+    the L-polynomial of the sextic cover'
+  class: barrier
+  claim: 'Let p = 1 mod 6, E : y^2 = x^3 + B over F_p ordinary with End(E) = Z[omega], G = E(F_p) of prime
+    order N, and lambda the GLV scalar with lambda^2 + lambda + 1 = 0 mod N. For b(t) in F_p[t] of degree
+    6 with distinct roots, let S_b : y^2 = x^3 + b(t). (i) The Z[omega]-module of F_p(t)-sections of S_b
+    has rank equal to the multiplicity of the Frobenius polynomial of E in the omega-twisted eigenpart
+    of the L-polynomial of C_b : beta^6 = b(t), computable from sextic Jacobi-type sums over F_p. (ii)
+    For sections s_1, s_2 with a relation alpha_1 s_1 = alpha_2 s_2, alpha_i = a_i + b_i omega, and any
+    smooth t_0, DL(s_2(t_0) : s_1(t_0)) = (a_1 + b_1 lambda) (a_2 + b_2 lambda)^{-1} mod N. (iii) Among
+    all sections with deg_t x <= 2 the number of distinct pairwise DL classes is at most the number of
+    alpha in Z[omega] with N(alpha) <= 36, about 130. No exponent change is claimed.'
+  mechanism: Over F_p(C_b) the surface becomes the constant curve E, so sections are twisted morphisms
+    C_b -> E and the section group is a submodule of Hom(J(C_b), E), a Z[omega]-module because End(E)
+    = Z[omega]. Specialisation at t_0 is a Z[omega]-homomorphism to E(F_p), and Lenstra's isomorphism
+    E(F_p) = O_K / (pi - 1) sends omega to lambda. Relations therefore specialise to ratios of small-norm
+    elements of Z[omega]; the L-polynomial of C_b decides how many independent sections exist but cannot
+    change the norm bound, which is controlled by the degree of the morphism.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The j = 0 automorphism gives only a constant factor; here the same Z[omega] action is the only
+      structure surviving specialisation.
+    verified_by: frontier map excerpt in REPO BRIEF 2026-11-09 section 3
+  - ref: IDEA-20260805-e5dd09
+    provenance: internal
+    claim: Geometric rank of y^2 = x^3 + b(t) with deg b = 6 is determined by the root pattern; this record
+      adds the F_p(t)-rank via the L-polynomial and the DL reading.
+    verified_by: ledger index excerpt in REPO BRIEF 2026-11-09 section 2
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting and rank-deficiency routes fail; this is a function-field special case.
+    verified_by: frontier map excerpt in REPO BRIEF 2026-11-09 section 3
+  assumptions:
+  - Lenstra's module isomorphism E(F_p) = O_K / (pi - 1) with omega acting as lambda, as used in the wave-1
+    port record; the normalisation is to be taken from RESEARCH_SECP256K1_CM.md.
+  - Tate-Shioda holds for the twisted Delsarte-type surface (recalled).
+  proof_search_map:
+    not_applicable_reason: Reach bound with a toy verification; no algorithm.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: fraction of section pairs whose DL equals the Z[omega] ratio mod N
+    direction: higher
+    minimum_effect: equals 1 on all pairs admitting a relation
+  - metric: number of distinct pairwise DL classes over sections with deg x <= 2
+    direction: lower
+    minimum_effect: at most 130 for every tested (p, b)
+  - metric: L-polynomial rank minus independent sections found
+    direction: different
+    minimum_effect: equals 0 on at least 95 percent of b
+  minimal_test:
+    design: 'For p = 1 mod 6, p <= 2^10, choose B with #E(F_p) prime N and compute lambda. Sample 100
+      degree-6 b(t) with distinct roots. Compute the L-polynomial of C_b by counting beta^6 = b(t) over
+      F_p and F_{p^2} with sextic character sums, extract the twisted eigenpart and the multiplicity of
+      (1 - t_E T + p T^2). Enumerate sections with deg x <= 2, deg y <= 3 by solving linear systems in
+      Sage, find Z[omega]-relations via the height pairing, specialise at 5 smooth t_0, compute DLs by
+      exhaustive enumeration (ground truth only), and compare with (a_1 + b_1 lambda)(a_2 + b_2 lambda)^{-1}.'
+    controls:
+    - Non-isotrivial control y^2 = x^3 + a(t) x + b(t) with the same degrees, where relations are plain
+      integer ratios and no lambda appears.
+    - Random-pair control, unrelated points of E(F_p), to confirm the DL oracle.
+    required_metrics:
+    - p
+    - N
+    - lambda
+    - L-polynomial twisted eigenpart per b
+    - sections found per b
+    - relation list with (a_i, b_i)
+    - agreement count
+    - distinct DL classes
+  falsification_conditions:
+  - A section pair with a relation whose specialised DL is not the stated ratio.
+  - More than 130 distinct DL classes from sections with deg x <= 2.
+  - Rank from the L-polynomial below the number of independent sections.
+  confounders:
+  - Constant sections from E(F_p)[torsion] are absent when N is prime; verify.
+  - Choice of omega versus omega^2 flips lambda; fix by the audit's normalisation.
+  interpretation_limits:
+  - Reach of about 130 classes at any p; a barrier, not a method.
+  - Larger-degree sections enlarge the norm bound polynomially, never to N.
+  heuristic_assumptions:
+  - id: H1
+    statement: Every relation among low-degree sections is Z[omega]-linear with N(alpha_i) <= 36.
+    rigorous_support: Degree bound on morphisms C_b -> E from deg x <= 2; recalled argument.
+    validation_plan: Compute all relations and report max N(alpha_i).
+  target_complexity:
+    time_exponent: N^{1/2} unchanged
+    memory_exponent: O(p) toy enumeration
+    best_known: Pollard rho, Theta(sqrt(N)) (KR-RHO-13bf67)
+    hidden_overhead: None claimed.
+    tradeoff_note: Barrier record.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-0528e7 for anything the Z[omega] action buys; IDEA-20260805-e5dd09 for geometric
+    rank. The specialised-DL ratio statement is new.
+  sota_delta: 'Exponent delta 0. Content delta: isotrivial j = 0 surfaces compute DLs only inside the
+    image of small-norm Z[omega], tying the secp256k1 CM structure to the XEDN negative result.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-0528e7
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-0528e7
+      provenance: internal
+      relation: adjacent
+      delta: Row concerns rho on automorphism orbits; this record shows the same Z[omega] scalars are
+        the only DLs a j = 0 isotrivial surface can specialise.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for isotrivial, Lenstra, Z[omega], XEDN
+      - wave-1 port and synthesis leads on Lenstra module and GLV spectral forcing
+      web: []
+      blocked: []
+    lead: LEAD-TRF-kernel-of-reduction-lemma
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For p = 1 mod 6, p <= 2^10, choose B with #E(F_p) prime N and compute lambda.
+        Sample 100 degree-6 b(t) with distinct roots. Compute the L-polynomial of C_b by counting beta^6
+        = b(t) over F_p and F_{p^2} with sextic character sums, extract the twisted eigenpart and the
+        multiplicity of (1 - t_E T + p T^2). Enumerate sections with deg x <= 2, deg y <= 3 by solving
+        linear systems in Sage, find Z[omega'

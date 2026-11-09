@@ -1,0 +1,14 @@
+# worktree (canonical drafts):
+$ python3 tools/task_card.py lint experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml
+CARD: runbook: does not lint clean: binds[0]: experiments/EXP-ICPERF-127dbd/specification.yaml has changed since the runbook was frozen
+CARD: runbook: does not lint clean: binds[1]: experiments/EXP-ICPERF-127dbd/trial-plan.json has changed since the runbook was frozen
+CARD: runbook: does not lint clean: spec_bindings[1]: experiments/EXP-ICPERF-127dbd/specification.yaml/experiment/approved_by is None, the runbook says 'DEC-20261107-7802ec'
+CARD: runbook: does not lint clean: S03-trial-s2: the plan's task TASK-20261107-f14df8 is not in coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+CARD FAIL experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml sha256 613bad15fe8f82e405ab3f0366cc57e0095b5cf1098c15cc7581b0b24b4a4429
+exit=1
+
+# approved-state scratch layout (scratchpad/d07-stageA: previews swapped in, preview queue):
+$ python3 tools/task_card.py lint experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml
+CARD: runbook: no committed approval decision names this experiment and runbook_sha256 36105be63adcd97000bfd1fa0b7b63414eafb247cc3774eec7446a7d34caf166
+CARD FAIL experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml sha256 613bad15fe8f82e405ab3f0366cc57e0095b5cf1098c15cc7581b0b24b4a4429
+exit=1

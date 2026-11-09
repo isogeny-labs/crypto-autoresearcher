@@ -1,0 +1,38 @@
+#set page(paper: "a4", margin: 20mm)
+#set text(size: 10pt)
+#text(size: 18pt, weight: "bold")[Prime SAT transform validation: producer02]
+#parbreak()
+#image("diagram.svg", width: 100%)
+
+#text("The second producer attempt recorded 472 accepted control observations before the fixed 600-second worker deadline terminated the incomplete suite. Both repaired exact-exception controls were accepted: the multiplier mutation raised exactly ValueError(\"certificate identity is not one\"), and the projection-blocker mutation raised exactly ValueError(\"prefix clause does not match its cylinder\"). These are producer observations; independent validation is not complete.")
+#parbreak()
+
+#text("Experiment EXP-PNEXT-3064e5; hypothesis H-PNEXT-8f9166; goal GOAL-PFDR-fd09e0; run RUN-PNEXT-8223e9; task TASK-20261107-c87fa6, epoch 1. One requested trial was attempted; zero successful trials; one worker timeout. The native supervisor recorded infrastructure_error, return code 1 and no checker return code. No automatic retry occurred. Both producer slots are consumed; the independently authored slot 3 remains reserved and is not authorized by this run.")
+#parbreak()
+
+#text("The last durable top-level checkpoint is raw/cf94e6b3684945b0b2e468fb7a86b95d/00000474.json. It records 472 accepted controls, 6 native instances, 12 native calls and 32 census assignments visited. These counters are checkpoint values, not final totals for work underway when the worker was killed. The last accepted label is native identity chart. Source order places the finite repeated-chart native stage next, but no completion record for it exists. This is a bounded location for diagnosis, not a measured attribution of the whole timeout to one routine. results.json and worker-error.json are absent. No full-suite or complete-projection claim follows.")
+#parbreak()
+
+#text("Kernel limits were read back as cpu.max=100000 100000, memory.max=2147483648 and memory.swap.max=0. Systemd reported Result=timeout, ExecMainCode=2, ExecMainStatus=9 and MainPID=0. The final launcher receipt confirms termination established and records 601.832985571993 administrative launcher seconds. The outer supervisor's start/finish timestamps include custody and compression; they are not solver timings. Exact CPU time, peak memory, exclusive-host timing and total host/inference cost were not captured in the sealed run and remain unknown. No cloud job was submitted.")
+#parbreak()
+
+#text("Custody had two additional failures. The launcher used read_bytes while hashing a roughly 2.2 GB raw archive under the outer 2 GiB address-space bound; MemoryError prevented artifact-manifest.json and its final binding. The adapter also raised MemoryError while hashing attempt-files.tar, leaving bundle-manifest.json and manifest.yaml absent. These original missing files are not fabricated or replaced. The supervisor retained the actual tar through deterministic compression and recorded its content digest. Its gzip is 127,211,514 bytes, SHA-256 90bf959c94dee0e70f75e8d7752fa6c028105da42337b24f3b638b15451c86ac; logical tar 4,587,520,000 bytes, SHA-256 ba1d0536a19a0ef93775341cbda708243e5092b4b63359498064192a406eedc0. Replay uses the committed artifact-store manifest and native artifact_storage mapping; all source failure bytes remain unchanged.")
+#parbreak()
+
+#text("The source repair commit is a1bbd189aa0b0a29fae122c7a111c32918aa89a3; launch authority commit is a0348ebe88a21d9cef5d3ff974c91c9042e8eb01. Exact hashes are in environment.json and attempt-authorization.json. Dirty state and runtime model identity are unknown. Seed 0, fixed software suite/order, limits of 12 native instances / 192 calls and 8 tiny censuses / 64 assignments. The command is reproduced below. The sparse-checkout refusal before materialization occurred before any trial directory or slot 2 reservation and did not consume an additional attempt.")
+#parbreak()
+
+#text("The export records one timed-out whole-suite attempt against the original baseline instrument. This row is an accounting envelope, not a per-arm observation: the fixed suite spans original/raw/appended/positive/negative arms and per-arm coverage is incomplete. No missing-arm success rows or unavailable final counters are manufactured. Its schema and file custody checks are reported separately from the expected incomplete protocol coverage findings.")
+#parbreak()
+
+#text("Next work is source-only diagnosis of the unfinished native stage and streaming archive hashing, plus independent-control preparation under the existing separate admission. No further producer retry is available. Full 106 coordinate plus 6 coefficient comparison cells, all five leads, complete projected sets and charts, reconstruction and certificate costs remain downstream. This report does not alter canonical mathematical/performance graphs or scientific statuses. A pipeline diagram is used because there is no matched performance comparison in this attempt.")
+#parbreak()
+
+#text("## Internal evidence and command")
+#parbreak()
+
+#text("Primary evidence: execution-receipt.json, raw-result.json, stderr.log and environment.json in the run directory; actual-attempt/launcher-receipt.json, systemd-state.json, resource-readback.json and the named root checkpoint inside attempt-files.tar.gz. The bundle also includes the immutable slot 2 terminal receipt. Protocol: coordination/prime_sat_transform_validation_producer02_20261107/protocol.json, version 2, canonical hash 0e01e709860e16e33afeef3a7812de280ee8cd317be17ae476a3f4f2b043dd32. All observations derive from these captured artifacts; no candidate rerun was used to produce this report.")
+#parbreak()
+
+#text("[\"/home/ec2-user/prime-sat-research-venv/bin/python\", \"coordination/prime_sat_transform_validation_20261105/trial-adapter.py\", \"--run-dir\", \"/home/ec2-user/crypto-prime-sat-ideas-20261029/experiments/EXP-PNEXT-3064e5/runs/RUN-PNEXT-8223e9\", \"--config\", \"experiments/EXP-PNEXT-3064e5/config.json\"]\n")
+#parbreak()

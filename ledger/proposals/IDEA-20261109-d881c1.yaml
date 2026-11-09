@@ -1,0 +1,142 @@
+idea:
+  id: IDEA-20261109-d881c1
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Shadow theorem for descent on a prime-order curve: Selmer and Sha classes of period prime to
+    N vanish in E(F_p), and over F_p the only torsor is the ECDLP instance itself'
+  class: barrier
+  claim: 'Let E/F_p have prime order N, G = <P>. (i) Over F_p, Lang gives H^1(F_p, E) = 0 and Kummer gives
+    E(F_p)/n = H^1(F_p, E[n]) of order |E(F_p)[n]|: zero for gcd(n, N) = 1, Z/N for n = N. The N-covering
+    of class delta(Q) is pi_Q(R) = [N]R + Q; the finite E[N]-torsor [N]^{-1}(Q) has no F_p-point; ECDLP
+    is the statement [T_Q] = k [T_P] in H^1(F_p, E[N]), whose only invariant computable below the N-division
+    field is the Tate pairing. (ii) For any number field K, place v above p of good reduction, and gcd(n,
+    N) = 1, the localisation Sel_n(E~/K) -> E~(K_v)/n = E(k_v)/n kills the N-primary part of E(k_v); hence
+    every element of Sel_n and of Sha(E~/K)[n] has shadow 0 in G. A nonzero shadow needs N | n, a covering
+    of degree at least N. Toy prediction: every reduced 2-covering of a curve with nonzero Sha[2], and
+    of the two-point lift of an ECDLP instance, has #C(F_p) = #E(F_p) and a covering map surjective on
+    F_p-points, exactly as coverings of global points do.'
+  mechanism: 'A torsor with no rational point over F_p must be a torsor under a finite group scheme (Lang),
+    and the only ones attached to E are [n]^{-1}(Q), classified by E(F_p)/n. Over a global field a Selmer
+    class localises into the Kummer image E(k_v)/n, whose N-part is zero for gcd(n, N) = 1 because that
+    part is n-divisible; Sha is locally trivial by definition. So global descent objects are invisible
+    to any computation on G unless their period is a multiple of N, and N-coverings are curves of degree
+    N in P^{N-1}. This separates an obstruction (Sha, Brauer-Manin: image 0 at p) from a transfer (the
+    n = N Kummer class: the Tate pairing, already closed).'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Pairing transfers need small embedding degree; the n = N Kummer class is this transfer.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief; row file not opened.
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails; this record states why descent data on a lift cannot
+      help either.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief.
+  - ref: Lang 1956, Algebraic groups over finite fields
+    provenance: recalled
+    claim: Every torsor under a connected algebraic group over F_q is trivial.
+    verified_by: recalled; the filing coordinator must confirm.
+  - ref: Cremona database curve 571a1
+    provenance: recalled
+    claim: Rank 0 with Sha of order 4, the standard explicit Sha[2] example.
+    verified_by: recalled; confirm in LMFDB before the run.
+  assumptions:
+  - N is prime and p does not divide n in every reduction step used.
+  - 'The toy primes are good primes of 571a1 at which #E_p(F_p) is prime.'
+  predictions:
+  - metric: 'number of reduced coverings with #C_p(F_p) different from #E_p(F_p)'
+    direction: lower
+    minimum_effect: exactly 0 (any nonzero count falsifies)
+  - metric: number of reduced coverings whose image in E_p(F_p) is a proper subgroup
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: '|H^1(F_p, E[n])| minus |E(F_p)[n]| for n in {2, 3, N}'
+    direction: lower
+    minimum_effect: exactly 0 on every toy curve
+  minimal_test:
+    design: 'Sage or PARI. (a) For 571a1 compute the 2-coverings with ell2cover, take 20 good primes p
+      in [2^10, 2^16] with #E_p prime, reduce each quartic, count F_p-points and the image of the covering
+      map. (b) For three calibration primes p <= 2^12 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md and
+      a prime-order curve, form the two-point lift E~_{P,Q} of 50 random instances, compute its 2-Selmer
+      coverings with ellrank, reduce and score the same metrics. (c) Compute the Frobenius matrix on E[n]
+      for n in {2, 3, N} and the order of coinvariants.'
+    controls:
+    - Coverings attached to global points (P~, Q~ themselves, and positive-rank twists of 571a1), scored
+      identically.
+    - 'Primes where #E_p is not prime are excluded and their count reported.'
+    required_metrics:
+    - number of coverings scored
+    - 'per-covering #C_p(F_p) minus #E_p(F_p)'
+    - per-covering image index
+    - '|H^1(F_p, E[n])| for n in {2, 3, N}'
+  falsification_conditions:
+  - 'Any reduced covering of period prime to N with #C_p(F_p) different from #E_p(F_p) or with image a
+    proper subgroup.'
+  - Any n coprime to N with H^1(F_p, E[n]) nonzero on a prime-order toy curve.
+  - A timeout or PARI failure is infrastructure, not evidence.
+  confounders:
+  - A quartic with bad reduction at p (p dividing its discriminant) is excluded and counted.
+  - Point counts are F_p-isomorphism invariants, so the metric does not depend on the chosen model of
+    the covering.
+  interpretation_limits:
+  - Closes descent objects of period prime to N as sources of information about k; defers pairings to
+    KR-RHO-53c89f.
+  - The period-N case is closed by size (degree N), not by vanishing.
+  heuristic_assumptions:
+  - id: H1
+    statement: Sha(E~/Q)[N] is nonzero with probability about 1/N for lifts of a 256-bit instance, so
+      period-N shadows are rare as well as huge.
+    rigorous_support: Delaunay-type heuristics; not load-bearing, the vanishing statements are theorems.
+    validation_plan: Record the 2-Selmer excess over the two known points in test (b) as a weak sanity
+      check that Sha[2] is already rare in this family.
+  target_complexity:
+    time_exponent: unchanged, N^{1/2}
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(N^{1/2}) group operations (KR-RHO-13bf67)
+    hidden_overhead: none; no algorithm is proposed
+    tradeoff_note: Barrier record; delta against the best known exponent is 0.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f dominates the n = N transfer; KR-IC-cd159a dominates the lifting reading.
+    Neither states shadow vanishing for period prime to N or the torsor reading of the instance.
+  sota_delta: Exponent delta 0. New content is the closure statement in quantitative form (shadow 0 for
+    gcd(n, N) = 1, degree at least N otherwise).
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-5ea2f8
+    - KR-IC-9e610d
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row closes MOV and anomalous transfers; this record shows cohomological descent over
+        F_p reduces to that row and global classes have zero shadow.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: Xedni fails by rank statistics; here the failure of descent data is structural and independent
+        of rank heuristics.
+    searched:
+      corpus_grep:
+      - repo brief section 2 for Selmer, Sha, torsor, Brauer, covering, descent
+      - frontier map rows on lifting, transfer and isogeny classes
+      web: []
+      blocked: []
+    lead: LEAD-EXO-torsor-deck-period
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage or PARI. (a) For 571a1 compute the 2-coverings with ell2cover, take 20
+        good primes p in [2^10, 2^16] with #E_p prime, reduce each quartic, count F_p-points and the image
+        of the covering map. (b) For three calibration primes p <= 2^12 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md
+        and a prime-order curve, form the two-point lift E~_{P,Q} of 50 random instances, compute its
+        2-Selmer coverings wit'

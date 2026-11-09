@@ -1,0 +1,108 @@
+# TASK-20261106-de6d19: LEDGER ARCHIVE of the EXP-ICPERF-127dbd re-session approval (DEC-20261106-ecf261), BATCH-0e0902.
+# Executed by the shell-holding top-level session in the coordinator role. Runs ALONE. Zero runs. Authorizes no EKS spend.
+handoff:
+  id: TASK-20261106-de6d19
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-06'
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  authorized_by: DEC-20261106-ecf261 approval_archive
+  hypothesis_ids:
+  - H-ICPERF-4cb536
+  objective: Make the re-session approval of EXP-ICPERF-127dbd (DEC-20261106-ecf261, session RBS-ICPERF-de8978) durable in four commits, in the order of DEC-20261106-ecf261 approval_archive.commit_order, reproducing every approved_bytes sha256, with one push to a ready-for-review PR with auto-merge. Runs ALONE. Zero runs.
+  uncertainty_reduced: None about the mathematics. It makes the approval and its exact bytes durable together, or none of them.
+  inputs:
+  - scratchpad/c1-fix/DEC-20261106-ecf261.yaml
+  - scratchpad/c1-fix/recompile-v3a/experiments/EXP-ICPERF-127dbd/specification.yaml
+  - scratchpad/c1-fix/recompile-v3a/coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+  - scratchpad/c1-fix/recompile-v3a/ledger/handoffs/TASK-20261106-724d14.yaml
+  - scratchpad/c1-fix/recompile-v3a/ledger/handoffs/TASK-20261106-d5ec1e.yaml
+  - scratchpad/c1-fix/recompile-v3a/F7-diffs.txt
+  - scratchpad/c1-fix/recompile-v3a/F8.txt
+  - scratchpad/c1-fix/recompile-v3a/SHA256SUMS
+  - scratchpad/c1-fix/packet/preapproval-report.json
+  - scratchpad/c1-fix/FINDINGS.md
+  - scratchpad/c1-fix/WRAPPER-V3.md
+  - scratchpad/c1-fix/launch_eks.sh.orig
+  - scratchpad/c1-fix/launch_eks.v2.sh
+  - scratchpad/c1-fix/launch_eks.sh (v3a)
+  - scratchpad/c1-fix/evidence/F2-v3a.txt
+  - scratchpad/c1-fix/evidence/fix-tests.log
+  - scratchpad/c1-fix/evidence/F12.txt
+  - scratchpad/c1-fix/evidence/crypto-binding-grep.txt
+  - scratchpad/c1-fix/evidence/s3-readonly-checks.txt
+  - scratchpad/c1-fix/evidence/rbs-e2a5c2-verify.txt
+  - scratchpad/c1-fix/evidence/F10.txt
+  - scratchpad/c1-fix/evidence/dccfdc-scratch-validate.txt
+  constraints:
+  - AA-1 Merge origin/main first; never rebase. Record base_commit_checked and merge_outcome. A conflict inside a record stops the archive; it is resolved by a superseding record, never by editing.
+  - 'AA-2 Before staging, the pre_check: DEC-20261106-ecf261 contains no unfilled placeholder value and no draft_state key. Then sha256 each byte copy and compare with DEC-20261106-ecf261 approved_bytes (specification, trial plan, runbook, launcher, queue, executor handoff, snapshot handoff, card). Any mismatch: stop; nothing takes effect. Also the FR-4 checks: 7cf956bd58 is an ancestor of the pushed head; it touches only experiments/EXP-ICPERF-127dbd/supersessions/RUN-ICPERF-c7f69e/manifest_v2.yaml and the single RUN-ICPERF-c7f69e entry of tools/run_supersession_registry.yaml; manifest_v2.yaml hashes to d0c6d60c... and the registry superseding_sha256 matches; no PR from claude/c1-session2-20261106 exists or has merged before this push. Any failure: stop and return to the Coordinator.'
+  - AA-3 After commit C2, python3 tools/runbook.py lint experiments/EXP-ICPERF-127dbd/runbook.yaml must print LINT OK with the runbook_sha256 of DEC-20261106-ecf261 approved_bytes, and python3 tools/task_card.py lint experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-2.yaml must print CARD OK. Otherwise stop before commit C3.
+  - AA-4 Commit C3 holds the queue alone. Render it with tools/research_dispatch.py <queue> --ready-only, and run validate_queue with GitRepositoryVerifier at HEAD; both must pass.
+  - AA-5 Stage named paths one by one; no git add -A, git add . or directory adds. Run tools/validate_ledger.py (no new error over the recorded baseline) and tools/check_merge_hygiene.py before the last commit.
+  - AA-6 One push of all four commits to origin claude/c1-session2-20261106 (head before the push d2db4c34f4, which holds 7cf956bd58). Open a NEW ready-for-review PR against main, the first PR from that branch, naming every record id and stating that it carries 7cf956bd58 (RUN-ICPERF-c7f69e supersession), d2db4c34f4 (recompile) and C1-C4; enable auto-merge (gh pr merge <n> --auto --merge). Never amend, rebase or force-push.
+  - AA-7 No relay and no launch. After merge, record python3 tools/newest_experiments.py --experiment EXP-ICPERF-127dbd --json; execution_state must be ready.
+  - AA-8 TASK-20261106-dccfdc stays queued and impeded (DEC-20261106-ecf261 ruling 6). The receipt records, as interim custody, the sha256 of the ten existing RUN-ICPERF-c7f69e files and of every file under runbook-sessions/RBS-ICPERF-e2a5c2/ at b0d984b99, with the F6 VERIFY OK output. The receipt takes no archival ownership of TASK-20261106-4b7018.
+  deliverables:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/ledger-receipt.json with commit shas (null inside its own commit), base_commit_checked, merge_outcome, path_sha256, record_ids, the AA-2 comparisons, the AA-3 lint lines, the AA-4 render and verifier results, the AA-8 custody hashes and the hygiene outcome.
+  - Four commits in the stated order, one push, a ready-for-review PR with auto-merge.
+  artifact_paths:
+  - ledger/decisions/DEC-20261106-ecf261.yaml
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/preapproval-report.json
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/FINDINGS.md
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/WRAPPER-V3.md
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/launch_eks.orig-to-v2.patch
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/launch_eks.orig-to-v3a.patch
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/launch_eks.v2-to-v3a.patch
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/F2-v3a.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/fix-tests.log
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/wrapper-fix/manifest-tests.log
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/recompile/F7-diffs.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/recompile/F8.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/crypto-binding-grep.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/s3-readonly-checks.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/rbs-e2a5c2-verify.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/ids-check.txt
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/dccfdc-scratch-validate.txt
+  - experiments/EXP-ICPERF-127dbd/specification.yaml
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/dispatch_queue.json
+  - ledger/handoffs/TASK-20261106-724d14.yaml
+  - ledger/handoffs/TASK-20261106-d5ec1e.yaml
+  - ledger/handoffs/TASK-20261106-de6d19.yaml
+  - ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19/ledger-receipt.json
+  write_scope:
+  - coordination/goals/GOAL-ICPERF-e6b6a4/batches/BATCH-0e0902/archives/TASK-20261106-de6d19
+  archived_by: TASK-20261106-de6d19
+  archive:
+    kind: ledger
+    binding_mode: content_at_commit
+    record_ids:
+    - DEC-20261106-ecf261
+    - EXP-ICPERF-127dbd
+    - H-ICPERF-4cb536
+    - TASK-20261106-4b7018
+    - TASK-20261106-724d14
+    - TASK-20261106-dccfdc
+    - TASK-20261106-d5ec1e
+    - TASK-20261106-de6d19
+    - BATCH-0e0902
+    - GOAL-ICPERF-e6b6a4
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: null
+    fallback_allowed: true
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    maximum_runs: 0
+  completion_gate:
+  - Every approved_bytes sha256 reproduced and recorded; runbook lint prints LINT OK and card -2 lint prints CARD OK on the repository tree after C2.
+  - Four commits in the decision's order, one push, a ready-for-review PR with auto-merge naming every record id.
+  - validate_ledger shows no new error over baseline; the post-commit verifier accepts the receipt. Zero runs.
+  return_format: The ledger receipt, PR reference, the lint lines and, after merge, the newest_experiments execution_state.
+  review_required: false
+  runs_launched: 0

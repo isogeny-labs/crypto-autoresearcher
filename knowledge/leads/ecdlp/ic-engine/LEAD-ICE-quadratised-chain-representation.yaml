@@ -1,0 +1,56 @@
+id: LEAD-ICE-quadratised-chain-representation
+family: ic-engine
+title: >-
+  Quadratised chain representations of the binary point decomposition (line norm form mu = e2,
+  generic w = x_a x_b, implied trace equations) against the cubic chained S_3 system
+mechanism: >-
+  Per merge P_a + P_b = U of a chained decomposition, the line through P_a, P_b, -U gives
+  e1 = lambda^2 + lambda + a, e2 = mu, e3 = mu^2 + b. Keeping mu = e2 as an auxiliary turns
+  the cubic S_3(x_a, x_b, x_U) into two quadratic equations, so the Weil-descended chain has
+  degree 2 at every m instead of 3; lambda adds the trace equation Tr(x_a + x_b + x_U + a) = 0.
+  The claim to test is that this geometric quadratisation (or the explicit trace equations)
+  lowers the refutation degree beyond what a structureless quadratisation w = x_a x_b gives.
+disposition: open_next_step
+next_action:
+  step: >-
+    Four-arm refutation (closure) degree cell on identical draws at (m, l) = (3, 5), (4, 5),
+    (4, 6) on toy binary curves n in {17, 19, 23}: chained S_3 (cubic), generic quadratisation
+    w = x_a x_b (confound control), mu = e2 quadratisation, and chained S_3 plus the implied
+    linear trace equations; unsatisfiable and planted-satisfiable draws in every arm, systems
+    exported by research/representation_leads_20261109/derive (protocol drafted there).
+  discriminates: >-
+    mu = e2 or the trace equations closing at a lower degree than the generic quadratisation on
+    the unsatisfiable draws is a representation effect worth pricing at m >= 5; equal closure
+    degree means the geometric form is a relabelled generic degree reduction and the lead closes.
+best_measured: null
+evidence:
+- repo: crypto
+  path: research/representation_leads_20261109/results/counts.jsonl
+  note: >-
+    exact sizes: mu = e2 has the same variables and distinct monomials as w = x_a x_b
+    (n = 19, l = 5: 715 / 1646 / 2577 at m = 3 / 4 / 5) and 30-40% more terms
+- repo: crypto
+  path: research/representation_leads_20261109/results/census.jsonl
+  note: >-
+    exhaustive n = 11, 13: every S_3 root triple is all-on-E (lambda exists) or all-on-twist
+    (no lambda), never mixed; so in a chain with x_R on E the trace equations are implied
+- repo: crypto
+  path: research/representation_leads_20261109/REPORT.pdf
+  note: derivations, controls, figures
+ledger_refs: []
+known_results:
+- KR-IC-f5c584
+- KR-IC-5a43e5
+related:
+- LEAD-ICE-descent-closure-degree-at-scale
+- LEAD-ICB-prime-degree-algebraic-decomposition
+- LEAD-ICP-icperf-writability-boundary
+forecloses:
+- line slope variables quadratise the Semaev chain
+- Riemann-Roch norm form for binary point decomposition
+- mixed S_3 and norm-form chain merges
+- degree-2 representation of chained summation polynomials
+- trace equation removes twist roots from the chain
+areas:
+- KIC
+last_reviewed: '2026-11-09'

@@ -1,0 +1,53 @@
+# C1 AMENDMENT-2 receipts (AMENDMENT-2.md section 6), run 2026-11-07T02:54:31Z in /home/user/crypto on branch claude/c1-amendment-2-20261107 (base = origin/main 151779ab979469baaa168e1e88a4097227219084)
+# TOOLS = crypto-autoresearcher tools/ (experiment_protocol.py), checkout at d4cf45f012
+
+## Receipt 1: validate the version 3 file (before the freeze; the freeze block is the draft block)
+$ python3 $TOOLS/experiment_protocol.py validate research/ic_c1_deferred_guard_fp28_20261106/protocol.json
+OK: experiment.protocol/v1 research/ic_c1_deferred_guard_fp28_20261106/protocol.json (0 finding(s))
+exit 0
+
+## Receipt 2: reproduce the version 2 hash (version 2, amendments reduced to the first entry, links.amendments reduced to its first entry, extensions.c1_amendment_2 removed)
+$ jq '.version=2 | .amendments=[.amendments[0]] | .links.amendments=[.links.amendments[0]] | del(.extensions.c1_amendment_2)' research/ic_c1_deferred_guard_fp28_20261106/protocol.json > v2-reproduced.json
+$ python3 $TOOLS/experiment_protocol.py hash v2-reproduced.json
+9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166
+expected (version 2 freeze, AMENDMENT-1 receipts): 9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166
+$ jq '.version=1 | .amendments=[] | del(.links.amendments) | del(.extensions.c1_amendment_1) | del(.extensions.c1_amendment_2)' research/ic_c1_deferred_guard_fp28_20261106/protocol.json > v1-reproduced.json ; hash
+43b1ca918c034433f3584f37db439613d11a618c0eec13d3d7831a1fa96d092f
+expected (version 1 freeze, PR #3558): 43b1ca918c034433f3584f37db439613d11a618c0eec13d3d7831a1fa96d092f
+
+## Receipt 3: freeze version 3 (--commit auto records the crypto HEAD at freeze time, the base commit below)
+$ git rev-parse HEAD
+151779ab979469baaa168e1e88a4097227219084
+$ python3 $TOOLS/experiment_protocol.py freeze research/ic_c1_deferred_guard_fp28_20261106/protocol.json --commit auto --filed-before-affected-data
+{
+  "status": "frozen",
+  "protocol_sha256": "4b7bf35f34c0ddf5c0e4bee95e1791e6f5d2bc2fb68d4836db9db53d33e9b9cc",
+  "commit": "151779ab979469baaa168e1e88a4097227219084",
+  "frozen_at": "2026-11-07T02:54:43Z",
+  "filed_before_affected_data": true
+}
+exit 0
+$ python3 $TOOLS/experiment_protocol.py hash research/ic_c1_deferred_guard_fp28_20261106/protocol.json
+4b7bf35f34c0ddf5c0e4bee95e1791e6f5d2bc2fb68d4836db9db53d33e9b9cc
+$ jq -r .freeze.protocol_sha256 research/ic_c1_deferred_guard_fp28_20261106/protocol.json
+4b7bf35f34c0ddf5c0e4bee95e1791e6f5d2bc2fb68d4836db9db53d33e9b9cc
+$ python3 $TOOLS/experiment_protocol.py validate research/ic_c1_deferred_guard_fp28_20261106/protocol.json   (after the freeze)
+OK: experiment.protocol/v1 research/ic_c1_deferred_guard_fp28_20261106/protocol.json (0 finding(s))
+exit 0
+$ jq -c '.version, .freeze, .extensions.c1_amendment_2.file_sha256' research/ic_c1_deferred_guard_fp28_20261106/protocol.json
+3
+{"status":"frozen","protocol_sha256":"4b7bf35f34c0ddf5c0e4bee95e1791e6f5d2bc2fb68d4836db9db53d33e9b9cc","commit":"151779ab979469baaa168e1e88a4097227219084","frozen_at":"2026-11-07T02:54:43Z","filed_before_affected_data":true}
+"8fdc60321fb3f3f3741c2a21f65d50f42d563ed065663528d786ca4056393b19"
+
+## Receipt 4: AMENDMENT-2.md sha256 and the PROTOCOL.md diff
+$ sha256sum research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md
+8fdc60321fb3f3f3741c2a21f65d50f42d563ed065663528d786ca4056393b19  research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md
+$ git diff --stat ab1c72504c6f9f42656a3b016373f3e2d82cdc39 -- research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md   (the commit that added PROTOCOL.md; expected: empty)
+exit 0
+$ git diff --stat HEAD -- research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md   (expected: empty)
+exit 0
+$ sha256sum research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md
+d2dba321d788e6e58aceac04ba6f32320a41b17c6fcf8b1fde73ee277c01f5f0  research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md
+expected PROTOCOL.md sha256 (AMENDMENT-1 receipts): d2dba321d788e6e58aceac04ba6f32320a41b17c6fcf8b1fde73ee277c01f5f0
+$ sha256sum research/ic_c1_deferred_guard_fp28_20261106/protocol.json
+561b6a75247a52d7a99f0c636fcef42eb038fc1e7844d78f002c55d8767ca05d  research/ic_c1_deferred_guard_fp28_20261106/protocol.json

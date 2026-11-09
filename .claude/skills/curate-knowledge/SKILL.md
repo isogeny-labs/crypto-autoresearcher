@@ -122,3 +122,11 @@ pulls in `main` and surfaces the entry as a PR:
   abstract is `reported` at best.
 - Internal findings never state more than their evidence record's scoped
   claim.
+
+## Default challenge research loop
+
+Research goals use [the default challenge research loop](../../../docs/challenge-research-loop.md). Preserve the frozen problem, candidate, evidence and review pointers relevant to this skill. Work within its existing role; findings guide the next attempt, and a worker completion alone is not scientific acceptance.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

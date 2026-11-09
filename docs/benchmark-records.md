@@ -41,7 +41,84 @@ in a `.artifacts.json` manifest, or marked `uploaded` by `benchrec.py upload`
 (which needs AWS credentials: CI has them, a session usually does not). CI
 with `--verify-s3` HEADs every object.
 
+### Closed raw data when a checkout path is reused
+
+`living_paths` remains an accepted configuration field for evolving catalogs.
+It never waives byte verification: configured and other changed paths follow
+the same strict archival checks below.
+
+The record and its original hashes, byte counts, URI, metrics and status stay
+immutable. A newer generated file at the same checkout path is not the raw
+data of the historical run. For a closed record only, the checker can verify
+the original bytes from its existing canonical content-addressed store URI.
+Online verification requires both the recorded length and a fresh bounded GET
+whose complete SHA-256 matches the original pin; HEAD alone, the filename and
+the `uploaded` flag are insufficient. Denied, missing, truncated, oversized or
+corrupt archive reads fail the check. Open runs never use this fallback.
+Closing an open record also cannot use the fallback: its current raw bytes must
+match the original capture before the closed record is written. The fallback
+only verifies records that were already closed before the command.
+
+For offline checking, exact original bytes may be staged at
+`.benchrec/raw-archive-cache/<sha256>` (inside the checkout). The checker
+recomputes both length and digest and rejects symlinks or escapes. This proves
+the recorded bytes locally, not their availability in S3. `--verify-s3` still
+performs a fresh archive GET even when that cache is populated, and retains
+the original per-object HEAD checks. Missing cache bytes do not relax an
+offline failure. `upload` never uploads the differing newer file or marks it
+uploaded; it accepts only the independently verified existing archive.
+
+These checks concern the old recorded bytes only. They do not validate the
+different current file, change a closed record, promote a measurement or
+replace any current-source/scientific validation gate. Prefer immutable raw
+output paths for new runs so this compatibility handling is unnecessary.
+
 ## One unit vocabulary
+
+### Measurement admission and historical exclusions
+
+Metric values, optional baselines/references, and both supplied spread endpoints
+must be finite numbers, never booleans. A spread requires two ordered endpoints;
+`n`, when supplied, must be a positive integer. Zero remains a valid value or
+reference; division by a zero reference has no derived ratio. Non-finite derived
+arithmetic is rejected before progress files are written.
+
+A measured record needs successful integer exit codes (`0`) for every recorded
+command. Failed attempts belong in invalid/censored records. When a historical
+record mixes failed and successful commands without attributing each metric to
+its command, its values cannot automatically enter aggregate comparisons.
+Documentary commands with unknown exits do not establish successful execution.
+These are metadata admission rules, not mathematical correctness certificates.
+
+Closed records stay immutable. An additive `integrity-exclusions.json` next to
+the configured records directory may explicitly exclude a historical measured
+record from **all** progress series and derived comparisons:
+
+```json
+{
+  "schema": "bench.integrity-exclusions/v1",
+  "records": {
+    "benchmarks/records/20261104T0000Z-example.json": {
+      "sha256": "<SHA-256 of the exact closed record bytes>",
+      "reason": "Specific measurement or execution-provenance deficiency."
+    }
+  }
+}
+```
+
+The checker rejects missing records, non-measured records, empty reasons and
+digest mismatches. An exclusion waives only measurement-metadata admission for
+that pinned record; raw hashes, byte counts, reports and storage checks still
+apply. JSON, Markdown, SVG and PDF progress outputs disclose exclusions; original
+status counts retain the historical statuses. Exclusion is conservative: it
+does not establish that the quoted measurements or underlying results are false.
+
+Progress rendering independently checks eligible measurement metadata. A stable
+series `(problem, metric name, unit)` must keep the same `better` direction;
+changing direction requires a new metric identity. Invalid metadata, direction
+drift or arithmetic overflow rejects the report before any output is replaced.
+Closing checks cross-record comparability before making a record immutable.
+Local raw files must match both their recorded SHA-256 and byte count.
 
 A metric is rejected unless its unit is one of these. The headline unit of
 every progress chart is `S`; every other unit gets its own panel and is never

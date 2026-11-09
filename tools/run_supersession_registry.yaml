@@ -2969,3 +2969,33 @@ records:
   notes: No experiment was rerun. manifest_v2.yaml remains immutable at SHA-256 c04b509e725efc20ec6f8745949340b51be0f1b8a76445961133a128f6a8cd47; manifest_v3.yaml adds the missing direct original-manifest pointer and is hash-pinned to the captured artifacts;
     raw-result.json is a byte-identical copy of metrics.json; the original manifest remains
     unchanged.
+- run_id: RUN-PNEXT-201c3c
+  superseded_path: experiments/EXP-PNEXT-6558d8/runs/RUN-PNEXT-201c3c/manifest.yaml
+  superseded_sha256: fb9d73bdab05e4a5b568711850fe84180486aa2118d11e87da8df5c95d80f747
+  superseding_path: experiments/EXP-PNEXT-6558d8/supersessions/RUN-PNEXT-201c3c/manifest_v2.yaml
+  superseding_sha256: f7d3c4b3b6ae8d8f0f324db1fc7bb3865073fe624df59200114a16944f7b5ff5
+  registered: '2026-11-05'
+  supersession_kind: additive_schema_completion
+  superseded_id_null: true
+  superseded_id_null_provenance: Original nested run envelope omits id. Actual launch.json
+    SHA256 345cd0a50106652ae6716c5a6a8ea64d17befe43ab7e3b61bca450e1224abc71 and execution-receipt.json
+    SHA256 28b8e150a19db988c8d35f9b7d5af9e5717aa2c87463f0f695e0bbc00c6069dc both explicitly
+    name RUN-PNEXT-201c3c, matching its directory. No identity invented.
+  defect: Sealed failed driver envelope omitted identity/provenance/environment/inputs/timing
+    because supervisor skips completion after nonzero driver exit.
+  notes: No rerun, repair or result promotion. New manifest outside sealed run transcribes
+    actual native failure and binds existing compressed bundle; original run bytes
+    remain immutable.
+- run_id: RUN-ICPERF-c7f69e
+  superseded_path: experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-c7f69e/manifest.yaml
+  superseded_sha256: ef8f29d3fb63262156f613136ddfdfa9e2fd360acbaecd7d61139a3581b1e8ea
+  superseding_path: experiments/EXP-ICPERF-127dbd/corrections/RUN-ICPERF-c7f69e-manifest-v3.yaml
+  superseding_sha256: 6c362768049f0838365146b992d00cddfed5eb3a69660bad74702016f567683b
+  registered: '2026-11-06'
+  supersession_kind: additive_schema_completion
+  decision_id: DEC-20261106-ecf261
+  defect: The launch wrapper (launch_eks.sh sha256 130164868a...) wrote a flat manifest without status, code,
+    environment, inputs, timing, resources and certificate fields; the run schema rejects it.
+  notes: No rerun. The run refused before submission (exit 4, nothing submitted, USD 0). manifest_v2.yaml
+    transcribes raw-result.json, launch.json, execution-receipt.json and environment.json and states the
+    receipt status infrastructure_error; the original run bytes, sealed by RBS-ICPERF-e2a5c2's journal, are unchanged.

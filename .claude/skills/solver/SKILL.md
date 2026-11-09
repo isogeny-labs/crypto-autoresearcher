@@ -20,3 +20,11 @@ Read `groebner_compare/README.md`, `src/crypto_autoresearcher/gf2/README.md`, an
 6. Return exact input/adapter/certificate identities and a stage-specific diagnosis. Use bench for paired comparisons, gpu for kernel correctness, and run for existing trial execution.
 
 Follow current `AGENTS.md` authority, provenance and immutable-record rules. This profile adds no prerequisite to `run`; preserve explicit execution requests.
+
+## Default challenge research loop
+
+Research goals use [the default challenge research loop](../../../docs/challenge-research-loop.md). Preserve the frozen problem, candidate, evidence and review pointers relevant to this skill. Work within its existing role; findings guide the next attempt, and a worker completion alone is not scientific acceptance.
+
+For goal-level boundary work, `autoresearch campaign frontier --goal <GOAL-ID>`
+shows the fixed comparison domain, reviewed points, remaining gap and next test.
+Carry those references; keep measured, modeled and unresolved claims distinct.

@@ -1,0 +1,35 @@
+# SIMULATION: scratch git layout (scratchpad/d07-stageC, never pushed) holding the approved-form preview bytes at the canonical paths, the preview queue and a stand-in approval decision naming the runbook sha256 (not a record; nothing was approved).
+$ python3 tools/task_card.py lint experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml
+CARD OK experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml sha256 613bad15fe8f82e405ab3f0366cc57e0095b5cf1098c15cc7581b0b24b4a4429
+exit=0
+
+$ python3 tools/task_card.py prompt experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml
+You are executor-mechanical. This is task card CARD-EXP-ICPERF-127dbd-4 (experiments/EXP-ICPERF-127dbd/task-cards/CARD-EXP-ICPERF-127dbd-4.yaml, sha256 613bad15fe8f82e405ab3f0366cc57e0095b5cf1098c15cc7581b0b24b4a4429); tools/task_card.py lint accepted it.
+Every value you need is below. Use no other value, run nothing else, and compute nothing: every number you report is copied from tool output.
+
+Follow ".claude/agents/executor-mechanical.md", section "Runbook execution: the procedure", steps 1 to 8, with exactly these values:
+  <runbook> = experiments/EXP-ICPERF-127dbd/runbook.yaml
+  <your bus address> = executor-mechanical-icperf-127dbd
+  <session_dir> = experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-616277
+  <session id> = RBS-ICPERF-616277
+  step 2 in the background: yes
+
+Write only inside:
+  - experiments/EXP-ICPERF-127dbd/runs/
+  - experiments/EXP-ICPERF-127dbd/runbook-sessions/
+  - experiments/EXP-ICPERF-127dbd/reports/
+
+Stop and return `refused`, naming the condition, when:
+  - The relay message does not state that DEC-20261107-7802ec is committed, that the independent red-team reconfirmation of the v3c locator bytes is archived, that the owner has been told the S2 launch notice, that the owner has given the EKS spend go-ahead, and that scripts/checkpoint.sh gate exited with status 0.
+  - The last line of step 1 does not begin with LINT OK.
+  - Step 2 exits with status 2.
+  - Step 2 exits with a status other than 0, 2 or 3.
+  - Step 3 does not print VERIFY OK.
+  - Step 5 shows a page 1 that lacks the text EXP-ICPERF-127dbd or the text RBS-ICPERF-616277.
+  - Any command in steps 1 to 8 would need an argument that this card does not give.
+  - A command would write a file outside the three write_scope paths.
+
+Note from the director: Budget gate line of protocol section 10, recorded before the launch, in USD. S2 launch, 0.93108 (HB of S1, used as actual_spend until a billing record exists) + 0.93108 + 0 = 1.86216, at most 5.00, pass. This session launches S2 only, on launch_eks.sh v3c; S1 already ran as RUN-ICPERF-8b0d47 and S02-reconcile-t1 copies its output read-only, so the session never launches S1 and never writes under runs/RUN-ICPERF-8b0d47. If S02-reconcile-t1 stops the session, S2 is never launched. Step 2 exit status 3 is a recorded result; still run steps 3 to 8, then do not run step 2 again and do not reopen this runbook session; wait for a Coordinator decision.
+
+Return the output of step 7 (`status --brief`) verbatim, and nothing you composed yourself.
+exit=0

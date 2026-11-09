@@ -7,7 +7,7 @@
   `{0,1,8,9,16,17}` is completely certified in Lean
 - **Next action owner:** formal proof lane for the factor and module
   lemmas; independent Reviewer for semantic fidelity
-- **Last updated:** 2026-10-22
+- **Last updated:** 2026-11-07
 
 ## Problem
 
@@ -52,6 +52,15 @@ polynomial-basis implementation to that canonical field.
   performed independent Rabin and polynomial-product calculations
   and reproduced both archived yield matrices. It is not a Lean
   invariant-subspace theorem.
+- **Exact encoding bridge:** The
+  [mask-decoding theorem](../formal/CryptoResearch/Binstd/EncodedPolynomial.lean)
+  identifies archived masks 131081, 3, 313, and 471 with the stated
+  polynomials over `ZMod 2`, and checks two nearby control masks. Its
+  current-head target build and per-theorem axiom query passed under the
+  repository's Lean 4.35.0 pin. The
+  [validation report](../docs/reports/2026-11-07-binstd-bridge/report.md)
+  records the checks and independent scope reviews. This still does not
+  connect encoded XOR remainder to polynomial division.
 - **Missing capability:** Lean proofs that the archived field modulus
   defines the claimed 17-dimensional field, that its `x↦x²` map
   agrees with the canonical-field Frobenius, and that this map has
@@ -101,3 +110,8 @@ as open. The later
 adds its abstract-field minimal polynomial while keeping the runner
 binding and classification open. No canonical performance graph changes
 because these are structural proof obligations.
+
+2026-11-07: The archived mask-to-polynomial equalities and nearby decoder
+controls were added under the current stable Lean pin. The modulus
+irreducibility, runner-field equivalence, and invariant-subspace
+classification remain open; no frozen run or performance panel changed.

@@ -1,0 +1,58 @@
+# DEC-20261107-3e9d71: the snapshot TASK-20261106-d5ec1e was refused as partial output.
+# This decision records impediment IMP-C1-d5ec1e-partial-output with interim custody, and assigns
+# design task TASK-20261107-c5a0f4 to the experiment-director (DEC-20261107-b74e2c ruling 6 and NA-1).
+coordinator_decision:
+  id: DEC-20261107-3e9d71
+  id_provenance: >-
+    Chosen by the Coordinator subagent, which has no shell, as an unused 6-hex token (no match for
+    "3e9d71" under ledger/, coordination/ or experiments/). It is NOT allocator-confirmed. The
+    top-level session runs `python3 tools/allocate_id.py --check DEC-20261107-3e9d71`. If that
+    fails, it allocates with --next, renames the file and replaces the id here, in
+    TASK-20261107-c5a0f4 and in goal.yaml. No other change is permitted.
+  recorded_at: '2026-11-07'
+  decided_at: '2026-11-07'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent with no shell. It wrote this file, ledger/handoffs/TASK-20261107-c5a0f4.yaml
+    and two changes to ledger/goals/GOAL-ICPERF-e6b6a4/goal.yaml (the impediment entry and
+    next_action). The refusal facts come from the top-level session's report of the executor's tool
+    output. The Coordinator did not run them.
+  goal_id: GOAL-ICPERF-e6b6a4
+  batch_id: BATCH-0e0902
+  decision: revise
+  decision_scope: >-
+    Impediment and custody for TASK-20261106-d5ec1e, and assignment of the design task
+    TASK-20261107-c5a0f4 (zero runs). It approves no launch and no bytes.
+  experiment_id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  facts_reported:
+    - "Scratch commit, never pushed. The dispatcher said: 'dispatch error: completed archive task TASK-20261106-d5ec1e path_sha256 must cover every archive and source artifact'. The branch claude/c1-snapshot-d5ec1e-20261107 is at b6d9ebe2d8 with no new commit."
+    - "22 of TASK-20261106-724d14's 36 artifact paths are missing: all 18 RUN-ICPERF-5ffa79 paths, and the 4 RUN-ICPERF-8b0d47 job/artifacts paths (SHA256SUMS, job-exit.json, session/records.jsonl, session/plan.json). The 14 existing RUN-ICPERF-8b0d47 files are already committed (4166fb89d2, c04a15753c, 1f7624db98)."
+    - "Outside the dispatcher's expected set: reports/run-20261106T2309Z, reports/run-20261107T0214Z, SR-20261106-fdb6fa, SR-20261107-64b997 (10 files in all), and the RBS-ICPERF-de8978 journal and step files."
+    - "SA-2: origin/main 2aa7407aa6 is an ancestor of HEAD. SA-4: nothing was compacted. check_merge_hygiene: PASS. validate_ledger (sparse) is identical on HEAD and main."
+  rulings:
+    - "TASK-20261106-d5ec1e stays queued and impeded. This is the same condition as IMP-C1-dccfdc-partial-output (DEC-20261106-ecf261 ruling 6). It is an impediment, not a failure. No dispatch_exception, no terminal_snapshot_authorizations, and no workaround: never create a missing path, and never declare a path as void by hand."
+    - "Interim custody. The existing RUN-ICPERF-8b0d47 files, the RBS-ICPERF-de8978 journal and step files, both reports and both session receipts are committed on claude/c1-launch-20261106 and reach main through PR #3127. Archive TASK-20261107-c5a0f4 records, in its snapshot receipt, the sha256 of each of those files as at the PR #3127 merge commit, and takes no archival ownership of TASK-20261106-724d14."
+    - "The new session's handoffs declare only files the session can produce (TASK-20261107-c5a0f4 D-7)."
+    - "TASK-20261107-c5a0f4 is assigned to the experiment-director. Zero runs. It returns uncommitted previews. An independent red-team task follows before any approval."
+  status_transitions: []
+  target_ids: [TASK-20261106-d5ec1e, TASK-20261107-c5a0f4, EXP-ICPERF-127dbd, GOAL-ICPERF-e6b6a4, BATCH-0e0902]
+  related_records:
+    prior_decisions: [DEC-20261106-ecf261, DEC-20261107-b74e2c]
+    pr: 3127
+  rationale:
+    - "The dispatcher refused d5ec1e for the same reason as dccfdc. Following the precedent keeps custody lawful and the records immutable."
+    - "Until S2 has run on a fixed wrapper, no evidence review exists, so the design task is the only next step that moves C1 forward."
+  evidence_refs:
+    - ledger/handoffs/TASK-20261106-d5ec1e.yaml
+    - ledger/handoffs/TASK-20261106-724d14.yaml (artifact_paths)
+    - ledger/decisions/DEC-20261106-ecf261.yaml (ruling 6)
+    - ledger/decisions/DEC-20261107-b74e2c.yaml (rulings 3, 4 and 6)
+  limitations:
+    - "No shell. The refusal and the path counts are as the top-level session reported them."
+  next_actions:
+    - {id: NA-1, rank: 1, owner: top-level session, text: "Check the ids. Commit this decision, TASK-20261107-c5a0f4 and goal.yaml (named paths only) on the PR #3127 branch, then push. Once PR #3127 has merged, dispatch TASK-20261107-c5a0f4 to experiment-director. Then archive its previews alone, and return for the red-team task."}
+  knowledge_promotion:
+    promoted: []
+    not_warranted: "An archive impediment and a design assignment. No evidence exists."

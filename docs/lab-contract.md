@@ -232,3 +232,37 @@ Still owner decisions, not drift: whether to delete the legacy bucket copies
 (the contract keeps them read-only), and whether `crypto` should flip its
 canonical skill surface to `.claude` (this contract allows either direction, as
 long as exactly one body exists).
+
+## 11. Knowledge base (2026-11-05)
+
+`research-kb` is the shared retrieval layer for all three repositories. It
+indexes the repositories, the archives and the paper collection and serves one
+read-only MCP catalog to Claude Code, Codex and OpenCode. It is a finding aid,
+not evidence: a passage points to a repository file, paper or Lean declaration,
+and the source must still be read.
+
+- Every repository's `AGENTS.md` names the KB and its mandatory triggers:
+  prior-art and “has this been tried?” questions, a new lead/mechanism/factor
+  base/solver/coordinate, a “first”, “best”, “not known” or negative claim, a
+  cross-repository question, and a subagent handoff.
+- The canonical procedure is owned by `crypto` at
+  `.agents/skills/research-kb/SKILL.md` (commit `bc10008055`). The other
+  repositories expose a pointer skill with the same name; they do not fork the
+  body.
+- Each repository records the KB `source_id` and `repo:path` under “Sources
+  checked” in the session log, task notes or PR. A miss states the queries and
+  repositories searched; it is not evidence of absence.
+- The CLI fallback is `scripts/research-kb` in each repository. It resolves the
+  sibling catalog and sets `RESEARCH_KB_HOME`/`RESEARCH_KB_CONFIG`; a bare CLI
+  run defaults to an empty local catalog.
+- The local `crypto-autoresearcher` `kb/` server remains that repository's
+  derived index; the retrieval policy in `docs/agent-contract-extended.md`
+  applies to both.
+
+## 12. Persistent scientific research (2026-11-08)
+
+For the shared research workflow, follow
+[Persistent scientific research loop](../AGENTS.md#persistent-scientific-research-loop).
+Repositories expose this behavior through their normative AGENTS.md; runtime
+instruction files point there. This rule supplements the existing challenge loop
+and preserves its immutable evidence, role authority, budgets and decision gates.

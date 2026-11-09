@@ -1,0 +1,133 @@
+idea:
+  id: IDEA-20261109-56b106
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Drinfeld distance k_p = ord_p(t mod p), the extension degree at which a prime-field curve first
+    acquires rational p-torsion, is 1 exactly on anomalous curves and for secp256k1 is predicted divisible
+    by the 233-bit prime factor of p - 1
+  class: barrier
+  claim: 'Let E/F_p be ordinary with trace t and N = #E(F_p) prime. Define k_p = ord_p(t mod p). Theorem
+    (unit root): if u is the p-adic unit eigenvalue of Frobenius then t_k = u^k + (p/u)^k, so t_k = t^k
+    mod p, and p divides #E(F_{p^k}) iff k_p divides k; supersingular curves have k_p = infinity. The
+    F_p-linear Drinfeld/Scanlon structure of G_a meets E only inside E(F_{p^k})[p] with k_p | k, and k_p
+    = 1 is exactly the anomalous case. Predictions fixed before any run: (1) for secp256k1, q_233 | k_p
+    where q_233 is the 233-bit prime factor of p - 1 (recalled factorisation 2*3*7*13441*q_233, to be
+    recomputed), so log2 k_p >= 233; (2) on 200 prime-order toy curves from the calibration primes the
+    law of log(k_p)/log(p-1) is indistinguishable from that of ord(u) for uniform units u; (3) every CTRL-ANOMALOUS-TRACE1
+    curve has k_p = 1 and its same-prime non-anomalous partner has k_p > 1. No exponent moves.'
+  mechanism: Scanlon linearity (Drinfeld DLP is Gaussian elimination, recalled) needs a module that is
+    an explicit F_p-vector space on which the acting ring acts F_p-linearly. On an elliptic curve the
+    only such locus is the p-torsion seen through the formal group. Over F_p it is rational iff t = 1;
+    over F_{p^k} iff t^k = 1 mod p. So k_p measures, in field-degree units, the distance of a curve from
+    the one locus where a Drinfeld-type attack is a theorem. Even at k = k_p the order-N subgroup is the
+    Pohlig-Hellman complement of the p-part, so the additive logarithm on E[p] carries zero bits about
+    the target discrete log; the certificate is doubly closed.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Anomalous curves are solved in polynomial time by p-adic methods; this record identifies them
+      as k_p = 1.
+    verified_by: brief section 3 row text, Mythos run 2026-11-09; next agent opens knowledge/frontiers/ecdlp/generic-rho/KR-RHO-53c89f.yaml
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt N); exponent difference here is 0.
+    verified_by: brief section 3 row text, Mythos run 2026-11-09
+  assumptions:
+  - secp256k1 is ordinary (t nonzero mod p); the test recomputes t from the published N.
+  - The factorisation of p - 1 is recomputed with primality certificates, not taken from memory.
+  predictions:
+  - metric: log2 of k_p for secp256k1
+    direction: higher
+    minimum_effect: at least 233
+  - metric: two-sample KS statistic between log(k_p)/log(p-1) over 200 toy prime-order curves and the
+      same statistic for 200 uniform units
+    direction: different
+    minimum_effect: below the 5 percent critical value, i.e. no detectable bias
+  - metric: k_p on anomalous control curves and their same-prime partners
+    direction: lower
+    minimum_effect: exactly 1 on every anomalous curve, at least 2 on every partner
+  minimal_test:
+    design: 'One script in crypto/sage or standalone Python. Read p and N for secp256k1 from cryptanalysis/include/ca_curve.h
+      or the SEC 2 values, set t = p + 1 - N, factor p - 1 (trial division to 2^24, then ECM, or verify
+      the recalled factorisation by multiplication and primality proofs), compute ord_p(t) by removing
+      prime factors from p - 1. Toy arm: 200 prime-order curves at p in 2^20..2^30 from docs/ECDLP_CALIBRATION_PRIMES.md
+      and 200 uniform units at the same primes; two-sample KS test. Control arm: the anomalous curves
+      of IDEA-20260805-cc4c2c plus one random prime-order curve at each prime.'
+    controls:
+    - Uniform random units of F_p^* at the same primes (null law of orders).
+    - Anomalous curves (k_p = 1 by theorem) with same-prime non-anomalous partners.
+    - Recomputed t checked by a point-order test on a random point.
+    required_metrics:
+    - t and t mod p for secp256k1
+    - factorisation of p - 1 with a primality certificate per factor
+    - k_p and log2 k_p for secp256k1
+    - KS statistic and p-value for the toy arm
+    - k_p for every control curve
+  falsification_conditions:
+  - log2 k_p for secp256k1 is below 64 (prediction 1 fails; still no attack because of the Pohlig-Hellman
+    separation).
+  - The toy arm rejects equality of laws at the 1 percent level toward smaller k_p.
+  - An anomalous control with k_p different from 1 is an implementation error and an invalid run.
+  confounders:
+  - Very smooth p - 1 at a toy prime shrinks orders in both arms; compare at the same prime only.
+  - Supersingular toy curves must be excluded or reported as k_p = infinity.
+  interpretation_limits:
+  - A confirmed prediction closes the p-torsion ascent route for secp256k1 by field size; it says nothing
+    about routes not using p-torsion.
+  - The toy statistic tests absence of bias in k_p, not any property of the discrete log.
+  heuristic_assumptions:
+  - id: H1
+    statement: For prime-order curves, t mod p has the multiplicative order of a uniform unit of F_p^*.
+    rigorous_support: No theorem; equidistribution of t does not address ord_p(t). The secp256k1 prediction
+      fails with probability about 1/q_233 under H1.
+    validation_plan: The toy-arm KS test; the secp256k1 value is exact.
+  target_complexity:
+    time_exponent: 1/2 unchanged
+    memory_exponent: O(1)
+    best_known: Pollard rho, Theta(sqrt N) group operations (KR-RHO-13bf67)
+    hidden_overhead: None; no algorithm is proposed. Any algorithm in E(F_{p^{k_p}}) pays at least k_p
+      * log2 p bit operations per element, predicted above 2^241.
+    tradeoff_note: Not applicable; a certificate, not a tradeoff.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f dominates the k_p = 1 case; the wave-1 transfer-lane ascent lead states
+    the ascent variant without this order computation.
+  sota_delta: Exponent delta 0. New quantity k_p as a one-number distance from the Drinfeld/anomalous
+    locus, with the concrete prediction log2 k_p >= 233.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-5ea2f8
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: special_case
+      delta: The row covers k_p = 1; this record defines k_p for every ordinary curve and predicts it
+        for secp256k1.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: k_p depends only on t, hence is isogeny-invariant, consistent with the row.
+    searched:
+      corpus_grep:
+      - brief section 2 for ord_p, p-torsion, ascent, anomalous, trace-one
+      - wave-1 transfer and p-adic lane titles for ascent variants
+      web: []
+      blocked: []
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: One script in crypto/sage or standalone Python. Read p and N for secp256k1
+        from cryptanalysis/include/ca_curve.h or the SEC 2 values, set t = p + 1 - N, factor p - 1 (trial
+        division to 2^24, then ECM, or verify the recalled factorisation by multiplication and primality
+        proofs), compute ord_p(t) by removing prime factors from p - 1. Toy arm: 200 prime-order curves
+        at p in 2^20..2^30 from docs/ECDLP'

@@ -1,0 +1,22 @@
+schema: crypto.autoresearch.formal_task.v1
+task_id: TASK-20261107-BINSTD-MASK
+claim_id: BINSTD-EXP-8bdf86-MASK-POLYNOMIAL
+kind: formalize_claim
+source: research/binstd_end_to_end_20261026/evidence.json
+source_status: COMPUTED
+theorem_name: CryptoResearch.Binstd.decode_modulus17
+theorem_file: CryptoResearch/Binstd/EncodedPolynomial.lean
+workspace: formal
+hypothesis_ids:
+  - H-BINSTD-5a212b
+notes: |
+  Source SHA-256: 66a5a699ab47f37968b7936015e354d9ac04a587581d802de92bbedbbcce91c6.
+  The same Lean file checks the three factor masks against factor1, factor8a,
+  and factor8b, and decodes two nearby reducible controls. This bridges exact
+  masks to concrete polynomials only. The
+  finite XOR remainder algorithm, runner field implementation, invariant
+  subspace classification, and measured relation yields remain separate.
+claim: |
+  Reading the 18 low bits of archived mask 131081 as coefficients over ZMod 2
+  gives X^17 + X^3 + 1. Archived masks 3, 313, and 471 decode to the exact
+  factor polynomials used by the existing BINSTD factorization theorem.

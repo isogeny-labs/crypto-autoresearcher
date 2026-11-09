@@ -1,0 +1,154 @@
+idea:
+  id: IDEA-20261109-dd7eed
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Descent over F_p(t) is free and buys nothing: Sha of the XEDN surface is its Brauer group with
+    exponent at most 30, and the specialisation kernel at the target fibre is an index-N lattice whose
+    short vectors are generic relations'
+  class: barrier
+  claim: 'Let S -> P^1 be an elliptic surface with section over F_p whose generic fibre E/F_p(t) has the
+    target E_0 as fibre at t = 0, with sections P~, Q~ specialising to P and Q = kP. (i) For the rational
+    surfaces of the XEDN census (deg a <= 4, deg b <= 6), Br(S) equals H^1(F_p, NS(S_bar)) because Br(S_bar)
+    = 0 and Br(F_p) = 0, and Sha(E/F_p(t)) equals Br(S) (Grothendieck; fibre condition to be re-checked).
+    Frobenius acts on NS(S_bar) through an automorphism of U + E8(-1) of order at most 30, so Sha has
+    exponent at most 30, Sha[N] = 0, and Sel_N = E(F_p(t))/N: the only shadows in E_0(F_p) are specialised
+    sections. Rank and Selmer group follow from Shioda-Tate in polynomial time. (ii) P~ and Q~ are dependent
+    only when k = b/a mod N with a^2, b^2 bounded by the ratio of the largest to the smallest height among
+    free-x sections, an O(1) set of scalars; this is the function-field face of the height obstruction
+    and explains the forced norm-1 relations of the XEDN records. (iii) The kernel L_0 of spec_0: E(F_p(t))
+    -> E_0(F_p) has index N, so its shortest vector has height about (N^2 det MW)^{1/r} by Minkowski (r
+    <= 8, so degree in t at least 2^{64} at 256 bits), and finding it is finding a relation among r points
+    of unknown logarithm, which is generic. (iv) K3 surfaces are the first case with Br(S_bar) nonzero;
+    the N-shadow statement is unchanged, so the planned K3 census gains only rank information from Sha.'
+  mechanism: 'Over a global function field the Selmer and Sha groups are computable (Tate holds for rational
+    and K3 elliptic surfaces), so F_p(t) is the one setting where the cost of descent has a finite answer.
+    The answer is that descent produces the Mordell-Weil lattice, the only link to the ECDLP is the specialisation
+    homomorphism, and its kernel is a sublattice of index N whose vectors are discrete-log relations:
+    descent moves the problem from E_0(F_p) to a lattice of rank at most 8 with a hidden index-N sublattice,
+    which is not easier.'
+  novelty_status: unverified
+  citations:
+  - ref: IDEA-20260805-bd61c3
+    provenance: internal
+    claim: The XEDN infinity-norm relation metric is forced to 1; this record gives the descent-theoretic
+      reason.
+    verified_by: ledger index excerpt in the repo brief; the record file must be opened.
+  - ref: IDEA-20260805-e5dd09
+    provenance: internal
+    claim: Geometric Mordell-Weil rank of the frozen family is determined by root multiplicities.
+    verified_by: ledger index excerpt in the repo brief.
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogeny-class invariants are shared; a fibre carrying the target is isogenous to it and specialisation
+      cannot leave the class.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief.
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails; this is the global-function-field analogue.
+    verified_by: Mythos ideation 2026-11-09, frontier-map excerpt in the repo brief.
+  - ref: Grothendieck Brauer III and Shioda 1990, Mordell-Weil lattices
+    provenance: recalled
+    claim: Br(S) equals Sha(E/K) for a Jacobian elliptic surface over P^1 over a finite field; rank formula.
+    verified_by: recalled; the coordinator must confirm the exact sequence and fibre hypotheses.
+  assumptions:
+  - Surfaces relatively minimal with a section; the fibre at t = 0 is smooth.
+  - Toy sizes p <= 2^16 so that logs of specialised generators can be tabulated exhaustively for the control.
+  predictions:
+  - metric: number of instances with P~, Q~ dependent and k outside the small-ratio set
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: ratio lambda_1(L_0) / (N^2 det MW)^{1/r} in the height norm
+    direction: lower
+    minimum_effect: between 1/4 and 4 on at least 90 percent of instances
+  - metric: exponent of H^1(F_p, NS(S_bar))
+    direction: lower
+    minimum_effect: at most 30, and gcd with N equal to 1 on every surface
+  minimal_test:
+    design: Sage. Three primes p <= 2^16 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md, 20 instances (P,
+      Q) each. Construct a two-section surface in the XEDN family through (P, Q) at t = 0 by solving the
+      linear system for a(t), b(t) given free-x section polynomials with x(0) = x_P, x_Q (reuse the census
+      builder referenced by IDEA-20260805-68c69a; locate run_census.sage first). Compute the Mordell-Weil
+      lattice by Shioda-Tate plus a bounded height search, the Gram determinant of (P~, Q~), the logs
+      of specialised generators by exhaustive table, hence L_0 and its shortest vector, and the Frobenius
+      action on NS(S_bar) over F_{p^6}.
+    controls:
+    - Same surface specialised at a second smooth fibre t_1, to check the lambda_1 law does not depend
+      on the instance.
+    - Height control from IDEA-20260805-68c69a (deg_t x(nP) = h n^2) before any surface is accepted.
+    required_metrics:
+    - rank r and fibre configuration per surface
+    - Gram determinant of (P~, Q~)
+    - lambda_1(L_0) and (N^2 det MW)^{1/r}
+    - exponent and order of H^1(F_p, NS(S_bar))
+  falsification_conditions:
+  - A dependent pair (P~, Q~) with k outside the small-ratio set.
+  - lambda_1(L_0) below (N^2 det MW)^{1/r} / 8 on more than 10 percent of instances, which would indicate
+    a non-generic kernel and must be explained.
+  - A surface with N dividing the exponent of H^1(F_p, NS(S_bar)).
+  - A failed height control is an invalid surface, not evidence.
+  confounders:
+  - Bounded height search can miss generators; the Shioda-Tate rank must match the found lattice before
+    any kernel is computed.
+  - Non-split fibre components inflate H^1(F_p, NS) without affecting the F_p-rational Mordell-Weil group;
+    report both.
+  interpretation_limits:
+  - Closes descent over F_p(t) for surfaces with chi <= 2 as a source of information about k; says nothing
+    about relation supply among sections beyond the Minkowski law.
+  - Rank-unbounded families are outside the test; their specialised points are unknown-log points, which
+    is generic.
+  heuristic_assumptions:
+  - id: H1
+    statement: L_0 behaves as a random index-N sublattice, so lambda_1 follows Minkowski up to a factor
+      4.
+    rigorous_support: Minkowski gives the upper bound unconditionally; the lower bound is heuristic.
+    validation_plan: Direct measurement in minimal_test at three primes, 60 instances.
+  target_complexity:
+    time_exponent: unchanged, N^{1/2}
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(N^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: none claimed; descent here is polynomial and yields no bit of k
+    tradeoff_note: Barrier record; delta 0.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-RHO-755e35 and KR-IC-cd159a dominate the transfer readings; the XEDN records dominate
+    the norm-1 observation. None states the Sha identification, the exponent bound, or the index-N kernel
+    law.
+  sota_delta: Exponent delta 0. New content is the identification of the XEDN forced relations with the
+    height obstruction, the Sha exponent bound, and the Minkowski law for the specialisation kernel.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-IC-cd159a
+    - KR-IC-5ea2f8
+    - KR-IC-46d822
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row closes isogeny walks; this record closes sections and torsors of a fibration containing
+        the target fibre.
+    - ref: KR-IC-5ea2f8
+      provenance: internal
+      relation: orthogonal
+      delta: Covers map a curve onto E; here E is a fibre of a surface and the map is specialisation,
+        in the opposite direction.
+    searched:
+      corpus_grep:
+      - repo brief section 2 for XEDN, Mordell-Weil, specialisation, surface, Shioda
+      - synthesis lane wave-1 K3 census lead
+      web: []
+      blocked: []
+    lead: LEAD-TRF-function-field-xedni-lift
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage. Three primes p <= 2^16 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+        20 instances (P, Q) each. Construct a two-section surface in the XEDN family through (P, Q) at
+        t = 0 by solving the linear system for a(t), b(t) given free-x section polynomials with x(0) =
+        x_P, x_Q (reuse the census builder referenced by IDEA-20260805-68c69a; locate run_census.sage
+        first). Compute the Mordell-Weil lattice '

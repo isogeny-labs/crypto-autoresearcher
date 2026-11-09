@@ -1,0 +1,7 @@
+preapproval-output-real-clone.json: tools/experiment_preapproval.py --packet preapproval-packet.json, run in the worktree (source_ref origin/main = 81b03b294b), under env -i with AWS_ unset.
+  approvable false, 4 blockers, all about state and none about content: the canonical specification, the lint receipt, launch_eks.sh and locate_results.sh are not committed with these bytes at origin/main
+  (nothing is committed or pushed by this task). The canonical specification is the review_required draft (PD-3), and the approved forms are only the previews named in the packet.
+preapproval-output-simulated-pushed.json: the same packet in a scratch git layout (scratchpad/d07-stageB, never pushed, never a record) that holds the same worktree files, committed and
+  pointed to by refs/remotes/origin/main. approvable true, 0 blockers. It shows that once the Coordinator's archive commits the draft-state canonical files and the bound files, the packet's content checks
+  (specification bindings, trial plan, queue structure and archive coverage, executor handoff binding, lane, goal, lint receipt) have no further finding. It is a simulation, not an approvability claim.
+runbook-lint-real-clone.txt / runbook-lint-approved-state-sim.txt: tools/runbook.py lint in the worktree (4 expected findings) and in the scratch layout scratchpad/d07-stageA that holds the approved-form previews at the canonical paths and the preview queue (LINT OK).

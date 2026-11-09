@@ -112,6 +112,13 @@ COMMAND_PURPOSES = ("probe", "coordination", "verification")
 ENGINES = ("supervisor", "local")
 REPLAY_MODES = ("fields", "bytes", "exempt")
 TOLERANCE_KEYS = ("rel_tol", "abs_tol")
+# The largest replay float tolerance a runbook or an audit option may declare
+# (SHF-20261106-a114e7 LGX-3). DEC-20261029-5554ee's rel_tol 1e-9 / abs_tol
+# 1e-12 is the bound: it absorbs a compensated-sum change of a few hundred ulps
+# (RBS-PFDR-bb0d26, relative 8.6e-14) and nothing a reader would call another
+# number. A wider tolerance is refused, never clamped: a toleranced replay of
+# a doubled value, a 1000x change or a sign flip must not audit clean.
+TOLERANCE_MAX = {"rel_tol": 1e-9, "abs_tol": 1e-12}
 AGGREGATES = ("count", "sum", "mean", "min", "max", "median", "fraction_true")
 PROOF_BACKENDS = ("risc0", "sp1")
 ASSERTION_OPS = ("equals", "not_equals", "in", "type", "min", "max", "matches",
@@ -923,7 +930,7 @@ def _lint_trials(runbook: Runbook, at: str, step: dict[str, Any], bound: dict[st
                 for index, item in enumerate(compare):
                     where = f"{at}.replay.compare[{index}]"
                     keys = {"file", "pointers"} if mode == "fields" else {"file"}
-                    optional = {"tolerance"} if mode == "fields" else set()
+                    optional = {"tolerance", "trials"} if mode == "fields" else {"trials"}
                     if not isinstance(item, dict) or not keys <= set(item) <= keys | optional:
                         out.append(f"{where}: keys are {sorted(keys)}"
                                    + (f", optionally {sorted(optional)}" if optional else ""))
@@ -933,8 +940,19 @@ def _lint_trials(runbook: Runbook, at: str, step: dict[str, Any], bound: dict[st
                             parse_tolerance(item["tolerance"])
                         except RunbookError as exc:
                             out.append(f"{where}.tolerance: {exc}")
-                    if any(item["file"] not in artifacts.get(t, []) for t in ids):
-                        out.append(f"{where}: {item['file']!r} is not an artifact of every trial")
+                    scope = ids
+                    if "trials" in item:
+                        # Per-trial compare items (DEC-20261105-6e2616 NA-1(b)):
+                        # heterogeneous trials compare their own pointers.
+                        if (not isinstance(item["trials"], list) or not item["trials"]
+                                or not all(isinstance(t, str) for t in item["trials"])
+                                or not set(item["trials"]) <= set(ids)):
+                            out.append(f"{where}.trials: a non-empty list of this step's trial ids")
+                            continue
+                        scope = item["trials"]
+                    if any(item["file"] not in artifacts.get(t, []) for t in scope):
+                        out.append(f"{where}: {item['file']!r} is not an artifact of every trial"
+                                   + (" it names" if "trials" in item else ""))
                     if mode == "fields" and (not isinstance(item["pointers"], list) or not item["pointers"]
                                              or not all(isinstance(p, str) and p.startswith("/") for p in item["pointers"])):
                         out.append(f"{where}: pointers is a non-empty list of JSON pointers")
@@ -1080,6 +1098,10 @@ def parse_tolerance(value: Any) -> dict[str, float]:
         if isinstance(number, bool) or not isinstance(number, (int, float)) \
                 or not math.isfinite(number) or number < 0:
             raise RunbookError(f"{name} is a finite non-negative number, got {number!r}")
+        if number > TOLERANCE_MAX[name]:
+            raise RunbookError(f"{name}={number!r} exceeds the maximum {TOLERANCE_MAX[name]!r} "
+                               "(docs/runbook-execution.md, DEC-20261029-5554ee); a replay "
+                               "that needs more is a mismatch, not a match")
         out[name] = float(number)
     return out
 
@@ -2250,14 +2272,81 @@ def _replay_interpreter(runbook: Runbook, trial: dict[str, Any], cache: dict[str
     return cache[program]
 
 
-def _recorded_python(run_dir: Path) -> str | None:
-    """/run/environment/python_version of a unit's manifest, when present."""
-    try:
-        manifest = yaml.safe_load((run_dir / "manifest.yaml").read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
+# Where a unit's run directory records the interpreter it ran under, in the
+# order the audit reads them; the first that yields a version wins. Real run
+# manifests (EXP-ICPERF-284bc4, 283a70) write /run/environment/python, not
+# python_version, and the supervisor's environment.json writes "python" as the
+# full sys.version string; reading only python_version made the parity check
+# a silent no-op (DEC-20261105-6e2616 NA-1).
+RECORDED_PYTHON_SOURCES: tuple[tuple[str, str], ...] = (
+    ("manifest.yaml", "/run/environment/python_version"),
+    ("manifest.yaml", "/run/environment/python"),
+    ("manifest.yaml", "/run/environment/driver_python_version"),
+    ("manifest.yaml", "/run/environment/version"),
+    ("environment.json", "/python_version"),
+    ("environment.json", "/python"),
+)
+PYTHON_VERSION = re.compile(r"^\s*(?:CPython\s+|Python\s+)?(\d+\.\d+(?:\.\d+)?)(?=$|[\s+a-z])")
+
+
+def _python_version_of(value: Any) -> str | None:
+    """The bare X.Y[.Z] a recorded field states: "3.11.17", or the leading
+    version of a sys.version string; None for anything else."""
+    if isinstance(value, (int, float)) or value is None or isinstance(value, bool):
         return None
-    found, value = pointer_get(manifest, "/run/environment/python_version")
-    return str(value) if found and value is not None else None
+    match = PYTHON_VERSION.match(str(value))
+    return match.group(1) if match else None
+
+
+def _load_record(path: Path) -> Any:
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    try:
+        # YAML scalars are read as their source text (BaseLoader): an unquoted
+        # python_version: 3.10 is the string "3.10", not the float 3.1
+        # (SHF-20261106-a114e7 LGX-8).
+        return json.loads(text) if path.suffix == ".json" else yaml.load(text, Loader=yaml.BaseLoader)
+    except (ValueError, yaml.YAMLError):
+        return None
+
+
+def recorded_interpreter(run_dir: Path) -> dict[str, Any]:
+    """The interpreter a unit was recorded under, from the canonical places in
+    RECORDED_PYTHON_SOURCES order: {"python_version", "source"}, or
+    {"python_version": None, "source": None, "searched": [...]} when none
+    records one. /run/environment/version counts only beside
+    implementation CPython, since other manifests use it for other things."""
+    documents: dict[str, Any] = {}
+    for name, pointer in RECORDED_PYTHON_SOURCES:
+        if name not in documents:
+            documents[name] = _load_record(run_dir / name)
+        found, value = pointer_get(documents[name], pointer) if documents[name] is not None else (False, None)
+        if not found:
+            continue
+        if pointer == "/run/environment/version":
+            _, implementation = pointer_get(documents[name], "/run/environment/implementation")
+            if str(implementation).lower() != "cpython":
+                continue
+        version = _python_version_of(value)
+        if version:
+            return {"python_version": version, "source": f"{name}#{pointer}"}
+    return {"python_version": None, "source": None,
+            "searched": [f"{name}#{pointer}" for name, pointer in RECORDED_PYTHON_SOURCES]}
+
+
+def _recorded_python(run_dir: Path) -> str | None:
+    """The recorded interpreter's bare version, when any canonical place has it."""
+    return recorded_interpreter(run_dir)["python_version"]
+
+
+def _same_version(recorded: str, replay: str) -> bool:
+    """Equal versions, or equal where the recorded one states fewer parts
+    (a recorded "3.11" matches a replay "3.11.17")."""
+    a, b = recorded.split("."), replay.split(".")
+    n = min(len(a), len(b))
+    return a[:n] == b[:n]
 
 
 def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce: str | None = None,
@@ -2289,6 +2378,7 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
     replays = []
     not_covered = []
     interpreters: dict[str, Any] = {}
+    interpreter_unknown: list[str] = []
     pinned = (runbook.doc.get("environment") or {}).get("python")
     for step in runbook.doc["steps"]:
         if step["kind"] != "trials":
@@ -2297,6 +2387,13 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
         population = [trial for (sid, trial), unit in units.items() if sid == step["id"] and unit["valid"]]
         if replay["mode"] == "exempt":
             not_covered.append(f"{step['id']}: replay exempt ({replay['exempt_reason']})")
+            continue
+        if not population:
+            # Nothing valid to replay: the step is unscreened, not clean
+            # (RBS-ICPERF-c4a91e; SHF-20261106-a114e7 LGX-8).
+            invalid = sum(1 for (sid, _), unit in units.items() if sid == step["id"])
+            not_covered.append(f"{step['id']}: no valid unit to replay ({invalid} recorded, none "
+                               "valid); the replay screen covers nothing in this step")
             continue
         k = min(len(population), samples or replay.get("sample", 1))
         chosen = challenge_order(f"{seed}:{step['id']}", population)[:k]
@@ -2313,11 +2410,21 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
                 continue
             unit = units[(step["id"], trial_id)]
             record = replay_unit(repo, runbook, step, plan, trial, unit, target, float_tolerance=float_tolerance)
-            recorded = _recorded_python(resolve(repo, unit["run_dir"]))
+            found = recorded_interpreter(resolve(repo, unit["run_dir"])) if unit.get("run_dir") else \
+                {"python_version": None, "source": None, "searched": []}
+            recorded = found["python_version"]
+            parity = "unknown" if recorded is None or have is None else \
+                "match" if _same_version(recorded, have) else "mismatch"
             record["interpreter"] = {"version": interpreter.get("version"),
                                      "executable": interpreter.get("executable"),
-                                     "python_version": have, "recorded_python_version": recorded}
-            if recorded is not None and recorded != have:
+                                     "python_version": have, "recorded_python_version": recorded,
+                                     "recorded_source": found["source"], "interpreter_parity": parity}
+            if parity == "unknown":
+                why = (f"no recorded interpreter in {unit.get('run_dir')} (searched "
+                       f"{', '.join(found.get('searched') or []) or 'nothing: no run directory'})"
+                       if recorded is None else "the replay interpreter did not report its version")
+                interpreter_unknown.append(f"{step['id']}/{trial_id}: interpreter_parity: unknown; {why}")
+            if parity == "mismatch":
                 record["environment_drift"] = {
                     "kind": "interpreter_version", "recorded_python_version": recorded,
                     "replay_python_version": have,
@@ -2347,6 +2454,13 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
             findings.append(f"{entry['step_id']}: the Lean receipt no longer satisfies its obligation")
     mismatched = [r for r in replays if r["result"] == "mismatch"]
     findings += [f"replay {r['step_id']}/{r['trial_id']}: {r['detail']}" for r in mismatched]
+    toleranced = [r for r in replays if r["result"] == "matched_within_tolerance"]
+    tolerance_notes = []
+    for r in toleranced:
+        bounds = sorted({json.dumps(row["tolerance"], sort_keys=True) for row in r["compared"]
+                         if row.get("result") == "within_tolerance" and row.get("tolerance")})
+        tolerance_notes.append(f"{r['step_id']}/{r['trial_id']}: matched only within tolerance "
+                               f"{'; '.join(bounds)}; not an exact replay")
     k_total = len(replays)
     report = {
         "schema": AUDIT_SCHEMA,
@@ -2371,6 +2485,15 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
         "replay_interpreters": sorted(interpreters.values(), key=lambda i: i["program"]),
         "environment_drift": [{"step_id": r["step_id"], "trial_id": r["trial_id"], **r["environment_drift"]}
                               for r in replays if r.get("environment_drift")],
+        # Every replayed unit's parity is match, mismatch or unknown; unknown
+        # is stated here and in notes, never skipped (DEC-20261105-6e2616).
+        "interpreter_parity": {state: sum(r.get("interpreter", {}).get("interpreter_parity") == state
+                                          for r in replays) for state in ("match", "mismatch", "unknown")},
+        "notes": interpreter_unknown,
+        # Each unit matched only within a float tolerance, with the bound and
+        # its source (runbook or audit_option); the verdict then reads
+        # clean_within_tolerance, never clean (SHF-20261106-a114e7 LGX-3).
+        "tolerance_notes": tolerance_notes,
         "journal_chains": journal_chains,
         "lean": lean,
         "not_covered": not_covered,
@@ -2381,7 +2504,9 @@ def audit(repo: Path, session: str | Path, *, samples: int | None = None, nonce:
         "detection_power": {"replayed_units": k_total,
                             "miss_probability": {str(f): round((1 - f) ** k_total, 6)
                                                  for f in (0.01, 0.05, 0.10, 0.25, 0.50)}},
-        "verdict": "flagged" if findings else "clean",
+        # A screen that matched any unit only within a float tolerance is
+        # never reported as an exact one (SHF-20261106-a114e7 LGX-3).
+        "verdict": "flagged" if findings else ("clean_within_tolerance" if toleranced else "clean"),
         "scope": ("integrity and replay screening of one runbook session; never a validation_report, "
                   "never evidence about the hypothesis, never an execution proof"),
     }
@@ -2421,14 +2546,40 @@ def replay_unit(repo: Path, runbook: Runbook, step: dict[str, Any], plan: dict[s
         record["detail"] = f"checker exits {check_code} on the replay"
         return record
     original = resolve(repo, unit["run_dir"])
-    problems = []
+    problems, toleranced = compare_outputs(step, trial["id"], original, directory, record,
+                                           float_tolerance=float_tolerance)
+    record["matched"] = not problems and not toleranced
+    record["result"] = "mismatch" if problems else ("matched_within_tolerance" if toleranced else "matched")
+    record["detail"] = "; ".join(problems) if problems else \
+        ("reproduced within the declared float tolerance" if toleranced else "reproduced")
+    return record
+
+
+def compare_outputs(step: dict[str, Any], trial_id: str, original: Path, directory: Path,
+                    record: dict[str, Any], *,
+                    float_tolerance: dict[str, float] | None = None) -> tuple[list[str], bool]:
+    """Compare a unit's recorded outputs with a replay's, per replay.compare.
+
+    Appends one row per compared pointer to record["compared"] and returns
+    (problems, toleranced). Compare items with `trials` apply only to those
+    trials. A pointer absent from BOTH documents is `not_applicable` for this
+    unit (a heterogeneous step's union of pointers; DEC-20261105-6e2616
+    NA-1(b), SHF-20261106-a114e7 ICV-1), never a match; a pointer present on
+    one side only is a mismatch. A unit for which no pointer applies at all
+    reproduced nothing and is a mismatch."""
+    problems: list[str] = []
     toleranced = False
+    applicable = 0
+    record.setdefault("compared", [])
     for item in step["replay"]["compare"]:
+        if "trials" in item and trial_id not in item["trials"]:
+            continue
         a, b = original / item["file"], directory / item["file"]
         if not b.is_file():
             problems.append(f"replay did not produce {item['file']}")
             continue
         if step["replay"]["mode"] == "bytes":
+            applicable += 1
             same = sha256_file(a) == sha256_file(b)
             record["compared"].append({"file": item["file"], "bytes_equal": same})
             if not same:
@@ -2442,7 +2593,18 @@ def replay_unit(repo: Path, runbook: Runbook, step: dict[str, Any], plan: dict[s
         for pointer in item["pointers"]:
             fa, va = pointer_get(left, pointer)
             fb, vb = pointer_get(right, pointer)
-            outcome = compare_tolerant(va, vb, tolerance) if fa and fb else {"result": "mismatch"}
+            if not fa and not fb:
+                record["compared"].append({"file": item["file"], "pointer": pointer, "equal": False,
+                                           "result": "not_applicable",
+                                           "detail": "absent from the recorded and the replayed output"})
+                continue
+            applicable += 1
+            if fa != fb:
+                outcome = {"result": "mismatch",
+                           "non_float_differences": [f"{pointer}: present only in the "
+                                                     f"{'recorded' if fa else 'replayed'} output"]}
+            else:
+                outcome = compare_tolerant(va, vb, tolerance)
             row = {"file": item["file"], "pointer": pointer, "equal": outcome["result"] == "equal",
                    "result": outcome["result"]}
             if tolerance:
@@ -2457,11 +2619,10 @@ def replay_unit(repo: Path, runbook: Runbook, step: dict[str, Any], plan: dict[s
                     if outcome.get("non_float_differences") else ""
                 problems.append(f"{item['file']}{pointer}: recorded {json.dumps(va)[:80]}, "
                                 f"replay {json.dumps(vb)[:80]}{extra}")
-    record["matched"] = not problems and not toleranced
-    record["result"] = "mismatch" if problems else ("matched_within_tolerance" if toleranced else "matched")
-    record["detail"] = "; ".join(problems) if problems else \
-        ("reproduced within the declared float tolerance" if toleranced else "reproduced")
-    return record
+    if not applicable and not problems:
+        problems.append("no compared pointer exists in the recorded or the replayed output; "
+                        "the replay reproduced nothing")
+    return problems, toleranced
 
 
 def pending_audits(repo: Path) -> list[dict[str, Any]]:
@@ -2869,8 +3030,10 @@ def main(argv: list[str] | None = None) -> int:
                               "findings": result["findings"], "replayed_units": len(result["replays"]),
                               "replay_results": result["replay_results"],
                               "environment_drift": result["environment_drift"],
+                              "interpreter_parity": result["interpreter_parity"],
+                              "notes": result["notes"],
                               "not_covered": result["not_covered"]}, indent=2))
-            return 0 if result["verdict"] == "clean" else 1
+            return 0 if result["verdict"] in ("clean", "clean_within_tolerance") else 1
         rows = pending_audits(repo)
         if args.json:
             print(json.dumps(rows, indent=2))

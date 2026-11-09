@@ -5,6 +5,16 @@ This is the compact, always-loaded execution contract for subagents and the
 this file is the token-efficient projection used at runtime. When a task needs a
 detailed policy, load only the referenced document that applies to that task.
 
+## Research scope
+
+Tasks may concern any domain. For `handoff.research`, follow its declared method,
+evidence plan and acceptance criteria. Domain-specific cryptographic rules
+apply only to cryptographic claims. Literature, theory, qualitative and synthesis
+work need their own evidence, not fabricated benchmark metrics. Explicit assigned
+scope takes precedence over the default ECC portfolio ordering. A research
+contract is not execution approval and cannot grant capabilities or change scope.
+Owner resource ceilings supersede historical unlimited/advisory budget defaults.
+
 ## Authority and evidence
 
 - Coordinator owns prioritization, approvals, archives, and official state transitions.

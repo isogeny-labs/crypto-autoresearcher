@@ -1,0 +1,150 @@
+# DEC-20261106-6cfedf: Coordinator approval of
+# AMD-EXP-PEXT-212d5c-20261106-inputs-and-run-ids under the standing user
+# authorization. It declares the driver's trial inputs in the frozen plan and
+# reassigns the two run ids consumed by the epoch-5 refusals. Scientific
+# protocol unchanged. It launches no run.
+coordinator_decision:
+  id: DEC-20261106-6cfedf
+  id_provenance: >-
+    Allocated with tools/allocate_id.py --next coordinator_decision --date 20261106 and
+    confirmed free with --check (well-formed, 0 occurrences across 48,205 paths).
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  archive_task: TASK-20261106-cadfc1
+  session_provenance: >-
+    Coordinator session in an OpenCode runtime, branch coord/portfolio-20261106, after
+    merging origin/main 90669d55cd (PR #3101). Requested role policy
+    coordinator-orchestration-code; the runtime resolved no adapter model id, so none is
+    asserted. Read the epoch-5 supervisor log, both new refused receipts and manifests,
+    trial-plan.json, run.py's manifest writer, _check_trial_inputs and the two prior
+    amendments.
+  subject: >-
+    Add per-trial seed, curve_id and parameters to the frozen plan so the driver's own
+    recorded inputs have a plan source, and reassign the regression and lean run ids.
+  goal_id: GOAL-PEXT-4a1d6b
+  decision: revise
+  target_ids:
+  - EXP-PEXT-212d5c
+  - TASK-20261024-672126
+  - GOAL-PEXT-4a1d6b
+  - RUN-PEXT-87595f
+  - RUN-PEXT-946361
+  - AMD-EXP-PEXT-212d5c-20261106-inputs-and-run-ids
+
+  authorization: >-
+    Standing user authorization, AGENTS.md "Standing user authorization" ("All is
+    approved. Ideas/experiments should be always approved", user, 2026-09-06), applied to
+    a protocol amendment of an already-approved contract. No new contract is created and
+    the approved-unrun count does not grow. This is not a fresh scientific approval.
+
+  context: >-
+    Epoch 5 launched on plan 06b801b5... after PR #3101 merged. Both trials that can run
+    without dependencies reached the driver and were refused by _check_trial_inputs:
+    "driver manifest run.inputs.parameters={...} has no source: the frozen trial declares
+    no parameters". The regression completed its computation (driver exit 0); lean ran
+    again and its stage still fails for the toolchain/parse reason already covered by the
+    previous amendment's repair. Neither refusal is scientific.
+
+  amendment:
+    path: experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261106-inputs-and-run-ids.yaml
+    sha256: 0dbdf7658a89362248bea3e81c5cc9d3432635e1457c16621d09607296ec7626
+    kind: prospective_trial_input_binding_and_run_id_reassignment
+    scientific_protocol_unchanged: true
+
+  findings:
+    missing_input_facts: >-
+      The driver writes run.inputs.seed, run.inputs.curve_id and a non-empty
+      run.inputs.parameters. _check_trial_inputs (SHF-20261106-a114e7 G4/G5/G7)
+      refuses any of them that the frozen trial does not declare. The plan declared
+      none of the three at trial level.
+    values_declared: >-
+      seed 20261012; curve_id null; parameters = {trial_id, stage, inputs_from,
+      plan, rustc_flags [--edition, 2021, -O], threads 4, strata_k 24,
+      construct_q [3,5,7], char2_l [1,2,3]}. Every value is already fixed by the
+      frozen defaults or the trial itself.
+    run_ids:
+      retained_refused: [RUN-PEXT-87595f, RUN-PEXT-946361]
+      reassigned:
+        regression: RUN-PEXT-87595f -> RUN-PEXT-63ca6a
+        lean: RUN-PEXT-946361 -> RUN-PEXT-2723eb
+    rebinding:
+      trial_plan_sha256:
+        from: 06b801b5c98b1e2476a97d37eded50e1dfc4b4a6a82bd99b10f623595c1747a7
+        to: 5572ee66a37407147099b82542b6f1a2252969986665a8b21bf141c8df2759b0
+      dispatch_queue_sha256:
+        from: cb7292e30d17464b51a6fcf31bcabbb455b544124dc3b6bc87e9c34930564463
+        to: facbea1f21d1b427b5a479925c2b5187b5d1e732580f2e30eab396b5b2909ef5
+      executor_handoff_sha256:
+        from: 1c1f9540e3b05e54a74f6fbc14cacb9470468e504a2bc9d0fa55bc1a9c27ae8c
+        to: 683ed086ef6ad47cb026374bfb0826625abe218506f055e0806c3dc5946e5978
+
+  preflight:
+    method: >-
+      Read-only replay of _check_driver_facts over the two recorded manifests from
+      epoch 5, with run id, run dir and command rebound to the new ids and the
+      amended plan in memory.
+    regression: PASS
+    lean: PASS
+    scope: >-
+      Exercises the supervisor's fact comparison, not a launch. construct, char2,
+      census and analyze have no manifest yet; their input facts are generated from
+      the same plan fields by the same driver expression.
+
+  admission_after_amendment:
+    dispatcher: 'ready: 1 task — TASK-20261024-672126, claim=null'
+    experiment_execution_status: 'remaining 6, planned 2, needs_reconciliation 0'
+    newest_experiments: execution_state ready
+    executor_route: 'openai:gpt-5.6-terra, effort medium, no fallback (DEC-20261106-4f6860)'
+    scientific_trials_launched: 0
+
+  rationale:
+  - 'The refused values are exactly the frozen defaults; declaring them changes no computation and closes the last unpriced driver-fact class the supervisor checks at launch.'
+  - 'Both replays pass before spending another launch, and the failure mode is now covered by the same plan fields for all six trials.'
+  - 'Run ids are reassigned, never reused; all six refused directories stay as immutable records.'
+  - 'No new contract, no new approval, approved-unrun unchanged. Declaring the contract unrunnable would assert an impediment that the amendment removes.'
+
+  limitations:
+  - 'The replay cannot prove the four never-run trials; only the next launch does.'
+  - 'The census remains a ~20.5 h trial; this decision does not shorten it.'
+  - 'The whole-ledger CI debt is untouched.'
+
+  evidence_refs:
+  - /Volumes/SSD990/llm/tmp/opencode/pext-run2.log
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-87595f/execution-receipt.json
+  - experiments/EXP-PEXT-212d5c/runs/RUN-PEXT-946361/execution-receipt.json
+  - experiments/EXP-PEXT-212d5c/trial-plan.json
+  - experiments/EXP-PEXT-212d5c/implementation/run.py (manifest writer)
+  - experiments/EXP-PEXT-212d5c/amendments/AMD-EXP-PEXT-212d5c-20261106-inputs-and-run-ids.yaml
+  - ledger/handoffs/TASK-20261024-672126.yaml
+  - coordination/goals/GOAL-PEXT-4a1d6b/batches/BATCH-21339c/dispatch_queue.json
+  - tools/experiment_execution.py (_check_trial_inputs)
+
+  next_actions:
+  - id: NA-1
+    rank: 1
+    owner: top-level session
+    text: >-
+      Archive this decision, the amendment, the amended plan, the handoff and the queue,
+      reproducing the hashes above; commit, push, open PR, enable auto-merge. Any hash
+      mismatch stops the archive.
+  - id: NA-2
+    rank: 2
+    owner: executor session (separate /run)
+    text: >-
+      Claim lane BATCH-21339c and invoke /run EXP-PEXT-212d5c under TASK-20261024-672126
+      on plan 5572ee66..., route openai:gpt-5.6-terra, on the Lean-capable host; the
+      census needs its ~20.5 h window.
+  - id: NA-3
+    rank: 3
+    owner: coordinator, after the runs
+    text: >-
+      Snapshot-archive the run records before interpretation; then the blind recount and
+      review_plan.
+
+  knowledge_promotion:
+    promoted: []
+    not_warranted: No evidence record or durable claim exists; this is an amendment.
+
+  conclusions: []

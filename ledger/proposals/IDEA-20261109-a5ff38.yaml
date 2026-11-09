@@ -1,0 +1,162 @@
+idea:
+  id: IDEA-20261109-a5ff38
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: F4 step-degree profile of prime-field Semaev membership systems is locally constant on the (a,b)-plane,
+    with j = 0, j = 1728 and isogeny-class arms
+  class: barrier
+  claim: 'Let p be a prime in [2^16, 2^20] with p = 1 mod 12, m in {3,4}, and B a divisor of p-1 near
+    p^{1/m}. For E_{a,b}: y^2 = x^3 + ax + b define Sigma_{a,b}(x_R) = {S_{m+1}(x_1,...,x_m,x_R), x_i^B
+    - 1 (i=1..m)} with x_R = x(R) for a random R in E_{a,b}(F_p). Let D_max be the largest step degree
+    a fixed F4 implementation (fixed monomial and variable order) reaches before returning the reduced
+    basis or {1}, and S_tot the total rows reduced. Claim: at fixed (p, m, B) and fixed solvability class
+    of x_R, D_max is the same for at least 90 percent of 40 uniformly random (a,b) with ab(4a^3+27b^2)
+    != 0, and the same value is taken on every curve of the F_p-isogeny class of one generic curve reached
+    by rational ell-isogenies, ell <= 13, that still has ab != 0. The fibres a = 0 (when 3 | B) and b
+    = 0 (when 4 | B) are special: D_max there may differ and the sign of the difference is the result,
+    predicted in {-1, 0, +1}. No change of ECDLP exponent is asserted; the record decides whether moving
+    the instance in moduli space can change Groebner cost anywhere but on a thin special locus that secp256k1
+    (a = 0) already occupies.'
+  mechanism: The coefficients of S_{m+1} are polynomials in (a,b) (S_3 is quadratic in a and linear in
+    b) and x_i^B - 1 is curve-independent, so every rank F4 computes is the rank of a matrix with entries
+    polynomial in (a,b) over F_p; each rank is constant off a proper closed subset and the whole step-degree
+    profile is constant on a dense open set (generic flatness, upper semicontinuity of Hilbert functions).
+    Special fibres are where a minor vanishes identically; a = 0 carries the diagonal mu_3 action x_i
+    -> omega x_i under which S_{m+1} is weighted homogeneous and x_i^B - 1 is invariant when 3 | B, so
+    Sigma_{0,b} is mu_3-graded; b = 0 carries the mu_4 analogue when 4 | B. Isogenous curves with ab !=
+    0 are generic points of the plane with the same N, so isogeny motion is predicted to leave D_max fixed
+    while the two CM fibres are the only candidates for a jump.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-0d2021
+    provenance: internal
+    claim: Degree-of-regularity estimates exist for semi-regular systems; this record measures one family
+      and imports no estimate.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Solving degree and degree of regularity are distinct invariants and semi-regular predictions
+      do not describe summation systems; D_max here is a measured F4 step degree.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves share N and generic difficulty; this record asks whether the Groebner profile
+      of a coordinate-defined system is also shared.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive prime-field Semaev index calculus does not beat generic methods; nothing here contradicts
+      the row.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  assumptions:
+  - The F4 implementation is deterministic for a fixed input ordering; crypto/RESEARCH_GROEBNER_F4.md
+    must be read to confirm, and if it is randomized the metric is the median of 3 runs.
+  - x_R is sampled as x(R) for uniform R so solvable and unsolvable classes occur at natural rates; D_max
+    is compared within a class.
+  predictions:
+  - metric: fraction of random (a,b) samples sharing the modal D_max at fixed (p, m, B, class)
+    direction: higher
+    minimum_effect: at least 0.9
+  - metric: number of isogeny-arm curves with ab != 0 whose D_max differs from the modal value
+    direction: lower
+    minimum_effect: zero in at least 95 percent of (p, m, B) cells
+  - metric: D_max at a = 0 with 3 | B minus modal D_max
+    direction: different
+    minimum_effect: reported exactly, predicted in {-1, 0, +1}
+  minimal_test:
+    design: 'For each of 6 cells (three calibration primes with p = 1 mod 12 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+      m in {3,4}) choose B with 12 | B | p-1 nearest p^{1/m}. Draw 40 random (a,b), 10 random x_R per
+      curve, run F4, log the step-degree sequence, D_max and S_tot. Add the arm a = 0 with 3 random b,
+      the arm b = 0 with 3 random a, and an isogeny arm: from one generic curve enumerate every curve
+      reached by rational ell-isogenies, ell <= 13, depth <= 2, and run the same x_R set on each. Report
+      per cell the modal D_max, the attaining fraction, and the two special-fibre differences.'
+    controls:
+    - Random polynomial of the same multidegree as S_{m+1} with the same x_i^B - 1, as the no-structure
+      reference per cell.
+    - Scaling control (u^4 a, u^6 b) with x_i -> u^2 x_i applied to the predicate, to confirm the profile
+      depends on (curve, predicate), not on j alone.
+    - Discriminant and ab != 0 checked for every sampled curve.
+    required_metrics:
+    - D_max per (curve, x_R)
+    - S_tot per (curve, x_R)
+    - modal D_max and attaining fraction per cell
+    - D_max difference at a = 0 and at b = 0
+    - isogeny-arm D_max list with ell and depth
+  falsification_conditions:
+  - In any cell fewer than 90 percent of random (a,b) share the modal D_max (the special locus is dense
+    at toy p; generic-fibre reasoning is unusable at these sizes).
+  - Some isogeny-arm curve with ab != 0 has D_max different from the modal value in more than 5 percent
+    of cells.
+  - A timeout is infrastructure, not a falsification and not support.
+  confounders:
+  - B must be divisible by 12 and divide p-1 so one B serves both CM arms; if none is near p^{1/m} the
+    cell is dropped, not approximated.
+  - Mixing solvable and unsolvable x_R classes would inflate variance.
+  interpretation_limits:
+  - Constancy at p <= 2^20 is a statement about this system; it bounds no d_reg at cryptographic size
+    and leaves the exponent 1/2 intact.
+  - A lower D_max at a = 0 is a constant-factor effect of the mu_3 grading already filed in the relations
+    and port waves.
+  heuristic_assumptions:
+  - id: H1
+    statement: The special locus of the F4 rank sequence has degree much smaller than p, so uniform (a,b)
+      are generic with probability near 1.
+    rigorous_support: Each rank is constant off a closed subset whose degree is bounded by matrix size
+      times entry degree, possibly comparable to p at toy sizes. No sharper bound is claimed.
+    validation_plan: The attaining fraction per cell is the measurement; report it with a Wilson interval
+      at n = 40.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: unchanged
+    best_known: Pollard rho in Theta(N^{1/2}) (KR-RHO-13bf67), with the sqrt(6) automorphism constant
+      on j = 0 (KR-RHO-0528e7).
+    hidden_overhead: none claimed; no algorithm is proposed
+    tradeoff_note: The sweep decides whether moduli motion is a Groebner lever at all; the only predicted
+      levers are the CM fibres, constant-factor.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. The wave-1 relations record on the x^B =
+    1 membership system supplies the system; this record adds the moduli sweep and the isogeny arm.
+  sota_delta: 'Exponent delta 0. Measured delta: constancy of D_max across (a,b) and across an isogeny
+    class at toy sizes, and the exact difference at the two CM fibres.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-0d2021
+    - KR-IC-fbdb61
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-f3da82
+    - KR-IC-955fd6
+    - KR-RHO-755e35
+    - KR-RHO-0528e7
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-fbdb61
+      provenance: internal
+      relation: adjacent
+      delta: The row relates solving-degree invariants of Weil-descent systems; this record measures the
+        variation of one invariant across the moduli of the curve over F_p.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row states generic-difficulty invariance under isogeny; this record tests Groebner-profile
+        invariance, which it does not address.
+    searched:
+      corpus_grep:
+      - brief section 2 for semicontinuity, generic fibre, j = 0 Groebner, isogeny class Groebner
+      - wave-1 relations and synthesis records for x^B = 1 membership and isogeny-class statistics
+      web: []
+      blocked: []
+    lead: LEAD-ICP-digit-presentation-solving-degree
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each of 6 cells (three calibration primes with p = 1 mod 12 from crypto/docs/ECDLP_CALIBRATION_PRIMES.md,
+        m in {3,4}) choose B with 12 | B | p-1 nearest p^{1/m}. Draw 40 random (a,b), 10 random x_R per
+        curve, run F4, log the step-degree sequence, D_max and S_tot. Add the arm a = 0 with 3 random
+        b, the arm b = 0 with 3 random a, and an isogeny arm: from one generic curve enumerate every curve
+        r'

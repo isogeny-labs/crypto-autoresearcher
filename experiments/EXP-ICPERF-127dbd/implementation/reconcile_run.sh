@@ -1,0 +1,298 @@
+#!/usr/bin/env bash
+# Read-only reconciliation of one already-finished C1 job under its existing run id (v3c; DEC-20261107-b74e2c ruling 3, R-1 to R-7;
+# DEC-20261107-a83c51 controls K-1, K-2, K-4, K-6 and K-7).
+# It launches nothing: it contains no job-submission, build-start or S3-write path. Its only AWS calls are
+# `aws s3 cp <s3 source> <local path>`, `aws s3 ls <s3 prefix>` and `aws s3api list-objects-v2` (through locate_results.sh and the
+# helper below), plus `aws --version` (no AWS call). It reads no records.jsonl content: that file is hashed and its newlines are
+# counted, nothing more, and no other downloaded file is opened except SHA256SUMS and job-exit.json (and everything check_job.py opens).
+# It writes only under --out, which must lie inside --out-root and never under a runs/ directory.
+#
+# usage: reconcile_run.sh --launcher-result RUN/job/launcher/result.json --launcher-result-sha256 HEX64 --request REQUEST.json
+#                         --check-job check_job.py --run-id RUN --trial-id T --out OUTDIR --out-root ROOT
+#                         --pin-status-sha256 HEX64 --pin-objects-sha256 HEX64 --pin-not-after YYYY-MM-DDTHH:MM:SSZ
+#   --out         an empty or absent directory. Its realpath must lie strictly inside the realpath of --out-root and must have no
+#                 runs/ path segment (K-7). It receives locator/, artifacts/, object-list.txt, check_job.stdout and
+#                 reconcile-result.json (schema c1.reconcile.result/v1, written on success AND on every failure after R-1).
+#   --out-root    the step's session output directory (the runbook passes {session_dir}/outputs/<step id>).
+#   --pin-*       the receipt pins of K-2 for this job (T1): sha256 of the launcher receipt's status.json and objects.json, and the
+#                 latest S3 LastModified allowed. They have no default; the runbook argv carries them from the specification.
+# Environment: ISOLAB_BUCKET (required). The script re-executes itself under `env -i` with an allowlist (K-7, the prologue below).
+#
+# R-1 launcher result sha256 equals --launcher-result-sha256; job name equals the request's job.job_name.
+# R-2 locator (locate_results.sh locate): the receipt rule of K-1/K-6 with the pins of K-2: status.json job.uid = job_uid,
+#     job.job_name = job, exactly one pod, restartCount 0, result.json names no results_uri (T1's does not).
+# R-3 objects.json: non-empty .objects, next_token null, keys only under runs/JOB/launcher/ and the pod prefix; the job listing holds
+#     only launcher/ and that pod prefix; a listing of the pod prefix equals the objects.json entries as (Key, Size, ETag).
+# R-4 aws s3 cp --recursive of the pod prefix into OUTDIR/artifacts (exit code recorded, files and sizes in OUTDIR/object-list.txt), then
+#     locate_results.sh objects: every file's size and single-part MD5 equal objects.json, with no extra and no missing file.
+# R-5 locate_results.sh verify: job-exit.json pod_uid, job_name, exit_code (a JSON number spelled 0, 42 or 43) equal the located pod,
+#     the job and the status exitCode.
+# R-6 python3 -I check_job.py OUTDIR/artifacts --request REQUEST --launcher-result RESULT prints CHECK_JOB_OK (exit 0).
+# R-7 reconcile-result.json. Also: SHA256SUMS is non-empty and lists run-summary.json at the sha256 of the empty string, and
+#     run-summary.json has 0 bytes (DEC-20261107-b74e2c ruling 5).
+# Exit: 0 pass; 2 usage, refused --out or refused environment; 3 R-1; 4 R-2; 5 R-3; 6 R-4; 7 R-5; 8 R-6; 9 run-summary or SHA256SUMS
+# rule; 10 a receipt pin differs (K-2).
+set -euo pipefail
+set +x
+
+# ---- K-7 environment prologue (v3d; DEC-20261107-a83c51 K-7; DEC-20261107-c3e91a R-1 to R-3). It is not study logic. ----
+# Phase 1 drops every inherited shell function, refuses an AWS_ENDPOINT_URL* variable and a preset constant of another value, and
+# re-executes this script under `env -i` with an explicit allowlist: HOME, TMPDIR, AWS_REGION, AWS_DEFAULT_REGION, ISOLAB_BUCKET,
+# CRYPTO_CHECKOUT (and ISOLAB_CODEBUILD_PROJECT in launch_eks.sh), the credential variables named in K7_CRED_VARS (never printed), the
+# transport variables named in K7_TRANSPORT_VARS when they are set (R-1 T-1), the constants of K7_CONSTS (R-3 CR-2 and PY-1), and a PATH
+# of exactly <directory of the first aws on the caller's PATH>:/usr/bin:/bin. env -i clears BASH_ENV, ENV, CDPATH, PYTHONPATH, the
+# AWS_CONFIG_FILE family and every BASH_FUNC_* export. Phase 2 (C1_ENV_PHASE=2) refuses to start unless the environment is exactly
+# that allowlist, the constants hold their values, AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set and non-empty (CR-1), the proxy,
+# no-proxy and CA-bundle values match their pins (T-2 to T-4), no function is defined, aws reports the pinned version, and the aws-cli
+# configuration files hold none of the entries named in K7_CFG_NAMES (entry names are printed, values never). BASH_ENV, ENV, imported
+# functions and SHELLOPTS act in the first bash before line 1 of this script; the argv of the runbook and of the trial plan closes them
+# with `/bin/bash -p` (R-2 A-1), and the refusals below stay as defence in depth (A-3). Not prevented by any script: the choice of the
+# directory that holds aws, and a swap of the CA-bundle file between the sha256 below and the CLI's own read (declared TOCTOU residual).
+K7_PIN_AWS_CLI=aws-cli/1.46.2
+K7_CRED_VARS=(AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN)
+K7_CFG_ALLOWED=()   # aws-cli configuration entry names the executor identity is allowed to use; none is allowed
+K7_CFG_NAMES=(credential_process endpoint_url cli_legacy_plugin_path ca_bundle role_arn source_profile credential_source web_identity_token_file sso_session sso_start_url)
+K7_PASS_VARS=(HOME TMPDIR AWS_REGION AWS_DEFAULT_REGION ISOLAB_BUCKET CRYPTO_CHECKOUT)
+K7_TRANSPORT_VARS=(HTTPS_PROXY https_proxy NO_PROXY no_proxy AWS_CA_BUNDLE)
+K7_CA_BUNDLE_ALLOWED=(/root/.ccr/ca-bundle.crt)
+K7_CONSTS=(AWS_EC2_METADATA_DISABLED=true PYTHONNOUSERSITE=1)
+K7_PROXY_RE='^http://(127\.0\.0\.1|localhost):[0-9]{1,5}/?$'
+K7_NOPROXY_RE='^[A-Za-z0-9.,:*/_-]*$'
+if [[ ${C1_ENV_PHASE:-} != 2 ]]; then
+  k7_fns=""
+  while IFS= read -r k7_l; do
+    [[ -n $k7_l ]] || continue
+    k7_fns+=" ${k7_l##* }"; builtin unset -f -- "${k7_l##* }" 2>/dev/null || true
+  done < <(builtin declare -F)
+  k7_hits=""
+  [[ -v BASH_ENV ]] && k7_hits+=" BASH_ENV"
+  [[ -v ENV ]] && k7_hits+=" ENV"
+  for k7_n in $(builtin compgen -e); do
+    [[ $k7_n == AWS_ENDPOINT_URL* ]] && { echo "k7: refused: $k7_n is set; no AWS_ENDPOINT_URL* variable is allowed" >&2; exit 2; }
+  done
+  for k7_c in "${K7_CONSTS[@]}"; do
+    k7_n=${k7_c%%=*}
+    [[ ! -v $k7_n || ${!k7_n} == "${k7_c#*=}" ]] || { echo "k7: refused: $k7_n is set to a value other than its constant ${k7_c#*=}" >&2; exit 2; } # [K7-const-preset]
+  done
+  k7_aws=$(builtin type -P aws 2>/dev/null) || { echo "k7: refused: no aws executable on PATH" >&2; exit 2; }
+  k7_dir=${k7_aws%/*}
+  [[ $k7_aws == /*/aws && $k7_dir != *[[:space:]:]* ]] || { echo "k7: refused: the aws on PATH is not an absolute path to a file named aws" >&2; exit 2; }
+  k7_kv=()
+  for k7_n in "${K7_PASS_VARS[@]}" "${K7_CRED_VARS[@]}" "${K7_TRANSPORT_VARS[@]}"; do
+    [[ -v $k7_n ]] && k7_kv+=("$k7_n=${!k7_n}")
+  done
+  [[ -x /usr/bin/env && -n ${BASH:-} ]] || { echo "k7: refused: /usr/bin/env or \$BASH is unavailable" >&2; exit 2; }
+  exec /usr/bin/env -i "${k7_kv[@]}" "${K7_CONSTS[@]}" "PATH=$k7_dir:/usr/bin:/bin" C1_ENV_PHASE=2 "C1_ENV_DROPPED=$(printf '%s%s' "$k7_hits" "$k7_fns" | tr -c 'A-Za-z0-9_ ' '?')" "$BASH" "$0" "$@"
+fi
+k7_ok=" PATH C1_ENV_PHASE C1_ENV_DROPPED PWD OLDPWD SHLVL _ ${K7_PASS_VARS[*]} ${K7_CRED_VARS[*]} ${K7_TRANSPORT_VARS[*]} "
+for k7_c in "${K7_CONSTS[@]}"; do k7_ok+="${k7_c%%=*} "; done
+k7_extra=""
+for k7_n in $(builtin compgen -e); do [[ $k7_ok == *" $k7_n "* ]] || k7_extra+=" $k7_n"; done
+[[ -z $k7_extra ]] || { echo "k7: refused: variables outside the allowlist are set:$k7_extra" >&2; exit 2; }
+[[ -z $(builtin declare -F) ]] || { echo "k7: refused: shell functions are defined" >&2; exit 2; }
+[[ -v BASH_ENV || -v ENV || -v CDPATH ]] && { echo "k7: refused: BASH_ENV, ENV or CDPATH is set" >&2; exit 2; }
+for k7_c in "${K7_CONSTS[@]}"; do
+  k7_n=${k7_c%%=*}
+  [[ -v $k7_n && ${!k7_n} == "${k7_c#*=}" ]] || { echo "k7: refused: $k7_n is not set to its constant ${k7_c#*=}" >&2; exit 2; } # [K7-const-value]
+done
+[[ -n ${AWS_ACCESS_KEY_ID:-} ]] || { echo "k7: refused: AWS_ACCESS_KEY_ID is not set or is empty (credentials come only from the environment)" >&2; exit 2; } # [K7-cred-id]
+[[ -n ${AWS_SECRET_ACCESS_KEY:-} ]] || { echo "k7: refused: AWS_SECRET_ACCESS_KEY is not set or is empty (credentials come only from the environment)" >&2; exit 2; } # [K7-cred-secret]
+[[ ! -v HTTPS_PROXY || ! -v https_proxy || $HTTPS_PROXY == "$https_proxy" ]] || { echo "k7: refused: HTTPS_PROXY and https_proxy differ" >&2; exit 2; } # [K7-proxy-pair]
+for k7_n in HTTPS_PROXY https_proxy; do
+  [[ ! -v $k7_n || ${!k7_n} =~ $K7_PROXY_RE ]] || { echo "k7: refused: $k7_n does not match the loopback proxy pin $K7_PROXY_RE (value not printed)" >&2; exit 2; } # [K7-proxy-shape]
+done
+[[ ! -v NO_PROXY || ! -v no_proxy || $NO_PROXY == "$no_proxy" ]] || { echo "k7: refused: NO_PROXY and no_proxy differ" >&2; exit 2; } # [K7-noproxy-pair]
+for k7_n in NO_PROXY no_proxy; do
+  [[ ! -v $k7_n || ${!k7_n} =~ $K7_NOPROXY_RE ]] || { echo "k7: refused: $k7_n does not match $K7_NOPROXY_RE (value not printed)" >&2; exit 2; } # [K7-noproxy-shape]
+done
+k7_ca=none; k7_casha=none
+if [[ -v AWS_CA_BUNDLE ]]; then
+  [[ -v HTTPS_PROXY || -v https_proxy ]] || { echo "k7: refused: AWS_CA_BUNDLE is allowed only when HTTPS_PROXY or https_proxy is set" >&2; exit 2; } # [K7-ca-needs-proxy]
+  k7_hit=""
+  for k7_a in "${K7_CA_BUNDLE_ALLOWED[@]}"; do [[ $AWS_CA_BUNDLE == "$k7_a" ]] && k7_hit=1; done
+  [[ -n $k7_hit ]] || { echo "k7: refused: AWS_CA_BUNDLE is not an entry of K7_CA_BUNDLE_ALLOWED (value not printed)" >&2; exit 2; } # [K7-ca-entry]
+  [[ $(realpath -e -- "$AWS_CA_BUNDLE" 2>/dev/null) == "$AWS_CA_BUNDLE" ]] || { echo "k7: refused: AWS_CA_BUNDLE is missing or its realpath differs (no symlink may be on the path)" >&2; exit 2; } # [K7-ca-realpath]
+  [[ -f $AWS_CA_BUNDLE && -s $AWS_CA_BUNDLE ]] || { echo "k7: refused: AWS_CA_BUNDLE is not a non-empty regular file" >&2; exit 2; } # [K7-ca-file]
+  k7_casha=$(sha256sum -- "$AWS_CA_BUNDLE" 2>/dev/null | cut -d ' ' -f1 || true)
+  [[ $k7_casha =~ ^[0-9a-f]{64}$ ]] || { echo "k7: refused: the sha256 of AWS_CA_BUNDLE could not be computed" >&2; exit 2; } # [K7-ca-sha]
+  k7_ca=$AWS_CA_BUNDLE
+fi
+k7_first=${PATH%%:*}
+[[ $PATH == "$k7_first:/usr/bin:/bin" && $k7_first == /* ]] || { echo "k7: refused: PATH is not <absolute dir>:/usr/bin:/bin" >&2; exit 2; }
+[[ $(builtin type -P aws 2>/dev/null) == "$k7_first/aws" ]] || { echo "k7: refused: aws does not resolve to $k7_first/aws" >&2; exit 2; }
+k7_v=$("$k7_first/aws" --version 2>&1 | head -n 1 || true)
+[[ ${k7_v%% *} == "$K7_PIN_AWS_CLI" ]] || { echo "k7: refused: aws reports '${k7_v%% *}', not the pinned $K7_PIN_AWS_CLI" >&2; exit 2; }
+[[ ${HOME:-} == /* && -d ${HOME:-/nonexistent} ]] || { echo "k7: refused: HOME is not an absolute directory" >&2; exit 2; }
+k7_cfg=""
+for k7_f in "$HOME/.aws/config" "$HOME/.aws/credentials"; do
+  [[ -f $k7_f ]] || continue
+  for k7_k in "${K7_CFG_NAMES[@]}"; do
+    grep -q -i -E "^[[:space:]]*$k7_k[[:space:]]*=" "$k7_f" && k7_cfg+=" $k7_k@${k7_f##*/}"
+  done
+  grep -q -i -E '^[[:space:]]*\[plugins\]' "$k7_f" && k7_cfg+=" plugins@${k7_f##*/}"
+done
+if [[ -f $HOME/.aws/cli/alias ]] && grep -q -E '^[[:space:]]*[^#;[:space:]\[][^=]*=' "$HOME/.aws/cli/alias"; then k7_cfg+=" alias@alias"; fi
+for k7_e in $k7_cfg; do
+  [[ " ${K7_CFG_ALLOWED[*]:-} " == *" $k7_e "* ]] || { echo "k7: refused: aws-cli configuration entry:$k7_cfg (names only; values are never printed)" >&2; exit 2; }
+done
+k7_t=""
+for k7_n in "${K7_TRANSPORT_VARS[@]}"; do [[ -v $k7_n ]] && k7_t+=" $k7_n"; done
+k7_px=none; [[ -v HTTPS_PROXY ]] && k7_px=$HTTPS_PROXY; [[ -v https_proxy ]] && k7_px=$https_proxy
+k7_np=none; [[ -v NO_PROXY ]] && k7_np=$NO_PROXY; [[ -v no_proxy ]] && k7_np=$no_proxy
+K7_STATUS="ok aws=$k7_first/aws version=${k7_v%% *} dropped=[${C1_ENV_DROPPED# }] config_entries=[${k7_cfg# }] transport=[${k7_t# }] proxy=$k7_px no_proxy=$k7_np ca_bundle=$k7_ca ca_bundle_sha256=$k7_casha"
+echo "k7_env_hygiene=$K7_STATUS"
+unset k7_ok k7_extra k7_n k7_first k7_v k7_f k7_k k7_e k7_c k7_a k7_hit k7_t k7_px k7_np k7_ca k7_casha
+# ---- end of the K-7 prologue ----
+
+EMPTY_SHA256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+s3_get() { # s3_get SOURCE LOCAL [--recursive] : the only download call; refuses a non-S3 source or an S3 destination
+  [[ $1 == s3://* && $2 != s3://* ]] || { echo "reconcile_run: s3_get refused: $1 -> $2" >&2; return 99; }
+  aws s3 cp "$1" "$2" "${@:3}" --only-show-errors
+}
+here=$(CDPATH= cd -- "$(dirname -- "$(realpath -- "${BASH_SOURCE[0]}")")" && pwd)
+res=""; want_sha=""; req=""; checkjob=""; runid=""; trial=""; out=""; out_root=""; pin_status=""; pin_objects=""; pin_na=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --launcher-result) res=${2:?}; shift 2 ;;
+    --launcher-result-sha256) want_sha=${2:?}; shift 2 ;;
+    --request) req=${2:?}; shift 2 ;;
+    --check-job) checkjob=${2:?}; shift 2 ;;
+    --run-id) runid=${2:?}; shift 2 ;;
+    --trial-id) trial=${2:?}; shift 2 ;;
+    --out) out=${2:?}; shift 2 ;;
+    --out-root) out_root=${2:?}; shift 2 ;;
+    --pin-status-sha256) pin_status=${2:?}; shift 2 ;;
+    --pin-objects-sha256) pin_objects=${2:?}; shift 2 ;;
+    --pin-not-after) pin_na=${2:?}; shift 2 ;;
+    *) echo "reconcile_run: unknown argument $1" >&2; exit 2 ;;
+  esac
+done
+for v in res want_sha req checkjob runid trial out out_root pin_status pin_objects pin_na; do
+  [[ -n ${!v} ]] || { echo "usage: reconcile_run.sh --launcher-result R --launcher-result-sha256 HEX --request Q --check-job C --run-id RUN --trial-id T --out DIR --out-root ROOT --pin-status-sha256 HEX --pin-objects-sha256 HEX --pin-not-after TIME" >&2; exit 2; }
+done
+[[ -n ${ISOLAB_BUCKET:-} ]] || { echo "ISOLAB_BUCKET is required" >&2; exit 2; }
+[[ -f $res && -f $req && -f $checkjob ]] || { echo "launcher result, request or check_job.py not found" >&2; exit 2; }
+out_real=$(realpath -m -- "$out"); root_real=$(realpath -m -- "$out_root")
+case "/$out/$out_real/" in */runs/*) echo "refused: --out lies inside a runs/ directory ($out -> $out_real)" >&2; exit 2 ;; esac # [K7-out-runs]
+[[ $out_real == "$root_real"/* ]] || { echo "refused: --out resolves to $out_real, which is not inside --out-root $root_real" >&2; exit 2; } # [K7-out-root]
+out=$out_real
+if [[ -e $out ]]; then
+  [[ -d $out && -z $(ls -A -- "$out") ]] || { echo "refused: --out $out exists and is not an empty directory" >&2; exit 2; }
+fi
+mkdir -p "$out"
+
+o_r1=not_run; o_r2=not_run; o_r3=not_run; o_r4=not_run; o_r5=not_run; o_r6=not_run; o_sums=not_run; o_pins=not_run
+job=""; job_uid=""; pod_uid=""; results_uri=""; results_locator=""; receipt_uri=""; pod_exit=""; dl_rc="not_attempted"
+sums_sha=""; job_exit=""; check_rc="not_run"; rs_digest=""; rs_bytes=""; rec_sha=""; rec_lines=""; got_sha=""
+objects_match=null; status_sha=""; objects_sha=""
+finish() { # finish EXIT_CODE REASON : write reconcile-result.json, then exit
+  local pass=false
+  [[ $1 == 0 ]] && pass=true
+  jq -n --arg run_id "$runid" --arg trial_id "$trial" --arg job "$job" --arg job_uid "$job_uid" --arg pod_uid "$pod_uid" \
+    --arg results_uri "$results_uri" --arg locator "$results_locator" --arg receipt_uri "$receipt_uri" --arg lsha "$got_sha" \
+    --arg dl "$dl_rc" --arg sums "$sums_sha" --arg jec "$job_exit" --arg pexit "$pod_exit" --arg crc "$check_rc" \
+    --arg rsd "$rs_digest" --arg rsb "$rs_bytes" --arg rsha "$rec_sha" --arg rlines "$rec_lines" \
+    --arg r1 "$o_r1" --arg r2 "$o_r2" --arg r3 "$o_r3" --arg r4 "$o_r4" --arg r5 "$o_r5" --arg r6 "$o_r6" --arg rsum "$o_sums" --arg pins "$o_pins" \
+    --arg ssha "$status_sha" --arg osha "$objects_sha" --argjson om "$objects_match" --arg k7 "$K7_STATUS" \
+    --argjson pass "$pass" --arg reason "$2" --argjson code "$1" \
+    '{schema:"c1.reconcile.result/v1", run_id:$run_id, trial_id:$trial_id, job_name:$job, job_uid:$job_uid, pod_uid:$pod_uid,
+      results_uri:$results_uri, results_locator:$locator, receipt_uri:$receipt_uri, launcher_result_sha256:$lsha,
+      download_exit:$dl, sha256sums_sha256:$sums, job_exit_code:$jec, status_container_exit_code:$pexit, check_job_exit:$crc,
+      run_summary_listed_sha256:$rsd, run_summary_bytes:$rsb, records_jsonl_sha256:$rsha, records_jsonl_newlines:$rlines,
+      r1_outcome:$r1, r2_outcome:$r2, r3_outcome:$r3, r4_outcome:$r4, r5_outcome:$r5, r6_outcome:$r6, run_summary_outcome:$rsum,
+      receipt_pins_outcome:$pins, receipt_status_json_sha256:$ssha, receipt_objects_json_sha256:$osha, objects_match:$om,
+      env_hygiene:$k7, reconcile_exit:$code, reconcile_pass:$pass, failure:$reason,
+      note:"read-only transfer bound to the consumed run id; records.jsonl is hashed and its newlines counted, never parsed"}' \
+    > "$out/reconcile-result.json"
+  echo "reconcile_pass=$pass reconcile_exit=$1 ${2:+reason=$2}"
+  exit "$1"
+}
+
+# R-1
+got_sha=$(sha256sum "$res" | cut -d ' ' -f1)
+echo "launcher_result_sha256=$got_sha"
+job=$(jq -r '.job.job_name // ""' "$req" 2>/dev/null || true)
+if [[ $got_sha != "$want_sha" ]]; then o_r1=fail; finish 3 "launcher result sha256 $got_sha differs from $want_sha"; fi
+if [[ -z $job ]] || [[ $(jq -r '.job_name // ""' "$res") != "$job" ]]; then o_r1=fail; finish 3 "launcher result job_name differs from the request job name '$job'"; fi
+job_uid=$(jq -r '.job_uid // ""' "$res"); receipt_uri=$(jq -r '.receipt_uri // ""' "$res")
+if [[ -z $job_uid || -z $receipt_uri ]]; then o_r1=fail; finish 3 "launcher result has no job_uid or receipt_uri"; fi
+o_r1=pass
+
+# R-2 and R-3: the shared locator (receipt rule, objects.json, listings, pins)
+mkdir -p "$out/locator"
+set +e
+"$here/locate_results.sh" locate --launcher-result "$res" --job "$job" --bucket "$ISOLAB_BUCKET" \
+  --workdir "$out/locator" --out "$out/locator/locator.json" \
+  --pin-status-sha256 "$pin_status" --pin-objects-sha256 "$pin_objects" --pin-not-after "$pin_na"
+loc_rc=$?
+set -e
+echo "locate_results exit $loc_rc"
+case $loc_rc in
+  0) ;;
+  20|21|22) o_r2=pass; o_r3=fail; finish 5 "locator exit $loc_rc (objects.json or the pod prefix listing)" ;;
+  23) o_r2=pass; o_r3=fail; o_pins=fail; finish 10 "locator exit 23 (a receipt pin differs)" ;;
+  *) o_r2=fail; finish 4 "locator exit $loc_rc" ;;
+esac
+results_locator=$(jq -r .results_locator "$out/locator/locator.json")
+results_uri=$(jq -r .results_uri "$out/locator/locator.json")
+pod_uid=$(jq -r '.pod_uid // ""' "$out/locator/locator.json")
+pod_exit=$(jq -r '.pod_exit_code // ""' "$out/locator/locator.json")
+status_sha=$(jq -r '.status_json_sha256 // ""' "$out/locator/locator.json")
+objects_sha=$(jq -r '.objects_json_sha256 // ""' "$out/locator/locator.json")
+if [[ $(jq -r '.launcher_results_uri // ""' "$out/locator/locator.json") != "" ]]; then o_r2=fail; finish 4 "result.json names a results_uri; T1's result.json names none"; fi
+o_r2=pass; o_r3=pass; o_pins=pass
+
+# R-4
+mkdir -p "$out/artifacts"
+set +e
+s3_get "$results_uri" "$out/artifacts/" --recursive
+dl_rc=$?
+set -e
+echo "download_exit=$dl_rc"
+if [[ $dl_rc != 0 ]]; then o_r4=fail; objects_match=false; finish 6 "download exit $dl_rc"; fi
+(cd "$out/artifacts" && find . -type f -printf '%s %P\n' | LC_ALL=C sort -k2) > "$out/object-list.txt"
+echo "downloaded $(wc -l < "$out/object-list.txt") files"
+set +e
+"$here/locate_results.sh" objects --locator "$out/locator/locator.json" --artifacts "$out/artifacts"
+orc=$?
+set -e
+echo "locate_results objects exit $orc"
+if [[ $orc != 0 ]]; then o_r4=fail; objects_match=false; finish 6 "the downloaded files differ from objects.json (objects exit $orc)"; fi
+objects_match=true
+o_r4=pass
+
+# SHA256SUMS and run-summary.json rule (ruling 5)
+if [[ ! -s $out/artifacts/SHA256SUMS ]]; then o_sums=fail; finish 9 "SHA256SUMS is absent or empty"; fi
+sums_sha=$(sha256sum "$out/artifacts/SHA256SUMS" | cut -d ' ' -f1)
+rs_digest=$(awk '$2 == "run-summary.json" { print $1 }' "$out/artifacts/SHA256SUMS")
+rs_bytes=$(stat -c %s "$out/artifacts/run-summary.json" 2>/dev/null || echo absent)
+if [[ $rs_digest != "$EMPTY_SHA256" || $rs_bytes != 0 ]]; then
+  o_sums=fail; finish 9 "run-summary.json is unlisted, listed at '${rs_digest:-none}' instead of $EMPTY_SHA256, or not 0 bytes (bytes $rs_bytes)"
+fi
+o_sums=pass
+
+# R-5
+set +e
+"$here/locate_results.sh" verify --locator "$out/locator/locator.json" --artifacts "$out/artifacts"
+vrc=$?
+set -e
+echo "locate_results verify exit $vrc"
+if [[ $vrc != 0 ]]; then o_r5=fail; finish 7 "verify exit $vrc"; fi
+job_exit=$(jq -r '.exit_code' "$out/artifacts/job-exit.json")
+o_r5=pass
+
+# R-6
+set +e
+python3 -I "$checkjob" "$out/artifacts" --request "$req" --launcher-result "$res" > "$out/check_job.stdout" 2> "$out/check_job.stderr"
+check_rc=$?
+set -e
+cat "$out/check_job.stdout"
+if [[ $check_rc != 0 || $(tail -n 1 "$out/check_job.stdout") != CHECK_JOB_OK ]]; then o_r6=fail; finish 8 "check_job.py exit $check_rc"; fi
+o_r6=pass
+
+# R-7: hash and newline count only
+if [[ -f $out/artifacts/session/records.jsonl ]]; then
+  rec_sha=$(sha256sum "$out/artifacts/session/records.jsonl" | cut -d ' ' -f1)
+  rec_lines=$(wc -l < "$out/artifacts/session/records.jsonl" | tr -d ' ')
+fi
+finish 0 ""

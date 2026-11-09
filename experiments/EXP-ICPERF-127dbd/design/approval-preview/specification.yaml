@@ -1,0 +1,403 @@
+# EXP-ICPERF-127dbd: C1 route A at fp28, protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 3.
+# Approved form, specification revision 2 (preview for the re-session RBS-ICPERF-616277 after the stopped RBS-ICPERF-de8978), written under TASK-20261107-c5a0f4
+# and DEC-20261107-b74e2c. NOT APPROVED until a committed Coordinator decision (reserved id DEC-20261107-7802ec) names it. No run, outcome or conclusion is in this file.
+experiment:
+  id: EXP-ICPERF-127dbd
+  hypothesis_id: H-ICPERF-4cb536
+  question_id: RQ-ICPERF-94c86e
+  goal_id: GOAL-ICPERF-e6b6a4
+  lead_id: LEAD-ICP-prime-ic-constant-engineering
+  version: 2
+  title: >-
+    C1 route A at fp28: two counted EKS sessions, each running ten arms, of prime-abscissa
+    size 304 with the deferred repeat guard against the walk incumbent at size 407
+  status: approved
+  frozen: true
+  approved_by: DEC-20261107-7802ec
+  execution_authorized: true
+  designed_at: '2026-11-06'
+  designed_by_decision: DEC-20261106-1d23b6
+  compile_rulings_decision: DEC-20261106-aa7448
+  objective: >-
+    Bring in the output of the S1 job (launch/request-s1.json, run RUN-ICPERF-8b0d47, pod
+    5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7), which already ran once, by a read-only reconciliation
+    that launches nothing, and check its transport and identity with check_job.py. Then launch the
+    frozen request launch/request-s2.json once on EKS Spot c8a.2xlarge through launch-remote under
+    launch_eks.sh v3b, download its job prefix with the C1-AMENDMENT-2 locator, and check it with
+    check_job.py. Then run the frozen analyze-c1.sh on both sessions, and record the integrity,
+    control and parity gates as runbook validity. The C1-primary verdict is not decided inside the
+    runbook. It is read from verdict.json in the evidence review, after the independent validator.
+  protocol:
+    protocol_id: IC-C1-DEFERRED-GUARD-FP28-20261106
+    version: 3
+    protocol_sha256: 4b7bf35f34c0ddf5c0e4bee95e1791e6f5d2bc2fb68d4836db9db53d33e9b9cc
+    freeze_commit: 151779ab979469baaa168e1e88a4097227219084
+    frozen_at: '2026-11-07T02:54:43Z'
+    study_dir: isogeny-labs/crypto:research/ic_c1_deferred_guard_fp28_20261106
+    narrative: isogeny-labs/crypto:research/ic_c1_deferred_guard_fp28_20261106/PROTOCOL.md
+    prior_version:
+      version: 2
+      protocol_sha256: 9844f78d435951cf9a5f19c9a89ff2a38656e58e94d632f577093db846f72166
+      freeze_commit: 4c44ad2ab582f0cd38b9fcf0dd0dd49df2800dd6
+      frozen_at: '2026-11-06T11:03:41Z'
+      carries: C1-AMENDMENT-1
+      crypto_pr: 3559
+    first_version:
+      version: 1
+      protocol_sha256: 43b1ca918c034433f3584f37db439613d11a618c0eec13d3d7831a1fa96d092f
+      freeze_commit: 339292abed16c2474e404e25f3b72d31b58bd9d8
+      frozen_at: '2026-11-06T10:11:25Z'
+      crypto_pr: 3558
+    amendments:
+      - id: C1-AMENDMENT-1
+        file: isogeny-labs/crypto:research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-1.md
+        sha256: 0dac23b1a0cd5128700f8b1ee136698c891f8ffbc36a8cef6b54a3cf0a09ef15
+        crypto_pr: 3559
+        filed_before_affected_data: true
+        scope: >-
+          Procedural. S01-probe checks the four launcher scripts against remote-pins.sha256 in
+          place of the unsatisfiable checkout-HEAD check. No N, seed, arm, weight, threshold,
+          margin, decision mapping, budget or deadline changes.
+      - id: C1-AMENDMENT-2
+        file: isogeny-labs/crypto:research/ic_c1_deferred_guard_fp28_20261106/AMENDMENT-2.md
+        sha256: 8fdc60321fb3f3f3741c2a21f65d50f42d563ed065663528d786ca4056393b19
+        crypto_pr: to be opened by the top-level session (its number changes no bound byte)
+        filed_before_affected_data: true
+        scope: >-
+          Procedural. A job's results are located by implementation/locate_results.sh: a non-empty
+          result.json results_uri as is, otherwise the launcher receipt's status.json pod uid bound to
+          the Job uid, with a post-download check of job-exit.json. S1 is the job already run
+          (RUN-ICPERF-8b0d47), brought in by a read-only reconciliation and not rerun. Discloses PD-1.
+          No N, seed, curve, target, arm, weight, threshold, margin, accounting rule, decision mapping,
+          request, instance, deadline, budget line or cap changes.
+    cross_repository_binding: >-
+      Option (b) of PROTOCOL.md section 18: byte-identical read-only copies under
+      experiments/EXP-ICPERF-127dbd/inputs/, bound by relative path below.
+  inputs:
+    protocol: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+    specs:
+      S1: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+      S2: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+    requests:
+      S1: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+      S2: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+    analysis_script: experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+    wrappers:
+      launcher: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
+      locator: experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh
+      reconciler: experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
+      checker: experiments/EXP-ICPERF-127dbd/implementation/check_job.py
+      probe: experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
+      remote_pins: experiments/EXP-ICPERF-127dbd/implementation/remote-pins.sha256
+    job_names: {S1: ic-c1-dg-s1-20261106, S2: ic-c1-dg-s2-20261106}
+    job_deadline_seconds: 3600
+    pin:
+      source_revision: ea8e9ef71c3c82027dd9e01535302725519c3fca
+      image: 104186811093.dkr.ecr.us-east-2.amazonaws.com/isolab/tasks@sha256:3c4ad8bf8ee1bd1fdc327cb4c0e2597a1fc5ef1cdd889aa21e1b1294bdd22914
+      ecbench_sha256: 73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01
+    spec_ids: {S1: ECS1h3229b941623b, S2: ECS1h1e755d9669a9}
+    s1_reconciliation:
+      run_id: RUN-ICPERF-8b0d47
+      trial_id: T1
+      launcher_result: experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json
+      launcher_result_sha256: 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7
+      job_uid: 8a20d036-efc2-45d2-ada6-6442b93c5a52
+      pod_uid: 5885ba61-53c2-4e2e-8a47-ff1ff04ee2e7
+      note: >-
+        T1 is not a trial of this session's plan. RUN-ICPERF-8b0d47 is consumed (receipt infrastructure_error,
+        DEC-20261107-b74e2c). Nothing is written under its run directory.
+    retired_run_ids: [RUN-ICPERF-5ffa79]
+    rerun_requests_not_in_this_session:
+      - launch/request-s1-r2.json (sha256 fd9c9c8fd5e64a333a4f650c1e8ff34dc9309193f290240b39f47845652a3e44)
+      - launch/request-s2-r2.json (sha256 816d85f0b37089c090cadce804d6ced760e9de255de39030deceaf2b84819050)
+  input_bindings:
+    protocol:
+      path: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+      sha256: 561b6a75247a52d7a99f0c636fcef42eb038fc1e7844d78f002c55d8767ca05d
+    spec_s1:
+      path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
+      sha256: d2af59dd9f62d46f28c0287a475becfe468e8e0a17eabe5f96681e2abf09e8ad
+    spec_s2:
+      path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s2.json
+      sha256: 688ec9a004648933231302935704d9307cfc441aaa231fc6efb25205a302cf34
+    request_s1:
+      path: experiments/EXP-ICPERF-127dbd/inputs/request-s1.json
+      sha256: 683cc67d136ab6a2e5f1f3fbc7f6ae20ba981194f4781418340d883620b6c779
+    request_s2:
+      path: experiments/EXP-ICPERF-127dbd/inputs/request-s2.json
+      sha256: d58a601e3a5503bd37578105763f05c35ec6b98503faa55628781fd61f8c4bf1
+    analysis_script:
+      path: experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
+      sha256: 66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc
+    launcher_result_s1:
+      path: experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json
+      sha256: 7c3d9954a561a7a0d07e498afe3ecdf5b8c53359cfa28abb578a67dc8a6d60e7
+    ecbench_local:
+      path: /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/v6/bin-pinned/ecbench
+      sha256: 73362eed4165d6db20fe1d398baa8fabefa2497aff6e78dab9ed8f31af31dd01
+      role: >-
+        The pinned binary that S04-verify runs. It is an external binary, checked by local
+        digest, and checked again by S01-probe before any spend. Its path is session-scratch
+        (RULINGS-COMPILE item 6d): a different executing session recompiles the runbook and
+        needs a new approval.
+  controls:
+    - id: CTL-AA-INCUMBENT
+      kind: aa
+      arms: [incumbent, incumbent-aa]
+      text: >-
+        Counted A/A twin. It differs only in arm label and position in the order. It must be
+        record-for-record identical: ops.ratio_b_over_a 1, ci95 [1, 1], same_seeds and
+        unpaired_runs 0 at w = 0, 0.1 and 1.
+      runbook_assertion: runbook.yaml S04-verify /sessions/{0,1}/detail/controls/twin_incumbent_aa
+    - id: CTL-AA-RHO
+      kind: aa
+      arms: [rho-neg, rho-neg-aa]
+      text: The same A/A rule for the matched rho reference.
+      runbook_assertion: runbook.yaml S04-verify /sessions/{0,1}/detail/controls/twin_rho_neg_aa
+    - id: CTL-POSITIVE
+      kind: positive
+      arms: [incumbent, pc-fb2x]
+      text: >-
+        pc-fb2x (size 814, the same code path as the incumbent) must be detected as higher:
+        ops.ratio_b_over_a > 1 and ci95[0] > 1 at every weight.
+      runbook_assertion: runbook.yaml S04-verify /sessions/{0,1}/detail/controls/pc_fb2x
+    - id: CTL-NEGATIVE
+      kind: negative
+      present: false
+      not_applicable_reason: >-
+        C1 compares the deterministic counted cost of fixed recipes on fresh instances. It is
+        not a detector that searches a population for a property, so there is no null
+        population. The no-difference null is represented exactly by the A/A twins, and at
+        w = 0 by the equal-N guard pairs.
+    - id: CHK-PARITY
+      kind: implementation_check
+      arms: [srenew-eager-n407, srenew-deferred-n407, srenew-eager-n304, candidate]
+      text: >-
+        Equal-N parity, protocol section 5 rules 1 to 4, over all 1,080 algorithm_seed pairs of
+        each parity comparison per session. A failure is implementation_defect.
+      runbook_assertion: runbook.yaml S04-verify /sessions/{0,1}/parity/*/ok
+    - id: RUNBOOK-CONTROLS-NOTE
+      kind: note
+      text: >-
+        runbook.yaml S03-trial-s2 declares controls: [] because these controls are arms inside
+        each ecbench job, not plan trials. Their gates are evaluated by the frozen
+        analyze-c1.sh in step S04-verify (RULINGS-COMPILE; PROTOCOL.md section 18).
+  independent_variables:
+    - "recipe: walk/eager/N407 (incumbent) | stride-renew/deferred/N304 (candidate)"
+    - "guard_placement: eager | deferred (descriptive factorial)"
+    - "target_source: walk | stride-renew (descriptive factorial)"
+    - "factor_base_size: 304 | 407 | 814 (814 for the positive control only)"
+    - "method_family: ic.pipeline | rho.negation (distance remaining only)"
+  variable_ledger:
+    crosses_map: false
+    aa_not_applicable: null
+    independent:
+      - {name: recipe, values: [walk/eager/N407, stride-renew/deferred/N304]}
+      - {name: guard_placement, values: [eager, deferred]}
+      - {name: target_source, values: [walk, stride-renew]}
+      - {name: factor_base_size, values: [304, 407, 814]}
+      - {name: method_family, values: [ic.pipeline, rho.negation]}
+    factors:
+      - {name: instrument, treatment: fixed, how: "image digest, source ea8e9ef7 and ecbench 73362eed bound in each frozen request job.build and checked by check_job.py"}
+      - {name: oracle, treatment: fixed, how: "mitm:negation_folded=1 in every IC arm of the frozen specs"}
+      - {name: max_trials, treatment: fixed, how: "26479085 in the frozen specs; the decision requires censored_pairs == 0"}
+      - {name: linalg_solver, treatment: fixed, how: "incremental-gauss, solver empty, solver_budget_seconds 0 (plan defaults) in the frozen specs"}
+      - {name: accounting, treatment: fixed, how: "as emitted at ea8e9ef7; the band charges sqrt_solves, lookups, row_ops, legendre_symbols and target_guard_probes, and rho canonicalisations; no accounting edit inside the study"}
+      - {name: curves, treatment: randomized, how: "ecbench prime_search at 28 bits from the frozen curve seeds 2026110628201/202 (S1) and 2026110628211/212 (S2)"}
+      - {name: targets, treatment: randomized, how: "60 public targets per curve from target seed 2026110628203 (S1) and 2026110628213 (S2)"}
+      - {name: algorithm_seed, treatment: randomized, how: "derived by ecbench from measurement seed 2026110628204 (S1) / 2026110628214 (S2) as a function of (workload, round) only, shared by all ten arms"}
+      - {name: arm_label_and_position, treatment: crossed, how: "order alternate_measured: every arm in every round, interleaved"}
+      - {name: warmup, treatment: fixed, how: "1 warm-up per workload, discarded from the comparisons, kept for parity"}
+      - {name: host, treatment: measured, how: "node, pod and CPU recorded; counted cost does not depend on the host"}
+      - {name: memory_layout_environment, treatment: measured, how: "recorded; no effect on counts"}
+      - {name: spot_preemption, treatment: measured, how: "a host loss stops the session; a rerun is a new runbook session on the frozen -r2 request after a Coordinator decision"}
+      - {name: analyst, treatment: fixed, how: "frozen analyze-c1.sh, sha256 66aa2ffd..., bound in this specification and the runbook"}
+    comparisons:
+      - id: cmp-recipe
+        design: one_factor
+        arms: [incumbent, candidate]
+        differs_in: [recipe]
+        reason: >-
+          The claim is recipe-level by DEC-20261106-1d23b6 c1_route_ruling.route_A. recipe
+          bundles guard placement, target source and N. No sentence attributes the effect to
+          a sub-factor; attribution is descriptive, through cmp-factorial.
+      - {id: cmp-guard-n407, design: one_factor, arms: [srenew-eager-n407, srenew-deferred-n407], differs_in: [guard_placement]}
+      - {id: cmp-guard-n304, design: one_factor, arms: [srenew-eager-n304, candidate], differs_in: [guard_placement]}
+      - id: cmp-factorial
+        design: factorial
+        arms: [incumbent, walk-eager-n304, srenew-eager-n407, srenew-deferred-n407, srenew-eager-n304, candidate]
+        differs_in: [guard_placement, target_source, factor_base_size]
+        reason: a partial factorial; the walk/deferred cells do not exist on ea8e9ef7 (route B); descriptive, decides no claim
+      - {id: cmp-positive, design: one_factor, arms: [incumbent, pc-fb2x], differs_in: [factor_base_size]}
+      - {id: cmp-aa-incumbent, design: aa, arms: [incumbent, incumbent-aa], differs_in: [arm_label_and_position]}
+      - {id: cmp-aa-rho, design: aa, arms: [rho-neg, rho-neg-aa], differs_in: [arm_label_and_position]}
+      - {id: cmp-rho-incumbent, design: one_factor, arms: [rho-neg, incumbent], differs_in: [method_family]}
+      - {id: cmp-rho-candidate, design: one_factor, arms: [rho-neg, candidate], differs_in: [method_family]}
+  metrics:
+    primary:
+      - m-s-w0
+      - m-s-w01
+      - m-s-w1
+    secondary:
+      - m-total-gae
+      - m-sqrt-solves
+      - m-lookups
+      - m-row-ops
+      - m-legendre-symbols
+      - m-target-guard-probes
+      - m-canonicalisations
+      - m-trials
+      - m-relations
+      - m-repeated-targets-skipped
+      - m-parity
+    definition: >-
+      Counted S at weight w: the charged GAE of one complete verified solve plus w times the
+      priced uncharged native operations, divided by sqrt(r) (protocol metrics). Read from
+      ecbench compare --weight w ops, and weighted per-arm S from the per-workload means,
+      never from top-level mean_s.
+    decisive:
+      - >-
+        Per session: U_w = max(ci95[1], ci95_bootstrap[1]) of candidate/incumbent at each
+        w in {0, 0.1, 1}, from analyze-c1.sh verdict.json
+    never_read:
+      - every wall-time field, including phases[].wall_ns
+  heuristic_under_test: null
+  preregistered_prediction:
+    quantity: >-
+      Candidate/incumbent counted S has U_w < 1 at w = 0, 0.1 and 1 in each of S1 and S2
+      (protocol predictions P-w0, P-w01, P-w1). The projected ratios 0.915 / 0.894 / 0.798
+      are model outputs, not claims.
+    source: experiments/EXP-ICPERF-127dbd/inputs/protocol.json hypotheses H-C1
+  prediction_provenance:
+    - prediction: P-w0
+      text: U_0 < 1 in each session (projected 0.915)
+      first_recorded_in: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+      written_at: '2026-11-06'
+      data_seen: &c1_data_seen
+        - "v6 counted session records.jsonl (sha256 1a7f3faad6f5ebada35f4546d150e0f35aadf0fae3df9d84234832851b8ec00b): calibrates the N model; not a C1 test curve"
+        - "crypto docs/ic/LEADERBOARD.md holdout-P28 row: 0.929 / 0.974 / 1.193 for eager N 288 against 407; other curve, other N"
+        - "v6 F4 pre-freeze smoke: one non-study curve, one target; risk statement only"
+        - "next-candidate/checks/dev/run1 and run2: local non-study development solves; parity and the candidate/incumbent ratio 0.9135 / 0.8931 / 0.7979; no C1 test curve"
+        - "next-candidate/checks/dev/power1 and power2: local non-study design-size runs, power only"
+        - "crypto backlog/XP-20261029-srenew-deferred-guard specs only; no run exists; its curves are excluded"
+        - "next-candidate/checks/dev/full-job and full60-job: local non-study full-size sessions; runtime and a script exercise; no C1 test curve"
+      sample_status: out_of_sample
+      decisive_scope: fresh fp28 prime_search curves of seeds 2026110628201/202 (S1) and 2026110628211/212 (S2)
+    - prediction: P-w01
+      text: U_0.1 < 1 in each session (projected 0.894)
+      first_recorded_in: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+      written_at: '2026-11-06'
+      data_seen: *c1_data_seen
+      sample_status: out_of_sample
+      decisive_scope: as P-w0
+    - prediction: P-w1
+      text: U_1 < 1 in each session (projected 0.798)
+      first_recorded_in: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
+      written_at: '2026-11-06'
+      data_seen: *c1_data_seen
+      sample_status: out_of_sample
+      decisive_scope: as P-w0
+  scale_relevance:
+    tier: target
+    justification: >-
+      fp28 is the size of the current prime-table IC baseline row this study would improve.
+      No transfer to other sizes is assumed.
+    correspondence: null
+  tail_checks: []
+  replication:
+    seeds: [2026110628201, 2026110628202, 2026110628203, 2026110628204, 2026110628211, 2026110628212, 2026110628213, 2026110628214]
+    independent_instances: 2
+    seed_policy: >-
+      Two pre-registered sessions, S1 and S2, with disjoint curve, target and measurement seeds.
+      Both run whatever S1 shows. No third session. The curve seed fallback (+100, once) applied
+      only before the freeze and was not used.
+  replay:
+    mode: exempt
+    reason: >-
+      Re-executing a trial relaunches a paid EKS job. The study replay is ecbench verify
+      --replay-all inside analyze-c1.sh (S04-verify). The independent validator replays
+      locally with the pinned binary.
+  decisive_test: >-
+    The runbook decides validity only: transport and identity at S02-reconcile-t1 and
+    S03-trial-s2, and the integrity, control and parity gates at S04-verify. No runbook assertion names the
+    verdict, U_w, L_w or a claim outcome. The C1-primary verdict is read from each session's
+    verdict.json under protocol section 8, in the evidence review after the validator.
+  budget:
+    enforcement: advisory
+    wall_clock_seconds_per_run: 4500
+    total_cpu_hours: null
+    maximum_memory_gb: 4
+    maximum_runs: 2
+    maximum_workers: 1
+  cloud_budget:
+    usd_hard_cap: 5.0
+    rule: >-
+      Protocol section 10. Before each launch L: actual_spend + HB(L) + HB(every first-attempt
+      job not yet launched) <= USD 5.00, with HB(job) = (job seconds / 3600) x 0.43108 + 100 x
+      0.005 = USD 0.93108 at 3,600 s. actual_spend is read from billing, else the job's HB,
+      never an estimate. This session launches S2 only: S2 line 0.93108 (HB of S1, used as
+      actual_spend) + 0.93108 + 0 = 1.86216 <= 5.00. A conditional S2-r2 line would be
+      2.79324 <= 5.00. The reconciliation makes read-only S3 GETs and counts no launch.
+      Worst case committed by the protocol USD 3.72.
+    owner_gate: >-
+      The owner's explicit go-ahead for EKS spend before any launch (protocol section 11;
+      DEC-20261106-1d23b6 owner_gate). The approval decision is not that go-ahead.
+  stopping_rules:
+    - "fixed design: S1 once; S2 once, whatever S1 shows; 10,800 executions each; no third session"
+    - "S1 ran once (RUN-ICPERF-8b0d47) and is brought in by the read-only reconciliation S02-reconcile-t1; S2 (S03-trial-s2) runs only if that step passed, and any failure of the reconciliation stops the session and returns to the Coordinator"
+    - "the protocol section 10 rolling hard-bound gate, at most USD 5.00"
+    - "deadline: a session that reaches its 3,600 s job deadline is an infrastructure outcome; the request is not rerun, no result is read from it, and it returns to the Coordinator"
+    - "every runbook failure stops; there is no automatic retry; a -r2 is a new runbook session on the frozen -r2 request after a Coordinator decision; the -r2 requests are not bound in this session"
+    - "before S2 only the check_job.py set of S1 is read (PROTOCOL section 9 item 2); no further read of S1 content outside that set, by anyone (C1-AMENDMENT-2, PD-1)"
+  invalidation_rules:
+    - "an integrity or control gate failure (replay, audit, record count, invalid outcomes, spec or build equality, A/A twin not exact, pc-fb2x gate) makes the session invalid_measurement and not evidence"
+    - "equal-N parity failure (protocol section 5 rules 1 to 4) makes the session implementation_defect: a fix is opened and no scientific verdict is issued"
+    - "a timeout, crash, host loss or deadline hit is infrastructure signal, not an empirical observation"
+    - "a job exit outside 0, 42 and 43, judged from job-exit.json, invalidates the session"
+    - "a manifest.yaml that fails tools/validate_ledger.py check_run, or that the supervisor refuses, invalidates the unit"
+  success_criterion: >-
+    Both sessions are valid, and in each of S1 and S2 the candidate/incumbent upper bound U_w
+    is below 1 at w = 0, at w = 0.1 and at w = 1 (pass + pass, supported_within_scope).
+  falsification_criterion: >-
+    Both sessions are valid and in each of S1 and S2 the upper bound U_w is at least 1 at
+    one or more of w = 0, 0.1 and 1 (fail + fail). That is not_supported_within_scope, or
+    refuted_within_scope at a weight where L_w > 1 in both sessions. Pass + fail is
+    inconclusive. An invalid session decides nothing.
+  decision_impact:
+    on_positive: >-
+      Evidence review support for H-ICPERF-4cb536 at the stated scope, after the independent
+      validator, the review plan and the review independence check. Then the validation gate
+      (VALIDATION.json with replay certificate, validator report and matched rho reference),
+      the IC leaderboard row and the benchmarks/ row, and a KN-FIND (replicated).
+    on_negative: >-
+      Close or weaken C1 route A at fp28 at the stated scope after archiving an empirical_only
+      refutation note (reject_scoped only at a common adverse weight in both sessions), and
+      evaluate the route B trigger: C1-primary fails, C1-guard passes, and incumbent to
+      srenew-eager-n407 has L_0 > 1 in both sessions.
+  required_artifacts:
+    - experiments/EXP-ICPERF-127dbd/runbook-sessions/RBS-ICPERF-616277/outputs/S02-reconcile-t1/attempt-1/reconcile-result.json
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/manifest.yaml
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/raw-result.json
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/SHA256SUMS
+    - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-efb7ef/job/artifacts/job-exit.json
+  runbook:
+    path: experiments/EXP-ICPERF-127dbd/runbook.yaml
+    session_id: RBS-ICPERF-616277
+    route: runbook (PROTOCOL.md section 18, revision 6 option (i), layout superseded for the re-session by C1-AMENDMENT-2 section 3 (c); protocol extensions.execution_route)
+    steps: [S01-probe, S02-reconcile-t1, S03-trial-s2, S04-verify]
+    s2_run_id: RUN-ICPERF-efb7ef
+    prior_sessions:
+      - session_id: RBS-ICPERF-de8978
+        approved_by: DEC-20261106-ecf261
+        outcome: 'stopped at S02-trials: T1 (RUN-ICPERF-8b0d47) ran once and its job exited 42; launch_eks.sh v3a could not locate the results (implementation_error); S2 never launched'
+        classified_by: DEC-20261107-b74e2c
+      - session_id: RBS-ICPERF-e2a5c2
+        approved_by: DEC-20261106-c69de4
+        outcome: 'stopped at S02-trials before any submission (implementation_error, wrapper duplicate check)'
+        classified_by: DEC-20261106-ecf261
+  assigned_to: executor
+  executor_tier: mechanical
+  scope_note: >-
+    fp28, the four seeded curves, this recipe, the ea8e9ef7 executable and its accounting.
+    No wall-time, asymptotic or rho-beating statement. Distance to rho is reported as
+    distance remaining.

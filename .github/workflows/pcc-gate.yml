@@ -26,6 +26,7 @@ concurrency:
 
 jobs:
   gate:
+    name: "${{ github.event_name == 'pull_request_target' && 'post-merge / ' || '' }}gate"
     if: ${{ (github.event.action != 'closed' || github.event.pull_request.merged) && !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -42,6 +43,7 @@ jobs:
           sparse-checkout: |
             /tools/pcc/
             /tools/artifacts/
+            /.artifacts/config.json
             /pcc/
             /docs/SABOTAGE_RESISTANCE.md
       - uses: actions/setup-python@v5
