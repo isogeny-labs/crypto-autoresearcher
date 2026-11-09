@@ -17,6 +17,27 @@ that has a `trial-plan.json`, because the selector and the runner hash those
 receipts to decide what is still planned. On a 2026-10-09 checkout it
 materialized 75,199 of 122,529 files in 15 seconds.
 
+## Start without downloading the archives
+
+The `code` profile keeps top-level files plus implementation, tools, skills,
+tests, schemas and documentation. It excludes the research data trees, including
+experiment/task archives, coordination archives, inputs and the scientific
+ledger. It is for implementation and orientation. Campaign autopilot refuses a
+code checkout rather than treating hidden goals as an empty research portfolio.
+Tests which consume repository research records also need the appropriate data.
+
+For execution use `harness`; for whole-ledger coordination use a full checkout.
+Switch with `python3 tools/sparse_checkout.py apply harness`, then add the named
+experiment or goal. `code` does not accept experiment/path additions directly.
+`disable` restores the full tree and downloads the omitted bytes.
+
+Git already compresses packfiles. A shallower history alone does not remove
+large files at the tip. Profile selection before the first checkout is what
+avoids downloading those file blobs. Moving existing policy-selected data to
+the artifact store is the permanent tip-size reduction; see [artifacts](artifacts.md).
+History remains intact and ordinary unfiltered full-history clones still fetch
+historical blobs.
+
 ## Commands
 
 ```sh
@@ -43,12 +64,14 @@ already downloaded. To download less, clone blobless and let the profile
 decide which blobs arrive:
 
 ```sh
-python3 tools/sparse_checkout.py clone https://github.com/aburan28/crypto-autoresearcher DIR [--branch B]
+python3 tools/sparse_checkout.py clone https://github.com/isogeny-labs/crypto-autoresearcher.git DIR --profile code [--branch B]
 ```
 
-This is `git clone --filter=blob:none --no-checkout`, the `harness` rules, then
-`git checkout`: history arrives as commits and trees, and only materialized
-files are downloaded. The tool is standard library only, so a copy of the file
+Clone defaults to `--depth 1 --single-branch --no-tags --filter=blob:none
+--no-checkout`, then applies the requested profile before checkout. It does not
+fetch every historical tree or branch. Use `--depth N` for a bounded history or
+`--full-history` for the selected branch's complete history. Other branches and
+tags can be fetched explicitly later. Only materialized file blobs arrive. The tool is standard library only, so a copy of the file
 can run before any checkout exists. Anything read later outside the profile
 (`git show HEAD:<path>`, `add --experiment`) is fetched on demand.
 
