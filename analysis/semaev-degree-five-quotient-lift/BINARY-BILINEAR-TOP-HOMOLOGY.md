@@ -60,6 +60,15 @@ iterated closure. Only then could a dimension gap plus an exact solution
 count or UNSAT bridge yield a binary LFD lower bound. No such joint claim is
 made here.
 
+Proposition 1.11 of the theorem dossier makes the degree-five obligation
+precise after an exact $W_4$ seed is available: every top-degree cancellation
+among variable multiples of **all** $W_4$ high-degree rows must reduce to
+$W_4$ for the simple no-new-low-fall criterion to apply. The 47 original
+quadratic top equations studied below are only a small generating layer of
+that 144,948-dimensional high-degree n47 $W_4$ space. Their syzygy ranks
+alone cannot verify Proposition 1.11; a failing no-new-fall criterion also
+does not decide whether $1$ survives in $W_5$.
+
 For the frozen `fresh-n47-rand-00` plan,
 `rank_binary_top_forms.py` evaluated the matrix formula exactly over its
 named `GF(2^47)` representation. The 47 basis trace functionals `mu=2^i`
