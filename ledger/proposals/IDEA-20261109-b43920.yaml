@@ -1,0 +1,174 @@
+idea:
+  id: IDEA-20261109-b43920
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Bilinear section-coefficient presentation of the L((m+1)O) incidence system against the determinant
+    presentation at the F4 degree wall over a mu_B factor base
+  class: representation
+  claim: 'Port of the MinRank lesson (Kipnis-Shamir and support-minors modelling) to prime-field point
+    decomposition. Keep the coefficients c of the section f_c = sum c_j phi_j in L((m+1)O) as unknowns
+    instead of eliminating them by a determinant. At m = 3 the system is f_c(P_i) = 0 for i = 1..3 (bilinear
+    in c and the point monomials), f_c(R) = 0 (linear in c, R known), y_i^2 = x_i^3 + a x_i + b, and x_i^B
+    = 1. Prediction, fixed before any run: the F4 wall degree D_wall of the bilinear presentation differs
+    from the determinant presentation by at most 1 at B in 7, 13, 19, because the membership binomials
+    are not bilinear and the Faugere-Safey El Din-Spaenlehauer bound d_reg <= min(n_c, n_p) + 2 = 4 does
+    not reach them. The port is alive only if D_wall(bil) <= B + 2 while D_wall(det) >= B + 4 at all three
+    B.'
+  mechanism: R + P_1 + .. + P_m = O iff some section of L((m+1)O) vanishes at the m + 1 points. The determinant
+    presentation encodes this as one equation of degree about 2 per point; the bilinear presentation trades
+    m - 1 extra linear unknowns for degree 1 in c and degree 2 in each point. In MinRank this trade lowers
+    the solving degree from the determinant degree to the bilinear regularity. The test asks whether the
+    same trade changes the wall when the zero-dimensional closure is an algebraic membership predicate
+    of degree B rather than a generic bilinear closure.
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: The framework is Semaev index calculus; novelty is claimed only in the presentation handed
+      to the solver.
+    verified_by: brief section 3 row text, 2026-11-09 session
+  - ref: KR-IC-0d2021
+    provenance: internal
+    claim: Modern regularity estimates are for semi-regular or affine sequences; the bilinear-plus-binomial
+      system here is neither.
+    verified_by: brief section 3 row text, 2026-11-09 session
+  - ref: KR-IC-fbdb61
+    provenance: internal
+    claim: Solving degree, first fall degree and degree of regularity are distinct; this record measures
+      the F4 wall only.
+    verified_by: brief section 3 row text, 2026-11-09 session
+  - ref: Faugere, Safey El Din, Spaenlehauer 2011 bihomogeneous systems
+    provenance: recalled
+    claim: Generic bilinear systems have regularity bounded by min(n_x, n_y) + 2 in the affine setting.
+    verified_by: not verified this session; next agent should confirm the exact bound
+  assumptions:
+  - Curve order prime, B divides p - 1, same p and curve for both presentations.
+  - Normalisation of c uses f_c(R) = 0 to eliminate one coefficient and sets the x^2 coefficient to 1;
+    targets where that coefficient vanishes are skipped and counted.
+  - Same solver, same grevlex ordering, same variable block order across presentations.
+  proof_search_map:
+    not_applicable_reason: A matched toy comparison of two presentations; no exponent claim.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: D_wall(bil) minus D_wall(det), median over 20 targets per B
+    direction: different
+    minimum_effect: inside the null band of absolute value at most 1 at every B
+  - metric: D_wall(bil) minus B
+    direction: higher
+    minimum_effect: at least 3 at B = 19
+  - metric: D_wall of the random bilinear control without memberships
+    direction: lower
+    minimum_effect: at most 4
+  minimal_test:
+    design: Use the F4 harness referenced in crypto/RESEARCH_GROEBNER_F4.md or the groebner_compare directory
+      in crypto-autoresearcher, whichever exposes the per-step degree. For B in 7, 13, 19 and the smallest
+      calibration prime p = 1 mod B with a prime-order curve, draw 20 random targets R known to decompose
+      (construct R as a sum of three base points) and 20 random targets. Solve both presentations, record
+      D_wall as the largest critical-pair degree reduced, the number of F4 steps, the largest matrix dimensions,
+      and wall time.
+    controls:
+    - Random bilinear control, same variable counts, f_c(P_i) replaced by random bilinear forms and memberships
+      removed; checks the recalled FSS bound in the harness.
+    - Same determinant system with variables renamed and reordered, to bound ordering noise in D_wall.
+    - Decomposable versus non-decomposable targets, to separate wall from consistency.
+    required_metrics:
+    - D_wall_bil
+    - D_wall_det
+    - D_wall_random_bilinear
+    - n_steps
+    - max_matrix_rows
+    - max_matrix_cols
+    - wall_time_seconds
+    - n_skipped_targets
+  falsification_conditions:
+  - Median D_wall(bil) is at most B + 2 and median D_wall(det) is at least B + 4 at all three B; the null
+    is falsified and the port is alive.
+  - The random bilinear control reaches a wall above 6, meaning the harness metric does not track the
+    recalled bound and the comparison is invalid.
+  - Solver timeout at B = 19 is infrastructure, not evidence either way.
+  confounders:
+  - Extra variables change the grevlex monomial order and can shift the wall by 1 independent of structure;
+    the null band absorbs this.
+  - Decomposable targets may terminate early on a linear form; both target classes are reported.
+  interpretation_limits:
+  - A null at m = 3 does not exclude a gain at m = 4 where n_c = 3; the record scopes to m = 3 and B at
+    most 19.
+  - Wall degree is not solving degree; no complexity exponent is inferred.
+  heuristic_assumptions:
+  - id: H1
+    statement: The F4 wall of a bilinear system closed by degree-B binomials is governed by B, not by
+      the bilinear regularity.
+    rigorous_support: None opened; FSS covers generic bilinear closures only.
+    validation_plan: The matched comparison above, with the random bilinear control separating the two
+      regimes.
+  - id: H2
+    statement: Per-step degree reported by the harness is comparable across presentations with different
+      variable counts.
+    rigorous_support: Definitional, if the harness reports critical-pair degree.
+    validation_plan: Read the harness metric definition in RESEARCH_GROEBNER_F4.md before running.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho at N^{1/2}; the wave-1 relations record's F4 wall at B for flat, chained and
+      determinant presentations
+    hidden_overhead: None claimed; if the wall did drop, the per-target cost would still be the B-dependent
+      relation search of the mu_B lane.
+    tradeoff_note: Delta 0. A cheap discriminating experiment that closes or opens a fourth presentation
+      the wave-1 record did not run.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 for any exponent reading; KR-IC-5931ee for the lane overall. Neither row
+    speaks to the presentation comparison.
+  sota_delta: Exponent delta 0. New content is a matched measurement of the Kipnis-Shamir style modelling
+    of the incidence condition, absent from the wave-1 presentation set.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-0d2021
+    - KR-IC-fbdb61
+    - KR-IC-8b9daa
+    - KR-IC-5931ee
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-8b9daa
+      provenance: internal
+      relation: adjacent
+      delta: Karabina's symmetric reformulation reduces the binary PDP system; this record adds variables
+        rather than removing them and works over F_p.
+    - ref: KR-IC-fbdb61
+      provenance: internal
+      relation: adjacent
+      delta: That row separates the degree invariants; this record measures one of them for a presentation
+        not covered there.
+    searched:
+      corpus_grep:
+      - brief section 2 for bilinear, MinRank, support minors, Kipnis
+      - wave-1 relations record titles for presentations of the membership system
+      web: []
+      blocked:
+      - crypto/RESEARCH_GROEBNER_F4.md not opened; read for the wall metric definition
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Use the F4 harness referenced in crypto/RESEARCH_GROEBNER_F4.md or the groebner_compare
+        directory in crypto-autoresearcher, whichever exposes the per-step degree. For B in 7, 13, 19
+        and the smallest calibration prime p = 1 mod B with a prime-order curve, draw 20 random targets
+        R known to decompose (construct R as a sum of three base points) and 20 random targets. Solve
+        both presentations, record D'
