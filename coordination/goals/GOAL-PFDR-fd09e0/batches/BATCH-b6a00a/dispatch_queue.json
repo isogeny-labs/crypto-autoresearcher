@@ -1,0 +1,638 @@
+{
+  "schema": "crypto.autoresearch.dispatch_queue.v1",
+  "goal_id": "GOAL-PFDR-fd09e0",
+  "batch_id": "BATCH-b6a00a",
+  "objective": "Bounded custody recovery of EXP-PFDR-ada71b scientific design under new experiment EXP-PFDR-7c7c95: two historical attempts plus exactly five new stages.",
+  "max_concurrent": 1,
+  "max_concurrent_basis": "one local executor at a time, 4 workers and 4 GiB memory protection",
+  "tasks": [
+    {
+      "id": "TASK-20261109-2dc07f",
+      "title": "Run five fresh EXP-PFDR-7c7c95 recovery trials under total seven-attempt ceiling",
+      "role": "executor",
+      "state": "queued",
+      "priority": 80,
+      "review_required": true,
+      "depends_on": [],
+      "read_scope": [
+        "experiments/EXP-PFDR-7c7c95/specification.yaml",
+        "experiments/EXP-PFDR-7c7c95/trial-plan.json",
+        "experiments/EXP-PFDR-7c7c95/implementation/",
+        "ledger/handoffs/TASK-20261109-2dc07f.yaml",
+        "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json",
+        "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/launch-recovery.sh",
+        "coordination/recovery/20261109/pfdr-resource-guard-probe.json",
+        "experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json"
+      ],
+      "write_scope": [
+        "experiments/EXP-PFDR-7c7c95/runs/"
+      ],
+      "artifact_paths": [
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/design.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/pilot-jobs.jsonl",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/analysis.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/flags.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/analysis-main.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/flags.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/rep-jobs.jsonl",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/main-jobs.jsonl",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stdout.log"
+      ],
+      "handoff": {
+        "execution": {
+          "mode": "experiments",
+          "kind": "run",
+          "experiment_id": "EXP-PFDR-7c7c95",
+          "trial_plan": "experiments/EXP-PFDR-7c7c95/trial-plan.json",
+          "trial_plan_sha256": "ad2ef87c68721f70765e8821805a2e3749a00580d2ac26e76b96bab263424814",
+          "approved_by": "DEC-20261109-6f42d4"
+        },
+        "objective": "Execute exactly five fresh stages of EXP-PFDR-7c7c95 with the frozen v2 scientific settings and repaired launch provenance; count two historical attempts toward the hard seven-attempt cap.",
+        "uncertainty_reduced": "Whether the repaired (v2) break-even growth ladder yields valid per-line slopes and passing preregistered controls on fresh curves.",
+        "inputs": [
+          "experiments/EXP-PFDR-7c7c95/specification.yaml",
+          "experiments/EXP-PFDR-7c7c95/trial-plan.json",
+          "experiments/EXP-PFDR-7c7c95/implementation/",
+          "ledger/handoffs/TASK-20261109-2dc07f.yaml",
+          "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json",
+          "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/launch-recovery.sh",
+          "coordination/recovery/20261109/pfdr-resource-guard-probe.json",
+          "experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json"
+        ],
+        "constraints": [
+          "No scientific parameter, seed, control or threshold changes.",
+          "Prior selftest is a hash-bound input only; prior invalid pilot supplies no design input.",
+          "At most five fresh run IDs; zero further retries; 4 workers, 4 GiB, one trial at a time; existing host only.",
+          "No cloud build, instance, paid inference or Bedrock.",
+          "Launch only with the committed experiments/EXP-PFDR-7c7c95/launch-recovery.sh under one whole-batch systemd user scope; fresh readback must confirm MemoryMax=4G, CPUQuota=400%, RuntimeMaxSec=107970, TimeoutStopSec=30 and KillSignal=SIGINT.",
+          "Stop with infrastructure status on 108000 s aggregate wall limit or aggregate 4 GiB memory ceiling; record every attempt, no retry."
+        ],
+        "deliverables": [
+          "experiments/EXP-PFDR-7c7c95/runs/<RUN-ID>/ for five declared IDs"
+        ],
+        "artifact_paths": [
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/design.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/pilot-jobs.jsonl",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/analysis.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/flags.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/analysis-main.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/flags.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/rep-jobs.jsonl",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/main-jobs.jsonl",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stdout.log"
+        ],
+        "write_scope": [
+          "experiments/EXP-PFDR-7c7c95/runs/"
+        ],
+        "archived_by": "TASK-20261109-f2ecc7",
+        "depends_on": [],
+        "inference": {
+          "policy": "executor-implementation",
+          "reasoning_effort": null,
+          "fallback_allowed": true,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "maximum_runs": 5,
+          "cumulative_maximum_runs": 7,
+          "historical_attempts": 2,
+          "maximum_retries": 0,
+          "memory_gb": 4,
+          "workers": 4,
+          "max_concurrent_trials": 1,
+          "wall_clock_seconds": 108000,
+          "cpu_hours_ceiling": 120,
+          "incremental_cloud_usd": 0,
+          "memory_limit_kind": "aggregate_systemd_MemoryMax",
+          "outer_wall_deadline_seconds": 108000,
+          "scope_runtime_seconds": 107970,
+          "scope_stop_grace_seconds": 30,
+          "cpu_quota_percent": 400
+        },
+        "completion_gate": [
+          "Every fresh run ID has its declared artifact set and supervisor receipt, including failed attempts.",
+          "Checker and provenance envelope pass for valid outputs; invalid outputs remain immutable.",
+          "No sixth new attempt or retry; original two attempts remain counted."
+        ],
+        "return_format": "five run IDs, receipts, checks and host resource/cost account",
+        "record": "ledger/handoffs/TASK-20261109-2dc07f.yaml"
+      },
+      "archived_by": "TASK-20261109-f2ecc7"
+    },
+    {
+      "id": "TASK-20261109-f2ecc7",
+      "title": "Snapshot archive five EXP-PFDR-7c7c95 recovery run directories",
+      "role": "coordinator",
+      "state": "queued",
+      "priority": 70,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261109-2dc07f"
+      ],
+      "read_scope": [
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/design.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/pilot-jobs.jsonl",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/analysis.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/flags.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/analysis-main.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/flags.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/rep-jobs.jsonl",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stdout.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/command.txt",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/environment.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/launch.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/main-jobs.jsonl",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/manifest.yaml",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/raw-result.json",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stderr.log",
+        "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stdout.log"
+      ],
+      "write_scope": [
+        "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-f2ecc7/"
+      ],
+      "artifact_paths": [
+        "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-f2ecc7/snapshot-receipt.json"
+      ],
+      "handoff": {
+        "objective": "Snapshot-archive the six EXP-PFDR-7c7c95 run directories produced by TASK-20261109-2dc07f exactly as returned, before any interpretation or ledger transition.",
+        "uncertainty_reduced": "Durability and content binding of the run artifacts; not a scientific uncertainty.",
+        "inputs": [
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/design.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/pilot-jobs.jsonl",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/analysis.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/flags.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-2245ef/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/analysis-main.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/flags.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-94fb9e/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/rep-jobs.jsonl",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b577bc/stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/check.stdout.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/command.txt",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/environment.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/launch.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/main-jobs.jsonl",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/manifest.yaml",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/raw-result.json",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stderr.log",
+          "experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-b67199/stdout.log"
+        ],
+        "constraints": [
+          "Stage exactly the declared run artifact paths; large artifacts go through the artifact store, never git add.",
+          "Do not edit any run artifact, the specification, the trial plan or the implementation.",
+          "Merge origin/main, never rebase.",
+          "No trial is launched from this task; maximum_runs 0.",
+          "A receipt is not evidence."
+        ],
+        "deliverables": [
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-f2ecc7/snapshot-receipt.json"
+        ],
+        "artifact_paths": [
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-f2ecc7/snapshot-receipt.json"
+        ],
+        "write_scope": [
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-f2ecc7/"
+        ],
+        "archived_by": "TASK-20261109-f2ecc7",
+        "depends_on": [
+          "TASK-20261109-2dc07f"
+        ],
+        "inference": {
+          "policy": "coordinator-orchestration-code",
+          "reasoning_effort": null,
+          "fallback_allowed": true,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "maximum_runs": 0
+        },
+        "completion_gate": [
+          "path_sha256 in the receipt covers every declared path",
+          "the commit is reachable from HEAD",
+          "zero trials"
+        ],
+        "return_format": "receipt path and commit sha",
+        "archive": {
+          "kind": "snapshot",
+          "binding_mode": "content_at_commit",
+          "source_task_ids": [
+            "TASK-20261109-2dc07f"
+          ],
+          "record_ids": [
+            "GOAL-PFDR-fd09e0",
+            "H-PFDR-ed7ccf",
+            "EXP-PFDR-7c7c95",
+            "DEC-20261109-6f42d4",
+            "BATCH-b6a00a",
+            "TASK-20261109-2dc07f",
+            "TASK-20261109-f2ecc7"
+          ],
+          "commit_sha": null,
+          "parent_sha": null,
+          "path_sha256": {}
+        },
+        "record": "ledger/handoffs/TASK-20261109-f2ecc7.yaml"
+      },
+      "archived_by": "TASK-20261109-f2ecc7",
+      "archive": {
+        "kind": "snapshot",
+        "binding_mode": "content_at_commit",
+        "source_task_ids": [
+          "TASK-20261109-2dc07f"
+        ],
+        "record_ids": [
+          "GOAL-PFDR-fd09e0",
+          "H-PFDR-ed7ccf",
+          "EXP-PFDR-7c7c95",
+          "DEC-20261109-6f42d4",
+          "BATCH-b6a00a",
+          "TASK-20261109-2dc07f",
+          "TASK-20261109-f2ecc7"
+        ],
+        "commit_sha": null,
+        "parent_sha": null,
+        "path_sha256": {}
+      }
+    },
+    {
+      "id": "TASK-20261109-eba43a",
+      "title": "Independently validate PFDR recovery execution and frozen controls",
+      "role": "validator",
+      "state": "queued",
+      "priority": 70,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261109-2dc07f",
+        "TASK-20261109-f2ecc7"
+      ],
+      "read_scope": [
+        "experiments/EXP-PFDR-7c7c95/specification.yaml",
+        "experiments/EXP-PFDR-7c7c95/trial-plan.json",
+        "experiments/EXP-PFDR-7c7c95/protocol.json",
+        "experiments/EXP-PFDR-7c7c95/runs/",
+        "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json",
+        "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json",
+        "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/execution-receipt.json",
+        "experiments/EXP-PFDR-7c7c95/launch-recovery.sh",
+        "coordination/recovery/20261109/pfdr-resource-guard-probe.json",
+        "experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json"
+      ],
+      "write_scope": [
+        "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/"
+      ],
+      "artifact_paths": [
+        "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/report.md"
+      ],
+      "archived_by": "TASK-20261109-fdb637",
+      "handoff": {
+        "objective": "Independently validate provenance, complete five-stage trial coverage, frozen controls, original selftest custody and measured outputs before any scientific decision.",
+        "uncertainty_reduced": "Whether the recovered run supplies admissible evidence for the frozen growth-ladder reading.",
+        "inputs": [
+          "experiments/EXP-PFDR-7c7c95/specification.yaml",
+          "experiments/EXP-PFDR-7c7c95/trial-plan.json",
+          "experiments/EXP-PFDR-7c7c95/protocol.json",
+          "experiments/EXP-PFDR-7c7c95/runs/",
+          "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/selftest.json",
+          "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-a4895b/execution-receipt.json",
+          "experiments/EXP-PFDR-ada71b/runs/RUN-PFDR-4fa30b/execution-receipt.json",
+          "experiments/EXP-PFDR-7c7c95/launch-recovery.sh",
+          "coordination/recovery/20261109/pfdr-resource-guard-probe.json",
+          "experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json"
+        ],
+        "constraints": [
+          "Independent session from the producer and Coordinator design session.",
+          "Preserve invalid and missing attempts; never infer a scientific reading from a green checker alone.",
+          "No trial launches or source edits."
+        ],
+        "deliverables": [
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/report.md"
+        ],
+        "artifact_paths": [
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/report.md"
+        ],
+        "write_scope": [
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/"
+        ],
+        "archived_by": "TASK-20261109-fdb637",
+        "depends_on": [
+          "TASK-20261109-2dc07f",
+          "TASK-20261109-f2ecc7"
+        ],
+        "inference": {
+          "policy": "review-adversarial",
+          "reasoning_effort": "xhigh",
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": true,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "maximum_runs": 0,
+          "wall_clock_seconds": 14400,
+          "memory_gb": 4
+        },
+        "completion_gate": [
+          "Report checks exact source/plan/receipt hashes, all controls, every trial outcome and claim scope."
+        ],
+        "return_format": "independent validation report and findings",
+        "record": "ledger/handoffs/TASK-20261109-eba43a.yaml"
+      }
+    },
+    {
+      "id": "TASK-20261109-fdb637",
+      "title": "Archive independent PFDR validation and Coordinator evidence decision",
+      "role": "coordinator",
+      "state": "queued",
+      "priority": 60,
+      "review_required": false,
+      "depends_on": [
+        "TASK-20261109-eba43a"
+      ],
+      "read_scope": [
+        "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/report.md",
+        "experiments/EXP-PFDR-7c7c95/runs/"
+      ],
+      "write_scope": [
+        "ledger/evidence/",
+        "ledger/decisions/",
+        "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-fdb637/"
+      ],
+      "artifact_paths": [
+        "ledger/evidence/EV-PFDR-b50d25.yaml",
+        "ledger/decisions/DEC-20261109-97e0a5.yaml",
+        "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-fdb637/ledger-receipt.json"
+      ],
+      "archived_by": "TASK-20261109-fdb637",
+      "archive": {
+        "kind": "ledger",
+        "binding_mode": "content_at_commit",
+        "source_task_ids": [
+          "TASK-20261109-eba43a"
+        ],
+        "record_ids": [
+          "GOAL-PFDR-fd09e0",
+          "EXP-PFDR-7c7c95",
+          "EV-PFDR-b50d25",
+          "DEC-20261109-97e0a5",
+          "TASK-20261109-eba43a",
+          "TASK-20261109-fdb637"
+        ],
+        "commit_sha": null,
+        "parent_sha": null,
+        "path_sha256": {}
+      },
+      "handoff": {
+        "objective": "After independent review, archive exact evidence and a scoped Coordinator decision with verified commit receipt.",
+        "uncertainty_reduced": "Whether the frozen claims are supported at the measured scope, pending review.",
+        "inputs": [
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/reviews/TASK-20261109-eba43a/report.md",
+          "experiments/EXP-PFDR-7c7c95/runs/"
+        ],
+        "constraints": [
+          "No predetermined positive or negative verdict.",
+          "No scientific transition until independent validation report and complete artifact verification."
+        ],
+        "deliverables": [
+          "ledger/evidence/EV-PFDR-b50d25.yaml",
+          "ledger/decisions/DEC-20261109-97e0a5.yaml",
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-fdb637/ledger-receipt.json"
+        ],
+        "artifact_paths": [
+          "ledger/evidence/EV-PFDR-b50d25.yaml",
+          "ledger/decisions/DEC-20261109-97e0a5.yaml",
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-fdb637/ledger-receipt.json"
+        ],
+        "write_scope": [
+          "ledger/evidence/",
+          "ledger/decisions/",
+          "coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/archives/TASK-20261109-fdb637/"
+        ],
+        "archived_by": "TASK-20261109-fdb637",
+        "depends_on": [
+          "TASK-20261109-eba43a"
+        ],
+        "inference": {
+          "policy": "coordinator-orchestration-code",
+          "reasoning_effort": "high",
+          "fallback_allowed": false,
+          "degraded_allowed": false,
+          "independent_session_required": false,
+          "delivery": "interactive"
+        },
+        "budget": {
+          "maximum_runs": 0,
+          "wall_clock_seconds": 14400,
+          "memory_gb": 4
+        },
+        "completion_gate": [
+          "Independent report and evidence decision archived by exact path, Git receipt verified."
+        ],
+        "return_format": "archive receipt and scoped decision",
+        "archive": {
+          "kind": "ledger",
+          "binding_mode": "content_at_commit",
+          "source_task_ids": [
+            "TASK-20261109-eba43a"
+          ],
+          "record_ids": [
+            "GOAL-PFDR-fd09e0",
+            "EXP-PFDR-7c7c95",
+            "EV-PFDR-b50d25",
+            "DEC-20261109-97e0a5",
+            "TASK-20261109-eba43a",
+            "TASK-20261109-fdb637"
+          ],
+          "commit_sha": null,
+          "parent_sha": null,
+          "path_sha256": {}
+        },
+        "record": "ledger/handoffs/TASK-20261109-fdb637.yaml"
+      }
+    }
+  ]
+}

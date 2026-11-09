@@ -1,0 +1,46 @@
+coordinator_decision:
+  id: DEC-20261109-6e0798
+  id_provenance: Allocated with tools/allocate_id.py --next coordinator_decision --date 20261109 and checked free before writing.
+  decided_at: '2026-11-09'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: Native Codex Coordinator subagent gpt-6-sol high; existing openai-gpt6 Coordinator binding resolves, model_verified false; no API inference or doctor probe claimed.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  mode: coordinate
+  kind: technical_reconciliation
+  context: Published pilot RUN-PFDR-1e5d2b was refused by the supervisor after the driver produced 960 rows; checker did not run in the official attempt. Frozen plan and protocol remain immutable. See coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/pilot-invalid-continuation-20261109.md.
+  decision: revise
+  target_ids:
+  - EXP-PFDR-7c7c95
+  - RUN-PFDR-1e5d2b
+  - GOAL-PFDR-fd09e0
+  - BATCH-b6a00a
+  rationale:
+  - The invalid pilot is the third counted attempt, leaving four of the approved cumulative seven; no retry is authorized.
+  - The current frozen invalidation rule holds dependent trials after an invalid input run. The approved five-stage plan cannot continue from this receipt.
+  - Read-only custody and structure checks make independent derivation from the published raw rows worth testing, but do not validate the failed run or imply a scientific result.
+  - Manifest identity/input defects and protocol instrument SHA drift require a prospective, fully checked contract.
+  evidence_refs:
+  - experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/execution-receipt.json
+  - experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/pilot-jobs.jsonl
+  - experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b/design.json
+  - experiments/EXP-PFDR-7c7c95/trial-plan.json
+  - experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json
+  - coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/pilot-invalid-continuation-20261109.md
+  limitations:
+  - This decision authorizes design and validation preparation only, no scientific run and no retrospective validity change.
+  - Pilot raw counts and order certificates have not received an independent scientific recount; the producer checker passed only post hoc.
+  - Reviewer binding is operator-supplied and unprobed; no independent review has occurred.
+  next_actions:
+  - Hold EXP-PFDR-7c7c95 dependent trials; preserve invalid pilot receipt and all artifacts.
+  - Independently derive and validate a hash-bound design input from the published raw pilot rows, then prepare a new four-stage contract with exact three-plus-four attempt accounting and exhaustive manifest-envelope regression.
+  - Run prospective preapproval on exact bytes, archive/publish and verify a new Coordinator approval before any future stage; require independent output review before scientific judgment.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: This is a custody and scheduling decision, not evidence for a scientific finding.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261109-6e0798.yaml
+  - coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/pilot-invalid-continuation-20261109.md

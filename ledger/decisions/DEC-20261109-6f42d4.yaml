@@ -1,0 +1,118 @@
+coordinator_decision:
+  id: DEC-20261109-6f42d4
+  id_provenance: Allocated with tools/allocate_id.py --next coordinator_decision --date 20261109 and confirmed free
+    with --check.
+  recorded_at: '2026-11-09'
+  decided_at: '2026-11-09'
+  decided_by: coordinator
+  recorded_by: coordinator
+  session_provenance: Native Codex Coordinator subagent gpt-6-sol high; adapter resolve --role coordinator --backend
+    openai-gpt6 matched policy and model. Adapter model_verified false; no API inference or doctor probe was claimed.
+  goal_id: GOAL-PFDR-fd09e0
+  question_id: RQ-PFDR-ae2fba
+  hypothesis_id: H-PFDR-ed7ccf
+  mode: design-experiment
+  kind: approval
+  context: Scheduling decision DEC-20261109-fe923d superseded failed old lane and opened BATCH-b6a00a. Original
+    valid selftest and invalid pilot each count as an attempt. New EXP-PFDR-7c7c95 uses unchanged scientific parameters
+    with a versioned launch-provenance repair. Exact prospective bytes passed experiment_preapproval.py with approvable
+    true and zero blockers. The earlier per-stage watchdog/per-process memory interpretation was corrected before
+    approval; the final packet binds a verified whole-batch systemd scope and frozen resource protocol v2.
+  decision: approve
+  target_ids:
+  - EXP-PFDR-7c7c95
+  - H-PFDR-ed7ccf
+  - GOAL-PFDR-fd09e0
+  - BATCH-b6a00a
+  - TASK-20261109-2dc07f
+  - TASK-20261109-f2ecc7
+  - TASK-20261109-eba43a
+  - TASK-20261109-fdb637
+  approval:
+    recorded: true
+    standing_authorization: AGENTS.md standing user authorization, 2026-09-06; approval requires a complete and
+      approvable protocol.
+    experiment_id: EXP-PFDR-7c7c95
+    predecessor_experiment_id: EXP-PFDR-ada71b
+    specification: experiments/EXP-PFDR-7c7c95/specification.yaml
+    specification_sha256: f63d1627be146264ad73ebde4bb71342905f62b90ce9d76ad3c5604284ed5d0f
+    trial_plan: experiments/EXP-PFDR-7c7c95/trial-plan.json
+    trial_plan_sha256: ad2ef87c68721f70765e8821805a2e3749a00580d2ac26e76b96bab263424814
+    queue: coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/dispatch_queue.json
+    queue_sha256: 8f13a43604822be1c63d6d725f7984adb8b8849d1beb34e981969791d0df30eb
+    executor_handoff: ledger/handoffs/TASK-20261109-2dc07f.yaml
+    executor_handoff_sha256: f6a5af020cb81461c92e9db925786c25d19d36a6e4ec39a603fefa80fac28def
+    protocol: experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json
+    protocol_sha256: e6fd82d7612b01f0374591119cae5345f7cddecbe311479b9c08b17e4b683ffd
+    protocol_file_sha256: 93dbf527fda7bce782f2306ec45fe92368cdc132bd2eaadf907a63d56dca9b6f
+    preapproval_packet: coordination/design/EXP-PFDR-7c7c95-recovery-20261109/preapproval-packet.json
+    preapproval_report: coordination/design/EXP-PFDR-7c7c95-recovery-20261109/preapproval-report.json
+    preapproval_approvable: true
+    approved_runs_new: 5
+    attempts_historical_valid: 1
+    attempts_historical_invalid: 1
+    cumulative_attempt_ceiling: 7
+    further_retries: 0
+    execution_route: implementation
+    runbook: No committed LINT OK receipt for these bytes; implementation route with independent validator successor.
+    scope: Five fresh stages on the original 16-32 bit, theta 0.30/0.35, d 1-3, h=2 design. Original RNG namespace
+      and seed blocks 12000000/12100000/12200000/12900000 remain fixed. Original selftest is reused by hash and
+      receipt; invalid pilot design is excluded.
+    resource_limits: 'One existing-host systemd user scope for all five stages: MemoryMax=4G (aggregate 4294967296-byte
+      readback), CPUQuota=400% (cpu.max 400000/100000), RuntimeMaxSec=107970, TimeoutStopSec=30, KillSignal=SIGINT.
+      Overall wall ceiling 108000 s, quota upper bound 120 core-hours. Supervisor also applies per-process RLIMIT_AS
+      and per-stage driver/checker watchdogs. Five fresh IDs, two historical attempts, zero retries, zero new paid
+      cloud allocation.'
+    asserts_nothing_about: H-PFDR-ed7ccf, growth-rate reading or goal completion.
+    enforcement_scope:
+      runner_gates: The frozen plan names exactly five fresh run IDs. New IDs and immutable run directories prevent
+        run reuse. The committed launch-recovery.sh wraps the whole supervisor in one systemd user scope with aggregate
+        memory, CPU quota and wall deadline; fresh scope readback is required at launch.
+      coordinator_accounting: Seven total attempts means one historical valid selftest, one historical invalid pilot
+        and at most five fresh stage attempts. The cross-experiment sum is Coordinator accounting; no sixth fresh
+        ID or retry is authorized.
+      observed_probe: The published resource probe read memory.max=4294967296, cpu.max=400000 100000, RuntimeMaxUSec=1d
+        5h 59min 30s, TimeoutStopUSec=30s, KillSignal=2. It did not stress OOM or wait 30 hours; verify actual run
+        scope after launch.
+      cost: 120 core-hours is a quota and wall-limit upper bound, not measured consumption. Count unsuccessful attempts
+        and all host usage toward the budget.
+    runtime: Use committed launch-recovery.sh with owner/epoch after fresh claim. It invokes uv Python 3.12; system
+      Python 3.9 cannot run the supervisor/curve source. Require fresh whole-batch cgroup readback before scientific
+      work. No trial has run.
+    previous_protocol: experiments/EXP-PFDR-7c7c95/protocol.json
+    resource_guard_launcher: experiments/EXP-PFDR-7c7c95/launch-recovery.sh
+    resource_guard_launcher_sha256: 15235b8e5115aeca07f919ee5ad89692db217176ea2ade8d7b4cfeaa0457140b
+    resource_guard_probe: coordination/recovery/20261109/pfdr-resource-guard-probe.json
+    resource_guard_probe_sha256: 7e4d7cdb73853ad226a2f5faa5029950c563a273efc44de404355746582b05dc
+  rationale:
+  - Original six-attempt cap consumed two attempts; exactly five new stages require a prospective seven-attempt
+    cumulative cap.
+  - Frozen v2 scientific conditions and seed derivation remain unchanged; only run identity and custody metadata
+    change.
+  - The preapproval probe passed on exact final bytes with a lawful lane and independent review chain.
+  - A benign systemd scope readback confirmed the aggregate memory, CPU quota and runtime parameters; exact launch
+    script is committed and hash-bound.
+  status_transitions:
+  - record: EXP-PFDR-7c7c95
+    note: review_required -> approved, frozen, execution_authorized
+  next_actions:
+  - Snapshot archive exact design and approval paths, push and verify GitHub revision; then require newest_experiments.py
+    --experiment EXP-PFDR-7c7c95 --json execution_state ready.
+  - Execute only through /run EXP-PFDR-7c7c95 after fresh owner claim, checkpoint and resource gates; archive every
+    attempt, then independent Validator before any scientific decision.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: Approval is not a scientific evidence review.
+  limitations:
+  - No scientific trials were launched in this approval session.
+  runs_launched: 0
+  records_written:
+  - ledger/decisions/DEC-20261109-6f42d4.yaml
+  - experiments/EXP-PFDR-7c7c95/specification.yaml
+  - experiments/EXP-PFDR-7c7c95/trial-plan.json
+  - coordination/goals/GOAL-PFDR-fd09e0/batches/BATCH-b6a00a/dispatch_queue.json
+  - ledger/handoffs/TASK-20261109-2dc07f.yaml
+  - experiments/EXP-PFDR-7c7c95/protocol-resource-v2.json
+  - experiments/EXP-PFDR-7c7c95/launch-recovery.sh
+  - coordination/recovery/20261109/pfdr-resource-guard-probe.json
+  official_effect_until_committed_pushed_reviewable: none
