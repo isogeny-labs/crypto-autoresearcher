@@ -1,0 +1,153 @@
+idea:
+  id: IDEA-20261109-d21883
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Transfer-admissibility certificate: affine targets need small k = ord_N(p) or N = p, abelian
+    targets obey a size law, isogenous targets are closed'
+  class: barrier
+  claim: 'For E/F_p of prime order N, every realisation of the DL instance in an algebraic group H over
+    F_p with a faster-than-generic DLP is excluded by three checks and one law. (i) Hom(E, H_aff) = 0
+    for every affine group H_aff, because an abelian variety is complete; so affine targets (G_a, G_m,
+    tori) are reached only through N-torsion pairings, which need N dividing Phi_k(p) with k = ord_N(p),
+    or through the p-adic logarithm, which needs N = p. (ii) Abelian-variety targets A of dimension d
+    >= 2 have about p^d points and no known DLP algorithm on them beats p^1 for the N-subgroup (size law,
+    measured in the sibling sextic-cover record). (iii) Elliptic targets are isogenous to E and closed
+    by KR-RHO-755e35. A script computing k, t - 1, and the CM conductor f with its smallest prime factor
+    certifies (i) and the reachability of (iii) for secp256k1 and for every curve in docs/ECDLP_CALIBRATION_PRIMES.md.
+    Prediction: secp256k1 has k > 10^6 by direct exponentiation and t - 1 about 2^128, so no pairing or
+    p-adic transfer exists and the lane for this curve reduces to the size law.'
+  mechanism: 'Chevalley: a connected commutative algebraic group H over F_p is an extension 0 -> H_aff
+    -> H -> A -> 0 with A an abelian variety. A homomorphism E -> H composed with H -> A lands in A; the
+    fibre direction is affine and receives only constant maps from E. So the only routes into affine groups
+    are the Weil and Tate pairings on E[N] (image in mu_N inside F_{p^k}, DLP by NFS at L_{p^k}(1/3))
+    and the formal-group logarithm (image in Z/p, needs N = p). With c = 1.923 and no o(1) term, L_{p^k}(1/3)
+    is 2^123 at k = 9, 2^129 at k = 10 and 2^139 at k = 12, so a pairing transfer beats 2^128 only for
+    k at most about 10, and k <= 12 is the zone needing a TNFS case analysis. Everything else is an abelian
+    variety of dimension >= 2 over F_p or an isogenous curve.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: MOV/Frey-Ruck and anomalous attacks apply only when the embedding degree is small or the trace
+      is one.
+    verified_by: REPO BRIEF 2026-11-09 section 3; file not opened
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: isogenous curves share order and hardness; isogeny walks reach no weak curve.
+    verified_by: REPO BRIEF 2026-11-09 section 3; file not opened
+  - ref: IDEA-20260727-005
+    provenance: internal
+    claim: exit maps into commutative algebraic groups were defined there; this record adds the affine-vanishing
+      step and the per-curve certificate.
+    verified_by: REPO BRIEF 2026-11-09 section 2 excerpt; ledger file not opened
+  assumptions:
+  - secp256k1 parameters p = 2^256 - 2^32 - 977 and the standard N; the script recomputes t = p + 1 -
+    N and checks 4p - t^2 = 3 f^2 with f an integer.
+  - docs/ECDLP_CALIBRATION_PRIMES.md lists curves with (p, N); the script reads them, never retypes them.
+  predictions:
+  - metric: smallest j <= 10^6 with p^j = 1 mod N for secp256k1
+    direction: higher
+    minimum_effect: none found (k > 10^6)
+  - metric: t - 1 for secp256k1
+    direction: different
+    minimum_effect: nonzero, magnitude about 2^128
+  - metric: number of calibration curves with k <= 12 or t = 1
+    direction: lower
+    minimum_effect: equals 0 unless the file flags a curve as a deliberate transfer control
+  minimal_test:
+    design: 'One Python or Pari script. For each curve: loop p^j mod N for j = 1..10^6; attempt factor(N
+      - 1) with a 10-minute ECM budget and, if complete, output exact k; compute t and f, verify the discriminant
+      identity, factor f with a 10-minute budget and report the smallest prime factor or a proven bound;
+      emit a JSON certificate with every intermediate value, then list per curve which transfer families
+      survive (i) and (iii).'
+    controls:
+    - A toy k = 1 curve (trace 2, order p - 1) must report k = 1.
+    - The anomalous toy curve of CTRL-ANOMALOUS-TRACE1 (IDEA-20260805-cc4c2c) must report t = 1.
+    - A random prime-order toy curve must report k near N and t far from 1.
+    required_metrics:
+    - k or a lower bound on k per curve
+    - t, f, smallest prime factor of f or bound
+    - per-curve list of surviving transfer families
+  falsification_conditions:
+  - secp256k1 reports k <= 24 or t = 1.
+  - A filed record exhibits an abelian-variety target of dimension >= 2 over F_p with charged ladder slope
+    below 0.5 against matched rho; then law (ii) is false and the certificate is incomplete.
+  - A homomorphism from E to an affine group over F_p that is neither a torsion pairing nor a p-adic log
+    is exhibited; then (i) is misapplied.
+  confounders:
+  - A partial factorisation of N - 1 yields only a lower bound on k; report it as a bound, not as k.
+  - Twists of E have different orders and are not transfer targets; the script must not report their embedding
+    degrees as E's.
+  interpretation_limits:
+  - The certificate closes transfers for the listed curves; it is not a theorem about all prime-field
+    curves, and (ii) is heuristic.
+  - Non-algebraic or cross-characteristic maps are closed instead by exit-map neutrality (IDEA-20260727-005),
+    not by this record.
+  heuristic_assumptions:
+  - id: H1
+    statement: no DLP algorithm on an abelian variety A/F_p of dimension d >= 2 solves a subgroup of order
+      about p below p^{1+o(1)}.
+    rigorous_support: Heuristic; best known is index calculus at p^{2-2/d} (KR-IC-a4dd54) and generic
+      p^{1/2} inside the subgroup.
+    validation_plan: the sibling sextic-cover record's ladder slope in Sage plus ca_rho.h; literature
+      re-check of the KR-IC-a4dd54 sources.
+  - id: H2
+    statement: NFS/TNFS in F_{p^k} for k <= 12 at p = 2^256 costs below 2^128 only for k at most about
+      10.
+    rigorous_support: L_{p^k}(1/3, 1.923) with no o(1); constants recalled, not measured.
+    validation_plan: replace by published TNFS estimates if a curve with k <= 12 appears in the certificate;
+      none expected.
+  target_complexity:
+    time_exponent: no change; 1/2 remains the best for secp256k1 (delta 0)
+    memory_exponent: no change
+    best_known: rho p^{1/2} (KR-RHO-13bf67)
+    hidden_overhead: factoring N - 1 and f, polynomial and budgeted
+    tradeoff_note: a certificate, not an algorithm; it ranks which transfer families are even admissible
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-RHO-53c89f states the two affine conditions; KR-RHO-755e35 closes isogenous targets.
+    The affine-vanishing argument and the per-curve certificate are the additions.
+  sota_delta: 'Exponent delta 0. Information delta: one script turns the transfer lane for secp256k1 into
+    a finite list of computed invariants.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-5ea2f8
+    - KR-IC-a4dd54
+    - KR-IC-cd159a
+    - KR-IC-64659b
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: special_case
+      delta: the row lists MOV and anomalous as curve checks; this record derives that they are the only
+        affine routes and computes them.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: closes elliptic targets; this record adds the affine and higher-dimensional cases.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for embedding degree, MOV, anomalous, exit map, transfer, generalized Jacobian
+      - REPO BRIEF section 3 generic-rho and index-calculus rows
+      web: []
+      blocked:
+      - docs/ECDLP_CALIBRATION_PRIMES.md and RESEARCH_SECP256K1_CM.md not opened; the next agent reads
+        them for the curve list and any existing k or f computation
+      - cryptanalysis/experiments/ecc2k130-pairing-degree-audit-20261005 not opened; expected to hold
+        the binary-field version of this audit
+    lead: LEAD-EXO-low-degree-query-lower-bound
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: One Python or Pari script. For each curve: loop p^j mod N for j = 1..10^6;
+        attempt factor(N - 1) with a 10-minute ECM budget and, if complete, output exact k; compute t
+        and f, verify the discriminant identity, factor f with a 10-minute budget and report the smallest
+        prime factor or a proven bound; emit a JSON certificate with every intermediate value, then list
+        per curve which transfer families su'
