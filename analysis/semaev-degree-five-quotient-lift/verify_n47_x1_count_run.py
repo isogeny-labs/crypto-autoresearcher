@@ -94,7 +94,7 @@ def verify_stage(stage, argv, expected_stdout, root):
     return stage['stdout_sha256']
 
 
-def verify(plan_path, receipt_path, repository, result_root):
+def verify(plan_path, receipt_path, repository, result_root, published_copy=False):
     plan = json.loads(plan_path.read_text())
     receipt = json.loads(receipt_path.read_text())
     require_equal(plan['schema'], 'semaev.n47-rand00-independent-x1-count-plan/v1', 'plan schema')
@@ -102,7 +102,8 @@ def verify(plan_path, receipt_path, repository, result_root):
     require_equal(receipt['plan_sha256'], sha256(plan_path), 'plan SHA-256')
     require_equal(receipt['attempts'], 1, 'attempt count')
     require_equal(receipt['retries'], 0, 'retry count')
-    require_equal(str(result_root), plan['output_root'], 'result root')
+    if not published_copy:
+        require_equal(str(result_root), plan['output_root'], 'result root')
     require_equal(sha256(repository / plan['source_path']), plan['source_sha256'], 'source SHA-256')
     require_equal(receipt['source_sha256'], plan['source_sha256'], 'receipt source SHA-256')
     require_equal(sha256(repository / plan['named_plan_path']), plan['named_plan_sha256'], 'named plan SHA-256')
@@ -111,7 +112,7 @@ def verify(plan_path, receipt_path, repository, result_root):
     require_equal(json.loads((repository / plan['named_plan_path']).read_text())['record'],
                   plan['record'], 'named instance record')
     check_named_target(plan)
-    binary = Path(plan['build_argv'][-1])
+    binary = result_root / 'count_x1' if published_copy else Path(plan['build_argv'][-1])
     require_equal(sha256(binary), receipt['binary_sha256'], 'binary SHA-256')
     build = receipt['build']
     require_equal(build['argv'], plan['build_launch_argv'], 'build argv')
@@ -137,8 +138,11 @@ def main():
     parser.add_argument('receipt', type=Path)
     parser.add_argument('repository', type=Path)
     parser.add_argument('result_root', type=Path)
+    parser.add_argument('--published-copy', action='store_true',
+                        help='check a byte-for-byte published copy of the run directory')
     args = parser.parse_args()
-    print(json.dumps(verify(args.plan, args.receipt, args.repository, args.result_root),
+    print(json.dumps(verify(args.plan, args.receipt, args.repository, args.result_root,
+                            published_copy=args.published_copy),
                      sort_keys=True))
 
 
