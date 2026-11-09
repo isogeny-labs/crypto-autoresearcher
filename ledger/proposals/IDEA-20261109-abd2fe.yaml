@@ -1,0 +1,57 @@
+idea:
+  id: IDEA-20261109-abd2fe
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  title: Ramanujan mixing-rate control for the H-WESO-516558 non-backtracking sampler
+  class: measurement
+  novelty_status: adaptation
+  repairs:
+    record: H-WESO-516558
+    recorded_status: analyzed (part H-S, scoped to tested primes)
+    assertion_that_flips: On a ladder of ~10 primes in [2^10, 2^20], split by p mod 12, the empirical
+      total variation distance of the length-k endpoint distribution to the 1/#Aut-weighted stationary
+      measure is at most 2x the Ramanujan bound C*sqrt(p/12)*(2 sqrt 2 / 3)^k. Violation on any rung means
+      the sampler is biased and (H-S) is weakened there.
+  claim: The sampler's bias is bounded by a known spectral quantity; measuring against it turns a prime-scoped
+    empirical claim into a bounded one.
+  mechanism: Enumerate norm-2 left ideals of the standard maximal order (3-regular 2-isogeny graph, Pizer
+    Ramanujan), run the filed non-backtracking sampler, compute TV(k) for k up to 2 log_2 p + 20, compare
+    to the bound; weight j = 0, 1728 by 1/#Aut.
+  lean:
+    covered_by: null
+    needed_statement: "theorem nonbacktracking_walk_count (G : SimpleGraph V) (hG : G.IsRegularOfDegree\
+      \ 3)\n  (v k) : Fintype.card (NBWalks G v k) = 3 * 2^(k-1)   (combinatorial part only)"
+  experiment:
+    nearest_surface: aburan28/crypto-autoresearcher Autolab packages p1486_hecke_* (H-ALISO-006..009)
+    design: TV(k) vs k per prime; two residue classes mod 12
+    control: simple (backtracking) random walk on the same graph must mix no faster
+    kill_criterion: TV(k) > 2x bound on any rung
+    cost: graph size ~p/12 vertices; minutes per prime at p <= 2^20
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-ALISO-006
+      - H-ALISO-007
+      - H-ALISO-008
+      - H-ALISO-009
+      none_found_after:
+      - BRIEF grep for "Ramanujan"
+      - BRIEF grep for "mixing"
+      - BRIEF grep for "total variation"
+    nearest_record:
+      id: H-WESO-516558
+      relation: controls
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - supersingular
+  - 2-isogeny-graph
+  - sampler
+  - mixing
+  - control-arm
