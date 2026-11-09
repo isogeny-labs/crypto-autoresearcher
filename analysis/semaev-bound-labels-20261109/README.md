@@ -103,3 +103,14 @@ The reviewed degree-three notes reduce the two-point family to a unique-zero bra
 The field-pencil note gives explicit trace-dual equations. Degree-c dual separators on all coordinate-one slices imply branch LFD<=c+3. Their absence does not prove a full-closure lower bound without a normalization theorem. The transport note proves degree-controlled substitution and explains why unchanged field towers and disjoint products cannot amplify degree. Each note has an independent written review.
 
 `publication-validation.json` preserves the local global benchmark-gate failure caused by missing historical artifacts in this sparse checkout. No historical benchmark records were changed. Focused SAT controls passed; hosted checks are tracked separately on the PR.
+
+
+## Frozen degree-two campaign and explicit infinite lower bound
+
+`no-wrap-w2/protocol.json` was frozen and published with exact source before the sole bounded local attempt. All12 cells completed; all controls and independent DAG/full-closure replays passed. For r1..5 the full affine ideal is available at cap2. For r6..12 a known affine consequence is absent, giving LFD>=3. No timing, instruction-count, or production dataset claim follows. The campaign source, raw derivation DAGs, limits, process receipt, validated export, metadata deviation, rendered report and independent reviews are retained.
+
+The r6 result is now explained by a symbolic polynomial-gcd proof: after five affine eliminations, the reduced11-dimensional quadratic span has no affine member and is already closed. It gives original rank71, affine dimension5, codimension35. Independent targeted replay reproduces those values. A selector argument brackets the first obstruction by3<=LFD<=4.
+
+Restriction and the exact two-point ideal extend the lower bound to every r>=6 and every irreducible field polynomial of degree n>4r. This is an explicit infinite constant lower bound3, not a growing bound. Pulling back the seed's closed space yields an explicit certificate construction of constant codimension35. Next: saturated degree3 closure at r6, then a construction whose required cap grows.
+
+Replay a saved certificate without rerunning the campaign: `python3 no-wrap-w2/replay.py no-wrap-w2/attempt-1/r6-certificate.json NEW-RESULT.json` (Python3.10+, assertions enabled). The output must match the retained result; output paths are exclusive. The original attempt must not be repeated under its consumed one-attempt allowance.

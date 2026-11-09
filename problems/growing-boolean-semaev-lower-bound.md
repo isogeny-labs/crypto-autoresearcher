@@ -162,3 +162,8 @@ The bounded DIMACS exporter and supplied-model checker pass five controls and an
 V=span(1,t,...,t^r), n>4r and z=a6=1 gives an explicit infinite exactly-two-point family, by a highest-polynomial-degree argument. Its r=1,2 members have cap-two derivations of the affine ideal; the odd-diagonal lower3 theorem does not apply. General dyadic coefficient saturation remains unresolved.
 
 Reviewed transport gives cap max(sD,c) for degree-s substitutions with generator-image cap c. Field towers preserving V retain late closure; disjoint SAT products take maximum LFD, so neither amplifies degree. Field-trace dual separators give a concrete upper-bound route, while turning their degree into a lower bound requires an unproved normalization of arbitrary full-closure derivations. These negative routes and exact remaining obligations are retained in the proof packet.
+
+
+### 2026-11-09: first explicit no-wrap obstruction, certified and symbolic
+
+The frozen r1..12 W2 campaign completed all cells with independent DAG/closure checks. Cap2 derives the affine ideal for r1..5; r6..12 certify lower3. At r6 a polynomial-gcd argument independently proves rank71, affine dimension5 and stable reduced quadratic space dimension11. Selector lifting gives upper4. Restriction with the independently known two-point ideal gives lower3 for every r>=6,n>4r, including a constant-codimension35 certificate pullback construction. This disproves the proposed universal cap2 for this explicit family; it does not prove unboundedness. The next discriminating obligation is full W3 at r6 (degree3 versus4), then a growing-cap family. Original campaign allowance consumed; no automatic repeat.

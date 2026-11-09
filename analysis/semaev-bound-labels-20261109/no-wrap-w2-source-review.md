@@ -21,3 +21,11 @@ The initial replay uses Python assertions for essential validation. It must expl
 The initial CLI reads JSON with unbounded `read_text()` before checking event count. A finite artifact-byte cap should be enforced before parsing. The r<=12 bound limits legitimate generated artifacts, but does not bound an untrusted replay file before allocation. This was also communicated to the parent. The producer's maximum independent-event count and its finite variable/monomial universe otherwise bound its allocations and termination.
 
 These are source-review findings, not evidence of a campaign result. Any subsequently applied fixes should be identified by the actual source revision and checked before treating this initial review as acceptance of the corrected replay.
+
+## Corrected source readback before campaign
+
+Read back the updated `replay.py` and `run.py`. The replay now refuses import when `__debug__` is false, so optimized Python cannot silently disable its assertions. Its `read_json` reads at most 8 MiB plus one byte and rejects excess before JSON parsing. Both standalone replay and the runner use this bounded loader for persisted certificates. These changes address the two identified admission issues.
+
+The runner sets 512 MiB address-space, 60 CPU-second, and 90 wall-second limits before computation, creates an exclusive output directory, records source/protocol hashes, and includes deterministic r=1, known r=1/r=2 upper-bound, corrupted-DAG, and incomplete-space controls. It performs the stated finite r=1,...,12 sequence and replays persisted certificates through the independent verifier. I read this code but did not execute its controls or campaign. Its integer `bit_count` calls require the specified compatible Python interpreter; the intended Python 3.12 invocation satisfies that source requirement.
+
+The corrected source is suitable for the stated bounded attempt from the standpoint of this independent correctness review. This is pre-execution source acceptance, not a statement that the campaign completed or any numerical result was observed.
