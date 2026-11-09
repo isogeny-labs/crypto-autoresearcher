@@ -1,0 +1,106 @@
+idea:
+  id: IDEA-20261109-6b5020
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Sign-scaled, T-optional doubling on Edwards25519 at 3M + 4S (4M + 4S with T), complete on all
+    8l points, against 5 fe_mul + 4 fe_sq as written
+  class: algorithm
+  claim: 'Input $(X_1:Y_1:Z_1)$ with $x=X_1/Z_1$, $y=Y_1/Z_1$ on $-x^2+y^2=1+dx^2y^2$; $T_1$ is not read.
+    Compute $A=X_1^2$, $B=Y_1^2$, $Z_s=Z_1^2$, $C=Z_s+Z_s$, $S=A+B$, $E=(X_1+Y_1)^2-S$, $G=B-A$, $F''=C-G$,
+    then $X_3=E\cdot F''$, $Y_3=G\cdot S$, $Z_3=F''\cdot G$ and, only when the next operation is an addition,
+    $T_3=E\cdot S$. Count: 3M + 4S + 0c + 6a without $T_3$ and 4M + 4S + 0c + 6a with it; no negation,
+    constant or inversion. Correctness: $(X_3,Y_3,Z_3,T_3)=-(EF,GH,FG,EH)$ for the repository''s $F=G-C$,
+    $H=-(A+B)$, as an identity in $\mathbb{Z}[X_1,Y_1,Z_1]$, so it is the same projective point and $T_3Z_3=X_3Y_3$
+    holds. Completeness: $Z_3=Z_1^4(1+dx^2y^2)(1-dx^2y^2)$, which is non-zero for every rational point
+    because $d$ and $-d$ are non-squares when $-1$ is a square. The law is therefore valid on all $8l$
+    points, including the identity, $(0,-1)$, $(\pm i,0)$ and the order-8 points. A run of w doublings
+    followed by an addition costs $(w-1)(3M+4S)+(4M+4S)$. For 252 doublings in 4-bit windows that is 819M
+    + 1008S against 1260 fe_mul + 1008 fe_sq as written.'
+  mechanism: 'Two changes to the excerpted double. First, the projective scaling symmetry $\lambda=-1$:
+    negating $F$ and $H$ together negates all four outputs, so $H=0-(A+B)$ becomes $S=A+B$, computed once
+    and reused in $E$, and $F$ becomes $C-G$. That removes one subtraction and the duplicate $A+B$. Second,
+    $2Z^2$ is formed by an addition instead of an fe_mul by 2. Third, doubling never reads $T$, so $E\cdot
+    S$ is skipped unless an addition follows. The affine image is $x_3=E/G=2xy/(y^2-x^2)$ and $y_3=S/F''=(x^2+y^2)/(2-y^2+x^2)$,
+    the doubling specialisation of the unified law. No secret-dependent branch; whether $T_3$ is produced
+    depends on the public position in the window schedule.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1 excerpt of src/ecc/ed25519.rs, fn double
+    provenance: internal
+    claim: Baseline body with 4 fe_sq, 5 fe_mul, 7 fe_add/fe_sub.
+    verified_by: this session, by reading the excerpt in the BRIEF
+  - ref: Hisil, Wong, Carter, Dawson 2008, extended twisted Edwards coordinates
+    provenance: recalled
+    claim: Doubling at 4M + 4S + 1 constant, and the remark that T can be dropped between doublings. Pointer
+      only.
+    verified_by: none
+  assumptions:
+  - a = -1 is a square and d is a non-square modulo p, as stated in BRIEF section 0.
+  - The caller's schedule guarantees T is produced before every addition.
+  predictions:
+  - metric: multiplication-class calls per doubling, new minus as-written
+    direction: lower
+    minimum_effect: exactly 1 fewer with T, exactly 2 fewer without T
+  - metric: number of rational points with Z_3 = 0 on the small analogue
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: 'tools/formula_cert/run.sh ed-dbl-signscaled. (1) Trace count must equal (3M, 4S, 0c, 6a)
+      and (4M, 4S, 0c, 6a). (2) Sage: the four outputs plus the four as-written outputs are the zero polynomial,
+      and Z_3 equals the stated product modulo the curve ideal. (3) Small analogue chosen by the printed
+      rule (smallest prime q at least 1009 with q congruent to 5 mod 8, smallest non-square d with group
+      order 8r, r an odd prime): for every point and every scaling, Z_3 is non-zero and the result equals
+      the reference group law. (4) At p: agreement with the existing double on 10,000 seeded points and
+      on the eight multiples of an order-8 point; RFC 8032 vectors in the repo still pass with the body
+      swapped in.'
+    controls:
+    - A square d on the same q, where at least one rational point must give Z_3 = 0 or the completeness
+      check is not sensitive.
+    - A mutant with F' = G - C but S kept, which must fail the group-law check.
+    required_metrics:
+    - traced M, S, c, a
+    - count of points with Z_3 = 0, per curve
+    - selected q, d and group order
+    - number of point-scaling pairs checked
+  falsification_conditions:
+  - Traced count differs from the stated vectors.
+  - Any rational point on a non-square-d analogue gives Z_3 = 0 or a wrong double.
+  - The polynomial identity against the as-written outputs is non-zero.
+  - Missing Sage is recorded as skipped infrastructure, not as support.
+  confounders:
+  - A square-d control curve may happen to have no rational point with d x^2 y^2 = 1 or -1; then another
+    square d is tried and the attempts reported.
+  interpretation_limits:
+  - A count of field calls; the BigUint backend is not constant-time and wall time is advisory.
+  - The window-level saving assumes a schedule with runs of doublings; the binary scalar_mul in the repo
+    gains less.
+  heuristic_assumptions:
+  - id: H1
+    statement: None beyond the stated algebra; the completeness argument is a proof given the two quadratic-character
+      facts.
+    rigorous_support: The factorisation of Z_3 and the non-squareness of d and -d.
+    validation_plan: Exhaustive enumeration on the analogue and the square-d control.
+  target_complexity:
+    time_exponent: not applicable, constant-factor field-operation count
+    memory_exponent: not applicable
+    best_known: 3M + 4S projective doubling for a = -1 (recalled)
+    hidden_overhead: The schedule must track whether T is live.
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: Equal in count to the projective a = -1 doubling in the literature (recalled); nothing
+    in the repository reaches it.
+  sota_delta: 0 against the literature. Against the excerpted double, 1 or 2 fewer multiplication-class
+    calls and 1 fewer addition-class call per doubling, with the same completeness.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a doubling law and its operation count,
+      not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2, all 24 IDEA and 6 H entries as truncated there, searched for doubling formulas
+      or counts
+    - BRIEF section 1 excerpt of ed25519.rs
