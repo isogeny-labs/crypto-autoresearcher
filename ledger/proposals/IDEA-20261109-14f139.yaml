@@ -1,0 +1,64 @@
+idea:
+  id: IDEA-20261109-14f139
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: unverified
+  lane: isogeny
+  angle: invariants and auxiliary structures on supersingular curves
+  title: Pairing-computable genus characters as a DDH distinguisher audit for oriented class-group actions
+  attack_type: parameter_audit
+  claim: For an O-oriented supersingular curve with disc(O) = D having t distinct prime factors, the assigned
+    characters of Cl(O) are computable from small-torsion pairing data in O(log p) field operations and
+    reveal the secret ideal class modulo Cl(O)^2, up to t-1 bits, breaking decisional assumptions whenever
+    h(O) is even. Cleared against H-ICINV-82ee6a (Frobenius-order endomorphism features), H-ECDLP-f8101e
+    (public representative selection by cheap invariants), H-SSIQ-d724f2 (2-adic level structure), and
+    avoids the rejected_scoped closure H-ICINV-6c7920 by targeting oriented class groups rather than ordinary
+    isogeny-class invariants. No Lean lemma constrains it; the missing statement is genus_character_pairing.
+  mechanism: Factor D for each deployed orientation; for each odd q | D compute the Kronecker character
+    of the class via the q-torsion pairing invariant; for the 2-adic part use the 2-torsion Tate/Weil
+    structure. Report bits leaked per parameter set and whether any IND-CPA proof depends on DDH over
+    that orientation.
+  objects:
+    order: O with discriminant D, conductor possibly composite
+    invariant: assigned characters chi_q, q | D
+    target: DDH over Cl(O) acting on oriented curves
+  cost_model:
+    invariant_cost: O(log p) field ops per character
+    bits_leaked: t - 1 where t = omega(D)
+    security_delta_if_true: decisional break only; CDH and key recovery unaffected
+  falsification: If every deployed orientation has D = -q or -4q or -8q with q prime and odd class number,
+    the leak is empty and the record closes as audited clean.
+  cleared:
+    checked:
+    - H-ICINV-82ee6a
+    - H-ECDLP-f8101e
+    - H-SSIQ-d724f2
+    disproven: H-ICINV-6c7920 (rejected_scoped; ordinary toy class invariants)
+  lean:
+    coverage: none
+    needed_statement: 'genus_character_pairing : forall q | D odd prime, chi_q [a] equals the q-torsion
+      pairing invariant of a * E for every O-oriented E'
+  experiment:
+    exp_id: none
+    nearest_surface: aburan28/crypto-autoresearcher autolab packaging
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no frontier map
+    searched:
+      corpus_grep:
+      - H-ICINV-6c7920
+      - H-ICINV-82ee6a
+      - H-ECDLP-f8101e
+      - H-SSIQ-d724f2
+    none_found_after:
+    - 'BRIEF grep: "genus"'
+    - 'BRIEF grep: "DDH"'
+    - 'BRIEF grep: "orient"'
+    - 'BRIEF grep: "class group"'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  risks: The result is known in the literature from recollection, but the brief contains no non-recalled
+    source record, so novelty_status is unverified rather than known.
