@@ -1,0 +1,143 @@
+idea:
+  id: IDEA-20261109-5dd4ab
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Torsion-section lift equals the elliptic Teichmueller lift on the canonical lift, so the second
+    Witt digit of a point has x_0-degree about 3p/2 there and generic degree on every non-canonical lift
+  class: representation
+  claim: 'Let E/F_p be ordinary with N = #E(F_p), N'' = #E''(F_p) for the quadratic twist, and p not dividing
+    N N''. For every Weierstrass lift E~/Z_p the reduction map E~(Z_p) -> E(F_p) splits uniquely (Ext^1(Z/N,
+    Z_p) = 0) and the torsion lift is P^ = P~ - [N^{-1} mod p^{m-1}]([N]P~) at precision p^m, two scalar
+    multiplications, no canonical lift needed. On the canonical lift the lifted Frobenius phi~ exists
+    and ker(phi~ - 1) has order Nm(pi - 1) = N, so P^ is the Frobenius-compatible point over P, the elliptic
+    Teichmueller lift of Mochizuki and Finotti; Finotti''s degree theorem (recalled, to be verified) then
+    gives the Witt coordinate x_1 = f(x_0), f in F_p[x_0], deg f <= (3p-1)/2, where x^ = [x_0] + p [x_1]^{1/p}.
+    Prediction A, for j = 0 toy curves whose canonical lift y^2 = x^3 + b^ is free, the Witt digit interpolated
+    over the x-set X of E(F_{p^2}) has degree <= (3p-1)/2 with coefficients in F_p, against |X| - 1 of
+    order p^2/2 for a random even function. Prediction B, on the non-canonical lift y^2 = x^3 + p a_1
+    x + b^ (a_1 nonzero) the torsion lift exists but its digit has degree >= |X| - 3. No exponent change
+    is claimed.'
+  mechanism: The digit x_1 is the only datum a p-adic lift adds at precision p^2, and the wave-1 p-adic
+    record on the torsion-section lift left its algebraic degree open. Frobenius compatibility pins x_1
+    by a p-power identity (tau(Frob P) = phi~(tau P), x(phi~ R) = x(R)^p mod p), which is why a degree
+    of order p appears. Off the canonical lift no Frobenius lift exists, the torsion lift is defined by
+    the group law alone, and x_1 should behave as an arbitrary even function. Degrees are measured over
+    F_{p^2}-points because over F_p every function of x_0 interpolates below |X| < p/2.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Anomalous curves are solved by p-adic lifting; this record works at N prime to p where the
+      lift splits and no homomorphism to F_p exists.
+    verified_by: REPO BRIEF section 3 row text, file not opened in this session
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Lifting to characteristic zero fails for xedni; the Z_p torsion lift is local, exact and carries
+      no height.
+    verified_by: REPO BRIEF section 3 row text, file not opened in this session
+  - ref: Finotti, Degrees of the elliptic Teichmueller lift, J. Number Theory 2002
+    provenance: recalled
+    claim: The x_1 coordinate of the elliptic Teichmueller lift is a polynomial in x_0 of degree at most
+      (3p-1)/2 for p >= 5. Exact hypotheses must be checked before quoting it as a theorem.
+    verified_by: not verified, recalled from memory
+  assumptions:
+  - p does not divide N N', so every point of E(F_{p^2}) has order prime to p and a unique torsion lift
+    in E~(W(F_{p^2})).
+  - The Witt coordinate is x_1 = d^p where x^ = [x_0] + p d mod p^2 and [x_0] is the Teichmueller representative;
+    interpolating d itself over F_{p^2} would show degree of order p^2/2 even on the canonical lift.
+  predictions:
+  - metric: degree of the x_1 interpolant over X on the canonical lift, divided by p
+    direction: lower
+    minimum_effect: at most 1.5 + 1/p at every tested p, while |X|/p >= p/2 - 1
+  - metric: degree of the x_1 interpolant over X on the lift with a_1 nonzero
+    direction: higher
+    minimum_effect: at least |X| - 3 at every tested p
+  - metric: number of interpolant coefficients outside F_p on the canonical lift
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: For primes p = 1 mod 3 between 31 and 241 and b in F_p^* with p not dividing N N', build F_{p^2}
+      = F_p[z]/(g) and O = (Z/p^2)[z]/(g~). Hensel-lift every affine point of E(F_{p^2}) to P~ on y^2
+      = x^3 + b^, compute delta = [N N']P~ in the kernel of reduction and P^ = P~ - [(N N')^{-1} mod p]
+      delta, extract d and x_1 = d^p, and Lagrange-interpolate x_1 over X (points with y nonzero) over
+      F_{p^2}, recording the degree. Repeat on y^2 = x^3 + p a_1 x + b^ for two random a_1 in F_p^*, and
+      with a random even function on X. Sage under crypto/sage; primes may also be drawn from crypto/docs/ECDLP_CALIBRATION_PRIMES.md.
+    controls:
+    - Random even function on X, degree expected |X| - 1 up to probability 1/p^2.
+    - Deformation b^ -> b^ + p b_1 (still canonical) must shift x_1 by exactly b_1 x_0 / (3b) pointwise
+      before any degree is recorded.
+    - Every lifted x^ reduces to x_0 modulo p.
+    required_metrics:
+    - p, b, N, N', |X|
+    - deg_can, deg_noncan_1, deg_noncan_2, deg_random
+    - count of interpolant coefficients outside F_p on the canonical lift
+    - wall-clock for the N N' lifts
+  falsification_conditions:
+  - deg_can exceeds (3p-1)/2 at two or more primes (recalled bound wrong, or the lift is not the Teichmueller
+    lift).
+  - deg_can is below (p-1)/4 at two or more primes (a low-degree digit exists and the digit factor base
+    must be re-examined).
+  - deg_noncan is at most (3p-1)/2 at two or more primes (degree structure is lift-independent).
+  - The b_1 shift control fails pointwise, which is an invalid run, not evidence.
+  confounders:
+  - Pairs (p, b) with p dividing N N' are skipped and counted.
+  - Points with y = 0 are excluded and counted.
+  interpretation_limits:
+  - A confirmed degree about 3p/2 is an algebraic-complexity statement at toy p and changes no exponent.
+  - The degree over F_{p^2}-points bounds but does not equal the degree of x_1 as a function on E(F_p).
+  heuristic_assumptions:
+  - id: H1
+    statement: The torsion lift on a non-canonical Weierstrass lift has no algebraic structure beyond
+      the group law, so its Witt digit has generic degree.
+    rigorous_support: None found; Finotti's theory is stated for the canonical lift only.
+    validation_plan: Measure deg_noncan at every prime in the sweep; scope the record to that range.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged
+    memory_exponent: O(p^2) field elements at toy size, O(1) at 256 bits for one lift
+    best_known: Pollard rho at Theta(N^{1/2}); the lift adds a digit costing two 256-bit scalar multiplications
+      modulo p^2 (about 10^4 multiplications) and no homomorphism.
+    hidden_overhead: Arithmetic modulo p^m costs about m^{1.6} times 256-bit arithmetic.
+    tradeoff_note: No time-memory trade-off is defined; this is a degree measurement.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  sota_delta: Exponent delta 0 against N^{1/2}. Counted delta, the degree of the exact p-adic digit of
+    a point, 3p/2 on the canonical lift versus p^2/2 off it, closing the open degree question of the wave-1
+    torsion-lift record.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    - KR-IC-5931ee
+    - KR-IC-f5c584
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row covers the trace-one p-adic lift; this record measures the digit of the lift that
+        exists when the trace is not one.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: orthogonal
+      delta: Xedni lifts to Q and needs rank; this lift is to Z_p, torsion and exact.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-1 p-adic records for Teichmueller, Witt digit, torsion section, canonical lift
+      - REPO BRIEF wave-2 cohomology records for Greenberg transform and second Witt digit
+      web: []
+      blocked:
+      - Finotti 2002 full statement not available in this session
+    lead: LEAD-EXO-padic-jet-canonical-lift
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For primes p = 1 mod 3 between 31 and 241 and b in F_p^* with p not dividing
+        N N'', build F_{p^2} = F_p[z]/(g) and O = (Z/p^2)[z]/(g~). Hensel-lift every affine point of E(F_{p^2})
+        to P~ on y^2 = x^3 + b^, compute delta = [N N'']P~ in the kernel of reduction and P^ = P~ - [(N
+        N'')^{-1} mod p] delta, extract d and x_1 = d^p, and Lagrange-interpolate x_1 over X (points with
+        y nonzero) over F_{p^2}, rec'
