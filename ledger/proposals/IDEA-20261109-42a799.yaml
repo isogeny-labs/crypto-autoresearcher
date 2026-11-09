@@ -1,0 +1,102 @@
+idea:
+  id: IDEA-20261109-42a799
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-c52b0d
+  title: 'Completeness control for EdPoint::add: the dual law as an oracle with a known 4-component exceptional
+    set over F_p, and an F_{p^2} run in which the standard law must fail on the four points at infinity'
+  class: control
+  claim: Two checks separate a correct completeness test from one that proves too much. (1) Over F_p,
+    the dual law A' = (Y1+X1)(Y2-X2), B' = (Y1-X1)(Y2+X2), C' = T1Z2, D' = Z1T2, E = 2(C'+D'), F = A'-B',
+    G = A'+B', H = 2(C'-D'), (X3,Y3,Z3,T3) = (EF, GH, FG, EH), costing 8M+0c, agrees projectively with
+    EdPoint::add on every pair with P2 - P1 not in {O, T2, T4, -T4}, T4 = (i, 0), and returns (0,0,0,0)
+    on every pair with P2 - P1 in that set. (2) Over F_{p^2} = F_p(sqrt(d)), where d is a square and the
+    completeness hypothesis fails, the standard law returns (0,0,0,0) on every pair (P, P+Q) with Q in
+    {(0:+-sqrt(d):0:1), (+-sqrt(-d):0:0:1)}, while the four Segre laws together are nonzero and mutually
+    consistent at every pair. A harness that does not observe (2) is not exercising completeness; a harness
+    that fails (1) has a wrong add.
+  mechanism: The dual law is L_dd of the bidegree-(2,2) space; its factors F = X1Y2 - Y1X2 and H = T1Z2
+    - Z1T2 vanish exactly when (x1:y1) = (x2:y2) and x1y1 = x2y2, i.e. P2 in {P1, P1+T2}, and its factors
+    E = T1Z2+Z1T2 and G = Y1Y2 - X1X2 vanish simultaneously exactly when P2 = P1 +- T4 = (+-i y1, +-i
+    x1). Both input-swap-antisymmetric factors make the law vanish on the diagonal, so it is never a doubling
+    formula, which is why it is a safe oracle only off the listed set. Over F_{p^2} the points at infinity
+    are the four solutions of Z = 0 in -X^2+Y^2 = Z^2+dT^2, XY = ZT; translation by them is linear, tau_Qinf
+    = (sqrt(d)X, -sqrt(d)Y, dT, -Z) and tau_Q2 = (sqrt(-d)Y, -sqrt(-d)X, dT, Z), and substituting P2 =
+    tau(P1) into the standard factors gives G_s = 0, E_s = 0 for Qinf and F_s = 0, H_s = 0 for Q2, hence
+    all four outputs vanish. These are exactly the denominators 1 +- d x1 x2 y1 y2 = 0 that completeness
+    excludes over F_p.
+  novelty_status: unverified
+  citations:
+  - ref: Bernstein, Lange 2007, Faster addition and doubling on elliptic curves
+    provenance: recalled
+    claim: the Edwards addition law is complete when d is a non-square
+    verified_by: null
+  - ref: Hisil, Wong, Carter, Dawson 2008
+    provenance: recalled
+    claim: dual addition law, fails on doubling
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs EdPoint::add and double
+    provenance: internal
+    claim: current add is 11M+1I, double is 5M+4S; tests are RFC 8032 vectors only
+    verified_by: this session read of the BRIEF excerpt
+  assumptions:
+  - d is a non-square in F_p and a square in F_{p^2}; both asserted by the script.
+  - The repository field helpers can be instantiated over F_{p^2} only in the Sage control; the Rust control
+    runs part (1) only.
+  predictions:
+  - metric: agreements of add with the dual law off the exceptional set
+    direction: equal
+    minimum_effect: 100 percent on 10^4 random pairs
+  - metric: dual-law all-zero outputs on P2 - P1 in {O,T2,T4,-T4}
+    direction: equal
+    minimum_effect: 100 percent on 30 pairs per translate
+  - metric: standard-law all-zero outputs on (P, P+Qinf) etc. over F_{p^2}
+    direction: equal
+    minimum_effect: 100 percent on 20 pairs per point at infinity
+  minimal_test:
+    design: 'Sage sections 1-3 and 7 of tools/ansatz_edwards25519.sage. Rust: a test module beside ed25519.rs
+      implementing dual_add with the formulas above, asserting projective equality with add on random
+      pairs and all-zero output on the four translates built with add itself.'
+    controls:
+    - add agrees with the affine formula on 200 random pairs
+    - the same translate test for T outside the exceptional set returns nonzero
+    - over F_p, 50 random pairs never zero the standard law
+    required_metrics:
+    - agreement count
+    - all-zero count per translate, F_p and F_{p^2}
+    - dual_add operation count (expected 8M, 0 constant multiplies)
+  falsification_conditions:
+  - add and dual_add disagree at a pair off the exceptional set.
+  - dual_add is nonzero at some pair with P2 - P1 in the set.
+  - the standard law is nonzero at some (P, P+Qinf) over F_{p^2}, or zero at some F_p pair.
+  confounders:
+  - Random pairs never hit the exceptional set; the set must be constructed explicitly.
+  interpretation_limits:
+  - This is a test oracle; no change to the hot path is proposed here.
+  - The dual law's 8M+0c is not a speedup claim for scalar multiplication, where the diagonal is reachable.
+  heuristic_assumptions:
+  - id: H1
+    statement: a control that fails on F_{p^2} and passes on F_p demonstrates the harness detects incompleteness
+    rigorous_support: the vanishing is proved by substitution above
+    validation_plan: the script's section 7 assertions
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: not applicable
+    best_known: Bernstein-Lange completeness theorem
+    hidden_overhead: none
+    tradeoff_note: oracle cost 8M per check
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: The completeness theorem itself for the mathematics; nothing in the BRIEF provides an
+    executable completeness control for the repository.
+  sota_delta: Operation-count delta 0. Adds a falsifiable, proves-too-much control to a module whose tests
+    currently check RFC 8032 vectors only.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 test-control campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 searched for completeness, exceptional, dual law, points at infinity
+    - BRIEF section 1 ed25519.rs tests read for existing controls (RFC 8032 vectors only)

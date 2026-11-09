@@ -1,0 +1,112 @@
+idea:
+  id: IDEA-20261109-6f19bf
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-c52b0d
+  title: Bidegree-(2,2) addition laws on the P^3 model of Edwards25519 form a 4-dimensional space with
+    a Segre basis whose exceptional divisors are cosets of two cyclic 4-torsion subgroups; HCD is the
+    unique complete one
+  class: representation
+  claim: 'On E: -X^2+Y^2 = Z^2+dT^2, XY = ZT over F_p, p = 2^255-19, a = -1, d = -121665/121666, the space
+    of addition laws whose four components are bihomogeneous of bidegree (2,2), taken modulo forms vanishing
+    on E x E, has dimension exactly 4 and is spanned by L_ab = (E_a F_b, G_a H_b, F_b G_a, E_a H_b), a,b
+    in {s,d}, with x-pencil (E_s,G_s) = (X1Y2+Y1X2, Z1Z2+dT1T2), (E_d,G_d) = (T1Z2+Z1T2, Y1Y2-X1X2) and
+    y-pencil (H_s,F_s) = (Y1Y2+X1X2, Z1Z2-dT1T2), (H_d,F_d) = (T1Z2-Z1T2, X1Y2-Y1X2). Every pair in the
+    x-pencil satisfies E = x3 G and every pair in the y-pencil satisfies H = y3 F on E x E. Exceptional
+    divisors, with T4 = (i:0:1:0), Qinf = (0:sqrt(d):0:1), Q2 = (sqrt(-d):0:0:1), Q2p = (-sqrt(-d):0:0:1):
+    L_ss vanishes exactly on Delta_{+-Qinf}+Delta_{Q2}+Delta_{Q2p} (no F_p-point, hence complete); L_dd
+    on Delta_O+Delta_{T2}+Delta_{+-T4}; L_sd on Delta_O+Delta_{T2}+Delta_{+-Qinf}; L_ds on Delta_{+-T4}+Delta_{Q2}+
+    Delta_{Q2p}. Under input swap L_ss, L_ds are symmetric and L_sd, L_dd are antisymmetric (all four
+    coordinates negate), so the latter vanish on the diagonal and can never double. Over F_p, L_ss is
+    the only complete law in the space up to scalar.'
+  mechanism: 'The four coordinates of a law are sections; the factorisation into bilinear pencils follows
+    because X3/Z3 = E/G and Y3/Z3 = H/F force E = x3 G, H = y3 F, and the 16 bilinear monomials are linearly
+    independent on E x E, so each pencil is a linear condition with a 2-dimensional solution space. The
+    model isomorphism psi(X,Y,Z,T) = (T,Z,Y,X) onto E_{d,a} (affine y to 1/y) pulls the E_{d,a}-standard
+    law back to L_ds, which is why a second pencil generator exists. Translations by 4-torsion are linear
+    on the model: tau_T2 = (-X,-Y,Z,T), tau_T4 = (iY,iX,Z,-T), tau_Qinf = (sqrt(d)X,-sqrt(d)Y,dT,-Z),
+    tau_Q2 = (sqrt(-d)Y,-sqrt(-d)X, dT,Z); each L_ab is an eigenvector for these and for negation (-X,Y,Z,-T).
+    Costs as straight-line programs with a = -1: L_ss is A=(Y1-X1)(Y2-X2), B=(Y1+X1)(Y2+X2), C=2dT1T2,
+    D=2Z1Z2, E=B-A, F=D-C, G=D+C, H=B+A, 8M+1c; L_dd is A''=(Y1+X1)(Y2-X2), B''=(Y1-X1)(Y2+X2), C''=T1Z2,
+    D''=Z1T2, E=2(C''+D''), F=A''-B'', G=A''+B'', H=2(C''-D''), 8M+0c; L_sd and L_ds need both bilinear
+    quadruples, 12M+1c.'
+  novelty_status: unverified
+  citations:
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards curves revisited
+    provenance: recalled
+    claim: extended coordinates, 8M+1c addition for a = -1, dual addition law
+    verified_by: null
+  - ref: Kohel 2011, Addition law structure of elliptic curves
+    provenance: recalled
+    claim: dimension of bidegree-(2,2) addition laws on a degree-4 model and exceptional divisors as translates
+      of the diagonal by torsion
+    verified_by: null
+  - ref: BRIEF section 1, src/ecc/ed25519.rs EdPoint::add
+    provenance: internal
+    claim: repository add is 11M + 1 inversion per call (fe_inv inside ed25519_d)
+    verified_by: this session read of the BRIEF excerpt
+  assumptions:
+  - -1 is a square and d is a non-square in F_p; the script asserts both.
+  - Sampling 700 random pairs imposes all linear conditions (generic position).
+  - Exceptional-divisor statements are asserted on 30 random pairs per translate.
+  predictions:
+  - metric: dimension D of the law space modulo the ideal
+    direction: equal
+    minimum_effect: D = 4
+  - metric: dimension of each bilinear pencil
+    direction: equal
+    minimum_effect: 2 and 2
+  - metric: F_p exceptional translates of (L_ss, L_sd, L_ds, L_dd)
+    direction: equal
+    minimum_effect: (0, 2, 2, 4) components among {O, T2, T4, -T4}
+  minimal_test:
+    design: Run tools/ansatz_edwards25519.sage sections 1-7. It builds the 400-unknown linear system from
+      sampled pairs, computes the kernel dimension minus 4*(100-64), checks the four Segre laws lie in
+      it and are independent, computes both pencils, and asserts the exceptional translates over F_p and
+      over F_{p^2}.
+    controls:
+    - rank of the 100 (2,2)-monomials on E x E equals 64 and of the 16 bilinear monomials equals 16
+    - L_ss agrees with the affine complete law on 200 random pairs
+    - the same translate test with T not in the predicted set must return nonzero
+    required_metrics:
+    - D
+    - x-pencil and y-pencil dimensions
+    - per-law vanishing table over {O,T2,T4,-T4} and over the four points at infinity
+    - S2 sign per law
+  falsification_conditions:
+  - D differs from 4, or either pencil dimension differs from 2.
+  - Any law is nonzero and disagrees with the affine law at a sampled pair.
+  - L_ss vanishes at an F_p-rational pair.
+  confounders:
+  - A sample set in special position could inflate the kernel; rerun with a fresh seed.
+  interpretation_limits:
+  - Statements are about this model and these constants; nothing is implied about ECDLP cost.
+  - Multiplication counts are for the stated straight-line programs, not minimal over all programs.
+  heuristic_assumptions:
+  - id: H1
+    statement: the (2,2) law space is exactly the Segre span of the two pencils
+    rigorous_support: linear algebra over F_p at sampled pairs; Kohel 2011 recalled, not retrieved
+    validation_plan: the script's D == 4 assertion plus independence of the four Segre laws
+  target_complexity:
+    time_exponent: not applicable, field-operation counts only
+    memory_exponent: 4 field elements per point
+    best_known: HCD 2008, 8M+1c addition, 4M+4S doubling
+    hidden_overhead: none; constant multiply by 2d counted as 1c
+    tradeoff_note: L_dd saves the 1c at the price of a 4-component rational exceptional divisor
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: HCD 2008 for the formulas L_ss and L_dd; Kohel 2011 for the dimension. Neither states
+    the Segre basis, the coset structure of the four divisors, or the S2 character table for Edwards25519
+    constants.
+  sota_delta: 'Operation-count delta 0 against HCD. Structural delta: a verified 4-element basis with
+    explicit exceptional divisors and symmetry characters, usable as test oracles and as the exhaustive
+    answer to the bidegree-(2,2) ansatz on this curve.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 formula-engineering campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 ledger excerpt searched for Edwards addition law, dual law, bidegree
+    - BRIEF section 1 repository excerpts searched for extended coordinates and add formulas
