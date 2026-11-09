@@ -4,7 +4,7 @@
 - **Kind:** mathematical proof gap; not an impossibility or resource result
 - **Affected work:** [four-track request and proof note](../analysis/boolean-fall-certificates-20261104/THEORY.md), RQ-DREG-bd6c86, prime digit and binary descent lanes
 - **Next action owner:** formal/theory continuation of the current owner request
-- **Last updated:** 2026-11-05
+- **Last updated:** 2026-11-09
 
 ## Problem
 
@@ -94,3 +94,11 @@ mathematical obligation; no goal or hypothesis status was changed.
 
 2026-11-05: Added the scoped prime written theorem and independent review;
 binary obligations and official research statuses remain unchanged.
+
+## Fixed-m=2 proof continuation, 2026-11-09
+
+[Parallel proof report](../docs/reports/2026-11-09-fixed-m2-lfd-unbounded/report.md) preserves the exact normalized binary m=2 target and adds two independently cross-checked written lemmas. For n=2k and the full quadratic-extension subfield V, UNSAT implies LFD<=3, eliminating that natural tower as an unbounded UNSAT construction. A closed-kernel certificate at cap D for UNSAT must have strict quotient-image filtration through D-1 and rank at least D. These are proof-route restrictions, not an unboundedness theorem, new experiment or formal promotion.
+
+Unchanged-instance field extensions and disjoint conjunctions do not amplify refutation degree. Vanishing all cross quadratic coefficients between two nonzero subspaces forces both dimensions at most one; an arbitrary sparse hard gadget therefore needs a nontrivial degree-controlled reduction respecting the field tensor. The report records these deductions, independent reviews, historical-profile arithmetic, source hashes and the exact missing uniform certificate construction. No solver, certificate replay, build or cloud job was run. Existing finite evidence remains immutable.
+
+Next: derive a parameter-uniform vector quotient for a genuinely varying half-dimensional subspace, prove full low-degree kernel multiplication closure, and combine it with UNSAT or a missing SAT consequence. R35a is a negative control for any rule predicting automatic degree-five survival. The original growing-lower-bound exit conditions above remain open.
