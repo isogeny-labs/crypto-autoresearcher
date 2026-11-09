@@ -209,3 +209,14 @@ The finite-selector CLI now emits these exact combinatorial maxima in closure_al
 The trace-feedback note calculates the complete first-step polynomials, including linked quadratic blocks and affine tails. A mandatory ax multiplier produces a pure-x term detected by Tr(a*x³), so the rectangular-plus-affine class cannot be invariant. This does not assert W3 differs from W2. The next obligation is stability of a larger linked-block space under all further cubic cancellations. No growing LFD bound is claimed.
 
 No native build or new scientific/cloud run occurred. The native source remains4be27eee881663c44318ed2d9debfad05d071538; its saved owned-authentic-validation authorization is approved:false. Existing native telemetry policy still marks training_cost_eligible:false. The theorem-derived algorithm envelope does not override either condition.
+
+
+### 2026-11-09: bounded exact Boolean LFD reference checker
+
+`python3 inspect_retained_lfd.py PARAMETERS.json WEIL-SYSTEM.json --operation-limit 1000000 --output NEW.json` first verifies the exact finite-selector equation join, then enumerates the actual Boolean zero set and saturates every cap0..N+1. Evaluation ranks give the dimensions of the vanishing ideal in each cap. Exact LFD is one plus the last deficient cap, or zero when none is deficient. This preserves the normalized strict-closure convention and literal input presentation.
+
+The core supports N<=12 and has explicit input/operation limits. CLI operation limits are1..10000000; the budget covers the reference analysis, separately from bounded loading/join/hashing/I/O. Exhaustion leaves exact_lfd null and retains completed cap summaries. Results are computed reference outputs, not standalone independently checked certificates; group-lift, authenticated producer, native-instruction and whole-dataset admission remain false. FFD is not inferred.
+
+Twenty-four software controls pass across the core, CLI, finite-selector join and existing retained join. A hand-constructed F8 repeated-selector fixture produces six completed cap rows, four code solutions and reference LFD4, using36481 charged arithmetic units. These units are not retired instructions. The cutoff1 control produces no exact label. No production artifact or new scientific sample was executed. Source snapshots and outputs are in exact-lfd-controls/.
+
+The parallel proof note shows every half-diagonal first-feedback space has at least r independent pure-x quadratic projections when n=2r+1. This rules out adding only a bounded number of such directions to the original rectangular ansatz. It is dimension growth at fixed degree3, not growth of LFD. A full stable linked-block space remains missing.
