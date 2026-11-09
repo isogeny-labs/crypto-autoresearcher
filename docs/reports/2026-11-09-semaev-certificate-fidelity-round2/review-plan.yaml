@@ -1,0 +1,143 @@
+review_plan:
+  status: prospective_before_reviewer_dispatch
+  source_commit: 3444ed998838e097134bd8e5a7fbd1035a90f9a1
+  claim_id: THM-SEMAEV-FALL1-LEMMA-3
+  producer_task: TASK-20260916-b55948
+  archival_task: TASK-20261109-716e67
+  conductor_tasks:
+    TASK-20261109-f0444b: T-1949
+    TASK-20261109-14bd43: T-1950
+    TASK-20261109-bcd27d: T-1951
+    TASK-20261109-716e67: T-1952
+  claim_under_review: |
+    Let K be a finite field with decidable equality, E a Weierstrass curve over
+    K, V an F_q-subspace of K given by a fixed finite basis, m a natural number,
+    and R a point of E(K).
+
+    Define, for a tuple of affine points P_1, ..., P_m of E(K), the predicate
+
+        Valid(P_1, ..., P_m ; R)  :=
+            (each P_i satisfies the Weierstrass equation of E)
+          and (x(P_i) lies in V for each i)
+          and (P_1 + ... + P_m = R in the group E(K))
+
+    Then Valid is a total decidable predicate.
+  operational_rationale_under_review: >-
+    The producer's target notes say that a kernel-checked decision procedure
+    removes the shared implementation failure mode from verification of a
+    producer's certificate. Review this as a separate operational reading.
+  immutable_inputs:
+    claim_source: research/THM_SEMAEV_FALL1.md
+    claim_source_sha256: 11b61f4f4bdaed0c323ec852f19fc4c0a7ff3972715bfe637604fb675db7fee4
+    target: formal/targets/semaev-decomposition-certificate.yaml
+    target_sha256: 3a8dc16449c2615c85c93bc92a3137435f1a367fb97a18729e6da6304554d7e6
+    theorem: formal/CryptoResearch/Semaev/Certificate.lean
+    theorem_sha256: aa022e4829eefc2cbe9ac05cbeb39f81e9e3eaa8147e2e41e9d718f11976bd89
+    named_declaration: CryptoResearch.Semaev.decidable_validDecomposition
+    supplemental_raw_declaration: CryptoResearch.Semaev.validRawDecomposition_iff_curve_span_sum
+    lean_toolchain: leanprover/lean4:v4.35.0
+    lean_toolchain_sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+    lake_manifest_sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+    prior_packet: docs/reports/2026-11-08-semaev-certificate-fidelity/technical-review.md
+    prior_packet_commit: 5f362bfc48e9f3546f33cc0c43e5d3dc8f4fc2ba
+    fresh_run: 42446577502
+    fresh_run_source_commit: e5569428e5e53145f123f3aeb36de00591ad72b6
+    fresh_artifact_sha256: 181433aeee8e030b0d33787e4d72e95d69ca9e59212abd6de864a48257cf3897
+    blind_card: docs/reports/2026-11-09-semaev-certificate-fidelity-round2/blind-card.md
+    blind_card_sha256: 16aea5ff762f1c4436da2321a3cd9f8942a166c3e858d50aad6535370744e800
+  coordinator_prior:
+    recorded_before_this_round: true
+    expectation: >-
+      The previous round's independent mathematical and source reviewers found
+      the typed nonsingular-point theorem faithful, while the source reviewer
+      found no serialized-record interpretation or native-verifier refinement.
+      I expect this round to retain that scoped finding. The previous round's
+      independence checker failed on plan/attestation format, so no formal
+      review outcome is carried forward from it.
+    uncertainty: >-
+      Whether a new blind derivation and independently inspected current
+      machine receipt agree on the exact typed and raw boundaries; whether
+      the source contains any previously missed wire-to-Lean bridge; and
+      whether the new attestations actually satisfy the prospective checker.
+  joints:
+    - joint: J1 blind mathematical predicate and controls
+      assigned_to: TASK-20261109-f0444b
+      attack_plan: >-
+        From the isolated blind card, derive a terminating decision procedure
+        and iff statement. Work F_5 positive and false cases, including empty
+        tuple, empty span, zero target, off-curve coordinates and wrong sum.
+        Seal before reading any producer source, proof, old packet or sibling.
+      breaking_artifact: >-
+        A counterexample to the iff, a nonterminating finite search, or an
+        accepted known-false case with the exact field and curve arithmetic.
+    - joint: J2 producer claim to elaborated theorem and data-model fidelity
+      assigned_to: TASK-20261109-14bd43
+      attack_plan: >-
+        Read the pinned source, target, theorem and relevant Mathlib point
+        model. Compare quantifiers, finite versus arbitrary fields, basis
+        semantics, smoothness, infinity, group law and the raw-coordinate
+        lemma. Try to locate executable parsing or native refinement before
+        accepting any operational certificate claim. Do not read J1/J3 reports.
+      breaking_artifact: >-
+        An exact type mismatch, vacuous/circular assumption, incorrect
+        exceptional case, or a missing named interpretation bridge with a
+        source-location and a concrete record field that cannot be bound.
+    - joint: J3 current machine evidence, pins and false-success controls
+      assigned_to: TASK-20261109-bcd27d
+      attack_plan: >-
+        Verify GitHub run and artifact digest, receipt/source/pin identities,
+        actual named target build and axiom audit, and whether the raw lemma is
+        included. Exercise changed-source, wrong-name and synthetic-receipt
+        controls; distinguish receipt consistency from authenticated execution.
+        Use the existing hosted run rather than a duplicate heavy host build.
+        Do not read J1/J2 reports.
+      breaking_artifact: >-
+        A wrong or omitted declaration, unapproved axiom, source/pin drift,
+        accepted known-false control, or a purported execution result
+        supported only by self-consistent receipt text.
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: null
+    blind_task_input: blind-card.md
+    blind_task_forbidden:
+      - research/THM_SEMAEV_FALL1.md
+      - formal/targets/semaev-decomposition-certificate.yaml
+      - formal/CryptoResearch/Semaev/Certificate.lean
+      - docs/reports/2026-11-08-semaev-certificate-fidelity/
+      - review-plan.yaml
+      - sibling reports and Git history
+  proves_too_much:
+    objects:
+      - off-curve raw coordinate (0,0) on y^2 = x^3 + x + 1 over F_5
+      - on-curve x-coordinate outside the span of an empty family
+      - empty tuple with a nonzero target
+      - serialized bytes supplied without a checked parser
+    failure_signature: >-
+      The first three must be rejected by the derived mathematical predicate.
+      The fourth cannot be accepted as a checked producer record merely from
+      the typed theorem; a separately verified decoder and execution bridge
+      would be required.
+    assigned_to: TASK-20261109-f0444b
+  blind_rederivation:
+    required: true
+    quantity: finite span membership and curve-group decomposition decision
+    parameters: >-
+      F = K = F_5, y^2 = x^3 + x + 1, empty and one-element spanning
+      families, tuples of lengths zero and one, and the candidate points and
+      targets listed in the isolated blind card.
+    blind_from:
+      - research/THM_SEMAEV_FALL1.md
+      - formal/targets/semaev-decomposition-certificate.yaml
+      - formal/CryptoResearch/Semaev/Certificate.lean
+      - docs/reports/2026-10-21-semaev-certificate/
+      - docs/reports/2026-11-08-semaev-certificate-fidelity/
+      - docs/reports/2026-11-09-semaev-certificate-fidelity-round2/review-plan.yaml
+    assigned_to: TASK-20261109-f0444b
+  procedure_deviations: []
+  publication_rule: >-
+    Machine validity, mathematical fidelity and operational record checking
+    receive separate verdicts. Keep every old sealed report unchanged. The
+    Coordinator composes this round only after its three reviewers seal and
+    the independence checker passes; no scientific status transition follows
+    automatically from a technical packet.
