@@ -23,7 +23,7 @@ def _need(test, reason):
         raise ValueError(reason)
 
 
-def verify(record, raw_bytes, binding):
+def verify(record, raw_bytes, binding, *, full_geometry=False, generic_ordinals=()):
     """Independently validate one compact certificate against the sealed unit."""
     unit = json.loads(raw_bytes)
     _need(type(unit) is dict and type(binding) is dict and type(record) is dict,
@@ -54,7 +54,17 @@ def verify(record, raw_bytes, binding):
     checker = IndependentCandidateChecker(binding["field"])
     _need(checker.field.p % 2 == 1 and checker.field.n in (3, 5, 7),
           "odd-field degree 3, 5 or 7 required")
-    reviewed = checker.verify(unit, binding["quotient_form"])
+    _need(type(full_geometry) is bool and isinstance(generic_ordinals, (list, tuple)),
+          "generic descent geometry mode")
+    geometry_ordinals = ([row[0] for row in unit["rows"]]
+                         if full_geometry else ())
+    reviewed = checker.verify(unit, binding["quotient_form"],
+                              geometry_ordinals=geometry_ordinals,
+                              generic_ordinals=generic_ordinals)
+    if full_geometry:
+        _need(reviewed["geometry_checked"] == unit["exceptional"]
+              and reviewed["arithmetic_checked"] == unit["exceptional"],
+              "full exceptional arithmetic review incomplete")
     intervals = unit["generic_intervals"]
     count = sum(stop - start for start, stop in intervals)
     _need(count == unit["generic"] == unit["structures"] - reviewed["exceptional"],
@@ -92,7 +102,10 @@ def verify(record, raw_bytes, binding):
           "generic descent certificate differs from independent replay")
     return {"valid": True, "scope": "all exact generic complement intervals",
             "generic_count": count, "exceptional_excluded": reviewed["exceptional"],
-            "genus": claims["genus"], "status": claims["status"]}
+            "genus": claims["genus"], "status": claims["status"],
+            "geometry_checked": reviewed["geometry_checked"],
+            "arithmetic_checked": reviewed["arithmetic_checked"],
+            "independent": reviewed}
 
 
 def verify_bound(record, raw_bytes, binder, class_index, t_index):

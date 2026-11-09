@@ -35,6 +35,7 @@ REQUIRED_SOURCES = {
         "candidate_batch.py", "candidate_census_driver.py", "candidate_census_check.py",
         "candidate_build.py",
         "generic_interval_descent.py", "check_generic_interval_descent.py",
+        "prospective_unit_descent.py", "check_prospective_unit_descent.py",
         "independent_candidate_unit.py", "independent_check.py",
         "quotient_core.rs", "symbolic_extension.rs", "branch_factorization.rs",
         "branch_roots.rs", "root_collision.rs", "join_plan.py", "input_manifest.py",
