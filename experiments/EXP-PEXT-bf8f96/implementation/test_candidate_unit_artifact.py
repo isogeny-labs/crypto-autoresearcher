@@ -80,8 +80,14 @@ class CandidateArtifactTests(unittest.TestCase):
             plan_sha256 = "a" * 64
             plan = {"field": self.joined["field"], "structures_per_T": 819}
             def bind(self, class_index, t_index):
-                return {"cohort": "q3-n3", "join_plan_sha256": self.plan_sha256,
+                return {"schema": "pext.candidate-binding/v1",
+                        "experiment": "EXP-PEXT-bf8f96",
+                        "cohort": "q3-n3", "join_plan_sha256": self.plan_sha256,
                         "class_index": class_index, "T_index": t_index,
+                        "model": [0, 0, 1], "target": None,
+                        "input_sha256": "b" * 64, "manifest_sha256": "c" * 64,
+                        "structure_offset": t_index * 819,
+                        "structure_end_exclusive": (t_index + 1) * 819,
                         "quotient_form": ([1, 0, 1, 1, 0] if t_index == 0
                                           else [1, 1, 1, 0, 1]),
                         "field": self.plan["field"], "structures_per_T": 819}
