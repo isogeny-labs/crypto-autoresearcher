@@ -935,7 +935,7 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
 - P45a *(B count, cert)*: $n=45$, $k=23$, Semaev's default polynomial subspace
   $V=\langle1,t,\dots,t^{22}\rangle$. Here $f=t^{45}+t^4+t^3+t+1$
   (`20000000001b`), $a_2=0$, $a_6$=`17cadafccda0` and $z$=`13ffe62d3f4d`.
-- `fresh-n47-rand-00` *(retained count, cert; outside the original sample)*:
+- `fresh-n47-rand-00` *(two exhaustive counts, cert; outside the original sample)*:
   $n=47$, $k=24$, random $V$. The separate checker accepted the original
   48-variable degree-four map with codimension at least 61,196 and nonzero
   image of $1$ (map SHA-256
@@ -956,15 +956,23 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
   `../semaev-degree-five-quotient-lift/n47-rand00-count-bridge-custody-002.json`.
   Its algorithmic completeness argument is in
   `../semaev-degree-five-quotient-lift/N47-RAND00-SOLUTION-COUNT-BRIDGE.md`.
+  A separately rebuilt `count_x1` binary enumerated all $2^{24}$ first
+  coordinates and solved the quadratic in the second. Its three frozen
+  controls returned 2, 0, and 4; the named target returned zero. The
+  independent receipt checker accepted the original result and the
+  [published copy](../semaev-degree-five-quotient-lift/validation/n47-rand00-x1-count-run-002/publication.json)
+  (receipt SHA-256
+  `3a45f84b50c4aeefcc6e1e75d341d60a24c551b25238efb170dbc3425ab0f778`).
+  The source audit and replay command are in
+  `../semaev-degree-five-quotient-lift/N47-X1-COUNT-RESULT-20261109.md`.
   The [independent top-form calculation](../semaev-degree-five-quotient-lift/validation/n47-rand00-joint-top-syzygies-001.json)
   records quadratic rank 46 out of 47 equations, so the
   affine-combination space is one-dimensional; the
   [checked affine witness](../semaev-degree-five-quotient-lift/n47-rand00-affine-witness-001.json)
   has a nonzero linear part in $c=a+b$.
-  Thus $r=1$ in Proposition 2.5a. With the retained zero count, the
+  Thus $r=1$ in Proposition 2.5a. With the independently repeated zero count, the
   named input has the additional upper bound
   $d_{\tilde F}\le24-1+2=25$, alongside its certified lower bound 5.
-  The count has not yet had an independent rebuild or second enumeration.
 - `fresh-n50-poly-03` *(retained count, cert; outside the original sample)*:
   $n=50$, $k=25$, polynomial $V=\langle1,t,\dots,t^{24}\rangle$.
   The separate checker accepted the original-system D4 map with codimension
