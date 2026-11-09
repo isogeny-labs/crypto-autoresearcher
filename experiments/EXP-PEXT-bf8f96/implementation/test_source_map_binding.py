@@ -9,6 +9,7 @@ import unittest
 from candidate_binding import CandidateBinder
 from candidate_stage import join_path
 from source_map_binding import certify, certify_bound
+from independent_source_map_check import verify as independent_verify
 
 
 class SourceMapBindingTests(unittest.TestCase):
@@ -36,6 +37,8 @@ class SourceMapBindingTests(unittest.TestCase):
                 self.assertEqual(cert["status"],
                                  "source_to_moved_quartic_checked; descended_model_pending")
                 self.assertNotEqual(cert["determinant"], 0)
+                self.assertTrue(independent_verify(cert, group["field"], row["model"],
+                                                   row["target"], row["matrix"])["valid"])
 
     def test_published_class_T_and_ordinal_binding(self):
         binder = CandidateBinder("q5-n3", plan_path=join_path("q5-n3"))
