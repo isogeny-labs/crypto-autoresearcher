@@ -1,0 +1,57 @@
+idea:
+  id: IDEA-20261109-7492a5
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: adaptation
+  title: Commutant census of torsion-masking subgroups of GL2(Z/N) against known-endomorphism levers
+  record_kind: security_proof_gap_and_measurement
+  claim: Scalar masking with alpha^2 = 1 (M-SIDH) and diagonal or circulant masking (FESTA) hide the images
+    of E0[N] up to a matrix M in a commutative subgroup H. The Castryck-Vercauteren lever (as recalled)
+    uses a known non-scalar endomorphism theta of E0 whose matrix Theta on E0[N] does not commute with
+    M, pinning M modulo C(Theta) intersect H. Over F_{p^2} the only endomorphism available for free is
+    Frobenius, which is scalar on all torsion, so the lever requires explicit knowledge of End(E0). The
+    record computes, for the H_N of H-SSIQ-d724f2, the commutant C(H_N) in GL2(Z/N) and classifies deployed
+    masking groups as inside or outside it. Clears H-SSIQ-d724f2 (census of H_N only) and H-ALISO-014
+    (search for small discriminant auxiliary endomorphisms). No Lean coverage; the SplitPrime.Obstruction
+    module is named in a commit but no theorem is quoted.
+  mechanism: 'Step 1: for N = product of small primes, compute Theta for each generator of the standard
+    maximal order (i^2 = -1, j^2 = -p) acting on E0[N] with j(E0) = 1728. Step 2: compute the set of M
+    in GL2(Z/N) with det M = 1 (pairing-preserving) commuting with all Theta; this is C(H_N). Step 3:
+    compare with scalars {alpha : alpha^2 = 1}, diagonal, and circulant masking groups; report intersections.
+    Step 4: for a random-walk E0 with unknown End, verify that Frobenius contributes only scalars, so
+    C = GL2 and no lever exists.'
+  assumptions_marked:
+    proved: Frobenius pi_{p^2} acts on E[N] as -p for supersingular E over F_{p^2}
+    heuristic: deployed FESTA/M-SIDH masking groups are correctly recalled
+    analogy_only: none
+  falsification_test: Enumerate at N with omega(N) in {3,4,5}. Lead dies as an attack if every deployed
+    masking group lies inside C(H_N) for the deployed E0; it survives as a measurement record either way.
+  cost_estimate:
+    computation: O(N^4) naive enumeration at toy N; structured via CRT in O(sum q^4)
+  cleared:
+    checked:
+    - H-SSIQ-d724f2
+    - H-ALISO-014
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need: (a) pi_{p^2} = [-p] on E[N] for supersingular E/F_{p^2}; (b)
+      if Theta in M2(Z/N) is non-scalar mod every q | N and M Theta = Theta M then M in (Z/N)[Theta]'
+    exp: none in the BRIEF; nearest surface is autolab package p1243_auxiliary_discriminant_search (H-ALISO-014)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: no frontier map section is present in the BRIEF.
+    searched:
+      corpus_grep:
+      - H-SSIQ-d724f2
+      - H-ALISO-014
+      - H-WESO-516558
+    none_found_after:
+    - 'BRIEF query: masking OR M-SIDH OR FESTA OR commutant'
+    - 'BRIEF query: GL2(Z/N) subgroup + endomorphism action'
+    - 'BRIEF query: scalar-only action (Lean)'
+    nearest_record: H-SSIQ-d724f2
+    relation: extends
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.

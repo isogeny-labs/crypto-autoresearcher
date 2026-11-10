@@ -1,0 +1,65 @@
+idea:
+  id: IDEA-20261109-e03d38
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: algorithm
+  novelty_status: adaptation
+  title: Degree-first Kani with Weil-pairing character filter against secret-degree torsion schemes
+  record_kind: cryptanalytic_attack_proposal
+  claim: For a binSIDH/terSIDH-style scheme publishing images of E0[N] under an isogeny of secret degree
+    d dividing a smooth A, the Kani recovery (dimension 8 whenever N^2 > d) reduces to enumerating candidate
+    d and running one splitting test each. If the images are masked by a common scalar, the Weil pairing
+    leaks the quadratic character of d modulo every prime q dividing N, cutting the candidate set from
+    2^t (resp. 3^t) by a factor of about 2^{omega(N)}. If masking is independent per basis point the filter
+    is void and the problem is the diagonal-masked (FESTA-shaped) one. Clears H-SSIQ-dfee7e (divisor count
+    only, no attack), H-ALISO-001, H-ALISO-002, H-ALISO-006, H-ALISO-007 (degree-first and degree-pair
+    measurements, no Kani coupling). No Lean coverage.
+  mechanism: 'Inputs: E0, E_A, (P'', Q'') = images of a basis of E0[N], N coprime to A. Step 1: compute
+    v = e_N(P'',Q'') / e_N(P,Q)^{?} on each prime-power component q^e of N; under common-scalar masking
+    v = lambda^2 d, so the Legendre symbol (d/q) is read off for each q. Step 2: enumerate d in D consistent
+    with all symbols. Step 3: for each d with N^2 > d build the (N,...,N)-isogeny on the Zarhin product
+    and test splitting; the unique split is the secret. Cost: |D_consistent| times T_Kani, T_Kani polynomial
+    in log p but concretely heavy in dimension 8.'
+  assumptions_marked:
+    proved: Weil pairing scales by lambda^2 under common scalar masking.
+    heuristic: candidate degrees have independent quadratic characters modulo distinct q.
+    analogy_only: none.
+  falsification_test: Toy instance, t = 8 primes for A, N a product of 6 small primes, p ~ 2^40. Measure
+    |D_consistent| under (a) common-scalar masking, (b) independent diag(lambda, mu) masking. Lead dies
+    if (a) leaves |D| within a factor 2 of 2^t, or if the published spec uses (b).
+  cost_estimate:
+    enumeration: 2^{t - omega(N)} candidates under common-scalar masking
+    per_candidate: one dimension-8 N-isogeny splitting test over F_{p^2}
+  cleared:
+    checked:
+    - H-SSIQ-dfee7e
+    - H-ALISO-001
+    - H-ALISO-002
+    - H-ALISO-006
+    - H-ALISO-007
+    disproven: none in the brief
+    lean: 'no Lean coverage; would need: e_N(lambda*phi(P), lambda*phi(Q)) = e_N(P,Q)^{lambda^2 d}, hence
+      (d/q) is determined for every prime q | N'
+    exp: none in the BRIEF; nearest surface is autolab package p1486_degree_first_hecke_probe (H-ALISO-001)
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: the BRIEF quotes no frontier map section; only hypothesis ids and one Lean commit
+      subject are available.
+    searched:
+      corpus_grep:
+      - H-SSIQ-dfee7e
+      - H-ALISO-001
+      - H-ALISO-002
+      - H-ALISO-006
+      - H-ALISO-007
+      - H-SSIQ-d724f2
+    none_found_after:
+    - 'BRIEF query: degree-first + Kani + pairing character'
+    - 'BRIEF query: binSIDH OR terSIDH OR secret degree'
+    - 'BRIEF query: Weil pairing leak OR quadratic residue filter'
+    nearest_record: H-SSIQ-dfee7e
+    relation: extends
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
