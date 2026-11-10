@@ -16,6 +16,7 @@ happened since: "already done" becomes a computed answer, not a re-reading.
     python3 tools/lead_atlas.py --delta          # what changed since the last review
     python3 tools/lead_atlas.py --coverage       # ECC ledger records not mapped to a lead
     python3 tools/lead_atlas.py --pursuit        # every lead not disproven in scope
+    python3 tools/lead_atlas.py --tiers          # evidence-tier counts and leads at tier >= 2
     python3 tools/lead_atlas.py --render [--out PATH]   # ATLAS.md (derived)
     python3 tools/lead_atlas.py --stamp          # record a completed review (REVIEW_STATE.json)
 
@@ -71,6 +72,15 @@ DISPOSITIONS = CLOSED + OPEN
 DISPROVEN = ("closed_obstructed",)
 OBSTRUCTION_KINDS = {"theorem", "proof", "measured", "literature",
                      "cost_model"}
+# Evidence ladder (README "Evidence tiers"). Promotion is by tier; the
+# disposition stays narrative. A lead without a `tier` field is tier 0 and
+# reported as untiered.
+TIERS = (0, 1, 2, 3)
+# Words in a lead's `status` field (when present) or in its best_measured text
+# that claim measured progress. Such a claim below tier 2 is advised, not failed.
+PROGRESS_STATUS = re.compile(r"\b(measured|confirmed|advanced|promoted)\b",
+                             re.IGNORECASE)
+PROGRESS_BEST = re.compile(r"\b(CONFIRMED|promoted|advanced)\b")
 LEAD_ID = re.compile(r"^LEAD-([A-Z]+)-[a-z0-9][a-z0-9-]{1,47}$")
 LEDGER_REF = re.compile(
     r"^(H|IDEA|EV|DEC|GOAL|RQ|EXP|CORR|HO)-[A-Za-z0-9-]+$")
@@ -172,6 +182,51 @@ def kr_ids() -> set[str]:
 # ---------------------------------------------------------------- checking
 
 
+def tier_of(row: dict[str, Any]) -> tuple[int, bool]:
+    """(tier, untiered). A missing or invalid `tier` reads as 0, untiered."""
+    t = row.get("tier")
+    if isinstance(t, int) and not isinstance(t, bool) and t in TIERS:
+        return t, False
+    return 0, t is None
+
+
+def claims_progress(row: dict[str, Any]) -> bool:
+    """Whether the row's wording claims measured progress."""
+    if PROGRESS_STATUS.search(str(row.get("status") or "")):
+        return True
+    return bool(PROGRESS_BEST.search(str(row.get("best_measured") or "")))
+
+
+def tier_advice(rows: list[dict[str, Any]]) -> list[str]:
+    """Advisory lines: progress claimed in words, tier below 2."""
+    out = []
+    for r in rows:
+        if claims_progress(r) and tier_of(r)[0] < 2:
+            out.append(f"{r['_path']}: claims measured progress "
+                       f"(status/best_measured) but tier is "
+                       f"{tier_of(r)[0]} < 2; add a tier-2 record in "
+                       "tier_evidence or soften the wording")
+    return out
+
+
+def tier_table(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    """Counts per tier per family, plus the leads at tier >= 2."""
+    by_fam: dict[str, dict[int, int]] = {}
+    untiered = 0
+    for r in rows:
+        t, u = tier_of(r)
+        untiered += u
+        by_fam.setdefault(str(r.get("family")), {k: 0 for k in TIERS})[t] += 1
+    total = {k: sum(f[k] for f in by_fam.values()) for k in TIERS}
+    high = [{"id": r["id"], "tier": tier_of(r)[0],
+             "tier_evidence": r.get("tier_evidence")}
+            for r in rows if tier_of(r)[0] >= 2]
+    n = len(rows)
+    return {"leads": n, "untiered": untiered, "total": total,
+            "by_family": by_fam, "tier2_plus": high,
+            "tier2_ratio": (len(high) / n) if n else 0.0}
+
+
 def check_leads(rows: list[dict[str, Any]], *, strict_paths: bool = False
                 ) -> tuple[list[str], list[str]]:
     """Return (errors, warnings). Missing sibling repos warn, never fail."""
@@ -258,6 +313,20 @@ def check_leads(rows: list[dict[str, Any]], *, strict_paths: bool = False
             elif disp == "open_blocked" and not str(nxt.get("blocked_by")
                                                     or "").strip():
                 err("open_blocked requires next_action.blocked_by")
+        if "tier" in r:
+            tv = r.get("tier")
+            if not (isinstance(tv, int) and not isinstance(tv, bool)
+                    and tv in TIERS):
+                err(f"tier must be one of {list(TIERS)}")
+            else:
+                te = r.get("tier_evidence")
+                if tv >= 1 and not (isinstance(te, dict) and
+                                    str(te.get(tv) or te.get(str(tv))
+                                        or "").strip()):
+                    err(f"tier {tv} requires tier_evidence[{tv}] "
+                        "(path or pcc id)")
+        elif r.get("tier_evidence"):
+            err("tier_evidence without tier")
         fc = r.get("forecloses") or []
         if not isinstance(fc, list) or len(fc) < 3:
             err("forecloses needs >= 3 phrases")
@@ -584,6 +653,13 @@ def brief() -> str:
                      ". Run `python3 tools/lead_atlas.py --delta`, fold the "
                      "new records into leads (skill `lead-atlas`), then "
                      "`--stamp`.")
+    tt = tier_table(rows)
+    lines.append("Evidence tiers (tier 2 = scaled, matched rho, replay "
+                 "certificate): " + ", ".join(
+                     f"tier {k} {v}" for k, v in tt["total"].items())
+                 + f"; {tt['untiered']} untiered; "
+                 f"{len(tt['tier2_plus'])}/{tt['leads']} leads at tier >= 2. "
+                 "`python3 tools/lead_atlas.py --tiers`.")
     if cov["unmapped"]:
         lines.append(f"{len(cov['unmapped'])} ECDLP records have no lead: "
                      "`python3 tools/lead_atlas.py --coverage`.")
@@ -606,7 +682,8 @@ def _tokens(text: str) -> set[str]:
             if t not in STOP and len(t) > 2}
 
 
-def match(query: str, limit: int = 8) -> list[tuple[float, str, str, str]]:
+def match(query: str, limit: int = 8
+          ) -> list[tuple[float, str, str, str, str]]:
     """Rank leads (and KR rows) against an idea. Low scores prove nothing."""
     q = _tokens(query)
     ql = " ".join(query.lower().split())
@@ -620,12 +697,12 @@ def match(query: str, limit: int = 8) -> list[tuple[float, str, str, str]]:
                  + 5 * len(hits))
         if score:
             out.append((float(score), str(r["id"]), str(r.get("disposition")),
-                        str(r.get("title"))))
+                        str(r.get("title")), f"T{tier_of(r)[0]}"))
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import build_frontier_map as bfm  # noqa: E402
     for score, row, _hits in bfm.match(bfm.load_rows(), query, limit):
         out.append((score, str(row.get("id")), "known_result",
-                    str(row.get("title"))))
+                    str(row.get("title")), "-"))
     out.sort(key=lambda t: (-t[0], t[1]))
     return out[:limit]
 
@@ -652,10 +729,11 @@ def render(rows: list[dict[str, Any]]) -> str:
             "Only `closed_obstructed` leaves this queue. Known, dominated and "
             "scale-exhausted leads remain pursued through their exact revisit "
             "conditions.", "",
-            "| lead | disposition | next action or revisit trigger | best measured |",
-            "|:--|:--|:--|:--|"]
+            "| lead | tier | disposition | next action or revisit trigger | best measured |",
+            "|:--|:--|:--|:--|:--|"]
     for r in pursuit_rows(rows):
         out.append(f"| `{r['id']}` {_one(r.get('title'))} | "
+                   f"T{tier_of(r)[0]} | "
                    f"{r['disposition']} | {_one(pursuit_action(r))} | "
                    f"{_one(r.get('best_measured')) or '—'} |")
     for fam in FAMILIES:
@@ -735,6 +813,7 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--delta", action="store_true")
     g.add_argument("--coverage", action="store_true")
     g.add_argument("--pursuit", action="store_true")
+    g.add_argument("--tiers", action="store_true")
     g.add_argument("--render", action="store_true")
     g.add_argument("--stamp", metavar="REVIEWER")
     ap.add_argument("--out", metavar="PATH")
@@ -759,6 +838,8 @@ def main(argv: list[str] | None = None) -> int:
             errors.append(f"coverage.tsv: {d} is not a lead id")
         for w in warnings:
             print("warning: " + w, file=sys.stderr)
+        for adv in tier_advice(rows):
+            print("advice: " + adv, file=sys.stderr)
         for e in errors:
             print(e, file=sys.stderr)
         if errors:
@@ -776,8 +857,8 @@ def main(argv: list[str] | None = None) -> int:
         elif not res:
             print("no lead or known result shares vocabulary with this idea; "
                   "a low score is not novelty: read ATLAS.md by family")
-        for score, rid, disp, title in res:
-            print(f"{score:5.0f}  {rid:44s} {disp:18s} {title}")
+        for score, rid, disp, title, tier in res:
+            print(f"{score:5.0f}  {rid:44s} {disp:18s} {tier:3s} {title}")
         return 0
     if a.delta:
         dl = delta()
@@ -818,6 +899,24 @@ def main(argv: list[str] | None = None) -> int:
             for r in rows:
                 print(f"{r['id']:52s} {r['disposition']:20s} "
                       f"{pursuit_action(r)}")
+        return 0
+    if a.tiers:
+        tt = tier_table(load_leads())
+        if a.json:
+            print(json.dumps(tt, indent=1))
+            return 0
+        print(f"{tt['leads']} leads, {tt['untiered']} untiered (read as 0); "
+              f"tier >= 2: {len(tt['tier2_plus'])}/{tt['leads']} "
+              f"({100 * tt['tier2_ratio']:.1f}%)")
+        print(f"{'family':12s} " + " ".join(f"{'T' + str(k):>4s}"
+                                           for k in TIERS))
+        for fam, cnt in sorted(tt["by_family"].items()):
+            print(f"{fam:12s} " + " ".join(f"{cnt[k]:4d}" for k in TIERS))
+        print(f"{'all':12s} " + " ".join(f"{tt['total'][k]:4d}"
+                                         for k in TIERS))
+        for h in tt["tier2_plus"]:
+            print(f"tier {h['tier']}  {h['id']}  "
+                  f"{json.dumps(h['tier_evidence'])}")
         return 0
     if a.render:
         text = render(load_leads())

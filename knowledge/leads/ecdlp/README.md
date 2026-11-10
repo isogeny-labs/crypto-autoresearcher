@@ -17,6 +17,7 @@ python3 tools/lead_atlas.py --match "idea"   # leads and KR rows an idea collide
 python3 tools/lead_atlas.py --delta          # watched paths changed since the last review
 python3 tools/lead_atlas.py --coverage       # ECDLP ledger records with no lead
 python3 tools/lead_atlas.py --pursuit        # every lead not disproven in scope
+python3 tools/lead_atlas.py --tiers          # evidence-tier counts per family, leads at tier >= 2
 python3 tools/lead_atlas.py --check          # CI (make check-ledger)
 python3 tools/lead_atlas.py --render --out knowledge/leads/ecdlp/ATLAS.md
 python3 tools/lead_atlas.py --stamp <session> # close a review: pin every repo's HEAD
@@ -117,6 +118,9 @@ related: [LEAD-...]                          # optional
 dominated_by: LEAD-...                       # closed_dominated only
 forecloses: [>= 3 phrases an idea would use when re-proposing this]
 areas: [FROB, QSP]
+tier: 0                       # 0-3, see "Evidence tiers"; absent reads as 0 (untiered)
+tier_evidence:                # required when tier >= 1: path or pcc id for the tier reached
+  2: crypto:benchmarks/<dir>/VALIDATION.json
 last_reviewed: 2026-10-24
 ```
 
@@ -131,6 +135,48 @@ Dispositions:
 | `open_next_step` | a concrete, runnable, discriminating next step exists |
 | `open_blocked` | the next step is known but blocked (`blocked_by`) |
 | `open_unexamined` | ideas exist; no experiment or evidence has touched it |
+
+## Evidence tiers
+
+Promotion is by tier, not by wording. `disposition` stays narrative; `tier`
+says how far the lead's evidence has climbed (harness review 2026-11-10, I10):
+
+| tier | meaning |
+|:--|:--|
+| 0 | proposed or prose only (no `tier` field reads as 0 and is flagged `untiered`) |
+| 1 | toy exact count or Stage-0 check on a small instance, with a committed command |
+| 2 | scaled instance with a matched rho reference and the section 5a GAE band: an ecbench or autolab record with a replay certificate |
+| 3 | index-calculus leaderboard row with `VALIDATION.json` (crypto `docs/ic/LEADERBOARD.md`) |
+
+`tier_evidence` maps the tier reached to a path or pcc claim id (a lower tier is
+implied by a higher one and needs no entry of its own). `--check` fails an
+invalid tier or a tier >= 1 with no evidence for it, and advises (does not
+fail) a lead whose `status` or `best_measured` wording claims measured progress
+(`measured`, `confirmed`, `advanced`, `promoted`) at tier < 2. Rows cited
+only from pre-gate leaderboard tables or same-host, native-unpriced ecbench
+sessions are not tiered up: they lack the matched rho and band, or the
+validation record.
+
+### Metric baseline (2026-11-10)
+
+Leads with a tier-2 record / leads proposed = 2 / 176 (1.1%), at tiers
+0: 174, 1: 0, 2: 2, 3: 0 (`--tiers`). The two are ICB-large-prime-variants
+and ICP-prime-ic-constant-engineering, whose VALIDATION.json files exist in
+crypto. ICB-learned-cost-model-factor-base-selection and
+ICP-residual-partial-relations cite VALIDATION.json paths that resolve in no
+checkout and stay at tier 0 until they do. Tier 1 is empty because no lead yet
+carries a verified committed Stage-0 command; it is a backfill gap, not a
+finding.
+
+Falsification test (does tier-2 predict leaderboard rows better than status?):
+at each later review, take the leads that gained a validated leaderboard row
+(or `VALIDATION.json`-gated improvement) since the previous stamp. For each
+lead, record the tier and the `disposition` it held at the previous stamp.
+Compare the precision of "tier 2 at the earlier stamp" against "disposition
+`open_next_step`" as predictors of gaining a row, on the same leads, with a
+paired bootstrap over leads. The tier ladder is falsified if its precision is
+not above the disposition's after three reviews, or if tier-2 leads gain rows
+no more often than tier-0 leads.
 
 ## Rules
 

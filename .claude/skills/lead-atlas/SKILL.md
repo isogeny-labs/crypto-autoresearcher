@@ -40,10 +40,11 @@ atlas:
    without a lead. Append `<id>\t<LEAD-id>` rows to `coverage.tsv`, keeping
    the file sorted.
 4. `python3 tools/lead_atlas.py --check` must pass.
-5. `python3 tools/lead_atlas.py --stamp <session-or-agent>` pins every
+5. Set each touched lead's `tier` and `tier_evidence` (README "Evidence tiers"); `--tiers` lists tier >= 2, `--check` advises progress claims below tier 2.
+6. `python3 tools/lead_atlas.py --stamp <session-or-agent>` pins every
    repository's HEAD as reviewed. Stamp only after steps 1-4 covered the whole
    delta. A partial review leaves the stamp alone and says what is left.
-6. Commit the rows, `coverage.tsv` and `REVIEW_STATE.json` together. When
+7. Commit the rows, `coverage.tsv` and `REVIEW_STATE.json` together. When
    dispositions changed, also refresh the atlas report and graph
    (`research-visuals`, "Deliverables for each search round";
    `docs/reports/ecdlp-lead-atlas-*/`).

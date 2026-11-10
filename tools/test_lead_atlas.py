@@ -153,6 +153,74 @@ class AtlasTests(unittest.TestCase):
         self.assertIn("target-dependent arbitrary set-section", statement)
 
 
+class TierTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.rows = la.load_leads()
+        self.base = copy.deepcopy(self.rows[0])
+        for k in ("tier", "tier_evidence", "status", "best_measured"):
+            self.base.pop(k, None)
+
+    def test_default_is_zero_and_untiered(self) -> None:
+        self.assertEqual(la.tier_of(self.base), (0, True))
+        self.base["tier"] = 0
+        self.assertEqual(la.tier_of(self.base), (0, False))
+
+    def test_parse_tier(self) -> None:
+        self.base["tier"] = 2
+        self.assertEqual(la.tier_of(self.base), (2, False))
+
+    def test_invalid_tier_and_missing_evidence_fail(self) -> None:
+        bad = copy.deepcopy(self.base)
+        bad["tier"] = 7
+        errors, _ = la.check_leads([bad])
+        self.assertTrue(any("tier must be" in e for e in errors))
+        bad["tier"] = 2
+        errors, _ = la.check_leads([bad])
+        self.assertTrue(any("requires tier_evidence" in e for e in errors))
+        bad["tier_evidence"] = {2: "some/path"}
+        errors, _ = la.check_leads([bad])
+        self.assertFalse(any("tier" in e for e in errors))
+
+    def test_tiers_table(self) -> None:
+        a, b = copy.deepcopy(self.base), copy.deepcopy(self.base)
+        a["tier"], a["tier_evidence"] = 3, {3: "x"}
+        tt = la.tier_table([a, b])
+        self.assertEqual(tt["total"], {0: 1, 1: 0, 2: 0, 3: 1})
+        self.assertEqual(tt["untiered"], 1)
+        self.assertEqual([h["id"] for h in tt["tier2_plus"]], [a["id"]])
+        self.assertAlmostEqual(tt["tier2_ratio"], 0.5)
+
+    def test_progress_claim_below_tier_two_is_advised(self) -> None:
+        row = copy.deepcopy(self.base)
+        row["status"] = "measured"
+        self.assertEqual(len(la.tier_advice([row])), 1)
+        row["tier"], row["tier_evidence"] = 2, {2: "x"}
+        self.assertEqual(la.tier_advice([row]), [])
+        row2 = copy.deepcopy(self.base)
+        row2["best_measured"] = "gain CONFIRMED at n = 19"
+        self.assertEqual(len(la.tier_advice([row2])), 1)
+        self.assertEqual(la.tier_advice([self.base]), [])
+
+    def test_advice_does_not_fail_the_check(self) -> None:
+        row = copy.deepcopy(self.base)
+        row["status"] = "confirmed"
+        errors, _ = la.check_leads([row])
+        self.assertFalse(any("progress" in e for e in errors))
+
+    def test_match_and_brief_carry_tier(self) -> None:
+        hits = la.match("Frobenius-invariant factor base for Koblitz "
+                        "subfield curve index calculus")
+        self.assertTrue(all(len(h) == 5 for h in hits))
+        self.assertTrue(any(h[4].startswith("T") for h in hits))
+        self.assertIn("Evidence tiers", la.brief())
+
+    def test_backfilled_tier_two_leads_cite_validation(self) -> None:
+        for r in self.rows:
+            if la.tier_of(r)[0] >= 2:
+                self.assertIn("VALIDATION.json",
+                              str(r["tier_evidence"].get(la.tier_of(r)[0])))
+
+
 class PriorArtLeadTests(unittest.TestCase):
     def _errors(self, rec_id: str, block: dict) -> list[str]:
         ctx = vl.Ctx(set())
