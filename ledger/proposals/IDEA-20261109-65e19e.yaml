@@ -1,0 +1,156 @@
+idea:
+  id: IDEA-20261109-65e19e
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: The quasi-quadratic p-adic local height on torsion sections equals -log_p(b_R^2)/(4N) with b_R
+    Ward's EDS periodicity constant
+  class: representation
+  claim: 'Toy prime-order curves over F_p, p <= 2^12, N prime, lifted with the same integer a, b to Z/p^{m+1},
+    m = 6. For R in E(F_p), R != O, let s(R) = [u] L(R) with u = 1 mod N, u = 0 mod p^m (this kills the
+    E_1 component), let W_n = psi_n(s(R)) in Z/p^{m+1}, and define b_R^2 = -W_{N+1}/W_{N-1} (a unit) and
+    Lambda(R) = -log_p(b_R^2)/(4N) in Q_p. Prediction P1 (the law): for all R, S with R != +-S, Lambda(R+S)
+    + Lambda(R-S) - 2 Lambda(R) - 2 Lambda(S) = eps * log_p( x(s(R)) - x(s(S)) ), with one universal eps
+    in {1, -1, 1/2, -1/2} fixed on the first pair and frozen. Consistency P2 (exact): Lambda(kR) = k^2
+    Lambda(R) + log_p psi_k(s(R)) for all k, equivalently b_{kR}^2 = b_R^{2k^2} psi_k(s(R))^{-4N}. P3
+    (closure): because the homogeneous law on Z/N has only the zero solution, Lambda is the unique quasi-quadratic
+    p-adic height on torsion sections, so the only canonical non-additive p-adic invariant of a point
+    of E(F_p) is the EDS periodicity constant already inside the Lauter-Stange equivalence. No exponent
+    changes.'
+  mechanism: 'Wave-1 closed additive and bilinear p-adic invariants (lead 12, record 1). Quadratic ones
+    remained: the Mazur-Tate sigma height is undefined on torsion points of order prime to p, and the
+    Bernardi / Balakrishnan-Besser extension via the quasi-parallelogram law is the only definition there.
+    A quadratic form Z/N -> Q_p vanishes (N^2 q(T) = q(NT) = 0), so the law pins Lambda uniquely; the
+    sigma identity sigma(kR) = sigma(R)^{k^2} psi_k(R) with Ward periodicity W_{n+N} = a b^n W_n forces
+    Lambda(s(R)) = -log_p(b_R^2)/(4N). P2 is then an exact identity from psi_n(kR) = psi_{nk}(R) / psi_k(R)^{n^2};
+    P1 is the genuinely testable statement.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: The p-adic elliptic log solves trace-one curves. Here N != p and the object is a quadratic
+      height on torsion sections.
+    verified_by: REPO BRIEF section 3, generic-rho table
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Global lifting fails; this record uses only local torsion sections.
+    verified_by: REPO BRIEF section 3, index-calculus table
+  - ref: RESEARCH_EDS_RESIDUE.md
+    provenance: internal
+    claim: The repo records Lauter-Stange EDS residue / association as equivalent to ECDLP; wave-1 lead
+      9 states Ward periodicity b^2 = -W(N+1)/W(N-1). This record adds the height reading.
+    verified_by: REPO BRIEF section 1 file list and wave-1 p-adic lead 9; file not opened
+  - ref: Ward 1948 / Stange elliptic nets, Mazur-Tate sigma, Bernardi local height
+    provenance: recalled
+    claim: Periodicity form, sigma scaling identity, quasi-parallelogram law with log_p(x(P)-x(Q)).
+    verified_by: recalled; eps absorbs normalisation and must be fixed by the first run
+  assumptions:
+  - 'W_{N+-1} are p-adic units: psi_{N+-1}(R) != 0 in F_p since (N+-1)R != O.'
+  - log_p is the Iwasawa branch; only unit arguments occur in P1 and P2.
+  proof_search_map:
+    not_applicable_reason: A toy identity check at p <= 2^12, no exponent claim.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: number of pairs violating P1 to precision p^{m-2}
+    direction: lower
+    minimum_effect: exactly 0 on every prime
+  - metric: number of (R, k) violating P2 to precision p^{m-2}
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: nullity of the homogeneous P1 system on tested pairs
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: 'For 10 calibration primes p <= 2^12 with prime N: enumerate E(F_p); compute s(R) for all
+      R by one scalar multiplication mod p^{m+1}; compute W_{N-1}, W_{N+1} and psi_k by the elliptic-net
+      double-and-add recursion mod p^{m+1}; tabulate Lambda(R); check P1 on all unordered pairs (about
+      N^2/2) and P2 on 10 random R for all k; report the rank of the homogeneous linear system on the
+      tested pairs.'
+    controls:
+    - W_N = psi_N(s(R)) = 0 exactly mod p^{m+1} for all R (torsion-section check).
+    - Recompute at m = 8; all reported digits stable (precision control).
+    - 'A random odd function Gamma: E(F_p) -> Z_p must violate P1 (instrument sanity).'
+    - 'One curve with #E = 2 N_1, law checked on the odd-order subgroup only.'
+    required_metrics:
+    - p, N, m, eps
+    - P1 violations and max residual valuation
+    - P2 violations
+    - nullity of the homogeneous system
+    - distribution of v_p(log_p b_R^2)
+  falsification_conditions:
+  - 'P1 fails on any pair for every eps in the list: Lambda is not the quasi-quadratic height; record
+    the residual.'
+  - 'P2 fails: the recalled periodicity form or the implementation is wrong; run invalid until resolved.'
+  - 'Nonzero nullity: uniqueness is weaker than claimed on the tested pair set.'
+  confounders:
+  - Sign and factor-2 conventions of the law; eps is frozen on the first pair, not fitted per pair.
+  - Pairs with R = +-S are excluded by definition and counted.
+  interpretation_limits:
+  - A pass identifies the local height on torsion sections with EDS data at toy p; it is a closure, not
+    an attack.
+  - Nothing here bounds non-quadratic, non-additive invariants beyond those pinned by the law.
+  heuristic_assumptions:
+  - id: H1
+    statement: The Bernardi-type quasi-parallelogram law holds on torsion sections with right side eps
+      * log_p(x(s(R)) - x(s(S))) and no extra term.
+    rigorous_support: Follows from the sigma-function identity on E_1 and continuity if the Coleman-function
+      height exists on all of E(Q_p) (recalled Balakrishnan-Besser); not opened in this session.
+    validation_plan: P1 on all pairs at 10 primes; eps frozen on the first pair.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(N) for the toy table only
+    best_known: Pollard rho, Theta(p^{1/2}) (KR-RHO-13bf67); Lauter-Stange EDS problems are ECDLP-equivalent.
+    hidden_overhead: Lambda costs O(log N) net steps per point at precision m.
+    tradeoff_note: Delta 0; closure of the quadratic p-adic invariant class.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f dominates every p-adic-log reading (N = p only). The EDS equivalence in
+    RESEARCH_EDS_RESIDUE.md dominates any use of b_R.
+  sota_delta: 'Exponent delta 0. New statement: the unique quasi-quadratic p-adic height on torsion sections
+    is -log_p(b_R^2)/(4N), tested on all pairs.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-IC-cd159a
+    - KR-IC-5a43e5
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: Additive p-adic log for N = p; here a quadratic height for N != p, shown to be EDS data.
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: orthogonal
+      delta: Global lifts and ranks; this record never leaves Z_p.
+    searched:
+      corpus_grep:
+      - REPO BRIEF wave-1 p-adic leads 8, 9, 12 and records 1-4
+      - REPO BRIEF ledger index for height, sigma, Coleman, EDS
+      web: []
+      blocked: []
+    lead: LEAD-ICB-quasi-subfield-polynomials
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For 10 calibration primes p <= 2^12 with prime N: enumerate E(F_p); compute
+        s(R) for all R by one scalar multiplication mod p^{m+1}; compute W_{N-1}, W_{N+1} and psi_k by
+        the elliptic-net double-and-add recursion mod p^{m+1}; tabulate Lambda(R); check P1 on all unordered
+        pairs (about N^2/2) and P2 on 10 random R for all k; report the rank of the homogeneous linear
+        system on the tested pairs.'
