@@ -17,7 +17,10 @@ next_action:
     Port the S3 root-index build and the rank finder from the cryptanalysis n = 83 producers
     (experiments/koblitz-n83-indexbuild2-20261020, koblitz-n83-rankfinder-20261021) into the
     Rust `ic price` pipeline (estimated 3-5 days; rule v4 README, follow-ups), then re-run
-    the rule-v4 paired panel on a host where the heavy-compute lock is honoured.
+    the rule-v4 paired panel on a host where the heavy-compute lock is honoured. Do not justify the
+    port by Frobenius canonicalisation: the 2026-11-06 site inventory (best_measured) leaves no
+    scalar canonicalisation site worth batching in `ic price` (ceiling <= 0.9% of a cold solve at
+    n = 41, <= 0.1% at n = 53 and 61, by an overestimate), so the port has to earn its gain elsewhere.
   discriminates: >-
     A paired cold ratio below 1 at >= 4 of 6 sizes is a Table A baseline improvement; no movement
     means the n = 83 levers are specific to the S3 pipeline's cost profile.
@@ -27,6 +30,28 @@ best_measured: >-
   a null result for the board. Production free relations are a net loss in this pipeline (cold
   +5-9%); K retune did not confirm on fresh seeds. cryptanalysis n = 83 ratchet: cold IC /
   tuned rho 3.92 (wall time, one host class).
+  Canonicalisation-site inventory (2026-11-06, unverified assertion: read from crypto origin/main
+  0ad5c2fb and rule-v3 recorded native counts, seed 201 target 1; no counter-instrumented run was
+  possible on the box that did this, the root disk was full): in an `ic price` cold solve
+  (PairSumTable folded tier, FrobeniusCanon present) every bulk site is already batched: pair-table
+  build (`build_folded_core`, canon_in_place / x_keys, KIC_FOLD_BUILD default bulk), the collect
+  scan (`x_keys` on the fused lazy-addition path, else `keys_of` -> `point_keys`), and the descent
+  walk (`keys_of` over 64 lanes). Batched canonicalisations a solve, pairs + scanned summands +
+  descent trials: n41 2.33M, n47 0.55M, n53 17.4M, n57 1.14M, n59 17.5M, n61 80.9M. The scalar
+  sites are `key_of` in `recover_pair_tagged` (once per admitted pair hit, then an add_many over the
+  orbit's members that dwarfs it), `pairs_for` for m = 2 (once a target), `probe_key` /
+  `contains_pair` (benches and tests), the KIC_FOLD_BUILD=scalar build, and the no-normal-basis
+  fallback of `keys_of`; their count is O(relations + target), relations 86 / 56 / 267 / 65 / 256 /
+  336. Ceiling by overestimate (one scalar key, 28 ns, per collect trial and per descent trial, far
+  more than the sites are called): 2.2 / 0.23 / 0.06 / 1.9 / 0.26 / 0.20% of a cold solve at
+  n = 41 / 47 / 53 / 57 / 59 / 61, of which at most 0.52 is recoverable by batching (bulk 16.6 vs
+  scalar 28 ns, `canon_many` doc comment, one host): <= 0.9% at n41, <= 0.1% at n53-n61. Below the
+  3% threshold at every size, so no batching code was written. The per-pair `canon_with_shift`
+  loop in `FrobeniusPairTable::build` (ic_boundary.rs) belongs to the ic_framework oracles
+  (mitm-frobenius, large-prime, fiber), not `ic price`. Side observation, not a lever claim: the
+  bulk canonicalisation itself is about 25-42% of a cold solve at 13.4 ns a key (an estimate from
+  one doc-comment figure taken on another host); a faster canon kernel, not more batching, is the
+  only canonicalisation lever left.
 evidence:
 - repo: cryptanalysis
   path: docs/ic/BASELINES.md
@@ -61,13 +86,27 @@ evidence:
 - repo: crypto
   path: research/ic_aimed_gather_20261023/README.md
   note: 'aimed subset gathered once per unit: collect phase 1.093x [1.068, 1.136] established against a 42-round A/A; whole set-up 1.042x marginal, not claimed; S unchanged'
+- repo: crypto
+  path: src/cryptanalysis/koblitz_index_calculus.rs
+  ref: 0ad5c2fbd3f06d229a06898f4ccf8128ae2c1df4 # crypto origin/main read 2026-11-06
+  note: 'site inventory source: bulk x_keys / point_keys / canon_in_place vs scalar key_of'
+- repo: crypto
+  path: src/cryptanalysis/koblitz_fast.rs
+  ref: 0ad5c2fbd3f06d229a06898f4ccf8128ae2c1df4 # canon_many doc comment: 16.6 vs 13.4 ns standalone, scalar 28 ns in a scan
+  note: 'batched Frobenius canonicalisation exists (16-wide AVX-512); per-key figures behind the ceiling'
+- repo: crypto
+  path: research/ic_tool_program/rule/v3/runs/k0n41/T01-R1.price.json
+  ref: 0ad5c2fbd3f06d229a06898f4ccf8128ae2c1df4 # sibling files k1n47 k0n53 k0n57 k1n59 k0n61
+  note: 'native counts: build.stored_pairs, collect.summands_scanned / trials / relations_collected, descent.trials_total, setup_units, step_prices.unit_ns'
 known_results:
 - KR-RHO-cb1c58
 forecloses:
 - speed up the Koblitz pair-table build
 - retune K for the one-target Koblitz rows
 - batched or cache-blocked table construction for compact orbit IC
+- batch the remaining scalar Frobenius canonicalisation sites of the Koblitz ic price pipeline
+- AVX-512 batched key_of for pairs_for and recover_pair_tagged
 areas:
 - BINSTD
 - ICPERF
-last_reviewed: '2026-10-30'
+last_reviewed: '2026-11-06'
