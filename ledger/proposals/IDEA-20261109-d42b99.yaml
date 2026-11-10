@@ -1,0 +1,85 @@
+idea:
+  id: IDEA-20261109-d42b99
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: unverified
+  title: Genus-character DDH ground truth on the program's certified ordinary toy isogeny classes (CRS-type
+    action spaces)
+  attack_type: measurement_decisional_validation
+  assumption_attacked: DDH on ordinary-curve commutative actions (Couveignes-Rostovtsev-Stolbunov) at
+    toy scale; harness validation for records on CSIDH relatives
+  claim: The program already holds complete, mass-formula-certified F_p-isogeny classes of ordinary curves
+    with Frobenius order Z[pi] at p in {2003, 4001, 6007} and a ladder below 2^24 (H-ICINV-82ee6a, H-ICINV-6c7920).
+    These are CRS action spaces. Computing every genus character chi_m (odd m | t^2 - 4p) both via Tate
+    pairing on E[m] and via the form-class genus of the connecting ideal gives a ground-truth table of
+    DDH-broken classes and a validated harness for the CSIDH-relative audit. It also tests the null that
+    the j-invariant / endomorphism features of H-ECDLP-f8101e are genus-constant. This avoids the closed
+    claim of H-ICINV-6c7920 (no cost reduction is asserted). No Lean lemma exists; needed statement genus_char_constant_on_horizontal_class.
+  mechanism: 'For each certified class: factor disc(Z[pi]) = t^2 - 4p; for each odd prime m dividing it,
+    find the minimal k with E[m] ⊂ E(F_{p^k}) via Frobenius order mod m; compute the reduced Tate pairing
+    character on E[m]; independently compute the genus of the binary quadratic form of each connecting
+    ideal; assert equality across the whole class. Record the fraction of classes with at least one computable
+    chi_m (DDH broken).'
+  quantities:
+    primes:
+    - 2003
+    - 4001
+    - 6007
+    ladder_bound: 2^24
+    expected_broken_fraction: high; disc t^2-4p typically has small odd factors (heuristic)
+  cost_or_delta_needed: none (validation); success criterion is agreement of the two chi_m computations
+    on every class
+  obstruction: Toy scale only; CRS is performance-dead so no deployed target; value is a verified harness
+    and a corrected recollection of the 2-adic cases of CSV.
+  kill_test: Any class where the pairing-derived chi_m disagrees with the form-genus chi_m falsifies either
+    the harness or the recalled theorem statement; both must be reconciled before the CSIDH-relative audit
+    record can proceed.
+  heuristic_vs_proved:
+    proved: none in this program
+    heuristic: small odd factors of t^2 - 4p are common
+    analogy: none; direct computation
+  lean:
+    covering_theorem: null
+    needed_statement: 'theorem genus_char_constant_on_horizontal_class (O : Order K) (m : ℕ) (hm : (m:ℤ)
+      ∣ discr O) : ∀ a b : ClassGroup O, horizontallyIsogenous (act a E₀) (act b E₀) → χ_m a = χ_m b'
+  exp:
+    covering_experiment: null
+    nearest_surface: aburan28/ecbench
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF frontier is the ECDLP/isogeny-class-invariant lane; no decisional lane
+      quoted
+    nearest_record:
+      id: H-ICINV-6c7920
+      relation: same_object_different_claim
+      note: same certified toy classes; that record's ECDLP-cost claim is rejected_scoped and is not reused
+        here
+    disproven_avoided: 'H-ICINV-6c7920 rejected_scoped: isogeny-class invariant selection did not reduce
+      ECDLP cost'
+    searched:
+      corpus_grep:
+      - H-ICINV-82ee6a
+      - H-ICINV-6c7920
+      - H-ECDLP-f8101e
+      - H-ECDLP-3550b8
+      none_found_after:
+      - genus / DDH / CRS in BRIEF
+      - Tate pairing in BRIEF
+      - EV-* and EXP-* ids in BRIEF
+    external_sources_recalled:
+    - Castryck-Sotakova-Vercauteren 2020
+    - Couveignes 2006
+    - Rostovtsev-Stolbunov 2006
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - ordinary
+  - crs
+  - genus-theory
+  - decisional
+  - harness-validation

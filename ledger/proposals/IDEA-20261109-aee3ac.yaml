@@ -1,0 +1,80 @@
+idea:
+  id: IDEA-20261109-aee3ac
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: adaptation
+  title: 'Disorientation fault adapted to CTIDH/dCTIDH Matryoshka batches: one sign-flip fault per batch'
+  attack_type: implementation_fault_attack
+  assumption_attacked: fault resistance of constant-time CSIDH implementations (CTIDH, dCTIDH)
+  claim: Disorientation faults (Banegas et al., recalled) flip the twist/orientation during an isogeny
+    step of plain CSIDH and recover exponents from faulty public keys. In CTIDH the primes are batched
+    and evaluated through Matryoshka-doll isogenies, so a single sign fault disorients the whole batch,
+    yielding a per-fault leak of the batch sign vector and reducing the fault count relative to plain
+    CSIDH. Cleared against H-WESO-516558 (endpoint distribution of walks) and H-ECDLP-3550b8 (basin classification
+    of outputs); Lean nearest module SplitPrime.Obstruction twist purity (no theorem name quoted), needed
+    statement twist_action_inverse. Dummy-free dCTIDH is the primary target because real-vs-dummy countermeasures
+    (Campos-Kannwischer-Meyer-Reith, recalled) do not apply to it.
+  mechanism: 'Fault model: single bit flip of the per-batch direction selector before the batch''s Matryoshka
+    evaluation. Effect: the batch of exponents (e_i)_{i in B} is applied with inverted orientation, producing
+    E'' = [prod_{i in B} l_i^{-2 e_i}] E_correct. Given E_correct (the genuine public key) and E'', the
+    attacker searches the batch''s bounded exponent box (size ~ (2m+1)^{|B|}) by meet-in-the-middle to
+    recover the batch; repeat per batch. Key recovery after about one fault per batch plus retries.'
+  quantities:
+    ctidh511_batches_recalled: ~14 batches over 74 primes, bound vector per batch (to be re-derived)
+    per_batch_mitm: (2m+1)^{|B|/2}, well under 2^30 for recalled parameters
+    faults_needed_target: <= 2 * number_of_batches
+  cost_or_delta_needed: full key with <= 2x batch count faults; else no improvement over plain disorientation
+  obstruction: Output validation (supersingularity / orientation re-derivation) may reject E'; the twist-purity
+    check formalized in the crypto-lean SplitPrime.Obstruction module (if it is what the commit subject
+    suggests) would make the faulty key detectable before release.
+  kill_test: Simulate the sign-flip fault on a reference CTIDH-511 trace model; if output validation rejects
+    every faulted key, or if recovery needs > 2^10 faults, close the record.
+  heuristic_vs_proved:
+    proved: none
+    heuristic: faulted key equals action of squared inverse batch ideal (requires twist_action_inverse)
+    analogy: H-ECDLP-3550b8 basin counting reused for faulty-output classification
+  lean:
+    covering_theorem: null
+    module_nearest: 'crypto-lean SplitPrime.Obstruction: twist purity (commit subject; no theorem name
+      in BRIEF)'
+    needed_statement: 'theorem twist_action_inverse (a : ClassGroup (ℤ[√-p])) (E : SupersingularFp p)
+      : twist (act a E) = act a⁻¹ (twist E)'
+  exp:
+    covering_experiment: null
+    nearest_surface: aburan28/crypto-autoresearcher
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no fault/side-channel records for isogeny implementations
+    nearest_record:
+      id: H-WESO-516558
+      relation: analogous
+      note: endpoint-distribution analysis of walks on ideals is the template for what a faulty endpoint
+        reveals
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-ECDLP-3550b8
+      - H-ALISO-010
+      - H-ALISO-011
+      none_found_after:
+      - fault / disorientation / CTIDH in BRIEF
+      - constant-time in BRIEF
+      - EV-* and EXP-* ids in BRIEF
+    external_sources_recalled:
+    - Banegas-Kramer-Lange-Meyer-Panny-Reijnders-Sotakova-Stebila 2023
+    - CTIDH 2021
+    - Campos-Kannwischer-Meyer-Reith 2020
+    - dCTIDH
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - csidh
+  - ctidh
+  - fault-attack
+  - twist
+  - implementation
