@@ -1,0 +1,288 @@
+# DEC-20261106-2f9a94 -- Coordinator ruling on sheriff finding LNX-2
+# (SHF-20261106-a114e7): the 2026-10-29 semantic review of
+# CryptoResearch.Quotient.translation_commutes_iff_two_torsion (#2670) cannot
+# support validated_scoped. Its reading is superseded, and an independent Lean
+# review round is opened under a frozen review_plan.
+# Zero runs. No research status changes. The frozen review files are not edited.
+coordinator_decision:
+  id: DEC-20261106-2f9a94
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py --next
+    coordinator_decision --date 20261106, then --check DEC-20261106-2f9a94: "OK:
+    well-formed and free across the union" (48,138 identifier-bearing paths
+    scanned), as reported by the top-level session. The Coordinator had no
+    shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  decided_at: '2026-11-06'
+  decided_by: coordinator
+  recorded_by: coordinator
+  mode: integrity_remediation
+  decision: supersede
+  decision_label: >-
+    The 2026-10-29 review's review_outcome validated_scoped is inadmissible. Read
+    it as a same-session, single-reviewer fidelity check: machine_status passed
+    (hosted receipts) as recorded, fidelity not independently supported, review
+    outcome inconclusive. semantic_review stays pending. An independent review
+    round (TASK-20261106-6d4fa6, TASK-20261106-bb6ab4, archived by
+    TASK-20261106-4b3dc6) is opened under the plan in
+    coordination/formal-reviews/quotient-translation-descent-20261106/source-handoff.yaml.
+  context: >-
+    Formal target formal/targets/quotient-translation-descent.yaml (task
+    TASK-20261016-4c779c, claim THM-QUOTIENT-DESCENT1-LEMMA) names
+    CryptoResearch.Quotient.translation_commutes_iff_two_torsion in
+    formal/CryptoResearch/Quotient/TranslationDescent.lean. The 2026-10-29 review
+    (docs/reports/2026-10-29-quotient-translation-descent-review/, commit
+    fcee5a4487, PR #2670) recorded fidelity faithful_scoped and review_outcome
+    validated_scoped for the target claim only. Sheriff case SHF-20261106-a114e7
+    finding LNX-2 (major, B7) shows that its independence and that outcome are
+    unsupported.
+  target_ids:
+    - TASK-20261016-4c779c
+    - THM-QUOTIENT-DESCENT1-LEMMA
+    - TASK-20261106-6d4fa6
+    - TASK-20261106-bb6ab4
+    - TASK-20261106-4b3dc6
+  supersedes:
+    - record: docs/reports/2026-10-29-quotient-translation-descent-review/review.yaml
+      field: review_outcome
+      prior_value: validated_scoped
+      superseding_reading: >-
+        a same-session, single-reviewer fidelity check; machine_status passed
+        (hosted receipts) as recorded; fidelity not independently supported;
+        review outcome inconclusive
+      edits_target: false
+    - record: docs/reports/2026-10-29-quotient-translation-descent-review/review.md
+      field: "Decision (scoped) paragraph and title (\"independent semantic review\", \"validated_scoped\")"
+      prior_value: independent semantic review; review outcome validated_scoped
+      superseding_reading: as for review.yaml review_outcome above
+      edits_target: false
+  related_records:
+    sheriff_case: >-
+      SHF-20261106-a114e7 at research/sheriff/SHF-20261106-a114e7/findings.yaml on
+      branch claude/sheriff-reaudit-20261106 (PR #3071, unmerged), head commit
+      ef52d97e641c17bbe5a6dd2c60a28b813fbbdacf
+    findings: [LNX-2, LNX-3, LNX-1]
+    companion_decision: >-
+      DEC-20261106-0c4c43 (independence and citation rules for the case. The lean
+      reader's checks cited here are reader-only under its citation_rule.)
+  session_provenance: >-
+    Composed by a Coordinator subagent dispatched by top-level session
+    https://claude.ai/code/session_01TCbLH7HXJioSw2Bzx7P9p9. That session produced
+    none of the audited records: the top-level session reports that no commit on
+    main carries its id. The work was commissioned by
+    session_016SURwTvgaQmnMnhpa1SLXQ, the producer of the theorem and of the
+    2026-10-29 review (DEC-20261106-0c4c43 independence_facts). Model, as stated
+    by the top-level session: claude-opus-5-5. No shell. Git facts were verified
+    by the top-level session. The plan author read the 2026-10-29 review and the
+    sheriff lean reader, so it is excluded as a reviewer in the round it opens.
+
+  ruling_lnx2:
+    review_under_ruling: >-
+      docs/reports/2026-10-29-quotient-translation-descent-review/review.yaml and
+      review.md (commit fcee5a4487, PR #2670, merge 95ab1113e1 per the lean reader).
+      review_outcome: validated_scoped; fidelity: faithful_scoped; machine_status:
+      passed.
+    admissibility: inadmissible
+    grounds:
+      - >-
+        Unsupported independence attestation. review.yaml:66 attests "Claude Code
+        session (independent of the producer; did not write the code under review)"
+        and records no session or model id. Its commit fcee5a4487 carries
+        Claude-Session session_016SURwTvgaQmnMnhpa1SLXQ. That is the same identifier
+        as both theorem-authoring commits, 418825c73d (2026-10-16) and c62fb626ab
+        (2026-10-23), and as the note corrections 1f3c063cae and 1f96ad0ba1
+        (verified by the top-level session).
+      - >-
+        No review_plan, a single reviewer and no blind re-derivation. The review
+        lists these as its own deviations (review.yaml:62: "single reviewer; no
+        precommitted review_plan, no separate joint owners, no blind
+        re-derivation; check_review_independence.py not run").
+      - >-
+        python3 tools/check_review_independence.py on the review exits 2: "no
+        review_plan found; pass --plan or a --batch containing one" (verified by
+        the top-level session; same text in the case's
+        scripts/readers/lean/review_independence.out).
+      - >-
+        lean-review.md:161-165: validated_scoped requires independently supported
+        faithful_scoped correspondence and all required controls and reviewer
+        attestations. A missing reviewer prevents that outcome. None of those
+        conditions is met by identifiers on record.
+    superseding_reading: >-
+      A same-session, single-reviewer fidelity check. machine_status passed (hosted
+      receipts), as recorded. Fidelity is not independently supported. Review
+      outcome inconclusive.
+    machine_status_note: >-
+      "passed (hosted receipts) as recorded" restates the review's own record:
+      hosted run 40760275078 (job 123070123680), receipt artifact 12850205685, and
+      corroborating run 40713787875. The local rebuild there was
+      infrastructure_error, and the #print axioms value was replayed from
+      2026-10-23 evidence. Neither this Coordinator nor the sheriff lean reader
+      observed those hosted runs (lean.yaml K16: HTTP 403). The toolchain and
+      manifest have changed since. The new round must therefore produce fresh
+      machine evidence (joint J2).
+    content_not_refuted: >-
+      The review's mathematical content is not refuted. The sheriff lean reader
+      reproduced its checks (lean.yaml K5-K11): the elaborated type matches the
+      target claim, the only hypothesis is AddCommGroup, the control counts
+      re-derive, and the claim boundary (descent, the Corollary and the Galbraith
+      closure are not supported by the theorem) agrees. Under DEC-20261106-0c4c43
+      those reader checks are reader-only. They support "not refuted". They do not
+      make fidelity independently supported.
+    semantic_review: >-
+      Stays pending. Per the lean reader (K12), every receipt for the target still
+      records semantic_review {required: true, status: pending}. Nothing here
+      changes that, and nothing may cite this target as semantically reviewed
+      until the round below records an outcome.
+    frozen_files: >-
+      docs/reports/2026-10-29-quotient-translation-descent-review/ (review.yaml,
+      review.md, controls.py, controls.out, boundary.svg, report.pdf) is not
+      edited. This record supplies the superseding reading.
+    out_of_scope_overstatement: >-
+      formal/targets/README.md:276-278 still calls it the "independent semantic
+      review of 2026-10-29" and says it finds the theorem "faithful_scoped,
+      validated_scoped for that claim only". formal/ is out of this PR's scope, so
+      that file is left as is here. A next action (NA-2) drops "independent" and
+      the validated_scoped clause and points to this decision.
+
+  independent_round:
+    batch_directory: coordination/formal-reviews/quotient-translation-descent-20261106/
+    plan: >-
+      coordination/formal-reviews/quotient-translation-descent-20261106/source-handoff.yaml
+      (handoff.review_plan), frozen in the snapshot archive of TASK-20261106-4b3dc6
+      before any reviewer is dispatched
+    tasks:
+      - id: TASK-20261106-6d4fa6
+        role: reviewer (source fidelity, machine evidence, claim boundary)
+        handoff: coordination/formal-reviews/quotient-translation-descent-20261106/source-handoff.yaml
+        joints: [J1, J2, J3]
+        deliverables:
+          - coordination/formal-reviews/quotient-translation-descent-20261106/source-report.md
+          - coordination/formal-reviews/quotient-translation-descent-20261106/source-attestation.yaml
+      - id: TASK-20261106-bb6ab4
+        role: reviewer (blind re-derivation and proves-too-much controls)
+        handoff: coordination/formal-reviews/quotient-translation-descent-20261106/blind-handoff.yaml
+        joints: [J4]
+        deliverables:
+          - coordination/formal-reviews/quotient-translation-descent-20261106/blind-report.md
+          - coordination/formal-reviews/quotient-translation-descent-20261106/blind-attestation.yaml
+      - id: TASK-20261106-4b3dc6
+        role: coordinator archival task (snapshot, then ledger archive)
+        handoff: coordination/formal-reviews/quotient-translation-descent-20261106/archive-handoff.yaml
+    claim_under_review: >-
+      The target's claim exactly as the producer stated it in
+      formal/targets/quotient-translation-descent.yaml (claim:), for the group-law
+      identity only. Not the note's descent Lemma or Corollary.
+    independence_requirements:
+      excluded_sessions:
+        - session: session_016SURwTvgaQmnMnhpa1SLXQ
+          why: producer of the theorem, the rename, the note corrections and the 2026-10-29 review
+        - session: session_01TCbLH84PotMkHyFGFE4ifE
+          why: ran SHF-20261106-a114e7 and read the producer's 2026-10-29 review and its verdicts
+        - session: session_01TCbLH7HXJioSw2Bzx7P9p9
+          why: author of this plan; it read the 2026-10-29 review and the sheriff lean reader
+      requirements:
+        - >-
+          The reviewer (TASK-20261106-6d4fa6) and the re-deriver (TASK-20261106-bb6ab4)
+          each run in a session that is none of the excluded sessions and distinct
+          from each other.
+        - >-
+          Each records its own session id (Claude-Session URL or the runtime's
+          equivalent) and its model id where the runtime exposes it, in its
+          attestation.
+        - >-
+          Each commits its deliverables with only its own session's trailer. No
+          commissioner or producer trailer is allowed (DEC-20261106-0c4c43
+          forward_rule).
+        - >-
+          The dispatcher records which session it dispatched each task to. It does
+          not reuse an excluded session.
+    completion: >-
+      The Coordinator composes per-joint verdicts only after both reports and
+      attestations are committed. It runs python3 tools/check_review_independence.py
+      --batch coordination/formal-reviews/quotient-translation-descent-20261106 and
+      retains its output, including any failure. It then records a new
+      machine_status / fidelity / review_outcome for the target claim in a later
+      coordinator_decision, which TASK-20261106-4b3dc6 archives in the ledger commit.
+      The round changes no hypothesis or official evidence status by itself
+      (lean-review.md section 6). semantic_review moves only if that later
+      decision records validated_scoped with every lean-review.md:161-165 condition
+      met.
+    budget: >-
+      Review only. maximum_runs 0 (no experiment run). Verification jobs under J2
+      are formal-gate checks, not experiment runs.
+    dispatch_preconditions: >-
+      The pinned inputs are on main at fd2697b3e8 (sha256 verified by the top-level
+      session). The three handoffs must be committed and pushed by the
+      TASK-20261106-4b3dc6 snapshot archive before dispatch (AGENTS.md "Handoffs").
+      If the target belongs to an active GOAL lane, the dispatcher claims a lane
+      with tools/goal_lanes.py. None was checked here.
+
+  rationale:
+    - >-
+      lean-review.md sections 1, 3 and 5: an independent fidelity verdict needs a
+      precommitted review_plan, separate reviewer sessions, one owner per joint,
+      a blind re-derivation and attestations. validated_scoped needs all of them.
+      The 2026-10-29 review lists their absence itself, and its one attestation of
+      independence is contradicted by the only identifier on record.
+    - >-
+      Superseding instead of editing keeps the frozen review intact (AGENTS.md core
+      rule 4). Marking the outcome inconclusive, not needs_revision, matches the
+      evidence. Nothing in the review or in the sheriff reader shows the theorem or
+      its fidelity to be wrong. What is missing is independent support.
+    - >-
+      The theorem is a short group-law identity. The review round is cheap and
+      settles the semantic_review state either way, and the claim-boundary joint
+      (J3) addresses the live overclaims the case found (LNX-1, LNX-2).
+  evidence_refs:
+    - "SHF-20261106-a114e7 LNX-2 (research/sheriff/SHF-20261106-a114e7/findings.yaml, branch claude/sheriff-reaudit-20261106, head ef52d97e641c17bbe5a6dd2c60a28b813fbbdacf; reader readers/lean.yaml, checks K5-K12)"
+    - "SHF-20261106-a114e7 LNX-3 (same location)"
+    - docs/reports/2026-10-29-quotient-translation-descent-review/review.yaml:40,62,66
+    - docs/reports/2026-10-29-quotient-translation-descent-review/review.md (Deviations)
+    - .claude/skills/review-evidence/references/lean-review.md:19-30,161-174
+    - formal/targets/README.md:271-280
+    - formal/targets/quotient-translation-descent.yaml:19-23
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/review_independence.out (sha256 ae980fd1474508cd58b082b23587798c465a1ef92eef96c2f82b457bfd18557f as recorded in readers/lean.yaml)
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/lean/independence.txt
+    - "git trailers of 418825c73d, c62fb626ab, fcee5a4487, 1f3c063cae, 1f96ad0ba1 (verified by the top-level session)"
+    - ledger/decisions/DEC-20261106-0c4c43.yaml
+  limitations:
+    - >-
+      The Coordinator did not run check_review_independence.py, Lean or git. The
+      exit-2 result and all trailers are the top-level session's observations.
+    - >-
+      The input sha256 values in the source handoff were verified by the top-level
+      session at fd2697b3e8. The current toolchain and manifest digests
+      (ca5f1f60...330c, b46170db...cec7) are given abbreviated as reported. The
+      reviewer binds the full values of the run it uses.
+    - >-
+      Whether the hosted lean-verification workflow can be dispatched or observed
+      by the reviewer's session is unknown. GitHub access returned 403 in the
+      sheriff session. J2 can end infrastructure_error, which yields an
+      inconclusive outcome, not a refutation.
+    - >-
+      This ruling is about review process tier. It makes no statement about the
+      truth of the note's descent Lemma or Corollary.
+  next_actions:
+    - >-
+      NA-1: TASK-20261106-4b3dc6 makes the snapshot archive of the three handoffs and
+      pushes it. Then dispatch TASK-20261106-6d4fa6 and TASK-20261106-bb6ab4 to two
+      distinct sessions outside the excluded list.
+    - >-
+      NA-2 (formal/ scope, not this PR): in formal/targets/README.md:276-278 drop
+      "independent" and the "validated_scoped for that claim only" clause, and cite
+      DEC-20261106-2f9a94 for the superseding reading. Do it as a dated correction
+      in a PR that owns formal/.
+    - >-
+      NA-3: after both reports land, the Coordinator composes, runs
+      check_review_independence.py on the batch, and records the outcome in a new
+      decision. TASK-20261106-4b3dc6 archives that decision with the reports.
+    - >-
+      NA-4: any J3 finding of a live record citing the theorem for descent, the
+      Corollary or the Galbraith closure (for example crypto
+      companion_catalogue.tex:317, LNX-1) is routed as a correction to that record's
+      owner. It is never fixed by editing the review.
+  knowledge_promotion:
+    promoted: []
+    not_warranted: >-
+      No KN created. This is a process-tier ruling with outcome inconclusive. No
+      support or reject_scoped on replicated or strong evidence results.

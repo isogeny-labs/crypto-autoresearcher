@@ -1,0 +1,236 @@
+# Additive wording correction against EV-PFDR-07d608, DEC-20261029-01405d,
+# KN-FIND-c81e5b and DEC-20261029-8d9b43 FR-3, filed on sheriff case
+# SHF-20261106-a114e7 findings PFX-1 (primary), PFX-4 and PFX-5, with PFX-2,
+# PFX-3 and PFX-6 acknowledged against existing records. It annotates; it
+# changes no byte of any cited record, and it changes no status, value,
+# verdict, strength, promotion or decision. The facts and bytes stand; only
+# the words narrow.
+correction:
+  id: CORR-20261106-7f388a
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py
+    --next correction --date 20261106, then confirmed with --check
+    CORR-20261106-7f388a ("OK: well-formed and free across the union", 48,138
+    identifier-bearing paths scanned), as reported by the top-level session.
+    The Coordinator had no shell and minted no identifier.
+  recorded_at: '2026-11-06'
+  recorded_by: coordinator
+  session_provenance: >-
+    Coordinator subagent dispatched by top-level session
+    https://claude.ai/code/session_01TCbLH7HXJioSw2Bzx7P9p9; model
+    claude-opus-5-5 as stated by the top-level session; no shell. This session
+    produced none of the audited records (no commit on main carries its id).
+    The work was commissioned by session session_016SURwTvgaQmnMnhpa1SLXQ,
+    which produced many of the audited records, including EV-PFDR-07d608,
+    DEC-20261029-01405d and KN-FIND-c81e5b (commit d3942d9261), as verified in
+    git by the top-level session (case finding SES-INDEP).
+  decided_under: >-
+    Coordinator authority over record corrections (agents/coordinator.md);
+    filed on SHF-20261106-a114e7 PFX-1, PFX-4 and PFX-5. It extends the
+    narrowing already recorded by DEC-20261029-8d9b43 R-2,
+    CORR-20261029-b45e67 and CORR-20261029-a8c797.
+  type: interpretation_and_citation_correction
+  supersedes: []
+  case_ref:
+    case: SHF-20261106-a114e7
+    findings_file: research/sheriff/SHF-20261106-a114e7/findings.yaml
+    branch: claude/sheriff-reaudit-20261106
+    pr: '#3071 (unmerged)'
+    head_commit: ef52d97e641c17bbe5a6dd2c60a28b813fbbdacf
+    findings: [PFX-1, PFX-2, PFX-3, PFX-4, PFX-5, PFX-6]
+    read_from: >-
+      Byte copies made with git show by the top-level session in the session
+      scratchpad (case/findings_flat.txt, case/readers/pfdr.yaml,
+      case/py311_replay_compare_head.json); the case files are not in this
+      checkout.
+  target_ids:
+    - EV-PFDR-07d608
+    - DEC-20261029-01405d
+    - KN-FIND-c81e5b
+    - DEC-20261029-8d9b43
+  corrects:
+    - ledger/evidence/EV-PFDR-07d608.yaml
+    - ledger/decisions/DEC-20261029-01405d.yaml
+    - knowledge/findings/KN-FIND-c81e5b.md
+    - ledger/decisions/DEC-20261029-8d9b43.yaml
+    - experiments/EXP-PFDR-bb0d26/analysis.md
+  corrections:
+    - label: PFX-1 (primary) "reproduced four (independent) ways" overclaims
+      finding: SHF-20261106-a114e7 PFX-1
+      record_type: evidence_decision_and_knowledge_wording
+      record_id: EV-PFDR-07d608 / DEC-20261029-01405d / KN-FIND-c81e5b
+      field: description of the review round's reproductions
+      locations:
+        - >-
+          ledger/evidence/EV-PFDR-07d608.yaml strength_basis, lines 91-93:
+          "The result was independently reproduced four ways: an exact audit
+          replay under the recorded interpreter version, validity checks, a
+          disjoint kernel recount, and a strictly blind re-derivation that
+          matched every class."
+        - ledger/decisions/DEC-20261029-01405d.yaml rationale item 1, lines 116-117 ("reproduced four independent ways")
+        - knowledge/findings/KN-FIND-c81e5b.md lines 46-50 ("The reading was reproduced four ways", listing the audit replay under CPython 3.11.15, a disjoint recount, a blind re-derivation and "a red-team power and scope review")
+        - experiments/EXP-PFDR-bb0d26/analysis.md lines 186-188 (J1, J2, J3 and C1 "each reproduce it independently"; same wording, found while reading)
+      prior_value: >-
+        The result was independently reproduced four ways (EV); reproduced
+        four independent ways (DEC); the reading was reproduced four ways,
+        including a red-team power and scope review (KN-FIND).
+      corrected_value: >-
+        The analysis, selftest and empty replication units were re-executed
+        byte-identically from the recorded census under CPython 3.11 (a
+        different 3.11.15 build; a replay, not an independent reproduction);
+        per-cell statistics were recomputed from the job records by disjoint
+        code; the census was re-executed only under 3.13 and only its job
+        fields were compared; no clean-run reproduction exists.
+      dropped: >-
+        The red-team power and scope review (KN-FIND-c81e5b line 50) is
+        dropped from the list of reproductions: it reproduces nothing.
+      facts:
+        replay_is_not_independent: >-
+          The J1 replay re-executed the producer's own run.py from the
+          producer's recorded census. It is a replay, not an independent
+          reproduction.
+        units_covered: >-
+          It covered 4 of the session's 5 units (selftest, analyze-main,
+          census-toy-rep, analyze-final), as fixed by the review card, and not
+          census-toy-main, the run that produced every count
+          (validator-report-TASK-20261029-958053.yaml line 102, "census-toy-main
+          was not replayed in full, per the card").
+        interpreter_build: >-
+          It ran under a different CPython 3.11.15 build (uv
+          python-build-standalone, Clang 22.1.3, Jul 18 2026) with PyYAML 6.0.3
+          injected on PYTHONPATH from a scratch --target directory, against the
+          recorded GCC 13.3.0 build of 3.11.15 (Mar 3 2026); same version,
+          different build (validator report lines 99-100).
+        one_census: >-
+          All the listed "ways" re-read one census (RUN-PFDR-4d8c71) from one
+          seed block; the J2 validity checks and the J3 disjoint recount (15 of
+          6653 ok jobs, validator report line 102) are checks of that census,
+          not reproductions of the effect from a clean run.
+        bytes_confirmed: >-
+          The facts and bytes stand: the case's own CPython 3.11.18 (GCC 13.3.0)
+          replay of the same four units is byte-identical on every measurement
+          file (case reader pfdr K11, py311_replay_compare.json; the scratchpad
+          head copy read here shows selftest raw-result.json, selftest.json and
+          design.json equal). None of the records calls the replay an
+          execution proof; each says there is none.
+      already_recorded_narrowing:
+        - >-
+          DEC-20261029-8d9b43 R-2 (lines 226-233): "Every reproduction in
+          either round re-reads that census: replays, recounts and blind
+          re-derivations reproduce the analysis, not the effect from a clean
+          run." Strength preliminary, not strong.
+        - CORR-20261029-b45e67 (EV-PFDR-07d608 strength strong -> preliminary).
+        - >-
+          CORR-20261029-a8c797 (KN-FIND-c81e5b promotion basis unmet, pending a
+          fresh-block replication of the full grid; cite only with that
+          disclosure; "Content unchanged").
+        - >-
+          This record adds what those leave standing: the "four ways" and
+          "four independent ways" sentences themselves, including the KN-FIND
+          list, read as corrected_value above.
+      build_note_elsewhere: >-
+        DEC-20261029-8d9b43 FR-1 (line 200, "exact replay under the recorded
+        3.11.15") and KN-FIND-c81e5b lines 83-84 ("an exact audit replay of
+        both under CPython 3.11.15") read with the build fact above: same
+        version, different build.
+      reason: >-
+        Case finding PFX-1 and reader claims PFX-C-EV-strength,
+        PFX-C-DEC-rationale, PFX-C-KN-reproduced and PFX-C-311-replay.
+    - label: PFX-4 KN-FIND "Use" sentence reads wider than the tested object
+      finding: SHF-20261106-a114e7 PFX-4
+      record_type: knowledge_wording
+      record_id: KN-FIND-c81e5b / EV-PFDR-07d608
+      field: licensed use of the random-label null rate
+      locations:
+        - knowledge/findings/KN-FIND-c81e5b.md "Use", lines 52-54
+        - ledger/evidence/EV-PFDR-07d608.yaml resource_check.reading, lines 426-428 (same phrase)
+      prior_value: '"for label-sum coincidence harvests from proper rank <= 3 GAP bases"'
+      corrected_value: >-
+        "for label-sum coincidence harvests from proper rank <= 3 log-GAP
+        half-box label sets of the tested construction and sizes
+        (fixed-origin, lexicographically filled half-box prefixes with T
+        minimal, x-labels, 20-28-bit curves, n 256-4096), to within the 5%
+        tolerance".
+      reason: >-
+        The same records' scope bullets say other fills and orders,
+        translated boxes and full boxes are untested (KN-FIND-c81e5b lines
+        66-68) and that support is for the 5% tolerance only, with unexplained
+        over-dispersion (lines 72-76).
+    - label: PFX-5 DEC-20261029-8d9b43 FR-3 restates the withdrawn label-AP bound
+      finding: SHF-20261106-a114e7 PFX-5
+      record_type: decision_wording
+      record_id: DEC-20261029-8d9b43
+      field: first_round_adds_beyond_this_round FR-3
+      locations:
+        - ledger/decisions/DEC-20261029-8d9b43.yaml line 204
+      prior_value: '"the planted-type label-AP detectability bound (2 to 47 labels)"'
+      corrected_value: >-
+        FR-3 reads through CORR-20261029-1aaef6: the "2 to 47 labels" figure is
+        withdrawn and no label-AP size bound is claimed. The correction's
+        ground is the low end (2.0 to 2.6 labels at the 28-bit n = 256 cells,
+        below the four labels C(X) needs for any internal coincidence); its
+        corrected value withdraws the figure as a whole. The rest of FR-3
+        (shared-curve correlation of per-curve residuals) stands.
+      reason: >-
+        Case finding PFX-5: DEC-20261029-8d9b43 was composed after
+        CORR-20261029-1aaef6 (per the case, commit 68f6c4670f at
+        2026-10-29T07:57Z against the correction at 07:06Z) and restates the
+        number without citing the withdrawal.
+  acknowledged_without_new_correction:
+    - finding: SHF-20261106-a114e7 PFX-2
+      status: already corrected
+      records: [CORR-20261029-b45e67, CORR-20261029-a8c797]
+      note: >-
+        Strength strong -> preliminary, and KN-FIND-c81e5b promotion basis
+        unmet; every citation of EV-PFDR-07d608 or KN-FIND-c81e5b carries both.
+    - finding: SHF-20261106-a114e7 PFX-3
+      status: future runbooks only; no record correction
+      records: []
+      note: >-
+        No correction record exists or is needed. The RBS-PFDR-bb0d26 replay contract compares raw-result.json /summary
+        only, so it cannot detect a full reseal or see per-cell values. The
+        audited records do not rely on the audit for per-cell values, and git
+        history immutability is the witness against a reseal. Future runbooks
+        of this shape compare the census jobs file and analysis cells, or
+        record a canonical digest of the jobs set.
+    - finding: SHF-20261106-a114e7 PFX-6
+      status: already corrected
+      records: [CORR-20261029-1aaef6]
+      note: >-
+        The "about 2 to 47 labels" bound in EV-PFDR-07d608 and KN-FIND-c81e5b
+        (line 43) is withdrawn; the original bytes remain and are read with
+        that correction.
+  preservation:
+    scientific_quantity_changed: false
+    decision_changed: false
+    hypothesis_status_changed: false
+    experiment_status_changed: false
+    evidence_strength_changed: false
+    knowledge_promotion_changed: false
+    claim_ceiling_changed: false
+    frozen_files_edited: false
+    note: >-
+      Nothing changes: no status, value, verdict, strength, promotion or
+      decision. DEC-20261029-01405d stays support (scoped); EV-PFDR-07d608
+      strength reads preliminary through CORR-20261029-b45e67; KN-FIND-c81e5b
+      reads through CORR-20261029-a8c797 and CORR-20261029-1aaef6; no
+      knowledge file is edited and knowledge/INDEX.md is not regenerated.
+  edits_target: false
+  evidence_artifacts:
+    - ledger/evidence/EV-PFDR-07d608.yaml (strength_basis lines 84-96; resource_check lines 421-432)
+    - ledger/decisions/DEC-20261029-01405d.yaml (rationale lines 114-118)
+    - knowledge/findings/KN-FIND-c81e5b.md (lines 40-54, 66-84)
+    - ledger/decisions/DEC-20261029-8d9b43.yaml (FR-1 to FR-3 lines 198-206; R-2 lines 226-233)
+    - experiments/EXP-PFDR-bb0d26/analysis.md (lines 186-188)
+    - experiments/EXP-PFDR-bb0d26/review/validator-report-TASK-20261029-958053.yaml (limitations lines 98-104)
+    - ledger/corrections/CORR-20261029-b45e67.yaml
+    - ledger/corrections/CORR-20261029-a8c797.yaml
+    - ledger/corrections/CORR-20261029-1aaef6.yaml
+    - research/sheriff/SHF-20261106-a114e7/findings.yaml (PFX-1 to PFX-6) and readers/pfdr.yaml (K11, PFX-C-311-replay), branch claude/sheriff-reaudit-20261106 at ef52d97e64, read from scratchpad copies
+    - research/sheriff/SHF-20261106-a114e7/scripts/readers/pfdr/py311_replay_compare.json (scratchpad head copy only)
+  limitations:
+    - No shell. Line numbers and quotations were read by the Coordinator from the files in this checkout (branch claude/sheriff-a114e7-records from origin/main fd2697b3e8); no replay, digest, checker or validator was run here.
+    - The census 3.13 re-execution, the case's 3.11.18 replay and the commit times in PFX-5 are the case's; only a truncated head copy of py311_replay_compare.json was read.
+    - The review card that fixed the replayed units was not opened; "per the card" is the validator report's wording.
+    - The case is unmerged (PR #3071) and was commissioned by the producing session (SES-INDEP); its findings are cited as the case's.
+  archived_by_note: Committed by the top-level session in the PR that adds this record.

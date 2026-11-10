@@ -1,0 +1,369 @@
+handoff:
+  id: TASK-20261106-6d4fa6
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py --next
+    handoff --date 20261106, then --check TASK-20261106-6d4fa6: "OK: well-formed
+    and free across the union" (48,138 identifier-bearing paths scanned), as
+    reported by the top-level session. The Coordinator had no shell and minted no
+    identifier.
+  from: coordinator
+  to: reviewer
+  authorized_by: DEC-20261106-2f9a94
+  recorded_at: '2026-11-06'
+  objective: >-
+    Independently check the Lean statement fidelity, fresh machine evidence and
+    claim boundary of CryptoResearch.Quotient.translation_commutes_iff_two_torsion
+    against the target claim of formal/targets/quotient-translation-descent.yaml
+    (the group-law identity only), owning joints J1, J2 and J3 of the review_plan
+    below.
+  uncertainty_reduced: >-
+    Whether the named theorem, at the pinned bytes, is machine-verified now and
+    faithfully states the target claim with no hidden or missing hypothesis, and
+    which live records cite it beyond that claim. Settles whether the target can
+    move from semantic_review pending, after the 2026-10-29 review was ruled
+    inadmissible (DEC-20261106-2f9a94).
+  inputs:
+    - formal/CryptoResearch/Quotient/TranslationDescent.lean@359a5cedaedd1be8aa728f7ca5e71e185377dbc9f2a9fed78e073321d6bf401e
+    - formal/targets/quotient-translation-descent.yaml@12fa5950f33f807c5968337053ab402edbd6392c6b088fe0c226f6bc44bdd24b
+    - research/THM_QUOTIENT_DESCENT1.md@ac91debeb577ddcece45e13b190c048797662801a3a21e973df1325c9199b08e
+  inputs_provenance: >-
+    sha256 values verified by the top-level session at origin/main fd2697b3e8. The
+    three files are unchanged since c62fb626ab and equal the 2026-10-29 review's
+    input_sha256 for these paths. formal/lean-toolchain (now ca5f1f60...330c,
+    leanprover/lean4:v4.35.0 per the sheriff lean reader) and
+    formal/lake-manifest.json (now b46170db...cec7) differ from the values the
+    2026-10-29 review bound. Bind the full toolchain and manifest digests, and the
+    head commit, of the run you actually use.
+  context_for_worker: >-
+    Your context: the three inputs above, the formal workspace and verifier
+    (formal/, tools/verify_formal_targets.py, .github/workflows/lean-verification.yml,
+    formal/AxiomAudit.lean), .claude/skills/review-evidence/references/lean-review.md,
+    and for J3 only the records that cite the theorem. DEC-20261106-2f9a94 states
+    why this round exists. You need not read it, and it does not carry a verdict
+    for you to confirm.
+  constraints:
+    - >-
+      Independence: run in a session that is none of session_016SURwTvgaQmnMnhpa1SLXQ
+      (producer), session_01TCbLH84PotMkHyFGFE4ifE (ran sheriff case
+      SHF-20261106-a114e7 and read the producer's review) or
+      session_01TCbLH7HXJioSw2Bzx7P9p9 (plan author), and not the session given
+      TASK-20261106-bb6ab4. If you are in one of them, refuse and return.
+    - >-
+      Commit your deliverables with only your own session's Claude-Session trailer
+      (or the runtime's equivalent). Use no commissioner or producer trailer
+      (DEC-20261106-0c4c43 forward_rule).
+    - >-
+      Read no sibling report before filing your own:
+      coordination/formal-reviews/quotient-translation-descent-20261106/blind-report.md,
+      blind-attestation.yaml, and anything else TASK-20261106-bb6ab4 writes.
+    - >-
+      Form your J1 and J2 verdicts from the primary inputs and your own checks
+      first. Prior verdicts on this theorem
+      (docs/reports/2026-10-29-quotient-translation-descent-review/,
+      research/sheriff/SHF-20261106-a114e7/ and the earlier sheriff cases) are
+      citing records for J3. Read them only after your J1 and J2 verdicts are
+      drafted, and state the order in your attestation.
+    - >-
+      maximum_runs 0: no experiment run. Formal verification (lake build of the
+      named module, tools/verify_formal_targets.py, a lean-verification workflow
+      dispatch, #print axioms, lean4checker) is the review's machine check. It is
+      not an experiment run and is allowed.
+    - >-
+      Do not modify the producer proof, the target, the note, the frozen
+      2026-10-29 review files, any receipt or any ledger or hypothesis status.
+      Write only under artifact_paths.
+    - >-
+      A missing toolchain, cache, disk, memory or GitHub access is
+      infrastructure_error. Report it as such, never as passed and never as a
+      defect of the theorem. An archived or replayed receipt is corroboration. It
+      does not satisfy J2 (lean-review.md section 2).
+    - >-
+      Report on your joints only, with one verdict per joint. Do not give a
+      whole-claim review_outcome. The Coordinator composes.
+  deliverables:
+    - >-
+      source-report.md: per-joint findings for J1, J2 and J3. It includes the
+      elaborated type, a clause crosswalk, the hypothesis-delta table, the machine
+      evidence with commands, exit statuses and bound hashes, and the citing-record
+      table with path:line and classification.
+    - >-
+      source-attestation.yaml: a review_attestation block (task_id
+      TASK-20261106-6d4fa6; joints_owned [J1, J2, J3]; verdict as a mapping
+      {J1, J2, J3} each holds | breaks | inconclusive; sources_read complete, git
+      reads as git:<sha>:<path>; read_sibling_reports false; blind_from_respected
+      null). Add session_id, model_id (where exposed), commit_trailer, and
+      read_order for the prior-verdict records.
+    - >-
+      source-evidence/: machine logs, the downloaded or produced receipt, the
+      #print axioms output and any control files for J1 and J2, each with its
+      sha256 in the report.
+  artifact_paths:
+    - coordination/formal-reviews/quotient-translation-descent-20261106/source-report.md
+    - coordination/formal-reviews/quotient-translation-descent-20261106/source-attestation.yaml
+    - coordination/formal-reviews/quotient-translation-descent-20261106/source-evidence/
+  archived_by: TASK-20261106-4b3dc6
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget: {}
+  completion_gate:
+    - >-
+      J1: the exact elaborated type (with universes and implicit binders) is
+      quoted from a fresh elaboration. A clause-by-clause crosswalk to the target
+      claim covers both directions of the iff. The hypothesis-delta table has
+      every row marked implied | scoping | unjustified, or is explicitly empty.
+      Degenerate cases (trivial group, exponent-2 groups, S = 0) are covered.
+    - >-
+      J2: fresh machine evidence for the exact named declaration at a pinned head
+      whose three input files match the pinned sha256, with toolchain and manifest
+      digests bound. A fresh #print axioms list is included. Or J2 is stated
+      infrastructure_error with the failing command and its output.
+    - >-
+      J3: every located record citing the theorem, the target, the note or the
+      2026-10-29 review is listed with path:line and classified (identity only |
+      cites descent, Corollary or Galbraith closure as formal | cites the review as
+      independent or validated_scoped). The repositories and trees searched, and
+      those not searched, are stated.
+    - >-
+      Attestation lists every source read, states sibling reports were not read,
+      gives one verdict per owned joint, and records session_id, model_id where
+      exposed, and the commit trailer used.
+  return_format: Markdown report with a separate YAML review_attestation file.
+  review_plan:
+    claim_under_review: |
+      In an additive commutative group E, for all S and T:
+      (for every P, -(P + S) + T = -(P + T + S)) holds if and only if 2 T = 0.
+      That is, translation by T commutes with the involution
+      iota_S(P) = -(P + S) exactly when T is 2-torsion, whatever S is.
+    claim_source: formal/targets/quotient-translation-descent.yaml claim (lines 19-23), verbatim
+    claim_scope: >-
+      The group-law identity only, for the declaration
+      CryptoResearch.Quotient.translation_commutes_iff_two_torsion. Not the descent
+      Lemma of research/THM_QUOTIENT_DESCENT1.md (degree-2 maps E -> P^1 as quotients
+      by iota_S; descent iff commutation), and not its Corollary or the Galbraith
+      closure.
+    coordinator_prior: >-
+      Written before any reviewer runs. The plan author has read the 2026-10-29
+      review and the sheriff lean reader, so this prior is informed by verdicts
+      this round must not lean on. I expect the identity to hold. I expect the Lean
+      type to match the claim exactly: S and T universal outside, P universal inside
+      the left side, the only instance [AddCommGroup E], and 2 • T as N-smul. That
+      gives a hypothesis-delta table with no scoping or unjustified row. The
+      note's curve setting (E(k-bar), char k != 2) is a specialization reached by
+      instantiation, not a missing hypothesis. So I expect J1 holds. I expect J2 to
+      hold if a fresh hosted or local check can be obtained. The main J2 risk is
+      infrastructure: GitHub access, or the formal workspace's memory limit. That
+      would make J2 inconclusive, not breaks. I expect J3 breaks. The main risk to
+      this claim is its boundary, not its proof. At least formal/targets/README.md
+      (it calls the 2026-10-29 check independent and validated_scoped) and
+      isogeny-labs/crypto's program-paper catalogue row (Lean-formalized descent
+      and the Galbraith closure) cite it beyond the identity. I expect J4 holds,
+      with commutativity load-bearing and every proves-too-much object failing. If
+      J1 finds a scoping row, or J4's independent statement needs a hypothesis the
+      Lean type lacks, this prior is wrong where it matters.
+    joints:
+      - joint: >-
+          J1 -- Lean statement fidelity. The elaborated type of
+          CryptoResearch.Quotient.translation_commutes_iff_two_torsion states
+          exactly the claim_under_review. That covers quantifier placement and
+          order, universes, the AddCommGroup instance against the note's
+          elliptic-curve setting, the meaning of 2 T, degenerate cases, and both
+          directions of the iff, with no binder, instance or side condition the
+          claim does not state.
+        assigned_to: TASK-20261106-6d4fa6
+        attack_plan: >-
+          Elaborate the file fresh and print the type with universes and implicit
+          binders: #check @CryptoResearch.Quotient.translation_commutes_iff_two_torsion,
+          with set_option pp.universes true, and pp.explicit if needed. Crosswalk each
+          clause of the claim to the type. Build the hypothesis-delta table: universe
+          u, implicit {E}, [AddCommGroup E], explicit S T, ∀ P inside the left side,
+          and 2 • T as N-smul (against Z-smul and T + T). Mark each row implied,
+          scoping or unjustified. Test the type against the note's setting:
+          instantiate it on Mathlib's elliptic-curve point group
+          (WeierstrassCurve.Affine.Point W over a field) with a one-line term. If
+          instantiation fails, that is a scoping row. Vary the statement. Does an
+          ∃ P left side, or ∀ P pulled outside the iff, change the truth value? If
+          yes, the placement is load-bearing and must match the claim. Check that
+          each direction is proved, not assumed: no sorry or axiom in the dependency
+          chain, and no conclusion among the hypotheses. Evaluate both sides by
+          kernel decide on ZMod 1, ZMod 2, ZMod 4 and ZMod 2 × ZMod 4 for every S
+          and T, including the trivial and exponent-2 cases and S = 0. I expect no
+          break. If it breaks, it is most likely at quantifier placement or the 2 T
+          reading.
+        breaking_artifact: >-
+          A claim clause absent from or strengthened in the Lean type. Or a
+          hypothesis-delta row marked scoping or unjustified. Or a concrete finite
+          group with S and T where the Lean proposition and the claim disagree in
+          truth value. Or a sorry, custom axiom or assumed conclusion in the
+          theorem's dependency chain.
+      - joint: >-
+          J2 -- machine evidence. The exact named declaration is machine-verified
+          now, at a pinned head whose TranslationDescent.lean, target yaml and note
+          match the pinned sha256. Fresh hosted verification is bound to those
+          hashes and to the current toolchain and manifest, and a fresh #print axioms
+          shows only standard axioms.
+        assigned_to: TASK-20261106-6d4fa6
+        attack_plan: >-
+          Pick a head commit at or after fd2697b3e8 where the three inputs hash to
+          the pinned values, and record it. Primary route: dispatch or locate the
+          lean-verification workflow (.github/workflows/lean-verification.yml) on
+          that head. Download its formal-verification receipt for this target.
+          Check that theorem_sha256, task_spec_sha256, lean_toolchain_sha256 and
+          lake_manifest_sha256 equal the pinned or bound values, that the named
+          declaration is the one verified, that status is machine_verified, and
+          that the axiom audit covers it. Also run tools/verify_formal_targets.py
+          where the workspace can be built. Fresh axioms: run #print axioms
+          CryptoResearch.Quotient.translation_commutes_iff_two_torsion in a scratch
+          file against the built module, and lean4checker --fresh if available.
+          Local route, labelled as such: lake build
+          CryptoResearch.Quotient.TranslationDescent is a module-scope check, not
+          the target gate. A full workspace build may exceed local memory (see
+          problems/formal-workspace-build-exceeds-16gb.md). If so, state
+          infrastructure_error with the command and output, and do not substitute
+          an archived receipt. Archived receipts (2026-10-23, 2026-10-31,
+          2026-11-03) may be cited as corroboration only, with their hashes compared.
+        breaking_artifact: >-
+          A fresh build or verifier failure on the pinned inputs. Or an axiom beyond
+          propext, Classical.choice and Quot.sound (or sorryAx). Or a receipt whose
+          bound hashes differ from the pinned inputs, or that does not name the
+          declaration. Or a target gate that omits the module.
+      - joint: >-
+          J3 -- claim boundary. Every live record that cites this theorem, its
+          target, the note or the 2026-10-29 review claims no more than the
+          group-law identity. No record presents descent, the Corollary or the
+          Galbraith closure as formalized, or presents the 2026-10-29 check as an
+          independent or validated_scoped review.
+        assigned_to: TASK-20261106-6d4fa6
+        attack_plan: >-
+          Search crypto-autoresearcher (all text files), isogeny-labs/crypto and
+          isogeny-labs/cryptanalysis for translation_commutes_iff_two_torsion,
+          translation_descends_iff_two_torsion, THM_QUOTIENT_DESCENT1,
+          quotient-translation-descent, TranslationDescent, and the 2026-10-29
+          review path. In crypto, include research/ and tools/, which the sheriff
+          case could not search (LNX-5); use git show or git grep on origin/main if
+          the checkout is sparse. Read each hit's sentence, and classify it as
+          identity only, as citing descent, the Corollary or the Galbraith closure
+          as formal, or as citing the review as independent or validated_scoped.
+          Known candidates to check first: formal/targets/README.md:271-280; the
+          note's title, Status line and any Closes/Galbraith lines in
+          research/THM_QUOTIENT_DESCENT1.md; the Lean file header and docstring;
+          crypto:papers/ecdlp-index-calculus-program/sections/companion_catalogue.tex:317
+          and its companion data row (sheriff LNX-1). Dated or immutable records
+          that quote an old state are listed but are not breaks unless they are
+          live citations.
+        breaking_artifact: >-
+          A path:line of a live record that cites the Lean theorem for descent, the
+          Corollary or the Galbraith closure, or cites the 2026-10-29 review as
+          independent or validated_scoped. Each break names the record's owner, for
+          routing a correction. A J3 break narrows the outcome scope and routes
+          corrections. It does not refute the identity.
+      - joint: >-
+          J4 -- blind re-derivation. From the informal statement alone, an
+          independent derivation reaches the same equivalence. It writes its own
+          formal statement and lists every hypothesis the statement needs. It
+          neither reads nor reproduces the producer's Lean text, and agreement or
+          disagreement with the Lean type is judged by the Coordinator at
+          composition.
+        assigned_to: TASK-20261106-bb6ab4
+        attack_plan: >-
+          Derive the equivalence for an arbitrary additive commutative group by hand.
+          Isolate the exact step that uses commutativity. Write an independent
+          formal statement (Lean 4 with Mathlib if available, else precise
+          mathematics) and prove it. Then derive the minimal hypotheses: does the
+          statement hold in an arbitrary group, in a commutative monoid, with S
+          restricted? Run the proves-too-much objects below and confirm each fails
+          with a checked counterexample. I expect the derivation to agree. If the
+          blind statement needs a hypothesis beyond commutativity, or quantifies P
+          differently, that is the disagreement to report.
+        breaking_artifact: >-
+          A counterexample to the stated equivalence in some additive commutative
+          group. Or a needed hypothesis absent from the informal statement. Or a
+          derivation that also goes through on a proves-too-much object, which
+          shows the argument is wrong.
+    blindness:
+      mutual: true
+      lifted_for: []
+      rationale: null
+    proves_too_much:
+      objects:
+        - >-
+          A non-commutative group with the same formulas, iota_S(P) = -(P + S) and
+          tau_T(P) = P + T, for example S_3 = Additive (Equiv.Perm (Fin 3)) or a
+          dihedral group. The equivalence is false. Commuting for every P forces T
+          to be central, so with S = 0 and T a transposition, 2 T = 0 holds but tau_T
+          does not commute with iota_S.
+        - >-
+          Mutant conclusion T = 0 in place of 2 T = 0. False on Z/2 (and on
+          Z/2 x Z/2) with S = 0 and T nonzero: the left side holds and T != 0.
+        - >-
+          Mutant conclusion 2 S = 0 in place of 2 T = 0. False on Z/4 with S = 1,
+          T = 0: the left side holds and 2 S = 2 != 0.
+        - >-
+          iota_S replaced by tau_S(P) = P + S. False on Z/3 with T = 1 and any S:
+          the translations commute but 2 T != 0.
+        - >-
+          Mutant conclusion 4 T = 0 in place of 2 T = 0. False on Z/4 with T = 1:
+          4 T = 0 but the left side fails, since the two sides differ by 2 T = 2.
+      failure_signature: >-
+        A correct argument uses commutativity at an identifiable step and fails on
+        every object above. Its formal statement does not elaborate or prove on the
+        mutants and is refuted there by a checked counterexample (kernel decide or
+        an explicit computation). An argument or proof that goes through on any of
+        them has proved too much and is wrong. Keep an expected elaboration
+        failure, a checked mathematical counterexample and an infrastructure
+        failure apart.
+      assigned_to: TASK-20261106-bb6ab4
+    blind_rederivation:
+      required: true
+      quantity: >-
+        From the statement "for an additive commutative group E and S, T in E:
+        (for all P, -(P + S) + T = -(P + T + S)) iff 2 T = 0", derive a proof and a
+        formal statement of your own (Lean if available, else precise mathematics),
+        and list every hypothesis the statement needs.
+      parameters: an arbitrary additive commutative group E; any S and T in E
+      blind_from:
+        - formal/CryptoResearch/Quotient/TranslationDescent.lean
+        - formal/targets/quotient-translation-descent.yaml
+        - formal/targets/README.md
+        - research/THM_QUOTIENT_DESCENT1.md
+        - docs/reports/2026-10-29-quotient-translation-descent-review/
+        - docs/reports/2026-10-23-translation-commutes-rename/
+        - research/sheriff/SHF-20261106-a114e7/
+        - research/sheriff/SHF-20261016-3caa6f/
+        - research/sheriff/SHF-20261017-e4d7f6/
+        - research/sheriff/SHF-20261028-0f3f64/
+        - coordination/formal-reviews/quotient-translation-descent-20261106/source-handoff.yaml
+        - coordination/formal-reviews/quotient-translation-descent-20261106/source-report.md
+        - coordination/formal-reviews/quotient-translation-descent-20261106/source-attestation.yaml
+        - coordination/formal-reviews/quotient-translation-descent-20261106/source-evidence/
+        - ledger/decisions/DEC-20261106-2f9a94.yaml
+        - ledger/decisions/DEC-20261106-0c4c43.yaml
+        - docs/reports/2026-10-31-hosted-formal-receipts/
+        - docs/reports/2026-11-03-stark-affine-proof-review/reviews/TASK-20261103-bf45a0/hosted/quotient-translation-descent.json
+        - docs/reports/2026-11-03-odd-torsion-review/reviews/TASK-20261103-a1d703/raw/run-41494797344/quotient-translation-descent.json
+        - research/lean_retrospective_20261018/
+        - research/lean_review_evidence_20261018/
+        - docs/reports/2026-10-23-formal-target-inventory/
+        - docs/reports/2026-10-25-formal-target-provenance/
+        - docs/reports/2026-10-31-formal-target-links/
+        - docs/reports/formal-target-inventory-20261102/
+      blind_from_history: >-
+        git log, git show, git diff, git blame and git grep of any blind_from path
+        are forbidden too, and so is a repository-wide search (rg or grep) for the
+        theorem's or note's names. Any git read the re-deriver makes is cited in
+        sources_read as git:<sha>:<path>, so tools/check_review_independence.py can
+        compare it with blind_from.
+      blind_from_note: >-
+        The first ten entries are the producer's files, the prior reviews and the
+        sheriff cases. The next four are this round's source-side files (plan,
+        sibling report, attestation and evidence). The rest are decisions, formal
+        receipts and inventories that quote the elaborated type or a prior verdict,
+        with paths as cited in the sheriff lean reader's sources_read; not every
+        one was confirmed present in this sparse checkout. They are listed so the
+        re-deriver's statement is not read off a receipt.
+      assigned_to: TASK-20261106-bb6ab4
+    procedure_deviations: []

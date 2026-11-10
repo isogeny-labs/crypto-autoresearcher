@@ -1,0 +1,135 @@
+handoff:
+  id: TASK-20261106-bb6ab4
+  id_provenance: >-
+    Allocated by the top-level session with python3 tools/allocate_id.py --next
+    handoff --date 20261106, then --check TASK-20261106-bb6ab4: "OK: well-formed
+    and free across the union" (48,138 identifier-bearing paths scanned), as
+    reported by the top-level session. The Coordinator had no shell and minted no
+    identifier.
+  from: coordinator
+  to: reviewer
+  authorized_by: DEC-20261106-2f9a94
+  recorded_at: '2026-11-06'
+  objective: >-
+    Re-derive, from the mathematical statement below alone, whether it holds, with
+    a proof (or counterexample) and a formal statement of your own, and list every
+    hypothesis it needs. You own joint J4 (blind re-derivation) and the
+    proves-too-much controls of this round.
+  uncertainty_reduced: >-
+    Whether a derivation made without any producer artifact reaches the stated
+    equivalence, and which hypotheses it actually needs.
+  inputs:
+    - >-
+      Statement (the only mathematical input). Let E be an additive commutative
+      group and S, T elements of E. Write iota_S(P) = -(P + S) and
+      tau_T(P) = P + T. Claim: (for all P in E, -(P + S) + T = -(P + T + S)) if and
+      only if 2 T = 0. That is, tau_T o iota_S = iota_S o tau_T as maps E -> E
+      exactly when T + T = 0. Determine whether this holds for every such E, S and
+      T. If it holds, prove it. If not, give the smallest counterexample.
+    - "Parameters: an arbitrary additive commutative group E; any S and T in E."
+  constraints:
+    - >-
+      Read only this handoff and general mathematical or Lean/Mathlib references
+      (library documentation, Mathlib source for general lemmas). Cite each one in
+      sources_read.
+    - >-
+      Do not read any of the following, and do not run git log, git show, git
+      diff, git blame or git grep on them: formal/CryptoResearch/Quotient/ (any file),
+      formal/targets/ (any file), research/THM_QUOTIENT_DESCENT1.md,
+      docs/reports/2026-10-29-quotient-translation-descent-review/,
+      docs/reports/2026-10-23-translation-commutes-rename/,
+      docs/reports/2026-10-23-formal-target-inventory/,
+      docs/reports/2026-10-25-formal-target-provenance/,
+      docs/reports/2026-10-31-formal-target-links/,
+      docs/reports/2026-10-31-hosted-formal-receipts/,
+      docs/reports/formal-target-inventory-20261102/, any formal receipt under
+      docs/reports/2026-11-03-*/, research/lean_retrospective_20261018/,
+      research/lean_review_evidence_20261018/, research/sheriff/ (any case),
+      ledger/decisions/DEC-20261106-2f9a94.yaml,
+      ledger/decisions/DEC-20261106-0c4c43.yaml, and in
+      coordination/formal-reviews/quotient-translation-descent-20261106/ every file
+      except this one (in particular source-handoff.yaml, source-report.md,
+      source-attestation.yaml, source-evidence/ and archive-handoff.yaml).
+    - >-
+      Do not search the repository (rg, grep, git grep or an index or kb query)
+      for the statement's terms, theorem names or this round's directory. A search
+      would surface the forbidden content. Do not read PR descriptions or commit
+      messages about this statement.
+    - >-
+      Preferably work in an isolated directory holding only this handoff and a
+      Lean 4 + Mathlib project. If you use this repository's formal/ Lake
+      workspace for Mathlib, put your file in a scratch path outside
+      formal/CryptoResearch/, do not import CryptoResearch, and open no file under
+      formal/CryptoResearch/ or formal/targets/.
+    - >-
+      Test these controls, deciding each with a checked computation (kernel decide
+      on a finite group, or an explicit hand calculation shown in full), and
+      report what your argument does on each. (a) The same formulas in a
+      non-commutative group, for example S_3 or a dihedral group, for every S and
+      T. (b) The statement with conclusion T = 0 in place of 2 T = 0. (c) The
+      statement with conclusion 2 S = 0 in place of 2 T = 0. (d) The statement with
+      iota_S replaced by tau_S(P) = P + S. (e) The statement with conclusion
+      4 T = 0 in place of 2 T = 0. A correct argument must use commutativity at an
+      identifiable step, and must fail on each of (a)-(e) wherever the variant
+      statement is false. Keep an elaboration failure, a checked counterexample and
+      an infrastructure failure apart.
+    - >-
+      Also determine the minimal hypotheses. Does the statement hold in an
+      arbitrary group, or in a commutative monoid? Does it need any condition on
+      S? Does the placement of "for all P" (inside the iff, outside it, or "there
+      exists P") change its truth?
+    - >-
+      Independence: run in a session that is none of
+      session_016SURwTvgaQmnMnhpa1SLXQ, session_01TCbLH84PotMkHyFGFE4ifE or
+      session_01TCbLH7HXJioSw2Bzx7P9p9, and not the session given
+      TASK-20261106-6d4fa6. If you are in one of them, refuse and return.
+    - >-
+      Commit your deliverables with only your own session's Claude-Session
+      trailer (or the runtime's equivalent). Use no commissioner or producer
+      trailer.
+    - >-
+      maximum_runs 0: no experiment run. Lean elaboration of your own file is
+      allowed. Do not modify any existing file or any ledger or hypothesis status.
+      Write only under artifact_paths.
+    - >-
+      A missing Lean toolchain or Mathlib is infrastructure_error for the formal
+      part. Give the precise mathematical statement and proof instead, and say so.
+  deliverables:
+    - >-
+      blind-report.md: the derivation, the step that uses commutativity, your
+      formal statement and proof (Lean source inline or under blind-evidence/),
+      the minimal-hypothesis list, and the result on each control (a)-(e) with its
+      checked computation.
+    - >-
+      blind-attestation.yaml: a review_attestation block (task_id
+      TASK-20261106-bb6ab4; joints_owned [J4]; verdict holds | breaks |
+      inconclusive; sources_read listing every path and reference read, any git
+      read as git:<sha>:<path>; read_sibling_reports false; blind_from_respected
+      true or false, stated honestly). Add session_id, model_id (where exposed),
+      commit_trailer, and a controls mapping {a..e} each fails_as_expected |
+      unexpectedly_holds | inconclusive.
+    - blind-evidence/ (optional), holding Lean files and their elaboration output, each with its sha256 in the report.
+  artifact_paths:
+    - coordination/formal-reviews/quotient-translation-descent-20261106/blind-report.md
+    - coordination/formal-reviews/quotient-translation-descent-20261106/blind-attestation.yaml
+    - coordination/formal-reviews/quotient-translation-descent-20261106/blind-evidence/
+  archived_by: TASK-20261106-4b3dc6
+  inference:
+    policy: review-adversarial
+    reasoning_effort: xhigh
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: true
+    delivery: interactive
+  budget: {}
+  completion_gate:
+    - >-
+      The derivation uses only the statement and parameters above. Every
+      hypothesis it uses is listed, and the commutativity step is identified.
+    - >-
+      Each control (a)-(e) has a checked computation and a stated result.
+    - >-
+      The attestation lists every source read, confirms blind_from_respected,
+      states sibling reports were not read, and records session_id, model_id where
+      exposed, and the commit trailer used.
+  return_format: Markdown report with a separate YAML review_attestation file.
