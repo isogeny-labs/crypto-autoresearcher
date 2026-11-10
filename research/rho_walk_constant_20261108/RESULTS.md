@@ -167,6 +167,19 @@ recommended 1,024 to 2,048 jumps. This study supports a smaller claim:
   binary and seeds (a trial's seed depends only on arm, size, r, trial and family),
   so the resumed run equals an uninterrupted one. Every cell was then checked to
   contain exactly its registered number of trials, numbered 0 to n - 1.
-- Raw cells: `data/raw_b*.tar.gz`; analysis output: `analysis_output.md`,
-  `results.json`. Reproduce: `gcc -O2 -o rho_walk_sim rho_walk_sim.c -lm`,
-  `./run.sh ./rho_walk_sim RAW_DIR 4`, `python3 analyze.py RAW_DIR --json results.json`.
+- Raw cells are not committed. The repository's artifact policy
+  (`docs/artifacts.md`) puts data-suffixed files over 64 KiB in the object store, and
+  this session has no store credentials; CI rejected the first commit that carried them
+  as tarballs (`artifacts` and `size` checks), and the tarballs were removed from the PR.
+  What is committed instead: `cell_digests.sha256` (sha256 of all 380 raw cell files,
+  checked against the files this analysis read), `cells_summary.csv` (trials, mean,
+  standard deviation and censored count per cell, enough to recompute every mean and
+  every interval except the bootstrap ones), `analysis_output.md` and `results.json`.
+  The raw cells are exactly regenerable, because every seed is a function of
+  (arm, size, r, trial, family): about an hour on four cores, then
+  `sha256sum -c` against the manifest. If the raw cells should be kept, they can go to
+  the store with `tools/artifacts/artifacts.py push` or the `artifact-autofix` label,
+  which is a maintainer decision.
+- Reproduce: `gcc -O2 -o rho_walk_sim rho_walk_sim.c -lm`,
+  `./run.sh ./rho_walk_sim RAW_DIR 4`, `(cd RAW_DIR && sha256sum -c ../cell_digests.sha256)`,
+  `python3 analyze.py RAW_DIR --json results.json`.
