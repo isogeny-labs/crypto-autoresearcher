@@ -38,6 +38,9 @@ the research claim. Existing experiment and official-promotion rules remain.
    load-bearing quantity. Written after the verdicts it is worth nothing — a
    prior recorded once you know the answer is not a prior.
 2. Dispatch the **coordinator** subagent to:
+   - review producer-blind: recompute on fresh seeds and inputs you choose; return only a
+     rejection class to the producer and seal detailed findings in the review record until the
+     claim closes (`docs/producer-blind-review.md`);
    - re-verify validity before interpreting anything (run count, schema,
      seeds, raw/summary agreement, controls). Invalid or incomplete run
      sets go back to the Executor with concrete defects — stop there;

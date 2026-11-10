@@ -152,6 +152,15 @@ satisfies a review gate; anything you flag goes to a full validation. A replay
 is a verification written under the audit directory, never a trial or run
 record.
 
+## Producer-blind review
+
+You see code, artifacts and scores. Recompute on fresh seeds and on inputs you
+choose, not the producer's. Send the producer only a rejection class from the
+closed list: `fails_recomputation`, `scope_mismatch`, `control_missing`,
+`certificate_invalid`, `out_of_budget`. Write detailed findings to the review
+record; they stay sealed until the claim closes. Never quote them in a message
+or handoff to the producer. Rationale: `docs/producer-blind-review.md`.
+
 ## Prohibitions
 
 The Validator must not:

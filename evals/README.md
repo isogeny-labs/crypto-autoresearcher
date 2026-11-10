@@ -32,3 +32,13 @@ should be read from its record.
 | --- | --- | --- | --- |
 | 2026-10-07 | `0804d91230` | `python3 -m orchestration.eval validate --suite evals/suites/{discipline,capability}.yaml` | both valid: 8 and 4 tasks, fixtures build, policies resolve (`capability` needs `sympy`, a core dependency) |
 | 2026-10-07 | `0804d91230` | `python3 -m orchestration.eval run --suite evals/suites/discipline.yaml --backend anthropic --trials 1 --out /tmp/evalrun-discipline` | **not a measurement**: 5/5 trials `stop_reason: trial_error`, 0 steps, 0 tokens, `TransportError: backend anthropic needs credentials in $ANTHROPIC_API_KEY, which is unset`. No API-backed backend had credentials in the Cloud Agent environment; `local` requires a served model. Record discarded, no baseline pinned. First real run awaits a credential in the weekly workflow or an operator session. |
+| 2026-11-10 | working tree on `harness/review-20261110-fixes` (uncommitted) | `python3 -m orchestration.eval validate --suite evals/suites/discipline.yaml` | valid: 10 tasks. Adds the paired arms `EVAL-DISC-FEEDBACK-DETAILED` and `EVAL-DISC-FEEDBACK-GENERIC` (proposal I6: 5-round rejected-submission loop; detailed arm returns the intake's reason, generic arm only the rejection class; grader `feedback_no_evasion`). **The arms have NOT been run**: no backend credential in this environment, so there is no result and no baseline. Falsifier: generic arm shows no lower evasion after >= 10 trials per arm (docs/producer-blind-review.md). |
+
+## Harness-change gate
+
+`tools/check_harness_change_gate.py` (workflow `harness-change-gate.yml`)
+requires a committed `evals/baselines/<date>/summary.json` newer than 30 days
+for a budget-constant change, a `coordination/skill-tuning/**` change or a new
+`docs/*loop*.md`. None exists yet. Create one with
+`python3 -m orchestration.eval run --suite evals/suites/discipline.yaml --backend anthropic --trials 10 --out evals/baselines/<date>`.
+Tasks under `evals/suites/held-out/` are excluded from tuning.

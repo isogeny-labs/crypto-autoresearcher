@@ -73,6 +73,15 @@ identity and measured bounds" for a cost claim), not the whole file.
   hand it to the Coordinator's ledger archive task. Do not commit in a shared
   worktree, change the ledger, or broaden a scoped result into impossibility.
 
+## Producer-blind review
+
+You see code, artifacts and scores. Recompute on fresh seeds and on inputs you
+choose, not the producer's. Send the producer only a rejection class from the
+closed list: `fails_recomputation`, `scope_mismatch`, `control_missing`,
+`certificate_invalid`, `out_of_budget`. Write detailed findings to the review
+record; they stay sealed until the claim closes. Never quote them in a message
+or handoff to the producer. Rationale: `docs/producer-blind-review.md`.
+
 ## Context discipline
 
 Read the snapshot's claim, cost model and the artifacts they cite. Open other

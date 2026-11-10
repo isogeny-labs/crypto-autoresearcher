@@ -21,6 +21,7 @@ from typing import Any, Callable
 
 from ..adapter import config as config_module
 from ..adapter import resolver as resolver_module
+from . import feedback as feedback_module
 from . import fingerprint as fingerprint_module
 from . import graders as graders_module
 from . import report as report_module
@@ -41,9 +42,12 @@ class TrialResult:
     verdicts: list[graders_module.Verdict] = field(default_factory=list)
     final_text: str = ""
     error: str | None = None
+    feedback_rounds: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        extra = ({"feedback_rounds": self.feedback_rounds}
+                 if self.feedback_rounds else {})
+        return {**extra,
             "task_id": self.task_id, "trial": self.trial, "passed": self.passed,
             "score": self.score, "stop_reason": self.stop_reason,
             "steps": self.steps, "wall_seconds": self.wall_seconds,
@@ -68,10 +72,16 @@ def run_trial(task: EvalTask, trial: int, *, config: config_module.Config,
     try:
         sandbox, _secrets = build_sandbox(task, root, repo=repo,
                                           seed_offset=seed_offset)
-        dispatch = sandbox_task(task, sandbox)
-        run = agent_runner.run_task(
-            dispatch, config=config, backend=backend, repo_root=sandbox,
-            max_steps=task.max_steps, opener=opener)
+        if task.feedback:
+            run, rounds = _run_feedback_loop(
+                task, sandbox, agent_runner, config=config, backend=backend,
+                opener=opener)
+        else:
+            rounds = []
+            dispatch = sandbox_task(task, sandbox)
+            run = agent_runner.run_task(
+                dispatch, config=config, backend=backend, repo_root=sandbox,
+                max_steps=task.max_steps, opener=opener)
     except Exception as exc:                          # recorded, never swallowed
         return TrialResult(
             task_id=task.id, trial=trial, passed=False, score=0.0,
@@ -82,7 +92,9 @@ def run_trial(task: EvalTask, trial: int, *, config: config_module.Config,
     context = graders_module.GradingContext(
         sandbox=Path(root), final_text=run.final_text, journal=run.journal,
         stop_reason=run.stop_reason, files_written=run.files_written,
-        task={"id": task.id, "kind": task.kind, "role": task.role})
+        task={"id": task.id, "kind": task.kind, "role": task.role,
+              **({"feedback": {"mode": task.feedback["mode"], "rounds": rounds}}
+                 if task.feedback else {})})
     verdicts = graders_module.run_graders(context, task.graders)
 
     return TrialResult(
@@ -92,7 +104,60 @@ def run_trial(task: EvalTask, trial: int, *, config: config_module.Config,
         stop_reason=run.stop_reason, steps=run.steps,
         wall_seconds=run.wall_seconds, usage=run.usage,
         denials=len([e for e in run.journal if "denied" in e]),
-        verdicts=verdicts, final_text=run.final_text)
+        verdicts=verdicts, final_text=run.final_text, feedback_rounds=rounds)
+
+
+@dataclass
+class _LoopRun:
+    """The aggregate of a feedback trial's rounds, shaped like a TaskRun."""
+    final_text: str
+    journal: list[Any]
+    stop_reason: str
+    files_written: list[str]
+    steps: int
+    wall_seconds: float
+    usage: dict[str, int]
+
+
+def _run_feedback_loop(task: EvalTask, sandbox: Path, agent_runner: Any, *,
+                       config: config_module.Config, backend: str | None,
+                       opener: Callable[..., Any] | None
+                       ) -> tuple[_LoopRun, list[dict[str, Any]]]:
+    """Run up to `rounds` agent sessions, applying the intake check between them.
+
+    The mode decides what the next round's prompt says about the rejection;
+    nothing else differs between arms. The loop ends early on acceptance.
+    """
+    spec = task.feedback or {}
+    mode, total = spec["mode"], int(spec["rounds"])
+    check = feedback_module.CHECKS[feedback_module.check_spec(task)["type"]]
+    base_objective = str(task.handoff.get("objective", ""))
+    records: list[dict[str, Any]] = []
+    journal: list[Any] = []
+    files: list[str] = []
+    usage: dict[str, int] = {}
+    steps, wall, told, last = 0, 0.0, "", None
+    for round_no in range(1, total + 1):
+        handoff = dict(task.handoff)
+        handoff["objective"] = (base_objective if not told
+                                else f"{base_objective}\n\n{told}")
+        round_task = EvalTask(**{**task.__dict__, "handoff": handoff})
+        last = agent_runner.run_task(
+            sandbox_task(round_task, sandbox), config=config, backend=backend,
+            repo_root=sandbox, max_steps=task.max_steps, opener=opener)
+        journal.extend(last.journal)
+        files.extend(f for f in last.files_written if f not in files)
+        steps += last.steps
+        wall += last.wall_seconds
+        for key, value in (last.usage or {}).items():
+            usage[key] = usage.get(key, 0) + int(value)
+        decision = check(sandbox, feedback_module.check_spec(task))
+        told = feedback_module.message(decision, mode, round_no, total)
+        records.append(feedback_module.round_record(round_no, decision, told))
+        if decision.accepted:
+            break
+    return (_LoopRun(last.final_text, journal, last.stop_reason, files, steps,
+                     round(wall, 3), usage), records)
 
 
 def run_suite(suite: Suite, *, config: config_module.Config | None = None,

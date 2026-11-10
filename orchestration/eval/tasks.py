@@ -41,6 +41,9 @@ class EvalTask:
     # tuning generalised. Tuning against held_out spends the only unbiased
     # measurement you have.
     split: str = "dev"
+    # Optional multi-round loop (see feedback.py): {rounds, mode, check}. Absent
+    # for every single-shot task, which is all tasks before the I6 arms.
+    feedback: dict[str, Any] | None = None
 
     @property
     def policy(self) -> str | None:
@@ -75,7 +78,8 @@ def load_suite(path: str | Path) -> Suite:
             fixtures=entry.get("fixtures") or [],
             max_steps=entry.get("max_steps"),
             tags=entry.get("tags") or [],
-            split=entry.get("split", "dev")))
+            split="held_out" if entry.get("held_out") is True else entry.get("split", "dev"),
+            feedback=entry.get("feedback")))
     _validate(tasks)
     return Suite(suite["name"], suite.get("description", ""), tasks)
 
@@ -91,6 +95,9 @@ def _validate(tasks: list[EvalTask]) -> None:
             raise ValueError(f"{task.id}: unknown kind {task.kind!r}")
         if task.split not in ("dev", "held_out"):
             raise ValueError(f"{task.id}: unknown split {task.split!r}")
+        if task.feedback is not None:
+            from .feedback import validate as validate_feedback
+            validate_feedback(task.id, task.feedback)
         if not task.graders:
             raise ValueError(f"{task.id}: a task with no graders cannot be scored")
         for spec in task.graders:

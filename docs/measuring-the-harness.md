@@ -265,6 +265,16 @@ is more likely staleness than progress.
 None of this makes the suite unfoolable. It makes fooling it require the same
 work as actually improving, which is the most a benchmark can do.
 
+### Held-out
+
+Tasks under `evals/suites/held-out/` are held out by location and carry
+`held_out: true` (read as `split: held_out`). Nothing `tune-skill` reads, and no
+tuning round, may load that directory, quote its task text or fixtures, or
+optimise against its scores. It is run only to check that a change generalised,
+by someone other than the tuner. Once a held-out task has informed a tuning
+decision it is spent: move it to `dev` and write a replacement. See
+`evals/suites/held-out/README.md`.
+
 ## Adding a task
 
 Add an entry to a suite under `evals/suites/`, then:
