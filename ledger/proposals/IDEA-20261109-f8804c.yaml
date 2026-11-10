@@ -1,0 +1,60 @@
+idea:
+  id: IDEA-20261109-f8804c
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: adaptation
+  title: One-fault commitment reuse in deterministic SQIsign2D signing yields a non-scalar endomorphism
+    of E_pk
+  attack_type: implementation_fault_key_recovery
+  assumption_attacked: Deterministic commitment derivation from (sk, msg) without hedging, combined with
+    the absence of a challenge re-derivation check before output.
+  claim: Signing the same message twice with one fault in the challenge-hash evaluation of the second
+    run yields transcripts (E_com, c, rsp), (E_com, c', rsp') with c != c'. The endomorphism alpha = dual(phi_rsp')
+    o phi_chl' o dual(phi_chl) o phi_rsp of E_pk has degree q q' 2^{2 e_chl} and is non-scalar; one non-scalar
+    endomorphism yields End(E_pk) and hence I_sk in heuristic polynomial time (external one-endomorphism-to-EndRing
+    reduction, recalled, not in brief). Clears H-WESO-516558 (commitment endpoint object reused) and H-SSIQ-d724f2
+    (target order for saturation). No Lean theorem covers the extractor; the missing statement is recorded
+    below.
+  mechanism: 'Fault model: single instruction skip or bit flip in the hash-input buffer for the challenge.
+    If the faulty output determines E_chl'', recover phi_chl'' by meet-in-the-middle over 2^{e_chl}-isogenies
+    from E_com in time about 2^{e_chl/2} (or directly from the challenge hint if present). Form alpha,
+    factor deg alpha (about 250 bits at level I, classically feasible), compute the order Z[alpha], saturate
+    to a maximal order using the one-endomorphism reduction, then compute the connecting ideal from O_0
+    to recover I_sk. Variant (Lead 4): fault the PRF input so two different messages share E_com; no MITM.'
+  quantitative: 1 fault (+1 honest signature) or 2 faults; MITM 2^{e_chl/2} worst case, memory the same;
+    finishing heuristic poly in log p.
+  cleared:
+    checked:
+    - 'H-WESO-516558: commitment-walk endpoint distribution; collision of endpoints is the exploited event'
+    - 'H-SSIQ-d724f2: standard maximal order, saturation target'
+    - 'H-ALISO-012 / H-ALISO-013: filed cost-accounting arms (quantum); this record is classical'
+    disproven: none in the brief
+    lean: no Lean coverage; would need "two accepting transcripts with equal E_com and distinct challenges
+      determine a non-scalar endomorphism of E_pk of degree q1 q2 2^{2 e_chl}"
+    exp: none; nearest surface is aburan28/ecbench (timing/fault harness) and aburan28/cryptanalysis
+  kill_test: 'Toy implementation with the fault injected: (a) if the signer re-derives the challenge from
+    its own output and aborts on mismatch, or (b) if commitment randomness is hedged with a fresh nonce,
+    the attack produces no usable pair; record as refuted-by-countermeasure. Otherwise verify alpha is
+    non-scalar and Z[alpha] saturates to End(E_pk) at toy size.'
+  cost: toy implementation days; level-I MITM feasible only if e_chl is small or a hint pins the kernel.
+  distinguish: Key recovery via implementation fault. Not a proof gap; the honest scheme is unaffected.
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-SSIQ-d724f2
+      - H-ALISO-012
+      - H-ALISO-013
+    none_found_after:
+    - 'brief grep: fault'
+    - 'brief grep: deterministic / nonce / commitment reuse'
+    - 'brief grep: endomorphism recovery'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  nearest_record:
+    id: H-WESO-516558
+    relation: adapts

@@ -1,0 +1,76 @@
+idea:
+  id: IDEA-20261109-0e23eb
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: unverified
+  title: Effective key entropy of exponent-vector keys modulo the CSIDH-512 relation lattice (CSIDH-512,
+    CTIDH-511, dCTIDH key distributions)
+  attack_type: parameter_audit_classical
+  assumption_attacked: claimed classical security level 2^{H/2} with H = log2 of key count
+  claim: 'Keys e in [-m,m]^n map to Cl(Z[sqrt(-p)]) via e -> prod l_i^{e_i}; two keys collide iff their
+    difference lies in the relation lattice Lambda. For CSIDH-512 the lattice is known (Beullens-Kleinjung-Vercauteren,
+    recalled: N ~ 2^257.1, cyclic) and the box has 11^74 ~ 2^256.8 points, so near-injectivity is expected.
+    CTIDH/dCTIDH use weighted batch distributions whose collision rate under Lambda has not been tabulated
+    to my knowledge. Any loss >= 8 bits of effective entropy lowers the MITM/vOW exponent. Cleared against
+    H-SSIQ-dfee7e and H-ALISO-017; no Lean lemma; needed statement key_map_injective_of_short.'
+  mechanism: (1) Load Lambda for CSIDH-512 (74 generators). (2) BKZ-reduce Lambda; record lambda_1 in
+    the infinity norm. If lambda_1 > 2m the box map is injective and entropy is exactly log2 of the key
+    count. (3) For CTIDH-511 and dCTIDH distributions, sample 2^20 keys, reduce each to a canonical representative
+    modulo Lambda (Babai), count repeats, and estimate min-entropy and collision entropy. (4) Translate
+    loss into vOW exponent change.
+  quantities:
+    csidh512_keys_bits: 256.8
+    csidh512_classgroup_bits_recalled: 257.1
+    sample_size: 2^20
+    loss_threshold_bits: 8
+  cost_or_delta_needed: '>= 8 bits of collision-entropy loss'
+  obstruction: Expected loss is below 1 bit for CSIDH-512; only weighted distributions have room, and
+    the record relies on recalled BKV data that must be reloaded from an authoritative source.
+  kill_test: If lambda_1^infty(Lambda) > 2m for CSIDH-512 and the sampled collision-entropy loss for CTIDH-511
+    / dCTIDH is < 2 bits, close the record as confirmation.
+  heuristic_vs_proved:
+    proved: injectivity criterion lambda_1 > 2m is elementary once stated
+    heuristic: sampling-based entropy estimates
+    analogy: H-SSIQ-dfee7e window-counting census
+  lean:
+    covering_theorem: null
+    needed_statement: 'lemma key_map_injective_of_short (Λ : Submodule ℤ (Fin n → ℤ)) (h : ∀ v ∈ Λ, v
+      ≠ 0 → ‖v‖∞ > 2*m) : Function.Injective (fun e : Box m => classOf (∏ i, 𝔩 i ^ e i))'
+  exp:
+    covering_experiment: null
+    nearest_surface: aburan28/cryptanalysis
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no class-group-structure records for CSIDH
+    nearest_record:
+      id: H-SSIQ-dfee7e
+      relation: special_case
+      note: counting admissible representations in a bounded window; here the window is the key box modulo
+        Lambda
+    source_non_recalled: none available in BRIEF; external BKV data recalled only
+    searched:
+      corpus_grep:
+      - H-SSIQ-dfee7e
+      - H-ALISO-017
+      - H-ALISO-016
+      - H-WESO-516558
+      none_found_after:
+      - relation lattice / class number in BRIEF
+      - CSI-FiSh in BRIEF
+      - EV-* and EXP-* ids in BRIEF
+    external_sources_recalled:
+    - Beullens-Kleinjung-Vercauteren CSI-FiSh
+    - CTIDH 2021
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - csidh
+  - class-group
+  - relation-lattice
+  - entropy
+  - parameter-audit

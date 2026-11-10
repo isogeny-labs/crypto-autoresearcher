@@ -1,0 +1,60 @@
+idea:
+  id: IDEA-20261109-748569
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: adaptation
+  title: SQIsign2D-West response-norm law vs ZK simulator (proof-gap measurement, not key recovery)
+  attack_type: security_proof_gap
+  assumption_attacked: Heuristic simulatability of the response ideal J (reduced norm q < 2^e) in the
+    zero-knowledge argument of the 2D-West identification protocol.
+  claim: The procedure-induced law of q = Nrd(J) over signatures of a fixed key (mixture over fresh commitments
+    and challenges) has total-variation distance from the simulator's secret-independent q-law exceeding
+    3/sqrt(N) at N = 10^6 toy signatures for a positive fraction of keys. Extends the sampler-uniformity
+    test of H-WESO-516558 from norm-2 commitment walks to the response short-vector sampler; uses the
+    standard order O of H-SSIQ-d724f2; the admissible-count statistic of H-SSIQ-dfee7e is the integer
+    analogue. No Lean theorem covers the claim; the missing statement is recorded below.
+  mechanism: Toy instantiation (p of 40-60 bits with 2^f | p+1 and e = log2(sqrt p) + s, s in 1..6). For
+    20 keys, generate 10^6 signatures each; record q/2^e, q mod 2^k for k <= 8, the rank of q among candidate
+    lattice points of norm < 2^e, and the number of candidates. Compare against (i) the paper-style simulator
+    (uniform candidate in a uniformly random class) and (ii) exact enumeration of the candidate set per
+    class. Report TV distance, KS statistic and the per-key variance of candidate counts (Lead 12 proxy).
+    By the Siegel-Weil floor (Lead 8), class-level deviations are O(2^{-e/2}); any detected gap is therefore
+    attributable to the selection procedure, not to representation numbers.
+  quantitative: Candidate set size about 2*pi^2*2^{2s}; detectable TV at N signatures about N^{-1/2};
+    level-I e about 126 (recalled), so class-level floor about 2^{-63}.
+  cleared:
+    checked:
+    - 'H-WESO-516558: sampler-uniformity of non-backtracking norm-2 ideal walks (moved to response sampler)'
+    - 'H-SSIQ-d724f2: standard maximal order of B_{p,inf}, census only, no attack'
+    - 'H-SSIQ-dfee7e: admissible-divisor counts in a split window, integer-only Arm I'
+    disproven: none in the brief
+    lean: no Lean coverage; would need "for uniform [I_com], the conditional law of Nrd(J) given (E_com,
+      E_chl) is independent of I_sk" over left O_0-ideal classes of norm < 2^e
+    exp: none; nearest surface is aburan28/cryptanalysis autolab namespace (p1486_*/p1243_* per H-ALISO-001..017)
+  kill_test: If TV distance < 3/sqrt(N) for all 20 keys and all s in 1..6, the response-side simulation
+    gap is empirically closed at toy scale; file as weakens against this record.
+  cost: about 2*10^7 toy signatures; CPU-days single node; no new assumptions.
+  distinguish: Proof gap only. A positive result does not recover keys; key recovery would need Lead 2's
+    Gram inversion, which is separately obstructed.
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-SSIQ-d724f2
+      - H-SSIQ-dfee7e
+      - H-ALISO-001
+      - H-ALISO-017
+    none_found_after:
+    - 'brief grep: response distribution'
+    - 'brief grep: SQIsign'
+    - 'brief grep: zero-knowledge / simulator'
+    - 'brief grep: EXP- (no experiment ids quoted)'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  nearest_record:
+    id: H-WESO-516558
+    relation: extends

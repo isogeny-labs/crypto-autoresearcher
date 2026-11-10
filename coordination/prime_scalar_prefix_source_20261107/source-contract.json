@@ -1,0 +1,92 @@
+{
+  "schema": "prime-sat.scalar-prefix-source-contract/v1",
+  "approved_by": "coordinator",
+  "execution_authorized": false,
+  "status": "source_only_unvalidated",
+  "scope": "Standalone shortest scalar-constant prefix extractor, direct-restriction reference and incidence sweep. No existing engine/checker changes or runtime integration.",
+  "write_paths": [
+    "research/prime_sat_scalar_prefix_source_20261107/extractor.py",
+    "research/prime_sat_scalar_prefix_source_20261107/interface.json",
+    "research/prime_sat_scalar_prefix_source_20261107/validation-plan.md",
+    "research/prime_sat_scalar_prefix_source_20261107/report.md",
+    "research/prime_sat_scalar_prefix_source_20261107/diagram.svg",
+    "research/prime_sat_scalar_prefix_source_20261107/report.typ",
+    "research/prime_sat_scalar_prefix_source_20261107/report.pdf",
+    "research/prime_sat_scalar_prefix_source_20261107/report-inputs.json"
+  ],
+  "input_sha256": {
+    "AGENTS.md": "1d51ede564b94fd52d54b4c835c17e74eb8830dd1f01c3cc6d9c739240c8c663",
+    "agents/coordinator.md": "410b3be4737a58dbf31c469b6b2d103740598e2b3c0a86610fa64af0b80128ad",
+    "research/prime_sat_transform_integration_20261103/engine_counted.py": "9710c5181fb49fcd0da7fe4ff16fb758cef8b911a398d17bbf430d9db3542227",
+    "research/prime_sat_prefix_adapter_20261030/adapter.py": "cbc038001273d0a351b86f94d3ac0708eb698e51ab3d8bbef39d7798c4e8fc65",
+    "research/prime_sat_followup_20261029/encoding.py": "2b18f50238db633eb91ac33a36660c52620e81c5f6fa1c9c78d40c261e99041f",
+    "research/prime_sat_transform_integration_20261103/software-contract.json": "9d72d35f3f9efc66148f21a6ba66d03f97c3bdb5d6f8b47f9747ace539bf75e8"
+  },
+  "theory_sha256": {
+    ".resume/prime-transform-prefix-theory-20261107/derivation-v2.md": "b38ace70f8683920d3bdad2342fc1b1b81d018ceb8417cfcce2d393794a93364",
+    ".resume/prime-transform-prefix-theory-20261107/refinement-v2.md": "5dded5bb38b4d11260875bf705b58be3a94f8d48f65627d63b73ab122f8cc79c",
+    ".resume/prime-transform-prefix-theory-20261107/independent-critique.md": "3ba862d10d3ff90b9eff381c111d29968c718cf7b77b79c4a7766a8c7f63c711",
+    ".resume/prime-transform-prefix-theory-20261107/disposition.md": "7e86890ed64a2ca5793644c395544973f19c437ae27ab1987dd728dbbfd19021"
+  },
+  "budget": {
+    "maximum_runs": 0,
+    "maximum_software_suite_invocations": 0,
+    "wall_clock_seconds": 1800,
+    "cpu": 1,
+    "memory_gb": 2,
+    "swap_gb": 0,
+    "max_concurrent": 1,
+    "solver_instances": 0,
+    "solver_calls": 0,
+    "census_calls": 0,
+    "builds": 0,
+    "package_installs": 0,
+    "cloud_jobs": 0,
+    "automatic_retries": 0,
+    "additional_cloud_spend_usd": 0
+  },
+  "api_requirements": [
+    "Pure Python standard-library-only standalone module, no import-time actions; fixed variable order and immutable caller inputs.",
+    "Input p externally assumed prime; validate integer p>=2, n>=0, 0<=assignment<2^n, canonical coefficient dictionaries with0<=mask<2^n and1<=coefficient<p. Reject booleans where integer data required. Do not silently alter noncanonical representations. Primality is not established by this module.",
+    "Reference method independently restricts original generators canonically and binary-searches the monotone scalar-constant predicate, with explicit P(0),P(n),empty generators,n=0 endpoints.",
+    "Sweep retains original term IDs/live flags and incidence lists even when aggregate coefficients cancel; subtraction from missing aggregate key starts at0; qualification checked only after a complete variable bucket.",
+    "Return found result with depth,prefix,generator_index,nonzero constant and deterministic lowest qualifying generator index; return explicit no_scalar_witness for polynomial-valid full assignments. Depth is shortest only in scalar-constant family. Never infer polynomial invalidity from domain invalidity.",
+    "Extractor returns a witness only: no inverse, certificate allocation, checker calls, clauses or callbacks in this module. Future integration performs full generator-count multiplier construction and separately charged inverse only after independent restriction.",
+    "Deterministic structural operation counts: generator headers, original term visits, incidence construction/visits, dictionary adds/subtractions, masks, predicate checks, touched-generator updates, qualifying-set/tie-break work, inverse calls, multiplier entries. Counts describe implementation work, not native solver time.",
+    "No claimed linear complexity if deterministic witness selection scans all generators at every depth. Pick witness only at first successful postbatch stop, or charge the chosen structure explicitly.",
+    "Projection bit count is not a reason to truncate returned prefix; integration preserves d>m auxiliary restrictions and fullmodel witnesses.",
+    "Reference and sweep share input validation only, not core restriction state. Explicit no_scalar_witness is returned only after establishing all full evaluations zero; invalid inputs and interrupted work must raise, never become no witness."
+  ],
+  "permitted_validation": [
+    "ast.parse only without importing module or executing functions",
+    "Manual source/proof review against bound derivation and invariants",
+    "Written static complexity/counter audit",
+    "Document rendering and all-pages PDF inspection by root"
+  ],
+  "prohibited": [
+    "No candidate imports, tests, digest controls, solver, property-based execution, field enumeration, benchmarks or external jobs.",
+    "No modifications to engine_counted.py, adapter.py, controls, frozen protocols, existing task records, previous artifacts, campaign slots or blind reviewer inputs."
+  ],
+  "completion_conditions": [
+    "Exactly8published source/report outputs and explicit source_only_unvalidated status.",
+    "Independent reference and sweep source match fixed specification and deterministic witness tie-break; record static review issues, do not claim runtime equality.",
+    "Include unchanged-checker integration plan and separate finite noncandidate integrity/software validation proposal, neither executed nor admitted here.",
+    "Report-inputs bind exact source/theory hashes and produced artifacts; root visually inspects allPDFpages.",
+    "Publish actual zero-run source snapshot under new checked source/snapshot task IDs."
+  ],
+  "integration_path": "Future _fallback on an invalid complete model calls extractor on original self.polys/fullbits; None/no_scalar_witness remains invalid-model invariant failure. Recompute ALL residuals through existing _residuals(depth,bits), assert selected residual equals {0:constant}, construct inverse and full multiplier vector, then call unchanged _record_proof; _record_proof itself only checks supplied residuals, so sweep dictionaries must never replace independent recomputation. Preserve _reject(bits), validmodel branch, prefix and projection semantics. New extraction counters must not silently relabel leaf_* historical counters or model-triggered refutations as partial-assignment pruning. No engine wiring in this task.",
+  "review_route": "Fresh independent source/static reviewer may inspect standalone source and public contracts only, using written reasoning and AST without executing it. This does not consume or replace reserved independent software slot and yields source-review-only evidence.",
+  "campaign": {
+    "producer_slots_consumed": 2,
+    "producer_slots_remaining": 0,
+    "independent_slot_reserved": true,
+    "full106plus6_preserved": true,
+    "all_five_leads_preserved": true,
+    "charts_projection_witness_certificate_costs_preserved": true
+  },
+  "native_ids": {
+    "decision_id": "DEC-20261107-a1739c",
+    "source_task_id": "TASK-20261107-898896",
+    "snapshot_task_id": "TASK-20261107-4ab723"
+  }
+}

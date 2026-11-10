@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-2fe799
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Carlitz module over F_2[T]/(P) as an unconditional polynomial-time discrete-log module, a second
+    mechanism-distinct positive control for the charged-cost ladder-slope estimator
+  class: control
+  claim: 'Let L = F_2[T]/(P), P irreducible of degree n, and C the Carlitz module C_T(x) = T x + x^2.
+    The A-module C(L), A = F_2[T], is cyclic of size 2^n with annihilator (P - 1) (Carlitz-Fermat, recalled;
+    the test re-derives it). For a module generator x and a secret a of degree below n, y = C_a(x) is
+    solved for a by one n by n Gaussian elimination over F_2 (Scanlon 2001, recalled): the vectors C_{T^i}(x),
+    i < n, span L and the coefficients of a are the coordinates of y. The generic cost for a cyclic module
+    of size 2^n under an opaque ring-action oracle is Theta(2^{n/2}) actions. Predictions: fed fully charged
+    bit-operation counts for n in {16, 20, ..., 48}, the ladder-slope estimator of IDEA-20260805-4d31bc
+    and IDEA-20260805-bb4488 returns slope at most 0.05 on the Scanlon arm and 0.50 +- 0.04 on the matched
+    rho arm, and its interval excludes 1/2 on the Scanlon arm for every n >= 24. Replacing C_T by a random
+    F_2-linear map keeps the Scanlon slope at most 0.05. This record proposes no ECDLP algorithm; it supplies
+    the estimator with a module whose true exponent is 0.'
+  mechanism: 'Drinfeld-module DLP is easy because the module has explicit base-field coordinates, the
+    ring acts linearly over a constant field, and the dimension is log_q of the size. The ECDLP campaign
+    has only one group with a true exponent below 1/2, the anomalous control, and its mechanism is a p-adic
+    log. The Carlitz module is a second truth with a different mechanism (linear algebra on an elementary
+    abelian group) and a different module structure (A-action, not Z-action). Running the estimator on
+    it tests two things at once: that the estimator reports a genuine exponent 0 when one exists, and
+    that the pipeline does not silently assume a cyclic Z-module. The README describes ca_group.h as a
+    cyclic-group interface; the next agent must read it for a ring-action hook and otherwise implement
+    the module standalone under cryptanalysis/experiments.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic algorithms need Omega(sqrt) operations; the Carlitz module beats this only by using
+      its representation, as the row requires.
+    verified_by: brief section 3 row text, Mythos run 2026-11-09
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Anomalous curves are the existing positive control; this record adds a second one with a different
+      mechanism.
+    verified_by: brief section 3 row text, Mythos run 2026-11-09
+  assumptions:
+  - P is irreducible and x generates C(L) as an A-module; the test checks Ann(x) = (P - 1) by direct evaluation.
+  - Bit operations are charged by an instrumented F_{2^n} multiplier shared by both arms.
+  predictions:
+  - metric: ladder slope of log2(charged bit operations) against n on the Scanlon arm
+    direction: lower
+    minimum_effect: at most 0.05 with the interval excluding 0.5 for n >= 24
+  - metric: ladder slope on the matched rho arm over the same module
+    direction: different
+    minimum_effect: within 0.04 of 0.50
+  - metric: ladder slope on the random-F_2-linear-map arm
+    direction: lower
+    minimum_effect: at most 0.05
+  minimal_test:
+    design: 'Implement F_{2^n} arithmetic and the Carlitz action C_a(x) by the recursion C_{T^{i+1}}(x)
+      = T C_{T^i}(x) + C_{T^i}(x)^2, summing the terms selected by the bits of a (O(n) field multiplications
+      per action). Scanlon arm: build the n by n matrix with columns C_{T^i}(x), solve M a = y over F_2.
+      Rho arm: a 16-adding walk on the cyclic A-module with states C_alpha(x) + C_beta(y), distinguished
+      points, collision solved in A/(P - 1) when the beta-difference is a unit. Ten instances per n in
+      {16, 20, ..., 48}; charge every field multiplication in bit operations; feed both arms to the existing
+      ladder-slope estimator unchanged.'
+    controls:
+    - Matched rho on the same module (baseline, not a proposal).
+    - Random F_2-linear map in place of C_T (linearity retained, Carlitz structure removed).
+    - A cyclic subgroup of (Z/qZ)^* of order near 2^n through ca_group.h (rho arm only, verifies charging).
+    required_metrics:
+    - charged bit operations per instance and arm
+    - fitted slope and interval per arm
+    - Ann(x) check per instance
+    - success rate per arm
+  falsification_conditions:
+  - The estimator returns a Scanlon-arm slope within 0.10 of 0.5 (the estimator or the charging is broken).
+  - The rho arm slope leaves [0.42, 0.58].
+  - A Scanlon solve fails on an instance with verified Ann(x) = (P - 1), which is an implementation error
+    and an invalid run.
+  confounders:
+  - Squaring is cheap in characteristic 2; charging must use the same multiplier model in both arms.
+  - Small n gives few samples for rho; report the interval, not a point.
+  interpretation_limits:
+  - Nothing here transfers to E(F_p); lead 1 of this wave states that the three Carlitz ingredients hold
+    on a curve only when E(F_p)[p] is nonzero.
+  - A passing estimator is necessary, not sufficient, for trusting its ECDLP readings.
+  heuristic_assumptions:
+  - id: H1
+    statement: The ladder-slope estimator is insensitive to the module being elementary abelian rather
+      than cyclic as a group.
+    rigorous_support: None; this is what the record tests.
+    validation_plan: The three arms above; a divergence between arms two and three isolates the assumption.
+  target_complexity:
+    time_exponent: 0 on C(L) (polynomial); 1/2 unchanged for ECDLP
+    memory_exponent: n^2 bits for the matrix
+    best_known: Scanlon's linear algebra for Drinfeld-module DLP (recalled); Pollard rho for E(F_p)
+    hidden_overhead: None claimed for ECDLP; no ECDLP algorithm is proposed.
+    tradeoff_note: Not applicable.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any reading of this as an attack. No row records a Carlitz positive
+    control for a charged estimator.
+  sota_delta: 'Exponent delta 0 for ECDLP. Methodological delta: a second ground-truth exponent-0 module
+    for the estimator, mechanism-distinct from anomalous.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-RHO-53c89f
+    - KR-RHO-cd86f5
+    - KR-RHO-fb88e6
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: The row's anomalous attack is the existing positive control; the Carlitz control uses linear
+        algebra on a non-cyclic group.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: orthogonal
+      delta: The row is the generic bound the Carlitz representation evades; no exponent claim is made
+        for curves.
+    searched:
+      corpus_grep:
+      - brief section 2 for Carlitz, Drinfeld, positive control, ladder slope, null object
+      - IDEA-20260731-011 and IDEA-20260805-9430e9 for fingerprint calibration
+      web: []
+      blocked: []
+    lead: LEAD-ICE-first-fall-degree-assumptions
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Implement F_{2^n} arithmetic and the Carlitz action C_a(x) by the recursion
+        C_{T^{i+1}}(x) = T C_{T^i}(x) + C_{T^i}(x)^2, summing the terms selected by the bits of a (O(n)
+        field multiplications per action). Scanlon arm: build the n by n matrix with columns C_{T^i}(x),
+        solve M a = y over F_2. Rho arm: a 16-adding walk on the cyclic A-module with states C_alpha(x)
+        + C_beta(y), distinguished points, '

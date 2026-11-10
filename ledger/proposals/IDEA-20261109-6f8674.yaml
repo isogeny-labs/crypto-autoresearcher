@@ -1,0 +1,150 @@
+idea:
+  id: IDEA-20261109-6f8674
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: 'Explicit F_p-isogeny class of secp256k1: the conductor c with 3c^2 = 4p - t^2, its factorisation,
+    the level census h(-3f^2), and a per-level invariant table pre-registering zero exponent change under
+    volcano motion'
+  class: measurement
+  claim: 'Let t = p + 1 - N for secp256k1 (t is about 1.27 * 2^128; the script recomputes it). Because
+    End_{F_p}(E) = Z[omega] contains Z[pi], 4p - t^2 = 3c^2 for an integer c of about 128 bits. The F_p-isogeny
+    class is the disjoint union over f | c of curves with End = Z + f Z[omega]; the number at level f
+    is h(-3f^2) = (f/3) prod_{ell | f} (1 - (-3/ell)/ell) for f > 1 and 1 for f = 1. P1: c is odd (an
+    F_p-rational 2-isogeny needs a rational 2-torsion point, N is odd, and 2 is inert in Q(omega)). P2:
+    for every prime ell | c, Phi_ell(0, X) has an F_p-root j_1 with End(E_{j_1}) = Z + ell Z[omega], and
+    H_{-3 ell^2}(j_1) = 0 mod p; for inert ell not dividing c there is no F_p-root. P3: at every level
+    f > 1 the smallest non-scalar endomorphism has degree at least 3f^2/4 (minimal norm of a non-rational
+    element of Z + f Z[omega]), so the rho automorphism constant drops from sqrt(6) to sqrt(2). P4: N,
+    t, D_K = -3, ord_N(p), the Galois module E[2] (a 3-cycle) and the group structure Z/N are identical
+    at every level. Deliverable: the census table, explicit Weierstrass models at the two smallest levels
+    f | c, a transported known-answer instance (phi(G), phi(kG)) on each with log equality verified, and
+    a toy replica at p ~ 2^40 timing rho with and without the automorphism walk on the crater and on a
+    level-f curve.'
+  mechanism: The ell-volcano of E has depth v_ell(c) and E is on the crater because its endomorphism ring
+    is maximal; descending ell-isogenies multiply the conductor by ell and horizontal ones exist only
+    for split ell, where at the crater they are the endomorphisms of norm ell. Every curve reachable by
+    F_p-rational isogenies sits at some level f | c, and Lenstra's module isomorphism E_f(F_p) = (Z +
+    f Z[omega])/(pi - 1) shows the group is the same cyclic Z/N with omega no longer acting as a degree-1
+    map. The census turns 'move the instance in moduli space' into a finite list of reachable levels with
+    a cost table whose only non-invariant entry is the automorphism constant, which moves against the
+    attacker.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Isogenous curves share N and generic difficulty; this record makes the class explicit for one
+      curve and tabulates what else is invariant.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The j = 0 automorphism group gives sqrt(6) in rho; P3 predicts the loss of this constant off
+      the crater.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Transfer attacks apply only to anomalous or small-embedding-degree curves; P4 records that
+      these checks are level-independent.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  assumptions:
+  - p and N are the published secp256k1 parameters; the script recomputes t, checks 4p - t^2 = 3c^2 exactly
+    and aborts otherwise (invalid run, not a result).
+  - crypto/RESEARCH_SECP256K1_CM.md and crypto/secp256k1_cm_audit may already hold c and its factorisation;
+    read first and reconcile, do not duplicate.
+  predictions:
+  - metric: parity of c
+    direction: different
+    minimum_effect: odd
+  - metric: number of primes ell | c for which Phi_ell(0, X) has no F_p-root
+    direction: lower
+    minimum_effect: zero
+  - metric: rho iterations on a 40-bit level-f toy curve divided by iterations on its crater with the
+      automorphism walk
+    direction: higher
+    minimum_effect: at least 1.5 (predicted sqrt(3) ~ 1.73 up to walk constants)
+  minimal_test:
+    design: 'Sage or pari: recompute t, c, factor c (128-bit, ECM or SIQS in minutes), tabulate h(-3f^2)
+      for all f | c below 2^40 and the class size as a divisor sum. For the two smallest primes ell |
+      c factor the ell-division polynomial of y^2 = x^3 + 7 over F_p to get the rational kernel, apply
+      Velu, record model and j-invariant, and evaluate H_{-3 ell^2}(j) mod p directly. Transport a known-answer
+      instance and check the log. Toy replica: find a j = 0 prime-order curve at p ~ 2^40 with a small
+      prime f | c, descend one level, run ecbench rho on both curves with 20 instances each.'
+    controls:
+    - Tate check, point count equals N on every constructed curve (invalid run otherwise).
+    - Toy replica with the automorphism walk disabled on both arms, to separate the lost constant from
+      implementation noise.
+    required_metrics:
+    - t, c and the factorisation of c
+    - h(-3f^2) per level and total class size
+    - models and j-invariants at the two smallest levels
+    - H_{-3 ell^2}(j) mod p residues
+    - toy rho iteration counts with and without the automorphism walk
+  falsification_conditions:
+  - 4p - t^2 is not 3 times a perfect square (invalid run; the CM premise would be wrong).
+  - c is even, or some ell | c gives no F_p-root of Phi_ell(0, X) (P1 or P2 fails; the volcano model is
+    misapplied).
+  - A level-f curve has an efficiently computable non-scalar endomorphism of degree below 3f^2/4 (P3 fails).
+  - A timeout is infrastructure, not a falsification and not support.
+  confounders:
+  - Division-polynomial factoring at 256 bits is feasible only for small ell; if the smallest prime factor
+    of c is large, P2 is checked via Phi_ell roots alone and the explicit model is deferred.
+  - At j = 0 roots of Phi_ell(0, X) and isogeny kernels differ by automorphism multiplicities; counts
+    are reported as roots, not kernels.
+  - Walk constants depend on r-adding parameters; use ecbench defaults on both arms.
+  interpretation_limits:
+  - The census certifies which curves exist and what they share; it is not evidence about any attack on
+    them beyond the two constants it measures.
+  heuristic_assumptions:
+  - id: H1
+    statement: The toy rho ratio at p ~ 2^40 transfers to 256 bits as a constant.
+    rigorous_support: The orbit-walk gain sqrt(|Aut|) is proven (KR-RHO-0528e7); only the walk-constant
+      overhead is empirical.
+    validation_plan: 20 instances per arm; report mean and interquartile range.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged, delta 0
+    memory_exponent: unchanged
+    best_known: Pollard rho at 0.79 sqrt(6) sqrt(N) class steps on the crater (KR-RHO-0528e7, KR-RHO-825bca);
+      any level f > 1 is predicted to cost sqrt(3) more.
+    hidden_overhead: none; the census is polynomial work
+    tradeoff_note: Moduli motion is a one-way constant for the attacker; the table records it rather than
+      proposing to use it.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-755e35 dominates the invariance reading and KR-RHO-0528e7 the constant. Neither
+    lists the conductor, levels or class size of secp256k1.
+  sota_delta: 'Exponent delta 0. New artifact: the explicit class census with per-level invariants, consumable
+    by every volcano lead.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-755e35
+    - KR-RHO-0528e7
+    - KR-RHO-53c89f
+    - KR-RHO-825bca
+    - KR-RHO-13bf67
+    - KR-IC-5ea2f8
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: The row is the general invariance statement; this record instantiates it with the explicit
+        conductor, level census and the one non-invariant constant.
+    searched:
+      corpus_grep:
+      - brief section 2 for conductor, volcano, class number, Hilbert class polynomial, secp256k1 CM
+      - brief wave-1 sweep lead 'Hecke/volcano position for j = 0' and transfer lead 'Volcano descent
+        to floor curves'
+      web: []
+      blocked: []
+    lead: LEAD-STR-isogeny-class-generic-invariance
+    lead_delta:
+      kind: answers_obstruction
+      statement: 'New test: Sage or pari: recompute t, c, factor c (128-bit, ECM or SIQS in minutes),
+        tabulate h(-3f^2) for all f | c below 2^40 and the class size as a divisor sum. For the two smallest
+        primes ell | c factor the ell-division polynomial of y^2 = x^3 + 7 over F_p to get the rational
+        kernel, apply Velu, record model and j-invariant, and evaluate H_{-3 ell^2}(j) mod p directly.
+        Transport a known-answer instance '

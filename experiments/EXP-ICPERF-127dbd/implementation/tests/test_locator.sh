@@ -7,6 +7,9 @@
 # symlink and next to launch-remote; no FAKE_* variable crosses the exec. The adversarial cases of the 9d2b6a review, re-targeted at
 # v3c, are in tests/rt_regression.sh; the mutation cases are in tests/mutation_check.sh.
 #
+# v3d (TASK-20261107-5f7d2b): every run carries literal dummy credentials (CRED_ENV); the v3c-to-v3d scope block asserts that only the K-7 prologues of launch_eks.sh and
+# reconcile_run.sh changed and that locate_results.sh, check_job.py, probe_s01.sh and remote-pins.sha256 are byte-identical to v3c. Case labels that say v3c name the
+# current bytes (they predate v3d).
 # usage: test_locator.sh [OUTDIR [REAL_CHECKOUT]]
 #   OUTDIR         where case directories and RESULTS.txt are written (default: a new directory under $TMPDIR)
 #   REAL_CHECKOUT  a checkout holding the four pinned launcher scripts, for the --dry-run case (a missing one is a failure, not a skip)
@@ -46,8 +49,10 @@ expect() { # expect CASE WHAT EXPECTED OBSERVED
 planned=$(jq -r '(.job.spec.workloads.curves | length) * .job.spec.workloads.targets_per_curve
   * (.job.spec.measurement.warmup + .job.spec.measurement.rounds) * (.job.spec.arms | length)' "$REQ")
 
+# v3d CR-1: the scripts refuse to start without AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY; every run here carries these literal dummy strings.
+CRED_ENV=(AWS_ACCESS_KEY_ID=AKIDFAKEFAKEFAKEFAKE AWS_SECRET_ACCESS_KEY=fakesecretfakesecretfakesecret0000)
 mk_bin() { # mk_bin DIR S3ROOT LOG : a directory holding only the fake as `aws`, with its conf file
-  mkdir -p "$1"; ln -sfn "$here/fake-aws" "$1/aws"
+  mkdir -p "$1"; ln -sfn "$(realpath --relative-to="$1" "$here/fake-aws")" "$1/aws"   # relative link
   printf 'FAKE_AWS_LOG=%q\nFAKE_S3_ROOT=%q\n' "$3" "$2" > "$1/fake-aws.conf"
 }
 
@@ -122,7 +127,7 @@ run_wrapper() { # run_wrapper ID v3a|v3b|v3c  : prints nothing; sets W_RC, W_CLA
   : > "$w/aws.log"; mk_bin "$w/bin" "$w/s3root" "$w/aws.log"
   printf '{"run_id":"RUN-TEST","trial_id":"T1"}\n' > "$w/rec/launch.json"
   W_RC=0
-  env PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" TMPDIR="$w" AWS_REGION=us-east-2 \
+  env "${CRED_ENV[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" TMPDIR="$w" AWS_REGION=us-east-2 \
     ISOLAB_BUCKET="$BUCKET" ISOLAB_CODEBUILD_PROJECT=isolab-experiment-launcher CRYPTO_CHECKOUT="$w/checkout" \
     bash "$w/impl/launch_eks.sh" --protocol "$PROTO" --experiment-id EXP-TEST --hypothesis-id H-TEST --task-id TASK-TEST \
     --approved-by DEC-TEST --trial-id T1 --run-id RUN-TEST --out "$w/rec/job" --record-dir "$w/rec" "$REQ" \
@@ -141,7 +146,7 @@ run_reconcile() { # run_reconcile ID [sha] [outsub] [tag] [pin_status] [pin_obje
   rm -rf "$w"; mkdir -p "$w/s3root" "$w/home" "$w/$outsub"
   cp -a "$fx/s3/." "$w/s3root/"; : > "$w/aws.log"; mk_bin "$w/bin" "$w/s3root" "$w/aws.log"
   R_RC=0
-  env PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" TMPDIR="$w" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" \
+  env "${CRED_ENV[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" TMPDIR="$w" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" \
     bash "$IMPL/reconcile_run.sh" --launcher-result "$fx/launcher/result.json" --launcher-result-sha256 "$sha" --request "$REQ" \
     --check-job "$CHECKJOB" --run-id RUN-ICPERF-8b0d47 --trial-id T1 --out "$w/$outsub" --out-root "$w" \
     --pin-status-sha256 "$ps" --pin-objects-sha256 "$po" --pin-not-after "$PIN_NA" > "$w/stdout" 2> "$w/stderr" || R_RC=$?
@@ -292,27 +297,58 @@ expect "k7" "the prologue carries the pinned aws-cli version 1.46.2" 2 "$(grep -
 expect "k7" "the two prologues differ only in the ISOLAB_CODEBUILD_PROJECT pass-through name" 1 \
   "$(diff <(sed -n '/^# ---- K-7 environment prologue/,/^# ---- end of the K-7 prologue/p' "$IMPL/launch_eks.sh") <(sed -n '/^# ---- K-7 environment prologue/,/^# ---- end of the K-7 prologue/p' "$IMPL/reconcile_run.sh") | grep -c '^[<>]' | awk '{print ($1 == 2) ? 1 : 0}')"
 # v3b -> v3c: only the K-7 prologue and section 3 (with the K-5 handler) change; sections 1, 1b, 1c, 2, the 42/43 pairing and the manifests do not
-expect "v3b-v3c diff" "v3b fixture sha256 is the reviewed f93e8858..." f93e8858923765c390fb7bcb01ea04c2373325815f08cbaf7df24b584e521da8 "$(sha256sum "$V3B" | cut -d ' ' -f1)"
-expect "v3b-v3c diff" "lines 1-32 (header, set -euo pipefail, set +x) byte-identical" "" "$(diff <(head -n 32 "$V3B") <(head -n 32 "$IMPL/launch_eks.sh") | head -n 3)"
-expect "v3b-v3c diff" "v3b lines 34-233 (sections 1, 1b, 1c, 2, write_records, both manifests, refuse, duplicate checks, the launch-remote exit line) byte-identical" "" \
+expect "v3b-v3d diff" "v3b fixture sha256 is the reviewed f93e8858..." f93e8858923765c390fb7bcb01ea04c2373325815f08cbaf7df24b584e521da8 "$(sha256sum "$V3B" | cut -d ' ' -f1)"
+expect "v3b-v3d diff" "lines 1-32 (header, set -euo pipefail, set +x) byte-identical" "" "$(diff <(head -n 32 "$V3B") <(head -n 32 "$IMPL/launch_eks.sh") | head -n 3)"
+expect "v3b-v3d diff" "v3b lines 34-233 (sections 1, 1b, 1c, 2, write_records, both manifests, refuse, duplicate checks, the launch-remote exit line) byte-identical" "" \
   "$(diff <(sed -n '34,233p' "$V3B") <(sed -n '/^dry=0; protocol=/,/^echo "launch-remote exit /p' "$IMPL/launch_eks.sh") | head -n 3)"
 blk() { sed -n '/^# Outcome class\./,/^fi$/p' "$1"; }
-expect "v3b-v3c diff" "outcome-class block (deadline first, 42/43 accept branch) byte-identical" "" "$(diff <(blk "$V3B") <(blk "$IMPL/launch_eks.sh") | head -n 3)"
-expect "v3b-v3c diff" "outcome-class block is non-empty" yes "$([[ $(blk "$V3B" | wc -l) -ge 12 ]] && echo yes || echo no)"
-expect "v3b-v3c diff" "final exit lines identical" "" "$(diff <(tail -n 3 "$V3B") <(tail -n 3 "$IMPL/launch_eks.sh") | head -n 3)"
-diff -u "$V3B" "$IMPL/launch_eks.sh" > "$OUT/launch_eks.v3b-to-v3c.diff"; diff -u "$V3A" "$IMPL/launch_eks.sh" > "$OUT/launch_eks.v3a-to-v3c.diff"
-grep -n '^@@' "$OUT/launch_eks.v3b-to-v3c.diff" > "$OUT/launch_eks.v3b-to-v3c.hunks.txt"; grep -n '^@@' "$OUT/launch_eks.v3a-to-v3c.diff" > "$OUT/launch_eks.v3a-to-v3c.hunks.txt"
-say "== hunk list v3b to v3c (v3b line ranges): $(sed 's/^[0-9]*://' "$OUT/launch_eks.v3b-to-v3c.hunks.txt" | tr '\n' ';')"
-say "== hunk list v3a to v3c (v3a line ranges): $(sed 's/^[0-9]*://' "$OUT/launch_eks.v3a-to-v3c.hunks.txt" | tr '\n' ';')"
-expect "v3b-v3c diff" "exactly three hunks (prologue; section 3 up to the class block; the lines after the class block)" 3 "$(wc -l < "$OUT/launch_eks.v3b-to-v3c.hunks.txt")"
-expect "v3b-v3c diff" "the first hunk starts after v3b line 32 (the prologue)" yes "$(head -n 1 "$OUT/launch_eks.v3b-to-v3c.hunks.txt" | sed -E 's/^[0-9]+:@@ -([0-9]+).*/\1/' | awk '{print ($1 >= 30 && $1 <= 33) ? "yes" : "no"}')"
-expect "v3b-v3c diff" "the second hunk starts in section 3 (v3b line >= 232)" yes "$(sed -n 2p "$OUT/launch_eks.v3b-to-v3c.hunks.txt" | sed -E 's/^[0-9]+:@@ -([0-9]+).*/\1/' | awk '{print ($1 >= 232) ? "yes" : "no"}')"
+expect "v3b-v3d diff" "outcome-class block (deadline first, 42/43 accept branch) byte-identical" "" "$(diff <(blk "$V3B") <(blk "$IMPL/launch_eks.sh") | head -n 3)"
+expect "v3b-v3d diff" "outcome-class block is non-empty" yes "$([[ $(blk "$V3B" | wc -l) -ge 12 ]] && echo yes || echo no)"
+expect "v3b-v3d diff" "final exit lines identical" "" "$(diff <(tail -n 3 "$V3B") <(tail -n 3 "$IMPL/launch_eks.sh") | head -n 3)"
+diff -u "$V3B" "$IMPL/launch_eks.sh" > "$OUT/launch_eks.v3b-to-v3d.diff"; diff -u "$V3A" "$IMPL/launch_eks.sh" > "$OUT/launch_eks.v3a-to-v3d.diff"
+grep -n '^@@' "$OUT/launch_eks.v3b-to-v3d.diff" > "$OUT/launch_eks.v3b-to-v3d.hunks.txt"; grep -n '^@@' "$OUT/launch_eks.v3a-to-v3d.diff" > "$OUT/launch_eks.v3a-to-v3d.hunks.txt"
+say "== hunk list v3b to v3d (v3b line ranges): $(sed 's/^[0-9]*://' "$OUT/launch_eks.v3b-to-v3d.hunks.txt" | tr '\n' ';')"
+say "== hunk list v3a to v3d (v3a line ranges): $(sed 's/^[0-9]*://' "$OUT/launch_eks.v3a-to-v3d.hunks.txt" | tr '\n' ';')"
+expect "v3b-v3d diff" "exactly three hunks (prologue; section 3 up to the class block; the lines after the class block)" 3 "$(wc -l < "$OUT/launch_eks.v3b-to-v3d.hunks.txt")"
+expect "v3b-v3d diff" "the first hunk starts after v3b line 32 (the prologue)" yes "$(head -n 1 "$OUT/launch_eks.v3b-to-v3d.hunks.txt" | sed -E 's/^[0-9]+:@@ -([0-9]+).*/\1/' | awk '{print ($1 >= 30 && $1 <= 33) ? "yes" : "no"}')"
+expect "v3b-v3d diff" "the second hunk starts in section 3 (v3b line >= 232)" yes "$(sed -n 2p "$OUT/launch_eks.v3b-to-v3d.hunks.txt" | sed -E 's/^[0-9]+:@@ -([0-9]+).*/\1/' | awk '{print ($1 >= 232) ? "yes" : "no"}')"
 
-say "== --dry-run of v3c (no AWS call)"
+# v3c -> v3d (TASK-20261107-5f7d2b V-2): only the K-7 prologue of launch_eks.sh and of reconcile_run.sh changes; locate_results.sh, check_job.py, probe_s01.sh and
+# remote-pins.sha256 are byte-identical to v3c. The v3c fixtures are the three files of the merged d07e94 snapshot (their sha256 values are the receipt's).
+V3C_L="$here/fixtures/launch_eks.v3c.sh"; V3C_R="$here/fixtures/reconcile_run.v3c.sh"; V3C_LOC="$here/fixtures/locate_results.v3c.sh"
+expect "v3c-v3d scope" "v3c launch_eks.sh fixture sha256 is the d07e94 receipt's a61c55da..." a61c55da15b149d00ee7e644c41d79ad8df4ae82f3c59dfca157ea9679fc9e76 "$(sha256sum "$V3C_L" | cut -d ' ' -f1)"
+expect "v3c-v3d scope" "v3c reconcile_run.sh fixture sha256 is the receipt's a294b7db..." a294b7dbc77b33ae4103dfa907a5effba03fe0e2c1837f3f51a44a5897055c16 "$(sha256sum "$V3C_R" | cut -d ' ' -f1)"
+expect "v3c-v3d scope" "v3c locate_results.sh fixture sha256 is the receipt's 668a424b..." 668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b "$(sha256sum "$V3C_LOC" | cut -d ' ' -f1)"
+expect "v3c-v3d scope" "locate_results.sh is byte-identical to v3c (cmp)" "" "$(cmp "$V3C_LOC" "$IMPL/locate_results.sh" 2>&1 | head -n 1)"
+expect "v3c-v3d scope" "check_job.py is unchanged (d60564dd...)" d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d "$(sha256sum "$IMPL/check_job.py" | cut -d ' ' -f1)"
+expect "v3c-v3d scope" "probe_s01.sh is unchanged (3d1826e4...)" 3d1826e47215b06de1114c9ce34b70faa536fd7dac1cf43af869be87e1da695b "$(sha256sum "$IMPL/probe_s01.sh" | cut -d ' ' -f1)"
+expect "v3c-v3d scope" "remote-pins.sha256 is unchanged (7b753189...)" 7b7531895ea935bf996fb983d837c57fe5a14439e93bb38917d9ee5a7468ee0f "$(sha256sum "$IMPL/remote-pins.sha256" | cut -d ' ' -f1)"
+# the changed region is the K-7 prologue: from its first line to `# ---- end of the K-7 prologue ----` (inclusive) in each script
+pro_a() { grep -n '^# ---- K-7 environment prologue' "$1" | head -n 1 | cut -d: -f1; }
+pro_z() { grep -n '^# ---- end of the K-7 prologue ----$' "$1" | head -n 1 | cut -d: -f1; }
+for pair in "launch_eks.sh:$V3C_L" "reconcile_run.sh:$V3C_R"; do
+  nm=${pair%%:*}; old=${pair#*:}; new="$IMPL/$nm"
+  oa=$(pro_a "$old"); oz=$(pro_z "$old"); na=$(pro_a "$new"); nz=$(pro_z "$new")
+  expect "v3c-v3d scope" "$nm: the lines before the prologue (v3c 1-$((oa - 1))) are byte-identical" "" "$(diff <(head -n $((oa - 1)) "$old") <(head -n $((na - 1)) "$new") | head -n 3)"
+  expect "v3c-v3d scope" "$nm: the lines after the prologue (v3c $((oz + 1))-end) are byte-identical" "" "$(diff <(tail -n +$((oz + 1)) "$old") <(tail -n +$((nz + 1)) "$new") | head -n 3)"
+  expect "v3c-v3d scope" "$nm: the prologue starts after the same set +x line (v3c line $((oa - 1)) or the blank line after it)" yes "$([[ $na == "$oa" ]] && echo yes || echo no)"
+  diff -u "$old" "$new" > "$OUT/$nm.v3c-to-v3d.diff"; grep -n '^@@' "$OUT/$nm.v3c-to-v3d.diff" > "$OUT/$nm.v3c-to-v3d.hunks.txt"
+  say "== hunk list $nm v3c to v3d (v3c line ranges; prologue = v3c lines $oa-$oz): $(sed 's/^[0-9]*://' "$OUT/$nm.v3c-to-v3d.hunks.txt" | tr '\n' ';')"
+  # every changed v3c line, from the normal diff (old line range before the a, c or d command), lies inside [prologue start - 1, prologue end]
+  outside=$(diff "$old" "$new" | grep -E '^[0-9]' | sed -E 's/[acd].*//' | tr ',' ' ' | awk -v lo=$((oa - 1)) -v hi=$oz '{ for (i = 1; i <= NF; i++) if ($i < lo || $i > hi) bad++ } END {print bad + 0}')
+  expect "v3c-v3d scope" "$nm: no changed v3c line lies outside the prologue" 0 "$outside"
+done
+expect "v3c-v3d scope" "launch_eks.sh: v3b lines 1-32 are still byte-identical (the prologue starts at line 33)" "" "$(diff <(head -n 32 "$V3B") <(head -n 32 "$IMPL/launch_eks.sh") | head -n 3)"
+expect "v3c-v3d scope" "the two prologues differ only in the K7_PASS_VARS line (ISOLAB_CODEBUILD_PROJECT)" 2 \
+  "$(diff <(sed -n '/^# ---- K-7 environment prologue/,/^# ---- end of the K-7 prologue/p' "$IMPL/launch_eks.sh") <(sed -n '/^# ---- K-7 environment prologue/,/^# ---- end of the K-7 prologue/p' "$IMPL/reconcile_run.sh") | grep -c '^[<>]')"
+expect "v3c-v3d scope" "the prologue comment no longer calls BASH_ENV an unavoidable residual (R-2 A-3)" 0 "$(grep -c -i 'unavoidable' "$IMPL/launch_eks.sh" "$IMPL/reconcile_run.sh" | awk -F: '{s+=$2} END {print s}')"
+expect "v3c-v3d scope" "the prologue comment says the argv closes it (/bin/bash -p), in both scripts" 2 "$(grep -c -F 'the argv of the runbook and of the trial plan closes them' "$IMPL/launch_eks.sh" "$IMPL/reconcile_run.sh" | awk -F: '{s+=$2} END {print s}')"
+
+say "== --dry-run of v3d (no AWS call)"
 if [[ -n $REAL_CHECKOUT && -d $REAL_CHECKOUT ]]; then
   w="$OUT/dryrun"; rm -rf "$w"; mkdir -p "$w/bin" "$w/rec" "$w/s3root" "$w/home"; : > "$w/aws.log"; mk_bin "$w/bin" "$w/s3root" "$w/aws.log"
   drc=0
-  env PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" \
+  env "${CRED_ENV[@]}" PATH="$w/bin:/usr/bin:/bin" HOME="$w/home" AWS_REGION=us-east-2 ISOLAB_BUCKET="$BUCKET" \
     ISOLAB_CODEBUILD_PROJECT=isolab-experiment-launcher CRYPTO_CHECKOUT="$REAL_CHECKOUT" \
     bash "$IMPL/launch_eks.sh" --dry-run --protocol "$PROTO" --experiment-id EXP-TEST --hypothesis-id H-TEST --task-id TASK-TEST \
     --approved-by DEC-TEST --trial-id T2 --run-id RUN-TEST --out "$w/rec/job" --record-dir "$w/rec" "$EXP/inputs/request-s2.json" \

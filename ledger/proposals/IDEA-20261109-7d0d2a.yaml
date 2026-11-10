@@ -1,0 +1,66 @@
+idea:
+  id: IDEA-20261109-7d0d2a
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: mechanism
+  novelty_status: speculative
+  lane: isogeny
+  angle: invariants and auxiliary structures on supersingular curves
+  title: Reduced Tate self-pairing on masked torsion images leaks individual masking-scalar squares
+  attack_type: cryptanalytic_attack
+  claim: On supersingular E/F_{p^2} with E(F_{p^2}) = (Z/(p+1))^2 and N | p+1, if the reduced Tate self-pairing
+    t_N(R,R) is non-trivial of full order for generic R in E[N] and t_N(phi P, phi P) = t_N(P,P)^{deg
+    phi}, then a diagonal mask (a,b) on torsion images leaks a^2 d and b^2 d mod N separately, whereas
+    the Weil pairing leaks only a b d. Cleared against H-SSIQ-d724f2 (level-N structure census) and H-SSIQ-dfee7e
+    (split-window admissibility for the Kani follow-on). No Lean lemma constrains it; the missing statement
+    is tate_self_pairing_scalar_frobenius.
+  mechanism: Two Miller loops of length log N over F_{p^2} per masked point (about 10^4-10^5 F_p multiplications
+    at N ~ 2^128). Output a^2 mod N, b^2 mod N; N a product of small primes gives a, b up to 2^{omega(N)}
+    sign choices; then full torsion images are known and the degree-d isogeny is recovered by the 2D Kani
+    splitting whose integer admissibility is the H-SSIQ-dfee7e question.
+  objects:
+    curve: supersingular E/F_{p^2}, Frobenius acting as -p (scalar-only action)
+    invariant: reduced Tate self-pairing on E[N], N | p+1
+    target: masked-torsion trapdoors (FESTA/QFESTA-type diagonal masks)
+  cost_model:
+    invariant_cost: 2 Miller loops per point
+    follow_on: 2^{omega(N)} candidates then one 2D isogeny
+    security_delta_if_true: full key recovery for diagonal masks
+  falsification: Sample 10^3 random supersingular E/F_{p^2} at toy p ~ 2^60 with p+1 = 2^a 3^b f and random
+    R in E[N]; compute t_N(R,R). If the self-pairing is trivial or lands in a proper subgroup of mu_N
+    on more than 99 percent of samples, the lead is dead. The expected outcome, given scalar Frobenius,
+    is that it dies.
+  cleared:
+    checked:
+    - H-SSIQ-d724f2
+    - H-SSIQ-dfee7e
+    disproven: none in the brief
+  lean:
+    coverage: none
+    needed_statement: 'tate_self_pairing_scalar_frobenius : (Frobenius acts as -p on E) -> N | p+1 ->
+      forall R : E[N], t_N R R = 1'
+    nearest_module: SplitPrime.Obstruction (commit 8187529; scalar-only action)
+  experiment:
+    exp_id: none
+    nearest_surface: aburan28/crypto-lean SplitPrime.Obstruction
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: BRIEF quotes no frontier map; only hypothesis ids are available
+    searched:
+      corpus_grep:
+      - H-SSIQ-d724f2
+      - H-SSIQ-dfee7e
+      - H-WESO-516558
+      - H-ALISO-017
+    none_found_after:
+    - 'BRIEF grep: "pairing"'
+    - 'BRIEF grep: "Tate"'
+    - 'BRIEF grep: "mask"'
+    - 'BRIEF grep: "FESTA"'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  risks: The compatibility t_N(phi P, phi P) = t_N(P,P)^{deg phi} is asserted for Weil and only conjectured
+    here for the reduced Tate pairing under the rationality conditions; marked heuristic. No break is
+    claimed.

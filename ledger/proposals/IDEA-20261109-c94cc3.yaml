@@ -1,0 +1,105 @@
+idea:
+  id: IDEA-20261109-c94cc3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: 'Ed25519 extended coordinates recosted: unified add 8M + 1c, Niels mixed add 7M, projective-output
+    doubling 3M + 4S, certified per window at 20M + 16S'
+  class: representation
+  claim: 'Three laws, all complete on E(F_p). Unified add with k = 2d precomputed: A = (Y_1 - X_1)(Y_2
+    - X_2), B = (Y_1 + X_1)(Y_2 + X_2), C = k T_1 T_2, D = 2 (Z_1 Z_2), E = B - A, F = D - C, G = D +
+    C, H = B + A, X_3 = E F, Y_3 = G H, T_3 = E H, Z_3 = F G: 8M + 1c + 9a. Niels mixed add against a
+    table entry (y_2 + x_2, y_2 - x_2, k x_2 y_2), Z_2 = 1: A = (Y_1 - X_1)(y_2 - x_2), B = (Y_1 + X_1)(y_2
+    + x_2), C = T_1 (k x_2 y_2), D = 2 Z_1, then the same E, F, G, H and four products: 7M + 0c + 7a.
+    Cached-Z entry (Y_2 + X_2, Y_2 - X_2, 2 Z_2, k T_2): 8M + 0c + 6a. Doubling with a = -1: A = X^2,
+    B = Y^2, C = 2 Z^2, E = (X + Y)^2 - A - B, G = B - A, F = G - C, H = -(A + B), X_3 = E F, Y_3 = G
+    H, Z_3 = F G: 3M + 4S + 8a; T_3 = E H adds 1M only before an addition. Fixed-base window w = 4 (3
+    projective doublings, 1 extended doubling, 1 Niels add) counts exactly 20M + 16S; 64 windows give
+    1280M + 1024S with a scalar-independent trace. Current src/ecc/ed25519.rs: add 11M, double 5M + 4S,
+    scalar-dependent double-and-add costing about 2651M + 1012S for a 253-bit scalar. Pass threshold:
+    exact equality of the per-operation vectors {add: 8M,1c}, {madd: 7M,0c}, {dbl_P: 3M,4S}, {dbl_E: 4M,4S},
+    and 64 x (20M + 16S) for fixed-base.'
+  mechanism: 'Completeness: with x_i = X_i/Z_i, F = 2 Z_1 Z_2 (1 - d x_1 x_2 y_1 y_2) and G = 2 Z_1 Z_2
+    (1 + d x_1 x_2 y_1 y_2). If d x_1 x_2 y_1 y_2 = 1 then d is a square; if it equals -1 then -d is a
+    square and, since -1 is a square for p = 5 mod 8, d is a square. Both contradict d non-square, so
+    F G is nonzero on every pair including O, (0,-1), (sqrt(-1), 0) and the 8-torsion. For doubling, affinely
+    F = d x^2 y^2 - 1 and G = 1 + d x^2 y^2 are nonzero by the same argument; at O, F = -2 Z^2 and G =
+    Z^2. Symmetry used: negation x -> -x acts on a Niels entry as (y + x, y - x, kxy) -> (y - x, y + x,
+    -kxy), one cswap plus one negation, so signed digits halve the table and stay branch-free. Scalar
+    is reduced mod l before recoding so the carry out of digit 63 is zero. The counting harness of the
+    companion record asserts the vectors; the Sage verifier asserts each law against the affine law modulo
+    the curve ideal; the exhaustive small-field analogue asserts F G nonzero on all n^2 pairs.'
+  novelty_status: unverified
+  citations:
+  - ref: Hisil, Wong, Carter, Dawson 2008, Twisted Edwards curves revisited, sections 3.1 and 3.3
+    provenance: recalled
+    claim: Source of the extended-coordinate add and doubling; counts 8M + 1c and 3M + 4S.
+    verified_by: null
+  - ref: Bernstein and Lange 2007, Faster addition and doubling on elliptic curves, completeness theorem
+    provenance: recalled
+    claim: Addition is complete when a is a square and d is a non-square.
+    verified_by: null
+  - ref: src/ecc/ed25519.rs
+    provenance: internal
+    claim: add uses three full fe_mul calls for 2 T_1, d T_2 and 2 Z_1; double uses fe_mul for 2 Z^2.
+    verified_by: formula-engineer session 2026-11-09 read BRIEF section 1 excerpt
+  assumptions:
+  - a = -1, d non-square, -1 square, B = 1, cofactor 8 with cyclic 2-part.
+  - Table scan cost (16 uniform cmovs per window) is reported separately from M and S.
+  predictions:
+  - metric: counted op vectors for add, madd, dbl_P, dbl_E
+    direction: equal
+    minimum_effect: exact match to the four claimed vectors
+  - metric: fixed-base total
+    direction: equal
+    minimum_effect: exactly 1280M + 1024S plus 64 table scans
+  - metric: exceptions of the unified law on the small analogue
+    direction: equal
+    minimum_effect: exactly 0 of n^2 pairs
+  minimal_test:
+    design: verify_formulas.sage proves the four ideal memberships for each law over symbolic a, d; small_field_exhaustive.py
+      checks F G nonzero and agreement with the affine law on all pairs; cargo test --features opcount
+      asserts the vectors; RFC 8032 section 7.1 vectors must still pass.
+    controls:
+    - Counter run on the unmodified add must report 11M, on the unmodified double 5M + 4S.
+    - Trace comparison on the old scalar_mul must report divergence, proving the uniformity check is live.
+    required_metrics:
+    - op vectors per law
+    - fixed-base and variable-base totals
+    - exception count on the small analogue
+    - RFC 8032 vector pass count
+  falsification_conditions:
+  - Any ideal membership fails in Sage.
+  - Any pair on the small analogue has F G = 0 or disagrees with the affine law.
+  - Any counted vector differs from the claim.
+  - Fixed-base traces differ between two scalars.
+  confounders:
+  - A table scan implemented with branches would pass the op count and fail uniformity; both checks are
+    required.
+  interpretation_limits:
+  - Counts are for BigUint field ops; no timing claim; no ECDLP claim.
+  heuristic_assumptions:
+  - id: H1
+    statement: The HCD counts transfer unchanged to this codebase once constants are hoisted.
+    rigorous_support: Formulas are identical; counting is exact.
+    validation_plan: Counter assertion.
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: fixed-base table 64 x 8 Niels entries, about 48 KB
+    best_known: 'HCD 2008: 8M + 1c add, 7M mixed add, 3M + 4S doubling'
+    hidden_overhead: table scans and scalar recoding, counted separately
+    tradeoff_note: table memory for M count
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: high
+  dominated_by: HCD 2008 dominates the formulas; the repository has none of them at these counts.
+  sota_delta: 'Repository delta: add 11M to 8M + 1c, double 5M + 4S to 3M + 4S, fixed-base about 2651M
+    + 1012S scalar-dependent to 1280M + 1024S uniform. Literature delta: zero.'
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 formula-verification campaign; no ECDLP mechanism is claimed.
+    none_found_after:
+    - BRIEF section 2 scanned for Edwards, extended, Niels, HCD, 2d
+    - BRIEF section 1 ed25519.rs excerpt read for existing tables or windows

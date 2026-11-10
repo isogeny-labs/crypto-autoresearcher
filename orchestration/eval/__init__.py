@@ -8,8 +8,10 @@ Two questions, deliberately never merged into one number:
 
 For a cryptanalysis harness the second dominates. A loop that occasionally
 reports a break that is not there costs more human time than one that finds
-nothing, so `evals/suites/discipline.yaml` is the anti-benchmark: every task
-there has a correct answer of the form "this does not show what it appears to".
+nothing, so `evals/suites/discipline.yaml` measures discipline in both
+directions: negative tasks have a correct answer of the form "this does not
+show what it appears to", and affirmative tasks have a verified positive that
+must be accepted, so refusing everything is not a passing policy.
 
 Results are evidence about the harness and its backends. They are NOT
 mathematical evidence about ECDLP, which is why they live in `evals/` and never

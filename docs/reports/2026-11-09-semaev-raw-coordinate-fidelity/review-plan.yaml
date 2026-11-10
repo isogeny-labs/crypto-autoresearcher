@@ -1,0 +1,126 @@
+review_plan:
+  status: prospective_before_reviewer_dispatch
+  source_commit: 3f7e3e4d0d049256e0ae23571553e806aab230ab
+  claim_id: THM-SEMAEV-FALL1-LEMMA-3-RAW-COORDINATES
+  producer_task: TASK-20260916-b55948
+  archival_task: TASK-20261109-13cbd1
+  conductor_tasks:
+    TASK-20261109-e30670: T-2005
+    TASK-20261109-35be7f: T-2006
+    TASK-20261109-0c1322: T-2007
+    TASK-20261109-13cbd1: T-2008
+    plan: T-2000
+  claim_under_review: |
+    For a finite field F, an F-algebra field K with decidable equality, a
+    nonsingular affine Weierstrass curve W, declared finite family basis,
+    raw coordinate tuple xy, and typed curve-group target R, the raw
+    decomposition predicate checks each pair's curve equation, each
+    x-coordinate's membership in the declared F-span, and the reified
+    curve-group sum against R. The named theorem states the corresponding
+    iff between this predicate and those mathematical conditions.
+  interpretation_under_review: >-
+    Determine whether this typed pair-level theorem also authenticates any
+    producer serialized certificate or actual experiment result. Separate
+    the B1-B6 wire-to-Lean bridges from the pair-level algebra.
+  immutable_inputs:
+    claim_source: research/THM_SEMAEV_FALL1.md
+    claim_source_sha256: 11b61f4f4bdaed0c323ec852f19fc4c0a7ff3972715bfe637604fb675db7fee4
+    target: formal/targets/semaev-raw-coordinate-certificate.yaml
+    target_sha256: e813668ff35099270312e4138f52e01c20673084ca11c9c822c6077018e4ebc5
+    theorem: formal/CryptoResearch/Semaev/Certificate.lean
+    theorem_sha256: aa022e4829eefc2cbe9ac05cbeb39f81e9e3eaa8147e2e41e9d718f11976bd89
+    named_declaration: CryptoResearch.Semaev.validRawDecomposition_iff_curve_span_sum
+    lean_toolchain: leanprover/lean4:v4.35.0
+    lean_toolchain_sha256: ca5f1f601d34c49079e38d7e7041eb0f2a9c227fbc1df0f404820069a052330c
+    lake_manifest_sha256: b46170db7f5631f573ff808cf1bc53655f3bd5385aeecc717c009a42dc01cec7
+    producer_report: docs/reports/2026-10-21-semaev-certificate/report.md
+    producer_report_sha256: d060ca4237190ef4b742b08797273da39e26eab39ed968bc6f0101a0ee18b68c
+    open_bridge_record: problems/semaev-certificate-serialized-record-bridge.md
+    open_bridge_record_sha256: 22004a6348c822371e265c174bd7e98bf5d65119a3ce74ba116548da04d6b0e9
+    hosted_run: 42666660822
+    hosted_run_head: 6670f72b65a405206702abc394efb2b0f0e82394
+    hosted_artifact_id: 13699530877
+    blind_card: docs/reports/2026-11-09-semaev-raw-coordinate-fidelity/blind-card.md
+    blind_card_sha256: 82114d64bf957cf255cc6c451cd961026f58814be4ec813719899f0902398d90
+  coordinator_prior:
+    recorded_before_this_round: true
+    expectation: >-
+      The typed pair-level iff likely holds, but the theorem probably leaves
+      serialized-record parsing, concrete parameter binding, and execution
+      outside its type. The hosted receipt may cover the named theorem, pending
+      exact artifact and input verification.
+    possible_disconfirmation: >-
+      A valid but off-curve pair accepted, a span or target mismatch ignored,
+      a circular hypothesis, an unapproved axiom, a hash mismatch, or a known
+      false control accepted would change the corresponding joint verdict.
+  joints:
+    - joint: J1 blind raw-coordinate algebra and finite controls
+      assigned_to: TASK-20261109-e30670
+      attack_plan: >-
+        Derive the iff without source access. Work an explicit F5 elliptic
+        curve with valid/off-curve pairs, a zero declared span, correct/wrong
+        target, b=0 and m=0. Check that mapping invalid pairs to identity
+        cannot cause acceptance when the first conjunct is enforced.
+      breaking_artifact: >-
+        A checked pair satisfying the predicate but violating the equation,
+        span, or group-sum condition, or a claimed false nearby object that is true.
+    - joint: J2 producer-to-Lean statement fidelity
+      assigned_to: TASK-20261109-35be7f
+      attack_plan: >-
+        Compare exact source Lemma 3, October 21 report, target spec, Lean
+        declaration and bridge problem on pinned bytes. Inspect quantifiers,
+        ellipticity, decidability, finite family versus basis, typed target,
+        pointOfRaw behavior, source claim boundaries, and B1-B6. Read no siblings.
+      breaking_artifact: >-
+        Missing curve equation/span/sum, assumed conclusion, vacuity, or
+        stronger producer interpretation silently attributed to the theorem.
+    - joint: J3 hosted named machine evidence and controls
+      assigned_to: TASK-20261109-0c1322
+      attack_plan: >-
+        Authenticate existing hosted run 42666660822 and artifact 13699530877.
+        Verify exact named receipt, all source/theorem/target/pin hashes, input
+        closure, build and axiom audit, and false-success mutations. Reuse the
+        completed run; launch no duplicate Lean build or cloud job. Read no siblings.
+      breaking_artifact: >-
+        Missing named audit, changed input hash, unapproved axiom, incomplete
+        verifier closure, or self-consistent JSON misread as execution proof.
+  blindness:
+    mutual: true
+    lifted_for: []
+    rationale: null
+    blind_task_input: blind-card.md
+    blind_task_forbidden:
+      - research/THM_SEMAEV_FALL1.md
+      - formal/targets/semaev-raw-coordinate-certificate.yaml
+      - formal/CryptoResearch/Semaev/Certificate.lean
+      - review-plan.yaml
+      - prior reports and receipts
+      - sibling reports and Git history
+  proves_too_much:
+    objects:
+      - invalid curve pair maps to identity and passes the raw certificate predicate
+      - a typed K x K pair-level theorem authenticates a producer byte record
+      - the iff proves a bounded runtime or a decomposition existence probability
+    failure_signature: >-
+      The first is rejected by the equation conjunct. The latter two require
+      explicit decoder/parameter/execution or measurement bridges not present
+      in the named theorem.
+    assigned_to: TASK-20261109-e30670
+  blind_rederivation:
+    required: true
+    quantity: raw pair predicate iff curve equation, declared span and group sum
+    parameters: F5 curve y^2=x^3+x+1, zero span, b=0, m=0, valid/off-curve pairs
+    blind_from:
+      - research/THM_SEMAEV_FALL1.md
+      - formal/targets/semaev-raw-coordinate-certificate.yaml
+      - formal/CryptoResearch/Semaev/Certificate.lean
+      - docs/reports/2026-10-21-semaev-certificate/
+      - problems/semaev-certificate-serialized-record-bridge.md
+      - docs/reports/2026-11-09-semaev-raw-coordinate-fidelity/review-plan.yaml
+    assigned_to: TASK-20261109-e30670
+  procedure_deviations: []
+  publication_rule: >-
+    Machine validity, typed pair-level source fidelity and serialized-record
+    interpretation receive separate verdicts. Composition follows only after
+    three sealed reports and a passing independence check. No official claim
+    transition follows automatically from this technical packet.

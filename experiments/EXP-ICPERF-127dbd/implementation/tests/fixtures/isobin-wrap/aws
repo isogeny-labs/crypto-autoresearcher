@@ -6,6 +6,8 @@
 #   RT_MODE=toctou   a third-party write into the fake bucket right after listing number $RT_TOCTOU_AT of s3://B/runs/<job>/ (`s3 ls`):
 #                    run $RT_TOCTOU_HOOK (a script that mutates $FAKE_S3_ROOT only);
 #   RT_MODE=toctou2  the same hook right after listing number $RT_TOCTOU_AT of an `s3api list-objects-v2` call on a pod prefix.
+#   RT_MODE=pyprobe  (v3d PY-1) run `python3 -c pass` inside the aws process, as the real aws CLI (a Python program) would start its interpreter:
+#                    a .pth file under $HOME/.local/lib/python3.*/site-packages runs there unless PYTHONNOUSERSITE=1.
 # v3c: the scripts run under `env -i`, so the settings come from the conf file in this file's directory (fake-aws.conf, shell syntax);
 # the conf sets FAKE_AWS_LOG, FAKE_S3_ROOT, RT_FAKE_AWS, RT_STATE and the RT_* knobs. The wrapper exports FAKE_AWS_CONF for the fake.
 conf=$(dirname -- "$0")/fake-aws.conf
@@ -14,6 +16,7 @@ export FAKE_AWS_CONF=$conf FAKE_S3_ROOT FAKE_AWS_LOG   # exported so that the ho
 [[ -n ${FAKE_S3_ROOT:-} && -n ${FAKE_AWS_LOG:-} ]] || { echo "RT-WRAP: no FAKE_S3_ROOT or FAKE_AWS_LOG in $conf" >&2; exit 96; }
 "${RT_FAKE_AWS:?}" "$@"; rc=$?
 case "${RT_MODE:-}" in
+pyprobe) python3 -c pass ;;
 partial)
   if [[ "${1:-} ${2:-}" == "s3 cp" && " $* " == *" --recursive "* && $rc == 0 ]]; then
     [[ -n ${RT_DROP:-} ]] && rm -f -- "${4%/}/$RT_DROP"

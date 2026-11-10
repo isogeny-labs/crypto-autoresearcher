@@ -1,0 +1,149 @@
+idea:
+  id: IDEA-20261109-0cbdd4
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: The ternary cubic attached to S_3 has j = 0 for every Weierstrass curve, so the Semaev tensor
+    has Waring rank 3 and a GL_3 symmetry that is a Mobius map of the x-line only when j(E) = 0
+  class: representation
+  claim: 'Let E be y^2 = x^3 + a x + b, char not 2 or 3. Writing S_3 as a symmetric tensor in Sym^3(F^3)
+    on the basis (1, x, x^2), the associated cubic form is F_E(u) = 3 u_0 u_2^2 - 6 u_1^2 u_2 - 6a u_0
+    u_1^2 - 12b u_0^2 u_1 + a^2 u_0^3. Hand derivation in this session: F_E is quadratic in u_2 with discriminant
+    4(u_1^4 + 2a u_0^2 u_1^2 + 4b u_0^3 u_1 - (a^2/3) u_0^4), whose binary-quartic invariants are I =
+    0 and J = -16(4a^3 + 27b^2). Predictions: (P1) Sage confirms I = 0 identically and J proportional
+    to the discriminant of E. (P2) F_E is a smooth plane cubic with j(F_E) = 0 for every nonsingular E,
+    independent of j(E), hence of Waring rank 3 over the algebraic closure, the minimum allowed by its
+    3 x 3 flattening, giving S_3 = sum_{t=0}^{2} q_t(x_1) q_t(x_2) q_t(x_3) with quadratics q_t. (P3)
+    At p = 1 mod 3 a positive fraction of (a, b) admits that decomposition with q_t over F_p; the fraction
+    at p = 2 mod 3 is reported without prediction. (P4) The order-3 automorphism of F_E lies in the Sym^2(PGL_2)
+    stabiliser of the Veronese conic u_0 u_2 = u_1^2 exactly when a = 0, where it is the GLV map x ->
+    zeta x. No exponent changes.'
+  mechanism: 'S_3(x_1,x_2,x_3) = F~_E(v(x_1), v(x_2), v(x_3)) with F~_E the polar trilinear form of F_E
+    and v(x) = (1, x, x^2) the Veronese conic: three points sum to O iff their conic images are apolar
+    with respect to a j = 0 cubic. A Fermat presentation F_E = L_0^3 + L_1^3 + L_2^3 gives q_t = L_t(1,
+    x, x^2) and the three-term product identity, a presentation of the m = 2 relation distinct from the
+    resultant form and from the torsion symmetrisation of KR-IC-955fd6. The record fixes what that presentation
+    is and when its symmetry is visible on the x-line; it claims no stage-cost change.'
+  novelty_status: unverified
+  citations:
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_3 is explicit and symmetric of degree 2 in each variable, hence an element of Sym^3(F^3).
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: KR-IC-955fd6
+    provenance: internal
+    claim: Symmetrised summation polynomials use small-order torsion; the symmetry here is a GL_3 action
+      on (1, x, x^2), not a translation.
+    verified_by: brief section 3 row text, 2026-11-09
+  - ref: KR-RHO-0528e7
+    provenance: internal
+    claim: The j = 0 automorphism gives a sqrt(6) constant in rho; P4 locates the same map inside F_E
+      and predicts it is the only Mobius case.
+    verified_by: brief section 3 row text, 2026-11-09
+  assumptions:
+  - The symmetric tensor is read with coefficient T[d_1,d_2,d_3] of x_1^{d_1} x_2^{d_2} x_3^{d_3} and
+    F_E(u) = sum over ordered triples, which produces the factors 3 in the cubic.
+  - Characteristic not 2 or 3 so the quartic invariants I, J are defined.
+  proof_search_map:
+    not_applicable_reason: An invariant computation and a presentation; no exponent claim.
+    bottleneck: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: symbolic value of I for the discriminant quartic of F_E
+    direction: different
+    minimum_effect: identically 0 in (a, b)
+  - metric: Waring rank of F_E over the algebraic closure
+    direction: lower
+    minimum_effect: exactly 3 for every nonsingular (a, b)
+  - metric: fraction of (a, b) at p = 1 mod 3 with an F_p-rational rank-3 decomposition
+    direction: higher
+    minimum_effect: positive
+  - metric: a-values where the order-3 automorphism preserves the Veronese conic
+    direction: different
+    minimum_effect: exactly the set a = 0
+  minimal_test:
+    design: 'Sage over Q(a, b): build S_3 (RESEARCH_SEMAEV_DECOMPOSITION.md is the repo reference the
+      next agent should align conventions with), extract F_E, compute I and J of the discriminant quartic,
+      and compute the Aronhold invariants of F_E to confirm j = 0. Over F_p for p in {31, 37, 43} and
+      {29, 41}: for every (a, b) with nonzero discriminant, decide by Groebner basis whether F_E = L_0^3
+      + L_1^3 + L_2^3 has an F_p solution in the nine coefficients of the L_t; when it does, verify the
+      three-term identity for S_3 on all triples with P_1+P_2+P_3 = O. Compute Aut(F_E) order-3 elements
+      and test membership in the conic stabiliser Sym^2(PGL_2).'
+    controls:
+    - 'A random symmetric (2,2,2) form over F_p: predicted I nonzero and Waring rank 4, so the j = 0 finding
+      is special to S_3.'
+    - 'Singular (a, b) with 4a^3 + 27b^2 = 0: predicted J = 0 and a singular F_E, consistent with the
+      formula.'
+    required_metrics:
+    - symbolic I and J
+    - Aronhold invariants and j of F_E
+    - per-prime fraction of (a, b) with F_p-rational Fermat form
+    - order-3 automorphisms and their conic-stabiliser membership
+  falsification_conditions:
+  - I nonzero as a polynomial in (a, b).
+  - Waring rank 4 for a nonsingular E over the algebraic closure.
+  - An order-3 automorphism of F_E in the conic stabiliser for some a different from 0.
+  confounders:
+  - Convention differences in the definition of S_3 (sign, scaling) change F_E by a scalar and leave I
+    = 0 and the rank unaffected.
+  - Projective equivalence of cubics is finer than isomorphism of curves; P3 counts cubic-form equivalence
+    to Fermat over F_p, not curve twists.
+  interpretation_limits:
+  - Rank 3 of S_3 is a statement about m = 2 relations; it does not propagate to S_{m+1}, which the flattening-floor
+    record tests.
+  - A presentation; it moves no stage cost.
+  heuristic_assumptions:
+  - id: H1
+    statement: The hand computation of F_E and of I, J is correct.
+    rigorous_support: Elementary expansion of S_3 and the standard invariant formulas for a depressed
+      quartic; recorded, not machine-checked.
+    validation_plan: The first line of the minimal test is the symbolic recomputation.
+  target_complexity:
+    time_exponent: 1/2 unchanged
+    memory_exponent: unchanged
+    best_known: Pollard rho, Theta(p^{1/2}) (KR-RHO-13bf67)
+    hidden_overhead: none claimed
+    tradeoff_note: Supplies a new presentation of the m = 2 relation for the relations lane to cost; delta
+      0 here.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: KR-IC-5a43e5 dominates any reading of S_3 itself; KR-IC-955fd6 covers torsion symmetrisation.
+    Neither states the j = 0 cubic or its rank.
+  sota_delta: 'Exponent delta 0. New structural fact if verified: the Semaev tensor of every curve is
+    a j = 0 cubic of Waring rank 3.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-955fd6
+    - KR-IC-8b9daa
+    - KR-RHO-0528e7
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-955fd6
+      provenance: internal
+      relation: adjacent
+      delta: Symmetrisation by 2- and 4-torsion needs even order; this symmetry exists on prime-order
+        curves and is not a translation.
+    - ref: KR-IC-8b9daa
+      provenance: internal
+      relation: adjacent
+      delta: Karabina's symmetric-function reformulation acts on the m variables; this acts on the (1,
+        x, x^2) basis of each slot.
+    searched:
+      corpus_grep:
+      - brief section 2 for Waring, cubic, Fermat, apolar, Veronese
+      - wave-1 sweep lead on Aut-quotient U_m and synthesis GLV spectral forcing
+      web: []
+      blocked: []
+    lead: LEAD-ICP-xline-symmetry-special-j
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage over Q(a, b): build S_3 (RESEARCH_SEMAEV_DECOMPOSITION.md is the repo
+        reference the next agent should align conventions with), extract F_E, compute I and J of the discriminant
+        quartic, and compute the Aronhold invariants of F_E to confirm j = 0. Over F_p for p in {31, 37,
+        43} and {29, 41}: for every (a, b) with nonzero discriminant, decide by Groebner basis whether
+        F_E = L_0^3 + L_1^3 + L_2^3'

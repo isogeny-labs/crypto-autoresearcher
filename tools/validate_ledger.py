@@ -10,6 +10,8 @@ Mechanically enforces the invariants that AGENTS.md and docs/ state in prose:
   * run manifests are complete and reproducible;
   * a run claiming a solve carries a verified certificate;
   * evidence records carry descriptive scale metadata and explicit scope;
+  * status, direction, strength, claim_tier and proof_status use the
+    controlled vocabulary of tools/ledger_vocabulary.py (date-gated);
   * knowledge/INDEX.md is not stale.
 
 Exit code 0 if clean, 1 if any error. Empty ledger validates clean.
@@ -39,6 +41,7 @@ inventories and the prune-only baseline: a supersession must supply a complete
 record and cannot turn an error into a warning.
 
 Usage: python3 tools/validate_ledger.py [--no-baseline] [--update-baseline]
+       python3 tools/validate_ledger.py --vocabulary   (histogram, exit 0)
 """
 from __future__ import annotations
 
@@ -57,6 +60,14 @@ from pathlib import Path, PurePosixPath
 import yaml
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Controlled vocabularies (tools/ledger_vocabulary.py). A standalone copy of
+# this file without its sibling module skips the vocabulary rules only.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    import ledger_vocabulary as vocab
+except ImportError:  # pragma: no cover - standalone copy
+    vocab = None
 
 # libyaml parses ~10x faster than the pure-Python loader, and parsing was 97%
 # of this validator's run time. The pure loader stays the reference: anything
@@ -122,7 +133,7 @@ SCHEMA_SUPERSESSION_REQUIRED = ["kind", "superseded_path",
                                 "superseded_sha256", "superseding_path",
                                 "superseding_sha256", "defect", "registered"]
 SCHEMA_SUPERSESSION_KINDS = {
-    "ledger", "experiment", "knowledge", "goal_checkpoint"
+    "ledger", "legacy_correction", "experiment", "knowledge", "goal_checkpoint"
 }
 SCHEMA_SUPERSESSION_ROOT = "ledger/corrections/schema-supersessions/"
 SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
@@ -284,8 +295,9 @@ def field_is_satisfied(body: dict, field: str) -> bool:
 
 
 TIER_ORDER = {"toy": 0, "medium": 1, "crypto": 2}
-PROOF_STATUSES = {"certificate", "derivation", "empirical_only",
-                  "not_applicable"}
+PROOF_STATUSES = (set(vocab.canonical("proof_status")) if vocab else
+                  {"certificate", "derivation", "empirical_only",
+                   "not_applicable"})
 
 # Both blocks below are OPTIONAL and checked only when present, which is what
 # lets them land without a baseline entry: the baseline is prune-only, so a
@@ -745,6 +757,9 @@ class Ctx:
         self.legacy_aliases: set[str] = set()
         self.amendment_ids: set[str] = set()   # AMD-* ids, indexed not checked
         self.schema_supersessions = schema_supersessions or {}
+        # (type, field) -> {value: count} of non-canonical values on records
+        # dated before the vocabulary cutoff (check_vocabulary).
+        self.vocabulary_legacy: dict[tuple[str, str], dict[str, int]] = {}
 
     def source_path(self, path: str) -> str:
         """Return the hash-pinned replacement for a registered source path."""
@@ -1090,6 +1105,7 @@ def check_ledger_record(path: str, rec_type: str, ctx: Ctx):
         if not isinstance(body.get("proof_refs"), list):
             ctx.err(path, "proof_refs must be a list")
     check_citations(path, body, rec_type, ctx)
+    check_vocabulary(path, body, rec_type, ctx)
     if rec_type == "idea":
         check_prior_art(path, body, ctx)
     if rec_type in ("evidence", "coordinator_decision"):
@@ -1210,6 +1226,7 @@ def check_experiment(path: str, ctx: Ctx):
                 ctx.err(path, f"approved experiment has null '{field}'")
     check_outcome_not_prewritten(path, body, ctx)
     check_confound_control(path, body, ctx)
+    check_vocabulary(path, body, "experiment", ctx)
     ctx.register(str(rec_id), path, body, "experiment")
 
 
@@ -1838,7 +1855,10 @@ def load_run_supersessions(path: str | None = None) -> dict[str, dict]:
 def _schema_supersession_kind_for_path(relative: str) -> str | None:
     patterns = {
         "ledger": re.compile(
-            r"^ledger/(?:questions|proposals|hypotheses|evidence|decisions|handoffs)/[^/]+\.yaml$"),
+            r"^ledger/(?:(?:questions|proposals|hypotheses|evidence|decisions|handoffs)/"
+            r"[^/]+|(?:RQ|H|EV|DEC)-[^/]+)\.yaml$"),
+        "legacy_correction": re.compile(
+            r"^ledger/corrections/CORR-[^/]+\.yaml$"),
         "experiment": re.compile(r"^experiments/[^/]+/specification\.yaml$"),
         "knowledge": re.compile(
             r"^knowledge/(?:literature|techniques|findings|open-problems)/[^/]+\.md$"),
@@ -2001,6 +2021,25 @@ def check_schema_supersessions(ctx: Ctx,
                         f"(registry pins {expected[:8]}, found {actual[:8]}); "
                         "supersede it instead of editing it",
                         force=True)
+        if entry["kind"] == "legacy_correction":
+            replacement = entry["superseding_path"]
+            if not os.path.isfile(replacement):
+                continue
+            try:
+                with open(replacement, encoding="utf-8") as handle:
+                    doc = load_yaml_unique_keys(handle, replacement)
+            except (OSError, yaml.YAMLError, ValueError) as exc:
+                ctx.err(replacement,
+                        f"registered correction replacement is unparseable: "
+                        f"{exc}", force=True)
+                continue
+            body = doc.get("correction") if isinstance(doc, dict) else None
+            source_id = os.path.splitext(os.path.basename(
+                entry["superseded_path"]))[0]
+            if not isinstance(body, dict) or body.get("id") != source_id:
+                ctx.err(replacement,
+                        "registered correction replacement must retain the "
+                        "archived correction id", force=True)
 
 
 def check_schema_redirects(ctx: Ctx,
@@ -3602,6 +3641,66 @@ def check_confound_control(path: str, body: dict, ctx: Ctx) -> None:
                               "assessment file (.claude/skills/transfer)")
 
 
+# ---- controlled vocabulary (tools/ledger_vocabulary.py) --------------------
+# status, direction, strength, claim_tier and proof_status take only the
+# values of tools/ledger_vocabulary.py. DATE-GATED like the rules above: a
+# record dated on or after vocabulary.VOCABULARY_CUTOFF (first of its updated,
+# created, specified_at, recorded_at, added, approved_at, else the date in its
+# id) fails on a non-canonical value; older values are tallied and reported
+# as one advisory per (type, field), never per record and never as failures.
+# The same gate binds the instrument-calibration rule: supporting evidence at
+# tier medium or crypto names its positive control.
+
+
+def check_vocabulary(path: str, body: dict, rec_type: str, ctx: Ctx) -> None:
+    """Controlled vocabulary and the positive-control rule, date-gated."""
+    if vocab is None or not isinstance(body, dict):
+        return
+    gated = vocab.is_gated(body, _id_date)
+    for (kind_type, field), kind in vocab.FIELDS.items():
+        if kind_type != rec_type:
+            continue
+        value = body.get(field)
+        if value is None:
+            continue  # absence is the required-field rule's business
+        allowed = vocab.canonical(kind)
+        if isinstance(value, str) and value in allowed:
+            continue
+        if not gated:
+            label = value if isinstance(value, str) else f"<{type(value).__name__}>"
+            tally = ctx.vocabulary_legacy.setdefault((rec_type, field), {})
+            tally[label] = tally.get(label, 0) + 1
+            continue
+        if kind == "proof_status" and "proof_status" in body:
+            continue  # reported by the proof_status rule in check_ledger_record
+        fixed = vocab.normalize(kind, value)
+        hint = (f"use '{fixed}'" if fixed else
+                f"use one of {'|'.join(sorted(allowed))}")
+        ctx.err(path, f"{field} '{value}' is not in the {rec_type} {field} "
+                      f"vocabulary (tools/ledger_vocabulary.py); {hint}")
+    if rec_type == "evidence" and gated:
+        direction = vocab.normalize("evidence_direction", body.get("direction"))
+        tier = vocab.normalize("claim_tier", body.get("claim_tier"))
+        if (direction == "supports" and tier in vocab.CALIBRATED_TIERS
+                and not vocab.names_positive_control(body)):
+            ctx.err(path, f"supporting evidence at tier {tier} names no "
+                          "positive control; the instrument is uncalibrated")
+
+
+def report_vocabulary_advisories(ctx: Ctx) -> None:
+    """One advisory per (type, field) summarizing pre-cutoff legacy values."""
+    if vocab is None:
+        return
+    for (rec_type, field), tally in sorted(ctx.vocabulary_legacy.items()):
+        ranked = sorted(tally.items(), key=lambda kv: (-kv[1], kv[0]))
+        top = ", ".join(f"{value[:40]}={n}" for value, n in ranked[:8])
+        ctx.advisories.append(
+            f"ledger: vocabulary {rec_type}.{field}: {sum(tally.values())} "
+            f"pre-{vocab.VOCABULARY_CUTOFF} record(s) carry {len(tally)} "
+            f"non-canonical value(s); top: {top} "
+            "(python3 tools/validate_ledger.py --vocabulary)")
+
+
 def check_confound_assessments(ctx: Ctx) -> None:
     """Review gate: evidence on a ledgered experiment grades each comparison."""
     for rec_id, kind in ctx.record_types.items():
@@ -3828,10 +3927,21 @@ def main() -> int:
                     help="prune baseline entries that no longer occur "
                          "(bootstraps the full set only if no baseline "
                          "file exists; never grows an existing one)")
+    ap.add_argument("--vocabulary", action="store_true",
+                    help="print the histogram of controlled-vocabulary values "
+                         "per record type and field, then exit 0")
     ap.add_argument("--advisories", action="store_true",
                     help="list every non-failing advisory (oversized goal "
                          "heads and proposals, aged open handoffs)")
     args = ap.parse_args()
+    if args.vocabulary:
+        if vocab is None:
+            print("tools/ledger_vocabulary.py is not importable", file=sys.stderr)
+            return 2
+        print(f"vocabulary cutoff {vocab.VOCABULARY_CUTOFF}: records dated on "
+              "or after it must use canonical values")
+        print("\n".join(vocab.format_histogram(vocab.histogram(REPO))))
+        return 0
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     try:
         import sparse_checkout
@@ -3916,6 +4026,7 @@ def main() -> int:
     check_confound_assessments(ctx)
     check_ceremony(ctx)
     check_aged_handoffs(ctx)
+    report_vocabulary_advisories(ctx)
 
     current = set(ctx.errors)
     if args.update_baseline:
@@ -3955,7 +4066,7 @@ def main() -> int:
               f"with --update-baseline")
     if ctx.advisories:
         kinds = {"goal head": 0, "next_action": 0, "proposal": 0, "handoff": 0,
-                 "json-only run": 0}
+                 "json-only run": 0, "vocabulary": 0}
         for line in ctx.advisories:
             for key in kinds:
                 if f": {key}" in line:

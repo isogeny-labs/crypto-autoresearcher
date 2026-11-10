@@ -1,6 +1,6 @@
-# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 3), session RBS-ICPERF-616277, recompiled for launcher v3c after the stopped session RBS-ICPERF-de8978 and the red-team review RT-20261107-9d2b6a (ruling DEC-20261107-a83c51). Compiled by the experiment director under TASK-20261107-d07e94. NOT AUTHORIZED.
-# NOT APPROVED. Runs only after a committed decision (reserved id DEC-20261107-7802ec) names this file's sha256 (runbook_sha256), after the independent red-team reconfirmation of the v3c bytes (DEC-20261107-a83c51 reconfirmation), and with the owner notice and EKS spend go-ahead of protocol section 11.
-# BOUND PREVIEW DIGESTS (PD-3): the specification.yaml and trial-plan.json digests bound below are those of the PREVIEW approved forms in experiments/EXP-ICPERF-127dbd/design/d07e94/approval-preview/ (specification.yaml 5136eaddce2c449690d4cc5a29facb6fd6c22977e04cda6b6459fbcc1e86d723, trial-plan.json 7be33749a33d2829577a187ca115bdba5ea6ef35fa59fadf7482fee39b0e64b6). An approval archive swaps them in at the canonical paths. The canonical drafts stay review_required, so `tools/runbook.py lint` of this file in the unmodified tree reports exactly the bind mismatches of those two files and the spec_bindings that read the approved form (approved_by, and any later restated value of a swapped file); nothing else.
+# Runbook for EXP-ICPERF-127dbd (protocol IC-C1-DEFERRED-GUARD-FP28-20261106, version 3), session RBS-ICPERF-616277, recompiled for launcher v3d after the stopped session RBS-ICPERF-de8978, the red-team review RT-20261107-9d2b6a (ruling DEC-20261107-a83c51) and the K-7 rulings of DEC-20261107-c3e91a. Compiled by the experiment director under TASK-20261107-5f7d2b. NOT AUTHORIZED.
+# NOT APPROVED. Runs only after a committed decision (reserved id DEC-20261107-7802ec) names this file's sha256 (runbook_sha256), after the independent red-team reconfirmation of the v3d bytes (TASK-20261107-a9406e; DEC-20261107-a83c51 reconfirmation), and with the owner notice and EKS spend go-ahead of protocol section 11.
+# BOUND PREVIEW DIGESTS (PD-3): the specification.yaml and trial-plan.json digests bound below are those of the PREVIEW approved forms in experiments/EXP-ICPERF-127dbd/design/5f7d2b/approval-preview/ (specification.yaml de94c9ef039937c4d1c9097bef753306d9617f8192d87a2dd52c53669acf95e7, trial-plan.json 45f58da0b4e9307b4bc9dd73582d514c746d06b6864dde3a3dfdf4fe68cc890c). An approval archive swaps them in at the canonical paths. The canonical drafts stay review_required, so `tools/runbook.py lint` of this file in the unmodified tree reports exactly the bind mismatches of those two files and the spec_bindings that read the approved form (approved_by, and any later restated value of a swapped file); nothing else.
 # T1 (S1) is not a trial of this session: RUN-ICPERF-8b0d47 is consumed and S02-reconcile-t1 is a read-only transfer under that run id, pinned to the launcher's 02:14:21Z receipt (K-2).
 schema: crypto.autoresearch.runbook.v1
 experiment_id: EXP-ICPERF-127dbd
@@ -8,7 +8,7 @@ session_id: RBS-ICPERF-616277
 title: Bring in the output of the S1 job by a read-only reconciliation, launch the frozen S2 request once, check each download, and run the frozen analyze-c1.sh gates
 purpose: Executes protocol IC-C1-DEFERRED-GUARD-FP28-20261106 version 3 (protocol_sha256 4b7bf35f..., which carries C1-AMENDMENT-1 and C1-AMENDMENT-2; the version
   2 hash was 9844f78d..., the version 1 hash 43b1ca91...). S1 already ran once as RUN-ICPERF-8b0d47; its output is brought in by implementation/reconcile_run.sh,
-  which launches nothing and reads only the check_job.py set. S2 is submitted once through launch-remote by implementation/launch_eks.sh v3c under the trial supervisor,
+  which launches nothing and reads only the check_job.py set. S2 is submitted once through launch-remote by implementation/launch_eks.sh v3d under the trial supervisor,
   which locates and downloads the job prefix with implementation/locate_results.sh under the controls K-1 to K-7 of DEC-20261107-a83c51. check_job.py checks transport and identity of each download. The frozen analyze-c1.sh
   then evaluates the integrity, control and parity gates of both sessions. Observations only; no scientific outcome is asserted.
 executor_tier: mechanical
@@ -16,9 +16,9 @@ approval:
   mode: decision_record
 binds:
 - path: experiments/EXP-ICPERF-127dbd/specification.yaml
-  sha256: 5136eaddce2c449690d4cc5a29facb6fd6c22977e04cda6b6459fbcc1e86d723
+  sha256: de94c9ef039937c4d1c9097bef753306d9617f8192d87a2dd52c53669acf95e7
 - path: experiments/EXP-ICPERF-127dbd/trial-plan.json
-  sha256: 7be33749a33d2829577a187ca115bdba5ea6ef35fa59fadf7482fee39b0e64b6
+  sha256: 45f58da0b4e9307b4bc9dd73582d514c746d06b6864dde3a3dfdf4fe68cc890c
 - path: experiments/EXP-ICPERF-127dbd/inputs/protocol.json
   sha256: 561b6a75247a52d7a99f0c636fcef42eb038fc1e7844d78f002c55d8767ca05d
 - path: experiments/EXP-ICPERF-127dbd/inputs/spec-c1-s1.json
@@ -32,11 +32,11 @@ binds:
 - path: experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
   sha256: 66aa2ffd91e10f5d1f1a65be086cd17c3bf388b4299157f646b75ea49d994dcc
 - path: experiments/EXP-ICPERF-127dbd/implementation/launch_eks.sh
-  sha256: a61c55da15b149d00ee7e644c41d79ad8df4ae82f3c59dfca157ea9679fc9e76
+  sha256: 05580b585f36da483656f6d88487e21a32ff2a7a42cc2021fef4c539096e9b38
 - path: experiments/EXP-ICPERF-127dbd/implementation/locate_results.sh
   sha256: 668a424be9f55c605dd907561fdda9ec6f9ef3c20a08b3cfb1c5c4221110791b
 - path: experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
-  sha256: a294b7dbc77b33ae4103dfa907a5effba03fe0e2c1837f3f51a44a5897055c16
+  sha256: 4664fa295b6f3b517f9e9bb3a8d7b8eb168e6af186b45cbaf463dc1d18786e31
 - path: experiments/EXP-ICPERF-127dbd/implementation/check_job.py
   sha256: d60564ddcfae7fb9607049e5bad6e53984051301d8dad84b979f9094e1c7af2d
 - path: experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
@@ -205,7 +205,7 @@ spec_bindings:
 environment:
   programs:
   - aws
-  - bash
+  - /bin/bash
   - git
   - jq
   - python3
@@ -226,7 +226,8 @@ steps:
     extensions.requests, checks the four launcher scripts against remote-pins.sha256, and prints the crypto checkout HEAD. It exits nonzero at the first mismatch,
     which stops the session before any launch. The step requires Account 104186811093 in its output; no AWS write call is made.
   argv:
-  - bash
+  - /bin/bash
+  - -p
   - experiments/EXP-ICPERF-127dbd/implementation/probe_s01.sh
   - --protocol
   - experiments/EXP-ICPERF-127dbd/inputs/protocol.json
@@ -260,10 +261,11 @@ steps:
     under the job listing), requires the receipt status.json and objects.json to have the pinned sha256 values and every S3 LastModified to be at or before the pinned time, requires a listing of the pod prefix to equal the
     launcher's objects.json as (Key, Size, ETag), copies that prefix read-only into the step output directory, requires the copied files to equal objects.json (size, and MD5 for single-part ETags; no extra or missing file), checks that job-exit.json names the located pod, the job ic-c1-dg-s1-20261106
     and the container exit code, runs the bound check_job.py on the copy, checks that SHA256SUMS lists run-summary.json at the empty-file sha256, and writes reconcile-result.json.
-    Its only AWS calls are aws s3 cp from S3, aws s3 ls and aws s3api list-objects-v2 (all reads); the script re-executes itself under env -i with an allowlist and refuses any AWS_ENDPOINT_URL variable and any aws-cli alias, endpoint_url or credential_process entry. It submits no job, starts no build and writes nothing to S3 or under runs/RUN-ICPERF-8b0d47. records.jsonl
+    Its only AWS calls are aws s3 cp from S3, aws s3 ls and aws s3api list-objects-v2 (all reads); the script is started as /bin/bash -p, re-executes itself under env -i with an allowlist and refuses any AWS_ENDPOINT_URL variable, a proxy or CA-bundle variable outside the loopback and ca-bundle pins of DEC-20261107-c3e91a R-1, missing environment credentials, and any aws-cli alias, endpoint_url, credential_process, ca_bundle, role_arn, source_profile, credential_source, web_identity_token_file, sso_session or sso_start_url entry; its env_hygiene field records the proxy, no-proxy, CA-bundle path and CA-bundle sha256 it ran with. It submits no job, starts no build and writes nothing to S3 or under runs/RUN-ICPERF-8b0d47. records.jsonl
     is hashed and its newlines are counted, never parsed.
   argv:
-  - bash
+  - /bin/bash
+  - -p
   - experiments/EXP-ICPERF-127dbd/implementation/reconcile_run.sh
   - --launcher-result
   - experiments/EXP-ICPERF-127dbd/runs/RUN-ICPERF-8b0d47/job/launcher/result.json
@@ -370,8 +372,8 @@ steps:
     session.json or run-summary.json from the copy.
 - id: S03-trial-s2
   kind: trials
-  title: Submit request S2 once under launch_eks.sh v3c and check the download
-  explain: Trial T2 runs launch_eks.sh v3c on request-s2.json as RUN-ICPERF-efb7ef under the trial supervisor, followed by check_job.py. The wrapper locates the job
+  title: Submit request S2 once under launch_eks.sh v3d and check the download
+  explain: Trial T2 runs launch_eks.sh v3d (as /bin/bash -p, the trial plan's argv) on request-s2.json as RUN-ICPERF-efb7ef under the trial supervisor, followed by check_job.py. The wrapper locates the job
     results with locate_results.sh and records results_locator, job_uid, pod_uid, download_exit and objects_match in raw-result.json (the downloaded files equal the launcher's objects.json; K-3 asserts download_exit '0', objects_match true, results_locator receipt_status_pod_uid and, for T2, a results_uri under the s2 job prefix). This step runs only if S02-reconcile-t1 passed. Controls is
     empty because the C1 controls (incumbent-aa, rho-neg-aa, pc-fb2x) are arms inside each ecbench job, not plan trials; their gates are evaluated by the frozen analyze-c1.sh
     in step S04-verify. No step retries a launch. The declared artifacts are the files under 1 MiB; records.jsonl and plan.json of the session are bound through job/artifacts/SHA256SUMS
@@ -476,7 +478,8 @@ steps:
   explain: Runs analyze-c1.sh once on session 1 (the reconciled S1 copy in the step output directory of S02-reconcile-t1) and session 2 (the S2 download) with the
     pinned ecbench; the validity assertions cover only the integrity, control and parity gate fields of verdict.json, never a claim outcome.
   argv:
-  - bash
+  - /bin/bash
+  - -p
   - experiments/EXP-ICPERF-127dbd/inputs/analyze-c1.sh
   - /tmp/claude-0/-home-user/fe537fb0-7f2e-504d-8df2-39e551cfffea/scratchpad/v6/bin-pinned/ecbench
   - '{out}/analysis'

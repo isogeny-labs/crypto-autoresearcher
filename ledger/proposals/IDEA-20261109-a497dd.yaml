@@ -1,0 +1,69 @@
+idea:
+  id: IDEA-20261109-a497dd
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  record_kind: security_proof_gap
+  title: Per-key conditioning of the exposed (degree, auxiliary curve) pairs in dimension-2 Kani signatures
+    versus the uniform-auxiliary idealisation
+  novelty_status: adaptation
+  claim: Dimension-2 signature schemes expose an auxiliary curve and the degree split (q, 2^e - q) of
+    the Kani square. The security argument idealises the auxiliary curve as uniformly random. The lane
+    measured global Hecke degree-pair supports (H-ALISO-006, H-ALISO-007) and Hecke spectral data (H-ALISO-008)
+    and has a uniform-walk endpoint baseline (H-WESO-516558, sampler part), but no record conditions on
+    a single signing key. We claim that a two-sample test on (q, j(E_aux)) across keys at toy p will either
+    fail to separate keys, supporting the idealisation, or separate them, which is a proof-gap finding
+    and not an attack. No Lean coverage; the Ramanujan mixing bound for T_q would be the constraining
+    statement.
+  mechanism: Generate 10^5 signatures per key for two keys at p about 2^30. Record for each signature
+    the degree q of the response leg and the j-invariant of the auxiliary curve. Compute the empirical
+    distribution per key and compare with (a) each other and (b) the H-WESO-516558 uniform-walk baseline
+    by a chi-square or energy-distance two-sample test. The statistical object is the Hecke correspondence
+    T_q applied to the public-key neighbourhood; the idealisation predicts both keys give samples indistinguishable
+    from the stationary distribution.
+  quantitative:
+    dimension: 2
+    coordinate_model: not model-dependent; j-invariants and degrees only
+    isogeny_degree: q and 2^e - q, with q odd
+    sample_size: 10^5 signatures per key, two keys
+    field: F_{p^2}, p about 2^30
+  cleared:
+    checked:
+    - H-ALISO-006
+    - H-ALISO-007
+    - H-ALISO-008
+    - H-WESO-516558
+    disproven: none in the brief
+    lean: no Lean coverage; would need "non-trivial eigenvalues of T_q on the supersingular graph are
+      bounded by 2 sqrt(q), so k steps mix to within (2 sqrt(q)/(q+1))^k of uniform"
+    exp: none; nearest surface is Autolab package p1486_hecke_krylov_probe (H-ALISO-008)
+  kill_test: If the two-sample test does not reject equality of the two per-key distributions at p-value
+    10^-3 with 10^5 samples each, and both are within the same tolerance of the H-WESO-516558 baseline,
+    close the record as supporting the idealisation. Any rejection is filed as a proof-gap evidence record
+    with the statistic and effect size.
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: this is a measurement against the lane's own baseline; it does not claim a new
+      reduction or attack
+    searched:
+      corpus_grep:
+      - H-ALISO-006
+      - H-ALISO-007
+      - H-ALISO-008
+      - H-WESO-516558
+      - H-ALISO-012
+      none_found_after:
+      - per-key
+      - auxiliary curve distribution
+      - degree pair conditioned
+      - two-sample
+    nearest_record:
+      id: H-ALISO-006
+      relation: adjacent
+      note: global degree-pair support, not conditioned on the signing key
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench

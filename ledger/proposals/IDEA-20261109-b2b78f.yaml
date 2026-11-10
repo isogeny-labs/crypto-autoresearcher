@@ -1,0 +1,104 @@
+idea:
+  id: IDEA-20261109-b2b78f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-3fae8b
+  title: Torsion and base-point correspondence Curve25519 to Edwards25519 in closed form, and a 2S small-order
+    test X Y (X^2 + Y^2) = 0
+  class: control
+  claim: 'With c = 9^{-1} x_B v_B (so c^2 = -486664), s = -c i (so s^2 = A+2), the birational map of RFC
+    7748 induces the table: (0,1) <-> infinity; (0,-1) <-> (0,0); (i,0) <-> (1,s); (-i,0) <-> (1,-s);
+    the four order-8 points have Edwards x^2 = -y^2, y^2 = s/(s+2) or s/(s-2), and Montgomery u with u
+    + 1/u = 2 + 2s or 2 - 2s respectively, exactly one sign being rational. Base: u = 9 maps to y = 4/5
+    exactly and x_B = 9c/v_B. Hence P in E(F_p)[8] iff X Y (X^2 + Y^2) = 0 in projective Edwards coordinates
+    (2S + 1a + three zero tests), replacing three doublings, and a Montgomery input u is small-order (on
+    curve or twist) iff u (u-1) (u+1) (u^2 - w_+ u + 1) = 0 (2M + 1S) before the ladder.'
+  mechanism: 'Order 2: v = 0 and u = 0 since u^2 + A u + 1 = 0 needs sqrt(A^2-4), a non-residue. Order
+    4: y = 0 gives u = 1, v = c u / x = c / (+-i) = -+ c i; v^2 = 1 + A + 1 = A + 2 = s^2 holds. Translation
+    by (0,0) is (u,v) -> (1/u, -v/u^2), computed from the chord of slope v/u, and in Edwards it is (x,y)
+    -> (-x,-y); hence order-8 u-values come in reciprocal pairs and order-8 y-values in sign pairs. Order
+    8: P has order 8 iff 2P has order 4 iff y(2P) = 0 iff x^2 + y^2 = 0 by the doubling formula y(2P)
+    = (y^2 + x^2)/(2 + x^2 - y^2). Substituting x^2 = -y^2 into y^2 - x^2 = 1 + d x^2 y^2 gives d y^4
+    + 2 y^2 - 1 = 0, y^2 = (-1 +- sqrt(1+d))/d with sqrt(1+d) = 2/s, i.e. y^2 = s/(s +- 2). On the Montgomery
+    side u(2P) = 1 gives the palindromic quartic u^4 - 4u^3 - (2+4A)u^2 - 4u + 1 = 0, i.e. w^2 - 4w -
+    4(A+2) = 0 for w = u + 1/u, so w = 2 +- 2s; w^2 - 4 = 4 s (s +- 2), and since s(s+2) s(s-2) = (A+2)(A-2)
+    is a non-residue exactly one sign gives rational u. Consistency: w = 2(1+y^2)/(1-y^2) at y^2 = s/(s+2)
+    equals 2 + 2s. The characterisation is complete: E(F_p)[8] is cyclic of order 8, and the eight points
+    are exactly {x=0} (2), {y=0} (2), {x^2+y^2=0} (4). Recalled numeric order-8 u-values (provenance recalled,
+    not load bearing): 325606250916557431795983626356110631294008115727848805560023387167927233504 and
+    39382357235489614581723060781553021112529911719440698176882885853963445705823, asserted by the script
+    to be reciprocal and roots of u^2 - w_+ u + 1. Symmetry used: the translation action of E[8] on coordinates,
+    which is a signed permutation up to one multiplication by i.'
+  novelty_status: unverified
+  citations:
+  - ref: RFC 7748 section 4.1 (map and base v); RFC 8032 section 5.1 (base x)
+    provenance: recalled
+    claim: Base-point coordinates and map.
+    verified_by: null
+  - ref: src/ecc/ed25519.rs
+    provenance: internal
+    claim: Verification rejects small-order points; the current test is not a polynomial test.
+    verified_by: brief module comment read in this session
+  - ref: IDEA-20260905-05648a
+    provenance: internal
+    claim: Certifies cyclic rational torsion of order 8; gives no coordinate table.
+    verified_by: BRIEF section 2 excerpt
+  assumptions:
+  - The recalled v_B satisfies v_B^2 = 9^3 + A 9^2 + 9; the script asserts it before c is used.
+  - E(F_p)[8] is cyclic of order 8 (group order 8l with cyclic 2-part); the script confirms by enumerating
+    the eight points.
+  predictions:
+  - metric: points P in a 2000-point sample with [8]P = O but X Y (X^2+Y^2) != 0
+    direction: equal
+    minimum_effect: zero
+  - metric: images of the eight Edwards torsion points under the map
+    direction: equal
+    minimum_effect: exact match with the table
+  minimal_test:
+    design: 'tests/torsion_map.rs: compute c, s, the eight Edwards points from the closed forms, map them,
+      compare with the eight Montgomery points obtained from u in {0,1,u_8,1/u_8} and both v signs; assert
+      [8]P = O for all eight and [4]P != O for the four order-8 points; assert the polynomial test agrees
+      with [8]P = O on them plus 2000 random points; assert u = 9 maps to y = 4/5.'
+    controls:
+    - 'Null object: a random non-torsion point must fail the polynomial test.'
+    - 'Twist control: u = -1 must pass the Montgomery test and fail the curve equation.'
+    required_metrics:
+    - table mismatches
+    - polynomial-test disagreements
+    - residuosity of s(s+2) and s(s-2)
+  falsification_conditions:
+  - Any point with [8]P = O failing X Y (X^2+Y^2) = 0, or conversely.
+  - Both or neither of s(s+2), s(s-2) a residue.
+  - c^2 != -486664 after the base-point definition.
+  confounders:
+  - A wrong recalled v_B changes c by more than a sign; the curve-equation assertion catches it.
+  interpretation_limits:
+  - The test detects order dividing 8 only; membership in the prime-order subgroup still needs [l]P =
+    O.
+  - No statement about ECDLP or about rigidity.
+  heuristic_assumptions:
+  - id: H1
+    statement: All rational points with x^2 + y^2 = 0 have order 8.
+    rigorous_support: 2P then has y = 0, so 2P has order 4 and P order 8.
+    validation_plan: Exhaustive over the computed roots.
+  target_complexity:
+    time_exponent: not applicable
+    memory_exponent: O(1)
+    best_known: three projective doublings 9M + 12S plus identity test
+    hidden_overhead: none
+    tradeoff_note: 2S + 1a replaces 9M + 12S for the small-order check
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: Folklore small-order lists; delta is the closed form and the polynomial test with proof
+    of completeness.
+  sota_delta: Count delta on the small-order check only; everything else is a verified correspondence
+    table.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: curve25519 explicit-formula campaign, not an ECDLP mechanism
+    none_found_after:
+    - BRIEF section 2 ledger index searched for torsion, small-order, base point, 4/5, order 8
+    - IDEA-20260829-d052e6 and IDEA-20260905-05648a excerpts read; neither gives coordinates

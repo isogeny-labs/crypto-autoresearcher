@@ -1,0 +1,373 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: "ZKX: B2 verifier soundness and mutation controls: crypto:src/zk/stark.rs, stark_v2.rs, plonk.rs after crypto#2747"
+reader:
+  role: validator
+  model: claude-opus-5-5
+  independence: "Did not produce anything under audit. Judged only from code at crypto 3a7a0f98a, the git diffs, and two independent Python models written for this case. PR descriptions were not read. Commit subjects shown by git log and the crypto session log are used only to inventory claims, never as evidence. Prior-case texts were read only for what was claimed (see blind_from for the one disclosed exception)."
+target:
+  repo: isogeny-labs/crypto
+  path: /home/user/crypto
+  head: 3a7a0f98af47f24cabfa7779c267695e00faf3dd
+  head_tree: cb3a43d52a41659b999a0fb9b39e353767acc6c1
+  at_origin_main: true
+  dirty_paths: 0
+  pr_merge: "crypto#2747 = merge e74711b41 (parents f484ef8db, 3b710e21a), an ancestor of HEAD; branch commit 38aaa78b3 plus two merges of main"
+  zk_changes_after_merge: "Yes. cafdfb1ef (stark_v2.rs, groth16.rs, README; S2N-3..S2N-9, S2N-11) and 6f8973589 (stark_v2.rs field-term docs). git diff e74711b41 HEAD -- src/zk/: groth16.rs +8, stark_v2.rs +190/-12. The prior audit head 669809d5c6 is an ancestor of HEAD, and 669809d5c6..HEAD in src/zk is exactly those three commits (plonk, stark, stark_v2, groth16)."
+  binding_evidence: "git -C /home/user/crypto rev-parse HEAD == origin/main == 3a7a0f98a; status clean; sweep.json repos.crypto.head == 3a7a0f98a; sweep.json canary.passed == true (15 caught, 0 missed, 0 false positives)"
+
+sources_read:
+  crypto-autoresearcher:
+    - CLAUDE.md (auto-loaded)
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - .claude/skills/sheriff/SKILL.md
+    - docs/sheriff.md (heading list; lines 87-158 B1/B2; 436-465 B9)
+    - docs/agent-runtime-core.md; agents/validator.md; AGENTS.md (heading list; lines 329-341 Review architecture)
+    - research/sheriff/SHF-20261106-a114e7/sweep.json (keys canary, repos.crypto and the zk leads only)
+    - "research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml (read in full: the brief names it as the format model and it carries S2N-1..S2N-11)"
+    - research/sheriff/SHF-20261016-3caa6f/findings.yaml (lines 207-232, S1 and S2 'what' text)
+    - research/sheriff/SHF-20261017-e4d7f6/findings.yaml (lines 210-256, V1-V3 'what' text)
+  crypto_at_3a7a0f98a:
+    - "git diff e74711b41^1 e74711b41 -- src/zk/ (all 1006 lines) and git diff e74711b41 HEAD -- src/zk/ (all 299 lines)"
+    - src/zk/stark.rs (lines 1-95 by grep, 100-184, 300-817 verify and FRI, 820-1227 tests)
+    - src/zk/stark_v2.rs (lines 1-262, 380-960, 1405-1435, 1618-1866)
+    - src/zk/plonk.rs (all 942 lines)
+    - src/zk/polynomial.rs (lines 1-215)
+    - "git show e74711b41^1:src/zk/plonk.rs (lines 280-420, 500-640: the pre-merge verify and compute_quotient)"
+    - "git show 669809d5c6:src/zk/stark_v2.rs lines 805-812 (old check() comment)"
+    - README.md (zk rows 644-647; merge diff of README)
+    - "docs/session-logs/2026-10-28.md at e74711b41 (lines 110-150, claim inventory only)"
+    - "grep: let _ in src/zk; plonk/stark callers; 'public' in plonk.rs; .github 32-bit targets"
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read)
+  - research/sheriff/SHF-20261106-a114e7/readers/* other than this file (not listed, not read)
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than stark/ (not opened; an `ls -la` of my own directory showed that the parent holds 10 entries, but no sibling names or contents were read)"
+  - research/sheriff/SHF-20261106-a114e7/sweep.md and checks/ (not read)
+  - prior cases' REPORT.md, scripts/ and readers other than SHF-20261028-0f3f64/readers/stark.yaml (not read)
+  - PR descriptions (not read); commit messages (subjects shown by git log only, not used as evidence)
+blind_from_disclosure: "SHF-20261028-0f3f64/readers/stark.yaml was read in full because the brief names it as the format model. It contains that reader's reasoning, not only what was claimed. Every verdict here was re-derived from code at HEAD and from this case's own scripts. Nothing in it is cited as evidence."
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: K1-bind
+    command: "git -C /home/user/crypto rev-parse HEAD HEAD^{tree} origin/main; git status --short; git merge-base --is-ancestor e74711b41 HEAD; git log e74711b41..HEAD -- src/zk/; read of sweep.json canary/repos"
+    output: inline (target block)
+    result: "pass. HEAD 3a7a0f98a is clean and equals origin/main. The canary passed. src/zk changed after the merge in cafdfb1ef and 6f8973589, so both are audited."
+  - id: K2-cargo-test
+    command: "cd /home/user/crypto && cargo test --release --lib zk::   (NOT RUN)"
+    output: none
+    result: "not_covered. The session's permission policy refuses executing crypto code. No Rust test or mutant was run, so every statement below about which test catches which deletion comes from line-by-line reading, cross-checked by the independent models in scripts/readers/stark/."
+  - id: K3-S2N1-fold-test-trace
+    command: "control-flow trace of rejects_fri_fold_inconsistency (stark_v2.rs:1664-1681) through check_gated (829-908) and fri_check (stark.rs:544-641), with prover knobs fri_zero_tail / fri_shift_layer1 (stark_v2.rs:736-753, 782-793)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/fri_mutation_model.out
+    result: "partial. (a) zero-tail on false_output_air (n=8, beta=4, q=20). Statement, lengths, depth (4 roots), alphas, z, OOD, AIR-at-z, openings, Composition and Deep all pass, because layer 0 is the honest D. In fri_check the final root equals the root of 4 zero leaves, and the first failure is the INTERMEDIATE fold comparison (stark.rs:619-624) at layer 0. If only that comparison is deleted, the zero layers fold to 0 == final_constant, the check returns Ok, and the exact assertion Err(Fri(Fold)) fails, so the deletion is detected. If only the LAST-layer comparison (625-631) is deleted, layer 0 still fails the intermediate comparison and the test still passes, so that deletion is NOT detected. (b) shift_layer1 on a true statement fails the intermediate comparison first. If that comparison is deleted, the last comparison still fires, because re-deriving the transcript changes alpha_2 while the honest final constant was folded with the old alpha_2. So (b) detects only deletion of BOTH comparisons. Both parts assert the exact variant Reject::Fri(FriReject::Fold), but Fold is shared by the two comparisons. The model reproduces all of this: no_fold_intermediate is killed by F1 only, no_fold_last SURVIVES every test analogue, and forgery F3 (honest folds, constant final layer) is accepted by no_fold_last. See ZKX-1."
+  - id: K4-S2N2-depth-test-trace
+    command: "control-flow trace of rejects_over_folded_fri_at_depth_gate (stark_v2.rs:1688-1705); check_gated depth_gate flag (848); fri_check folds/final root (554-565)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/fri_mutation_model.out
+    result: "pass. Final size 1 gives 6 roots against an expected 4, so the depth gate returns Reject::Shape. The length gate (840-846) passes, since all four vectors have q entries. With the gate off, check_gated(..,false) returns Ok(()): every other gate accepts the false statement, because log2 L folds bound no degree. This is a direct deletion control. Final size beta/2 = 2 returns Shape. With the gate off it returns Fri(FinalLayer), so the exact Shape assertion also fails and the deletion is detected, though by another gate. The honest false proof with the gate off returns Fri(FinalLayer), so turning the gate off does not accept everything. check_gated is called only by check(true) and by this test (grep)."
+  - id: K5-S2N3-to-S2N11-tests
+    command: "trace rejects_composition_opening_and_recompute_separately, deep_gamma1_uses_f_at_same_x, statement_transcript_binds_air_n_beta_q, rejects_oversized_statements_without_panic (stark_v2.rs:1714-1846)"
+    output: inline
+    result: "pass, by reading. Swapped composition openings return Opening. With that check deleted the opened Comp(x_p1) differs from the AIR at x_p0, giving Composition, so the exact assertion detects the deletion. Composition offset returns Composition. With the recompute deleted, (Comp(X)+1-Comp(z))/(X-z) has a pole, giving Fri(FinalLayer), so that deletion is detected too. The gamma1 formula is pinned by the unit test. The AIR fingerprint is pinned by the tripling and shifted variants. The 'n' and 'blow_up' cases also change the boundary count or fri_final_size, so they pin the binding rather than each absorb line; binding holds either way, because fri_folds = log2 n and fri_final_size = beta are absorbed too. statement_transcript returns None for n*beta > 2^32 and k > n before coset() is reached."
+  - id: K6-plonk-verify-read
+    command: "line-by-line read of plonk.rs verify (335-368), identity_residual (376-439), challenges (315-327), Transcript (189-223), compute_quotient (591-646), permutation_identity_at_zeta (648-680)"
+    output: inline
+    result: "mixed. YES: each sent evaluation is compared with the sent polynomial at the verifier's zeta / zeta*omega (360-365), in place of KZG openings. The gate, permutation (sigma polys, k = 1,2,3) and L1*(Z-1) terms are combined with alpha and alpha^2 and compared with t(zeta)*Z_H(zeta). Z(zeta) and t(zeta) are computed by the verifier. Coefficients and evaluations must be < r. a,b,c are absorbed before beta and gamma, Z before alpha, and t before zeta. NO: the transcript starts from FS_TAG and absorbs only the proof's polynomials. The circuit (n, selectors including q_C, permutation) is never absorbed, and there is no public-input mechanism (grep 'public': 0 hits), so a statement chosen after the proof is not bound (ZKX-3). No `let _ =` remains in plonk.rs, stark.rs or stark_v2.rs. `let (_, _, _, zeta) = challenges(proof)` (356) drops beta, gamma and alpha only to recompute them in identity_residual (379); no value goes unchecked. Note, not a finding: Poly.coeffs is public, and appending trailing zeros changes zeta without changing the polynomial, which allows zeta grinding. Each attempt still succeeds with probability at most deg/r, about 2^-250, so this is immaterial."
+  - id: K7-plonk-fixed-quotient
+    command: "compare pre-merge compute_quotient (git show e74711b41^1, gate.divmod(Z_H) with `let _ = (z_poly, beta, gamma, alpha)`) and verify (`let _ = omega`) with HEAD; re-derive the GWC19 round-3 identity independently (plonk_model.py part A)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.out
+    result: "pass. 'The fixed quotient' is t = (gate + alpha*perm + alpha^2*L1*(Z-1)) / Z_H. Before the merge it was gate/Z_H alone, so honest proofs verified only for the identity permutation. My re-derivation from the recalled GWC19 statement (PI omitted, k1 = 2, k2 = 3, L1 at omega^0 to match the code's Z(omega^0) = 1) matches the code's formula term by term. Numerically, the honest copy-circuit witness leaves remainder 0. The gate-broken, copy-broken and Z = 0 witnesses leave non-zero remainders and are rejected. The old gate-only quotient leaves remainder 0 for the copy-broken witness. 1, 2 and 3 lie in distinct cosets of every 2-power subgroup (2^(2^32), 3^(2^32) and (3/2)^(2^32) are all != 1 mod r)."
+  - id: K8-plonk-negative-tests
+    command: "map each PLONK check to the tests that fail if it alone is deleted (plonk.rs:844-931); model part C"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.out
+    result: "partial. tampered evaluation: rejects_tampered_evaluations exists, but each forgery breaks TWO comparisons (shift i, solve z_zw; or shift z_zw, solve c). A mutant dropping any one of the four comparisons, including exactly the z_zeta_omega comparison that was S2N-10, survives every test. In the model each single-drop mutant survives the test's forgeries, and each is shown soundness-critical by an isolating forgery that only it accepts (ZKX-2). identity check: pinned by rejects_unsatisfying_witnesses (gate, copy and Z = 0, all with honest evaluations). Its gate, perm and boundary terms are pinned in the verifier by completeness (an honest proof fails if any is dropped) and in the spec by the three remainders. wrong public input or wrong circuit: no test, and no binding (ZKX-3). tampered commitment (a polynomial changed, evaluations re-derived): no direct test; in substance it is the unsatisfying-witness case. wrong quotient on an otherwise honest proof: no direct test; the floor-quotient cases cover it in substance. canonical values: tested; 2^300 would panic in append_scalar without the check. verify returns bool, so no PLONK test can assert which check fired."
+  - id: K9-blind-rederivation
+    command: "python3 -I scripts/readers/stark/fri_mutation_model.py; python3 -I scripts/readers/stark/plonk_model.py"
+    output: "research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/fri_mutation_model.json, plonk_model.json"
+    result: see blind_rederivation
+  - id: K10-proves-too-much
+    command: same scripts
+    output: same
+    result: see proves_too_much_control
+  - id: K11-sweep-lead
+    command: "sweep.json zk leads (1): zk.no_negative_test crypto src/zk/groth16.rs"
+    output: inline
+    result: "confirmed, by design. groth16 verify is now documented as non-functional (groth16.rs:71-77, README.md:644). A negative test would pass vacuously. S2N-9 is the carried finding."
+
+blind_rederivation:
+  quantities:
+    - name: FRI fold formula
+      statement: "f_{i+1}(x^2) = (f(x)+f(-x))/2 + alpha*(f(x)-f(-x))/(2x), which must equal f_e(x^2) + alpha*f_o(x^2) for f(X) = f_e(X^2) + X*f_o(X^2)"
+      derived: "algebraically identical to the code's ((f(x)+f(-x)) + alpha*(f(x)-f(-x))*x^-1)/2 (stark.rs:613-616, 400-406). Checked numerically on a Goldilocks coset of size 32 at every point."
+      matches_code: true
+    - name: FRI depth and final size
+      statement: "D has degree < n on a domain of size L = n*beta; each fold halves both the degree bound and the domain"
+      derived: "constant after exactly log2 n folds, so log2 n + 1 layer roots and a final layer of L/n = beta values. Numerically, at (n,beta) in {(4,4),(8,2),(8,4),(16,8),(32,2)}, a degree n-1 table becomes constant at log2 n folds and a degree-n table at log2 n + 1. With final size 1 (log2 L folds) every table folds to one value."
+      matches_code: "true: stark_v2.rs:848 (n.trailing_zeros()+1), :406-407 (fri_folds = log2 n, fri_final_size = beta), :732 (default final_size = beta)"
+    - name: PLONK quotient identity
+      statement: "GWC19 round 3 (recalled, not retrieved; not load-bearing for any finding): t*Z_H = gate + alpha*[(a+bX+g)(b+b*k1X+g)(c+b*k2X+g)Z(X) - (a+bS1+g)(b+bS2+g)(c+bS3+g)Z(wX)] + alpha^2 (Z-1) L1, plus PI(X) in the gate"
+      derived: "the code matches with k1 = 2, k2 = 3, no PI, and L1 at omega^0. Remainders and verdicts are as in K7."
+      matches_code: true
+    - name: eps_field arithmetic (stark_v2.rs:100-115)
+      statement: "(k+1)/r + (2n+k)/(r-n-L) + (5+log2 n) L/r with k <= n, L <= 2^32, r = BLS12-381 scalar modulus"
+      derived: "log2 r = 254.857. The worst case is 2^-217.61 at n = 2^31, beta = 2, and the same point with L^2/r gives 2^-185.69. Both match the docs (2^-217.6 and 2^-185.7)."
+      matches_code: true
+  blind_from: "the producer's tests and knobs were read before the models were written. The re-derivations use only the statements above and the parameters (n, beta, q, r), and the models share no code with the producer."
+proves_too_much_control:
+  - "FRI model: the full verifier rejects every known-false input (F0-F5: honest-folded high-degree table, zero tail, shifted layer, constant final, over-folded to 1 and to beta/2) and accepts the honest low-degree table under every mutant. The deletion procedure does not report every gate as unpinned: no_depth_gate, no_final_layer_root_check and no_fold_intermediate are each killed by a test analogue. The null mutant violates no test assertion."
+  - "PLONK model: rejects the gate-broken, copy-broken and Z = 0 proofs and accepts the honest toy and copy proofs. The forged statement proof is rejected against C_12345 and against C_{x+1}, so the forgery is specific to the solved x and not an artifact of a model that accepts everything."
+
+findings:
+  - id: ZKX-1
+    beat: B2
+    severity: major
+    claim_ids: [ZKX-C2, ZKX-C3]
+    what: "The FRI LAST-layer fold comparison (fri_check: last fold == final_constant, stark.rs:625-631) has no test, in stark_v2 or stark v1, that fails when that comparison alone is deleted. rejects_fri_fold_inconsistency's zero-tail proof is first rejected by the intermediate comparison (619-624). Its shift-layer-1 proof is rejected by whichever comparison remains, so it pins only the deletion of both. Every other Reject::Fri proof is stopped earlier by the final-layer root check. The comparison is soundness-critical. Without it a prover commits a false statement's real D as layer 0, honest folds for layers 1..log2 n - 1, and any constant final layer, and every gate passes (model forgery F3 is accepted by mutant no_fold_last). Both comparisons return the same FriReject::Fold, so no test can assert which one fired. This is the residual of S2N-1. Reasoned from code and an independent model, not executed."
+    evidence:
+      - crypto:src/zk/stark.rs:619-631
+      - crypto:src/zk/stark_v2.rs:1664-1681
+      - crypto:src/zk/stark_v2.rs:736-753
+      - crypto:src/zk/stark.rs:514-516
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/fri_mutation_model.out (no_fold_last SURVIVES; F3_honest_folds_const_final accepted only by no_fold_last / no_fold_both)
+    fix: "Add a knob that keeps FRI layers 0..log2 n - 1 honest for false_output_air and replaces only the final layer with a constant (root recomputed, transcript re-derived). Assert Err(Reject::Fri(FriReject::Fold)), with a control that the final root equals the constant-layer root. Split FriReject::Fold into FoldLayer and FoldFinal so each test can assert which comparison fired."
+  - id: ZKX-2
+    beat: B2
+    severity: major
+    claim_ids: [ZKX-C8]
+    what: "rejects_tampered_evaluations does not isolate any of PLONK verify's four evaluation comparisons (plonk.rs:360-365). Each forgery tampers two evaluations (shift i and solve z_zeta_omega, or shift z_zeta_omega and solve c_zeta), so deleting any single comparison leaves the other to reject. The '+1' cases are caught by the identity check anyway. A mutant that drops exactly the z_zeta_omega comparison, the S2N-10 defect itself, passes every PLONK test. Each comparison is soundness-critical: the residual is affine in each evaluation, so with that one comparison gone, an unsatisfying witness with honest polynomials is accepted after solving that evaluation (model part C, isolating forgeries). verify returns bool, so the tests cannot name the check that fired."
+    evidence:
+      - crypto:src/zk/plonk.rs:360-365
+      - crypto:src/zk/plonk.rs:844-867
+      - crypto:src/zk/plonk.rs:783-792
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.out (C_eval_checks.single_comparison_mutants_vs_producer_test: all four SURVIVE; isolating_forgeries accepted only by the matching drop)
+    fix: "For each j in 0..4, take prove_unchecked of an unsatisfying witness (honest evaluations) and solve only evaluation j. Assert identity_residual == 0 as the control and !verify. Better, return a reject reason (as stark_v2's Reject does) and assert it."
+  - id: ZKX-3
+    beat: B2
+    severity: major
+    claim_ids: [ZKX-C9, ZKX-C8]
+    what: "PLONK's Fiat-Shamir transcript does not absorb the statement. Transcript::new starts from FS_TAG, and challenges() absorbs only the proof's a, b, c, Z, t (plonk.rs:194-198, 315-327). The circuit (n, the selectors including q_C, the permutation) never enters it, and the module has no public-input mechanism. This is the frozen-heart class the B2 checklist names. A statement whose public value is carried in q_C can be chosen after the proof. In the independent model, C_x enforces a0 = x, a1 = 12345 and a0 = a1, so it is unsatisfiable for x != 12345. A proof built before x is chosen (a satisfying-looking witness for 12345 and t + 1) has a residual affine in x with slope -L0(zeta) != 0. Solving gives x = 0x4f26...98c9 != 12345, and verify(C_x) accepts while C_12345 and C_{x+1} reject. The module docs still say 'Soundness is the usual Schwartz-Zippel bound over a random-oracle Fiat-Shamir transcript', which holds only for a circuit fixed independently of the proof. No test exercises a wrong circuit or public input. No caller in the crate uses plonk::verify, and the module says it must not back a research claim. Not executed against the Rust verify."
+    evidence:
+      - crypto:src/zk/plonk.rs:194-198
+      - crypto:src/zk/plonk.rs:314-327
+      - crypto:src/zk/plonk.rs:52-55
+      - crypto:src/zk/plonk.rs:376-439
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.out (D_statement_binding)
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.json (D_forged_proof, D_circuit_C_x)
+    fix: "Absorb a circuit digest (n, every selector value, the permutation) and any public inputs before beta, as stark_v2's statement_transcript does. Add a negative test that proves for C_12345 and verifies against C_x (wrong public input), plus the adaptive forgery with its control. Until then, scope the soundness sentence to circuits fixed before the proof."
+  - id: ZKX-4
+    beat: B8
+    severity: minor
+    claim_ids: [ZKX-C2, ZKX-C3, ZKX-C12]
+    what: "Four inaccurate comments. (1) S2N-6 residual: the check() comment still says FRI's first layer is 'the DEEP combination of the opened f(x) and Comp(x)'; f(omega*x) is omitted (stark_v2.rs:890-891; the module doc at line 86 was fixed). (2) 'each proof passes every gate but the one named' (1655-1657) is false for the beta/2 over-folded proof, which also fails the final-layer root check when the depth gate is off (model F5). (3) The fri_input_low_degree doc equates 'the prover's final layer is constant' with 'the committed FRI input is of degree < n' (1417-1418). That is false for the zero-tail prover, where it returns true for a non-low-degree layer 0; the test comment at 1670-1671 describes the control correctly. (4) The session log says the refactor lets the S2N-1 test 'assert the fold check specifically', but Fold is shared by both comparisons (ZKX-1)."
+    evidence:
+      - crypto:src/zk/stark_v2.rs:890-891
+      - crypto:src/zk/stark_v2.rs:1655-1657
+      - crypto:src/zk/stark_v2.rs:1417-1422
+      - "crypto:docs/session-logs/2026-10-28.md:139-140 (at e74711b41)"
+    fix: "Say 'f(x), f(omega*x) and Comp(x)'; scope the block comment to the size-1 control; rename the helper to fri_final_layer_constant; and narrow the session-log sentence."
+  - id: ZKX-5
+    beat: B8
+    severity: minor
+    claim_ids: [ZKX-C11]
+    what: "README.md has two zk::groth16 rows: the new 'verify is non-functional' row (644) and the stale 'Groth16 zk-SNARK skeleton' row (645), left by cafdfb1ef."
+    evidence:
+      - crypto:README.md:644-645
+    fix: "Delete README.md:645."
+
+prior_finding_verdicts:
+  - id: S1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "By code reading at 3a7a0f98a; execution not_covered. v1 checks both boundary rows, the transition at each transcript-derived position and its successor, and the verifier's q (stark.rs:756-817). v2 recomputes Comp(x) from the opened trace, checks the AIR at the OOD point and runs FRI on the DEEP quotient over a coset LDE (stark_v2.rs:829-908). No `let _` remains in either module. Negative tests exist for all four original mutants (broken transition, empty proof, another boundary, false output). Residual: v1 remains a spot check by design (carried under V1)."
+  - id: S2
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "The (q/beta)^q formula is gone. The docs state a conjectured eps with an explicit formula, say 'no security level is claimed' and give the SHA-256 128-bit cap (stark_v2.rs:91-125). The arithmetic re-derives (eps_field 2^-217.61)."
+  - id: V1
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: partially_fixed
+    why: "v2 is fixed: statement_transcript absorbs the AIR fingerprint, n, beta, q, the FRI depth and final size, and every (p_k, v_k) before alpha (stark_v2.rs:391-420), and the frozen-heart tests remain. v1 is fixed for q-from-proof, truncation and zero folds (stark.rs:763-777). By design, v1 at a caller-chosen q is grindable (q = 20 at n = 8 in a few hundred attempts). This is documented (stark.rs:70-80) and tested both ways (1199-1226), and the verifier has no floor on q."
+  - id: V2
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "No bit figure is claimed. StarkConfig calls 8^-80 'not a security level' (stark_v2.rs:169-171), and the docs give the hash cap and the T-query factor (120-125)."
+  - id: V3
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "v1 escape is (1-k/n)^q with the verifier's q, and the catch probability is 1-(1-1/n)^q (stark.rs:70-80). The last root and final constant are absorbed and checked (326-335, 563-565). canonical_bytes rejects v+r and values wider than 32 bytes. v2 has an OOD sample, and README:647 marks both modules as not for research claims."
+  - id: S2N-1
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: partially_fixed
+    why: "rejects_fri_fold_inconsistency's zero-tail proof isolates the intermediate fold comparison: with it deleted, check returns Ok and the exact Err(Fri(Fold)) assertion fails. The last-layer comparison, equally soundness-critical, is still isolated by no test (ZKX-1)."
+  - id: S2N-2
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: fixed
+    why: "The final-size-1 proof of the false statement returns Shape with the gate on and Ok(()) with check_gated(..,false), a direct single-gate deletion control. The beta/2 proof would return Fri(FinalLayer) without the gate, so its exact Shape assertion also detects the deletion (K4). Execution not_covered."
+  - id: S2N-3
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: fixed
+    why: "rejects_composition_opening_and_recompute_separately asserts Opening and Composition exactly. Each gate's deletion changes the variant returned (Composition and Fri(FinalLayer) respectively), so each gate is pinned (K5)."
+  - id: S2N-4
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: fixed
+    why: "deep_gamma1_uses_f_at_same_x pins the gamma1 term with gamma = [1,0,0] and separates it from f(omega*x)."
+  - id: S2N-5
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: fixed
+    why: "statement_transcript_binds_air_n_beta_q pins binding of the AIR fingerprint, n, beta, q and the boundary count directly at alpha (the producer's chosen form, not the frozen-heart port). The n and beta cases also change other absorbed values, so they pin binding, not each absorb line."
+  - id: S2N-6
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: partially_fixed
+    why: "Item 2 now gives the agreement bound and the beta = 2 caveat. My derivation, with the lcm denominator x^n-1, bounds agreement by 2n-1 <= 2n+k-2 for k >= 1 (2n-2 for k = 0), so the bound and the ~1-2/beta distance hold. Item 3, ood_point_ok and the module text at :86 are fixed. The check() comment at stark_v2.rs:890-891 still omits f(omega*x) (ZKX-4)."
+  - id: S2N-7
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: fixed
+    why: "The test doc (stark_v2.rs:1472-1476) now calls a232be6a8 an equivalent reformulation. (f(X)-f(wz))/(X-wz) is a polynomial because its numerator vanishes at X = wz."
+  - id: S2N-8
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: fixed
+    why: "The docs give 2^-217.6 (L/r) and 2^-185.7 (L^2/r), state that eps_field dominates 2^-240 for the default config, flag the unique-decoding form without list-size factors as 'indicative', and k <= n is now enforced (stark_v2.rs:398). My arithmetic gives the same values."
+  - id: S2N-9
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: partially_fixed
+    why: "The interim remedy is applied: the groth16.rs docs (71-77) and README:644 state that verify is non-functional. verify itself stays non-functional with no tampered-proof test, as the fix anticipated, and README:645 keeps a stale duplicate row (ZKX-5). Whether verify really rejects honest proofs is not_covered (it would need cargo test zk::groth16 -- --include-ignored)."
+  - id: S2N-10
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: partially_fixed
+    why: "Code fixed by reading and in the model. verify checks a(zeta), b(zeta), c(zeta) and Z(zeta*omega) against the sent polynomials, and the quotient now includes the permutation and Z(1) = 1 (K6, K7). The forged-evaluation regression test does not pin any single comparison, including the S2N-10 z_zeta_omega one (ZKX-2). The docs' soundness sentence overclaims because the statement is not absorbed (ZKX-3, a new defect of the same frozen-heart class the original fix text did not name)."
+  - id: S2N-11
+    source: research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml
+    verdict: fixed
+    why: "statement_transcript returns None for n*beta > 2^32 (checked_mul) and for k > n before any coset is built (stark_v2.rs:398-400). rejects_oversized_statements_without_panic covers verify and prove."
+
+claims:
+  - id: ZKX-C1
+    text: "fri_verify is now fri_check(..).is_ok(); fri_check returns a FriReject reason ... Behaviour unchanged. / Returns an error, never panics, on malformed input."
+    location: "crypto:src/zk/stark.rs:519-544; crypto:docs/session-logs/2026-10-28.md:118-121 (e74711b41)"
+    suggested_verdict: upheld_scoped
+    scoped_to: "By diff reading: every `return false` became an Err and `true` became Ok(()). No condition changed. Execution not_covered."
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ZKX-C2
+    text: "FRI gates isolated (... findings S2N-1 and S2N-2): each proof passes every gate but the one named."
+    location: crypto:src/zk/stark_v2.rs:1655-1657
+    suggested_verdict: overclaimed
+    scoped_to: "True for the zero-tail, shift-layer-1 and size-1 over-folded proofs. The beta/2 over-folded proof also fails the final-layer root check. The fold-consistency 'gate' is isolated only in its intermediate comparison."
+    findings: [ZKX-1, ZKX-4]
+    beats: {B2: fail, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: ZKX-C3
+    text: "S2N-1: fold consistency ... only fold consistency rejects (rejects_fri_fold_inconsistency); 'so the S2N-1 test can assert the fold check specifically'"
+    location: "crypto:src/zk/stark_v2.rs:1659-1681; crypto:docs/session-logs/2026-10-28.md:139-140 (e74711b41)"
+    suggested_verdict: overclaimed
+    scoped_to: "The test pins the intermediate fold comparison (stark.rs:619-624) and the deletion of both comparisons. It does not pin the last-layer comparison (625-631), and the shared Fold variant cannot tell the two apart. Execution not_covered."
+    findings: [ZKX-1, ZKX-4]
+    beats: {B2: fail, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: ZKX-C4
+    text: "S2N-2: the verifier-fixed FRI depth ... the depth gate rejects it. Control: at final size 1 FRI bounds no degree, and with the depth gate off every other gate accepts the false statement."
+    location: crypto:src/zk/stark_v2.rs:1683-1705
+    suggested_verdict: upheld_scoped
+    scoped_to: "By control-flow reading and the toy model (F4, F5). The exact Reject::Shape is asserted, and check_gated(..,false) is a true single-gate deletion control. cargo test is not_covered."
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ZKX-C5
+    text: "check_gated ... depth_gate = false is used only by the S2N-2 control test"
+    location: crypto:src/zk/stark_v2.rs:826-834
+    suggested_verdict: upheld
+    scoped_to: "grep shows the only calls are check (true, :823) and the test (:1699, :1702); verify goes through check."
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ZKX-C6
+    text: "S2N-3/S2N-4/S2N-5/S2N-11 tests: composition opening and recompute are separate gates; gamma1 uses f at the same x; AIR fingerprint, n, beta, q and boundaries each move alpha; n*beta > 2^32 and k > n rejected without panic"
+    location: crypto:src/zk/stark_v2.rs:1707-1846
+    suggested_verdict: upheld_scoped
+    scoped_to: "By reading (K5). Each asserted variant changes under deletion of its gate. The n and beta cases pin binding, not each absorb line. Execution not_covered."
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ZKX-C7
+    text: "stark_v2 docs: Comp agrees with a degree-< n polynomial on at most 2n + k - 2 coset points (relative distance about 1 - 2/beta; none for beta = 2); D recomputed from f(x), f(omega x), Comp(x); eps_field about 2^-217.6 (L/r), about 2^-185.7 (L^2/r), indicative"
+    location: "crypto:src/zk/stark_v2.rs:24-33, 82-89, 106-119"
+    suggested_verdict: upheld_scoped
+    scoped_to: "The agreement bound holds (derived as <= 2n-1 for k >= 1, 2n-2 for k = 0), and the eps arithmetic re-derives. The check() comment at :890-891 still omits f(omega x)."
+    findings: [ZKX-4]
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ZKX-C8
+    text: "[verify] absorbs every polynomial, checks each sent evaluation a(zeta), b(zeta), c(zeta), Z(zeta omega) against the polynomial it was sent (the step KZG openings would do), and checks gate(zeta) + alpha perm(zeta) + alpha^2 L1(zeta)(Z(zeta) - 1) = t(zeta) Z_H(zeta) ...: the gate equation, the copy constraints (sigma polynomials, coset constants 1, 2, 3) and Z(1) = 1."
+    location: "crypto:src/zk/plonk.rs:42-48, 329-368; crypto:README.md:646"
+    suggested_verdict: upheld_scoped
+    scoped_to: "True of the code by reading and in the independent model, for the proof's polynomials. The circuit is not absorbed (ZKX-3). The tests pin the four evaluation comparisons only jointly (ZKX-2). Execution not_covered."
+    findings: [ZKX-2, ZKX-3]
+    beats: {B2: fail, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ZKX-C9
+    text: "Soundness is the usual Schwartz-Zippel bound over a random-oracle Fiat-Shamir transcript; this is an educational, unaudited verifier with no stated security level and must not back a research claim."
+    location: crypto:src/zk/plonk.rs:52-55
+    suggested_verdict: overclaimed
+    scoped_to: "Holds only for a circuit fixed independently of the proof (non-adaptive). With the statement chosen after the proof, a false statement is accepted by algebra (model D). The disclaimer part is upheld."
+    findings: [ZKX-3]
+    beats: {B2: fail, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: ZKX-C10
+    text: "Before 2026-10-28 the sent evaluations were never checked and the quotient left out the permutation, so a forger could solve for Z(zeta omega) and pass any circuit; ... honest proofs verified only for the identity permutation"
+    location: "crypto:src/zk/plonk.rs:49-52; crypto:docs/session-logs/2026-10-28.md:128-133 (e74711b41)"
+    suggested_verdict: upheld
+    scoped_to: "Pre-merge code: gate-only quotient with `let _ = (z_poly, beta, gamma, alpha)`, `let _ = omega`, no evaluation check. The model shows the gate-only quotient has zero remainder for a copy-broken witness."
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: ZKX-C11
+    text: "README zk rows: PLONK 'educational, unaudited, not zero-knowledge, not succinct'; Groth16 'verify is non-functional (the pairing rejects honest proofs too)'"
+    location: crypto:README.md:644-646
+    suggested_verdict: upheld_scoped
+    scoped_to: "The PLONK row matches the code. The Groth16 behaviour is not_covered here (pairing not executed), and a stale duplicate Groth16 row remains."
+    findings: [ZKX-5]
+    beats: {B2: not_covered, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: ZKX-C12
+    text: "rejects_tampered_evaluations: 'each sent evaluation is checked against its polynomial. Shifting one by 1 is rejected; so is the finding's forgery ... Control: the forged identity residual is zero, so the identity check alone (the old verifier) accepts it.'"
+    location: crypto:src/zk/plonk.rs:844-867
+    suggested_verdict: overclaimed
+    scoped_to: "The test shows the four comparisons together reject these forgeries. It does not show that each is checked, since no single comparison's deletion is caught. Its forgery tampers an honest proof's evaluations rather than the finding's attack (unsatisfying witness, solve z_zeta_omega only)."
+    findings: [ZKX-2]
+    beats: {B2: fail, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: fail}
+  - id: ZKX-C13
+    text: "rejects_unsatisfying_witnesses / plonk_prove_verify_with_copy_constraint / compute_quotient: remainder is zero iff the witness satisfies the gates, the copy constraints and Z(1) = 1"
+    location: "crypto:src/zk/plonk.rs:584-590, 836-911"
+    suggested_verdict: upheld_scoped
+    scoped_to: "Reproduced by the independent model (part A). The 'iff' holds with overwhelming probability over beta, gamma, alpha, not deterministically. Execution not_covered."
+    beats: {B2: pass, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+
+lead_dispositions:
+  - lead: "crypto src/zk/groth16.rs zk.no_negative_test"
+    disposition: confirmed
+    one_line: "No tampered-proof rejection is tested. verify is documented non-functional (groth16.rs:71-77), so a negative test would be vacuous; carried as S2N-9 (partially_fixed)."
+
+not_covered:
+  - what: "Execution of the zk tests and of every deletion mutant described above"
+    why: "The session's permission policy refuses executing code from /home/user/crypto"
+    command_that_would_cover: "cd /home/user/crypto && cargo test --release --lib zk::  (plus zk::groth16 -- --include-ignored)"
+  - what: "ZKX-1 and ZKX-2 mutants on the real code"
+    why: "Rust not executed; established by reading and by the independent models"
+    command_that_would_cover: "delete crypto:src/zk/stark.rs:625-631 (resp. one comparison of plonk.rs:360-365) in a scratch copy and run cargo test --release --lib zk::stark_v2 (resp. zk::plonk); all tests are expected to stay green"
+  - what: "ZKX-3 forgery against the Rust plonk::verify"
+    why: "Rust not executed. The model reproduces the transcript byte for byte as read, but a model is not the code."
+    command_that_would_cover: "a case-side harness crate linking crypto at 3a7a0f98a that loads plonk_model.json (D_forged_proof, D_circuit_C_x) and calls plonk::verify, expecting true; the same proof against q_C[0] = -12345 is expected to return false"
+
+limitations:
+  - "This is a sheriff reader record, never a validation_report, and it satisfies no review gate. Projected onto agents/validator.md its verdict would be `incomplete`: the producer's tests and mutants were not executed."
+  - "Every 'would fail if deleted' statement is reasoning from code, corroborated by models that re-implement the verifiers' logic. The models do not execute the Rust and could diverge from it in an unread detail."
+  - "The GWC19 statement and the frozen-heart attack class are recalled, not retrieved. Neither is load-bearing: ZKX-3 rests on the code (challenges() reads only the proof) and the model's algebra, and K7 on the code's own formula plus the numeric remainders."
+  - "Not reviewed: v1 stark.rs internals beyond FRI and verify; merkle.rs (taken from the prior audit's reading, not re-read); groth16 pairing."
+
+artifact_paths:
+  - path: research/sheriff/SHF-20261106-a114e7/readers/stark.yaml
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/fri_mutation_model.py
+    sha256: 2ea6473f31ee4bef0d0615757d6be8295fba2ca82634cb3372a7403bb3761683
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/fri_mutation_model.out
+    sha256: 50528ef55625b1fae483084f420c01a93564d4eb4b30d3717a0d6242540b4e05
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/fri_mutation_model.json
+    sha256: 4257f11f2082c30690549b112bc07a90220a6a23b9031643ef45ed55f9101c9b
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.py
+    sha256: 3c64dba9df8b0375a8324d160ceeb767abc098aedf443d74f38b88fcb6c93673
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.out
+    sha256: 78d98d2899d472e7eb4e3cbe1ce215974e90944130bf5ae62ba347faa47c6d84
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/stark/plonk_model.json
+    sha256: a41130832f3934b96e6f66a56fc342d10906f0e358a642826981939757880688
+
+review_attestation:
+  joints_owned: ["ZKX: B2 verifier soundness and mutation controls for crypto:src/zk/stark.rs, stark_v2.rs, plonk.rs after crypto#2747; prior findings S1, S2, V1, V2, V3, S2N-1..S2N-11; sweep lead groth16 zk.no_negative_test"]
+  sources_read: "see sources_read above (complete)"
+  read_sibling_reports: false
+  blind_from_respected: true
+  joint_result: "holds for S2N-2..S2N-5, S2N-7, S2N-8, S2N-11, the fixed PLONK quotient, PLONK evaluation binding in code, and the eps arithmetic, all scoped to code reading. Breaks on test isolation for the FRI last-layer fold comparison (ZKX-1) and for each PLONK evaluation comparison (ZKX-2), and on PLONK statement binding (ZKX-3). Inconclusive on execution (cargo test not_covered)."

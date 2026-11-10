@@ -1,0 +1,611 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: "PPX: B7/B8 papers, prose, ecbench session integrity text; re-check of prior findings P1, P3-P6, E1, E2 (SHF-20261016-3caa6f), P-N1, P-N2, P-N4..P-N7, E1-R (SHF-20261017-e4d7f6), PPN-1..PPN-7, SES-1 (SHF-20261028-0f3f64); new strong-word scan of papers and README tables changed since 2026-10-28"
+reader:
+  role: validator
+  model: claude-opus-5-5
+  independence: >-
+    Did not produce anything under audit. Judged from files and git blobs at the heads below,
+    and from my own scripts. Prior findings were read only for what they claimed and which
+    paths they cited. PR descriptions were not read. Commit subjects shown by git log were not
+    used as evidence. Nothing from /home/user/crypto or /home/user/cryptanalysis was executed.
+target:
+  crypto:
+    path: /home/user/crypto
+    head: 3a7a0f98af47f24cabfa7779c267695e00faf3dd
+    at_origin_main: true
+    dirty_paths: 0
+  crypto-autoresearcher:
+    path: /home/user/crypto-autoresearcher
+    audited_head: da442739db82a5f99d95e4ab9413cbe6fb326f0a
+    note: >-
+      While I worked, the case session committed reader outputs on branch
+      claude/sheriff-reaudit-20261106 (HEAD moved to be57d6c66b). `git diff --name-only
+      da442739db HEAD` touches only research/sheriff/SHF-20261106-a114e7/, pcc/ledger.jsonl and
+      problems/post-merge-checks-mask-pre-merge-state.md. Every path I read (papers/,
+      experiments/EXP-SGCP-EMBED-002, experiments/EXP-SMON-e5cbe6, ledger/evidence,
+      ledger/corrections) is identical at da442739db.
+  cryptanalysis: "not read (no prior finding in this set points there)"
+  method: >-
+    The crypto clone is treeless and sparse. Files outside the cone were read with
+    `git show HEAD:<path>` and `git cat-file --batch`. The sparse checkout was not changed.
+
+sources_read:
+  crypto-autoresearcher:
+    - CLAUDE.md (auto-loaded)
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - .claude/skills/sheriff/SKILL.md
+    - docs/sheriff.md (heading list; lines 364-461, B7-B9)
+    - research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml (format model only)
+    - "research/sheriff/SHF-20261016-3caa6f/findings.yaml lines 110-146, 189-196 (claims C12-C16, C22) and 285-409 (findings P1, P3-P6, E1, E2): what was claimed only"
+    - "research/sheriff/SHF-20261017-e4d7f6/findings.yaml lines 100-128, 169-173 (claims C3-C6, C12) and 320-379 (findings P-N1..P-N7, E1-R): what was claimed only"
+    - "research/sheriff/SHF-20261028-0f3f64/findings.yaml lines 1045-1204 (PPN-1..PPN-7, LN9-R, SES-1, the first lead dispositions): what was claimed only. Its re-verdict block (lines 169-262) was not read"
+    - papers/semaev-conservation-specialization/paper.tex (lines 855-900)
+    - "papers/first-fall-lean/{paper.tex lines 250-266, README.md grep, .artifacts.json}; formal/CryptoResearch/Nagao/*.lean (grep for the cited theorem names only)"
+    - "experiments/EXP-SGCP-EMBED-002/development-result-v1.md (lines 1-15); ledger/evidence/EV-ICINV-8afb64.yaml (lines 55-60); ledger/corrections/ (rg); CORR-20261028-a02dba, CORR-20261029-892bca, CORR-20261028-1e1ff4 (grep lines)"
+    - experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/raw-result.json (git blob, parsed by key)
+  crypto_at_3a7a0f98a:
+    - papers/lll-degeneracy-note/{lll_degeneracy_note.tex (all), abstract.txt, README.md (grep), lll_degeneracy_note.pdf (pdftotext)}
+    - research/lll_degeneracy_rerun_20261016/logs/{probes.log, p521_hp.log, commit.txt}
+    - research/notes/lattice-hnp/RESEARCH_LLL_GS_ANALYSIS.md (lines 255-370)
+    - Cargo.lock (num-bigint entries), Cargo.toml:250, src/cryptanalysis/lattice.rs (lines 371-456)
+    - "src/ecc/curve_zoo.rs, src/ecc/curve.rs, src/cryptanalysis/p256_structural.rs, src/ecc_safety.rs (rg for the six group-order constants only)"
+    - papers/structural-completeness/{structural_completeness.tex lines 55-164, 296-480, 520-530, 625-633, 848-1009; abstract.txt; README.md (grep); recount/README.md; recount/count.txt; recount/exp_zdoubleprime_lemma_extended.txt (lines 55-70); structural_completeness.pdf (pdftotext)}
+    - "secp256k1_cm_audit/*.gp and *_output.expected.txt and tests/curve_audit.rs at 57fa35852 and HEAD (line counts and existence only)"
+    - research/notes/cm-isogeny/PAPER_STRUCTURAL_COMPLETENESS.md (lines 1-60, 680-712, grep)
+    - research/conductor_gap_cm_pairs_20261010/{README.md lines 1-12 and 94-108, PROTOCOL.md lines 62-67, lean/README.md, lean/GenericInvariance.lean (grep)}
+    - src/cryptanalysis/ecbench/generic.rs (line 309 at 57fa35852, line 275 at 11aa00591, line 363 at HEAD)
+    - research/ic_tree_split_structured_v_20261011/{RESULTS.md lines 42-62 and grep, reports/run-20261011T2105Z/report.typ line 29, runs/registered/cells.jsonl, runs/registered/readout.txt}
+    - src/cryptanalysis/ecbench/audit.rs (lines 870-905, 990-1045, 1385-1440, 1885-1910; test names)
+    - .github/workflows/ecbench.yml (lines 1-80, 228-320; grep of job conditions)
+    - .github/scripts/ecbench-audit-sessions.sh (all)
+    - .github/scripts/ci-scope.mjs (lines 25-100, 255-321)
+    - .github/workflows/artifacts.yml (lines 1-80); tools/artifacts/artifacts.py (lines 1-60, 631-676)
+    - docs/ecbench/INCOMPLETE_SESSIONS.tsv, docs/ecbench/DEFECTIVE_SESSIONS.tsv (first column)
+    - "the whole HEAD tree listing (git ls-tree -r) and every committed session.json blob (1,455 files)"
+    - "papers/ diff 36c102a2a..HEAD (tex/md/txt) and Markdown/TeX diff of the whole tree since 2026-10-28, scanned for strong words"
+    - "papers/ecdlp-index-calculus-treatise/sections/{prog_prime.tex 210-237, prog_binary.tex 114-152, prog_rootfinding.tex 200-238, audit.tex 13-46, prog_koblitz.tex (contexts of three hits), prog_frontier.tex 297-325}; papers/ecdlp-boundaries-20261018/sections/generic.tex 31-43"
+    - research/torsion_auxiliary_inputs_20260918/{README.md lines 1-95, RESULTS.md lines 1-140}
+    - benchmarks/README.md (row 247); benchmarks/20261029-prime-precompute-regime/README.md (lines 1-14); research/prime_precompute_regime_20261028/README.md (lines 1-20, 92-104, 166-190)
+    - AGENTS.md (crypto) lines 681-720 ("Papers") and 1440-1452
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read)
+  - research/sheriff/SHF-20261106-a114e7/readers/* other than this file (not read)
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than papers/ (not read; `git log` printed commit subjects naming 'icperf-receipts reader' and 'icperf-interpretation reader', nothing else)"
+  - research/sheriff/SHF-20261106-a114e7/sweep.md, sweep.json, checks/ (not read)
+  - "prior cases' readers/*.yaml other than the stark.yaml format model, their scripts/, REPORT.md, and SHF-20261028-0f3f64 findings.yaml lines 169-262 (prior re-verdicts)"
+  - PR descriptions (not read); commit messages (displayed by git log, not used as evidence)
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: K1-bind
+    command: "git -C <repo> rev-parse HEAD origin/main; git status --short (all three repos); git diff --name-only da442739db HEAD (crypto-autoresearcher)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/text_checks.out (section heads)
+    result: "pass. crypto 3a7a0f98a == origin/main, clean. crypto-autoresearcher audited at da442739db; branch commits since then touch only the case dir, pcc/ledger.jsonl and one unrelated problem record."
+  - id: K2-blind-p4
+    command: "python3 -I scripts/readers/papers/papers_checks.py /home/user/crypto  (section A)"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    result: "pass. My own sieve gives 330 primes p = 1 (mod 6) with p <= 5000 (first 7, last 4999), 669 primes p <= 5000, and 666 primes in [7, 5000], the forprime(p=7,5000) loop count. structural_completeness.tex:444 says 330 of 669."
+  - id: K3-blind-second-number
+    command: "papers_checks.py sections B, C, G"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    result: >-
+      pass. (i) 80 primes p = 1 (mod 6) with p <= 1000 (tex:414). (ii) Solving 4p = 73 + 3k^2 with p prime
+      in [7, 5000] gives exactly k in {1,5,9,11,21,25,31,35,41,55,65} (tex:447-448); the k <= 11 primes are
+      {19,37,79,109} (tex:440), and 349 is in the set (tex:461). (iii) LLL arithmetic from the standard
+      group orders (recalled, and string-equal to crypto:src/ecc/curve_zoo.rs and p256_structural.rs).
+      n^4 > f64::MAX holds for secp256k1, P-384 and brainpoolP384r1 and fails for P-256 and brainpoolP256r1.
+      f64::MAX ~ 2^1024. n(secp256k1) - n(P-256) ~ 2^224.0. P-256's n^4 sits below f64::MAX by a factor of
+      about 1 - 2^-30. For P-521, n^2 has 1042 bits, the scale shift is 542 and 22 low bits are truncated.
+      Correct rounding then gives exactly 2^500; a truncating 53-bit conversion gives 2^500(1 - 2^-53),
+      a residual of 2^447. (iv) secp256k1 p mod {3,5,7,11,13} = {1,3,1,7,5}; p != l-1 (mod l) for every odd
+      l <= 29; -7 is not a cube mod p, so x^3 + 7 is irreducible.
+  - id: K4-proves-too-much
+    command: "papers_checks.py section D: the same check() applied to values known to be wrong"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    result: "pass. All 8 controls FAIL as required: 621 (the withdrawn count), 331, 81, the k list without 65, 'P-256 n^4 > f64::MAX', 'truncation gives exactly 2^500', the old 2^1023 and the old 2^192."
+  - id: K5-p3-recount
+    command: "papers_checks.py section F: my own point counts of y^2 = x^3 + b over F_p, 5 <= p < 500, b = 1..p-1, l in {3,5,7} (all p) and {11,13} (p = 1 mod 3), r = p mod l != 0"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    result: >-
+      pass. Every number in tex:369-399 re-derives exactly: 24,476 = 8,734 ordinary + 15,742 supersingular;
+      8,156 in the hypothesis classes, all ordinary, 0 violations; 16,320 excluded (578 ordinary), all with
+      l | #E^t; the hypothesis classes that contain instances; the skipped (7,7,5) with #E = 7; 1,802 for
+      l in {11,13} (198; 1,510 + 94); 26,278 / 10,536 / 9,864. The distinct (l,p,#E) counts 336, 249, 292
+      and 209 also re-derive, but none appears in the recount/ outputs the paper cites (PPX-4).
+  - id: K6-loc-table
+    command: "papers_checks.py section E: wc -l of git show 57fa35852:secp256k1_cm_audit/<f> and HEAD:..., existence of <stem>_output.expected.txt, tests/curve_audit.rs"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    result: >-
+      pass for the paper. All 16 rows, the expected-output column, the total 3305 (equal at 57fa35852 and
+      HEAD) and tests/curve_audit.rs = 568 lines match. The Markdown twin's 10-row total 2386 equals its
+      rows. Fail for abstract.txt:56-60, which says "13 PARI/GP scripts (~3000 lines) with committed
+      baseline outputs" and a "~390 lines" Rust test. The test has 568 lines at every commit since
+      2026-09-12 and 584 before (PPX-3).
+  - id: K7-lll-rerun-table
+    command: "papers_checks.py section H: parse every probe line of logs/probes.log and logs/p521_hp.log"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    result: "pass. All nine rows of tex:197-205 (recovered/distinct, recovered/runs, k_bits) match the committed logs exactly, and no log row falls outside the table. The probes themselves were not re-executed (cargo blocked)."
+  - id: K8-pn7-cells
+    command: "python3 -I (inline, recorded) over research/ic_tree_split_structured_v_20261011/runs/registered/cells.jsonl; gap = curve.d_s - r.d_s"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/pn7_cells.out
+    result: "pass. Six frob cells have g in {23,29,127}. Five are at gap -1 with |T2| = 29, 28, 70, 29, 35. The sixth (a=0, seed 20261012, l=4, |T2|=1) has gap 0. 15 of the 20 n=21 frob cells are at gap 0. This matches RESULTS.md:52-58 and report.typ:29."
+  - id: K9-semaev-trace
+    command: "git show HEAD:experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/raw-result.json | python3 -I (leaf search and per-m sums)"
+    output: inline
+    result: "pass. C2 samples 18000, good 16737. C5 samples 18000, good 16107. C6 total 257061, good 224906, bad includes 101, 211 and 157. NULL-A 599 (0.1369) and NULL-B 595 (0.4891). Seed 20260807; 20 curves. The paper's artifact table (paper.tex:859-897) names exactly these keys."
+  - id: K10-text-checks
+    command: "CHECKPOINT_SKIP=audit BENCHREC_SKIP=audit bash scripts/readers/papers/text_checks.sh"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/text_checks.out
+    result: "Line evidence for every prior-finding verdict below. These are greps and git show only."
+  - id: K11-ecbench-census
+    command: "git ls-tree -r --name-only HEAD > tree; git cat-file --batch < HEAD:<dir>/session.json list; python3 -I scripts/readers/papers/ecbench_census.py tree blobs dirs"
+    output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/ecbench_census.out
+    result: >-
+      1,455 session.json directories, of which 1,435 have schema ecbench.session/v1 (1,379 complete,
+      23 interrupted, 33 running). All 33 running sessions satisfy audit.rs's never_finalised predicate,
+      and none is pinned in INCOMPLETE_SESSIONS.tsv or DEFECTIVE_SESSIONS.tsv, so CI should list all 33
+      as unbound prefixes. 516 sessions keep records.jsonl only in the artifact store behind a
+      git-tracked .artifacts.json. 430 of those lie outside ci-scope.mjs's directory rules, and the
+      file-name rule never matches .artifacts.json (PPX-5). Add dates are in never_finalised_added.out:
+      30 of the 33 were added by 2026-10-26 and 3 on 2026-10-30. That does not match the 13 that
+      PPN-5 reported. The difference lies in the prior case's count, not in the producer, and I did not
+      resolve it.
+  - id: K12-new-claim-scan
+    command: "git diff -U0 <last commit before 2026-10-28> HEAD over papers/ (tex/md/txt) and README.md in both repos, plus a phrase scan of all *.md/*.tex added lines in crypto; then read each surviving lead in context"
+    output: inline (lead_dispositions)
+    result: "Two leads confirmed (PPX-1, PPX-2). The others were dismissed or handed on, one line each."
+  - id: K13-make-check
+    command: "make -C papers/<paper> check (NOT RUN)"
+    output: none
+    result: "not_covered. Building runs producer code. PDF currency was checked by commit date and pdftotext instead: the LLL and structural PDFs (2026-10-28T16:19) postdate their .tex (15:24) and contain the corrected text."
+  - id: K14-ecbench-verify
+    command: "cargo build --release --bin ecbench && ecbench verify --dir <session> --replay 0 --allow-interrupted (NOT RUN)"
+    output: none
+    result: "not_covered (permission policy). The E1, E1-R and PPN-5 verdicts rest on reading audit.rs and the audit script."
+
+blind_rederivation:
+  quantity: "P4: the number of primes p = 1 (mod 6) with p <= 5000; second number: the 80 primes p = 1 (mod 6) with p <= 1000 and the norm-form set 4p = 73 + 3k^2 (structural_completeness.tex:414, 447-448); plus the LLL note's P-521 2^500 / 2^447 conversion arithmetic"
+  method: "My own Eratosthenes sieve, Miller-Rabin and direct search (papers_checks.py sections A-C), from the statement only. No producer script or output was used to compute; the producer values are compared afterwards."
+  result: "330 (of 669) and 80 re-derive exactly. The k set is exactly the 11 values stated. 2^500 under correct rounding and 2^500(1 - 2^-53) (residual 2^447) under truncation re-derive."
+  output: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+proves_too_much_control:
+  object: "the same comparison function run on values known to be wrong (621, 331, 81, a truncated k list, P-256 overflow, exact 2^500 under truncation, 2^1023, 2^192)"
+  expected: all FAIL
+  result: "8 of 8 FAIL (papers_checks.out section D; papers_checks.json D_controls_all_failed: true). The instrument does not accept every input."
+
+prior_finding_verdicts:
+  - id: P1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      The curve-specificity claim is withdrawn in the title, the abstract (tex:24-44) and a correction
+      section listing every withdrawn conclusion (tex:46-65). The overflow explanation re-derives (K3), the
+      re-run table matches the committed logs (K7), and the PDF (2026-10-28T16:19) postdates the last .tex
+      change and contains the corrections. The probes were not re-executed.
+    evidence: [crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:24-65, crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:157-170, research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out]
+  - id: P3
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "The 16 562 literal is gone from the paper and from every recount output. Every count in tex:369-399 re-derives by my own point counting (K5). recount/count.txt is committed and cited. Residual: PPX-4."
+    evidence: [crypto:papers/structural-completeness/structural_completeness.tex:369-399, crypto:papers/structural-completeness/recount/count.txt, research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out]
+  - id: P4
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "tex:444 says 330 of 669. Both re-derive blind (K2), and count.txt [4] agrees. The 621 control fails (K4)."
+    evidence: [crypto:papers/structural-completeness/structural_completeness.tex:440-447, crypto:papers/structural-completeness/recount/count.txt]
+  - id: P5
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "The abstract (tex:74-88) now says 'argued by case analysis ... proof sketches ... not yet independently reviewed', names the standing assumptions and gives every bounded range. abstract.txt:29-39 and the Markdown twin (lines 32-40) match, and the PDF text agrees."
+    evidence: [crypto:papers/structural-completeness/structural_completeness.tex:74-88, crypto:papers/structural-completeness/abstract.txt:29-39]
+  - id: P6
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "paper.tex:859-897 cites the code, the specification, the contract and RUN-SMON-e5cbe6-001, with a number-to-key table. All cited files are in git, and the aggregates trace (K9)."
+    evidence: [papers/semaev-conservation-specialization/paper.tex:859-897, experiments/EXP-SMON-e5cbe6/runs/RUN-SMON-e5cbe6-001/raw-result.json]
+  - id: E1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      By code reading. never_finalised() (status running, no finish time, no records hash) is accepted
+      under --allow-interrupted (audit.rs:1412-1425) and reported as interrupted/never_finalised with
+      records_bound false (1887-1899). Unit tests cover killed, progress-counter and finalised cases
+      (2101-2199). 33 such sessions are committed (K11). ecbench verify was not executed (K14).
+    evidence: [crypto:src/cryptanalysis/ecbench/audit.rs:1008-1012, crypto:src/cryptanalysis/ecbench/audit.rs:1412-1425, crypto:src/cryptanalysis/ecbench/audit.rs:1887-1899]
+  - id: E2
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "Sessions are enumerated by schema from git ls-tree in both the harness and evidence_audit_pr jobs (ecbench.yml:237-251, 606-620). Residual coverage gap at PR-scope selection: PPX-5."
+    evidence: [crypto:.github/workflows/ecbench.yml:237-251, crypto:.github/workflows/ecbench.yml:606-620]
+  - id: P-N1
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "The mechanism is withdrawn (tex:69-91). The abstract (33-34), Failure B (172-182) and 'What remains' (232-233) say the reason is not isolated, and 'catastrophic' appears only inside the quoted correction. The 2^500 statement re-derives (K3)."
+    evidence: [crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:69-91, crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:172-182]
+  - id: P-N2
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "Table tex:191-219 gives distinct pairs, runs and k_bits (384 at P-521, explained), and my log recount matches every cell (K7)."
+    evidence: [crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:191-219, research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out]
+  - id: P-N4
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "The r = 0 skip of (7,7,5), the 'hypothesis classes' wording and the distinct-check counts are all in tex:370-396, and all re-derive (K5). Residual: the four distinct counts are not in the cited recount/ outputs (PPX-4)."
+    evidence: [crypto:papers/structural-completeness/structural_completeness.tex:370-396]
+  - id: P-N5
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "recount/README.md:5-16 corrects the provenance line. The regenerated exp_zdoubleprime output prints '(Exp Z''): 1,802 instances.' at line 63, and no recount output contains 16562."
+    evidence: [crypto:papers/structural-completeness/recount/README.md:5-16, crypto:papers/structural-completeness/recount/exp_zdoubleprime_lemma_extended.txt:62-63]
+  - id: P-N6
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: >-
+      The Markdown twin's abstract says 'argued ... proof sketches in §8', and the stale 'unconditional'
+      paragraph is deleted (twin lines 32-46). The README calls §8 proof sketches. Cosmetic residual:
+      §8 still typesets the case analysis as \begin{proof} (tex:875), and the intro list keeps
+      'Prove a structural-completeness theorem' (tex:142).
+    evidence: [crypto:research/notes/cm-isogeny/PAPER_STRUCTURAL_COMPLETENESS.md:32-46, crypto:papers/structural-completeness/structural_completeness.tex:142, crypto:papers/structural-completeness/structural_completeness.tex:875]
+  - id: P-N7
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: "RESULTS.md:52-58 and report.typ:29 give the five-of-six statement, and my cells.jsonl recount agrees exactly (K8). report.pdf was committed with report.typ (b615f0019)."
+    evidence: [crypto:research/ic_tree_split_structured_v_20261011/RESULTS.md:52-58, crypto:research/ic_tree_split_structured_v_20261011/reports/run-20261011T2105Z/report.typ:29]
+  - id: E1-R
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: >-
+      The fix's 'report them as unbound' branch is implemented. AuditReport.records_bound is false for
+      never-finalised sessions, with a doc rule that they must not be cited as complete
+      (audit.rs:886-898, 1897-1899), and CI lists them (PPN-5). By design the weakness remains: 33
+      committed sessions have no whole-file hash and unkeyed per-record seals. rg finds none of the 33
+      cited in crypto papers/. Code read; not executed.
+    evidence: [crypto:src/cryptanalysis/ecbench/audit.rs:886-898, crypto:src/cryptanalysis/ecbench/audit.rs:1897-1899, research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/never_finalised_added.out]
+  - id: PPN-1
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: "The banner (README.md:3-6) now reads 'no implemented method shows a reproducible conductor effect, pending the rho re-test at l = 8209 under a fresh measurement seed', with a dated correction note (7-11)."
+    evidence: [crypto:research/conductor_gap_cm_pairs_20261010/README.md:1-11]
+  - id: PPN-2
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: >-
+      A dated correction heads §10 (RESEARCH_LLL_GS_ANALYSIS.md:260-296): the mechanism is withdrawn,
+      f64::MAX ~ 2^1024, the difference is 2^224.0, the factor is 1 - 2^-30, and the conversion
+      dependence is stated. All the numbers re-derive (K3). The note's footnote pins num-bigint 0.4.8,
+      which Cargo.lock:1485-1486 confirms. big_to_f64_scaled shifts out 22 bits (lattice.rs:444-454).
+      I did not read num-bigint's to_f64 source, so the correct-rounding premise is the producer's
+      source reading. The footnote says so.
+    evidence: [crypto:research/notes/lattice-hnp/RESEARCH_LLL_GS_ANALYSIS.md:260-296, crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:79-88, crypto:Cargo.lock:1485-1486, crypto:src/cryptanalysis/lattice.rs:444-454]
+  - id: PPN-3
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: partially_fixed
+    why: >-
+      The paper's table, its total, the expected-output column and the 568-line test are exact at
+      57fa35852 and HEAD (K6). The unsupported timing and 'every script' claims are gone, and the PDF is
+      rebuilt. abstract.txt, the submission companion, still lists '13 PARI/GP scripts (~3000 lines)
+      with committed baseline outputs' and a '~390 lines' Rust test. That contradicts the corrected
+      paper (16 scripts, 3305 LOC, 12 of 16, 568). See PPX-3.
+    evidence: [crypto:papers/structural-completeness/structural_completeness.tex:962-1009, crypto:papers/structural-completeness/abstract.txt:53-60]
+  - id: PPN-4
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: "tex:146-153 and twin:110-114 now say 'argued by case analysis ... nothing in it is machine-checked', with a correction note. The PDF text (pdftotext line 87) agrees."
+    evidence: [crypto:papers/structural-completeness/structural_completeness.tex:146-153, crypto:research/notes/cm-isogeny/PAPER_STRUCTURAL_COMPLETENESS.md:110-114]
+  - id: PPN-5
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: "The audit script reads records_bound before deleting the receipt. It lists every false session with its interruption as an 'unbound prefix, not integrity-passed', adds them to the step summary and fails on a non-boolean (ecbench-audit-sessions.sh:10-15, 162-200). Code read; not executed. Residual wording defect in the sharded summary: PPX-6."
+    evidence: [crypto:.github/scripts/ecbench-audit-sessions.sh:10-15, crypto:.github/scripts/ecbench-audit-sessions.sh:162-200]
+  - id: PPN-6
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: partially_fixed
+    why: >-
+      (a) is fixed: a weekly schedule trigger exists (ecbench.yml:49-53). (b) is fixed for records kept
+      in git: ci-scope.mjs:79 selects ecbench_replay for session.json and records.jsonl(.gz) anywhere.
+      But 516 committed sessions keep records.jsonl only behind .artifacts.json, and 430 of them lie
+      outside the directory rules (K11). A PR that edits only that pointer selects neither the PR
+      integrity audit nor the 'never edited' step. See PPX-5.
+    evidence: [crypto:.github/workflows/ecbench.yml:41-53, crypto:.github/scripts/ci-scope.mjs:70-79, research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/ecbench_census.out]
+  - id: PPN-7
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: "All four files cite the call by symbol plus 'line 309 at commit 57fa35852, line 275 at 11aa00591'. Both pinned lines are `let h = mix(g.key(&pos));`, and HEAD has the call at line 363."
+    evidence: [crypto:research/conductor_gap_cm_pairs_20261010/README.md:94-98, crypto:research/conductor_gap_cm_pairs_20261010/PROTOCOL.md:62-65, crypto:src/cryptanalysis/ecbench/generic.rs:363]
+  - id: SES-1
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: not_fixed
+    why: >-
+      Both records are unchanged: development-result-v1.md:8 still heads '## Verified execution', and
+      EV-ICINV-8afb64.yaml:58 still says 'triple-independently-verified execution'. Their last commits
+      are 2026-08-01 and 2026-08-11. No record under ledger/corrections mentions SES-1 or relabels
+      either one. The three corrections citing SHF-20261028-0f3f64 address LGN-6, LGN-7 and LGN-9.
+    evidence: [experiments/EXP-SGCP-EMBED-002/development-result-v1.md:8, ledger/evidence/EV-ICINV-8afb64.yaml:58]
+
+findings:
+  - id: PPX-1
+    beat: B8
+    severity: minor
+    claim_ids: [PPX-C7]
+    what: >-
+      Added after 2026-10-28 (commit 74c2bffa4), the treatise says "Cheon's attack with auxiliary inputs
+      beats rho from 24 bits up, but only for the DLP with auxiliary inputs". The cited RESULTS.md
+      (3 seeds per size) supports that only for the p-1 BSGS fixed-base-comb variant, which it classes
+      as 'engineering': S/S_rho is 0.281 at 24 bits and below 1 at every size to 48. The naive p-1
+      variant, classed 'advance', is slower than rho at 24 and 28 bits (1.125, 1.827). The p-1 kangaroo
+      comb loses at 28 bits (1.219). Cheon's p+1 algorithm is slower than rho at every measured size
+      (7.03 at 24 bits down to 1.37 at 40). The DLPwAI scoping is kept; the variant and the p+1 negative
+      are dropped.
+    evidence:
+      - crypto:papers/ecdlp-index-calculus-treatise/sections/prog_prime.tex:225-227
+      - crypto:research/torsion_auxiliary_inputs_20260918/RESULTS.md:9-19
+      - crypto:research/torsion_auxiliary_inputs_20260918/RESULTS.md:45-56
+    fix: "Say 'Cheon's p-1 algorithm with fixed-base comb tables beats rho from 24 bits up (24-48 bits, three seeds per size), and the naive variant from 32 bits; the p+1 variant is slower than rho at every measured size (24-40 bits); all for the DLP with auxiliary inputs only'. Rebuild the PDF."
+  - id: PPX-2
+    beat: B8
+    severity: minor
+    claim_ids: [PPX-C8]
+    what: >-
+      Two papers use execution-proof wording for answer-verified runs. The treatise (added after
+      2026-10-28) and the older program paper (2026-10-20) both write "1,088/1,088 verified executions".
+      The cited row, benchmarks/README.md:247, says "verified sealed ecbench executions", meaning sealed
+      sessions whose answers were verified. These are replays and hashes, not execution proofs, and no
+      execution proof exists in these repositories (SKILL.md rules). This is the same defect class as
+      SES-1, now in a paper.
+    evidence:
+      - crypto:papers/ecdlp-index-calculus-treatise/sections/prog_rootfinding.tex:237
+      - crypto:papers/ecdlp-index-calculus-program/sections/rootfinding.tex:237
+      - crypto:benchmarks/README.md:247
+    fix: "Write '1,088/1,088 executions with verified answers (sealed ecbench sessions)' in both papers and rebuild their PDFs."
+  - id: PPX-3
+    beat: B8
+    severity: minor
+    claim_ids: [PPX-C6]
+    what: >-
+      The structural-completeness submission abstract (abstract.txt:53-60, last changed 2026-10-17, before
+      the PPN-3 correction) still advertises "13 PARI/GP scripts (~3000 lines) with committed baseline
+      outputs for reproducibility" and "1 Rust integration test (~390 lines)". The corrected paper says
+      16 scripts, 3305 LOC, 12 of 16 with expected output, and tests/curve_audit.rs at 568 lines. The
+      test has had 568 lines since 2026-09-12 and 584 before that, so '~390' matches no recorded state.
+    evidence:
+      - crypto:papers/structural-completeness/abstract.txt:53-60
+      - crypto:papers/structural-completeness/structural_completeness.tex:962-1009
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/text_checks.out
+    fix: "Regenerate the companion-artefact lines of abstract.txt from the paper's Reproducibility section (16 scripts, 3305 LOC at 57fa35852, 12 with expected output, 568-line test), or drop them."
+  - id: PPX-4
+    beat: B8
+    severity: minor
+    claim_ids: [PPX-C2]
+    what: >-
+      tex:394-396 gives 336 and 249 distinct (l, p, #E) checks (292 and 209 for l in {3,5,7}) and then
+      says "The counts and the re-run outputs are committed in recount/ (count.txt, exp_*.txt)". None
+      of the four distinct counts appears in any recount/ output. They are correct, since my independent
+      recount re-derives all four, but they trace to no cited artifact.
+    evidence:
+      - crypto:papers/structural-completeness/structural_completeness.tex:393-399
+      - crypto:papers/structural-completeness/recount/count.txt
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    fix: "Add the distinct-(l,p,#E) tallies to count.py/count.txt (regenerated and committed), or cite the artifact that holds them."
+  - id: PPX-5
+    beat: B7
+    severity: minor
+    claim_ids: [PPX-C9]
+    what: >-
+      The PPN-6(b) fix does not cover sessions whose records live in the artifact store. ci-scope.mjs
+      selects ecbench_replay for session.json and records.jsonl(.gz) by name anywhere, plus every
+      non-prose file under five research and docs trees. 516 committed ecbench sessions keep
+      records.jsonl only as an entry in a git-tracked .artifacts.json, and 430 of them lie outside those
+      trees. The name rule never matches .artifacts.json, and the artifacts workflow only flags data
+      committed to git, not changed pointers. So a PR or push that edits only such a pointer
+      (re-pointing records.jsonl to other bytes) runs neither evidence_audit_pr nor the 'never edited'
+      step. The weekly lane re-audits integrity, and session.records_sha256 then catches a re-pointed
+      finalised session. It does not run the never-edited check, and it cannot catch a swapped prefix
+      in a never-finalised session (one such pointer-only session:
+      research/pkm_tower_rootfind_20261018/interrupted/P8-worker-restart-20261019). Reasoned from
+      code; no CI run observed.
+    evidence:
+      - crypto:.github/scripts/ci-scope.mjs:70-79
+      - crypto:.github/workflows/ecbench.yml:274-299
+      - crypto:.github/workflows/ecbench.yml:575
+      - crypto:.github/workflows/artifacts.yml:49-56
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/ecbench_census.out
+    fix: "Add `(^|/)\\.artifacts\\.json$` to the ecbench_replay rule (or select when the changed .artifacts.json's directory holds an ecbench session.json), and run the never-edited diff in the weekly lane against the previous scheduled commit."
+  - id: PPX-6
+    beat: B7
+    severity: minor
+    claim_ids: [PPX-C10]
+    what: >-
+      In the sharded PR audit (AUDIT_SHARD=k/16), the summary line reports '$bound_count of $index
+      committed ecbench sessions pass integrity'. bound_count counts only this shard's sessions, but
+      index counts every non-pinned session in the whole list (ecbench-audit-sessions.sh:105-127,
+      184-185, 202). A green shard therefore reads as if most committed sessions were not
+      integrity-passed. This understates rather than overstates, but the integrity text is wrong.
+    evidence:
+      - crypto:.github/scripts/ecbench-audit-sessions.sh:105-127
+      - crypto:.github/scripts/ecbench-audit-sessions.sh:184-185
+      - crypto:.github/scripts/ecbench-audit-sessions.sh:202
+      - crypto:.github/workflows/ecbench.yml:653-656
+    fix: "Report '$bound_count of $audited sessions in this shard (of $index in total)'."
+
+claims:
+  - id: PPX-C1
+    text: "an extended PARI sweep ... over all 330 primes p = 1 (mod 6) with 7 <= p <= 5000 (of the 669 primes p <= 5000 ...) finds no CM-73 prime beyond p = 109. Among the 11 primes satisfying the necessary norm form 4p = 73 + 3k^2 ..."
+    location: crypto:papers/structural-completeness/structural_completeness.tex:440-450
+    suggested_verdict: upheld_scoped
+    scoped_to: "The 330/669 counts, the 11-prime norm-form set and its k list re-derive exactly. That the sweep found no further CM-73 prime rests on the committed thread12_cm73_sweep.txt; gp was not re-run, and a bounded sweep proves nothing beyond 5000, which the paper says."
+    beats: {B2: n/a, B3: n/a, B4: not_covered, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PPX-C2
+    text: "there are 24 476 instances: 8 734 on ordinary curves ... and 15 742 on supersingular ones ... 26 278 instances ... 9 864 ordinary instances ... 0 violations ... 336 and 249 distinct (l, p, #E) checks"
+    location: crypto:papers/structural-completeness/structural_completeness.tex:369-399
+    suggested_verdict: upheld_scoped
+    scoped_to: "Every count re-derives by independent point counting. The distinct-check counts are correct but absent from the cited recount/ artifacts (PPX-4)."
+    findings: [PPX-4]
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PPX-C3
+    text: "For secp256k1, and for every 384-bit curve, the squared Gram-Schmidt norms overflow IEEE double precision (n^4 > f64::MAX) ... a re-run on 2026-10-16 recovers the key for every distinct seed pair at 256 and 384 bits, secp256k1 included (3 of 3 distinct seed pairs, 6 probe runs), and on P-521 with 2048-bit fixed-point Gram-Schmidt (3 of 3; at k_bits = 384)"
+    location: crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:29-40
+    suggested_verdict: upheld_scoped
+    scoped_to: "The overflow arithmetic re-derives, and every table cell equals the committed probe logs. The probes were not re-executed, and the recovered keys are as logged, not re-verified."
+    beats: {B2: n/a, B3: n/a, B4: not_covered, B5: n/a, B6: pass, B7: pass, B8: pass}
+  - id: PPX-C4
+    text: "the P-521 diagonal n^2/2^542 rounds to exactly 2^500 in f64 ... A truncating BigInt-to-f64 conversion would instead give 2^500(1-2^-53) and a residual of 2^447"
+    location: crypto:papers/lll-degeneracy-note/lll_degeneracy_note.tex:76-88
+    suggested_verdict: upheld_scoped
+    scoped_to: "Both values re-derive from the P-521 order and the code's 22-bit shift. That num-bigint 0.4.8 to_f64 is correctly rounded is the producer's source reading (stated as such), not checked here."
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PPX-C5
+    text: "LOC are wc -l counts at commit 57fa35852 ... Total 3305 ... Twelve of the sixteen have a committed expected output ... tests/curve_audit.rs, 568 lines at the same commit"
+    location: crypto:papers/structural-completeness/structural_completeness.tex:962-1009
+    suggested_verdict: upheld
+    scoped_to: "All rows, the total, the expected-output column and the test length are exact at 57fa35852 and at HEAD."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PPX-C6
+    text: "13 PARI/GP scripts (~3000 lines) with committed baseline outputs for reproducibility; 1 Rust integration test (~390 lines)"
+    location: crypto:papers/structural-completeness/abstract.txt:56-60
+    suggested_verdict: unsupported
+    scoped_to: "The paper's own corrected table gives 16 scripts, 3305 LOC, 12 with expected output and a 568-line test. '~390' matches no commit."
+    findings: [PPX-3]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: fail}
+  - id: PPX-C7
+    text: "Cheon's attack with auxiliary inputs beats rho from 24 bits up, but only for the DLP with auxiliary inputs"
+    location: crypto:papers/ecdlp-index-calculus-treatise/sections/prog_prime.tex:225-227
+    suggested_verdict: overclaimed
+    scoped_to: "For the DLP with auxiliary inputs, 24-48 bits, three seeds per size: the p-1 BSGS fixed-base-comb variant beats rho at every size, and the naive p-1 variant from 32 bits. The p+1 variant is slower than rho at every measured size (24-40 bits)."
+    findings: [PPX-1]
+    beats: {B2: n/a, B3: n/a, B4: not_covered, B5: not_covered, B6: not_covered, B7: n/a, B8: fail}
+  - id: PPX-C8
+    text: "1,088/1,088 verified executions"
+    location: crypto:papers/ecdlp-index-calculus-treatise/sections/prog_rootfinding.tex:237
+    suggested_verdict: overclaimed
+    scoped_to: "1,088/1,088 sealed ecbench executions with verified answers, as benchmarks/README.md:247 records (not re-run). No execution proof."
+    findings: [PPX-2]
+    beats: {B2: fail, B3: n/a, B4: not_covered, B5: n/a, B6: n/a, B7: not_covered, B8: fail}
+  - id: PPX-C9
+    text: "Every committed ecbench session is found by its schema ... Each complete or interrupted session is integrity-audited ... on ecbench pull requests and in the weekly/manual lane, and is evidence that is never edited."
+    location: crypto:.github/workflows/ecbench.yml:21-28
+    suggested_verdict: overclaimed
+    scoped_to: "The by-schema enumeration holds, and the weekly lane exists. PR-time selection and the never-edited check miss pointer-only edits for 430 sessions whose records live in the artifact store. The weekly lane re-audits integrity but not immutability."
+    findings: [PPX-5]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: n/a}
+  - id: PPX-C10
+    text: "a session whose receipt says records_bound: false ... is listed, with its interruption, as an unbound prefix, not integrity-passed"
+    location: crypto:.github/scripts/ecbench-audit-sessions.sh:10-15
+    suggested_verdict: upheld_scoped
+    scoped_to: "By code reading (lines 162-200); not executed. The sharded summary's denominator is wrong (PPX-6)."
+    findings: [PPX-6]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: not_covered}
+  - id: PPX-C11
+    text: "Every number in this section, and the counts quoted in the abstract, is read from one committed run"
+    location: papers/semaev-conservation-specialization/paper.tex:859-873
+    suggested_verdict: upheld_scoped
+    scoped_to: "The cited run files are in git, and the table's aggregates trace to the named keys (K9). The abstract's counts were not traced one by one here."
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: PPX-C12
+    text: "## Verified execution / triple-independently-verified execution"
+    location: experiments/EXP-SGCP-EMBED-002/development-result-v1.md:8; ledger/evidence/EV-ICINV-8afb64.yaml:58
+    suggested_verdict: overclaimed
+    scoped_to: "Verified rows/answers and independent reconstruction, not execution proofs (SES-1, not fixed)."
+    beats: {B2: fail, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: n/a, B8: fail}
+  - id: PPX-C13
+    text: "The gap -1 cells are exactly the five non-degenerate subfield cells. Six frob cells have g dividing t^7 - 1, and five of them are at gap -1"
+    location: crypto:research/ic_tree_split_structured_v_20261011/RESULTS.md:52-56
+    suggested_verdict: upheld
+    scoped_to: "Recounted from runs/registered/cells.jsonl (K8)."
+    beats: {B2: n/a, B3: n/a, B4: pass, B5: n/a, B6: n/a, B7: pass, B8: pass}
+
+lead_dispositions:
+  - lead: "treatise prog_prime.tex:226 'beats rho from 24 bits up'"
+    disposition: confirmed
+    one_line: "PPX-1."
+  - lead: "treatise prog_rootfinding.tex:237 and program rootfinding.tex:237 'verified executions'"
+    disposition: confirmed
+    one_line: "PPX-2."
+  - lead: "first-fall-lean title 'Machine-checked first-fall-degree reasoning' (car papers/first-fall-lean)"
+    disposition: dismissed_for_B8
+    one_line: "The cited declarations (lemma4_mv_false, lemma4_mvB_false, exact_first_fall_degrees, recovery) exist in formal/CryptoResearch/Nagao/*.lean and are imported by CryptoResearch.lean. Build, axioms and fidelity belong to the B3 reader and are not_covered here."
+  - lead: "first-fall-lean 'no fake fall at degree 1 was proved by a reviewer'"
+    disposition: dismissed
+    one_line: "The paper says it was adopted as the Lean theorem exact_first_fall_degrees (FakeExact.lean:107); it is earned by that artifact, subject to B3."
+  - lead: "crypto benchmarks/20261029-prime-precompute-regime/README.md:10 'beats rho per target from about 6 targets on'"
+    disposition: handed_on
+    one_line: "Headed 'control and accounting, not an improvement', with no results row. Whether the matched reference for a multi-target regime is multi-target rho rather than independent single-target runs is a B5 cost-model question for the red-team joint. My scaling argument would rest on recalled Kuhn-Struik constants, so I make no finding."
+  - lead: "treatise prog_frontier.tex:310 'measured IC beats a rho arm'"
+    disposition: dismissed
+    one_line: "It discloses that the arm is the item-7 rho at 1.75 sqrt(l) steps and leaves the crossing against a matched rho 'not established' (lines 319-325)."
+  - lead: "treatise prog_binary.tex:122-150 MITM 'Speed-up' table (94-277x to 4,244x)"
+    disposition: dismissed
+    one_line: "It names the component (pair table vs Gaudry pairs-and-solve), is labelled 'wall-time ... shared host, unvalidated', and cites three study dirs. No interval is given for l >= 9, which is a note, not a finding."
+  - lead: "treatise audit.tex:38 'IC's online speed-up over rho'"
+    disposition: dismissed
+    one_line: "Captioned 'The retired online wins', under 'Claims that did not survive'."
+  - lead: "treatise prog_groebner/prog_koblitz component speed-up rows"
+    disposition: dismissed
+    one_line: "Labelled as stage or component speed-ups that change no index-calculus result, or archived as incomplete/withheld, in the captions read."
+  - lead: "ecdlp-boundaries generic.tex:37 'proves that one concrete implementation beats every other'"
+    disposition: dismissed
+    one_line: "It is a negation ('Neither schematic inequality proves ...')."
+  - lead: "crypto README.md added lines with 'speedup' (rootfinding results section)"
+    disposition: dismissed
+    one_line: "Every hit is negated or caveated ('not a speedup', 'do not cite them as admitted speedups')."
+
+not_covered:
+  - what: "make -C papers/<paper> check for every paper touched (LLL note, structural-completeness, treatise, semaev, first-fall-lean)"
+    why: "Building runs producer code (permission policy)."
+    command_that_would_cover: "make -C /home/user/crypto/papers/<paper> check; make -C /home/user/crypto-autoresearcher/papers/<paper> check"
+  - what: "ecbench verify on the 33 never-finalised sessions and on a re-pointed .artifacts.json control (PPX-5)"
+    why: "Executing crypto's Rust is blocked."
+    command_that_would_cover: "cd /home/user/crypto && cargo build --release --bin ecbench && python3 tools/artifacts/artifacts.py pull <dir> && ./target/release/ecbench verify --dir <dir> --replay 0 --allow-interrupted"
+  - what: "Re-execution of the LLL probes and of thread12_cm73_sweep.gp / the lemma scripts"
+    why: "Producer code (cargo test, gp, their python) is not executed here. The counts were re-derived independently instead."
+    command_that_would_cover: "cargo test --release --test lll_degeneracy_probe -- --nocapture; gp --stacksize 32000000 -q secp256k1_cm_audit/thread12_cm73_sweep.gp"
+  - what: "num-bigint 0.4.8 BigUint::to_f64 rounding (the premise of PPX-C4)"
+    why: "The crate source was not fetched or read."
+    command_that_would_cover: "read ~/.cargo/registry/src/*/num-bigint-0.4.8/src/biguint/convert.rs (high_bits_to_u64), or a one-line Rust check whose output is committed"
+  - what: "first-fall-lean paper.pdf (artifact-store object 0b1e7c51...)"
+    why: "No store credentials or pull attempted; the PDF is not in git."
+    command_that_would_cover: "python3 tools/artifacts/artifacts.py pull papers/first-fall-lean/paper.pdf && pdftotext it"
+  - what: "Exhaustive B8 tracing of every number in the 489 papers/ files changed in crypto since 2026-10-28"
+    why: "Out of budget. The scan was by strong words and phrase, and the leads above are the ones read in context. A bounded scan proves no absence."
+    command_that_would_cover: "python3 tools/sheriff.py sweep --target crypto:papers --deep, then trace each paper.untraced_number"
+
+limitations:
+  - "This is a sheriff reader record. It is never a validation_report and satisfies no review gate. Projected onto agents/validator.md it would be `incomplete`, because builds and producer executions are not_covered."
+  - "The E1, E1-R, PPN-5, PPN-6 and PPX-5/6 judgements come from code reading; no CI run or ecbench verify was observed."
+  - "The six group orders were recalled from the standards and cross-checked only by string equality with crypto's own constants and by primality."
+  - "The census reads session.json blobs at HEAD; it does not hydrate any artifact-store object."
+
+artifact_paths:
+  - path: research/sheriff/SHF-20261106-a114e7/readers/papers.yaml
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.py
+    sha256: d195530ce9f8a89203bdcf5b665f81ab7196177cf42fe63ad0a5e3d3eabd3a77
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.out
+    sha256: ecbc630007f77cbc7f6feb67ad3a93666ec5f919704c29b4ad93cb953e1f1fa8
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/papers_checks.json
+    sha256: c342667f85ae9f0d4f0ddccae72b2b09fe2f2e5babdd320b84e895ec72f1f6a1
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/ecbench_census.py
+    sha256: 39a90a6d8e7191606b34fe5654016eb589bd80d5b8ae2bc075a6deecac5a4339
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/ecbench_census.out
+    sha256: 63fe9b536f07db168a57c4da7d2c21cd018a6e88c97584295123e935cb3b4447
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/ecbench_census.json
+    sha256: d818b73ec14e7e39cd67223e2b2a4e85bd3a8ed62e0913dd6be97c2f70f82739
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/never_finalised_added.out
+    sha256: df1679554477766d8a9bce1c36071e1498d9b3ff78b3f9912005ca3a18205574
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/pn7_cells.out
+    sha256: 2988dbdfa670d58ed70c4f29599b8ead36e47b8c221eb8b3948ad346557aee92
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/text_checks.sh
+    sha256: 821b04d613339c4a1830f6daa21dd071d5c87cfdff16b38356e2a51ca921115f
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/papers/text_checks.out
+    sha256: 04cdd05d4fc6dd2436a094861deb376872b02130907ad05c48ffef77ca2a3248
+
+review_attestation:
+  joints_owned: ["PPX: papers, prose and ecbench session integrity text (B7/B8); prior findings P1, P3-P6, E1, E2, P-N1, P-N2, P-N4..P-N7, E1-R, PPN-1..PPN-7, SES-1; the new strong-word scan since 2026-10-28"]
+  sources_read: "see sources_read above (complete)"
+  read_sibling_reports: false
+  blind_from_respected: true
+  joint_result: >-
+    Holds for 19 of 22 prior findings: fixed, with every number re-derived independently. PPN-3 and
+    PPN-6 are partially fixed (a stale abstract.txt; artifact-store pointers outside CI scope). SES-1
+    is not fixed. Six new minor findings, two of them strong-word overclaims added since 2026-10-28
+    (PPX-1, PPX-2). Builds and executions are not_covered.

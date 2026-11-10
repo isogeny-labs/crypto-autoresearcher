@@ -1,0 +1,373 @@
+{
+  "schema": "experiment.protocol/v1",
+  "protocol_id": "SEMAEV-NOWRAP-W3-R6-20261109",
+  "version": 1,
+  "created": "2026-11-09",
+  "repository": "crypto-autoresearcher",
+  "study_dir": "analysis/semaev-bound-labels-20261109/no-wrap-w3",
+  "authors": [
+    "Codex"
+  ],
+  "links": {
+    "problem": "problems/growing-boolean-semaev-lower-bound.md",
+    "predata_prediction": "no-wrap-r6-exact-degree-three.md derived before any D3 computation; independent review pending at preparation."
+  },
+  "question": "Does full degree-three closure derive the complete affine ideal of the r6 no-wrap system? Prior bracket3..4; predata symbolic argument predicts3.",
+  "claims": [
+    {
+      "id": "C1",
+      "text": "One fixed r6 cap3 closure certificate gives upper3 or lower4 after complete replay.",
+      "class": "exact_computation",
+      "decided_by": []
+    }
+  ],
+  "hypotheses": [],
+  "arms": [
+    {
+      "id": "exact-w3",
+      "role": "candidate",
+      "description": "Degree-three saturation with replayable provenance",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "2baf89e504cf1e6c66dc6361cfcd314fe08815c35496b7c6a0ea26a96a8f2569",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "r": [
+          6
+        ],
+        "cap": 3
+      }
+    },
+    {
+      "id": "independent-replay",
+      "role": "reference",
+      "description": "Independent set-polynomial reconstruction and full DAG/closure replay of each candidate",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "r": [
+          6
+        ],
+        "cap": 3
+      }
+    },
+    {
+      "id": "positive",
+      "role": "control_positive",
+      "description": "known r1 and r2 upper2",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "controls": "r1cap3, existing r6cap2 certificate, mutations"
+      }
+    },
+    {
+      "id": "negative",
+      "role": "control_negative",
+      "description": "corrupted r1 DAG and incomplete space rejected",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": null,
+        "build": [],
+        "binary_sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+        "flags": {},
+        "env": {},
+        "threads": 1
+      },
+      "parameters": {
+        "controls": "r1cap3, existing r6cap2 certificate, mutations"
+      }
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "not_applicable_reason": "No noisy statistic; exact byte-identical r1 repetition is required.",
+      "comparison": null
+    },
+    "positive": {
+      "present": true,
+      "arm": "positive",
+      "expected_detection": "r1 upper3; existing r6cap2 reproduces rank71 and lower3",
+      "not_applicable_reason": null
+    },
+    "negative": {
+      "present": true,
+      "arm": "negative",
+      "null_population": {
+        "description": "corrupt DAG and incomplete containing space",
+        "generator": "run.py fixed r1cap3 mutations",
+        "n": 2,
+        "why_n": "two distinct soundness failure paths; no statistical claim",
+        "matched_on": [
+          "same r1 inputs and schema"
+        ]
+      },
+      "not_applicable_reason": null
+    }
+  },
+  "variable_ledger": {
+    "independent": [
+      {
+        "name": "r",
+        "levels": [
+          6
+        ]
+      }
+    ],
+    "factors": [
+      {
+        "name": "presentation",
+        "treatment": "fixed",
+        "value": "all nonzero polynomial coefficients of S3 with n>4r,z=a6=1",
+        "how": "source reconstructs coefficient expansion"
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "start receipt; no timings interpreted"
+      },
+      {
+        "name": "source",
+        "treatment": "fixed",
+        "value": {
+          "closure.py": "2baf89e504cf1e6c66dc6361cfcd314fe08815c35496b7c6a0ea26a96a8f2569",
+          "replay.py": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+          "run.py": "105c9814f72d4546fedbab87653c11148556c98b2bdbca4440bed8ffba4409f2"
+        },
+        "how": "commit and freeze before computation"
+      },
+      {
+        "name": "implementation",
+        "treatment": "crossed",
+        "value": [
+          "bitset producer",
+          "set-polynomial replay"
+        ],
+        "how": "every produced certificate replayed independently"
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "C-exact",
+        "arms": [
+          "exact-w3",
+          "independent-replay"
+        ],
+        "differs_in": [
+          "implementation"
+        ],
+        "design": "absolute",
+        "threshold": "every certificate passes independent replay and closure checks"
+      }
+    ],
+    "aa_not_applicable": "deterministic exact proof computation",
+    "crosses_map": false
+  },
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "ascending r; no performance claims",
+    "seed_derivation": {
+      "method": "explicit_list",
+      "seeds": [
+        0
+      ],
+      "nonce": null,
+      "note": "deterministic coefficient systems; no random draws"
+    },
+    "instance_sampling": {
+      "rule": "one fixed r6 cap3 coefficient system",
+      "independent_of_arm": true
+    },
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "exact deterministic proof, no statistical analysis",
+      "unmasked_at": null
+    }
+  },
+  "sample_size": {
+    "instances": 1,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "method": "exact",
+      "alpha": 0.05,
+      "tests_in_family": 1,
+      "correction": "none",
+      "rank_test_n": null,
+      "min_attainable_two_sided_p": null,
+      "passes": true,
+      "note": "exact finite decision; no population inference"
+    },
+    "preflight_runtime": {
+      "fixed_seconds": null,
+      "per_sample_seconds": null,
+      "threads": 1,
+      "estimated_total_seconds": 60,
+      "measured_on": "not measured; hard CPU limit60s and wall90s"
+    }
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "missing",
+        "name": "missing affine generators",
+        "unit": "count",
+        "kind": "counted",
+        "definition": "known affine generators absent from full degree-three closure",
+        "source": "r*-result.json missing_affine_generators",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": []
+  },
+  "measurement": {
+    "isolation_required": "L0",
+    "warmups": 0,
+    "order": "sequential",
+    "clock": "counted",
+    "counters": [
+      "rank",
+      "affine_dimension"
+    ],
+    "record": [
+      "python",
+      "host",
+      "commit",
+      "source_sha256"
+    ],
+    "timed_primary_justification": null
+  },
+  "execution": {
+    "backend": "local",
+    "queue": "none",
+    "placement": {
+      "cpus": 1,
+      "spot": false,
+      "memory_mib": 512
+    },
+    "measurement_class": "search",
+    "timeout_seconds": 90,
+    "checkpoint": {
+      "policy": "none",
+      "interval_seconds": null,
+      "grace_seconds": null,
+      "restore_validation": "none",
+      "after_restore": {
+        "wall_time": "invalid",
+        "counted_units": "valid"
+      }
+    },
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    }
+  },
+  "stopping_rules": [
+    {
+      "rule": "one r6cap3 cell or first assertion/resource failure; no retry",
+      "kind": "fixed_n",
+      "preregistered": true
+    }
+  ],
+  "invalidation_rules": [
+    "any failed control invalidates all scientific labels",
+    "failed replay invalidates that cell; stop",
+    "partial execution yields only completed verified cells"
+  ],
+  "decision_rule": {
+    "text": "No missing affine yields upper3; missing affine yields lower4. Prior reviewed bracket3..4 then determines exact degree. No general-r extrapolation.",
+    "comparison_ids": [
+      "C-exact"
+    ],
+    "threshold": "zero missing versus positive missing",
+    "statistic": "exact membership",
+    "interval": "none",
+    "multiple_comparison_correction": "none",
+    "effect_size_measure": "none",
+    "verdict_vocabulary": [
+      "upper3",
+      "lower4",
+      "invalid",
+      "incomplete"
+    ]
+  },
+  "analysis_plan": {
+    "script": {
+      "path": "analysis/semaev-bound-labels-20261109/no-wrap-w3/replay.py",
+      "sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565"
+    },
+    "inputs": [
+      "r*-certificate.json"
+    ],
+    "outputs": [
+      "r*-result.json",
+      "summary.json"
+    ],
+    "blinded": false,
+    "frozen_before_data": true
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "closure rank and affine dimension by r"
+    ],
+    "report_dir": "reports"
+  },
+  "inadmissible": [
+    "general-r bound inferred from finite list",
+    "timing or instruction count conclusion",
+    "production dataset admission",
+    "same-field claim without n>4r and original presentation"
+  ],
+  "literature": [
+    {
+      "ref": "analysis/semaev-bound-labels-20261109/no-wrap-coefficient-progress.md",
+      "provenance": "internal",
+      "claim": "coefficient identity and known r1,r2 cap2 proofs",
+      "verified_by": "independent written review 2026-11-09"
+    },
+    {
+      "ref": "analysis/semaev-bound-labels-20261109/polynomial-subspace-candidate.md",
+      "provenance": "internal",
+      "claim": "exact two-point bridge",
+      "verified_by": "independent written review 2026-11-09"
+    },
+    {
+      "ref": "analysis/semaev-bound-labels-20261109/no-wrap-r6-symbolic-obstruction.md",
+      "provenance": "internal",
+      "claim": "reviewed bracket3..4",
+      "verified_by": "independent review 2026-11-09"
+    }
+  ],
+  "amendments": [],
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "ff1ecf8e84aebfb9276f708c19203220a8047b162b6dcdf6bbe55e6a4edf0710",
+    "commit": "c36ccde4ab18de70d8875e91e42fbaef5c4ea728",
+    "frozen_at": "2026-11-09T19:28:39Z",
+    "filed_before_affected_data": true
+  }
+}

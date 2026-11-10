@@ -16,7 +16,7 @@ from candidate_unit_artifact import (CandidateUnitArtifacts, admitted_runner,
 
 
 def run_batch(runner, run_dir, cohort, plan_sha256, caps, memory_bytes,
-              cpu_seconds, unit_wall_seconds, stage_wall_seconds):
+              cpu_seconds, unit_wall_seconds, stage_wall_seconds, *, use_worker=False):
     """Execute every fixed unit, then seal the complete exact-coverage index."""
     if not isinstance(runner, CandidateUnitArtifacts):
         raise ValueError("candidate artifact runner required")
@@ -42,26 +42,46 @@ def run_batch(runner, run_dir, cohort, plan_sha256, caps, memory_bytes,
     chunks_dir.mkdir()  # an interrupted attempt is never reused
     started = time.monotonic()
     pending = []
-    for ordinal, row in enumerate(units):
-        remaining = stage_wall_seconds - (time.monotonic() - started)
-        if remaining <= 0:
-            raise TimeoutError("stage wall ceiling reached before next unit")
-        wall = min(unit_wall_seconds, max(1, int(remaining)))
-        binding = binder.bind(row["class_index"], row["T_index"])
-        if (binding["cohort"] != cohort or binding["join_plan_sha256"] != plan_sha256
-                or binding["class_index"] != row["class_index"]
-                or binding["T_index"] != row["T_index"]):
-            raise ValueError("bound unit differs from fixed layout")
-        receipt = runner.run(row["name"], binding["quotient_form"],
-                             binding["field"], binding["structures_per_T"],
-                             caps, memory_bytes, cpu_seconds, wall,
-                             binding=binding if runner.scope == "approved-cohort" else None)
-        if receipt["status"] != "candidate_emitted":
-            raise ValueError(f"candidate unit failed: {row['name']}: {receipt['status']}")
-        pending.append(run_dir / row["name"])
-        if len(pending) == MAX_UNITS or ordinal == len(units)-1:
-            seal_chunk(pending, chunks_dir / row["chunk"])
-            pending = []
+    worker_mode = runner.scope == "approved-cohort" or use_worker
+    if worker_mode:
+        runner.start_worker(caps, memory_bytes, stage_wall_seconds,
+                            stage_wall_seconds)
+    try:
+        for ordinal, row in enumerate(units):
+            remaining = stage_wall_seconds - (time.monotonic() - started)
+            if remaining <= 0:
+                raise TimeoutError("stage wall ceiling reached before next unit")
+            wall = min(unit_wall_seconds, max(1, int(remaining)))
+            binding = binder.bind(row["class_index"], row["T_index"])
+            if (binding["cohort"] != cohort or binding["join_plan_sha256"] != plan_sha256
+                    or binding["class_index"] != row["class_index"]
+                    or binding["T_index"] != row["T_index"]):
+                raise ValueError("bound unit differs from fixed layout")
+            if worker_mode:
+                receipt = runner.run_worker(row["name"], binding["quotient_form"],
+                    binding["field"], binding["structures_per_T"], caps,
+                    memory_bytes, cpu_seconds, wall, binding)
+            else:
+                receipt = runner.run(row["name"], binding["quotient_form"],
+                    binding["field"], binding["structures_per_T"], caps,
+                    memory_bytes, cpu_seconds, wall, binding=None)
+            if receipt["status"] != "candidate_emitted":
+                raise ValueError(f"candidate unit failed: {row['name']}: {receipt['status']}")
+            pending.append(run_dir / row["name"])
+            if len(pending) == MAX_UNITS or ordinal == len(units)-1:
+                seal_chunk(pending, chunks_dir / row["chunk"])
+                pending = []
+        if worker_mode:
+            remaining = stage_wall_seconds - (time.monotonic() - started)
+            if remaining <= 0:
+                raise TimeoutError("stage wall ceiling reached before worker exit")
+            runner.finish_worker(remaining)
+    except BaseException as error:
+        if worker_mode:
+            runner.abort_worker(str(error))
+        raise
+    finally:
+        runner.stop_worker()
     index = seal_complete_index(run_dir, cohort, plan, plan_sha256,
                                 runner.binary_sha256)
     verified = verify_complete_index(run_dir, cohort, plan, plan_sha256,

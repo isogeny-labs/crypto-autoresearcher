@@ -1,0 +1,54 @@
+handoff:
+  id: TASK-20261109-ab1c83
+  from: coordinator
+  to: coordinator
+  role: coordinator
+  recorded_at: '2026-11-09'
+  goal_id: GOAL-PEXT-4a1d6b
+  objective: Fix prospective C6/C7 source strata and selected control units from all four checked published join plans before any run.
+  uncertainty_reduced: Every declared factor pattern occurs in all four cohorts; first canonical class/T and ordinal-zero C6 units plus two C7 scalar classes per pattern are now fixed by exact source readback.
+  inputs: &artifacts
+  - experiments/EXP-PEXT-bf8f96/implementation/c67_control_schedule.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_c67_control_schedule.py
+  - experiments/EXP-PEXT-bf8f96/inputs/c67-control-schedule-prospective.json
+  - experiments/EXP-PEXT-bf8f96/reports/c67-prospective-schedule-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - experiments/EXP-PEXT-bf8f96/protocol.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261109-ab1c83.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-a7ea2b.yaml
+  constraints:
+  - No candidate cohort, C6 transport control, C7 random draw, benchmark, cloud job, protocol approval or freeze.
+  - Preserve P1-P4, C0-C7, H1 q13 and six-run, 4 GB, 24 CPU-hour, 24-hour, zero-cloud-dollar, no-retry ceilings.
+  - Source availability and requested control counts are not completed samples or scientific outcomes.
+  deliverables:
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-ab1c83/receipt.json
+  artifact_paths: *artifacts
+  write_scope:
+  - experiments/EXP-PEXT-bf8f96/implementation/c67_control_schedule.py
+  - experiments/EXP-PEXT-bf8f96/implementation/test_c67_control_schedule.py
+  - experiments/EXP-PEXT-bf8f96/inputs/c67-control-schedule-prospective.json
+  - experiments/EXP-PEXT-bf8f96/reports/c67-prospective-schedule-20261109/report.md
+  - experiments/EXP-PEXT-bf8f96/specification.yaml
+  - experiments/EXP-PEXT-bf8f96/protocol.json
+  - problems/pext-degree2-squareclass-census-launcher.md
+  - ledger/handoffs/TASK-20261109-ab1c83.yaml
+  - coordination/sessions/receipts/20261109/SR-20261109-a7ea2b.yaml
+  - experiments/EXP-PEXT-bf8f96/archives/TASK-20261109-ab1c83/receipt.json
+  archived_by: TASK-20261109-ab1c83
+  inference:
+    policy: coordinator-orchestration-code
+    reasoning_effort: high
+    fallback_allowed: false
+    degraded_allowed: false
+    independent_session_required: false
+    delivery: interactive
+  budget:
+    wall_clock_seconds: 1800
+    memory_gb: 4
+    maximum_runs: 0
+  completion_gate:
+  - Full published-source schedule exact readback and digest pass; all 20 C6 units and 40 C7 strata are fixed prospectively.
+  - Native snapshot archive verifies and PR is published; run-level custody, external review and resource qualification remain open.
+  state: queued
+  return_format: Archive and publication receipt with source-only scope.

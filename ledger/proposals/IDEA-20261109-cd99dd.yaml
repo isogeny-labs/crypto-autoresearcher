@@ -1,0 +1,64 @@
+idea:
+  id: IDEA-20261109-cd99dd
+  question_id: RQ-ISO-3325c3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: control
+  novelty_status: speculative
+  title: 'Control: bounded-depth Hecke-Krylov profiles are constant across maximal orders (local isomorphism),
+    so they cannot certify End(E)'
+  assumption_attacked: Decisional EndRing; also guards the filed H-ALISO-008 probe against over-interpretation.
+  mechanism: Compute dim span{v, T_2 v, ..., T_2^k v} for vertex indicators v on the supersingular module
+    (size ~ p/12) with T_2, T_3 the Hecke/Brandt operators. By Eichler, all maximal orders of B_{p,inf}
+    are locally conjugate at every q != p, so any invariant factoring through finitely many local completions
+    is constant. The control checks whether profiles up to depth (log_2 p)/2 separate any vertices. Clears
+    H-ALISO-008 (Krylov probe), H-ALISO-006 / H-ALISO-007 (degree-pair support) and H-SSIQ-d724f2 (standard-order
+    census as the all-orders-locally-equal baseline).
+  object_computed: Krylov dimension sequence per vertex; count of distinct sequences.
+  cost_model:
+    classical: O(k * p) field operations per vertex at toy p; not an attack at cryptographic p
+    parameters: primes adjacent to those used by the p1486 packages; depth k <= (log_2 p)/2
+  obstruction: Depth ~ log_l p (graph diameter) would see global structure but costs the full graph; below
+    that, local-only.
+  kill_test: If all vertices share identical profiles up to depth (log_2 p)/2 at every tested p, the invariant
+    is genus-only and the lead closes; if profiles separate a positive fraction of vertices, escalate
+    to a mechanism record.
+  lean:
+    theorem: null
+    coverage: none
+    needed_statement: For maximal orders O, O' of B_{p,inf} and any prime q != p, O tensor Z_q and O'
+      tensor Z_q are both isomorphic to M_2(Z_q); hence any invariant factoring through finitely many
+      local completions is constant on maximal orders.
+  experiment:
+    id: null
+    nearest_surface: aburan28/crypto-autoresearcher autolab package p1486_hecke_krylov_probe
+  prior_art:
+    frontier_map: not_applicable
+    nearest_record:
+      id: H-ALISO-008
+      relation: control_for
+    searched:
+      corpus_grep:
+      - H-ALISO-008
+      - H-ALISO-006
+      - H-ALISO-007
+      - H-SSIQ-d724f2
+    none_found_after:
+    - 'BRIEF query: "Eichler" / "local isomorphism" / "genus" -> none'
+    - 'BRIEF query: "Brandt" -> none; Hecke appears only in H-ALISO-00x'
+    - 'BRIEF query: Lean theorems on quaternion orders -> only module name SplitPrime.Obstruction'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  disproven_avoided: H-ICINV-6c7920 [rejected_scoped] is the ordinary-curve analogue where class-invariant
+    features failed to separate usefully; this control is designed to detect the same failure mode before
+    any attack claim.
+  evidence_type: proof_gap_control
+  tag: speculative
+  claim: 'Control: bounded-depth Hecke-Krylov profiles are constant across maximal orders (local isomorphism),
+    so they cannot certify End(E). Compute dim span{v, T_2 v, ..., T_2^k v} for vertex indicators v on
+    the supersingular module (size ~ p/12) with T_2, T_3 the Hecke/Brandt operators. By Eichler, all maximal
+    orders of B_{p,inf} are locally conjugate at every q != p, so any invariant factoring through finitely
+    many local completions is constant. The control checks whether profiles up to depth (log_2 p)/2 separate
+    any vertices. Clears H-ALISO-008 (Krylov probe), H-ALISO-006 / H-ALISO-007 (degree-pair support) and
+    H-SSIQ-d724f2 (standard-order census as the all-orders-locally-equal baseline).'

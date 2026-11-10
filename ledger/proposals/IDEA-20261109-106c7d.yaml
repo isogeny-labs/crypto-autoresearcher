@@ -1,0 +1,117 @@
+idea:
+  id: IDEA-20261109-106c7d
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Inverted Edwards coordinates on Edwards25519 - exceptional locus is exactly E[4](F_p), and the
+    count is dominated
+  class: representation
+  claim: 'Hand derivation, nothing executed. Curve $-x^2+y^2=1+dx^2y^2$, $p=2^{255}-19$, $d=-121665/121666$
+    non-square, $-1=i^2$ square, cofactor 8. Inverted coordinates $(X:Y:Z)$ with $x=Z/X$, $y=Z/Y$ satisfy
+    $(X^2-Y^2)Z^2=X^2Y^2+dZ^4$. (C1) Addition: $A=Z_1Z_2$, $B=dA^2$, $C=X_1X_2$, $D=Y_1Y_2$, $E=CD$, $H=C+D$,
+    $I=(X_1+Y_1)(X_2+Y_2)-C-D$, $X_3=(E+B)H$, $Y_3=(E-B)I$, $Z_3=AHI$. Cost 9M+1S+1c. (C2) Doubling: $A=X_1^2$,
+    $B=Y_1^2$, $C=A-B$, $D=A+B$, $E=(X_1+Y_1)^2-A-B$, $X_3=CD$, $Y_3=E(C-2dZ_1^2)$, $Z_3=DE$. Cost 3M+4S+1c;
+    the constant becomes three 17-bit multiplies via $D''=121666D$, $X_3=CD''$, $Z_3=D''E$, $Y_3=E(121666C+243330Z_1^2)$.
+    (C3) Exceptional locus. The four points with $xy=0$, namely $(0,1)$, $(0,-1)$, $(i,0)$, $(-i,0)$,
+    are exactly $E[4](\mathbb{F}_p)$ and have no representative. For inputs outside $E[4]$, $E\pm B\neq0$
+    always, and $Z_3=0$ in C1 iff $P_1+P_2\in E[4]$; $Z_3=0$ in C2 iff $P_1$ has order 8. In those cases
+    the output is $(X_3:0:0)$ or $(0:Y_3:0)$ and the sum is lost. (C4) On the prime-order subgroup minus
+    the identity, C2 never fails and C1 fails iff $P_2=-P_1$; C1 is valid for $P_1=P_2$. (C5) The identity
+    is unrepresentable, so a zero window digit cannot be a table entry and an accumulator cannot start
+    at the identity. (C6) Per bit of binary double-and-add: 7.5M+4.5S+1.5c, against 8M+4S+0.5c for the
+    BRIEF''s extended code and 7M+4S for factored-T extended. Inverted coordinates are dominated on Edwards25519.'
+  mechanism: 'Inverted coordinates are projective coordinates after $(x,y)\mapsto(1/x,1/y)$. Substituting
+    into the affine unified law gives $x_3=AI/(E+B)$ and $y_3=AH/(E-B)$, so the inverted outputs have
+    $Z_3=AHI$; $I=0$ iff $x_3=0$ and $H=0$ iff $y_3=0$, which is membership of the sum in $E[4]$. The
+    doubling uses the curve equation $X^2Y^2=(X^2-Y^2)Z^2-dZ^4$ to replace $2AB-Z^2C$ by $Z^2(C-2dZ^2)$.
+    Symmetry: projective scaling $\lambda(X,Y,Z)$; negation is $X\mapsto-X$; translation by $(0,-1)$ is
+    $Z\mapsto-Z$. The inversion saves 1M in the addition against projective Edwards (9M+1S against 10M+1S)
+    and moves the constant into the doubling.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 0 and section 1, curve data and ed25519.rs excerpt
+    provenance: internal
+    claim: a = -1, d non-square, cofactor 8; extended HWCD code is the baseline.
+    verified_by: this session, by reading the BRIEF
+  - ref: Bernstein and Lange 2007, Inverted Edwards coordinates
+    provenance: recalled
+    claim: The inverted representation and its 9M+1S addition. Pointer only.
+    verified_by: null
+  - ref: Bernstein, Birkner, Joye, Lange, Peters 2008, Twisted Edwards curves
+    provenance: recalled
+    claim: The twisted form of the inverted formulas. Pointer only.
+    verified_by: null
+  assumptions:
+  - a = -1, d non-square, -1 square, rational torsion cyclic of order 8.
+  - Multiplication by d or 2d is a full multiplication unless cleared as in C2.
+  predictions:
+  - metric: inputs in E[4] with a valid inverted representative
+    direction: lower
+    minimum_effect: exactly 0 of 4
+  - metric: pairs outside E[4] with Z3 = 0 whose sum is outside E[4], small-prime exhaustive check
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: field multiplications plus squarings per bit, S = M
+    direction: higher
+    minimum_effect: at least 12 plus constants, against 11 for factored-T extended
+  minimal_test:
+    design: 'Proposed scripts/check_inverted_25519.sage. (1) Symbolic: C1 and C2 equal the affine law
+      after x = Z/X, y = Z/Y, modulo the curve equations. (2) Exhaustive on a small prime p with p = 1
+      mod 4, a = -1, d non-square and cyclic 8-torsion: for every pair outside E[4], assert Z3 = 0 iff
+      the sum is in E[4], and the same for doubling with order-8 inputs. (3) On Edwards25519: take a point
+      of order 8 from the BRIEF''s torsion, check doubling degenerates; check P + (-P) degenerates for
+      random P of order l; check P + P agrees with EdPoint::double.'
+    controls:
+    - EdPoint from the repository as the complete reference.
+    - A curve with square d as a contrast case, where E + B or E - B may vanish.
+    - Projective Edwards (complete) run on the same pairs.
+    required_metrics:
+    - count of degenerate outputs by cause
+    - count of mismatches on non-degenerate outputs
+    - M, S, c per operation
+  falsification_conditions:
+  - A degenerate output occurs for a pair whose sum is outside E[4].
+  - A pair whose sum is in E[4] yields a non-degenerate output.
+  - The addition needs fewer than 9M+1S or the doubling fewer than 3M+4S in this form.
+  - A timeout is infrastructure, not evidence.
+  confounders:
+  - Extra points at infinity can patch the locus with branches; that is a different, branching algorithm
+    and is out of scope.
+  - Mixed additions change the per-bit numbers but not the ordering.
+  interpretation_limits:
+  - Domination is stated for a = -1 on this curve only.
+  - Counts are hand counts, not a measured bound.
+  - No ECDLP statement is made.
+  heuristic_assumptions:
+  - id: H1
+    statement: Clamped Ed25519 scalars are not reduced mod l, so an accumulator can in principle meet
+      P2 = -P1; the event is rare but not excluded.
+    rigorous_support: none beyond the group-order argument in C4
+    validation_plan: construct the scalar that forces the event and observe the failure
+  target_complexity:
+    time_exponent: not an exponent claim; 7.5M+4.5S+1.5c per scalar bit
+    memory_exponent: three field elements per point
+    best_known: factored-T extended coordinates at 7M+4S per bit, complete
+    hidden_overhead: no identity element; signed recoding needed to avoid zero digits
+    tradeoff_note: one fewer coordinate than extended, at the price of completeness
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: 'Extended coordinates with factored T: fewer operations per bit and complete. This record
+    is a negative result with its count.'
+  sota_delta: Plus 0.5M, 0.5S and 1.5c per bit against factored-T extended; minus one stored field element;
+    loses completeness on E[4].
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a coordinate system and its exception
+      set, not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2 ledger index searched for inverted coordinates
+    - BRIEF section 1 excerpts searched for an inverted representation
+    searched:
+      corpus_grep: []
+      web: []
+      blocked:
+      - full ledger and kb search were not available in this session

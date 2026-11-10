@@ -1,0 +1,76 @@
+{
+ "schema": "sembin-collision-search-addendum-v1",
+ "date": "2026-11-06",
+ "experiment_id": "EXP-SEMBIN-cb5e25",
+ "addendum_to": "experiments/EXP-SEMBIN-cb5e25/collision-search.json",
+ "addendum_to_sha256": "1b3d863baeda65420771563116c39d34752ddb386d8c34ca80be7bd0cb2d2e50",
+ "performed_by": "top-level session (claude-sonnet-5-5), not an independent reviewer",
+ "dispatch_condition": "DEC-20261106-e7576f DG-1",
+ "dg1_status": "PARTIALLY MET. The sibling-repository half is done below. The research-kb half is NOT met and this addendum does not claim it: the Coordinator must rule whether DG-1 is satisfied by this addendum with the knowledge-base half stated as unavailable.",
+ "timing_disclosure": "Read AFTER protocol.json was frozen (2026-11-06T08:36:56Z) and after the approval decision. Nothing here was an input to the frozen predictions P-*, criteria S-MAIN/F-MAIN or the grid, and none is changed by it.",
+ "sibling_repository": {
+  "repo": "isogeny-labs/crypto",
+  "commit": "b354dfefa868fcc7e663dbc5f07bc4fbf370d585",
+  "access": "anonymous read, blobless sparse clone (the full repository is about 9.6 GB and filled this container's writable allowance on a first attempt; that partial clone was removed)",
+  "paths_read": [
+   "research/dreg_closure_*/{PREREGISTRATION,RESULTS,PROTOCOL,README}.md (first 900-1100 characters of each RESULTS/README/PROTOCOL; keyword searches over all of them)",
+   "scripts/research-kb",
+   "  .agents/skills/research-kb/SKILL.md"
+  ]
+ },
+ "studies_found": [
+  {
+   "dir": "research/dreg_closure_driver_20261016",
+   "what": "MutantXL closure of descended S_3 systems, 16 UNSATISFIABLE draws, closure degree vs N",
+   "relation": "adjacent instrument family; refutation degree on UNSAT chained systems with a common subspace"
+  },
+  {
+   "dir": "research/dreg_closure_mutantxl_20261016",
+   "what": "MutantXL closure refutes 92 unsatisfiable descent systems at degree 3-4 where XL needs 5-7",
+   "relation": "same"
+  },
+  {
+   "dir": "research/dreg_closure_scale_20261016",
+   "what": "closure stays at degree 4 to N=42 at m=4, rises past 4 at m=3, l=7 (UNSAT draws)",
+   "relation": "same; the regime of this experiment's stretch cell (m=3, n=19, k=7, N=40)"
+  },
+  {
+   "dir": "research/dreg_closure_specialise_20261017",
+   "what": "one fixed variable usually brings l=7 draws back to degree 4",
+   "relation": "variable specialisation; the word 'coset' there is the value of one fixed variable, not Nagao's coset-shifted factor bases"
+  },
+  {
+   "dir": "research/dreg_closure_m4l6_20261018",
+   "what": "(m,l)=(4,6) cells: unsatisfiable draws refute at degree 4; a satisfiable control is not refuted (rank 214,391 of 342,537)",
+   "relation": "a satisfiable control is by construction not refuted; Groebner-basis containment is not measured"
+  },
+  {
+   "dir": "research/dreg_closure_guess_20261022 and guess3_20261023",
+   "what": "guessing 3 or 4 variables at l=8",
+   "relation": "hybrid guess-and-determine on UNSAT draws"
+  },
+  {
+   "dir": "research/dreg_closure_null22_7_20261028",
+   "what": "unspecialised (22,7) system does not refute at degree 4 on 4 of 4 draws",
+   "relation": "UNSAT refutation degree at l=7"
+  }
+ ],
+ "keyword_search_over_the_studies": {
+  "Nagao": "no hits",
+  "EQS4": "no hits",
+  "disjoint": "no hits",
+  "shifted": "no hits",
+  "Groebner basis": "no hits",
+  "linear forms": "no hits",
+  "v_i": "no hits",
+  "coset": "4 files, all as the value of a single specialised/guessed variable or a 7-dimensional subspace or coset of summands, not Nagao's coset-shifted factor bases"
+ },
+ "result": "No replication, no existing counterexample and no corroboration of the question this experiment asks was found in the sibling studies: they measure the refutation degree of unsatisfiable chained S_3 systems with a common subspace (and a satisfiable control that cannot be refuted), not whether the degree-4 closure contains the Groebner basis of satisfiable coset-shifted Nagao EQS4 systems. The contract is not reframed.",
+ "context_not_prediction": "Those studies show the degree-4 closure of UNSAT systems rising above 4 at subspace dimension 7 for m=3. This experiment's stretch cell sits in that regime, so a non-contained outcome there would not be surprising. That is context for reading results; it is not a prediction and moves no frozen criterion.",
+ "research_kb_half": {
+  "status": "NOT MET",
+  "reason": "scripts/research-kb needs an executable and a built catalog.sqlite plus sources.toml from sibling research-kb checkouts that are not present here ('no executable found'); the crypto-kb MCP server timed out on connect (30 s). Building the catalog is not feasible within this container's writable allowance.",
+  "what_remains": "Run the research-kb queries named in the specification's observation_collision_search where the KB is reachable and commit a further dated addendum."
+ },
+ "limits": "Partial. The sibling documents were read at the top level of each study; the per-draw records under runs/ and the run reports were not opened. A miss is not evidence of absence."
+}

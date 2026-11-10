@@ -13,7 +13,9 @@ set -u
 conf=${FAKE_AWS_CONF:-$(dirname -- "$0")/fake-aws.conf}
 [[ -f $conf ]] && . "$conf"
 [[ -n ${FAKE_AWS_LOG:-} ]] && echo "aws $*" >> "$FAKE_AWS_LOG"
-[[ -n ${FAKE_LOG_ENVNAMES:-} ]] && echo "ENVNAMES $(env | grep -o '^AWS_[A-Z_]*' | LC_ALL=C sort | tr '\n' ' ')PATHDIRS=$(printf %s "$PATH" | tr ':' ' ' | wc -w)" >> "${FAKE_AWS_LOG:-/dev/null}"
+[[ -n ${FAKE_LOG_ENVNAMES:-} ]] && echo "ENVNAMES $(env | grep -o '^AWS_[A-Z0-9_]*' | LC_ALL=C sort | tr '\n' ' ')PATHDIRS=$(printf %s "$PATH" | tr ':' ' ' | wc -w)" >> "${FAKE_AWS_LOG:-/dev/null}"
+# v3d: the names (never the values) of the transport, shell-startup and python variables the aws process sees, on a line of its own
+[[ -n ${FAKE_LOG_ENVNAMES:-} ]] && echo "ENVOTHER $(env | cut -d= -f1 | grep -E '^(https?_proxy|HTTPS?_PROXY|ALL_PROXY|all_proxy|NO_PROXY|no_proxy|REQUESTS_CA_BUNDLE|SSL_CERT_FILE|SSL_CERT_DIR|CURL_CA_BUNDLE|PYTHONNOUSERSITE|PYTHONPATH|BASH_ENV|ENV|SHELLOPTS)$' | LC_ALL=C sort | tr '\n' ' ')" >> "${FAKE_AWS_LOG:-/dev/null}"
 if [[ ${1:-} == --version ]]; then echo "aws-cli/1.46.2 Python/3.12.3 Linux/6 fake-aws"; exit 0; fi
 : "${FAKE_AWS_LOG:?fake-aws: no conf file with FAKE_AWS_LOG}"
 root=${FAKE_S3_ROOT:?fake-aws: no FAKE_S3_ROOT}

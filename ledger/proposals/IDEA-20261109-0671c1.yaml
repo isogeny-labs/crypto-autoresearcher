@@ -1,0 +1,122 @@
+idea:
+  id: IDEA-20261109-0671c1
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Edwards25519 in (U:V:Z:Ta:Tb), U=Y+X, V=Y-X, T=Ta*Tb - doubling 3M+4S, complete addition 8M,
+    negation as a swap
+  class: representation
+  claim: 'Hand count, nothing executed. Curve $-x^2+y^2=1+dx^2y^2$ over $\mathbb{F}_p$, $p=2^{255}-19$,
+    $d=-121665/121666$ non-square, $-1$ square, cofactor 8. Represent $(x,y)$ by $(U:V:Z:T_a:T_b)$ with
+    $x=(U-V)/(2Z)$, $y=(U+V)/(2Z)$, $4T_aT_bZ=U^2-V^2$; identity $(1,1,1,0,1)$. (C1) Doubling: $P=U_1^2$,
+    $Q=V_1^2$, $R=(U_1+V_1)^2$, $W=Z_1^2$, $e=P-Q$, $h=P+Q$, $g=R-h$, $f=4W-g$, $X''=ef$, $Y''=gh$, $Z_3=fg$,
+    $U_3=Y''+X''$, $V_3=Y''-X''$, $T_{a,3}=e$, $T_{b,3}=h$. Cost 3M+4S+9a. (C2) Addition with cached operand
+    $(U_2,V_2,Z_2''=2Z_2,T_2''=2dT_2)$: $T_1=T_{a,1}T_{b,1}$, $A=V_1V_2$, $B=U_1U_2$, $C=T_1T_2''$, $D=Z_1Z_2''$,
+    $E=B-A$, $F=D-C$, $G=D+C$, $H=B+A$, $X''=EF$, $Y''=GH$, $Z_3=FG$, $U_3=Y''+X''$, $V_3=Y''-X''$, $T_{a,3}=E$,
+    $T_{b,3}=H$. Cost 8M+6a, no constant multiply; 7M+7a when $Z_2=1$ ($D=2Z_1$). Caching costs 1M+1c+1a
+    once per operand. (C3) Both laws are complete on $E(\mathbb{F}_p)$, including the identity, the points
+    of order 2, 4, 8, $P=Q$ and $P=-Q$: $F=2Z_1Z_2(1-dx_1x_2y_1y_2)$, $G=2Z_1Z_2(1+dx_1x_2y_1y_2)$, $g=2Z_1^2(1+dx_1^2y_1^2)$,
+    $f=2Z_1^2(1-dx_1^2y_1^2)$, none of which vanishes because $d$ is non-square and $-1$ is square. (C4)
+    Per bit of binary double-and-add: 7M+4S, against 8M+4S+0.5c nominal for the HWCD code in the BRIEF.
+    (C5) Negative part: the (U,V) basis alone changes no M or S count; it removes 4a per addition on inputs
+    and adds 2a on outputs. All M savings come from factoring T.'
+  mechanism: '$T$ is read only by additions. Doubling produces $T_3=e\cdot h$ and never consumes $T_1$,
+    so storing the factors $(e,h)$ defers one multiplication to the next addition and deletes it in every
+    run of consecutive doublings. The addition emits $(E,H)$ unmultiplied for the same reason, so its
+    count stays at 8M. $U,V$ are the eigen-coordinates of the bilinear part of the unified law ($A=V_1V_2$,
+    $B=U_1U_2$). Symmetries: scaling torus $(\lambda U,\lambda V,\lambda Z,\mu T_a,\lambda\mu^{-1}T_b)$;
+    negation $(U,V,T_a)\mapsto(V,U,-T_a)$; translation by $(0,-1)$ is $(U,V)\mapsto(-U,-V)$; translation
+    by $(i,0)$ is $(U,V,T_a)\mapsto(iU,-iV,-T_a)$, so $E[4]$ acts diagonally. Negation as a swap halves
+    a signed table and makes conditional negation one conditional swap plus one conditional sign.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt
+    provenance: internal
+    claim: EdPoint::double uses 5 fe_mul and 4 fe_sq; EdPoint::add uses 12 fe_mul and 1 fe_inv because
+      ed25519_d() is recomputed per call.
+    verified_by: this session, by reading the excerpt in the BRIEF
+  - ref: Hisil, Wong, Carter, Dawson 2008, extended twisted Edwards
+    provenance: recalled
+    claim: Unified a=-1 addition 8M+1c and doubling 4M+4S. Pointer only.
+    verified_by: null
+  - ref: Hamburg 2012, Fast and compact elliptic-curve cryptography
+    provenance: recalled
+    claim: T kept as an unevaluated product. Pointer only.
+    verified_by: null
+  assumptions:
+  - a = -1, d non-square, -1 square mod p, B = 1, cofactor 8.
+  - M, S and a are counted per formula; multiplication by 2 or 4 is an addition chain.
+  - The cached operand is precomputed once and reused.
+  predictions:
+  - metric: fe_mul calls per doubling
+    direction: lower
+    minimum_effect: exactly 3, against 5 in the current code
+  - metric: fe_mul plus fe_inv calls per addition
+    direction: lower
+    minimum_effect: exactly 8 and 0, against 12 and 1
+  - metric: affine mismatches against EdPoint on all tested pairs
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: '(1) Proposed scripts/check_uvt_25519.sage: in the fraction field of Q(d)[x1,y1,x2,y2] modulo
+      both curve equations, assert that C1 and C2 equal the affine unified law and that T_a T_b Z = X
+      Y is preserved. (2) Proposed Rust struct UvPoint in src/ecc/ed25519.rs: compare to_affine against
+      EdPoint for all 64 pairs of the 8 torsion points, for torsion plus base multiples, and for the RFC
+      8032 section 7.1 vectors. (3) Count calls through test-only counters around fe_mul, fe_sq and fe_inv.'
+    controls:
+    - Existing EdPoint as the reference implementation.
+    - 'Planted bug: negation implemented as a swap without the sign on T_a must fail the torsion-pair
+      test.'
+    - A small-prime curve with a = -1, d non-square and cyclic 8-torsion, checked exhaustively.
+    required_metrics:
+    - fe_mul, fe_sq, fe_inv calls per doubling and per addition
+    - mismatch count
+    - additions per operation
+  falsification_conditions:
+  - Any symbolic identity in C1 or C2 fails.
+  - Any affine mismatch against EdPoint, including torsion inputs.
+  - A doubling needs more than 3 fe_mul or an addition more than 8.
+  - A timeout or build failure is infrastructure, not evidence.
+  confounders:
+  - Removing the per-call recomputation of d and the fe_mul by 2 are implementation gains; report them
+    separately from the 1M per doubling.
+  - The S to M cost ratio of the BigUint helpers is unknown.
+  interpretation_limits:
+  - Operation counts are not wall time and not a sealed measured bound.
+  - BigUint arithmetic and the variable-time scalar loop remain; this record does not make the module
+    constant-time.
+  - No ECDLP statement is made.
+  heuristic_assumptions:
+  - id: H1
+    statement: A field squaring costs no more than a field multiplication in the repository helpers, so
+      3M+4S is not worse than 4M+4S.
+    rigorous_support: none; fe_sq was not opened in this session
+    validation_plan: count fe_sq and fe_mul separately and report both
+  target_complexity:
+    time_exponent: not an exponent claim; 7M+4S per scalar bit, binary method
+    memory_exponent: five field elements per point, four per cached operand
+    best_known: recalled production practice reaches 3M+4S doubling and 8M (7M mixed) addition; not opened
+      here
+    hidden_overhead: one-time 1M+1c per cached operand
+    tradeoff_note: one extra stored field element buys 1M per doubling
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: Nothing in the BRIEF's repository. Equal in M and S to the recalled P1P1/P2 pipeline and
+    to factored-T coordinates; the difference is the (U,V) storage and the stated torsion action.
+  sota_delta: Minus 1M per doubling and minus 1c per addition against the HWCD a=-1 code in the BRIEF
+    (4M+4S, 8M+1c); 0M and 0S against recalled production practice; minus 2a per addition.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; an arithmetic representation, not an
+      ECDLP mechanism, so no frontier row applies.
+    none_found_after:
+    - BRIEF section 2 ledger index, all listed IDEA and H rows, read as truncated summaries
+    - BRIEF section 1 repository excerpts, searched for a factored T or a Y+X, Y-X basis
+    searched:
+      corpus_grep: []
+      web: []
+      blocked:
+      - full ledger and kb search were not available in this session

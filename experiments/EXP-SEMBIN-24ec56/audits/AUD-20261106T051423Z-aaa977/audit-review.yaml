@@ -1,0 +1,328 @@
+audit_review:
+  audit_id: AUD-20261106T051423Z-aaa977
+  session_dir: experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-24ec56
+  journal_tip: eb3ee32b5ef7c997fa96fc7630e4beace23238f6004fe0452cfd447e8b959030
+  journal_blob: e8e6357dddce657601a722c3bb78b0847e05cd8c
+  repository_head: d5001059cd1b6c4dbfd7d7f894ac9c3b9c2b9806
+  auditor_model: validator/claude-opus-5-5
+  reviewed_at: '2026-11-06'
+  scope: >-
+    Reader screen of one runbook session, dispatched at the validator (Opus) tier
+    because the deterministic audit printed flagged. It is not a validation_report,
+    not evidence about H-SEMBIN-106967, not an execution proof, and it satisfies no
+    review gate. The reviewer did not produce this session, ran no trial and no
+    session step command, and wrote only this file.
+
+  deterministic_findings_carried:
+  - >-
+    audit.json: unrelated journal chain blob e8e6357dddce657601a722c3bb78b0847e05cd8c
+    (owner codex-run-20261026-01a179ee, 40 entries); 2 executions wrote this session id
+  - >-
+    audit.json: unrelated journal chain blob f9bc11b7d004ae38663e08f669b21365907aaa43
+    (owner executor-sonnet-rm3mrv, 52 entries); 2 executions wrote this session id
+
+  journal_chains:
+    method: >-
+      git log --all --full-history on the journal path, git rev-parse <commit>:<path>
+      per commit, git merge-base --is-ancestor against HEAD, git branch -a --contains,
+      byte-prefix comparison of successive blobs (git cat-file -p), jq over entries.
+    chain_A_executor_sonnet:
+      owner: executor-sonnet-rm3mrv
+      blobs_in_order:
+      - {blob: 6a77a91a4b197aa5e0741d54f31bbee7777d560d, entries: 8, commit: 47c605da4ae05f284af32b113dae22cf5320b1f0, committed: '2026-10-19T04:30:03Z'}
+      - {blob: fdea491e279b464d06317b345fa938a5ef7a1068, entries: 11, commit: d00428a6c9b9fcf9c71581983bd8684fd4c7c2a9, committed: '2026-10-22T12:03:49Z'}
+      - {blob: f9bc11b7d004ae38663e08f669b21365907aaa43, entries: 52, commit: 9fc0d78b5ef97e220ce9311c521d2d4b524afbe6, committed: '2026-10-31T21:29:02Z'}
+      append_only: >-
+        yes: blob 6a77a91a (8067 bytes) and blob fdea491e (9641 bytes) are each a
+        byte-prefix of blob f9bc11b7.
+      reachable_from: origin/claude/index-calculus-ecdlp-ecc2k-rm3mrv only; none of the three commits is an ancestor of HEAD or main.
+      first_entry: '2026-10-18T18:27:37.987403Z (session_started, preflight commit 47460c175ede0fd8f72d4add407668a554a99653)'
+      last_entry: '2026-10-31T21:28:06.135628Z (session_finished stopped, tip hash 7a8329e2bfdf8c6fe5934b02dd76583702bfd070936e5b99171c01a9d86126e3)'
+      content: >-
+        Four session_resumed events and step S01-trials attempts 1-4 interrupted
+        (2026-10-18 to 2026-10-31); attempt 5 (2026-10-31T21:27Z) recorded 36 units: 11
+        valid with receipt_status output_validated (ctrl-c1-gate-m3-n9, poly-m3-n9,
+        ctrl-c6-replicate-m3-n9, ctrl-m2-n9, ctrl-m2-n11, rand-m3-n9, poly-m3-n11,
+        rand-m3-n11, null-support-m3-n9, rand-m3-n15, poly-m3-n13), 6 invalid_output
+        (invalid_measurement), 4 needs_reconciliation and 15 infrastructure_error; step
+        finished failed, implementation_error, supervisor exit 3.
+      claims: >-
+        Task claim epoch 1 (acquired 2026-10-18T18:27:38Z, expired 2026-10-25T18:27:38Z)
+        and, on the rm3mrv branch only, epoch 3 (acquired 2026-10-31T21:27:02Z,
+        superseding epoch 2 of codex-run-20261026-01a179ee as released; released failed
+        2026-10-31T21:28:01Z).
+    chain_B_codex_run:
+      owner: codex-run-20261026-01a179ee
+      blob: e8e6357dddce657601a722c3bb78b0847e05cd8c
+      entries: 40
+      first_commit: '40ae4ae5c7b303311f615f451f0943d2062995ce (2026-10-26T21:03:40Z, branch codex/run-harness-20261026; journal path status A, created)'
+      reached_main_via: 7f427c763a62a1aefe6253479de6ec462932a2c5 (merge of PR 2601, 2026-10-31T15:53:03Z)
+      first_entry: '2026-10-26T21:02:28.326405Z (session_started, preflight commit 5ac50196675bf0cdd7195c7a74863bed8473e231)'
+      last_entry: '2026-10-26T21:02:42.564962Z (session_finished stopped, hash eb3ee32b...)'
+      claims: 'Task claim epoch 2 (supersedes epoch 1 executor-sonnet-rm3mrv, status expired); released failed 2026-10-26T21:02:37Z.'
+      session_binds: >-
+        session_started.binds (22 paths) is identical to chain A's; runbook_sha256
+        2996f44f... and specification sha256 38211e96... are the same in both chains.
+    is_current_tip_the_later_execution: >-
+      By session start, yes: chain B started 2026-10-26, chain A 2026-10-18. By last
+      activity, no: chain A was resumed and extended (attempt 5) on 2026-10-31T21:27Z,
+      after chain B had finished and after chain B reached main, on a branch that main
+      does not contain.
+    was_the_earlier_record_overwritten: >-
+      Not within any single git lineage. On HEAD's ancestry the journal path is first
+      added by 40ae4ae5 (diff status A, no previous blob), and no chain A blob is
+      reachable from HEAD. Chain A's blobs are still reachable from
+      origin/claude/index-calculus-ecdlp-ecc2k-rm3mrv. Each chain is append-only within
+      itself. What happened instead: one session id (RBS-SEMBIN-24ec56) and one journal
+      path hold two independent executions on divergent branches, with different
+      genesis entries (hash 6ae6d6fa... vs adffdc7c...). If the rm3mrv branch were merged
+      into main, the two blobs would collide at the same path. This screen describes the
+      fact and does not decide whether it is a write-once violation.
+
+  unit_invalidity:
+    observation: >-
+      All 36 unit_recorded entries (seq 2-37) read valid false, receipt_status not_run,
+      failure_class infrastructure_error, detail "no receipt (not_run)", run_dir null,
+      artifacts {}. experiments/EXP-SEMBIN-24ec56/runs/ holds only .gitkeep and the
+      step's out directory (runbook-sessions/RBS-SEMBIN-24ec56/outputs/S01-trials/attempt-1)
+      does not exist. No trial was launched.
+    cause_recorded: >-
+      steps/S01-trials.attempt-1.supervisor.stderr: "execution impediment: dispatcher
+      refused execution: dispatch error: archive task TASK-20261018-ac4898 declared
+      content_at_commit binding requires archive.commit_sha to be an ancestor of HEAD".
+      step_finished (seq 38): status failed, exit_code 2, failure_class
+      infrastructure_error, timed_out false; session_finished (seq 39): stopped. The claim
+      (epoch 2, commit b44bae1b) and release (outcome failed, commit c1523d49) both
+      succeeded with exit 0.
+    reviewer_fact_check: >-
+      The archive commit_sha recorded for TASK-20261018-ac4898 in the dispatch queue at
+      the preflight commit is c3e38fa0e2eea5abbb4e3aa4874f9fd4a15a3d7e. In this
+      repository's object graph it is an ancestor of the preflight commit 5ac50196, the
+      claim commit b44bae1b and the release commit c1523d49. The refusal therefore does not
+      reproduce from today's history. The session's artifacts do not show why `git
+      merge-base --is-ancestor` returned 1 in the run worktree
+      /home/ec2-user/crypto-autoresearcher-run-20261026 at 2026-10-26T21:02Z; the cause is
+      undetermined. This is an infrastructure impediment, not a measurement.
+    summary_reading: >-
+      The session summary's control_validity "failed" and execution_validity "incomplete"
+      follow from the 18 control units being not_run (tools/runbook.py marks
+      control_validity failed when any control unit is invalid). No control was measured
+      to fail. Every metric reads n 0, with all 18 non-control trials listed as
+      excluded_trials.
+
+  specification_fidelity:
+    specification: experiments/EXP-SEMBIN-24ec56/specification.yaml (sha256 38211e96deedb6136fb58ed5e6372ef32ef926921a3c1584b4c5462131f47bd5, matches runbook and journal binds)
+    runbook: experiments/EXP-SEMBIN-24ec56/runbook.yaml (sha256 2996f44f854ecb70712ddca4ef64e31888467cdaa37dbea739824c717d38fd5c)
+    trial_plan: experiments/EXP-SEMBIN-24ec56/trial-plan.json (sha256 ced00bdae527379d627263a4c9befcc3eb97f015c06b222da26899619acfb7c5)
+    arms:
+    - item: 36 trials (replication.trials)
+      runbook: >-
+        S01-trials runs trial-plan.json; its trial ids and run ids equal spec
+        replication.trials in order. by_trial asserts /seed for all 36 and each equals the
+        plan seed and the plan argv --seed. The seeds follow spec seed_rule (C6 trial seed
+        20261022, C6 cell seed 20261017, as seed_rule states).
+      status: implemented
+    - item: independent variables m, (n,k), V, closure kind, eliminator, family, block-local L2adj1
+      runbook: carried by the plan's cells and defaults (closure_degrees, eliminator thresholds), not by the runbook itself
+      status: delegated_to_plan
+    controls:
+    - item: C1 pilot gate (60/60 W_4 refutations, 0/8 false refutations)
+      runbook: >-
+        Listed in step controls. by_trial asserts only that /summary/c1 is an object;
+        check.py and run.py set status completed_invalid if c1.pass is false; step
+        validity accepts /status in [completed_valid, completed_invalid].
+      status: partial
+    - item: C2 m=2 control (W_3 refutes >= 90% of UNSAT and 0 SAT)
+      runbook: trials ctrl-m2-n9 and ctrl-m2-n11 are listed in step controls; no runbook metric or assertion surfaces the m=2 control rate
+      status: partial
+    - item: C3 SAT controls (false_refutations == 0, codim(W_4) == nsol)
+      runbook: >-
+        metric false_refutations (sum); check.py exits 3 on a codim/nsol mismatch, which
+        makes the unit invalid. A false refutation sets status completed_invalid, which
+        the runbook accepts as a valid unit (see finding F2).
+      status: implemented_with_gap
+    - item: C4 nulls (support-matched r_4 >= 0.9; dense matched r_4 <= 0.1)
+      runbook: 14 null trials listed in step controls; no null r_4 metric in runbook.metrics (the r4_* metrics cover only the 18 S_3 poly/rand cells)
+      status: partial
+    - item: C5 eliminator cross-check
+      runbook: metric eliminator_disagreements (sum); check.py recount; a disagreement makes status completed_invalid, still accepted as a valid unit
+      status: implemented_with_gap
+    - item: C6 determinism replicate (ctrl-c6-replicate-m3-n9 rows match poly-m3-n9 / RUN-SEMBIN-0689a2 field by field; comparison C-aa-c6 arms [poly-m3-n9, ctrl-c6-replicate-m3-n9])
+      runbook: >-
+        by_trial asserts only that /summary/c6 is an object. The plan cell has
+        replicates 2, and run.py sets summary.c6.identical by comparing digests of the two
+        repetitions inside the C6 trial. No runbook element compares the C6 unit with the
+        poly-m3-n9 unit.
+      status: not_as_specified
+    metrics:
+    - item: primary r_4 per cell with Clopper-Pearson 95%
+      runbook: r4_<cell>_<V> and unsat_w4_run_<cell>_<V> for the 18 S_3 cells (count/min/max of one trial each); the CP95 interval is not surfaced (check.py recomputes it inside raw-result)
+      status: partial
+    - item: primary false_refutations
+      runbook: metric false_refutations
+      status: implemented
+    - item: primary M_4 refutation count per cell
+      runbook: only the total m4_refutations (sum) is surfaced; a zero total implies zero in every cell, which is what P3 tests
+      status: partial
+    - item: primary D_W distribution per cell
+      runbook: none
+      status: absent
+    - item: secondary codim equals solution count
+      runbook: enforced through check.py exit status, not surfaced as a metric
+      status: implemented_as_validity
+    - item: secondary eliminator agreement count
+      runbook: eliminator_disagreements
+      status: implemented
+    - item: secondary per-job cost fields (cols, rank, rows, iterations, ops_proxy, wall_s, peak_rss_mb, censored)
+      runbook: only censored_jobs and elapsed_seconds
+      status: partial
+    - item: secondary null r_4 (P2)
+      runbook: none
+      status: absent
+    - item: secondary m=2 control rate (C2)
+      runbook: none
+      status: absent
+    - item: secondary block-local L2adj1 at m=4
+      runbook: none
+      status: absent
+    - item: secondary ops_to_1 vs N, P4 AIC fit
+      runbook: none (no analysis step)
+      status: absent
+    stopping_rules:
+    - item: per-trial target stopping (first 10 unique UNSAT per (curve, V), SAT among first 150)
+      runbook: plan defaults min_unsat_per_curve 10, max_targets_per_curve 150
+      status: delegated_to_plan
+    - item: job censoring at 6 GB RSS or 1800 s
+      runbook: plan defaults job_rss_cap_gb 6, job_wall_cap_s 1800; spec_bindings asserts maximum_memory_gb == 6; metric censored_jobs
+      status: implemented
+    - item: skip after 3 consecutive censored jobs
+      runbook: plan default skip_after_consecutive_censored 3
+      status: delegated_to_plan
+    - item: trial watchdogs 14400 / 43200 / 64800 s
+      runbook: plan watchdog_seconds, with 12 trials at 14400, 6 at 43200 (m4-n13, m5-n11 incl. their nulls) and 18 at 64800, as the spec states; step timeout_seconds 604800
+      status: implemented
+    - item: 36 planned trials and no 37th
+      runbook: one execution of the plan; on_failure stop; tell_on_failure "stop this session without retry"
+      status: implemented
+    - item: crash, timeout or memory kill is failed_infrastructure or censoring, never a metric value
+      runbook: on_failure classes; invalid units are excluded from metrics (excluded_trials)
+      status: implemented
+    required_artifacts: 144 spec paths = 36 x {manifest.yaml, results.jsonl, instances.json, raw-result.json}; the runbook validity files and the plan artifacts list the same four per trial.
+    findings:
+    - id: F1
+      text: >-
+        C6 is implemented as an in-trial two-replicate comparison
+        (summary.c6.identical in run.py). The specification's C6 check and comparison
+        C-aa-c6 compare ctrl-c6-replicate-m3-n9 against trial poly-m3-n9
+        (RUN-SEMBIN-0689a2), and no runbook element makes that comparison.
+    - id: F2
+      text: >-
+        Step validity accepts raw-result /status completed_invalid, run.py exits 0 on
+        completed_invalid, and check.py exits 0 when the status matches its recount. A
+        trial whose C1 gate fails, whose C6 replicate differs, or that has a false
+        refutation, eliminator or enumerator disagreement, evalcheck mismatch or worker
+        error would be recorded as a valid unit. control_validity could then read passed
+        for runs that the spec's invalidation_rules void. Only false_refutations and
+        eliminator_disagreements are surfaced as metrics; c1.pass, c6.identical and
+        per-unit /status are not.
+    - id: F3
+      text: >-
+        The session summary surfaces none of: the primary D_W distribution, the
+        per-cell CP95 interval, per-cell M_4 counts, null r_4 (P2), the m=2 control rate
+        (C2), the block-local arm, or ops_proxy / P4. They would exist only inside each
+        unit's raw-result.json.
+    note: >-
+      F1-F3 are latent in this session because no unit ran. They bind any later session
+      that reuses runbook sha256 2996f44f....
+
+  blind_rederivation:
+    status: not_performed
+    primary_metric: r_4 per cell (specification metrics.primary[0])
+    reason: >-
+      No unit in the audited chain produced a raw output. All 36 units are not_run with
+      run_dir null, experiments/EXP-SEMBIN-24ec56/runs/ holds only .gitkeep, and the step
+      out directory is absent. With nothing to re-derive from, no script was written and
+      no value is recorded.
+    script: null
+    rederived_value: null
+    session_summary_value: 'every r4_* metric reads n 0, values {count 0, min null, max null}'
+    chain_A_outputs: >-
+      Chain A's run directories on origin/claude/index-calculus-ecdlp-ecc2k-rm3mrv were
+      not read. They belong to a different journal tip that HEAD does not contain, and
+      this audit does not cover them.
+
+  certificate_checks:
+    status: not_performed
+    reason: >-
+      No unit was replayed (replayed_units 0) and no unit produced output, so there are
+      neither two replayed nor two unreplayed units to check. The spec's certificate is
+      a closure-degree measurement on toy systems, with no discrete logarithm or relation
+      claimed.
+    units: []
+
+  lean_statement_fidelity:
+    obligations: []
+    note: >-
+      audit.json lean is [], summary lean_obligations is [], and the specification,
+      runbook and trial plan contain no Lean obligation. Nothing to screen.
+
+  not_covered:
+  - 'audit.json not_covered: [] (copied; empty)'
+  - >-
+    replay: no valid unit, so the replay population was empty (replayed_units 0,
+    miss_probability 1.0 at every rate). The deterministic tool left not_covered empty
+    in this case (cf. sheriff finding LGX-8(a)); added here.
+  - 'interpreter parity: nothing was replayed (match 0, mismatch 0, unknown 0).'
+  - >-
+    float tolerance: the runbook declares none (audit.json float_tolerance null), so
+    exact comparison would have applied to the replay pointers, including the
+    floating-point /summary/r4_by_cell.
+  - 'blind re-derivation of the primary metric (r_4 per cell): no raw output exists.'
+  - 'certificate mathematics: no replayed or unreplayed unit has output.'
+  - 'Lean statement fidelity: no Lean obligation exists.'
+  - 'execution proof: no execution_proof step; summary execution_proofs.chain reads incomplete (docs/execution-proof-chain.md milestones open).'
+  - >-
+    chain A (blob f9bc11b7, origin/claude/index-calculus-ecdlp-ecc2k-rm3mrv, tip
+    7a8329e2...): its 11 output_validated units recorded under the same session id are
+    not audited, replayed or re-derived by this audit, which covers only the HEAD tip
+    eb3ee32b....
+  - >-
+    root cause of the dispatcher's ancestry refusal at run time: not determinable from
+    the session artifacts (see unit_invalidity.reviewer_fact_check).
+  - >-
+    specification items with no runbook counterpart (F3): D_W distribution, null r_4,
+    m=2 control rate, block-local arm, P4 cost fit. This session could not have measured
+    them as session metrics.
+
+  verdict: flagged
+  escalate: true
+  verdict_basis: >-
+    The deterministic flag stands: two independent executions are recorded under
+    session id RBS-SEMBIN-24ec56, on divergent branches. The audited tip measured
+    nothing, because all 36 units are not_run after an infrastructure refusal. The
+    runbook also has the latent fidelity gaps F1-F3. None of this is evidence about
+    H-SEMBIN-106967, for or against. The Coordinator decides what follows.
+
+  sources_read:
+  - docs/agent-runtime-core.md
+  - agents/validator.md
+  - .claude/skills/audit-runs/SKILL.md
+  - .claude/agents/validator-sweep.md
+  - AGENTS.md (headings only)
+  - experiments/EXP-SEMBIN-24ec56/audits/AUD-20261106T051423Z-aaa977/audit.json
+  - experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-24ec56/journal.jsonl (by key, jq)
+  - experiments/EXP-SEMBIN-24ec56/runbook-sessions/RBS-SEMBIN-24ec56/steps/ (all non-empty files)
+  - experiments/EXP-SEMBIN-24ec56/specification.yaml (by key)
+  - experiments/EXP-SEMBIN-24ec56/runbook.yaml (by key)
+  - experiments/EXP-SEMBIN-24ec56/trial-plan.json (by key)
+  - experiments/EXP-SEMBIN-24ec56/implementation/check.py (grep and lines 180-250, for fidelity only)
+  - experiments/EXP-SEMBIN-24ec56/implementation/run.py (grep and lines 538-558, 832-842, 905-927, for fidelity only)
+  - experiments/EXP-SEMBIN-24ec56/reports/run-20261026T2102Z/data.json (numeric paths) and .artifacts.json
+  - coordination/goals/GOAL-SEMBIN-5078bc/batches/BATCH-821a5d/claims/TASK-20261018-944ddb.{1.claim,2.release}.json (keys)
+  - git objects: journal blobs 6a77a91a, fdea491e, f9bc11b7, e8e6357d; epoch-3 claim and release on origin/claude/index-calculus-ecdlp-ecc2k-rm3mrv; dispatch_queue.json and tools/research_dispatch.py at 5ac50196
+  - tools/runbook.py (lines 2072-2086, grep), tools/experiment_execution.py (lines 600-633)
+  - ledger/handoffs/TASK-20261018-ac4898.yaml (lines 1-30)
+  temporary_files: >-
+    One temporary copy of git blob f9bc11b7 was written to the session scratchpad
+    outside the repository for jq reading and then deleted. No repository file other than
+    this one was written.

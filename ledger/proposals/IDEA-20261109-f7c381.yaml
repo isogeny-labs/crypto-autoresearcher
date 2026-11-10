@@ -1,0 +1,131 @@
+idea:
+  id: IDEA-20261109-f7c381
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Function-field xedni null test, the relation lattice of specialised Mordell-Weil sections on
+    a rational elliptic surface over F_p(T) has the Gaussian-heuristic shortest vector of r random points
+  class: lifting
+  claim: 'Let S be y^2 = x^3 + a(T)x + b(T) over F_p(T), deg a <= 4, deg b <= 6, with r >= 3 independent
+    free-x sections s_1..s_r (the XEDN census objects), and t_0 in F_p a smooth fibre with #E_{t_0}(F_p)
+    = N prime. Put P_i = s_i(t_0) and Lambda = ker(Z^r -> Z/N, c -> sum c_i log P_i). Statement replacing
+    Silverman''s specialisation theorem (whose injectivity needs an infinite target): Lambda has index
+    exactly N whenever some P_i is nonzero, and Lambda is the hidden relation lattice of r points of E(F_p).
+    Prediction, fixed before any run: the median over 50 surfaces and 5 fibres each of lambda_1(Lambda)
+    / (sqrt(r/(2 pi e)) N^{1/r}) lies in [0.8, 1.25] and is indistinguishable from the same statistic
+    for r uniform random points of E(F_p); no vector of infinity-norm at most 2 lies in Lambda unless
+    it is the specialisation of a relation over F_p(T), which is a group-law tautology. A confirmed prediction
+    closes the function-field xedni route at the same place the Q route closes, for a different reason:
+    not height growth, but a kernel that is the discrete log.'
+  mechanism: 'Over F_p(T) heights are degrees and Mordell-Weil lattices are explicit, so the two obstructions
+    that killed xedni over Q are absent. What replaces them is the finite target: specialisation is a
+    surjection from Z^r to Z/N whose kernel encodes the logs of the specialised points. A section through
+    a prescribed Q at t_0 lies in a coset of Lambda of minimal height about N^{2/r}, finding it is an
+    r-sum problem of size 2^r N (generic cost sqrt N), and testing a candidate by evaluating the section
+    at t_0 costs the same as the group-law sum it certifies. The one datum that would escape this accounting
+    is a short vector of Lambda not forced by an F_p(T)-relation; the test measures whether one ever appears.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-cd159a
+    provenance: internal
+    claim: Xedni over Q fails on heights and ranks; this record states the function-field replacement.
+    verified_by: brief section 3 row text, Mythos run 2026-11-09
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: The hidden-kernel argument is the generic bound; exponent delta 0.
+    verified_by: brief section 3 row text, Mythos run 2026-11-09
+  assumptions:
+  - A full discrete-log table of E_{t_0}(F_p) is built by enumeration at p near 2^20 (toy only).
+  - Sections are verified on the surface by the height_control check of run_census.sage, as IDEA-20260805-68c69a
+    requires.
+  predictions:
+  - metric: median of lambda_1(Lambda) divided by the Gaussian heuristic sqrt(r/(2 pi e)) N^{1/r}
+    direction: different
+    minimum_effect: within [0.8, 1.25] and within 10 percent of the random-point control
+  - metric: count of Lambda vectors with infinity-norm at most 2 not implied by an F_p(T)-relation
+    direction: lower
+    minimum_effect: exactly 0 over all instances
+  minimal_test:
+    design: Build or reuse 50 rational elliptic surfaces with r in {3, ..., 8} independent free-x sections
+      (the census construction of the XEDN lane); for each pick 5 fibres t_0 with prime N by point counting;
+      enumerate E_{t_0}(F_p) to get logs; form Lambda from the log vector; compute lambda_1 exactly (LLL
+      then enumeration in dimension at most 8); list all vectors of infinity-norm at most 2 and check
+      each against the section lattice relations over F_p(T).
+    controls:
+    - r uniform random points of E_{t_0}(F_p), same N, same r.
+    - Fibres where all P_i are zero are excluded and counted.
+    - Height control on every section before specialisation.
+    required_metrics:
+    - r, N, lambda_1(Lambda) and its ratio to the heuristic per instance
+    - same ratio for the random control
+    - list of infinity-norm at most 2 vectors with their F_p(T) status
+    - number of excluded fibres
+  falsification_conditions:
+  - The median ratio is below 0.6 across instances while the control stays near 1 (sections carry a relation
+    the group law does not; a positive result that must be re-run on fresh surfaces).
+  - A short vector in Lambda has no F_p(T) relation behind it in more than 1 percent of instances.
+  - Sections failing height control make the instance invalid, not evidence.
+  confounders:
+  - Dependent sections inflate short vectors trivially; independence over F_p(T) is checked by the height
+    pairing determinant.
+  - Small r makes lambda_1 near N^{1/r} large and coarse; report r separately.
+  interpretation_limits:
+  - A null result is a count at p near 2^20 on rational surfaces; K3 and higher-rank (Ulmer-type) families
+    are a separate arm not covered here.
+  - Nothing here proposes an algorithm; exponent delta is 0.
+  heuristic_assumptions:
+  - id: H1
+    statement: Specialised independent sections behave as uniform random points of E_{t_0}(F_p) with respect
+      to their relation lattice.
+    rigorous_support: None known; equidistribution of specialisations in the fibre is plausible but not
+      a theorem at fixed t_0.
+    validation_plan: The random-point control and the infinity-norm census above.
+  target_complexity:
+    time_exponent: 1/2 unchanged
+    memory_exponent: O(1) beyond the toy log table
+    best_known: Pollard rho, Theta(sqrt N) group operations (KR-RHO-13bf67)
+    hidden_overhead: None; no algorithm is proposed. A section through Q has x of degree about N^{2/r},
+      and locating it is generic.
+    tradeoff_note: Not applicable.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-IC-cd159a dominates the lifting reading; IDEA-20260805-887d67 (unverified) raises specialisation
+    of census sections without this statistic or control; IDEA-20260805-5a9d2c explains the norm-1 relations
+    as forced.
+  sota_delta: 'Exponent delta 0. Delta over the XEDN lane: the measured object moves from relations over
+    F_p(T) (shown forced) to the relation lattice after specialisation, with a matched random control.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-cd159a
+    - KR-RHO-13bf67
+    - KR-RHO-755e35
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-IC-cd159a
+      provenance: internal
+      relation: adjacent
+      delta: The row closes Q-lifts by height and rank; this record closes F_p(T)-lifts by the hidden
+        kernel, and tests it.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: special_case
+      delta: Any success here would contradict the generic bound unless it used the surface representation;
+        the test is designed to detect exactly that.
+    searched:
+      corpus_grep:
+      - brief section 2 for XEDN, Mordell-Weil, specialisation, elliptic surface, section
+      - IDEA-20260805-887d67, -5a9d2c, -4ddf4e, -9ad641, -d426f9, -bd61c3, -68c69a
+      web: []
+      blocked: []
+    lead: LEAD-ICP-xedni-function-field-sections
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Build or reuse 50 rational elliptic surfaces with r in {3, ..., 8} independent
+        free-x sections (the census construction of the XEDN lane); for each pick 5 fibres t_0 with prime
+        N by point counting; enumerate E_{t_0}(F_p) to get logs; form Lambda from the log vector; compute
+        lambda_1 exactly (LLL then enumeration in dimension at most 8); list all vectors of infinity-norm
+        at most 2 and check each ag'

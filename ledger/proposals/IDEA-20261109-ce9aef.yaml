@@ -1,0 +1,128 @@
+idea:
+  id: IDEA-20261109-ce9aef
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: Charts from extended Edwards25519 to projective Curve25519 have an odd-degree base divisor; the
+    unique linear chart drops exactly (0,-1)
+  class: control
+  claim: 'Formula engineering, not an ECDLP claim. Let $\gamma^2 = -486664$ and $\beta$ the map $u = (1+y)/(1-y)$,
+    $v = \gamma u/x$. C1. $E_1(X:Y:Z:T) = (U:V:W) = (X+T : \gamma(Z+Y) : X-T)$ equals $\beta$, sends the
+    identity to $(0:2\gamma:0) = O$, costs $1c + 3a$, and its three forms vanish together only at $(0:-1:1:0)$.
+    C2. Any triple of linear forms inducing $\beta$ is a scalar multiple of $E_1$. C3. A chart of degree
+    $n$ inducing $\beta$ has a base divisor of degree $4n - 3$, which is odd; a complete chart must vanish
+    on a closed point of odd degree at least 3. No chart whose base locus lies in $E(\mathbb{F}_p)$ together
+    with the four points at infinity is complete. C4. $E_2 = (-(X^2 + dT^2) : -\gamma(XZ + dTY) : (Z-Y)^2)$
+    equals $\beta$, sends $(0:-1:1:0)$ to $(0:0:1)$, vanishes among rational points only at the identity,
+    and costs $2M + 3S + 3c + 3a$. The pair $\{E_1, E_2\}$ is complete. C5. The x-only exit $(U:W) = (Z+Y
+    : Z-Y)$ is complete at cost $2a$.'
+  mechanism: 'The extended model is a degree-4 curve in $\mathbb{P}^3$. The hyperplane $Z = 0$ cuts $(0:\pm\sqrt{d}:0:1)$,
+    a pair $\pm R$ with sum $O$, and $(\pm\sqrt{-d}:0:0:1)$, two 2-torsion points with sum $T_2 = (0,-1)$;
+    hence $H \sim 3(O) + (T_2)$. Lines on $M$ pull back to $3(O)$. Forms of degree $n$ inducing $\beta$
+    have common divisor $B$ with $nH - B \sim 3(O)$, so $\deg B = 4n - 3$. For $n = 1$, $B \sim (T_2)$
+    forces $B = (T_2)$; the forms through $T_2$ are spanned by $X$, $T$, $Z+Y$, and $x/(1+y) = \gamma(u+1)/(2v)$,
+    $xy/(1+y) = \gamma(u-1)/(2v)$ give $E_1$. $B$ is rational of odd degree, so it contains a closed point
+    of odd degree; the points at infinity come in conjugate pairs, which gives C3. $E_2$ follows from
+    $Z^2 - Y^2 = -X^2 - dT^2$ and $XY = ZT$; its base divisor is $(O) + 2(T'') + 2(T'''')$. Constant-time
+    use: $E_1$ alone is exact on $E(\mathbb{F}_p)$ minus $T_2$, hence on the prime-order subgroup; otherwise
+    compute both and select by the mask $X = 0$ and $Y = -Z$.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 0, curve data
+    provenance: internal
+    claim: d is a non-square and -1 a square, so no point at infinity is rational.
+    verified_by: idea-generator session 2026-11-09 read the BRIEF text
+  - ref: Bosma and Lenstra, complete systems of addition laws, 1995
+    provenance: recalled
+    claim: Base-divisor arguments of this kind for addition laws.
+    verified_by: null
+  assumptions:
+  - The extended model $XY = ZT$, $-X^2 + Y^2 = Z^2 + dT^2$ is a smooth curve of degree 4; the script
+    checks the Jacobian rank on the toy.
+  - Charts are defined over the base field.
+  proof_search_map:
+    not_applicable_reason: null
+    bottleneck: The divisor class of the hyperplane section and smoothness of the extended model.
+    baseline_embedding:
+      parameter_slice: n = 1
+      reproduction_check: Recover $E_1$ and its single base point by linear algebra on the forms through
+        each rational point.
+    observation_collision:
+      observable: degree and support of the base divisor
+      distinct_preimage_search: At p = 13, A = 7, enumerate degree-5 effective rational divisors with
+        sum O and list those without a rational point.
+    constructive_transforms:
+    - multiply a chart by a function with prescribed divisor
+    quantifier_order: For all n and all degree-n charts inducing beta there is a closed point of odd degree
+      in the base divisor.
+    method_ceiling:
+      strongest_certifiable_claim: Parity and support of the base divisor. It does not exclude a complete
+        chart based at a degree-3 or degree-5 closed point.
+      nearby_object_control: The reverse direction, where the base degree $3n - 4$ is even at n = 2 and
+        a complete chart exists (slug complete-quadratic-lift-montgomery-to-extended-edwards). The argument
+        must not forbid it.
+    proof_obligations:
+    - hyperplane class is 3(O) + (T_2)
+    - base divisor of a rational chart is rational
+  predictions:
+  - metric: rational points of the p = 13 toy and of the Curve25519 sample where E_1 is all zero
+    direction: different
+    minimum_effect: exactly 1, the point (0,-1)
+  - metric: rational points where E_2 is all zero
+    direction: different
+    minimum_effect: exactly 1, the identity
+  - metric: complete quadratic charts on the toy with base locus on rational points and points at infinity
+    direction: lower
+    minimum_effect: exactly 0
+  minimal_test:
+    design: 'Proposed scripts/sage/c25519_exit_charts.sage. Exhaustive at p = 13, A = 7, gamma = 2, d
+      = 11: evaluate $E_1$, $E_2$ and the x-only exit at every rational point and compare with $\beta$
+      extended by the torsion table; run the divisor enumeration of the proof map. On Curve25519: 10000
+      random points and the 8 torsion points.'
+    controls:
+    - 'Proves-too-much control: the same degree computation applied to Montgomery-to-Edwards must permit
+      the complete quadratic lift.'
+    - 'Positive control: if the toy has a degree-3 closed point with the right sum, construct the complete
+      quadratic chart and report its coefficients.'
+    required_metrics:
+    - all-zero count for E_1, E_2 and the x-only exit
+    - mismatch count against beta
+    - number of point-free degree-5 base divisors on the toy
+    - fe_mul and fe_sq calls per chart
+  falsification_conditions:
+  - A linear chart inducing beta with no rational base point, or with a base point other than (0,-1).
+  - E_1 or E_2 disagreeing with beta where it is non-zero.
+  - A rational point where both E_1 and E_2 vanish.
+  - A crash or timeout is infrastructure, not a falsification.
+  confounders:
+  - Charts that induce beta composed with a translation have a different base class and must not be counted.
+  interpretation_limits:
+  - C3 is a structural constraint, not a non-existence theorem for every complete chart.
+  heuristic_assumptions:
+  - id: H1
+    statement: None; the argument is Riemann-Roch on a genus-1 curve.
+    rigorous_support: Hand proof in the filing session.
+    validation_plan: Exhaustive toy enumeration and the proves-too-much control.
+  target_complexity:
+    time_exponent: not applicable, 1c + 3a or 2M + 3S + 3c per exit
+    memory_exponent: not applicable
+    best_known: Affine map at 1I + 5M + 1c, undefined at two points.
+    hidden_overhead: The mask test needs canonical reduction of X and Y + Z.
+    tradeoff_note: Two charts are needed for the full group, one for the prime-order subgroup.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: high
+  dominated_by: 'Nothing in BRIEF sections 1 or 2. For x-only output the complete exit $(Z+Y : Z-Y)$ dominates
+    both charts.'
+  sota_delta: Exit cost falls from 1I + 5M + 1c to 1c + 3a with one named exceptional point instead of
+    two; adds a proof that degree 1 cannot do better and a parity constraint for all degrees.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Campaign "Curve25519 explicit formulas and coordinate systems" is formula engineering;
+      no ECDLP frontier row is touched.
+    none_found_after:
+    - BRIEF section 2, all 30 ledger entries (truncated abstracts), for exit charts, base loci or exceptional
+      points of model maps
+    - BRIEF section 1 excerpts of x25519.rs and ed25519.rs

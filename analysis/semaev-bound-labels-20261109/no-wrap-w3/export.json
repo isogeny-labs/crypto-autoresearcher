@@ -1,0 +1,218 @@
+{
+  "schema": "experiment.export/v1",
+  "export_id": "SEMAEV-NOWRAP-W3-R6-20261109-attempt1",
+  "created": "2026-11-09T19:30:09.333800+00:00",
+  "protocol": {
+    "path": "protocol.json",
+    "sha256": "ff1ecf8e84aebfb9276f708c19203220a8047b162b6dcdf6bbe55e6a4edf0710",
+    "protocol_id": "SEMAEV-NOWRAP-W3-R6-20261109",
+    "version": 1
+  },
+  "producer": {
+    "runtime": "codex",
+    "model": null,
+    "session": null,
+    "role": "executor"
+  },
+  "source": {
+    "repo": "crypto-autoresearcher",
+    "commit": "36e78efeaae7ed265cb4dbb34a3604b246de3be3",
+    "dirty": false
+  },
+  "backend": "local",
+  "host": {
+    "path": "attempt-1/start.json",
+    "sha256": "1f3da94cac78cf23b1a9c70a52bd19925ede22cf8e029b3f3b5becbc6eee1039",
+    "class_id": "local-proof-computation",
+    "summary": {
+      "cpu_model": null,
+      "logical_cpus": null,
+      "memory_bytes": null,
+      "kernel": null,
+      "hypervisor": null,
+      "isolation_tier_max": "L0"
+    }
+  },
+  "arms": [
+    {
+      "id": "exact-w3",
+      "role": "candidate",
+      "binary_sha256": "2baf89e504cf1e6c66dc6361cfcd314fe08815c35496b7c6a0ea26a96a8f2569",
+      "commit": "36e78efeaae7ed265cb4dbb34a3604b246de3be3"
+    },
+    {
+      "id": "independent-replay",
+      "role": "reference",
+      "binary_sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+      "commit": "36e78efeaae7ed265cb4dbb34a3604b246de3be3"
+    },
+    {
+      "id": "positive",
+      "role": "control_positive",
+      "binary_sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+      "commit": "36e78efeaae7ed265cb4dbb34a3604b246de3be3"
+    },
+    {
+      "id": "negative",
+      "role": "control_negative",
+      "binary_sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+      "commit": "36e78efeaae7ed265cb4dbb34a3604b246de3be3"
+    }
+  ],
+  "flow": {
+    "planned": 1,
+    "attempted": 1,
+    "completed": 1,
+    "not_completed": 0,
+    "interrupted": 0,
+    "resumed": 0,
+    "excluded": []
+  },
+  "files": [
+    {
+      "path": "attempt-1/controls.json",
+      "sha256": "0e81e8417f0446c74e4cf4c0c2239666c3231f141ada9ee55994939e329478b1",
+      "bytes": 933,
+      "kind": "raw"
+    },
+    {
+      "path": "attempt-1/manifest.json",
+      "sha256": "b52f4481087f3f48c1a6cd572e8ddc33b8579067beb6210fa7abb0ce8a3083dd",
+      "bytes": 634,
+      "kind": "raw"
+    },
+    {
+      "path": "attempt-1/r6-certificate.json",
+      "sha256": "d8b24c96da8383754d0026a4a6f3ce0b1ad458a0a4e8ccb88f1bf9909235f504",
+      "bytes": 217794,
+      "kind": "raw"
+    },
+    {
+      "path": "attempt-1/r6-result.json",
+      "sha256": "4ae9a959e34c50b5ac29fd352cae650449fe6927a7832e6286d22cba2c9a4401",
+      "bytes": 399,
+      "kind": "raw"
+    },
+    {
+      "path": "attempt-1/start.json",
+      "sha256": "1f3da94cac78cf23b1a9c70a52bd19925ede22cf8e029b3f3b5becbc6eee1039",
+      "bytes": 903,
+      "kind": "raw"
+    },
+    {
+      "path": "attempt-1/summary.json",
+      "sha256": "ce27d857ac1b2479ca50d7ca5332963981eed5adeb61952f0ab356d2b0d4154f",
+      "bytes": 581,
+      "kind": "raw"
+    }
+  ],
+  "analysis": {
+    "script": {
+      "path": "replay.py",
+      "sha256": "dddd18f30aa6887f69e169259e11bd605a9aba2996191af2d06208637609c565",
+      "bytes": 3365,
+      "kind": "analysis"
+    },
+    "blinded": false,
+    "blinding_key_sha256": null,
+    "outputs": [
+      {
+        "path": "attempt-1/summary.json",
+        "sha256": "ce27d857ac1b2479ca50d7ca5332963981eed5adeb61952f0ab356d2b0d4154f",
+        "bytes": 581,
+        "kind": "summary"
+      }
+    ],
+    "unmasked_at": null
+  },
+  "notes": [
+    {
+      "kind": "observation",
+      "by": "producer",
+      "text": "One fixed r6cap3 cell completed with controls and full independent replay. Reference replay is a verification step, not a timed additional run."
+    },
+    {
+      "kind": "observation",
+      "by": "producer",
+      "text": "Symbolic exact-degree-three proof and independent review were published before computation. No general-r degree conclusion comes from this one cell."
+    },
+    {
+      "kind": "observation",
+      "by": "producer",
+      "text": "No timing or instruction-count claim; exclusive outputs and one attempt; no new cloud job."
+    }
+  ],
+  "reviews_dir": "reviews",
+  "backend_record": {
+    "session_id": "ECBS1hc931106fd275",
+    "spec_sha256": "94f54998e76fc3facb9d05011d1f9784f56563c2c47b0ad15d9d500951ae8e9e",
+    "records_sha256": "c61f37c7fb1755b30babcd75cda67534b9f738fbea91a9bb0039e1ba002c576f",
+    "status": "complete"
+  },
+  "runs": [
+    {
+      "run_id": "nowrap-w3-r6",
+      "arm": "exact-w3",
+      "instance_id": "polynomial-coeff-r6-cap3",
+      "seed": "0",
+      "replicate": 0,
+      "warmup": false,
+      "status": "succeeded",
+      "outcome_class": "completed",
+      "attempts": 1,
+      "resumed": 0,
+      "checkpoint": null,
+      "measurements": {
+        "counted": {
+          "rank": 468,
+          "affine_dimension": 13,
+          "eligible_dimension": 104,
+          "missing": 0
+        },
+        "wall_seconds": null,
+        "wall_valid": false,
+        "cpu_user_seconds": null,
+        "cpu_sys_seconds": null,
+        "max_rss_bytes": null,
+        "counters": {},
+        "perf": {
+          "instructions": null,
+          "cycles": null
+        }
+      },
+      "isolation": {
+        "tier": "L0",
+        "contended": true,
+        "blockers": [
+          "no timing inference"
+        ]
+      },
+      "verification": {
+        "status": "verified",
+        "verifier": "replay.py independent reconstruction, DAG and full degree-three closure"
+      },
+      "exclusion": {
+        "excluded": false,
+        "rule": null
+      },
+      "artifacts": [
+        {
+          "path": "attempt-1/r6-certificate.json",
+          "sha256": "d8b24c96da8383754d0026a4a6f3ce0b1ad458a0a4e8ccb88f1bf9909235f504",
+          "bytes": 217794,
+          "kind": "raw"
+        },
+        {
+          "path": "attempt-1/r6-result.json",
+          "sha256": "4ae9a959e34c50b5ac29fd352cae650449fe6927a7832e6286d22cba2c9a4401",
+          "bytes": 399,
+          "kind": "raw"
+        }
+      ],
+      "started_at": null,
+      "finished_at": null,
+      "worker": null,
+      "backend_ref": null
+    }
+  ]
+}

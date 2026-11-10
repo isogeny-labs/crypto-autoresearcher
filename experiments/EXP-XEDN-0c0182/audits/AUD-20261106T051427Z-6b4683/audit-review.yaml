@@ -1,0 +1,342 @@
+# Reader review (Opus validator tier) of one runbook session, dispatched by audit-runs because the
+# deterministic audit printed `flagged`. A screen: never a validation_report, never evidence about
+# H-XEDN-5befd8, never an execution proof, never a review gate. Write-once.
+audit_review:
+  audit_id: AUD-20261106T051427Z-6b4683
+  session_dir: experiments/EXP-XEDN-0c0182/runbook-sessions/RBS-XEDN-a7cd25
+  journal_tip: 7852f39220ab54507f40946ff50770aea6e81a31b1047490c6afe2f502e03a1e
+  auditor_model: claude-opus-5-5
+  auditor_role: validator (Opus, review-adversarial tier; audit-runs step 3 on a flagged deterministic verdict)
+  reviewed_on: '2026-11-06'
+  repository_revision: >-
+    82130dbe78b641c60dd823b645ef77961c01597d on claude/audit-runs-lgx7-20261106 (based on origin/main
+    d5001059cd); audit.json identical to its committed blob (sha256 7daa6a76a106...bd664).
+  independence: >-
+    I did not produce this session or either of its executions. I did not read
+    experiments/EXP-XEDN-0c0182/implementation/run.py or check.py, any producer report under
+    reports/, or the earlier reader review AUD-20261027T214121Z-f680a6/audit-review.yaml (only that
+    directory's audit.json, for its journal_tip). The tools that wrote the session
+    (tools/runbook.py at fb4c4bbc... = commit 91a53e8dc2, tools/experiment_execution.py at 91a53e8dc2)
+    were read only at the lines that settle check 3 (unit validity, exit-code meaning, reopen rule,
+    envelope completion). No trial or step command was run.
+  sources_read:
+    - experiments/EXP-XEDN-0c0182/audits/AUD-20261106T051427Z-6b4683/audit.json
+    - experiments/EXP-XEDN-0c0182/audits/AUD-20261027T214121Z-f680a6/audit.json
+    - experiments/EXP-XEDN-0c0182/specification.yaml
+    - experiments/EXP-XEDN-0c0182/runbook.yaml
+    - experiments/EXP-XEDN-0c0182/trial-plan.json
+    - experiments/EXP-XEDN-0c0182/runbook-sessions/RBS-XEDN-a7cd25/journal.jsonl (all 24 entries, by key)
+    - experiments/EXP-XEDN-0c0182/runbook-sessions/RBS-XEDN-a7cd25/steps/ (all non-empty logs)
+    - experiments/EXP-XEDN-0c0182/runs/RUN-XEDN-132272/ and RUN-XEDN-f4d646/ (receipt, manifest, manifest_v2, launch, environment, command; raw-result.json by key)
+    - analysis/xedni-cheon/20261007-certificates/targets.json (frozen input)
+    - ledger/proposals/IDEA-20261016-633cb1.yaml lines 4-22 (definition of "faithful" only)
+    - experiments/EXP-XEDN-0c0182/reports/run-20261026T2106Z/data.json (first 600 bytes, journal_tip only)
+    - git history of the journal and run directories (blobs, commits, merge parents)
+    - "tools/runbook.py @91a53e8dc2: lines 100-107, 1300-1312, 1380-1396, 1585-1605, 1880-1940"
+    - "tools/experiment_execution.py @91a53e8dc2: lines 492-503, 520-589, 600-635, 920-1000"
+    - tools/run_supersession_registry.yaml (RUN-XEDN rows only)
+
+  deterministic_audit_recap:
+    verdict: flagged
+    findings_copied: >-
+      Two unrelated journal chains in git history for this session id: blob d45487a4 (first commit
+      fc38e671, 2026-10-26T21:06:38Z) and blob 3085ea22 (first commit 944e9fe0, 2026-10-30T16:07:53Z),
+      both owner runbook-ece267, 24 entries, first entry 2026-10-17T05:34:29.457869Z.
+    replayed_units: 0
+    miss_probability: 1.0 at every rate (0.01 .. 0.5)
+    interpreter_parity: {match: 0, mismatch: 0, unknown: 0}
+    float_tolerance: null
+    not_covered_in_audit_json: []
+    digests_rechecked_here: >-
+      All five runbook binds (specification c708b936..., trial-plan 7d2bc173..., run.py 5955ab7e...,
+      check.py 02fa2788..., targets.json 55cfa882...), runbook 7d4b2fd1... and tools/runbook.py
+      8de36933... (= audit tool_sha256) match sha256sum. Both runs' manifest.yaml, raw-result.json and
+      execution-receipt.json match journal seq 20/21; four attempt-4 step logs checked match seq 22.
+
+  specification_fidelity:
+    summary: >-
+      The runbook binds the frozen spec version and both seeds, runs the two planned trials through
+      the supervisor and asserts schema, identity, primes, curve, targets digest and frozen pair count,
+      and the integer type of four census counts. It asserts no control, no prediction and no
+      cross-trial comparison. Controls C1 to C4, the Legendre table, the p=353 clause and every
+      secondary metric exist only as raw fields, reachable by replay, which compares exactly.
+    items:
+      - {spec: "independent variable p in {31,43,59,83,353}", runbook: "S01 validity /primes equals [31,43,59,83,353]", status: implemented}
+      - {spec: "independent variable sign arm (4 arms)", runbook: "none (driver output /pairs[].arms[], /accepted_by_arm; replay compare only)", status: no_runbook_assertion}
+      - {spec: "independent variable 32 frozen pairs", runbook: "/frozen_pairs equals 32; /targets_sha256 equals 55cfa882...; binds targets.json", status: implemented}
+      - {spec: "replication seeds 20261016, 20261017 / run ids", runbook: "spec_bindings /replication/seeds; by_trial /seed, /run_id, /trial_id", status: implemented}
+      - {spec: "budget maximum_memory_gb 1", runbook: "spec_bindings /budget/maximum_memory_gb; trial-plan memory_mb 1024", status: implemented}
+      - {spec: "budget maximum_runs 2", runbook: "none", status: no_runbook_counterpart}
+      - {spec: "C1 historical p=353 control", runbook: "none (steps.controls is []; /historical_control replay compare only)", status: no_runbook_counterpart}
+      - {spec: "C2 unfaithful p31-pair00 opposite-sign eligible", runbook: "none", status: no_runbook_counterpart}
+      - {spec: "C3 separating power (even-order chi=-1 exists)", runbook: "none", status: no_runbook_counterpart}
+      - {spec: "C4 determinism replicate between the two runs", runbook: "none; no step compares trials", status: no_runbook_counterpart}
+      - {spec: "C5 check.py exits 0 on each run", runbook: "supervisor trial-plan check_argv; unit valid requires receipt output_validated (check_returncode 0)", status: implemented_by_design_not_executed}
+      - {spec: "primary f1_violations_total (P1)", runbook: "metric f1_violations_total; assertion type integer", status: implemented}
+      - {spec: "primary odd_order_minus_eligible_at_3mod4 (P2)", runbook: "metric; assertion type integer", status: implemented}
+      - {spec: "primary faithful_nonplus_eligible_arms_at_3mod4 (P2)", runbook: "metric; assertion type integer", status: implemented}
+      - {spec: "primary p353 odd_order_points_with_minus_sign_eligible vs odd_order_affine_points (P2)", runbook: "none (/per_prime replay compare only)", status: no_runbook_metric}
+      - {spec: "primary Legendre table D_minus_63, minus_16 (P3)", runbook: "none (/per_prime replay compare only)", status: no_runbook_metric}
+      - {spec: "secondary faithful_pairs (P4)", runbook: "metric faithful_pairs; assertion type integer", status: implemented}
+      - {spec: "secondary group order / odd part / two part (P4)", runbook: "none (replay only)", status: no_runbook_metric}
+      - {spec: "secondary accepted cells vs H1 (P5)", runbook: "none (/accepted_by_arm, /pairs replay only)", status: no_runbook_metric}
+      - {spec: "secondary per-pair arm detail, control fields", runbook: "none (replay only)", status: no_runbook_metric}
+      - {spec: "stopping rule: stop after two checker-validated trials", runbook: "supervisor engine; on_invalid stop", status: implemented}
+      - {spec: "stopping rule: crash/timeout/memory kill is failed_infrastructure", runbook: "timed_out -> resource_exhaustion; receipt memory_limit_exceeded/watchdog_expired -> resource_exhaustion; nonzero driver exit -> infrastructure_error", status: implemented_with_relabel}
+      - {spec: "stopping rule: no third run without amendment and new approval", runbook: "none", status: no_runbook_counterpart}
+      - {spec: "invalidation: check.py non-zero", runbook: "receipt invalid_output -> unit valid false", status: implemented}
+      - {spec: "invalidation: run.py exits 3 (implementation failure)", runbook: "on_failure {exit_code: 3} -> implementation_error, but matched against the supervisor's exit code", status: misbound}
+      - {spec: "invalidation: targets_sha256 differs", runbook: "/targets_sha256 equals assertion", status: implemented}
+      - {spec: "invalidation: deterministic field differs (C4)", runbook: "none", status: no_runbook_counterpart}
+      - {spec: "required_artifacts manifest.yaml, raw-result.json per run", runbook: "validity.files manifest.yaml, raw-result.json", status: implemented}
+    findings:
+      - >-
+        F-SPEC-1. No runbook counterpart for controls C1, C2, C3 and C4, for the P3 Legendre table, or
+        for the p=353 clause of P2. The session cannot have established them; only a replay with exact
+        field comparison could reach them, and nothing was replayed. Re-derived independently below.
+      - >-
+        F-SPEC-2. The runbook's on_failure rule {exit_code: 3} -> implementation_error is evaluated on
+        the trials step's exit code, which is the supervisor's (tools/runbook.py @91a53e8dc2 lines
+        1593-1599: exit 3 = "trials remain or need reconciliation"). It is not run.py's exit 3 that the
+        spec's invalidation rule names. A run.py exit 3 would surface as receipt status
+        infrastructure_error (experiment_execution.py @91a53e8dc2 lines 933-934: driver returncode != 0). In this session
+        run.py returned 0 on both trials, so the spec's run.py-exit-3 rule did not fire.
+      - >-
+        F-SPEC-3. Spec budget maximum_runs 2 and the stopping rule "No third run without a protocol
+        amendment and a new approval" have no runbook counterpart. run.py was executed twice per run id:
+        chain A on 2026-10-26 (21:05:56Z, 21:05:58Z) and chain B on 2026-10-30 (16:05:52Z, 16:05:58Z).
+        experiments/EXP-XEDN-0c0182/amendments/ is empty. Whether a re-execution of a run id counts as a
+        third run is a Coordinator ruling, not this screen's.
+      - >-
+        F-SPEC-4 (definition gap, not a defect). The spec does not define point-level sign eligibility.
+        Under the quadratic-character reading (chi(s*x) = +1) the raw results hold, and P2's p=353 clause
+        holds 42 == 42. Under the t-representative reading (some 1 <= t <= t_max = 64 with s*t^2 == x),
+        which the spec's t_rule suggests, the p=353 count would be 12 != 42. The raw fields match the
+        character reading exactly. "faithful" is defined only in IDEA-20261016-633cb1 ("both targets of
+        odd order"), not in the spec. The P5 progression base (w0, z0) is not defined anywhere in the spec.
+
+  attempt_4_validity:
+    question: Why are the fourth attempt's units valid:false although every file assertion passed, and why exit 3?
+    facts:
+      - >-
+        Journal seq 20/21: each unit's validity list shows passed: true with no failures for
+        manifest.yaml and both raw-result.json blocks, but receipt_status is invalid_output and
+        failure_class invalid_measurement. tools/runbook.py @91a53e8dc2 evaluate_unit (line ~1937) sets
+        valid = (receipt status == "output_validated") and no problems. File assertions cannot make a
+        unit valid if the supervisor receipt is not output_validated.
+      - >-
+        Both execution-receipt.json files (sha256 4e8f0abe..., a617797f...): returncode 0,
+        check_returncode null, status invalid_output, published false. detail: "manifest.yaml fails
+        the run schema (tools/validate_ledger.py) and cannot be completed from publish-time facts:
+        run.result.certificate.kind must be one of discrete_log|decomposition|none". The same text is in
+        steps/S01-trials.attempt-4.supervisor.stderr (sha256 6f7f3ab9...).
+      - >-
+        Mechanism (tools/experiment_execution.py @91a53e8dc2 lines 931-944, 553-588): after a driver exit 0
+        the supervisor completes manifest.yaml into a run envelope before it runs the checker. run.py's
+        manifest is four flat lines (run_id, trial_id, seed, status: output_written). It carries no
+        certificate and no attack_claimed in manifest or raw-result, so the supervisor adds no
+        certificate.kind. The schema gate then fails and EnvelopeRefused is raised. check.py was never
+        launched: check.stdout.log and check.stderr.log are 0 bytes and check_returncode is null in both
+        runs.
+      - >-
+        Exit 3: steps/S01-trials.attempt-4.supervisor.stdout reports output_validated 0,
+        needs_reconciliation 2, measurement_complete false. The supervisor exited 3, which
+        tools/runbook.py maps to "trials remain or need reconciliation", class implementation_error. It
+        is also matched by the runbook's {exit_code: 3} rule (see F-SPEC-2).
+      - >-
+        Chain A (2026-10-26, supervisor at commit ee2347cb) failed identically. Same refusal text,
+        returncode 0, check_returncode null; supervisor.stderr and supervisor.stdout blobs are identical
+        between the two chains.
+      - >-
+        Later record (not part of the session): manifest_v2.yaml in both run dirs (commit 1884c0c8,
+        2026-10-30T21:22Z; linked dd1d525f) is an additive superseding manifest recording status failed,
+        certificate.kind none, checker_returncode null. It says it does not claim checker admission.
+    classification_note: >-
+      This is a driver/supervisor interface failure: the driver's manifest is not completable by the
+      supervisor at that revision. Under AGENTS.md core rule 5 it is not evidence about H-XEDN-5befd8.
+
+  journal_chains_examination:
+    current_tip_chain: >-
+      HEAD journal blob 3085ea22 (= working tree): 24 entries, tip seq 23 7852f392...
+      (2026-10-30T16:06:24Z). First commit 944e9fe0 (2026-10-30T16:07:53Z, branch
+      codex/run-selected-20261030-icperf, claim epoch 4, worktree
+      /home/ec2-user/crypto-coordinate-current-base-20261028).
+    other_chain: >-
+      Blob d45487a4: 24 entries, tip seq 23 45eff20e17a5... (2026-10-26T21:06:05Z). First commit
+      fc38e671 (2026-10-26T21:06:38Z, branch codex/run-harness-20261026, claim epoch 3, worktree
+      /home/ec2-user/crypto-autoresearcher-run-20261026, reopen preflight commit 40ae4ae5, tool sha
+      ce286aa9...). Released as failed (3.release.json, 72ba6df53db).
+    history:
+      - "e3089f54 (2026-10-17): journal created, 12 entries (attempts 1-2), tip seq 11 17eda862."
+      - "3db94038 (2026-10-21): +6 entries (attempt 3), 18 entries, tip seq 17 89f65770 = journal_tip of AUD-20261027T214121Z-f680a6."
+      - "fc38e671 (2026-10-26) parent blob 1b395e97 (18 entries) -> d45487a4 (chain A, +6 entries attempt 4)."
+      - "944e9fe0 (2026-10-30) parent blob 1b395e97 (18 entries) -> 3085ea22 (chain B, +6 entries attempt 4)."
+      - "1a0afc68 (2026-10-31 02:02 -0700, PR #2776): chain B reaches main."
+      - "85a3fa6d98 (2026-10-31 03:16:40 -0700, 'Merge approved harness-plan records onto current main, preserving current evidence'): parents d83777bd (main, 3085ea22) and 8c265ebe (codex/run-harness-20261026, d45487a4); result 3085ea22."
+    how_they_differ: >-
+      Entries seq 0-17 are byte-identical in both blobs and in the 18-entry blob 1b395e97 (cmp). Both
+      chains' seq 18 (session_reopened, "previous stop was infrastructure_error") has prev = 89f65770
+      (the attempt-3 stop). From seq 18 to 23 every hash differs. Chain A ran 2026-10-26T21:05:45-21:06:05Z,
+      preflight tracked_dirty false. Chain B ran 2026-10-30T16:04:02-16:06:24Z, preflight tracked_dirty
+      null. Chain B does not contain chain A's entries, and chain A does not contain B's.
+    rewritten_or_regenerated: >-
+      No. The identical first-entry time comes from the shared, unchanged seq-0 session_started entry
+      (2026-10-17). Neither chain rewrote the 18-entry prefix. The journal forked: two executions in
+      two worktrees each appended their own attempt 4 to the same 18-entry state.
+    current_tip_is_later: >-
+      Yes in time: chain B's entries and first commit are later than chain A's. But B is a sibling of
+      A, not a continuation of it.
+    reopen_rule_fact: >-
+      tools/runbook.py @91a53e8dc2 reopens a stopped session only if the last stop's class is in
+      REOPENABLE = (infrastructure_error, resource_exhaustion) (lines 105-106, 1384-1393). Chain A's
+      terminal class is implementation_error, which is not reopenable. Chain B could reopen only because
+      its worktree journal ended at seq 17 (infrastructure_error). Chain B's claim record does show the
+      queue knew epoch 3 (chain A's claim) existed: "supersedes: {epoch: 3, status: released}".
+    write_once_overwrite: >-
+      Yes, in the mainline tree. Merge 85a3fa6d98 kept chain B's bytes at paths where chain A had
+      committed write-once records. Paths whose blob at HEAD differs from fc38e671's (16):
+      runbook-sessions/RBS-XEDN-a7cd25/journal.jsonl; steps/S01-trials.attempt-4.{claim-branch.stdout,
+      claim-commit.stdout, claim-committed.stdout, claim-fetch.stderr, claim.stdout, release.stdout};
+      runs/RUN-XEDN-132272/{execution-receipt.json, launch.json, environment.json, command.txt,
+      raw-result.json}; runs/RUN-XEDN-f4d646/{execution-receipt.json, launch.json, environment.json,
+      command.txt}. Chain A's RUN-XEDN-132272 raw-result.json differs from B's only in elapsed_seconds
+      (0.069 vs 0.07). The f4d646 raw-result.json and both manifest.yaml files are byte-identical across
+      chains. Chain A's bytes survive only in git history (fc38e671, reachable from HEAD through
+      85a3fa6d98's second parent) and in the derived report reports/run-20261026T2106Z/data.json,
+      whose journal_tip 45eff20e... is absent from the HEAD journal. No superseding path, correction
+      record or run_supersession_registry entry exists for chain A's receipts. The registry lists
+      only manifest.yaml -> manifest_v2.yaml for the two run ids. Within each worktree each execution
+      wrote its files once; the replacement happened at the merge resolution.
+
+  blind_rederivation:
+    metric: >-
+      f1_violations_total (spec primary, P1), with the other P1-P3 primary quantities
+      (odd_order_minus_eligible_at_3mod4, faithful_nonplus_eligible_arms_at_3mod4, the p=353
+      minus-eligibility clause, the Legendre table) and C1-C3 derived the same way.
+    script: experiments/EXP-XEDN-0c0182/audits/AUD-20261106T051427Z-6b4683/scripts/blind_rederive.py
+    script_sha256: c17bbe9e99986ca7d462e3fa1cc1c469eaecb135e045e1bff41cb5c853d1b6ad
+    output: experiments/EXP-XEDN-0c0182/audits/AUD-20261106T051427Z-6b4683/scripts/blind_rederive.out.json
+    output_sha256: e2782740d81d01173254db1327152bf5858af2c921234260e9543622ab9f1cce
+    command: python3 -I <script> /home/user/crypto-autoresearcher <output> (run from a scratch cwd; Python 3.13.18)
+    method: >-
+      From the spec's definitions only: exhaustive enumeration of (x, y) on y^2 = x^3 - x^2 + 16x over F_p,
+      point order by repeated affine addition, chi by Euler's criterion. The value is computed from first
+      principles, not from the producer's intermediate fields, then compared field by field with each
+      unit's raw-result.json. Inputs: specification.yaml (digest-pinned), targets.json (frozen input,
+      digest-pinned), IDEA-20261016-633cb1's definition of faithful.
+    values:
+      blind:
+        f1_violations_total: 0
+        odd_order_minus_eligible_at_3mod4: 0
+        faithful_nonplus_eligible_arms_at_3mod4: 0
+        faithful_pairs: 0
+        p353_odd_order_points_with_minus_sign_eligible: 42
+        p353_odd_order_affine_points: 42
+        legendre_D_minus_63: {31: -1, 43: 1, 59: -1, 83: -1, 353: -1}
+        legendre_minus_16: {31: -1, 43: -1, 59: -1, 83: -1, 353: 1}
+        group_order: {31: 32, 43: 40, 59: 72, 83: 72, 353: 344}
+        odd_part: {31: 1, 43: 5, 59: 9, 83: 9, 353: 43}
+        odd_order_affine_points: {31: 0, 43: 4, 59: 8, 83: 8, 353: 42}
+        even_order_points_with_nonresidue_x: {31: 16, 43: 20, 59: 36, 83: 36, 353: 172}
+        alt_t_rep_reading_p353_minus_eligible: 12
+      raw_result_RUN-XEDN-132272: >-
+        f1_violations_total 0, odd_order_minus_eligible_at_3mod4 0, faithful_nonplus_eligible_arms_at_3mod4
+        0, faithful_pairs 0. Zero differences over every compared field (top-level counts and ids,
+        per_prime census and legendre at all five primes, historical_control, 32 pairs' order/faithful
+        flags, 128 arm eligibilities).
+      raw_result_RUN-XEDN-f4d646: same; zero differences.
+      session_summary: >-
+        No value. The journal seq 23 summary reports n 0, count 0, min/max null for every metric, with
+        both trials in excluded_trials (units invalid). The blind value has no session summary to agree
+        or disagree with; it agrees with both invalid units' raw fields.
+    predictions_on_blind_values: >-
+      P1 holds. P2 holds; its faithful-arm clause is vacuous (faithful_pairs 0), while its point-level
+      clause is not (4, 8 and 8 odd-order points at 43, 59, 83). P3 matches the table exactly. C1, C2
+      and C3 hold. These are reader recomputations on checker-unvalidated outputs. They are not a
+      validation and say nothing about H-XEDN-5befd8.
+    caveat: >-
+      The p=353 clause depends on the point-level eligibility reading (F-SPEC-4). Under the
+      t-representative reading it would read 12 != 42.
+
+  certificate_checks:
+    note: >-
+      This census claims no discrete-log, relation or decomposition certificate (manifest_v2.yaml:
+      certificate.kind none). Its checkable claims are point facts, and these are re-verified for both
+      units. The audit replayed no unit, so "two replayed" is impossible. Both units here are unreplayed.
+    script: experiments/EXP-XEDN-0c0182/audits/AUD-20261106T051427Z-6b4683/scripts/certificate_checks.py
+    script_sha256: 395b61108dcc8ff3dbaf951ae4c6cba00ed6aefda58446b4e508bc71f98737fd
+    output: experiments/EXP-XEDN-0c0182/audits/AUD-20261106T051427Z-6b4683/scripts/certificate_checks.out.json
+    output_sha256: 5af505e1c484778cc4385c764ec15ad5bb816e85790dbb8853c60b5fa23c08e4
+    independence: >-
+      Own arithmetic, stdlib only, sharing no code with the producer (never read) or with
+      blind_rederive.py. Group order by the character sum p + 1 + sum chi(f(x)). Odd order by
+      [odd part]P = O with Jacobian double-and-add, hand-derived including the a2 term and self-tested
+      by Lagrange on all 39 affine points at p=43. Exact H1 predictions with fractions.Fraction.
+    results:
+      - {unit: RUN-XEDN-132272, replayed: false, checks: "group_order at 5 primes agrees; f1_violation_points empty; historical (9,63),(17,183) on curve, odd order, chi(x)=chi(-x)=+1; 32/32 pairs' P/Q odd-order flags agree; h1_predicted_exact equals the exact rational on 32/32 eligible arms (260 (s,t) terms); 24 supplementary-proposal pairs (seed 20261016) all on curve, odd order, distinct x", result: verified}
+      - {unit: RUN-XEDN-f4d646, replayed: false, checks: "same checks; 24 supplementary-proposal pairs (seed 20261017) all on curve, odd order, distinct x", result: verified}
+      - {input: targets.json, checks: "all 64 points on curve, distinct x per pair, every arm's t_representatives equal the first four t in [1,64] with s*t^2 == x mod p, no pair has both points of odd order (faithful_pairs 0)", result: verified}
+      - {check: "C4 determinism on raw outputs", result: "no differing field outside run_id, trial_id, seed, supplementary_manifest_proposal, elapsed_seconds"}
+      - {check: "P5 accepted cells, one pre-committed reading (w0=y_P, z0=y_Q least non-negative residues)", result: "matches 4 of 32 eligible arms per unit; not reproduced under this reading. The spec does not define w0, z0. No other reading was tried. This is not a finding against the producer."}
+
+  lean_statement_fidelity:
+    obligations: []
+    note: >-
+      No Lean obligation is declared. Runbook purpose: "No Lean premise and no execution proof is
+      claimed". audit.json lean [], summary lean_obligations []. Nothing to screen.
+
+  not_covered:
+    - >-
+      replay: no valid unit, so the replay population was empty (replayed_units 0; miss probability 1.0 at
+      every fabrication rate). audit.json's not_covered was left empty by the tool in this case
+      (sheriff finding LGX-8(a)); it is added here.
+    - "interpreter parity: nothing was replayed (match 0, mismatch 0, unknown 0)."
+    - >-
+      float tolerance: none declared by the runbook (replay mode fields, no tolerance; audit
+      float_tolerance null). Exact comparison would have applied to float fields such as
+      /pairs[].arms[].h1_predicted and /accepted_by_arm/*/h1_predicted. Producer interpreter 3.11.17,
+      audit interpreter 3.13.18.
+    - "certificate checks on replayed units: none replayed; both units checked here as unreplayed only."
+    - >-
+      C5 independent checker: check.py never ran on either trial in either execution (check_returncode
+      null, empty check logs). The session never established checker validity of any output.
+    - >-
+      C1-C4, the P3 Legendre table and the p=353 P2 clause: no runbook counterpart. Re-derived here by a
+      reader. Not established by the session.
+    - "P5 accepted cells: not re-derived blind (w0, z0 undefined in the spec); H1 tail split: the spec itself records it as not computed."
+    - "execution proof: unavailable (summary execution_proofs chain incomplete, verified_units 0)."
+    - "Lean: no Lean step declared; none ran."
+    - >-
+      dirty state of chain B's execution: reopen preflight tracked_dirty null; manifest_v2 code.dirty
+      null. Not established.
+    - >-
+      chain A (blob d45487a4, tip 45eff20e...): its journal, receipts and logs are absent from the HEAD
+      tree and were not digest- or replay-audited by any audit. Only its git-history blobs were compared
+      here.
+    - >-
+      AUD-20261027T214121Z-f680a6 audited the 18-entry prefix (tip 89f65770), which both chains share
+      unchanged. It covers neither attempt 4.
+
+  verdict: flagged
+  verdict_reason: >-
+    The current chain's digests hold, and the units' raw census fields agree exactly with an
+    independent first-principles derivation and independent certificate arithmetic. The session is
+    still flagged for these facts:
+    (1) Two executions wrote attempt 4 of this session id from the same 18-entry state. Chain B
+    reopened a session whose actual last stop (chain A, implementation_error) is not reopenable.
+    (2) Merge 85a3fa6d98 replaced chain A's committed write-once records (journal, both execution
+    receipts, launch/environment/command files, one raw-result.json, six step logs) with chain B's at
+    the same paths. There is no superseding record.
+    (3) No unit is valid. The supervisor refused both trials at manifest-envelope completion, before
+    check.py, so C5 never ran and nothing was replayed.
+    (4) Controls C1-C4, P3 and the p=353 clause have no runbook counterpart.
+    (5) The runbook's exit-code-3 rule is bound to the supervisor's exit code, not run.py's.
+    (6) The driver was executed twice per run id against the spec's "no third run" rule, with no
+    amendment.
+    None of this is evidence about H-XEDN-5befd8.
+  escalate: true
+  escalate_to: >-
+    Coordinator: decide among a rerun under a new session id after the driver-manifest/supervisor
+    envelope defect is fixed, an invalidation or custody record for chain A's replaced write-once
+    artifacts, and a ruling on maximum_runs / "no third run". Any later citation of these runs needs a
+    full validation. This screen repairs nothing.

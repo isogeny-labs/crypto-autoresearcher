@@ -1,0 +1,82 @@
+schema: crypto.autoresearch.pfdr_independent_validation_plan/v1
+recorded_at: '2026-11-09'
+authority: DEC-20261109-6e0798
+purpose: Determine whether the invalid pilot's immutable raw rows can supply a newly derived, prospective design-calibration input under a new contract.
+scope:
+  source_run: RUN-PFDR-1e5d2b
+  source_experiment: EXP-PFDR-7c7c95
+  receipt_status: invalid_output
+  scientific_status: no conclusion
+  original_plan_sha256: ad2ef87c68721f70765e8821805a2e3749a00580d2ac26e76b96bab263424814
+  launch_authority_commit: 95ff8c4f46738b620eb1ce2f01a4bb987c894268
+  raw_jsonl_sha256: 651b9d7de59efce886749f986621acb1b3f9c3d42ed5d762c540472eed83571c
+  producer_design_sha256: bb37f3a743b069f5c15d77234d241899b98d39e578d4eeee700161d8af6f852b
+  executed_driver_sha256: 96ba0604bdfba65eb1afa3840084ec8fa69fc3dcef47e02c73c0e29374e0a0f7
+  frozen_protocol_arm_driver_sha256: 567e18b901c8153b3b4c8ae058aa6ede2c867af5374ad8b1b7958729116439f3
+  finding_to_resolve: The run/plan envelope and protocol arm instrument identity differ from what the frozen records declare; preserve both discrepancies.
+reviewer:
+  role: validator
+  policy: review-adversarial
+  backend: openai-gpt6
+  native_model: gpt-6-sol
+  requested_effort: xhigh
+  independent_session: true
+  originator: executor-pfdr-recovery-20261109
+  operator_overlay: coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/reviewer-bindings-operator-supplied.yaml
+  operator_overlay_sha256: 2ac9a732767afc8617dc15a8f1eec3043685fba279dcb14ee061ce9f25913cc8
+  resolver_receipt: coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/reviewer-binding-resolve.json
+  resolver_receipt_sha256: ffb5ca48686be4fe614cca05f54150819fa0c1107f3ca65fac3da120c80c6f5f
+  verified_model: false
+  note: The resolver records an operator assertion; the fresh native reviewer must report its actual model, effort and independent session. No API or Bedrock inference is permitted.
+budget:
+  wall_seconds_hard: 300
+  cpu_cores_max: 1
+  cpu_seconds_max: 300
+  memory_gib_max: 2
+  scientific_trial_attempts: 0
+  replay_rows_max: 2
+  replay_null_replicates_per_row_max: 1
+  new_cloud_usd_max: 0
+  enforcement: Use timeout 300s, one-core affinity and 2 GiB process/cgroup guard for computational replay; stop and record unperformed checks if these limits cannot be established. No new run ID, supervisor launch or full pilot rerun.
+exclusive_write_scope:
+  - coordination/goals/GOAL-PFDR-fd09e0/recovery-20261109/independent-validation/
+deliverables:
+  - independent-validation/report.json
+  - independent-validation/derived-design.json, only if every derivation and provenance check passes
+  - independent-validation/replay/ (bounded sample logs, if replay is admitted)
+  - independent-validation/session-receipt.json
+required_checks:
+  custody:
+    - Fetch and inspect the published commit, source run receipt, launch.json, environment.json, manifest.yaml, raw-result.json, pilot-jobs.jsonl and design.json without changing them.
+    - Recompute every receipt artifact SHA-256 and byte count; check launch authority commit, plan hash, frozen spec hash, source SHA map against git show at the authority commit, and archive commit lineage.
+    - Verify official receipt remains invalid_output and checker exit null; do not turn raw-result invalid_reason null or a post hoc check into output_validated.
+    - Compare scientific source portions of the executed driver with its predecessor; enumerate any differences, and record the executed-versus-frozen-protocol arm instrument SHA drift explicitly.
+  raw_grid:
+    - Parse all 960 rows; require exactly bits 16/20/24/28/32 x theta 0.30/0.35 x d 1/2/3 x c 0..31, no duplicates, no missing keys, pilot block, status ok, 20 nonnegative integer null values each.
+    - For every (bits,c), require one p/a/b_coef/N identity across all theta/d arms; check the reported order seed 12000000+c, N/p/bits consistency and reported N_prime/Hasse/points_ok/pass. Distinguish report consistency from an independent primality or point-order proof.
+    - Verify paired d arms share identical null vectors for each (bits,theta,c), as fixed by the pilot RNG labels; test actual row order and count separately from sorted identities.
+  independent_derivation:
+    - Derive b per cell from the frozen formula and verify row b and all 30 design cell descriptors.
+    - From the JSONL values independently compute per-cell mean_null over 32 x 20 values, n_curves clamp ceil(1.5 x 2500 / mean_null) in [10,4000], and expected_null_total. Compute Lbar as mean log2 N over 32 unique curves per rung.
+    - Independently compute all 40 plant configurations from the written plant_internal formula, target K_gamma with gamma 0/1/6/1/3/1/2, feasible bracket/rounding probability, seed namespace EXP-PFDR-ada71b, main-block seeded L for every planned curve, pooled internal and gamma_design OLS. Compare every field and list of the candidate derived design to the producer design with numeric tolerances stated before comparison.
+    - Write derived-design.json from the independent calculation only on full pass; record its SHA-256 and whether byte/content equal to producer design. Do not copy producer design as a substitute for derivation.
+  replay:
+    - Draw and record a fresh nonce before choosing a sample. Sort SHA-256(nonce || row-key) among the 16/20-bit pilot rows; take at most two distinct row keys, one null replicate per key. This bounds cost and makes the small-size restriction explicit.
+    - Where feasible within the hard resource budget, regenerate the sampled curves/bases at the pinned seed and independently count the null coincidence using a separate implementation or brute force. Record exact values, code/source identity, equality or mismatch and which program components are shared. If a replay requires a new trial, cannot run within limits, or would rely only on the producer kernel, mark replay not_admitted/not_independent and do not imply it passed.
+  analysis_scope:
+    - No hypothesis outcome, slope, growth-rate, control-pass, statistical or runtime claim from this pilot.
+    - State which checks passed, failed or were not performed; any mismatch blocks derivative use. A green producer checker alone is insufficient.
+producer_side_check:
+  command: PYTHONDONTWRITEBYTECODE=1 /home/ec2-user/.local/bin/uv run --no-project --python 3.12 --with pyyaml python -B experiments/EXP-PFDR-7c7c95/implementation/check.py experiments/EXP-PFDR-7c7c95/runs/RUN-PFDR-1e5d2b experiments/EXP-PFDR-7c7c95/trial-plan.json pilot
+  observed_exit_code: 0
+  observed_stdout: CHECK OK pilot
+  observed_at: '2026-11-09'
+  meaning: Post hoc producer-side check only; not part of original supervisor receipt and not an independent validator report.
+partial_export:
+  status: cannot truthfully lint as a complete experiment.export/v1 against frozen protocol-resource-v2.json
+  reason: The protocol has six scientific arms and plans 30 instances x 20 replicates per arm; the failed pilot has only null calibration jobs and no main/census arms or analysis. Mapping pilot jobs to structured, gamma plants, Z/N interval or A/A would invent observations. Instrument flags in the frozen arms also bind the wrong driver SHA.
+  honest_representation: A write-once failure inventory may name the original six arms with no fabricated rows, plus a single failed pilot attempt/event and raw files with hashes, flow/shortfall and exclusion reason. Treat it as a partial diagnostic bundle; do not claim export lint or experiment.review/v1 validation passed. The required full export remains an open obligation for any subsequently valid run.
+  expected_lint_findings: Missing all or most protocol arms; measured row count below 6 x 30 x 20 = 3600 and per-arm instance/replicate shortfalls; any direct pilot row mapping conflicts with planned stage/seed semantics. Report literal lint output if a diagnostic export is made.
+decision_gate:
+  pass: Coordinator may consider the derivative as an input to a new prospectively approved four-stage contract; invalid receipt remains invalid and three of seven attempts remain consumed.
+  fail_or_incomplete: No derivative input and no further scientific stage under the current plan; record exact defect and stop. A reviewer report never approves a new run.

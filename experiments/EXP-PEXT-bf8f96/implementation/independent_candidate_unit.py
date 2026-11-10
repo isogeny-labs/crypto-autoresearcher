@@ -8,6 +8,7 @@ from an external binding, never from the unit under review.
 
 from check_all_degree_collision_certificate import projective_kernel, root_degree, validate_row
 from check_compact_class_inputs import BasisField
+from check_quotient_certificate import square_relations
 from check_structure_certificate import cocycle, inverse, multiply, normalize, transform
 from generic_disjoint import classify, exceptional_geometry
 from independent_transversal import IndependentTransversal, from_triple, orbit_representatives
@@ -143,6 +144,7 @@ class IndependentCandidateChecker:
         count = self.transversal.count
         if (unit.get("schema") != "pext.checked-candidate-unit/v1"
                 or unit.get("structure_order") != "left-pgl2-fq/v1"
+                or unit.get("candidate_order_aa") != "reverse-cocycle-build-representatives-buckets-and-roots/v1"
                 or unit.get("field") != self.field_record
                 or unit.get("form") != expected_form
                 or unit.get("structures") != count):
@@ -170,6 +172,18 @@ class IndependentCandidateChecker:
             raise ValueError("root-degree candidate counts")
         if unit.get("generic_intervals") != intervals_of(expected, count):
             raise ValueError("generic complement intervals")
+        squareclasses = unit.get("exceptional_squareclasses")
+        if (not isinstance(squareclasses, list) or len(squareclasses) != len(rows)
+                or any(not isinstance(entry, list) or len(entry) != 2
+                       or type(entry[0]) is not int or type(entry[1]) is not bool
+                       or not isinstance(row, list) or len(row) != 5
+                       or type(row[2]) is not int
+                       or not 1 <= row[2] <= field.n
+                       or not 1 <= entry[0] <= field.n
+                       or entry[0] not in (row[2], row[2] + 1)
+                       or entry[1] != (entry[0] > row[2])
+                       for row, entry in zip(rows, squareclasses))):
+            raise ValueError("exceptional square-class vector shape or rank")
         if unit.get("cocycle_entries") != [count]*((field.n-1)//2):
             raise ValueError("cocycle index coverage")
         if unit.get("rational_image_entries") != count*(field.p+1):
@@ -178,7 +192,7 @@ class IndependentCandidateChecker:
         if not requested <= set(expected):
             raise ValueError("geometry sample outside exceptional set")
         geometry_checked = 0
-        for row in rows:
+        for position, row in enumerate(rows):
             ordinal = row[0]
             if ordinal not in requested:
                 continue
@@ -192,6 +206,17 @@ class IndependentCandidateChecker:
             if row[2:] != [geometry["geometric_squareclass_rank"],
                            geometry["branch_points"], geometry["geometric_genus"]]:
                 raise ValueError("sampled candidate geometry mismatch")
+            relations = square_relations(field, orbit)
+            square_count = sum(is_square for _, is_square in relations)
+            if (not relations or len(relations) & (len(relations)-1)
+                    or not square_count or square_count & (square_count-1)):
+                raise ValueError("sampled square-class relation count")
+            geometric_rank = field.n - (len(relations).bit_length()-1)
+            arithmetic_rank = field.n - (square_count.bit_length()-1)
+            nonsquare_constant = any(not is_square for _, is_square in relations)
+            if (geometric_rank != row[2]
+                    or squareclasses[position] != [arithmetic_rank, nonsquare_constant]):
+                raise ValueError("sampled exceptional arithmetic square classes mismatch")
             geometry_checked += 1
         generic_requested = set(generic_ordinals)
         if (any(type(ordinal) is not int or not 0 <= ordinal < count
@@ -206,4 +231,5 @@ class IndependentCandidateChecker:
                 "nonrational": len(nonrational), "overlap": len(rational & nonrational),
                 "exceptional": len(expected), "generic_intervals": len(unit["generic_intervals"]),
                 "geometry_checked": geometry_checked,
+                "arithmetic_checked": geometry_checked,
                 "generic_checked": len(generic_requested)}

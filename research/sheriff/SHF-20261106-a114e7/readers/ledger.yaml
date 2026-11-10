@@ -1,0 +1,792 @@
+schema: sheriff.reader/v1
+case: SHF-20261106-a114e7
+joint: "LGX: B7 ledger and tooling. Duplicate-key YAML loaders, complete_manifest contradiction refusals, the empty-manifest gate and PR-scoped check_run (#2659); completion sources and CORR-20261028-1e1ff4 / -a02dba (#2663); the four runbook-session audits (#2671); rulings DEC-20261029-9bc3ff / -22e05b / -5554ee and CORR-20261029-892bca (#2674); the runbook-session bytes guard (#2686); runbook.py float tolerance, interpreter parity, session-id collision and multi-journal audit (#2689, #3059); validate_ledger recount, check_merge_hygiene --absolute and runbook.py pending-audits on main"
+reader:
+  role: validator
+  model: claude-opus-5-5
+  independence: >-
+    Produced nothing under audit. Judged from code, records and git objects at
+    crypto-autoresearcher origin/main da442739db and from this reader's own
+    reruns and probes. PR descriptions were not read. Commit messages were
+    displayed by git log/show and are not used as evidence. Prior sheriff
+    finding texts were read only to learn what was claimed. One prior-case
+    artifact (SHF-20261028-0f3f64 scripts/readers/ledger/out/validate_ledger_main.txt,
+    the list of 67 errors) was opened as data, after this reader had recounted
+    the same commit independently, to compare the two lists.
+target:
+  repo: isogeny-labs/crypto-autoresearcher
+  path: /home/user/crypto-autoresearcher
+  head: da442739db82a5f99d95e4ab9413cbe6fb326f0a
+  head_tree: d39dfde801a82d895f6f9dc538d290e448d26792
+  at_origin_main: true
+  worktree_note: >-
+    The audit worktree's HEAD was db4592579a at the start and 3a8ea3ad82 at the
+    end: session WIP commits on top of origin/main that touch only
+    research/sheriff/SHF-20261106-a114e7/ and problems/ (this reader committed
+    nothing). Every tool, record and count below is read at da442739db: the
+    validator runs use a non-git scratch materialisation of da442739db (see
+    build_tree.py), the runbook audits a `git clone --shared` checked out at
+    da442739db, and record checks use `git show da442739db:<path>`.
+    pcc/ledger.jsonl is hook-modified in the worktree and was not read.
+  binding_evidence: >-
+    git rev-parse da442739db^{tree} = d39dfde801..., equal to sweep.json
+    repos.crypto-autoresearcher.head_tree; sweep.json canary passed (15 caught,
+    0 missed, 0 false positives).
+  prior_head_compared: b7d5e65b9f (the head audited by SHF-20261028-0f3f64)
+
+sources_read:
+  crypto-autoresearcher:
+    - research/sheriff/SHF-20261106-a114e7/scripts/READER_BRIEF.md
+    - CLAUDE.md (auto-loaded)
+    - docs/agent-runtime-core.md
+    - agents/validator.md
+    - .claude/skills/sheriff/SKILL.md
+    - docs/sheriff.md (lines 1-102, 364-462, 505-564; heading list)
+    - AGENTS.md (heading list; "Review architecture" 329-341; "Durable research commits", "Research states", "Artifact policy" 437-504)
+    - research/sheriff/SHF-20261028-0f3f64/readers/stark.yaml (format model only)
+    - research/sheriff/SHF-20261028-0f3f64/findings.yaml (lines 90-125, 265-276, 810-980; LGN-1..9 and re-verdict rows, for what was claimed only)
+    - research/sheriff/SHF-20261016-3caa6f/findings.yaml (lines 365-432; M1, M2, X1, X3)
+    - research/sheriff/SHF-20261017-e4d7f6/findings.yaml (lines 265-285, 370-390; M2-R, I1)
+    - research/sheriff/SHF-20261028-0f3f64/sweep.json (repos key) and research/sheriff/SHF-20261106-a114e7/sweep.json (canary, repos, instrument keys)
+    - research/sheriff/SHF-20261028-0f3f64/scripts/readers/ledger/out/validate_ledger_main.txt (the 67-line error list, as data, after the independent recount)
+    - tools/validate_ledger.py (60-95, 115-120, 184-206, 250-251, 315-345, 399-450 via git show, 727-806, 1013-1046, 1123-1160 via git show, 1298-1528, 1709-1725, 1838-1900, 2279-2340, 2471-2503, 3825-3981)
+    - tools/check_merge_hygiene.py (45-100, 450-660, 700-1124 via the #2659 and #2686 diffs and main())
+    - tools/experiment_execution.py (1-41, 98-240, 241-600, 968-1068)
+    - tools/runbook.py (the #2689 and #3059 diffs in full; 1990-2010, 2355-2370)
+    - tools/sparse_checkout.py (refuse_if_sparse, 155-175)
+    - tools/sheriff.py (grep for head_tree, worktree_digest, --allow-interrupted, ecbench enumeration, ~/.elan, bibliography and list handling)
+    - tests/test_experiment_execution.py (860-1000: the producer's fixture shape only; the probes here use their own values)
+    - docs/experiment-execution.md (96-110, 150-215)
+    - docs/runbook-execution.md (210-262, 322-334)
+    - .claude/skills/audit-runs/SKILL.md (33-40)
+    - .github/workflows/validate.yml (1-160 and grep), .github/scripts/ci_scope.py (grep)
+    - orchestration/fast_yaml.py (safe_load)
+    - ledger/corrections/CORR-20261028-1e1ff4.yaml, CORR-20261028-a02dba.yaml, CORR-20261029-892bca.yaml (all)
+    - ledger/decisions/DEC-20261028-f8c018.yaml (1-112), DEC-20261029-9bc3ff.yaml (1-140 and grep), DEC-20261029-22e05b.yaml (1-120), DEC-20261029-5554ee.yaml (1-60 and grep), DEC-20261023-5c9671.yaml (grep), DEC-20261031-e3ee70.yaml (grep), DEC-20261105-6e2616.yaml (grep)
+    - ledger/handoffs/TASK-20261003-68bcf5.yaml (grep), experiments/EXP-BINSTD-8bdf86/review/review-plan-ell89.yaml (153-165)
+    - tools/schema_supersession_registry.yaml and tools/run_supersession_registry.yaml (entries named below)
+    - "the four #2671 audit.json files (summary keys and replays) and grep of their audit-review.yaml verdict lines"
+    - "git show / ls-tree / cat-file of the records, sessions, runs and commits cited below"
+blind_from:
+  - research/sheriff/SHF-20261106-a114e7/prior.md (not read)
+  - research/sheriff/SHF-20261106-a114e7/readers/* other than this file (not read; `git status` displayed the NAME readers/cryptanalysis.yaml)
+  - "research/sheriff/SHF-20261106-a114e7/scripts/readers/* other than ledger/ (not read; `git log --stat` of the session WIP commit db4592579a and `git status` displayed file NAMES under cryptanalysis/, icperf-receipts/, icperf-interpretation/, lean/ and pfdr/, no contents opened)"
+  - research/sheriff/SHF-20261106-a114e7/sweep.md and checks/ (not read; the WIP commit stat displayed the names checks/ci/merge_timings.yaml and checks/sweep-home.stdout)
+  - problems/post-merge-checks-mask-pre-merge-state.md (added by the session WIP commit; not read)
+  - prior cases' readers/*.yaml other than the stark.yaml format model, their scripts/ (except the one data file named above) and REPORT.md (not read)
+  - PR descriptions (not read); commit messages (displayed, not used as evidence)
+blind_from_respected: true
+read_sibling_reports: false
+
+checks:
+  - id: K1-validate-ledger-main
+    command: >-
+      python3 -I -B scripts/readers/ledger/build_tree.py <repo> da442739db <scratch>/tree_main <repo> da442739db;
+      cd <scratch>/tree_main && python3 -B tools/validate_ledger.py [--no-baseline]
+    output: scripts/readers/ledger/out/validate_ledger_main.{stdout,stderr}, validate_ledger_main_nobaseline.*, main_new.txt, main_all.txt
+    result: >-
+      FAIL: 1 new validation error (1,211 in total, 1,210 grandfathered; tools/validate_ledger_baseline.txt
+      is byte-identical to b7d5e65b9f's and no baseline entry went stale). The one error:
+      experiments/EXP-BINSTD-591d28/runs/RUN-BINSTD-f7ca97/manifest.yaml: expected top-level key 'run'
+      (a flat manifest added 2026-10-11 by #1650, one of the 67 of SHF-20261028-0f3f64; problems/binstd-f7ca97-original-execution-captures-missing.md
+      records why it is not superseded). The validator refuses a sparse checkout, so it ran on a non-git
+      materialisation of da442739db: 126,152 files hardlinked from the clean worktree, 42,200 written from
+      git, 2,607 large non-record blobs as empty placeholders (listed in out/tree_main.placeholders.txt). A first run produced 2 phantom errors
+      from a 2 MB manifest.yaml left as a placeholder (EXP-FROB-b8cf21 TASK-20260907-ee1e3c and the evidence
+      citing it); that file was written from git and the run repeated. No placeholder is a .yaml/.yml file;
+      no remaining error names a placeholder. A full checkout (9.6 GB) did not fit (2.5 GB free).
+  - id: K2-validate-ledger-prior-and-attribution
+    command: >-
+      same build at b7d5e65b9f (hardlinked from tree_main), its own validator and baseline;
+      python3 -I -B scripts/readers/ledger/attribute_resolutions.py out/prior_new67.txt out/main_new.txt
+    output: scripts/readers/ledger/out/validate_ledger_prior*.{stdout,stderr}, prior_new67.txt, resolution_attribution.json, validate_ledger_categories.json
+    result: >-
+      Independent recount at b7d5e65b9f: 67 new (1,277 total); line-for-line identical to the case's list
+      (prior_case_list67.txt, compared after the recount). Between b7d5e65b9f and da442739db, 66 of the 67
+      were resolved and 0 new errors appeared. None of the 24 erroring files changed a byte. Resolution:
+      29 by run supersessions (manifest_v2, additive_schema_completion): RUN-ECDLP-9f18c9 (10, #2756),
+      RUN-ICPERF-943efa and -b09be8 (16, #2715), FROB-91ee9c TASK-20260914-7119f2 (3, #2714); 28 by schema
+      supersessions of 12 handoff/proposal records (4973b4cd1d, #2771); 3 by schema supersessions via #2764
+      (TASK-20260910-19bd7b and the IDEA-94078e/-c9c6c3 v3 routes); 2 by the LGN-1 registry de-duplication
+      (DEC-20261019-624f64, TASK-20261017-2d324f; 63cea870d2, which reached main's first-parent line in
+      #2609); 1 by a validator rule for the hash-bound AUXIN successor draft (EXP-AUXIN-339fb0, bef7340a3d
+      via #2657); and 3 by per-quantity review_plan checks (TASK-20261003-68bcf5, whose plan lists
+      quantities each with quantity/assigned_to/blind_from; 4973b4cd1d via #2771). 29+28+3+2+1+3 = 66. Category breakdowns of the 67 and the 1,211 are in validate_ledger_categories.json.
+  - id: K3-count-claims-in-scope
+    command: same build and validator at e9b91d62a9, f450a6cce3, 7b16f392d3, 692b54f1f4, 0265593c57 (each commit's own validator and baseline); set comparisons with comm
+    output: scripts/readers/ledger/out/validate_ledger_<commit>.*, errs_<commit>.txt
+    result: >-
+      e9b91d62a9 141 and f450a6cce3 124, every f450a6cce3 error also at e9b91d62a9 and no DEC-20260929 line
+      at either (CORR-20261028-1e1ff4 upheld). 7b16f392d3 65 = the 67 minus exactly the two LGN-1 errors;
+      692b54f1f4 115; 0265593c57 100, which adds exactly one error over its first parent
+      (DEC-20261019-624f64 knowledge_promotion) and contains both LGN-1 errors (DEC-20261028-f8c018 67/65/115/100
+      upheld; its 98 "with registry repair only" was not measured here, and is consistent with 100 minus the
+      two LGN-1 errors). The two draft contracts are 703,334 and 705,752 bytes at e9b91d62a9.
+  - id: K4-check-merge-hygiene-absolute
+    command: CHECKPOINT_SKIP=audit python3 -B tools/check_merge_hygiene.py --absolute (audit worktree)
+    output: scripts/readers/ledger/out/check_merge_hygiene_absolute.{stdout,stderr}
+    result: >-
+      PASS, rc 0: no conflict markers, no unparseable records, no duplicate registry keys, no changed
+      runbook-session files. Partial: run on the sparse worktree at db4592579a (the session WIP commit on
+      da442739db). The parse rules cover ledger/*.yaml, experiments/*/specification.yaml and coordination
+      *.json, all inside the sparse set. The session-file group compares merge parents only in --absolute
+      mode and HEAD is not a merge, so that group was vacuous here; K12 exercises it.
+  - id: K5-pending-audits
+    command: CHECKPOINT_SKIP=audit python3 -B tools/runbook.py pending-audits --json
+    output: scripts/readers/ledger/out/runbook_pending_audits.json
+    result: >-
+      2 pending: RBS-SEMBIN-24ec56 (stopped 2026-10-26, reached main after b7d5e65b9f) and RBS-XEDN-a7cd25
+      (stopped 2026-10-30; two audits exist for earlier journal tips; the journal was appended after them,
+      prefix-preserving). The four LGN-9 sessions are no longer pending. The blind re-derivation agrees.
+  - id: K6-complete-manifest-contradictions
+    command: python3 -I -B scripts/readers/ledger/probe_completion.py <scratch>/tree_main <scratch>/probe
+    output: scripts/readers/ledger/out/probe_completion.json (controls, cases)
+    result: >-
+      Controls: a partial driver manifest with no contradiction is completed (20 keys added, each with a
+      source in envelope_completion.sources, representation note present); an agreeing complete envelope is
+      accepted 'unchanged'. 46 of 46 contradictions of a publish-time fact are refused with the driver bytes
+      unchanged and no candidate file left: run id/run_id, experiment_id, task_id, trial_id, approved_by,
+      hypothesis_id; code.commit (also a 12-hex prefix), code.command, check_command, command_file;
+      environment.commit, source_sha256, specification_sha256, runtime_lock, runtime_lock_sha256, file,
+      python (same interpreter); inputs.trial_plan, plan_sha256, trial_id, seed (2, "1", 1.0, true),
+      parameters (25, "24", 24.0), curve_id; timing.started_at/finished_at outside the interval or without a
+      zone, wall_seconds 60, -0.5, NaN, true; result.metrics {m: 4} and {m: 3.0} vs run.metrics {m: 3};
+      result.raw_result; attack_claimed against raw-result.json both ways; and a complete envelope
+      contradicting only task_id, only inputs.seed or only code.commit.
+  - id: K7-complete-manifest-gaps
+    command: same script (gap_probes)
+    output: scripts/readers/ledger/out/probe_completion.json (gap_probes)
+    result: >-
+      Accepted and published (finding LGX-2): G1 run.seed 99 for a seed-1 trial (published beside the
+      supervisor-added inputs.seed 1); G2 the same in the flat shape; G3 run.parameters {bits: 64} against
+      trial parameters {bits: 24}; G4 an extra key in inputs.parameters; G5 inputs.parameters {}; G6
+      hypothesis_id when the plan has none; G7 inputs.seed when the trial has none; G8 started_at after
+      finished_at (both inside the interval); G9 environment.python "not 3.13.18; ran under 3.13.189";
+      G10 a verified discrete_log certificate while attack_claimed is false in both files; G11 raw-result.json
+      with attack_claimed true then false (JSON last-wins); G12 unparseable raw-result.json; G13 status
+      failed after exit 0; G17 inputs.Seed; G18 inputs.specification_sha256 contradicting the plan. On main,
+      91 run manifests carry a run-level seed and 113 run-level parameters (none currently disagree with
+      inputs.seed), so drivers do write these places.
+  - id: K8-empty-manifest-gate
+    command: same script (empty_manifest_complete, empty_manifest_check_run)
+    output: scripts/readers/ledger/out/probe_completion.json
+    result: >-
+      pass. complete_manifest refuses all 13 variants: 0-byte, comment-only, null, ~, '---', '---/...',
+      BOM-only, whitespace, [], a scalar ("not a mapping"), {} and run: {} (schema cannot be completed),
+      run: (null). check_run reports every one: the 8 that load as None get "run manifest is empty (no YAML
+      document)", the rest "expected top-level key 'run'" or the missing-field list. load_plan refuses
+      manifest.yaml and raw-result.json in allow_empty_artifacts (experiment_execution.py:206-210), and
+      execute_trial calls complete_manifest for any existing manifest.yaml and maps EnvelopeRefused to
+      invalid_output (999-1003, 1019-1023); both by code reading, execute_trial not run end to end.
+  - id: K9-duplicate-keys
+    command: same script (duplicate_driver_keys, check_run_duplicate_keys, registry_and_record_loaders)
+    output: scripts/readers/ledger/out/probe_completion.json
+    result: >-
+      Driver manifests: refused for a top-level duplicate, a nested code.commit duplicate, 'seed' vs seed,
+      a merge-key override and a repeated top-level run:. Registries: a planted duplicate superseded_path
+      is refused by load_schema_supersessions and load_run_supersessions, and
+      check_merge_hygiene.check_registry_duplicate_keys reports it (control on main bytes: no problem).
+      Still accepted, last value wins (finding LGX-1): validate_ledger.check_run on a run manifest with
+      experiment_id twice, or with certificate.kind discrete_log then none (0 errors, run registered);
+      check_new_run_manifests on the same; check_merge_hygiene.check_parses and validate_ledger.load_yaml on
+      a decision with status accepted then rejected (no problem; loads as rejected);
+      tools/duplicate_run_ids.yaml with a repeated key (plain _safe_load).
+  - id: K10-pr-scoped-check-run
+    command: python3 -I -B scripts/readers/ledger/probe_merge_hygiene.py <scratch>/tree_main <scratch>/mh (check_new_run_manifests)
+    output: scripts/readers/ledger/out/probe_merge_hygiene.json
+    result: >-
+      A PR-added flat or empty manifest.yaml is reported; a valid one passes. The same flat or empty
+      envelope as a run's only manifest_v2.yaml (validate_ledger checks manifest_v2.yaml when no
+      manifest.yaml exists) is not reported, and a duplicate-key manifest passes (LGX-5, LGX-1). In CI the
+      step gets a full checkout for any non-documentation path (.github/scripts/ci_scope.py), so the
+      manifests are on disk there.
+  - id: K11-session-bytes-guard
+    command: same script (scratch git repositories; check_session_files)
+    output: scripts/readers/ledger/out/probe_merge_hygiene.json
+    result: >-
+      Flagged: a modified sealed output file; a modified output with the journal digest rewritten to match
+      (journal not a byte prefix); a deleted sealed file; a merge that keeps execution B's journal and
+      output but execution A's log (the RBS-ICPERF-b7e41c splice), in PR scope and in --absolute
+      (merge-parent) scope, including the off-journal digest. Not flagged (control): an unrelated change;
+      a journal append. Not flagged (LGX-4): an unrecorded extra file added inside a sealed session; a
+      journal append that binds a new output file; a non-merge commit modifying a sealed file under
+      --absolute; any session directory outside experiments/<EXP>/ and examples/**/.
+  - id: K12-session-guard-on-history
+    command: python3 -c "check_merge_hygiene.check_session_files(base)" for base b7d5e65b9f and da442739db~200 (audit worktree, git objects only)
+    output: scripts/readers/ledger/out/session_files_since_prior.txt
+    result: >-
+      0 findings for both ranges. The only session change since b7d5e65b9f is RBS-XEDN-a7cd25's journal,
+      whose old bytes are a prefix of the new (20,019 -> 33,755 bytes). The known b7e41c mismatch predates
+      both ranges and is reported only when a change touches that session.
+  - id: K13-runbook-audits-rerun
+    command: >-
+      git clone --shared --no-checkout; sparse tools/, orchestration/, templates/, ledger/decisions/ and the
+      three experiments; checkout --detach da442739db; refs mirrored from the worktree (1,625);
+      python3 -B tools/runbook.py audit <session> --auditor "validator/claude-opus-5-5 sheriff SHF-20261106-a114e7 ledger reader"
+      (fresh nonce, never --nonce)
+    output: scripts/readers/ledger/out/audit_RBS-ICPERF-b7e41c.*, audit_RBS-ICPERF-c4a91e.*, audit_RBS-PFDR-ca5e01.{started,stdout,stderr,partial_replay_stdout.log,partial_replay_main-jobs.jsonl,partial_job_compare.json}
+    result: >-
+      RBS-ICPERF-b7e41c: verdict flagged; the same digest finding as #2671's d57860
+      (steps/S02-trials.attempt-1.supervisor.stderr differs from its recorded digest) plus the two
+      journal-chain findings the newer tool adds (fb546f79d0, first commit 93b87120f6, owner
+      executor-codex-run-20261019-0527; c3f89d1fce, first commit ba814919aa, owner
+      executor-run-icperf-e467a5-20261021). RBS-ICPERF-c4a91e: verdict clean, as #2671's f9db07. Both
+      replay 0 units: each session's only unit is invalid_output, so the replay population is empty
+      (miss probability 1.0; LGX-8). Both audits are schema v2, fresh nonces 08d1f5de... and b0331641...,
+      tool sha256 8de36933.... RBS-PFDR-ca5e01 (replays 4 of 6 valid units): fresh nonce; the first
+      chosen unit was census-main RUN-PFDR-eb4733 (19,388 jobs, 947 s wall on the producer's host). At
+      load average ~11 on 4 cores the first jobs took 379-408 s each against 57-63 s recorded, so the audit
+      was stopped after 30 min (rc 143) to free the shared host; no audit.json was written. Of the 35 job
+      records the partial replay wrote, 34 equal the recorded records in every field but `seconds`; the
+      35th was killed (status failed_infrastructure:kernel_exit_-9, an infrastructure event, not a
+      mismatch). The ca5e01 and bb0d26 replays are not_covered here.
+  - id: K14-tolerance-and-parity
+    command: python3 -I -B scripts/readers/ledger/probe_runbook_tolerance.py <scratch>/tree_main <scratch>/rbt
+    output: scripts/readers/ledger/out/probe_runbook_tolerance.json
+    result: >-
+      parse_tolerance accepts any finite non-negative value: rel_tol=1, rel_tol=1e6, abs_tol=1e300 are
+      accepted; negative, NaN, inf, booleans, {} and unknown keys are refused. compare_tolerant: the bb0d26
+      drift pair is within the suggested 1e-9/1e-12, a 1% change is not. Under rel_tol=0.5 a doubled value is
+      within tolerance; under rel_tol=1 a 1e3 -> 1e6 change and a document whose mean moves -0.2675 -> -0.9 and
+      sd 0.97 -> 5.0 (n and pass equal) are within tolerance; under rel_tol=2 or abs_tol=1e9 a sign flip is.
+      Ints and int-vs-float stay exact. Only 'mismatch' is a finding, so each of these audits would be
+      verdict clean (LGX-3). Parity helpers: "3.11.15 (main...)" -> 3.11.15, "3" and the float 3.11 ->
+      None (unknown), 3.11.15 vs 3.11.17 mismatch, "3.11" vs 3.11.17 match.
+  - id: K15-session-collision-and-chains
+    command: same script (scratch git repository)
+    output: scripts/readers/ledger/out/probe_runbook_tolerance.json
+    result: >-
+      session_id_collisions: a branch holding the journal blocks a fresh session; an identical or extended
+      local journal passes; an unrelated local journal is refused; after the branch is deleted nothing is
+      seen (refs only, never fetches, as documented). journal_chain_findings: an overwrite gives 2 chains and
+      2 findings, and stays 2 after the second chain appends. On real data the b7e41c rerun reports both
+      chains (owners executor-codex-run-20261019-0527 and executor-run-icperf-e467a5-20261021); c4a91e,
+      committed twice with identical bytes (31b6310304 / 62578b925e, same session tree f793d2a4), gives 1.
+  - id: K16-corrections-and-rulings
+    command: >-
+      python3 -I -B scripts/readers/ledger/verify_corr_892bca.py; an inline script for DEC-20261029-9bc3ff
+      (out/verify_dec_9bc3ff.txt); git log/show/ls-tree/cat-file for CORR-20261028-a02dba and
+      DEC-20261029-22e05b / -5554ee; /usr/bin/python3.11 and python3.13 sum([1e16, 1.0, -1e16])
+    output: scripts/readers/ledger/out/verify_corr_892bca.json, verify_dec_9bc3ff.txt
+    result: >-
+      CORR-20261029-892bca: every git fact holds (stderr blob ed9fcfcdf5 at 93b87120f6, 0186e97db6 and main;
+      e69de29bb2 at 2d3948be7f; journal fb546f79d0 vs c3f89d1fce; 96 bytes, sha256 85aab135...; the two tips
+      and start times; merge parents 4162400dad / af671797aa, merge base without the session; journal,
+      environment.json, claim.stdout and release.stdout resolved to B, supervisor.stderr to A; 8 of 9
+      B-bound files match on main; first reached main's first-parent line in 6b65cdcaeb (#2416);
+      RUN-ICPERF-943efa's three artifacts and receipt match journal seq 4 and the receipt). The stderr blob
+      is unchanged on main, so the record is additive. DEC-20261029-9bc3ff premises hold (A: 9/9 digests
+      at 93b87120f6, S02 exit 2 infrastructure_error, unit not_run, tracked_dirty false; B: 9/9 at
+      2d3948be7f, S02 exit 3 implementation_error, unit invalid_output, preflight tracked_dirty true at
+      6e27b5ac). DEC-20261029-22e05b's ledger facts hold (b09be8 manifest 9 lines / 177 bytes, 8 check_run
+      errors on the raw file under the main validator, no attack_claimed in manifest, raw-result or either
+      run.py, so complete_manifest would refuse it; the double commit has one session tree).
+      DEC-20261029-5554ee: the bb0d26 manifests record python_version 3.11.15; rel 8.63e-14 / 416 ulps and
+      4.58e-14 / 402 ulps recompute; 3.11 sum() returns 0.0 and 3.13 returns 1.0 on the 3-term probe.
+      CORR-20261028-a02dba: 3bc7f516ec adds the 8 implementation files and 15 RUN-AES-0739d9 paths, parent
+      d447e31aaa, 2026-09-10T19:38:24Z; deleted 5a6af784ad, re-added e03a460636; bytes equal on main; both
+      manifest_v2 files hash to their registry pins and last changed 2026-10-23; no evidence record cites
+      either run.
+
+blind_rederivation:
+  quantity: "the set of finished runbook sessions on main whose current journal tip has no audit (what `tools/runbook.py pending-audits` reports)"
+  statement_used: "docs/runbook-execution.md:327-328 and .claude/skills/audit-runs/SKILL.md:35-36: finished sessions whose current journal tip has no audit"
+  parameters: "git tree da442739db; a session is any */runbook-sessions/<id>/journal.jsonl; finished = has a session_finished entry; tip = the last entry's hash; an audit = any audit.json with a runbook_audit schema naming the session_dir and that tip"
+  blind_from: "tools/runbook.py pending_audits() and its helpers (not read before or after)"
+  script: scripts/readers/ledger/blind_pending_audits.py
+  output: scripts/readers/ledger/out/blind_pending_audits.json
+  result: >-
+    11 sessions, 10 finished, 13 runbook audits. Pending = {RBS-SEMBIN-24ec56, RBS-XEDN-a7cd25}, identical
+    to the tool's list. A second, non-blind recount (the 67 errors at b7d5e65b9f rebuilt from git objects)
+    also matched the prior case line for line.
+proves_too_much_control:
+  - object: "a sealed runbook-session file modified on a PR branch, and a merge splicing two executions"
+    known: "the session is no longer the record of one execution"
+    expected: fail (be refused)
+    observed: "refused by check_session_files in PR and merge-parent scope (K11)"
+    result: pass
+  - object: "a driver manifest contradicting the frozen trial's seed, task or commit"
+    known: "the envelope does not describe the trial that ran"
+    expected: fail (be refused)
+    observed: "refused, bytes unchanged (K6); the unchanged fixture is accepted"
+    result: pass
+  - object: "a run manifest stating certificate.kind discrete_log and then none"
+    known: "the record is self-contradictory"
+    expected: fail
+    observed: "check_run and the PR-scoped merge-hygiene check report 0 errors and register the run (K9)"
+    result: "control fails: the run-schema gate proves too much (LGX-1)"
+  - object: "a replayed float that doubles, under an audit-time --float-tolerance rel_tol=1"
+    known: "the value was not reproduced"
+    expected: mismatch
+    observed: "matched_within_tolerance; not a finding; verdict clean (K14)"
+    result: "control fails for any large declared tolerance (LGX-3); with the suggested 1e-9/1e-12 it is a mismatch"
+
+prior_finding_verdicts:
+  - id: LGN-1
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: >-
+      The three registry entries are separate list items again (tools/schema_supersession_registry.yaml
+      1887-1910; 63cea870d2, reached main's first-parent line in #2609); a unique-key load of the registry
+      at da442739db succeeds. Both LGN-1 errors are gone (65 at 7b16f392d3 = 67 minus exactly those two; 0
+      on main). Both routing registries now load through a duplicate-refusing loader and
+      check_merge_hygiene reports a planted duplicate (K9). Residual beyond the finding: LGX-1.
+  - id: LGN-2
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: partially_fixed
+    why: >-
+      Every contradiction class the finding listed is now refused type-strictly, on partial and complete
+      envelopes, with the driver bytes left unchanged (46/46, K6). But the fix asked for every driver field
+      that has a declared source, or narrowed docs; the docs still say "Every driver value with a
+      publish-time source is checked" while run-level seed/parameters, flat-shape seed, parameter extras and
+      several other sourced values are published unchecked (K7, LGX-2).
+  - id: LGN-3
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: >-
+      check_run reports all 13 empty or non-mapping variants; complete_manifest refuses all of them; load_plan
+      refuses manifest.yaml/raw-result.json in allow_empty_artifacts; execute_trial completes any existing
+      manifest (K8). execute_trial itself was not run end to end here.
+  - id: LGN-4
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: >-
+      docs/experiment-execution.md:183-206 now names the derived values, the supervisor constants and the
+      three pointers to later files; envelope_completion.sources records a source for every added key (K6
+      control: 20 of 20); command.txt must equal the launched argv or completion is refused
+      (experiment_execution.py:490-495).
+  - id: LGN-5
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: >-
+      Duplicate keys in a driver manifest are refused (5 shapes, K9); the re-serialisation is stated in
+      envelope_completion.representation and the driver bytes are kept in the receipt's
+      manifest_completion.driver_manifest_text. Scoped to supervisor-completed driver manifests (LGX-1).
+  - id: LGN-6
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: "CORR-20261028-1e1ff4 recounted here: 141 and 124, subset holds, no DEC-20260929 line (K3); DEC-20261023-5c9671 has one commit and is unedited."
+  - id: LGN-7
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: "CORR-20261028-a02dba's facts verified from git (K16); both manifest_v2 files still hash to their registry pins."
+  - id: LGN-8
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: partially_fixed
+    why: >-
+      The 26 errors are cleared (supersessions via #2715 and #2756), no new validate_ledger error has
+      entered main since b7d5e65b9f (435 first-parent commits, K2), and merge hygiene now runs check_run on
+      PR-added manifest.yaml files. But schema-failing run manifests still enter main: 13 since
+      b7d5e65b9f (RUN-XEDN-132272/-f4d646, RUN-PFIVE-c8c614, eight RUN-CMFB, RUN-DREG-826fb8,
+      RUN-PNEXT-201c3c; 1 to 11 check_run errors each on the raw file), each accompanied by an
+      additive_schema_completion supersession registered the same day and naming no decision_id;
+      RUN-XEDN-132272's receipt is the supervisor's own refusal ("manifest.yaml fails the run schema ... cannot
+      be completed"). The three supersessions sampled record the failure honestly (failed,
+      failed_infrastructure, interrupted). Whether validate is a required check on main is not_covered
+      (the GitHub API is not enabled for this session). See LGX-6.
+  - id: LGN-9
+    source: research/sheriff/SHF-20261028-0f3f64/findings.yaml
+    verdict: fixed
+    why: >-
+      All four sessions have audits of their current tips (#2671; the blind re-derivation finds each
+      tip audited). This reader's fresh-nonce reruns reproduce the two ICPERF verdicts; the ca5e01 rerun
+      was only partial (34 of 34 completed jobs identical) and bb0d26 was not rerun (K13). Two other
+      finished sessions now await audit (LGX-7).
+  - id: M1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      DEC-20261016-5d2fb8 still does not parse (immutable, one commit) and is retired by a hash-pinned schema
+      supersession (registry line 1596); check_merge_hygiene --absolute passes (K4).
+  - id: M2
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: partially_fixed
+    why: "349 new errors then, 1 now (RUN-BINSTD-f7ca97, K1); the 1,210 grandfathered errors are unchanged and the CI gate stays relative."
+  - id: M2-R
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: partially_fixed
+    why: "The count fell from 330 to 1 and is no longer rising (0 new since b7d5e65b9f). The re-derivation of the 287 figure at ecdb13bdff was not attempted here (not_covered)."
+  - id: X1
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: "RBS-EXAMPLE-b301f5 and RBS-IC-f59d5a each have two audits of their current tips (blind_pending_audits.json)."
+  - id: X3
+    source: research/sheriff/SHF-20261016-3caa6f/findings.yaml
+    verdict: fixed
+    why: >-
+      By code reading of tools/sheriff.py at da442739db: ecbench verify runs with --allow-interrupted on
+      sessions selected by schema ecbench.session/v1 from HEAD (814-839, 897, 953-961); number extraction
+      splits brace lists and skips bibliographies (608-620); the canary includes those look-alikes
+      (1346-1347) and passed in this case's sweep. Not re-executed by this reader.
+  - id: I1
+    source: research/sheriff/SHF-20261017-e4d7f6/findings.yaml
+    verdict: fixed
+    why: >-
+      By code reading: snapshots carry head_tree and worktree_digest (127-148; this case's head_tree equals
+      git rev-parse da442739db^{tree}); ecbench sessions are enumerated from HEAD with ls-tree/cat-file;
+      outside_sparse and paper.trace_partial rows exist; ~/.elan/bin is probed (196-198). Not re-executed.
+
+findings:
+  - id: LGX-1
+    beat: B7
+    severity: minor
+    claim_ids: [C-LGX-1, C-LGX-4]
+    what: >-
+      Duplicate-key refusal covers the two routing registries and supervisor-completed driver manifests
+      only, as the loader's docstring says. Every other YAML reader on the gate path uses plain safe_load,
+      where the last value silently wins: validate_ledger.load_yaml (every ledger record, specification,
+      review-plan file and run manifest, so check_run), check_merge_hygiene.check_parses and
+      check_new_run_manifests (through check_run), tools/duplicate_run_ids.yaml and the legacy inventories.
+      Planted: a run manifest with certificate.kind discrete_log then none, or with two experiment_id
+      values, passes check_run and the PR-scoped hygiene check with 0 errors and is registered; a decision
+      with status accepted then rejected parses and loads as rejected. Run records not completed by the
+      supervisor (hand-published runs, manifest_v2 supersessions) can therefore carry a contradicting
+      duplicate onto main.
+    evidence:
+      - tools/validate_ledger.py:785-792
+      - tools/validate_ledger.py:1854-1891
+      - tools/validate_ledger.py:196
+      - tools/check_merge_hygiene.py:547-590
+      - tools/check_merge_hygiene.py:624-660
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/probe_completion.json (check_run_duplicate_keys, registry_and_record_loaders)
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/probe_merge_hygiene.json (check_new_run_manifests)
+    fix: >-
+      Load run manifests (manifest.yaml and manifest_v2.yaml) and new ledger records with the unique-key
+      loader in check_run, check_new_run_manifests and check_parses, scoped to files a PR adds or changes so
+      archived records keep their bytes; or report duplicates as errors for new records only.
+  - id: LGX-2
+    beat: B7
+    severity: major
+    claim_ids: [C-LGX-2]
+    what: >-
+      complete_manifest checks only an enumerated set of locations. Driver values elsewhere that have a
+      publish-time source are published unchecked: run-level seed and parameters (G1, G3) and the flat-shape
+      seed (G2), extra or missing keys inside inputs.parameters (G4, G5; _conflicts compares only shared
+      keys), inputs.seed when the trial has no seed and hypothesis_id when the plan has none (G6, G7),
+      inputs.specification_sha256 (G18), started_at after finished_at (G8), an environment.python that merely
+      contains the version string (G9), and a case-variant inputs.Seed (G17). In G1 the published manifest
+      carries run.seed 99 beside the supervisor-added inputs.seed 1, a contradiction the supervisor itself
+      completed. 91 manifests on main carry a run-level seed and 113 run-level parameters. The documentation
+      states "Every driver value with a publish-time source is checked against it type-strictly ... and a
+      contradiction is refused".
+    evidence:
+      - tools/experiment_execution.py:259-266
+      - tools/experiment_execution.py:310-399
+      - docs/experiment-execution.md:163-181
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/probe_completion.json (gap_probes)
+    fix: >-
+      Check run-level and flat-shape seed/parameters/curve_id against the trial; compare inputs.parameters as
+      a whole (or refuse keys outside the plan unless the driver marks them derived); refuse hypothesis_id
+      and seed when the plan/trial declares none; check started_at <= finished_at and an exact version
+      token. Otherwise narrow the documentation to the enumerated locations.
+  - id: LGX-3
+    beat: B7
+    severity: major
+    claim_ids: [C-LGX-14]
+    what: >-
+      The replay float tolerance is declared and recorded but unbounded. parse_tolerance accepts any finite
+      non-negative rel_tol/abs_tol (rel_tol=1e6 and abs_tol=1e300 are accepted), both in a frozen runbook
+      (lint) and as an audit-time --float-tolerance chosen after the mismatch is seen. Under rel_tol=0.5 a
+      doubled value, under rel_tol=1 a 1000x change, and under abs_tol=1e9 a sign flip replay as
+      matched_within_tolerance; only 'mismatch' is a finding, so the audit verdict is 'clean'. No other tool
+      reads float_tolerance or flags a large one. The audit can therefore accept materially different numbers
+      while still reporting a clean screen.
+    evidence:
+      - tools/runbook.py:1062-1085
+      - tools/runbook.py:1087-1135
+      - tools/runbook.py:2423
+      - tools/runbook.py:2464
+      - docs/runbook-execution.md:215-242
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/probe_runbook_tolerance.json
+    fix: >-
+      Cap the tolerance (for example rel_tol <= 1e-6, abs_tol <= 1e-9 unless a Coordinator decision names a
+      larger one in the runbook), and make an audit-option tolerance or any toleranced match visible in the
+      verdict (for example 'clean_within_tolerance' plus a finding naming the source and the bound) so a
+      toleranced screen is never read as an exact one.
+  - id: LGX-4
+    beat: B7
+    severity: minor
+    claim_ids: [C-LGX-13]
+    what: >-
+      check_session_files refuses modified, deleted and spliced session files, but does not flag an
+      unrecorded extra file added inside a sealed session, a journal append that binds a new output file,
+      a non-merge commit (squash merge or direct push) checked with --absolute, or a session directory
+      outside experiments/<EXP>/ and examples/**/ (SESSION_FILE).
+    evidence:
+      - tools/check_merge_hygiene.py:728-731
+      - tools/check_merge_hygiene.py:953-1040
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/probe_merge_hygiene.json
+    fix: >-
+      Report session files that the journal does not bind; in --absolute mode compare HEAD with HEAD^ when
+      HEAD is not a merge; widen SESSION_FILE to any */runbook-sessions/<id>/ path or refuse sessions
+      elsewhere.
+  - id: LGX-5
+    beat: B7
+    severity: minor
+    claim_ids: [C-LGX-4]
+    what: >-
+      check_new_run_manifests matches only experiments/*/runs/*/manifest.yaml. A PR-added run whose only
+      envelope is manifest_v2.yaml (which validate_ledger does schema-check when no manifest.yaml exists) is
+      not checked: a flat or empty manifest_v2.yaml passes merge hygiene.
+    evidence:
+      - tools/check_merge_hygiene.py:646-652
+      - tools/validate_ledger.py:115-116
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/probe_merge_hygiene.json (check_new_run_manifests)
+    fix: Also check manifest_v2.yaml when it is the run's only envelope, as validate_ledger's main() does.
+  - id: LGX-6
+    beat: B7
+    severity: minor
+    claim_ids: [C-LGX-18]
+    what: >-
+      The LGN-8 class now reaches main validator-clean rather than not at all: 13 schema-failing run
+      manifests (1 to 11 check_run errors each on the raw file) entered main after b7d5e65b9f together
+      with additive_schema_completion supersessions
+      (XEDN x2, PFIVE, CMFB x8, DREG, PNEXT), and the 26 LGN-8 errors were cleared the same way after
+      DEC-20261029-9bc3ff and -22e05b recorded that no supersession is filed for 943efa/b09be8. None of the 17
+      new run-supersession entries names a decision_id, and nothing beyond schema and hash pinning checks a
+      superseding manifest's fidelity. The three sampled record the failure faithfully.
+    evidence:
+      - tools/run_supersession_registry.yaml (entries registered 2026-10-19 .. 2026-11-05 for the runs named)
+      - experiments/EXP-XEDN-0c0182/runs/RUN-XEDN-132272/execution-receipt.json (status invalid_output, refusal detail)
+      - ledger/decisions/DEC-20261029-9bc3ff.yaml (ruling.run_RUN-ICPERF-943efa)
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/resolution_attribution.json
+    fix: >-
+      Require a decision_id (or a validator review) for every run-supersession entry, and have
+      check_new_run_manifests require that a superseding manifest carries the receipt's status for a refused
+      or failed run.
+  - id: LGX-7
+    beat: B7
+    severity: minor
+    claim_ids: []
+    what: >-
+      Two finished runbook sessions await audit on main: RBS-SEMBIN-24ec56 and RBS-XEDN-a7cd25 (its two
+      audits cover earlier journal tips). The tool and the blind re-derivation agree.
+    evidence:
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/runbook_pending_audits.json
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/blind_pending_audits.json
+    fix: Run /audit-runs on both before either is cited.
+  - id: LGX-8
+    beat: B7
+    severity: minor
+    claim_ids: [C-LGX-8, C-LGX-17]
+    what: >-
+      (a) A session whose units are all invalid has an empty replay population; the audit replays nothing,
+      leaves not_covered empty and returns verdict clean (RBS-ICPERF-c4a91e, both #2671 and this rerun);
+      only detection_power (miss probability 1.0) shows it. (b) After #3059 widened the recorded-interpreter
+      sources, docs/runbook-execution.md:244-249 still describes only /run/environment/python_version, and
+      an unquoted YAML python_version (a float such as 3.11, or 3.10 read as 3.1) yields parity unknown.
+    evidence:
+      - tools/runbook.py:2362-2367
+      - tools/runbook.py:2259-2275
+      - docs/runbook-execution.md:244-249
+      - research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/audit_RBS-ICPERF-c4a91e.audit.json
+    fix: >-
+      Add a not_covered line when a trials step has no valid unit to replay; update the parity paragraph to
+      RECORDED_PYTHON_SOURCES; read a numeric python_version from the source text, not the parsed float.
+
+claims:
+  - id: C-LGX-1
+    text: "A SafeLoader that refuses duplicate mapping keys ... Used for the mutable routing indexes and for driver manifests, never for archived records."
+    location: tools/validate_ledger.py:1854-1863 (#2659, 6e86a2ddeb); tools/check_merge_hygiene.py:595-620 ("duplicate keys in routing registries")
+    suggested_verdict: upheld_scoped
+    scoped_to: "Both routing registries and supervisor-completed driver manifests refuse duplicate keys (planted duplicates refused; main's registries clean). Other gate-path YAML readers still accept duplicates (LGX-1)."
+    findings: [LGX-1]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: n/a}
+  - id: C-LGX-2
+    text: "Every driver value with a publish-time source is checked against it type-strictly (`1.0`, `true` and `\"1\"` are not `1`), on complete envelopes too, and a contradiction is refused"
+    location: docs/experiment-execution.md:165-181; tools/experiment_execution.py:310-318 (#2659, #2663)
+    suggested_verdict: overclaimed
+    scoped_to: "Every enumerated location is checked type-strictly and refused with the driver bytes unchanged (46/46). Driver values with a publish-time source outside those locations are published unchecked (LGX-2)."
+    findings: [LGX-2]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: n/a}
+  - id: C-LGX-3
+    text: "an empty manifest is refused at completion and reported by `check_run`"
+    location: docs/experiment-execution.md:105-107; tools/validate_ledger.py:1389-1396 (#2659)
+    suggested_verdict: upheld_scoped
+    scoped_to: "13 empty/non-mapping variants refused by complete_manifest and reported by check_run; the execute_trial path by code reading only."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: n/a}
+  - id: C-LGX-4
+    text: "Run manifests this branch adds or changes must pass check_run."
+    location: tools/check_merge_hygiene.py:624-636 (#2659)
+    suggested_verdict: upheld_scoped
+    scoped_to: "PR-added or changed experiments/*/runs/*/manifest.yaml (and manifests routed through a changed registry entry) are schema-checked; manifest_v2.yaml-only runs are not (LGX-5) and duplicate keys pass (LGX-1). Whether the job is required for merge: not_covered."
+    findings: [LGX-5, LGX-1]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: n/a}
+  - id: C-LGX-5
+    text: "Each added key's source is recorded in `run.envelope_completion.sources`"
+    location: docs/experiment-execution.md:183-206; tools/experiment_execution.py:401-431 (#2663)
+    suggested_verdict: upheld
+    scoped_to: "20 of 20 added keys carry a source; representation note and driver hash present (probe control)."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LGX-6
+    text: "e9b91d62a9: 141; f450a6cce3: 124 ... Every error at f450a6cce3 is also present at e9b91d62a9"
+    location: ledger/corrections/CORR-20261028-1e1ff4.yaml (measurement) (#2663)
+    suggested_verdict: upheld
+    scoped_to: "Recounted with each commit's own validator and baseline; DEC-20261023-5c9671 is unedited (additive)."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LGX-7
+    text: "experiments/EXP-AES-14352a/implementation/ (8 files) was first committed in 3bc7f516ec ... Its parent is the recorded launch HEAD d447e31aaa"
+    location: ledger/corrections/CORR-20261028-a02dba.yaml (corrected_value) (#2663)
+    suggested_verdict: upheld
+    scoped_to: "Every git fact verified; the manifest_v2 files are unchanged and still hash to their pins (additive)."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LGX-8
+    text: "audit-runs of the four LGN-9 sessions: RBS-ICPERF-c4a91e clean, RBS-ICPERF-b7e41c flagged (supervisor.stderr differs from its recorded digest), RBS-PFDR-bb0d26 flagged (two float replays), RBS-PFDR-ca5e01 clean (4 reproduced)"
+    location: experiments/EXP-*/audits/AUD-20261029T01*/audit.json (#2671, 708939176d)
+    suggested_verdict: upheld_scoped
+    scoped_to: "The two ICPERF verdicts and their digest finding reproduce under the current tool with fresh nonces (it adds the two-chain finding for b7e41c). The ca5e01 replay was only partly repeated (34 of 34 completed census-main jobs identical to the record) and bb0d26 was not rerun here: not_covered. c4a91e's clean verdict carries no replay power (LGX-8)."
+    findings: [LGX-8]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: not_covered, B8: n/a}
+  - id: C-LGX-9
+    text: "The session directory on main is a merge splice of two executions. It is citable as the record of neither. RUN-ICPERF-943efa ... is invalidated as evidence and as an instrument pass."
+    location: ledger/decisions/DEC-20261029-9bc3ff.yaml (decision_label, facts_relied_on) (#2674)
+    suggested_verdict: upheld
+    scoped_to: "Every git and journal premise in facts_relied_on recomputed (K16)."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LGX-10
+    text: "The session record is intact. Its only unit, RUN-ICPERF-b09be8, is invalid_output, an LGN-8 instance."
+    location: ledger/decisions/DEC-20261029-22e05b.yaml (decision_label, ruling, F2) (#2674)
+    suggested_verdict: upheld_scoped
+    scoped_to: "The ledger/tooling premises hold (intact chain, clean rerun, 9-line 177-byte manifest with 8 check_run errors, no attack_claimed anywhere, one session tree for the double commit). F3/F4 (band statistics of the xorshift sampler) belong to the ICPERF interpretation joint and are not_covered here."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: not_covered, B7: pass, B8: pass}
+  - id: C-LGX-11
+    text: "The replay mismatch is interpreter drift. CPython 3.12 made builtin sum() of floats compensated, while the runs were recorded under 3.11.15 and replayed under 3.13.17."
+    location: ledger/decisions/DEC-20261029-5554ee.yaml (decision_label, 62-79) (#2674)
+    suggested_verdict: upheld_scoped
+    scoped_to: "Recorded 3.11.15 confirmed; the two differences recompute (8.63e-14 / 416 ulps, 4.58e-14 / 402 ulps); 3.11 vs 3.13 sum() differ as stated on a 3-term probe. A 3.11 replay of the bb0d26 units was not run by this reader."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LGX-12
+    text: "No single execution produced the session directory as it stands on main: B's journal and 8 of the 9 files it binds, plus A's stderr."
+    location: ledger/corrections/CORR-20261029-892bca.yaml (corrected_value, reason) (#2674)
+    suggested_verdict: upheld
+    scoped_to: "All stated blobs, digests, tips, parents and resolutions verified; additive (no session byte changed)."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LGX-13
+    text: "against ``--base`` and against each parent of a merge, no existing session file is deleted or changed, the journal grows only by append, and every touched session still hashes to its own journal."
+    location: tools/check_merge_hygiene.py:33-37 and 964-975 (#2686, 34655d880d)
+    suggested_verdict: upheld_scoped
+    scoped_to: "Modification, deletion, journal rewrite and the two-execution splice are refused in PR and merge-parent scope. Unrecorded additions, non-merge commits under --absolute and sessions outside experiments/examples are not covered (LGX-4)."
+    findings: [LGX-4]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: n/a}
+  - id: C-LGX-14
+    text: "A declared tolerance (`replay.compare[].tolerance: {rel_tol, abs_tol}`, either or both, finite and non-negative; lint checks it) ... applies only to JSON float leaves, under `math.isclose`."
+    location: docs/runbook-execution.md:225-234; tools/runbook.py:1062-1135 (#2689, c7c7924d10)
+    suggested_verdict: overclaimed
+    scoped_to: "The tolerance is declared and recorded (runbook or audit_option), applies to float leaves only, and keeps ints, types and keys exact. The docs present it as what tells drift from a fabricated value ('Under exact comparison that is indistinguishable from a fabricated value'); that holds only for a small bound, and nothing bounds it: a large tolerance accepts materially different numbers and the verdict stays clean (LGX-3)."
+    findings: [LGX-3]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: fail, B8: n/a}
+  - id: C-LGX-15
+    text: "Before anything is written: a session id belongs to one execution (RBS-ICPERF-b7e41c had two). Read-only git; never fetches."
+    location: tools/runbook.py:1367-1372, 330-350 (#2689)
+    suggested_verdict: upheld_scoped
+    scoped_to: "Refuses a fresh session whose journal any local or fetched ref holds, and an unrelated local journal; refs only, so an unfetched or deleted ref is not seen (as documented). Runner.run itself not executed; the guard function was."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: n/a}
+  - id: C-LGX-16
+    text: "Each maximal blob (a prefix of no other) heads one chain; more than one chain means the session id was written by unrelated executions."
+    location: tools/runbook.py:353-391, 2344-2351 (#2689)
+    suggested_verdict: upheld
+    scoped_to: "b7e41c rerun reports both chains; c4a91e (identical double commit) reports one; scratch overwrite and append behave as stated."
+    findings: []
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: n/a}
+  - id: C-LGX-17
+    text: "Every replayed unit's parity is match, mismatch or unknown; unknown is stated here and in notes, never skipped (DEC-20261105-6e2616)."
+    location: tools/runbook.py:2449-2453, 2250-2323 (#3059, 351420eafc)
+    suggested_verdict: upheld_scoped
+    scoped_to: "By probe of the helpers and reading of the audit loop: versions are parsed from the recorded sources and compared; unknown is listed in notes. No replay completed here, so no recorded parity row was observed (the ca5e01 unit would have been 3.13.16 recorded vs 3.13.18 replay: mismatch, a drift note). Docs not updated and numeric YAML versions read as unknown (LGX-8)."
+    findings: [LGX-8]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: not_covered, B8: n/a}
+  - id: C-LGX-18
+    text: "audited_b7d5e65b9f_per_case: 67; origin_main_7b16f392d3: 65 ... merge_first_parent_692b54f1f4: 115; merge_0265593c57_as_merged: 100; merge_0265593c57_with_registry_repair_only: 98"
+    location: ledger/decisions/DEC-20261028-f8c018.yaml (measurement) (#2659)
+    suggested_verdict: upheld_scoped
+    scoped_to: "67, 65, 115 and 100 recounted with each commit's own validator; 65 = 67 minus exactly the two LGN-1 errors; 98 not measured (consistent with 100 minus those two). The 26 LGN-8 errors it names are 10 + 8 + 8 in the 67."
+    findings: [LGX-6]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+  - id: C-LGX-19
+    text: "The 26 errors from RUN-ICPERF-943efa, RUN-ICPERF-b09be8 and RUN-ECDLP-9f18c9 stay as recorded. No superseding manifest is filed here"
+    location: ledger/decisions/DEC-20261028-f8c018.yaml (lgn8_rulings); DEC-20261029-9bc3ff.yaml (validate_ledger triage stays a separate act)
+    suggested_verdict: upheld_scoped
+    scoped_to: "True of these decisions. The errors were later cleared by registry supersessions (#2715, #2756) that cite no decision (LGX-6); no record byte changed."
+    findings: [LGX-6]
+    beats: {B2: n/a, B3: n/a, B4: n/a, B5: n/a, B6: n/a, B7: pass, B8: pass}
+
+lead_dispositions:
+  - lead: "ledger/handoffs/TASK-20261024-672126.yaml modified in place after b7d5e65b9f (run ids renamed)"
+    disposition: dismissed
+    one_line: "13d1ab6fd8 rebinds the handoff under DEC-20261031-e3ee70, which names TASK-20261024-672126 and describes the rebinding; outside this joint's PRs. RUN-PEXT-fccfb9 and -af1b2a stay on main."
+  - lead: "goal and hypothesis files modified since b7d5e65b9f (4 goals, 5 hypotheses)"
+    disposition: not_covered
+    one_line: "Mutable status records; not examined in this joint."
+  - lead: "DEC-20261028-f8c018: 'The repair entered main in 63cea870d2'"
+    disposition: dismissed
+    one_line: "63cea870d2 is in main's history but off the first-parent line; it reached main through #2609 (b32abaf518). Wording only; no count depends on it."
+
+not_covered:
+  - what: "Whether validate (ledger, ledger-and-harness) and merge-hygiene are required checks on main"
+    why: "GitHub API access is not enabled for this session (HTTP 403)"
+    command_that_would_cover: "gh api repos/isogeny-labs/crypto-autoresearcher/branches/main/protection (or the rulesets endpoint)"
+  - what: "validate_ledger on a full (non-materialised) checkout"
+    why: "9.6 GB tree; 2.5 GB free. The materialisation used placeholders for 2,607 large non-record blobs"
+    command_that_would_cover: "git checkout da442739db in a full clone with >= 10 GB free; python3 tools/validate_ledger.py"
+  - what: "execute_trial end to end with empty, contradicting and duplicate-key driver manifests"
+    why: "Needs a claimed executor task and plan fixtures; covered here at complete_manifest and check_run level plus code reading"
+    command_that_would_cover: "python3 -m pytest tests/test_experiment_execution.py -k 'Contradiction or empty or duplicate' plus a fixture driver writing run.seed: 99"
+  - what: "A completed fresh audit of RBS-PFDR-ca5e01 (4 replayed units)"
+    why: "Started with a fresh nonce and stopped after 30 min: the shared 4-core host ran at load ~11 and census-main alone would have taken hours (34 of 19,388 jobs done, all identical to the record)"
+    command_that_would_cover: "python3 tools/runbook.py audit experiments/EXP-PFDR-ca5e01/runbook-sessions/RBS-PFDR-ca5e01 --auditor <role/model> on an idle host with >= 4 cores (about 40 min at the producer's speed)"
+  - what: "A fresh audit of RBS-PFDR-bb0d26 (with and without --float-tolerance) and a 3.11 replay"
+    why: "Not chosen for this joint's reruns (another joint covers the PFDR runs); the 3.11 byte reproduction claimed in DEC-20261029-5554ee was not rerun"
+    command_that_would_cover: "PATH=<python3.11 first> python3 tools/runbook.py audit experiments/EXP-PFDR-bb0d26/runbook-sessions/RBS-PFDR-bb0d26 --auditor ..."
+  - what: "DEC-20261029-22e05b F3/F4 band statistics (6635 of 21207 wrong triples; 48.2% of seeds)"
+    why: "Interpretation of the ICPERF sampler, outside the ledger joint"
+    command_that_would_cover: "an independent xorshift band re-derivation from the EXP-ICPERF-b2f2d0 specification"
+  - what: "M2-R's 287 figure at ecdb13bdff"
+    why: "Not attempted (disk budget spent on the in-scope recounts)"
+    command_that_would_cover: "build_tree.py at ecdb13bdff, then its own tools/validate_ledger.py"
+
+limitations:
+  - "This file is a sheriff reader record. It is never a validation_report and satisfies no review gate. Projected onto the agents/validator.md template its verdict would be `incomplete` (required-check status and full-checkout validation are not_covered)."
+  - "The validator counts come from a non-git materialisation with empty placeholders for large non-record blobs. A hash check against a placeholder would add an error, not hide one, and no reported error names a placeholder."
+  - "Probes call the audited functions directly (complete_manifest, check_run, check_session_files, check_new_run_manifests, parse_tolerance, compare_tolerant, session_id_collisions, journal_chain_findings) with REPO pointed at scratch repositories; the CLI wrappers were run only where named."
+  - "A replay is not an execution proof; the runbook audits bound fabrication only to the sampled units."
+
+artifact_paths:
+  - path: research/sheriff/SHF-20261106-a114e7/readers/ledger.yaml
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/build_tree.py
+    sha256: d5c2c44b29ac32ea6891b413c2c91cae6b9d4f7fb478571cc8c51f2d0c705398
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/attribute_resolutions.py
+    sha256: 90cb0ae2743fd70ccba8ed2d5d8a051ae3e1d3ff5462dd884d05e57dc57e4fa5
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/probe_completion.py
+    sha256: 579c4795f99e72666180aba200b175c95aa58500bc726eb2d5a8db78dbf250a7
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/probe_merge_hygiene.py
+    sha256: 4312085f58dcc8b145303b4d0859b5c5b71be5157c42dd10b8531601811e29a6
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/probe_runbook_tolerance.py
+    sha256: adac347d0bbd6907f21605f901596dce726178a9543b891ad37048974d03d2c7
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/verify_corr_892bca.py
+    sha256: 4c6c209d0229ae28618f1c76de4a23aef682f3abed8030a5ebe58e3d44825e9a
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/blind_pending_audits.py
+    sha256: be030c98f0a05b020c73081a25909d7576f4ec7988204f01ca3f71b1835726ee
+  - path: research/sheriff/SHF-20261106-a114e7/scripts/readers/ledger/out/
+    note: "validator outputs per commit, error lists, probe JSON, audit stdout/stderr and audit.json copies"
+
+review_attestation:
+  joints_owned: ["LGX: B7 ledger and tooling (#2659, #2663, #2671, #2674, #2686, #2689, #3059); validate_ledger recount; check_merge_hygiene --absolute; runbook.py pending-audits; prior findings LGN-1..9, M1, M2, X1, X3, M2-R, I1"]
+  sources_read: "see sources_read above (complete)"
+  read_sibling_reports: false
+  blind_from_respected: true
+  joint_result: >-
+    Holds on: the registry and driver-manifest duplicate refusals, the 46 enumerated contradiction
+    refusals, the empty-manifest gate, completion sources, both #2663 corrections, the #2674 premises in
+    this joint, the session-bytes guard against modification and splices, collision and multi-journal
+    detection, and every validate_ledger count in scope (main: 1 new error, 66 of the prior 67 resolved,
+    none added). Breaks on: unchecked sourced driver values outside the enumerated locations (LGX-2) and
+    an unbounded replay tolerance (LGX-3). Inconclusive on: required-check enforcement on main.

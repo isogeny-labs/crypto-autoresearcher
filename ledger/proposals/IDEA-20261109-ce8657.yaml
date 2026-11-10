@@ -1,0 +1,64 @@
+idea:
+  id: IDEA-20261109-ce8657
+  question_id: RQ-ISO-3325c3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: unverified
+  title: Statistical distance between KLPT-output ideals and uniform norm-l^e class representatives, tested
+    against the non-backtracking walk null model
+  assumption_attacked: Zero-knowledge of SQIsign-style identification (security-proof gap), via the distribution
+    of KLPT connecting ideals; not EndRing search.
+  mechanism: Classical KLPT on the special extremal order O_0 (basis 1, i, (i+j)/2, (1+k)/2) solves a
+    norm equation then strong-approximates, yielding J ~ I of norm l^e with e ~ 1.5 log_l p whose first
+    steps are biased toward E_0. Compare the first-t step endpoint histogram of phi_J against the stationary
+    non-backtracking walk distribution that H-WESO-516558 measured on norm-2 left ideals. Clears H-WESO-516558
+    (null model), H-SSIQ-dfee7e (norm-equation splitting arm) and H-SSIQ-d724f2 (level-N image census,
+    the Galois side of the same bias). The new quantity is the chi-squared distance after re-randomization
+    of the response.
+  object_computed: Empirical first-8-step endpoint distribution of 10^4 KLPT outputs for a fixed input
+    class; chi-squared statistic against the walk histogram.
+  cost_model:
+    classical: 10^4 KLPT runs at p ~ 2^60, each poly(log p); negligible
+    distinguisher: statistical distance >= 1/poly suffices
+  obstruction: SQIsign re-randomizes the response ideal; the bias must survive the re-randomization to
+    matter. Toy p may over- or under-state the bias.
+  kill_test: Chi-squared p-value > 0.05 at t = 8 for p ~ 2^60 after re-randomization; then no exploitable
+    bias and the record closes.
+  lean:
+    theorem: null
+    coverage: none
+    needed_statement: 'The pushforward of the uniform measure on {J : J ~ I, nrd(J) = l^e} under the first-step
+      map to the l-isogeny neighbourhood of E_0 is uniform iff the number of norm-l^e representatives
+      is divisible by l+1.'
+  experiment:
+    id: null
+    nearest_surface: aburan28/cryptanalysis pcc shared-code files (Shared-code lock commit)
+  prior_art:
+    frontier_map: not_applicable
+    nearest_record:
+      id: H-WESO-516558
+      relation: null_model_for
+    searched:
+      corpus_grep:
+      - H-WESO-516558
+      - H-SSIQ-dfee7e
+      - H-SSIQ-d724f2
+    none_found_after:
+    - 'BRIEF query: "KLPT" in H-* titles -> no direct hit; nearest is H-SSIQ-dfee7e integer arm'
+    - 'BRIEF query: "zero-knowledge" / "SQIsign" -> none'
+    - 'BRIEF query: EV-* on walk endpoint distributions -> none quoted'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  disproven_avoided: none in the brief
+  evidence_type: security_proof_gap
+  tag: known_in_literature_unverified_here
+  claim: Statistical distance between KLPT-output ideals and uniform norm-l^e class representatives, tested
+    against the non-backtracking walk null model. Classical KLPT on the special extremal order O_0 (basis
+    1, i, (i+j)/2, (1+k)/2) solves a norm equation then strong-approximates, yielding J ~ I of norm l^e
+    with e ~ 1.5 log_l p whose first steps are biased toward E_0. Compare the first-t step endpoint histogram
+    of phi_J against the stationary non-backtracking walk distribution that H-WESO-516558 measured on
+    norm-2 left ideals. Clears H-WESO-516558 (null model), H-SSIQ-dfee7e (norm-equation splitting arm)
+    and H-SSIQ-d724f2 (level-N image census, the Galois side of the same bias). The new quantity is the
+    chi-squared distance after re-randomization of the response.

@@ -579,3 +579,65 @@ def test_results_record_the_fingerprint_for_attribution(cfg, tmp_path, monkeypat
     record = json.loads(written["summary.json"].read_text())
     assert record["fingerprint"]["inputs"]["agents/executor.md"]
     assert record["fingerprint"]["digest"].startswith("sha256:")
+
+
+# --------------------------------------------------------------------------
+# discipline polarity: refuse-everything must not be a passing policy
+# --------------------------------------------------------------------------
+def _discipline_document():
+    return yaml.safe_load(DISCIPLINE.read_text())
+
+
+def _write(tmp_path, document):
+    path = tmp_path / "suite.yaml"
+    path.write_text(yaml.safe_dump(document))
+    return path
+
+
+def test_shipped_discipline_suite_has_both_polarities():
+    tasks = tasks_module.load_suite(DISCIPLINE).tasks
+    for polarity in ("affirmative", "negative"):
+        count = sum(1 for t in tasks if t.polarity == polarity)
+        assert count >= 3, f"{count} {polarity} discipline task(s)"
+    held_affirmative = [t for t in tasks
+                        if t.polarity == "affirmative" and t.split == "held_out"]
+    assert held_affirmative
+
+
+def test_discipline_suite_without_enough_affirmative_tasks_is_rejected(tmp_path):
+    document = _discipline_document()
+    for task in document["suite"]["tasks"]:
+        task["polarity"] = "negative"
+    with pytest.raises(ValueError, match="0 affirmative"):
+        tasks_module.load_suite(_write(tmp_path, document))
+
+
+def test_discipline_suite_without_enough_negative_tasks_is_rejected(tmp_path):
+    document = _discipline_document()
+    for task in document["suite"]["tasks"]:
+        task["polarity"] = "affirmative"
+    with pytest.raises(ValueError, match="0 negative"):
+        tasks_module.load_suite(_write(tmp_path, document))
+
+
+def test_discipline_task_without_polarity_is_rejected(tmp_path):
+    document = _discipline_document()
+    del document["suite"]["tasks"][0]["polarity"]
+    with pytest.raises(ValueError, match="need polarity"):
+        tasks_module.load_suite(_write(tmp_path, document))
+
+
+def test_capability_suite_needs_no_polarity():
+    assert all(t.polarity is None
+               for t in tasks_module.load_suite(CAPABILITY).tasks)
+
+
+def test_validate_command_fails_a_one_sided_discipline_suite(tmp_path, capsys):
+    from orchestration.eval import cli as cli_module
+    document = _discipline_document()
+    for task in document["suite"]["tasks"]:
+        task["polarity"] = "negative"
+    args = cli_module.build_parser().parse_args(
+        ["validate", "--suite", str(_write(tmp_path, document))])
+    assert args.func(args) == 1
+    assert "affirmative" in capsys.readouterr().out

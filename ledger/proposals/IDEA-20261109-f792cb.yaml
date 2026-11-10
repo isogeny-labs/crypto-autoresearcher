@@ -1,0 +1,72 @@
+idea:
+  id: IDEA-20261109-f792cb
+  question_id: RQ-ISO-844f9f
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: algorithm
+  record_kind: parameter_audit
+  title: Audit of masked-torsion SIDH repairs via Weil-pairing recovery of the mask square followed by
+    a single dimension-2 Kani chain
+  novelty_status: unverified
+  claim: SIDH/SIKE is dead under the torsion-point attacks; the only repairs in scope are those that mask
+    the torsion images by a secret scalar alpha (M-SIDH-type). For such a repair the Weil pairing reveals
+    alpha^2 times the degree mod the torsion order, leaving 2^t square-root lifts where t is the number
+    of distinct prime factors of the torsion order. Each lift is tested by one dimension-2 Kani chain
+    whose final splitting is detected by a vanishing even theta constant. We claim the audit will show
+    every published parameter set has min 2^t >= 2^lambda unless p has restricted shape, in which case
+    recalled (not verified) special-form attacks already apply; the record exists to pin the lift count
+    per parameter set. Clears H-ALISO-006 and H-ALISO-007 (degree-pair support, the same consistency question).
+    No Lean coverage for the pairing identity.
+  mechanism: 'Step 1 (dimension 1): compute e_M(alpha phi(P), alpha phi(Q)) = e_M(P,Q)^(alpha^2 N) and
+    solve for alpha^2 mod M by a discrete log in mu_M (smooth M, Pohlig-Hellman). Step 2: enumerate the
+    2^t square roots. Step 3 (dimension 2, level-2 theta, (2,2)-steps, chain length e): for each lift
+    build the Kani kernel on E0 x E1 with auxiliary a + b iota from H-ALISO-014-style discriminant search
+    and test the final theta null for a single zero coordinate. Cost per lift is e steps; total 2^t *
+    e steps.'
+  quantitative:
+    dimension: 1 then 2
+    coordinate_model: Weil pairing then level-2 theta
+    isogeny_degree: (2,2) per step, 2^e total
+    candidate_count: 2^t with t = omega(M)
+    attack_status: parameter audit only; no exponent improvement claimed
+  cleared:
+    checked:
+    - H-ALISO-006
+    - H-ALISO-007
+    - H-ALISO-014
+    disproven: none in the brief
+    lean: no Lean coverage; would need "for phi of degree N and alpha a unit mod M, e_M(alpha phi(P),
+      alpha phi(Q)) = e_M(P,Q)^(alpha^2 N) for all P,Q in E[M]"
+    exp: none; nearest surface is Autolab package p1486_hecke_degree_pair_support_probe (H-ALISO-006)
+  kill_test: 'Tabulate t and 2^t for every masked-torsion parameter set reachable from the repositories.
+    If min 2^t >= 2^lambda for all sets and no extra torsion is exposed, close as "parameter audit: clean".
+    If any set has 2^t < 2^lambda, run the dimension-2 chain at toy scale on that shape and file the result
+    as evidence, not as a break.'
+  prior_art:
+    frontier_map: not_applicable
+    frontier_map_reason: the mechanism is the published masked-torsion analysis; the record is a parameter
+      table, not a new reduction
+    searched:
+      corpus_grep:
+      - H-ALISO-002
+      - H-ALISO-006
+      - H-ALISO-007
+      - H-ALISO-014
+      - H-ALISO-015
+      none_found_after:
+      - mask
+      - M-SIDH
+      - Weil pairing alpha^2
+      - square root lift
+      - vanishing theta constant
+    nearest_record:
+      id: H-ALISO-006
+      relation: special_case
+      note: degree-pair support probing is the same consistency question without the scalar mask; the
+        source for the mask-square step is the published masked-torsion literature (recalled, external
+        to the lane)
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench

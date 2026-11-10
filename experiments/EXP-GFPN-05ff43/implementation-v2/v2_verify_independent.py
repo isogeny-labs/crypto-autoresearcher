@@ -7,6 +7,7 @@ no msolve, no v2_* module). F_q = F_p[z]/(M) for the monic modulus M recorded in
 y^2 = x^3 + a2 x^2 + a4 x + a6; double-and-add scalar multiplication.
 
 A v2 certificate is ACCEPTED iff every check below passes:
+  curve          odd-characteristic cubic discriminant is nonzero;
   known scalar   G and R on the curve, [n]G = O, R = [k]G (docs/claims-and-verification.md);
   points         exactly m points, each on the curve, signs in {+1, -1};
   factor base    per the certificate's factor_base.kind:
@@ -27,19 +28,120 @@ Returns (ok, n_verified_points, reasons).
 """
 import json
 import sys
+from functools import lru_cache
+from math import isqrt
+
+
+def _prime_for_protocol(p):
+    """Exact trial-division check for the protocol's bounded p < 2^31."""
+    if type(p) is not int or p < 2 or p >= 2 ** 31:
+        return False
+    if p % 2 == 0:
+        return p == 2
+    return all(p % d != 0 for d in range(3, isqrt(p) + 1, 2))
+
+
+def _trim(poly):
+    while poly and poly[-1] == 0:
+        poly.pop()
+    return poly
+
+
+def _poly_rem(a, b, p):
+    """Remainder of low-to-high coefficient polynomials over F_p."""
+    r = _trim(list(a))
+    divisor = _trim(list(b))
+    inv_lead = pow(divisor[-1], -1, p)
+    while len(r) >= len(divisor):
+        c = r[-1] * inv_lead % p
+        shift = len(r) - len(divisor)
+        for i, value in enumerate(divisor):
+            r[shift + i] = (r[shift + i] - c * value) % p
+        _trim(r)
+    return r
+
+
+def _poly_mul_mod(a, b, modulus, p):
+    product = [0] * (len(a) + len(b) - 1)
+    for i, ai in enumerate(a):
+        for j, bj in enumerate(b):
+            product[i + j] = (product[i + j] + ai * bj) % p
+    return _poly_rem(product, modulus, p)
+
+
+def _poly_pow_mod(base, exponent, modulus, p):
+    result = [1]
+    base = _poly_rem(base, modulus, p)
+    while exponent:
+        if exponent & 1:
+            result = _poly_mul_mod(result, base, modulus, p)
+        exponent >>= 1
+        if exponent:
+            base = _poly_mul_mod(base, base, modulus, p)
+    return result
+
+
+def _poly_gcd(a, b, p):
+    a, b = _trim(list(a)), _trim(list(b))
+    while b:
+        a, b = b, _poly_rem(a, b, p)
+    return a
+
+
+def _prime_divisors(n):
+    factors = []
+    d = 2
+    while d * d <= n:
+        if n % d == 0:
+            factors.append(d)
+            while n % d == 0:
+                n //= d
+        d += 1
+    if n > 1:
+        factors.append(n)
+    return factors
+
+
+@lru_cache(maxsize=64)
+def _field_is_valid(p, modulus):
+    """Rabin criterion for a monic modulus over a verified prime field.
+
+    See FLINT's independent description of the criterion:
+    https://flintlib.org/doc/gr_poly/gr_poly_is_irreducible.html
+    """
+    n = len(modulus) - 1
+    if not _prime_for_protocol(p) or not 1 <= n <= 16:
+        return False
+    x = [0, 1]
+    for factor in _prime_divisors(n):
+        power = _poly_pow_mod(x, p ** (n // factor), modulus, p)
+        difference = _poly_rem([((power[i] if i < len(power) else 0) -
+                                 (1 if i == 1 else 0)) % p
+                                for i in range(max(len(power), 2))], modulus, p)
+        if len(_poly_gcd(modulus, difference, p)) != 1:
+            return False
+    final = _poly_pow_mod(x, p ** n, modulus, p)
+    return final == _poly_rem(x, modulus, p)
 
 
 class FqP:
     def __init__(self, p, modulus):
         self.p = int(p)
-        self.M = [int(c) % self.p for c in modulus]
+        if self.p < 2 or not isinstance(modulus, list) or len(modulus) < 2 or any(
+            type(c) is not int or not 0 <= c < self.p for c in modulus
+        ):
+            raise ValueError("modulus must have canonical field coefficients")
+        self.M = modulus
         if self.M[-1] != 1:
             raise ValueError("modulus not monic")
         self.n = len(self.M) - 1
 
     def norm(self, a):
-        a = [int(x) % self.p for x in a]
-        return tuple(a + [0] * (self.n - len(a)))
+        if not isinstance(a, list) or len(a) != self.n or any(
+            type(x) is not int or not 0 <= x < self.p for x in a
+        ):
+            raise ValueError("field element must be a canonical n-tuple")
+        return tuple(a)
 
     def add(self, a, b):
         return tuple((x + y) % self.p for x, y in zip(a, b))
@@ -103,6 +205,21 @@ class CurveP:
         self.F = F
         self.a2, self.a4, self.a6 = F.norm(a2), F.norm(a4), F.norm(a6)
 
+    def is_nonsingular(self):
+        # The recorded short Weierstrass form has a group law only when the
+        # cubic discriminant is nonzero in odd characteristic.
+        F = self.F
+        a, b, c = self.a2, self.a4, self.a6
+        a2, b2 = F.mul(a, a), F.mul(b, b)
+        a3, b3, c2 = F.mul(a2, a), F.mul(b2, b), F.mul(c, c)
+        terms = (F.mul(a2, b2), F.scal(-4, b3),
+                 F.scal(-4, F.mul(a3, c)), F.scal(-27, c2),
+                 F.scal(18, F.mul(F.mul(a, b), c)))
+        disc = F.zero()
+        for term in terms:
+            disc = F.add(disc, term)
+        return F.p % 2 == 1 and not F.is_zero(disc)
+
     def f(self, x):
         F = self.F
         return F.add(F.mul(F.add(F.mul(F.add(x, self.a2), x), self.a4), x), self.a6)
@@ -151,6 +268,8 @@ def _legendre(a, p):
 
 
 def _pt(F, xy):
+    if not isinstance(xy, list) or len(xy) != 2:
+        raise ValueError("point must be a coordinate pair")
     return (F.norm(xy[0]), F.norm(xy[1]))
 
 
@@ -168,10 +287,14 @@ def _arm_family(arm):
 def verify(cert):
     reasons = []
     try:
-        p = int(cert["p"])
+        p = cert["p"]
         F = FqP(p, cert["modulus"])
+        if not _field_is_valid(p, tuple(F.M)):
+            raise ValueError("p is not an admitted prime or modulus is reducible")
         cv = cert["curve"]
         E = CurveP(F, cv["a2"], cv["a4"], cv["a6"])
+        if not E.is_nonsingular():
+            raise ValueError("singular curve")
         G = _pt(F, cert["G"])
         R = _pt(F, cert["R"])
         k = int(cert["k"])
@@ -180,7 +303,13 @@ def verify(cert):
         arm = str(cert["arm"])
         fb = cert["factor_base"]
         fbk = fb["kind"]
-    except (KeyError, TypeError, ValueError) as e:
+        if type(cert["n"]) is not int or cert["n"] != F.n:
+            raise ValueError("recorded field degree does not match modulus")
+        for xy in cert["points"]:
+            _pt(F, xy)
+        if fb.get("lam") is not None:
+            F.norm(fb["lam"])
+    except (KeyError, TypeError, ValueError, IndexError) as e:
         return False, 0, ["certificate missing or malformed field: %r" % (e,)]
     if not cert.get("known_scalar"):
         reasons.append("known_scalar not true")
@@ -254,8 +383,9 @@ def verify(cert):
         if eps not in (1, -1):
             reasons.append("bad sign %r" % (eps,))
         signed.append(P if eps == 1 else E.neg(P))
-    if len(pts) != m or len(cert["signs"]) != m:
-        reasons.append("expected %d points and signs, got %d / %d" % (m, len(pts), len(cert["signs"])))
+    if len(cert["points"]) != m or len(cert["signs"]) != m:
+        reasons.append("expected %d points and signs, got %d / %d" %
+                       (m, len(cert["points"]), len(cert["signs"])))
     S = None
     for P in signed:
         S = E.add(S, P)

@@ -51,6 +51,24 @@ experiment:
     - experiments/EXP-PEXT-bf8f96/implementation/c2_control_stage.py
     - experiments/EXP-PEXT-bf8f96/implementation/geometric_analysis_stage.py
     - experiments/EXP-PEXT-bf8f96/implementation/c3_order_control.py
+    - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit.rs
+    - experiments/EXP-PEXT-bf8f96/implementation/candidate_unit_artifact.py
+    - experiments/EXP-PEXT-bf8f96/implementation/candidate_census_driver.py
+    - experiments/EXP-PEXT-bf8f96/implementation/candidate_census_check.py
+    - experiments/EXP-PEXT-bf8f96/implementation/candidate_stage.py
+    - experiments/EXP-PEXT-bf8f96/implementation/independent_check.py
+    - experiments/EXP-PEXT-bf8f96/implementation/generic_interval_descent.py
+    - experiments/EXP-PEXT-bf8f96/implementation/check_generic_interval_descent.py
+    - experiments/EXP-PEXT-bf8f96/implementation/root_collision.rs
+    - experiments/EXP-PEXT-bf8f96/implementation/quotient_core.rs
+    - experiments/EXP-PEXT-bf8f96/implementation/independent_candidate_unit.py
+    - experiments/EXP-PEXT-bf8f96/implementation/check_candidate_unit.py
+    - experiments/EXP-PEXT-bf8f96/implementation/geometric_reducer.py
+    - experiments/EXP-PEXT-bf8f96/implementation/source_map_binding.py
+    - experiments/EXP-PEXT-bf8f96/implementation/independent_source_map_check.py
+    - experiments/EXP-PEXT-bf8f96/implementation/source_fixed_unit.py
+    - experiments/EXP-PEXT-bf8f96/implementation/independent_source_fixed_check.py
+    - experiments/EXP-PEXT-bf8f96/implementation/fixed_model_geometry.py
     - experiments/EXP-PEXT-0b2c75/implementation/pext4_census.rs
     - experiments/EXP-PEXT-bf8f96/inputs/manifest.json
     - experiments/EXP-PEXT-bf8f96/inputs/classes-20261102/legacy-n3-alignment.json
@@ -102,17 +120,18 @@ experiment:
       every T unit of each special-j class and every unit carrying a Type2 hyperelliptic witness. Selection
       uses a complete certificate-bound metadata table in canonical join-plan order; witness ordinals are
       retained, the special-j flag is recomputed from the named model, and producer genus/minimum values are
-      withheld until independent recomputation is sealed. A preliminary table with unresolved descent is
-      preview-only and cannot enter the C5 review roster.
+      withheld until independent recomputation is sealed. The unit descent status is certified_admissible
+      only if every structure has a checked admissibility certificate, certified_inadmissible only if every
+      structure has a checked inadmissibility certificate, and mixed only if complete checked coverage has
+      both; any unknown structure makes the status unresolved. A preliminary table with unresolved descent
+      is preview-only and cannot enter the C5 review roster.
   - id: C6
     kind: coordinate_isomorphism
-    description: 'C-coordinate: identity vs seeded PGL2(K) transport with full binary-form scalar; preserve
-      actual curve via inverse map, recompute branch ranks/connectedness. The expected exact invariant equality
-      is checked, not assumed.'
+    description: 'C-coordinate: identity vs seeded PGL2(K) common transport of the whole original conjugate family with full binary-form scalar; preserve the actual curve via inverse maps, verify the twisted action sigma(g_i)=T_C(g_(i+1)) for C=sigma(M)M^-1, and recompute branch ranks/connectedness. The expected exact invariant equality is checked, not assumed; the ordinary coefficient orbit of only the transported first form is a different cover when M is not rational.'
   - id: C7
     kind: matched_random
     description: 'C-random-branch: seeded K-stable squarefree quartics matched on field, degree, branch factor
-      type and scalar class, sampled independently of source outputs. Compare weighted-factor and direct incidence
+      type and scalar class, sampled independently of source outputs. Compare weighted-factor, direct incidence and independent character-sum/Riemann-Hurwitz
       implementations; report random-destination identity separately. This is an instrument control, not an
       ECDLP benefit comparison.'
   independent_variables:
@@ -196,18 +215,18 @@ experiment:
       exact cross-check against the pinned earlier spectrum
     watchdog_seconds: 3600
   - id: n3core
-    objective: Complete q5 and q7 same-curve all-T census
+    objective: Complete q5 and q7 same-curve all-T census; bind their prospective C6/C7 control batches to this existing supervisor run with write-once custody
     watchdog_seconds: 21600
   - id: n3ext
     objective: Complete q11 same-curve all-T census, and descriptive H1 shared-orbit configuration/curve-count
-      ratios at q5,7,11,13. Preserve partial coverage separately if watchdog reached.
+      ratios at q5,7,11,13. Bind q11 prospective C6/C7 control batches to this existing supervisor run; preserve partial coverage separately if watchdog reached.
     watchdog_seconds: 28800
   - id: n5
-    objective: Complete q3 original full cohort all-T census
+    objective: Complete q3 original full cohort all-T census; bind its prospective C6/C7 control batches to this existing supervisor run with write-once custody
     watchdog_seconds: 21600
   - id: analyze
     objective: Exact joins, write-once geometric and incomplete C5 preview custody, independent control
-      reconciliation, export and report
+      reconciliation including C6/C7 arithmetic and seed replay, export and report
     watchdog_seconds: 3600
   stopping_rules:
   - Fixed whole cohorts; stop at stage watchdog or memory ceiling and retain all partial rows and exact remaining
@@ -279,16 +298,14 @@ experiment:
       how: No data-dependent thresholds; labels visible, script frozen before runs.
     - name: projective_coordinate
       treatment: crossed
-      value: identity plus 16 deterministic seeded invertible projective changes per available stratum
-      how: Transport the actual binary quartic including its scalar and exceptional infinity chart; invertible
-        model maps certify unchanged curve.
+      value: identity plus 16 deterministic seeded invertible projective changes for the first canonical class/T source unit and structure ordinal zero per available published-source field/branch-pattern stratum
+      how: Transport every original conjugate quartic by one common seeded PGL2(K) matrix, retaining each scalar and exceptional infinity chart; verify the twisted Frobenius action and both source-map inverses before exact invariant comparison. Bind every batch to the approved existing census run by write-once schedule admission and exact readback.
     - name: matched_random_branch
       treatment: randomized
-      value: 16 fresh K-stable squarefree quartics per available field and branch-factor-type stratum, two
+      value: 16 fresh K-stable squarefree quartics per available published-source field and branch-factor-type stratum, two
         scalar classes each
-      how: Seed20261102 SHA256 counter stream generates coefficient tuples before output; reject only nonsquarefree/wrong
-        factor pattern, cap4096 draws per stratum. Exhausted control is inconclusive. Match field, degree,
-        branch factor type, scalar class, instrument and resource cap; no curve identity matching or cost claim.
+      how: Seed20261102 SHA256 counter stream generates coefficient tuples before output; multiply by the least encoded nonsquare when needed to match the predeclared scalar class, then reject only nonsquarefree, wrong factor pattern or duplicate forms, cap4096 draws per stratum and 4096 SHA blocks per coefficient. Exhausted control is inconclusive. Match field, degree,
+        branch factor type, scalar class, instrument and resource cap; no curve identity matching or cost claim. Bind every batch to the approved existing census run by write-once schedule admission and exact readback; require independent seed and arithmetic replay before a checked control label.
     comparisons:
     - id: C-types
       arms:
@@ -393,7 +410,7 @@ experiment:
     protocol_hashes: {}
     implementation_tier: executor-implementation
     runbook: null
-    reason: Checked candidate and geometric-analysis components retain Type2 true ordinals with unit hashes; the analyze component now writes and readback-checks an incomplete four-cohort C5 metadata/roster preview and a fixed F27 synthetic C2 fixture. Fixed-field multiplication, independent fixture replay and one-row published-source binding exist. Certified descent/counterexample metadata, final C5 blind custody, full-cohort checker integration/runtime qualification, six-stage launcher, remaining controls and runbook remain unavailable, so no mechanical card is asserted.
+    reason: Checked candidate and geometric-analysis components retain Type2 true ordinals with unit hashes; the analyze component writes and readback-checks an incomplete four-cohort C5 metadata/roster preview and a fixed F27 synthetic C2 fixture. A prospective field-level candidate worker builds its cocycle and rational-image indices once per cohort, binds each unit to a checked startup and clean exit, and retains the C3 reverse-order checks and existing sealed chunks. The independent candidate review binds a compact generic-interval descent theorem application to exact exceptional-set coverage. A source-level proof packet partitions every collision case for independent Reviewer challenge; each sealed exceptional row carries a compact arithmetic-rank/constant-relation vector. A prospective sealed-unit summary joins all exceptional rank pairs, checked generic coverage and published class/T identity, with a separate full-row replay checker; exceptional descent and C5 remain unresolved. Fixed-field multiplication, independent fixture replay and one-row published-source binding include independent exact forward/inverse source-map replay and published class/T/ordinal checks. The source radical action refuses a non-exhibiting sign search as an instrument error. A source-pinned universal composition and odd-order Kummer descent packet now specifies the proposed compact proof interface, and chosen fixed models receive independent determinant, coordinate-map and inverse readback; formal review and full-row resource fit remain open. An independent native component now replays exceptional row arithmetic on fixed F27 and one degree-five software fixture; its Python stream wrapper and full-cohort fit remain unqualified. An answer-free C5 source projection and post-seal comparison exist; sealed full-cohort exceptional descent/counterexample metadata, authenticated independent blind custody and final C5 status remain unavailable. Full-cohort runtime qualification, six-stage launcher, remaining controls and runbook remain unavailable, so no mechanical card is asserted.
   required_artifacts:
   - experiments/EXP-PEXT-bf8f96/implementation/run.py
   - experiments/EXP-PEXT-bf8f96/implementation/check.py
@@ -401,8 +418,12 @@ experiment:
   - experiments/EXP-PEXT-bf8f96/implementation/quotient_census.rs
   - experiments/EXP-PEXT-bf8f96/implementation/independent_check.py
   - experiments/EXP-PEXT-bf8f96/implementation/degree2_identity.py
+  - experiments/EXP-PEXT-bf8f96/implementation/c67_run_custody.py
+  - experiments/EXP-PEXT-bf8f96/implementation/c67_independent_check_stage.py
+  - experiments/EXP-PEXT-bf8f96/implementation/c67_control_producer.py
   - experiments/EXP-PEXT-bf8f96/trial-plan.json
   - experiments/EXP-PEXT-bf8f96/inputs/manifest.json
+  - experiments/EXP-PEXT-bf8f96/inputs/c67-control-schedule-prospective.json
   - experiments/EXP-PEXT-bf8f96/export.json
   - experiments/EXP-PEXT-bf8f96/reports/run-<UTC>/report.md
   - experiments/EXP-PEXT-bf8f96/reports/run-<UTC>/report.pdf
@@ -410,7 +431,8 @@ experiment:
   readiness:
     problem: problems/pext-degree2-squareclass-census-launcher.md
     blockers:
-    - Candidate build, bounded unit loop, independent checker, Type2 and geometric-analysis components retain checked Type2 true ordinals and unit hashes; analyze now writes/readback-checks a four-cohort C5 preview and fixed F27 synthetic C2 fixture, with unresolved descent allowed only in explicit incomplete preview mode. Fixed-field multiplication, independent source/geometry fixture replays and one-row published-source binding exist. Certified descent/counterexample metadata, final C5 blind custody, full-cohort checker integration/runtime qualification, complete quotient/census launcher, remaining controls and final analysis remain.
+    - Candidate build, bounded unit loop, independent checker, Type2 and geometric-analysis components retain checked Type2 true ordinals and unit hashes; analyze writes/readback-checks a four-cohort C5 preview and fixed F27 synthetic C2 fixture, with unresolved descent allowed only in explicit incomplete preview mode. A prospective field-level worker reuses checked indices across units, retains C3 checks, and binds per-unit artifacts to a clean worker exit; its full-cohort CPU, RSS and storage fit remain unqualified. A compact generic-interval theorem application binds the exact checked complement. A source-level collision-completeness proof packet is ready, but the required independent Reviewer session remains open. Each exceptional row carries an arithmetic-rank/constant-relation vector, independently replayed in full-geometry mode; a prospective per-unit summary binds all exceptional rank pairs, generic coverage and class/T identity with a separate full-row replay checker. One source row has exact coordinate-map replay and published class/T/ordinal binding. A non-exhibiting radical sign search is an instrument error. The source-pinned compact descent theorem packet proposes an exact per-row sufficient certificate and leaves formal review open; chosen fixed models now receive independent source-map readback. A native independent exceptional-row arithmetic component has fixed F27 and one degree-five software checks, while its Python wrapper and full-cohort fit remain unqualified. A certified exceptional descent classifier and its resource fit remain open. An answer-free C5 projection and post-seal comparison exist. Certified full-cohort exceptional descent/counterexample metadata, authenticated independent blind custody and final C5 status remain open; full-cohort checker integration/runtime qualification, complete quotient/census launcher and final analysis remain. Source-only C6 common-family transport with checked twisted Frobenius and C7 matched-random sampler with two rank instruments exist; C7 has source-only independent draw/accounting replay and character-sum/Riemann-Hurwitz geometry agreement on fixed F27 forms; a prospective source-only schedule fixes the first canonical class/T and ordinal zero for 20 C6 units, 320 C6 slots, 40 C7 strata and 640 requested forms from all four published join plans; neither control has scientific-run custody, external Reviewer acceptance or full-stage resource qualification.
+    - A prospective C6/C7 custody component binds all 60 scheduled batches to the existing n3core/n3ext/n5 supervisor runs and has fixed write-once/readback tests. A source-only independent stage requires the sealed custody readback, regenerates C6 slots and C7 deterministic draws/geometry, and declares its local source closure. A source-only producer now orders custody admission, scheduled C6/C7 generation, exclusive writes, sealed readback and independent replay. The future approved trial plan must bind the schedule and join plans in input_sha256, producer/custody/replay code in source_sha256, every exact batch path and c67-independent-check.json in the census trial artifacts. Approved six-stage launcher integration, external review and full-stage resource qualification remain absent; no control data has been taken.
     - Compact full-cohort inputs manifest and exact four-cohort join plans exist; trial-plan/RUN allocation, executor handoff and prospective dispatch queue remain absent.
     - 'No lawful additional lane reserved: two current PEXT lanes open; resolve lifecycle prospectively, preserving
       failed outcomes and continuation.'

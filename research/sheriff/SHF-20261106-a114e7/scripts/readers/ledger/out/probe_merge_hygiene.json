@@ -1,0 +1,88 @@
+{
+ "control: no change to session (unrelated file added)": {
+  "flagged": false,
+  "findings": []
+ },
+ "modify sealed output file": {
+  "flagged": true,
+  "findings": [
+   "RBS-T-0a0a0a: steps/S01.out: session file changed: sha256 258a08a02096540ad53375e55a52d95f30d8d31df3e7a93b51e1d3aca685c25f on merge base 3db46bbbab74, sha256 1a26273b38ec9ca4253eae5225dfa3fe731b929998d224505483dccc96b4127d on head 5f55cecffdbb. Session files a",
+   "RBS-T-0a0a0a: steps/S01.out: file is off its journal digest: the journal records sha256 258a08a02096540ad53375e55a52d95f30d8d31df3e7a93b51e1d3aca685c25f, head 5f55cecffdbb holds sha256 1a26273b38ec9ca4253eae5225dfa3fe731b929998d224505483dccc96b4127d (base 3db4",
+   "Runbook-session directories are written only by tools/runbook.py and are never edited or spliced. Restore the base's bytes; a second execution needs its own session id (docs/runbook-execution.md)."
+  ]
+ },
+ "modify output AND rewrite journal digest to match (journal not a prefix)": {
+  "flagged": true,
+  "findings": [
+   "RBS-T-0a0a0a: journal.jsonl: journal rewritten, not appended to: sha256 83fe1daf8da6d2772c96b4b7ac78bfbfd907d2de78223b8703f96e38d7608816 on merge base 3db46bbbab74, sha256 09e99e9f191d9e2642f9db9416af6b605b03b16d3f0dd7de8d37cd61623e25d1 on head cafd0f51d159. S",
+   "RBS-T-0a0a0a: steps/S01.out: session file changed: sha256 258a08a02096540ad53375e55a52d95f30d8d31df3e7a93b51e1d3aca685c25f on merge base 3db46bbbab74, sha256 1a26273b38ec9ca4253eae5225dfa3fe731b929998d224505483dccc96b4127d on head cafd0f51d159. Session files a",
+   "Runbook-session directories are written only by tools/runbook.py and are never edited or spliced. Restore the base's bytes; a second execution needs its own session id (docs/runbook-execution.md)."
+  ]
+ },
+ "delete a sealed file": {
+  "flagged": true,
+  "findings": [
+   "RBS-T-0a0a0a: steps/S01.log: present on merge base 75ca2937fbdc (sha256 dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22) and deleted on head 775e06208ece. Session files are immutable.",
+   "RBS-T-0a0a0a: steps/S01.log: experiments/EXP-T-0a0a0a/runbook-sessions/RBS-T-0a0a0a/steps/S01.log is recorded by the journal (sha256 dc51b8c96c2d745df3bd5590d990230a482fd247123599548e0632fdbf97fc22) but is missing on head 775e06208ece (base 75ca2937fbdc, head ",
+   "Runbook-session directories are written only by tools/runbook.py and are never edited or spliced. Restore the base's bytes; a second execution needs its own session id (docs/runbook-execution.md)."
+  ]
+ },
+ "append a journal line (allowed)": {
+  "flagged": false,
+  "findings": []
+ },
+ "append a journal line re-binding the output to a new digest + add a second output file": {
+  "flagged": false,
+  "findings": []
+ },
+ "add an unrecorded extra file inside the sealed session": {
+  "flagged": false,
+  "findings": []
+ },
+ "absolute mode, non-merge commit modifying a sealed file": {
+  "flagged": false,
+  "findings": []
+ },
+ "session dir outside experiments/ and examples/ (research/...) modified": {
+  "regex_matches": false,
+  "note": "SESSION_FILE only matches experiments/<EXP>/runbook-sessions/ and examples/**/runbook-sessions/"
+ },
+ "splice: merge keeps execution B's journal/output and execution A's log": {
+  "pr_scope": {
+   "flagged": true,
+   "findings": [
+    "RBS-T-0a0a0a: journal.jsonl: journal rewritten, not appended to: sha256 8825aea2ae20aca6171c445461006af3880cb7240a36edf17124eb1f5ffd0a77 on merge base 51e06f5c07af, sha256 9d40f3924ed406611c3e098711933739f0e1247b19a5652e848640c047a6ed56 on head 686220c389d2. S",
+    "RBS-T-0a0a0a: steps/S01.log: session file changed: sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 on merge parent 77c6ef1137d6, sha256 85fa88d955c6cb024998965ab280b4f79f1f71ca182313b20c1a4abde424f280 on head 686220c389d2. Session files",
+    "RBS-T-0a0a0a: steps/S01.out: session file changed: sha256 06f961b802bc46ee168555f066d28f4f0e9afdf3f88174c1ee6f9de004fc30a0 on merge base 51e06f5c07af, sha256 c0cde77fa8fef97d476c10aad3d2d54fcc2f336140d073651c2dcccf1e379fd6 on head 686220c389d2. Session files a",
+    "RBS-T-0a0a0a: steps/S01.log: file is off its journal digest: the journal records sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, head 686220c389d2 holds sha256 85fa88d955c6cb024998965ab280b4f79f1f71ca182313b20c1a4abde424f280 (base 51e0",
+    "Runbook-session directories are written only by tools/runbook.py and are never edited or spliced. Restore the base's bytes; a second execution needs its own session id (docs/runbook-execution.md)."
+   ]
+  },
+  "absolute_scope": {
+   "flagged": true,
+   "findings": [
+    "RBS-T-0a0a0a: journal.jsonl: journal rewritten, not appended to: sha256 8825aea2ae20aca6171c445461006af3880cb7240a36edf17124eb1f5ffd0a77 on merge parent 51e06f5c07af, sha256 9d40f3924ed406611c3e098711933739f0e1247b19a5652e848640c047a6ed56 on head 686220c389d2.",
+    "RBS-T-0a0a0a: steps/S01.log: session file changed: sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 on merge parent 77c6ef1137d6, sha256 85fa88d955c6cb024998965ab280b4f79f1f71ca182313b20c1a4abde424f280 on head 686220c389d2. Session files",
+    "RBS-T-0a0a0a: steps/S01.out: session file changed: sha256 06f961b802bc46ee168555f066d28f4f0e9afdf3f88174c1ee6f9de004fc30a0 on merge parent 51e06f5c07af, sha256 c0cde77fa8fef97d476c10aad3d2d54fcc2f336140d073651c2dcccf1e379fd6 on head 686220c389d2. Session files",
+    "RBS-T-0a0a0a: steps/S01.log: file is off its journal digest: the journal records sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855, head 686220c389d2 holds sha256 85fa88d955c6cb024998965ab280b4f79f1f71ca182313b20c1a4abde424f280 (head 6862",
+    "Runbook-session directories are written only by tools/runbook.py and are never edited or spliced. Restore the base's bytes; a second execution needs its own session id (docs/runbook-execution.md)."
+   ]
+  }
+ },
+ "check_new_run_manifests": {
+  "valid as manifest.yaml": [],
+  "valid as manifest_v2.yaml": [],
+  "flat (schema-failing) as manifest.yaml": [
+   "experiments/EXP-T-0a0a0a/runs/RUN-T-0b0b0b/manifest.yaml: expected top-level key 'run'",
+   "A run record that fails the run schema is never published as-is: publish a schema-valid envelope (a failed run as status failed_infrastructure), or a faithful superseding manifest registered in tools/run_supersession_registry.yaml."
+  ],
+  "flat (schema-failing) as manifest_v2.yaml": [],
+  "empty as manifest.yaml": [
+   "experiments/EXP-T-0a0a0a/runs/RUN-T-0b0b0b/manifest.yaml: run manifest is empty (no YAML document); expected top-level key 'run'",
+   "A run record that fails the run schema is never published as-is: publish a schema-valid envelope (a failed run as status failed_infrastructure), or a faithful superseding manifest registered in tools/run_supersession_registry.yaml."
+  ],
+  "empty as manifest_v2.yaml": [],
+  "duplicate certificate.kind discrete_log then none as manifest.yaml": [],
+  "duplicate certificate.kind discrete_log then none as manifest_v2.yaml": []
+ }
+}

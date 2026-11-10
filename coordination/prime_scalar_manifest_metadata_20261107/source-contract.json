@@ -1,0 +1,79 @@
+{
+  "schema": "prime-scalar.phased-metadata-contract/v1",
+  "status": "source_phase_ready_for_checked_native_records; metadata_phase_not_admitted",
+  "candidate_execution_authorized": false,
+  "oracle_execution_authorized": false,
+  "source_write_paths": [
+    "research/prime_scalar_manifest_metadata_20261107/metadata_driver.py",
+    "research/prime_scalar_manifest_metadata_20261107/metadata_supervisor.py",
+    "research/prime_scalar_manifest_metadata_20261107/audit_manifest.py",
+    "research/prime_scalar_manifest_metadata_20261107/audit-contract.json"
+  ],
+  "metadata_write_paths": [
+    "research/prime_scalar_manifest_metadata_20261107/public-output-layout.json",
+    "research/prime_scalar_manifest_metadata_20261107/manifest.json",
+    "research/prime_scalar_manifest_metadata_20261107/builder-receipt.json",
+    "research/prime_scalar_manifest_metadata_20261107/audit-receipt.json",
+    "research/prime_scalar_manifest_metadata_20261107/supervisor-receipts.json",
+    "research/prime_scalar_manifest_metadata_20261107/report.md",
+    "research/prime_scalar_manifest_metadata_20261107/diagram.svg",
+    "research/prime_scalar_manifest_metadata_20261107/report.typ",
+    "research/prime_scalar_manifest_metadata_20261107/report.pdf",
+    "research/prime_scalar_manifest_metadata_20261107/report-inputs.json"
+  ],
+  "root_owned_outputs": [
+    "research/prime_scalar_manifest_metadata_20261107/supervisor-receipts.json",
+    "research/prime_scalar_manifest_metadata_20261107/report.pdf",
+    "research/prime_scalar_manifest_metadata_20261107/report-inputs.json"
+  ],
+  "source_phase": {
+    "budget_seconds": 1800,
+    "cpu": 1,
+    "memory_mib": 2048,
+    "swap": 0,
+    "concurrency": 1,
+    "runs": 0,
+    "authoring": "Fresh fork_turns=none Executor reads locked spec/audit specification/public declared materialize interface and builder hash only; never builder/checks/oracle/extractor implementations or producer results. Driver loads hash-pinned builder only in later admitted metadata phase. Independent auditor inverse-ranks inputs; no shared generator logic. Coordinator does not implement source.",
+    "validation": "Static source/AST only; no imports or metadata enumeration. Root separately checks public mapping_v1 clarification against published source return statements.",
+    "completion": "Exact4source files published, independent static review disposed, actual hashes and complete authority/resource supervisor available; source_only_unvalidated."
+  },
+  "metadata_phase": {
+    "admitted": false,
+    "dependency": "Source completion plus exact published/reviewed3sourcehashes and authoritative gate/nonce/enforcement details",
+    "operation_budget": "One60s builder and one60s independent audit,1CPU512MiBswap0concurrency1,no retry/no cloud; separately5sstartup+5scleanup each,140stotal",
+    "admission_rule": "Coordinator must issue exact phase approval after concrete hashes/commands/native authority/cgroup mechanism checked. Root may carry authorized preparation through these phases in same continuation; no new user confirmation needed, no automatic execution from this draft.",
+    "invocation_consumption": "Native reservation consumed once before builder start; audit reservation once before audit; no relaunch on uncertain outcome. Reconcile unit InvocationID,receipts,exclusiveoutputs before any continuation.",
+    "authoritative_evidence": "Actual native metadata task claim/epoch/unexpireddeadline, publishedDEC phaseapproval and sourcehashes; arbitrary JSON flag/string cannot grant authority.",
+    "count_scope": "649cases1680depthqueries23952futurecandidatecalls; metadata only, no candidate/oracle evaluations.",
+    "runtime_rules": "Gate before builderimport; no subprocess insideTasksMax1worker. Native supervision/readback occurs outsideworker within explicitparent budget. Audit separately constrained. Retain failures/partials.",
+    "state_before_exact_phase_approval": "blocked in native queue, never auto-ready merely on source completion",
+    "supervision": "metadata_supervisor.py runs in actual unprivileged user-systemd parent unit CPUQuota100%,MemoryMax512MiB,MemorySwapMax0,RuntimeMax70s with finite TasksMax16. Worker is separate unit60s,TasksMax1. Shared dedicated per-phase slice enforces aggregate CPUQuota100%,MemoryMax512MiB,MemorySwapMax0 across BOTH units; individual limits do not replace aggregate cap. Refuse absent sharedcap/delegation. Root starts parent unit; supervisor owns native reservation/gates/readback/terminal custody. Five seconds startup and five cleanup are hard sub-bounds, not extensions of worker60s.",
+    "supervisor_obligations": [
+      "Verify actual published phaseapproval/sourcehash/native metadata claim owner/epoch/unexpireddeadline before any invocation reservation. Exclusive durable builder/audit reservations consumed once; reconcile existingreceipts/unitInvocationIDs instead of relaunch.",
+      "Check own actual parentPID/InvocationID/user/cgroup and effective aggregate sharedslice controls, no unownedprocesses; validate parent70sdeadline accounting for elapsedstartuptime.",
+      "Create owned worker through existing usermanager, gate before loadingbuilder or auditingmanifest; read actual worker and parent/slice limits/membership/InvocationIDs, then atomically issue nonce-bound release. Worker checks nonce matches exacttask/epoch/unitInvocationID/spec+sourcehashes.",
+      "ParentRuntimeMax70 and workerRuntimeMax60 externally enforced. Parent must prearm workerstop so parentkill cannot leave workerunbounded; worker independent60sdeadline persists. Supervisor5scleanup records termination/memoryevents/CPU/bytefacts; unknownownership refusesstopofunrelatedunits and recordsuncertain outcome.",
+      "Root outsideunits reads durable supervisor/worker/unitreceipts and may record external parenttimeout from usermanager if parentcannotwrite terminal. Native readiness/custody is not scientificvalidation.",
+      "No opaque external verifier adapter placeholder: supervisor implements exact native authority/readback/singleuse semantics in reviewedsource, or metadata phase remainsblocked."
+    ]
+  },
+  "snapshot_phase": {
+    "source_tasks": "Both source and metadata tasks, disjoint artifactownership",
+    "expected_physical_paths": 15,
+    "requires": "All14declaredsource+metadata artifacts actual or exactterminalfailure amendment; no fabricated outputs. Actualsnapshotreceipt adds1.",
+    "state": "Snapshot binds metadata evidence only, no semantic acceptance."
+  },
+  "input_sha256": {
+    "preparation.json": "503a6defe993df2900d2ca40d66d1058405a6f8d1e10af46bcff484f91637d2a",
+    "audit-spec.md": "7f064d05730b8cec0827d191c4a7c8a84c305796e7556abf4720378a5b3a9224",
+    "command-and-admission.md": "7cb7f04d58fc8a478fe7e282b2b0ca4c371cb01b48ba5d72d0ae7969f2883c84"
+  },
+  "immutable_history": "Do not alter published blinded-source report, case specification, failed campaign records or previous snapshots.",
+  "campaign": "Bothproducer slots consumed; independentsoftware slot reserved; all106+6/fiveleads/charts/projections/witness/certificate costs downstream.",
+  "native_ids": {
+    "decision_id": "DEC-20261107-7fec0c",
+    "source_task_id": "TASK-20261107-57cb8a",
+    "metadata_task_id": "TASK-20261107-e7cdd2",
+    "snapshot_task_id": "TASK-20261107-969bcf"
+  }
+}

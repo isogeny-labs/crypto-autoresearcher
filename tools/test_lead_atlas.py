@@ -237,5 +237,64 @@ class RecordAreaTests(unittest.TestCase):
                 self.assertIn(rid, recs)
 
 
+class OracleClassTests(unittest.TestCase):
+    """Owner ruling R1: every IC lead names the oracle that produces relations."""
+
+    def setUp(self) -> None:
+        self.rows = la.load_leads()
+        self.ic = [r for r in self.rows
+                   if r.get("family") in la.ORACLE_REQUIRED_FAMILIES]
+
+    def test_every_ic_lead_has_a_valid_oracle_class(self) -> None:
+        self.assertGreaterEqual(len(self.ic), 50)
+        for r in self.ic:
+            with self.subTest(r["id"]):
+                self.assertIn(r.get("oracle_class"), la.ORACLE_CLASSES)
+
+    def test_missing_oracle_class_fails_in_ic_families(self) -> None:
+        for fam in la.ORACLE_REQUIRED_FAMILIES:
+            row = copy.deepcopy(next(r for r in self.ic
+                                     if r["family"] == fam))
+            row.pop("oracle_class")
+            errors, _ = la.check_leads([row])
+            with self.subTest(fam):
+                self.assertTrue(any("oracle_class" in e for e in errors))
+
+    def test_missing_oracle_class_is_allowed_elsewhere(self) -> None:
+        row = copy.deepcopy(next(r for r in self.rows
+                                 if r["family"] == "generic"))
+        row.pop("oracle_class", None)
+        errors, _ = la.check_leads([row])
+        self.assertFalse(any("oracle_class" in e for e in errors))
+
+    def test_invalid_oracle_class_fails(self) -> None:
+        row = copy.deepcopy(self.ic[0])
+        row["oracle_class"] = "magic"
+        errors, _ = la.check_leads([row])
+        self.assertTrue(any("oracle_class 'magic'" in e for e in errors))
+
+    def test_genericity_mode_runs_and_lists_open_first(self) -> None:
+        import io
+        import json
+        from contextlib import redirect_stdout
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            self.assertEqual(la.main(["--genericity", "--json"]), 0)
+        data = json.loads(buf.getvalue())
+        self.assertTrue(data)
+        self.assertEqual(
+            {d["id"] for d in data},
+            {r["id"] for r in self.rows if r.get("oracle_class") == "generic"})
+        flags = [d["disposition"] in la.OPEN for d in data]
+        self.assertEqual(flags, sorted(flags, reverse=True))
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            self.assertEqual(la.main(["--genericity"]), 0)
+        self.assertIn("generic-oracle leads", buf.getvalue())
+
+    def test_brief_mentions_generic_oracle_count(self) -> None:
+        self.assertIn("carry a generic oracle", la.brief())
+
+
 if __name__ == "__main__":
     unittest.main()

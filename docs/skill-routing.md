@@ -1,5 +1,11 @@
 # Skills and tool routing
 
+Start with [`autoresearch`](../.claude/skills/autoresearch/SKILL.md) for one
+entry point that invokes the appropriate lifecycle skill. Full-cycle requests
+continue across coordination, design, execution and review; explicit stage-only
+requests stop at their requested deliverables. Direct helper invocations remain
+supported. The table below identifies the canonical procedure for each action.
+
 Use one primary skill for the requested action, with a subject profile only when
 it adds useful context. Explicit experiment execution goes directly to `run`;
 this guide, catalog checks and subject assessment are never launch preflights.
@@ -8,6 +14,7 @@ this guide, catalog checks and subject assessment are never launch preflights.
 
 | Request | Primary skill | Boundary |
 | --- | --- | --- |
+| Carry out or continue a research loop through one entry point | `autoresearch` | Invoke lifecycle skills within scope; preserve their roles and gates |
 | Run an existing experiment, goal, task or command | `run` | Execute existing public synthetic trials; preserve named scope and built-in admission |
 | Turn an idea into a frozen trial | `design-experiment` | Coordinator design/approval; no trial execution |
 | Review results, Lean theorem fidelity, proof workflows or a scientific conclusion | `review-evidence` | Independent claim-tier and formal-artifact review; no automatic promotion |
@@ -156,3 +163,12 @@ source/console interfaces, availability and execution/authority boundaries. Run
 the focused catalog tests and `check`; inspect `drift` after new CLI sources land.
 Keep descriptions sufficient to trigger the skill without loading its body.
 Reuse lifecycle skills instead of duplicating them under a shorter alias.
+
+## Default research-goal loop
+
+Every research goal uses [the challenge research loop](challenge-research-loop.md):
+freeze the problem, propose a candidate, gather evidence, independently review
+it, then let the findings determine the next attempt. `autoresearch campaign next
+--goal <GOAL-ID>` selects the current phase without model calls. Autopilot uses
+this planner by default; all 32 skills and host adapters preserve the relevant
+problem, candidate and evidence pointers. Explicit run requests stay with `run`.

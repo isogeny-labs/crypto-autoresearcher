@@ -1,0 +1,68 @@
+idea:
+  id: IDEA-20261109-258bfb
+  question_id: RQ-ISO-3325c3
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  class: measurement
+  novelty_status: adaptation
+  title: 'Constant-factor audit of the OneEnd-to-EndRing reduction: dimension-2 Kani fallback rate as
+    a function of auxiliary endomorphism discriminant'
+  assumption_attacked: Cost of the OneEnd => EndRing reduction (not the EndRing assumption itself); bounds
+    what a single leaked endomorphism reveals.
+  mechanism: 'Given non-scalar alpha in End(E) of discriminant Delta, saturate Z[alpha] to the maximal
+    order by finding a second endomorphism beta via a Kani embedding: pick an auxiliary degree d with
+    N - d a sum of two squares and glue a degree-d endomorphism with a degree-(N-d) isogeny into an (N,N)-isogeny
+    of E x E. Clears H-ALISO-001 / H-ALISO-002 (degree-first Hecke probes measure which d are realizable),
+    H-ALISO-015 (four-line descent saturation), H-ALISO-017 (lattice Kani gluing) and H-SSIQ-dfee7e (admissible-divisor
+    density). The new quantity is the fraction of (p, Delta) for which no admissible d lies below the
+    available 2-power torsion, forcing a dimension-4 step (cost x~16).'
+  object_computed: The lattice Z[alpha, beta] and its index in End(E); the dimension-2 fallback indicator
+    per sample.
+  cost_model:
+    classical: poly(log p) dim-2 (2^k,2^k)-isogeny steps per saturation round, each ~1e3 F_{p^2} mults;
+      dim-4 fallback multiplies by ~16
+    parameters: p in [2^30, 2^60]; |Delta| in [p^{0.5}, p^{1.5}]; 10^3 samples per cell
+  obstruction: Two-square obstruction on N - d is exactly the sieve-adjusted density of H-SSIQ-dfee7e;
+    at |Delta| ~ p^{1.5} the first admissible d may exceed 2^f.
+  kill_test: Dimension-2 fallback rate stays below 1 percent across all cells up to |Delta| = p^{1.5};
+    then the reduction constant is as advertised and the record closes as a non-finding.
+  lean:
+    theorem: null
+    coverage: none
+    needed_statement: 'For supersingular E over F_{p^2} and non-scalar alpha in End(E) with squarefree
+      discriminant Delta, the index [End(E) : Z[alpha, beta]] divides gcd(Delta, disc(beta)) for any beta
+      produced by the Kani embedding step.'
+  experiment:
+    id: null
+    nearest_surface: aburan28/crypto-autoresearcher autolab package p1486_degree_first_hecke_verify
+  prior_art:
+    frontier_map: not_applicable
+    nearest_record:
+      id: H-ALISO-001
+      relation: special_case_extension
+    searched:
+      corpus_grep:
+      - H-ALISO-001
+      - H-ALISO-002
+      - H-ALISO-015
+      - H-ALISO-017
+      - H-SSIQ-dfee7e
+    none_found_after:
+    - 'BRIEF query: "dimension-4" / "dim-4 fallback" in H-* titles -> no hit'
+    - 'BRIEF query: "saturation index" -> only H-ALISO-015 descent'
+    - 'BRIEF query: EV-*/EXP-* for Kani gluing -> none quoted in excerpt'
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+  disproven_avoided: none in the brief
+  evidence_type: cost_audit
+  tag: adaptation
+  claim: 'Constant-factor audit of the OneEnd-to-EndRing reduction: dimension-2 Kani fallback rate as
+    a function of auxiliary endomorphism discriminant. Given non-scalar alpha in End(E) of discriminant
+    Delta, saturate Z[alpha] to the maximal order by finding a second endomorphism beta via a Kani embedding:
+    pick an auxiliary degree d with N - d a sum of two squares and glue a degree-d endomorphism with a
+    degree-(N-d) isogeny into an (N,N)-isogeny of E x E. Clears H-ALISO-001 / H-ALISO-002 (degree-first
+    Hecke probes measure which d are realizable), H-ALISO-015 (four-line descent saturation), H-ALISO-017
+    (lattice Kani gluing) and H-SSIQ-dfee7e (admissible-divisor density). The new quantity is the fraction
+    of (p, Delta) for which no admissible d lies below the available 2-power torsion, forcing a dimension-4
+    step (cost x~16).'
