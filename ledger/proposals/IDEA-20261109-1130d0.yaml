@@ -1,0 +1,156 @@
+idea:
+  id: IDEA-20261109-1130d0
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Anomalous sibling of a prime-order CM curve, a trace-one curve over q = 3a^2 + 3a + 1 near 3N^2
+    whose N-torsion is O_K/(pi - 1), as the positive control of the cross-characteristic transfer lane
+  class: control
+  claim: 'With notation of the unit-sibling record, let lambda be the GLV eigenvalue mod N (lambda^2 +
+    lambda + 1 = 0). Put a_0 = -lambda (1 + 2 lambda)^{-1} mod N, a = a_0 + jN for j >= 0, alpha = a +
+    (2a + 1) omega. Then Tr(alpha) = -1, Nm(alpha) = 3a^2+3a+1, alpha = 0 mod n = (pi - 1), and q_j =
+    Nm(1 + alpha) = Nm(alpha). When q_j is prime the twist E_gamma of y^2 = x^3 + b over F_{q_j} with
+    Frobenius 1 + alpha has #E_gamma = q_j (trace 1, anomalous), q_j in (3N^2 j^2, 3N^2 (j+1)^2), and
+    E_gamma(F_{q_j})[N] = O_K/n = Z/N whenever N does not divide q_j/N. Smart''s attack solves every DLP
+    in E_gamma(F_{q_j}) in polynomial time. Pre-registered, (i) the construction verifies on 30 toy curves
+    and on secp256k1 (a 512-bit anomalous curve exists for some j <= 2000), (ii) at toy size, mapping
+    P -> P'' and Q = kP -> kP'' with k from brute force and running the anomalous solver returns k mod
+    N on every instance, the positive control, (iii) the naive rule smallest-x to smallest-x gives a scalar
+    lambda'' outside mu_6 on at least 1 - 6/N - 3 sigma of 300 instances, no accidental canonical labelling.
+    The torsor theorem says the compatible map is the log; this record supplies the instance that any
+    future map claim must pass.'
+  mechanism: E_gamma(F_q) = O_K/(alpha) with (alpha) = n b, so b/(n b) = O_K/n sits inside as the N-torsion;
+    the group is cyclic of prime order q with trace 1 because Tr(1 + alpha) = 2 - 1 = 1. The formal-group
+    log on the lift gives the DL in E_gamma; pulled back through a compatible map it would give the DL
+    on E. The map is a (Z/N)^*-torsor (companion record), so the control shows the target solver works
+    and that the bottleneck is exactly the map.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-RHO-53c89f
+    provenance: internal
+    claim: Anomalous curves are solved in polynomial time; this builds such a curve containing the instance
+      module.
+    verified_by: brief section 3, read 2026-11-09
+  - ref: IDEA-20260805-cc4c2c
+    provenance: internal
+    claim: CTRL-ANOMALOUS-TRACE1 at bits = 20 is the existing anomalous control; next agent locates its
+      implementation under GOAL-ECDLP-001.
+    verified_by: brief section 2 index line, read 2026-11-09
+  - ref: KR-RHO-755e35
+    provenance: internal
+    claim: Walking an isogeny class cannot reach an anomalous curve; the sibling is not in the class and
+      not over F_p.
+    verified_by: brief section 3, read 2026-11-09
+  assumptions:
+  - gcd(N, q_j/N) = 1, checked per instance, else the N-part is not cyclic and the instance is skipped.
+  - 1 + 2 lambda is invertible mod N since its square is -3 and N != 3.
+  proof_search_map:
+    not_applicable_reason: Positive control for a transfer pipeline, no exponent claim.
+    bottleneck: not_applicable
+    baseline_embedding:
+      parameter_slice: not_applicable
+      reproduction_check: not_applicable
+    observation_collision:
+      observable: not_applicable
+      distinct_preimage_search: not_applicable
+    constructive_transforms: []
+    quantifier_order: not_applicable
+    method_ceiling:
+      strongest_certifiable_claim: not_applicable
+      nearby_object_control: not_applicable
+    proof_obligations: []
+  predictions:
+  - metric: fraction of toy instances with
+    direction: higher
+    minimum_effect: exactly 1
+  - metric: fraction of toy instances where the anomalous solver on the brute-forced compatible map returns
+      k mod N
+    direction: higher
+    minimum_effect: exactly 1
+  - metric: fraction of instances where smallest-x matching yields lambda' in mu_6
+    direction: lower
+    minimum_effect: at most 6/N plus 3 sigma over 300 instances
+  minimal_test:
+    design: Sage. Toy arm, 30 j = 0 prime-order curves with p = 1 mod 3, p <= 2^22. Compute lambda, a_0,
+      iterate j until q_j prime, select the twist with trace 1 by point counting (toy) or by [q]P = O
+      on 20 points, verify N | q and gcd(N, q/N) = 1. Brute-force k on E. Pick P' of order N on E_gamma,
+      set Q' = kP', run the anomalous solver, compare. For 300 instances also apply the smallest-x rule
+      and record lambda' = k'/k. secp256k1 arm, compute a_0 from the published lambda, find the first
+      prime q_j, build and verify the 512-bit anomalous curve by [q]P = O, record j and q_j.
+    controls:
+    - Same-prime non-anomalous arm, a sibling with Tr(alpha) != -1 of similar size, the anomalous solver
+      must fail or return garbage.
+    - Random non-CM prime-order toy curve, no construction available, logged.
+    required_metrics:
+    - lambda, a_0, j, q_j, bitlength
+    - null
+    - solver success flag per instance
+    - lambda' distribution over 300 instances
+  falsification_conditions:
+  - Any toy instance with
+  - Solver failure on a correctly built compatible map, the control pipeline is broken and no transfer
+    claim can be evaluated.
+  - Smallest-x matching gives lambda' in mu_6 beyond chance plus 3 sigma, an unexpected canonical labelling,
+    escalate to the torsor theorem.
+  - No prime q_j for j <= 2000 on secp256k1 is a density failure, reported, not falsification.
+  confounders:
+  - At toy size k is known by brute force; the control verifies the target solver and the module arithmetic
+    only.
+  - Smallest-x is one rule; the torsor theorem covers all O_K-module maps, not all set rules.
+  interpretation_limits:
+  - Existence of a 512-bit anomalous curve containing Z/N as a module is a fact about CM curves and gives
+    no algorithm for secp256k1.
+  - The record intentionally cannot distinguish the map problem from the ECDLP because they are the same
+    problem.
+  heuristic_assumptions:
+  - id: H1
+    statement: Some q_j with j <= 2000 is prime for secp256k1.
+    rigorous_support: Density about 1/ln q near 1/356 per j; failure is a report, not a falsification.
+    validation_plan: Miller-Rabin loop in the secp256k1 arm with the j found recorded.
+  target_complexity:
+    time_exponent: N^{1/2} unchanged on E; polynomial on E_gamma
+    memory_exponent: O(1)
+    best_known: Pollard rho on E, KR-RHO-13bf67; Smart on E_gamma, KR-RHO-53c89f
+    hidden_overhead: The compatible map, which is the discrete log itself.
+    tradeoff_note: None.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-53c89f dominates the target side, KR-RHO-13bf67 the map side. No row states that
+    a prime-order CM curve has an anomalous sibling over a 512-bit prime containing its module.
+  sota_delta: Exponent delta 0. New control instance of exact shape for the cross-characteristic lane
+    and a closed form q = 3a^2 + 3a + 1 for the anomalous sibling primes.
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/generic-rho
+    rows_checked:
+    - KR-RHO-53c89f
+    - KR-RHO-755e35
+    - KR-RHO-13bf67
+    - KR-IC-cd159a
+    nearest:
+    - ref: KR-RHO-53c89f
+      provenance: internal
+      relation: adjacent
+      delta: Row applies Smart to anomalous curves; here the anomalous curve is constructed to contain
+        the instance module over another prime.
+    - ref: KR-RHO-755e35
+      provenance: internal
+      relation: adjacent
+      delta: Row forbids reaching an anomalous curve by isogeny; the sibling is reached by changing the
+        Frobenius generator, not by isogeny, and the map is still unavailable.
+    searched:
+      corpus_grep:
+      - brief for anomalous control, CTRL-ANOMALOUS-TRACE1, trace one
+      - Wave-1 p-adic records for trace-one j = 0 toy curves (same-prime arms only)
+      web: []
+      blocked: []
+    lead: LEAD-EXO-weak-class-instrument-calibration
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: Sage. Toy arm, 30 j = 0 prime-order curves with p = 1 mod 3, p <= 2^22. Compute
+        lambda, a_0, iterate j until q_j prime, select the twist with trace 1 by point counting (toy)
+        or by [q]P = O on 20 points, verify N | q and gcd(N, q/N) = 1. Brute-force k on E. Pick P'' of
+        order N on E_gamma, set Q'' = kP'', run the anomalous solver, compare. For 300 instances also
+        apply the smallest-x rule and record lam'
