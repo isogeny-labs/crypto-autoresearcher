@@ -245,3 +245,14 @@ Forty-one software controls pass, including six new binding controls. A valid ce
 For n=3*7^j, the Frobenius-module construction gives V of dimension(n+1)/2 with nonzero restricted trace and1 outsideV. On E:y²+xy=x³+1 with target(1,0), the full-vector-space m2 Semaev system onV×V is UNSAT. The explicit affine separator lambda(t)=t+eta yields a literal refutation at cap3, so LFD<=3. Exact degree is not asserted. The proof uses reciprocal Frobenius-factor components to construct a stable trace-isotropic L and a trace-zero F8 plane S. It includes original-presentation degree lifting.
 
 This is a constructive infinite modular family, beyond the earlier no-wrap regime. It does not bound every fixed-m2 family and does not transfer cap3 through arbitrary nonlinear point selectors. The factor-base design JSON records the construction as a potential low-degree UNSAT control, not an implemented generator or recovered-scalar dataset. No scientific draws were taken.
+
+
+### 2026-11-10: uniform quotient lower-bound route
+
+The current target remains an explicit infinite non-subfield fixed-m2 family with D(n) tending to infinity and a closed quotient retaining an independently known ideal consequence. The generator continuation interrupted by the service limit left no uncommitted implementation; it was not retried when the user redirected work to this proof route.
+
+Two parallel approaches rule out concrete uniform ansatzes. A quotient whose images factor across x/y blocks already produces actual solutions from generator containment and a nonzero unit image. Global commutation of multiplication operators alone similarly forces full Boolean idempotence and an actual-solution representation; imposing global idempotence separately is unnecessary. Useful operators must be coupled across blocks and retain a nonzero commutator at the truncated boundary. Full kernel closure, including feedback, remains mandatory.
+
+The independent initial-monomial argument strengthens the size constraint: any useful degree-D UNSAT separating quotient has actual rank q>=2^(D-1). A degree-compatible multiplicative term order makes surviving standard monomials a downset, and the no-plateau argument supplies one of degree D-1. All its divisors survive. This is a necessary representation-size bound, not a growing LFD lower bound. Symbolically described exponential spaces remain possible, and polynomial q(n) still permits logarithmically growing D(n).
+
+The operator note records the exact field-valued Semaev coefficient equation, the complete shifted-dual closure condition, and the boundary conditions. No correlated infinite quotient satisfying them was constructed in this turn. No experiments, native builds, certificate replays or cloud jobs occurred.
