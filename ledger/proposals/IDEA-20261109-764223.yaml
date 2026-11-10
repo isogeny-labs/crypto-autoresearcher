@@ -1,0 +1,151 @@
+idea:
+  id: IDEA-20261109-764223
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Charged field-multiplications per relation, mu_B resultant tower against a rejection-sampling
+    collector on the identical factor base
+  class: cost_model
+  claim: 'Toy sizes, predictions fixed before any run. For m in {3, 4}, p in [2^28, 2^32] with 2^12 |
+    p - 1, and B the power of two nearest to (m! N)^{1/m} so that the expected yield per target is about
+    1, run two collectors on the same F_B = {P : x(P)^B = 1}. (T) decompose random targets R = [a]P +
+    [b]Q by the mu_B resultant tower; (J) walk R_i = R_{i-1} + P_step and accept when x(R_i)^B = 1, giving
+    the relation R_i = +-F. Charge factor-base construction, target generation, spurious-root filtering
+    and relation verification in both. Primary metric rho_m = M_T / M_J, field multiplications per accepted
+    verified relation. Predictions: rho_m at least 1 at every (p, B), point estimate of order 2 m! log^2
+    B; the observed yield per target Y_obs within 10 percent of Y_pred = C(|F_B| + m - 1, m) / N; the
+    spurious fraction among tower zeros equal to 1 - 2^{-2} for the two jointly solved variables; rho_m
+    stable within a factor 2 across charging conventions. No exponent change is claimed.'
+  mechanism: 'Rejection sampling produces a relation at N / |F_B| group operations. Enumeration-plus-root-finding
+    Semaev over F_p pays B^{m-1} per target for B^m / (m! N) relations, also N / B per relation up to
+    m! and polylog factors, so over F_p the summation polynomial adds no yield and the comparison in RESEARCH_SEMAEV_DECOMPOSITION.md
+    is only meaningful against this collector. The collector is the concrete null object of IDEA-20260731-011
+    for relation generation: any claimed improvement must show rho_m below 1 at equal F_B, equal arithmetic
+    backend and equal charging, or it is an accounting change. The independent yield check against the
+    exact mean of IDEA-20260805-a25f11 separates a yield effect from a cost effect.'
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive Semaev over F_p is no better than generic methods; rho_m at least 1 is its collector-level
+      form.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-RHO-825bca
+    provenance: internal
+    claim: Honest constants for rho on standard curves; the record uses field multiplications, not cycles,
+      and does not compare to rho directly.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: IDEA-20260731-011
+    provenance: internal
+    claim: Any sub-rho claim must be run against a null object; this record supplies the null collector
+      for relation generation.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  - ref: IDEA-20260805-a25f11
+    provenance: internal
+    claim: Mean decompositions per target C(2B + m - 1, m) / N; used here with 2B replaced by |F_B|.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  - ref: IDEA-20260805-061f97
+    provenance: internal
+    claim: Relation collection is routinely under-charged; both arms here carry identical charges.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  assumptions:
+  - N is prime and 2^12 divides p - 1; both are recorded in the receipt.
+  - Both collectors use one arithmetic backend with a multiplication counter; the next agent reads docs/ic
+    in crypto to confirm the ic command's bounded factor-base comparison exposes such a counter, and runs
+    ecbench methods to check whether a collector is already registered.
+  predictions:
+  - metric: rho_m, field multiplications per relation, tower over rejection, at B nearest (m! N)^{1/m}
+    direction: higher
+    minimum_effect: at least 1.0 at every (p, B) for m = 3 and 4
+  - metric: Y_obs divided by Y_pred over at least 1000 targets
+    direction: different
+    minimum_effect: within 0.1 of 1.0
+  - metric: ratio of rho_m under wall-clock charging to rho_m under multiplication charging
+    direction: different
+    minimum_effect: within a factor 2 of 1.0
+  minimal_test:
+    design: 'For each (m, p): build F_B once and charge it to both arms. Run (T) on 1000 targets, counting
+      multiplications in the DFT, product tree, X^B mod P, gcd, root extraction and filtering, and record
+      relations found. Run (J) until the same number of relations is found. Verify every relation by scalar
+      multiplication. Repeat with wall-clock charging and with the factor-base charge removed.'
+    controls:
+    - Identical F_B, backend and verification in both arms.
+    - Oracle-filter variant of (T) with spurious zeros rejected at zero charge; rho_m must move by less
+      than 10 percent.
+    - Two charging conventions; the ratio of ratios is reported.
+    - Yield check against Y_pred with Poisson error bars.
+    required_metrics:
+    - M_T and M_J
+    - rho_m per (m, p, B)
+    - Y_obs, Y_pred and the spurious fraction
+    - rho_m under each charging convention
+  falsification_conditions:
+  - rho_m below 1 at any (p, B) (positive signal; this claim dies and Lead 1 is re-filed as a live mechanism).
+  - rho_m changes by more than a factor 2 between charging conventions (the metric is an accounting artifact).
+  - Y_obs / Y_pred outside [0.8, 1.2] (the yield model, not the collector, is wrong).
+  confounders:
+  - (J) step cost depends on batched inversion; it is fixed at one affine addition per step with Montgomery
+    batching across 64 walks, and reported.
+  - Choosing B as a power of two makes Y_pred deviate from 1; the ratio, not the absolute yield, is the
+    metric.
+  interpretation_limits:
+  - rho_m at 28 to 32 bits says nothing about m above 4 or about non-subgroup bases.
+  - A confirmed rho_m above 1 is consistent with KR-IC-5931ee and moves no exponent.
+  heuristic_assumptions:
+  - id: H1
+    statement: Field multiplications are a charging unit under which both collectors are fairly compared.
+    rigorous_support: Both are dominated by F_p multiplication; inversions are batched and counted as
+      multiplications.
+    validation_plan: The two-convention control above.
+  target_complexity:
+    time_exponent: N^1 for both collectors; rho_m measures the constant
+    memory_exponent: O~(2^{m-1} B) for the tower, O(B) for the rejection walk
+    best_known: Pollard rho, 0.886 sqrt(N) group operations (KR-RHO-13bf67)
+    hidden_overhead: Factor-base construction (B Legendre symbols and square roots) and relation verification,
+      charged here.
+    tradeoff_note: Delta +1/2 against rho for both arms; the record fixes the null baseline every F_p
+      decomposition claim must beat.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-IC-5931ee at the exponent. No row or record states the charged collector-level ratio
+    or supplies the rejection collector as the null.
+  sota_delta: 'Exponent delta 0. Counted delta: rho_m, with a yield audit and a charging-convention invariance
+    check.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5931ee
+    - KR-IC-ae532f
+    - KR-IC-9e610d
+    - KR-RHO-825bca
+    - KR-RHO-46c2c6
+    - KR-RHO-cb1c58
+    - KR-RHO-13bf67
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: special_case
+      delta: The row states the exponent floor; this record measures the constant between two collectors
+        at equal base.
+    - ref: KR-RHO-46c2c6
+      provenance: internal
+      relation: orthogonal
+      delta: The row amortises rho over many targets; neither collector here reuses distinguished points.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for null object, rejection, factor-base yield, relation collection charging,
+        decomposition probability
+      - REPO BRIEF section 1b for factor-base-yield experiment directories and the ic command description
+      web: []
+      blocked: []
+    lead: LEAD-ICP-isogeny-transported-relation-yield
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each (m, p): build F_B once and charge it to both arms. Run (T) on 1000
+        targets, counting multiplications in the DFT, product tree, X^B mod P, gcd, root extraction and
+        filtering, and record relations found. Run (J) until the same number of relations is found. Verify
+        every relation by scalar multiplication. Repeat with wall-clock charging and with the factor-base
+        charge removed.'

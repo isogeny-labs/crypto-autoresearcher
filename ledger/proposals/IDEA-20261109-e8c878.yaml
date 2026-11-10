@@ -1,0 +1,152 @@
+idea:
+  id: IDEA-20261109-e8c878
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Three presentations of one zero-dimensional prime-field membership system (flat S_{m+1}, chained
+    S_3 tower, incidence determinant over L((m+1)O)) measured at the F4 degree wall
+  class: representation
+  claim: 'Toy sizes, predictions fixed before any run. Fix p near 2^24 with 128 | p - 1, m in {3, 4},
+    B in {16, 32, 64}, membership x_i^B - 1 on every point variable, and one target per instance. F (flat):
+    S_{m+1} in x_1..x_m, degree 2^{m-1} per variable, m unknowns. C (chained): S_3(x_1, x_2, u_1), S_3(u_j,
+    x_{j+2}, u_{j+1}), S_3(u_{m-2}, x_m, x_R), degree 2 per variable, 2m - 2 unknowns. D (incidence):
+    the determinant of the (m+1) by (m+1) matrix with rows (1, x_i, y_i, x_i^2, x_i y_i, ...) spanning
+    L((m+1)O) at P_1..P_m and -R, plus y_i^2 - f(x_i); total degree at most m floor((m+1)/2), 2m unknowns.
+    (P1) D_max at least B for all three; (P2) T_C / T_F at least 1 at B at least 32; (P3) T_D / T_F in
+    [1/2, 2]; (P4) the first y-free polynomial F4 derives from D has x-degree 2^{m-1} per variable (it
+    rebuilds S_{m+1}). No exponent change is claimed.'
+  mechanism: The three systems define the same variety after projection to the x-coordinates, so any timing
+    difference is presentation, not yield. Over F_2^n the chained form wins because link variables inherit
+    vector-space membership (KR-IC-73db3f); over F_p the links carry no membership and F4 must re-derive
+    S_4 at degree 4 per variable before meeting the wall at B, so the extra m - 2 variables only enlarge
+    the Macaulay matrix from about B^m / m! to B^{2m-2} / (2m-2)! columns. The determinant form trades
+    exponential degree in m for m extra variables and the curve equations; eliminating y_i returns S_{m+1}
+    times its sign conjugates. IDEA-20260731-014 asks whether presentation moves Groebner cost on a frozen
+    system; this is the concrete triad.
+  novelty_status: adaptation
+  citations:
+  - ref: KR-IC-8b9daa
+    provenance: internal
+    claim: Karabina's symmetric formulation changes PDP cost by a constant over F_2^n; D is a prime-field
+      cousin.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-5a43e5
+    provenance: internal
+    claim: S_m = Res(S_{m-k+1}, S_{k+1}) with degree 2^{m-2} per variable; C is this recursion left unexpanded.
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: KR-IC-f5c584
+    provenance: internal
+    claim: Low first fall degree over F_2^n comes from the trace morphism; no such morphism exists on
+      a prime-order E(F_p).
+    verified_by: REPO BRIEF 2026-11-09 section 3 row text
+  - ref: IDEA-20260731-014
+    provenance: internal
+    claim: Records that Groebner cost on the same membership system varies across presentations; this
+      record instantiates the test over F_p.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  - ref: IDEA-20260805-90a841
+    provenance: internal
+    claim: The boolean chained system of src/semaev_tree.py is the recorded chained baseline whose preference
+      this record predicts to reverse over F_p.
+    verified_by: REPO BRIEF 2026-11-09 section 2 ledger excerpt
+  assumptions:
+  - The same F4 binary, monomial order (grevlex) and machine serve all three presentations.
+  - The L((m+1)O) basis is (1, x, y, x^2) for m = 3 and (1, x, y, x^2, xy) for m = 4.
+  predictions:
+  - metric: minimum over presentations of D_max divided by B
+    direction: higher
+    minimum_effect: at least 1.0
+  - metric: T_C divided by T_F, median over 20 instances at B = 32 and 64
+    direction: higher
+    minimum_effect: at least 1.0
+  - metric: absolute log2 of T_D divided by T_F, median at B = 32 and 64
+    direction: lower
+    minimum_effect: at most 1.0
+  minimal_test:
+    design: For each (m, B) and 20 random targets build F, C and D with the same F_B and R, run F4 to
+      a Groebner basis, record D_max, Macaulay rows and columns at D_max, wall time, and the degree of
+      the first y-free element for D. Verify all three solution sets against brute-force enumeration of
+      F_B^m. Add a null analogue per presentation (random polynomials of the same multidegree in place
+      of S_{m+1}, of the S_3 links, or of the determinant) and record the same quantities.
+    controls:
+    - Solution-set identity across F, C, D and brute force on every instance.
+    - Null analogues with identical membership equations and shapes.
+    - Build time charged in all arms; a pass without build charge must move each ratio by less than 10
+      percent.
+    required_metrics:
+    - D_max per presentation
+    - Macaulay dimensions at D_max
+    - T_F, T_C, T_D and the two ratios
+    - degree of first y-free polynomial in D
+    - null-analogue ratios
+  falsification_conditions:
+  - T_D / T_F is below 1/8 at two B values while the null ratio stays in [1/2, 2] (a presentation-specific
+    gain; the record's neutrality claim dies and the gain becomes a lead).
+  - T_C / T_F is below 1/2 at B at least 32 (the binary preference survives over F_p).
+  - D_max below B/2 for any presentation (the wall claim is wrong).
+  confounders:
+  - F4 pair selection differs with variable count; report degree profiles, not only totals.
+  - At B = 16 build and setup costs dominate; ratios are read at B at least 32.
+  interpretation_limits:
+  - A confirmed ratio is a 24-bit measurement on one F4; it does not bound other solvers or m above 4.
+  - Neutrality here says nothing about Weil-descended systems, where chaining is known to help.
+  heuristic_assumptions:
+  - id: H1
+    statement: Presentations of one zero-dimensional ideal differ in F4 cost by at most a constant once
+      the membership wall at degree B is reached.
+    rigorous_support: None beyond the shared variety; Groebner cost is presentation dependent in general
+      (IDEA-20260731-014).
+    validation_plan: The ratios above, with null analogues, at two B values and two m values.
+  target_complexity:
+    time_exponent: N^1 for relation collection regardless of presentation; unchanged
+    memory_exponent: Macaulay matrix at degree about B, between B^m / m! and B^{2m-2} / (2m-2)! columns
+    best_known: Pollard rho, 0.886 sqrt(N) group operations (KR-RHO-13bf67)
+    hidden_overhead: System build (determinant expansion for D is O(m^2) polynomials of degree at most
+      m) and spurious-zero filtering.
+    tradeoff_note: Delta +1/2 against rho; the record decides whether presentation is worth any further
+      F_p effort.
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: low
+  dominated_by: KR-IC-5931ee at the exponent; KR-IC-8b9daa for the symmetric-form constant over F_2^n.
+    Neither states the F_p triad or the chained reversal.
+  sota_delta: 'Exponent delta 0. Counted delta: two timing ratios and the degree of the first y-free polynomial,
+    pre-registered.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-IC-5a43e5
+    - KR-IC-8b9daa
+    - KR-IC-955fd6
+    - KR-IC-73db3f
+    - KR-IC-f5c584
+    - KR-IC-fbdb61
+    - KR-IC-5931ee
+    nearest:
+    - ref: KR-IC-8b9daa
+      provenance: internal
+      relation: adjacent
+      delta: The row reformulates PDP symmetrically over F_2^n; this record compares three F_p presentations
+        at a fixed membership wall.
+    - ref: KR-IC-f5c584
+      provenance: internal
+      relation: orthogonal
+      delta: The row's low first fall comes from a trace morphism absent over F_p; the record predicts
+        no analogous early fall.
+    searched:
+      corpus_grep:
+      - REPO BRIEF section 2 for chained, semaev_tree, presentation, determinant, incidence, symmetric
+        formulation
+      - REPO BRIEF section 3 for Karabina, symmetrized summation polynomials, trace equation
+      web: []
+      blocked: []
+    lead: LEAD-ICP-pkm-tower-algebraic-oracle
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each (m, B) and 20 random targets build F, C and D with the same F_B and
+        R, run F4 to a Groebner basis, record D_max, Macaulay rows and columns at D_max, wall time, and
+        the degree of the first y-free element for D. Verify all three solution sets against brute-force
+        enumeration of F_B^m. Add a null analogue per presentation (random polynomials of the same multidegree
+        in place of S_{m+1}, of the'
