@@ -1,0 +1,110 @@
+idea:
+  id: IDEA-20261109-361e1d
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECC-9d5d44
+  title: 'Fixed-base X25519 through an Edwards radix-16 comb and the map (Z+Y : Z-Y), at 465M + 16S +
+    1I against 2551 fe_mul + 1I as written'
+  class: composition
+  claim: 'Let $B$ be the Edwards25519 base point ($y=4/5$) and $k$ a clamped scalar. Table: $T_{i,j}=(j+1)\cdot256^iB$
+    for $0\le i<32$, $0\le j<8$, stored as $(y_p,y_m,t)=(y+x,\ y-x,\ 2dxy)$, 768 field elements. Recoding:
+    with nibbles $n_i$ of $k$ and $c_0=0$, for $i=0..62$ set $s=n_i+c_i$, $c_{i+1}=\lfloor(s+8)/16\rfloor$,
+    $e_i=s-16c_{i+1}$, and $e_{63}=n_{63}+c_{63}$; then $e_i\in[-8,7]$, $e_{63}\in[4,8]$ and $k=\sum e_i16^i$.
+    Lookup of digit $e$: entry $|e|$ (entry 0 is $(1,1,0)$); for $e<0$ swap $y_p,y_m$ and negate $t$.
+    Mixed addition into $(X_1:Y_1:Z_1:T_1)$: $A=(Y_1-X_1)y_m$, $B''=(Y_1+X_1)y_p$, $C=T_1t$, $D=Z_1+Z_1$,
+    $E=B''-A$, $F=D-C$, $G=D+C$, $H=B''+A$, output $(EF,GH,FG,EH)$, costing 7M + 7a. Schedule: $Q=\sum_{i\
+    \mathrm{odd}}e_iT_{(i-1)/2}$ (32 additions), $Q\leftarrow16Q$ (4 doublings at 4M + 4S + 6a), then
+    $Q\leftarrow Q+\sum_{i\ \mathrm{even}}e_iT_{i/2}$ (32 additions). Output $u=(Z+Y)\cdot(Z-Y)^{-1}$,
+    costing 2a + 1M + 1I. Total: 465M + 16S + 0c + 474a + 1I, plus 64 lookups; identical for every scalar.
+    Claim: the 32-byte result equals x25519_base(k). The as-written ladder costs 2551 fe_mul + 1 fe_inv.'
+  mechanism: 'The map $u=(1+y)/(1-y)$ is a group isomorphism from the Edwards model to the Montgomery
+    model, sending $B$ to $u=9$ because $(1+4/5)/(1-4/5)=9$. It depends on $y$ only, so it is invariant
+    under $x\mapsto-x$ and no sign convention for $\sqrt{-486664}$ enters. Projectively it is $(Z+Y:Z-Y)$,
+    defined on every rational point since $Y=Z=0$ cannot occur when $d$ is non-square; the identity goes
+    to $(1:0)$ and $(0,-1)$ to $(0:1)$. For clamped $k$ the result is never the identity: $8\mid k$ and
+    $l\mid k$ would force $k\ge8l>2^{255}$, while $0<k<2^{255}$. So $Z-Y\ne0$. The unified mixed addition
+    is complete ($-1$ square, $d$ non-square), so zero digits and the initial identity need no special
+    case. The schedule is fixed: 64 additions and 4 doublings regardless of $k$. The table index is secret,
+    so a constant-time backend must scan all 9 entries with conditional moves; the BigUint backend in
+    the repository is not constant-time and this record does not claim it is.'
+  novelty_status: unverified
+  citations:
+  - ref: BRIEF section 1 excerpts of src/ecc/x25519.rs and src/ecc/ed25519.rs
+    provenance: internal
+    claim: x25519_base runs the 255-step ladder on u = 9; ladder body is 10 fe_mul per step.
+    verified_by: this session, by reading the excerpts in the BRIEF
+  - ref: BRIEF section 0
+    provenance: internal
+    claim: u = (1+y)/(1-y), base y = 4/5, base u = 9, clamping rule, value of l.
+    verified_by: this session, by reading the BRIEF
+  - ref: Bernstein, Duif, Lange, Schwabe, Yang 2011, and NaCl-family fixed-base code
+    provenance: recalled
+    claim: Radix-16 signed comb with a 32 by 8 table and Edwards-to-Montgomery output. Pointer only.
+    verified_by: none
+  assumptions:
+  - The ladder returns the u-coordinate of [k]P for P with u = 9 on the curve.
+  - The table is generated offline from the existing Edwards arithmetic and checked entry by entry against
+    scalar_mul.
+  - Scalars are clamped; unclamped scalars are out of scope.
+  predictions:
+  - metric: byte mismatches against x25519_base over all tested scalars
+    direction: lower
+    minimum_effect: exactly 0
+  - metric: multiplication-class operations (M + S + c) per call, new minus as-written ladder
+    direction: lower
+    minimum_effect: exactly 481 against 2551, a reduction of 2070
+  minimal_test:
+    design: 'tools/formula_cert/run.sh x25519-base-edcomb16. (1) Trace count must equal (465M, 16S, 0c,
+      474a, 1I) and be identical across scalars. (2) Differential at p: equality with x25519_base on the
+      RFC 7748 vectors already in the repo tests whose input u is 9, on 10,000 seeded random 32-byte scalars,
+      and on scalars whose nibbles are all 0, all 7, all 8 and all 15 before clamping. (3) Small analogue
+      with a 4-digit comb: for every k below 8 times 16^3, equality with the analogue ladder, including
+      results at the identity where both sides return 0. (4) ecbench method x25519.base.edcomb16 reports
+      the count vector and advisory median wall time beside x25519.ladder.rfc7748.'
+    controls:
+    - A table with one corrupted entry, which must produce a mismatch on a scalar that selects it.
+    - A recoding with the carry dropped, which must fail on the all-8 nibble scalar.
+    required_metrics:
+    - traced M, S, c, a, I and lookup count
+    - mismatch count and number of scalars tested
+    - table size in field elements
+    - advisory wall-time medians, marked as not a bound
+  falsification_conditions:
+  - Any byte mismatch against x25519_base on a clamped scalar.
+  - Traced count differs from the stated vector or varies with the scalar.
+  - Either control passes.
+  - A timeout or build failure is infrastructure, not a result.
+  confounders:
+  - If fe_inv(0) is not 0 the small-analogue identity cases differ; the test asserts that convention separately.
+  interpretation_limits:
+  - Applies to the base point only; variable-base X25519 keeps the ladder.
+  - Operation counts are the claim; wall time is advisory and depends on the BigUint backend.
+  - Table generation cost and 768 stored field elements are not in the per-call count.
+  heuristic_assumptions:
+  - id: H1
+    statement: None; equality follows from the isomorphism and the completeness of the unified law.
+    rigorous_support: The arguments in the mechanism; ladder correctness is taken from RFC 7748 (recalled).
+    validation_plan: Differential tests at p and exhaustive comb test on the analogue.
+  target_complexity:
+    time_exponent: not applicable, constant-factor field-operation count
+    memory_exponent: not applicable, fixed table of 768 field elements
+    best_known: Signed radix-16 fixed-base comb of the same shape (recalled)
+    hidden_overhead: 64 full-table scans in a constant-time backend; one-time table generation.
+    tradeoff_note: Larger tables reduce additions further; not claimed here.
+  estimated_cost:
+    implementation: medium
+    compute: low
+  recommended_priority: high
+  dominated_by: Wider combs with larger tables use fewer additions (recalled, not counted here). Nothing
+    in the repository offers a fixed-base path.
+  sota_delta: 0 against the literature design. Against x25519_base as written, 481 multiplication-class
+    operations instead of 2551 per call, a factor of about 5.3, with the same single inversion.
+  prior_art:
+    frontier_map: not_applicable
+    not_applicable_reason: Curve25519 explicit-formula campaign; a fixed-base composition of two models
+      with an operation count, not an ECDLP mechanism.
+    none_found_after:
+    - BRIEF section 2, all 24 IDEA and 6 H entries as truncated there, searched for fixed-base, comb,
+      or Edwards-to-Montgomery output maps
+    - IDEA-20260807-e6d79e excerpt, which maps Montgomery to Weierstrass only
