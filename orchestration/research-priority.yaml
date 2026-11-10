@@ -209,6 +209,21 @@ process_budget:
   unlimited_scientific_runs: true
   on_limit: defer_unfiled_design_work
 
+# Per-area approved-unrun cap (approval is bounded by execution). An approve
+# decision may not take an area above this many approved contracts with no
+# run unless the decision names, under `supersedes:`, a retired contract of
+# the same area for each new one. Reinstated 2026-11-10 on the owner's "fix it
+# all" instruction, implementing proposal I2 of
+# crypto:docs/autoresearcher-harness-review-20261110.md. This REVERSES the
+# 2026-10-11 removal of the P0.1 capacity gate (commit 304547eb2c), which was
+# per goal; the cap is now per area (EXP-<AREA>-) and lives here so the
+# 2026-11-01 design-rate rule above and the cap are one record. Enforced by
+# tools/check_approval_capacity.py: advisory for approvals dated before
+# 2026-11-11, an error from then on. Read by `tools/portfolio_kpis.py
+# --capacity area:AREA`. Rule, metric and falsifier:
+# docs/execution-capacity-cap.md.
+approved_unrun_cap_per_area: 3
+
 priority:
   # Instruction 2. ECC first, always, across every selection point.
   ecc_first: true

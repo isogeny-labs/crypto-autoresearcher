@@ -39,7 +39,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from experiment_execution import GENERATED, RUN_ID, safe_path  # noqa: E402
+from experiment_execution import (  # noqa: E402
+    GENERATED, RUN_ID, archive_coverage_gaps, required_archive_paths, safe_path)
 from goal_lanes import load_lanes  # noqa: E402
 from research_dispatch import DispatchError, GitRepositoryVerifier, paths_within_scopes, validate_queue  # noqa: E402
 
@@ -135,7 +136,13 @@ def _source_bindings(spec: dict[str, Any], plan: dict[str, Any], root: Path,
         walk(bindings, "specification.input_bindings")
 
 
-def _trials(plan: dict[str, Any], root: Path, blockers: list[str]) -> set[str]:
+def _coverage_plan(plan: dict[str, Any]) -> dict[str, Any]:
+    """The plan as the supervisor will see it at its canonical specification path."""
+    return {**plan, "specification": f"experiments/{plan.get('experiment_id')}/specification.yaml"}
+
+
+def _trials(plan: dict[str, Any], root: Path, blockers: list[str],
+            valid: list[dict[str, Any]] | None = None) -> set[str]:
     trials = plan.get("trials")
     if not isinstance(trials, list) or not trials:
         blockers.append("trial plan: nonempty trials required")
@@ -192,8 +199,10 @@ def _trials(plan: dict[str, Any], root: Path, blockers: list[str]) -> set[str]:
         except (ValueError, OSError) as error:
             blockers.append(f"{label}: invalid declared trial artifacts: {error}")
             continue
-        for name in (*GENERATED, *artifacts):
-            required.add(f"{parent}/{name}")
+        # The one required-path enumeration authorize() uses.
+        required.update(required_archive_paths(root.resolve(), _coverage_plan(plan), [trial]))
+        if valid is not None:
+            valid.append(trial)
     return required
 
 
@@ -273,7 +282,8 @@ def assess(root: Path, packet: dict[str, Any]) -> dict[str, Any]:
         blockers.append("packet: pushed origin source_ref required")
     else:
         _source_bindings(spec, plan, root, source_ref, blockers)
-    required = _trials(plan, root, blockers)
+    valid_trials: list[dict[str, Any]] = []
+    required = _trials(plan, root, blockers, valid_trials)
     if queue.get("schema") != "crypto.autoresearch.dispatch_queue.v1" or queue.get("goal_id") != spec.get("goal_id"):
         blockers.append("prospective queue schema or goal binding mismatch")
     tasks = queue.get("tasks") if isinstance(queue.get("tasks"), list) else []
@@ -296,7 +306,12 @@ def assess(root: Path, packet: dict[str, Any]) -> dict[str, Any]:
         if handoff.get("id") != task_id or handoff.get("role") != "executor" or task.get("archived_by") != handoff.get("archived_by"):
             blockers.append("prospective queue/handoff: task identity or archive owner mismatch")
         declared = task.get("artifact_paths") if isinstance(task.get("artifact_paths"), list) else []
-        missing = sorted(required - set(declared))
+        # Shared predicate: the same gaps authorize() refuses on and the
+        # selector reports as needs_archive_coverage.
+        gaps = archive_coverage_gaps(root.resolve(), _coverage_plan(plan), {"artifact_paths": declared},
+                                     trials=valid_trials)
+        report["archive_coverage_gaps"] = gaps
+        missing = sorted(gaps)
         if missing:
             blockers.append(f"prospective executor archive coverage missing: {', '.join(missing[:3])}" + (f" (+{len(missing)-3} more)" if len(missing) > 3 else ""))
         archive = next((t for t in tasks if isinstance(t, dict) and t.get("id") == task.get("archived_by") and t.get("role") == "coordinator"), None)

@@ -3944,6 +3944,8 @@ def main() -> int:
     from check_probe_admission import check_probe_admission      # I1, I12
     from check_evidence_witness import check_evidence_witness    # I6b
     from check_handoff_expiry import check_handoff_expiry        # I8
+    from check_approval_capacity import check_approval_capacity  # I2
+    check_approval_capacity(ctx)
     check_probe_admission(ctx)
     check_evidence_witness(ctx, repo_root=REPO)
     check_handoff_expiry(ctx)

@@ -1,12 +1,12 @@
 # Experiments reported ready are refused by the supervisor's archive-coverage check
 
-- **Status:** `open`
+- **Status:** `investigating` (selector fix in harness PR `harness/review-20261110-fixes`, pending merge; see Resolution)
 - **Kind:** implementation gap (readiness check and admission check disagree)
 - **Affected work:** the 17 experiments listed below; the `run` skill's selector
   (`tools/newest_experiments.py`); mechanical-tier execution
   ([runbook execution](../docs/runbook-execution.md))
 - **Next action owner:** Coordinator (the dispatch queues are its records)
-- **Last updated:** 2026-10-17
+- **Last updated:** 2026-11-10
 
 ## Problem
 
@@ -73,7 +73,34 @@ runbook.
 
 ## Resolution and history
 
-Unresolved.
+Unresolved as of 2026-10-17.
+
+2026-11-10 (harness review I2, `crypto:docs/autoresearcher-harness-review-20261110.md`;
+working-tree change on `harness/review-20261110-fixes`, not yet merged):
+
+- **Fixed: unblock item 1.** The coverage rule is now one function,
+  `tools/experiment_execution.py` `archive_coverage_gaps(root, plan, task)`.
+  `authorize()` refuses on its first gap. Its error text and the result for a
+  complete plan are unchanged. `tools/newest_experiments.py` calls the same
+  function after the dispatch-queue check and reports a plan with gaps as
+  `needs_archive_coverage` (with `archive_coverage_gaps`), never `ready`.
+  `tools/experiment_preapproval.py` reports the same list and returns
+  `approvable: false`. Regression test: `tests/test_archive_coverage_predicate.py`.
+  A fixture missing `launch.json` is refused by all three with an identical
+  gap list. The complete control passes all three.
+- **Already done by the Coordinator: unblock item 2.** At HEAD `16b9d274c6`,
+  the predicate applied statically to the committed plan and queue blobs
+  gives 0 gaps for all 18 rows above, including the EXP-CMFB-cea1d2 control.
+  The queues were amended by commits `615a2c0999` and `a2070ac516`
+  (2026-10-16), `c928ebe46d` (2026-10-19) and later archive commits. So 18 of
+  18 now agree on coverage. That is a static check: no selector listing was
+  run in this sparse checkout and no trial was launched.
+- **Not fixed.** This change does not check run-manifest provenance or schema
+  (the SNFS update above). It does not provide the additive repair/retry
+  route. It does not repair the RUN-ECDLP-2ac930 output-contract failure.
+  Those exit criteria still apply. Close this record after the merge and a
+  full `newest_experiments.py --limit 0 --json` listing in a non-sparse
+  checkout with no `ready` row having gaps.
 
 ## 2026-10-17 SNFS execution update
 

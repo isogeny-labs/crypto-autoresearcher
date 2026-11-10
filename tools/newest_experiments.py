@@ -21,6 +21,11 @@ Each row also carries `off_main_runs`: remote branches holding unmerged
 commits under the experiment's runs/, so a session sees work in flight on
 another branch before it starts the same contract.
 
+A plan whose queued executor task omits a file the supervisor writes is
+`needs_archive_coverage`, never `ready`: readiness calls the one predicate
+authorize() refuses on, experiment_execution.archive_coverage_gaps
+(problems/ready-plans-lack-supervisor-archive-coverage.md).
+
 In a sparse checkout (docs/sparse-checkout.md) a committed run left off disk
 still counts: it is read from the index, and a trial plan whose coverage it
 decides selects as `needs_materialization`, never as `ready`.
@@ -45,7 +50,7 @@ except ImportError:  # imported as tools.<name>, the repository root importable
     from orchestration import fast_yaml
 import ecc_priority  # noqa: E402
 import sparse_checkout  # noqa: E402
-from experiment_execution import coverage, safe_path, sha256  # noqa: E402
+from experiment_execution import archive_coverage_gaps, coverage, safe_path, sha256  # noqa: E402
 from research_dispatch import (  # noqa: E402
     TERMINAL_STATES, GitRepositoryVerifier, validate_queue)
 
@@ -114,6 +119,23 @@ def _dispatch_queue_ready(repo: Path, plan: Path) -> tuple[bool, str, str | None
     return True, "", bound_name
 
 
+def _archive_gaps(repo: Path, plan: Path) -> list[str]:
+    """Apply authorize()'s archive-coverage predicate to the plan's queued executor task.
+
+    Called only after _dispatch_queue_ready() accepted the queue, so the plan
+    and queue are readable and the task exists. The predicate itself lives in
+    experiment_execution.archive_coverage_gaps; nothing is re-derived here.
+    """
+    try:
+        plan_data = json.loads(plan.read_text(encoding="utf-8"))
+        queue = json.loads((repo / plan_data["queue"]).read_text(encoding="utf-8"))
+        task = next(item for item in queue["tasks"]
+                    if isinstance(item, dict) and item.get("id") == plan_data["task_id"])
+        return archive_coverage_gaps(repo.resolve(), plan_data, task)
+    except (KeyError, StopIteration) as error:
+        raise ValueError(f"archive coverage cannot be evaluated: {error!r}") from error
+
+
 def execution_progress(exp_dir: Path, repo: Path, *, preapproval_candidate: bool = False) -> dict[str, Any]:
     plan = exp_dir / ("candidate-trial-plan.json" if preapproval_candidate else "trial-plan.json")
     # A sparse checkout leaves tracked files off disk; they still exist.
@@ -148,6 +170,17 @@ def execution_progress(exp_dir: Path, repo: Path, *, preapproval_candidate: bool
                 if not queue_ready:
                     return {"execution_state": "needs_dispatch_queue", "reason": reason,
                             "trial_plan": plan_name, "coverage": report}
+                # Readiness applies the same archive-coverage predicate as
+                # authorize(); a plan the supervisor would refuse is never ready.
+                gaps = _archive_gaps(repo, plan)
+                if gaps:
+                    return {"execution_state": "needs_archive_coverage",
+                            "reason": (f"handoff archive coverage missing: {gaps[0]}"
+                                       + (f" (+{len(gaps) - 1} more)" if len(gaps) > 1 else "")
+                                       + "; supersede the queue with a task declaring every "
+                                         "supervisor and trial artifact"),
+                            "archive_coverage_gaps": gaps,
+                            "trial_plan": plan_name, "coverage": report}
                 plan_name = bound_name
             state = ("measurement_complete" if report["measurement_complete"] else
                      "ready" if report["planned"] else "needs_reconciliation")
@@ -172,11 +205,11 @@ def execution_progress(exp_dir: Path, repo: Path, *, preapproval_candidate: bool
 
 
 _READINESS_RANK = {"ready": 0, "needs_materialization": 1, "needs_dispatch_queue": 2,
-                   "needs_implementation_or_plan": 3, "needs_reconciliation": 4,
-                   "needs_plan_repair": 5}
+                   "needs_archive_coverage": 2, "needs_implementation_or_plan": 3,
+                   "needs_reconciliation": 4, "needs_plan_repair": 5}
 # needs_materialization occurs only in a sparse checkout: one command from runnable.
 _SELECTABLE = ("ready", "needs_materialization", "needs_dispatch_queue",
-               "needs_implementation_or_plan")
+               "needs_archive_coverage", "needs_implementation_or_plan")
 
 
 def off_main_runs(repo: Path = REPO, *, base: str = "origin/main") -> dict[str, list[str]]:
@@ -375,10 +408,12 @@ def main(argv: list[str] | None = None) -> int:
     ready = sum(1 for r in rows if r["execution_state"] == "ready")
     sparse = sum(1 for r in rows if r["execution_state"] == "needs_materialization")
     queues = sum(1 for r in rows if r["execution_state"] == "needs_dispatch_queue")
+    archive = sum(1 for r in rows if r["execution_state"] == "needs_archive_coverage")
     print(f"newest_experiments: {len(rows)} selectable row(s): {ready} ready, "
           + (f"{sparse} need materialization (sparse checkout), " if sparse else "")
           + (f"{queues} need a dispatch queue, " if queues else "")
-          + f"{len(rows) - ready - sparse - queues} need implementation/plan; "
+          + (f"{archive} need archive coverage, " if archive else "")
+          + f"{len(rows) - ready - sparse - queues - archive} need implementation/plan; "
             "ready rows sort first",
           file=sys.stderr)
     for hold in report.get("explicit") or []:

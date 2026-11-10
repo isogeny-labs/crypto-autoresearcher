@@ -6,7 +6,9 @@ track-record review (docs/track-record-review-20261006.md) found nobody was
 asking at wake: how many approved contracts have never run, per goal; what
 fraction of specified work ever produced evidence; which dispatched handoffs
 never came back. `tools/ledger_summary.py` prints these for /research-status
-and the backlog remains visible without limiting approvals.
+and `--capacity area:AREA` reports headroom against the per-area cap in
+`orchestration/research-priority.yaml` (`approved_unrun_cap_per_area`),
+the same field tools/check_approval_capacity.py enforces.
 
 Definitions, stated once:
 
@@ -23,6 +25,7 @@ Usage:
     python3 tools/portfolio_kpis.py            # markdown
     python3 tools/portfolio_kpis.py --json
     python3 tools/portfolio_kpis.py --backlog  # per-goal approved-unrun table
+    python3 tools/portfolio_kpis.py --capacity area:ECDLP  # headroom vs the per-area cap
 """
 from __future__ import annotations
 
@@ -43,6 +46,34 @@ except ImportError:  # pragma: no cover
     from yaml import SafeLoader as Loader  # type: ignore[assignment]
 
 REPO = Path(__file__).resolve().parents[1]
+
+# The per-area approved-unrun cap lives in ONE record, the research-priority
+# policy (`approved_unrun_cap_per_area`), shared with the design-rate rule and
+# read by tools/check_approval_capacity.py. Reinstated 2026-11-10 (harness
+# review I2; docs/execution-capacity-cap.md) after its 2026-10-11 removal.
+POLICY_FILE = REPO / "orchestration" / "research-priority.yaml"
+CAP_FIELD = "approved_unrun_cap_per_area"
+
+
+def approved_unrun_cap(policy_file: Path = POLICY_FILE) -> int | None:
+    """The per-area cap from the policy, or None when the field is absent."""
+    try:
+        doc = yaml.load(policy_file.read_text(encoding="utf-8"), Loader=Loader) or {}
+    except (OSError, yaml.YAMLError):
+        return None
+    cap = doc.get(CAP_FIELD) if isinstance(doc, dict) else None
+    if cap is None:
+        return None
+    if isinstance(cap, bool) or not isinstance(cap, int) or cap < 1:
+        raise ValueError(f"{policy_file}: {CAP_FIELD} must be a positive integer, got {cap!r}")
+    return cap
+
+
+def area_of(exp_id: str) -> str:
+    """`area:<AREA>` from an experiment id; the cap's grouping key."""
+    match = _AREA_IN_ID.match(exp_id or "")
+    return f"area:{match.group(1)}" if match else "area:unknown"
+
 
 # Open handoffs older than this are reported as aged (P3.17). Two weeks is
 # longer than any dispatched task budget in the ledger.
@@ -112,6 +143,17 @@ def approved_unrun(root: Path = REPO, rows: list[dict[str, Any]] | None = None
         if row["status"] == "approved" and not row["has_runs"]:
             out[row["goal"]].append(row["id"])
     return {goal: sorted(ids) for goal, ids in sorted(out.items())}
+
+
+def approved_unrun_by_area(root: Path = REPO, rows: list[dict[str, Any]] | None = None
+                           ) -> dict[str, list[str]]:
+    """`area:<AREA>` -> approved experiment ids with no run (the capped quantity)."""
+    rows = scan_experiments(root) if rows is None else rows
+    out: dict[str, list[str]] = collections.defaultdict(list)
+    for row in rows:
+        if row["status"] == "approved" and not row["has_runs"]:
+            out[area_of(row["id"])].append(row["id"])
+    return {area: sorted(ids) for area, ids in sorted(out.items())}
 
 
 def _count_dir(root: Path, sub: str) -> int:
@@ -269,15 +311,31 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--backlog", action="store_true",
                         help="print the full per-goal approved-unrun table")
-    parser.add_argument("--goal-backlog", "--capacity", dest="goal_backlog",
-                        metavar="GOAL_OR_AREA",
-                        help="show approved-unrun backlog for one goal key; "
-                             "--capacity is a non-blocking legacy alias")
+    parser.add_argument("--goal-backlog", dest="goal_backlog", metavar="GOAL_OR_AREA",
+                        help="show approved-unrun backlog for one goal key")
+    parser.add_argument("--capacity", metavar="area:AREA",
+                        help="approval headroom for one area against "
+                             f"{CAP_FIELD} in orchestration/research-priority.yaml; "
+                             "exit 1 when the area is at or over the cap. A goal "
+                             "key is accepted as the non-blocking legacy backlog view")
     args = parser.parse_args(argv)
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import sparse_checkout
     if sparse_checkout.refuse_if_sparse("portfolio_kpis", args.repo_root):
         return 2
+    if args.capacity and args.capacity.startswith("area:"):
+        cap = approved_unrun_cap(args.repo_root / "orchestration" / "research-priority.yaml")
+        unrun = approved_unrun_by_area(args.repo_root).get(args.capacity, [])
+        if cap is None:
+            print(f"{args.capacity}\tapproved_unrun={len(unrun)}\tcap=none")
+            headroom = None
+        else:
+            headroom = max(0, cap - len(unrun))
+            print(f"{args.capacity}\tapproved_unrun={len(unrun)}\tcap={cap}\theadroom={headroom}")
+        for eid in unrun:
+            print(f"  {eid}")
+        return 1 if headroom == 0 else 0
+    args.goal_backlog = args.goal_backlog or args.capacity
     if args.goal_backlog:
         unrun = approved_unrun(args.repo_root).get(args.goal_backlog, [])
         print(f"{args.goal_backlog}\tapproved_unrun={len(unrun)}\tcap=none")

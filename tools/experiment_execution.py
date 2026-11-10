@@ -806,6 +806,35 @@ def committed_queue(root: Path, path: Path) -> None:
         raise ExecutionError(f"invalid managed queue binding: {relative}: {error}") from error
 
 
+def required_archive_paths(root: Path, plan: dict[str, Any],
+                           trials: list[dict[str, Any]] | None = None) -> list[str]:
+    """Repository-relative files the supervisor writes for each trial, in plan order.
+
+    The eight GENERATED supervisor files come first, then the trial's declared
+    artifacts, exactly as authorize() has always enumerated them.
+    """
+    required: list[str] = []
+    for trial in (plan.get("trials") or []) if trials is None else trials:
+        directory = run_root(root, plan, trial)
+        for name in (*GENERATED, *trial["artifacts"]):
+            required.append((directory / name).relative_to(root).as_posix())
+    return required
+
+
+def archive_coverage_gaps(root: Path, plan: dict[str, Any], task: dict[str, Any] | None,
+                          trials: list[dict[str, Any]] | None = None) -> list[str]:
+    """THE archive-coverage predicate: required run files the task does not declare.
+
+    One function, imported by authorize() (admission), newest_experiments.py
+    (readiness: a plan with gaps is ``needs_archive_coverage``) and
+    experiment_preapproval.py (``approvable``), so readiness and admission
+    cannot disagree (problems/ready-plans-lack-supervisor-archive-coverage.md;
+    docs/execution-capacity-cap.md). An empty list means covered.
+    """
+    declared = set((task or {}).get("artifact_paths") or [])
+    return [path for path in required_archive_paths(root, plan, trials) if path not in declared]
+
+
 def authorize(root: Path, path: Path, plan: dict[str, Any], owner: str, epoch: int) -> dict[str, Any]:
     """Re-render the existing dispatcher, including its archive and claims gates."""
     committed_queue(root, safe_path(root, plan["queue"]))
@@ -859,13 +888,10 @@ def authorize(root: Path, path: Path, plan: dict[str, Any], owner: str, epoch: i
     budget = handoff.get("budget") or {}
     if any(budget.get(key) == 0 for key in ("maximum_runs", "experiment_maximum_runs")):
         raise ExecutionError("zero-run task cannot execute trials")
-    paths = set(task.get("artifact_paths") or [])
     for trial in plan["trials"]:
-        directory = run_root(root, plan, trial)
-        for name in (*GENERATED, *trial["artifacts"]):
-            relative = (directory / name).relative_to(root).as_posix()
-            if relative not in paths:
-                raise ExecutionError(f"handoff archive coverage missing: {relative}")
+        gaps = archive_coverage_gaps(root, plan, task, trials=[trial])
+        if gaps:
+            raise ExecutionError(f"handoff archive coverage missing: {gaps[0]}")
         # The trial guard is RLIMIT_AS on Linux or sampled group RSS on macOS.
         if budget.get("memory_gb") is not None and trial["memory_mb"] > float(budget["memory_gb"]) * 1024:
             raise ExecutionError("trial memory exceeds handoff protection")

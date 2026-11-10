@@ -1,10 +1,10 @@
 # Experiment approval readiness has a circular selector gate
 
-- **Status:** `investigating`
+- **Status:** `investigating` (shared admission/readiness predicate landed in harness PR `harness/review-20261110-fixes`, pending merge; launcher dry-run for unapproved packets still open)
 - **Kind:** control-plane implementation and contract mismatch.
 - **Affected work:** [AGENTS.md approval rule](../AGENTS.md#approval-is-bounded-by-execution), [the ordinary experiment selector](../tools/newest_experiments.py), [the supervisor plan loader](../tools/experiment_execution.py), [EXP-ICPERF-018b0c](../experiments/EXP-ICPERF-018b0c/specification.yaml), and the separate [supervisor archive-coverage problem](ready-plans-lack-supervisor-archive-coverage.md).
 - **Next action owner:** Coordinator for a reviewed read-only preapproval probe and contract correction; then the ICPERF design lane for a complete prospective k11 packet.
-- **Last updated:** 2026-10-17
+- **Last updated:** 2026-11-10
 
 ## Problem
 
@@ -39,6 +39,34 @@ A planned step is not an experiment result. Apply the existing approval, executi
 ## Resolution and history
 
 2026-10-17: Opened from the mutually exclusive selector and preapproval rule, with `EXP-ICPERF-018b0c` as a concrete affected draft. Unresolved until the exact probe, contract change, controls and archive are reviewed and landed.
+
+2026-11-10 (harness review I2, `crypto:docs/autoresearcher-harness-review-20261110.md`,
+"Also under I2"; working-tree change, not yet merged):
+
+- **Fixed: one predicate, not two.** Archive coverage was enforced in three
+  places: in `authorize()`, as a reimplementation inside
+  `tools/experiment_preapproval.py`, and not at all in the selector. It is
+  now `experiment_execution.archive_coverage_gaps`, imported by all three
+  (`required_archive_paths` gives the enumeration). For the same bytes, the
+  probe's `archive_coverage_gaps` equals the selector's, and `authorize()`
+  refuses on the first entry (`tests/test_archive_coverage_predicate.py`).
+  The probe can no longer pass a packet that the post-approval selector and
+  runner would refuse on coverage.
+- **Fixed: approval bounded by execution.** A per-area cap of 3
+  approved-unrun contracts is declared as `approved_unrun_cap_per_area` in
+  `orchestration/research-priority.yaml`. It is checked by
+  `tools/check_approval_capacity.py`: advisory before 2026-11-11, an error
+  from then on, and `supersedes:` is required to pass over the cap. See
+  `docs/execution-capacity-cap.md`.
+- **Not fixed.** `ready` is still not computable for an unapproved packet
+  by dry-running its launcher against the frozen spec. The probe checks
+  bytes and bindings. It runs nothing. The selector still requires an
+  approved specification, and the preapproval-candidate path
+  (`candidate-trial-plan.json`) does not yet apply coverage because it has
+  no bound queue task. The other gates (lane, route, provenance and
+  `EXP-ICPERF-018b0c` bindings) are unchanged. Unblock item 1 is
+  structurally met, but the launcher-dry-run requirement from the review
+  remains open.
 
 ## 2026-10-17 additive-repair boundary
 
