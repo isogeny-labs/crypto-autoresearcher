@@ -1,0 +1,136 @@
+idea:
+  id: IDEA-20261109-8ec8e4
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  question_id: RQ-ECDLP-f655d3
+  title: Exact interpolation degree and monomial weight of the discrete-log function on x-interval, mu_B
+    and random factor bases at calibration primes, filling the missing polynomial-model frontier row
+  class: barrier
+  claim: 'Toy measurement, predictions fixed before any run. For a prime-order toy curve E/F_p with generator
+    P and N = #E, define l(x) = min(k, N-k) for x = x(kP). For a set S of s x-coordinates let d(S) be
+    the least degree of f in F_p[X] with f = l on S. Let w be the number of nonzero coefficients of the
+    unique degree-below-p polynomial equal to l on x(E) and to 0 elsewhere. Prediction A: d(S) >= s -
+    2 for S_int (x < p^{1/2}), S_mu (x^B = 1, B | p-1, B near p^{1/2}) and S_rand (uniform, same size),
+    on every calibration prime tested. Prediction B: w >= 0.9 p. A structured set with d(S) <= 0.9 (s-1)
+    while S_rand stays >= s - 2 falsifies the claim and would be the first structured exception to the
+    recalled Lange-Winterhof bounds. No exponent change is claimed.'
+  mechanism: A polynomial model of the discrete log on a factor base (fit, then descend targets through
+    it) needs the log to have degree far below the set size on that base. Dimension counting makes the
+    generic degree s - 1; the recalled theorems bound degree and weight from below on large or structured
+    sets of logs. The measurement computes d(S) exactly by Newton divided differences (the largest index
+    with a nonzero Newton coefficient) and w by one length-p interpolation, so the result is a count,
+    not an estimate. The control is the random set of equal size on the same curve.
+  novelty_status: unverified
+  citations:
+  - ref: KR-RHO-13bf67
+    provenance: internal
+    claim: Generic lower bound Omega(sqrt p). A polynomial model of the log would be a representation-dependent
+      algorithm; this record checks that the representation offers none of the required structure.
+    verified_by: brief section 3, generic-rho row KR-RHO-13bf67 (not opened in this session)
+  - ref: KR-IC-5931ee
+    provenance: internal
+    claim: Naive prime-field Semaev index calculus cannot beat generic methods under statistical assumptions;
+      this record tests one algebraic assumption about the base, not the decomposition step.
+    verified_by: brief section 3, index-calculus row KR-IC-5931ee
+  - ref: Lange-Winterhof, Interpolation of the elliptic curve discrete logarithm by polynomials (recalled)
+    provenance: recalled
+    claim: Lower bounds on the degree of polynomials interpolating the EC discrete logarithm on sets of
+      consecutive logs; provenance is memory and must be re-verified by the next agent.
+    verified_by: not verified in this session
+  assumptions:
+  - Curves and primes are taken from crypto/docs/ECDLP_CALIBRATION_PRIMES.md with N prime and p <= 2^14.
+  - For S_mu a divisor B of p-1 with p^{0.4} <= B <= p^{0.6} exists; primes without one skip the mu arm
+    and report it.
+  predictions:
+  - metric: (s - 1) - d(S) for S_int and S_mu, maximised over primes and draws
+    direction: lower
+    minimum_effect: at most 1
+  - metric: (s - 1) - d(S_rand), maximised over 10 draws per prime
+    direction: lower
+    minimum_effect: at most 1
+  - metric: w / p
+    direction: higher
+    minimum_effect: at least 0.9
+  minimal_test:
+    design: For each calibration prime, enumerate kP for k = 1..N-1 once and tabulate x -> l(x). Build
+      S_int, S_mu, S_rand of equal size s. Compute d(S) by Newton divided differences over F_p; compute
+      w by Lagrange or NTT interpolation of length p. Report s, d(S) per set, w, p, N, B.
+    controls:
+    - S_rand of the same size on the same curve, 10 independent draws.
+    - 'Label control: replace l by the enumeration index of x in S; its degree must also be s - 1 or s
+      - 2, else the divided-difference implementation is suspect.'
+    required_metrics:
+    - s
+    - d(S_int)
+    - d(S_mu)
+    - d(S_rand) min and max over draws
+    - w
+    - p
+    - N
+  falsification_conditions:
+  - d(S_int) <= 0.9 (s - 1) or d(S_mu) <= 0.9 (s - 1) while every d(S_rand) >= s - 2.
+  - w < 0.9 p on any tested curve.
+  - A divided-difference implementation that gives degree below s - 2 on the label control is invalid,
+    not a result.
+  confounders:
+  - Sets of size s close to p make degree s - 1 trivially maximal; keep s <= p^{0.6}.
+  - Choice of l (min(k, N-k)) is one sign convention; report whether the alternative k mod N changes d
+    by more than 1.
+  interpretation_limits:
+  - A confirmed prediction records a frontier row at toy size; it is not a proof for p of 256 bits.
+  - Degree is one model class; low-weight sparse models at full degree are covered only by w.
+  heuristic_assumptions:
+  - id: H1
+    statement: A structured factor base behaves like a random set for interpolation degree and weight
+      of the discrete log.
+    rigorous_support: Dimension count gives degree s - 1 for a uniformly random function with probability
+      1 - 1/p; recalled Lange-Winterhof bounds cover consecutive-log sets, not x-interval or mu_B sets.
+    validation_plan: Exact computation on every calibration prime with the random control; no subsampling
+      of S.
+  target_complexity:
+    time_exponent: p^{1/2} unchanged
+    memory_exponent: O(p) for the one-time log table at toy size
+    best_known: Pollard rho, Theta(p^{1/2}) group operations, KR-RHO-13bf67
+    hidden_overhead: none claimed; no algorithm is proposed
+    tradeoff_note: delta 0; a barrier row and its toy certificate
+  estimated_cost:
+    implementation: low
+    compute: low
+  recommended_priority: medium
+  dominated_by: KR-RHO-13bf67 dominates any exponent reading. No frontier row states the interpolation-degree
+    or weight barrier; this record supplies the toy certificate for one.
+  sota_delta: 'Exponent delta 0. Counted delta: d(S) within 1 of s - 1 on all three bases and w >= 0.9
+    p, or a structured exception.'
+  prior_art:
+    frontier_map: knowledge/frontiers/ecdlp/index-calculus
+    rows_checked:
+    - KR-RHO-13bf67
+    - KR-IC-5931ee
+    - KR-IC-5a43e5
+    - KR-IC-73db3f
+    - KR-RHO-93979e
+    nearest:
+    - ref: KR-IC-5931ee
+      provenance: internal
+      relation: adjacent
+      delta: YYTK bound the decomposition stage under statistical assumptions; this record measures an
+        algebraic property of the base itself.
+    - ref: KR-RHO-13bf67
+      provenance: internal
+      relation: adjacent
+      delta: Generic bound; the measured object is representation-specific.
+    searched:
+      corpus_grep:
+      - brief section 2 for interpolation, Lange-Winterhof, polynomial model of DL
+      - wave-1 sweep lead on learned predictors of k-bits
+      - wave-1 barriers leads on spectral norm and hybrid-sum flatness
+      web: []
+      blocked: []
+    lead: LEAD-EXO-quadratic-phase-small-x-leakage
+    lead_delta:
+      kind: advances_next_action
+      statement: 'New test: For each calibration prime, enumerate kP for k = 1..N-1 once and tabulate
+        x -> l(x). Build S_int, S_mu, S_rand of equal size s. Compute d(S) by Newton divided differences
+        over F_p; compute w by Lagrange or NTT interpolation of length p. Report s, d(S) per set, w, p,
+        N, B.'
