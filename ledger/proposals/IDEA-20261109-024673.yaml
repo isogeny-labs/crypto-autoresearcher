@@ -1,0 +1,58 @@
+idea:
+  id: IDEA-20261109-024673
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  title: Two-sided Lean certificate for KN-OPEN-095df5 (F_2-rational point of order 131)
+  class: control
+  novelty_status: adaptation
+  repairs:
+    record: KN-OPEN-095df5
+    via: H-BINSTD-944a66
+    recorded_status: analyzed (SETTING only; question left open)
+    assertion_that_flips: (up) ord_131(2) = 130, hence 131 | 2^130 - 1 and Res_{F_{2^130}/F_2} G_m has
+      an F_2-point of order 131, dimension 130; (down) no elliptic curve over F_2 and no abelian surface
+      over F_2 has such a point, so any witness has dimension >= 3. Both halves together move the record
+      from open to "answered modulo dimension 3".
+  claim: The question in H-BINSTD-944a66 is decidable by elementary arithmetic in both directions, and
+    the undecided residue is exactly dimension 3 over F_2.
+  mechanism: '2^7 = -3, 2^14 = 9, 2^28 = 81, 2^56 = 11, 2^63 = -33, 2^65 = -1 (mod 131); 2^k != 1 for
+    k in {2,5,10,13,26}; so 2 is a primitive root mod 131. For the lower bound, enumerate the 32 Weierstrass
+    tuples over F_2 and count points (all in 1..5); for abelian surfaces #A(F_2) <= (1+sqrt 2)^4 < 34.'
+  lean:
+    covered_by: null
+    nearest_namespace: SplitPrime.Obstruction (commit 8187529; no theorem name quoted)
+    needed_statement: "theorem orderOf_two_zmod_131 : orderOf (2 : ZMod 131) = 130; theorem no_order_131_over_F2\
+      \ : forall a1 a2 a3 a4 a6 : ZMod 2,\n  not (131 | Fintype.card (WeierstrassCurve.Point (mk a1 a2\
+      \ a3 a4 a6)));\nboth by decide."
+  experiment:
+    nearest_surface: aburan28/crypto-autoresearcher (no Autolab package quoted for H-BINSTD-944a66)
+    design: Enumerate genus-3 curves over F_2 (hyperelliptic and plane quartic), compute L-polynomials,
+      test 131 | L(1).
+    control: Same enumeration for genus 2 must return zero hits (consistency with the bound).
+    kill_criterion: A genus-3 hit closes the question positively in dimension 3; zero hits plus the Lean
+      certificates close it as "dimension >= 4 or non-Jacobian".
+    cost: minutes; finitely many curves
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - KN-OPEN-095df5
+      - H-BINSTD-944a66
+      none_found_after:
+      - BRIEF grep for "131"
+      - BRIEF grep for "Couveignes"
+      - BRIEF grep for "order 131"
+    nearest_record:
+      id: H-BINSTD-944a66
+      relation: specializes
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - parameter-audit
+  - certificate
+  - F_2
+  - Couveignes-Lercier

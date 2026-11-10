@@ -1,0 +1,53 @@
+idea:
+  id: IDEA-20261109-edbaa1
+  question_id: RQ-ISO-68bbac
+  added: '2026-11-09'
+  status: proposed
+  approved_by: null
+  title: Certify the H-SSIQ-d724f2 census of H_N <= GL_2(Z/N) by decide for N in {3,5,7}
+  class: representation
+  novelty_status: adaptation
+  repairs:
+    record: H-SSIQ-d724f2
+    recorded_status: supported (heuristic_validation; NO ATTACK; NO EXPONENT)
+    assertion_that_flips: For each N in {3,5,7}, Nat.card (Subgroup.closure S_N) equals the census value,
+      where S_N is the generating set recorded in H-SSIQ-d724f2. Agreement upgrades "supported" to "certified
+      for N <= 7"; disagreement at any N downgrades to "weakened".
+  claim: A group-theoretic census over GL_2(Z/N) for fixed small N is a finite object and should carry
+    a kernel-checked certificate rather than a heuristic label.
+  mechanism: Encode S_N as matrices over ZMod N, build the Fintype of GL_2, compute the closure order;
+    |GL_2(Z/3)| = 48, |GL_2(Z/5)| = 480, |GL_2(Z/7)| = 2016, so decide is feasible at N <= 5 and native_decide
+    likely needed at N = 7 (report which).
+  lean:
+    covered_by: null
+    nearest_namespace: SplitPrime.Obstruction (scalar-only action is the nearest proved shape)
+    needed_statement: "theorem H_N_card (N : {3,5,7}) :\n  Nat.card (Subgroup.closure (S_N : Set (GL (Fin\
+      \ 2) (ZMod N)))) = census N"
+  experiment:
+    nearest_surface: aburan28/crypto-lean commit 8187529
+    design: Lean file per N; CI runs decide
+    control: independent Sage/GAP computation of the same closure order
+    kill_criterion: Lean value differs from census or from GAP
+    cost: hours of formalization; seconds of kernel time at N <= 5
+  prior_art:
+    frontier_map: not_applicable
+    searched:
+      corpus_grep:
+      - H-SSIQ-d724f2
+      - H-SSIQ-dfee7e
+      none_found_after:
+      - BRIEF grep for "GL_2"
+      - BRIEF grep for "census"
+      - BRIEF grep for "decide"
+    nearest_record:
+      id: H-SSIQ-d724f2
+      relation: certifies
+    not_applicable_reason: This campaign is isogeny/formula engineering, not an ECDLP-mechanism claim;
+      the ECDLP frontier map does not cover the relevant literature.
+    none_found_after:
+    - repository search of crypto, cryptanalysis, crypto-autoresearcher and ecbench
+  tags:
+  - quaternion
+  - maximal-order
+  - Lean
+  - finite-check
