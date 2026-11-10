@@ -9,8 +9,13 @@ idea:
   claim: Formula-engineering claim, not an ECDLP claim. For a rational point $(X:Y:Z:T)$ on $-x^2+y^2=1+dx^2y^2$,
     $p=2^{255}-19$, cofactor 8, put $U=Y+X$, $V=Y-X$. Then $[8]P=O$ iff $XY(X^2+Y^2)=0$ iff $U^4=V^4$.
     The test is $U^2=V^2$ (order dividing 4) or $U^2=-V^2$ (order 8). Cost 2S + 3a and two comparisons,
-    0M, 0I, no use of $Z$, $T$ or $d$. It replaces a cofactor multiplication followed by an identity test,
-    which under the assumed baseline costs 12M + 12S + 3 fe_mul by 2 + 1I + 2M.
+    0M, 0I, no use of $Z$, $T$ or $d$. The saving is conditional on the verify path, which the excerpt
+    does not show. If verification rejects small-order points by a cofactor multiplication followed by
+    an identity test (three doublings plus is_identity, assumed), that check costs 12M + 12S + 3 fe_mul
+    by 2 + 1I + 2M, that is 14M + 12S + 3 small multiplies + 1I, and the predicate replaces it. If verification
+    instead uses a prime-subgroup check, the predicate cannot replace that check, which already rejects
+    every small-order point except the identity, and the saving is zero. No delta is claimed until the
+    verify path is read.
   mechanism: The doubling in the repository gives $T(2P)=EH$ and $Z(2P)=FG$ with $E=2XY$, $H=-(X^2+Y^2)$,
     $G=Y^2-X^2$, $F=G-2Z^2$. Doubling is complete because $d$ is a non-square, so $FG\ne0$. $E(\mathbb
     F_p)[4]$ is $\{(0,\pm1),(\pm\sqrt{-1},0)\}$, which is the locus $T=0$. Hence $[8]P=O$ iff $[2]P\in
@@ -22,10 +27,12 @@ idea:
   - ref: BRIEF section 1, src/ecc/ed25519.rs excerpt (double, is_identity, module note)
     provenance: internal
     claim: Verification rejects small-order points; is_identity converts to affine with one inversion.
-      The rejecting code is not in the excerpt.
+      The rejecting code is not in the excerpt. Per the referee's reading, the module note says verification
+      also rejects non-prime-subgroup points.
     verified_by: idea-generator session 2026-11-09 read the BRIEF excerpt
   assumptions:
-  - Baseline is three doublings plus is_identity; the excerpt does not show it.
+  - Baseline is three doublings plus is_identity. The excerpt does not show it, and the module note suggests
+    a subgroup check may be used instead; the delta depends on which.
   - $E(\mathbb F_p)[8]$ is cyclic of order 8; $d$ is a non-square.
   proof_search_map:
     not_applicable_reason: Explicit predicate with a finite check.
@@ -48,24 +55,30 @@ idea:
     minimum_effect: agreement on all 8 torsion points and all sampled points
   - metric: field operations per test
     direction: lower
-    minimum_effect: 2S against at least 12M + 12S + 1I
+    minimum_effect: 2S + 3a against 14M + 12S + 3 small multiplies + 1I if the baseline is as assumed;
+      no saving if rejection is done by a subgroup check
   minimal_test:
-    design: Assertion A10 of scripts/ed25519_law_ansatz.py builds an order-8 point as [l]Q, checks its
-      eight multiples, random points, and points of the form [8]Q + torsion. Then a Rust unit test against
-      the existing check.
+    design: First read the verify path and record which check it performs. Assertion A10 of the proposed
+      scripts/ed25519_law_ansatz.py (not in the pack) builds an order-8 point as [l]Q, checks its eight
+      multiples, random points, and points of the form [8]Q + torsion. Then a Rust unit test against the
+      existing check.
     controls:
     - Existing cofactor-multiplication check on the same encodings.
     - Points of order l, 2l, 4l, 8l must be reported as not small.
     required_metrics:
+    - which check the verify path performs (cofactor multiplication, subgroup check, or other)
     - number of points tested and disagreements
     - fe_sq, fe_mul and fe_inv calls per test in both arms
   falsification_conditions:
   - Any rational point where the predicate disagrees with [8]P = O.
   - The current verify path already costs 2S or less.
+  - The verify path rejects small-order points through a subgroup check; the delta claim is then void
+    and only the identity stands.
   confounders:
   - Decoding accepts non-canonical encodings; test after decode.
   interpretation_limits:
   - Does not test membership in the prime-order subgroup.
+  - Cannot replace a subgroup check; where one is used the saving is zero.
   - Says nothing about the quadratic twist or X25519 inputs.
   heuristic_assumptions:
   - id: H1
@@ -75,7 +88,8 @@ idea:
   target_complexity:
     time_exponent: not applicable, constant-factor formula cost
     memory_exponent: not applicable
-    best_known: Cofactor multiplication then identity test
+    best_known: Cofactor multiplication then identity test (assumed to be the repository's method; not
+      shown in the excerpt)
     hidden_overhead: None claimed.
     tradeoff_note: None.
   estimated_cost:
@@ -84,7 +98,9 @@ idea:
   recommended_priority: medium
   dominated_by: Encoding blacklists reach the same decision with table lookups on canonical bytes; this
     is the algebraic form for projective points.
-  sota_delta: Assumed baseline 14M + 12S + 3 small multiplies + 1I becomes 2S.
+  sota_delta: Conditional. If the baseline is three doublings plus is_identity, 14M + 12S + 3 small multiplies
+    + 1I becomes 2S + 3a. If the verify path uses a subgroup check, the delta is zero. The baseline is
+    not shown in the excerpt.
   prior_art:
     frontier_map: not_applicable
     not_applicable_reason: Curve25519 explicit-formula campaign; no ECDLP mechanism is claimed.

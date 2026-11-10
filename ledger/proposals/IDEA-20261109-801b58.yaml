@@ -15,20 +15,22 @@ idea:
     that is $y_5 = (2y_2y_3 - y_1(y_2^2 + y_3^2))/(y_2^2 + y_3^2 - 2y_1y_2y_3)$, with no curve constant.
     Cost $4M + 2S + 6a$, or $3M + 2S$ with a normalised difference, equal to the Montgomery count. C3.
     Doubling: $AA = Z^2$, $BB = Y^2$, $E = AA - BB$, $x'' = AA \cdot BB$, $z'' = E(AA + 121665E) = 121666(Z^2
-    - Y^2)(Z^2 + dY^2)$, then $(Z'':Y'') = (x'' + z'' : x'' - z'')$. C4. No-go: for any map $g$ of the
-    x-line and any function $F$, $g(x(P+Q)) = F(g(x(P)), g(x(Q)))$ fails on every pair with $2P \ne O$
-    and $2Q \ne O$; on Curve25519 that is every pair avoiding $O$ and $(0,0)$. C5. Consequences: the ladder
-    output yields Edwards $y = (X_2 - Z_2)/(X_2 + Z_2)$ at $1I + 1M + 2a$, the cost of $u$. Entering from
-    Edwards $y$ with a projective difference adds $1M$ per step, $255M$ in total, about one inversion;
-    no saving is claimed.'
+    - Y^2)(Z^2 + dY^2)$, then $(Z'':Y'') = (x'' + z'' : x'' - z'')$. C4. No-go: for any injective map
+    $g$ of the x-line and any function $F$, and for every pair $(P,Q)$ with $2P \ne O$ and $2Q \ne O$,
+    the identity $g(x(P+Q)) = F(g(x(P)), g(x(Q)))$ fails on $(P,Q)$ or on $(P,-Q)$; it may hold on one
+    of the two. Hence no such $F$ satisfies the identity on all pairs. On Curve25519 the pairs concerned
+    are those avoiding $O$ and $(0,0)$. C5. Consequences: the ladder output yields Edwards $y = (X_2 -
+    Z_2)/(X_2 + Z_2)$ at $1I + 1M + 2a$, the cost of $u$. Entering from Edwards $y$ with a projective
+    difference adds $1M$ per step, $255M$ in total, about one inversion; no saving is claimed.'
   mechanism: 'C2 is substitution: $(X_2 - Z_2)(X_3 + Z_3) = 4Y_2Z_3$ and $(X_2 + Z_2)(X_3 - Z_3) = 4Z_2Y_3$,
     with $U_1 = (Z_1 + Y_1)/2$ and $W_1 = (Z_1 - Y_1)/2$. Hand checks: $y_3 = 1$ gives $y_5 = y_2$; $y_3
     = -1$ with $y_1 = -y_2$ gives $y_5 = -y_2$, matching translation by $(0,-1)$. C4 uses the involution
     $(P,Q) \mapsto (P,-Q)$: it fixes $(x(P), x(Q))$ and maps $x(P+Q)$ to $x(P-Q)$, and $x(P+Q) = x(P-Q)$
-    only if $P+Q = \pm(P-Q)$, that is $2Q = O$ or $2P = O$. Any $F$ of the two x-values is constant on
-    the orbit, so it cannot equal an injective relabelling of $x(P+Q)$. The Edwards law takes $(x,y)$,
-    which carries the sign the x-line forgets; the minimum extra datum is $x(P-Q)$ or one sign bit per
-    point. The step is branch-free and reads scalar bits uniformly once the swap is masked.'
+    only if $P+Q = \pm(P-Q)$, that is $2Q = O$ or $2P = O$. Any $F$ of the two x-values takes the same
+    value on $(P,Q)$ and $(P,-Q)$, while $g(x(P+Q)) \ne g(x(P-Q))$ for injective $g$, so $F$ is wrong
+    on at least one of the two pairs; it can be right on the other. The Edwards law takes $(x,y)$, which
+    carries the sign the x-line forgets; the minimum extra datum is $x(P-Q)$ or one sign bit per point.
+    The step is branch-free and reads scalar bits uniformly once the swap is masked.'
   novelty_status: unverified
   citations:
   - ref: BRIEF section 1, src/ecc/x25519.rs excerpt
@@ -97,6 +99,8 @@ idea:
   - The factor 2 in a, b, c, d is projectively harmless only if applied to both coordinates.
   interpretation_limits:
   - This record claims no speedup; it identifies the frame and closes a question.
+  - C4 does not say a given F is wrong on every pair; it says F is wrong on at least one of (P,Q) and
+    (P,-Q).
   heuristic_assumptions:
   - id: H1
     statement: None; substitution identities and a symmetry argument.
