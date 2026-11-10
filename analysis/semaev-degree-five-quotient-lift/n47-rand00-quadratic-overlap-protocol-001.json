@@ -1,0 +1,371 @@
+{
+  "amendments": [],
+  "analysis_plan": {
+    "blinded": false,
+    "frozen_before_data": true,
+    "inputs": [
+      "n47-rand00-quadratic-overlap-plan-001.json",
+      "n47-rand00-d5-local-plan-002.json",
+      "validation/n47-rand00-projected-square-rank-001.json"
+    ],
+    "outputs": [
+      "Complete stdout/stderr, exact overlap JSON, hashes, exit, rusage and cost receipt or failure record."
+    ],
+    "script": {
+      "path": "rank_quadratic_overlap.py",
+      "sha256": "513154ab78948a3dd139df37e2110b0a0761cf5368ee0dc713578cf3911cfab5"
+    }
+  },
+  "arms": [
+    {
+      "id": "overlap-rank",
+      "role": "candidate",
+      "description": "Exact F2 rank intersection of 552 annihilator-image vectors with 253 self-adjoint images on the frozen input.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "51876dfe213252bd8c981946506a68f9e87d7fcf",
+        "build": [
+          [
+            "reuse",
+            "Python 3 source at pinned SHA-256"
+          ]
+        ],
+        "binary_sha256": "513154ab78948a3dd139df37e2110b0a0761cf5368ee0dc713578cf3911cfab5",
+        "threads": 1,
+        "env": {
+          "PYTHONHASHSEED": "0"
+        },
+        "flags": {
+          "mode": "reduced-overlap",
+          "source_sha256": "513154ab78948a3dd139df37e2110b0a0761cf5368ee0dc713578cf3911cfab5"
+        }
+      },
+      "parameters": {
+        "n": 47,
+        "k": 24,
+        "max_output_coordinates": 30000,
+        "memory_bytes": 1073741824
+      }
+    },
+    {
+      "id": "proved-bounds",
+      "role": "reference",
+      "description": "Written field-linear proof gives rank 552 and 253 for the two basis maps and overlap in 0..253.",
+      "instrument": {
+        "repo": "crypto-autoresearcher",
+        "commit": "51876dfe213252bd8c981946506a68f9e87d7fcf",
+        "build": [
+          [
+            "reuse",
+            "written Boolean-ring proof"
+          ]
+        ],
+        "binary_sha256": "97bd0d70b17f4dfa850566c5ea51a03802d55659a8f12abb8ca2d4c3630b42c3",
+        "threads": 1,
+        "env": {},
+        "flags": {
+          "proof_file": "BINARY-BILINEAR-TOP-HOMOLOGY.md"
+        }
+      },
+      "parameters": {
+        "annihilator_rank": 552,
+        "self_adjoint_rank": 253,
+        "overlap_min": 0,
+        "overlap_max": 253
+      }
+    }
+  ],
+  "authors": [
+    "Codex, owner-authorized degree-six frontier"
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "class": "exact_computation",
+      "decided_by": [
+        "overlap-rank"
+      ],
+      "text": "For the frozen n47 input, the reduced exact F2 matrix gives the overlap dimension and the resulting rank of the explicitly generated quadratic top-syzygy subspace; it does not determine the full quadratic kernel or LFD."
+    }
+  ],
+  "controls": {
+    "aa": {
+      "present": false,
+      "comparison": null,
+      "not_applicable_reason": "Exact deterministic F2 ranks; no timed or variance claim."
+    },
+    "positive": {
+      "present": false,
+      "arm": null,
+      "expected_detection": null,
+      "not_applicable_reason": "The script verifies full product span, projected-square rank, both basis dimensions and both independent-map ranks before reporting an overlap."
+    },
+    "negative": {
+      "present": false,
+      "arm": null,
+      "null_population": null,
+      "not_applicable_reason": "No statistical null population or detector claim."
+    }
+  },
+  "created": "2026-11-08",
+  "decision_rule": {
+    "comparison_ids": [
+      "overlap-rank"
+    ],
+    "effect_size_measure": "none",
+    "interval": "none, exact",
+    "multiple_comparison_correction": "none",
+    "statistic": "none",
+    "text": "Record exact overlap and generated rank only after zero exit, source/input checks and all proved rank controls. Do not infer full quadratic kernel or LFD.",
+    "threshold": "product rank=47, projected-square rank=24, annihilator rank=552, self-adjoint rank=253, 0<=overlap<=253, 4164<=generated rank<=4417, exit0, hashes match",
+    "verdict_vocabulary": [
+      "overlap_verified",
+      "incomplete",
+      "mismatch",
+      "resource_refused"
+    ]
+  },
+  "execution": {
+    "backend": "local",
+    "checkpoint": {
+      "after_restore": {
+        "counted_units": "valid",
+        "wall_time": "invalid"
+      },
+      "grace_seconds": 0,
+      "interval_seconds": 0,
+      "policy": "none",
+      "restore_validation": "none"
+    },
+    "measurement_class": "search",
+    "placement": {
+      "counter_memory_bytes": 0,
+      "max_workers": 1,
+      "memory_per_worker_bytes": 1073741824,
+      "pod_memory_bytes": 0,
+      "checkpoint_detail": "No checkpoint; retain complete output and one total attempt."
+    },
+    "queue": "frozen-local-campaign",
+    "retries": {
+      "infrastructure_only": true,
+      "max_attempts": 1
+    },
+    "timeout_seconds": 300
+  },
+  "freeze": {
+    "status": "frozen",
+    "protocol_sha256": "86d7539a9ec574612c98df43dae5d0a8b09a21a86a8cf4fa1ffbf10ef25304a8",
+    "commit": "51876dfe213252bd8c981946506a68f9e87d7fcf",
+    "frozen_at": "2026-11-08T01:08:25Z",
+    "filed_before_affected_data": true
+  },
+  "hypotheses": [],
+  "inadmissible": [
+    "Treating generated-subspace rank as full quadratic-multiplier kernel rank.",
+    "Inferring D4 or D5 closure exactness or LFD from this top-form calculation.",
+    "Treating timeout, partial stdout or a mismatch as an exact overlap.",
+    "Changing the named input or one-attempt cap after seeing output."
+  ],
+  "invalidation_rules": [
+    "Any source, plan or input hash mismatch prevents execution.",
+    "Missing fresh shared budget headroom or existing output root prevents execution.",
+    "Nonzero exit, timeout, incomplete JSON or failed algebraic control makes the result inconclusive."
+  ],
+  "links": {
+    "plan": "n47-rand00-quadratic-overlap-plan-001.json",
+    "plan_sha256": "c3f3793048f7607f10046f96fcdbcf8e021f985109c639859f6f66466911d2d6",
+    "source_sha256": "513154ab78948a3dd139df37e2110b0a0761cf5368ee0dc713578cf3911cfab5",
+    "input_plan_sha256": "554486c20b6de56a4e53b57484ba8008783815358e21f854be7835b9d905a24a",
+    "source_commit": "51876dfe213252bd8c981946506a68f9e87d7fcf",
+    "projected_square_result_sha256": "d9c071225e2e11b4d608abe93471f89658157fa8148358bc2fdbaa251b571504"
+  },
+  "literature": [
+    {
+      "ref": "BINARY-BILINEAR-TOP-HOMOLOGY.md",
+      "provenance": "internal",
+      "claim": "Proof of reduced overlap representation and rank bounds.",
+      "verified_by": "Codex 2026-11-08"
+    },
+    {
+      "ref": "validation/n47-rand00-projected-square-rank-001.json",
+      "provenance": "internal",
+      "claim": "Named projected-square rank 24 and fixed input hash.",
+      "verified_by": "Codex 2026-11-08"
+    }
+  ],
+  "measurement": {
+    "clock": "counted",
+    "counters": [],
+    "isolation_required": "L0",
+    "order": "sequential",
+    "record": [
+      "source_sha256",
+      "input_plan_sha256",
+      "argv",
+      "host",
+      "exit_code",
+      "rusage",
+      "budget_readback"
+    ],
+    "timed_primary_justification": null,
+    "warmups": 0
+  },
+  "metrics": {
+    "primary": [
+      {
+        "id": "overlap_dimension",
+        "kind": "exact",
+        "name": "exact intersection dimension",
+        "unit": "F2 dimension",
+        "definition": "Dimension of the intersection between displayed symmetric and lifted-linear top-syzygy families.",
+        "source": "stdout symmetric_linear_overlap_dimension",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ],
+    "secondary": [
+      {
+        "id": "generated_rank",
+        "kind": "exact",
+        "name": "generated quadratic top-syzygy rank",
+        "unit": "F2 dimension",
+        "definition": "3336 plus 1081 minus the exact overlap dimension.",
+        "source": "stdout generated_quadratic_syzygy_rank",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "annihilator_rank",
+        "kind": "exact",
+        "name": "annihilator image rank",
+        "unit": "F2 dimension",
+        "definition": "Rank of 552 maps F_A.",
+        "source": "stdout annihilator_image_rank",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      },
+      {
+        "id": "self_adjoint_rank",
+        "kind": "exact",
+        "name": "self-adjoint image rank",
+        "unit": "F2 dimension",
+        "definition": "Rank of 253 maps F_L.",
+        "source": "stdout symmetric_quotient_rank",
+        "aggregation": "per_row",
+        "resolution": "1",
+        "uncertainty": "none_exact"
+      }
+    ]
+  },
+  "protocol_id": "SEMAEV-N47-RAND00-QUADRATIC-OVERLAP-20261108-V1",
+  "question": "What is the exact overlap of the known symmetric quadratic top-syzygies with variable lifts of the known linear syzygies on the named n47 input?",
+  "randomization": {
+    "arm_order": "fixed",
+    "arm_order_reason": "One exact calculation checked against fixed proof-derived dimension bounds; no timed comparison.",
+    "blinding": {
+      "analysis_labels_masked": false,
+      "how": "Named input and exact algebraic target are public.",
+      "unmasked_at": null
+    },
+    "instance_sampling": {
+      "independent_of_arm": true,
+      "rule": "Frozen n47 random00 input only; no new selection or population claim."
+    },
+    "seed_derivation": {
+      "method": "explicit_list",
+      "nonce": null,
+      "note": "Reuse the original fixed input seed; no draw.",
+      "seeds": [
+        9494361161180666839
+      ]
+    }
+  },
+  "reporting": {
+    "export_schema": "experiment.export/v1",
+    "review_schema": "experiment.review/v1",
+    "graphs": [
+      "Single named-input overlap table, or failure flow if incomplete."
+    ],
+    "report_dir": "reports/n47-rand00-quadratic-overlap-001"
+  },
+  "repository": "crypto-autoresearcher",
+  "sample_size": {
+    "instances": 1,
+    "replicates": 1,
+    "warmups": 0,
+    "power": {
+      "alpha": 0.05,
+      "correction": "none",
+      "method": "exact",
+      "note": "One named exact overlap; no population inference.",
+      "passes": true,
+      "tests_in_family": 1
+    },
+    "preflight_runtime": {
+      "estimated_total_seconds": 300,
+      "fixed_seconds": 0,
+      "per_sample_seconds": 300,
+      "measured_on": "Watchdog ceiling, not measured runtime.",
+      "threads": 1
+    }
+  },
+  "schema": "experiment.protocol/v1",
+  "stopping_rules": [
+    {
+      "kind": "fixed_n",
+      "preregistered": true,
+      "rule": "One named n47 reduced-overlap attempt under 300-second watchdog, 1 GiB address-space cap, USD 0.05 reservation and no retry."
+    }
+  ],
+  "study_dir": "analysis/semaev-degree-five-quotient-lift",
+  "variable_ledger": {
+    "aa_not_applicable": "No timed or population comparison.",
+    "comparisons": [
+      {
+        "id": "overlap-rank",
+        "arms": [
+          "overlap-rank",
+          "proved-bounds"
+        ],
+        "design": "absolute",
+        "differs_in": [
+          "instrument"
+        ],
+        "threshold": "product rank 47, projected-square rank 24, annihilator rank 552, self-adjoint rank 253, overlap 0..253, generated rank 4164..4417, exit0 and hashes match"
+      }
+    ],
+    "crosses_map": false,
+    "factors": [
+      {
+        "name": "input",
+        "treatment": "fixed",
+        "how": "Frozen n47 random00 field, target and factor-base record bound by input-plan SHA-256."
+      },
+      {
+        "name": "instrument",
+        "treatment": "fixed",
+        "how": "Pinned Python source and exact integer-row elimination; no build."
+      },
+      {
+        "name": "host",
+        "treatment": "measured",
+        "how": "One existing Spot host, 1 GiB address-space cap and one CPU; no performance claim."
+      },
+      {
+        "name": "order",
+        "treatment": "fixed",
+        "how": "Check source, input and budget before one reduced overlap computation."
+      },
+      {
+        "name": "migration",
+        "treatment": "measured",
+        "how": "Missing output or interrupted process remains inconclusive; no retry."
+      }
+    ],
+    "independent": []
+  },
+  "version": 1
+}

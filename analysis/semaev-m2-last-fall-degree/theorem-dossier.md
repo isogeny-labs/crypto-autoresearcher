@@ -191,6 +191,277 @@ $N$ variables. A certificate can be checked without knowing how it was found.
 `verify/cert_check.py` does this with its own descent of $S_3$, and
 `results/verification.md` lists the instances whose certificates it accepted.
 
+**Equivalent factorization check.** Write $A=\pi|_{B_{\le d-1}}$ and, for
+each variable $x_i$, let $B_i(g)=\pi(x_i g)$ on $B_{\le d-1}$. Condition (ii)
+is exactly $\ker A\subseteq\ker B_i$. Equivalently, there is a unique linear
+map $T_i:\operatorname{im}A\to Z$ with $B_i=T_i A$. To check this without
+storing a basis of $\ker A$, eliminate the paired columns
+$(A(m),B_i(m))$ for low-degree monomials $m$: when a column reduces to zero
+in its first component, its second component must also reduce to zero.
+Indeed, the same elimination operations express a relation among the
+original columns, so a nonzero second remainder is precisely a witness that
+$\ker A\not\subseteq\ker B_i$. Conversely, if all second remainders vanish,
+every relation among the $A(m)$ has zero image under $B_i$, which defines
+$T_i$. This changes the verification representation, not the certificate
+criterion or its mathematical conclusion. The small exact implementation is
+`../semaev-degree-five-quotient-lift/check_quotient_closure_factorized.py`.
+It is separate from the source-hash-pinned checker in the frozen n47 sliced
+D4 protocol. The alternative complete checker
+`../semaev-degree-five-quotient-lift/check_sliced_certificate_factorized.py`
+also verifies the monomial universe, quotient rank, generators and image of
+one while reading certificate rows on demand by default (whole-file mapping
+is optional). It passes
+small retained-certificate and tamper tests, including agreement at degree
+five on a retained n=6 affine-sliced map and acceptance of the retained full
+n=6 D5 map in its `--full-original` mode. Its time and memory use on an
+actual frontier-size D5 map have not yet been measured, so it is a candidate
+verifier for a separately frozen D5 protocol, not an accepted D5 result. The
+source-derived size screen for the n47 slice is
+`../semaev-degree-five-quotient-lift/N47-D5-CHECKER-ENVELOPE.md`.
+
+**Remark 1.5a** (why a scalar closure certificate cannot refute an
+unsatisfiable system). Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
+$\pi:B_{\le d}\to\mathbb F_2$ satisfies Proposition 1.5 with
+$\pi(1)=1$. Put $c_i=\pi(x_i)$. For any $u\in B_{\le d-1}$, condition (ii)
+gives $\pi(x_i u)=c_i\pi(u)$: if $\pi(u)=0$ apply (ii) to $u$, and if
+$\pi(u)=1$ apply it to $u+1$. Induction on monomial degree now gives
+$\pi(m)=m(c)$ for every monomial of degree at most $d$. Thus (i) says
+$f(c)=0$ for every generator: $c$ is a Boolean solution. Conversely,
+evaluation at any Boolean solution is such a scalar map. For an unsatisfiable
+instance, a degree-$d$ nonmembership certificate with nonzero image of $1$
+therefore needs a quotient codomain of dimension at least two. A scalar
+functional that merely annihilates $W_d(F)$ need not satisfy the closure
+condition and is not, by itself, a Proposition 1.5 certificate.
+
+**Lemma 1.6** (lifting a checked kernel). **Proved.** Let
+$d\ge\max_{f\in F}\deg f$, and let $U\subseteq B_{\le d}$ contain $F$ and be
+closed under multiplication by each variable on $U\cap B_{\le d-1}$.
+Let $C_{d+1}(U)$ be the smallest subspace of $B_{\le d+1}$ containing $U$
+and closed under variable multiplication on its degree-at-most-$d$ part.
+Then
+
+$$W_{d+1}(F)\subseteq C_{d+1}(U).$$
+
+Equality holds whenever $U\subseteq W_{d+1}(F)$; in particular it holds
+when $U=W_d(F)$. Thus $1\notin C_{d+1}(U)$ proves
+$1\notin W_{d+1}(F)$, but $1\in C_{d+1}(U)$ alone does not prove
+$1\in W_{d+1}(F)$. A checked quotient map with kernel $U$ establishes
+$W_d(F)\subseteq U$, not the additional equality.
+
+*Proof.* Since $F\subseteq U\subseteq C_{d+1}(U)$, the definition of
+$W_{d+1}(F)$ gives the first inclusion. If
+$U\subseteq W_{d+1}(F)$, that latter space is closed under every allowed
+degree-$(d+1)$ multiplication and contains $U$, so minimality of
+$C_{d+1}(U)$ gives the reverse inclusion. Finally,
+$W_d(F)\subseteq W_{d+1}(F)$ by monotonicity. $\square$
+
+**Lemma 1.7** (solutions constrain an exact-seed lift). **Proved.** Let
+$S\ne\varnothing$ be the Boolean zero set of $F$, and write $I(S)$ for
+its vanishing ideal in $B$. If $U\subseteq I(S)\cap B_{\le d}$, then
+$C_{d+1}(U)\subseteq I(S)\cap B_{\le d+1}$ and $1\notin C_{d+1}(U)$.
+Moreover, if $|S|=s$ and $d+1\ge s-1$, then
+
+$$\operatorname{codim}(C_{d+1}(U)\subseteq B_{\le d+1})\ge s.$$
+
+In particular, the conclusion holds for the exact seed $U=W_d(F)$.
+A checked quotient kernel known only to contain $W_d(F)$ need not lie in
+$I(S)$, so its provisional lift can kill $1$ even when solutions exist.
+
+*Proof.* The vanishing ideal contains $U$ and is closed under every
+variable multiplication, giving the first inclusion by minimality.
+The constant one does not vanish on nonempty $S$. For the codimension,
+fix $p\in S$. For each $q\in S\setminus\{p\}$, select a coordinate on
+which $p$ and $q$ differ and an affine coordinate factor that is one at
+$p$ and zero at $q$. Their product has degree at most $s-1$ and restricts
+to the indicator of $p$ on $S$. These $s$ indicators show that evaluation
+$B_{\le d+1}\to\mathbb F_2^S$ is onto when $d+1\ge s-1$. Since
+$C_{d+1}(U)$ lies in its kernel, its codimension is at least $s$.
+Finally, all generators vanish on $S$, and their allowed closure steps
+still vanish there, so $W_d(F)\subseteq I(S)$. $\square$
+
+**Proposition 1.8** (exactness of pivot-marked direct closure). **Proved.**
+Assume $d\ge\max_{f\in F}\deg f$. Order the monomials of $B_{\le d}$ by
+decreasing degree, and let $M_e$ be
+the span of all Boolean products $mf$ with $f\in F$ and
+$\deg m+\deg f\le e$. Begin with $A=M_d$. Pre-mark the leading columns
+of an echelon basis of $M_{d-1}$. Repeatedly choose every unmarked
+leading column in the degree-at-most-$(d-1)$ part of an echelon basis of
+$A$, mark it, multiply its basis row by every variable, adjoin the
+products to $A$, and re-echelonize. Batching and arbitrary row operations
+that preserve row space do not affect the conclusion. If this process
+terminates with no unmarked low-degree leading column, then $A=W_d(F)$.
+If it stops early because $1\in A$, then $1\in W_d(F)$.
+
+*Proof.* Every row of $M_d$ is in $W_d(F)$, and each newly adjoined row is
+a variable multiple of a row already in $A\cap B_{\le d-1}$. Hence
+$A\subseteq W_d(F)$ throughout. A leading column of a row space remains
+a leading column when the row space grows: its old witness with all earlier
+coordinates zero remains in the larger space. Thus a marked column cannot
+disappear. For each marked low-degree pivot $p$, retain a row $r_p$ with
+leading column $p$. If $p$ was pre-marked, take $r_p\in M_{d-1}$, so
+$x_i r_p\in M_d\subseteq A$ for every variable $x_i$. Otherwise its
+products were adjoined, so $x_i r_p\in A$ at termination.
+
+Let $s_p$ be the final echelon row with low-degree pivot $p$. The difference
+$s_p+r_p$ is in $A$ and has leading column strictly after $p$. Since both
+rows have degree at most $d-1$, it is a combination of final low-degree
+echelon rows with pivots after $p$. Descending induction on the marked
+low-degree pivots now gives $x_i s_p\in A$ for every $i$: it holds for
+$r_p$, and the products of all later rows are in $A$ by induction. Every
+element of $A\cap B_{\le d-1}$ is a combination of these rows, so $A$ is
+closed under all allowed variable multiplications. It contains $F$;
+minimality of $W_d(F)$ gives $W_d(F)\subseteq A$. The early-stop claim
+follows from the invariant $A\subseteq W_d(F)$. $\square$
+
+`code/lfdclose2.c` implements this pivot-marked algorithm. Its `mult`
+array marks leading columns, rather than immutable row identities; the
+descending-induction argument is what justifies that choice. The source
+audit and retained n47 D3 rank are recorded in
+`../semaev-degree-five-quotient-lift/N47-D3-EXACT-CLOSURE-AUDIT.md`.
+
+**Proposition 1.9** (exactness of a completed quotient lift). **Proved.**
+Let $U\subseteq B_{\le d}$ be the kernel of an onto map
+$\beta:B_{\le d}\to Q$, and suppose each coordinate of $Q$ has a monomial
+representative $b_q$ with $\beta(b_q)=e_q$. Among degree-$(d+1)$ monomials,
+retain as *standard* those with no degree-$d$ divisor other than such
+unit representatives. For each other high monomial $t=xm$, choose a
+non-representative divisor $m$ and recursively rewrite
+$t$ as $\sum_q\beta(m)_q\,xb_q$, using an acyclic order. This defines an
+onto linear map
+$\phi:B_{\le d+1}\to P=\mathbb F_2^{H}\oplus Q$, where $H$ is the
+standard high-monomial set, $\phi|_{B_{\le d}}=\beta$, and the selected
+standard monomials and $b_q$ map to the basis of $P$.
+
+Let $u_m=m+\sum_q\beta(m)_q b_q$ for every low monomial $m$. Start a
+relation space $A\subseteq P$ with all $\phi(x_i u_m)$; then repeatedly
+adjoin $T_i(v)=\phi(x_i\sum_q v_q b_q)$ for every variable $x_i$ and a
+basis of $A\cap Q$ until the rank stabilizes. If this process completes,
+then
+
+$$\phi^{-1}(A)=C_{d+1}(U).$$
+
+Consequently, if $U=W_d(F)$, a completed quotient export
+$B_{\le d+1}\to P/A$ has kernel exactly $W_{d+1}(F)$.
+
+*Proof.* The $u_m$ span $U$. Each low monomial is congruent modulo $U$ to
+its $b_q$ expression. Each selected high rewrite differs from the original
+monomial by $x_i u_m\in C_{d+1}(U)$. Acyclic substitution therefore shows
+that every polynomial is congruent modulo $C_{d+1}(U)$ to its standard
+representative in $P$. In particular, $\ker\phi\subseteq C_{d+1}(U)$.
+
+Put $C=C_{d+1}(U)$. The initial relation space lies in $\phi(C)$. If
+$v\in\phi(C)\cap Q$, take $c\in C$ with $\phi(c)=v$. Its low representative
+$\sum_q v_q b_q$ differs from $c$ by an element of $\ker\phi\subseteq C$,
+so that representative belongs to $C$; hence $T_i(v)\in\phi(C)$. Thus
+the completed $A$ lies in $\phi(C)$.
+
+Conversely, $K=\phi^{-1}(A)$ contains $U$. For $g\in K\cap B_{\le d}$,
+put $v=\beta(g)\in A\cap Q$. The difference
+$g+\sum_q v_q b_q$ lies in $U$, so $\phi(x_i g)$ differs from $T_i(v)$
+by an initial relation in $A$. Therefore $x_i g\in K$ for every $i$;
+minimality gives $C\subseteq K$. Since $A\subseteq\phi(C)$ and
+$\ker\phi\subseteq C$, the reverse inclusion $K\subseteq C$ follows.
+The final claim is Lemma 1.6. $\square$
+
+The n47 batched-lift source implements this construction: its provisional
+map is $\phi$, its initial `seed variable` loop spans the
+$\phi(x_i u_m)$, and its `closure round` loop applies the $T_i$ on
+$A\cap Q$. The source and retained-result audit is
+`../semaev-degree-five-quotient-lift/N47-D4-EXACT-LIFT-AUDIT.md`.
+
+The same provisional map admits a smaller *independent nonmembership*
+certificate: verify a linear quotient on its working coordinates against
+all initial seed relations and the low-coordinate closure condition, without
+exporting an image for every degree-five monomial. This only requires a
+checked seed inclusion, not an exact seed. The criterion and proof are in
+`../semaev-degree-five-quotient-lift/COMPACT-D5-QUOTIENT-CRITERION.md`;
+no compact n47 certificate has been produced or checked.
+
+**Proposition 1.10** (dimension floor for an unsatisfiable dual
+certificate). **Proved.** Let $d\ge\max(2,\max_{f\in F}\deg f)$ and suppose
+the Boolean zero set of $F$ is empty. If an onto map
+$\pi:B_{\le d}\to Z$ satisfies Proposition 1.5(i-ii) and
+$\pi(1)\ne0$, then $\dim Z\ge d$. In particular, if
+$1\notin W_d(F)$, the exact quotient $B_{\le d}/W_d(F)$ has dimension
+at least $d$.
+
+*Proof.* Put $S_r=\pi(B_{\le r})$ for $0\le r\le d$, and let
+$q=\dim Z$. We have $\dim S_0=1$ and $S_d=Z$. If
+$S_{r+1}=S_r$ for some $r\le d-2$, every degree-$(r+2)$ monomial
+can be written $x_i m$ with $\deg m=r+1$. Choose
+$v\in B_{\le r}$ with $\pi(v)=\pi(m)$. Then
+$m+v\in\ker\pi\cap B_{\le d-1}$, so the closure condition gives
+$\pi(x_i m)=\pi(x_i v)\in S_{r+1}=S_r$. Repeating this
+argument shows $S_d=S_r=Z$. Thus the filtration grows strictly at
+every step before reaching $Z$, and $S_{q-1}=Z$ whenever $q\le d$.
+
+Suppose $q\le d-1$. Then $S_{d-2}=Z$. The closure condition makes
+$T_i(\pi(u))=\pi(x_i u)$ a well-defined linear map on
+$Z=S_{d-1}$. On the spanning set $S_{d-2}=Z$, the Boolean identities
+$x_i^2=x_i$ and $x_ix_j=x_jx_i$ give
+$T_i^2=T_i$ and $T_iT_j=T_jT_i$. These commuting idempotents have a
+joint eigenspace decomposition indexed by Boolean assignments $c$:
+the orthogonal projectors $\prod_i T_i^{c_i}(I+T_i)^{1-c_i}$ sum
+to the identity.
+The vector $\pi(1)$ generates $Z$ under the $T_i$, because every
+monomial image is obtained by successive actions. For each $f\in F$,
+$T_f\pi(1)=\pi(f)=0$; commutativity and cyclicity imply $T_f=0$
+on all of $Z$. Any nonzero joint eigenspace therefore has
+$f(c)=0$ for every $f\in F$, a Boolean solution, contradiction.
+Hence $q\ge d$. The quotient-map consequence follows from the
+converse direction of Proposition 1.5. $\square$
+
+The small exhaustive control in
+`../semaev-degree-five-quotient-lift/test_check_sliced_certificate_factorized.py`
+enumerates all 36 onto two-dimensional closed maps on two Boolean
+variables at degree three and finds a Boolean evaluation in each case.
+It checks the edge case $q<d$ independently of the proof.
+
+**Proposition 1.11** (one-step criterion for a degree-six lower bound).
+**Proved.** Put $U=W_4(F)$ and $T=U+\sum_i x_iU\subseteq B_{\le5}$.
+If
+
+$$T\cap B_{\le4}=U,$$
+
+then $T=W_5(F)$. Consequently, if $1\notin U$ and the Boolean zero set of
+$F$ is empty, this condition proves $d_{\tilde F}\ge6$.
+To test it, choose any complement $H$ of $U\cap B_{\le3}$ in $U$ and let
+$\Theta:\bigoplus_i H\to B_{\le5}/U$ send $(h_i)$ to
+$\sum_i x_i h_i+U$. Let $\operatorname{top}_5$ project to the homogeneous
+degree-five part of the Boolean associated graded ring. The displayed
+condition is equivalent to
+
+$$\ker(\operatorname{top}_5\circ\Theta)=\ker\Theta.$$
+
+Thus every cancellation of degree-five top terms must lift to a relation
+already in $U$; a mere rank of the top-form map is insufficient.
+
+*Proof.* $T\subseteq W_5(F)$ because $U\subseteq W_5(F)$ and degree-five
+closure permits $x_i u$ for every $u\in U$. If $T\cap B_{\le4}=U$, every
+element of $T$ eligible for another variable multiplication belongs to
+$U$, and all such products lie in $T$. Hence $T$ is closed, contains $F$,
+and equals $W_5(F)$ by minimality. For the equivalent kernel condition,
+$x_i(U\cap B_{\le3})\subseteq U$ by degree-four closure, so $T/U$ is
+generated by the $x_iH+U$. A vector in $\ker(\operatorname{top}_5\circ
+\Theta)$ has image in $B_{\le4}/U$; it is in $\ker\Theta$ exactly when
+that lower-degree image vanishes. The LFD conclusion is Proposition 1.2.
+$\square$
+
+For the named n47 random-00 system, the independently exact $W_4$ rank is
+151,857 and $\dim(U\cap B_{\le3})=6,909$, so $\dim H=144,948$.
+The raw top map has $48\cdot144,948=6,957,504$ input coordinates and
+$\binom{48}{5}=1,712,304$ degree-five output coordinates. These are
+dimensions of a proof obligation, not evidence that the criterion holds.
+In fact the criterion would force
+$\dim(B_{\le5}/W_5(F))\ge\dim(B_{\le4}/W_4(F))=61,196$,
+because the old quotient injects into the new one when no lower-degree
+row appears. A D5 quotient smaller than 61,196 would disprove this strong
+criterion without deciding whether $1$ survives. The proposition is
+therefore an optional structural route, not a replacement for checking
+the D5 quotient directly.
+The quotient-lift route of Proposition 1.9 exploits the 61,196-dimensional
+D4 quotient instead of materializing this raw map.
+
 ---
 
 ## 2. Structure of the $m=2$ system
@@ -248,6 +519,18 @@ $\operatorname{Triv}_2=0$. No syzygy has degree below 2. $\square$
 because of the trace relation $\ell_0=\operatorname{Tr}(S/z^2)$. Removing it by
 Gaussian elimination still leaves falls in degree 3 (Lemma 2.3). Either way
 the first fall degree is bounded independently of $n$.
+
+**Prior-art boundary.** Kosters–Yeo, *Notes on summation polynomials*
+(arXiv:1503.08001, Corollary 4.11 and Remark 4.12), already derive a linear
+trace combination and first fall degree 2 for the ordinary-curve $S_3$
+Weil-descent setting. Kousidis–Wiemers, *On the first fall degree of summation
+polynomials* (2019, Remark 3.3), expressly cite that result for $m=2$.
+Accordingly, the value 2 itself must not be presented as a new discovery.
+The proof here fixes this dossier's exact Boolean presentation and supports
+the subsequent closure and LFD statements. The first-fall statement for the
+specific chained presentation must be compared separately with the splitting
+systems in Kosters–Yeo §5 and Huang–Kosters–Yeo §5.2 before any novelty
+claim. See `PRIOR-ART-DEFINITION-GATE.md` for source links and definitions.
 
 **Lemma 2.3** (explicit degree-3 falls). **Proved** for every $n$ and every $V$.
 
@@ -326,6 +609,18 @@ $$1=\sum_\sigma\sum_i\lambda_i^\sigma\,e_\sigma f_i .$$
 Each $e_\sigma f_i$ is a sum of products $m\,f_i$ with $m$ a monomial in $c$
 of degree $\le k$, so it lies in $M_{k+2}$. $\square$
 
+The $k+2$ bound cannot be lowered merely from the displayed bilinear
+presentation. In $\mathbb F_2[a,b,c]/(a^2-a,b^2-b,c^2-c)$, take
+$g_0=1+ac$ and $g_1=1+(c+1)b$. At $c=0$, $g_0=1$; at $c=1$,
+$g_1=1$, so the system is unsatisfiable. Both generators and their sum have
+degree exactly two. Consequently $W_2(\{g_0,g_1\})$ is their two-dimensional
+span and does not contain $1$. Yet
+$(c+1)g_0+cg_1=1$, and the allowed degree-three multiplications put this
+identity in $W_3$. Its last fall degree is therefore exactly three, attaining
+$k+2$ for the single $c$ variable. This is a sharpness control for general
+bilinear systems, not a Semaev instance; improving the Semaev bound requires
+using its additional field structure.
+
 **Proposition 2.5a** (upper bound from affine constraints on the sum).
 **Proved.** Suppose the unsatisfiable $m=2$ system has $r$ affine-linear
 polynomials in $c=a+b$ in $\operatorname{span}F$ whose linear parts are
@@ -400,6 +695,20 @@ $x$, so its product with a low-degree member of $\ker\pi_G$ is annihilated
 by the checked closure condition. Also $\pi_F(1)=\pi_G(1)$. This describes
 a certificate transfer, not a completed reduced-instance computation.
 
+Conversely, a dual certificate for $F$ restricts to one for $G$ **with the
+same quotient dimension**. Let $\pi_F:B_{\le d}\to Z$ satisfy Proposition 1.5
+and set $\pi_G=\pi_F|_{B'_{\le d}}$. For every monomial $m$ containing $b_j$,
+$m+\rho(m)=y(m/b_j)$ in the Boolean ring. Its degree is at most $d$, and
+$y\in W_d(F)$, so the closure rule puts $m+\rho(m)$ in
+$W_d(F)\subseteq\ker\pi_F$. The equality is trivial for monomials omitting
+$b_j$; by linearity $\pi_F=\pi_G\circ\rho$. Since $\pi_F$ is onto, $\pi_G$
+is onto as well. It annihilates each generator $\rho(f)$ of $G$, because
+$\pi_G(\rho(f))=\pi_F(f)=0$. The low-degree kernel closure under the retained
+variables is inherited from $\pi_F$, and $\pi_G(1)=\pi_F(1)$. Thus a checked
+original degree-four map can be projected without losing codimension when an
+affine relation is in $W_4(F)$; checking the projected bytes independently
+remains necessary for a computational certificate claim.
+
 **Corollary 2.5c** (slicing from a later affine fall). **Proved.** Fix
 $d\ge2$. The equality and nonmembership transfer of Proposition 2.5b still
 hold if its affine polynomial $y$ belongs to $W_d(F)$ rather than to
@@ -458,6 +767,37 @@ independent affine linear parts in $c$. The kernel of that image map is
 $(Q+U)^\perp$, while its domain is $Q^\perp$, giving the equivalent
 dimension formula. Proposition 2.5a applies.
 $\square$
+
+**Proposition 2.5e** (one-way certificate transfer under arbitrary affine
+restriction). **Proved.** Let $\rho:B\to B'$ set any chosen Boolean variables
+to affine forms in the retained variables, and let $G=\rho(F)$. For every
+$d\ge2$, $\rho(W_d(F))\subseteq W_d(G)$. Thus a checked certificate
+$1\notin W_d(G)$ proves $1\notin W_d(F)$, even when the substituted affine
+equations are **not** consequences of $F$. If $F$ has no Boolean zero, this
+gives $d_{\tilde F}\ge d+1$. More generally, an onto quotient certificate
+$\pi_G$ for $G$ lifts to $\pi_G\circ\rho$ for $F$ with the same codimension
+lower bound; it yields the same last-fall-degree conclusion whenever that
+bound exceeds the exact solution count of $F$.
+
+*Proof.* Affine substitution does not increase Boolean degree and sends
+each generator of $F$ to a generator of $G$. It also sends an allowed
+product $x_i g$ to $\rho(x_i)\rho(g)$, where $\rho(x_i)$ is affine. The
+constant part is already in $W_d(G)$, and each variable part is obtained by
+an allowed closure step; applying this argument inductively proves the
+inclusion. Since $\rho(1)=1$, nonmembership transfers back to $F$. For the
+dual statement, $\rho$ is onto, so $\pi_G\circ\rho$ is onto and annihilates
+the original generators. If $g$ has degree below $d$ and lies in its kernel,
+then $\rho(g)$ has degree below $d$ and lies in $\ker\pi_G$; the affine
+expansion of $\rho(x_i)$ shows that $\pi_G(\rho(x_i g))=0$. The solution-count
+claims follow from Propositions 1.2 and 1.4. $\square$
+
+For the named n47 random00 target, this provides a possible
+smaller-certificate route: fix additional Boolean coordinates in a frozen
+subsystem, check its degree-five nonmembership, and lift that certificate to
+the original 48-variable system. The separate exact recount remains needed
+to confirm the historical zero; a restricted system can close earlier, so
+the proposition does not assert that such a certificate exists. The queued
+original-system D5 attempt remains the direct test.
 
 **Proposition 2.6** (a general lower bound: $d_{\tilde F}\ge3$). **Proved** for every $n$.
 Write $T_a=\sum_j\operatorname{Tr}(v_j)a_j$ and $T_b=\sum_j\operatorname{Tr}(v_j)b_j$
@@ -595,6 +935,69 @@ $d_{\tilde F}\ge5$ and every F4 run has $d_{F4}\ge5$.
 - P45a *(B count, cert)*: $n=45$, $k=23$, Semaev's default polynomial subspace
   $V=\langle1,t,\dots,t^{22}\rangle$. Here $f=t^{45}+t^4+t^3+t+1$
   (`20000000001b`), $a_2=0$, $a_6$=`17cadafccda0` and $z$=`13ffe62d3f4d`.
+- `fresh-n47-rand-00` *(two exhaustive counts, cert; outside the original sample)*:
+  $n=47$, $k=24$, random $V$. The separate checker accepted the original
+  48-variable degree-four map with codimension at least 61,196 and nonzero
+  image of $1$ (map SHA-256
+  `3bdad807113e43ec41ac6e9edcb2a282ffa486c7a694eba0dd3e0e9b0fa5162f`,
+  checker transcript SHA-256
+  `058be3276433127923b07d3c41a4c4e81bc7a8c75d205f824e5abe4f9f86ab93`).
+  The [compressed certificate](https://github.com/isogeny-labs/crypto-autoresearcher/releases/download/semaev-closure-certificates-20261029/fresh-n47-rand-00-D5-cascade01-highmem01-D4.D4.cert.gz)
+  is a hosted release asset; its anonymous-download and decompression readback
+  is recorded in
+  `../semaev-degree-five-quotient-lift/highmem-archive/fresh-n47-rand-00-D5-cascade01-highmem01-D4.publication.json`.
+  An independent exact $W_4$ closure replay has rank 151,857 in 213,053
+  columns, equal to the checked map's kernel dimension; hence its D4 seed
+  kernel is exactly $W_4(F)$ for this named input under the recorded
+  computation (see
+  `../semaev-degree-five-quotient-lift/N47-D4-EXACT-LIFT-AUDIT.md`).
+  The retained exhaustive `count_by_sum` run returned zero; its named input,
+  binary/source provenance, output, and receipt were checked again in
+  `../semaev-degree-five-quotient-lift/n47-rand00-count-bridge-custody-002.json`.
+  Its algorithmic completeness argument is in
+  `../semaev-degree-five-quotient-lift/N47-RAND00-SOLUTION-COUNT-BRIDGE.md`.
+  A separately rebuilt `count_x1` binary enumerated all $2^{24}$ first
+  coordinates and solved the quadratic in the second. Its three frozen
+  controls returned 2, 0, and 4; the named target returned zero. The
+  independent receipt checker accepted the original result and the
+  [published copy](../semaev-degree-five-quotient-lift/validation/n47-rand00-x1-count-run-002/publication.json)
+  (receipt SHA-256
+  `3a45f84b50c4aeefcc6e1e75d341d60a24c551b25238efb170dbc3425ab0f778`).
+  The source audit and replay command are in
+  `../semaev-degree-five-quotient-lift/N47-X1-COUNT-RESULT-20261109.md`.
+  The [independent top-form calculation](../semaev-degree-five-quotient-lift/validation/n47-rand00-joint-top-syzygies-001.json)
+  records quadratic rank 46 out of 47 equations, so the
+  affine-combination space is one-dimensional; the
+  [checked affine witness](../semaev-degree-five-quotient-lift/n47-rand00-affine-witness-001.json)
+  has a nonzero linear part in $c=a+b$.
+  Thus $r=1$ in Proposition 2.5a. With the independently repeated zero count, the
+  named input has the additional upper bound
+  $d_{\tilde F}\le24-1+2=25$, alongside its certified lower bound 5.
+- `fresh-n50-poly-03` *(retained count, cert; outside the original sample)*:
+  $n=50$, $k=25$, polynomial $V=\langle1,t,\dots,t^{24}\rangle$.
+  The separate checker accepted the original-system D4 map with codimension
+  at least 38,629 and nonzero image of $1$; the retained exhaustive count
+  returned zero. The degree-50 field polynomial, named input and command,
+  count source/binary provenance, checker output, map hash, and public
+  certificate readback are rechecked in
+  `../semaev-degree-five-quotient-lift/validation/n50-poly03-count-bridge-custody-001.json`.
+  Its source-level count argument is in
+  `../semaev-degree-five-quotient-lift/N50-POLY03-COUNT-BRIDGE.md`.
+  The count has not yet had an independent rebuild or second enumeration.
+- `fresh-n51-poly-01` *(retained count, cert; outside the original sample)*:
+  $n=51$, $k=26$, polynomial $V=\langle1,t,\dots,t^{25}\rangle$.
+  The separate checker accepted the **52-variable original presentation**
+  D4 map with codimension at least 45,615; the retained exhaustive count
+  returned zero. The map has SHA-256
+  `c160792a7530b20dd17affcdabafb8d95494eed51c8ee6d818af3212f3e304f6`.
+  The named [D4 report](../semaev-degree-five-quotient-lift/reports/n51-poly01-d4-20261101/report.md)
+  and its [public readback receipt](../semaev-degree-five-quotient-lift/bounded-d4-archive-001/fresh-n51-poly-01-D5-cascade01-bounded-D4-001.publication.json)
+  bind the count, checker, and certificate. Its separately studied
+  51-variable affine slice is a different presentation and is not the
+  basis of this bound. This record has $a_2=1$, but the displayed $S_3$
+  formula is independent of $a_2$; the pair counter and independent
+  descent therefore use the same $S_3$ equation. The count has not had
+  an independent second enumeration.
 
 R35a's closure, $\dim W_4\cap B_{\le d}=(0,1,105,3885,61425)$, is
 reproduced exactly by implementation B. The closure stalls in a regular way: it

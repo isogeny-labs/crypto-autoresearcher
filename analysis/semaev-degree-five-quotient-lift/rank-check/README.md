@@ -23,3 +23,17 @@ python3 analysis/semaev-degree-five-quotient-lift/rank-check/run_indep_d4_rank.p
   --plan analysis/semaev-degree-five-quotient-lift/rank-check/n47-rand00-plan-002.json \
   --protocol analysis/semaev-degree-five-quotient-lift/rank-check/n47-rand00-protocol-002.json
 ```
+
+The v2 attempt completed. Its write-once result at
+`/home/ec2-user/fall-degree-data-20261029/n47-rand00-independent-rank-002/result.json`
+has SHA-256
+`9543233d947e9ede88776a7c2a8e10c53af0d27bb408c0429b4d3c8c28c5f502`.
+The independent verifier reported rank 151,857 in 213,053 columns,
+`contains_one=false`, and exit zero without timeout. The source, request,
+seed, checker transcript, stdout and stderr hashes were read back and match
+the frozen plan and receipt. The accepted D4 map has kernel dimension
+`213053-61196=151857` and contains `W4`; therefore this rank match proves
+`ker(pi4)=W4` for the named n47 random-00 input under the recorded independent
+computation. The source-and-receipt audit is in
+`../N47-D4-EXACT-LIFT-AUDIT.md`. No D5 membership or nonmembership follows
+from this D4 equality alone.
